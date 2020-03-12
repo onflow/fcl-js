@@ -1,0 +1,43 @@
+{
+  "name": "@onflow/resolver-encode",
+  "version": "0.0.7",
+  "description": "Flow SDK Resolver -- encode",
+  "license": "Apache-2.0",
+  "author": "Dapper Labs <dev@dapperlabs.com>",
+  "homepage": "https://onflow.org",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/dapperlabs/flow-js-sdk.git"
+  },
+  "bugs": {
+    "url": "https://github.com/dapperlabs/flow-js-sdk/issues"
+  },
+  "jest": {
+    "transform": {
+      ".js": "jest-esm-transformer"
+    }
+  },
+  "devDependencies": {
+    "jest": "25.1.0",
+    "jest-esm-transformer": "1.0.0",
+    "microbundle": "0.11.0"
+  },
+  "source": "src/encode.js",
+  "main": "dist/encode.js",
+  "module": "dist/encode.module.js",
+  "unpkg": "dist/encode.umd.js",
+  "scripts": {
+    "prepublishOnly": "npm test && npm run build",
+    "test": "jest",
+    "build": "microbundle",
+    "test:watch": "jest --watch",
+    "start": "microbundle watch"
+  },
+  "dependencies": {
+    "@onflow/assigns": "0.0.3",
+    "@onflow/bytes": "0.0.1",
+    "@onflow/interaction": "0.0.2",
+    "@qvvg/mario": "^1.3.0",
+    "rlp": "^2.2.4"
+  }
+}

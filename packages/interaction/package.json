@@ -1,0 +1,36 @@
+{
+  "name": "@onflow/interaction",
+  "version": "0.0.2",
+  "description": "Flow Interaction ADT and Helpers",
+  "license": "Apache-2.0",
+  "author": "Dapper Labs <dev@dapperlabs.com>",
+  "homepage": "https://onflow.org",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/dapperlabs/flow-js-sdk.git"
+  },
+  "bugs": {
+    "url": "https://github.com/dapperlabs/flow-js-sdk/issues"
+  },
+  "jest": {
+    "transform": {
+      ".js": "jest-esm-transformer"
+    }
+  },
+  "devDependencies": {
+    "jest": "25.1.0",
+    "jest-esm-transformer": "1.0.0",
+    "microbundle": "0.11.0"
+  },
+  "source": "src/interaction.js",
+  "main": "dist/interaction.js",
+  "module": "dist/interaction.module.js",
+  "unpkg": "dist/interaction.umd.js",
+  "scripts": {
+    "prepublishOnly": "npm test && npm run build",
+    "test": "jest",
+    "build": "microbundle",
+    "test:watch": "jest --watch",
+    "start": "microbundle watch"
+  }
+}

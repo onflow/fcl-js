@@ -1,0 +1,28 @@
+{
+  "name": "@onflow/protobuf",
+  "version": "0.0.3",
+  "description": "Access Node Protobuf",
+  "license": "Apache-2.0",
+  "author": "Dapper Labs <dev@dapperlabs.com>",
+  "homepage": "https://onflow.org",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/dapperlabs/flow-js-sdk.git"
+  },
+  "bugs": {
+    "url": "https://github.com/dapperlabs/flow-js-sdk/issues"
+  },
+  "jest": {
+    "transform": {
+      ".js": "jest-esm-transformer"
+    }
+  },
+  "devDependencies": {
+    "jest": "25.1.0",
+    "jest-esm-transformer": "1.0.0"
+  },
+  "main": "src/protobuf.js",
+  "scripts": {
+    "test": "jest"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "name": "example-react",
+  "private": true,
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "parcel src/index.html"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@onflow/fcl": "0.0.21",
+    "@onflow/sdk": "0.0.6",
+    "react": "16.13.1",
+    "react-dom": "16.13.1"
+  },
+  "devDependencies": {
+    "parcel": "2.0.0-alpha.3.2"
+  }
+}
