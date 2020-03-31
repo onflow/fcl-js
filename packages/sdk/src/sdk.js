@@ -15,6 +15,7 @@ export {computeLimit} from "./build/compute-limit"
 
 export {resolve} from "./resolve"
 export {resolveParams} from "./resolve/resolve-params"
+export {resolveSignatures} from "./resolve/resolve-signatures"
 
 export {send} from "@onflow/send"
 export {decode, decodeResponse} from "@onflow/decode"
