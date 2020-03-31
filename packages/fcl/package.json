@@ -1,6 +1,6 @@
 {
   "name": "@onflow/fcl",
-  "version": "0.0.21",
+  "version": "0.0.22",
   "description": "Flow Client Library",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
@@ -35,8 +35,7 @@
   },
   "dependencies": {
     "@onflow/resolver-encode": "0.0.4",
-    "@onflow/resolver-signatures": "0.0.3",
-    "@onflow/sdk": "0.0.5",
+    "@onflow/sdk": "0.0.8",
     "@onflow/send": "0.0.3"
   }
 }
