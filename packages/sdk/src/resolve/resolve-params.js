@@ -1,8 +1,11 @@
-import {pipe} from "@qvvg/mario"
-import {get, update} from "@onflow/assigns"
+import {pipe, get, update} from "@onflow/interaction"
+
+function isFn(v) {
+  return typeof v === "function"
+}
 
 export const resolveParams = pipe([
-  update("code", (code, ix) => {
-    return typeof code === "function" ? code(get(ix, "params", {})) : code
+  update("ix.code", (code, ix) => {
+    return isFn(code) ? code(get(ix, "ix.params", {})) : code
   }),
 ])

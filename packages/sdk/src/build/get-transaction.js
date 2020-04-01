@@ -1,6 +1,5 @@
-import {pipe} from "@qvvg/mario"
-import {makeGetTransaction} from "@onflow/interaction"
-import {put} from "@onflow/assigns"
+import {pipe, put, makeGetTransaction} from "@onflow/interaction"
 
-export const getTransaction = txHash =>
-  pipe([makeGetTransaction, put("hash", txHash)])
+export function getTransaction(txId) {
+  return pipe([makeGetTransaction, put("gt.txId", txId)])
+}

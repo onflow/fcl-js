@@ -1,11 +1,10 @@
-import {pipe} from "@qvvg/mario"
-import {makeGetEvents} from "@onflow/interaction"
-import {put} from "@onflow/assigns"
+import {pipe, put, makeGetEvents} from "@onflow/interaction"
 
-export const getEvents = (eventType, startBlock, endBlock) =>
-  pipe([
+export function getEvents(eventType, start, end) {
+  return pipe([
     makeGetEvents,
-    put("eventType", eventType),
-    put("startBlock", startBlock),
-    put("endBlock", endBlock),
+    put("ge.eventType", eventType),
+    put("bounds.start", start),
+    put("bounds.end", end),
   ])
+}

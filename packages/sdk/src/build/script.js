@@ -1,6 +1,6 @@
-import {pipe} from "@qvvg/mario"
+import {pipe, put, makeScript} from "@onflow/interaction"
 import {t7l} from "@qvvg/templar"
-import {makeScript} from "@onflow/interaction"
-import {put} from "@onflow/assigns"
 
-export const script = (...args) => pipe([makeScript, put("code", t7l(...args))])
+export function script(...args) {
+  return pipe([makeScript, put("ix.code", t7l(...args))])
+}

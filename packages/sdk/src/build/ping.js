@@ -1,4 +1,5 @@
-import {pipe} from "@qvvg/mario"
-import {makePing} from "@onflow/interaction"
+import {pipe, makePing} from "@onflow/interaction"
 
-export const ping = () => pipe([makePing])
+export function ping() {
+  return pipe([makePing])
+}

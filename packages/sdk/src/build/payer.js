@@ -1,7 +1,5 @@
-import {pipe} from "@qvvg/mario"
-import {put} from "@onflow/assigns"
+import {pipe, put} from "@onflow/interaction"
 
-export const payer = authz =>
-  pipe([
-    put("payerAuthorization", authz)
-  ])
+export function payer(authz) {
+  return pipe([put("tx.payer", authz)])
+}

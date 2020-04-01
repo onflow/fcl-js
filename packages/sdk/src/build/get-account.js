@@ -1,6 +1,5 @@
-import {pipe} from "@qvvg/mario"
-import {makeGetAccount} from "@onflow/interaction"
-import {put} from "@onflow/assigns"
+import {pipt, put, makeGetAccount} from "@onflow/interaction"
 
-export const getAccount = address =>
-  pipe([makeGetAccount, put("address", address)])
+export function getAccount(acct) {
+  return pipe([makeGetAccount, put("ga.acct", acct)])
+}

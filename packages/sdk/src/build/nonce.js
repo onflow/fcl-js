@@ -1,4 +1,5 @@
-import {pipe} from "@qvvg/mario"
-import {put} from "@onflow/assigns"
+import {pipe, put} from "@onflow/interaction"
 
-export const nonce = nonce => pipe([put("nonce", nonce)])
+export function nonce(nonce) {
+  return pipe([put("tx.nonce", nonce)])
+}

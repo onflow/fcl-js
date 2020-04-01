@@ -1,14 +1,13 @@
-import {pipe} from "@qvvg/mario"
-import {put} from "@onflow/assigns"
+import {pipe, put} from "@onflow/interaction"
 
-const toMap = (kv = []) =>
-  kv.reduce((acc, d) => ({...acc, [d.key]: d.value}), {})
+function toMap(kv = []) {
+  return kv.reduce((acc, d) => ({...acc, [d.key]: d.value}), {})
+}
 
-export const params = (px = []) =>
-  pipe([
-    put("params", toMap(px))
-  ])
+export function params(px = []) {
+  return pipe([put("ix.params", toMap(px))])
+}
 
-export const param = (key, value, _type = null) => {
+export function param(key, value, _type = null) {
   return {key, value}
 }

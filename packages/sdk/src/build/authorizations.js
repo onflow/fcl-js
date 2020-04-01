@@ -1,11 +1,9 @@
-import {pipe} from "@qvvg/mario"
-import {put} from "@onflow/assigns"
+import {pipe, put} from "@onflow/interaction"
 
-export const authorizations = (ax = []) =>
-  pipe([
-    put("authorizations", ax)
-  ])
+export function authorizations(ax = []) {
+  return pipe([put("tx.authorizations", ax)])
+}
 
-export const authorization = (acct, signFn) => {
+export function authorization(acct, signFn) {
   return {acct, signFn}
 }

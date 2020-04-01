@@ -1,6 +1,5 @@
-import {pipe} from "@qvvg/mario"
-import {makeGetLatestBlock} from "@onflow/interaction"
-import {put} from "@onflow/assigns"
+import {pipe, put, makeGetLatestBlock} from "@onflow/interaction"
 
-export const getLatestBlock = (isSealed = false) =>
-  pipe([makeGetLatestBlock, put("isSealed", isSealed)])
+export function getLatestBlock(isSealed = false) {
+  return pipe([makeGetLatestBlock, put("glb.isSealed", isSealed)])
+}
