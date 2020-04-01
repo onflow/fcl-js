@@ -12,7 +12,6 @@
   "dependencies": {
     "@onflow/fcl": "0.0.21",
     "@onflow/sdk": "0.0.6",
-    "bn.js": "^5.1.1",
     "elliptic": "^6.5.2",
     "key-encoder": "^2.0.3",
     "react": "16.13.1",

@@ -1,11 +1,8 @@
-import { DefaultSigner } from "./signing"
+import {signTransactionPayload} from "./ECDSA256Signer"
 import flowJson from "../../../flow.json"
-
-const signer = new DefaultSigner()
 
 const pk = flowJson.accounts.root.privateKey
 
-export const signingFunction = async payload => {
-  const sig = signer.signTransactionPayload(pk, payload)
-  return sig
+export const signingFunction = payload => {
+  return signTransactionPayload(pk, payload)
 }
