@@ -2,8 +2,7 @@ import React, {useState} from "react"
 import * as sdk from "@onflow/sdk"
 import * as fcl from "@onflow/fcl"
 import {formatResponse} from "./utils/format-response"
-
-const signingFunction = async () => "SIGNATURE"
+import {signingFunction} from "./utils/signing-function.js"
 
 export const Transaction = () => {
   const [result, setResult] = useState(null)
