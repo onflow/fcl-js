@@ -22,20 +22,20 @@ Currently the Access Node recognizes 7 different types of interactions.
 - **status** *(all)* `Int` -- a marker that represents the status of the interaction
 - **reason** *(all)* `String` -- used to supply more information/feedback when a status is bad
 - **payload** *(script, transaction)*
- - **code** *(script, transaction)* `UInt8Array` encoded cadence code
- - **ref** *(transaction)* `UInt8Array` encoded id of an existing block (used for timeout)
- - **nonce** *(transaction)* `Int` all transactions in Flow need to be unique
- - **limit** *(transaction)* `Int` how much payer is willing to spend
+  - **code** *(script, transaction)* `UInt8Array` -- encoded cadence code
+  - **ref** *(transaction)* `UInt8Array` -- encoded id of an existing block (used for timeout)
+  - **nonce** *(transaction)* `Int` -- all transactions in Flow need to be unique
+  - **limit** *(transaction)* `Int` -- how much payer is willing to spend
 - **bounds** *(getEvents)*
- - **start** *(getEvebts)* `Int [?-> UInt8Array]` events after this
- - **end** *(getEvents)* `Int [?-> UInt8Array]`events before this
-- **acct** *(getAccount)* `UInt8Array` encoded version of an account
-- **authz** *(transaction)* `Array<{acct:UInt8Array, signature:UInt8Array}>` list of accounts and signatures authorizing a transaction
-- **payer** *(transaction)* `{acct:UInt8Array, signature: UInt8Array}` who is paying and their authorization
-- **eventType** *(getEvents)* `String [?->UInt8Array]` the type of events to query against
-- **txId** *(getTransaction)* `UInt8Array` encoded id of the transaction to query against
-- **isSealed** *(getLatestBlock)* `Boolean` determines if the criteria for the latest block is sealed or **FIND_CORRECT_STATE_NAME**
-- **assigns** *(all)* `{[String]:Any}` a pocket to hold things in while building and resolving
+  - **start** *(getEvebts)* `Int [?-> UInt8Array]` -- events after this
+  - **end** *(getEvents)* `Int [?-> UInt8Array]` -- events before this
+- **acct** *(getAccount)* `UInt8Array` -- encoded version of an account
+- **authz** *(transaction)* `Array<{acct:UInt8Array, signature:UInt8Array}>` -- list of accounts and signatures authorizing a transaction
+- **payer** *(transaction)* `{acct:UInt8Array, signature: UInt8Array}` -- which account is paying for the transaction and their authorization
+- **eventType** *(getEvents)* `String [?->UInt8Array]` -- the type of events to query against
+- **txId** *(getTransaction)* `UInt8Array` -- encoded id of the transaction to query against
+- **isSealed** *(getLatestBlock)* `Boolean` -- determines if the criteria for the latest block is sealed or **FIND_CORRECT_STATE_NAME**
+- **assigns** *(all)* `{[String]:Any}` -- a pocket to hold things in while building and resolving
 
 ## Exposed Constants
 
@@ -85,7 +85,7 @@ Currently the Access Node recognizes 7 different types of interactions.
 - makePing/1
 - isPing/1
 
-**interaction/0**
+### `interaction/0`
 
 > Constructs an empty interaction.
 
@@ -95,7 +95,7 @@ import {interaction} from "@onflow/interaction"
 const emptyInteraction = interaction()
 ```
 
-**isInteraction/1**
+### `isInteraction/1`
 
 > returns true if the value passed to it is an interaction
 
@@ -108,7 +108,7 @@ isInteraction(ix) // true
 isInteraction("i am a string") // false
 ```
 
-**Ok/1** and **isOk/1**
+### `Ok/1` and `isOk/1`
 
 > Sets the status of an interaction to `OK`
 
@@ -118,7 +118,7 @@ import {interaction, Ok, isOk} from "@onflow/interaction"
 isOk(Ok(interaction())) // true
 ```
 
-**Bad/2**, **isBad/1** and **why/1**
+### `Bad/2`, `isBad/1` and `why/1`
 
 > Sets the status of an interaction to `BAD`, can also add a reason as to why its bad.
 
@@ -130,7 +130,7 @@ isBad(ix) // true
 why(ix) // "You were supposed to do the thing"
 ```
 
-**makeUnknown/1** and **isUnknown/1**
+### `makeUnknown/1` and `isUnknown/1`
 
 > tags an interaction as Unknown
 
@@ -140,7 +140,7 @@ import {interaction, makeUnknown, isUnknown} from "@onflow/interaction"
 isUnknown(makeUnknown(interaction())) // true
 ```
 
-**makeScript/1** and **isScript/1**
+### `makeScript/1` and `isScript/1`
 
 > tags an interaction as a Script interaction
 
@@ -150,7 +150,7 @@ import {interaction, makeScript, isScript} from "@onflow/interaction"
 isScript(makeScript(interaction())) // true
 ```
 
-**makeTransaction/1** and **isTransaction/1**
+### `makeTransaction/1` and `isTransaction/1`
 
 > tags an interaction as a Transaction interaction
 
@@ -160,7 +160,7 @@ import {interaction, makeTransaction, isTransaction} from "@onflow/interaction"
 isTransaction(makeTransaction(interaction())) // true
 ```
 
-**makeGetTransaction/1** and **isGetTransaction/1**
+### `makeGetTransaction/1` and `isGetTransaction/1`
 
 > tags an interaction as a GetTransaction interaction
 
@@ -170,7 +170,7 @@ import {interaction, makeGetTransaction, isGetTransaction} from "@onflow/interac
 isGetTransaction(makeGetTransaction(interaction())) // true
 ```
 
-**makeGetAccount/1** and **isGetAccount/1**
+### `makeGetAccount/1` and `isGetAccount/1`
 
 > tags an interaction as a GetAccount interaction
 
@@ -180,7 +180,7 @@ import {interaction, makeGetAccount, isGetAccount} from "@onflow/interaction"
 isGetAccount(makeGetAccount(interaction())) // true
 ```
 
-**makeGetEvents/1** and **isGetEvents/1**
+### `makeGetEvents/1` and `isGetEvents/1`
 
 > tags an interaction as a GetEvents interaction
 
@@ -190,7 +190,7 @@ import {interaction, makeGetEvents, isGetEvents} from "@onflow/interaction"
 isGetEvents(makeGetEvents(interaction())) // true
 ```
 
-**makeGetLatestBlock/1** and **isGetLatestBlock/1**
+### `makeGetLatestBlock/1` and `isGetLatestBlock/1`
 
 > tags an interaction as a GetLatestBlock interaction
 
@@ -200,7 +200,7 @@ import {interaction, makeGetLatestBlock, isGetLatestBlock} from "@onflow/interac
 isGetLatestBlock(makeGetLatestBlock(interaction())) // true
 ```
 
-**makePing/1** and **isPing/1**
+### `makePing/1` and `isPing/1`
 
 > tags an interaction as a Ping interaction
 
@@ -209,7 +209,8 @@ import {interaction, makePing, isPing} from "@onflow/interaction"
 
 isPing(makePing(interaction())) // true
 ```
-**get/3**, **put/2**,**update/2** and **destory/1**
+
+### `get/3`, `put/2`, `update/2` and `destory/1`
 
 > crud operations for the assigns pocket inside the interaction. They are specifically designed to be used with `pipe`.
 
@@ -230,7 +231,7 @@ ix = destory("count")(ix)
 get(ix, "count", 0) // 0
 ```
 
-**pipe/2**
+### `pipe/2`
 
 > asynchronously composes transform functions and applys them to an interaction.
 
@@ -246,7 +247,7 @@ const ix = await pipe(interaction(), [
 get(ix, "sum", 0) // 11
 ```
 
-**pipe/1**
+### `pipe/1`
 
 > gets passed an array of transform functions, returning a function that takes an interaction to apply the transform functions to asynchronously.
 
