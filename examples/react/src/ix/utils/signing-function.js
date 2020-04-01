@@ -1,7 +1,7 @@
 import { DefaultSigner } from "./signing"
 import flowJson from "../../../flow.json"
 
-const signer = DefaultSigner()
+const signer = new DefaultSigner()
 
 const pk = flowJson.accounts.root.privateKey
 
