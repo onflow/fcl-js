@@ -61,29 +61,35 @@ Currently the Access Node recognizes 7 different types of interactions.
 
 ## Exposed Functions
 
-- interaction/0
-- isInteraction/1
-- Ok/1
-- isOk/1
-- Bad/2
-- isBad/1
-- why/1
-- makeUnknown/1
-- isUnknown/1
-- makeScript/1
-- isScript/1
-- makeTransaction/1
-- isTransaction/1
-- makeGetTransaction/1
-- isGetTransaction/1
-- makeGetAccount/1
-- isGetAccount/1
-- makeGetEvents/1
-- isGetEvents/1
-- makeGetLatestBlock/1
-- isGetLatestBlock/1
-- makePing/1
-- isPing/1
+- [interaction/0](#interaction0)
+- [isInteraction/1](#isinteraction1)
+- [Ok/1](#ok1-and-isok1)
+- [isOk/1](#ok1-and-isok1)
+- [Bad/2](#bad2-isbad1-and-why1)
+- [isBad/1](#bad2-isbad1-and-why1)
+- [why/1](#bad2-isbad1-and-why1)
+- [makeUnknown/1](#makeunknown1-and-isunknown1)
+- [isUnknown/1](#makeunknown1-and-isunknown1)
+- [makeScript/1](#makescript1-and-isscript1)
+- [isScript/1](#makescript1-and-isscript1)
+- [makeTransaction/1](#maketransaction1-and-istransaction1)
+- [isTransaction/1](#maketransaction1-and-istransaction1)
+- [makeGetTransaction/1](#makegettransaction1-and-isgettransaction1)
+- [isGetTransaction/1](#makegettransaction1-and-isgettransaction1)
+- [makeGetAccount/1](#makegetaccount1-and-isgetaccount1)
+- [isGetAccount/1](#makegetaccount1-and-isgetaccount1)
+- [makeGetEvents/1](#makegetevents1-and-isgetevents1)
+- [isGetEvents/1](#makegetevents1-and-isgetevents1)
+- [makeGetLatestBlock/1](#makegetlatestblock1-and-isgetlatestblock1)
+- [isGetLatestBlock/1](#makegetlatestblock1-and-isgetlatestblock1)
+- [makePing/1](#makeping1-and-isping1)
+- [isPing/1](#makeping1-and-isping1)
+- [get/3](#get3-put2-update2-and-destory1)
+- [put/2](#get3-put2-update2-and-destory1)
+- [update/2](#get3-put2-update2-and-destory1)
+- [destroy/1](#get3-put2-update2-and-destory1)
+- [pipe/2](#pipe2)
+- [pipe/1](#pipe2)
 
 ### `interaction/0`
 
