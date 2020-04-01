@@ -48,7 +48,6 @@ export default function ECDSAP256Signer() {
     sha3.update(payload)
     const hash = bytes(Uint8Array.from(sha3.digest()), 32)
     const pkder = this.encoder.encodePrivate(pk, "raw", "der")
-    console.log('pkdir', pkder)
     return this.signHash(this.decodePrivateKey(keyToBuffer(pkder)), hash)
   }
 
