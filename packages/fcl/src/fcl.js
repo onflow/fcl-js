@@ -4,6 +4,52 @@ import {send as baseSend} from "@onflow/send"
 
 const NODE = "http://localhost:8080"
 
+export const config = async (_key, _value) => {}
+export const authenticate = async () => {}
+export const unauthenticate = async () => {}
+
+export const currentUser = () => {
+  return {
+    subscribe: callback => {
+      return function unsubscribe() {}
+    },
+
+    authorization: async () => {},
+    payerAuthorization: async () => {},
+    param: async () => {},
+  }
+}
+
+export const user = flowAcctNumber => {
+  return {
+    subscribe: callback => {
+      return function unsubscribe() {}
+    },
+
+    authorization: async () => {},
+    payerAuthorization: async () => {},
+    param: async () => {},
+  }
+}
+
+export const transaction = txId => {
+  return {
+    subscribe: callback => {
+      return function unsubscribe() {}
+    },
+  }
+}
+
+export const event = (eventType, start) => {
+  return {
+    subscribe: callback => {
+      return function unsubscribe() {}
+    },
+  }
+}
+
+export const decode = async _respones => {}
+
 export const send = (args = [], opts = {}) => {
   opts.node = opts.node || NODE
 
