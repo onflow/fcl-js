@@ -2,24 +2,23 @@
 
 > This module provides a high level opinionated use of various parts of the Flow SDK.
 
-## Exposed
+---
 
-### `config/1` and `config/2`
+## `config/1` and `config/2`
 
 > Key/Value Store used to configure the internals of fcl.
 
-**Progress**
+### Progress
 - [ ] `fcl.config/1`
 - [ ] `fcl.config/2`
 
+### `config/1`
 
-**config/1**
+Asynchronously fetches the config value
 
-> Asynchronously fetches the config value
+### `config/2`
 
-**config/2**
-
-> Sets the value for a given key in the config.
+Sets the value for a given key in the config.
 
 
 ```javascript
@@ -34,19 +33,21 @@ config("foo", undefined)
 await config("foo") // undefined
 ```
 
-### "currentUser/0"
+---
+
+## `currentUser/0`
 
 > `fcl.currentUser/0` returns things you can do with the current user.
 
-**Progress**
+### Progress
 - [ ] `fcl.currentUser/0`
 - [ ] `fcl.currentUser/0.subsribe/1`
 - [ ] `fcl.currentUser/0.authorization/n`
 - [ ] `fcl.currentUser/0.payerAuthorization/n`
 
-**`fcl.currentUser/0.subscribe/1`**
+### `fcl.currentUser/0.subscribe/1`
 
-> Reactively calls the callback with the identity of the current user anytime the knowledge of the currentUser changes. Returns an unsubscribe function.
+Reactively calls the callback with the identity of the current user anytime the knowledge of the currentUser changes. Returns an unsubscribe function.
 
 ```javascript
 import React, {useState, useEffect} from "react"
@@ -65,9 +66,9 @@ export const CurrentUser = () => {
 }
 ```
 
-**`fcl.currentUser/0.authorization` and `fcl.currentUser/0.payerAuthorization/n`**
+### `fcl.currentUser/0.authorization/n` and `fcl.currentUser/0.payerAuthorization/n`
 
-> Used in conjunction with `fcl.send/n` to specify a required authorization by the currentUser.
+Used in conjunction with `fcl.send/n` to specify a required authorization by the currentUser.
 
 ```javascript
 import * as fcl from "@onflow/fcl"
@@ -93,19 +94,21 @@ const runTransaction = async (to, amount) =>
   ])
 ```
 
-### "user/1"
+---
+
+## `user/1`
 
 > `fcl.user/1` returns things you can do with the supplied user.
 
-**Progress**
+### Progress
 - [ ] `fcl.user/1`
 - [ ] `fcl.user/1.subscribe/1`
 - [ ] `fcl.user/1.authorization/n`
 - [ ] `fcl.user/1.payerAuthorization/n`
 
-**`fcl.user/1.subscribe`**
+### `fcl.user/1.subscribe/1`
 
-> Reactively calls the callback with the identity of the supplied user anytime the knowledge of the supplied user changes. Returns an unsubscribe function.
+Reactively calls the callback with the identity of the supplied user anytime the knowledge of the supplied user changes. Returns an unsubscribe function.
 
 ```javascript
 import React, {useState, useEffect} from "react"
@@ -124,9 +127,9 @@ export const User = ({ flowAcctNumber }) => {
 }
 ```
 
-**`fcl.user/1.authorization/n` and `fcl.user/1.payerAuthorization`**
+### `fcl.user/1.authorization/n` and `fcl.user/1.payerAuthorization`
 
-> Used in conjunction with `fcl.send/n` to specify a required authorization by a supplied user.
+Used in conjunction with `fcl.send/n` to specify a required authorization by a supplied user.
 
 ```javascript
 import * as fcl from "@onflow/fcl"
@@ -152,29 +155,35 @@ const runTransaction = async (from, amount) =>
   ])
 ```
 
-### `transaction/1`
+---
+
+## `transaction/1`
 
 > EARLY WIP
 
-**Progress**
+### Progress
 - [ ] `fcl.transaction/1`
 - [ ] `fcl.transaction/1.subscribe/1`
 
-### `event/1`, `event/2` and `event/3`
+---
+
+## `event/1`, `event/2` and `event/3`
 
 > EARLY WIP
 
-**Progress**
+### Progress
 - [ ] `fcl.events/1`
 - [ ] `fcl.events/2`
 - [ ] `fcl.events/3`
 - [ ] `fcl.events/n.subscribe/1`
 
-### "authenticate/0" and `unauthenticate/0`
+---
+
+## `authenticate/0` and `unauthenticate/0`
 
 > Authenticates and unauthenticates the currentUser.
 
-**Progress**
+### Progress
 - [ ] `fcl.authenticate/0`
 - [ ] `fcl.unauthenticate/0`
 
@@ -192,11 +201,13 @@ export const AuthButton = () => {
 }
 ```
 
-### `send/1` and `send/2`
+---
+
+## `send/1` and `send/2`
 
 > An opinionated use of the build/resolve/send pipeline. Comes preconfigured to work with params, async remote signing and payer.
 
-**Progress**
+### Progress
 - [x] `fcl.send/1`
 - [x] `fcl.send/2`
 
@@ -227,11 +238,13 @@ const runTransaction = async (to, amount) =>
   ])
 ```
 
-### `decode/1`
+---
+
+## `decode/1`
 
 > An opinionated use of the decode function. Allows for global configuration of custom resources.
 
-**Progress**
+### Progress
 - [ ] `fcl.decode/1`
 
 ```javascript
