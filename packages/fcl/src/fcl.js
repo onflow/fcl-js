@@ -1,10 +1,9 @@
+import "./default-config"
 import * as sdk from "@onflow/sdk"
 import {encode} from "@onflow/resolver-encode"
 import {send as baseSend} from "@onflow/send"
+export {config} from "./config"
 
-const NODE = "http://localhost:8080"
-
-export const config = async (_key, _value) => {}
 export const authenticate = async () => {}
 export const unauthenticate = async () => {}
 

@@ -4,33 +4,71 @@
 
 ---
 
-## `config/1` and `config/2`
+## `config/0`
 
 > Key/Value Store used to configure the internals of fcl.
 
 ### Progress
-- [ ] `fcl.config/1`
-- [ ] `fcl.config/2`
+- [x] `fcl.config/0.put/2`
+- [x] `fcl.config/0.get/1`
+- [x] `fcl.config/0.get/2`
+- [x] `fcl.config/0.update/2`
+- [x] `fcl.config/0.delete/1`
+- [x] `fcl.config/0.where/1
+- [x] `fcl.config/0.subscribe/1`
 
-### `config/1`
-
-Asynchronously fetches the config value
-
-### `config/2`
-
-Sets the value for a given key in the config.
-
+### `fcl.config/0.put/2` `fcl.config/0.get/n`
 
 ```javascript
-import { config } from "@onflow/fcl"
+import * as fcl from "@onflow/fcl"
 
-config("foo", "bar")
-await config("foo") // "bar"
+fcl.config().put("foo", "bar")
+await fcl.config().get("foo") // "bar"
+await fcl.config().get("bar") // undefined
+await fcl.config().get("bar", "fallback") // "fallback"
+```
 
-// you can remove values by setting them to undefined
+### `fcl.config/0.update/2` and `fcl.config/0.delete/1`
 
-config("foo", undefined)
-await config("foo") // undefined
+```javascript
+import * as fcl from "@onflow/fcl"
+
+fcl.config().put("foo", "bar")
+await fcl.config().get("foo") // "bar"
+fcl.config().update("foo", v => v + v)
+await fcl.config().get("foo") // "barbar"
+fcl.config().delete("foo")
+await fcl.config().get("foo") // undefined
+```
+
+### `fcl.config/0.where/1`
+
+```javascript
+import * as fcl from "@onflow/fcl"
+
+fcl.config().put("foo.bar", "bar")
+fcl.config().put("foo.baz", "baz")
+fcl.config().put("wat.bar", "wat")
+
+await fcl.config().where(/^foo/) // { "foo.bar": "bar", "foo.baz": "baz" }
+await fcl.config().where(/^wat/) // { "wat.bar": "wat" }
+```
+
+### `fcl.config/0.subscribe/1`
+
+```javascript
+import * as fcl from "@onflow/fcl"
+
+const unsubscribe = fcl.config().subscribe(snapshot => {
+  console.log("snapshot:", snapshot)
+})
+// snapshot: {}
+fcl.config.put("foo", "bar")
+// snapshot: { "foo": "bar" }
+fcl.config.update("foo", v => v + v)
+// snapshot: { "foo": "barbar" }
+
+unsubscribe()
 ```
 
 ---
