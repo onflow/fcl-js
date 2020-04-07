@@ -8,7 +8,7 @@ export const Ping = () => {
 
   const run = async () => {
     const response = await fcl.send([sdk.ping()])
-    setResult(formatResponse(response))
+    setResult(response)
   }
 
   return (

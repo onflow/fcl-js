@@ -12,15 +12,16 @@ export const Transaction = () => {
       sdk.params([sdk.param("foo", "rawr")]),
       sdk.payer(sdk.authorization("01", signingFunction)),
       sdk.transaction`
-      transaction { 
-        execute { 
-          log("Hello ${p => p.foo}") 
-        } 
-      }
-    `,
+        transaction { 
+            prepare(acct: AuthAccount) {}
+            execute { 
+              log("Hello ${p => p.foo}") 
+            } 
+        }
+      `,
       sdk.authorizations([sdk.authorization("01", signingFunction)]),
     ])
-    setResult(formatResponse(response))
+    setResult(response)
   }
 
   return (

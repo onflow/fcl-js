@@ -9,7 +9,7 @@ export const GetAccount = () => {
 
   const run = async () => {
     const response = await fcl.send([sdk.getAccount(acct)])
-    setResult(formatResponse(response))
+    setResult(response)
   }
 
   return (
