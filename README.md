@@ -20,11 +20,11 @@ const response = await fcl.send([
   ]),
 
   sdk.authorization([
-    fcl.currentUser.authorization // We dont think dapp developers should need to get into the details of how 
+    fcl.currentUser().authorization // We dont think dapp developers should need to get into the details of how 
   ]),                             // a transaction is signed. Of course, you can always drop down to the sdk to
                                   // learn more if you really want to.
 
-  sdk.payer(fcl.currentUser.payer), // A feature of Flow is the people doing the transactions don't need to be
+  sdk.payer(fcl.currentUser().payerAuthorization), // A feature of Flow is the people doing the transactions don't need to be
                                     // the ones paying for them. In this case it's going to be the same as the
                                     // account that is authorizing the transaction. FCL will aim to make this
                                     // as painless as possible.
