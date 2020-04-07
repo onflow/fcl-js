@@ -6,8 +6,8 @@ import {unary} from "./unary"
 export async function sendGetEvents(ix, opts = {}) {
   const req = new GetEventsRequest()
   req.setType(ix.eventType)
-  req.setStartBlock(ix.startBlock)
-  req.setEndBlock(ix.endBlock)
+  req.setStartBlock(Number(ix.bounds.start))
+  req.setEndBlock(Number(ix.bounds.end))
 
   const res = await unary(opts.node, ObserveService.GetEvents, req)
 

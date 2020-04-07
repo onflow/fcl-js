@@ -1,10 +1,13 @@
 import {ExecuteScriptRequest, ObserveService} from "@onflow/protobuf"
+import {get} from "@onflow/interaction"
+import {scriptToBuffer} from "@onflow/bytes"
 import {response} from "@onflow/response"
 import {unary} from "./unary"
 
 export async function sendExecuteScript(ix, opts = {}) {
   const req = new ExecuteScriptRequest()
-  req.setScript(ix.code)
+  const code = scriptToBuffer(ix.payload.code)
+  req.setScript(code)
 
   const res = await unary(opts.node, ObserveService.ExecuteScript, req)
 

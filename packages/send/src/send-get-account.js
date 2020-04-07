@@ -1,11 +1,12 @@
 import {GetAccountRequest, ObserveService} from "@onflow/protobuf"
 import {response} from "@onflow/response"
 import {unary} from "./unary"
-import {bufferToHexString} from "@onflow/bytes"
+import {bufferToHexString, addressToBuffer, bytes} from "@onflow/bytes"
 
 export async function sendGetAccount(ix, opts = {}) {
   const req = new GetAccountRequest()
-  req.setAddress(ix.address)
+  const address = addressToBuffer(bytes(ix.acct, 20))
+  req.setAddress(address)
 
   const res = await unary(opts.node, ObserveService.GetAccount, req)
 

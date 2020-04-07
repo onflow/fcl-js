@@ -1,11 +1,11 @@
 import {ObserveService, GetTransactionRequest} from "@onflow/protobuf"
 import {response} from "@onflow/response"
-import {bufferToHexString} from "@onflow/bytes"
+import {bufferToHexString, hashToBuffer} from "@onflow/bytes"
 import {unary} from "./unary"
 
 export async function sendGetTransaction(ix, opts = {}) {
   const req = new GetTransactionRequest()
-  req.setHash(ix.hash)
+  req.setHash(hashToBuffer(ix.txId))
 
   const res = await unary(opts.node, ObserveService.GetTransaction, req)
 
