@@ -22,9 +22,9 @@ export function transaction(...args) {
     makeTransaction,
     put("ix.code", t7l(...args)),
     ix => {
-      ix.payload.limit = DEFAULT_COMPUTE_LIMIT
-      ix.payload.nonce = nonce()
-      ix.payload.ref = DEFUALT_REF
+      ix.payload.limit = ix.payload.limit || DEFAULT_COMPUTE_LIMIT
+      ix.payload.nonce = ix.payload.nonce || nonce()
+      ix.payload.ref = ix.payload.ref || DEFUALT_REF
       return Ok(ix)
     },
     update("tx.authorizations", hammer(DEFAULT_SCRIPT_ACCOUNTS))
