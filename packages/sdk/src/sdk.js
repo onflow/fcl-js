@@ -24,4 +24,5 @@ export {transaction} from "./build/transaction"
 
 // resolvers
 export {resolveAuthorizations} from "./resolve/resolve-authorizations"
+export {resolvePayload} from "./resolve/resolve-payload"
 export {resolveParams} from "./resolve/resolve-params"

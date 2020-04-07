@@ -1,10 +1,19 @@
-import {pipe, put, makeGetEvents} from "@onflow/interaction"
+import {pipe, Ok, makeGetEvents} from "@onflow/interaction"
 
 export function getEvents(eventType, start, end) {
   return pipe([
     makeGetEvents,
-    put("ge.eventType", eventType),
-    put("bounds.start", start),
-    put("bounds.end", end),
+    ix => {
+      ix.eventType = eventType
+      return Ok(ix)
+    },
+    ix => {
+      ix.bounds.start = start
+      return Ok(ix)
+    },
+    ix => {
+      ix.bounds.end = end
+      return Ok(ix)
+    }
   ])
 }

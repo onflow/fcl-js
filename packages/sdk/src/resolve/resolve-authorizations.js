@@ -22,15 +22,20 @@ function hasMinAuthorizations(ix) {
 }
 
 export async function resolveAuthorizations(ix) {
-  if (!isTransaction(ix)) return Ok(is)
+  if (!isTransaction(ix)) return Ok(ix)
   if (!hasMinAuthorizations(ix)) return Nope(ix, ERROR_MINIMUM_AUTHORIZATIONS)
+
+  const payload = get(ix, "tx.payload")
 
   const axs = get(ix, "tx.authorizations", []).map(
     async function resolveAuthorization(authz) {
       if (isFn(authz)) authz = await authz()
-      return buildAuthorization(authz.acct, await authz.signFn(ix.payload))
+      return buildAuthorization(authz.acct, await authz.signFn(payload.rlpEncoded))
     }
   )
+
+  const payer = get(ix, "tx.payer")
+  ix.payer = buildAuthorization(payer.acct, await payer.signFn(payload.rlpEncoded))
 
   ix.authz = await Promise.all(axs)
   return Ok(ix)

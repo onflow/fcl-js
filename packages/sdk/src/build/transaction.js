@@ -1,8 +1,9 @@
-import {pipe, put, update, makeTransaction} from "@onflow/interaction"
+import {pipe, put, Ok, update, makeTransaction} from "@onflow/interaction"
 import {t7l} from "@qvvg/templar"
 
 const DEFAULT_COMPUTE_LIMIT = 10
 const DEFAULT_SCRIPT_ACCOUNTS = []
+const DEFUALT_REF = null
 
 // NOTE: nonces are changing, this will work for
 //       the way the current emulator works
@@ -20,8 +21,12 @@ export function transaction(...args) {
   return pipe([
     makeTransaction,
     put("ix.code", t7l(...args)),
-    update("tx.limit", hammer(DEFAULT_COMPUTE_LIMIT)),
-    update("tx.authorizations", hammer(DEFAULT_SCRIPT_ACCOUNTS)),
-    update("tx.nonce", hammer(nonce())),
+    ix => {
+      ix.payload.limit = DEFAULT_COMPUTE_LIMIT
+      ix.payload.nonce = nonce()
+      ix.payload.ref = DEFUALT_REF
+      return Ok(ix)
+    },
+    update("tx.authorizations", hammer(DEFAULT_SCRIPT_ACCOUNTS))
   ])
 }
