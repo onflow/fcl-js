@@ -16,7 +16,7 @@ export const Script = () => {
         }
       `,
     ])
-    setResult(formatResponse(response))
+    setResult(response)
   }
 
   return (

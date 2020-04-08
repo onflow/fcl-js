@@ -16,8 +16,7 @@ export const signTransactionPayload = (pk, payload) => {
   const sha3 = new SHA3(256)
   sha3.update(payload)
   const hash = bytes(Uint8Array.from(sha3.digest()), 32)
-  const pkder = encoder.encodePrivate(pk, "raw", "der")
-  return signHash(decodePrivateKey(keyToBuffer(pkder)), hash)
+  return signHash(decodePrivateKey(keyToBuffer(pk)), hash)
 }
 
 export const signHash = (keyPair, hash) => {

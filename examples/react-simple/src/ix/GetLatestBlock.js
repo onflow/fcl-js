@@ -8,7 +8,7 @@ export const GetLatestBlock = () => {
 
   const run = async () => {
     const response = await fcl.send([sdk.getLatestBlock()])
-    setResult(formatResponse(response))
+    setResult(response)
   }
 
   return (

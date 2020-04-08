@@ -13,7 +13,7 @@ export const GetEvents = () => {
     const response = await fcl.send([
       sdk.getEvents(eventType, startBlock, endBlock),
     ])
-    setResult(formatResponse(response))
+    setResult(response)
   }
 
   return (

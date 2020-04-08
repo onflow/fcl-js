@@ -9,7 +9,7 @@ export const GetTransaction = () => {
 
   const run = async () => {
     const response = await fcl.send([sdk.getTransaction(txHash)])
-    setResult(formatResponse(response))
+    setResult(response)
   }
 
   return (
