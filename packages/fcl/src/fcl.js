@@ -1,11 +1,7 @@
 import "./default-config"
-import * as sdk from "@onflow/sdk"
-import {send as baseSend} from "@onflow/send"
 export {config} from "./config"
+export {send} from "./send"
 
-const NODE = "http://localhost:8080"
-
-export const config = async (_key, _value) => {}
 export const authenticate = async () => {}
 export const unauthenticate = async () => {}
 
@@ -51,14 +47,3 @@ export const event = (eventType, start) => {
 
 export const decode = async _respones => {}
 
-export const send = async (args = [], opts = {}) => {
-  opts.node = opts.node || NODE
-  
-  if (Array.isArray(args)) args = sdk.build(args)
-
-  const ix = await sdk.pipe(args, [
-    sdk.resolve([sdk.resolveParams, sdk.resolvePayload, sdk.resolveAuthorizations])
-  ])
-
-  return baseSend(ix, opts)
-}
