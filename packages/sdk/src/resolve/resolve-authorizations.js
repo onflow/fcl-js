@@ -30,12 +30,12 @@ export async function resolveAuthorizations(ix) {
   const axs = get(ix, "tx.authorizations", []).map(
     async function resolveAuthorization(authz) {
       if (isFn(authz)) authz = await authz()
-      return buildAuthorization(authz.acct, await authz.signFn(payload.rlpEncoded))
+      return buildAuthorization(authz.acct, await authz.signFn(payload))
     }
   )
 
   const payer = get(ix, "tx.payer")
-  ix.payer = buildAuthorization(payer.acct, await payer.signFn(payload.rlpEncoded))
+  ix.payer = buildAuthorization(payer.acct, await payer.signFn(payload))
 
   ix.authz = await Promise.all(axs)
   return Ok(ix)
