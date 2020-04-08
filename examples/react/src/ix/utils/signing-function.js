@@ -16,5 +16,5 @@ const flowJson = {
 }
 
 export const signingFunction = (payload) => {
-  return signTransactionPayload(flowJson.accounts.root.privateKey, payload)
+  return signTransactionPayload(flowJson.accounts.root.privateKey, payload.rlpEncoded)
 }
