@@ -79,9 +79,21 @@ unsubscribe()
 
 ### Progress
 - [ ] `fcl.currentUser/0`
+- [ ] `fcl.currentUser/0.snapshot/0`
 - [ ] `fcl.currentUser/0.subsribe/1`
 - [ ] `fcl.currentUser/0.authorization/n`
 - [ ] `fcl.currentUser/0.payerAuthorization/n`
+
+
+### `fcl.currentUser/0.snapshot/0`
+
+Asynchronously returns a snapshot of the current internal state of the currentUser.
+
+```javascript
+import * as fcl from "@onflow/fcl"
+
+await fcl.currentUser().snapshot() // {acct, name,  …}
+```
 
 ### `fcl.currentUser/0.subscribe/1`
 
@@ -122,7 +134,7 @@ const runTransaction = async (to, amount) =>
       }
     `,
     sdk.params([
-      fcl.user(to).param,
+      fcl.user(to).param(),
       sdk.param(amount, t.UFix64),
     ]),
     sdk.authorizations([
@@ -140,9 +152,20 @@ const runTransaction = async (to, amount) =>
 
 ### Progress
 - [ ] `fcl.user/1`
+- [ ] `fcl.user/1.snapshot/0`
 - [ ] `fcl.user/1.subscribe/1`
 - [ ] `fcl.user/1.authorization/n`
 - [ ] `fcl.user/1.payerAuthorization/n`
+
+### `fcl.currentUser/0.snapshot/0`
+
+Asynchronously returns a snapshot of the current internal state of the supplied user.
+
+```javascript
+import * as fcl from "@onflow/fcl"
+
+await fcl.user(flowAcctNumber).snapshot() // {acct, name,  …}
+```
 
 ### `fcl.user/1.subscribe/1`
 
@@ -183,7 +206,7 @@ const runTransaction = async (from, amount) =>
       }
     `,
     sdk.params([
-      fcl.currentUser().param,
+      fcl.currentUser().param(),
       sdk.param(amount, t.UFix64),
     ]),
     sdk.authorizations([
@@ -254,8 +277,8 @@ import * as fcl from "@onflow/fcl"
 import * as sdk from "@onflow/sdk"
 import * as t from "@onflow/types"
 
-fcl.config("accessNode.api", "https://my.access.node")
-fcl.config("accessNode.key", process.env.FLOW_ACCESS_NODE_API_KEY)
+fcl.config().put("accessNode.api", "https://my.access.node")
+fcl.config().put("accessNode.key", process.env.FLOW_ACCESS_NODE_API_KEY)
 
 const runTransaction = async (to, amount) =>
   fcl.send([
@@ -266,7 +289,7 @@ const runTransaction = async (to, amount) =>
       }
     `,
     sdk.params([
-      fcl.user(to).param,
+      fcl.user(to).param(),
       sdk.param(amount, t.UFix64),
     ]),
     sdk.authorizations([

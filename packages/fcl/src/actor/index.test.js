@@ -148,4 +148,15 @@ describe("golden path", () => {
 
     kill(c)
   })
+
+  test("actors with same name only spawn once", async () => {
+    const fn = jest.fn()
+
+    const c1 = spawn(fn, "foo")
+    const c2 = spawn(fn, "foo")
+
+    await idle()
+    expect(c1).toBe(c2)
+    expect(fn).toHaveBeenCalledTimes(1)
+  })
 })
