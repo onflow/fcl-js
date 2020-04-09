@@ -28,10 +28,12 @@
   "unpkg": "dist/decode.umd.js",
   "scripts": {
     "prepublishOnly": "npm test && npm run build",
-    "test": "jest",
+    "test": "jest --verbose",
     "build": "microbundle",
     "test:watch": "jest --watch",
     "start": "microbundle watch"
   },
-  "dependencies": {}
+  "dependencies": {
+    "@onflow/bytes": "0.0.1"
+  }
 }
