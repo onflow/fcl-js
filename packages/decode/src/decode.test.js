@@ -1,319 +1,303 @@
-import assert from "assert"
 import {decode} from "./decode"
 
 describe("unit tests to cover all types", () => {
-  it("returns the correct response given a json-cdc payload 2 OPTIONAL", () => {
+  it("returns the correct response given a json-cdc payload 2 OPTIONAL", async () => {
     const payload = {type: "Optional", value: null}
 
-    const decoded = decode(payload)
+    const decoded = await decode(payload)
 
-    assert.deepEqual(decoded, null)
+    expect(decoded).toStrictEqual(null)
   })
 
-  it("returns the correct response given a json-cdc payload 3 OPTIONAL", () => {
+  it("returns the correct response given a json-cdc payload 3 OPTIONAL", async () => {
     const payload = {type: "Optional", value: {type: "Int", value: "42"}}
 
-    const decoded = decode(payload)
+    const decoded = await decode(payload)
 
-    assert.deepEqual(decoded, 42)
+    expect(decoded).toStrictEqual(42)
   })
 
-  it("returns the correct response given a json-cdc payload 4 VOID", () => {
+  it("returns the correct response given a json-cdc payload 4 VOID", async () => {
     const payload = {type: "Void"}
 
-    const decoded = decode(payload)
+    const decoded = await decode(payload)
 
-    assert.deepEqual(decoded, null)
+    expect(decoded).toStrictEqual(null)
   })
 
-  it("returns the correct response given a json-cdc payload 5 BOOLEAN", () => {
+  it("returns the correct response given a json-cdc payload 5 BOOLEAN", async () => {
     const payload = {type: "Bool", value: true}
 
-    const decoded = decode(payload)
+    const decoded = await decode(payload)
 
-    assert.deepEqual(decoded, true)
+    expect(decoded).toStrictEqual(true)
   })
 
-  it("returns the correct response given a json-cdc payload 6 BOOLEAN", () => {
+  it("returns the correct response given a json-cdc payload 6 BOOLEAN", async () => {
     const payload = {type: "Bool", value: false}
 
-    const decoded = decode(payload)
+    const decoded = await decode(payload)
 
-    assert.deepEqual(decoded, false)
+    expect(decoded).toStrictEqual(false)
   })
 
-  it("returns the correct response given a json-cdc payload 7 STRING", () => {
+  it("returns the correct response given a json-cdc payload 7 STRING", async () => {
     const payload = {type: "String", value: ""}
 
-    const decoded = decode(payload)
+    const decoded = await decode(payload)
 
-    assert.deepEqual(decoded, "")
+    expect(decoded).toStrictEqual("")
   })
 
-  it("returns the correct response given a json-cdc payload 8 STRING", () => {
+  it("returns the correct response given a json-cdc payload 8 STRING", async () => {
     const payload = {type: "String", value: "foo"}
 
-    const decoded = decode(payload)
+    const decoded = await decode(payload)
 
-    assert.deepEqual(decoded, "foo")
+    expect(decoded).toStrictEqual("foo")
   })
 
-  it("returns the correct response given a json-cdc payload 9 ADDRESS", () => {
+  it("returns the correct response given a json-cdc payload 9 ADDRESS", async () => {
     const payload = {
       type: "Address",
       value: "0x0102030405000000000000000000000000000000",
     }
 
-    const decoded = decode(payload)
+    const decoded = await decode(payload)
 
-    assert.deepEqual(decoded, "0x0102030405000000000000000000000000000000")
+    expect(decoded).toStrictEqual("0x0102030405000000000000000000000000000000")
   })
 
-  it("returns the correct response given a json-cdc payload 10 ADDRESS", () => {
+  it("returns the correct response given a json-cdc payload 10 ADDRESS", async () => {
     const payload = {
       type: "Address",
       value: "0x0102030405000000000000000000000000000000",
     }
 
-    const decoded = decode(payload)
+    const decoded = await decode(payload)
 
-    assert.deepEqual(decoded, "0x0102030405000000000000000000000000000000")
+    expect(decoded).toStrictEqual("0x0102030405000000000000000000000000000000")
   })
 
-  it("returns the correct response given a json-cdc payload 10 INT", () => {
+  it("returns the correct response given a json-cdc payload 10 INT", async () => {
     const payload = {type: "Int", value: "-42"}
 
-    const decoded = decode(payload)
+    const decoded = await decode(payload)
 
-    assert.deepEqual(decoded, -42)
+    expect(decoded).toStrictEqual(-42)
   })
 
-  it("returns the correct response given a json-cdc payload 11 INT", () => {
+  it("returns the correct response given a json-cdc payload 11 INT", async () => {
     const payload = {
       type: "Int",
       value:
         "115792089237316195423570985008687907853269984665640564039457584007913129639945",
     }
 
-    const decoded = decode(payload)
+    const decoded = await decode(payload)
 
-    assert.deepEqual(
-      decoded,
-      115792089237316195423570985008687907853269984665640564039457584007913129639945
-    )
+    expect(decoded).toStrictEqual(115792089237316195423570985008687907853269984665640564039457584007913129639945)
   })
 
-  it("returns the correct response given a json-cdc payload 12 INT", () => {
+  it("returns the correct response given a json-cdc payload 12 INT", async () => {
     const payload = {
       type: "Int",
       value:
         "-57896044618658097711785492504343953926634992332820282019728792003956564819978",
     }
 
-    const decoded = decode(payload)
+    const decoded = await decode(payload)
 
-    assert.deepEqual(
-      decoded,
-      -57896044618658097711785492504343953926634992332820282019728792003956564819978
-    )
+    expect(decoded).toStrictEqual(-57896044618658097711785492504343953926634992332820282019728792003956564819978)
   })
 
-  it("returns the correct response given a json-cdc payload 13 INT", () => {
+  it("returns the correct response given a json-cdc payload 13 INT", async () => {
     const payload = {type: "Int", value: "0"}
 
-    const decoded = decode(payload)
+    const decoded = await decode(payload)
 
-    assert.deepEqual(decoded, 0)
+    expect(decoded).toStrictEqual(0)
   })
 
-  it("returns the correct response given a json-cdc payload 14 INT8", () => {
+  it("returns the correct response given a json-cdc payload 14 INT8", async () => {
     const payload = {type: "Int8", value: "-128"}
 
-    const decoded = decode(payload)
+    const decoded = await decode(payload)
 
-    assert.deepEqual(decoded, -128)
+    expect(decoded).toStrictEqual(-128)
   })
 
-  it("returns the correct response given a json-cdc payload 15 INT16", () => {
+  it("returns the correct response given a json-cdc payload 15 INT16", async () => {
     const payload = {type: "Int16", value: "32767"}
 
-    const decoded = decode(payload)
+    const decoded = await decode(payload)
 
-    assert.deepEqual(decoded, 32767)
+    expect(decoded).toStrictEqual(32767)
   })
 
-  it("returns the correct response given a json-cdc payload 16 INT32", () => {
+  it("returns the correct response given a json-cdc payload 16 INT32", async () => {
     const payload = {type: "Int32", value: "2147483647"}
 
-    const decoded = decode(payload)
+    const decoded = await decode(payload)
 
-    assert.deepEqual(decoded, 2147483647)
+    expect(decoded).toStrictEqual(2147483647)
   })
 
-  it("returns the correct response given a json-cdc payload 17 INT64", () => {
+  it("returns the correct response given a json-cdc payload 17 INT64", async () => {
     const payload = {type: "Int64", value: "-9223372036854775808"}
 
-    const decoded = decode(payload)
+    const decoded = await decode(payload)
 
-    assert.deepEqual(decoded, -9223372036854775808)
+    expect(decoded).toStrictEqual(-9223372036854775808)
   })
 
-  it("returns the correct response given a json-cdc payload 18 INT128", () => {
+  it("returns the correct response given a json-cdc payload 18 INT128", async () => {
     const payload = {
       type: "Int128",
       value: "-170141183460469231731687303715884105727",
     }
 
-    const decoded = decode(payload)
+    const decoded = await decode(payload)
 
-    assert.deepEqual(decoded, -170141183460469231731687303715884105727)
+    expect(decoded).toStrictEqual(-170141183460469231731687303715884105727)
   })
 
-  it("returns the correct response given a json-cdc payload 19 INT256", () => {
+  it("returns the correct response given a json-cdc payload 19 INT256", async () => {
     const payload = {
       type: "Int256",
       value:
         "57896044618658097711785492504343953926634992332820282019728792003956564819967",
     }
 
-    const decoded = decode(payload)
+    const decoded = await decode(payload)
 
-    assert.deepEqual(
-      decoded,
-      57896044618658097711785492504343953926634992332820282019728792003956564819967
-    )
+    expect(decoded).toStrictEqual(57896044618658097711785492504343953926634992332820282019728792003956564819967)
   })
 
-  it("returns the correct response given a json-cdc payload 20 UINT", () => {
+  it("returns the correct response given a json-cdc payload 20 UINT", async () => {
     const payload = {
       type: "UInt",
       value:
         "115792089237316195423570985008687907853269984665640564039457584007913129639945",
     }
 
-    const decoded = decode(payload)
+    const decoded = await decode(payload)
 
-    assert.deepEqual(
-      decoded,
-      115792089237316195423570985008687907853269984665640564039457584007913129639945
-    )
+    expect(decoded).toStrictEqual(115792089237316195423570985008687907853269984665640564039457584007913129639945)
   })
 
-  it("returns the correct response given a json-cdc payload 21 UINT8", () => {
+  it("returns the correct response given a json-cdc payload 21 UINT8", async () => {
     const payload = {type: "UInt8", value: "255"}
 
-    const decoded = decode(payload)
+    const decoded = await decode(payload)
 
-    assert.deepEqual(decoded, 255)
+    expect(decoded).toStrictEqual(255)
   })
 
-  it("returns the correct response given a json-cdc payload 22 UINT16", () => {
+  it("returns the correct response given a json-cdc payload 22 UINT16", async () => {
     const payload = {type: "UInt16", value: "65535"}
 
-    const decoded = decode(payload)
+    const decoded = await decode(payload)
 
-    assert.deepEqual(decoded, 65535)
+    expect(decoded).toStrictEqual(65535)
   })
 
-  it("returns the correct response given a json-cdc payload 23 UINT32", () => {
+  it("returns the correct response given a json-cdc payload 23 UINT32", async () => {
     const payload = {type: "UInt32", value: "4294967295"}
 
-    const decoded = decode(payload)
+    const decoded = await decode(payload)
 
-    assert.deepEqual(decoded, 4294967295)
+    expect(decoded).toStrictEqual(4294967295)
   })
 
-  it("returns the correct response given a json-cdc payload 24 UINT64", () => {
+  it("returns the correct response given a json-cdc payload 24 UINT64", async () => {
     const payload = {type: "UInt64", value: "18446744073709551615"}
 
-    const decoded = decode(payload)
+    const decoded = await decode(payload)
 
-    assert.deepEqual(decoded, 18446744073709551615)
+    expect(decoded).toStrictEqual(18446744073709551615)
   })
 
-  it("returns the correct response given a json-cdc payload 25 UINT128", () => {
+  it("returns the correct response given a json-cdc payload 25 UINT128", async () => {
     const payload = {
       type: "UInt128",
       value: "340282366920938463463374607431768211455",
     }
 
-    const decoded = decode(payload)
+    const decoded = await decode(payload)
 
-    assert.deepEqual(decoded, 340282366920938463463374607431768211455)
+    expect(decoded).toStrictEqual(340282366920938463463374607431768211455)
   })
 
-  it("returns the correct response given a json-cdc payload 26 UINT256", () => {
+  it("returns the correct response given a json-cdc payload 26 UINT256", async () => {
     const payload = {
       type: "UInt256",
       value:
         "115792089237316195423570985008687907853269984665640564039457584007913129639935",
     }
 
-    const decoded = decode(payload)
+    const decoded = await decode(payload)
 
-    assert.deepEqual(
-      decoded,
-      115792089237316195423570985008687907853269984665640564039457584007913129639935
-    )
+    expect(decoded).toStrictEqual(115792089237316195423570985008687907853269984665640564039457584007913129639935)
   })
 
-  it("returns the correct response given a json-cdc payload 27 WORD8", () => {
+  it("returns the correct response given a json-cdc payload 27 WORD8", async () => {
     const payload = {type: "Word8", value: "255"}
 
-    const decoded = decode(payload)
+    const decoded = await decode(payload)
 
-    assert.deepEqual(decoded, 255)
+    expect(decoded).toStrictEqual(255)
   })
 
-  it("returns the correct response given a json-cdc payload 28 WORD16", () => {
+  it("returns the correct response given a json-cdc payload 28 WORD16", async () => {
     const payload = {type: "Word16", value: "65535"}
 
-    const decoded = decode(payload)
+    const decoded = await decode(payload)
 
-    assert.deepEqual(decoded, 65535)
+    expect(decoded).toStrictEqual(65535)
   })
 
-  it("returns the correct response given a json-cdc payload 29 WORD32", () => {
+  it("returns the correct response given a json-cdc payload 29 WORD32", async () => {
     const payload = {type: "Word32", value: "4294967295"}
 
-    const decoded = decode(payload)
+    const decoded = await decode(payload)
 
-    assert.deepEqual(decoded, 4294967295)
+    expect(decoded).toStrictEqual(4294967295)
   })
 
-  it("returns the correct response given a json-cdc payload 30 WORD64", () => {
+  it("returns the correct response given a json-cdc payload 30 WORD64", async () => {
     const payload = {type: "Word64", value: "18446744073709551615"}
 
-    const decoded = decode(payload)
+    const decoded = await decode(payload)
 
-    assert.deepEqual(decoded, 18446744073709551615)
+    expect(decoded).toStrictEqual(18446744073709551615)
   })
 
-  it("returns the correct response given a json-cdc payload 31 FIX64", () => {
+  it("returns the correct response given a json-cdc payload 31 FIX64", async () => {
     const payload = {type: "Fix64", value: "789.00123010"}
 
-    const decoded = decode(payload)
+    const decoded = await decode(payload)
 
-    assert.deepEqual(decoded, 789.0012301)
+    expect(decoded).toStrictEqual(789.0012301)
   })
 
-  it("returns the correct response given a json-cdc payload 32 FIX64", () => {
+  it("returns the correct response given a json-cdc payload 32 FIX64", async () => {
     const payload = {type: "Fix64", value: "-12345.00678900"}
 
-    const decoded = decode(payload)
+    const decoded = await decode(payload)
 
-    assert.deepEqual(decoded, -12345.006789)
+    expect(decoded).toStrictEqual(-12345.006789)
   })
 
-  it("returns the correct response given a json-cdc payload 33 UFIX64", () => {
+  it("returns the correct response given a json-cdc payload 33 UFIX64", async () => {
     const payload = {type: "UFix64", value: "789.00123010"}
 
-    const decoded = decode(payload)
+    const decoded = await decode(payload)
 
-    assert.deepEqual(decoded, 789.0012301)
+    expect(decoded).toStrictEqual(789.0012301)
   })
 
-  it("returns the correct response given a json-cdc payload 34 ARRAY", () => {
+  it("returns the correct response given a json-cdc payload 34 ARRAY", async () => {
     const payload = {
       type: "Array",
       value: [
@@ -323,12 +307,12 @@ describe("unit tests to cover all types", () => {
       ],
     }
 
-    const decoded = decode(payload)
+    const decoded = await decode(payload)
 
-    assert.deepEqual(decoded, [1, 2, 3])
+    expect(decoded).toStrictEqual([1,2,3])
   })
 
-  it("returns the correct response given a json-cdc payload 35 ARRAY", () => {
+  it("returns the correct response given a json-cdc payload 35 ARRAY", async () => {
     const payload = {
       type: "Array",
       value: [
@@ -356,12 +340,12 @@ describe("unit tests to cover all types", () => {
       ],
     }
 
-    const decoded = decode(payload)
+    const decoded = await decode(payload)
 
-    assert.deepEqual(decoded, [{bar: 1}, {bar: 2}, {bar: 3}])
+    expect(decoded).toStrictEqual([{bar: 1}, {bar: 2}, {bar: 3}])
   })
 
-  it("returns the correct response given a json-cdc payload 36 DICTIONARY", () => {
+  it("returns the correct response given a json-cdc payload 36 DICTIONARY", async () => {
     const payload = {
       type: "Dictionary",
       value: [
@@ -371,12 +355,12 @@ describe("unit tests to cover all types", () => {
       ],
     }
 
-    const decoded = decode(payload)
+    const decoded = await decode(payload)
 
-    assert.deepEqual(decoded, {a: 1, b: 2, c: 3})
+    expect(decoded).toStrictEqual({a: 1, b: 2, c: 3})
   })
 
-  it("returns the correct response given a json-cdc payload 37 DICTIONARY", () => {
+  it("returns the correct response given a json-cdc payload 37 DICTIONARY", async () => {
     const payload = {
       type: "Dictionary",
       value: [
@@ -419,12 +403,12 @@ describe("unit tests to cover all types", () => {
       ],
     }
 
-    const decoded = decode(payload)
+    const decoded = await decode(payload)
 
-    assert.deepEqual(decoded, {a: {1: 1}, b: {2: 2}, c: {3: 3}})
+    expect(decoded).toStrictEqual({a: {1: 1}, b: {2: 2}, c: {3: 3}})
   })
 
-  it("returns the correct response given a json-cdc payload 38 DICTIONARY", () => {
+  it("returns the correct response given a json-cdc payload 38 DICTIONARY", async () => {
     const payload = {
       type: "Dictionary",
       value: [
@@ -461,12 +445,12 @@ describe("unit tests to cover all types", () => {
       ],
     }
 
-    const decoded = decode(payload)
+    const decoded = await decode(payload)
 
-    assert.deepEqual(decoded, {a: {bar: 1}, b: {bar: 2}, c: {bar: 3}})
+    expect(decoded).toStrictEqual({a: {bar: 1}, b: {bar: 2}, c: {bar: 3}})
   })
 
-  it("returns the correct response given a json-cdc payload 39 RESOURCE", () => {
+  it("returns the correct response given a json-cdc payload 39 RESOURCE", async () => {
     const payload = {
       type: "Resource",
       value: {
@@ -475,12 +459,12 @@ describe("unit tests to cover all types", () => {
       },
     }
 
-    const decoded = decode(payload)
+    const decoded = await decode(payload)
 
-    assert.deepEqual(decoded, {bar: 42})
+    expect(decoded).toStrictEqual({bar: 42})
   })
 
-  it("returns the correct response given a json-cdc payload 40 RESOURCE", () => {
+  it("returns the correct response given a json-cdc payload 40 RESOURCE", async () => {
     const payload = {
       type: "Resource",
       value: {
@@ -500,12 +484,12 @@ describe("unit tests to cover all types", () => {
       },
     }
 
-    const decoded = decode(payload)
+    const decoded = await decode(payload)
 
-    assert.deepEqual(decoded, {bar: {x: 42}})
+    expect(decoded).toStrictEqual({bar: {x: 42}})
   })
 
-  it("returns the correct response given a json-cdc payload 41 STRUCT", () => {
+  it("returns the correct response given a json-cdc payload 41 STRUCT", async () => {
     const payload = {
       type: "Struct",
       value: {
@@ -517,12 +501,12 @@ describe("unit tests to cover all types", () => {
       },
     }
 
-    const decoded = decode(payload)
+    const decoded = await decode(payload)
 
-    assert.deepEqual(decoded, {a: 1, b: "foo"})
+    expect(decoded).toStrictEqual({a: 1, b: "foo"})
   })
 
-  it("returns the correct response given a json-cdc payload 42 STRUCT", () => {
+  it("returns the correct response given a json-cdc payload 42 STRUCT", async () => {
     const payload = {
       type: "Struct",
       value: {
@@ -543,12 +527,12 @@ describe("unit tests to cover all types", () => {
       },
     }
 
-    const decoded = decode(payload)
+    const decoded = await decode(payload)
 
-    assert.deepEqual(decoded, {a: "foo", b: {bar: 42}})
+    expect(decoded).toStrictEqual({a: "foo", b: {bar: 42}})
   })
 
-  it("returns the correct response given a json-cdc payload 43 STRUCT", () => {
+  it("returns the correct response given a json-cdc payload 43 STRUCT", async () => {
     const payload = {
       type: "Struct",
       value: {
@@ -569,12 +553,12 @@ describe("unit tests to cover all types", () => {
       },
     }
 
-    const decoded = decode(payload)
+    const decoded = await decode(payload)
 
-    assert.deepEqual(decoded, {a: "foo", b: {bar: 42}})
+    expect(decoded).toStrictEqual({a: "foo", b: {bar: 42}})
   })
 
-  it("returns the correct response given a json-cdc payload 44 EVENT", () => {
+  it("returns the correct response given a json-cdc payload 44 EVENT", async () => {
     const payload = {
       type: "Event",
       value: {
@@ -586,12 +570,12 @@ describe("unit tests to cover all types", () => {
       },
     }
 
-    const decoded = decode(payload)
+    const decoded = await decode(payload)
 
-    assert.deepEqual(decoded, {a: 1, b: "foo"})
+    expect(decoded).toStrictEqual({a: 1, b: "foo"})
   })
 
-  it("returns the correct response given a json-cdc payload 44 EVENT", () => {
+  it("returns the correct response given a json-cdc payload 44 EVENT", async () => {
     const payload = {
       type: "Event",
       value: {
@@ -612,9 +596,9 @@ describe("unit tests to cover all types", () => {
       },
     }
 
-    const decoded = decode(payload)
+    const decoded = await decode(payload)
 
-    assert.deepEqual(decoded, {a: "foo", b: {bar: 42}})
+    expect(decoded).toStrictEqual({a: "foo", b: {bar: 42}})
   })
 })
 
@@ -968,8 +952,58 @@ describe("generative tests", () => {
       return typeof d === "function" ? d() : d
     })
     .forEach(({label, payload, decoded, custom}) => {
-      it(label, () =>
-        expect(decode(payload, custom || undefined)).toStrictEqual(decoded)
+      it(label, async () =>
+        expect(await decode(payload, custom || undefined)).toStrictEqual(decoded)
       )
     })
+})
+
+describe("custom decoder tests", () => {
+  it("decodes using a custom decoder correctly", async () => {
+    const resource = {
+      type: "Resource",
+      value: {
+        id: "test.Foo",
+        fields: [{name: "bar", value: {type: "Int", value: "1"}}],
+      },
+    }
+
+    const fooDecoder = async (resource) => ({
+      hello: "world",
+    })
+
+    const decoded = await decode(resource, {"test.Foo": fooDecoder})
+
+    expect(decoded).toStrictEqual({
+      hello: "world",
+    })
+  })
+
+  it("decodes using a custom nested decoder correctly", async () => {
+    const resource = {
+      type: "Resource",
+      value: {
+        id: "test.Jeff",
+        fields: [
+          {name: "firstName", value: {type: "String", value: "Jeff"}},
+          {name: "lastName", value: {type: "String", value: "Doyle"}}
+        ]
+      }
+    }
+
+    const Jeff = function (resource) {
+      if (!(this instanceof Jeff)) return new Jeff(resource)
+      this.firstName = resource.firstName
+      this.lastName = resource.lastName
+      this.printName = () => `${this.firstName} ${this.lastName}`
+    }
+
+    const jeffDecoder = async (resource) => {
+      return Jeff(resource)
+    }
+
+    const decoded = await decode(resource, { "test.Jeff": jeffDecoder }, [])
+
+    expect(decoded.printName()).toStrictEqual("Jeff Doyle")
+  })
 })
