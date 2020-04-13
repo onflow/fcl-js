@@ -1,6 +1,6 @@
 import {bytes, bytesToString} from "@onflow/bytes"
 
-export const decodeNumber = (num, _, stack) => {
+export const decodeNumber = async (num, _, stack) => {
   try {
     return Number(num)
   } catch (e) {
@@ -8,31 +8,37 @@ export const decodeNumber = (num, _, stack) => {
   }
 }
 
-export const decodeImplicit = (i) => i
+export const decodeImplicit = async (i) => i
 
-export const decodeVoid = () => null
+export const decodeVoid = async () => null
 
-export const decodeOptional = (optional, decoders, stack) =>
-  optional ? recurseDecode(optional, decoders, stack) : null
+export const decodeOptional = async (optional, decoders, stack) =>
+  optional ? await recurseDecode(optional, decoders, stack) : null
 
-export const decodeReference = (v) => ({address: v.address, type: v.type})
+export const decodeReference = async (v) => ({address: v.address, type: v.type})
 
-export const decodeArray = (array, decoders, stack) =>
-  array.map((v) => recurseDecode(v, decoders, [...stack, v.type]))
+export const decodeArray = async (array, decoders, stack) =>
+  await Promise.all(array.map((v) => new Promise(async (res) => res(await recurseDecode(v, decoders, [...stack, v.type])))))
 
-export const decodeDictionary = (dictionary, decoders, stack) =>
-  dictionary.reduce((acc, v) => {
+export const decodeDictionary = async (dictionary, decoders, stack) =>
+  await dictionary.reduce(async (acc, v) => {
+    acc = await acc
     acc[
-      recurseDecode(v.key, decoders, [...stack, v.key])
-    ] = recurseDecode(v.value, decoders, [...stack, v.key])
+      await recurseDecode(v.key, decoders, [...stack, v.key])
+    ] = await recurseDecode(v.value, decoders, [...stack, v.key])
     return acc
-  }, {})
+  }, Promise.resolve({}))
 
-export const decodeComposite = (composite, decoders, stack) =>
-  composite.fields.reduce((acc, v) => {
-    acc[v.name] = recurseDecode(v.value, decoders, [...stack, v.name])
+export const decodeComposite = async (composite, decoders, stack) => {
+  const decoded = await composite.fields.reduce(async (acc, v) => {
+    acc = await acc
+    acc[v.name] = await recurseDecode(v.value, decoders, [...stack, v.name])
     return acc
-  }, {})
+  }, Promise.resolve({}))
+  return decoders[composite.id]
+    ? await decoders[composite.id](decoded)
+    : decoded
+}
 
 export const defaultDecoders = {
   UInt: decodeNumber,
@@ -69,28 +75,26 @@ export const defaultDecoders = {
   Struct: decodeComposite,
 }
 
-export const recurseDecode = (decodeInstructions, decoders, stack) => {
+export const recurseDecode = async (decodeInstructions, decoders, stack) => {
   let decoder = decoders[decodeInstructions.type]
   if (!decoder)
     throw new Error(
       `Undefined Decoder Error: ${decodeInstructions.type}@${stack.join(".")}`
     )
-  return decoder(decodeInstructions.value, decoders, stack)
+  return await decoder(decodeInstructions.value, decoders, stack)
 }
 
-// TODO: Implement correctly once the JSON encoding is returned from the access API.
-export const decode = (decodeInstructions, customDecoders = {}, stack = []) => {
+export const decode = async (decodeInstructions, customDecoders = {}, stack = []) => {
   let decoders = {...defaultDecoders, ...customDecoders}
-  return recurseDecode(decodeInstructions, decoders, stack)
+  return await recurseDecode(decodeInstructions, decoders, stack)
 }
 
-// TODO: Implement correctly once the JSON encoding is returned form the access API.
-export const decodeResponse = (response, customDecoders = {}) => {
+export const decodeResponse = async (response, customDecoders = {}) => {
   let decoders = {...defaultDecoders, ...customDecoders}
 
   const encoded = response.encodedData
   const decodeInstructions = bytesToString(bytes(encoded))
   const decodeInstructionsJson = JSON.parse(decodeInstructions)
 
-  return decode(decodeInstructionsJson, decoders)
+  return await decode(decodeInstructionsJson, decoders)
 }
