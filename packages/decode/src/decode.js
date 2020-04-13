@@ -18,7 +18,14 @@ export const decodeOptional = async (optional, decoders, stack) =>
 export const decodeReference = async (v) => ({address: v.address, type: v.type})
 
 export const decodeArray = async (array, decoders, stack) =>
-  await Promise.all(array.map((v) => new Promise(async (res) => res(await recurseDecode(v, decoders, [...stack, v.type])))))
+  await Promise.all(
+    array.map(
+      (v) =>
+        new Promise(async (res) =>
+          res(await recurseDecode(v, decoders, [...stack, v.type]))
+        )
+    )
+  )
 
 export const decodeDictionary = async (dictionary, decoders, stack) =>
   await dictionary.reduce(async (acc, v) => {
@@ -35,9 +42,8 @@ export const decodeComposite = async (composite, decoders, stack) => {
     acc[v.name] = await recurseDecode(v.value, decoders, [...stack, v.name])
     return acc
   }, Promise.resolve({}))
-  return decoders[composite.id]
-    ? await decoders[composite.id](decoded)
-    : decoded
+  const decoder = composite.id && decoderLookup(decoders, composite.id)
+  return decoder ? await decoder(decoded) : decoded
 }
 
 export const defaultDecoders = {
@@ -75,8 +81,19 @@ export const defaultDecoders = {
   Struct: decodeComposite,
 }
 
+export const decoderLookup = (decoders, lookup) => {
+  const found = Object.keys(decoders).find(decoder => {
+    if (/^\/.*\/$/.test(decoder)) {
+      const reg = new RegExp(decoder.substring(1, decoder.length - 1))
+      return reg.test(lookup)  
+    }
+    return decoder === lookup
+  })
+  return lookup && found && decoders[found]
+}
+
 export const recurseDecode = async (decodeInstructions, decoders, stack) => {
-  let decoder = decoders[decodeInstructions.type]
+  let decoder = decoderLookup(decoders, decodeInstructions.type)
   if (!decoder)
     throw new Error(
       `Undefined Decoder Error: ${decodeInstructions.type}@${stack.join(".")}`
@@ -84,7 +101,11 @@ export const recurseDecode = async (decodeInstructions, decoders, stack) => {
   return await decoder(decodeInstructions.value, decoders, stack)
 }
 
-export const decode = async (decodeInstructions, customDecoders = {}, stack = []) => {
+export const decode = async (
+  decodeInstructions,
+  customDecoders = {},
+  stack = []
+) => {
   let decoders = {...defaultDecoders, ...customDecoders}
   return await recurseDecode(decodeInstructions, decoders, stack)
 }

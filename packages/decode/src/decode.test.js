@@ -1006,4 +1006,88 @@ describe("custom decoder tests", () => {
 
     expect(decoded.printName()).toStrictEqual("Jeff Doyle")
   })
+
+  it("decodes using a cusotm nested decoder correctly", async () => {
+    const resource = {
+      type: "Resource",
+      value: {
+        id: "test.CryptoKitty",
+        fields: [
+          {name: "kittyName", value: {type: "String", value: "Sir Meowsers"}},
+          {name: "kittyHat", value: {
+            type: "Resource",
+            value: {
+              id: "test.CryptoKittyHat",
+              fields: [
+                {name: "kittyHatName", value: {type: "String", value: "Yankee With No Brim"}}
+              ]
+            }
+          }}
+        ]
+      }
+    }
+
+    const kittyHatDecoder = async (kittyHat) => ({
+      name: kittyHat.kittyHatName
+    })
+
+    const kittyDecoder = async (kitty) => ({
+      name: kitty.kittyName,
+      hat: kitty.kittyHat
+    })
+
+    const decoded = await decode(resource, { 
+      "/test.CryptoKitty$/": kittyDecoder,
+      "/test.CryptoKittyHat$/": kittyHatDecoder,
+    })
+
+    expect(decoded).toStrictEqual({
+      name: "Sir Meowsers",
+      hat: {
+        name: "Yankee With No Brim"
+      }
+    })
+  })
+
+  it("decodes using a custom decoder with regex lookup", async () => {
+    const resource = {
+      type: "Resource",
+      value: {
+        id: "test.CryptoKitty",
+        fields: [
+          {name: "kittyName", value: {type: "String", value: "Sir Meowsers"}},
+          {name: "kittyHat", value: {
+            type: "Resource",
+            value: {
+              id: "test.CryptoKittyHat",
+              fields: [
+                {name: "kittyHatName", value: {type: "String", value: "Yankee With No Brim"}}
+              ]
+            }
+          }}
+        ]
+      }
+    }
+
+    const kittyHatDecoder = async (kittyHat) => ({
+      name: kittyHat.kittyHatName
+    })
+
+    const kittyDecoder = async (kitty) => ({
+      name: kitty.kittyName,
+      hat: kitty.kittyHat
+    })
+
+    const decoded = await decode(resource, { 
+      "/.CryptoKittyHat$/": kittyHatDecoder,
+      "/.CryptoKitty$/": kittyDecoder,
+    })
+
+    expect(decoded).toStrictEqual({
+      name: "Sir Meowsers",
+      hat: {
+        name: "Yankee With No Brim"
+      }
+    })
+  })
 })
