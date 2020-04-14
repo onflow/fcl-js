@@ -1,0 +1,21 @@
+{
+  "name": "@onflow/dev-handshake",
+  "private": true,
+  "version": "0.0.1",
+  "description": "dev handshake server for local development with the flow client library",
+  "license": "Apache-2.0",
+  "author": "Dapper Labs <dev@dapperlabs.com>",
+  "homepage": "https://onflow.org",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/dapperlabs/flow-js-sdk.git"
+  },
+  "bugs": {
+    "url": "https://github.com/dapperlabs/flow-js-sdk/issues"
+  },
+  "main": "src/index.js",
+  "dependencies": {},
+  "scripts": {
+    "dev:watch": "node ./index.js"
+  }
+}
