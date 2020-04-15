@@ -74,6 +74,7 @@ const Previous = () => {
         <ul>
           ${providers.map(mapProvider)}
         </ul>
+        <hr />
       `
 }
 
@@ -87,6 +88,7 @@ const Recommended = () => {
     <ul>
       <${Provider} pid=${pid} />
     </ul>
+    <hr />
   `
 }
 
@@ -101,25 +103,50 @@ const All = () => {
   `
 }
 
+const Scope = () => {
+  const {searchParams: params} = new URL(location)
+  const scope = params.get("scope")
+  const l6n = params.get("l6n")
+  return scope == null
+    ? null
+    : html`
+        <code>${l6n}</code>
+        <ul>
+          ${scope.split(/\s/g).map(
+            d => html`
+              <li key=${d}><code>${d}</code></li>
+            `
+          )}
+        </ul>
+      `
+}
+
 const Root = () => {
   const url = new URL(location)
+  const params = url.searchParams
 
+  if (!(params.has("l6n") && params.has("nonce"))) {
+    return html`
+      <h3>Invalid Query Parameters</h3>
+      <p>
+        <code>l6n</code> and <code>nonce</code> are required query paramaters.
+      </p>
+    `
+  }
   if (
-    url.searchParams.has("provider") &&
-    url.searchParams.has("force") &&
+    params.has("provider") &&
+    params.has("force") &&
     !previousProviders().length
   ) {
-    const provider = PROVIDERS[url.searchParams.get("provider")]
+    const provider = PROVIDERS[params.get("provider")]
     if (provider != null) location.replace(redirectUrl(provider.authn))
   }
 
   return html`
     <h1>Flow Handshake</h1>
-    <hr />
+    <${Scope} />
     <${Previous} />
-    <hr />
     <${Recommended} />
-    <hr />
     <${All} />
   `
 }
