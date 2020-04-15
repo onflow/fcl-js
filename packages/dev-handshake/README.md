@@ -19,4 +19,4 @@ If `redirect` is not present in the query params, then the provider will need to
 example:
 `/authenticate/?l6n=http%3A%2F%2Fdapp.com&nonce=foo&provider=asdf8703&force&scope=email+sms`
 
-![diagram showing current fcl authn and authz flow](../dev-wallet/assets/FCL-AUTHN-AUTHZ-FLOWS-v1.png)
+![diagram showing current fcl authn and authz flow](../dev-wallet/assets/FCL-AUTHN-AUTHZ-FLOWS-v2.png)
