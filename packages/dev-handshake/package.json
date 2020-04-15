@@ -16,6 +16,6 @@
   "main": "src/index.js",
   "dependencies": {},
   "scripts": {
-    "dev:watch": "node ./index.js"
+    "start": "npx http-server ./src -p 8700"
   }
 }

@@ -11,7 +11,11 @@
 - `nonce` *required* - random string
 - `provider` - a preferred provider (value is provider flow acct number)
 - `force` - forces provider if no previous provider detected (value is boolean defaults to false)
+- `scope` - additional values for the provider to expose in provider hooks
 - `redirect` *future* - used in eventual redirect flow
+
+example:
+`/authenticate/?l6n=http%3A%2F%2Fdapp.com&nonce=foo&provider=asdf8703&force&scope=email+sms`
 
 ### GET /callback
 
