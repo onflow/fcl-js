@@ -12,23 +12,11 @@
 - `provider` - a preferred provider (value is provider flow acct number)
 - `force` - forces provider if no previous provider detected (value is boolean defaults to false)
 - `scope` - additional values for the provider to expose in provider hooks
-- `redirect` *future* - used in eventual redirect flow
+- `redirect` *future* - where the provider redirects to after an authentication
+
+If `redirect` is not present in the query params, then the provider will need to do a JavaScript `postMessage` scoped to the `l6n`.
 
 example:
 `/authenticate/?l6n=http%3A%2F%2Fdapp.com&nonce=foo&provider=asdf8703&force&scope=email+sms`
-
-### GET /callback
-
-> Receives query params and emits a `window.postMessage` event to the parent of the iframe (scoped to the `l6n`).
-
-**Accepted Query Params**
-- `acct` - flow acct of user if it exists
-- `pacct` - flow acct of provider (used to look up onChain details of provider)
-- `code` - a token fcl will include in provider hooks request
-- `exp` - when the `code` expires (epoch)
-- `hks` - a url where fcl can request the users provider hooks
-- `nonce` - the nonce provided in the /authenticate request
-- `l6n` - the location (origin) provided in the /authenticate request
-- `redirect`
 
 ![diagram showing current fcl authn and authz flow](../dev-wallet/assets/FCL-AUTHN-AUTHZ-FLOWS-v1.png)
