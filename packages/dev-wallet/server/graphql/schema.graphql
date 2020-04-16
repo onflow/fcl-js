@@ -1,0 +1,27 @@
+type Info {
+  pid: ID
+  name: String
+  icon: String
+}
+
+type Me {
+  userId: ID
+  email: String
+  privateKey: String
+  publicKey: String
+}
+
+type Session {
+  token: String
+  expiresAt: Float
+  user: Me
+}
+
+type Query {
+  info: Info
+  me(token: String): Me
+}
+
+type Mutation {
+  authenticate(email: String, password: String): Session
+}
