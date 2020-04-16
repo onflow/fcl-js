@@ -1,11 +1,11 @@
 import {html, render} from "https://unpkg.com/htm/preact/standalone.module.js"
 
-const pro = (pid, authn, label, avatar) => ({
+const pro = (pid, authn, label, icon) => ({
   [pid]: {
     pid,
     authn,
     label,
-    avatar: avatar || `https://avatars.onflow.org/avatar/${pid}.svg`,
+    icon: icon || `https://avatars.onflow.org/avatar/${pid}.svg`,
   },
 })
 
@@ -33,7 +33,8 @@ const redirectUrl = base => {
   for (let [k, v] of new URL(location).searchParams.entries()) {
     url.searchParams.append(k, v)
   }
-  url.searchParams.append("redirect", location.origin + "/callback")
+  url.searchParams.delete("provider")
+  url.searchParams.delete("force")
   return url
 }
 
@@ -45,7 +46,7 @@ const Provider = ({pid}) => {
     : html`
         <li>
           <a href=${redirectUrl(provider.authn)}>
-            <img src=${provider.avatar} height="16" />
+            <img src=${provider.icon} height="16" />
             <strong>${provider.label}</strong>
           </a>
         </li>
