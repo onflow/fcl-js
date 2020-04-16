@@ -1,3 +1,4 @@
+// source: flow/entities/block_seal.proto
 /**
  * @fileoverview
  * @enhanceable
@@ -45,13 +46,15 @@ proto.entities.BlockSeal.repeatedFields_ = [3,4];
 
 if (jspb.Message.GENERATE_TO_OBJECT) {
 /**
- * Creates an object representation of this proto suitable for use in Soy templates.
+ * Creates an object representation of this proto.
  * Field names that are reserved in JavaScript and will be renamed to pb_name.
+ * Optional fields that are not set will be set to undefined.
  * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
  * For the list of reserved names please see:
- *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
- * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
- *     for transitional soy proto support: http://goto/soy-param-migration
+ *     net/proto2/compiler/js/internal/generator.cc#kKeyword.
+ * @param {boolean=} opt_includeInstance Deprecated. whether to include the
+ *     JSPB instance for transitional soy proto support:
+ *     http://goto/soy-param-migration
  * @return {!Object}
  */
 proto.entities.BlockSeal.prototype.toObject = function(opt_includeInstance) {
@@ -61,8 +64,8 @@ proto.entities.BlockSeal.prototype.toObject = function(opt_includeInstance) {
 
 /**
  * Static version of the {@see toObject} method.
- * @param {boolean|undefined} includeInstance Whether to include the JSPB
- *     instance for transitional soy proto support:
+ * @param {boolean|undefined} includeInstance Deprecated. Whether to include
+ *     the JSPB instance for transitional soy proto support:
  *     http://goto/soy-param-migration
  * @param {!proto.entities.BlockSeal} msg The msg instance to transform.
  * @return {!Object}
@@ -219,9 +222,12 @@ proto.entities.BlockSeal.prototype.getBlockId_asU8 = function() {
 };
 
 
-/** @param {!(string|Uint8Array)} value */
+/**
+ * @param {!(string|Uint8Array)} value
+ * @return {!proto.entities.BlockSeal} returns this
+ */
 proto.entities.BlockSeal.prototype.setBlockId = function(value) {
-  jspb.Message.setProto3BytesField(this, 1, value);
+  return jspb.Message.setProto3BytesField(this, 1, value);
 };
 
 
@@ -258,9 +264,12 @@ proto.entities.BlockSeal.prototype.getExecutionReceiptId_asU8 = function() {
 };
 
 
-/** @param {!(string|Uint8Array)} value */
+/**
+ * @param {!(string|Uint8Array)} value
+ * @return {!proto.entities.BlockSeal} returns this
+ */
 proto.entities.BlockSeal.prototype.setExecutionReceiptId = function(value) {
-  jspb.Message.setProto3BytesField(this, 2, value);
+  return jspb.Message.setProto3BytesField(this, 2, value);
 };
 
 
@@ -297,26 +306,31 @@ proto.entities.BlockSeal.prototype.getExecutionReceiptSignaturesList_asU8 = func
 };
 
 
-/** @param {!(Array<!Uint8Array>|Array<string>)} value */
+/**
+ * @param {!(Array<!Uint8Array>|Array<string>)} value
+ * @return {!proto.entities.BlockSeal} returns this
+ */
 proto.entities.BlockSeal.prototype.setExecutionReceiptSignaturesList = function(value) {
-  jspb.Message.setField(this, 3, value || []);
+  return jspb.Message.setField(this, 3, value || []);
 };
 
 
 /**
  * @param {!(string|Uint8Array)} value
  * @param {number=} opt_index
+ * @return {!proto.entities.BlockSeal} returns this
  */
 proto.entities.BlockSeal.prototype.addExecutionReceiptSignatures = function(value, opt_index) {
-  jspb.Message.addToRepeatedField(this, 3, value, opt_index);
+  return jspb.Message.addToRepeatedField(this, 3, value, opt_index);
 };
 
 
 /**
  * Clears the list making it empty but non-null.
+ * @return {!proto.entities.BlockSeal} returns this
  */
 proto.entities.BlockSeal.prototype.clearExecutionReceiptSignaturesList = function() {
-  this.setExecutionReceiptSignaturesList([]);
+  return this.setExecutionReceiptSignaturesList([]);
 };
 
 
@@ -353,26 +367,31 @@ proto.entities.BlockSeal.prototype.getResultApprovalSignaturesList_asU8 = functi
 };
 
 
-/** @param {!(Array<!Uint8Array>|Array<string>)} value */
+/**
+ * @param {!(Array<!Uint8Array>|Array<string>)} value
+ * @return {!proto.entities.BlockSeal} returns this
+ */
 proto.entities.BlockSeal.prototype.setResultApprovalSignaturesList = function(value) {
-  jspb.Message.setField(this, 4, value || []);
+  return jspb.Message.setField(this, 4, value || []);
 };
 
 
 /**
  * @param {!(string|Uint8Array)} value
  * @param {number=} opt_index
+ * @return {!proto.entities.BlockSeal} returns this
  */
 proto.entities.BlockSeal.prototype.addResultApprovalSignatures = function(value, opt_index) {
-  jspb.Message.addToRepeatedField(this, 4, value, opt_index);
+  return jspb.Message.addToRepeatedField(this, 4, value, opt_index);
 };
 
 
 /**
  * Clears the list making it empty but non-null.
+ * @return {!proto.entities.BlockSeal} returns this
  */
 proto.entities.BlockSeal.prototype.clearResultApprovalSignaturesList = function() {
-  this.setResultApprovalSignaturesList([]);
+  return this.setResultApprovalSignaturesList([]);
 };
 
 

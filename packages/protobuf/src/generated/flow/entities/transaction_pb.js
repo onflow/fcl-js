@@ -1,3 +1,4 @@
+// source: flow/entities/transaction.proto
 /**
  * @fileoverview
  * @enhanceable
@@ -90,13 +91,15 @@ proto.entities.Transaction.repeatedFields_ = [6,7,8];
 
 if (jspb.Message.GENERATE_TO_OBJECT) {
 /**
- * Creates an object representation of this proto suitable for use in Soy templates.
+ * Creates an object representation of this proto.
  * Field names that are reserved in JavaScript and will be renamed to pb_name.
+ * Optional fields that are not set will be set to undefined.
  * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
  * For the list of reserved names please see:
- *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
- * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
- *     for transitional soy proto support: http://goto/soy-param-migration
+ *     net/proto2/compiler/js/internal/generator.cc#kKeyword.
+ * @param {boolean=} opt_includeInstance Deprecated. whether to include the
+ *     JSPB instance for transitional soy proto support:
+ *     http://goto/soy-param-migration
  * @return {!Object}
  */
 proto.entities.Transaction.prototype.toObject = function(opt_includeInstance) {
@@ -106,8 +109,8 @@ proto.entities.Transaction.prototype.toObject = function(opt_includeInstance) {
 
 /**
  * Static version of the {@see toObject} method.
- * @param {boolean|undefined} includeInstance Whether to include the JSPB
- *     instance for transitional soy proto support:
+ * @param {boolean|undefined} includeInstance Deprecated. Whether to include
+ *     the JSPB instance for transitional soy proto support:
  *     http://goto/soy-param-migration
  * @param {!proto.entities.Transaction} msg The msg instance to transform.
  * @return {!Object}
@@ -292,13 +295,15 @@ proto.entities.Transaction.serializeBinaryToWriter = function(message, writer) {
 
 if (jspb.Message.GENERATE_TO_OBJECT) {
 /**
- * Creates an object representation of this proto suitable for use in Soy templates.
+ * Creates an object representation of this proto.
  * Field names that are reserved in JavaScript and will be renamed to pb_name.
+ * Optional fields that are not set will be set to undefined.
  * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
  * For the list of reserved names please see:
- *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
- * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
- *     for transitional soy proto support: http://goto/soy-param-migration
+ *     net/proto2/compiler/js/internal/generator.cc#kKeyword.
+ * @param {boolean=} opt_includeInstance Deprecated. whether to include the
+ *     JSPB instance for transitional soy proto support:
+ *     http://goto/soy-param-migration
  * @return {!Object}
  */
 proto.entities.Transaction.ProposalKey.prototype.toObject = function(opt_includeInstance) {
@@ -308,8 +313,8 @@ proto.entities.Transaction.ProposalKey.prototype.toObject = function(opt_include
 
 /**
  * Static version of the {@see toObject} method.
- * @param {boolean|undefined} includeInstance Whether to include the JSPB
- *     instance for transitional soy proto support:
+ * @param {boolean|undefined} includeInstance Deprecated. Whether to include
+ *     the JSPB instance for transitional soy proto support:
  *     http://goto/soy-param-migration
  * @param {!proto.entities.Transaction.ProposalKey} msg The msg instance to transform.
  * @return {!Object}
@@ -454,9 +459,12 @@ proto.entities.Transaction.ProposalKey.prototype.getAddress_asU8 = function() {
 };
 
 
-/** @param {!(string|Uint8Array)} value */
+/**
+ * @param {!(string|Uint8Array)} value
+ * @return {!proto.entities.Transaction.ProposalKey} returns this
+ */
 proto.entities.Transaction.ProposalKey.prototype.setAddress = function(value) {
-  jspb.Message.setProto3BytesField(this, 1, value);
+  return jspb.Message.setProto3BytesField(this, 1, value);
 };
 
 
@@ -469,9 +477,12 @@ proto.entities.Transaction.ProposalKey.prototype.getKeyId = function() {
 };
 
 
-/** @param {number} value */
+/**
+ * @param {number} value
+ * @return {!proto.entities.Transaction.ProposalKey} returns this
+ */
 proto.entities.Transaction.ProposalKey.prototype.setKeyId = function(value) {
-  jspb.Message.setProto3IntField(this, 2, value);
+  return jspb.Message.setProto3IntField(this, 2, value);
 };
 
 
@@ -484,9 +495,12 @@ proto.entities.Transaction.ProposalKey.prototype.getSequenceNumber = function() 
 };
 
 
-/** @param {number} value */
+/**
+ * @param {number} value
+ * @return {!proto.entities.Transaction.ProposalKey} returns this
+ */
 proto.entities.Transaction.ProposalKey.prototype.setSequenceNumber = function(value) {
-  jspb.Message.setProto3IntField(this, 3, value);
+  return jspb.Message.setProto3IntField(this, 3, value);
 };
 
 
@@ -495,13 +509,15 @@ proto.entities.Transaction.ProposalKey.prototype.setSequenceNumber = function(va
 
 if (jspb.Message.GENERATE_TO_OBJECT) {
 /**
- * Creates an object representation of this proto suitable for use in Soy templates.
+ * Creates an object representation of this proto.
  * Field names that are reserved in JavaScript and will be renamed to pb_name.
+ * Optional fields that are not set will be set to undefined.
  * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
  * For the list of reserved names please see:
- *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
- * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
- *     for transitional soy proto support: http://goto/soy-param-migration
+ *     net/proto2/compiler/js/internal/generator.cc#kKeyword.
+ * @param {boolean=} opt_includeInstance Deprecated. whether to include the
+ *     JSPB instance for transitional soy proto support:
+ *     http://goto/soy-param-migration
  * @return {!Object}
  */
 proto.entities.Transaction.Signature.prototype.toObject = function(opt_includeInstance) {
@@ -511,8 +527,8 @@ proto.entities.Transaction.Signature.prototype.toObject = function(opt_includeIn
 
 /**
  * Static version of the {@see toObject} method.
- * @param {boolean|undefined} includeInstance Whether to include the JSPB
- *     instance for transitional soy proto support:
+ * @param {boolean|undefined} includeInstance Deprecated. Whether to include
+ *     the JSPB instance for transitional soy proto support:
  *     http://goto/soy-param-migration
  * @param {!proto.entities.Transaction.Signature} msg The msg instance to transform.
  * @return {!Object}
@@ -657,9 +673,12 @@ proto.entities.Transaction.Signature.prototype.getAddress_asU8 = function() {
 };
 
 
-/** @param {!(string|Uint8Array)} value */
+/**
+ * @param {!(string|Uint8Array)} value
+ * @return {!proto.entities.Transaction.Signature} returns this
+ */
 proto.entities.Transaction.Signature.prototype.setAddress = function(value) {
-  jspb.Message.setProto3BytesField(this, 1, value);
+  return jspb.Message.setProto3BytesField(this, 1, value);
 };
 
 
@@ -672,9 +691,12 @@ proto.entities.Transaction.Signature.prototype.getKeyId = function() {
 };
 
 
-/** @param {number} value */
+/**
+ * @param {number} value
+ * @return {!proto.entities.Transaction.Signature} returns this
+ */
 proto.entities.Transaction.Signature.prototype.setKeyId = function(value) {
-  jspb.Message.setProto3IntField(this, 2, value);
+  return jspb.Message.setProto3IntField(this, 2, value);
 };
 
 
@@ -711,9 +733,12 @@ proto.entities.Transaction.Signature.prototype.getSignature_asU8 = function() {
 };
 
 
-/** @param {!(string|Uint8Array)} value */
+/**
+ * @param {!(string|Uint8Array)} value
+ * @return {!proto.entities.Transaction.Signature} returns this
+ */
 proto.entities.Transaction.Signature.prototype.setSignature = function(value) {
-  jspb.Message.setProto3BytesField(this, 3, value);
+  return jspb.Message.setProto3BytesField(this, 3, value);
 };
 
 
@@ -750,9 +775,12 @@ proto.entities.Transaction.prototype.getScript_asU8 = function() {
 };
 
 
-/** @param {!(string|Uint8Array)} value */
+/**
+ * @param {!(string|Uint8Array)} value
+ * @return {!proto.entities.Transaction} returns this
+ */
 proto.entities.Transaction.prototype.setScript = function(value) {
-  jspb.Message.setProto3BytesField(this, 1, value);
+  return jspb.Message.setProto3BytesField(this, 1, value);
 };
 
 
@@ -789,9 +817,12 @@ proto.entities.Transaction.prototype.getReferenceBlockId_asU8 = function() {
 };
 
 
-/** @param {!(string|Uint8Array)} value */
+/**
+ * @param {!(string|Uint8Array)} value
+ * @return {!proto.entities.Transaction} returns this
+ */
 proto.entities.Transaction.prototype.setReferenceBlockId = function(value) {
-  jspb.Message.setProto3BytesField(this, 2, value);
+  return jspb.Message.setProto3BytesField(this, 2, value);
 };
 
 
@@ -804,9 +835,12 @@ proto.entities.Transaction.prototype.getGasLimit = function() {
 };
 
 
-/** @param {number} value */
+/**
+ * @param {number} value
+ * @return {!proto.entities.Transaction} returns this
+ */
 proto.entities.Transaction.prototype.setGasLimit = function(value) {
-  jspb.Message.setProto3IntField(this, 3, value);
+  return jspb.Message.setProto3IntField(this, 3, value);
 };
 
 
@@ -820,17 +854,21 @@ proto.entities.Transaction.prototype.getProposalKey = function() {
 };
 
 
-/** @param {?proto.entities.Transaction.ProposalKey|undefined} value */
+/**
+ * @param {?proto.entities.Transaction.ProposalKey|undefined} value
+ * @return {!proto.entities.Transaction} returns this
+*/
 proto.entities.Transaction.prototype.setProposalKey = function(value) {
-  jspb.Message.setWrapperField(this, 4, value);
+  return jspb.Message.setWrapperField(this, 4, value);
 };
 
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.entities.Transaction} returns this
  */
 proto.entities.Transaction.prototype.clearProposalKey = function() {
-  this.setProposalKey(undefined);
+  return this.setProposalKey(undefined);
 };
 
 
@@ -876,9 +914,12 @@ proto.entities.Transaction.prototype.getPayer_asU8 = function() {
 };
 
 
-/** @param {!(string|Uint8Array)} value */
+/**
+ * @param {!(string|Uint8Array)} value
+ * @return {!proto.entities.Transaction} returns this
+ */
 proto.entities.Transaction.prototype.setPayer = function(value) {
-  jspb.Message.setProto3BytesField(this, 5, value);
+  return jspb.Message.setProto3BytesField(this, 5, value);
 };
 
 
@@ -915,26 +956,31 @@ proto.entities.Transaction.prototype.getAuthorizersList_asU8 = function() {
 };
 
 
-/** @param {!(Array<!Uint8Array>|Array<string>)} value */
+/**
+ * @param {!(Array<!Uint8Array>|Array<string>)} value
+ * @return {!proto.entities.Transaction} returns this
+ */
 proto.entities.Transaction.prototype.setAuthorizersList = function(value) {
-  jspb.Message.setField(this, 6, value || []);
+  return jspb.Message.setField(this, 6, value || []);
 };
 
 
 /**
  * @param {!(string|Uint8Array)} value
  * @param {number=} opt_index
+ * @return {!proto.entities.Transaction} returns this
  */
 proto.entities.Transaction.prototype.addAuthorizers = function(value, opt_index) {
-  jspb.Message.addToRepeatedField(this, 6, value, opt_index);
+  return jspb.Message.addToRepeatedField(this, 6, value, opt_index);
 };
 
 
 /**
  * Clears the list making it empty but non-null.
+ * @return {!proto.entities.Transaction} returns this
  */
 proto.entities.Transaction.prototype.clearAuthorizersList = function() {
-  this.setAuthorizersList([]);
+  return this.setAuthorizersList([]);
 };
 
 
@@ -948,9 +994,12 @@ proto.entities.Transaction.prototype.getPayloadSignaturesList = function() {
 };
 
 
-/** @param {!Array<!proto.entities.Transaction.Signature>} value */
+/**
+ * @param {!Array<!proto.entities.Transaction.Signature>} value
+ * @return {!proto.entities.Transaction} returns this
+*/
 proto.entities.Transaction.prototype.setPayloadSignaturesList = function(value) {
-  jspb.Message.setRepeatedWrapperField(this, 7, value);
+  return jspb.Message.setRepeatedWrapperField(this, 7, value);
 };
 
 
@@ -966,9 +1015,10 @@ proto.entities.Transaction.prototype.addPayloadSignatures = function(opt_value, 
 
 /**
  * Clears the list making it empty but non-null.
+ * @return {!proto.entities.Transaction} returns this
  */
 proto.entities.Transaction.prototype.clearPayloadSignaturesList = function() {
-  this.setPayloadSignaturesList([]);
+  return this.setPayloadSignaturesList([]);
 };
 
 
@@ -982,9 +1032,12 @@ proto.entities.Transaction.prototype.getEnvelopeSignaturesList = function() {
 };
 
 
-/** @param {!Array<!proto.entities.Transaction.Signature>} value */
+/**
+ * @param {!Array<!proto.entities.Transaction.Signature>} value
+ * @return {!proto.entities.Transaction} returns this
+*/
 proto.entities.Transaction.prototype.setEnvelopeSignaturesList = function(value) {
-  jspb.Message.setRepeatedWrapperField(this, 8, value);
+  return jspb.Message.setRepeatedWrapperField(this, 8, value);
 };
 
 
@@ -1000,9 +1053,10 @@ proto.entities.Transaction.prototype.addEnvelopeSignatures = function(opt_value,
 
 /**
  * Clears the list making it empty but non-null.
+ * @return {!proto.entities.Transaction} returns this
  */
 proto.entities.Transaction.prototype.clearEnvelopeSignaturesList = function() {
-  this.setEnvelopeSignaturesList([]);
+  return this.setEnvelopeSignaturesList([]);
 };
 
 

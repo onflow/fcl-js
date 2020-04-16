@@ -1,3 +1,4 @@
+// source: flow/entities/account.proto
 /**
  * @fileoverview
  * @enhanceable
@@ -67,13 +68,15 @@ proto.entities.Account.repeatedFields_ = [4];
 
 if (jspb.Message.GENERATE_TO_OBJECT) {
 /**
- * Creates an object representation of this proto suitable for use in Soy templates.
+ * Creates an object representation of this proto.
  * Field names that are reserved in JavaScript and will be renamed to pb_name.
+ * Optional fields that are not set will be set to undefined.
  * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
  * For the list of reserved names please see:
- *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
- * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
- *     for transitional soy proto support: http://goto/soy-param-migration
+ *     net/proto2/compiler/js/internal/generator.cc#kKeyword.
+ * @param {boolean=} opt_includeInstance Deprecated. whether to include the
+ *     JSPB instance for transitional soy proto support:
+ *     http://goto/soy-param-migration
  * @return {!Object}
  */
 proto.entities.Account.prototype.toObject = function(opt_includeInstance) {
@@ -83,8 +86,8 @@ proto.entities.Account.prototype.toObject = function(opt_includeInstance) {
 
 /**
  * Static version of the {@see toObject} method.
- * @param {boolean|undefined} includeInstance Whether to include the JSPB
- *     instance for transitional soy proto support:
+ * @param {boolean|undefined} includeInstance Deprecated. Whether to include
+ *     the JSPB instance for transitional soy proto support:
  *     http://goto/soy-param-migration
  * @param {!proto.entities.Account} msg The msg instance to transform.
  * @return {!Object}
@@ -244,9 +247,12 @@ proto.entities.Account.prototype.getAddress_asU8 = function() {
 };
 
 
-/** @param {!(string|Uint8Array)} value */
+/**
+ * @param {!(string|Uint8Array)} value
+ * @return {!proto.entities.Account} returns this
+ */
 proto.entities.Account.prototype.setAddress = function(value) {
-  jspb.Message.setProto3BytesField(this, 1, value);
+  return jspb.Message.setProto3BytesField(this, 1, value);
 };
 
 
@@ -259,9 +265,12 @@ proto.entities.Account.prototype.getBalance = function() {
 };
 
 
-/** @param {number} value */
+/**
+ * @param {number} value
+ * @return {!proto.entities.Account} returns this
+ */
 proto.entities.Account.prototype.setBalance = function(value) {
-  jspb.Message.setProto3IntField(this, 2, value);
+  return jspb.Message.setProto3IntField(this, 2, value);
 };
 
 
@@ -298,9 +307,12 @@ proto.entities.Account.prototype.getCode_asU8 = function() {
 };
 
 
-/** @param {!(string|Uint8Array)} value */
+/**
+ * @param {!(string|Uint8Array)} value
+ * @return {!proto.entities.Account} returns this
+ */
 proto.entities.Account.prototype.setCode = function(value) {
-  jspb.Message.setProto3BytesField(this, 3, value);
+  return jspb.Message.setProto3BytesField(this, 3, value);
 };
 
 
@@ -314,9 +326,12 @@ proto.entities.Account.prototype.getKeysList = function() {
 };
 
 
-/** @param {!Array<!proto.entities.AccountKey>} value */
+/**
+ * @param {!Array<!proto.entities.AccountKey>} value
+ * @return {!proto.entities.Account} returns this
+*/
 proto.entities.Account.prototype.setKeysList = function(value) {
-  jspb.Message.setRepeatedWrapperField(this, 4, value);
+  return jspb.Message.setRepeatedWrapperField(this, 4, value);
 };
 
 
@@ -332,9 +347,10 @@ proto.entities.Account.prototype.addKeys = function(opt_value, opt_index) {
 
 /**
  * Clears the list making it empty but non-null.
+ * @return {!proto.entities.Account} returns this
  */
 proto.entities.Account.prototype.clearKeysList = function() {
-  this.setKeysList([]);
+  return this.setKeysList([]);
 };
 
 
@@ -343,13 +359,15 @@ proto.entities.Account.prototype.clearKeysList = function() {
 
 if (jspb.Message.GENERATE_TO_OBJECT) {
 /**
- * Creates an object representation of this proto suitable for use in Soy templates.
+ * Creates an object representation of this proto.
  * Field names that are reserved in JavaScript and will be renamed to pb_name.
+ * Optional fields that are not set will be set to undefined.
  * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
  * For the list of reserved names please see:
- *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
- * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
- *     for transitional soy proto support: http://goto/soy-param-migration
+ *     net/proto2/compiler/js/internal/generator.cc#kKeyword.
+ * @param {boolean=} opt_includeInstance Deprecated. whether to include the
+ *     JSPB instance for transitional soy proto support:
+ *     http://goto/soy-param-migration
  * @return {!Object}
  */
 proto.entities.AccountKey.prototype.toObject = function(opt_includeInstance) {
@@ -359,8 +377,8 @@ proto.entities.AccountKey.prototype.toObject = function(opt_includeInstance) {
 
 /**
  * Static version of the {@see toObject} method.
- * @param {boolean|undefined} includeInstance Whether to include the JSPB
- *     instance for transitional soy proto support:
+ * @param {boolean|undefined} includeInstance Deprecated. Whether to include
+ *     the JSPB instance for transitional soy proto support:
  *     http://goto/soy-param-migration
  * @param {!proto.entities.AccountKey} msg The msg instance to transform.
  * @return {!Object}
@@ -517,9 +535,12 @@ proto.entities.AccountKey.prototype.getIndex = function() {
 };
 
 
-/** @param {number} value */
+/**
+ * @param {number} value
+ * @return {!proto.entities.AccountKey} returns this
+ */
 proto.entities.AccountKey.prototype.setIndex = function(value) {
-  jspb.Message.setProto3IntField(this, 1, value);
+  return jspb.Message.setProto3IntField(this, 1, value);
 };
 
 
@@ -556,9 +577,12 @@ proto.entities.AccountKey.prototype.getPublicKey_asU8 = function() {
 };
 
 
-/** @param {!(string|Uint8Array)} value */
+/**
+ * @param {!(string|Uint8Array)} value
+ * @return {!proto.entities.AccountKey} returns this
+ */
 proto.entities.AccountKey.prototype.setPublicKey = function(value) {
-  jspb.Message.setProto3BytesField(this, 2, value);
+  return jspb.Message.setProto3BytesField(this, 2, value);
 };
 
 
@@ -571,9 +595,12 @@ proto.entities.AccountKey.prototype.getSignAlgo = function() {
 };
 
 
-/** @param {number} value */
+/**
+ * @param {number} value
+ * @return {!proto.entities.AccountKey} returns this
+ */
 proto.entities.AccountKey.prototype.setSignAlgo = function(value) {
-  jspb.Message.setProto3IntField(this, 3, value);
+  return jspb.Message.setProto3IntField(this, 3, value);
 };
 
 
@@ -586,9 +613,12 @@ proto.entities.AccountKey.prototype.getHashAlgo = function() {
 };
 
 
-/** @param {number} value */
+/**
+ * @param {number} value
+ * @return {!proto.entities.AccountKey} returns this
+ */
 proto.entities.AccountKey.prototype.setHashAlgo = function(value) {
-  jspb.Message.setProto3IntField(this, 4, value);
+  return jspb.Message.setProto3IntField(this, 4, value);
 };
 
 
@@ -601,9 +631,12 @@ proto.entities.AccountKey.prototype.getWeight = function() {
 };
 
 
-/** @param {number} value */
+/**
+ * @param {number} value
+ * @return {!proto.entities.AccountKey} returns this
+ */
 proto.entities.AccountKey.prototype.setWeight = function(value) {
-  jspb.Message.setProto3IntField(this, 5, value);
+  return jspb.Message.setProto3IntField(this, 5, value);
 };
 
 
@@ -616,9 +649,12 @@ proto.entities.AccountKey.prototype.getSequenceNumber = function() {
 };
 
 
-/** @param {number} value */
+/**
+ * @param {number} value
+ * @return {!proto.entities.AccountKey} returns this
+ */
 proto.entities.AccountKey.prototype.setSequenceNumber = function(value) {
-  jspb.Message.setProto3IntField(this, 6, value);
+  return jspb.Message.setProto3IntField(this, 6, value);
 };
 
 

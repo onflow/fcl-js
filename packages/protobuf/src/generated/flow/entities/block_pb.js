@@ -1,3 +1,4 @@
+// source: flow/entities/block.proto
 /**
  * @fileoverview
  * @enhanceable
@@ -51,13 +52,15 @@ proto.entities.Block.repeatedFields_ = [5,6,7];
 
 if (jspb.Message.GENERATE_TO_OBJECT) {
 /**
- * Creates an object representation of this proto suitable for use in Soy templates.
+ * Creates an object representation of this proto.
  * Field names that are reserved in JavaScript and will be renamed to pb_name.
+ * Optional fields that are not set will be set to undefined.
  * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
  * For the list of reserved names please see:
- *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
- * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
- *     for transitional soy proto support: http://goto/soy-param-migration
+ *     net/proto2/compiler/js/internal/generator.cc#kKeyword.
+ * @param {boolean=} opt_includeInstance Deprecated. whether to include the
+ *     JSPB instance for transitional soy proto support:
+ *     http://goto/soy-param-migration
  * @return {!Object}
  */
 proto.entities.Block.prototype.toObject = function(opt_includeInstance) {
@@ -67,8 +70,8 @@ proto.entities.Block.prototype.toObject = function(opt_includeInstance) {
 
 /**
  * Static version of the {@see toObject} method.
- * @param {boolean|undefined} includeInstance Whether to include the JSPB
- *     instance for transitional soy proto support:
+ * @param {boolean|undefined} includeInstance Deprecated. Whether to include
+ *     the JSPB instance for transitional soy proto support:
  *     http://goto/soy-param-migration
  * @param {!proto.entities.Block} msg The msg instance to transform.
  * @return {!Object}
@@ -269,9 +272,12 @@ proto.entities.Block.prototype.getId_asU8 = function() {
 };
 
 
-/** @param {!(string|Uint8Array)} value */
+/**
+ * @param {!(string|Uint8Array)} value
+ * @return {!proto.entities.Block} returns this
+ */
 proto.entities.Block.prototype.setId = function(value) {
-  jspb.Message.setProto3BytesField(this, 1, value);
+  return jspb.Message.setProto3BytesField(this, 1, value);
 };
 
 
@@ -308,9 +314,12 @@ proto.entities.Block.prototype.getParentId_asU8 = function() {
 };
 
 
-/** @param {!(string|Uint8Array)} value */
+/**
+ * @param {!(string|Uint8Array)} value
+ * @return {!proto.entities.Block} returns this
+ */
 proto.entities.Block.prototype.setParentId = function(value) {
-  jspb.Message.setProto3BytesField(this, 2, value);
+  return jspb.Message.setProto3BytesField(this, 2, value);
 };
 
 
@@ -323,9 +332,12 @@ proto.entities.Block.prototype.getHeight = function() {
 };
 
 
-/** @param {number} value */
+/**
+ * @param {number} value
+ * @return {!proto.entities.Block} returns this
+ */
 proto.entities.Block.prototype.setHeight = function(value) {
-  jspb.Message.setProto3IntField(this, 3, value);
+  return jspb.Message.setProto3IntField(this, 3, value);
 };
 
 
@@ -339,17 +351,21 @@ proto.entities.Block.prototype.getTimestamp = function() {
 };
 
 
-/** @param {?proto.google.protobuf.Timestamp|undefined} value */
+/**
+ * @param {?proto.google.protobuf.Timestamp|undefined} value
+ * @return {!proto.entities.Block} returns this
+*/
 proto.entities.Block.prototype.setTimestamp = function(value) {
-  jspb.Message.setWrapperField(this, 4, value);
+  return jspb.Message.setWrapperField(this, 4, value);
 };
 
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.entities.Block} returns this
  */
 proto.entities.Block.prototype.clearTimestamp = function() {
-  this.setTimestamp(undefined);
+  return this.setTimestamp(undefined);
 };
 
 
@@ -372,9 +388,12 @@ proto.entities.Block.prototype.getCollectionGuaranteesList = function() {
 };
 
 
-/** @param {!Array<!proto.entities.CollectionGuarantee>} value */
+/**
+ * @param {!Array<!proto.entities.CollectionGuarantee>} value
+ * @return {!proto.entities.Block} returns this
+*/
 proto.entities.Block.prototype.setCollectionGuaranteesList = function(value) {
-  jspb.Message.setRepeatedWrapperField(this, 5, value);
+  return jspb.Message.setRepeatedWrapperField(this, 5, value);
 };
 
 
@@ -390,9 +409,10 @@ proto.entities.Block.prototype.addCollectionGuarantees = function(opt_value, opt
 
 /**
  * Clears the list making it empty but non-null.
+ * @return {!proto.entities.Block} returns this
  */
 proto.entities.Block.prototype.clearCollectionGuaranteesList = function() {
-  this.setCollectionGuaranteesList([]);
+  return this.setCollectionGuaranteesList([]);
 };
 
 
@@ -406,9 +426,12 @@ proto.entities.Block.prototype.getBlockSealsList = function() {
 };
 
 
-/** @param {!Array<!proto.entities.BlockSeal>} value */
+/**
+ * @param {!Array<!proto.entities.BlockSeal>} value
+ * @return {!proto.entities.Block} returns this
+*/
 proto.entities.Block.prototype.setBlockSealsList = function(value) {
-  jspb.Message.setRepeatedWrapperField(this, 6, value);
+  return jspb.Message.setRepeatedWrapperField(this, 6, value);
 };
 
 
@@ -424,9 +447,10 @@ proto.entities.Block.prototype.addBlockSeals = function(opt_value, opt_index) {
 
 /**
  * Clears the list making it empty but non-null.
+ * @return {!proto.entities.Block} returns this
  */
 proto.entities.Block.prototype.clearBlockSealsList = function() {
-  this.setBlockSealsList([]);
+  return this.setBlockSealsList([]);
 };
 
 
@@ -463,26 +487,31 @@ proto.entities.Block.prototype.getSignaturesList_asU8 = function() {
 };
 
 
-/** @param {!(Array<!Uint8Array>|Array<string>)} value */
+/**
+ * @param {!(Array<!Uint8Array>|Array<string>)} value
+ * @return {!proto.entities.Block} returns this
+ */
 proto.entities.Block.prototype.setSignaturesList = function(value) {
-  jspb.Message.setField(this, 7, value || []);
+  return jspb.Message.setField(this, 7, value || []);
 };
 
 
 /**
  * @param {!(string|Uint8Array)} value
  * @param {number=} opt_index
+ * @return {!proto.entities.Block} returns this
  */
 proto.entities.Block.prototype.addSignatures = function(value, opt_index) {
-  jspb.Message.addToRepeatedField(this, 7, value, opt_index);
+  return jspb.Message.addToRepeatedField(this, 7, value, opt_index);
 };
 
 
 /**
  * Clears the list making it empty but non-null.
+ * @return {!proto.entities.Block} returns this
  */
 proto.entities.Block.prototype.clearSignaturesList = function() {
-  this.setSignaturesList([]);
+  return this.setSignaturesList([]);
 };
 
 
