@@ -1,6 +1,6 @@
 {
   "name": "@onflow/protobuf",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Access Node Protobuf",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
@@ -19,10 +19,18 @@
   },
   "devDependencies": {
     "jest": "25.1.0",
-    "jest-esm-transformer": "1.0.0"
+    "jest-esm-transformer": "1.0.0",
+    "path": "^0.12.7",
+    "webpack": "^4.42.1",
+    "webpack-cli": "^3.3.11"
   },
-  "main": "src/protobuf.js",
+  "main": "./dist/index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "build": "webpack"
+  },
+  "dependencies": {
+    "@improbable-eng/grpc-web": "^0.12.0",
+    "google-protobuf": "^3.11.4"
   }
 }
