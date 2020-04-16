@@ -28,6 +28,7 @@
   },
   "main": "./dist/index.js",
   "scripts": {
+    "prepublishOnly": "npm test && npm run build",
     "test": "jest",
     "build": "webpack"
   },
