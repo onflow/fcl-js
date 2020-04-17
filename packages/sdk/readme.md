@@ -63,7 +63,7 @@ console.log(result === 11n) // true
   - [`sdk.getAccount`](./build/get-account.js)
   - [`sdk.getEvents`](./build/get-events.js)
   - [`sdk.getLatestBlock`](./build/get-latest-block.js)
-  - [`sdk.getTransaction`](./build/get-transaction.js)
+  - [`sdk.getTransactionStatus`](./build/get-transaction-status.js)
   - [`sdk.limit`](./build/limit.js)
   - [`sdk.nonce`](./build/nonce.js)
   - [`sdk.params` & `sdk.param`](./build/params.js)
