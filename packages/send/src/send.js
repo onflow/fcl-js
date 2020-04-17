@@ -1,6 +1,6 @@
 import {
   isTransaction,
-  isGetTransaction,
+  isGetTransactionStatus,
   isScript,
   isGetAccount,
   isGetEvents,
@@ -8,7 +8,7 @@ import {
   isPing
 } from "@onflow/interaction"
 import {sendTransaction} from "./send-transaction"
-import {sendGetTransaction} from "./send-get-transaction"
+import {sendGetTransactionStatus} from "./send-get-transaction-status"
 import {sendExecuteScript} from "./send-execute-script"
 import {sendGetAccount} from "./send-get-account"
 import {sendGetEvents} from "./send-get-events"
@@ -19,8 +19,8 @@ export const send = async (ix, opts = {}) => {
   switch (true) {
     case isTransaction(ix):
       return sendTransaction(ix, opts)
-    case isGetTransaction(ix):
-      return sendGetTransaction(ix, opts)
+    case isGetTransactionStatus(ix):
+      return sendGetTransactionStatus(ix, opts)
     case isScript(ix):
       return sendExecuteScript(ix, opts)
     case isGetAccount(ix):

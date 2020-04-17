@@ -1,4 +1,4 @@
-import {GetAccountRequest, ObserveService} from "@onflow/protobuf"
+import {GetAccountRequest, AccessAPI} from "@onflow/protobuf"
 import {response} from "@onflow/response"
 import {unary} from "./unary"
 import {bufferToHexString, addressToBuffer, bytes} from "@onflow/bytes"
@@ -8,7 +8,7 @@ export async function sendGetAccount(ix, opts = {}) {
   const address = addressToBuffer(bytes(ix.acct, 20))
   req.setAddress(address)
 
-  const res = await unary(opts.node, ObserveService.GetAccount, req)
+  const res = await unary(opts.node, AccessAPI.GetAccount, req)
 
   let ret = response()
   ret.tag = ix.tag
@@ -19,10 +19,12 @@ export async function sendGetAccount(ix, opts = {}) {
     balance: account.getBalance(),
     code: account.getCode_asU8(),
     keys: account.getKeysList().map(publicKey => ({
+      index: publicKey.getIndex(),
       publicKey: bufferToHexString(publicKey.getPublicKey_asU8()),
       signAlgo: publicKey.getSignAlgo(),
       hashAlgo: publicKey.getHashAlgo(),
       weight: publicKey.getWeight(),
+      sequenceNumber: publicKey.getSequenceNumber()
     })),
   }
 
