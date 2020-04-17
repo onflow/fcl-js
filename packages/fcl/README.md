@@ -1,340 +1,146 @@
-# FCL
+# @onflow/fcl
 
-> This module provides a high level opinionated use of various parts of the Flow SDK.
+A high level abstraction (built on top of [@onflow/sdk](../sdk)) that enables development of browser based dApps.
 
----
+# Status
 
-## `config/0`
+- **Interface** Stable _(low risk of change)_
+- **Realization** Unstable _(high risk of change)_
 
-> Key/Value Store used to configure the internals of fcl.
+We are currently confident in how to consume this package and how to build it, but this module is currently in an incomplete state and not everything works yet.
 
-### Progress
-- [x] `fcl.config/0.put/2`
-- [x] `fcl.config/0.get/1`
-- [x] `fcl.config/0.get/2`
-- [x] `fcl.config/0.update/2`
-- [x] `fcl.config/0.delete/1`
-- [x] `fcl.config/0.where/1
-- [x] `fcl.config/0.subscribe/1`
+# Install
 
-### `fcl.config/0.put/2` `fcl.config/0.get/n`
-
-```javascript
-import * as fcl from "@onflow/fcl"
-
-fcl.config().put("foo", "bar")
-await fcl.config().get("foo") // "bar"
-await fcl.config().get("bar") // undefined
-await fcl.config().get("bar", "fallback") // "fallback"
+```bash
+npm install --save @onflow/fcl
 ```
 
-### `fcl.config/0.update/2` and `fcl.config/0.delete/1`
+You will probably also want: [`@onflow/sdk`](../sdk) and [`@onflow/types`](../types)
+
+# Overview
+
+- [x] [`fcl.config()`](./src/config) _(done)_
+  - [x] `fcl.config().put(key, value)` _(done)_
+  - [x] `fcl.config().get(key)` _(done)_
+  - [x] `fcl.config().get(key, fallback)` _(done)_
+  - [x] `fcl.config().update(key, transform)` _(done)_
+  - [x] `fcl.config().delete(key)` _(done)_
+  - [x] `fcl.config().where(regexp)` _(done)_
+  - [x] `fcl.config().subscribe(callback)` _(done)_
+- [ ] `fcl.authenticate()` _(wip)_
+- [ ] `fcl.unauthenticate()` _(wip)_
+- [ ] `fcl.currentUser()` _(wip)_
+  - [ ] `fcl.currentUser().snapshot()` _(wip)_
+  - [ ] `fcl.currentUser().subscribe(callback)` _(wip)_
+  - [ ] `fcl.currentUser().authorization` _(wip)_
+  - [ ] `fcl.currentUser().payerAuthorization` _(wip)_
+  - [ ] `fcl.currentUser().proposerAuthorization` _(wip)_
+  - [ ] `fcl.currentUser().param(key)` _(wip)_
+- [ ] [`fcl.user(addr)`](./src/user) _(wip)_
+  - [ ] `fcl.user(addr).snapshot()` _(wip)_
+  - [ ] `fcl.user(addr).subscribe(callback)` _(wip)_
+  - [ ] `fcl.user(addr).authorization` _(wip)_
+  - [ ] `fcl.user(addr).payerAuthorization` _(wip)_
+  - [ ] `fcl.user(addr).proposerAuthorization` _(wip)_
+  - [ ] `fcl.user(addr).param(key)` _(wip)_
+- [ ] `fcl.transaction(transactionId)` _(wip)_
+  - [ ] `fcl.transaction(transactionId).snapshot()` _(wip)_
+  - [ ] `fcl.transaction(transactionId).subscribe(callback)` _(wip)_
+- [ ] `fcl.events(...)` _(EARLY VERY UNSTABLE)_
+  - [ ] `fcl.events(...).subscribe(callback)` _(EARLY VERY UNSTABLE)_
+- [ ] [`fcl.send(builders)`](./src/send) _(WIP)_
+  - [ ] Configure `fcl.send` _(WIP)_
+- [ ] `fcl.decode(response)` _(WIP)_
+  - [ ] Configure `fcl.decode` _(WIP)_
+    - [ ] Custom qualified decoders _(WIP)_
+    - [ ] Custom unqualified decoders _(WIP)_
+
+# Usage
+
+**Authentication Example**
 
 ```javascript
+import React, {useState, useEffect} from "react"
 import * as fcl from "@onflow/fcl"
 
-fcl.config().put("foo", "bar")
-await fcl.config().get("foo") // "bar"
-fcl.config().update("foo", v => v + v)
-await fcl.config().get("foo") // "barbar"
-fcl.config().delete("foo")
-await fcl.config().get("foo") // undefined
+fcl.config()
+  .put("challenge.scope", "email+publicKey")
+
+export const Profile = () => {
+  const [user, setUser] = useState(null)
+  useEffect(() => fcl.currentUser().subscribe(setUser), [])
+
+  if (user == null) return <div>Loading...</div>
+
+  return !user.loggedIn
+    ? <div>
+        <button onClick={fcl.authenticate}>Sign In</button>
+        <button onClick={fcl.authenticate}>Sign Up</button>
+      </div>
+    : <div>
+        <div>
+          <img src={user.avatar || "http://placekitten.com/g/100/100"} width="100" height="100"/>
+          {user.name || "Anonymous"}
+        </div>
+        <button onClick={fcl.unauthenticate}>Sign Out</button>
+      </div>
+}
 ```
 
-### `fcl.config/0.where/1`
+**Transaction Example**
 
 ```javascript
 import * as fcl from "@onflow/fcl"
+import * as sdk from "@onflow/sdk"
+import * as six from "@onflow/six" // Comming Soon (Saved Interactions)
+import * as t from "@onflow/types"
 
-fcl.config().put("foo.bar", "bar")
-fcl.config().put("foo.baz", "baz")
-fcl.config().put("wat.bar", "wat")
+fcl.config()
+  .put("send.node", "https://accessNodeUrl")
 
-await fcl.config().where(/^foo/) // { "foo.bar": "bar", "foo.baz": "baz" }
-await fcl.config().where(/^wat/) // { "wat.bar": "wat" }
-```
+const response = await fcl.send([
+  sdk.transaction(six.SEND_FLOW_TOKENS),
+  sdk.params([
+    fcl.user(toAddress).param(),
+    sdk.param(amount, t.UFix64),
+  ]),
+  sdk.payer(fcl.currentUser().payerAuthorization),
+  sdk.proposer(fcl.currentUser().proposerAuthorization),
+  sdk.authorizations([
+    fcl.currentUser().authorization
+  ]),
+])
 
-### `fcl.config/0.subscribe/1`
-
-```javascript
-import * as fcl from "@onflow/fcl"
-
-const unsubscribe = fcl.config().subscribe(snapshot => {
-  console.log("snapshot:", snapshot)
+const unsub = fcl.transaction(response).subscribe(status => {
+  if (sdk.isSealed(status)) unsub()
+  console.log(status)
 })
-// snapshot: {}
-fcl.config.put("foo", "bar")
-// snapshot: { "foo": "bar" }
-fcl.config.update("foo", v => v + v)
-// snapshot: { "foo": "barbar" }
-
-unsubscribe()
 ```
 
----
-
-## `currentUser/0`
-
-> `fcl.currentUser/0` returns things you can do with the current user.
-
-### Progress
-- [ ] `fcl.currentUser/0`
-- [ ] `fcl.currentUser/0.snapshot/0`
-- [ ] `fcl.currentUser/0.subsribe/1`
-- [ ] `fcl.currentUser/0.authorization/n`
-- [ ] `fcl.currentUser/0.payerAuthorization/n`
-
-
-### `fcl.currentUser/0.snapshot/0`
-
-Asynchronously returns a snapshot of the current internal state of the currentUser.
-
-```javascript
-import * as fcl from "@onflow/fcl"
-
-await fcl.currentUser().snapshot() // {acct, name,  …}
-```
-
-### `fcl.currentUser/0.subscribe/1`
-
-Reactively calls the callback with the identity of the current user anytime the knowledge of the currentUser changes. Returns an unsubscribe function.
-
-```javascript
-import React, {useState, useEffect} from "react"
-import {currentUser} from "@onflow/fcl"
-
-export const CurrentUser = () => {
-  const [user, setUser] = useState({})
-  useEffect(() => currentUser.subscribe(setUser), [])
-
-  return user.DID == null
-    ? null
-    : <div>
-        <img src={user.avatar || "https://fallback.avatar.com"}/>
-        <div>{user.name || "Anonymous"}</div>
-      </div>
-}
-```
-
-### `fcl.currentUser/0.authorization/n` and `fcl.currentUser/0.payerAuthorization/n`
-
-Used in conjunction with `fcl.send/n` to specify a required authorization by the currentUser.
+**Script**
 
 ```javascript
 import * as fcl from "@onflow/fcl"
 import * as sdk from "@onflow/sdk"
 import * as t from "@onflow/types"
 
-const runTransaction = async (to, amount) =>
-  fcl.send([
-    sdk.transaction`
-      transaction(to: Address, amount: UFix64) {
-        prepare(from: AuthAccount) { … }
-        execute { … }
-      }
-    `,
-    sdk.params([
-      fcl.user(to).param(),
-      sdk.param(amount, t.UFix64),
-    ]),
-    sdk.authorizations([
-      fcl.currentUser().authorization
-    ]),
-    sdk.payer(fcl.currentUser().payerAuthorization)
+fcl.config()
+  .put("decoder.SomeNFT", d => new SomeToken(d))
+
+// query for onchain nfts
+const response = await fcl.send([
+  sdk.script`
+    import SomeNFT, getAllForAddress from 0x....
+
+    pub fun main(addr: Address): @[SomeNFT] {
+      let nfts: [SomeNFT] = getAllForAddress(addr: Address)
+      return nfts
+    }
+  `,
+  sdk.params([
+    fcl.currentUser().param()
   ])
-```
+])
 
----
-
-## `user/1`
-
-> `fcl.user/1` returns things you can do with the supplied user.
-
-### Progress
-- [ ] `fcl.user/1`
-- [ ] `fcl.user/1.snapshot/0`
-- [ ] `fcl.user/1.subscribe/1`
-- [ ] `fcl.user/1.authorization/n`
-- [ ] `fcl.user/1.payerAuthorization/n`
-
-### `fcl.currentUser/0.snapshot/0`
-
-Asynchronously returns a snapshot of the current internal state of the supplied user.
-
-```javascript
-import * as fcl from "@onflow/fcl"
-
-await fcl.user(flowAcctNumber).snapshot() // {acct, name,  …}
-```
-
-### `fcl.user/1.subscribe/1`
-
-Reactively calls the callback with the identity of the supplied user anytime the knowledge of the supplied user changes. Returns an unsubscribe function.
-
-```javascript
-import React, {useState, useEffect} from "react"
-import * as fcl from "@onflow/fcl"
-
-export const User = ({ flowAcctNumber }) => {
-  const [user, setUser] = userState({})
-  useEffect(() => fcl.user(flowAcctNumber).subscribe(setUser), [])
-
-  return user.DID == null
-    ? null
-    : <div>
-        <img src={user.avatar || "https://fallback.avatar.com"}/>
-        <div>{user.name || "Anonymous"}</div>
-      </div>
-}
-```
-
-### `fcl.user/1.authorization/n` and `fcl.user/1.payerAuthorization`
-
-Used in conjunction with `fcl.send/n` to specify a required authorization by a supplied user.
-
-```javascript
-import * as fcl from "@onflow/fcl"
-import * as sdk from "@onflow/sdk"
-import * as t from "@onflow/types"
-
-const runTransaction = async (from, amount) =>
-  fcl.send([
-    sdk.transaction`
-      transaction(to: Address, amount: UFix64) {
-        prepare(from: AuthAccount) { … }
-        execute { … }
-      }
-    `,
-    sdk.params([
-      fcl.currentUser().param(),
-      sdk.param(amount, t.UFix64),
-    ]),
-    sdk.authorizations([
-      fcl.user(from).authorization,
-    ]),
-    sdk.payer(fcl.user(from).payerAuthorization)
-  ])
-```
-
----
-
-## `transaction/1`
-
-> EARLY WIP
-
-### Progress
-- [ ] `fcl.transaction/1`
-- [ ] `fcl.transaction/1.subscribe/1`
-
----
-
-## `event/1`, `event/2` and `event/3`
-
-> EARLY WIP
-
-### Progress
-- [ ] `fcl.events/1`
-- [ ] `fcl.events/2`
-- [ ] `fcl.events/3`
-- [ ] `fcl.events/n.subscribe/1`
-
----
-
-## `authenticate/0` and `unauthenticate/0`
-
-> Authenticates and unauthenticates the currentUser.
-
-### Progress
-- [ ] `fcl.authenticate/0`
-- [ ] `fcl.unauthenticate/0`
-
-```javascript
-import React, {useState, useEffect} from "react"
-import { currentUser, authenticate, unauthenticate } from "@onflow/fcl"
-
-export const AuthButton = () => {
-  const [user, setUser] = useState({})
-  useEffect(() => currentUser().subscribe(setUser), [])
-
-  return user.DID != null
-    ? <button onClick={unauthenticate}>Log Out</button>
-    : <button onClick={authenticate}>Log In</button>
-}
-```
-
----
-
-## `send/1` and `send/2`
-
-> An opinionated use of the build/resolve/send pipeline. Comes preconfigured to work with params, async remote signing and payer.
-
-### Progress
-- [x] `fcl.send/1`
-- [x] `fcl.send/2`
-
-```javascript
-import * as fcl from "@onflow/fcl"
-import * as sdk from "@onflow/sdk"
-import * as t from "@onflow/types"
-
-fcl.config().put("accessNode.api", "https://my.access.node")
-fcl.config().put("accessNode.key", process.env.FLOW_ACCESS_NODE_API_KEY)
-
-const runTransaction = async (to, amount) =>
-  fcl.send([
-    sdk.transaction`
-      transaction(to: Address, amount: UFix64) {
-        prepare(from: AuthAccount) { … }
-        execute { … }
-      }
-    `,
-    sdk.params([
-      fcl.user(to).param(),
-      sdk.param(amount, t.UFix64),
-    ]),
-    sdk.authorizations([
-      fcl.currentUser().authorization
-    ]),
-    sdk.payer(fcl.currentUser().payerAuthorization)
-  ])
-```
-
----
-
-## `decode/1`
-
-> An opinionated use of the decode function. Allows for global configuration of custom resources.
-
-### Progress
-- [ ] `fcl.decode/1`
-
-```javascript
-import * as fcl from "@onflow/fcl"
-import * as sdk from "@onflow/sdk"
-
-class MyCustomResource {
-  consturctor(data) {
-    this.name = data.name || "Anonymous"
-    this.age = data.age || 0
-  }
-}
-
-fcl.config("decode.MyCustomResource", data => new MyCustomResource(data))
-
-const getStuff = async () => {
-  const response = await fcl.send([
-    sdk.script`
-      import MyCustomResource from 0x___
-
-      pub fun main(): @[MyCustomResource] {
-        ...
-      }
-    `
-  ])
-
-  const arrayOfMyCustomResource = await fcl.decode(response)
-
-  …
-}
-
+const results = await fcl.decode(response)
 ```
