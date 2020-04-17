@@ -30,4 +30,4 @@ The data that needs to be sent back to FCL after a successful challenge is as fo
 - **nonce** - A generated value FCL supplies in the challenge, it needs to be sent back to FCL unchanged.
 - **l6n** - The location (origin) of the dApp. Used to scope the javascript postMessage. It also needs to be sent back to FCL unchanged.
 
-![diagram showing current fcl authn and authz flow](./assets/fcl-ars-auth-v3.png)
+![diagram showing current fcl authn and authz flow](./assets/fcl-ars-auth-v3.1.png)
