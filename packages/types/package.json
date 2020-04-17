@@ -1,0 +1,36 @@
+{
+  "name": "@onflow/types",
+  "version": "0.0.0",
+  "description": "Utilities to transform javascript values into Cadence understandable values",
+  "license": "Apache-2.0",
+  "author": "Dapper Labs <dev@dapperlabs.com>",
+  "homepage": "https://onflow.org",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/dapperlabs/flow-js-sdk.git"
+  },
+  "bugs": {
+    "url": "https://github.com/dapperlabs/flow-js-sdk/issues"
+  },
+  "jest": {
+    "transform": {
+      ".js": "jest-esm-transformer"
+    }
+  },
+  "devDependencies": {
+    "jest": "25.1.0",
+    "jest-esm-transformer": "1.0.0",
+    "microbundle": "0.11.0"
+  },
+  "source": "src/types.js",
+  "main": "dist/types.js",
+  "module": "dist/types.module.js",
+  "unpkg": "dist/types.umd.js",
+  "scripts": {
+    "prepublishOnly": "npm test && npm run build",
+    "test": "jest",
+    "build": "microbundle",
+    "test:watch": "jest --watch",
+    "start": "microbundle watch"
+  }
+}
