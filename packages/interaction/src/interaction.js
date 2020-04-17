@@ -1,11 +1,11 @@
-export const UNKNOWN /*          */ = 0b00000001
-export const SCRIPT /*           */ = 0b00000010
-export const TRANSACTION /*      */ = 0b00000100
-export const GET_TRANSACTION /*  */ = 0b00001000
-export const GET_ACCOUNT /*      */ = 0b00010000
-export const GET_EVENTS /*       */ = 0b00100000
-export const GET_LATEST_BLOCK /* */ = 0b01000000
-export const PING /*             */ = 0b10000000
+export const UNKNOWN /*                 */ = 0b00000001
+export const SCRIPT /*                  */ = 0b00000010
+export const TRANSACTION /*             */ = 0b00000100
+export const GET_TRANSACTION_STATUS /*  */ = 0b00001000
+export const GET_ACCOUNT /*             */ = 0b00010000
+export const GET_EVENTS /*              */ = 0b00100000
+export const GET_LATEST_BLOCK /*        */ = 0b01000000
+export const PING /*                    */ = 0b10000000
 
 export const BAD /* */ = 0b01
 export const OK /*  */ = 0b10
@@ -65,25 +65,25 @@ const make = wat => ix => {
   return Ok(ix)
 }
 
-export const makeUnknown /*        */ = make(UNKNOWN)
-export const makeScript /*         */ = make(SCRIPT)
-export const makeTransaction /*    */ = make(TRANSACTION)
-export const makeGetTransaction /* */ = make(GET_TRANSACTION)
-export const makeGetAccount /*     */ = make(GET_ACCOUNT)
-export const makeGetEvents /*      */ = make(GET_EVENTS)
-export const makeGetLatestBlock /* */ = make(GET_LATEST_BLOCK)
-export const makePing /*           */ = make(PING)
+export const makeUnknown /*               */ = make(UNKNOWN)
+export const makeScript /*                */ = make(SCRIPT)
+export const makeTransaction /*           */ = make(TRANSACTION)
+export const makeGetTransactionStatus /*  */ = make(GET_TRANSACTION_STATUS)
+export const makeGetAccount /*            */ = make(GET_ACCOUNT)
+export const makeGetEvents /*             */ = make(GET_EVENTS)
+export const makeGetLatestBlock /*        */ = make(GET_LATEST_BLOCK)
+export const makePing /*                  */ = make(PING)
 
 const is = wat => ix => Boolean(ix.tag & wat)
 
-export const isUnknown /*        */ = is(UNKNOWN)
-export const isScript /*         */ = is(SCRIPT)
-export const isTransaction /*    */ = is(TRANSACTION)
-export const isGetTransaction /* */ = is(GET_TRANSACTION)
-export const isGetAccount /*     */ = is(GET_ACCOUNT)
-export const isGetEvents /*      */ = is(GET_EVENTS)
-export const isGetLatestBlock /* */ = is(GET_LATEST_BLOCK)
-export const isPing /*           */ = is(PING)
+export const isUnknown /*               */ = is(UNKNOWN)
+export const isScript /*                */ = is(SCRIPT)
+export const isTransaction /*           */ = is(TRANSACTION)
+export const isGetTransactionStatus /*  */ = is(GET_TRANSACTION_STATUS)
+export const isGetAccount /*            */ = is(GET_ACCOUNT)
+export const isGetEvents /*             */ = is(GET_EVENTS)
+export const isGetLatestBlock /*        */ = is(GET_LATEST_BLOCK)
+export const isPing /*                  */ = is(PING)
 
 export const isOk /*  */ = ix => Boolean(ix.status & OK)
 export const isBad /* */ = ix => Boolean(ix.status & BAD)
