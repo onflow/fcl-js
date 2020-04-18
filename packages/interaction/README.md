@@ -87,8 +87,8 @@ Currently the Access Node recognizes 7 different types of interactions.
     - [makeTransaction/1](#maketransaction1-and-istransaction1)
     - [isTransaction/1](#maketransaction1-and-istransaction1)
   - **GetTransactionStatus**
-    - [makeGetTransactionStatus/1](#makegettransaction1-and-isgettransactionstatus1)
-    - [isGetTransactionStatus/1](#makegettransaction1-and-isgettransactionstatus1)
+    - [makeGetTransactionStatus/1](#makegettransactionstatus1-and-isgettransactionstatus1)
+    - [isGetTransactionStatus/1](#makegettransactionstatus1-and-isgettransactionstatus1)
   - **GetAccount**
     - [makeGetAccount/1](#makegetaccount1-and-isgetaccount1)
     - [isGetAccount/1](#makegetaccount1-and-isgetaccount1)
