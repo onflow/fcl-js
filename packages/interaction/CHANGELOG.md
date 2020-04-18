@@ -1,11 +1,13 @@
-# Unreleased
+### Unreleased
 
-- _YYYY-MM-DD_ **BREAKING?** description
+- YYYY-MM-DD **BREAKING?** -- description
+- 2020-04-18 -- VSN jest 25.1.0 -> 25.3.0
+- 2020-04-18 -- VSN microbundle 0.11.0 -> 0.12.0-next.8
 
-# 0.0.4 _2020-04-17_
+### 0.0.4 -- 2020-04-17
 
-- _2020-04-17_ **BREAKING** Updates `GET_TRANSACTION` to `GET_TRANSACTION_STATUS`, `isGetTransaction` to `isGetTransactionStatus`, and `makeGetTransaction` to `makeGetTransactionStatus` in accordance to the updated AccessAPI spec.
+- 2020-04-17 **BREAKING** -- Updates `GET_TRANSACTION` to `GET_TRANSACTION_STATUS`, `isGetTransaction` to `isGetTransactionStatus`, and `makeGetTransaction` to `makeGetTransactionStatus` in accordance to the updated AccessAPI spec.
 
-# 0.0.3 _2020-04-17_
+### 0.0.3 -- 2020-04-17
 
 - Pre Changelog
