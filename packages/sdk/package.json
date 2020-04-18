@@ -18,9 +18,9 @@
     }
   },
   "devDependencies": {
-    "jest": "25.1.0",
+    "jest": "25.3.0",
     "jest-esm-transformer": "1.0.0",
-    "microbundle": "0.11.0"
+    "microbundle": "0.12.0-next.8"
   },
   "source": "src/sdk.js",
   "main": "dist/sdk.js",
