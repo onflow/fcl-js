@@ -26,8 +26,8 @@ clean:
 .PHONY: install
 install:
 	$(info TSK: install)
-	$(info run "npm install" in packages/*)
-	$(EXEC) sh -c 'npm install --prefix $$0 || exit 255'
+	$(info run "npm ci" in packages/*)
+	$(EXEC) sh -c 'npm ci --prefix $$0 || exit 255'
 
 .PHONY: build
 build:
