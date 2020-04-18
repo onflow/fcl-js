@@ -1,7 +1,8 @@
-# Unreleased
+### Unreleased
 
-- _YYYY-MM-DD_ **BREAKING?** description
+- YYYY-MM-DD **BREAKING?** -- description
+- 2020-04-18 -- VSN jest 25.1.0 -> 25.3.0
 
-# 0.1.2 _2020-04-17_
+### 0.1.2 -- 2020-04-17
 
 - Pre Changelog
