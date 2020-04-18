@@ -53,11 +53,11 @@ const preparePayloadSignatures = (tx) => {
       }
     }).
     sort((a, b) => {
-      if (a.signerIndex > b.signerIndex) return -1
-      if (a.signerIndex < b.signerIndex) return 1
+      if (a.signerIndex > b.signerIndex) return 1
+      if (a.signerIndex < b.signerIndex) return -1
 
-      if (a.keyIndex > b.keyIndex) return -1
-      if (a.keyIndex < b.keyIndex) return 1
+      if (a.keyIndex > b.keyIndex) return 1
+      if (a.keyIndex < b.keyIndex) return -1
     }).
     map((sig) => {
       return [
