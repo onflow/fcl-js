@@ -1,6 +1,12 @@
-# Interaction
+# @onflow/interaction
 
 > This module provides an ADT (Abstract Data Type) that represents the underlying data required by the `send` function. It provides function in which to modify the interaction.
+
+# Install
+
+```bash
+npm install --save @onflow/interaction
+```
 
 ## Types of interactions
 
@@ -8,7 +14,7 @@ Currently the Access Node recognizes 7 different types of interactions.
 
 - **Script** executes a script, can be used to query Flow
 - **Transaction** executes a transaction
-- **GetTransaction** requests the status of a supplied transaction
+- **GetTransactionStatus** requests the status of a supplied transaction
 - **GetAccount** requests a supplied account
 - **GetEvents** requests events of a supplied type
 - **GetLatestBlock** requests the latest block
@@ -22,18 +28,18 @@ Currently the Access Node recognizes 7 different types of interactions.
 - **status** *(all)* `Int` -- a marker that represents the status of the interaction
 - **reason** *(all)* `String` -- used to supply more information/feedback when a status is bad
 - **payload** *(script, transaction)*
-  - **code** *(script, transaction)* `UInt8Array` -- encoded cadence code
-  - **ref** *(transaction)* `UInt8Array` -- encoded id of an existing block (used for timeout)
+  - **code** *(script, transaction)* `String` -- cadence code
+  - **ref** *(transaction)* `String` -- id of an existing block (used for timeout)
   - **nonce** *(transaction)* `Int` -- all transactions in Flow need to be unique
   - **limit** *(transaction)* `Int` -- how much payer is willing to spend
 - **bounds** *(getEvents)*
-  - **start** *(getEvebts)* `Int [?-> UInt8Array]` -- events after this
-  - **end** *(getEvents)* `Int [?-> UInt8Array]` -- events before this
-- **acct** *(getAccount)* `UInt8Array` -- encoded version of an account
-- **authz** *(transaction)* `Array<{acct:UInt8Array, signature:UInt8Array}>` -- list of accounts and signatures authorizing a transaction
-- **payer** *(transaction)* `{acct:UInt8Array, signature: UInt8Array}` -- which account is paying for the transaction and their authorization
-- **eventType** *(getEvents)* `String [?->UInt8Array]` -- the type of events to query against
-- **txId** *(getTransaction)* `UInt8Array` -- encoded id of the transaction to query against
+  - **start** *(getEvebts)* `Int` -- events after this
+  - **end** *(getEvents)* `Int` -- events before this
+- **acct** *(getAccount)* `String` -- the account to get
+- **authz** *(transaction)* `Array<{acct:String, signature:String}>` -- list of accounts and signatures authorizing a transaction
+- **payer** *(transaction)* `{acct:String, signature: String}` -- which account is paying for the transaction and their authorization
+- **eventType** *(getEvents)* `String` -- the type of events to query against
+- **txId** *(getTransaction)* `String` -- id of the transaction to query against
 - **isSealed** *(getLatestBlock)* `Boolean` -- determines if the criteria for the latest block is sealed or **FIND_CORRECT_STATE_NAME**
 - **assigns** *(all)* `{[String]:Any}` -- a pocket to hold things in while building and resolving
 
@@ -41,16 +47,16 @@ Currently the Access Node recognizes 7 different types of interactions.
 
 **Tags**
 
-| Label            | asInt |      asBin |
-|-----------------:|:-----:|:-----------|
-| UNKNOWN          |   1   | 0b00000001 |
-| SCRIPT           |   2   | 0b00000010 |
-| TRANSACTION      |   4   | 0b00000100 |
-| GET_TRANSACTION  |   8   | 0b00001000 |
-| GET_ACCOUNT      |  16   | 0b00010000 |
-| GET_EVENTS       |  32   | 0b00100000 |
-| GET_LATEST_BLOCK |  64   | 0b01000000 |
-| PING             |  128  | 0b10000000 |
+| Label                   | asInt |      asBin |
+|------------------------:|:-----:|:-----------|
+| UNKNOWN                 |   1   | 0b00000001 |
+| SCRIPT                  |   2   | 0b00000010 |
+| TRANSACTION             |   4   | 0b00000100 |
+| GET_TRANSACTION_STATUS  |   8   | 0b00001000 |
+| GET_ACCOUNT             |  16   | 0b00010000 |
+| GET_EVENTS              |  32   | 0b00100000 |
+| GET_LATEST_BLOCK        |  64   | 0b01000000 |
+| PING                    |  128  | 0b10000000 |
 
 **Status**
 
@@ -80,9 +86,9 @@ Currently the Access Node recognizes 7 different types of interactions.
   - **Transaction**
     - [makeTransaction/1](#maketransaction1-and-istransaction1)
     - [isTransaction/1](#maketransaction1-and-istransaction1)
-  - **GetTransaction**
-    - [makeGetTransaction/1](#makegettransaction1-and-isgettransaction1)
-    - [isGetTransaction/1](#makegettransaction1-and-isgettransaction1)
+  - **GetTransactionStatus**
+    - [makeGetTransactionStatus/1](#makegettransaction1-and-isgettransactionstatus1)
+    - [isGetTransactionStatus/1](#makegettransaction1-and-isgettransactionstatus1)
   - **GetAccount**
     - [makeGetAccount/1](#makegetaccount1-and-isgetaccount1)
     - [isGetAccount/1](#makegetaccount1-and-isgetaccount1)
@@ -181,12 +187,12 @@ isTransaction(makeTransaction(interaction())) // true
 
 ### `makeGetTransaction/1` and `isGetTransaction/1`
 
-> tags an interaction as a GetTransaction interaction
+> tags an interaction as a GetTransactionStatus interaction
 
 ```javascript
-import {interaction, makeGetTransaction, isGetTransaction} from "@onflow/interaction"
+import {interaction, makeGetTransactionStatus, isGetTransactionStatus} from "@onflow/interaction"
 
-isGetTransaction(makeGetTransaction(interaction())) // true
+isGetTransactionStatus(makeGetTransactionStatus(interaction())) // true
 ```
 
 ### `makeGetAccount/1` and `isGetAccount/1`
