@@ -1,3 +1,13 @@
+# @onflow/protobuf
+
+This package contains the protobuf files used in the JS-SDK for communicating with the AccessAPI
+
+# Install
+
+```bash
+npm install --save @onflow/protobuf
+```
+
 ## Versioning
 
 The version of this package reflects the version of the AccessAPI spec for which it supports.
