@@ -27,6 +27,8 @@
     "uuid": "^7.0.3"
   },
   "scripts": {
+    "build": "echo 'nothing to build'",
+    "test": "echo 'no tests yet'",
     "start:cabbage": "PORT=8701 ./wallet",
     "start:potato": "PORT=8702 ./wallet",
     "start:carrot": "PORT=8703 ./wallet"
