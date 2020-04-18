@@ -19,6 +19,7 @@
     }
   },
   "devDependencies": {
+    "deepmerge": "^4.2.2",
     "jest": "25.3.0",
     "jest-esm-transformer": "1.0.0",
     "microbundle": "0.12.0-next.8"
