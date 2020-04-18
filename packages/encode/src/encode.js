@@ -18,6 +18,8 @@ const rlpEncode = (v) => {
 }
 
 const preparePayload = (tx) => {
+  validatePayload(tx)
+
   return [
     scriptToBuffer(tx.script),
     hashToBuffer(tx.refBlock),
@@ -31,6 +33,8 @@ const preparePayload = (tx) => {
 }
 
 const prepareEnvelope = (tx) => {
+  validateEnvelope(tx)
+
   return [
     preparePayload(tx),
     preparePayloadSignatures(tx),
@@ -81,3 +85,60 @@ const collectSigners = (tx) => {
 
   return signers
 }
+
+const validatePayload = (tx) => {
+  payloadFields.forEach((field) => checkField(tx, field))
+  proposalKeyFields.forEach((field) => checkField(tx.proposalKey, field, "proposalKey"))
+}
+
+const validateEnvelope = (tx) => {
+  envelopeFields.forEach((field) => checkField(tx, field))
+  tx.payloadSigs.forEach((sig, index) => {
+    payloadSigFields.forEach((field) => checkField(sig, field, "payloadSigs", index))
+  })
+}
+
+const isNumber = (v) => typeof v === "number"
+const isString = (v) => typeof v === "string"
+const isObject = (v) => v !== null && typeof v === "object"
+const isArray = (v) => isObject(v) && v instanceof Array
+
+const payloadFields = [
+  ["script", isString],
+  ["refBlock", isString],
+  ["gasLimit", isNumber],
+  ["proposalKey", isObject],
+  ["payer", isString],
+  ["authorizers", isArray],
+]
+
+const proposalKeyFields = [
+  ["address", isString],
+  ["key", isNumber],
+  ["sequenceNum", isNumber],
+]
+
+const envelopeFields = [
+  ["payloadSigs", isArray],
+]
+
+const payloadSigFields = [
+  ["address", isString], 
+  ["key", isNumber],
+  ["sig", isString],
+]
+
+const checkField = (obj, field, base, index) => {
+  const [name, checker] = field
+  const val = obj[name]
+  if (val == null) throw missingFieldError(name, base, index)
+  if (!checker(val)) throw invalidFieldError(name, base, index)
+}
+
+const printFieldName = (field, base, index) => {
+  if (!!base) return index == null ? `${base}.${field}` : `${base}.${index}.${field}`
+  return field
+}
+
+const missingFieldError = (field, base, index) => new Error(`Missing field ${printFieldName(field, base, index)}`) 
+const invalidFieldError = (field, base, index) => new Error(`Invalid field ${printFieldName(field, base, index)}`)
