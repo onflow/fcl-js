@@ -16,6 +16,8 @@
   "main": "src/index.js",
   "dependencies": {},
   "scripts": {
-    "start": "npx http-server ./src -p 8700"
+    "start": "npx http-server ./src -p 8700",
+    "build": "echo 'nothing to build'",
+    "test": "echo 'no tests yet'"
   }
 }
