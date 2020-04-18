@@ -8,14 +8,14 @@ const baseTx = {
   gasLimit: 42,
   proposalKey: {
     address: "01",
-    key: 4,
+    keyId: 4,
     sequenceNum: 10,
   },
   payer: "01",
   authorizers: ["01"],
   payloadSigs: [{
     address: "01",
-    key: 4,
+    keyId: 4,
     sig: "f7225388c1d69d57e6251c9fda50cbbf9e05131e5adb81e5aa0422402f048162",
   }]
 }
@@ -52,7 +52,7 @@ describe("encode transaction", () => {
     ["null gasLimit", buildTx({ gasLimit: null }),],
     ["null proposalKey", buildTx({ proposalKey: null }),],
     ["null proposalKey.address", buildTx({ proposalKey: { address: null } }),],
-    ["null proposalKey.key", buildTx({ proposalKey: { key: null } }),],
+    ["null proposalKey.keyId", buildTx({ proposalKey: { keyId: null } }),],
     ["null proposalKey.sequenceNum", buildTx({ proposalKey: { sequenceNum: null } }),],
     ["null payer", buildTx({ payer: null }),],
     ["null authorizers", buildTx({ authorizers: null }),],
@@ -62,7 +62,7 @@ describe("encode transaction", () => {
     ["non-number gasLimit", buildTx({ gasLimit: "foo" }),],
     ["non-object proposalKey", buildTx({ proposalKey: "foo" }),],
     ["non-string proposalKey.address", buildTx({ proposalKey: { address: 42 } }),],
-    ["non-number proposalKey.key", buildTx({ proposalKey: { key: "foo" } }),],
+    ["non-number proposalKey.keyId", buildTx({ proposalKey: { keyId: "foo" } }),],
     ["non-number proposalKey.sequenceNum", buildTx({ proposalKey: { sequenceNum: "foo" } }),],
     ["non-string payer", buildTx({ payer: 42 }),],
     ["non-array authorizers", buildTx({ authorizers: {} }),],
@@ -72,12 +72,12 @@ describe("encode transaction", () => {
     ...invalidPayloadCases,
     ["null payloadSigs", buildTx({ payloadSigs: null }),],
     ["null payloadSigs.0.address", buildTx({ payloadSigs: [ { address: null } ] }),],
-    ["null payloadSigs.0.key", buildTx({ payloadSigs: [ { key: null } ] }),],
+    ["null payloadSigs.0.keyId", buildTx({ payloadSigs: [ { keyId: null } ] }),],
     ["null payloadSigs.0.sig", buildTx({ payloadSigs: [ { sig: null } ] }),],
 
     ["non-array payloadSigs", buildTx({ payloadSigs: {} }),],
     ["non-string payloadSigs.0.address", buildTx({ payloadSigs: [ { address: 42 } ] }),],
-    ["non-number payloadSigs.0.key", buildTx({ payloadSigs: [ { key: "foo" } ] }),],
+    ["non-number payloadSigs.0.keyId", buildTx({ payloadSigs: [ { keyId: "foo" } ] }),],
     ["non-string payloadSigs.0.sig", buildTx({ payloadSigs: [ { sig: 42 } ] }),],
   ]
 
@@ -109,7 +109,7 @@ describe("encode transaction", () => {
     ],
     [
       "zero proposalKey.key",
-      buildTx({ proposalKey: { key: 0 } }),
+      buildTx({ proposalKey: { keyId: 0 } }),
       "f895b07472616e73616374696f6e207b2065786563757465207b206c6f67282248656c6c6f2c20576f726c64212229207d207da0f0e4c2f76c58916ec258f246851bea091d14d4247a2fc3e18694461b1816e13b2a940000000000000000000000000000000000000001800a940000000000000000000000000000000000000001d5940000000000000000000000000000000000000001",
       "f8bcf895b07472616e73616374696f6e207b2065786563757465207b206c6f67282248656c6c6f2c20576f726c64212229207d207da0f0e4c2f76c58916ec258f246851bea091d14d4247a2fc3e18694461b1816e13b2a940000000000000000000000000000000000000001800a940000000000000000000000000000000000000001d5940000000000000000000000000000000000000001e4e38004a0f7225388c1d69d57e6251c9fda50cbbf9e05131e5adb81e5aa0422402f048162",
     ],
@@ -147,7 +147,7 @@ describe("encode transaction", () => {
     ],
     [
       "zero payloadSigs.0.key",
-      buildTx({ payloadSigs: [ { key: 0 }] }),
+      buildTx({ payloadSigs: [ { keyId: 0 }] }),
       "f8bcf895b07472616e73616374696f6e207b2065786563757465207b206c6f67282248656c6c6f2c20576f726c64212229207d207da0f0e4c2f76c58916ec258f246851bea091d14d4247a2fc3e18694461b1816e13b2a940000000000000000000000000000000000000001040a940000000000000000000000000000000000000001d5940000000000000000000000000000000000000001e4e38080a0f7225388c1d69d57e6251c9fda50cbbf9e05131e5adb81e5aa0422402f048162",
     ],
     [
@@ -155,9 +155,9 @@ describe("encode transaction", () => {
       buildTx({
         authorizers: ["01", "02", "03"],
         payloadSigs: [
-          { address: "03", key: 0, sig: "c" },
-          { address: "01", key: 0, sig: "a" },
-          { address: "02", key: 0, sig: "b" },
+          { address: "03", keyId: 0, sig: "c" },
+          { address: "01", keyId: 0, sig: "a" },
+          { address: "02", keyId: 0, sig: "b" },
         ] 
       }),
       "f8cff8c0b07472616e73616374696f6e207b2065786563757465207b206c6f67282248656c6c6f2c20576f726c64212229207d207da0f0e4c2f76c58916ec258f246851bea091d14d4247a2fc3e18694461b1816e13b2a940000000000000000000000000000000000000001040a940000000000000000000000000000000000000001f83f940000000000000000000000000000000000000001940000000000000000000000000000000000000002940000000000000000000000000000000000000003ccc3808080c3018080c3028080",
@@ -167,9 +167,9 @@ describe("encode transaction", () => {
       buildTx({
         authorizers: ["01"],
         payloadSigs: [
-          { address: "01", key: 2, sig: "c" },
-          { address: "01", key: 0, sig: "a" },
-          { address: "01", key: 1, sig: "b" },
+          { address: "01", keyId: 2, sig: "c" },
+          { address: "01", keyId: 0, sig: "a" },
+          { address: "01", keyId: 1, sig: "b" },
         ] 
       }),
       "f8a4f895b07472616e73616374696f6e207b2065786563757465207b206c6f67282248656c6c6f2c20576f726c64212229207d207da0f0e4c2f76c58916ec258f246851bea091d14d4247a2fc3e18694461b1816e13b2a940000000000000000000000000000000000000001040a940000000000000000000000000000000000000001d5940000000000000000000000000000000000000001ccc3808080c3800180c3800280",

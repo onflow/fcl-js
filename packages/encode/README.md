@@ -22,7 +22,7 @@ const payloadMsg = encodeTransactionPayload({
   gasLimit: 42,
   proposalKey: {
     address: "01",
-    key: 7,
+    keyId: 7,
     sequenceNum: 10,
   },
   payer: "01",
@@ -35,14 +35,14 @@ const envelopeMsg = encodeTransactionEnvelope({
   gasLimit: 42,
   proposalKey: {
     address: "01",
-    key: 7,
+    keyId: 7,
     sequenceNum: 10,
   },
   payer: "01",
   authorizers: ["01"],
   payloadSigs: [{
     address: "01",
-    key: 7,
+    keyId: 7,
     sig: "f7225388c1d69d57e6251c9fda50cbbf9e05131e5adb81e5aa0422402f048162",
   }],
 })

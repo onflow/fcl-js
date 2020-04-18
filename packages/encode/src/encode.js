@@ -25,7 +25,7 @@ const preparePayload = (tx) => {
     hashToBuffer(tx.refBlock),
     tx.gasLimit,
     addressToBuffer(bytes(tx.proposalKey.address, 20)),
-    tx.proposalKey.key,
+    tx.proposalKey.keyId,
     tx.proposalKey.sequenceNum,
     addressToBuffer(bytes(tx.payer, 20)),
     tx.authorizers.map((addr) => addressToBuffer(bytes(addr, 20)))
@@ -48,7 +48,7 @@ const preparePayloadSignatures = (tx) => {
     map((sig) => {
       return {
         signerIndex: signers.get(sig.address),
-        keyIndex: sig.key,
+        keyId: sig.keyId,
         sig: sig.sig,
       }
     }).
@@ -56,13 +56,13 @@ const preparePayloadSignatures = (tx) => {
       if (a.signerIndex > b.signerIndex) return 1
       if (a.signerIndex < b.signerIndex) return -1
 
-      if (a.keyIndex > b.keyIndex) return 1
-      if (a.keyIndex < b.keyIndex) return -1
+      if (a.keyId > b.keyId) return 1
+      if (a.keyId < b.keyId) return -1
     }).
     map((sig) => {
       return [
         sig.signerIndex,
-        sig.keyIndex,
+        sig.keyId,
         bytesToBuffer(bytes(sig.sig)),
       ]
     })
@@ -114,7 +114,7 @@ const payloadFields = [
 
 const proposalKeyFields = [
   ["address", isString],
-  ["key", isNumber],
+  ["keyId", isNumber],
   ["sequenceNum", isNumber],
 ]
 
@@ -124,7 +124,7 @@ const envelopeFields = [
 
 const payloadSigFields = [
   ["address", isString], 
-  ["key", isNumber],
+  ["keyId", isNumber],
   ["sig", isString],
 ]
 
