@@ -45,7 +45,7 @@ test:
 publish:
 	$(info TSK: publish)
 	$(info run "npm publish" in packages/*)
-	$(EXEC) sh -c 'npm publish --dry-run $$0 || exit 255'
+	$(EXEC) sh -c 'npm publish $$0'
 
 .PHONY: ci
 ci: clean install build
