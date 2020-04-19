@@ -1,7 +1,7 @@
 > **NOTE:** Requires a Buffer polyfill
 
 # @onflow/bytes
-This package provides helper functions around the interanal bytes data structure used throughout the Flow JS SDK.
+This package provides helper functions around the internal bytes data structure used throughout the Flow JS SDK.
 
 # Install
 

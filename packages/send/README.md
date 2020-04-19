@@ -18,6 +18,6 @@ import {send} from "@onflow/send"
 const interaction = ...
 
 const response = await send(interaction, {
-  node: "accessNode url"
+  node: "Access Node Url"
 })
 ```

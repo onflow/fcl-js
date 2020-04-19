@@ -1,6 +1,6 @@
 # @onflow/response
 
-> This module provides an ADT (Abstract Data Type) that represents the underlying data returned from the `send` function.
+> This module provides an ADT (Abstract Data Type) that represents the underlying data returned from the send function.
 
 # Install
 
@@ -8,7 +8,7 @@
 npm install --save @onflow/response
 ```
 
-{"tag": 0, "transaction":null, "transactionHash":null, "encodedData":null, "decodeInstructions": null, "events": null, "account": null, "ping": null}'
+{"tag": 0, "transaction":null, "transactionId":null, "encodedData":null, "events": null, "account": null}'
 
 ## Internal Properties
 

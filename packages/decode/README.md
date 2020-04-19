@@ -1,7 +1,7 @@
 > **NOTE:** Requires a Buffer polyfill
 
 # @onflow/bytes
-This package provides methods that can decode a JSON-CDC payload from the AccessAPI into a JavaScript friendly types.
+This package provides methods that can decode a JSON-CDC payload from the Access API into JavaScript friendly types.
 
 # Install
 
@@ -20,7 +20,7 @@ const decoded = await decodeResponse(myResponse)
 
 **Decoding a Response, with a Custom Decoder**
 
-A Custom Decoder is a way for users to define how to decode certain encoded types from the AccessAPI
+A Custom Decoder is a way for users to define how to decode certain encoded types from the Access API
 
 ```javascript
 import { decodeResponse } from "@onflow/decode"
@@ -44,8 +44,8 @@ const decoded = await decodeResponse(myResponse, {
 
 **Decoding a Response, with a Custom Decoder using Regex Lookup**
 
-You can specify Custom Decoders to be executed on types tested against with a Regex expression.
-To denote a Regex expression, write the key for that custom decoder between two slashes. Note that
+You can specify Custom Decoders to be executed on types tested against with a regular expression.
+To denote a regular expression, write the key for that custom decoder between two slashes. Note that
 only global search is suppoted at this time.
 
 ```javascript
@@ -57,7 +57,7 @@ const decoded = await decodeResponse(myResponse, {
 
 **Decoding a JSON-CDC payload**
 
-You can additionally directly deocde a JSON-CDC payload.
+You can additionally directly decode a JSON-CDC payload.
 
 ```javascript
 import { decode } from "@onflow/decode"

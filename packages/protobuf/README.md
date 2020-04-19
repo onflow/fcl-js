@@ -1,6 +1,6 @@
 # @onflow/protobuf
 
-This package contains the protobuf files used in the JS-SDK for communicating with the AccessAPI
+This package contains the protobuf files used by the Flow JS SDK to communicate with the Access API.
 
 # Install
 
