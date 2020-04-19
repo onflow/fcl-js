@@ -31,9 +31,13 @@ export async function sendTransaction(ix, opts = {}) {
   transactionMsg.setScript(scriptToBuffer(ix.payload.code))
   transactionMsg.setNonce(ix.payload.nonce)
   transactionMsg.setComputeLimit(ix.payload.limit)
-  transactionMsg.setReferenceBlockHash(ix.payload.ref ? hashToBuffer(ix.payload.ref) : null)
+  transactionMsg.setReferenceBlockHash(
+    ix.payload.ref ? hashToBuffer(ix.payload.ref) : null
+  )
   transactionMsg.setPayeraccount(addressToBuffer(bytes(ix.payer.acct, 20)))
-  ix.authz.forEach(a => transactionMsg.addScriptaccounts(addressToBuffer(bytes(a.acct, 20))))
+  ix.authz.forEach(a =>
+    transactionMsg.addScriptaccounts(addressToBuffer(bytes(a.acct, 20)))
+  )
   accountSignatures.forEach(accountSignature =>
     transactionMsg.addSignatures(accountSignature)
   )
@@ -46,7 +50,7 @@ export async function sendTransaction(ix, opts = {}) {
 
   let ret = response()
   ret.tag = ix.tag
-  ret.transactionHash = bufferToHexString(res.getHash_asU8())
+  ret.transactionId = bufferToHexString(res.getHash_asU8())
 
   return ret
 }
