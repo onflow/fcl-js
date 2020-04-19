@@ -22,7 +22,7 @@ const preparePayload = (tx) => {
 
   return [
     scriptToBuffer(tx.script),
-    hashToBuffer(tx.refBlock),
+    hashToBuffer(bytes(tx.refBlock, 32)),
     tx.gasLimit,
     addressToBuffer(bytes(tx.proposalKey.address, 20)),
     tx.proposalKey.keyId,
@@ -104,35 +104,35 @@ const isObject = (v) => v !== null && typeof v === "object"
 const isArray = (v) => isObject(v) && v instanceof Array
 
 const payloadFields = [
-  ["script", isString],
-  ["refBlock", isString],
-  ["gasLimit", isNumber],
-  ["proposalKey", isObject],
-  ["payer", isString],
-  ["authorizers", isArray],
+  { name: "script",      check: isString },
+  { name: "refBlock",    check: isString, defaultVal: "0" },
+  { name: "gasLimit",    check: isNumber },
+  { name: "proposalKey", check: isObject },
+  { name: "payer",       check: isString },
+  { name: "authorizers", check: isArray },
 ]
 
 const proposalKeyFields = [
-  ["address", isString],
-  ["keyId", isNumber],
-  ["sequenceNum", isNumber],
+  { name: "address",     check: isString },
+  { name: "keyId",       check: isNumber },
+  { name: "sequenceNum", check: isNumber },
 ]
 
 const envelopeFields = [
-  ["payloadSigs", isArray],
+  { name: "payloadSigs", check: isArray },
 ]
 
 const payloadSigFields = [
-  ["address", isString], 
-  ["keyId", isNumber],
-  ["sig", isString],
+  { name: "address", check: isString },
+  { name: "keyId",   check: isNumber },
+  { name: "sig",     check: isString },
 ]
 
 const checkField = (obj, field, base, index) => {
-  const [name, checker] = field
-  const val = obj[name]
-  if (val == null) throw missingFieldError(name, base, index)
-  if (!checker(val)) throw invalidFieldError(name, base, index)
+  const { name, check, defaultVal } = field
+  if (obj[name] == null && defaultVal != null) obj[name] = defaultVal
+  if (obj[name] == null) throw missingFieldError(name, base, index)
+  if (!check(obj[name])) throw invalidFieldError(name, base, index)
 }
 
 const printFieldName = (field, base, index) => {
