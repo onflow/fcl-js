@@ -1,6 +1,9 @@
 ### Unreleased
 
 - YYYY-MM-DD **BREAKING?** -- description
+
+### 0.0.2 -- 2020-04-20
+
 - 2020-04-20 -- Remove `@onflow/bytes`
 
 ### 0.0.1 -- 2020-04-20
