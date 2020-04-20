@@ -35,7 +35,6 @@
     "start": "microbundle watch"
   },
   "dependencies": {
-    "@onflow/bytes": "0.0.1",
     "rlp": "^2.2.4"
   }
 }
