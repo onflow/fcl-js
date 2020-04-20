@@ -26,6 +26,7 @@ const IX = `{
     "end":null
   },
   "acct":null,
+  "proposer":null,
   "authz":[],
   "payer":null,
   "eventType":null,
