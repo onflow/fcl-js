@@ -2,6 +2,8 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+- 2020-04-20 -- VSN `@onflow/interaction` 0.0.3 -> 0.0.5
+
 ### 0.0.6 -- 2020-04-20
 
 - 2020-04-20 -- Removed `@onflow/bytes`
