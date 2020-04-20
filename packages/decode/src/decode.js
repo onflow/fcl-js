@@ -1,6 +1,4 @@
-import {bytes, bytesToString} from "@onflow/bytes"
-
-export const decodeNumber = async (num, _, stack) => {
+const decodeNumber = async (num, _, stack) => {
   try {
     return Number(num)
   } catch (e) {
@@ -8,26 +6,26 @@ export const decodeNumber = async (num, _, stack) => {
   }
 }
 
-export const decodeImplicit = async (i) => i
+const decodeImplicit = async i => i
 
-export const decodeVoid = async () => null
+const decodeVoid = async () => null
 
-export const decodeOptional = async (optional, decoders, stack) =>
+const decodeOptional = async (optional, decoders, stack) =>
   optional ? await recurseDecode(optional, decoders, stack) : null
 
-export const decodeReference = async (v) => ({address: v.address, type: v.type})
+const decodeReference = async v => ({address: v.address, type: v.type})
 
-export const decodeArray = async (array, decoders, stack) =>
+const decodeArray = async (array, decoders, stack) =>
   await Promise.all(
     array.map(
-      (v) =>
-        new Promise(async (res) =>
+      v =>
+        new Promise(async res =>
           res(await recurseDecode(v, decoders, [...stack, v.type]))
         )
     )
   )
 
-export const decodeDictionary = async (dictionary, decoders, stack) =>
+const decodeDictionary = async (dictionary, decoders, stack) =>
   await dictionary.reduce(async (acc, v) => {
     acc = await acc
     acc[
@@ -36,7 +34,7 @@ export const decodeDictionary = async (dictionary, decoders, stack) =>
     return acc
   }, Promise.resolve({}))
 
-export const decodeComposite = async (composite, decoders, stack) => {
+const decodeComposite = async (composite, decoders, stack) => {
   const decoded = await composite.fields.reduce(async (acc, v) => {
     acc = await acc
     acc[v.name] = await recurseDecode(v.value, decoders, [...stack, v.name])
@@ -46,7 +44,7 @@ export const decodeComposite = async (composite, decoders, stack) => {
   return decoder ? await decoder(decoded) : decoded
 }
 
-export const defaultDecoders = {
+const defaultDecoders = {
   UInt: decodeNumber,
   Int: decodeNumber,
   UInt8: decodeNumber,
@@ -81,18 +79,18 @@ export const defaultDecoders = {
   Struct: decodeComposite,
 }
 
-export const decoderLookup = (decoders, lookup) => {
+const decoderLookup = (decoders, lookup) => {
   const found = Object.keys(decoders).find(decoder => {
     if (/^\/.*\/$/.test(decoder)) {
       const reg = new RegExp(decoder.substring(1, decoder.length - 1))
-      return reg.test(lookup)  
+      return reg.test(lookup)
     }
     return decoder === lookup
   })
   return lookup && found && decoders[found]
 }
 
-export const recurseDecode = async (decodeInstructions, decoders, stack) => {
+const recurseDecode = async (decodeInstructions, decoders, stack) => {
   let decoder = decoderLookup(decoders, decodeInstructions.type)
   if (!decoder)
     throw new Error(
@@ -114,7 +112,7 @@ export const decodeResponse = async (response, customDecoders = {}) => {
   let decoders = {...defaultDecoders, ...customDecoders}
 
   const encoded = response.encodedData
-  const decodeInstructions = bytesToString(bytes(encoded))
+  const decodeInstructions = Buffer.from(encoded).toString("utf8")
   const decodeInstructionsJson = JSON.parse(decodeInstructions)
 
   return await decode(decodeInstructionsJson, decoders)
