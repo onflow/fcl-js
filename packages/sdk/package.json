@@ -36,6 +36,7 @@
   "dependencies": {
     "@onflow/bytes": "0.0.2",
     "@onflow/decode": "0.0.4",
+    "@onflow/encode": "0.0.1",
     "@onflow/interaction": "0.0.3",
     "@onflow/send": "0.0.5",
     "@qvvg/templar": "0.0.0",
