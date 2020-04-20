@@ -1,6 +1,8 @@
 ### Unreleased
 
 - YYYY-MM-DD **BREAKING?** -- description
+- 2020-04-20 -- VSN `@onflow/send` 0.0.5 -> 0.0.7
+- 2020-04-20 -- VSN `@onflow/interaction` 0.0.4 -> 0.0.5
 - 2020-04-20 -- VSN `@onflow/decode` 0.0.4 -> 0.0.5
 - 2020-04-20 -- VSN `@onflow/encode` 0.0.1 -> 0.0.2
 - 2020-04-20 -- VSN `@onflow/interaction` 0.0.3 -> 0.0.4
