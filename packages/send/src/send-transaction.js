@@ -1,7 +1,6 @@
 import {
-  ObserveService,
-  AccountSignature,
-  Transaction as TransactionMessage,
+  AccessAPI,
+  Transaction,
   SendTransactionRequest,
 } from "@onflow/protobuf"
 import {response} from "@onflow/response"
@@ -15,42 +14,45 @@ import {
 import {unary} from "./unary"
 
 export async function sendTransaction(ix, opts = {}) {
-  const accountSignatures = ix.authz.map(sig => {
-    const accountSig = new AccountSignature()
-    accountSig.setAccount(addressToBuffer(bytes(sig.acct, 20)))
-    accountSig.setSignature(sig.signature)
-    return accountSig
+  const tx = new Transaction()
+  tx.setScript(scriptToBuffer(ix.payload.code))
+  tx.setGasLimit(ix.payload.limit)
+  tx.setReferenceBlockId(ix.payload.ref ? hashToBuffer(ix.payload.ref) : null)
+  tx.setPayer(addressToBuffer(bytes(ix.payer.acct, 20)))
+  ix.authz.forEach(a => tx.addAuthorizers(addressToBuffer(bytes(a.acct, 20))))
+
+  const proposalKey = new Transaction.ProposalKey()
+  proposalKey.setAddress(addressToBuffer(bytes(ix.proposer.addr, 20)))
+  proposalKey.setKeyId(ix.proposer.keyId)
+  proposalKey.setSequenceNumber(ix.proposer.sequenceNum)
+
+  tx.setProposalKey(proposalKey)
+
+  ix.authz.forEach(auth => {
+    if (auth.signature === null) return
+    const authzSig = new Transaction.Signature()
+    authzSig.setAddress(addressToBuffer(bytes(auth.acct, 20)))
+    authzSig.setKeyId(auth.keyId)
+    authzSig.setSignature(hashToBuffer(auth.signature))
+
+    tx.addPayloadSignatures(authzSig)
   })
 
-  const payerSig = new AccountSignature()
-  payerSig.setAccount(addressToBuffer(bytes(ix.payer.acct, 20)))
-  payerSig.setSignature(ix.payer.signature)
-  const payerSignature = payerSig
+  const payerSig = new Transaction.Signature()
+  payerSig.setAddress(addressToBuffer(bytes(ix.payer.acct, 20)))
+  payerSig.setKeyId(ix.payer.keyId)
+  payerSig.setSignature(hashToBuffer(ix.payer.signature))
 
-  const transactionMsg = new TransactionMessage()
-  transactionMsg.setScript(scriptToBuffer(ix.payload.code))
-  transactionMsg.setNonce(ix.payload.nonce)
-  transactionMsg.setComputeLimit(ix.payload.limit)
-  transactionMsg.setReferenceBlockHash(
-    ix.payload.ref ? hashToBuffer(ix.payload.ref) : null
-  )
-  transactionMsg.setPayeraccount(addressToBuffer(bytes(ix.payer.acct, 20)))
-  ix.authz.forEach(a =>
-    transactionMsg.addScriptaccounts(addressToBuffer(bytes(a.acct, 20)))
-  )
-  accountSignatures.forEach(accountSignature =>
-    transactionMsg.addSignatures(accountSignature)
-  )
-  accountSignatures.push(payerSignature)
+  tx.addEnvelopeSignatures(payerSig)
 
   const req = new SendTransactionRequest()
-  req.setTransaction(transactionMsg)
+  req.setTransaction(tx)
 
-  const res = await unary(opts.node, ObserveService.SendTransaction, req)
+  const res = await unary(opts.node, AccessAPI.SendTransaction, req)
 
   let ret = response()
   ret.tag = ix.tag
-  ret.transactionId = bufferToHexString(res.getHash_asU8())
+  ret.transactionHash = bufferToHexString(res.getId_asU8())
 
   return ret
 }

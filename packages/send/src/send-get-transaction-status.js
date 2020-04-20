@@ -1,11 +1,11 @@
-import {AccessAPI, GetTransactionResultRequest} from "@onflow/protobuf"
+import {AccessAPI, GetTransactionRequest} from "@onflow/protobuf"
 import {response} from "@onflow/response"
 import {bufferToHexString, hashToBuffer} from "@onflow/bytes"
 import {unary} from "./unary"
 
 export async function sendGetTransactionStatus(ix, opts = {}) {
-  const req = new GetTransactionResultRequest()
-  req.setHash(hashToBuffer(ix.txId))
+  const req = new GetTransactionRequest()
+  req.setId(hashToBuffer(ix.txId))
 
   const res = await unary(opts.node, AccessAPI.GetTransactionResult, req)
 
