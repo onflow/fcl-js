@@ -12,13 +12,16 @@ As the diagram at the bottom of this page depicts we have a pretty good idea whe
 # Introduction
 
 A Wallet Provider handles Authentications and Authorizations. They play a very important role of being the place the users control their information and approve transactions.
+
 One of FCLs core ideals is for the user to be in control of their data, a wallet provider is where many users will do just that.
+
 FCL has been built in a way that it doesn't need to know any intimate details about a wallet provider up front, they can be discovered when the users wishes to let the dApp know about them. This gives us a concept we have been calling Bring Your Own Identity.
 
 # Identity
 Conceptually, FCL thinks of identity in two ways: Public and Private.
 
 Public identity will be stored on chain as a resource, it will be publicly available to anyone that knows the Flow Address for the account.
+
 In FCL getting a users public identity will be as easy as:
 
 ```javascript
@@ -34,9 +37,12 @@ const unsub = user(flowAddress).subscribe(identity => console.log(identity))
 ```
 
 Private identity will be stored by the Wallet Provider, it will only be available to the currentUser.
+
 In FCL getting the currentUsers identity will fetch both the public and the private identities, merging the private into the public.
+
 Private info needs to be requested via scopes before the challenge step, more on that later.
-We highly recommend that Wallet Providers let the user see what scopes are being requested, and decide what scopes to share with the dApp.
+We highly recommend Wallet Providers let the user see what scopes are being requested, and decide what scopes to share with the dApp.
+
 Consumers of identities in FCL should always assume all data is optional, and should store as little as possible, FCL will make sure the users always see the latest.
 
 ```javascript
@@ -53,10 +59,11 @@ authenticate() // trigger the challenge step (authenticate the user via a wallet
 
 # Identity Data
 
-All information in Identities are optional and may not be there.
-All values can be stored on chain, but most probably shouldn't.
+- All information in Identities are optional and may not be there.
+- All values can be stored on chain, but most probably shouldn't be.
 
 We would love to see Wallet Providers enable the user to control the following info publicly, sort of a public profile starter kit if you will.
+
 FCL will always publicly try to fetch these fields when asked for a users information and it will be up to the Wallet provider to make sure they are there and keep them up to date if the user wants to change them.
 
 - **`name`** -- A human readable name/alias/nym for a dApp users display name
@@ -158,21 +165,24 @@ FCL should now have everything it needs to collect the Public, Private and Walle
 The Wallet Provider info will be on chain so its not something that needs to be worried about here by the Wallet Provider.
 What does need to be worried about handling the hooks request which was supplied to FCL via the `hks` value in the challenge response `https://provider.hooks`.
 
-The hooks request will be to the value supplied in the challenge response and it will include the code as a query param
+The hooks request will be to the `hks` value supplied in the challenge response. The request will also include the code as a query param
 
 ```
 GET https://povider.com/hooks
   ?code=afseasdfsadf
 ```
 
-This request happens for a number of reasons.
+This request needs to happen for a number of reasons.
 - If it fails FCL knows something is wrong and will attempt to re-authenticate.
 - If is succeeds FCL knows that the code it has is valid.
 - It creates a direct way for FCL to "verify" the user against the Wallet Provider.
 - It gives FCL a direct way to get Private Identity Information and Hooks.
 - The code can be passed to the backend to create a back-channel between the backend and the Wallet Provider.
 
+When users return to a dApp, if the code FCL stored hasnt expired, FCL will make this request again in order to stay up to date with the latest informtaion. FCL may also intermitently request this information before some critial actions.
+
 The hooks request should respond with the following JSON
+
 ```javascript
 const privateHooks = {
   addr: "0xab4U9KMf",       // the flow address this user is using for the dapp
@@ -226,7 +236,7 @@ const publicHooks = {
 }
 ```
 
-At this point FCL can be fairly confident who the currentUser and initiate transactions the user can authorize.
+At this point FCL can be fairly confident who the currentUser is and is ready to initiate transactions the user can authorize.
 
 # Authorization
 
