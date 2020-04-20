@@ -1,6 +1,16 @@
-const merge = require('deepmerge')
+const merge = require("deepmerge")
 
 import {encodeTransactionPayload, encodeTransactionEnvelope} from "./encode"
+import * as root from "./encode"
+
+it("export contract interface", () => {
+  expect(root).toStrictEqual(
+    expect.objectContaining({
+      encodeTransactionPayload: expect.any(Function),
+      encodeTransactionEnvelope: expect.any(Function),
+    })
+  )
+})
 
 const baseTx = {
   script: `transaction { execute { log("Hello, World!") } }`,
@@ -13,71 +23,85 @@ const baseTx = {
   },
   payer: "01",
   authorizers: ["01"],
-  payloadSigs: [{
-    address: "01",
-    keyId: 4,
-    sig: "f7225388c1d69d57e6251c9fda50cbbf9e05131e5adb81e5aa0422402f048162",
-  }]
+  payloadSigs: [
+    {
+      address: "01",
+      keyId: 4,
+      sig: "f7225388c1d69d57e6251c9fda50cbbf9e05131e5adb81e5aa0422402f048162",
+    },
+  ],
 }
 
 const combineMerge = (target, source, options) => {
   // empty list always overwrites target
   if (source.length == 0) return source
 
-	const destination = target.slice()
+  const destination = target.slice()
 
-	source.forEach((item, index) => {
-		if (typeof destination[index] === 'undefined') {
-			destination[index] = options.cloneUnlessOtherwiseSpecified(item, options)
-		} else if (options.isMergeableObject(item)) {
-			destination[index] = merge(target[index], item, options)
-		} else if (target.indexOf(item) === -1) {
-			destination.push(item)
-		}
+  source.forEach((item, index) => {
+    if (typeof destination[index] === "undefined") {
+      destination[index] = options.cloneUnlessOtherwiseSpecified(item, options)
+    } else if (options.isMergeableObject(item)) {
+      destination[index] = merge(target[index], item, options)
+    } else if (target.indexOf(item) === -1) {
+      destination.push(item)
+    }
   })
-  
-	return destination
+
+  return destination
 }
 
-const buildTx = (partialTx) => merge(baseTx, partialTx, { arrayMerge: combineMerge })
+const buildTx = partialTx =>
+  merge(baseTx, partialTx, {arrayMerge: combineMerge})
 
 describe("encode transaction", () => {
-
   const invalidPayloadCases = [
-    ["empty", {},],
-    ["non-object", "foo",],
+    ["empty", {}],
+    ["non-object", "foo"],
 
-    ["null script", buildTx({ script: null }),],
-    ["null gasLimit", buildTx({ gasLimit: null }),],
-    ["null proposalKey", buildTx({ proposalKey: null }),],
-    ["null proposalKey.address", buildTx({ proposalKey: { address: null } }),],
-    ["null proposalKey.keyId", buildTx({ proposalKey: { keyId: null } }),],
-    ["null proposalKey.sequenceNum", buildTx({ proposalKey: { sequenceNum: null } }),],
-    ["null payer", buildTx({ payer: null }),],
-    ["null authorizers", buildTx({ authorizers: null }),],
+    ["null script", buildTx({script: null})],
+    ["null gasLimit", buildTx({gasLimit: null})],
+    ["null proposalKey", buildTx({proposalKey: null})],
+    ["null proposalKey.address", buildTx({proposalKey: {address: null}})],
+    ["null proposalKey.keyId", buildTx({proposalKey: {keyId: null}})],
+    [
+      "null proposalKey.sequenceNum",
+      buildTx({proposalKey: {sequenceNum: null}}),
+    ],
+    ["null payer", buildTx({payer: null})],
+    ["null authorizers", buildTx({authorizers: null})],
 
-    ["non-string script", buildTx({ script: 42 }),],
-    ["non-string refBlock", buildTx({ refBlock: 42 }),],
-    ["non-number gasLimit", buildTx({ gasLimit: "foo" }),],
-    ["non-object proposalKey", buildTx({ proposalKey: "foo" }),],
-    ["non-string proposalKey.address", buildTx({ proposalKey: { address: 42 } }),],
-    ["non-number proposalKey.keyId", buildTx({ proposalKey: { keyId: "foo" } }),],
-    ["non-number proposalKey.sequenceNum", buildTx({ proposalKey: { sequenceNum: "foo" } }),],
-    ["non-string payer", buildTx({ payer: 42 }),],
-    ["non-array authorizers", buildTx({ authorizers: {} }),],
+    ["non-string script", buildTx({script: 42})],
+    ["non-string refBlock", buildTx({refBlock: 42})],
+    ["non-number gasLimit", buildTx({gasLimit: "foo"})],
+    ["non-object proposalKey", buildTx({proposalKey: "foo"})],
+    ["non-string proposalKey.address", buildTx({proposalKey: {address: 42}})],
+    ["non-number proposalKey.keyId", buildTx({proposalKey: {keyId: "foo"}})],
+    [
+      "non-number proposalKey.sequenceNum",
+      buildTx({proposalKey: {sequenceNum: "foo"}}),
+    ],
+    ["non-string payer", buildTx({payer: 42})],
+    ["non-array authorizers", buildTx({authorizers: {}})],
   ]
 
   const invalidEnvelopeCases = [
     ...invalidPayloadCases,
-    ["null payloadSigs", buildTx({ payloadSigs: null }),],
-    ["null payloadSigs.0.address", buildTx({ payloadSigs: [ { address: null } ] }),],
-    ["null payloadSigs.0.keyId", buildTx({ payloadSigs: [ { keyId: null } ] }),],
-    ["null payloadSigs.0.sig", buildTx({ payloadSigs: [ { sig: null } ] }),],
+    ["null payloadSigs", buildTx({payloadSigs: null})],
+    ["null payloadSigs.0.address", buildTx({payloadSigs: [{address: null}]})],
+    ["null payloadSigs.0.keyId", buildTx({payloadSigs: [{keyId: null}]})],
+    ["null payloadSigs.0.sig", buildTx({payloadSigs: [{sig: null}]})],
 
-    ["non-array payloadSigs", buildTx({ payloadSigs: {} }),],
-    ["non-string payloadSigs.0.address", buildTx({ payloadSigs: [ { address: 42 } ] }),],
-    ["non-number payloadSigs.0.keyId", buildTx({ payloadSigs: [ { keyId: "foo" } ] }),],
-    ["non-string payloadSigs.0.sig", buildTx({ payloadSigs: [ { sig: 42 } ] }),],
+    ["non-array payloadSigs", buildTx({payloadSigs: {}})],
+    [
+      "non-string payloadSigs.0.address",
+      buildTx({payloadSigs: [{address: 42}]}),
+    ],
+    [
+      "non-number payloadSigs.0.keyId",
+      buildTx({payloadSigs: [{keyId: "foo"}]}),
+    ],
+    ["non-string payloadSigs.0.sig", buildTx({payloadSigs: [{sig: 42}]})],
   ]
 
   // Test case format:
@@ -96,46 +120,46 @@ describe("encode transaction", () => {
     ],
     [
       "empty script",
-      buildTx({ script: "" }),
+      buildTx({script: ""}),
       "f86580a0f0e4c2f76c58916ec258f246851bea091d14d4247a2fc3e18694461b1816e13b2a940000000000000000000000000000000000000001040a940000000000000000000000000000000000000001d5940000000000000000000000000000000000000001",
       "f88cf86580a0f0e4c2f76c58916ec258f246851bea091d14d4247a2fc3e18694461b1816e13b2a940000000000000000000000000000000000000001040a940000000000000000000000000000000000000001d5940000000000000000000000000000000000000001e4e38004a0f7225388c1d69d57e6251c9fda50cbbf9e05131e5adb81e5aa0422402f048162",
     ],
     [
       "null refBlock",
-      buildTx({ refBlock: null }),
+      buildTx({refBlock: null}),
       "f895b07472616e73616374696f6e207b2065786563757465207b206c6f67282248656c6c6f2c20576f726c64212229207d207da000000000000000000000000000000000000000000000000000000000000000002a940000000000000000000000000000000000000001040a940000000000000000000000000000000000000001d5940000000000000000000000000000000000000001",
       "f8bcf895b07472616e73616374696f6e207b2065786563757465207b206c6f67282248656c6c6f2c20576f726c64212229207d207da000000000000000000000000000000000000000000000000000000000000000002a940000000000000000000000000000000000000001040a940000000000000000000000000000000000000001d5940000000000000000000000000000000000000001e4e38004a0f7225388c1d69d57e6251c9fda50cbbf9e05131e5adb81e5aa0422402f048162",
     ],
     [
       "zero gasLimit",
-      buildTx({ gasLimit: 0 }),
+      buildTx({gasLimit: 0}),
       "f895b07472616e73616374696f6e207b2065786563757465207b206c6f67282248656c6c6f2c20576f726c64212229207d207da0f0e4c2f76c58916ec258f246851bea091d14d4247a2fc3e18694461b1816e13b80940000000000000000000000000000000000000001040a940000000000000000000000000000000000000001d5940000000000000000000000000000000000000001",
       "f8bcf895b07472616e73616374696f6e207b2065786563757465207b206c6f67282248656c6c6f2c20576f726c64212229207d207da0f0e4c2f76c58916ec258f246851bea091d14d4247a2fc3e18694461b1816e13b80940000000000000000000000000000000000000001040a940000000000000000000000000000000000000001d5940000000000000000000000000000000000000001e4e38004a0f7225388c1d69d57e6251c9fda50cbbf9e05131e5adb81e5aa0422402f048162",
     ],
     [
       "zero proposalKey.key",
-      buildTx({ proposalKey: { keyId: 0 } }),
+      buildTx({proposalKey: {keyId: 0}}),
       "f895b07472616e73616374696f6e207b2065786563757465207b206c6f67282248656c6c6f2c20576f726c64212229207d207da0f0e4c2f76c58916ec258f246851bea091d14d4247a2fc3e18694461b1816e13b2a940000000000000000000000000000000000000001800a940000000000000000000000000000000000000001d5940000000000000000000000000000000000000001",
       "f8bcf895b07472616e73616374696f6e207b2065786563757465207b206c6f67282248656c6c6f2c20576f726c64212229207d207da0f0e4c2f76c58916ec258f246851bea091d14d4247a2fc3e18694461b1816e13b2a940000000000000000000000000000000000000001800a940000000000000000000000000000000000000001d5940000000000000000000000000000000000000001e4e38004a0f7225388c1d69d57e6251c9fda50cbbf9e05131e5adb81e5aa0422402f048162",
     ],
     [
       "zero proposalKey.sequenceNum",
-      buildTx({ proposalKey: { sequenceNum: 0 } }),
+      buildTx({proposalKey: {sequenceNum: 0}}),
       "f895b07472616e73616374696f6e207b2065786563757465207b206c6f67282248656c6c6f2c20576f726c64212229207d207da0f0e4c2f76c58916ec258f246851bea091d14d4247a2fc3e18694461b1816e13b2a9400000000000000000000000000000000000000010480940000000000000000000000000000000000000001d5940000000000000000000000000000000000000001",
       "f8bcf895b07472616e73616374696f6e207b2065786563757465207b206c6f67282248656c6c6f2c20576f726c64212229207d207da0f0e4c2f76c58916ec258f246851bea091d14d4247a2fc3e18694461b1816e13b2a9400000000000000000000000000000000000000010480940000000000000000000000000000000000000001d5940000000000000000000000000000000000000001e4e38004a0f7225388c1d69d57e6251c9fda50cbbf9e05131e5adb81e5aa0422402f048162",
     ],
     [
       "empty authorizers",
-      buildTx({ authorizers: [] }),
+      buildTx({authorizers: []}),
       "f880b07472616e73616374696f6e207b2065786563757465207b206c6f67282248656c6c6f2c20576f726c64212229207d207da0f0e4c2f76c58916ec258f246851bea091d14d4247a2fc3e18694461b1816e13b2a940000000000000000000000000000000000000001040a940000000000000000000000000000000000000001c0",
       "f8a7f880b07472616e73616374696f6e207b2065786563757465207b206c6f67282248656c6c6f2c20576f726c64212229207d207da0f0e4c2f76c58916ec258f246851bea091d14d4247a2fc3e18694461b1816e13b2a940000000000000000000000000000000000000001040a940000000000000000000000000000000000000001c0e4e38004a0f7225388c1d69d57e6251c9fda50cbbf9e05131e5adb81e5aa0422402f048162",
     ],
     [
       "multiple authorizers",
-      buildTx({ authorizers: ["01", "02"] }),
+      buildTx({authorizers: ["01", "02"]}),
       "f8aab07472616e73616374696f6e207b2065786563757465207b206c6f67282248656c6c6f2c20576f726c64212229207d207da0f0e4c2f76c58916ec258f246851bea091d14d4247a2fc3e18694461b1816e13b2a940000000000000000000000000000000000000001040a940000000000000000000000000000000000000001ea940000000000000000000000000000000000000001940000000000000000000000000000000000000002",
       "f8d1f8aab07472616e73616374696f6e207b2065786563757465207b206c6f67282248656c6c6f2c20576f726c64212229207d207da0f0e4c2f76c58916ec258f246851bea091d14d4247a2fc3e18694461b1816e13b2a940000000000000000000000000000000000000001040a940000000000000000000000000000000000000001ea940000000000000000000000000000000000000001940000000000000000000000000000000000000002e4e38004a0f7225388c1d69d57e6251c9fda50cbbf9e05131e5adb81e5aa0422402f048162",
-    ]
+    ],
   ]
 
   // Test case format:
@@ -147,12 +171,12 @@ describe("encode transaction", () => {
   const validEnvelopeCases = [
     [
       "empty payloadSigs",
-      buildTx({ payloadSigs: [] }),
+      buildTx({payloadSigs: []}),
       "f898f895b07472616e73616374696f6e207b2065786563757465207b206c6f67282248656c6c6f2c20576f726c64212229207d207da0f0e4c2f76c58916ec258f246851bea091d14d4247a2fc3e18694461b1816e13b2a940000000000000000000000000000000000000001040a940000000000000000000000000000000000000001d5940000000000000000000000000000000000000001c0",
     ],
     [
       "zero payloadSigs.0.key",
-      buildTx({ payloadSigs: [ { keyId: 0 }] }),
+      buildTx({payloadSigs: [{keyId: 0}]}),
       "f8bcf895b07472616e73616374696f6e207b2065786563757465207b206c6f67282248656c6c6f2c20576f726c64212229207d207da0f0e4c2f76c58916ec258f246851bea091d14d4247a2fc3e18694461b1816e13b2a940000000000000000000000000000000000000001040a940000000000000000000000000000000000000001d5940000000000000000000000000000000000000001e4e38080a0f7225388c1d69d57e6251c9fda50cbbf9e05131e5adb81e5aa0422402f048162",
     ],
     [
@@ -160,10 +184,10 @@ describe("encode transaction", () => {
       buildTx({
         authorizers: ["01", "02", "03"],
         payloadSigs: [
-          { address: "03", keyId: 0, sig: "c" },
-          { address: "01", keyId: 0, sig: "a" },
-          { address: "02", keyId: 0, sig: "b" },
-        ] 
+          {address: "03", keyId: 0, sig: "c"},
+          {address: "01", keyId: 0, sig: "a"},
+          {address: "02", keyId: 0, sig: "b"},
+        ],
       }),
       "f8cff8c0b07472616e73616374696f6e207b2065786563757465207b206c6f67282248656c6c6f2c20576f726c64212229207d207da0f0e4c2f76c58916ec258f246851bea091d14d4247a2fc3e18694461b1816e13b2a940000000000000000000000000000000000000001040a940000000000000000000000000000000000000001f83f940000000000000000000000000000000000000001940000000000000000000000000000000000000002940000000000000000000000000000000000000003ccc3808080c3018080c3028080",
     ],
@@ -172,41 +196,43 @@ describe("encode transaction", () => {
       buildTx({
         authorizers: ["01"],
         payloadSigs: [
-          { address: "01", keyId: 2, sig: "c" },
-          { address: "01", keyId: 0, sig: "a" },
-          { address: "01", keyId: 1, sig: "b" },
-        ] 
+          {address: "01", keyId: 2, sig: "c"},
+          {address: "01", keyId: 0, sig: "a"},
+          {address: "01", keyId: 1, sig: "b"},
+        ],
       }),
       "f8a4f895b07472616e73616374696f6e207b2065786563757465207b206c6f67282248656c6c6f2c20576f726c64212229207d207da0f0e4c2f76c58916ec258f246851bea091d14d4247a2fc3e18694461b1816e13b2a940000000000000000000000000000000000000001040a940000000000000000000000000000000000000001d5940000000000000000000000000000000000000001ccc3808080c3800180c3800280",
-    ]
+    ],
   ]
 
-
   describe("payload", () => {
-    describe("invalid",() => {
+    describe("invalid", () => {
       test.each(invalidPayloadCases)("%s", (_, tx) => {
         expect(() => encodeTransactionPayload(tx)).toThrow()
       })
     })
 
-    describe("valid",() => {
+    describe("valid", () => {
       test.each(validPayloadCases)("%s", (_, tx, expectedPayload) => {
         expect(encodeTransactionPayload(tx)).toBe(expectedPayload)
       })
     })
   })
-    
+
   describe("envelope", () => {
-    describe("invalid",() => {
+    describe("invalid", () => {
       test.each(invalidEnvelopeCases)("%s", (_, tx) => {
         expect(() => encodeTransactionEnvelope(tx)).toThrow()
       })
     })
 
-    describe("valid",() => {
-      test.each(validPayloadCases)("%s", (_, tx, expectedPayload, expectedEnvelope) => {
-        expect(encodeTransactionEnvelope(tx)).toBe(expectedEnvelope)
-      })
+    describe("valid", () => {
+      test.each(validPayloadCases)(
+        "%s",
+        (_, tx, expectedPayload, expectedEnvelope) => {
+          expect(encodeTransactionEnvelope(tx)).toBe(expectedEnvelope)
+        }
+      )
 
       test.each(validEnvelopeCases)("%s", (_, tx, expectedEnvelope) => {
         expect(encodeTransactionEnvelope(tx)).toBe(expectedEnvelope)
