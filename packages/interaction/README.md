@@ -36,9 +36,9 @@ Currently the Access Node recognizes 7 different types of interactions.
   - **start** *(getEvebts)* `Int` -- events after this
   - **end** *(getEvents)* `Int` -- events before this
 - **acct** *(getAccount)* `String` -- the account to get
-- **authz** *(transaction)* `Array<{acct:String, signature:String}>` -- list of accounts and signatures authorizing a transaction
+- **authz** *(transaction)* `Array<{acct:String, signature:String, keyId:Int}>` -- list of accounts and signatures authorizing a transaction
 - **proposer** *(transaction)* `{acct:String, keyId:Int, sequenceNum:Int}` -- the proposer for a transaction
-- **payer** *(transaction)* `{addr:String, signature: String}` -- which account is paying for the transaction and their authorization
+- **payer** *(transaction)* `{addr:String, signature:String, keyId:Int}` -- which account is paying for the transaction and their authorization
 - **eventType** *(getEvents)* `String` -- the type of events to query against
 - **txId** *(getTransaction)* `String` -- id of the transaction to query against
 - **isSealed** *(getLatestBlock)* `Boolean` -- determines if the criteria for the latest block is sealed or **FIND_CORRECT_STATE_NAME**
