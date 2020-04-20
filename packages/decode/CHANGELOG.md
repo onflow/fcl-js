@@ -1,6 +1,9 @@
 ### Unreleased
 
 - YYYY-MM-DD **BREAKING?** -- description
+
+### 0.0.5 -- 2020-04-20
+
 - 2020-04-20 **BREAKING** -- Only export `decode` and `decodeResponse`
 - 2020-04-20 -- Removed dependency for `@onflow/bytes`
 
