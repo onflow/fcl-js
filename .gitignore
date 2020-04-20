@@ -3,3 +3,4 @@ dist/
 .DS_Store
 .parcel-cache/
 dev-wallet/db/*.db
+todo.md
