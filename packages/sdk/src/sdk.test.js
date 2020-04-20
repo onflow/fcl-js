@@ -25,9 +25,9 @@ describe("build", () => {
       proposer("01", 1, 123)
     ]))
 
-    const txProposer = get(ix, "tx.proposer")
+    const txProposer = ix.proposer
 
-    assert.deepEqual(txProposer, {addr: "01", proposalKeyIndex: 1, sequenceNumber: 123 })
+    assert.deepEqual(txProposer, {addr: "01", keyId: 1, sequenceNum: 123 })
   })
 
   it("returns the correct proposer when building a transaction with a fetched proposer", async () => {
@@ -40,9 +40,9 @@ describe("build", () => {
       proposer(asyncProposer)
     ]))
 
-    const txProposer = get(ix, "tx.proposer")
+    const txProposer = ix.proposer
 
-    assert.deepEqual(txProposer, {addr: "01", proposalKeyIndex: 1, sequenceNumber: 123 })
+    assert.deepEqual(txProposer, {addr: "01", keyId: 1, sequenceNum: 123 })
   })
 
   it("returns the correct proposer when building a transaction with a given proposalKey", async () => {
@@ -51,8 +51,8 @@ describe("build", () => {
       proposer(proposalKey("01", 1, 123))
     ]))
 
-    const txProposer = get(ix, "tx.proposer")
+    const txProposer = ix.propser
 
-    assert.deepEqual(txProposer, {addr: "01", proposalKeyIndex: 1, sequenceNumber: 123 })
+    assert.deepEqual(txProposer, {addr: "01", keyId: 1, sequenceNum: 123 })
   })
 })

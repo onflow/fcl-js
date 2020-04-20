@@ -1,11 +1,15 @@
 import {Ok, Nope, isTransaction, get} from "@onflow/interaction"
 import {addressToBuffer} from "@onflow/bytes"
+import {
+  encodeTransactionPayload,
+  encodeTransactionEnvelope,
+} from "@onflow/encode"
 
 const ERROR_MINIMUM_AUTHORIZATIONS =
   "Transactions require at least one authoriztion"
 
-function buildAuthorization(acct, signature) {
-  return {acct, signature}
+function buildAuthorization(acct, signature, keyId) {
+  return {acct, signature, keyId}
 }
 
 function isFn(v) {
@@ -16,27 +20,77 @@ function isArray(v) {
   return Array.isArray(v)
 }
 
-function hasMinAuthorizations(ix) {
-  const axs = get(ix, "tx.authorizations")
-  return axs != null && isArray(axs) && axs.length >= 1
-}
-
 export async function resolveAuthorizations(ix) {
   if (!isTransaction(ix)) return Ok(ix)
-  if (!hasMinAuthorizations(ix)) return Nope(ix, ERROR_MINIMUM_AUTHORIZATIONS)
 
-  const payload = get(ix, "tx.payload")
+  const transactionPayload = encodeTransactionPayload({
+    script: ix.payload.code,
+    refBlock: ix.payload.ref || null,
+    gasLimit: ix.payload.limit,
+    proposalKey: {
+     address: ix.proposer.addr,
+     keyId: ix.proposer.keyId,
+     sequenceNum: ix.proposer.sequenceNum
+    },
+    payer: get(ix, "tx.payer").acct,
+    authorizers: get(ix, "tx.authorizations").map(a => a.acct)
+  })
 
   const axs = get(ix, "tx.authorizations", []).map(
     async function resolveAuthorization(authz) {
       if (isFn(authz)) authz = await authz()
-      return buildAuthorization(authz.acct, await authz.signFn(payload))
+      if (authz.acct === get(ix, "tx.payer").acct) return buildAuthorization(authz.acct, null, authz.keyId)
+      const authzSignature = await authz.signFn({
+        message: transactionPayload,
+        addr: authz.acct,
+        keyId: authz.keyId,
+        roles: {
+          proposer: ix.proposer.addr === authz.acct,
+          authorizer: true,
+          payer: get(ix, "tx.payer").acct === authz.acct,
+        },
+        interaction: ix,
+      })
+      return buildAuthorization(authz.acct, authzSignature.signature, authz.keyId)
     }
   )
 
-  const payer = get(ix, "tx.payer")
-  ix.payer = buildAuthorization(payer.acct, await payer.signFn(payload))
-
   ix.authz = await Promise.all(axs)
+
+  const transactionEnvelope = encodeTransactionEnvelope({
+    script: ix.payload.code,
+    refBlock: ix.payload.ref,
+    gasLimit: ix.payload.limit,
+    proposalKey: {
+     address: ix.proposer.addr,
+     keyId: ix.proposer.keyId,
+     sequenceNum: ix.proposer.sequenceNum
+    },
+    payer: get(ix, "tx.payer").acct,
+    authorizers: get(ix, "tx.authorizations").map(a => a.acct),
+    payloadSigs: ix.authz.map(ax => {
+      if (ax.signature === null) return null
+      return {
+        address: ax.acct,
+        keyId: ax.keyId,
+        sig: ax.signature
+      }
+    }).filter(ps => ps !== null)
+  })
+
+  const payer = get(ix, "tx.payer")
+  const payerSignature = await payer.signFn({
+    message: transactionEnvelope,
+    addr: payer.acct,
+    keyId: payer.keyId,
+    roles: {
+      proposer: ix.proposer.addr === payer.acct,
+      authorizer: false,
+      payer: true,
+    },
+    interaction: ix,
+  })
+  ix.payer = buildAuthorization(payer.acct, payerSignature.signature, payer.keyId)
+
   return Ok(ix)
 }

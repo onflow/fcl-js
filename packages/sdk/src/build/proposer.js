@@ -1,18 +1,21 @@
-import {pipe, put} from "@onflow/interaction"
+import {pipe, put, Ok} from "@onflow/interaction"
 
 export async function proposer(...args) {
     if (typeof args[0] === "function") return put("tx.proposer", await args[0]())
     if (typeof args[0] === "object") return put("tx.proposer", args[0])
-    const [addr, proposalKeyIndex, sequenceNumber] = args
+    const [addr, keyId, sequenceNum] = args
     return pipe([
-        put("tx.proposer", proposalKey(
-            addr,
-            proposalKeyIndex,
-            sequenceNumber
-        ))
+        ix => {
+            ix.proposer = proposalKey(
+                addr,
+                keyId,
+                sequenceNum
+            )
+            return Ok(ix)
+        }
     ])
 }
 
-export function proposalKey(addr, proposalKeyIndex, sequenceNumber) {
-    return {addr, proposalKeyIndex, sequenceNumber}
+export function proposalKey(addr, keyId, sequenceNum) {
+    return {addr, keyId, sequenceNum}
 }
