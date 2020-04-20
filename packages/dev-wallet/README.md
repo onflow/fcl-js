@@ -7,11 +7,11 @@ A wallet provider for local development and tests.
 - **Inteface*** Semi-Stable _(medium risk of change)_
 - **Realization** Extremely Unstable _(there will be many changes)_
 
-As the diagram below depicts we have a pretty good idea where this fits into FCL, but this package is under heavy development.
+As the diagram at the bottom of this page depicts we have a pretty good idea where this fits into FCL, but this package is under heavy development.
 
 # Introduction
 
-A Wallet Provider handles Authentications and Authorizations. They play the very important role of being the place the users of dApps built using the FCL control their own information and approve transactions.
+A Wallet Provider handles Authentications and Authorizations. They play a very important role of being the place the users control their information and approve transactions.
 One of FCLs core ideals is for the user to be in control of their data, a wallet provider is where many users will do just that.
 FCL has been built in a way that it doesn't need to know any intimate details about a wallet provider up front, they can be discovered when the users wishes to let the dApp know about them. This gives us a concept we have been calling Bring Your Own Identity.
 
@@ -42,7 +42,7 @@ Consumers of identities in FCL should always assume all data is optional, and sh
 ```javascript
 import { config, currentUser, authenticate } from "@onflow/fcl"
 
-config.put("challenge.scope", "email") // request the email and publicKey scopes
+config.put("challenge.scope", "email") // request the email scope
 
 const unsub = currentUser().subscribe(identity => console.log(identity))
 //                                       ^
@@ -56,9 +56,8 @@ authenticate() // trigger the challenge step (authenticate the user via a wallet
 All information in Identities are optional and may not be there.
 All values can be stored on chain, but most probably shouldn't.
 
-We would love to see Wallet Providers to enable the user to control the following info publicly, sort of a public profile starter kit.
-FCL will always publicly try to fetch these when asked for a users information.
-It is up to the Wallet provider to supply them if they want to overload the values, but we would recommend updating the public values if they change.
+We would love to see Wallet Providers to enable the user to control the following info publicly, sort of a public profile starter kit if you will.
+FCL will always publicly try to fetch these fields when asked for a users information and it will be up to the Wallet provider to make sure they are there and keep them up to date if the user wants to change them.
 
 - **`name`** -- A human readable name/alias/nym for a dApp users display name
 - **`avatar`** -- A fully qualified url to a smaller image used to visually represent the dApp user
@@ -66,17 +65,18 @@ It is up to the Wallet provider to supply them if they want to overload the valu
 - **`color`** -- A 6 character hex color, could be used by the dApp for personalization
 - **`bio`** -- A small amount of text that a user can use to express themselves
 
-If we can give dApp developers a solid foundation in which to start with, which we belive the above (public profile starter kit) would do, our hopes are they will need to rely less on storing their own copy of data in their own databases.
-If FCL can do this for them, easier and for free, and always be up to date, many wont need to store their own copy, we consider this a big win.
+If we can give dApp developers a solid foundation of usable information that is in the direct control of the users from the very start, which we belive the above fields would do, our hopes are they can rely more on the chain and will need to store less in their own database.
+
 Private data on the other hand has more use cases than general data. It is pretty easy to imagine ordering something and needing information like contact details and where to ship something.
-Eventually we would love to see that sort of thing handled completely on-chain, securely, privately and safely, but in the interm it probably means storing a copy of data in a database.
 
-We think our thoughts here are fairly straight forward.
-The dApp requests the scopes they want up front `fcl.config().put("challenge.scope", "email+shippingAddress")`.
-The User authenticates `fcl.authenticate()` and inside the Wallet Providers authentication process decides its okay for the dApp to know both the `email` and the `shippingAddress`. The User should be able to decide which information to share, if any at all.
-When the dApp needs the information they can request it from FCLs current cache of data, if it isnt there the dApp needs to be okay with that and ajust accodingly.
+Eventually we would love to see that sort of thing handled completely on-chain, securely, privately and safely, but in the interm it probably means storing a copy of data in a database when its needed, and allowed by a user.
 
-Below are the scopes we are suggesting to support privately:
+The process of a dApp receiving private data is as follows:
+1. The dApp requests the scopes they want up front `fcl.config().put("challenge.scope", "email+shippingAddress")`.
+2. The User authenticates `fcl.authenticate()` and inside the Wallet Providers authentication process decides its okay for the dApp to know both the `email` and the `shippingAddress`. The User should be able to decide which information to share, if any at all.
+3. When the dApp needs the information they can request it from FCLs current cache of data, if it isnt there the dApp needs to be okay with that and adjust accodingly.
+
+Below are the scopes we are thinking of supporting privately:
 FCL will only publicly and privately try to fetch these when specified up front by a dApp.
 
 - **`email`**
@@ -342,5 +342,15 @@ If the authorization is approved it should include a composite signature:
 ```
 
 FCl can now submit the transaction to the Flow blockchain.
+
+# TL;DR Wallet Provider
+
+Register Provider with FCL Handshake and implement 5 Endpoints.
+
+- `GET flow/authenticate` -> `parent.postMessage(..., l6n)`
+- `GET flow/hooks?code=___` -> `{ ...identityAndHooks }`
+- `POST flow/authorize` -> `{ status, reason, compositeSignature, authorizationUpdates, local }`
+- `POST authorizations/:authorization_id`
+- `GET authorizations/:authorization_id`
 
 ![diagram showing current fcl authn and authz flow](./assets/fcl-ars-auth-v3.2.png)
