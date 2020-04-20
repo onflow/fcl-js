@@ -16,15 +16,17 @@ export const Script = () => {
         }
       `,
     ])
-    setResult(response)
+    setResult(await sdk.decodeResponse(response))
   }
+
+  console.log('result', result)
 
   return (
     <div>
       <button onClick={run}>
         Run <strong>Script</strong>
       </button>
-      <pre>{JSON.stringify(result, null, 2)}</pre>
+      <pre>{JSON.stringify(result)}</pre>
     </div>
   )
 }
