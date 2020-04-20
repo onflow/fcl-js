@@ -311,7 +311,7 @@ get(ix, "sum", 0) // 10
 
 import { Bad, Ok, isBad, why } from "@onflow/interaction"
 
-const countCantBeGreaterThan = value => ix => 
+const countCantBeGreaterThan = value => ix =>
   get(ix, "count", 0) > value
     ? Bad(ix, `Was greater than ${value}`)
     : Ok(ix)
