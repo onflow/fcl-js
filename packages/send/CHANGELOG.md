@@ -1,6 +1,7 @@
 ### Unreleased
 
 - YYYY-MM-DD **BREAKING?** -- description
+- 2020-04-20 -- Removed `@onflow/bytes`
 - 2020-04-19 **BREAKING** -- Updates `sendGetTransaction` to `sendGetTransactionStatus`. Updates internal functionality of `sendTransaction` and `sendGetEvents` according to the latest AccessAPI spec.
 
 ### 0.0.5 -- 2020-04-18

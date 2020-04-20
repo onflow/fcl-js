@@ -1,7 +1,8 @@
 import {GetEventsForHeightRangeRequest, AccessAPI} from "@onflow/protobuf"
 import {response} from "@onflow/response"
-import {bufferToHexString} from "@onflow/bytes"
 import {unary} from "./unary"
+
+const u8ToHex = u8 => Buffer.from(u8).toString("hex")
 
 export async function sendGetEvents(ix, opts = {}) {
   const req = new GetEventsForHeightRangeRequest()
@@ -22,11 +23,11 @@ export async function sendGetEvents(ix, opts = {}) {
       blockHeight: result.getBlockHeight(),
       events: events.map(event => ({
         type: event.getType(),
-        transactionId: bufferToHexString(event.getTransactionId_asU8()),
+        transactionId: u8ToHex(event.getTransactionId_asU8()),
         transactionIndex: event.getTransactionIndex(),
         eventIndex: event.getEventIndex(),
         payload: event.getPayload_asU8(),
-      }))
+      })),
     }
   })
 

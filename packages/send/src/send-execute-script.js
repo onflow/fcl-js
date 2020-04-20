@@ -1,11 +1,10 @@
 import {ExecuteScriptAtLatestBlockRequest, AccessAPI} from "@onflow/protobuf"
-import {scriptToBuffer} from "@onflow/bytes"
 import {response} from "@onflow/response"
 import {unary} from "./unary"
 
 export async function sendExecuteScript(ix, opts = {}) {
   const req = new ExecuteScriptAtLatestBlockRequest()
-  const code = scriptToBuffer(ix.payload.code)
+  const code = Buffer.from(ix.payload.code, "utf8")
   req.setScript(code)
 
   const res = await unary(opts.node, AccessAPI.ExecuteScriptAtLatestBlock, req)

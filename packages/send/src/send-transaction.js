@@ -1,28 +1,24 @@
-import {
-  AccessAPI,
-  Transaction,
-  SendTransactionRequest,
-} from "@onflow/protobuf"
+import {AccessAPI, Transaction, SendTransactionRequest} from "@onflow/protobuf"
 import {response} from "@onflow/response"
-import {
-  bufferToHexString,
-  scriptToBuffer,
-  hashToBuffer,
-  addressToBuffer,
-  bytes,
-} from "@onflow/bytes"
 import {unary} from "./unary"
+
+const u8ToHex = u8 => Buffer.from(u8).toString("hex")
+const paddedHexBuffer = (hex, pad) =>
+  Buffer.from(hex.padStart(pad * 2, 0), "hex")
+const scriptBuffer = script => Buffer.from(script, "utf8")
+const hexBuffer = hex => Buffer.from(hex, "hex")
+const addressBuffer = addr => paddedHexBuffer(addr, 20)
 
 export async function sendTransaction(ix, opts = {}) {
   const tx = new Transaction()
-  tx.setScript(scriptToBuffer(ix.payload.code))
+  tx.setScript(scriptBuffer(ix.payload.code))
   tx.setGasLimit(ix.payload.limit)
-  tx.setReferenceBlockId(ix.payload.ref ? hashToBuffer(ix.payload.ref) : null)
-  tx.setPayer(addressToBuffer(bytes(ix.payer.acct, 20)))
-  ix.authz.forEach(a => tx.addAuthorizers(addressToBuffer(bytes(a.acct, 20))))
+  tx.setReferenceBlockId(ix.payload.ref ? hexBuffer(ix.payload.ref) : null)
+  tx.setPayer(addressBuffer(ix.payer.acct))
+  ix.authz.forEach(a => tx.addAuthorizers(addressBuffer(a.acct)))
 
   const proposalKey = new Transaction.ProposalKey()
-  proposalKey.setAddress(addressToBuffer(bytes(ix.proposer.addr, 20)))
+  proposalKey.setAddress(addressBuffer(ix.proposer.addr))
   proposalKey.setKeyId(ix.proposer.keyId)
   proposalKey.setSequenceNumber(ix.proposer.sequenceNum)
 
@@ -31,17 +27,17 @@ export async function sendTransaction(ix, opts = {}) {
   ix.authz.forEach(auth => {
     if (auth.signature === null) return
     const authzSig = new Transaction.Signature()
-    authzSig.setAddress(addressToBuffer(bytes(auth.acct, 20)))
+    authzSig.setAddress(addressBuffer(auth.acct))
     authzSig.setKeyId(auth.keyId)
-    authzSig.setSignature(hashToBuffer(auth.signature))
+    authzSig.setSignature(hexBuffer(auth.signature))
 
     tx.addPayloadSignatures(authzSig)
   })
 
   const payerSig = new Transaction.Signature()
-  payerSig.setAddress(addressToBuffer(bytes(ix.payer.acct, 20)))
+  payerSig.setAddress(addressBuffer(ix.payer.acct))
   payerSig.setKeyId(ix.payer.keyId)
-  payerSig.setSignature(hashToBuffer(ix.payer.signature))
+  payerSig.setSignature(hexBuffer(ix.payer.signature))
 
   tx.addEnvelopeSignatures(payerSig)
 
@@ -52,7 +48,7 @@ export async function sendTransaction(ix, opts = {}) {
 
   let ret = response()
   ret.tag = ix.tag
-  ret.transactionHash = bufferToHexString(res.getId_asU8())
+  ret.transactionHash = u8ToHex(res.getId_asU8())
 
   return ret
 }
