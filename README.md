@@ -20,7 +20,7 @@ All changes to a module will be reflected in the modules version number (includi
   - [ ] [`@onflow/sdk`](./packages/sdk) _(wip)_ -- Tools that enable developers to [build](./packages/sdk/src/build), [resolve](./packages/sdk/src/resolve), [send](./packages/send) and [decode](./packages/decode) interactions with the Flow blockchain.
   - [ ] [`@onflow/types`](./packages/types) _(early wip)_ -- Type casting interaction params to cadence compatible values.
   - [x] [`@onflow/send`](./packages/send) _(mvp)_ -- Send [interactions](./packages/interaction) to the Flow blockchain get [responses](./packages/response) back.
-  - [x] [`@onflow/decode](./packages/decode) _(mvp)_ -- Decodes [responses](./packages/response) return values into Javascript (No need for an ABI).
+  - [x] [`@onflow/decode`](./packages/decode) _(mvp)_ -- Decodes [responses](./packages/response) return values into Javascript (No need for an ABI).
 
 - Lower Level
   - [x] [`@onflow/protobuf`](./packages/protobuf) _(mvp)_ -- Dependency of [send](./packages/protobuf). Provides transport between the browser and the Flow blockchain.
