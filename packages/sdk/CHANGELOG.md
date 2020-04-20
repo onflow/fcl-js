@@ -1,6 +1,13 @@
 ### Unreleased
 
 - YYYY-MM-DD **BREAKING?** -- description
+- 2020-04-20 -- VSN `@onflow/decode` 0.0.4 -> 0.0.5
+- 2020-04-20 -- VSN `@onflow/encode` 0.0.1 -> 0.0.2
+- 2020-04-20 -- VSN `@onflow/interaction` 0.0.3 -> 0.0.4
+- 2020-04-20 **BREAKING** -- No longer exporting `nonce`
+- 2020-04-20 **BREAKING** -- No longer exporting `resolvePayload`
+- 2020-04-20 -- Remove dep `rlp`
+- 2020-04-20 -- Remove dep `@onflow/bytes`
 - 2020-04-20 -- Add dep `@onflow/encode` 0.0.1
 - 2020-04-19 **BREAKING** Updates `resolveAuthorizations()` according to the signing requirements of the latest AccessAPI spec. Adds `payer` builder.
 

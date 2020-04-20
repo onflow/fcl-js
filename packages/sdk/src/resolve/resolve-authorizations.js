@@ -1,5 +1,4 @@
-import {Ok, Nope, isTransaction, get} from "@onflow/interaction"
-import {addressToBuffer} from "@onflow/bytes"
+import {Ok, isTransaction, get} from "@onflow/interaction"
 import {
   encodeTransactionPayload,
   encodeTransactionEnvelope,
@@ -28,18 +27,19 @@ export async function resolveAuthorizations(ix) {
     refBlock: ix.payload.ref || null,
     gasLimit: ix.payload.limit,
     proposalKey: {
-     address: ix.proposer.addr,
-     keyId: ix.proposer.keyId,
-     sequenceNum: ix.proposer.sequenceNum
+      address: ix.proposer.addr,
+      keyId: ix.proposer.keyId,
+      sequenceNum: ix.proposer.sequenceNum,
     },
     payer: get(ix, "tx.payer").acct,
-    authorizers: get(ix, "tx.authorizations").map(a => a.acct)
+    authorizers: get(ix, "tx.authorizations").map(a => a.acct),
   })
 
   const axs = get(ix, "tx.authorizations", []).map(
     async function resolveAuthorization(authz) {
       if (isFn(authz)) authz = await authz()
-      if (authz.acct === get(ix, "tx.payer").acct) return buildAuthorization(authz.acct, null, authz.keyId)
+      if (authz.acct === get(ix, "tx.payer").acct)
+        return buildAuthorization(authz.acct, null, authz.keyId)
       const authzSignature = await authz.signFn({
         message: transactionPayload,
         addr: authz.acct,
@@ -51,7 +51,11 @@ export async function resolveAuthorizations(ix) {
         },
         interaction: ix,
       })
-      return buildAuthorization(authz.acct, authzSignature.signature, authz.keyId)
+      return buildAuthorization(
+        authz.acct,
+        authzSignature.signature,
+        authz.keyId
+      )
     }
   )
 
@@ -62,20 +66,22 @@ export async function resolveAuthorizations(ix) {
     refBlock: ix.payload.ref,
     gasLimit: ix.payload.limit,
     proposalKey: {
-     address: ix.proposer.addr,
-     keyId: ix.proposer.keyId,
-     sequenceNum: ix.proposer.sequenceNum
+      address: ix.proposer.addr,
+      keyId: ix.proposer.keyId,
+      sequenceNum: ix.proposer.sequenceNum,
     },
     payer: get(ix, "tx.payer").acct,
     authorizers: get(ix, "tx.authorizations").map(a => a.acct),
-    payloadSigs: ix.authz.map(ax => {
-      if (ax.signature === null) return null
-      return {
-        address: ax.acct,
-        keyId: ax.keyId,
-        sig: ax.signature
-      }
-    }).filter(ps => ps !== null)
+    payloadSigs: ix.authz
+      .map(ax => {
+        if (ax.signature === null) return null
+        return {
+          address: ax.acct,
+          keyId: ax.keyId,
+          sig: ax.signature,
+        }
+      })
+      .filter(ps => ps !== null),
   })
 
   const payer = get(ix, "tx.payer")
@@ -90,7 +96,11 @@ export async function resolveAuthorizations(ix) {
     },
     interaction: ix,
   })
-  ix.payer = buildAuthorization(payer.acct, payerSignature.signature, payer.keyId)
+  ix.payer = buildAuthorization(
+    payer.acct,
+    payerSignature.signature,
+    payer.keyId
+  )
 
   return Ok(ix)
 }

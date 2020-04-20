@@ -22,15 +22,10 @@ const ixBuilt = await sdk.build([
       return a + b
     }
   `,
-  sdk.params([
-    sdk.param(5, t.UFix64, "a"),
-    sdk.param(6, t.UFix64, "b"),
-  ])
+  sdk.params([sdk.param(5, t.UFix64, "a"), sdk.param(6, t.UFix64, "b")]),
 ])
 
-const ixResolved = await sdk.resolve(ixBuild, [
-  sdk.resolveParams,
-])
+const ixResolved = await sdk.resolve(ixBuild, [sdk.resolveParams])
 
 const response = await sdk.send(ixResolved, {
   node: "accessNode url",
@@ -46,6 +41,7 @@ console.log(result === 11n) // true
 # Exposes
 
 - [Top Level](./)
+
   - [`sdk.build`](./src/build)
   - [`sdk.resolve`](./src/resolve)
   - [`sdk.send`](../send)
@@ -53,12 +49,14 @@ console.log(result === 11n) // true
   - [`sdk.decodeResponse`](../decode)
 
 - [Utils](../interaction)
+
   - [`sdk.isOk`](../interaction)
-  - [`sdk.isNope`](../interaction)
+  - [`sdk.isBad`](../interaction)
   - [`sdk.why`](../interaction)
   - [`sdk.pipe`](../interaction)
 
 - [Builders](./src/build)
+
   - [`sdk.authorizations` & `sdk.authorization`](./src/build/authorizations.js)
   - [`sdk.getAccount`](./src/build/get-account.js)
   - [`sdk.getEvents`](./src/build/get-events.js)
