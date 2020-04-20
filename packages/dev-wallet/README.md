@@ -56,7 +56,7 @@ authenticate() // trigger the challenge step (authenticate the user via a wallet
 All information in Identities are optional and may not be there.
 All values can be stored on chain, but most probably shouldn't.
 
-We would love to see Wallet Providers to enable the user to control the following info publicly, sort of a public profile starter kit if you will.
+We would love to see Wallet Providers enable the user to control the following info publicly, sort of a public profile starter kit if you will.
 FCL will always publicly try to fetch these fields when asked for a users information and it will be up to the Wallet provider to make sure they are there and keep them up to date if the user wants to change them.
 
 - **`name`** -- A human readable name/alias/nym for a dApp users display name
