@@ -1,4 +1,28 @@
-import {decode} from "./decode"
+import * as root from "./decode"
+import {decode, decodeResponse} from "./decode"
+
+it("exported interface contract", () => {
+  expect(root).toStrictEqual(
+    expect.objectContaining({
+      decode: expect.any(Function),
+      decodeResponse: expect.any(Function),
+    })
+  )
+})
+
+it("decodeResponse", async () => {
+  const response = {
+    encodedData: Uint8Array.from(
+      Buffer.from(
+        "7b2274797065223a22496e74222c2276616c7565223a2237227d0a",
+        "hex"
+      )
+    ),
+  }
+
+  const data = await decodeResponse(response)
+  expect(data).toBe(7)
+})
 
 describe("unit tests to cover all types", () => {
   it("returns the correct response given a json-cdc payload 2 OPTIONAL", async () => {
@@ -96,7 +120,9 @@ describe("unit tests to cover all types", () => {
 
     const decoded = await decode(payload)
 
-    expect(decoded).toStrictEqual(115792089237316195423570985008687907853269984665640564039457584007913129639945)
+    expect(decoded).toStrictEqual(
+      115792089237316195423570985008687907853269984665640564039457584007913129639945
+    )
   })
 
   it("returns the correct response given a json-cdc payload 12 INT", async () => {
@@ -108,7 +134,9 @@ describe("unit tests to cover all types", () => {
 
     const decoded = await decode(payload)
 
-    expect(decoded).toStrictEqual(-57896044618658097711785492504343953926634992332820282019728792003956564819978)
+    expect(decoded).toStrictEqual(
+      -57896044618658097711785492504343953926634992332820282019728792003956564819978
+    )
   })
 
   it("returns the correct response given a json-cdc payload 13 INT", async () => {
@@ -171,7 +199,9 @@ describe("unit tests to cover all types", () => {
 
     const decoded = await decode(payload)
 
-    expect(decoded).toStrictEqual(57896044618658097711785492504343953926634992332820282019728792003956564819967)
+    expect(decoded).toStrictEqual(
+      57896044618658097711785492504343953926634992332820282019728792003956564819967
+    )
   })
 
   it("returns the correct response given a json-cdc payload 20 UINT", async () => {
@@ -183,7 +213,9 @@ describe("unit tests to cover all types", () => {
 
     const decoded = await decode(payload)
 
-    expect(decoded).toStrictEqual(115792089237316195423570985008687907853269984665640564039457584007913129639945)
+    expect(decoded).toStrictEqual(
+      115792089237316195423570985008687907853269984665640564039457584007913129639945
+    )
   })
 
   it("returns the correct response given a json-cdc payload 21 UINT8", async () => {
@@ -238,7 +270,9 @@ describe("unit tests to cover all types", () => {
 
     const decoded = await decode(payload)
 
-    expect(decoded).toStrictEqual(115792089237316195423570985008687907853269984665640564039457584007913129639935)
+    expect(decoded).toStrictEqual(
+      115792089237316195423570985008687907853269984665640564039457584007913129639935
+    )
   })
 
   it("returns the correct response given a json-cdc payload 27 WORD8", async () => {
@@ -309,7 +343,7 @@ describe("unit tests to cover all types", () => {
 
     const decoded = await decode(payload)
 
-    expect(decoded).toStrictEqual([1,2,3])
+    expect(decoded).toStrictEqual([1, 2, 3])
   })
 
   it("returns the correct response given a json-cdc payload 35 ARRAY", async () => {
@@ -695,7 +729,7 @@ const genDictionary = (depth = 0) => {
   ]
   const dictionaryLength = ~~(Math.random() * 10)
   const arr = Array.from({length: dictionaryLength}).reduce(
-    (acc) => {
+    acc => {
       const {payload: valPayload, decoded: val} = OPTIONS[
         ~~(Math.random() * OPTIONS.length)
       ]()
@@ -747,7 +781,7 @@ const genResource = (depth = 0) => {
   ]
   const fieldsLength = ~~(Math.random() * 10)
   const res = Array.from({length: fieldsLength}).reduce(
-    (acc) => {
+    acc => {
       const {payload: valPayload, decoded: val} = OPTIONS[
         ~~(Math.random() * OPTIONS.length)
       ]()
@@ -799,7 +833,7 @@ const genStruct = (depth = 0) => {
   ]
   const fieldsLength = ~~(Math.random() * 10)
   const res = Array.from({length: fieldsLength}).reduce(
-    (acc) => {
+    acc => {
       const {payload: valPayload, decoded: val} = OPTIONS[
         ~~(Math.random() * OPTIONS.length)
       ]()
@@ -851,7 +885,7 @@ const genEvent = (depth = 0) => {
   ]
   const fieldsLength = ~~(Math.random() * 10)
   const res = Array.from({length: fieldsLength}).reduce(
-    (acc) => {
+    acc => {
       const {payload: valPayload, decoded: val} = OPTIONS[
         ~~(Math.random() * OPTIONS.length)
       ]()
@@ -903,7 +937,7 @@ const genArray = (depth = 0) => {
   ]
   const fieldsLength = ~~(Math.random() * 10)
   const arr = Array.from({length: fieldsLength}).reduce(
-    (acc) => {
+    acc => {
       const {payload, decoded} = OPTIONS[~~(Math.random() * OPTIONS.length)]()
       acc.values.push(payload)
       acc.decoded.push(decoded)
@@ -925,7 +959,7 @@ const genArraySpec = () => {
   }
 }
 
-const times = (fn) => {
+const times = fn => {
   const OPTS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
   return Array.from({length: OPTS[~~(Math.random() * OPTS.length)]}, () => fn)
 }
@@ -947,13 +981,15 @@ describe("generative tests", () => {
     ...times(genEventSpec),
     ...times(genArraySpec),
   ]
-    .filter((d) => d != null)
-    .map((d) => {
+    .filter(d => d != null)
+    .map(d => {
       return typeof d === "function" ? d() : d
     })
     .forEach(({label, payload, decoded, custom}) => {
       it(label, async () =>
-        expect(await decode(payload, custom || undefined)).toStrictEqual(decoded)
+        expect(await decode(payload, custom || undefined)).toStrictEqual(
+          decoded
+        )
       )
     })
 })
@@ -968,7 +1004,7 @@ describe("custom decoder tests", () => {
       },
     }
 
-    const fooDecoder = async (resource) => ({
+    const fooDecoder = async resource => ({
       hello: "world",
     })
 
@@ -986,23 +1022,23 @@ describe("custom decoder tests", () => {
         id: "test.Jeff",
         fields: [
           {name: "firstName", value: {type: "String", value: "Jeff"}},
-          {name: "lastName", value: {type: "String", value: "Doyle"}}
-        ]
-      }
+          {name: "lastName", value: {type: "String", value: "Doyle"}},
+        ],
+      },
     }
 
-    const Jeff = function (resource) {
+    const Jeff = function(resource) {
       if (!(this instanceof Jeff)) return new Jeff(resource)
       this.firstName = resource.firstName
       this.lastName = resource.lastName
       this.printName = () => `${this.firstName} ${this.lastName}`
     }
 
-    const jeffDecoder = async (resource) => {
+    const jeffDecoder = async resource => {
       return Jeff(resource)
     }
 
-    const decoded = await decode(resource, { "test.Jeff": jeffDecoder }, [])
+    const decoded = await decode(resource, {"test.Jeff": jeffDecoder}, [])
 
     expect(decoded.printName()).toStrictEqual("Jeff Doyle")
   })
@@ -1014,29 +1050,35 @@ describe("custom decoder tests", () => {
         id: "test.CryptoKitty",
         fields: [
           {name: "kittyName", value: {type: "String", value: "Sir Meowsers"}},
-          {name: "kittyHat", value: {
-            type: "Resource",
+          {
+            name: "kittyHat",
             value: {
-              id: "test.CryptoKittyHat",
-              fields: [
-                {name: "kittyHatName", value: {type: "String", value: "Yankee With No Brim"}}
-              ]
-            }
-          }}
-        ]
-      }
+              type: "Resource",
+              value: {
+                id: "test.CryptoKittyHat",
+                fields: [
+                  {
+                    name: "kittyHatName",
+                    value: {type: "String", value: "Yankee With No Brim"},
+                  },
+                ],
+              },
+            },
+          },
+        ],
+      },
     }
 
-    const kittyHatDecoder = async (kittyHat) => ({
-      name: kittyHat.kittyHatName
+    const kittyHatDecoder = async kittyHat => ({
+      name: kittyHat.kittyHatName,
     })
 
-    const kittyDecoder = async (kitty) => ({
+    const kittyDecoder = async kitty => ({
       name: kitty.kittyName,
-      hat: kitty.kittyHat
+      hat: kitty.kittyHat,
     })
 
-    const decoded = await decode(resource, { 
+    const decoded = await decode(resource, {
       "/test.CryptoKitty$/": kittyDecoder,
       "/test.CryptoKittyHat$/": kittyHatDecoder,
     })
@@ -1044,8 +1086,8 @@ describe("custom decoder tests", () => {
     expect(decoded).toStrictEqual({
       name: "Sir Meowsers",
       hat: {
-        name: "Yankee With No Brim"
-      }
+        name: "Yankee With No Brim",
+      },
     })
   })
 
@@ -1056,29 +1098,35 @@ describe("custom decoder tests", () => {
         id: "test.CryptoKitty",
         fields: [
           {name: "kittyName", value: {type: "String", value: "Sir Meowsers"}},
-          {name: "kittyHat", value: {
-            type: "Resource",
+          {
+            name: "kittyHat",
             value: {
-              id: "test.CryptoKittyHat",
-              fields: [
-                {name: "kittyHatName", value: {type: "String", value: "Yankee With No Brim"}}
-              ]
-            }
-          }}
-        ]
-      }
+              type: "Resource",
+              value: {
+                id: "test.CryptoKittyHat",
+                fields: [
+                  {
+                    name: "kittyHatName",
+                    value: {type: "String", value: "Yankee With No Brim"},
+                  },
+                ],
+              },
+            },
+          },
+        ],
+      },
     }
 
-    const kittyHatDecoder = async (kittyHat) => ({
-      name: kittyHat.kittyHatName
+    const kittyHatDecoder = async kittyHat => ({
+      name: kittyHat.kittyHatName,
     })
 
-    const kittyDecoder = async (kitty) => ({
+    const kittyDecoder = async kitty => ({
       name: kitty.kittyName,
-      hat: kitty.kittyHat
+      hat: kitty.kittyHat,
     })
 
-    const decoded = await decode(resource, { 
+    const decoded = await decode(resource, {
       "/.CryptoKittyHat$/": kittyHatDecoder,
       "/.CryptoKitty$/": kittyDecoder,
     })
@@ -1086,8 +1134,8 @@ describe("custom decoder tests", () => {
     expect(decoded).toStrictEqual({
       name: "Sir Meowsers",
       hat: {
-        name: "Yankee With No Brim"
-      }
+        name: "Yankee With No Brim",
+      },
     })
   })
 })

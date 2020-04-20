@@ -32,8 +32,5 @@
     "build": "microbundle",
     "test:watch": "jest --watch",
     "start": "microbundle watch"
-  },
-  "dependencies": {
-    "@onflow/bytes": "0.0.1"
   }
 }
