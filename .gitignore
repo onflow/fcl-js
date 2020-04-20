@@ -4,3 +4,4 @@ dist/
 .parcel-cache/
 dev-wallet/db/*.db
 todo.md
+.exrc
