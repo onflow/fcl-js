@@ -50,8 +50,6 @@ describe("build", () => {
       proposer({addr: "01", keyId: 1, sequenceNum: 123})
     ]))
 
-    console.log('ix', ix)
-
     const txProposer = ix.proposer
 
     assert.deepEqual(txProposer, {addr: "01", keyId: 1, sequenceNum: 123 })
