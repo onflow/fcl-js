@@ -2,6 +2,8 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.0.28 -- 2020-04-20
+
 - 2020-04-20 -- VSN `@onflow/sdk` 0.0.12 -> 0.0.14
 - 2020-04-20 -- Remove `@onflow/send` in favour of `@onflow/sdk`
 
