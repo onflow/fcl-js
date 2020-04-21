@@ -10,10 +10,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@onflow/sdk": "0.0.14",
     "@onflow/bytes": "0.0.1",
+    "@onflow/sdk": "0.0.14",
     "elliptic": "^6.5.2",
-    "key-encoder": "^2.0.3",
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "sha3": "^2.1.2"
