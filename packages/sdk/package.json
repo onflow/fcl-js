@@ -37,7 +37,7 @@
     "@onflow/decode": "0.0.5",
     "@onflow/encode": "0.0.2",
     "@onflow/interaction": "0.0.5",
-    "@onflow/send": "0.0.7",
+    "@onflow/send": "0.0.8",
     "@qvvg/templar": "0.0.0"
   }
 }

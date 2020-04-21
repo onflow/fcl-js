@@ -2,6 +2,8 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+- 2020-04-20 -- VSN `@onflow/send` 0.0.7 -> 0.0.8
+
 ### 0.0.13 -- 2020-04-20
 
 - 2020-04-20 -- Updates proposer to set only on the top level proposer field on the ix and updates tests.
