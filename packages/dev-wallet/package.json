@@ -15,16 +15,16 @@
   },
   "main": "server/index.js",
   "dependencies": {
-    "argon2": "^0.26.2",
-    "body-parser": "^1.19.0",
-    "compression": "^1.7.4",
-    "cors": "^2.8.5",
-    "esm": "^3.2.25",
-    "express": "^4.17.1",
-    "express-graphql": "^0.9.0",
-    "graphql": "^15.0.0",
-    "sqlite3": "^4.1.1",
-    "uuid": "^7.0.3"
+    "argon2": "0.26.2",
+    "body-parser": "1.19.0",
+    "compression": "1.7.4",
+    "cors": "2.8.5",
+    "esm": "3.2.25",
+    "express": "4.17.1",
+    "express-graphql": "0.9.0",
+    "graphql": "15.0.0",
+    "sqlite3": "4.1.1",
+    "uuid": "7.0.3"
   },
   "scripts": {
     "build": "echo 'nothing to build'",
