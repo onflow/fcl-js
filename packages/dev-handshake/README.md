@@ -1,5 +1,23 @@
 # Dev Handshake Service
 
+A service that enables Wallet Provider Discovery used in local development and testing.
+
+# Status
+
+- **Last Updated:** April 21st 2020
+- **Stable:** Yes
+- **Risk of Breaking Change:** Low
+
+The external facing aspect of this package is fairly locked in, and already service its purpose.
+That being said, this package is under active development and isnt really anywhere near its final form.
+It still has a long ways to go.
+It does currently work as long as all the values line up with its internal hardcoded values and nothing onchain matters.
+Since this entire project is about things onchain being important, not being able to work with onchain data really needs to be addressed, which will be happening shortly.
+
+Known Upcoming Changes:
+
+- Currently the wallet providers are hardcoded. These will be moved to onchain.
+
 ## API
 
 ### GET /authenticate
