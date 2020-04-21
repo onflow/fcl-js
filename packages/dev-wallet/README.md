@@ -4,10 +4,12 @@ A wallet provider for local development and tests.
 
 # Status
 
-- **Inteface*** Semi-Stable _(medium risk of change)_
-- **Realization** Extremely Unstable _(there will be many changes)_
+- **Last Updated:** April 21st 2020
+- **Stable:** No
+- **Risk of Breaking Change:** High
 
 As the diagram at the bottom of this page depicts we have a pretty good idea where this fits into FCL, but this package is under heavy development.
+As feedback comes in things may change as well. This is an important piece of the puzzle to get correct.
 
 # Introduction
 
@@ -18,6 +20,7 @@ One of FCLs core ideals is for the user to be in control of their data, a wallet
 FCL has been built in a way that it doesn't need to know any intimate details about a wallet provider up front, they can be discovered when the users wishes to let the dApp know about them. This gives us a concept we have been calling Bring Your Own Identity.
 
 # Identity
+
 Conceptually, FCL thinks of identity in two ways: Public and Private.
 
 Public identity will be stored on chain as a resource, it will be publicly available to anyone that knows the Flow Address for the account.
@@ -46,7 +49,7 @@ We highly recommend Wallet Providers let the user see what scopes are being requ
 Consumers of identities in FCL should always assume all data is optional, and should store as little as possible, FCL will make sure the users always see the latest.
 
 ```javascript
-import { config, currentUser, authenticate } from "@onflow/fcl"
+import {config, currentUser, authenticate} from "@onflow/fcl"
 
 config.put("challenge.scope", "email") // request the email scope
 
@@ -79,6 +82,7 @@ Private data on the other hand has more use cases than general data. It is prett
 Eventually we would love to see that sort of thing handled completely on-chain, securely, privately and safely, but in the interm it probably means storing a copy of data in a database when its needed, and allowed by a user.
 
 The process of a dApp receiving private data is as follows:
+
 1. The dApp requests the scopes they want up front `fcl.config().put("challenge.scope", "email+shippingAddress")`.
 2. The User authenticates `fcl.authenticate()` and inside the Wallet Providers authentication process decides its okay for the dApp to know both the `email` and the `shippingAddress`. The User should be able to decide which information to share, if any at all.
 3. When the dApp needs the information they can request it from FCLs current cache of data, if it isnt there the dApp needs to be okay with that and adjust accodingly.
@@ -106,7 +110,7 @@ Authentication can happen one of two ways:
 
 As a Wallet Provider you will be expected to register a URL endpoint (and some other information) with a handshake service (FCL will be launching with one in which registration happens on chain and is completely open source (Apache-2.0 lincense)).
 This registered URL will be what is shown inside the iFrame or where the dApp users will be redirected.
-For the remainder of this documentation we will refere to it as the *Authentication Endpoint* and pair it with the `GET https://provider.com/flow/authentication` route.
+For the remainder of this documentation we will refere to it as the _Authentication Endpoint_ and pair it with the `GET https://provider.com/flow/authentication` route.
 
 The Authentication Endpoint will receive the following data as query params:
 
@@ -128,7 +132,6 @@ The values will use javascripts `encodeURIComponent` function and scopes will be
 We can tell that this challenge is using the Redirect Flow because of the inclusion of the redirect query param.
 The Iframe Flow will still need to be supported as it will be the default flow for dApps.
 
-
 At this point its on the Wallet Provider to do their magic and be confident enough that the user is who they say they are.
 The user should then be shown in some form what the dApp is requesting via the scopes and allow them to opt in or out of anything they want.
 Once the Wallet Provider is ready to hand back control to the dApp and FCL it needs to complete the challenge by redirecting or emiting a javascript `postMessage` event.
@@ -149,16 +152,19 @@ GET https://dapp.com/flow/callback         # supplied by the redirect query para
 Iframe will look like this:
 
 ```javascript
-parent.postMessage({
-  type: "FCL::CHALLENGE::RESPONSE", // used by FCL to know what kind of message this is
-  addr: "0xab4U9KMf",
-  paddr: "0xhMgqTff86",
-  code: "afseasdfsadf",
-  exp: 1650400809517,
-  hks: "https://provider.com/hooks",
-  nonce: "asdfasdfasdf",
-  l6n: decodeURIComponent(l6n)
-}, decodeURIComponent(l6n))
+parent.postMessage(
+  {
+    type: "FCL::CHALLENGE::RESPONSE", // used by FCL to know what kind of message this is
+    addr: "0xab4U9KMf",
+    paddr: "0xhMgqTff86",
+    code: "afseasdfsadf",
+    exp: 1650400809517,
+    hks: "https://provider.com/hooks",
+    nonce: "asdfasdfasdf",
+    l6n: decodeURIComponent(l6n),
+  },
+  decodeURIComponent(l6n)
+)
 ```
 
 FCL should now have everything it needs to collect the Public, Private and Wallet Provider Info.
@@ -173,6 +179,7 @@ GET https://povider.com/hooks
 ```
 
 This request needs to happen for a number of reasons.
+
 - If it fails FCL knows something is wrong and will attempt to re-authenticate.
 - If is succeeds FCL knows that the code it has is valid.
 - It creates a direct way for FCL to "verify" the user against the Wallet Provider.
@@ -243,6 +250,7 @@ At this point FCL can be fairly confident who the currentUser is and is ready to
 FCL will broadcast authorization requests to the Public and Private authorization hooks it knows for a User, in a process we call Asynchronous Remote Signing.
 
 The core concepts to this idea are:
+
 - Hooks tell FCL where to send authorization requests (Wallet Provider)
 - Wallet Provider responds imediately with:
   - a back-channel where FCL can request the results of the authorization
@@ -254,7 +262,7 @@ Below is the public authorization hook we received during the challenge above.
 
 ```javascript
   {
-    id: 345324539,                 
+    id: 345324539,
     addr: "0xhMgqTff86",
     method: "HTTP/POST",
     endpoint: "https://provider.com/flow/authorize",
