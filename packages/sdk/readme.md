@@ -2,6 +2,14 @@
 
 A collection of modules that make interacting with [Flow](https://onflow.org) easier.
 
+# Status
+
+- **Last Updated:** April 21st 2020
+- **Stable:** Yes
+- **Risk of Breaking Change:** Medium
+
+This package is wworking and in active delveopment, breaking changes may happen.
+
 # Install
 
 ```bash
@@ -28,7 +36,7 @@ const ixBuilt = await sdk.build([
 const ixResolved = await sdk.resolve(ixBuild, [sdk.resolveParams])
 
 const response = await sdk.send(ixResolved, {
-  node: "accessNode url",
+  node: "https://...accessNodeUrl...",
 })
 
 const result = await sdk.decodeResponse(response, {
