@@ -1,27 +1,24 @@
 ---
+name: Reporting a Problem/Bug
+about: Reporting a Problem/Bug
+title: ''
+labels: bug, Feedback
+assignees: ''
 
-name: Bug report
-about: Create a report to help us improve
-title: ""
-labels: bug
-assignees: 10thfloor
----**Describe the bug**
-A clear and concise description of what the bug is.
+---
 
-**To Reproduce**
-Steps to reproduce the behavior:
+### Problem
 
-**Expected behavior**
-A clear and concise description of what you expected to happen.
+<what is the problem you've encountered?>
 
-**Screenshots**
-If applicable, add screenshots to help explain your problem.
+### Steps to Reproduce
 
-**Desktop (please complete the following information):**
+<share any logs/screenshots or steps to replicate>
 
-- OS: [e.g. iOS]
-- Browser [e.g. chrome, safari]
-- Version [e.g. 1.0.0]
+### Acceptance Criteria
 
-**Additional context**
-Add any other context about the problem here.
+<if any>
+
+### Context
+
+<what are you currently working on that this is blocking?>
