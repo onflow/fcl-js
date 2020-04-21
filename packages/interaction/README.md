@@ -1,6 +1,19 @@
 # @onflow/interaction
 
-> This module provides an ADT (Abstract Data Type) that represents the underlying data required by the `send` function. It provides function in which to modify the interaction.
+This module provides an ADT (Abstract Data Type) that represents the underlying data required by the `send` function. It provides function in which to modify the interaction.
+
+# Status
+
+- **Last Updated:** April 21st 2020
+- **Stable:** Yes
+- **Risk of Breaking Change:** Medium
+
+This is a keystone data structure in how the SDK works. We will strive for backwards compatibility in any changes to this, as it also makes our lives easier.
+Now that we have a stable encoding package for creating what needs to be signed in transactions, we will be bringing this data structure closer to what those functions need.
+
+Known Upcoming Changes:
+
+- We will be changing some of the underlying fields and data so they are more inline with `@onflow/encode`
 
 # Install
 
@@ -24,47 +37,47 @@ Currently the Access Node recognizes 7 different types of interactions.
 
 > The interaction is a monomorphic data structure, that merges the 7 types of interactions together. Internally it has a bunch of properties, but not everything needs to be included for each of the 7 interaction types.
 
-- **tag** *(all)* `Int` -- a marker that represents the type of the interaction
-- **status** *(all)* `Int` -- a marker that represents the status of the interaction
-- **reason** *(all)* `String` -- used to supply more information/feedback when a status is bad
-- **payload** *(script, transaction)*
-  - **code** *(script, transaction)* `String` -- cadence code
-  - **ref** *(transaction)* `String` -- id of an existing block (used for timeout)
-  - **nonce** *(transaction)* `Int` -- all transactions in Flow need to be unique
-  - **limit** *(transaction)* `Int` -- how much payer is willing to spend
-- **bounds** *(getEvents)*
-  - **start** *(getEvebts)* `Int` -- events after this
-  - **end** *(getEvents)* `Int` -- events before this
-- **acct** *(getAccount)* `String` -- the account to get
-- **authz** *(transaction)* `Array<{acct:String, signature:String, keyId:Int}>` -- list of accounts and signatures authorizing a transaction
-- **proposer** *(transaction)* `{acct:String, keyId:Int, sequenceNum:Int}` -- the proposer for a transaction
-- **payer** *(transaction)* `{addr:String, signature:String, keyId:Int}` -- which account is paying for the transaction and their authorization
-- **eventType** *(getEvents)* `String` -- the type of events to query against
-- **txId** *(getTransaction)* `String` -- id of the transaction to query against
-- **isSealed** *(getLatestBlock)* `Boolean` -- determines if the criteria for the latest block is sealed or **FIND_CORRECT_STATE_NAME**
-- **assigns** *(all)* `{[String]:Any}` -- a pocket to hold things in while building and resolving
+- **tag** _(all)_ `Int` -- a marker that represents the type of the interaction
+- **status** _(all)_ `Int` -- a marker that represents the status of the interaction
+- **reason** _(all)_ `String` -- used to supply more information/feedback when a status is bad
+- **payload** _(script, transaction)_
+  - **code** _(script, transaction)_ `String` -- cadence code
+  - **ref** _(transaction)_ `String` -- id of an existing block (used for timeout)
+  - **nonce** _(transaction)_ `Int` -- all transactions in Flow need to be unique
+  - **limit** _(transaction)_ `Int` -- how much payer is willing to spend
+- **bounds** _(getEvents)_
+  - **start** _(getEvebts)_ `Int` -- events after this
+  - **end** _(getEvents)_ `Int` -- events before this
+- **acct** _(getAccount)_ `String` -- the account to get
+- **authz** _(transaction)_ `Array<{acct:String, signature:String, keyId:Int}>` -- list of accounts and signatures authorizing a transaction
+- **proposer** _(transaction)_ `{acct:String, keyId:Int, sequenceNum:Int}` -- the proposer for a transaction
+- **payer** _(transaction)_ `{addr:String, signature:String, keyId:Int}` -- which account is paying for the transaction and their authorization
+- **eventType** _(getEvents)_ `String` -- the type of events to query against
+- **txId** _(getTransaction)_ `String` -- id of the transaction to query against
+- **isSealed** _(getLatestBlock)_ `Boolean` -- determines if the criteria for the latest block is sealed or **FIND_CORRECT_STATE_NAME**
+- **assigns** _(all)_ `{[String]:Any}` -- a pocket to hold things in while building and resolving
 
 ## Exposed Constants
 
 **Tags**
 
-| Label                   | asInt |      asBin |
-|------------------------:|:-----:|:-----------|
-| UNKNOWN                 |   1   | 0b00000001 |
-| SCRIPT                  |   2   | 0b00000010 |
-| TRANSACTION             |   4   | 0b00000100 |
-| GET_TRANSACTION_STATUS  |   8   | 0b00001000 |
-| GET_ACCOUNT             |  16   | 0b00010000 |
-| GET_EVENTS              |  32   | 0b00100000 |
-| GET_LATEST_BLOCK        |  64   | 0b01000000 |
-| PING                    |  128  | 0b10000000 |
+|                  Label | asInt | asBin      |
+| ---------------------: | :---: | :--------- |
+|                UNKNOWN |   1   | 0b00000001 |
+|                 SCRIPT |   2   | 0b00000010 |
+|            TRANSACTION |   4   | 0b00000100 |
+| GET_TRANSACTION_STATUS |   8   | 0b00001000 |
+|            GET_ACCOUNT |  16   | 0b00010000 |
+|             GET_EVENTS |  32   | 0b00100000 |
+|       GET_LATEST_BLOCK |  64   | 0b01000000 |
+|                   PING |  128  | 0b10000000 |
 
 **Status**
 
 | Label | asInt | asBin |
-|------:|:-----:|:------|
-| BAD   |   1   |  0b01 |
-| OK    |   2   |  0b10 |
+| ----: | :---: | :---- |
+|   BAD |   1   | 0b01  |
+|    OK |   2   | 0b10  |
 
 ## Exposed Functions
 
@@ -191,7 +204,11 @@ isTransaction(makeTransaction(interaction())) // true
 > tags an interaction as a GetTransactionStatus interaction
 
 ```javascript
-import {interaction, makeGetTransactionStatus, isGetTransactionStatus} from "@onflow/interaction"
+import {
+  interaction,
+  makeGetTransactionStatus,
+  isGetTransactionStatus,
+} from "@onflow/interaction"
 
 isGetTransactionStatus(makeGetTransactionStatus(interaction())) // true
 ```
@@ -221,7 +238,11 @@ isGetEvents(makeGetEvents(interaction())) // true
 > tags an interaction as a GetLatestBlock interaction
 
 ```javascript
-import {interaction, makeGetLatestBlock, isGetLatestBlock} from "@onflow/interaction"
+import {
+  interaction,
+  makeGetLatestBlock,
+  isGetLatestBlock,
+} from "@onflow/interaction"
 
 isGetLatestBlock(makeGetLatestBlock(interaction())) // true
 ```
@@ -241,7 +262,6 @@ isPing(makePing(interaction())) // true
 > crud operations for the assigns pocket inside the interaction. They are specifically designed to be used with `pipe`.
 
 ```javascript
-
 import {interaction, get, put, update, destory} from "@onflow/interaction"
 
 let ix = interaction()
@@ -267,7 +287,7 @@ import {interaction, pipe, put, update} from "@onflow/interaction"
 const ix = await pipe(interaction(), [
   put("a", 5),
   put("b", 6),
-  update("sum", (_, ix) => get(ix, "a", 0) + get(ix, "b", 0))
+  update("sum", (_, ix) => get(ix, "a", 0) + get(ix, "b", 0)),
 ])
 
 get(ix, "sum", 0) // 11
@@ -283,7 +303,7 @@ import {interaction, pipe, put, update} from "@onflow/interaction"
 const run = await pipe([
   put("a", 5),
   put("b", 6),
-  update("sum", (_, ix) => get(ix, "a", 0) + get(ix, "b", 0))
+  update("sum", (_, ix) => get(ix, "a", 0) + get(ix, "b", 0)),
 ])
 
 const ix = run(interaction())
@@ -292,42 +312,36 @@ get(ix, "sum", 0) // 11
 
 // Pipes can also be composed
 
-const p1 = pipe([
-  put("a", 1),
-  put("b", 2),
-])
+const p1 = pipe([put("a", 1), put("b", 2)])
 
-const p2 = pipe([
-  put("c", 3),
-  put("d", 4),
-])
+const p2 = pipe([put("c", 3), put("d", 4)])
 
-const calc = update("sum", (_, ix) => ["a", "b", "c", "d"].reduce((acc, d) => acc + get(ix, d, 0), 0))
+const calc = update("sum", (_, ix) =>
+  ["a", "b", "c", "d"].reduce((acc, d) => acc + get(ix, d, 0), 0)
+)
 
 const ix = await pipe(interaction(), [p1, p2, calc])
 get(ix, "sum", 0) // 10
 
 // Pipes can be stoped
 
-import { Bad, Ok, isBad, why } from "@onflow/interaction"
+import {Bad, Ok, isBad, why} from "@onflow/interaction"
 
 const countCantBeGreaterThan = value => ix =>
-  get(ix, "count", 0) > value
-    ? Bad(ix, `Was greater than ${value}`)
-    : Ok(ix)
+  get(ix, "count", 0) > value ? Bad(ix, `Was greater than ${value}`) : Ok(ix)
 
 const setCount = count => put("count", count)
 
-const incCountBy = amount => update("count", (count) => count + amount)
+const incCountBy = amount => update("count", count => count + amount)
 
 const ix = await pipe(interaction(), [
-  setCount(5),                // count: 5
+  setCount(5), // count: 5
   countCantBeGreaterThan(10), // Ok
-  incCountBy(3),              // count: 8
+  incCountBy(3), // count: 8
   countCantBeGreaterThan(10), // Ok
-  incCountBy(5),              // count: 13
+  incCountBy(5), // count: 13
   countCantBeGreaterThan(10), // Bad
-  incCountBy(9),              // never called
+  incCountBy(9), // never called
 ])
 
 isBad(ix) // true
