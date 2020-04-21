@@ -4,10 +4,9 @@ Enabling developers to create dApps on the Flow blockchain using Javascript
 
 # Status
 
-**EARLY ALPHA**
+**EARLY PUBLIC ALPHA**
 
-- **Interface** Stable _(low risk of change)_
-- **Realization** Unstable _(high risk of change)_
+- **Last Updated:** April 21st 2020
 
 We are currently confident in how to consume most of the things in this repository, but most of the modules are in active development and their underlying implementations are subject to change.
 
@@ -17,7 +16,7 @@ All changes to a module will be reflected in the modules version number (includi
 
 - Higher Level
   - [ ] [`@onflow/fcl`](./packages/fcl) _(wip)_ -- A high level dApp framework built on top an opinionated use of the sdk.
-  - [ ] [`@onflow/sdk`](./packages/sdk) _(wip)_ -- Tools that enable developers to [build](./packages/sdk/src/build), [resolve](./packages/sdk/src/resolve), [send](./packages/send) and [decode](./packages/decode) interactions with the Flow blockchain.
+  - [x] [`@onflow/sdk`](./packages/sdk) _(mvp)_ -- Tools that enable developers to [build](./packages/sdk/src/build), [resolve](./packages/sdk/src/resolve), [send](./packages/send) and [decode](./packages/decode) interactions with the Flow blockchain.
   - [ ] [`@onflow/types`](./packages/types) _(early wip)_ -- Type casting interaction params to cadence compatible values.
   - [x] [`@onflow/send`](./packages/send) _(mvp)_ -- Send [interactions](./packages/interaction) to the Flow blockchain get [responses](./packages/response) back.
   - [x] [`@onflow/decode`](./packages/decode) _(mvp)_ -- Decodes [responses](./packages/response) return values into Javascript (No need for an ABI).
