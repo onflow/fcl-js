@@ -17,7 +17,7 @@ A Wallet Provider handles Authentications and Authorizations. They play a very i
 
 One of FCLs core ideals is for the user to be in control of their data, a wallet provider is where many users will do just that.
 
-FCL has been built in a way that it doesn't need to know any intimate details about a wallet provider up front, they can be discovered when the users wishes to let the dApp know about them. This gives us a concept we have been calling Bring Your Own Identity.
+FCL has been built in a way that it doesn't need to know any intimate details about a wallet provider up front, they can be discovered when the users wishes to let the dapp know about them. This gives us a concept we have been calling Bring Your Own Identity.
 
 # Identity
 
@@ -44,7 +44,7 @@ Private identity will be stored by the Wallet Provider, it will only be availabl
 In FCL getting the currentUsers identity will fetch both the public and the private identities, merging the private into the public.
 
 Private info needs to be requested via scopes before the challenge step, more on that later.
-We highly recommend Wallet Providers let the user see what scopes are being requested, and decide what scopes to share with the dApp.
+We highly recommend Wallet Providers let the user see what scopes are being requested, and decide what scopes to share with the dapp.
 
 Consumers of identities in FCL should always assume all data is optional, and should store as little as possible, FCL will make sure the users always see the latest.
 
@@ -69,26 +69,26 @@ We would love to see Wallet Providers enable the user to control the following i
 
 FCL will always publicly try to fetch these fields when asked for a users information and it will be up to the Wallet provider to make sure they are there and keep them up to date if the user wants to change them.
 
-- **`name`** -- A human readable name/alias/nym for a dApp users display name
-- **`avatar`** -- A fully qualified url to a smaller image used to visually represent the dApp user
-- **`cover`** -- A fully qualified url to a bigger image, could be used by the dApp for personalization
-- **`color`** -- A 6 character hex color, could be used by the dApp for personalization
+- **`name`** -- A human readable name/alias/nym for a dapp users display name
+- **`avatar`** -- A fully qualified url to a smaller image used to visually represent the dapp user
+- **`cover`** -- A fully qualified url to a bigger image, could be used by the dapp for personalization
+- **`color`** -- A 6 character hex color, could be used by the dapp for personalization
 - **`bio`** -- A small amount of text that a user can use to express themselves
 
-If we can give dApp developers a solid foundation of usable information that is in the direct control of the users from the very start, which we belive the above fields would do, our hopes are they can rely more on the chain and will need to store less in their own database.
+If we can give dapp developers a solid foundation of usable information that is in the direct control of the users from the very start, which we belive the above fields would do, our hopes are they can rely more on the chain and will need to store less in their own database.
 
 Private data on the other hand has more use cases than general data. It is pretty easy to imagine ordering something and needing information like contact details and where to ship something.
 
 Eventually we would love to see that sort of thing handled completely on-chain, securely, privately and safely, but in the interm it probably means storing a copy of data in a database when its needed, and allowed by a user.
 
-The process of a dApp receiving private data is as follows:
+The process of a dapp receiving private data is as follows:
 
-1. The dApp requests the scopes they want up front `fcl.config().put("challenge.scope", "email+shippingAddress")`.
-2. The User authenticates `fcl.authenticate()` and inside the Wallet Providers authentication process decides its okay for the dApp to know both the `email` and the `shippingAddress`. The User should be able to decide which information to share, if any at all.
-3. When the dApp needs the information they can request it from FCLs current cache of data, if it isnt there the dApp needs to be okay with that and adjust accodingly.
+1. The dapp requests the scopes they want up front `fcl.config().put("challenge.scope", "email+shippingAddress")`.
+2. The User authenticates `fcl.authenticate()` and inside the Wallet Providers authentication process decides its okay for the dapp to know both the `email` and the `shippingAddress`. The User should be able to decide which information to share, if any at all.
+3. When the dapp needs the information they can request it from FCLs current cache of data, if it isnt there the dapp needs to be okay with that and adjust accodingly.
 
 Below are the scopes we are thinking of supporting privately:
-FCL will only publicly and privately try to fetch these when specified up front by a dApp.
+FCL will only publicly and privately try to fetch these when specified up front by a dapp.
 
 - **`email`**
 - **`fullName`**
@@ -109,14 +109,14 @@ Authentication can happen one of two ways:
 - Redirection Flow
 
 As a Wallet Provider you will be expected to register a URL endpoint (and some other information) with a handshake service (FCL will be launching with one in which registration happens on chain and is completely open source (Apache-2.0 lincense)).
-This registered URL will be what is shown inside the iFrame or where the dApp users will be redirected.
+This registered URL will be what is shown inside the iFrame or where the dapp users will be redirected.
 For the remainder of this documentation we will refere to it as the _Authentication Endpoint_ and pair it with the `GET https://provider.com/flow/authentication` route.
 
 The Authentication Endpoint will receive the following data as query params:
 
-- `l6n` _(required)_ -- location (origin) of dApp
+- `l6n` _(required)_ -- location (origin) of dapp
 - `nonce` _(required)_ -- a random string supplied by the FCL
-- `scope` _(optional)_ -- the scopes requested by the dApp
+- `scope` _(optional)_ -- the scopes requested by the dapp
 - `redirect` _(optional)_ -- where to redirect once the authentication challenge is complete
 
 ```
@@ -130,11 +130,11 @@ The values will use javascripts `encodeURIComponent` function and scopes will be
 ```
 
 We can tell that this challenge is using the Redirect Flow because of the inclusion of the redirect query param.
-The Iframe Flow will still need to be supported as it will be the default flow for dApps.
+The Iframe Flow will still need to be supported as it will be the default flow for dapps.
 
 At this point its on the Wallet Provider to do their magic and be confident enough that the user is who they say they are.
-The user should then be shown in some form what the dApp is requesting via the scopes and allow them to opt in or out of anything they want.
-Once the Wallet Provider is ready to hand back control to the dApp and FCL it needs to complete the challenge by redirecting or emiting a javascript `postMessage` event.
+The user should then be shown in some form what the dapp is requesting via the scopes and allow them to opt in or out of anything they want.
+Once the Wallet Provider is ready to hand back control to the dapp and FCL it needs to complete the challenge by redirecting or emiting a javascript `postMessage` event.
 
 Redirecting will look like this:
 
@@ -186,7 +186,7 @@ This request needs to happen for a number of reasons.
 - It gives FCL a direct way to get Private Identity Information and Hooks.
 - The code can be passed to the backend to create a back-channel between the backend and the Wallet Provider.
 
-When users return to a dApp, if the code FCL stored hasnt expired, FCL will make this request again in order to stay up to date with the latest informtaion. FCL may also intermitently request this information before some critial actions.
+When users return to a dapp, if the code FCL stored hasnt expired, FCL will make this request again in order to stay up to date with the latest informtaion. FCL may also intermitently request this information before some critial actions.
 
 The hooks request should respond with the following JSON
 
@@ -202,8 +202,8 @@ const privateHooks = {
     bio: "",
   },
   scoped: {                 // the private info request in the original challenge
-    email: "bob@bob.bob",   // the user said it was okay for the dApp to know the email
-    shippingAddress: null,  // the user said it was NOT okay for the dApp to know the shippingAddress
+    email: "bob@bob.bob",   // the user said it was okay for the dapp to know the email
+    shippingAddress: null,  // the user said it was NOT okay for the dapp to know the shippingAddress
   },
   provider: {
     addr: "0xhMgqTff86", // the flow address for the wallet provider (used in the identity composite id)
