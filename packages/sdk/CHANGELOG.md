@@ -1,6 +1,7 @@
 ### Unreleased
 
 - YYYY-MM-DD **BREAKING?** -- description
+- 2020-04-20 -- Updates proposer to set only on the top level proposer field on the ix and updates tests.
 
 ### 0.0.13 -- 2020-04-20
 
