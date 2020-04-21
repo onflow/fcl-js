@@ -2,7 +2,7 @@ import React, {useState} from "react"
 import ReactDOM from "react-dom"
 import {Script} from "./ix/Script"
 import {Transaction} from "./ix/Transaction"
-import {GetTransaction} from "./ix/GetTransaction"
+import {GetTransactionStatus} from "./ix/GetTransactionStatus"
 import {GetAccount} from "./ix/GetAccount"
 import {GetEvents} from "./ix/GetEvents"
 import {GetLatestBlock} from "./ix/GetLatestBlock"
@@ -14,7 +14,7 @@ const App = () => (
     <hr />
     <Transaction />
     <hr />
-    <GetTransaction />
+    <GetTransactionStatus />
     <hr />
     <GetAccount />
     <hr />

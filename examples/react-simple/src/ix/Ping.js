@@ -1,13 +1,18 @@
 import React, {useState} from "react"
 import * as sdk from "@onflow/sdk"
-import * as fcl from "@onflow/fcl"
-import {formatResponse} from "./utils/format-response"
 
 export const Ping = () => {
   const [result, setResult] = useState(null)
 
   const run = async () => {
-    const response = await fcl.send([sdk.ping()])
+    const response = await sdk.send(await sdk.pipe(await sdk.build([
+      sdk.ping()
+    ]), [
+      sdk.resolve([
+        sdk.resolveParams,
+        sdk.resolveAuthorizations,
+      ]),
+    ]), { node: "http://localhost:8080" })
     setResult(response)
   }
 
