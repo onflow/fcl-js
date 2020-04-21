@@ -2,6 +2,8 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.0.8 -- 2020-04-20
+
 - 2020-04-20 -- sendTransaction response transactionHash -> transactionId
 - 2020-04-20 -- Fix critical bug in gettransactionStatus
 
