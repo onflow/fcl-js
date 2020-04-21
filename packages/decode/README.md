@@ -26,6 +26,14 @@ npm install --save @onflow/decode
 
 # Usage
 
+**Decoding without ABIs**
+
+Unlike with other blockchains, Flow does not require the use of an ABI to decode responses from the blockchain! A response from the Flow Access Node is encoded in JSON-CDC, which is a self describing payload that this package uses to decode the response into JavaScript friendly types.
+
+**Decoding payloads from Transactions and Events**
+
+Decode works on JSON-CDC payloads from both Transactions and Events. You can use this package to produce JavaScript friendly types for the payloads from both of these interactions.
+
 **Decoding a Response**
 
 ```javascript
