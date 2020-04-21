@@ -2,6 +2,9 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+- 2020-04-20 -- sendTransaction response transactionHash -> transactionId
+- 2020-04-20 -- Fix critical bug in gettransactionStatus
+
 ### 0.0.7 -- 2020-04-20
 
 - 2020-04-20 -- VSN `@onflow/interaction` 0.0.3 -> 0.0.5

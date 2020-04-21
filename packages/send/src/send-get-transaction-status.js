@@ -7,7 +7,7 @@ const hexBuffer = hex => Buffer.from(hex, "hex")
 
 export async function sendGetTransactionStatus(ix, opts = {}) {
   const req = new GetTransactionRequest()
-  req.setId(hashBuffer(ix.txId))
+  req.setId(hexBuffer(ix.txId))
 
   const res = await unary(opts.node, AccessAPI.GetTransactionResult, req)
 
