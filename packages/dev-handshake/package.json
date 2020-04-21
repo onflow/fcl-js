@@ -8,10 +8,10 @@
   "homepage": "https://onflow.org",
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/dapperlabs/flow-js-sdk.git"
+    "url": "git+ssh://git@github.com/onflow/flow-js-sdk.git"
   },
   "bugs": {
-    "url": "https://github.com/dapperlabs/flow-js-sdk/issues"
+    "url": "https://github.com/onflow/flow-js-sdk/issues"
   },
   "main": "src/index.js",
   "dependencies": {},
