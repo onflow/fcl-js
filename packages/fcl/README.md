@@ -4,10 +4,11 @@ A high level abstraction (built on top of [@onflow/sdk](../sdk)) that enables de
 
 # Status
 
-- **Interface** Stable _(low risk of change)_
-- **Realization** Unstable _(high risk of change)_
+- **Last Updated:** April 21st 2020
+- **Stable:** No
+- **Risk of Breaking Change:** Medium
 
-We are currently confident in how to consume this package and how to build it, but this module is currently in an incomplete state and not everything works yet.
+We are currently confident in how to consume this package and how to build it, but this module is currently in a very incomplete state and not everything works yet.
 
 # Install
 
@@ -63,8 +64,7 @@ You will probably also want: [`@onflow/sdk`](../sdk) and [`@onflow/types`](../ty
 import React, {useState, useEffect} from "react"
 import * as fcl from "@onflow/fcl"
 
-fcl.config()
-  .put("challenge.scope", "email+publicKey")
+fcl.config().put("challenge.scope", "email+publicKey")
 
 export const Profile = () => {
   const [user, setUser] = useState(null)
@@ -72,18 +72,24 @@ export const Profile = () => {
 
   if (user == null) return <div>Loading...</div>
 
-  return !user.loggedIn
-    ? <div>
-        <button onClick={fcl.authenticate}>Sign In</button>
-        <button onClick={fcl.authenticate}>Sign Up</button>
+  return !user.loggedIn ? (
+    <div>
+      <button onClick={fcl.authenticate}>Sign In</button>
+      <button onClick={fcl.authenticate}>Sign Up</button>
+    </div>
+  ) : (
+    <div>
+      <div>
+        <img
+          src={user.avatar || "http://placekitten.com/g/100/100"}
+          width="100"
+          height="100"
+        />
+        {user.name || "Anonymous"}
       </div>
-    : <div>
-        <div>
-          <img src={user.avatar || "http://placekitten.com/g/100/100"} width="100" height="100"/>
-          {user.name || "Anonymous"}
-        </div>
-        <button onClick={fcl.unauthenticate}>Sign Out</button>
-      </div>
+      <button onClick={fcl.unauthenticate}>Sign Out</button>
+    </div>
+  )
 }
 ```
 
@@ -95,20 +101,14 @@ import * as sdk from "@onflow/sdk"
 import * as six from "@onflow/six" // Comming Soon (Saved Interactions)
 import * as t from "@onflow/types"
 
-fcl.config()
-  .put("send.node", "https://accessNodeUrl")
+fcl.config().put("send.node", "https://accessNodeUrl")
 
 const response = await fcl.send([
   sdk.transaction(six.SEND_FLOW_TOKENS),
-  sdk.params([
-    fcl.user(toAddress).param(),
-    sdk.param(amount, t.UFix64),
-  ]),
+  sdk.params([fcl.user(toAddress).param(), sdk.param(amount, t.UFix64)]),
   sdk.payer(fcl.currentUser().payerAuthorization),
   sdk.proposer(fcl.currentUser().proposerAuthorization),
-  sdk.authorizations([
-    fcl.currentUser().authorization
-  ]),
+  sdk.authorizations([fcl.currentUser().authorization]),
 ])
 
 const unsub = fcl.transaction(response).subscribe(status => {
@@ -124,8 +124,7 @@ import * as fcl from "@onflow/fcl"
 import * as sdk from "@onflow/sdk"
 import * as t from "@onflow/types"
 
-fcl.config()
-  .put("decoder.SomeNFT", d => new SomeToken(d))
+fcl.config().put("decoder.SomeNFT", d => new SomeToken(d))
 
 // query for onchain nfts
 const response = await fcl.send([
@@ -137,9 +136,7 @@ const response = await fcl.send([
       return nfts
     }
   `,
-  sdk.params([
-    fcl.currentUser().param()
-  ])
+  sdk.params([fcl.currentUser().param()]),
 ])
 
 const results = await fcl.decode(response)
