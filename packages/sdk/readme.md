@@ -8,7 +8,7 @@ A collection of modules that make interacting with [Flow](https://onflow.org) ea
 - **Stable:** Yes
 - **Risk of Breaking Change:** Medium
 
-This package is wworking and in active delveopment, breaking changes may happen.
+This package is working and in active delveopment, breaking changes may happen.
 
 # Install
 
