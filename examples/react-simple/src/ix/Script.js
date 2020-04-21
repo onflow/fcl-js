@@ -1,12 +1,10 @@
 import React, {useState} from "react"
 import * as sdk from "@onflow/sdk"
-import {isGetTransactionStatus} from "@onflow/interaction"
 
 export const Script = () => {
   const [result, setResult] = useState(null)
 
   const run = async () => {
-    console.log('isGetTransactionStatus', isGetTransactionStatus)
     const response = await sdk.send(await sdk.pipe(await sdk.build([
       sdk.params([sdk.param("foo", "bar")]),
       sdk.script`
