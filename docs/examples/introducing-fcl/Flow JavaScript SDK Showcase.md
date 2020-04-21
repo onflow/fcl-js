@@ -202,11 +202,6 @@ Flow Transactions are used to _move_ **[resources](resources)** and interact wit
     	`
     ])
 
-### Transactions with Multiple Account Authorizations (Multiple Signers)
-
-If a transaction requires authorization from multiple accounts, you can proved them as long as the `signingFunction` for that account is exposed to your app
-
-    // TODO
 
 ### Parameterized Transactions
 
