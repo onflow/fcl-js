@@ -1,6 +1,5 @@
 import assert from "assert"
-import {get} from "@onflow/interaction"
-import {build, resolve, transaction, limit, proposer, proposalKey} from "./sdk"
+import {build, resolve, transaction, limit, proposer} from "./sdk"
 
 describe("build", () => {
   it("returns the correct limit when building a transaction", async () => {
@@ -32,7 +31,7 @@ describe("build", () => {
 
   it("returns the correct proposer when building a transaction with a fetched proposer", async () => {
     const asyncProposer = async () => {
-      return proposalKey("01", 1, 123)
+      return {addr: "01", keyId: 1, sequenceNum: 123}
     }
     
     const ix = await resolve(await build([
@@ -42,16 +41,18 @@ describe("build", () => {
 
     const txProposer = ix.proposer
 
-    assert.deepEqual(txProposer, {addr: "01", keyId: 1, sequenceNum: 123 })
+    assert.deepEqual(txProposer, {addr: "01", keyId: 1, sequenceNum: 123})
   })
 
   it("returns the correct proposer when building a transaction with a given proposalKey", async () => {
     const ix = await resolve(await build([
       transaction``,
-      proposer(proposalKey("01", 1, 123))
+      proposer({addr: "01", keyId: 1, sequenceNum: 123})
     ]))
 
-    const txProposer = ix.propser
+    console.log('ix', ix)
+
+    const txProposer = ix.proposer
 
     assert.deepEqual(txProposer, {addr: "01", keyId: 1, sequenceNum: 123 })
   })
