@@ -48,7 +48,7 @@ export async function sendTransaction(ix, opts = {}) {
 
   let ret = response()
   ret.tag = ix.tag
-  ret.transactionHash = u8ToHex(res.getId_asU8())
+  ret.transactionId = u8ToHex(res.getId_asU8())
 
   return ret
 }
