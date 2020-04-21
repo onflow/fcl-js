@@ -10,8 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@onflow/fcl": "0.0.22",
-    "@onflow/sdk": "0.0.10",
+    "@onflow/sdk": "0.0.14",
     "@onflow/bytes": "0.0.1",
     "elliptic": "^6.5.2",
     "key-encoder": "^2.0.3",

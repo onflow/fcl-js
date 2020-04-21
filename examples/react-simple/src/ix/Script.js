@@ -1,13 +1,13 @@
 import React, {useState} from "react"
 import * as sdk from "@onflow/sdk"
-import * as fcl from "@onflow/fcl"
-import {formatResponse} from "./utils/format-response"
+import {isGetTransactionStatus} from "@onflow/interaction"
 
 export const Script = () => {
   const [result, setResult] = useState(null)
 
   const run = async () => {
-    const response = await fcl.send([
+    console.log('isGetTransactionStatus', isGetTransactionStatus)
+    const response = await sdk.send(await sdk.pipe(await sdk.build([
       sdk.params([sdk.param("foo", "bar")]),
       sdk.script`
         pub fun main(): Int {
@@ -15,7 +15,12 @@ export const Script = () => {
           return 7
         }
       `,
-    ])
+    ]), [
+      sdk.resolve([
+        sdk.resolveParams,
+        sdk.resolveAuthorizations,
+      ]),
+    ]), { node: "http://localhost:8080" })
     setResult(await sdk.decodeResponse(response))
   }
 

@@ -1,25 +1,30 @@
 import React, {useState} from "react"
 import * as sdk from "@onflow/sdk"
-import * as fcl from "@onflow/fcl"
-import {formatResponse} from "./utils/format-response"
 
-export const GetTransaction = () => {
+export const GetTransactionStatus = () => {
   const [result, setResult] = useState(null)
-  const [txHash, setTxHash] = useState("")
+  const [txId, setTxId] = useState("")
 
   const run = async () => {
-    const response = await fcl.send([sdk.getTransactionStatus(txHash)])
+    const response = await sdk.send(await sdk.pipe(await sdk.build([
+      sdk.getTransactionStatus(txId)
+    ]), [
+      sdk.resolve([
+        sdk.resolveParams,
+        sdk.resolveAuthorizations,
+      ]),
+    ]), { node: "http://localhost:8080" })
     setResult(response)
   }
 
   return (
     <div>
       <input
-        placeholder="transaction hash"
-        onChange={e => setTxHash(e.target.value)}
+        placeholder="transaction id"
+        onChange={e => setTxId(e.target.value)}
       />
       <button onClick={run}>
-        Run <strong>GetTransaction</strong> for: {txHash || "_____"}
+        Run <strong>GetTransaction</strong> for: {txId || "_____"}
       </button>
       <pre>{JSON.stringify(result, null, 2)}</pre>
     </div>
