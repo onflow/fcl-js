@@ -12,6 +12,18 @@ We are currently confident in how to consume most of the things in this reposito
 
 All changes to a module will be reflected in the modules version number (including breaking changes) as a patch, until we are confident the module is working and stable, at which point we will release a `v1.0.0`. After a `v1.0.0` release of a module we will strictly follow SemVer.
 
+# What is Flow?
+
+Flow is a new blockchain for open worlds. Read more about it [here](https://onflow.org).
+
+# Getting Started
+
+- For now you probably want the [`@onflow/sdk`](./packages/sdk) package.
+- The Flow CLIs [emulator](https://github.com/onflow/flow/blob/master/docs/emulator.md) can be used to develop against locally.
+- We have a [React Example](./examples/react-simple) application for you to poke around too. If you want to run it locally, you will need the emulator running with [this config](./flow.json).
+
+Eventually [`@onflow/fcl`](./packages/fcl) will make getting started and developing on the Flow blockchain easier.
+
 # Overview
 
 - Higher Level
