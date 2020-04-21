@@ -35,6 +35,6 @@
   },
   "dependencies": {
     "@onflow/sdk": "0.0.14",
-    "queue-microtask": "^1.1.2"
+    "queue-microtask": "1.1.2"
   }
 }
