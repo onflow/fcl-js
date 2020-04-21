@@ -193,7 +193,6 @@ const response = await sdk.send(await sdk.pipe(await sdk.build([
   - [`sdk.getLatestBlock`](./src/build/get-latest-block.js)
   - [`sdk.getTransactionStatus`](./src/build/get-transaction-status.js)
   - [`sdk.limit`](./src/build/limit.js)
-  - [`sdk.nonce`](./src/build/nonce.js)
   - [`sdk.params` & `sdk.param`](./src/build/params.js)
   - [`sdk.payer`](./src/build/payer.js)
   - [`sdk.ping`](./src/build/ping.js)
