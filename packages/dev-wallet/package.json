@@ -29,8 +29,8 @@
   "scripts": {
     "build": "echo 'nothing to build'",
     "test": "echo 'no tests yet'",
-    "start:cabbage": "PORT=8701 ./wallet",
-    "start:potato": "PORT=8702 ./wallet",
-    "start:carrot": "PORT=8703 ./wallet"
+    "start:cabbage": "PORT=8701 NAME=Cabbage ./wallet",
+    "start:potato": "PORT=8702 NAME=Potato ./wallet",
+    "start:carrot": "PORT=8703 NAME=Carrot ./wallet"
   }
 }
