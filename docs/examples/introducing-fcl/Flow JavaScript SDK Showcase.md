@@ -99,13 +99,13 @@ const resp = await fcl.send([
 ])
 ```
 
-More on [Transactions](trasnactions) later in the guide.
+More on [Transactions](transactions) later in the guide.
 
 ## Deploy a Smart Contract
 
 Deploying Cadence smart contracts is easy using `@onflow`. You can deploy Cadence smart contracts directly to the blockchain, and will not need to use ABIs to interact with them. Contracts can be deployed to and from any account as long as it is authorized.
 
-**A Note on Contract Deployment:** You'll need to have a Flow account to deploy Cadence smart contracts. Accounts are used to authorize the deployment trasnaction, and store the contract code.
+**A Note on Contract Deployment:** You'll need to have a Flow account to deploy Cadence smart contracts. Accounts are used to authorize the deployment transaction, and store the contract code.
 
 Deploy a contract by supplying the contract code and a public key anywhere in your code
 
@@ -155,7 +155,7 @@ transaction {
 
 **A Note on Upgradability:** Currently, you may deploy new smart contract code to your account at any time however there are some important limitations. Changes to objects created by old contracts are not updated if modified in a new version of your contract. **In the future, Flow will support a more robust means of updating your contract code.**
 
-This example is the same as the previous, with a slight modification to the trasnaction
+This example is the same as the previous, with a slight modification to the transaction
 
 ```swift
 AuthAccount.setCode(account: account, code: code)
