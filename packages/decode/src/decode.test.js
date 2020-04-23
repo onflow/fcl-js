@@ -12,12 +12,12 @@ it("exported interface contract", () => {
 
 it("decodeResponse", async () => {
   const response = {
-    encodedData: Uint8Array.from(
+    encodedData: JSON.parse(Buffer.from(Uint8Array.from(
       Buffer.from(
         "7b2274797065223a22496e74222c2276616c7565223a2237227d0a",
         "hex"
       )
-    ),
+    )).toString("utf8")),
   }
 
   const data = await decodeResponse(response)
