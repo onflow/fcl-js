@@ -1,4 +1,7 @@
+[![Build Status](https://travis-ci.com/onflow/flow-js-sdk.svg?branch=master)](https://travis-ci.com/onflow/flow-js-sdk)
+
 # Flow Javascript SDK
+
 
 Enabling developers to create dApps on the Flow blockchain using Javascript
 
