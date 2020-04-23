@@ -74,35 +74,45 @@ spawn(async ctx => {
 
 const identity = v => v
 
-export const config = () => ({
-  put(key, value) {
-    send(NAME, PUT, {key, value})
-  },
-  get(key, fallback) {
-    return send(NAME, GET, {key, fallback}, {expectReply: true, timeout: 10})
-  },
-  update(key, fn = identity) {
-    send(NAME, UPDATE, {key, fn})
-  },
-  delete(key) {
-    send(NAME, DELETE, {key})
-  },
-  where(pattern) {
-    return send(NAME, WHERE, {pattern}, {expectReply: true, timeout: 10})
-  },
-  subscribe(callback) {
-    const EXIT = "@EXIT"
-    const self = spawn(async ctx => {
-      ctx.send(NAME, SUBSCRIBE)
-      while (1) {
-        const letter = await ctx.receive()
-        if (letter.tag === EXIT) {
-          ctx.send(NAME, UNSUBSCRIBE)
-          return
-        }
-        callback(letter.data)
+function put(key, value) {
+  send(NAME, PUT, {key, value})
+  return config()
+}
+
+function get(key, fallback) {
+  return send(NAME, GET, {key, fallback}, {expectReply: true, timeout: 10})
+}
+
+function update(key, fn = identity) {
+  send(NAME, UPDATE, {key, fn})
+  return config()
+}
+
+function _delete(key) {
+  send(NAME, DELETE, {key})
+  return config()
+}
+
+function where(pattern) {
+  return send(NAME, WHERE, {pattern}, {expectReply: true, timeout: 10})
+}
+
+function subscribe(callback) {
+  const EXIT = "@EXIT"
+  const self = spawn(async ctx => {
+    ctx.send(NAME, SUBSCRIBE)
+    while (1) {
+      const letter = await ctx.receive()
+      if (letter.tag === EXIT) {
+        ctx.send(NAME, UNSUBSCRIBE)
+        return
       }
-    })
-    return () => send(self, EXIT)
-  },
-})
+      callback(letter.data)
+    }
+  })
+  return () => send(self, EXIT)
+}
+
+export function config() {
+  return {put, get, update, delete: _delete, where, subscribe}
+}
