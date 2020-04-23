@@ -111,9 +111,7 @@ export const decode = async (
 export const decodeResponse = async (response, customDecoders = {}) => {
   let decoders = {...defaultDecoders, ...customDecoders}
 
-  const encoded = response.encodedData
-  const decodeInstructions = Buffer.from(encoded).toString("utf8")
-  const decodeInstructionsJson = JSON.parse(decodeInstructions)
+  const decodeInstructionsJson = response.encodedData
 
   return await decode(decodeInstructionsJson, decoders)
 }
