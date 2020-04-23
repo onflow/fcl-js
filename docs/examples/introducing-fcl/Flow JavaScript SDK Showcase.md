@@ -24,9 +24,15 @@ We think that a blockchain platform should enable decentralization and help deve
 
 - Provides abstractions of common `sdk` patterns, like `send`. It's designed to be user-friendly too. Under-the-hood this library uses `@onflow/sdk` to perform most of its functions.
 
+## Start **Developing**
+
+To start developing on Flow using `@onflow` you'll need to install and start the Flow Emulator. For installation instruction for the emulator follow this guide: [Install the Flow Emulator on your system](https://github.com/onflow/flow/blob/master/docs/cli.md)
+
+Once installed you can visit the [Flow Emulator documentation](https://github.com/onflow/flow/blob/master/docs/emulator.md) for information about how to use the emulator while developing.
+
 # Configuration
 
-Anywhere in your code, connect to a Flow access node
+Anywhere in your code, connect to a Flow access node. This example connects to a locally running Flow Emulator on port 8080
 
 ```js
 fcl.config().put("accessNode", "http://localhost:8080");
@@ -41,8 +47,6 @@ import * as sdk from "@onflow/sdk"
 import * as fcl from "@onflow/fcl"
 import * as types from "@onflow/types"
 ```
-
-## Start **Developing**
 
 ## Connect to a Wallet
 
@@ -105,7 +109,7 @@ More on [Transactions](transactions) later in the guide.
 
 Deploying Cadence smart contracts is easy using `@onflow`. You can deploy Cadence smart contracts directly to the blockchain, and will not need to use ABIs to interact with them. Contracts can be deployed to and from any account as long as it is authorized.
 
-**A Note on Contract Deployment:** You'll need to have a Flow account to deploy Cadence smart contracts. Accounts are used to authorize the deployment transaction, and store the contract code.
+**A Note on Contract Deployment:** You'll need to have a Flow account to deploy Cadence smart contracts. Accounts are used to authorize the deployment transaction, and store the contract code. The [Flow Emulator]( https://github.com/onflow/flow/blob/master/docs/emulator.md) comes with a root account you can use to authorize the create account transaction. To understand how Flow accounts work, [visit the Flow developer documentation](https://docs.onflow.org/docs/introduction).
 
 Deploy a contract by supplying the contract code and a public key anywhere in your code
 
