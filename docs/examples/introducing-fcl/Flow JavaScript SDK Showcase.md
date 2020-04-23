@@ -151,7 +151,7 @@ transaction {
   }
 ```
 
-## **Updating a Deployed Contract**
+## **Update a Deployed Contract**
 
 **A Note on Upgradability:** Currently, you may deploy new smart contract code to your account at any time however there are some important limitations. Changes to objects created by old contracts are not updated if modified in a new version of your contract. **In the future, Flow will support a more robust means of updating your contract code.**
 
