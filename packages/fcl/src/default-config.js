@@ -1,3 +1,5 @@
 import {config} from "./config"
-const $ = config()
-$.put("accessNode.api", "http://localhost:8080")
+
+config()
+  .put("accessNode.api", "http://localhost:8080")
+  .put("challenge.handshake", "http://localhost:8700/authenticate")

@@ -2,8 +2,8 @@ import "./default-config"
 export {config} from "./config"
 export {send} from "./send"
 export {user} from "./user"
+export {authenticate} from "./authenticate"
 
-export const authenticate = async () => {}
 export const unauthenticate = async () => {}
 
 export const currentUser = () => {
