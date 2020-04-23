@@ -11,7 +11,7 @@ export async function sendExecuteScript(ix, opts = {}) {
 
   let ret = response()
   ret.tag = ix.tag
-  ret.encodedData = res.getValue_asU8()
+  ret.encodedData = JSON.parse(Buffer.from(res.getValue_asU8()).toString("utf8"))
 
   return ret
 }
