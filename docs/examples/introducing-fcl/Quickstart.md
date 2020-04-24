@@ -1,10 +1,6 @@
-# Flow JavaScript SDK
+# Flow JavaScript SDK Quickstart
 
-# Introduction
-
-We think that a blockchain platform should enable decentralization and help developers focus on building. `@onflow` is all you need to interact with the Flow blockchain and Cadence smart contracts from your JavaScript client code.
-
-# Installation
+## Installation
 
 **NPM**
 
