@@ -1,6 +1,7 @@
 ### Unreleased
 
 - YYYY-MM-DD **BREAKING?** -- description
+- 2020-04-27 **BREAKING** -- decodeResponse now consumes and decodes responses of types Script, GetTransactionStatus and GetEvents.
 - 2020-04-23 **BREAKING** -- No longer parse JSON-CDC data from Uint8Array in decodeResponse since this step is now performed in send.
 
 ### 0.0.5 -- 2020-04-20

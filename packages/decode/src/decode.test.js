@@ -1,5 +1,10 @@
 import * as root from "./decode"
 import {decode, decodeResponse} from "./decode"
+import {
+  GET_TRANSACTION_STATUS,
+  GET_EVENTS,
+  SCRIPT
+} from "@onflow/interaction"
 
 it("exported interface contract", () => {
   expect(root).toStrictEqual(
@@ -12,6 +17,7 @@ it("exported interface contract", () => {
 
 it("decodeResponse", async () => {
   const response = {
+    tag: SCRIPT,
     encodedData: JSON.parse(Buffer.from(Uint8Array.from(
       Buffer.from(
         "7b2274797065223a22496e74222c2276616c7565223a2237227d0a",
@@ -1139,3 +1145,38 @@ describe("custom decoder tests", () => {
     })
   })
 })
+
+describe("decode GetEvents tests", () => {
+  it("decodes a GetEvents response correctly", async () => {
+      const getEventsResponse = {
+        tag: GET_EVENTS,
+        events: [{
+            events: [{
+              payload: {type: "String", value: "foo"}
+            }]
+        }]
+      }
+
+      expect(await decodeResponse(getEventsResponse)).toStrictEqual(
+        [{"events": [{"decoded": "foo", "payload": {"type": "String", "value": "foo"}}]}]
+      )
+  })
+})
+
+describe("decode GetTransactionStatus tests", () => {
+  it("decodes a GetEvents response correctly", async () => {
+      const getTransactionStatusResponse = {
+        tag: GET_TRANSACTION_STATUS,
+        transaction: {
+          events: [{
+            payload: {type: "String", value: "foo"}
+          }]
+        }
+      }
+
+      expect(await decodeResponse(getTransactionStatusResponse)).toStrictEqual(
+        {"transaction": { events: [{"decoded": "foo", "payload": {"type": "String", "value": "foo"}}]}}
+      )
+  })
+})
+

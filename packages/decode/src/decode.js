@@ -1,3 +1,9 @@
+import {
+  isGetTransactionStatus,
+  isScript,
+  isGetEvents,
+} from "@onflow/interaction"
+
 const decodeNumber = async (num, _, stack) => {
   try {
     return Number(num)
@@ -111,7 +117,39 @@ export const decode = async (
 export const decodeResponse = async (response, customDecoders = {}) => {
   let decoders = {...defaultDecoders, ...customDecoders}
 
-  const decodeInstructionsJson = response.encodedData
-
-  return await decode(decodeInstructionsJson, decoders)
+  switch(true) {
+    case(isGetTransactionStatus(response)):
+      return {
+        transaction: {
+          ...response.transaction,
+          events: await Promise.all(response.transaction.events.map(
+            async function decodeEvents(e) {
+              return {
+                ...e,
+                decoded: await decode(e.payload, decoders)
+              }
+            }
+          ))
+        }
+      }
+    case(isGetEvents(response)):
+      return await Promise.all(response.events.map(
+        async function decodeEvents(e) {
+            return {
+              ...e,
+              events: await Promise.all(e.events.map(
+                async function decodeEventEvents(ev) {
+                  return {
+                    ...ev,
+                    decoded: await decode(ev.payload, decoders)
+                  }
+                }
+              ))
+            }
+          }
+        )
+      )
+    case(isScript(response)):
+      return await decode(response.encodedData, decoders)
+  }
 }
