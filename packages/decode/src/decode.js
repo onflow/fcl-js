@@ -148,5 +148,5 @@ export const decodeResponse = async (response, customDecoders = {}) => {
     return response.transactionId
   }
 
-  return await decode(decodeInstructionsJson, decoders)
+  return null
 }
