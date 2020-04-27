@@ -16,20 +16,23 @@ export async function sendGetEvents(ix, opts = {}) {
   ret.tag = ix.tag
 
   const results = res.getResultsList()
-  ret.events = results.map(result => {
+  ret.events = results.reduce((blocks, result) => {
+    const blockId = result.getBlockId()
+    const blockHeight = result.getBlockHeight()
     const events = result.getEventsList()
-    return {
-      blockId: result.getBlockId(),
-      blockHeight: result.getBlockHeight(),
-      events: events.map(event => ({
+    events.forEach(event => {
+      blocks.push({
+        blockId,
+        blockHeight,
         type: event.getType(),
         transactionId: u8ToHex(event.getTransactionId_asU8()),
         transactionIndex: event.getTransactionIndex(),
         eventIndex: event.getEventIndex(),
         payload: JSON.parse(Buffer.from(event.getPayload_asU8()).toString("utf8")),
-      })),
-    }
-  })
+      })
+    })
+    return blocks
+  }, [])
 
   return ret
 }
