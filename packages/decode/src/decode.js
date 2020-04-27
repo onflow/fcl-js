@@ -111,7 +111,42 @@ export const decode = async (
 export const decodeResponse = async (response, customDecoders = {}) => {
   let decoders = {...defaultDecoders, ...customDecoders}
 
-  const decodeInstructionsJson = response.encodedData
+  if (response.encodedData) {
+    return await decode(response.encodedData, decoders)
+  } else if (response.transaction) {
+    return {
+      ...response.transaction,
+      events: await Promise.all(response.transaction.events.map(
+        async function decodeEvents(e) {
+          return {
+            type: e.type,
+            transactionId: e.transactionId,
+            transactionIndex: e.transactionIndex,
+            eventIndex: e.eventIndex,
+            data: await decode(e.payload, decoders)
+          }
+        }
+      ))
+    }
+  } else if (response.events) {
+    return await Promise.all(response.events.map(
+        async function decodeEvents(e) {
+          return {
+            type: e.type,
+            transactionId: e.transactionId,
+            transactionIndex: e.transactionIndex,
+            eventIndex: e.eventIndex,
+            data: await decode(e.payload, decoders)
+          }
+        }
+      ))
+  } else if (response.account) {
+    return response.account
+  } else if (response.latestBlock) {
+    return response.latestBlock
+  } else if (response.transactionId) {
+    return response.transactionId
+  }
 
   return await decode(decodeInstructionsJson, decoders)
 }
