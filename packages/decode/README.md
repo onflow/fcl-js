@@ -2,7 +2,7 @@
 
 # @onflow/decode
 
-This package provides methods that can decode a JSON-CDC payload from the Access API into JavaScript friendly types.
+This package provides methods that can decode a response, which can include JSON-CDC payloads from the Access API into JavaScript friendly types.
 
 # Status
 
@@ -13,10 +13,6 @@ This package provides methods that can decode a JSON-CDC payload from the Access
 This package is fairly stable, might even be the most complete package we have.
 We are fairly happy with how it is consumed, and how it works internally.
 Other than the known upcoming change listed below this package might be ready for its first major version bump.
-
-Known Upcoming Changes:
-
-- `decodeResponse` currently unpacks the JSON-CDC from a hex representation. We will be moving this responsiblity into `@onflow/send` so that `decode` can be passed `response.encodedData` directly.
 
 # Install
 
@@ -30,9 +26,9 @@ npm install --save @onflow/decode
 
 Unlike with other blockchains, Flow does not require the use of an ABI to decode responses from the blockchain! A response from the Flow Access Node is encoded in JSON-CDC, which is a self describing payload that this package uses to decode the response into JavaScript friendly types.
 
-**Decoding payloads from Transactions and Events**
+**Decoding**
 
-Decode works on JSON-CDC payloads from both Transactions and Events. You can use this package to produce JavaScript friendly types for the payloads from both of these interactions.
+You can use `decodeResponse` on any type of response. If that response includes a JSON-CDC payload, it will be decoded into JavaScript friendly types. The data that is returned from `decodeResponse` is the data received from the Access Node for the sent interaction.
 
 **Decoding a Response**
 

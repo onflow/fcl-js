@@ -1139,3 +1139,61 @@ describe("custom decoder tests", () => {
     })
   })
 })
+
+describe("decode GetEvents tests", () => {
+  it("decodes a GetEvents response correctly", async () => {
+      const getEventsResponse = {
+        events: [{
+          eventIndex: 123,
+          transactionId: "abc-123",
+          transactionIndex: 123,
+          type: "MyFunAndCoolEvent",
+          payload: {type: "String", value: "foo"}
+        }]
+      }
+
+      expect(await decodeResponse(getEventsResponse)).toStrictEqual(
+        [{
+          eventIndex: 123,
+          transactionId: "abc-123",
+          transactionIndex: 123,
+          type: "MyFunAndCoolEvent",
+          data: "foo"
+        }]
+      )
+  })
+})
+
+describe("decode GetTransactionStatus tests", () => {
+  it("decodes a GetEvents response correctly", async () => {
+      const getTransactionStatusResponse = {
+        transaction: {
+          status: 4,
+          statusCode: 1,
+          errorMessage: null,
+          events: [{
+            type: "LilBUBTheMagicalSpaceCat.LandedOnMars",
+            transactionId: "my-fun-and-very-special-txn-id",
+            transactionIndex: 123456,
+            eventIndex: 7891011,
+            payload: {type: "String", value: "Thanks for reviewing these tests!"}
+          }]
+        }
+      }
+
+      expect(await decodeResponse(getTransactionStatusResponse)).toStrictEqual(
+        { 
+          status: 4,
+          statusCode: 1,
+          errorMessage: null,
+          events: [{
+            type: "LilBUBTheMagicalSpaceCat.LandedOnMars",
+            transactionId: "my-fun-and-very-special-txn-id",
+            transactionIndex: 123456,
+            eventIndex: 7891011,
+            data: "Thanks for reviewing these tests!"
+          }]
+        }
+      )
+  })
+})
