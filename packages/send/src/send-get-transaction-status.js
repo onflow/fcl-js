@@ -24,7 +24,7 @@ export async function sendGetTransactionStatus(ix, opts = {}) {
       transactionId: u8ToHex(event.getTransactionId_asU8()),
       transactionIndex: event.getTransactionIndex(),
       eventIndex: event.getEventIndex(),
-      payload: event.getPayload_asU8(),
+      payload: JSON.parse(Buffer.from(event.getPayload_asU8()).toString("utf8")),
     })),
   }
 

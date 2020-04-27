@@ -1,6 +1,7 @@
 ### Unreleased
 
 - YYYY-MM-DD **BREAKING?** -- description
+- 2020-04-27 **BREAKING** -- Parses JSON-CDC payloads in `sendGetTransactionStatus`
 - 2020-04-23 **BREAKING** -- Parses JSON-CDC payloads before putting them in a response.
 
 ### 0.0.8 -- 2020-04-20
