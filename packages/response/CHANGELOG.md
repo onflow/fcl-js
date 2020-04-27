@@ -1,6 +1,7 @@
 ### Unreleased
 
 - YYYY-MM-DD **BREAKING?** -- description
+- 2020-04-27 **BREAKING** -- Renames `events` to `blocks`
 
 ### 0.0.2 -- 2020-04-18
 
