@@ -99,16 +99,12 @@ const makeIx = (wat) => (ix) => {
   return Ok(ix)
 }
 
-console.log('JSON.parse(ACCT)', ACCT)
-
 export const makeAccount = (ix, uuid) => {
-  console.log('JSON.parse(ACCT)', ACCT)
   ix.accounts[uuid] = JSON.parse(ACCT)
   return Ok(ix)
 }
 
 export const makeParam = (ix, uuid) => {
-  console.log('JSON.parse(PRM)', JSON.parse(PRM))
   ix.params[uuid] = JSON.parse(PRM)
   return Ok(ix)
 }
