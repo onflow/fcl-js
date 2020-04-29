@@ -1,27 +1,64 @@
-type Info {
-  pid: ID
-  name: String
+type Config {
+  accessNode: String
+  host: String
   icon: String
+  name: String
+  origin: String
+  pid: String
+  port: Int
 }
 
 type Me {
   userId: ID
-  email: String
-  privateKey: String
+  addr: String
   publicKey: String
+  privateKey: String
+  keyId: Int
+  email: String
+  name: String
+  avatar: String
+  cover: String
+  color: String
+  bio: String
+}
+
+type User {
+  userId: ID
+  addr: String
+  publicKey: String
+  keyId: Int
+  name: String
+  avatar: String
+  cover: String
+  color: String
+  bio: String
 }
 
 type Session {
-  token: String
-  expiresAt: Float
+  userId: ID
   user: Me
+  addr: String
+  sessionId: String
 }
 
 type Query {
-  info: Info
-  me(token: String): Me
+  config: Config
+  me(sessionId: ID): Me
 }
 
 type Mutation {
-  authenticate(email: String, password: String): Session
+  authenticate(email: String, pass: String): Session
+  upsertUser(input: UpsertUserInput): User
+}
+
+input UpsertUserInput {
+  email: String!
+  pass: String!
+  name: String
+  avatar: String
+  cover: String
+  color: String
+  bio: String
+  newPass: String
+  newEmail: String
 }

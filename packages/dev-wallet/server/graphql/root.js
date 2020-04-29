@@ -1,33 +1,35 @@
 import * as CONFIG from "../config"
-import argon2 from "argon2"
-import {getUserByEmail, getUserById, createUser} from "../repo/user"
-import {getSession, createSession} from "../repo/session"
+import * as db from "../domains/user"
+import {sessionFor} from "../domains/session"
 
-export const authenticate = async ({email, password}) => {
-  let user = await getUserByEmail(email)
-  if (user == null) {
-    await createUser(email, password)
-    user = await getUserByEmail(email)
-  }
-  if (!(await argon2.verify(user.passwordHash, password))) {
-    throw new Error("Invalid Email or Password")
-  }
-  const session = await createSession(user.userId)
-
-  return {...session, user: user}
+export const upsertUser = async ({input}) => {
+  const {userId} = await db.upsertUser(input)
+  const [_, user] = db.getUser(userId)
+  console.log(user)
+  return user
 }
 
-export const me = async ({token}) => {
-  let session = await getSession(token)
-  if (session == null) {
-    throw new Error("Invalid Session Token")
+export const authenticate = async ({email, pass}) => {
+  const session = await db.upsertUser({email, pass})
+  return {
+    ...session,
+    user: db.getUser(session.userId),
   }
-  let user = await getUserById(session.userId)
+}
+
+export const me = async ({sessionId}) => {
+  const userId = sessionFor(sessionId)
+  if (userId == null) throw new Error("Invalid SessionId")
+  const [_, user] = db.getUser(userId)
   return user
 }
 
 export const info = async () => ({
-  pid: CONFIG.PID,
-  name: CONFIG.NAME,
+  accessNode: CONFIG.ACCESS_NODE,
+  host: CONFIG.HOST,
   icon: CONFIG.ICON,
+  name: CONFIG.NAME,
+  origin: CONFIG.ORIGIN,
+  pid: CONFIG.PID,
+  port: CONFIG.PORT,
 })
