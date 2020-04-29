@@ -1,5 +1,8 @@
+import "../default-config"
 import {spawn, send} from "../actor"
 import {genUser} from "./__factories__/gen-user"
+import {send as fclSend} from "../send"
+import * as sdk from "@onflow/sdk"
 
 const SUBSCRIBE = "SUBSCRIBE"
 const UNSUBSCRIBE = "UNSUBSCRIBE"
@@ -46,43 +49,43 @@ const userLogic = async ctx => {
 
 const identity = v => v
 
-const spawnUser = acct => spawn(userLogic, acct)
+const spawnUser = addr => spawn(userLogic, addr)
 
-export const user = acct => ({
+export const user = addr => ({
   async authorization() {
-    spawnUser(acct)
+    spawnUser(addr)
 
     const signFn = async () => {
       // TODO: async decomp via hooks
       // TODO: async remote signing
       throw new Error(
-        `fcl.user(${acct}).payerAuthorization WIP error -- known missing functionality`
+        `fcl.user(${addr}).payerAuthorization WIP error -- known missing functionality`
       )
     }
-    return {acct, signFn}
+    return {addr, signFn}
   },
 
   async payerAuthorization() {
-    spawnUser(acct)
+    spawnUser(addr)
 
     const signFn = async () => {
       // TODO: async decomp via hooks
       // TODO: async remote signing
       throw new Error(
-        `fcl.user(${acct}).payerAuthorization WIP error -- known missing functionality`
+        `fcl.user(${addr}).payerAuthorization WIP error -- known missing functionality`
       )
     }
-    return {acct, signFn}
+    return {addr, signFn}
   },
 
   async snapshot() {
-    spawnUser(acct)
-    return send(acct, SNAPSHOT, null, {expectReply: true, timeout: 0})
+    spawnUser(addr)
+    return send(addr, SNAPSHOT, null, {expectReply: true, timeout: 0})
   },
 
   param(key) {
     return {
-      value: acct,
+      value: addr,
       xform: {
         asParam: v => v,
         asInjection: v => v,
@@ -91,19 +94,24 @@ export const user = acct => ({
   },
 
   subscribe(callback) {
-    spawnUser(acct)
+    spawnUser(addr)
     const EXIT = "@EXIT"
     const self = spawn(async ctx => {
-      ctx.send(acct, SUBSCRIBE)
+      ctx.send(addr, SUBSCRIBE)
       while (1) {
         const letter = await ctx.receive()
         if (letter.tag === EXIT) {
-          ctx.send(acct, UNSUBSCRIBE)
+          ctx.send(addr, UNSUBSCRIBE)
           return
         }
         callback(letter.data)
       }
     })
     return () => send(self, EXIT)
+  },
+
+  async info() {
+    const {account} = await fclSend([sdk.getAccount(addr)])
+    return account
   },
 })

@@ -1,6 +1,7 @@
 ### Unreleased
 
 - YYYY-MM-DD **BREAKING?** -- description
+- 2020-04-28 -- `fcl.user(addr).info()` does a `send([getAccount(addr)])` returning the `account`
 - 2020-04-23 -- `fcl.authenticate()` renders iframe for config: `challenge.handshake`
 
 ### 0.0.28 -- 2020-04-20
