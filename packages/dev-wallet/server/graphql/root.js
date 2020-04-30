@@ -24,7 +24,7 @@ export const me = async ({sessionId}) => {
   return user
 }
 
-export const info = async () => ({
+export const config = async () => ({
   accessNode: CONFIG.ACCESS_NODE,
   host: CONFIG.HOST,
   icon: CONFIG.ICON,

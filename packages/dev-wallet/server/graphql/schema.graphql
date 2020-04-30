@@ -11,6 +11,7 @@ type Config {
 type Me {
   userId: ID
   addr: String
+  vsn: Int
   publicKey: String
   privateKey: String
   keyId: Int
@@ -25,6 +26,7 @@ type Me {
 type User {
   userId: ID
   addr: String
+  vsn: Int
   publicKey: String
   keyId: Int
   name: String
@@ -48,12 +50,13 @@ type Query {
 
 type Mutation {
   authenticate(email: String, pass: String): Session
-  upsertUser(input: UpsertUserInput): User
+  upsertUser(input: UpsertUserInput): Me
 }
 
 input UpsertUserInput {
-  email: String!
-  pass: String!
+  sessionId: ID
+  email: String
+  pass: String
   name: String
   avatar: String
   cover: String
