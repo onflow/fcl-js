@@ -44,8 +44,11 @@ export async function authenticate() {
   renderFrame({handshake, scope, nonce, l6n})
 
   window.addEventListener("message", ({data, origin}) => {
-    if (origin !== handshake) return
     if (data.type !== CHALLENGE_RESPONSE_EVENT) return
+    if (document.getElementById(FRAME_ID)) {
+      document.getElementById(FRAME_ID).remove()
+    }
+
     console.log("RECEIVED", CHALLENGE_RESPONSE_EVENT, data)
   })
 }
