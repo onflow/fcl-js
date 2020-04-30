@@ -4,7 +4,7 @@ import argon2 from "argon2"
 import * as fcl from "@onflow/fcl"
 import * as sdk from "@onflow/sdk"
 import * as t from "@onflow/types"
-import {createSession} from "./session"
+import {createSession, sessionFor} from "./session"
 import {genKeys, signWithKey} from "../crypto"
 import {CONTRACT} from "../flow/contract-noop"
 import {createFlowAccount} from "../flow/create-flow-account"
@@ -33,6 +33,7 @@ export const getUserByEmail = email => getUserBy("email", email)
 
 export const upsertUser = async (data = {}) => {
   let {
+    sessionId = null,
     email = null,
     pass = null,
     name = null,
@@ -43,13 +44,21 @@ export const upsertUser = async (data = {}) => {
     newPass = null,
     newEmail = null,
   } = data
-  invariant(email, "upsertUser({ email }) -- email is required", data)
-  invariant(pass, "upsertUser({ pass }) -- pass is required", data)
-  let [userId, user] = getUserByEmail(email)
+
+  let userId, user
+  if (sessionId == null) {
+    invariant(email, "upsertUser({ email }) -- email is required", data)
+    invariant(pass, "upsertUser({ pass }) -- pass is required", data)
+    ;[userId, user] = getUserByEmail(email)
+  } else {
+    userId = sessionFor(sessionId)
+    ;[userId, user] = getUser(userId)
+  }
 
   if (user == null) {
     user = {
       userId: uuid(),
+      vsn: 0,
       email,
       pass: await argon2.hash(pass),
       ...(await createFlowAccount()),
@@ -68,7 +77,9 @@ export const upsertUser = async (data = {}) => {
   }
 
   // validate passwords need to match
-  invariant(await argon2.verify(user.pass, pass), "Invalid email or password")
+  if (sessionId == null) {
+    invariant(await argon2.verify(user.pass, pass), "Invalid email or password")
+  }
 
   // update
   if (newEmail != null) user.email = email
@@ -85,11 +96,13 @@ export const upsertUser = async (data = {}) => {
   if (user.color == null) user.color = "#ff0066"
   if (user.bio == null) user.bio = ""
 
+  user.vsn += 1
+
   // Update users chain data here async once contracts are ready
   // eventually be smarter about this, only do it if the data changes
 
   // create session because apparently this function does everything
-  const sessionId = createSession(user.userId)
+  sessionId = createSession(user.userId)
 
   console.log("USER", USERS[user.userId])
 
