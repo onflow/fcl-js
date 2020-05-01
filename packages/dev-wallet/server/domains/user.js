@@ -90,6 +90,7 @@ export const upsertUser = async (data = {}) => {
   if (color != null) user.color = color
   if (bio != null) user.bio = bio
 
+  if (user.name == null) user.name = null
   if (user.avatar == null)
     user.avatar = `https://avatars.onflow.org/avatar/${user.addr}.svg`
   if (user.cover == null) user.cover = `https://placekitten.com/1440/480`

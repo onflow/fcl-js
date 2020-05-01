@@ -43,14 +43,26 @@ type Session {
   sessionId: String
 }
 
+type Handshake {
+  handshakeId: ID
+  addr: String
+  paddr: String
+  exp: String
+  hooks: String
+  nonce: String
+  l6n: String
+}
+
 type Query {
   config: Config
   me(sessionId: ID): Me
+  handshake(sessionId: ID, handshakeId: ID): Handshake
 }
 
 type Mutation {
   authenticate(email: String, pass: String): Session
   upsertUser(input: UpsertUserInput): Me
+  genHandshake(input: GenHandshakeInput): ID
 }
 
 input UpsertUserInput {
@@ -64,4 +76,11 @@ input UpsertUserInput {
   bio: String
   newPass: String
   newEmail: String
+}
+
+input GenHandshakeInput {
+  sessionId: ID
+  l6n: String
+  nonce: String
+  scope: String
 }

@@ -11,6 +11,7 @@ export const HOST = [ORIGIN, PORT].filter(Boolean).join(":")
 export const ACCESS_NODE = String(
   process.env.ACCESS_NODE || "http://localhost:8080"
 )
+export const AUTHN = String(process.env.AUTHN || `${HOST}/flow/authenticate`)
 export const ROOT_ADDR = String(process.env.ROOT_ADDR || "01")
 export const PK = String(
   process.env.PK ||
