@@ -6,6 +6,7 @@ import {
 import {useConfig} from "../hooks/config.js"
 
 export const Header = () => {
+  return null
   const {searchParams: params} = new URL(location)
   const config = useConfig()
   const [more, setMore] = useState(false)

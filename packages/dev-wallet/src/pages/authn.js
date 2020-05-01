@@ -5,8 +5,16 @@ import {
   useCallback,
 } from "https://unpkg.com/htm/preact/standalone.module.js"
 import {Header} from "../comps/header.js"
-import {gql} from "../utils/gql.js"
 import {useConfig} from "../hooks/config.js"
+import * as api from "../api/api.js"
+
+const CHAR = "0123456789abcdef"
+const randChar = () => CHAR[~~(Math.random() * CHAR.length)]
+const rand = length => Array.from({length}, randChar).join("")
+const randColor = () => `#${rand(6)}`
+const uuid = () => [rand(8), rand(4), rand(4), rand(4), rand(12)].join("-")
+
+const DEBUG = true
 
 const getParams = () => {
   const {searchParams: params} = new URL(location)
@@ -21,15 +29,6 @@ const getParams = () => {
 
 const AuthForm = ({sessionId, onAuth = () => {}}) => {
   if (sessionId != null) return null
-  const query = gql`
-    mutation Authn($email: String, $passw: String) {
-      authenticate(email: $email, pass: $passw) {
-        sessionId
-        userId
-        addr
-      }
-    }
-  `
 
   const [email, setEmail] = useState("")
   const [passw, setPassw] = useState("")
@@ -37,9 +36,11 @@ const AuthForm = ({sessionId, onAuth = () => {}}) => {
 
   const authenticate = async e => {
     e.preventDefault()
-    const {errors, data} = await query({email, passw})
+    const {errors, data} = await api.authenticate({email, passw})
+    if (DEBUG)
+      console.log("%capi.authenticate", "color:#0066ff;", {errors, data})
     if (errors) setErrors(errors)
-    onAuth(data.authenticate)
+    onAuth(data.authenticate.sessionId)
   }
 
   return html`
@@ -81,41 +82,18 @@ const AuthForm = ({sessionId, onAuth = () => {}}) => {
   `
 }
 
-const queryMe = gql`
-  query Me($sessionId: ID) {
-    me(sessionId: $sessionId) {
-      userId
-      addr
-      vsn
-      email
-      name
-      avatar
-      cover
-      color
-      bio
-    }
-  }
-`
-
-const upsertMe = gql`
-  mutation Upsert($input: UpsertUserInput) {
-    upsertUser(input: $input) {
-      userId
-      addr
-      vsn
-      email
-      name
-      avatar
-      cover
-      color
-      bio
-    }
-  }
-`
-
-const ApproveScope = ({sessionId, setSessionId, user, setUser, onCode}) => {
+const ApproveScope = ({
+  sessionId,
+  setSessionId,
+  user,
+  setUser,
+  onHandshakeId,
+  config,
+}) => {
+  const params = getParams()
   if (sessionId == null) return null
   if (user == null) return null
+  if (config == null) return null
 
   const [dirty, setDirty] = useState(false)
   const [name, setName] = useState(user.name)
@@ -136,11 +114,26 @@ const ApproveScope = ({sessionId, setSessionId, user, setUser, onCode}) => {
 
   const upsert = async e => {
     e.preventDefault()
-    console.log("SESSION_ID", sessionId)
-    const resp = await upsertMe({
+    const {error, data} = await api.upsertUser({
       input: {sessionId, name, avatar, cover, color, bio},
     })
-    setUser(resp.data.upsertUser)
+    if (DEBUG) console.log("%api.upsertUser", "color:#0066ff;", {error, data})
+    setUser(data.upsertUser)
+  }
+
+  const useProfile = async e => {
+    e.preventDefault()
+    const params = getParams()
+    const {error, data} = await api.genHandshake({
+      input: {
+        sessionId,
+        l6n: params.l6n,
+        nonce: params.nonce,
+      },
+    })
+    if (DEBUG)
+      console.log("%capi.genhandshake", "color:#0066ff;", {error, data})
+    onHandshakeId(data.genHandshake)
   }
 
   return html`
@@ -153,16 +146,38 @@ const ApproveScope = ({sessionId, setSessionId, user, setUser, onCode}) => {
         flex-direction: column;
       }
       .profile-card {
-        max-width: 377px;
+        box-sizing: border-box;
+        min-width: 377px;
+        width: 100%;
+        max-width: 400px;
+        height: 100vh;
         padding: 13px;
         border: 1px solid rgba(0, 0, 0, 0.1);
         border-radius: 3px;
+      }
+
+      .profile-card h3 {
+        font-size: 13px;
+        margin: 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+      }
+
+      .profile-card h3 em {
+        font-weight: normal;
+        font-style: normal;
+        font-family: monospace;
+        opacity: 0.5;
+        font-size: 11px;
       }
       .cover {
         background: url(${cover}) no-repeat;
         background-size: cover;
         border-radius: 3px 3px;
         height: 144px;
+        min-height: 144px;
+        max-height: 144px;
         align-items: flex-end;
         justify-content: flex-end;
         border-bottom: 3px solid ${color};
@@ -189,59 +204,103 @@ const ApproveScope = ({sessionId, setSessionId, user, setUser, onCode}) => {
       .profile-card button + button {
         margin-left: 8px;
       }
+      .profile-card hr {
+        display: block;
+        border: none;
+        height: 2px;
+        width: 100%;
+        border-radius: 3px;
+        background: ${color};
+        opacity: 0.5;
+      }
     </style>
     <div class="profile-card column">
-      <div class="cover row">
-        <input
-          placeholder="Cover Photo URL"
-          value=${cover}
-          onInput=${e => setCover(e.target.value)}
-        />
-      </div>
-      <div class="row" style="padding:0 13px;">
-        <div class="column" style="align-items:center;justify-content:center;">
-          <img
-            src=${avatar}
-            width="89"
-            height="89"
-            style="margin-bottom:8px;border:3px solid ${color};border-radius:3px;background:white;margin-top:-50px;"
-          />
+      <h3>
+        <span>${config.name}</span>
+        <em>${params.l6n}</em>
+      </h3>
+      <hr />
+      <div class="column" style="flex:1;overflow-y:scroll;">
+        <h3 style="margin-top:13px;">
+          <span>Public Profile</span>
+          <em>${user.addr}</em>
+        </h3>
+        <div class="cover row">
           <input
-            value=${avatar}
-            onInput=${e => setAvatar(e.target.value)}
-            style="width:89px;"
-            placeholder="Avatar URL"
-          />
-          <input
-            value=${color}
-            onInput=${e => setColor(e.target.value)}
-            style="width:89px;"
-            placeholder="Color"
+            placeholder="Cover Photo URL"
+            value=${cover}
+            onInput=${e => setCover(e.target.value)}
           />
         </div>
-        <div class="column" style="flex:1;margin-left:13px;">
-          <input
-            placeholder="Name"
-            value=${name}
-            onInput=${e => setName(e.target.value)}
-            style="font-size:21px;margin-top:13px;"
-          />
-          <textarea
-            value=${bio}
-            onInput=${e => setBio(e.target.value)}
-            placeholder="Bio"
-            style="width:90%;height:89px;"
-          />
+        <div class="row" style="padding:0 13px;">
+          <div
+            class="column"
+            style="align-items:center;justify-content:flex-start;"
+          >
+            <img
+              src=${avatar}
+              width="89"
+              height="89"
+              style="margin-bottom:8px;border:3px solid ${color};border-radius:3px;background:white;margin-top:-53px;"
+              ondblclick=${e =>
+                setAvatar(`https://avatars.onflow.org/avatar/${uuid()}.svg`)}
+            />
+            <input
+              value=${avatar}
+              style="width:89px;"
+              placeholder="Avatar URL"
+              onFocus=${e => e.target.select()}
+              onInput=${e => setAvatar(e.target.value)}
+              ondblclick=${e =>
+                setAvatar(`https://avatars.onflow.org/avatar/${uuid()}.svg`)}
+            />
+            <input
+              value=${color}
+              style="width:89px;"
+              placeholder="Color"
+              onFocus=${e => e.target.select()}
+              onInput=${e => setColor(e.target.value)}
+              ondblclick=${e => setColor(randColor())}
+            />
+          </div>
+          <div class="column" style="flex:1;margin-left:13px;">
+            <input
+              placeholder="Name"
+              value=${name}
+              style="font-size:21px;margin-top:13px;"
+              onFocus=${e => e.target.select()}
+              onInput=${e => setName(e.target.value)}
+            />
+            <textarea
+              value=${bio}
+              placeholder="Bio"
+              style="width:90%;height:44px;"
+              onFocus=${e => e.target.select()}
+              onInput=${e => setBio(e.target.value)}
+            />
+          </div>
         </div>
+        ${false &&
+          html`
+            <h3 style="margin-top:21px;">Requested Private Info</h3>
+            <hr />
+            <ul>
+              <li>Email: <input /></li>
+            </ul>
+            <hr />
+          `}
       </div>
-      <div class="row" style="justify-content:center;align-items:center;">
+      <div
+        class="row"
+        style="justify-content:center;align-items:center;margin-top:13px;"
+      >
         <button onClick=${() => setSessionId(null)}>Log Out</button>
         ${dirty
           ? html`
               <button onClick=${upsert}>Save Changes</button>
             `
           : html`
-              <button onClick=${() => onCode("TEMP_CODE")}>
+              <button onClick=${useProfile}>
                 Use This Profile
               </button>
             `}
@@ -254,17 +313,18 @@ export default () => {
   const config = useConfig()
   const [sessionId, setSessionId] = useState(localStorage.getItem("sessionId"))
   const [user, setUser] = useState(null)
-  const [code, setCode] = useState(null)
+  const [handshakeId, setHandshakeId] = useState(null)
 
   useEffect(() => {
     if (sessionId == null) {
       localStorage.removeItem("sessionId")
       setUser(null)
-      setCode(null)
+      setHandshakeId(null)
       return
     } else {
       localStorage.setItem("sessionId", sessionId)
-      queryMe({sessionId}).then(({errors, data}) => {
+      api.me({sessionId}).then(({errors, data}) => {
+        if (DEBUG) console.log("%capi.me", "color:#0066ff;", {errors, data})
         if (errors) setSessionId(null)
         else setUser(data.me)
       })
@@ -272,35 +332,57 @@ export default () => {
   }, [sessionId])
 
   useEffect(() => {
-    if (code == null) return
-    const params = getParams()
-    const message = {
-      type: "FCL::CHALLENGE::RESPONSE",
-      addr: user.addr,
-      paddr: config.pid,
-      code: code,
-      exp: 0,
-      hks: config.host + "/flow/hooks/" + user.userId,
-      nonce: params.nonce,
-      l6n: params.l6n,
-    }
-    window.parent.postMessage(message, params.l6n)
-  }, [code])
+    if (handshakeId == null) return
+    api.handshake({sessionId, handshakeId}).then(({error, data}) => {
+      if (DEBUG) console.log("%capi.handshake", "color:#0066ff;", {error, data})
+      const {handshake: hs} = data
+      const msg = {
+        type: "FCL::CHALLENGE::RESPONSE",
+        addr: hs.addr,
+        paddr: hs.paddr,
+        code: hs.handshakeId,
+        exp: hs.exp,
+        hks: hs.hooks,
+        nonce: hs.nonce,
+        l6n: hs.l6n,
+      }
+      window.parent.postMessage(msg, msg.l6n)
+    })
+  }, [handshakeId])
+
+  if (DEBUG)
+    console.log("%cknowledge", "color:purple", {
+      params: getParams(),
+      config,
+      sessionId,
+      user,
+      handshakeId,
+    })
 
   return html`
-    <div>
+    <style>
+      .root {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+    </style>
+    <div class="root">
       <${Header} />
-      <${AuthForm}
-        sessionId=${sessionId}
-        onAuth=${d => setSessionId(d.sessionId)}
-      />
+      <${AuthForm} sessionId=${sessionId} onAuth=${setSessionId} />
       <${ApproveScope}
         key=${user == null ? 0 : user.vsn}
         sessionId=${sessionId}
         setSessionId=${setSessionId}
         user=${user}
         setUser=${setUser}
-        onCode=${setCode}
+        onHandshakeId=${setHandshakeId}
+        config=${config}
       />
     </div>
   `
