@@ -22,7 +22,7 @@ function renderFrame({handshake, scope, nonce, l6n}) {
   $frame.id = FRAME_ID
   $frame.style.height = "500px"
   $frame.style.maxHeight = "90vh"
-  $frame.style.width = "500px"
+  $frame.style.width = "400px"
   $frame.style.maxWidth = "90vw"
   $frame.style.display = "block"
   $frame.style.background = "#fff"
