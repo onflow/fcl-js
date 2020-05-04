@@ -1,6 +1,10 @@
 ### Unreleased
 
 - YYYY-MM-DD **BREAKING?** -- description
+
+### 0.0.9 -- 2020-05-04
+
+- 2020-05-04 **BREAKING** -- VSN `@onflow/interaction` 0.0.5 -> 0.0.6 Breaking Change
 - 2020-05-04 **BREAKING** -- Updates send according to the updated interaction ADT
 - 2020-04-27 **BREAKING** -- Parses JSON-CDC payloads in `sendGetTransactionStatus`
 - 2020-04-23 **BREAKING** -- Parses JSON-CDC payloads before putting them in a response.
