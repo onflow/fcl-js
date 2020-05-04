@@ -6,9 +6,9 @@ const u8ToHex = u8 => Buffer.from(u8).toString("hex")
 
 export async function sendGetEvents(ix, opts = {}) {
   const req = new GetEventsForHeightRangeRequest()
-  req.setType(ix.eventType)
-  req.setStartHeight(Number(ix.bounds.start))
-  req.setEndHeight(Number(ix.bounds.end))
+  req.setType(ix.events.eventType)
+  req.setStartHeight(Number(ix.events.start))
+  req.setEndHeight(Number(ix.events.end))
 
   const res = await unary(opts.node, AccessAPI.GetEventsForHeightRange, req)
 

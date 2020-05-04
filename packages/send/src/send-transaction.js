@@ -11,33 +11,33 @@ const addressBuffer = addr => paddedHexBuffer(addr, 20)
 
 export async function sendTransaction(ix, opts = {}) {
   const tx = new Transaction()
-  tx.setScript(scriptBuffer(ix.payload.code))
-  tx.setGasLimit(ix.payload.limit)
-  tx.setReferenceBlockId(ix.payload.ref ? hexBuffer(ix.payload.ref) : null)
-  tx.setPayer(addressBuffer(ix.payer.acct))
-  ix.authz.forEach(a => tx.addAuthorizers(addressBuffer(a.acct)))
+  tx.setScript(scriptBuffer(ix.message.cadence))
+  tx.setGasLimit(ix.message.computeLimit)
+  tx.setReferenceBlockId(ix.message.refBlock ? hexBuffer(ix.message.refBlock) : null)
+  tx.setPayer(addressBuffer(ix.accounts[ix.payer].addr))
+  ix.authorizations.forEach(tempId => tx.addAuthorizers(addressBuffer(ix.accounts[tempId].addr)))
 
   const proposalKey = new Transaction.ProposalKey()
-  proposalKey.setAddress(addressBuffer(ix.proposer.addr))
-  proposalKey.setKeyId(ix.proposer.keyId)
-  proposalKey.setSequenceNumber(ix.proposer.sequenceNum)
+  proposalKey.setAddress(addressBuffer(ix.accounts[ix.proposer].addr))
+  proposalKey.setKeyId(ix.accounts[ix.proposer].keyId)
+  proposalKey.setSequenceNumber(ix.accounts[ix.proposer].sequenceNum)
 
   tx.setProposalKey(proposalKey)
 
-  ix.authz.forEach(auth => {
-    if (auth.signature === null) return
+  ix.authorizations.forEach(tempId => {
+    if (ix.accounts[tempId].signature === null) return
     const authzSig = new Transaction.Signature()
-    authzSig.setAddress(addressBuffer(auth.acct))
-    authzSig.setKeyId(auth.keyId)
-    authzSig.setSignature(hexBuffer(auth.signature))
+    authzSig.setAddress(addressBuffer(ix.accounts[tempId].addr))
+    authzSig.setKeyId(ix.accounts[tempId].keyId)
+    authzSig.setSignature(hexBuffer(ix.accounts[tempId].signature))
 
     tx.addPayloadSignatures(authzSig)
   })
 
   const payerSig = new Transaction.Signature()
-  payerSig.setAddress(addressBuffer(ix.payer.acct))
-  payerSig.setKeyId(ix.payer.keyId)
-  payerSig.setSignature(hexBuffer(ix.payer.signature))
+  payerSig.setAddress(addressBuffer(ix.accounts[ix.payer].addr))
+  payerSig.setKeyId(ix.accounts[ix.payer].keyId)
+  payerSig.setSignature(hexBuffer(ix.accounts[ix.payer].signature))
 
   tx.addEnvelopeSignatures(payerSig)
 
