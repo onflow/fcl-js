@@ -4,7 +4,7 @@ export function getLatestBlock(isSealed = false) {
   return pipe([
     makeGetLatestBlock,
     ix => {
-      ix.isSealed = isSealed
+      ix.latestBlock.isSealed = isSealed
       return Ok(ix)
     }
   ])

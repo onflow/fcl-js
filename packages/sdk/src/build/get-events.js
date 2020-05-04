@@ -4,15 +4,15 @@ export function getEvents(eventType, start, end) {
   return pipe([
     makeGetEvents,
     ix => {
-      ix.eventType = eventType
+      ix.events.eventType = eventType
       return Ok(ix)
     },
     ix => {
-      ix.bounds.start = start
+      ix.events.start = start
       return Ok(ix)
     },
     ix => {
-      ix.bounds.end = end
+      ix.events.end = end
       return Ok(ix)
     }
   ])
