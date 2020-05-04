@@ -4,7 +4,7 @@ import {unary} from "./unary"
 
 export async function sendExecuteScript(ix, opts = {}) {
   const req = new ExecuteScriptAtLatestBlockRequest()
-  const code = Buffer.from(ix.payload.code, "utf8")
+  const code = Buffer.from(ix.message.cadence, "utf8")
   req.setScript(code)
 
   const res = await unary(opts.node, AccessAPI.ExecuteScriptAtLatestBlock, req)

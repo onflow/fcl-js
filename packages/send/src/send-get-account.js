@@ -10,7 +10,7 @@ const addressBuffer = addr => paddedHexBuffer(addr, 20)
 
 export async function sendGetAccount(ix, opts = {}) {
   const req = new GetAccountRequest()
-  req.setAddress(addressBuffer(ix.acct))
+  req.setAddress(addressBuffer(ix.accountAddr))
 
   const res = await unary(opts.node, AccessAPI.GetAccount, req)
 
