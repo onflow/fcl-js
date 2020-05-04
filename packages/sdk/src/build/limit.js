@@ -1,9 +1,9 @@
 import {pipe, Ok} from "@onflow/interaction"
 
-export function limit(limit) {
+export function limit(computeLimit) {
   return pipe([
     ix => {
-      ix.payload.limit = limit
+      ix.message.computeLimit = computeLimit
       return Ok(ix)
     }
   ])

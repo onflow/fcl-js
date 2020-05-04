@@ -1,10 +1,10 @@
 import {pipe, Ok, makeGetTransactionStatus} from "@onflow/interaction"
 
-export function getTransactionStatus(txId) {
+export function getTransactionStatus(transactionId) {
   return pipe([
     makeGetTransactionStatus,
     ix => {
-      ix.txId = txId
+      ix.transactionId = transactionId
       return Ok(ix)
     }
   ])

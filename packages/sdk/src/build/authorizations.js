@@ -1,9 +1,18 @@
-import {pipe, put} from "@onflow/interaction"
+import {pipe, makeAuthorizer} from "@onflow/interaction"
 
 export function authorizations(ax = []) {
-  return pipe([put("tx.authorizations", ax)])
+  return pipe([
+    ...ax.map(a =>
+      makeAuthorizer(
+        {
+          ...a,
+          role: {authorizer: true},
+        }
+      )
+    ),
+  ])
 }
 
-export function authorization(acct, signFn, keyId) {
-  return {acct, signFn, keyId}
+export function authorization(addr, signingFunction, keyId) {
+  return {addr, signingFunction, keyId}
 }

@@ -3,6 +3,6 @@ import {t7l} from "@qvvg/templar"
 
 export function script(...args) {
   return pipe([makeScript,
-    put("ix.code", t7l(...args)),
+    put("ix.cadence", t7l(...args)),
   ])
 }

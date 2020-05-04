@@ -1,13 +1,9 @@
-import {pipe, put} from "@onflow/interaction"
-
-function toMap(kv = []) {
-  return kv
-    .filter(d => d.key != null)
-    .reduce((acc, d) => ({...acc, [d.key]: d.value}), {})
-}
+import {pipe, makeParam} from "@onflow/interaction"
 
 export function params(px = []) {
-  return pipe([put("ix.params", toMap(px))])
+  return pipe([
+    ...px.map(p => makeParam(p))
+  ])
 }
 
 const identity = {

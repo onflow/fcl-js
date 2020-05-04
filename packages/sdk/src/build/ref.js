@@ -1,9 +1,9 @@
 import {pipe, Ok} from "@onflow/interaction"
 
-export function ref(ref) {
+export function ref(refBlock) {
   return pipe([
     ix => {
-      ix.payload.ref = ref
+      ix.message.refBlock = refBlock
       return Ok(ix)
     }
   ])

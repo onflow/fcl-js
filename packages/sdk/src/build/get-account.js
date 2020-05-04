@@ -1,10 +1,10 @@
 import {pipe, makeGetAccount, Ok} from "@onflow/interaction"
 
-export function getAccount(acct) {
+export function getAccount(addr) {
   return pipe([
     makeGetAccount,
     ix => {
-      ix.acct = acct
+      ix.accountAddr = addr
       return Ok(ix)
     }
   ])

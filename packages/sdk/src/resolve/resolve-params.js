@@ -7,8 +7,8 @@ function isFn(v) {
 export const resolveParams = pipe([
   ix => {
     if (!isTransaction(ix) && !isScript(ix)) return Ok(ix)
-    const code = get(ix, "ix.code")
-    ix.payload.code = isFn(code) ? code(get(ix, "ix.params", {})) : code
+    const cadence = get(ix, "ix.cadence")
+    ix.message.cadence = isFn(cadence) ? cadence(get(ix, "ix.params", {})) : cadence
     return Ok(ix)
   }
 ])

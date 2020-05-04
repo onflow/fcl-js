@@ -1,7 +1,12 @@
-import {pipe, put} from "@onflow/interaction"
+import {pipe, makePayer} from "@onflow/interaction"
 
 export function payer(authz) {
   return pipe([
-    put("tx.payer", authz)
+    makePayer(
+      {
+        ...authz,
+        role: {payer: true},
+      }
+    ),
   ])
 }
