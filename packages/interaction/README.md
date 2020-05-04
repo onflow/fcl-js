@@ -37,25 +37,45 @@ Currently the Access Node recognizes 7 different types of interactions.
 
 > The interaction is a monomorphic data structure, that merges the 7 types of interactions together. Internally it has a bunch of properties, but not everything needs to be included for each of the 7 interaction types.
 
+
 - **tag** _(all)_ `Int` -- a marker that represents the type of the interaction
 - **status** _(all)_ `Int` -- a marker that represents the status of the interaction
 - **reason** _(all)_ `String` -- used to supply more information/feedback when a status is bad
-- **payload** _(script, transaction)_
-  - **code** _(script, transaction)_ `String` -- cadence code
-  - **ref** _(transaction)_ `String` -- id of an existing block (used for timeout)
-  - **nonce** _(transaction)_ `Int` -- all transactions in Flow need to be unique
-  - **limit** _(transaction)_ `Int` -- how much payer is willing to spend
-- **bounds** _(getEvents)_
-  - **start** _(getEvebts)_ `Int` -- events after this
+- **accounts** _(transaction, script)_
+  - **kind** _(transaction, script)_ `Int` -- denotes the kind of account, ACCOUNT or PARAM
+  - **tempId** _(transaction, script)_ `String` -- denotes the internal tempId for this account
+  - **addr** _(transaction, script)_ `String` -- denotes the address of this account
+  - **keyId** _(transaction, script)_ `Int` -- denotes the keyId in question for this account
+  - **sequenceNum** _(transaction, script)_ `Int` -- denotes the sequenceNum in question for this account
+  - **signature** _(transaction, script)_ `String` -- the signature produced by the signingFunction for this account
+  - **signingFunction** _(transaction, script)_ `Function` -- the signing function for this account
+  - **resolve** _(transaction, script)_ `Function` -- the resolver for this account
+  - **kind** _(transaction, script)_
+    - **propser** _(transaction, script)_ `Boolean` -- denotes if this account is a propser
+    - **authorizer** _(transaction, script)_ `Boolean` -- denotes if this account is an authorizer
+    - **payer** _(transaction, script)_ `Boolean` -- denotes if this account is a payer
+    - **param** _(transaction, script)_ `Boolean` -- denotes if this account is a param
+- **message** _(script, transaction)_
+  - **cadence** _(script, transaction)_ `String` -- cadence code
+  - **refBlock** _(transaction)_ `String` -- id of an existing block (used for timeout)
+  - **computeLimit** _(script)_ `Int` -- how much payer is willing to spend
+  - **proposer** _(transaction)_ `String` -- the tempId of the account proposer for a transaction
+  - **payer** _(transaction)_ `String` -- the tempId of the payer for a transaction
+  - **authorizations** _(transaction)_ `Array<String>` -- list of tempIds referencing the accounts of the authorizers for a transaction
+  - **params** _(transaction, script)_ `Array<String>` -- list of tempIds referencing the params for a transaction
+- **proposer** _(transaction)_ `String` -- the tempId referencing the account of the proposer for a transaction
+- **payer** _(transaction)_ `String` -- the tempId referencing the account of the payer for a transaction
+- **authorizations** _(transaction)_ `Array<String>` -- list of tempIds referencing the accounts of the authorizers for a transaction
+- **events** _(getEvents)_
+  - **start** _(getEvents)_ `Int` -- events after this
   - **end** _(getEvents)_ `Int` -- events before this
-- **acct** _(getAccount)_ `String` -- the account to get
-- **authz** _(transaction)_ `Array<{acct:String, signature:String, keyId:Int}>` -- list of accounts and signatures authorizing a transaction
-- **proposer** _(transaction)_ `{acct:String, keyId:Int, sequenceNum:Int}` -- the proposer for a transaction
-- **payer** _(transaction)_ `{addr:String, signature:String, keyId:Int}` -- which account is paying for the transaction and their authorization
-- **eventType** _(getEvents)_ `String` -- the type of events to query against
-- **txId** _(getTransaction)_ `String` -- id of the transaction to query against
-- **isSealed** _(getLatestBlock)_ `Boolean` -- determines if the criteria for the latest block is sealed or **FIND_CORRECT_STATE_NAME**
+  - **eventType** _(getEvents)_ `String` -- type of events to get
+- **latestBlock** _(getLatestBlock)
+  - **isSealed** _(getLatestBlock)_ `Boolean` `Boolean` -- determines if the criteria for the latest block is sealed or 
+- **accountAddr** _(getAccount)_ `String` -- the account to get
+- **transactionId** _(getTransactionStatus)_ `String` -- the transaction to get
 - **assigns** _(all)_ `{[String]:Any}` -- a pocket to hold things in while building and resolving
+
 
 ## Exposed Constants
 
@@ -120,6 +140,12 @@ Currently the Access Node recognizes 7 different types of interactions.
   - [put/2](#get3-put2-update2-and-destory1)
   - [update/2](#get3-put2-update2-and-destory1)
   - [destroy/1](#get3-put2-update2-and-destory1)
+- **Accounts**
+  - [makeAuthorizer/1](#makeAuthorizer1)
+  - [makePayer/1](#makePayer1)
+  - [makeProposer/1](#makeProposer1)
+- **Params**
+  - [makeParam/1](#makeParam1)
 - **Composition**
   - [pipe/2](#pipe2)
   - [pipe/1](#pipe2)
@@ -275,6 +301,46 @@ get(ix, "count", 0) // 1
 
 ix = destory("count")(ix)
 get(ix, "count", 0) // 0
+```
+
+### `makeAuthorizer/1`
+> compose an Authorizer account, and registers a tempId for it in the interaction object accounts registry
+```javascript
+import {makeAuthorizer, makeTransaction, pipe} from "@onflow/interaction"
+const ix = pipe([
+  makeTransaction``
+  makeAuthorizer({ addr: "01", role: { authorizer: true } })
+])
+```
+
+### `makePayer/1`
+> compose a Payer account, and registers a tempId for it in the interaction object accounts registry
+```javascript
+import {makePayer, makeTransaction, pipe} from "@onflow/interaction"
+const ix = pipe([
+  makeTransaction``
+  makePayer({ addr: "01", role: { payer: true } })
+])
+```
+
+### `makeProposer/1`
+> compose a Proposer account, and registers a tempId for it in the interaction object accounts registry
+```javascript
+import {makeProposer, makeTransaction, pipe} from "@onflow/interaction"
+const ix = pipe([
+  makeTransaction``
+  makeProposer({ addr: "01", role: { proposer: true } })
+])
+```
+
+### `makeParam/1`
+> compose a Param, and registers a tempId for it in the interaction object params registry
+```javascript
+import {makeParam, makeTransaction, pipe} from "@onflow/interaction"
+const ix = pipe([
+  makeTransaction``
+  makeParam(...)
+])
 ```
 
 ### `pipe/2`
