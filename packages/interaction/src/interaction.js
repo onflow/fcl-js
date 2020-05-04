@@ -33,7 +33,9 @@ const ACCT = `{
 const PRM = `{
   "kind":${PARAM},
   "tempId":null,
-  "value":null
+  "key":null,
+  "value":null,
+  "xform":null
 }`
 
 const IX = `{
@@ -77,6 +79,11 @@ const isNull = (d) => d == null
 const isNumber = (d) => d === "number"
 const isFn = (d) => typeof d === "function"
 
+const CHARS = "abcdefghijklmnopqrstuvwxyz0123456789".split("")
+const randChar = () => CHARS[~~(Math.random() * CHARS.length)]
+export const uuid = () => Array.from({length: 10}, randChar).join("")
+export const uuidExists = (ix, uuid) => Boolean(ix.accounts[uuid] || ix.params[uuid])
+
 export const isInteraction = (ix) => {
   if (!isObj(ix) || isNull(ix) || isNumber(ix)) return false
   for (let key of KEYS) if (!ix.hasOwnProperty(key)) return false
@@ -99,13 +106,61 @@ const makeIx = (wat) => (ix) => {
   return Ok(ix)
 }
 
-export const makeAccount = (ix, uuid) => {
-  ix.accounts[uuid] = JSON.parse(ACCT)
+const makeAccount = (acct, tempId) => (ix) => {
+  ix.accounts[tempId] = JSON.parse(ACCT)
+  ix.accounts[tempId].tempId = tempId
+  ix.accounts[tempId].addr = acct.addr
+  ix.accounts[tempId].keyId = acct.keyId
+  ix.accounts[tempId].sequenceNum = acct.sequenceNum
+  ix.accounts[tempId].signature = acct.signature
+  ix.accounts[tempId].signingFunction = acct.signingFunction
+  ix.accounts[tempId].resolve = acct.resolve
+  ix.accounts[tempId].role = {
+    ...ix.accounts[tempId].role,
+    ...acct.role,
+  }
   return Ok(ix)
 }
 
-export const makeParam = (ix, uuid) => {
-  ix.params[uuid] = JSON.parse(PRM)
+export const makeAuthorizer = (acct) => (ix) => {
+  let tempId = uuid()
+  while (uuidExists(ix, tempId)) {
+    tempId = uuid()
+  }
+  ix.authorizations.push(tempId)
+  return Ok(pipe(ix, [makeAccount(acct, tempId)]))
+}
+
+export const makeProposer = (acct) => (ix) => {
+  let tempId = uuid()
+  while (uuidExists(ix, tempId)) {
+    tempId = uuid()
+  }
+  ix.proposer = tempId
+  return Ok(pipe(ix, [makeAccount(acct, tempId)]))
+}
+
+export const makePayer = (acct) => (ix) => {
+  let tempId = uuid()
+  while (uuidExists(ix, tempId)) {
+    tempId = uuid()
+  }
+  ix.payer = tempId
+  return Ok(pipe(ix, [makeAccount(acct, tempId)]))
+} 
+
+export const makeParam = (param) => (ix) => {
+  let tempId = uuid()
+  while (uuidExists(ix, tempId)) {
+    tempId = uuid()
+  }
+  ix.message.params.push(tempId)
+
+  ix.params[tempId] = JSON.parse(PRM)
+  ix.params[tempId].tempId = tempId
+  ix.params[tempId].key = param.key
+  ix.params[tempId].value = param.value
+  ix.params[tempId].xform = param.xform
   return Ok(ix)
 }
 

@@ -1,6 +1,7 @@
 ### Unreleased
 
 - YYYY-MM-DD **BREAKING?** -- description
+- 2020-05-03 **BREAKING** -- Updates interaction ADT structure
 
 ### 0.0.5 -- 2020-04-20
 
