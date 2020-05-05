@@ -35,7 +35,8 @@ const PRM = `{
   "tempId":null,
   "key":null,
   "value":null,
-  "xform":null
+  "xform":null,
+  "resolve": null
 }`
 
 const IX = `{
@@ -161,6 +162,7 @@ export const makeParam = (param) => (ix) => {
   ix.params[tempId].key = param.key
   ix.params[tempId].value = param.value
   ix.params[tempId].xform = param.xform
+  ix.params[tempId].resolve = param.resolve
   return Ok(ix)
 }
 
