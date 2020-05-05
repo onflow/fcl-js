@@ -4,6 +4,11 @@ import {spawn, send} from "../actor"
 import {send as fclSend} from "../send"
 import * as sdk from "@onflow/sdk"
 import * as t from "@onflow/types"
+import {renderAuthnFrame} from "./render-authn-frame"
+import {renderAuthzFrame} from "./render-authz-frame"
+import {compositeIdFromProvider} from "./composite-id-from-provider"
+import {fetchHook} from "./fetch-hook"
+import {pollForAuthzUpdates} from "./poll-for-authz-updates"
 
 const NAME = "CURRENT_USER"
 const SUBSCRIBE = "SUBSCRIBE"
@@ -14,7 +19,6 @@ const SET_CURRENT_USER = "SET_CURRENT_USER"
 const DEL_CURRENT_USER = "DEL_CURRENT_USER"
 const GET_AS_PARAM = "GET_AS_PARAM"
 
-const FRAME_ID = "FCL_IFRAME_CHALLENGE"
 const CHALLENGE_RESPONSE_EVENT = "FCL::CHALLENGE::RESPONSE"
 
 const DATA = `{
@@ -90,45 +94,6 @@ const currentUserLogic = async ctx => {
 const identity = v => v
 const spawnCurrentUser = () => spawn(currentUserLogic, NAME)
 
-function renderFrame({handshake, scope, nonce, l6n}) {
-  if (document.getElementById(FRAME_ID)) return
-
-  const src = [
-    handshake,
-    [
-      `l6n=${encodeURIComponent(l6n)}`,
-      `nonce=${encodeURIComponent(nonce)}`,
-      scope && `scope=${scope.split(" ").join("+")}`,
-    ]
-      .filter(Boolean)
-      .join("&"),
-  ].join("?")
-
-  const $frame = document.createElement("iframe")
-  $frame.src = src
-  $frame.id = FRAME_ID
-  $frame.style.height = "500px"
-  $frame.style.maxHeight = "90vh"
-  $frame.style.width = "400px"
-  $frame.style.maxWidth = "90vw"
-  $frame.style.display = "block"
-  $frame.style.background = "#fff"
-  $frame.style.position = "fixed"
-  $frame.style.top = "5vh"
-  $frame.style.right = "calc(50vw)"
-  $frame.style.transform = "translateX(50%)"
-  $frame.style.boxShadow = "0 4px 8px -4px black"
-  $frame.frameBorder = "0"
-  document.body.append($frame)
-}
-
-const compositeId = data => {
-  const addr = ((data || {}).provider || {}).addr
-  const pid = ((data || {}).provider || {}).pid
-  if (addr == null || pid == null) return null
-  return `${addr}/${pid}`
-}
-
 async function authenticate() {
   return new Promise(async resolve => {
     spawnCurrentUser()
@@ -136,20 +101,20 @@ async function authenticate() {
     const user = await snapshot()
     if (user.loggedIn) return resolve(user)
 
-    const handshake = await config().get("challenge.handshake")
-    const scope = await config().get("challenge.scope")
-    const nonce = "asdf"
-    const l6n = window.location.origin
-
-    renderFrame({handshake, scope, nonce, l6n})
+    const unrender = renderAuthnFrame({
+      handshake: await config().get("challenge.handshake"),
+      scope: await config().get("challenge.scope"),
+      nonce: "asdf",
+      l6n: window.location.origin,
+    })
 
     window.addEventListener("message", async ({data, origin}) => {
       if (data.type !== CHALLENGE_RESPONSE_EVENT) return
-      if (document.getElementById(FRAME_ID)) {
-        document.getElementById(FRAME_ID).remove()
-      }
+      unrender()
+      const url = new URL(data.hks)
+      url.searchParams.append("code", data.code)
 
-      const user = await fetch(`${data.hks}?code=${data.code}`, {
+      const user = await fetch(url, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -158,7 +123,7 @@ async function authenticate() {
 
       send(NAME, SET_CURRENT_USER, {
         ...user,
-        cid: compositeId(user),
+        cid: compositeIdFromProvider(user.provider),
         loggedIn: true,
         verified: true,
       })
@@ -187,32 +152,29 @@ async function authorization(account) {
     sequenceNum = key.sequenceNumber
   }
 
+  const signingFunction = async message => {
+    const user = await snapshot()
+    const acct = await info()
+    const resp = await fetchHook(user.authorizations[0], message)
+
+    let unrender = () => {}
+    if (resp.local && resp.local.length > 0) {
+      console.log("RENDER LOCAL")
+      unrender = renderAuthzFrame(resp.local[0])
+    }
+
+    const result = await pollForAuthzUpdates(resp.authorizationUpdates)
+    unrender()
+    return result
+  }
+
   return {
     ...account,
     addr: user.addr,
     keyId: user.keyId,
     sequenceNum,
     signature: account.signature || null,
-    signingFunction: async message => {
-      const user = await snapshot()
-      console.group("%cAuthorization", "color:purple;font-family:monospace;")
-      console.log(
-        "%cThis is currently a Work In Progress and coming soon",
-        "color:tomato;font-family:monospace;"
-      )
-      console.log(
-        "%cAuthorization Hooks",
-        "color:blue;font-family:monospace;",
-        user.authorizations
-      )
-      console.log("%cMessage", "color:blue;font-family:monospace;", message)
-      console.groupEnd()
-      return {
-        addr: user.addr,
-        keyId: user.keyId,
-        signature: "NOT_AN_ACTUAL_SIGNATURE_YET",
-      }
-    },
+    signingFunction,
     resolve: null,
     roles: account.roles,
   }
