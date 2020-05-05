@@ -1,9 +1,7 @@
 import {pipe, makeParam} from "@onflow/interaction"
 
 export function params(px = []) {
-  return pipe([
-    ...px.map(p => makeParam(p))
-  ])
+  return pipe(px.map(makeParam))
 }
 
 const identity = {

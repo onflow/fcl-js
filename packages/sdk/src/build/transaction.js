@@ -1,15 +1,9 @@
-import {pipe, put, Ok, update, makeTransaction} from "@onflow/interaction"
+import {pipe, put, Ok, makeTransaction} from "@onflow/interaction"
 import {t7l} from "@qvvg/templar"
 
 const DEFAULT_COMPUTE_LIMIT = 10
 const DEFAULT_SCRIPT_ACCOUNTS = []
 const DEFUALT_REF = null
-
-function hammer(fallback) {
-  return function(value) {
-    return value == null ? fallback : value
-  }
-}
 
 export function transaction(...args) {
   return pipe([

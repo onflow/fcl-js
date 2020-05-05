@@ -1,12 +1,11 @@
 import {pipe, makePayer} from "@onflow/interaction"
 
+const isFn = d => typeof d === "function"
+
 export function payer(authz) {
-  return pipe([
-    makePayer(
-      {
-        ...authz,
-        role: {payer: true},
-      }
-    ),
-  ])
+  const a = isFn(authz)
+    ? {resolve: authz}
+    : authz
+
+  return makePayer({ ...a, role: { payer: true }})
 }
