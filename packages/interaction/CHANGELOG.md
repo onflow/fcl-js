@@ -1,6 +1,7 @@
 ### Unreleased
 
 - YYYY-MM-DD **BREAKING?** -- description
+- 2020-05-05 -- Adds resolve field to param
 
 ### 0.0.6 -- 2020-05-04
 

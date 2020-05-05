@@ -50,7 +50,7 @@ Currently the Access Node recognizes 7 different types of interactions.
   - **signature** _(transaction, script)_ `String` -- the signature produced by the signingFunction for this account
   - **signingFunction** _(transaction, script)_ `Function` -- the signing function for this account
   - **resolve** _(transaction, script)_ `Function` -- the resolver for this account
-  - **kind** _(transaction, script)_
+  - **role** _(transaction, script)_
     - **propser** _(transaction, script)_ `Boolean` -- denotes if this account is a propser
     - **authorizer** _(transaction, script)_ `Boolean` -- denotes if this account is an authorizer
     - **payer** _(transaction, script)_ `Boolean` -- denotes if this account is a payer
