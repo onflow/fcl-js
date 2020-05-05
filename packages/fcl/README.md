@@ -4,11 +4,19 @@ A high level abstraction (built on top of [@onflow/sdk](../sdk)) that enables de
 
 # Status
 
-- **Last Updated:** April 21st 2020
+- **Last Updated:** May 5th 2020
 - **Stable:** No
 - **Risk of Breaking Change:** Medium
 
 We are currently confident in how to consume this package and how to build it, but this module is currently in a very incomplete state and not everything works yet.
+
+- `config`, `decode` and `send` are in a working state.
+- `subscribe`, `snapshot` and `info` are in a working state.
+- `authenticate` and `unauthenticate` are working with the dev wallet, but do not yet persist a session
+- The authentication portion of `currentUser` is working with the dev wallet
+- We are waiting on some upstream changes before we can make the `currentUser` authorization portion work as expected
+- `user` is currently blocked by not storing public data on chain, we are working towards this, but its currently lower on our priority list
+- Work on `events` and `transactions` hasn't started yet, but should be straight forward once it has.
 
 # Install
 
@@ -20,39 +28,43 @@ You will probably also want: [`@onflow/sdk`](../sdk) and [`@onflow/types`](../ty
 
 # Overview
 
-- [x] [`fcl.config()`](./src/config) _(done)_
-  - [x] `fcl.config().put(key, value)` _(done)_
-  - [x] `fcl.config().get(key)` _(done)_
-  - [x] `fcl.config().get(key, fallback)` _(done)_
-  - [x] `fcl.config().update(key, transform)` _(done)_
-  - [x] `fcl.config().delete(key)` _(done)_
-  - [x] `fcl.config().where(regexp)` _(done)_
-  - [x] `fcl.config().subscribe(callback)` _(done)_
-- [ ] [`fcl.authenticate()`](./src/authenticate) _(wip)_
-- [ ] [`fcl.unauthenticate()`](./src/authenticate) _(wip)_
+- [x] [`fcl.config()`](./src/config)
+  - [x] `fcl.config().put(key, value)`
+  - [x] `fcl.config().get(key)`
+  - [x] `fcl.config().get(key, fallback)`
+  - [x] `fcl.config().update(key, transform)`
+  - [x] `fcl.config().delete(key)`
+  - [x] `fcl.config().where(regexp)`
+  - [x] `fcl.config().subscribe(callback)`
+- [x] [`fcl.authenticate()`](./src/current-user)
+- [x] [`fcl.unauthenticate()`](./src/current-user)
 - [ ] [`fcl.currentUser()`](./src/current-user) _(wip)_
-  - [ ] `fcl.currentUser().snapshot()` _(wip)_
-  - [ ] `fcl.currentUser().subscribe(callback)` _(wip)_
+  - [x] `fcl.currentUser().snapshot()`
+  - [x] `fcl.currentUser().subscribe(callback)`
+  - [x] `fcl.currentUser().authenticate()`
+    - [ ] Current User Persistent Session
+  - [x] `fcl.currentUser().unauthenticate()`
   - [ ] `fcl.currentUser().authorization` _(wip)_
-  - [ ] `fcl.currentUser().param(key)` _(wip)_
-  - [ ] `fcl.currentUser().info()` _(wip)_
-- [ ] [`fcl.user(addr)`](./src/user) _(wip)_
-  - [ ] `fcl.user(addr).snapshot()` _(wip)_
-  - [ ] `fcl.user(addr).subscribe(callback)` _(wip)_
-  - [ ] `fcl.user(addr).authorization` _(wip)_
-  - [ ] `fcl.user(addr).param(key)` _(wip)_
-  - [ ] `fcl.user(addr).info()` _(wip)_
-- [ ] `fcl.transaction(transactionId)` _(wip)_
-  - [ ] `fcl.transaction(transactionId).snapshot()` _(wip)_
-  - [ ] `fcl.transaction(transactionId).subscribe(callback)` _(wip)_
-- [ ] `fcl.events(...)` _(EARLY VERY UNSTABLE)_
-  - [ ] `fcl.events(...).subscribe(callback)` _(EARLY VERY UNSTABLE)_
-- [ ] [`fcl.send(builders)`](./src/send) _(WIP)_
-  - [ ] Configure `fcl.send` _(WIP)_
-- [ ] `fcl.decode(response)` _(WIP)_
-  - [ ] Configure `fcl.decode` _(WIP)_
-    - [ ] Custom qualified decoders _(WIP)_
-    - [ ] Custom unqualified decoders _(WIP)_
+  - [ ] `fcl.currentUser().param(key)` _(Pending Dep Update)_
+  - [x] `fcl.currentUser().info()`
+- [ ] `fcl.transaction(transactionId)` _(not started)_
+  - [ ] `fcl.transaction(transactionId).snapshot()` _(not started)_
+  - [ ] `fcl.transaction(transactionId).subscribe(callback)` _(not started)_
+  - [ ] `fcl.transaction(transactionId).onceSealed()` _(not started)_
+- [ ] `fcl.events(...)` _(not_started)_
+  - [ ] `fcl.events(...).subscribe(callback)` _(not started)_
+- [x] [`fcl.send(builders)`](./src/send)
+  - [x] Configure `fcl.send`
+- [x] [`fcl.decode(response)`](./src/decode)
+  - [x] Configure `fcl.decode`
+    - [x] Custom unqualified decoders
+    - [ ] Custom qualified decoders _(Not MVP)_
+- [ ] [`fcl.user(addr)`](./src/user) _(blocked)_
+  - [ ] `fcl.user(addr).snapshot()` _(blocked)_
+  - [ ] `fcl.user(addr).subscribe(callback)` _(blocked)_
+  - [ ] `fcl.user(addr).authorization` _(blocked)_
+  - [ ] `fcl.user(addr).param(key)` _(blocked)_
+  - [ ] `fcl.user(addr).info()` _(blocked)_
 
 # Usage
 
