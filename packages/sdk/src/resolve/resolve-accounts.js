@@ -1,22 +1,22 @@
 import {pipe, isTransaction, Ok} from "@onflow/interaction"
 
-const isFn = (d) => typeof d === "function"
-const isNumber = (d) => typeof d === "number"
-const isString = (d) => typeof d === "string"
+const isFn = d => typeof d === "function"
+const isNumber = d => typeof d === "number"
+const isString = d => typeof d === "string"
 
 const invariant = (fact, msg, ...rest) => {
   if (!fact) {
     const error = new Error(`INVARIANT ${msg}`)
     error.stack = error.stack
       .split("\n")
-      .filter((d) => !/at invariant/.test(d))
+      .filter(d => !/at invariant/.test(d))
       .join("\n")
     console.error("\n\n---\n\n", error, "\n\n", ...rest, "\n\n---\n\n")
     throw error
   }
 }
 
-const accountCanFulfillRoles = (account) => {
+const accountCanFulfillRoles = account => {
   if (account.role.proposer) {
     if (
       !isString(account.addr) ||
@@ -51,7 +51,7 @@ const firstNonNullKeyId = (values = []) =>
     ? values.filter(isNumber)[0]
     : null
 const findProposer = (accounts = []) =>
-  accounts.find((d) => d.role.proposer) || {}
+  accounts.find(d => d.role.proposer) || {}
 
 const deepMergeAccount = (into, from) => ({
   kind: firstNonNull([into.kind, from.kind]),
@@ -73,20 +73,21 @@ const deepMergeAccount = (into, from) => ({
   },
 })
 
-export const enforceResolvedAccounts = async (ix) => {
+export const enforceResolvedAccounts = async ix => {
   if (!isTransaction(ix)) return Ok(ix)
   for (let [tempId, account] of Object.entries(ix.accounts)) {
-    if (isFn(account.resolve)) account = await account.resolve(account)
+    if (isFn(account.resolve))
+      ix.accounts[tempId] = await account.resolve(account)
     invariant(
-      accountCanFulfillRoles(account),
+      accountCanFulfillRoles(ix.accounts[tempId]),
       "Account unable to fulfill role",
-      account
+      ix.accounts[tempId]
     )
   }
   return Ok(ix)
 }
 
-export const dedupeResolvedAccounts = async (ix) => {
+export const dedupeResolvedAccounts = async ix => {
   if (!isTransaction(ix)) return Ok(ix)
   for (let account of Object.values(ix.accounts)) {
     const cid = `${account.addr}|${account.keyId}`
@@ -100,7 +101,7 @@ export const dedupeResolvedAccounts = async (ix) => {
     }
     if (ix.proposer === account.tempId) ix.proposer = cid
     if (ix.payer === account.tempId) ix.payer = cid
-    ix.authorizations = ix.authorizations.map((d) =>
+    ix.authorizations = ix.authorizations.map(d =>
       d === account.tempId ? cid : d
     )
     delete ix.accounts[account.tempId]
