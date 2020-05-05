@@ -16,6 +16,7 @@ const SRC = path.resolve(__dirname, "../src")
 const app = express()
 
 app
+  .use(cors())
   .use(compression())
   .use(bodyParser.json())
   .use(express.static(SRC))
