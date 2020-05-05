@@ -1,14 +1,23 @@
-import {isTransaction, isScript, pipe, get, Ok, update} from "@onflow/interaction"
+import {isTransaction, isScript, get, Ok} from "@onflow/interaction"
 
-function isFn(v) {
-  return typeof v === "function"
-}
+const isFn = d => typeof d === "function"
+const isString = s => typeof s === "string"
 
-export const resolveParams = pipe([
-  ix => {
-    if (!isTransaction(ix) && !isScript(ix)) return Ok(ix)
-    const cadence = get(ix, "ix.cadence")
-    ix.message.cadence = isFn(cadence) ? cadence(get(ix, "ix.params", {})) : cadence
+export const resolveParams = (ix) => {
+  if (!(isTransaction(ix) || isScript(ix))) return Ok(ix)
+  const cadence = get(ix, 'ix.cadence')
+  if (isString(cadence)) {
+    ix.message.cadence = cadence
     return Ok(ix)
   }
-])
+  if (isFn(cadence)) {
+    const params = Object.fromEntries(Object
+      .values(ix.params)
+      .filter(param => param.key != null)
+      .map(param => [param.key, param.xform.asInjection(param.value)]))
+
+    ix.message.cadence = cadence(params)
+    return Ok(ix)
+  }
+  throw new Error("Invalid Cadence Value")
+}

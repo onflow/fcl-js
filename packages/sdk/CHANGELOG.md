@@ -1,6 +1,7 @@
 ### Unreleased
 
 - YYYY-MM-DD **BREAKING?** -- description
+- 2020-05-04 **BREAKING** -- Updates sdk according to updated interaction ADT
 
 ### 0.0.14 -- 2020-04-20
 

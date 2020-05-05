@@ -23,8 +23,6 @@ export {script} from "./build/script"
 export {transaction} from "./build/transaction"
 
 // resolvers
-export {resolveAuthorizations} from "./resolve/resolve-authorizations"
+export {resolveAccounts} from "./resolve/resolve-accounts"
 export {resolveParams} from "./resolve/resolve-params"
 export {resolveSignatures} from "./resolve/resolve-signatures"
-export {resolvePayer} from "./resolve/resolve-payer"
-export {resolveProposer} from "./resolve/resolve-proposer"
