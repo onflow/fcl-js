@@ -115,6 +115,8 @@ app.post("/flow/authorize", cors(), (req, res) => {
   const authorizationId = authz.createAuthorization({userId, transaction})
   const authorization = authz.authorizationFor(authorizationId)
 
+  setTimeout(() => authz.approveAuthorization({authorizationId}), 3000)
+
   return res.send(200, {
     status: authorization.status,
     reason: authorization.reason,
@@ -125,13 +127,12 @@ app.post("/flow/authorize", cors(), (req, res) => {
       params: {authorizationId, userId},
     },
     local: [
-      {
-        method: "BROWSER/IFRAME",
-        endpoint: `${CONFIG.HOST}/authorize`,
-        params: {authorizationId: null},
-        width: "377",
-        background: "#fff",
-      },
+      // {
+      //   method: "BROWSER/IFRAME",
+      //   endpoint: `${CONFIG.HOST}/authorize/${authorizationId}`,
+      //   width: "377",
+      //   background: "#fff",
+      // },
     ],
   })
 })
@@ -147,7 +148,7 @@ app.get("/flow/authorize", cors(), (req, res) => {
   if (userId !== user.userId) return res.send(400, "userId mismatch")
 
   const authorization = authz.authorizationFor(authorizationId)
-  if (athorization == null) return res.send(404, "Authorization Not Found")
+  if (authorization == null) return res.send(404, "Authorization Not Found")
 
   return res.send(200, {
     status: authorization.status,

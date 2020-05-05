@@ -78,7 +78,7 @@ export const approveAuthorization = ({authorizationId}) => {
     authorization,
     transaction,
   })
-  invariant(transaction.messsage, "No 'transaction.message' to Sign", {
+  invariant(transaction.message, "No 'transaction.message' to Sign", {
     authorizationId,
     authorization,
     transaction,
@@ -99,15 +99,15 @@ export const approveAuthorization = ({authorizationId}) => {
   })
 
   const addr = user.addr
-  invariant(authorization.addr === user.addr, "Flow Address Mismatch", {
+  invariant(transaction.addr === user.addr, "Flow Address Mismatch", {
     authorizationId,
     authorization,
     transaction,
     user,
   })
 
-  const keyId = authorization.keyId || user.keyId
-  invariant(keyId, "Missing keyId", {
+  const keyId = transaction.keyId || user.keyId
+  invariant(keyId != null, "Missing keyId", {
     authorizationId,
     authorization,
     transaction,
@@ -129,7 +129,7 @@ export const approveAuthorization = ({authorizationId}) => {
   authorization.status = APPROVED
   authorization.compositeSignature = {addr, keyId, signature}
 
-  invariant(authorization.status === APPROVIED, "Incorrect Status", {
+  invariant(authorization.status === APPROVED, "Incorrect Status", {
     authorization,
   })
   invariant(
