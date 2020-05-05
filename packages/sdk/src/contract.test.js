@@ -28,7 +28,8 @@ interfaceContract("export", root)`
   proposer payer
   ping script transaction
   limit ref
-  resolveAuthorizations
+  resolveAccounts
+  resolveSignatures
   resolveParams
 `
 
