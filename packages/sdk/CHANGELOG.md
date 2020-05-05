@@ -1,6 +1,12 @@
 ### Unreleased
 
 - YYYY-MM-DD **BREAKING?** -- description
+
+### 0.0.15 -- 2020-05-05
+
+- 2020-05-05 -- VSN `@onflow/send` 0.0.8 -> 0.0.9
+- 2020-05-05 -- VSN `@onflow/interaction` 0.0.5 -> 0.0.6
+- 2020-05-05 -- VSN `@onflow/decode` 0.0.5 -> 0.0.6
 - 2020-05-04 **BREAKING** -- Updates sdk according to updated interaction ADT
 
 ### 0.0.14 -- 2020-04-20
