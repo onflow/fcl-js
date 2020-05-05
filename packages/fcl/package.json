@@ -34,7 +34,7 @@
     "start": "microbundle watch"
   },
   "dependencies": {
-    "@onflow/sdk": "0.0.15",
+    "@onflow/sdk": "0.0.16",
     "@onflow/types": "0.0.1",
     "queue-microtask": "1.1.2"
   }
