@@ -1,7 +1,17 @@
 import {pipe, makeParam} from "@onflow/interaction"
 
+const isFn = d => typeof d === "function"
+
 export function params(px = []) {
-  return pipe(px.map(makeParam))
+  return pipe(
+    px.map(param => {
+      const p = isFn(param)
+        ? { resolve: param }
+        : param
+    
+      return makeParam(p)
+    }
+  ))
 }
 
 const identity = {
