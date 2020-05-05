@@ -115,7 +115,7 @@ app.post("/flow/authorize", cors(), (req, res) => {
   const authorizationId = authz.createAuthorization({userId, transaction})
   const authorization = authz.authorizationFor(authorizationId)
 
-  setTimeout(() => authz.approveAuthorization({authorizationId}), 3000)
+  // setTimeout(() => authz.approveAuthorization({authorizationId}), 3000)
 
   return res.send(200, {
     status: authorization.status,
@@ -127,12 +127,12 @@ app.post("/flow/authorize", cors(), (req, res) => {
       params: {authorizationId, userId},
     },
     local: [
-      // {
-      //   method: "BROWSER/IFRAME",
-      //   endpoint: `${CONFIG.HOST}/authorize/${authorizationId}`,
-      //   width: "377",
-      //   background: "#fff",
-      // },
+      {
+        method: "BROWSER/IFRAME",
+        endpoint: `${CONFIG.HOST}/authorization/${authorizationId}`,
+        width: "377",
+        background: "#fff",
+      },
     ],
   })
 })

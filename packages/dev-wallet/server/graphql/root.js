@@ -2,6 +2,11 @@ import * as CONFIG from "../config"
 import * as db from "../domains/user"
 import {sessionFor} from "../domains/session"
 import {createHandshake, handshakeFor} from "../domains/handshake"
+import {
+  authorizationFor,
+  approveAuthorization as approveAuthorizationFor,
+  declineAuthorization as declineAuthorizationFor,
+} from "../domains/authorization"
 
 const invariant = (fact, msg, ...rest) => {
   if (!fact) {
@@ -122,6 +127,63 @@ export const handshake = ({sessionId, handshakeId}) => {
     paddr: CONFIG.PID, // Will eventually be the providers onchain address that FCL can use to find more info about it
     hooks: CONFIG.HOST + "/flow/hooks", // Where FCL will get hook information
   }
+}
+
+// Returns the details of an authorization
+export const authorization = async ({sessionId, authorizationId}) => {
+  console.log("GQL -- query/authorization", {sessionId, authorizationId})
+  invariant(sessionId, "sessionId required")
+  invariant(authorizationId, "authorizationId required")
+
+  // exchange sessionId for userId so we know the session is valid
+  const userId = sessionFor(sessionId)
+  invariant(userId, "Invalid SessionId")
+
+  // get authorization for supplied authorizationId
+  const authorization = authorizationFor(authorizationId)
+  invariant(authorization, "count not find authorization")
+  invariant(
+    authorization.transaction,
+    "count not find authorization.transaction",
+    {authorization}
+  )
+  invariant(authorization.status, "count not find authorization.status", {
+    authorization,
+  })
+
+  console.log("AUTHZ", authorization)
+
+  return {
+    authorizationId,
+    transaction: JSON.stringify(authorization.transaction),
+    status: authorization.status,
+  }
+}
+
+export const approveAuthorization = async ({input}) => {
+  console.log("GQL -- mutation/approveAuthorization", input)
+  const {authorizationId, sessionId} = input
+  invariant(sessionId, "sessionId required")
+  invariant(authorizationId, "authorizationId required")
+
+  // exchange sessionId for userId so we know the session is valid
+  const userId = sessionFor(sessionId)
+  invariant(userId, "Invalid SessionId")
+
+  return approveAuthorizationFor({authorizationId})
+}
+
+export const declineAuthorization = async ({input}) => {
+  console.log("GQL -- mutation/approveAuthorization", input)
+  const {authorizationId, sessionId} = input
+  invariant(sessionId, "sessionId required")
+  invariant(authorizationId, "authorizationId required")
+
+  // exchange sessionId for userId so we know the session is valid
+  const userId = sessionFor(sessionId)
+  invariant(userId, "Invalid SessionId")
+
+  return declineAuthorizationFor({authorizationId})
 }
 
 export const config = async () => {
