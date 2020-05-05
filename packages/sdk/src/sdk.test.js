@@ -1,5 +1,5 @@
 import assert from "assert"
-import {build, resolve, transaction, limit, proposer} from "./sdk"
+import {build, resolve, transaction, limit, proposer, params, param, resolveParams} from "./sdk"
 
 describe("build", () => {
   it("returns the correct limit when building a transaction", async () => {
@@ -24,7 +24,25 @@ describe("build", () => {
     assert.deepEqual(txProposer.sequenceNum, 123)
   })
 
-  it("placeholder test", async () => {
-    expect(1).toBe(1)
+  it("accepts an async function as a param", async () => {
+    const identity = {
+      asParam: v => v,
+      asInjection: v => v,
+    }
+
+    const ix = await resolve(await build([
+      transaction``,
+      params([ async () => {
+        return {
+          key: "my_param", value: 1, xform: identity
+        }
+      } ])
+    ]), [ resolveParams ])
+
+    const ixParams = Object.values(ix.params)
+    const p = ixParams.find(p => p.key === "my_param")
+
+    assert.deepEqual(p.key, "my_param")
+    assert.deepEqual(p.value, 1)
   })
 })

@@ -11,12 +11,13 @@ export async function proposer(...args) {
       }
     )
   } else {
-    const [addr, keyId, sequenceNum] = args
+    const [addr, keyId, sequenceNum, signingFunction] = args
     return makeProposer(
       {
         addr,
         keyId,
         sequenceNum,
+        signingFunction,
         role: {proposer: true},
       }
     )
