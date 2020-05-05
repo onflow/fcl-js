@@ -28,22 +28,20 @@ You will probably also want: [`@onflow/sdk`](../sdk) and [`@onflow/types`](../ty
   - [x] `fcl.config().delete(key)` _(done)_
   - [x] `fcl.config().where(regexp)` _(done)_
   - [x] `fcl.config().subscribe(callback)` _(done)_
-- [ ] `fcl.authenticate()` _(wip)_
-- [ ] `fcl.unauthenticate()` _(wip)_
-- [ ] `fcl.currentUser()` _(wip)_
+- [ ] [`fcl.authenticate()`](./src/authenticate) _(wip)_
+- [ ] [`fcl.unauthenticate()`](./src/authenticate) _(wip)_
+- [ ] [`fcl.currentUser()`](./src/current-user) _(wip)_
   - [ ] `fcl.currentUser().snapshot()` _(wip)_
   - [ ] `fcl.currentUser().subscribe(callback)` _(wip)_
   - [ ] `fcl.currentUser().authorization` _(wip)_
-  - [ ] `fcl.currentUser().payerAuthorization` _(wip)_
-  - [ ] `fcl.currentUser().proposerAuthorization` _(wip)_
   - [ ] `fcl.currentUser().param(key)` _(wip)_
+  - [ ] `fcl.currentUser().info()` _(wip)_
 - [ ] [`fcl.user(addr)`](./src/user) _(wip)_
   - [ ] `fcl.user(addr).snapshot()` _(wip)_
   - [ ] `fcl.user(addr).subscribe(callback)` _(wip)_
   - [ ] `fcl.user(addr).authorization` _(wip)_
-  - [ ] `fcl.user(addr).payerAuthorization` _(wip)_
-  - [ ] `fcl.user(addr).proposerAuthorization` _(wip)_
   - [ ] `fcl.user(addr).param(key)` _(wip)_
+  - [ ] `fcl.user(addr).info()` _(wip)_
 - [ ] `fcl.transaction(transactionId)` _(wip)_
   - [ ] `fcl.transaction(transactionId).snapshot()` _(wip)_
   - [ ] `fcl.transaction(transactionId).subscribe(callback)` _(wip)_
@@ -64,7 +62,7 @@ You will probably also want: [`@onflow/sdk`](../sdk) and [`@onflow/types`](../ty
 import React, {useState, useEffect} from "react"
 import * as fcl from "@onflow/fcl"
 
-fcl.config().put("challenge.scope", "email+publicKey")
+fcl.config().put("challenge.scope", "email")
 
 export const Profile = () => {
   const [user, setUser] = useState(null)

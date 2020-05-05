@@ -2,21 +2,12 @@ import "./default-config"
 export {config} from "./config"
 export {send} from "./send"
 export {user} from "./user"
-export {authenticate} from "./authenticate"
 
-export const unauthenticate = async () => {}
+import {currentUser} from "./current-user"
+export {currentUser}
 
-export const currentUser = () => {
-  return {
-    subscribe: callback => {
-      return function unsubscribe() {}
-    },
-
-    authorization: async () => {},
-    payerAuthorization: async () => {},
-    param: async () => {},
-  }
-}
+export const authenticate = () => currentUser().authenticate()
+export const unauthenticate = () => currentUser().unauthenticate()
 
 export const transaction = txId => {
   return {
