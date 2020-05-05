@@ -21,7 +21,8 @@ const accountCanFulfillRoles = (account) => {
     if (
       !isString(account.addr) ||
       !isNumber(account.keyId) ||
-      !isNumber(account.sequenceNum)
+      !isNumber(account.sequenceNum) ||
+      !isFn(account.signingFunction)
     )
       return false
   }
