@@ -53,16 +53,35 @@ type Handshake {
   l6n: String
 }
 
+type Authorization {
+  authorizationId: ID
+  transaction: String
+  status: String
+}
+
 type Query {
   config: Config
   me(sessionId: ID): Me
   handshake(sessionId: ID, handshakeId: ID): Handshake
+  authorization(sessionId: ID, authorizationId: ID): Authorization
 }
 
 type Mutation {
   authenticate(email: String, pass: String): Session
   upsertUser(input: UpsertUserInput): Me
   genHandshake(input: GenHandshakeInput): ID
+  approveAuthorization(input: ApproveAuthorizationInput): ID
+  declineAuthorization(input: DeclineAuthorizationInput): ID
+}
+
+input ApproveAuthorizationInput {
+  sessionId: ID
+  authorizationId: ID
+}
+
+input DeclineAuthorizationInput {
+  sessionId: ID
+  authorizationId: ID
 }
 
 input UpsertUserInput {
