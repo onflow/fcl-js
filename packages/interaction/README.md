@@ -55,6 +55,13 @@ Currently the Access Node recognizes 7 different types of interactions.
     - **authorizer** _(transaction, script)_ `Boolean` -- denotes if this account is an authorizer
     - **payer** _(transaction, script)_ `Boolean` -- denotes if this account is a payer
     - **param** _(transaction, script)_ `Boolean` -- denotes if this account is a param
+- **params** _(transaction, script)_
+  - **kind** _(transaction, script)_ `Int` -- denotes the kind of param, ACCOUNT or PARAM
+  - **tempId** _(transaction, script)_ `String` -- the internal tempId for this param
+  - **key** _(transaction, script)_ `String` -- the key for this param
+  - **value** _(transaction, script)_ `Any` -- the value for this param
+  - **xform** _(transaction, script)_ `Any` -- the transform for this param
+  - **resolve** _(transaction, script)_ `Function` -- a resolver for this param
 - **message** _(script, transaction)_
   - **cadence** _(script, transaction)_ `String` -- cadence code
   - **refBlock** _(transaction)_ `String` -- id of an existing block (used for timeout)
