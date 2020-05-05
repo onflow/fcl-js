@@ -1,6 +1,8 @@
 ### Unreleased
 
 - YYYY-MM-DD **BREAKING?** -- description
+- 2020-05-05 -- Update resolvers based on sdk update
+- 2020-05-05 -- VSN `@onflow/sdk` 0.0.14 -> 0.0.15 Breaking Change
 - 2020-04-29 -- authn challenge response no longer locks to handshake origin
 - 2020-04-28 -- `fcl.user(addr).info()` does a `send([getAccount(addr)])` returning the `account`
 - 2020-04-23 -- `fcl.authenticate()` renders iframe for config: `challenge.handshake`
