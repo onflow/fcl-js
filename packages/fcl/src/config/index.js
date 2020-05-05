@@ -10,69 +10,62 @@ const SUBSCRIBE = "SUBSCRIBE"
 const UNSUBSCRIBE = "UNSUBSCRIBE"
 const UPDATED = "CONFIG/UPDATED"
 
-spawn(async ctx => {
-  const snapshot = keys =>
-    keys.reduce((acc, key) => ({...acc, [key]: ctx.get(key)}), {})
+const snapshot = (ctx, keys = []) =>
+  keys.reduce((acc, key) => ({...acc, [key]: ctx.get(key)}), {})
 
+const identity = v => v
+
+const HANDLERS = {
+  [PUT]: (ctx, _letter, {key, value}) => {
+    if (key == null) throw new Error("Missing 'key' for config/put.")
+    ctx.put(key, value)
+    ctx.broadcast(UPDATED, snapshot(ctx, ctx.keys()))
+  },
+  [GET]: (ctx, letter, {key, fallback}) => {
+    if (key == null) throw new Error("Missing 'key' for config/get")
+    letter.reply(ctx.get(key, fallback))
+  },
+  [UPDATE]: (ctx, letter, {key, fn}) => {
+    if (key == null) throw new Error("Missing 'key' for config/update")
+    ctx.update(key, fn || identity)
+    ctx.broadcast(UPDATED, snapshot(ctx, ctx.keys()))
+  },
+  [DELETE]: (ctx, letter, {key}) => {
+    if (key == null) throw new Error("Missing 'key' for config/delete")
+    ctx.delete(key)
+    ctx.broadcast(UPDATED, snapshot(ctx, ctx.keys()))
+  },
+  [WHERE]: (ctx, letter, {pattern}) => {
+    if (pattern == null) throw new Error("Missing 'pattern' for config/where")
+    letter.reply(
+      snapshot(
+        ctx,
+        ctx.keys().filter(d => pattern.test(d))
+      )
+    )
+  },
+  [SUBSCRIBE]: (ctx, letter) => {
+    ctx.subscribe(letter.from)
+    ctx.send(letter.from, UPDATED, snapshot(ctx.keys()))
+  },
+  [UNSUBSCRIBE]: (ctx, letter) => {
+    ctx.unsubscribe(letter.from)
+  },
+}
+
+spawn(async ctx => {
   __loop: while (1) {
     const letter = await ctx.receive()
-    const data = letter.data
 
     try {
-      switch (letter.tag) {
-        case PUT:
-          if (data.key != null) {
-            ctx.put(data.key, data.value)
-            ctx.broadcast(UPDATED, snapshot(ctx.keys()))
-          }
-          continue __loop
-
-        case GET:
-          if (data.key != null) {
-            letter.reply(ctx.get(data.key, data.fallback))
-          }
-          continue __loop
-
-        case UPDATE:
-          if (data.key != null) {
-            ctx.update(data.key, data.fn)
-            ctx.broadcast(UPDATED, snapshot(ctx.keys()))
-          }
-          continue __loop
-
-        case DELETE:
-          if (data.key != null) {
-            ctx.delete(data.key)
-            ctx.broadcast(UPDATED, snapshot(ctx.keys()))
-          }
-          continue __loop
-
-        case WHERE:
-          if (data.pattern != null) {
-            letter.reply(snapshot(ctx.keys().filter(d => data.pattern.test(d))))
-          }
-          continue __loop
-
-        case SUBSCRIBE:
-          ctx.subscribe(letter.from)
-          ctx.send(letter.from, UPDATED, snapshot(ctx.keys()))
-          continue __loop
-
-        case UNSUBSCRIBE:
-          ctx.unsubscribe(letter.from)
-          continue __loop
-
-        default:
-          continue __loop
-      }
+      await HANDLERS[letter.tag](ctx, letter, letter.data || {})
     } catch (error) {
-      console.error("Config Error", letter, error)
+      console.error("User Error", letter, error)
+    } finally {
       continue __loop
     }
   }
 }, NAME)
-
-const identity = v => v
 
 function put(key, value) {
   send(NAME, PUT, {key, value})
