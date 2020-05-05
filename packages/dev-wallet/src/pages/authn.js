@@ -14,7 +14,7 @@ const rand = length => Array.from({length}, randChar).join("")
 const randColor = () => `#${rand(6)}`
 const uuid = () => [rand(8), rand(4), rand(4), rand(4), rand(12)].join("-")
 
-const DEBUG = true
+const DEBUG = false
 
 const getParams = () => {
   const {searchParams: params} = new URL(location)
