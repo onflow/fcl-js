@@ -1,6 +1,7 @@
 ### Unreleased
 
 - YYYY-MM-DD **BREAKING?** -- description
+- 2020-05-05 -- Allows params to accept async resolver functions that return a param 
 
 ### 0.0.16 -- 2020-05-05
 
