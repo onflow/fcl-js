@@ -2,6 +2,10 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.0.16 -- 2020-05-05
+
+- 2020-05-05 -- Fix bug where `resolveAccounts` was mutating a copy of an account instead of the original account
+
 ### 0.0.15 -- 2020-05-05
 
 - 2020-05-05 -- VSN `@onflow/send` 0.0.8 -> 0.0.9
