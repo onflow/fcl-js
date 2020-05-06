@@ -5,7 +5,7 @@
 
 Enabling developers to create dApps on the Flow blockchain using Javascript
 
-For a guide on how to use the SDK [Start Here](https://github.com/onflow/flow-js-sdk/blob/master/docs/examples/introducing-fcl/Flow%20JavaScript%20SDK%20Showcase.md)
+For a guide on how to use the SDK [Start Here](https://github.com/onflow/flow-js-sdk/blob/master/docs/examples/introducing-fcl/Quickstart.md)
 
 # Status
 
