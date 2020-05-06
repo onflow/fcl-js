@@ -1,6 +1,13 @@
 ### Unreleased
 
 - YYYY-MM-DD **BREAKING?** -- description
+
+### 0.0.29 -- 2020-04-20
+
+- 2020-05-06 -- Fixed an issue with custom decoders
+- 2020-05-06 -- Leverage named imports to enable better tree shaking
+- 2020-05-06 -- Proxy `@onflow/sdk` through fcl to enable single import
+- 2020-05-06 -- VSN `@onflow/sdk` 0.0.16 -> 0.0.17
 - 2020-05-05 -- VSN `@onflow/sdk` 0.0.15 -> 0.0.16
 - 2020-05-05 -- Update resolvers based on sdk update
 - 2020-05-05 -- VSN `@onflow/sdk` 0.0.14 -> 0.0.15 Breaking Change
