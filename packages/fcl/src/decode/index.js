@@ -9,5 +9,5 @@ export const decode = async response => {
       return [pattern, xform]
     })
   )
-  return sdk.decodeResponse(response, decoders)
+  return decodeResponse(response, decoders)
 }

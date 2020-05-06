@@ -1,18 +1,23 @@
-import * as sdk from "@onflow/sdk"
+import {
+  resolve,
+  resolveParams,
+  resolveAccounts,
+  resolveSignatures,
+  build,
+  send as sdkSend,
+} from "@onflow/sdk"
 import {config} from "../config"
 
 export const send = async (args = [], opts = {}) => {
   opts.node = opts.node || (await config().get("accessNode.api"))
 
-  if (Array.isArray(args)) args = sdk.build(args)
+  if (Array.isArray(args)) args = build(args)
 
-  const ix = await sdk.pipe(args, [
-    sdk.resolve([
-      sdk.resolveParams,
-      sdk.resolveAccounts,
-      sdk.resolveSignatures,
-    ]),
+  const ix = await resolve(args, [
+    resolveParams,
+    resolveAccounts,
+    resolveSignatures,
   ])
 
-  return sdk.send(ix, opts)
+  return sdkSend(ix, opts)
 }

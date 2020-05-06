@@ -2,13 +2,13 @@ import "../default-config"
 import {config} from "../config"
 import {spawn, send} from "../actor"
 import {send as fclSend} from "../send"
-import * as sdk from "@onflow/sdk"
-import * as t from "@onflow/types"
+import {getAccount} from "@onflow/sdk"
 import {renderAuthnFrame} from "./render-authn-frame"
 import {renderAuthzFrame} from "./render-authz-frame"
 import {compositeIdFromProvider} from "./composite-id-from-provider"
 import {fetchHook} from "./fetch-hook"
 import {pollForAuthzUpdates} from "./poll-for-authz-updates"
+import {Identity} from "@onflow/types"
 
 const NAME = "CURRENT_USER"
 const SUBSCRIBE = "SUBSCRIBE"
@@ -71,7 +71,7 @@ const HANDLERS = {
     ctx.broadcast(UPDATED, dataSnapshot(ctx, ctx.keys()))
   },
   [GET_AS_PARAM]: async (ctx, letter, {key}) => {
-    letter.reply({key, value: ctx.get("addr", null), xform: t.Identity})
+    letter.reply({key, value: ctx.get("addr", null), xform: Identity})
   },
 }
 
@@ -214,7 +214,7 @@ async function info() {
   spawnCurrentUser()
   const {addr} = await snapshot()
   if (addr == null) throw new Error("No Flow Address for Current User")
-  const {account} = await fclSend([sdk.getAccount(addr)])
+  const {account} = await fclSend([getAccount(addr)])
   return account
 }
 
