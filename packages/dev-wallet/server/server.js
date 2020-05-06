@@ -187,8 +187,8 @@ app
 const script = `
 import * as fcl from "@onflow/fcl"
 
-${chalk.dim(`// Point to ${CONFIG.NAME} as wallet provider.`)}
-${chalk.dim(`// This should only be used during development.`)}
+// Point to ${CONFIG.NAME} as wallet provider.
+// This should only be used during development.
 fcl.config()
   .put("challenge.handshake", "${CONFIG.AUTHN}")
 `
