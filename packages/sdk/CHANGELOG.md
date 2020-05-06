@@ -1,7 +1,12 @@
 ### Unreleased
 
 - YYYY-MM-DD **BREAKING?** -- description
-- 2020-05-05 -- Allows params to accept async resolver functions that return a param 
+
+### 0.0.17 -- 2020-05-06
+
+- 2020-05-06 -- VSN `@onflow/send` 0.0.9 -> 0.0.10
+- 2020-05-06 -- VSN `@onflow/interaction` 0.0.6 -> 0.0.7
+- 2020-05-05 -- Allows params to accept async resolver functions that return a param
 
 ### 0.0.16 -- 2020-05-05
 
