@@ -201,5 +201,6 @@ const response = await sdk.send(await sdk.pipe(await sdk.build([
   - [`sdk.transaction`](./src/build/transaction.js)
 
 - [Resolvers](./resolve)
-  - [`sdk.resolveAuthorizations`](./src/resolve/resolve-authorizations.js)
+  - [`sdk.resolveAccounts`](./src/resolve/resolve-accounts.js)
   - [`sdk.resolveParams`](./src/resolve/resolve-params.js)
+  - [`sdk.resolveSignatures`](./src/resolve/resolve-signatures.js)
