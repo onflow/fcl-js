@@ -11,6 +11,9 @@ import {render} from "./render"
 import * as hs from "./domains/handshake"
 import * as db from "./domains/user"
 import * as authz from "./domains/authorization"
+import clipboardy from "clipboardy"
+import chalk from "chalk"
+import emoji from "node-emoji"
 
 const SRC = path.resolve(__dirname, "../src")
 const app = express()
@@ -22,14 +25,15 @@ app
   .use(express.static(SRC))
 
 app.get("/flow/hooks", cors(), (req, res) => {
+  console.log("API -- GET /flow/hooks", {query: req.query, body: req.body})
   const {code} = req.query
-  if (code == null) return res.send(400, "Missing 'code' query param")
+  if (code == null) return res.status(400).send("Missing 'code' query param")
 
   const handshake = hs.handshakeFor(code)
-  if (handshake == null) return res.send(404, "Code Not Found")
+  if (handshake == null) return res.status(404).send("Code Not Found")
 
   const [_, user] = db.getUser(handshake.userId)
-  if (user == null) return res.send(404, "User Not Found")
+  if (user == null) return res.status(404).send("User Not Found")
 
   // These are the private hooks FCL is looking for
   // Since there are no on-chain public hooks yet
@@ -37,7 +41,7 @@ app.get("/flow/hooks", cors(), (req, res) => {
   // hooks for now. As a wallet provider this is our
   // opportunity to overload what ever we want in
   // the public hooks.
-  res.send(200, {
+  res.status(200).send({
     addr: user.addr, // Used by FCL to fetch public hooks
     keyId: user.keyId, // FCL will use the keyId when the account is a proposer
     // Opportunity to overload the public indentity
@@ -103,21 +107,24 @@ app.get("/flow/hooks", cors(), (req, res) => {
 
 // handles authorization hook CONFIG.PID#authz-http-post
 app.post("/flow/authorize", cors(), (req, res) => {
+  console.log("API -- POST /flow/authorize", {query: req.query, body: req.body})
   const {userId} = req.query
-  if (userId == null) return res.send(400, "Missing 'userId' query param")
+  if (userId == null)
+    return res.status(400).send("Missing 'userId' query param")
 
   const [_, user] = db.getUser(userId)
-  if (user == null) return res.send(404, "User Not Found")
+  if (user == null) return res.status(404).send("User Not Found")
 
   const transaction = req.body
-  if (transaction == null) return res.send(400, "no body")
-  if (transaction.message == null) return res.send(400, "No 'message' to sign")
+  if (transaction == null) return res.status(400).send("no body")
+  if (transaction.message == null)
+    return res.status(400).send("No 'message' to sign")
   const authorizationId = authz.createAuthorization({userId, transaction})
   const authorization = authz.authorizationFor(authorizationId)
 
   // setTimeout(() => authz.approveAuthorization({authorizationId}), 3000)
 
-  return res.send(200, {
+  return res.status(200).send({
     status: authorization.status,
     reason: authorization.reason,
     compositeSignature: authorization.compositeSignature,
@@ -138,19 +145,22 @@ app.post("/flow/authorize", cors(), (req, res) => {
 })
 
 app.get("/flow/authorize", cors(), (req, res) => {
+  console.log("API -- GET /flow/authorize", {query: req.query, body: req.body})
   const {authorizationId, userId} = req.query
   if (authorizationId == null)
-    return res.send(400, "Missing 'authorizationId' query param")
-  if (userId == null) return res.send(400, "Missing 'userId' query param")
+    return res.status(400).send("Missing 'authorizationId' query param")
+  if (userId == null)
+    return res.status(400).send("Missing 'userId' query param")
 
   const [_, user] = db.getUser(userId)
-  if (user == null) return res.send(404, "User Not Found")
-  if (userId !== user.userId) return res.send(400, "userId mismatch")
+  if (user == null) return res.status(404).send("User Not Found")
+  if (userId !== user.userId) return res.status(400).send("userId mismatch")
 
   const authorization = authz.authorizationFor(authorizationId)
-  if (authorization == null) return res.send(404, "Authorization Not Found")
+  if (authorization == null)
+    return res.status(404).send("Authorization Not Found")
 
-  return res.send(200, {
+  return res.status(200).send({
     status: authorization.status,
     reason: authorization.reason,
     compositeSignature: authorization.compositeSignature,
@@ -174,12 +184,38 @@ app
   .get(render)
   .head(render)
 
-import {upsertUser} from "./domains/user"
+const script = `
+import * as fcl from "@onflow/fcl"
+
+${chalk.dim(`// Point to ${CONFIG.NAME} as wallet provider.`)}
+${chalk.dim(`// This should only be used during development.`)}
+fcl.config()
+  .put("challenge.handshake", "${CONFIG.AUTHN}")
+`
+
+const intro = `
+:wave: Welcome :wave:
+
+:tada: ${chalk.blue(CONFIG.NAME)} has started at: ${chalk.blue(CONFIG.HOST)}
+
+${chalk.dim(
+  `Paste the following into your code to configure fcl to use ${chalk.blue(
+    CONFIG.NAME
+  )}:`
+)}
+${chalk.dim("---")}
+${chalk.cyan(script.trim())}
+${chalk.dim("---")}
+${chalk.dim(
+  ":clipboard: We have copied it to your clibboard to make things easier."
+)}
+
+${chalk.dim("Additional configuration details:")}
+`
 
 export const start = async () => {
-  console.log("Dev Wallet Config", CONFIG)
-  // await upsertUser({email: "bob@bob.bob", pass: "password"})
+  clipboardy.writeSync(script)
   await promisify(app.listen)
     .bind(app)(CONFIG.PORT)
-    .then(_ => console.log(`Dev Wallet Started: ${CONFIG.HOST}`))
+    .then(_ => console.log(emoji.emojify(intro), CONFIG))
 }

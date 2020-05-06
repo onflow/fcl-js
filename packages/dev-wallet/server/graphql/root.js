@@ -151,8 +151,6 @@ export const authorization = async ({sessionId, authorizationId}) => {
     authorization,
   })
 
-  console.log("AUTHZ", authorization)
-
   return {
     authorizationId,
     transaction: JSON.stringify(authorization.transaction),

@@ -62,7 +62,6 @@ export const authorizationFor = authorizationId => {
 }
 
 export const approveAuthorization = ({authorizationId}) => {
-  console.log("approveAuthorization!!")
   invariant(
     authorizationId,
     "approveAuthorization({authorizationId}) -- authorizationId required",
@@ -153,8 +152,6 @@ export const approveAuthorization = ({authorizationId}) => {
     "Missing keyId signature",
     {authorization}
   )
-
-  console.log("Authorization Approved")
 
   return authorizationId
 }
