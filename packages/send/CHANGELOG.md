@@ -2,6 +2,10 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.0.10 -- 2020-05-06
+
+- 2020-05-06 -- VSN `@onflow/interaction` 0.0.6 -> 0.0.7
+
 ### 0.0.9 -- 2020-05-04
 
 - 2020-05-04 **BREAKING** -- VSN `@onflow/interaction` 0.0.5 -> 0.0.6 Breaking Change
