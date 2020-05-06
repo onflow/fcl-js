@@ -27,7 +27,8 @@ const getParams = () => {
   }
 }
 
-const AuthForm = ({sessionId, onAuth = () => {}}) => {
+const AuthForm = ({config = {}, sessionId, onAuth = () => {}}) => {
+  if (config == null) return null
   if (sessionId != null) return null
 
   const [email, setEmail] = useState("")
@@ -45,6 +46,7 @@ const AuthForm = ({sessionId, onAuth = () => {}}) => {
 
   return html`
     <form onSubmit=${authenticate}>
+      <small>${config.name}</small>
       <h3>Authenticate</h3>
       ${!!errors.length &&
         html`
@@ -374,7 +376,11 @@ export default () => {
     </style>
     <div class="root">
       <${Header} />
-      <${AuthForm} sessionId=${sessionId} onAuth=${setSessionId} />
+      <${AuthForm}
+        config=${config}
+        sessionId=${sessionId}
+        onAuth=${setSessionId}
+      />
       <${ApproveScope}
         key=${user == null ? 0 : user.vsn}
         sessionId=${sessionId}

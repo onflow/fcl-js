@@ -7,7 +7,7 @@ import {
 import {useConfig} from "../hooks/config.js"
 import * as api from "../api/api.js"
 
-const DEBUG = true
+const DEBUG = false
 
 export default ({authorizationId}) => {
   const config = useConfig()
@@ -50,10 +50,7 @@ export default ({authorizationId}) => {
 
   const transaction = JSON.parse(authorization.transaction)
 
-  console.log(transaction)
-
   const input = {sessionId, authorizationId}
-  console.log("INPUT", input)
 
   return html`
     <div>
