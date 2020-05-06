@@ -20,6 +20,8 @@
     "@onflow/types": "0.0.1",
     "argon2": "0.26.2",
     "body-parser": "1.19.0",
+    "chalk": "^4.0.0",
+    "clipboardy": "^2.3.0",
     "compression": "1.7.4",
     "cors": "2.8.5",
     "elliptic": "^6.5.2",
@@ -27,6 +29,7 @@
     "express": "4.17.1",
     "express-graphql": "0.9.0",
     "graphql": "15.0.0",
+    "node-emoji": "^1.10.0",
     "sha3": "^2.1.2",
     "sqlite3": "4.1.1",
     "uuid": "7.0.3"
@@ -34,8 +37,6 @@
   "scripts": {
     "build": "echo 'nothing to build'",
     "test": "echo 'no tests yet'",
-    "start:cabbage": "PORT=8701 NAME=Cabbage ./wallet",
-    "start:potato": "PORT=8702 NAME=Potato ./wallet",
-    "start:carrot": "PORT=8703 NAME=Carrot ./wallet"
+    "start": "PORT=8701 NAME='Flow Dev Wallet' ./wallet"
   }
 }

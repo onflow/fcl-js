@@ -36,16 +36,16 @@ export const createHandshake = (opts = {}) => {
     handshakeId,
     exp: Date.now() + WEEK,
   }
-  console.log(`createHandshake(opts) -> ${handshakeId}`, HANDSHAKES)
+  // console.log(`createHandshake(opts) -> ${handshakeId}`, HANDSHAKES)
   return handshakeId
 }
 
 export const handshakeFor = handshakeId => {
   invariant(handshakeId, `handshakeFor(handshakeId) -- handshakeId is required`)
-  console.log(
-    `handshakeFor(${handshakeId}) -> ___`,
-    HANDSHAKES[handshakeId],
-    HANDSHAKES
-  )
+  // console.log(
+  //   `handshakeFor(${handshakeId}) -> ___`,
+  //   HANDSHAKES[handshakeId],
+  //   HANDSHAKES
+  // )
   return HANDSHAKES[handshakeId]
 }

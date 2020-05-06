@@ -105,7 +105,7 @@ export const upsertUser = async (data = {}) => {
   // create session because apparently this function does everything
   sessionId = createSession(user.userId)
 
-  console.log("USER", USERS[user.userId])
+  console.log("User Upserted", USERS[user.userId])
 
   return {
     userId: user.userId,
