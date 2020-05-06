@@ -14,7 +14,7 @@ const PROVIDERS = {
   ...pro(
     "asdf8701",
     "http://localhost:8701/flow/authenticate",
-    "Cabbage Wallet"
+    "Flow Dev Wallet"
   ),
   ...pro(
     "asdf8702",
