@@ -101,7 +101,7 @@ export async function resolveSignatures(ix) {
     keyId: payer.keyId,
     roles: {
       proposer: proposer.addr === payer.addr,
-      authorizer: false,
+      authorizer: Boolean(authorizors.find(a => a.addr === payer.addr)),
       payer: true,
     },
     interaction: ix,
