@@ -2,6 +2,7 @@ import "./default-config"
 export {config} from "./config"
 export {send} from "./send"
 export {decode} from "./decode"
+export {transaction as tx} from "./transaction"
 
 import {currentUser} from "./current-user"
 export {currentUser}
