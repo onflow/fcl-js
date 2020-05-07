@@ -1,6 +1,9 @@
 ### Unreleased
 
 - YYYY-MM-DD **BREAKING?** -- description
+
+### 0.0.30 -- 2020-05-07
+
 - 2020-05-07 -- Created and exposed a top level `tx` function
 - 2020-05-07 -- actor spawn now excepts an object of handlers
 - 2020-05-07 -- Moved common actor logic into actor (where, all)
