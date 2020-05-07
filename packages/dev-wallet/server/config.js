@@ -1,9 +1,9 @@
 import * as fcl from "@onflow/fcl"
 
 export const ORIGIN = String(process.env.ORIGIN || "http://localhost")
-export const PORT = Number(process.env.PORT)
+export const PORT = Number(process.env.PORT || 8701)
 export const PID = String(process.env.PID || `asdf${PORT}`)
-export const NAME = String(process.env.NAME || `Wallet Provider ${PID}`)
+export const NAME = String(process.env.NAME || `FCL Dev Wallet`)
 export const ICON = String(
   process.env.ICON || `https://avatars.onflow/avatar/${PID}.svg`
 )

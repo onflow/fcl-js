@@ -1,6 +1,5 @@
 {
   "name": "@onflow/dev-wallet",
-  "private": true,
   "version": "0.0.1",
   "description": "dev wallet provider service for local development with the flow client library",
   "license": "Apache-2.0",
@@ -34,9 +33,13 @@
     "sqlite3": "4.1.1",
     "uuid": "7.0.3"
   },
+  "bin": {
+    "fcl-wallet": "./wallet"
+  },
   "scripts": {
+    "prepublishOnly": "npm test && npm run build",
     "build": "echo 'nothing to build'",
     "test": "echo 'no tests yet'",
-    "start": "PORT=8701 NAME='Flow Dev Wallet' ./wallet"
+    "start": "./wallet"
   }
 }
