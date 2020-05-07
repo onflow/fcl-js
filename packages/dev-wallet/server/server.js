@@ -238,7 +238,9 @@ ${chalk.dim("*")} Installed: ${chalk.red(currentVersion)}
 ${chalk.dim("*")} Latest:    ${chalk.green(latestVersion)}
 
 If you installed ${chalk.blue("@onflow/dev-wallet")} globally
-You can update it with: ${chalk.cyan("npm update -g @onflow/dev-wallet")}
+You can update it with: ${chalk.cyan(
+            "npm install -g @onflow/dev-wallet@" + latestVersion
+          )}
 
 ${chalk.red.dim("*** *** *** *** *** *** ***")}
     `
