@@ -2,6 +2,7 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 - 2020-05-07 -- Params resolver parses params correctly
+- 2020-05-07 -- Allows authorizer payer and proposer to be the same
 
 ### 0.0.17 -- 2020-05-06
 
