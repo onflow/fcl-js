@@ -1,6 +1,6 @@
 {
   "name": "@onflow/dev-wallet",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "dev wallet provider service for local development with the flow client library",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
@@ -28,6 +28,7 @@
     "express": "4.17.1",
     "express-graphql": "0.9.0",
     "graphql": "15.0.0",
+    "latest-version": "^5.1.0",
     "node-emoji": "^1.10.0",
     "sha3": "^2.1.2",
     "sqlite3": "4.1.1",

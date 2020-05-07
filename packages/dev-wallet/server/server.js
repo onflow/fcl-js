@@ -14,6 +14,8 @@ import * as authz from "./domains/authorization"
 import clipboardy from "clipboardy"
 import chalk from "chalk"
 import emoji from "node-emoji"
+import latest from "latest-version"
+import pkgJSON from "../package.json"
 
 const SRC = path.resolve(__dirname, "../src")
 const app = express()
@@ -217,5 +219,30 @@ export const start = async () => {
   clipboardy.writeSync(script)
   await promisify(app.listen)
     .bind(app)(CONFIG.PORT)
-    .then(_ => console.log(emoji.emojify(intro), CONFIG))
+    .then(async _ => {
+      console.log(emoji.emojify(intro), CONFIG)
+
+      const currentVersion = pkgJSON.version
+      const latestVersion = await latest(pkgJSON.name)
+      if (currentVersion !== latestVersion) {
+        console.log(
+          "\n\n",
+          `
+${chalk.red.dim("*** *** *** *** *** *** ***")}
+
+${chalk.red("The version of " + chalk.blue(pkgJSON.name))}
+${chalk.red("you are using is " + chalk.underline("Out of Date"))}
+
+${chalk.blue(pkgJSON.name)}:
+${chalk.dim("*")} Installed: ${chalk.red(currentVersion)}
+${chalk.dim("*")} Latest:    ${chalk.green(latestVersion)}
+
+If you installed ${chalk.blue("@onflow/dev-wallet")} globally
+You can update it with: ${chalk.cyan("npm update -g @onflow/dev-wallet")}
+
+${chalk.red.dim("*** *** *** *** *** *** ***")}
+    `
+        )
+      }
+    })
 }
