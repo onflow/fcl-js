@@ -25,7 +25,7 @@ export async function sendTransaction(ix, opts = {}) {
   tx.setProposalKey(proposalKey)
 
   ix.authorizations.forEach(tempId => {
-    if (ix.accounts[tempId].signature === null) return
+    if (ix.accounts[tempId].signature === null || ix.accounts[tempId].role.payer) return
     const authzSig = new Transaction.Signature()
     authzSig.setAddress(addressBuffer(ix.accounts[tempId].addr))
     authzSig.setKeyId(ix.accounts[tempId].keyId)
