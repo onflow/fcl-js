@@ -25,11 +25,12 @@ export const resolveParams = async (ix) => {
     params.forEach(p => {
       ix.params[p.tempId] = p
     })
-    params = params
+    params = Object.fromEntries(params
       .filter(param => param.key != null)
-      .map(param => [param.key, param.xform.asInjection(param.value)])
+      .map(param => [param.key, param.xform.asInjection(param.value)]))
 
     ix.message.cadence = cadence(params)
+
     return Ok(ix)
   }
   throw new Error("Invalid Cadence Value")
