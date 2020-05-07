@@ -189,49 +189,48 @@ app
 const script = `
 import * as fcl from "@onflow/fcl"
 
-// Point to ${CONFIG.NAME} as wallet provider.
-// This should only be used during development.
 fcl.config()
   .put("challenge.handshake", "${CONFIG.AUTHN}")
 `
 
 const intro = `
-:wave: Welcome :wave:
+${chalk.dim(pkgJSON.name + "@" + pkgJSON.version)}
+${chalk.dim("*** *** *** *** *** *** ***")}
 
-:tada: ${chalk.blue(CONFIG.NAME)} has started at: ${chalk.blue(CONFIG.HOST)}
-
-${chalk.dim(
-  `Paste the following into your code to configure fcl to use ${chalk.blue(
-    CONFIG.NAME
-  )}:`
+:tada: ${chalk.blue(CONFIG.NAME)} has started:
+${chalk.dim("*")} Origin:       ${chalk.blue.underline(CONFIG.HOST)}
+${chalk.dim("*")} FCL Authn:    ${chalk.blue.underline(CONFIG.AUTHN)}
+${chalk.dim("*")} GraphiQL:     ${chalk.blue.underline(
+  CONFIG.HOST + "/graphql"
 )}
-${chalk.dim("---")}
+${chalk.dim("*")} Access Node:  ${chalk.blue.underline(CONFIG.ACCESS_NODE)}
+${chalk.dim("*")} Root Address: ${chalk.blue(CONFIG.ROOT_ADDR)}
+${chalk.dim("*")} Private Key:  ${chalk.blue(CONFIG.PK)}
+
+Include this code in development to configure fcl:
+
 ${chalk.cyan(script.trim())}
-${chalk.dim("---")}
-${chalk.dim(
-  ":clipboard: We have copied it to your clibboard to make things easier."
-)}
 
-${chalk.dim("Additional configuration details:")}
-`
+${chalk.dim("*** *** *** *** *** *** ***")}
+`.trim()
 
 export const start = async () => {
   clipboardy.writeSync(script)
   await promisify(app.listen)
     .bind(app)(CONFIG.PORT)
     .then(async _ => {
-      console.log(emoji.emojify(intro), CONFIG)
+      console.log(emoji.emojify(intro))
 
       const currentVersion = pkgJSON.version
       const latestVersion = await latest(pkgJSON.name)
       if (currentVersion !== latestVersion) {
+        console.log("\n")
         console.log(
-          "\n\n",
           `
 ${chalk.red.dim("*** *** *** *** *** *** ***")}
 
-${chalk.red("The version of " + chalk.blue(pkgJSON.name))}
-${chalk.red("you are using is " + chalk.underline("Out of Date"))}
+${chalk.red.bold("The version of " + chalk.blue(pkgJSON.name))}
+${chalk.red.bold("you are using is " + chalk.underline("Out of Date"))}
 
 ${chalk.blue(pkgJSON.name)}:
 ${chalk.dim("*")} Installed: ${chalk.red(currentVersion)}
@@ -243,7 +242,7 @@ You can update it with: ${chalk.cyan(
           )}
 
 ${chalk.red.dim("*** *** *** *** *** *** ***")}
-    `
+    `.trim()
         )
       }
     })
