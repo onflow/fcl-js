@@ -26,43 +26,39 @@ npm install --save @onflow/fcl
 
 # Overview
 
-- [x] [`fcl.config()`](./src/config)
-  - [x] `fcl.config().put(key, value)`
-  - [x] `fcl.config().get(key)`
-  - [x] `fcl.config().get(key, fallback)`
-  - [x] `fcl.config().update(key, transform)`
-  - [x] `fcl.config().delete(key)`
-  - [x] `fcl.config().where(regexp)`
-  - [x] `fcl.config().subscribe(callback)`
-- [x] [`fcl.authenticate()`](./src/current-user)
-- [x] [`fcl.unauthenticate()`](./src/current-user)
-- [ ] [`fcl.currentUser()`](./src/current-user)
-  - [x] `fcl.currentUser().snapshot()`
-  - [x] `fcl.currentUser().subscribe(callback)`
-  - [x] `fcl.currentUser().authenticate()`
-    - [ ] Current User Persistent Session
-  - [x] `fcl.currentUser().unauthenticate()`
-  - [x] `fcl.currentUser().authorization`
-  - [x] `fcl.currentUser().param(key)`
-  - [x] `fcl.currentUser().info()`
-- [x] `fcl.tx(transactionId)`
-  - [x] `fcl.tx(transactionId).snapshot()`
-  - [x] `fcl.tx(transactionId).subscribe(callback)`
-  - [x] `fcl.tx(transactionId).onceSealed()`
-- [ ] `fcl.events(...)` _(Not MVP)_
+- [ ] Docs
+  - [ ] [Quick Start](#quick-start) -- From zero to users submitting transactions.
+  - [x] [Configuration](./src/config) -- Configure FCL.
+  - [ ] [Authentication](./src/authentication) -- Authenticate Users using FCL wallet providers.
+  - [ ] [Current User](./src/current-user) -- Know things about the Current User
+  - [ ] [Scripts](./src/scripts) -- Query data from the Flow blockchain.
+  - [ ] [Transactions](./src/transactions) -- Send transactions to the Flow blockchain.
+  - [ ] [Emulator Docs](https://github.com/onflow/flow/blob/master/docs/emulator.md) -- Documentation for the Emulator
+  - [ ] [Dev Wallet Docs](../dev-wallet) -- Documenation for the Dev Wallet
+  - [ ] [FCL Wallet Provider Spec](./src/wallet-provider-spec) -- Documentation for Wallet Providers
+    - [ ] [Wallet Discovery](./src/wallet-provider-spec/wallet-discovery) -- How FCL discovers wallets providers
+    - [ ] [Custodial Wallet Provider Spec](./src/wallet-provider-spec/custodial.md) -- Documentation for Custodial Wallet Provider
+    - [ ] [Non-Custodial Wallet Provider Spec](src/wallet-provider-spec/non-custodial.md) -- Documentation for Non-Custodial Wallet Providers
+
+# Work in Progress
+
+- [ ] Persistent Current User Session
+- `fcl.events(...)` _(Not MVP)_
   - [ ] `fcl.events(...).subscribe(callback)` _(Not MVP)_
-- [x] [`fcl.send(builders)`](./src/send)
-  - [x] Configure `fcl.send`
-- [x] [`fcl.decode(response)`](./src/decode)
-  - [x] Configure `fcl.decode`
-    - [x] Custom unqualified decoders
-    - [ ] Custom qualified decoders _(Not MVP)_
-- [ ] [`fcl.user(addr)`](./src/user) _(blocked)_
+- [`fcl.decode(response)`](./src/decode)
+  - [ ] Custom qualified decoders _(Not MVP)_
+- `fcl.user(addr)` _(blocked)_
   - [ ] `fcl.user(addr).snapshot()` _(blocked)_
   - [ ] `fcl.user(addr).subscribe(callback)` _(blocked)_
   - [ ] `fcl.user(addr).authorization` _(blocked)_
   - [ ] `fcl.user(addr).param(key)` _(blocked)_
   - [ ] `fcl.user(addr).info()` _(blocked)_
+
+# Quick Start
+
+From zero to users submitting transactions.
+
+_This is coming very soon_
 
 # Usage
 
