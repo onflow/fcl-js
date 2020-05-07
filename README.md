@@ -32,7 +32,7 @@ Eventually [`@onflow/fcl`](./packages/fcl) will make getting started and develop
 # Overview
 
 - Higher Level
-  - [ ] [`@onflow/fcl`](./packages/fcl) _(wip)_ -- A high level dApp framework built on top an opinionated use of the sdk.
+  - [x] [`@onflow/fcl`](./packages/fcl) _(mvp)_ -- A high level dapp framework built on top an opinionated use of the sdk.
   - [x] [`@onflow/sdk`](./packages/sdk) _(mvp)_ -- Tools that enable developers to [build](./packages/sdk/src/build), [resolve](./packages/sdk/src/resolve), [send](./packages/send) and [decode](./packages/decode) interactions with the Flow blockchain.
   - [ ] [`@onflow/types`](./packages/types) _(early wip)_ -- Type casting interaction params to cadence compatible values.
   - [x] [`@onflow/send`](./packages/send) _(mvp)_ -- Send [interactions](./packages/interaction) to the Flow blockchain get [responses](./packages/response) back.
@@ -45,5 +45,4 @@ Eventually [`@onflow/fcl`](./packages/fcl) will make getting started and develop
   - [x] [`@onflow/encode`](./packages/encode) _(mvp)_ -- Transactions needs signatures, this module knows how to create the values that get signed.
 
 - Development Tools
-  - [x] [`@onflow/dev-handshake`](./packages/dev-handshake) _(mvp)_ -- A local fcl provider handshake service for local development and testing.
-  - [ ] [`@onflow/dev-wallet`](./packages/dev-wallet) _(early wip)_ -- A local fcl wallet provider for local development and testing.
+  - [x] [`@onflow/dev-wallet`](./packages/dev-wallet) _(mvp)_ -- A local fcl wallet provider for local development and testing.

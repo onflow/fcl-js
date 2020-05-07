@@ -18,18 +18,20 @@ npm install --save @onflow/fcl
 
 # Overview
 
+Having trouble with something? Reach out to us on [Discord](https://discord.gg/k6cZ7QC), we are more than happy to help.
+
 - [ ] [Quick Start](#quick-start) -- From zero to users interacting with the Flow blockchain using a dapp you made.
-- [x] [Configuration](./src/config) -- Configure FCL.
+- [Configuration](./src/config) -- Configure FCL.
 - [ ] [Authentication](./src/authentication) -- Authenticate Users using FCL wallet providers.
 - [ ] [Current User](./src/current-user) -- Know things about the Current User.
 - [ ] [Scripts](./src/scripts) -- Query data from the Flow blockchain.
 - [ ] [Transactions](./src/transactions) -- Send transactions to the Flow blockchain.
-- [x] [Emulator Docs](https://github.com/onflow/flow/blob/master/docs/emulator.md) -- Documentation for the Emulator.
-- [ ] [Dev Wallet Docs](../dev-wallet) -- Documenation for the Dev Wallet.
-- [ ] [FCL Wallet Provider Spec](./src/wallet-provider-spec) -- **WIP** Documentation for Wallet Providers.
-  - [ ] [Wallet Discovery](./src/wallet-provider-spec/wallet-discovery) -- **Coming Soon** How FCL discovers wallets providers.
-  - [ ] [Custodial Wallet Provider Spec](./src/wallet-provider-spec/custodial.md) -- Documentation for Custodial Wallet Provider.
-  - [ ] [Non-Custodial Wallet Provider Spec](src/wallet-provider-spec/non-custodial.md) -- **Coming Soon** Documentation for Non-Custodial Wallet Providers.
+- [Emulator Docs](https://github.com/onflow/flow/blob/master/docs/emulator.md) -- Documentation for the Emulator.
+- [Dev Wallet Docs](../dev-wallet) -- Documenation for the Dev Wallet.
+- [FCL Wallet Provider Spec](./src/wallet-provider-spec) -- **WIP** Documentation for Wallet Providers.
+  - [Wallet Discovery](./src/wallet-provider-spec/wallet-discovery) -- **Coming Soon** How FCL discovers wallets providers.
+  - [Custodial Wallet Provider Spec](./src/wallet-provider-spec/custodial.md) -- Documentation for Custodial Wallet Provider.
+  - [Non-Custodial Wallet Provider Spec](src/wallet-provider-spec/non-custodial.md) -- **Coming Soon** Documentation for Non-Custodial Wallet Providers.
 
 # Todo List
 
