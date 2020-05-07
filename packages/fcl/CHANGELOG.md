@@ -1,8 +1,12 @@
 ### Unreleased
 
 - YYYY-MM-DD **BREAKING?** -- description
+- 2020-05-07 -- Created and exposed a top level `tx` function
+- 2020-05-07 -- actor spawn now excepts an object of handlers
+- 2020-05-07 -- Moved common actor logic into actor (where, all)
+- 2020-05-07 -- Exposed fcls actor registry to window
 
-### 0.0.29 -- 2020-04-20
+### 0.0.29 -- 2020-05-06
 
 - 2020-05-06 -- Fixed an issue with custom decoders
 - 2020-05-06 -- Leverage named imports to enable better tree shaking

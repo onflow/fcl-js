@@ -1,7 +1,18 @@
 import {mailbox as createMailbox} from "./mailbox"
 import queueMicrotask from "queue-microtask"
 
-const REGISTRY = {}
+export const INIT = "INIT"
+export const SUBSCRIBE = "SUBSCRIBE"
+export const UNSUBSCRIBE = "UNSUBSCRIBE"
+export const EXIT = "EXIT"
+export const TERMINATE = "TERMINATE"
+
+const root =
+  (typeof self === "object" && self.self === self && self) ||
+  (typeof global === "object" && global.global === global && global) ||
+  (typeof window === "object" && window.window === window && window)
+
+root.FCL_REGISTRY = root.FCL_REGISTRY == null ? {} : root.FCL_REGISTRY
 var pid = 0b0
 
 const DEFAULT_TIMEOUT = 5000
@@ -30,7 +41,7 @@ export const send = (addr, tag, data, opts = {}) =>
     }
 
     try {
-      REGISTRY[addr].mailbox.deliver(payload)
+      root.FCL_REGISTRY[addr].mailbox.deliver(payload)
       if (!expectReply) reply(true)
     } catch (error) {
       console.error("FCL.Actor -- Could Not Deliver Message", payload, error)
@@ -38,14 +49,34 @@ export const send = (addr, tag, data, opts = {}) =>
   })
 
 export const kill = addr => {
-  delete REGISTRY[addr]
+  delete root.FCL_REGISTRY[addr]
+}
+
+const fromHandlers = (handlers = {}) => async ctx => {
+  if (typeof handlers[INIT] === "function") await handlers[INIT](ctx)
+  __loop: while (1) {
+    const letter = await ctx.receive()
+    try {
+      if (letter.tag === EXIT) {
+        if (typeof handlers[TERMINATE] === "function") {
+          await handlers[TERMINATE](ctx, letter, letter.data || {})
+        }
+        break __loop
+      }
+      await handlers[letter.tag](ctx, letter, letter.data || {})
+    } catch (error) {
+      console.error(`${ctx.self()} Error`, letter, error)
+    } finally {
+      continue __loop
+    }
+  }
 }
 
 export const spawn = (fn, addr = null) => {
   if (addr == null) addr = ++pid
-  if (REGISTRY[addr] != null) return addr
+  if (root.FCL_REGISTRY[addr] != null) return addr
 
-  REGISTRY[addr] = {
+  root.FCL_REGISTRY[addr] = {
     addr,
     mailbox: createMailbox(),
     subs: new Set(),
@@ -54,34 +85,52 @@ export const spawn = (fn, addr = null) => {
 
   const ctx = {
     self: () => addr,
-    receive: () => REGISTRY[addr].mailbox.receive(),
+    receive: () => root.FCL_REGISTRY[addr].mailbox.receive(),
     send: (to, tag, data, opts = {}) => {
       opts.from = addr
       return send(to, tag, data, opts)
     },
     broadcast: (tag, data, opts = {}) => {
       opts.from = addr
-      for (let to of REGISTRY[addr].subs) send(to, tag, data, opts)
+      for (let to of root.FCL_REGISTRY[addr].subs) send(to, tag, data, opts)
     },
-    subscribe: sub => sub != null && REGISTRY[addr].subs.add(sub),
-    unsubscribe: sub => sub != null && REGISTRY[addr].subs.delete(sub),
+    subscribe: sub => sub != null && root.FCL_REGISTRY[addr].subs.add(sub),
+    unsubscribe: sub => sub != null && root.FCL_REGISTRY[addr].subs.delete(sub),
     put: (key, value) => {
-      if (key != null) REGISTRY[addr].kvs[key] = value
+      if (key != null) root.FCL_REGISTRY[addr].kvs[key] = value
     },
     get: (key, fallback) => {
-      const value = REGISTRY[addr].kvs[key]
+      const value = root.FCL_REGISTRY[addr].kvs[key]
       return value == null ? fallback : value
     },
     delete: key => {
-      delete REGISTRY[addr].kvs[key]
+      delete root.FCL_REGISTRY[addr].kvs[key]
     },
     update: (key, fn) => {
-      if (key != null) REGISTRY[addr].kvs[key] = fn(REGISTRY[addr].kvs[key])
+      if (key != null)
+        root.FCL_REGISTRY[addr].kvs[key] = fn(root.FCL_REGISTRY[addr].kvs[key])
     },
     keys: () => {
-      return Object.keys(REGISTRY[addr].kvs)
+      return Object.keys(root.FCL_REGISTRY[addr].kvs)
+    },
+    all: () => {
+      return root.FCL_REGISTRY[addr].kvs
+    },
+    where: pattern => {
+      return Object.keys(root.FCL_REGISTRY[addr].kvs).reduce((acc, key) => {
+        return pattern.test(key)
+          ? {...acc, [key]: root.FCL_REGISTRY[addr].kvs[key]}
+          : acc
+      }, {})
+    },
+    merge: (data = {}) => {
+      Object.keys(data).forEach(
+        key => (root.FCL_REGISTRY[addr].kvs[key] = data[key])
+      )
     },
   }
+
+  if (typeof fn === "object") fn = fromHandlers(fn)
 
   queueMicrotask(async () => {
     await fn(ctx)

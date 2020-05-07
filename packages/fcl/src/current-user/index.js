@@ -1,6 +1,6 @@
 import "../default-config"
 import {config} from "../config"
-import {spawn, send} from "../actor"
+import {spawn, send, INIT, SUBSCRIBE, UNSUBSCRIBE} from "../actor"
 import {send as fclSend} from "../send"
 import {getAccount} from "@onflow/sdk"
 import {renderAuthnFrame} from "./render-authn-frame"
@@ -11,8 +11,6 @@ import {pollForAuthzUpdates} from "./poll-for-authz-updates"
 import {Identity} from "@onflow/types"
 
 const NAME = "CURRENT_USER"
-const SUBSCRIBE = "SUBSCRIBE"
-const UNSUBSCRIBE = "UNSUBSCRIBE"
 const UPDATED = "CURRENT_USER/UPDATED"
 const SNAPSHOT = "SNAPSHOT"
 const SET_CURRENT_USER = "SET_CURRENT_USER"
@@ -43,56 +41,35 @@ const DATA = `{
   "authorizations":[]
 }`
 
-const dataSnapshot = (ctx, keys) => {
-  return Object.fromEntries(keys.map(key => [key, ctx.get(key)]))
-}
-
-const saveData = (ctx, user) => {
-  Object.entries(user).forEach(([key, value]) => ctx.put(key, value))
-}
-
 const HANDLERS = {
+  [INIT]: ctx => {
+    ctx.merge(JSON.parse(DATA))
+  },
   [SUBSCRIBE]: (ctx, letter) => {
     ctx.subscribe(letter.from)
-    ctx.send(letter.from, UPDATED, dataSnapshot(ctx, ctx.keys()))
+    ctx.send(letter.from, UPDATED, ctx.all())
   },
   [UNSUBSCRIBE]: (ctx, letter) => {
     ctx.unsubscribe(letter.from)
   },
   [SNAPSHOT]: async (ctx, letter) => {
-    letter.reply(dataSnapshot(ctx, ctx.keys()))
+    letter.reply(ctx.all())
   },
   [SET_CURRENT_USER]: async (ctx, letter, data) => {
-    saveData(ctx, data)
-    ctx.broadcast(UPDATED, dataSnapshot(ctx, ctx.keys()))
+    ctx.merge(data)
+    ctx.broadcast(UPDATED, ctx.all())
   },
   [DEL_CURRENT_USER]: async (ctx, letter) => {
-    saveData(ctx, JSON.parse(DATA))
-    ctx.broadcast(UPDATED, dataSnapshot(ctx, ctx.keys()))
+    ctx.merge(JSON.parse(DATA))
+    ctx.broadcast(UPDATED, ctx.all())
   },
   [GET_AS_PARAM]: async (ctx, letter, {key}) => {
     letter.reply({key, value: ctx.get("addr", null), xform: Identity})
   },
 }
 
-const currentUserLogic = async ctx => {
-  saveData(ctx, JSON.parse(DATA))
-
-  __loop: while (1) {
-    const letter = await ctx.receive()
-
-    try {
-      await HANDLERS[letter.tag](ctx, letter, letter.data || {})
-    } catch (error) {
-      console.error("Current User Error", letter, error)
-    } finally {
-      continue __loop
-    }
-  }
-}
-
 const identity = v => v
-const spawnCurrentUser = () => spawn(currentUserLogic, NAME)
+const spawnCurrentUser = () => spawn(HANDLERS, NAME)
 
 async function authenticate() {
   return new Promise(async resolve => {

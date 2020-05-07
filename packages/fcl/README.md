@@ -4,27 +4,25 @@ A high level abstraction (built on top of [@onflow/sdk](../sdk)) that enables de
 
 # Status
 
-- **Last Updated:** May 5th 2020
-- **Stable:** No
+- **Last Updated:** May 7th 2020
+- **Stable:** Yes
 - **Risk of Breaking Change:** Medium
 
 We are currently confident in how to consume this package and how to build it, but this module is currently in a very incomplete state and not everything works yet.
 
 - `config`, `decode` and `send` are in a working state.
-- `subscribe`, `snapshot` and `info` are in a working state.
+- `currentUser` and `tx` are in a working state.
 - `authenticate` and `unauthenticate` are working with the dev wallet, but do not yet persist a session
 - The authentication portion of `currentUser` is working with the dev wallet
-- We are waiting on some upstream changes before we can make the `currentUser` authorization portion work as expected
-- `user` is currently blocked by not storing public data on chain, we are working towards this, but its currently lower on our priority list
-- Work on `events` and `transactions` hasn't started yet, but should be straight forward once it has.
+- `user` is currently blocked by not storing public data on chain, we are working towards this, but its currently lower on our priority list.
+- Work on `events` hasn't started yet, but should be straight forward once it has, we believe it will be similar to how we did `tx`.
+- `@onflow/sdk` has been proxied through the module, so now consumers of `@onflow/fcl` no longer need to worry about keeping versions in sync.
 
 # Install
 
 ```bash
 npm install --save @onflow/fcl
 ```
-
-You will probably also want: [`@onflow/sdk`](../sdk) and [`@onflow/types`](../types)
 
 # Overview
 
@@ -38,21 +36,21 @@ You will probably also want: [`@onflow/sdk`](../sdk) and [`@onflow/types`](../ty
   - [x] `fcl.config().subscribe(callback)`
 - [x] [`fcl.authenticate()`](./src/current-user)
 - [x] [`fcl.unauthenticate()`](./src/current-user)
-- [ ] [`fcl.currentUser()`](./src/current-user) _(wip)_
+- [ ] [`fcl.currentUser()`](./src/current-user)
   - [x] `fcl.currentUser().snapshot()`
   - [x] `fcl.currentUser().subscribe(callback)`
   - [x] `fcl.currentUser().authenticate()`
     - [ ] Current User Persistent Session
   - [x] `fcl.currentUser().unauthenticate()`
-  - [ ] `fcl.currentUser().authorization` _(wip)_
-  - [ ] `fcl.currentUser().param(key)` _(Pending Dep Update)_
+  - [x] `fcl.currentUser().authorization`
+  - [x] `fcl.currentUser().param(key)`
   - [x] `fcl.currentUser().info()`
-- [ ] `fcl.transaction(transactionId)` _(not started)_
-  - [ ] `fcl.transaction(transactionId).snapshot()` _(not started)_
-  - [ ] `fcl.transaction(transactionId).subscribe(callback)` _(not started)_
-  - [ ] `fcl.transaction(transactionId).onceSealed()` _(not started)_
-- [ ] `fcl.events(...)` _(not_started)_
-  - [ ] `fcl.events(...).subscribe(callback)` _(not started)_
+- [x] `fcl.tx(transactionId)`
+  - [x] `fcl.tx(transactionId).snapshot()`
+  - [x] `fcl.tx(transactionId).subscribe(callback)`
+  - [x] `fcl.tx(transactionId).onceSealed()`
+- [ ] `fcl.events(...)` _(Not MVP)_
+  - [ ] `fcl.events(...).subscribe(callback)` _(Not MVP)_
 - [x] [`fcl.send(builders)`](./src/send)
   - [x] Configure `fcl.send`
 - [x] [`fcl.decode(response)`](./src/decode)
@@ -82,22 +80,29 @@ export const Profile = () => {
 
   if (user == null) return <div>Loading...</div>
 
-  return !user.loggedIn ? (
-    <div>
-      <button onClick={fcl.authenticate}>Sign In</button>
-      <button onClick={fcl.authenticate}>Sign Up</button>
-    </div>
-  ) : (
+  if (!user.loggedIn)
+    return (
+      <div>
+        <button onClick={fcl.authenticate}>Sign In</button>
+      </div>
+    )
+
+  return (
     <div>
       <div>
-        <img
-          src={user.avatar || "http://placekitten.com/g/100/100"}
-          width="100"
-          height="100"
-        />
-        {user.name || "Anonymous"}
+        <button onClick={fcl.authenticate}>Sign Up</button>
       </div>
-      <button onClick={fcl.unauthenticate}>Sign Out</button>
+      <div>
+        <div>
+          <img
+            src={user.avatar || "http://placekitten.com/g/100/100"}
+            width="100"
+            height="100"
+          />
+          {user.name || "Anonymous"}
+        </div>
+        <button onClick={fcl.unauthenticate}>Sign Out</button>
+      </div>
     </div>
   )
 }
@@ -107,47 +112,59 @@ export const Profile = () => {
 
 ```javascript
 import * as fcl from "@onflow/fcl"
-import * as sdk from "@onflow/sdk"
-import * as six from "@onflow/six" // Comming Soon (Saved Interactions)
-import * as t from "@onflow/types"
-
-fcl.config().put("send.node", "https://accessNodeUrl")
 
 const response = await fcl.send([
-  sdk.transaction(six.SEND_FLOW_TOKENS),
-  sdk.params([fcl.user(toAddress).param(), sdk.param(amount, t.UFix64)]),
-  sdk.payer(fcl.currentUser().payerAuthorization),
-  sdk.proposer(fcl.currentUser().proposerAuthorization),
-  sdk.authorizations([fcl.currentUser().authorization]),
+  fcl.transaction`
+    transaction {
+      execute {
+        log("rawr")
+      }
+    }
+  `,
+  fcl.proposer(fcl.currentUser().authorization),
+  fcl.payer(fcl.currentUser().authorization),
 ])
 
-const unsub = fcl.transaction(response).subscribe(status => {
-  if (sdk.isSealed(status)) unsub()
-  console.log(status)
+const unsub = fcl.tx(response).subscribe(transaction => {
+  console.log("Sub -- Transaction Status", transaction)
+  if (fcl.tx.isSealed(transaction)) unsub()
 })
+
+const transaction = await fcl.tx(response).onceSealed()
+console.log("await -- Transaction Sealed", transaction)
 ```
 
 **Script**
 
 ```javascript
 import * as fcl from "@onflow/fcl"
-import * as sdk from "@onflow/sdk"
-import * as t from "@onflow/types"
 
-fcl.config().put("decoder.SomeNFT", d => new SomeToken(d))
+function Woot({x, y}) {
+  if (!(this instanceof Woot)) return new Woot(...arguments)
+  this.x = x
+  this.y = y
+}
 
-// query for onchain nfts
+fcl.config().put("decoder.Woot", Woot)
+
 const response = await fcl.send([
   sdk.script`
-    import SomeNFT, getAllForAddress from 0x....
+    pub struct Woot {
+      pub var x: Int
+      pub var y: Int
 
-    pub fun main(addr: Address): @[SomeNFT] {
-      let nfts: [SomeNFT] = getAllForAddress(addr: Address)
-      return nfts
+      init(x: Int, y: Int) {
+        self.x = x
+        self.y = y
+      }
+    }
+
+    pub fun main(): [Woot] {
+      return [Woot(x: 1, y: 2), Woot(x: 3, y: 4), Woot(x: 5, y: 6)]
     }
   `,
-  sdk.params([fcl.currentUser().param()]),
 ])
 
-const results = await fcl.decode(response)
+const data = await fcl.decode(response)
+console.log("DATA", data)
 ```

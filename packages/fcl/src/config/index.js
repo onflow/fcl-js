@@ -1,4 +1,4 @@
-import {spawn, send} from "../actor"
+import {spawn, send, SUBSCRIBE, UNSUBSCRIBE} from "../actor"
 
 const NAME = "config"
 const PUT = "PUT_CONFIG"
@@ -6,12 +6,7 @@ const GET = "GET_CONFIG"
 const UPDATE = "UPDATE_CONFIG"
 const DELETE = "DELETE_CONFIG"
 const WHERE = "WHERE_CONFIG"
-const SUBSCRIBE = "SUBSCRIBE"
-const UNSUBSCRIBE = "UNSUBSCRIBE"
 const UPDATED = "CONFIG/UPDATED"
-
-const snapshot = (ctx, keys = []) =>
-  keys.reduce((acc, key) => ({...acc, [key]: ctx.get(key)}), {})
 
 const identity = v => v
 
@@ -19,7 +14,7 @@ const HANDLERS = {
   [PUT]: (ctx, _letter, {key, value}) => {
     if (key == null) throw new Error("Missing 'key' for config/put.")
     ctx.put(key, value)
-    ctx.broadcast(UPDATED, snapshot(ctx, ctx.keys()))
+    ctx.broadcast(UPDATED, ctx.all())
   },
   [GET]: (ctx, letter, {key, fallback}) => {
     if (key == null) throw new Error("Missing 'key' for config/get")
@@ -28,44 +23,27 @@ const HANDLERS = {
   [UPDATE]: (ctx, letter, {key, fn}) => {
     if (key == null) throw new Error("Missing 'key' for config/update")
     ctx.update(key, fn || identity)
-    ctx.broadcast(UPDATED, snapshot(ctx, ctx.keys()))
+    ctx.broadcast(UPDATED, ctx.all())
   },
   [DELETE]: (ctx, letter, {key}) => {
     if (key == null) throw new Error("Missing 'key' for config/delete")
     ctx.delete(key)
-    ctx.broadcast(UPDATED, snapshot(ctx, ctx.keys()))
+    ctx.broadcast(UPDATED, ctx.all())
   },
   [WHERE]: (ctx, letter, {pattern}) => {
     if (pattern == null) throw new Error("Missing 'pattern' for config/where")
-    letter.reply(
-      snapshot(
-        ctx,
-        ctx.keys().filter(d => pattern.test(d))
-      )
-    )
+    letter.reply(ctx.where(pattern))
   },
   [SUBSCRIBE]: (ctx, letter) => {
     ctx.subscribe(letter.from)
-    ctx.send(letter.from, UPDATED, snapshot(ctx.keys()))
+    ctx.send(letter.from, UPDATED, ctx.all())
   },
   [UNSUBSCRIBE]: (ctx, letter) => {
     ctx.unsubscribe(letter.from)
   },
 }
 
-spawn(async ctx => {
-  __loop: while (1) {
-    const letter = await ctx.receive()
-
-    try {
-      await HANDLERS[letter.tag](ctx, letter, letter.data || {})
-    } catch (error) {
-      console.error("User Error", letter, error)
-    } finally {
-      continue __loop
-    }
-  }
-}, NAME)
+spawn(HANDLERS, NAME)
 
 function put(key, value) {
   send(NAME, PUT, {key, value})
