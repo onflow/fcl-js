@@ -658,7 +658,7 @@ function App() {
 
 Our application is complete!
 
-To deploy your app, you'll need to modify your configuration. Once the Flow network is live you'l be able obtain keys to use to authorize with  Flow's Access nodes
+To deploy your app, you'll need to modify your configuration. Once the Flow Mainnet is live you'll be able to obtain an production Access Node API url and API Key. More on this soon!
 
 ```jsx
 if(process.env.NODE_ENV === 'development') {
