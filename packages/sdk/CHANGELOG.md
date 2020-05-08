@@ -1,6 +1,9 @@
 ### Unreleased
 
 - YYYY-MM-DD **BREAKING?** -- description
+
+### 0.0.20 -- 2020-05-07
+
 - 2020-05-07 **BREAKING** -- Proposers accept authorization object
 
 ### 0.0.19 -- 2020-05-07
