@@ -20,7 +20,7 @@ npm install --save @onflow/fcl
 
 Having trouble with something? Reach out to us on [Discord](https://discord.gg/k6cZ7QC), we are more than happy to help.
 
-- [Quick Start](#quick-start) -- From zero to users interacting with the Flow blockchain using a dapp you made.
+- [Quick Start](#flow-app-quickstart) -- From zero to users interacting with the Flow blockchain using a dapp you made.
 - [Configuration](./src/config) -- Configure FCL.
 - [Authentication](./src/authentication) -- Authenticate Users using FCL wallet providers.
 - [Scripts](./src/scripts) -- Query data from the Flow blockchain.
