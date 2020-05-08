@@ -1,5 +1,5 @@
 import assert from "assert"
-import {build, resolve, transaction, limit, proposer, params, param, resolveParams} from "./sdk"
+import {build, resolve, transaction, limit, proposer, authorization, params, param, resolveParams} from "./sdk"
 
 describe("build", () => {
   it("returns the correct limit when building a transaction", async () => {
@@ -14,7 +14,7 @@ describe("build", () => {
 
   it("returns the correct proposer when building a transaction with a known proposer", async () => {
     const ix = await resolve(
-      await build([transaction``, proposer("01", 1, 123)])
+      await build([transaction``, proposer(authorization("01", () => {}, 1, 123))])
     )
 
     const txProposer = ix.accounts[ix.proposer]
