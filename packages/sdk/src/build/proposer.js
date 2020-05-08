@@ -2,22 +2,18 @@ import {pipe, makeProposer} from "@onflow/interaction"
 
 const isFn = d => typeof d === "function"
 
-export async function proposer(...args) {
-  if (isFn(args[0])) {
+export async function proposer(ax) {
+  if (isFn(ax)) {
     return makeProposer(
       {
-        resolve: args[0],
+        resolve: ax,
         role: {proposer: true},
       }
     )
   } else {
-    const [addr, keyId, sequenceNum, signingFunction] = args
     return makeProposer(
       {
-        addr,
-        keyId,
-        sequenceNum,
-        signingFunction,
+        ...ax,
         role: {proposer: true},
       }
     )
