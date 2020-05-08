@@ -2,6 +2,10 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.0.33 -- 2020-05-07
+
+- 2020-05-07 -- VSN `@onflow/sdk` 0.0.19 -> 0.0.20
+
 ### 0.0.32 -- 2020-05-07
 
 - 2020-05-07 -- add .npmignore with src/
