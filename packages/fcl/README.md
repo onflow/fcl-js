@@ -28,9 +28,9 @@ Having trouble with something? Reach out to us on [Discord](https://discord.gg/k
 - [Emulator Docs](https://github.com/onflow/flow/blob/master/docs/emulator.md) -- Documentation for the Emulator.
 - [Dev Wallet Docs](../dev-wallet) -- Documenation for the Dev Wallet.
 - [FCL Wallet Provider Spec](./src/wallet-provider-spec) -- **WIP** Documentation for Wallet Providers.
-  - [Wallet Discovery](./src/wallet-provider-spec/wallet-discovery) -- **Coming Soon** How FCL discovers wallets providers.
-  - [Custodial Wallet Provider Spec](./src/wallet-provider-spec/custodial.md) -- Documentation for Custodial Wallet Provider.
-  - [Non-Custodial Wallet Provider Spec](src/wallet-provider-spec/non-custodial.md) -- **Coming Soon** Documentation for Non-Custodial Wallet Providers.
+  - [Wallet Discovery](./src/wallet-provider-spec/wallet-discovery.md) -- **Coming Soon** How FCL discovers wallets providers.
+  - [Custodial Wallet Provider](./src/wallet-provider-spec/custodial.md) -- Documentation for Custodial Wallet Providers.
+  - [Non-Custodial Wallet Provider](src/wallet-provider-spec/non-custodial.md) -- **Coming Soon** Documentation for Non-Custodial Wallet Providers.
 
 # Todo List
 
