@@ -94,7 +94,7 @@ npm install --save @emotion/styled
 
 ## Install the Flow Emulator
 
-The Flow emulator is a lightweight tool that emulates the behaviour of the real Flow network. The emulator comes bundled with the `[Flow CLI](https://github.com/onflow/flow/blob/master/docs/cli.md)` . Install the emulator by following these [instructions](https://github.com/onflow/flow/blob/master/docs/cli.md#installation).
+The Flow emulator is a lightweight tool that emulates the behaviour of the real Flow network. The emulator comes bundled with the [Flow CLI](https://github.com/onflow/flow/blob/master/docs/cli.md). Install the emulator by following these [instructions](https://github.com/onflow/flow/blob/master/docs/cli.md#installation).
 
 ## Start the Flow Emulator
 
@@ -104,7 +104,7 @@ From the root directory of your React app, run the following command to start th
 flow emulator start --init
 ```
 
-**Note:** In the future, you will not need to use the `--init` flag if you start the emulator from a directory that already contains the `flow.json` file.
+**Note:** You don't need to use the `--init` flag if you start the emulator from a directory that already contains the `flow.json` file.
 
 Running the above command starts the emulator and generates a `flow.json` file similar to this
 
@@ -122,11 +122,11 @@ Running the above command starts the emulator and generates a `flow.json` file s
 
 ```
 
-The emulated network is running and contains a single *root* account we can use to authorize transactions. The private key for this account will need to be consumed by the `dev-wallet`. 
+The emulated network is running and contains a single *root* account we can use to authorize transactions. We will connect the private key from this account to the `dev-wallet`.
 
 ## Start the Dev Wallet
 
-Create a `scripts` entry in your `package.json` with the following command. Copy and paste the private key from your root account in `flow.json` and attached it to the `PK` environment variable.
+Create a `scripts` entry in your `package.json` with the following command. Copy and paste the private key from your root account in `flow.json` and attach it to an environment variable named `PK`
 
 ```json
 {
@@ -142,7 +142,7 @@ Use the new command to run the Dev Wallet
 npm run dev:wallet
 ```
 
-If all is well you should see a similar output to this:
+If all is well you should see
 
 ```
 @onflow/dev-wallet@0.0.4
@@ -169,7 +169,7 @@ fcl.config()
 
 ## Start the React App
 
-We're ready to start building our new dApp. Start the React app to begin building the UI and interacting with the emulator using `@onflow/fcl`
+We're ready to start building our new app. Start the React app to begin building the UI and interacting with the emulator using `@onflow/fcl`
 
 ```
 npm start
@@ -199,18 +199,18 @@ function App() {
 
 ```
 
-`@onflow/fcl` is now configured to connect to the Dev Wallet. For more informatino about how `@onflow/fcl` interacts with Wallet providers, you can view documentation [here](dev wallet)
+`@onflow/fcl` is now configured to connect to the Dev Wallet. For more information about how `@onflow/fcl` interacts with Wallet providers, you can view documentation [../dev-wallet](dev wallet)
 
 ## Authenticate Users
 
-Once configured, all that is needed is to call `fcl.authenticate()` in your code to authenticate Flow accounts. `fcl.authenticate()` will also determine if the user has already created a Flow account (by checking with the connected wallet) and create one if not.
+Once configured, all that is needed is to call `fcl.authenticate()` in your code to authenticate Flow accounts. 
 
 ### Login & Signup
 
 Attach the `fcl.authenticate` function to the `onClick` handler of a button
 
 ```jsx
-<Button onClick={fcl.authenticate}>Sign In/Up</Button>
+<Button onClick={() => fcl.authenticate()}>Sign In/Up</Button>
 ```
 
 ### Logout
@@ -218,7 +218,7 @@ Attach the `fcl.authenticate` function to the `onClick` handler of a button
 To allow users to sign out of your application, simply call `fcl.unauthenticate()`
 
 ```jsx
-<Button onClick={fcl.unauthenticate}>Sign Out</button>
+<Button onClick={() => fcl.unauthenticate()}>Sign Out</button>
 ```
 
 ### Changes to the Authenticated State
@@ -227,7 +227,7 @@ To receive a reactive update when a user has signed in/out you can subscribe to 
 
 ```jsx
 fcl.currentUser().subscribe((user) => {
-  // user will be a user object, or null!
+  console.log(user)
 })
 ```
 
@@ -300,9 +300,6 @@ function App() {
   return (
     <div className="App">
 +     <CurrentUser/>
-      <header className="App-header">
-        {/*...*/}
-      </header>
     </div>
   )
 }
@@ -311,7 +308,7 @@ function App() {
 
 ## Run a Cadence Script
 
-Cadence scripts allow you to run computations on Flow. You'll mainly use scripts as a way of querying Flow for information about accounts and their **[resources](notion://www.notion.so/dapperlabs/resources).** A script is not signed by any account and cannot modify an account's state.
+Cadence scripts allow you to run computations on Flow that are not recorded on the blockchain. You'll mainly use scripts as a way of querying Flow for information about accounts and their **[resources](notion://www.notion.so/dapperlabs/resources).** A script is not signed by any account and cannot modify an account's state.
 
 ### Simple Script
 
@@ -331,7 +328,7 @@ const value = await fcl.decode(response)
 // value === 48
 ```
 
-To call A Cadence script from your React app, create another component and wire up the UI. Here is an example component you can use. Create a file named `ScriptOne` in the `src` directory of your app
+To call A Cadence script from your React app, create another component and wire-up the UI. Here is an example component you can use. Create a file named `ScriptOne` in the `src` directory of your app with the following content
 
 ```jsx
 import React, {useState} from "react"
@@ -382,9 +379,6 @@ function App() {
   return (
     <div className="App">
       <CurrentUser/>
-      <header className="App-header">
-        {/*...*/}
-      </header>
 +     <ScriptOne/>
     </div>
   )
@@ -395,30 +389,27 @@ Go ahead and test out your new script!
 
 ### Query Flow Accounts
 
-Scripts are mainly used to acquire information about an accounts public state and it's **[resources](notion://www.notion.so/dapperlabs/resources)**. Here is an example of a script you might use to query account balances
+A common use for Cadence scripts is to acquire information about a Flow account's public state and its **[resources](notion://www.notion.so/dapperlabs/resources)**. Here is an example of a script you might use to query and use another account's public resources.
 
 ```jsx
 const response = await fcl.send([
-        sdk.script`
-          import FungibleToken from 0x01
+    sdk.script`
+	import HelloWorld from 0x02
 
-              access(all) fun main() {
+	pub fun main() {
+	    let helloAccount = getAccount(0x02)
+	    let helloCapability = helloAccount.getCapability(/public/Hello)
+	    let helloReference = helloCapability!.borrow<&HelloWorld.HelloAsset>()
 
-                  let acct1 = getAccount(0x01)
-                  let acct2 = getAccount(0x02)
-
-                  return [
-	                    acct1.published[&AnyResource{FungibleToken.Receiver}]?.balance,
-                      acct2.published[&AnyResource{FungibleToken.Receiver}]?.balance
-                  ]
-              }
-      `,
+	    log(helloReference?.hello())
+	}
+    `,
 ])
 ```
 
 ### Register and Use a Custom Decoder
 
-Cadence scripts can also return complex Cadence data-types from their computations. These return values are sent over-the-wire to your JavaScript code. You'll handle parsing and transforming custom Cadence data-types using **custom decoders**.
+Cadence scripts can return complex Cadence data-types. These return values are sent over-the-wire to your JavaScript code. You'll handle parsing and transforming custom Cadence data-types using **custom decoders**.
 
 Given this Cadence script that returns `[SomeStruct(x: 1, y: 2), SomeStruct(x: 3, y: 4)]` 
 
@@ -442,7 +433,7 @@ Given this Cadence script that returns `[SomeStruct(x: 1, y: 2), SomeStruct(x: 3
   ])
 ```
 
-We would like to transform `SomeStruct(x: 1, y: 2)` into a JavaScript data-structure
+We would like to transform `SomeStruct(x: 1, y: 2)` into a JavaScript data-structure.
 
 ```jsx
 class Point {
@@ -508,8 +499,8 @@ export default function ScriptTwo() {
       <Header>Script Two</Header>
       <Button>Run Script</Button>
       {data && <Results>{JSON.stringify(data, null, 2)}</Results>}
-			{data[0].name} 1 <!-- "Point 1" -->
-			{data[1].name} 2 <!-- "Point 2" -->
+      <span>{data && data !== null && data[0].constructor.name} 1 </span> <!-- "Point 1" -->
+      <span>{data && data !== null && data[1].constructor.name} 2 </span> <!-- "Point 2" -->
     </Root>
   )
 }
@@ -532,9 +523,6 @@ function App() {
       <CurrentUser/>
       <ScriptOne/>
 +     <ScriptTwo/>
-      <header className="App-header">
-        {/*...*/}
-      </header>
     </div>
   )
 }
@@ -547,11 +535,11 @@ Flow Transactions are used to *move* **[resources](notion://www.notion.so/dapper
 
 `@onflow` allows for specifying the **payer**, **proposer** and **authorizer** of transactions on Flow. 
 
-Describing the specifics of how to compose Flow transactions is beyond the scope of this guide. For more information about how to build Flow transactions you can read the [documentation](docs)
+Describing the specifics of how to compose Flow transactions is beyond the scope of this guide. For more information about how to build Flow transactions you can read the [https://docs.onflow.org/docs/cadence#transactions](docs).
 
 ### Simple Transaction
 
-To send a transaction you must supply a **payer** and **proposer**. In this transaction the current user we authenticated earlier is used for each. `@onflow/fcl` will use the configured wallet to sign this transaction on behalf of the current user.
+To send a transaction you must supply a **payer** and **proposer**. In the following transaction the current user we authenticated earlier is used for each. `@onflow/fcl` will use the configured wallet to sign this transaction on behalf of the current user.
 
 ```jsx
 const response = await fcl.send([
@@ -567,14 +555,14 @@ const response = await fcl.send([
 ])
 ```
 
-You can subscribe to the result of a transaction in your client code
+You can subscribe to the result of a transaction in your client code.
 
 ```jsx
  const unsub = fcl.tx(response).subscribe(transaction => {
-	 if (fcl.tx.isSealed(transaction)) {
-	   setState("Transaction Confirmed: Is Sealed")
-	   unsub()
-	 }
+     if (fcl.tx.isSealed(transaction)) {
+       setState("Transaction Confirmed: Is Sealed")
+       unsub()
+     }
 })
 ```
 
@@ -589,13 +577,13 @@ const Root = styled.div``
 const Button = styled.button``
 const Status = styled.pre``
 
-export default function Transaction() {
+export default function TransactionOne() {
   const [status, setStatus] = useState("Not Started")
   const runTransaction = async e => {
     e.preventDefault()
     setState("Resolving...")
     
-		const response = await fcl.send([
+    const response = await fcl.send([
       fcl.transaction`
         transaction {
           execute {
@@ -627,11 +615,11 @@ export default function Transaction() {
 
 ```
 
-Display the `ScriptTwo` component in your app
+Display the `TransactionOne` component in your app
 
 ```diff
-// src/App.js
 // ...
+
 import CurrentUser from "./CurrentUser"
 import ScriptOne from "./ScriptOne"
 import ScriptTwo from "./ScriptTwo"
@@ -646,9 +634,6 @@ function App() {
       <ScriptOne/>
       <ScriptTwo/>
 +     <TransactionOne/>
-      <header className="App-header">
-        {/*...*/}
-      </header>
     </div>
   )
 }
@@ -662,14 +647,14 @@ To deploy your app, you'll need to modify your configuration. Once the Flow Main
 
 ```jsx
 if(process.env.NODE_ENV === 'development') {
-	fcl.config()
-    .put("challenge.handshake", "http://localhost:8701/flow/authenticate")
+    fcl.config()
+       .put("challenge.handshake", "http://localhost:8701/flow/authenticate")
 }
 
 if (process.env.NODE_ENV === "production") {
-	fcl.config()
-    .put("accessNode.api", process.env.ACCESS_NODE_API)
-    .put("accessNode.key", process.env.ACCESS_NODE_KEY)
+    fcl.config()
+       .put("accessNode.api", process.env.ACCESS_NODE_API)
+       .put("accessNode.key", process.env.ACCESS_NODE_KEY)
 } 
 ```
 
