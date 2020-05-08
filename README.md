@@ -2,10 +2,9 @@
 
 # Flow Javascript SDK
 
-
 Enabling developers to create dApps on the Flow blockchain using Javascript
 
-For a guide on how to use the SDK [Start Here](https://github.com/onflow/flow-js-sdk/blob/master/docs/examples/introducing-fcl/Quickstart.md)
+A quick start guide can be found [Here](./packages/fcl#quick-start)
 
 # Status
 
@@ -23,15 +22,15 @@ Flow is a new blockchain for open worlds. Read more about it [here](https://onfl
 
 # Getting Started
 
-- For now you probably want the [`@onflow/sdk`](./packages/sdk) package.
+A quick start guide can be found [Here](./packages/fcl#quick-start).
+
 - The Flow CLIs [emulator](https://github.com/onflow/flow/blob/master/docs/emulator.md) can be used to develop against locally.
 - We have a [React Example](./examples/react-simple) application for you to poke around too. If you want to run it locally, you will need the emulator running with [this config](./flow.json).
-
-Eventually [`@onflow/fcl`](./packages/fcl) will make getting started and developing on the Flow blockchain easier.
 
 # Overview
 
 - Higher Level
+
   - [x] [`@onflow/fcl`](./packages/fcl) _(mvp)_ -- A high level dapp framework built on top an opinionated use of the sdk.
   - [x] [`@onflow/sdk`](./packages/sdk) _(mvp)_ -- Tools that enable developers to [build](./packages/sdk/src/build), [resolve](./packages/sdk/src/resolve), [send](./packages/send) and [decode](./packages/decode) interactions with the Flow blockchain.
   - [ ] [`@onflow/types`](./packages/types) _(early wip)_ -- Type casting interaction params to cadence compatible values.
@@ -39,6 +38,7 @@ Eventually [`@onflow/fcl`](./packages/fcl) will make getting started and develop
   - [x] [`@onflow/decode`](./packages/decode) _(mvp)_ -- Decodes [responses](./packages/response) return values into Javascript (No need for an ABI).
 
 - Lower Level
+
   - [x] [`@onflow/protobuf`](./packages/protobuf) _(mvp)_ -- Dependency of [send](./packages/protobuf). Provides transport between the browser and the Flow blockchain.
   - [x] [`@onflow/interaction`](./packages/interaction) _(mvp)_ -- A data structure that can be [built](./packages/sdk/src/build), [resolved](./packages/sdk/src/resolve) and [sent](./packages/send) to the Flow blockchain.
   - [x] [`@onflow/response`](./packages/response) _(mvp)_ -- A data structure that represents a response from the Flow blockchain. If the interaction returns something, it can be [decoded](./package/decode) without something like an ABI.
