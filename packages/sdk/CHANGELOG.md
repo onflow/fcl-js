@@ -1,6 +1,13 @@
 ### Unreleased
 
 - YYYY-MM-DD **BREAKING?** -- description
+
+### 0.0.19 -- 2020-05-07
+
+- Same as 0.0.18 but the package-lock was updated
+
+### 0.0.18 -- 2020-05-07
+
 - 2020-05-07 -- Params resolver parses params correctly
 - 2020-05-07 -- Allows authorizer payer and proposer to be the same
 
