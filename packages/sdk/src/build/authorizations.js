@@ -14,6 +14,6 @@ export function authorizations(ax = []) {
   ))
 }
 
-export function authorization(addr, signingFunction, keyId) {
-  return {addr, signingFunction, keyId}
+export function authorization(addr, signingFunction, keyId, sequenceNum) {
+  return {addr, signingFunction, keyId, sequenceNum}
 }
