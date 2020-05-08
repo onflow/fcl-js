@@ -38,63 +38,75 @@ Having trouble with something? Reach out to us on [Discord](https://discord.gg/k
 - [ ] `fcl.events(...)`-- Subscribging to onchain events
 - [ ] `fcl.user(addr)` -- Subscribing to onchain public identity info
 
-# Quick Start
+# Flow App Quickstart
 
-From zero to users interacting with the Flow blockchain using a dapp you made.
+**Last Updated:** May 7th 2020
 
-> **NOTE** This quick start will **NOT** go into the deployment of contracts. We will supply a more comprehensive tutorial covering this soon, so stay tuned.
+Follow this guide to understand the basics of how to build an app that interacts with the Flow blockchain using `@onflow/fcl`
 
-- **Last Updated:** May 7th 2020
+ 
 
-### Brief
+This guide uses `create-react-app` and does not require any server-side code. `@onflow/fcl` is not tied to any front-end framework.
 
-We are going to:
+In this quickstart you will
 
-- Create a small React app that highlights some core FCL concepts
-- Install and start the emulator `flow`
-- Install and start the FCL Dev Wallet (`fcl-wallet`)
+- Use `@onflow/fcl`  to  perform authentication and authorization of Flow accounts
+- Use `@onflow/fcl`  to send scripts and transactions to the Flow blockchain emulator
+- Install and use  the Flow blockchain emulator (`flow`)
+- Install and use the FCL Dev Wallet (`fcl-wallet`) to simulate connection between your app, `@onflow/fcl` and a user's 3rd party key management software
+- Configure `@onflow/fcl` for a production deployment
 
-The React App will be representative of the dapp you want to make. Durring development we will be using the `fcl-wallet` to act as a custodial wallet that we can authenticate with as well as authorize transactions, the emulator `flow` will act as an Access Node. Access Nodes are our gateway to the blockchain.
-With these three things we can create a dapp in development, and then once there is a Flow Mainnet/Testnet, all we need to do is change some configuration values and our dapp should work there too.
+Once complete, this example application will be deployable to the Flow test/main networks with only small changes to configuration values. Let's begin.
 
-### Creating the React App
+## Create the React App
 
-In this example we will be using [React](https://reactjs.org/) and [Create React App](https://reactjs.org/docs/create-a-new-react-app.html). But there really isn't anything stopping you from using any other framwork you choose.
-
-To use Create React App to create a React App we need to run:
+Run the following command to generate a React app. (Must have `npm` installed)
 
 ```bash
 npx create-react-app my-dapp
 ```
 
-This will take a little bit of time but afterwords we will have a bootstrapped directory called `my-dapp` which will have a ready-to-go React App. Once done, lets change into that directory and install some dependencies.
+## Install `@onflow` Dependencies
+
+From the root directory of your new react app, run the following commands to install `@onflow/fcl` and the `@onflow/dev-wallet`
 
 ```bash
-cd my-dapp
-npm install --save @onflow/fcl styled-components
+npm install --save @onflow/fcl
 npm install --save-dev @onflow/dev-wallet
 ```
 
-The above installed two run time dependencies for us (`@onflow/fcl` and `styled-components`), as well as the development dependency `@onflow/dev-wallet`
+### What we installed
 
-- `@onflow/fcl` will be the library we use to interact with the Flow blockchain.
-- `styled-components` will let us add a little
-- `@onflow/dev-wallet` will act as our custodial wallet that can authenticate and authorize transaction.
+- `@onflow/fcl` is the library we'll use to interact with the Flow blockchain.
+- `@onflow/dev-wallet` A "custodial" wallet that can authenticate and authorize transactions. It will simulate 3rd party key-management software necessary for interacting with the Flow blockchain on behalf of a specific Flow account.
 
-### Installing and Starting the Emulator
+**A Note on Wallets:**  Flow is designed to support most wallet types–– fully-custodial wallets, browser-based (extensions), hardware and other managed decentralized wallet options.
 
-The Flow emulator is a lightweight tool that emulates the behaviour of the real Flow network that we can use during development.
+`@onflow/fcl` uses a handshake protocol to enable wallets to manage Flow identities, and perform authentication and authorization. Any wallet that supports the protocol can be used by your users automatically without any configuration in the application.
 
-We cannot run the emulator if we do not have the emulator. The emulator comes bundled with the [`Flow CLI`](https://github.com/onflow/flow/blob/master/docs/cli.md) you can install that following these [instructions](https://github.com/onflow/flow/blob/master/docs/cli.md#installation).
+### Additional Project Dependencies
 
-After `Flow CLI` has been installed, lets get the emulator up and running.
+In this guide, we'll  use `@emotion/styled` to write css. (You can skip this step, or install your own preferred css tools)
+
+```bash
+npm install --save @emotion/styled
+```
+
+## Install the Flow Emulator
+
+The Flow emulator is a lightweight tool that emulates the behaviour of the real Flow network. The emulator comes bundled with the [Flow CLI](https://github.com/onflow/flow/blob/master/docs/cli.md). Install the emulator by following these [instructions](https://github.com/onflow/flow/blob/master/docs/cli.md#installation).
+
+## Start the Flow Emulator
+
+From the root directory of your React app, run the following command to start the emulator
 
 ```bash
 flow emulator start --init
 ```
 
-Running the above should have started the emulator, as well as created a `flow.json` file that configures it. In the future, you will not need to use the `--init` flag if you start the emulator from a directory that already has the `flow.json` file.
-At this point in time, you should the emulator running and a `flow.json` file that looks something like this:
+**Note:** You don't need to use the `--init` flag if you start the emulator from a directory that already contains the `flow.json` file.
+
+Running the above command starts the emulator and generates a `flow.json` file similar to this
 
 ```json
 {
@@ -107,11 +119,14 @@ At this point in time, you should the emulator running and a `flow.json` file th
     }
   }
 }
+
 ```
 
-You will need the value for `accounts.root.privateKey` in the `flow.json` shortly when we go to start up the dev-wallet, which is our next step.
+The emulated network is running and contains a single *root* account we can use to authorize transactions. We will connect the private key from this account to the `dev-wallet`.
 
-### Starting up the dev-wallet
+## Start the Dev Wallet
+
+Create a `scripts` entry in your `package.json` with the following command. Copy and paste the private key from your root account in `flow.json` and attach it to an environment variable named `PK`
 
 ```json
 {
@@ -121,19 +136,23 @@ You will need the value for `accounts.root.privateKey` in the `flow.json` shortl
 }
 ```
 
+Use the new command to run the Dev Wallet
+
 ```bash
 npm run dev:wallet
 ```
+
+If all is well you should see
 
 ```
 @onflow/dev-wallet@0.0.4
 *** *** *** *** *** *** ***
 
 🎉 FCL Dev Wallet has started:
-* Origin:       http://localhost:8701
-* FCL Authn:    http://localhost:8701/flow/authenticate
-* GraphiQL:     http://localhost:8701/graphql
-* Access Node:  http://localhost:8080
+* Origin:       <http://localhost:8701>
+* FCL Authn:    <http://localhost:8701/flow/authenticate>
+* GraphiQL:     <http://localhost:8701/graphql>
+* Access Node:  <http://localhost:8080>
 * Root Address: 01
 * Private Key:  e19081c8964b8dcf3902cc71e37d1f07f86fb357d79dd2fb57006419e0f95e95
 
@@ -145,107 +164,175 @@ fcl.config()
   .put("challenge.handshake", "http://localhost:8701/flow/authenticate")
 
 *** *** *** *** *** *** ***
+
 ```
 
-### Start Up our Dapp
+## Start the React App
 
-```bash
+We're ready to start building our new app. Start the React app to begin building the UI and interacting with the emulator using `@onflow/fcl`
+
+```
 npm start
 ```
 
-### Configure FCL to use the dev wallet
+# Build the Example Application
+
+Now that we have the Flow emulator, Dev Wallet and our React app up and running we're ready to build our application. 
+
+## Configure `@onflow/fcl`
+
+Before we can use `@onflow/fcl` to interact with Flow we'll need to tell it how to connect to the Dev Wallet we started earlier. Add the following code to `src/App.js`
 
 ```diff
-// src/App.js
 import React from "react";
++ import * as fcl from "@onflow/fcl";
+
 import logo from "./logo.svg";
 import "./App.css";
-+  import * as fcl from "@onflow/fcl";
-+
-+  fcl.config()
-+    .put("challenge.handshake", "http://localhost:8701/flow/authenticate")
-+
+
++ fcl.config()
++    .put("challenge.handshake", "<http://localhost:8701/flow/authenticate>")
+
 function App() {
   // ...
 }
+
 ```
 
-### Authentication
+`@onflow/fcl` is now configured to connect to the Dev Wallet. For more information about how `@onflow/fcl` interacts with Wallet providers, you can view documentation [../dev-wallet](dev wallet)
 
-```javascript
-// src/CurrentUser.js
+## Authenticate Users
+
+Once configured, all that is needed is to call `fcl.authenticate()` in your code to authenticate Flow accounts. 
+
+### Login & Signup
+
+Attach the `fcl.authenticate` function to the `onClick` handler of a button
+
+```jsx
+<Button onClick={() => fcl.authenticate()}>Sign In/Up</Button>
+```
+
+### Logout
+
+To allow users to sign out of your application, simply call `fcl.unauthenticate()`
+
+```jsx
+<Button onClick={() => fcl.unauthenticate()}>Sign Out</button>
+```
+
+### Changes to the Authenticated State
+
+To receive a reactive update when a user has signed in/out you can subscribe to changes
+
+```jsx
+fcl.currentUser().subscribe((user) => {
+  console.log(user)
+})
+```
+
+## **Build the Login Form**
+
+Here is the code for the completed component containing the UI and logic for authenticating users using `@onflow/fcl`. Add this code to `CurrentUser.js` in the `src` directory of your app
+
+```jsx
 import React, {useState, useEffect} from "react"
-import styled from "styled-components"
+import styled from "@emotion/styled"
 import * as fcl from "@onflow/fcl"
 
 const Root = styled.div``
+
 const Img = styled.img`
   width: 35px;
   height: 35px;
 `
 const Button = styled.button``
 
-const SignIn = () => {
+const SignInButton = () => {
   const [user, setUser] = useState(null)
-  useEffect(() => fcl.currentUser().subscribe(setUser), [])
-  if (user == null) return null
 
+  useEffect(() => fcl.currentUser().subscribe(setUser), [])
+
+  if (user == null) return null
   if (user.loggedIn) return null
+
   return <Button onClick={fcl.authenticate}>Sign In/Up</Button>
 }
 
-const Profile = () => {
+const UserProfile = () => {
   const [user, setUser] = useState(null)
+
   useEffect(() => fcl.currentUser().subscribe(setUser), [])
+
   if (user == null) return null
 
   if (!user.loggedIn) return null
   return (
     <>
-      {user.identity.avater && <Img src={user.identity.avatar} />}
+      {user.identity.avatar && <Img src={user.identity.avatar} />}
       <Name>{user.identity.name || "Anonymous"}</Name>
       <Button onClick={fcl.unauthenticate}>Sign Out</button>
     </>
   )
 }
 
-export default function CurrentUser() {
+const CurrentUser = () => {
   return (
     <Root>
-      <SignIn />
-      <Profile />
+      <SignInButton />
+      <UserProfile />
     </Root>
   )
 }
+
+export default CurrentUser
 ```
 
+And display the `CurrentUser` component in your app
+
 ```diff
-// src/App.js
-// ...
-+
-+  import CurrentUser from "./CurrentUser"
-+
++ import CurrentUser from "./CurrentUser"
+
 fcl.config()
- .put("challenge.handshake", "http://localhost:8701/flow/authenticate")
+ .put("challenge.handshake", "<http://localhost:8701/flow/authenticate>")
 
 function App() {
   return (
     <div className="App">
-+      <CurrentUser/>
-      <header className="App-header">
-        {/*...*/}
-      </header>
++     <CurrentUser/>
     </div>
   )
 }
+
 ```
 
-### Our First Script
+## Run a Cadence Script
 
-```javascript
-// src/ScriptOne.js
+Cadence scripts allow you to run computations on Flow that are not recorded on the blockchain. You'll mainly use scripts as a way of querying Flow for information about accounts and their **[resources](notion://www.notion.so/dapperlabs/resources).** A script is not signed by any account and cannot modify an account's state.
+
+### Simple Script
+
+Using a simple script is a useful way to test your connection to Flow
+
+```jsx
+const resp = await fcl.send([
+  sdk.script`
+    pub fun main(): Int {
+      return 42 + 6
+    }
+  `
+])
+
+const value = await fcl.decode(response)
+
+// value === 48
+```
+
+To call A Cadence script from your React app, create another component and wire-up the UI. Here is an example component you can use. Create a file named `ScriptOne` in the `src` directory of your app with the following content
+
+```jsx
 import React, {useState} from "react"
-import styled from "styled-components"
+import styled from "@emotion/styled"
 import * as fcl from "@onflow/fcl"
 
 const Root = styled.div``
@@ -261,7 +348,7 @@ export default function ScriptOne() {
     const response = await fcl.send([
       fcl.script`
         pub fun main(): Int {
-          return 7 + 4
+          return 42 + 6
         }
       `,
     ])
@@ -276,55 +363,105 @@ export default function ScriptOne() {
     </Root>
   )
 }
+
 ```
 
-```diff
-// src/App.js
-// ...
-import CurrentUser from "./CurrentUser"
-+  import ScriptOne from "./ScriptOne"
+And display the component in your app
 
+```diff
 // ...
++ import ScriptOne from "./ScriptOne"
+
+fcl.config()
+ .put("challenge.handshake", "<http://localhost:8701/flow/authenticate>")
 
 function App() {
   return (
     <div className="App">
       <CurrentUser/>
-+      <ScriptOne/>
-      <header className="App-header">
-        {/*...*/}
-      </header>
++     <ScriptOne/>
     </div>
   )
 }
-
 ```
 
-### A more complex Script
+Go ahead and test out your new script!
 
-```javascript
-// woot.js
-export function Woot({x, y}) {
-  this.x = x
-  this.y = y
+### Query Flow Accounts
+
+A common use for Cadence scripts is to acquire information about a Flow account's public state and its **[resources](notion://www.notion.so/dapperlabs/resources)**. Here is an example of a script you might use to query and use another account's public resources.
+
+```jsx
+const response = await fcl.send([
+    sdk.script`
+	import HelloWorld from 0x02
+
+	pub fun main() {
+	    let helloAccount = getAccount(0x02)
+	    let helloCapability = helloAccount.getCapability(/public/Hello)
+	    let helloReference = helloCapability!.borrow<&HelloWorld.HelloAsset>()
+
+	    log(helloReference?.hello())
+	}
+    `,
+])
+```
+
+### Register and Use a Custom Decoder
+
+Cadence scripts can return complex Cadence data-types. These return values are sent over-the-wire to your JavaScript code. You'll handle parsing and transforming custom Cadence data-types using **custom decoders**.
+
+Given this Cadence script that returns `[SomeStruct(x: 1, y: 2), SomeStruct(x: 3, y: 4)]` 
+
+```jsx
+ const response = await fcl.send([
+      fcl.script`
+      pub struct SomeStruct {
+        pub var x: Int
+        pub var y: Int
+
+        init(x: Int, y: Int) {
+          self.x = x
+          self.y = y
+        }
+      }
+
+      pub fun main(): [SomeStruct] {
+        return [SomeStruct(x: 1, y: 2), SomeStruct(x: 3, y: 4)]
+      }
+    `,
+  ])
+```
+
+We would like to transform `SomeStruct(x: 1, y: 2)` into a JavaScript data-structure.
+
+```jsx
+class Point {
+  constructor ({ x, y }) {
+    this.x = x
+    thix.y = y
+  }
 }
 ```
 
+Registering a decoding function using the code below will ensure that the response from `fcl.send` will contain  `Point` objects wherever a `SomeStruct` Cadence type is returned.
+
 ```diff
-// App.js
-+ import Woot from "./woot"
++ import MyObjectDecoder from "./MyObjectDecoder"
 // ...
+
 fcl.config()
-  .put("challenge.handshake", "http://localhost:8701/flow/authenticate")
-+  .put("decoder.Woot", woot => new Woot(woot))
+  .put("challenge.handshake", "<http://localhost:8701/flow/authenticate>")
++ .put("decoder.SomeStruct", data => new Point(data))
 
 // ...
 ```
 
-```javascript
-// src/ScriptTwo.js
+Here is a completed component that contains the script that will trigger our new decoding function. Create a file named `ScriptTwo` in the `src` directory of your app.
+
+```jsx
 import React, {useState} from "react"
-import styled from "styled-components"
+import styled from "@emotion/styled"
 import * as fcl from "@onflow/fcl"
 
 const Root = styled.div``
@@ -339,7 +476,7 @@ export default function ScriptTwo() {
     e.preventDefault()
     const response = await fcl.send([
       fcl.script`
-        pub struct Woot {
+        pub struct SomeStruct {
           pub var x: Int
           pub var y: Int
 
@@ -349,8 +486,8 @@ export default function ScriptTwo() {
           }
         }
 
-        pub fun main(): [Woot] {
-          return [Woot(x: 1, y: 2), Woot(x: 3, y: 4)]
+        pub fun main(): [SomeStruct] {
+          return [SomeStruct(x: 1, y: 2), SomeStruct(x: 3, y: 4)]
         }
       `,
     ])
@@ -362,14 +499,18 @@ export default function ScriptTwo() {
       <Header>Script Two</Header>
       <Button>Run Script</Button>
       {data && <Results>{JSON.stringify(data, null, 2)}</Results>}
+      <span>{data && data !== null && data[0].constructor.name} 1 </span> <!-- "Point 1" -->
+      <span>{data && data !== null && data[1].constructor.name} 2 </span> <!-- "Point 2" -->
     </Root>
   )
 }
 ```
 
+Display the `ScriptTwo` component in your app
+
 ```diff
-// src/App.js
 // ...
+
 import CurrentUser from "./CurrentUser"
 import ScriptOne from "./ScriptOne"
 import ScriptTwo from "./ScriptTwo"
@@ -381,19 +522,53 @@ function App() {
     <div className="App">
       <CurrentUser/>
       <ScriptOne/>
-+      <ScriptTwo/>
-      <header className="App-header">
-        {/*...*/}
-      </header>
++     <ScriptTwo/>
     </div>
   )
 }
+
 ```
 
-### Transaction Time
+## Execute a Cadence Transaction
 
-```javascript
-// src/Transaction.js
+Flow Transactions are used to *move* **[resources](notion://www.notion.so/dapperlabs/resources)** and interact with smart contracts on behalf of Flow accounts. `@onflow` provides flexible primitives composing authorizing and paying for Transactions on Flow.
+
+`@onflow` allows for specifying the **payer**, **proposer** and **authorizer** of transactions on Flow. 
+
+Describing the specifics of how to compose Flow transactions is beyond the scope of this guide. For more information about how to build Flow transactions you can read the [https://docs.onflow.org/docs/cadence#transactions](docs).
+
+### Simple Transaction
+
+To send a transaction you must supply a **payer** and **proposer**. In the following transaction the current user we authenticated earlier is used for each. `@onflow/fcl` will use the configured wallet to sign this transaction on behalf of the current user.
+
+```jsx
+const response = await fcl.send([
+  fcl.transaction`
+    transaction {
+      execute {
+        log("A transaction happened")
+      }
+    }
+  `,
+  fcl.proposer(fcl.currentUser().authorization),
+  fcl.payer(fcl.currentUser().authorization),
+])
+```
+
+You can subscribe to the result of a transaction in your client code.
+
+```jsx
+ const unsub = fcl.tx(response).subscribe(transaction => {
+     if (fcl.tx.isSealed(transaction)) {
+       setState("Transaction Confirmed: Is Sealed")
+       unsub()
+     }
+})
+```
+
+Here is a completed component that contains the transaction above. Create a file named `TransactionOne` in the `src` directory of your app.
+
+```jsx
 import React, {useState, useEffect} from "react"
 import styled from "styled-components"
 import * as fcl from "@onflow/fcl"
@@ -402,11 +577,12 @@ const Root = styled.div``
 const Button = styled.button``
 const Status = styled.pre``
 
-export default function Transaction() {
+export default function TransactionOne() {
   const [status, setStatus] = useState("Not Started")
   const runTransaction = async e => {
     e.preventDefault()
     setState("Resolving...")
+    
     const response = await fcl.send([
       fcl.transaction`
         transaction {
@@ -418,7 +594,9 @@ export default function Transaction() {
       fcl.proposer(fcl.currentUser().authorization),
       fcl.payer(fcl.currentUser().authorization),
     ])
+
     setState("Transaction Sent, Waiting for Confirmation")
+
     const unsub = fcl.tx(response).subscribe(transaction => {
       if (fcl.tx.isSealed(transaction)) {
         setState("Transaction Confirmed: Is Sealed")
@@ -434,15 +612,18 @@ export default function Transaction() {
     </Root>
   )
 }
+
 ```
 
+Display the `TransactionOne` component in your app
+
 ```diff
-// src/App.js
 // ...
+
 import CurrentUser from "./CurrentUser"
 import ScriptOne from "./ScriptOne"
 import ScriptTwo from "./ScriptTwo"
-+ import Transaction from "./Transaction"
++ import TransactionOne from "./Transaction"
 
 // ...
 
@@ -452,11 +633,39 @@ function App() {
       <CurrentUser/>
       <ScriptOne/>
       <ScriptTwo/>
-+      <Transaction/>
-      <header className="App-header">
-        {/*...*/}
-      </header>
++     <TransactionOne/>
     </div>
   )
 }
 ```
+
+# Moving to Production
+
+Our application is complete!
+
+To deploy your app, you'll need to modify your configuration. Once the Flow Mainnet is live you'll be able to obtain an production Access Node API url and API Key. More on this soon!
+
+```jsx
+if(process.env.NODE_ENV === 'development') {
+    fcl.config()
+       .put("challenge.handshake", "http://localhost:8701/flow/authenticate")
+}
+
+if (process.env.NODE_ENV === "production") {
+    fcl.config()
+       .put("accessNode.api", process.env.ACCESS_NODE_API)
+       .put("accessNode.key", process.env.ACCESS_NODE_KEY)
+} 
+```
+
+# Final Thoughts
+
+Congratulations you've completed a tour of the basic functionality of `@onflow/fcl` by completing the following tasks
+
+- Use `@onflow/fcl`  to  perform authentication and authorization of Flow accounts
+- Use `@onflow/fcl`  to send scripts and transactions to the Flow blockchain emulator
+- Install and use  the Flow blockchain emulator (`flow`)
+- Install and use the FCL Dev Wallet (`fcl-wallet`) to simulate connection between your app, `@onflow/fcl` and a user's 3rd party key management software
+- Configure `@onflow/fcl` for a production deployment
+
+Hopefully this give you a head start developing your idea on Flow! Thanks for reading.
