@@ -2,6 +2,10 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.0.31 -- 2020-05-07
+
+- 2020-05-07 -- VSN `@onflow/sdk` 0.0.17 -> 0.0.19
+
 ### 0.0.30 -- 2020-05-07
 
 - 2020-05-07 -- Created and exposed a top level `tx` function
