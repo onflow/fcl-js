@@ -20,12 +20,11 @@ npm install --save @onflow/fcl
 
 Having trouble with something? Reach out to us on [Discord](https://discord.gg/k6cZ7QC), we are more than happy to help.
 
-- [ ] [Quick Start](#quick-start) -- From zero to users interacting with the Flow blockchain using a dapp you made.
+- [Quick Start](#quick-start) -- From zero to users interacting with the Flow blockchain using a dapp you made.
 - [Configuration](./src/config) -- Configure FCL.
-- [ ] [Authentication](./src/authentication) -- Authenticate Users using FCL wallet providers.
-- [ ] [Current User](./src/current-user) -- Know things about the Current User.
-- [ ] [Scripts](./src/scripts) -- Query data from the Flow blockchain.
-- [ ] [Transactions](./src/transactions) -- Send transactions to the Flow blockchain.
+- [Authentication](./src/authentication) -- Authenticate Users using FCL wallet providers.
+- [Scripts](./src/scripts) -- Query data from the Flow blockchain.
+- [Transactions](./src/transactions) -- Send transactions to the Flow blockchain.
 - [Emulator Docs](https://github.com/onflow/flow/blob/master/docs/emulator.md) -- Documentation for the Emulator.
 - [Dev Wallet Docs](../dev-wallet) -- Documenation for the Dev Wallet.
 - [FCL Wallet Provider Spec](./src/wallet-provider-spec) -- **WIP** Documentation for Wallet Providers.
