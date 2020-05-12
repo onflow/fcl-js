@@ -497,7 +497,7 @@ export default function ScriptTwo() {
   return (
     <Root>
       <Header>Script Two</Header>
-      <Button>Run Script</Button>
+      <Button onClick={runScript}>Run Script</Button>
       {data && <Results>{JSON.stringify(data, null, 2)}</Results>}
       <span>{data && data !== null && data[0].constructor.name} 1 </span> <!-- "Point 1" -->
       <span>{data && data !== null && data[1].constructor.name} 2 </span> <!-- "Point 2" -->
@@ -581,7 +581,7 @@ export default function TransactionOne() {
   const [status, setStatus] = useState("Not Started")
   const runTransaction = async e => {
     e.preventDefault()
-    setState("Resolving...")
+    setStatus("Resolving...")
     
     const response = await fcl.send([
       fcl.transaction`
@@ -595,11 +595,11 @@ export default function TransactionOne() {
       fcl.payer(fcl.currentUser().authorization),
     ])
 
-    setState("Transaction Sent, Waiting for Confirmation")
+    setStatus("Transaction Sent, Waiting for Confirmation")
 
     const unsub = fcl.tx(response).subscribe(transaction => {
       if (fcl.tx.isSealed(transaction)) {
-        setState("Transaction Confirmed: Is Sealed")
+        setStatus("Transaction Confirmed: Is Sealed")
         unsub()
       }
     })
