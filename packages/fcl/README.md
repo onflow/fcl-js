@@ -358,7 +358,7 @@ export default function ScriptOne() {
   return (
     <Root>
       <Header>Script One</Header>
-      <Button>Run Script</Button>
+      <Button onClick={runScript}>Run Script</Button>
       {data && <Results>{JSON.stringify(data, null, 2)}</Results>}
     </Root>
   )
