@@ -218,7 +218,7 @@ Attach the `fcl.authenticate` function to the `onClick` handler of a button
 To allow users to sign out of your application, simply call `fcl.unauthenticate()`
 
 ```jsx
-<Button onClick={() => fcl.unauthenticate()}>Sign Out</button>
+<Button onClick={() => fcl.unauthenticate()}>Sign Out</Button>
 ```
 
 ### Changes to the Authenticated State
@@ -241,11 +241,11 @@ import styled from "@emotion/styled"
 import * as fcl from "@onflow/fcl"
 
 const Root = styled.div``
-
 const Img = styled.img`
   width: 35px;
   height: 35px;
 `
+const Name = styled.div``
 const Button = styled.button``
 
 const SignInButton = () => {
@@ -439,7 +439,7 @@ We would like to transform `SomeStruct(x: 1, y: 2)` into a JavaScript data-struc
 class Point {
   constructor ({ x, y }) {
     this.x = x
-    thix.y = y
+    this.y = y
   }
 }
 ```
@@ -447,7 +447,7 @@ class Point {
 Registering a decoding function using the code below will ensure that the response from `fcl.send` will contain  `Point` objects wherever a `SomeStruct` Cadence type is returned.
 
 ```diff
-+ import MyObjectDecoder from "./MyObjectDecoder"
++ import Point from "./Point"
 // ...
 
 fcl.config()
@@ -570,7 +570,7 @@ Here is a completed component that contains the transaction above. Create a file
 
 ```jsx
 import React, {useState, useEffect} from "react"
-import styled from "styled-components"
+import styled from "@emotion/styled"
 import * as fcl from "@onflow/fcl"
 
 const Root = styled.div``
