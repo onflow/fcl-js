@@ -11,7 +11,7 @@ export const authenticate = () => currentUser().authenticate()
 export const unauthenticate = () => currentUser().unauthenticate()
 
 // proxy sdk
-export {isOk, isBad, why} from "@onflow/sdk"
+export {isOk, isBad, why, cadence, cdc} from "@onflow/sdk"
 export {
   transaction,
   script,

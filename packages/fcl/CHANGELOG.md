@@ -1,6 +1,7 @@
 ### Unreleased
 
 - YYYY-MM-DD **BREAKING?** -- description
+- 2020-05-15 -- VSN `@onflow/sdk` 0.0.20 -> 0.0.21
 
 ### 0.0.33 -- 2020-05-07
 
