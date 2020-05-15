@@ -59,6 +59,6 @@ describe("consume", () => {
   `
 
   interfaceContract("@qvvg/templar", templar)`
-    t7l
+    templar
   `
 })

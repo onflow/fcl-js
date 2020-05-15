@@ -1,6 +1,7 @@
 ### Unreleased
 
 - YYYY-MM-DD **BREAKING?** -- description
+- 2020-05-15 -- VSN `@qvvg/templar` 0.0.0 -> 0.0.1
 
 ### 0.0.20 -- 2020-05-07
 
