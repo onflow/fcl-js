@@ -7,7 +7,7 @@ const paddedHexBuffer = (hex, pad) =>
   Buffer.from(hex.padStart(pad * 2, 0), "hex")
 const scriptBuffer = script => Buffer.from(script, "utf8")
 const hexBuffer = hex => Buffer.from(hex, "hex")
-const addressBuffer = addr => paddedHexBuffer(addr, 20)
+const addressBuffer = addr => paddedHexBuffer(addr, 8)
 
 export async function sendTransaction(ix, opts = {}) {
   const tx = new Transaction()

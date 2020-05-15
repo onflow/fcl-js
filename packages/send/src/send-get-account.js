@@ -6,7 +6,7 @@ const u8ToHex = u8 => Buffer.from(u8).toString("hex")
 const paddedHexBuffer = (hex, pad) =>
   Buffer.from(hex.padStart(pad * 2, 0), "hex")
 
-const addressBuffer = addr => paddedHexBuffer(addr, 20)
+const addressBuffer = addr => paddedHexBuffer(addr, 8)
 
 export async function sendGetAccount(ix, opts = {}) {
   const req = new GetAccountRequest()

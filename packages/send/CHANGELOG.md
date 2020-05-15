@@ -1,6 +1,7 @@
 ### Unreleased
 
 - YYYY-MM-DD **BREAKING?** -- description
+- 2020-05-15 -- Updates address padding
 - 2020-05-07 -- Allow authorizer proposer and payer to be the same account
 
 ### 0.0.10 -- 2020-05-06
