@@ -6,7 +6,7 @@ export const encodeTransactionEnvelope = tx => rlpEncode(prepareEnvelope(tx))
 const paddedHexBuffer = (value, pad) =>
   Buffer.from(value.padStart(pad * 2, 0), "hex")
 
-const addressBuffer = addr => paddedHexBuffer(addr, 20)
+const addressBuffer = addr => paddedHexBuffer(addr, 8)
 
 const blockBuffer = block => paddedHexBuffer(block, 32)
 
