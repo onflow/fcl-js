@@ -85,7 +85,7 @@ if (goog.DEBUG && !COMPILED) {
  * @private {!Array<number>}
  * @const
  */
-proto.entities.Transaction.repeatedFields_ = [6,7,8];
+proto.entities.Transaction.repeatedFields_ = [2,7,8,9];
 
 
 
@@ -119,8 +119,9 @@ proto.entities.Transaction.prototype.toObject = function(opt_includeInstance) {
 proto.entities.Transaction.toObject = function(includeInstance, msg) {
   var f, obj = {
     script: msg.getScript_asB64(),
+    argumentsList: msg.getArgumentsList_asB64(),
     referenceBlockId: msg.getReferenceBlockId_asB64(),
-    gasLimit: jspb.Message.getFieldWithDefault(msg, 3, 0),
+    gasLimit: jspb.Message.getFieldWithDefault(msg, 4, 0),
     proposalKey: (f = msg.getProposalKey()) && proto.entities.Transaction.ProposalKey.toObject(includeInstance, f),
     payer: msg.getPayer_asB64(),
     authorizersList: msg.getAuthorizersList_asB64(),
@@ -170,31 +171,35 @@ proto.entities.Transaction.deserializeBinaryFromReader = function(msg, reader) {
       break;
     case 2:
       var value = /** @type {!Uint8Array} */ (reader.readBytes());
-      msg.setReferenceBlockId(value);
+      msg.addArguments(value);
       break;
     case 3:
+      var value = /** @type {!Uint8Array} */ (reader.readBytes());
+      msg.setReferenceBlockId(value);
+      break;
+    case 4:
       var value = /** @type {number} */ (reader.readUint64());
       msg.setGasLimit(value);
       break;
-    case 4:
+    case 5:
       var value = new proto.entities.Transaction.ProposalKey;
       reader.readMessage(value,proto.entities.Transaction.ProposalKey.deserializeBinaryFromReader);
       msg.setProposalKey(value);
       break;
-    case 5:
+    case 6:
       var value = /** @type {!Uint8Array} */ (reader.readBytes());
       msg.setPayer(value);
       break;
-    case 6:
+    case 7:
       var value = /** @type {!Uint8Array} */ (reader.readBytes());
       msg.addAuthorizers(value);
       break;
-    case 7:
+    case 8:
       var value = new proto.entities.Transaction.Signature;
       reader.readMessage(value,proto.entities.Transaction.Signature.deserializeBinaryFromReader);
       msg.addPayloadSignatures(value);
       break;
-    case 8:
+    case 9:
       var value = new proto.entities.Transaction.Signature;
       reader.readMessage(value,proto.entities.Transaction.Signature.deserializeBinaryFromReader);
       msg.addEnvelopeSignatures(value);
@@ -235,24 +240,31 @@ proto.entities.Transaction.serializeBinaryToWriter = function(message, writer) {
       f
     );
   }
+  f = message.getArgumentsList_asU8();
+  if (f.length > 0) {
+    writer.writeRepeatedBytes(
+      2,
+      f
+    );
+  }
   f = message.getReferenceBlockId_asU8();
   if (f.length > 0) {
     writer.writeBytes(
-      2,
+      3,
       f
     );
   }
   f = message.getGasLimit();
   if (f !== 0) {
     writer.writeUint64(
-      3,
+      4,
       f
     );
   }
   f = message.getProposalKey();
   if (f != null) {
     writer.writeMessage(
-      4,
+      5,
       f,
       proto.entities.Transaction.ProposalKey.serializeBinaryToWriter
     );
@@ -260,21 +272,21 @@ proto.entities.Transaction.serializeBinaryToWriter = function(message, writer) {
   f = message.getPayer_asU8();
   if (f.length > 0) {
     writer.writeBytes(
-      5,
+      6,
       f
     );
   }
   f = message.getAuthorizersList_asU8();
   if (f.length > 0) {
     writer.writeRepeatedBytes(
-      6,
+      7,
       f
     );
   }
   f = message.getPayloadSignaturesList();
   if (f.length > 0) {
     writer.writeRepeatedMessage(
-      7,
+      8,
       f,
       proto.entities.Transaction.Signature.serializeBinaryToWriter
     );
@@ -282,7 +294,7 @@ proto.entities.Transaction.serializeBinaryToWriter = function(message, writer) {
   f = message.getEnvelopeSignaturesList();
   if (f.length > 0) {
     writer.writeRepeatedMessage(
-      8,
+      9,
       f,
       proto.entities.Transaction.Signature.serializeBinaryToWriter
     );
@@ -785,16 +797,77 @@ proto.entities.Transaction.prototype.setScript = function(value) {
 
 
 /**
- * optional bytes reference_block_id = 2;
- * @return {!(string|Uint8Array)}
+ * repeated bytes arguments = 2;
+ * @return {!(Array<!Uint8Array>|Array<string>)}
  */
-proto.entities.Transaction.prototype.getReferenceBlockId = function() {
-  return /** @type {!(string|Uint8Array)} */ (jspb.Message.getFieldWithDefault(this, 2, ""));
+proto.entities.Transaction.prototype.getArgumentsList = function() {
+  return /** @type {!(Array<!Uint8Array>|Array<string>)} */ (jspb.Message.getRepeatedField(this, 2));
 };
 
 
 /**
- * optional bytes reference_block_id = 2;
+ * repeated bytes arguments = 2;
+ * This is a type-conversion wrapper around `getArgumentsList()`
+ * @return {!Array<string>}
+ */
+proto.entities.Transaction.prototype.getArgumentsList_asB64 = function() {
+  return /** @type {!Array<string>} */ (jspb.Message.bytesListAsB64(
+      this.getArgumentsList()));
+};
+
+
+/**
+ * repeated bytes arguments = 2;
+ * Note that Uint8Array is not supported on all browsers.
+ * @see http://caniuse.com/Uint8Array
+ * This is a type-conversion wrapper around `getArgumentsList()`
+ * @return {!Array<!Uint8Array>}
+ */
+proto.entities.Transaction.prototype.getArgumentsList_asU8 = function() {
+  return /** @type {!Array<!Uint8Array>} */ (jspb.Message.bytesListAsU8(
+      this.getArgumentsList()));
+};
+
+
+/**
+ * @param {!(Array<!Uint8Array>|Array<string>)} value
+ * @return {!proto.entities.Transaction} returns this
+ */
+proto.entities.Transaction.prototype.setArgumentsList = function(value) {
+  return jspb.Message.setField(this, 2, value || []);
+};
+
+
+/**
+ * @param {!(string|Uint8Array)} value
+ * @param {number=} opt_index
+ * @return {!proto.entities.Transaction} returns this
+ */
+proto.entities.Transaction.prototype.addArguments = function(value, opt_index) {
+  return jspb.Message.addToRepeatedField(this, 2, value, opt_index);
+};
+
+
+/**
+ * Clears the list making it empty but non-null.
+ * @return {!proto.entities.Transaction} returns this
+ */
+proto.entities.Transaction.prototype.clearArgumentsList = function() {
+  return this.setArgumentsList([]);
+};
+
+
+/**
+ * optional bytes reference_block_id = 3;
+ * @return {!(string|Uint8Array)}
+ */
+proto.entities.Transaction.prototype.getReferenceBlockId = function() {
+  return /** @type {!(string|Uint8Array)} */ (jspb.Message.getFieldWithDefault(this, 3, ""));
+};
+
+
+/**
+ * optional bytes reference_block_id = 3;
  * This is a type-conversion wrapper around `getReferenceBlockId()`
  * @return {string}
  */
@@ -805,7 +878,7 @@ proto.entities.Transaction.prototype.getReferenceBlockId_asB64 = function() {
 
 
 /**
- * optional bytes reference_block_id = 2;
+ * optional bytes reference_block_id = 3;
  * Note that Uint8Array is not supported on all browsers.
  * @see http://caniuse.com/Uint8Array
  * This is a type-conversion wrapper around `getReferenceBlockId()`
@@ -822,16 +895,16 @@ proto.entities.Transaction.prototype.getReferenceBlockId_asU8 = function() {
  * @return {!proto.entities.Transaction} returns this
  */
 proto.entities.Transaction.prototype.setReferenceBlockId = function(value) {
-  return jspb.Message.setProto3BytesField(this, 2, value);
+  return jspb.Message.setProto3BytesField(this, 3, value);
 };
 
 
 /**
- * optional uint64 gas_limit = 3;
+ * optional uint64 gas_limit = 4;
  * @return {number}
  */
 proto.entities.Transaction.prototype.getGasLimit = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 3, 0));
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 4, 0));
 };
 
 
@@ -840,17 +913,17 @@ proto.entities.Transaction.prototype.getGasLimit = function() {
  * @return {!proto.entities.Transaction} returns this
  */
 proto.entities.Transaction.prototype.setGasLimit = function(value) {
-  return jspb.Message.setProto3IntField(this, 3, value);
+  return jspb.Message.setProto3IntField(this, 4, value);
 };
 
 
 /**
- * optional ProposalKey proposal_key = 4;
+ * optional ProposalKey proposal_key = 5;
  * @return {?proto.entities.Transaction.ProposalKey}
  */
 proto.entities.Transaction.prototype.getProposalKey = function() {
   return /** @type{?proto.entities.Transaction.ProposalKey} */ (
-    jspb.Message.getWrapperField(this, proto.entities.Transaction.ProposalKey, 4));
+    jspb.Message.getWrapperField(this, proto.entities.Transaction.ProposalKey, 5));
 };
 
 
@@ -859,7 +932,7 @@ proto.entities.Transaction.prototype.getProposalKey = function() {
  * @return {!proto.entities.Transaction} returns this
 */
 proto.entities.Transaction.prototype.setProposalKey = function(value) {
-  return jspb.Message.setWrapperField(this, 4, value);
+  return jspb.Message.setWrapperField(this, 5, value);
 };
 
 
@@ -877,21 +950,21 @@ proto.entities.Transaction.prototype.clearProposalKey = function() {
  * @return {boolean}
  */
 proto.entities.Transaction.prototype.hasProposalKey = function() {
-  return jspb.Message.getField(this, 4) != null;
+  return jspb.Message.getField(this, 5) != null;
 };
 
 
 /**
- * optional bytes payer = 5;
+ * optional bytes payer = 6;
  * @return {!(string|Uint8Array)}
  */
 proto.entities.Transaction.prototype.getPayer = function() {
-  return /** @type {!(string|Uint8Array)} */ (jspb.Message.getFieldWithDefault(this, 5, ""));
+  return /** @type {!(string|Uint8Array)} */ (jspb.Message.getFieldWithDefault(this, 6, ""));
 };
 
 
 /**
- * optional bytes payer = 5;
+ * optional bytes payer = 6;
  * This is a type-conversion wrapper around `getPayer()`
  * @return {string}
  */
@@ -902,7 +975,7 @@ proto.entities.Transaction.prototype.getPayer_asB64 = function() {
 
 
 /**
- * optional bytes payer = 5;
+ * optional bytes payer = 6;
  * Note that Uint8Array is not supported on all browsers.
  * @see http://caniuse.com/Uint8Array
  * This is a type-conversion wrapper around `getPayer()`
@@ -919,21 +992,21 @@ proto.entities.Transaction.prototype.getPayer_asU8 = function() {
  * @return {!proto.entities.Transaction} returns this
  */
 proto.entities.Transaction.prototype.setPayer = function(value) {
-  return jspb.Message.setProto3BytesField(this, 5, value);
+  return jspb.Message.setProto3BytesField(this, 6, value);
 };
 
 
 /**
- * repeated bytes authorizers = 6;
+ * repeated bytes authorizers = 7;
  * @return {!(Array<!Uint8Array>|Array<string>)}
  */
 proto.entities.Transaction.prototype.getAuthorizersList = function() {
-  return /** @type {!(Array<!Uint8Array>|Array<string>)} */ (jspb.Message.getRepeatedField(this, 6));
+  return /** @type {!(Array<!Uint8Array>|Array<string>)} */ (jspb.Message.getRepeatedField(this, 7));
 };
 
 
 /**
- * repeated bytes authorizers = 6;
+ * repeated bytes authorizers = 7;
  * This is a type-conversion wrapper around `getAuthorizersList()`
  * @return {!Array<string>}
  */
@@ -944,7 +1017,7 @@ proto.entities.Transaction.prototype.getAuthorizersList_asB64 = function() {
 
 
 /**
- * repeated bytes authorizers = 6;
+ * repeated bytes authorizers = 7;
  * Note that Uint8Array is not supported on all browsers.
  * @see http://caniuse.com/Uint8Array
  * This is a type-conversion wrapper around `getAuthorizersList()`
@@ -961,7 +1034,7 @@ proto.entities.Transaction.prototype.getAuthorizersList_asU8 = function() {
  * @return {!proto.entities.Transaction} returns this
  */
 proto.entities.Transaction.prototype.setAuthorizersList = function(value) {
-  return jspb.Message.setField(this, 6, value || []);
+  return jspb.Message.setField(this, 7, value || []);
 };
 
 
@@ -971,7 +1044,7 @@ proto.entities.Transaction.prototype.setAuthorizersList = function(value) {
  * @return {!proto.entities.Transaction} returns this
  */
 proto.entities.Transaction.prototype.addAuthorizers = function(value, opt_index) {
-  return jspb.Message.addToRepeatedField(this, 6, value, opt_index);
+  return jspb.Message.addToRepeatedField(this, 7, value, opt_index);
 };
 
 
@@ -985,12 +1058,12 @@ proto.entities.Transaction.prototype.clearAuthorizersList = function() {
 
 
 /**
- * repeated Signature payload_signatures = 7;
+ * repeated Signature payload_signatures = 8;
  * @return {!Array<!proto.entities.Transaction.Signature>}
  */
 proto.entities.Transaction.prototype.getPayloadSignaturesList = function() {
   return /** @type{!Array<!proto.entities.Transaction.Signature>} */ (
-    jspb.Message.getRepeatedWrapperField(this, proto.entities.Transaction.Signature, 7));
+    jspb.Message.getRepeatedWrapperField(this, proto.entities.Transaction.Signature, 8));
 };
 
 
@@ -999,7 +1072,7 @@ proto.entities.Transaction.prototype.getPayloadSignaturesList = function() {
  * @return {!proto.entities.Transaction} returns this
 */
 proto.entities.Transaction.prototype.setPayloadSignaturesList = function(value) {
-  return jspb.Message.setRepeatedWrapperField(this, 7, value);
+  return jspb.Message.setRepeatedWrapperField(this, 8, value);
 };
 
 
@@ -1009,7 +1082,7 @@ proto.entities.Transaction.prototype.setPayloadSignaturesList = function(value) 
  * @return {!proto.entities.Transaction.Signature}
  */
 proto.entities.Transaction.prototype.addPayloadSignatures = function(opt_value, opt_index) {
-  return jspb.Message.addToRepeatedWrapperField(this, 7, opt_value, proto.entities.Transaction.Signature, opt_index);
+  return jspb.Message.addToRepeatedWrapperField(this, 8, opt_value, proto.entities.Transaction.Signature, opt_index);
 };
 
 
@@ -1023,12 +1096,12 @@ proto.entities.Transaction.prototype.clearPayloadSignaturesList = function() {
 
 
 /**
- * repeated Signature envelope_signatures = 8;
+ * repeated Signature envelope_signatures = 9;
  * @return {!Array<!proto.entities.Transaction.Signature>}
  */
 proto.entities.Transaction.prototype.getEnvelopeSignaturesList = function() {
   return /** @type{!Array<!proto.entities.Transaction.Signature>} */ (
-    jspb.Message.getRepeatedWrapperField(this, proto.entities.Transaction.Signature, 8));
+    jspb.Message.getRepeatedWrapperField(this, proto.entities.Transaction.Signature, 9));
 };
 
 
@@ -1037,7 +1110,7 @@ proto.entities.Transaction.prototype.getEnvelopeSignaturesList = function() {
  * @return {!proto.entities.Transaction} returns this
 */
 proto.entities.Transaction.prototype.setEnvelopeSignaturesList = function(value) {
-  return jspb.Message.setRepeatedWrapperField(this, 8, value);
+  return jspb.Message.setRepeatedWrapperField(this, 9, value);
 };
 
 
@@ -1047,7 +1120,7 @@ proto.entities.Transaction.prototype.setEnvelopeSignaturesList = function(value)
  * @return {!proto.entities.Transaction.Signature}
  */
 proto.entities.Transaction.prototype.addEnvelopeSignatures = function(opt_value, opt_index) {
-  return jspb.Message.addToRepeatedWrapperField(this, 8, opt_value, proto.entities.Transaction.Signature, opt_index);
+  return jspb.Message.addToRepeatedWrapperField(this, 9, opt_value, proto.entities.Transaction.Signature, opt_index);
 };
 
 

@@ -34,7 +34,7 @@ ExecutionAPI.ExecuteScriptAtBlockID = {
   requestStream: false,
   responseStream: false,
   requestType: flow_execution_execution_pb.ExecuteScriptAtBlockIDRequest,
-  responseType: flow_execution_execution_pb.ExecuteScriptResponse
+  responseType: flow_execution_execution_pb.ExecuteScriptAtBlockIDResponse
 };
 
 ExecutionAPI.GetEventsForBlockIDs = {
@@ -43,16 +43,16 @@ ExecutionAPI.GetEventsForBlockIDs = {
   requestStream: false,
   responseStream: false,
   requestType: flow_execution_execution_pb.GetEventsForBlockIDsRequest,
-  responseType: flow_execution_execution_pb.EventsResponse
+  responseType: flow_execution_execution_pb.GetEventsForBlockIDsResponse
 };
 
-ExecutionAPI.GetEventsForBlockIDTransactionID = {
-  methodName: "GetEventsForBlockIDTransactionID",
+ExecutionAPI.GetTransactionResult = {
+  methodName: "GetTransactionResult",
   service: ExecutionAPI,
   requestStream: false,
   responseStream: false,
-  requestType: flow_execution_execution_pb.GetEventsForBlockIDTransactionIDRequest,
-  responseType: flow_execution_execution_pb.EventsResponse
+  requestType: flow_execution_execution_pb.GetTransactionResultRequest,
+  responseType: flow_execution_execution_pb.GetTransactionResultResponse
 };
 
 exports.ExecutionAPI = ExecutionAPI;
@@ -186,11 +186,11 @@ ExecutionAPIClient.prototype.getEventsForBlockIDs = function getEventsForBlockID
   };
 };
 
-ExecutionAPIClient.prototype.getEventsForBlockIDTransactionID = function getEventsForBlockIDTransactionID(requestMessage, metadata, callback) {
+ExecutionAPIClient.prototype.getTransactionResult = function getTransactionResult(requestMessage, metadata, callback) {
   if (arguments.length === 2) {
     callback = arguments[1];
   }
-  var client = grpc.unary(ExecutionAPI.GetEventsForBlockIDTransactionID, {
+  var client = grpc.unary(ExecutionAPI.GetTransactionResult, {
     request: requestMessage,
     host: this.serviceHost,
     metadata: metadata,
