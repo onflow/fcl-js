@@ -28,7 +28,7 @@ type ExecutionAPIExecuteScriptAtBlockID = {
   readonly requestStream: false;
   readonly responseStream: false;
   readonly requestType: typeof flow_execution_execution_pb.ExecuteScriptAtBlockIDRequest;
-  readonly responseType: typeof flow_execution_execution_pb.ExecuteScriptResponse;
+  readonly responseType: typeof flow_execution_execution_pb.ExecuteScriptAtBlockIDResponse;
 };
 
 type ExecutionAPIGetEventsForBlockIDs = {
@@ -37,16 +37,16 @@ type ExecutionAPIGetEventsForBlockIDs = {
   readonly requestStream: false;
   readonly responseStream: false;
   readonly requestType: typeof flow_execution_execution_pb.GetEventsForBlockIDsRequest;
-  readonly responseType: typeof flow_execution_execution_pb.EventsResponse;
+  readonly responseType: typeof flow_execution_execution_pb.GetEventsForBlockIDsResponse;
 };
 
-type ExecutionAPIGetEventsForBlockIDTransactionID = {
+type ExecutionAPIGetTransactionResult = {
   readonly methodName: string;
   readonly service: typeof ExecutionAPI;
   readonly requestStream: false;
   readonly responseStream: false;
-  readonly requestType: typeof flow_execution_execution_pb.GetEventsForBlockIDTransactionIDRequest;
-  readonly responseType: typeof flow_execution_execution_pb.EventsResponse;
+  readonly requestType: typeof flow_execution_execution_pb.GetTransactionResultRequest;
+  readonly responseType: typeof flow_execution_execution_pb.GetTransactionResultResponse;
 };
 
 export class ExecutionAPI {
@@ -55,7 +55,7 @@ export class ExecutionAPI {
   static readonly GetAccountAtBlockID: ExecutionAPIGetAccountAtBlockID;
   static readonly ExecuteScriptAtBlockID: ExecutionAPIExecuteScriptAtBlockID;
   static readonly GetEventsForBlockIDs: ExecutionAPIGetEventsForBlockIDs;
-  static readonly GetEventsForBlockIDTransactionID: ExecutionAPIGetEventsForBlockIDTransactionID;
+  static readonly GetTransactionResult: ExecutionAPIGetTransactionResult;
 }
 
 export type ServiceError = { message: string, code: number; metadata: grpc.Metadata }
@@ -111,29 +111,29 @@ export class ExecutionAPIClient {
   executeScriptAtBlockID(
     requestMessage: flow_execution_execution_pb.ExecuteScriptAtBlockIDRequest,
     metadata: grpc.Metadata,
-    callback: (error: ServiceError|null, responseMessage: flow_execution_execution_pb.ExecuteScriptResponse|null) => void
+    callback: (error: ServiceError|null, responseMessage: flow_execution_execution_pb.ExecuteScriptAtBlockIDResponse|null) => void
   ): UnaryResponse;
   executeScriptAtBlockID(
     requestMessage: flow_execution_execution_pb.ExecuteScriptAtBlockIDRequest,
-    callback: (error: ServiceError|null, responseMessage: flow_execution_execution_pb.ExecuteScriptResponse|null) => void
+    callback: (error: ServiceError|null, responseMessage: flow_execution_execution_pb.ExecuteScriptAtBlockIDResponse|null) => void
   ): UnaryResponse;
   getEventsForBlockIDs(
     requestMessage: flow_execution_execution_pb.GetEventsForBlockIDsRequest,
     metadata: grpc.Metadata,
-    callback: (error: ServiceError|null, responseMessage: flow_execution_execution_pb.EventsResponse|null) => void
+    callback: (error: ServiceError|null, responseMessage: flow_execution_execution_pb.GetEventsForBlockIDsResponse|null) => void
   ): UnaryResponse;
   getEventsForBlockIDs(
     requestMessage: flow_execution_execution_pb.GetEventsForBlockIDsRequest,
-    callback: (error: ServiceError|null, responseMessage: flow_execution_execution_pb.EventsResponse|null) => void
+    callback: (error: ServiceError|null, responseMessage: flow_execution_execution_pb.GetEventsForBlockIDsResponse|null) => void
   ): UnaryResponse;
-  getEventsForBlockIDTransactionID(
-    requestMessage: flow_execution_execution_pb.GetEventsForBlockIDTransactionIDRequest,
+  getTransactionResult(
+    requestMessage: flow_execution_execution_pb.GetTransactionResultRequest,
     metadata: grpc.Metadata,
-    callback: (error: ServiceError|null, responseMessage: flow_execution_execution_pb.EventsResponse|null) => void
+    callback: (error: ServiceError|null, responseMessage: flow_execution_execution_pb.GetTransactionResultResponse|null) => void
   ): UnaryResponse;
-  getEventsForBlockIDTransactionID(
-    requestMessage: flow_execution_execution_pb.GetEventsForBlockIDTransactionIDRequest,
-    callback: (error: ServiceError|null, responseMessage: flow_execution_execution_pb.EventsResponse|null) => void
+  getTransactionResult(
+    requestMessage: flow_execution_execution_pb.GetTransactionResultRequest,
+    callback: (error: ServiceError|null, responseMessage: flow_execution_execution_pb.GetTransactionResultResponse|null) => void
   ): UnaryResponse;
 }
 

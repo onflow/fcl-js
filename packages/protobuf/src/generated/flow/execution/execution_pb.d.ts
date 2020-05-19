@@ -115,47 +115,47 @@ export namespace ExecuteScriptAtBlockIDRequest {
   }
 }
 
-export class ExecuteScriptResponse extends jspb.Message {
+export class ExecuteScriptAtBlockIDResponse extends jspb.Message {
   getValue(): Uint8Array | string;
   getValue_asU8(): Uint8Array;
   getValue_asB64(): string;
   setValue(value: Uint8Array | string): void;
 
   serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): ExecuteScriptResponse.AsObject;
-  static toObject(includeInstance: boolean, msg: ExecuteScriptResponse): ExecuteScriptResponse.AsObject;
+  toObject(includeInstance?: boolean): ExecuteScriptAtBlockIDResponse.AsObject;
+  static toObject(includeInstance: boolean, msg: ExecuteScriptAtBlockIDResponse): ExecuteScriptAtBlockIDResponse.AsObject;
   static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
   static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-  static serializeBinaryToWriter(message: ExecuteScriptResponse, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): ExecuteScriptResponse;
-  static deserializeBinaryFromReader(message: ExecuteScriptResponse, reader: jspb.BinaryReader): ExecuteScriptResponse;
+  static serializeBinaryToWriter(message: ExecuteScriptAtBlockIDResponse, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): ExecuteScriptAtBlockIDResponse;
+  static deserializeBinaryFromReader(message: ExecuteScriptAtBlockIDResponse, reader: jspb.BinaryReader): ExecuteScriptAtBlockIDResponse;
 }
 
-export namespace ExecuteScriptResponse {
+export namespace ExecuteScriptAtBlockIDResponse {
   export type AsObject = {
     value: Uint8Array | string,
   }
 }
 
-export class EventsResponse extends jspb.Message {
+export class GetEventsForBlockIDsResponse extends jspb.Message {
   clearResultsList(): void;
-  getResultsList(): Array<EventsResponse.Result>;
-  setResultsList(value: Array<EventsResponse.Result>): void;
-  addResults(value?: EventsResponse.Result, index?: number): EventsResponse.Result;
+  getResultsList(): Array<GetEventsForBlockIDsResponse.Result>;
+  setResultsList(value: Array<GetEventsForBlockIDsResponse.Result>): void;
+  addResults(value?: GetEventsForBlockIDsResponse.Result, index?: number): GetEventsForBlockIDsResponse.Result;
 
   serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): EventsResponse.AsObject;
-  static toObject(includeInstance: boolean, msg: EventsResponse): EventsResponse.AsObject;
+  toObject(includeInstance?: boolean): GetEventsForBlockIDsResponse.AsObject;
+  static toObject(includeInstance: boolean, msg: GetEventsForBlockIDsResponse): GetEventsForBlockIDsResponse.AsObject;
   static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
   static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-  static serializeBinaryToWriter(message: EventsResponse, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): EventsResponse;
-  static deserializeBinaryFromReader(message: EventsResponse, reader: jspb.BinaryReader): EventsResponse;
+  static serializeBinaryToWriter(message: GetEventsForBlockIDsResponse, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): GetEventsForBlockIDsResponse;
+  static deserializeBinaryFromReader(message: GetEventsForBlockIDsResponse, reader: jspb.BinaryReader): GetEventsForBlockIDsResponse;
 }
 
-export namespace EventsResponse {
+export namespace GetEventsForBlockIDsResponse {
   export type AsObject = {
-    resultsList: Array<EventsResponse.Result.AsObject>,
+    resultsList: Array<GetEventsForBlockIDsResponse.Result.AsObject>,
   }
 
   export class Result extends jspb.Message {
@@ -219,7 +219,7 @@ export namespace GetEventsForBlockIDsRequest {
   }
 }
 
-export class GetEventsForBlockIDTransactionIDRequest extends jspb.Message {
+export class GetTransactionResultRequest extends jspb.Message {
   getBlockId(): Uint8Array | string;
   getBlockId_asU8(): Uint8Array;
   getBlockId_asB64(): string;
@@ -231,19 +231,49 @@ export class GetEventsForBlockIDTransactionIDRequest extends jspb.Message {
   setTransactionId(value: Uint8Array | string): void;
 
   serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): GetEventsForBlockIDTransactionIDRequest.AsObject;
-  static toObject(includeInstance: boolean, msg: GetEventsForBlockIDTransactionIDRequest): GetEventsForBlockIDTransactionIDRequest.AsObject;
+  toObject(includeInstance?: boolean): GetTransactionResultRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: GetTransactionResultRequest): GetTransactionResultRequest.AsObject;
   static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
   static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-  static serializeBinaryToWriter(message: GetEventsForBlockIDTransactionIDRequest, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): GetEventsForBlockIDTransactionIDRequest;
-  static deserializeBinaryFromReader(message: GetEventsForBlockIDTransactionIDRequest, reader: jspb.BinaryReader): GetEventsForBlockIDTransactionIDRequest;
+  static serializeBinaryToWriter(message: GetTransactionResultRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): GetTransactionResultRequest;
+  static deserializeBinaryFromReader(message: GetTransactionResultRequest, reader: jspb.BinaryReader): GetTransactionResultRequest;
 }
 
-export namespace GetEventsForBlockIDTransactionIDRequest {
+export namespace GetTransactionResultRequest {
   export type AsObject = {
     blockId: Uint8Array | string,
     transactionId: Uint8Array | string,
+  }
+}
+
+export class GetTransactionResultResponse extends jspb.Message {
+  getStatusCode(): number;
+  setStatusCode(value: number): void;
+
+  getErrorMessage(): string;
+  setErrorMessage(value: string): void;
+
+  clearEventsList(): void;
+  getEventsList(): Array<flow_entities_event_pb.Event>;
+  setEventsList(value: Array<flow_entities_event_pb.Event>): void;
+  addEvents(value?: flow_entities_event_pb.Event, index?: number): flow_entities_event_pb.Event;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): GetTransactionResultResponse.AsObject;
+  static toObject(includeInstance: boolean, msg: GetTransactionResultResponse): GetTransactionResultResponse.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: GetTransactionResultResponse, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): GetTransactionResultResponse;
+  static deserializeBinaryFromReader(message: GetTransactionResultResponse, reader: jspb.BinaryReader): GetTransactionResultResponse;
+}
+
+export namespace GetTransactionResultResponse {
+  export type AsObject = {
+    statusCode: number,
+    errorMessage: string,
+    eventsList: Array<flow_entities_event_pb.Event.AsObject>,
   }
 }
 

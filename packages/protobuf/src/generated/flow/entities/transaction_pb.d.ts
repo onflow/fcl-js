@@ -9,6 +9,13 @@ export class Transaction extends jspb.Message {
   getScript_asB64(): string;
   setScript(value: Uint8Array | string): void;
 
+  clearArgumentsList(): void;
+  getArgumentsList(): Array<Uint8Array | string>;
+  getArgumentsList_asU8(): Array<Uint8Array>;
+  getArgumentsList_asB64(): Array<string>;
+  setArgumentsList(value: Array<Uint8Array | string>): void;
+  addArguments(value: Uint8Array | string, index?: number): Uint8Array | string;
+
   getReferenceBlockId(): Uint8Array | string;
   getReferenceBlockId_asU8(): Uint8Array;
   getReferenceBlockId_asB64(): string;
@@ -57,6 +64,7 @@ export class Transaction extends jspb.Message {
 export namespace Transaction {
   export type AsObject = {
     script: Uint8Array | string,
+    argumentsList: Array<Uint8Array | string>,
     referenceBlockId: Uint8Array | string,
     gasLimit: number,
     proposalKey?: Transaction.ProposalKey.AsObject,
