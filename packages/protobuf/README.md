@@ -27,6 +27,8 @@ The version of this package reflects the version of the AccessAPI spec for which
 
 ## Generating Protobuf Files
 
+First, ensure you have `protoc` installed on your machine. `protoc` is a tool that will allow us to generate js-protobuf files. To install `protoc`, follow the guide available here https://grpc.io/docs/quickstart/go/#protocol-buffers (note: MacOS users can install `protoc` using homebrew: `brew install protoc`)
+
 To generate the js-protobuf files, run the following command in the root of this package:
 
 ```
