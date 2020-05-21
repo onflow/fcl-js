@@ -8,13 +8,8 @@ export const GetAccount = () => {
   const run = async () => {
     const response = await sdk.send(await sdk.pipe(await sdk.build([
       sdk.getAccount(addr)
-    ]), [
-      sdk.resolve([
-        sdk.resolveParams,
-        sdk.resolveAuthorizations,
-      ]),
-    ]), { node: "http://localhost:8080" })
-    setResult(response)
+    ])), { node: "http://localhost:8080" })
+    setResult(await sdk.decodeResponse(response))
   }
 
   return (
