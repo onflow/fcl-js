@@ -22,7 +22,7 @@ const preparePayload = tx => {
 
   return [
     scriptBuffer(tx.script),
-    null,
+    [],
     blockBuffer(tx.refBlock),
     tx.gasLimit,
     addressBuffer(tx.proposalKey.address),
