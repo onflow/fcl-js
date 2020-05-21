@@ -7,12 +7,7 @@ export const Ping = () => {
   const run = async () => {
     const response = await sdk.send(await sdk.pipe(await sdk.build([
       sdk.ping()
-    ]), [
-      sdk.resolve([
-        sdk.resolveParams,
-        sdk.resolveAuthorizations,
-      ]),
-    ]), { node: "http://localhost:8080" })
+    ])), { node: "http://localhost:8080" })
     setResult(response)
   }
 

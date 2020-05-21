@@ -12,7 +12,6 @@ export const Transaction = () => {
     ]), [
       sdk.resolve([
         sdk.resolveParams,
-        sdk.resolveAuthorizations,
       ]),
     ]), { node: "http://localhost:8080" })
 
@@ -21,17 +20,18 @@ export const Transaction = () => {
     const response = await sdk.send(await sdk.pipe(await sdk.build([
       sdk.params([sdk.param("foo", "rawr")]),
       sdk.payer(sdk.authorization("01", signingFunction, 0)),
-      sdk.proposer("01", 0, seqNum),
+      sdk.proposer(sdk.authorization("01", signingFunction, 0, seqNum)),
       sdk.transaction`transaction { prepare(acct: AuthAccount) {} execute { log("Hello") } }`,
       sdk.authorizations([sdk.authorization("01", signingFunction, 0)]),
     ]), [
       sdk.resolve([
         sdk.resolveParams,
-        sdk.resolveAuthorizations,
+        sdk.resolveAccounts,
+        sdk.resolveSignatures,
       ]),
     ]), { node: "http://localhost:8080" })
 
-    setResult(response)
+    setResult(await sdk.decodeResponse(response))
   }
 
   return (

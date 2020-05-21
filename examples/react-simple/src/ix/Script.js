@@ -16,7 +16,6 @@ export const Script = () => {
     ]), [
       sdk.resolve([
         sdk.resolveParams,
-        sdk.resolveAuthorizations,
       ]),
     ]), { node: "http://localhost:8080" })
     setResult(await sdk.decodeResponse(response))
