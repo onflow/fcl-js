@@ -1,6 +1,9 @@
 ### Unreleased
 
 - YYYY-MM-DD **BREAKING?** -- description
+
+### 0.0.3 -- 2020-05-20
+
 - 2020-05-20 -- Update address padding
 
 ### 0.0.2 -- 2020-04-20

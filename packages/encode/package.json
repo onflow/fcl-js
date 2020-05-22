@@ -1,6 +1,6 @@
 {
   "name": "@onflow/encode",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Encoding utilities for Flow entities.",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
