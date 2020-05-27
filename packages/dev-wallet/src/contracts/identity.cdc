@@ -106,7 +106,6 @@ pub contract IdentityContract {
         return AuthenticationHook(id: id, addr: addr, method: method, endpoint: endpoint, data: data);
     }
 
-
     pub fun mintIdentity(name: String?, avatar: String?, cover: String?, color: String?, bio: String?, authorizations: [AnyStruct{AuthenticationHookInterface}]?): @Identity {
         return <- create Identity(name: name, avatar: avatar, cover: cover, color: color, bio: bio, authorizations: authorizations)
     }
@@ -118,18 +117,10 @@ pub contract IdentityContract {
         log("Identity created and saved")
     }
 
-    pub fun readPublicIdentity(addr: Address): AnyStruct {
+    pub fun readPublicIdentity(addr: Address): &{PublicIdentity} {
         let IdentityInterfaceCapability = getAccount(addr).getCapability(/public/Identity)!
-        let PublicIdentityeRef = IdentityInterfaceCapability.borrow<&Identity{PublicIdentity}>()!
-        let publicIdentity = {
-            "name": PublicIdentityeRef.name as AnyStruct,
-            "avatar": PublicIdentityeRef.avatar as AnyStruct,
-            "color": PublicIdentityeRef.color as AnyStruct,
-            "cover": PublicIdentityeRef.cover as AnyStruct,
-            "bio": PublicIdentityeRef.bio as AnyStruct,
-            "authorizations": PublicIdentityeRef.authorizations as AnyStruct
-        }
-        return publicIdentity
+        let PublicIdentityeRef = IdentityInterfaceCapability.borrow<&Identity{PublicIdentity}>()! as &Identity{PublicIdentity}
+        return PublicIdentityeRef
     }
 
     init() {
