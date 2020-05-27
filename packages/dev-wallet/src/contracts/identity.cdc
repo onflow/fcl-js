@@ -1,21 +1,21 @@
 pub contract IdentityContract {
 
     pub struct interface AuthenticationHookInterface {
-        pub id: String
-        pub addr: String
-        pub method: String
-        pub endpoint: String
-        pub data: {String:AnyStruct}
+        pub id: String?
+        pub addr: String?
+        pub method: String?
+        pub endpoint: String?
+        pub data: {String:AnyStruct}?
     }
 
     pub struct AuthenticationHook: AuthenticationHookInterface {
-        pub var id: String
-        pub var addr: String
-        pub var method: String
-        pub var endpoint: String
-        pub var data: {String:AnyStruct}
+        pub var id: String?
+        pub var addr: String?
+        pub var method: String?
+        pub var endpoint: String?
+        pub var data: {String:AnyStruct}?
 
-        init(id: String, addr: String, method: String, endpoint: String, data: {String:AnyStruct}) {
+        init(id: String?, addr: String?, method: String?, endpoint: String?, data: {String:AnyStruct}?) {
             self.id = id
             self.addr = addr
             self.method = method
@@ -102,6 +102,11 @@ pub contract IdentityContract {
         }
     }
 
+    pub fun createAuthenticationHook(id: String?, addr: String?, method: String?, endpoint: String?, data: {String:AnyStruct}?): AnyStruct{AuthenticationHookInterface} {
+        return AuthenticationHook(id: id, addr: addr, method: method, endpoint: endpoint, data: data);
+    }
+
+
     pub fun mintIdentity(name: String?, avatar: String?, cover: String?, color: String?, bio: String?, authorizations: [AnyStruct{AuthenticationHookInterface}]?): @Identity {
         return <- create Identity(name: name, avatar: avatar, cover: cover, color: color, bio: bio, authorizations: authorizations)
     }
@@ -116,10 +121,19 @@ pub contract IdentityContract {
     pub fun readPublicIdentity(addr: Address): AnyStruct {
         let IdentityInterfaceCapability = getAccount(addr).getCapability(/public/Identity)!
         let PublicIdentityeRef = IdentityInterfaceCapability.borrow<&Identity{PublicIdentity}>()!
-        return PublicIdentityeRef
+        let publicIdentity = {
+            "name": PublicIdentityeRef.name as AnyStruct,
+            "avatar": PublicIdentityeRef.avatar as AnyStruct,
+            "color": PublicIdentityeRef.color as AnyStruct,
+            "cover": PublicIdentityeRef.cover as AnyStruct,
+            "bio": PublicIdentityeRef.bio as AnyStruct,
+            "authorizations": PublicIdentityeRef.authorizations as AnyStruct
+        }
+        return publicIdentity
     }
 
     init() {
         log("Identity Contract Init")
     }
 }
+ 
