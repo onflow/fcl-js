@@ -1,5 +1,4 @@
 {
-  "private": true,
   "name": "@onflow/ix-tag-unknown",
   "version": "0.0.0-wip.0",
   "description": "Flow Interaction ADT tag constant: unknown",
@@ -9,5 +8,6 @@
     "test": "echo 'no tests yet'"
   },
   "main": "tag.cjs.js",
+  "types": "tag.d.ts",
   "unpkg": "tag.web.js"
 }
