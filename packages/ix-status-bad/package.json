@@ -1,13 +1,14 @@
 {
-  "private": true,
   "name": "@onflow/ix-status-bad",
-  "version": "0.0.0-wip.0",
+  "version": "0.0.0",
   "description": "Flow Interaction ADT status constant: bad",
   "sideEffects": false,
   "scripts": {
     "build": "echo 'nothing to build'",
     "test": "echo 'no tests yet'"
   },
+  "types": "types.d.ts",
   "main": "status.cjs.js",
-  "unpkg": "status.web.js"
+  "module": "status.js",
+  "unpkg": "status.js"
 }
