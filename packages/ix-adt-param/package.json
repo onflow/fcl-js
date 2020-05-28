@@ -1,0 +1,13 @@
+{
+  "private": true,
+  "name": "@onflow/ix-adt-param",
+  "version": "0.0.0-wip.0",
+  "description": "Flow Interaction ADT: param",
+  "sideEffects": false,
+  "scripts": {
+    "build": "echo 'nothing to build'",
+    "test": "echo 'no tests yet'"
+  },
+  "main": "param.cjs.js",
+  "unpkg": "param.web.js"
+}
