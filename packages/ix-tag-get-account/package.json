@@ -1,13 +1,14 @@
 {
-  "private": true,
   "name": "@onflow/ix-tag-get-account",
-  "version": "0.0.0-wip.0",
+  "version": "0.0.0",
   "description": "Flow Interaction ADT tag constant: get account",
   "sideEffects": false,
   "scripts": {
     "build": "echo 'nothing to build'",
     "test": "echo 'no tests yet'"
   },
+  "types": "types.d.ts",
   "main": "tag.cjs.js",
-  "unpkg": "tag.web.js"
+  "module": "interaction.js",
+  "unpkg": "tag.js"
 }
