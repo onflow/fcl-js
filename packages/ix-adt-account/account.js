@@ -1,3 +1,4 @@
+/// <reference types="./types.d.ts" />
 const ACCOUNT = `{
   "kind":"ACCOUNT",
   "tempId":null,

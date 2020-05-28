@@ -1,13 +1,14 @@
 {
-  "private": true,
   "name": "@onflow/ix-adt-account",
-  "version": "0.0.0-wip.0",
+  "version": "0.0.0",
   "description": "Flow Interaction ADT: account",
   "sideEffects": false,
   "scripts": {
     "build": "echo 'nothing to build'",
     "test": "echo 'no tests yet'"
   },
+  "types": "types.d.ts",
   "main": "account.cjs.js",
-  "unpkg": "account.web.js"
+  "module": "account.js",
+  "unpkg": "account.js"
 }
