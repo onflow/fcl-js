@@ -1,13 +1,14 @@
 {
-  "private": true,
   "name": "@onflow/ix-is-tag",
-  "version": "0.0.0-wip.0",
+  "version": "0.0.0",
   "description": "Flow Interaction ADT: is tag",
   "sideEffects": false,
   "scripts": {
     "build": "echo 'nothing to build'",
     "test": "echo 'no tests yet'"
   },
+  "types": "types.d.ts",
   "main": "is-tag.cjs.js",
-  "unpkg": "is-tag.web.js"
+  "module": "is-tag.js",
+  "unpkg": "is-tag.js"
 }
