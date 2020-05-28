@@ -1,0 +1,13 @@
+{
+  "private": true,
+  "name": "@onflow/ix-status-ok",
+  "version": "0.0.0-wip.0",
+  "description": "Flow Interaction ADT status constant: ok",
+  "sideEffects": false,
+  "scripts": {
+    "build": "echo 'nothing to build'",
+    "test": "echo 'no tests yet'"
+  },
+  "main": "status.cjs.js",
+  "unpkg": "status.web.js"
+}
