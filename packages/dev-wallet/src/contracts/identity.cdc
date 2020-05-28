@@ -129,7 +129,6 @@ pub contract IdentityContract {
         let identity: @Identity <- self.mintIdentity(address: account.address, name: name, avatar: avatar, cover: cover, color: color, bio: bio, authorizations: authorizations)
         account.save(<-identity, to: /storage/Identity)
         account.link<&IdentityContract.Identity{IdentityContract.PublicIdentity}>(/public/Identity, target: /storage/Identity)
-        log("Identity created and saved")
     }
 
     pub fun readPublicIdentity(addr: Address): &{PublicIdentity} {
