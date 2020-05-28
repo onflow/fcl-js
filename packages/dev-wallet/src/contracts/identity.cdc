@@ -1,5 +1,8 @@
 pub contract IdentityContract {
 
+    pub event IdentityCreated(address: Address)
+    pub event IdentityUpdated(address: Address)
+
     pub struct interface AuthenticationHookInterface {
         pub id: String?
         pub addr: String?
@@ -45,6 +48,7 @@ pub contract IdentityContract {
     }   
 
     pub resource Identity: PublicIdentity, ModifyIdentity {
+        pub var address: Address
         pub var name: String?
         pub var avatar: String?
         pub var cover: String?
@@ -52,32 +56,41 @@ pub contract IdentityContract {
         pub var bio: String?
         pub var authorizations: [AnyStruct{AuthenticationHookInterface}]
 
-        init(name: String?, avatar: String?, cover: String?, color: String?, bio: String?, authorizations: [AnyStruct{AuthenticationHookInterface}]?) {
+        init(address: Address, name: String?, avatar: String?, cover: String?, color: String?, bio: String?, authorizations: [AnyStruct{AuthenticationHookInterface}]?) {
+            self.address = address
             self.name = name
             self.avatar = avatar
             self.cover = cover
             self.color = color
             self.bio = bio
             self.authorizations = authorizations != nil ? authorizations! : []
+            
+            emit IdentityCreated(address: self.address)
         }
 
         pub fun setName(name: String): Void {
             self.name = name
+            emit IdentityUpdated(address: self.address)
         }
         pub fun setAvatar(avatar: String): Void {
             self.avatar = avatar
+            emit IdentityUpdated(address: self.address)
         }
         pub fun setCover(cover: String): Void {
             self.cover = cover
+            emit IdentityUpdated(address: self.address)
         }
         pub fun setColor(color: String): Void {
             self.color = color
+            emit IdentityUpdated(address: self.address)
         }
         pub fun setBio(bio: String): Void {
             self.bio = bio
+            emit IdentityUpdated(address: self.address)
         }
         pub fun addAuthorization(authorization: AnyStruct{AuthenticationHookInterface}): Void {
             self.updateAuthorization(authorization: authorization)
+            emit IdentityUpdated(address: self.address)
         }
         pub fun removeAuthorization(id: String): Void {
             var i = 0
@@ -88,6 +101,7 @@ pub contract IdentityContract {
                 }
                 i = i + 1
             }
+            emit IdentityUpdated(address: self.address)
         }
         pub fun updateAuthorization(authorization: AnyStruct{AuthenticationHookInterface}): Void {
             var i = 0
@@ -99,6 +113,7 @@ pub contract IdentityContract {
                 i = i + 1
             }
             self.authorizations.append(authorization)
+            emit IdentityUpdated(address: self.address)
         }
     }
 
@@ -106,12 +121,12 @@ pub contract IdentityContract {
         return AuthenticationHook(id: id, addr: addr, method: method, endpoint: endpoint, data: data);
     }
 
-    pub fun mintIdentity(name: String?, avatar: String?, cover: String?, color: String?, bio: String?, authorizations: [AnyStruct{AuthenticationHookInterface}]?): @Identity {
-        return <- create Identity(name: name, avatar: avatar, cover: cover, color: color, bio: bio, authorizations: authorizations)
+    pub fun mintIdentity(address: Address, name: String?, avatar: String?, cover: String?, color: String?, bio: String?, authorizations: [AnyStruct{AuthenticationHookInterface}]?): @Identity {
+        return <- create Identity(address: address, name: name, avatar: avatar, cover: cover, color: color, bio: bio, authorizations: authorizations)
     }
 
     pub fun mintIdentityAndSaveAndLink(account: AuthAccount, name: String?, avatar: String?, cover: String?, color: String?, bio: String?, authorizations: [AnyStruct{AuthenticationHookInterface}]?) {
-        let identity: @Identity <- self.mintIdentity(name: name, avatar: avatar, cover: cover, color: color, bio: bio, authorizations: authorizations)
+        let identity: @Identity <- self.mintIdentity(address: account.address, name: name, avatar: avatar, cover: cover, color: color, bio: bio, authorizations: authorizations)
         account.save(<-identity, to: /storage/Identity)
         account.link<&IdentityContract.Identity{IdentityContract.PublicIdentity}>(/public/Identity, target: /storage/Identity)
         log("Identity created and saved")
