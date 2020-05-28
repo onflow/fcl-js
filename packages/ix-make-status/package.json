@@ -1,13 +1,14 @@
 {
-  "private": true,
   "name": "@onflow/ix-make-status",
-  "version": "0.0.0-wip.0",
+  "version": "0.0.0",
   "description": "Flow Interaction ADT: make status",
   "sideEffects": false,
   "scripts": {
     "build": "echo 'nothing to build'",
     "test": "echo 'no tests yet'"
   },
+  "types": "types.d.ts",
   "main": "make-status.cjs.js",
-  "unpkg": "make-status.web.js"
+  "module": "make-status.js",
+  "unpkg": "make-status.js"
 }
