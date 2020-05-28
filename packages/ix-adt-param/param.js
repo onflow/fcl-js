@@ -1,11 +1,4 @@
-export interface Param {
-  kind: string
-  tempId?: string
-  key?: string
-  value: any
-  xform: object
-}
-
+/// <reference types="./types.d.ts" />
 const PARAM = `{
   "kind":"PARAM",
   "tempId":null,
@@ -15,6 +8,6 @@ const PARAM = `{
   "resolve": null
 }`
 
-export function param(): Param {
+export function param() {
   return JSON.parse(PARAM)
 }
