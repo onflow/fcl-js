@@ -1,3 +1,4 @@
+/// <reference types="./types.d.ts" />
 const INTERACTION = `{
   "tag":"UNKNOWN",
   "assigns":{},
