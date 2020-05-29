@@ -74,7 +74,7 @@ export const createFlowAccount = async (contract = CONTRACT) => {
     `,
     fcl.proposer(authorization),
     fcl.payer(authorization),
-    fcl.authorization(authorization),
+    fcl.authorizations([authorization]),
     fcl.params([
       fcl.param(keys.flowKey, t.Identity, "publicKey"),
       fcl.param(
