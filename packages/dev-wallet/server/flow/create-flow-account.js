@@ -68,7 +68,7 @@ export const createFlowAccount = async (contract = CONTRACT) => {
 
           let account = AuthAccount(payer: self.accountPayer)
           account.addPublicKey(key.decodeHex())
-          account.setCode(code)
+          account.setCode(code.decodeHex())
         }
       }
     `,
