@@ -55,15 +55,26 @@ export const createFlowAccount = async (contract = CONTRACT) => {
   const response = await fcl.send([
     fcl.transaction`
       transaction {
+
+        let accountPayer: AuthAccount
+
+        prepare(signer: AuthAccount) {
+          self.accountPayer = signer
+        }
+
         execute {
           let key = "${p => p.publicKey}"
           let code = "${p => p.code}"
-          AuthAccount(publicKeys: [key.decodeHex()], code: code.decodeHex())
+
+          let account = AuthAccount(payer: self.accountPayer)
+          account.addPublicKey(key.decodeHex())
+          account.setCode(code)
         }
       }
     `,
     fcl.proposer(authorization),
     fcl.payer(authorization),
+    fcl.authorization(authorization),
     fcl.params([
       fcl.param(keys.flowKey, t.Identity, "publicKey"),
       fcl.param(
