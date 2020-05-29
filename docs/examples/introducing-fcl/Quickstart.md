@@ -107,12 +107,30 @@ Deploying Cadence smart contracts is easy using `@onflow`. You can deploy Cadenc
 
 **A Note on Contract Deployment:** You'll need to have a Flow account to deploy Cadence smart contracts. Accounts are used to authorize the deployment transaction, and store the contract code. The [Flow Emulator]( https://github.com/onflow/flow/blob/master/docs/emulator.md) comes with a root account you can use to authorize the create account transaction. To understand how Flow accounts work, [visit the Flow developer documentation](https://docs.onflow.org/docs/introduction).
 
-Deploy a contract by supplying the contract code and a public key anywhere in your code
+Deploy a contract using the `AuthAccount.setCode` method:
 
 ```js
+const code = `
+  access(all) contract HelloWorld {
+
+    access(all) let greeting: String
+
+    init() {
+        self.greeting = "Hello, World!"
+    }
+
+    access(all) fun hello(): String {
+        return self.greeting
+    }
+  }
+`
+
+// Cadence source code must be UTF-8 encoded bytes
+const codeHex = Buffer.from(contract, "utf8").toString("hex")
+
 fcl.send([
   sdk.params([
-    sdk.param(code, t.Code, "code")
+    sdk.param(codeHex, t.Identity, "code")
   ]),
 
   sdk.authorizations([
@@ -124,13 +142,31 @@ fcl.send([
 
   sdk.transaction`
     transaction {
-      let account: AuthAccount
-      prepare(acct: AuthAccount) {
-        account = acct
+
+      let accountPayer: AuthAccount
+
+      prepare(signer: AuthAccount) {
+        self.accountPayer = signer
       }
+
+      execute {
+        let code = "${p => p.code}"
+        let account = AuthAccount(payer: self.accountPayer)
+        account.setCode(code.decodeHex())
+      }
+    }
+
+    transaction {
+      let payer: AuthAccount
+
+      prepare(signer: AuthAccount) {
+        payer = signer
+      }
+
       execute {
         let code = ${p => p.code}
-        AuthAccount(account: account, code: code)
+        let account = AuthAccount(payer: self.payer)
+        account.setCode(code)
       }
     }
   `
@@ -143,10 +179,11 @@ fcl.send([
 
 ```swift
 transaction {
-    execute {
-      let publicKeys = ["F862...".decodeHex()]
+    prepare(signer: AuthAccount) {
+      let publicKey = "F862...".decodeHex()
       let code = "7075...".decodeHex()
-      AuthAccount(publicKeys: publicKeys, code: code)
+      signer.addPublicKey(publicKey)
+      signer.setCode(code)
     }
   }
 ```
