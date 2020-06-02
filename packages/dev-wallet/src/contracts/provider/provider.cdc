@@ -1,17 +1,19 @@
 pub contract ProviderContract {
+    
+    pub event ProviderCreated(pid: String)
 
     pub resource interface ProviderInterface {
-        pub pid: String
-        pub authn: String
-        pub label: String
-        pub icon: String
+        pub fun getPid(): String
+        pub fun getAuthn(): String
+        pub fun getLabel(): String
+        pub fun getIcon(): String
     }   
 
     pub resource Provider: ProviderInterface {
-        pub var pid: String
-        pub var authn: String
-        pub var label: String
-        pub var icon: String
+        access(self) var pid: String
+        access(self) var authn: String
+        access(self) var label: String
+        access(self) var icon: String
 
         init(pid: String, authn: String, label: String, icon: String) {
             self.pid = pid
@@ -32,6 +34,19 @@ pub contract ProviderContract {
         pub fun setIcon(icon: String): Void {
             self.icon = icon
         }
+
+        pub fun getPid(): String {
+            return self.pid
+        }
+        pub fun getAuthn(): String {
+            return self.authn
+        }
+        pub fun getLabel(): String {
+            return self.label
+        }
+        pub fun getIcon(): String {
+            return self.icon
+        }
     }
 
     // Map from PID to Address
@@ -42,7 +57,7 @@ pub contract ProviderContract {
         self.providers = {}
     }
 
-    pub fun mintProvider(addr: Address, pid: String, authn: String, label: String, icon: String): @Provider {
+    access(self) fun mintProvider(addr: Address, pid: String, authn: String, label: String, icon: String): @Provider {
         self.providers[pid] = addr
         return <- create Provider(pid: pid, authn: authn, label: label, icon: icon)
     }
@@ -51,6 +66,7 @@ pub contract ProviderContract {
         let provider: @Provider <- self.mintProvider(addr: addr, pid: pid, authn: authn, label: label, icon: icon)
         account.save(<-provider, to: /storage/Provider)
         account.link<&ProviderContract.Provider{ProviderContract.ProviderInterface}>(/public/Provider, target: /storage/Provider)
+        emit ProviderCreated(pid: pid)
     }
 
     pub fun readProviders(): {String: &{ProviderInterface}} {
