@@ -32,7 +32,7 @@ pub contract ProviderContract {
         pub fun setIcon(icon: String): Void {
             self.icon = icon
         }
-    } 
+    }
 
     // Map from PID to Address
     pub var providers: {String: Address}
@@ -53,7 +53,7 @@ pub contract ProviderContract {
         account.link<&ProviderContract.Provider{ProviderContract.ProviderInterface}>(/public/Provider, target: /storage/Provider)
     }
 
-    pub fun getProviders(): {String: &{ProviderInterface}} {
+    pub fun readProviders(): {String: &{ProviderInterface}} {
         let providers: {String: &{ProviderInterface}} = {}
         for providerId in self.providers.keys {
             let providerAddress: Address = self.providers[providerId]!
@@ -64,7 +64,7 @@ pub contract ProviderContract {
         return providers
     }
 
-    pub fun getProvider(pid: String): &{ProviderInterface} {
+    pub fun readProvider(pid: String): &{ProviderInterface} {
         let providerAddress: Address = self.providers[pid]!
         let ProviderInterfaceCapability = getAccount(providerAddress).getCapability(/public/Provider)!
         let ProviderInterfaceRef = ProviderInterfaceCapability.borrow<&Provider{ProviderInterface}>()! as &Provider{ProviderInterface}
