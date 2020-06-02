@@ -1,5 +1,5 @@
 pub contract ProviderContract {
-    
+
     pub event ProviderCreated(pid: String)
 
     pub resource interface ProviderInterface {
@@ -52,9 +52,10 @@ pub contract ProviderContract {
     // Map from PID to Address
     pub var providers: {String: Address}
 
-    // The init() function is required if the contract contains any fields.
     init() {
         self.providers = {}
+
+        log("Provider Contract Init")
     }
 
     access(self) fun mintProvider(addr: Address, pid: String, authn: String, label: String, icon: String): @Provider {
