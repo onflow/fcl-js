@@ -4,7 +4,7 @@ A high level abstraction (built on top of [@onflow/sdk](../sdk)) that enables de
 
 # Status
 
-- **Last Updated:** May 7th 2020
+- **Last Updated:** June 2nd 2020
 - **Stable:** Yes
 - **Risk of Breaking Change:** Low
 
@@ -32,29 +32,24 @@ Having trouble with something? Reach out to us on [Discord](https://discord.gg/k
   - [Custodial Wallet Provider](./src/wallet-provider-spec/custodial.md) -- Documentation for Custodial Wallet Providers.
   - [Non-Custodial Wallet Provider](src/wallet-provider-spec/non-custodial.md) -- **Coming Soon** Documentation for Non-Custodial Wallet Providers.
 
-# Todo List
-
-- [ ] Persistent Current User Session
-- [ ] `fcl.events(...)`-- Subscribging to onchain events
-- [ ] `fcl.user(addr)` -- Subscribing to onchain public identity info
 
 # Flow App Quickstart
 
-**Last Updated:** May 7th 2020
+**Last Updated:** June 2nd 2020
 
-Follow this guide to understand the basics of how to build an app that interacts with the Flow blockchain using `@onflow/fcl`
-
- 
-
+Follow this guide to understand the basics of how to build an app that interacts with the Flow blockchain using `@onflow/fcl`.
 This guide uses `create-react-app` and does not require any server-side code. `@onflow/fcl` is not tied to any front-end framework.
 
-In this quickstart you will
-
-- Use `@onflow/fcl`  to  perform authentication and authorization of Flow accounts
-- Use `@onflow/fcl`  to send scripts and transactions to the Flow blockchain emulator
-- Install and use  the Flow blockchain emulator (`flow`)
-- Install and use the FCL Dev Wallet (`fcl-wallet`) to simulate connection between your app, `@onflow/fcl` and a user's 3rd party key management software
-- Configure `@onflow/fcl` for a production deployment
+## Quickstart Contents
+- [Install](#install-onflow-dependencies)
+- [Use the Flow Emulator](#install-the-flow-emulator)
+- [Connect to the `dev-wallet`](#start-the-dev-wallet)
+- [Create Accounts](#create-additional-accounts)
+- [Authenticate Accounts (login/logout)](#authenticate-users)
+- [Query Flow using a Cadence Script](#run-a-cadence-script)
+- [Decode Responses from Flow](#register-and-use-a-custom-decoder)
+- [Sign and Submit Transactions to Flow](#execute-a-cadence-transaction)
+- [Move Your App to Production](#moving-to-production)
 
 Once complete, this example application will be deployable to the Flow test/main networks with only small changes to configuration values. Let's begin.
 
@@ -83,14 +78,6 @@ npm install --save-dev @onflow/dev-wallet
 **A Note on Wallets:**  Flow is designed to support most wallet types–– fully-custodial wallets, browser-based (extensions), hardware and other managed decentralized wallet options.
 
 `@onflow/fcl` uses a handshake protocol to enable wallets to manage Flow identities, and perform authentication and authorization. Any wallet that supports the protocol can be used by your users automatically without any configuration in the application.
-
-### Additional Project Dependencies
-
-In this guide, we'll  use `@emotion/styled` to write css. (You can skip this step, or install your own preferred css tools)
-
-```bash
-npm install --save @emotion/styled
-```
 
 ## Install the Flow Emulator
 
@@ -167,6 +154,14 @@ fcl.config()
 
 ```
 
+### Additional Project Dependencies
+
+In this guide, we'll  use `@emotion/styled` to write css. (You can skip this step, or install your own preferred css tools)
+
+```bash
+npm install --save @emotion/styled
+```
+
 ## Start the React App
 
 We're ready to start building our new app. Start the React app to begin building the UI and interacting with the emulator using `@onflow/fcl`
@@ -200,6 +195,34 @@ function App() {
 ```
 
 `@onflow/fcl` is now configured to connect to the Dev Wallet. For more information about how `@onflow/fcl` interacts with Wallet providers, you can view documentation [../dev-wallet](dev wallet)
+
+## Create Additional Accounts
+This application uses a single (root) account to demonstrate the functionality of `@onflow`. If your implementation requires reating additional accounts from the UI, you can use the following transaction.
+
+```
+const response = await fcl.send([
+    fcl.transaction`
+      transaction {
+        execute {
+          let key = "${p => p.publicKey}"
+          let code = "${p => p.code}"
+          AuthAccount(publicKeys: [key.decodeHex()], code: code.decodeHex())
+        }
+      }
+    `,
+    fcl.proposer(authorization),
+    fcl.payer(authorization),
+    fcl.params([
+      fcl.param(keys.flowKey, t.Identity, "publicKey"),
+      fcl.param(
+        Buffer.from(contract, "utf8").toString("hex"),
+        t.Identity,
+        "code"
+      ),
+    ]),
+  ])
+
+```
 
 ## Authenticate Users
 
