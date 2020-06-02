@@ -6,4 +6,11 @@ transaction {
         
         log("Provider created and saved")
     }
+    
+    post {
+        // Check that the capabilities were created correctly
+        getAccount(0x01).getCapability(/public/Provider)!
+                        .check<&ProviderContract.Provider{ProviderContract.ProviderInterface}>():  
+                        "Identity Reference was not created correctly"
+    }
 }
