@@ -4,19 +4,19 @@ pub contract IdentityContract {
     pub event IdentityUpdated(address: Address)
 
     pub struct interface AuthenticationHookInterface {
-        pub id: String?
-        pub addr: String?
-        pub method: String?
-        pub endpoint: String?
-        pub data: {String:AnyStruct}?
+        pub fun getId(): String?
+        pub fun getAddr(): String?
+        pub fun getMethod(): String?
+        pub fun getEndpoint(): String?
+        pub fun getData(): {String:AnyStruct}?
     }
 
     pub struct AuthenticationHook: AuthenticationHookInterface {
-        pub var id: String?
-        pub var addr: String?
-        pub var method: String?
-        pub var endpoint: String?
-        pub var data: {String:AnyStruct}?
+        access(self) var id: String?
+        access(self) var addr: String?
+        access(self) var method: String?
+        access(self) var endpoint: String?
+        access(self) var data: {String:AnyStruct}?
 
         init(id: String?, addr: String?, method: String?, endpoint: String?, data: {String:AnyStruct}?) {
             self.id = id
@@ -25,15 +25,32 @@ pub contract IdentityContract {
             self.endpoint = endpoint
             self.data = data
         }
+
+        pub fun getId(): String? {
+            return self.id
+        }
+        pub fun getAddr(): String? {
+            return self.addr
+        }
+        pub fun getMethod(): String? {
+            return self.method
+        }
+        pub fun getEndpoint(): String? {
+            return self.endpoint
+        }
+        pub fun getData(): {String:AnyStruct}? {
+            return self.data
+        }
     }
 
     pub resource interface PublicIdentity {
-        pub name: String?
-        pub avatar: String?
-        pub cover: String?
-        pub color: String?
-        pub bio: String?
-        pub authorizations: [AnyStruct{AuthenticationHookInterface}]
+        pub fun getAddress(): Address
+        pub fun getName(): String?
+        pub fun getAvatar(): String?
+        pub fun getCover(): String?
+        pub fun getColor(): String?
+        pub fun getBio(): String?
+        pub fun getAuthorizations(): [AnyStruct{AuthenticationHookInterface}]
     }
 
     pub resource interface ModifyIdentity {
@@ -48,13 +65,13 @@ pub contract IdentityContract {
     }   
 
     pub resource Identity: PublicIdentity, ModifyIdentity {
-        pub var address: Address
-        pub var name: String?
-        pub var avatar: String?
-        pub var cover: String?
-        pub var color: String?
-        pub var bio: String?
-        pub var authorizations: [AnyStruct{AuthenticationHookInterface}]
+        access(self) var address: Address
+        access(self) var name: String?
+        access(self) var avatar: String?
+        access(self) var cover: String?
+        access(self) var color: String?
+        access(self) var bio: String?
+        access(self) var authorizations: [AnyStruct{AuthenticationHookInterface}]
 
         init(address: Address, name: String?, avatar: String?, cover: String?, color: String?, bio: String?, authorizations: [AnyStruct{AuthenticationHookInterface}]?) {
             self.address = address
@@ -66,6 +83,28 @@ pub contract IdentityContract {
             self.authorizations = authorizations != nil ? authorizations! : []
             
             emit IdentityCreated(address: self.address)
+        }
+
+        pub fun getAddress(): Address {
+            return self.address
+        }
+        pub fun getName(): String? {
+            return self.name
+        }
+        pub fun getAvatar(): String? {
+            return self.avatar
+        }
+        pub fun getCover(): String? {
+            return self.cover
+        }
+        pub fun getColor(): String? {
+            return self.color
+        }
+        pub fun getBio(): String? {
+            return self.bio
+        }
+        pub fun getAuthorizations(): [AnyStruct{AuthenticationHookInterface}] {
+            return self.authorizations
         }
 
         pub fun setName(name: String): Void {
@@ -95,7 +134,7 @@ pub contract IdentityContract {
         pub fun removeAuthorization(id: String): Void {
             var i = 0
             while (i < self.authorizations.length) {
-                if (self.authorizations[i].id == id) {
+                if (self.authorizations[i].getId() == id) {
                     self.authorizations.remove(at: i)
                     break;
                 }
@@ -106,7 +145,7 @@ pub contract IdentityContract {
         pub fun updateAuthorization(authorization: AnyStruct{AuthenticationHookInterface}): Void {
             var i = 0
             while (i < self.authorizations.length) {
-                if (self.authorizations[i].id == authorization.id) {
+                if (self.authorizations[i].getId() == authorization.getId()) {
                     self.authorizations.remove(at: i)
                     break;
                 }
@@ -121,7 +160,7 @@ pub contract IdentityContract {
         return AuthenticationHook(id: id, addr: addr, method: method, endpoint: endpoint, data: data);
     }
 
-    pub fun mintIdentity(address: Address, name: String?, avatar: String?, cover: String?, color: String?, bio: String?, authorizations: [AnyStruct{AuthenticationHookInterface}]?): @Identity {
+    access(self) fun mintIdentity(address: Address, name: String?, avatar: String?, cover: String?, color: String?, bio: String?, authorizations: [AnyStruct{AuthenticationHookInterface}]?): @Identity {
         return <- create Identity(address: address, name: name, avatar: avatar, cover: cover, color: color, bio: bio, authorizations: authorizations)
     }
 
