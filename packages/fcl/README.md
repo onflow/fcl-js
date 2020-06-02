@@ -197,7 +197,7 @@ function App() {
 `@onflow/fcl` is now configured to connect to the Dev Wallet. For more information about how `@onflow/fcl` interacts with Wallet providers, you can view documentation [../dev-wallet](dev wallet)
 
 ## Create Additional Accounts
-This application uses a single (root) account to demonstrate the functionality of `@onflow`. If your implementation requires reating additional accounts from the UI, you can use the following transaction.
+This application uses a single (root) account to demonstrate the functionality of `@onflow`. If your implementation requires creating additional accounts, you can use the following transaction.
 
 ```
 const response = await fcl.send([
