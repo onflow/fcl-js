@@ -22,8 +22,6 @@ const authzIdFromPathname = pathname => {
   return parts[parts.length - 1]
 }
 
-console.log("PROVIDER", url.pathname)
-
 switch (true) {
   case test(/\/authorization\/[0-9a-zA-Z\-]+$/):
     route("/pages/authorization.js", {

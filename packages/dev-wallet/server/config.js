@@ -16,13 +16,14 @@ export const PK = String(
   process.env.PK ||
     get(
       flowConfig(),
-      "accounts/root/privateKey",
+      "accounts/service/privateKey",
       "bf9db4706c2fdb9011ee7e170ccac492f05427b96ab41d8bf2d8c58443704b76"
     )
 )
 
-export const ROOT_ADDR = String(
-  process.env.ROOT_ADDR || get(flowConfig(), "accounts/root/address", "01")
+export const SERVICE_ADDR = String(
+  process.env.SERVICE_ADDR ||
+    get(flowConfig(), "accounts/service/address", "01")
 )
 
 export const PORT = Number(
