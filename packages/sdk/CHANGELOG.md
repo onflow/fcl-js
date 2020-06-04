@@ -2,6 +2,10 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.0.23 -- 2020-06-04
+
+- 2020-06-04 -- VSN `@onflow/encode` 0.0.2 -> 0.0.3
+
 ### 0.0.22 -- 2020-06-03
 
 - 2020-06-03 -- VSN `@onflow/encode` 0.0.2 -> 0.0.3
