@@ -2,6 +2,10 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.0.12 -- 2020-05-06
+
+- 2020-05-06 -- VSN `@onflow/protobuf` 0.1.2 -> 0.1.3
+
 ### 0.0.11 -- 2020-05-22
 
 - 2020-05-20 -- Updates address padding
