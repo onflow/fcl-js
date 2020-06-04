@@ -2,6 +2,11 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.0.22 -- 2020-06-03
+
+- 2020-06-03 -- VSN `@onflow/encode` 0.0.2 -> 0.0.3
+- 2020-06-03 -- VSN `@onflow/send` 0.0.11 -> 0.0.12
+
 ### 0.0.21 -- 2020-05-15
 
 - 2020-05-15 -- VSN `@qvvg/templar` 0.0.0 -> 0.0.1
