@@ -1,11 +1,14 @@
 {
   "name": "@onflow/ix-adt-account",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Flow Interaction ADT: account",
   "sideEffects": false,
+  "devDependencies": {
+    "jest": "^26.0.1"
+  },
   "scripts": {
     "build": "echo 'nothing to build'",
-    "test": "echo 'no tests yet'"
+    "test": "jest"
   },
   "types": "types.d.ts",
   "main": "account.cjs.js",

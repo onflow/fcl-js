@@ -1,0 +1,20 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Snapshot of empty account structure 1`] = `
+Object {
+  "addr": null,
+  "keyId": null,
+  "kind": "ACCOUNT",
+  "resolve": null,
+  "roles": Object {
+    "authorizer": false,
+    "param": false,
+    "payer": false,
+    "proposer": false,
+  },
+  "sequenceNum": null,
+  "signature": null,
+  "signingFunction": null,
+  "tempId": null,
+}
+`;
