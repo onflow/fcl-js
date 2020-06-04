@@ -23,7 +23,7 @@ const getAccount = async addr => {
 }
 
 const authorization = async (account = {}) => {
-  const user = await getAccount(CONFIG.ROOT_ADDR)
+  const user = await getAccount(CONFIG.SERVICE_ADDR)
   const key = user.keys[0]
 
   let sequenceNum

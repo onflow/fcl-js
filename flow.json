@@ -1,10 +1,10 @@
 {
-  "accounts": {
-    "root": {
-      "address": "0000000000000000000000000000000000000001",
-      "privateKey": "bf9db4706c2fdb9011ee7e170ccac492f05427b96ab41d8bf2d8c58443704b76",
-      "sigAlgorithm": "ECDSA_P256",
-      "hashAlgorithm": "SHA3_256"
-    }
-  }
+	"accounts": {
+		"service": {
+			"address": "f8d6e0586b0a20c7",
+			"privateKey": "84f82df6790f07b281adb5bbc848bd6298a2de67f94bdfac7a400d5a1b893de5",
+			"sigAlgorithm": "ECDSA_P256",
+			"hashAlgorithm": "SHA3_256"
+		}
+	}
 }
