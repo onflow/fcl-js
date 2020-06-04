@@ -11,7 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "@onflow/bytes": "0.0.1",
-    "@onflow/sdk": "0.0.14",
+    "@onflow/sdk": "0.0.23",
     "elliptic": "^6.5.2",
     "react": "16.13.1",
     "react-dom": "16.13.1",
