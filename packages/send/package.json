@@ -1,6 +1,6 @@
 {
   "name": "@onflow/send",
-  "version": "0.0.11",
+  "version": "0.0.12",
   "description": "Flow SDK Send",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
@@ -37,7 +37,7 @@
     "@improbable-eng/grpc-web": "0.12.0",
     "@improbable-eng/grpc-web-node-http-transport": "0.12.0",
     "@onflow/interaction": "0.0.7",
-    "@onflow/protobuf": "0.1.2",
+    "@onflow/protobuf": "0.1.3",
     "@onflow/response": "0.0.2"
   }
 }
