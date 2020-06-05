@@ -461,7 +461,7 @@ if (goog.DEBUG && !COMPILED) {
  * @constructor
  */
 proto.access.ExecuteScriptAtLatestBlockRequest = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
+  jspb.Message.initialize(this, opt_data, 0, -1, proto.access.ExecuteScriptAtLatestBlockRequest.repeatedFields_, null);
 };
 goog.inherits(proto.access.ExecuteScriptAtLatestBlockRequest, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
@@ -482,7 +482,7 @@ if (goog.DEBUG && !COMPILED) {
  * @constructor
  */
 proto.access.ExecuteScriptAtBlockIDRequest = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
+  jspb.Message.initialize(this, opt_data, 0, -1, proto.access.ExecuteScriptAtBlockIDRequest.repeatedFields_, null);
 };
 goog.inherits(proto.access.ExecuteScriptAtBlockIDRequest, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
@@ -503,7 +503,7 @@ if (goog.DEBUG && !COMPILED) {
  * @constructor
  */
 proto.access.ExecuteScriptAtBlockHeightRequest = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
+  jspb.Message.initialize(this, opt_data, 0, -1, proto.access.ExecuteScriptAtBlockHeightRequest.repeatedFields_, null);
 };
 goog.inherits(proto.access.ExecuteScriptAtBlockHeightRequest, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
@@ -3421,6 +3421,13 @@ proto.access.GetAccountResponse.prototype.hasAccount = function() {
 
 
 
+/**
+ * List of repeated fields within this message type.
+ * @private {!Array<number>}
+ * @const
+ */
+proto.access.ExecuteScriptAtLatestBlockRequest.repeatedFields_ = [2];
+
 
 
 if (jspb.Message.GENERATE_TO_OBJECT) {
@@ -3452,7 +3459,8 @@ proto.access.ExecuteScriptAtLatestBlockRequest.prototype.toObject = function(opt
  */
 proto.access.ExecuteScriptAtLatestBlockRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    script: msg.getScript_asB64()
+    script: msg.getScript_asB64(),
+    argumentsList: msg.getArgumentsList_asB64()
   };
 
   if (includeInstance) {
@@ -3493,6 +3501,10 @@ proto.access.ExecuteScriptAtLatestBlockRequest.deserializeBinaryFromReader = fun
       var value = /** @type {!Uint8Array} */ (reader.readBytes());
       msg.setScript(value);
       break;
+    case 2:
+      var value = /** @type {!Uint8Array} */ (reader.readBytes());
+      msg.addArguments(value);
+      break;
     default:
       reader.skipField();
       break;
@@ -3526,6 +3538,13 @@ proto.access.ExecuteScriptAtLatestBlockRequest.serializeBinaryToWriter = functio
   if (f.length > 0) {
     writer.writeBytes(
       1,
+      f
+    );
+  }
+  f = message.getArgumentsList_asU8();
+  if (f.length > 0) {
+    writer.writeRepeatedBytes(
+      2,
       f
     );
   }
@@ -3574,6 +3593,74 @@ proto.access.ExecuteScriptAtLatestBlockRequest.prototype.setScript = function(va
 };
 
 
+/**
+ * repeated bytes arguments = 2;
+ * @return {!(Array<!Uint8Array>|Array<string>)}
+ */
+proto.access.ExecuteScriptAtLatestBlockRequest.prototype.getArgumentsList = function() {
+  return /** @type {!(Array<!Uint8Array>|Array<string>)} */ (jspb.Message.getRepeatedField(this, 2));
+};
+
+
+/**
+ * repeated bytes arguments = 2;
+ * This is a type-conversion wrapper around `getArgumentsList()`
+ * @return {!Array<string>}
+ */
+proto.access.ExecuteScriptAtLatestBlockRequest.prototype.getArgumentsList_asB64 = function() {
+  return /** @type {!Array<string>} */ (jspb.Message.bytesListAsB64(
+      this.getArgumentsList()));
+};
+
+
+/**
+ * repeated bytes arguments = 2;
+ * Note that Uint8Array is not supported on all browsers.
+ * @see http://caniuse.com/Uint8Array
+ * This is a type-conversion wrapper around `getArgumentsList()`
+ * @return {!Array<!Uint8Array>}
+ */
+proto.access.ExecuteScriptAtLatestBlockRequest.prototype.getArgumentsList_asU8 = function() {
+  return /** @type {!Array<!Uint8Array>} */ (jspb.Message.bytesListAsU8(
+      this.getArgumentsList()));
+};
+
+
+/**
+ * @param {!(Array<!Uint8Array>|Array<string>)} value
+ * @return {!proto.access.ExecuteScriptAtLatestBlockRequest} returns this
+ */
+proto.access.ExecuteScriptAtLatestBlockRequest.prototype.setArgumentsList = function(value) {
+  return jspb.Message.setField(this, 2, value || []);
+};
+
+
+/**
+ * @param {!(string|Uint8Array)} value
+ * @param {number=} opt_index
+ * @return {!proto.access.ExecuteScriptAtLatestBlockRequest} returns this
+ */
+proto.access.ExecuteScriptAtLatestBlockRequest.prototype.addArguments = function(value, opt_index) {
+  return jspb.Message.addToRepeatedField(this, 2, value, opt_index);
+};
+
+
+/**
+ * Clears the list making it empty but non-null.
+ * @return {!proto.access.ExecuteScriptAtLatestBlockRequest} returns this
+ */
+proto.access.ExecuteScriptAtLatestBlockRequest.prototype.clearArgumentsList = function() {
+  return this.setArgumentsList([]);
+};
+
+
+
+/**
+ * List of repeated fields within this message type.
+ * @private {!Array<number>}
+ * @const
+ */
+proto.access.ExecuteScriptAtBlockIDRequest.repeatedFields_ = [3];
 
 
 
@@ -3607,7 +3694,8 @@ proto.access.ExecuteScriptAtBlockIDRequest.prototype.toObject = function(opt_inc
 proto.access.ExecuteScriptAtBlockIDRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
     blockId: msg.getBlockId_asB64(),
-    script: msg.getScript_asB64()
+    script: msg.getScript_asB64(),
+    argumentsList: msg.getArgumentsList_asB64()
   };
 
   if (includeInstance) {
@@ -3652,6 +3740,10 @@ proto.access.ExecuteScriptAtBlockIDRequest.deserializeBinaryFromReader = functio
       var value = /** @type {!Uint8Array} */ (reader.readBytes());
       msg.setScript(value);
       break;
+    case 3:
+      var value = /** @type {!Uint8Array} */ (reader.readBytes());
+      msg.addArguments(value);
+      break;
     default:
       reader.skipField();
       break;
@@ -3692,6 +3784,13 @@ proto.access.ExecuteScriptAtBlockIDRequest.serializeBinaryToWriter = function(me
   if (f.length > 0) {
     writer.writeBytes(
       2,
+      f
+    );
+  }
+  f = message.getArgumentsList_asU8();
+  if (f.length > 0) {
+    writer.writeRepeatedBytes(
+      3,
       f
     );
   }
@@ -3782,6 +3881,74 @@ proto.access.ExecuteScriptAtBlockIDRequest.prototype.setScript = function(value)
 };
 
 
+/**
+ * repeated bytes arguments = 3;
+ * @return {!(Array<!Uint8Array>|Array<string>)}
+ */
+proto.access.ExecuteScriptAtBlockIDRequest.prototype.getArgumentsList = function() {
+  return /** @type {!(Array<!Uint8Array>|Array<string>)} */ (jspb.Message.getRepeatedField(this, 3));
+};
+
+
+/**
+ * repeated bytes arguments = 3;
+ * This is a type-conversion wrapper around `getArgumentsList()`
+ * @return {!Array<string>}
+ */
+proto.access.ExecuteScriptAtBlockIDRequest.prototype.getArgumentsList_asB64 = function() {
+  return /** @type {!Array<string>} */ (jspb.Message.bytesListAsB64(
+      this.getArgumentsList()));
+};
+
+
+/**
+ * repeated bytes arguments = 3;
+ * Note that Uint8Array is not supported on all browsers.
+ * @see http://caniuse.com/Uint8Array
+ * This is a type-conversion wrapper around `getArgumentsList()`
+ * @return {!Array<!Uint8Array>}
+ */
+proto.access.ExecuteScriptAtBlockIDRequest.prototype.getArgumentsList_asU8 = function() {
+  return /** @type {!Array<!Uint8Array>} */ (jspb.Message.bytesListAsU8(
+      this.getArgumentsList()));
+};
+
+
+/**
+ * @param {!(Array<!Uint8Array>|Array<string>)} value
+ * @return {!proto.access.ExecuteScriptAtBlockIDRequest} returns this
+ */
+proto.access.ExecuteScriptAtBlockIDRequest.prototype.setArgumentsList = function(value) {
+  return jspb.Message.setField(this, 3, value || []);
+};
+
+
+/**
+ * @param {!(string|Uint8Array)} value
+ * @param {number=} opt_index
+ * @return {!proto.access.ExecuteScriptAtBlockIDRequest} returns this
+ */
+proto.access.ExecuteScriptAtBlockIDRequest.prototype.addArguments = function(value, opt_index) {
+  return jspb.Message.addToRepeatedField(this, 3, value, opt_index);
+};
+
+
+/**
+ * Clears the list making it empty but non-null.
+ * @return {!proto.access.ExecuteScriptAtBlockIDRequest} returns this
+ */
+proto.access.ExecuteScriptAtBlockIDRequest.prototype.clearArgumentsList = function() {
+  return this.setArgumentsList([]);
+};
+
+
+
+/**
+ * List of repeated fields within this message type.
+ * @private {!Array<number>}
+ * @const
+ */
+proto.access.ExecuteScriptAtBlockHeightRequest.repeatedFields_ = [3];
 
 
 
@@ -3815,7 +3982,8 @@ proto.access.ExecuteScriptAtBlockHeightRequest.prototype.toObject = function(opt
 proto.access.ExecuteScriptAtBlockHeightRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
     blockHeight: jspb.Message.getFieldWithDefault(msg, 1, 0),
-    script: msg.getScript_asB64()
+    script: msg.getScript_asB64(),
+    argumentsList: msg.getArgumentsList_asB64()
   };
 
   if (includeInstance) {
@@ -3860,6 +4028,10 @@ proto.access.ExecuteScriptAtBlockHeightRequest.deserializeBinaryFromReader = fun
       var value = /** @type {!Uint8Array} */ (reader.readBytes());
       msg.setScript(value);
       break;
+    case 3:
+      var value = /** @type {!Uint8Array} */ (reader.readBytes());
+      msg.addArguments(value);
+      break;
     default:
       reader.skipField();
       break;
@@ -3900,6 +4072,13 @@ proto.access.ExecuteScriptAtBlockHeightRequest.serializeBinaryToWriter = functio
   if (f.length > 0) {
     writer.writeBytes(
       2,
+      f
+    );
+  }
+  f = message.getArgumentsList_asU8();
+  if (f.length > 0) {
+    writer.writeRepeatedBytes(
+      3,
       f
     );
   }
@@ -3963,6 +4142,67 @@ proto.access.ExecuteScriptAtBlockHeightRequest.prototype.getScript_asU8 = functi
  */
 proto.access.ExecuteScriptAtBlockHeightRequest.prototype.setScript = function(value) {
   return jspb.Message.setProto3BytesField(this, 2, value);
+};
+
+
+/**
+ * repeated bytes arguments = 3;
+ * @return {!(Array<!Uint8Array>|Array<string>)}
+ */
+proto.access.ExecuteScriptAtBlockHeightRequest.prototype.getArgumentsList = function() {
+  return /** @type {!(Array<!Uint8Array>|Array<string>)} */ (jspb.Message.getRepeatedField(this, 3));
+};
+
+
+/**
+ * repeated bytes arguments = 3;
+ * This is a type-conversion wrapper around `getArgumentsList()`
+ * @return {!Array<string>}
+ */
+proto.access.ExecuteScriptAtBlockHeightRequest.prototype.getArgumentsList_asB64 = function() {
+  return /** @type {!Array<string>} */ (jspb.Message.bytesListAsB64(
+      this.getArgumentsList()));
+};
+
+
+/**
+ * repeated bytes arguments = 3;
+ * Note that Uint8Array is not supported on all browsers.
+ * @see http://caniuse.com/Uint8Array
+ * This is a type-conversion wrapper around `getArgumentsList()`
+ * @return {!Array<!Uint8Array>}
+ */
+proto.access.ExecuteScriptAtBlockHeightRequest.prototype.getArgumentsList_asU8 = function() {
+  return /** @type {!Array<!Uint8Array>} */ (jspb.Message.bytesListAsU8(
+      this.getArgumentsList()));
+};
+
+
+/**
+ * @param {!(Array<!Uint8Array>|Array<string>)} value
+ * @return {!proto.access.ExecuteScriptAtBlockHeightRequest} returns this
+ */
+proto.access.ExecuteScriptAtBlockHeightRequest.prototype.setArgumentsList = function(value) {
+  return jspb.Message.setField(this, 3, value || []);
+};
+
+
+/**
+ * @param {!(string|Uint8Array)} value
+ * @param {number=} opt_index
+ * @return {!proto.access.ExecuteScriptAtBlockHeightRequest} returns this
+ */
+proto.access.ExecuteScriptAtBlockHeightRequest.prototype.addArguments = function(value, opt_index) {
+  return jspb.Message.addToRepeatedField(this, 3, value, opt_index);
+};
+
+
+/**
+ * Clears the list making it empty but non-null.
+ * @return {!proto.access.ExecuteScriptAtBlockHeightRequest} returns this
+ */
+proto.access.ExecuteScriptAtBlockHeightRequest.prototype.clearArgumentsList = function() {
+  return this.setArgumentsList([]);
 };
 
 
