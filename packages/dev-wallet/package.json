@@ -1,6 +1,6 @@
 {
   "name": "@onflow/dev-wallet",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "dev wallet provider service for local development with the flow client library",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
