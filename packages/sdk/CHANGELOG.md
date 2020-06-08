@@ -1,6 +1,7 @@
 ### Unreleased
 
 - YYYY-MM-DD **BREAKING?** -- description
+- 2020-06-08 -- Added validator builder
 
 ### 0.0.23 -- 2020-06-04
 
