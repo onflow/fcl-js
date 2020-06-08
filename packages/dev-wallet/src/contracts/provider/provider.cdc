@@ -50,7 +50,7 @@ pub contract ProviderContract {
     }
 
     // Map from PID to Address
-    pub var providers: {String: Address}
+    access(self) var providers: {String: Address}
 
     init() {
         self.providers = {}

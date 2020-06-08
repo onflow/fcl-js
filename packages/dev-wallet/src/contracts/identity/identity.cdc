@@ -170,7 +170,7 @@ pub contract IdentityContract {
         account.link<&IdentityContract.Identity{IdentityContract.PublicIdentity}>(/public/Identity, target: /storage/Identity)
     }
 
-    pub fun readPublicIdentity(addr: Address): &{PublicIdentity} {
+    pub fun readPublicIdentity(addr: Address): &{PublicIdentity}? {
         let IdentityInterfaceCapability = getAccount(addr).getCapability(/public/Identity)!
         let PublicIdentityeRef = IdentityInterfaceCapability.borrow<&Identity{PublicIdentity}>()! as &Identity{PublicIdentity}
         return PublicIdentityeRef
