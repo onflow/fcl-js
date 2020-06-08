@@ -1,5 +1,7 @@
-import { pipe, Ok, Bad } from "@onflow/interaction"
+import { update } from "@onflow/interaction"
 
 export function validator(cb) {
-    return pipe([ ix => cb(ix, { Ok, Bad }) ])
+    return update('ix.validators', validators => 
+        validators ? validators.push(cb) : [cb]
+    )
 }
