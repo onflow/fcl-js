@@ -23,6 +23,7 @@ export {ping} from "./build/ping"
 export {ref} from "./build/ref"
 export {script} from "./build/script"
 export {transaction} from "./build/transaction"
+export {validator} from "./build/validator"
 
 // resolvers
 export {resolveAccounts} from "./resolve/resolve-accounts"
