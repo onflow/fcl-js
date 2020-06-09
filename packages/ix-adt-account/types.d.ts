@@ -13,7 +13,7 @@ export interface Account {
   sequenceNum?: number
   signature?: string
   signingFunction?: (data: object) => object
-  role: Roles
+  roles: Roles
 }
 
 export function account(): Account

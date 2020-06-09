@@ -1,6 +1,16 @@
 ### Unreleased
 
 - YYYY-MM-DD **BREAKING?** -- description
+- 2020-06-08 -- Added validator builder
+
+### 0.0.23 -- 2020-06-04
+
+- 2020-06-04 -- VSN `@onflow/encode` 0.0.2 -> 0.0.3
+
+### 0.0.22 -- 2020-06-03
+
+- 2020-06-03 -- VSN `@onflow/encode` 0.0.2 -> 0.0.3
+- 2020-06-03 -- VSN `@onflow/send` 0.0.11 -> 0.0.12
 
 ### 0.0.21 -- 2020-05-15
 

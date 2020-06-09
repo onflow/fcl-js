@@ -2,6 +2,14 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.0.37 -- 2020-06-04
+
+- 2020-06-04 -- VSN `@onflow/sdk` 0.0.22 -> 0.0.23
+
+### 0.0.36 -- 2020-06-03
+
+- 2020-06-03 -- VSN `@onflow/sdk` 0.0.21 -> 0.0.22
+
 ### 0.0.35 -- 2020-05-15
 
 - Rerelease because funky build

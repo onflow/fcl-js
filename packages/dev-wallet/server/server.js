@@ -198,14 +198,14 @@ ${chalk.dim(pkgJSON.name + "@" + pkgJSON.version)}
 ${chalk.dim("*** *** *** *** *** *** ***")}
 
 :tada: ${chalk.blue(CONFIG.NAME)} has started:
-${chalk.dim("*")} Origin:       ${chalk.blue.underline(CONFIG.HOST)}
-${chalk.dim("*")} FCL Authn:    ${chalk.blue.underline(CONFIG.AUTHN)}
-${chalk.dim("*")} GraphiQL:     ${chalk.blue.underline(
+${chalk.dim("*")} Origin:          ${chalk.blue.underline(CONFIG.HOST)}
+${chalk.dim("*")} FCL Authn:       ${chalk.blue.underline(CONFIG.AUTHN)}
+${chalk.dim("*")} GraphiQL:        ${chalk.blue.underline(
   CONFIG.HOST + "/graphql"
 )}
-${chalk.dim("*")} Access Node:  ${chalk.blue.underline(CONFIG.ACCESS_NODE)}
-${chalk.dim("*")} Root Address: ${chalk.blue(CONFIG.ROOT_ADDR)}
-${chalk.dim("*")} Private Key:  ${chalk.blue(CONFIG.PK)}
+${chalk.dim("*")} Access Node:     ${chalk.blue.underline(CONFIG.ACCESS_NODE)}
+${chalk.dim("*")} Service Address: ${chalk.blue(CONFIG.SERVICE_ADDR)}
+${chalk.dim("*")} Private Key:     ${chalk.blue(CONFIG.PK)}
 
 Include this code in development to configure fcl:
 

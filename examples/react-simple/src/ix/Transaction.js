@@ -8,7 +8,7 @@ export const Transaction = () => {
   const run = async () => {
 
     const acctResponse = await sdk.send(await sdk.pipe(await sdk.build([
-      sdk.getAccount("01")
+      sdk.getAccount("f8d6e0586b0a20c7")
     ]), [
       sdk.resolve([
         sdk.resolveParams,
@@ -19,10 +19,10 @@ export const Transaction = () => {
 
     const response = await sdk.send(await sdk.pipe(await sdk.build([
       sdk.params([sdk.param("foo", "rawr")]),
-      sdk.payer(sdk.authorization("01", signingFunction, 0)),
-      sdk.proposer(sdk.authorization("01", signingFunction, 0, seqNum)),
+      sdk.payer(sdk.authorization("f8d6e0586b0a20c7", signingFunction, 0)),
+      sdk.proposer(sdk.authorization("f8d6e0586b0a20c7", signingFunction, 0, seqNum)),
       sdk.transaction`transaction { prepare(acct: AuthAccount) {} execute { log("Hello") } }`,
-      sdk.authorizations([sdk.authorization("01", signingFunction, 0)]),
+      sdk.authorizations([sdk.authorization("f8d6e0586b0a20c7", signingFunction, 0)]),
     ]), [
       sdk.resolve([
         sdk.resolveParams,
