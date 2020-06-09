@@ -1,1 +1,1 @@
-export { sendFlowToken } from './send-flow-token.js'
+export { SEND_FLOW_TOKEN } from './send-flow-token.js'
