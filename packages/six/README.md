@@ -5,9 +5,8 @@ Stored interactions encapsulating common use cases of flow
 # Status
 
 - **Last Updated:** June 8th 2020
-- **Stable:** Yes
-- **Risk of Breaking Change:** Low (If taking into account the known upcoming changes)
-
+- **Stable:** No
+- **Risk of Breaking Change:** High
 
 Known Upcoming Changes:
 - None at the moment.
