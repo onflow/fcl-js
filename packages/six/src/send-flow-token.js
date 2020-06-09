@@ -17,7 +17,7 @@ import * as t from "@onflow/types"
 // }
 
 const SEND_FLOW_TOKEN_CODE = `importFungibleTokenfrom0xf8d6e0586b0a20c7;importf8d6e0586b0a20c7from0xf8d6e0586b0a20c7;transaction(to:Address,amount:UFix64){prepare(acct:AuthAccount){letrecipient=getAccount(to);letproviderRef=acct.borrow<&f8d6e0586b0a20c7.Vault{FungibleToken.Provider}>(from:/storage/f8d6e0586b0a20c7Vault)??panic("CouldnotborrowProviderreferencetotheVault!");letreceiverRef=recipient.getCapability(/public/f8d6e0586b0a20c7Receiver)!.borrow<&f8d6e0586b0a20c7.Vault{FungibleToken.Receiver}>()??panic("Couldnotborrowreceiverreferencetotherecipient'sVault");lettokens<-providerRef.withdraw(amount:amount);receiverRef.deposit(from:<-tokens);}}`
-const SEND_FLOW_TOKEN_CODE_HASH = "3a385731720e0905ae4d9efb182660186eb033d7b676c1b872a95008e2161f52"
+const SEND_FLOW_TOKEN_CODE_HASH = "d80843be995a91cee43192460fe427c30900a33b48690adc190907198a7bd19a"
 
 const SEND_FLOW_TOKEN_SIX = ({ to, amount }) => pipe([
   sdk.transaction(SEND_FLOW_TOKEN_CODE),
