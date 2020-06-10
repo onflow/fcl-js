@@ -7,8 +7,10 @@ const type = (label, asParam, asInjection) => ({
 const isArray = (d) => Array.isArray(d)
 const isObj = (d) => typeof d === "object"
 const isNull = (d) => d == null
+const isBoolean = (d) => typeof d === "boolean"
 const isNumber = (d) => d === "number"
 const isInteger = (d) => Number.isInteger(d)
+const isString = (d) => typeof d === "string"
 const isFn = (d) => typeof d === "function"
 
 const throwTypeError = (msg) => {
@@ -149,67 +151,100 @@ export const Int256 = type(
 
 export const Word8 = type(
   "Word8",
-  v => v,
+  v => {
+    if (isNumber(v) && isInteger(v) && ((2**8 - 1) >= v) && (v >= 0)) return v 
+    throwTypeError("Expected positive integer")
+  },
   v => v
 )
 
 export const Word16 = type(
   "Word16",
-  v => v,
+  v => {
+    if (isNumber(v) && isInteger(v) && ((2**16 - 1) >= v) && (v >= 0)) return v 
+    throwTypeError("Expected positive integer")
+  },
   v => v
 )
 
 export const Word32 = type(
   "Word32",
-  v => v,
+  v => {
+    if (isNumber(v) && isInteger(v) && ((2**32 - 1) >= v) && (v >= 0)) return v 
+    throwTypeError("Expected positive integer")
+  },
   v => v
 )
 
 export const Word64 = type(
   "Word64",
-  v => v,
+  v => {
+    if (isNumber(v) && isInteger(v) && ((2**64 - 1) >= v) && (v >= 0)) return v 
+    throwTypeError("Expected positive integer")
+  },
   v => v
 )
 
 export const UFix64 = type(
   "UFix64",
-  v => v,
+  v => {
+    if (isNumber(v) && ((2**63 - 1) >= v) && (v >= 0)) return v 
+    throwTypeError("Expected positive integer")
+  },
   v => v
 )
 
 export const Fix64 = type(
   "Fix64",
-  v => v,
+  v => {
+    if (isNumber(v) && ((2**63 - 1) >= v) && (v >= ((-2)**64))) return v 
+    throwTypeError("Expected positive integer")
+  },
   v => v
 )
 
 export const String = type(
   "String",
-  v => v,
+  v => {
+    if (isString(v)) return v
+    throwTypeError("Expected String for type String")
+  },
   v => v
 )
 
 export const Character = type(
   "Character",
-  v => v,
+  v => {
+    if (isString(v) && v.length === 1) return v
+    throwTypeError("Expected Character for type Character")
+  },
   v => v
 )
 
 export const Bool = type(
   "Bool",
-  v => v,
+  v => {
+    if (isBoolean(v)) return v
+    throwTypeError("Expected Boolean for type Bool")
+  },
   v => v
 )
 
 export const Address = type(
   "Address",
-  v => v,
+  v => {
+    if (isString(v)) return v
+    throwTypeError("Expected Address for type Address")
+  },
   v => v
 )
 
 export const Void = type(
   "Void",
-  v => v,
+  v => {
+    if (!v || isNull(v)) return v
+    throwTypeError("Expected Void for type Void")
+  },
   v => v
 )
 
@@ -227,7 +262,10 @@ export const Reference = type(
 
 export const Array = type(
   "Array",
-  v => v,
+  v => {
+    if (isArray(v)) return v
+    throwTypeError("Expected Array for type Array")
+  },
   v => v
 )
 
