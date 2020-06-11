@@ -271,7 +271,10 @@ export const Array = type(
 
 export const Dictionary = type(
   "Dictionary",
-  v => v,
+  v => {
+    if (isObj(v)) return v
+    throwTypeError("Expected Object for type Dictionary")
+  },
   v => v
 )
 
@@ -283,12 +286,18 @@ export const Event = type(
 
 export const Resource = type(
   "Resource",
-  v => v,
+  v => {
+    if (isObj(v)) return v
+    throwTypeError("Expected Object for type Dictionary")
+  },
   v => v
 )
 
 export const Struct = type(
   "Struct",
-  v => v,
+  v => {
+    if (isObj(v)) return v
+    throwTypeError("Expected Object for type Dictionary")
+  },
   v => v
 )
