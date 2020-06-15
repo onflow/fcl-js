@@ -8,9 +8,10 @@ const isArray = (d) => Array.isArray(d)
 const isObj = (d) => typeof d === "object"
 const isNull = (d) => d == null
 const isBoolean = (d) => typeof d === "boolean"
-const isNumber = (d) => d === "number"
+const isNumber = (d) => typeof d === "number"
 const isInteger = (d) => Number.isInteger(d)
 const isString = (d) => typeof d === "string"
+const isFn = (d) => typeof d === "function"
 
 const throwTypeError = (msg) => {
   throw new Error("Type Error: " + msg)
@@ -25,7 +26,10 @@ export const Identity = type(
 export const UInt = type(
   "UInt",
   v => {
-    if (isNumber(v) && isInteger(v) && v >= 0) return v 
+    if (isNumber(v) && isInteger(v)) return {
+      type: "UInt",
+      value: v
+    }
     throwTypeError("Expected Positive Integer for type Unsigned Int")
   },
   v => v
@@ -34,7 +38,10 @@ export const UInt = type(
 export const Int = type(
   "Int",
   v => {
-    if (isNumber(v) && isInteger(v)) return v 
+    if (isNumber(v) && isInteger(v)) return {
+      type: "Int",
+      value: v 
+    }
     throwTypeError("Expected Integer for type Int")
   },
   v => v
@@ -43,7 +50,10 @@ export const Int = type(
 export const UInt8 = type(
   "UInt8",
   v => {
-    if (isNumber(v) && isInteger(v) && ((2**8 - 1) >= v) && (v >= 0)) return v 
+    if (isNumber(v) && isInteger(v)) return {
+      type: "UInt8",
+      value: v 
+    }
     throwTypeError("Expected integer for UInt8")
   },
   v => v
@@ -52,7 +62,10 @@ export const UInt8 = type(
 export const Int8 = type(
   "Int8",
   v => {
-    if (isNumber(v) && isInteger(v) && ((2**7 - 1) >= v) && (v >= ((-2)**7))) return v 
+    if (isNumber(v) && isInteger(v)) return {
+      type: "Int8",
+      value: v 
+    } 
     throwTypeError("Expected positive integer for Int8")
   },
   v => v
@@ -61,7 +74,10 @@ export const Int8 = type(
 export const UInt16 = type(
   "UInt16",
   v => {
-    if (isNumber(v) && isInteger(v) && ((2**16 - 1) >= v) && (v >= 0)) return v 
+    if (isNumber(v) && isInteger(v)) return {
+      type: "UInt16",
+      value: v,
+    }
     throwTypeError("Expected integer for UInt16")
   },
   v => v
@@ -70,7 +86,10 @@ export const UInt16 = type(
 export const Int16 = type(
   "Int16",
   v => {
-    if (isNumber(v) && isInteger(v) && ((2**15 - 1) >= v) && (v >= ((-2)**15))) return v 
+    if (isNumber(v) && isInteger(v)) return {
+      type: "Int16",
+      value: v 
+    } 
     throwTypeError("Expected positive integer for Int16")
   },
   v => v
@@ -79,7 +98,10 @@ export const Int16 = type(
 export const UInt32 = type(
   "UInt32",
   v => {
-    if (isNumber(v) && isInteger(v) && ((2**32 - 1) >= v) && (v >= 0)) return v 
+    if (isNumber(v) && isInteger(v)) return {
+      type: "UInt32",
+      value: v 
+    } 
     throwTypeError("Expected integer for UInt32")
   },
   v => v
@@ -88,7 +110,10 @@ export const UInt32 = type(
 export const Int32 = type(
   "Int32",
   v => {
-    if (isNumber(v) && isInteger(v) && ((2**31 - 1) >= v) && (v >= ((-2)**31))) return v 
+    if (isNumber(v) && isInteger(v)) return {
+      type: "Int32",
+      value: v 
+    }
     throwTypeError("Expected positive integer for Int32")
   },
   v => v
@@ -97,7 +122,10 @@ export const Int32 = type(
 export const UInt64 = type(
   "UInt64",
   v => {
-    if (isNumber(v) && isInteger(v) && ((2**63 - 1) >= v) && (v >= 0)) return v 
+    if (isNumber(v) && isInteger(v)) return {
+      type: "UInt64",
+      value: v 
+    } 
     throwTypeError("Expected integer for UInt64")
   },
   v => v
@@ -106,7 +134,10 @@ export const UInt64 = type(
 export const Int64 = type(
   "Int64",
   v => {
-    if (isNumber(v) && isInteger(v) && ((2**63 - 1) >= v) && (v >= ((-2)**64))) return v 
+    if (isNumber(v) && isInteger(v)) return {
+      type: "Int64",
+      value: v 
+    }
     throwTypeError("Expected positive integer for Int64")
   },
   v => v
@@ -115,7 +146,10 @@ export const Int64 = type(
 export const UInt128 = type(
   "UInt128",
   v => {
-    if (isNumber(v) && isInteger(v) && ((2**128 - 1) >= v) && (v >= 0)) return v 
+    if (isNumber(v) && isInteger(v)) return {
+      type: "UInt128",
+      value: v 
+    }
     throwTypeError("Expected integer for UInt128")
   },
   v => v
@@ -124,7 +158,10 @@ export const UInt128 = type(
 export const Int128 = type(
   "Int128",
   v => {
-    if (isNumber(v) && isInteger(v) && ((2**127 - 1) >= v) && (v >= ((-2)**127))) return v 
+    if (isNumber(v) && isInteger(v)) return {
+      type: "Int128",
+      value: v 
+    } 
     throwTypeError("Expected positive integer for Int128")
   },
   v => v
@@ -133,7 +170,10 @@ export const Int128 = type(
 export const UInt256 = type(
   "UInt256",
   v => {
-    if (isNumber(v) && isInteger(v) && ((2**256 - 1) >= v) && (v >= 0)) return v 
+    if (isNumber(v) && isInteger(v)) return {
+      type: "UInt256",
+      value: v 
+    }
     throwTypeError("Expected integer for UInt256")
   },
   v => v
@@ -142,7 +182,10 @@ export const UInt256 = type(
 export const Int256 = type(
   "Int256",
   v => {
-    if (isNumber(v) && isInteger(v) && ((2**255 - 1) >= v) && (v >= ((-2)**255))) return v 
+    if (isNumber(v) && isInteger(v)) return {
+      type: "Int256",
+      value: v 
+    } 
     throwTypeError("Expected integer for Int256")
   },
   v => v
@@ -151,7 +194,10 @@ export const Int256 = type(
 export const Word8 = type(
   "Word8",
   v => {
-    if (isNumber(v) && isInteger(v) && ((2**8 - 1) >= v) && (v >= 0)) return v 
+    if (isNumber(v) && isInteger(v)) return {
+      type: "Word8",
+      value: v 
+    } 
     throwTypeError("Expected positive number for Word8")
   },
   v => v
@@ -160,7 +206,10 @@ export const Word8 = type(
 export const Word16 = type(
   "Word16",
   v => {
-    if (isNumber(v) && isInteger(v) && ((2**16 - 1) >= v) && (v >= 0)) return v 
+    if (isNumber(v) && isInteger(v)) return {
+      type: "Word16",
+      value: v 
+    } 
     throwTypeError("Expected positive number for Word16")
   },
   v => v
@@ -169,7 +218,10 @@ export const Word16 = type(
 export const Word32 = type(
   "Word32",
   v => {
-    if (isNumber(v) && isInteger(v) && ((2**32 - 1) >= v) && (v >= 0)) return v 
+    if (isNumber(v) && isInteger(v)) return {
+      type: "Word32",
+      value: v 
+    } 
     throwTypeError("Expected positive number for Word32")
   },
   v => v
@@ -178,7 +230,10 @@ export const Word32 = type(
 export const Word64 = type(
   "Word64",
   v => {
-    if (isNumber(v) && isInteger(v) && ((2**64 - 1) >= v) && (v >= 0)) return v 
+    if (isNumber(v) && isInteger(v)) return {
+      type: "Word64",
+      value: v 
+    } 
     throwTypeError("Expected positive number for Word64")
   },
   v => v
@@ -187,7 +242,10 @@ export const Word64 = type(
 export const UFix64 = type(
   "UFix64",
   v => {
-    if (isNumber(v) && ((2**63 - 1) >= v) && (v >= 0)) return v 
+    if (isNumber(v)) return {
+      type: "UFix64",
+      value: v 
+    } 
     throwTypeError("Expected positive integer for UFix64")
   },
   v => v
@@ -196,7 +254,10 @@ export const UFix64 = type(
 export const Fix64 = type(
   "Fix64",
   v => {
-    if (isNumber(v) && ((2**63 - 1) >= v) && (v >= ((-2)**64))) return v 
+    if (isNumber(v)) return {
+      type: "Fix64",
+      value: v 
+    } 
     throwTypeError("Expected integer for Fix64")
   },
   v => v
@@ -205,7 +266,10 @@ export const Fix64 = type(
 export const String = type(
   "String",
   v => {
-    if (isString(v)) return v
+    if (isString(v)) return {
+      type: "String",
+      value: v 
+    }
     throwTypeError("Expected String for type String")
   },
   v => v
@@ -214,7 +278,10 @@ export const String = type(
 export const Character = type(
   "Character",
   v => {
-    if (isString(v) && v.length === 1) return v
+    if (isString(v)) return {
+      type: "Character",
+      value: v 
+    }
     throwTypeError("Expected Character for type Character")
   },
   v => v
@@ -223,7 +290,10 @@ export const Character = type(
 export const Bool = type(
   "Bool",
   v => {
-    if (isBoolean(v)) return v
+    if (isBoolean(v)) return {
+      type: "Bool",
+      value: v 
+    }
     throwTypeError("Expected Boolean for type Bool")
   },
   v => v
@@ -232,7 +302,10 @@ export const Bool = type(
 export const Address = type(
   "Address",
   v => {
-    if (isString(v)) return v
+    if (isString(v)) return {
+      type: "Address",
+      value: v 
+    }
     throwTypeError("Expected Address for type Address")
   },
   v => v
@@ -241,7 +314,9 @@ export const Address = type(
 export const Void = type(
   "Void",
   v => {
-    if (!v || isNull(v)) return v
+    if (!v || isNull(v)) return {
+      type: "Void"
+    }
     throwTypeError("Expected Void for type Void")
   },
   v => v
@@ -249,29 +324,45 @@ export const Void = type(
 
 export const Optional = type(
   "Optional",
-  v => v,
+  v => ({
+    type: "Optional",
+    value: v
+  }),
   v => v
 )
 
 export const Reference = type(
   "Reference",
-  v => v,
-  v => v
-)
-
-export const Array = type(
-  "Array",
   v => {
-    if (isArray(v)) return v
-    throwTypeError("Expected Array for type Array")
+    if (isObj(v)) return {
+      type: "Reference",
+      value: v
+    }
+    throwTypeError("Expected Object for type Reference")
   },
   v => v
 )
 
+export const _Array = type(
+  "Array",
+  v => {
+    return {
+      type: "Array",
+      value: isArray(v) ? v : [v]
+    }
+  },
+  v => v
+)
+
+export {_Array as Array}
+
 export const Dictionary = type(
   "Dictionary",
   v => {
-    if (isObj(v)) return v
+    if (isObj(v)) return {
+      type: "Dictionary",
+      value: isArray(v) ? v : [v]
+    }
     throwTypeError("Expected Object for type Dictionary")
   },
   v => v
@@ -279,15 +370,24 @@ export const Dictionary = type(
 
 export const Event = type(
   "Event",
-  v => v,
+  v => {
+    if (isObj(v)) return {
+      type: "Event",
+      value: v
+    }
+    throwTypeError("Expected Object for type Event")
+  },
   v => v
 )
 
 export const Resource = type(
   "Resource",
   v => {
-    if (isObj(v)) return v
-    throwTypeError("Expected Object for type Dictionary")
+    if (isObj(v)) return {
+      type: "Resource",
+      value: v
+    }
+    throwTypeError("Expected Object for type Resource")
   },
   v => v
 )
@@ -295,8 +395,11 @@ export const Resource = type(
 export const Struct = type(
   "Struct",
   v => {
-    if (isObj(v)) return v
-    throwTypeError("Expected Object for type Dictionary")
+    if (isObj(v)) return {
+      type: "Struct",
+      value: v
+    }
+    throwTypeError("Expected Object for type Struct")
   },
   v => v
 )
