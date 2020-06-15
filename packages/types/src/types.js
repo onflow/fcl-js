@@ -11,7 +11,6 @@ const isBoolean = (d) => typeof d === "boolean"
 const isNumber = (d) => typeof d === "number"
 const isInteger = (d) => Number.isInteger(d)
 const isString = (d) => typeof d === "string"
-const isFn = (d) => typeof d === "function"
 
 const throwTypeError = (msg) => {
   throw new Error("Type Error: " + msg)
