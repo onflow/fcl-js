@@ -1,7 +1,7 @@
 const type = (label, asParam, asInjection) => ({
   label,
   asParam,
-  asInjection,
+  asInjection
 })
 
 const isArray = (d) => Array.isArray(d)
@@ -342,63 +342,86 @@ export const Reference = type(
   v => v
 )
 
-export const _Array = type(
-  "Array",
-  v => {
-    return {
-      type: "Array",
-      value: isArray(v) ? v : [v]
-    }
-  },
-  v => v
-)
+export const _Array = (children = []) =>
+  type(
+    "Array",
+    v => {
+      return {
+        type: "Array",
+        value: isArray(children) ? children.map((c, i) => c.asParam(v[i])) : v.map(x => children.asParam(x))
+      }
+    },
+    v => v
+  )
+
 
 export {_Array as Array}
 
-export const Dictionary = type(
-  "Dictionary",
-  v => {
-    if (isObj(v)) return {
-      type: "Dictionary",
-      value: isArray(v) ? v : [v]
-    }
-    throwTypeError("Expected Object for type Dictionary")
-  },
-  v => v
-)
+export const Dictionary = (children = []) => 
+  type(
+    "Dictionary",
+    v => {
+      if (isObj(v)) return {
+        type: "Dictionary",
+        value: isArray(children) ? 
+          children.map((c, i) => ({ key: c.key.asParam(v[i].key), value: c.value.asParam(v[i].value) }))
+          : v.map(x => ({ key: children.key.asParam(x.key), value: children.value.asParam(x.value) }))
+      }
+      throwTypeError("Expected Object for type Dictionary")
+    },
+    v => v
+  )
 
-export const Event = type(
-  "Event",
-  v => {
-    if (isObj(v)) return {
-      type: "Event",
-      value: v
-    }
-    throwTypeError("Expected Object for type Event")
-  },
-  v => v
-)
+export const Event = (children = []) => 
+  type(
+    "Event",
+    v => {
+      if (isObj(v)) return {
+        type: "Event",
+        value: {
+          id: v.id,
+          fields: isArray(children) ? 
+            children.map((c, i) => ({ name: v.fields[i].name, value: c.asParam(v.fields[i].value) }))
+            : v.fields.map(x => ({ name: x.name, value: children.asParam(x.value) }))
+        }
+      }
+      throwTypeError("Expected Object for type Event")
+    },
+    v => v
+  )
 
-export const Resource = type(
-  "Resource",
-  v => {
-    if (isObj(v)) return {
-      type: "Resource",
-      value: v
-    }
-    throwTypeError("Expected Object for type Resource")
-  },
-  v => v
-)
+export const Resource = (children = []) => 
+  type (
+    "Resource",
+    v => {
+      if (isObj(v)) return {
+        type: "Resource",
+        value: {
+          id: v.id,
+          fields: isArray(children) ? 
+            children.map((c, i) => ({ name: v.fields[i].name, value: c.value.asParam(v.fields[i].value) }))
+            : v.fields.map(x => ({ name: x.name, value: children.value.asParam(x.value) }))
+        }
+      }
+      throwTypeError("Expected Object for type Resource")
+    },
+    v => v
+  )
 
-export const Struct = type(
-  "Struct",
-  v => {
-    if (isObj(v)) return {
-      type: "Struct",
-      value: v
-    }
-    throwTypeError("Expected Object for type Struct")
-  },
-  v => v
-)
+export const Struct = (children = []) => 
+  type (
+    "Struct",
+    v => {
+      if (isObj(v)) return {
+        type: "Struct",
+        value: {
+          id: v.id,
+          fields: isArray(children) ? 
+            children.map((c, i) => ({ name: v.fields[i].name, value: c.asParam(v.fields[i].value) }))
+            : v.fields.map(x => ({ name: x.name, value: children.asParam(x.value) }))
+        }
+      }
+      throwTypeError("Expected Object for type Struct")
+    },
+    v => v
+  )
