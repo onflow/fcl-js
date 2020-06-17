@@ -47,14 +47,14 @@ import * as t from "./types.js"
     {address: "0x01", type: "0x01.CryptoKitty"},
   ],
   [
-    t.Array,
-    t.String.asParam("test"),
+    t.Array(t.String),
+    ["test"],
     {type: "Array", value: [{type: "String", value: "test"}]},
-    {type: "String", value: "test"},
+    ["test"],
   ],
   [
-    t.Array,
-    [t.String.asParam("test1"), t.String.asParam("test2")],
+    t.Array([t.String, t.String]),
+    ["test1", "test2"],
     {
       type: "Array",
       value: [
@@ -62,16 +62,16 @@ import * as t from "./types.js"
         {type: "String", value: "test2"},
       ],
     },
-    [
-      {type: "String", value: "test1"},
-      {type: "String", value: "test2"},
-    ],
+    ["test1", "test2"],
   ],
   [
-    t.Dictionary,
+    t.Dictionary([
+      {key: t.Int, value: t.String},
+      {key: t.Int, value: t.String},
+    ]),
     [
-      {key: t.Int.asParam(1), value: t.String.asParam("one")},
-      {key: t.Int.asParam(2), value: t.String.asParam("two")},
+      {key: 1, value: "one"},
+      {key: 2, value: "two"},
     ],
     {
       type: "Dictionary",
@@ -81,48 +81,90 @@ import * as t from "./types.js"
       ],
     },
     [
-      {key: {type: "Int", value: 1}, value: {type: "String", value: "one"}},
-      {key: {type: "Int", value: 2}, value: {type: "String", value: "two"}},
+      {key: 1, value: "one"},
+      {key: 2, value: "two"},
     ],
   ],
   [
-    t.Dictionary,
-    {key: t.Int.asParam(1), value: t.String.asParam("one")},
+    t.Dictionary({key: t.Int, value: t.String}),
+    {key: 1, value: "one"},
     {
       type: "Dictionary",
       value: [
         {key: {type: "Int", value: 1}, value: {type: "String", value: "one"}},
       ],
     },
-    {key: {type: "Int", value: 1}, value: {type: "String", value: "one"}},
+    {key: 1, value: "one"},
   ],
   [
-    t.Struct,
-    { id: "0x01.Jeffysaur", fields: [ { name: "Jeffysaur_Name", value: t.String.asParam("Mr Jeff The Dinosaur") } ] },
+    t.Struct({fields: [{value: t.String}]}),
+    {
+      id: "0x01.Jeffysaur",
+      fields: [{name: "Jeffysaur_Name", value: "Mr Jeff The Dinosaur"}],
+    },
     {
       type: "Struct",
-      value: { id: "0x01.Jeffysaur", fields: [ { name: "Jeffysaur_Name", value: { type: "String", value: "Mr Jeff The Dinosaur" } } ] },
+      value: {
+        id: "0x01.Jeffysaur",
+        fields: [
+          {
+            name: "Jeffysaur_Name",
+            value: {type: "String", value: "Mr Jeff The Dinosaur"},
+          },
+        ],
+      },
     },
-    { id: "0x01.Jeffysaur", fields: [ { name: "Jeffysaur_Name", value: { type: "String", value: "Mr Jeff The Dinosaur" } } ] },
+    {
+      id: "0x01.Jeffysaur",
+      fields: [{name: "Jeffysaur_Name", value: "Mr Jeff The Dinosaur"}],
+    },
   ],
   [
-    t.Event,
-    { id: "0x01.JeffWroteSomeJS", fields: [ { name: "wasTheCodeClean?", value: t.String.asParam("absolutely") } ] },
+    t.Event({fields: [{value: t.String}]}),
+    {
+      id: "0x01.JeffWroteSomeJS",
+      fields: [{name: "wasTheCodeClean?", value: "absolutely"}],
+    },
     {
       type: "Event",
-      value: { id: "0x01.JeffWroteSomeJS", fields: [ { name: "wasTheCodeClean?", value: { type: "String", value: "absolutely" } } ] },
+      value: {
+        id: "0x01.JeffWroteSomeJS",
+        fields: [
+          {
+            name: "wasTheCodeClean?",
+            value: {type: "String", value: "absolutely"},
+          },
+        ],
+      },
     },
-    { id: "0x01.JeffWroteSomeJS", fields: [ { name: "wasTheCodeClean?", value: { type: "String", value: "absolutely" } } ] },
+    {
+      id: "0x01.JeffWroteSomeJS",
+      fields: [{name: "wasTheCodeClean?", value: "absolutely"}],
+    },
   ],
   [
-    t.Resource,
-    { id: "0x01.Jeffysaur", fields: [ { name: "Jeffysaur_Name", value: t.String.asParam("Mr Jeff The Dinosaur") } ] },
+    t.Resource({fields: [{value: t.String}]}),
+    {
+      id: "0x01.Jeffysaur",
+      fields: [{name: "Jeffysaur_Name", value: "Mr Jeff The Dinosaur"}],
+    },
     {
       type: "Resource",
-      value: { id: "0x01.Jeffysaur", fields: [ { name: "Jeffysaur_Name", value: { type: "String", value: "Mr Jeff The Dinosaur" } } ] },
+      value: {
+        id: "0x01.Jeffysaur",
+        fields: [
+          {
+            name: "Jeffysaur_Name",
+            value: {type: "String", value: "Mr Jeff The Dinosaur"},
+          },
+        ],
+      },
     },
-    { id: "0x01.Jeffysaur", fields: [ { name: "Jeffysaur_Name", value: { type: "String", value: "Mr Jeff The Dinosaur" } } ] },
-  ]
+    {
+      id: "0x01.Jeffysaur",
+      fields: [{name: "Jeffysaur_Name", value: "Mr Jeff The Dinosaur"}],
+    },
+  ],
 ].forEach(([cast, input, asParam, asInjection]) => {
   describe(cast.label, () => {
     test(`t.${cast.label}.asParam(${input})`, () => {
