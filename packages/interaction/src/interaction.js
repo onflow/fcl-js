@@ -224,6 +224,7 @@ export const why /*   */ = (ix) => ix.reason
 
 export const isAccount /*  */ = (account) => Boolean(account.kind & ACCOUNT)
 export const isParam /*    */ = (param) => Boolean(param.kind & PARAM)
+export const isArgument /* */ = (argument) => Boolean(param.kind && ARGUMENT)
 
 const hardMode = (ix) => {
   for (let key of Object.keys(ix)) {
