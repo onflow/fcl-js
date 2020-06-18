@@ -57,6 +57,7 @@ const IX = `{
   "reason":null,
   "accounts":{},
   "params":{},
+  "arguments":{},
   "message": {
     "cadence":null,
     "refBlock":null,
