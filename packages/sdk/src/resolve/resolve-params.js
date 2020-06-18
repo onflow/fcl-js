@@ -13,6 +13,7 @@ export const resolveParams = async (ix) => {
     async function resParam(up) {
       if (typeof up.resolve === "function") return ({
         ...await up.resolve(),
+        index: up.index,
         tempId: up.tempId
       })
       return up
@@ -25,11 +26,11 @@ export const resolveParams = async (ix) => {
       asInjection: p.xform.asInjection(p.value),
     }
   })
-  params = Object.fromEntries(params
-    .filter(param => param.key != null)
-    .map(param => [param.key, param.xform.asInjection(param.value)]))
 
   if (isFn(cadence)) {
+    params = Object.fromEntries(params
+      .filter(param => param.key != null)
+      .map(param => [param.key, param.xform.asInjection(param.value)]))
     ix.message.cadence = cadence(params)
   } else if (isString(cadence)) {
     ix.message.cadence = cadence
