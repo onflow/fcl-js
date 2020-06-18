@@ -4,10 +4,10 @@ const isFn = d => typeof d === "function"
 
 export function params(px = []) {
   return pipe(
-    px.map(param => {
+    px.map((param, index) => {
       const p = isFn(param)
-        ? { resolve: param }
-        : param
+        ? { index, resolve: param }
+        : { ...param, index}
     
       return makeParam(p)
     }
