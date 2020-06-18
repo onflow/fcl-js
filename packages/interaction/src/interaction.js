@@ -35,6 +35,17 @@ const PRM = `{
   "tempId":null,
   "key":null,
   "value":null,
+  "asParam":null,
+  "xform":null,
+  "resolve": null
+}`
+
+const ARG = `{
+  "kind":${PARAM},
+  "tempId":null,
+  "key":null,
+  "value":null,
+  "asArgument":null,
   "xform":null,
   "resolve": null
 }`
@@ -53,7 +64,8 @@ const IX = `{
     "proposer":null,
     "payer":null,
     "authorizations":[],
-    "params":[]
+    "params":[],
+    "arguments":[]
   },
   "proposer":null,
   "authorizations":[],
@@ -161,8 +173,26 @@ export const makeParam = (param) => (ix) => {
   ix.params[tempId].tempId = tempId
   ix.params[tempId].key = param.key
   ix.params[tempId].value = param.value
+  ix.params[tempId].asParam = param.asParam
   ix.params[tempId].xform = param.xform
   ix.params[tempId].resolve = param.resolve
+  return Ok(ix)
+}
+
+export const makeArgument = (arg) => (ix) => {
+  let tempId = uuid()
+  while (uuidExists(ix, tempId)) {
+    tempId = uuid()
+  }
+  ix.message.arguments.push(tempId)
+
+  ix.arguments[tempId] = JSON.parse(ARG)
+  ix.arguments[tempId].tempId = tempId
+  ix.arguments[tempId].key = arg.key
+  ix.arguments[tempId].value = arg.value
+  ix.arguments[tempId].asArgument = arg.asArgument
+  ix.arguments[tempId].xform = arg.xform
+  ix.arguments[tempId].resolve = arg.resolve
   return Ok(ix)
 }
 
