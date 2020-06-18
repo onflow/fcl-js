@@ -162,6 +162,8 @@ export const makeParam = (param) => (ix) => {
   ix.params[tempId].key = param.key
   ix.params[tempId].value = param.value
   ix.params[tempId].xform = param.xform
+  ix.params[tempId].asParam = param.asParam
+  ix.params[tempId].asInjection = param.asInjection
   ix.params[tempId].resolve = param.resolve
   return Ok(ix)
 }

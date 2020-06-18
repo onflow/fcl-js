@@ -1,6 +1,7 @@
 ### Unreleased
 
 - YYYY-MM-DD **BREAKING?** -- description
+- 2020-06-18 -- Adds fields for xformed params in ix object
 
 ### 0.0.7 -- 2020-05-06
 
