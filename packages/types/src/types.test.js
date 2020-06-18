@@ -97,9 +97,8 @@ import * as t from "./types.js"
     {key: 1, value: "one"},
   ],
   [
-    t.Struct({fields: [{value: t.String}]}),
+    t.Struct("0x01.Jeffysaur", [{value: t.String}]),
     {
-      id: "0x01.Jeffysaur",
       fields: [{name: "Jeffysaur_Name", value: "Mr Jeff The Dinosaur"}],
     },
     {
@@ -115,14 +114,12 @@ import * as t from "./types.js"
       },
     },
     {
-      id: "0x01.Jeffysaur",
       fields: [{name: "Jeffysaur_Name", value: "Mr Jeff The Dinosaur"}],
     },
   ],
   [
-    t.Event({fields: [{value: t.String}]}),
+    t.Event("0x01.JeffWroteSomeJS", [{value: t.String}]),
     {
-      id: "0x01.JeffWroteSomeJS",
       fields: [{name: "wasTheCodeClean?", value: "absolutely"}],
     },
     {
@@ -138,14 +135,12 @@ import * as t from "./types.js"
       },
     },
     {
-      id: "0x01.JeffWroteSomeJS",
       fields: [{name: "wasTheCodeClean?", value: "absolutely"}],
     },
   ],
   [
-    t.Resource({fields: [{value: t.String}]}),
+    t.Resource("0x01.Jeffysaur", [{value: t.String}]),
     {
-      id: "0x01.Jeffysaur",
       fields: [{name: "Jeffysaur_Name", value: "Mr Jeff The Dinosaur"}],
     },
     {
@@ -161,7 +156,6 @@ import * as t from "./types.js"
       },
     },
     {
-      id: "0x01.Jeffysaur",
       fields: [{name: "Jeffysaur_Name", value: "Mr Jeff The Dinosaur"}],
     },
   ],
