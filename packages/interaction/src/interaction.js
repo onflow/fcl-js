@@ -10,8 +10,9 @@ export const PING /*                    */ = 0b10000000
 export const BAD /* */ = 0b01
 export const OK /*  */ = 0b10
 
-export const ACCOUNT /* */ = 0b01
-export const PARAM /*   */ = 0b10
+export const ACCOUNT /* */ = 0b001
+export const PARAM /*   */ = 0b010
+export const ARGUMENT /**/ = 0b100
 
 const ACCT = `{
   "kind":${ACCOUNT},
@@ -41,7 +42,7 @@ const PRM = `{
 }`
 
 const ARG = `{
-  "kind":${PARAM},
+  "kind":${ARGUMENT},
   "tempId":null,
   "key":null,
   "value":null,
