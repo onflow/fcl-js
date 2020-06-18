@@ -413,7 +413,7 @@ export const Dictionary = (children = []) =>
     (v) => v
   )
 
-export const Event = (children = []) =>
+export const Event = (id, fields = []) =>
   type(
     "Event",
     (v) => {
@@ -421,15 +421,15 @@ export const Event = (children = []) =>
         return {
           type: "Event",
           value: {
-            id: v.id,
-            fields: isArray(children.fields)
-              ? children.fields.map((c, i) => ({
+            id: id,
+            fields: isArray(fields)
+              ? fields.map((c, i) => ({
                   name: v.fields[i].name,
                   value: c.value.asParam(v.fields[i].value),
                 }))
               : v.fields.map((x) => ({
                   name: x.name,
-                  value: children.fields.value.asParam(x.value),
+                  value: fields.value.asParam(x.value),
                 })),
           },
         }
@@ -438,7 +438,7 @@ export const Event = (children = []) =>
     (v) => v
   )
 
-export const Resource = (children = []) =>
+export const Resource = (id, fields = []) =>
   type(
     "Resource",
     (v) => {
@@ -446,15 +446,15 @@ export const Resource = (children = []) =>
         return {
           type: "Resource",
           value: {
-            id: v.id,
-            fields: isArray(children.fields)
-              ? children.fields.map((c, i) => ({
+            id: id,
+            fields: isArray(fields)
+              ? fields.map((c, i) => ({
                   name: v.fields[i].name,
                   value: c.value.asParam(v.fields[i].value),
                 }))
               : v.fields.map((x) => ({
                   name: x.name,
-                  value: children.fields.value.asParam(x.value),
+                  value: fields.value.asParam(x.value),
                 })),
           },
         }
@@ -463,7 +463,7 @@ export const Resource = (children = []) =>
     (v) => v
   )
 
-export const Struct = (children = {fields: []}) =>
+export const Struct = (id, fields = []) =>
   type(
     "Struct",
     (v) => {
@@ -471,15 +471,15 @@ export const Struct = (children = {fields: []}) =>
         return {
           type: "Struct",
           value: {
-            id: v.id,
-            fields: isArray(children.fields)
-              ? children.fields.map((c, i) => ({
+            id: id,
+            fields: isArray(fields)
+              ? fields.map((c, i) => ({
                   name: v.fields[i].name,
                   value: c.value.asParam(v.fields[i].value),
                 }))
               : v.fields.map((x) => ({
                   name: x.name,
-                  value: children.fields.value.asParam(x.value),
+                  value: fields.value.asParam(x.value),
                 })),
           },
         }
