@@ -1,6 +1,7 @@
 ### Unreleased
 
 - YYYY-MM-DD **BREAKING?** -- description
+- 2020-06-18 -- Adds arguments to interaction ADT structure
 
 ### 0.0.7 -- 2020-05-06
 
