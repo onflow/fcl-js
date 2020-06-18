@@ -13,7 +13,6 @@ export const resolveParams = async (ix) => {
     async function resParam(up) {
       if (typeof up.resolve === "function") return ({
         ...await up.resolve(),
-        index: up.index,
         tempId: up.tempId
       })
       return up
