@@ -33,8 +33,11 @@ const ACCT = `{
 const PRM = `{
   "kind":${PARAM},
   "tempId":null,
+  "index":null,
   "key":null,
   "value":null,
+  "asParam":null,
+  "asInjection":null,
   "xform":null,
   "resolve": null
 }`
@@ -159,6 +162,7 @@ export const makeParam = (param) => (ix) => {
 
   ix.params[tempId] = JSON.parse(PRM)
   ix.params[tempId].tempId = tempId
+  ix.params[tempId].index = param.index
   ix.params[tempId].key = param.key
   ix.params[tempId].value = param.value
   ix.params[tempId].xform = param.xform
