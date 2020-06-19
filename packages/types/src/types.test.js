@@ -33,12 +33,12 @@ import * as t from "./types.js"
   [t.Bool, true, {type: "Bool", value: true}, true],
   [t.Address, "0x1", {type: "Address", value: "0x1"}, "0x1"],
   [t.Void, null, {type: "Void"}, null],
-  [t.Optional, null, {type: "Optional", value: null}, null],
+  [t.Optional(t.String), null, {type: "Optional", value: null}, null],
   [
-    t.Optional,
-    t.String.asParam("test"),
+    t.Optional(t.String),
+    "test",
     {type: "Optional", value: {type: "String", value: "test"}},
-    {type: "String", value: "test"},
+    "test",
   ],
   [
     t.Reference,
@@ -159,10 +159,10 @@ import * as t from "./types.js"
       fields: [{name: "Jeffysaur_Name", value: "Mr Jeff The Dinosaur"}],
     },
   ],
-].forEach(([cast, input, asParam, asInjection]) => {
+].forEach(([cast, input, asArgument, asInjection]) => {
   describe(cast.label, () => {
-    test(`t.${cast.label}.asParam(${input})`, () => {
-      expect(cast.asParam(input)).toStrictEqual(asParam)
+    test(`t.${cast.label}.asArgument(${input})`, () => {
+      expect(cast.asArgument(input)).toStrictEqual(asArgument)
     })
     test(`t.${cast.label}.asInjection(${input})`, () => {
       expect(cast.asInjection(input)).toStrictEqual(asInjection)
