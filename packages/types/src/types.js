@@ -1,6 +1,6 @@
-const type = (label, asParam, asInjection) => ({
+const type = (label, asArgument, asInjection) => ({
   label,
-  asParam,
+  asArgument,
   asInjection,
 })
 
@@ -346,14 +346,15 @@ export const Void = type(
   (v) => v
 )
 
-export const Optional = type(
-  "Optional",
-  (v) => ({
-    type: "Optional",
-    value: v,
-  }),
-  (v) => v
-)
+export const Optional = (children) =>
+  type(
+    "Optional",
+    (v) => ({
+      type: "Optional",
+      value: isNull(v) ? null : children.asArgument(v),
+    }),
+    (v) => v
+  )
 
 export const Reference = type(
   "Reference",
@@ -375,8 +376,8 @@ export const _Array = (children = []) =>
       return {
         type: "Array",
         value: isArray(children)
-          ? children.map((c, i) => c.asParam(v[i]))
-          : v.map((x) => children.asParam(x)),
+          ? children.map((c, i) => c.asArgument(v[i]))
+          : v.map((x) => children.asArgument(x)),
       }
     },
     (v) => v
@@ -393,18 +394,18 @@ export const Dictionary = (children = []) =>
           type: "Dictionary",
           value: isArray(children)
             ? children.map((c, i) => ({
-                key: c.key.asParam(v[i].key),
-                value: c.value.asParam(v[i].value),
+                key: c.key.asArgument(v[i].key),
+                value: c.value.asArgument(v[i].value),
               }))
             : isArray(v)
             ? v.map((x) => ({
-                key: children.key.asParam(x.key),
-                value: children.value.asParam(x.value),
+                key: children.key.asArgument(x.key),
+                value: children.value.asArgument(x.value),
               }))
             : [
                 {
-                  key: children.key.asParam(v.key),
-                  value: children.value.asParam(v.value),
+                  key: children.key.asArgument(v.key),
+                  value: children.value.asArgument(v.value),
                 },
               ],
         }
@@ -425,11 +426,11 @@ export const Event = (id, fields = []) =>
             fields: isArray(fields)
               ? fields.map((c, i) => ({
                   name: v.fields[i].name,
-                  value: c.value.asParam(v.fields[i].value),
+                  value: c.value.asArgument(v.fields[i].value),
                 }))
               : v.fields.map((x) => ({
                   name: x.name,
-                  value: fields.value.asParam(x.value),
+                  value: fields.value.asArgument(x.value),
                 })),
           },
         }
@@ -450,11 +451,11 @@ export const Resource = (id, fields = []) =>
             fields: isArray(fields)
               ? fields.map((c, i) => ({
                   name: v.fields[i].name,
-                  value: c.value.asParam(v.fields[i].value),
+                  value: c.value.asArgument(v.fields[i].value),
                 }))
               : v.fields.map((x) => ({
                   name: x.name,
-                  value: fields.value.asParam(x.value),
+                  value: fields.value.asArgument(x.value),
                 })),
           },
         }
@@ -475,11 +476,11 @@ export const Struct = (id, fields = []) =>
             fields: isArray(fields)
               ? fields.map((c, i) => ({
                   name: v.fields[i].name,
-                  value: c.value.asParam(v.fields[i].value),
+                  value: c.value.asArgument(v.fields[i].value),
                 }))
               : v.fields.map((x) => ({
                   name: x.name,
-                  value: fields.value.asParam(x.value),
+                  value: fields.value.asArgument(x.value),
                 })),
           },
         }
