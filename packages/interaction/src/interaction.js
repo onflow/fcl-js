@@ -96,7 +96,6 @@ const isFn = (d) => typeof d === "function"
 const CHARS = "abcdefghijklmnopqrstuvwxyz0123456789".split("")
 const randChar = () => CHARS[~~(Math.random() * CHARS.length)]
 export const uuid = () => Array.from({length: 10}, randChar).join("")
-export const uuidExists = (ix, uuid) => Boolean(ix.accounts[uuid] || ix.params[uuid] || ix.arguments[uuid])
 
 export const isInteraction = (ix) => {
   if (!isObj(ix) || isNull(ix) || isNumber(ix)) return false
