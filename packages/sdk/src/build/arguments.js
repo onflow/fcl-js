@@ -2,7 +2,7 @@ import {pipe, makeArgument} from "@onflow/interaction"
 
 const isFn = d => typeof d === "function"
 
-export function arguments(ag = []) {
+export function _arguments(ag = []) {
   return pipe(
     ag.map(arg => {
       const a = isFn(arg)
@@ -19,6 +19,6 @@ const identity = {
   asInjection: v => v,
 }
 
-export function argument(value, xform = identity) {
+export function _argument(value, xform = identity) {
   return {value, xform}
 }
