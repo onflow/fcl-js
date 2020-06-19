@@ -15,7 +15,7 @@ export function params(px = []) {
 }
 
 const identity = {
-  asParam: v => v,
+  asArgument: v => v,
   asInjection: v => v,
 }
 
