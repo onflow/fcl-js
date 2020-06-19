@@ -44,7 +44,6 @@ const PRM = `{
 const ARG = `{
   "kind":${ARGUMENT},
   "tempId":null,
-  "key":null,
   "value":null,
   "asArgument":null,
   "xform":null,
@@ -97,7 +96,7 @@ const isFn = (d) => typeof d === "function"
 const CHARS = "abcdefghijklmnopqrstuvwxyz0123456789".split("")
 const randChar = () => CHARS[~~(Math.random() * CHARS.length)]
 export const uuid = () => Array.from({length: 10}, randChar).join("")
-export const uuidExists = (ix, uuid) => Boolean(ix.accounts[uuid] || ix.params[uuid])
+export const uuidExists = (ix, uuid) => Boolean(ix.accounts[uuid] || ix.params[uuid] || ix.arguments[uuid])
 
 export const isInteraction = (ix) => {
   if (!isObj(ix) || isNull(ix) || isNumber(ix)) return false
@@ -139,36 +138,24 @@ const makeAccount = (acct, tempId) => (ix) => {
 
 export const makeAuthorizer = (acct) => (ix) => {
   let tempId = uuid()
-  while (uuidExists(ix, tempId)) {
-    tempId = uuid()
-  }
   ix.authorizations.push(tempId)
   return Ok(pipe(ix, [makeAccount(acct, tempId)]))
 }
 
 export const makeProposer = (acct) => (ix) => {
   let tempId = uuid()
-  while (uuidExists(ix, tempId)) {
-    tempId = uuid()
-  }
   ix.proposer = tempId
   return Ok(pipe(ix, [makeAccount(acct, tempId)]))
 }
 
 export const makePayer = (acct) => (ix) => {
   let tempId = uuid()
-  while (uuidExists(ix, tempId)) {
-    tempId = uuid()
-  }
   ix.payer = tempId
   return Ok(pipe(ix, [makeAccount(acct, tempId)]))
 } 
 
 export const makeParam = (param) => (ix) => {
   let tempId = uuid()
-  while (uuidExists(ix, tempId)) {
-    tempId = uuid()
-  }
   ix.message.params.push(tempId)
 
   ix.params[tempId] = JSON.parse(PRM)
@@ -183,14 +170,10 @@ export const makeParam = (param) => (ix) => {
 
 export const makeArgument = (arg) => (ix) => {
   let tempId = uuid()
-  while (uuidExists(ix, tempId)) {
-    tempId = uuid()
-  }
   ix.message.arguments.push(tempId)
 
   ix.arguments[tempId] = JSON.parse(ARG)
   ix.arguments[tempId].tempId = tempId
-  ix.arguments[tempId].key = arg.key
   ix.arguments[tempId].value = arg.value
   ix.arguments[tempId].asArgument = arg.asArgument
   ix.arguments[tempId].xform = arg.xform
@@ -224,7 +207,7 @@ export const why /*   */ = (ix) => ix.reason
 
 export const isAccount /*  */ = (account) => Boolean(account.kind & ACCOUNT)
 export const isParam /*    */ = (param) => Boolean(param.kind & PARAM)
-export const isArgument /* */ = (argument) => Boolean(param.kind && ARGUMENT)
+export const isArgument /* */ = (argument) => Boolean(argument.kind & ARGUMENT)
 
 const hardMode = (ix) => {
   for (let key of Object.keys(ix)) {
