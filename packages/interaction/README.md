@@ -42,7 +42,7 @@ Currently the Access Node recognizes 7 different types of interactions.
 - **status** _(all)_ `Int` -- a marker that represents the status of the interaction
 - **reason** _(all)_ `String` -- used to supply more information/feedback when a status is bad
 - **accounts** _(transaction, script)_
-  - **kind** _(transaction, script)_ `Int` -- denotes the kind of account, ACCOUNT or PARAM
+  - **kind** _(transaction, script)_ `Int` -- denotes the kind of account, ACCOUNT or PARAM or ARGUMENT
   - **tempId** _(transaction, script)_ `String` -- denotes the internal tempId for this account
   - **addr** _(transaction, script)_ `String` -- denotes the address of this account
   - **keyId** _(transaction, script)_ `Int` -- denotes the keyId in question for this account
@@ -56,12 +56,20 @@ Currently the Access Node recognizes 7 different types of interactions.
     - **payer** _(transaction, script)_ `Boolean` -- denotes if this account is a payer
     - **param** _(transaction, script)_ `Boolean` -- denotes if this account is a param
 - **params** _(transaction, script)_
-  - **kind** _(transaction, script)_ `Int` -- denotes the kind of param, ACCOUNT or PARAM
+  - **kind** _(transaction, script)_ `Int` -- denotes the kind of param, ACCOUNT or PARAM or ARGUMENT
   - **tempId** _(transaction, script)_ `String` -- the internal tempId for this param
   - **key** _(transaction, script)_ `String` -- the key for this param
   - **value** _(transaction, script)_ `Any` -- the value for this param
+  - **asParam** _(transaction, script)_ `Any` -- the asParam transformed value for this param
   - **xform** _(transaction, script)_ `Any` -- the transform for this param
   - **resolve** _(transaction, script)_ `Function` -- a resolver for this param
+- **arguments** _(transaction, script)_
+  - **kind** _(transaction, script)_ `Int` -- denotes the kind of argument, ACCOUNT or PARAM or ARGUMENT
+  - **tempId** _(transaction, script)_ `String` -- the internal tempId for this argument
+  - **value** _(transaction, script)_ `Any` -- the value for this argument
+  - **asArgument** _(transaction, script)_ `Any` -- the asArgument transformed value for this argument
+  - **xform** _(transaction, script)_ `Any` -- the transform for this argument
+  - **resolve** _(transaction, script)_ `Function` -- a resolver for this argument
 - **message** _(script, transaction)_
   - **cadence** _(script, transaction)_ `String` -- cadence code
   - **refBlock** _(transaction)_ `String` -- id of an existing block (used for timeout)
@@ -69,7 +77,8 @@ Currently the Access Node recognizes 7 different types of interactions.
   - **proposer** _(transaction)_ `String` -- the tempId of the account proposer for a transaction
   - **payer** _(transaction)_ `String` -- the tempId of the payer for a transaction
   - **authorizations** _(transaction)_ `Array<String>` -- list of tempIds referencing the accounts of the authorizers for a transaction
-  - **params** _(transaction, script)_ `Array<String>` -- list of tempIds referencing the params for a transaction
+  - **params** _(transaction, script)_ `Array<String>` -- list of tempIds referencing the params for a transaction or script
+  - **arguments** _(transaction, script)_ `Array<String>` -- list of tempIds referencing the arguments for a transaction or script
 - **proposer** _(transaction)_ `String` -- the tempId referencing the account of the proposer for a transaction
 - **payer** _(transaction)_ `String` -- the tempId referencing the account of the payer for a transaction
 - **authorizations** _(transaction)_ `Array<String>` -- list of tempIds referencing the accounts of the authorizers for a transaction
