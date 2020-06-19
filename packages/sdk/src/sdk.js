@@ -28,6 +28,7 @@ export {validator} from "./build/validator"
 
 // resolvers
 export {resolveAccounts} from "./resolve/resolve-accounts"
+export {resolveArguments} from "./resolve/resolve-arguments"
 export {resolveParams} from "./resolve/resolve-params"
 export {resolveSignatures} from "./resolve/resolve-signatures"
 export {resolveValidators} from "./resolve/resolve-validators"
