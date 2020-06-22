@@ -1,6 +1,7 @@
 ### Unreleased
 
 - YYYY-MM-DD **BREAKING?** -- description
+- 2020-06-22 -- Adds arguments to signature resolver
 - 2020-06-19 -- Adds argument resolver
 - 2020-06-19 -- Adds argument builder
 - 2020-06-08 -- Added validator builder
