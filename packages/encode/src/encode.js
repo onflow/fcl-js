@@ -10,6 +10,8 @@ const addressBuffer = addr => paddedHexBuffer(addr, 8)
 
 const blockBuffer = block => paddedHexBuffer(block, 32)
 
+const argumentToString = arg => Buffer.from(JSON.stringify(arg), "utf8")
+
 const scriptBuffer = script => Buffer.from(script, "utf8")
 const signatureBuffer = signature => Buffer.from(signature, "hex")
 
@@ -22,7 +24,7 @@ const preparePayload = tx => {
 
   return [
     scriptBuffer(tx.script),
-    [],
+    tx.arguments.map(argumentToString),
     blockBuffer(tx.refBlock),
     tx.gasLimit,
     addressBuffer(tx.proposalKey.address),
@@ -103,6 +105,7 @@ const isArray = v => isObject(v) && v instanceof Array
 
 const payloadFields = [
   {name: "script", check: isString},
+  {name: "arguments", check: isArray},
   {name: "refBlock", check: isString, defaultVal: "0"},
   {name: "gasLimit", check: isNumber},
   {name: "proposalKey", check: isObject},
