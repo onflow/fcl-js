@@ -22,7 +22,7 @@ export async function resolveSignatures(ix) {
     return ix.accounts[tempId]
   })
   let arguments = ix.message.arguments.map(tempId => {
-    return ix.arguments[tempId]
+    return ix.arguments[tempId].asArgument
   })
   const payer = ix.accounts[ix.payer]
   const proposer = ix.accounts[ix.proposer]
