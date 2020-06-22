@@ -21,11 +21,15 @@ export async function resolveSignatures(ix) {
   let authorizors = ix.authorizations.map(tempId => {
     return ix.accounts[tempId]
   })
+  let arguments = ix.message.arguments.map(tempId => {
+    return ix.arguments[tempId]
+  })
   const payer = ix.accounts[ix.payer]
   const proposer = ix.accounts[ix.proposer]
 
   const transactionPayload = encodeTransactionPayload({
     script: ix.message.cadence,
+    arguments,
     refBlock: ix.message.refBlock || null,
     gasLimit: ix.message.computeLimit,
     proposalKey: {
@@ -74,6 +78,7 @@ export async function resolveSignatures(ix) {
 
   const transactionEnvelope = encodeTransactionEnvelope({
     script: ix.message.cadence,
+    arguments,
     refBlock: ix.message.refBlock || null,
     gasLimit: ix.message.computeLimit,
     proposalKey: {
@@ -99,6 +104,7 @@ export async function resolveSignatures(ix) {
     message: transactionEnvelope,
     addr: payer.addr,
     keyId: payer.keyId,
+    arguments,
     roles: {
       proposer: proposer.addr === payer.addr,
       authorizer: Boolean(authorizors.find(a => a.addr === payer.addr)),
