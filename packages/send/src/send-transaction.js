@@ -8,6 +8,7 @@ const paddedHexBuffer = (hex, pad) =>
 const scriptBuffer = script => Buffer.from(script, "utf8")
 const hexBuffer = hex => Buffer.from(hex, "hex")
 const addressBuffer = addr => paddedHexBuffer(addr, 8)
+const argumentBuffer = arg => Buffer.from(JSON.stringify(arg), "utf8")
 
 export async function sendTransaction(ix, opts = {}) {
   const tx = new Transaction()
@@ -15,6 +16,7 @@ export async function sendTransaction(ix, opts = {}) {
   tx.setGasLimit(ix.message.computeLimit)
   tx.setReferenceBlockId(ix.message.refBlock ? hexBuffer(ix.message.refBlock) : null)
   tx.setPayer(addressBuffer(ix.accounts[ix.payer].addr))
+  ix.message.arguments.forEach(arg => tx.addArguments(argumentBuffer(ix.arguments[arg].asArgument)))
   ix.authorizations.forEach(tempId => tx.addAuthorizers(addressBuffer(ix.accounts[tempId].addr)))
 
   const proposalKey = new Transaction.ProposalKey()
