@@ -17,7 +17,7 @@ export const resolveArguments = async (ix) => {
   args.forEach(a => {
     ix.arguments[a.tempId] = {
       ...a,
-      asArgument: a.xform.asArgument(p.value),
+      asArgument: a.xform.asArgument(a.value),
     }
   })
 
