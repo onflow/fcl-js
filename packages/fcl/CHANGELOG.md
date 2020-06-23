@@ -2,6 +2,10 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.0.38
+
+- 2020-06-23 -- Added `fcl.serialize`
+
 ### 0.0.37 -- 2020-06-04
 
 - 2020-06-04 -- VSN `@onflow/sdk` 0.0.22 -> 0.0.23
