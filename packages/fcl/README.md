@@ -271,7 +271,7 @@ const UserProfile = () => {
     <>
       {user.identity.avatar && <Img src={user.identity.avatar} />}
       <Name>{user.identity.name || "Anonymous"}</Name>
-      <Button onClick={fcl.unauthenticate}>Sign Out</button>
+      <Button onClick={fcl.unauthenticate}>Sign Out</Button>
     </>
   )
 }
