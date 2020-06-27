@@ -111,7 +111,7 @@ Running the above command starts the emulator and generates a `flow.json` file s
 ```json
 {
   "accounts": {
-    "root": {
+    "service": {
       "address": "0000000000000000000000000000000000000001",
       "privateKey": "e19081c8964b8dcf3902cc71e37d1f07f86fb357d79dd2fb57006419e0f95e95",
       "sigAlgorithm": "ECDSA_P256",
@@ -122,11 +122,11 @@ Running the above command starts the emulator and generates a `flow.json` file s
 
 ```
 
-The emulated network is running and contains a single *root* account we can use to authorize transactions. We will connect the private key from this account to the `dev-wallet`.
+The emulated network is running and contains a single *service* account we can use to authorize transactions. We will connect the private key from this account to the `dev-wallet`.
 
 ## Start the Dev Wallet
 
-Create a `scripts` entry in your `package.json` with the following command. Copy and paste the private key from your root account in `flow.json` and attach it to an environment variable named `PK`
+Create a `scripts` entry in your `package.json` with the following command. Copy and paste the private key from your service account in `flow.json` and attach it to an environment variable named `PK`
 
 ```json
 {
@@ -145,7 +145,7 @@ npm run dev:wallet
 If all is well you should see
 
 ```
-@onflow/dev-wallet@0.0.4
+@onflow/dev-wallet@0.0.7
 *** *** *** *** *** *** ***
 
 🎉 FCL Dev Wallet has started:
@@ -153,7 +153,7 @@ If all is well you should see
 * FCL Authn:    <http://localhost:8701/flow/authenticate>
 * GraphiQL:     <http://localhost:8701/graphql>
 * Access Node:  <http://localhost:8080>
-* Root Address: 01
+* Service Address: 01
 * Private Key:  e19081c8964b8dcf3902cc71e37d1f07f86fb357d79dd2fb57006419e0f95e95
 
 Include this code in development to configure fcl:
