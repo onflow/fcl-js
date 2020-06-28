@@ -191,7 +191,7 @@ import logo from "./logo.svg";
 import "./App.css";
 
 + fcl.config()
-+    .put("challenge.handshake", "<http://localhost:8701/flow/authenticate>")
++    .put("challenge.handshake", "http://localhost:8701/flow/authenticate")
 
 function App() {
   // ...
