@@ -112,8 +112,8 @@ Running the above command starts the emulator and generates a `flow.json` file s
 {
   "accounts": {
     "root": {
-      "address": "0000000000000000000000000000000000000001",
-      "privateKey": "e19081c8964b8dcf3902cc71e37d1f07f86fb357d79dd2fb57006419e0f95e95",
+      "address": "f8d6e0586b0a20c7",
+      "privateKey": "0ab0b3c92adf319ab118f6c073003f7029bb6fa8eb986f47f9b139fbb189e655",
       "sigAlgorithm": "ECDSA_P256",
       "hashAlgorithm": "SHA3_256"
     }
@@ -131,7 +131,7 @@ Create a `scripts` entry in your `package.json` with the following command. Copy
 ```json
 {
   "scripts": {
-    "dev:wallet": "PK=e19081c8964b8dcf3902cc71e37d1f07f86fb357d79dd2fb57006419e0f95e95 fcl-wallet"
+    "dev:wallet": "PK=0ab0b3c92adf319ab118f6c073003f7029bb6fa8eb986f47f9b139fbb189e655 fcl-wallet"
   }
 }
 ```
@@ -153,8 +153,8 @@ If all is well you should see
 * FCL Authn:    <http://localhost:8701/flow/authenticate>
 * GraphiQL:     <http://localhost:8701/graphql>
 * Access Node:  <http://localhost:8080>
-* Root Address: 01
-* Private Key:  e19081c8964b8dcf3902cc71e37d1f07f86fb357d79dd2fb57006419e0f95e95
+* Service Address: f8d6e0586b0a20c7
+* Private Key:  0ab0b3c92adf319ab118f6c073003f7029bb6fa8eb986f47f9b139fbb189e655
 
 Include this code in development to configure fcl:
 
@@ -394,10 +394,10 @@ A common use for Cadence scripts is to acquire information about a Flow account'
 ```jsx
 const response = await fcl.send([
     sdk.script`
-	import HelloWorld from 0x02
+	import HelloWorld from 586b0d6e0a20c7f1
 
 	pub fun main() {
-	    let helloAccount = getAccount(0x02)
+	    let helloAccount = getAccount(586b0d6e0a20c7f1)
 	    let helloCapability = helloAccount.getCapability(/public/Hello)
 	    let helloReference = helloCapability!.borrow<&HelloWorld.HelloAsset>()
 
