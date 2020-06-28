@@ -294,7 +294,7 @@ And display the `CurrentUser` component in your app
 + import CurrentUser from "./CurrentUser"
 
 fcl.config()
- .put("challenge.handshake", "<http://localhost:8701/flow/authenticate>")
+ .put("challenge.handshake", "http://localhost:8701/flow/authenticate")
 
 function App() {
   return (
@@ -373,7 +373,7 @@ And display the component in your app
 + import ScriptOne from "./ScriptOne"
 
 fcl.config()
- .put("challenge.handshake", "<http://localhost:8701/flow/authenticate>")
+ .put("challenge.handshake", "http://localhost:8701/flow/authenticate")
 
 function App() {
   return (
@@ -451,7 +451,7 @@ Registering a decoding function using the code below will ensure that the respon
 // ...
 
 fcl.config()
-  .put("challenge.handshake", "<http://localhost:8701/flow/authenticate>")
+  .put("challenge.handshake", "http://localhost:8701/flow/authenticate")
 + .put("decoder.SomeStruct", data => new Point(data))
 
 // ...
