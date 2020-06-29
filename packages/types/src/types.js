@@ -28,7 +28,7 @@ export const UInt = type(
     if (isNumber(v) && isInteger(v))
       return {
         type: "UInt",
-        value: v,
+        value: v.toString(),
       }
     throwTypeError("Expected Positive Integer for type Unsigned Int")
   },
@@ -41,7 +41,7 @@ export const Int = type(
     if (isNumber(v) && isInteger(v))
       return {
         type: "Int",
-        value: v,
+        value: v.toString(),
       }
     throwTypeError("Expected Integer for type Int")
   },
@@ -54,7 +54,7 @@ export const UInt8 = type(
     if (isNumber(v) && isInteger(v))
       return {
         type: "UInt8",
-        value: v,
+        value: v.toString(),
       }
     throwTypeError("Expected integer for UInt8")
   },
@@ -67,7 +67,7 @@ export const Int8 = type(
     if (isNumber(v) && isInteger(v))
       return {
         type: "Int8",
-        value: v,
+        value: v.toString(),
       }
     throwTypeError("Expected positive integer for Int8")
   },
@@ -80,7 +80,7 @@ export const UInt16 = type(
     if (isNumber(v) && isInteger(v))
       return {
         type: "UInt16",
-        value: v,
+        value: v.toString(),
       }
     throwTypeError("Expected integer for UInt16")
   },
@@ -93,7 +93,7 @@ export const Int16 = type(
     if (isNumber(v) && isInteger(v))
       return {
         type: "Int16",
-        value: v,
+        value: v.toString(),
       }
     throwTypeError("Expected positive integer for Int16")
   },
@@ -106,7 +106,7 @@ export const UInt32 = type(
     if (isNumber(v) && isInteger(v))
       return {
         type: "UInt32",
-        value: v,
+        value: v.toString(),
       }
     throwTypeError("Expected integer for UInt32")
   },
@@ -119,7 +119,7 @@ export const Int32 = type(
     if (isNumber(v) && isInteger(v))
       return {
         type: "Int32",
-        value: v,
+        value: v.toString(),
       }
     throwTypeError("Expected positive integer for Int32")
   },
@@ -132,7 +132,7 @@ export const UInt64 = type(
     if (isNumber(v) && isInteger(v))
       return {
         type: "UInt64",
-        value: v,
+        value: v.toString(),
       }
     throwTypeError("Expected integer for UInt64")
   },
@@ -145,7 +145,7 @@ export const Int64 = type(
     if (isNumber(v) && isInteger(v))
       return {
         type: "Int64",
-        value: v,
+        value: v.toString(),
       }
     throwTypeError("Expected positive integer for Int64")
   },
@@ -158,7 +158,7 @@ export const UInt128 = type(
     if (isNumber(v) && isInteger(v))
       return {
         type: "UInt128",
-        value: v,
+        value: v.toString(),
       }
     throwTypeError("Expected integer for UInt128")
   },
@@ -171,7 +171,7 @@ export const Int128 = type(
     if (isNumber(v) && isInteger(v))
       return {
         type: "Int128",
-        value: v,
+        value: v.toString(),
       }
     throwTypeError("Expected positive integer for Int128")
   },
@@ -184,7 +184,7 @@ export const UInt256 = type(
     if (isNumber(v) && isInteger(v))
       return {
         type: "UInt256",
-        value: v,
+        value: v.toString(),
       }
     throwTypeError("Expected integer for UInt256")
   },
@@ -197,7 +197,7 @@ export const Int256 = type(
     if (isNumber(v) && isInteger(v))
       return {
         type: "Int256",
-        value: v,
+        value: v.toString(),
       }
     throwTypeError("Expected integer for Int256")
   },
@@ -210,7 +210,7 @@ export const Word8 = type(
     if (isNumber(v) && isInteger(v))
       return {
         type: "Word8",
-        value: v,
+        value: v.toString(),
       }
     throwTypeError("Expected positive number for Word8")
   },
@@ -223,7 +223,7 @@ export const Word16 = type(
     if (isNumber(v) && isInteger(v))
       return {
         type: "Word16",
-        value: v,
+        value: v.toString(),
       }
     throwTypeError("Expected positive number for Word16")
   },
@@ -236,7 +236,7 @@ export const Word32 = type(
     if (isNumber(v) && isInteger(v))
       return {
         type: "Word32",
-        value: v,
+        value: v.toString(),
       }
     throwTypeError("Expected positive number for Word32")
   },
@@ -249,7 +249,7 @@ export const Word64 = type(
     if (isNumber(v) && isInteger(v))
       return {
         type: "Word64",
-        value: v,
+        value: v.toString(),
       }
     throwTypeError("Expected positive number for Word64")
   },
@@ -262,7 +262,7 @@ export const UFix64 = type(
     if (isNumber(v))
       return {
         type: "UFix64",
-        value: v,
+        value: v.toString(),
       }
     throwTypeError("Expected positive integer for UFix64")
   },
@@ -275,7 +275,7 @@ export const Fix64 = type(
     if (isNumber(v))
       return {
         type: "Fix64",
-        value: v,
+        value: v.toString(),
       }
     throwTypeError("Expected integer for Fix64")
   },
