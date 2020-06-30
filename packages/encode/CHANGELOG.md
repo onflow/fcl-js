@@ -1,6 +1,9 @@
 ### Unreleased
 
 - YYYY-MM-DD **BREAKING?** -- description
+
+### 0.0.4 -- 2020-06-30
+
 - 2020-06-22 -- Adds arguments to encode
 
 ### 0.0.3 -- 2020-05-20
