@@ -35,9 +35,9 @@
   },
   "dependencies": {
     "@onflow/decode": "0.0.6",
-    "@onflow/encode": "0.0.3",
-    "@onflow/interaction": "0.0.7",
-    "@onflow/send": "0.0.12",
+    "@onflow/encode": "0.0.4",
+    "@onflow/interaction": "0.0.8",
+    "@onflow/send": "0.0.13",
     "@qvvg/templar": "0.0.1"
   }
 }
