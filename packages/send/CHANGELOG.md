@@ -1,6 +1,9 @@
 ### Unreleased
 
 - YYYY-MM-DD **BREAKING?** -- description
+
+### 0.0.13 -- 2020-06-30
+
 - 2020-06-22 -- Adds arguments to `sendTransaction`
 
 ### 0.0.12 -- 2020-05-06
