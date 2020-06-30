@@ -1,6 +1,9 @@
 ### Unreleased
 
 - YYYY-MM-DD **BREAKING?** -- description
+
+### 0.0.2 -- 2020-06-30
+
 - 2020-06-29 -- Stringifies int values to conform to JSON-CDC spec.
 
 ### 0.0.1 -- 2020-06-19
