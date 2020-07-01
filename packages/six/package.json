@@ -1,0 +1,43 @@
+{
+  "name": "@onflow/six",
+  "version": "0.0.0",
+  "description": "Flow SDK Stored Interactions",
+  "license": "Apache-2.0",
+  "author": "Dapper Labs <dev@dapperlabs.com>",
+  "homepage": "https://onflow.org",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/onflow/flow-js-sdk.git"
+  },
+  "bugs": {
+    "url": "https://github.com/onflow/flow-js-sdk/issues"
+  },
+  "jest": {
+    "transform": {
+      ".js": "jest-esm-transformer"
+    }
+  },
+  "devDependencies": {
+    "jest": "25.3.0",
+    "jest-esm-transformer": "1.0.0",
+    "microbundle": "0.12.0-next.8"
+  },
+  "source": "src/sdk.js",
+  "main": "dist/sdk.js",
+  "module": "dist/sdk.module.js",
+  "unpkg": "dist/sdk.umd.js",
+  "scripts": {
+    "prepublishOnly": "npm test && npm run build",
+    "test": "jest",
+    "build": "microbundle",
+    "test:watch": "jest --watch",
+    "start": "microbundle watch"
+  },
+  "dependencies": {
+    "@onflow/decode": "0.0.6",
+    "@onflow/encode": "0.0.4",
+    "@onflow/interaction": "0.0.8",
+    "@onflow/send": "0.0.13",
+    "@qvvg/templar": "0.0.1"
+  }
+}
