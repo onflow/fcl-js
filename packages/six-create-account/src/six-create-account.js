@@ -14,7 +14,7 @@ transaction(code: String, publicKeys: [String]) {
 }
 `
 
-export const CREATE_ACCOUNT_CADENCE_sha256_AS_hex = "b4b6397f2985d89662dbe4c2b8577545d49d64bce477935379c32cecaea63484";
+export const CREATE_ACCOUNT_CADENCE_sha256_AS_hex = "b4b6397f2985d89662dbe4c2b8577545d49d64bce477935379c32cecaea63484"
 
 export const createAccount = (code = "", publicKeys = []) => sdk.pipe([
     sdk.transaction(CREATE_ACCOUNT_CADENCE),

@@ -23,10 +23,10 @@
     "microbundle": "0.12.0-next.8"
   },
   "type": "module",
-  "source": "src/six.js",
-  "main": "dist/six.js",
-  "module": "dist/six.module.js",
-  "unpkg": "dist/six.umd.js",
+  "source": "src/six-create-account.js",
+  "main": "dist/six-create-account.js",
+  "module": "dist/six-create-account.module.js",
+  "unpkg": "dist/six-create-account.umd.js",
   "scripts": {
     "prepublishOnly": "npm test && npm run build",
     "test": "jest",
