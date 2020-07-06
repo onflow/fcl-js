@@ -32,8 +32,7 @@
     "test": "jest",
     "build": "microbundle",
     "test:watch": "jest --watch",
-    "start": "microbundle watch",
-    "hash": "node src/hash-six-create-account.js"
+    "start": "microbundle watch"
   },
   "dependencies": {
     "@onflow/sdk": "0.0.23",
