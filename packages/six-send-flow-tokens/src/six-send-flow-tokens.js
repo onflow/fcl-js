@@ -38,10 +38,11 @@ transaction(amount: UFix64, to: Address) {
     }
 }
 `
+
 export const template = ({ amount, to, proposer, from, payer }) =>
   sdk.pipe([
     sdk.invariant(amount > 0, "template({amount}) -- amount must be greater than 0"),
-    sdk.invariant(to, "Needs to be a thing"),
+    sdk.invariant(to != null, "template({to}) -- to must be defined"),
     sdk.transaction(CODE),
     sdk.args([
       sdk.arg(amount, t.UFix64),
@@ -51,7 +52,7 @@ export const template = ({ amount, to, proposer, from, payer }) =>
     sdk.authorizations([from]),
     sdk.payer(payer),
     sdk.validate((ix, {Ok, Bad}) => {
-      if (!hasSingleAuthorization(ix)) return Bad(ix, "Should only need a single authorization")
+      if (ix.authorizations.length > 1) return Bad(ix, "template only requires one authorization.")
       return Ok(ix)
     })
   ])
