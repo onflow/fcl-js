@@ -1,0 +1,41 @@
+{
+  "name": "@onflow/six-send-flow-tokens",
+  "version": "0.0.0",
+  "description": "Flow SDK Stored Interaction - Send Flow Tokens",
+  "license": "Apache-2.0",
+  "author": "Dapper Labs <dev@dapperlabs.com>",
+  "homepage": "https://onflow.org",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/onflow/flow-js-sdk.git"
+  },
+  "bugs": {
+    "url": "https://github.com/onflow/flow-js-sdk/issues"
+  },
+  "jest": {
+    "transform": {
+      ".js": "jest-esm-transformer"
+    }
+  },
+  "devDependencies": {
+    "jest": "25.3.0",
+    "jest-esm-transformer": "1.0.0",
+    "microbundle": "0.12.0-next.8"
+  },
+  "type": "module",
+  "source": "src/six-send-flow-tokens.js",
+  "main": "dist/six-send-flow-tokens.js",
+  "module": "dist/six-send-flow-tokens.module.js",
+  "unpkg": "dist/six-send-flow-tokens.umd.js",
+  "scripts": {
+    "prepublishOnly": "npm test && npm run build",
+    "test": "jest",
+    "build": "microbundle",
+    "test:watch": "jest --watch",
+    "start": "microbundle watch"
+  },
+  "dependencies": {
+    "@onflow/sdk": "0.0.23",
+    "@onflow/types": "0.0.2"
+  }
+}
