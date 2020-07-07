@@ -22,6 +22,7 @@ export async function resolveSignatures(ix) {
     return ix.accounts[tempId]
   })
   let args = ix.message.arguments.map(tempId => {
+    console.log("arg", ix.arguments[tempId].asArgument)
     return ix.arguments[tempId].asArgument
   })
   const payer = ix.accounts[ix.payer]
