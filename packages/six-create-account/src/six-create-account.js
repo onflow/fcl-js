@@ -21,7 +21,7 @@ transaction(code: String, publicKeys: [String]) {
 export const template = ({ proposer, authorization, payer, code = "", publicKeys = [] }) => sdk.pipe([
     sdk.invariant(publicKeys.length > 0, "template({publicKeys}) -- must include one public key when creating an account."),
     sdk.transaction(CODE),
-    sdk.args([sdk.arg(code, t.String), sdk.arg(publicKeys, t.Array(t.String))]),
+    sdk.args([sdk.arg(code, t.String), sdk.arg(publicKeys.map(k => Buffer.from(k).toString("hex")), t.Array(t.String))]),
     sdk.proposer(proposer),
     sdk.authorizations([authorization]),
     sdk.payer(payer),
