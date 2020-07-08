@@ -2,6 +2,7 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+- 2020-07-08 -- VSN `@onflow/sdk` 0.0.23 -> 0.0.24
 - 2020-07-08 -- Updates FCL's resolve implementation according to the new resolvers available in the SDK.
 
 ### 0.0.38
