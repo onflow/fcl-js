@@ -25,7 +25,7 @@ Building a interaction produces an unresolved interaction. For example, to build
 ```javascript
 const builtTxIx = await sdk.build([
   sdk.payer(sdk.authorization("01", signingFunction, 0)),
-  sdk.proposer(sdk.authorization("01",signingFunction, 0, seqNum)),
+  sdk.proposer(sdk.authorization("01", signingFunction, 0, seqNum)),
   sdk.transaction`transaction { prepare(acct: AuthAccount) {} execute { log("Hello") } }`,
   sdk.authorizations([sdk.authorization("01", signingFunction, 0)]),
 ])
