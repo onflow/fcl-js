@@ -1,7 +1,7 @@
 {
-  "name": "@onflow/fcl",
-  "version": "0.0.38",
-  "description": "Flow Client Library",
+  "name": "@onflow/six-create-account",
+  "version": "0.0.0",
+  "description": "Flow SDK Stored Interaction - Create Account",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
   "homepage": "https://onflow.org",
@@ -22,10 +22,11 @@
     "jest-esm-transformer": "1.0.0",
     "microbundle": "0.12.0-next.8"
   },
-  "source": "src/fcl.js",
-  "main": "dist/fcl.js",
-  "module": "dist/fcl.module.js",
-  "unpkg": "dist/fcl.umd.js",
+  "type": "module",
+  "source": "src/six-create-account.js",
+  "main": "dist/six-create-account.js",
+  "module": "dist/six-create-account.module.js",
+  "unpkg": "dist/six-create-account.umd.js",
   "scripts": {
     "prepublishOnly": "npm test && npm run build",
     "test": "jest",
@@ -35,7 +36,6 @@
   },
   "dependencies": {
     "@onflow/sdk": "0.0.24",
-    "@onflow/types": "0.0.1",
-    "queue-microtask": "1.1.2"
+    "@onflow/types": "0.0.2"
   }
 }
