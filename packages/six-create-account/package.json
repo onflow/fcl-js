@@ -1,7 +1,7 @@
 {
-  "name": "@onflow/send",
-  "version": "0.0.13",
-  "description": "Flow SDK Send",
+  "name": "@onflow/six-create-account",
+  "version": "0.0.0",
+  "description": "Flow SDK Stored Interaction - Create Account",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
   "homepage": "https://onflow.org",
@@ -22,10 +22,11 @@
     "jest-esm-transformer": "1.0.0",
     "microbundle": "0.12.0-next.8"
   },
-  "source": "src/send.js",
-  "main": "dist/send.js",
-  "module": "dist/send.module.js",
-  "unpkg": "dist/send.umd.js",
+  "type": "module",
+  "source": "src/six-create-account.js",
+  "main": "dist/six-create-account.js",
+  "module": "dist/six-create-account.module.js",
+  "unpkg": "dist/six-create-account.umd.js",
   "scripts": {
     "prepublishOnly": "npm test && npm run build",
     "test": "jest",
@@ -34,10 +35,7 @@
     "start": "microbundle watch"
   },
   "dependencies": {
-    "@improbable-eng/grpc-web": "0.12.0",
-    "@improbable-eng/grpc-web-node-http-transport": "0.12.0",
-    "@onflow/interaction": "0.0.7",
-    "@onflow/protobuf": "0.1.3",
-    "@onflow/response": "0.0.2"
+    "@onflow/sdk": "0.0.24",
+    "@onflow/types": "0.0.2"
   }
 }

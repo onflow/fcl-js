@@ -25,6 +25,7 @@ export {ref} from "./build/ref"
 export {script} from "./build/script"
 export {transaction} from "./build/transaction"
 export {validator} from "./build/validator"
+export {invariant} from "./build/invariant"
 
 // resolvers
 export {resolveAccounts} from "./resolve/resolve-accounts"

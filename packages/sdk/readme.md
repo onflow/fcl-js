@@ -4,7 +4,7 @@ A collection of modules that make interacting with [Flow](https://onflow.org) ea
 
 # Status
 
-- **Last Updated:** April 21st 2020
+- **Last Updated:** July 7th 2020
 - **Stable:** Yes
 - **Risk of Breaking Change:** Medium
 
@@ -25,7 +25,7 @@ Building a interaction produces an unresolved interaction. For example, to build
 ```javascript
 const builtTxIx = await sdk.build([
   sdk.payer(sdk.authorization("01", signingFunction, 0)),
-  sdk.proposer("01", 0, seqNum),
+  sdk.proposer(sdk.authorization("01", signingFunction, 0, seqNum)),
   sdk.transaction`transaction { prepare(acct: AuthAccount) {} execute { log("Hello") } }`,
   sdk.authorizations([sdk.authorization("01", signingFunction, 0)]),
 ])
@@ -38,8 +38,8 @@ Once a transaction interaction is built, it's still not quite ready to be sent t
 ```javascript
 const resolvedTxIx = await sdk.pipe(builtTxIx, [
   sdk.resolve([
-    sdk.resolveParams,
-    sdk.resolveAuthorizations,
+    sdk.resolveAccounts,
+    sdk.resolveSignatures
   ])
 )
 ```
@@ -60,65 +60,40 @@ Please reference the provided example project `react-simple` for example code.
 ### GetAccount
 
 ```javascript
-const response = await sdk.send(await sdk.pipe(await sdk.build([
+const response = await sdk.send(await sdk.build([
   sdk.getAccount(addr)
-]), [
-  sdk.resolve([
-    sdk.resolveParams,
-    sdk.resolveAuthorizations,
-  ]),
 ]), { node: "http://localhost:8080" })
 ```
 
 ### GetEvents
 
 ```javascript
-const response = await sdk.send(await sdk.pipe(await sdk.build([
+const response = await sdk.send(await sdk.build([
   sdk.getEvents(eventType, startBlock, endBlock),
-]), [
-  sdk.resolve([
-    sdk.resolveParams,
-    sdk.resolveAuthorizations,
-  ]),
 ]), { node: "http://localhost:8080" })
 ```
 
 ### GetLatestBlock
 
 ```javascript
-const response = await sdk.send(await sdk.pipe(await sdk.build([
+const response = await sdk.send(await sdk.build([
   sdk.getLatestBlock()
-]), [
-  sdk.resolve([
-    sdk.resolveParams,
-    sdk.resolveAuthorizations,
-  ]),
 ]), { node: "http://localhost:8080" })
 ```
 
 ### GetTransactionStatus
 
 ```javascript
-const response = await sdk.send(await sdk.pipe(await sdk.build([
+const response = await sdk.send(await sdk.build([
   sdk.getTransactionStatus(txId)
-]), [
-  sdk.resolve([
-    sdk.resolveParams,
-    sdk.resolveAuthorizations,
-  ]),
 ]), { node: "http://localhost:8080" })
 ```
 
 ### Ping
 
 ```javascript
-const response = await sdk.send(await sdk.pipe(await sdk.build([
+const response = await sdk.send(await sdk.build([
   sdk.ping()
-]), [
-  sdk.resolve([
-    sdk.resolveParams,
-    sdk.resolveAuthorizations,
-  ]),
 ]), { node: "http://localhost:8080" })
 ```
 
@@ -136,7 +111,6 @@ const response = await sdk.send(await sdk.pipe(await sdk.build([
 ]), [
   sdk.resolve([
     sdk.resolveParams,
-    sdk.resolveAuthorizations,
   ]),
 ]), { node: "http://localhost:8080" })
 ```
@@ -144,26 +118,21 @@ const response = await sdk.send(await sdk.pipe(await sdk.build([
 ### Transaction
 
 ```javascript
-const acctResponse = await sdk.send(await sdk.pipe(await sdk.build([
+const acctResponse = await sdk.send(await sdk.build([
   sdk.getAccount("01")
-]), [
-  sdk.resolve([
-    sdk.resolveParams,
-    sdk.resolveAuthorizations,
-  ]),
 ]), { node: "http://localhost:8080" })
 
 const seqNum = acctResponse.account.keys[0].sequenceNumber
 
 const response = await sdk.send(await sdk.pipe(await sdk.build([
   sdk.payer(sdk.authorization("01", signingFunction, 0)),
-  sdk.proposer("01", 0, seqNum),
+  sdk.proposer(sdk.authorization("01", signingFunction, 0, seqNum)),
   sdk.transaction`transaction { prepare(acct: AuthAccount) {} execute { log("Hello") } }`,
   sdk.authorizations([sdk.authorization("01", signingFunction, 0)]),
 ]), [
   sdk.resolve([
-    sdk.resolveParams,
-    sdk.resolveAuthorizations,
+    sdk.resolveAccounts,
+    sdk.resolveSignatures
   ]),
 ]), { node: "http://localhost:8080" })
 ```
