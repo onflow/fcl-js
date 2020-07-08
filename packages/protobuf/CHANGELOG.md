@@ -2,6 +2,8 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+- 2020-06-10 **BREAKING** -- Update protobufs according to latest changes to support script arguments
+
 ### 0.1.3 -- 2020-06-03
 
 - 2020-05-19 **BREAKING** -- Update protobufs according to latest changes to support transaction arguments

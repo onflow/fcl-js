@@ -98,6 +98,13 @@ export class ExecuteScriptAtBlockIDRequest extends jspb.Message {
   getScript_asB64(): string;
   setScript(value: Uint8Array | string): void;
 
+  clearArgumentsList(): void;
+  getArgumentsList(): Array<Uint8Array | string>;
+  getArgumentsList_asU8(): Array<Uint8Array>;
+  getArgumentsList_asB64(): Array<string>;
+  setArgumentsList(value: Array<Uint8Array | string>): void;
+  addArguments(value: Uint8Array | string, index?: number): Uint8Array | string;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): ExecuteScriptAtBlockIDRequest.AsObject;
   static toObject(includeInstance: boolean, msg: ExecuteScriptAtBlockIDRequest): ExecuteScriptAtBlockIDRequest.AsObject;
@@ -112,6 +119,7 @@ export namespace ExecuteScriptAtBlockIDRequest {
   export type AsObject = {
     blockId: Uint8Array | string,
     script: Uint8Array | string,
+    argumentsList: Array<Uint8Array | string>,
   }
 }
 

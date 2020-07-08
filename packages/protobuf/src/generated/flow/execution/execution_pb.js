@@ -122,7 +122,7 @@ if (goog.DEBUG && !COMPILED) {
  * @constructor
  */
 proto.execution.ExecuteScriptAtBlockIDRequest = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
+  jspb.Message.initialize(this, opt_data, 0, -1, proto.execution.ExecuteScriptAtBlockIDRequest.repeatedFields_, null);
 };
 goog.inherits(proto.execution.ExecuteScriptAtBlockIDRequest, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
@@ -820,6 +820,13 @@ proto.execution.GetAccountAtBlockIDResponse.prototype.hasAccount = function() {
 
 
 
+/**
+ * List of repeated fields within this message type.
+ * @private {!Array<number>}
+ * @const
+ */
+proto.execution.ExecuteScriptAtBlockIDRequest.repeatedFields_ = [3];
+
 
 
 if (jspb.Message.GENERATE_TO_OBJECT) {
@@ -852,7 +859,8 @@ proto.execution.ExecuteScriptAtBlockIDRequest.prototype.toObject = function(opt_
 proto.execution.ExecuteScriptAtBlockIDRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
     blockId: msg.getBlockId_asB64(),
-    script: msg.getScript_asB64()
+    script: msg.getScript_asB64(),
+    argumentsList: msg.getArgumentsList_asB64()
   };
 
   if (includeInstance) {
@@ -897,6 +905,10 @@ proto.execution.ExecuteScriptAtBlockIDRequest.deserializeBinaryFromReader = func
       var value = /** @type {!Uint8Array} */ (reader.readBytes());
       msg.setScript(value);
       break;
+    case 3:
+      var value = /** @type {!Uint8Array} */ (reader.readBytes());
+      msg.addArguments(value);
+      break;
     default:
       reader.skipField();
       break;
@@ -937,6 +949,13 @@ proto.execution.ExecuteScriptAtBlockIDRequest.serializeBinaryToWriter = function
   if (f.length > 0) {
     writer.writeBytes(
       2,
+      f
+    );
+  }
+  f = message.getArgumentsList_asU8();
+  if (f.length > 0) {
+    writer.writeRepeatedBytes(
+      3,
       f
     );
   }
@@ -1024,6 +1043,67 @@ proto.execution.ExecuteScriptAtBlockIDRequest.prototype.getScript_asU8 = functio
  */
 proto.execution.ExecuteScriptAtBlockIDRequest.prototype.setScript = function(value) {
   return jspb.Message.setProto3BytesField(this, 2, value);
+};
+
+
+/**
+ * repeated bytes arguments = 3;
+ * @return {!(Array<!Uint8Array>|Array<string>)}
+ */
+proto.execution.ExecuteScriptAtBlockIDRequest.prototype.getArgumentsList = function() {
+  return /** @type {!(Array<!Uint8Array>|Array<string>)} */ (jspb.Message.getRepeatedField(this, 3));
+};
+
+
+/**
+ * repeated bytes arguments = 3;
+ * This is a type-conversion wrapper around `getArgumentsList()`
+ * @return {!Array<string>}
+ */
+proto.execution.ExecuteScriptAtBlockIDRequest.prototype.getArgumentsList_asB64 = function() {
+  return /** @type {!Array<string>} */ (jspb.Message.bytesListAsB64(
+      this.getArgumentsList()));
+};
+
+
+/**
+ * repeated bytes arguments = 3;
+ * Note that Uint8Array is not supported on all browsers.
+ * @see http://caniuse.com/Uint8Array
+ * This is a type-conversion wrapper around `getArgumentsList()`
+ * @return {!Array<!Uint8Array>}
+ */
+proto.execution.ExecuteScriptAtBlockIDRequest.prototype.getArgumentsList_asU8 = function() {
+  return /** @type {!Array<!Uint8Array>} */ (jspb.Message.bytesListAsU8(
+      this.getArgumentsList()));
+};
+
+
+/**
+ * @param {!(Array<!Uint8Array>|Array<string>)} value
+ * @return {!proto.execution.ExecuteScriptAtBlockIDRequest} returns this
+ */
+proto.execution.ExecuteScriptAtBlockIDRequest.prototype.setArgumentsList = function(value) {
+  return jspb.Message.setField(this, 3, value || []);
+};
+
+
+/**
+ * @param {!(string|Uint8Array)} value
+ * @param {number=} opt_index
+ * @return {!proto.execution.ExecuteScriptAtBlockIDRequest} returns this
+ */
+proto.execution.ExecuteScriptAtBlockIDRequest.prototype.addArguments = function(value, opt_index) {
+  return jspb.Message.addToRepeatedField(this, 3, value, opt_index);
+};
+
+
+/**
+ * Clears the list making it empty but non-null.
+ * @return {!proto.execution.ExecuteScriptAtBlockIDRequest} returns this
+ */
+proto.execution.ExecuteScriptAtBlockIDRequest.prototype.clearArgumentsList = function() {
+  return this.setArgumentsList([]);
 };
 
 
