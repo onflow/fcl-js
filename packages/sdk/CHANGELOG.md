@@ -1,6 +1,11 @@
 ### Unreleased
 
 - YYYY-MM-DD **BREAKING?** -- description
+- 2020-07-07 -- Updates to Readme
+
+### 0.0.24 -- 2020-07-07
+
+- 2020-06-30 -- Update dependency versions
 - 2020-06-22 -- Adds arguments to signature resolver
 - 2020-06-19 -- Adds argument resolver
 - 2020-06-19 -- Adds argument builder
