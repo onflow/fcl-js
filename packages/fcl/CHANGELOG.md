@@ -2,6 +2,8 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+- 2020-07-08 -- Updates FCL's resolve implementation according to the new resolvers available in the SDK.
+
 ### 0.0.38
 
 - 2020-06-23 -- Added `fcl.serialize`
