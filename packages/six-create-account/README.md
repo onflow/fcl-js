@@ -27,10 +27,10 @@ fcl.config().put("accessNode", "http://localhost:8080");
 const response = await fcl.send([
     createAccount({
         proposer: fcl.currentUser().authorization,
-        authorization: fcl.currentUser().authorization,
-        payer: fcl.currentUser().authorization,
-        code: "my-cadence-code",                            // Cadence code as a utf8 string.
-        publicKeys: [myPublicKeyAsHexString]
+        authorization: fcl.currentUser().authorization,     
+        payer: fcl.currentUser().authorization,             
+        code: "my-cadence-code",                            // Cadence code as a utf8 encoded string.
+        publicKeys: [myPublicKeyAsHexString]                // Public Keys as hex encoded string.
     })
 ])
 
