@@ -2,6 +2,8 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+- 2020-07-08 -- Adds arguments to `sendExecuteScript`
+
 ### 0.0.13 -- 2020-06-30
 
 - 2020-06-22 -- Adds arguments to `sendTransaction`
