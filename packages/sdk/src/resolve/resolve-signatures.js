@@ -1,8 +1,24 @@
-import {Ok, isTransaction} from "@onflow/interaction"
+import {isTransaction} from "@onflow/interaction"
 import {
-  encodeTransactionPayload,
-  encodeTransactionEnvelope,
+  encodeTransactionPayload as encodeInsideMessage,
+  encodeTransactionEnvelope as encodeOutsideMessage,
 } from "@onflow/encode"
+
+function prepForEncoding(ix) {
+  return {
+    script: ix.message.cadence,
+    refBlock: ix.message.refBlock || null,
+    gasLimit: ix.message.computeLimit,
+    arguments: ix.message.arguments.map(cid => ix.arguments[cid].asArgument),
+    proposalKey: {
+      address: ix.accounts[ix.proposer].addr,
+      keyId: ix.accounts[ix.proposer].keyId,
+      sequenceNum: ix.accounts[ix.proposer].sequenceNum,
+    },
+    payer: ix.accounts[ix.payer].addr,
+    authorizers: ix.authorizations.map(cid => ix.accounts[cid].addr),
+  }
+}
 
 async function fetchSignatures(ix, signers = [], message) {
   return Promise.all(
@@ -28,116 +44,61 @@ async function fetchSignatures(ix, signers = [], message) {
   )
 }
 
-export async function resolveSignatures(ix) {
-  if (!isTransaction(ix)) return Ok(ix)
-
-  var insideSigners, insideSignatures, outsideSigners, outsideSignatures
-
+function collateSigners(ix) {
   // inside signers are: (authorizers + proposer) - payer
-  try {
-    insideSigners = new Set(ix.authorizations)
-    insideSigners.add(ix.proposer)
-    insideSigners.delete(ix.payer)
-    insideSigners = Array.from(insideSigners)
-  } catch (error) {
-    console.error("Inside Signer Discovery", error, {
-      ix,
-      insideSigners,
-      insideSignatures,
-      outsideSigners,
-      outsideSignatures,
-    })
-    throw error
-  }
+  let insideSigners = new Set(ix.authorizations)
+  insideSigners.add(ix.proposer)
+  insideSigners.delete(ix.payer)
+  insideSigners = Array.from(insideSigners)
 
   // outside signers are: payer
-  try {
-    outsideSigners = new Set([ix.payer])
-    outsideSigners = Array.from(outsideSigners)
-  } catch (error) {
-    console.error("Outside Signer Discovery", error, {
-      ix,
-      insideSigners,
-      insideSignatures,
-      outsideSigners,
-      outsideSignatures,
-    })
-    throw error
+  let outsideSigners = new Set([ix.payer])
+  outsideSigners = Array.from(outsideSigners)
+
+  return {insideSigners, outsideSigners}
+}
+
+function mutateAccountsWithSignatures(ix, compSigs) {
+  for (let {cid, signature} of compSigs) {
+    ix.accounts[cid].signature = signature
   }
+  return compSigs
+}
+
+export async function resolveSignatures(ix) {
+  if (!isTransaction(ix)) return ix
+
+  const {insideSigners, outsideSigners} = collateSigners(ix)
 
   // Get inside composite signatures for inside payload in parallel
-  try {
-    insideSignatures = await fetchSignatures(
+  const insideSignatures = mutateAccountsWithSignatures(
+    ix,
+    await fetchSignatures(
       ix,
       insideSigners,
-      encodeTransactionPayload({
-        script: ix.message.cadence,
-        refBlock: ix.message.refBlock || null,
-        gasLimit: ix.message.computeLimit,
-        proposalKey: {
-          address: ix.accounts[ix.proposer].addr,
-          keyId: ix.accounts[ix.proposer].keyId,
-          sequenceNum: ix.accounts[ix.proposer].sequenceNum,
-        },
-        payer: ix.accounts[ix.payer].addr,
-        authorizers: ix.authorizations.map(cid => ix.accounts[cid].addr),
-      })
+      encodeInsideMessage(prepForEncoding(ix))
     )
-    // add signatures to accounts
-    for (let {cid, signature} of insideSignatures) {
-      ix.accounts[cid].signature = signature
-    }
-  } catch (error) {
-    console.error("Fetching of Inside Signatures", error, {
-      ix,
-      insideSigners,
-      insideSignatures,
-      outsideSigners,
-      outsideSignatures,
-    })
-    throw error
-  }
+  )
 
   // Get outside composite signatures for outside payload in parallel
-  try {
-    outsideSignatures = await fetchSignatures(
+  const outsideSignatures = mutateAccountsWithSignatures(
+    ix,
+    await fetchSignatures(
       ix,
       outsideSigners,
-      encodeTransactionEnvelope({
-        script: ix.message.cadence,
-        refBlock: ix.message.refBlock || null,
-        gasLimit: ix.message.computeLimit,
-        proposalKey: {
-          address: ix.accounts[ix.proposer].addr,
-          keyId: ix.accounts[ix.proposer].keyId,
-          sequenceNum: ix.accounts[ix.proposer].sequenceNum,
-        },
-        payer: ix.accounts[ix.payer].addr,
-        authorizers: ix.authorizations.map(cid => ix.accounts[cid].addr),
+      encodeOutsideMessage({
+        ...prepForEncoding(ix),
         payloadSigs: insideSignatures,
       })
     )
-    // add signatures to accounts
-    for (let {cid, signature} of outsideSignatures) {
-      ix.accounts[cid].signature = signature
-    }
-  } catch (error) {
-    console.error("Fetching of Outside Signatures", error, {
-      ix,
-      insideSigners,
-      insideSignatures,
-      outsideSigners,
-      outsideSignatures,
-    })
-    throw error
-  }
+  )
 
-  return Ok(ix)
+  return ix
 }
 
 // TODO — WHAT WE WANT INSTEAD OF WHAT WE HAVE
 //
-// encodeTransactionPayload({
+// encodeInsideMessage({
 //   cadence: ___,
 //   refBlock: ___,
 //   computeLimit: ___,
@@ -150,14 +111,14 @@ export async function resolveSignatures(ix) {
 //   authorizers: [___],
 // })
 //
-// encodeTransactionPayload({
+// encodeInsideMessage({
 //   ...ix.message,
 //   proposer: ix.accounts[ix.proposer],
 //   payer: ix.accounts[ix.payer].addr,
 //   authorizers: ix.authorizers.map(cid => ix.accounts[cid].addr)
 // })
 //
-// encodeTransactionEnvelope({
+// encodeOutsideMessage({
 //   cadence: ___,
 //   refBlock: ___,
 //   computeLimit: ___,
@@ -171,7 +132,7 @@ export async function resolveSignatures(ix) {
 //   payloadSigs: [{ addr, keyId, signature }],
 // })
 //
-// encodeTransactionEnvelope({
+// encodeOutsideMessage({
 //   ...ix.message,
 //   proposer: ix.accounts[ix.proposer],
 //   payer: ix.accounts[ix.payer].addr,
