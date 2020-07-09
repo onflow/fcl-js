@@ -2,13 +2,16 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
-- 2020-07-08 -- VSN `@onflow/sdk` 0.0.23 -> 0.0.24
+### 0.0.40 -- 2020-07-09
+
+- 2020-07-09 -- Bring in resolveSignatures fix from SDK that passes arguments to the encoder function
 
 ### 0.0.39 -- 2020-07-09
 
 - 2020-07-09 -- Expose `fcl.args` and `fcl.arg`
-- 2020-07-09 -- Bring in resolveSignatures fix from SDK
+- 2020-07-09 -- Bring in resolveSignatures fix from SDK that deals with signatures better
 - 2020-07-08 -- Updates FCL's resolve implementation according to the new resolvers available in the SDK.
+- 2020-07-08 -- VSN `@onflow/sdk` 0.0.23 -> 0.0.24
 
 ### 0.0.38
 
