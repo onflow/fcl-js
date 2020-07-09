@@ -25,7 +25,7 @@ export const template = ({ proposer, authorization, payer, code = "", publicKeys
     sdk.proposer(proposer),
     sdk.authorizations([authorization]),
     sdk.payer(payer),
-    sdk.validate((ix, {Ok, Bad}) => {
+    sdk.validator((ix, {Ok, Bad}) => {
         if (ix.authorizations.length > 1) return Bad(ix, "template only requires one authorization.")
         return Ok(ix)
     })

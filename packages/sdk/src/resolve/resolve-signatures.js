@@ -1,121 +1,141 @@
-import {Ok, isTransaction, get} from "@onflow/interaction"
+import {isTransaction} from "@onflow/interaction"
 import {
-  encodeTransactionPayload,
-  encodeTransactionEnvelope,
+  encodeTransactionPayload as encodeInsideMessage,
+  encodeTransactionEnvelope as encodeOutsideMessage,
 } from "@onflow/encode"
 
-const ERROR_MINIMUM_AUTHORIZATIONS =
-  "Transactions require at least one authoriztion"
-
-function isFn(v) {
-  return typeof v === "function"
+function prepForEncoding(ix) {
+  return {
+    script: ix.message.cadence,
+    refBlock: ix.message.refBlock || null,
+    gasLimit: ix.message.computeLimit,
+    arguments: ix.message.arguments.map(cid => ix.arguments[cid].asArgument),
+    proposalKey: {
+      address: ix.accounts[ix.proposer].addr,
+      keyId: ix.accounts[ix.proposer].keyId,
+      sequenceNum: ix.accounts[ix.proposer].sequenceNum,
+    },
+    payer: ix.accounts[ix.payer].addr,
+    authorizers: ix.authorizations.map(cid => ix.accounts[cid].addr),
+  }
 }
 
-function isArray(v) {
-  return Array.isArray(v)
+async function fetchSignatures(ix, signers = [], message) {
+  return Promise.all(
+    signers.map(async cid => {
+      const compSig = await ix.accounts[cid].signingFunction({
+        message,
+        addr: ix.accounts[cid].addr,
+        keyId: ix.accounts[cid].keyId,
+        roles: ix.accounts[cid].role, // grr this should be roles,
+        interaction: ix,
+      })
+      compSig.cid = cid
+      if (ix.accounts[cid].addr !== compSig.addr) {
+        throw new Error(`${cid} — mismatching address in composite signature`)
+      }
+      if (ix.accounts[cid].keyId !== compSig.keyId) {
+        throw new Error(`${cid} — mismatching keyId in composite signature`)
+      }
+      compSig.sig = compSig.signature
+      compSig.address = compSig.addr
+      return compSig
+    })
+  )
+}
+
+function collateSigners(ix) {
+  // inside signers are: (authorizers + proposer) - payer
+  let insideSigners = new Set(ix.authorizations)
+  insideSigners.add(ix.proposer)
+  insideSigners.delete(ix.payer)
+  insideSigners = Array.from(insideSigners)
+
+  // outside signers are: payer
+  let outsideSigners = new Set([ix.payer])
+  outsideSigners = Array.from(outsideSigners)
+
+  return {insideSigners, outsideSigners}
+}
+
+function mutateAccountsWithSignatures(ix, compSigs) {
+  for (let {cid, signature} of compSigs) {
+    ix.accounts[cid].signature = signature
+  }
+  return compSigs
 }
 
 export async function resolveSignatures(ix) {
-  if (!isTransaction(ix)) return Ok(ix)
+  if (!isTransaction(ix)) return ix
 
-  let authorizors = ix.authorizations.map(tempId => {
-    return ix.accounts[tempId]
-  })
-  let args = ix.message.arguments.map(tempId => {
-    return ix.arguments[tempId].asArgument
-  })
-  const payer = ix.accounts[ix.payer]
-  const proposer = ix.accounts[ix.proposer]
+  const {insideSigners, outsideSigners} = collateSigners(ix)
 
-  const transactionPayload = encodeTransactionPayload({
-    script: ix.message.cadence,
-    arguments: args,
-    refBlock: ix.message.refBlock || null,
-    gasLimit: ix.message.computeLimit,
-    proposalKey: {
-      address: proposer.addr,
-      keyId: proposer.keyId,
-      sequenceNum: proposer.sequenceNum,
-    },
-    payer: payer.addr,
-    authorizers: authorizors.map(a => a.addr),
-  })
-
-  const axs = authorizors.map(
-    async function resolveSignature(authorizer) {
-      if (authorizer.addr === payer.addr) {
-        ix.accounts[authorizer.tempId] = {
-            ...ix.accounts[authorizer.tempId],
-            signature: null
-        }
-        return
-      }
-
-      const authzSignature = await authorizer.signingFunction({
-        message: transactionPayload,
-        addr: authorizer.addr,
-        keyId: authorizer.keyId,
-        roles: {
-          proposer: proposer.addr === authorizer.addr,
-          authorizer: true,
-          payer: payer.addr === authorizer.addr,
-        },
-        interaction: ix,
-      })
-
-      ix.accounts[authorizer.tempId] = {
-          ...ix.accounts[authorizer.tempId],
-          signature: authzSignature.signature,
-      }
-    }
+  // Get inside composite signatures for inside payload in parallel
+  const insideSignatures = mutateAccountsWithSignatures(
+    ix,
+    await fetchSignatures(
+      ix,
+      insideSigners,
+      encodeInsideMessage(prepForEncoding(ix))
+    )
   )
 
-  await Promise.all(axs)
-
-  authorizors = ix.authorizations.map(tempId => {
-    return ix.accounts[tempId]
-  })
-
-  const transactionEnvelope = encodeTransactionEnvelope({
-    script: ix.message.cadence,
-    arguments: args,
-    refBlock: ix.message.refBlock || null,
-    gasLimit: ix.message.computeLimit,
-    proposalKey: {
-      address: proposer.addr,
-      keyId: proposer.keyId,
-      sequenceNum: proposer.sequenceNum,
-    },
-    payer: payer.addr,
-    authorizers: authorizors.map(a => a.addr),
-    payloadSigs: authorizors
-      .map(ax => {
-        if (ax.signature === null) return null
-        return {
-          address: ax.addr,
-          keyId: ax.keyId,
-          sig: ax.signature,
-        }
+  // Get outside composite signatures for outside payload in parallel
+  const outsideSignatures = mutateAccountsWithSignatures(
+    ix,
+    await fetchSignatures(
+      ix,
+      outsideSigners,
+      encodeOutsideMessage({
+        ...prepForEncoding(ix),
+        payloadSigs: insideSignatures,
       })
-      .filter(ps => ps !== null),
-  })
+    )
+  )
 
-  const payerSignature = await payer.signingFunction({
-    message: transactionEnvelope,
-    addr: payer.addr,
-    keyId: payer.keyId,
-    roles: {
-      proposer: proposer.addr === payer.addr,
-      authorizer: Boolean(authorizors.find(a => a.addr === payer.addr)),
-      payer: true,
-    },
-    interaction: ix,
-  })
-
-  ix.accounts[ix.payer] = {
-      ...ix.accounts[ix.payer],
-      signature: payerSignature.signature,
-  }
-
-  return Ok(ix)
+  return ix
 }
+
+// TODO — WHAT WE WANT INSTEAD OF WHAT WE HAVE
+//
+// encodeInsideMessage({
+//   cadence: ___,
+//   refBlock: ___,
+//   computeLimit: ___,
+//   proposer: {
+//     addr: ___,
+//     keyId: ___,
+//     sequenceNum: __,
+//   },
+//   payer: ___,
+//   authorizers: [___],
+// })
+//
+// encodeInsideMessage({
+//   ...ix.message,
+//   proposer: ix.accounts[ix.proposer],
+//   payer: ix.accounts[ix.payer].addr,
+//   authorizers: ix.authorizers.map(cid => ix.accounts[cid].addr)
+// })
+//
+// encodeOutsideMessage({
+//   cadence: ___,
+//   refBlock: ___,
+//   computeLimit: ___,
+//   proposer: {
+//     addr: ___,
+//     keyId: ___,
+//     sequenceNum: __,
+//   },
+//   payer: ___,
+//   authorizers: [___],
+//   payloadSigs: [{ addr, keyId, signature }],
+// })
+//
+// encodeOutsideMessage({
+//   ...ix.message,
+//   proposer: ix.accounts[ix.proposer],
+//   payer: ix.accounts[ix.payer].addr,
+//   authorizers: ix.authorizers.map(cid => ix.accounts[cid].addr),
+//   payloadSigs: insideSignatures,
+// })

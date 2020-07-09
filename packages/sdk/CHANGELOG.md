@@ -1,6 +1,14 @@
 ### Unreleased
 
 - YYYY-MM-DD **BREAKING?** -- description
+
+### 0.0.26 -- 2020-07-09
+
+- 2020-07-09 -- FIX: resolveSignatures now passes arguments to encoder
+
+### 0.0.25 -- 2020-07-09
+
+- 2020-07-09 -- FIX: no longer lose signatures sometimes
 - 2020-07-07 -- Updates to Readme
 
 ### 0.0.24 -- 2020-07-07
