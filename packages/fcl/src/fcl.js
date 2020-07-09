@@ -28,6 +28,8 @@ export {
 export {
   authorizations,
   authorization,
+  args,
+  arg,
   params,
   param,
   proposer,

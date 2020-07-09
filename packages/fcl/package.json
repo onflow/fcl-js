@@ -1,6 +1,6 @@
 {
   "name": "@onflow/fcl",
-  "version": "0.0.38",
+  "version": "0.0.39",
   "description": "Flow Client Library",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
@@ -34,8 +34,8 @@
     "start": "microbundle watch"
   },
   "dependencies": {
-    "@onflow/sdk": "0.0.24",
-    "@onflow/types": "0.0.1",
+    "@onflow/sdk": "0.0.25",
+    "@onflow/types": "0.0.2",
     "queue-microtask": "1.1.2"
   }
 }
