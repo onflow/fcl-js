@@ -2,6 +2,10 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.0.3 -- 2020-07-10
+
+- 2020-07-10 -- Required version bump.
+
 ### 0.0.2 -- 2020-06-30
 
 - 2020-06-29 -- Stringifies int values to conform to JSON-CDC spec.
