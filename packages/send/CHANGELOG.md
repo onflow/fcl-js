@@ -2,6 +2,7 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+- 2020-07-13 -- VSN `@onflow/protobuf` 0.1.3 -> 0.1.4
 - 2020-07-08 -- Adds arguments to `sendExecuteScript`
 
 ### 0.0.13 -- 2020-06-30
