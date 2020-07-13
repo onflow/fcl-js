@@ -2,6 +2,10 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.0.27 -- 2020-7-13
+
+- 2020-07-13 -- VSN `@onflow/send` 0.0.13 -> 0.0.14
+
 ### 0.0.26 -- 2020-07-09
 
 - 2020-07-09 -- FIX: resolveSignatures now passes arguments to encoder
