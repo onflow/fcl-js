@@ -4,7 +4,7 @@ This package contains the protobuf files used by the Flow JS SDK to communicate 
 
 # Status
 
-- **Last Updated:** April 21st 2020
+- **Last Updated:** June 13th 2020
 - **Stable:** Yes
 - **Risk of Breaking Change:** High
 
