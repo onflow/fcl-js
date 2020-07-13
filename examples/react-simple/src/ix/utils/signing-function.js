@@ -16,6 +16,6 @@ export const signingFunction = ({
   return {
     addr,
     keyId,
-    signature: bufferToHexString(signTransactionPayload(flowJson.accounts.service.privateKey, hashToBuffer(message)))
+    signature: bufferToHexString(signTransactionPayload("68ee617d9bf67a4677af80aaca5a090fcda80ff2f4dbc340e0e36201fa1f1d8c", hashToBuffer(message)))
   }
 }

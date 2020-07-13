@@ -7,7 +7,7 @@ export const GetLatestBlock = () => {
   const run = async () => {
     const response = await sdk.send(await sdk.pipe(await sdk.build([
       sdk.getLatestBlock()
-    ])), { node: "http://localhost:8080" })
+    ])), { node: "http://access-001.candidate4.nodes.onflow.org:9000" })
     setResult(await sdk.decodeResponse(response))
   }
 

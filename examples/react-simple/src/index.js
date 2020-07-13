@@ -7,6 +7,8 @@ import {GetAccount} from "./ix/GetAccount"
 import {GetEvents} from "./ix/GetEvents"
 import {GetLatestBlock} from "./ix/GetLatestBlock"
 import {Ping} from "./ix/Ping"
+import {BatchTransactions} from "./ix/BatchTransactions"
+import {SixCreateAccount} from "./ix/SixCreateAccount"
 
 const App = () => (
   <div>
@@ -23,6 +25,10 @@ const App = () => (
     <GetLatestBlock />
     <hr />
     <Ping />
+    <hr />
+    <BatchTransactions />
+    <hr />
+    <SixCreateAccount />
   </div>
 )
 

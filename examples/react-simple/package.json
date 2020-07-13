@@ -11,10 +11,13 @@
   "license": "ISC",
   "dependencies": {
     "@onflow/bytes": "0.0.1",
-    "@onflow/sdk": "0.0.23",
+    "@onflow/sdk": "file:../../packages/sdk",
+    "@onflow/six-create-account": "file:../../packages/six-create-account",
+    "@onflow/types": "file:../../packages/types",
     "elliptic": "^6.5.2",
     "react": "16.13.1",
     "react-dom": "16.13.1",
+    "rlp": "^2.2.5",
     "sha3": "^2.1.2"
   },
   "devDependencies": {
