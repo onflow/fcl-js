@@ -2,6 +2,10 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.0.41 -- 2020-07-13
+
+- 2020-07-13 -- VSN `@onflow/sdk` 0.0.26 -> 0.0.27
+
 ### 0.0.40 -- 2020-07-09
 
 - 2020-07-09 -- Bring in resolveSignatures fix from SDK that passes arguments to the encoder function
