@@ -1,7 +1,7 @@
 {
-  "name": "@onflow/six-create-account",
-  "version": "0.0.0",
-  "description": "Flow SDK Stored Interaction - Create Account",
+  "name": "@onflow/util-actor",
+  "version": "0.0.1",
+  "description": "Actors to enforce ordered operations/transitions of state",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
   "homepage": "https://onflow.org",
@@ -22,20 +22,18 @@
     "jest-esm-transformer": "1.0.0",
     "microbundle": "0.12.0-next.8"
   },
-  "type": "module",
-  "source": "src/six-create-account.js",
-  "main": "dist/six-create-account.js",
-  "module": "dist/six-create-account.module.js",
-  "unpkg": "dist/six-create-account.umd.js",
+  "dependencies": {
+    "queue-microtask": "1.1.2"
+  },
+  "source": "src/actor.js",
+  "main": "dist/actor.js",
+  "module": "dist/actor.module.js",
+  "unpkg": "dist/actor.umd.js",
   "scripts": {
     "prepublishOnly": "npm test && npm run build",
     "test": "jest",
     "build": "microbundle",
     "test:watch": "jest --watch",
     "start": "microbundle watch"
-  },
-  "dependencies": {
-    "@onflow/sdk": "0.0.27",
-    "@onflow/types": "0.0.2"
   }
 }
