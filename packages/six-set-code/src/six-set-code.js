@@ -16,7 +16,6 @@ transaction(code: String) {
 `
 
 export const template = ({ proposer, authorization, payer, code = "" }) => sdk.pipe([
-    sdk.invariant(!!code, "template({CODE}) -- must include code to set on an account."),
     sdk.transaction(CODE),
     sdk.args([sdk.arg(Buffer.from(code, "utf8").toString("hex"), t.String)]),
     sdk.proposer(proposer),
