@@ -1,23 +1,19 @@
-const DEFAULT_ALPHABET = "aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYxX123456789"
-const DEFAULT_NUMBER_OF_GROUPS = 4
-const DEFAULT_GROUP_LENGTH = 8
+const ALPHABET = "aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ1234567890"
+const NUMBER_OF_GROUPS = 4
+const GROUP_LENGTH = 8
 
-export const uid = ({
-  alphabet = DEFAULT_ALPHABET,
-  numberOfGroups = DEFAULT_NUMBER_OF_GROUPS,
-  groupLength = DEFAULT_GROUP_LENGTH
-} = {}) => {
+export const uid = () => {
   const getRandomFromAlphabet = () => {
-    return alphabet.charAt(~~(Math.random() * alphabet.length))
+    return ALPHABET.charAt(~~(Math.random() * ALPHABET.length))
   }
 
   let uid = ""
 
-  for (var i = 1; i <= numberOfGroups; i++) {
-    for (var j = 1; j <= groupLength; j++) {
+  for (var i = 1; i <= NUMBER_OF_GROUPS; i++) {
+    for (var j = 1; j <= GROUP_LENGTH; j++) {
         uid += getRandomFromAlphabet()
     }
-    if (i != numberOfGroups) uid += "-"
+    if (i != NUMBER_OF_GROUPS) uid += "-"
   }
 
   return uid
