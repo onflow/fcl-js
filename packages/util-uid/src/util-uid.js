@@ -1,20 +1,10 @@
-const ALPHABET = "aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ1234567890"
-const NUMBER_OF_GROUPS = 4
-const GROUP_LENGTH = 8
+// Inspired by: https://github.com/lukeed/uid/blob/master/src/index.js , thank you Luke! https://github.com/lukeed
 
-const getRandomFromAlphabet = () => {
-  return ALPHABET.charAt(~~(Math.random() * ALPHABET.length))
-}
+var HEX = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+var T = HEX.length
 
-export const uid = () => {
-  let uid = ""
-
-  for (var i = 1; i <= NUMBER_OF_GROUPS; i++) {
-    for (var j = 1; j <= GROUP_LENGTH; j++) {
-        uid += getRandomFromAlphabet()
-    }
-    if (i != NUMBER_OF_GROUPS) uid += "-"
-  }
-
-  return uid
+export function uid () {
+  var str='', num=32
+  while (num--) str += HEX[Math.random() * T | 0]
+  return str
 }
