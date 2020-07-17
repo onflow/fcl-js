@@ -2,11 +2,11 @@ const ALPHABET = "aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ1234567890
 const NUMBER_OF_GROUPS = 4
 const GROUP_LENGTH = 8
 
-export const uid = () => {
-  const getRandomFromAlphabet = () => {
-    return ALPHABET.charAt(~~(Math.random() * ALPHABET.length))
-  }
+const getRandomFromAlphabet = () => {
+  return ALPHABET.charAt(~~(Math.random() * ALPHABET.length))
+}
 
+export const uid = () => {
   let uid = ""
 
   for (var i = 1; i <= NUMBER_OF_GROUPS; i++) {
