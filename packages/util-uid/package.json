@@ -1,7 +1,7 @@
 {
-  "name": "@onflow/util-uuid",
+  "name": "@onflow/util-uid",
   "version": "0.0.1",
-  "description": "Utilities to transform javascript values into Cadence understandable values",
+  "description": "Utilities to generate Unique Identifiers",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
   "homepage": "https://onflow.org",
@@ -22,10 +22,10 @@
     "jest-esm-transformer": "1.0.0",
     "microbundle": "0.12.0-next.8"
   },
-  "source": "src/util-uuid.js",
-  "main": "dist/util-uuid.js",
-  "module": "dist/util-uuid.module.js",
-  "unpkg": "dist/util-uuid.umd.js",
+  "source": "src/util-uid.js",
+  "main": "dist/util-uid.js",
+  "module": "dist/util-uid.module.js",
+  "unpkg": "dist/util-uid.umd.js",
   "scripts": {
     "prepublishOnly": "npm test && npm run build",
     "test": "jest",
