@@ -1,6 +1,6 @@
 import "../default-config"
-import {config} from "../config"
-import {spawn, send, INIT, SUBSCRIBE, UNSUBSCRIBE} from "../actor"
+import {config} from "@onflow/config"
+import {spawn, send, INIT, SUBSCRIBE, UNSUBSCRIBE} from "@onflow/util-actor"
 import {send as fclSend} from "../send"
 import {decode} from "../decode"
 import {getTransactionStatus} from "@onflow/sdk"

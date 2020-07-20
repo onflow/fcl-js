@@ -1,5 +1,5 @@
 import "./default-config"
-export {config} from "./config"
+export {config} from "@onflow/config"
 export {send} from "./send"
 export {serialize} from "./serialize"
 export {decode} from "./decode"

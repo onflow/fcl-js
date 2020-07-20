@@ -2,6 +2,10 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.0.42 -- 2020-07-20
+
+- 2020-07-20 -- Convert config and actor to use external `@onflow/confg` and `@onflow/util-actor`
+
 ### 0.0.41 -- 2020-07-13
 
 - 2020-07-13 -- VSN `@onflow/sdk` 0.0.26 -> 0.0.27

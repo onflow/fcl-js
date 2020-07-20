@@ -1,6 +1,6 @@
 import {build, send as sdkSend} from "@onflow/sdk"
+import {config} from "@onflow/config"
 import {resolve} from "../resolve"
-import {config} from "../config"
 
 export const send = async (args = [], opts = {}) => {
   opts.node = opts.node || (await config().get("accessNode.api"))
