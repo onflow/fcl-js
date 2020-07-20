@@ -33,8 +33,5 @@ export {resolveArguments} from "./resolve/resolve-arguments"
 export {resolveParams} from "./resolve/resolve-params"
 export {resolveSignatures} from "./resolve/resolve-signatures"
 export {resolveValidators} from "./resolve/resolve-validators"
-<<<<<<< HEAD
 export {resolveProposerSequenceNumber} from "./resolve/resolve-proposer-sequence-number"
-=======
 export {resolveRefBlockId} from "./resolve/resolve-ref-block-id"
->>>>>>> PKG -- [sdk] Adds refBlockId resolver
