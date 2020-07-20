@@ -1,5 +1,8 @@
-import {isTransaction, isScript, Ok, Bad} from "@onflow/interaction"
-import { send, pipe, build, getLatestBlock, decodeResponse } from "../sdk.js"
+import {isTransaction, Ok} from "@onflow/interaction"
+import {send} from "@onflow/send"
+import {decodeResponse} from "@onflow/decode"
+import {build} from "../build"
+import {getLatestBlock} from "../build/get-latest-block"
 
 export const resolveRefBlockId = ({ node }) => async (ix) => {
     if (!(isTransaction(ix))) return Ok(ix)
