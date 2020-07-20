@@ -2,6 +2,7 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 - 2020-07-20 -- Adds resolveProposerSequenceNumber resolve to resolve proposer sequence numbers where they are unspecified.
+- 2020-07-20 -- Adds resolveRefBlockId resolver to resolve reference block ids on transactions where they are unspecified.
 
 ### 0.0.27 -- 2020-7-13
 
