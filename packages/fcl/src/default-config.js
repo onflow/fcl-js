@@ -1,4 +1,4 @@
-import {config} from "./config"
+import {config} from "@onflow/config"
 
 config()
   .put("accessNode.api", "http://localhost:8080")
