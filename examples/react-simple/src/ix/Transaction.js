@@ -90,7 +90,7 @@ export const Transaction = () => {
       resolveAccounts   // Will prepare each account such that it can be used for this transaction interaction.
       resolveSignatures // Will retrieve a signature for a specified account.
       resolveValidators // Will execute each validator specified for this interaction.
-      
+
     */
 
     const response = await sdk.send(await sdk.pipe(await sdk.build([
@@ -100,7 +100,7 @@ export const Transaction = () => {
       sdk.proposer(sdk.authorization("f8d6e0586b0a20c7", signingFunction, 0, seqNum)),
       sdk.authorizations([sdk.authorization("f8d6e0586b0a20c7", signingFunction, 0)]),
       sdk.validator((ix, {Ok, Bad}) => {
-        if (Object.keys(ix.arguments).length > 1) return Bad(ix, "This transaction should only have one authorization!")
+        if (Object.keys(ix.arguments).length > 1) return Bad(ix, "This transaction should only have one argument!")
         return Ok(ix)
     })
     ]), [
