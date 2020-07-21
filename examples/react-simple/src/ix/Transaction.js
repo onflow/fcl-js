@@ -67,7 +67,7 @@ export const Transaction = () => {
       Validators
       ----------
 
-      To guarantee that everything has gone as expected while building and resolving your transaction, validators act as a
+      To check that everything has gone as expected while building and resolving your transaction, validators act as a
       mechanism to check the interaction object has been formulated to your desired specification.
 
       Lets assume you expect only one argument to be included in this transaction interaction, a validator for such looks like:
@@ -80,7 +80,7 @@ export const Transaction = () => {
       Resolvers
       ---------
 
-      Before a transaction interaction is ready to be sent, it must first be passed through a sequence of resolvers.
+      Before a transaction interaction is ready to be sent, it must, if not yet ready, be first be passed through a sequence of resolvers.
       Resolvers fill in and further prepare an interaction into a state where it is ready to be sent.
       Note, the order of the resolvers does matter, since the result of a prior resolver may be needed for one that proceeds it.
 
