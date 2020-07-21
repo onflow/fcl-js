@@ -174,9 +174,16 @@ async function authorization(account) {
       unrender = renderAuthzFrame(resp.local[0])
     }
 
-    const result = await pollForAuthzUpdates(resp.authorizationUpdates)
-    unrender()
-    return result
+    let result = null;
+    try {
+      result = await pollForAuthzUpdates(resp.authorizationUpdates)
+    } catch (error) {
+      console.error(error)
+      throw error
+    } finally {
+      unrender()
+      return result
+    }
   }
 
   return {
