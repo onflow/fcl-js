@@ -143,6 +143,7 @@ export interface TransactionStatusMap {
   FINALIZED: 2;
   EXECUTED: 3;
   SEALED: 4;
+  EXPIRED: 5;
 }
 
 export const TransactionStatus: TransactionStatusMap;

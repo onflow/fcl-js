@@ -109,13 +109,22 @@ AccessAPI.GetTransactionResult = {
   responseType: flow_access_access_pb.TransactionResultResponse
 };
 
-AccessAPI.GetAccount = {
-  methodName: "GetAccount",
+AccessAPI.GetAccountAtLatestBlock = {
+  methodName: "GetAccountAtLatestBlock",
   service: AccessAPI,
   requestStream: false,
   responseStream: false,
-  requestType: flow_access_access_pb.GetAccountRequest,
-  responseType: flow_access_access_pb.GetAccountResponse
+  requestType: flow_access_access_pb.GetAccountAtLatestBlockRequest,
+  responseType: flow_access_access_pb.AccountResponse
+};
+
+AccessAPI.GetAccountAtBlockHeight = {
+  methodName: "GetAccountAtBlockHeight",
+  service: AccessAPI,
+  requestStream: false,
+  responseStream: false,
+  requestType: flow_access_access_pb.GetAccountAtBlockHeightRequest,
+  responseType: flow_access_access_pb.AccountResponse
 };
 
 AccessAPI.ExecuteScriptAtLatestBlock = {
@@ -161,6 +170,15 @@ AccessAPI.GetEventsForBlockIDs = {
   responseStream: false,
   requestType: flow_access_access_pb.GetEventsForBlockIDsRequest,
   responseType: flow_access_access_pb.EventsResponse
+};
+
+AccessAPI.GetNetworkParameters = {
+  methodName: "GetNetworkParameters",
+  service: AccessAPI,
+  requestStream: false,
+  responseStream: false,
+  requestType: flow_access_access_pb.GetNetworkParametersRequest,
+  responseType: flow_access_access_pb.GetNetworkParametersResponse
 };
 
 exports.AccessAPI = AccessAPI;
@@ -511,11 +529,42 @@ AccessAPIClient.prototype.getTransactionResult = function getTransactionResult(r
   };
 };
 
-AccessAPIClient.prototype.getAccount = function getAccount(requestMessage, metadata, callback) {
+AccessAPIClient.prototype.getAccountAtLatestBlock = function getAccountAtLatestBlock(requestMessage, metadata, callback) {
   if (arguments.length === 2) {
     callback = arguments[1];
   }
-  var client = grpc.unary(AccessAPI.GetAccount, {
+  var client = grpc.unary(AccessAPI.GetAccountAtLatestBlock, {
+    request: requestMessage,
+    host: this.serviceHost,
+    metadata: metadata,
+    transport: this.options.transport,
+    debug: this.options.debug,
+    onEnd: function (response) {
+      if (callback) {
+        if (response.status !== grpc.Code.OK) {
+          var err = new Error(response.statusMessage);
+          err.code = response.status;
+          err.metadata = response.trailers;
+          callback(err, null);
+        } else {
+          callback(null, response.message);
+        }
+      }
+    }
+  });
+  return {
+    cancel: function () {
+      callback = null;
+      client.close();
+    }
+  };
+};
+
+AccessAPIClient.prototype.getAccountAtBlockHeight = function getAccountAtBlockHeight(requestMessage, metadata, callback) {
+  if (arguments.length === 2) {
+    callback = arguments[1];
+  }
+  var client = grpc.unary(AccessAPI.GetAccountAtBlockHeight, {
     request: requestMessage,
     host: this.serviceHost,
     metadata: metadata,
@@ -671,6 +720,37 @@ AccessAPIClient.prototype.getEventsForBlockIDs = function getEventsForBlockIDs(r
     callback = arguments[1];
   }
   var client = grpc.unary(AccessAPI.GetEventsForBlockIDs, {
+    request: requestMessage,
+    host: this.serviceHost,
+    metadata: metadata,
+    transport: this.options.transport,
+    debug: this.options.debug,
+    onEnd: function (response) {
+      if (callback) {
+        if (response.status !== grpc.Code.OK) {
+          var err = new Error(response.statusMessage);
+          err.code = response.status;
+          err.metadata = response.trailers;
+          callback(err, null);
+        } else {
+          callback(null, response.message);
+        }
+      }
+    }
+  });
+  return {
+    cancel: function () {
+      callback = null;
+      client.close();
+    }
+  };
+};
+
+AccessAPIClient.prototype.getNetworkParameters = function getNetworkParameters(requestMessage, metadata, callback) {
+  if (arguments.length === 2) {
+    callback = arguments[1];
+  }
+  var client = grpc.unary(AccessAPI.GetNetworkParameters, {
     request: requestMessage,
     host: this.serviceHost,
     metadata: metadata,

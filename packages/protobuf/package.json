@@ -1,6 +1,6 @@
 {
   "name": "@onflow/protobuf",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Access Node Protobuf",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",

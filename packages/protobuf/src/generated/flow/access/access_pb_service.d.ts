@@ -103,13 +103,22 @@ type AccessAPIGetTransactionResult = {
   readonly responseType: typeof flow_access_access_pb.TransactionResultResponse;
 };
 
-type AccessAPIGetAccount = {
+type AccessAPIGetAccountAtLatestBlock = {
   readonly methodName: string;
   readonly service: typeof AccessAPI;
   readonly requestStream: false;
   readonly responseStream: false;
-  readonly requestType: typeof flow_access_access_pb.GetAccountRequest;
-  readonly responseType: typeof flow_access_access_pb.GetAccountResponse;
+  readonly requestType: typeof flow_access_access_pb.GetAccountAtLatestBlockRequest;
+  readonly responseType: typeof flow_access_access_pb.AccountResponse;
+};
+
+type AccessAPIGetAccountAtBlockHeight = {
+  readonly methodName: string;
+  readonly service: typeof AccessAPI;
+  readonly requestStream: false;
+  readonly responseStream: false;
+  readonly requestType: typeof flow_access_access_pb.GetAccountAtBlockHeightRequest;
+  readonly responseType: typeof flow_access_access_pb.AccountResponse;
 };
 
 type AccessAPIExecuteScriptAtLatestBlock = {
@@ -157,6 +166,15 @@ type AccessAPIGetEventsForBlockIDs = {
   readonly responseType: typeof flow_access_access_pb.EventsResponse;
 };
 
+type AccessAPIGetNetworkParameters = {
+  readonly methodName: string;
+  readonly service: typeof AccessAPI;
+  readonly requestStream: false;
+  readonly responseStream: false;
+  readonly requestType: typeof flow_access_access_pb.GetNetworkParametersRequest;
+  readonly responseType: typeof flow_access_access_pb.GetNetworkParametersResponse;
+};
+
 export class AccessAPI {
   static readonly serviceName: string;
   static readonly Ping: AccessAPIPing;
@@ -170,12 +188,14 @@ export class AccessAPI {
   static readonly SendTransaction: AccessAPISendTransaction;
   static readonly GetTransaction: AccessAPIGetTransaction;
   static readonly GetTransactionResult: AccessAPIGetTransactionResult;
-  static readonly GetAccount: AccessAPIGetAccount;
+  static readonly GetAccountAtLatestBlock: AccessAPIGetAccountAtLatestBlock;
+  static readonly GetAccountAtBlockHeight: AccessAPIGetAccountAtBlockHeight;
   static readonly ExecuteScriptAtLatestBlock: AccessAPIExecuteScriptAtLatestBlock;
   static readonly ExecuteScriptAtBlockID: AccessAPIExecuteScriptAtBlockID;
   static readonly ExecuteScriptAtBlockHeight: AccessAPIExecuteScriptAtBlockHeight;
   static readonly GetEventsForHeightRange: AccessAPIGetEventsForHeightRange;
   static readonly GetEventsForBlockIDs: AccessAPIGetEventsForBlockIDs;
+  static readonly GetNetworkParameters: AccessAPIGetNetworkParameters;
 }
 
 export type ServiceError = { message: string, code: number; metadata: grpc.Metadata }
@@ -309,14 +329,23 @@ export class AccessAPIClient {
     requestMessage: flow_access_access_pb.GetTransactionRequest,
     callback: (error: ServiceError|null, responseMessage: flow_access_access_pb.TransactionResultResponse|null) => void
   ): UnaryResponse;
-  getAccount(
-    requestMessage: flow_access_access_pb.GetAccountRequest,
+  getAccountAtLatestBlock(
+    requestMessage: flow_access_access_pb.GetAccountAtLatestBlockRequest,
     metadata: grpc.Metadata,
-    callback: (error: ServiceError|null, responseMessage: flow_access_access_pb.GetAccountResponse|null) => void
+    callback: (error: ServiceError|null, responseMessage: flow_access_access_pb.AccountResponse|null) => void
   ): UnaryResponse;
-  getAccount(
-    requestMessage: flow_access_access_pb.GetAccountRequest,
-    callback: (error: ServiceError|null, responseMessage: flow_access_access_pb.GetAccountResponse|null) => void
+  getAccountAtLatestBlock(
+    requestMessage: flow_access_access_pb.GetAccountAtLatestBlockRequest,
+    callback: (error: ServiceError|null, responseMessage: flow_access_access_pb.AccountResponse|null) => void
+  ): UnaryResponse;
+  getAccountAtBlockHeight(
+    requestMessage: flow_access_access_pb.GetAccountAtBlockHeightRequest,
+    metadata: grpc.Metadata,
+    callback: (error: ServiceError|null, responseMessage: flow_access_access_pb.AccountResponse|null) => void
+  ): UnaryResponse;
+  getAccountAtBlockHeight(
+    requestMessage: flow_access_access_pb.GetAccountAtBlockHeightRequest,
+    callback: (error: ServiceError|null, responseMessage: flow_access_access_pb.AccountResponse|null) => void
   ): UnaryResponse;
   executeScriptAtLatestBlock(
     requestMessage: flow_access_access_pb.ExecuteScriptAtLatestBlockRequest,
@@ -362,6 +391,15 @@ export class AccessAPIClient {
   getEventsForBlockIDs(
     requestMessage: flow_access_access_pb.GetEventsForBlockIDsRequest,
     callback: (error: ServiceError|null, responseMessage: flow_access_access_pb.EventsResponse|null) => void
+  ): UnaryResponse;
+  getNetworkParameters(
+    requestMessage: flow_access_access_pb.GetNetworkParametersRequest,
+    metadata: grpc.Metadata,
+    callback: (error: ServiceError|null, responseMessage: flow_access_access_pb.GetNetworkParametersResponse|null) => void
+  ): UnaryResponse;
+  getNetworkParameters(
+    requestMessage: flow_access_access_pb.GetNetworkParametersRequest,
+    callback: (error: ServiceError|null, responseMessage: flow_access_access_pb.GetNetworkParametersResponse|null) => void
   ): UnaryResponse;
 }
 

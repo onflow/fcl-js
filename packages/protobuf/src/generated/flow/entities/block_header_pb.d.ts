@@ -2,6 +2,7 @@
 // file: flow/entities/block_header.proto
 
 import * as jspb from "google-protobuf";
+import * as google_protobuf_timestamp_pb from "google-protobuf/google/protobuf/timestamp_pb";
 
 export class BlockHeader extends jspb.Message {
   getId(): Uint8Array | string;
@@ -16,6 +17,11 @@ export class BlockHeader extends jspb.Message {
 
   getHeight(): number;
   setHeight(value: number): void;
+
+  hasTimestamp(): boolean;
+  clearTimestamp(): void;
+  getTimestamp(): google_protobuf_timestamp_pb.Timestamp | undefined;
+  setTimestamp(value?: google_protobuf_timestamp_pb.Timestamp): void;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): BlockHeader.AsObject;
@@ -32,6 +38,7 @@ export namespace BlockHeader {
     id: Uint8Array | string,
     parentId: Uint8Array | string,
     height: number,
+    timestamp?: google_protobuf_timestamp_pb.Timestamp.AsObject,
   }
 }
 
