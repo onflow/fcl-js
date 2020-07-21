@@ -1,4 +1,4 @@
-import {GetAccountRequest, AccessAPI} from "@onflow/protobuf"
+import {GetAccountAtLatestBlockRequest, AccessAPI} from "@onflow/protobuf"
 import {response} from "@onflow/response"
 import {unary} from "./unary"
 
@@ -9,10 +9,10 @@ const paddedHexBuffer = (hex, pad) =>
 const addressBuffer = addr => paddedHexBuffer(addr, 8)
 
 export async function sendGetAccount(ix, opts = {}) {
-  const req = new GetAccountRequest()
+  const req = new GetAccountAtLatestBlockRequest()
   req.setAddress(addressBuffer(ix.accountAddr))
 
-  const res = await unary(opts.node, AccessAPI.GetAccount, req)
+  const res = await unary(opts.node, AccessAPI.GetAccountAtLatestBlock, req)
 
   let ret = response()
   ret.tag = ix.tag
