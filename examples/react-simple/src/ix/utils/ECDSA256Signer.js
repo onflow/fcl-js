@@ -1,6 +1,27 @@
 import {ec as EC} from "elliptic"
 import {SHA3} from "sha3"
-import {bytes, bytesToBuffer} from "@onflow/bytes"
+
+const createPaddedBuffer = (src, length) => {
+  const dst = Buffer.alloc(length)
+  src.copy(dst, length - src.length, 0, src.length)
+  return dst
+}
+
+const bytes = (bytes, length) => {
+  let buffer = bytes
+  if (typeof bytes === "string") {
+    buffer = Buffer.from(bytes, "hex")
+  } else if (bytes instanceof Uint8Array) {
+    buffer = Buffer.from(bytes)
+  }
+
+  if (length !== undefined) {
+    buffer = createPaddedBuffer(buffer, length)
+  }
+
+  return buffer
+}
+const bytesToBuffer = bytes => Buffer.from(bytes)
 
 const signatureLength = 64
 const ec = new EC("p256")

@@ -43,17 +43,19 @@ export const Script = () => {
     */
 
     const response = await sdk.send(await sdk.pipe(await sdk.build([
-      sdk.args([sdk.arg(1, t.Int), sdk.arg(2, t.Int)]),                   
       sdk.script`                                                         
         pub fun main(arg1: Int, arg2: Int): Int {
           return arg1 + arg2
         }
-      `, 
+      `,
+      sdk.args([sdk.arg(1, t.Int), sdk.arg(2, t.Int)]),                   
     ]), [
       sdk.resolve([
+        sdk.resolveParams,
         sdk.resolveArguments,
       ]),
     ]), { node: "http://localhost:8080" })
+
     setResult(await sdk.decodeResponse(response))
   }
 

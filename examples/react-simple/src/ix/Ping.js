@@ -10,7 +10,7 @@ export const Ping = () => {
 
       Ping
       ----
-      
+
       To declare a ping interaction, call the sdk.ping builder.
       Ping is a simple way to check if the Flow JS-SDK is able to connect to your desired access node, emulator or otherwise.
 
@@ -19,6 +19,7 @@ export const Ping = () => {
     const response = await sdk.send(await sdk.build([
       sdk.ping()
     ]), { node: "http://localhost:8080" })
+    
     setResult(response)
   }
 
