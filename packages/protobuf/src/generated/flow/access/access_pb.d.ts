@@ -2,12 +2,12 @@
 // file: flow/access/access.proto
 
 import * as jspb from "google-protobuf";
+import * as flow_entities_account_pb from "../../flow/entities/account_pb";
 import * as flow_entities_block_header_pb from "../../flow/entities/block_header_pb";
 import * as flow_entities_block_pb from "../../flow/entities/block_pb";
 import * as flow_entities_collection_pb from "../../flow/entities/collection_pb";
-import * as flow_entities_transaction_pb from "../../flow/entities/transaction_pb";
-import * as flow_entities_account_pb from "../../flow/entities/account_pb";
 import * as flow_entities_event_pb from "../../flow/entities/event_pb";
+import * as flow_entities_transaction_pb from "../../flow/entities/transaction_pb";
 
 export class PingRequest extends jspb.Message {
   serializeBinary(): Uint8Array;
@@ -375,47 +375,73 @@ export namespace TransactionResultResponse {
   }
 }
 
-export class GetAccountRequest extends jspb.Message {
+export class GetAccountAtLatestBlockRequest extends jspb.Message {
   getAddress(): Uint8Array | string;
   getAddress_asU8(): Uint8Array;
   getAddress_asB64(): string;
   setAddress(value: Uint8Array | string): void;
 
   serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): GetAccountRequest.AsObject;
-  static toObject(includeInstance: boolean, msg: GetAccountRequest): GetAccountRequest.AsObject;
+  toObject(includeInstance?: boolean): GetAccountAtLatestBlockRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: GetAccountAtLatestBlockRequest): GetAccountAtLatestBlockRequest.AsObject;
   static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
   static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-  static serializeBinaryToWriter(message: GetAccountRequest, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): GetAccountRequest;
-  static deserializeBinaryFromReader(message: GetAccountRequest, reader: jspb.BinaryReader): GetAccountRequest;
+  static serializeBinaryToWriter(message: GetAccountAtLatestBlockRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): GetAccountAtLatestBlockRequest;
+  static deserializeBinaryFromReader(message: GetAccountAtLatestBlockRequest, reader: jspb.BinaryReader): GetAccountAtLatestBlockRequest;
 }
 
-export namespace GetAccountRequest {
+export namespace GetAccountAtLatestBlockRequest {
   export type AsObject = {
     address: Uint8Array | string,
   }
 }
 
-export class GetAccountResponse extends jspb.Message {
+export class AccountResponse extends jspb.Message {
   hasAccount(): boolean;
   clearAccount(): void;
   getAccount(): flow_entities_account_pb.Account | undefined;
   setAccount(value?: flow_entities_account_pb.Account): void;
 
   serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): GetAccountResponse.AsObject;
-  static toObject(includeInstance: boolean, msg: GetAccountResponse): GetAccountResponse.AsObject;
+  toObject(includeInstance?: boolean): AccountResponse.AsObject;
+  static toObject(includeInstance: boolean, msg: AccountResponse): AccountResponse.AsObject;
   static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
   static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-  static serializeBinaryToWriter(message: GetAccountResponse, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): GetAccountResponse;
-  static deserializeBinaryFromReader(message: GetAccountResponse, reader: jspb.BinaryReader): GetAccountResponse;
+  static serializeBinaryToWriter(message: AccountResponse, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): AccountResponse;
+  static deserializeBinaryFromReader(message: AccountResponse, reader: jspb.BinaryReader): AccountResponse;
 }
 
-export namespace GetAccountResponse {
+export namespace AccountResponse {
   export type AsObject = {
     account?: flow_entities_account_pb.Account.AsObject,
+  }
+}
+
+export class GetAccountAtBlockHeightRequest extends jspb.Message {
+  getAddress(): Uint8Array | string;
+  getAddress_asU8(): Uint8Array;
+  getAddress_asB64(): string;
+  setAddress(value: Uint8Array | string): void;
+
+  getBlockHeight(): number;
+  setBlockHeight(value: number): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): GetAccountAtBlockHeightRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: GetAccountAtBlockHeightRequest): GetAccountAtBlockHeightRequest.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: GetAccountAtBlockHeightRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): GetAccountAtBlockHeightRequest;
+  static deserializeBinaryFromReader(message: GetAccountAtBlockHeightRequest, reader: jspb.BinaryReader): GetAccountAtBlockHeightRequest;
+}
+
+export namespace GetAccountAtBlockHeightRequest {
+  export type AsObject = {
+    address: Uint8Array | string,
+    blockHeight: number,
   }
 }
 
@@ -648,6 +674,42 @@ export namespace EventsResponse {
       blockHeight: number,
       eventsList: Array<flow_entities_event_pb.Event.AsObject>,
     }
+  }
+}
+
+export class GetNetworkParametersRequest extends jspb.Message {
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): GetNetworkParametersRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: GetNetworkParametersRequest): GetNetworkParametersRequest.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: GetNetworkParametersRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): GetNetworkParametersRequest;
+  static deserializeBinaryFromReader(message: GetNetworkParametersRequest, reader: jspb.BinaryReader): GetNetworkParametersRequest;
+}
+
+export namespace GetNetworkParametersRequest {
+  export type AsObject = {
+  }
+}
+
+export class GetNetworkParametersResponse extends jspb.Message {
+  getChainId(): string;
+  setChainId(value: string): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): GetNetworkParametersResponse.AsObject;
+  static toObject(includeInstance: boolean, msg: GetNetworkParametersResponse): GetNetworkParametersResponse.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: GetNetworkParametersResponse, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): GetNetworkParametersResponse;
+  static deserializeBinaryFromReader(message: GetNetworkParametersResponse, reader: jspb.BinaryReader): GetNetworkParametersResponse;
+}
+
+export namespace GetNetworkParametersResponse {
+  export type AsObject = {
+    chainId: string,
   }
 }
 

@@ -1141,7 +1141,8 @@ proto.entities.TransactionStatus = {
   PENDING: 1,
   FINALIZED: 2,
   EXECUTED: 3,
-  SEALED: 4
+  SEALED: 4,
+  EXPIRED: 5
 };
 
 goog.object.extend(exports, proto.entities);
