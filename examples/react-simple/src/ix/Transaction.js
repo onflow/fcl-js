@@ -9,6 +9,7 @@ export const Transaction = () => {
   const run = async () => {
 
     /*
+
       Transaction
       -----------
 
@@ -97,7 +98,7 @@ export const Transaction = () => {
       sdk.transaction`transaction(message: String) { prepare(acct: AuthAccount) {} execute { log(message) } }`,
       sdk.args([sdk.arg("Hello, World!", t.String)]),
       sdk.payer(sdk.authorization("f8d6e0586b0a20c7", signingFunction, 0)),
-      sdk.proposer(sdk.authorization("f8d6e0586b0a20c7", signingFunction, 0, seqNum)),
+      sdk.proposer(sdk.authorization("f8d6e0586b0a20c7", signingFunction, 0)),
       sdk.authorizations([sdk.authorization("f8d6e0586b0a20c7", signingFunction, 0)]),
       sdk.validator((ix, {Ok, Bad}) => {
         if (Object.keys(ix.arguments).length > 1) return Bad(ix, "This transaction should only have one argument!")
@@ -108,6 +109,7 @@ export const Transaction = () => {
         sdk.resolveRefBlockId({ node: "http://localhost:8080" }),
         sdk.resolveProposerSequenceNumber({ node: "http://localhost:8080" }),
         sdk.resolveArguments,
+        sdk.resolveParams,
         sdk.resolveAccounts,
         sdk.resolveSignatures,
         sdk.resolveValidators,

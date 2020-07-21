@@ -1,7 +1,7 @@
 {
   "name": "example-react",
   "private": true,
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -11,7 +11,8 @@
   "license": "ISC",
   "dependencies": {
     "@onflow/bytes": "0.0.1",
-    "@onflow/sdk": "0.0.23",
+    "@onflow/types": "0.0.3",
+    "@onflow/sdk": "0.0.28",
     "elliptic": "^6.5.2",
     "react": "16.13.1",
     "react-dom": "16.13.1",
