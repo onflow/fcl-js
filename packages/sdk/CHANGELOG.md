@@ -1,6 +1,10 @@
 ### Unreleased
 
 - YYYY-MM-DD **BREAKING?** -- description
+
+### 0.0.28 -- 2020-7-13
+
+- 2020-07-13 -- VSN `@onflow/send` 0.0.14 -> 0.0.15
 - 2020-07-20 -- Adds resolveProposerSequenceNumber resolve to resolve proposer sequence numbers where they are unspecified.
 - 2020-07-20 -- Adds resolveRefBlockId resolver to resolve reference block ids on transactions where they are unspecified.
 
