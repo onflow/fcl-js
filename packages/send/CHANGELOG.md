@@ -2,7 +2,7 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
-### 0.0.14 -- 2020-07-21
+### 0.0.15 -- 2020-07-21
 
 - 2020-07-21 -- VSN `@onflow/protobuf` 0.1.4 -> 0.1.5
 - 2020-07-21 -- Updates getAccount according to latest protobuf api
