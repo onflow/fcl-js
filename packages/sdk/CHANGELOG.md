@@ -1,6 +1,7 @@
 ### Unreleased
 
 - YYYY-MM-DD **BREAKING?** -- description
+- 2020-07-21 -- Adds cadence resolver, decoupled from resolveParams
 
 ### 0.0.28 -- 2020-7-13
 
