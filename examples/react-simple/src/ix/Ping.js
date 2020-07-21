@@ -5,9 +5,17 @@ export const Ping = () => {
   const [result, setResult] = useState(null)
 
   const run = async () => {
-    const response = await sdk.send(await sdk.pipe(await sdk.build([
+
+    /*
+
+
+
+    */
+
+
+    const response = await sdk.send(await sdk.build([
       sdk.ping()
-    ])), { node: "http://localhost:8080" })
+    ]), { node: "http://localhost:8080" })
     setResult(response)
   }
 
