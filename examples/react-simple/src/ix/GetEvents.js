@@ -8,9 +8,26 @@ export const GetEvents = () => {
   const [endBlock, setEndBlock] = useState("")
 
   const run = async () => {
-    const response = await sdk.send(await sdk.pipe(await sdk.build([
+
+    /*
+
+      Get Events
+      -----------
+
+      Declaring an interaction which gets events is done by calling the sdk.getEvents builder.
+      
+      sdk.getEvents consumes an eventType, a startBlock and an endBlock.
+
+        - eventType: This is the type of event you wish to get.
+        - startBlock: Denotes the starting block to get events from.
+        - endBlock: Denotes the ending block to get events from.
+
+    */
+
+    const response = await sdk.send(await sdk.build([
       sdk.getEvents(eventType, startBlock, endBlock),
-    ])), { node: "http://localhost:8080" })
+    ]), { node: "http://localhost:8080" })
+
     setResult(await sdk.decodeResponse(response))
   }
 

@@ -5,9 +5,21 @@ export const GetLatestBlock = () => {
   const [result, setResult] = useState(null)
 
   const run = async () => {
-    const response = await sdk.send(await sdk.pipe(await sdk.build([
+
+    /*
+
+      Get Latest Block
+      ----------------------
+
+      Declaring an interaction which gets the latest block is delcared by calling the
+      sdk.getLatestBlock builder.
+
+    */
+
+    const response = await sdk.send(await sdk.build([
       sdk.getLatestBlock()
-    ])), { node: "http://localhost:8080" })
+    ]), { node: "http://localhost:8080" })
+
     setResult(await sdk.decodeResponse(response))
   }
 

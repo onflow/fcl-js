@@ -27,7 +27,12 @@ export const Script = () => {
       ----------------
 
       Scripts can consume arguments. These arguments are populated into the main function.
-      Declaring arguments for a Script 
+      Declaring arguments for a Script requires calling the sdk.args and sdk.arg builders like such:
+          
+        sdk.args([sdk.arg(1, t.Int), sdk.arg(2, t.Int)]),
+
+      The order of the arguments here matters, since the order will correspond to the order of the 
+      arguments in the main function of your Cadence script.
 
       Resolvers
       ---------
