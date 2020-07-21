@@ -7,10 +7,8 @@ export const resolveParams = async (ix) => {
   if (!(isTransaction(ix) || isScript(ix))) return Ok(ix)
   const cadence = get(ix, 'ix.cadence')
   if (isString(cadence)) {
-    ix.message.cadence = cadence
     return Ok(ix)
-  }
-  if (isFn(cadence)) {
+  } else if (isFn(cadence)) {
     let unresolvedParams = Object
       .values(ix.params)
     let params = await Promise.all(unresolvedParams.map(
