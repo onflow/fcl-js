@@ -6,9 +6,23 @@ export const GetTransactionStatus = () => {
   const [txId, setTxId] = useState("")
 
   const run = async () => {
-    const response = await sdk.send(await sdk.pipe(await sdk.build([
+    
+    /*
+
+      Get Transaction Status
+      ----------------------
+
+      Declaring an interaction which gets the status of a transaction is delcared by calling the
+      sdk.getTransactionStatus builder.
+
+      sdk.getTransactionStatus consumed the id of a transaction to fetch it's status.
+
+    */
+    
+    const response = await sdk.send(await sdk.build([
       sdk.getTransactionStatus(txId)
-    ])), { node: "http://localhost:8080" })
+    ]), { node: "http://localhost:8080" })
+
     setResult(await sdk.decodeResponse(response))
   }
 

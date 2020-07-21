@@ -6,9 +6,21 @@ export const GetAccount = () => {
   const [addr, setAddr] = useState("")
 
   const run = async () => {
-    const response = await sdk.send(await sdk.pipe(await sdk.build([
+
+    /*
+
+      Get Account
+      -----------
+
+      Declaring an interaction which gets an account is done by calling the sdk.getAccount builder.
+      sdk.getAccount consumes an address of an account to get.
+
+    */
+
+    const response = await sdk.send(await sdk.build([
       sdk.getAccount(addr)
-    ])), { node: "http://localhost:8080" })
+    ]), { node: "http://localhost:8080" })
+
     setResult(await sdk.decodeResponse(response))
   }
 
