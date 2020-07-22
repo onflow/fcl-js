@@ -2,6 +2,7 @@ import React, {useState} from "react"
 import * as sdk from "@onflow/sdk"
 import * as t from "@onflow/types"
 import {signingFunction} from "./utils/signing-function.js"
+import {authorizationFunction} from "./utils/authorization-function.js"
 
 export const Transaction = () => {
   const [result, setResult] = useState(null)
@@ -46,7 +47,7 @@ export const Transaction = () => {
 
       The signing function must return an object as such:
 
-          {
+          return {
             addr,       // The address of the Flow Account which produced this signature.
             keyId,      // The keyId used to produce the signature.
             signature   // A hex encoded string of the signature produced by this function.
@@ -94,7 +95,7 @@ export const Transaction = () => {
 
     */
 
-    const response = await sdk.send(await sdk.pipe(await sdk.build([
+    const response_1 = await sdk.send(await sdk.pipe(await sdk.build([
       sdk.transaction`transaction(message: String) { prepare(acct: AuthAccount) {} execute { log(message) } }`,
       sdk.args([sdk.arg("Hello, World!", t.String)]),
       sdk.payer(sdk.authorization("f8d6e0586b0a20c7", signingFunction, 0)),
@@ -116,7 +117,46 @@ export const Transaction = () => {
       ]),
     ]), { node: "http://localhost:8080" })
 
-    setResult(await sdk.decodeResponse(response))
+    setResult(await sdk.decodeResponse(response_1))
+
+    /*
+
+      Transaction - Using an Authorization Function
+      ---------------------------------------------
+
+      In the previous example, we specified our proposer, authorizers and payer by building an authorization for each
+      using sdk.authorization(...). The Flow JS-SDK also supports using an 'authorization function'. This is a function
+      which, when called, resolves into an authorization that can be used as the proposer, payer or as an authorizer.
+
+      The code below is the same as the preovious example, except sdk.payer, sdk.proposer and sdk.authorizations all consume
+      authorization functions. These specific example authorization functions resolve the sequence number for their respective 
+      accounts, so we don't need the sdk.resolveProposerSequenceNumber resolver for this example.
+
+    */
+
+    const response_2 = await sdk.send(await sdk.pipe(await sdk.build([
+      sdk.transaction`transaction(message: String) { prepare(acct: AuthAccount) {} execute { log(message) } }`,
+      sdk.args([sdk.arg("Hello, World!", t.String)]),
+      sdk.payer(authorizationFunction),
+      sdk.proposer(authorizationFunction),
+      sdk.authorizations([authorizationFunction]),
+      sdk.validator((ix, {Ok, Bad}) => {
+        if (Object.keys(ix.arguments).length > 1) return Bad(ix, "This transaction should only have one argument!")
+        return Ok(ix)
+    })
+    ]), [
+      sdk.resolve([
+        sdk.resolveRefBlockId({ node: "http://localhost:8080" }),
+        sdk.resolveAccounts,
+        sdk.resolveParams,
+        sdk.resolveArguments,
+        sdk.resolveSignatures,
+        sdk.resolveValidators,
+      ]),
+    ]), { node: "http://localhost:8080" })
+
+    setResult(await sdk.decodeResponse(response_2))
+
   }
 
   return (
