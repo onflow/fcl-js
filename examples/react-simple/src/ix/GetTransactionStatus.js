@@ -15,7 +15,10 @@ export const GetTransactionStatus = () => {
       Declaring an interaction which gets the status of a transaction is delcared by calling the
       sdk.getTransactionStatus builder.
 
-      sdk.getTransactionStatus consumed the id of a transaction to fetch it's status.
+      sdk.getTransactionStatus consumes the id of a transaction to fetch it's status.
+
+      Refer to https://github.com/onflow/flow-js-sdk/blob/master/packages/response/README.md to see the shape of response
+      for a Get Transaction Status interaction.
 
     */
     

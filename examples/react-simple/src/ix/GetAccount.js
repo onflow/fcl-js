@@ -15,6 +15,9 @@ export const GetAccount = () => {
       Declaring an interaction which gets an account is done by calling the sdk.getAccount builder.
       sdk.getAccount consumes an address of an account to get.
 
+      Refer to https://github.com/onflow/flow-js-sdk/blob/master/packages/response/README.md to see the shape of response
+      for a Get Account interaction.
+
     */
 
     const response = await sdk.send(await sdk.build([
