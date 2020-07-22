@@ -14,6 +14,9 @@ export const GetLatestBlock = () => {
       Declaring an interaction which gets the latest block is delcared by calling the
       sdk.getLatestBlock builder.
 
+      Refer to https://github.com/onflow/flow-js-sdk/blob/master/packages/response/README.md to see the shape of response
+      for a Get Latest Block interaction.
+
     */
 
     const response = await sdk.send(await sdk.build([

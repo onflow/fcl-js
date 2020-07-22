@@ -14,10 +14,12 @@ export const Transaction = () => {
       Transaction
       -----------
 
-      Transactions are declared by building an interaction and specifying a transaction within it.
-      This is done by specifying Cadence code within the transaction builder.
+      Transactions are declared by building an interaction and specifying a Cadence transaction within it.
 
-      Transactions also require other pieces of information as so they can be sent.
+      Refer to https://github.com/onflow/flow-js-sdk/blob/master/packages/response/README.md to see the shape of response
+      for a Transaction interaction.
+
+      Transactions also require other pieces of information as so they can be sent and executed.
 
       Proposer, Payer and Authorizers
       --------------------------------
@@ -26,10 +28,10 @@ export const Transaction = () => {
 
       - The proposer specifies the Account for which the sequence number of one of it's keys will be used and incremented by this transaction.
       - The payer specifies the Account for which will pay for the transaction.
-      - Each authorizer specifies an AuthAccount which can be used within the cadence code of the transaction.
+      - Each authorizer specifies an AuthAccount which can be used within the Cadence code of the transaction.
 
-      To declare a proposer, authorizer or payer, you must specify an authorization.
-      The sdk.authorization constructor consumes an account address, a signing function, and a keyId.
+      A proposer, authorizer and payer are specified using the sdk.authorization method.
+      The sdk.authorization method consumes an account address, a signing function, and a keyId.
 
       The signing function is a function with an interface as such:
 
@@ -58,9 +60,10 @@ export const Transaction = () => {
       Arguments
       ---------
 
-      Transactions can also contain arguments. Arguments are variables that are passed into a transaction.
+      Transactions may also receive arguments. Arguments are variables that are passed into a transaction.
       Specifying arguments is done by specifying an array of arguments.
       Each argument consumes a JavaScript value, and an associated Cadence type identifier.
+      Cadence type identifiers can be found in the `@onflow/types`.
       
       Denoting an argument is done by calling the args and arg builder as such:
 
@@ -83,7 +86,7 @@ export const Transaction = () => {
       ---------
 
       Before a transaction interaction is ready to be sent, it must, if not yet ready, be first be passed through a sequence of resolvers.
-      Resolvers fill in and further prepare an interaction into a state where it is ready to be sent.
+      Resolvers gather the information necessary to finish building the finalized interaction, so it's in a state which is valid and ready to be sent to Flow.
       Note, the order of the resolvers does matter, since the result of a prior resolver may be needed for one that proceeds it.
 
       resolveRefBlockId({ node: "my-access-node" })   // Will populate the block id for which this transaction will be executed against if not already specified.
@@ -129,7 +132,8 @@ export const Transaction = () => {
       which, when called, resolves into an authorization that can be used as the proposer, payer or as an authorizer.
 
       The code below is the same as the preovious example, except sdk.payer, sdk.proposer and sdk.authorizations all consume
-      authorization functions. These specific example authorization functions resolve the sequence number for their respective 
+      authorization functions. Authorization functions can be written by 3rd parties, or yourself. 
+      These specific example authorization functions resolve the sequence number for their respective 
       accounts, so we don't need the sdk.resolveProposerSequenceNumber resolver for this example.
 
     */

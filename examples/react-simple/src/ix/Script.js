@@ -12,8 +12,11 @@ export const Script = () => {
       Script
       ------
       
-      Scripts are declared by building an interaction and specifying a script within it.
+      Scripts are declared by building an interaction and specifying a Cadence script within it.
       This is done by specifying Cadence code within the script builder.
+
+      Refer to https://github.com/onflow/flow-js-sdk/blob/master/packages/response/README.md to see the shape of response
+      for a Script interaction.
 
       Declaring a script that returns an integer may look like such:
 
@@ -26,19 +29,17 @@ export const Script = () => {
       Script Arguments
       ----------------
 
-      Scripts can consume arguments. These arguments are populated into the main function.
       Declaring arguments for a Script requires calling the sdk.args and sdk.arg builders like such:
           
         sdk.args([sdk.arg(1, t.Int), sdk.arg(2, t.Int)]),
 
-      The order of the arguments here matters, since the order will correspond to the order of the 
-      arguments in the main function of your Cadence script.
+      The order of the arguments here matters, since the order will correspond to the order of the parameters you declared in the main function of your Cadence script.
 
       Resolvers
       ---------
 
       In order to resolve any script arguments specified in the interaction,
-      the interaction muse be passed through the resolveArguments and resolveParams resolvers.
+      the interaction must be passed through the resolveArguments and resolveParams resolvers.
 
     */
 
