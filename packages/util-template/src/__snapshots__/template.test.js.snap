@@ -1,0 +1,29 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`template input type vs output type t71(\`\`) -> function 1`] = `"function"`;
+
+exports[`template input type vs output type template(template\`\`) -> function 1`] = `"function"`;
+
+exports[`template input type vs output type template\`\` -> function 1`] = `"function"`;
+
+exports[`template interop function template(template\`\${o=>o.a}\`)(o) -> 'abc' 1`] = `"abc"`;
+
+exports[`template interop function template\`\${o=>o.a}\`(o) -> 'abc' 1`] = `"abc"`;
+
+exports[`template interop more template template(template\`x\${template\`y\${o => o.a}\`}\`)(o) -> 'xyabc' 1`] = `"xyabc"`;
+
+exports[`template interop more template template\`x\${template\`y\${o=>o.a}\`}\`(o) => 'xyabc' 1`] = `"xyabc"`;
+
+exports[`template interop more template template\`x\${template\`y\${template\`z\${o=>o.a}\`}\`}\`(o) => 'xyabc' 1`] = `"xyzabc"`;
+
+exports[`template interop nested functions template\`\${fn}\`(o) -> 'abc' 1`] = `"abc"`;
+
+exports[`template no interop template('abc')() -> 'abc' 1`] = `"abc"`;
+
+exports[`template no interop template(template\`abc\`)() -> 'abc' 1`] = `"abc"`;
+
+exports[`template no interop template\`abc\`() -> 'abc' 1`] = `"abc"`;
+
+exports[`template only interop template(template\`\${'abc'}\`)() -> 'abc' 1`] = `"abc"`;
+
+exports[`template only interop template\`\${'abc'}\`() -> 'abc' 1`] = `"abc"`;
