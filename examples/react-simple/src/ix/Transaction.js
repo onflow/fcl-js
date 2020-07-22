@@ -29,7 +29,7 @@ export const Transaction = () => {
       - Each authorizer specifies an AuthAccount which can be used within the cadence code of the transaction.
 
       To declare a proposer, authorizer or payer, you must specify an authorization.
-      An authorization consists of an account address, a signing function, and a keyId.
+      The sdk.authorization constructor consumes an account address, a signing function, and a keyId.
 
       The signing function is a function with an interface as such:
 
