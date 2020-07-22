@@ -38,7 +38,7 @@ export const Script = () => {
       ---------
 
       In order to resolve any script arguments specified in the interaction,
-      the interaction muse be passed through the resolveArguments resolver.
+      the interaction muse be passed through the resolveArguments and resolveParams resolvers.
 
     */
 
