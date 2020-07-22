@@ -17,6 +17,10 @@ const fetchTxStatus = async transactionId => {
 }
 
 const isSealed = tx => tx.status === 4
+const isExecuted = tx => tx.status === 3 || isSealed(tx)
+const isFinalized = tx => tx.status === 2 || isExecuted(tx)
+const isPending = tx => tx.status === 1 || isFinalized(tx)
+const isUnknown = tx => tx.status === 0 || isPending(tx)
 
 const HANDLERS = {
   [INIT]: async ctx => {
@@ -72,22 +76,31 @@ export function transaction(transactionId) {
     return () => send(self, EXIT)
   }
 
-  function onceSealed() {
-    return new Promise(resolve => {
-      const unsub = subscribe(transaction => {
-        if (isSealed(transaction)) {
-          resolve(transaction)
-          unsub()
-        }
+  function once(predicate) {
+    return function innerOnce() {
+      return new Promise(resolve => {
+        const unsub = subscribe(transaction => {
+          if (predicate(transaction)) {
+            resolve(transaction)
+            unsub()
+          }
+        })
       })
-    })
+    }
   }
 
   return {
     snapshot,
     subscribe,
-    onceSealed,
+    oncePending: once(isPending),
+    onceFinalized: once(isFinalized),
+    onceExecuted: once(isExecuted),
+    onceSealed: once(isSealed),
   }
 }
 
+transaction.isUnknown = isUnknown
+transaction.isPending = isPending
+transaction.isFinalized = isFinalized
+transaction.isExecuted = isExecuted
 transaction.isSealed = isSealed
