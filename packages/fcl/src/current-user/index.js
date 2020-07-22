@@ -41,27 +41,62 @@ const DATA = `{
   "authorizations":[]
 }`
 
+const DEPRECATED_FIELDS = new Set([
+  "verified",
+  "identity",
+  "scoped",
+  "provider",
+])
+
+const deprecationNotice = prop => {
+  console.warn(
+    `
+          %cFCL Deprecation Notice
+          ========================
+
+          Access to field "${prop}" on "CurrentUser" is deprecated and will cease to work in future releases of FCL.
+          Find out more here: https://github.com/onflow/flow-js-sdk/blob/master/packages/fcl/WARNINGS.md#0001-current-user-data
+
+          =======================
+        `
+      .replace(/\n\s+/g, "\n")
+      .trim(),
+    "font-weight:bold;font-family:monospace;"
+  )
+}
+const deprecate = data => {
+  if (typeof Proxy !== "undefined") {
+    data = new Proxy(data, {
+      get(obj, prop) {
+        if (DEPRECATED_FIELDS.has(prop)) deprecationNotice(prop)
+        return obj[prop]
+      },
+    })
+  }
+  return data
+}
+
 const HANDLERS = {
   [INIT]: ctx => {
     ctx.merge(JSON.parse(DATA))
   },
   [SUBSCRIBE]: (ctx, letter) => {
     ctx.subscribe(letter.from)
-    ctx.send(letter.from, UPDATED, ctx.all())
+    ctx.send(letter.from, UPDATED, deprecate(ctx.all()))
   },
   [UNSUBSCRIBE]: (ctx, letter) => {
     ctx.unsubscribe(letter.from)
   },
   [SNAPSHOT]: async (ctx, letter) => {
-    letter.reply(ctx.all())
+    letter.reply(deprecate(ctx.all()))
   },
   [SET_CURRENT_USER]: async (ctx, letter, data) => {
     ctx.merge(data)
-    ctx.broadcast(UPDATED, ctx.all())
+    ctx.broadcast(UPDATED, deprecate(ctx.all()))
   },
   [DEL_CURRENT_USER]: async (ctx, letter) => {
     ctx.merge(JSON.parse(DATA))
-    ctx.broadcast(UPDATED, ctx.all())
+    ctx.broadcast(UPDATED, deprecate(ctx.all()))
   },
   [GET_AS_PARAM]: async (ctx, letter, {key}) => {
     letter.reply({key, value: ctx.get("addr", null), xform: Identity})
@@ -136,7 +171,6 @@ async function authorization(account) {
 
     let unrender = () => {}
     if (resp.local && resp.local.length > 0) {
-      console.log("RENDER LOCAL")
       unrender = renderAuthzFrame(resp.local[0])
     }
 

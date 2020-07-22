@@ -2,6 +2,10 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.0.45 -- 2020-07-22
+
+- 2020-07-22 -- deprecate fields on CurrentUser data structure
+
 ### 0.0.44 -- 2020-07-22
 
 - 2020-07-22 -- added `tx(r).onceFinalized()` and `tx(r).onceExecuted`.
