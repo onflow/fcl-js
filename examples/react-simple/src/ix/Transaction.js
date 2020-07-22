@@ -97,7 +97,7 @@ export const Transaction = () => {
 
     const response_1 = await sdk.send(await sdk.pipe(await sdk.build([
       sdk.transaction`transaction(message: String) { prepare(acct: AuthAccount) {} execute { log(message) } }`,
-      sdk.args([sdk.arg("Hello, World!", t.String)]),
+      sdk.args([sdk.arg("~~ Go with the Flow ~~", t.String)]),
       sdk.payer(sdk.authorization("f8d6e0586b0a20c7", signingFunction, 0)),
       sdk.proposer(sdk.authorization("f8d6e0586b0a20c7", signingFunction, 0)),
       sdk.authorizations([sdk.authorization("f8d6e0586b0a20c7", signingFunction, 0)]),
@@ -136,7 +136,7 @@ export const Transaction = () => {
 
     const response_2 = await sdk.send(await sdk.pipe(await sdk.build([
       sdk.transaction`transaction(message: String) { prepare(acct: AuthAccount) {} execute { log(message) } }`,
-      sdk.args([sdk.arg("Hello, World!", t.String)]),
+      sdk.args([sdk.arg("~~ Go with the Flow ~~", t.String)]),
       sdk.payer(authorizationFunction),
       sdk.proposer(authorizationFunction),
       sdk.authorizations([authorizationFunction]),
