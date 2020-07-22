@@ -2,6 +2,19 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.0.45 -- 2020-07-22
+
+- 2020-07-22 -- deprecate fields on CurrentUser data structure
+
+### 0.0.44 -- 2020-07-22
+
+- 2020-07-22 -- added `tx(r).onceFinalized()` and `tx(r).onceExecuted`.
+- 2020-07-22 -- added `tx.isFinalized(txStatus)` and `tx.isExecuted(txStatus)`.
+
+### 0.0.43 -- 2020-07-21
+
+- 2020-07-21 -- VSN `@onflow/sdk` 0.0.27 -> 0.0.28
+
 ### 0.0.42 -- 2020-07-20
 
 - 2020-07-20 -- Convert config and actor to use external `@onflow/confg` and `@onflow/util-actor`
