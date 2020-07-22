@@ -1,6 +1,6 @@
 {
   "name": "@onflow/dev-wallet",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "dev wallet provider service for local development with the flow client library",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
@@ -15,7 +15,7 @@
   "main": "server/index.js",
   "dependencies": {
     "@onflow/fcl-config": "0.0.1",
-    "@onflow/fcl": "0.0.37",
+    "@onflow/fcl": "0.0.43",
     "@onflow/types": "0.0.1",
     "argon2": "0.26.2",
     "body-parser": "1.19.0",
