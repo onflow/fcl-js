@@ -2,6 +2,11 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.0.44 -- 2020-07-22
+
+- 2020-07-22 -- added `tx(r).onceFinalized()` and `tx(r).onceExecuted`.
+- 2020-07-22 -- added `tx.isFinalized(txStatus)` and `tx.isExecuted(txStatus)`.
+
 ### 0.0.43 -- 2020-07-21
 
 - 2020-07-21 -- VSN `@onflow/sdk` 0.0.27 -> 0.0.28
