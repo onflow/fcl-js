@@ -2,6 +2,10 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.0.46 -- 2020-07-27
+
+- 2020-07-27 -- VSN `@onflow/sdk` 0.0.28 -> 0.0.30
+
 ### 0.0.45 -- 2020-07-22
 
 - 2020-07-22 -- deprecate fields on CurrentUser data structure
