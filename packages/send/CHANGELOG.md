@@ -2,6 +2,10 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.0.16 -- 2020-07-27
+
+- 2020-07-27 -- VSN `@onflow/protobuf` 0.1.5 -> 0.1.6
+
 ### 0.0.15 -- 2020-07-21
 
 - 2020-07-21 -- VSN `@onflow/protobuf` 0.1.4 -> 0.1.5
