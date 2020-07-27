@@ -103,6 +103,15 @@ type AccessAPIGetTransactionResult = {
   readonly responseType: typeof flow_access_access_pb.TransactionResultResponse;
 };
 
+type AccessAPIGetAccount = {
+  readonly methodName: string;
+  readonly service: typeof AccessAPI;
+  readonly requestStream: false;
+  readonly responseStream: false;
+  readonly requestType: typeof flow_access_access_pb.GetAccountRequest;
+  readonly responseType: typeof flow_access_access_pb.GetAccountResponse;
+};
+
 type AccessAPIGetAccountAtLatestBlock = {
   readonly methodName: string;
   readonly service: typeof AccessAPI;
@@ -188,6 +197,7 @@ export class AccessAPI {
   static readonly SendTransaction: AccessAPISendTransaction;
   static readonly GetTransaction: AccessAPIGetTransaction;
   static readonly GetTransactionResult: AccessAPIGetTransactionResult;
+  static readonly GetAccount: AccessAPIGetAccount;
   static readonly GetAccountAtLatestBlock: AccessAPIGetAccountAtLatestBlock;
   static readonly GetAccountAtBlockHeight: AccessAPIGetAccountAtBlockHeight;
   static readonly ExecuteScriptAtLatestBlock: AccessAPIExecuteScriptAtLatestBlock;
@@ -328,6 +338,15 @@ export class AccessAPIClient {
   getTransactionResult(
     requestMessage: flow_access_access_pb.GetTransactionRequest,
     callback: (error: ServiceError|null, responseMessage: flow_access_access_pb.TransactionResultResponse|null) => void
+  ): UnaryResponse;
+  getAccount(
+    requestMessage: flow_access_access_pb.GetAccountRequest,
+    metadata: grpc.Metadata,
+    callback: (error: ServiceError|null, responseMessage: flow_access_access_pb.GetAccountResponse|null) => void
+  ): UnaryResponse;
+  getAccount(
+    requestMessage: flow_access_access_pb.GetAccountRequest,
+    callback: (error: ServiceError|null, responseMessage: flow_access_access_pb.GetAccountResponse|null) => void
   ): UnaryResponse;
   getAccountAtLatestBlock(
     requestMessage: flow_access_access_pb.GetAccountAtLatestBlockRequest,

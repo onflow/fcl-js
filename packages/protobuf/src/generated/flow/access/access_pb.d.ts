@@ -375,6 +375,50 @@ export namespace TransactionResultResponse {
   }
 }
 
+export class GetAccountRequest extends jspb.Message {
+  getAddress(): Uint8Array | string;
+  getAddress_asU8(): Uint8Array;
+  getAddress_asB64(): string;
+  setAddress(value: Uint8Array | string): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): GetAccountRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: GetAccountRequest): GetAccountRequest.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: GetAccountRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): GetAccountRequest;
+  static deserializeBinaryFromReader(message: GetAccountRequest, reader: jspb.BinaryReader): GetAccountRequest;
+}
+
+export namespace GetAccountRequest {
+  export type AsObject = {
+    address: Uint8Array | string,
+  }
+}
+
+export class GetAccountResponse extends jspb.Message {
+  hasAccount(): boolean;
+  clearAccount(): void;
+  getAccount(): flow_entities_account_pb.Account | undefined;
+  setAccount(value?: flow_entities_account_pb.Account): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): GetAccountResponse.AsObject;
+  static toObject(includeInstance: boolean, msg: GetAccountResponse): GetAccountResponse.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: GetAccountResponse, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): GetAccountResponse;
+  static deserializeBinaryFromReader(message: GetAccountResponse, reader: jspb.BinaryReader): GetAccountResponse;
+}
+
+export namespace GetAccountResponse {
+  export type AsObject = {
+    account?: flow_entities_account_pb.Account.AsObject,
+  }
+}
+
 export class GetAccountAtLatestBlockRequest extends jspb.Message {
   getAddress(): Uint8Array | string;
   getAddress_asU8(): Uint8Array;

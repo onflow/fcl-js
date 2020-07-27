@@ -4,16 +4,12 @@ This package contains the protobuf files used by the Flow JS SDK to communicate 
 
 # Status
 
-- **Last Updated:** June 13th 2020
+- **Last Updated:** July 27th 2020
 - **Stable:** Yes
 - **Risk of Breaking Change:** High
 
 These change when the access nodes need different data. If the access nodes introduce a breaking change this package will proxy that breaking change into the SDK and FCL.
 This risk is what lead us to the interaction abstraction and our send functions acting as a translation layer between the interaction and these.
-
-Known Upcoming Changes:
-
-- Future versions of the access node will allow us to send Cadence params beside the code. This isn't a thing that is in the proto files at all yet.
 
 # Install
 

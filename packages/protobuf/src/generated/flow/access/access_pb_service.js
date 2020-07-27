@@ -109,6 +109,15 @@ AccessAPI.GetTransactionResult = {
   responseType: flow_access_access_pb.TransactionResultResponse
 };
 
+AccessAPI.GetAccount = {
+  methodName: "GetAccount",
+  service: AccessAPI,
+  requestStream: false,
+  responseStream: false,
+  requestType: flow_access_access_pb.GetAccountRequest,
+  responseType: flow_access_access_pb.GetAccountResponse
+};
+
 AccessAPI.GetAccountAtLatestBlock = {
   methodName: "GetAccountAtLatestBlock",
   service: AccessAPI,
@@ -503,6 +512,37 @@ AccessAPIClient.prototype.getTransactionResult = function getTransactionResult(r
     callback = arguments[1];
   }
   var client = grpc.unary(AccessAPI.GetTransactionResult, {
+    request: requestMessage,
+    host: this.serviceHost,
+    metadata: metadata,
+    transport: this.options.transport,
+    debug: this.options.debug,
+    onEnd: function (response) {
+      if (callback) {
+        if (response.status !== grpc.Code.OK) {
+          var err = new Error(response.statusMessage);
+          err.code = response.status;
+          err.metadata = response.trailers;
+          callback(err, null);
+        } else {
+          callback(null, response.message);
+        }
+      }
+    }
+  });
+  return {
+    cancel: function () {
+      callback = null;
+      client.close();
+    }
+  };
+};
+
+AccessAPIClient.prototype.getAccount = function getAccount(requestMessage, metadata, callback) {
+  if (arguments.length === 2) {
+    callback = arguments[1];
+  }
+  var client = grpc.unary(AccessAPI.GetAccount, {
     request: requestMessage,
     host: this.serviceHost,
     metadata: metadata,
