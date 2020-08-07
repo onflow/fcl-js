@@ -1,5 +1,6 @@
 import React, {useState} from "react"
-import * as sdk from "@onflow/sdk"
+import {config} from "@onflow/config"
+import * as fcl from "@onflow/fcl"
 
 export const GetAccount = () => {
   const [result, setResult] = useState(null)
@@ -20,11 +21,13 @@ export const GetAccount = () => {
 
     */
 
-    const response = await sdk.send(await sdk.build([
-      sdk.getAccount(addr)
-    ]), { node: "http://localhost:8080" })
+   config()
+   .put("accessNode.api", "http://localhost:8080")
 
-    setResult(await sdk.decodeResponse(response))
+    const response = await fcl.send([
+      fcl.getAccount(addr)
+    ])
+    setResult(await fcl.decode(response))
   }
 
   return (

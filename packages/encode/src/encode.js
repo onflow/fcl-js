@@ -41,7 +41,7 @@ const prepareEnvelope = tx => {
   return [preparePayload(tx), preparePayloadSignatures(tx)]
 }
 
-const preparePayloadSignatures = tx => {
+export const preparePayloadSignatures = tx => {
   const signers = collectSigners(tx)
 
   return tx.payloadSigs

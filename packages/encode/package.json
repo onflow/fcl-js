@@ -28,6 +28,7 @@
   "module": "dist/encode.module.js",
   "unpkg": "dist/encode.umd.js",
   "scripts": {
+    "zondax": "node src/zondax.js",
     "prepublishOnly": "npm test && npm run build",
     "test": "jest",
     "build": "microbundle",
