@@ -27,7 +27,7 @@ import * as sdk from "@onflow/sdk"
 import * as types from "@onflow/types"
 const builtTxIx = await sdk.build([
   sdk.transaction`transaction(msg: String) { prepare(acct: AuthAccount) {} execute { log(msg) } }`,
-  sdk.args([sdk.arg("Hello, Flow!", types.String)])
+  sdk.args([sdk.arg("Hello, Flow!", types.String)]),
   sdk.payer(sdk.authorization("01", signingFunction, 0)),
   sdk.proposer(sdk.authorization("01", signingFunction, 0, seqNum)),
   sdk.authorizations([sdk.authorization("01", signingFunction, 0)]),
@@ -45,6 +45,7 @@ const resolvedTxIx = await sdk.pipe(builtTxIx, [
     sdk.resolveProposerSequenceNumber({ node: "http://localhost:8080" }),
     sdk.resolveRefBlockId({ node: "http://localhost:8080" }),
     sdk.resolveArguments,
+    sdk.resolveParams,
     sdk.resolveAccounts,
     sdk.resolveSignatures
   ])
@@ -126,6 +127,7 @@ const response = await sdk.send(await sdk.pipe(await sdk.build([
 ]), [
   sdk.resolve([
     sdk.resolveArguments,
+    sdk.resolveParams,
   ]),
 ]), { node: "http://localhost:8080" })
 ```
@@ -146,6 +148,7 @@ const response = await sdk.send(await sdk.pipe(await sdk.build([
     sdk.resolveProposerSequenceNumber({ node: "http://localhost:8080" }),
     sdk.resolveRefBlockId({ node: "http://localhost:8080" }),
     sdk.resolveArguments,
+    sdk.resolveParams,
     sdk.resolveAccounts,
     sdk.resolveSignatures
   ]),
