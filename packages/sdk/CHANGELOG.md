@@ -1,6 +1,7 @@
 ### Unreleased
 
 - YYYY-MM-DD **BREAKING?** -- description
+- 2020-08-10 -- Updates Readme
 
 ### 0.0.30 -- 2020-7-27
 

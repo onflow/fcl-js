@@ -4,7 +4,7 @@ A collection of modules that make interacting with [Flow](https://onflow.org) ea
 
 # Status
 
-- **Last Updated:** July 7th 2020
+- **Last Updated:** August 10th 2020
 - **Stable:** Yes
 - **Risk of Breaking Change:** Medium
 
@@ -23,10 +23,13 @@ npm install --save @onflow/sdk
 Building a interaction produces an unresolved interaction. For example, to build a transaction interaction you must call `sdk.build([...])`, and pass in the sequence of builders you want to use to compose that transaction interaction. The example below highlights one way to build a transaction interaction:
 
 ```javascript
+import * as sdk from "@onflow/sdk"
+import * as types from "@onflow/types"
 const builtTxIx = await sdk.build([
+  sdk.transaction`transaction(msg: String) { prepare(acct: AuthAccount) {} execute { log(msg) } }`,
+  sdk.args([sdk.arg("Hello, Flow!", types.String)])
   sdk.payer(sdk.authorization("01", signingFunction, 0)),
   sdk.proposer(sdk.authorization("01", signingFunction, 0, seqNum)),
-  sdk.transaction`transaction { prepare(acct: AuthAccount) {} execute { log("Hello") } }`,
   sdk.authorizations([sdk.authorization("01", signingFunction, 0)]),
 ])
 ```
@@ -36,8 +39,12 @@ const builtTxIx = await sdk.build([
 Once a transaction interaction is built, it's still not quite ready to be sent to the Access Node. To further prepare it to be ready to be sent to the Access Node, you must resolve it by piping it through a series of resolvers. Resolvers are functions that consume an interaction and attempt to fill in or prepare any missing pieces of it to get it ready to be sent to the Access API. The example below highlights one way to resolve a transaction interaction:
 
 ```javascript
+import * as sdk from "@onflow/sdk"
 const resolvedTxIx = await sdk.pipe(builtTxIx, [
   sdk.resolve([
+    sdk.resolveProposerSequenceNumber({ node: "http://localhost:8080" }),
+    sdk.resolveRefBlockId({ node: "http://localhost:8080" }),
+    sdk.resolveArguments,
     sdk.resolveAccounts,
     sdk.resolveSignatures
   ])
@@ -48,6 +55,7 @@ const resolvedTxIx = await sdk.pipe(builtTxIx, [
 Now that your transction interaction is resolved, it can be sent to an Access Node! To send it to an Access Node, you must call `sdk.send(...)` with that interaction, and a configuration object. To specify which Access Node to send your request to, you specify it in the _node_ parameter of the config object. For example, the code below shows how to send your transaction interaction to the Flow Emulator running on _localhost:8080_:
 
 ```javascript
+import * as sdk from "@onflow/sdk"
 const response = await sdk.send(resolvedTxIx, { node: "http://localhost:8080" })
 ```
 
@@ -60,6 +68,7 @@ Please reference the provided example project `react-simple` for example code.
 ### GetAccount
 
 ```javascript
+import * as sdk from "@onflow/sdk"
 const response = await sdk.send(await sdk.build([
   sdk.getAccount(addr)
 ]), { node: "http://localhost:8080" })
@@ -68,6 +77,7 @@ const response = await sdk.send(await sdk.build([
 ### GetEvents
 
 ```javascript
+import * as sdk from "@onflow/sdk"
 const response = await sdk.send(await sdk.build([
   sdk.getEvents(eventType, startBlock, endBlock),
 ]), { node: "http://localhost:8080" })
@@ -76,6 +86,7 @@ const response = await sdk.send(await sdk.build([
 ### GetLatestBlock
 
 ```javascript
+import * as sdk from "@onflow/sdk"
 const response = await sdk.send(await sdk.build([
   sdk.getLatestBlock()
 ]), { node: "http://localhost:8080" })
@@ -84,6 +95,7 @@ const response = await sdk.send(await sdk.build([
 ### GetTransactionStatus
 
 ```javascript
+import * as sdk from "@onflow/sdk"
 const response = await sdk.send(await sdk.build([
   sdk.getTransactionStatus(txId)
 ]), { node: "http://localhost:8080" })
@@ -92,6 +104,7 @@ const response = await sdk.send(await sdk.build([
 ### Ping
 
 ```javascript
+import * as sdk from "@onflow/sdk"
 const response = await sdk.send(await sdk.build([
   sdk.ping()
 ]), { node: "http://localhost:8080" })
@@ -100,17 +113,19 @@ const response = await sdk.send(await sdk.build([
 ### Script
 
 ```javascript 
+import * as sdk from "@onflow/sdk"
+import * as types from "@onflow/types"
 const response = await sdk.send(await sdk.pipe(await sdk.build([
-  sdk.params([sdk.param("foo", "bar")]),
+  sdk.args([sdk.arg("Hello Flow!", types.String)]),
   sdk.script`
-    pub fun main(): Int {
-      log("${p => p.foo}")
+    pub fun main(msg: String): Int {
+      log(msg)
       return 7
     }
   `,
 ]), [
   sdk.resolve([
-    sdk.resolveParams,
+    sdk.resolveArguments,
   ]),
 ]), { node: "http://localhost:8080" })
 ```
@@ -118,19 +133,19 @@ const response = await sdk.send(await sdk.pipe(await sdk.build([
 ### Transaction
 
 ```javascript
-const acctResponse = await sdk.send(await sdk.build([
-  sdk.getAccount("01")
-]), { node: "http://localhost:8080" })
-
-const seqNum = acctResponse.account.keys[0].sequenceNumber
-
+import * as sdk from "@onflow/sdk"
+import * as types from "@onflow/types"
 const response = await sdk.send(await sdk.pipe(await sdk.build([
+  sdk.transaction`transaction(msg: String) { prepare(acct: AuthAccount) {} execute { log(msg) } }`,
+  sdk.args([sdk.arg("Hello, Flow!", types.String)]),
   sdk.payer(sdk.authorization("01", signingFunction, 0)),
-  sdk.proposer(sdk.authorization("01", signingFunction, 0, seqNum)),
-  sdk.transaction`transaction { prepare(acct: AuthAccount) {} execute { log("Hello") } }`,
+  sdk.proposer(sdk.authorization("01", signingFunction, 0)),
   sdk.authorizations([sdk.authorization("01", signingFunction, 0)]),
 ]), [
   sdk.resolve([
+    sdk.resolveProposerSequenceNumber({ node: "http://localhost:8080" }),
+    sdk.resolveRefBlockId({ node: "http://localhost:8080" }),
+    sdk.resolveArguments,
     sdk.resolveAccounts,
     sdk.resolveSignatures
   ]),
