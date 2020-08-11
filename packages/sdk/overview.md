@@ -28,23 +28,36 @@ We will walk through each phase to exaplain how it is relevant for your applicat
 
 ## Build
 
-Build is the phase of your use of the Flow JS-SDK where you _Build_ up a specific interaction. During this phase you specify upon an interaction what information you currently know. This may include the specific Cadence code for a Script you wish to execute, or the address for the Account of which you wish to get. As you specify information, the type of the interaction you are composing becomes clear. For example, if you Build an interaction and speficy that you want to get an account for a specific address, you are composing an interaction of type Get Account.
+Build is the phase of your use of the Flow JS-SDK where you _Build_ up a specific interaction. During this phase you specify upon an interaction what information you currently know. This may include the specific Cadence code for a Script you wish to execute, or the address for the Account of which you wish to get. As you specify information, the type of the interaction you are composing becomes clear. For example, if you Build an interaction and specify that you want to get an account for a specific address, you are composing an interaction of type Get Account.
 
 The Flow JS-SDK exposes what we call a _build_ function, and a suite of _builder_ functions. The build function consumes as its argument an array of builder functions within it. Each builder function consumes information that you know, and that you want to place into the interaction. 
 
+Example 1
+    : Building an Execute Script Interaction
+```javascript
+import * as sdk from "@onflow/sdk"
 
-> Example 1
->    : Building an Execute Script Interaction
-> ```javascript
-> import * as sdk from "@onflow/sdk"
->
-> const interaction = await sdk.build([
->    sdk.script`
->        pub fun main(): Int {
->            return 721
->        }
->    `
-> ])
-> ```
+const interaction = await sdk.build([
+   sdk.script`
+       pub fun main(): Int {
+           return 721
+       }
+   `
+])
+```
 
-So, what happened in Example 1? 
+In Example 1, we're composing an Execute Script Interaction, because we have built an interaction and specified a Script Cadence code within it using the sdk.script builder.
+
+Example 2
+    : Building an Execute Get Account Interaction
+```javascript
+import * as sdk from "@onflow/sdk"
+
+const interaction = await sdk.build([
+   sdk.script`
+       pub fun main(): Int {
+           return 721
+       }
+   `
+])
+```
