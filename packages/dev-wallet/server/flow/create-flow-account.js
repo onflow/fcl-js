@@ -2,7 +2,6 @@ import * as CONFIG from "../config"
 import * as fcl from "@onflow/fcl"
 import * as t from "@onflow/types"
 import {genKeys, signWithKey} from "../crypto"
-import {CONTRACT} from "./contract-noop"
 
 const invariant = (fact, msg, ...rest) => {
   if (!fact) {
@@ -49,7 +48,7 @@ const authorization = async (account = {}) => {
   }
 }
 
-export const createFlowAccount = async (contract = CONTRACT) => {
+export const createFlowAccount = async () => {
   const keys = await genKeys()
 
   const response = await fcl.send([
@@ -62,7 +61,6 @@ export const createFlowAccount = async (contract = CONTRACT) => {
         execute {
           let account = AuthAccount(payer: self.payer)
           account.addPublicKey("${p => p.publicKey}".decodeHex())
-          account.setCode("${p => p.code}".decodeHex())
         }
       }
     `,
@@ -71,11 +69,6 @@ export const createFlowAccount = async (contract = CONTRACT) => {
     fcl.payer(authorization),
     fcl.params([
       fcl.param(keys.flowKey, t.Identity, "publicKey"),
-      fcl.param(
-        Buffer.from(contract, "utf8").toString("hex"),
-        t.Identity,
-        "code"
-      ),
     ]),
   ])
 
