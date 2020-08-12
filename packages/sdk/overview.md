@@ -1,12 +1,6 @@
 # Flow JS-SDK
 
-#### Contributers
-
-This document was written by github.com/JeffreyDoyle and github.com/orodio for github.com/onflow.
-
-For other documentation and code surrounding the Flow JS-SDK please reference: github.com/onflow/flow-js-sdk
-
-## Introduction
+#### Introduction
 
 Welcome, we're glad you're here.
 
@@ -137,15 +131,90 @@ const signingFunction = (...) => {
 }
 
 const builtInteraction = await sdk.build([
-    sdk.transaction`transaction() { prepare(acct: AuthAccount) {} execute { log("Hello, Flow!") } }`,
+    sdk.transaction`transaction(msg: String) { prepare(acct: AuthAccount) {} execute { log(msg) } }`,
+    sdk.args([sdk.arg("Hello, Flow!", types.String)]),
     sdk.payer(sdk.authorization("f8d6e0586b0a20c7", signingFunction, 0)),
     sdk.proposer(sdk.authorization("f8d6e0586b0a20c7", signingFunction, 0)),
     sdk.authorizations([sdk.authorization("f8d6e0586b0a20c7", signingFunction, 0)]),
 ])
 
 const resolvedInteraction = await sdk.pipe(builtInteraction, [
-    
+    sdk.resolveRefBlockId({ node: "http://localhost:8080" }),
+    sdk.resolveProposerSequenceNumber({ node: "http://localhost:8080" }),
+    sdk.resolveArguments,
+    sdk.resolveParams,
+    sdk.resolveAccounts,
+    sdk.resolveSignatures,
+])
+```
 
+In Example 5 we build a Transaction Interaction by building an interaction and calling the transaction builder with a piece of transaction Cadence code, and then specify an authorization for the payer, proposer and one authorizer.
+
+After the Transaction Interaction is built, we pipe it through a series of resolvers. We resolve the reference block id to execute this transaction against by calling the resolveRefBlockId resovler. We resolve the sequence number for the proposer authorization for this transaction by calling the resolveProposerSequenceNumber resolver. Then we resolve the arguments and params for the transaction by calling the resolveArguments and resolveParams resolvers. We then call the resolveAccounts resolver to prepare each specified authorization into a format that they could be used to produce their correct signature(s) for the transaction. Finally, at the end, we call the resolveSignatures resolver which will asyncronously using the signingFunction available for the specified authorizations retrieve a signature for each.
+
+## Send
+
+Once an Interaction has been _Built_ and, if necessary, _Resolved_ it can then be _Sent_ to the Flow Blockchain. Fortunately, sending to the Flow Blockchain is simple. The Flow JS-SDK exposes a Send function which consumes an Interaction and some configuration, and returns a data structure called a _Response_ (more on this later). 
+
+Example 6
+    : Sending an Execute Script Interaction
+```javascript
+import * as sdk from "@onflow/sdk"
+import * as types from "@onflow/types"
+
+const builtInteraction = await sdk.build([
+    sdk.script`
+        pub fun main(msg: String): String {
+            return "Hello, Flow!"
+        }
+    `,
+    sdk.args([ sdk.arg("Hello, Flow", types.String) ])
 ])
 
+const resolvedInteraction = await sdk.pipe(builtInteraction, [
+    sdk.resolveParams,
+    sdk.resolveArguments,
+])
+
+const response = await sdk.send(resolvedInteraction, { node: "my-access-node-url" })
 ```
+
+In Example 6 we use the Flow JS-SDK send function to send an Interaction to the Flow Blockchain, and receive back a Response. Notice how the send function consumes both the resolved interaction as well as an object of configuration. The key value pair `node: "my-access-node-url"` on this configuration object tells the send function where to send this interaction to. The node here must point to the Flow access node of your choice, be that for the Flow main-net, testnet, emulator or elsewhere.
+
+## Decode
+
+The Flow JS-SDK send function returns a response. This Response is a Data Structure that must be _decoded_ into a format that you intuitively want. For example, if you send an Execute Script Interaction to the Flow Blockchain and inside that Interaction was a Cadence script that when executed returns the Integer 1, then the response you intuitively want is the integer 1 represented as a the JavaScript number 1. If you send a Get Account Interaction to the Flow Blockchain, then the response you intuitively want is a JavaScript object containing information of that Flow Account, not the entire content of the Response Data Structure itself.
+
+This is where the decode phase comes in. The Flow JS-SDK exposes a function `decode` that consumes a response and returns back what you intuitively expect.
+
+Example 7
+    : Decoding an Execute Script Interaction
+```javascript
+import * as sdk from "@onflow/sdk"
+import * as types from "@onflow/types"
+
+const builtInteraction = await sdk.build([
+    sdk.script`
+        pub fun main(int1: Int, int2: Int): Int {
+            return "Hello, Flow!"
+        }
+    `,
+    sdk.args([ sdk.arg(1, types.Int), sdk.arg(2, types.Int) ])
+])
+
+const resolvedInteraction = await sdk.pipe(builtInteraction, [
+    sdk.resolveParams,
+    sdk.resolveArguments,
+])
+
+const response = await sdk.send(resolvedInteraction, { node: "my-access-node-url" })
+
+const decoded = await sdk.decode(response)
+
+assert(3 === decoded)
+assert(typeof decoded === "number")
+```
+
+In Example 7 we illustrate how intuitively the decoded value returned from calling decode on the response returned from this Execute Script interaction must be the JavaScript number 3. This is because the Execute Script interaction contains Cadence Code, which when executed with the included script arguements, adds the Cadence Integer 1 and Cadence Integer 2 together to return the Cadence Integer 3. Since there is no native concept of a Cadence Integer of value 3 in JavaScript, when this response is decoded, we intuitively expect the decoded value to be the JavaScript number 3.
+
+
