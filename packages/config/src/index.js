@@ -1,4 +1,10 @@
-import {spawn, send, SUBSCRIBE, UNSUBSCRIBE} from "@onflow/util-actor"
+import {
+  spawn,
+  send,
+  subscriber,
+  SUBSCRIBE,
+  UNSUBSCRIBE,
+} from "@onflow/util-actor"
 
 const NAME = "config"
 const PUT = "PUT_CONFIG"
@@ -69,19 +75,7 @@ function where(pattern) {
 }
 
 function subscribe(callback) {
-  const EXIT = "@EXIT"
-  const self = spawn(async ctx => {
-    ctx.send(NAME, SUBSCRIBE)
-    while (1) {
-      const letter = await ctx.receive()
-      if (letter.tag === EXIT) {
-        ctx.send(NAME, UNSUBSCRIBE)
-        return
-      }
-      callback(letter.data)
-    }
-  })
-  return () => send(self, EXIT)
+  return subscriber(NAME, () => spawn(HANDLERS, NAME), callback)
 }
 
 export function config() {
