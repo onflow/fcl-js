@@ -4,11 +4,11 @@ A collection of modules that make interacting with [Flow](https://onflow.org) ea
 
 # Status
 
-- **Last Updated:** July 7th 2020
+- **Last Updated:** August 13th 2020
 - **Stable:** Yes
 - **Risk of Breaking Change:** Medium
 
-This package is working and in active delveopment, breaking changes may happen.
+This package is working and in active development, breaking changes may happen.
 
 # Install
 
