@@ -2,6 +2,10 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.0.49 -- 2020-08-13
+
+- 2020-08-13 -- Adds export of `fcl.events(eventKey).subscribe(callback)`
+
 ### 0.0.48 -- 2020-08-13
 
 - 2020-08-13 -- Removed `resolveSequenceNumber` from default resolver
