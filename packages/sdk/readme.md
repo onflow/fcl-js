@@ -32,11 +32,11 @@ Futher in this document we will outline how to create such Interactions for use 
 
 ## Phases
 
-Conceptually, there are four phases to the Flow JS-SDK
+Conceptually, there are four phases to the Flow JS-SDK.
 
 Build -> Resolve -> Send -> Decode
 
-We will walk through each phase to exaplain how it is relevant for your applications and how you use the Flow JS-SDK
+We will walk through each phase to exaplain how it is relevant for your applications and how you use the Flow JS-SDK.
 
 ## Build
 
@@ -80,9 +80,9 @@ The Proposer of the transaction represents the Account on Flow for which one of 
 
 The Payer of the transaction represents the Account on Flow for which will pay for the transaction.
 
-Each Authorizer of the transactionr represents an Account on Flow which consents to have it's state modified by this transaction.
+Each Authorizer of the transaction represents an Account on Flow which consents to have it's state modified by this transaction.
 
-The builders for the Proposer, Payer and each Authorizer consume an `authorization` which is built using its own builder function. An authorization is a data structure which is constructed by providing an Address, Signing Function and a keyId, and optionally a sequence number (more on this later).
+The builders for the Proposer, Payer and each Authorizer consume an _authorization_ which is built using its own builder function. An authorization is a data structure which is constructed by providing an Address, Signing Function and a keyId, and optionally a sequence number (more on this later).
 
 The Address for an Authorization corresponds to the address for the Flow Account this authorization represents. The Signing Function is a function which can produce a Signature for a transaction on behalf of the specified account. The keyId represents the id of the key on the Account which needs to be used to produce the Signature for a transaction. An Authorization also optionlly takes a sequence number, which is the sequence number for the key corresponding to the keyId of the Flow Account this authorization represents, if this authroization is for a proposer. (Again, more on this later. Observe how we choose not to provide this piece of information in Example 3, this decision will be explained later).
 
@@ -168,7 +168,7 @@ const resolvedInteraction = await sdk.pipe(builtInteraction, [
 
 In Example 5 we build a Transaction Interaction by building an interaction and calling the transaction builder with a piece of transaction Cadence code, and then specify an authorization for the payer, proposer and one authorizer.
 
-After the Transaction Interaction is built, we pipe it through a series of resolvers. We resolve the reference block id to execute this transaction against by calling the resolveRefBlockId resovler. We resolve the sequence number for the proposer authorization for this transaction by calling the resolveProposerSequenceNumber resolver. Then we resolve the arguments and params for the transaction by calling the resolveArguments and resolveParams resolvers. We then call the resolveAccounts resolver to prepare each specified authorization into a format that they could be used to produce their correct signature(s) for the transaction. Finally, at the end, we call the resolveSignatures resolver which will asyncronously using the signingFunction available for the specified authorizations retrieve a signature for each.
+After the Transaction Interaction is built, we pipe it through a series of resolvers. We resolve the reference block id to execute this transaction against by calling the resolveRefBlockId resovler. We resolve the sequence number for the proposer authorization for this transaction by calling the resolveProposerSequenceNumber resolver. Then we resolve the arguments and params for the transaction by calling the resolveArguments and resolveParams resolvers. We then call the resolveAccounts resolver to prepare each specified authorization into a format that they could be used to produce their correct signature(s) for the transaction. Finally, at the end, we call the resolveSignatures resolver which will asyncronously using the signingFunction available for the specified authorizations to retrieve a signature for each.
 
 ## Send
 
@@ -207,8 +207,8 @@ This is where the decode phase comes in. The Flow JS-SDK exposes a function `dec
 
 For the available Interaction types, decoding responses for them produces values like such:
 
-- Decoding a Transaction Interaction returns the Transaction ID for the submitted Interaction
-- Decoding an Execute Script Interaction returns the JavaScript equivalent typed values for the value returned by the Cadence Script that was Executed.
+- Decoding a Transaction Interaction returns the Transaction ID for the submitted Transaction Interaction
+- Decoding an Execute Script Interaction returns the JavaScript equivalently typed values for the value returned by the Cadence Script that was Executed.
 - Decoding a Get Account Interaction returns a JavaScript object containing the information for the account.
 - Decoding a Get Events Interaction returns a JavaScript array of JavaScript objects each containing the relevant information for each Event.
 - Decoding a Get Transaction Status interaction returns a JavaScript object of relevant information about the status of a transcation.
@@ -242,7 +242,7 @@ assert(3 === decoded)
 assert(typeof decoded === "number")
 ```
 
-In Example 7 we illustrate how intuitively the decoded value returned from calling decode on the response returned from this Execute Script interaction must be the JavaScript number 3. This is because the Execute Script interaction contains Cadence Code, which when executed with the included script arguements, adds the Cadence Integer 1 and Cadence Integer 2 together to return the Cadence Integer 3. Since there is no native concept of a Cadence Integer of value 3 in JavaScript, when this response is decoded, we intuitively expect the decoded value to be the JavaScript number 3.
+In Example 7 we illustrate how intuitively the decoded value returned from calling decode on the response returned from this Execute Script interaction must be the JavaScript number 3. This is because the Execute Script interaction contains Cadence code, which when executed with the included script arguements, adds the Cadence Integer 1 and Cadence Integer 2 together to return the Cadence Integer 3. Since there is no native concept of a Cadence Integer of value 3 in JavaScript, when this response is decoded, we intuitively expect the decoded value to be the JavaScript number 3.
 
 Decode does several things under the hood to take your response into something you'd like to consume in your JS Applications. At a high level, it returns the relevant information from the response data structure, and if there are any Cadence values, decodes those Cadence values into conceptually equivalent JavaScript values and types.
 
@@ -300,7 +300,7 @@ assert(3 === decoded)
 assert(typeof decoded === "number")
 ```
 
-In Example 8 we declare an Execute Script interaction with Cadence code that returns a Point Cadence struct. If no custom decoders were declared, the returned Cadence Point struct would by default be decoded into a JavaScript object with key value pairs for it's x and y variables. However, in this exampel we declare a custom decoder onto the call to decode which includes a regular expression that will match to the Point struct and return a new instance of the Point class that is declared just above.
+In Example 8 we declare an Execute Script interaction with Cadence code that returns a Point Cadence struct. If no custom decoders were declared, the returned Cadence Point struct would by default be decoded into a JavaScript object with key value pairs for it's x and y variables. However, in this example we declare a custom decoder onto the call to decode which includes a regular expression that will match to the Point struct and return a new instance of the Point class that is declared just above.
 
 ## Flow JS-SDK Usage
 
