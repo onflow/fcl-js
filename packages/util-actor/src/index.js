@@ -4,6 +4,8 @@ import queueMicrotask from "queue-microtask"
 export const INIT = "INIT"
 export const SUBSCRIBE = "SUBSCRIBE"
 export const UNSUBSCRIBE = "UNSUBSCRIBE"
+export const UPDATED = "UPDATED"
+export const SNAPSHOT = "SNAPSHOT"
 export const EXIT = "EXIT"
 export const TERMINATE = "TERMINATE"
 
@@ -90,12 +92,17 @@ export const spawn = (fn, addr = null) => {
       opts.from = addr
       return send(to, tag, data, opts)
     },
+    sendSelf: (tag, data, opts) => {
+      if (root.FCL_REGISTRY[addr]) send(addr, tag, data, opts)
+    },
     broadcast: (tag, data, opts = {}) => {
       opts.from = addr
       for (let to of root.FCL_REGISTRY[addr].subs) send(to, tag, data, opts)
     },
     subscribe: sub => sub != null && root.FCL_REGISTRY[addr].subs.add(sub),
     unsubscribe: sub => sub != null && root.FCL_REGISTRY[addr].subs.delete(sub),
+    subscriberCount: () => root.FCL_REGISTRY[addr].subs.size,
+    hasSubs: () => !!root.FCL_REGISTRY[addr].subs.size,
     put: (key, value) => {
       if (key != null) root.FCL_REGISTRY[addr].kvs[key] = value
     },
@@ -138,4 +145,41 @@ export const spawn = (fn, addr = null) => {
   })
 
   return addr
+}
+
+// Returns an unsubscribe function
+// A SUBSCRIBE handler will need to be created to handle the subscription event
+//
+//  [SUBSCRIBE]: (ctx, letter) => {
+//    ctx.subscribe(letter.from)
+//    ctx.send(letter.from, UPDATED, ctx.all())
+//  }
+//
+export function subscriber(address, spawnFn, callback) {
+  spawnFn(address)
+  const EXIT = "@EXIT"
+  const self = spawn(async ctx => {
+    ctx.send(address, SUBSCRIBE)
+    while (1) {
+      const letter = await ctx.receive()
+      if (letter.tag === EXIT) {
+        ctx.send(address, UNSUBSCRIBE)
+        return
+      }
+      callback(letter.data)
+    }
+  })
+  return () => send(self, EXIT)
+}
+
+// Returns a promise that returns a result
+// A SNAPSHOT handler will need to be created to handle the snapshot event
+//
+//  [SNAPSHOT]: (ctx, letter) => {
+//    letter.reply(ctx.all())
+//  }
+//
+export function snapshoter(address, spawnFn) {
+  spawnFn(address)
+  return send(address, SNAPSHOT, null, {expectReply: true, timeout: 0})
 }
