@@ -2,6 +2,10 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.0.48 -- 2020-08-13
+
+- 2020-08-13 -- Removed `resolveSequenceNumber` from default resolver
+
 ### 0.0.47 -- 2020-08-13
 
 - 2020-08-13 -- `@onflow/config` VSN `0.0.1` -> `0.0.2`

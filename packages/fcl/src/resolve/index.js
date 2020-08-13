@@ -6,14 +6,14 @@ import {
   resolveSignatures,
   resolveValidators,
   resolveRefBlockId,
-  resolveProposerSequenceNumber,
+  // resolveProposerSequenceNumber,
 } from "@onflow/sdk"
 import {config} from "@onflow/config"
 
 export const resolve = async ix => {
   return sdkResolve(ix, [
-    resolveRefBlockId({ node: await config().get("accessNode.api") }),
-    resolveProposerSequenceNumber({ node: await config().get("accessNode.api") }),
+    resolveRefBlockId({node: await config().get("accessNode.api")}),
+    // resolveProposerSequenceNumber({ node: await config().get("accessNode.api") }),
     resolveParams,
     resolveArguments,
     resolveAccounts,
