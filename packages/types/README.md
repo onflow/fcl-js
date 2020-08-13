@@ -66,7 +66,7 @@ sdk.build([
 import * as t from "@onflow/types"
 
 sdk.build([
-  sdk.args([ sdk.arg(1, t.UInt8) ])
+  sdk.args([ sdk.arg(8, t.UInt8) ])
 ])
 ```
 
@@ -76,7 +76,7 @@ sdk.build([
 import * as t from "@onflow/types"
 
 sdk.build([
-  sdk.args([ sdk.arg(1, t.Int8) ])
+  sdk.args([ sdk.arg(8, t.Int8) ])
 ])
 ```
 
@@ -86,7 +86,7 @@ sdk.build([
 import * as t from "@onflow/types"
 
 sdk.build([
-  sdk.args([ sdk.arg(1, t.UInt16) ])
+  sdk.args([ sdk.arg(16, t.UInt16) ])
 ])
 ```
 
@@ -96,7 +96,7 @@ sdk.build([
 import * as t from "@onflow/types"
 
 sdk.build([
-  sdk.args([ sdk.arg(1, t.Int16) ])
+  sdk.args([ sdk.arg(16, t.Int16) ])
 ])
 ```
 
@@ -106,7 +106,7 @@ sdk.build([
 import * as t from "@onflow/types"
 
 sdk.build([
-  sdk.args([ sdk.arg(1, t.UInt32) ])
+  sdk.args([ sdk.arg(32, t.UInt32) ])
 ])
 ```
 
@@ -116,7 +116,7 @@ sdk.build([
 import * as t from "@onflow/types"
 
 sdk.build([
-  sdk.args([ sdk.arg(1, t.Int32) ])
+  sdk.args([ sdk.arg(32, t.Int32) ])
 ])
 ```
 
@@ -126,7 +126,7 @@ sdk.build([
 import * as t from "@onflow/types"
 
 sdk.build([
-  sdk.args([ sdk.arg(1, t.UInt64) ])
+  sdk.args([ sdk.arg(64, t.UInt64) ])
 ])
 ```
 
@@ -136,7 +136,7 @@ sdk.build([
 import * as t from "@onflow/types"
 
 sdk.build([
-  sdk.args([ sdk.arg(1, t.Int64) ])
+  sdk.args([ sdk.arg(64, t.Int64) ])
 ])
 ```
 
@@ -146,7 +146,7 @@ sdk.build([
 import * as t from "@onflow/types"
 
 sdk.build([
-  sdk.args([ sdk.arg(1, t.UInt128) ])
+  sdk.args([ sdk.arg(128, t.UInt128) ])
 ])
 ```
 
@@ -156,7 +156,7 @@ sdk.build([
 import * as t from "@onflow/types"
 
 sdk.build([
-  sdk.args([ sdk.arg(1, t.Int128) ])
+  sdk.args([ sdk.arg(128, t.Int128) ])
 ])
 ```
 
@@ -166,7 +166,7 @@ sdk.build([
 import * as t from "@onflow/types"
 
 sdk.build([
-  sdk.args([ sdk.arg(1, t.UInt256) ])
+  sdk.args([ sdk.arg(256, t.UInt256) ])
 ])
 ```
 
@@ -176,7 +176,7 @@ sdk.build([
 import * as t from "@onflow/types"
 
 sdk.build([
-  sdk.args([ sdk.arg(1, t.Int256) ])
+  sdk.args([ sdk.arg(256, t.Int256) ])
 ])
 ```
 
@@ -186,7 +186,7 @@ sdk.build([
 import * as t from "@onflow/types"
 
 sdk.build([
-  sdk.args([ sdk.arg(1, t.Word8) ])
+  sdk.args([ sdk.arg(8, t.Word8) ])
 ])
 ```
 
@@ -196,7 +196,7 @@ sdk.build([
 import * as t from "@onflow/types"
 
 sdk.build([
-  sdk.args([ sdk.arg(1, t.Word16) ])
+  sdk.args([ sdk.arg(16, t.Word16) ])
 ])
 ```
 
@@ -206,7 +206,7 @@ sdk.build([
 import * as t from "@onflow/types"
 
 sdk.build([
-  sdk.args([ sdk.arg(1, t.Word32) ])
+  sdk.args([ sdk.arg(32, t.Word32) ])
 ])
 ```
 
@@ -216,7 +216,7 @@ sdk.build([
 import * as t from "@onflow/types"
 
 sdk.build([
-  sdk.args([ sdk.arg(1, t.Word64) ])
+  sdk.args([ sdk.arg(64, t.Word64) ])
 ])
 ```
 
@@ -226,7 +226,7 @@ sdk.build([
 import * as t from "@onflow/types"
 
 sdk.build([
-  sdk.args([ sdk.arg(1, t.UFix64) ])
+  sdk.args([ sdk.arg(64, t.UFix64) ])
 ])
 ```
 
@@ -236,6 +236,175 @@ sdk.build([
 import * as t from "@onflow/types"
 
 sdk.build([
-  sdk.args([ sdk.arg(1, t.Fix64) ])
+  sdk.args([ sdk.arg(64, t.Fix64) ])
+])
+```
+
+## String
+
+```javascript
+import * as t from "@onflow/types"
+
+sdk.build([
+  sdk.args([ sdk.arg("Flow", t.String) ])
+])
+```
+
+## Character
+
+```javascript
+import * as t from "@onflow/types"
+
+sdk.build([
+  sdk.args([ sdk.arg("c", t.Character) ])
+])
+```
+
+## Bool
+
+```javascript
+import * as t from "@onflow/types"
+
+sdk.build([
+  sdk.args([ sdk.arg(true, t.Bool) ])
+])
+```
+
+## Address
+
+```javascript
+import * as t from "@onflow/types"
+
+sdk.build([
+  sdk.args([ sdk.arg("0xABC123DEF456", t.Address) ])
+])
+```
+
+## Void
+
+```javascript
+import * as t from "@onflow/types"
+
+sdk.build([
+  sdk.args([ sdk.arg(null, t.Void) ])
+])
+```
+
+## Optional
+
+```javascript
+import * as t from "@onflow/types"
+
+sdk.build([
+  sdk.args([ sdk.arg("Flow", t.Optional(t.String)) ])
+])
+
+sdk.build([
+  sdk.args([ sdk.arg(null, t.Optional(t.String)) ])
+])
+```
+
+## Reference
+
+```javascript
+import * as t from "@onflow/types"
+
+sdk.build([
+  sdk.args([ sdk.arg({address: "0xABC123DEF456", type: "0xABC123DEF456.CryptoKitty"}, t.Reference) ])
+])
+```
+
+## Array
+
+```javascript
+import * as t from "@onflow/types"
+
+sdk.build([
+  sdk.args([ sdk.arg(["First", "Second"], t.Array(t.String)) ])
+])
+
+sdk.build([
+  sdk.args([ sdk.arg(["First", 2], t.Array([t.String, t.Int])) ])
+])
+```
+
+## Dictionary
+
+```javascript
+import * as t from "@onflow/types"
+
+sdk.build([
+  sdk.args([ 
+    sdk.arg(
+      [
+        {key: 1, value: "one"},
+        {key: 2, value: "two"},
+      ],
+      t.Dictionary([
+        {key: t.Int, value: t.String},
+        {key: t.Int, value: t.String},
+      ])
+    ) 
+  ])
+])
+
+sdk.build([
+  sdk.args([ 
+    sdk.arg(
+      {key: 1, value: "one"},
+      t.Dictionary({key: t.Int, value: t.String})
+    ) 
+  ])
+])
+```
+
+## Struct
+
+```javascript
+import * as t from "@onflow/types"
+
+sdk.build([
+  sdk.args([ 
+    sdk.arg(
+      {
+        fields: [{name: "CryptoKitty_name", value: "Lil' Jimmy The CryptoKitty"}],
+      },
+      t.Struct("0xABC123DEF456.CryptoKitty", [{value: t.String}])
+    ) 
+  ])
+])
+```
+
+## Event
+
+```javascript
+import * as t from "@onflow/types"
+
+sdk.build([
+  sdk.args([ 
+    sdk.arg(
+      {
+        fields: [{name: "wasTheCodeClean?", value: "absolutely"}],
+      },
+      t.Event("0xABC123DEF456.JeffWroteSomeJS", [{value: t.String}]),
+    ) 
+  ])
+])
+```
+
+## Resource
+
+```javascript
+import * as t from "@onflow/types"
+
+sdk.build([
+  sdk.args([ 
+    sdk.arg(
+      {
+        fields: [{name: "Jeffysaur_Name", value: "Mr Jeff The Dinosaur"}],
+      }
+      t.Resource("0x01.Jeffysaur", [{value: t.String}]),
+    ) 
+  ])
 ])
 ```
