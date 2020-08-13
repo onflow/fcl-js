@@ -5,6 +5,7 @@ export {serialize} from "./serialize"
 export {decode} from "./decode"
 export {transaction as tx} from "./transaction"
 export {resolve} from "./resolve"
+export {events} from "./events"
 
 import {currentUser} from "./current-user"
 export {currentUser}
