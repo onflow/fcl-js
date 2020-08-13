@@ -16,11 +16,12 @@ npm install --save @onflow/types
 
 # Usage
 
+## Transactions
+
 ```javascript
 import * as sdk from "@onflow/sdk"
 import * as t from "@onflow/types"
 
-// This is the recommended way of using arguments with types.
 sdk.build([
   sdk.transaction`
     transaction(to: Address, amount: UFix64) {
@@ -31,9 +32,27 @@ sdk.build([
     }
   `,
   sdk.args([
-    // only two arguments
     sdk.arg(to, t.Address),
     sdk.arg(amount, t.UFix64),
+  ]),
+])
+```
+
+## Scripts
+
+```javascript
+import * as sdk from "@onflow/sdk"
+import * as t from "@onflow/types"
+
+sdk.build([
+  sdk.script`
+    pub fun main(a: Int, b: Int): Int {
+      return a + b
+    }
+  `,
+  sdk.args([
+    sdk.arg(1, t.Int),
+    sdk.arg(2, t.Int),
   ]),
 ])
 ```
