@@ -1,6 +1,7 @@
 ### Unreleased
 
 - YYYY-MM-DD **BREAKING?** -- description
+- 2020-08-13 -- Updates Readme with an overview of the JS-SDK
 - 2020-08-10 -- Updates Readme
 
 ### 0.0.30 -- 2020-7-27
