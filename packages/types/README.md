@@ -36,21 +36,206 @@ sdk.build([
     sdk.arg(amount, t.UFix64),
   ]),
 ])
+```
 
-// This is the non-recommended way of using params with types.
+# Available Types
+
+## UInt
+
+```javascript
+import * as t from "@onflow/types"
+
 sdk.build([
-  sdk.transaction`
-    transaction {
-      execute {
-        let to: Address = ${p => p.to}
-        let amount: UFix64 = ${p => p.amount}
-      }
-    }
-  `,
-  sdk.params([
-    // notice the third argument
-    sdk.param(to, t.Address, "to"),
-    sdk.param(amount, t.UFix64, "amount"),
-  ]),
+  sdk.args([ sdk.arg(1, t.UInt) ])
+])
+```
+
+## Int
+
+```javascript
+import * as t from "@onflow/types"
+
+sdk.build([
+  sdk.args([ sdk.arg(1, t.Int) ])
+])
+```
+
+## UInt8
+
+```javascript
+import * as t from "@onflow/types"
+
+sdk.build([
+  sdk.args([ sdk.arg(1, t.UInt8) ])
+])
+```
+
+## Int8
+
+```javascript
+import * as t from "@onflow/types"
+
+sdk.build([
+  sdk.args([ sdk.arg(1, t.Int8) ])
+])
+```
+
+## UInt16
+
+```javascript
+import * as t from "@onflow/types"
+
+sdk.build([
+  sdk.args([ sdk.arg(1, t.UInt16) ])
+])
+```
+
+## Int16
+
+```javascript
+import * as t from "@onflow/types"
+
+sdk.build([
+  sdk.args([ sdk.arg(1, t.Int16) ])
+])
+```
+
+## UInt32
+
+```javascript
+import * as t from "@onflow/types"
+
+sdk.build([
+  sdk.args([ sdk.arg(1, t.UInt32) ])
+])
+```
+
+## Int32
+
+```javascript
+import * as t from "@onflow/types"
+
+sdk.build([
+  sdk.args([ sdk.arg(1, t.Int32) ])
+])
+```
+
+## UInt64
+
+```javascript
+import * as t from "@onflow/types"
+
+sdk.build([
+  sdk.args([ sdk.arg(1, t.UInt64) ])
+])
+```
+
+## Int64
+
+```javascript
+import * as t from "@onflow/types"
+
+sdk.build([
+  sdk.args([ sdk.arg(1, t.Int64) ])
+])
+```
+
+## UInt128
+
+```javascript
+import * as t from "@onflow/types"
+
+sdk.build([
+  sdk.args([ sdk.arg(1, t.UInt128) ])
+])
+```
+
+## Int128
+
+```javascript
+import * as t from "@onflow/types"
+
+sdk.build([
+  sdk.args([ sdk.arg(1, t.Int128) ])
+])
+```
+
+## UInt256
+
+```javascript
+import * as t from "@onflow/types"
+
+sdk.build([
+  sdk.args([ sdk.arg(1, t.UInt256) ])
+])
+```
+
+## Int256
+
+```javascript
+import * as t from "@onflow/types"
+
+sdk.build([
+  sdk.args([ sdk.arg(1, t.Int256) ])
+])
+```
+
+## Word8
+
+```javascript
+import * as t from "@onflow/types"
+
+sdk.build([
+  sdk.args([ sdk.arg(1, t.Word8) ])
+])
+```
+
+## Word16
+
+```javascript
+import * as t from "@onflow/types"
+
+sdk.build([
+  sdk.args([ sdk.arg(1, t.Word16) ])
+])
+```
+
+## Word32
+
+```javascript
+import * as t from "@onflow/types"
+
+sdk.build([
+  sdk.args([ sdk.arg(1, t.Word32) ])
+])
+```
+
+## Word64
+
+```javascript
+import * as t from "@onflow/types"
+
+sdk.build([
+  sdk.args([ sdk.arg(1, t.Word64) ])
+])
+```
+
+## UFix64
+
+```javascript
+import * as t from "@onflow/types"
+
+sdk.build([
+  sdk.args([ sdk.arg(1, t.UFix64) ])
+])
+```
+
+## Fix64
+
+```javascript
+import * as t from "@onflow/types"
+
+sdk.build([
+  sdk.args([ sdk.arg(1, t.Fix64) ])
 ])
 ```
