@@ -5,3 +5,4 @@ dist/
 dev-wallet/db/*.db
 todo.md
 .exrc
+flowdb/
