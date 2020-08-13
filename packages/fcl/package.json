@@ -1,6 +1,6 @@
 {
   "name": "@onflow/fcl",
-  "version": "0.0.46",
+  "version": "0.0.47",
   "description": "Flow Client Library",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
@@ -18,9 +18,9 @@
     }
   },
   "devDependencies": {
-    "jest": "25.3.0",
+    "jest": "26.4.0",
     "jest-esm-transformer": "1.0.0",
-    "microbundle": "0.12.0-next.8"
+    "microbundle": "0.12.3"
   },
   "source": "src/fcl.js",
   "main": "dist/fcl.js",
@@ -36,8 +36,8 @@
   "dependencies": {
     "@onflow/sdk": "0.0.30",
     "@onflow/types": "0.0.2",
-    "@onflow/util-actor": "0.0.1",
-    "@onflow/config": "0.0.1",
+    "@onflow/util-actor": "0.0.2",
+    "@onflow/config": "0.0.2",
     "queue-microtask": "1.1.2"
   }
 }

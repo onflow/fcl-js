@@ -1,6 +1,11 @@
 ### Unreleased
 
 - YYYY-MM-DD **BREAKING?** -- description
+
+### 0.0.47 -- 2020-08-13
+
+- 2020-08-13 -- `@onflow/config` VSN `0.0.1` -> `0.0.2`
+- 2020-08-13 -- `@onflow/util-actor` VSN `0.0.1` -> `0.0.2`
 - 2020-08-07 -- Adds resolvers `resolveRefBlockId` and `resolveProposerSequenceNumber` to fcl resolve.
 
 ### 0.0.46 -- 2020-07-27
