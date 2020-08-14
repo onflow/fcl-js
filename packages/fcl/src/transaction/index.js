@@ -36,7 +36,7 @@ const HANDLERS = {
     ctx.unsubscribe(letter.from)
   },
   [SNAPSHOT]: async (ctx, letter) => {
-    letter.replay(ctx.all())
+    letter.reply(ctx.all())
   },
   [POLL]: async ctx => {
     const tx = await fetchTxStatus(ctx.self())
