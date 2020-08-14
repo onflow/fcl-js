@@ -31,7 +31,7 @@
     "latest-version": "^5.1.0",
     "node-emoji": "^1.10.0",
     "sha3": "^2.1.2",
-    "sqlite3": "4.1.1",
+    "sqlite3": "4.2.0",
     "uuid": "7.0.3"
   },
   "bin": {
