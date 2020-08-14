@@ -2,6 +2,10 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.0.50 -- 2020-08-14
+
+- 2020-08-14 -- Fixeds some small bugs due to typos
+
 ### 0.0.49 -- 2020-08-13
 
 - 2020-08-13 -- Adds export of `fcl.events(eventKey).subscribe(callback)`
