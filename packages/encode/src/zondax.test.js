@@ -56,6 +56,14 @@ acct.addPublicKey(key)
 }
 }`
 
+const ADD_NEW_KEY_CDC =
+`transaction(publicKey: [UInt8]) {
+prepare(signer: AuthAccount) {
+let acct = AuthAccount(payer: signer)
+acct.addPublicKey(key)
+}
+}`
+
 const basePayloadTx = {
     script: `transaction(msg: String) { execute { log(msg) } }`,
     arguments: [{ type: "String", value: "Hello, Zondax!"}],
@@ -159,6 +167,22 @@ const validPayloadCases = [
                 ]
             })
         ]
+    )),
+    ...(Array.from({ length: 20 }).map((_, i) => 
+        [
+            "Add New Key Transaction - Valid Payload - Valid Arguments #" + i,
+            buildPayloadTx({
+                script: ADD_NEW_KEY_CDC,
+                arguments: [
+                    {
+                        type: "Array",
+                        value: Array.from({ length: Math.ceil(Math.random() * 10) }).map(() => (
+                            {type: "UInt8", value: ~~(Math.random() * (2**8 - 1))}
+                        ))
+                    }
+                ]
+            })
+        ]
     ))
 ].map(x => ({
     title: x[0],
@@ -245,7 +269,7 @@ const validEnvelopeCases = [
     )),
     ...(Array.from({ length: 20 }).map((_, i) => 
         [
-            "Create Account Transaction - Valid Payload - Valid Arguments #" + i,
+            "Create Account Transaction - Valid Envelope - Valid Arguments #" + i,
             buildEnvelopeTx({
                 script: CREATE_ACCOUNT_CDC,
                 arguments: [
@@ -258,6 +282,22 @@ const validEnvelopeCases = [
                                     {type: "UInt8", value: ~~(Math.random() * (2**8 - 1))}
                                 ))
                             }
+                        ))
+                    }
+                ]
+            })
+        ]
+    )),
+    ...(Array.from({ length: 20 }).map((_, i) => 
+        [
+            "Add New Key Transaction - Valid Envelope - Valid Arguments #" + i,
+            buildEnvelopeTx({
+                script: ADD_NEW_KEY_CDC,
+                arguments: [
+                    {
+                        type: "Array",
+                        value: Array.from({ length: Math.ceil(Math.random() * 10) }).map(() => (
+                            {type: "UInt8", value: ~~(Math.random() * (2**8 - 1))}
                         ))
                     }
                 ]
