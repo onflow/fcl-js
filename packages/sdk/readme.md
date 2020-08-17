@@ -157,11 +157,11 @@ const builtInteraction = await sdk.build([
 ])
 
 const resolvedInteraction = await sdk.pipe(builtInteraction, [
-    sdk.resolveRefBlockId({ node: "http://localhost:8080" }),
-    sdk.resolveProposerSequenceNumber({ node: "http://localhost:8080" }),
     sdk.resolveArguments,
     sdk.resolveParams,
     sdk.resolveAccounts,
+    sdk.resolveRefBlockId({ node: "http://localhost:8080" }),
+    sdk.resolveProposerSequenceNumber({ node: "http://localhost:8080" }),
     sdk.resolveSignatures,
 ])
 ```
@@ -328,11 +328,11 @@ Once a transaction interaction is built, it's still not quite ready to be sent t
 import * as sdk from "@onflow/sdk"
 const resolvedTxIx = await sdk.pipe(builtTxIx, [
   sdk.resolve([
-    sdk.resolveProposerSequenceNumber({ node: "http://localhost:8080" }),
-    sdk.resolveRefBlockId({ node: "http://localhost:8080" }),
     sdk.resolveArguments,
     sdk.resolveParams,
     sdk.resolveAccounts,
+    sdk.resolveProposerSequenceNumber({ node: "http://localhost:8080" }),
+    sdk.resolveRefBlockId({ node: "http://localhost:8080" }),
     sdk.resolveSignatures
   ])
 )
@@ -430,11 +430,11 @@ const response = await sdk.send(await sdk.pipe(await sdk.build([
   sdk.authorizations([sdk.authorization("01", signingFunction, 0)]),
 ]), [
   sdk.resolve([
-    sdk.resolveProposerSequenceNumber({ node: "http://localhost:8080" }),
-    sdk.resolveRefBlockId({ node: "http://localhost:8080" }),
     sdk.resolveArguments,
     sdk.resolveParams,
     sdk.resolveAccounts,
+    sdk.resolveProposerSequenceNumber({ node: "http://localhost:8080" }),
+    sdk.resolveRefBlockId({ node: "http://localhost:8080" }),
     sdk.resolveSignatures
   ]),
 ]), { node: "http://localhost:8080" })
@@ -476,5 +476,7 @@ const response = await sdk.send(await sdk.pipe(await sdk.build([
   - [`sdk.resolveAccounts`](./src/resolve/resolve-accounts.js)
   - [`sdk.resolveParams`](./src/resolve/resolve-params.js)
   - [`sdk.resolveSignatures`](./src/resolve/resolve-signatures.js)
-
-
+  - [`sdk.resolveArguments`](./src/resolve/resolve-arguments.js)
+  - [`sdk.resolveProposerSequenceNumber`](./src/resolve/resolve-proposer-sequence-number.js)
+  - [`sdk.resolveRefBlockId`](./src/resolve/resolve-ref-block-id.js)
+  - [`sdk.resolveValidators`](./src/resolve/resolve-validators.js)
