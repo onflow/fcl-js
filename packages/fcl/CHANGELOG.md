@@ -2,6 +2,13 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.0.52 -- 2020-08-18
+
+- 2020-08-18 -- Authorization persists using local storage (this isnt the final solution, but creates the experience we want for now)
+- 2020-08-18 -- authn and authz iframes are now full width and height
+- 2020-08-18 -- Fixed an issue where unauthenticating the currentUser wasnt clearning the address on the user
+- 2020-08-18 -- Added two new util functions `fcl.withPrefix` and `fcl.sansPrefix`
+
 ### 0.0.51 -- 2020-08-14
 
 - 2020-08-14 -- `fcl.tx(resp).once*` throw errors when statusCode is non-zero, errors can be suppressed (previous behaviour) py passing `{suppress: true}` to the `.once*` function.

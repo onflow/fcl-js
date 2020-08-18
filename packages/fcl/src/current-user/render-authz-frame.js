@@ -10,18 +10,18 @@ export function renderAuthzFrame(hook) {
   const $frame = document.createElement("iframe")
   $frame.src = url.href
   $frame.id = FRAME_ID
-  $frame.style.height = hook.height || "500px"
-  $frame.style.maxHeight = "90vh"
-  $frame.style.width = hook.width || "400px"
-  $frame.style.maxWidth = "90vw"
-  $frame.style.display = "block"
-  $frame.style.background = hook.background || "#fff"
   $frame.style.position = "fixed"
-  $frame.style.top = "5vh"
-  $frame.style.right = "calc(50vw)"
-  $frame.style.transform = "translateX(50%)"
-  $frame.style.boxShadow = "0 4px 8px -4px black"
+  $frame.style.top = "0px"
+  $frame.style.right = "0px"
+  $frame.style.left = "0px"
+  $frame.style.bottom = "0px"
+  $frame.style.height = "100vh"
+  $frame.style.width = "100vw"
+  $frame.style.display = "block"
+  $frame.style.background = "rgba(0,0,0,0.25)"
   $frame.frameBorder = "0"
+  $frame.style.boxSizing = "border-box"
+  $frame.style.border = "1px solid white"
   document.body.append($frame)
 
   return () => {

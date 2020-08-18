@@ -20,6 +20,8 @@ const GET_AS_PARAM = "GET_AS_PARAM"
 const CHALLENGE_RESPONSE_EVENT = "FCL::CHALLENGE::RESPONSE"
 
 const DATA = `{
+  "VERSION": "0.1.1",
+  "addr":null,
   "cid":null,
   "loggedIn":null,
   "verified":null,
@@ -49,7 +51,7 @@ const DEPRECATED_FIELDS = new Set([
 ])
 
 const deprecationNotice = prop => {
-  console.warn(
+  console.error(
     `
           %cFCL Deprecation Notice
           ========================
@@ -76,9 +78,25 @@ const deprecate = data => {
   return data
 }
 
+const coldStorage = {
+  get: async () => {
+    const fallback = JSON.parse(DATA)
+    const stored = JSON.parse(localStorage.getItem(NAME))
+    if (stored != null && fallback.VERSION !== stored.VERSION) {
+      localStorage.removeItem(NAME)
+      return fallback
+    }
+    return stored || fallback
+  },
+  put: async data => {
+    localStorage.setItem(NAME, JSON.stringify(data))
+    return data
+  },
+}
+
 const HANDLERS = {
-  [INIT]: ctx => {
-    ctx.merge(JSON.parse(DATA))
+  [INIT]: async ctx => {
+    ctx.merge(await coldStorage.get())
   },
   [SUBSCRIBE]: (ctx, letter) => {
     ctx.subscribe(letter.from)
@@ -92,10 +110,12 @@ const HANDLERS = {
   },
   [SET_CURRENT_USER]: async (ctx, letter, data) => {
     ctx.merge(data)
+    coldStorage.put(ctx.all())
     ctx.broadcast(UPDATED, deprecate(ctx.all()))
   },
   [DEL_CURRENT_USER]: async (ctx, letter) => {
     ctx.merge(JSON.parse(DATA))
+    coldStorage.put(ctx.all())
     ctx.broadcast(UPDATED, deprecate(ctx.all()))
   },
   [GET_AS_PARAM]: async (ctx, letter, {key}) => {
@@ -174,7 +194,7 @@ async function authorization(account) {
       unrender = renderAuthzFrame(resp.local[0])
     }
 
-    let result = null;
+    let result = null
     try {
       result = await pollForAuthzUpdates(resp.authorizationUpdates)
     } catch (error) {
