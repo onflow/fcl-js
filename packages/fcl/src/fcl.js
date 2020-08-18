@@ -6,6 +6,7 @@ export {decode} from "./decode"
 export {transaction as tx} from "./transaction"
 export {resolve} from "./resolve"
 export {events} from "./events"
+export {withPrefix, sansPrefix} from "./address"
 
 import {currentUser} from "./current-user"
 export {currentUser}
@@ -38,3 +39,5 @@ export {
   limit,
   ref,
 } from "@onflow/sdk"
+
+export const VERSION = "0.0.51"
