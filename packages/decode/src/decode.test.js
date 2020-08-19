@@ -312,7 +312,7 @@ describe("unit tests to cover all types", () => {
 
     const decoded = await decode(payload)
 
-    expect(decoded).toStrictEqual(789.0012301)
+    expect(decoded).toStrictEqual("789.00123010")
   })
 
   it("returns the correct response given a json-cdc payload 32 FIX64", async () => {
@@ -320,7 +320,7 @@ describe("unit tests to cover all types", () => {
 
     const decoded = await decode(payload)
 
-    expect(decoded).toStrictEqual(-12345.006789)
+    expect(decoded).toStrictEqual("-12345.00678900")
   })
 
   it("returns the correct response given a json-cdc payload 33 UFIX64", async () => {
@@ -328,7 +328,7 @@ describe("unit tests to cover all types", () => {
 
     const decoded = await decode(payload)
 
-    expect(decoded).toStrictEqual(789.0012301)
+    expect(decoded).toStrictEqual("789.00123010")
   })
 
   it("returns the correct response given a json-cdc payload 34 ARRAY", async () => {
