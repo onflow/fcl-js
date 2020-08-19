@@ -1,129 +1,4 @@
-function zeros (length) {
-  const arr = []
-  for (let i = 0; i < length; i++) {
-    arr.push(0)
-  }
-  return arr
-}
-
-function roundDigits (split, precision) {
-  // create a clone
-  const rounded = {
-    sign: split.sign,
-    coefficients: split.coefficients,
-    exponent: split.exponent
-  }
-  const c = rounded.coefficients
-
-  // prepend zeros if needed
-  while (precision <= 0) {
-    c.unshift(0)
-    rounded.exponent++
-    precision++
-  }
-
-  if (c.length > precision) {
-    const removed = c.splice(precision, c.length - precision)
-
-    if (removed[0] >= 5) {
-      let i = precision - 1
-      c[i]++
-      while (c[i] === 10) {
-        c.pop()
-        if (i === 0) {
-          c.unshift(0)
-          rounded.exponent++
-          i++
-        }
-        i--
-        c[i]++
-      }
-    }
-  }
-
-  return rounded
-}
-
-function splitNumber (value) {
-  // parse the input value
-  const match = String(value).toLowerCase().match(/^0*?(-?)(\d+\.?\d*)(e([+-]?\d+))?$/)
-
-  if (!match) {
-    throw new SyntaxError('Invalid number ' + value)
-  }
-
-  const sign = match[1]
-  const digits = match[2]
-  let exponent = parseFloat(match[4] || '0')
-
-  const dot = digits.indexOf('.')
-  exponent += (dot !== -1) ? (dot - 1) : (digits.length - 1)
-  
-  const coefficients = digits
-    .replace('.', '') // remove the dot (must be removed before removing leading zeros)
-    .replace(/^0*/, function (zeros) {
-      // remove leading zeros, add their count to the exponent
-      exponent -= zeros.length
-      return ''
-    })
-    .replace(/0*$/, '') // remove trailing zeros
-    .split('')
-    .map(function (d) {
-      return parseInt(d)
-    })
-
-  if (coefficients.length === 0) {
-    coefficients.push(0)
-    exponent++
-  }
-
-  return {
-    sign: sign,
-    coefficients: coefficients,
-    exponent: exponent
-  }
-}
-
-function formatNumber (value) {
-  // handle special cases
-  if (value === Infinity) {
-    return 'Infinity'
-  } else if (value === -Infinity) {
-    return '-Infinity'
-  } else if (isNaN(value)) {
-    return 'NaN'
-  }
-
-  if (isNaN(value) || !isFinite(value)) {
-    return String(value)
-  }
-
-  const splitValue = splitNumber(value)
-  const rounded = (typeof precision === 'number')
-    ? roundDigits(splitValue, splitValue.exponent + 1 + precision)
-    : splitValue
-  let c = rounded.coefficients
-  let p = rounded.exponent + 1 // exponent may have changed
-
-  // append zeros if needed
-  const pp = p + (precision || 0)
-  if (c.length < pp) {
-    c = c.concat(zeros(pp - c.length))
-  }
-
-  // prepend zeros if needed
-  if (p < 0) {
-    c = zeros(-p + 1).concat(c)
-    p = 1
-  }
-
-  // insert a dot if needed
-  if (p < c.length) {
-    c.splice(p, 0, (p === 0) ? '0.' : '.')
-  }
-
-  return rounded.sign + c.join('')
-}
+import { convertNumberToString } from "./number-to-string.js";
 
 const type = (label, asArgument, asInjection) => ({
   label,
@@ -155,7 +30,7 @@ export const UInt = type(
     if (isNumber(v) && isInteger(v))
       return {
         type: "UInt",
-        value: v.toString(),
+        value: convertNumberToString(v),
       }
     throwTypeError("Expected Positive Integer for type Unsigned Int")
   },
@@ -168,7 +43,7 @@ export const Int = type(
     if (isNumber(v) && isInteger(v))
       return {
         type: "Int",
-        value: v.toString(),
+        value: convertNumberToString(v),
       }
     throwTypeError("Expected Integer for type Int")
   },
@@ -181,7 +56,7 @@ export const UInt8 = type(
     if (isNumber(v) && isInteger(v))
       return {
         type: "UInt8",
-        value: v.toString(),
+        value: convertNumberToString(v),
       }
     throwTypeError("Expected integer for UInt8")
   },
@@ -194,7 +69,7 @@ export const Int8 = type(
     if (isNumber(v) && isInteger(v))
       return {
         type: "Int8",
-        value: v.toString(),
+        value: convertNumberToString(v),
       }
     throwTypeError("Expected positive integer for Int8")
   },
@@ -207,7 +82,7 @@ export const UInt16 = type(
     if (isNumber(v) && isInteger(v))
       return {
         type: "UInt16",
-        value: v.toString(),
+        value: convertNumberToString(v),
       }
     throwTypeError("Expected integer for UInt16")
   },
@@ -220,7 +95,7 @@ export const Int16 = type(
     if (isNumber(v) && isInteger(v))
       return {
         type: "Int16",
-        value: v.toString(),
+        value: convertNumberToString(v),
       }
     throwTypeError("Expected positive integer for Int16")
   },
@@ -233,7 +108,7 @@ export const UInt32 = type(
     if (isNumber(v) && isInteger(v))
       return {
         type: "UInt32",
-        value: v.toString(),
+        value: convertNumberToString(v),
       }
     throwTypeError("Expected integer for UInt32")
   },
@@ -246,7 +121,7 @@ export const Int32 = type(
     if (isNumber(v) && isInteger(v))
       return {
         type: "Int32",
-        value: v.toString(),
+        value: convertNumberToString(v),
       }
     throwTypeError("Expected positive integer for Int32")
   },
@@ -259,7 +134,7 @@ export const UInt64 = type(
     if (isNumber(v) && isInteger(v))
       return {
         type: "UInt64",
-        value: v.toString(),
+        value: convertNumberToString(v),
       }
     throwTypeError("Expected integer for UInt64")
   },
@@ -272,7 +147,7 @@ export const Int64 = type(
     if (isNumber(v) && isInteger(v))
       return {
         type: "Int64",
-        value: v.toString(),
+        value: convertNumberToString(v),
       }
     throwTypeError("Expected positive integer for Int64")
   },
@@ -285,7 +160,7 @@ export const UInt128 = type(
     if (isNumber(v) && isInteger(v))
       return {
         type: "UInt128",
-        value: v.toString(),
+        value: convertNumberToString(v),
       }
     throwTypeError("Expected integer for UInt128")
   },
@@ -298,7 +173,7 @@ export const Int128 = type(
     if (isNumber(v) && isInteger(v))
       return {
         type: "Int128",
-        value: v.toString(),
+        value: convertNumberToString(v),
       }
     throwTypeError("Expected positive integer for Int128")
   },
@@ -311,7 +186,7 @@ export const UInt256 = type(
     if (isNumber(v) && isInteger(v))
       return {
         type: "UInt256",
-        value: v.toString(),
+        value: convertNumberToString(v),
       }
     throwTypeError("Expected integer for UInt256")
   },
@@ -324,7 +199,7 @@ export const Int256 = type(
     if (isNumber(v) && isInteger(v))
       return {
         type: "Int256",
-        value: v.toString(),
+        value: convertNumberToString(v),
       }
     throwTypeError("Expected integer for Int256")
   },
@@ -337,7 +212,7 @@ export const Word8 = type(
     if (isNumber(v) && isInteger(v))
       return {
         type: "Word8",
-        value: v.toString(),
+        value: convertNumberToString(v),
       }
     throwTypeError("Expected positive number for Word8")
   },
@@ -350,7 +225,7 @@ export const Word16 = type(
     if (isNumber(v) && isInteger(v))
       return {
         type: "Word16",
-        value: v.toString(),
+        value: convertNumberToString(v),
       }
     throwTypeError("Expected positive number for Word16")
   },
@@ -363,7 +238,7 @@ export const Word32 = type(
     if (isNumber(v) && isInteger(v))
       return {
         type: "Word32",
-        value: v.toString(),
+        value: convertNumberToString(v),
       }
     throwTypeError("Expected positive number for Word32")
   },
@@ -376,7 +251,7 @@ export const Word64 = type(
     if (isNumber(v) && isInteger(v))
       return {
         type: "Word64",
-        value: v.toString(),
+        value: convertNumberToString(v),
       }
     throwTypeError("Expected positive number for Word64")
   },
@@ -389,7 +264,7 @@ export const UFix64 = type(
     if (isNumber(v))
       return {
         type: "UFix64",
-        value: formatNumber(v),
+        value: convertNumberToString(v),
       }
     throwTypeError("Expected positive integer for UFix64")
   },
@@ -402,7 +277,7 @@ export const Fix64 = type(
     if (isNumber(v))
       return {
         type: "Fix64",
-        value: formatNumber(v),
+        value: convertNumberToString(v),
       }
     throwTypeError("Expected integer for Fix64")
   },
