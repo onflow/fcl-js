@@ -256,15 +256,39 @@ export const Word64 = type(
   (v) => v
 )
 
+const UFix64AndFix64NumberDeprecationNotice = () => {
+  console.error(
+    `
+          %c@onflow/types Deprecation Notice
+          ========================
+
+          Passing in Numbers as values for Fix64 and UFix64 types is deprecated and will cease to work in future releases of @onflow/types.
+          Find out more here: https://github.com/onflow/flow-js-sdk/blob/master/packages/types/WARNINGS.md#0001-[U]Fix64-as-Number
+
+          =======================
+        `
+      .replace(/\n\s+/g, "\n")
+      .trim(),
+    "font-weight:bold;font-family:monospace;"
+  )
+}
+
 export const UFix64 = type(
   "UFix64",
   (v) => {
-    if (isNumber(v))
+    if (isString(v)) {
       return {
         type: "UFix64",
-        value: v.toString(),
+        value: v
       }
-    throwTypeError("Expected positive integer for UFix64")
+    } else if (isNumber(v)) {
+      UFix64AndFix64NumberDeprecationNotice()
+      return {
+        type: "UFix64",
+        value: v.toString()
+      }
+    }
+    throwTypeError("Expected String for UFix64")
   },
   (v) => v
 )
@@ -272,12 +296,19 @@ export const UFix64 = type(
 export const Fix64 = type(
   "Fix64",
   (v) => {
-    if (isNumber(v))
+    if (isString(v)) {
       return {
         type: "Fix64",
-        value: v.toString(),
+        value: v
       }
-    throwTypeError("Expected integer for Fix64")
+    } else if (isNumber(v)) {
+      UFix64AndFix64NumberDeprecationNotice()
+      return {
+        type: "Fix64",
+        value: v.toString()
+      }
+    }
+    throwTypeError("Expected String for Fix64")
   },
   (v) => v
 )

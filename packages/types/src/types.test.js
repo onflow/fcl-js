@@ -21,8 +21,8 @@ import * as t from "./types.js"
   [t.Word16, 16, {type: "Word16", value: "16"}, 16],
   [t.Word32, 32, {type: "Word32", value: "32"}, 32],
   [t.Word64, 64, {type: "Word64", value: "64"}, 64],
-  [t.UFix64, 64, {type: "UFix64", value: "64"}, 64],
-  [t.Fix64, 64, {type: "Fix64", value: "64"}, 64],
+  [t.UFix64, "64", {type: "UFix64", value: "64"}, "64"],
+  [t.Fix64, "64", {type: "Fix64", value: "64"}, "64"],
   [
     t.String,
     "Go with the Flow",
