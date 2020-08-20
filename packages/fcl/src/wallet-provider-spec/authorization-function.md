@@ -26,14 +26,57 @@ const response = fcl.send([
 ])
 ```
 
-During the resolve phase of the Flow JS-SDK and FCL, the authorization function is called appropriately and is _resolved_ into the authorization data structure it returns.
+The builder functions, fcl.proposer, fcl.payer and fcl.authoirzers each consume the Authorization Function and set it as the resolve field on the internal Account object it creates.
+
+During the resolve phase of the Flow JS-SDK and FCL, when resolveAccounts is called, the resolve field on each internal Account object is called, which means each Authorization Function is called appropriately and the account is _resolved_ into the data structure the authorizationFunction returns.
 
 ## How to Create An Authorization Function
 
-Fortunately, creating an Authorization Function is relatively simple.
+Fortunately, creating an Authorization Function is relatively simple!
 
-An Authorization Function is a function which consumes an Account, and returns an Authroization data structure. An account in an internal to FCL and the JS-SDK data structure which contains information about who the Authorization is for. 
+An Authorization Function is a function which consumes an Account, and returns an Authroization data structure, which is the same data structure as an Account but with additional information populated into it. An Account is an internal data structure to FCL and the JS-SDK which contains information about who the Authorization is for.
 
+Example 2:
+```javascript
+const authorizationFunction = (account) => {
+    
+    .. do things ..
 
+    return {
+        ...account,
+        addr: "f8d6e0586b0a20c7", // The address of the Flow Account this authorizationFunction is for.
+        keyId: 1, // The id of the key on the Flow Account this authorizationFunction intends to use.
+        sequenceNum: 123, // The sequence number of the key corresponding to the keyId on the Flow Account this authorizationFunction intends to use.
+        signingFunction: (...) => {...}, // The signing function for this authorization function (more on this later)
+        resolve: null, // Resolve is set to null to prevent this account from being resolved further.
+        roles: account.roles, // The roles this account represents (authorizer, proposer, payer or any combination of the three)
+    }
+}
+```
 
+## How too create a Signing Function
 
+Creating a signing function is also relatively simple!
+
+To create a signing function you specify a function which consumes a payload and returns a signature data structure.
+
+Example 3:
+```javascript
+export const signingFunction = ({
+  message,
+  addr, // The address of the Flow Account this signature is to be produced for.
+  keyId, // The keyId of the key which is to be used to produce the signature.
+  roles: {
+    proposer, // A Boolean representing if this signature to be produced for a proposer.
+    authorizer, // A Boolean representing if this signature to be produced for a authorizer.
+    payer, // A Boolean representing if this signature to be produced for a payer.
+  }, 
+  interaction, // The internal Interaction data structure. This can be used to recreate the message for security purposes.
+}) => {
+  return {
+    addr, // The address of the Flow Account this signature was produced for.
+    keyId, // The keyId for which key was used to produce the signature.
+    signature: produceSignature(...) // The hex encoded string representing the signature of the message.
+  }
+}
+```
