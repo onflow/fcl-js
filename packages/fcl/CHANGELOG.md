@@ -1,6 +1,7 @@
 ### Unreleased
 
 - YYYY-MM-DD **BREAKING?** -- description
+- 2020-08-20 -- Adds Authorization Function Documentation
 
 ### 0.0.52 -- 2020-08-18
 

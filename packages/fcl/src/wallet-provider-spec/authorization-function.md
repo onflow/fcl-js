@@ -8,7 +8,7 @@ The Authorization Function, when called, returns valuable information that the F
 
 ## How to Use an Authorization Function
 
-An authorization function is a function that you may use in place of an authorization in the Flow JS-SDK and FCL. An authorization is a concept that is used when denoting a proposer, payer or authorizer for a transaction. An authorization can either be a data structure represenating an authorization, or a function which when called returns an authorization. In this document we discuss the latter.
+An authorization function is a function that you may use in place of an authorization in the Flow JS-SDK and FCL. An authorization is a concept that is used when denoting a proposer, payer or authorizer for a transaction. An authorization can either be a data structure represenating an authorization, or a function which when called returns an authorization called an Authorization Function. In this document we discuss the latter.
 
 To use an Authorization Function, you simply specify that Authorization Function as the authorization for a proposer, payer or authorizer for a transaction.
 
