@@ -62,8 +62,8 @@ To create a signing function you specify a function which consumes a payload and
 
 Example 3:
 ```javascript
-export const signingFunction = ({
-  message,
+const signingFunction = ({
+  message, // The encoded string which needs to be used to produce the signature.
   addr, // The address of the Flow Account this signature is to be produced for.
   keyId, // The keyId of the key which is to be used to produce the signature.
   roles: {
@@ -76,7 +76,9 @@ export const signingFunction = ({
   return {
     addr, // The address of the Flow Account this signature was produced for.
     keyId, // The keyId for which key was used to produce the signature.
-    signature: produceSignature(...) // The hex encoded string representing the signature of the message.
+    signature: produceSignature(message) // The hex encoded string representing the signature of the message.
   }
 }
 ```
+
+This signing function is one that coould be returned from the Authroization Function as the signingFunction in its returned data structure.
