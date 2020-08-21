@@ -245,7 +245,7 @@ sdk.build([
 import * as t from "@onflow/types"
 
 sdk.build([
-  sdk.args([ sdk.arg(64, t.UFix64) ])
+  sdk.args([ sdk.arg("64.123", t.UFix64) ])
 ])
 ```
 
@@ -255,7 +255,7 @@ sdk.build([
 import * as t from "@onflow/types"
 
 sdk.build([
-  sdk.args([ sdk.arg(64, t.Fix64) ])
+  sdk.args([ sdk.arg("64.123", t.Fix64) ])
 ])
 ```
 
