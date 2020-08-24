@@ -28,7 +28,7 @@
   "unpkg": "dist/interaction.umd.js",
   "scripts": {
     "prepublishOnly": "npm test && npm run build",
-    "test": "jest --verbose",
+    "test": "jest",
     "build": "microbundle",
     "test:watch": "jest --watch",
     "start": "microbundle watch"

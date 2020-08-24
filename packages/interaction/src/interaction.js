@@ -1,11 +1,13 @@
-export const UNKNOWN /*                 */ = 0b00000001
-export const SCRIPT /*                  */ = 0b00000010
-export const TRANSACTION /*             */ = 0b00000100
-export const GET_TRANSACTION_STATUS /*  */ = 0b00001000
-export const GET_ACCOUNT /*             */ = 0b00010000
-export const GET_EVENTS /*              */ = 0b00100000
-export const GET_LATEST_BLOCK /*        */ = 0b01000000
-export const PING /*                    */ = 0b10000000
+export const UNKNOWN /*                 */ = 0b0000000001
+export const SCRIPT /*                  */ = 0b0000000010
+export const TRANSACTION /*             */ = 0b0000000100
+export const GET_TRANSACTION_STATUS /*  */ = 0b0000001000
+export const GET_ACCOUNT /*             */ = 0b0000010000
+export const GET_EVENTS /*              */ = 0b0000100000
+export const GET_LATEST_BLOCK /*        */ = 0b0001000000
+export const GET_BLOCK_BY_ID /*         */ = 0b0010000000
+export const GET_BLOCK_BY_HEIGHT /*     */ = 0b0100000000
+export const PING /*                    */ = 0b1000000000
 
 export const BAD /* */ = 0b01
 export const OK /*  */ = 0b10
@@ -76,7 +78,9 @@ const IX = `{
     "start":null,
     "end":null
   },
-  "latestBlock": {
+  "block": {
+    "id":null,
+    "height":null,
     "isSealed":null
   },
   "accountAddr":null,
@@ -187,6 +191,8 @@ export const makeGetTransactionStatus /*  */ = makeIx(GET_TRANSACTION_STATUS)
 export const makeGetAccount /*            */ = makeIx(GET_ACCOUNT)
 export const makeGetEvents /*             */ = makeIx(GET_EVENTS)
 export const makeGetLatestBlock /*        */ = makeIx(GET_LATEST_BLOCK)
+export const makeGetBlockById /*          */ = makeIx(GET_BLOCK_BY_ID)
+export const makeGetBlockByHeight /*      */ = makeIx(GET_BLOCK_BY_HEIGHT)
 export const makePing /*                  */ = makeIx(PING)
 
 const is = (wat) => (ix) => Boolean(ix.tag & wat)
@@ -198,6 +204,8 @@ export const isGetTransactionStatus /*  */ = is(GET_TRANSACTION_STATUS)
 export const isGetAccount /*            */ = is(GET_ACCOUNT)
 export const isGetEvents /*             */ = is(GET_EVENTS)
 export const isGetLatestBlock /*        */ = is(GET_LATEST_BLOCK)
+export const isGetBlockById /*          */ = is(GET_BLOCK_BY_ID)
+export const isGetBlockByHeight /*      */ = is(GET_BLOCK_BY_HEIGHT)
 export const isPing /*                  */ = is(PING)
 
 export const isOk /*  */ = (ix) => Boolean(ix.status & OK)
