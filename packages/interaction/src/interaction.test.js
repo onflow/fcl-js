@@ -18,6 +18,8 @@ import {
   GET_ACCOUNT,
   GET_EVENTS,
   GET_LATEST_BLOCK,
+  GET_BLOCK_BY_ID,
+  GET_BLOCK_BY_HEIGHT,
   PING,
 } from "./interaction"
 import {
@@ -28,6 +30,8 @@ import {
   makeGetAccount,
   makeGetEvents,
   makeGetLatestBlock,
+  makeGetBlockByHeight,
+  makeGetBlockById,
   makePing,
 } from "./interaction"
 import {
@@ -38,6 +42,8 @@ import {
   isGetAccount,
   isGetEvents,
   isGetLatestBlock,
+  isGetBlockByHeight,
+  isGetBlockById,
   isPing,
 } from "./interaction"
 
@@ -70,6 +76,8 @@ describe("TAGS", () => {
     [GET_ACCOUNT, makeGetAccount, isGetAccount],
     [GET_EVENTS, makeGetEvents, isGetEvents],
     [GET_LATEST_BLOCK, makeGetLatestBlock, isGetLatestBlock],
+    [GET_BLOCK_BY_HEIGHT, makeGetBlockByHeight, isGetBlockByHeight],
+    [GET_BLOCK_BY_ID, makeGetBlockById, isGetBlockById],
     [PING, makePing, isPing],
   ]
 

@@ -1,6 +1,7 @@
 ### Unreleased
 
 - YYYY-MM-DD **BREAKING?** -- description
+- 2020-08-24 -- Updates interaction ADT for `GET_BLOCK_BY_ID` and `GET_BLOCK_BY_HEIGHT`.
 
 ### 0.0.8 -- 2020-06-19
 
