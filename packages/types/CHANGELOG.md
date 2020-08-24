@@ -1,6 +1,9 @@
 ### Unreleased
 
 - YYYY-MM-DD **BREAKING?** -- description
+
+### 0.0.4 -- 2020-08-24
+
 - 2020-08-19 -- Deprecates numbers as values passed in for UFix64 and Fix64 types
 
 ### 0.0.3 -- 2020-07-10
