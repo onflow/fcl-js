@@ -1,14 +1,14 @@
-import {GetLatestBlockRequest, AccessAPI} from "@onflow/protobuf"
+import {GetBlockByHeightRequest, AccessAPI} from "@onflow/protobuf"
 import {response} from "@onflow/response"
 import {unary} from "./unary"
 
 const u8ToHex = u8 => Buffer.from(u8).toString("hex")
 
-export async function sendGetLatestBlock(ix, opts = {}) {
-  const req = new GetLatestBlockRequest()
-  req.setIsSealed(ix.block.isSealed)
+export async function sendGetBlockByHeight(ix, opts = {}) {
+  const req = new GetBlockByHeightRequest()
+  req.setHeight(ix.block.height)
 
-  const res = await unary(opts.node, AccessAPI.GetLatestBlock, req)
+  const res = await unary(opts.node, AccessAPI.GetBlockByHeight, req)
 
   const block = res.getBlock()
 
