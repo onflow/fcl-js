@@ -1,6 +1,7 @@
 ### Unreleased
 
 - YYYY-MM-DD **BREAKING?** -- description
+- 2020-08-24 -- Updates decode to decode GetLatestBlock, GetBlockByHeight and GetBlockByHeight responses.
 - 2020-08-19 -- Updtates UFix64 and Fix64 types to now decode into Strings.
 
 ### 0.0.6 -- 2020-05-04
