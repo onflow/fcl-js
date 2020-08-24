@@ -5,9 +5,9 @@ export const GET_TRANSACTION_STATUS /*  */ = 0b0000001000
 export const GET_ACCOUNT /*             */ = 0b0000010000
 export const GET_EVENTS /*              */ = 0b0000100000
 export const GET_LATEST_BLOCK /*        */ = 0b0001000000
-export const GET_BLOCK_BY_ID /*         */ = 0b0010000000
-export const GET_BLOCK_BY_HEIGHT /*     */ = 0b0100000000
-export const PING /*                    */ = 0b1000000000
+export const PING /*                    */ = 0b0010000000
+export const GET_BLOCK_BY_ID /*         */ = 0b0100000000
+export const GET_BLOCK_BY_HEIGHT /*     */ = 0b1000000000
 
 export const BAD /* */ = 0b01
 export const OK /*  */ = 0b10
