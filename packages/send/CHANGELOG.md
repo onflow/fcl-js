@@ -1,6 +1,7 @@
 ### Unreleased
 
 - YYYY-MM-DD **BREAKING?** -- description
+- 2020-08-24 -- Implements send for GetBlockById and GetBlockByHeight interactions.
 
 ### 0.0.17 -- 2020-07-27
 

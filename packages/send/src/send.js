@@ -5,6 +5,8 @@ import {
   isGetAccount,
   isGetEvents,
   isGetLatestBlock,
+  isGetBlockById,
+  isGetBlockByHeight,
   isPing
 } from "@onflow/interaction"
 import {sendTransaction} from "./send-transaction"
@@ -13,6 +15,8 @@ import {sendExecuteScript} from "./send-execute-script"
 import {sendGetAccount} from "./send-get-account"
 import {sendGetEvents} from "./send-get-events"
 import {sendGetLatestBlock} from "./send-get-latest-block"
+import {sendGetBlockById} from "./send-get-block-by-id"
+import {sendGetBlockByHeight} from "./send-get-block-by-height"
 import {sendPing} from "./send-ping"
 
 export const send = async (ix, opts = {}) => {
@@ -29,6 +33,10 @@ export const send = async (ix, opts = {}) => {
       return sendGetEvents(ix, opts)
     case isGetLatestBlock(ix):
       return sendGetLatestBlock(ix, opts)
+    case isGetBlockById(ix):
+      return sendGetBlockById(ix, opts)
+    case isGetBlockByHeight(ix):
+      return sendGetBlockByHeight(ix, opts)
     case isPing(ix):
       return sendPing(ix, opts)
     default:
