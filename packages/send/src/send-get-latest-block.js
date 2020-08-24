@@ -18,7 +18,7 @@ export async function sendGetLatestBlock(ix, opts = {}) {
 
   const ret = response()
   ret.tag = ix.tag
-  ret.block = {
+  ret.latestBlock = {
     id: u8ToHex(block.getId_asU8()),
     parentId: u8ToHex(block.getParentId_asU8()),
     height: block.getHeight(),
