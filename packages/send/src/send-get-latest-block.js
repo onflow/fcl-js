@@ -6,7 +6,7 @@ const u8ToHex = u8 => Buffer.from(u8).toString("hex")
 
 export async function sendGetLatestBlock(ix, opts = {}) {
   const req = new GetLatestBlockRequest()
-  req.setIsSealed(ix.block.isSealed)
+  req.setIsSealed(ix.latestBlock.isSealed)
 
   const res = await unary(opts.node, AccessAPI.GetLatestBlock, req)
 
