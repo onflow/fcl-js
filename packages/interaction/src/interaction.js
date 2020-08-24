@@ -78,10 +78,12 @@ const IX = `{
     "start":null,
     "end":null
   },
+  "latestBlock": {
+    "isSealed":null
+  },
   "block": {
     "id":null,
-    "height":null,
-    "isSealed":null
+    "height":null
   },
   "accountAddr":null,
   "transactionId":null
