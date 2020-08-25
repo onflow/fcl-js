@@ -34,10 +34,10 @@
     "start": "microbundle watch"
   },
   "dependencies": {
-    "@onflow/decode": "0.0.6",
+    "@onflow/decode": "0.0.7",
     "@onflow/encode": "0.0.4",
-    "@onflow/interaction": "0.0.8",
-    "@onflow/send": "0.0.17",
+    "@onflow/interaction": "0.0.10",
+    "@onflow/send": "0.0.19",
     "@qvvg/templar": "0.0.1"
   }
 }

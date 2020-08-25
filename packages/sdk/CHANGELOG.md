@@ -1,6 +1,12 @@
 ### Unreleased
 
 - YYYY-MM-DD **BREAKING?** -- description
+
+### 0.0.31 -- 2020-08-25
+
+- 2020-08-25 -- VSN `@onflow/send` 0.0.17 -> 0.0.19
+- 2020-08-25 -- VSN `@onflow/interaction` 0.0.9 -> 0.0.10
+- 2020-08-25 -- VSN `@onflow/decode` 0.0.6 -> 0.0.7
 - 2020-08-24 -- Implements GetBlockByHeight and GetBlockById interaction builders.
 - 2020-08-13 -- Updates Readme with an overview of the JS-SDK
 - 2020-08-10 -- Updates Readme
