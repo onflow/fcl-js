@@ -1,6 +1,10 @@
 ### Unreleased
 
 - YYYY-MM-DD **BREAKING?** -- description
+
+### 0.0.7 -- 2020-08-25
+
+- 2020-08-25 -- Deprecates operating upon data from the latestBlock field of the response object.
 - 2020-08-24 -- Updates decode to decode GetLatestBlock, GetBlockByHeight and GetBlockByHeight responses.
 - 2020-08-19 -- Updtates UFix64 and Fix64 types to now decode into Strings.
 

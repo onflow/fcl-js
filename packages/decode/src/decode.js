@@ -1,3 +1,20 @@
+const latestBlockDeprecationNotice = () => {
+  console.error(
+    `
+          %c@onflow/decode Deprecation Notice
+          ========================
+
+          Operating upon data of the latestBlock field of the response object is deprecated and will no longer be recognized in future releases of @onflow/decode.
+          Find out more here: https://github.com/onflow/flow-js-sdk/blob/master/packages/decode/WARNINGS.md#0001-Deprecating-latestBlock-field
+
+          =======================
+        `
+      .replace(/\n\s+/g, "\n")
+      .trim(),
+    "font-weight:bold;font-family:monospace;"
+  )
+}
+
 const decodeNumber = async (num, _, stack) => {
   try {
     return Number(num)
@@ -144,6 +161,9 @@ export const decodeResponse = async (response, customDecoders = {}) => {
     return response.account
   } else if (response.block) {
     return response.block
+  } else if (response.latestBlock) {
+    latestBlockDeprecationNotice()
+    return response.latestBlock
   } else if (response.transactionId) {
     return response.transactionId
   }
