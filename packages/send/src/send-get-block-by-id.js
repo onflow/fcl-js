@@ -3,10 +3,11 @@ import {response} from "@onflow/response"
 import {unary} from "./unary"
 
 const u8ToHex = u8 => Buffer.from(u8).toString("hex")
+const hexBuffer = hex => Buffer.from(hex, "hex")
 
 export async function sendGetBlockById(ix, opts = {}) {
   const req = new GetBlockByIDRequest()
-  req.setId(ix.block.id)
+  req.setId(hexBuffer(ix.block.id))
 
   const res = await unary(opts.node, AccessAPI.GetBlockByID, req)
 

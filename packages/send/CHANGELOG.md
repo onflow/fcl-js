@@ -2,6 +2,10 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.0.20 -- 2020-08-24
+
+- 2020-08-25 -- `sendGetBlockById` transforms block id from hex string to byte array.
+
 ### 0.0.19 -- 2020-08-25
 
 - 2020-08-25 -- `sendGetLatestBlock` sets response to `block` field of response object.
