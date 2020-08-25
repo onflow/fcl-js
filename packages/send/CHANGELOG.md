@@ -2,6 +2,10 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.0.19 -- 2020-08-25
+
+- 2020-08-25 -- `sendGetLatestBlock` sets response to `block` field of response object.
+
 ### 0.0.18 -- 2020-08-25
 
 - 2020-08-25 -- Deprecates operating upon the latestBlock field of the interaction object.
