@@ -4,9 +4,34 @@ import {unary} from "./unary"
 
 const u8ToHex = u8 => Buffer.from(u8).toString("hex")
 
+const latestBlockDeprecationNotice = () => {
+  console.error(
+    `
+          %c@onflow/send Deprecation Notice
+          ========================
+
+          Operating upon data of the latestBlock field of the interaction object is deprecated and will no longer be recognized in future releases of @onflow/send.
+          Find out more here: https://github.com/onflow/flow-js-sdk/blob/master/packages/send/WARNINGS.md#0001-Deprecating-latestBlock-field
+
+          =======================
+        `
+      .replace(/\n\s+/g, "\n")
+      .trim(),
+    "font-weight:bold;font-family:monospace;"
+  )
+}
+
 export async function sendGetLatestBlock(ix, opts = {}) {
   const req = new GetLatestBlockRequest()
-  req.setIsSealed(ix.latestBlock.isSealed)
+
+  if (ix.latestBlock && ix.latestBlock.isSealed) {
+    req.setIsSealed(ix.latestBlock.isSealed)
+    latestBlockDeprecationNotice()
+  }
+
+  if (ix.block && ix.block.isSealed) {
+    req.setIsSealed(ix.block.isSealed)
+  }
 
   const res = await unary(opts.node, AccessAPI.GetLatestBlock, req)
 
