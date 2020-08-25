@@ -4,6 +4,8 @@
 
 ### 0.0.18 -- 2020-08-25
 
+- 2020-08-25 -- Deprecates operating upon the latestBlock field of the interaction object.
+- 2020-08-25 -- VSN `@onflow/interaction` 0.0.8 -> 0.0.10
 - 2020-07-27 -- VSN `@onflow/protobuf` 0.0.8 -> 0.0.9
 - 2020-08-24 -- Implements send for GetBlockById and GetBlockByHeight interactions.
 
