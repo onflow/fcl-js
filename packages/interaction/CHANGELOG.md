@@ -2,6 +2,10 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.0.10 -- 2020-08-25
+
+- 2020-08-25 -- Adds `block` field to the `interaction` ADT and deprecates `latestBlock` field.
+
 ### 0.0.9 -- 2020-08-24
 
 - 2020-08-24 -- Updates interaction ADT for `GET_BLOCK_BY_ID` and `GET_BLOCK_BY_HEIGHT`.

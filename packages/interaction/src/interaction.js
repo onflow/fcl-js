@@ -82,6 +82,7 @@ const IX = `{
     "isSealed":null
   },
   "block": {
+    "isSealed":null,
     "id":null,
     "height":null
   },

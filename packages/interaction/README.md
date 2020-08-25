@@ -86,8 +86,12 @@ Currently the Access Node recognizes 7 different types of interactions.
   - **start** _(getEvents)_ `Int` -- events after this
   - **end** _(getEvents)_ `Int` -- events before this
   - **eventType** _(getEvents)_ `String` -- type of events to get
-- **latestBlock** _(getLatestBlock)
-  - **isSealed** _(getLatestBlock)_ `Boolean` `Boolean` -- determines if the criteria for the latest block is sealed or 
+- **latestBlock** _(getLatestBlock)_ `**DEPRECATED**` (see: https://github.com/onflow/flow-js-sdk/blob/master/packages/interaction/WARNINGS.md#0001-Deprecating-latestBlock-field)
+  - **isSealed** _(getLatestBlock)_ `Boolean` -- determines if the criteria for the latest block is sealed or not `**DEPRECATED**` (see: https://github.com/onflow/flow-js-sdk/blob/master/packages/interaction/WARNINGS.md#0001-Deprecating-latestBlock-field)
+- **block** _(getLatestBlock, getBlockByHeight, getBlockById)_
+  - **isSealed** _(getLatestBlock)_ `Boolean` -- determines if the criteria for the latest block is sealed or not.
+  - **height** _(getBlockByHeight)_ `Int` -- sets the height for the block to get.
+  - **id** _(getBlockById)_ `Int` -- sets the id for the block to get.
 - **accountAddr** _(getAccount)_ `String` -- the account to get
 - **transactionId** _(getTransactionStatus)_ `String` -- the transaction to get
 - **assigns** _(all)_ `{[String]:Any}` -- a pocket to hold things in while building and resolving
