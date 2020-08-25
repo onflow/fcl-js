@@ -2,6 +2,8 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.0.18 -- 2020-08-25
+
 - 2020-07-27 -- VSN `@onflow/protobuf` 0.0.8 -> 0.0.9
 - 2020-08-24 -- Implements send for GetBlockById and GetBlockByHeight interactions.
 
