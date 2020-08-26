@@ -1,6 +1,10 @@
 ### Unreleased
 
 - YYYY-MM-DD **BREAKING?** -- description
+
+### 0.0.53 -- 2020-08-26
+
+- 2020-08-26 -- `@onflow/sdk` VSN `0.0.30` -> `0.0.31`
 - 2020-08-20 -- Adds Authorization Function Documentation
 
 ### 0.0.52 -- 2020-08-18
