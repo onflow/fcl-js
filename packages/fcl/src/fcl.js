@@ -25,6 +25,8 @@ export {
   getAccount,
   getEvents,
   getLatestBlock,
+  getBlockByHeight,
+  getBlockById,
   getTransactionStatus,
 } from "@onflow/sdk"
 export {
