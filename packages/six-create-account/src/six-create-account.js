@@ -3,7 +3,7 @@ import * as t from "@onflow/types"
 
 export const TITLE = "Create Account"
 export const DESCRIPTION = "Create an Account on Flow with public keys."
-export const VERSION = "0.0.1"
+export const VERSION = "0.0.0"
 export const HASH = "eef2d0494448554177612e63026256258339230cbc6931ded78d6149443c6173"
 export const CODE = 
 `transaction(publicKeys: [String]) {
