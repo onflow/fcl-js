@@ -535,7 +535,7 @@ Flow Transactions are used to *move* **[resources](notion://www.notion.so/dapper
 
 `@onflow` allows for specifying the **payer**, **proposer** and **authorizer** of transactions on Flow. 
 
-Describing the specifics of how to compose Flow transactions is beyond the scope of this guide. For more information about how to build Flow transactions you can read the [https://docs.onflow.org/docs/cadence#transactions](docs).
+Describing the specifics of how to compose Flow transactions is beyond the scope of this guide. For more information about how to build Flow transactions you can read the [docs here](https://docs.onflow.org/docs/cadence#transactions).
 
 ### Simple Transaction
 
