@@ -3,7 +3,7 @@ import * as t from "@onflow/types"
 
 export const TITLE = "Transfer Tokens"
 export const DESCRIPTION = "Transfer tokens from one account to another."
-export const VERSION = "0.0.1"
+export const VERSION = "0.0.0"
 export const HASH = "ca80b628d985b358ae1cb136bcd976997c942fa10dbabfeafb4e20fa66a5a5e2"
 export const CODE = 
 `import FungibleToken from 0xee82856bf20e2aa6
