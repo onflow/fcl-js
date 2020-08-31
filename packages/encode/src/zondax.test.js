@@ -1,6 +1,76 @@
+import * as rlp from "rlp"
+import {ec as EC} from "elliptic"
 import {encodeTransactionPayload, encodeTransactionEnvelope} from "./encode.js"
+
+// const crypto = require('crypto');
+
+// Object.defineProperty(global.self, 'crypto', {
+//   value: {
+//     getRandomValues: arr => crypto.randomBytes(arr.length)
+//   }
+// });
+
+// Object.defineProperty(global, 'crypto', crypto);
+
+// console.log(self.crypto)
+
 const merge = require("deepmerge")
 const fs = require('fs');
+
+const alphabet = "abcdefghijklmnopqrstuvwxyz1234567890";
+
+function genRandomPublicKey(len = 128) {
+    const hex = '0123456789abcdef';
+    let output = '';
+    for (let i = 0; i < len; ++i) {
+        output += hex.charAt(Math.floor(Math.random() * hex.length));
+    }
+
+    const toHex = hex => Buffer.from(hex, "hex").toString("hex")
+    return toHex(output);
+}
+
+// const getRandomFromAlphabet = () => alphabet.split("")[~~(Math.random() * alphabet.length)]
+// const genRandomPublicKey = () => Array.from({ length: Math.ceil(Math.random() * 128) + 128 }).map(() => getRandomFromAlphabet()).join("");
+
+// const encodePublicKeyForFlow = () => {
+//     const pk = genRandomPublicKey()
+//     const pkBuffer = Buffer.from(genRandomPublicKey(), "hex")
+//     const signature = Math.random() >= 0.5 ? 2 : 3
+//     const hash = Math.random() >= 0.5 ? 1 : 3
+//     const weight = Math.ceil(Math.random() * 1000)
+
+//     // const ec = new EC("p256")
+
+//     // const keys = ec.genKeyPair()
+//     // const privateKey = keys.getPrivate("hex")
+//     // const publicKey = keys.getPublic("hex").replace(/^04/, "")
+
+//     // console.log('keys', keys) 
+//     // console.log('pkBuffer', pkBuffer)
+//     // console.log('pkBuffer rlp', rlp.encode([Buffer.from(publicKey, "hex")]).toString("hex"))
+//     // console.log('signature', signature)
+//     // console.log('hash', hash)
+//     // console.log('weight', weight)
+
+//     return rlp
+//         .encode([
+//             Buffer.from(genRandomPublicKey(), "hex"), // publicKey hex to binary
+//             Math.random() >= 0.5 ? 2 : 3, // P256 per https://github.com/onflow/flow/blob/master/docs/accounts-and-keys.md#supported-signature--hash-algorithms
+//             Math.random() >= 0.5 ? 1 : 3, // SHA3-256 per https://github.com/onflow/flow/blob/master/docs/accounts-and-keys.md#supported-signature--hash-algorithms
+//             Math.ceil(Math.random() * 1000), // give key full weight
+//         ])
+//         .toString("hex")
+// }
+
+
+const pk = `4519e9fbf966c6589faf
+e60903c0da5f55c5cb50
+aee5d870f097b35dfb6d
+e13c170718cd92f50811
+cdd9290e51c2766440b6
+5031ae482cca79e3c479
+96e0423a`;
 
 const combineMerge = (target, source, options) => {
     // empty list always overwrites target
@@ -29,8 +99,7 @@ const buildPayloadTx = partialTx =>
 
 
 const SEND_FLOW_TOKEN_CDC =
-`import FungibleToken from 0xf233dcee88fe0abe
-import FlowToken from 0x1654653399040a61
+`import FungibleToken from 0xee82856bf20e2aa6
 transaction(amount: UFix64, to: Address) {
 let vault: @FungibleToken.Vault
 prepare(signer: AuthAccount) {
@@ -47,20 +116,20 @@ getAccount(to)
 }`
 
 const CREATE_ACCOUNT_CDC =
-`transaction(publicKeys: [[UInt8]]) {
+`transaction(publicKeys: [String]) {
 prepare(signer: AuthAccount) {
 let acct = AuthAccount(payer: signer)
 for key in publicKeys {
-acct.addPublicKey(key)
+acct.addPublicKey(key.decodeHex())
 }
 }
 }`
 
 const ADD_NEW_KEY_CDC =
-`transaction(publicKey: [UInt8]) {
+`transaction(publicKey: String) {
 prepare(signer: AuthAccount) {
 let acct = AuthAccount(payer: signer)
-acct.addPublicKey(key)
+acct.addPublicKey(publicKey.decodeHex())
 }
 }`
 
@@ -137,7 +206,25 @@ const validPayloadCases = [
                 arguments: [
                     {
                         type: "UFix64",
-                        value: (Math.random() * 1000).toFixed(2).toString(),
+                        value: (Math.random() * 10000).toFixed(2).toString(),
+                    },
+                    {
+                        type: "Address",
+                        value: "0xf8d6e0586b0a20c7"
+                    }
+                ]
+            })
+        ]
+    )),
+    ...(Array.from({ length: 5 }).map((_, i) => 
+        [
+            "Send Flow Token Transaction - Valid Payload - Valid Arguments -- EXTREME #" + i,
+            buildPayloadTx({
+                script: SEND_FLOW_TOKEN_CDC,
+                arguments: [
+                    {
+                        type: "UFix64",
+                        value: (Math.random() * 2**40).toFixed(2).toString(),
                     },
                     {
                         type: "Address",
@@ -157,10 +244,27 @@ const validPayloadCases = [
                         type: "Array",
                         value: Array.from({ length: Math.ceil(Math.random() * 4) }).map(() => (
                             {
-                                type: "Array",
-                                value: Array.from({ length: Math.ceil(Math.random() * 10) }).map(() => (
-                                    {type: "UInt8", value: ~~(Math.random() * (2**8 - 1))}
-                                ))
+                                type: "String",
+                                value: genRandomPublicKey()
+                            }
+                        ))
+                    }
+                ]
+            })
+        ]
+    )),
+    ...(Array.from({ length: 5 }).map((_, i) => 
+        [
+            "Create Account Transaction - Valid Payload - Valid Arguments -- EXTREME #" + i,
+            buildPayloadTx({
+                script: CREATE_ACCOUNT_CDC,
+                arguments: [
+                    {
+                        type: "Array",
+                        value: Array.from({ length: Math.ceil(Math.random() * 5) + 5 }).map(() => (
+                            {
+                                type: "String",
+                                value: genRandomPublicKey()
                             }
                         ))
                     }
@@ -175,10 +279,8 @@ const validPayloadCases = [
                 script: ADD_NEW_KEY_CDC,
                 arguments: [
                     {
-                        type: "Array",
-                        value: Array.from({ length: Math.ceil(Math.random() * 10) }).map(() => (
-                            {type: "UInt8", value: ~~(Math.random() * (2**8 - 1))}
-                        ))
+                        type: "String",
+                        value: genRandomPublicKey()
                     }
                 ]
             })
@@ -257,7 +359,25 @@ const validEnvelopeCases = [
                 arguments: [
                     {
                         type: "UFix64",
-                        value: (Math.random() * 1000).toFixed(2).toString(),
+                        value: (Math.random() * 10000).toFixed(2).toString(),
+                    },
+                    {
+                        type: "Address",
+                        value: "0xf8d6e0586b0a20c7"
+                    }
+                ]
+            })
+        ]
+    )),
+    ...(Array.from({ length: 5 }).map((_, i) => 
+        [
+            "Send Flow Token Transaction - Valid Envelope - Valid Arguments -- EXTREME #" + i,
+            buildEnvelopeTx({
+                script: SEND_FLOW_TOKEN_CDC,
+                arguments: [
+                    {
+                        type: "UFix64",
+                        value: (Math.random() * 2**40).toFixed(2).toString(),
                     },
                     {
                         type: "Address",
@@ -277,10 +397,27 @@ const validEnvelopeCases = [
                         type: "Array",
                         value: Array.from({ length: Math.ceil(Math.random() * 4) }).map(() => (
                             {
-                                type: "Array",
-                                value: Array.from({ length: Math.ceil(Math.random() * 10) }).map(() => (
-                                    {type: "UInt8", value: ~~(Math.random() * (2**8 - 1))}
-                                ))
+                                type: "String",
+                                value: genRandomPublicKey()
+                            }
+                        ))
+                    }
+                ]
+            })
+        ]
+    )),
+    ...(Array.from({ length: 5 }).map((_, i) => 
+        [
+            "Create Account Transaction - Valid Envelope - Valid Arguments -- EXTREME #" + i,
+            buildEnvelopeTx({
+                script: CREATE_ACCOUNT_CDC,
+                arguments: [
+                    {
+                        type: "Array",
+                        value: Array.from({ length: Math.ceil(Math.random() * 5) + 5 }).map(() => (
+                            {
+                                type: "String",
+                                value: genRandomPublicKey()
                             }
                         ))
                     }
@@ -295,10 +432,8 @@ const validEnvelopeCases = [
                 script: ADD_NEW_KEY_CDC,
                 arguments: [
                     {
-                        type: "Array",
-                        value: Array.from({ length: Math.ceil(Math.random() * 10) }).map(() => (
-                            {type: "UInt8", value: ~~(Math.random() * (2**8 - 1))}
-                        ))
+                        type: "String",
+                        value: genRandomPublicKey()
                     }
                 ]
             })

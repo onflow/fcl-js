@@ -207,8 +207,8 @@ const validEnvelopeCases = [
 ]
 
 
-fs.writeFileSync("validPayloadCases.json", JSON.stringify(validPayloadCases, null, 2))
-fs.writeFileSync("validEnvelopeCases.json", JSON.stringify(validEnvelopeCases, null, 2))
+// fs.writeFileSync("validPayloadCases.json", JSON.stringify(validPayloadCases, null, 2))
+// fs.writeFileSync("validEnvelopeCases.json", JSON.stringify(validEnvelopeCases, null, 2))
 
   
 describe("encode transaction", () => {
