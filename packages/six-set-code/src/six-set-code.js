@@ -4,16 +4,13 @@ import * as t from "@onflow/types"
 export const TITLE = "Set Account Code"
 export const DESCRIPTION = "Set an Account Code on Flow with given code."
 export const VERSION = "0.0.0"
-export const HASH = "922bc35cadb81d7a449956aa02f57bcd052859e9cc212e84af2b7035d2af001d"
+export const HASH = "7375dc3feb96e2f8061eff548220a96bf77ceb17affd1ac113f10d15411a92c4"
 export const CODE = 
-`
-transaction(code: String) {
-    prepare(signer: AuthAccount) {
-        let acct = AuthAccount(payer: signer)
+`transaction(code: String) {
+    prepare(acct: AuthAccount) {
         acct.setCode(code.decodeHex())
     }
-}
-`
+}`
 
 export const template = ({ proposer, authorization, payer, code = "" }) => sdk.pipe([
     sdk.transaction(CODE),
