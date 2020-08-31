@@ -4,7 +4,7 @@ Stored Interaction for setting an Accounts Code on Flow
 
 # Status
 
-- **Last Updated:** July 14 2020
+- **Last Updated:** August 31 2020
 - **Stable:** No
 - **Risk of Breaking Change:** Very High
 
@@ -20,7 +20,7 @@ npm install @onflow/six-set-code
 
 ```javascript
 import * as fcl from "@onflow/fcl"
-import { template as createAccount } from "@onflow/six-create-account"
+import { template as setCode } from "@onflow/six-set-code"
 
 fcl.config().put("accessNode", "http://localhost:8080");
 
