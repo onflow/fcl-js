@@ -36,6 +36,6 @@
   },
   "dependencies": {
     "@onflow/sdk": "0.0.31",
-    "@onflow/types": "0.0.2"
+    "@onflow/types": "0.0.4"
   }
 }
