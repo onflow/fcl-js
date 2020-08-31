@@ -2,7 +2,7 @@ import * as sdk from "@onflow/sdk"
 import * as t from "@onflow/types"
 
 export const TITLE = "Create Account"
-export const DESCRIPTION = "Create an Account on Flow with given code and public keys."
+export const DESCRIPTION = "Create an Account on Flow with public keys."
 export const VERSION = "0.0.1"
 export const HASH = "eef2d0494448554177612e63026256258339230cbc6931ded78d6149443c6173"
 export const CODE = 
