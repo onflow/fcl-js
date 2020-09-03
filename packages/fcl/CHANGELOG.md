@@ -2,6 +2,10 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.0.54 -- 2020-09-03
+
+- 2020-09-03 -- Authn and Authz iframes allow usb feature policy.
+
 ### 0.0.53 -- 2020-08-26
 
 - 2020-08-26 -- `@onflow/sdk` VSN `0.0.30` -> `0.0.31`
