@@ -1,11 +1,9 @@
+import {urlFromService} from "./url-from-service"
 const FRAME_ID = "FCL_IFRAME_AUTHZ"
 
-export function renderAuthzFrame(hook) {
+export function renderAuthzFrame(service) {
   if (document.getElementById(FRAME_ID)) return
-  var url = new URL(hook.endpoint)
-  for (let [key, value] of Object.entries(hook.params || {})) {
-    url.searchParams.append(key, value)
-  }
+  var url = urlFromService(service)
 
   const $frame = document.createElement("iframe")
   $frame.src = url.href
@@ -25,9 +23,11 @@ export function renderAuthzFrame(hook) {
   $frame.style.border = "1px solid white"
   document.body.append($frame)
 
-  return () => {
+  const unmount = () => {
     if (document.getElementById(FRAME_ID)) {
       document.getElementById(FRAME_ID).remove()
     }
   }
+
+  return [$frame, unmount]
 }

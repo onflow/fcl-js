@@ -1,11 +1,9 @@
 const FRAME_ID = "FCL_IFRAME_CHALLENGE"
 
-export function renderAuthnFrame({handshake, scope, nonce, l6n}) {
+export function renderAuthnFrame({handshake, l6n}) {
   if (document.getElementById(FRAME_ID)) return
   var url = new URL(handshake)
   url.searchParams.append("l6n", l6n)
-  url.searchParams.append("nonce", nonce)
-  if (scope) url.searchParams.append("scope", scope.split(" ").join("+"))
 
   const $frame = document.createElement("iframe")
   $frame.src = url.href

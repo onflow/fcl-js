@@ -2,6 +2,10 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.0.55 -- 2020-09-04
+
+- 2020-09-04 -- Wallet Provider Services
+
 ### 0.0.54 -- 2020-09-03
 
 - 2020-09-03 -- Authn and Authz iframes allow usb feature policy.
