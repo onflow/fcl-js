@@ -4,5 +4,4 @@
 
 ### 0.0.1 -- 2020-09-03
 
-- 2020-08-31 -- Updates dependencies
-- 2020-07-14 -- Initial Implementation
+- 2020-08-31 -- Initial Implementation

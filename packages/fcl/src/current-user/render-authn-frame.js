@@ -10,6 +10,7 @@ export function renderAuthnFrame({handshake, scope, nonce, l6n}) {
   const $frame = document.createElement("iframe")
   $frame.src = url.href
   $frame.id = FRAME_ID
+  $frame.allow = "usb"
   $frame.style.position = "fixed"
   $frame.style.top = "0px"
   $frame.style.right = "0px"

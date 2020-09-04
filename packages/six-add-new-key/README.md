@@ -1,6 +1,6 @@
-# @onflow/six-set-code
+# @onflow/six-add-new-key
 
-Stored Interaction for setting an Accounts Code on Flow
+Stored Interaction for adding a new key to an Account on Flow.
 
 # Status
 
@@ -14,22 +14,22 @@ Known Upcoming Changes:
 
 # Install
 
-npm install @onflow/six-set-code
+npm install @onflow/six-add-new-key
 
 # Usage:
 
 ```javascript
 import * as fcl from "@onflow/fcl"
-import { template as setCode } from "@onflow/six-set-code"
+import { template as addNewKey } from "@onflow/six-add-new-key"
 
 fcl.config().put("accessNode", "http://localhost:8080");
 
 const response = await fcl.send([
-    setCode({
+    addNewKey({
         proposer: fcl.currentUser().authorization,
         authorization: fcl.currentUser().authorization,     
         payer: fcl.currentUser().authorization,             
-        code: "my-cadence-code",                            // Cadence code as a utf8 encoded string.
+        publicKey: [publicKey]                          // New Public Key as a hex encoded string.
     })
 ])
 

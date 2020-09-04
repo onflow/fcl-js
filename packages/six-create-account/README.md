@@ -29,7 +29,6 @@ const response = await fcl.send([
         proposer: fcl.currentUser().authorization,
         authorization: fcl.currentUser().authorization,     
         payer: fcl.currentUser().authorization,             
-        code: "my-cadence-code",                            // Cadence code as a utf8 encoded string.
         publicKeys: [myPublicKeyAsHexString]                // Public Keys as hex encoded string.
     })
 ])
