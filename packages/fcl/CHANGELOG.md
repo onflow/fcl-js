@@ -2,6 +2,10 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.0.56 -- 2020-09-04
+
+- 2020-09-04 -- Fixed some issues involving FCL talking to iframes
+
 ### 0.0.55 -- 2020-09-04
 
 - 2020-09-04 -- Wallet Provider Services

@@ -42,4 +42,4 @@ export {
   ref,
 } from "@onflow/sdk"
 
-export const VERSION = "0.0.51"
+export const VERSION = "0.0.56"

@@ -82,14 +82,15 @@ async function authenticate() {
     const user = await snapshot()
     if (user.loggedIn) return resolve(user)
 
-    const unrender = renderAuthnFrame({
+    const [$frame, unrender] = renderAuthnFrame({
       handshake: await config().get("challenge.handshake"),
       l6n: window.location.origin,
     })
 
-    window.addEventListener("message", async ({data, origin}) => {
+    const replyFn = async ({data}) => {
       if (data.type !== CHALLENGE_RESPONSE_EVENT) return
       unrender()
+      window.removeEventListener("message", replyFn)
 
       const msg = {
         addr: data.addr,
@@ -103,7 +104,9 @@ async function authenticate() {
 
       send(NAME, SET_CURRENT_USER, msg)
       resolve(await snapshot())
-    })
+    }
+
+    window.addEventListener("message", replyFn)
   })
 }
 
@@ -124,11 +127,7 @@ async function authorization(account) {
     sequenceNum = key.sequenceNumber
   }
 
-  const signingFunction = async signable => {
-    const compSig = await execAuthzService(authz, signable)
-    validateCompositeSignature(compSig, authz)
-    return compSig
-  }
+  const signingFunction = async signable => execAuthzService(authz, signable)
 
   return {
     ...account,

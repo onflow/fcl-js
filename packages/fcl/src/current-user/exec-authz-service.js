@@ -1,6 +1,7 @@
 import {urlFromService} from "./url-from-service"
 import {renderAuthzFrame} from "./render-authz-frame"
 import {pollForAuthzUpdates} from "./poll-for-authz-updates"
+import {validateCompositeSignature} from "./validate-composite-signature"
 import {uid} from "./uid"
 
 const STRATEGIES = {
@@ -9,7 +10,11 @@ const STRATEGIES = {
 }
 
 export async function execAuthzService(authz, signable) {
-  return STRATEGIES[authz.method](authz, signable)
+  const compSig = await STRATEGIES[authz.method](authz, signable)
+  if (compSig.sig == null) compSig.sig = compSig.signature
+  if (compSig.signature == null) compSig.signature = compSig.sig
+  validateCompositeSignature(compSig, authz)
+  return compSig
 }
 
 async function execHttpPost(authz, signable) {
@@ -32,7 +37,7 @@ async function execHttpPost(authz, signable) {
     result = await pollForAuthzUpdates(resp.authorizationUpdates)
   } catch (error) {
     unrender()
-    console.error(error)
+    trouble(authz, signable, error)
     throw error
   } finally {
     unrender()
@@ -42,35 +47,61 @@ async function execHttpPost(authz, signable) {
 
 async function execIframeRPC(authz, signable) {
   return new Promise((resolve, reject) => {
-    const id = uid()
-    const [$frame, unmount] = renderAuthzFrame(authz)
-    $frame.contentWindow.postMessage(
-      {
-        jsonrpc: "2.0",
-        id,
-        method: "fcl:sign",
-        params: [signable, authz.params],
-      },
-      "*"
-    )
+    try {
+      const id = uid()
+      const [$frame, unmount] = renderAuthzFrame(authz)
+      setTimeout(() => {
+        $frame.contentWindow.postMessage(
+          JSON.parse(
+            JSON.stringify({
+              jsonrpc: "2.0",
+              id,
+              method: "fcl:sign",
+              params: [signable, authz.params],
+            })
+          ),
+          "*"
+        )
+      }, 500)
 
-    const listener = window.addListener("message", async ({data}) => {
-      if (typeof data !== "object") return
-      if (data.jsonrpc !== "2.0") return
-      if (data.id !== id) return
+      const replyFn = async ({data}) => {
+        if (typeof data !== "object") return
+        if (data.jsonrpc !== "2.0") return
+        if (data.id !== id) return
 
-      const result = data.result
+        const result = data.result
 
-      if (result.status === "APPROVED") {
-        resolve(result.compositeSignature)
-      } else if (result.status === "DECLINED") {
-        reject({status: result.status, reason: result.reason})
-      } else {
-        reject({
-          status: "DECLINED",
-          reason: "Status was neither APPROVED nor DECLINED",
-        })
+        if (result.status === "APPROVED") {
+          window.removeEventListener("message", replyFn)
+          unmount()
+          resolve(result.compositeSignature)
+        } else if (result.status === "DECLINED") {
+          window.removeEventListener("message", replyFn)
+          unmount()
+          reject({status: result.status, reason: result.reason})
+        } else {
+          window.removeEventListener("message", replyFn)
+          unmount()
+          reject({
+            status: "DECLINED",
+            reason: "Status was neither APPROVED nor DECLINED",
+          })
+        }
       }
-    })
+
+      window.addEventListener("message", replyFn)
+    } catch (error) {
+      trouble(authz, signable, error)
+      reject({status: "DECLINED", reason: "Trouble talking to Wallet Provider"})
+    }
   })
+}
+
+function trouble(authz, signable, error) {
+  console.error(
+    `[${authz.method}] Trouble talking to Wallet Provider`,
+    "\n\n",
+    {authz, signable},
+    error
+  )
 }
