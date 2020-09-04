@@ -17,7 +17,7 @@
     "@onflow/fcl-config": "0.0.1",
     "@onflow/fcl": "0.0.43",
     "@onflow/types": "0.0.1",
-    "argon2": "0.26.2",
+    "argon2": "0.27.0",
     "body-parser": "1.19.0",
     "chalk": "^4.0.0",
     "clipboardy": "^2.3.0",
