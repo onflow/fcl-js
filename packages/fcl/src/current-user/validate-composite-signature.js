@@ -12,7 +12,7 @@ export function validateCompositeSignature(compSig, authz) {
   try {
     if (compSig.addr == null) throw new Error(missing("addr", "Address"))
     if (compSig.keyId == null) throw new Error(missing("keyId"))
-    if (compSig.sig == null) throw new Error(missing("sig", "Signature"))
+    if (compSig.signature == null) throw new Error(missing("signature"))
     if (compSig.addr !== authz.addr) throw new Error(noMatch("addr", "Address"))
     if (compSig.keyId !== authz.keyId) throw new Error(noMatch("keyId"))
     return compSig
