@@ -1,5 +1,6 @@
 import React, {useState} from "react"
 import * as fcl from "@onflow/fcl"
+import * as sdk from "@onflow/sdk"
 import { template as addNewKey } from "@onflow/six-add-new-key"
 
 export const SixAddNewKey = () => {

@@ -10,7 +10,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@onflow/fcl": "0.0.54",
+    "@onflow/fcl": "0.0.56",
+    "@onflow/sdk": "^0.0.31",
     "@onflow/six-add-new-key": "0.0.1",
     "@onflow/six-create-account": "0.0.1",
     "@onflow/six-transfer-tokens": "0.0.1",

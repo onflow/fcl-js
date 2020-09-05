@@ -1,5 +1,6 @@
 import React, {useState} from "react"
 import * as fcl from "@onflow/fcl"
+import * as sdk from "@onflow/sdk"
 import { template as createAccount } from "@onflow/six-create-account"
 
 export const SixCreateAccount = () => {
