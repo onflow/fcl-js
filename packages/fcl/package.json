@@ -38,6 +38,6 @@
     "@onflow/types": "0.0.2",
     "@onflow/util-actor": "0.0.2",
     "@onflow/config": "0.0.2",
-    "queue-microtask": "1.1.2"
+    "queue-microtask": "1.1.4"
   }
 }
