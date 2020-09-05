@@ -38,6 +38,6 @@
     "@onflow/encode": "0.0.4",
     "@onflow/interaction": "0.0.10",
     "@onflow/send": "0.0.20",
-    "@qvvg/templar": "0.0.1"
+    "@qvvg/templar": "0.0.2"
   }
 }
