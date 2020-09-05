@@ -20,7 +20,7 @@ export const SixTransferTokens = () => {
             authorization: fcl.currentUser().authorization,     
             payer: fcl.currentUser().authorization,             
             amount: amount,                                    // Amount as a String representing a Cadence UFix64
-            to: fcl.sansPrefix(toAddress)                      // The Address of the Account to transfer tokens to.
+            to: fcl.withPrefix(toAddress)                      // The Address of the Account to transfer tokens to.
         })
     ])
 
