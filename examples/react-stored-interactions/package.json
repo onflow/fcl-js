@@ -11,7 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "@onflow/fcl": "0.0.56",
-    "@onflow/six-add-new-key": "0.0.2",
+    "@onflow/six-add-new-key": "0.0.3",
     "@onflow/six-create-account": "0.0.1",
     "@onflow/six-transfer-tokens": "0.0.1",
     "@onflow/types": "0.0.3",

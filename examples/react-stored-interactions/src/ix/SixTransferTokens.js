@@ -23,7 +23,7 @@ export const SixTransferTokens = () => {
         ])
       ])
 
-      setResult(await sdk.decode(response))
+      setResult(await fcl.decode(response))
     } catch(e) {
         console.log('error', e)
     }

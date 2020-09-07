@@ -2,19 +2,8 @@ import React, {useState} from "react"
 import * as fcl from "@onflow/fcl"
 import * as sdk from "@onflow/sdk"
 import { template as addNewKey } from "@onflow/six-add-new-key"
-const rlp = require("rlp")
-
-const encodePublicKeyForFlow = (publicKey) =>
-  rlp
-    .encode([
-      Buffer.from(publicKey), // publicKey hex to binary
-      2, // P256 per https://github.com/onflow/flow/blob/master/docs/accounts-and-keys.md#supported-signature--hash-algorithms
-      3, // SHA3-256 per https://github.com/onflow/flow/blob/master/docs/accounts-and-keys.md#supported-signature--hash-algorithms
-      1000, // give key full weight
-    ])
-    .toString("hex")
-
 import AccountKeyInput, {defaultAccountKey, encodeAccountKey} from "../account-keys"
+const rlp = require("rlp")
 
 export const SixAddNewKey = () => {
   const [accountKey, setAccountKey] = useState(defaultAccountKey)
@@ -34,7 +23,7 @@ export const SixAddNewKey = () => {
       ])
     ])
 
-    setResult(await sdk.decode(response))
+    setResult(await fcl.decode(response))
   }
 
   return (
