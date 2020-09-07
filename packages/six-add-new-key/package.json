@@ -1,6 +1,6 @@
 {
   "name": "@onflow/six-add-new-key",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Flow SDK Stored Interaction - Add New Key",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
