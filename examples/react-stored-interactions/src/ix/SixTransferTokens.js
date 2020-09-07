@@ -15,13 +15,16 @@ export const SixTransferTokens = () => {
         .put("challenge.handshake", "http://localhost:3000/local/authn")
 
     const response = await fcl.send([
+      sdk.pipe([
         transferTokens({
             proposer: fcl.currentUser().authorization,
             authorization: fcl.currentUser().authorization,     
             payer: fcl.currentUser().authorization,             
             amount: amount,                                    // Amount as a String representing a Cadence UFix64
             to: fcl.withPrefix(toAddress)                      // The Address of the Account to transfer tokens to.
-        })
+        }),
+        fcl.limit(1000),
+      ])
     ])
 
     setResult(await sdk.decodeResponse(response))
