@@ -4,16 +4,15 @@ import * as t from "@onflow/types"
 export const TITLE = "Add New Key"
 export const DESCRIPTION = "Add a new key to an Account on Flow."
 export const VERSION = "0.0.0"
-export const HASH = "9f2e43f75e6f001879c66b16137e3cddbe3adeb56c1915831022babe84d6b0ee"
+export const HASH = "595c86561441b32b2b91ee03f9e10ca6efa7b41bcc994f51317ec0aa9d8f8a42"
 export const CODE = 
 `transaction(publicKey: String) {
 prepare(signer: AuthAccount) {
-let acct = AuthAccount(payer: signer)
-acct.addPublicKey(publicKey.decodeHex())
+signer.addPublicKey(publicKey.decodeHex())
 }
 }`
 
-export const template = ({ payer, proposer, authorization, publicKey = "" }) => sdk.pipe([
+export const template = ({ proposer, authorization, payer, publicKey = "" }) => sdk.pipe([
     sdk.invariant(publicKey !== "", "template({publicKey}) -- publicKey must not be an empty string."),
     sdk.transaction(CODE),
     sdk.args([sdk.arg(publicKey, t.String)]),
