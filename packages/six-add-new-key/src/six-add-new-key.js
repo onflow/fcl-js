@@ -13,11 +13,15 @@ acct.addPublicKey(publicKey.decodeHex())
 }
 }`
 
-export const template = ({ proposer, authorization, publicKey = "" }) => sdk.pipe([
+export const template = ({ payer, proposer, authorization, publicKey = "" }) => sdk.pipe([
     sdk.invariant(publicKey !== "", "template({publicKey}) -- publicKey must not be an empty string."),
     sdk.transaction(CODE),
     sdk.args([sdk.arg(publicKey, t.String)]),
     sdk.proposer(proposer),
     sdk.authorizations([authorization]),
-    sdk.payer(payer)
+    sdk.payer(payer),
+    sdk.validator((ix, {Ok, Bad}) => {
+        if (ix.authorizations.length > 1) return Bad(ix, "template only requires one authorization.")
+        return Ok(ix)
+    })
 ])
