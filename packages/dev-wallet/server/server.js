@@ -23,7 +23,7 @@ const app = express()
 app
   .use(cors())
   .use(compression())
-  .use(bodyParser.json({limit: "1gb"}))
+  .use(bodyParser.json({limit: "5mb"}))
   .use(express.static(SRC))
 
 app.get("/flow/hooks", cors(), (req, res) => {
