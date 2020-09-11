@@ -8,7 +8,7 @@ A high level abstraction (built on top of [@onflow/sdk](../sdk)) that enables de
 - **Stable:** Yes
 - **Risk of Breaking Change:** Low
 
-The things that exists probably won't be chainging much externally, we will be adding new functionality in the near future.
+The things that exists probably won't be changing much externally, we will be adding new functionality in the near future.
 
 # Install
 
