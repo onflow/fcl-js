@@ -11,7 +11,6 @@ import {render} from "./render"
 import * as hs from "./domains/handshake"
 import * as db from "./domains/user"
 import * as authz from "./domains/authorization"
-import clipboardy from "clipboardy"
 import chalk from "chalk"
 import emoji from "node-emoji"
 import latest from "latest-version"
@@ -215,7 +214,6 @@ ${chalk.dim("*** *** *** *** *** *** ***")}
 `.trim()
 
 export const start = async () => {
-  clipboardy.writeSync(script)
   await promisify(app.listen)
     .bind(app)(CONFIG.PORT)
     .then(async _ => {
