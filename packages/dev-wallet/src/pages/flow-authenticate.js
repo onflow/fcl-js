@@ -141,16 +141,6 @@ const ApproveScope = ({
         display: flex;
         flex-direction: column;
       }
-      .profile-card {
-        box-sizing: border-box;
-        min-width: 377px;
-        width: 100%;
-        max-width: 400px;
-        height: 100vh;
-        padding: 13px;
-        border: 1px solid rgba(0, 0, 0, 0.1);
-        border-radius: 3px;
-      }
 
       .profile-card h3 {
         font-size: 13px;
@@ -360,23 +350,30 @@ export default () => {
         justify-content: center;
         align-items: center;
       }
+      .inner {
+        background: white;
+        padding: 13px;
+        border-radius: 3px;
+      }
     </style>
     <div class="root">
-      <${Header} />
-      <${AuthForm}
-        config=${config}
-        sessionId=${sessionId}
-        onAuth=${setSessionId}
-      />
-      <${ApproveScope}
-        key=${user == null ? 0 : user.vsn}
-        sessionId=${sessionId}
-        setSessionId=${setSessionId}
-        user=${user}
-        setUser=${setUser}
-        onHandshakeId=${setHandshakeId}
-        config=${config}
-      />
+      <div class="inner">
+        <${Header} />
+        <${AuthForm}
+          config=${config}
+          sessionId=${sessionId}
+          onAuth=${setSessionId}
+        />
+        <${ApproveScope}
+          key=${user == null ? 0 : user.vsn}
+          sessionId=${sessionId}
+          setSessionId=${setSessionId}
+          user=${user}
+          setUser=${setUser}
+          onHandshakeId=${setHandshakeId}
+          config=${config}
+        />
+      </div>
     </div>
   `
 }
