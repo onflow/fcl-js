@@ -10,7 +10,7 @@ import * as api from "../api/api.js"
 
 const CHAR = "0123456789abcdef"
 const randChar = () => CHAR[~~(Math.random() * CHAR.length)]
-const rand = length => Array.from({length}, randChar).join("")
+const rand = (length) => Array.from({length}, randChar).join("")
 const randColor = () => `#${rand(6)}`
 const uuid = () => [rand(8), rand(4), rand(4), rand(4), rand(12)].join("-")
 
@@ -35,7 +35,7 @@ const AuthForm = ({config = {}, sessionId, onAuth = () => {}}) => {
   const [passw, setPassw] = useState("")
   const [errors, setErrors] = useState([])
 
-  const authenticate = async e => {
+  const authenticate = async (e) => {
     e.preventDefault()
     const {errors, data} = await api.authenticate({email, passw})
     if (DEBUG)
@@ -49,22 +49,18 @@ const AuthForm = ({config = {}, sessionId, onAuth = () => {}}) => {
       <small>${config.name}</small>
       <h3>Authenticate</h3>
       ${!!errors.length &&
-        html`
-          <strong>Errors</strong>
-          <ul style="color:tomato;">
-            ${errors.map(
-              (d, i) => html`
-                <li key=${i}>${d.message}</li>
-              `
-            )}
-          </ul>
-        `}
+      html`
+        <strong>Errors</strong>
+        <ul style="color:tomato;">
+          ${errors.map((d, i) => html` <li key=${i}>${d.message}</li> `)}
+        </ul>
+      `}
       <div>
         <input
           value=${email}
           type="email"
           placeholder="email"
-          onInput=${e => setEmail(e.target.value)}
+          onInput=${(e) => setEmail(e.target.value)}
         />
       </div>
       <div>
@@ -72,13 +68,11 @@ const AuthForm = ({config = {}, sessionId, onAuth = () => {}}) => {
           value=${passw}
           type="password"
           placeholder="password"
-          onInput=${e => setPassw(e.target.value)}
+          onInput=${(e) => setPassw(e.target.value)}
         />
       </div>
       <div>
-        <button onClick=${authenticate}>
-          Authenticate
-        </button>
+        <button onClick=${authenticate}>Authenticate</button>
       </div>
     </form>
   `
@@ -114,7 +108,7 @@ const ApproveScope = ({
     setDirty(isDirty)
   }, [name, avatar, cover, color, bio])
 
-  const upsert = async e => {
+  const upsert = async (e) => {
     e.preventDefault()
     const {error, data} = await api.upsertUser({
       input: {sessionId, name, avatar, cover, color, bio},
@@ -123,7 +117,7 @@ const ApproveScope = ({
     setUser(data.upsertUser)
   }
 
-  const useProfile = async e => {
+  const useProfile = async (e) => {
     e.preventDefault()
     const params = getParams()
     const {error, data} = await api.genHandshake({
@@ -231,7 +225,7 @@ const ApproveScope = ({
           <input
             placeholder="Cover Photo URL"
             value=${cover}
-            onInput=${e => setCover(e.target.value)}
+            onInput=${(e) => setCover(e.target.value)}
           />
         </div>
         <div class="row" style="padding:0 13px;">
@@ -244,25 +238,25 @@ const ApproveScope = ({
               width="89"
               height="89"
               style="margin-bottom:8px;border:3px solid ${color};border-radius:3px;background:white;margin-top:-53px;"
-              ondblclick=${e =>
+              ondblclick=${(e) =>
                 setAvatar(`https://avatars.onflow.org/avatar/${uuid()}.svg`)}
             />
             <input
               value=${avatar}
               style="width:89px;"
               placeholder="Avatar URL"
-              onFocus=${e => e.target.select()}
-              onInput=${e => setAvatar(e.target.value)}
-              ondblclick=${e =>
+              onFocus=${(e) => e.target.select()}
+              onInput=${(e) => setAvatar(e.target.value)}
+              ondblclick=${(e) =>
                 setAvatar(`https://avatars.onflow.org/avatar/${uuid()}.svg`)}
             />
             <input
               value=${color}
               style="width:89px;"
               placeholder="Color"
-              onFocus=${e => e.target.select()}
-              onInput=${e => setColor(e.target.value)}
-              ondblclick=${e => setColor(randColor())}
+              onFocus=${(e) => e.target.select()}
+              onInput=${(e) => setColor(e.target.value)}
+              ondblclick=${(e) => setColor(randColor())}
             />
           </div>
           <div class="column" style="flex:1;margin-left:13px;">
@@ -270,27 +264,27 @@ const ApproveScope = ({
               placeholder="Name"
               value=${name}
               style="font-size:21px;margin-top:13px;"
-              onFocus=${e => e.target.select()}
-              onInput=${e => setName(e.target.value)}
+              onFocus=${(e) => e.target.select()}
+              onInput=${(e) => setName(e.target.value)}
             />
             <textarea
               value=${bio}
               placeholder="Bio"
               style="width:90%;height:44px;"
-              onFocus=${e => e.target.select()}
-              onInput=${e => setBio(e.target.value)}
+              onFocus=${(e) => e.target.select()}
+              onInput=${(e) => setBio(e.target.value)}
             />
           </div>
         </div>
         ${false &&
-          html`
-            <h3 style="margin-top:21px;">Requested Private Info</h3>
-            <hr />
-            <ul>
-              <li>Email: <input /></li>
-            </ul>
-            <hr />
-          `}
+        html`
+          <h3 style="margin-top:21px;">Requested Private Info</h3>
+          <hr />
+          <ul>
+            <li>Email: <input /></li>
+          </ul>
+          <hr />
+        `}
       </div>
       <div
         class="row"
@@ -298,14 +292,8 @@ const ApproveScope = ({
       >
         <button onClick=${() => setSessionId(null)}>Log Out</button>
         ${dirty
-          ? html`
-              <button onClick=${upsert}>Save Changes</button>
-            `
-          : html`
-              <button onClick=${useProfile}>
-                Use This Profile
-              </button>
-            `}
+          ? html` <button onClick=${upsert}>Save Changes</button> `
+          : html` <button onClick=${useProfile}>Use This Profile</button> `}
       </div>
     </div>
   `
@@ -345,7 +333,6 @@ export default () => {
         code: hs.handshakeId,
         exp: hs.exp,
         hks: hs.hooks,
-        nonce: hs.nonce,
         l6n: hs.l6n,
       }
       window.parent.postMessage(msg, msg.l6n)
