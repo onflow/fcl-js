@@ -49,7 +49,6 @@ type Handshake {
   paddr: String
   exp: String
   hooks: String
-  nonce: String
   l6n: String
 }
 

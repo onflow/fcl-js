@@ -13,7 +13,7 @@ const invariant = (fact, msg, ...rest) => {
     const error = new Error(`GQL INVARIANT ${msg}`)
     error.stack = error.stack
       .split("\n")
-      .filter(d => !/at invariant/.test(d))
+      .filter((d) => !/at invariant/.test(d))
       .join("\n")
     console.error("\n\n---\n\n", error, "\n\n", ...rest, "\n\n---\n\n")
     throw error
@@ -80,10 +80,9 @@ export const me = async ({sessionId}) => {
 // and private data
 export const genHandshake = ({input}) => {
   console.log("GQL -- mutation/genHandshake", {input})
-  const {sessionId, l6n, nonce, scope} = input
+  const {sessionId, l6n, scope} = input
   invariant(sessionId, "sessionId required")
   invariant(l6n, "l6n required")
-  invariant(nonce, "nonce required")
 
   // exchange sessionId for userId
   const userId = sessionFor(sessionId)
@@ -91,7 +90,7 @@ export const genHandshake = ({input}) => {
 
   // generate handshakeId for given user and dapp
   // and return it
-  return createHandshake({userId, l6n, nonce, scope})
+  return createHandshake({userId, l6n, scope})
 }
 
 // Returns the handshake info for a given sessionId and handshakeId
@@ -122,7 +121,7 @@ export const handshake = ({sessionId, handshakeId}) => {
   // augment handshake with additional provider data
   // and return it, because thats what this function is supposed to do
   return {
-    ...handshake, // includes handshakeId, exp, l6n, and nonce
+    ...handshake, // includes handshakeId, exp, l6n
     addr: user.addr, // The users flow address
     paddr: CONFIG.PID, // Will eventually be the providers onchain address that FCL can use to find more info about it
     hooks: CONFIG.HOST + "/flow/hooks", // Where FCL will get hook information

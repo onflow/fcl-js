@@ -8,7 +8,6 @@ export const query = gql`
       paddr
       exp
       hooks
-      nonce
       l6n
     }
   }
