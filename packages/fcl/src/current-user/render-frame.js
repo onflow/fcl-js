@@ -18,7 +18,6 @@ export function renderFrame(src) {
   $frame.style.background = "rgba(0,0,0,0.25)"
   $frame.frameBorder = "0"
   $frame.style.boxSizing = "border-box"
-  $frame.style.border = "1px solid white"
   document.body.append($frame)
 
   const unmount = () => {
