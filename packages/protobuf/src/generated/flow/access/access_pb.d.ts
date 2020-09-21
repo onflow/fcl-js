@@ -8,6 +8,7 @@ import * as flow_entities_block_pb from "../../flow/entities/block_pb";
 import * as flow_entities_collection_pb from "../../flow/entities/collection_pb";
 import * as flow_entities_event_pb from "../../flow/entities/event_pb";
 import * as flow_entities_transaction_pb from "../../flow/entities/transaction_pb";
+import * as google_protobuf_timestamp_pb from "google-protobuf/google/protobuf/timestamp_pb";
 
 export class PingRequest extends jspb.Message {
   serializeBinary(): Uint8Array;
@@ -697,6 +698,11 @@ export namespace EventsResponse {
     getBlockHeight(): number;
     setBlockHeight(value: number): void;
 
+    hasBlockTimestamp(): boolean;
+    clearBlockTimestamp(): void;
+    getBlockTimestamp(): google_protobuf_timestamp_pb.Timestamp | undefined;
+    setBlockTimestamp(value?: google_protobuf_timestamp_pb.Timestamp): void;
+
     clearEventsList(): void;
     getEventsList(): Array<flow_entities_event_pb.Event>;
     setEventsList(value: Array<flow_entities_event_pb.Event>): void;
@@ -716,6 +722,7 @@ export namespace EventsResponse {
     export type AsObject = {
       blockId: Uint8Array | string,
       blockHeight: number,
+      blockTimestamp?: google_protobuf_timestamp_pb.Timestamp.AsObject,
       eventsList: Array<flow_entities_event_pb.Event.AsObject>,
     }
   }

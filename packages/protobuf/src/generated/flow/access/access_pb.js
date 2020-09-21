@@ -24,6 +24,8 @@ var flow_entities_event_pb = require('../../flow/entities/event_pb.js');
 goog.object.extend(proto, flow_entities_event_pb);
 var flow_entities_transaction_pb = require('../../flow/entities/transaction_pb.js');
 goog.object.extend(proto, flow_entities_transaction_pb);
+var google_protobuf_timestamp_pb = require('google-protobuf/google/protobuf/timestamp_pb.js');
+goog.object.extend(proto, google_protobuf_timestamp_pb);
 goog.exportSymbol('proto.access.AccountResponse', null, global);
 goog.exportSymbol('proto.access.BlockHeaderResponse', null, global);
 goog.exportSymbol('proto.access.BlockResponse', null, global);
@@ -5487,7 +5489,7 @@ proto.access.EventsResponse.serializeBinaryToWriter = function(message, writer) 
  * @private {!Array<number>}
  * @const
  */
-proto.access.EventsResponse.Result.repeatedFields_ = [3];
+proto.access.EventsResponse.Result.repeatedFields_ = [4];
 
 
 
@@ -5522,6 +5524,7 @@ proto.access.EventsResponse.Result.toObject = function(includeInstance, msg) {
   var f, obj = {
     blockId: msg.getBlockId_asB64(),
     blockHeight: jspb.Message.getFieldWithDefault(msg, 2, 0),
+    blockTimestamp: (f = msg.getBlockTimestamp()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
     eventsList: jspb.Message.toObjectList(msg.getEventsList(),
     flow_entities_event_pb.Event.toObject, includeInstance)
   };
@@ -5569,6 +5572,11 @@ proto.access.EventsResponse.Result.deserializeBinaryFromReader = function(msg, r
       msg.setBlockHeight(value);
       break;
     case 3:
+      var value = new google_protobuf_timestamp_pb.Timestamp;
+      reader.readMessage(value,google_protobuf_timestamp_pb.Timestamp.deserializeBinaryFromReader);
+      msg.setBlockTimestamp(value);
+      break;
+    case 4:
       var value = new flow_entities_event_pb.Event;
       reader.readMessage(value,flow_entities_event_pb.Event.deserializeBinaryFromReader);
       msg.addEvents(value);
@@ -5616,10 +5624,18 @@ proto.access.EventsResponse.Result.serializeBinaryToWriter = function(message, w
       f
     );
   }
+  f = message.getBlockTimestamp();
+  if (f != null) {
+    writer.writeMessage(
+      3,
+      f,
+      google_protobuf_timestamp_pb.Timestamp.serializeBinaryToWriter
+    );
+  }
   f = message.getEventsList();
   if (f.length > 0) {
     writer.writeRepeatedMessage(
-      3,
+      4,
       f,
       flow_entities_event_pb.Event.serializeBinaryToWriter
     );
@@ -5688,12 +5704,49 @@ proto.access.EventsResponse.Result.prototype.setBlockHeight = function(value) {
 
 
 /**
- * repeated entities.Event events = 3;
+ * optional google.protobuf.Timestamp block_timestamp = 3;
+ * @return {?proto.google.protobuf.Timestamp}
+ */
+proto.access.EventsResponse.Result.prototype.getBlockTimestamp = function() {
+  return /** @type{?proto.google.protobuf.Timestamp} */ (
+    jspb.Message.getWrapperField(this, google_protobuf_timestamp_pb.Timestamp, 3));
+};
+
+
+/**
+ * @param {?proto.google.protobuf.Timestamp|undefined} value
+ * @return {!proto.access.EventsResponse.Result} returns this
+*/
+proto.access.EventsResponse.Result.prototype.setBlockTimestamp = function(value) {
+  return jspb.Message.setWrapperField(this, 3, value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.access.EventsResponse.Result} returns this
+ */
+proto.access.EventsResponse.Result.prototype.clearBlockTimestamp = function() {
+  return this.setBlockTimestamp(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.access.EventsResponse.Result.prototype.hasBlockTimestamp = function() {
+  return jspb.Message.getField(this, 3) != null;
+};
+
+
+/**
+ * repeated entities.Event events = 4;
  * @return {!Array<!proto.entities.Event>}
  */
 proto.access.EventsResponse.Result.prototype.getEventsList = function() {
   return /** @type{!Array<!proto.entities.Event>} */ (
-    jspb.Message.getRepeatedWrapperField(this, flow_entities_event_pb.Event, 3));
+    jspb.Message.getRepeatedWrapperField(this, flow_entities_event_pb.Event, 4));
 };
 
 
@@ -5702,7 +5755,7 @@ proto.access.EventsResponse.Result.prototype.getEventsList = function() {
  * @return {!proto.access.EventsResponse.Result} returns this
 */
 proto.access.EventsResponse.Result.prototype.setEventsList = function(value) {
-  return jspb.Message.setRepeatedWrapperField(this, 3, value);
+  return jspb.Message.setRepeatedWrapperField(this, 4, value);
 };
 
 
@@ -5712,7 +5765,7 @@ proto.access.EventsResponse.Result.prototype.setEventsList = function(value) {
  * @return {!proto.entities.Event}
  */
 proto.access.EventsResponse.Result.prototype.addEvents = function(opt_value, opt_index) {
-  return jspb.Message.addToRepeatedWrapperField(this, 3, opt_value, proto.entities.Event, opt_index);
+  return jspb.Message.addToRepeatedWrapperField(this, 4, opt_value, proto.entities.Event, opt_index);
 };
 
 
