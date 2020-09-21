@@ -2,6 +2,10 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.1.7 -- 2020-09-21
+
+- 2020-07-27 **BREAKING** -- Update protobufs according to latest changes to support latest get account apis
+
 ### 0.1.6 -- 2020-07-27
 
 - 2020-07-27 **BREAKING** -- Update protobufs according to latest changes to support latest get account apis
