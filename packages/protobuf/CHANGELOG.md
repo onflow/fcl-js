@@ -4,7 +4,7 @@
 
 ### 0.1.7 -- 2020-09-21
 
-- 2020-09-21 **BREAKING** -- Update protobufs according to latest changes to support latest get account apis
+- 2020-09-21 _non-breaking_ -- Update protobuf: BlockEvents now include block timestamp
 
 ### 0.1.6 -- 2020-07-27
 
