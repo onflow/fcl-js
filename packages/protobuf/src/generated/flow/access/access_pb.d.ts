@@ -698,15 +698,15 @@ export namespace EventsResponse {
     getBlockHeight(): number;
     setBlockHeight(value: number): void;
 
-    hasBlockTimestamp(): boolean;
-    clearBlockTimestamp(): void;
-    getBlockTimestamp(): google_protobuf_timestamp_pb.Timestamp | undefined;
-    setBlockTimestamp(value?: google_protobuf_timestamp_pb.Timestamp): void;
-
     clearEventsList(): void;
     getEventsList(): Array<flow_entities_event_pb.Event>;
     setEventsList(value: Array<flow_entities_event_pb.Event>): void;
     addEvents(value?: flow_entities_event_pb.Event, index?: number): flow_entities_event_pb.Event;
+
+    hasBlockTimestamp(): boolean;
+    clearBlockTimestamp(): void;
+    getBlockTimestamp(): google_protobuf_timestamp_pb.Timestamp | undefined;
+    setBlockTimestamp(value?: google_protobuf_timestamp_pb.Timestamp): void;
 
     serializeBinary(): Uint8Array;
     toObject(includeInstance?: boolean): Result.AsObject;
@@ -722,8 +722,8 @@ export namespace EventsResponse {
     export type AsObject = {
       blockId: Uint8Array | string,
       blockHeight: number,
-      blockTimestamp?: google_protobuf_timestamp_pb.Timestamp.AsObject,
       eventsList: Array<flow_entities_event_pb.Event.AsObject>,
+      blockTimestamp?: google_protobuf_timestamp_pb.Timestamp.AsObject,
     }
   }
 }
