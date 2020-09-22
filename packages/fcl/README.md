@@ -44,7 +44,7 @@ Having trouble with something? Reach out to us on [Discord](https://discord.gg/k
 
 Follow this guide to understand the basics of how to build an app that interacts with the Flow blockchain using `@onflow/fcl`
 
- 
+
 
 This guide uses `create-react-app` and does not require any server-side code. `@onflow/fcl` is not tied to any front-end framework.
 
@@ -189,7 +189,7 @@ npm start
 
 # Build the Example Application
 
-Now that we have the Flow emulator, Dev Wallet and our React app up and running we're ready to build our application. 
+Now that we have the Flow emulator, Dev Wallet and our React app up and running we're ready to build our application.
 
 ## Configure `@onflow/fcl`
 
@@ -215,7 +215,7 @@ function App() {
 
 ## Authenticate Users
 
-Once configured, all that is needed is to call `fcl.authenticate()` in your code to authenticate Flow accounts. 
+Once configured, all that is needed is to call `fcl.authenticate()` in your code to authenticate Flow accounts.
 
 ### Login & Signup
 
@@ -283,7 +283,7 @@ const UserProfile = () => {
     <>
       {user.identity.avatar && <Img src={user.identity.avatar} />}
       <Name>{user.identity.name || "Anonymous"}</Name>
-      <Button onClick={fcl.unauthenticate}>Sign Out</button>
+      <Button onClick={fcl.unauthenticate}>Sign Out</Button>
     </>
   )
 }
@@ -328,7 +328,7 @@ Using a simple script is a useful way to test your connection to Flow
 
 ```jsx
 const resp = await fcl.send([
-  sdk.script`
+  fcl.script`
     pub fun main(): Int {
       return 42 + 6
     }
@@ -405,7 +405,7 @@ A common use for Cadence scripts is to acquire information about a Flow account'
 
 ```jsx
 const response = await fcl.send([
-    sdk.script`
+    fcl.script`
 	import HelloWorld from 586b0d6e0a20c7f1
 
 	pub fun main() {
@@ -423,7 +423,7 @@ const response = await fcl.send([
 
 Cadence scripts can return complex Cadence data-types. These return values are sent over-the-wire to your JavaScript code. You'll handle parsing and transforming custom Cadence data-types using **custom decoders**.
 
-Given this Cadence script that returns `[SomeStruct(x: 1, y: 2), SomeStruct(x: 3, y: 4)]` 
+Given this Cadence script that returns `[SomeStruct(x: 1, y: 2), SomeStruct(x: 3, y: 4)]`
 
 ```jsx
  const response = await fcl.send([
@@ -545,7 +545,7 @@ function App() {
 
 Flow Transactions are used to *move* **[resources](notion://www.notion.so/dapperlabs/resources)** and interact with smart contracts on behalf of Flow accounts. `@onflow` provides flexible primitives composing authorizing and paying for Transactions on Flow.
 
-`@onflow` allows for specifying the **payer**, **proposer** and **authorizer** of transactions on Flow. 
+`@onflow` allows for specifying the **payer**, **proposer** and **authorizer** of transactions on Flow.
 
 Describing the specifics of how to compose Flow transactions is beyond the scope of this guide. For more information about how to build Flow transactions you can read the [docs here](https://docs.onflow.org/docs/cadence#transactions).
 
@@ -594,7 +594,7 @@ export default function TransactionOne() {
   const runTransaction = async e => {
     e.preventDefault()
     setStatus("Resolving...")
-    
+
     const response = await fcl.send([
       fcl.transaction`
         transaction {
@@ -667,7 +667,7 @@ if (process.env.NODE_ENV === "production") {
     fcl.config()
        .put("accessNode.api", process.env.ACCESS_NODE_API)
        .put("accessNode.key", process.env.ACCESS_NODE_KEY)
-} 
+}
 ```
 
 # Final Thoughts
