@@ -24,6 +24,8 @@ var flow_entities_event_pb = require('../../flow/entities/event_pb.js');
 goog.object.extend(proto, flow_entities_event_pb);
 var flow_entities_transaction_pb = require('../../flow/entities/transaction_pb.js');
 goog.object.extend(proto, flow_entities_transaction_pb);
+var google_protobuf_timestamp_pb = require('google-protobuf/google/protobuf/timestamp_pb.js');
+goog.object.extend(proto, google_protobuf_timestamp_pb);
 goog.exportSymbol('proto.access.AccountResponse', null, global);
 goog.exportSymbol('proto.access.BlockHeaderResponse', null, global);
 goog.exportSymbol('proto.access.BlockResponse', null, global);
@@ -5523,7 +5525,8 @@ proto.access.EventsResponse.Result.toObject = function(includeInstance, msg) {
     blockId: msg.getBlockId_asB64(),
     blockHeight: jspb.Message.getFieldWithDefault(msg, 2, 0),
     eventsList: jspb.Message.toObjectList(msg.getEventsList(),
-    flow_entities_event_pb.Event.toObject, includeInstance)
+    flow_entities_event_pb.Event.toObject, includeInstance),
+    blockTimestamp: (f = msg.getBlockTimestamp()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -5572,6 +5575,11 @@ proto.access.EventsResponse.Result.deserializeBinaryFromReader = function(msg, r
       var value = new flow_entities_event_pb.Event;
       reader.readMessage(value,flow_entities_event_pb.Event.deserializeBinaryFromReader);
       msg.addEvents(value);
+      break;
+    case 4:
+      var value = new google_protobuf_timestamp_pb.Timestamp;
+      reader.readMessage(value,google_protobuf_timestamp_pb.Timestamp.deserializeBinaryFromReader);
+      msg.setBlockTimestamp(value);
       break;
     default:
       reader.skipField();
@@ -5622,6 +5630,14 @@ proto.access.EventsResponse.Result.serializeBinaryToWriter = function(message, w
       3,
       f,
       flow_entities_event_pb.Event.serializeBinaryToWriter
+    );
+  }
+  f = message.getBlockTimestamp();
+  if (f != null) {
+    writer.writeMessage(
+      4,
+      f,
+      google_protobuf_timestamp_pb.Timestamp.serializeBinaryToWriter
     );
   }
 };
@@ -5722,6 +5738,43 @@ proto.access.EventsResponse.Result.prototype.addEvents = function(opt_value, opt
  */
 proto.access.EventsResponse.Result.prototype.clearEventsList = function() {
   return this.setEventsList([]);
+};
+
+
+/**
+ * optional google.protobuf.Timestamp block_timestamp = 4;
+ * @return {?proto.google.protobuf.Timestamp}
+ */
+proto.access.EventsResponse.Result.prototype.getBlockTimestamp = function() {
+  return /** @type{?proto.google.protobuf.Timestamp} */ (
+    jspb.Message.getWrapperField(this, google_protobuf_timestamp_pb.Timestamp, 4));
+};
+
+
+/**
+ * @param {?proto.google.protobuf.Timestamp|undefined} value
+ * @return {!proto.access.EventsResponse.Result} returns this
+*/
+proto.access.EventsResponse.Result.prototype.setBlockTimestamp = function(value) {
+  return jspb.Message.setWrapperField(this, 4, value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.access.EventsResponse.Result} returns this
+ */
+proto.access.EventsResponse.Result.prototype.clearBlockTimestamp = function() {
+  return this.setBlockTimestamp(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.access.EventsResponse.Result.prototype.hasBlockTimestamp = function() {
+  return jspb.Message.getField(this, 4) != null;
 };
 
 
