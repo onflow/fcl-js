@@ -3,6 +3,8 @@ import {response} from "@onflow/response"
 import {unary} from "./unary"
 
 export async function sendPing(ix, opts = {}) {
+  ix = await ix
+
   const req = new PingRequest()
 
   const res = await unary(opts.node, AccessAPI.Ping, req)

@@ -22,6 +22,8 @@ const latestBlockDeprecationNotice = () => {
 }
 
 export async function sendGetLatestBlock(ix, opts = {}) {
+  ix = await ix
+
   const req = new GetLatestBlockRequest()
 
   if (ix.latestBlock && ix.latestBlock.isSealed) {
