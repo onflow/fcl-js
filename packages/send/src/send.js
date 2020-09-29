@@ -22,6 +22,7 @@ import {config} from "@onflow/config"
 
 export const send = async (ix, opts = {}) => {
   opts.node = opts.node || await config().get("accessNode.api")
+  ix = await ix
 
   switch (true) {
     case isTransaction(ix):

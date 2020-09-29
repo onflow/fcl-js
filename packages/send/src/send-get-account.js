@@ -9,6 +9,8 @@ const paddedHexBuffer = (hex, pad) =>
 const addressBuffer = addr => paddedHexBuffer(addr, 8)
 
 export async function sendGetAccount(ix, opts = {}) {
+  ix = await ix
+
   const req = new GetAccountRequest()
   req.setAddress(addressBuffer(ix.accountAddr))
 
