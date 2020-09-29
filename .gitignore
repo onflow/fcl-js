@@ -1,8 +1,13 @@
+# folders
 node_modules/
 dist/
-.DS_Store
 .parcel-cache/
+flowdb/
+
+.exrc
+.DS_Store
+
+# file types
 dev-wallet/db/*.db
 todo.md
-.exrc
-flowdb/
+**/debug.log
