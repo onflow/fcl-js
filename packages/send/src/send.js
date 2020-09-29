@@ -18,8 +18,11 @@ import {sendGetLatestBlock} from "./send-get-latest-block"
 import {sendGetBlockById} from "./send-get-block-by-id"
 import {sendGetBlockByHeight} from "./send-get-block-by-height"
 import {sendPing} from "./send-ping"
+import {config} from "@onflow/config"
 
 export const send = async (ix, opts = {}) => {
+  opts.node = opts.node || await config().get("accessNode.api")
+
   switch (true) {
     case isTransaction(ix):
       return sendTransaction(ix, opts)
