@@ -2,6 +2,11 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.0.33 - 2020-09-29
+
+- 2020-09-29 -- Proxy sdk.resolveArguments to `@onflow/sdk-resolve-arguments`
+- 2020-09-29 -- VSN `@onflow/sdk-resolve-cadence` 0.0.0 -> 0.0.1
+
 ### 0.0.32 -- 2020-09-29
 
 - 2020-09-29 -- Deprecate resolverParams
