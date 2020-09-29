@@ -1,7 +1,7 @@
 {
   "name": "@onflow/sdk-resolve-cadence",
-  "version": "0.0.0",
-  "description": "Flow JS SDK Resolver -- Params",
+  "version": "0.0.1",
+  "description": "Flow JS SDK Resolver -- Cadence",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
   "homepage": "https://onflow.org",
@@ -26,9 +26,9 @@
     "@onflow/interaction": "0.0.10"
   },
   "source": "src/index.js",
-  "main": "dist/sdk-resolve-params.js",
-  "module": "dist/sdk-resolve-params.module.js",
-  "unpkg": "dist/sdk-resolve-params.umd.js",
+  "main": "dist/sdk-resolve-cadence.js",
+  "module": "dist/sdk-resolve-cadence.module.js",
+  "unpkg": "dist/sdk-resolve-cadence.umd.js",
   "scripts": {
     "prepublishOnly": "npm test && npm run build",
     "test": "jest",
