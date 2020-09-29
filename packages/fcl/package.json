@@ -34,10 +34,11 @@
     "start": "microbundle watch"
   },
   "dependencies": {
+    "@onflow/config": "0.0.2",
     "@onflow/sdk": "0.0.31",
+    "@onflow/sdk-resolve-cadence": "0.0.0",
     "@onflow/types": "0.0.2",
     "@onflow/util-actor": "0.0.2",
-    "@onflow/config": "0.0.2",
     "queue-microtask": "1.1.2"
   }
 }

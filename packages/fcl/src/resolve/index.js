@@ -1,20 +1,18 @@
 import {
   resolve as sdkResolve,
-  resolveParams,
   resolveArguments,
   resolveAccounts,
   resolveSignatures,
   resolveValidators,
   resolveRefBlockId,
-  // resolveProposerSequenceNumber,
 } from "@onflow/sdk"
+import {resolveCadence} from "@onflow/sdk-resolve-cadence"
 import {config} from "@onflow/config"
 
 export const resolve = async ix => {
   return sdkResolve(ix, [
+    resolveCadence,
     resolveRefBlockId({node: await config().get("accessNode.api")}),
-    // resolveProposerSequenceNumber({ node: await config().get("accessNode.api") }),
-    resolveParams,
     resolveArguments,
     resolveAccounts,
     resolveSignatures,
