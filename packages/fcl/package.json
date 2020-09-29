@@ -1,6 +1,6 @@
 {
   "name": "@onflow/fcl",
-  "version": "0.0.58",
+  "version": "0.0.59",
   "description": "Flow Client Library",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
@@ -35,9 +35,13 @@
   },
   "dependencies": {
     "@onflow/config": "0.0.2",
-    "@onflow/sdk": "0.0.31",
+    "@onflow/interaction": "0.0.10",
+    "@onflow/sdk": "0.0.35",
+    "@onflow/sdk-resolve-accounts": "0.0.0",
     "@onflow/sdk-resolve-arguments": "0.0.1",
     "@onflow/sdk-resolve-cadence": "0.0.0",
+    "@onflow/sdk-resolve-signatures": "0.0.0",
+    "@onflow/sdk-resolve-validators": "0.0.0",
     "@onflow/types": "0.0.2",
     "@onflow/util-actor": "0.0.2",
     "queue-microtask": "1.1.2"
