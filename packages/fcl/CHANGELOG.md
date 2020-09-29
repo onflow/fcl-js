@@ -2,6 +2,10 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.0.58 -- 2020-09-29
+
+- 2020-09-29 -- use `@onflow/sdk-resolve-arguments` package directly
+
 ### 0.0.57 -- 2020-09-29
 
 - 2020-09-29 -- add a z-index value to service frame
