@@ -50,7 +50,7 @@ test("[DEPRECATED] cadence with params", async () => {
 })
 
 function params(px = []) {
-  return pipe(px.map(param => makeParam(typeof param === "function" ? { resolve: param } : param )))
+  return pipe(px.map(makeParam))
 }
 
 function param(value, xform, key = null) {
