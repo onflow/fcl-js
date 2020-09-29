@@ -1,6 +1,6 @@
 {
   "name": "@onflow/sdk",
-  "version": "0.0.31",
+  "version": "0.0.32",
   "description": "Flow SDK",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
@@ -37,6 +37,7 @@
     "@onflow/decode": "0.0.7",
     "@onflow/encode": "0.0.4",
     "@onflow/interaction": "0.0.10",
+    "@onflow/sdk-resolve-cadence": "0.0.0",
     "@onflow/send": "0.0.20",
     "@qvvg/templar": "0.0.1"
   }

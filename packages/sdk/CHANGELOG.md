@@ -2,6 +2,10 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.0.32 -- 2020-09-29
+
+- 2020-09-29 -- Deprecate resolverParams
+
 ### 0.0.31 -- 2020-08-25
 
 - 2020-08-25 -- VSN `@onflow/send` 0.0.17 -> 0.0.20
