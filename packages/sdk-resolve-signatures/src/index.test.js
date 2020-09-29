@@ -1,4 +1,4 @@
-import {resolveSignatures} from "./resolve-signatures"
+import {resolveSignatures} from "./index.js"
 
 test("exports function", () => {
   expect(typeof resolveSignatures).toBe("function")

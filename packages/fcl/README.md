@@ -128,6 +128,18 @@ The emulated network is running and contains a single *root* account we can use 
 
 Create a `scripts` entry in your `package.json` with the following command. Copy and paste the private key from your root account in `flow.json` and attach it to an environment variable named `PK`
 
+### Windows
+
+```json
+{
+  "scripts": {
+    "dev:wallet": "SET PK=0ab0b3c92adf319ab118f6c073003f7029bb6fa8eb986f47f9b139fbb189e655 && fcl-wallet"
+  }
+}
+```
+
+### Linux
+
 ```json
 {
   "scripts": {

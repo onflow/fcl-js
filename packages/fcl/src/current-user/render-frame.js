@@ -16,6 +16,7 @@ export function renderFrame(src) {
   $frame.style.width = "100vw"
   $frame.style.display = "block"
   $frame.style.background = "rgba(0,0,0,0.25)"
+  $frame.style.zIndex = 2147483647
   $frame.frameBorder = "0"
   $frame.style.boxSizing = "border-box"
   document.body.append($frame)

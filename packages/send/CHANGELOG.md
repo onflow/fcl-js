@@ -2,6 +2,14 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.0.22 - 2020-09-29
+
+- 2020-09-29 -- Await for interaction if its a promise
+
+### 0.0.21 - 2020-09-29
+
+- 2020-09-29 -- Fallback to config accessNode.api for node value
+
 ### 0.0.20 -- 2020-08-24
 
 - 2020-08-25 -- `sendGetBlockById` transforms block id from hex string to byte array.
