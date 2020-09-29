@@ -16,19 +16,19 @@ test("cadence is a string", async () => {
   expect(ix.message.cadence).toBe(CADENCE)
 })
 
-// test("cadence is a function", async () => {
-//   const CADENCE = async function () {
-//     return "CADENCE_ASYNC_FUNCTION"
-//   }
+test("cadence is a function", async () => {
+  const CADENCE = async function () {
+    return "CADENCE_ASYNC_FUNCTION"
+  }
 
-//   const ix = await pipe([
-//     makeScript,
-//     put("ix.cadence", CADENCE),
-//     resolveCadence,
-//   ])(interaction())
+  const ix = await pipe([
+    makeScript,
+    put("ix.cadence", CADENCE),
+    resolveCadence,
+  ])(interaction())
 
-//   expect(ix.message.cadence).toBe(await CADENCE())
-// })
+  expect(ix.message.cadence).toBe(await CADENCE())
+})
 
 test("[DEPRECATED] cadence with params", async () => {
   const CADENCE = async function (params = {}) {

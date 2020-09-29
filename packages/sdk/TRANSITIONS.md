@@ -1,6 +1,38 @@
 # Transitions
 
-### 0001 Deprecate Params
+## 0002 Deprecate Resolve Params Resolver
+
+- **Date:** Sept 29th 2020
+- **Issue:** [#177](https://github.com/onflow/flow-js-sdk/issues/177)
+- **Type:** Deprecation of resolveParams Resolver
+
+At the time of writing this if you are writing script and transaction interactions and building up your resolvers yourself you will likely have a piece of code that looks something like this.
+
+```javascript
+import * as sdk from "@onflow/sdk"
+
+sdk.resolve(ix, [
+  sdk.resolveParams,
+])
+```
+
+We are introducing a more generic resolver that covers core cadence concepts: `@onflow/sdk-resolve-cadence`.
+The above code using `sdk.resolveParams` will still work for now as a proxy to `@onflow/sdk-resolve-cadence` (with deprecation notice), but we can't promise it will stay around for ever in the future.
+
+Instead we would recommend that you use the following in its place:
+
+```javascript
+import * as sdk from "@onflow/sdk"
+import {resolveCadence} from "@onflow/sdk-resolve-cadence"
+
+sdk.resolve(ix, [
+  resolveCadence,
+])
+```
+
+As part of our ongoing effort to break the sdk down into smaller and smaller pieces, at this time we are not considering adding in an `sdk.resolveCadence`.
+
+## 0001 Deprecate Params
 
 - **Date:** July 22nd 2020
 - **Issue:** [#177](https://github.com/onflow/flow-js-sdk/issues/177)
