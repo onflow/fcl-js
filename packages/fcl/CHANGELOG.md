@@ -4,6 +4,7 @@
 
 ### 0.0.57 -- 2020-09-29
 
+- 2020-09-29 -- add a z-index value to service frame
 - 2020-09-29 -- resolveParams -> resolveCadence
 
 ### 0.0.56 -- 2020-09-04
