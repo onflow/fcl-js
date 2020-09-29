@@ -1,7 +1,7 @@
 {
-  "name": "@onflow/fcl",
-  "version": "0.0.59",
-  "description": "Flow Client Library",
+  "name": "@onflow/sdk-resolve-signatures",
+  "version": "0.0.0",
+  "description": "Flow JS SDK Resolver -- Signatures",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
   "homepage": "https://onflow.org",
@@ -18,32 +18,24 @@
     }
   },
   "devDependencies": {
+    "@onflow/types": "0.0.4",
     "jest": "26.4.2",
     "jest-esm-transformer": "1.0.0",
     "microbundle": "0.12.4"
   },
-  "source": "src/fcl.js",
-  "main": "dist/fcl.js",
-  "module": "dist/fcl.module.js",
-  "unpkg": "dist/fcl.umd.js",
+  "dependencies": {
+    "@onflow/encode": "0.0.4",
+    "@onflow/interaction": "0.0.10"
+  },
+  "source": "src/index.js",
+  "main": "dist/sdk-resolve-signatures.js",
+  "module": "dist/sdk-resolve-signatures.module.js",
+  "unpkg": "dist/sdk-resolve-signatures.umd.js",
   "scripts": {
     "prepublishOnly": "npm test && npm run build",
     "test": "jest",
     "build": "microbundle",
     "test:watch": "jest --watch",
     "start": "microbundle watch"
-  },
-  "dependencies": {
-    "@onflow/config": "0.0.2",
-    "@onflow/interaction": "0.0.10",
-    "@onflow/sdk": "0.0.35",
-    "@onflow/sdk-resolve-accounts": "0.0.0",
-    "@onflow/sdk-resolve-arguments": "0.0.1",
-    "@onflow/sdk-resolve-cadence": "0.0.0",
-    "@onflow/sdk-resolve-signatures": "0.0.0",
-    "@onflow/sdk-resolve-validators": "0.0.0",
-    "@onflow/types": "0.0.2",
-    "@onflow/util-actor": "0.0.2",
-    "queue-microtask": "1.1.2"
   }
 }

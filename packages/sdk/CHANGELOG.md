@@ -2,6 +2,18 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.0.35 -- 2020-09-29
+
+- 2020-09-29 -- Proxy @onflow/sdk-resolve-validators at the top level
+- 2020-09-29 -- Proxy @onflow/sdk-resolve-signatures at the top level
+- 2020-09-29 -- Proxy @onflow/sdk-resolve-accounts at the top level
+- 2020-09-29 -- Proxy @onflow/sdk-resolve-arguments at the top level
+- 2020-09-29 -- VSN `@onflow/send` 0.0.21 -> 0.0.22
+
+### 0.0.34 - 2020-09-29
+
+- 2020-09-29 -- VSN `@onflow/send` 0.0.20 -> 0.0.21
+
 ### 0.0.33 - 2020-09-29
 
 - 2020-09-29 -- Proxy sdk.resolveArguments to `@onflow/sdk-resolve-arguments`
