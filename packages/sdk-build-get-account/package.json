@@ -1,7 +1,7 @@
 {
-  "name": "@onflow/sdk",
-  "version": "0.0.35",
-  "description": "Flow SDK",
+  "name": "@onflow/sdk-build-get-account",
+  "version": "0.0.0",
+  "description": "Flow JS SDK Builder -- Get Account",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
   "homepage": "https://onflow.org",
@@ -18,30 +18,23 @@
     }
   },
   "devDependencies": {
+    "@onflow/types": "0.0.4",
     "jest": "26.4.2",
     "jest-esm-transformer": "1.0.0",
     "microbundle": "0.12.4"
   },
-  "source": "src/sdk.js",
-  "main": "dist/sdk.js",
-  "module": "dist/sdk.module.js",
-  "unpkg": "dist/sdk.umd.js",
+  "dependencies": {
+    "@onflow/interaction": "0.0.10"
+  },
+  "source": "src/index.js",
+  "main": "dist/sdk-build-get-account.js",
+  "module": "dist/sdk-build-get-account.module.js",
+  "unpkg": "dist/sdk-build-get-account.umd.js",
   "scripts": {
     "prepublishOnly": "npm test && npm run build",
     "test": "jest",
     "build": "microbundle",
     "test:watch": "jest --watch",
     "start": "microbundle watch"
-  },
-  "dependencies": {
-    "@onflow/decode": "0.0.7",
-    "@onflow/interaction": "0.0.10",
-    "@onflow/sdk-resolve-accounts": "0.0.0",
-    "@onflow/sdk-resolve-arguments": "0.0.1",
-    "@onflow/sdk-resolve-cadence": "0.0.1",
-    "@onflow/sdk-resolve-signatures": "0.0.0",
-    "@onflow/sdk-resolve-validators": "0.0.0",
-    "@onflow/send": "0.0.22",
-    "@onflow/util-template": "0.0.1"
   }
 }
