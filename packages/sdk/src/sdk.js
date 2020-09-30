@@ -6,8 +6,8 @@ export {decode, decodeResponse} from "@onflow/decode"
 
 // Utils
 export {isOk, isBad, why, pipe} from "@onflow/interaction"
-export {templar as cadence} from "@qvvg/templar"
-export {templar as cdc} from "@qvvg/templar"
+export {template as cadence} from "@onflow/util-template"
+export {template as cdc} from "@onflow/util-template"
 
 // builders
 export {authorizations, authorization} from "./build/authorizations"

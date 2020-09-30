@@ -3,7 +3,7 @@ import * as decode from "@onflow/decode"
 import * as encode from "@onflow/encode"
 import * as interaction from "@onflow/interaction"
 import * as send from "@onflow/send"
-import * as templar from "@qvvg/templar"
+import * as template from "@onflow/util-template"
 
 const interfaceContract = (label, wat) => ([template]) => {
   const keys = template
@@ -58,7 +58,7 @@ describe("consume", () => {
     send
   `
 
-  interfaceContract("@qvvg/templar", templar)`
-    templar
+  interfaceContract("@onflow/util-template", template)`
+    template
   `
 })

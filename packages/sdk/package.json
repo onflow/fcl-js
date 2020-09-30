@@ -42,6 +42,6 @@
     "@onflow/sdk-resolve-signatures": "0.0.0",
     "@onflow/sdk-resolve-validators": "0.0.0",
     "@onflow/send": "0.0.22",
-    "@qvvg/templar": "0.0.1"
+    "@onflow/util-template": "0.0.1"
   }
 }
