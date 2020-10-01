@@ -43,7 +43,7 @@ export const template = async ({ proposer, authorization, payer, amount = "", to
     const env = await config().get("env", "mainnet")
     const code = CODE.replace(Deps.FungibleToken, Env[env][Deps.FungibleToken])
 
-    return await sdk.pipe([
+    return sdk.pipe([
         sdk.transaction(code),
         sdk.args([sdk.arg(amount, t.UFix64), sdk.arg(to, t.Address)]),
         sdk.proposer(proposer),
