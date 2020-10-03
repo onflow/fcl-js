@@ -1,4 +1,4 @@
-import { encode } from 'rlp'
+import { encode } from './rlp-flow';
 
 export const encodeTransactionPayload = tx => rlpEncode(preparePayload(tx))
 export const encodeTransactionEnvelope = tx => rlpEncode(prepareEnvelope(tx))
