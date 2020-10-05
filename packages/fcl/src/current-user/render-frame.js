@@ -6,7 +6,7 @@ export function renderFrame(src) {
   const $frame = document.createElement("iframe")
   $frame.src = src
   $frame.id = FRAME_ID
-  $frame.allow = "usb"
+  $frame.allow = "usb *"
   $frame.style.position = "fixed"
   $frame.style.top = "0px"
   $frame.style.right = "0px"
