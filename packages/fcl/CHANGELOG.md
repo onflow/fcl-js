@@ -2,6 +2,10 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.0.60 -- 2020-10-05
+
+- 2020-10-05 -- iframe feature policy allows usb on all contexts
+
 ### 0.0.59 -- 2020-09-29
 
 - 2020-09-29 -- VSN `@onflow/sdk` 0.0.31 -> 0.0.35
