@@ -1,4 +1,4 @@
-import { resolveRefBlockId } from "@onflow/sdk"
+import {resolveRefBlockId} from "@onflow/sdk"
 import {pipe} from "@onflow/interaction"
 import {resolveCadence} from "@onflow/sdk-resolve-cadence"
 import {resolveArguments} from "@onflow/sdk-resolve-arguments"

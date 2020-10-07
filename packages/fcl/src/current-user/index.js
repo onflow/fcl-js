@@ -1,5 +1,5 @@
 import "../default-config"
-import {getAccount} from "@onflow/sdk"
+export {getAccount} from "@onflow/sdk-build-get-account"
 import {Identity} from "@onflow/types"
 import {config} from "@onflow/config"
 import {spawn, send, INIT, SUBSCRIBE, UNSUBSCRIBE} from "@onflow/util-actor"

@@ -2,6 +2,11 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.0.61-alpha.1 - 2020-10-07
+
+- 2020-10-07 -- proxy to packages directly instead of via sdk
+- 2020-10-07 -- allow for authn iframe to be closed by content
+
 ### 0.0.60 -- 2020-10-05
 
 - 2020-10-05 -- iframe feature policy allows usb on all contexts
