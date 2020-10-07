@@ -1,6 +1,6 @@
 {
   "name": "@onflow/sdk-resolve-signatures",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Flow JS SDK Resolver -- Signatures",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
@@ -24,7 +24,7 @@
     "microbundle": "0.12.4"
   },
   "dependencies": {
-    "@onflow/encode": "0.0.4",
+    "@onflow/encode": "0.0.5",
     "@onflow/interaction": "0.0.10"
   },
   "source": "src/index.js",
