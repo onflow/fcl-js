@@ -2,6 +2,26 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.0.60 -- 2020-10-05
+
+- 2020-10-05 -- iframe feature policy allows usb on all contexts
+
+### 0.0.59 -- 2020-09-29
+
+- 2020-09-29 -- VSN `@onflow/sdk` 0.0.31 -> 0.0.35
+- 2020-09-29 -- use `@onflow/sdk-resolve-validators` package directly
+- 2020-09-29 -- use `@onflow/sdk-resolve-signatures` package directly
+- 2020-09-29 -- use `@onflow/sdk-resolve-accounts` package directly
+
+### 0.0.58 -- 2020-09-29
+
+- 2020-09-29 -- use `@onflow/sdk-resolve-arguments` package directly
+
+### 0.0.57 -- 2020-09-29
+
+- 2020-09-29 -- add a z-index value to service frame
+- 2020-09-29 -- resolveParams -> resolveCadence
+
 ### 0.0.56 -- 2020-09-04
 
 - 2020-09-04 -- Fixed some issues involving FCL talking to iframes

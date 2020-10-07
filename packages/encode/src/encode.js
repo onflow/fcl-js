@@ -1,4 +1,4 @@
-const rlp = require("rlp")
+import { encode } from './rlp-flow';
 
 export const encodeTransactionPayload = tx => rlpEncode(preparePayload(tx))
 export const encodeTransactionEnvelope = tx => rlpEncode(prepareEnvelope(tx))
@@ -16,7 +16,7 @@ const scriptBuffer = script => Buffer.from(script, "utf8")
 const signatureBuffer = signature => Buffer.from(signature, "hex")
 
 const rlpEncode = v => {
-  return rlp.encode(v).toString("hex")
+  return encode(v).toString("hex")
 }
 
 const preparePayload = tx => {

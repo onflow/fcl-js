@@ -11,6 +11,8 @@ const addressBuffer = addr => paddedHexBuffer(addr, 8)
 const argumentBuffer = arg => Buffer.from(JSON.stringify(arg), "utf8")
 
 export async function sendTransaction(ix, opts = {}) {
+  ix = await ix
+
   const tx = new Transaction()
   tx.setScript(scriptBuffer(ix.message.cadence))
   tx.setGasLimit(ix.message.computeLimit)

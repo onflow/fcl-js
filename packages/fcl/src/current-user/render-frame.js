@@ -6,7 +6,7 @@ export function renderFrame(src) {
   const $frame = document.createElement("iframe")
   $frame.src = src
   $frame.id = FRAME_ID
-  $frame.allow = "usb"
+  $frame.allow = "usb *"
   $frame.style.position = "fixed"
   $frame.style.top = "0px"
   $frame.style.right = "0px"
@@ -16,9 +16,9 @@ export function renderFrame(src) {
   $frame.style.width = "100vw"
   $frame.style.display = "block"
   $frame.style.background = "rgba(0,0,0,0.25)"
+  $frame.style.zIndex = 2147483647
   $frame.frameBorder = "0"
   $frame.style.boxSizing = "border-box"
-  $frame.style.border = "1px solid white"
   document.body.append($frame)
 
   const unmount = () => {

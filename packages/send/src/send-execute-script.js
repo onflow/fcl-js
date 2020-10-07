@@ -5,6 +5,8 @@ import {unary} from "./unary"
 const argumentBuffer = arg => Buffer.from(JSON.stringify(arg), "utf8")
 
 export async function sendExecuteScript(ix, opts = {}) {
+  ix = await ix
+
   const req = new ExecuteScriptAtLatestBlockRequest()
   const code = Buffer.from(ix.message.cadence, "utf8")
   ix.message.arguments.forEach(arg => req.addArguments(argumentBuffer(ix.arguments[arg].asArgument)))

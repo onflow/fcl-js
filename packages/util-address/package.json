@@ -1,0 +1,37 @@
+{
+  "name": "@onflow/util-address",
+  "version": "0.0.0",
+  "description": "Flow JS SDK Util -- Address",
+  "license": "Apache-2.0",
+  "author": "Dapper Labs <dev@dapperlabs.com>",
+  "homepage": "https://onflow.org",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/onflow/flow-js-sdk.git"
+  },
+  "bugs": {
+    "url": "https://github.com/onflow/flow-js-sdk/issues"
+  },
+  "jest": {
+    "transform": {
+      ".js": "jest-esm-transformer"
+    }
+  },
+  "devDependencies": {
+    "@onflow/types": "0.0.4",
+    "jest": "26.4.2",
+    "jest-esm-transformer": "1.0.0",
+    "microbundle": "0.12.4"
+  },
+  "source": "src/index.js",
+  "main": "dist/util-address.js",
+  "module": "dist/util-address.module.js",
+  "unpkg": "dist/util-address.umd.js",
+  "scripts": {
+    "prepublishOnly": "npm test && npm run build",
+    "test": "jest",
+    "build": "microbundle",
+    "test:watch": "jest --watch",
+    "start": "microbundle watch"
+  }
+}

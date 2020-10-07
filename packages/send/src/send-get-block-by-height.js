@@ -5,6 +5,8 @@ import {unary} from "./unary"
 const u8ToHex = u8 => Buffer.from(u8).toString("hex")
 
 export async function sendGetBlockByHeight(ix, opts = {}) {
+  ix = await ix
+
   const req = new GetBlockByHeightRequest()
   req.setHeight(ix.block.height)
 

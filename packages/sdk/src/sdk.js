@@ -6,8 +6,8 @@ export {decode, decodeResponse} from "@onflow/decode"
 
 // Utils
 export {isOk, isBad, why, pipe} from "@onflow/interaction"
-export {templar as cadence} from "@qvvg/templar"
-export {templar as cdc} from "@qvvg/templar"
+export {template as cadence} from "@onflow/util-template"
+export {template as cdc} from "@onflow/util-template"
 
 // builders
 export {authorizations, authorization} from "./build/authorizations"
@@ -30,10 +30,11 @@ export {validator} from "./build/validator"
 export {invariant} from "./build/invariant"
 
 // resolvers
-export {resolveAccounts} from "./resolve/resolve-accounts"
-export {resolveArguments} from "./resolve/resolve-arguments"
+export {resolveArguments} from "@onflow/sdk-resolve-arguments"
+export {resolveAccounts} from "@onflow/sdk-resolve-accounts"
+export {resolveSignatures} from "@onflow/sdk-resolve-signatures"
+export {resolveValidators} from "@onflow/sdk-resolve-validators"
+
 export {resolveParams} from "./resolve/resolve-params"
-export {resolveSignatures} from "./resolve/resolve-signatures"
-export {resolveValidators} from "./resolve/resolve-validators"
 export {resolveProposerSequenceNumber} from "./resolve/resolve-proposer-sequence-number"
 export {resolveRefBlockId} from "./resolve/resolve-ref-block-id"

@@ -34,7 +34,5 @@
     "test:watch": "jest --watch",
     "start": "microbundle watch"
   },
-  "dependencies": {
-    "rlp": "^2.2.4"
-  }
+  "dependencies": {}
 }
