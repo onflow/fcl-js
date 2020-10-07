@@ -19,6 +19,7 @@ const DEL_CURRENT_USER = "DEL_CURRENT_USER"
 const GET_AS_PARAM = "GET_AS_PARAM"
 
 const CHALLENGE_RESPONSE_EVENT = "FCL::CHALLENGE::RESPONSE"
+const CHALLENGE_CANCEL_EVENT = "FCL::CHALLENGE::CANCEL"
 
 const DATA = `{
   "VERSION": "0.2.0",
@@ -88,7 +89,13 @@ async function authenticate() {
     })
 
     const replyFn = async ({data}) => {
+      if (data.type === CHALLENGE_CANCEL_EVENT) {
+        unrender()
+        window.removeEventListener("message", replyFn)
+        return
+      }
       if (data.type !== CHALLENGE_RESPONSE_EVENT) return
+
       unrender()
       window.removeEventListener("message", replyFn)
 
