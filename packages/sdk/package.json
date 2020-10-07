@@ -1,6 +1,6 @@
 {
   "name": "@onflow/sdk",
-  "version": "0.0.35",
+  "version": "0.0.37",
   "description": "Flow SDK",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
@@ -57,7 +57,7 @@
     "@onflow/sdk-resolve-accounts": "0.0.0",
     "@onflow/sdk-resolve-arguments": "0.0.1",
     "@onflow/sdk-resolve-cadence": "0.0.1",
-    "@onflow/sdk-resolve-signatures": "0.0.0",
+    "@onflow/sdk-resolve-signatures": "0.0.1",
     "@onflow/sdk-resolve-validators": "0.0.0",
     "@onflow/send": "0.0.22",
     "@onflow/util-template": "0.0.1"

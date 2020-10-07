@@ -2,6 +2,10 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.0.37 -- 2020-10-07
+
+- 2020-10-07 -- Bump `@onflow/sdk-resolve-signatures` 0.0.0 -> 0.0.1
+
 ### 0.0.36 -- 2020-10-07
 
 - 2020-10-07 -- Proxy `@onflow/sdk-build-authorizations` at the top level
