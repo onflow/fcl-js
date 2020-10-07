@@ -1,0 +1,36 @@
+{
+  "name": "@onflow/rlp",
+  "version": "0.0.0",
+  "description": "Port of ehteriumjs/rlp",
+  "license": "MPL-2.0",
+  "author": "Dapper Labs <dev@dapperlabs.com>",
+  "homepage": "https://onflow.org",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/onflow/flow-js-sdk.git"
+  },
+  "bugs": {
+    "url": "https://github.com/onflow/flow-js-sdk/issues"
+  },
+  "jest": {
+    "transform": {
+      ".js": "jest-esm-transformer"
+    }
+  },
+  "devDependencies": {
+    "jest": "26.4.2",
+    "jest-esm-transformer": "1.0.0",
+    "microbundle": "0.12.4"
+  },
+  "source": "src/index.js",
+  "main": "dist/rlp.js",
+  "module": "dist/rlp.module.js",
+  "unpkg": "dist/rlp.umd.js",
+  "scripts": {
+    "prepublishOnly": "npm test && npm run build",
+    "test": "jest",
+    "build": "microbundle",
+    "test:watch": "jest --watch",
+    "start": "microbundle watch"
+  }
+}
