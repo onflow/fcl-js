@@ -2,6 +2,10 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.0.5 -- 2020-10-07
+
+- 2020-10-07 -- Use @onflow/rlp for rlp encoding
+
 ### 0.0.4 -- 2020-06-30
 
 - 2020-06-22 -- Adds arguments to encode
