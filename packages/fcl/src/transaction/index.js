@@ -13,7 +13,7 @@ import {
 } from "@onflow/util-actor"
 import {send as fclSend} from "../send"
 import {decode} from "../decode"
-import {getTransactionStatus} from "@onflow/sdk"
+export {getTransactionStatus} from "@onflow/sdk-build-transaction-status"
 
 const RATE = 2500
 const POLL = "POLL"
