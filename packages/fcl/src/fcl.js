@@ -4,7 +4,6 @@ export {send} from "./send"
 export {serialize} from "./serialize"
 export {decode} from "./decode"
 export {transaction as tx} from "./transaction"
-export {resolve} from "./resolve"
 export {events} from "./events"
 
 import {currentUser} from "./current-user"
@@ -36,4 +35,4 @@ export {limit} from "@onflow/sdk-build-limit"
 export {ref} from "@onflow/sdk-build-ref"
 export { params, param } from "@onflow/sdk-build-params"
 
-export const VERSION = "0.0.61-alpha.3"
+export const VERSION = "0.0.61-alpha.4"

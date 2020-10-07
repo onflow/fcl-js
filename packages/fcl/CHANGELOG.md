@@ -2,6 +2,10 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.0.61-alpha.4 - 2020-10-07
+
+- 2020-10-07 -- remove resolvers and replace with @onflow/sdk-resolve
+
 ### 0.0.61-alpha.3 - 2020-10-07
 
 - 2020-10-07 -- remove use of sdk
