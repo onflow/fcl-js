@@ -34,7 +34,5 @@ export {resolveArguments} from "@onflow/sdk-resolve-arguments"
 export {resolveAccounts} from "@onflow/sdk-resolve-accounts"
 export {resolveSignatures} from "@onflow/sdk-resolve-signatures"
 export {resolveValidators} from "@onflow/sdk-resolve-validators"
-
+export {resolveRefBlockId} from "@onflow/sdk-resolve-ref-block-id"
 export {resolveParams} from "./resolve/resolve-params"
-export {resolveProposerSequenceNumber} from "./resolve/resolve-proposer-sequence-number"
-export {resolveRefBlockId} from "./resolve/resolve-ref-block-id"
