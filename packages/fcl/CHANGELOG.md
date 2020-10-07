@@ -2,6 +2,11 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.0.61-alpha.3 - 2020-10-07
+
+- 2020-10-07 -- remove use of sdk
+- 2020-10-07 -- use `@onflow/sdk-resolve-ref-block-id` package directly
+
 ### 0.0.61-alpha.2 - 2020-10-07
 
 - 2020-10-07 -- VSN `@onflow/sdk-resolve-signatures` 0.0.0 -> 0.0.1

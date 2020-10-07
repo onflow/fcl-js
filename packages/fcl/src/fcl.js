@@ -36,4 +36,4 @@ export {limit} from "@onflow/sdk-build-limit"
 export {ref} from "@onflow/sdk-build-ref"
 export { params, param } from "@onflow/sdk-build-params"
 
-export const VERSION = "0.0.61-alpha.2"
+export const VERSION = "0.0.61-alpha.3"
