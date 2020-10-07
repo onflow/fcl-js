@@ -2,6 +2,8 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.0.38 -- 2020-10-07
+
 - 2020-10-07 -- Proxy `@onflow/sdk-resolve-ref-block-id` at the top level
 - 2020-10-07 -- Removed export of resolveProposerSequenceNumber (it never worked anyways)
 
