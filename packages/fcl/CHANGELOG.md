@@ -2,6 +2,11 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.0.61-alpha.2 - 2020-10-07
+
+- 2020-10-07 -- VSN `@onflow/sdk-resolve-signatures` 0.0.0 -> 0.0.1
+- 2020-10-07 -- VSN `@onflow/sdk` 0.0.35 -> 0.0.37
+
 ### 0.0.61-alpha.1 - 2020-10-07
 
 - 2020-10-07 -- proxy to packages directly instead of via sdk
