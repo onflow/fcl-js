@@ -12,6 +12,6 @@ export const resolve = async ix => pipe(ix, [
   resolveArguments,
   resolveAccounts,
   resolveRefBlockId({node: await config().get("accessNode.api")}),
-  resolveValidators,
   resolveSignatures,
+  resolveValidators,
 ])

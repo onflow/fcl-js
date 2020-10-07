@@ -2,6 +2,27 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.0.36 -- 2020-10-07
+
+- 2020-10-07 -- Proxy `@onflow/sdk-build-authorizations` at the top level
+- 2020-10-07 -- Proxy `@onflow/sdk-build-get-account` at the top level
+- 2020-10-07 -- Proxy `@onflow/sdk-build-get-events` at the top level
+- 2020-10-07 -- Proxy `@onflow/sdk-build-get-latest-block` at the top level
+- 2020-10-07 -- Proxy `@onflow/sdk-build-get-block-by-id` at the top level
+- 2020-10-07 -- Proxy `@onflow/sdk-build-get-block-by-height` at the top level
+- 2020-10-07 -- Proxy `@onflow/sdk-build-transaction-status` at the top level
+- 2020-10-07 -- Proxy `@onflow/sdk-build-limit` at the top level
+- 2020-10-07 -- Proxy `@onflow/sdk-build-params` at the top level
+- 2020-10-07 -- Proxy `@onflow/sdk-build-arguments` at the top level
+- 2020-10-07 -- Proxy `@onflow/sdk-build-proposer` at the top level
+- 2020-10-07 -- Proxy `@onflow/sdk-build-payer` at the top level
+- 2020-10-07 -- Proxy `@onflow/sdk-build-ping` at the top level
+- 2020-10-07 -- Proxy `@onflow/sdk-build-ref` at the top level
+- 2020-10-07 -- Proxy `@onflow/sdk-build-script` at the top level
+- 2020-10-07 -- Proxy `@onflow/sdk-build-transaction` at the top level
+- 2020-10-07 -- Proxy `@onflow/sdk-build-validator` at the top level
+- 2020-10-07 -- Proxy `@onflow/sdk-build-invariant` at the top level
+
 ### 0.0.35 -- 2020-09-29
 
 - 2020-09-29 -- Proxy @onflow/sdk-resolve-validators at the top level
