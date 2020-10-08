@@ -1,6 +1,6 @@
 {
   "name": "@onflow/sdk",
-  "version": "0.0.38",
+  "version": "0.0.39",
   "description": "Flow SDK",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
@@ -34,11 +34,11 @@
     "start": "microbundle watch"
   },
   "dependencies": {
-    "@onflow/decode": "0.0.7",
+    "@onflow/decode": "0.0.8",
     "@onflow/interaction": "0.0.10",
     "@onflow/sdk-build-arguments": "0.0.0",
     "@onflow/sdk-build-authorizations": "0.0.0",
-    "@onflow/sdk-build-get-account": "0.0.0",
+    "@onflow/sdk-build-get-account": "0.0.1",
     "@onflow/sdk-build-get-block-by-height": "0.0.0",
     "@onflow/sdk-build-get-block-by-id": "0.0.0",
     "@onflow/sdk-build-get-events": "0.0.0",

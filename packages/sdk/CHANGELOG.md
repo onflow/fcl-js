@@ -2,6 +2,11 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.0.39 -- 2020-10-08
+
+- 2020-10-08 -- VSN `@onflow/decode` 0.0.7 -> 0.0.8
+- 2020-10-08 -- VSN `@onflow/sdk-build-get-account` 0.0.0 -> 0.0.1
+
 ### 0.0.38 -- 2020-10-07
 
 - 2020-10-07 -- Proxy `@onflow/sdk-resolve-ref-block-id` at the top level
@@ -9,7 +14,7 @@
 
 ### 0.0.37 -- 2020-10-07
 
-- 2020-10-07 -- Bump `@onflow/sdk-resolve-signatures` 0.0.0 -> 0.0.1
+- 2020-10-07 -- VSN `@onflow/sdk-resolve-signatures` 0.0.0 -> 0.0.1
 
 ### 0.0.36 -- 2020-10-07
 
