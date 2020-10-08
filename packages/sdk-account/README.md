@@ -1,10 +1,12 @@
 # sdk-account
 
+Fetch the Account for a given address from the configured Access Node
+
 ```javascript
 import {config} from "@onflow/config"
 import {account} from "@onflow/sdk-account"
 
-config
+config()
   .put("accessNode.api", "https://access-testnet.onflow.org") // point the sdk to the desired access node
 
 var acct = await account("0xba1132bc08f82fe2")
