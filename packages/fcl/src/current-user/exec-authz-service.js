@@ -2,7 +2,7 @@ import {urlFromService} from "./url-from-service"
 import {renderAuthzFrame} from "./render-authz-frame"
 import {pollForAuthzUpdates} from "./poll-for-authz-updates"
 import {validateCompositeSignature} from "./validate-composite-signature"
-import {uid} from "./uid"
+import {uid} from "@onflow/util-uid"
 
 const STRATEGIES = {
   "HTTP/POST": execHttpPost,

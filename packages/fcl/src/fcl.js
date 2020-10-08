@@ -1,8 +1,5 @@
 import "./default-config"
-export {config} from "@onflow/config"
-export {send} from "./send"
 export {serialize} from "./serialize"
-export {decode} from "./decode"
 export {transaction as tx} from "./transaction"
 export {events} from "./events"
 
@@ -12,6 +9,11 @@ export {currentUser}
 export const authenticate = () => currentUser().authenticate()
 export const unauthenticate = () => currentUser().unauthenticate()
 
+export {config} from "@onflow/config"
+export {send} from "@onflow/sdk-send"
+export {decode} from "@onflow/decode"
+export {account} from "@onflow/sdk-account"
+export {latestBlock} from "@onflow/sdk-latest-block"
 export {isOk, isBad, why, pipe}  from "@onflow/interaction"
 export {withPrefix, sansPrefix, display} from "@onflow/util-address"
 export {template as cadence} from "@onflow/util-template"
@@ -35,4 +37,4 @@ export {limit} from "@onflow/sdk-build-limit"
 export {ref} from "@onflow/sdk-build-ref"
 export { params, param } from "@onflow/sdk-build-params"
 
-export const VERSION = "0.0.61-alpha.4"
+export const VERSION = "0.0.61-alpha.5"

@@ -11,16 +11,15 @@ import {
   SUBSCRIBE,
   UNSUBSCRIBE,
 } from "@onflow/util-actor"
-import {send as fclSend} from "../send"
-import {decode} from "../decode"
+import {send as fclSend} from "@onflow/sdk-send"
+import {decode} from "@onflow/sdk-decode"
 export {getTransactionStatus} from "@onflow/sdk-build-transaction-status"
 
 const RATE = 2500
 const POLL = "POLL"
 
 const fetchTxStatus = async transactionId => {
-  const response = await fclSend([getTransactionStatus(transactionId)])
-  return decode(response)
+  return fclSend([getTransactionStatus(transactionId)]).then(decode)
 }
 
 const isExpired = tx => tx.status === 5

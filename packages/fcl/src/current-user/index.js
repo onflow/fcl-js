@@ -1,9 +1,7 @@
 import "../default-config"
-export {getAccount} from "@onflow/sdk-build-get-account"
-import {Identity} from "@onflow/types"
+import {account} from "@onflow/sdk-account"
 import {config} from "@onflow/config"
 import {spawn, send, INIT, SUBSCRIBE, UNSUBSCRIBE} from "@onflow/util-actor"
-import {send as fclSend} from "../send"
 import {renderAuthnFrame} from "./render-authn-frame"
 import {fetchServices} from "./fetch-services"
 import {mergeServices} from "./merge-services"
@@ -16,7 +14,6 @@ const UPDATED = "CURRENT_USER/UPDATED"
 const SNAPSHOT = "SNAPSHOT"
 const SET_CURRENT_USER = "SET_CURRENT_USER"
 const DEL_CURRENT_USER = "DEL_CURRENT_USER"
-const GET_AS_PARAM = "GET_AS_PARAM"
 
 const CHALLENGE_RESPONSE_EVENT = "FCL::CHALLENGE::RESPONSE"
 const CHALLENGE_CANCEL_EVENT = "FCL::CHALLENGE::CANCEL"
@@ -32,15 +29,15 @@ const DATA = `{
 const coldStorage = {
   get: async () => {
     const fallback = JSON.parse(DATA)
-    const stored = JSON.parse(localStorage.getItem(NAME))
+    const stored = JSON.parse(sessionStorage.getItem(NAME))
     if (stored != null && fallback.VERSION !== stored.VERSION) {
-      localStorage.removeItem(NAME)
+      sessionStorage.removeItem(NAME)
       return fallback
     }
     return stored || fallback
   },
   put: async data => {
-    localStorage.setItem(NAME, JSON.stringify(data))
+    sessionStorage.setItem(NAME, JSON.stringify(data))
     return data
   },
 }
@@ -51,26 +48,23 @@ const HANDLERS = {
   },
   [SUBSCRIBE]: (ctx, letter) => {
     ctx.subscribe(letter.from)
-    ctx.send(letter.from, UPDATED, ctx.all())
+    ctx.send(letter.from, UPDATED, {...ctx.all()})
   },
   [UNSUBSCRIBE]: (ctx, letter) => {
     ctx.unsubscribe(letter.from)
   },
   [SNAPSHOT]: async (ctx, letter) => {
-    letter.reply(ctx.all())
+    letter.reply({...ctx.all()})
   },
   [SET_CURRENT_USER]: async (ctx, letter, data) => {
     ctx.merge(data)
     coldStorage.put(ctx.all())
-    ctx.broadcast(UPDATED, ctx.all())
+    ctx.broadcast(UPDATED, {...ctx.all()})
   },
   [DEL_CURRENT_USER]: async (ctx, letter) => {
     ctx.merge(JSON.parse(DATA))
     coldStorage.put(ctx.all())
-    ctx.broadcast(UPDATED, ctx.all())
-  },
-  [GET_AS_PARAM]: async (ctx, letter, {key}) => {
-    letter.reply({key, value: ctx.get("addr", null), xform: Identity})
+    ctx.broadcast(UPDATED, {...ctx.all()})
   },
 }
 
@@ -148,14 +142,6 @@ async function authorization(account) {
   }
 }
 
-function param(key) {
-  return async function innerParam() {
-    spawnCurrentUser()
-    await authenticate()
-    return send(NAME, GET_AS_PARAM, {key}, {expectReply: true, timeout: 10})
-  }
-}
-
 function subscribe(callback) {
   spawnCurrentUser()
   const EXIT = "@EXIT"
@@ -182,8 +168,7 @@ async function info() {
   spawnCurrentUser()
   const {addr} = await snapshot()
   if (addr == null) throw new Error("No Flow Address for Current User")
-  const {account} = await fclSend([getAccount(addr)])
-  return account
+  return account(addr)
 }
 
 export const currentUser = () => {
@@ -191,7 +176,6 @@ export const currentUser = () => {
     authenticate,
     unauthenticate,
     authorization,
-    param,
     subscribe,
     snapshot,
   }
