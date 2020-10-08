@@ -2,6 +2,15 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.0.61-alpha.5 - 2020-10-08
+
+- 2020-10-08 -- ADD PROXY `latestBlock` exports directly to `@onflow/sdk-latest-block`
+- 2020-10-08 -- ADD PROXY `account` exports directly to `@onflow/sdk-account`
+- 2020-10-08 -- PROXY `send` export directly to `@onflow/sdk-send`
+- 2020-10-08 -- PROXY `decode` export directly to `@onflow/sdk-decode`
+- 2020-10-08 -- VSN `@onflow/decode` 0.0.7 -> 0.0.8
+- 2020-10-08 -- VSN `@onflow/sdk-build-get-account` 0.0.0 -> 0.0.1
+
 ### 0.0.61-alpha.4 - 2020-10-07
 
 - 2020-10-07 -- remove resolvers and replace with @onflow/sdk-resolve
