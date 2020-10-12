@@ -74,7 +74,7 @@ function decode(input, stream) {
  * @param input
  * @returns The length of the input or an empty Buffer if no input
  */
-function getLength(input) {
+export function getLength(input) {
     if (!input || input.length === 0) {
         return Buffer.from([]);
     }
@@ -100,7 +100,7 @@ function getLength(input) {
         return llength + length;
     }
 }
-exports.getLength = getLength;
+
 /** Decode an input with RLP */
 function _decode(input) {
     var length, llength, data, innerRemainder, d;
