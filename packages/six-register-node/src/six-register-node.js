@@ -14,11 +14,11 @@ const Env = {
     },
     testnet: {
         [Deps.LOCKEDTOKENADDRESS]: "0xbe9b485f7d5e7787",
-        [Deps.STAKINGPROXYADDRESS]: "b5b17ac6b1db09ae",
+        [Deps.STAKINGPROXYADDRESS]: "0xb5b17ac6b1db09ae",
     },
     mainnet: {
         [Deps.LOCKEDTOKENADDRESS]: "0x31aed847945124fd",
-        [Deps.STAKINGPROXYADDRESS]: "3a84eade58d45ad4",
+        [Deps.STAKINGPROXYADDRESS]: "0x3a84eade58d45ad4",
     }
 }
 
