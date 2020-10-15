@@ -4,7 +4,7 @@ import {config} from "@onflow/config"
 
 const Deps = {
     LOCKEDTOKENADDRESS: "0xLOCKEDTOKENADDRESS",
-    STAKINGPROXYADDRESS: "0xSTAKINGPROXYADDRESS"
+    STAKINGPROXYADDRESS: "0xSTAKINGPROXYADDRESS",
 }
 
 const Env = {
@@ -22,15 +22,15 @@ const Env = {
     }
 }
 
-export const TITLE = "Unstake Flow"
-export const DESCRIPTION = "Unstakes Flow for an account."
+export const TITLE = "Withdraw Unstaked Flow"
+export const DESCRIPTION = "Withdraw Unlocked Flow to an account."
 export const VERSION = "0.0.1"
-export const HASH = "494b4668842ce28ca05122587d4b8592ed9055b31f153e273e3de26eb9154999"
+export const HASH = "d93fa72dfa3277b2a6e9dfa770cfd26d1d652e0ba22c8f21b5c180a3eb657e9f"
 export const CODE = 
 `import LockedTokens from 0xLOCKEDTOKENADDRESS
 import StakingProxy from 0xSTAKINGPROXYADDRESS
 
-transaction() {
+transaction(amount: UFix64) {
 
     let holderRef: &LockedTokens.TokenHolder
 
@@ -42,17 +42,18 @@ transaction() {
     execute {
         let stakerProxy = self.holderRef.borrowStaker()
 
-        stakerProxy.unstakeAll()
+        stakerProxy.withdrawUnstakedTokens(amount: amount)
     }
 }`
 
-export const template = async ({ proposer, authorization, payer }) => {
+export const template = async ({ proposer, authorization, payer, amount = ""}) => {
     const env = await config().get("env", "mainnet")
     let code = CODE.replace(Deps.LOCKEDTOKENADDRESS, Env[env][Deps.LOCKEDTOKENADDRESS])
     code = code.replace(Deps.STAKINGPROXYADDRESS, Env[env][Deps.STAKINGPROXYADDRESS])
 
     return sdk.pipe([
         sdk.transaction(code),
+        sdk.args([sdk.arg(amount, t.UFix64)]),
         sdk.proposer(proposer),
         sdk.authorizations([authorization]),
         sdk.payer(payer),

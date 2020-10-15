@@ -20,7 +20,7 @@ const Env = {
         [Deps.LOCKEDTOKENADDRESS]: "0xbe9b485f7d5e7787",
         [Deps.FUNGIBLETOKENADDRESS]: "0x9a0766d93b6608b7",
         [Deps.FLOWTOKENADDRESS]: "0x7e60df042a9c0868",
-        [Deps.STAKINGPROXYADDRESS]: "0xb5b17ac6b1db09ae",
+        [Deps.STAKINGPROXYADDRESS]: "0x7aad92e5a0715d21",
     },
     mainnet: {
         [Deps.LOCKEDTOKENADDRESS]: "0x31aed847945124fd",
