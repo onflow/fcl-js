@@ -19,7 +19,14 @@ export async function sendTransaction(ix, opts = {}) {
   tx.setReferenceBlockId(ix.message.refBlock ? hexBuffer(ix.message.refBlock) : null)
   tx.setPayer(addressBuffer(ix.accounts[ix.payer].addr))
   ix.message.arguments.forEach(arg => tx.addArguments(argumentBuffer(ix.arguments[arg].asArgument)))
-  ix.authorizations.forEach(tempId => tx.addAuthorizers(addressBuffer(ix.accounts[tempId].addr)))
+  ix.authorizations
+    .map(tempId => ix.accounts[tempId].addr)
+    .reduce((prev, current) => {
+      return prev.find(item => item === current)
+        ? prev
+        : [...prev, current]
+    }, [])
+    .forEach(addr => tx.addAuthorizers(addressBuffer(addr)))
 
   const proposalKey = new Transaction.ProposalKey()
   proposalKey.setAddress(addressBuffer(ix.accounts[ix.proposer].addr))
