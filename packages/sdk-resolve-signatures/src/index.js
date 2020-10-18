@@ -16,7 +16,13 @@ function prepForEncoding(ix) {
       sequenceNum: ix.accounts[ix.proposer].sequenceNum,
     },
     payer: ix.accounts[ix.payer].addr,
-    authorizers: ix.authorizations.map(cid => ix.accounts[cid].addr),
+    authorizers: ix.authorizations
+      .map(cid => ix.accounts[cid].addr)
+      .reduce((prev, current) => {
+        return prev.find(item => item === current)
+          ? prev
+          : [...prev, current]
+      }, []),
   }
 }
 
