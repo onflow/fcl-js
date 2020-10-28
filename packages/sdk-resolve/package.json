@@ -1,6 +1,6 @@
 {
   "name": "@onflow/sdk-resolve",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Flow JS SDK Resolver -- Default Resolver",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
@@ -28,7 +28,7 @@
     "@onflow/sdk-resolve-arguments": "0.0.1",
     "@onflow/sdk-resolve-cadence": "0.0.1",
     "@onflow/sdk-resolve-ref-block-id": "0.0.1",
-    "@onflow/sdk-resolve-signatures": "0.0.1",
+    "@onflow/sdk-resolve-signatures": "0.0.2",
     "@onflow/sdk-resolve-validators": "0.0.0"
   },
   "source": "src/index.js",
