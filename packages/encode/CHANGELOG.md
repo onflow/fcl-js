@@ -2,6 +2,10 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.0.6 -- 2020-10-28
+
+- 2020-10-28 -- VSN `@onflow/rlp` 0.0.0 -> 0.0.1
+
 ### 0.0.5 -- 2020-10-07
 
 - 2020-10-07 -- Use @onflow/rlp for rlp encoding
