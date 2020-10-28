@@ -46,14 +46,14 @@ transaction(id: String, role: UInt8, networkingAddress: String, networkingKey: S
     }
 }`
 
-export const template = async ({ proposer, authorization, payer, address = "", nodeID = "", amount = "" }) => {
+export const template = async ({ proposer, authorization, payer, nodeID = "", nodeRole = "", networkingAddress = "", networkingKey = "", stakingKey = "", amount = "" }) => {
     const env = await config().get("env", "mainnet")
     let code = CODE.replace(Deps.LOCKEDTOKENADDRESS, Env[env][Deps.LOCKEDTOKENADDRESS])
     code = code.replace(Deps.STAKINGPROXYADDRESS, Env[env][Deps.STAKINGPROXYADDRESS])
 
     return sdk.pipe([
         sdk.transaction(code),
-        sdk.args([sdk.arg(address, t.Address), sdk.arg(nodeID, t.String), sdk.arg(amount, t.UFix64)]),
+        sdk.args([sdk.arg(nodeID, t.String), sdk.arg(nodeRole, t.UInt8), sdk.arg(networkingAddress, t.String), sdk.arg(networkingKey, t.String), sdk.arg(stakingKey, t.String), sdk.arg(amount, t.UFix64)]),
         sdk.proposer(proposer),
         sdk.authorizations([authorization]),
         sdk.payer(payer),
