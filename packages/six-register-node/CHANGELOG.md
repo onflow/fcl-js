@@ -2,6 +2,10 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.0.3 -- 2020-10-28
+
+- 2020-10-28 -- Updates arguments to match transaction requirements
+
 ### 0.0.2 -- 2020-10-28
 
 - 2020-10-28 -- Updates mainnet hash
