@@ -25,34 +25,24 @@ const Env = {
 export const TITLE = "Register Node"
 export const DESCRIPTION = "Register a Node on Flow."
 export const VERSION = "0.0.1"
-export const HASH = "8567091de78994a6128d299065c1593fd02be5e0062736d3a91d66a07518a667"
+export const HASH = "6ffa49f84f795db62af8928c820aaac199876278db291d82ff66e30ae9cd513c"
 export const CODE = 
 `import LockedTokens from 0xLOCKEDTOKENADDRESS
 import StakingProxy from 0xSTAKINGPROXYADDRESS
 
-transaction(address: Address, nodeID: String, amount: UFix64) {
+transaction(id: String, role: UInt8, networkingAddress: String, networkingKey: String, stakingKey: String, amount: UFix64) {
 
     let holderRef: &LockedTokens.TokenHolder
 
     prepare(acct: AuthAccount) {
         self.holderRef = acct.borrow<&LockedTokens.TokenHolder>(from: LockedTokens.TokenHolderStoragePath)
-            ?? panic("Could not borrow reference to TokenHolder")
+            ?? panic("Could not borrow ref to TokenHolder")
     }
 
     execute {
-        let nodeOperatorRef = getAccount(address).getCapability
-            <&StakingProxy.NodeStakerProxyHolder{StakingProxy.NodeStakerProxyHolderPublic}>
-            (StakingProxy.NodeOperatorCapabilityPublicPath)!.borrow() 
-            ?? panic("Could not borrow node operator public capability")
-
-        let nodeInfo = nodeOperatorRef.getNodeInfo(nodeID: nodeID)
-            ?? panic("Couldn't get info for nodeID=".concat(nodeID))
+        let nodeInfo = StakingProxy.NodeInfo(id: id, role: role, networkingAddress: networkingAddress, networkingKey: networkingKey, stakingKey: stakingKey)
 
         self.holderRef.createNodeStaker(nodeInfo: nodeInfo, amount: amount)
-
-        let nodeStakerProxy = self.holderRef.borrowStaker()
-
-        nodeOperatorRef.addStakingProxy(nodeID: nodeInfo.id, proxy: nodeStakerProxy)
     }
 }`
 

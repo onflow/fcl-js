@@ -29,7 +29,7 @@ const Env = {
 export const TITLE = "Withdraw Unlocked Tokens"
 export const DESCRIPTION = "Withdraw Unlocked Tokens to an authorizers account."
 export const VERSION = "0.0.1"
-export const HASH = "ec1033575f80233fd9197e30215b86a25df065ded7110693c5b416529ef00dbd"
+export const HASH = "a2146e3e6e7718779ce59376b88760c154d82b7d132fe2c377114ec7cf434e7b"
 export const CODE = 
 `import FungibleToken from 0xFUNGIBLETOKENADDRESS
 import FlowToken from 0xFLOWTOKENADDRESS

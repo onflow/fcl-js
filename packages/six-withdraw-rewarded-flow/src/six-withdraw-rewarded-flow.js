@@ -25,7 +25,7 @@ const Env = {
 export const TITLE = "Withdraw Rewarded Flow"
 export const DESCRIPTION = "Withdraw Rewarded Flow to an account."
 export const VERSION = "0.0.1"
-export const HASH = "e814c4ffd2f053a4bedd4622c173d932abad7c6f5dead4af3f164a92439a3d19"
+export const HASH = "4c5c67ff1581c7a51819835ddda4fcd18ea5b11acd93aaee022c324364d4532f"
 export const CODE = 
 `import LockedTokens from 0xLOCKEDTOKENADDRESS
 import StakingProxy from 0xSTAKINGPROXYADDRESS
