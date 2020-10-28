@@ -33,7 +33,7 @@ const Env = {
 export const TITLE = "Stake New Locked Flow"
 export const DESCRIPTION = "Stakes New Locked Flow for an account."
 export const VERSION = "0.0.1"
-export const HASH = "ee03f23a00cd1ff940f3ffc7c7bb87e8065ef5f54581ac679d463af5ab7dab9e"
+export const HASH = "1929e4f38894b8641848a3c0a3b9d35495b35083d42e8a3d4c928b9db4174ee8"
 export const CODE = 
 `import FlowToken from 0xFLOWTOKENADDRESS
 import FungibleToken from 0xFUNGIBLETOKENADDRESS

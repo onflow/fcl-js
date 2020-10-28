@@ -25,7 +25,7 @@ const Env = {
 export const TITLE = "Unstake Flow"
 export const DESCRIPTION = "Unstakes Flow for an account."
 export const VERSION = "0.0.1"
-export const HASH = "494b4668842ce28ca05122587d4b8592ed9055b31f153e273e3de26eb9154999"
+export const HASH = "28d1719c5b21c88c62665db5ba04886809f3234c27057b057c36d5f265ee9de4"
 export const CODE = 
 `import LockedTokens from 0xLOCKEDTOKENADDRESS
 import StakingProxy from 0xSTAKINGPROXYADDRESS
