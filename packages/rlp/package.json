@@ -1,6 +1,6 @@
 {
   "name": "@onflow/rlp",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Port of ehteriumjs/rlp",
   "license": "MPL-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
