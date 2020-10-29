@@ -1,6 +1,6 @@
 {
   "name": "@onflow/encode",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Encoding utilities for Flow entities.",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
@@ -35,6 +35,6 @@
     "start": "microbundle watch"
   },
   "dependencies": {
-    "@onflow/rlp": "0.0.2"
+    "@onflow/rlp": "0.0.3"
   }
 }
