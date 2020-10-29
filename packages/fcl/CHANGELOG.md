@@ -2,6 +2,16 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.0.61 - 2020-10-28
+
+- 2020-10-28 -- VSN `@onflow/sdk-decode` 0.0.0 -> 0.0.1
+- 2020-10-28 -- VSN `@onflow/sdk-build-authorizations` 0.0.0 -> 0.0.1
+- 2020-10-28 -- VSN `@onflow/sdk-latest-block` 0.0.0 -> 0.0.2
+- 2020-10-28 -- VSN `@onflow/sdk-account` 0.0.0 -> 0.0.2
+- 2020-10-28 -- VSN `@onflow/sdk-send` 0.0.0 -> 0.0.2
+- 2020-10-28 -- VSN `@onflow/sdk-resolve` 0.0.0 -> 0.0.3
+- 2020-10-28 -- Added in `persistSession` config flag (defaults to true)
+
 ### 0.0.61-alpha.5 - 2020-10-08
 
 - 2020-10-08 -- ADD PROXY `latestBlock` exports directly to `@onflow/sdk-latest-block`
