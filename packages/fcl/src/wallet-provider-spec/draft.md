@@ -360,30 +360,31 @@ An example handshake response:
 
 ```javascript
 const handshakeResponse = {
-  addr: "ba1132bc08f82fe2",
-  paddr: "f086a545ce3c552d",
+  addr: "0xba1132bc08f82fe2", // users flow address
+  paddr: "0xf086a545ce3c552d", // wallet providers flow address
   hks: "https://example.wallet/fcl/hooks",
   code: "SOME_TOKEN",
   expires: 1599180117,
   services: [
     {
       type: "authn",
-      id: "example-wallet#authn",
-      addr: "f086a545ce3c552d",
+      id: "example-wallet#authn", // used to dedupe services Private > Public
+      addr: "0xf086a545ce3c552d", // wallet providers flow address
       authn: "https://example.wallet/fcl/authn",
       name: "Example Wallet",
       icon: "https://example.wallet/assets/icon.png",
-      pid: "0609d667-944c-3c2d-9d09-18af5c58c8fb",
+      pid: "0609d667-944c-3c2d-9d09-18af5c58c8fb", // wallet providers internal id representation for the user
+      // it needs to stay the same every time the user authenticates
     },
     {
       type: "authz",
       id: "example-wallet#authz",
       method: "IFRAME/RPC",
-      addr: "ba1132bc08f82fe2",
-      keyId: 3,
+      addr: "0xba1132bc08f82fe2", // users flow address, this is who needs to sign the transaction
+      keyId: 3, // which key in the users flow address needs to sign the transaction
       endpoint: "https://example.wallet/fcl/authz",
       data: {
-        id: "0609d667-944c-3c2d-9d09-18af5c58c8fb",
+        id: "0609d667-944c-3c2d-9d09-18af5c58c8fb", // data that will be sent to the endpoint along with the signable
       },
     },
   ],
@@ -396,8 +397,8 @@ And the same but with an `authz -- HTTP/POST` service:
 
 ```javascript
 const handshakeResponse = {
-  addr: "ba1132bc08f82fe2",
-  paddr: "f086a545ce3c552d",
+  addr: "0xba1132bc08f82fe2",
+  paddr: "0xf086a545ce3c552d",
   hks: "https://example.wallet/fcl/hooks",
   code: "SOME_TOKEN",
   expires: 1599180117,
@@ -405,7 +406,7 @@ const handshakeResponse = {
     {
       type: "authn",
       id: "example-wallet#authn",
-      addr: "f086a545ce3c552d",
+      addr: "0xf086a545ce3c552d",
       authn: "https://example.wallet/fcl/authn",
       name: "Example Wallet",
       icon: "https://example.wallet/assets/icon.png",
@@ -415,7 +416,7 @@ const handshakeResponse = {
       type: "authz",
       id: "example-wallet#authz",
       method: "HTTP/POST", // The change is here
-      addr: "ba1132bc08f82fe2",
+      addr: "0xba1132bc08f82fe2",
       keyId: 3,
       endpoint: "https://example.wallet/fcl/authz",
       data: {
@@ -466,7 +467,7 @@ const service = {
   type: "authz",
   id: "example-wallet#authz",
   method: "IFRAME/RPC",
-  addr: "ba1132bc08f82fe2",
+  addr: "0xba1132bc08f82fe2",
   keyId: 3,
   endpoint: "https://example.wallet/fcl/authz",
   data: {
@@ -507,7 +508,7 @@ const msg = {
     status: "APPROVED",
     reason: null,
     compositeSignature: {
-      addr: "ba1132bc08f82fe2",
+      addr: "0xba1132bc08f82fe2",
       keyId: 3,
       signature:
         "95ee6929dda9548abbf79802be19400fb717b003476eb1f2e080bf15f7d40b1c087e7ff2b42bea8756c6509a5135c5ee6994897367f669279fadb392f4651d48",
@@ -543,7 +544,7 @@ const service = {
   type: "authz",
   id: "example-wallet#authz",
   method: "HTTP/POST",
-  addr: "ba1132bc08f82fe2",
+  addr: "0xba1132bc08f82fe2",
   keyId: 3,
   endpoint: "https://example.wallet/fcl/authz",
   data: {
@@ -618,7 +619,7 @@ An `APPROVED` status response looks like this:
 const statusResponse = {
   status: "APPROVED",
   compositeSignature: {
-    addr: "ba1132bc08f82fe2",
+    addr: "0xba1132bc08f82fe2",
     keyId: 3,
     signature:
       "95ee6929dda9548abbf79802be19400fb717b003476eb1f2e080bf15f7d40b1c087e7ff2b42bea8756c6509a5135c5ee6994897367f669279fadb392f4651d48",
