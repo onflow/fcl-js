@@ -1,15 +1,17 @@
 import {pipe, makeAuthorizer} from "@onflow/interaction"
 
 const roles = {
-  authorizer: true
+  authorizer: true,
 }
 
 export function authorizations(ax = []) {
-  return pipe(ax.map(authz => {
-    return typeof authz === "function"
-      ? makeAuthorization({ resolve: authz, role: roles, roles })
-      : makeAuthorization({ ...authz, role: roles, roles })
-  }))
+  return pipe(
+    ax.map((authz) => {
+      return typeof authz === "function"
+        ? makeAuthorizer({resolve: authz, role: roles, roles})
+        : makeAuthorizer({...authz, role: roles, roles})
+    })
+  )
 }
 
 export function authorization(addr, signingFunction, keyId, sequenceNum) {
