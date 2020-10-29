@@ -3,6 +3,7 @@ import {account} from "@onflow/sdk-account"
 import {config} from "@onflow/config"
 import {spawn, send, INIT, SUBSCRIBE, UNSUBSCRIBE} from "@onflow/util-actor"
 import {renderAuthnFrame} from "./render-authn-frame"
+import {buildUser} from "./build-user"
 import {fetchServices} from "./fetch-services"
 import {mergeServices} from "./merge-services"
 import {serviceOfType} from "./service-of-type"
@@ -36,15 +37,20 @@ const coldStorage = {
     }
     return stored || fallback
   },
-  put: async data => {
+  put: async (data) => {
     sessionStorage.setItem(NAME, JSON.stringify(data))
     return data
   },
 }
 
+const canColdStorage = () => {
+  return config().get("persistSession", true)
+}
+
 const HANDLERS = {
-  [INIT]: async ctx => {
-    ctx.merge(await coldStorage.get())
+  [INIT]: async (ctx) => {
+    ctx.merge(JSON.parse(DATA))
+    if (await canColdStorage()) ctx.merge(await coldStorage.get())
   },
   [SUBSCRIBE]: (ctx, letter) => {
     ctx.subscribe(letter.from)
@@ -58,21 +64,21 @@ const HANDLERS = {
   },
   [SET_CURRENT_USER]: async (ctx, letter, data) => {
     ctx.merge(data)
-    coldStorage.put(ctx.all())
+    if (await canColdStorage()) coldStorage.put(ctx.all())
     ctx.broadcast(UPDATED, {...ctx.all()})
   },
   [DEL_CURRENT_USER]: async (ctx, letter) => {
     ctx.merge(JSON.parse(DATA))
-    coldStorage.put(ctx.all())
+    if (await canColdStorage()) coldStorage.put(ctx.all())
     ctx.broadcast(UPDATED, {...ctx.all()})
   },
 }
 
-const identity = v => v
+const identity = (v) => v
 const spawnCurrentUser = () => spawn(HANDLERS, NAME)
 
 async function authenticate() {
-  return new Promise(async resolve => {
+  return new Promise(async (resolve) => {
     spawnCurrentUser()
     const user = await snapshot()
     if (user.loggedIn) return resolve(user)
@@ -93,17 +99,7 @@ async function authenticate() {
       unrender()
       window.removeEventListener("message", replyFn)
 
-      const msg = {
-        addr: data.addr,
-        cid: `did:fcl:${data.addr}`,
-        loggedIn: true,
-        services: mergeServices(
-          data.services || [],
-          await fetchServices(data.hks, data.code)
-        ),
-      }
-
-      send(NAME, SET_CURRENT_USER, msg)
+      send(NAME, SET_CURRENT_USER, await buildUser(data))
       resolve(await snapshot())
     }
 
@@ -124,11 +120,11 @@ async function authorization(account) {
   let sequenceNum
   if (account.role.proposer) {
     const acct = await info()
-    const key = acct.keys.find(key => key.index === authz.keyId)
+    const key = acct.keys.find((key) => key.index === authz.keyId)
     sequenceNum = key.sequenceNumber
   }
 
-  const signingFunction = async signable => execAuthzService(authz, signable)
+  const signingFunction = async (signable) => execAuthzService(authz, signable)
 
   return {
     ...account,
@@ -145,7 +141,7 @@ async function authorization(account) {
 function subscribe(callback) {
   spawnCurrentUser()
   const EXIT = "@EXIT"
-  const self = spawn(async ctx => {
+  const self = spawn(async (ctx) => {
     ctx.send(NAME, SUBSCRIBE)
     while (1) {
       const letter = await ctx.receive()
