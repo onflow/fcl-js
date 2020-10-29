@@ -2,6 +2,10 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.0.9 -- 2020-10-28
+
+- 2020-10-28 -- Safer code decoding for account
+
 ### 0.0.8 -- 2020-10-08
 
 - 2020-10-08 -- Auto decode account code
