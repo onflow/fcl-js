@@ -2,6 +2,10 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.0.62 - 2020-10-29
+
+- 2020-10-29 -- Fixed an issue regarding fetching transaction statuses
+
 ### 0.0.61 - 2020-10-28
 
 - 2020-10-28 -- VSN `@onflow/sdk-decode` 0.0.0 -> 0.0.1
