@@ -23,20 +23,20 @@ const decodeNumber = async (num, _, stack) => {
   }
 }
 
-const decodeImplicit = async i => i
+const decodeImplicit = async (i) => i
 
 const decodeVoid = async () => null
 
 const decodeOptional = async (optional, decoders, stack) =>
   optional ? await recurseDecode(optional, decoders, stack) : null
 
-const decodeReference = async v => ({address: v.address, type: v.type})
+const decodeReference = async (v) => ({address: v.address, type: v.type})
 
 const decodeArray = async (array, decoders, stack) =>
   await Promise.all(
     array.map(
-      v =>
-        new Promise(async res =>
+      (v) =>
+        new Promise(async (res) =>
           res(await recurseDecode(v, decoders, [...stack, v.type]))
         )
     )
@@ -97,7 +97,7 @@ const defaultDecoders = {
 }
 
 const decoderLookup = (decoders, lookup) => {
-  const found = Object.keys(decoders).find(decoder => {
+  const found = Object.keys(decoders).find((decoder) => {
     if (/^\/.*\/$/.test(decoder)) {
       const reg = new RegExp(decoder.substring(1, decoder.length - 1))
       return reg.test(lookup)
@@ -133,33 +133,33 @@ export const decodeResponse = async (response, customDecoders = {}) => {
   } else if (response.transaction) {
     return {
       ...response.transaction,
-      events: await Promise.all(response.transaction.events.map(
-        async function decodeEvents(e) {
+      events: await Promise.all(
+        response.transaction.events.map(async function decodeEvents(e) {
           return {
             type: e.type,
             transactionId: e.transactionId,
             transactionIndex: e.transactionIndex,
             eventIndex: e.eventIndex,
-            data: await decode(e.payload, decoders)
+            data: await decode(e.payload, decoders),
           }
-        }
-      ))
+        })
+      ),
     }
   } else if (response.events) {
-    return await Promise.all(response.events.map(
-        async function decodeEvents(e) {
-          return {
-            type: e.type,
-            transactionId: e.transactionId,
-            transactionIndex: e.transactionIndex,
-            eventIndex: e.eventIndex,
-            data: await decode(e.payload, decoders)
-          }
+    return await Promise.all(
+      response.events.map(async function decodeEvents(e) {
+        return {
+          type: e.type,
+          transactionId: e.transactionId,
+          transactionIndex: e.transactionIndex,
+          eventIndex: e.eventIndex,
+          data: await decode(e.payload, decoders),
         }
-      ))
+      })
+    )
   } else if (response.account) {
     const acct = response.account
-    acct.code = new TextDecoder("utf-8").decode(acct)
+    acct.code = new TextDecoder("utf-8").decode(acct.code || new UInt8Array())
     return acct
   } else if (response.block) {
     return response.block
