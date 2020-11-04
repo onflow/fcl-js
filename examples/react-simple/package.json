@@ -13,8 +13,8 @@
     "@onflow/types": "0.0.3",
     "@onflow/sdk": "0.0.28",
     "elliptic": "^6.5.2",
-    "react": "16.13.1",
-    "react-dom": "16.13.1",
+    "react": "16.14.0",
+    "react-dom": "16.14.0",
     "sha3": "^2.1.2"
   },
   "devDependencies": {
