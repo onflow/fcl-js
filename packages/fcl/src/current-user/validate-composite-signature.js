@@ -1,3 +1,5 @@
+import {sansPrefix} from "@onflow/util-address"
+
 const label = (key, full) => (full == null ? `'${key}'` : `'${key}' (${full})`)
 
 const missing = (key, full) =>
@@ -13,7 +15,7 @@ export function validateCompositeSignature(compSig, authz) {
     if (compSig.addr == null) throw new Error(missing("addr", "Address"))
     if (compSig.keyId == null) throw new Error(missing("keyId"))
     if (compSig.signature == null) throw new Error(missing("signature"))
-    if (compSig.addr !== authz.addr) throw new Error(noMatch("addr", "Address"))
+    if (sansPrefix(compSig.addr) !== sansPrefix(authz.addr)) throw new Error(noMatch("addr", "Address"))
     if (compSig.keyId !== authz.keyId) throw new Error(noMatch("keyId"))
     return compSig
   } catch (error) {

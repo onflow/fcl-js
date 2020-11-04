@@ -2,6 +2,10 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.0.65 - 2020-11-04
+
+- 2020-11-05 -- sansPrefix required addresses
+
 ### 0.0.64 - 2020-11-04
 
 - 2020-11-04 -- VSN `@onflow/sdk-send` 0.0.2 -> 0.0.3
