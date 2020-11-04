@@ -3,6 +3,7 @@ import {
   encodeTransactionPayload as encodeInsideMessage,
   encodeTransactionEnvelope as encodeOutsideMessage,
 } from "@onflow/encode"
+import {sansPrefix} from "@onflow/util-address"
 
 function prepForEncoding(ix) {
   return {
@@ -11,13 +12,13 @@ function prepForEncoding(ix) {
     gasLimit: ix.message.computeLimit,
     arguments: ix.message.arguments.map(cid => ix.arguments[cid].asArgument),
     proposalKey: {
-      address: ix.accounts[ix.proposer].addr,
+      address: sansPrefix(ix.accounts[ix.proposer].addr),
       keyId: ix.accounts[ix.proposer].keyId,
       sequenceNum: ix.accounts[ix.proposer].sequenceNum,
     },
-    payer: ix.accounts[ix.payer].addr,
+    payer: sansPrefix(ix.accounts[ix.payer].addr),
     authorizers: ix.authorizations
-      .map(cid => ix.accounts[cid].addr)
+      .map(cid => sansPrefix(ix.accounts[cid].addr))
       .reduce((prev, current) => {
         return prev.find(item => item === current)
           ? prev
@@ -31,20 +32,20 @@ async function fetchSignatures(ix, signers = [], message) {
     signers.map(async cid => {
       const compSig = await ix.accounts[cid].signingFunction({
         message,
-        addr: ix.accounts[cid].addr,
+        addr: sansPrefix(ix.accounts[cid].addr),
         keyId: ix.accounts[cid].keyId,
         roles: ix.accounts[cid].role, // grr this should be roles,
         interaction: ix,
       })
       compSig.cid = cid
-      if (ix.accounts[cid].addr !== compSig.addr) {
+      if (sansPrefix(ix.accounts[cid].addr) !== sansPrefix(compSig.addr)) {
         throw new Error(`${cid} — mismatching address in composite signature`)
       }
       if (ix.accounts[cid].keyId !== compSig.keyId) {
         throw new Error(`${cid} — mismatching keyId in composite signature`)
       }
       compSig.sig = compSig.signature
-      compSig.address = compSig.addr
+      compSig.address = sansPrefix(compSig.addr)
       return compSig
     })
   )
