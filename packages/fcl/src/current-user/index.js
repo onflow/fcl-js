@@ -2,6 +2,7 @@ import "../default-config"
 import {account} from "@onflow/sdk-account"
 import {config} from "@onflow/config"
 import {spawn, send, INIT, SUBSCRIBE, UNSUBSCRIBE} from "@onflow/util-actor"
+import {sansPrefix} from "@onflow/util-address"
 import {renderAuthnFrame} from "./render-authn-frame"
 import {buildUser} from "./build-user"
 import {fetchServices} from "./fetch-services"
@@ -128,7 +129,7 @@ async function authorization(account) {
 
   return {
     ...account,
-    addr: authz.addr,
+    addr: sansPrefix(authz.addr),
     keyId: authz.keyId,
     sequenceNum,
     signature: account.signature || null,
