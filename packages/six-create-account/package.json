@@ -1,6 +1,6 @@
 {
   "name": "@onflow/six-create-account",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Flow SDK Stored Interaction - Create Account",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
@@ -22,7 +22,6 @@
     "jest-esm-transformer": "1.0.0",
     "microbundle": "0.12.0-next.8"
   },
-  "type": "module",
   "source": "src/six-create-account.js",
   "main": "dist/six-create-account.js",
   "module": "dist/six-create-account.module.js",
