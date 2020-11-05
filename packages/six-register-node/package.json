@@ -1,6 +1,6 @@
 {
   "name": "@onflow/six-register-node",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Flow SDK Stored Interaction - Register Node",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
@@ -22,7 +22,6 @@
     "jest-esm-transformer": "1.0.0",
     "microbundle": "0.12.0-next.8"
   },
-  "type": "module",
   "source": "src/six-register-node.js",
   "main": "dist/six-register-node.js",
   "module": "dist/six-register-node.module.js",
