@@ -2,6 +2,10 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.0.3 -- 2020-11-05
+
+- 2020-11-05 -- Updates package.json to remove type: module
+
 ### 0.0.2 -- 2020-11-05
 
 - 2020-11-05 -- Updates package.json to remove type: module
