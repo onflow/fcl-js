@@ -1,6 +1,6 @@
 {
   "name": "@onflow/six-restake-unstaked-flow",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Flow SDK Stored Interaction - Restake Unstaked Flow",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
@@ -22,7 +22,6 @@
     "jest-esm-transformer": "1.0.0",
     "microbundle": "0.12.0-next.8"
   },
-  "type": "module",
   "source": "src/six-restake-unstaked-flow.js",
   "main": "dist/six-restake-unstaked-flow.js",
   "module": "dist/six-restake-unstaked-flow.module.js",
