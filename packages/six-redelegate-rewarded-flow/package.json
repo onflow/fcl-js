@@ -1,6 +1,6 @@
 {
   "name": "@onflow/six-redelegate-rewarded-flow",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Flow SDK Stored Interaction - Redelegate Rewarded Flow",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
@@ -22,7 +22,6 @@
     "jest-esm-transformer": "1.0.0",
     "microbundle": "0.12.0-next.8"
   },
-  "type": "module",
   "source": "src/six-redelegate-rewarded-flow.js",
   "main": "dist/six-redelegate-rewarded-flow.js",
   "module": "dist/six-redelegate-rewarded-flow.module.js",
