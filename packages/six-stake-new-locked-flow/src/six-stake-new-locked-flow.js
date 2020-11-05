@@ -74,7 +74,8 @@ transaction(amount: UFix64) {
             panic("Not enough tokens to stake!")
         }
     }
-}`
+}
+`
 
 export const template = async ({ proposer, authorization, payer, amount = ""}) => {
     const env = await config().get("env", "mainnet")
