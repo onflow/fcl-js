@@ -44,7 +44,8 @@ transaction() {
 
         stakerProxy.unstakeAll()
     }
-}`
+}
+`
 
 export const template = async ({ proposer, authorization, payer }) => {
     const env = await config().get("env", "mainnet")
