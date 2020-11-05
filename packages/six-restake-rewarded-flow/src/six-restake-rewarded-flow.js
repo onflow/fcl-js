@@ -44,7 +44,8 @@ transaction(amount: UFix64) {
 
         stakerProxy.stakeRewardedTokens(amount: amount)
     }
-}`
+}
+`
 
 export const template = async ({ proposer, authorization, payer, amount = ""}) => {
     const env = await config().get("env", "mainnet")
