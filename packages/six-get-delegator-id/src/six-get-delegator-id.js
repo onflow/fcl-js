@@ -32,7 +32,8 @@ pub fun main(account: Address): UInt32 {
         .borrow() ?? panic("Could not borrow a reference to public LockedAccountInfo")
 
     return lockedAccountInfoRef.getDelegatorID()!
-}`
+}
+`
 
 export const template = async ({ account = "" }) => {
     const env = await config().get("env", "mainnet")
