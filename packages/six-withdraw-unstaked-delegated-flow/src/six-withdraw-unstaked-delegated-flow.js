@@ -11,10 +11,10 @@ const Env = {
         [Deps.LOCKEDTOKENADDRESS]: "0x0",
     },
     testnet: {
-        [Deps.LOCKEDTOKENADDRESS]: "0xbe9b485f7d5e7787",
+        [Deps.LOCKEDTOKENADDRESS]: "0x95e019a17d0e23d7",
     },
     mainnet: {
-        [Deps.LOCKEDTOKENADDRESS]: "0x31aed847945124fd",
+        [Deps.LOCKEDTOKENADDRESS]: "0x8d0e87b65159ae63",
     }
 }
 
