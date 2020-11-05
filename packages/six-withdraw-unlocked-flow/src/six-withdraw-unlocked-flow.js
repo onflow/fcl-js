@@ -51,7 +51,8 @@ transaction(amount: UFix64) {
     execute {
         self.vaultRef.deposit(from: <-self.holderRef.withdraw(amount: amount))
     }
-}`
+}
+`
 
 export const template = async ({ proposer, authorization, payer, amount = ""}) => {
     const env = await config().get("env", "mainnet")
