@@ -25,7 +25,7 @@ const Env = {
 export const TITLE = "Register Node"
 export const DESCRIPTION = "Register a Node on Flow."
 export const VERSION = "0.0.1"
-export const HASH = "6ffa49f84f795db62af8928c820aaac199876278db291d82ff66e30ae9cd513c"
+export const HASH = "d7c3a22ca7f254e89479621115a8cd81504d57ae4e19f480c437377e7ace19ca"
 export const CODE = 
 `import LockedTokens from 0xLOCKEDTOKENADDRESS
 import StakingProxy from 0xSTAKINGPROXYADDRESS
@@ -34,8 +34,8 @@ transaction(id: String, role: UInt8, networkingAddress: String, networkingKey: S
 
     let holderRef: &LockedTokens.TokenHolder
 
-    prepare(acct: AuthAccount) {
-        self.holderRef = acct.borrow<&LockedTokens.TokenHolder>(from: LockedTokens.TokenHolderStoragePath)
+    prepare(account: AuthAccount) {
+        self.holderRef = account.borrow<&LockedTokens.TokenHolder>(from: LockedTokens.TokenHolderStoragePath)
             ?? panic("Could not borrow ref to TokenHolder")
     }
 
@@ -44,7 +44,8 @@ transaction(id: String, role: UInt8, networkingAddress: String, networkingKey: S
 
         self.holderRef.createNodeStaker(nodeInfo: nodeInfo, amount: amount)
     }
-}`
+}
+`
 
 export const template = async ({ proposer, authorization, payer, nodeID = "", nodeRole = "", networkingAddress = "", networkingKey = "", stakingKey = "", amount = "" }) => {
     const env = await config().get("env", "mainnet")
