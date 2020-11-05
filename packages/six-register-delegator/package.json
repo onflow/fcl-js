@@ -1,6 +1,6 @@
 {
   "name": "@onflow/six-register-delegator",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Flow SDK Stored Interaction - Register Delegator",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
@@ -22,7 +22,6 @@
     "jest-esm-transformer": "1.0.0",
     "microbundle": "0.12.0-next.8"
   },
-  "type": "module",
   "source": "src/six-register-delegator.js",
   "main": "dist/six-register-delegator.js",
   "module": "dist/six-register-delegator.module.js",
