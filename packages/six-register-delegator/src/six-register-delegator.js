@@ -41,7 +41,8 @@ transaction(id: String, amount: UFix64) {
 
         delegatorProxy.delegateNewTokens(amount: amount)
     }
-}`
+}
+`
 
 export const template = async ({ proposer, authorization, payer, id = "", amount = ""}) => {
     const env = await config().get("env", "mainnet")
