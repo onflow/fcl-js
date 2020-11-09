@@ -2,6 +2,10 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.0.66 - 2020-11-09
+
+- 2020-11-09 -- Adds a handshake mechanism to exec-authz-service to allow clients to request signable message when ready
+
 ### 0.0.65 - 2020-11-04
 
 - 2020-11-05 -- sansPrefix required addresses

@@ -52,7 +52,8 @@ async function execIframeRPC(authz, signable) {
     try {
       const id = uid()
       const [$frame, unmount] = renderAuthzFrame(authz)
-      setTimeout(() => {
+
+      const sendSignMessage = () => {
         $frame.contentWindow.postMessage(
           JSON.parse(
             JSON.stringify({
@@ -64,7 +65,7 @@ async function execIframeRPC(authz, signable) {
           ),
           "*"
         )
-      }, 500)
+      }
 
       const replyFn = async ({data}) => {
         if (typeof data !== "object") return
@@ -92,6 +93,25 @@ async function execIframeRPC(authz, signable) {
       }
 
       window.addEventListener("message", replyFn)
+
+      new Promise(resolve => {
+        window.addEventListener("message", receiveSignReadyMessage)
+        
+        const timeout = setTimeout(() => {
+          window.removeEventListener("message", receiveSignReadyMessage)
+          sendSignMessage()
+          resolve()
+        }, 5000)
+
+        function receiveSignReadyMessage({ data }) {
+          if (data.type === "FCL::AUTHZ_READY") {
+            clearTimeout(timeout)
+            window.removeEventListener("message", receiveSignReadyMessage)
+            sendSignMessage()
+            resolve()
+          }
+        }
+      })
     } catch (error) {
       trouble(authz, signable, error)
       reject({status: "DECLINED", reason: "Trouble talking to Wallet Provider"})
