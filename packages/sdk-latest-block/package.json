@@ -1,6 +1,6 @@
 {
   "name": "@onflow/sdk-latest-block",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Flow JS SDK -- Fetch the Latest Block from the Configured Access Node",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
@@ -27,7 +27,7 @@
   "module": "dist/sdk-latest-block.module.js",
   "unpkg": "dist/sdk-latest-block.umd.js",
   "scripts": {
-    "prepublishOnly": "npm test && npm run build",
+    "prepublishOnly": "npm install && npm test && npm run build",
     "test": "jest",
     "build": "microbundle",
     "test:watch": "jest --watch",
@@ -36,6 +36,6 @@
   "dependencies": {
     "@onflow/sdk-build-get-latest-block": "0.0.0",
     "@onflow/sdk-decode": "0.0.1",
-    "@onflow/sdk-send": "0.0.2"
+    "@onflow/sdk-send": "0.0.5"
   }
 }
