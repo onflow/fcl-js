@@ -22,14 +22,17 @@ export async function execAuthzService(authz, signable) {
 async function execHttpPost(authz, signable) {
   var unrender = () => {}
   var result = null
+
   try {
-    const resp = await fetch(urlFromService(authz), {
+    const resp = await fetch(urlFromService(authz, true), {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: signable ? JSON.stringify(signable) : undefined,
-    }).then(d => d.json())
+    }).then((d) => d.json())
+
+    console.log("RESP", resp)
 
     if (resp.local && resp.local.length > 0) {
       const [_, unmount] = renderAuthzFrame(resp.local[0])
@@ -94,16 +97,16 @@ async function execIframeRPC(authz, signable) {
 
       window.addEventListener("message", replyFn)
 
-      new Promise(resolve => {
+      new Promise((resolve) => {
         window.addEventListener("message", receiveSignReadyMessage)
-        
+
         const timeout = setTimeout(() => {
           window.removeEventListener("message", receiveSignReadyMessage)
           sendSignMessage()
           resolve()
         }, 5000)
 
-        function receiveSignReadyMessage({ data }) {
+        function receiveSignReadyMessage({data}) {
           if (data.type === "FCL::AUTHZ_READY") {
             clearTimeout(timeout)
             window.removeEventListener("message", receiveSignReadyMessage)

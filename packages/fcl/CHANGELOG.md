@@ -2,6 +2,45 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.0.67-alpha.2 - 2020-11-17
+
+- 2020-11-17 -- Injected in a custom resolver in prep for pre-authz service
+
+### 0.0.67-alpha.1 - 2020-11-17
+
+- 2020-11-17 -- Added `fcl.account`
+- 2020-11-17 -- Added `fcl.reauthenticate`
+- 2020-11-17 -- Added `fcl.authz`
+- 2020-11-17 -- Added `fcl.signUp`
+- 2020-11-17 -- Added `fcl.logIn`
+
+```javascript
+// fcl.account - A convenience function for fetching an account
+/* old */ await fcl.send([fcl.getAccount("0x1d007d755706c469")])
+/* new */ await fcl.account("0x1d007d755706c469")
+
+// fcl.reauthenticate - Logs the current user out before attempting to authenticate again
+await fcl.reauthenticate()
+
+// fcl.authz - alias for fcl.currentUser().authorization
+await fcl.send([
+  fcl.transaction(txCode),
+  fcl.proposer(fcl.authz),
+  fcl.payer(fcl.authz),
+  fcl.authorizations([fcl.authz]),
+])
+
+// fcl.signUp and fcl.logIn - Currently these alias fcl.authenticate, eventually they will pass additional context to the wallets
+await fcl.signUp()
+await fcl.logIn()
+```
+
+### 0.0.67-alpha.0 - 2020-11-17
+
+- 2020-11-17 -- VSN @onflow/sdk-latest-block 0.0.2 -> 0.0.3
+- 2020-11-17 -- VSN @onflow/sdk-account 0.0.2 -> 0.0.3
+- 2020-11-17 -- VSN @onflow/sdk-send 0.0.3 -> 0.0.5
+
 ### 0.0.66 - 2020-11-09
 
 - 2020-11-09 -- Adds a handshake mechanism to exec-authz-service to allow clients to request signable message when ready

@@ -1,4 +1,5 @@
 import "./default-config"
+import "./temp"
 export {serialize} from "./serialize"
 export {transaction as tx} from "./transaction"
 export {events} from "./events"
@@ -8,6 +9,14 @@ export {currentUser}
 
 export const authenticate = () => currentUser().authenticate()
 export const unauthenticate = () => currentUser().unauthenticate()
+export const reauthenticate = () => {
+  currentUser().unauthenticate()
+  currentUser().authenticate()
+}
+export const signUp = () => currentUser().authenticate()
+export const logIn = () => currentUser().authenticate()
+
+export const authz = currentUser().authorization
 
 export {config} from "@onflow/config"
 export {send} from "@onflow/sdk-send"
@@ -37,4 +46,4 @@ export {limit} from "@onflow/sdk-build-limit"
 export {ref} from "@onflow/sdk-build-ref"
 export {params, param} from "@onflow/sdk-build-params"
 
-export const VERSION = "0.0.66"
+export const VERSION = "0.0.67-alpha.2"

@@ -4,7 +4,7 @@ A high level abstraction (built on top of [@onflow/sdk](../sdk)) that enables de
 
 # Status
 
-- **Last Updated:** May 7th 2020
+- **Last Updated:** Nov 17th 2020
 - **Stable:** Yes
 - **Risk of Breaking Change:** Low
 
@@ -32,27 +32,19 @@ Having trouble with something? Reach out to us on [Discord](https://discord.gg/k
   - [Custodial Wallet Provider](./src/wallet-provider-spec/custodial.md) -- Documentation for Custodial Wallet Providers.
   - [Non-Custodial Wallet Provider](src/wallet-provider-spec/non-custodial.md) -- **Coming Soon** Documentation for Non-Custodial Wallet Providers.
 
-# Todo List
-
-- [ ] Persistent Current User Session
-- [ ] `fcl.events(...)`-- Subscribging to onchain events
-- [ ] `fcl.user(addr)` -- Subscribing to onchain public identity info
-
 # Flow App Quickstart
 
 **Last Updated:** May 7th 2020
 
 Follow this guide to understand the basics of how to build an app that interacts with the Flow blockchain using `@onflow/fcl`
 
-
-
 This guide uses `create-react-app` and does not require any server-side code. `@onflow/fcl` is not tied to any front-end framework.
 
 In this quickstart you will
 
-- Use `@onflow/fcl`  to  perform authentication and authorization of Flow accounts
-- Use `@onflow/fcl`  to send scripts and transactions to the Flow blockchain emulator
-- Install and use  the Flow blockchain emulator (`flow`)
+- Use `@onflow/fcl` to perform authentication and authorization of Flow accounts
+- Use `@onflow/fcl` to send scripts and transactions to the Flow blockchain emulator
+- Install and use the Flow blockchain emulator (`flow`)
 - Install and use the FCL Dev Wallet (`fcl-wallet`) to simulate connection between your app, `@onflow/fcl` and a user's 3rd party key management software
 - Configure `@onflow/fcl` for a production deployment
 
@@ -80,13 +72,13 @@ npm install --save-dev @onflow/dev-wallet
 - `@onflow/fcl` is the library we'll use to interact with the Flow blockchain.
 - `@onflow/dev-wallet` A "custodial" wallet that can authenticate and authorize transactions. It will simulate 3rd party key-management software necessary for interacting with the Flow blockchain on behalf of a specific Flow account.
 
-**A Note on Wallets:**  Flow is designed to support most wallet types–– fully-custodial wallets, browser-based (extensions), hardware and other managed decentralized wallet options.
+**A Note on Wallets:** Flow is designed to support most wallet types–– fully-custodial wallets, browser-based (extensions), hardware and other managed decentralized wallet options.
 
 `@onflow/fcl` uses a handshake protocol to enable wallets to manage Flow identities, and perform authentication and authorization. Any wallet that supports the protocol can be used by your users automatically without any configuration in the application.
 
 ### Additional Project Dependencies
 
-In this guide, we'll  use `@emotion/styled` to write css. (You can skip this step, or install your own preferred css tools)
+In this guide, we'll use `@emotion/styled` to write css. (You can skip this step, or install your own preferred css tools)
 
 ```bash
 npm install --save @emotion/styled
@@ -119,10 +111,9 @@ Running the above command starts the emulator and generates a `flow.json` file s
     }
   }
 }
-
 ```
 
-The emulated network is running and contains a single *root* account we can use to authorize transactions. We will connect the private key from this account to the `dev-wallet`.
+The emulated network is running and contains a single _root_ account we can use to authorize transactions. We will connect the private key from this account to the `dev-wallet`.
 
 ## Start the Dev Wallet
 
@@ -332,7 +323,7 @@ const resp = await fcl.send([
     pub fun main(): Int {
       return 42 + 6
     }
-  `
+  `,
 ])
 
 const value = await fcl.decode(response)
@@ -355,7 +346,7 @@ const Results = styled.pre``
 export default function ScriptOne() {
   const [data, setData] = useState(null)
 
-  const runScript = async e => {
+  const runScript = async (e) => {
     e.preventDefault()
     const response = await fcl.send([
       fcl.script`
@@ -375,7 +366,6 @@ export default function ScriptOne() {
     </Root>
   )
 }
-
 ```
 
 And display the component in your app
@@ -405,7 +395,7 @@ A common use for Cadence scripts is to acquire information about a Flow account'
 
 ```jsx
 const response = await fcl.send([
-    fcl.script`
+  fcl.script`
 	import HelloWorld from 586b0d6e0a20c7f1
 
 	pub fun main() {
@@ -426,8 +416,8 @@ Cadence scripts can return complex Cadence data-types. These return values are s
 Given this Cadence script that returns `[SomeStruct(x: 1, y: 2), SomeStruct(x: 3, y: 4)]`
 
 ```jsx
- const response = await fcl.send([
-      fcl.script`
+const response = await fcl.send([
+  fcl.script`
       pub struct SomeStruct {
         pub var x: Int
         pub var y: Int
@@ -442,21 +432,21 @@ Given this Cadence script that returns `[SomeStruct(x: 1, y: 2), SomeStruct(x: 3
         return [SomeStruct(x: 1, y: 2), SomeStruct(x: 3, y: 4)]
       }
     `,
-  ])
+])
 ```
 
 We would like to transform `SomeStruct(x: 1, y: 2)` into a JavaScript data-structure.
 
 ```jsx
 class Point {
-  constructor ({ x, y }) {
+  constructor({x, y}) {
     this.x = x
     this.y = y
   }
 }
 ```
 
-Registering a decoding function using the code below will ensure that the response from `fcl.send` will contain  `Point` objects wherever a `SomeStruct` Cadence type is returned.
+Registering a decoding function using the code below will ensure that the response from `fcl.send` will contain `Point` objects wherever a `SomeStruct` Cadence type is returned.
 
 ```diff
 + import Point from "./Point"
@@ -543,7 +533,7 @@ function App() {
 
 ## Execute a Cadence Transaction
 
-Flow Transactions are used to *move* **[resources](notion://www.notion.so/dapperlabs/resources)** and interact with smart contracts on behalf of Flow accounts. `@onflow` provides flexible primitives composing authorizing and paying for Transactions on Flow.
+Flow Transactions are used to _move_ **[resources](notion://www.notion.so/dapperlabs/resources)** and interact with smart contracts on behalf of Flow accounts. `@onflow` provides flexible primitives composing authorizing and paying for Transactions on Flow.
 
 `@onflow` allows for specifying the **payer**, **proposer** and **authorizer** of transactions on Flow.
 
@@ -570,11 +560,11 @@ const response = await fcl.send([
 You can subscribe to the result of a transaction in your client code.
 
 ```jsx
- const unsub = fcl.tx(response).subscribe(transaction => {
-     if (fcl.tx.isSealed(transaction)) {
-       setState("Transaction Confirmed: Is Sealed")
-       unsub()
-     }
+const unsub = fcl.tx(response).subscribe((transaction) => {
+  if (fcl.tx.isSealed(transaction)) {
+    setState("Transaction Confirmed: Is Sealed")
+    unsub()
+  }
 })
 ```
 
@@ -591,7 +581,7 @@ const Status = styled.pre``
 
 export default function TransactionOne() {
   const [status, setStatus] = useState("Not Started")
-  const runTransaction = async e => {
+  const runTransaction = async (e) => {
     e.preventDefault()
     setStatus("Resolving...")
 
@@ -609,7 +599,7 @@ export default function TransactionOne() {
 
     setStatus("Transaction Sent, Waiting for Confirmation")
 
-    const unsub = fcl.tx(response).subscribe(transaction => {
+    const unsub = fcl.tx(response).subscribe((transaction) => {
       if (fcl.tx.isSealed(transaction)) {
         setStatus("Transaction Confirmed: Is Sealed")
         unsub()
@@ -624,7 +614,6 @@ export default function TransactionOne() {
     </Root>
   )
 }
-
 ```
 
 Display the `TransactionOne` component in your app
@@ -658,15 +647,17 @@ Our application is complete!
 To deploy your app, you'll need to modify your configuration. Once the Flow Mainnet is live you'll be able to obtain an production Access Node API url and API Key. More on this soon!
 
 ```jsx
-if(process.env.NODE_ENV === 'development') {
-    fcl.config()
-       .put("challenge.handshake", "http://localhost:8701/flow/authenticate")
+if (process.env.NODE_ENV === "development") {
+  fcl
+    .config()
+    .put("challenge.handshake", "http://localhost:8701/flow/authenticate")
 }
 
 if (process.env.NODE_ENV === "production") {
-    fcl.config()
-       .put("accessNode.api", process.env.ACCESS_NODE_API)
-       .put("accessNode.key", process.env.ACCESS_NODE_KEY)
+  fcl
+    .config()
+    .put("accessNode.api", process.env.ACCESS_NODE_API)
+    .put("accessNode.key", process.env.ACCESS_NODE_KEY)
 }
 ```
 
@@ -674,9 +665,9 @@ if (process.env.NODE_ENV === "production") {
 
 Congratulations you've completed a tour of the basic functionality of `@onflow/fcl` by completing the following tasks
 
-- Use `@onflow/fcl`  to  perform authentication and authorization of Flow accounts
-- Use `@onflow/fcl`  to send scripts and transactions to the Flow blockchain emulator
-- Install and use  the Flow blockchain emulator (`flow`)
+- Use `@onflow/fcl` to perform authentication and authorization of Flow accounts
+- Use `@onflow/fcl` to send scripts and transactions to the Flow blockchain emulator
+- Install and use the Flow blockchain emulator (`flow`)
 - Install and use the FCL Dev Wallet (`fcl-wallet`) to simulate connection between your app, `@onflow/fcl` and a user's 3rd party key management software
 - Configure `@onflow/fcl` for a production deployment
 

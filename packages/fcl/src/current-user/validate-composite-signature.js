@@ -1,9 +1,11 @@
 import {sansPrefix} from "@onflow/util-address"
+import {invariant} from "@onflow/util-invariant"
 
 const label = (key, full) => (full == null ? `'${key}'` : `'${key}' (${full})`)
 
 const missing = (key, full) =>
   `Missing ${label(key, full)} in Composite Signature.`
+
 const noMatch = (key, full) =>
   `${label(
     key,
@@ -12,17 +14,18 @@ const noMatch = (key, full) =>
 
 export function validateCompositeSignature(compSig, authz) {
   try {
-    if (compSig.addr == null) throw new Error(missing("addr", "Address"))
-    if (compSig.keyId == null) throw new Error(missing("keyId"))
-    if (compSig.signature == null) throw new Error(missing("signature"))
-    if (sansPrefix(compSig.addr) !== sansPrefix(authz.addr)) throw new Error(noMatch("addr", "Address"))
-    if (compSig.keyId !== authz.keyId) throw new Error(noMatch("keyId"))
+    const xxx = {compSig, authz}
+    invariant(compSig.addr, missing("addr", "Address"), xxx)
+    invariant(compSig.keyId, missing("keyId"), xxx)
+    invariant(compSig.signature, missing("signature"), xxx)
+    invariant(compSig.keyId === authz.identity.keyId, noMatch("keyId"), xxx)
+    invariant(
+      sansPrefix(compSig.addr) === sansPrefix(authz.identity.address),
+      noMatch("addr", "Address"),
+      xxx
+    )
     return compSig
   } catch (error) {
-    console.error(error, "\n\n", {
-      "Composite Signature": compSig,
-      "Authz Service": authz,
-    })
     throw new Error(
       `Composite Signature from Wallet Provider failed Validation/Sanitation.\nReason: ${error.message}`
     )

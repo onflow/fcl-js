@@ -3,6 +3,7 @@ import {account} from "@onflow/sdk-account"
 import {config} from "@onflow/config"
 import {spawn, send, INIT, SUBSCRIBE, UNSUBSCRIBE} from "@onflow/util-actor"
 import {sansPrefix} from "@onflow/util-address"
+import {account as fetchAccount} from "@onflow/sdk-account"
 import {renderAuthnFrame} from "./render-authn-frame"
 import {buildUser} from "./build-user"
 import {fetchServices} from "./fetch-services"
@@ -17,14 +18,17 @@ const SNAPSHOT = "SNAPSHOT"
 const SET_CURRENT_USER = "SET_CURRENT_USER"
 const DEL_CURRENT_USER = "DEL_CURRENT_USER"
 
+const CANCEL_EVENT = "FCL::CANCEL"
 const CHALLENGE_RESPONSE_EVENT = "FCL::CHALLENGE::RESPONSE"
 const CHALLENGE_CANCEL_EVENT = "FCL::CHALLENGE::CANCEL"
 
 const DATA = `{
-  "VERSION": "0.2.0",
+  "@type": "User",
+  "@vsn": "1.0.0",
   "addr":null,
   "cid":null,
   "loggedIn":null,
+  "expiresAt":null,
   "services":[]
 }`
 
@@ -32,7 +36,7 @@ const coldStorage = {
   get: async () => {
     const fallback = JSON.parse(DATA)
     const stored = JSON.parse(sessionStorage.getItem(NAME))
-    if (stored != null && fallback.VERSION !== stored.VERSION) {
+    if (stored != null && fallback["@vsn"] !== stored["@vsn"]) {
       sessionStorage.removeItem(NAME)
       return fallback
     }
@@ -51,7 +55,10 @@ const canColdStorage = () => {
 const HANDLERS = {
   [INIT]: async (ctx) => {
     ctx.merge(JSON.parse(DATA))
-    if (await canColdStorage()) ctx.merge(await coldStorage.get())
+    if (await canColdStorage()) {
+      const user = await coldStorage.get()
+      if (notExpired(user)) ctx.merge(user)
+    }
   },
   [SUBSCRIBE]: (ctx, letter) => {
     ctx.subscribe(letter.from)
@@ -78,11 +85,19 @@ const HANDLERS = {
 const identity = (v) => v
 const spawnCurrentUser = () => spawn(HANDLERS, NAME)
 
+function notExpired(user) {
+  return (
+    user.expiresAt == null ||
+    user.expiresAt === 0 ||
+    user.expiresAt > Date.now()
+  )
+}
+
 async function authenticate() {
   return new Promise(async (resolve) => {
     spawnCurrentUser()
     const user = await snapshot()
-    if (user.loggedIn) return resolve(user)
+    if (user.loggedIn && notExpired(user)) return resolve(user)
 
     const [$frame, unrender] = renderAuthnFrame({
       handshake: await config().get("challenge.handshake"),
@@ -90,7 +105,7 @@ async function authenticate() {
     })
 
     const replyFn = async ({data}) => {
-      if (data.type === CHALLENGE_CANCEL_EVENT) {
+      if (data.type === CHALLENGE_CANCEL_EVENT || data.type === CANCEL_EVENT) {
         unrender()
         window.removeEventListener("message", replyFn)
         return
@@ -116,26 +131,29 @@ function unauthenticate() {
 async function authorization(account) {
   spawnCurrentUser()
   const user = await authenticate()
+  const authn = serviceOfType(user.services, "authn")
   const authz = serviceOfType(user.services, "authz")
+  const preAuthz = serviceOfType(user.services, "pre-authz")
 
-  let sequenceNum
-  if (account.role.proposer) {
-    const acct = await info()
-    const key = acct.keys.find((key) => key.index === authz.keyId)
-    sequenceNum = key.sequenceNumber
-  }
-
-  const signingFunction = async (signable) => execAuthzService(authz, signable)
+  // if (preAuthz != null) {
+  //   return {
+  //     ...account,
+  //     resolve: (account, signable),
+  //     tempId: [authz.identity.address, authz.identity.keyId].join("|")
+  //   }
+  // }
 
   return {
     ...account,
-    addr: sansPrefix(authz.addr),
-    keyId: authz.keyId,
-    sequenceNum,
-    signature: account.signature || null,
-    signingFunction,
+    tempId: "CURRENT_USER",
     resolve: null,
-    roles: account.roles,
+    addr: sansPrefix(authz.identity.address),
+    keyId: authz.identity.keyId,
+    sequenceNum: null,
+    signature: null,
+    async signingFunction(signable) {
+      return execAuthzService(authz, signable)
+    },
   }
 }
 
