@@ -1,6 +1,6 @@
 {
   "name": "@onflow/sdk-account",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Flow JS SDK -- Fetch Account details from Configured Access Node",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
@@ -27,7 +27,7 @@
   "module": "dist/sdk-account.module.js",
   "unpkg": "dist/sdk-account.umd.js",
   "scripts": {
-    "prepublishOnly": "npm test && npm run build",
+    "prepublishOnly": "npm install && npm test && npm run build",
     "test": "jest",
     "build": "microbundle",
     "test:watch": "jest --watch",
@@ -36,6 +36,6 @@
   "dependencies": {
     "@onflow/sdk-build-get-account": "0.0.1",
     "@onflow/sdk-decode": "0.0.1",
-    "@onflow/sdk-send": "0.0.2"
+    "@onflow/sdk-send": "0.0.5"
   }
 }
