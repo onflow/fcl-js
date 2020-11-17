@@ -2,6 +2,36 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.0.5 -- 2020-11-17
+
+- 2020-11-17 -- Includes updated lock file
+
+### 0.0.4 -- 2020-11-17
+
+- 2020-11-17 -- Globally Injectable Send and Resolve Function as Config
+- 2020-11-17 -- Injectable Send and Resolve Function as Option
+
+> Notes
+
+```javascript
+// As Config
+import {config} from "@onflow/config"
+
+config()
+  .put("sdk.resolve", async (ix) => ix)
+  .put("sdk.send", async (ix) => console.log(ix))
+
+await send([getAccount("0x1d007d755706c469")])
+
+// As Options
+const opts = {
+  resolve: async (ix) => ix,
+  send: async (ix) => console.log(ix),
+}
+
+await send([getAccount("0x1d007d755706c469")], opts)
+```
+
 ### 0.0.3 -- 2020-11-04
 
 - 2020-10-28 -- VSN `@onflow/sdk-resolve` 0.0.3 -> 0.0.4
