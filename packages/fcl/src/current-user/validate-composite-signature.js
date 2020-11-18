@@ -16,7 +16,7 @@ export function validateCompositeSignature(compSig, authz) {
   try {
     const xxx = {compSig, authz}
     invariant(compSig.addr, missing("addr", "Address"), xxx)
-    invariant(compSig.keyId, missing("keyId"), xxx)
+    invariant(compSig.keyId != null, missing("keyId"), xxx)
     invariant(compSig.signature, missing("signature"), xxx)
     invariant(compSig.keyId === authz.identity.keyId, noMatch("keyId"), xxx)
     invariant(
