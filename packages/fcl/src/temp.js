@@ -70,12 +70,10 @@ async function resolve(ix) {
   }
 
   // Pre-Authz
-  if (isTransaction(ix)) {
-    // console.log("RESOLVE PRE_AUTHZ START", ix)
-    // console.log("RESOLVE PRE_AUTHZ END", ix)
-  }
+  // if (isTransaction(ix)) {}
 
   // Dedupe Again
+  // if (isTransaction(ix)) {}
 
   // Fetch Ref
   if (isTransaction(ix) && ix.message.refBlock == null) {
@@ -96,7 +94,6 @@ async function resolve(ix) {
 
   // Signatures
   if (isTransaction(ix)) {
-    console.log("RESOLVE SIGNATURES START", ix)
     // Inside Signers Are: (authorizers + proposer) - payer
     let insideSigners = new Set(ix.authorizations)
     insideSigners.add(ix.proposer)
@@ -106,8 +103,6 @@ async function resolve(ix) {
     // Outside Signers Are: (payer)
     let outsideSigners = new Set([ix.payer])
     outsideSigners = Array.from(outsideSigners)
-
-    console.log("SIGNATORIES", {insideSigners, outsideSigners})
 
     const insidePayload = encodeInsideMessage(prepForEncoding(ix))
     await Promise.all(
@@ -144,8 +139,6 @@ async function resolve(ix) {
         ix.accounts[id].signature = signature
       })
     )
-
-    console.log("RESOLVE SIGNATURES END", ix)
   }
 
   return ix

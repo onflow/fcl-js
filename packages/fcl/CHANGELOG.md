@@ -2,6 +2,10 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.0.67-alpha.3 - 2020-11-17
+
+- 2020-11-17 -- Fix issue where validation for composite signature for keyId of zero was counted as false
+
 ### 0.0.67-alpha.2 - 2020-11-17
 
 - 2020-11-17 -- Injected in a custom resolver in prep for pre-authz service
