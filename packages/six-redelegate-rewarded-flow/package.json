@@ -1,6 +1,6 @@
 {
   "name": "@onflow/six-redelegate-rewarded-flow",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Flow SDK Stored Interaction - Redelegate Rewarded Flow",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
