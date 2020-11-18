@@ -28,8 +28,8 @@ export const CODE =
 transaction(amount: UFix64) {
     let nodeDelegatorProxy: LockedTokens.LockedNodeDelegatorProxy
 
-    prepare(acct: AuthAccount) {
-        let holderRef = acct.borrow<&LockedTokens.TokenHolder>(from: LockedTokens.TokenHolderStoragePath) 
+    prepare(account: AuthAccount) {
+        let holderRef = account.borrow<&LockedTokens.TokenHolder>(from: LockedTokens.TokenHolderStoragePath) 
             ?? panic("TokenHolder is not saved at specified path")
         
         self.nodeDelegatorProxy = holderRef.borrowDelegator()
