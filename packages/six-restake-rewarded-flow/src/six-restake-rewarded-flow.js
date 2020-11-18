@@ -34,8 +34,8 @@ transaction(amount: UFix64) {
 
     let holderRef: &LockedTokens.TokenHolder
 
-    prepare(acct: AuthAccount) {
-        self.holderRef = acct.borrow<&LockedTokens.TokenHolder>(from: LockedTokens.TokenHolderStoragePath)
+    prepare(account: AuthAccount) {
+        self.holderRef = account.borrow<&LockedTokens.TokenHolder>(from: LockedTokens.TokenHolderStoragePath)
             ?? panic("Could not borrow reference to TokenHolder")
     }
 
