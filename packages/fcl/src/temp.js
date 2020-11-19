@@ -14,7 +14,22 @@ const isFn = (v) => typeof v === "function"
 
 async function resolve(ix) {
   ix = await ix
-  // resolve cadence
+  await execCadence(ix)
+  await execArguments(ix)
+  await execResolveAccounts(ix)
+
+  // Pre-Authz
+  // if (isTransaction(ix)) {}
+
+  await execFetchRef(ix)
+  await execFetchSequenceNumber(ix)
+  await execSignatures(ix)
+  return ix
+}
+
+config().put("sdk.resolve", resolve)
+
+async function execCadence(ix) {
   if (isTransaction(ix) || isScript(ix)) {
     var cadence = get(ix, "ix.cadence")
     invariant(
@@ -23,28 +38,40 @@ async function resolve(ix) {
     )
     if (isFn(cadence)) cadence = await cadence({})
     invariant(isString(cadence), "Cadence needs to be a string at this point.")
-    // CONTRACT ADDRESS REPLACEMENT CAN GO HERE??
-    ix.message.cadence = cadence
+    ix.message.cadence = await config()
+      .where(/^0x/)
+      .then((d) =>
+        Object.entries(d).reduce(
+          (cadence, [key, value]) => cadence.replace(key, value),
+          cadence
+        )
+      )
   }
 
-  // resolve arguments
-  if (isTransaction(ix) || isScript(ix)) {
-    function cast(arg) {
-      invariant(
-        typeof arg.xform != null,
-        `No type specified for argument: ${arg.value}`
-      )
-      if (isFn(arg.xform)) return arg.xform(arg.value)
-      if (isFn(arg.xform.asArgument)) return arg.xform.asArgument(arg.value)
-      invariant(false, `Invalid Argument`, arg)
-    }
+  return ix
+}
 
+async function execArguments(ix) {
+  function cast(arg) {
+    invariant(
+      typeof arg.xform != null,
+      `No type specified for argument: ${arg.value}`
+    )
+    if (isFn(arg.xform)) return arg.xform(arg.value)
+    if (isFn(arg.xform.asArgument)) return arg.xform.asArgument(arg.value)
+    invariant(false, `Invalid Argument`, arg)
+  }
+
+  if (isTransaction(ix) || isScript(ix)) {
     for (let [id, arg] of Object.entries(ix.arguments)) {
       ix.arguments[id].asArgument = cast(arg)
     }
   }
 
-  // First Resolution of Accounts
+  return ix
+}
+
+async function execResolveAccounts(ix) {
   if (isTransaction(ix)) {
     // Dedupe and collect roles
     var axs = {}
@@ -68,19 +95,17 @@ async function resolve(ix) {
     }
     ix.accounts = axs
   }
+  return ix
+}
 
-  // Pre-Authz
-  // if (isTransaction(ix)) {}
-
-  // Dedupe Again
-  // if (isTransaction(ix)) {}
-
-  // Fetch Ref
+async function execFetchRef(ix) {
   if (isTransaction(ix) && ix.message.refBlock == null) {
     ix.message.refBlock = (await latestBlock()).id
   }
+  return ix
+}
 
-  // Fetch Sequence Number
+async function execFetchSequenceNumber(ix) {
   if (isTransaction(ix)) {
     var acct = Object.values(ix.accounts).find((a) => a.role.proposer)
     invariant(acct, `Transactions require a proposer`)
@@ -91,8 +116,10 @@ async function resolve(ix) {
         .then((key) => key.sequenceNumber)
     }
   }
+  return ix
+}
 
-  // Signatures
+async function execSignatures(ix) {
   if (isTransaction(ix)) {
     // Inside Signers Are: (authorizers + proposer) - payer
     let insideSigners = new Set(ix.authorizations)
@@ -105,46 +132,56 @@ async function resolve(ix) {
     outsideSigners = Array.from(outsideSigners)
 
     const insidePayload = encodeInsideMessage(prepForEncoding(ix))
-    await Promise.all(
-      insideSigners.map(async (id) => {
-        const acct = ix.accounts[id]
-        if (acct.signature != null) return
-        const {signature} = await acct.signingFunction({
-          message: insidePayload,
-          addr: sansPrefix(acct.addr),
-          keyId: acct.keyId,
-          roles: acct.role,
-          interaction: ix,
-        })
-        ix.accounts[id].signature = signature
-      })
-    )
+    await Promise.all(insideSigners.map(fetchSignature(ix, insidePayload)))
 
     const outsidePayload = encodeOutsideMessage({
       ...prepForEncoding(ix),
       payloadSigs: insideSigners.map((id) => ix.accounts[id].signature),
     })
-
-    await Promise.all(
-      outsideSigners.map(async (id) => {
-        const acct = ix.accounts[id]
-        if (acct.signature != null) return
-        const {signature} = await acct.signingFunction({
-          message: outsidePayload,
-          addr: sansPrefix(acct.addr),
-          keyId: acct.keyId,
-          roles: acct.role,
-          interaction: ix,
-        })
-        ix.accounts[id].signature = signature
-      })
-    )
+    await Promise.all(outsideSigners.map(fetchSignature(ix, outsidePayload)))
   }
-
   return ix
 }
 
-config().put("sdk.resolve", resolve)
+function fetchSignature(ix, payload) {
+  return async function innerFetchSignature(id) {
+    const acct = ix.accounts[id]
+    if (acct.signature != null) return
+    const {signature} = await acct.signingFunction(
+      buildSignable(acct, payload, ix)
+    )
+    ix.accounts[id].signature = signature
+  }
+}
+
+function buildPreSignable(acct, ix) {
+  console.log("BUILD PRE SIGNABLE", {acct, message, ix})
+  return {
+    "@type": "PreSignable",
+    "@vsn": "1.0.0",
+    roles: acct.role,
+    cadence: ix.message.cadence,
+    args: ix.message.arguments.map((d) => ix.arguments[d].asArgument),
+    data: {},
+    interaction: ix,
+  }
+}
+
+function buildSignable(acct, message, ix) {
+  console.log("BUILD SIGNABLE", {acct, message, ix})
+  return {
+    "@type": "Signable",
+    "@vsn": "1.0.0",
+    message,
+    addr: sansPrefix(acct.addr),
+    keyId: acct.keyId,
+    roles: acct.role,
+    cadence: ix.message.cadence,
+    args: ix.message.arguments.map((d) => ix.arguments[d].asArgument),
+    data: {},
+    interaction: ix,
+  }
+}
 
 function prepForEncoding(ix) {
   return {

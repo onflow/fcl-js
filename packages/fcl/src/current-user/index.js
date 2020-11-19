@@ -152,6 +152,7 @@ async function authorization(account) {
     sequenceNum: null,
     signature: null,
     async signingFunction(signable) {
+      console.log("Signable", signable)
       return execAuthzService(authz, signable)
     },
   }

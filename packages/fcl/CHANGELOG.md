@@ -2,6 +2,59 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.0.67-alpha.4 - 2020-11-19
+
+- 2020-11-19 -- Auto replace known cadence addresses
+- 2020-11-17 -- Auto resolve sequence number for proposer if its not there
+
+> Example references this contract: [Testnet Profile Contract](https://flow-view-source.com/testnet/account/0x1d007d755706c469)
+
+```javascript
+// Config fcl with contract addresses
+// Their config key must start with `0x`
+fcl.config()
+  .put("env", "testnet")
+  .put("0xProfile", "0x1d007d755506c469")
+
+// Your transactions can now look like this
+await fcl.send([
+  fcl.proposer(fcl.authz),
+  fcl.authorizations([fcl.authz])
+  fcl.payer(fcl.authz),
+  fcl.limit(35),
+  fcl.args([
+    fcl.arg("Bob", t.String),
+  ]),
+  fcl.transaction`
+    import Profile from 0xProfile
+
+    transaction(displayName: String) {
+      prepare(account: AuthAccount) {
+        account
+          .borrow<&{Profile.Owner}>(from: Profile.privatePath)!
+          .setDisplayName(displayName)
+      }
+    }
+  `
+])
+
+// Your scripts can now look like this
+await fcl.send([
+  fcl.args([
+    fcl.arg("0xba1132bc08f82fe2", t.Address),
+  ]),
+  fcl.script`
+    import Profile from 0xProfile
+
+    pub fun main(address: Address): Profile.ReadOnly? {
+      return Profile.fetchProfile(address)
+    }
+  `,
+]).then(fcl.decode)
+
+
+```
+
 ### 0.0.67-alpha.3 - 2020-11-17
 
 - 2020-11-17 -- Fix issue where validation for composite signature for keyId of zero was counted as false
