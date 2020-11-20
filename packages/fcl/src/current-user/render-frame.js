@@ -7,18 +7,20 @@ export function renderFrame(src) {
   $frame.src = src
   $frame.id = FRAME_ID
   $frame.allow = "usb *"
-  $frame.style.position = "fixed"
-  $frame.style.top = "0px"
-  $frame.style.right = "0px"
-  $frame.style.left = "0px"
-  $frame.style.bottom = "0px"
-  $frame.style.height = "100vh"
-  $frame.style.width = "100vw"
-  $frame.style.display = "block"
-  $frame.style.background = "rgba(0,0,0,0.25)"
-  $frame.style.zIndex = 2147483647
   $frame.frameBorder = "0"
-  $frame.style.boxSizing = "border-box"
+  $frame.style.cssText = `
+    position:fixed;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+    height: 100vh;
+    width: 100vw;
+    display:block;
+    background:rgba(0,0,0,0.25);
+    z-index: 2147483647;
+    box-sizing: border-box;
+  `
   document.body.append($frame)
 
   const unmount = () => {

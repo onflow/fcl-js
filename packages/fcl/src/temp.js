@@ -17,10 +17,6 @@ async function resolve(ix) {
   await execCadence(ix)
   await execArguments(ix)
   await execResolveAccounts(ix)
-
-  // Pre-Authz
-  // if (isTransaction(ix)) {}
-
   await execFetchRef(ix)
   await execFetchSequenceNumber(ix)
   await execSignatures(ix)
@@ -71,30 +67,82 @@ async function execArguments(ix) {
   return ix
 }
 
+const resolveAccount = async (ax) => {
+  if (isFn(ax.resolve)) ax.resolve(ax)
+  return ax
+}
+
+async function resolveAccounts(ix, accounts, last, depth = 3) {
+  invariant(depth, "Account Resolve Recursion Limit Exceeded", {ix, accounts})
+  console.log("resolveAccounts", accounts, ix)
+  for (let ax of accounts) {
+    var old = last || ax
+    if (isFn(ax.resolve)) ax = await ax.resolve(ax, buildPreSignable(ax, ix))
+    console.log(">>>", {old, ax})
+
+    if (Array.isArray(ax)) {
+      console.log("RECURSE!!", ax)
+      await resolveAccounts(ix, ax, old, depth - 1)
+    } else {
+      ix.accounts[ax.tempId] = ix.accounts[ax.tempId] || ax
+      ix.accounts[ax.tempId].role.proposer =
+        ix.accounts[ax.tempId].role.proposer || ax.role.proposer
+      ix.accounts[ax.tempId].role.payer =
+        ix.accounts[ax.tempId].role.payer || ax.role.payer
+      ix.accounts[ax.tempId].role.authorizer =
+        ix.accounts[ax.tempId].role.authorizer || ax.role.authorizer
+
+      // this needs to be based on if the account has the role...
+      if (ix.proposer === old.tempId) ix.proposer = ax.tempId
+      if (ix.payer === old.tempId) ix.payer = ax.tempId
+      ix.authorizations = ix.authorizations.map((d) =>
+        d === old.tempId ? ax.tempId : d
+      )
+    }
+    if (old.tempId != ax.tempId) delete ix.accounts[old.tempId]
+  }
+}
+
 async function execResolveAccounts(ix) {
   if (isTransaction(ix)) {
-    // Dedupe and collect roles
-    var axs = {}
-    for (let [id, acct] of Object.entries(ix.accounts)) {
-      var _id = id
-      if (isFn(acct.resolve)) {
-        acct = await acct.resolve(acct)
-        id = acct.tempId
-      }
-
-      // deep upsert account and merge roles
-      axs[id] = axs[id] || acct
-      axs[id].role.proposer = axs[id].role.proposer || acct.role.proposer
-      axs[id].role.payer = axs[id].role.payer || acct.role.payer
-      axs[id].role.authorizer = axs[id].role.authorizer || acct.role.authorizer
-
-      // Replace older temp Ids to be new ones
-      if (ix.proposer === _id) ix.proposer = id
-      if (ix.payer === _id) ix.payer = id
-      ix.authorizations = ix.authorizations.map((d) => (d === _id ? id : d))
+    try {
+      console.log("START", ix)
+      console.log("AAA", ix.accounts)
+      await resolveAccounts(ix, Object.values(ix.accounts))
+      console.log("BBB", ix.accounts)
+      await resolveAccounts(ix, Object.values(ix.accounts))
+      console.log("CCC", ix.accounts)
+      console.log("END", ix)
+    } catch (error) {
+      console.error("=== SAD PANDA ===\n\n", error, "\n\n=== SAD PANDA ===")
+      throw error
     }
-    ix.accounts = axs
+    // throw new Error("BOOM!!")
   }
+
+  // Dedupe and collect roles
+  // if (isTransaction(ix)) {
+  //   var axs = {}
+  //   for (let [id, acct] of Object.entries(ix.accounts)) {
+  //     var _id = id
+  //     if (isFn(acct.resolve)) {
+  //       acct = await acct.resolve(acct)
+  //       id = acct.tempId
+  //     }
+
+  //     // deep upsert account and merge roles
+  //     axs[id] = axs[id] || acct
+  //     axs[id].role.proposer = axs[id].role.proposer || acct.role.proposer
+  //     axs[id].role.payer = axs[id].role.payer || acct.role.payer
+  //     axs[id].role.authorizer = axs[id].role.authorizer || acct.role.authorizer
+
+  //     // Replace older temp Ids to be new ones
+  //     if (ix.proposer === _id) ix.proposer = id
+  //     if (ix.payer === _id) ix.payer = id
+  //     ix.authorizations = ix.authorizations.map((d) => (d === _id ? id : d))
+  //   }
+  //   ix.accounts = axs
+  // }
   return ix
 }
 
@@ -109,7 +157,7 @@ async function execFetchSequenceNumber(ix) {
   if (isTransaction(ix)) {
     var acct = Object.values(ix.accounts).find((a) => a.role.proposer)
     invariant(acct, `Transactions require a proposer`)
-    if (acct.sequenceNum === null) {
+    if (acct.sequenceNum == null) {
       ix.accounts[acct.tempId].sequenceNum = await fetchAccount(acct.addr)
         .then((acct) => acct.keys)
         .then((keys) => keys.find((key) => key.index === acct.keyId))
@@ -121,26 +169,37 @@ async function execFetchSequenceNumber(ix) {
 
 async function execSignatures(ix) {
   if (isTransaction(ix)) {
-    // Inside Signers Are: (authorizers + proposer) - payer
-    let insideSigners = new Set(ix.authorizations)
-    insideSigners.add(ix.proposer)
-    insideSigners.delete(ix.payer)
-    insideSigners = Array.from(insideSigners)
+    try {
+      let insideSigners = findInsideSigners(ix)
+      const insidePayload = encodeInsideMessage(prepForEncoding(ix))
+      await Promise.all(insideSigners.map(fetchSignature(ix, insidePayload)))
 
-    // Outside Signers Are: (payer)
-    let outsideSigners = new Set([ix.payer])
-    outsideSigners = Array.from(outsideSigners)
-
-    const insidePayload = encodeInsideMessage(prepForEncoding(ix))
-    await Promise.all(insideSigners.map(fetchSignature(ix, insidePayload)))
-
-    const outsidePayload = encodeOutsideMessage({
-      ...prepForEncoding(ix),
-      payloadSigs: insideSigners.map((id) => ix.accounts[id].signature),
-    })
-    await Promise.all(outsideSigners.map(fetchSignature(ix, outsidePayload)))
+      let outsideSigners = findOutsideSigners(ix)
+      const outsidePayload = encodeOutsideMessage({
+        ...prepForEncoding(ix),
+        payloadSigs: insideSigners.map((id) => ix.accounts[id].signature),
+      })
+      await Promise.all(outsideSigners.map(fetchSignature(ix, outsidePayload)))
+    } catch (error) {
+      console.error("Signatures", error, {ix})
+      throw error
+    }
   }
   return ix
+}
+
+function findInsideSigners(ix) {
+  // Inside Signers Are: (authorizers + proposer) - payer
+  let inside = new Set(ix.authorizations)
+  inside.add(ix.proposer)
+  inside.delete(ix.payer)
+  return Array.from(inside)
+}
+
+function findOutsideSigners(ix) {
+  // Outside Signers Are: (payer)
+  let outside = new Set([ix.payer])
+  return Array.from(outside)
 }
 
 function fetchSignature(ix, payload) {
@@ -155,31 +214,39 @@ function fetchSignature(ix, payload) {
 }
 
 function buildPreSignable(acct, ix) {
-  console.log("BUILD PRE SIGNABLE", {acct, message, ix})
-  return {
-    "@type": "PreSignable",
-    "@vsn": "1.0.0",
-    roles: acct.role,
-    cadence: ix.message.cadence,
-    args: ix.message.arguments.map((d) => ix.arguments[d].asArgument),
-    data: {},
-    interaction: ix,
+  try {
+    return {
+      "@type": "PreSignable",
+      "@vsn": "1.0.0",
+      roles: acct.role,
+      cadence: ix.message.cadence,
+      args: ix.message.arguments.map((d) => ix.arguments[d].asArgument),
+      data: {},
+      interaction: ix,
+    }
+  } catch (error) {
+    console.error("buildPreSignable", error)
+    throw error
   }
 }
 
 function buildSignable(acct, message, ix) {
-  console.log("BUILD SIGNABLE", {acct, message, ix})
-  return {
-    "@type": "Signable",
-    "@vsn": "1.0.0",
-    message,
-    addr: sansPrefix(acct.addr),
-    keyId: acct.keyId,
-    roles: acct.role,
-    cadence: ix.message.cadence,
-    args: ix.message.arguments.map((d) => ix.arguments[d].asArgument),
-    data: {},
-    interaction: ix,
+  try {
+    return {
+      "@type": "Signable",
+      "@vsn": "1.0.0",
+      message,
+      addr: sansPrefix(acct.addr),
+      keyId: acct.keyId,
+      roles: acct.role,
+      cadence: ix.message.cadence,
+      args: ix.message.arguments.map((d) => ix.arguments[d].asArgument),
+      data: {},
+      interaction: ix,
+    }
+  } catch (error) {
+    console.error("buildSignable", error)
+    throw error
   }
 }
 

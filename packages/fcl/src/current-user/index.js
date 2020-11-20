@@ -9,8 +9,9 @@ import {buildUser} from "./build-user"
 import {fetchServices} from "./fetch-services"
 import {mergeServices} from "./merge-services"
 import {serviceOfType} from "./service-of-type"
-import {execAuthzService} from "./exec-authz-service"
+// import {execAuthzService} from "./exec-authz-service"
 import {validateCompositeSignature} from "./validate-composite-signature"
+import {execService} from "./exec-service"
 
 const NAME = "CURRENT_USER"
 const UPDATED = "CURRENT_USER/UPDATED"
@@ -128,34 +129,83 @@ function unauthenticate() {
   send(NAME, DEL_CURRENT_USER)
 }
 
+// async buildAuthzFn(authz) {
+//   return function authz(account) {
+//     return {
+//       ...account,
+//       tempId: [authz.identity.address, authz.identity.keyId].join("|"),
+//       addr: sansPrefix(authz.identity.address),
+//       keyId: authz.identity.keyId,
+//       async signingFunction(signable) {
+//         return execService(authz, signable)
+//       }
+//     }
+//   }
+// }
+
+const mmmh = (authz) => ({
+  f_type: "PreAuthzResponse",
+  f_vsn: "1.0.0",
+  proposer: authz,
+  payer: [authz],
+  authorization: [authz],
+})
+
+function rawr(authz) {
+  const resp = mmmh(authz)
+  const axs = []
+
+  if (resp.proposer != null) axs.push(["PROPOSER", resp.proposer])
+  for (let az of resp.payer || []) axs.push(["PAYER", az])
+  for (let az of resp.authorization || []) axs.push(["AUTHORIZER", az])
+
+  return axs.map(([role, az]) => ({
+    tempId: [az.identity.address, az.identity.keyId].join("|"),
+    addr: az.identity.address,
+    keyId: az.identity.keyId,
+    signingFunction(signable) {
+      return execService(authz, signable)
+    },
+    role: {
+      proposer: role === "PROPOSER",
+      payer: role === "PAYER",
+      authorizer: role === "AUTHORIZER",
+    },
+  }))
+}
+
 async function authorization(account) {
   spawnCurrentUser()
   const user = await authenticate()
-  const authn = serviceOfType(user.services, "authn")
   const authz = serviceOfType(user.services, "authz")
-  const preAuthz = serviceOfType(user.services, "pre-authz")
-
-  // if (preAuthz != null) {
-  //   return {
-  //     ...account,
-  //     resolve: (account, signable),
-  //     tempId: [authz.identity.address, authz.identity.keyId].join("|")
-  //   }
-  // }
+  // const preAuthz = serviceOfType(user.services, "pre-authz")
 
   return {
     ...account,
     tempId: "CURRENT_USER",
-    resolve: null,
-    addr: sansPrefix(authz.identity.address),
-    keyId: authz.identity.keyId,
-    sequenceNum: null,
-    signature: null,
-    async signingFunction(signable) {
-      console.log("Signable", signable)
-      return execAuthzService(authz, signable)
+    async resolve(account, preSignable) {
+      console.log("FETCHY", {account, preSignable})
+      return rawr(authz)
     },
   }
+
+  // return {
+  //   ...account,
+  //   tempId: "CURRENT_USER",
+  //   resolve: null,
+  //   addr: sansPrefix(authz.identity.address),
+  //   keyId: authz.identity.keyId,
+  //   sequenceNum: null,
+  //   signature: null,
+  //   async signingFunction(signable) {
+  //     return execService(authz, signable)
+  //   },
+  // }
+}
+
+function log(d) {
+  console.log(">>>", d)
+  return d
 }
 
 function subscribe(callback) {

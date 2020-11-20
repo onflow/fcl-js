@@ -32,7 +32,7 @@ export async function buildUser(data) {
     await fetchServices(data.hks, data.code)
   ).map((service) => normalizeService(service, data))
 
-  console.log("BUILD USER", services)
+  // console.log("BUILD USER", services)
 
   const authn = findService("authn", services)
 
