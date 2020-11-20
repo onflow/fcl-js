@@ -11,7 +11,7 @@ export const authenticate = () => currentUser().authenticate()
 export const unauthenticate = () => currentUser().unauthenticate()
 export const reauthenticate = () => {
   currentUser().unauthenticate()
-  currentUser().authenticate()
+  return currentUser().authenticate()
 }
 export const signUp = () => currentUser().authenticate()
 export const logIn = () => currentUser().authenticate()
@@ -46,4 +46,4 @@ export {limit} from "@onflow/sdk-build-limit"
 export {ref} from "@onflow/sdk-build-ref"
 export {params, param} from "@onflow/sdk-build-params"
 
-export const VERSION = "0.0.67-alpha.15"
+export const VERSION = "0.0.67-alpha.16"

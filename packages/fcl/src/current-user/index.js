@@ -9,7 +9,6 @@ import {buildUser} from "./build-user"
 import {fetchServices} from "./fetch-services"
 import {mergeServices} from "./merge-services"
 import {serviceOfType} from "./service-of-type"
-// import {execAuthzService} from "./exec-authz-service"
 import {validateCompositeSignature} from "./validate-composite-signature"
 import {execService} from "./exec-service"
 
@@ -19,13 +18,14 @@ const SNAPSHOT = "SNAPSHOT"
 const SET_CURRENT_USER = "SET_CURRENT_USER"
 const DEL_CURRENT_USER = "DEL_CURRENT_USER"
 
+// Backwards Compatibility
 const CANCEL_EVENT = "FCL::CANCEL"
 const CHALLENGE_RESPONSE_EVENT = "FCL::CHALLENGE::RESPONSE"
 const CHALLENGE_CANCEL_EVENT = "FCL::CHALLENGE::CANCEL"
 
 const DATA = `{
-  "@type": "User",
-  "@vsn": "1.0.0",
+  "f_type": "User",
+  "f_vsn": "1.0.0",
   "addr":null,
   "cid":null,
   "loggedIn":null,
@@ -37,13 +37,13 @@ const coldStorage = {
   get: async () => {
     const fallback = JSON.parse(DATA)
     const stored = JSON.parse(sessionStorage.getItem(NAME))
-    if (stored != null && fallback["@vsn"] !== stored["@vsn"]) {
+    if (stored != null && fallback["f_vsn"] !== stored["f_vsn"]) {
       sessionStorage.removeItem(NAME)
       return fallback
     }
     return stored || fallback
   },
-  put: async (data) => {
+  put: async data => {
     sessionStorage.setItem(NAME, JSON.stringify(data))
     return data
   },
@@ -54,7 +54,7 @@ const canColdStorage = () => {
 }
 
 const HANDLERS = {
-  [INIT]: async (ctx) => {
+  [INIT]: async ctx => {
     ctx.merge(JSON.parse(DATA))
     if (await canColdStorage()) {
       const user = await coldStorage.get()
@@ -83,7 +83,7 @@ const HANDLERS = {
   },
 }
 
-const identity = (v) => v
+const identity = v => v
 const spawnCurrentUser = () => spawn(HANDLERS, NAME)
 
 function notExpired(user) {
@@ -95,7 +95,7 @@ function notExpired(user) {
 }
 
 async function authenticate() {
-  return new Promise(async (resolve) => {
+  return new Promise(async resolve => {
     spawnCurrentUser()
     const user = await snapshot()
     if (user.loggedIn && notExpired(user)) return resolve(user)
@@ -143,7 +143,7 @@ function unauthenticate() {
 //   }
 // }
 
-const mmmh = (authz) => ({
+const mmmh = authz => ({
   f_type: "PreAuthzResponse",
   f_vsn: "1.0.0",
   proposer: authz,
@@ -151,28 +151,28 @@ const mmmh = (authz) => ({
   authorization: [authz],
 })
 
-function rawr(authz) {
-  const resp = mmmh(authz)
-  const axs = []
+// function rawr(authz) {
+//   const resp = mmmh(authz)
+//   const axs = []
 
-  if (resp.proposer != null) axs.push(["PROPOSER", resp.proposer])
-  for (let az of resp.payer || []) axs.push(["PAYER", az])
-  for (let az of resp.authorization || []) axs.push(["AUTHORIZER", az])
+//   if (resp.proposer != null) axs.push(["PROPOSER", resp.proposer])
+//   for (let az of resp.payer || []) axs.push(["PAYER", az])
+//   for (let az of resp.authorization || []) axs.push(["AUTHORIZER", az])
 
-  return axs.map(([role, az]) => ({
-    tempId: [az.identity.address, az.identity.keyId].join("|"),
-    addr: az.identity.address,
-    keyId: az.identity.keyId,
-    signingFunction(signable) {
-      return execService(authz, signable)
-    },
-    role: {
-      proposer: role === "PROPOSER",
-      payer: role === "PAYER",
-      authorizer: role === "AUTHORIZER",
-    },
-  }))
-}
+//   return axs.map(([role, az]) => ({
+//     tempId: [az.identity.address, az.identity.keyId].join("|"),
+//     addr: az.identity.address,
+//     keyId: az.identity.keyId,
+//     signingFunction(signable) {
+//       return execService(authz, signable)
+//     },
+//     role: {
+//       proposer: role === "PROPOSER",
+//       payer: role === "PAYER",
+//       authorizer: role === "AUTHORIZER",
+//     },
+//   }))
+// }
 
 async function authorization(account) {
   spawnCurrentUser()
@@ -180,27 +180,27 @@ async function authorization(account) {
   const authz = serviceOfType(user.services, "authz")
   // const preAuthz = serviceOfType(user.services, "pre-authz")
 
-  return {
-    ...account,
-    tempId: "CURRENT_USER",
-    async resolve(account, preSignable) {
-      console.log("FETCHY", {account, preSignable})
-      return rawr(authz)
-    },
-  }
-
   // return {
   //   ...account,
   //   tempId: "CURRENT_USER",
-  //   resolve: null,
-  //   addr: sansPrefix(authz.identity.address),
-  //   keyId: authz.identity.keyId,
-  //   sequenceNum: null,
-  //   signature: null,
-  //   async signingFunction(signable) {
-  //     return execService(authz, signable)
+  //   async resolve(account, preSignable) {
+  //     console.log("FETCHY", {account, preSignable})
+  //     return rawr(authz)
   //   },
   // }
+
+  return {
+    ...account,
+    tempId: "CURRENT_USER",
+    resolve: null,
+    addr: sansPrefix(authz.identity.address),
+    keyId: authz.identity.keyId,
+    sequenceNum: null,
+    signature: null,
+    async signingFunction(signable) {
+      return execService(authz, signable)
+    },
+  }
 }
 
 function log(d) {
@@ -211,7 +211,7 @@ function log(d) {
 function subscribe(callback) {
   spawnCurrentUser()
   const EXIT = "@EXIT"
-  const self = spawn(async (ctx) => {
+  const self = spawn(async ctx => {
     ctx.send(NAME, SUBSCRIBE)
     while (1) {
       const letter = await ctx.receive()

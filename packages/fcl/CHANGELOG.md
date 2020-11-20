@@ -2,6 +2,10 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.0.67-alpha.16 - 2020-11-20
+
+- 2020-11-20 -- Rough in pre-authz flow
+
 ### 0.0.67-alpha.[7..15] - 2020-11-19
 
 - 2020-11-19 -- Experimental IFRAME/RPC strategy
