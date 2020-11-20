@@ -2,7 +2,15 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
-### 0.0.67-alpha.4 - 2020-11-19
+### 0.0.67-alpha.[7..15] - 2020-11-19
+
+- 2020-11-19 -- Experimental IFRAME/RPC strategy
+
+### 0.0.67-alpha.6 - 2020-11-19
+
+- 2020-11-19 -- IFRAMES can be closed with an `{type: "FCL:FRAME:CLOSE"}` postMessage
+
+### 0.0.67-alpha.5 - 2020-11-19
 
 - 2020-11-19 -- Auto replace known cadence addresses
 - 2020-11-17 -- Auto resolve sequence number for proposer if its not there
@@ -51,9 +59,11 @@ await fcl.send([
     }
   `,
 ]).then(fcl.decode)
-
-
 ```
+
+### 0.0.67-alpha.4 - 2020-11-17
+
+- 2020-11-17 -- Fix small issues involving NPM
 
 ### 0.0.67-alpha.3 - 2020-11-17
 
