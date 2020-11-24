@@ -2,6 +2,11 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.0.67-alpha.17 - 2020-11-23
+
+- 2020-11-23 -- `pre-authz` flow executed
+- 2020-11-23 -- `fcl.serialize` now accepts custom resolver
+
 ### 0.0.67-alpha.16 - 2020-11-20
 
 - 2020-11-20 -- Rough in pre-authz flow
