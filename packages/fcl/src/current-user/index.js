@@ -137,6 +137,29 @@ const mmmh = authz => ({
   authorization: [authz],
 })
 
+function rawr(authz) {
+  const resp = mmmh(authz)
+  const axs = []
+
+  if (resp.proposer != null) axs.push(["PROPOSER", resp.proposer])
+  for (let az of resp.payer || []) axs.push(["PAYER", az])
+  for (let az of resp.authorization || []) axs.push(["AUTHORIZER", az])
+
+  return axs.map(([role, az]) => ({
+    tempId: [az.identity.address, az.identity.keyId].join("|"),
+    addr: az.identity.address,
+    keyId: az.identity.keyId,
+    signingFunction(signable) {
+      return execService(authz, signable)
+    },
+    role: {
+      proposer: role === "PROPOSER",
+      payer: role === "PAYER",
+      authorizer: role === "AUTHORIZER",
+    },
+  }))
+}
+
 async function authorization(account) {
   spawnCurrentUser()
   const user = await authenticate()
@@ -148,7 +171,7 @@ async function authorization(account) {
       ...account,
       tempId: "CURRENT_USER",
       async resolve(account, preSignable) {
-        return execService(preAuthz, preSignable)
+        return rawr(await execService(preAuthz, preSignable))
       },
     }
   }

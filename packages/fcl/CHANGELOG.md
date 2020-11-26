@@ -2,6 +2,10 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.0.67-alpha.18 - 2020-11-26
+
+- 2020-11-23 -- `pre-authz` flatmaps exec-services response
+
 ### 0.0.67-alpha.17 - 2020-11-23
 
 - 2020-11-23 -- `pre-authz` flow executed
