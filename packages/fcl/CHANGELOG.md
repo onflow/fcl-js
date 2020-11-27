@@ -2,9 +2,17 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.0.67-alpha.[19..35] - 2020-11-26
+
+- 2020-11-26 -- `pre-authz` golden path tested on testnet with dapper
+- 2020-11-26 -- Early exit `HTTP/POST` so that it can work like an `HTTP/RPC`
+- 2020-11-26 -- added an alias from `HTTP/RPC` to `HTTP/POST`
+- 2020-11-26 -- additional `pre-authz` debuging in current user
+- 2020-11-26 -- service-endpoint includes `l6n` as `window.location.origin`
+
 ### 0.0.67-alpha.18 - 2020-11-26
 
-- 2020-11-23 -- `pre-authz` flatmaps exec-services response
+- 2020-11-26 -- `pre-authz` flatmaps exec-services response
 
 ### 0.0.67-alpha.17 - 2020-11-23
 
