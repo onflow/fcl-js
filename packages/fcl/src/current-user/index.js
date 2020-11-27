@@ -132,12 +132,13 @@ function unauthenticate() {
 const mmmh = authz => ({
   f_type: "PreAuthzResponse",
   f_vsn: "1.0.0",
-  proposer: authz,
-  payer: [authz],
-  authorization: [authz],
+  proposer: (authz || {}).proposer,
+  payer: (authz || {}).payer || [],
+  authorization: (authz || {}).authorization || [],
 })
 
 function rawr(authz) {
+  console.log("rawr(authz)[A]", {authz})
   const resp = mmmh(authz)
   const axs = []
 
@@ -145,12 +146,14 @@ function rawr(authz) {
   for (let az of resp.payer || []) axs.push(["PAYER", az])
   for (let az of resp.authorization || []) axs.push(["AUTHORIZER", az])
 
-  return axs.map(([role, az]) => ({
+  console.log("rawr(authz)[B]", {authz, axs, resp})
+
+  var result = axs.map(([role, az]) => ({
     tempId: [az.identity.address, az.identity.keyId].join("|"),
     addr: az.identity.address,
     keyId: az.identity.keyId,
     signingFunction(signable) {
-      return execService(authz, signable)
+      return execService(az, signable)
     },
     role: {
       proposer: role === "PROPOSER",
@@ -158,6 +161,8 @@ function rawr(authz) {
       authorizer: role === "AUTHORIZER",
     },
   }))
+  console.log("rawr(authz)[x]", {authz, result})
+  return result
 }
 
 async function authorization(account) {

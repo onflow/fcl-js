@@ -15,7 +15,7 @@ const IGNORE = new Set([
 
 export function frame(service, opts = {}) {
   console.log("FRAME", {service, opts})
-  if (service == null) return service
+  if (service == null) return {send: noop, close: noop}
 
   const onClose = opts.onClose || noop
   const onMessage = opts.onMessage || noop

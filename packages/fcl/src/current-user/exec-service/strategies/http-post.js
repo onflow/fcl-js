@@ -11,21 +11,30 @@ export async function execHttpPost(service, signable) {
     data: signable,
   }).then(normalizePollingResponse)
 
-  var canContinue = true
-  const {close: closeFrame} = frame(resp.local, {
-    onClose() {
-      canContinue = false
-    },
-  })
+  if (resp.status === "APPROVED") {
+    return resp.data
+  } else if (resp.status === "DECLINED") {
+    throw new Error(`Declined: ${resp.reason || "No reason supplied."}`)
+  } else if (resp.status === "PENDING") {
+    var canContinue = true
+    const {close: closeFrame} = frame(resp.local, {
+      onClose() {
+        canContinue = false
+      },
+    })
 
-  return poll(resp.updates, () => canContinue)
-    .then((compositeSignature) => {
-      closeFrame()
-      return normalizeCompositeSignature(compositeSignature)
-    })
-    .catch((error) => {
-      console.error(error)
-      closeFrame()
-      throw error
-    })
+    return poll(resp.updates, () => canContinue)
+      .then(compositeSignature => {
+        closeFrame()
+        return normalizeCompositeSignature(compositeSignature)
+      })
+      .catch(error => {
+        console.error(error)
+        closeFrame()
+        throw error
+      })
+  } else {
+    console.error(`Auto Decline: Invalid Response`, {service, resp})
+    throw new Error(`Auto Decline: Invalid Response`)
+  }
 }

@@ -9,17 +9,23 @@ import {
   encodeTransactionEnvelope as encodeOutsideMessage,
 } from "@onflow/encode"
 
-const isString = (v) => typeof v === "string"
-const isFn = (v) => typeof v === "function"
+const isString = v => typeof v === "string"
+const isFn = v => typeof v === "function"
 
 async function resolve(ix) {
   ix = await ix
+  if (isTransaction(ix)) {
+    console.log("PRE_RESOLVE IX", JSON.stringify(ix, null, 2))
+  }
+
   await execCadence(ix)
   await execArguments(ix)
   await execResolveAccounts(ix)
   await execFetchRef(ix)
   await execFetchSequenceNumber(ix)
   await execSignatures(ix)
+  await prepForSend(ix)
+  if (isTransaction(ix)) console.log("PRE_SEND IX", JSON.stringify(ix, null, 2))
   return ix
 }
 
@@ -36,7 +42,7 @@ async function execCadence(ix) {
     invariant(isString(cadence), "Cadence needs to be a string at this point.")
     ix.message.cadence = await config()
       .where(/^0x/)
-      .then((d) =>
+      .then(d =>
         Object.entries(d).reduce(
           (cadence, [key, value]) => cadence.replace(key, value),
           cadence
@@ -67,7 +73,7 @@ async function execArguments(ix) {
   return ix
 }
 
-const resolveAccount = async (ax) => {
+const resolveAccount = async ax => {
   if (isFn(ax.resolve)) ax.resolve(ax)
   return ax
 }
@@ -78,7 +84,6 @@ async function resolveAccounts(ix, accounts, last, depth = 3) {
   for (let ax of accounts) {
     var old = last || ax
     if (isFn(ax.resolve)) ax = await ax.resolve(ax, buildPreSignable(ax, ix))
-    console.log(">>>", {old, ax})
 
     if (Array.isArray(ax)) {
       console.log("RECURSE!!", ax)
@@ -92,12 +97,21 @@ async function resolveAccounts(ix, accounts, last, depth = 3) {
       ix.accounts[ax.tempId].role.authorizer =
         ix.accounts[ax.tempId].role.authorizer || ax.role.authorizer
 
-      // this needs to be based on if the account has the role...
-      if (ix.proposer === old.tempId) ix.proposer = ax.tempId
-      if (ix.payer === old.tempId) ix.payer = ax.tempId
-      ix.authorizations = ix.authorizations.map((d) =>
-        d === old.tempId ? ax.tempId : d
-      )
+      if (ix.accounts[ax.tempId].role.proposer && ix.proposer === old.tempId) {
+        ix.proposer = ax.tempId
+      }
+
+      if (ix.accounts[ax.tempId].role.payer && ix.payer === old.tempId) {
+        ix.payer = ax.tempId
+      }
+
+      ix.authorizations = ix.authorizations.map(d => {
+        if (ix.accounts[ax.tempId].role.authorizer && d === old.tempId) {
+          return ax.tempId
+        } else {
+          return d
+        }
+      })
     }
     if (old.tempId != ax.tempId) delete ix.accounts[old.tempId]
   }
@@ -106,43 +120,16 @@ async function resolveAccounts(ix, accounts, last, depth = 3) {
 async function execResolveAccounts(ix) {
   if (isTransaction(ix)) {
     try {
-      console.log("START", ix)
-      console.log("AAA", ix.accounts)
+      console.log("AAA", ix)
       await resolveAccounts(ix, Object.values(ix.accounts))
-      console.log("BBB", ix.accounts)
+      console.log("BBB", ix)
       await resolveAccounts(ix, Object.values(ix.accounts))
-      console.log("CCC", ix.accounts)
-      console.log("END", ix)
+      console.log("CCC", ix)
     } catch (error) {
       console.error("=== SAD PANDA ===\n\n", error, "\n\n=== SAD PANDA ===")
       throw error
     }
-    // throw new Error("BOOM!!")
   }
-
-  // Dedupe and collect roles
-  // if (isTransaction(ix)) {
-  //   var axs = {}
-  //   for (let [id, acct] of Object.entries(ix.accounts)) {
-  //     var _id = id
-  //     if (isFn(acct.resolve)) {
-  //       acct = await acct.resolve(acct)
-  //       id = acct.tempId
-  //     }
-
-  //     // deep upsert account and merge roles
-  //     axs[id] = axs[id] || acct
-  //     axs[id].role.proposer = axs[id].role.proposer || acct.role.proposer
-  //     axs[id].role.payer = axs[id].role.payer || acct.role.payer
-  //     axs[id].role.authorizer = axs[id].role.authorizer || acct.role.authorizer
-
-  //     // Replace older temp Ids to be new ones
-  //     if (ix.proposer === _id) ix.proposer = id
-  //     if (ix.payer === _id) ix.payer = id
-  //     ix.authorizations = ix.authorizations.map((d) => (d === _id ? id : d))
-  //   }
-  //   ix.accounts = axs
-  // }
   return ix
 }
 
@@ -155,13 +142,13 @@ async function execFetchRef(ix) {
 
 async function execFetchSequenceNumber(ix) {
   if (isTransaction(ix)) {
-    var acct = Object.values(ix.accounts).find((a) => a.role.proposer)
+    var acct = Object.values(ix.accounts).find(a => a.role.proposer)
     invariant(acct, `Transactions require a proposer`)
     if (acct.sequenceNum == null) {
       ix.accounts[acct.tempId].sequenceNum = await fetchAccount(acct.addr)
-        .then((acct) => acct.keys)
-        .then((keys) => keys.find((key) => key.index === acct.keyId))
-        .then((key) => key.sequenceNumber)
+        .then(acct => acct.keys)
+        .then(keys => keys.find(key => key.index === acct.keyId))
+        .then(key => key.sequenceNumber)
     }
   }
   return ix
@@ -177,7 +164,11 @@ async function execSignatures(ix) {
       let outsideSigners = findOutsideSigners(ix)
       const outsidePayload = encodeOutsideMessage({
         ...prepForEncoding(ix),
-        payloadSigs: insideSigners.map((id) => ix.accounts[id].signature),
+        payloadSigs: insideSigners.map(id => ({
+          address: ix.accounts[id].addr,
+          keyId: ix.accounts[id].keyId,
+          sig: ix.accounts[id].signature,
+        })),
       })
       await Promise.all(outsideSigners.map(fetchSignature(ix, outsidePayload)))
     } catch (error) {
@@ -220,7 +211,7 @@ function buildPreSignable(acct, ix) {
       "@vsn": "1.0.0",
       roles: acct.role,
       cadence: ix.message.cadence,
-      args: ix.message.arguments.map((d) => ix.arguments[d].asArgument),
+      args: ix.message.arguments.map(d => ix.arguments[d].asArgument),
       data: {},
       interaction: ix,
     }
@@ -240,7 +231,7 @@ function buildSignable(acct, message, ix) {
       keyId: acct.keyId,
       roles: acct.role,
       cadence: ix.message.cadence,
-      args: ix.message.arguments.map((d) => ix.arguments[d].asArgument),
+      args: ix.message.arguments.map(d => ix.arguments[d].asArgument),
       data: {},
       interaction: ix,
     }
@@ -255,7 +246,7 @@ function prepForEncoding(ix) {
     script: ix.message.cadence,
     refBlock: ix.message.refBlock || null,
     gasLimit: ix.message.computeLimit,
-    arguments: ix.message.arguments.map((id) => ix.arguments[id].asArgument),
+    arguments: ix.message.arguments.map(id => ix.arguments[id].asArgument),
     proposalKey: {
       address: sansPrefix(ix.accounts[ix.proposer].addr),
       keyId: ix.accounts[ix.proposer].keyId,
@@ -263,9 +254,16 @@ function prepForEncoding(ix) {
     },
     payer: sansPrefix(ix.accounts[ix.payer].addr),
     authorizers: ix.authorizations
-      .map((cid) => sansPrefix(ix.accounts[cid].addr))
+      .map(cid => sansPrefix(ix.accounts[cid].addr))
       .reduce((prev, current) => {
-        return prev.find((item) => item === current) ? prev : [...prev, current]
+        return prev.find(item => item === current) ? prev : [...prev, current]
       }, []),
   }
+}
+
+async function prepForSend(ix) {
+  for (let key of Object.keys(ix.accounts)) {
+    ix.accounts[key].addr = sansPrefix(ix.accounts[key].addr)
+  }
+  return ix
 }

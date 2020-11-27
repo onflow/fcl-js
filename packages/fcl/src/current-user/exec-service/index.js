@@ -2,6 +2,7 @@ import {execHttpPost} from "./strategies/http-post"
 import {execIframeRPC} from "./strategies/iframe-rpc"
 
 const STRATEGIES = {
+  "HTTP/RPC": execHttpPost,
   "HTTP/POST": execHttpPost,
   "IFRAME/RPC": execIframeRPC,
 }
