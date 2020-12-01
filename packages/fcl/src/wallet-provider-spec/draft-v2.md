@@ -112,6 +112,8 @@ Returns a `PollingResponse` with a `PreAuthzResponse` as the data.
   uid: "____",
   endpoint: "https://___",
   method: "HTTP/POST", // Service Methods: HTTP/POST | IFRAME/RPC | HTTP/RPC
+  data: {},   // included in body of pre-authz request
+  params: {}, // included as query params on endpoint url
 }
 ```
 
