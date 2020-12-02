@@ -41,7 +41,7 @@ async function fetchSignatures(ix, signers = [], message) {
       if (sansPrefix(ix.accounts[cid].addr) !== sansPrefix(compSig.addr)) {
         throw new Error(`${cid} — mismatching address in composite signature`)
       }
-      if (ix.accounts[cid].keyId !== compSig.keyId) {
+      if (ix.accounts[cid].role.proposer && ix.accounts[cid].keyId !== compSig.keyId) {
         throw new Error(`${cid} — mismatching keyId in composite signature`)
       }
       compSig.sig = compSig.signature
@@ -66,8 +66,12 @@ function collateSigners(ix) {
 }
 
 function mutateAccountsWithSignatures(ix, compSigs) {
-  for (let {cid, signature} of compSigs) {
+  for (let {cid, signature, keyId} of compSigs) {
     ix.accounts[cid].signature = signature
+
+    if (!ix.accounts[cid].role.proposer) {
+      ix.accounts[cid].keyId = keyId
+    }
   }
   return compSigs
 }
