@@ -6,6 +6,11 @@ Object {
     "foo": Object {
       "addr": "foo",
       "keyId": 0,
+      "role": Object {
+        "authorizer": true,
+        "payer": false,
+        "proposer": false,
+      },
       "sequenceNum": 0,
       "signature": "SIGNATURE",
       "signingFunction": [MockFunction] {
@@ -16,7 +21,11 @@ Object {
               "interaction": [Circular],
               "keyId": 0,
               "message": "f845f84283666f6fc0a000000000000000000000000000000000000000000000000000000000000000000a870000000000000f8080870000000000000fc8870000000000000fc0",
-              "roles": undefined,
+              "roles": Object {
+                "authorizer": true,
+                "payer": false,
+                "proposer": false,
+              },
             },
           ],
         ],

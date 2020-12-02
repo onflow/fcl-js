@@ -24,6 +24,11 @@ test("Golden Path", async () => {
         keyId: 0,
         sequenceNum: 0,
         signingFunction: signingFunction,
+        role: {
+          proposer: false,
+          authorizer: true,
+          payer: false,
+        },
       },
     },
     proposer: "foo",
