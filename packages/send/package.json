@@ -1,6 +1,6 @@
 {
   "name": "@onflow/send",
-  "version": "0.0.23",
+  "version": "0.0.33",
   "description": "Flow SDK Send",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
