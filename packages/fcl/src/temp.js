@@ -14,10 +14,6 @@ const isFn = v => typeof v === "function"
 
 async function resolve(ix) {
   ix = await ix
-  if (isTransaction(ix)) {
-    console.log("PRE_RESOLVE IX", JSON.stringify(ix, null, 2))
-  }
-
   await execCadence(ix)
   await execArguments(ix)
   await execResolveAccounts(ix)
@@ -25,7 +21,6 @@ async function resolve(ix) {
   await execFetchSequenceNumber(ix)
   await execSignatures(ix)
   await prepForSend(ix)
-  if (isTransaction(ix)) console.log("PRE_SEND IX", JSON.stringify(ix, null, 2))
   return ix
 }
 
@@ -80,13 +75,11 @@ const resolveAccount = async ax => {
 
 async function resolveAccounts(ix, accounts, last, depth = 3) {
   invariant(depth, "Account Resolve Recursion Limit Exceeded", {ix, accounts})
-  console.log("resolveAccounts", accounts, ix)
   for (let ax of accounts) {
     var old = last || ax
     if (isFn(ax.resolve)) ax = await ax.resolve(ax, buildPreSignable(ax, ix))
 
     if (Array.isArray(ax)) {
-      console.log("RECURSE!!", ax)
       await resolveAccounts(ix, ax, old, depth - 1)
     } else {
       ix.accounts[ax.tempId] = ix.accounts[ax.tempId] || ax
@@ -120,11 +113,8 @@ async function resolveAccounts(ix, accounts, last, depth = 3) {
 async function execResolveAccounts(ix) {
   if (isTransaction(ix)) {
     try {
-      console.log("AAA", ix)
       await resolveAccounts(ix, Object.values(ix.accounts))
-      console.log("BBB", ix)
       await resolveAccounts(ix, Object.values(ix.accounts))
-      console.log("CCC", ix)
     } catch (error) {
       console.error("=== SAD PANDA ===\n\n", error, "\n\n=== SAD PANDA ===")
       throw error

@@ -2,9 +2,9 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
-### 0.0.67-alpha.36 - 2020-12-03
+### 0.0.67-alpha.[36..39] - 2020-12-03
 
-- 2020-12-03 -- Updates `@onflow/send` to `0.0.23` This includes some fixes involving how signatures are added to transaction rpc calls
+- 2020-12-03 -- Updates `@onflow/send` -- This includes some fixes involving how signatures are added to transaction rpc calls
 
 ### 0.0.67-alpha.[19..35] - 2020-11-26
 
