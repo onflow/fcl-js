@@ -1,6 +1,6 @@
 {
   "name": "@onflow/sdk-account",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Flow JS SDK -- Fetch Account details from Configured Access Node",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
@@ -36,6 +36,6 @@
   "dependencies": {
     "@onflow/sdk-build-get-account": "0.0.1",
     "@onflow/sdk-decode": "0.0.1",
-    "@onflow/sdk-send": "0.0.6"
+    "@onflow/sdk-send": "0.0.7"
   }
 }
