@@ -2,8 +2,9 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
-### 0.0.6 -- 2020-12-03
+### 0.0.[6..7] -- 2020-12-03
 
+- 2020-12-03 -- VSN `@onflow/sdk-resolve` 0.0.4
 - 2020-12-03 -- VSN `@onflow/send` 0.0.23
 
 ### 0.0.5 -- 2020-11-17
