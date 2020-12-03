@@ -2,7 +2,7 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
-### 0.0.[23..33] - 2020-12-03
+### 0.0.[23..34] - 2020-12-03
 
 - 2020-12-03 -- FIX modified how tx signatures were applied to gRPC call.
 - 2020-12-03 -- Sanitization of addresses of prefix when sending transactions.
