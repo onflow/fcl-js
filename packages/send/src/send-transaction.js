@@ -42,38 +42,42 @@ export async function sendTransaction(ix, opts = {}) {
 
   // Apply Non Payer Signatures to Payload Signatures
   for (let acct of Object.values(ix.accounts)) {
-    if (acct.signature == null) continue // Skip -- No Signature
-    if (acct.role.payer) continue // Skip -- Is Payer
-
-    // Build Signature
-    const sig = new Transaction.Signature()
-    sig.setAddress(addressBuffer(sansPrefix(acct.addr)))
-    sig.setKeyId(acct.keyId)
-    sig.setSignature(hexBuffer(acct.signature))
-
-    // Apply Signature
-    tx.addPayloadSignatures(sig)
+    try {
+      if (!acct.role.payer && acct.signature != null) {
+        const sig = new Transaction.Signature()
+        sig.setAddress(addressBuffer(sansPrefix(acct.addr)))
+        sig.setKeyId(acct.keyId)
+        sig.setSignature(hexBuffer(acct.signature))
+        tx.addPayloadSignatures(sig)
+      }
+    } catch (error) {
+      console.error("Trouble applying payload signature", {acct, ix})
+      throw error
+    }
   }
 
   // Apply Payer Signatures to Envelope Signatures
   for (let acct of Object.values(ix.accounts)) {
-    if (acct.signature == null) continue // Skip -- No Signature
-    if (!acct.role.payer) continue // Skip -- Not Payer
-
-    // Build Signature
-    const sig = new Transaction.Signature()
-    sig.setAddress(addressBuffer(sansPrefix(acct.addr)))
-    sig.setKeyId(acct.keyId)
-    sig.setSignature(hexBuffer(acct.signature))
-
-    // Apply Signature
-    tx.addEnvelopeSignatures(sig)
+    try {
+      if (acct.role.payer && acct.signature != null) {
+        const sig = new Transaction.Signature()
+        sig.setAddress(addressBuffer(sansPrefix(acct.addr)))
+        sig.setKeyId(acct.keyId)
+        sig.setSignature(hexBuffer(acct.signature))
+        tx.addEnvelopeSignatures(sig)
+      }
+    } catch (error) {
+      console.error("Trouble applying envelope signature", {acct, ix})
+      throw error
+    }
   }
 
   const req = new SendTransactionRequest()
   req.setTransaction(tx)
 
+  var t1 = Date.now()
   const res = await unary(opts.node, AccessAPI.SendTransaction, req)
+  var t2 = Date.now()
 
   let ret = response()
   ret.tag = ix.tag
@@ -81,7 +85,9 @@ export async function sendTransaction(ix, opts = {}) {
 
   if (typeof window !== "undefined") {
     window.dispatchEvent(
-      new CustomEvent("FLOW::TX", {details: {txId: ret.transactionId}})
+      new CustomEvent("FLOW::TX", {
+        detail: {txId: ret.transactionId, delta: t2 - t1},
+      })
     )
   }
 

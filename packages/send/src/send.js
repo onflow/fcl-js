@@ -20,6 +20,11 @@ import {sendGetBlockByHeight} from "./send-get-block-by-height"
 import {sendPing} from "./send-ping"
 import {config} from "@onflow/config"
 
+console.log(
+  "%cSEND UPDATED",
+  "color:green;font-size:56px;font-family:monospace;"
+)
+
 export const send = async (ix, opts = {}) => {
   opts.node = opts.node || (await config().get("accessNode.api"))
   ix = await ix
