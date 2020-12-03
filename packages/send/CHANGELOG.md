@@ -2,6 +2,13 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.0.23 - 2020-12-03
+
+- 2020-12-03 -- FIX modified how tx signatures were applied to gRPC call.
+- 2020-12-03 -- Sanitization of addresses of prefix when sending transactions.
+- 2020-12-03 -- Sanitization of addresses of prefix when sending getAccount.
+- 2020-12-03 -- Decoration of addresses of received getAccount data.
+
 ### 0.0.22 - 2020-09-29
 
 - 2020-09-29 -- Await for interaction if its a promise

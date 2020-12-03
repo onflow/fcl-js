@@ -1,6 +1,6 @@
 {
   "name": "@onflow/send",
-  "version": "0.0.22",
+  "version": "0.0.23",
   "description": "Flow SDK Send",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
@@ -27,7 +27,7 @@
   "module": "dist/send.module.js",
   "unpkg": "dist/send.umd.js",
   "scripts": {
-    "prepublishOnly": "npm test && npm run build",
+    "prepublishOnly": "npm install && npm test && npm run build",
     "test": "jest",
     "build": "microbundle",
     "test:watch": "jest --watch",
@@ -39,6 +39,7 @@
     "@onflow/config": "0.0.2",
     "@onflow/interaction": "0.0.10",
     "@onflow/protobuf": "0.1.6",
-    "@onflow/response": "0.0.2"
+    "@onflow/response": "0.0.2",
+    "@onflow/util-address": "^0.0.0"
   }
 }

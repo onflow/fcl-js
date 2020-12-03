@@ -1,5 +1,6 @@
 import {GetAccountRequest, AccessAPI} from "@onflow/protobuf"
 import {response} from "@onflow/response"
+import {sansPrefix, withPrefix} from "@onflow/util-address"
 import {unary} from "./unary"
 
 const u8ToHex = u8 => Buffer.from(u8).toString("hex")
@@ -12,7 +13,7 @@ export async function sendGetAccount(ix, opts = {}) {
   ix = await ix
 
   const req = new GetAccountRequest()
-  req.setAddress(addressBuffer(ix.accountAddr))
+  req.setAddress(addressBuffer(sansPrefix(ix.accountAddr)))
 
   const res = await unary(opts.node, AccessAPI.GetAccount, req)
 
@@ -21,7 +22,7 @@ export async function sendGetAccount(ix, opts = {}) {
 
   const account = res.getAccount()
   ret.account = {
-    address: u8ToHex(account.getAddress_asU8()),
+    address: withPrefix(u8ToHex(account.getAddress_asU8())),
     balance: account.getBalance(),
     code: account.getCode_asU8(),
     keys: account.getKeysList().map(publicKey => ({
