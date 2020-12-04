@@ -2,6 +2,11 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.0.[6..9] -- 2020-12-03
+
+- 2020-12-03 -- VSN `@onflow/sdk-resolve` 0.0.9
+- 2020-12-03 -- VSN `@onflow/send` 0.0.34
+
 ### 0.0.5 -- 2020-11-17
 
 - 2020-11-17 -- Includes updated lock file
@@ -18,15 +23,15 @@
 import {config} from "@onflow/config"
 
 config()
-  .put("sdk.resolve", async (ix) => ix)
-  .put("sdk.send", async (ix) => console.log(ix))
+  .put("sdk.resolve", async ix => ix)
+  .put("sdk.send", async ix => console.log(ix))
 
 await send([getAccount("0x1d007d755706c469")])
 
 // As Options
 const opts = {
-  resolve: async (ix) => ix,
-  send: async (ix) => console.log(ix),
+  resolve: async ix => ix,
+  send: async ix => console.log(ix),
 }
 
 await send([getAccount("0x1d007d755706c469")], opts)

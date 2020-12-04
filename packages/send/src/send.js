@@ -7,7 +7,7 @@ import {
   isGetLatestBlock,
   isGetBlockById,
   isGetBlockByHeight,
-  isPing
+  isPing,
 } from "@onflow/interaction"
 import {sendTransaction} from "./send-transaction"
 import {sendGetTransactionStatus} from "./send-get-transaction-status"
@@ -21,7 +21,7 @@ import {sendPing} from "./send-ping"
 import {config} from "@onflow/config"
 
 export const send = async (ix, opts = {}) => {
-  opts.node = opts.node || await config().get("accessNode.api")
+  opts.node = opts.node || (await config().get("accessNode.api"))
   ix = await ix
 
   switch (true) {

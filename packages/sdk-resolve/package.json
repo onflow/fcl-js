@@ -1,6 +1,6 @@
 {
   "name": "@onflow/sdk-resolve",
-  "version": "0.0.4",
+  "version": "0.0.9",
   "description": "Flow JS SDK Resolver -- Default Resolver",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
@@ -27,7 +27,7 @@
     "@onflow/sdk-resolve-accounts": "0.0.0",
     "@onflow/sdk-resolve-arguments": "0.0.1",
     "@onflow/sdk-resolve-cadence": "0.0.1",
-    "@onflow/sdk-resolve-ref-block-id": "0.0.3",
+    "@onflow/sdk-resolve-ref-block-id": "0.0.6",
     "@onflow/sdk-resolve-signatures": "0.0.5",
     "@onflow/sdk-resolve-validators": "0.0.0"
   },
@@ -36,7 +36,7 @@
   "module": "dist/sdk-resolve.module.js",
   "unpkg": "dist/sdk-resolve.umd.js",
   "scripts": {
-    "prepublishOnly": "npm test && npm run build",
+    "prepublishOnly": "npm install && npm test && npm run build",
     "test": "jest",
     "build": "microbundle",
     "test:watch": "jest --watch",
