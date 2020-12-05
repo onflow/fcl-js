@@ -12,8 +12,8 @@ export const CODE =
     }
 }`
 
-export const template = ({ proposer, authorization, payer, code = "" }) => sdk.pipe([
-    sdk.transaction(CODE),
+export const template = ({ proposer, authorization, payer, code = "", deployScript = CODE }) => sdk.pipe([
+    sdk.transaction(deployScript),
     sdk.args([sdk.arg(Buffer.from(code, "utf8").toString("hex"), t.String)]),
     sdk.proposer(proposer),
     sdk.authorizations([authorization]),
