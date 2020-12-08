@@ -219,6 +219,9 @@ function fetchSignature(ix, payload) {
     const {signature} = await acct.signingFunction(
       buildSignable(acct, payload, ix)
     )
+    if (!acct.role.proposer) {
+      ix.accounts[id].keyId = keyId
+    }
     ix.accounts[id].signature = signature
   }
 }
