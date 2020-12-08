@@ -2,9 +2,15 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
-### 0.0.67-alpha.[36..39] - 2020-12-03
+### 0.0.67-alpha.41 - 2020-12-08
+
+- 2020-12-08 -- FIX: issue with multi-sig from same account (@boczeraturl)
+
+### 0.0.67-alpha.[36..40] - 2020-12-03
 
 - 2020-12-03 -- Updates `@onflow/send` -- This includes some fixes involving how signatures are added to transaction rpc calls
+- 2020-12-03 -- FIX: `fcl.serialize` respects injected resolver propoerly.
+- 2020-12-03 -- Prep for Resolver extraction.
 
 ### 0.0.67-alpha.[19..35] - 2020-11-26
 
