@@ -75,6 +75,8 @@ const resolveAccount = async ax => {
 
 async function resolveAccounts(ix, accounts, last, depth = 3) {
   invariant(depth, "Account Resolve Recursion Limit Exceeded", {ix, accounts})
+
+  let authorizations = []
   for (let ax of accounts) {
     var old = last || ax
     if (isFn(ax.resolve)) ax = await ax.resolve(ax, buildPreSignable(ax, ix))
@@ -98,15 +100,42 @@ async function resolveAccounts(ix, accounts, last, depth = 3) {
         ix.payer = ax.tempId
       }
 
-      ix.authorizations = ix.authorizations.map(d => {
-        if (ix.accounts[ax.tempId].role.authorizer && d === old.tempId) {
-          return ax.tempId
+      if (ix.accounts[ax.tempId].role.authorizer) {
+        if (last) {
+          // do group replacement
+          authorizations = [...authorizations, ax.tempId]
+        } else {
+          // do 1-1 replacement
+          ix.authorizations = ix.authorizations.map(d => {
+            if (d === old.tempId) {
+              return ax.tempId
+            } else {
+              return d
+            }
+          })
+        }
+      }
+    }
+    if (old.tempId != ax.tempId) delete ix.accounts[old.tempId]
+  }
+
+  if (last) {
+    // complete group replacement
+    ix.authorizations = ix.authorizations
+      .map(d => {
+        if (d === last.tempId) {
+          return authorizations
         } else {
           return d
         }
       })
-    }
-    if (old.tempId != ax.tempId) delete ix.accounts[old.tempId]
+      .reduce((prev, curr) => {
+        if (Array.isArray(curr)) {
+          return [...prev, ...curr]
+        } else {
+          return [...prev, curr]
+        }
+      }, [])
   }
 }
 
