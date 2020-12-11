@@ -1,4 +1,4 @@
-// package: execution
+// package: flow.execution
 // file: flow/execution/execution.proto
 
 var flow_execution_execution_pb = require("../../flow/execution/execution_pb");
@@ -6,7 +6,7 @@ var grpc = require("@improbable-eng/grpc-web").grpc;
 
 var ExecutionAPI = (function () {
   function ExecutionAPI() {}
-  ExecutionAPI.serviceName = "execution.ExecutionAPI";
+  ExecutionAPI.serviceName = "flow.execution.ExecutionAPI";
   return ExecutionAPI;
 }());
 

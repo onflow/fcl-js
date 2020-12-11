@@ -1,13 +1,11 @@
 syntax = "proto3";
 
-package flow.entities;
-
-option go_package = "entities";
+package entities;
 
 import "google/protobuf/timestamp.proto";
 
-import "flow/entities/collection.proto";
-import "flow/entities/block_seal.proto";
+import "flow/legacy/entities/collection.proto";
+import "flow/legacy/entities/block_seal.proto";
 
 message Block {
   bytes id = 1;

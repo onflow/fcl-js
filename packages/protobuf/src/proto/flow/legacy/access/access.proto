@@ -1,16 +1,13 @@
 syntax = "proto3";
 
-package flow.access;
+package access;
 
-option go_package = "access";
-
-import "flow/entities/account.proto";
-import "flow/entities/block_header.proto";
-import "flow/entities/block.proto";
-import "flow/entities/collection.proto";
-import "flow/entities/event.proto";
-import "flow/entities/transaction.proto";
-import "google/protobuf/timestamp.proto";
+import "flow/legacy/entities/account.proto";
+import "flow/legacy/entities/block_header.proto";
+import "flow/legacy/entities/block.proto";
+import "flow/legacy/entities/collection.proto";
+import "flow/legacy/entities/event.proto";
+import "flow/legacy/entities/transaction.proto";
 
 // AccessAPI is the public-facing API provided by access nodes.
 service AccessAPI {
@@ -223,7 +220,6 @@ message EventsResponse {
     bytes block_id = 1;
     uint64 block_height = 2;
     repeated entities.Event events = 3;
-    google.protobuf.Timestamp block_timestamp = 4;
   }
   repeated Result results = 1;
 }

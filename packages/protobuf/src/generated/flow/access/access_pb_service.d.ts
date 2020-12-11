@@ -1,4 +1,4 @@
-// package: access
+// package: flow.access
 // file: flow/access/access.proto
 
 import * as flow_access_access_pb from "../../flow/access/access_pb";

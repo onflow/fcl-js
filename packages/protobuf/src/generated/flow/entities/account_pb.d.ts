@@ -1,4 +1,4 @@
-// package: entities
+// package: flow.entities
 // file: flow/entities/account.proto
 
 import * as jspb from "google-protobuf";
@@ -22,6 +22,8 @@ export class Account extends jspb.Message {
   setKeysList(value: Array<AccountKey>): void;
   addKeys(value?: AccountKey, index?: number): AccountKey;
 
+  getContractsMap(): jspb.Map<string, Uint8Array | string>;
+  clearContractsMap(): void;
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): Account.AsObject;
   static toObject(includeInstance: boolean, msg: Account): Account.AsObject;
@@ -38,6 +40,7 @@ export namespace Account {
     balance: number,
     code: Uint8Array | string,
     keysList: Array<AccountKey.AsObject>,
+    contractsMap: Array<[string, Uint8Array | string]>,
   }
 }
 
@@ -62,6 +65,9 @@ export class AccountKey extends jspb.Message {
   getSequenceNumber(): number;
   setSequenceNumber(value: number): void;
 
+  getRevoked(): boolean;
+  setRevoked(value: boolean): void;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): AccountKey.AsObject;
   static toObject(includeInstance: boolean, msg: AccountKey): AccountKey.AsObject;
@@ -80,6 +86,7 @@ export namespace AccountKey {
     hashAlgo: number,
     weight: number,
     sequenceNumber: number,
+    revoked: boolean,
   }
 }
 

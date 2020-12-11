@@ -26,38 +26,38 @@ var flow_entities_transaction_pb = require('../../flow/entities/transaction_pb.j
 goog.object.extend(proto, flow_entities_transaction_pb);
 var google_protobuf_timestamp_pb = require('google-protobuf/google/protobuf/timestamp_pb.js');
 goog.object.extend(proto, google_protobuf_timestamp_pb);
-goog.exportSymbol('proto.access.AccountResponse', null, global);
-goog.exportSymbol('proto.access.BlockHeaderResponse', null, global);
-goog.exportSymbol('proto.access.BlockResponse', null, global);
-goog.exportSymbol('proto.access.CollectionResponse', null, global);
-goog.exportSymbol('proto.access.EventsResponse', null, global);
-goog.exportSymbol('proto.access.EventsResponse.Result', null, global);
-goog.exportSymbol('proto.access.ExecuteScriptAtBlockHeightRequest', null, global);
-goog.exportSymbol('proto.access.ExecuteScriptAtBlockIDRequest', null, global);
-goog.exportSymbol('proto.access.ExecuteScriptAtLatestBlockRequest', null, global);
-goog.exportSymbol('proto.access.ExecuteScriptResponse', null, global);
-goog.exportSymbol('proto.access.GetAccountAtBlockHeightRequest', null, global);
-goog.exportSymbol('proto.access.GetAccountAtLatestBlockRequest', null, global);
-goog.exportSymbol('proto.access.GetAccountRequest', null, global);
-goog.exportSymbol('proto.access.GetAccountResponse', null, global);
-goog.exportSymbol('proto.access.GetBlockByHeightRequest', null, global);
-goog.exportSymbol('proto.access.GetBlockByIDRequest', null, global);
-goog.exportSymbol('proto.access.GetBlockHeaderByHeightRequest', null, global);
-goog.exportSymbol('proto.access.GetBlockHeaderByIDRequest', null, global);
-goog.exportSymbol('proto.access.GetCollectionByIDRequest', null, global);
-goog.exportSymbol('proto.access.GetEventsForBlockIDsRequest', null, global);
-goog.exportSymbol('proto.access.GetEventsForHeightRangeRequest', null, global);
-goog.exportSymbol('proto.access.GetLatestBlockHeaderRequest', null, global);
-goog.exportSymbol('proto.access.GetLatestBlockRequest', null, global);
-goog.exportSymbol('proto.access.GetNetworkParametersRequest', null, global);
-goog.exportSymbol('proto.access.GetNetworkParametersResponse', null, global);
-goog.exportSymbol('proto.access.GetTransactionRequest', null, global);
-goog.exportSymbol('proto.access.PingRequest', null, global);
-goog.exportSymbol('proto.access.PingResponse', null, global);
-goog.exportSymbol('proto.access.SendTransactionRequest', null, global);
-goog.exportSymbol('proto.access.SendTransactionResponse', null, global);
-goog.exportSymbol('proto.access.TransactionResponse', null, global);
-goog.exportSymbol('proto.access.TransactionResultResponse', null, global);
+goog.exportSymbol('proto.flow.access.AccountResponse', null, global);
+goog.exportSymbol('proto.flow.access.BlockHeaderResponse', null, global);
+goog.exportSymbol('proto.flow.access.BlockResponse', null, global);
+goog.exportSymbol('proto.flow.access.CollectionResponse', null, global);
+goog.exportSymbol('proto.flow.access.EventsResponse', null, global);
+goog.exportSymbol('proto.flow.access.EventsResponse.Result', null, global);
+goog.exportSymbol('proto.flow.access.ExecuteScriptAtBlockHeightRequest', null, global);
+goog.exportSymbol('proto.flow.access.ExecuteScriptAtBlockIDRequest', null, global);
+goog.exportSymbol('proto.flow.access.ExecuteScriptAtLatestBlockRequest', null, global);
+goog.exportSymbol('proto.flow.access.ExecuteScriptResponse', null, global);
+goog.exportSymbol('proto.flow.access.GetAccountAtBlockHeightRequest', null, global);
+goog.exportSymbol('proto.flow.access.GetAccountAtLatestBlockRequest', null, global);
+goog.exportSymbol('proto.flow.access.GetAccountRequest', null, global);
+goog.exportSymbol('proto.flow.access.GetAccountResponse', null, global);
+goog.exportSymbol('proto.flow.access.GetBlockByHeightRequest', null, global);
+goog.exportSymbol('proto.flow.access.GetBlockByIDRequest', null, global);
+goog.exportSymbol('proto.flow.access.GetBlockHeaderByHeightRequest', null, global);
+goog.exportSymbol('proto.flow.access.GetBlockHeaderByIDRequest', null, global);
+goog.exportSymbol('proto.flow.access.GetCollectionByIDRequest', null, global);
+goog.exportSymbol('proto.flow.access.GetEventsForBlockIDsRequest', null, global);
+goog.exportSymbol('proto.flow.access.GetEventsForHeightRangeRequest', null, global);
+goog.exportSymbol('proto.flow.access.GetLatestBlockHeaderRequest', null, global);
+goog.exportSymbol('proto.flow.access.GetLatestBlockRequest', null, global);
+goog.exportSymbol('proto.flow.access.GetNetworkParametersRequest', null, global);
+goog.exportSymbol('proto.flow.access.GetNetworkParametersResponse', null, global);
+goog.exportSymbol('proto.flow.access.GetTransactionRequest', null, global);
+goog.exportSymbol('proto.flow.access.PingRequest', null, global);
+goog.exportSymbol('proto.flow.access.PingResponse', null, global);
+goog.exportSymbol('proto.flow.access.SendTransactionRequest', null, global);
+goog.exportSymbol('proto.flow.access.SendTransactionResponse', null, global);
+goog.exportSymbol('proto.flow.access.TransactionResponse', null, global);
+goog.exportSymbol('proto.flow.access.TransactionResultResponse', null, global);
 /**
  * Generated by JsPbCodeGenerator.
  * @param {Array=} opt_data Optional initial data array, typically from a
@@ -68,16 +68,16 @@ goog.exportSymbol('proto.access.TransactionResultResponse', null, global);
  * @extends {jspb.Message}
  * @constructor
  */
-proto.access.PingRequest = function(opt_data) {
+proto.flow.access.PingRequest = function(opt_data) {
   jspb.Message.initialize(this, opt_data, 0, -1, null, null);
 };
-goog.inherits(proto.access.PingRequest, jspb.Message);
+goog.inherits(proto.flow.access.PingRequest, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
   /**
    * @public
    * @override
    */
-  proto.access.PingRequest.displayName = 'proto.access.PingRequest';
+  proto.flow.access.PingRequest.displayName = 'proto.flow.access.PingRequest';
 }
 /**
  * Generated by JsPbCodeGenerator.
@@ -89,16 +89,16 @@ if (goog.DEBUG && !COMPILED) {
  * @extends {jspb.Message}
  * @constructor
  */
-proto.access.PingResponse = function(opt_data) {
+proto.flow.access.PingResponse = function(opt_data) {
   jspb.Message.initialize(this, opt_data, 0, -1, null, null);
 };
-goog.inherits(proto.access.PingResponse, jspb.Message);
+goog.inherits(proto.flow.access.PingResponse, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
   /**
    * @public
    * @override
    */
-  proto.access.PingResponse.displayName = 'proto.access.PingResponse';
+  proto.flow.access.PingResponse.displayName = 'proto.flow.access.PingResponse';
 }
 /**
  * Generated by JsPbCodeGenerator.
@@ -110,16 +110,16 @@ if (goog.DEBUG && !COMPILED) {
  * @extends {jspb.Message}
  * @constructor
  */
-proto.access.GetLatestBlockHeaderRequest = function(opt_data) {
+proto.flow.access.GetLatestBlockHeaderRequest = function(opt_data) {
   jspb.Message.initialize(this, opt_data, 0, -1, null, null);
 };
-goog.inherits(proto.access.GetLatestBlockHeaderRequest, jspb.Message);
+goog.inherits(proto.flow.access.GetLatestBlockHeaderRequest, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
   /**
    * @public
    * @override
    */
-  proto.access.GetLatestBlockHeaderRequest.displayName = 'proto.access.GetLatestBlockHeaderRequest';
+  proto.flow.access.GetLatestBlockHeaderRequest.displayName = 'proto.flow.access.GetLatestBlockHeaderRequest';
 }
 /**
  * Generated by JsPbCodeGenerator.
@@ -131,16 +131,16 @@ if (goog.DEBUG && !COMPILED) {
  * @extends {jspb.Message}
  * @constructor
  */
-proto.access.GetBlockHeaderByIDRequest = function(opt_data) {
+proto.flow.access.GetBlockHeaderByIDRequest = function(opt_data) {
   jspb.Message.initialize(this, opt_data, 0, -1, null, null);
 };
-goog.inherits(proto.access.GetBlockHeaderByIDRequest, jspb.Message);
+goog.inherits(proto.flow.access.GetBlockHeaderByIDRequest, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
   /**
    * @public
    * @override
    */
-  proto.access.GetBlockHeaderByIDRequest.displayName = 'proto.access.GetBlockHeaderByIDRequest';
+  proto.flow.access.GetBlockHeaderByIDRequest.displayName = 'proto.flow.access.GetBlockHeaderByIDRequest';
 }
 /**
  * Generated by JsPbCodeGenerator.
@@ -152,16 +152,16 @@ if (goog.DEBUG && !COMPILED) {
  * @extends {jspb.Message}
  * @constructor
  */
-proto.access.GetBlockHeaderByHeightRequest = function(opt_data) {
+proto.flow.access.GetBlockHeaderByHeightRequest = function(opt_data) {
   jspb.Message.initialize(this, opt_data, 0, -1, null, null);
 };
-goog.inherits(proto.access.GetBlockHeaderByHeightRequest, jspb.Message);
+goog.inherits(proto.flow.access.GetBlockHeaderByHeightRequest, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
   /**
    * @public
    * @override
    */
-  proto.access.GetBlockHeaderByHeightRequest.displayName = 'proto.access.GetBlockHeaderByHeightRequest';
+  proto.flow.access.GetBlockHeaderByHeightRequest.displayName = 'proto.flow.access.GetBlockHeaderByHeightRequest';
 }
 /**
  * Generated by JsPbCodeGenerator.
@@ -173,16 +173,16 @@ if (goog.DEBUG && !COMPILED) {
  * @extends {jspb.Message}
  * @constructor
  */
-proto.access.BlockHeaderResponse = function(opt_data) {
+proto.flow.access.BlockHeaderResponse = function(opt_data) {
   jspb.Message.initialize(this, opt_data, 0, -1, null, null);
 };
-goog.inherits(proto.access.BlockHeaderResponse, jspb.Message);
+goog.inherits(proto.flow.access.BlockHeaderResponse, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
   /**
    * @public
    * @override
    */
-  proto.access.BlockHeaderResponse.displayName = 'proto.access.BlockHeaderResponse';
+  proto.flow.access.BlockHeaderResponse.displayName = 'proto.flow.access.BlockHeaderResponse';
 }
 /**
  * Generated by JsPbCodeGenerator.
@@ -194,16 +194,16 @@ if (goog.DEBUG && !COMPILED) {
  * @extends {jspb.Message}
  * @constructor
  */
-proto.access.GetLatestBlockRequest = function(opt_data) {
+proto.flow.access.GetLatestBlockRequest = function(opt_data) {
   jspb.Message.initialize(this, opt_data, 0, -1, null, null);
 };
-goog.inherits(proto.access.GetLatestBlockRequest, jspb.Message);
+goog.inherits(proto.flow.access.GetLatestBlockRequest, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
   /**
    * @public
    * @override
    */
-  proto.access.GetLatestBlockRequest.displayName = 'proto.access.GetLatestBlockRequest';
+  proto.flow.access.GetLatestBlockRequest.displayName = 'proto.flow.access.GetLatestBlockRequest';
 }
 /**
  * Generated by JsPbCodeGenerator.
@@ -215,16 +215,16 @@ if (goog.DEBUG && !COMPILED) {
  * @extends {jspb.Message}
  * @constructor
  */
-proto.access.GetBlockByIDRequest = function(opt_data) {
+proto.flow.access.GetBlockByIDRequest = function(opt_data) {
   jspb.Message.initialize(this, opt_data, 0, -1, null, null);
 };
-goog.inherits(proto.access.GetBlockByIDRequest, jspb.Message);
+goog.inherits(proto.flow.access.GetBlockByIDRequest, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
   /**
    * @public
    * @override
    */
-  proto.access.GetBlockByIDRequest.displayName = 'proto.access.GetBlockByIDRequest';
+  proto.flow.access.GetBlockByIDRequest.displayName = 'proto.flow.access.GetBlockByIDRequest';
 }
 /**
  * Generated by JsPbCodeGenerator.
@@ -236,16 +236,16 @@ if (goog.DEBUG && !COMPILED) {
  * @extends {jspb.Message}
  * @constructor
  */
-proto.access.GetBlockByHeightRequest = function(opt_data) {
+proto.flow.access.GetBlockByHeightRequest = function(opt_data) {
   jspb.Message.initialize(this, opt_data, 0, -1, null, null);
 };
-goog.inherits(proto.access.GetBlockByHeightRequest, jspb.Message);
+goog.inherits(proto.flow.access.GetBlockByHeightRequest, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
   /**
    * @public
    * @override
    */
-  proto.access.GetBlockByHeightRequest.displayName = 'proto.access.GetBlockByHeightRequest';
+  proto.flow.access.GetBlockByHeightRequest.displayName = 'proto.flow.access.GetBlockByHeightRequest';
 }
 /**
  * Generated by JsPbCodeGenerator.
@@ -257,16 +257,16 @@ if (goog.DEBUG && !COMPILED) {
  * @extends {jspb.Message}
  * @constructor
  */
-proto.access.BlockResponse = function(opt_data) {
+proto.flow.access.BlockResponse = function(opt_data) {
   jspb.Message.initialize(this, opt_data, 0, -1, null, null);
 };
-goog.inherits(proto.access.BlockResponse, jspb.Message);
+goog.inherits(proto.flow.access.BlockResponse, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
   /**
    * @public
    * @override
    */
-  proto.access.BlockResponse.displayName = 'proto.access.BlockResponse';
+  proto.flow.access.BlockResponse.displayName = 'proto.flow.access.BlockResponse';
 }
 /**
  * Generated by JsPbCodeGenerator.
@@ -278,16 +278,16 @@ if (goog.DEBUG && !COMPILED) {
  * @extends {jspb.Message}
  * @constructor
  */
-proto.access.GetCollectionByIDRequest = function(opt_data) {
+proto.flow.access.GetCollectionByIDRequest = function(opt_data) {
   jspb.Message.initialize(this, opt_data, 0, -1, null, null);
 };
-goog.inherits(proto.access.GetCollectionByIDRequest, jspb.Message);
+goog.inherits(proto.flow.access.GetCollectionByIDRequest, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
   /**
    * @public
    * @override
    */
-  proto.access.GetCollectionByIDRequest.displayName = 'proto.access.GetCollectionByIDRequest';
+  proto.flow.access.GetCollectionByIDRequest.displayName = 'proto.flow.access.GetCollectionByIDRequest';
 }
 /**
  * Generated by JsPbCodeGenerator.
@@ -299,16 +299,16 @@ if (goog.DEBUG && !COMPILED) {
  * @extends {jspb.Message}
  * @constructor
  */
-proto.access.CollectionResponse = function(opt_data) {
+proto.flow.access.CollectionResponse = function(opt_data) {
   jspb.Message.initialize(this, opt_data, 0, -1, null, null);
 };
-goog.inherits(proto.access.CollectionResponse, jspb.Message);
+goog.inherits(proto.flow.access.CollectionResponse, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
   /**
    * @public
    * @override
    */
-  proto.access.CollectionResponse.displayName = 'proto.access.CollectionResponse';
+  proto.flow.access.CollectionResponse.displayName = 'proto.flow.access.CollectionResponse';
 }
 /**
  * Generated by JsPbCodeGenerator.
@@ -320,16 +320,16 @@ if (goog.DEBUG && !COMPILED) {
  * @extends {jspb.Message}
  * @constructor
  */
-proto.access.SendTransactionRequest = function(opt_data) {
+proto.flow.access.SendTransactionRequest = function(opt_data) {
   jspb.Message.initialize(this, opt_data, 0, -1, null, null);
 };
-goog.inherits(proto.access.SendTransactionRequest, jspb.Message);
+goog.inherits(proto.flow.access.SendTransactionRequest, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
   /**
    * @public
    * @override
    */
-  proto.access.SendTransactionRequest.displayName = 'proto.access.SendTransactionRequest';
+  proto.flow.access.SendTransactionRequest.displayName = 'proto.flow.access.SendTransactionRequest';
 }
 /**
  * Generated by JsPbCodeGenerator.
@@ -341,16 +341,16 @@ if (goog.DEBUG && !COMPILED) {
  * @extends {jspb.Message}
  * @constructor
  */
-proto.access.SendTransactionResponse = function(opt_data) {
+proto.flow.access.SendTransactionResponse = function(opt_data) {
   jspb.Message.initialize(this, opt_data, 0, -1, null, null);
 };
-goog.inherits(proto.access.SendTransactionResponse, jspb.Message);
+goog.inherits(proto.flow.access.SendTransactionResponse, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
   /**
    * @public
    * @override
    */
-  proto.access.SendTransactionResponse.displayName = 'proto.access.SendTransactionResponse';
+  proto.flow.access.SendTransactionResponse.displayName = 'proto.flow.access.SendTransactionResponse';
 }
 /**
  * Generated by JsPbCodeGenerator.
@@ -362,16 +362,16 @@ if (goog.DEBUG && !COMPILED) {
  * @extends {jspb.Message}
  * @constructor
  */
-proto.access.GetTransactionRequest = function(opt_data) {
+proto.flow.access.GetTransactionRequest = function(opt_data) {
   jspb.Message.initialize(this, opt_data, 0, -1, null, null);
 };
-goog.inherits(proto.access.GetTransactionRequest, jspb.Message);
+goog.inherits(proto.flow.access.GetTransactionRequest, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
   /**
    * @public
    * @override
    */
-  proto.access.GetTransactionRequest.displayName = 'proto.access.GetTransactionRequest';
+  proto.flow.access.GetTransactionRequest.displayName = 'proto.flow.access.GetTransactionRequest';
 }
 /**
  * Generated by JsPbCodeGenerator.
@@ -383,16 +383,16 @@ if (goog.DEBUG && !COMPILED) {
  * @extends {jspb.Message}
  * @constructor
  */
-proto.access.TransactionResponse = function(opt_data) {
+proto.flow.access.TransactionResponse = function(opt_data) {
   jspb.Message.initialize(this, opt_data, 0, -1, null, null);
 };
-goog.inherits(proto.access.TransactionResponse, jspb.Message);
+goog.inherits(proto.flow.access.TransactionResponse, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
   /**
    * @public
    * @override
    */
-  proto.access.TransactionResponse.displayName = 'proto.access.TransactionResponse';
+  proto.flow.access.TransactionResponse.displayName = 'proto.flow.access.TransactionResponse';
 }
 /**
  * Generated by JsPbCodeGenerator.
@@ -404,16 +404,16 @@ if (goog.DEBUG && !COMPILED) {
  * @extends {jspb.Message}
  * @constructor
  */
-proto.access.TransactionResultResponse = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, proto.access.TransactionResultResponse.repeatedFields_, null);
+proto.flow.access.TransactionResultResponse = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, proto.flow.access.TransactionResultResponse.repeatedFields_, null);
 };
-goog.inherits(proto.access.TransactionResultResponse, jspb.Message);
+goog.inherits(proto.flow.access.TransactionResultResponse, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
   /**
    * @public
    * @override
    */
-  proto.access.TransactionResultResponse.displayName = 'proto.access.TransactionResultResponse';
+  proto.flow.access.TransactionResultResponse.displayName = 'proto.flow.access.TransactionResultResponse';
 }
 /**
  * Generated by JsPbCodeGenerator.
@@ -425,16 +425,16 @@ if (goog.DEBUG && !COMPILED) {
  * @extends {jspb.Message}
  * @constructor
  */
-proto.access.GetAccountRequest = function(opt_data) {
+proto.flow.access.GetAccountRequest = function(opt_data) {
   jspb.Message.initialize(this, opt_data, 0, -1, null, null);
 };
-goog.inherits(proto.access.GetAccountRequest, jspb.Message);
+goog.inherits(proto.flow.access.GetAccountRequest, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
   /**
    * @public
    * @override
    */
-  proto.access.GetAccountRequest.displayName = 'proto.access.GetAccountRequest';
+  proto.flow.access.GetAccountRequest.displayName = 'proto.flow.access.GetAccountRequest';
 }
 /**
  * Generated by JsPbCodeGenerator.
@@ -446,16 +446,16 @@ if (goog.DEBUG && !COMPILED) {
  * @extends {jspb.Message}
  * @constructor
  */
-proto.access.GetAccountResponse = function(opt_data) {
+proto.flow.access.GetAccountResponse = function(opt_data) {
   jspb.Message.initialize(this, opt_data, 0, -1, null, null);
 };
-goog.inherits(proto.access.GetAccountResponse, jspb.Message);
+goog.inherits(proto.flow.access.GetAccountResponse, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
   /**
    * @public
    * @override
    */
-  proto.access.GetAccountResponse.displayName = 'proto.access.GetAccountResponse';
+  proto.flow.access.GetAccountResponse.displayName = 'proto.flow.access.GetAccountResponse';
 }
 /**
  * Generated by JsPbCodeGenerator.
@@ -467,16 +467,16 @@ if (goog.DEBUG && !COMPILED) {
  * @extends {jspb.Message}
  * @constructor
  */
-proto.access.GetAccountAtLatestBlockRequest = function(opt_data) {
+proto.flow.access.GetAccountAtLatestBlockRequest = function(opt_data) {
   jspb.Message.initialize(this, opt_data, 0, -1, null, null);
 };
-goog.inherits(proto.access.GetAccountAtLatestBlockRequest, jspb.Message);
+goog.inherits(proto.flow.access.GetAccountAtLatestBlockRequest, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
   /**
    * @public
    * @override
    */
-  proto.access.GetAccountAtLatestBlockRequest.displayName = 'proto.access.GetAccountAtLatestBlockRequest';
+  proto.flow.access.GetAccountAtLatestBlockRequest.displayName = 'proto.flow.access.GetAccountAtLatestBlockRequest';
 }
 /**
  * Generated by JsPbCodeGenerator.
@@ -488,16 +488,16 @@ if (goog.DEBUG && !COMPILED) {
  * @extends {jspb.Message}
  * @constructor
  */
-proto.access.AccountResponse = function(opt_data) {
+proto.flow.access.AccountResponse = function(opt_data) {
   jspb.Message.initialize(this, opt_data, 0, -1, null, null);
 };
-goog.inherits(proto.access.AccountResponse, jspb.Message);
+goog.inherits(proto.flow.access.AccountResponse, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
   /**
    * @public
    * @override
    */
-  proto.access.AccountResponse.displayName = 'proto.access.AccountResponse';
+  proto.flow.access.AccountResponse.displayName = 'proto.flow.access.AccountResponse';
 }
 /**
  * Generated by JsPbCodeGenerator.
@@ -509,16 +509,16 @@ if (goog.DEBUG && !COMPILED) {
  * @extends {jspb.Message}
  * @constructor
  */
-proto.access.GetAccountAtBlockHeightRequest = function(opt_data) {
+proto.flow.access.GetAccountAtBlockHeightRequest = function(opt_data) {
   jspb.Message.initialize(this, opt_data, 0, -1, null, null);
 };
-goog.inherits(proto.access.GetAccountAtBlockHeightRequest, jspb.Message);
+goog.inherits(proto.flow.access.GetAccountAtBlockHeightRequest, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
   /**
    * @public
    * @override
    */
-  proto.access.GetAccountAtBlockHeightRequest.displayName = 'proto.access.GetAccountAtBlockHeightRequest';
+  proto.flow.access.GetAccountAtBlockHeightRequest.displayName = 'proto.flow.access.GetAccountAtBlockHeightRequest';
 }
 /**
  * Generated by JsPbCodeGenerator.
@@ -530,16 +530,16 @@ if (goog.DEBUG && !COMPILED) {
  * @extends {jspb.Message}
  * @constructor
  */
-proto.access.ExecuteScriptAtLatestBlockRequest = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, proto.access.ExecuteScriptAtLatestBlockRequest.repeatedFields_, null);
+proto.flow.access.ExecuteScriptAtLatestBlockRequest = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, proto.flow.access.ExecuteScriptAtLatestBlockRequest.repeatedFields_, null);
 };
-goog.inherits(proto.access.ExecuteScriptAtLatestBlockRequest, jspb.Message);
+goog.inherits(proto.flow.access.ExecuteScriptAtLatestBlockRequest, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
   /**
    * @public
    * @override
    */
-  proto.access.ExecuteScriptAtLatestBlockRequest.displayName = 'proto.access.ExecuteScriptAtLatestBlockRequest';
+  proto.flow.access.ExecuteScriptAtLatestBlockRequest.displayName = 'proto.flow.access.ExecuteScriptAtLatestBlockRequest';
 }
 /**
  * Generated by JsPbCodeGenerator.
@@ -551,16 +551,16 @@ if (goog.DEBUG && !COMPILED) {
  * @extends {jspb.Message}
  * @constructor
  */
-proto.access.ExecuteScriptAtBlockIDRequest = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, proto.access.ExecuteScriptAtBlockIDRequest.repeatedFields_, null);
+proto.flow.access.ExecuteScriptAtBlockIDRequest = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, proto.flow.access.ExecuteScriptAtBlockIDRequest.repeatedFields_, null);
 };
-goog.inherits(proto.access.ExecuteScriptAtBlockIDRequest, jspb.Message);
+goog.inherits(proto.flow.access.ExecuteScriptAtBlockIDRequest, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
   /**
    * @public
    * @override
    */
-  proto.access.ExecuteScriptAtBlockIDRequest.displayName = 'proto.access.ExecuteScriptAtBlockIDRequest';
+  proto.flow.access.ExecuteScriptAtBlockIDRequest.displayName = 'proto.flow.access.ExecuteScriptAtBlockIDRequest';
 }
 /**
  * Generated by JsPbCodeGenerator.
@@ -572,16 +572,16 @@ if (goog.DEBUG && !COMPILED) {
  * @extends {jspb.Message}
  * @constructor
  */
-proto.access.ExecuteScriptAtBlockHeightRequest = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, proto.access.ExecuteScriptAtBlockHeightRequest.repeatedFields_, null);
+proto.flow.access.ExecuteScriptAtBlockHeightRequest = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, proto.flow.access.ExecuteScriptAtBlockHeightRequest.repeatedFields_, null);
 };
-goog.inherits(proto.access.ExecuteScriptAtBlockHeightRequest, jspb.Message);
+goog.inherits(proto.flow.access.ExecuteScriptAtBlockHeightRequest, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
   /**
    * @public
    * @override
    */
-  proto.access.ExecuteScriptAtBlockHeightRequest.displayName = 'proto.access.ExecuteScriptAtBlockHeightRequest';
+  proto.flow.access.ExecuteScriptAtBlockHeightRequest.displayName = 'proto.flow.access.ExecuteScriptAtBlockHeightRequest';
 }
 /**
  * Generated by JsPbCodeGenerator.
@@ -593,16 +593,16 @@ if (goog.DEBUG && !COMPILED) {
  * @extends {jspb.Message}
  * @constructor
  */
-proto.access.ExecuteScriptResponse = function(opt_data) {
+proto.flow.access.ExecuteScriptResponse = function(opt_data) {
   jspb.Message.initialize(this, opt_data, 0, -1, null, null);
 };
-goog.inherits(proto.access.ExecuteScriptResponse, jspb.Message);
+goog.inherits(proto.flow.access.ExecuteScriptResponse, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
   /**
    * @public
    * @override
    */
-  proto.access.ExecuteScriptResponse.displayName = 'proto.access.ExecuteScriptResponse';
+  proto.flow.access.ExecuteScriptResponse.displayName = 'proto.flow.access.ExecuteScriptResponse';
 }
 /**
  * Generated by JsPbCodeGenerator.
@@ -614,16 +614,16 @@ if (goog.DEBUG && !COMPILED) {
  * @extends {jspb.Message}
  * @constructor
  */
-proto.access.GetEventsForHeightRangeRequest = function(opt_data) {
+proto.flow.access.GetEventsForHeightRangeRequest = function(opt_data) {
   jspb.Message.initialize(this, opt_data, 0, -1, null, null);
 };
-goog.inherits(proto.access.GetEventsForHeightRangeRequest, jspb.Message);
+goog.inherits(proto.flow.access.GetEventsForHeightRangeRequest, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
   /**
    * @public
    * @override
    */
-  proto.access.GetEventsForHeightRangeRequest.displayName = 'proto.access.GetEventsForHeightRangeRequest';
+  proto.flow.access.GetEventsForHeightRangeRequest.displayName = 'proto.flow.access.GetEventsForHeightRangeRequest';
 }
 /**
  * Generated by JsPbCodeGenerator.
@@ -635,16 +635,16 @@ if (goog.DEBUG && !COMPILED) {
  * @extends {jspb.Message}
  * @constructor
  */
-proto.access.GetEventsForBlockIDsRequest = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, proto.access.GetEventsForBlockIDsRequest.repeatedFields_, null);
+proto.flow.access.GetEventsForBlockIDsRequest = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, proto.flow.access.GetEventsForBlockIDsRequest.repeatedFields_, null);
 };
-goog.inherits(proto.access.GetEventsForBlockIDsRequest, jspb.Message);
+goog.inherits(proto.flow.access.GetEventsForBlockIDsRequest, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
   /**
    * @public
    * @override
    */
-  proto.access.GetEventsForBlockIDsRequest.displayName = 'proto.access.GetEventsForBlockIDsRequest';
+  proto.flow.access.GetEventsForBlockIDsRequest.displayName = 'proto.flow.access.GetEventsForBlockIDsRequest';
 }
 /**
  * Generated by JsPbCodeGenerator.
@@ -656,16 +656,16 @@ if (goog.DEBUG && !COMPILED) {
  * @extends {jspb.Message}
  * @constructor
  */
-proto.access.EventsResponse = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, proto.access.EventsResponse.repeatedFields_, null);
+proto.flow.access.EventsResponse = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, proto.flow.access.EventsResponse.repeatedFields_, null);
 };
-goog.inherits(proto.access.EventsResponse, jspb.Message);
+goog.inherits(proto.flow.access.EventsResponse, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
   /**
    * @public
    * @override
    */
-  proto.access.EventsResponse.displayName = 'proto.access.EventsResponse';
+  proto.flow.access.EventsResponse.displayName = 'proto.flow.access.EventsResponse';
 }
 /**
  * Generated by JsPbCodeGenerator.
@@ -677,16 +677,16 @@ if (goog.DEBUG && !COMPILED) {
  * @extends {jspb.Message}
  * @constructor
  */
-proto.access.EventsResponse.Result = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, proto.access.EventsResponse.Result.repeatedFields_, null);
+proto.flow.access.EventsResponse.Result = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, proto.flow.access.EventsResponse.Result.repeatedFields_, null);
 };
-goog.inherits(proto.access.EventsResponse.Result, jspb.Message);
+goog.inherits(proto.flow.access.EventsResponse.Result, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
   /**
    * @public
    * @override
    */
-  proto.access.EventsResponse.Result.displayName = 'proto.access.EventsResponse.Result';
+  proto.flow.access.EventsResponse.Result.displayName = 'proto.flow.access.EventsResponse.Result';
 }
 /**
  * Generated by JsPbCodeGenerator.
@@ -698,16 +698,16 @@ if (goog.DEBUG && !COMPILED) {
  * @extends {jspb.Message}
  * @constructor
  */
-proto.access.GetNetworkParametersRequest = function(opt_data) {
+proto.flow.access.GetNetworkParametersRequest = function(opt_data) {
   jspb.Message.initialize(this, opt_data, 0, -1, null, null);
 };
-goog.inherits(proto.access.GetNetworkParametersRequest, jspb.Message);
+goog.inherits(proto.flow.access.GetNetworkParametersRequest, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
   /**
    * @public
    * @override
    */
-  proto.access.GetNetworkParametersRequest.displayName = 'proto.access.GetNetworkParametersRequest';
+  proto.flow.access.GetNetworkParametersRequest.displayName = 'proto.flow.access.GetNetworkParametersRequest';
 }
 /**
  * Generated by JsPbCodeGenerator.
@@ -719,16 +719,16 @@ if (goog.DEBUG && !COMPILED) {
  * @extends {jspb.Message}
  * @constructor
  */
-proto.access.GetNetworkParametersResponse = function(opt_data) {
+proto.flow.access.GetNetworkParametersResponse = function(opt_data) {
   jspb.Message.initialize(this, opt_data, 0, -1, null, null);
 };
-goog.inherits(proto.access.GetNetworkParametersResponse, jspb.Message);
+goog.inherits(proto.flow.access.GetNetworkParametersResponse, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
   /**
    * @public
    * @override
    */
-  proto.access.GetNetworkParametersResponse.displayName = 'proto.access.GetNetworkParametersResponse';
+  proto.flow.access.GetNetworkParametersResponse.displayName = 'proto.flow.access.GetNetworkParametersResponse';
 }
 
 
@@ -746,8 +746,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.access.PingRequest.prototype.toObject = function(opt_includeInstance) {
-  return proto.access.PingRequest.toObject(opt_includeInstance, this);
+proto.flow.access.PingRequest.prototype.toObject = function(opt_includeInstance) {
+  return proto.flow.access.PingRequest.toObject(opt_includeInstance, this);
 };
 
 
@@ -756,11 +756,11 @@ proto.access.PingRequest.prototype.toObject = function(opt_includeInstance) {
  * @param {boolean|undefined} includeInstance Deprecated. Whether to include
  *     the JSPB instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.access.PingRequest} msg The msg instance to transform.
+ * @param {!proto.flow.access.PingRequest} msg The msg instance to transform.
  * @return {!Object}
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.access.PingRequest.toObject = function(includeInstance, msg) {
+proto.flow.access.PingRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
 
   };
@@ -776,23 +776,23 @@ proto.access.PingRequest.toObject = function(includeInstance, msg) {
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.access.PingRequest}
+ * @return {!proto.flow.access.PingRequest}
  */
-proto.access.PingRequest.deserializeBinary = function(bytes) {
+proto.flow.access.PingRequest.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.access.PingRequest;
-  return proto.access.PingRequest.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.flow.access.PingRequest;
+  return proto.flow.access.PingRequest.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.access.PingRequest} msg The message object to deserialize into.
+ * @param {!proto.flow.access.PingRequest} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.access.PingRequest}
+ * @return {!proto.flow.access.PingRequest}
  */
-proto.access.PingRequest.deserializeBinaryFromReader = function(msg, reader) {
+proto.flow.access.PingRequest.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -812,9 +812,9 @@ proto.access.PingRequest.deserializeBinaryFromReader = function(msg, reader) {
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.access.PingRequest.prototype.serializeBinary = function() {
+proto.flow.access.PingRequest.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
-  proto.access.PingRequest.serializeBinaryToWriter(this, writer);
+  proto.flow.access.PingRequest.serializeBinaryToWriter(this, writer);
   return writer.getResultBuffer();
 };
 
@@ -822,11 +822,11 @@ proto.access.PingRequest.prototype.serializeBinary = function() {
 /**
  * Serializes the given message to binary data (in protobuf wire
  * format), writing to the given BinaryWriter.
- * @param {!proto.access.PingRequest} message
+ * @param {!proto.flow.access.PingRequest} message
  * @param {!jspb.BinaryWriter} writer
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.access.PingRequest.serializeBinaryToWriter = function(message, writer) {
+proto.flow.access.PingRequest.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
 };
 
@@ -847,8 +847,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.access.PingResponse.prototype.toObject = function(opt_includeInstance) {
-  return proto.access.PingResponse.toObject(opt_includeInstance, this);
+proto.flow.access.PingResponse.prototype.toObject = function(opt_includeInstance) {
+  return proto.flow.access.PingResponse.toObject(opt_includeInstance, this);
 };
 
 
@@ -857,11 +857,11 @@ proto.access.PingResponse.prototype.toObject = function(opt_includeInstance) {
  * @param {boolean|undefined} includeInstance Deprecated. Whether to include
  *     the JSPB instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.access.PingResponse} msg The msg instance to transform.
+ * @param {!proto.flow.access.PingResponse} msg The msg instance to transform.
  * @return {!Object}
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.access.PingResponse.toObject = function(includeInstance, msg) {
+proto.flow.access.PingResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
 
   };
@@ -877,23 +877,23 @@ proto.access.PingResponse.toObject = function(includeInstance, msg) {
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.access.PingResponse}
+ * @return {!proto.flow.access.PingResponse}
  */
-proto.access.PingResponse.deserializeBinary = function(bytes) {
+proto.flow.access.PingResponse.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.access.PingResponse;
-  return proto.access.PingResponse.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.flow.access.PingResponse;
+  return proto.flow.access.PingResponse.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.access.PingResponse} msg The message object to deserialize into.
+ * @param {!proto.flow.access.PingResponse} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.access.PingResponse}
+ * @return {!proto.flow.access.PingResponse}
  */
-proto.access.PingResponse.deserializeBinaryFromReader = function(msg, reader) {
+proto.flow.access.PingResponse.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -913,9 +913,9 @@ proto.access.PingResponse.deserializeBinaryFromReader = function(msg, reader) {
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.access.PingResponse.prototype.serializeBinary = function() {
+proto.flow.access.PingResponse.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
-  proto.access.PingResponse.serializeBinaryToWriter(this, writer);
+  proto.flow.access.PingResponse.serializeBinaryToWriter(this, writer);
   return writer.getResultBuffer();
 };
 
@@ -923,11 +923,11 @@ proto.access.PingResponse.prototype.serializeBinary = function() {
 /**
  * Serializes the given message to binary data (in protobuf wire
  * format), writing to the given BinaryWriter.
- * @param {!proto.access.PingResponse} message
+ * @param {!proto.flow.access.PingResponse} message
  * @param {!jspb.BinaryWriter} writer
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.access.PingResponse.serializeBinaryToWriter = function(message, writer) {
+proto.flow.access.PingResponse.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
 };
 
@@ -948,8 +948,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.access.GetLatestBlockHeaderRequest.prototype.toObject = function(opt_includeInstance) {
-  return proto.access.GetLatestBlockHeaderRequest.toObject(opt_includeInstance, this);
+proto.flow.access.GetLatestBlockHeaderRequest.prototype.toObject = function(opt_includeInstance) {
+  return proto.flow.access.GetLatestBlockHeaderRequest.toObject(opt_includeInstance, this);
 };
 
 
@@ -958,11 +958,11 @@ proto.access.GetLatestBlockHeaderRequest.prototype.toObject = function(opt_inclu
  * @param {boolean|undefined} includeInstance Deprecated. Whether to include
  *     the JSPB instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.access.GetLatestBlockHeaderRequest} msg The msg instance to transform.
+ * @param {!proto.flow.access.GetLatestBlockHeaderRequest} msg The msg instance to transform.
  * @return {!Object}
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.access.GetLatestBlockHeaderRequest.toObject = function(includeInstance, msg) {
+proto.flow.access.GetLatestBlockHeaderRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
     isSealed: jspb.Message.getBooleanFieldWithDefault(msg, 1, false)
   };
@@ -978,23 +978,23 @@ proto.access.GetLatestBlockHeaderRequest.toObject = function(includeInstance, ms
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.access.GetLatestBlockHeaderRequest}
+ * @return {!proto.flow.access.GetLatestBlockHeaderRequest}
  */
-proto.access.GetLatestBlockHeaderRequest.deserializeBinary = function(bytes) {
+proto.flow.access.GetLatestBlockHeaderRequest.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.access.GetLatestBlockHeaderRequest;
-  return proto.access.GetLatestBlockHeaderRequest.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.flow.access.GetLatestBlockHeaderRequest;
+  return proto.flow.access.GetLatestBlockHeaderRequest.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.access.GetLatestBlockHeaderRequest} msg The message object to deserialize into.
+ * @param {!proto.flow.access.GetLatestBlockHeaderRequest} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.access.GetLatestBlockHeaderRequest}
+ * @return {!proto.flow.access.GetLatestBlockHeaderRequest}
  */
-proto.access.GetLatestBlockHeaderRequest.deserializeBinaryFromReader = function(msg, reader) {
+proto.flow.access.GetLatestBlockHeaderRequest.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -1018,9 +1018,9 @@ proto.access.GetLatestBlockHeaderRequest.deserializeBinaryFromReader = function(
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.access.GetLatestBlockHeaderRequest.prototype.serializeBinary = function() {
+proto.flow.access.GetLatestBlockHeaderRequest.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
-  proto.access.GetLatestBlockHeaderRequest.serializeBinaryToWriter(this, writer);
+  proto.flow.access.GetLatestBlockHeaderRequest.serializeBinaryToWriter(this, writer);
   return writer.getResultBuffer();
 };
 
@@ -1028,11 +1028,11 @@ proto.access.GetLatestBlockHeaderRequest.prototype.serializeBinary = function() 
 /**
  * Serializes the given message to binary data (in protobuf wire
  * format), writing to the given BinaryWriter.
- * @param {!proto.access.GetLatestBlockHeaderRequest} message
+ * @param {!proto.flow.access.GetLatestBlockHeaderRequest} message
  * @param {!jspb.BinaryWriter} writer
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.access.GetLatestBlockHeaderRequest.serializeBinaryToWriter = function(message, writer) {
+proto.flow.access.GetLatestBlockHeaderRequest.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
   f = message.getIsSealed();
   if (f) {
@@ -1048,16 +1048,16 @@ proto.access.GetLatestBlockHeaderRequest.serializeBinaryToWriter = function(mess
  * optional bool is_sealed = 1;
  * @return {boolean}
  */
-proto.access.GetLatestBlockHeaderRequest.prototype.getIsSealed = function() {
+proto.flow.access.GetLatestBlockHeaderRequest.prototype.getIsSealed = function() {
   return /** @type {boolean} */ (jspb.Message.getBooleanFieldWithDefault(this, 1, false));
 };
 
 
 /**
  * @param {boolean} value
- * @return {!proto.access.GetLatestBlockHeaderRequest} returns this
+ * @return {!proto.flow.access.GetLatestBlockHeaderRequest} returns this
  */
-proto.access.GetLatestBlockHeaderRequest.prototype.setIsSealed = function(value) {
+proto.flow.access.GetLatestBlockHeaderRequest.prototype.setIsSealed = function(value) {
   return jspb.Message.setProto3BooleanField(this, 1, value);
 };
 
@@ -1078,8 +1078,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.access.GetBlockHeaderByIDRequest.prototype.toObject = function(opt_includeInstance) {
-  return proto.access.GetBlockHeaderByIDRequest.toObject(opt_includeInstance, this);
+proto.flow.access.GetBlockHeaderByIDRequest.prototype.toObject = function(opt_includeInstance) {
+  return proto.flow.access.GetBlockHeaderByIDRequest.toObject(opt_includeInstance, this);
 };
 
 
@@ -1088,11 +1088,11 @@ proto.access.GetBlockHeaderByIDRequest.prototype.toObject = function(opt_include
  * @param {boolean|undefined} includeInstance Deprecated. Whether to include
  *     the JSPB instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.access.GetBlockHeaderByIDRequest} msg The msg instance to transform.
+ * @param {!proto.flow.access.GetBlockHeaderByIDRequest} msg The msg instance to transform.
  * @return {!Object}
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.access.GetBlockHeaderByIDRequest.toObject = function(includeInstance, msg) {
+proto.flow.access.GetBlockHeaderByIDRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
     id: msg.getId_asB64()
   };
@@ -1108,23 +1108,23 @@ proto.access.GetBlockHeaderByIDRequest.toObject = function(includeInstance, msg)
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.access.GetBlockHeaderByIDRequest}
+ * @return {!proto.flow.access.GetBlockHeaderByIDRequest}
  */
-proto.access.GetBlockHeaderByIDRequest.deserializeBinary = function(bytes) {
+proto.flow.access.GetBlockHeaderByIDRequest.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.access.GetBlockHeaderByIDRequest;
-  return proto.access.GetBlockHeaderByIDRequest.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.flow.access.GetBlockHeaderByIDRequest;
+  return proto.flow.access.GetBlockHeaderByIDRequest.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.access.GetBlockHeaderByIDRequest} msg The message object to deserialize into.
+ * @param {!proto.flow.access.GetBlockHeaderByIDRequest} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.access.GetBlockHeaderByIDRequest}
+ * @return {!proto.flow.access.GetBlockHeaderByIDRequest}
  */
-proto.access.GetBlockHeaderByIDRequest.deserializeBinaryFromReader = function(msg, reader) {
+proto.flow.access.GetBlockHeaderByIDRequest.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -1148,9 +1148,9 @@ proto.access.GetBlockHeaderByIDRequest.deserializeBinaryFromReader = function(ms
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.access.GetBlockHeaderByIDRequest.prototype.serializeBinary = function() {
+proto.flow.access.GetBlockHeaderByIDRequest.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
-  proto.access.GetBlockHeaderByIDRequest.serializeBinaryToWriter(this, writer);
+  proto.flow.access.GetBlockHeaderByIDRequest.serializeBinaryToWriter(this, writer);
   return writer.getResultBuffer();
 };
 
@@ -1158,11 +1158,11 @@ proto.access.GetBlockHeaderByIDRequest.prototype.serializeBinary = function() {
 /**
  * Serializes the given message to binary data (in protobuf wire
  * format), writing to the given BinaryWriter.
- * @param {!proto.access.GetBlockHeaderByIDRequest} message
+ * @param {!proto.flow.access.GetBlockHeaderByIDRequest} message
  * @param {!jspb.BinaryWriter} writer
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.access.GetBlockHeaderByIDRequest.serializeBinaryToWriter = function(message, writer) {
+proto.flow.access.GetBlockHeaderByIDRequest.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
   f = message.getId_asU8();
   if (f.length > 0) {
@@ -1178,7 +1178,7 @@ proto.access.GetBlockHeaderByIDRequest.serializeBinaryToWriter = function(messag
  * optional bytes id = 1;
  * @return {!(string|Uint8Array)}
  */
-proto.access.GetBlockHeaderByIDRequest.prototype.getId = function() {
+proto.flow.access.GetBlockHeaderByIDRequest.prototype.getId = function() {
   return /** @type {!(string|Uint8Array)} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
 };
 
@@ -1188,7 +1188,7 @@ proto.access.GetBlockHeaderByIDRequest.prototype.getId = function() {
  * This is a type-conversion wrapper around `getId()`
  * @return {string}
  */
-proto.access.GetBlockHeaderByIDRequest.prototype.getId_asB64 = function() {
+proto.flow.access.GetBlockHeaderByIDRequest.prototype.getId_asB64 = function() {
   return /** @type {string} */ (jspb.Message.bytesAsB64(
       this.getId()));
 };
@@ -1201,7 +1201,7 @@ proto.access.GetBlockHeaderByIDRequest.prototype.getId_asB64 = function() {
  * This is a type-conversion wrapper around `getId()`
  * @return {!Uint8Array}
  */
-proto.access.GetBlockHeaderByIDRequest.prototype.getId_asU8 = function() {
+proto.flow.access.GetBlockHeaderByIDRequest.prototype.getId_asU8 = function() {
   return /** @type {!Uint8Array} */ (jspb.Message.bytesAsU8(
       this.getId()));
 };
@@ -1209,9 +1209,9 @@ proto.access.GetBlockHeaderByIDRequest.prototype.getId_asU8 = function() {
 
 /**
  * @param {!(string|Uint8Array)} value
- * @return {!proto.access.GetBlockHeaderByIDRequest} returns this
+ * @return {!proto.flow.access.GetBlockHeaderByIDRequest} returns this
  */
-proto.access.GetBlockHeaderByIDRequest.prototype.setId = function(value) {
+proto.flow.access.GetBlockHeaderByIDRequest.prototype.setId = function(value) {
   return jspb.Message.setProto3BytesField(this, 1, value);
 };
 
@@ -1232,8 +1232,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.access.GetBlockHeaderByHeightRequest.prototype.toObject = function(opt_includeInstance) {
-  return proto.access.GetBlockHeaderByHeightRequest.toObject(opt_includeInstance, this);
+proto.flow.access.GetBlockHeaderByHeightRequest.prototype.toObject = function(opt_includeInstance) {
+  return proto.flow.access.GetBlockHeaderByHeightRequest.toObject(opt_includeInstance, this);
 };
 
 
@@ -1242,11 +1242,11 @@ proto.access.GetBlockHeaderByHeightRequest.prototype.toObject = function(opt_inc
  * @param {boolean|undefined} includeInstance Deprecated. Whether to include
  *     the JSPB instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.access.GetBlockHeaderByHeightRequest} msg The msg instance to transform.
+ * @param {!proto.flow.access.GetBlockHeaderByHeightRequest} msg The msg instance to transform.
  * @return {!Object}
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.access.GetBlockHeaderByHeightRequest.toObject = function(includeInstance, msg) {
+proto.flow.access.GetBlockHeaderByHeightRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
     height: jspb.Message.getFieldWithDefault(msg, 1, 0)
   };
@@ -1262,23 +1262,23 @@ proto.access.GetBlockHeaderByHeightRequest.toObject = function(includeInstance, 
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.access.GetBlockHeaderByHeightRequest}
+ * @return {!proto.flow.access.GetBlockHeaderByHeightRequest}
  */
-proto.access.GetBlockHeaderByHeightRequest.deserializeBinary = function(bytes) {
+proto.flow.access.GetBlockHeaderByHeightRequest.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.access.GetBlockHeaderByHeightRequest;
-  return proto.access.GetBlockHeaderByHeightRequest.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.flow.access.GetBlockHeaderByHeightRequest;
+  return proto.flow.access.GetBlockHeaderByHeightRequest.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.access.GetBlockHeaderByHeightRequest} msg The message object to deserialize into.
+ * @param {!proto.flow.access.GetBlockHeaderByHeightRequest} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.access.GetBlockHeaderByHeightRequest}
+ * @return {!proto.flow.access.GetBlockHeaderByHeightRequest}
  */
-proto.access.GetBlockHeaderByHeightRequest.deserializeBinaryFromReader = function(msg, reader) {
+proto.flow.access.GetBlockHeaderByHeightRequest.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -1302,9 +1302,9 @@ proto.access.GetBlockHeaderByHeightRequest.deserializeBinaryFromReader = functio
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.access.GetBlockHeaderByHeightRequest.prototype.serializeBinary = function() {
+proto.flow.access.GetBlockHeaderByHeightRequest.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
-  proto.access.GetBlockHeaderByHeightRequest.serializeBinaryToWriter(this, writer);
+  proto.flow.access.GetBlockHeaderByHeightRequest.serializeBinaryToWriter(this, writer);
   return writer.getResultBuffer();
 };
 
@@ -1312,11 +1312,11 @@ proto.access.GetBlockHeaderByHeightRequest.prototype.serializeBinary = function(
 /**
  * Serializes the given message to binary data (in protobuf wire
  * format), writing to the given BinaryWriter.
- * @param {!proto.access.GetBlockHeaderByHeightRequest} message
+ * @param {!proto.flow.access.GetBlockHeaderByHeightRequest} message
  * @param {!jspb.BinaryWriter} writer
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.access.GetBlockHeaderByHeightRequest.serializeBinaryToWriter = function(message, writer) {
+proto.flow.access.GetBlockHeaderByHeightRequest.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
   f = message.getHeight();
   if (f !== 0) {
@@ -1332,16 +1332,16 @@ proto.access.GetBlockHeaderByHeightRequest.serializeBinaryToWriter = function(me
  * optional uint64 height = 1;
  * @return {number}
  */
-proto.access.GetBlockHeaderByHeightRequest.prototype.getHeight = function() {
+proto.flow.access.GetBlockHeaderByHeightRequest.prototype.getHeight = function() {
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 1, 0));
 };
 
 
 /**
  * @param {number} value
- * @return {!proto.access.GetBlockHeaderByHeightRequest} returns this
+ * @return {!proto.flow.access.GetBlockHeaderByHeightRequest} returns this
  */
-proto.access.GetBlockHeaderByHeightRequest.prototype.setHeight = function(value) {
+proto.flow.access.GetBlockHeaderByHeightRequest.prototype.setHeight = function(value) {
   return jspb.Message.setProto3IntField(this, 1, value);
 };
 
@@ -1362,8 +1362,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.access.BlockHeaderResponse.prototype.toObject = function(opt_includeInstance) {
-  return proto.access.BlockHeaderResponse.toObject(opt_includeInstance, this);
+proto.flow.access.BlockHeaderResponse.prototype.toObject = function(opt_includeInstance) {
+  return proto.flow.access.BlockHeaderResponse.toObject(opt_includeInstance, this);
 };
 
 
@@ -1372,11 +1372,11 @@ proto.access.BlockHeaderResponse.prototype.toObject = function(opt_includeInstan
  * @param {boolean|undefined} includeInstance Deprecated. Whether to include
  *     the JSPB instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.access.BlockHeaderResponse} msg The msg instance to transform.
+ * @param {!proto.flow.access.BlockHeaderResponse} msg The msg instance to transform.
  * @return {!Object}
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.access.BlockHeaderResponse.toObject = function(includeInstance, msg) {
+proto.flow.access.BlockHeaderResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
     block: (f = msg.getBlock()) && flow_entities_block_header_pb.BlockHeader.toObject(includeInstance, f)
   };
@@ -1392,23 +1392,23 @@ proto.access.BlockHeaderResponse.toObject = function(includeInstance, msg) {
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.access.BlockHeaderResponse}
+ * @return {!proto.flow.access.BlockHeaderResponse}
  */
-proto.access.BlockHeaderResponse.deserializeBinary = function(bytes) {
+proto.flow.access.BlockHeaderResponse.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.access.BlockHeaderResponse;
-  return proto.access.BlockHeaderResponse.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.flow.access.BlockHeaderResponse;
+  return proto.flow.access.BlockHeaderResponse.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.access.BlockHeaderResponse} msg The message object to deserialize into.
+ * @param {!proto.flow.access.BlockHeaderResponse} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.access.BlockHeaderResponse}
+ * @return {!proto.flow.access.BlockHeaderResponse}
  */
-proto.access.BlockHeaderResponse.deserializeBinaryFromReader = function(msg, reader) {
+proto.flow.access.BlockHeaderResponse.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -1433,9 +1433,9 @@ proto.access.BlockHeaderResponse.deserializeBinaryFromReader = function(msg, rea
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.access.BlockHeaderResponse.prototype.serializeBinary = function() {
+proto.flow.access.BlockHeaderResponse.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
-  proto.access.BlockHeaderResponse.serializeBinaryToWriter(this, writer);
+  proto.flow.access.BlockHeaderResponse.serializeBinaryToWriter(this, writer);
   return writer.getResultBuffer();
 };
 
@@ -1443,11 +1443,11 @@ proto.access.BlockHeaderResponse.prototype.serializeBinary = function() {
 /**
  * Serializes the given message to binary data (in protobuf wire
  * format), writing to the given BinaryWriter.
- * @param {!proto.access.BlockHeaderResponse} message
+ * @param {!proto.flow.access.BlockHeaderResponse} message
  * @param {!jspb.BinaryWriter} writer
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.access.BlockHeaderResponse.serializeBinaryToWriter = function(message, writer) {
+proto.flow.access.BlockHeaderResponse.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
   f = message.getBlock();
   if (f != null) {
@@ -1461,29 +1461,29 @@ proto.access.BlockHeaderResponse.serializeBinaryToWriter = function(message, wri
 
 
 /**
- * optional entities.BlockHeader block = 1;
- * @return {?proto.entities.BlockHeader}
+ * optional flow.entities.BlockHeader block = 1;
+ * @return {?proto.flow.entities.BlockHeader}
  */
-proto.access.BlockHeaderResponse.prototype.getBlock = function() {
-  return /** @type{?proto.entities.BlockHeader} */ (
+proto.flow.access.BlockHeaderResponse.prototype.getBlock = function() {
+  return /** @type{?proto.flow.entities.BlockHeader} */ (
     jspb.Message.getWrapperField(this, flow_entities_block_header_pb.BlockHeader, 1));
 };
 
 
 /**
- * @param {?proto.entities.BlockHeader|undefined} value
- * @return {!proto.access.BlockHeaderResponse} returns this
+ * @param {?proto.flow.entities.BlockHeader|undefined} value
+ * @return {!proto.flow.access.BlockHeaderResponse} returns this
 */
-proto.access.BlockHeaderResponse.prototype.setBlock = function(value) {
+proto.flow.access.BlockHeaderResponse.prototype.setBlock = function(value) {
   return jspb.Message.setWrapperField(this, 1, value);
 };
 
 
 /**
  * Clears the message field making it undefined.
- * @return {!proto.access.BlockHeaderResponse} returns this
+ * @return {!proto.flow.access.BlockHeaderResponse} returns this
  */
-proto.access.BlockHeaderResponse.prototype.clearBlock = function() {
+proto.flow.access.BlockHeaderResponse.prototype.clearBlock = function() {
   return this.setBlock(undefined);
 };
 
@@ -1492,7 +1492,7 @@ proto.access.BlockHeaderResponse.prototype.clearBlock = function() {
  * Returns whether this field is set.
  * @return {boolean}
  */
-proto.access.BlockHeaderResponse.prototype.hasBlock = function() {
+proto.flow.access.BlockHeaderResponse.prototype.hasBlock = function() {
   return jspb.Message.getField(this, 1) != null;
 };
 
@@ -1513,8 +1513,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.access.GetLatestBlockRequest.prototype.toObject = function(opt_includeInstance) {
-  return proto.access.GetLatestBlockRequest.toObject(opt_includeInstance, this);
+proto.flow.access.GetLatestBlockRequest.prototype.toObject = function(opt_includeInstance) {
+  return proto.flow.access.GetLatestBlockRequest.toObject(opt_includeInstance, this);
 };
 
 
@@ -1523,11 +1523,11 @@ proto.access.GetLatestBlockRequest.prototype.toObject = function(opt_includeInst
  * @param {boolean|undefined} includeInstance Deprecated. Whether to include
  *     the JSPB instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.access.GetLatestBlockRequest} msg The msg instance to transform.
+ * @param {!proto.flow.access.GetLatestBlockRequest} msg The msg instance to transform.
  * @return {!Object}
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.access.GetLatestBlockRequest.toObject = function(includeInstance, msg) {
+proto.flow.access.GetLatestBlockRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
     isSealed: jspb.Message.getBooleanFieldWithDefault(msg, 1, false)
   };
@@ -1543,23 +1543,23 @@ proto.access.GetLatestBlockRequest.toObject = function(includeInstance, msg) {
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.access.GetLatestBlockRequest}
+ * @return {!proto.flow.access.GetLatestBlockRequest}
  */
-proto.access.GetLatestBlockRequest.deserializeBinary = function(bytes) {
+proto.flow.access.GetLatestBlockRequest.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.access.GetLatestBlockRequest;
-  return proto.access.GetLatestBlockRequest.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.flow.access.GetLatestBlockRequest;
+  return proto.flow.access.GetLatestBlockRequest.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.access.GetLatestBlockRequest} msg The message object to deserialize into.
+ * @param {!proto.flow.access.GetLatestBlockRequest} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.access.GetLatestBlockRequest}
+ * @return {!proto.flow.access.GetLatestBlockRequest}
  */
-proto.access.GetLatestBlockRequest.deserializeBinaryFromReader = function(msg, reader) {
+proto.flow.access.GetLatestBlockRequest.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -1583,9 +1583,9 @@ proto.access.GetLatestBlockRequest.deserializeBinaryFromReader = function(msg, r
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.access.GetLatestBlockRequest.prototype.serializeBinary = function() {
+proto.flow.access.GetLatestBlockRequest.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
-  proto.access.GetLatestBlockRequest.serializeBinaryToWriter(this, writer);
+  proto.flow.access.GetLatestBlockRequest.serializeBinaryToWriter(this, writer);
   return writer.getResultBuffer();
 };
 
@@ -1593,11 +1593,11 @@ proto.access.GetLatestBlockRequest.prototype.serializeBinary = function() {
 /**
  * Serializes the given message to binary data (in protobuf wire
  * format), writing to the given BinaryWriter.
- * @param {!proto.access.GetLatestBlockRequest} message
+ * @param {!proto.flow.access.GetLatestBlockRequest} message
  * @param {!jspb.BinaryWriter} writer
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.access.GetLatestBlockRequest.serializeBinaryToWriter = function(message, writer) {
+proto.flow.access.GetLatestBlockRequest.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
   f = message.getIsSealed();
   if (f) {
@@ -1613,16 +1613,16 @@ proto.access.GetLatestBlockRequest.serializeBinaryToWriter = function(message, w
  * optional bool is_sealed = 1;
  * @return {boolean}
  */
-proto.access.GetLatestBlockRequest.prototype.getIsSealed = function() {
+proto.flow.access.GetLatestBlockRequest.prototype.getIsSealed = function() {
   return /** @type {boolean} */ (jspb.Message.getBooleanFieldWithDefault(this, 1, false));
 };
 
 
 /**
  * @param {boolean} value
- * @return {!proto.access.GetLatestBlockRequest} returns this
+ * @return {!proto.flow.access.GetLatestBlockRequest} returns this
  */
-proto.access.GetLatestBlockRequest.prototype.setIsSealed = function(value) {
+proto.flow.access.GetLatestBlockRequest.prototype.setIsSealed = function(value) {
   return jspb.Message.setProto3BooleanField(this, 1, value);
 };
 
@@ -1643,8 +1643,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.access.GetBlockByIDRequest.prototype.toObject = function(opt_includeInstance) {
-  return proto.access.GetBlockByIDRequest.toObject(opt_includeInstance, this);
+proto.flow.access.GetBlockByIDRequest.prototype.toObject = function(opt_includeInstance) {
+  return proto.flow.access.GetBlockByIDRequest.toObject(opt_includeInstance, this);
 };
 
 
@@ -1653,11 +1653,11 @@ proto.access.GetBlockByIDRequest.prototype.toObject = function(opt_includeInstan
  * @param {boolean|undefined} includeInstance Deprecated. Whether to include
  *     the JSPB instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.access.GetBlockByIDRequest} msg The msg instance to transform.
+ * @param {!proto.flow.access.GetBlockByIDRequest} msg The msg instance to transform.
  * @return {!Object}
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.access.GetBlockByIDRequest.toObject = function(includeInstance, msg) {
+proto.flow.access.GetBlockByIDRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
     id: msg.getId_asB64()
   };
@@ -1673,23 +1673,23 @@ proto.access.GetBlockByIDRequest.toObject = function(includeInstance, msg) {
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.access.GetBlockByIDRequest}
+ * @return {!proto.flow.access.GetBlockByIDRequest}
  */
-proto.access.GetBlockByIDRequest.deserializeBinary = function(bytes) {
+proto.flow.access.GetBlockByIDRequest.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.access.GetBlockByIDRequest;
-  return proto.access.GetBlockByIDRequest.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.flow.access.GetBlockByIDRequest;
+  return proto.flow.access.GetBlockByIDRequest.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.access.GetBlockByIDRequest} msg The message object to deserialize into.
+ * @param {!proto.flow.access.GetBlockByIDRequest} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.access.GetBlockByIDRequest}
+ * @return {!proto.flow.access.GetBlockByIDRequest}
  */
-proto.access.GetBlockByIDRequest.deserializeBinaryFromReader = function(msg, reader) {
+proto.flow.access.GetBlockByIDRequest.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -1713,9 +1713,9 @@ proto.access.GetBlockByIDRequest.deserializeBinaryFromReader = function(msg, rea
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.access.GetBlockByIDRequest.prototype.serializeBinary = function() {
+proto.flow.access.GetBlockByIDRequest.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
-  proto.access.GetBlockByIDRequest.serializeBinaryToWriter(this, writer);
+  proto.flow.access.GetBlockByIDRequest.serializeBinaryToWriter(this, writer);
   return writer.getResultBuffer();
 };
 
@@ -1723,11 +1723,11 @@ proto.access.GetBlockByIDRequest.prototype.serializeBinary = function() {
 /**
  * Serializes the given message to binary data (in protobuf wire
  * format), writing to the given BinaryWriter.
- * @param {!proto.access.GetBlockByIDRequest} message
+ * @param {!proto.flow.access.GetBlockByIDRequest} message
  * @param {!jspb.BinaryWriter} writer
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.access.GetBlockByIDRequest.serializeBinaryToWriter = function(message, writer) {
+proto.flow.access.GetBlockByIDRequest.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
   f = message.getId_asU8();
   if (f.length > 0) {
@@ -1743,7 +1743,7 @@ proto.access.GetBlockByIDRequest.serializeBinaryToWriter = function(message, wri
  * optional bytes id = 1;
  * @return {!(string|Uint8Array)}
  */
-proto.access.GetBlockByIDRequest.prototype.getId = function() {
+proto.flow.access.GetBlockByIDRequest.prototype.getId = function() {
   return /** @type {!(string|Uint8Array)} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
 };
 
@@ -1753,7 +1753,7 @@ proto.access.GetBlockByIDRequest.prototype.getId = function() {
  * This is a type-conversion wrapper around `getId()`
  * @return {string}
  */
-proto.access.GetBlockByIDRequest.prototype.getId_asB64 = function() {
+proto.flow.access.GetBlockByIDRequest.prototype.getId_asB64 = function() {
   return /** @type {string} */ (jspb.Message.bytesAsB64(
       this.getId()));
 };
@@ -1766,7 +1766,7 @@ proto.access.GetBlockByIDRequest.prototype.getId_asB64 = function() {
  * This is a type-conversion wrapper around `getId()`
  * @return {!Uint8Array}
  */
-proto.access.GetBlockByIDRequest.prototype.getId_asU8 = function() {
+proto.flow.access.GetBlockByIDRequest.prototype.getId_asU8 = function() {
   return /** @type {!Uint8Array} */ (jspb.Message.bytesAsU8(
       this.getId()));
 };
@@ -1774,9 +1774,9 @@ proto.access.GetBlockByIDRequest.prototype.getId_asU8 = function() {
 
 /**
  * @param {!(string|Uint8Array)} value
- * @return {!proto.access.GetBlockByIDRequest} returns this
+ * @return {!proto.flow.access.GetBlockByIDRequest} returns this
  */
-proto.access.GetBlockByIDRequest.prototype.setId = function(value) {
+proto.flow.access.GetBlockByIDRequest.prototype.setId = function(value) {
   return jspb.Message.setProto3BytesField(this, 1, value);
 };
 
@@ -1797,8 +1797,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.access.GetBlockByHeightRequest.prototype.toObject = function(opt_includeInstance) {
-  return proto.access.GetBlockByHeightRequest.toObject(opt_includeInstance, this);
+proto.flow.access.GetBlockByHeightRequest.prototype.toObject = function(opt_includeInstance) {
+  return proto.flow.access.GetBlockByHeightRequest.toObject(opt_includeInstance, this);
 };
 
 
@@ -1807,11 +1807,11 @@ proto.access.GetBlockByHeightRequest.prototype.toObject = function(opt_includeIn
  * @param {boolean|undefined} includeInstance Deprecated. Whether to include
  *     the JSPB instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.access.GetBlockByHeightRequest} msg The msg instance to transform.
+ * @param {!proto.flow.access.GetBlockByHeightRequest} msg The msg instance to transform.
  * @return {!Object}
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.access.GetBlockByHeightRequest.toObject = function(includeInstance, msg) {
+proto.flow.access.GetBlockByHeightRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
     height: jspb.Message.getFieldWithDefault(msg, 1, 0)
   };
@@ -1827,23 +1827,23 @@ proto.access.GetBlockByHeightRequest.toObject = function(includeInstance, msg) {
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.access.GetBlockByHeightRequest}
+ * @return {!proto.flow.access.GetBlockByHeightRequest}
  */
-proto.access.GetBlockByHeightRequest.deserializeBinary = function(bytes) {
+proto.flow.access.GetBlockByHeightRequest.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.access.GetBlockByHeightRequest;
-  return proto.access.GetBlockByHeightRequest.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.flow.access.GetBlockByHeightRequest;
+  return proto.flow.access.GetBlockByHeightRequest.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.access.GetBlockByHeightRequest} msg The message object to deserialize into.
+ * @param {!proto.flow.access.GetBlockByHeightRequest} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.access.GetBlockByHeightRequest}
+ * @return {!proto.flow.access.GetBlockByHeightRequest}
  */
-proto.access.GetBlockByHeightRequest.deserializeBinaryFromReader = function(msg, reader) {
+proto.flow.access.GetBlockByHeightRequest.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -1867,9 +1867,9 @@ proto.access.GetBlockByHeightRequest.deserializeBinaryFromReader = function(msg,
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.access.GetBlockByHeightRequest.prototype.serializeBinary = function() {
+proto.flow.access.GetBlockByHeightRequest.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
-  proto.access.GetBlockByHeightRequest.serializeBinaryToWriter(this, writer);
+  proto.flow.access.GetBlockByHeightRequest.serializeBinaryToWriter(this, writer);
   return writer.getResultBuffer();
 };
 
@@ -1877,11 +1877,11 @@ proto.access.GetBlockByHeightRequest.prototype.serializeBinary = function() {
 /**
  * Serializes the given message to binary data (in protobuf wire
  * format), writing to the given BinaryWriter.
- * @param {!proto.access.GetBlockByHeightRequest} message
+ * @param {!proto.flow.access.GetBlockByHeightRequest} message
  * @param {!jspb.BinaryWriter} writer
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.access.GetBlockByHeightRequest.serializeBinaryToWriter = function(message, writer) {
+proto.flow.access.GetBlockByHeightRequest.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
   f = message.getHeight();
   if (f !== 0) {
@@ -1897,16 +1897,16 @@ proto.access.GetBlockByHeightRequest.serializeBinaryToWriter = function(message,
  * optional uint64 height = 1;
  * @return {number}
  */
-proto.access.GetBlockByHeightRequest.prototype.getHeight = function() {
+proto.flow.access.GetBlockByHeightRequest.prototype.getHeight = function() {
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 1, 0));
 };
 
 
 /**
  * @param {number} value
- * @return {!proto.access.GetBlockByHeightRequest} returns this
+ * @return {!proto.flow.access.GetBlockByHeightRequest} returns this
  */
-proto.access.GetBlockByHeightRequest.prototype.setHeight = function(value) {
+proto.flow.access.GetBlockByHeightRequest.prototype.setHeight = function(value) {
   return jspb.Message.setProto3IntField(this, 1, value);
 };
 
@@ -1927,8 +1927,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.access.BlockResponse.prototype.toObject = function(opt_includeInstance) {
-  return proto.access.BlockResponse.toObject(opt_includeInstance, this);
+proto.flow.access.BlockResponse.prototype.toObject = function(opt_includeInstance) {
+  return proto.flow.access.BlockResponse.toObject(opt_includeInstance, this);
 };
 
 
@@ -1937,11 +1937,11 @@ proto.access.BlockResponse.prototype.toObject = function(opt_includeInstance) {
  * @param {boolean|undefined} includeInstance Deprecated. Whether to include
  *     the JSPB instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.access.BlockResponse} msg The msg instance to transform.
+ * @param {!proto.flow.access.BlockResponse} msg The msg instance to transform.
  * @return {!Object}
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.access.BlockResponse.toObject = function(includeInstance, msg) {
+proto.flow.access.BlockResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
     block: (f = msg.getBlock()) && flow_entities_block_pb.Block.toObject(includeInstance, f)
   };
@@ -1957,23 +1957,23 @@ proto.access.BlockResponse.toObject = function(includeInstance, msg) {
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.access.BlockResponse}
+ * @return {!proto.flow.access.BlockResponse}
  */
-proto.access.BlockResponse.deserializeBinary = function(bytes) {
+proto.flow.access.BlockResponse.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.access.BlockResponse;
-  return proto.access.BlockResponse.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.flow.access.BlockResponse;
+  return proto.flow.access.BlockResponse.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.access.BlockResponse} msg The message object to deserialize into.
+ * @param {!proto.flow.access.BlockResponse} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.access.BlockResponse}
+ * @return {!proto.flow.access.BlockResponse}
  */
-proto.access.BlockResponse.deserializeBinaryFromReader = function(msg, reader) {
+proto.flow.access.BlockResponse.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -1998,9 +1998,9 @@ proto.access.BlockResponse.deserializeBinaryFromReader = function(msg, reader) {
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.access.BlockResponse.prototype.serializeBinary = function() {
+proto.flow.access.BlockResponse.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
-  proto.access.BlockResponse.serializeBinaryToWriter(this, writer);
+  proto.flow.access.BlockResponse.serializeBinaryToWriter(this, writer);
   return writer.getResultBuffer();
 };
 
@@ -2008,11 +2008,11 @@ proto.access.BlockResponse.prototype.serializeBinary = function() {
 /**
  * Serializes the given message to binary data (in protobuf wire
  * format), writing to the given BinaryWriter.
- * @param {!proto.access.BlockResponse} message
+ * @param {!proto.flow.access.BlockResponse} message
  * @param {!jspb.BinaryWriter} writer
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.access.BlockResponse.serializeBinaryToWriter = function(message, writer) {
+proto.flow.access.BlockResponse.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
   f = message.getBlock();
   if (f != null) {
@@ -2026,29 +2026,29 @@ proto.access.BlockResponse.serializeBinaryToWriter = function(message, writer) {
 
 
 /**
- * optional entities.Block block = 1;
- * @return {?proto.entities.Block}
+ * optional flow.entities.Block block = 1;
+ * @return {?proto.flow.entities.Block}
  */
-proto.access.BlockResponse.prototype.getBlock = function() {
-  return /** @type{?proto.entities.Block} */ (
+proto.flow.access.BlockResponse.prototype.getBlock = function() {
+  return /** @type{?proto.flow.entities.Block} */ (
     jspb.Message.getWrapperField(this, flow_entities_block_pb.Block, 1));
 };
 
 
 /**
- * @param {?proto.entities.Block|undefined} value
- * @return {!proto.access.BlockResponse} returns this
+ * @param {?proto.flow.entities.Block|undefined} value
+ * @return {!proto.flow.access.BlockResponse} returns this
 */
-proto.access.BlockResponse.prototype.setBlock = function(value) {
+proto.flow.access.BlockResponse.prototype.setBlock = function(value) {
   return jspb.Message.setWrapperField(this, 1, value);
 };
 
 
 /**
  * Clears the message field making it undefined.
- * @return {!proto.access.BlockResponse} returns this
+ * @return {!proto.flow.access.BlockResponse} returns this
  */
-proto.access.BlockResponse.prototype.clearBlock = function() {
+proto.flow.access.BlockResponse.prototype.clearBlock = function() {
   return this.setBlock(undefined);
 };
 
@@ -2057,7 +2057,7 @@ proto.access.BlockResponse.prototype.clearBlock = function() {
  * Returns whether this field is set.
  * @return {boolean}
  */
-proto.access.BlockResponse.prototype.hasBlock = function() {
+proto.flow.access.BlockResponse.prototype.hasBlock = function() {
   return jspb.Message.getField(this, 1) != null;
 };
 
@@ -2078,8 +2078,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.access.GetCollectionByIDRequest.prototype.toObject = function(opt_includeInstance) {
-  return proto.access.GetCollectionByIDRequest.toObject(opt_includeInstance, this);
+proto.flow.access.GetCollectionByIDRequest.prototype.toObject = function(opt_includeInstance) {
+  return proto.flow.access.GetCollectionByIDRequest.toObject(opt_includeInstance, this);
 };
 
 
@@ -2088,11 +2088,11 @@ proto.access.GetCollectionByIDRequest.prototype.toObject = function(opt_includeI
  * @param {boolean|undefined} includeInstance Deprecated. Whether to include
  *     the JSPB instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.access.GetCollectionByIDRequest} msg The msg instance to transform.
+ * @param {!proto.flow.access.GetCollectionByIDRequest} msg The msg instance to transform.
  * @return {!Object}
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.access.GetCollectionByIDRequest.toObject = function(includeInstance, msg) {
+proto.flow.access.GetCollectionByIDRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
     id: msg.getId_asB64()
   };
@@ -2108,23 +2108,23 @@ proto.access.GetCollectionByIDRequest.toObject = function(includeInstance, msg) 
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.access.GetCollectionByIDRequest}
+ * @return {!proto.flow.access.GetCollectionByIDRequest}
  */
-proto.access.GetCollectionByIDRequest.deserializeBinary = function(bytes) {
+proto.flow.access.GetCollectionByIDRequest.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.access.GetCollectionByIDRequest;
-  return proto.access.GetCollectionByIDRequest.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.flow.access.GetCollectionByIDRequest;
+  return proto.flow.access.GetCollectionByIDRequest.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.access.GetCollectionByIDRequest} msg The message object to deserialize into.
+ * @param {!proto.flow.access.GetCollectionByIDRequest} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.access.GetCollectionByIDRequest}
+ * @return {!proto.flow.access.GetCollectionByIDRequest}
  */
-proto.access.GetCollectionByIDRequest.deserializeBinaryFromReader = function(msg, reader) {
+proto.flow.access.GetCollectionByIDRequest.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -2148,9 +2148,9 @@ proto.access.GetCollectionByIDRequest.deserializeBinaryFromReader = function(msg
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.access.GetCollectionByIDRequest.prototype.serializeBinary = function() {
+proto.flow.access.GetCollectionByIDRequest.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
-  proto.access.GetCollectionByIDRequest.serializeBinaryToWriter(this, writer);
+  proto.flow.access.GetCollectionByIDRequest.serializeBinaryToWriter(this, writer);
   return writer.getResultBuffer();
 };
 
@@ -2158,11 +2158,11 @@ proto.access.GetCollectionByIDRequest.prototype.serializeBinary = function() {
 /**
  * Serializes the given message to binary data (in protobuf wire
  * format), writing to the given BinaryWriter.
- * @param {!proto.access.GetCollectionByIDRequest} message
+ * @param {!proto.flow.access.GetCollectionByIDRequest} message
  * @param {!jspb.BinaryWriter} writer
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.access.GetCollectionByIDRequest.serializeBinaryToWriter = function(message, writer) {
+proto.flow.access.GetCollectionByIDRequest.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
   f = message.getId_asU8();
   if (f.length > 0) {
@@ -2178,7 +2178,7 @@ proto.access.GetCollectionByIDRequest.serializeBinaryToWriter = function(message
  * optional bytes id = 1;
  * @return {!(string|Uint8Array)}
  */
-proto.access.GetCollectionByIDRequest.prototype.getId = function() {
+proto.flow.access.GetCollectionByIDRequest.prototype.getId = function() {
   return /** @type {!(string|Uint8Array)} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
 };
 
@@ -2188,7 +2188,7 @@ proto.access.GetCollectionByIDRequest.prototype.getId = function() {
  * This is a type-conversion wrapper around `getId()`
  * @return {string}
  */
-proto.access.GetCollectionByIDRequest.prototype.getId_asB64 = function() {
+proto.flow.access.GetCollectionByIDRequest.prototype.getId_asB64 = function() {
   return /** @type {string} */ (jspb.Message.bytesAsB64(
       this.getId()));
 };
@@ -2201,7 +2201,7 @@ proto.access.GetCollectionByIDRequest.prototype.getId_asB64 = function() {
  * This is a type-conversion wrapper around `getId()`
  * @return {!Uint8Array}
  */
-proto.access.GetCollectionByIDRequest.prototype.getId_asU8 = function() {
+proto.flow.access.GetCollectionByIDRequest.prototype.getId_asU8 = function() {
   return /** @type {!Uint8Array} */ (jspb.Message.bytesAsU8(
       this.getId()));
 };
@@ -2209,9 +2209,9 @@ proto.access.GetCollectionByIDRequest.prototype.getId_asU8 = function() {
 
 /**
  * @param {!(string|Uint8Array)} value
- * @return {!proto.access.GetCollectionByIDRequest} returns this
+ * @return {!proto.flow.access.GetCollectionByIDRequest} returns this
  */
-proto.access.GetCollectionByIDRequest.prototype.setId = function(value) {
+proto.flow.access.GetCollectionByIDRequest.prototype.setId = function(value) {
   return jspb.Message.setProto3BytesField(this, 1, value);
 };
 
@@ -2232,8 +2232,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.access.CollectionResponse.prototype.toObject = function(opt_includeInstance) {
-  return proto.access.CollectionResponse.toObject(opt_includeInstance, this);
+proto.flow.access.CollectionResponse.prototype.toObject = function(opt_includeInstance) {
+  return proto.flow.access.CollectionResponse.toObject(opt_includeInstance, this);
 };
 
 
@@ -2242,11 +2242,11 @@ proto.access.CollectionResponse.prototype.toObject = function(opt_includeInstanc
  * @param {boolean|undefined} includeInstance Deprecated. Whether to include
  *     the JSPB instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.access.CollectionResponse} msg The msg instance to transform.
+ * @param {!proto.flow.access.CollectionResponse} msg The msg instance to transform.
  * @return {!Object}
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.access.CollectionResponse.toObject = function(includeInstance, msg) {
+proto.flow.access.CollectionResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
     collection: (f = msg.getCollection()) && flow_entities_collection_pb.Collection.toObject(includeInstance, f)
   };
@@ -2262,23 +2262,23 @@ proto.access.CollectionResponse.toObject = function(includeInstance, msg) {
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.access.CollectionResponse}
+ * @return {!proto.flow.access.CollectionResponse}
  */
-proto.access.CollectionResponse.deserializeBinary = function(bytes) {
+proto.flow.access.CollectionResponse.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.access.CollectionResponse;
-  return proto.access.CollectionResponse.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.flow.access.CollectionResponse;
+  return proto.flow.access.CollectionResponse.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.access.CollectionResponse} msg The message object to deserialize into.
+ * @param {!proto.flow.access.CollectionResponse} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.access.CollectionResponse}
+ * @return {!proto.flow.access.CollectionResponse}
  */
-proto.access.CollectionResponse.deserializeBinaryFromReader = function(msg, reader) {
+proto.flow.access.CollectionResponse.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -2303,9 +2303,9 @@ proto.access.CollectionResponse.deserializeBinaryFromReader = function(msg, read
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.access.CollectionResponse.prototype.serializeBinary = function() {
+proto.flow.access.CollectionResponse.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
-  proto.access.CollectionResponse.serializeBinaryToWriter(this, writer);
+  proto.flow.access.CollectionResponse.serializeBinaryToWriter(this, writer);
   return writer.getResultBuffer();
 };
 
@@ -2313,11 +2313,11 @@ proto.access.CollectionResponse.prototype.serializeBinary = function() {
 /**
  * Serializes the given message to binary data (in protobuf wire
  * format), writing to the given BinaryWriter.
- * @param {!proto.access.CollectionResponse} message
+ * @param {!proto.flow.access.CollectionResponse} message
  * @param {!jspb.BinaryWriter} writer
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.access.CollectionResponse.serializeBinaryToWriter = function(message, writer) {
+proto.flow.access.CollectionResponse.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
   f = message.getCollection();
   if (f != null) {
@@ -2331,29 +2331,29 @@ proto.access.CollectionResponse.serializeBinaryToWriter = function(message, writ
 
 
 /**
- * optional entities.Collection collection = 1;
- * @return {?proto.entities.Collection}
+ * optional flow.entities.Collection collection = 1;
+ * @return {?proto.flow.entities.Collection}
  */
-proto.access.CollectionResponse.prototype.getCollection = function() {
-  return /** @type{?proto.entities.Collection} */ (
+proto.flow.access.CollectionResponse.prototype.getCollection = function() {
+  return /** @type{?proto.flow.entities.Collection} */ (
     jspb.Message.getWrapperField(this, flow_entities_collection_pb.Collection, 1));
 };
 
 
 /**
- * @param {?proto.entities.Collection|undefined} value
- * @return {!proto.access.CollectionResponse} returns this
+ * @param {?proto.flow.entities.Collection|undefined} value
+ * @return {!proto.flow.access.CollectionResponse} returns this
 */
-proto.access.CollectionResponse.prototype.setCollection = function(value) {
+proto.flow.access.CollectionResponse.prototype.setCollection = function(value) {
   return jspb.Message.setWrapperField(this, 1, value);
 };
 
 
 /**
  * Clears the message field making it undefined.
- * @return {!proto.access.CollectionResponse} returns this
+ * @return {!proto.flow.access.CollectionResponse} returns this
  */
-proto.access.CollectionResponse.prototype.clearCollection = function() {
+proto.flow.access.CollectionResponse.prototype.clearCollection = function() {
   return this.setCollection(undefined);
 };
 
@@ -2362,7 +2362,7 @@ proto.access.CollectionResponse.prototype.clearCollection = function() {
  * Returns whether this field is set.
  * @return {boolean}
  */
-proto.access.CollectionResponse.prototype.hasCollection = function() {
+proto.flow.access.CollectionResponse.prototype.hasCollection = function() {
   return jspb.Message.getField(this, 1) != null;
 };
 
@@ -2383,8 +2383,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.access.SendTransactionRequest.prototype.toObject = function(opt_includeInstance) {
-  return proto.access.SendTransactionRequest.toObject(opt_includeInstance, this);
+proto.flow.access.SendTransactionRequest.prototype.toObject = function(opt_includeInstance) {
+  return proto.flow.access.SendTransactionRequest.toObject(opt_includeInstance, this);
 };
 
 
@@ -2393,11 +2393,11 @@ proto.access.SendTransactionRequest.prototype.toObject = function(opt_includeIns
  * @param {boolean|undefined} includeInstance Deprecated. Whether to include
  *     the JSPB instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.access.SendTransactionRequest} msg The msg instance to transform.
+ * @param {!proto.flow.access.SendTransactionRequest} msg The msg instance to transform.
  * @return {!Object}
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.access.SendTransactionRequest.toObject = function(includeInstance, msg) {
+proto.flow.access.SendTransactionRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
     transaction: (f = msg.getTransaction()) && flow_entities_transaction_pb.Transaction.toObject(includeInstance, f)
   };
@@ -2413,23 +2413,23 @@ proto.access.SendTransactionRequest.toObject = function(includeInstance, msg) {
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.access.SendTransactionRequest}
+ * @return {!proto.flow.access.SendTransactionRequest}
  */
-proto.access.SendTransactionRequest.deserializeBinary = function(bytes) {
+proto.flow.access.SendTransactionRequest.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.access.SendTransactionRequest;
-  return proto.access.SendTransactionRequest.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.flow.access.SendTransactionRequest;
+  return proto.flow.access.SendTransactionRequest.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.access.SendTransactionRequest} msg The message object to deserialize into.
+ * @param {!proto.flow.access.SendTransactionRequest} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.access.SendTransactionRequest}
+ * @return {!proto.flow.access.SendTransactionRequest}
  */
-proto.access.SendTransactionRequest.deserializeBinaryFromReader = function(msg, reader) {
+proto.flow.access.SendTransactionRequest.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -2454,9 +2454,9 @@ proto.access.SendTransactionRequest.deserializeBinaryFromReader = function(msg, 
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.access.SendTransactionRequest.prototype.serializeBinary = function() {
+proto.flow.access.SendTransactionRequest.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
-  proto.access.SendTransactionRequest.serializeBinaryToWriter(this, writer);
+  proto.flow.access.SendTransactionRequest.serializeBinaryToWriter(this, writer);
   return writer.getResultBuffer();
 };
 
@@ -2464,11 +2464,11 @@ proto.access.SendTransactionRequest.prototype.serializeBinary = function() {
 /**
  * Serializes the given message to binary data (in protobuf wire
  * format), writing to the given BinaryWriter.
- * @param {!proto.access.SendTransactionRequest} message
+ * @param {!proto.flow.access.SendTransactionRequest} message
  * @param {!jspb.BinaryWriter} writer
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.access.SendTransactionRequest.serializeBinaryToWriter = function(message, writer) {
+proto.flow.access.SendTransactionRequest.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
   f = message.getTransaction();
   if (f != null) {
@@ -2482,29 +2482,29 @@ proto.access.SendTransactionRequest.serializeBinaryToWriter = function(message, 
 
 
 /**
- * optional entities.Transaction transaction = 1;
- * @return {?proto.entities.Transaction}
+ * optional flow.entities.Transaction transaction = 1;
+ * @return {?proto.flow.entities.Transaction}
  */
-proto.access.SendTransactionRequest.prototype.getTransaction = function() {
-  return /** @type{?proto.entities.Transaction} */ (
+proto.flow.access.SendTransactionRequest.prototype.getTransaction = function() {
+  return /** @type{?proto.flow.entities.Transaction} */ (
     jspb.Message.getWrapperField(this, flow_entities_transaction_pb.Transaction, 1));
 };
 
 
 /**
- * @param {?proto.entities.Transaction|undefined} value
- * @return {!proto.access.SendTransactionRequest} returns this
+ * @param {?proto.flow.entities.Transaction|undefined} value
+ * @return {!proto.flow.access.SendTransactionRequest} returns this
 */
-proto.access.SendTransactionRequest.prototype.setTransaction = function(value) {
+proto.flow.access.SendTransactionRequest.prototype.setTransaction = function(value) {
   return jspb.Message.setWrapperField(this, 1, value);
 };
 
 
 /**
  * Clears the message field making it undefined.
- * @return {!proto.access.SendTransactionRequest} returns this
+ * @return {!proto.flow.access.SendTransactionRequest} returns this
  */
-proto.access.SendTransactionRequest.prototype.clearTransaction = function() {
+proto.flow.access.SendTransactionRequest.prototype.clearTransaction = function() {
   return this.setTransaction(undefined);
 };
 
@@ -2513,7 +2513,7 @@ proto.access.SendTransactionRequest.prototype.clearTransaction = function() {
  * Returns whether this field is set.
  * @return {boolean}
  */
-proto.access.SendTransactionRequest.prototype.hasTransaction = function() {
+proto.flow.access.SendTransactionRequest.prototype.hasTransaction = function() {
   return jspb.Message.getField(this, 1) != null;
 };
 
@@ -2534,8 +2534,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.access.SendTransactionResponse.prototype.toObject = function(opt_includeInstance) {
-  return proto.access.SendTransactionResponse.toObject(opt_includeInstance, this);
+proto.flow.access.SendTransactionResponse.prototype.toObject = function(opt_includeInstance) {
+  return proto.flow.access.SendTransactionResponse.toObject(opt_includeInstance, this);
 };
 
 
@@ -2544,11 +2544,11 @@ proto.access.SendTransactionResponse.prototype.toObject = function(opt_includeIn
  * @param {boolean|undefined} includeInstance Deprecated. Whether to include
  *     the JSPB instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.access.SendTransactionResponse} msg The msg instance to transform.
+ * @param {!proto.flow.access.SendTransactionResponse} msg The msg instance to transform.
  * @return {!Object}
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.access.SendTransactionResponse.toObject = function(includeInstance, msg) {
+proto.flow.access.SendTransactionResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
     id: msg.getId_asB64()
   };
@@ -2564,23 +2564,23 @@ proto.access.SendTransactionResponse.toObject = function(includeInstance, msg) {
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.access.SendTransactionResponse}
+ * @return {!proto.flow.access.SendTransactionResponse}
  */
-proto.access.SendTransactionResponse.deserializeBinary = function(bytes) {
+proto.flow.access.SendTransactionResponse.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.access.SendTransactionResponse;
-  return proto.access.SendTransactionResponse.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.flow.access.SendTransactionResponse;
+  return proto.flow.access.SendTransactionResponse.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.access.SendTransactionResponse} msg The message object to deserialize into.
+ * @param {!proto.flow.access.SendTransactionResponse} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.access.SendTransactionResponse}
+ * @return {!proto.flow.access.SendTransactionResponse}
  */
-proto.access.SendTransactionResponse.deserializeBinaryFromReader = function(msg, reader) {
+proto.flow.access.SendTransactionResponse.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -2604,9 +2604,9 @@ proto.access.SendTransactionResponse.deserializeBinaryFromReader = function(msg,
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.access.SendTransactionResponse.prototype.serializeBinary = function() {
+proto.flow.access.SendTransactionResponse.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
-  proto.access.SendTransactionResponse.serializeBinaryToWriter(this, writer);
+  proto.flow.access.SendTransactionResponse.serializeBinaryToWriter(this, writer);
   return writer.getResultBuffer();
 };
 
@@ -2614,11 +2614,11 @@ proto.access.SendTransactionResponse.prototype.serializeBinary = function() {
 /**
  * Serializes the given message to binary data (in protobuf wire
  * format), writing to the given BinaryWriter.
- * @param {!proto.access.SendTransactionResponse} message
+ * @param {!proto.flow.access.SendTransactionResponse} message
  * @param {!jspb.BinaryWriter} writer
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.access.SendTransactionResponse.serializeBinaryToWriter = function(message, writer) {
+proto.flow.access.SendTransactionResponse.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
   f = message.getId_asU8();
   if (f.length > 0) {
@@ -2634,7 +2634,7 @@ proto.access.SendTransactionResponse.serializeBinaryToWriter = function(message,
  * optional bytes id = 1;
  * @return {!(string|Uint8Array)}
  */
-proto.access.SendTransactionResponse.prototype.getId = function() {
+proto.flow.access.SendTransactionResponse.prototype.getId = function() {
   return /** @type {!(string|Uint8Array)} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
 };
 
@@ -2644,7 +2644,7 @@ proto.access.SendTransactionResponse.prototype.getId = function() {
  * This is a type-conversion wrapper around `getId()`
  * @return {string}
  */
-proto.access.SendTransactionResponse.prototype.getId_asB64 = function() {
+proto.flow.access.SendTransactionResponse.prototype.getId_asB64 = function() {
   return /** @type {string} */ (jspb.Message.bytesAsB64(
       this.getId()));
 };
@@ -2657,7 +2657,7 @@ proto.access.SendTransactionResponse.prototype.getId_asB64 = function() {
  * This is a type-conversion wrapper around `getId()`
  * @return {!Uint8Array}
  */
-proto.access.SendTransactionResponse.prototype.getId_asU8 = function() {
+proto.flow.access.SendTransactionResponse.prototype.getId_asU8 = function() {
   return /** @type {!Uint8Array} */ (jspb.Message.bytesAsU8(
       this.getId()));
 };
@@ -2665,9 +2665,9 @@ proto.access.SendTransactionResponse.prototype.getId_asU8 = function() {
 
 /**
  * @param {!(string|Uint8Array)} value
- * @return {!proto.access.SendTransactionResponse} returns this
+ * @return {!proto.flow.access.SendTransactionResponse} returns this
  */
-proto.access.SendTransactionResponse.prototype.setId = function(value) {
+proto.flow.access.SendTransactionResponse.prototype.setId = function(value) {
   return jspb.Message.setProto3BytesField(this, 1, value);
 };
 
@@ -2688,8 +2688,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.access.GetTransactionRequest.prototype.toObject = function(opt_includeInstance) {
-  return proto.access.GetTransactionRequest.toObject(opt_includeInstance, this);
+proto.flow.access.GetTransactionRequest.prototype.toObject = function(opt_includeInstance) {
+  return proto.flow.access.GetTransactionRequest.toObject(opt_includeInstance, this);
 };
 
 
@@ -2698,11 +2698,11 @@ proto.access.GetTransactionRequest.prototype.toObject = function(opt_includeInst
  * @param {boolean|undefined} includeInstance Deprecated. Whether to include
  *     the JSPB instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.access.GetTransactionRequest} msg The msg instance to transform.
+ * @param {!proto.flow.access.GetTransactionRequest} msg The msg instance to transform.
  * @return {!Object}
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.access.GetTransactionRequest.toObject = function(includeInstance, msg) {
+proto.flow.access.GetTransactionRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
     id: msg.getId_asB64()
   };
@@ -2718,23 +2718,23 @@ proto.access.GetTransactionRequest.toObject = function(includeInstance, msg) {
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.access.GetTransactionRequest}
+ * @return {!proto.flow.access.GetTransactionRequest}
  */
-proto.access.GetTransactionRequest.deserializeBinary = function(bytes) {
+proto.flow.access.GetTransactionRequest.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.access.GetTransactionRequest;
-  return proto.access.GetTransactionRequest.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.flow.access.GetTransactionRequest;
+  return proto.flow.access.GetTransactionRequest.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.access.GetTransactionRequest} msg The message object to deserialize into.
+ * @param {!proto.flow.access.GetTransactionRequest} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.access.GetTransactionRequest}
+ * @return {!proto.flow.access.GetTransactionRequest}
  */
-proto.access.GetTransactionRequest.deserializeBinaryFromReader = function(msg, reader) {
+proto.flow.access.GetTransactionRequest.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -2758,9 +2758,9 @@ proto.access.GetTransactionRequest.deserializeBinaryFromReader = function(msg, r
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.access.GetTransactionRequest.prototype.serializeBinary = function() {
+proto.flow.access.GetTransactionRequest.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
-  proto.access.GetTransactionRequest.serializeBinaryToWriter(this, writer);
+  proto.flow.access.GetTransactionRequest.serializeBinaryToWriter(this, writer);
   return writer.getResultBuffer();
 };
 
@@ -2768,11 +2768,11 @@ proto.access.GetTransactionRequest.prototype.serializeBinary = function() {
 /**
  * Serializes the given message to binary data (in protobuf wire
  * format), writing to the given BinaryWriter.
- * @param {!proto.access.GetTransactionRequest} message
+ * @param {!proto.flow.access.GetTransactionRequest} message
  * @param {!jspb.BinaryWriter} writer
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.access.GetTransactionRequest.serializeBinaryToWriter = function(message, writer) {
+proto.flow.access.GetTransactionRequest.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
   f = message.getId_asU8();
   if (f.length > 0) {
@@ -2788,7 +2788,7 @@ proto.access.GetTransactionRequest.serializeBinaryToWriter = function(message, w
  * optional bytes id = 1;
  * @return {!(string|Uint8Array)}
  */
-proto.access.GetTransactionRequest.prototype.getId = function() {
+proto.flow.access.GetTransactionRequest.prototype.getId = function() {
   return /** @type {!(string|Uint8Array)} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
 };
 
@@ -2798,7 +2798,7 @@ proto.access.GetTransactionRequest.prototype.getId = function() {
  * This is a type-conversion wrapper around `getId()`
  * @return {string}
  */
-proto.access.GetTransactionRequest.prototype.getId_asB64 = function() {
+proto.flow.access.GetTransactionRequest.prototype.getId_asB64 = function() {
   return /** @type {string} */ (jspb.Message.bytesAsB64(
       this.getId()));
 };
@@ -2811,7 +2811,7 @@ proto.access.GetTransactionRequest.prototype.getId_asB64 = function() {
  * This is a type-conversion wrapper around `getId()`
  * @return {!Uint8Array}
  */
-proto.access.GetTransactionRequest.prototype.getId_asU8 = function() {
+proto.flow.access.GetTransactionRequest.prototype.getId_asU8 = function() {
   return /** @type {!Uint8Array} */ (jspb.Message.bytesAsU8(
       this.getId()));
 };
@@ -2819,9 +2819,9 @@ proto.access.GetTransactionRequest.prototype.getId_asU8 = function() {
 
 /**
  * @param {!(string|Uint8Array)} value
- * @return {!proto.access.GetTransactionRequest} returns this
+ * @return {!proto.flow.access.GetTransactionRequest} returns this
  */
-proto.access.GetTransactionRequest.prototype.setId = function(value) {
+proto.flow.access.GetTransactionRequest.prototype.setId = function(value) {
   return jspb.Message.setProto3BytesField(this, 1, value);
 };
 
@@ -2842,8 +2842,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.access.TransactionResponse.prototype.toObject = function(opt_includeInstance) {
-  return proto.access.TransactionResponse.toObject(opt_includeInstance, this);
+proto.flow.access.TransactionResponse.prototype.toObject = function(opt_includeInstance) {
+  return proto.flow.access.TransactionResponse.toObject(opt_includeInstance, this);
 };
 
 
@@ -2852,11 +2852,11 @@ proto.access.TransactionResponse.prototype.toObject = function(opt_includeInstan
  * @param {boolean|undefined} includeInstance Deprecated. Whether to include
  *     the JSPB instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.access.TransactionResponse} msg The msg instance to transform.
+ * @param {!proto.flow.access.TransactionResponse} msg The msg instance to transform.
  * @return {!Object}
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.access.TransactionResponse.toObject = function(includeInstance, msg) {
+proto.flow.access.TransactionResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
     transaction: (f = msg.getTransaction()) && flow_entities_transaction_pb.Transaction.toObject(includeInstance, f)
   };
@@ -2872,23 +2872,23 @@ proto.access.TransactionResponse.toObject = function(includeInstance, msg) {
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.access.TransactionResponse}
+ * @return {!proto.flow.access.TransactionResponse}
  */
-proto.access.TransactionResponse.deserializeBinary = function(bytes) {
+proto.flow.access.TransactionResponse.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.access.TransactionResponse;
-  return proto.access.TransactionResponse.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.flow.access.TransactionResponse;
+  return proto.flow.access.TransactionResponse.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.access.TransactionResponse} msg The message object to deserialize into.
+ * @param {!proto.flow.access.TransactionResponse} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.access.TransactionResponse}
+ * @return {!proto.flow.access.TransactionResponse}
  */
-proto.access.TransactionResponse.deserializeBinaryFromReader = function(msg, reader) {
+proto.flow.access.TransactionResponse.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -2913,9 +2913,9 @@ proto.access.TransactionResponse.deserializeBinaryFromReader = function(msg, rea
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.access.TransactionResponse.prototype.serializeBinary = function() {
+proto.flow.access.TransactionResponse.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
-  proto.access.TransactionResponse.serializeBinaryToWriter(this, writer);
+  proto.flow.access.TransactionResponse.serializeBinaryToWriter(this, writer);
   return writer.getResultBuffer();
 };
 
@@ -2923,11 +2923,11 @@ proto.access.TransactionResponse.prototype.serializeBinary = function() {
 /**
  * Serializes the given message to binary data (in protobuf wire
  * format), writing to the given BinaryWriter.
- * @param {!proto.access.TransactionResponse} message
+ * @param {!proto.flow.access.TransactionResponse} message
  * @param {!jspb.BinaryWriter} writer
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.access.TransactionResponse.serializeBinaryToWriter = function(message, writer) {
+proto.flow.access.TransactionResponse.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
   f = message.getTransaction();
   if (f != null) {
@@ -2941,29 +2941,29 @@ proto.access.TransactionResponse.serializeBinaryToWriter = function(message, wri
 
 
 /**
- * optional entities.Transaction transaction = 1;
- * @return {?proto.entities.Transaction}
+ * optional flow.entities.Transaction transaction = 1;
+ * @return {?proto.flow.entities.Transaction}
  */
-proto.access.TransactionResponse.prototype.getTransaction = function() {
-  return /** @type{?proto.entities.Transaction} */ (
+proto.flow.access.TransactionResponse.prototype.getTransaction = function() {
+  return /** @type{?proto.flow.entities.Transaction} */ (
     jspb.Message.getWrapperField(this, flow_entities_transaction_pb.Transaction, 1));
 };
 
 
 /**
- * @param {?proto.entities.Transaction|undefined} value
- * @return {!proto.access.TransactionResponse} returns this
+ * @param {?proto.flow.entities.Transaction|undefined} value
+ * @return {!proto.flow.access.TransactionResponse} returns this
 */
-proto.access.TransactionResponse.prototype.setTransaction = function(value) {
+proto.flow.access.TransactionResponse.prototype.setTransaction = function(value) {
   return jspb.Message.setWrapperField(this, 1, value);
 };
 
 
 /**
  * Clears the message field making it undefined.
- * @return {!proto.access.TransactionResponse} returns this
+ * @return {!proto.flow.access.TransactionResponse} returns this
  */
-proto.access.TransactionResponse.prototype.clearTransaction = function() {
+proto.flow.access.TransactionResponse.prototype.clearTransaction = function() {
   return this.setTransaction(undefined);
 };
 
@@ -2972,7 +2972,7 @@ proto.access.TransactionResponse.prototype.clearTransaction = function() {
  * Returns whether this field is set.
  * @return {boolean}
  */
-proto.access.TransactionResponse.prototype.hasTransaction = function() {
+proto.flow.access.TransactionResponse.prototype.hasTransaction = function() {
   return jspb.Message.getField(this, 1) != null;
 };
 
@@ -2983,7 +2983,7 @@ proto.access.TransactionResponse.prototype.hasTransaction = function() {
  * @private {!Array<number>}
  * @const
  */
-proto.access.TransactionResultResponse.repeatedFields_ = [4];
+proto.flow.access.TransactionResultResponse.repeatedFields_ = [4];
 
 
 
@@ -3000,8 +3000,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.access.TransactionResultResponse.prototype.toObject = function(opt_includeInstance) {
-  return proto.access.TransactionResultResponse.toObject(opt_includeInstance, this);
+proto.flow.access.TransactionResultResponse.prototype.toObject = function(opt_includeInstance) {
+  return proto.flow.access.TransactionResultResponse.toObject(opt_includeInstance, this);
 };
 
 
@@ -3010,11 +3010,11 @@ proto.access.TransactionResultResponse.prototype.toObject = function(opt_include
  * @param {boolean|undefined} includeInstance Deprecated. Whether to include
  *     the JSPB instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.access.TransactionResultResponse} msg The msg instance to transform.
+ * @param {!proto.flow.access.TransactionResultResponse} msg The msg instance to transform.
  * @return {!Object}
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.access.TransactionResultResponse.toObject = function(includeInstance, msg) {
+proto.flow.access.TransactionResultResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
     status: jspb.Message.getFieldWithDefault(msg, 1, 0),
     statusCode: jspb.Message.getFieldWithDefault(msg, 2, 0),
@@ -3034,23 +3034,23 @@ proto.access.TransactionResultResponse.toObject = function(includeInstance, msg)
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.access.TransactionResultResponse}
+ * @return {!proto.flow.access.TransactionResultResponse}
  */
-proto.access.TransactionResultResponse.deserializeBinary = function(bytes) {
+proto.flow.access.TransactionResultResponse.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.access.TransactionResultResponse;
-  return proto.access.TransactionResultResponse.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.flow.access.TransactionResultResponse;
+  return proto.flow.access.TransactionResultResponse.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.access.TransactionResultResponse} msg The message object to deserialize into.
+ * @param {!proto.flow.access.TransactionResultResponse} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.access.TransactionResultResponse}
+ * @return {!proto.flow.access.TransactionResultResponse}
  */
-proto.access.TransactionResultResponse.deserializeBinaryFromReader = function(msg, reader) {
+proto.flow.access.TransactionResultResponse.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -3058,7 +3058,7 @@ proto.access.TransactionResultResponse.deserializeBinaryFromReader = function(ms
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {!proto.entities.TransactionStatus} */ (reader.readEnum());
+      var value = /** @type {!proto.flow.entities.TransactionStatus} */ (reader.readEnum());
       msg.setStatus(value);
       break;
     case 2:
@@ -3087,9 +3087,9 @@ proto.access.TransactionResultResponse.deserializeBinaryFromReader = function(ms
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.access.TransactionResultResponse.prototype.serializeBinary = function() {
+proto.flow.access.TransactionResultResponse.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
-  proto.access.TransactionResultResponse.serializeBinaryToWriter(this, writer);
+  proto.flow.access.TransactionResultResponse.serializeBinaryToWriter(this, writer);
   return writer.getResultBuffer();
 };
 
@@ -3097,11 +3097,11 @@ proto.access.TransactionResultResponse.prototype.serializeBinary = function() {
 /**
  * Serializes the given message to binary data (in protobuf wire
  * format), writing to the given BinaryWriter.
- * @param {!proto.access.TransactionResultResponse} message
+ * @param {!proto.flow.access.TransactionResultResponse} message
  * @param {!jspb.BinaryWriter} writer
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.access.TransactionResultResponse.serializeBinaryToWriter = function(message, writer) {
+proto.flow.access.TransactionResultResponse.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
   f = message.getStatus();
   if (f !== 0.0) {
@@ -3136,19 +3136,19 @@ proto.access.TransactionResultResponse.serializeBinaryToWriter = function(messag
 
 
 /**
- * optional entities.TransactionStatus status = 1;
- * @return {!proto.entities.TransactionStatus}
+ * optional flow.entities.TransactionStatus status = 1;
+ * @return {!proto.flow.entities.TransactionStatus}
  */
-proto.access.TransactionResultResponse.prototype.getStatus = function() {
-  return /** @type {!proto.entities.TransactionStatus} */ (jspb.Message.getFieldWithDefault(this, 1, 0));
+proto.flow.access.TransactionResultResponse.prototype.getStatus = function() {
+  return /** @type {!proto.flow.entities.TransactionStatus} */ (jspb.Message.getFieldWithDefault(this, 1, 0));
 };
 
 
 /**
- * @param {!proto.entities.TransactionStatus} value
- * @return {!proto.access.TransactionResultResponse} returns this
+ * @param {!proto.flow.entities.TransactionStatus} value
+ * @return {!proto.flow.access.TransactionResultResponse} returns this
  */
-proto.access.TransactionResultResponse.prototype.setStatus = function(value) {
+proto.flow.access.TransactionResultResponse.prototype.setStatus = function(value) {
   return jspb.Message.setProto3EnumField(this, 1, value);
 };
 
@@ -3157,16 +3157,16 @@ proto.access.TransactionResultResponse.prototype.setStatus = function(value) {
  * optional uint32 status_code = 2;
  * @return {number}
  */
-proto.access.TransactionResultResponse.prototype.getStatusCode = function() {
+proto.flow.access.TransactionResultResponse.prototype.getStatusCode = function() {
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 2, 0));
 };
 
 
 /**
  * @param {number} value
- * @return {!proto.access.TransactionResultResponse} returns this
+ * @return {!proto.flow.access.TransactionResultResponse} returns this
  */
-proto.access.TransactionResultResponse.prototype.setStatusCode = function(value) {
+proto.flow.access.TransactionResultResponse.prototype.setStatusCode = function(value) {
   return jspb.Message.setProto3IntField(this, 2, value);
 };
 
@@ -3175,54 +3175,54 @@ proto.access.TransactionResultResponse.prototype.setStatusCode = function(value)
  * optional string error_message = 3;
  * @return {string}
  */
-proto.access.TransactionResultResponse.prototype.getErrorMessage = function() {
+proto.flow.access.TransactionResultResponse.prototype.getErrorMessage = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 3, ""));
 };
 
 
 /**
  * @param {string} value
- * @return {!proto.access.TransactionResultResponse} returns this
+ * @return {!proto.flow.access.TransactionResultResponse} returns this
  */
-proto.access.TransactionResultResponse.prototype.setErrorMessage = function(value) {
+proto.flow.access.TransactionResultResponse.prototype.setErrorMessage = function(value) {
   return jspb.Message.setProto3StringField(this, 3, value);
 };
 
 
 /**
- * repeated entities.Event events = 4;
- * @return {!Array<!proto.entities.Event>}
+ * repeated flow.entities.Event events = 4;
+ * @return {!Array<!proto.flow.entities.Event>}
  */
-proto.access.TransactionResultResponse.prototype.getEventsList = function() {
-  return /** @type{!Array<!proto.entities.Event>} */ (
+proto.flow.access.TransactionResultResponse.prototype.getEventsList = function() {
+  return /** @type{!Array<!proto.flow.entities.Event>} */ (
     jspb.Message.getRepeatedWrapperField(this, flow_entities_event_pb.Event, 4));
 };
 
 
 /**
- * @param {!Array<!proto.entities.Event>} value
- * @return {!proto.access.TransactionResultResponse} returns this
+ * @param {!Array<!proto.flow.entities.Event>} value
+ * @return {!proto.flow.access.TransactionResultResponse} returns this
 */
-proto.access.TransactionResultResponse.prototype.setEventsList = function(value) {
+proto.flow.access.TransactionResultResponse.prototype.setEventsList = function(value) {
   return jspb.Message.setRepeatedWrapperField(this, 4, value);
 };
 
 
 /**
- * @param {!proto.entities.Event=} opt_value
+ * @param {!proto.flow.entities.Event=} opt_value
  * @param {number=} opt_index
- * @return {!proto.entities.Event}
+ * @return {!proto.flow.entities.Event}
  */
-proto.access.TransactionResultResponse.prototype.addEvents = function(opt_value, opt_index) {
-  return jspb.Message.addToRepeatedWrapperField(this, 4, opt_value, proto.entities.Event, opt_index);
+proto.flow.access.TransactionResultResponse.prototype.addEvents = function(opt_value, opt_index) {
+  return jspb.Message.addToRepeatedWrapperField(this, 4, opt_value, proto.flow.entities.Event, opt_index);
 };
 
 
 /**
  * Clears the list making it empty but non-null.
- * @return {!proto.access.TransactionResultResponse} returns this
+ * @return {!proto.flow.access.TransactionResultResponse} returns this
  */
-proto.access.TransactionResultResponse.prototype.clearEventsList = function() {
+proto.flow.access.TransactionResultResponse.prototype.clearEventsList = function() {
   return this.setEventsList([]);
 };
 
@@ -3243,8 +3243,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.access.GetAccountRequest.prototype.toObject = function(opt_includeInstance) {
-  return proto.access.GetAccountRequest.toObject(opt_includeInstance, this);
+proto.flow.access.GetAccountRequest.prototype.toObject = function(opt_includeInstance) {
+  return proto.flow.access.GetAccountRequest.toObject(opt_includeInstance, this);
 };
 
 
@@ -3253,11 +3253,11 @@ proto.access.GetAccountRequest.prototype.toObject = function(opt_includeInstance
  * @param {boolean|undefined} includeInstance Deprecated. Whether to include
  *     the JSPB instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.access.GetAccountRequest} msg The msg instance to transform.
+ * @param {!proto.flow.access.GetAccountRequest} msg The msg instance to transform.
  * @return {!Object}
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.access.GetAccountRequest.toObject = function(includeInstance, msg) {
+proto.flow.access.GetAccountRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
     address: msg.getAddress_asB64()
   };
@@ -3273,23 +3273,23 @@ proto.access.GetAccountRequest.toObject = function(includeInstance, msg) {
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.access.GetAccountRequest}
+ * @return {!proto.flow.access.GetAccountRequest}
  */
-proto.access.GetAccountRequest.deserializeBinary = function(bytes) {
+proto.flow.access.GetAccountRequest.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.access.GetAccountRequest;
-  return proto.access.GetAccountRequest.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.flow.access.GetAccountRequest;
+  return proto.flow.access.GetAccountRequest.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.access.GetAccountRequest} msg The message object to deserialize into.
+ * @param {!proto.flow.access.GetAccountRequest} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.access.GetAccountRequest}
+ * @return {!proto.flow.access.GetAccountRequest}
  */
-proto.access.GetAccountRequest.deserializeBinaryFromReader = function(msg, reader) {
+proto.flow.access.GetAccountRequest.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -3313,9 +3313,9 @@ proto.access.GetAccountRequest.deserializeBinaryFromReader = function(msg, reade
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.access.GetAccountRequest.prototype.serializeBinary = function() {
+proto.flow.access.GetAccountRequest.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
-  proto.access.GetAccountRequest.serializeBinaryToWriter(this, writer);
+  proto.flow.access.GetAccountRequest.serializeBinaryToWriter(this, writer);
   return writer.getResultBuffer();
 };
 
@@ -3323,11 +3323,11 @@ proto.access.GetAccountRequest.prototype.serializeBinary = function() {
 /**
  * Serializes the given message to binary data (in protobuf wire
  * format), writing to the given BinaryWriter.
- * @param {!proto.access.GetAccountRequest} message
+ * @param {!proto.flow.access.GetAccountRequest} message
  * @param {!jspb.BinaryWriter} writer
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.access.GetAccountRequest.serializeBinaryToWriter = function(message, writer) {
+proto.flow.access.GetAccountRequest.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
   f = message.getAddress_asU8();
   if (f.length > 0) {
@@ -3343,7 +3343,7 @@ proto.access.GetAccountRequest.serializeBinaryToWriter = function(message, write
  * optional bytes address = 1;
  * @return {!(string|Uint8Array)}
  */
-proto.access.GetAccountRequest.prototype.getAddress = function() {
+proto.flow.access.GetAccountRequest.prototype.getAddress = function() {
   return /** @type {!(string|Uint8Array)} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
 };
 
@@ -3353,7 +3353,7 @@ proto.access.GetAccountRequest.prototype.getAddress = function() {
  * This is a type-conversion wrapper around `getAddress()`
  * @return {string}
  */
-proto.access.GetAccountRequest.prototype.getAddress_asB64 = function() {
+proto.flow.access.GetAccountRequest.prototype.getAddress_asB64 = function() {
   return /** @type {string} */ (jspb.Message.bytesAsB64(
       this.getAddress()));
 };
@@ -3366,7 +3366,7 @@ proto.access.GetAccountRequest.prototype.getAddress_asB64 = function() {
  * This is a type-conversion wrapper around `getAddress()`
  * @return {!Uint8Array}
  */
-proto.access.GetAccountRequest.prototype.getAddress_asU8 = function() {
+proto.flow.access.GetAccountRequest.prototype.getAddress_asU8 = function() {
   return /** @type {!Uint8Array} */ (jspb.Message.bytesAsU8(
       this.getAddress()));
 };
@@ -3374,9 +3374,9 @@ proto.access.GetAccountRequest.prototype.getAddress_asU8 = function() {
 
 /**
  * @param {!(string|Uint8Array)} value
- * @return {!proto.access.GetAccountRequest} returns this
+ * @return {!proto.flow.access.GetAccountRequest} returns this
  */
-proto.access.GetAccountRequest.prototype.setAddress = function(value) {
+proto.flow.access.GetAccountRequest.prototype.setAddress = function(value) {
   return jspb.Message.setProto3BytesField(this, 1, value);
 };
 
@@ -3397,8 +3397,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.access.GetAccountResponse.prototype.toObject = function(opt_includeInstance) {
-  return proto.access.GetAccountResponse.toObject(opt_includeInstance, this);
+proto.flow.access.GetAccountResponse.prototype.toObject = function(opt_includeInstance) {
+  return proto.flow.access.GetAccountResponse.toObject(opt_includeInstance, this);
 };
 
 
@@ -3407,11 +3407,11 @@ proto.access.GetAccountResponse.prototype.toObject = function(opt_includeInstanc
  * @param {boolean|undefined} includeInstance Deprecated. Whether to include
  *     the JSPB instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.access.GetAccountResponse} msg The msg instance to transform.
+ * @param {!proto.flow.access.GetAccountResponse} msg The msg instance to transform.
  * @return {!Object}
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.access.GetAccountResponse.toObject = function(includeInstance, msg) {
+proto.flow.access.GetAccountResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
     account: (f = msg.getAccount()) && flow_entities_account_pb.Account.toObject(includeInstance, f)
   };
@@ -3427,23 +3427,23 @@ proto.access.GetAccountResponse.toObject = function(includeInstance, msg) {
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.access.GetAccountResponse}
+ * @return {!proto.flow.access.GetAccountResponse}
  */
-proto.access.GetAccountResponse.deserializeBinary = function(bytes) {
+proto.flow.access.GetAccountResponse.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.access.GetAccountResponse;
-  return proto.access.GetAccountResponse.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.flow.access.GetAccountResponse;
+  return proto.flow.access.GetAccountResponse.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.access.GetAccountResponse} msg The message object to deserialize into.
+ * @param {!proto.flow.access.GetAccountResponse} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.access.GetAccountResponse}
+ * @return {!proto.flow.access.GetAccountResponse}
  */
-proto.access.GetAccountResponse.deserializeBinaryFromReader = function(msg, reader) {
+proto.flow.access.GetAccountResponse.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -3468,9 +3468,9 @@ proto.access.GetAccountResponse.deserializeBinaryFromReader = function(msg, read
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.access.GetAccountResponse.prototype.serializeBinary = function() {
+proto.flow.access.GetAccountResponse.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
-  proto.access.GetAccountResponse.serializeBinaryToWriter(this, writer);
+  proto.flow.access.GetAccountResponse.serializeBinaryToWriter(this, writer);
   return writer.getResultBuffer();
 };
 
@@ -3478,11 +3478,11 @@ proto.access.GetAccountResponse.prototype.serializeBinary = function() {
 /**
  * Serializes the given message to binary data (in protobuf wire
  * format), writing to the given BinaryWriter.
- * @param {!proto.access.GetAccountResponse} message
+ * @param {!proto.flow.access.GetAccountResponse} message
  * @param {!jspb.BinaryWriter} writer
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.access.GetAccountResponse.serializeBinaryToWriter = function(message, writer) {
+proto.flow.access.GetAccountResponse.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
   f = message.getAccount();
   if (f != null) {
@@ -3496,29 +3496,29 @@ proto.access.GetAccountResponse.serializeBinaryToWriter = function(message, writ
 
 
 /**
- * optional entities.Account account = 1;
- * @return {?proto.entities.Account}
+ * optional flow.entities.Account account = 1;
+ * @return {?proto.flow.entities.Account}
  */
-proto.access.GetAccountResponse.prototype.getAccount = function() {
-  return /** @type{?proto.entities.Account} */ (
+proto.flow.access.GetAccountResponse.prototype.getAccount = function() {
+  return /** @type{?proto.flow.entities.Account} */ (
     jspb.Message.getWrapperField(this, flow_entities_account_pb.Account, 1));
 };
 
 
 /**
- * @param {?proto.entities.Account|undefined} value
- * @return {!proto.access.GetAccountResponse} returns this
+ * @param {?proto.flow.entities.Account|undefined} value
+ * @return {!proto.flow.access.GetAccountResponse} returns this
 */
-proto.access.GetAccountResponse.prototype.setAccount = function(value) {
+proto.flow.access.GetAccountResponse.prototype.setAccount = function(value) {
   return jspb.Message.setWrapperField(this, 1, value);
 };
 
 
 /**
  * Clears the message field making it undefined.
- * @return {!proto.access.GetAccountResponse} returns this
+ * @return {!proto.flow.access.GetAccountResponse} returns this
  */
-proto.access.GetAccountResponse.prototype.clearAccount = function() {
+proto.flow.access.GetAccountResponse.prototype.clearAccount = function() {
   return this.setAccount(undefined);
 };
 
@@ -3527,7 +3527,7 @@ proto.access.GetAccountResponse.prototype.clearAccount = function() {
  * Returns whether this field is set.
  * @return {boolean}
  */
-proto.access.GetAccountResponse.prototype.hasAccount = function() {
+proto.flow.access.GetAccountResponse.prototype.hasAccount = function() {
   return jspb.Message.getField(this, 1) != null;
 };
 
@@ -3548,8 +3548,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.access.GetAccountAtLatestBlockRequest.prototype.toObject = function(opt_includeInstance) {
-  return proto.access.GetAccountAtLatestBlockRequest.toObject(opt_includeInstance, this);
+proto.flow.access.GetAccountAtLatestBlockRequest.prototype.toObject = function(opt_includeInstance) {
+  return proto.flow.access.GetAccountAtLatestBlockRequest.toObject(opt_includeInstance, this);
 };
 
 
@@ -3558,11 +3558,11 @@ proto.access.GetAccountAtLatestBlockRequest.prototype.toObject = function(opt_in
  * @param {boolean|undefined} includeInstance Deprecated. Whether to include
  *     the JSPB instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.access.GetAccountAtLatestBlockRequest} msg The msg instance to transform.
+ * @param {!proto.flow.access.GetAccountAtLatestBlockRequest} msg The msg instance to transform.
  * @return {!Object}
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.access.GetAccountAtLatestBlockRequest.toObject = function(includeInstance, msg) {
+proto.flow.access.GetAccountAtLatestBlockRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
     address: msg.getAddress_asB64()
   };
@@ -3578,23 +3578,23 @@ proto.access.GetAccountAtLatestBlockRequest.toObject = function(includeInstance,
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.access.GetAccountAtLatestBlockRequest}
+ * @return {!proto.flow.access.GetAccountAtLatestBlockRequest}
  */
-proto.access.GetAccountAtLatestBlockRequest.deserializeBinary = function(bytes) {
+proto.flow.access.GetAccountAtLatestBlockRequest.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.access.GetAccountAtLatestBlockRequest;
-  return proto.access.GetAccountAtLatestBlockRequest.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.flow.access.GetAccountAtLatestBlockRequest;
+  return proto.flow.access.GetAccountAtLatestBlockRequest.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.access.GetAccountAtLatestBlockRequest} msg The message object to deserialize into.
+ * @param {!proto.flow.access.GetAccountAtLatestBlockRequest} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.access.GetAccountAtLatestBlockRequest}
+ * @return {!proto.flow.access.GetAccountAtLatestBlockRequest}
  */
-proto.access.GetAccountAtLatestBlockRequest.deserializeBinaryFromReader = function(msg, reader) {
+proto.flow.access.GetAccountAtLatestBlockRequest.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -3618,9 +3618,9 @@ proto.access.GetAccountAtLatestBlockRequest.deserializeBinaryFromReader = functi
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.access.GetAccountAtLatestBlockRequest.prototype.serializeBinary = function() {
+proto.flow.access.GetAccountAtLatestBlockRequest.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
-  proto.access.GetAccountAtLatestBlockRequest.serializeBinaryToWriter(this, writer);
+  proto.flow.access.GetAccountAtLatestBlockRequest.serializeBinaryToWriter(this, writer);
   return writer.getResultBuffer();
 };
 
@@ -3628,11 +3628,11 @@ proto.access.GetAccountAtLatestBlockRequest.prototype.serializeBinary = function
 /**
  * Serializes the given message to binary data (in protobuf wire
  * format), writing to the given BinaryWriter.
- * @param {!proto.access.GetAccountAtLatestBlockRequest} message
+ * @param {!proto.flow.access.GetAccountAtLatestBlockRequest} message
  * @param {!jspb.BinaryWriter} writer
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.access.GetAccountAtLatestBlockRequest.serializeBinaryToWriter = function(message, writer) {
+proto.flow.access.GetAccountAtLatestBlockRequest.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
   f = message.getAddress_asU8();
   if (f.length > 0) {
@@ -3648,7 +3648,7 @@ proto.access.GetAccountAtLatestBlockRequest.serializeBinaryToWriter = function(m
  * optional bytes address = 1;
  * @return {!(string|Uint8Array)}
  */
-proto.access.GetAccountAtLatestBlockRequest.prototype.getAddress = function() {
+proto.flow.access.GetAccountAtLatestBlockRequest.prototype.getAddress = function() {
   return /** @type {!(string|Uint8Array)} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
 };
 
@@ -3658,7 +3658,7 @@ proto.access.GetAccountAtLatestBlockRequest.prototype.getAddress = function() {
  * This is a type-conversion wrapper around `getAddress()`
  * @return {string}
  */
-proto.access.GetAccountAtLatestBlockRequest.prototype.getAddress_asB64 = function() {
+proto.flow.access.GetAccountAtLatestBlockRequest.prototype.getAddress_asB64 = function() {
   return /** @type {string} */ (jspb.Message.bytesAsB64(
       this.getAddress()));
 };
@@ -3671,7 +3671,7 @@ proto.access.GetAccountAtLatestBlockRequest.prototype.getAddress_asB64 = functio
  * This is a type-conversion wrapper around `getAddress()`
  * @return {!Uint8Array}
  */
-proto.access.GetAccountAtLatestBlockRequest.prototype.getAddress_asU8 = function() {
+proto.flow.access.GetAccountAtLatestBlockRequest.prototype.getAddress_asU8 = function() {
   return /** @type {!Uint8Array} */ (jspb.Message.bytesAsU8(
       this.getAddress()));
 };
@@ -3679,9 +3679,9 @@ proto.access.GetAccountAtLatestBlockRequest.prototype.getAddress_asU8 = function
 
 /**
  * @param {!(string|Uint8Array)} value
- * @return {!proto.access.GetAccountAtLatestBlockRequest} returns this
+ * @return {!proto.flow.access.GetAccountAtLatestBlockRequest} returns this
  */
-proto.access.GetAccountAtLatestBlockRequest.prototype.setAddress = function(value) {
+proto.flow.access.GetAccountAtLatestBlockRequest.prototype.setAddress = function(value) {
   return jspb.Message.setProto3BytesField(this, 1, value);
 };
 
@@ -3702,8 +3702,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.access.AccountResponse.prototype.toObject = function(opt_includeInstance) {
-  return proto.access.AccountResponse.toObject(opt_includeInstance, this);
+proto.flow.access.AccountResponse.prototype.toObject = function(opt_includeInstance) {
+  return proto.flow.access.AccountResponse.toObject(opt_includeInstance, this);
 };
 
 
@@ -3712,11 +3712,11 @@ proto.access.AccountResponse.prototype.toObject = function(opt_includeInstance) 
  * @param {boolean|undefined} includeInstance Deprecated. Whether to include
  *     the JSPB instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.access.AccountResponse} msg The msg instance to transform.
+ * @param {!proto.flow.access.AccountResponse} msg The msg instance to transform.
  * @return {!Object}
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.access.AccountResponse.toObject = function(includeInstance, msg) {
+proto.flow.access.AccountResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
     account: (f = msg.getAccount()) && flow_entities_account_pb.Account.toObject(includeInstance, f)
   };
@@ -3732,23 +3732,23 @@ proto.access.AccountResponse.toObject = function(includeInstance, msg) {
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.access.AccountResponse}
+ * @return {!proto.flow.access.AccountResponse}
  */
-proto.access.AccountResponse.deserializeBinary = function(bytes) {
+proto.flow.access.AccountResponse.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.access.AccountResponse;
-  return proto.access.AccountResponse.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.flow.access.AccountResponse;
+  return proto.flow.access.AccountResponse.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.access.AccountResponse} msg The message object to deserialize into.
+ * @param {!proto.flow.access.AccountResponse} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.access.AccountResponse}
+ * @return {!proto.flow.access.AccountResponse}
  */
-proto.access.AccountResponse.deserializeBinaryFromReader = function(msg, reader) {
+proto.flow.access.AccountResponse.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -3773,9 +3773,9 @@ proto.access.AccountResponse.deserializeBinaryFromReader = function(msg, reader)
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.access.AccountResponse.prototype.serializeBinary = function() {
+proto.flow.access.AccountResponse.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
-  proto.access.AccountResponse.serializeBinaryToWriter(this, writer);
+  proto.flow.access.AccountResponse.serializeBinaryToWriter(this, writer);
   return writer.getResultBuffer();
 };
 
@@ -3783,11 +3783,11 @@ proto.access.AccountResponse.prototype.serializeBinary = function() {
 /**
  * Serializes the given message to binary data (in protobuf wire
  * format), writing to the given BinaryWriter.
- * @param {!proto.access.AccountResponse} message
+ * @param {!proto.flow.access.AccountResponse} message
  * @param {!jspb.BinaryWriter} writer
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.access.AccountResponse.serializeBinaryToWriter = function(message, writer) {
+proto.flow.access.AccountResponse.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
   f = message.getAccount();
   if (f != null) {
@@ -3801,29 +3801,29 @@ proto.access.AccountResponse.serializeBinaryToWriter = function(message, writer)
 
 
 /**
- * optional entities.Account account = 1;
- * @return {?proto.entities.Account}
+ * optional flow.entities.Account account = 1;
+ * @return {?proto.flow.entities.Account}
  */
-proto.access.AccountResponse.prototype.getAccount = function() {
-  return /** @type{?proto.entities.Account} */ (
+proto.flow.access.AccountResponse.prototype.getAccount = function() {
+  return /** @type{?proto.flow.entities.Account} */ (
     jspb.Message.getWrapperField(this, flow_entities_account_pb.Account, 1));
 };
 
 
 /**
- * @param {?proto.entities.Account|undefined} value
- * @return {!proto.access.AccountResponse} returns this
+ * @param {?proto.flow.entities.Account|undefined} value
+ * @return {!proto.flow.access.AccountResponse} returns this
 */
-proto.access.AccountResponse.prototype.setAccount = function(value) {
+proto.flow.access.AccountResponse.prototype.setAccount = function(value) {
   return jspb.Message.setWrapperField(this, 1, value);
 };
 
 
 /**
  * Clears the message field making it undefined.
- * @return {!proto.access.AccountResponse} returns this
+ * @return {!proto.flow.access.AccountResponse} returns this
  */
-proto.access.AccountResponse.prototype.clearAccount = function() {
+proto.flow.access.AccountResponse.prototype.clearAccount = function() {
   return this.setAccount(undefined);
 };
 
@@ -3832,7 +3832,7 @@ proto.access.AccountResponse.prototype.clearAccount = function() {
  * Returns whether this field is set.
  * @return {boolean}
  */
-proto.access.AccountResponse.prototype.hasAccount = function() {
+proto.flow.access.AccountResponse.prototype.hasAccount = function() {
   return jspb.Message.getField(this, 1) != null;
 };
 
@@ -3853,8 +3853,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.access.GetAccountAtBlockHeightRequest.prototype.toObject = function(opt_includeInstance) {
-  return proto.access.GetAccountAtBlockHeightRequest.toObject(opt_includeInstance, this);
+proto.flow.access.GetAccountAtBlockHeightRequest.prototype.toObject = function(opt_includeInstance) {
+  return proto.flow.access.GetAccountAtBlockHeightRequest.toObject(opt_includeInstance, this);
 };
 
 
@@ -3863,11 +3863,11 @@ proto.access.GetAccountAtBlockHeightRequest.prototype.toObject = function(opt_in
  * @param {boolean|undefined} includeInstance Deprecated. Whether to include
  *     the JSPB instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.access.GetAccountAtBlockHeightRequest} msg The msg instance to transform.
+ * @param {!proto.flow.access.GetAccountAtBlockHeightRequest} msg The msg instance to transform.
  * @return {!Object}
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.access.GetAccountAtBlockHeightRequest.toObject = function(includeInstance, msg) {
+proto.flow.access.GetAccountAtBlockHeightRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
     address: msg.getAddress_asB64(),
     blockHeight: jspb.Message.getFieldWithDefault(msg, 2, 0)
@@ -3884,23 +3884,23 @@ proto.access.GetAccountAtBlockHeightRequest.toObject = function(includeInstance,
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.access.GetAccountAtBlockHeightRequest}
+ * @return {!proto.flow.access.GetAccountAtBlockHeightRequest}
  */
-proto.access.GetAccountAtBlockHeightRequest.deserializeBinary = function(bytes) {
+proto.flow.access.GetAccountAtBlockHeightRequest.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.access.GetAccountAtBlockHeightRequest;
-  return proto.access.GetAccountAtBlockHeightRequest.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.flow.access.GetAccountAtBlockHeightRequest;
+  return proto.flow.access.GetAccountAtBlockHeightRequest.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.access.GetAccountAtBlockHeightRequest} msg The message object to deserialize into.
+ * @param {!proto.flow.access.GetAccountAtBlockHeightRequest} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.access.GetAccountAtBlockHeightRequest}
+ * @return {!proto.flow.access.GetAccountAtBlockHeightRequest}
  */
-proto.access.GetAccountAtBlockHeightRequest.deserializeBinaryFromReader = function(msg, reader) {
+proto.flow.access.GetAccountAtBlockHeightRequest.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -3928,9 +3928,9 @@ proto.access.GetAccountAtBlockHeightRequest.deserializeBinaryFromReader = functi
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.access.GetAccountAtBlockHeightRequest.prototype.serializeBinary = function() {
+proto.flow.access.GetAccountAtBlockHeightRequest.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
-  proto.access.GetAccountAtBlockHeightRequest.serializeBinaryToWriter(this, writer);
+  proto.flow.access.GetAccountAtBlockHeightRequest.serializeBinaryToWriter(this, writer);
   return writer.getResultBuffer();
 };
 
@@ -3938,11 +3938,11 @@ proto.access.GetAccountAtBlockHeightRequest.prototype.serializeBinary = function
 /**
  * Serializes the given message to binary data (in protobuf wire
  * format), writing to the given BinaryWriter.
- * @param {!proto.access.GetAccountAtBlockHeightRequest} message
+ * @param {!proto.flow.access.GetAccountAtBlockHeightRequest} message
  * @param {!jspb.BinaryWriter} writer
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.access.GetAccountAtBlockHeightRequest.serializeBinaryToWriter = function(message, writer) {
+proto.flow.access.GetAccountAtBlockHeightRequest.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
   f = message.getAddress_asU8();
   if (f.length > 0) {
@@ -3965,7 +3965,7 @@ proto.access.GetAccountAtBlockHeightRequest.serializeBinaryToWriter = function(m
  * optional bytes address = 1;
  * @return {!(string|Uint8Array)}
  */
-proto.access.GetAccountAtBlockHeightRequest.prototype.getAddress = function() {
+proto.flow.access.GetAccountAtBlockHeightRequest.prototype.getAddress = function() {
   return /** @type {!(string|Uint8Array)} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
 };
 
@@ -3975,7 +3975,7 @@ proto.access.GetAccountAtBlockHeightRequest.prototype.getAddress = function() {
  * This is a type-conversion wrapper around `getAddress()`
  * @return {string}
  */
-proto.access.GetAccountAtBlockHeightRequest.prototype.getAddress_asB64 = function() {
+proto.flow.access.GetAccountAtBlockHeightRequest.prototype.getAddress_asB64 = function() {
   return /** @type {string} */ (jspb.Message.bytesAsB64(
       this.getAddress()));
 };
@@ -3988,7 +3988,7 @@ proto.access.GetAccountAtBlockHeightRequest.prototype.getAddress_asB64 = functio
  * This is a type-conversion wrapper around `getAddress()`
  * @return {!Uint8Array}
  */
-proto.access.GetAccountAtBlockHeightRequest.prototype.getAddress_asU8 = function() {
+proto.flow.access.GetAccountAtBlockHeightRequest.prototype.getAddress_asU8 = function() {
   return /** @type {!Uint8Array} */ (jspb.Message.bytesAsU8(
       this.getAddress()));
 };
@@ -3996,9 +3996,9 @@ proto.access.GetAccountAtBlockHeightRequest.prototype.getAddress_asU8 = function
 
 /**
  * @param {!(string|Uint8Array)} value
- * @return {!proto.access.GetAccountAtBlockHeightRequest} returns this
+ * @return {!proto.flow.access.GetAccountAtBlockHeightRequest} returns this
  */
-proto.access.GetAccountAtBlockHeightRequest.prototype.setAddress = function(value) {
+proto.flow.access.GetAccountAtBlockHeightRequest.prototype.setAddress = function(value) {
   return jspb.Message.setProto3BytesField(this, 1, value);
 };
 
@@ -4007,16 +4007,16 @@ proto.access.GetAccountAtBlockHeightRequest.prototype.setAddress = function(valu
  * optional uint64 block_height = 2;
  * @return {number}
  */
-proto.access.GetAccountAtBlockHeightRequest.prototype.getBlockHeight = function() {
+proto.flow.access.GetAccountAtBlockHeightRequest.prototype.getBlockHeight = function() {
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 2, 0));
 };
 
 
 /**
  * @param {number} value
- * @return {!proto.access.GetAccountAtBlockHeightRequest} returns this
+ * @return {!proto.flow.access.GetAccountAtBlockHeightRequest} returns this
  */
-proto.access.GetAccountAtBlockHeightRequest.prototype.setBlockHeight = function(value) {
+proto.flow.access.GetAccountAtBlockHeightRequest.prototype.setBlockHeight = function(value) {
   return jspb.Message.setProto3IntField(this, 2, value);
 };
 
@@ -4027,7 +4027,7 @@ proto.access.GetAccountAtBlockHeightRequest.prototype.setBlockHeight = function(
  * @private {!Array<number>}
  * @const
  */
-proto.access.ExecuteScriptAtLatestBlockRequest.repeatedFields_ = [2];
+proto.flow.access.ExecuteScriptAtLatestBlockRequest.repeatedFields_ = [2];
 
 
 
@@ -4044,8 +4044,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.access.ExecuteScriptAtLatestBlockRequest.prototype.toObject = function(opt_includeInstance) {
-  return proto.access.ExecuteScriptAtLatestBlockRequest.toObject(opt_includeInstance, this);
+proto.flow.access.ExecuteScriptAtLatestBlockRequest.prototype.toObject = function(opt_includeInstance) {
+  return proto.flow.access.ExecuteScriptAtLatestBlockRequest.toObject(opt_includeInstance, this);
 };
 
 
@@ -4054,11 +4054,11 @@ proto.access.ExecuteScriptAtLatestBlockRequest.prototype.toObject = function(opt
  * @param {boolean|undefined} includeInstance Deprecated. Whether to include
  *     the JSPB instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.access.ExecuteScriptAtLatestBlockRequest} msg The msg instance to transform.
+ * @param {!proto.flow.access.ExecuteScriptAtLatestBlockRequest} msg The msg instance to transform.
  * @return {!Object}
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.access.ExecuteScriptAtLatestBlockRequest.toObject = function(includeInstance, msg) {
+proto.flow.access.ExecuteScriptAtLatestBlockRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
     script: msg.getScript_asB64(),
     argumentsList: msg.getArgumentsList_asB64()
@@ -4075,23 +4075,23 @@ proto.access.ExecuteScriptAtLatestBlockRequest.toObject = function(includeInstan
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.access.ExecuteScriptAtLatestBlockRequest}
+ * @return {!proto.flow.access.ExecuteScriptAtLatestBlockRequest}
  */
-proto.access.ExecuteScriptAtLatestBlockRequest.deserializeBinary = function(bytes) {
+proto.flow.access.ExecuteScriptAtLatestBlockRequest.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.access.ExecuteScriptAtLatestBlockRequest;
-  return proto.access.ExecuteScriptAtLatestBlockRequest.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.flow.access.ExecuteScriptAtLatestBlockRequest;
+  return proto.flow.access.ExecuteScriptAtLatestBlockRequest.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.access.ExecuteScriptAtLatestBlockRequest} msg The message object to deserialize into.
+ * @param {!proto.flow.access.ExecuteScriptAtLatestBlockRequest} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.access.ExecuteScriptAtLatestBlockRequest}
+ * @return {!proto.flow.access.ExecuteScriptAtLatestBlockRequest}
  */
-proto.access.ExecuteScriptAtLatestBlockRequest.deserializeBinaryFromReader = function(msg, reader) {
+proto.flow.access.ExecuteScriptAtLatestBlockRequest.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -4119,9 +4119,9 @@ proto.access.ExecuteScriptAtLatestBlockRequest.deserializeBinaryFromReader = fun
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.access.ExecuteScriptAtLatestBlockRequest.prototype.serializeBinary = function() {
+proto.flow.access.ExecuteScriptAtLatestBlockRequest.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
-  proto.access.ExecuteScriptAtLatestBlockRequest.serializeBinaryToWriter(this, writer);
+  proto.flow.access.ExecuteScriptAtLatestBlockRequest.serializeBinaryToWriter(this, writer);
   return writer.getResultBuffer();
 };
 
@@ -4129,11 +4129,11 @@ proto.access.ExecuteScriptAtLatestBlockRequest.prototype.serializeBinary = funct
 /**
  * Serializes the given message to binary data (in protobuf wire
  * format), writing to the given BinaryWriter.
- * @param {!proto.access.ExecuteScriptAtLatestBlockRequest} message
+ * @param {!proto.flow.access.ExecuteScriptAtLatestBlockRequest} message
  * @param {!jspb.BinaryWriter} writer
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.access.ExecuteScriptAtLatestBlockRequest.serializeBinaryToWriter = function(message, writer) {
+proto.flow.access.ExecuteScriptAtLatestBlockRequest.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
   f = message.getScript_asU8();
   if (f.length > 0) {
@@ -4156,7 +4156,7 @@ proto.access.ExecuteScriptAtLatestBlockRequest.serializeBinaryToWriter = functio
  * optional bytes script = 1;
  * @return {!(string|Uint8Array)}
  */
-proto.access.ExecuteScriptAtLatestBlockRequest.prototype.getScript = function() {
+proto.flow.access.ExecuteScriptAtLatestBlockRequest.prototype.getScript = function() {
   return /** @type {!(string|Uint8Array)} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
 };
 
@@ -4166,7 +4166,7 @@ proto.access.ExecuteScriptAtLatestBlockRequest.prototype.getScript = function() 
  * This is a type-conversion wrapper around `getScript()`
  * @return {string}
  */
-proto.access.ExecuteScriptAtLatestBlockRequest.prototype.getScript_asB64 = function() {
+proto.flow.access.ExecuteScriptAtLatestBlockRequest.prototype.getScript_asB64 = function() {
   return /** @type {string} */ (jspb.Message.bytesAsB64(
       this.getScript()));
 };
@@ -4179,7 +4179,7 @@ proto.access.ExecuteScriptAtLatestBlockRequest.prototype.getScript_asB64 = funct
  * This is a type-conversion wrapper around `getScript()`
  * @return {!Uint8Array}
  */
-proto.access.ExecuteScriptAtLatestBlockRequest.prototype.getScript_asU8 = function() {
+proto.flow.access.ExecuteScriptAtLatestBlockRequest.prototype.getScript_asU8 = function() {
   return /** @type {!Uint8Array} */ (jspb.Message.bytesAsU8(
       this.getScript()));
 };
@@ -4187,9 +4187,9 @@ proto.access.ExecuteScriptAtLatestBlockRequest.prototype.getScript_asU8 = functi
 
 /**
  * @param {!(string|Uint8Array)} value
- * @return {!proto.access.ExecuteScriptAtLatestBlockRequest} returns this
+ * @return {!proto.flow.access.ExecuteScriptAtLatestBlockRequest} returns this
  */
-proto.access.ExecuteScriptAtLatestBlockRequest.prototype.setScript = function(value) {
+proto.flow.access.ExecuteScriptAtLatestBlockRequest.prototype.setScript = function(value) {
   return jspb.Message.setProto3BytesField(this, 1, value);
 };
 
@@ -4198,7 +4198,7 @@ proto.access.ExecuteScriptAtLatestBlockRequest.prototype.setScript = function(va
  * repeated bytes arguments = 2;
  * @return {!(Array<!Uint8Array>|Array<string>)}
  */
-proto.access.ExecuteScriptAtLatestBlockRequest.prototype.getArgumentsList = function() {
+proto.flow.access.ExecuteScriptAtLatestBlockRequest.prototype.getArgumentsList = function() {
   return /** @type {!(Array<!Uint8Array>|Array<string>)} */ (jspb.Message.getRepeatedField(this, 2));
 };
 
@@ -4208,7 +4208,7 @@ proto.access.ExecuteScriptAtLatestBlockRequest.prototype.getArgumentsList = func
  * This is a type-conversion wrapper around `getArgumentsList()`
  * @return {!Array<string>}
  */
-proto.access.ExecuteScriptAtLatestBlockRequest.prototype.getArgumentsList_asB64 = function() {
+proto.flow.access.ExecuteScriptAtLatestBlockRequest.prototype.getArgumentsList_asB64 = function() {
   return /** @type {!Array<string>} */ (jspb.Message.bytesListAsB64(
       this.getArgumentsList()));
 };
@@ -4221,7 +4221,7 @@ proto.access.ExecuteScriptAtLatestBlockRequest.prototype.getArgumentsList_asB64 
  * This is a type-conversion wrapper around `getArgumentsList()`
  * @return {!Array<!Uint8Array>}
  */
-proto.access.ExecuteScriptAtLatestBlockRequest.prototype.getArgumentsList_asU8 = function() {
+proto.flow.access.ExecuteScriptAtLatestBlockRequest.prototype.getArgumentsList_asU8 = function() {
   return /** @type {!Array<!Uint8Array>} */ (jspb.Message.bytesListAsU8(
       this.getArgumentsList()));
 };
@@ -4229,9 +4229,9 @@ proto.access.ExecuteScriptAtLatestBlockRequest.prototype.getArgumentsList_asU8 =
 
 /**
  * @param {!(Array<!Uint8Array>|Array<string>)} value
- * @return {!proto.access.ExecuteScriptAtLatestBlockRequest} returns this
+ * @return {!proto.flow.access.ExecuteScriptAtLatestBlockRequest} returns this
  */
-proto.access.ExecuteScriptAtLatestBlockRequest.prototype.setArgumentsList = function(value) {
+proto.flow.access.ExecuteScriptAtLatestBlockRequest.prototype.setArgumentsList = function(value) {
   return jspb.Message.setField(this, 2, value || []);
 };
 
@@ -4239,18 +4239,18 @@ proto.access.ExecuteScriptAtLatestBlockRequest.prototype.setArgumentsList = func
 /**
  * @param {!(string|Uint8Array)} value
  * @param {number=} opt_index
- * @return {!proto.access.ExecuteScriptAtLatestBlockRequest} returns this
+ * @return {!proto.flow.access.ExecuteScriptAtLatestBlockRequest} returns this
  */
-proto.access.ExecuteScriptAtLatestBlockRequest.prototype.addArguments = function(value, opt_index) {
+proto.flow.access.ExecuteScriptAtLatestBlockRequest.prototype.addArguments = function(value, opt_index) {
   return jspb.Message.addToRepeatedField(this, 2, value, opt_index);
 };
 
 
 /**
  * Clears the list making it empty but non-null.
- * @return {!proto.access.ExecuteScriptAtLatestBlockRequest} returns this
+ * @return {!proto.flow.access.ExecuteScriptAtLatestBlockRequest} returns this
  */
-proto.access.ExecuteScriptAtLatestBlockRequest.prototype.clearArgumentsList = function() {
+proto.flow.access.ExecuteScriptAtLatestBlockRequest.prototype.clearArgumentsList = function() {
   return this.setArgumentsList([]);
 };
 
@@ -4261,7 +4261,7 @@ proto.access.ExecuteScriptAtLatestBlockRequest.prototype.clearArgumentsList = fu
  * @private {!Array<number>}
  * @const
  */
-proto.access.ExecuteScriptAtBlockIDRequest.repeatedFields_ = [3];
+proto.flow.access.ExecuteScriptAtBlockIDRequest.repeatedFields_ = [3];
 
 
 
@@ -4278,8 +4278,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.access.ExecuteScriptAtBlockIDRequest.prototype.toObject = function(opt_includeInstance) {
-  return proto.access.ExecuteScriptAtBlockIDRequest.toObject(opt_includeInstance, this);
+proto.flow.access.ExecuteScriptAtBlockIDRequest.prototype.toObject = function(opt_includeInstance) {
+  return proto.flow.access.ExecuteScriptAtBlockIDRequest.toObject(opt_includeInstance, this);
 };
 
 
@@ -4288,11 +4288,11 @@ proto.access.ExecuteScriptAtBlockIDRequest.prototype.toObject = function(opt_inc
  * @param {boolean|undefined} includeInstance Deprecated. Whether to include
  *     the JSPB instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.access.ExecuteScriptAtBlockIDRequest} msg The msg instance to transform.
+ * @param {!proto.flow.access.ExecuteScriptAtBlockIDRequest} msg The msg instance to transform.
  * @return {!Object}
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.access.ExecuteScriptAtBlockIDRequest.toObject = function(includeInstance, msg) {
+proto.flow.access.ExecuteScriptAtBlockIDRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
     blockId: msg.getBlockId_asB64(),
     script: msg.getScript_asB64(),
@@ -4310,23 +4310,23 @@ proto.access.ExecuteScriptAtBlockIDRequest.toObject = function(includeInstance, 
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.access.ExecuteScriptAtBlockIDRequest}
+ * @return {!proto.flow.access.ExecuteScriptAtBlockIDRequest}
  */
-proto.access.ExecuteScriptAtBlockIDRequest.deserializeBinary = function(bytes) {
+proto.flow.access.ExecuteScriptAtBlockIDRequest.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.access.ExecuteScriptAtBlockIDRequest;
-  return proto.access.ExecuteScriptAtBlockIDRequest.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.flow.access.ExecuteScriptAtBlockIDRequest;
+  return proto.flow.access.ExecuteScriptAtBlockIDRequest.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.access.ExecuteScriptAtBlockIDRequest} msg The message object to deserialize into.
+ * @param {!proto.flow.access.ExecuteScriptAtBlockIDRequest} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.access.ExecuteScriptAtBlockIDRequest}
+ * @return {!proto.flow.access.ExecuteScriptAtBlockIDRequest}
  */
-proto.access.ExecuteScriptAtBlockIDRequest.deserializeBinaryFromReader = function(msg, reader) {
+proto.flow.access.ExecuteScriptAtBlockIDRequest.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -4358,9 +4358,9 @@ proto.access.ExecuteScriptAtBlockIDRequest.deserializeBinaryFromReader = functio
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.access.ExecuteScriptAtBlockIDRequest.prototype.serializeBinary = function() {
+proto.flow.access.ExecuteScriptAtBlockIDRequest.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
-  proto.access.ExecuteScriptAtBlockIDRequest.serializeBinaryToWriter(this, writer);
+  proto.flow.access.ExecuteScriptAtBlockIDRequest.serializeBinaryToWriter(this, writer);
   return writer.getResultBuffer();
 };
 
@@ -4368,11 +4368,11 @@ proto.access.ExecuteScriptAtBlockIDRequest.prototype.serializeBinary = function(
 /**
  * Serializes the given message to binary data (in protobuf wire
  * format), writing to the given BinaryWriter.
- * @param {!proto.access.ExecuteScriptAtBlockIDRequest} message
+ * @param {!proto.flow.access.ExecuteScriptAtBlockIDRequest} message
  * @param {!jspb.BinaryWriter} writer
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.access.ExecuteScriptAtBlockIDRequest.serializeBinaryToWriter = function(message, writer) {
+proto.flow.access.ExecuteScriptAtBlockIDRequest.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
   f = message.getBlockId_asU8();
   if (f.length > 0) {
@@ -4402,7 +4402,7 @@ proto.access.ExecuteScriptAtBlockIDRequest.serializeBinaryToWriter = function(me
  * optional bytes block_id = 1;
  * @return {!(string|Uint8Array)}
  */
-proto.access.ExecuteScriptAtBlockIDRequest.prototype.getBlockId = function() {
+proto.flow.access.ExecuteScriptAtBlockIDRequest.prototype.getBlockId = function() {
   return /** @type {!(string|Uint8Array)} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
 };
 
@@ -4412,7 +4412,7 @@ proto.access.ExecuteScriptAtBlockIDRequest.prototype.getBlockId = function() {
  * This is a type-conversion wrapper around `getBlockId()`
  * @return {string}
  */
-proto.access.ExecuteScriptAtBlockIDRequest.prototype.getBlockId_asB64 = function() {
+proto.flow.access.ExecuteScriptAtBlockIDRequest.prototype.getBlockId_asB64 = function() {
   return /** @type {string} */ (jspb.Message.bytesAsB64(
       this.getBlockId()));
 };
@@ -4425,7 +4425,7 @@ proto.access.ExecuteScriptAtBlockIDRequest.prototype.getBlockId_asB64 = function
  * This is a type-conversion wrapper around `getBlockId()`
  * @return {!Uint8Array}
  */
-proto.access.ExecuteScriptAtBlockIDRequest.prototype.getBlockId_asU8 = function() {
+proto.flow.access.ExecuteScriptAtBlockIDRequest.prototype.getBlockId_asU8 = function() {
   return /** @type {!Uint8Array} */ (jspb.Message.bytesAsU8(
       this.getBlockId()));
 };
@@ -4433,9 +4433,9 @@ proto.access.ExecuteScriptAtBlockIDRequest.prototype.getBlockId_asU8 = function(
 
 /**
  * @param {!(string|Uint8Array)} value
- * @return {!proto.access.ExecuteScriptAtBlockIDRequest} returns this
+ * @return {!proto.flow.access.ExecuteScriptAtBlockIDRequest} returns this
  */
-proto.access.ExecuteScriptAtBlockIDRequest.prototype.setBlockId = function(value) {
+proto.flow.access.ExecuteScriptAtBlockIDRequest.prototype.setBlockId = function(value) {
   return jspb.Message.setProto3BytesField(this, 1, value);
 };
 
@@ -4444,7 +4444,7 @@ proto.access.ExecuteScriptAtBlockIDRequest.prototype.setBlockId = function(value
  * optional bytes script = 2;
  * @return {!(string|Uint8Array)}
  */
-proto.access.ExecuteScriptAtBlockIDRequest.prototype.getScript = function() {
+proto.flow.access.ExecuteScriptAtBlockIDRequest.prototype.getScript = function() {
   return /** @type {!(string|Uint8Array)} */ (jspb.Message.getFieldWithDefault(this, 2, ""));
 };
 
@@ -4454,7 +4454,7 @@ proto.access.ExecuteScriptAtBlockIDRequest.prototype.getScript = function() {
  * This is a type-conversion wrapper around `getScript()`
  * @return {string}
  */
-proto.access.ExecuteScriptAtBlockIDRequest.prototype.getScript_asB64 = function() {
+proto.flow.access.ExecuteScriptAtBlockIDRequest.prototype.getScript_asB64 = function() {
   return /** @type {string} */ (jspb.Message.bytesAsB64(
       this.getScript()));
 };
@@ -4467,7 +4467,7 @@ proto.access.ExecuteScriptAtBlockIDRequest.prototype.getScript_asB64 = function(
  * This is a type-conversion wrapper around `getScript()`
  * @return {!Uint8Array}
  */
-proto.access.ExecuteScriptAtBlockIDRequest.prototype.getScript_asU8 = function() {
+proto.flow.access.ExecuteScriptAtBlockIDRequest.prototype.getScript_asU8 = function() {
   return /** @type {!Uint8Array} */ (jspb.Message.bytesAsU8(
       this.getScript()));
 };
@@ -4475,9 +4475,9 @@ proto.access.ExecuteScriptAtBlockIDRequest.prototype.getScript_asU8 = function()
 
 /**
  * @param {!(string|Uint8Array)} value
- * @return {!proto.access.ExecuteScriptAtBlockIDRequest} returns this
+ * @return {!proto.flow.access.ExecuteScriptAtBlockIDRequest} returns this
  */
-proto.access.ExecuteScriptAtBlockIDRequest.prototype.setScript = function(value) {
+proto.flow.access.ExecuteScriptAtBlockIDRequest.prototype.setScript = function(value) {
   return jspb.Message.setProto3BytesField(this, 2, value);
 };
 
@@ -4486,7 +4486,7 @@ proto.access.ExecuteScriptAtBlockIDRequest.prototype.setScript = function(value)
  * repeated bytes arguments = 3;
  * @return {!(Array<!Uint8Array>|Array<string>)}
  */
-proto.access.ExecuteScriptAtBlockIDRequest.prototype.getArgumentsList = function() {
+proto.flow.access.ExecuteScriptAtBlockIDRequest.prototype.getArgumentsList = function() {
   return /** @type {!(Array<!Uint8Array>|Array<string>)} */ (jspb.Message.getRepeatedField(this, 3));
 };
 
@@ -4496,7 +4496,7 @@ proto.access.ExecuteScriptAtBlockIDRequest.prototype.getArgumentsList = function
  * This is a type-conversion wrapper around `getArgumentsList()`
  * @return {!Array<string>}
  */
-proto.access.ExecuteScriptAtBlockIDRequest.prototype.getArgumentsList_asB64 = function() {
+proto.flow.access.ExecuteScriptAtBlockIDRequest.prototype.getArgumentsList_asB64 = function() {
   return /** @type {!Array<string>} */ (jspb.Message.bytesListAsB64(
       this.getArgumentsList()));
 };
@@ -4509,7 +4509,7 @@ proto.access.ExecuteScriptAtBlockIDRequest.prototype.getArgumentsList_asB64 = fu
  * This is a type-conversion wrapper around `getArgumentsList()`
  * @return {!Array<!Uint8Array>}
  */
-proto.access.ExecuteScriptAtBlockIDRequest.prototype.getArgumentsList_asU8 = function() {
+proto.flow.access.ExecuteScriptAtBlockIDRequest.prototype.getArgumentsList_asU8 = function() {
   return /** @type {!Array<!Uint8Array>} */ (jspb.Message.bytesListAsU8(
       this.getArgumentsList()));
 };
@@ -4517,9 +4517,9 @@ proto.access.ExecuteScriptAtBlockIDRequest.prototype.getArgumentsList_asU8 = fun
 
 /**
  * @param {!(Array<!Uint8Array>|Array<string>)} value
- * @return {!proto.access.ExecuteScriptAtBlockIDRequest} returns this
+ * @return {!proto.flow.access.ExecuteScriptAtBlockIDRequest} returns this
  */
-proto.access.ExecuteScriptAtBlockIDRequest.prototype.setArgumentsList = function(value) {
+proto.flow.access.ExecuteScriptAtBlockIDRequest.prototype.setArgumentsList = function(value) {
   return jspb.Message.setField(this, 3, value || []);
 };
 
@@ -4527,18 +4527,18 @@ proto.access.ExecuteScriptAtBlockIDRequest.prototype.setArgumentsList = function
 /**
  * @param {!(string|Uint8Array)} value
  * @param {number=} opt_index
- * @return {!proto.access.ExecuteScriptAtBlockIDRequest} returns this
+ * @return {!proto.flow.access.ExecuteScriptAtBlockIDRequest} returns this
  */
-proto.access.ExecuteScriptAtBlockIDRequest.prototype.addArguments = function(value, opt_index) {
+proto.flow.access.ExecuteScriptAtBlockIDRequest.prototype.addArguments = function(value, opt_index) {
   return jspb.Message.addToRepeatedField(this, 3, value, opt_index);
 };
 
 
 /**
  * Clears the list making it empty but non-null.
- * @return {!proto.access.ExecuteScriptAtBlockIDRequest} returns this
+ * @return {!proto.flow.access.ExecuteScriptAtBlockIDRequest} returns this
  */
-proto.access.ExecuteScriptAtBlockIDRequest.prototype.clearArgumentsList = function() {
+proto.flow.access.ExecuteScriptAtBlockIDRequest.prototype.clearArgumentsList = function() {
   return this.setArgumentsList([]);
 };
 
@@ -4549,7 +4549,7 @@ proto.access.ExecuteScriptAtBlockIDRequest.prototype.clearArgumentsList = functi
  * @private {!Array<number>}
  * @const
  */
-proto.access.ExecuteScriptAtBlockHeightRequest.repeatedFields_ = [3];
+proto.flow.access.ExecuteScriptAtBlockHeightRequest.repeatedFields_ = [3];
 
 
 
@@ -4566,8 +4566,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.access.ExecuteScriptAtBlockHeightRequest.prototype.toObject = function(opt_includeInstance) {
-  return proto.access.ExecuteScriptAtBlockHeightRequest.toObject(opt_includeInstance, this);
+proto.flow.access.ExecuteScriptAtBlockHeightRequest.prototype.toObject = function(opt_includeInstance) {
+  return proto.flow.access.ExecuteScriptAtBlockHeightRequest.toObject(opt_includeInstance, this);
 };
 
 
@@ -4576,11 +4576,11 @@ proto.access.ExecuteScriptAtBlockHeightRequest.prototype.toObject = function(opt
  * @param {boolean|undefined} includeInstance Deprecated. Whether to include
  *     the JSPB instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.access.ExecuteScriptAtBlockHeightRequest} msg The msg instance to transform.
+ * @param {!proto.flow.access.ExecuteScriptAtBlockHeightRequest} msg The msg instance to transform.
  * @return {!Object}
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.access.ExecuteScriptAtBlockHeightRequest.toObject = function(includeInstance, msg) {
+proto.flow.access.ExecuteScriptAtBlockHeightRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
     blockHeight: jspb.Message.getFieldWithDefault(msg, 1, 0),
     script: msg.getScript_asB64(),
@@ -4598,23 +4598,23 @@ proto.access.ExecuteScriptAtBlockHeightRequest.toObject = function(includeInstan
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.access.ExecuteScriptAtBlockHeightRequest}
+ * @return {!proto.flow.access.ExecuteScriptAtBlockHeightRequest}
  */
-proto.access.ExecuteScriptAtBlockHeightRequest.deserializeBinary = function(bytes) {
+proto.flow.access.ExecuteScriptAtBlockHeightRequest.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.access.ExecuteScriptAtBlockHeightRequest;
-  return proto.access.ExecuteScriptAtBlockHeightRequest.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.flow.access.ExecuteScriptAtBlockHeightRequest;
+  return proto.flow.access.ExecuteScriptAtBlockHeightRequest.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.access.ExecuteScriptAtBlockHeightRequest} msg The message object to deserialize into.
+ * @param {!proto.flow.access.ExecuteScriptAtBlockHeightRequest} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.access.ExecuteScriptAtBlockHeightRequest}
+ * @return {!proto.flow.access.ExecuteScriptAtBlockHeightRequest}
  */
-proto.access.ExecuteScriptAtBlockHeightRequest.deserializeBinaryFromReader = function(msg, reader) {
+proto.flow.access.ExecuteScriptAtBlockHeightRequest.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -4646,9 +4646,9 @@ proto.access.ExecuteScriptAtBlockHeightRequest.deserializeBinaryFromReader = fun
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.access.ExecuteScriptAtBlockHeightRequest.prototype.serializeBinary = function() {
+proto.flow.access.ExecuteScriptAtBlockHeightRequest.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
-  proto.access.ExecuteScriptAtBlockHeightRequest.serializeBinaryToWriter(this, writer);
+  proto.flow.access.ExecuteScriptAtBlockHeightRequest.serializeBinaryToWriter(this, writer);
   return writer.getResultBuffer();
 };
 
@@ -4656,11 +4656,11 @@ proto.access.ExecuteScriptAtBlockHeightRequest.prototype.serializeBinary = funct
 /**
  * Serializes the given message to binary data (in protobuf wire
  * format), writing to the given BinaryWriter.
- * @param {!proto.access.ExecuteScriptAtBlockHeightRequest} message
+ * @param {!proto.flow.access.ExecuteScriptAtBlockHeightRequest} message
  * @param {!jspb.BinaryWriter} writer
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.access.ExecuteScriptAtBlockHeightRequest.serializeBinaryToWriter = function(message, writer) {
+proto.flow.access.ExecuteScriptAtBlockHeightRequest.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
   f = message.getBlockHeight();
   if (f !== 0) {
@@ -4690,16 +4690,16 @@ proto.access.ExecuteScriptAtBlockHeightRequest.serializeBinaryToWriter = functio
  * optional uint64 block_height = 1;
  * @return {number}
  */
-proto.access.ExecuteScriptAtBlockHeightRequest.prototype.getBlockHeight = function() {
+proto.flow.access.ExecuteScriptAtBlockHeightRequest.prototype.getBlockHeight = function() {
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 1, 0));
 };
 
 
 /**
  * @param {number} value
- * @return {!proto.access.ExecuteScriptAtBlockHeightRequest} returns this
+ * @return {!proto.flow.access.ExecuteScriptAtBlockHeightRequest} returns this
  */
-proto.access.ExecuteScriptAtBlockHeightRequest.prototype.setBlockHeight = function(value) {
+proto.flow.access.ExecuteScriptAtBlockHeightRequest.prototype.setBlockHeight = function(value) {
   return jspb.Message.setProto3IntField(this, 1, value);
 };
 
@@ -4708,7 +4708,7 @@ proto.access.ExecuteScriptAtBlockHeightRequest.prototype.setBlockHeight = functi
  * optional bytes script = 2;
  * @return {!(string|Uint8Array)}
  */
-proto.access.ExecuteScriptAtBlockHeightRequest.prototype.getScript = function() {
+proto.flow.access.ExecuteScriptAtBlockHeightRequest.prototype.getScript = function() {
   return /** @type {!(string|Uint8Array)} */ (jspb.Message.getFieldWithDefault(this, 2, ""));
 };
 
@@ -4718,7 +4718,7 @@ proto.access.ExecuteScriptAtBlockHeightRequest.prototype.getScript = function() 
  * This is a type-conversion wrapper around `getScript()`
  * @return {string}
  */
-proto.access.ExecuteScriptAtBlockHeightRequest.prototype.getScript_asB64 = function() {
+proto.flow.access.ExecuteScriptAtBlockHeightRequest.prototype.getScript_asB64 = function() {
   return /** @type {string} */ (jspb.Message.bytesAsB64(
       this.getScript()));
 };
@@ -4731,7 +4731,7 @@ proto.access.ExecuteScriptAtBlockHeightRequest.prototype.getScript_asB64 = funct
  * This is a type-conversion wrapper around `getScript()`
  * @return {!Uint8Array}
  */
-proto.access.ExecuteScriptAtBlockHeightRequest.prototype.getScript_asU8 = function() {
+proto.flow.access.ExecuteScriptAtBlockHeightRequest.prototype.getScript_asU8 = function() {
   return /** @type {!Uint8Array} */ (jspb.Message.bytesAsU8(
       this.getScript()));
 };
@@ -4739,9 +4739,9 @@ proto.access.ExecuteScriptAtBlockHeightRequest.prototype.getScript_asU8 = functi
 
 /**
  * @param {!(string|Uint8Array)} value
- * @return {!proto.access.ExecuteScriptAtBlockHeightRequest} returns this
+ * @return {!proto.flow.access.ExecuteScriptAtBlockHeightRequest} returns this
  */
-proto.access.ExecuteScriptAtBlockHeightRequest.prototype.setScript = function(value) {
+proto.flow.access.ExecuteScriptAtBlockHeightRequest.prototype.setScript = function(value) {
   return jspb.Message.setProto3BytesField(this, 2, value);
 };
 
@@ -4750,7 +4750,7 @@ proto.access.ExecuteScriptAtBlockHeightRequest.prototype.setScript = function(va
  * repeated bytes arguments = 3;
  * @return {!(Array<!Uint8Array>|Array<string>)}
  */
-proto.access.ExecuteScriptAtBlockHeightRequest.prototype.getArgumentsList = function() {
+proto.flow.access.ExecuteScriptAtBlockHeightRequest.prototype.getArgumentsList = function() {
   return /** @type {!(Array<!Uint8Array>|Array<string>)} */ (jspb.Message.getRepeatedField(this, 3));
 };
 
@@ -4760,7 +4760,7 @@ proto.access.ExecuteScriptAtBlockHeightRequest.prototype.getArgumentsList = func
  * This is a type-conversion wrapper around `getArgumentsList()`
  * @return {!Array<string>}
  */
-proto.access.ExecuteScriptAtBlockHeightRequest.prototype.getArgumentsList_asB64 = function() {
+proto.flow.access.ExecuteScriptAtBlockHeightRequest.prototype.getArgumentsList_asB64 = function() {
   return /** @type {!Array<string>} */ (jspb.Message.bytesListAsB64(
       this.getArgumentsList()));
 };
@@ -4773,7 +4773,7 @@ proto.access.ExecuteScriptAtBlockHeightRequest.prototype.getArgumentsList_asB64 
  * This is a type-conversion wrapper around `getArgumentsList()`
  * @return {!Array<!Uint8Array>}
  */
-proto.access.ExecuteScriptAtBlockHeightRequest.prototype.getArgumentsList_asU8 = function() {
+proto.flow.access.ExecuteScriptAtBlockHeightRequest.prototype.getArgumentsList_asU8 = function() {
   return /** @type {!Array<!Uint8Array>} */ (jspb.Message.bytesListAsU8(
       this.getArgumentsList()));
 };
@@ -4781,9 +4781,9 @@ proto.access.ExecuteScriptAtBlockHeightRequest.prototype.getArgumentsList_asU8 =
 
 /**
  * @param {!(Array<!Uint8Array>|Array<string>)} value
- * @return {!proto.access.ExecuteScriptAtBlockHeightRequest} returns this
+ * @return {!proto.flow.access.ExecuteScriptAtBlockHeightRequest} returns this
  */
-proto.access.ExecuteScriptAtBlockHeightRequest.prototype.setArgumentsList = function(value) {
+proto.flow.access.ExecuteScriptAtBlockHeightRequest.prototype.setArgumentsList = function(value) {
   return jspb.Message.setField(this, 3, value || []);
 };
 
@@ -4791,18 +4791,18 @@ proto.access.ExecuteScriptAtBlockHeightRequest.prototype.setArgumentsList = func
 /**
  * @param {!(string|Uint8Array)} value
  * @param {number=} opt_index
- * @return {!proto.access.ExecuteScriptAtBlockHeightRequest} returns this
+ * @return {!proto.flow.access.ExecuteScriptAtBlockHeightRequest} returns this
  */
-proto.access.ExecuteScriptAtBlockHeightRequest.prototype.addArguments = function(value, opt_index) {
+proto.flow.access.ExecuteScriptAtBlockHeightRequest.prototype.addArguments = function(value, opt_index) {
   return jspb.Message.addToRepeatedField(this, 3, value, opt_index);
 };
 
 
 /**
  * Clears the list making it empty but non-null.
- * @return {!proto.access.ExecuteScriptAtBlockHeightRequest} returns this
+ * @return {!proto.flow.access.ExecuteScriptAtBlockHeightRequest} returns this
  */
-proto.access.ExecuteScriptAtBlockHeightRequest.prototype.clearArgumentsList = function() {
+proto.flow.access.ExecuteScriptAtBlockHeightRequest.prototype.clearArgumentsList = function() {
   return this.setArgumentsList([]);
 };
 
@@ -4823,8 +4823,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.access.ExecuteScriptResponse.prototype.toObject = function(opt_includeInstance) {
-  return proto.access.ExecuteScriptResponse.toObject(opt_includeInstance, this);
+proto.flow.access.ExecuteScriptResponse.prototype.toObject = function(opt_includeInstance) {
+  return proto.flow.access.ExecuteScriptResponse.toObject(opt_includeInstance, this);
 };
 
 
@@ -4833,11 +4833,11 @@ proto.access.ExecuteScriptResponse.prototype.toObject = function(opt_includeInst
  * @param {boolean|undefined} includeInstance Deprecated. Whether to include
  *     the JSPB instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.access.ExecuteScriptResponse} msg The msg instance to transform.
+ * @param {!proto.flow.access.ExecuteScriptResponse} msg The msg instance to transform.
  * @return {!Object}
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.access.ExecuteScriptResponse.toObject = function(includeInstance, msg) {
+proto.flow.access.ExecuteScriptResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
     value: msg.getValue_asB64()
   };
@@ -4853,23 +4853,23 @@ proto.access.ExecuteScriptResponse.toObject = function(includeInstance, msg) {
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.access.ExecuteScriptResponse}
+ * @return {!proto.flow.access.ExecuteScriptResponse}
  */
-proto.access.ExecuteScriptResponse.deserializeBinary = function(bytes) {
+proto.flow.access.ExecuteScriptResponse.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.access.ExecuteScriptResponse;
-  return proto.access.ExecuteScriptResponse.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.flow.access.ExecuteScriptResponse;
+  return proto.flow.access.ExecuteScriptResponse.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.access.ExecuteScriptResponse} msg The message object to deserialize into.
+ * @param {!proto.flow.access.ExecuteScriptResponse} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.access.ExecuteScriptResponse}
+ * @return {!proto.flow.access.ExecuteScriptResponse}
  */
-proto.access.ExecuteScriptResponse.deserializeBinaryFromReader = function(msg, reader) {
+proto.flow.access.ExecuteScriptResponse.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -4893,9 +4893,9 @@ proto.access.ExecuteScriptResponse.deserializeBinaryFromReader = function(msg, r
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.access.ExecuteScriptResponse.prototype.serializeBinary = function() {
+proto.flow.access.ExecuteScriptResponse.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
-  proto.access.ExecuteScriptResponse.serializeBinaryToWriter(this, writer);
+  proto.flow.access.ExecuteScriptResponse.serializeBinaryToWriter(this, writer);
   return writer.getResultBuffer();
 };
 
@@ -4903,11 +4903,11 @@ proto.access.ExecuteScriptResponse.prototype.serializeBinary = function() {
 /**
  * Serializes the given message to binary data (in protobuf wire
  * format), writing to the given BinaryWriter.
- * @param {!proto.access.ExecuteScriptResponse} message
+ * @param {!proto.flow.access.ExecuteScriptResponse} message
  * @param {!jspb.BinaryWriter} writer
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.access.ExecuteScriptResponse.serializeBinaryToWriter = function(message, writer) {
+proto.flow.access.ExecuteScriptResponse.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
   f = message.getValue_asU8();
   if (f.length > 0) {
@@ -4923,7 +4923,7 @@ proto.access.ExecuteScriptResponse.serializeBinaryToWriter = function(message, w
  * optional bytes value = 1;
  * @return {!(string|Uint8Array)}
  */
-proto.access.ExecuteScriptResponse.prototype.getValue = function() {
+proto.flow.access.ExecuteScriptResponse.prototype.getValue = function() {
   return /** @type {!(string|Uint8Array)} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
 };
 
@@ -4933,7 +4933,7 @@ proto.access.ExecuteScriptResponse.prototype.getValue = function() {
  * This is a type-conversion wrapper around `getValue()`
  * @return {string}
  */
-proto.access.ExecuteScriptResponse.prototype.getValue_asB64 = function() {
+proto.flow.access.ExecuteScriptResponse.prototype.getValue_asB64 = function() {
   return /** @type {string} */ (jspb.Message.bytesAsB64(
       this.getValue()));
 };
@@ -4946,7 +4946,7 @@ proto.access.ExecuteScriptResponse.prototype.getValue_asB64 = function() {
  * This is a type-conversion wrapper around `getValue()`
  * @return {!Uint8Array}
  */
-proto.access.ExecuteScriptResponse.prototype.getValue_asU8 = function() {
+proto.flow.access.ExecuteScriptResponse.prototype.getValue_asU8 = function() {
   return /** @type {!Uint8Array} */ (jspb.Message.bytesAsU8(
       this.getValue()));
 };
@@ -4954,9 +4954,9 @@ proto.access.ExecuteScriptResponse.prototype.getValue_asU8 = function() {
 
 /**
  * @param {!(string|Uint8Array)} value
- * @return {!proto.access.ExecuteScriptResponse} returns this
+ * @return {!proto.flow.access.ExecuteScriptResponse} returns this
  */
-proto.access.ExecuteScriptResponse.prototype.setValue = function(value) {
+proto.flow.access.ExecuteScriptResponse.prototype.setValue = function(value) {
   return jspb.Message.setProto3BytesField(this, 1, value);
 };
 
@@ -4977,8 +4977,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.access.GetEventsForHeightRangeRequest.prototype.toObject = function(opt_includeInstance) {
-  return proto.access.GetEventsForHeightRangeRequest.toObject(opt_includeInstance, this);
+proto.flow.access.GetEventsForHeightRangeRequest.prototype.toObject = function(opt_includeInstance) {
+  return proto.flow.access.GetEventsForHeightRangeRequest.toObject(opt_includeInstance, this);
 };
 
 
@@ -4987,11 +4987,11 @@ proto.access.GetEventsForHeightRangeRequest.prototype.toObject = function(opt_in
  * @param {boolean|undefined} includeInstance Deprecated. Whether to include
  *     the JSPB instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.access.GetEventsForHeightRangeRequest} msg The msg instance to transform.
+ * @param {!proto.flow.access.GetEventsForHeightRangeRequest} msg The msg instance to transform.
  * @return {!Object}
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.access.GetEventsForHeightRangeRequest.toObject = function(includeInstance, msg) {
+proto.flow.access.GetEventsForHeightRangeRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
     type: jspb.Message.getFieldWithDefault(msg, 1, ""),
     startHeight: jspb.Message.getFieldWithDefault(msg, 2, 0),
@@ -5009,23 +5009,23 @@ proto.access.GetEventsForHeightRangeRequest.toObject = function(includeInstance,
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.access.GetEventsForHeightRangeRequest}
+ * @return {!proto.flow.access.GetEventsForHeightRangeRequest}
  */
-proto.access.GetEventsForHeightRangeRequest.deserializeBinary = function(bytes) {
+proto.flow.access.GetEventsForHeightRangeRequest.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.access.GetEventsForHeightRangeRequest;
-  return proto.access.GetEventsForHeightRangeRequest.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.flow.access.GetEventsForHeightRangeRequest;
+  return proto.flow.access.GetEventsForHeightRangeRequest.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.access.GetEventsForHeightRangeRequest} msg The message object to deserialize into.
+ * @param {!proto.flow.access.GetEventsForHeightRangeRequest} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.access.GetEventsForHeightRangeRequest}
+ * @return {!proto.flow.access.GetEventsForHeightRangeRequest}
  */
-proto.access.GetEventsForHeightRangeRequest.deserializeBinaryFromReader = function(msg, reader) {
+proto.flow.access.GetEventsForHeightRangeRequest.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -5057,9 +5057,9 @@ proto.access.GetEventsForHeightRangeRequest.deserializeBinaryFromReader = functi
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.access.GetEventsForHeightRangeRequest.prototype.serializeBinary = function() {
+proto.flow.access.GetEventsForHeightRangeRequest.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
-  proto.access.GetEventsForHeightRangeRequest.serializeBinaryToWriter(this, writer);
+  proto.flow.access.GetEventsForHeightRangeRequest.serializeBinaryToWriter(this, writer);
   return writer.getResultBuffer();
 };
 
@@ -5067,11 +5067,11 @@ proto.access.GetEventsForHeightRangeRequest.prototype.serializeBinary = function
 /**
  * Serializes the given message to binary data (in protobuf wire
  * format), writing to the given BinaryWriter.
- * @param {!proto.access.GetEventsForHeightRangeRequest} message
+ * @param {!proto.flow.access.GetEventsForHeightRangeRequest} message
  * @param {!jspb.BinaryWriter} writer
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.access.GetEventsForHeightRangeRequest.serializeBinaryToWriter = function(message, writer) {
+proto.flow.access.GetEventsForHeightRangeRequest.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
   f = message.getType();
   if (f.length > 0) {
@@ -5101,16 +5101,16 @@ proto.access.GetEventsForHeightRangeRequest.serializeBinaryToWriter = function(m
  * optional string type = 1;
  * @return {string}
  */
-proto.access.GetEventsForHeightRangeRequest.prototype.getType = function() {
+proto.flow.access.GetEventsForHeightRangeRequest.prototype.getType = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
 };
 
 
 /**
  * @param {string} value
- * @return {!proto.access.GetEventsForHeightRangeRequest} returns this
+ * @return {!proto.flow.access.GetEventsForHeightRangeRequest} returns this
  */
-proto.access.GetEventsForHeightRangeRequest.prototype.setType = function(value) {
+proto.flow.access.GetEventsForHeightRangeRequest.prototype.setType = function(value) {
   return jspb.Message.setProto3StringField(this, 1, value);
 };
 
@@ -5119,16 +5119,16 @@ proto.access.GetEventsForHeightRangeRequest.prototype.setType = function(value) 
  * optional uint64 start_height = 2;
  * @return {number}
  */
-proto.access.GetEventsForHeightRangeRequest.prototype.getStartHeight = function() {
+proto.flow.access.GetEventsForHeightRangeRequest.prototype.getStartHeight = function() {
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 2, 0));
 };
 
 
 /**
  * @param {number} value
- * @return {!proto.access.GetEventsForHeightRangeRequest} returns this
+ * @return {!proto.flow.access.GetEventsForHeightRangeRequest} returns this
  */
-proto.access.GetEventsForHeightRangeRequest.prototype.setStartHeight = function(value) {
+proto.flow.access.GetEventsForHeightRangeRequest.prototype.setStartHeight = function(value) {
   return jspb.Message.setProto3IntField(this, 2, value);
 };
 
@@ -5137,16 +5137,16 @@ proto.access.GetEventsForHeightRangeRequest.prototype.setStartHeight = function(
  * optional uint64 end_height = 3;
  * @return {number}
  */
-proto.access.GetEventsForHeightRangeRequest.prototype.getEndHeight = function() {
+proto.flow.access.GetEventsForHeightRangeRequest.prototype.getEndHeight = function() {
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 3, 0));
 };
 
 
 /**
  * @param {number} value
- * @return {!proto.access.GetEventsForHeightRangeRequest} returns this
+ * @return {!proto.flow.access.GetEventsForHeightRangeRequest} returns this
  */
-proto.access.GetEventsForHeightRangeRequest.prototype.setEndHeight = function(value) {
+proto.flow.access.GetEventsForHeightRangeRequest.prototype.setEndHeight = function(value) {
   return jspb.Message.setProto3IntField(this, 3, value);
 };
 
@@ -5157,7 +5157,7 @@ proto.access.GetEventsForHeightRangeRequest.prototype.setEndHeight = function(va
  * @private {!Array<number>}
  * @const
  */
-proto.access.GetEventsForBlockIDsRequest.repeatedFields_ = [2];
+proto.flow.access.GetEventsForBlockIDsRequest.repeatedFields_ = [2];
 
 
 
@@ -5174,8 +5174,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.access.GetEventsForBlockIDsRequest.prototype.toObject = function(opt_includeInstance) {
-  return proto.access.GetEventsForBlockIDsRequest.toObject(opt_includeInstance, this);
+proto.flow.access.GetEventsForBlockIDsRequest.prototype.toObject = function(opt_includeInstance) {
+  return proto.flow.access.GetEventsForBlockIDsRequest.toObject(opt_includeInstance, this);
 };
 
 
@@ -5184,11 +5184,11 @@ proto.access.GetEventsForBlockIDsRequest.prototype.toObject = function(opt_inclu
  * @param {boolean|undefined} includeInstance Deprecated. Whether to include
  *     the JSPB instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.access.GetEventsForBlockIDsRequest} msg The msg instance to transform.
+ * @param {!proto.flow.access.GetEventsForBlockIDsRequest} msg The msg instance to transform.
  * @return {!Object}
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.access.GetEventsForBlockIDsRequest.toObject = function(includeInstance, msg) {
+proto.flow.access.GetEventsForBlockIDsRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
     type: jspb.Message.getFieldWithDefault(msg, 1, ""),
     blockIdsList: msg.getBlockIdsList_asB64()
@@ -5205,23 +5205,23 @@ proto.access.GetEventsForBlockIDsRequest.toObject = function(includeInstance, ms
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.access.GetEventsForBlockIDsRequest}
+ * @return {!proto.flow.access.GetEventsForBlockIDsRequest}
  */
-proto.access.GetEventsForBlockIDsRequest.deserializeBinary = function(bytes) {
+proto.flow.access.GetEventsForBlockIDsRequest.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.access.GetEventsForBlockIDsRequest;
-  return proto.access.GetEventsForBlockIDsRequest.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.flow.access.GetEventsForBlockIDsRequest;
+  return proto.flow.access.GetEventsForBlockIDsRequest.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.access.GetEventsForBlockIDsRequest} msg The message object to deserialize into.
+ * @param {!proto.flow.access.GetEventsForBlockIDsRequest} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.access.GetEventsForBlockIDsRequest}
+ * @return {!proto.flow.access.GetEventsForBlockIDsRequest}
  */
-proto.access.GetEventsForBlockIDsRequest.deserializeBinaryFromReader = function(msg, reader) {
+proto.flow.access.GetEventsForBlockIDsRequest.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -5249,9 +5249,9 @@ proto.access.GetEventsForBlockIDsRequest.deserializeBinaryFromReader = function(
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.access.GetEventsForBlockIDsRequest.prototype.serializeBinary = function() {
+proto.flow.access.GetEventsForBlockIDsRequest.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
-  proto.access.GetEventsForBlockIDsRequest.serializeBinaryToWriter(this, writer);
+  proto.flow.access.GetEventsForBlockIDsRequest.serializeBinaryToWriter(this, writer);
   return writer.getResultBuffer();
 };
 
@@ -5259,11 +5259,11 @@ proto.access.GetEventsForBlockIDsRequest.prototype.serializeBinary = function() 
 /**
  * Serializes the given message to binary data (in protobuf wire
  * format), writing to the given BinaryWriter.
- * @param {!proto.access.GetEventsForBlockIDsRequest} message
+ * @param {!proto.flow.access.GetEventsForBlockIDsRequest} message
  * @param {!jspb.BinaryWriter} writer
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.access.GetEventsForBlockIDsRequest.serializeBinaryToWriter = function(message, writer) {
+proto.flow.access.GetEventsForBlockIDsRequest.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
   f = message.getType();
   if (f.length > 0) {
@@ -5286,16 +5286,16 @@ proto.access.GetEventsForBlockIDsRequest.serializeBinaryToWriter = function(mess
  * optional string type = 1;
  * @return {string}
  */
-proto.access.GetEventsForBlockIDsRequest.prototype.getType = function() {
+proto.flow.access.GetEventsForBlockIDsRequest.prototype.getType = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
 };
 
 
 /**
  * @param {string} value
- * @return {!proto.access.GetEventsForBlockIDsRequest} returns this
+ * @return {!proto.flow.access.GetEventsForBlockIDsRequest} returns this
  */
-proto.access.GetEventsForBlockIDsRequest.prototype.setType = function(value) {
+proto.flow.access.GetEventsForBlockIDsRequest.prototype.setType = function(value) {
   return jspb.Message.setProto3StringField(this, 1, value);
 };
 
@@ -5304,7 +5304,7 @@ proto.access.GetEventsForBlockIDsRequest.prototype.setType = function(value) {
  * repeated bytes block_ids = 2;
  * @return {!(Array<!Uint8Array>|Array<string>)}
  */
-proto.access.GetEventsForBlockIDsRequest.prototype.getBlockIdsList = function() {
+proto.flow.access.GetEventsForBlockIDsRequest.prototype.getBlockIdsList = function() {
   return /** @type {!(Array<!Uint8Array>|Array<string>)} */ (jspb.Message.getRepeatedField(this, 2));
 };
 
@@ -5314,7 +5314,7 @@ proto.access.GetEventsForBlockIDsRequest.prototype.getBlockIdsList = function() 
  * This is a type-conversion wrapper around `getBlockIdsList()`
  * @return {!Array<string>}
  */
-proto.access.GetEventsForBlockIDsRequest.prototype.getBlockIdsList_asB64 = function() {
+proto.flow.access.GetEventsForBlockIDsRequest.prototype.getBlockIdsList_asB64 = function() {
   return /** @type {!Array<string>} */ (jspb.Message.bytesListAsB64(
       this.getBlockIdsList()));
 };
@@ -5327,7 +5327,7 @@ proto.access.GetEventsForBlockIDsRequest.prototype.getBlockIdsList_asB64 = funct
  * This is a type-conversion wrapper around `getBlockIdsList()`
  * @return {!Array<!Uint8Array>}
  */
-proto.access.GetEventsForBlockIDsRequest.prototype.getBlockIdsList_asU8 = function() {
+proto.flow.access.GetEventsForBlockIDsRequest.prototype.getBlockIdsList_asU8 = function() {
   return /** @type {!Array<!Uint8Array>} */ (jspb.Message.bytesListAsU8(
       this.getBlockIdsList()));
 };
@@ -5335,9 +5335,9 @@ proto.access.GetEventsForBlockIDsRequest.prototype.getBlockIdsList_asU8 = functi
 
 /**
  * @param {!(Array<!Uint8Array>|Array<string>)} value
- * @return {!proto.access.GetEventsForBlockIDsRequest} returns this
+ * @return {!proto.flow.access.GetEventsForBlockIDsRequest} returns this
  */
-proto.access.GetEventsForBlockIDsRequest.prototype.setBlockIdsList = function(value) {
+proto.flow.access.GetEventsForBlockIDsRequest.prototype.setBlockIdsList = function(value) {
   return jspb.Message.setField(this, 2, value || []);
 };
 
@@ -5345,18 +5345,18 @@ proto.access.GetEventsForBlockIDsRequest.prototype.setBlockIdsList = function(va
 /**
  * @param {!(string|Uint8Array)} value
  * @param {number=} opt_index
- * @return {!proto.access.GetEventsForBlockIDsRequest} returns this
+ * @return {!proto.flow.access.GetEventsForBlockIDsRequest} returns this
  */
-proto.access.GetEventsForBlockIDsRequest.prototype.addBlockIds = function(value, opt_index) {
+proto.flow.access.GetEventsForBlockIDsRequest.prototype.addBlockIds = function(value, opt_index) {
   return jspb.Message.addToRepeatedField(this, 2, value, opt_index);
 };
 
 
 /**
  * Clears the list making it empty but non-null.
- * @return {!proto.access.GetEventsForBlockIDsRequest} returns this
+ * @return {!proto.flow.access.GetEventsForBlockIDsRequest} returns this
  */
-proto.access.GetEventsForBlockIDsRequest.prototype.clearBlockIdsList = function() {
+proto.flow.access.GetEventsForBlockIDsRequest.prototype.clearBlockIdsList = function() {
   return this.setBlockIdsList([]);
 };
 
@@ -5367,7 +5367,7 @@ proto.access.GetEventsForBlockIDsRequest.prototype.clearBlockIdsList = function(
  * @private {!Array<number>}
  * @const
  */
-proto.access.EventsResponse.repeatedFields_ = [1];
+proto.flow.access.EventsResponse.repeatedFields_ = [1];
 
 
 
@@ -5384,8 +5384,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.access.EventsResponse.prototype.toObject = function(opt_includeInstance) {
-  return proto.access.EventsResponse.toObject(opt_includeInstance, this);
+proto.flow.access.EventsResponse.prototype.toObject = function(opt_includeInstance) {
+  return proto.flow.access.EventsResponse.toObject(opt_includeInstance, this);
 };
 
 
@@ -5394,14 +5394,14 @@ proto.access.EventsResponse.prototype.toObject = function(opt_includeInstance) {
  * @param {boolean|undefined} includeInstance Deprecated. Whether to include
  *     the JSPB instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.access.EventsResponse} msg The msg instance to transform.
+ * @param {!proto.flow.access.EventsResponse} msg The msg instance to transform.
  * @return {!Object}
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.access.EventsResponse.toObject = function(includeInstance, msg) {
+proto.flow.access.EventsResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
     resultsList: jspb.Message.toObjectList(msg.getResultsList(),
-    proto.access.EventsResponse.Result.toObject, includeInstance)
+    proto.flow.access.EventsResponse.Result.toObject, includeInstance)
   };
 
   if (includeInstance) {
@@ -5415,23 +5415,23 @@ proto.access.EventsResponse.toObject = function(includeInstance, msg) {
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.access.EventsResponse}
+ * @return {!proto.flow.access.EventsResponse}
  */
-proto.access.EventsResponse.deserializeBinary = function(bytes) {
+proto.flow.access.EventsResponse.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.access.EventsResponse;
-  return proto.access.EventsResponse.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.flow.access.EventsResponse;
+  return proto.flow.access.EventsResponse.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.access.EventsResponse} msg The message object to deserialize into.
+ * @param {!proto.flow.access.EventsResponse} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.access.EventsResponse}
+ * @return {!proto.flow.access.EventsResponse}
  */
-proto.access.EventsResponse.deserializeBinaryFromReader = function(msg, reader) {
+proto.flow.access.EventsResponse.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -5439,8 +5439,8 @@ proto.access.EventsResponse.deserializeBinaryFromReader = function(msg, reader) 
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = new proto.access.EventsResponse.Result;
-      reader.readMessage(value,proto.access.EventsResponse.Result.deserializeBinaryFromReader);
+      var value = new proto.flow.access.EventsResponse.Result;
+      reader.readMessage(value,proto.flow.access.EventsResponse.Result.deserializeBinaryFromReader);
       msg.addResults(value);
       break;
     default:
@@ -5456,9 +5456,9 @@ proto.access.EventsResponse.deserializeBinaryFromReader = function(msg, reader) 
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.access.EventsResponse.prototype.serializeBinary = function() {
+proto.flow.access.EventsResponse.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
-  proto.access.EventsResponse.serializeBinaryToWriter(this, writer);
+  proto.flow.access.EventsResponse.serializeBinaryToWriter(this, writer);
   return writer.getResultBuffer();
 };
 
@@ -5466,18 +5466,18 @@ proto.access.EventsResponse.prototype.serializeBinary = function() {
 /**
  * Serializes the given message to binary data (in protobuf wire
  * format), writing to the given BinaryWriter.
- * @param {!proto.access.EventsResponse} message
+ * @param {!proto.flow.access.EventsResponse} message
  * @param {!jspb.BinaryWriter} writer
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.access.EventsResponse.serializeBinaryToWriter = function(message, writer) {
+proto.flow.access.EventsResponse.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
   f = message.getResultsList();
   if (f.length > 0) {
     writer.writeRepeatedMessage(
       1,
       f,
-      proto.access.EventsResponse.Result.serializeBinaryToWriter
+      proto.flow.access.EventsResponse.Result.serializeBinaryToWriter
     );
   }
 };
@@ -5489,7 +5489,7 @@ proto.access.EventsResponse.serializeBinaryToWriter = function(message, writer) 
  * @private {!Array<number>}
  * @const
  */
-proto.access.EventsResponse.Result.repeatedFields_ = [3];
+proto.flow.access.EventsResponse.Result.repeatedFields_ = [3];
 
 
 
@@ -5506,8 +5506,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.access.EventsResponse.Result.prototype.toObject = function(opt_includeInstance) {
-  return proto.access.EventsResponse.Result.toObject(opt_includeInstance, this);
+proto.flow.access.EventsResponse.Result.prototype.toObject = function(opt_includeInstance) {
+  return proto.flow.access.EventsResponse.Result.toObject(opt_includeInstance, this);
 };
 
 
@@ -5516,11 +5516,11 @@ proto.access.EventsResponse.Result.prototype.toObject = function(opt_includeInst
  * @param {boolean|undefined} includeInstance Deprecated. Whether to include
  *     the JSPB instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.access.EventsResponse.Result} msg The msg instance to transform.
+ * @param {!proto.flow.access.EventsResponse.Result} msg The msg instance to transform.
  * @return {!Object}
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.access.EventsResponse.Result.toObject = function(includeInstance, msg) {
+proto.flow.access.EventsResponse.Result.toObject = function(includeInstance, msg) {
   var f, obj = {
     blockId: msg.getBlockId_asB64(),
     blockHeight: jspb.Message.getFieldWithDefault(msg, 2, 0),
@@ -5540,23 +5540,23 @@ proto.access.EventsResponse.Result.toObject = function(includeInstance, msg) {
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.access.EventsResponse.Result}
+ * @return {!proto.flow.access.EventsResponse.Result}
  */
-proto.access.EventsResponse.Result.deserializeBinary = function(bytes) {
+proto.flow.access.EventsResponse.Result.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.access.EventsResponse.Result;
-  return proto.access.EventsResponse.Result.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.flow.access.EventsResponse.Result;
+  return proto.flow.access.EventsResponse.Result.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.access.EventsResponse.Result} msg The message object to deserialize into.
+ * @param {!proto.flow.access.EventsResponse.Result} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.access.EventsResponse.Result}
+ * @return {!proto.flow.access.EventsResponse.Result}
  */
-proto.access.EventsResponse.Result.deserializeBinaryFromReader = function(msg, reader) {
+proto.flow.access.EventsResponse.Result.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -5594,9 +5594,9 @@ proto.access.EventsResponse.Result.deserializeBinaryFromReader = function(msg, r
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.access.EventsResponse.Result.prototype.serializeBinary = function() {
+proto.flow.access.EventsResponse.Result.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
-  proto.access.EventsResponse.Result.serializeBinaryToWriter(this, writer);
+  proto.flow.access.EventsResponse.Result.serializeBinaryToWriter(this, writer);
   return writer.getResultBuffer();
 };
 
@@ -5604,11 +5604,11 @@ proto.access.EventsResponse.Result.prototype.serializeBinary = function() {
 /**
  * Serializes the given message to binary data (in protobuf wire
  * format), writing to the given BinaryWriter.
- * @param {!proto.access.EventsResponse.Result} message
+ * @param {!proto.flow.access.EventsResponse.Result} message
  * @param {!jspb.BinaryWriter} writer
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.access.EventsResponse.Result.serializeBinaryToWriter = function(message, writer) {
+proto.flow.access.EventsResponse.Result.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
   f = message.getBlockId_asU8();
   if (f.length > 0) {
@@ -5647,7 +5647,7 @@ proto.access.EventsResponse.Result.serializeBinaryToWriter = function(message, w
  * optional bytes block_id = 1;
  * @return {!(string|Uint8Array)}
  */
-proto.access.EventsResponse.Result.prototype.getBlockId = function() {
+proto.flow.access.EventsResponse.Result.prototype.getBlockId = function() {
   return /** @type {!(string|Uint8Array)} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
 };
 
@@ -5657,7 +5657,7 @@ proto.access.EventsResponse.Result.prototype.getBlockId = function() {
  * This is a type-conversion wrapper around `getBlockId()`
  * @return {string}
  */
-proto.access.EventsResponse.Result.prototype.getBlockId_asB64 = function() {
+proto.flow.access.EventsResponse.Result.prototype.getBlockId_asB64 = function() {
   return /** @type {string} */ (jspb.Message.bytesAsB64(
       this.getBlockId()));
 };
@@ -5670,7 +5670,7 @@ proto.access.EventsResponse.Result.prototype.getBlockId_asB64 = function() {
  * This is a type-conversion wrapper around `getBlockId()`
  * @return {!Uint8Array}
  */
-proto.access.EventsResponse.Result.prototype.getBlockId_asU8 = function() {
+proto.flow.access.EventsResponse.Result.prototype.getBlockId_asU8 = function() {
   return /** @type {!Uint8Array} */ (jspb.Message.bytesAsU8(
       this.getBlockId()));
 };
@@ -5678,9 +5678,9 @@ proto.access.EventsResponse.Result.prototype.getBlockId_asU8 = function() {
 
 /**
  * @param {!(string|Uint8Array)} value
- * @return {!proto.access.EventsResponse.Result} returns this
+ * @return {!proto.flow.access.EventsResponse.Result} returns this
  */
-proto.access.EventsResponse.Result.prototype.setBlockId = function(value) {
+proto.flow.access.EventsResponse.Result.prototype.setBlockId = function(value) {
   return jspb.Message.setProto3BytesField(this, 1, value);
 };
 
@@ -5689,54 +5689,54 @@ proto.access.EventsResponse.Result.prototype.setBlockId = function(value) {
  * optional uint64 block_height = 2;
  * @return {number}
  */
-proto.access.EventsResponse.Result.prototype.getBlockHeight = function() {
+proto.flow.access.EventsResponse.Result.prototype.getBlockHeight = function() {
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 2, 0));
 };
 
 
 /**
  * @param {number} value
- * @return {!proto.access.EventsResponse.Result} returns this
+ * @return {!proto.flow.access.EventsResponse.Result} returns this
  */
-proto.access.EventsResponse.Result.prototype.setBlockHeight = function(value) {
+proto.flow.access.EventsResponse.Result.prototype.setBlockHeight = function(value) {
   return jspb.Message.setProto3IntField(this, 2, value);
 };
 
 
 /**
- * repeated entities.Event events = 3;
- * @return {!Array<!proto.entities.Event>}
+ * repeated flow.entities.Event events = 3;
+ * @return {!Array<!proto.flow.entities.Event>}
  */
-proto.access.EventsResponse.Result.prototype.getEventsList = function() {
-  return /** @type{!Array<!proto.entities.Event>} */ (
+proto.flow.access.EventsResponse.Result.prototype.getEventsList = function() {
+  return /** @type{!Array<!proto.flow.entities.Event>} */ (
     jspb.Message.getRepeatedWrapperField(this, flow_entities_event_pb.Event, 3));
 };
 
 
 /**
- * @param {!Array<!proto.entities.Event>} value
- * @return {!proto.access.EventsResponse.Result} returns this
+ * @param {!Array<!proto.flow.entities.Event>} value
+ * @return {!proto.flow.access.EventsResponse.Result} returns this
 */
-proto.access.EventsResponse.Result.prototype.setEventsList = function(value) {
+proto.flow.access.EventsResponse.Result.prototype.setEventsList = function(value) {
   return jspb.Message.setRepeatedWrapperField(this, 3, value);
 };
 
 
 /**
- * @param {!proto.entities.Event=} opt_value
+ * @param {!proto.flow.entities.Event=} opt_value
  * @param {number=} opt_index
- * @return {!proto.entities.Event}
+ * @return {!proto.flow.entities.Event}
  */
-proto.access.EventsResponse.Result.prototype.addEvents = function(opt_value, opt_index) {
-  return jspb.Message.addToRepeatedWrapperField(this, 3, opt_value, proto.entities.Event, opt_index);
+proto.flow.access.EventsResponse.Result.prototype.addEvents = function(opt_value, opt_index) {
+  return jspb.Message.addToRepeatedWrapperField(this, 3, opt_value, proto.flow.entities.Event, opt_index);
 };
 
 
 /**
  * Clears the list making it empty but non-null.
- * @return {!proto.access.EventsResponse.Result} returns this
+ * @return {!proto.flow.access.EventsResponse.Result} returns this
  */
-proto.access.EventsResponse.Result.prototype.clearEventsList = function() {
+proto.flow.access.EventsResponse.Result.prototype.clearEventsList = function() {
   return this.setEventsList([]);
 };
 
@@ -5745,7 +5745,7 @@ proto.access.EventsResponse.Result.prototype.clearEventsList = function() {
  * optional google.protobuf.Timestamp block_timestamp = 4;
  * @return {?proto.google.protobuf.Timestamp}
  */
-proto.access.EventsResponse.Result.prototype.getBlockTimestamp = function() {
+proto.flow.access.EventsResponse.Result.prototype.getBlockTimestamp = function() {
   return /** @type{?proto.google.protobuf.Timestamp} */ (
     jspb.Message.getWrapperField(this, google_protobuf_timestamp_pb.Timestamp, 4));
 };
@@ -5753,18 +5753,18 @@ proto.access.EventsResponse.Result.prototype.getBlockTimestamp = function() {
 
 /**
  * @param {?proto.google.protobuf.Timestamp|undefined} value
- * @return {!proto.access.EventsResponse.Result} returns this
+ * @return {!proto.flow.access.EventsResponse.Result} returns this
 */
-proto.access.EventsResponse.Result.prototype.setBlockTimestamp = function(value) {
+proto.flow.access.EventsResponse.Result.prototype.setBlockTimestamp = function(value) {
   return jspb.Message.setWrapperField(this, 4, value);
 };
 
 
 /**
  * Clears the message field making it undefined.
- * @return {!proto.access.EventsResponse.Result} returns this
+ * @return {!proto.flow.access.EventsResponse.Result} returns this
  */
-proto.access.EventsResponse.Result.prototype.clearBlockTimestamp = function() {
+proto.flow.access.EventsResponse.Result.prototype.clearBlockTimestamp = function() {
   return this.setBlockTimestamp(undefined);
 };
 
@@ -5773,45 +5773,45 @@ proto.access.EventsResponse.Result.prototype.clearBlockTimestamp = function() {
  * Returns whether this field is set.
  * @return {boolean}
  */
-proto.access.EventsResponse.Result.prototype.hasBlockTimestamp = function() {
+proto.flow.access.EventsResponse.Result.prototype.hasBlockTimestamp = function() {
   return jspb.Message.getField(this, 4) != null;
 };
 
 
 /**
  * repeated Result results = 1;
- * @return {!Array<!proto.access.EventsResponse.Result>}
+ * @return {!Array<!proto.flow.access.EventsResponse.Result>}
  */
-proto.access.EventsResponse.prototype.getResultsList = function() {
-  return /** @type{!Array<!proto.access.EventsResponse.Result>} */ (
-    jspb.Message.getRepeatedWrapperField(this, proto.access.EventsResponse.Result, 1));
+proto.flow.access.EventsResponse.prototype.getResultsList = function() {
+  return /** @type{!Array<!proto.flow.access.EventsResponse.Result>} */ (
+    jspb.Message.getRepeatedWrapperField(this, proto.flow.access.EventsResponse.Result, 1));
 };
 
 
 /**
- * @param {!Array<!proto.access.EventsResponse.Result>} value
- * @return {!proto.access.EventsResponse} returns this
+ * @param {!Array<!proto.flow.access.EventsResponse.Result>} value
+ * @return {!proto.flow.access.EventsResponse} returns this
 */
-proto.access.EventsResponse.prototype.setResultsList = function(value) {
+proto.flow.access.EventsResponse.prototype.setResultsList = function(value) {
   return jspb.Message.setRepeatedWrapperField(this, 1, value);
 };
 
 
 /**
- * @param {!proto.access.EventsResponse.Result=} opt_value
+ * @param {!proto.flow.access.EventsResponse.Result=} opt_value
  * @param {number=} opt_index
- * @return {!proto.access.EventsResponse.Result}
+ * @return {!proto.flow.access.EventsResponse.Result}
  */
-proto.access.EventsResponse.prototype.addResults = function(opt_value, opt_index) {
-  return jspb.Message.addToRepeatedWrapperField(this, 1, opt_value, proto.access.EventsResponse.Result, opt_index);
+proto.flow.access.EventsResponse.prototype.addResults = function(opt_value, opt_index) {
+  return jspb.Message.addToRepeatedWrapperField(this, 1, opt_value, proto.flow.access.EventsResponse.Result, opt_index);
 };
 
 
 /**
  * Clears the list making it empty but non-null.
- * @return {!proto.access.EventsResponse} returns this
+ * @return {!proto.flow.access.EventsResponse} returns this
  */
-proto.access.EventsResponse.prototype.clearResultsList = function() {
+proto.flow.access.EventsResponse.prototype.clearResultsList = function() {
   return this.setResultsList([]);
 };
 
@@ -5832,8 +5832,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.access.GetNetworkParametersRequest.prototype.toObject = function(opt_includeInstance) {
-  return proto.access.GetNetworkParametersRequest.toObject(opt_includeInstance, this);
+proto.flow.access.GetNetworkParametersRequest.prototype.toObject = function(opt_includeInstance) {
+  return proto.flow.access.GetNetworkParametersRequest.toObject(opt_includeInstance, this);
 };
 
 
@@ -5842,11 +5842,11 @@ proto.access.GetNetworkParametersRequest.prototype.toObject = function(opt_inclu
  * @param {boolean|undefined} includeInstance Deprecated. Whether to include
  *     the JSPB instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.access.GetNetworkParametersRequest} msg The msg instance to transform.
+ * @param {!proto.flow.access.GetNetworkParametersRequest} msg The msg instance to transform.
  * @return {!Object}
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.access.GetNetworkParametersRequest.toObject = function(includeInstance, msg) {
+proto.flow.access.GetNetworkParametersRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
 
   };
@@ -5862,23 +5862,23 @@ proto.access.GetNetworkParametersRequest.toObject = function(includeInstance, ms
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.access.GetNetworkParametersRequest}
+ * @return {!proto.flow.access.GetNetworkParametersRequest}
  */
-proto.access.GetNetworkParametersRequest.deserializeBinary = function(bytes) {
+proto.flow.access.GetNetworkParametersRequest.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.access.GetNetworkParametersRequest;
-  return proto.access.GetNetworkParametersRequest.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.flow.access.GetNetworkParametersRequest;
+  return proto.flow.access.GetNetworkParametersRequest.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.access.GetNetworkParametersRequest} msg The message object to deserialize into.
+ * @param {!proto.flow.access.GetNetworkParametersRequest} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.access.GetNetworkParametersRequest}
+ * @return {!proto.flow.access.GetNetworkParametersRequest}
  */
-proto.access.GetNetworkParametersRequest.deserializeBinaryFromReader = function(msg, reader) {
+proto.flow.access.GetNetworkParametersRequest.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -5898,9 +5898,9 @@ proto.access.GetNetworkParametersRequest.deserializeBinaryFromReader = function(
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.access.GetNetworkParametersRequest.prototype.serializeBinary = function() {
+proto.flow.access.GetNetworkParametersRequest.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
-  proto.access.GetNetworkParametersRequest.serializeBinaryToWriter(this, writer);
+  proto.flow.access.GetNetworkParametersRequest.serializeBinaryToWriter(this, writer);
   return writer.getResultBuffer();
 };
 
@@ -5908,11 +5908,11 @@ proto.access.GetNetworkParametersRequest.prototype.serializeBinary = function() 
 /**
  * Serializes the given message to binary data (in protobuf wire
  * format), writing to the given BinaryWriter.
- * @param {!proto.access.GetNetworkParametersRequest} message
+ * @param {!proto.flow.access.GetNetworkParametersRequest} message
  * @param {!jspb.BinaryWriter} writer
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.access.GetNetworkParametersRequest.serializeBinaryToWriter = function(message, writer) {
+proto.flow.access.GetNetworkParametersRequest.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
 };
 
@@ -5933,8 +5933,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.access.GetNetworkParametersResponse.prototype.toObject = function(opt_includeInstance) {
-  return proto.access.GetNetworkParametersResponse.toObject(opt_includeInstance, this);
+proto.flow.access.GetNetworkParametersResponse.prototype.toObject = function(opt_includeInstance) {
+  return proto.flow.access.GetNetworkParametersResponse.toObject(opt_includeInstance, this);
 };
 
 
@@ -5943,11 +5943,11 @@ proto.access.GetNetworkParametersResponse.prototype.toObject = function(opt_incl
  * @param {boolean|undefined} includeInstance Deprecated. Whether to include
  *     the JSPB instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.access.GetNetworkParametersResponse} msg The msg instance to transform.
+ * @param {!proto.flow.access.GetNetworkParametersResponse} msg The msg instance to transform.
  * @return {!Object}
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.access.GetNetworkParametersResponse.toObject = function(includeInstance, msg) {
+proto.flow.access.GetNetworkParametersResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
     chainId: jspb.Message.getFieldWithDefault(msg, 1, "")
   };
@@ -5963,23 +5963,23 @@ proto.access.GetNetworkParametersResponse.toObject = function(includeInstance, m
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.access.GetNetworkParametersResponse}
+ * @return {!proto.flow.access.GetNetworkParametersResponse}
  */
-proto.access.GetNetworkParametersResponse.deserializeBinary = function(bytes) {
+proto.flow.access.GetNetworkParametersResponse.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.access.GetNetworkParametersResponse;
-  return proto.access.GetNetworkParametersResponse.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.flow.access.GetNetworkParametersResponse;
+  return proto.flow.access.GetNetworkParametersResponse.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.access.GetNetworkParametersResponse} msg The message object to deserialize into.
+ * @param {!proto.flow.access.GetNetworkParametersResponse} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.access.GetNetworkParametersResponse}
+ * @return {!proto.flow.access.GetNetworkParametersResponse}
  */
-proto.access.GetNetworkParametersResponse.deserializeBinaryFromReader = function(msg, reader) {
+proto.flow.access.GetNetworkParametersResponse.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -6003,9 +6003,9 @@ proto.access.GetNetworkParametersResponse.deserializeBinaryFromReader = function
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.access.GetNetworkParametersResponse.prototype.serializeBinary = function() {
+proto.flow.access.GetNetworkParametersResponse.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
-  proto.access.GetNetworkParametersResponse.serializeBinaryToWriter(this, writer);
+  proto.flow.access.GetNetworkParametersResponse.serializeBinaryToWriter(this, writer);
   return writer.getResultBuffer();
 };
 
@@ -6013,11 +6013,11 @@ proto.access.GetNetworkParametersResponse.prototype.serializeBinary = function()
 /**
  * Serializes the given message to binary data (in protobuf wire
  * format), writing to the given BinaryWriter.
- * @param {!proto.access.GetNetworkParametersResponse} message
+ * @param {!proto.flow.access.GetNetworkParametersResponse} message
  * @param {!jspb.BinaryWriter} writer
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.access.GetNetworkParametersResponse.serializeBinaryToWriter = function(message, writer) {
+proto.flow.access.GetNetworkParametersResponse.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
   f = message.getChainId();
   if (f.length > 0) {
@@ -6033,18 +6033,18 @@ proto.access.GetNetworkParametersResponse.serializeBinaryToWriter = function(mes
  * optional string chain_id = 1;
  * @return {string}
  */
-proto.access.GetNetworkParametersResponse.prototype.getChainId = function() {
+proto.flow.access.GetNetworkParametersResponse.prototype.getChainId = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
 };
 
 
 /**
  * @param {string} value
- * @return {!proto.access.GetNetworkParametersResponse} returns this
+ * @return {!proto.flow.access.GetNetworkParametersResponse} returns this
  */
-proto.access.GetNetworkParametersResponse.prototype.setChainId = function(value) {
+proto.flow.access.GetNetworkParametersResponse.prototype.setChainId = function(value) {
   return jspb.Message.setProto3StringField(this, 1, value);
 };
 
 
-goog.object.extend(exports, proto.access);
+goog.object.extend(exports, proto.flow.access);

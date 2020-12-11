@@ -1,4 +1,4 @@
-// package: entities
+// package: flow.entities
 // file: flow/entities/block_header.proto
 
 import * as jspb from "google-protobuf";

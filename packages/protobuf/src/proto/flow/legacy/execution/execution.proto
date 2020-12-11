@@ -1,11 +1,9 @@
 syntax = "proto3";
 
-package flow.execution;
+package execution;
 
-option go_package = "execution";
-
-import "flow/entities/account.proto";
-import "flow/entities/event.proto";
+import "flow/legacy/entities/account.proto";
+import "flow/legacy/entities/event.proto";
 
 // ExecutionAPI is the API provided by the execution nodes.
 service ExecutionAPI {

@@ -1,4 +1,4 @@
-// package: access
+// package: flow.access
 // file: flow/access/access.proto
 
 import * as jspb from "google-protobuf";
