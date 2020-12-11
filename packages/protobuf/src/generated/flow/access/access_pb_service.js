@@ -1,4 +1,4 @@
-// package: access
+// package: flow.access
 // file: flow/access/access.proto
 
 var flow_access_access_pb = require("../../flow/access/access_pb");
@@ -6,7 +6,7 @@ var grpc = require("@improbable-eng/grpc-web").grpc;
 
 var AccessAPI = (function () {
   function AccessAPI() {}
-  AccessAPI.serviceName = "access.AccessAPI";
+  AccessAPI.serviceName = "flow.access.AccessAPI";
   return AccessAPI;
 }());
 

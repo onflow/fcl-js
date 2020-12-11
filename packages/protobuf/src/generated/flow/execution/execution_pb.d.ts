@@ -1,4 +1,4 @@
-// package: execution
+// package: flow.execution
 // file: flow/execution/execution.proto
 
 import * as jspb from "google-protobuf";

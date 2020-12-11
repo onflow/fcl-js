@@ -1,8 +1,6 @@
 syntax = "proto3";
 
-package flow.entities;
-
-option go_package = "entities";
+package entities;
 
 import "google/protobuf/timestamp.proto";
 

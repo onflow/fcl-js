@@ -2,6 +2,10 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.1.8 -- 2020-12-11
+
+- 2020-12-11 _non-breaking_ -- Update protobufs according to latest changes to support multi contract and deleted keys
+
 ### 0.1.7 -- 2020-09-21
 
 - 2020-09-21 _non-breaking_ -- Update protobuf: BlockEvents now include block timestamp
