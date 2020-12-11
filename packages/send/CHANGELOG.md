@@ -2,6 +2,11 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.0.35 - 2020-12-11
+
+- 2020-12-11 -- `sendGetAccount` parses multiple contracts on a queried account onto response object.
+- 2020-12-11 -- VSN `@onflow/protobuf` 0.1.7 -> 0.1.8
+
 ### 0.0.[23..34] - 2020-12-03
 
 - 2020-12-03 -- FIX modified how tx signatures were applied to gRPC call.
