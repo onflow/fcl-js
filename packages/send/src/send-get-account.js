@@ -21,10 +21,18 @@ export async function sendGetAccount(ix, opts = {}) {
   ret.tag = ix.tag
 
   const account = res.getAccount()
+
+  let contractsMap;
+  const contracts = (contractsMap = account.getContractsMap()) ? contractsMap.getEntryList().reduce((acc, contract) => ({
+    ...acc,
+    [contract[0]]: new TextDecoder("utf-8").decode(contract[1] || new UInt8Array())
+  }), {}) : {}
+
   ret.account = {
     address: withPrefix(u8ToHex(account.getAddress_asU8())),
     balance: account.getBalance(),
-    code: account.getCode_asU8(),
+    code: new TextDecoder("utf-8").decode(account.getCode_asU8() || new UInt8Array()),
+    contracts,
     keys: account.getKeysList().map(publicKey => ({
       index: publicKey.getIndex(),
       publicKey: u8ToHex(publicKey.getPublicKey_asU8()),
@@ -32,6 +40,7 @@ export async function sendGetAccount(ix, opts = {}) {
       hashAlgo: publicKey.getHashAlgo(),
       weight: publicKey.getWeight(),
       sequenceNumber: publicKey.getSequenceNumber(),
+      revoked: publicKey.getRevoked(),
     })),
   }
 
