@@ -1,6 +1,6 @@
 {
   "name": "@onflow/sdk-latest-block",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Flow JS SDK -- Fetch the Latest Block from the Configured Access Node",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
@@ -35,7 +35,7 @@
   },
   "dependencies": {
     "@onflow/sdk-build-get-latest-block": "0.0.0",
-    "@onflow/sdk-decode": "0.0.1",
-    "@onflow/sdk-send": "0.0.9"
+    "@onflow/sdk-decode": "0.0.2",
+    "@onflow/sdk-send": "0.0.10"
   }
 }
