@@ -2,6 +2,12 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.0.67-alpha.42 - 2020-12-11
+
+- 2020-12-11 -- VSN `@onflow/sdk-send` 0.0.9 -> 0.0.10
+- 2020-12-11 -- VSN `@onflow/sdk-resolve` 0.0.9 -> 0.0.10
+- 2020-12-11 -- VSN `@onflow/sdk-account` 0.0.7 -> 0.0.8
+
 ### 0.0.67-alpha.41 - 2020-12-08
 
 - 2020-12-08 -- FIX: issue with multi-sig from same account (@boczeraturl)
