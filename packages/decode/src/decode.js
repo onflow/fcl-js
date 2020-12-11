@@ -158,9 +158,7 @@ export const decodeResponse = async (response, customDecoders = {}) => {
       })
     )
   } else if (response.account) {
-    const acct = response.account
-    acct.code = new TextDecoder("utf-8").decode(acct.code || new UInt8Array())
-    return acct
+    return response.account
   } else if (response.block) {
     return response.block
   } else if (response.latestBlock) {
