@@ -24,7 +24,7 @@ const Env = {
 
 export const TITLE = "Register Delegator"
 export const DESCRIPTION = "Register a Delegator on Flow."
-export const VERSION = "0.0.6"
+export const VERSION = "0.0.7"
 export const HASH = "3cb357a97a57d9abbe5c68f0df342ee96ba97ade2013753fd2ddf47695a8c08a"
 export const CODE =
 `import FlowToken from 0xFLOWTOKENADDRESS
@@ -71,7 +71,7 @@ transaction(id: String, amount: UFix64) {
 export const template = async ({ proposer, authorization, payer, id = "", amount = ""}) => {
     const env = await config().get("env", "mainnet")
     let code = CODE.replace(Deps.LOCKEDTOKENADDRESS, Env[env][Deps.LOCKEDTOKENADDRESS])
-    code = CODE.replace(Deps.FLOWTOKENADDRESS, Env[env][Deps.FLOWTOKENADDRESS])
+    code = code.replace(Deps.FLOWTOKENADDRESS, Env[env][Deps.FLOWTOKENADDRESS])
 
     return sdk.pipe([
         sdk.transaction(code),
