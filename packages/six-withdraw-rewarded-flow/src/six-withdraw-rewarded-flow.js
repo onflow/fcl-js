@@ -24,7 +24,7 @@ const Env = {
 
 export const TITLE = "Withdraw Rewarded Flow"
 export const DESCRIPTION = "Withdraw Rewarded Flow to an account."
-export const VERSION = "0.0.1"
+export const VERSION = "0.0.5"
 export const HASH = "4c5c67ff1581c7a51819835ddda4fcd18ea5b11acd93aaee022c324364d4532f"
 export const CODE = 
 `import LockedTokens from 0xLOCKEDTOKENADDRESS
@@ -34,8 +34,8 @@ transaction(amount: UFix64) {
 
     let holderRef: &LockedTokens.TokenHolder
 
-    prepare(acct: AuthAccount) {
-        self.holderRef = acct.borrow<&LockedTokens.TokenHolder>(from: LockedTokens.TokenHolderStoragePath)
+    prepare(account: AuthAccount) {
+        self.holderRef = account.borrow<&LockedTokens.TokenHolder>(from: LockedTokens.TokenHolderStoragePath)
             ?? panic("Could not borrow reference to TokenHolder")
     }
 
