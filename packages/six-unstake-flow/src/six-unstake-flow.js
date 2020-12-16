@@ -30,7 +30,7 @@ export const CODE =
 `import LockedTokens from 0xLOCKEDTOKENADDRESS
 import StakingProxy from 0xSTAKINGPROXYADDRESS
 
-transaction() {
+transaction(amount: UFix64) {
 
     let holderRef: &LockedTokens.TokenHolder
 
@@ -42,18 +42,19 @@ transaction() {
     execute {
         let stakerProxy = self.holderRef.borrowStaker()
 
-        stakerProxy.unstakeAll()
+        stakerProxy.requestUnstaking(amount: amount)
     }
 }
 `
 
-export const template = async ({ proposer, authorization, payer }) => {
+export const template = async ({ proposer, authorization, payer, amount = "" }) => {
     const env = await config().get("env", "mainnet")
     let code = CODE.replace(Deps.LOCKEDTOKENADDRESS, Env[env][Deps.LOCKEDTOKENADDRESS])
     code = code.replace(Deps.STAKINGPROXYADDRESS, Env[env][Deps.STAKINGPROXYADDRESS])
 
     return sdk.pipe([
         sdk.transaction(code),
+        sdk.args([sdk.arg(amount, t.UFix64)]),
         sdk.proposer(proposer),
         sdk.authorizations([authorization]),
         sdk.payer(payer),
