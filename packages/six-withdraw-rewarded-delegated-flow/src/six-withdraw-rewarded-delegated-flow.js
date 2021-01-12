@@ -4,39 +4,50 @@ import {config} from "@onflow/config"
 
 const Deps = {
     LOCKEDTOKENADDRESS: "0xLOCKEDTOKENADDRESS",
+    FLOWTOKENADDRESS: "0xFLOWTOKENADDRESS",
 }
 
 const Env = {
     local: {
         [Deps.LOCKEDTOKENADDRESS]: "0x0",
+        [Deps.FLOWTOKENADDRESS]: "0x0",
     },
     testnet: {
         [Deps.LOCKEDTOKENADDRESS]: "0x95e019a17d0e23d7",
+        [Deps.FLOWTOKENADDRESS]: "0x7e60df042a9c0868",
     },
     mainnet: {
         [Deps.LOCKEDTOKENADDRESS]: "0x8d0e87b65159ae63",
+        [Deps.FLOWTOKENADDRESS]: "0x1654653399040a61",
     }
 }
 
 export const TITLE = "Withdraw Rewarded Delegated Flow"
 export const DESCRIPTION = "Withdraw Rewarded Delegated Flow to an account."
 export const VERSION = "0.0.1"
-export const HASH = "2920ed29151943c1c061ba3eb81b904bdc78f658ad18b44b95df48cd96056929"
+export const HASH = "239ffa449eae5560eec3e99633dcf9c63b1e9c99996d1c5636644dceef9ec44b"
 export const CODE = 
 `import LockedTokens from 0xLOCKEDTOKENADDRESS
+import FlowToken from 0xFLOWTOKENADDRESS
 
 transaction(amount: UFix64) {
-    let nodeDelegatorProxy: LockedTokens.LockedNodeDelegatorProxy
+
+    let holderRef: &LockedTokens.TokenHolder
+    let vaultRef: &FlowToken.Vault
 
     prepare(account: AuthAccount) {
-        let holderRef = account.borrow<&LockedTokens.TokenHolder>(from: LockedTokens.TokenHolderStoragePath) 
-            ?? panic("TokenHolder is not saved at specified path")
-        
-        self.nodeDelegatorProxy = holderRef.borrowDelegator()
+        self.holderRef = account.borrow<&LockedTokens.TokenHolder>(from: LockedTokens.TokenHolderStoragePath) 
+            ?? panic("Could not borrow reference to TokenHolder")
+
+        self.vaultRef = account.borrow<&FlowToken.Vault>(from: /storage/flowTokenVault)
+            ?? panic("Could not borrow reference to FlowToken value")
     }
 
     execute {
-        self.nodeDelegatorProxy.withdrawRewardedTokens(amount: amount)
+        let delegatorProxy = self.holderRef.borrowDelegator()
+
+        delegatorProxy.withdrawRewardedTokens(amount: amount)
+        self.vaultRef.deposit(from: <-self.holderRef.withdraw(amount: amount))
     }
 }
 `
@@ -44,6 +55,7 @@ transaction(amount: UFix64) {
 export const template = async ({ proposer, authorization, payer, amount = ""}) => {
     const env = await config().get("env", "mainnet")
     let code = CODE.replace(Deps.LOCKEDTOKENADDRESS, Env[env][Deps.LOCKEDTOKENADDRESS])
+    code = code.replace(Deps.FLOWTOKENADDRESS, Env[env][Deps.FLOWTOKENADDRESS])
 
     return sdk.pipe([
         sdk.transaction(code),
