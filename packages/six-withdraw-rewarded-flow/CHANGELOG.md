@@ -2,6 +2,10 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.0.6 -- 2021-1-12
+
+- 2021-1-12 -- Updates transaction code
+
 ### 0.0.5 -- 2020-12-15
 
 - 2020-12-15 -- Updates transaction code
