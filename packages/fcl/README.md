@@ -13,7 +13,7 @@ The things that exists probably won't be changing much externally, we will be ad
 # Install
 
 ```bash
-npm install --save @onflow/fcl@alpha @onflow/types
+npm install --save @onflow/fcl @onflow/types
 ```
 
 # Overview
@@ -55,12 +55,12 @@ Run the following commands to initialize a new FCL project.
 ```sh
 yarn create react-app my-app
 cd my-app
-yarn add @onflow/fcl@alpha @onflow/types
+yarn add @onflow/fcl @onflow/types
 ```
 
 Those deps:
 
-- `@onflow/fcl@alpha` is the latest build of FCL. It is currently stable and will be out of alpha very soon.
+- `@onflow/fcl` is the latest build of FCL.
 - `@onflow/types` is a conversion layer between javascript and cadence (Flows native language). These are used when we want to pass javascript into Cadence transactions and scripts.
 
 ## Configuration

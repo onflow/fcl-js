@@ -129,7 +129,7 @@ function unauthenticate() {
   send(NAME, DEL_CURRENT_USER)
 }
 
-const mmmh = authz => ({
+const normalizePreAuthzResponse = authz => ({
   f_type: "PreAuthzResponse",
   f_vsn: "1.0.0",
   proposer: (authz || {}).proposer,
@@ -137,16 +137,13 @@ const mmmh = authz => ({
   authorization: (authz || {}).authorization || [],
 })
 
-function rawr(authz) {
-  console.log("rawr(authz)[A]", {authz})
-  const resp = mmmh(authz)
+function resolvePreAuthz(authz) {
+  const resp = normalizePreAuthzResponse(authz)
   const axs = []
 
   if (resp.proposer != null) axs.push(["PROPOSER", resp.proposer])
   for (let az of resp.payer || []) axs.push(["PAYER", az])
   for (let az of resp.authorization || []) axs.push(["AUTHORIZER", az])
-
-  console.log("rawr(authz)[B]", {authz, axs, resp})
 
   var result = axs.map(([role, az]) => ({
     tempId: [az.identity.address, az.identity.keyId].join("|"),
@@ -161,7 +158,6 @@ function rawr(authz) {
       authorizer: role === "AUTHORIZER",
     },
   }))
-  console.log("rawr(authz)[x]", {authz, result})
   return result
 }
 
@@ -176,7 +172,7 @@ async function authorization(account) {
       ...account,
       tempId: "CURRENT_USER",
       async resolve(account, preSignable) {
-        return rawr(await execService(preAuthz, preSignable))
+        return resolvePreAuthz(await execService(preAuthz, preSignable))
       },
     }
   }
