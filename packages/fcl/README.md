@@ -20,7 +20,7 @@ npm install --save @onflow/fcl @onflow/types
 
 Having trouble with something? Reach out to us on [Discord](https://discord.gg/k6cZ7QC), we are more than happy to help.
 
-- [Quick Start](#flow-app-quickstart) -- From zero to users interacting with the Flow blockchain using a dapp you made.
+- [Quick Start](#flow-app-quickstart) -- From zero to users interacting with the Flow blockchain using a app you made.
 
 # Flow App Quickstart
 
@@ -36,9 +36,9 @@ In this quickstart you will:
   - [ ] `@onflow/fcl` can talk to Flow (Testnet).
   - [ ] `@onflow/fcl` can talk to FCL Wallet Discovery.
   - [ ] That it knows about our profile contract.
-- [ ] Use `@onflow/fcl` to authenticate using a Flow (Testnet) Account via a discoverd wallet.
+- [ ] Use `@onflow/fcl` to authenticate using a Flow (Testnet) Account via a discovered wallet.
 - [ ] Talk about resource initialization.
-- [ ] Use a script to check if the current acount has a profile resource initialized.
+- [ ] Use a script to check if the current account has a profile resource initialized.
 - [ ] Use a transaction to initialize a profile.
 - [ ] Query an accounts profile if its there.
 - [ ] Use a transaction to update a profile
@@ -129,9 +129,9 @@ We should now be able to check off the following:
   - [x] `@onflow/fcl` can talk to Flow (Testnet).
   - [x] `@onflow/fcl` can talk to FCL Wallet Discovery.
   - [x] That it knows about our profile contract.
-- [ ] Use `@onflow/fcl` to authenticate using a Flow (Testnet) Account via a discoverd wallet.
+- [ ] Use `@onflow/fcl` to authenticate using a Flow (Testnet) Account via a discovered wallet.
 - [ ] Talk about resource initialization.
-- [ ] Use a script to check if the current acount has a profile resource initialized.
+- [ ] Use a script to check if the current account has a profile resource initialized.
 - [ ] Use a transaction to initialize a profile.
 - [ ] Query an accounts profile if its there.
 - [ ] Use a transaction to update a profile
@@ -186,13 +186,13 @@ export function AuthCluster() {
 There is a lot going on in there, we should take a closer look, in particular at the following:
 
 - `fcl.currentUser().subscribe(setUser)`
-- `fcl.unathenticate`
+- `fcl.unauthenticate`
 - `fcl.logIn` and `fcl.signUp`
 
 ### `fcl.currentUser().subscribe(setUser)`
 
-Internally and conceptually FCL sort of uses the actor model (as much as anything in really javascript can...), this allows us to reactively subscribe to things, like in this instance, when the current user changes from being unauthenticated to authenticated.
-`fcl.currentUser()` returns us the Current Users actor, for the purposes of this guide we can think of it this way: `fcl.currentUser()` is going to return to us an object that has all the thigns we can do with a current user.
+Internally and conceptually FCL sort of uses the actor model (as much as anything in javascript really can...), this allows us to reactively subscribe to things, like in this instance, when the current user changes from being unauthenticated to authenticated.
+`fcl.currentUser()` returns us the Current Users actor, for the purposes of this guide we can think of it this way: `fcl.currentUser()` is going to return to us an object that has all the things we can do with a current user.
 One of the things we can do with a Current User is subscribe to its state, passing it a callback function. This means that anytime the state of the current user changes, our callback will be invoked with the current users current state.
 This callback is invoked immediately as soon as we subscribe, but do to how `react`, its `useState` and `useEffect` hooks work we need to be sure to give ourselves some default values.
 
@@ -235,9 +235,9 @@ We should now be able to check off the following:
   - [x] `@onflow/fcl` can talk to Flow (Testnet).
   - [x] `@onflow/fcl` can talk to FCL Wallet Discovery.
   - [x] That it knows about our profile contract.
-- [x] Use `@onflow/fcl` to authenticate using a Flow (Testnet) Account via a discoverd wallet.
+- [x] Use `@onflow/fcl` to authenticate using a Flow (Testnet) Account via a discovered wallet.
 - [ ] Talk about resource initialization.
-- [ ] Use a script to check if the current acount has a profile resource initialized.
+- [ ] Use a script to check if the current account has a profile resource initialized.
 - [ ] Use a transaction to initialize a profile.
 - [ ] Query an accounts profile if its there.
 - [ ] Use a transaction to update a profile
@@ -247,9 +247,9 @@ We should now be able to check off the following:
 
 ## Flow Contracts
 
-I've started to think of Flow Contracts as statefull modules, and have been trying to break them down into a concept which I have been calling Micro Contracts.
+I've started to think of Flow Contracts as stateful modules, and have been trying to break them down into a concept which I have been calling Micro Contracts.
 To me a Micro Contract is a smaller self contained contract that does a single thing real well, and should be re-usable across various applications with out an additional instance of it being deployed.
-As our Flow ecosystem grows and evolves hopefully the more of these building blocks become available, allowing you as the app developers to build on the shoulders of giants, enabling you to focus on the logic that makes your application/contracts special.
+As our Flow ecosystem grows and evolves hopefully the more of these building blocks become available, allowing you as the app developer to build on the shoulders of giants, enabling you to focus on the logic that makes your application/contracts special.
 
 The rest of this guide is going to focus on a Profile contract that you can find at [https://flow-view-source.com/testnet/account/0xba1132bc08f82fe2/contract/Profile](https://flow-view-source.com/testnet/account/0xba1132bc08f82fe2/contract/Profile).
 
@@ -260,16 +260,16 @@ Not only that but using it should be easy enough to use in this quick start guid
 Now there is **something very important** that you as an application developer needs to keep in mind when developing on Flow.
 Generally speaking, Flow Accounts need to have a resource, from a contract, in their storage, in order to interact with said contract.
 **We don't get to silently slip this resource into their storage, the user needs to actively authorize this action.**
-This resource is usually where we store the accounts speciic data (that statefull part of statefull modules), it also generally acts as the interface into the contract itself.
+This resource is usually where we store the accounts specific data (that stateful part of stateful modules), it also generally acts as the interface into the contract itself.
 If we were to use the Profile contract as an example, the resource the Flow Account needs to have acts as the storage where we keep the Profiles details, it also exposes functionality for the owner of the resource to update those details.
 
-It's often not enough to only have the resource, we often need a publically accessible interface too. This publically accessible interface in Cadence terms is called a capability, and is usually a sub-set of what the resource is able to do.
+It's often not enough to only have the resource, we often need a publicly accessible interface too. This publicly accessible interface in Cadence terms is called a capability, and is usually a sub-set of what the resource is able to do.
 In the case of the Profile contract, this public capability is what allows our application to read the profiles information without the flow account authorizing our access ever time, meaning we don't ever need to store a copy of their info.
 
-We would usuall call setting up a Flow Account with a contracts resources and additional capabilities "Initialization".
+We would usual call setting up a Flow Account with a contracts resources and additional capabilities "Initialization".
 As a Flow Application Developer you will need to think about this sort of thing a lot and figure out what this means for your applications UX.
 
-:tada: Contrats!! Their is so much more to learn about the above, but for now the important bit is to remember that your users need to authorize the initialization of your contracts into their Flow Accounts.
+:tada: Congrats!! Their is so much more to learn about the above, but for now the important bit is to remember that your users need to authorize the initialization of resources from your contracts into their Flow Accounts.
 
 We should now be able to check off the following:
 
@@ -277,9 +277,9 @@ We should now be able to check off the following:
   - [x] `@onflow/fcl` can talk to Flow (Testnet).
   - [x] `@onflow/fcl` can talk to FCL Wallet Discovery.
   - [x] That it knows about our profile contract.
-- [x] Use `@onflow/fcl` to authenticate using a Flow (Testnet) Account via a discoverd wallet.
+- [x] Use `@onflow/fcl` to authenticate using a Flow (Testnet) Account via a discovered wallet.
 - [x] Talk about resource initialization.
-- [ ] Use a script to check if the current acount has a profile resource initialized.
+- [ ] Use a script to check if the current account has a profile resource initialized.
 - [ ] Use a transaction to initialize a profile.
 - [ ] Query an accounts profile if its there.
 - [ ] Use a transaction to update a profile
@@ -289,7 +289,7 @@ We should now be able to check off the following:
 
 ## FCL and scripts
 
-In FCL, I almost always start of writing a script like this: `fcl.send([]).then(fcl.decode)`. `fcl.send()` takes an array that lets us describe what we want our script to be, and `fcl.decode` is going to parse out the return value from our script and turn it into javascript values.
+In FCL, I almost always start off writing a script like this: `fcl.send([]).then(fcl.decode)`. `fcl.send()` takes an array that lets us describe what we want our script to be, and `fcl.decode` is going to parse out the return value from our script and turn it into javascript values.
 
 Our first script isn't going to have anything to do with our Profile contract, its going to use Cadence, to add two numbers. We are going to hardcode in these numbers to start with, and then pass them in as arguments.
 Let's look at our first script.
@@ -300,18 +300,16 @@ import * as fcl from "@onflow/fcl"
 await fcl
   .send([
     fcl.script`
-    pub fun main(): Int {
-      return 5 + 4
-    }
-  `,
+      pub fun main(): Int {
+        return 5 + 4
+      }
+    `,
   ])
   .then(fcl.decode)
 ```
 
 In Cadence scripts, `pub fun main()` is what gets invoked, in this case it is returning an integer (`Int`).
 `fcl.send` sends our script to the chain (via our configured access node) and then `fcl.decode` is decoding the response which should return `9` in this case.
-
-> TIP: If you want to try this out, [flow-view-source](https://flow-view-source.com/testnet/account/0xba1132bc08f82fe2/contract/Profile) exposes both `fcl` and `t` in the console. Try pasting the above (sans-import) snippet in its console.
 
 The above snipped is fine as a starting point, but we can do so much more here, like replacing those magic numbers with script arguments.
 
@@ -322,10 +320,10 @@ import * as t from "@onflow/types"
 await fcl
   .send([
     fcl.script`
-    pub fun main(a: Int, b: Int): Int {
-      return a + b
-    }
-  `,
+      pub fun main(a: Int, b: Int): Int {
+        return a + b
+      }
+    `,
     fcl.args([
       fcl.arg(5, t.Int), // a
       fcl.arg(4, t.Int), // b
@@ -335,9 +333,12 @@ await fcl
 ```
 
 In the above we have changed `pub fun main(): Int` to `pub fun main(a: Int, b: Int): Int`, this tells Cadence to expect to arguments, in this case both are integers.
-`fcl.args([])` allows us to pass in arguments to our Cadence script, the order matters here, the first argument in the array is going to be the first argument to our `main` function.
+`fcl.args([])` allows us to pass in arguments to our Cadence script.
+The order of arguments matters here, the first argument in the array is going to be the first argument to our `main` function.
 We then see two `fcl.arg(value, t.Int)` calls passed to `fcl.args([])`, the first will be our `a` argument, and the second will be our `b` argument.
-That `t.Int` needs to match the arguments type decloration in Cadence, there is a corresponding `t.*` for every Cadence Type.
+That `t.Int` needs to match the arguments type declaration in Cadence, there is a corresponding `t.*` for every Cadence Type.
+
+> TIP: If you want to try this out, [flow-view-source](https://flow-view-source.com/testnet/account/0xba1132bc08f82fe2/contract/Profile) exposes both `fcl` and `t` in the console. Try pasting the above (sans-import) snippet in its console.
 
 I just so happen to know that the [Rawr (testnet) at 0xba1132bc08f82fe2](https://flow-view-source.com/testnet/account/0xba1132bc08f82fe2/contract/Rawr) contract has this add functionality that we are currently using.
 Let's import the Rawr contract and use its `add` function instead of writing out our bespoke implementation.
@@ -349,12 +350,12 @@ import * as t from "@onflow/types"
 await fcl
   .send([
     fcl.script`
-    import Rawr from 0xba1132bc08f82fe2
+      import Rawr from 0xba1132bc08f82fe2
 
-    pub fun main(a: Int, b: Int): Int {
-      return Rawr.add(a: a, b: b)
-    }
-  `,
+      pub fun main(a: Int, b: Int): Int {
+        return Rawr.add(a: a, b: b)
+      }
+    `,
     fcl.args([
       fcl.arg(5, t.Int), // a
       fcl.arg(4, t.Int), // b
@@ -364,7 +365,7 @@ await fcl
 ```
 
 So at this point we should be able to import contracts, and execute scripts against them. Lets apply this new found knowledge against our profile contract.
-I know for a fact that `0xba1132bc08f82fe2` (It also happens to be where the Profile contract is deployed) has a profile, so lets see if we query the chain for it.
+I know for a fact that `0xba1132bc08f82fe2` (It also happens to be where the Profile contract is deployed) has a profile, so let's see if we can query the chain for it.
 
 ```javascript
 import * as fcl from "@onflow/fcl"
@@ -373,12 +374,12 @@ import * as t from "@onflow/types"
 await fcl
   .send([
     fcl.script`
-    import Profile from 0xba1132bc08f82fe2
+      import Profile from 0xba1132bc08f82fe2
 
-    pub fun main(address: Address): Profile.ReadOnly? {
-      return Profile.read(address)
-    }
-  `,
+      pub fun main(address: Address): Profile.ReadOnly? {
+        return Profile.read(address)
+      }
+    `,
     fcl.args([
       fcl.arg("0xba1132bc08f82fe2", t.Address), // <-- t.Address this time :)
     ]),
@@ -401,14 +402,14 @@ We should get back something like this:
 
 A lot of work has been done in the [Profile](https://flow-view-source.com/testnet/account/0xba1132bc08f82fe2/contract/Profile) contract, to make interacting with it from a web app and FCL a nicer experience, I would highly recommend having a look through it, there are a lot of small lessons in there.
 
-:tada: Congrats!! You just queried a Flow Account on the Flow Blockchain for a Profile thats rules were defined in a contract.
+:tada: Congrats!! You just queried a Flow Account on the Flow Blockchain for a Profile, that's rules were defined in a contract.
 
 ## Checking if the Flow Account is initialized with the Profile
 
-Not all Flow Accounts are going to have a profile though, if you are new to Flow your account right now probably doesn't have one, so being able to check if an account is initialized and then being able initialize an account is extremely important. That is what we will cover
+Not all Flow Accounts are going to have a profile though, if you are new to Flow your account right now probably doesn't have one, so being able to check if an account is initialized and then being able initialize an account is extremely important. That is what we will cover next.
 
 Let's start by creating a directory for our Flow Scripts and Transactions. I generally like to call this directory `flow`, name my scripts with `*.script.js` and name my transactions with `*.tx.js`.
-Our first scipt is going to check if a supplied address is initialized with a profile.
+Our first script is going to check if an account specified by a supplied address is initialized with a profile.
 
 ```sh
 mkdir ./src/flow
@@ -430,12 +431,12 @@ export async function isInitialized(address) {
   return fcl
     .send([
       fcl.script`
-      import Profile from 0xProfile
+        import Profile from 0xProfile
 
-      pub fun main(address: Address): Bool {
-        return Profile.check(address)
-      }
-    `,
+        pub fun main(address: Address): Bool {
+          return Profile.check(address)
+        }
+      `,
       fcl.args([fcl.arg(addres, t.Address)]),
     ])
     .then(fcl.decode)
@@ -444,9 +445,9 @@ export async function isInitialized(address) {
 
 Something new was introduced in the above file, we used `0xProfile` instead of `0xba1132bc08f82fe2` in the import statement.
 Way way way back at the start of this guide we added in the configuration `config().put("0xProfile", "0xba1132bc08f82fe2")`, it turns out that when we are using FCL, that configuration allows us to pull the corresponding addresses from any configuration value where its key starts with `0x`.
-This is super convienient when you move from one environment/chain to another, all you should need to do is update your environment variables to reflect your new environment/chain, none of you code should need to change.
+This is super convenient when you move from one environment/chain to another, all you should need to do is update your environment variables to reflect your new environment/chain, none of you code should need to change.
 
-Other than that newly introduced import, hopefully the above is looking familliar to you now. Let's put this aside for now and move onto how to initialize an account with a Profile.
+Other than that newly introduced import, hopefully the above is looking familiar to you now. Let's put this aside for now and move onto how to initialize an account with a Profile.
 
 :tada: Congrats!! You now have a re-usable script that you can use to check if an account is initialized.
 
@@ -456,9 +457,9 @@ We should now be able to check off the following:
   - [x] `@onflow/fcl` can talk to Flow (Testnet).
   - [x] `@onflow/fcl` can talk to FCL Wallet Discovery.
   - [x] That it knows about our profile contract.
-- [x] Use `@onflow/fcl` to authenticate using a Flow (Testnet) Account via a discoverd wallet.
+- [x] Use `@onflow/fcl` to authenticate using a Flow (Testnet) Account via a discovered wallet.
 - [x] Talk about resource initialization.
-- [x] Use a script to check if the current acount has a profile resource initialized.
+- [x] Use a script to check if the current account has a profile resource initialized.
 - [ ] Use a transaction to initialize a profile.
 - [ ] Query an accounts profile if its there.
 - [ ] Use a transaction to update a profile
@@ -473,7 +474,7 @@ You need a transaction when you want to permanently change the state of the Flow
 Those three aspects we call roles and are as follows, the payer, the proposer, and authorizers (one for each owner of state).
 The most common intent will be that the Current User is responsible for all three roles, and by extension the wallet.
 What we need is the Current User to Authorize its participation as all three of the roles (payer, proposer, authorizer).
-Luckliy for us FCL makes this pretty easy, `fcl.currentUser()` has an `authorization` function that can be used to do just that.
+Luckily for us FCL makes this pretty easy, `fcl.currentUser()` has an `authorization` function that can be used to do just that.
 You will need `fcl.currentUser().authorization` in almost every standard transaction, usually multiple times, because of this we have aliased it to `fcl.authz`.
 
 Transactions also require a computation limit. This value will eventually be tied to the cost to the payer of the transaction, its in your best interest to keep it as low as possible.
@@ -540,11 +541,11 @@ if we assume that the actual cadence code was copy-pasted from the contract, the
 
 - `fcl.authz` -- we have already talked about this above, its an alias for `fcl.currentUser().authorization`.
 - `fcl.payer(fcl.authz)`, `fcl.proposer(fcl.authz)` -- These are saying the current user is responsible for the payer and proposer roles.
-- `fcl.authorizations([fcl.authz])` -- this means that our current user is authorizing the transaction to modifiy the state of things it owns (storage and public capabilities in this case), we gain access to this permission via the first `AuthAccount` passed into the prepare statement of our transaction.
+- `fcl.authorizations([fcl.authz])` -- this means that our current user is authorizing the transaction to modify the state of things it owns (storage and public capabilities in this case), we gain access to this permission via the first `AuthAccount` passed into the prepare statement of our transaction.
 - `fcl.tx(txId)` -- This is a new actor we havent seen before, it keeps track of transaction statuses, in this case for the transaction we just submitted to the chain
 - `fcl.tx(txId).onceSealed()` -- This is a promise that will resolve once our change is permanently represented by the chain. It can also error if something goes wrong.
 
-:tada: Congrats!! We now have a function we can all to initialize the current users account with a Profile
+:tada: Congrats!! We now have a function we can call to initialize the current users account with a Profile
 
 We should now be able to check off the following:
 
@@ -552,9 +553,9 @@ We should now be able to check off the following:
   - [x] `@onflow/fcl` can talk to Flow (Testnet).
   - [x] `@onflow/fcl` can talk to FCL Wallet Discovery.
   - [x] That it knows about our profile contract.
-- [x] Use `@onflow/fcl` to authenticate using a Flow (Testnet) Account via a discoverd wallet.
+- [x] Use `@onflow/fcl` to authenticate using a Flow (Testnet) Account via a discovered wallet.
 - [x] Talk about resource initialization.
-- [x] Use a script to check if the current acount has a profile resource initialized.
+- [x] Use a script to check if the current account has a profile resource initialized.
 - [x] Use a transaction to initialize a profile.
 - [ ] Query an accounts profile if its there.
 - [ ] Use a transaction to update a profile
@@ -590,7 +591,7 @@ export async function fetchProfile(address) {
 }
 ```
 
-:tada: Congrats!! We now have a function we can fetch an accounts Profile if it has one
+:tada: Congrats!! We now have a function we can call to fetch an accounts Profile if it has one
 
 We should now be able to check off the following:
 
@@ -598,9 +599,9 @@ We should now be able to check off the following:
   - [x] `@onflow/fcl` can talk to Flow (Testnet).
   - [x] `@onflow/fcl` can talk to FCL Wallet Discovery.
   - [x] That it knows about our profile contract.
-- [x] Use `@onflow/fcl` to authenticate using a Flow (Testnet) Account via a discoverd wallet.
+- [x] Use `@onflow/fcl` to authenticate using a Flow (Testnet) Account via a discovered wallet.
 - [x] Talk about resource initialization.
-- [x] Use a script to check if the current acount has a profile resource initialized.
+- [x] Use a script to check if the current account has a profile resource initialized.
 - [x] Use a transaction to initialize a profile.
 - [x] Query an accounts profile if its there.
 - [ ] Use a transaction to update a profile
@@ -610,7 +611,7 @@ We should now be able to check off the following:
 
 ## Updating a profile
 
-Updating a piece of information in a profile is a transction, the contract has an example of it, and explains a bit better what you can do with it ([Link for the Lazy](https://flow-view-source.com/testnet/account/0xba1132bc08f82fe2/contract/Profile)), so we wont go into all that much detail here.
+Updating a piece of information in a profile is a transaction, the contract has an example of it, and explains a bit better what you can do with it ([Link for the Lazy](https://flow-view-source.com/testnet/account/0xba1132bc08f82fe2/contract/Profile)), so we wont go into all that much detail here.
 But you should start to see a pattern with transactions:
 
 - They always have cadence
@@ -618,7 +619,7 @@ But you should start to see a pattern with transactions:
 - They always have a payer and proposer
 - They usually have authorizations
 - Payer, proposer, and first authorization are more often than not the current user
-- The more complex the transaction the higher the comput limit
+- The more complex the transaction the higher the compute limit
 
 Initialization transactions are often the most scary looking, while also probably the most similar between contracts.
 Other transactions like the following that will live in `./src/flow/profile-set-name.tx.js` generally will borrow a resource from the AuthAccount and do some action on the resource.
@@ -673,9 +674,9 @@ We should now be able to check off the following:
   - [x] `@onflow/fcl` can talk to Flow (Testnet).
   - [x] `@onflow/fcl` can talk to FCL Wallet Discovery.
   - [x] That it knows about our profile contract.
-- [x] Use `@onflow/fcl` to authenticate using a Flow (Testnet) Account via a discoverd wallet.
+- [x] Use `@onflow/fcl` to authenticate using a Flow (Testnet) Account via a discovered wallet.
 - [x] Talk about resource initialization.
-- [x] Use a script to check if the current acount has a profile resource initialized.
+- [x] Use a script to check if the current account has a profile resource initialized.
 - [x] Use a transaction to initialize a profile.
 - [x] Query an accounts profile if its there.
 - [x] Use a transaction to update a profile
@@ -714,9 +715,9 @@ I think that checks everything else off of our list:
   - [x] `@onflow/fcl` can talk to Flow (Testnet).
   - [x] `@onflow/fcl` can talk to FCL Wallet Discovery.
   - [x] That it knows about our profile contract.
-- [x] Use `@onflow/fcl` to authenticate using a Flow (Testnet) Account via a discoverd wallet.
+- [x] Use `@onflow/fcl` to authenticate using a Flow (Testnet) Account via a discovered wallet.
 - [x] Talk about resource initialization.
-- [x] Use a script to check if the current acount has a profile resource initialized.
+- [x] Use a script to check if the current account has a profile resource initialized.
 - [x] Use a transaction to initialize a profile.
 - [x] Query an accounts profile if its there.
 - [x] Use a transaction to update a profile
