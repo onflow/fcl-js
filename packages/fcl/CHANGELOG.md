@@ -2,9 +2,13 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
-### 0.0.67-alpha.43 - 2020-12-11 
+### 0.0.67 - 2021-01-14
 
-- 2020-12-11 -- Disables setting keyId in fetch signatures 
+- 2021-01-14 -- General Cleanup
+
+### 0.0.67-alpha.43 - 2020-12-11
+
+- 2020-12-11 -- Disables setting keyId in fetch signatures
 
 ### 0.0.67-alpha.42 - 2020-12-11
 
