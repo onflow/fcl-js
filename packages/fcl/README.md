@@ -437,7 +437,7 @@ export async function isInitialized(address) {
           return Profile.check(address)
         }
       `,
-      fcl.args([fcl.arg(addres, t.Address)]),
+      fcl.args([fcl.arg(address, t.Address)]),
     ])
     .then(fcl.decode)
 }
@@ -568,7 +568,7 @@ We should now be able to check off the following:
 We actually saw this already, back when we were talking about scripts. So this section is really going to be about adding it to a file we will call `./src/flow/fetch-profile.script.js`
 
 ```javascript
-// File: ./src/flow/fetch-profile.scripts.js
+// File: ./src/flow/fetch-profile.script.js
 
 import * as fcl from "@onflow/fcl"
 import * as t from "@onflow/types"
@@ -726,3 +726,566 @@ I think that checks everything else off of our list:
   - [x] Path to Flow (Mainnet)
 
 If you have any questions, concerns, comments, just want to say hi, we would love to have your company in our [discord](https://discord.gg/k6cZ7QC).
+
+## Extra Credit - Adding interface that uses our functions.
+
+Originally, this guide ended here, but a couple people on our [discord](https://discord.gg/k6cZ7QC) said they really wanted this guide to include using these functions we spent so much time making.
+This next part is a little more opinionated and your mileage may very, but we are going to continue on by adding some hooks that encapsulate certain ideas and then use those hooks in our view.
+
+In this extra credit section we are going to do the following:
+
+- [ ] Install and setup [recoil](recoiljs.org) for state
+- [ ] Create a current user hook
+- [ ] Use the current user hook in our AuthCluster component
+- [ ] Create an init hook
+- [ ] Create a InitCluster component
+- [ ] Create a profile hook
+- [ ] Create a ProfileCluster component
+
+Let's dig into it.
+
+## Recoil
+
+Recoil is a state management library for React, it will allow us to have a little more control over when we do certain actions as well as enable us to encapsulate and isolate the ability to talk to things on chain.
+
+The plan is to have a hook that covers each of the three concepts we currently have (Current User, Initialization, Profile) each hook will give us access to the corresponding data, as well as expose functions which we can use to interact with the data.
+
+The first thing we need to do with Recoil is install it.
+
+```sh
+yarn add recoil
+```
+
+Once installed we need to add in the RecoilProvider to the root of our application. I am going to replace `./src/index.js` with the following:
+
+```javascript
+// File: ./src/index.js
+
+import "./config"
+import React from "react"
+import ReactDOM from "react-dom"
+import App from "./App"
+import reportWebVitals from "./reportWebVitals"
+import {RecoilRoot} from "recoil"
+
+ReactDOM.render(
+  <React.StrictMode>
+    <RecoilRoot>
+      <App />
+    </RecoilRoot>
+  </React.StrictMode>,
+  document.getElementById("root")
+)
+
+reportWebVitals()
+```
+
+In the above we are importing the `RecoilRoot` provider and then nesting aour `App` component in it.
+
+:tada: Congrats!! Recoil should now be installed and setup.
+
+Our Extra Credit checklist is now looking like this:
+
+- [x] Install and setup [recoil](recoiljs.org) for state
+- [ ] Create a current user hook
+- [ ] Use the current user hook in our AuthCluster component
+- [ ] Create an init hook
+- [ ] Create a InitCluster component
+- [ ] Create a profile hook
+- [ ] Create a ProfileCluster component
+
+## Current User Hook
+
+For this one I sort of want to start backwards, that is by talking about the outcome I want to see from our hook.
+
+Currently we have an `AuthCluster` component that lives in `./src/auth-cluster.js`, I am wanting to change it so its code looks like this:
+
+```javascript
+// File: ./src/auth-cluster.js
+
+import React, {useState, useEffect} from "react"
+import {useCurrentUser} from "./hooks/current-user"
+
+function WithAuth() {
+  const cu = useCurrentUser()
+
+  return !cu.loggedIn ? null : (
+    <div>
+      <span>{cu.addr ?? "No Address"}</span>
+      <button onClick={cu.logOut}>Log Out</button>
+    </div>
+  )
+}
+
+function SansAuth() {
+  const cu = useCurrentUser()
+
+  return cu.loggedIn ? null : (
+    <div>
+      <button onClick={cu.logIn}>Log In</button>
+      <button onClick={cu.signUp}>Sign Up</button>
+    </div>
+  )
+}
+
+export function AuthCluster() {
+  return (
+    <>
+      <WithAuth />
+      <SansAuth />
+    </>
+  )
+}
+```
+
+The difference is nuanced, but the actual consumption of this on another level to what we had before.
+The `useCurrentUser` hook we are going to create hides all the implementation details regarding what we can do with the current user, exposing a standardized set of tools in which we can consume and interact with the current user.
+
+Our `WithAuth` and `SansAuth` components are completely self-contained and don't require any additional props at this point, a quality I personally try to strive for, as they know when they should render and what they can do when they render, all that is left is deciding where they should redner if they decide they should.
+
+A good next step is creating our new `useCurrentUser` hook. We wills start by creating a `./hooks/` directory and then adding in a `./hooks/current-user.js` file for our hook to live in.
+
+```sh
+mkdir ./src/hooks
+touch ./src/hooks/current-user.js
+```
+
+After we have the files our current user hook will look something like this:
+
+```javascript
+// File: ./src/hooks/current-user.js
+
+import {useEffect} from "react"
+import {atom, useSetRecoilState, useRecoilValue} from "recoil"
+import * as fcl from "@onflow/fcl"
+
+// This is a recoil atom (https://recoiljs.org/docs/api-reference/core/atom)
+// You can think of it as a unique reactive node with our current users state.
+// Our hook is going to subscribe to this state.
+export const $currentUser = atom({
+  key: "CURRENT_USER", // Atoms needs a unique key, we can only ever call the atom function once with this key.
+  default: {addr: null, cid: null, loggedIn: null},
+})
+
+// We only want a single place where we subscribe and update our
+// current users atom state. That will be this component that we will
+// add to the root of our application.
+export function CurrentUserSubscription() {
+  const setCurrentUser = useSetRecoilState($currentUser)
+  useEffect(() => fcl.currentUser().subscribe(setCurrentUser), [setCurrentUser])
+  return null
+}
+
+// Our actual hook, most of the work is happening
+// in our CurrentUserSubscription component so that allows
+// this hook to focus on decorating the current user value
+// we receive with some helper functions
+export function useCurrentUser() {
+  const currentUser = useRecoilValue($currentUser)
+
+  return {
+    ...currentUser,
+    logOut: fcl.unauthenticate,
+    logIn: fcl.logIn,
+    signUp: fcl.signUp,
+  }
+}
+```
+
+The last thing we need to do here is to add our `CurrentUserSubscription` to the root of our application (./src/index.js)
+
+```javascript
+// File: ./src/index.js
+
+import "./config"
+import React from "react"
+import ReactDOM from "react-dom"
+import App from "./App"
+import reportWebVitals from "./reportWebVitals"
+import {RecoilRoot} from "recoil"
+import {CurrentUserSubscription} from "./hooks/current-user"
+
+ReactDOM.render(
+  <React.StrictMode>
+    <RecoilRoot>
+      <CurrentUserSubscription />
+      <App />
+    </RecoilRoot>
+  </React.StrictMode>,
+  document.getElementById("root")
+)
+
+reportWebVitals()
+```
+
+:tada: Congrats!! We now have a `useCurrentUser` hook and we are using it in our `AuthCluster` component.
+
+Our Extra Credit checklist is now looking like this:
+
+- [x] Install and setup [recoil](recoiljs.org) for state
+- [x] Create a current user hook
+- [x] Use the current user hook in our AuthCluster component
+- [ ] Create an init hook
+- [ ] Create a InitCluster component
+- [ ] Create a profile hook
+- [ ] Create a ProfileCluster component
+
+## Init Hook
+
+Our next hook will check if an address is initialized with the profile contract, it should also expose a function that will allow us to initialize the Profile.
+
+I usually like to think about how these hooks will be consumed so once again I think starting from the component that consumes them seems like the right place to start again.
+
+Below is a new component `InitCluster`, it will live at `./src/init-cluster.js`. It will take an address as a prop, and check if it is initialized.
+If it isn't initialized and the address is for the current user we should give the current user a button they can press to initialize the account, triggering our init-account transaction.
+Once the account is initialized the component should reactively reflect that.
+While we are doing the transaction we should display to the user that the app is doing something.
+
+```javascript
+// File: ./src/init-cluster.js
+
+import {useEffect} from "react"
+import {useCurrentUser} from "./hooks/current-user"
+import {useInit} from "./hooks/init"
+
+const fmtBool = bool => (bool ? "yes" : "no")
+
+export function InitCluster({address}) {
+  const cu = useCurrentUser()
+  const init = useInit(address)
+  useEffect(() => init.check(), [address])
+
+  if (address == null) return null
+
+  return (
+    <div>
+      <h3>Init?: {address}</h3>
+      <ul>
+        <li>
+          <strong>Profile: </strong>
+          {init.isIdle && <span>{fmtBool(init.profile)}</span>}
+          {!init.profile && cu.addr === address && init.isIdle && (
+            <button disabled={init.isProcessing} onClick={init.exec}>
+              Initialize Profile
+            </button>
+          )}
+          {init.isProcessing && <span>PROCESSING</span>}
+        </li>
+      </ul>
+    </div>
+  )
+}
+```
+
+The above code introduces our `useInit` hook, which will live in `./src/hooks/init.js`.
+It has two independent states, one that knows if the profile is initialized and another that knows if our hook is doing some sort of work.
+We are using `atomFamily` as there can be more than once instance of an Init Atom (multiple addresses).
+
+First we need to create the file our new hook will live in.
+
+```sh
+touch ./src/hooks/init.js
+```
+
+Then we can write our new `useInit` hook in our new file: `./src/hooks/init.js`
+
+```javascript
+// File: ./src/hooks/init.js
+
+import {atomFamily, useRecoilState} from "recoil"
+import {isInitialized} from "../flow/is-initialized.script"
+import {initAccount} from "../flow/init-account.tx"
+
+const IDLE = "IDLE"
+const PROCESSING = "PROCESSING"
+
+// atomFamily is a function that returns a memoized function
+// that constructs atoms. This will allow us to define the
+// behaviour of the atom once and then construct new atoms
+// based on an id (in this case the address)
+const $profile = atomFamily({
+  key: "INIT::PROFILE::STATE",
+  default: null,
+})
+
+const $profileStatus = atomFamily({
+  key: "INIT::PROFILE::STATUS",
+  default: PROCESSING,
+})
+
+export function useInit(address) {
+  const [profile, setProfile] = useRecoilState($profile(address))
+  const [status, setStatus] = useRecoilState($profileStatus(address))
+
+  // Will check if the supplied address is initialized
+  async function check() {
+    setStatus(PROCESSING)
+    // isInitialized is going to throw an error if the address is null
+    // so we will want to avoid that. Because react hooks can't dynamically
+    // added and removed from a react node, you will find this sort of logic
+    // will leak into our hooks, we could get around this by changing our
+    // isInitialized function return null instead of throwing an error.
+    if (address != null) await isInitialized(address).then(setProfile)
+    setStatus(IDLE)
+  }
+
+  // will attempt at initializing the current address
+  async function exec() {
+    setStatus(PROCESSING)
+    await initAccount()
+    setStatus(IDLE)
+    await check()
+  }
+
+  return {
+    profile,
+    check,
+    exec,
+    isIdle: status === IDLE,
+    isProcessing: status === PROCESSING,
+    status,
+    IDLE,
+    PROCESSING,
+  }
+}
+```
+
+Now that we have an `InitCluster` component that consumes our new `useInit` hook, lets add it into our `App` component.
+One thing to note here is the use of the current users address, we are going to use that address for the rest of the guide
+as it is readily available to us, but any address should work and our component will adapt and only show what its supposed to show.
+
+```javascript
+// File: ./src/App.js
+
+import React from "react"
+import {AuthCluster} from "./auth-cluster"
+import {InitCluster} from "./init-cluster"
+import {useCurrentUser} from "./hooks/current-user"
+
+export default function App() {
+  const cu = useCurrentUser()
+
+  return (
+    <div>
+      <AuthCluster />
+      <InitCluster address={cu.addr} />
+    </div>
+  )
+}
+```
+
+:tada: Congrats!! We now have a `useInit` hook and a `InitCluster` component.
+
+Our Extra Credit checklist is now looking like this:
+
+- [x] Install and setup [recoil](recoiljs.org) for state
+- [x] Create a current user hook
+- [x] Use the current user hook in our AuthCluster component
+- [x] Create an init hook
+- [x] Create a InitCluster component
+- [ ] Create a profile hook
+- [ ] Create a ProfileCluster component
+
+## The Profile
+
+Once again let's start with the consumption by creating a `ProfileCluster` component.
+It should:
+
+- accept an address as a prop
+- fetch the profile from the chain
+- deal with the address not having a profile
+- if the profile is for the current user, allow the current user to update the name
+
+First step should be creating the file that will be the home of our new component:
+
+```sh
+touch ./src/profile-cluster.js
+```
+
+Then add the code to the file, this one is a bit more complicated but is really just more of the same, we consume the hooks and use the functionality they provide.
+
+```javascript
+// File: ./src/profile-cluster.js
+
+import {useState, useEffect} from "react"
+import {useCurrentUser} from "./hooks/current-user"
+import {useProfile} from "./hooks/profile"
+
+function ProfileForm() {
+  const cu = useCurrentUser()
+  const profile = useProfile(cu.addr)
+  const [name, setName] = useState("")
+  useEffect(() => {
+    setName(profile.name)
+  }, [profile.name])
+
+  const submit = () => {
+    profile.setName(name)
+  }
+
+  return (
+    <div>
+      <input value={name} onChange={e => setName(e.target.value)} />
+      {profile.isIdle && <button onClick={submit}>Update Name</button>}
+      {profile.isProcessing && <span>PROCESSING</span>}
+    </div>
+  )
+}
+
+export function ProfileCluster({address}) {
+  const profile = useProfile(address)
+  useEffect(() => profile.refetch(), [address])
+  if (address == null) return null
+
+  return (
+    <div>
+      <h3>Profile: {address}</h3>
+      {profile.isCurrentUser && <ProfileForm />}
+      <ul>
+        <li>
+          <img
+            src={profile.avatar}
+            width="50px"
+            height="50px"
+            alt={profile.name}
+          />
+        </li>
+        <li>
+          <strong>Name: </strong>
+          <span>{profile.name}</span>
+          {profile.isCurrentUser && <span> -You</span>}
+          {profile.isProcessing && <span>PROCESSING</span>}
+        </li>
+        <li>
+          <strong>Color: </strong>
+          <span>{profile.color}</span>
+        </li>
+        <li>
+          <strong>Info: </strong>
+          <span>{profile.info}</span>
+        </li>
+      </ul>
+    </div>
+  )
+}
+```
+
+Then we move onto the hook.
+`useProfile` is once again using an `atomFamily` from recoil, this is allowing us to have multiple atoms (one per address supplied).
+It has two pieces of state, one is the status, the other being the profiles details.
+If an account doesn't have a profile we are defaulting it to a Anonymous default profile.
+
+```javascript
+// File: ./src/hooks/profile.js
+
+import {atomFamily, useRecoilState} from "recoil"
+import {fetchProfile} from "../flow/fetch-profile.script"
+import {setName as profileSetName} from "../flow/profile-set-name.tx"
+import {useCurrentUser} from "./current-user"
+
+const DEFAULT = {
+  name: "Anon",
+  color: "#232323",
+  info: "...",
+  avatar: "https://avatars.onflow.org/avatar/pew",
+}
+const IDLE = "IDLE"
+const PROCESSING = "PROCESSING"
+
+const $profile = atomFamily({
+  key: "PROFILE::STATE",
+  default: DEFAULT,
+})
+
+const $status = atomFamily({
+  key: "PROFILE::STATUS",
+  default: PROCESSING,
+})
+
+export function useProfile(address) {
+  const cu = useCurrentUser()
+  const [profile, setProfile] = useRecoilState($profile(address))
+  const [status, setStatus] = useRecoilState($status(address))
+
+  async function refetch() {
+    setStatus(PROCESSING)
+    await fetchProfile(address)
+      .then(profile => {
+        if (profile == null) return profile
+        if (profile.avatar === "") profile.avatar = DEFAULT.avatar
+        if (profile.info === "") profile.info = DEFAULT.info
+        return profile
+      })
+      .then(setProfile)
+    setStatus(IDLE)
+  }
+
+  async function setName(name) {
+    setStatus(PROCESSING)
+    await profileSetName(name)
+    setStatus(IDLE)
+    await refetch()
+  }
+
+  return {
+    ...(profile ?? DEFAULT),
+    status,
+    isCurrentUser: address === cu.addr,
+    setName,
+    refetch,
+    IDLE,
+    PROCESSING,
+    isIdle: status === IDLE,
+    isProcessing: status === PROCESSING,
+  }
+}
+```
+
+Now that we have a `ProfileCluster` component and a `useProfile` hook its time to use it.
+Let's update our `./src/App.js` file to show the current users profile, as well as show two additional profiles, one for my account which has a profile, and another for an account that I know does not have a profile.
+
+```javascript
+// File: ./src/App.js
+
+import React from "react"
+import {AuthCluster} from "./auth-cluster"
+import {InitCluster} from "./init-cluster"
+import {ProfileCluster} from "./profile-cluster"
+import {useCurrentUser} from "./hooks/current-user"
+
+export default function App() {
+  const cu = useCurrentUser()
+
+  return (
+    <div>
+      <AuthCluster />
+      <InitCluster address={cu.addr} />
+      <ProfileCluster address={cu.addr} />
+      <ProfileCluster address="0xba1132bc08f82fe2" />
+      <ProfileCluster address="0xf117a8efa34ffd58" />
+    </div>
+  )
+}
+```
+
+:tada: Congrats!! We now have a `useProfile` hook and a `ProfileCluster` component.
+
+Our Extra Credit checklist should now be complete and look like this:
+
+- [x] Install and setup [recoil](recoiljs.org) for state
+- [x] Create a current user hook
+- [x] Use the current user hook in our AuthCluster component
+- [x] Create an init hook
+- [x] Create a InitCluster component
+- [x] Create a profile hook
+- [x] Create a ProfileCluster component
+
+## Closing Note on the Extra Credit Section
+
+There are so many additional improvements that can be made in the code we just did.
+Most of those improvements come down to being smarter about when and how we query the data, pushing them into the category or how we deal with state.
+We do (while not very efficient) have a working application that can interact with the Flow (testnet) Blockchain.
+I am sure there are better/alternative ways of doing this sort of stuff, eventually there always are, so I would recommend using the above as a starting point instead of a gospel.
+Try and think about the different mechanisms available to you and take the good that aligns with your vision and drop the bad that doesn't align with it.
+
+We are eager to see what you come up with, as mentioned before, if you have any questions, concerns, comments, just want to say hi, we would love to have your company in our [discord](https://discord.gg/k6cZ7QC).
