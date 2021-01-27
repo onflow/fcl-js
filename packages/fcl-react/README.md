@@ -1,6 +1,9 @@
-# @onflow/fcl-react
+---
+title: FCL + React
+description: Helpful FCL Hooks for React
+---
 
-Helpful FCL Hooks for React
+
 
 **IMPORTANT** This currently requires `npm install --save @onflow/fcl@alpha`
 
