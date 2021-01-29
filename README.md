@@ -42,18 +42,18 @@ Please note, that some code provided - e.g. `Object.fromEntries` - will require 
 
 - Higher Level
 
-  - [x] [`@onflow/fcl`](./packages/fcl) _(mvp)_ -- A high level dapp framework built on top an opinionated use of the sdk.
-  - [x] [`@onflow/sdk`](./packages/sdk) _(mvp)_ -- Tools that enable developers to [build](./packages/sdk/src/build), [resolve](./packages/sdk/src/resolve), [send](./packages/send) and [decode](./packages/decode) interactions with the Flow blockchain.
-  - [ ] [`@onflow/types`](./packages/types) _(early wip)_ -- Type casting interaction params to cadence compatible values.
-  - [x] [`@onflow/send`](./packages/send) _(mvp)_ -- Send [interactions](./packages/interaction) to the Flow blockchain get [responses](./packages/response) back.
-  - [x] [`@onflow/decode`](./packages/decode) _(mvp)_ -- Decodes [responses](./packages/response) return values into Javascript (No need for an ABI).
+  - [x] [`@onflow/fcl`](./packages/fcl) -- A high level dapp framework built on top an opinionated use of the sdk.
+  - [x] [`@onflow/sdk`](./packages/sdk) -- Tools that enable developers to [build](./packages/sdk/src/build), [resolve](./packages/sdk/src/resolve), [send](./packages/send) and [decode](./packages/decode) interactions with the Flow blockchain.
+  - [x] [`@onflow/types`](./packages/types) -- Type casting interaction params to cadence compatible values.
+  - [x] [`@onflow/send`](./packages/send) -- Send [interactions](./packages/interaction) to the Flow blockchain get [responses](./packages/response) back.
+  - [x] [`@onflow/decode`](./packages/decode) -- Decodes [responses](./packages/response) return values into Javascript (No need for an ABI).
 
 - Lower Level
 
-  - [x] [`@onflow/protobuf`](./packages/protobuf) _(mvp)_ -- Dependency of [send](./packages/protobuf). Provides transport between the browser and the Flow blockchain.
-  - [x] [`@onflow/interaction`](./packages/interaction) _(mvp)_ -- A data structure that can be [built](./packages/sdk/src/build), [resolved](./packages/sdk/src/resolve) and [sent](./packages/send) to the Flow blockchain.
-  - [x] [`@onflow/response`](./packages/response) _(mvp)_ -- A data structure that represents a response from the Flow blockchain. If the interaction returns something, it can be [decoded](./package/decode) without something like an ABI.
-  - [x] [`@onflow/encode`](./packages/encode) _(mvp)_ -- Transactions needs signatures, this module knows how to create the values that get signed.
+  - [x] [`@onflow/protobuf`](./packages/protobuf) -- Dependency of [send](./packages/protobuf). Provides transport between the browser and the Flow blockchain.
+  - [x] [`@onflow/interaction`](./packages/interaction) -- A data structure that can be [built](./packages/sdk/src/build), [resolved](./packages/sdk/src/resolve) and [sent](./packages/send) to the Flow blockchain.
+  - [x] [`@onflow/response`](./packages/response) -- A data structure that represents a response from the Flow blockchain. If the interaction returns something, it can be [decoded](./package/decode) without something like an ABI.
+  - [x] [`@onflow/encode`](./packages/encode) -- Transactions needs signatures, this module knows how to create the values that get signed.
 
 - Development Tools
-  - [x] [`@onflow/dev-wallet`](./packages/dev-wallet) _(mvp)_ -- A local fcl wallet provider for local development and testing.
+  - [x] [`@onflow/dev-wallet`](./packages/dev-wallet) -- A local fcl wallet provider for local development and testing.
