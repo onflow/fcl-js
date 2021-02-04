@@ -14,7 +14,7 @@
   },
   "main": "server/index.js",
   "dependencies": {
-    "@onflow/fcl": "0.0.56",
+    "@onflow/fcl": "0.0.67",
     "@onflow/fcl-config": "0.0.1",
     "@onflow/types": "0.0.1",
     "argon2": "0.27.0",
