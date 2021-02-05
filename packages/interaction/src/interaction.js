@@ -1,20 +1,23 @@
-export const UNKNOWN /*                 */ = 0b0000000001
-export const SCRIPT /*                  */ = 0b0000000010
-export const TRANSACTION /*             */ = 0b0000000100
-export const GET_TRANSACTION_STATUS /*  */ = 0b0000001000
-export const GET_ACCOUNT /*             */ = 0b0000010000
-export const GET_EVENTS /*              */ = 0b0000100000
-export const GET_LATEST_BLOCK /*        */ = 0b0001000000
-export const PING /*                    */ = 0b0010000000
-export const GET_BLOCK_BY_ID /*         */ = 0b0100000000
-export const GET_BLOCK_BY_HEIGHT /*     */ = 0b1000000000
+export const UNKNOWN /*                       */ = "UNKNOWN"
+export const SCRIPT /*                        */ = "SCRIPT"
+export const TRANSACTION /*                   */ = "TRANSACTION"
+export const GET_TRANSACTION_STATUS /*        */ = "GET_TRANSACTION_STATUS"
+export const GET_ACCOUNT /*                   */ = "GET_ACCOUNT"
+export const GET_EVENTS /*                    */ = "GET_EVENTS"
+export const GET_LATEST_BLOCK /*              */ = "GET_LATEST_BLOCK"
+export const PING /*                          */ = "PING"
+export const GET_TRANSACTION /*               */ = "GET_TRANSACTION"
+export const GET_BLOCK_BY_ID /*               */ = "GET_BLOCK_BY_ID"
+export const GET_BLOCK_BY_HEIGHT /*           */ = "GET_BLOCK_BY_HEIGHT"
+export const GET_BLOCK /*                     */ = "GET_BLOCK"
+export const GET_BLOCK_HEADER /*              */ = "GET_BLOCK_HEADER"
 
-export const BAD /* */ = 0b01
-export const OK /*  */ = 0b10
+export const BAD /* */ = "BAD"
+export const OK /*  */ = "OK"
 
-export const ACCOUNT /* */ = 0b001
-export const PARAM /*   */ = 0b010
-export const ARGUMENT /**/ = 0b100
+export const ACCOUNT /* */ = "ACCOUNT"
+export const PARAM /*   */ = "PARAM"
+export const ARGUMENT /**/ = "ARGUMENT"
 
 const ACCT = `{
   "kind":${ACCOUNT},
@@ -76,18 +79,20 @@ const IX = `{
   "events": {
     "eventType":null,
     "start":null,
-    "end":null
+    "end":null,
+    "blockIds":[]
   },
-  "latestBlock": {
-    "isSealed":null
+  "transaction": {
+    id:null
   },
   "block": {
-    "isSealed":null,
     "id":null,
-    "height":null
+    "height":null,
+    "isSealed":null
   },
-  "accountAddr":null,
-  "transactionId":null
+  "account": {
+    "addr":null
+  }
 }`
 
 const KEYS = new Set(Object.keys(JSON.parse(IX)))
@@ -187,37 +192,41 @@ export const makeArgument = (arg) => (ix) => {
   return Ok(ix)
 }
 
-export const makeUnknown /*               */ = makeIx(UNKNOWN)
-export const makeScript /*                */ = makeIx(SCRIPT)
-export const makeTransaction /*           */ = makeIx(TRANSACTION)
-export const makeGetTransactionStatus /*  */ = makeIx(GET_TRANSACTION_STATUS)
-export const makeGetAccount /*            */ = makeIx(GET_ACCOUNT)
-export const makeGetEvents /*             */ = makeIx(GET_EVENTS)
-export const makeGetLatestBlock /*        */ = makeIx(GET_LATEST_BLOCK)
-export const makeGetBlockById /*          */ = makeIx(GET_BLOCK_BY_ID)
-export const makeGetBlockByHeight /*      */ = makeIx(GET_BLOCK_BY_HEIGHT)
-export const makePing /*                  */ = makeIx(PING)
+export const makeUnknown /*                 */ = makeIx(UNKNOWN)
+export const makeScript /*                  */ = makeIx(SCRIPT)
+export const makeTransaction /*             */ = makeIx(TRANSACTION)
+export const makeGetTransactionStatus /*    */ = makeIx(GET_TRANSACTION_STATUS)
+export const makeGetAccount /*              */ = makeIx(GET_ACCOUNT)
+export const makeGetEvents /*               */ = makeIx(GET_EVENTS)
+export const makeGetLatestBlock /*          */ = makeIx(GET_LATEST_BLOCK)
+export const makeGetBlockById /*            */ = makeIx(GET_BLOCK_BY_ID)
+export const makeGetBlockByHeight /*        */ = makeIx(GET_BLOCK_BY_HEIGHT)
+export const makePing /*                    */ = makeIx(PING)
+export const makeGetBlock /*                */ = makeIx(GET_BLOCK)
+export const makeGetBlockHeader /*          */ = makeIx(GET_BLOCK_HEADER)
 
-const is = (wat) => (ix) => Boolean(ix.tag & wat)
+const is = (wat) => (ix) => ix.tag === wat
 
-export const isUnknown /*               */ = is(UNKNOWN)
-export const isScript /*                */ = is(SCRIPT)
-export const isTransaction /*           */ = is(TRANSACTION)
-export const isGetTransactionStatus /*  */ = is(GET_TRANSACTION_STATUS)
-export const isGetAccount /*            */ = is(GET_ACCOUNT)
-export const isGetEvents /*             */ = is(GET_EVENTS)
-export const isGetLatestBlock /*        */ = is(GET_LATEST_BLOCK)
-export const isGetBlockById /*          */ = is(GET_BLOCK_BY_ID)
-export const isGetBlockByHeight /*      */ = is(GET_BLOCK_BY_HEIGHT)
-export const isPing /*                  */ = is(PING)
+export const isUnknown /*                 */ = is(UNKNOWN)
+export const isScript /*                  */ = is(SCRIPT)
+export const isTransaction /*             */ = is(TRANSACTION)
+export const isGetTransactionStatus /*    */ = is(GET_TRANSACTION_STATUS)
+export const isGetAccount /*              */ = is(GET_ACCOUNT)
+export const isGetEvents /*               */ = is(GET_EVENTS)
+export const isGetLatestBlock /*          */ = is(GET_LATEST_BLOCK)
+export const isGetBlockById /*            */ = is(GET_BLOCK_BY_ID)
+export const isGetBlockByHeight /*        */ = is(GET_BLOCK_BY_HEIGHT)
+export const isPing /*                    */ = is(PING)
+export const isGetBlock /*                */ = is(GET_BLOCK)
+export const isGetBlockHeader /*          */ = is(GET_BLOCK_HEADER)
 
-export const isOk /*  */ = (ix) => Boolean(ix.status & OK)
-export const isBad /* */ = (ix) => Boolean(ix.status & BAD)
+export const isOk /*  */ = (ix) => ix.status === OK
+export const isBad /* */ = (ix) => ix.status === BAD
 export const why /*   */ = (ix) => ix.reason
 
-export const isAccount /*  */ = (account) => Boolean(account.kind & ACCOUNT)
-export const isParam /*    */ = (param) => Boolean(param.kind & PARAM)
-export const isArgument /* */ = (argument) => Boolean(argument.kind & ARGUMENT)
+export const isAccount /*  */ = (account) => account.kind === ACCOUNT
+export const isParam /*    */ = (param) => param.kind === PARAM
+export const isArgument /* */ = (argument) => argument.kind === ARGUMENT
 
 const hardMode = (ix) => {
   for (let key of Object.keys(ix)) {
@@ -228,14 +237,19 @@ const hardMode = (ix) => {
 }
 
 const recPipe = async (ix, fns = []) => {
-  ix = hardMode(await ix)
-  if (isBad(ix) || !fns.length) return ix
-  const [hd, ...rest] = fns
-  const cur = await hd
-  if (isFn(cur)) return recPipe(cur(ix), rest)
-  if (isNull(cur) || !cur) return recPipe(ix, rest)
-  if (isInteraction(cur)) return recPipe(cur, rest)
-  throw new Error("Invalid Interaction Composition")
+  try {
+    ix = hardMode(await ix)
+    if (isBad(ix)) throw new Error(ix.reason)
+    if (!fns.length) return ix
+    const [hd, ...rest] = fns
+    const cur = await hd
+    if (isFn(cur)) return recPipe(cur(ix), rest)
+    if (isNull(cur) || !cur) return recPipe(ix, rest)
+    if (isInteraction(cur)) return recPipe(cur, rest)
+    throw new Error("Invalid Interaction Composition")
+  } catch (e) {
+    throw e
+  }
 }
 
 export const pipe = (...args) => {
