@@ -1,6 +1,6 @@
 {
   "name": "@onflow/decode",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "description": "Flow SDK Decoder",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
