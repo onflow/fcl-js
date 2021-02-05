@@ -2,6 +2,11 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.0.9 -- 2022-02-02
+
+- 2021-02-02 -- Deprecates opts as first argument
+- 2021-02-02 -- Adds isSealed flag as first argument
+
 ### 0.0.8 -- 2020-12-11
 
 - 2020-12-11 -- VSN `@onflow/sdk-send` 0.0.10
