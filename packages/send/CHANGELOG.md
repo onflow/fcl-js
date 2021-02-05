@@ -2,6 +2,15 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.0.36 - 2021-02-02
+
+- 2021-02-02 -- `sendExecuteScript` now supports ExecuteScriptAtBlockIDRequest and ExecuteScriptAtBlockHeightRequest along with ExecuteScriptAtLatestBlockRequest
+- 2021-02-02 -- `sendGetAccount` uses address from updated interaction object shape
+- 2021-02-02 -- `sendGetBlockByHeight` uses height from updated interaction object shape
+- 2021-02-02 -- Adds `sendGetBlockHeader`. Now supports GetBlockHeaderByIDRequest, GetBlockHeaderByHeightRequest and GetLatestBlockHeaderRequest.
+- 2021-02-02 -- `sendGetEvents` now supports GetEventsForHeightRangeRequest and GetEventsForBlockIDsRequest
+- 2021-02-02 -- `sendGetTransaction` uses transactionId from updated interaction object shape
+
 ### 0.0.35 - 2020-12-11
 
 - 2020-12-11 -- `sendGetAccount` parses multiple contracts on a queried account onto response object.

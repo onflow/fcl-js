@@ -9,7 +9,7 @@ export async function sendGetTransactionStatus(ix, opts = {}) {
   ix = await ix
 
   const req = new GetTransactionRequest()
-  req.setId(hexBuffer(ix.transactionId))
+  req.setId(hexBuffer(ix.transaction.id))
 
   const res = await unary(opts.node, AccessAPI.GetTransactionResult, req)
 
