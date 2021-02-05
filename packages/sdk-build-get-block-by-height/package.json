@@ -1,6 +1,6 @@
 {
   "name": "@onflow/sdk-build-get-block-by-height",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Flow JS SDK Builder -- Get Block By Height",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
