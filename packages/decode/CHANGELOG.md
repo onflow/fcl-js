@@ -2,6 +2,10 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.0.11 -- 2021-02-02
+
+- 2021-02-02 -- Adds support for Block Header decoding
+
 ### 0.0.9 -- 2020-10-28
 
 - 2020-10-28 -- Safer code decoding for account

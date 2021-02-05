@@ -161,6 +161,8 @@ export const decodeResponse = async (response, customDecoders = {}) => {
     return response.account
   } else if (response.block) {
     return response.block
+  } else if (response.blockHeader) {
+    return response.blockHeader
   } else if (response.latestBlock) {
     latestBlockDeprecationNotice()
     return response.latestBlock
