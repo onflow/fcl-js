@@ -2,6 +2,10 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.0.1 -- 2020-02-02
+
+- 2021-02-02 -- **BREAKING** Deprecates this builder.
+
 ### 0.0.0 -- 2020-09-29
 
 - 2020-09-29 -- Initial port from sdk.
