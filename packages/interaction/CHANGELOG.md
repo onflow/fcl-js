@@ -2,6 +2,10 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.0.11 -- 2021-02-02
+
+- 2021-02-02 -- Updates interaction ADT shape.
+
 ### 0.0.10 -- 2020-08-25
 
 - 2020-08-25 -- Adds `block` field to the `interaction` ADT and deprecates `latestBlock` field.
