@@ -2,6 +2,10 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.0.2 -- 2021-02-02
+
+- 2021-02-02 -- Updates builder to set values on updated interaction object shape
+
 ### 0.0.1 -- 2020-10-08
 
 - 2020-10-08 -- Auto cast addresses with sansPrefix

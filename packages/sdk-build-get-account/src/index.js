@@ -5,7 +5,7 @@ export function getAccount(addr) {
   return pipe([
     makeGetAccount,
     ix => {
-      ix.accountAddr = sansPrefix(addr)
+      ix.account.addr = sansPrefix(addr)
       return Ok(ix)
     }
   ])
