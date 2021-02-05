@@ -1,16 +1,25 @@
-import {GetBlockByHeightRequest, AccessAPI} from "@onflow/protobuf"
+import {GetBlockByIDRequest, GetBlockByHeightRequest, GetLatestBlockRequest, AccessAPI} from "@onflow/protobuf"
 import {response} from "@onflow/response"
 import {unary} from "./unary"
 
 const u8ToHex = u8 => Buffer.from(u8).toString("hex")
+const hexBuffer = hex => Buffer.from(hex, "hex")
 
-export async function sendGetBlockByHeight(ix, opts = {}) {
+export async function sendGetBlock(ix, opts = {}) {
   ix = await ix
 
-  const req = new GetBlockByHeightRequest()
-  req.setHeight(Number(ix.block.height))
+  let req
+  if (ix.block.id) {
+    req = new GetBlockByIDRequest()
+    req.setBlockId(hexBuffer(ix.block.id))
+  } else if (ix.block.height) {
+    req = new GetBlockByHeightRequest()
+    req.setBlockHeight(Number(ix.block.height))
+  } else {
+    req = new GetLatestBlockRequest()
+  }
 
-  const res = await unary(opts.node, AccessAPI.GetBlockByHeight, req)
+  const res = await unary(opts.node, AccessAPI.GetBlockByID, req)
 
   const block = res.getBlock()
 

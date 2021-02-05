@@ -1,16 +1,24 @@
-import {GetEventsForHeightRangeRequest, AccessAPI} from "@onflow/protobuf"
+import {GetEventsForHeightRangeRequest, GetEventsForBlockIDsRequest, AccessAPI} from "@onflow/protobuf"
 import {response} from "@onflow/response"
 import {unary} from "./unary"
 
 const u8ToHex = u8 => Buffer.from(u8).toString("hex")
+const hexBuffer = hex => Buffer.from(hex, "hex")
 
 export async function sendGetEvents(ix, opts = {}) {
   ix = await ix
-
-  const req = new GetEventsForHeightRangeRequest()
+ 
+  const req = ix.events.start ? new GetEventsForHeightRangeRequest() : new GetEventsForBlockIDsRequest()
   req.setType(ix.events.eventType)
-  req.setStartHeight(Number(ix.events.start))
-  req.setEndHeight(Number(ix.events.end))
+  
+  if (ix.events.start) {
+    req.setStartHeight(Number(ix.events.start))
+    req.setEndHeight(Number(ix.events.end))
+  } else {
+    ix.events.blockIds.forEach(id =>
+      req.addBlockIds(hexBuffer(id))
+    )
+  }
 
   const res = await unary(opts.node, AccessAPI.GetEventsForHeightRange, req)
 
@@ -21,11 +29,13 @@ export async function sendGetEvents(ix, opts = {}) {
   ret.events = results.reduce((blocks, result) => {
     const blockId = result.getBlockId()
     const blockHeight = result.getBlockHeight()
+    const blockTimestamp = result.getBlockTimestamp()
     const events = result.getEventsList()
     events.forEach(event => {
       blocks.push({
         blockId,
         blockHeight,
+        blockTimestamp,
         type: event.getType(),
         transactionId: u8ToHex(event.getTransactionId_asU8()),
         transactionIndex: event.getTransactionIndex(),

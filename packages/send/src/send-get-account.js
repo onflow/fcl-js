@@ -1,4 +1,4 @@
-import {GetAccountRequest, AccessAPI} from "@onflow/protobuf"
+import {GetAccountAtLatestBlockRequest, GetAccountAtBlockHeightRequest, AccessAPI} from "@onflow/protobuf"
 import {response} from "@onflow/response"
 import {sansPrefix, withPrefix} from "@onflow/util-address"
 import {unary} from "./unary"
@@ -12,8 +12,9 @@ const addressBuffer = addr => paddedHexBuffer(addr, 8)
 export async function sendGetAccount(ix, opts = {}) {
   ix = await ix
 
-  const req = new GetAccountRequest()
-  req.setAddress(addressBuffer(sansPrefix(ix.accountAddr)))
+  const req = ix.block.height ? new GetAccountAtBlockHeightRequest() : new GetAccountAtLatestBlockRequest()
+  if (ix.block.height) req.setHeight(Number(ix.block.height))
+  req.setAddress(addressBuffer(sansPrefix(ix.account.addr)))
 
   const res = await unary(opts.node, AccessAPI.GetAccount, req)
 
