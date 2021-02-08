@@ -4,7 +4,7 @@ This module provides an ADT (Abstract Data Type) that represents the underlying 
 
 # Status
 
-- **Last Updated:** April 21st 2020
+- **Last Updated:** Feb 2nd 2021
 - **Stable:** Yes
 - **Risk of Breaking Change:** Medium
 
@@ -32,6 +32,11 @@ Currently the Access Node recognizes 7 different types of interactions.
 - **GetEvents** requests events of a supplied type
 - **GetLatestBlock** requests the latest block
 - **Ping** requests a pong
+- **GetTransaction** requests a transaction
+- **GetBlockById** requests a block by an ID **deprecated**, use GetBlock instead
+- **GetBlockByHeight** requests a block by a height **deprecated**, use GetBlock instead
+- **GetBlock** requests a block
+- **GetBlockHeader** requests a block header
 
 ## Internal Properties
 
@@ -86,14 +91,15 @@ Currently the Access Node recognizes 7 different types of interactions.
   - **start** _(getEvents)_ `Int` -- events after this
   - **end** _(getEvents)_ `Int` -- events before this
   - **eventType** _(getEvents)_ `String` -- type of events to get
-- **latestBlock** _(getLatestBlock)_ `**DEPRECATED**` (see: https://github.com/onflow/flow-js-sdk/blob/master/packages/interaction/WARNINGS.md#0001-Deprecating-latestBlock-field)
-  - **isSealed** _(getLatestBlock)_ `Boolean` -- determines if the criteria for the latest block is sealed or not `**DEPRECATED**` (see: https://github.com/onflow/flow-js-sdk/blob/master/packages/interaction/WARNINGS.md#0001-Deprecating-latestBlock-field)
+  - **blockIds** _(getEvents)_ `Array<String>` -- array of block ids to get events from
 - **block** _(getLatestBlock, getBlockByHeight, getBlockById)_
   - **isSealed** _(getLatestBlock)_ `Boolean` -- determines if the criteria for the latest block is sealed or not.
   - **height** _(getBlockByHeight)_ `Int` -- sets the height for the block to get.
   - **id** _(getBlockById)_ `Int` -- sets the id for the block to get.
-- **accountAddr** _(getAccount)_ `String` -- the account to get
-- **transactionId** _(getTransactionStatus)_ `String` -- the transaction to get
+- **account**
+  - **addr** _(getAccount) `String` -- address of the account to get
+- **transaction**
+  - **id** _(getTransaction) -- id of the transaction to get
 - **assigns** _(all)_ `{[String]:Any}` -- a pocket to hold things in while building and resolving
 
 
@@ -101,23 +107,28 @@ Currently the Access Node recognizes 7 different types of interactions.
 
 **Tags**
 
-|                  Label | asInt | asBin      |
-| ---------------------: | :---: | :--------- |
-|                UNKNOWN |   1   | 0b00000001 |
-|                 SCRIPT |   2   | 0b00000010 |
-|            TRANSACTION |   4   | 0b00000100 |
-| GET_TRANSACTION_STATUS |   8   | 0b00001000 |
-|            GET_ACCOUNT |  16   | 0b00010000 |
-|             GET_EVENTS |  32   | 0b00100000 |
-|       GET_LATEST_BLOCK |  64   | 0b01000000 |
-|                   PING |  128  | 0b10000000 |
+|                  Label  | asString                    |
+| ----------------------: | :-------------------------: |
+|                UNKNOWN  | UNKNOWN                     |
+|                 SCRIPT  | SCRIPT                      |
+|            TRANSACTION  | TRANSACTION | 0b00000100    |
+| GET_TRANSACTION_STATUS  | GET_TRANSACTION_STATUS      |
+|            GET_ACCOUNT  | GET_ACCOUNT                 |
+|             GET_EVENTS  | GET_EVENTS                  |
+|       GET_LATEST_BLOCK  | GET_LATEST_BLOCK            |
+|                   PING  | PING                        |
+|                   PING  | PING                        |
+|        GET_TRANSACTION  | GET_TRANSACTION             |
+|        GET_BLOCK_BY_ID  | GET_BLOCK_BY_ID             |
+|        GET_BLOCK        | GET_BLOCK                   |
+|        GET_BLOCK_HEADER | GET_BLOCK_HEADER            |
 
 **Status**
 
-| Label | asInt | asBin |
-| ----: | :---: | :---- |
-|   BAD |   1   | 0b01  |
-|    OK |   2   | 0b10  |
+| Label | asString |
+| ----: | :------: |
+|   BAD |   BAD    |
+|    OK |   OK     |
 
 ## Exposed Functions
 
@@ -152,9 +163,21 @@ Currently the Access Node recognizes 7 different types of interactions.
   - **GetLatestBlock**
     - [makeGetLatestBlock/1](#makegetlatestblock1-and-isgetlatestblock1)
     - [isGetLatestBlock/1](#makegetlatestblock1-and-isgetlatestblock1)
+  - **GetBlock**
+    - [makeGeBlock/1](#makegetblock1-and-isgetblock1)
+    - [isGetBlock/1](#makegetblock1-and-isgetblock1)
   - **Ping**
     - [makePing/1](#makeping1-and-isping1)
     - [isPing/1](#makeping1-and-isping1)
+  - **GetTransaction**
+    - [makePing/1](#makegettransaction1-and-isgettransaction1)
+    - [isPing/1](#makegettransaction1-and-isgettransaction1)
+  - **GetBlock**
+    - [makePing/1](#makegetblock1-and-isgetblock1)
+    - [isPing/1](#makegetblock1-and-isgetblock1)
+  - **GetBlockHeader**
+    - [makePing/1](#makegetblockheader1-and-isgetblockheader1)
+    - [isPing/1](#makegetblockheader1-and-isgetblockheader1)
 - **Assigns**
   - [get/3](#get3-put2-update2-and-destory1)
   - [put/2](#get3-put2-update2-and-destory1)
@@ -301,6 +324,36 @@ isGetLatestBlock(makeGetLatestBlock(interaction())) // true
 import {interaction, makePing, isPing} from "@onflow/interaction"
 
 isPing(makePing(interaction())) // true
+```
+
+### `makeGetTransaction/1` and `isGetTransaction/1`
+
+> tags an interaction as a GetTransaction interaction
+
+```javascript
+import {interaction, makeGetTransaction, isGetTransaction} from "@onflow/interaction"
+
+isGetTransaction(makeGetTransaction(interaction())) // true
+```
+
+### `makeGetBlock1` and `isGetBlock/1`
+
+> tags an interaction as a GetBlock interaction
+
+```javascript
+import {interaction, makeGetBlock, isGetBlock} from "@onflow/interaction"
+
+isGetBlock(makeGetBlock(interaction())) // true
+```
+
+### `makeGetBlockHeader/1` and `isGetBlockHeader/1`
+
+> tags an interaction as a GetBlockHeader interaction
+
+```javascript
+import {interaction, makeGetBlockHeader, isGetBlockHeader} from "@onflow/interaction"
+
+isGetBlockHeader(makeGetBlockHeader(interaction())) // true
 ```
 
 ### `get/3`, `put/2`, `update/2` and `destory/1`
