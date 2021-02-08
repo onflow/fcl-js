@@ -111,7 +111,7 @@ Currently the Access Node recognizes 7 different types of interactions.
 | ----------------------: | :-------------------------: |
 |                UNKNOWN  | UNKNOWN                     |
 |                 SCRIPT  | SCRIPT                      |
-|            TRANSACTION  | TRANSACTION | 0b00000100    |
+|            TRANSACTION  | TRANSACTION                 |
 | GET_TRANSACTION_STATUS  | GET_TRANSACTION_STATUS      |
 |            GET_ACCOUNT  | GET_ACCOUNT                 |
 |             GET_EVENTS  | GET_EVENTS                  |
