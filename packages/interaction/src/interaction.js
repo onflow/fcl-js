@@ -20,7 +20,7 @@ export const PARAM /*   */ = "PARAM"
 export const ARGUMENT /**/ = "ARGUMENT"
 
 const ACCT = `{
-  "kind":${ACCOUNT},
+  "kind":"${ACCOUNT}",
   "tempId":null,
   "addr":null,
   "keyId":null,
@@ -37,7 +37,7 @@ const ACCT = `{
 }`
 
 const PRM = `{
-  "kind":${PARAM},
+  "kind":"${PARAM}",
   "tempId":null,
   "key":null,
   "value":null,
@@ -47,7 +47,7 @@ const PRM = `{
 }`
 
 const ARG = `{
-  "kind":${ARGUMENT},
+  "kind":"${ARGUMENT}",
   "tempId":null,
   "value":null,
   "asArgument":null,
@@ -56,9 +56,9 @@ const ARG = `{
 }`
 
 const IX = `{
-  "tag":${UNKNOWN},
+  "tag":"${UNKNOWN}",
   "assigns":{},
-  "status":${OK},
+  "status":"${OK}",
   "reason":null,
   "accounts":{},
   "params":{},
@@ -83,7 +83,7 @@ const IX = `{
     "blockIds":[]
   },
   "transaction": {
-    id:null
+    "id":null
   },
   "block": {
     "id":null,
