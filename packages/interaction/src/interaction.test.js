@@ -138,14 +138,14 @@ describe("Ok vs Bad", () => {
     })
 
     it("golden path -- bad", async () => {
-      const result = await pipe(interaction(), [
-        setA(1),
-        none("sad"),
-        setB(2),
-        exec,
-      ])
-      expect(result.assigns.value).toBe(undefined)
-      expect(isOk(result)).toBe(false)
+      expect((async function() {
+        const result = await pipe(interaction(), [
+          setA(1),
+          none("sad"),
+          setB(2),
+          exec,
+        ])
+      })()).rejects.toThrow("Interaction Error: sad")
     })
 
     it("golden path -- really bad", async () => {
@@ -179,5 +179,12 @@ describe("Ok vs Bad", () => {
       const ix = await pipe(interaction(), [put("count", 5), p4])
       expect(get(ix, "count")).toBe(14)
     })
+  })
+})
+
+describe("ix shape", () => {
+  it("matches snapshot", () => {
+    const ix = interaction()
+    expect(ix).toMatchSnapshot()
   })
 })
