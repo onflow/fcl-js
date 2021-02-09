@@ -239,7 +239,7 @@ const hardMode = (ix) => {
 const recPipe = async (ix, fns = []) => {
   try {
     ix = hardMode(await ix)
-    if (isBad(ix)) throw new Error(ix.reason)
+    if (isBad(ix)) throw new Error(`Interaction Error: ${ix.reason}`)
     if (!fns.length) return ix
     const [hd, ...rest] = fns
     const cur = await hd
