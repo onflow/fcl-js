@@ -1,6 +1,6 @@
 {
   "name": "@onflow/sdk-build-script",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Flow JS SDK Builder -- Script",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
@@ -24,7 +24,7 @@
     "microbundle": "0.12.4"
   },
   "dependencies": {
-    "@onflow/interaction": "0.0.10",
+    "@onflow/interaction": "0.0.11",
     "@onflow/util-template": "0.0.1"
   },
   "source": "src/index.js",

@@ -1,6 +1,6 @@
 {
   "name": "@onflow/sdk-build-get-block",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Flow JS SDK Builder -- Get Block",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
@@ -24,7 +24,7 @@
     "microbundle": "0.12.4"
   },
   "dependencies": {
-    "@onflow/interaction": "0.0.10"
+    "@onflow/interaction": "0.0.11"
   },
   "source": "src/index.js",
   "main": "dist/sdk-build-get-block.js",
