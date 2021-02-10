@@ -12,7 +12,7 @@ test("Golden Path", async () => {
   }))
 
   const ix = await resolveSignatures({
-    tag: 4,
+    tag: "TRANSACTION",
     message: {
       cadence: "foo",
       arguments: [],
