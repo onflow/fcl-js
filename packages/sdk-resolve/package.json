@@ -1,6 +1,6 @@
 {
   "name": "@onflow/sdk-resolve",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "description": "Flow JS SDK Resolver -- Default Resolver",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
@@ -23,13 +23,13 @@
     "microbundle": "0.12.4"
   },
   "dependencies": {
-    "@onflow/interaction": "0.0.10",
-    "@onflow/sdk-resolve-accounts": "0.0.0",
-    "@onflow/sdk-resolve-arguments": "0.0.1",
-    "@onflow/sdk-resolve-cadence": "0.0.1",
-    "@onflow/sdk-resolve-ref-block-id": "0.0.7",
-    "@onflow/sdk-resolve-signatures": "0.0.5",
-    "@onflow/sdk-resolve-validators": "0.0.0"
+    "@onflow/interaction": "0.0.11",
+    "@onflow/sdk-resolve-accounts": "0.0.1",
+    "@onflow/sdk-resolve-arguments": "0.0.2",
+    "@onflow/sdk-resolve-cadence": "0.0.2",
+    "@onflow/sdk-resolve-ref-block-id": "0.0.8",
+    "@onflow/sdk-resolve-signatures": "0.0.6",
+    "@onflow/sdk-resolve-validators": "0.0.1"
   },
   "source": "src/index.js",
   "main": "dist/sdk-resolve.js",

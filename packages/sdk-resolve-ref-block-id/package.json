@@ -1,6 +1,6 @@
 {
   "name": "@onflow/sdk-resolve-ref-block-id",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Flow JS SDK Resolver -- Ref Block Id",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
@@ -23,10 +23,10 @@
     "microbundle": "0.12.4"
   },
   "dependencies": {
-    "@onflow/decode": "0.0.10",
-    "@onflow/interaction": "0.0.10",
-    "@onflow/sdk-build-get-latest-block": "0.0.0",
-    "@onflow/send": "0.0.35"
+    "@onflow/decode": "0.0.11",
+    "@onflow/interaction": "0.0.11",
+    "@onflow/sdk-build-get-latest-block": "0.0.1",
+    "@onflow/send": "0.0.36"
   },
   "source": "src/index.js",
   "main": "dist/sdk-resolve-ref-block-id.js",
