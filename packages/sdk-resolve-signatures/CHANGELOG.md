@@ -2,6 +2,10 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.0.6 -- 2020-02-02
+
+- 2021-02-02 -- VSN `@onflow/interaction` 0.0.10 -> 0.0.11
+
 ### 0.0.5 -- 2020-11-04
 
 - 2020-11-04 -- Adds sansPrefix for addresses being preped for encode
