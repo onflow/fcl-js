@@ -2,6 +2,11 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.0.8 -- 2020-02-02
+
+- 2021-02-02 -- VSN `@onflow/interaction` 0.0.10 -> 0.0.11
+- 2021-02-02 -- VSN `@onflow/sdk-build-get-latest-block` 0.0.0 -> 0.0.2
+
 ### 0.0.7 -- 2020-12-03
 
 - 2020-12-03 -- VSN `@onflow/decode` 0.0.9 -> 0.0.10
