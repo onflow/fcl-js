@@ -9,13 +9,13 @@ describe("address as input", () => {
     const addr = sansPrefix(ADDRESS)
     const result = await getAccount(addr)(interaction())
 
-    expect(result.accountAddr).toBe(sansPrefix(ADDRESS))
+    expect(result.account.addr).toBe(sansPrefix(ADDRESS))
   })
 
   test("withPrefix", async () => {
     const addr = withPrefix(ADDRESS)
     const result = await getAccount(addr)(interaction())
 
-    expect(result.accountAddr).toBe(sansPrefix(ADDRESS))
+    expect(result.account.addr).toBe(sansPrefix(ADDRESS))
   })
 })
