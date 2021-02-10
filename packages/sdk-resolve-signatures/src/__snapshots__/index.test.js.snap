@@ -46,6 +46,6 @@ Object {
   },
   "payer": "foo",
   "proposer": "foo",
-  "tag": 4,
+  "tag": "TRANSACTION",
 }
 `;
