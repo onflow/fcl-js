@@ -1,6 +1,6 @@
 {
   "name": "@onflow/sdk-resolve-cadence",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Flow JS SDK Resolver -- Cadence",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
@@ -23,7 +23,7 @@
     "microbundle": "0.12.4"
   },
   "dependencies": {
-    "@onflow/interaction": "0.0.10"
+    "@onflow/interaction": "0.0.11"
   },
   "source": "src/index.js",
   "main": "dist/sdk-resolve-cadence.js",
