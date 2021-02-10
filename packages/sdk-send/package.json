@@ -1,6 +1,6 @@
 {
   "name": "@onflow/sdk-send",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "description": "Flow JS SDK -- Send interactions to Access Nodes after resolving them with the default resolver.",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
@@ -35,8 +35,8 @@
   },
   "dependencies": {
     "@onflow/config": "0.0.2",
-    "@onflow/interaction": "0.0.10",
-    "@onflow/sdk-resolve": "0.0.10",
-    "@onflow/send": "0.0.35"
+    "@onflow/interaction": "0.0.11",
+    "@onflow/sdk-resolve": "0.0.11",
+    "@onflow/send": "0.0.36"
   }
 }
