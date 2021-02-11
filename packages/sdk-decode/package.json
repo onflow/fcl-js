@@ -1,6 +1,6 @@
 {
   "name": "@onflow/sdk-decode",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Flow JS SDK -- Configurable Decoder for Access Node Responses",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
@@ -35,6 +35,6 @@
   },
   "dependencies": {
     "@onflow/config": "0.0.2",
-    "@onflow/decode": "0.0.10"
+    "@onflow/decode": "0.0.11"
   }
 }
