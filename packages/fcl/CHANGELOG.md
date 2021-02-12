@@ -2,9 +2,9 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
-### 0.0.67 - 2021-01-14
+### 0.0.68-alpha.1 - 2022-02-02
 
-- 2021-01-14 -- General Cleanup
+- 2022-02-02 -- Adds support for new `GetEvents`, `GetBlockHeader`, `GetBlock` interactions.
 
 ### 0.0.67-alpha.43 - 2020-12-11
 
