@@ -2,6 +2,10 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.0.45-alpha.1 -- 2022-02-02
+
+- 2022-02-02 -- Adds support for new `GetEvents`, `GetBlockHeader`, `GetBlock` interactions.
+
 ### 0.0.44 -- 2020-12-11
 
 - 2020-12-11 -- VSN `@onflow/sdk-resolve-ref-block-id` 0.0.0 -> 0.0.7

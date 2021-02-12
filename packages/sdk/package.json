@@ -1,6 +1,6 @@
 {
   "name": "@onflow/sdk",
-  "version": "0.0.45-alpha.1",
+  "version": "0.0.45-alpha.2",
   "description": "Flow SDK",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
@@ -44,6 +44,7 @@
     "@onflow/sdk-build-get-block": "0.0.1",
     "@onflow/sdk-build-get-block-by-height": "0.0.2",
     "@onflow/sdk-build-get-block-by-id": "0.0.2",
+    "@onflow/sdk-build-get-block-header": "0.0.1",
     "@onflow/sdk-build-get-events": "0.0.2",
     "@onflow/sdk-build-get-events-at-block-height-range": "0.0.1",
     "@onflow/sdk-build-get-events-at-block-ids": "0.0.1",
