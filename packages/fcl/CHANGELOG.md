@@ -6,6 +6,10 @@
 
 - 2022-02-02 -- Adds support for new `GetEvents`, `GetBlockHeader`, `GetBlock` interactions.
 
+### 0.0.67 - 2021-01-14
+
+- 2021-01-14 -- General Cleanup
+
 ### 0.0.67-alpha.43 - 2020-12-11
 
 - 2020-12-11 -- Disables setting keyId in fetch signatures
