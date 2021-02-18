@@ -2,7 +2,17 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
-### 0.0.45-alpha.1 -- 2022-02-02
+### 0.0.45-alpha.4 -- 2022-02-02
+
+- 2022-02-18 -- Merged `@onflow/send` into `@onflow/sdk`
+- 2022-02-18 -- Merged `@onflow/decode` into `@onflow/sdk`
+- 2022-02-18 -- Merged `@onflow/encode` into `@onflow/sdk`
+- 2022-02-18 -- Merged `@onflow/interaction` into `@onflow/sdk`
+- 2022-02-18 -- Merged `@onflow/response` into `@onflow/sdk`
+- 2022-02-18 -- Merged all `@onflow/resolve-*` into `@onflow/sdk`
+- 2022-02-18 -- Merged all `@onflow/build-*` into `@onflow/sdk`
+
+### 0.0.45-alpha.[1-3] -- 2022-02-02
 
 - 2022-02-02 -- Adds support for new `GetEvents`, `GetBlockHeader`, `GetBlock` interactions.
 

@@ -1,0 +1,43 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ix shape matches snapshot 1`] = `
+Object {
+  "account": Object {
+    "addr": null,
+  },
+  "accounts": Object {},
+  "arguments": Object {},
+  "assigns": Object {},
+  "authorizations": Array [],
+  "block": Object {
+    "height": null,
+    "id": null,
+    "isSealed": null,
+  },
+  "events": Object {
+    "blockIds": Array [],
+    "end": null,
+    "eventType": null,
+    "start": null,
+  },
+  "message": Object {
+    "arguments": Array [],
+    "authorizations": Array [],
+    "cadence": null,
+    "computLimit": null,
+    "params": Array [],
+    "payer": null,
+    "proposer": null,
+    "refBlock": null,
+  },
+  "params": Object {},
+  "payer": null,
+  "proposer": null,
+  "reason": null,
+  "status": "OK",
+  "tag": "UNKNOWN",
+  "transaction": Object {
+    "id": null,
+  },
+}
+`;
