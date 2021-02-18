@@ -1,4 +1,4 @@
-import {resolveCadence} from "@onflow/sdk-resolve-cadence"
+import {resolveCadence} from "./resolve-cadence.js"
 
 export function resolveParams (ix) {
   console.error(

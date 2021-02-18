@@ -1,8 +1,8 @@
-import {isTransaction, Ok} from "@onflow/interaction"
-import {send} from "@onflow/send"
-import {decodeResponse} from "@onflow/decode"
-import {getAccount} from "@onflow/sdk-build-get-account"
-import {build} from "../build"
+import {isTransaction, Ok} from "../interaction/interaction.js"
+import {send} from "../send/send.js"
+import {decodeResponse} from "../decode/decode.js"
+import {getAccount} from "../build/build-get-account.js"
+import {build} from "../build/build.js"
 
 export const resolveProposerSequenceNumber = ({ node }) => async (ix) => {
   if (!(isTransaction(ix))) return Ok(ix)
