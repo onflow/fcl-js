@@ -1,8 +1,8 @@
 import * as root from "./sdk"
-import * as decode from "@onflow/decode"
-import * as encode from "@onflow/encode"
-import * as interaction from "@onflow/interaction"
-import * as send from "@onflow/send"
+import * as decode from "./decode/decode.js"
+import * as encode from "./encode/encode.js"
+import * as interaction from "./interaction/interaction.js"
+import * as send from "./send/send.js"
 import * as template from "@onflow/util-template"
 
 const interfaceContract = (label, wat) => ([template]) => {

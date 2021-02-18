@@ -1,5 +1,5 @@
-import * as root from "./decode"
-import {decode, decodeResponse} from "./decode"
+import * as root from "./decode.js"
+import {decode, decodeResponse} from "./decode.js"
 
 it("exported interface contract", () => {
   expect(root).toStrictEqual(

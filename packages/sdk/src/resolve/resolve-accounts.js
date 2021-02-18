@@ -1,122 +1,88 @@
-import {pipe, isTransaction, Ok} from "../interaction/interaction.js"
+import {invariant} from "@onflow/util-invariant"
+import {isTransaction} from "../interaction/interaction.js"
 
-const isFn = d => typeof d === "function"
-const isNumber = d => typeof d === "number"
-const isString = d => typeof d === "string"
+const isFn = v => typeof v === "function"
 
-const invariant = (fact, msg, ...rest) => {
-  if (!fact) {
-    const error = new Error(`INVARIANT ${msg}`)
-    error.stack = error.stack
-      .split("\n")
-      .filter(d => !/at invariant/.test(d))
-      .join("\n")
-    console.error("\n\n---\n\n", error, "\n\n", ...rest, "\n\n---\n\n")
+function buildPreSignable(acct, ix) {
+  try {
+    return {
+      f_type: "PreSignable",
+      f_vsn: "1.0.0",
+      roles: acct.role,
+      cadence: ix.message.cadence,
+      args: ix.message.arguments.map(d => ix.arguments[d].asArgument),
+      data: {},
+      interaction: ix,
+    }
+  } catch (error) {
+    console.error("buildPreSignable", error)
     throw error
   }
 }
 
-const accountCanFulfillRoles = account => {
-  if (account.role.proposer) {
-    if (
-      !isString(account.addr) ||
-      !isNumber(account.keyId) ||
-      !isNumber(account.sequenceNum) ||
-      !isFn(account.signingFunction)
-    )
-      return false
-  }
-  if (account.role.payer) {
-    if (
-      !isString(account.addr) ||
-      !isNumber(account.keyId) ||
-      !isFn(account.signingFunction)
-    )
-      return false
-  }
-  if (account.role.authorizer) {
-    if (
-      !isString(account.addr) ||
-      !isNumber(account.keyId) ||
-      !isFn(account.signingFunction)
-    )
-      return false
-  }
-  return true
-}
+async function collectAccounts(ix, accounts, last, depth = 3) {
+  invariant(depth, "Account Resolve Recursion Limit Exceeded", {ix, accounts})
 
-const firstNonNull = (values = []) => values.filter(Boolean)[0] || null
-const firstNonNullKeyId = (values = []) =>
-  typeof values.filter(isNumber)[0] === "number"
-    ? values.filter(isNumber)[0]
-    : null
-const findProposer = (accounts = []) =>
-  accounts.find(d => d.role.proposer) || {}
+  let authorizations = []
+  for (let ax of accounts) {
+    var old = last || ax
+    if (isFn(ax.resolve)) ax = await ax.resolve(ax, buildPreSignable(ax, ix))
 
-const deepMergeAccount = (into, from) => ({
-  kind: firstNonNull([into.kind, from.kind]),
-  tempId: firstNonNull([into.tempId, from.tempId]),
-  addr: firstNonNull([into.addr, from.addr]),
-  keyId: firstNonNullKeyId([into.keyId, from.keyId]),
-  sequenceNum:
-    typeof findProposer([into, from]).sequenceNum === "number"
-      ? findProposer([into, from]).sequenceNum
-      : into.sequenceNum,
-  signature: firstNonNull([into.signature, from.signature]),
-  signingFunction: firstNonNull([into.signingFunction, from.signingFunction]),
-  resolve: firstNonNull([into.resolve, from.resolve]),
-  role: {
-    proposer: into.role.proposer || from.role.proposer,
-    authorizer: into.role.authorizer || from.role.authorizer,
-    payer: into.role.payer || from.role.payer,
-    param: into.role.param || from.role.param,
-  },
-})
-
-export const enforceResolvedAccounts = async ix => {
-  if (!isTransaction(ix)) return Ok(ix)
-  for (let [tempId, account] of Object.entries(ix.accounts)) {
-    if (isFn(account.resolve))
-      ix.accounts[tempId] = await account.resolve(account)
-    invariant(
-      accountCanFulfillRoles(ix.accounts[tempId]),
-      "Account unable to fulfill role",
-      ix.accounts[tempId]
-    )
-  }
-  return Ok(ix)
-}
-
-export const dedupeResolvedAccounts = async ix => {
-  if (!isTransaction(ix)) return Ok(ix)
-  for (let account of Object.values(ix.accounts)) {
-    const cid = `${account.addr}|${account.keyId}`
-    if (ix.accounts[cid] != null) {
-      ix.accounts[cid] = deepMergeAccount(ix.accounts[cid], {
-        tempId: cid,
-        ...account,
-      })
+    if (Array.isArray(ax)) {
+      await collectAccounts(ix, ax, old, depth - 1)
     } else {
-      ix.accounts[cid] = {tempId: cid, ...account}
+      ix.accounts[ax.tempId] = ix.accounts[ax.tempId] || ax
+      ix.accounts[ax.tempId].role.proposer =
+        ix.accounts[ax.tempId].role.proposer || ax.role.proposer
+      ix.accounts[ax.tempId].role.payer =
+        ix.accounts[ax.tempId].role.payer || ax.role.payer
+      ix.accounts[ax.tempId].role.authorizer =
+        ix.accounts[ax.tempId].role.authorizer || ax.role.authorizer
+
+      if (ix.accounts[ax.tempId].role.proposer && ix.proposer === old.tempId) {
+        ix.proposer = ax.tempId
+      }
+
+      if (ix.accounts[ax.tempId].role.payer && ix.payer === old.tempId) {
+        ix.payer = ax.tempId
+      }
+
+      if (ix.accounts[ax.tempId].role.authorizer) {
+        if (last) {
+          // do group replacement
+          authorizations = [...authorizations, ax.tempId]
+        } else {
+          // do 1-1 replacement
+          ix.authorizations = ix.authorizations.map(d =>
+            d === old.tempId ? ax.tempId : d
+          )
+        }
+      }
     }
-    if (ix.proposer === account.tempId) ix.proposer = cid
-    if (ix.payer === account.tempId) ix.payer = cid
-    ix.authorizations = ix.authorizations.map(d =>
-      d === account.tempId ? cid : d
-    )
-    delete ix.accounts[account.tempId]
+    if (old.tempId != ax.tempId) delete ix.accounts[old.tempId]
   }
-  for (let account of Object.values(ix.accounts)) {
-    invariant(
-      accountCanFulfillRoles(account),
-      "Account unable to fulfill roles",
-      account
-    )
+
+  if (last) {
+    // complete (flatmap) group replacement
+    ix.authorizations = ix.authorizations
+      .map(d => (d === last.tempId ? authorizations : d))
+      .reduce(
+        (prev, curr) =>
+          Array.isArray(curr) ? [...prev, ...curr] : [...prev, curr],
+        []
+      )
   }
-  return Ok(ix)
 }
 
-export const resolveAccounts = pipe([
-  enforceResolvedAccounts,
-  dedupeResolvedAccounts,
-])
+export async function resolveAccounts(ix) {
+  if (isTransaction(ix)) {
+    try {
+      await collectAccounts(ix, Object.values(ix.accounts))
+      await collectAccounts(ix, Object.values(ix.accounts))
+    } catch (error) {
+      console.error("=== SAD PANDA ===\n\n", error, "\n\n=== SAD PANDA ===")
+      throw error
+    }
+  }
+  return ix
+}
