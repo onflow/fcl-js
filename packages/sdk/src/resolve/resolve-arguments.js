@@ -1,23 +1,25 @@
-import {isTransaction, isScript, Ok, Bad} from "../interaction/interaction.js"
+import {invariant} from "@onflow/util-invariant"
+import {isTransaction, isScript} from "../interaction/interaction.js"
 
-function ignore(ix) {
-  return !(isTransaction(ix) || isScript(ix))
+const isFn = v => typeof v === "function"
+
+function cast(arg) {
+  // prettier-ignore
+  invariant(typeof arg.xform != null, `No type specified for argument: ${arg.value}`)
+
+  if (isFn(arg.xform)) return arg.xform(arg.value)
+  if (isFn(arg.xform.asArgument)) return arg.xform.asArgument(arg.value)
+
+  // prettier-ignore
+  invariant(false, `Invalid Argument`, arg)
 }
 
-function cast (arg) {
-  if (typeof arg.xform == null) throw new Error(`No type specified for argument: ${arg.value}`)
-  if (typeof arg.xform === "function") return arg.xform(arg.value)
-  if (typeof arg.xform.asArgument === "function") return arg.xform.asArgument(arg.value)
-  console.error("Invalid Argument", arg)
-  throw new Error(`Invalid Argument`)
-}
-
-export async function resolveArguments (ix) {
-  if (ignore(ix)) return Ok(ix)
-
-  for (let [id, arg] of Object.entries(ix.arguments)) {
-    ix.arguments[id].asArgument = cast(arg)
+export async function resolveArguments(ix) {
+  if (isTransaction(ix) || isScript(ix)) {
+    for (let [id, arg] of Object.entries(ix.arguments)) {
+      ix.arguments[id].asArgument = cast(arg)
+    }
   }
 
-  return Ok(ix)
+  return ix
 }

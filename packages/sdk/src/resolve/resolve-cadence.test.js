@@ -1,6 +1,5 @@
-import {interaction, pipe, put, makeScript} from "@onflow/interaction"
-import {makeParam} from "@onflow/interaction"
-import {resolveCadence} from "./index.js"
+import {interaction, pipe, put, makeScript, makeParam} from "../interaction/interaction.js"
+import {resolveCadence} from "./resolve-cadence.js"
 
 const log = msg => ix => (console.log(msg, ix), ix)
 
@@ -29,30 +28,3 @@ test("cadence is a function", async () => {
 
   expect(ix.message.cadence).toBe(await CADENCE())
 })
-
-test("[DEPRECATED] cadence with params", async () => {
-  const CADENCE = async function (params = {}) {
-    console.log("PARAMS", params)
-    return `CADENCE WITH PARAMS: foo:${params.foo}, bar:${params.bar}`
-  }
-
-  const ix = await pipe([
-    makeScript,
-    put("ix.cadence", CADENCE),
-    params([
-      param("FOO", null, "foo"),
-      param("BAR", null, "bar"),
-    ]),
-    resolveCadence,
-  ])(interaction())
-
-  expect(ix.message.cadence).toBe(await CADENCE({ foo:"FOO", bar:"BAR" }))
-})
-
-function params(px = []) {
-  return pipe(px.map(makeParam))
-}
-
-function param(value, xform, key = null) {
-  return {key, value, xform}
-}

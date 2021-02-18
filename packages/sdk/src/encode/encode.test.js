@@ -1,7 +1,7 @@
 const merge = require("deepmerge")
 
-import {encodeTransactionPayload, encodeTransactionEnvelope} from "./encode"
-import * as root from "./encode"
+import {encodeTransactionPayload, encodeTransactionEnvelope} from "./encode.js"
+import * as root from "./encode.js"
 
 it("export contract interface", () => {
   expect(root).toStrictEqual(

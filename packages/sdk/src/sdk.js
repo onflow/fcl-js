@@ -9,7 +9,11 @@ export {isOk, isBad, why, pipe} from "./interaction/interaction.js"
 export {template as cadence} from "@onflow/util-template"
 export {template as cdc} from "@onflow/util-template"
 
-// builders
+// Helpers
+export {latestBlock} from "./latest-block/latest-block.js"
+export {account} from "./account/account.js"
+
+// Builders
 export {authorizations, authorization} from "./build/build-authorizations.js"
 export {atBlockHeight} from "./build/build-at-block-height.js"
 export {atBlockId} from "./build/build-at-block-id.js"
@@ -35,7 +39,7 @@ export {transaction} from "./build/build-transaction.js"
 export {validator} from "./build/build-validator.js"
 export {invariant} from "./build/build-invariant.js"
 
-// resolvers
+// Resolvers
 export {resolveArguments} from "./resolve/resolve-arguments.js"
 export {resolveAccounts} from "./resolve/resolve-accounts.js"
 export {resolveSignatures} from "./resolve/resolve-signatures.js"

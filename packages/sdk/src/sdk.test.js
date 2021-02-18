@@ -1,11 +1,28 @@
 import assert from "assert"
-import {build, resolve, transaction, limit, proposer, authorization, params, param, resolveParams} from "./sdk"
+import {build, resolve, ref, transaction, limit, proposer, authorizations, payer, authorization, params, param, resolveParams} from "./sdk.js"
 
 describe("build", () => {
   it("returns the correct limit when building a transaction", async () => {
-    const one = await resolve(await build([transaction``, limit(156)]))
+    const one = await resolve(await build([
+      transaction``,
+      limit(156),
+      proposer(authorization("01", () => ({signature: "123"}), 1, 123)),
+      authorizations([authorization("01", () => ({signature: "123"}), 1, 123)]),
+      payer(authorization("01", () => ({signature: "123"}), 1, 123)),
+      ref("123")
+    ]))
 
-    const two = await resolve(await build([limit(156), transaction``]))
+    const two = await resolve(await build([
+      limit(156),
+      transaction``,
+      proposer(authorization("01", () => ({signature: "123"}), 1, 123)),
+      authorizations([authorization("01", () => ({signature: "123"}), 1, 123)]),
+      payer(authorization("01", () => ({signature: "123"}), 1, 123)),
+      ref("123")
+    ]))
+
+    console.log('one', one) 
+    console.log('two', two)
 
     assert.equal(one.message.computeLimit, 156)
     assert.equal(two.message.computeLimit, 156)
@@ -14,7 +31,13 @@ describe("build", () => {
 
   it("returns the correct proposer when building a transaction with a known proposer", async () => {
     const ix = await resolve(
-      await build([transaction``, proposer(authorization("01", () => {}, 1, 123))])
+      await build([
+        transaction``,
+        proposer(authorization("01", () => ({signature: "123"}), 1, 123)),
+        authorizations([authorization("01", () => ({signature: "123"}), 1, 123)]),
+        payer(authorization("01", () => ({signature: "123"}), 1, 123)),
+        ref("123")
+      ])
     )
 
     const txProposer = ix.accounts[ix.proposer]
