@@ -4,7 +4,7 @@ export function getTransactionStatus(transactionId) {
   return pipe([
     makeGetTransactionStatus,
     ix => {
-      ix.transactionId = transactionId
+      ix.transaction.id = transactionId
       return Ok(ix)
     }
   ])

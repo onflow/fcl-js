@@ -1,5 +1,5 @@
 import {isTransaction, Ok} from "../interaction/interaction.js"
-import {send} from "../send/send.js"
+import {send} from "../send/sdk-send.js"
 import {decodeResponse} from "../decode/decode.js"
 import {getAccount} from "../build/build-get-account.js"
 import {build} from "../build/build.js"

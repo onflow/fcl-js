@@ -1,5 +1,5 @@
 import {getAccount} from "../build/build-get-account.js"
-import {decode} from "../decode/decode.js"
+import {decodeResponse as decode} from "../decode/decode.js"
 import {send} from "../send/send.js"
 
 export function account(address, opts) {

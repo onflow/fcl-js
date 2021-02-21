@@ -1,6 +1,6 @@
 import {send} from "../send/send.js"
 import {getBlock} from "../build/build-get-block"
-import {decode} from "../decode/decode.js"
+import {decodeResponse as decode} from "../decode/decode.js"
 
 export function latestBlock(...args) {
   let opts = args[1] || (typeof args[0] === "object" ? args[0] : undefined)
