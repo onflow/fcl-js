@@ -1,49 +1,23 @@
 import {
-  isTransaction,
-  isGetTransactionStatus,
-  isScript,
-  isGetAccount,
-  isGetEvents,
-  isGetLatestBlock,
-  isGetBlockById,
-  isGetBlockByHeight,
-  isPing,
+  interaction,
+  pipe,
 } from "../interaction/interaction.js"
-import {sendTransaction} from "./send-transaction.js"
-import {sendGetTransactionStatus} from "./send-get-transaction-status.js"
-import {sendExecuteScript} from "./send-execute-script.js"
-import {sendGetAccount} from "./send-get-account.js"
-import {sendGetEvents} from "./send-get-events.js"
-import {sendGetLatestBlock} from "./send-get-latest-block.js"
-import {sendGetBlockById} from "./send-get-block-by-id.js"
-import {sendGetBlockByHeight} from "./send-get-block-by-height.js"
-import {sendPing} from "./send-ping.js"
 import {config} from "@onflow/config"
+import {resolve as defaultResolve} from "../resolve/resolve.js"
+import {send as defaultSend} from "./sdk-send.js"
 
-export const send = async (ix, opts = {}) => {
-  opts.node = opts.node || (await config().get("accessNode.api"))
-  ix = await ix
+// import {interaction, pipe} from "@onflow/interaction"
+// import {send as defaultSend} from "@onflow/send"
+// import {resolve as defaultResolve} from "@onflow/sdk-resolve"
+// import {config} from "@onflow/config"
 
-  switch (true) {
-    case isTransaction(ix):
-      return sendTransaction(ix, opts)
-    case isGetTransactionStatus(ix):
-      return sendGetTransactionStatus(ix, opts)
-    case isScript(ix):
-      return sendExecuteScript(ix, opts)
-    case isGetAccount(ix):
-      return sendGetAccount(ix, opts)
-    case isGetEvents(ix):
-      return sendGetEvents(ix, opts)
-    case isGetLatestBlock(ix):
-      return sendGetLatestBlock(ix, opts)
-    case isGetBlockById(ix):
-      return sendGetBlockById(ix, opts)
-    case isGetBlockByHeight(ix):
-      return sendGetBlockByHeight(ix, opts)
-    case isPing(ix):
-      return sendPing(ix, opts)
-    default:
-      return ix
-  }
+export const send = async (args = [], opts = {}) => {
+  const sendFunction = await config().get("sdk.send", opts.send || defaultSend)
+  const resolveFunction = await config().get(
+    "sdk.resolve",
+    opts.resolve || defaultResolve
+  )
+  if (Array.isArray(args)) args = pipe(interaction(), args)
+  return sendFunction(await resolveFunction(args), opts)
 }
+

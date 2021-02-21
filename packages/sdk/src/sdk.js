@@ -2,10 +2,33 @@
 export {build} from "./build/build.js"
 export {resolve} from "./resolve/resolve.js"
 export {send} from "./send/send.js"
-export {decode, decodeResponse} from "./decode/decode.js"
+export {decodeResponse as decode} from "./decode/decode.js"
 
 // Utils
-export {isOk, isBad, why, pipe} from "./interaction/interaction.js"
+export {
+    interaction,
+    isOk,
+    isBad,
+    why,
+    pipe,
+    get,
+    put,
+    update,
+    destroy,
+    isUnknown,
+    isScript,
+    isTransaction,
+    isGetTransaction,
+    isGetTransactionStatus,
+    isGetAccount,
+    isGetEvents,
+    isGetLatestBlock,
+    isGetBlockById,
+    isGetBlockByHeight,
+    isPing,
+    isGetBlock,
+    isGetBlockHeader,
+} from "./interaction/interaction.js"
 export {template as cadence} from "@onflow/util-template"
 export {template as cdc} from "@onflow/util-template"
 
@@ -27,6 +50,7 @@ export {getLatestBlock} from "./build/build-get-latest-block.js"
 export {getBlockById} from "./build/build-get-block-by-id.js"
 export {getBlockByHeight} from "./build/build-get-block-by-height"
 export {getTransactionStatus} from "./build/build-get-transaction-status.js"
+export {getTransaction} from "./build/build-get-transaction.js"
 export {limit} from "./build/build-limit.js"
 export {params, param} from "./build/build-params.js"
 export {args, arg} from "./build/build-arguments.js"

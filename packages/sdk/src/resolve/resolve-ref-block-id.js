@@ -1,5 +1,5 @@
 import {isTransaction, Ok, interaction, pipe} from "../interaction/interaction.js"
-import {send} from "../send/send.js"
+import {send} from "../send/sdk-send.js"
 import {decodeResponse} from "../decode/decode.js"
 import {getBlock} from "../build/build-get-block.js"
 
