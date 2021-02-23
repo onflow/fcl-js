@@ -20,7 +20,7 @@ const interfaceContract = (label, wat) => ([template]) => {
 
 interfaceContract("export", root)`
   build resolve send
-  decode decodeResponse
+  decode
   isOk isBad why pipe
   getAccount getEvents getLatestBlock getTransactionStatus
   authorizations authorization
