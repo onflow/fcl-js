@@ -2,7 +2,7 @@
 export {build} from "./build/build.js"
 export {resolve} from "./resolve/resolve.js"
 export {send} from "./send/send.js"
-export {decodeResponse as decode} from "./decode/decode.js"
+export {decode} from "./decode/sdk-decode.js"
 
 // Utils
 export {
