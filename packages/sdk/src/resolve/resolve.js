@@ -29,7 +29,7 @@ export const resolve = pipe([
 
 async function execFetchRef(ix) {
     if (isTransaction(ix) && ix.message.refBlock == null) {
-        ix.message.refBlock = (await send([getBlock()]).then(decode)).id
+        ix.message.refBlock = (await send(build([getBlock()])).then(decode)).id
     }
     return ix
 }
