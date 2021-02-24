@@ -2,9 +2,9 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
-### 0.0.68-alpha.1 - 2022-02-02
+### 0.0.68-alpha.[1..3] - 2022-02-02
 
-- 2022-02-02 -- Adds support for new `GetEvents`, `GetBlockHeader`, `GetBlock` interactions.
+- 2022-02-02 -- Adds support for new `GetEvents`, `GetBlockHeader`, `GetBlock`, `GetTransaction` interactions.
 
 ### 0.0.67 - 2021-01-14
 
