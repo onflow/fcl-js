@@ -6,7 +6,7 @@ export function latestBlock(...args) {
   let opts = args[1] || (typeof args[0] === "object" ? args[0] : undefined)
   let isSealed = typeof args[0] === "boolean" ? args[0] : undefined
 
-  if (typeof args[0] !== "object") {
+  if (typeof args[0] === "object") {
     console.warn(
       `
       %cFCL/SDK Deprecation Notice

@@ -17,7 +17,7 @@ export async function sendGetTransactionStatus(ix, opts = {}) {
 
   let ret = response()
   ret.tag = ix.tag
-  ret.transaction = {
+  ret.transactionStatus = {
     status: res.getStatus(),
     statusCode: res.getStatusCode(),
     errorMessage: res.getErrorMessage(),

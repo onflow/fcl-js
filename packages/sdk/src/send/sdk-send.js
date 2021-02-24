@@ -17,6 +17,7 @@ import {sendGetTransaction} from "./send-get-transaction.js"
 import {sendExecuteScript} from "./send-execute-script.js"
 import {sendGetAccount} from "./send-get-account.js"
 import {sendGetEvents} from "./send-get-events.js"
+import {sendGetBlock} from "./send-get-block.js"
 import {sendGetLatestBlock} from "./send-get-latest-block.js"
 import {sendGetBlockById} from "./send-get-block-by-id.js"
 import {sendGetBlockByHeight} from "./send-get-block-by-height.js"
@@ -43,7 +44,7 @@ export const send = async (ix, opts = {}) => {
         case isGetLatestBlock(ix):
             return sendGetLatestBlock(ix, opts)
         case isGetBlock(ix):
-            return sendGetLatestBlock(ix, opts)
+            return sendGetBlock(ix, opts)
         case isGetBlockById(ix):
             return sendGetBlockById(ix, opts)
         case isGetBlockByHeight(ix):

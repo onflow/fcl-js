@@ -9,17 +9,22 @@ export async function sendGetBlock(ix, opts = {}) {
   ix = await ix
 
   let req
+  let res
   if (ix.block.id) {
     req = new GetBlockByIDRequest()
-    req.setBlockId(hexBuffer(ix.block.id))
+    req.setId(hexBuffer(ix.block.id))
+
+    res = await unary(opts.node, AccessAPI.GetBlockByID, req)
   } else if (ix.block.height) {
     req = new GetBlockByHeightRequest()
-    req.setBlockHeight(Number(ix.block.height))
+    req.setHeight(Number(ix.block.height))
+
+    res = await unary(opts.node, AccessAPI.GetBlockByHeight, req)
   } else {
     req = new GetLatestBlockRequest()
-  }
 
-  const res = await unary(opts.node, AccessAPI.GetBlockByID, req)
+    res = await unary(opts.node, AccessAPI.GetLatestBlock, req)
+  }
 
   const block = res.getBlock()
 
