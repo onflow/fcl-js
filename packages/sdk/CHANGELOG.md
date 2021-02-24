@@ -2,7 +2,7 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
-### 0.0.45-alpha.4 -- 2022-02-02
+### 0.0.45-alpha.[4-6] -- 2022-02-02
 
 - 2022-02-18 -- Merged `@onflow/send` into `@onflow/sdk`
 - 2022-02-18 -- Merged `@onflow/decode` into `@onflow/sdk`
