@@ -1,9 +1,9 @@
 import {spawn, subscriber, SUBSCRIBE, UNSUBSCRIBE} from "@onflow/util-actor"
 import {config} from "@onflow/config"
-import {latestBlock} from "@onflow/sdk-latest-block"
-export {getEvents} from "@onflow/sdk-build-get-events"
-import {send} from "@onflow/sdk-send"
-import {decode} from "@onflow/sdk-decode"
+import {latestBlock} from "@onflow/sdk"
+export {getEvents} from "@onflow/sdk"
+import {send} from "@onflow/sdk"
+import {decode} from "@onflow/sdk"
 
 const RATE = 10000
 const UPDATED = "UPDATED"

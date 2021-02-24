@@ -11,9 +11,9 @@ import {
   SUBSCRIBE,
   UNSUBSCRIBE,
 } from "@onflow/util-actor"
-import {send as fclSend} from "@onflow/sdk-send"
-import {decode} from "@onflow/sdk-decode"
-import {getTransactionStatus} from "@onflow/sdk-build-transaction-status"
+import {send as fclSend} from "@onflow/sdk"
+import {decode} from "@onflow/sdk"
+import {getTransactionStatus} from "@onflow/sdk"
 
 const RATE = 2500
 const POLL = "POLL"
