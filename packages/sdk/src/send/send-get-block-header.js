@@ -9,17 +9,22 @@ export async function sendGetBlockHeader(ix, opts = {}) {
   ix = await ix
 
   let req
+  let res
   if (ix.block.id) {
     req = new GetBlockHeaderByIDRequest()
-    req.setBlockId(hexBuffer(ix.block.id))
+    req.setId(hexBuffer(ix.block.id))
+
+    res = await unary(opts.node, AccessAPI.GetBlockHeaderByID, req)
   } else if (ix.block.height) {
     req = new GetBlockHeaderByHeightRequest()
-    req.setBlockHeight(Number(ix.block.height))
+    req.setHeight(Number(ix.block.height))
+
+    res = await unary(opts.node, AccessAPI.GetBlockHeaderByHeight, req)
   } else {
     req = new GetLatestBlockHeaderRequest()
-  }
 
-  const res = await unary(opts.node, AccessAPI.GetBlockByID, req)
+    res = await unary(opts.node, AccessAPI.GetLatestBlockHeader, req)
+  }
 
   const blockHeader = res.getBlock()
 

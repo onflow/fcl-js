@@ -13,8 +13,6 @@ export async function sendGetTransaction(ix, opts = {}) {
 
   const res = await unary(opts.node, AccessAPI.GetTransaction, req)
 
-  let events = res.getEventsList()
-
   let ret = response()
   ret.tag = ix.tag
 
@@ -25,15 +23,15 @@ export async function sendGetTransaction(ix, opts = {}) {
   })
 
   const unwrapSignature = sig => ({
-    address: u8ToHex(key.getAddress_asU8()),
-    keyId: key.getKeyId(),
-    signature: u8ToHex(key.getSequenceNumber_asU8())
+    address: u8ToHex(sig.getAddress_asU8()),
+    keyId: sig.getKeyId(),
+    signature: u8ToHex(sig.getSignature_asU8())
   })
 
-  let transaction = ret.getTransaction()
+  let transaction = res.getTransaction()
   ret.transaction = {
-      script: u8ToHex(transaction.getScript_asU8()),
-      arguments: (transaction.getArgumentsList()).map(u8ToHex),
+      script: Buffer.from(transaction.getScript_asU8()).toString("utf8"),
+      arguments: (transaction.getArgumentsList()).map(arg => JSON.parse(Buffer.from(arg).toString("utf8"))),
       referenceBlockId: u8ToHex(transaction.getReferenceBlockId_asU8()),
       gasLimit: transaction.getGasLimit(),
       proposalKey: unwrapKey(transaction.getProposalKey()),
@@ -43,51 +41,5 @@ export async function sendGetTransaction(ix, opts = {}) {
       envelopeSignatures: (transaction.getEnvelopeSignaturesList()).map(unwrapSignature)
   }
 
-//   ret.transaction = {
-//     status: res.getStatus(),
-//     statusCode: res.getStatusCode(),
-//     errorMessage: res.getErrorMessage(),
-//     events: events.map(event => ({
-//       type: event.getType(),
-//       transactionId: u8ToHex(event.getTransactionId_asU8()),
-//       transactionIndex: event.getTransactionIndex(),
-//       eventIndex: event.getEventIndex(),
-//       payload: JSON.parse(Buffer.from(event.getPayload_asU8()).toString("utf8")),
-//     })),
-//   }
-
   return ret
 }
-
-// enum TransactionStatus {
-//     UNKNOWN = 0;
-//     PENDING = 1;
-//     FINALIZED = 2;
-//     EXECUTED = 3;
-//     SEALED = 4;
-//     EXPIRED = 5;
-//   }
-  
-//   message Transaction {
-//     message ProposalKey {
-//       bytes address = 1;
-//       uint32 key_id = 2;
-//       uint64 sequence_number = 3;
-//     }
-    
-//     message Signature {
-//       bytes address = 1;
-//       uint32 key_id = 2;
-//       bytes signature = 3;
-//     }
-  
-//     bytes script = 1;
-//     repeated bytes arguments = 2;
-//     bytes reference_block_id = 3;
-//     uint64 gas_limit = 4;
-//     ProposalKey proposal_key = 5;
-//     bytes payer = 6;
-//     repeated bytes authorizers = 7;
-//     repeated Signature payload_signatures = 8;
-//     repeated Signature envelope_signatures = 9;
-//   }
