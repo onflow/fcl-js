@@ -31,7 +31,7 @@ export async function sendGetTransaction(ix, opts = {}) {
   let transaction = res.getTransaction()
   ret.transaction = {
       script: Buffer.from(transaction.getScript_asU8()).toString("utf8"),
-      arguments: (transaction.getArgumentsList()).map(arg => JSON.parse(Buffer.from(arg).toString("utf8"))),
+      args: (transaction.getArgumentsList()).map(arg => JSON.parse(Buffer.from(arg).toString("utf8"))),
       referenceBlockId: u8ToHex(transaction.getReferenceBlockId_asU8()),
       gasLimit: transaction.getGasLimit(),
       proposalKey: unwrapKey(transaction.getProposalKey()),
