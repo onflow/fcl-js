@@ -1167,7 +1167,7 @@ describe("decode GetEvents tests", () => {
 describe("decode GetTransactionStatus tests", () => {
   it("decodes a GetEvents response correctly", async () => {
       const getTransactionStatusResponse = {
-        transaction: {
+        transactionStatus: {
           status: 4,
           statusCode: 1,
           errorMessage: null,
