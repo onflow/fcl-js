@@ -362,7 +362,7 @@ await fcl
       fcl.arg("0xba1132bc08f82fe2", t.Address), // <-- t.Address this time :)
     ]),
   ])
-  .then(fcl)
+  .then(fcl.decode)
 ```
 
 We should get back something like this:
