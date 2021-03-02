@@ -2,13 +2,13 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
-### 0.0.68-alpha.7 - 2021-03-02
+### 0.0.68-alpha.[7..8] - 2021-03-02
 
 - 2021-03-02 -- Authn now uses frame mechanism from Authz flow.
   - This is in prep for sending config details to wallet during handshake.
   - Enables standardized `FCL:FRAME:CLOSE` message for closing frame
   - Introduces a new standardized response `FCL:FRAME:RESPONSE` for wallets to pass the final response back.
-  - Introduces a new standardized open response `FCL:FRAME:OPEN` for wallets that need to escape the iframe in web browser
+  - (EXPERIMENTAL) Introduces a new standardized open response `FCL:FRAME:OPEN` for wallets that need to escape the iframe in web browser
   - This is backwards compatible with older versions of the FCL wallet spec, but will not be included in V1 release.
 - 2021-03-02 -- Introduced new config `discovery.wallet`. This will eventually replace `challenge.handshake`.
   - Current implementation will look for `discovery.wallet` first and then fallback onto `challenge.handshake`.
@@ -26,7 +26,7 @@ FCL                         Wallet
  |----[APP DETAILS/NEEDS]---->|  // Application specific details/needs
  |     [handles details]------*
  |                            |
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[OPTIONAL TAB FLOW]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[OPTIONAL TAB FLOW] (EXPERIMENTAL)
  |<----[FCL:FRAME:OPEN]-------|  // Some authentication flows cant
  |------[Open Tab]----------->|  // Be handled in an iframe
  |                            |
