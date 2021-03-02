@@ -9,21 +9,36 @@ export async function sendExecuteScript(ix, opts = {}) {
   ix = await ix
 
   let req
+  let res
   if (ix.block.id) {
     req = new ExecuteScriptAtBlockIDRequest()
+    
     req.setBlockId(hexBuffer(ix.block.id))
+
+    const code = Buffer.from(ix.message.cadence, "utf8")
+    ix.message.arguments.forEach(arg => req.addArguments(argumentBuffer(ix.arguments[arg].asArgument)))
+    req.setScript(code)
+
+    res = await unary(opts.node, AccessAPI.ExecuteScriptAtBlockID, req)
   } else if (ix.block.height) {
     req = new ExecuteScriptAtBlockHeightRequest()
+
     req.setBlockHeight(Number(ix.block.height))
+
+    const code = Buffer.from(ix.message.cadence, "utf8")
+    ix.message.arguments.forEach(arg => req.addArguments(argumentBuffer(ix.arguments[arg].asArgument)))
+    req.setScript(code)
+
+    res = await unary(opts.node, AccessAPI.ExecuteScriptAtBlockHeight, req)
   } else {
     req = new ExecuteScriptAtLatestBlockRequest()
+
+    const code = Buffer.from(ix.message.cadence, "utf8")
+    ix.message.arguments.forEach(arg => req.addArguments(argumentBuffer(ix.arguments[arg].asArgument)))
+    req.setScript(code)
+
+    res = await unary(opts.node, AccessAPI.ExecuteScriptAtLatestBlock, req)
   }
-
-  const code = Buffer.from(ix.message.cadence, "utf8")
-  ix.message.arguments.forEach(arg => req.addArguments(argumentBuffer(ix.arguments[arg].asArgument)))
-  req.setScript(code)
-
-  const res = await unary(opts.node, AccessAPI.ExecuteScriptAtLatestBlock, req)
 
   let ret = response()
   ret.tag = ix.tag
