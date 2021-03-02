@@ -11,6 +11,7 @@ import {mergeServices} from "./merge-services"
 import {serviceOfType} from "./service-of-type"
 import {validateCompositeSignature} from "./validate-composite-signature"
 import {execService} from "./exec-service"
+import {frame} from "./exec-service/strategies/utils/frame"
 
 const NAME = "CURRENT_USER"
 const UPDATED = "CURRENT_USER/UPDATED"
@@ -19,7 +20,6 @@ const SET_CURRENT_USER = "SET_CURRENT_USER"
 const DEL_CURRENT_USER = "DEL_CURRENT_USER"
 
 // Backwards Compatibility
-const CANCEL_EVENT = "FCL::CANCEL"
 const CHALLENGE_RESPONSE_EVENT = "FCL::CHALLENGE::RESPONSE"
 const CHALLENGE_CANCEL_EVENT = "FCL::CHALLENGE::CANCEL"
 
@@ -95,32 +95,33 @@ function notExpired(user) {
 }
 
 async function authenticate() {
-  return new Promise(async resolve => {
+  return new Promise(async (resolve, reject) => {
     spawnCurrentUser()
     const user = await snapshot()
     if (user.loggedIn && notExpired(user)) return resolve(user)
 
-    const [$frame, unrender] = renderAuthnFrame({
-      handshake: await config().get("challenge.handshake"),
-      l6n: window.location.origin,
-    })
-
-    const replyFn = async ({data}) => {
-      if (data.type === CHALLENGE_CANCEL_EVENT || data.type === CANCEL_EVENT) {
-        unrender()
-        window.removeEventListener("message", replyFn)
-        return
+    frame(
+      {
+        endpoint:
+          (await config().get("discovery.wallet")) ||
+          (await config().get("challenge.handshake")),
+      },
+      {
+        onReady(e, {send, close}) {
+          console.log("ON READY", e)
+          // SEND CONFIG AND APP DESCRIPTION/NEEDS TO WALLET AUTHN
+          // YET TO BE DEFINED
+        },
+        async onClose() {
+          resolve(await snapshot())
+        },
+        async onResponse(e, {close}) {
+          send(NAME, SET_CURRENT_USER, await buildUser(e.data))
+          resolve(await snapshot())
+          close()
+        },
       }
-      if (data.type !== CHALLENGE_RESPONSE_EVENT) return
-
-      unrender()
-      window.removeEventListener("message", replyFn)
-
-      send(NAME, SET_CURRENT_USER, await buildUser(data))
-      resolve(await snapshot())
-    }
-
-    window.addEventListener("message", replyFn)
+    )
   })
 }
 
