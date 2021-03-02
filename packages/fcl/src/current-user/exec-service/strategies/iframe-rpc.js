@@ -11,6 +11,7 @@ export function execIframeRPC(service, signable) {
     frame(service, {
       onReady(_, {send}) {
         try {
+          // This is out of place, we need to find an alternative
           send({
             jsonrpc: "2.0",
             id: id,

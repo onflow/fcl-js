@@ -2,9 +2,61 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
-### 0.0.68-alpha.[1..3] - 2022-02-02
+### 0.0.68-alpha.7 - 2021-03-02
 
-- 2022-02-02 -- Adds support for new `GetEvents`, `GetBlockHeader`, `GetBlock`, `GetTransaction` interactions.
+- 2021-03-02 -- Authn now uses frame mechanism from Authz flow.
+  - This is in prep for sending config details to wallet during handshake.
+  - Enables standardized `FCL:FRAME:CLOSE` message for closing frame
+  - Introduces a new standardized response `FCL:FRAME:RESPONSE` for wallets to pass the final response back.
+  - Introduces a new standardized open response `FCL:FRAME:OPEN` for wallets that need to escape the iframe in web browser
+  - This is backwards compatible with older versions of the FCL wallet spec, but will not be included in V1 release.
+- 2021-03-02 -- Introduced new config `discovery.wallet`. This will eventually replace `challenge.handshake`.
+  - Current implementation will look for `discovery.wallet` first and then fallback onto `challenge.handshake`.
+  - This is backwards compatible with older version of FCL, but will not be included in V1 release.
+
+New Wallet AUTHN Flow will now look like this:
+
+```
+FCL                         Wallet
+ |                            |
+ |-------[Render Frame]------>|
+ |                            |
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[OPTIONAL READY FLOW]
+ |<----[FCL:FRAME:READY]------|  // Enables wallet to receive
+ |----[APP DETAILS/NEEDS]---->|  // Application specific details/needs
+ |     [handles details]------*
+ |                            |
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[OPTIONAL TAB FLOW]
+ |<----[FCL:FRAME:OPEN]-------|  // Some authentication flows cant
+ |------[Open Tab]----------->|  // Be handled in an iframe
+ |                            |
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[GOLDEN AUTH PATH]
+ |<----[FCL:FRAME:RESPONSE]---|
+ *-------[handles auth]       |
+ |-------[Close Frame]---X    |
+ |--------[Close Tab]----X    |
+ |                            |
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[CANCEL AUTH PATH]
+ |<----[FCL:FRAME:CLOSE]------|
+ |-------[Close Frame]---X    |
+ |--------[Close Tab]----X    |
+ |                            |
+```
+
+`FCL:FRAME:OPEN` payload needs to look like this:
+
+```json
+{
+  "type": "FCL:FRAME:OPEN",
+  "endpoint": "https://google.com"
+}
+```
+
+> The opened tab (web view in something like Unity/iOS?) will not be responsible for sending the Final `FCL:FRAME:RESPONSE` or `FCL:FRAME:CLOSE` messages (this will need to be the frame), but FCL will attempt to close the tab one authn is complete.
+
+### 0.0.68-alpha.[1..6] - 2021-02-02
+
+- 2021-02-02 -- Adds support for new `GetEvents`, `GetBlockHeader`, `GetBlock`, `GetTransaction` interactions.
 
 ### 0.0.67 - 2021-01-14
 
