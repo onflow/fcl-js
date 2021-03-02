@@ -2,6 +2,10 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.0.68-alpha.9 - 2021-03-02
+
+- 2020-03-02 -- VSN `@onflow/sdk` 0.0.45-alpha.9 -> 0.0.45-alpha.10
+
 ### 0.0.68-alpha.[7..8] - 2021-03-02
 
 - 2021-03-02 -- Authn now uses frame mechanism from Authz flow.
