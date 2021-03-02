@@ -16,7 +16,7 @@ export async function sendGetAccount(ix, opts = {}) {
   if (ix.block.height) req.setHeight(Number(ix.block.height))
   req.setAddress(addressBuffer(sansPrefix(ix.account.addr)))
 
-  const res = await unary(opts.node, AccessAPI.GetAccount, req)
+  const res = await unary(opts.node, ix.block.height ? AccessAPI.GetAccountAtBlockHeight : AccessAPI.GetAccountAtLatestBlock, req)
 
   let ret = response()
   ret.tag = ix.tag

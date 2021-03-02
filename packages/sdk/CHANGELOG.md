@@ -5,6 +5,7 @@
 ### 0.0.45-alpha.10 -- 2022-03-02
 
 - 2022-03-02 -- Fixed issue where `ExecuteScript*` interactions were not being sent in correct GRPC request type
+- 2022-03-02 -- Fixed issue where `GetAccount*` interactions were not being sent in correct GRPC request type
 
 ### 0.0.45-alpha.[4-6] -- 2022-02-02
 
