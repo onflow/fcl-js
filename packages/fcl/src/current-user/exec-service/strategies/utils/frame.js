@@ -16,7 +16,6 @@ const IGNORE = new Set([
 ])
 
 export function frame(service, opts = {}) {
-  console.log("FRAME", {service, opts})
   if (service == null) return {send: noop, close: noop}
 
   var tab = null
@@ -41,7 +40,6 @@ export function frame(service, opts = {}) {
 
       // Backwards Compatible
       if (e.data.type === "FCL::CHALLENGE::RESPONSE") {
-        console.log("BOOP")
         onResponse(e, {send, close})
       }
       if (e.data.type === "FCL::AUTHZ_READY") onReady(e, {send, close})
@@ -78,7 +76,6 @@ export function frame(service, opts = {}) {
 
   function open(msg) {
     try {
-      console.log("OPEN", msg)
       tab = window.open(msg.endpoint)
       tab.focus()
     } catch (error) {

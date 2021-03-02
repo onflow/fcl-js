@@ -3,13 +3,8 @@ import {account} from "@onflow/sdk"
 import {config} from "@onflow/config"
 import {spawn, send, INIT, SUBSCRIBE, UNSUBSCRIBE} from "@onflow/util-actor"
 import {sansPrefix} from "@onflow/util-address"
-import {account as fetchAccount} from "@onflow/sdk"
-import {renderAuthnFrame} from "./render-authn-frame"
 import {buildUser} from "./build-user"
-import {fetchServices} from "./fetch-services"
-import {mergeServices} from "./merge-services"
 import {serviceOfType} from "./service-of-type"
-import {validateCompositeSignature} from "./validate-composite-signature"
 import {execService} from "./exec-service"
 import {frame} from "./exec-service/strategies/utils/frame"
 
@@ -18,10 +13,6 @@ const UPDATED = "CURRENT_USER/UPDATED"
 const SNAPSHOT = "SNAPSHOT"
 const SET_CURRENT_USER = "SET_CURRENT_USER"
 const DEL_CURRENT_USER = "DEL_CURRENT_USER"
-
-// Backwards Compatibility
-const CHALLENGE_RESPONSE_EVENT = "FCL::CHALLENGE::RESPONSE"
-const CHALLENGE_CANCEL_EVENT = "FCL::CHALLENGE::CANCEL"
 
 const DATA = `{
   "f_type": "User",
