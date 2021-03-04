@@ -1,5 +1,7 @@
-# Flow App Quickstart
-
+---
+title: Flow App Quickstart
+description: Follow this guide to understand the basics of how to build an app that interacts with the Flow blockchain using `@onflow/fcl`
+contentType: HOWTO
 ---
 
 **Last Updated:** Jan 14th 2021
@@ -79,12 +81,12 @@ These environment variables should now be available for us to use when we go to 
 ```javascript
 // File: ./src/config.js
 
-import {config} from "@onflow/fcl"
+import { config } from "@onflow/fcl";
 
 config()
   .put("accessNode.api", process.env.REACT_APP_ACCESS_NODE) // Configure FCLs Access Node
   .put("challenge.handshake", process.env.REACT_APP_WALLET_DISCOVERY) // Configure FCLs Wallet Discovery mechanism
-  .put("0xProfile", process.env.REACT_APP_CONTRACT_PROFILE) // Will let us use `0xProfile` in our cadence
+  .put("0xProfile", process.env.REACT_APP_CONTRACT_PROFILE); // Will let us use `0xProfile` in our cadence
 ```
 
 We now have a file that configures FCL but... It is not yet being invoked, so FCL still remains unconfigured in our application.
@@ -93,10 +95,10 @@ The final step of this section is to import this file as the first thing in our 
 ```javascript
 // File: ./src/index.js
 
-import "./config" // Imports environment variables and configures FCL
+import "./config"; // Imports environment variables and configures FCL
 // Then the rest of ./src/index.js
-import React from "react"
-import ReactDOM from "react-dom"
+import React from "react";
+import ReactDOM from "react-dom";
 ```
 
 :tada: Congrats!! You have configured FCL, which is the very first step in having a decentralized application built on Flow (testnet)
@@ -136,12 +138,12 @@ We are going to call this component `AuthCluster` and it will live at `/src/auth
 ```javascript
 // File: ./src/auth-cluster.js
 
-import React, {useState, useEffect} from "react"
-import * as fcl from "@onflow/fcl"
+import React, { useState, useEffect } from "react";
+import * as fcl from "@onflow/fcl";
 
 export function AuthCluster() {
-  const [user, setUser] = useState({loggedIn: null})
-  useEffect(() => fcl.currentUser().subscribe(setUser), [])
+  const [user, setUser] = useState({ loggedIn: null });
+  useEffect(() => fcl.currentUser().subscribe(setUser), []);
 
   if (user.loggedIn) {
     return (
@@ -149,14 +151,14 @@ export function AuthCluster() {
         <span>{user?.addr ?? "No Address"}</span>
         <button onClick={fcl.unauthenticate}>Log Out</button>
       </div>
-    )
+    );
   } else {
     return (
       <div>
         <button onClick={fcl.logIn}>Log In</button>
         <button onClick={fcl.signUp}>Sign Up</button>
       </div>
-    )
+    );
   }
 }
 ```
@@ -193,15 +195,15 @@ We should then import and add our `AuthCluster` component to our application in 
 ```javascript
 // File: ./src/Auth.js
 
-import React from "react"
-import {AuthCluster} from "./auth-cluster"
+import React from "react";
+import { AuthCluster } from "./auth-cluster";
 
 export default function App() {
   return (
     <div>
       <AuthCluster />
     </div>
-  )
+  );
 }
 ```
 
@@ -273,7 +275,7 @@ Our first script isn't going to have anything to do with our Profile contract, i
 Let's look at our first script.
 
 ```javascript
-import * as fcl from "@onflow/fcl"
+import * as fcl from "@onflow/fcl";
 
 await fcl
   .send([
@@ -283,7 +285,7 @@ await fcl
       }
     `,
   ])
-  .then(fcl.decode)
+  .then(fcl.decode);
 ```
 
 In Cadence scripts, `pub fun main()` is what gets invoked, in this case it is returning an integer (`Int`).
@@ -292,8 +294,8 @@ In Cadence scripts, `pub fun main()` is what gets invoked, in this case it is re
 The above snipped is fine as a starting point, but we can do so much more here, like replacing those magic numbers with script arguments.
 
 ```javascript
-import * as fcl from "@onflow/fcl"
-import * as t from "@onflow/types"
+import * as fcl from "@onflow/fcl";
+import * as t from "@onflow/types";
 
 await fcl
   .send([
@@ -307,7 +309,7 @@ await fcl
       fcl.arg(4, t.Int), // b
     ]),
   ])
-  .then(fcl.decode)
+  .then(fcl.decode);
 ```
 
 In the above we have changed `pub fun main(): Int` to `pub fun main(a: Int, b: Int): Int`, this tells Cadence to expect to arguments, in this case both are integers.
@@ -322,8 +324,8 @@ I just so happen to know that the [Rawr (testnet) at 0xba1132bc08f82fe2](https:/
 Let's import the Rawr contract and use its `add` function instead of writing out our bespoke implementation.
 
 ```javascript
-import * as fcl from "@onflow/fcl"
-import * as t from "@onflow/types"
+import * as fcl from "@onflow/fcl";
+import * as t from "@onflow/types";
 
 await fcl
   .send([
@@ -339,15 +341,15 @@ await fcl
       fcl.arg(4, t.Int), // b
     ]),
   ])
-  .then(fcl.decode)
+  .then(fcl.decode);
 ```
 
 So at this point we should be able to import contracts, and execute scripts against them. Lets apply this new found knowledge against our profile contract.
 I know for a fact that `0xba1132bc08f82fe2` (It also happens to be where the Profile contract is deployed) has a profile, so let's see if we can query the chain for it.
 
 ```javascript
-import * as fcl from "@onflow/fcl"
-import * as t from "@onflow/types"
+import * as fcl from "@onflow/fcl";
+import * as t from "@onflow/types";
 
 await fcl
   .send([
@@ -362,7 +364,7 @@ await fcl
       fcl.arg("0xba1132bc08f82fe2", t.Address), // <-- t.Address this time :)
     ]),
   ])
-  .then(fcl)
+  .then(fcl);
 ```
 
 We should get back something like this:
@@ -399,12 +401,12 @@ The Profile contract exposes a helper function that lets us check if an address 
 ```javascript
 // File: ./src/flow/is-initialized.script.js
 
-import * as fcl from "@onflow/fcl"
-import * as t from "@onflow/types"
+import * as fcl from "@onflow/fcl";
+import * as t from "@onflow/types";
 
 export async function isInitialized(address) {
   if (address == null)
-    throw new Error("isInitialized(address) -- address required")
+    throw new Error("isInitialized(address) -- address required");
 
   return fcl
     .send([
@@ -417,7 +419,7 @@ export async function isInitialized(address) {
       `,
       fcl.args([fcl.arg(address, t.Address)]),
     ])
-    .then(fcl.decode)
+    .then(fcl.decode);
 }
 ```
 
@@ -465,8 +467,8 @@ Let's create a `./src/flow/init-account.tx.js` file with the following FCL trans
 ```javascript
 // File: ./src/flow/init-account.tx.js
 
-import * as fcl from "@onflow/fcl"
-import * as t from "@onflow/types"
+import * as fcl from "@onflow/fcl";
+import * as t from "@onflow/types";
 
 export async function initAccount() {
   const txId = await fcl
@@ -505,9 +507,9 @@ export async function initAccount() {
       fcl.authorizations([fcl.authz]), // current user will be first AuthAccount
       fcl.limit(35), // set the compute limit
     ])
-    .then(fcl.decode)
+    .then(fcl.decode);
 
-  return fcl.tx(txId).onceSealed()
+  return fcl.tx(txId).onceSealed();
 }
 ```
 
@@ -548,11 +550,11 @@ We actually saw this already, back when we were talking about scripts. So this s
 ```javascript
 // File: ./src/flow/fetch-profile.script.js
 
-import * as fcl from "@onflow/fcl"
-import * as t from "@onflow/types"
+import * as fcl from "@onflow/fcl";
+import * as t from "@onflow/types";
 
 export async function fetchProfile(address) {
-  if (address == null) return null
+  if (address == null) return null;
 
   return fcl
     .send([
@@ -565,7 +567,7 @@ export async function fetchProfile(address) {
       `,
       fcl.args([fcl.arg(address, t.Address)]),
     ])
-    .then(fcl.decode)
+    .then(fcl.decode);
 }
 ```
 
@@ -615,8 +617,8 @@ Below is our `./src/flow/profile-set-name.tx.js` file.
 ```javascript
 // File: ./src/flow/profile-set-name.tx.js
 
-import * as fcl from "@onflow/fcl"
-import * as t from "@onflow/types"
+import * as fcl from "@onflow/fcl";
+import * as t from "@onflow/types";
 
 export async function setName(name) {
   const txId = await fcl
@@ -638,9 +640,9 @@ export async function setName(name) {
         }
       `,
     ])
-    .then(fcl.decode)
+    .then(fcl.decode);
 
-  return fcl.tx(txId).onceSealed()
+  return fcl.tx(txId).onceSealed();
 }
 ```
 
@@ -739,12 +741,12 @@ Once installed we need to add in the RecoilProvider to the root of our applicati
 ```javascript
 // File: ./src/index.js
 
-import "./config"
-import React from "react"
-import ReactDOM from "react-dom"
-import App from "./App"
-import reportWebVitals from "./reportWebVitals"
-import {RecoilRoot} from "recoil"
+import "./config";
+import React from "react";
+import ReactDOM from "react-dom";
+import App from "./App";
+import reportWebVitals from "./reportWebVitals";
+import { RecoilRoot } from "recoil";
 
 ReactDOM.render(
   <React.StrictMode>
@@ -753,9 +755,9 @@ ReactDOM.render(
     </RecoilRoot>
   </React.StrictMode>,
   document.getElementById("root")
-)
+);
 
-reportWebVitals()
+reportWebVitals();
 ```
 
 In the above we are importing the `RecoilRoot` provider and then nesting aour `App` component in it.
@@ -781,29 +783,29 @@ Currently we have an `AuthCluster` component that lives in `./src/auth-cluster.j
 ```javascript
 // File: ./src/auth-cluster.js
 
-import React, {useState, useEffect} from "react"
-import {useCurrentUser} from "./hooks/current-user"
+import React, { useState, useEffect } from "react";
+import { useCurrentUser } from "./hooks/current-user";
 
 function WithAuth() {
-  const cu = useCurrentUser()
+  const cu = useCurrentUser();
 
   return !cu.loggedIn ? null : (
     <div>
       <span>{cu.addr ?? "No Address"}</span>
       <button onClick={cu.logOut}>Log Out</button>
     </div>
-  )
+  );
 }
 
 function SansAuth() {
-  const cu = useCurrentUser()
+  const cu = useCurrentUser();
 
   return cu.loggedIn ? null : (
     <div>
       <button onClick={cu.logIn}>Log In</button>
       <button onClick={cu.signUp}>Sign Up</button>
     </div>
-  )
+  );
 }
 
 export function AuthCluster() {
@@ -812,7 +814,7 @@ export function AuthCluster() {
       <WithAuth />
       <SansAuth />
     </>
-  )
+  );
 }
 ```
 
@@ -833,25 +835,27 @@ After we have the files our current user hook will look something like this:
 ```javascript
 // File: ./src/hooks/current-user.js
 
-import {useEffect} from "react"
-import {atom, useSetRecoilState, useRecoilValue} from "recoil"
-import * as fcl from "@onflow/fcl"
+import { useEffect } from "react";
+import { atom, useSetRecoilState, useRecoilValue } from "recoil";
+import * as fcl from "@onflow/fcl";
 
 // This is a recoil atom (https://recoiljs.org/docs/api-reference/core/atom)
 // You can think of it as a unique reactive node with our current users state.
 // Our hook is going to subscribe to this state.
 export const $currentUser = atom({
   key: "CURRENT_USER", // Atoms needs a unique key, we can only ever call the atom function once with this key.
-  default: {addr: null, cid: null, loggedIn: null},
-})
+  default: { addr: null, cid: null, loggedIn: null },
+});
 
 // We only want a single place where we subscribe and update our
 // current users atom state. That will be this component that we will
 // add to the root of our application.
 export function CurrentUserSubscription() {
-  const setCurrentUser = useSetRecoilState($currentUser)
-  useEffect(() => fcl.currentUser().subscribe(setCurrentUser), [setCurrentUser])
-  return null
+  const setCurrentUser = useSetRecoilState($currentUser);
+  useEffect(() => fcl.currentUser().subscribe(setCurrentUser), [
+    setCurrentUser,
+  ]);
+  return null;
 }
 
 // Our actual hook, most of the work is happening
@@ -859,14 +863,14 @@ export function CurrentUserSubscription() {
 // this hook to focus on decorating the current user value
 // we receive with some helper functions
 export function useCurrentUser() {
-  const currentUser = useRecoilValue($currentUser)
+  const currentUser = useRecoilValue($currentUser);
 
   return {
     ...currentUser,
     logOut: fcl.unauthenticate,
     logIn: fcl.logIn,
     signUp: fcl.signUp,
-  }
+  };
 }
 ```
 
@@ -875,13 +879,13 @@ The last thing we need to do here is to add our `CurrentUserSubscription` to the
 ```javascript
 // File: ./src/index.js
 
-import "./config"
-import React from "react"
-import ReactDOM from "react-dom"
-import App from "./App"
-import reportWebVitals from "./reportWebVitals"
-import {RecoilRoot} from "recoil"
-import {CurrentUserSubscription} from "./hooks/current-user"
+import "./config";
+import React from "react";
+import ReactDOM from "react-dom";
+import App from "./App";
+import reportWebVitals from "./reportWebVitals";
+import { RecoilRoot } from "recoil";
+import { CurrentUserSubscription } from "./hooks/current-user";
 
 ReactDOM.render(
   <React.StrictMode>
@@ -891,9 +895,9 @@ ReactDOM.render(
     </RecoilRoot>
   </React.StrictMode>,
   document.getElementById("root")
-)
+);
 
-reportWebVitals()
+reportWebVitals();
 ```
 
 :tada: Congrats!! We now have a `useCurrentUser` hook and we are using it in our `AuthCluster` component.
@@ -922,18 +926,18 @@ While we are doing the transaction we should display to the user that the app is
 ```javascript
 // File: ./src/init-cluster.js
 
-import {useEffect} from "react"
-import {useCurrentUser} from "./hooks/current-user"
-import {useInit} from "./hooks/init"
+import { useEffect } from "react";
+import { useCurrentUser } from "./hooks/current-user";
+import { useInit } from "./hooks/init";
 
-const fmtBool = bool => (bool ? "yes" : "no")
+const fmtBool = (bool) => (bool ? "yes" : "no");
 
-export function InitCluster({address}) {
-  const cu = useCurrentUser()
-  const init = useInit(address)
-  useEffect(() => init.check(), [address])
+export function InitCluster({ address }) {
+  const cu = useCurrentUser();
+  const init = useInit(address);
+  useEffect(() => init.check(), [address]);
 
-  if (address == null) return null
+  if (address == null) return null;
 
   return (
     <div>
@@ -951,7 +955,7 @@ export function InitCluster({address}) {
         </li>
       </ul>
     </div>
-  )
+  );
 }
 ```
 
@@ -970,12 +974,12 @@ Then we can write our new `useInit` hook in our new file: `./src/hooks/init.js`
 ```javascript
 // File: ./src/hooks/init.js
 
-import {atomFamily, useRecoilState} from "recoil"
-import {isInitialized} from "../flow/is-initialized.script"
-import {initAccount} from "../flow/init-account.tx"
+import { atomFamily, useRecoilState } from "recoil";
+import { isInitialized } from "../flow/is-initialized.script";
+import { initAccount } from "../flow/init-account.tx";
 
-const IDLE = "IDLE"
-const PROCESSING = "PROCESSING"
+const IDLE = "IDLE";
+const PROCESSING = "PROCESSING";
 
 // atomFamily is a function that returns a memoized function
 // that constructs atoms. This will allow us to define the
@@ -984,35 +988,35 @@ const PROCESSING = "PROCESSING"
 const $profile = atomFamily({
   key: "INIT::PROFILE::STATE",
   default: null,
-})
+});
 
 const $profileStatus = atomFamily({
   key: "INIT::PROFILE::STATUS",
   default: PROCESSING,
-})
+});
 
 export function useInit(address) {
-  const [profile, setProfile] = useRecoilState($profile(address))
-  const [status, setStatus] = useRecoilState($profileStatus(address))
+  const [profile, setProfile] = useRecoilState($profile(address));
+  const [status, setStatus] = useRecoilState($profileStatus(address));
 
   // Will check if the supplied address is initialized
   async function check() {
-    setStatus(PROCESSING)
+    setStatus(PROCESSING);
     // isInitialized is going to throw an error if the address is null
     // so we will want to avoid that. Because react hooks can't dynamically
     // added and removed from a react node, you will find this sort of logic
     // will leak into our hooks, we could get around this by changing our
     // isInitialized function return null instead of throwing an error.
-    if (address != null) await isInitialized(address).then(setProfile)
-    setStatus(IDLE)
+    if (address != null) await isInitialized(address).then(setProfile);
+    setStatus(IDLE);
   }
 
   // will attempt at initializing the current address
   async function exec() {
-    setStatus(PROCESSING)
-    await initAccount()
-    setStatus(IDLE)
-    await check()
+    setStatus(PROCESSING);
+    await initAccount();
+    setStatus(IDLE);
+    await check();
   }
 
   return {
@@ -1024,7 +1028,7 @@ export function useInit(address) {
     status,
     IDLE,
     PROCESSING,
-  }
+  };
 }
 ```
 
@@ -1035,20 +1039,20 @@ as it is readily available to us, but any address should work and our component 
 ```javascript
 // File: ./src/App.js
 
-import React from "react"
-import {AuthCluster} from "./auth-cluster"
-import {InitCluster} from "./init-cluster"
-import {useCurrentUser} from "./hooks/current-user"
+import React from "react";
+import { AuthCluster } from "./auth-cluster";
+import { InitCluster } from "./init-cluster";
+import { useCurrentUser } from "./hooks/current-user";
 
 export default function App() {
-  const cu = useCurrentUser()
+  const cu = useCurrentUser();
 
   return (
     <div>
       <AuthCluster />
       <InitCluster address={cu.addr} />
     </div>
-  )
+  );
 }
 ```
 
@@ -1085,35 +1089,35 @@ Then add the code to the file, this one is a bit more complicated but is really 
 ```javascript
 // File: ./src/profile-cluster.js
 
-import {useState, useEffect} from "react"
-import {useCurrentUser} from "./hooks/current-user"
-import {useProfile} from "./hooks/profile"
+import { useState, useEffect } from "react";
+import { useCurrentUser } from "./hooks/current-user";
+import { useProfile } from "./hooks/profile";
 
 function ProfileForm() {
-  const cu = useCurrentUser()
-  const profile = useProfile(cu.addr)
-  const [name, setName] = useState("")
+  const cu = useCurrentUser();
+  const profile = useProfile(cu.addr);
+  const [name, setName] = useState("");
   useEffect(() => {
-    setName(profile.name)
-  }, [profile.name])
+    setName(profile.name);
+  }, [profile.name]);
 
   const submit = () => {
-    profile.setName(name)
-  }
+    profile.setName(name);
+  };
 
   return (
     <div>
-      <input value={name} onChange={e => setName(e.target.value)} />
+      <input value={name} onChange={(e) => setName(e.target.value)} />
       {profile.isIdle && <button onClick={submit}>Update Name</button>}
       {profile.isProcessing && <span>PROCESSING</span>}
     </div>
-  )
+  );
 }
 
-export function ProfileCluster({address}) {
-  const profile = useProfile(address)
-  useEffect(() => profile.refetch(), [address])
-  if (address == null) return null
+export function ProfileCluster({ address }) {
+  const profile = useProfile(address);
+  useEffect(() => profile.refetch(), [address]);
+  if (address == null) return null;
 
   return (
     <div>
@@ -1144,7 +1148,7 @@ export function ProfileCluster({address}) {
         </li>
       </ul>
     </div>
-  )
+  );
 }
 ```
 
@@ -1156,53 +1160,53 @@ If an account doesn't have a profile we are defaulting it to a Anonymous default
 ```javascript
 // File: ./src/hooks/profile.js
 
-import {atomFamily, useRecoilState} from "recoil"
-import {fetchProfile} from "../flow/fetch-profile.script"
-import {setName as profileSetName} from "../flow/profile-set-name.tx"
-import {useCurrentUser} from "./current-user"
+import { atomFamily, useRecoilState } from "recoil";
+import { fetchProfile } from "../flow/fetch-profile.script";
+import { setName as profileSetName } from "../flow/profile-set-name.tx";
+import { useCurrentUser } from "./current-user";
 
 const DEFAULT = {
   name: "Anon",
   color: "#232323",
   info: "...",
   avatar: "https://avatars.onflow.org/avatar/pew",
-}
-const IDLE = "IDLE"
-const PROCESSING = "PROCESSING"
+};
+const IDLE = "IDLE";
+const PROCESSING = "PROCESSING";
 
 const $profile = atomFamily({
   key: "PROFILE::STATE",
   default: DEFAULT,
-})
+});
 
 const $status = atomFamily({
   key: "PROFILE::STATUS",
   default: PROCESSING,
-})
+});
 
 export function useProfile(address) {
-  const cu = useCurrentUser()
-  const [profile, setProfile] = useRecoilState($profile(address))
-  const [status, setStatus] = useRecoilState($status(address))
+  const cu = useCurrentUser();
+  const [profile, setProfile] = useRecoilState($profile(address));
+  const [status, setStatus] = useRecoilState($status(address));
 
   async function refetch() {
-    setStatus(PROCESSING)
+    setStatus(PROCESSING);
     await fetchProfile(address)
-      .then(profile => {
-        if (profile == null) return profile
-        if (profile.avatar === "") profile.avatar = DEFAULT.avatar
-        if (profile.info === "") profile.info = DEFAULT.info
-        return profile
+      .then((profile) => {
+        if (profile == null) return profile;
+        if (profile.avatar === "") profile.avatar = DEFAULT.avatar;
+        if (profile.info === "") profile.info = DEFAULT.info;
+        return profile;
       })
-      .then(setProfile)
-    setStatus(IDLE)
+      .then(setProfile);
+    setStatus(IDLE);
   }
 
   async function setName(name) {
-    setStatus(PROCESSING)
-    await profileSetName(name)
-    setStatus(IDLE)
-    await refetch()
+    setStatus(PROCESSING);
+    await profileSetName(name);
+    setStatus(IDLE);
+    await refetch();
   }
 
   return {
@@ -1215,7 +1219,7 @@ export function useProfile(address) {
     PROCESSING,
     isIdle: status === IDLE,
     isProcessing: status === PROCESSING,
-  }
+  };
 }
 ```
 
@@ -1225,14 +1229,14 @@ Let's update our `./src/App.js` file to show the current users profile, as well 
 ```javascript
 // File: ./src/App.js
 
-import React from "react"
-import {AuthCluster} from "./auth-cluster"
-import {InitCluster} from "./init-cluster"
-import {ProfileCluster} from "./profile-cluster"
-import {useCurrentUser} from "./hooks/current-user"
+import React from "react";
+import { AuthCluster } from "./auth-cluster";
+import { InitCluster } from "./init-cluster";
+import { ProfileCluster } from "./profile-cluster";
+import { useCurrentUser } from "./hooks/current-user";
 
 export default function App() {
-  const cu = useCurrentUser()
+  const cu = useCurrentUser();
 
   return (
     <div>
@@ -1242,7 +1246,7 @@ export default function App() {
       <ProfileCluster address="0xba1132bc08f82fe2" />
       <ProfileCluster address="0xf117a8efa34ffd58" />
     </div>
-  )
+  );
 }
 ```
 
