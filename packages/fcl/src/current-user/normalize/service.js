@@ -3,9 +3,10 @@ import {normalizeAuthz} from "./authz"
 import {normalizePreAuthz} from "./pre-authz"
 import {normalizeFrame} from "./frame"
 import {normalizeBackChannelRpc} from "./back-channel-rpc"
+import {normalizeOpenId} from "./open-id"
 
 export function normalizeServices(services, data) {
-  return services.map((service) => normalizeService(service, data))
+  return services.map(service => normalizeService(service, data))
 }
 
 const serviceNormalizers = {
@@ -14,6 +15,7 @@ const serviceNormalizers = {
   authz: normalizeAuthz,
   authn: normalizeAuthn,
   frame: normalizeFrame,
+  "open-id": normalizeOpenId,
 }
 
 export function normalizeService(service, data) {

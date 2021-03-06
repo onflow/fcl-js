@@ -85,6 +85,15 @@ function notExpired(user) {
   )
 }
 
+async function configLens(regex) {
+  return Object.fromEntries(
+    Object.entries(await fcl.config().where(regex)).map(([key, value]) => [
+      key.replace(regex, ""),
+      value,
+    ])
+  )
+}
+
 async function authenticate() {
   return new Promise(async (resolve, reject) => {
     spawnCurrentUser()
@@ -98,10 +107,12 @@ async function authenticate() {
           (await config().get("challenge.handshake")),
       },
       {
-        onReady(e, {send, close}) {
-          console.log("ON READY", e)
-          // SEND CONFIG AND APP DESCRIPTION/NEEDS TO WALLET AUTHN
-          // YET TO BE DEFINED
+        async onReady(e, {send, close}) {
+          send({
+            type: "FCL:AUTHN:CONFIG",
+            services: await configLens(/^service\./),
+            app: await configLens(/^app\.detail\./),
+          })
         },
         async onClose() {
           resolve(await snapshot())
