@@ -64,7 +64,7 @@ export function frame(service, opts = {}) {
 
   function send(msg) {
     try {
-      console.log("SEND", msg)
+      // console.log("SEND", msg)
       $frame.contentWindow.postMessage(
         JSON.parse(JSON.stringify(msg || {})),
         "*"

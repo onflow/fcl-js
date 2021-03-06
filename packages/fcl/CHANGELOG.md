@@ -2,6 +2,30 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.0.68-alpha.10 - 2021-03-05
+
+- 2021-03-05 -- Additional Configuration
+  - `app.detail.title` -- the title of the application
+  - `app.detail.icon` -- url for an icon image for the application
+  - `service.OpenID.scopes` -- register interest for scopes to be returned by the wallet
+
+New configuration works like older configuration:
+
+```javascript
+import * as fcl from "@onflow/fcl"
+
+fcl
+  .config()
+  .put("app.detail.title", "My Great Application")
+  .put("app.detail.icon", "https://avatars.onflow.org/avatar/dapp")
+  .put("service.OpenID.scopes", "email email_verified name")
+```
+
+All OpenID data returned should be considered optional. For the time being it will be visable as a service in the current user, but in the future we will provide additional ways to subscribe and access this data.
+Info on what could be there is specified in [OpenID Connect Spec](https://openid.net/specs/openid-connect-basic-1_0.html) in particular under [2.4 Scope Values](https://openid.net/specs/openid-connect-basic-1_0.html#Scopes) and [2.5 Standard Claims](https://openid.net/specs/openid-connect-basic-1_0.html#StandardClaims).
+Wallets are not expected to implement the open-id service, and if they do we suggest best practice is for wallets to allow the account owner to decide what information is shared (all, none, somewhere in between), for stable applications we also highly recommend you do not depend on a wallet returning this info for a given user.
+As always with services an example of what they are supposed to return can be found in their normalization file: [normalize/open-id.js](https://github.com/onflow/flow-js-sdk/blob/1db3375bf353f22f6c7e40102c65a739810c17c6/packages/fcl/src/current-user/normalize/open-id.js)
+
 ### 0.0.68-alpha.9 - 2021-03-02
 
 - 2020-03-02 -- VSN `@onflow/sdk` 0.0.45-alpha.9 -> 0.0.45-alpha.10
