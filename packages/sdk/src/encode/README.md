@@ -9,7 +9,7 @@ Encoding utilities for [Flow](https://onflow.org) entities. Produces the values 
 - **Risk of Breaking Change:** Low
 
 This package is fairly close to its first major version release.
-As we propogate some of the terms used in this module to other things they might break, but unless the Flow blockchain needs different things signed nothing should really change here.
+As we propagate some of the terms used in this module to other things they might break, but unless the Flow blockchain needs different things signed nothing should really change here.
 
 # Install
 

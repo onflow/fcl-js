@@ -2,6 +2,7 @@ import { encode } from '@onflow/rlp';
 
 export const encodeTransactionPayload = tx => rlpEncode(preparePayload(tx))
 export const encodeTransactionEnvelope = tx => rlpEncode(prepareEnvelope(tx))
+export const encodeTransaction = tx => rlpEncode(prepareComplete(tx))
 
 const paddedHexBuffer = (value, pad) =>
   Buffer.from(value.padStart(pad * 2, 0), "hex")
@@ -38,13 +39,28 @@ const preparePayload = tx => {
 const prepareEnvelope = tx => {
   validateEnvelope(tx)
 
-  return [preparePayload(tx), preparePayloadSignatures(tx)]
-}
-
-const preparePayloadSignatures = tx => {
   const signers = collectSigners(tx)
 
-  return tx.payloadSigs
+  return [
+    preparePayload(tx), 
+    prepareSignatures(signers, tx.payloadSigs),
+  ]
+}
+
+const prepareComplete = tx => {
+  validateComplete(tx)
+
+  const signers = collectSigners(tx)
+
+  return [
+    preparePayload(tx), 
+    prepareSignatures(signers, tx.payloadSigs),
+    prepareSignatures(signers, tx.envelopeSigs),
+  ]
+}
+
+const prepareSignatures = (signers, sigs) => {
+  return signers
     .map(sig => {
       return {
         signerIndex: signers.get(sig.address),
@@ -91,9 +107,23 @@ const validatePayload = tx => {
 
 const validateEnvelope = tx => {
   envelopeFields.forEach(field => checkField(tx, field))
-  tx.payloadSigs.forEach((sig, index) => {
-    payloadSigFields.forEach(field =>
-      checkField(sig, field, "payloadSigs", index)
+  validatePayloadSigs(tx)
+}
+
+const validateComplete = tx => {
+  completeFields.forEach(field => checkField(tx, field))
+
+  validatePayloadSigs(tx)
+  validateEnvelopeSigs(tx)
+}
+
+const validatePayloadSigs = tx => validateSigs(tx.payloadSigs, "payloadSigs")
+const validateEnvelopeSigs = tx => validateSigs(tx.envelopeSigs, "envelopeSigs")
+
+const validateSigs = (sigs, base) => {
+  sigs.forEach((sig, index) => {
+    sigFields.forEach(field =>
+      checkField(sig, field, base, index)
     )
   })
 }
@@ -121,7 +151,12 @@ const proposalKeyFields = [
 
 const envelopeFields = [{name: "payloadSigs", check: isArray}]
 
-const payloadSigFields = [
+const completeFields = [
+  {name: "payloadSigs", check: isArray},
+  {name: "envelopeSigs", check: isArray},
+]
+
+const sigFields = [
   {name: "address", check: isString},
   {name: "keyId", check: isNumber},
   {name: "sig", check: isString},
