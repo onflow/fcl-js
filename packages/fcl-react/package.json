@@ -18,9 +18,9 @@
     }
   },
   "devDependencies": {
-    "jest": "26.4.2",
+    "jest": "^26.6.3",
     "jest-esm-transformer": "1.0.0",
-    "microbundle": "0.12.4"
+    "microbundle": "^0.13.0"
   },
   "source": "src/fcl-react.js",
   "main": "dist/fcl-react.js",
@@ -35,7 +35,7 @@
     "start": "microbundle watch"
   },
   "peerDependencies": {
-    "@onflow/fcl": "*",
+    "@onflow/fcl": "^0.0.67",
     "react": "*"
   }
 }
