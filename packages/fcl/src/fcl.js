@@ -53,4 +53,4 @@ export {limit} from "@onflow/sdk"
 export {ref} from "@onflow/sdk"
 export {params, param} from "@onflow/sdk"
 
-export const VERSION = "0.0.68-alpha.10"
+export const VERSION = "0.0.68-alpha.11"
