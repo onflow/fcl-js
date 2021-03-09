@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.com/onflow/flow-js-sdk.svg?branch=master)](https://travis-ci.com/onflow/flow-js-sdk)
+[![FLOW-JS-SDK Continuous Integration](https://github.com/onflow/flow-js-sdk/actions/workflows/integrate.yml/badge.svg)](https://github.com/onflow/flow-js-sdk/actions/workflows/integrate.yml)
 
 ## Introducing `@onflow/fcl`
 
