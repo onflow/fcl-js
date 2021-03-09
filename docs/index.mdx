@@ -4,17 +4,49 @@ title: Flow JavaScript SDK
 
 ## Introducing `@onflow/fcl`
 
-Flow's JavaScript SDK was created to make developing JavaScript applications that connect to
-the Flow blockchain easy and secure.
+Flow Client Library (FCL) enables applications to easily integrate with all FCL-compatible wallets and
+other services (e.g. (Comming Soon) profiles, private information, notifications). This offers developers a strong
+foundation to compose their apps with existing building blocks. It’s currently supported for browser
+applications, and will be extended to other platforms.
+
+With FCL, you can:
+
+- Integrate all compatible wallets without any custom code or code injection
+- Authenticate users
+- Query the Flow Blockchain
+- Send transactions (e.g. initializing resources, sending assets, purchasing, etc.)
+- Sign transactions through wallet integration avoiding key management
+
+With FCL, you will eventually be able to:
+
+- Personally sign data via FCL Compatible Wallets
+- Request Additional User info like Emails
 
 While it would be possible to create a Flow wallet as a browser plugin, we specifically created `@onflow/fcl` so that web-based dapps don’t have to depend on browser
 plugins. `@onflow/fcl` is able to connect browser-based dapps to a wallet service, or a wallet installed on your phone
 or running on your local computer without introducing the security risks that can come from installing
 a browser plugin.
 
+## Status
+
+- **Last Updated:** Mar 2nd 2021
+- **Stable:** Yes
+- **Risk of Breaking Change:** Low
+
+The things that exists probably won't be changing much externally, we will be adding new functionality in the near future.
+
+## The Difference between FCL and the JS-SDK
+
+We like to think about it this way. The JS-SDK is where we are discovering the fundamental operators (think plus, minus type of operators) for interacting with the Flow Blockchain.
+Some of those interactions, like a transaction, require things your application may not have, might not know, or shouldn't know (You should not know users private keys), FCL is more about how do you get those sorts of things so they can be used with the JS-SDK.
+
+## Should You use FCL or the JS-SDK
+
+Probably FCL, FCL exposes most of the JS-SDK, and hides a lot of things you probably don't want to care about like how to "resolve" a transaction, it sounds tedious, it is finicky and FCL is going to do it for you so you never have to worry about it.
+
 ## Wallet Discovery
 
-`@onflow/fcl` also eliminates the need for dapp developers to write code to integrate their user's preferred wallet into
+FCL also eliminates the need for dapp developers to write code to integrate their user's preferred wallet into
 their application. Instead,`@onflow/fcl` uses a secure discovery protocol that wallets can implement to connect
 to `@onflow/fcl`. The end result is dapps using `@onflow/fcl` automatically integrate all compatible wallets without their developers
 needing to write any custom code!
