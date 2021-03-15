@@ -151,6 +151,9 @@ export const decodeResponse = async (response, customDecoders = {}) => {
     return await Promise.all(
       response.events.map(async function decodeEvents(e) {
         return {
+          blockId: e.blockId,
+          blockHeight: e.blockHeight,
+          blockTimestamp: e.blockTimestamp,
           type: e.type,
           transactionId: e.transactionId,
           transactionIndex: e.transactionIndex,
