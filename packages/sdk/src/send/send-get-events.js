@@ -32,7 +32,7 @@ export async function sendGetEvents(ix, opts = {}) {
   ret.events = results.reduce((blocks, result) => {
     const blockId = result.getBlockId()
     const blockHeight = result.getBlockHeight()
-    const blockTimestamp = result.getBlockTimestamp()
+    const blockTimestamp = result.getBlockTimestamp().toDate().toISOString()
     const events = result.getEventsList()
     events.forEach(event => {
       blocks.push({
