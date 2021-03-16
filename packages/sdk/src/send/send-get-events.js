@@ -8,19 +8,22 @@ const hexBuffer = hex => Buffer.from(hex, "hex")
 export async function sendGetEvents(ix, opts = {}) {
   ix = await ix
  
+  let res
   const req = ix.events.start ? new GetEventsForHeightRangeRequest() : new GetEventsForBlockIDsRequest()
   req.setType(ix.events.eventType)
   
   if (ix.events.start) {
     req.setStartHeight(Number(ix.events.start))
     req.setEndHeight(Number(ix.events.end))
+
+    res = await unary(opts.node, AccessAPI.GetEventsForHeightRange, req)
   } else {
     ix.events.blockIds.forEach(id =>
       req.addBlockIds(hexBuffer(id))
     )
-  }
 
-  const res = await unary(opts.node, AccessAPI.GetEventsForHeightRange, req)
+    res = await unary(opts.node, AccessAPI.GetEventsForBlockIDs, req)
+  }
 
   let ret = response()
   ret.tag = ix.tag
