@@ -4,6 +4,7 @@
 
 ### 0.0.45-alpha.12 -- 2021-03-12
 
+- 2021-03-16 -- Fixed issue in `interaction` where `isNumber` did not correctly check if a value is a number or not
 - 2021-03-12 -- Fixed issue where `GetEvents*` interactions were not being sent in correct GRPC request type
 
 ### 0.0.45-alpha.10 -- 2021-03-02

@@ -102,7 +102,7 @@ export const interaction = () => JSON.parse(IX)
 const isArray = (d) => Array.isArray(d)
 const isObj = (d) => typeof d === "object"
 const isNull = (d) => d == null
-const isNumber = (d) => d === "number"
+const isNumber = (d) => typeof d === "number"
 const isFn = (d) => typeof d === "function"
 
 const CHARS = "abcdefghijklmnopqrstuvwxyz0123456789".split("")
