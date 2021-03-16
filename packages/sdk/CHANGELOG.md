@@ -4,7 +4,7 @@
 
 ### 0.0.45-alpha.12 -- 2021-03-12
 
-- 2021-03-12 -- Fixed issue where `GetBlock*` interactions were not being sent in correct GRPC request type
+- 2021-03-12 -- Fixed issue where `GetEvents*` interactions were not being sent in correct GRPC request type
 
 ### 0.0.45-alpha.10 -- 2021-03-02
 
