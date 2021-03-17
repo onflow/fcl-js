@@ -30,7 +30,7 @@ export async function sendGetEvents(ix, opts = {}) {
 
   const results = res.getResultsList()
   ret.events = results.reduce((blocks, result) => {
-    const blockId = result.getBlockId()
+    const blockId = u8ToHex(result.getBlockId_asU8())
     const blockHeight = result.getBlockHeight()
     const blockTimestamp = result.getBlockTimestamp().toDate().toISOString()
     const events = result.getEventsList()

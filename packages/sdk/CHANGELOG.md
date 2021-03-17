@@ -2,6 +2,10 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.0.45-alpha.13 -- 2021-03-17
+
+- 2021-03-17 -- Fixed an issue in `send-get-events` where block IDs were not being decoded to strings properly.
+
 ### 0.0.45-alpha.12 -- 2021-03-12
 
 - 2021-03-16 -- Fixed issue in `interaction` where `isNumber` did not correctly check if a value is a number or not
