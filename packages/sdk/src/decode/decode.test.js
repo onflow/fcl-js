@@ -1142,8 +1142,13 @@ describe("custom decoder tests", () => {
 
 describe("decode GetEvents tests", () => {
   it("decodes a GetEvents response correctly", async () => {
+      const timestampISOString =new Date().toISOString()
+
       const getEventsResponse = {
         events: [{
+          blockHeight: 123,
+          blockId: "abc123",
+          blockTimestamp: timestampISOString,
           eventIndex: 123,
           transactionId: "abc-123",
           transactionIndex: 123,
@@ -1154,6 +1159,9 @@ describe("decode GetEvents tests", () => {
 
       expect(await decodeResponse(getEventsResponse)).toStrictEqual(
         [{
+          blockHeight: 123,
+          blockId: "abc123",
+          blockTimestamp: timestampISOString,
           eventIndex: 123,
           transactionId: "abc-123",
           transactionIndex: 123,
