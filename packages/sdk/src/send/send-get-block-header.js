@@ -34,7 +34,7 @@ export async function sendGetBlockHeader(ix, opts = {}) {
     id: u8ToHex(blockHeader.getId_asU8()),
     parentId: u8ToHex(blockHeader.getParentId_asU8()),
     height: blockHeader.getHeight(),
-    timestamp: blockHeader.getTimestamp(),
+    timestamp: blockHeader.getTimestamp().toDate().toISOString(),
   }
 
   return ret

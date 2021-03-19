@@ -38,7 +38,7 @@ export async function sendGetBlock(ix, opts = {}) {
     id: u8ToHex(block.getId_asU8()),
     parentId: u8ToHex(block.getParentId_asU8()),
     height: block.getHeight(),
-    timestamp: block.getTimestamp(),
+    timestamp: block.getTimestamp().toDate().toISOString(),
     collectionGuarantees: collectionGuarantees.map(collectionGuarantee => ({
       collectionId: u8ToHex(collectionGuarantee.getCollectionId_asU8()),
       signatures: collectionGuarantee.getSignaturesList(),
