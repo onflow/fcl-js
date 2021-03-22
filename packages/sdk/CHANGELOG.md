@@ -2,6 +2,10 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.0.45-alpha.15 -- 2021-03-22
+
+- 2021-03-22 -- Fixed an issue where `send-get-block-header` interactions were not able to be sent correctly.
+
 ### 0.0.45-alpha.14 -- 2021-03-19
 
 - 2021-03-19 -- Fixed an issue in `send-get-block` and `send-get-block-header` where timestamps were not being decoded to ISO strings properly.
