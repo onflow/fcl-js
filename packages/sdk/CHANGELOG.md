@@ -2,6 +2,10 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.0.45-alpha.16 -- 2021-03-28
+
+- 2021-03-28 -- Added new test suits for `build` and `send`.
+
 ### 0.0.45-alpha.15 -- 2021-03-22
 
 - 2021-03-22 -- Fixed an issue where `send-get-block-header` interactions were not able to be sent correctly.
