@@ -1,11 +1,13 @@
 import {AccessAPI, GetTransactionRequest} from "@onflow/protobuf"
 import {response} from "../response/response.js"
-import {unary} from "./unary"
+import {unary as defaultUnary} from "./unary"
 
 const u8ToHex = u8 => Buffer.from(u8).toString("hex")
 const hexBuffer = hex => Buffer.from(hex, "hex")
 
 export async function sendGetTransactionStatus(ix, opts = {}) {
+  const unary = opts.unary || defaultUnary
+
   ix = await ix
 
   const req = new GetTransactionRequest()
