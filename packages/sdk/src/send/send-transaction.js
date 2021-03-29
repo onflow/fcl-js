@@ -1,7 +1,7 @@
 import {AccessAPI, Transaction, SendTransactionRequest} from "@onflow/protobuf"
 import {response} from "../response/response.js"
 import {sansPrefix} from "@onflow/util-address"
-import {unary} from "./unary"
+import {unary as defaultUnary} from "./unary"
 
 const u8ToHex = u8 => Buffer.from(u8).toString("hex")
 const paddedHexBuffer = (hex, pad) =>
@@ -12,6 +12,8 @@ const addressBuffer = addr => paddedHexBuffer(addr, 8)
 const argumentBuffer = arg => Buffer.from(JSON.stringify(arg), "utf8")
 
 export async function sendTransaction(ix, opts = {}) {
+  const unary = opts.unary || defaultUnary
+
   ix = await ix
 
   const tx = new Transaction()
