@@ -4,7 +4,7 @@ const roles = {
   payer: true
 }
 
-export function payer(authz) {
+export async function payer(authz) {
   return typeof authz === "function"
     ? makePayer({resolve: authz, role: roles, roles})
     : makePayer({...authz, role: roles, roles})
