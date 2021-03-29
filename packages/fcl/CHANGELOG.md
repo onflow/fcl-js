@@ -2,9 +2,116 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
-### 0.0.67-alpha.[36..39] - 2020-12-03
+### 0.0.68-alpha.10 - 2021-03-05
+
+- 2021-03-05 -- Additional Configuration
+  - `app.detail.title` -- the title of the application
+  - `app.detail.icon` -- url for an icon image for the application
+  - `service.OpenID.scopes` -- register interest for scopes to be returned by the wallet
+
+New configuration works like older configuration:
+
+```javascript
+import * as fcl from "@onflow/fcl"
+
+fcl
+  .config()
+  .put("app.detail.title", "My Great Application")
+  .put("app.detail.icon", "https://avatars.onflow.org/avatar/dapp")
+  .put("service.OpenID.scopes", "email email_verified name")
+```
+
+All OpenID data returned should be considered optional. For the time being it will be visable as a service in the current user, but in the future we will provide additional ways to subscribe and access this data.
+
+Info on what could be there is specified in [OpenID Connect Spec](https://openid.net/specs/openid-connect-basic-1_0.html) in particular under [2.4 Scope Values](https://openid.net/specs/openid-connect-basic-1_0.html#Scopes) and [2.5 Standard Claims](https://openid.net/specs/openid-connect-basic-1_0.html#StandardClaims).
+
+Wallets are not expected to implement the open-id service, and if they do we suggest best practice is for wallets to allow the account owner to decide what information is shared (all, none, somewhere in between), for stable applications we also highly recommend you do not depend on a wallet returning this info for a given user.
+
+As always with services, an example of the data they are supposed to return can be found in their normalization file: [normalize/open-id.js](https://github.com/onflow/flow-js-sdk/blob/master/packages/fcl/src/current-user/normalize/open-id.js)
+
+### 0.0.68-alpha.9 - 2021-03-02
+
+- 2020-03-02 -- VSN `@onflow/sdk` 0.0.45-alpha.9 -> 0.0.45-alpha.10
+
+### 0.0.68-alpha.[7..8] - 2021-03-02
+
+- 2021-03-02 -- Authn now uses frame mechanism from Authz flow.
+  - This is in prep for sending config details to wallet during handshake.
+  - Enables standardized `FCL:FRAME:CLOSE` message for closing frame
+  - Introduces a new standardized response `FCL:FRAME:RESPONSE` for wallets to pass the final response back.
+  - (EXPERIMENTAL) Introduces a new standardized open response `FCL:FRAME:OPEN` for wallets that need to escape the iframe in web browser
+  - This is backwards compatible with older versions of the FCL wallet spec, but will not be included in V1 release.
+- 2021-03-02 -- Introduced new config `discovery.wallet`. This will eventually replace `challenge.handshake`.
+  - Current implementation will look for `discovery.wallet` first and then fallback onto `challenge.handshake`.
+  - This is backwards compatible with older version of FCL, but will not be included in V1 release.
+
+New Wallet AUTHN Flow will now look like this:
+
+```
+FCL                         Wallet
+ |                            |
+ |-------[Render Frame]------>|
+ |                            |
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[OPTIONAL READY FLOW]
+ |<----[FCL:FRAME:READY]------|  // Enables wallet to receive
+ |----[APP DETAILS/NEEDS]---->|  // Application specific details/needs
+ |     [handles details]------*
+ |                            |
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[OPTIONAL TAB FLOW] (EXPERIMENTAL)
+ |<----[FCL:FRAME:OPEN]-------|  // Some authentication flows cant
+ |------[Open Tab]----------->|  // Be handled in an iframe
+ |                            |
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[GOLDEN AUTH PATH]
+ |<----[FCL:FRAME:RESPONSE]---|
+ *-------[handles auth]       |
+ |-------[Close Frame]---X    |
+ |--------[Close Tab]----X    |
+ |                            |
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[CANCEL AUTH PATH]
+ |<----[FCL:FRAME:CLOSE]------|
+ |-------[Close Frame]---X    |
+ |--------[Close Tab]----X    |
+ |                            |
+```
+
+`FCL:FRAME:OPEN` payload needs to look like this:
+
+```json
+{
+  "type": "FCL:FRAME:OPEN",
+  "endpoint": "https://google.com"
+}
+```
+
+> The opened tab (web view in something like Unity/iOS?) will not be responsible for sending the Final `FCL:FRAME:RESPONSE` or `FCL:FRAME:CLOSE` messages (this will need to be the frame), but FCL will attempt to close the tab one authn is complete.
+
+### 0.0.68-alpha.[1..6] - 2021-02-02
+
+- 2021-02-02 -- Adds support for new `GetEvents`, `GetBlockHeader`, `GetBlock`, `GetTransaction` interactions.
+
+### 0.0.67 - 2021-01-14
+
+- 2021-01-14 -- General Cleanup
+
+### 0.0.67-alpha.43 - 2020-12-11
+
+- 2020-12-11 -- Disables setting keyId in fetch signatures
+
+### 0.0.67-alpha.42 - 2020-12-11
+
+- 2020-12-11 -- VSN `@onflow/sdk-send` 0.0.9 -> 0.0.10
+- 2020-12-11 -- VSN `@onflow/sdk-resolve` 0.0.9 -> 0.0.10
+- 2020-12-11 -- VSN `@onflow/sdk-account` 0.0.7 -> 0.0.8
+
+### 0.0.67-alpha.41 - 2020-12-08
+
+- 2020-12-08 -- FIX: issue with multi-sig from same account (@boczeraturl)
+
+### 0.0.67-alpha.[36..40] - 2020-12-03
 
 - 2020-12-03 -- Updates `@onflow/send` -- This includes some fixes involving how signatures are added to transaction rpc calls
+- 2020-12-03 -- FIX: `fcl.serialize` respects injected resolver propoerly.
+- 2020-12-03 -- Prep for Resolver extraction.
 
 ### 0.0.67-alpha.[19..35] - 2020-11-26
 

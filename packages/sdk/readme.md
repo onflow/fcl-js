@@ -1,8 +1,11 @@
-# @onflow/sdk
+---
+title: SDK
+description: A collection of modules that make interacting with Flow easier
+---
 
-A collection of modules that make interacting with [Flow](https://onflow.org) easier.
 
-# Status
+
+## Status
 
 - **Last Updated:** August 13th 2020
 - **Stable:** Yes
@@ -10,13 +13,13 @@ A collection of modules that make interacting with [Flow](https://onflow.org) ea
 
 This package is working and in active development, breaking changes may happen.
 
-# Install
+## Install
 
 ```bash
 npm install --save @onflow/sdk
 ```
 
-# Flow JS-SDK
+## Flow JS-SDK
 
 #### Introduction
 
@@ -42,7 +45,7 @@ We will walk through each phase to exaplain how it is relevant for your applicat
 
 Build is the phase of your use of the Flow JS-SDK where you _Build_ up a specific interaction. During this phase you specify upon an interaction what information you currently know. This may include the specific Cadence code for a Script you wish to execute, or the address for the Account of which you wish to get. As you specify information, the type of the interaction you are composing becomes clear. For example, if you Build an interaction and specify that you want to get an account for a specific address, you are composing an interaction of type Get Account.
 
-The Flow JS-SDK exposes what we call a _build_ function, and a suite of _builder_ functions. The build function consumes as its argument an array of builder functions within it. Each builder function consumes information that you know, and that you want to place into the interaction. 
+The Flow JS-SDK exposes what we call a _build_ function, and a suite of _builder_ functions. The build function consumes as its argument an array of builder functions within it. Each builder function consumes information that you know, and that you want to place into the interaction.
 
 Example 1
     : Building an Execute Script Interaction
@@ -135,7 +138,7 @@ const resolvedInteraction = await sdk.pipe(builtInteraction, [
 ])
 ```
 
-In Example 4 we Build an Execute Script Interaction by using the script builder to specify a Cadence script and the args and arg builders to specify some arguments to pass into the Cadence Script. To Resolve this built interaction, we pipe'd the built interaction through an array of resolvers. The resolveParams resolver encoded the Cadence script into a format the Flow Blockchain accepts, and the resolveArguments resolver prepared the arguments into the correct encoding that the Flow Blockchain accepts. 
+In Example 4 we Build an Execute Script Interaction by using the script builder to specify a Cadence script and the args and arg builders to specify some arguments to pass into the Cadence Script. To Resolve this built interaction, we pipe'd the built interaction through an array of resolvers. The resolveParams resolver encoded the Cadence script into a format the Flow Blockchain accepts, and the resolveArguments resolver prepared the arguments into the correct encoding that the Flow Blockchain accepts.
 
 Example 5
     : Building an Execute Script Interaction
@@ -172,7 +175,7 @@ After the Transaction Interaction is built, we pipe it through a series of resol
 
 ## Send
 
-Once an Interaction has been _Built_ and, if necessary, _Resolved_ it can then be _Sent_ to the Flow Blockchain. Fortunately, sending to the Flow Blockchain is simple. The Flow JS-SDK exposes a Send function which consumes an Interaction and some configuration, and returns a data structure called a _Response_ (more on this later). 
+Once an Interaction has been _Built_ and, if necessary, _Resolved_ it can then be _Sent_ to the Flow Blockchain. Fortunately, sending to the Flow Blockchain is simple. The Flow JS-SDK exposes a Send function which consumes an Interaction and some configuration, and returns a data structure called a _Response_ (more on this later).
 
 Example 6
     : Sending an Execute Script Interaction
@@ -250,7 +253,7 @@ Decode does several things under the hood to take your response into something y
 
 Custom Decoders are a concept available in the Flow JS-SDK which allows developers to, when decoding a response, exchange any Cadence typed values into their desired JavaScript value.
 
-Custom Decoders are declared by passing a configuration object of key value pairs into the decode function. The keys included in this object correspond to the Cadence type you wish to provide a custom decoder for, and the value must be an asyncronous function which returns your desired JavaScript value for the type. The keys in this object can optionally be regex values declared by writing a regular expression between two forward slashes (ie: "/my-regex-exp/"). 
+Custom Decoders are declared by passing a configuration object of key value pairs into the decode function. The keys included in this object correspond to the Cadence type you wish to provide a custom decoder for, and the value must be an asyncronous function which returns your desired JavaScript value for the type. The keys in this object can optionally be regex values declared by writing a regular expression between two forward slashes (ie: "/my-regex-exp/").
 
 Example 8
     : Using a Custom Decoder to decode an Execute Script interaction.
@@ -288,8 +291,8 @@ class Point {
     constructor({ x, y }) {
         this.x = x
         this.y = y
-        this.created_at = Date.now() 
-    }    
+        this.created_at = Date.now()
+    }
 }
 
 const decoded = await sdk.decode(response, {
@@ -347,7 +350,7 @@ import * as sdk from "@onflow/sdk"
 const response = await sdk.send(resolvedTxIx, { node: "http://localhost:8080" })
 ```
 
-The SDK additionally supplies builders to construct interactions of many different types to interact with the Access Node's various APIs. 
+The SDK additionally supplies builders to construct interactions of many different types to interact with the Access Node's various APIs.
 
 Please reference the provided example project `react-simple` for example code.
 
@@ -398,7 +401,7 @@ const response = await sdk.send(await sdk.build([
 
 ### Script Usage
 
-```javascript 
+```javascript
 import * as sdk from "@onflow/sdk"
 import * as types from "@onflow/types"
 const response = await sdk.send(await sdk.pipe(await sdk.build([

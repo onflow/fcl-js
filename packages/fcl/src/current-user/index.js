@@ -1,27 +1,18 @@
 import "../default-config"
-import {account} from "@onflow/sdk-account"
+import {account} from "@onflow/sdk"
 import {config} from "@onflow/config"
 import {spawn, send, INIT, SUBSCRIBE, UNSUBSCRIBE} from "@onflow/util-actor"
 import {sansPrefix} from "@onflow/util-address"
-import {account as fetchAccount} from "@onflow/sdk-account"
-import {renderAuthnFrame} from "./render-authn-frame"
 import {buildUser} from "./build-user"
-import {fetchServices} from "./fetch-services"
-import {mergeServices} from "./merge-services"
 import {serviceOfType} from "./service-of-type"
-import {validateCompositeSignature} from "./validate-composite-signature"
 import {execService} from "./exec-service"
+import {frame} from "./exec-service/strategies/utils/frame"
 
 const NAME = "CURRENT_USER"
 const UPDATED = "CURRENT_USER/UPDATED"
 const SNAPSHOT = "SNAPSHOT"
 const SET_CURRENT_USER = "SET_CURRENT_USER"
 const DEL_CURRENT_USER = "DEL_CURRENT_USER"
-
-// Backwards Compatibility
-const CANCEL_EVENT = "FCL::CANCEL"
-const CHALLENGE_RESPONSE_EVENT = "FCL::CHALLENGE::RESPONSE"
-const CHALLENGE_CANCEL_EVENT = "FCL::CHALLENGE::CANCEL"
 
 const DATA = `{
   "f_type": "User",
@@ -94,33 +85,45 @@ function notExpired(user) {
   )
 }
 
+async function configLens(regex) {
+  return Object.fromEntries(
+    Object.entries(await fcl.config().where(regex)).map(([key, value]) => [
+      key.replace(regex, ""),
+      value,
+    ])
+  )
+}
+
 async function authenticate() {
-  return new Promise(async resolve => {
+  return new Promise(async (resolve, reject) => {
     spawnCurrentUser()
     const user = await snapshot()
     if (user.loggedIn && notExpired(user)) return resolve(user)
 
-    const [$frame, unrender] = renderAuthnFrame({
-      handshake: await config().get("challenge.handshake"),
-      l6n: window.location.origin,
-    })
-
-    const replyFn = async ({data}) => {
-      if (data.type === CHALLENGE_CANCEL_EVENT || data.type === CANCEL_EVENT) {
-        unrender()
-        window.removeEventListener("message", replyFn)
-        return
+    frame(
+      {
+        endpoint:
+          (await config().get("discovery.wallet")) ||
+          (await config().get("challenge.handshake")),
+      },
+      {
+        async onReady(e, {send, close}) {
+          send({
+            type: "FCL:AUTHN:CONFIG",
+            services: await configLens(/^service\./),
+            app: await configLens(/^app\.detail\./),
+          })
+        },
+        async onClose() {
+          resolve(await snapshot())
+        },
+        async onResponse(e, {close}) {
+          send(NAME, SET_CURRENT_USER, await buildUser(e.data))
+          resolve(await snapshot())
+          close()
+        },
       }
-      if (data.type !== CHALLENGE_RESPONSE_EVENT) return
-
-      unrender()
-      window.removeEventListener("message", replyFn)
-
-      send(NAME, SET_CURRENT_USER, await buildUser(data))
-      resolve(await snapshot())
-    }
-
-    window.addEventListener("message", replyFn)
+    )
   })
 }
 
@@ -129,7 +132,7 @@ function unauthenticate() {
   send(NAME, DEL_CURRENT_USER)
 }
 
-const mmmh = authz => ({
+const normalizePreAuthzResponse = authz => ({
   f_type: "PreAuthzResponse",
   f_vsn: "1.0.0",
   proposer: (authz || {}).proposer,
@@ -137,16 +140,13 @@ const mmmh = authz => ({
   authorization: (authz || {}).authorization || [],
 })
 
-function rawr(authz) {
-  console.log("rawr(authz)[A]", {authz})
-  const resp = mmmh(authz)
+function resolvePreAuthz(authz) {
+  const resp = normalizePreAuthzResponse(authz)
   const axs = []
 
   if (resp.proposer != null) axs.push(["PROPOSER", resp.proposer])
   for (let az of resp.payer || []) axs.push(["PAYER", az])
   for (let az of resp.authorization || []) axs.push(["AUTHORIZER", az])
-
-  console.log("rawr(authz)[B]", {authz, axs, resp})
 
   var result = axs.map(([role, az]) => ({
     tempId: [az.identity.address, az.identity.keyId].join("|"),
@@ -161,7 +161,6 @@ function rawr(authz) {
       authorizer: role === "AUTHORIZER",
     },
   }))
-  console.log("rawr(authz)[x]", {authz, result})
   return result
 }
 
@@ -176,7 +175,7 @@ async function authorization(account) {
       ...account,
       tempId: "CURRENT_USER",
       async resolve(account, preSignable) {
-        return rawr(await execService(preAuthz, preSignable))
+        return resolvePreAuthz(await execService(preAuthz, preSignable))
       },
     }
   }

@@ -1,22 +1,25 @@
-# @onflow/types
+---
+title: Types
+description: Translates JavaScript values into equivalent Cadence compatible values
+---
 
-Translates JavaScript values into equivalent Cadence compatible values.
 
-# Status
+
+## Status
 
 - **Last Updated:** July 10 2020
 - **Stable:** Yes
 - **Risk of Breaking Change:** Medium
 
-# Install
+## Install
 
 ```bash
 npm install --save @onflow/types
 ```
 
-# Usage
+## Usage
 
-## Transactions
+### Transactions
 
 ```javascript
 import * as sdk from "@onflow/sdk"
@@ -38,7 +41,7 @@ sdk.build([
 ])
 ```
 
-## Scripts
+### Scripts
 
 ```javascript
 import * as sdk from "@onflow/sdk"
@@ -59,7 +62,7 @@ sdk.build([
 
 # Available Types
 
-## UInt
+### UInt
 
 ```javascript
 import * as t from "@onflow/types"
@@ -69,7 +72,7 @@ sdk.build([
 ])
 ```
 
-## Int
+### Int
 
 ```javascript
 import * as t from "@onflow/types"
@@ -79,7 +82,7 @@ sdk.build([
 ])
 ```
 
-## UInt8
+### UInt8
 
 ```javascript
 import * as t from "@onflow/types"
@@ -89,7 +92,7 @@ sdk.build([
 ])
 ```
 
-## Int8
+### Int8
 
 ```javascript
 import * as t from "@onflow/types"
@@ -99,7 +102,7 @@ sdk.build([
 ])
 ```
 
-## UInt16
+### UInt16
 
 ```javascript
 import * as t from "@onflow/types"
@@ -109,7 +112,7 @@ sdk.build([
 ])
 ```
 
-## Int16
+### Int16
 
 ```javascript
 import * as t from "@onflow/types"
@@ -119,7 +122,7 @@ sdk.build([
 ])
 ```
 
-## UInt32
+### UInt32
 
 ```javascript
 import * as t from "@onflow/types"
@@ -129,7 +132,7 @@ sdk.build([
 ])
 ```
 
-## Int32
+### Int32
 
 ```javascript
 import * as t from "@onflow/types"
@@ -139,7 +142,7 @@ sdk.build([
 ])
 ```
 
-## UInt64
+### UInt64
 
 ```javascript
 import * as t from "@onflow/types"
@@ -149,7 +152,7 @@ sdk.build([
 ])
 ```
 
-## Int64
+### Int64
 
 ```javascript
 import * as t from "@onflow/types"
@@ -159,7 +162,7 @@ sdk.build([
 ])
 ```
 
-## UInt128
+### UInt128
 
 ```javascript
 import * as t from "@onflow/types"
@@ -169,7 +172,7 @@ sdk.build([
 ])
 ```
 
-## Int128
+### Int128
 
 ```javascript
 import * as t from "@onflow/types"
@@ -179,7 +182,7 @@ sdk.build([
 ])
 ```
 
-## UInt256
+### UInt256
 
 ```javascript
 import * as t from "@onflow/types"
@@ -189,7 +192,7 @@ sdk.build([
 ])
 ```
 
-## Int256
+### Int256
 
 ```javascript
 import * as t from "@onflow/types"
@@ -199,7 +202,7 @@ sdk.build([
 ])
 ```
 
-## Word8
+### Word8
 
 ```javascript
 import * as t from "@onflow/types"
@@ -209,7 +212,7 @@ sdk.build([
 ])
 ```
 
-## Word16
+### Word16
 
 ```javascript
 import * as t from "@onflow/types"
@@ -219,7 +222,7 @@ sdk.build([
 ])
 ```
 
-## Word32
+### Word32
 
 ```javascript
 import * as t from "@onflow/types"
@@ -229,7 +232,7 @@ sdk.build([
 ])
 ```
 
-## Word64
+### Word64
 
 ```javascript
 import * as t from "@onflow/types"
@@ -239,7 +242,7 @@ sdk.build([
 ])
 ```
 
-## UFix64
+### UFix64
 
 ```javascript
 import * as t from "@onflow/types"
@@ -249,7 +252,7 @@ sdk.build([
 ])
 ```
 
-## Fix64
+### Fix64
 
 ```javascript
 import * as t from "@onflow/types"
@@ -259,7 +262,7 @@ sdk.build([
 ])
 ```
 
-## String
+### String
 
 ```javascript
 import * as t from "@onflow/types"
@@ -269,7 +272,7 @@ sdk.build([
 ])
 ```
 
-## Character
+### Character
 
 ```javascript
 import * as t from "@onflow/types"
@@ -279,7 +282,7 @@ sdk.build([
 ])
 ```
 
-## Bool
+### Bool
 
 ```javascript
 import * as t from "@onflow/types"
@@ -289,7 +292,7 @@ sdk.build([
 ])
 ```
 
-## Address
+### Address
 
 ```javascript
 import * as t from "@onflow/types"
@@ -299,7 +302,7 @@ sdk.build([
 ])
 ```
 
-## Void
+### Void
 
 ```javascript
 import * as t from "@onflow/types"
@@ -309,7 +312,7 @@ sdk.build([
 ])
 ```
 
-## Optional
+### Optional
 
 ```javascript
 import * as t from "@onflow/types"
@@ -323,7 +326,7 @@ sdk.build([
 ])
 ```
 
-## Reference
+### Reference
 
 ```javascript
 import * as t from "@onflow/types"
@@ -333,7 +336,7 @@ sdk.build([
 ])
 ```
 
-## Array
+### Array
 
 ```javascript
 import * as t from "@onflow/types"
@@ -347,13 +350,13 @@ sdk.build([
 ])
 ```
 
-## Dictionary
+### Dictionary
 
 ```javascript
 import * as t from "@onflow/types"
 
 sdk.build([
-  sdk.args([ 
+  sdk.args([
     sdk.arg(
       [
         {key: 1, value: "one"},
@@ -363,67 +366,67 @@ sdk.build([
         {key: t.Int, value: t.String},
         {key: t.Int, value: t.String},
       ])
-    ) 
+    )
   ])
 ])
 
 sdk.build([
-  sdk.args([ 
+  sdk.args([
     sdk.arg(
       {key: 1, value: "one"},
       t.Dictionary({key: t.Int, value: t.String})
-    ) 
+    )
   ])
 ])
 ```
 
-## Struct
+### Struct
 
 ```javascript
 import * as t from "@onflow/types"
 
 sdk.build([
-  sdk.args([ 
+  sdk.args([
     sdk.arg(
       {
         fields: [{name: "CryptoKitty_name", value: "Lil' Jimmy The CryptoKitty"}],
       },
       t.Struct("0xABC123DEF456.CryptoKitty", [{value: t.String}])
-    ) 
+    )
   ])
 ])
 ```
 
-## Event
+### Event
 
 ```javascript
 import * as t from "@onflow/types"
 
 sdk.build([
-  sdk.args([ 
+  sdk.args([
     sdk.arg(
       {
         fields: [{name: "wasTheCodeClean?", value: "absolutely"}],
       },
       t.Event("0xABC123DEF456.JeffWroteSomeJS", [{value: t.String}]),
-    ) 
+    )
   ])
 ])
 ```
 
-## Resource
+### Resource
 
 ```javascript
 import * as t from "@onflow/types"
 
 sdk.build([
-  sdk.args([ 
+  sdk.args([
     sdk.arg(
       {
         fields: [{name: "Jeffysaur_Name", value: "Mr Jeff The Dinosaur"}],
       }
       t.Resource("0x01.Jeffysaur", [{value: t.String}]),
-    ) 
+    )
   ])
 ])
 ```

@@ -2,6 +2,48 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.0.45-alpha.15 -- 2021-03-22
+
+- 2021-03-22 -- Fixed an issue where `send-get-block-header` interactions were not able to be sent correctly.
+
+### 0.0.45-alpha.14 -- 2021-03-19
+
+- 2021-03-19 -- Fixed an issue in `send-get-block` and `send-get-block-header` where timestamps were not being decoded to ISO strings properly.
+
+### 0.0.45-alpha.13 -- 2021-03-17
+
+- 2021-03-17 -- Fixed an issue in `send-get-events` where block IDs were not being decoded to strings properly.
+
+### 0.0.45-alpha.12 -- 2021-03-12
+
+- 2021-03-16 -- Fixed issue in `interaction` where `isNumber` did not correctly check if a value is a number or not
+- 2021-03-12 -- Fixed issue where `GetEvents*` interactions were not being sent in correct GRPC request type
+
+### 0.0.45-alpha.10 -- 2021-03-02
+
+- 2021-03-02 -- Fixed issue where `ExecuteScript*` interactions were not being sent in correct GRPC request type
+- 2021-03-02 -- Fixed issue where `GetAccount*` interactions were not being sent in correct GRPC request type
+
+### 0.0.45-alpha.[4-6] -- 2021-02-02
+
+- 2021-02-18 -- Merged `@onflow/send` into `@onflow/sdk`
+- 2021-02-18 -- Merged `@onflow/decode` into `@onflow/sdk`
+- 2021-02-18 -- Merged `@onflow/encode` into `@onflow/sdk`
+- 2021-02-18 -- Merged `@onflow/interaction` into `@onflow/sdk`
+- 2021-02-18 -- Merged `@onflow/response` into `@onflow/sdk`
+- 2021-02-18 -- Merged all `@onflow/resolve-*` into `@onflow/sdk`
+- 2021-02-18 -- Merged all `@onflow/build-*` into `@onflow/sdk`
+
+### 0.0.45-alpha.[1-3] -- 2021-02-02
+
+- 2021-02-02 -- Adds support for new `GetEvents`, `GetBlockHeader`, `GetBlock` interactions.
+
+### 0.0.44 -- 2020-12-11
+
+- 2020-12-11 -- VSN `@onflow/sdk-resolve-ref-block-id` 0.0.0 -> 0.0.7
+- 2020-12-11 -- VSN `@onflow/decode` 0.0.9 -> 0.0.10
+- 2020-12-11 -- VSN `@onflow/send` 0.0.34 -> 0.0.34
+
 ### 0.0.43 -- 2020-10-28
 
 - 2020-11-04 -- VSN `@onflow/sdk-resolve-signatures` 0.0.4 -> 0.0.5

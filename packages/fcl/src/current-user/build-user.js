@@ -21,7 +21,7 @@ function normalizeData(data) {
 }
 
 function findService(type, services) {
-  return services.find((d) => d.type === type)
+  return services.find(d => d.type === type)
 }
 
 export async function buildUser(data) {
@@ -30,9 +30,7 @@ export async function buildUser(data) {
   var services = mergeServices(
     data.services || [],
     await fetchServices(data.hks, data.code)
-  ).map((service) => normalizeService(service, data))
-
-  // console.log("BUILD USER", services)
+  ).map(service => normalizeService(service, data))
 
   const authn = findService("authn", services)
 

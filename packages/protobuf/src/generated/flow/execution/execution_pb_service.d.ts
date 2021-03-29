@@ -1,4 +1,4 @@
-// package: execution
+// package: flow.execution
 // file: flow/execution/execution.proto
 
 import * as flow_execution_execution_pb from "../../flow/execution/execution_pb";

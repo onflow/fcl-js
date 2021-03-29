@@ -1,5 +1,153 @@
 # Transitions
 
+## 0007 Deprecate Opts First Arg Latest Block
+
+- **Date:** Feb 2nd 2021
+- **Type:** Deprecation of options as first arguemnt to latestBlock
+
+For JS-SDK versions 0.0.44 and below, getting the latest block looked like this:
+
+```javascript
+let options = {...}
+
+await sdk.latestBlock(options)
+```
+
+Getting the latest block now works slightly differently. If you wish to get the latest block, you must now pass in arguments
+like such:
+
+```javascript
+let options = {...}
+let isSealed = false
+
+await sdk.latestBlock(isSealed, options)
+```
+
+The first argument to `latestBlock` must be a boolean specifying if the latest block must be sealed or not, followed by send options
+as the second argument.
+
+We reccomend migrating your code to the new format as soon as you can. In future versions of the JS-SDK, `latestBlock` may
+cease to accept options as the first argument.
+
+## 0006 Deprecate Get Latest Block Builder
+
+- **Date:** Feb 2nd 2021
+- **Type:** Deprecation of getLatestBlock Builder
+
+For JS-SDK versions 0.0.44 and below, getting the latest block looked like this:
+
+```javascript
+await sdk.send(sdk.build([
+  sdk.getLatestBlock()
+]).then(sdk.decode)
+```
+
+Getting the latest block now works slightly differently. If you wish to get the latest block, you must now use the
+`getBlock` builder like such:
+
+```javascript
+let isSealed = false
+
+await sdk.send(sdk.build([
+  sdk.getBlock(isSealed)
+]).then(sdk.decode)
+```
+
+You can optionally specify if you require the latest block to be sealed or not by passing in an isSealed boolean as the first
+arguement to the `getBlock` builder.
+
+We reccomend migrating your code to the new format as soon as you can. In future versions of the JS-SDK, the `getLatestBlock` builder
+may cease to exist.
+
+## 0005 Deprecate Start End Get Events Builder
+
+- **Date:** Feb 2nd 2021
+- **Type:** Deprecation of getEvents Builder
+
+For JS-SDK versions 0.0.44 and below, getting events in a block height range looked something like this:
+
+```javascript
+await sdk.send(sdk.build([
+  sdk.getEvents("MyEvent", 123, 456)
+]).then(sdk.decode)
+```
+
+Getting events now works slightly differently. If you wish to get events in a block height range, you must now use the
+`getEventsAtBlockHeightRange` builder like such:
+
+```javascript
+await sdk.send(sdk.build([
+  sdk.getEventsAtBlockHeightRange("MyEvent", 123, 456)
+]).then(sdk.decode)
+```
+
+If you wish to get events in a selection of blocks specified by block ids, you can now use the `getEventsAtBlockIds` builder
+like such:
+
+```javascript
+await sdk.send(sdk.build([
+  sdk.getEventsAtBlockIds("MyEvent", [
+    "c4f239d49e96d1e5fbcf1f31027a6e582e8c03fcd9954177b7723fdb03d938c7",
+    "5dbaa85922eb194a3dc463c946cc01c866f2ff2b88f3e59e21c0d8d00113273f"
+  ])
+]).then(sdk.decode)
+```
+
+We reccomend migrating your code to the new format as soon as you can. In future versions of the JS-SDK, the `getEvents` builder
+may cease to exist.
+
+## 0004 Deprecate Get Block By Id Builder
+
+- **Date:** Feb 2nd 2021
+- **Type:** Deprecation of getBlockById Builder
+
+For JS-SDK versions 0.0.44 and below, getting a block at a specific block id looked something like this:
+
+```javascript
+await sdk.send(sdk.build([
+  sdk.getBlockById("c4f239d49e96d1e5fbcf1f31027a6e582e8c03fcd9954177b7723fdb03d938c7")
+]).then(sdk.decode)
+```
+
+Moving forward, getting a block by a specific block id will work by specifying that you want to get a block, and then the block id
+of the block you wish to get like such:
+
+```javascript
+await sdk.send(sdk.build([
+  sdk.getBlock(),
+  sdk.atBlockId("c4f239d49e96d1e5fbcf1f31027a6e582e8c03fcd9954177b7723fdb03d938c7")
+]).then(sdk.decode)
+```
+
+We reccomend migrating your code to the new format as soon as you can. In future versions of the JS-SDK, the `getBlockById` builder
+may cease to exist.
+
+## 0003 Deprecate Get Block By Height Builder
+
+- **Date:** Feb 2nd 2021
+- **Type:** Deprecation of getBlockByHeight Builder
+
+For JS-SDK versions 0.0.44 and below, getting a block at a specific block height looked something like this:
+
+```javascript
+await sdk.send(sdk.build([
+  sdk.getBlockByHeight(123)
+]).then(sdk.decode)
+```
+
+Moving forward, getting a block by a specific block height will work by specifying that you want to get a block, and then the block height
+of the block you wish to get like such:
+
+```javascript
+await sdk.send(sdk.build([
+  sdk.getBlock(),
+  sdk.atBlockHeight(123)
+]).then(sdk.decode)
+```
+
+We reccomend migrating your code to the new format as soon as you can. In future versions of the JS-SDK, the `getBlockByHeight` builder
+may cease to exist.
+
 ## 0002 Deprecate Resolve Params Resolver
 
 - **Date:** Sept 29th 2020

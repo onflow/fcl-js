@@ -54,7 +54,7 @@ const authorizationFunction = (account) => {
 }
 ```
 
-## How too create a Signing Function
+## How to create a Signing Function
 
 Creating a signing function is also relatively simple!
 
