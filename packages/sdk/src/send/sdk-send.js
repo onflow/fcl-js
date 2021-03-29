@@ -40,7 +40,7 @@ export const send = async (ix, opts = {}) => {
         case isScript(ix):
             return opts.sendExecuteScript ? opts.sendExecuteScript(ix, opts) : sendExecuteScript(ix, opts)
         case isGetAccount(ix):
-            return opts.sendExecuteScript ? opts.sendGetAccount(ix, opts) : sendGetAccount(ix, opts)
+            return opts.sendGetAccount ? opts.sendGetAccount(ix, opts) : sendGetAccount(ix, opts)
         case isGetEvents(ix):
             return opts.sendGetEvents ? opts.sendGetEvents(ix, opts) : sendGetEvents(ix, opts)
         case isGetLatestBlock(ix):
