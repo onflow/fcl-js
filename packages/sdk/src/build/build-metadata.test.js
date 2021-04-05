@@ -4,7 +4,6 @@ import {meta} from "./build-metadata.js"
 describe("Build Meta", () => {
   test("Build Meta", async () => {
     const metadata = {
-      kind: "METADATA",
       title: "Kitty Kangol",
       description: "A cool cat hat",
       price: "10",
