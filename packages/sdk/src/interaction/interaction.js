@@ -18,8 +18,6 @@ export const OK /*  */ = "OK"
 export const ACCOUNT /*  */ = "ACCOUNT"
 export const PARAM /*    */ = "PARAM"
 export const ARGUMENT /* */ = "ARGUMENT"
-export const METADATA /* */ = "METADATA"
-export const META_KEYS /**/ = ["title", "description", "price", "image"]
 
 const ACCT = `{
   "kind":"${ACCOUNT}",
@@ -57,14 +55,6 @@ const ARG = `{
   "resolve": null
 }`
 
-const META = `{
-  "kind":"${METADATA}",
-  "title":null,
-  "description":null,
-  "price":null,
-  "image":null
-}`
-
 const IX = `{
   "tag":"${UNKNOWN}",
   "assigns":{},
@@ -73,7 +63,12 @@ const IX = `{
   "accounts":{},
   "params":{},
   "arguments":{},
-  "metadata":{},
+  "metadata": {
+    "title":null,
+    "description":null,
+    "price":null,
+    "image":null
+  },
   "message": {
     "cadence":null,
     "refBlock":null,
@@ -200,15 +195,6 @@ export const makeArgument = (arg) => (ix) => {
   ix.arguments[tempId].asArgument = arg.asArgument
   ix.arguments[tempId].xform = arg.xform
   ix.arguments[tempId].resolve = arg.resolve
-  return Ok(ix)
-}
-export const makeMeta = (data) => (ix) => {
-  if (Object.keys(data).length > META_KEYS.length) {
-    return Bad(ix, "Wrong number of metadata keys")
-  }
-  Object.keys(data).forEach(key => META_KEYS.includes(key) || delete data[key])
-
-  ix.metadata = {...JSON.parse(META), ...data}
   return Ok(ix)
 }
 
