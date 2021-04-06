@@ -1,10 +1,10 @@
 ### Unreleased
 
 - YYYY-MM-DD **BREAKING?** -- description
+- 2021-04-02 -- Updated `interaction` with metadata object. Added `meta` builder function and test.
 
 ### 0.0.45-alpha.16 -- 2021-03-28
 
-- 2021-04-02 -- Updated `interaction` with metadata object. Added `meta` builder function and test.
 - 2021-03-28 -- Added new test suits for `build` and `send`.
 
 ### 0.0.45-alpha.15 -- 2021-03-22
