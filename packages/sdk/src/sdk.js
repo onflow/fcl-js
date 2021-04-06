@@ -6,28 +6,28 @@ export {decode} from "./decode/sdk-decode.js"
 
 // Utils
 export {
-    interaction,
-    isOk,
-    isBad,
-    why,
-    pipe,
-    get,
-    put,
-    update,
-    destroy,
-    isUnknown,
-    isScript,
-    isTransaction,
-    isGetTransaction,
-    isGetTransactionStatus,
-    isGetAccount,
-    isGetEvents,
-    isGetLatestBlock,
-    isGetBlockById,
-    isGetBlockByHeight,
-    isPing,
-    isGetBlock,
-    isGetBlockHeader,
+  interaction,
+  isOk,
+  isBad,
+  why,
+  pipe,
+  get,
+  put,
+  update,
+  destroy,
+  isUnknown,
+  isScript,
+  isTransaction,
+  isGetTransaction,
+  isGetTransactionStatus,
+  isGetAccount,
+  isGetEvents,
+  isGetLatestBlock,
+  isGetBlockById,
+  isGetBlockByHeight,
+  isPing,
+  isGetBlock,
+  isGetBlockHeader,
 } from "./interaction/interaction.js"
 export {template as cadence} from "@onflow/util-template"
 export {template as cdc} from "@onflow/util-template"
@@ -56,6 +56,7 @@ export {params, param} from "./build/build-params.js"
 export {args, arg} from "./build/build-arguments.js"
 export {proposer} from "./build/build-proposer.js"
 export {payer} from "./build/build-payer.js"
+export {meta} from "./build/build-metadata"
 export {ping} from "./build/build-ping.js"
 export {ref} from "./build/build-ref.js"
 export {script} from "./build/build-script.js"
