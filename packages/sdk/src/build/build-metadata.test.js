@@ -14,6 +14,7 @@ describe("Build Meta", () => {
       title: "Kitty Kangol",
       description: "A cool cat hat",
       price: "10",
+      size: "Large",
     })(interaction())
     expect(ix.metadata).toEqual(metadata)
   })
