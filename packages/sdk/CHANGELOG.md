@@ -1,6 +1,7 @@
 ### Unreleased
 
 - YYYY-MM-DD **BREAKING?** -- description
+- 2021-04-06 -- Added `metadata` field to `preSignable` in resolve-accounts. Export `meta` builder from `sdk.js`
 - 2021-04-02 -- Updated `interaction` with metadata object. Added `meta` builder function and test.
 
 ### 0.0.45-alpha.16 -- 2021-03-28
