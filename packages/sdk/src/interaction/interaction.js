@@ -11,6 +11,7 @@ export const GET_BLOCK_BY_ID /*               */ = "GET_BLOCK_BY_ID"
 export const GET_BLOCK_BY_HEIGHT /*           */ = "GET_BLOCK_BY_HEIGHT"
 export const GET_BLOCK /*                     */ = "GET_BLOCK"
 export const GET_BLOCK_HEADER /*              */ = "GET_BLOCK_HEADER"
+export const GET_COLLECTION /*                */ = "GET_COLLECTION"
 
 export const BAD /* */ = "BAD"
 export const OK /*  */ = "OK"
@@ -98,6 +99,9 @@ const IX = `{
   },
   "account": {
     "addr":null
+  },
+  "collection": {
+    "id":null
   }
 }`
 
@@ -211,6 +215,7 @@ export const makeGetBlockByHeight /*        */ = makeIx(GET_BLOCK_BY_HEIGHT)
 export const makePing /*                    */ = makeIx(PING)
 export const makeGetBlock /*                */ = makeIx(GET_BLOCK)
 export const makeGetBlockHeader /*          */ = makeIx(GET_BLOCK_HEADER)
+export const makeGetCollection /*           */ = makeIx(GET_COLLECTION)
 
 const is = (wat) => (ix) => ix.tag === wat
 
@@ -227,6 +232,7 @@ export const isGetBlockByHeight /*        */ = is(GET_BLOCK_BY_HEIGHT)
 export const isPing /*                    */ = is(PING)
 export const isGetBlock /*                */ = is(GET_BLOCK)
 export const isGetBlockHeader /*          */ = is(GET_BLOCK_HEADER)
+export const isGetCollection /*           */ = is(GET_COLLECTION)
 
 export const isOk /*  */ = (ix) => ix.status === OK
 export const isBad /* */ = (ix) => ix.status === BAD

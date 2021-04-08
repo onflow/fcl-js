@@ -173,6 +173,8 @@ export const decodeResponse = async (response, customDecoders = {}) => {
     return response.latestBlock
   } else if (response.transactionId) {
     return response.transactionId
+  } else if (response.collection) {
+    return response.collection
   }
 
   return null

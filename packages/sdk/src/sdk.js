@@ -28,6 +28,7 @@ export {
   isPing,
   isGetBlock,
   isGetBlockHeader,
+  isGetCollection,
 } from "./interaction/interaction.js"
 export {template as cadence} from "@onflow/util-template"
 export {template as cdc} from "@onflow/util-template"
@@ -49,6 +50,7 @@ export {getBlockHeader} from "./build/build-get-block-header.js"
 export {getLatestBlock} from "./build/build-get-latest-block.js"
 export {getBlockById} from "./build/build-get-block-by-id.js"
 export {getBlockByHeight} from "./build/build-get-block-by-height"
+export {getCollection} from "./build/build-get-collection"
 export {getTransactionStatus} from "./build/build-get-transaction-status.js"
 export {getTransaction} from "./build/build-get-transaction.js"
 export {limit} from "./build/build-limit.js"
