@@ -1,7 +1,8 @@
 ### Unreleased
 
 - YYYY-MM-DD **BREAKING?** -- description
-- 2021-04-06 -- Internal only. Update `build-limit`
+- 2021-04-08 -- Added validation to `metadata` builder.
+- 2021-04-07 -- Internal only. Update `build-limit`
 - 2021-04-07 -- Added `metadata` field to `Signable` in resolve-signatures.
 - 2021-04-06 -- Added `metadata` field to `preSignable` in resolve-accounts. Export `meta` builder from `sdk.js`
 - 2021-04-02 -- Updated `interaction` with metadata object. Added `meta` builder function and test.
