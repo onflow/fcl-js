@@ -15,12 +15,7 @@ const META = {
   title: "Kitty Kangol",
   description: "A cool cat hat",
   price: "10",
-  image: {
-    url: "https://i.imgur.com/a/JPmBk9R.png",
-    width: "200",
-    height: "200",
-    alt: "An adorable NFT",
-  },
+  image: "https://i.imgur.com/a/JPmBk9R.png",
 }
 
 test("meta in resolve-accounts", async () => {
