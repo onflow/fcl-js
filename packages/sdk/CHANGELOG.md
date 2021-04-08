@@ -1,6 +1,29 @@
 ### Unreleased
 
 - YYYY-MM-DD **BREAKING?** -- description
+- 2021-04-08 -- - Implements Transaction Metadata for media rich wallet transactions
+  - Adds `metadata` field to `interaction` and provides `meta` builder to include optional metadata with the transaction.
+  - `meta()` accepts the optional fields `title`, `description`, `price`, and `image` as Strings. Invalid types will `throw`. Unsupport fields will be scrubbed.
+
+```js
+sdk.build([
+  sdk.transaction(TRANSFER_NFT),
+  sdk.meta({
+    title: 'Kitty Kangol',
+    description: 'A cool cat hat',
+    price: '10',
+    image: 'https://i.imgur.com/Ol2zPax.png',
+  }),
+])
+
+type Metadata {
+  title: String
+  description: String
+  price: String
+  image: String
+}
+```
+
 - 2021-04-08 -- Added validation to `metadata` builder.
 - 2021-04-07 -- Internal only. Update `build-limit`
 - 2021-04-07 -- Added `metadata` field to `Signable` in resolve-signatures.
