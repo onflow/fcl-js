@@ -23,12 +23,7 @@ Object {
               "message": "f845f84283666f6fc0a000000000000000000000000000000000000000000000000000000000000000000a870000000000000f8080870000000000000fc8870000000000000fc0",
               "metadata": Object {
                 "description": "A cool cat hat",
-                "image": Object {
-                  "alt": "An adorable NFT",
-                  "height": "200",
-                  "url": "https://i.imgur.com/a/JPmBk9R.png",
-                  "width": "200",
-                },
+                "image": "https://i.imgur.com/a/JPmBk9R.png",
                 "price": "10",
                 "title": "Kitty Kangol",
               },
@@ -59,12 +54,7 @@ Object {
   },
   "metadata": Object {
     "description": "A cool cat hat",
-    "image": Object {
-      "alt": "An adorable NFT",
-      "height": "200",
-      "url": "https://i.imgur.com/a/JPmBk9R.png",
-      "width": "200",
-    },
+    "image": "https://i.imgur.com/a/JPmBk9R.png",
     "price": "10",
     "title": "Kitty Kangol",
   },
