@@ -1,4 +1,4 @@
-import {pipe, makeProposer} from "../interaction/interaction.js"
+import {makeAccountRole} from "../interaction/interaction.js"
 
 const roles = {
   proposer: true,
@@ -6,6 +6,6 @@ const roles = {
 
 export async function proposer(authz) {
   return typeof authz === "function"
-    ? makeProposer({resolve: authz, role: roles, roles})
-    : makeProposer({...authz, role: roles, roles})
+    ? makeAccountRole({resolve: authz, role: roles, roles})
+    : makeAccountRole({...authz, role: roles, roles})
 }

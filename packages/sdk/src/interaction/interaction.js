@@ -109,23 +109,23 @@ const KEYS = new Set(Object.keys(JSON.parse(IX)))
 
 export const interaction = () => JSON.parse(IX)
 
-const isArray = (d) => Array.isArray(d)
-const isObj = (d) => typeof d === "object"
-const isNull = (d) => d == null
-const isNumber = (d) => typeof d === "number"
-const isFn = (d) => typeof d === "function"
+const isArray = d => Array.isArray(d)
+const isObj = d => typeof d === "object"
+const isNull = d => d == null
+const isNumber = d => typeof d === "number"
+const isFn = d => typeof d === "function"
 
 const CHARS = "abcdefghijklmnopqrstuvwxyz0123456789".split("")
 const randChar = () => CHARS[~~(Math.random() * CHARS.length)]
 export const uuid = () => Array.from({length: 10}, randChar).join("")
 
-export const isInteraction = (ix) => {
+export const isInteraction = ix => {
   if (!isObj(ix) || isNull(ix) || isNumber(ix)) return false
   for (let key of KEYS) if (!ix.hasOwnProperty(key)) return false
   return true
 }
 
-export const Ok = (ix) => {
+export const Ok = ix => {
   ix.status = OK
   return ix
 }
@@ -136,46 +136,40 @@ export const Bad = (ix, reason) => {
   return ix
 }
 
-const makeIx = (wat) => (ix) => {
+const makeIx = wat => ix => {
   ix.tag = wat
   return Ok(ix)
 }
 
-const makeAccount = (acct, tempId) => (ix) => {
-  ix.accounts[tempId] = JSON.parse(ACCT)
+export const makeAccountRole = acct => ix => {
+  const tempId = uuid()
+  const accountObj = JSON.parse(ACCT)
+  const preSetKeys = ["kind", "tempId", "role"]
+  const [role] = Object.keys(acct.roles)
+
+  ix.accounts[tempId] = accountObj
   ix.accounts[tempId].tempId = tempId
-  ix.accounts[tempId].addr = acct.addr
-  ix.accounts[tempId].keyId = acct.keyId
-  ix.accounts[tempId].sequenceNum = acct.sequenceNum
-  ix.accounts[tempId].signature = acct.signature
-  ix.accounts[tempId].signingFunction = acct.signingFunction
-  ix.accounts[tempId].resolve = acct.resolve
   ix.accounts[tempId].role = {
     ...ix.accounts[tempId].role,
     ...acct.role,
   }
-  return Ok(ix)
+
+  for (let key of Object.keys(accountObj)) {
+    if (!preSetKeys.includes(key)) {
+      ix.accounts[tempId][key] = acct[key]
+    }
+  }
+
+  if (acct.role.authorizer) {
+    ix.authorizations.push(tempId)
+  } else {
+    ix[role] = tempId
+  }
+
+  return ix
 }
 
-export const makeAuthorizer = (acct) => (ix) => {
-  let tempId = uuid()
-  ix.authorizations.push(tempId)
-  return Ok(pipe(ix, [makeAccount(acct, tempId)]))
-}
-
-export const makeProposer = (acct) => (ix) => {
-  let tempId = uuid()
-  ix.proposer = tempId
-  return Ok(pipe(ix, [makeAccount(acct, tempId)]))
-}
-
-export const makePayer = (acct) => (ix) => {
-  let tempId = uuid()
-  ix.payer = tempId
-  return Ok(pipe(ix, [makeAccount(acct, tempId)]))
-} 
-
-export const makeParam = (param) => (ix) => {
+export const makeParam = param => ix => {
   let tempId = uuid()
   ix.message.params.push(tempId)
 
@@ -189,7 +183,7 @@ export const makeParam = (param) => (ix) => {
   return Ok(ix)
 }
 
-export const makeArgument = (arg) => (ix) => {
+export const makeArgument = arg => ix => {
   let tempId = uuid()
   ix.message.arguments.push(tempId)
 
@@ -217,7 +211,7 @@ export const makeGetBlock /*                */ = makeIx(GET_BLOCK)
 export const makeGetBlockHeader /*          */ = makeIx(GET_BLOCK_HEADER)
 export const makeGetCollection /*           */ = makeIx(GET_COLLECTION)
 
-const is = (wat) => (ix) => ix.tag === wat
+const is = wat => ix => ix.tag === wat
 
 export const isUnknown /*                 */ = is(UNKNOWN)
 export const isScript /*                  */ = is(SCRIPT)
@@ -234,15 +228,15 @@ export const isGetBlock /*                */ = is(GET_BLOCK)
 export const isGetBlockHeader /*          */ = is(GET_BLOCK_HEADER)
 export const isGetCollection /*           */ = is(GET_COLLECTION)
 
-export const isOk /*  */ = (ix) => ix.status === OK
-export const isBad /* */ = (ix) => ix.status === BAD
-export const why /*   */ = (ix) => ix.reason
+export const isOk /*  */ = ix => ix.status === OK
+export const isBad /* */ = ix => ix.status === BAD
+export const why /*   */ = ix => ix.reason
 
-export const isAccount /*  */ = (account) => account.kind === ACCOUNT
-export const isParam /*    */ = (param) => param.kind === PARAM
-export const isArgument /* */ = (argument) => argument.kind === ARGUMENT
+export const isAccount /*  */ = account => account.kind === ACCOUNT
+export const isParam /*    */ = param => param.kind === PARAM
+export const isArgument /* */ = argument => argument.kind === ARGUMENT
 
-const hardMode = (ix) => {
+const hardMode = ix => {
   for (let key of Object.keys(ix)) {
     if (!KEYS.has(key))
       throw new Error(`"${key}" is an invalid root level Interaction property.`)
@@ -268,27 +262,27 @@ const recPipe = async (ix, fns = []) => {
 
 export const pipe = (...args) => {
   const [arg1, arg2] = args
-  if (isArray(arg1) && arg2 == null) return (d) => pipe(d, arg1)
+  if (isArray(arg1) && arg2 == null) return d => pipe(d, arg1)
   return recPipe(arg1, arg2)
 }
 
-const identity = (v) => v
+const identity = v => v
 
 export const get = (ix, key, fallback) => {
   return ix.assigns[key] == null ? fallback : ix.assigns[key]
 }
 
-export const put = (key, value) => (ix) => {
+export const put = (key, value) => ix => {
   ix.assigns[key] = value
   return Ok(ix)
 }
 
-export const update = (key, fn = identity) => (ix) => {
+export const update = (key, fn = identity) => ix => {
   ix.assigns[key] = fn(ix.assigns[key], ix)
   return Ok(ix)
 }
 
-export const destroy = (key) => (ix) => {
+export const destroy = key => ix => {
   delete ix.assigns[key]
   return Ok(ix)
 }
