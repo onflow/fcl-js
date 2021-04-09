@@ -2,6 +2,10 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.0.68-alpha.18 - 2021-04-09
+
+- 2021-04-09 -- Exposes `meta` and `getCollection` builders from SDK
+
 ### 0.0.68-alpha.10 - 2021-03-05
 
 - 2021-03-05 -- Additional Configuration
