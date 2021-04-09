@@ -1,4 +1,4 @@
-import {pipe, makeAuthorizer} from "../interaction/interaction.js"
+import {pipe, makeAccountRole} from "../interaction/interaction.js"
 
 const roles = {
   authorizer: true,
@@ -6,10 +6,10 @@ const roles = {
 
 export function authorizations(ax = []) {
   return pipe(
-    ax.map((authz) => {
+    ax.map(authz => {
       return typeof authz === "function"
-        ? makeAuthorizer({resolve: authz, role: roles, roles})
-        : makeAuthorizer({...authz, role: roles, roles})
+        ? makeAccountRole({resolve: authz, role: roles, roles})
+        : makeAccountRole({...authz, role: roles, roles})
     })
   )
 }
