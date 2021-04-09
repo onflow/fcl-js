@@ -1,6 +1,9 @@
 ### Unreleased
 
 - YYYY-MM-DD **BREAKING?** -- description
+
+### 0.0.45-alpha.18 -- 2021-04-09
+
 - 2021-04-08 -- Adds `GetCollection` interaction, build, send and decode support.
 - 2021-04-08 -- - Implements Transaction Metadata for media rich wallet transactions
   - Adds `metadata` field to `interaction` and provides `meta` builder to include optional metadata with the transaction.
