@@ -1,11 +1,13 @@
 ### Unreleased
 
 - YYYY-MM-DD **BREAKING?** -- description
+- 2021-04-09 -- Internal only - Added `makeAccountRole` to `interaction`.
 
 ### 0.0.45-alpha.18 -- 2021-04-09
 
 - 2021-04-08 -- Adds `GetCollection` interaction, build, send and decode support.
 - 2021-04-08 -- - Implements Transaction Metadata for media rich wallet transactions
+- 2021-04-08 -- Implements Transaction Metadata for media rich wallet transactions
   - Adds `metadata` field to `interaction` and provides `meta` builder to include optional metadata with the transaction.
   - `meta()` accepts the optional fields `title`, `description`, `price`, and `image` as Strings. Invalid types will `throw`. Unsupport fields will be scrubbed.
 
@@ -27,6 +29,7 @@ type Metadata {
   image: String
 }
 ```
+
 - 2021-04-08 -- Added validation to `metadata` builder.
 - 2021-04-07 -- Internal only. Update `build-limit`
 - 2021-04-07 -- Added `metadata` field to `Signable` in resolve-signatures.
