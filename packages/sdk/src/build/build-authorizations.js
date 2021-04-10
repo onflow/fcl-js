@@ -8,8 +8,8 @@ export function authorizations(ax = []) {
   return pipe(
     ax.map(authz => {
       return typeof authz === "function"
-        ? makeAccountRole({resolve: authz, role: roles, roles})
-        : makeAccountRole({...authz, role: roles, roles})
+        ? makeAccountRole({resolve: authz, role: roles})
+        : makeAccountRole({...authz, role: roles})
     })
   )
 }
