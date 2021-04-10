@@ -143,21 +143,17 @@ const makeIx = wat => ix => {
 
 export const makeAccountRole = acct => ix => {
   const tempId = uuid()
+  const [role] = Object.keys(acct.role)
   const accountObj = JSON.parse(ACCT)
-  const preSetKeys = ["kind", "tempId", "role"]
-  const [role] = Object.keys(acct.roles)
 
-  ix.accounts[tempId] = accountObj
-  ix.accounts[tempId].tempId = tempId
-  ix.accounts[tempId].role = {
-    ...ix.accounts[tempId].role,
-    ...acct.role,
-  }
-
-  for (let key of Object.keys(accountObj)) {
-    if (!preSetKeys.includes(key)) {
-      ix.accounts[tempId][key] = acct[key]
-    }
+  ix.accounts[tempId] = {
+    tempId,
+    ...accountObj,
+    ...acct,
+    role: {
+      ...accountObj.role,
+      ...acct.role,
+    },
   }
 
   if (acct.role.authorizer) {

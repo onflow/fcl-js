@@ -6,6 +6,6 @@ const roles = {
 
 export async function proposer(authz) {
   return typeof authz === "function"
-    ? makeAccountRole({resolve: authz, role: roles, roles})
-    : makeAccountRole({...authz, role: roles, roles})
+    ? makeAccountRole({resolve: authz, role: roles})
+    : makeAccountRole({...authz, role: roles})
 }
