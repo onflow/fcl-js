@@ -1,4 +1,4 @@
-import {isTransaction} from "../interaction/interaction.js"
+import {isTransaction, makeVoucher} from "../interaction/interaction.js"
 import {sansPrefix} from "@onflow/util-address"
 import {
   encodeTransactionPayload as encodeInsideMessage,
@@ -62,7 +62,7 @@ export function buildSignable(acct, message, ix) {
   try {
     return {
       f_type: "Signable",
-      f_vsn: "1.0.0",
+      f_vsn: "1.0.1",
       message,
       addr: sansPrefix(acct.addr),
       keyId: acct.keyId,
@@ -72,6 +72,7 @@ export function buildSignable(acct, message, ix) {
       data: {},
       metadata: ix.metadata,
       interaction: ix,
+      voucher: makeVoucher(ix),
     }
   } catch (error) {
     console.error("buildSignable", error)

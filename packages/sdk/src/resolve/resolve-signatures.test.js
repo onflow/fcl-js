@@ -16,9 +16,14 @@ const signingFunction = jest.fn(() => ({
 const TRANSACTION = {
   tag: "TRANSACTION",
   message: {
-    cadence: "foo",
+    cadence: "",
+    refBlock: "123",
+    computeLimit: 156,
+    proposer: null,
+    payer: null,
+    authorizations: [],
+    params: [],
     arguments: [],
-    computeLimit: 10,
   },
   accounts: {
     foo: {
@@ -44,6 +49,14 @@ test("meta in signable", async () => {
   const signable = buildSignable(ix.accounts.foo, "message", ix)
 
   expect(signable.metadata).toEqual(ix.metadata)
+})
+
+test("voucher in signable", async () => {
+  const ix = await resolveSignatures(TRANSACTION)
+
+  const signable = buildSignable(ix.accounts.foo, "message", ix)
+
+  expect(signable.voucher).toEqual(ix.message)
 })
 
 test("Golden Path", async () => {
