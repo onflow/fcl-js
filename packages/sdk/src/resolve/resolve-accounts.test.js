@@ -10,6 +10,7 @@ import {
   authorizations,
   authorization,
 } from "../sdk.js"
+import {buildPreSignable} from "./resolve-accounts"
 
 const META = {
   title: "Kitty Kangol",
@@ -32,4 +33,27 @@ test("meta in resolve-accounts", async () => {
   )
 
   expect(ix.metadata).toStrictEqual(META)
+})
+
+const IX = {
+  proposer: "ba1132bc08f82fe2|1",
+  authorizations: ["ba1132bc08f82fe2|1"],
+  payer: "f086a545ce3c552d|18",
+  metadata: META,
+  message: {
+    cadence: "",
+    refBlock: "123",
+    computeLimit: 156,
+    proposer: null,
+    payer: null,
+    authorizations: [],
+    params: [],
+    arguments: [],
+  },
+}
+
+test("Voucher in PreSignable", async () => {
+  const ps = buildPreSignable({role: "authorizer"}, IX)
+
+  expect(ps.voucher).toStrictEqual(IX.message)
 })
