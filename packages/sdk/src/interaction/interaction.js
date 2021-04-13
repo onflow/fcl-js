@@ -297,3 +297,16 @@ export const destroy = key => ix => {
   delete ix.assigns[key]
   return Ok(ix)
 }
+
+export const makeVoucher = ix => {
+  return {
+    cadence: ix.message.cadence,
+    refBlock: ix.message.refBlock || null,
+    computeLimit: ix.message.computeLimit,
+    proposer: ix.message.proposer,
+    payer: ix.message.payer,
+    authorizations: ix.message.authorizations,
+    params: ix.message.params,
+    arguments: ix.message.arguments.map(id => ix.arguments[id].asArgument),
+  }
+}
