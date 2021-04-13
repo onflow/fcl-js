@@ -1,7 +1,7 @@
 ### Unreleased
 
 - YYYY-MM-DD **BREAKING?** -- description
-- 2021-04-09 -- Internal only - Added `makeAccountRole` to `interaction`.
+- 2021-04-09 -- Internal only - Added `prepAccount` to `interaction`. Update `authorizations`, `payer`, `proposer` builders.
 
 ### 0.0.45-alpha.18 -- 2021-04-09
 
