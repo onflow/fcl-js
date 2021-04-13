@@ -1,15 +1,9 @@
-import {pipe, makeAccountRole} from "../interaction/interaction.js"
-
-const roles = {
-  authorizer: true,
-}
+import {pipe, prepAccount, AUTHORIZER} from "../interaction/interaction.js"
 
 export function authorizations(ax = []) {
   return pipe(
     ax.map(authz => {
-      return typeof authz === "function"
-        ? makeAccountRole({resolve: authz, role: roles})
-        : makeAccountRole({...authz, role: roles})
+      return prepAccount(authz, {role: AUTHORIZER})
     })
   )
 }

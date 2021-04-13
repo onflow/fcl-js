@@ -1,3 +1,5 @@
+import {invariant} from "@onflow/util-invariant"
+
 export const UNKNOWN /*                       */ = "UNKNOWN"
 export const SCRIPT /*                        */ = "SCRIPT"
 export const TRANSACTION /*                   */ = "TRANSACTION"
@@ -19,6 +21,10 @@ export const OK /*  */ = "OK"
 export const ACCOUNT /*  */ = "ACCOUNT"
 export const PARAM /*    */ = "PARAM"
 export const ARGUMENT /* */ = "ARGUMENT"
+
+export const AUTHORIZER /* */ = "authorizer"
+export const PAYER /*      */ = "payer"
+export const PROPOSER /*   */ = "proposer"
 
 const ACCT = `{
   "kind":"${ACCOUNT}",
@@ -141,22 +147,31 @@ const makeIx = wat => ix => {
   return Ok(ix)
 }
 
-export const makeAccountRole = acct => ix => {
+export const prepAccount = (acct, opts = {}) => ix => {
+  invariant(
+    typeof acct === "function" || typeof acct === "object",
+    "prepAccount must be passed an authorization function or an account object"
+  )
+  invariant(opts.role != null, "Account must have a role")
+
+  const ACCOUNT = JSON.parse(ACCT)
+  const role = opts.role
   const tempId = uuid()
-  const [role] = Object.keys(acct.role)
-  const accountObj = JSON.parse(ACCT)
+
+  acct = typeof acct === "function" ? {resolve: acct} : acct
 
   ix.accounts[tempId] = {
+    ...ACCOUNT,
     tempId,
-    ...accountObj,
     ...acct,
     role: {
-      ...accountObj.role,
-      ...acct.role,
+      ...ACCOUNT.role,
+      ...(typeof role === "object" ? role : {}),
+      [role]: true,
     },
   }
 
-  if (acct.role.authorizer) {
+  if (role === AUTHORIZER) {
     ix.authorizations.push(tempId)
   } else {
     ix[role] = tempId

@@ -1,11 +1,5 @@
-import {makeAccountRole} from "../interaction/interaction.js"
-
-const roles = {
-  proposer: true,
-}
+import {prepAccount, PROPOSER} from "../interaction/interaction.js"
 
 export async function proposer(authz) {
-  return typeof authz === "function"
-    ? makeAccountRole({resolve: authz, role: roles})
-    : makeAccountRole({...authz, role: roles})
+  return prepAccount(authz, {role: PROPOSER})
 }
