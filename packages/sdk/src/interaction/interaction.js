@@ -166,7 +166,7 @@ export const prepAccount = (acct, opts = {}) => ix => {
     ...acct,
     role: {
       ...ACCOUNT.role,
-      ...(typeof role === "object" ? role : {}),
+      ...(typeof acct.role === "object" ? acct.role : {}),
       [role]: true,
     },
   }
