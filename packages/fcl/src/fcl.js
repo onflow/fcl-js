@@ -1,5 +1,7 @@
 import "./default-config"
 import "./temp"
+export {VERSION} from "./VERSION"
+export {query} from "./exec/query"
 export {serialize} from "./serialize"
 export {transaction as tx} from "./transaction"
 export {events} from "./events"
@@ -17,6 +19,9 @@ export const signUp = () => currentUser().authenticate()
 export const logIn = () => currentUser().authenticate()
 
 export const authz = currentUser().authorization
+
+import * as types from "@onflow/types"
+export const t = types
 
 export {config} from "@onflow/config"
 export {send} from "@onflow/sdk"
@@ -54,5 +59,3 @@ export {limit} from "@onflow/sdk"
 export {ref} from "@onflow/sdk"
 export {params, param} from "@onflow/sdk"
 export {meta} from "@onflow/sdk"
-
-export const VERSION = "0.0.68-alpha.18"
