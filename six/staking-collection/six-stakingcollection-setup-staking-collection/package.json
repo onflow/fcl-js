@@ -1,0 +1,41 @@
+{
+  "name": "@onflow/six-stakingcollection-setup-staking-collection",
+  "version": "0.0.0",
+  "description": "Flow SDK Stored Interaction - Setup a Staking Collection for an account.",
+  "license": "Apache-2.0",
+  "author": "Dapper Labs <dev@dapperlabs.com>",
+  "homepage": "https://onflow.org",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/onflow/flow-js-sdk.git"
+  },
+  "bugs": {
+    "url": "https://github.com/onflow/flow-js-sdk/issues"
+  },
+  "jest": {
+    "transform": {
+      ".js": "jest-esm-transformer"
+    }
+  },
+  "devDependencies": {
+    "jest": "25.3.0",
+    "jest-esm-transformer": "1.0.0",
+    "microbundle": "0.12.0-next.8"
+  },
+  "source": "src/six-stakingcollection-setup-staking-collection.js",
+  "main": "dist/six-stakingcollection-setup-staking-collection.js",
+  "module": "dist/six-stakingcollection-setup-staking-collection.module.js",
+  "unpkg": "dist/six-stakingcollection-setup-staking-collection.umd.js",
+  "scripts": {
+    "prepublishOnly": "npm test && npm run build",
+    "test": "jest",
+    "build": "microbundle",
+    "test:watch": "jest --watch",
+    "start": "microbundle watch"
+  },
+  "dependencies": {
+    "@onflow/config": "0.0.2",
+    "@onflow/sdk": "0.0.44",
+    "@onflow/types": "0.0.4"
+  }
+}
