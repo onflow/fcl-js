@@ -5,8 +5,16 @@ Object {
   "accounts": Object {
     "foo": Object {
       "addr": "foo",
-      "keyId": 0,
-      "sequenceNum": 0,
+      "keyId": 1,
+      "kind": "ACCOUNT",
+      "resolve": null,
+      "role": Object {
+        "authorizer": false,
+        "param": false,
+        "payer": true,
+        "proposer": false,
+      },
+      "sequenceNum": 123,
       "signature": "SIGNATURE",
       "signingFunction": [MockFunction] {
         "calls": Array [
@@ -19,23 +27,34 @@ Object {
               "f_type": "Signable",
               "f_vsn": "1.0.1",
               "interaction": [Circular],
-              "keyId": 0,
-              "message": "f843f84080c0a00000000000000000000000000000000000000000000000000000000000000123819c870000000000000f8080870000000000000fc8870000000000000fc0",
+              "keyId": 1,
+              "message": "f843f84080c0a00000000000000000000000000000000000000000000000000000000000000123819c870000000000000f017b870000000000000fc8870000000000000fc0",
               "metadata": Object {
                 "description": "A cool cat hat",
                 "image": "https://i.imgur.com/a/JPmBk9R.png",
                 "price": "10",
                 "title": "Kitty Kangol",
               },
-              "roles": undefined,
+              "roles": Object {
+                "authorizer": false,
+                "param": false,
+                "payer": true,
+                "proposer": false,
+              },
               "voucher": Object {
                 "arguments": Array [],
-                "authorizations": Array [],
+                "authorizers": Array [
+                  "foo",
+                ],
                 "cadence": "",
                 "computeLimit": 156,
-                "params": Array [],
-                "payer": null,
-                "proposer": null,
+                "payer": "foo",
+                "payloadSigs": Array [],
+                "proposalKey": Object {
+                  "address": "foo",
+                  "keyId": 1,
+                  "sequenceNum": 123,
+                },
                 "refBlock": "123",
               },
             },
@@ -52,6 +71,7 @@ Object {
           },
         ],
       },
+      "tempId": "foo",
     },
   },
   "authorizations": Array [

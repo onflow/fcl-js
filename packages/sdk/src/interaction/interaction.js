@@ -321,9 +321,5 @@ export const createSignableVoucher = ix => {
       keyId: ix.accounts[id].keyId,
       sig: ix.accounts[id].signature,
     })),
-    // unsure if needed?
-    // proposer: ix.message.proposer,
-    // authorizations: ix.message.authorizations,
-    // params: ix.message.params,
   }
 }

@@ -53,7 +53,37 @@ const IX = {
 }
 
 test("Voucher in PreSignable", async () => {
-  const ps = buildPreSignable({role: "authorizer"}, IX)
+  const authz = {
+    addr: "0x01",
+    signingFunction: () => ({signature: "123"}),
+    keyId: 1,
+    sequenceNum: 123,
+  }
+  const ix = await resolve(
+    await build([
+      transaction``,
+      limit(156),
+      proposer(authz),
+      authorizations([authz]),
+      payer(authz),
+      ref("123"),
+      meta(META),
+    ])
+  )
 
-  expect(ps.voucher).toStrictEqual(IX.message)
+  const ps = buildPreSignable(ix.accounts[ix.proposer], ix)
+
+  expect(ps.voucher).toEqual({
+    cadence: "",
+    refBlock: "123",
+    computeLimit: 156,
+    arguments: [],
+    proposalKey: {address: "01", keyId: 1, sequenceNum: 123},
+    payer: "01",
+    authorizers: ["01"],
+    payloadSigs: [
+      {address: "01", keyId: 1, sig: "123"},
+      {address: "01", keyId: 1, sig: "123"},
+    ],
+  })
 })
