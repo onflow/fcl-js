@@ -33,7 +33,7 @@
     "test:watch": "jest --watch",
     "start": "microbundle watch"
   },
-  "dependencies": {
+  "peerDependencies": {
     "@onflow/config": "0.0.2",
     "@onflow/sdk": "0.0.44",
     "@onflow/types": "0.0.4"
