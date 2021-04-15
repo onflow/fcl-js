@@ -1,4 +1,5 @@
 import {invariant} from "@onflow/util-invariant"
+import {findInsideSigners} from "../resolve/resolve-signatures"
 
 export const UNKNOWN /*                       */ = "UNKNOWN"
 export const SCRIPT /*                        */ = "SCRIPT"
@@ -298,15 +299,31 @@ export const destroy = key => ix => {
   return Ok(ix)
 }
 
-export const makeVoucher = ix => {
+export const createSignableVoucher = ix => {
   return {
     cadence: ix.message.cadence,
     refBlock: ix.message.refBlock || null,
     computeLimit: ix.message.computeLimit,
-    proposer: ix.message.proposer,
-    payer: ix.message.payer,
-    authorizations: ix.message.authorizations,
-    params: ix.message.params,
     arguments: ix.message.arguments.map(id => ix.arguments[id].asArgument),
+    proposalKey: {
+      address: ix.accounts[ix.proposer].addr,
+      keyId: ix.accounts[ix.proposer].keyId,
+      sequenceNum: ix.accounts[ix.proposer].sequenceNum,
+    },
+    payer: ix.accounts[ix.payer].addr,
+    authorizers: ix.authorizations
+      .map(cid => ix.accounts[cid].addr)
+      .reduce((prev, current) => {
+        return prev.find(item => item === current) ? prev : [...prev, current]
+      }, []),
+    payloadSigs: findInsideSigners(ix).map(id => ({
+      address: ix.accounts[id].addr,
+      keyId: ix.accounts[id].keyId,
+      sig: ix.accounts[id].signature,
+    })),
+    // unsure if needed?
+    // proposer: ix.message.proposer,
+    // authorizations: ix.message.authorizations,
+    // params: ix.message.params,
   }
 }

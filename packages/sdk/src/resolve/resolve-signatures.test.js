@@ -1,4 +1,16 @@
 import {resolveSignatures, buildSignable} from "./resolve-signatures.js"
+import {
+  build,
+  resolve,
+  ref,
+  transaction,
+  proposer,
+  payer,
+  limit,
+  meta,
+  authorizations,
+  authorization,
+} from "../sdk.js"
 
 const META = {
   title: "Kitty Kangol",
@@ -27,10 +39,15 @@ const TRANSACTION = {
   },
   accounts: {
     foo: {
+      kind: "ACCOUNT",
+      tempId: "foo",
       addr: "foo",
-      keyId: 0,
-      sequenceNum: 0,
+      keyId: 1,
+      sequenceNum: 123,
+      signature: null,
       signingFunction: signingFunction,
+      resolve: null,
+      role: {proposer: false, authorizer: false, payer: true, param: false},
     },
   },
   proposer: "foo",
@@ -52,11 +69,40 @@ test("meta in signable", async () => {
 })
 
 test("voucher in signable", async () => {
-  const ix = await resolveSignatures(TRANSACTION)
+  // const ix = await resolveSignatures(TRANSACTION)
+  const authz = {
+    addr: "0x01",
+    signingFunction: () => ({signature: "123"}),
+    keyId: 1,
+    sequenceNum: 123,
+  }
+  const ix = await resolve(
+    await build([
+      transaction``,
+      limit(156),
+      proposer(authz),
+      authorizations([authz]),
+      payer(authz),
+      ref("123"),
+      meta(META),
+    ])
+  )
 
-  const signable = buildSignable(ix.accounts.foo, "message", ix)
+  const signable = buildSignable(ix.accounts[ix.proposer], {}, ix)
 
-  expect(signable.voucher).toEqual(ix.message)
+  expect(signable.voucher).toEqual({
+    cadence: "",
+    refBlock: "123",
+    computeLimit: 156,
+    arguments: [],
+    proposalKey: {address: "01", keyId: 1, sequenceNum: 123},
+    payer: "01",
+    authorizers: ["01"],
+    payloadSigs: [
+      {address: "01", keyId: 1, sig: "123"},
+      {address: "01", keyId: 1, sig: "123"},
+    ],
+  })
 })
 
 test("Golden Path", async () => {

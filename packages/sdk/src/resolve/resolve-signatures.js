@@ -1,4 +1,7 @@
-import {isTransaction, makeVoucher} from "../interaction/interaction.js"
+import {
+  isTransaction,
+  createSignableVoucher,
+} from "../interaction/interaction.js"
 import {sansPrefix} from "@onflow/util-address"
 import {
   encodeTransactionPayload as encodeInsideMessage,
@@ -30,7 +33,7 @@ export async function resolveSignatures(ix) {
   return ix
 }
 
-function findInsideSigners(ix) {
+export function findInsideSigners(ix) {
   // Inside Signers Are: (authorizers + proposer) - payer
   let inside = new Set(ix.authorizations)
   inside.add(ix.proposer)
@@ -72,7 +75,7 @@ export function buildSignable(acct, message, ix) {
       data: {},
       metadata: ix.metadata,
       interaction: ix,
-      voucher: makeVoucher(ix),
+      voucher: createSignableVoucher(ix),
     }
   } catch (error) {
     console.error("buildSignable", error)
