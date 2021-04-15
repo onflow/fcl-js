@@ -1,6 +1,7 @@
 ### Unreleased
 
 - YYYY-MM-DD **BREAKING?** -- description
+- 2021-04-15 -- Add `createSignableVoucher` for message payload verification by wallet, pass as `voucher` to `PreSignable` and `Signable`
 - 2021-04-15 -- Exposes `config` from SDK.
 - 2021-04-15 -- Removes use of `TextDecoder` from `send-get-account`.
 - 2021-04-13 -- Add `makeVoucher` for message verification by wallet, pass as `voucher` to `PreSignable` and `Signable`

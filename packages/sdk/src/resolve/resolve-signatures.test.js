@@ -69,7 +69,6 @@ test("meta in signable", async () => {
 })
 
 test("voucher in signable", async () => {
-  // const ix = await resolveSignatures(TRANSACTION)
   const authz = {
     addr: "0x01",
     signingFunction: () => ({signature: "123"}),
