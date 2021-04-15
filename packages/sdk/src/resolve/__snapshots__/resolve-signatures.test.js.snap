@@ -44,14 +44,14 @@ Object {
               "voucher": Object {
                 "arguments": Array [],
                 "authorizers": Array [
-                  "foo",
+                  "0xfoo",
                 ],
                 "cadence": "",
                 "computeLimit": 156,
-                "payer": "foo",
+                "payer": "0xfoo",
                 "payloadSigs": Array [],
                 "proposalKey": Object {
-                  "address": "foo",
+                  "address": "0xfoo",
                   "keyId": 1,
                   "sequenceNum": 123,
                 },

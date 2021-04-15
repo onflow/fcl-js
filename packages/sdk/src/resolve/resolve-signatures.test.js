@@ -94,12 +94,12 @@ test("voucher in signable", async () => {
     refBlock: "123",
     computeLimit: 156,
     arguments: [],
-    proposalKey: {address: "01", keyId: 1, sequenceNum: 123},
-    payer: "01",
-    authorizers: ["01"],
+    proposalKey: {address: "0x01", keyId: 1, sequenceNum: 123},
+    payer: "0x01",
+    authorizers: ["0x01"],
     payloadSigs: [
-      {address: "01", keyId: 1, sig: "123"},
-      {address: "01", keyId: 1, sig: "123"},
+      {address: "0x01", keyId: 1, sig: "123"},
+      {address: "0x01", keyId: 1, sig: "123"},
     ],
   })
 })
