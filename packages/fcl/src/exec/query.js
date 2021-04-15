@@ -1,11 +1,8 @@
 import {invariant} from "@onflow/util-invariant"
 import * as sdk from "@onflow/sdk"
-// import {send, script, decode, limit, args, arg} from "@onflow/sdk"
 import * as t from "@onflow/types"
-
-const isRequired = d => typeof d != null
-const isString = d => typeof d === "string"
-const isFunc = d => typeof d === "function"
+import {isRequired, isObject, isString, isFunc} from "./utils/is"
+import {normalizeArgs} from "./utils/normalize-args"
 
 /** Query the Flow Blockchain
  *
@@ -64,9 +61,4 @@ async function preQuery(opts) {
     isString(opts.cadence),
     "query({ cadence }) -- cadence must be a string"
   )
-}
-
-function normalizeArgs(ax) {
-  if (isFunc(ax)) return ax(sdk.arg, t)
-  return []
 }
