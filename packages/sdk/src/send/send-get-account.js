@@ -10,7 +10,6 @@ const paddedHexBuffer = (hex, pad) =>
 const addressBuffer = addr => paddedHexBuffer(addr, 8)
 
 export async function sendGetAccount(ix, opts = {}) {
-  const TextDecoder = opts.TextDecoder || globalThis?.window?.TextDecoder || globalThis?.util?.TextDecoder
   const unary = opts.unary || defaultUnary
 
   ix = await ix
@@ -29,14 +28,16 @@ export async function sendGetAccount(ix, opts = {}) {
   let contractsMap;
   const contracts = (contractsMap = account.getContractsMap()) ? contractsMap.getEntryList().reduce((acc, contract) => ({
     ...acc,
-    [contract[0]]: new TextDecoder("utf-8").decode(contract[1] || new UInt8Array())
+    [contract[0]]: Buffer.from(contract[1] || new UInt8Array()).toString("utf8")
   }), {}) : {}
 
   ret.account = {
     address: withPrefix(u8ToHex(account.getAddress_asU8())),
     balance: account.getBalance(),
-    code: new TextDecoder("utf-8").decode(account.getCode_asU8() || new UInt8Array()),
+    code: Buffer.from(account.getCode_asU8() || new UInt8Array()).toString("utf8"),
+    bruhCode: Buffer.from(account.getCode_asU8() || new UInt8Array()).toString("utf8"),
     contracts,
+    bruhContracts: contracts,
     keys: account.getKeysList().map(publicKey => ({
       index: publicKey.getIndex(),
       publicKey: u8ToHex(publicKey.getPublicKey_asU8()),
