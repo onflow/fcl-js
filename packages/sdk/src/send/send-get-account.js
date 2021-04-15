@@ -10,7 +10,7 @@ const paddedHexBuffer = (hex, pad) =>
 const addressBuffer = addr => paddedHexBuffer(addr, 8)
 
 export async function sendGetAccount(ix, opts = {}) {
-  const TextDecoder = opts.TextDecoder || window.TextDecoder
+  const TextDecoder = opts.TextDecoder || globalThis?.window?.TextDecoder || globalThis?.util?.TextDecoder
   const unary = opts.unary || defaultUnary
 
   ix = await ix

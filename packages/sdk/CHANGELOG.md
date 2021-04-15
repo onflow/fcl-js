@@ -1,6 +1,8 @@
 ### Unreleased
 
 - YYYY-MM-DD **BREAKING?** -- description
+- 2021-04-15 -- Exposes `config` from SDK.
+- 2021-04-15 -- Fixes accessing `TextDecoder` when running `getAccount` in an node environment
 - 2021-04-09 -- Internal only - Added `prepAccount` to `interaction`. Update `authorizations`, `payer`, `proposer` builders.
 
 ### 0.0.45-alpha.18 -- 2021-04-09

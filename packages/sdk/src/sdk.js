@@ -73,3 +73,6 @@ export {resolveSignatures} from "./resolve/resolve-signatures.js"
 export {resolveValidators} from "./resolve/resolve-validators.js"
 export {resolveRefBlockId} from "./resolve/resolve-ref-block-id.js"
 export {resolveParams} from "./resolve/resolve-params"
+
+// Config
+export {config} from "@onflow/config"
