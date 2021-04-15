@@ -35,9 +35,7 @@ export async function sendGetAccount(ix, opts = {}) {
     address: withPrefix(u8ToHex(account.getAddress_asU8())),
     balance: account.getBalance(),
     code: Buffer.from(account.getCode_asU8() || new UInt8Array()).toString("utf8"),
-    bruhCode: Buffer.from(account.getCode_asU8() || new UInt8Array()).toString("utf8"),
     contracts,
-    bruhContracts: contracts,
     keys: account.getKeysList().map(publicKey => ({
       index: publicKey.getIndex(),
       publicKey: u8ToHex(publicKey.getPublicKey_asU8()),
