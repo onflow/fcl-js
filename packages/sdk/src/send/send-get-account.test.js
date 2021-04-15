@@ -82,14 +82,7 @@ describe("Send Get Account", () => {
             ])
         ),
         {
-            unary: unaryMock,
-            TextDecoder: class {
-                constructor(encoding) {
-                    return ({
-                        decode: () => ""
-                    })
-                }
-            }
+            unary: unaryMock
         }
     )
 
