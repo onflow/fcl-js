@@ -1,5 +1,8 @@
 import {invariant} from "@onflow/util-invariant"
-import {isTransaction, makeVoucher} from "../interaction/interaction.js"
+import {
+  isTransaction,
+  createSignableVoucher,
+} from "../interaction/interaction.js"
 
 const isFn = v => typeof v === "function"
 export function buildPreSignable(acct, ix) {
@@ -13,7 +16,7 @@ export function buildPreSignable(acct, ix) {
       data: {},
       metadata: ix.metadata,
       interaction: ix,
-      voucher: makeVoucher(ix),
+      voucher: createSignableVoucher(ix),
     }
   } catch (error) {
     console.error("buildPreSignable", error)
