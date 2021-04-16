@@ -2,6 +2,10 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+## 0.0.68-alpha.20 - 2021-04-16
+
+- 2021-04-16 - VSN `@onflow/sdk` 0.0.45-alpha.18 -> 0.0.45-alpha.19
+
 ## 0.0.68-alpha.19 - 2021-04-14
 
 - 2021-04-14 - FCL now imports and exports `@onflow/types` as `t` (@orodio)
