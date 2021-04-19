@@ -1,6 +1,7 @@
 ### Unreleased
 
 - YYYY-MM-DD **BREAKING?** -- description
+- 2021-04-19 -- Internal only, update `voucher` fields to match message
 - 2021-04-15 -- Add `createSignableVoucher` for message payload verification by wallet, pass as `voucher` to `PreSignable` and `Signable`
 - 2021-04-15 -- Exposes `config` from SDK.
 - 2021-04-15 -- Removes use of `TextDecoder` from `send-get-account`.
@@ -10,7 +11,6 @@
 ### 0.0.45-alpha.18 -- 2021-04-09
 
 - 2021-04-08 -- Adds `GetCollection` interaction, build, send and decode support.
-- 2021-04-08 -- - Implements Transaction Metadata for media rich wallet transactions
 - 2021-04-08 -- Implements Transaction Metadata for media rich wallet transactions
   - Adds `metadata` field to `interaction` and provides `meta` builder to include optional metadata with the transaction.
   - `meta()` accepts the optional fields `title`, `description`, `price`, and `image` as Strings. Invalid types will `throw`. Unsupport fields will be scrubbed.

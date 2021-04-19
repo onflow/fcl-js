@@ -46,8 +46,7 @@ Object {
                 "authorizers": Array [
                   "0xfoo",
                 ],
-                "cadence": "",
-                "computeLimit": 156,
+                "gasLimit": 156,
                 "payer": "0xfoo",
                 "payloadSigs": Array [],
                 "proposalKey": Object {
@@ -56,6 +55,7 @@ Object {
                   "sequenceNum": 123,
                 },
                 "refBlock": "123",
+                "script": "",
               },
             },
           ],

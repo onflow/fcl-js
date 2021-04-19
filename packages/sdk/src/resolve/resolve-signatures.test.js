@@ -90,9 +90,9 @@ test("voucher in signable", async () => {
   const signable = buildSignable(ix.accounts[ix.proposer], {}, ix)
 
   expect(signable.voucher).toEqual({
-    cadence: "",
+    script: "",
     refBlock: "123",
-    computeLimit: 156,
+    gasLimit: 156,
     arguments: [],
     proposalKey: {address: "0x01", keyId: 1, sequenceNum: 123},
     payer: "0x01",

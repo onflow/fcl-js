@@ -41,9 +41,9 @@ const IX = {
   payer: "f086a545ce3c552d|18",
   metadata: META,
   message: {
-    cadence: "",
+    script: "",
     refBlock: "123",
-    computeLimit: 156,
+    gasLimit: 156,
     proposer: null,
     payer: null,
     authorizations: [],
@@ -74,9 +74,9 @@ test("Voucher in PreSignable", async () => {
   const ps = buildPreSignable(ix.accounts[ix.proposer], ix)
 
   expect(ps.voucher).toEqual({
-    cadence: "",
+    script: "",
     refBlock: "123",
-    computeLimit: 156,
+    gasLimit: 156,
     arguments: [],
     proposalKey: {address: "0x01", keyId: 1, sequenceNum: 123},
     payer: "0x01",

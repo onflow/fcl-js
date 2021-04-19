@@ -302,9 +302,9 @@ export const destroy = key => ix => {
 
 export const createSignableVoucher = ix => {
   return {
-    cadence: ix.message.cadence,
+    script: ix.message.cadence,
+    gasLimit: ix.message.computeLimit,
     refBlock: ix.message.refBlock || null,
-    computeLimit: ix.message.computeLimit,
     arguments: ix.message.arguments.map(id => ix.arguments[id].asArgument),
     proposalKey: {
       address: withPrefix(ix.accounts[ix.proposer].addr),
