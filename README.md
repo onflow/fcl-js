@@ -45,7 +45,7 @@ Please note, that some code provided - e.g. `Object.fromEntries` - will require 
   - [x] [`@onflow/fcl`](./packages/fcl) -- A high level dapp framework built on top an opinionated use of the sdk.
   - [x] [`@onflow/sdk`](./packages/sdk) -- Tools that enable developers to [build](./packages/sdk/src/build), [resolve](./packages/sdk/src/resolve), [send](./packages/sdk/src/send) and [decode](./packages/sdk/src/decode) interactions with the Flow blockchain.
   - [x] [`@onflow/types`](./packages/types) -- Type casting interaction params to cadence compatible values.
-  - [x] [`send`](./packages/sdk/src/send) -- Send [interactions](./packages/interaction) to the Flow blockchain get [responses](./packages/response) back.
+  - [x] [`send`](./packages/sdk/src/send) -- Send [interactions](./packages/sdk/src/interaction) to the Flow blockchain get [responses](./packages/response) back.
   - [x] [`decode`](./packages/sdk/src/decode) -- Decodes [responses](./packages/sdk/src/response) return values into Javascript (No need for an ABI).
 
 - Lower Level
