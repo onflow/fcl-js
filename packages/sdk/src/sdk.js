@@ -1,3 +1,4 @@
+import {deprecate} from "./utils"
 // Base
 export {build} from "./build/build.js"
 export {resolve} from "./resolve/resolve.js"
@@ -54,7 +55,6 @@ export {getCollection} from "./build/build-get-collection"
 export {getTransactionStatus} from "./build/build-get-transaction-status.js"
 export {getTransaction} from "./build/build-get-transaction.js"
 export {limit} from "./build/build-limit.js"
-export {params, param} from "./build/build-params.js"
 export {args, arg} from "./build/build-arguments.js"
 export {proposer} from "./build/build-proposer.js"
 export {payer} from "./build/build-payer.js"
@@ -75,3 +75,17 @@ export {resolveParams} from "./resolve/resolve-params"
 
 // Config
 export {config} from "@onflow/config"
+
+// Deprecated
+export const params = params =>
+  deprecate.error({
+    name: "params",
+    transitionsPath:
+      "https://github.com/onflow/flow-js-sdk/blob/master/packages/sdk/TRANSITIONS.md#0001-deprecate-params",
+  })
+export const param = params =>
+  deprecate.warn({
+    name: "param",
+    transitionsPath:
+      "https://github.com/onflow/flow-js-sdk/blob/master/packages/sdk/TRANSITIONS.md#0001-deprecate-params",
+  })
