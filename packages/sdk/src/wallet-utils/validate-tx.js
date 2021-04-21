@@ -3,15 +3,25 @@ import {
   encodeTransactionEnvelope as encodeOutsideMessage,
 } from "../encode/encode.js"
 import {invariant} from "@onflow/util-invariant"
-import {TRANSACTION} from "../interaction/interaction"
+
+const isPayer = signable => {
+  return signable.roles.payer
+}
+const getVoucher = signable => {
+  return signable.voucher
+}
+const getMessage = signable => {
+  return signable.message
+}
+
+const isExpectedMessage = signable => {
+  return isPayer(signable)
+    ? encodeOutsideMessage(getVoucher(signable)) === getMessage(signable)
+    : encodeInsideMessage(getVoucher(signable)) === getMessage(signable)
+}
 
 export const validateSignableTransaction = signable => {
-  invariant(
-    signable.interaction.tag === TRANSACTION,
-    "Signable payload must be transaction"
-  )
+  invariant(isExpectedMessage(signable), "Signable payload must be transaction")
 
-  return signable.roles.payer
-    ? encodeOutsideMessage(signable.voucher) === signable.message
-    : encodeInsideMessage(signable.voucher) === signable.message
+  return true
 }
