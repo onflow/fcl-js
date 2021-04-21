@@ -29,12 +29,6 @@ Object {
               "interaction": [Circular],
               "keyId": 1,
               "message": "f843f84080c0a00000000000000000000000000000000000000000000000000000000000000123819c870000000000000f017b870000000000000fc8870000000000000fc0",
-              "metadata": Object {
-                "description": "A cool cat hat",
-                "image": "https://i.imgur.com/a/JPmBk9R.png",
-                "price": "10",
-                "title": "Kitty Kangol",
-              },
               "roles": Object {
                 "authorizer": false,
                 "param": false,
@@ -86,12 +80,6 @@ Object {
     "payer": null,
     "proposer": null,
     "refBlock": "123",
-  },
-  "metadata": Object {
-    "description": "A cool cat hat",
-    "image": "https://i.imgur.com/a/JPmBk9R.png",
-    "price": "10",
-    "title": "Kitty Kangol",
   },
   "payer": "foo",
   "proposer": "foo",
