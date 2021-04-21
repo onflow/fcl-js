@@ -46,7 +46,7 @@ transaction(nodeID: String, delegatorID: UInt32?) {
 
 export const template = async ({ proposer, authorization, payer, nodeId = "", delegatorId = null}) => {
     const env = await config().get("env", "mainnet")
-    let code = CODE.replace(Deps.FLOWSTAKINGCOLLECTION, Env[env][Deps.FLOWSTAKINGCOLLECTION])
+    let code = CODE.replace(Deps.FLOWSTAKINGCOLLECTION, await sdk.config().get(Deps.FLOWSTAKINGCOLLECTION, Env[env][Deps.FLOWSTAKINGCOLLECTION]))
 
     return sdk.pipe([
         sdk.transaction(code),
