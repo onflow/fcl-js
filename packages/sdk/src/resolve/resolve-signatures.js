@@ -84,9 +84,9 @@ export function buildSignable(acct, message, ix) {
 
 function prepForEncoding(ix) {
   return {
-    script: ix.message.cadence,
+    cadence: ix.message.cadence,
     refBlock: ix.message.refBlock || null,
-    gasLimit: ix.message.computeLimit,
+    computeLimit: ix.message.computeLimit,
     arguments: ix.message.arguments.map(id => ix.arguments[id].asArgument),
     proposalKey: {
       address: sansPrefix(ix.accounts[ix.proposer].addr),
