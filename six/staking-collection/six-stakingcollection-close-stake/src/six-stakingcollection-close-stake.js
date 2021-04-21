@@ -3,7 +3,7 @@ import * as t from "@onflow/types"
 import {config} from "@onflow/config"
 
 const Deps = {
-    FLOWSTAKINGCOLLECTION: "0xLOCKEDTOKENADDRESS",
+    FLOWSTAKINGCOLLECTION: "0xSTAKINGCOLLECTIONADDRESS",
 }
 
 const Env = {
@@ -54,9 +54,9 @@ export const template = async ({ proposer, authorization, payer, nodeId = "", de
         sdk.proposer(proposer),
         sdk.authorizations([authorization]),
         sdk.payer(payer),
-        sdk.validator((ix, {Ok, Bad}) => {
-            if (ix.authorizations.length > 1) return Bad(ix, "template only requires one authorization.")
-            return Ok(ix)
+        sdk.validator(ix => {
+            if (ix.authorizations.length > 1) throw new error("template only requires one authorization.")
+            return ix
         })
     ])
 }
