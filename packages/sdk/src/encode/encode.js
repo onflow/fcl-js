@@ -6,7 +6,8 @@ export const encodeTransactionEnvelope = tx => rlpEncode(prependTransactionDomai
 const paddedHexBuffer = (value, pad) =>
   Buffer.from(value.padStart(pad * 2, 0), "hex")
 
-const transactionDomainTag = paddedHexBuffer("FLOW-V0.0-transaction", 32)
+const TRANSACTION_DOMAIN_TAG = "FLOW-V0.0-transaction"
+const TRANSACTION_DOMAIN_TAG_BUFFER = paddedHexBuffer(TRANSACTION_DOMAIN_TAG, 32)
 
 const addressBuffer = addr => paddedHexBuffer(addr, 8)
 
@@ -21,7 +22,7 @@ const rlpEncode = v => {
   return encode(v).toString("hex")
 }
 
-const prependTransactionDomainTag = tx => [transactionDomainTag].concat(tx)
+const prependTransactionDomainTag = tx => [TRANSACTION_DOMAIN_TAG_BUFFER].concat(tx)
 
 const preparePayload = tx => {
   validatePayload(tx)
