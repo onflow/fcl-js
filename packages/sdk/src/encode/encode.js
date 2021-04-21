@@ -42,7 +42,7 @@ const preparePayload = tx => {
 const prepareEnvelope = tx => {
   validateEnvelope(tx)
 
-  return [transactionDomainTag, preparePayload(tx), preparePayloadSignatures(tx)]
+  return [preparePayload(tx), preparePayloadSignatures(tx)]
 }
 
 const preparePayloadSignatures = tx => {
