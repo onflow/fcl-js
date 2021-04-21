@@ -176,20 +176,6 @@ export const prepAccount = (acct, opts = {}) => ix => {
   return ix
 }
 
-export const makeParam = param => ix => {
-  let tempId = uuid()
-  ix.message.params.push(tempId)
-
-  ix.params[tempId] = JSON.parse(PRM)
-  ix.params[tempId].tempId = tempId
-  ix.params[tempId].key = param.key
-  ix.params[tempId].value = param.value
-  ix.params[tempId].asParam = param.asParam
-  ix.params[tempId].xform = param.xform
-  ix.params[tempId].resolve = param.resolve
-  return Ok(ix)
-}
-
 export const makeArgument = arg => ix => {
   let tempId = uuid()
   ix.message.arguments.push(tempId)

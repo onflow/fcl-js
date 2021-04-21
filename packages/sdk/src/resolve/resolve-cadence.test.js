@@ -1,4 +1,4 @@
-import {interaction, pipe, put, makeScript, makeParam} from "../interaction/interaction.js"
+import {interaction, pipe, put, makeScript} from "../interaction/interaction.js"
 import {resolveCadence} from "./resolve-cadence.js"
 
 const log = msg => ix => (console.log(msg, ix), ix)
