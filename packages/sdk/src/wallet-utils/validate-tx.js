@@ -5,7 +5,7 @@ import {
 import {invariant} from "@onflow/util-invariant"
 import {TRANSACTION} from "../interaction/interaction"
 
-const validateSignableTransaction = signable => {
+export const validateSignableTransaction = signable => {
   invariant(
     signable.interaction.tag === TRANSACTION,
     "Signable payload must be transaction"
@@ -15,5 +15,3 @@ const validateSignableTransaction = signable => {
     ? encodeOutsideMessage(signable.voucher) === signable.message
     : encodeInsideMessage(signable.voucher) === signable.message
 }
-
-export default validateSignableTransaction
