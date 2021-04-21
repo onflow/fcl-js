@@ -23,10 +23,10 @@ const preparePayload = tx => {
   validatePayload(tx)
 
   return [
-    scriptBuffer(tx.script),
+    scriptBuffer(tx.cadence),
     tx.arguments.map(argumentToString),
     blockBuffer(tx.refBlock),
-    tx.gasLimit,
+    tx.computeLimit,
     addressBuffer(tx.proposalKey.address),
     tx.proposalKey.keyId,
     tx.proposalKey.sequenceNum,
@@ -104,10 +104,10 @@ const isObject = v => v !== null && typeof v === "object"
 const isArray = v => isObject(v) && v instanceof Array
 
 const payloadFields = [
-  {name: "script", check: isString},
+  {name: "cadence", check: isString},
   {name: "arguments", check: isArray},
   {name: "refBlock", check: isString, defaultVal: "0"},
-  {name: "gasLimit", check: isNumber},
+  {name: "computeLimit", check: isNumber},
   {name: "proposalKey", check: isObject},
   {name: "payer", check: isString},
   {name: "authorizers", check: isArray},

@@ -13,10 +13,10 @@ it("export contract interface", () => {
 })
 
 const baseTx = {
-  script: `transaction { execute { log("Hello, World!") } }`,
+  cadence: `transaction { execute { log("Hello, World!") } }`,
   arguments: [],
   refBlock: "f0e4c2f76c58916ec258f246851bea091d14d4247a2fc3e18694461b1816e13b",
-  gasLimit: 42,
+  computeLimit: 42,
   proposalKey: {
     address: "01",
     keyId: 4,
@@ -60,8 +60,8 @@ describe("encode transaction", () => {
     ["empty", {}],
     ["non-object", "foo"],
 
-    ["null script", buildTx({script: null})],
-    ["null gasLimit", buildTx({gasLimit: null})],
+    ["null cadence", buildTx({cadence: null})],
+    ["null computeLimit", buildTx({computeLimit: null})],
     ["null proposalKey", buildTx({proposalKey: null})],
     ["null proposalKey.address", buildTx({proposalKey: {address: null}})],
     ["null proposalKey.keyId", buildTx({proposalKey: {keyId: null}})],
@@ -72,9 +72,9 @@ describe("encode transaction", () => {
     ["null payer", buildTx({payer: null})],
     ["null authorizers", buildTx({authorizers: null})],
 
-    ["non-string script", buildTx({script: 42})],
+    ["non-string cadence", buildTx({cadence: 42})],
     ["non-string refBlock", buildTx({refBlock: 42})],
-    ["non-number gasLimit", buildTx({gasLimit: "foo"})],
+    ["non-number computeLimit", buildTx({computeLimit: "foo"})],
     ["non-object proposalKey", buildTx({proposalKey: "foo"})],
     ["non-string proposalKey.address", buildTx({proposalKey: {address: 42}})],
     ["non-number proposalKey.keyId", buildTx({proposalKey: {keyId: "foo"}})],
@@ -120,8 +120,8 @@ describe("encode transaction", () => {
       "f899f872b07472616e73616374696f6e207b2065786563757465207b206c6f67282248656c6c6f2c20576f726c64212229207d207dc0a0f0e4c2f76c58916ec258f246851bea091d14d4247a2fc3e18694461b1816e13b2a880000000000000001040a880000000000000001c9880000000000000001e4e38004a0f7225388c1d69d57e6251c9fda50cbbf9e05131e5adb81e5aa0422402f048162",
     ],
     [
-      "empty script",
-      buildTx({script: ""}),
+      "empty cadence",
+      buildTx({cadence: ""}),
       "f84280c0a0f0e4c2f76c58916ec258f246851bea091d14d4247a2fc3e18694461b1816e13b2a880000000000000001040a880000000000000001c9880000000000000001",
       "f869f84280c0a0f0e4c2f76c58916ec258f246851bea091d14d4247a2fc3e18694461b1816e13b2a880000000000000001040a880000000000000001c9880000000000000001e4e38004a0f7225388c1d69d57e6251c9fda50cbbf9e05131e5adb81e5aa0422402f048162"
     ],
@@ -132,8 +132,8 @@ describe("encode transaction", () => {
       "f899f872b07472616e73616374696f6e207b2065786563757465207b206c6f67282248656c6c6f2c20576f726c64212229207d207dc0a000000000000000000000000000000000000000000000000000000000000000002a880000000000000001040a880000000000000001c9880000000000000001e4e38004a0f7225388c1d69d57e6251c9fda50cbbf9e05131e5adb81e5aa0422402f048162"
     ],
     [
-      "zero gasLimit",
-      buildTx({gasLimit: 0}),
+      "zero computeLimit",
+      buildTx({computeLimit: 0}),
       "f872b07472616e73616374696f6e207b2065786563757465207b206c6f67282248656c6c6f2c20576f726c64212229207d207dc0a0f0e4c2f76c58916ec258f246851bea091d14d4247a2fc3e18694461b1816e13b80880000000000000001040a880000000000000001c9880000000000000001",
       "f899f872b07472616e73616374696f6e207b2065786563757465207b206c6f67282248656c6c6f2c20576f726c64212229207d207dc0a0f0e4c2f76c58916ec258f246851bea091d14d4247a2fc3e18694461b1816e13b80880000000000000001040a880000000000000001c9880000000000000001e4e38004a0f7225388c1d69d57e6251c9fda50cbbf9e05131e5adb81e5aa0422402f048162"
     ],
