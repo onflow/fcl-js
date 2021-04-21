@@ -72,12 +72,6 @@ const IX = `{
   "accounts":{},
   "params":{},
   "arguments":{},
-  "metadata": {
-    "title":null,
-    "description":null,
-    "price":null,
-    "image":null
-  },
   "message": {
     "cadence":null,
     "refBlock":null,

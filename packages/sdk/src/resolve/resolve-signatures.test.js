@@ -7,17 +7,9 @@ import {
   proposer,
   payer,
   limit,
-  meta,
   authorizations,
   authorization,
 } from "../sdk.js"
-
-const META = {
-  title: "Kitty Kangol",
-  description: "A cool cat hat",
-  price: "10",
-  image: "https://i.imgur.com/a/JPmBk9R.png",
-}
 
 const signingFunction = jest.fn(() => ({
   addr: "foo",
@@ -53,19 +45,10 @@ const TRANSACTION = {
   proposer: "foo",
   authorizations: ["foo"],
   payer: "foo",
-  metadata: META,
 }
 
 test("exports function", () => {
   expect(typeof resolveSignatures).toBe("function")
-})
-
-test("meta in signable", async () => {
-  const ix = await resolveSignatures(TRANSACTION)
-
-  const signable = buildSignable(ix.accounts.foo, "message", ix)
-
-  expect(signable.metadata).toEqual(ix.metadata)
 })
 
 test("voucher in signable", async () => {
@@ -83,7 +66,6 @@ test("voucher in signable", async () => {
       authorizations([authz]),
       payer(authz),
       ref("123"),
-      meta(META),
     ])
   )
 

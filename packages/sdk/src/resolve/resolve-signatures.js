@@ -73,7 +73,6 @@ export function buildSignable(acct, message, ix) {
       cadence: ix.message.cadence,
       args: ix.message.arguments.map(d => ix.arguments[d].asArgument),
       data: {},
-      metadata: ix.metadata,
       interaction: ix,
       voucher: createSignableVoucher(ix),
     }
