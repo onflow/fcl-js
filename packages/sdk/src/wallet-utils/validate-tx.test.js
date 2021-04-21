@@ -5,8 +5,8 @@ import {
 } from "../encode/encode.js"
 
 const MESSAGE = {
-  script: "",
-  gasLimit: 156,
+  cadence: "",
+  computeLimit: 156,
   refBlock: "123",
   arguments: [],
   proposalKey: {address: "0x01", keyId: 1, sequenceNum: 123},
@@ -23,8 +23,8 @@ const encodedPayerMessage = encodeOutsideMessage(MESSAGE)
 const encodedNonPayerMessage = encodeInsideMessage(MESSAGE)
 
 const VOUCHER = {
-  script: "",
-  gasLimit: 156,
+  cadence: "",
+  computeLimit: 156,
   refBlock: "123",
   arguments: [],
   proposalKey: {address: "0x01", keyId: 1, sequenceNum: 123},
