@@ -11,7 +11,7 @@
 - 2021-04-23 -- Moves type check utils to `/utils`
 - 2021-04-23 -- Move `createVoucher` to `/utils` to resolve circular dependency in `interaction`
 - 2021-04-22 -- Adds `wallet-utils` `validateSignableTransaction` support for wallets to validate Signable payload
-- 2021-04-21 -- Removes **Deprecated** `params`, `buildParams`
+- 2021-04-20 -- Removes **Deprecated** `params`, `buildParams`
 - 2021-04-21 -- Updates encoding naming of `gasLimit` and `script` to `computeLimit` and `cadence`. Internal only.
 
 ### 0.0.45-alpha.20 -- 2021-04-21
