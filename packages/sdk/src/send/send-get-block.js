@@ -36,7 +36,7 @@ export async function sendGetBlock(ix, opts = {}) {
 
   const collectionGuarantees = block.getCollectionGuaranteesList()
   const blockSeals = block.getBlockSealsList()
-  const signatures = block.getSignaturesList()
+  const signatures = (block.getSignaturesList()).map(u8ToHex)
 
   const ret = response()
   ret.tag = ix.tag
@@ -47,13 +47,13 @@ export async function sendGetBlock(ix, opts = {}) {
     timestamp: block.getTimestamp().toDate().toISOString(),
     collectionGuarantees: collectionGuarantees.map(collectionGuarantee => ({
       collectionId: u8ToHex(collectionGuarantee.getCollectionId_asU8()),
-      signatures: collectionGuarantee.getSignaturesList(),
+      signatures: (collectionGuarantee.getSignaturesList()).map(u8ToHex),
     })),
     blockSeals: blockSeals.map(blockSeal => ({
       blockId: u8ToHex(blockSeal.getBlockId_asU8()),
       executionReceiptId: u8ToHex(blockSeal.getExecutionReceiptId_asU8()),
-      executionReceiptSignatures: blockSeal.getExecutionReceiptSignaturesList(),
-      resultApprovalSignatures: blockSeal.getResultApprovalSignaturesList(),
+      executionReceiptSignatures: (blockSeal.getExecutionReceiptSignaturesList()).map(u8ToHex),
+      resultApprovalSignatures: (blockSeal.getResultApprovalSignaturesList()).map(u8ToHex),
     })),
     signatures: signatures,
   }

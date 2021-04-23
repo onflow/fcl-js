@@ -2,6 +2,7 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+- 2021-05-03 -- Decodes signatures in block responses from a byte array to a hex string
 - 2021-05-03 -- Updates shape of response ADT
 
 ## 0.0.45 - 2021-04-27
