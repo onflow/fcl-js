@@ -1,38 +1,9 @@
 export {createVoucher} from "./create-voucher.js"
+export {deprecate} from "./deprecate.js"
 
-const buildWarningMessage = ({name, transitionsPath}) => {
-  console.warn(
-    `
-    %cFCL/SDK Deprecation Notice
-    ============================
-    The ${name} builder has been deprecated and will be removed in future versions of the Flow JS-SDK/FCL.
-    You can learn more (including a guide on common transition paths) here: ${transitionsPath}
-    ============================
-  `,
-    "font-weight:bold;font-family:monospace;"
-  )
-}
-
-const buildErrorMessage = ({name, transitionsPath}) => {
-  console.error(
-    `
-    %cFCL/SDK Deprecation Notice
-    ============================
-    The ${name} builder has been removed from the Flow JS-SDK/FCL.
-    You can learn more (including a guide on common transition paths) here: ${transitionsPath}
-    ============================
-  `,
-    "font-weight:bold;font-family:monospace;"
-  )
-}
-
-const warn = deprecated => buildWarningMessage(deprecated)
-
-const error = deprecated => {
-  buildErrorMessage(deprecated)
-}
-
-export const deprecate = {
-  warn,
-  error,
-}
+export const isNumber = d => typeof d === "number"
+export const isString = d => typeof d === "string"
+export const isArray = d => Array.isArray(d)
+export const isObj = d => d !== null && typeof d === "object"
+export const isNull = d => d == null
+export const isFn = d => typeof d === "function"
