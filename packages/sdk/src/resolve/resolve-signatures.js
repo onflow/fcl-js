@@ -1,7 +1,5 @@
-import {
-  isTransaction,
-  createSignableVoucher,
-} from "../interaction/interaction.js"
+import {isTransaction} from "../interaction/interaction.js"
+import {createVoucher} from "../utils"
 import {sansPrefix} from "@onflow/util-address"
 import {
   encodeTransactionPayload as encodeInsideMessage,
@@ -74,7 +72,7 @@ export function buildSignable(acct, message, ix) {
       args: ix.message.arguments.map(d => ix.arguments[d].asArgument),
       data: {},
       interaction: ix,
-      voucher: createSignableVoucher(ix),
+      voucher: createVoucher(ix),
     }
   } catch (error) {
     console.error("buildSignable", error)
