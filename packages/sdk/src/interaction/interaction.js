@@ -1,4 +1,5 @@
 import {invariant} from "@onflow/util-invariant"
+import {isArray, isObj, isNull, isNumber, isFn} from "../utils"
 
 export const UNKNOWN /*                       */ = "UNKNOWN"
 export const SCRIPT /*                        */ = "SCRIPT"
@@ -108,12 +109,6 @@ const IX = `{
 const KEYS = new Set(Object.keys(JSON.parse(IX)))
 
 export const interaction = () => JSON.parse(IX)
-
-const isArray = d => Array.isArray(d)
-const isObj = d => typeof d === "object"
-const isNull = d => d == null
-const isNumber = d => typeof d === "number"
-const isFn = d => typeof d === "function"
 
 const CHARS = "abcdefghijklmnopqrstuvwxyz0123456789".split("")
 const randChar = () => CHARS[~~(Math.random() * CHARS.length)]
