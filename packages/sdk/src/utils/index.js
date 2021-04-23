@@ -1,3 +1,5 @@
+export {createVoucher} from "./create-voucher.js"
+
 const buildWarningMessage = ({name, transitionsPath}) => {
   console.warn(
     `
