@@ -1,4 +1,7 @@
-test("placeholder", () => {
-    expect(1).toBe(1)
+import {response} from "./response.js"
+
+test("Response - Snapshot", async () => {
+    const resp = response()
+
+    expect(resp).toMatchSnapshot()
 })
-  
