@@ -101,12 +101,12 @@ npm install --save @onflow/sdk
     - **executionReceiptSignatures** `Array<string>` -- Execution receipt signatures
     - **resultApprovalSignatures** `Array<string>` -- Result approval signatures
   - **signatures** `Array<string>` -- Signatures included in this block
-- **blockHeader** _GetBlockHeader_
+- **blockHeader** _GetBlockHeader_  -- The block header returned from a GetBlockHeader request.
   - **id** `string` -- ID of the block
   - **parenId** `string` -- Parent ID of the block
   - **height** `number` -- Height of the block
   - **timestamp** `string` -- ISO timestamp of the block
-- **latestBlock**  _GetLastestBlock_
+- **DEPRECATED: latestBlock**  _GetLastestBlock_  -- The block returned from a GetLatestBlock request. **DEPRECATED**
   - **id** `string` -- ID of the block
   - **parentId** `string` -- Parent ID of the block
   - **height** `number` -- Height of the block
@@ -120,7 +120,9 @@ npm install --save @onflow/sdk
     - **executionReceiptSignatures** `Array<string>` -- Execution receipt signatures
     - **resultApprovalSignatures** `Array<string>` -- Result approval signatures
   - **signatures** `Array<string>` -- Signatures included in this block
-- **collection** _GetCollection_
+- **collection** _GetCollection_ -- The collection returned from a GetCollection request
+  - **id** `string` -- ID of the collection
+  - **transactionIds** `Array<string>` -- The ids of transactions included in the collection
 
 ## Exposed Functions
 
