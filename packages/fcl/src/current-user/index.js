@@ -87,7 +87,7 @@ function notExpired(user) {
 
 async function configLens(regex) {
   return Object.fromEntries(
-    Object.entries(await fcl.config().where(regex)).map(([key, value]) => [
+    Object.entries(await config().where(regex)).map(([key, value]) => [
       key.replace(regex, ""),
       value,
     ])

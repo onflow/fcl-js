@@ -2,6 +2,10 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+## 0.0.69-alpha.22 - 2021-04-26
+
+- 2021-04-26 -- Fixed an issue where `config()` was being called as `fcl.config()`, but `fcl` wanst available.
+
 ## 0.0.68-alpha.21 - 2021-04-21
 
 - 2021-04-21 -- **BREAKING** The experimental feature `fcl.meta` which allowed for a transaction to send along meta data to an authorization function has been removed because of the unprovable nature of its data and our strict trustless requirements. We believe this removal is in the best interest for js-sdk/fcl end users and will be looking into alternative approaches that provide the same functionality but in a more provable/trustless way. We have no ETA on this features replacement.
