@@ -4,7 +4,7 @@ export const encodeTransactionPayload = tx => prependTransactionDomainTag(rlpEnc
 export const encodeTransactionEnvelope = tx => prependTransactionDomainTag(rlpEncode(prepareEnvelope(tx)))
 
 const paddedHexBuffer = (value, pad) =>
-  Buffer.from(value.padStart(pad * 2, 0), "hex")
+  Buffer.from(value.padEnd(pad * 2, 0), "hex")
 
 const TRANSACTION_DOMAIN_TAG = paddedHexBuffer(Buffer.from("FLOW-V0.0-transaction").toString("hex"), 32).toString("hex")
 const prependTransactionDomainTag = tx => TRANSACTION_DOMAIN_TAG + tx
