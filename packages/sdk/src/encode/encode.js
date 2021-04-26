@@ -3,15 +3,18 @@ import { encode } from '@onflow/rlp';
 export const encodeTransactionPayload = tx => prependTransactionDomainTag(rlpEncode(preparePayload(tx)))
 export const encodeTransactionEnvelope = tx => prependTransactionDomainTag(rlpEncode(prepareEnvelope(tx)))
 
-const paddedHexBuffer = (value, pad) =>
+const endPaddedHexBuffer = (value, pad) =>
   Buffer.from(value.padEnd(pad * 2, 0), "hex")
 
-const TRANSACTION_DOMAIN_TAG = paddedHexBuffer(Buffer.from("FLOW-V0.0-transaction").toString("hex"), 32).toString("hex")
+const startPaddedHexBuffer = (value, pad) =>
+  Buffer.from(value.padStart(pad * 2, 0), "hex")
+
+const TRANSACTION_DOMAIN_TAG = endPaddedHexBuffer(Buffer.from("FLOW-V0.0-transaction").toString("hex"), 32).toString("hex")
 const prependTransactionDomainTag = tx => TRANSACTION_DOMAIN_TAG + tx
 
-const addressBuffer = addr => paddedHexBuffer(addr, 8)
+const addressBuffer = addr => startPaddedHexBuffer(addr, 8)
 
-const blockBuffer = block => paddedHexBuffer(block, 32)
+const blockBuffer = block => startPaddedHexBuffer(block, 32)
 
 const argumentToString = arg => Buffer.from(JSON.stringify(arg), "utf8")
 
