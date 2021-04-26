@@ -302,15 +302,7 @@ sdk.build([
 ])
 ```
 
-### Void
 
-```javascript
-import * as t from "@onflow/types"
-
-sdk.build([
-  sdk.args([ sdk.arg(null, t.Void) ])
-])
-```
 
 ### Optional
 
@@ -326,15 +318,6 @@ sdk.build([
 ])
 ```
 
-### Reference
-
-```javascript
-import * as t from "@onflow/types"
-
-sdk.build([
-  sdk.args([ sdk.arg({address: "0xABC123DEF456", type: "0xABC123DEF456.CryptoKitty"}, t.Reference) ])
-])
-```
 
 ### Array
 
@@ -362,10 +345,7 @@ sdk.build([
         {key: 1, value: "one"},
         {key: 2, value: "two"},
       ],
-      t.Dictionary([
-        {key: t.Int, value: t.String},
-        {key: t.Int, value: t.String},
-      ])
+      t.Dictionary({key: t.Int, value: t.String})
     )
   ])
 ])
@@ -373,27 +353,27 @@ sdk.build([
 sdk.build([
   sdk.args([
     sdk.arg(
-      {key: 1, value: "one"},
-      t.Dictionary({key: t.Int, value: t.String})
+      [
+        {key: "a", value: "one"},
+        {key: "b", value: "two"},
+      ],
+      t.Dictionary({key: t.String, value: t.String})
     )
   ])
 ])
 ```
 
-### Struct
+# Exist but not supported
+
+The following, while technically possible, are impracticle. We strongly recommend not using them as arguments for transactions or scripts.
+
+### Void
 
 ```javascript
 import * as t from "@onflow/types"
 
 sdk.build([
-  sdk.args([
-    sdk.arg(
-      {
-        fields: [{name: "CryptoKitty_name", value: "Lil' Jimmy The CryptoKitty"}],
-      },
-      t.Struct("0xABC123DEF456.CryptoKitty", [{value: t.String}])
-    )
-  ])
+  sdk.args([ sdk.arg(null, t.Void) ])
 ])
 ```
 
@@ -409,6 +389,34 @@ sdk.build([
         fields: [{name: "wasTheCodeClean?", value: "absolutely"}],
       },
       t.Event("0xABC123DEF456.JeffWroteSomeJS", [{value: t.String}]),
+    )
+  ])
+])
+```
+
+
+### Reference
+
+```javascript
+import * as t from "@onflow/types"
+
+sdk.build([
+  sdk.args([ sdk.arg({address: "0xABC123DEF456", type: "0xABC123DEF456.CryptoKitty"}, t.Reference) ])
+])
+```
+
+### Struct
+
+```javascript
+import * as t from "@onflow/types"
+
+sdk.build([
+  sdk.args([
+    sdk.arg(
+      {
+        fields: [{name: "CryptoKitty_name", value: "Lil' Jimmy The CryptoKitty"}],
+      },
+      t.Struct("0xABC123DEF456.CryptoKitty", [{value: t.String}])
     )
   ])
 ])
