@@ -4,7 +4,7 @@
 
 ## 0.0.69-alpha.22 - 2021-04-26
 
-- 2021-04-26 -- Fixed an issue where `config()` was being called as `fcl.config()`, but `fcl` wanst available.
+- 2021-04-26 -- Fixed an issue where `config()` was being called as `fcl.config()`, but `fcl` wasn't available.
 
 ## 0.0.68-alpha.21 - 2021-04-21
 
