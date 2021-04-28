@@ -1,6 +1,6 @@
 {
   "name": "@onflow/six-withdraw-rewarded-delegated-flow",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Flow SDK Stored Interaction - Withdraw Rewarded Delegated Flow",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
@@ -35,7 +35,7 @@
   },
   "dependencies": {
     "@onflow/config": "0.0.2",
-    "@onflow/sdk": "0.0.31",
+    "@onflow/sdk": "0.0.45",
     "@onflow/types": "0.0.4"
   }
 }

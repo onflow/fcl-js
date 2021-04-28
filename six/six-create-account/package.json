@@ -1,6 +1,6 @@
 {
   "name": "@onflow/six-create-account",
-  "version": "0.0.2",
+  "version": "0.0.4",
   "description": "Flow SDK Stored Interaction - Create Account",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
@@ -34,7 +34,7 @@
     "start": "microbundle watch"
   },
   "dependencies": {
-    "@onflow/sdk": "0.0.31",
+    "@onflow/sdk": "0.0.45",
     "@onflow/types": "0.0.4"
   }
 }
