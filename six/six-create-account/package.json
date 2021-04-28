@@ -34,7 +34,7 @@
     "start": "microbundle watch"
   },
   "peerDependencies": {
-    "@onflow/sdk": "0.0.45",
-    "@onflow/types": "0.0.4"
+    "@onflow/fcl": "^0.0.69",
+    "@onflow/types": "^0.0.4"
   }
 }

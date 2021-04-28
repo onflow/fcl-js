@@ -36,7 +36,7 @@
   },
   "peerDependencies": {
     "@onflow/config": "^0.0.2",
-    "@onflow/fcl": "^0.0.68",
+    "@onflow/fcl": "^0.0.69",
     "@onflow/types": "^0.0.4"
   }
 }
