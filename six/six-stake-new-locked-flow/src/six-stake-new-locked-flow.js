@@ -90,7 +90,7 @@ export const template = async ({ proposer, authorization, payer, amount = ""}) =
         fcl.proposer(proposer),
         fcl.authorizations([authorization]),
         fcl.payer(payer),
-        sdk.validator(ix => {
+        fcl.validator(ix => {
             if (ix.authorizations.length > 1) throw new Error("template only requires one authorization.")
             return ix
         })
