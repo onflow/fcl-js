@@ -1,4 +1,4 @@
-import * as sdk from "@onflow/sdk"
+import * as fcl from "@onflow/fcl"
 import * as t from "@onflow/types"
 import {config} from "@onflow/config"
 
@@ -43,15 +43,15 @@ export const template = async ({ proposer, authorization, payer, amount = "", to
     const env = await config().get("env", "mainnet")
     const code = CODE.replace(Deps.FungibleToken, Env[env][Deps.FungibleToken])
 
-    return sdk.pipe([
-        sdk.transaction(code),
-        sdk.args([sdk.arg(amount, t.UFix64), sdk.arg(to, t.Address)]),
-        sdk.proposer(proposer),
-        sdk.authorizations([authorization]),
-        sdk.payer(payer),
-        sdk.validator((ix, {Ok, Bad}) => {
-            if (ix.authorizations.length > 1) return Bad(ix, "template only requires one authorization.")
-            return Ok(ix)
+    return fcl.pipe([
+        fcl.transaction(code),
+        fcl.args([fcl.arg(amount, t.UFix64), fcl.arg(to, t.Address)]),
+        fcl.proposer(proposer),
+        fcl.authorizations([authorization]),
+        fcl.payer(payer),
+        fcl.validator(ix => {
+            if (ix.authorizations.length > 1) throw new Error("template only requires one authorization.")
+            return ix
         })
     ])
 }

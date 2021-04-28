@@ -1,4 +1,4 @@
-import * as sdk from "@onflow/sdk"
+import * as fcl from "@onflow/fcl"
 import * as t from "@onflow/types"
 
 export const TITLE = "Set Account Code"
@@ -12,14 +12,14 @@ export const CODE =
     }
 }`
 
-export const template = ({ proposer, authorization, payer, code = "" }) => sdk.pipe([
-    sdk.transaction(CODE),
-    sdk.args([sdk.arg(Buffer.from(code, "utf8").toString("hex"), t.String)]),
-    sdk.proposer(proposer),
-    sdk.authorizations([authorization]),
-    sdk.payer(payer),
-    sdk.validator((ix, {Ok, Bad}) => {
-        if (ix.authorizations.length > 1) return Bad(ix, "template only requires one authorization.")
-        return Ok(ix)
-    })
+export const template = ({ proposer, authorization, payer, code = "" }) => fcl.pipe([
+    fcl.transaction(CODE),
+    fcl.args([fcl.arg(Buffer.from(code, "utf8").toString("hex"), t.String)]),
+    fcl.proposer(proposer),
+    fcl.authorizations([authorization]),
+    fcl.payer(payer),
+    fcl.validator(ix => {
+        if (ix.authorizations.length > 1) throw new Error("template only requires one authorization.")
+        return ix
+    }
 ])

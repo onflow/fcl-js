@@ -1,4 +1,4 @@
-import * as sdk from "@onflow/sdk"
+import * as fcl from "@onflow/fcl"
 import * as t from "@onflow/types"
 import {config} from "@onflow/config"
 
@@ -39,8 +39,8 @@ export const template = async ({ account = "" }) => {
     const env = await config().get("env", "mainnet")
     let code = CODE.replace(Deps.LOCKEDTOKENADDRESS, Env[env][Deps.LOCKEDTOKENADDRESS])
 
-    return sdk.pipe([
-        sdk.script(code),
-        sdk.args([sdk.arg(account, t.Address)])
+    return fcl.pipe([
+        fcl.script(code),
+        fcl.args([fcl.arg(account, t.Address)])
     ])
 }

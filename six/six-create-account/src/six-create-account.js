@@ -1,4 +1,4 @@
-import * as sdk from "@onflow/sdk"
+import * as fcl from "@onflow/fcl"
 import * as t from "@onflow/types"
 
 export const TITLE = "Create Account"
@@ -15,15 +15,15 @@ acct.addPublicKey(key.decodeHex())
 }
 }`
 
-export const template = ({ proposer, authorization, payer, publicKeys = [] }) => sdk.pipe([
-    sdk.invariant(publicKeys.length > 0, "template({publicKeys}) -- must include one public key when creating an account."),
-    sdk.transaction(CODE),
-    sdk.args([sdk.arg(publicKeys, t.Array(t.String))]),
-    sdk.proposer(proposer),
-    sdk.authorizations([authorization]),
-    sdk.payer(payer),
-    sdk.validator((ix, {Ok, Bad}) => {
-        if (ix.authorizations.length > 1) return Bad(ix, "template only requires one authorization.")
-        return Ok(ix)
+export const template = ({ proposer, authorization, payer, publicKeys = [] }) => fcl.pipe([
+    fcl.invariant(publicKeys.length > 0, "template({publicKeys}) -- must include one public key when creating an account."),
+    fcl.transaction(CODE),
+    fcl.args([fcl.arg(publicKeys, t.Array(t.String))]),
+    fcl.proposer(proposer),
+    fcl.authorizations([authorization]),
+    fcl.payer(payer),
+    fcl.validator(ix => {
+        if (ix.authorizations.length > 1) throw new Error("template only requires one authorization.")
+        return ix
     })
 ])
