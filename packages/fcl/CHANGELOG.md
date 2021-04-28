@@ -2,9 +2,9 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
-## 0.0.68 - 2021-04-16
+## 0.0.68 - 2021-04-27
 
-- 2021-04-16 -- Full VSN Release `@onflow/fcl` 0.0.68-alpha.22 -> 0.0.68
+- 2021-04-27 -- Full VSN Release `@onflow/fcl` 0.0.68-alpha.22 -> 0.0.68
 
 ## 0.0.68-alpha.22 - 2021-04-26
 
