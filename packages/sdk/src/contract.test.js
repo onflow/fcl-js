@@ -6,10 +6,7 @@ import * as send from "./send/send.js"
 import * as template from "@onflow/util-template"
 
 const interfaceContract = (label, wat) => ([template]) => {
-  const keys = template
-    .replace(/\s+/g, "|")
-    .split("|")
-    .filter(Boolean)
+  const keys = template.replace(/\s+/g, "|").split("|").filter(Boolean)
 
   describe(label, () => {
     for (let key of keys)
@@ -30,7 +27,6 @@ interfaceContract("export", root)`
   limit ref
   resolveAccounts
   resolveSignatures
-  resolveParams
 `
 
 describe("consume", () => {
