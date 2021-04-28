@@ -2,9 +2,9 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
-## 0.0.45 - 2021-04-16
+## 0.0.45 - 2021-04-27
 
-- 2021-04-16 -- Full VSN Release `@onflow/sdk` 0.0.45-alpha.20 -> 0.0.45
+- 2021-04-27 -- Full VSN Release `@onflow/sdk` 0.0.45-alpha.20 -> 0.0.45
 - 2021-04-23 -- Moves type check utils to `/utils`
 - 2021-04-23 -- Move `createVoucher` to `/utils` to resolve circular dependency in `interaction`
 - 2021-04-22 -- Adds `wallet-utils` `validateSignableTransaction` support for wallets to validate Signable payload
