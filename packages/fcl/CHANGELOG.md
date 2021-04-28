@@ -2,7 +2,11 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
-## 0.0.69-alpha.22 - 2021-04-26
+## 0.0.68 - 2021-04-16
+
+- 2021-04-16 -- Full VSN Release `@onflow/fcl` 0.0.68-alpha.22 -> 0.0.68
+
+## 0.0.68-alpha.22 - 2021-04-26
 
 - 2021-04-26 -- Fixed an issue where `config()` was being called as `fcl.config()`, but `fcl` wasn't available.
 
