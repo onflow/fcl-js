@@ -25,7 +25,7 @@
 [@gregsantos](https://github.com/gregsantos):
 
 - 2021-05-05 -- Renames `createVoucher` to `createSignableVoucher` and moves to `resolve-signatures`. Internal only.
-<br>
+- 2021-04-27 -- Removes `resolveParams`, Updates `resolvers` exported from `sdk` 
 <br>
 <br>
 <br>

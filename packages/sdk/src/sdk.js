@@ -66,12 +66,14 @@ export {validator} from "./build/build-validator.js"
 export {invariant} from "./build/build-invariant.js"
 
 // Resolvers
+export {resolveCadence} from "./resolve/resolve-cadence.js"
+export {resolveFinalNormalization} from "./resolve/resolve-final-normalization"
+export {resolveProposerSequenceNumber} from "./resolve/resolve-proposer-sequence-number"
 export {resolveArguments} from "./resolve/resolve-arguments.js"
 export {resolveAccounts} from "./resolve/resolve-accounts.js"
 export {resolveSignatures} from "./resolve/resolve-signatures.js"
 export {resolveValidators} from "./resolve/resolve-validators.js"
 export {resolveRefBlockId} from "./resolve/resolve-ref-block-id.js"
-export {resolveParams} from "./resolve/resolve-params"
 
 // Config
 export {config} from "@onflow/config"
