@@ -1,4 +1,4 @@
-import * as sdk from "@onflow/sdk"
+import * as fcl from "@onflow/fcl"
 import * as t from "@onflow/types"
 import {config} from "@onflow/config"
 
@@ -79,15 +79,15 @@ export const template = async ({ proposer, authorization, payer, nodeID = "", no
     code = code.replace(Deps.STAKINGPROXYADDRESS, Env[env][Deps.STAKINGPROXYADDRESS])
     code = code.replace(Deps.FLOWTOKENADDRESS, Env[env][Deps.FLOWTOKENADDRESS])
 
-    return sdk.pipe([
-        sdk.transaction(code),
-        sdk.args([sdk.arg(nodeID, t.String), sdk.arg(nodeRole, t.UInt8), sdk.arg(networkingAddress, t.String), sdk.arg(networkingKey, t.String), sdk.arg(stakingKey, t.String), sdk.arg(amount, t.UFix64)]),
-        sdk.proposer(proposer),
-        sdk.authorizations([authorization]),
-        sdk.payer(payer),
-        sdk.validator((ix, {Ok, Bad}) => {
-            if (ix.authorizations.length > 1) return Bad(ix, "template only requires one authorization.")
-            return Ok(ix)
+    return fcl.pipe([
+        fcl.transaction(code),
+        fcl.args([fcl.arg(nodeID, t.String), fcl.arg(nodeRole, t.UInt8), fcl.arg(networkingAddress, t.String), fcl.arg(networkingKey, t.String), fcl.arg(stakingKey, t.String), fcl.arg(amount, t.UFix64)]),
+        fcl.proposer(proposer),
+        fcl.authorizations([authorization]),
+        fcl.payer(payer),
+        fcl.validator(ix => {
+            if (ix.authorizations.length > 1) throw new Error("template only requires one authorization.")
+            return ix
         })
     ])
 }

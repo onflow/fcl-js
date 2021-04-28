@@ -1,4 +1,4 @@
-import * as sdk from "@onflow/sdk"
+import * as fcl from "@onflow/fcl"
 import * as t from "@onflow/types"
 import {config} from "@onflow/config"
 
@@ -73,15 +73,15 @@ export const template = async ({ proposer, authorization, payer, id = "", amount
     let code = CODE.replace(Deps.LOCKEDTOKENADDRESS, Env[env][Deps.LOCKEDTOKENADDRESS])
     code = code.replace(Deps.FLOWTOKENADDRESS, Env[env][Deps.FLOWTOKENADDRESS])
 
-    return sdk.pipe([
-        sdk.transaction(code),
-        sdk.args([sdk.arg(id, t.String), sdk.arg(amount, t.UFix64)]),
-        sdk.proposer(proposer),
-        sdk.authorizations([authorization]),
-        sdk.payer(payer),
-        sdk.validator((ix, {Ok, Bad}) => {
-            if (ix.authorizations.length > 1) return Bad(ix, "template only requires one authorization.")
-            return Ok(ix)
+    return fcl.pipe([
+        fcl.transaction(code),
+        fcl.args([fcl.arg(id, t.String), fcl.arg(amount, t.UFix64)]),
+        fcl.proposer(proposer),
+        fcl.authorizations([authorization]),
+        fcl.payer(payer),
+        fcl.validator(ix => {
+            if (ix.authorizations.length > 1) throw new Error("template only requires one authorization.")
+            return ix
         })
     ])
 }

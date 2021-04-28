@@ -34,8 +34,8 @@
     "start": "microbundle watch"
   },
   "dependencies": {
-    "@onflow/config": "0.0.2",
-    "@onflow/sdk": "0.0.45",
-    "@onflow/types": "0.0.4"
+    "@onflow/config": "^0.0.2",
+    "@onflow/fcl": "^0.0.68",
+    "@onflow/types": "^0.0.4"
   }
 }
