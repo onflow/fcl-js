@@ -4,7 +4,7 @@ Stored Interaction for creating an Account on Flow.
 
 # Status
 
-- **Last Updated:** July 6 2020
+- **Last Updated:** April 28 2021
 - **Stable:** No
 - **Risk of Breaking Change:** Very High
 

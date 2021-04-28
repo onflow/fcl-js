@@ -4,7 +4,7 @@ Stored Interaction for registering a node on Flow
 
 # Status
 
-- **Last Updated:** August 31 2020
+- **Last Updated:** April 28 2021
 - **Stable:** No
 - **Risk of Breaking Change:** Very High
 
