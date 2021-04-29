@@ -16,6 +16,28 @@ Known Upcoming Changes:
 
 npm install @onflow/six-transfer-tokens
 
+# Configuration 
+
+To use this Stored Interaction, you must configure FCL with certain account addresses which contain contracts imported by this Stored Interaction.
+
+| Dependencies           | Mainnet            | Testnet            |
+| ---------------------- | ------------------ | ------------------ |
+| 0xFUNGIBLETOKENADDRESS | 0xf233dcee88fe0abe | 0x9a0766d93b6608b7 |
+
+Example (for mainnet):
+
+```javascript
+fcl.config()
+  .put("0xFUNGIBLETOKENADDRESS", "0xf233dcee88fe0abe")
+```
+
+Example (for testnet):
+
+```javascript
+fcl.config()
+  .put("0xFUNGIBLETOKENADDRESS", "0x9a0766d93b6608b7")
+```
+
 # Usage:
 
 ```javascript

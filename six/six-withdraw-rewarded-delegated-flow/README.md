@@ -16,6 +16,31 @@ Known Upcoming Changes:
 
 npm install @onflow/six-withdraw-rewarded-delegated-flow
 
+# Configuration 
+
+To use this Stored Interaction, you must configure FCL with certain account addresses which contain contracts imported by this Stored Interaction.
+
+| Dependencies          | Mainnet            | Testnet            |
+| --------------------- | ------------------ | ------------------ |
+| 0xFLOWTOKENADDRESS    | 0x1654653399040a61 | 0x7e60df042a9c0868 |
+| 0xLOCKEDTOKENADDRESS  | 0x8d0e87b65159ae63 | 0x95e019a17d0e23d7 |
+
+Example (for mainnet):
+
+```javascript
+fcl.config()
+  .put("0xFLOWTOKENADDRESS", "0x1654653399040a61")
+  .put("0xLOCKEDTOKENADDRESS", "0x8d0e87b65159ae63")
+```
+
+Example (for testnet):
+
+```javascript
+fcl.config()
+  .put("0xFLOWTOKENADDRESS", "0x7e60df042a9c0868")
+  .put("0xLOCKEDTOKENADDRESS", "0x95e019a17d0e23d7")
+```
+
 # Usage:
 
 ```javascript
