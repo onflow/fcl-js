@@ -4,7 +4,6 @@ import {config} from "@onflow/config"
 
 const DEPS = new Set([
     "0xFLOWTOKENADDRESS",
-    "0xSTAKINGPROXYADDRESS",
     "0xLOCKEDTOKENADDRESS"
 ])
 
