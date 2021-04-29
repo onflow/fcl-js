@@ -2,21 +2,9 @@ import * as fcl from "@onflow/fcl"
 import * as t from "@onflow/types"
 import {config} from "@onflow/config"
 
-const Deps = {
-    LOCKEDTOKENADDRESS: "0xLOCKEDTOKENADDRESS",
-}
-
-const Env = {
-    local: {
-        [Deps.LOCKEDTOKENADDRESS]: "0x0",
-    },
-    testnet: {
-        [Deps.LOCKEDTOKENADDRESS]: "0x95e019a17d0e23d7",
-    },
-    mainnet: {
-        [Deps.LOCKEDTOKENADDRESS]: "0x8d0e87b65159ae63",
-    }
-}
+const DEPS = new Set([
+    "0xLOCKEDTOKENADDRESS"
+])
 
 export const TITLE = "Unstake Delegated Flow"
 export const DESCRIPTION = "Unstakes Delegated Flow for an account."
@@ -41,9 +29,20 @@ transaction(amount: UFix64) {
 }
 `
 
+class UndefinedConfigurationError extends Error {
+    constructor(address) {
+      const msg = `Stored Interaction Error: Missing configuration for ${address}. Please see the following to learn more: https://github.com/onflow/flow-js-sdk/blob/master/six/six-unstake-delegated-flow/README.md`.trim()
+      super(msg)
+      this.name = "Stored Interaction Undefined Address Configuration Error"
+    }
+}
+
+const addressCheck = async address => {
+    if (!await config().get(address)) throw new UndefinedConfigurationError(address)
+}
+
 export const template = async ({ proposer, authorization, payer, amount = ""}) => {
-    const env = await config().get("env", "mainnet")
-    let code = CODE.replace(Deps.LOCKEDTOKENADDRESS, Env[env][Deps.LOCKEDTOKENADDRESS])
+    for (let addr of DEPS) await addressCheck(addr)
 
     return fcl.pipe([
         fcl.transaction(code),

@@ -2,29 +2,11 @@ import * as fcl from "@onflow/fcl"
 import * as t from "@onflow/types"
 import {config} from "@onflow/config"
 
-const Deps = {
-    FLOWTOKENADDRESS: "0xFLOWTOKENADDRESS",
-    LOCKEDTOKENADDRESS: "0xLOCKEDTOKENADDRESS",
-    STAKINGPROXYADDRESS: "0xSTAKINGPROXYADDRESS",
-}
-
-const Env = {
-    local: {
-        [Deps.FLOWTOKENADDRESS]: "0x0",
-        [Deps.LOCKEDTOKENADDRESS]: "0x0",
-        [Deps.STAKINGPROXYADDRESS]: "0x0",
-    },
-    testnet: {
-        [Deps.FLOWTOKENADDRESS]: "0x7e60df042a9c0868",
-        [Deps.LOCKEDTOKENADDRESS]: "0x95e019a17d0e23d7",
-        [Deps.STAKINGPROXYADDRESS]: "0x7aad92e5a0715d21",
-    },
-    mainnet: {
-        [Deps.FLOWTOKENADDRESS]: "0x1654653399040a61",
-        [Deps.LOCKEDTOKENADDRESS]: "0x8d0e87b65159ae63",
-        [Deps.STAKINGPROXYADDRESS]: "0x62430cf28c26d095",
-    }
-}
+const DEPS = new Set([
+    "0xFLOWTOKENADDRESS",
+    "0xSTAKINGPROXYADDRESS",
+    "0xLOCKEDTOKENADDRESS"
+])
 
 export const TITLE = "Register Node"
 export const DESCRIPTION = "Register a Node on Flow."
@@ -72,12 +54,20 @@ transaction(id: String, role: UInt8, networkingAddress: String, networkingKey: S
 }
 `
 
+class UndefinedConfigurationError extends Error {
+    constructor(address) {
+      const msg = `Stored Interaction Error: Missing configuration for ${address}. Please see the following to learn more: https://github.com/onflow/flow-js-sdk/blob/master/six/six-register-node/README.md`.trim()
+      super(msg)
+      this.name = "Stored Interaction Undefined Address Configuration Error"
+    }
+}
+
+const addressCheck = async address => {
+    if (!await config().get(address)) throw new UndefinedConfigurationError(address)
+}
 
 export const template = async ({ proposer, authorization, payer, nodeID = "", nodeRole = "", networkingAddress = "", networkingKey = "", stakingKey = "", amount = "" }) => {
-    const env = await config().get("env", "mainnet")
-    let code = CODE.replace(Deps.LOCKEDTOKENADDRESS, Env[env][Deps.LOCKEDTOKENADDRESS])
-    code = code.replace(Deps.STAKINGPROXYADDRESS, Env[env][Deps.STAKINGPROXYADDRESS])
-    code = code.replace(Deps.FLOWTOKENADDRESS, Env[env][Deps.FLOWTOKENADDRESS])
+    for (let addr of DEPS) await addressCheck(addr)
 
     return fcl.pipe([
         fcl.transaction(code),

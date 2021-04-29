@@ -2,29 +2,11 @@ import * as fcl from "@onflow/fcl"
 import * as t from "@onflow/types"
 import {config} from "@onflow/config"
 
-const Deps = {
-    LOCKEDTOKENADDRESS: "0xLOCKEDTOKENADDRESS",
-    FUNGIBLETOKENADDRESS: "0xFUNGIBLETOKENADDRESS",
-    FLOWTOKENADDRESS: "0xFLOWTOKENADDRESS",
-}
-
-const Env = {
-    local: {
-        [Deps.LOCKEDTOKENADDRESS]: "0x0",
-        [Deps.FUNGIBLETOKENADDRESS]: "0x0",
-        [Deps.FLOWTOKENADDRESS]: "0x0",
-    },
-    testnet: {
-        [Deps.LOCKEDTOKENADDRESS]: "0x95e019a17d0e23d7",
-        [Deps.FUNGIBLETOKENADDRESS]: "0x9a0766d93b6608b7",
-        [Deps.FLOWTOKENADDRESS]: "0x7e60df042a9c0868",
-    },
-    mainnet: {
-        [Deps.LOCKEDTOKENADDRESS]: "0x8d0e87b65159ae63",
-        [Deps.FUNGIBLETOKENADDRESS]: "0xf233dcee88fe0abe",
-        [Deps.FLOWTOKENADDRESS]: "0x1654653399040a61",
-    }
-}
+const DEPS = new Set([
+    "0xFLOWTOKENADDRESS",
+    "0xFUNGIBLETOKENADDRESS",
+    "0xLOCKEDTOKENADDRESS"
+])
 
 export const TITLE = "Deposit Unlocked Tokens"
 export const DESCRIPTION = "Deposit Unlocked Tokens."
@@ -54,11 +36,20 @@ transaction(amount: UFix64) {
 }
 `
 
+class UndefinedConfigurationError extends Error {
+    constructor(address) {
+      const msg = `Stored Interaction Error: Missing configuration for ${address}. Please see the following to learn more: https://github.com/onflow/flow-js-sdk/blob/master/six/six-deposit-unlocked-flow/README.md`.trim()
+      super(msg)
+      this.name = "Stored Interaction Undefined Address Configuration Error"
+    }
+}
+
+const addressCheck = async address => {
+    if (!await config().get(address)) throw new UndefinedConfigurationError(address)
+}
+
 export const template = async ({ proposer, authorization, payer, amount = ""}) => {
-    const env = await config().get("env", "mainnet")
-    let code = CODE.replace(Deps.LOCKEDTOKENADDRESS, Env[env][Deps.LOCKEDTOKENADDRESS])
-    code = code.replace(Deps.FUNGIBLETOKENADDRESS, Env[env][Deps.FUNGIBLETOKENADDRESS])
-    code = code.replace(Deps.FLOWTOKENADDRESS, Env[env][Deps.FLOWTOKENADDRESS])
+    for (let addr of DEPS) await addressCheck(addr)
 
     return fcl.pipe([
         fcl.transaction(code),

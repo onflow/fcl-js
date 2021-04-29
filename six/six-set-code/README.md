@@ -10,7 +10,7 @@ Stored Interaction for setting an Accounts Code on Flow
 
 Known Upcoming Changes:
 
-- Potential changes to all aspects of Stored Interactions
+To use this Stored Interaction, you must configure FCL with certain account addresses which contain contracts imported by this Stored Interaction.
 
 # Install
 

@@ -2,25 +2,10 @@ import * as fcl from "@onflow/fcl"
 import * as t from "@onflow/types"
 import {config} from "@onflow/config"
 
-const Deps = {
-    LOCKEDTOKENADDRESS: "0xLOCKEDTOKENADDRESS",
-    STAKINGPROXYADDRESS: "0xSTAKINGPROXYADDRESS",
-}
-
-const Env = {
-    local: {
-        [Deps.LOCKEDTOKENADDRESS]: "0x0",
-        [Deps.STAKINGPROXYADDRESS]: "0x0",
-    },
-    testnet: {
-        [Deps.LOCKEDTOKENADDRESS]: "0x95e019a17d0e23d7",
-        [Deps.STAKINGPROXYADDRESS]: "0x7aad92e5a0715d21",
-    },
-    mainnet: {
-        [Deps.LOCKEDTOKENADDRESS]: "0x8d0e87b65159ae63",
-        [Deps.STAKINGPROXYADDRESS]: "0x62430cf28c26d095",
-    }
-}
+const DEPS = new Set([
+    "0xSTAKINGPROXYADDRESS",
+    "0xLOCKEDTOKENADDRESS"
+])
 
 export const TITLE = "Withdraw Unstaked Flow"
 export const DESCRIPTION = "Withdraw Unlocked Flow to an account."
@@ -47,10 +32,20 @@ transaction(amount: UFix64) {
 }
 `
 
+class UndefinedConfigurationError extends Error {
+    constructor(address) {
+      const msg = `Stored Interaction Error: Missing configuration for ${address}. Please see the following to learn more: https://github.com/onflow/flow-js-sdk/blob/master/six/six-withdraw-unstaked-flow/README.md`.trim()
+      super(msg)
+      this.name = "Stored Interaction Undefined Address Configuration Error"
+    }
+}
+
+const addressCheck = async address => {
+    if (!await config().get(address)) throw new UndefinedConfigurationError(address)
+}
+
 export const template = async ({ proposer, authorization, payer, amount = ""}) => {
-    const env = await config().get("env", "mainnet")
-    let code = CODE.replace(Deps.LOCKEDTOKENADDRESS, Env[env][Deps.LOCKEDTOKENADDRESS])
-    code = code.replace(Deps.STAKINGPROXYADDRESS, Env[env][Deps.STAKINGPROXYADDRESS])
+    for (let addr of DEPS) await addressCheck(addr)
 
     return fcl.pipe([
         fcl.transaction(code),
