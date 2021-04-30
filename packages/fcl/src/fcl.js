@@ -9,7 +9,7 @@ export {events} from "./events"
 import {currentUser} from "./current-user"
 export {currentUser}
 
-export const authenticate = () => currentUser().authenticate()
+export const authenticate = opts => currentUser().authenticate(opts)
 export const unauthenticate = () => currentUser().unauthenticate()
 export const reauthenticate = () => {
   currentUser().unauthenticate()
@@ -19,6 +19,8 @@ export const signUp = () => currentUser().authenticate()
 export const logIn = () => currentUser().authenticate()
 
 export const authz = currentUser().authorization
+
+export const sign = currentUser().sign
 
 import * as types from "@onflow/types"
 export const t = types
