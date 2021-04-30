@@ -3,6 +3,7 @@ import {account} from "@onflow/sdk"
 import {config} from "@onflow/config"
 import {spawn, send, INIT, SUBSCRIBE, UNSUBSCRIBE} from "@onflow/util-actor"
 import {sansPrefix} from "@onflow/util-address"
+import {invariant} from "@onflow/util-invariant"
 import {buildUser} from "./build-user"
 import {serviceOfType} from "./service-of-type"
 import {execService} from "./exec-service"
@@ -94,13 +95,14 @@ async function configLens(regex) {
   )
 }
 
-async function authenticate() {
+async function authenticate(opts) {
   return new Promise(async (resolve, reject) => {
     spawnCurrentUser()
     const user = await snapshot()
     if (user.loggedIn && notExpired(user)) return resolve(user)
+    const frameStrategy = opts.frame || frame
 
-    frame(
+    frameStrategy(
       {
         endpoint:
           (await config().get("discovery.wallet")) ||
@@ -223,11 +225,34 @@ async function info() {
   return account(addr)
 }
 
+// what does this payload signable nned to be?
+const makeSignable = msg => ({msg})
+const isRequired = d => typeof d != null
+
+async function sign(payload = {}, options = {}) {
+  spawnCurrentUser()
+  // do we need frame here?
+  const user = await authenticate(options)
+  // authenticate -> buildUser(wallet response data) -> fetchServices
+  const services = await configLens(/^service\./)
+  const signer = serviceOfType(user.services, "arb-sig")
+
+  invariant(isRequired(payload), "message to sign is required")
+  invariant(
+    isRequired(signer),
+    "Current user is missing arbitrary signing service."
+  )
+
+  return true
+  // await execService(signer, makeSignable(payload))
+}
+
 export const currentUser = () => {
   return {
     authenticate,
     unauthenticate,
     authorization,
+    sign,
     subscribe,
     snapshot,
   }

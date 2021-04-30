@@ -26,55 +26,121 @@ test("fcl.VERSION needs to match version in package.json", () => {
   expect(pkg.version).toBe(fcl.VERSION)
 })
 
-test("serialize returns voucher", async () => {
-  const authz = {
-    addr: "0x01",
-    signingFunction: () => ({signature: "123"}),
-    keyId: 1,
-    sequenceNum: 123,
+const userData = {
+  f_type: "USER",
+  f_vsn: "1.0.0",
+  addr: "0x6a14b81975f0ee46",
+  cid: "d388f086a545ce3c552d89447a786a4a58753775",
+  loggedIn: true,
+  expiresAt: undefined,
+  services: [
+    {
+      f_type: "Service",
+      f_vsn: "1.0.0",
+      type: "authn",
+      uid: "blocto#authn",
+      id: "DzxjJXu7u",
+      identity: {
+        address: "0x6a14b81975f0ee46",
+      },
+      provider: {
+        address: "0xf086a545ce3c552d",
+        name: "Blocto",
+        icon: "https://blocto.portto.io/icons/icon-512x512.png",
+        description: "Blocto is your entrance to blockchain world.",
+      },
+      authn: "https://flow-wallet-testnet.blocto.app/api/authz",
+    },
+    {
+      f_type: "Service",
+      f_vsn: "1.0.0",
+      type: "authz",
+      uid: "blocto#authz",
+      method: "HTTP/POST",
+      identity: {
+        address: "0x6a14b81975f0ee46",
+        keyId: 1,
+        addr: "0x6a14b81975f0ee46",
+      },
+      address: "0x6a14b81975f0ee46",
+      addr: "0x6a14b81975f0ee46",
+      keyId: 1,
+      endpoint: "https://flow-wallet-testnet.blocto.app/api/authz",
+      params: {
+        sessionId: "DzxjJXu7u",
+      },
+    },
+    {
+      f_type: "Service",
+      f_vsn: "1.0.0",
+      type: "pre-authz",
+      uid: "blocto#pre-authz",
+      method: "HTTP/POST",
+      endpoint: "https://flow-wallet-testnet.blocto.app/api/pre-authz",
+      params: {
+        sessionId: "DzxjJXu7u",
+      },
+    },
+    {
+      f_type: "Service",
+      f_vsn: "1.0.0",
+      type: "authz",
+      uid: "DzxjJXu7u#authz-http-post",
+      endpoint: "https://flow-wallet-testnet.blocto.app/api/authz",
+      method: "HTTP/POST",
+      identity: {
+        f_type: "Identity",
+        f_vsn: "1.0.0",
+        address: "0x6a14b81975f0ee46",
+        keyId: 1,
+      },
+      params: {
+        sessionId: "DzxjJXu7u",
+      },
+    },
+    {
+      f_type: "Service",
+      f_vsn: "1.0.0",
+      type: "authn",
+      uid: "wallet-provider#authn",
+      endpoint: "https://flow-wallet-testnet.blocto.app/authn",
+      id: "6a14b81975f0ee46",
+      provider: {
+        address: "0xf086a545ce3c552d",
+        name: "Blocto",
+        icon: "https://blocto.portto.io/icons/icon-512x512.png",
+      },
+    },
+    {
+      f_type: "Service",
+      f_vsn: "1.0.0",
+      type: "arb-sig",
+      uid: "wallet-provider#authn",
+      endpoint: "https://flow-wallet-testnet.blocto.app/authn",
+      id: "6a14b81975f0ee46",
+      provider: {
+        address: "0xf086a545ce3c552d",
+        name: "Blocto",
+        icon: "https://blocto.portto.io/icons/icon-512x512.png",
+      },
+    },
+  ],
+}
+
+const close = () => {}
+
+test("sign", async () => {
+  const myFrameStrategy = (service, {onResponse}) => {
+    try {
+      onResponse({data: userData}, {close})
+    } catch (error) {
+      console.error("Test Authn Callback Error", error)
+    }
   }
 
-  const serializedVoucher = JSON.stringify(
-    {
-      cadence: "",
-      refBlock: "123",
-      computeLimit: 156,
-      arguments: [],
-      proposalKey: {
-        address: "0x01",
-        keyId: 1,
-        sequenceNum: 123,
-      },
-      payer: "0x01",
-      authorizers: ["0x01"],
-      payloadSigs: [
-        {
-          address: "0x01",
-          keyId: 1,
-          sig: "123",
-        },
-        {
-          address: "0x01",
-          keyId: 1,
-          sig: "123",
-        },
-      ],
-    },
-    null,
-    2
-  )
-
-  const serializedIx = await serialize(
-    [
-      transaction``,
-      limit(156),
-      proposer(authz),
-      authorizations([authz]),
-      payer(authz),
-      ref("123"),
-    ],
-    {resolve}
-  )
-
-  expect(serializedIx).toEqual(serializedVoucher)
+  const snap = await fcl.authenticate({frame: myFrameStrategy})
+  // console.log("Test snap", snap, userData)
+  const user = await fcl.sign({payload: 1}, {frame: myFrameStrategy})
+  console.log(user)
+  // expect(snap).toEqual(userData)
 })
