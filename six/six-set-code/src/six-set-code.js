@@ -21,5 +21,5 @@ export const template = ({ proposer, authorization, payer, code = "" }) => fcl.p
     fcl.validator(ix => {
         if (ix.authorizations.length > 1) throw new Error("template only requires one authorization.")
         return ix
-    }
+    }),
 ])
