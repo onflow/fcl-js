@@ -2,6 +2,7 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+- 2021-05-05 -- Prepends a transaction domain tag to encoded payload and envelope messages
 - 2021-05-03 -- Decodes signatures in block responses from a byte array to a hex string
 - 2021-05-03 -- Updates shape of response ADT
 
