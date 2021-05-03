@@ -70,7 +70,7 @@ export const template = async ({ proposer, authorization, payer, nodeID = "", no
     for (let addr of DEPS) await addressCheck(addr)
 
     return fcl.pipe([
-        fcl.transaction(code),
+        fcl.transaction(CODE),
         fcl.args([fcl.arg(nodeID, t.String), fcl.arg(nodeRole, t.UInt8), fcl.arg(networkingAddress, t.String), fcl.arg(networkingKey, t.String), fcl.arg(stakingKey, t.String), fcl.arg(amount, t.UFix64)]),
         fcl.proposer(proposer),
         fcl.authorizations([authorization]),

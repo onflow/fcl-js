@@ -43,7 +43,7 @@ export const template = async ({ proposer, authorization, payer, amount = "", to
     for (let addr of DEPS) await addressCheck(addr)
 
     return fcl.pipe([
-        fcl.transaction(code),
+        fcl.transaction(CODE),
         fcl.args([fcl.arg(amount, t.UFix64), fcl.arg(to, t.Address)]),
         fcl.proposer(proposer),
         fcl.authorizations([authorization]),

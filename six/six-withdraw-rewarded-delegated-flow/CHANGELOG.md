@@ -2,6 +2,10 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.0.7 -- 2021-05-03
+
+- 2020-05-03 -- Use config to resolve import addresses
+
 ### 0.0.5 -- 2021-1-12
 
 - 2021-1-12 -- Updates transaction code
