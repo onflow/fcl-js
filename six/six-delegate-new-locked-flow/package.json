@@ -1,6 +1,6 @@
 {
   "name": "@onflow/six-delegate-new-locked-flow",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Flow SDK Stored Interaction - Delegate New Locked Flow",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",

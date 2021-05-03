@@ -1,6 +1,6 @@
 {
   "name": "@onflow/six-register-delegator",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "Flow SDK Stored Interaction - Register Delegator",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",

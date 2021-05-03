@@ -39,7 +39,7 @@ export const template = async ({ account = "" }) => {
     for (let addr of DEPS) await addressCheck(addr)
 
     return fcl.pipe([
-        fcl.script(code),
+        fcl.script(CODE),
         fcl.args([fcl.arg(account, t.Address)])
     ])
 }
