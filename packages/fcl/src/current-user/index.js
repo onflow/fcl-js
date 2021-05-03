@@ -95,14 +95,14 @@ async function configLens(regex) {
   )
 }
 
-async function authenticate(opts) {
+async function authenticate(opts = {}) {
   return new Promise(async (resolve, reject) => {
     spawnCurrentUser()
     const user = await snapshot()
     if (user.loggedIn && notExpired(user)) return resolve(user)
-    const frameStrategy = opts.frame || frame
+    const serviceStrategy = opts.serviceStrategy || frame
 
-    frameStrategy(
+    serviceStrategy(
       {
         endpoint:
           (await config().get("discovery.wallet")) ||
@@ -225,26 +225,26 @@ async function info() {
   return account(addr)
 }
 
-// what does this payload signable nned to be?
 const makeSignable = msg => ({msg})
-const isRequired = d => typeof d != null
+const isTransaction = msg => true
+const isValidMessage = msg => {
+  invariant(isTransaction(msg), "message cannot be a transaction")
+  return msg && true
+}
 
-async function sign(payload = {}, options = {}) {
+async function sign(msg, options = {}) {
   spawnCurrentUser()
-  // do we need frame here?
   const user = await authenticate(options)
-  // authenticate -> buildUser(wallet response data) -> fetchServices
-  const services = await configLens(/^service\./)
-  const signer = serviceOfType(user.services, "arb-sig")
+  const signingService = serviceOfType(user.services, "signature")
 
-  invariant(isRequired(payload), "message to sign is required")
+  invariant(isValidMessage(msg), "a valid message to sign is required")
   invariant(
-    isRequired(signer),
+    signingService,
     "Current user is missing arbitrary signing service."
   )
 
+  // await execService(signingService, makeSignable(msg))
   return true
-  // await execService(signer, makeSignable(payload))
 }
 
 export const currentUser = () => {
