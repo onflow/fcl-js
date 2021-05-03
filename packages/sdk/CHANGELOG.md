@@ -29,6 +29,7 @@
 <br>
 <br>
 <br>
+- 2021-05-28 -- Includes check for new TRANSACTION_DOMAIN_TAG in wallet/utils `validateSignableTransaction`
 
 ## 0.0.47-alpha.1 - 2021-05-27
 

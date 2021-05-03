@@ -9,7 +9,7 @@ const rightPaddedHexBuffer = (value, pad) =>
 const leftPaddedHexBuffer = (value, pad) =>
   Buffer.from(value.padStart(pad * 2, 0), "hex")
 
-const TRANSACTION_DOMAIN_TAG = rightPaddedHexBuffer(Buffer.from("FLOW-V0.0-transaction").toString("hex"), 32).toString("hex")
+export const TRANSACTION_DOMAIN_TAG = rightPaddedHexBuffer(Buffer.from("FLOW-V0.0-transaction").toString("hex"), 32).toString("hex")
 const prependTransactionDomainTag = tx => TRANSACTION_DOMAIN_TAG + tx
 
 const addressBuffer = addr => leftPaddedHexBuffer(addr, 8)
