@@ -32,7 +32,7 @@ const userData = {
   addr: "0x6a14b81975f0ee46",
   cid: "d388f086a545ce3c552d89447a786a4a58753775",
   loggedIn: true,
-  expiresAt: undefined,
+  expiresAt: null,
   services: [
     {
       f_type: "Service",
@@ -101,28 +101,24 @@ const userData = {
     {
       f_type: "Service",
       f_vsn: "1.0.0",
-      type: "authn",
-      uid: "wallet-provider#authn",
-      endpoint: "https://flow-wallet-testnet.blocto.app/authn",
-      id: "6a14b81975f0ee46",
+      type: "signature",
+      uid: "wallet-provider#signature",
+      endpoint: "http://localhost:3000/fcl/authn",
+      method: "IFRAME/RPC", // HTTP/POST | IFRAME/RPC | HTTP/RPC
+      identity: {
+        f_type: "Identity",
+        f_vsn: "1.0.0",
+        address: "0x6a14b81975f0ee46",
+        keyId: 1,
+      },
       provider: {
-        address: "0xf086a545ce3c552d",
-        name: "Blocto",
+        address: "0xf8d6e0586b0a20c7",
+        name: "Flow Dev Wallet",
+        description: "The Best Wallet",
         icon: "https://blocto.portto.io/icons/icon-512x512.png",
       },
-    },
-    {
-      f_type: "Service",
-      f_vsn: "1.0.0",
-      type: "arb-sig",
-      uid: "wallet-provider#authn",
-      endpoint: "https://flow-wallet-testnet.blocto.app/authn",
-      id: "6a14b81975f0ee46",
-      provider: {
-        address: "0xf086a545ce3c552d",
-        name: "Blocto",
-        icon: "https://blocto.portto.io/icons/icon-512x512.png",
-      },
+      data: {}, // included in body of authz request
+      params: {}, // included as query params on endpoint url
     },
   ],
 }
@@ -130,7 +126,7 @@ const userData = {
 const close = () => {}
 
 test("sign", async () => {
-  const myFrameStrategy = (service, {onResponse}) => {
+  const testServiceStrategy = (service, {onResponse}) => {
     try {
       onResponse({data: userData}, {close})
     } catch (error) {
@@ -138,9 +134,9 @@ test("sign", async () => {
     }
   }
 
-  const snap = await fcl.authenticate({frame: myFrameStrategy})
-  // console.log("Test snap", snap, userData)
-  const user = await fcl.sign({payload: 1}, {frame: myFrameStrategy})
-  console.log(user)
-  // expect(snap).toEqual(userData)
+  const user = await fcl.authenticate({serviceStrategy: testServiceStrategy})
+
+  const signature = await fcl.sign({}, {serviceStrategy: testServiceStrategy})
+
+  expect(signature).toBe(true)
 })

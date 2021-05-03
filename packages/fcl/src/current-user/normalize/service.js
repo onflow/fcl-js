@@ -4,6 +4,7 @@ import {normalizePreAuthz} from "./pre-authz"
 import {normalizeFrame} from "./frame"
 import {normalizeBackChannelRpc} from "./back-channel-rpc"
 import {normalizeOpenId} from "./open-id"
+import {normalizeSignature} from "./signature"
 
 export function normalizeServices(services, data) {
   return services.map(service => normalizeService(service, data))
@@ -16,12 +17,12 @@ const serviceNormalizers = {
   authn: normalizeAuthn,
   frame: normalizeFrame,
   "open-id": normalizeOpenId,
+  signature: normalizeSignature,
 }
 
 export function normalizeService(service, data) {
   try {
     var normalized = serviceNormalizers[service.type](service, data)
-    // console.log(service.type, {normalized, service})
     return normalized
   } catch (error) {
     console.error(
