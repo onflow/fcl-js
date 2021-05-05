@@ -2,6 +2,14 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+## 0.0.70-alpha.1 - 2021-05-05
+
+- 2021-05-05 -- VSN `@onflow/sdk` 0.0.45 -> 0.0.46-alpha.1
+  
+## 0.0.69 - 2021-04-28
+
+- 2021-04-28 -- Exposes `invariant` and `validator` builders from FCL
+
 ## 0.0.68 - 2021-04-27
 
 - 2021-04-27 -- Full VSN Release `@onflow/fcl` 0.0.68-alpha.22 -> 0.0.68
