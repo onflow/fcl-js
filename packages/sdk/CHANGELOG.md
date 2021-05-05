@@ -2,6 +2,35 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+**Community Contributions:**
+
+[@orodio](https://github.com/orodio):
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+[@JeffreyDoyle](https://github.com/JeffreyDoyle):
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+[@gregsantos](https://github.com/gregsantos):
+
+- 2021-05-05 -- Renames `createVoucher` to `createSignableVoucher` and moves to `resolve-signatures`. Internal only.
+<br>
+<br>
+<br>
+<br>
+<br>
+
 ## 0.0.46-alpha.1 - 2021-05-05
 
 - 2021-05-05 **BREAKING** -- Prepends a transaction domain tag to encoded payload and envelope messages. Transaction domain tags allow signers to identify which messages are intended to represent encoded transactions, and which are not. The Flow protocol has been updated (as of May 5th 2021) to both accept signatures produced from messages prepended with a transaction domain tag, and from messages that are not. The next spork (time and date of next spork are TBD) will _strictly require_ all signatures for transnactions to have been produced from messages prepended with a transaction domain tag. This breaking change requires _all_ users of Flow Client Library and the Flow JavaScript SDK to update their versions to a version greater than or equal to the verison that this change was included in.
