@@ -4,7 +4,7 @@
 
 ## 0.0.70-alpha.1 - 2021-05-05
 
-- 2021-05-05 -- VSN `@onflow/sdk` 0.0.45 -> 0.0.46-alpha.1
+- 2021-05-05 **BREAKING** -- VSN `@onflow/sdk` 0.0.45 -> 0.0.46-alpha.1 -- Prepends a transaction domain tag to encoded payload and envelope messages. Transaction domain tags allow signers to identify which messages are intended to represent encoded transactions, and which are not. The Flow protocol has been updated (as of May 5th 2021) to both accept signatures produced from messages prepended with a transaction domain tag, and from messages that are not. The next spork (time and date of next spork are TBD) will strictly require all signatures for transnactions to have been produced from messages prepended with a transaction domain tag. This breaking change requires all users of Flow Client Library and the Flow JavaScript SDK to update their versions to a version greater than or equal to the verison that this change was included in.
   
 ## 0.0.69 - 2021-04-28
 
