@@ -1,6 +1,6 @@
 {
   "name": "@onflow/six-withdraw-rewarded-delegated-flow",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Flow SDK Stored Interaction - Withdraw Rewarded Delegated Flow",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
@@ -34,8 +34,8 @@
     "start": "microbundle watch"
   },
   "peerDependencies": {
-    "@onflow/config": "^0.0.2",
-    "@onflow/fcl": "^0.0.69",
-    "@onflow/types": "^0.0.4"
+    "@onflow/config": "~0.0.2",
+    "@onflow/fcl": "~0.0.70",
+    "@onflow/types": "~0.0.4"
   }
 }

@@ -2,6 +2,10 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.0.5 -- 2021-05-10
+
+- 2020-05-10 -- Updates peerDependencies versioning
+
 ### 0.0.3 -- 2020-11-05
 
 - 2020-11-05 -- Updates package.json to remove type: module
