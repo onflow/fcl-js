@@ -2,6 +2,10 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.0.6 -- 2021-05-10
+
+- 2020-05-10 -- Updates peerDependencies versioning
+
 ### 0.0.5 -- 2021-05-03
 
 - 2020-05-03 -- Use config to resolve import addresses
