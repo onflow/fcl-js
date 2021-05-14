@@ -4,7 +4,7 @@ import {normalizePreAuthz} from "./pre-authz"
 import {normalizeFrame} from "./frame"
 import {normalizeBackChannelRpc} from "./back-channel-rpc"
 import {normalizeOpenId} from "./open-id"
-import {normalizeSignature} from "./signature"
+import {normalizeUserSignature} from "./user-signature"
 
 export function normalizeServices(services, data) {
   return services.map(service => normalizeService(service, data))
@@ -17,7 +17,7 @@ const serviceNormalizers = {
   authn: normalizeAuthn,
   frame: normalizeFrame,
   "open-id": normalizeOpenId,
-  signature: normalizeSignature,
+  "user-signature": normalizeUserSignature,
 }
 
 export function normalizeService(service, data) {

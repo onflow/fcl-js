@@ -15,12 +15,10 @@ export const reauthenticate = () => {
   currentUser().unauthenticate()
   return currentUser().authenticate()
 }
-export const signUp = () => currentUser().authenticate()
-export const logIn = () => currentUser().authenticate()
+export const signUp = opts => currentUser().authenticate()
+export const logIn = opts => currentUser().authenticate()
 
 export const authz = currentUser().authorization
-
-export const sign = currentUser().sign
 
 import * as types from "@onflow/types"
 export const t = types

@@ -225,26 +225,28 @@ async function info() {
   return account(addr)
 }
 
-const makeSignable = msg => ({msg})
-const isTransaction = msg => true
-const isValidMessage = msg => {
-  invariant(isTransaction(msg), "message cannot be a transaction")
-  return msg && true
+const makeSignable = msg => {
+  return {
+    message: msg,
+  }
 }
 
-async function sign(msg, options = {}) {
+async function signUserMessage(msg, opts = {}) {
   spawnCurrentUser()
-  const user = await authenticate(options)
-  const signingService = serviceOfType(user.services, "signature")
+  const user = await authenticate(opts)
+  const signingService = serviceOfType(user.services, "user-signature")
 
-  invariant(isValidMessage(msg), "a valid message to sign is required")
   invariant(
     signingService,
-    "Current user is missing arbitrary signing service."
+    "Current user must have authorized a signing service."
   )
+  invariant(/^[0-9a-f]+$/i.test(msg), "Message must be a hex string")
 
-  // await execService(signingService, makeSignable(msg))
-  return true
+  try {
+    return await execService(signingService, makeSignable(msg))
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 export const currentUser = () => {
@@ -252,7 +254,7 @@ export const currentUser = () => {
     authenticate,
     unauthenticate,
     authorization,
-    sign,
+    signUserMessage,
     subscribe,
     snapshot,
   }
