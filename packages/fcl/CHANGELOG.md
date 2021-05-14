@@ -2,8 +2,7 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
-- 2021-05-27 -- Updates `fcl.serialize` to return serialized voucher
-- 2021-05-27 -- VSN `@onflow/sdk` 0.0.46-alpha.1 -> 0.0.47-alpha.1
+- 2021-05-20 -- Adds `fcl.currentUser().signUserMessage` and `user-signature` service normalizer. `fcl.currentUser().signUserMessage` allows for sending of unencrypted message data to a connected wallet provider or service to be signed with user's private key.
 
 ## 0.0.70 - 2021-05-10
 
