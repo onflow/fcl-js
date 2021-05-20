@@ -1,8 +1,10 @@
 import {AccessAPI, PingRequest} from "@onflow/protobuf"
 import {response} from "../response/response.js"
-import {unary} from "./unary"
+import {unary as defaultUnary} from "./unary"
 
 export async function sendPing(ix, opts = {}) {
+  const unary = opts.unary || defaultUnary
+
   ix = await ix
 
   const req = new PingRequest()

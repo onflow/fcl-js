@@ -6,10 +6,12 @@ import {
     isGetAccount,
     isGetEvents,
     isGetBlock,
+    isGetBlockHeader,
     isGetLatestBlock,
     isGetBlockById,
     isGetBlockByHeight,
     isPing,
+    isGetCollection,
 } from "../interaction/interaction.js"
 import {sendTransaction} from "./send-transaction.js"
 import {sendGetTransactionStatus} from "./send-get-transaction-status.js"
@@ -17,9 +19,12 @@ import {sendGetTransaction} from "./send-get-transaction.js"
 import {sendExecuteScript} from "./send-execute-script.js"
 import {sendGetAccount} from "./send-get-account.js"
 import {sendGetEvents} from "./send-get-events.js"
+import {sendGetBlock} from "./send-get-block.js"
+import {sendGetBlockHeader} from "./send-get-block-header.js"
 import {sendGetLatestBlock} from "./send-get-latest-block.js"
 import {sendGetBlockById} from "./send-get-block-by-id.js"
 import {sendGetBlockByHeight} from "./send-get-block-by-height.js"
+import {sendGetCollection} from "./send-get-collection.js"
 import {sendPing} from "./send-ping.js"
 import {config} from "@onflow/config"
 
@@ -29,27 +34,31 @@ export const send = async (ix, opts = {}) => {
 
     switch (true) {
         case isTransaction(ix):
-            return sendTransaction(ix, opts)
+            return opts.sendTransaction ? opts.sendTransaction(ix, opts) : sendTransaction(ix, opts)
         case isGetTransactionStatus(ix):
-            return sendGetTransactionStatus(ix, opts)
+            return opts.sendGetTransactionStatus ? opts.sendGetTransactionStatus(ix, opts) : sendGetTransactionStatus(ix, opts)
         case isGetTransaction(ix):
-            return sendGetTransaction(ix, opts)
+            return opts.sendGetTransaction ? opts.sendGetTransaction(ix, opts) : sendGetTransaction(ix, opts)
         case isScript(ix):
-            return sendExecuteScript(ix, opts)
+            return opts.sendExecuteScript ? opts.sendExecuteScript(ix, opts) : sendExecuteScript(ix, opts)
         case isGetAccount(ix):
-            return sendGetAccount(ix, opts)
+            return opts.sendGetAccount ? opts.sendGetAccount(ix, opts) : sendGetAccount(ix, opts)
         case isGetEvents(ix):
-            return sendGetEvents(ix, opts)
+            return opts.sendGetEvents ? opts.sendGetEvents(ix, opts) : sendGetEvents(ix, opts)
         case isGetLatestBlock(ix):
-            return sendGetLatestBlock(ix, opts)
+            return opts.sendGetLatestBlock ? opts.sendGetLatestBlock(ix, opts) : sendGetLatestBlock(ix,  opts)
         case isGetBlock(ix):
-            return sendGetLatestBlock(ix, opts)
+            return opts.sendGetBlock ? opts.sendGetBlock(ix, opts) : sendGetBlock(ix, opts)
+        case isGetBlockHeader(ix):
+            return opts.sendGetBlockHeader ? opts.sendGetBlockHeader(ix, opts) : sendGetBlockHeader(ix, opts)
         case isGetBlockById(ix):
-            return sendGetBlockById(ix, opts)
+            return opts.sendGetBlockById ? opts.sendGetBlockById(ix, opts) : sendGetBlockById(ix, opts)
         case isGetBlockByHeight(ix):
-            return sendGetBlockByHeight(ix, opts)
+            return opts.sendGetBlockByHeight ? opts.sendGetBlockByHeight(ix, opts) : sendGetBlockByHeight(ix, opts)
+        case isGetCollection(ix):
+            return opts.sendGetCollection ? opts.sendGetCollection(ix, opts) : sendGetCollection(ix, opts)
         case isPing(ix):
-            return sendPing(ix, opts)
+            return opts.sendPing ? opts.sendPing(ix, opts) : sendPing(ix, opts)
         default:
             return ix
     }

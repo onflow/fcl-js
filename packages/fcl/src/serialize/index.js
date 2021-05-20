@@ -1,5 +1,5 @@
-import {interaction, pipe} from "@onflow/interaction"
-import {resolve as defaultResolve} from "@onflow/sdk-resolve"
+import {interaction, pipe} from "@onflow/sdk"
+import {resolve as defaultResolve} from "@onflow/sdk"
 import {config} from "@onflow/config"
 
 export const serialize = async (args = [], opts = {}) => {

@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.com/onflow/flow-js-sdk.svg?branch=master)](https://travis-ci.com/onflow/flow-js-sdk)
+[![FLOW-JS-SDK Continuous Integration](https://github.com/onflow/flow-js-sdk/actions/workflows/integrate.yml/badge.svg)](https://github.com/onflow/flow-js-sdk/actions/workflows/integrate.yml)
 
 ## Introducing `@onflow/fcl`
 
@@ -43,17 +43,17 @@ Please note, that some code provided - e.g. `Object.fromEntries` - will require 
 - Higher Level
 
   - [x] [`@onflow/fcl`](./packages/fcl) -- A high level dapp framework built on top an opinionated use of the sdk.
-  - [x] [`@onflow/sdk`](./packages/sdk) -- Tools that enable developers to [build](./packages/sdk/src/build), [resolve](./packages/sdk/src/resolve), [send](./packages/send) and [decode](./packages/decode) interactions with the Flow blockchain.
+  - [x] [`@onflow/sdk`](./packages/sdk) -- Tools that enable developers to [build](./packages/sdk/src/build), [resolve](./packages/sdk/src/resolve), [send](./packages/sdk/src/send) and [decode](./packages/sdk/src/decode) interactions with the Flow blockchain.
   - [x] [`@onflow/types`](./packages/types) -- Type casting interaction params to cadence compatible values.
-  - [x] [`@onflow/send`](./packages/send) -- Send [interactions](./packages/interaction) to the Flow blockchain get [responses](./packages/response) back.
-  - [x] [`@onflow/decode`](./packages/decode) -- Decodes [responses](./packages/response) return values into Javascript (No need for an ABI).
+  - [x] [`send`](./packages/sdk/src/send) -- Send [interactions](./packages/sdk/src/interaction) to the Flow blockchain get [responses](./packages/response) back.
+  - [x] [`decode`](./packages/sdk/src/decode) -- Decodes [responses](./packages/sdk/src/response) return values into Javascript (No need for an ABI).
 
 - Lower Level
 
   - [x] [`@onflow/protobuf`](./packages/protobuf) -- Dependency of [send](./packages/protobuf). Provides transport between the browser and the Flow blockchain.
-  - [x] [`@onflow/interaction`](./packages/interaction) -- A data structure that can be [built](./packages/sdk/src/build), [resolved](./packages/sdk/src/resolve) and [sent](./packages/send) to the Flow blockchain.
-  - [x] [`@onflow/response`](./packages/response) -- A data structure that represents a response from the Flow blockchain. If the interaction returns something, it can be [decoded](./package/decode) without something like an ABI.
-  - [x] [`@onflow/encode`](./packages/encode) -- Transactions needs signatures, this module knows how to create the values that get signed.
+  - [x] [`interaction`](./packages/sdk/src/interaction) -- A data structure that can be [built](./packages/sdk/src/build), [resolved](./packages/sdk/src/resolve) and [sent](./packages/sdk/src/send) to the Flow blockchain.
+  - [x] [`response`](./packages/sdk/src/response) -- A data structure that represents a response from the Flow blockchain. If the interaction returns something, it can be [decoded](./package/sdk/src/decode) without something like an ABI.
+  - [x] [`encode`](./packages/sdk/src/encode) -- Transactions needs signatures, this module knows how to create the values that get signed.
 
 - Development Tools
   - [x] [`@onflow/dev-wallet`](./packages/dev-wallet) -- A local fcl wallet provider for local development and testing.

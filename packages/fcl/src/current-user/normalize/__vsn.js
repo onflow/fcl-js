@@ -27,3 +27,8 @@ export const COMPOSITE_SIGNATURE_PRAGMA = {
   f_type: "CompositeSignature",
   f_vsn: "1.0.0",
 }
+
+export const OPEN_ID_PRAGME = {
+  f_type: "OpenId",
+  f_vsn: "1.0.0",
+}

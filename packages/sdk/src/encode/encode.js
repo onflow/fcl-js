@@ -1,14 +1,20 @@
 import { encode } from '@onflow/rlp';
 
-export const encodeTransactionPayload = tx => rlpEncode(preparePayload(tx))
-export const encodeTransactionEnvelope = tx => rlpEncode(prepareEnvelope(tx))
+export const encodeTransactionPayload = tx => prependTransactionDomainTag(rlpEncode(preparePayload(tx)))
+export const encodeTransactionEnvelope = tx => prependTransactionDomainTag(rlpEncode(prepareEnvelope(tx)))
 
-const paddedHexBuffer = (value, pad) =>
+const rightPaddedHexBuffer = (value, pad) =>
+  Buffer.from(value.padEnd(pad * 2, 0), "hex")
+
+const leftPaddedHexBuffer = (value, pad) =>
   Buffer.from(value.padStart(pad * 2, 0), "hex")
 
-const addressBuffer = addr => paddedHexBuffer(addr, 8)
+const TRANSACTION_DOMAIN_TAG = rightPaddedHexBuffer(Buffer.from("FLOW-V0.0-transaction").toString("hex"), 32).toString("hex")
+const prependTransactionDomainTag = tx => TRANSACTION_DOMAIN_TAG + tx
 
-const blockBuffer = block => paddedHexBuffer(block, 32)
+const addressBuffer = addr => leftPaddedHexBuffer(addr, 8)
+
+const blockBuffer = block => leftPaddedHexBuffer(block, 32)
 
 const argumentToString = arg => Buffer.from(JSON.stringify(arg), "utf8")
 
@@ -23,10 +29,10 @@ const preparePayload = tx => {
   validatePayload(tx)
 
   return [
-    scriptBuffer(tx.script),
+    scriptBuffer(tx.cadence),
     tx.arguments.map(argumentToString),
     blockBuffer(tx.refBlock),
-    tx.gasLimit,
+    tx.computeLimit,
     addressBuffer(tx.proposalKey.address),
     tx.proposalKey.keyId,
     tx.proposalKey.sequenceNum,
@@ -104,10 +110,10 @@ const isObject = v => v !== null && typeof v === "object"
 const isArray = v => isObject(v) && v instanceof Array
 
 const payloadFields = [
-  {name: "script", check: isString},
+  {name: "cadence", check: isString},
   {name: "arguments", check: isArray},
   {name: "refBlock", check: isString, defaultVal: "0"},
-  {name: "gasLimit", check: isNumber},
+  {name: "computeLimit", check: isNumber},
   {name: "proposalKey", check: isObject},
   {name: "payer", check: isString},
   {name: "authorizers", check: isArray},

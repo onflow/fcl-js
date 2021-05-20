@@ -1,6 +1,6 @@
 import {pipe, Ok, makeGetEvents} from "../interaction/interaction.js"
 
-export function getEventsAtBlockIds(blockIds = []) {
+export function getEventsAtBlockIds(eventType, blockIds = []) {
   return pipe([
     makeGetEvents,
     ix => {

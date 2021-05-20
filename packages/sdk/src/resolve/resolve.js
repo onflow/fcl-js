@@ -16,15 +16,6 @@ import {resolveSignatures} from "./resolve-signatures.js"
 import {resolveValidators} from "./resolve-validators.js"
 import {resolveFinalNormalization} from "./resolve-final-normalization.js"
 
-// export const resolve = pipe([
-//   resolveCadence,
-//   resolveArguments,
-//   resolveAccounts,
-//   resolveRefBlockId(opts),
-//   resolveSignatures,
-//   resolveValidators,
-// ])
-
 export const resolve = pipe([
     resolveCadence,
     resolveArguments,
@@ -38,7 +29,7 @@ export const resolve = pipe([
 
 async function execFetchRef(ix) {
     if (isTransaction(ix) && ix.message.refBlock == null) {
-        ix.message.refBlock = (await send([getBlock()], opts).then(decode)).id
+        ix.message.refBlock = (await send(build([getBlock()])).then(decode)).id
     }
     return ix
 }

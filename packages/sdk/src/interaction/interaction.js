@@ -1,3 +1,5 @@
+import {invariant} from "@onflow/util-invariant"
+
 export const UNKNOWN /*                       */ = "UNKNOWN"
 export const SCRIPT /*                        */ = "SCRIPT"
 export const TRANSACTION /*                   */ = "TRANSACTION"
@@ -11,13 +13,18 @@ export const GET_BLOCK_BY_ID /*               */ = "GET_BLOCK_BY_ID"
 export const GET_BLOCK_BY_HEIGHT /*           */ = "GET_BLOCK_BY_HEIGHT"
 export const GET_BLOCK /*                     */ = "GET_BLOCK"
 export const GET_BLOCK_HEADER /*              */ = "GET_BLOCK_HEADER"
+export const GET_COLLECTION /*                */ = "GET_COLLECTION"
 
 export const BAD /* */ = "BAD"
 export const OK /*  */ = "OK"
 
-export const ACCOUNT /* */ = "ACCOUNT"
-export const PARAM /*   */ = "PARAM"
-export const ARGUMENT /**/ = "ARGUMENT"
+export const ACCOUNT /*  */ = "ACCOUNT"
+export const PARAM /*    */ = "PARAM"
+export const ARGUMENT /* */ = "ARGUMENT"
+
+export const AUTHORIZER /* */ = "authorizer"
+export const PAYER /*      */ = "payer"
+export const PROPOSER /*   */ = "proposer"
 
 const ACCT = `{
   "kind":"${ACCOUNT}",
@@ -66,7 +73,7 @@ const IX = `{
   "message": {
     "cadence":null,
     "refBlock":null,
-    "computLimit":null,
+    "computeLimit":null,
     "proposer":null,
     "payer":null,
     "authorizations":[],
@@ -92,6 +99,9 @@ const IX = `{
   },
   "account": {
     "addr":null
+  },
+  "collection": {
+    "id":null
   }
 }`
 
@@ -99,23 +109,22 @@ const KEYS = new Set(Object.keys(JSON.parse(IX)))
 
 export const interaction = () => JSON.parse(IX)
 
-const isArray = (d) => Array.isArray(d)
-const isObj = (d) => typeof d === "object"
-const isNull = (d) => d == null
-const isNumber = (d) => d === "number"
-const isFn = (d) => typeof d === "function"
-
 const CHARS = "abcdefghijklmnopqrstuvwxyz0123456789".split("")
 const randChar = () => CHARS[~~(Math.random() * CHARS.length)]
 export const uuid = () => Array.from({length: 10}, randChar).join("")
+export const isNumber = d => typeof d === "number"
+export const isArray = d => Array.isArray(d)
+export const isObj = d => d !== null && typeof d === "object"
+export const isNull = d => d == null
+export const isFn = d => typeof d === "function"
 
-export const isInteraction = (ix) => {
+export const isInteraction = ix => {
   if (!isObj(ix) || isNull(ix) || isNumber(ix)) return false
   for (let key of KEYS) if (!ix.hasOwnProperty(key)) return false
   return true
 }
 
-export const Ok = (ix) => {
+export const Ok = ix => {
   ix.status = OK
   return ix
 }
@@ -126,60 +135,45 @@ export const Bad = (ix, reason) => {
   return ix
 }
 
-const makeIx = (wat) => (ix) => {
+const makeIx = wat => ix => {
   ix.tag = wat
   return Ok(ix)
 }
 
-const makeAccount = (acct, tempId) => (ix) => {
-  ix.accounts[tempId] = JSON.parse(ACCT)
-  ix.accounts[tempId].tempId = tempId
-  ix.accounts[tempId].addr = acct.addr
-  ix.accounts[tempId].keyId = acct.keyId
-  ix.accounts[tempId].sequenceNum = acct.sequenceNum
-  ix.accounts[tempId].signature = acct.signature
-  ix.accounts[tempId].signingFunction = acct.signingFunction
-  ix.accounts[tempId].resolve = acct.resolve
-  ix.accounts[tempId].role = {
-    ...ix.accounts[tempId].role,
-    ...acct.role,
+export const prepAccount = (acct, opts = {}) => ix => {
+  invariant(
+    typeof acct === "function" || typeof acct === "object",
+    "prepAccount must be passed an authorization function or an account object"
+  )
+  invariant(opts.role != null, "Account must have a role")
+
+  const ACCOUNT = JSON.parse(ACCT)
+  const role = opts.role
+  const tempId = uuid()
+
+  acct = typeof acct === "function" ? {resolve: acct} : acct
+
+  ix.accounts[tempId] = {
+    ...ACCOUNT,
+    tempId,
+    ...acct,
+    role: {
+      ...ACCOUNT.role,
+      ...(typeof acct.role === "object" ? acct.role : {}),
+      [role]: true,
+    },
   }
-  return Ok(ix)
+
+  if (role === AUTHORIZER) {
+    ix.authorizations.push(tempId)
+  } else {
+    ix[role] = tempId
+  }
+
+  return ix
 }
 
-export const makeAuthorizer = (acct) => (ix) => {
-  let tempId = uuid()
-  ix.authorizations.push(tempId)
-  return Ok(pipe(ix, [makeAccount(acct, tempId)]))
-}
-
-export const makeProposer = (acct) => (ix) => {
-  let tempId = uuid()
-  ix.proposer = tempId
-  return Ok(pipe(ix, [makeAccount(acct, tempId)]))
-}
-
-export const makePayer = (acct) => (ix) => {
-  let tempId = uuid()
-  ix.payer = tempId
-  return Ok(pipe(ix, [makeAccount(acct, tempId)]))
-} 
-
-export const makeParam = (param) => (ix) => {
-  let tempId = uuid()
-  ix.message.params.push(tempId)
-
-  ix.params[tempId] = JSON.parse(PRM)
-  ix.params[tempId].tempId = tempId
-  ix.params[tempId].key = param.key
-  ix.params[tempId].value = param.value
-  ix.params[tempId].asParam = param.asParam
-  ix.params[tempId].xform = param.xform
-  ix.params[tempId].resolve = param.resolve
-  return Ok(ix)
-}
-
-export const makeArgument = (arg) => (ix) => {
+export const makeArgument = arg => ix => {
   let tempId = uuid()
   ix.message.arguments.push(tempId)
 
@@ -205,8 +199,9 @@ export const makeGetBlockByHeight /*        */ = makeIx(GET_BLOCK_BY_HEIGHT)
 export const makePing /*                    */ = makeIx(PING)
 export const makeGetBlock /*                */ = makeIx(GET_BLOCK)
 export const makeGetBlockHeader /*          */ = makeIx(GET_BLOCK_HEADER)
+export const makeGetCollection /*           */ = makeIx(GET_COLLECTION)
 
-const is = (wat) => (ix) => ix.tag === wat
+const is = wat => ix => ix.tag === wat
 
 export const isUnknown /*                 */ = is(UNKNOWN)
 export const isScript /*                  */ = is(SCRIPT)
@@ -221,16 +216,17 @@ export const isGetBlockByHeight /*        */ = is(GET_BLOCK_BY_HEIGHT)
 export const isPing /*                    */ = is(PING)
 export const isGetBlock /*                */ = is(GET_BLOCK)
 export const isGetBlockHeader /*          */ = is(GET_BLOCK_HEADER)
+export const isGetCollection /*           */ = is(GET_COLLECTION)
 
-export const isOk /*  */ = (ix) => ix.status === OK
-export const isBad /* */ = (ix) => ix.status === BAD
-export const why /*   */ = (ix) => ix.reason
+export const isOk /*  */ = ix => ix.status === OK
+export const isBad /* */ = ix => ix.status === BAD
+export const why /*   */ = ix => ix.reason
 
-export const isAccount /*  */ = (account) => account.kind === ACCOUNT
-export const isParam /*    */ = (param) => param.kind === PARAM
-export const isArgument /* */ = (argument) => argument.kind === ARGUMENT
+export const isAccount /*  */ = account => account.kind === ACCOUNT
+export const isParam /*    */ = param => param.kind === PARAM
+export const isArgument /* */ = argument => argument.kind === ARGUMENT
 
-const hardMode = (ix) => {
+const hardMode = ix => {
   for (let key of Object.keys(ix)) {
     if (!KEYS.has(key))
       throw new Error(`"${key}" is an invalid root level Interaction property.`)
@@ -256,27 +252,27 @@ const recPipe = async (ix, fns = []) => {
 
 export const pipe = (...args) => {
   const [arg1, arg2] = args
-  if (isArray(arg1) && arg2 == null) return (d) => pipe(d, arg1)
+  if (isArray(arg1) && arg2 == null) return d => pipe(d, arg1)
   return recPipe(arg1, arg2)
 }
 
-const identity = (v) => v
+const identity = v => v
 
 export const get = (ix, key, fallback) => {
   return ix.assigns[key] == null ? fallback : ix.assigns[key]
 }
 
-export const put = (key, value) => (ix) => {
+export const put = (key, value) => ix => {
   ix.assigns[key] = value
   return Ok(ix)
 }
 
-export const update = (key, fn = identity) => (ix) => {
+export const update = (key, fn = identity) => ix => {
   ix.assigns[key] = fn(ix.assigns[key], ix)
   return Ok(ix)
 }
 
-export const destroy = (key) => (ix) => {
+export const destroy = key => ix => {
   delete ix.assigns[key]
   return Ok(ix)
 }

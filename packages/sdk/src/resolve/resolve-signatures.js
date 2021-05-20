@@ -1,5 +1,5 @@
 import {isTransaction} from "../interaction/interaction.js"
-import {sansPrefix} from "@onflow/util-address"
+import {sansPrefix, withPrefix} from "@onflow/util-address"
 import {
   encodeTransactionPayload as encodeInsideMessage,
   encodeTransactionEnvelope as encodeOutsideMessage,
@@ -30,7 +30,7 @@ export async function resolveSignatures(ix) {
   return ix
 }
 
-function findInsideSigners(ix) {
+export function findInsideSigners(ix) {
   // Inside Signers Are: (authorizers + proposer) - payer
   let inside = new Set(ix.authorizations)
   inside.add(ix.proposer)
@@ -58,11 +58,36 @@ function fetchSignature(ix, payload) {
   }
 }
 
-function buildSignable(acct, message, ix) {
+export const createSignableVoucher = ix => {
+  return {
+    cadence: ix.message.cadence,
+    refBlock: ix.message.refBlock || null,
+    computeLimit: ix.message.computeLimit,
+    arguments: ix.message.arguments.map(id => ix.arguments[id].asArgument),
+    proposalKey: {
+      address: withPrefix(ix.accounts[ix.proposer].addr),
+      keyId: ix.accounts[ix.proposer].keyId,
+      sequenceNum: ix.accounts[ix.proposer].sequenceNum,
+    },
+    payer: withPrefix(ix.accounts[ix.payer].addr),
+    authorizers: ix.authorizations
+      .map(cid => withPrefix(ix.accounts[cid].addr))
+      .reduce((prev, current) => {
+        return prev.find(item => item === current) ? prev : [...prev, current]
+      }, []),
+    payloadSigs: findInsideSigners(ix).map(id => ({
+      address: withPrefix(ix.accounts[id].addr),
+      keyId: ix.accounts[id].keyId,
+      sig: ix.accounts[id].signature,
+    })),
+  }
+}
+
+export function buildSignable(acct, message, ix) {
   try {
     return {
       f_type: "Signable",
-      f_vsn: "1.0.0",
+      f_vsn: "1.0.1",
       message,
       addr: sansPrefix(acct.addr),
       keyId: acct.keyId,
@@ -71,6 +96,7 @@ function buildSignable(acct, message, ix) {
       args: ix.message.arguments.map(d => ix.arguments[d].asArgument),
       data: {},
       interaction: ix,
+      voucher: createSignableVoucher(ix),
     }
   } catch (error) {
     console.error("buildSignable", error)
@@ -80,9 +106,9 @@ function buildSignable(acct, message, ix) {
 
 function prepForEncoding(ix) {
   return {
-    script: ix.message.cadence,
+    cadence: ix.message.cadence,
     refBlock: ix.message.refBlock || null,
-    gasLimit: ix.message.computeLimit,
+    computeLimit: ix.message.computeLimit,
     arguments: ix.message.arguments.map(id => ix.arguments[id].asArgument),
     proposalKey: {
       address: sansPrefix(ix.accounts[ix.proposer].addr),

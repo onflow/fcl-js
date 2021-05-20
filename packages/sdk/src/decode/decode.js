@@ -130,11 +130,11 @@ export const decodeResponse = async (response, customDecoders = {}) => {
 
   if (response.encodedData) {
     return await decode(response.encodedData, decoders)
-  } else if (response.transaction) {
+  } else if (response.transactionStatus) {
     return {
-      ...response.transaction,
+      ...response.transactionStatus,
       events: await Promise.all(
-        response.transaction.events.map(async function decodeEvents(e) {
+        response.transactionStatus.events.map(async function decodeEvents(e) {
           return {
             type: e.type,
             transactionId: e.transactionId,
@@ -145,10 +145,15 @@ export const decodeResponse = async (response, customDecoders = {}) => {
         })
       ),
     }
+  } else if (response.transaction) {
+    return response.transaction
   } else if (response.events) {
     return await Promise.all(
       response.events.map(async function decodeEvents(e) {
         return {
+          blockId: e.blockId,
+          blockHeight: e.blockHeight,
+          blockTimestamp: e.blockTimestamp,
           type: e.type,
           transactionId: e.transactionId,
           transactionIndex: e.transactionIndex,
@@ -168,6 +173,8 @@ export const decodeResponse = async (response, customDecoders = {}) => {
     return response.latestBlock
   } else if (response.transactionId) {
     return response.transactionId
+  } else if (response.collection) {
+    return response.collection
   }
 
   return null

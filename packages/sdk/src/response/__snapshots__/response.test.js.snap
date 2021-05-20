@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Response - Snapshot 1`] = `
+Object {
+  "account": null,
+  "block": null,
+  "blockHeader": null,
+  "collection": null,
+  "encodedData": null,
+  "events": null,
+  "latestBlock": null,
+  "tag": null,
+  "transaction": null,
+  "transactionId": null,
+  "transactionStatus": null,
+}
+`;

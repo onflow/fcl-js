@@ -26,9 +26,9 @@ import {
 } from "@onflow/encode"
 
 const payloadMsg = encodeTransactionPayload({
-  script: `transaction { execute { log("Hello, World!") } }`,
+  cadence: `transaction { execute { log("Hello, World!") } }`,
   refBlock: "f0e4c2f76c58916ec258f246851bea091d14d4247a2fc3e18694461b1816e13b",
-  gasLimit: 42,
+  computeLimit: 42,
   proposalKey: {
     address: "01",
     keyId: 7,
@@ -39,9 +39,9 @@ const payloadMsg = encodeTransactionPayload({
 })
 
 const envelopeMsg = encodeTransactionEnvelope({
-  script: `transaction { execute { log("Hello, World!") } }`,
+  cadence: `transaction { execute { log("Hello, World!") } }`,
   refBlock: "f0e4c2f76c58916ec258f246851bea091d14d4247a2fc3e18694461b1816e13b",
-  gasLimit: 42,
+  computeLimit: 42,
   proposalKey: {
     address: "01",
     keyId: 7,

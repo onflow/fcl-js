@@ -1,11 +1,5 @@
-import {pipe, makePayer} from "../interaction/interaction.js"
+import {prepAccount, PAYER} from "../interaction/interaction.js"
 
-const roles = {
-  payer: true
-}
-
-export function payer(authz) {
-  return typeof authz === "function"
-    ? makePayer({resolve: authz, role: roles, roles})
-    : makePayer({...authz, role: roles, roles})
+export async function payer(authz) {
+  return prepAccount(authz, {role: PAYER})
 }

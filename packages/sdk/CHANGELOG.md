@@ -2,19 +2,139 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
-### 0.0.45-alpha.4 -- 2022-02-02
+**Community Contributions:**
 
-- 2022-02-18 -- Merged `@onflow/send` into `@onflow/sdk`
-- 2022-02-18 -- Merged `@onflow/decode` into `@onflow/sdk`
-- 2022-02-18 -- Merged `@onflow/encode` into `@onflow/sdk`
-- 2022-02-18 -- Merged `@onflow/interaction` into `@onflow/sdk`
-- 2022-02-18 -- Merged `@onflow/response` into `@onflow/sdk`
-- 2022-02-18 -- Merged all `@onflow/resolve-*` into `@onflow/sdk`
-- 2022-02-18 -- Merged all `@onflow/build-*` into `@onflow/sdk`
+[@orodio](https://github.com/orodio):
 
-### 0.0.45-alpha.[1-3] -- 2022-02-02
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
 
-- 2022-02-02 -- Adds support for new `GetEvents`, `GetBlockHeader`, `GetBlock` interactions.
+[@JeffreyDoyle](https://github.com/JeffreyDoyle):
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+[@gregsantos](https://github.com/gregsantos):
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+## 0.0.46 - 2021-05-10
+
+- 2021-05-05 -- [@gregsantos](https://github.com/gregsantos): Renames `createVoucher` to `createSignableVoucher` and moves to `resolve-signatures`. Internal only.
+- 2021-04-27 -- [@gregsantos](https://github.com/gregsantos): Removes `resolveParams`, Updates `resolvers` exported from `sdk` 
+
+## 0.0.46-alpha.1 - 2021-05-05
+
+- 2021-05-05 **BREAKING** -- Prepends a transaction domain tag to encoded payload and envelope messages. Transaction domain tags allow signers to identify which messages are intended to represent encoded transactions, and which are not. The Flow protocol has been updated (as of May 5th 2021) to both accept signatures produced from messages prepended with a transaction domain tag, and from messages that are not. The next spork (time and date of next spork are TBD) will _strictly require_ all signatures for transnactions to have been produced from messages prepended with a transaction domain tag. This breaking change requires _all_ users of Flow Client Library and the Flow JavaScript SDK to update their versions to a version greater than or equal to the verison that this change was included in.
+- 2021-05-03 -- Decodes signatures in block responses from a byte array to a hex string
+- 2021-05-03 -- Updates shape of response ADT
+
+## 0.0.45 - 2021-04-27
+
+- 2021-04-27 -- Full VSN Release `@onflow/sdk` 0.0.45-alpha.20 -> 0.0.45
+- 2021-04-23 -- Moves type check utils to `/utils`
+- 2021-04-23 -- Move `createVoucher` to `/utils` to resolve circular dependency in `interaction`
+- 2021-04-22 -- Adds `wallet-utils` `validateSignableTransaction` support for wallets to validate Signable payload
+- 2021-04-20 -- Removes **Deprecated** `params`, `buildParams`
+- 2021-04-21 -- Updates encoding naming of `gasLimit` and `script` to `computeLimit` and `cadence`. Internal only.
+
+### 0.0.45-alpha.20 -- 2021-04-21
+
+- 2021-04-21 -- **BREAKING** The experimental feature `sdk.meta` which allowed for a transaction to send along meta data to an authorization function has been removed because of the unprovable nature of its data and our strict trustless requirements. We believe this removal is in the best interest for js-sdk/fcl end users and will be looking into alternative approaches that provide the same functionality but in a more provable/trustless way. We have no ETA on this features replacement.
+
+### 0.0.45-alpha.19 -- 2021-04-16
+
+- 2021-04-15 -- Adds `createSignableVoucher` for message payload verification by wallet, pass as `voucher` to `PreSignable` and `Signable`
+- 2021-04-15 -- Exposes `config` from SDK.
+- 2021-04-15 -- Removes use of `TextDecoder` from `send-get-account`.
+- 2021-04-13 -- Adds `makeVoucher` for message verification by wallet, pass as `voucher` to `PreSignable` and `Signable`
+- 2021-04-09 -- Internal only - Added `prepAccount` to `interaction`. Update `authorizations`, `payer`, `proposer` builders.
+
+### 0.0.45-alpha.18 -- 2021-04-09
+
+- 2021-04-08 -- Adds `GetCollection` interaction, build, send and decode support.
+- 2021-04-08 -- - Implements Transaction Metadata for media rich wallet transactions
+- 2021-04-08 -- Implements Transaction Metadata for media rich wallet transactions
+  - Adds `metadata` field to `interaction` and provides `meta` builder to include optional metadata with the transaction.
+  - `meta()` accepts the optional fields `title`, `description`, `price`, and `image` as Strings. Invalid types will `throw`. Unsupport fields will be scrubbed.
+
+```js
+sdk.build([
+  sdk.transaction(TRANSFER_NFT),
+  sdk.meta({
+    title: 'Kitty Kangol',
+    description: 'A cool cat hat',
+    price: '10',
+    image: 'https://i.imgur.com/Ol2zPax.png',
+  }),
+])
+
+type Metadata {
+  title: String
+  description: String
+  price: String
+  image: String
+}
+```
+
+- 2021-04-08 -- Added validation to `metadata` builder.
+- 2021-04-07 -- Internal only. Update `build-limit`
+- 2021-04-07 -- Added `metadata` field to `Signable` in resolve-signatures.
+- 2021-04-06 -- Added `metadata` field to `preSignable` in resolve-accounts. Export `meta` builder from `sdk.js`
+- 2021-04-02 -- Updated `interaction` with metadata object. Added `meta` builder function and test.
+
+### 0.0.45-alpha.16 -- 2021-03-28
+
+- 2021-03-28 -- Added new test suits for `build` and `send`.
+
+### 0.0.45-alpha.15 -- 2021-03-22
+
+- 2021-03-22 -- Fixed an issue where `send-get-block-header` interactions were not able to be sent correctly.
+
+### 0.0.45-alpha.14 -- 2021-03-19
+
+- 2021-03-19 -- Fixed an issue in `send-get-block` and `send-get-block-header` where timestamps were not being decoded to ISO strings properly.
+
+### 0.0.45-alpha.13 -- 2021-03-17
+
+- 2021-03-17 -- Fixed an issue in `send-get-events` where block IDs were not being decoded to strings properly.
+
+### 0.0.45-alpha.12 -- 2021-03-12
+
+- 2021-03-16 -- Fixed issue in `interaction` where `isNumber` did not correctly check if a value is a number or not
+- 2021-03-12 -- Fixed issue where `GetEvents*` interactions were not being sent in correct GRPC request type
+
+### 0.0.45-alpha.10 -- 2021-03-02
+
+- 2021-03-02 -- Fixed issue where `ExecuteScript*` interactions were not being sent in correct GRPC request type
+- 2021-03-02 -- Fixed issue where `GetAccount*` interactions were not being sent in correct GRPC request type
+
+### 0.0.45-alpha.[4-6] -- 2021-02-02
+
+- 2021-02-18 -- Merged `@onflow/send` into `@onflow/sdk`
+- 2021-02-18 -- Merged `@onflow/decode` into `@onflow/sdk`
+- 2021-02-18 -- Merged `@onflow/encode` into `@onflow/sdk`
+- 2021-02-18 -- Merged `@onflow/interaction` into `@onflow/sdk`
+- 2021-02-18 -- Merged `@onflow/response` into `@onflow/sdk`
+- 2021-02-18 -- Merged all `@onflow/resolve-*` into `@onflow/sdk`
+- 2021-02-18 -- Merged all `@onflow/build-*` into `@onflow/sdk`
+
+### 0.0.45-alpha.[1-3] -- 2021-02-02
+
+- 2021-02-02 -- Adds support for new `GetEvents`, `GetBlockHeader`, `GetBlock` interactions.
 
 ### 0.0.44 -- 2020-12-11
 

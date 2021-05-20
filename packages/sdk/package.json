@@ -1,6 +1,6 @@
 {
   "name": "@onflow/sdk",
-  "version": "0.0.45-alpha.4",
+  "version": "0.0.46",
   "description": "Flow SDK",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
@@ -27,6 +27,7 @@
   "module": "dist/sdk.module.js",
   "unpkg": "dist/sdk.umd.js",
   "scripts": {
+    "alpha": "npm publish --tag alpha",
     "prepublishOnly": "npm test && npm run build",
     "test": "jest",
     "build": "microbundle",

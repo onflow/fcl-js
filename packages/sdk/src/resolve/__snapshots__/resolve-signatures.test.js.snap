@@ -5,8 +5,16 @@ Object {
   "accounts": Object {
     "foo": Object {
       "addr": "foo",
-      "keyId": 0,
-      "sequenceNum": 0,
+      "keyId": 1,
+      "kind": "ACCOUNT",
+      "resolve": null,
+      "role": Object {
+        "authorizer": false,
+        "param": false,
+        "payer": true,
+        "proposer": false,
+      },
+      "sequenceNum": 123,
       "signature": "SIGNATURE",
       "signingFunction": [MockFunction] {
         "calls": Array [
@@ -14,14 +22,35 @@ Object {
             Object {
               "addr": "foo",
               "args": Array [],
-              "cadence": "foo",
+              "cadence": "",
               "data": Object {},
               "f_type": "Signable",
-              "f_vsn": "1.0.0",
+              "f_vsn": "1.0.1",
               "interaction": [Circular],
-              "keyId": 0,
-              "message": "f845f84283666f6fc0a000000000000000000000000000000000000000000000000000000000000000000a870000000000000f8080870000000000000fc8870000000000000fc0",
-              "roles": undefined,
+              "keyId": 1,
+              "message": "464c4f572d56302e302d7472616e73616374696f6e0000000000000000000000f843f84080c0a00000000000000000000000000000000000000000000000000000000000000123819c870000000000000f017b870000000000000fc8870000000000000fc0",
+              "roles": Object {
+                "authorizer": false,
+                "param": false,
+                "payer": true,
+                "proposer": false,
+              },
+              "voucher": Object {
+                "arguments": Array [],
+                "authorizers": Array [
+                  "0xfoo",
+                ],
+                "cadence": "",
+                "computeLimit": 156,
+                "payer": "0xfoo",
+                "payloadSigs": Array [],
+                "proposalKey": Object {
+                  "address": "0xfoo",
+                  "keyId": 1,
+                  "sequenceNum": 123,
+                },
+                "refBlock": "123",
+              },
             },
           ],
         ],
@@ -36,6 +65,7 @@ Object {
           },
         ],
       },
+      "tempId": "foo",
     },
   },
   "authorizations": Array [
@@ -43,8 +73,13 @@ Object {
   ],
   "message": Object {
     "arguments": Array [],
-    "cadence": "foo",
-    "computeLimit": 10,
+    "authorizations": Array [],
+    "cadence": "",
+    "computeLimit": 156,
+    "params": Array [],
+    "payer": null,
+    "proposer": null,
+    "refBlock": "123",
   },
   "payer": "foo",
   "proposer": "foo",
