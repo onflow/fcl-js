@@ -1,7 +1,5 @@
----
-title: FCL
-description: Making secure web applications powered by the Flow Blockchain
----
+# FCL: Flow Client Library
+### Making secure web applications powered by the Flow Blockchain
 
 Flow Client Library (FCL) enables applications to easily integrate with all FCL-compatible wallets and
 other services (e.g. (Comming Soon) profiles, private information, notifications). This offers developers a strong
