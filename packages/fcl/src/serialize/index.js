@@ -1,5 +1,6 @@
 import {interaction, pipe} from "@onflow/sdk"
 import {resolve as defaultResolve} from "@onflow/sdk"
+import {createSignableVoucher} from "@onflow/sdk"
 import {config} from "@onflow/config"
 
 export const serialize = async (args = [], opts = {}) => {
@@ -8,5 +9,10 @@ export const serialize = async (args = [], opts = {}) => {
     .get("sdk.resolve", opts.resolve || defaultResolve(opts))
 
   if (Array.isArray(args)) args = await pipe(interaction(), args)
-  return JSON.stringify(await resolveFunction(args), null, 2)
+
+  return JSON.stringify(
+    createSignableVoucher(await resolveFunction(args)),
+    null,
+    2
+  )
 }
