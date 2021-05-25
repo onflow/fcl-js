@@ -1,6 +1,6 @@
 # @onflow/six-stakingcollection-register-delegator
 
-Stored Interaction for registering a delegator held in a StakingCollectioni
+Stored Interaction for registering a delegator held in a StakingCollection
 
 # Status
 

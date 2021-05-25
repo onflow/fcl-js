@@ -1,6 +1,6 @@
 # @onflow/six-stakingcollection-close-stake
 
-Stored Interaction for closing a stake held in a StakingCollectioni
+Stored Interaction for closing a stake held in a StakingCollection
 
 # Status
 
@@ -37,7 +37,6 @@ Example (for testnet):
 fcl.config()
   .put("0xSTAKINGCOLLECTIONADDRESS", "0x0")
 ```
-
 
 # Usage:
 
