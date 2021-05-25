@@ -4,7 +4,7 @@ import * as t from "@onflow/types"
 export const TITLE = "Request Unstaking"
 export const DESCRIPTION = "Requests unstaking for a stake held in a Staking Collection."
 export const VERSION = "0.0.0"
-export const HASH = "dcae4faa6d689873f7caf7c5efef669f9fe1d4113e58b474b7aec1e07113a7ff"
+export const HASH = "e6498dd05b42216dfaef433696c0988f6376d01adabb68233d8897eaba5973d7"
 export const CODE = 
 `import FlowStakingCollection from 0xSTAKINGCOLLECTIONADDRESS
 

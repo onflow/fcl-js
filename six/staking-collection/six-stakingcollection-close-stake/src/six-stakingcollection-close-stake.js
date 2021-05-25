@@ -4,7 +4,7 @@ import * as t from "@onflow/types"
 export const TITLE = "Close Stake"
 export const DESCRIPTION = "Closes a stake held in a Staking Collection."
 export const VERSION = "0.0.0"
-export const HASH = "dcae4faa6d689873f7caf7c5efef669f9fe1d4113e58b474b7aec1e07113a7ff"
+export const HASH = "d6598d888f9d2f9b93928c122b0b67852387275b5f4681353e3d28bfd889c819"
 export const CODE = 
 `import FlowStakingCollection from 0xSTAKINGCOLLECTIONADDRESS
 

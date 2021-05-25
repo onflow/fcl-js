@@ -4,7 +4,7 @@ import * as t from "@onflow/types"
 export const TITLE = "Register Node"
 export const DESCRIPTION = "Register a node held in a Staking Collection."
 export const VERSION = "0.0.0"
-export const HASH = "dcae4faa6d689873f7caf7c5efef669f9fe1d4113e58b474b7aec1e07113a7ff"
+export const HASH = "c5134ce80a85fba071dc3450870f4c46eb2871ed76c0bd9c062b8487b3d5ab1f"
 export const CODE = 
 `import FlowStakingCollection from 0xSTAKINGCOLLECTIONADDRESS
 

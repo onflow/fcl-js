@@ -4,7 +4,7 @@ import * as t from "@onflow/types"
 export const TITLE = "Transfer Node"
 export const DESCRIPTION = "Transfers a node from one Staking Collection to another."
 export const VERSION = "0.0.0"
-export const HASH = "dcae4faa6d689873f7caf7c5efef669f9fe1d4113e58b474b7aec1e07113a7ff"
+export const HASH = "325fbb74ca1aece78692ba0a23a0277c1b6dd837758612866c65d603b8e9183e"
 export const CODE = 
 `import FlowStakingCollection from 0xSTAKINGCOLLECTIONADDRESS
 
