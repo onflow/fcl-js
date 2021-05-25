@@ -1,7 +1,6 @@
 import * as fcl from "./fcl"
 import fs from "fs"
 import path from "path"
-import {currentUser} from "../dist/fcl.modern"
 
 test("config", async () => {
   const $ = fcl.config()
