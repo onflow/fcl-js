@@ -4,7 +4,7 @@ import * as t from "@onflow/types"
 export const TITLE = "Setup Staking Collection"
 export const DESCRIPTION = "Sets up a Staking Collection for an account."
 export const VERSION = "0.0.0"
-export const HASH = "dcae4faa6d689873f7caf7c5efef669f9fe1d4113e58b474b7aec1e07113a7ff"
+export const HASH = "801279c025228054c88eafd730766a3abc046dd324b8a3dfa19abeb82ca01637"
 export const CODE = 
 `import StakingCollection from 0xSTAKINGCOLLECTION
 

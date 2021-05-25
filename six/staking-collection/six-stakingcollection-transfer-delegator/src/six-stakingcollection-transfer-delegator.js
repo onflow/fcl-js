@@ -4,7 +4,7 @@ import * as t from "@onflow/types"
 export const TITLE = "Transfer Delegator"
 export const DESCRIPTION = "Transfers a delegator from one Staking Collection to another."
 export const VERSION = "0.0.0"
-export const HASH = "dcae4faa6d689873f7caf7c5efef669f9fe1d4113e58b474b7aec1e07113a7ff"
+export const HASH = "0057581fbae892f285a9ae9d87f043f34027c4bf96e2b2ee5cbeb2bdba8fcce0"
 export const CODE = 
 `import FlowStakingCollection from 0xSTAKINGCOLLECTIONADDRESS
 
