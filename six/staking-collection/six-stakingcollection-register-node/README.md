@@ -1,6 +1,6 @@
 # @onflow/six-stakingcollection-register-node
 
-Stored Interaction for registering a node held in a StakingCollectioni
+Stored Interaction for registering a node held in a StakingCollection
 
 # Status
 
