@@ -1,22 +1,5 @@
 import * as sdk from "@onflow/sdk"
 import * as t from "@onflow/types"
-import {config} from "@onflow/config"
-
-const Deps = {
-    FLOWSTAKINGCOLLECTION: "0xSTAKINGCOLLECTIONADDRESS",
-}
-
-const Env = {
-    local: {
-        [Deps.FLOWSTAKINGCOLLECTION]: "0x0",
-    },
-    testnet: {
-        [Deps.FLOWSTAKINGCOLLECTION]: "0x0",
-    },
-    mainnet: {
-        [Deps.FLOWSTAKINGCOLLECTION]: "0x0",
-    }
-}
 
 export const TITLE = "Setup Staking Collection"
 export const DESCRIPTION = "Sets up a Staking Collection for an account."
@@ -41,11 +24,8 @@ transaction() {
 `
 
 export const template = async ({ proposer, authorization, payer }) => {
-    const env = await config().get("env", "mainnet")
-    let code = CODE.replace(Deps.FLOWSTAKINGCOLLECTION, await sdk.config().get(Deps.FLOWSTAKINGCOLLECTION) || Env[env][Deps.FLOWSTAKINGCOLLECTION])
-
     return sdk.pipe([
-        sdk.transaction(code),
+        sdk.transaction(CODE),
         sdk.proposer(proposer),
         sdk.authorizations([authorization]),
         sdk.payer(payer),

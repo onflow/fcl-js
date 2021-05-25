@@ -16,6 +16,28 @@ Known Upcoming Changes:
 
 npm install @onflow/six-stakingcollection-stake-rewarded-tokens
 
+# Configuration 
+
+To use this Stored Interaction, you must configure FCL with certain account addresses which contain contracts imported by this Stored Interaction.
+
+| Dependencies                | Mainnet            | Testnet            |
+| --------------------------- | ------------------ | ------------------ |
+| 0xSTAKINGCOLLECTIONADDRESS  | 0x0                | 0x0                |
+
+Example (for mainnet):
+
+```javascript
+fcl.config()
+  .put("0xSTAKINGCOLLECTIONADDRESS", "0x0")
+```
+
+Example (for testnet):
+
+```javascript
+fcl.config()
+  .put("0xSTAKINGCOLLECTIONADDRESS", "0x0")
+```
+
 # Usage:
 
 ```javascript
