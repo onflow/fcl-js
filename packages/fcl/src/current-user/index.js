@@ -226,6 +226,8 @@ async function info() {
 }
 
 const makeSignable = msg => {
+  invariant(/^[0-9a-f]+$/i.test(msg), "Message must be a hex string")
+
   return {
     message: msg,
   }
@@ -240,7 +242,6 @@ async function signUserMessage(msg, opts = {}) {
     signingService,
     "Current user must have authorized a signing service."
   )
-  invariant(/^[0-9a-f]+$/i.test(msg), "Message must be a hex string")
 
   try {
     return await execService(signingService, makeSignable(msg))

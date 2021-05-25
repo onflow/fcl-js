@@ -31,7 +31,6 @@ export function frame(service, opts = {}) {
   function internal(e) {
     try {
       if (typeof e.data !== "object") return
-      // if (e.data.type == null) return
       if (IGNORE.has(e.data.type)) return
       if (e.data.type === CLOSE_EVENT) close()
       if (e.data.type === READY_EVENT) onReady(e, {send, close})
@@ -64,7 +63,6 @@ export function frame(service, opts = {}) {
 
   function send(msg) {
     try {
-      // console.log("SEND", msg)
       $frame.contentWindow.postMessage(
         JSON.parse(JSON.stringify(msg || {})),
         "*"

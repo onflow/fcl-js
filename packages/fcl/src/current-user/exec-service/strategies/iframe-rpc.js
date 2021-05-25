@@ -23,8 +23,31 @@ export function execIframeRPC(service, signable) {
         }
       },
 
-      onClose() {
-        reject(`Declined: Externally Halted`)
+      onResponse(e, {send, close}) {
+        try {
+          if (typeof e.data !== "object") return
+          const resp = normalizePollingResponse(e.data)
+
+          switch (resp.status) {
+            case "APPROVED":
+              resolve(normalizeCompositeSignature(resp.data))
+              close()
+              break
+
+            case "DECLINED":
+              reject(`Declined: ${resp.reason || "No reason supplied"}`)
+              close()
+              break
+
+            default:
+              reject(`Declined: No reason supplied`)
+              close()
+              break
+          }
+        } catch (error) {
+          console.error("execIframeRPC onResponse error", error)
+          throw error
+        }
       },
 
       onMessage(e, {close}) {
@@ -54,6 +77,10 @@ export function execIframeRPC(service, signable) {
           console.error("execIframeRPC onMessage error", error)
           throw error
         }
+      },
+
+      onClose() {
+        reject(`Declined: Externally Halted`)
       },
     })
   })
