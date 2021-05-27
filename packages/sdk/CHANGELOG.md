@@ -24,17 +24,20 @@
 
 [@gregsantos](https://github.com/gregsantos):
 
-2021-05-27 -- Exposes `createSignableVoucher`
 <br>
 <br>
 <br>
 <br>
 <br>
+
+## 0.0.47-alpha.1 - 2021-05-27
+
+- 2021-05-27 -- [@gregsantos](https://github.com/gregsantos): Exposes `createSignableVoucher`
 
 ## 0.0.46 - 2021-05-10
 
 - 2021-05-05 -- [@gregsantos](https://github.com/gregsantos): Renames `createVoucher` to `createSignableVoucher` and moves to `resolve-signatures`. Internal only.
-- 2021-04-27 -- [@gregsantos](https://github.com/gregsantos): Removes `resolveParams`, Updates `resolvers` exported from `sdk` 
+- 2021-04-27 -- [@gregsantos](https://github.com/gregsantos): Removes `resolveParams`, Updates `resolvers` exported from `sdk`
 
 ## 0.0.46-alpha.1 - 2021-05-05
 
