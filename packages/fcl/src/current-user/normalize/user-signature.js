@@ -7,10 +7,10 @@ import {SERVICE_PRAGMA} from "./__vsn"
 //   "type": "user-signature",
 //   "uid": "uniqueDedupeKey",
 //   "endpoint": "https://rawr",
-//   "method": "HTTP/POST", // HTTP/POST | IFRAME/RPC | HTTP/RPC
+//   "method": "IFRAME/RPC", // HTTP/POST | IFRAME/RPC | HTTP/RPC
 //   "id": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx", // wallets internal id for the user
-//   "params": {}, // included as query params on endpoint url
 //   "data": {}, // included in body of user-signature request
+//   "params": {}, // included as query params on endpoint url
 // }
 export function normalizeUserSignature(service) {
   if (service == null) return null
@@ -20,15 +20,6 @@ export function normalizeUserSignature(service) {
       return service
 
     default:
-      return {
-        ...SERVICE_PRAGMA,
-        type: service.type,
-        uid: service.id,
-        endpoint: service.endpoint,
-        method: service.method,
-        id: service.pid,
-        params: service.params,
-        data: service.data,
-      }
+      throw new Error("Invalid user-signature service")
   }
 }
