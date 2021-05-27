@@ -31,6 +31,7 @@ export {
   isGetBlockHeader,
   isGetCollection,
 } from "./interaction/interaction.js"
+export {createSignableVoucher} from "./resolve/resolve-signatures"
 export {template as cadence} from "@onflow/util-template"
 export {template as cdc} from "@onflow/util-template"
 

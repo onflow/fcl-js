@@ -24,7 +24,7 @@
 
 [@gregsantos](https://github.com/gregsantos):
 
-<br>
+2021-05-27 -- Exposes `createSignableVoucher`
 <br>
 <br>
 <br>
