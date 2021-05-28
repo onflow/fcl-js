@@ -5,7 +5,7 @@ import {normalizeCompositeSignature} from "../../normalize/composite-signature"
 import {frame} from "./utils/frame"
 import {poll} from "./utils/poll"
 
-export async function execHttpPost(service, signable) {
+export async function execHttpPost(service, signable, opts) {
   signable.data = service.data
   const resp = await fetchService(service, {
     data: signable,
