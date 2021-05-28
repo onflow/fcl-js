@@ -191,7 +191,9 @@ async function authorization(account) {
     sequenceNum: null,
     signature: null,
     async signingFunction(signable) {
-      return execService(authz, signable)
+      return execService(authz, signable, {
+        includeOlderJsonRpcCall: true,
+      })
     },
   }
 }

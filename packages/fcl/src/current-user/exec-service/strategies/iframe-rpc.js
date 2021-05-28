@@ -3,21 +3,32 @@ import {frame} from "./utils/frame"
 import {normalizePollingResponse} from "../../normalize/polling-response"
 import {normalizeCompositeSignature} from "../../normalize/composite-signature"
 
-export function execIframeRPC(service, signable) {
+export function execIframeRPC(service, body, opts) {
   return new Promise((resolve, reject) => {
     const id = uid()
-    signable.data = service.data
+    const includeOlderJsonRpcCall = opts.includeOlderJsonRpcCall
+
+    body.data = service.data
 
     frame(service, {
       onReady(_, {send}) {
         try {
-          // This is out of place, we need to find an alternative
           send({
-            jsonrpc: "2.0",
-            id: id,
-            method: "fcl:sign",
-            params: [signable, service.params],
+            type: "FCL:FRAME:READY:RESPONSE",
+            body,
+            service: {
+              params: service.params,
+              data: service.data,
+            },
           })
+          if (includeOlderJsonRpcCall) {
+            send({
+              jsonrpc: "2.0",
+              id: id,
+              method: "fcl:sign",
+              params: [body, service.params],
+            })
+          }
         } catch (error) {
           throw error
         }
