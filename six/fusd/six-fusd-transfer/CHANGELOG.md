@@ -2,6 +2,10 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.0.3 -- 2021-05-31
+
+- 2021-06-1 -- Adds correct import address format.
+
 ### 0.0.2 -- 2021-05-31
 
 - 2021-06-1 -- Added necessary arguments to transaction template.
