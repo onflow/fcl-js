@@ -3,11 +3,11 @@ import * as t from "@onflow/types"
 
 export const TITLE = "FUSD Transfer"
 export const DESCRIPTION = "Transfer FUSD to another Flow account."
-export const VERSION = "0.0.2"
-export const HASH = "34303bce7380715d79eb4f3c5a2a7482b0869247f336030aa4c7139b45d0d821"
+export const VERSION = "0.0.3"
+export const HASH = "0459184235a66fd5d7aef72a0b0e15de2b1b6c540a6aa7b68880860ff219979e"
 export const CODE = 
-`import FungibleToken from 0x9a0766d93b6608b7
-import FUSD from 0xe223d8a629e49c68
+`import FungibleToken from 0xFUNGIBLETOKENADDRESS
+import FUSD from 0xFUSDADDRESS
 
 transaction(amount: UFix64, to: Address) {
 
