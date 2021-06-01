@@ -3,7 +3,7 @@ import * as t from "@onflow/types"
 
 export const TITLE = "FUSD Transfer"
 export const DESCRIPTION = "Transfer FUSD to another Flow account."
-export const VERSION = "0.0.1"
+export const VERSION = "0.0.2"
 export const HASH = "34303bce7380715d79eb4f3c5a2a7482b0869247f336030aa4c7139b45d0d821"
 export const CODE = 
 `import FungibleToken from 0x9a0766d93b6608b7
@@ -40,8 +40,9 @@ transaction(amount: UFix64, to: Address) {
 }
 `
 
-export const template = ({ proposer, authorization, payer }) => fcl.pipe([
+export const template = ({ proposer, authorization, payer, amount = "", to = "" }) => fcl.pipe([
     fcl.transaction(CODE),
+    fcl.args([fcl.arg(amount, t.UFix64), fcl.arg(to, t.Address)]),
     fcl.proposer(proposer),
     fcl.authorizations([authorization]),
     fcl.payer(payer),

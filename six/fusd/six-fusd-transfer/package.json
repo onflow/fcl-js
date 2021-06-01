@@ -1,6 +1,6 @@
 {
   "name": "@onflow/six-fusd-transfer",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Flow SDK Stored Interaction - FUSD Transfer",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
