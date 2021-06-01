@@ -55,7 +55,9 @@ const response = await fcl.send([
     fusdTransfer({
         proposer: fcl.currentUser().authorization,
         authorization: fcl.currentUser().authorization,     
-        payer: fcl.currentUser().authorization,             
+        payer: fcl.currentUser().authorization,        
+        amount: "123.456",                                    // Amount as a String representing a Cadence UFix64
+        to: "0xABC123DEF456"                                  // The Address of the Account to transfer FUSD to.     
     })
 ])
 
