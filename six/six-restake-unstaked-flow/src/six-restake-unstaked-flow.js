@@ -9,7 +9,7 @@ const DEPS = new Set([
 
 export const TITLE = "Restake Unstaked Flow"
 export const DESCRIPTION = "Restakes unstaked Flow for an account."
-export const VERSION = "0.0.1"
+export const VERSION = "0.0.9"
 export const HASH = "677cc0ac3962ec136ca26dbec0aa942d926640ecf8418433f0db4b7925f5d0fe"
 export const CODE = 
 `import LockedTokens from 0xLOCKEDTOKENADDRESS
