@@ -2,6 +2,10 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.0.4 -- 2021-06-03
+
+- 2021-06-03 -- Updates versioning of peer dependencies
+
 ### 0.0.3 -- 2021-05-31
 
 - 2021-06-1 -- Adds correct import address format.

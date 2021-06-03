@@ -3,7 +3,7 @@ import * as t from "@onflow/types"
 
 export const TITLE = "Set Account Code"
 export const DESCRIPTION = "Set an Account Code on Flow with given code."
-export const VERSION = "0.0.0"
+export const VERSION = "0.0.6"
 export const HASH = "7375dc3feb96e2f8061eff548220a96bf77ceb17affd1ac113f10d15411a92c4"
 export const CODE = 
 `transaction(code: String) {

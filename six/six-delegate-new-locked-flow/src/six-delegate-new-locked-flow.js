@@ -10,7 +10,7 @@ const DEPS = new Set([
 
 export const TITLE = "Delegate New Locked Flow"
 export const DESCRIPTION = "Delegate New Locked Flow for an account."
-export const VERSION = "0.0.1"
+export const VERSION = "0.0.8"
 export const HASH = "802354d8b3e7908e584bcb5217637fb9f4ef045427c32d57d81ad4a390ed1a60"
 export const CODE = 
 `import FlowToken from 0xFLOWTOKENADDRESS

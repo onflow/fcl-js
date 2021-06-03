@@ -1,9 +1,14 @@
 import * as fcl from "@onflow/fcl"
-import * as t from "@onflow/types"
+import {config} from "@onflow/config"
+
+const DEPS = new Set([
+    "0xFUNGIBLETOKENADDRESS",
+    "0xFUSDADDRESS"
+])
 
 export const TITLE = "FUSD Setup"
 export const DESCRIPTION = "Set up a FUSD Vault and Receiver for an account."
-export const VERSION = "0.0.1"
+export const VERSION = "0.0.2"
 export const HASH = "187055772ca2912d1eaa13845485891fc854a5094e2fbd613a0c6e8c914b293f"
 export const CODE = 
 `import FungibleToken from 0xFUNGIBLETOKENADDRESS
@@ -39,13 +44,29 @@ transaction {
 }
 `
 
-export const template = ({ proposer, authorization, payer }) => fcl.pipe([
-    fcl.transaction(CODE),
-    fcl.proposer(proposer),
-    fcl.authorizations([authorization]),
-    fcl.payer(payer),
-    fcl.validator(ix => {
-        if (ix.authorizations.length > 1) throw new Error("template only requires one authorization.")
-        return ix
-    })
-])
+class UndefinedConfigurationError extends Error {
+    constructor(address) {
+      const msg = `Stored Interaction Error: Missing configuration for ${address}. Please see the following to learn more: https://github.com/onflow/flow-js-sdk/blob/master/six/six-delegate-new-locked-flow/README.md`.trim()
+      super(msg)
+      this.name = "Stored Interaction Undefined Address Configuration Error"
+    }
+}
+
+const addressCheck = async address => {
+    if (!await config().get(address)) throw new UndefinedConfigurationError(address)
+}
+
+export const template = ({ proposer, authorization, payer }) => {
+    for (let addr of DEPS) await addressCheck(addr)
+
+    return fcl.pipe([
+        fcl.transaction(CODE),
+        fcl.proposer(proposer),
+        fcl.authorizations([authorization]),
+        fcl.payer(payer),
+        fcl.validator(ix => {
+            if (ix.authorizations.length > 1) throw new Error("template only requires one authorization.")
+            return ix
+        })
+    ])
+}

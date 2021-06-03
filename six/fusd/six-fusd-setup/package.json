@@ -1,6 +1,6 @@
 {
   "name": "@onflow/six-fusd-setup",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Flow SDK Stored Interaction - FUSD Setup",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
@@ -35,7 +35,8 @@
     "start": "microbundle watch"
   },
   "peerDependencies": {
-    "@onflow/fcl": "~0.0.70",
-    "@onflow/types": "~0.0.4"
+    "@onflow/config": ">=0.0.2",
+    "@onflow/fcl": ">=0.0.70",
+    "@onflow/types": ">=0.0.4"
   }
 }

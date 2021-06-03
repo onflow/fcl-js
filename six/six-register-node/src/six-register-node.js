@@ -10,7 +10,7 @@ const DEPS = new Set([
 
 export const TITLE = "Register Node"
 export const DESCRIPTION = "Register a Node on Flow."
-export const VERSION = "0.0.6"
+export const VERSION = "0.0.10"
 export const HASH = "b64e0e3ed9eb28789198f2b0437f55f750bfa76da99450f63be6543bde66122a"
 export const CODE = 
 `import FlowToken from 0xFLOWTOKENADDRESS

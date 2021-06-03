@@ -10,7 +10,7 @@ const DEPS = new Set([
 
 export const TITLE = "Withdraw Unlocked Tokens"
 export const DESCRIPTION = "Withdraw Unlocked Tokens to an authorizers account."
-export const VERSION = "0.0.1"
+export const VERSION = "0.0.8"
 export const HASH = "a2146e3e6e7718779ce59376b88760c154d82b7d132fe2c377114ec7cf434e7b"
 export const CODE = 
 `import FungibleToken from 0xFUNGIBLETOKENADDRESS

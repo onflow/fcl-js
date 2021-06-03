@@ -8,7 +8,7 @@ const DEPS = new Set([
 
 export const TITLE = "Get Delegator ID"
 export const DESCRIPTION = "Gets a delegators ID."
-export const VERSION = "0.0.1"
+export const VERSION = "0.0.7"
 export const HASH = "20236b89c6f8ac93f51c4b7785cbe266727b41141d4ffc97229c9d60a4605ed8"
 export const CODE = 
 `import LockedTokens from 0xLOCKEDTOKENADDRESS
