@@ -26,7 +26,7 @@ export function renderFrame(src) {
   const $frame = document.createElement("iframe")
   $frame.src = src
   $frame.id = FRAME
-  $frame.allow = "usb *"
+  $frame.allow = "usb *; hid *"
   $frame.frameBorder = "0"
   $frame.style.cssText = FRAME_STYLES
   document.body.append($frame)
