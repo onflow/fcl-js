@@ -2,6 +2,10 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+## 0.0.71 - 2021-06-04
+
+- 2021-06-04 -- Full VSN Release `@onflow/fcl` 0.0.71-alpha.1 -> 0.0.71
+
 ## 0.0.71-alpha.1 - 2021-06-03
 
 - 2021-06-03 -- Adds `hid *` permission policy to iframe rendered in render-frame strategy.
