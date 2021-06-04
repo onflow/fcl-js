@@ -30,6 +30,10 @@
 <br>
 <br>
 
+## 0.0.47 - 2021-06-04
+
+- 2021-04-27 -- [@JeffreyDoyle](https://github.com/JeffreyDoyle): Full VSN Release `@onflow/sdk` 0.0.47-alpha.1 -> 0.0.47
+
 ## 0.0.47-alpha.1 - 2021-05-27
 
 - 2021-05-27 -- [@gregsantos](https://github.com/gregsantos): Exposes `createSignableVoucher`
