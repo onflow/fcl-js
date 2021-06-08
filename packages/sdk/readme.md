@@ -115,7 +115,7 @@ After Build, the next phase of use of the JS-SDK is the Resolve phase. During Bu
 
 Some things, however, we don't know. For example, when developing your dApp, you don't know the signature that will be produced when a user signs a transaction. You don't know the specific encoding that your Interaction needs to be in, or maybe you don't yet know the sequence number for a transactions proposer authorization. All of these things need to be discovered, produced or conceptually _resolved_ before your Interaction can be sent to the Flow Blockchain.
 
-This is where the _Resolve_ phase comes in. Resolves takes your built interaction containing all the information you do know and does it's best to get it into a position where it can be sent to the Flow Blockchain. The Flow JS-SDK comes with several _resolver_ functions that your dApp can use to do just this.
+This is where the _Resolve_ phase comes in. Resolve takes your built interaction containing all the information you do know and does it's best to get it into a position where it can be sent to the Flow Blockchain. The Flow JS-SDK comes with several _resolver_ functions that your dApp can use to do just this.
 
 Example 4
     : Building an Execute Script Interaction
@@ -141,7 +141,7 @@ const resolvedInteraction = await sdk.pipe(builtInteraction, [
 In Example 4 we Build an Execute Script Interaction by using the script builder to specify a Cadence script and the args and arg builders to specify some arguments to pass into the Cadence Script. To Resolve this built interaction, we pipe'd the built interaction through an array of resolvers. The resolveParams resolver encoded the Cadence script into a format the Flow Blockchain accepts, and the resolveArguments resolver prepared the arguments into the correct encoding that the Flow Blockchain accepts.
 
 Example 5
-    : Building an Execute Script Interaction
+    : Building a Transaction Interaction
 ```javascript
 import * as sdk from "@onflow/sdk"
 import * as types from "@onflow/types"
@@ -171,7 +171,7 @@ const resolvedInteraction = await sdk.pipe(builtInteraction, [
 
 In Example 5 we build a Transaction Interaction by building an interaction and calling the transaction builder with a piece of transaction Cadence code, and then specify an authorization for the payer, proposer and one authorizer.
 
-After the Transaction Interaction is built, we pipe it through a series of resolvers. We resolve the reference block id to execute this transaction against by calling the resolveRefBlockId resovler. We resolve the sequence number for the proposer authorization for this transaction by calling the resolveProposerSequenceNumber resolver. Then we resolve the arguments and params for the transaction by calling the resolveArguments and resolveParams resolvers. We then call the resolveAccounts resolver to prepare each specified authorization into a format that they could be used to produce their correct signature(s) for the transaction. Finally, at the end, we call the resolveSignatures resolver which will asyncronously using the signingFunction available for the specified authorizations to retrieve a signature for each.
+After the Transaction Interaction is built, we pipe it through a series of resolvers. We resolve the reference block id to execute this transaction against by calling the resolveRefBlockId resovler. We resolve the sequence number for the proposer authorization for this transaction by calling the resolveProposerSequenceNumber resolver. Then we resolve the arguments and params for the transaction by calling the resolveArguments and resolveParams resolvers. We then call the resolveAccounts resolver to prepare each specified authorization into a format that they could be used to produce their correct signature(s) for the transaction. Finally, at the end, we call the resolveSignatures resolver which will asyncronously use the signingFunction available for the specified authorizations to retrieve a signature for each.
 
 ## Send
 
