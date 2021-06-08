@@ -1,6 +1,10 @@
 import * as sdk from "@onflow/sdk"
 import * as t from "@onflow/types"
 
+const DEPS = new Set([
+    "0xSTAKINGCOLLECTIONADDRESS",
+])
+
 export const TITLE = "Request Unstaking"
 export const DESCRIPTION = "Requests unstaking for a stake held in a Staking Collection."
 export const VERSION = "0.0.0"
@@ -25,7 +29,21 @@ transaction(nodeID: String, delegatorID: UInt32?, amount: UFix64) {
 }
 `
 
+class UndefinedConfigurationError extends Error {
+    constructor(address) {
+      const msg = `Stored Interaction Error: Missing configuration for ${address}. Please see the following to learn more: https://github.com/onflow/flow-js-sdk/blob/master/six/six-withdraw-unstaked-flow/README.md`.trim()
+      super(msg)
+      this.name = "Stored Interaction Undefined Address Configuration Error"
+    }
+}
+
+const addressCheck = async address => {
+    if (!await config().get(address)) throw new UndefinedConfigurationError(address)
+}
+
 export const template = async ({ proposer, authorization, payer, nodeId = "", delegatorId = null, amount = ""}) => {
+    for (let addr of DEPS) await addressCheck(addr)
+
     return sdk.pipe([
         sdk.transaction(CODE),
         sdk.args([sdk.arg(nodeId, t.String), sdk.arg(delegatorId, t.Optional(t.UInt32), sdk.arg(amount, t.UFix64))]),
