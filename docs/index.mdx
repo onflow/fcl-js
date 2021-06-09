@@ -35,15 +35,6 @@ a browser plugin.
 
 The things that exists probably won't be changing much externally, we will be adding new functionality in the near future.
 
-## The Difference between FCL and the JS-SDK
-
-We like to think about it this way. The JS-SDK is where we are discovering the fundamental operators (think plus, minus type of operators) for interacting with the Flow Blockchain.
-Some of those interactions, like a transaction, require things your application may not have, might not know, or shouldn't know (You should not know users private keys), FCL is more about how do you get those sorts of things so they can be used with the JS-SDK.
-
-## Should You use FCL or the JS-SDK
-
-Probably FCL, FCL exposes most of the JS-SDK, and hides a lot of things you probably don't want to care about like how to "resolve" a transaction, it sounds tedious, it is finicky and FCL is going to do it for you so you never have to worry about it.
-
 ## Wallet Discovery
 
 FCL also eliminates the need for dapp developers to write code to integrate their user's preferred wallet into
