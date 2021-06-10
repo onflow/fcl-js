@@ -46,9 +46,9 @@ Common Configuration Keys and additional info can be found here [How to Configur
 
 A [user-signature service](https://github.com/onflow/flow-js-sdk/blob/master/packages/fcl/src/current-user/normalize/user-signature.js#L4-L14) is a standard service, with methods for **IFRAME/RPC** or **HTTP/POST**.
 
-The `user-signature` service receives a signable message from **FCL** and returns a standard [PollingResponse](https://github.com/onflow/flow-js-sdk/blob/8e53ac59636e28cdcfa2494de6cb278e71bc14c2/packages/fcl/src/current-user/normalize/polling-response.js#L5) with a [CompositeSignature](https://github.com/onflow/flow-js-sdk/blob/8e53ac59636e28cdcfa2494de6cb278e71bc14c2/packages/fcl/src/current-user/normalize/composite-signature.js#L4) or `null` as the data.
+The `user-signature` service receives a signable message from **FCL** and returns a standard [PollingResponse](https://github.com/onflow/flow-js-sdk/blob/8e53ac59636e28cdcfa2494de6cb278e71bc14c2/packages/fcl/src/current-user/normalize/polling-response.js#L5) with an array of [CompositeSignatures](https://github.com/onflow/flow-js-sdk/blob/8e53ac59636e28cdcfa2494de6cb278e71bc14c2/packages/fcl/src/current-user/normalize/composite-signature.js#L4) or `null` as the data.
 
-A status of **Approved** needs to have composite signature as data. 
+A status of **Approved** needs to have an array of composite signatures as data. 
 
 A status of **Declined** needs to include a reason why. 
 
@@ -78,6 +78,9 @@ A domain tag is encoded as **UTF-8 bytes, right padded to a total length of 32 b
 Using upcoming functionalty of **FCL**, the signature can now be verified on the Flow blockchain. The following illustrates an example.
 
 ```javascript
+// this code example was done before compSig was an array of composite signatures.
+// An uptodate version will be updated here ASAP
+
 function validateSignedUserMessage(message, compSig) {
   return fcl.query({
     cadence: `
@@ -112,5 +115,5 @@ function validateSignedUserMessage(message, compSig) {
 - Register with **FCL** and provide signing service endpoint. No further configuration is needed.
 - On receipt of message, prompt user to approve or decline
 - Prepend `UserDomainTag`, hash and sign the message with the signatureAlgorithm specified on user's key
-- Return a standard `PollingResponse` with `CompositeSignature` as data or `null` and `reason` if declined
+- Return a standard `PollingResponse` with an array of `CompositeSignatures` as data or `null` and `reason` if declined
 
