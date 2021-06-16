@@ -15,7 +15,7 @@
 
 [@JeffreyDoyle](https://github.com/JeffreyDoyle):
 
-<br>
+<br> 2021-06-16 -- [@JeffreyDoyle](https://github.com/JeffreyDoyle): Adds encode signable wallet utility function.
 <br>
 <br>
 <br>

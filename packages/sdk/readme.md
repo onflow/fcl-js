@@ -449,16 +449,16 @@ const response = await sdk.send(await sdk.pipe(await sdk.build([
 
   - [`sdk.build`](./src/build)
   - [`sdk.resolve`](./src/resolve)
-  - [`sdk.send`](../send)
-  - [`sdk.decode`](../decode)
-  - [`sdk.decodeResponse`](../decode)
+  - [`sdk.send`](./src/send)
+  - [`sdk.decode`](./src/decode)
+  - [`sdk.decodeResponse`](./src/decode)
 
 - [Utils](../interaction)
 
-  - [`sdk.isOk`](../interaction)
-  - [`sdk.isBad`](../interaction)
-  - [`sdk.why`](../interaction)
-  - [`sdk.pipe`](../interaction)
+  - [`sdk.isOk`](./src/interaction)
+  - [`sdk.isBad`](./src/interaction)
+  - [`sdk.why`](./src/interaction)
+  - [`sdk.pipe`](./src/interaction)
 
 - [Builders](./src/build)
 

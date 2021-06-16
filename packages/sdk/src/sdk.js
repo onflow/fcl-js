@@ -32,6 +32,7 @@ export {
   isGetCollection,
 } from "./interaction/interaction.js"
 export {createSignableVoucher} from "./resolve/resolve-signatures"
+export {encodeMessageFromSignable} from "./wallet-utils/encode-signable.js"
 export {template as cadence} from "@onflow/util-template"
 export {template as cdc} from "@onflow/util-template"
 
