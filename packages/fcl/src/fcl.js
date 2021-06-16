@@ -32,6 +32,7 @@ export {isOk, isBad, why, pipe, build} from "@onflow/sdk"
 export {withPrefix, sansPrefix, display} from "@onflow/util-address"
 export {template as cadence} from "@onflow/util-template"
 export {template as cdc} from "@onflow/util-template"
+export {createSignableVoucher} from "@onflow/sdk"
 
 // builders
 export {transaction} from "@onflow/sdk"

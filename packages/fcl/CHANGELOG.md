@@ -2,6 +2,12 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+## 0.0.72 - 2021-06-16
+
+- 2021-06-16 -- Full VSN Release `@onflow/fcl` 0.0.71 -> 0.0.72
+- 2021-06-16 -- VSN `@onflow/sdk` 0.0.47 -> 0.0.48
+- 2021-06-16 -- Exports `encodeMessageFromSignable` from `@onflow/sdk`
+
 ## 0.0.71 - 2021-06-04
 
 - 2021-06-04 -- Full VSN Release `@onflow/fcl` 0.0.71-alpha.1 -> 0.0.71
