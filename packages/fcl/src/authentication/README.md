@@ -17,7 +17,7 @@ FCL provides two ways of getting the current users information. One way is a pro
 ### Snapshot of Current User
 
 ```javascript
-import * as fcl from "@onflow/fcl"
+import fcl from '@onflow/fcl';
 
 const currentUser = await fcl.currentUser().snapshot()
 console.log("The Current User", currentUser)
@@ -26,10 +26,10 @@ console.log("The Current User", currentUser)
 ### Subscribe to Current User
 
 ```javascript
-import * as fcl from "@onflow/fcl"
+import fcl from '@onflow/fcl';
 
-// Returns an unsubscribe function
-const unsubscribe = fcl.currentUser()
+// Returns a subscribe function
+const subscribe = fcl.currentUser()
   .subscribe(currentUser => {
     console.log("The Current User", currentUser)
   })
