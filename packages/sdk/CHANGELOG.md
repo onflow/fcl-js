@@ -15,8 +15,17 @@
 
 [@JeffreyDoyle](https://github.com/JeffreyDoyle):
 
+<br> 2021-06-16 -- [@JeffreyDoyle](https://github.com/JeffreyDoyle): Adds ability to specify optional grpc metadata to requests sent to an Access API. To specity grpc metadata, use config like such:
+
+```javascript
+import {config} from "@onflow/config"
+
+fcl.config()
+  .put("grpc.metadata", {"headerkey1": "headervalue1"})
+
+```
+
 <br> 2021-06-16 -- [@JeffreyDoyle](https://github.com/JeffreyDoyle): Adds encode signable wallet utility function.
-<br>
 <br>
 <br>
 <br>
