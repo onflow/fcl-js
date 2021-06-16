@@ -40,43 +40,23 @@ export const encodeMessageFromSignable = (signable, signerAddress) => {
         throw new UnableToDetermineMessageEncodingTypeForSignerAddress(signerAddress)
     }
 
-    return isPayloadSigner ? 
-        encodeTransactionPayload(
-            {
-                cadence: signable.voucher.cadence,
-                refBlock: signable.voucher.refBlock,
-                computeLimit: signable.voucher.computeLimit,
-                arguments: signable.voucher.arguments,
-                proposalKey: {
-                    ...signable.voucher.proposalKey,
-                    address: sansPrefix(signable.voucher.proposalKey.address)
-                },
-                payer: sansPrefix(signable.voucher.payer),
-                authorizers: signable.voucher.authorizers.map(sansPrefix),
-                payloadSigs: signable.voucher.payloadSigs.map(ps => ({
-                    ...ps,
-                    address: sansPrefix(ps.address)
-                }))
-            }
-        )
-    :
-        encodeTransactionEnvelope(
-            {
-                cadence: signable.voucher.cadence,
-                refBlock: signable.voucher.refBlock,
-                computeLimit: signable.voucher.computeLimit,
-                arguments: signable.voucher.arguments,
-                proposalKey: {
-                    ...signable.voucher.proposalKey,
-                    address: sansPrefix(signable.voucher.proposalKey.address)
-                },
-                payer: sansPrefix(signable.voucher.payer),
-                authorizers: signable.voucher.authorizers.map(sansPrefix),
-                payloadSigs: signable.voucher.payloadSigs.map(ps => ({
-                    ...ps,
-                    address: sansPrefix(ps.address)
-                }))
-            }
-        )
+    const message = {
+        cadence: signable.voucher.cadence,
+        refBlock: signable.voucher.refBlock,
+        computeLimit: signable.voucher.computeLimit,
+        arguments: signable.voucher.arguments,
+        proposalKey: {
+            ...signable.voucher.proposalKey,
+            address: sansPrefix(signable.voucher.proposalKey.address)
+        },
+        payer: sansPrefix(signable.voucher.payer),
+        authorizers: signable.voucher.authorizers.map(sansPrefix),
+        payloadSigs: signable.voucher.payloadSigs.map(ps => ({
+            ...ps,
+            address: sansPrefix(ps.address)
+        }))
+    }
+
+    return isPayloadSigner ? encodeTransactionPayload(message) : encodeTransactionEnvelope(message)
 }
 
