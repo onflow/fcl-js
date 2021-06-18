@@ -1,5 +1,4 @@
 import "./default-config"
-import "./temp"
 export {VERSION} from "./VERSION"
 export {query} from "./exec/query"
 export {mutate} from "./exec/mutate"
