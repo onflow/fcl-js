@@ -1,4 +1,6 @@
 import assert from "assert"
+import fs from "fs"
+import path from "path"
 import {
   build,
   resolve,
@@ -11,7 +13,15 @@ import {
   authorization,
   params,
   param,
+  VERSION,
 } from "./sdk.js"
+
+test("fcl.VERSION needs to match version in package.json", () => {
+  const pkg = JSON.parse(
+    fs.readFileSync(path.resolve(process.cwd(), "package.json"), "utf-8")
+  )
+  expect(pkg.version).toBe(VERSION)
+})
 
 describe("build", () => {
   it("returns the correct limit when building a transaction", async () => {

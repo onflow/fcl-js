@@ -1,6 +1,6 @@
 {
   "name": "@onflow/sdk",
-  "version": "0.0.48",
+  "version": "0.0.49",
   "description": "Flow SDK",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
@@ -37,9 +37,9 @@
   "dependencies": {
     "@improbable-eng/grpc-web": "^0.14.0",
     "@improbable-eng/grpc-web-node-http-transport": "^0.14.0",
-    "@onflow/config": "^0.0.2",
     "@onflow/protobuf": "^0.1.8",
     "@onflow/rlp": "^0.0.3",
+    "@onflow/util-actor": "0.0.2",
     "@onflow/util-address": "^0.0.0",
     "@onflow/util-invariant": "^0.0.0",
     "@onflow/util-template": "0.0.1",

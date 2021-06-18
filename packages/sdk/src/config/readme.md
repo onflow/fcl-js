@@ -1,32 +1,25 @@
-# @onflow/config
+# config
 
 Reactive configuration for Flow JS SDK and FCL
 
 # Status
 
-- **Status Last Updated:** July 17th 2020
+- **Status Last Updated:** June 16th 2021
 - **Stable:** Yes
 - **Risk of Breaking Change:** Low
 
 # Overview
 
-- [Install](#install)
 - [Usage](#usage)
 - [Configurations](#configurations)
   - [Access Node](#access-node)
   - [Decode](#decode)
   - [Wallets](#Wallets)
 
-# Install
-
-```bash
-npm install --save @onflow/config
-```
-
 # Usage
 
 ```javascript
-import {config} from "@onflow/config"
+import {config} from "@onflow/sdk"
 
 // Reactively subscribe to config changes
 config().subscribe(configData => console.log("CONFIG", configData))
@@ -84,7 +77,7 @@ Known configuration values in FCL
 - `accessNode.key` _(default: null)_ -- Some Access Nodes require an api key.
 
 ```javascript
-import {config} from "@onflow/config"
+import {config} from "@onflow/fcl"
 
 if (process.env.NODE_ENV === "production") {
   config()
@@ -100,18 +93,18 @@ if (process.env.NODE_ENV === "production") {
 `decoder.*` -- Custom decoders for parsing JSON-CDC
 
 ```javascript
-import {config} from "@onflow/config"
-import * as fcl from "@onflow/fcl"
+import {config, query} from "@onflow/fcl"
 
 function Woot({x, y}) {
   this.x = x
   this.y = y
 }
 
-config().put("decoder.Woot", woot => new Woot(woot))
+config()
+  .put("decoder.Woot", woot => new Woot(woot))
 
-var response = await fcl.send([
-  fcl.script`
+var data = await fcl.query({
+  cadence: `
     pub struct Woot {
       pub var x: Int
       pub var y: Int
@@ -125,10 +118,9 @@ var response = await fcl.send([
     pub fun main(): [Woot] {
       return [Woot(x: 1, y: 2), Woot(x: 3, y: 4), Woot(x: 5, y: 6)]
     }
-  `,
-])
+  `
+})
 
-var data = await fcl.decode(response)
 console.log(data) // [ Woot{x:1, y:2}, Woot{x:3, y:4}, Woot{x:5, y:6} ]
 ```
 
@@ -136,13 +128,14 @@ console.log(data) // [ Woot{x:1, y:2}, Woot{x:3, y:4}, Woot{x:5, y:6} ]
 
 > See [`fcl.currentUser`](../current-user) for more details on authentication.
 
-`challenge.handshake` _(default: FCL wallet discovery service url)_ -- Where FCL will attempt to authenticate
+`wallet.discovery` _(default: FCL wallet discovery service url)_ -- Where FCL will attempt to authenticate
 
 ```javascript
-import {config} from "@onflow/config"
+import {config} from "@onflow/fcl"
 
 if (process.env.NODE_ENV === "development") {
   // Use dev wallet during development
-  config().put("challenge.handshake", "http://localhost:8701/flow/authenticate")
+  config()
+    .put("discovery.wallet", "http://localhost:8701/flow/authenticate")
 }
 ```

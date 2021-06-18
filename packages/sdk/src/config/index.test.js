@@ -3,6 +3,10 @@ import {config} from "./"
 const idle = () => new Promise(resolve => setTimeout(resolve), 0)
 
 describe("config", () => {
+  config({
+    "config.test.init": "rawr",
+  })
+
   config()
     .put("config.test.t", "t")
     .put("config.test.z", "z")
@@ -12,6 +16,7 @@ describe("config", () => {
 
   test("get", async () => {
     expect(await config().get("config.test.foo.bar")).toBe("bar")
+    expect(await config().get("config.test.init")).toBe("rawr")
   })
 
   test("get with fallback", async () => {
@@ -42,9 +47,7 @@ describe("config", () => {
     const unsub = config().subscribe(fn1)
     await idle()
 
-    config()
-      .put("config.test.y", "y")
-      .put("config.test.x", "x")
+    config().put("config.test.y", "y").put("config.test.x", "x")
 
     await idle()
     unsub()
