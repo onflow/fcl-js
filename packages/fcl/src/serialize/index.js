@@ -1,7 +1,6 @@
 import {interaction, pipe} from "@onflow/sdk"
 import {resolve as defaultResolve} from "@onflow/sdk"
-import {createSignableVoucher} from "@onflow/sdk"
-import {config} from "@onflow/config"
+import {config, createSignableVoucher} from "@onflow/sdk"
 
 export const serialize = async (args = [], opts = {}) => {
   // prettier-ignore
