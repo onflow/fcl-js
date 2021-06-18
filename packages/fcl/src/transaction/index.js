@@ -1,5 +1,4 @@
 import "../default-config"
-import {config} from "@onflow/config"
 import {
   spawn,
   send,
@@ -11,30 +10,28 @@ import {
   SUBSCRIBE,
   UNSUBSCRIBE,
 } from "@onflow/util-actor"
-import {send as fclSend} from "@onflow/sdk"
-import {decode} from "@onflow/sdk"
-import {getTransactionStatus} from "@onflow/sdk"
+import {send as fclSend, decode, getTransactionStatus} from "@onflow/sdk"
 
 const RATE = 2500
 const POLL = "POLL"
 
-const fetchTxStatus = async (transactionId) => {
+const fetchTxStatus = async transactionId => {
   return fclSend([getTransactionStatus(transactionId)]).then(decode)
 }
 
-const isExpired = (tx) => tx.status === 5
-const isSealed = (tx) => tx.status >= 4
-const isExecuted = (tx) => tx.status >= 3
-const isFinalized = (tx) => tx.status >= 2
-const isPending = (tx) => tx.status >= 1
-const isUnknown = (tx) => tx.status >= 0
+const isExpired = tx => tx.status === 5
+const isSealed = tx => tx.status >= 4
+const isExecuted = tx => tx.status >= 3
+const isFinalized = tx => tx.status >= 2
+const isPending = tx => tx.status >= 1
+const isUnknown = tx => tx.status >= 0
 
 const isDiff = (cur, next) => {
   return JSON.stringify(cur) !== JSON.stringify(next)
 }
 
 const HANDLERS = {
-  [INIT]: async (ctx) => {
+  [INIT]: async ctx => {
     const tx = await fetchTxStatus(ctx.self())
     if (!isSealed(tx)) setTimeout(() => ctx.sendSelf(POLL), RATE)
     ctx.merge(tx)
@@ -49,7 +46,7 @@ const HANDLERS = {
   [SNAPSHOT]: async (ctx, letter) => {
     letter.reply(ctx.all())
   },
-  [POLL]: async (ctx) => {
+  [POLL]: async ctx => {
     const tx = await fetchTxStatus(ctx.self())
     if (!isSealed(tx)) setTimeout(() => ctx.sendSelf(POLL), RATE)
     if (isDiff(ctx.all(), tx)) ctx.broadcast(UPDATED, tx)
@@ -57,14 +54,14 @@ const HANDLERS = {
   },
 }
 
-const scoped = (transactionId) => {
+const scoped = transactionId => {
   if (typeof transactionId === "object")
     transactionId = transactionId.transactionId
   if (transactionId == null) throw new Error("transactionId required")
   return transactionId
 }
 
-const spawnTransaction = (transactionId) => {
+const spawnTransaction = transactionId => {
   return spawn(HANDLERS, scoped(transactionId))
 }
 
@@ -81,7 +78,7 @@ export function transaction(transactionId) {
     return function innerOnce(opts = {}) {
       const suppress = opts.suppress || false
       return new Promise((resolve, reject) => {
-        const unsub = subscribe((txStatus) => {
+        const unsub = subscribe(txStatus => {
           if (txStatus.statusCode && !suppress) {
             reject(txStatus.errorMessage)
             unsub()

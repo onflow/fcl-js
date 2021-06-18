@@ -2,6 +2,11 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+## 0.0.73-alpha.2 - 2021-06-17
+
+- 2021-06-17 -- VSN `@onflow/sdk` 0.0.48 -> 0.0.50
+- 2021-06-17 -- Used `config` from `@onflow/sdk` instead of `@onflow/config`
+
 ## 0.0.73-alpha.1 - 2021-06-17
 
 - 2021-06-17 -- **EXPERIMENTAL** Exposes new top level `fcl.mutate` function (@orodio)

@@ -1,6 +1,5 @@
 import "../default-config"
-import {account} from "@onflow/sdk"
-import {config} from "@onflow/config"
+import {account, config} from "@onflow/sdk"
 import {spawn, send, INIT, SUBSCRIBE, UNSUBSCRIBE} from "@onflow/util-actor"
 import {sansPrefix} from "@onflow/util-address"
 import {invariant} from "@onflow/util-invariant"

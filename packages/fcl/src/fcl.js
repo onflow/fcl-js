@@ -24,7 +24,7 @@ export const authz = currentUser().authorization
 import * as types from "@onflow/types"
 export const t = types
 
-export {config} from "@onflow/config"
+export {config} from "@onflow/sdk"
 export {send} from "@onflow/sdk"
 export {decode} from "@onflow/sdk"
 export {account} from "@onflow/sdk"
