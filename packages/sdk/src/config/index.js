@@ -78,6 +78,10 @@ function subscribe(callback) {
   return subscriber(NAME, () => spawn(HANDLERS, NAME), callback)
 }
 
-export function config() {
+export function config(values) {
+  if (values != null && typeof values === "object") {
+    Object.keys(values).map(d => put(d, values[d]))
+  }
+
   return {put, get, update, delete: _delete, where, subscribe}
 }

@@ -30,6 +30,28 @@
 <br>
 <br>
 
+## 0.0.49 - 2021-06-16
+
+- 2021-06-16 -- [@orodio](https://github.com/orodio): Pulled `@onflow/config` functionality into `@onflow/sdk`
+- 2021-06-16 -- [@orodio](https://github.com/orodio): Added the ability to set configuration values in `sdk.config` from initializer.
+
+```javascript
+import {config} from "@onflow/sdk"
+
+config({
+  "accessNode.api": "https://access-testnet.onflow.org",
+  "discovery.wallet": "https://fcl-discovery.onflow.org/testnet/authn",
+  "0xFUSD": "0xe223d8a629e49c68",
+})
+
+// -- is equivalent to --
+
+config()
+  .put("accessNode.api", "https://access-testnet.onflow.org")
+  .put("discovery.wallet", "https://fcl-discovery.onflow.org/testnet/authn")
+  .put("0xFUSD", "0xe223d8a629e49c68")
+```
+
 ## 0.0.48 - 2021-06-16
 
 - 2021-06-16 -- [@JeffreyDoyle](https://github.com/JeffreyDoyle): Adds ability to specify optional grpc metadata to requests sent to an Access API. To specity grpc metadata, use config like such:
@@ -37,10 +59,9 @@
 ```javascript
 import {config} from "@onflow/config"
 
-fcl.config()
-  .put("grpc.metadata", {"headerkey1": "headervalue1"})
-
+fcl.config().put("grpc.metadata", {headerkey1: "headervalue1"})
 ```
+
 - 2021-06-16 -- [@JeffreyDoyle](https://github.com/JeffreyDoyle): Adds encode signable wallet utility function.
 
 ## 0.0.47 - 2021-06-04

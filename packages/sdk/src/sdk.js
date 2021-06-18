@@ -78,7 +78,7 @@ export {resolveValidators} from "./resolve/resolve-validators.js"
 export {resolveRefBlockId} from "./resolve/resolve-ref-block-id.js"
 
 // Config
-export {config} from "@onflow/config"
+export {config} from "./config"
 
 // Deprecated
 export const params = params =>
@@ -93,3 +93,5 @@ export const param = params =>
     transitionsPath:
       "https://github.com/onflow/flow-js-sdk/blob/master/packages/sdk/TRANSITIONS.md#0001-deprecate-params",
   })
+
+export {VERSION} from "./VERSION"
