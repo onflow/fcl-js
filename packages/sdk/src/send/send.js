@@ -1,8 +1,5 @@
-import {
-  interaction,
-  pipe,
-} from "../interaction/interaction.js"
-import {config} from "@onflow/config"
+import {interaction, pipe} from "../interaction/interaction.js"
+import {config} from "../config"
 import {resolve as defaultResolve} from "../resolve/resolve.js"
 import {send as defaultSend} from "./sdk-send.js"
 
@@ -15,4 +12,3 @@ export const send = async (args = [], opts = {}) => {
   if (Array.isArray(args)) args = pipe(interaction(), args)
   return sendFunction(await resolveFunction(args), opts)
 }
-

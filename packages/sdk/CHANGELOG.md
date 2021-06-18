@@ -30,6 +30,10 @@
 <br>
 <br>
 
+## 0.0.50 - 2021-06-17
+
+- 2021-06-16 -- [@orodio](https://github.com/orodio): General dep clean up. And force internal usage of config.
+
 ## 0.0.49 - 2021-06-16
 
 - 2021-06-16 -- [@orodio](https://github.com/orodio): Pulled `@onflow/config` functionality into `@onflow/sdk`
