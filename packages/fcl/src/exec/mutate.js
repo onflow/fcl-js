@@ -1,11 +1,9 @@
 import {invariant} from "@onflow/util-invariant"
 import * as sdk from "@onflow/sdk"
-import * as t from "@onflow/types"
 import {isRequired, isObject, isString, isFunc, isNumber} from "./utils/is"
 import {normalizeArgs} from "./utils/normalize-args"
 import {currentUser} from "../current-user"
-
-const authz = currentUser().authorization
+import {transaction} from "../transaction"
 
 /** As the current user Mutate the Flow Blockchain
  *
@@ -45,30 +43,61 @@ const authz = currentUser().authorization
  *      ],
  *    })
  *
+ *
+ *  Options:
+ *    type Options = {
+ *      cadence: String!,
+ *      args: (arg, t) => Array<Arg>,
+ *      limit: Number,
+ *      authz: AuthzFn, // will overload the trinity of signatory roles
+ *      proposer: AuthzFn, // will overload the proposer signatory role
+ *      payer: AuthzFn, // will overload the payer signatory role
+ *      authorizations: [AuthzFn], // an array of authorization functions used as authorizations signatory roles
+ *    }
  */
-export async function mutate(opts = {}) {
-  await prepMutation(opts)
 
-  // prettier-ignore
-  return sdk.send([
-    sdk.transaction(opts.cadence),
-    sdk.args(normalizeArgs(opts.args || [])),
-    opts.limit && isNumber(opts.limit) && sdk.limit(opts.limit),
-    sdk.proposer(authz),
-    sdk.payer(authz),
-    sdk.authorizations([authz]),
-  ]).then(sdk.decode)
+const noop = () => {}
+
+export async function mutate(opts = {}) {
+  var txid
+  try {
+    await prepMutation(opts)
+
+    // Allow for a config to overwrite the authorization function.
+    // prettier-ignore
+    const authz = await sdk.config().get("fcl.authz", currentUser().authorization)
+
+    // prettier-ignore
+    txid = sdk.send([
+      sdk.transaction(opts.cadence),
+
+      sdk.args(normalizeArgs(opts.args || [])),
+
+      opts.limit && isNumber(opts.limit) && sdk.limit(opts.limit),
+
+      // opts.proposer > opts.authz > authz
+      sdk.proposer(opts.proposer || opts.authz || authz),
+
+      // opts.payer > opts.authz > authz
+      sdk.payer(opts.payer || opts.authz || authz),
+
+      // opts.authorizations > [opts.authz > authz]
+      sdk.authorizations(opts.authorizations || [opts.authz || authz]),
+    ]).then(sdk.decode)
+
+    return txid
+  } catch (error) {
+    throw error
+  }
 }
 
 async function prepMutation(opts) {
+  // prettier-ignore
   invariant(isRequired(opts), "mutate(opts) -- opts is required")
+  // prettier-ignore
   invariant(isObject(opts), "mutate(opts) -- opts must be an object")
-  invariant(
-    isRequired(opts.cadence),
-    "mutate({ cadence }) -- cadence is required"
-  )
-  invariant(
-    isString(opts.cadence),
-    "mutate({ cadence }) -- cadence must be a string"
-  )
+  // prettier-ignore
+  invariant(isRequired(opts.cadence), "mutate({ cadence }) -- cadence is required")
+  // prettier-ignore
+  invariant(isString(opts.cadence), "mutate({ cadence }) -- cadence must be a string")
 }

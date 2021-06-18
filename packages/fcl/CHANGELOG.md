@@ -2,6 +2,100 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+## 0.0.73-alpha.1 - 2021-06-17
+
+- 2021-06-17 -- **EXPERIMENTAL** Exposes new top level `fcl.mutate` function (@orodio)
+
+New **EXPERIMENTAL** `fcl.mutate` functionality (mirors `fcl.query` but for transactions) can be used like this.
+
+```javascript
+// profile contract on testnet
+import * as fcl from "@onflow/fcl"
+
+// address overloading works for fcl.mutate too
+fcl.config().put("0xProfile", "0xba1132bc08f82fe2")
+
+// defaults to current user for all signatory roles
+await fcl.mutate({
+  cadence: `
+    import Profile from 0xProfile
+
+    transaction(name: String) {
+      prepare(acct: AuthAccount) {
+        acct
+          .borrow<&{Profile.Owner}>(from: Profile.privatePath)
+          .setName(name)
+      }
+    }
+  `,
+
+  args: (arg, t) => [arg("qvvg", t.String)],
+
+  limit: 65,
+})
+
+// you can use a custom authorization function for all three signatory roles
+import {myAuthzFn} from "./my-authz-fn"
+
+const INIT_PROFILE_CONTRACT = `
+  import Profile from 0xProfile
+
+  transaction {
+    prepare(acct: AuthAccount) {
+      if !Profile.check(acct.address) {
+        acct.save(<- Profile.new(), to: Profile.privatePath)
+        acct.link<&Profile.Base{Profile.Public}>(Profile.publicPath, target: Profile.privatePath)
+      }
+    }
+  }
+`
+
+await fcl.mutate({
+  cadence: INIT_PROFILE_CONTRACT,
+  authz: myAuthzFn,
+})
+
+// individual roles can be overloaded
+// mutate will prefer specific roles over authz over current user
+// the following is the same as passing myAuthzFn in as authz
+
+await fcl.mutate({
+  cadence: INIT_PROFILE_CONTRACT,
+  proposer: myAuthzFn,
+  payer: myAuthzFn,
+  authorizations: [myAuthzFn],
+})
+
+// the following would use myAuthzFn to pay for the transaction but the current user for everything else
+
+await fcl.mutate({
+  cadence: INIT_PROFILE_CONTRACT,
+  payer: myAuthzFn,
+})
+
+// the following would use myAuthzFn for the payer and the second authorization but current user for everything else
+
+await fcl.mutate({
+  cadence: `
+    transaction {
+      prepare(currentUser: AuthAccount, myAuthzFn: AuthAccount) {
+        // some transaction that requires two authorization accounts
+      }
+    }
+  `,
+  payer: myAuthzFn,
+  authorizations: [fcl.authz, myAuthzFn],
+})
+
+// the following would use myAuthzFn for everything, but the current user will be the authorizer
+
+await fcl.mutate({
+  cadence: INIT_PROFILE_CONTRACT,
+  authz: myAuthzFn,
+  authorizations: [fcl.authz],
+})
+```
+
 ## 0.0.72 - 2021-06-16
 
 - 2021-06-16 -- Full VSN Release `@onflow/fcl` 0.0.71 -> 0.0.72
