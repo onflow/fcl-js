@@ -1,4 +1,4 @@
-import * as sdk from "@onflow/sdk"
+import * as fcl from "@onflow/fcl"
 import * as t from "@onflow/types"
 
 const DEPS = new Set([
@@ -78,12 +78,12 @@ const addressCheck = async address => {
 export const template = async ({ proposer, authorization, payer }) => {
     for (let addr of DEPS) await addressCheck(addr)
     
-    return sdk.pipe([
-        sdk.transaction(CODE),
-        sdk.proposer(proposer),
-        sdk.authorizations([authorization]),
-        sdk.payer(payer),
-        sdk.validator(ix => {
+    return fcl.pipe([
+        fcl.transaction(CODE),
+        fcl.proposer(proposer),
+        fcl.authorizations([authorization]),
+        fcl.payer(payer),
+        fcl.validator(ix => {
             if (ix.authorizations.length > 1) throw new Error("template only requires one authorization.")
             return ix
         })
