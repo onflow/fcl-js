@@ -2,6 +2,10 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+## 0.0.73 - 2021-06-21
+
+- 2021-06-21 -- Full VSN release of FCL.
+
 ## 0.0.73-alpha.3 - 2021-06-18
 
 - 2021-06-18 -- Removed `temp.js`
