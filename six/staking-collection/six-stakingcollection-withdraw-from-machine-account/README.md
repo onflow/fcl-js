@@ -1,10 +1,10 @@
-# @onflow/six-stakingcollection-transfer-node
+# @onflow/six-stakingcollection-withdraw-from-machine-account
 
-Stored Interaction for transferring a node from one Staking Collection to another.
+Stored Interaction for withdrawing FLOW from a machine account.
 
 # Status
 
-- **Last Updated:** June 21 2021
+- **Last Updated:** April 14 2021
 - **Stable:** No
 - **Risk of Breaking Change:** Very High
 
@@ -14,7 +14,7 @@ Known Upcoming Changes:
 
 # Install
 
-npm install @onflow/six-stakingcollection-transfer-node
+npm install @onflow/six-stakingcollection-withdraw-from-machine-account
 
 # Configuration 
 
@@ -42,17 +42,17 @@ fcl.config()
 
 ```javascript
 import * as fcl from "@onflow/fcl"
-import { template as transferNode } from "@onflow/six-stakingcollection-transfer-node"
+import { template as withdrawFromMachineAccounnt } from "@onflow/six-stakingcollection-withdraw-from-machine-account"
 
 fcl.config().put("accessNode", "http://localhost:8080");
 
 const response = await fcl.send([
-    transferNode({
+    withdrawFromMachineAccounnt({
         proposer: fcl.currentUser().authorization,
         authorization: fcl.currentUser().authorization,     
         payer: fcl.currentUser().authorization,
-        nodeId: "abc123",            
-        to: "0xABC123"                             
+        nodeId: "abc123"             
+        amount: "123.456",                                    
     })
 ])
 

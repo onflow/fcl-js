@@ -7,8 +7,8 @@ const DEPS = new Set([
 
 export const TITLE = "Transfer Node"
 export const DESCRIPTION = "Transfers a node from one Staking Collection to another."
-export const VERSION = "0.0.0"
-export const HASH = "325fbb74ca1aece78692ba0a23a0277c1b6dd837758612866c65d603b8e9183e"
+export const VERSION = "0.0.1"
+export const HASH = "27e948414b5c1324489a3f0934683c0007a532b15b2d269f534f81dcd6a4c38a"
 export const CODE = 
 `import FlowStakingCollection from 0xSTAKINGCOLLECTIONADDRESS
 
@@ -36,14 +36,15 @@ transaction(nodeID: String, to: Address) {
         // Borrow a capability to the public methods available on the receivers StakingCollection.
         self.toStakingCollectionCap = toAccount.getCapability<&FlowStakingCollection.StakingCollection{FlowStakingCollection.StakingCollectionPublic}>(FlowStakingCollection.StakingCollectionPublicPath).borrow()
             ?? panic("Could not borrow ref to StakingCollection")
-    }
 
-    execute {
+        let machineAccountInfo = self.fromStakingCollectionRef.getMachineAccounts()[nodeID]
+            ?? panic("Could not get machine account info for the specified node ID")
+
         // Remove the NodeStaker from the authorizers StakingCollection.
         let nodeStaker <- self.fromStakingCollectionRef.removeNode(nodeID: nodeID)
 
         // Deposit the NodeStaker to the receivers StakingCollection.
-        self.toStakingCollectionCap.addNodeObject(<- nodeStaker!)
+        self.toStakingCollectionCap.addNodeObject(<- nodeStaker!, machineAccountInfo: machineAccountInfo)
     }
 }
 `

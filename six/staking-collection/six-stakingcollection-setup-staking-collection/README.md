@@ -4,7 +4,7 @@ Stored Interaction for setting up a Staking Collection for an account.
 
 # Status
 
-- **Last Updated:** April 14 2021
+- **Last Updated:** June 21 2021
 - **Stable:** No
 - **Risk of Breaking Change:** Very High
 
@@ -22,20 +22,32 @@ To use this Stored Interaction, you must configure FCL with certain account addr
 
 | Dependencies                | Mainnet            | Testnet            |
 | --------------------------- | ------------------ | ------------------ |
-| 0xSTAKINGCOLLECTIONADDRESS  | 0x0                | 0x0                |
+| 0xFUNGIBLETOKENADDRESS      | 0xf233dcee88fe0abe | 0x9a0766d93b6608b7 |
+| 0xFLOWTOKENADDRESS          | 0x1654653399040a61 | 0x7e60df042a9c0868 |
+| 0xIDENTITYTABLEADDRESS      | 0x8624b52f9ddcd04a | 0x9eca2b38b18b5dfe |
+| 0xLOCKEDTOKENADDRESS        | 0x8d0e87b65159ae63 | 0x95e019a17d0e23d7 |
+| 0xSTAKINGCOLLECTIONADDRESS  | 0x8d0e87b65159ae63 | 0x95e019a17d0e23d7 |
 
 Example (for mainnet):
 
 ```javascript
 fcl.config()
-  .put("0xSTAKINGCOLLECTIONADDRESS", "0x0")
+  .put("0xFUNGIBLETOKENADDRESS", "0xf233dcee88fe0abe")
+  .put("0xFLOWTOKENADDRESS", "0x1654653399040a61")
+  .put("0xIDENTITYTABLEADDRESS", "0x8624b52f9ddcd04a")
+  .put("0xLOCKEDTOKENADDRESS", "0x8d0e87b65159ae63")
+  .put("0xSTAKINGCOLLECTIONADDRESS", "0x8d0e87b65159ae63")
 ```
 
 Example (for testnet):
 
 ```javascript
 fcl.config()
-  .put("0xSTAKINGCOLLECTIONADDRESS", "0x0")
+  .put("0xFUNGIBLETOKENADDRESS", "0x9a0766d93b6608b7")
+  .put("0xFLOWTOKENADDRESS", "0x7e60df042a9c0868")
+  .put("0xIDENTITYTABLEADDRESS", "0x9eca2b38b18b5dfe")
+  .put("0xLOCKEDTOKENADDRESS", "0x95e019a17d0e23d7")
+  .put("0xSTAKINGCOLLECTIONADDRESS", "0x95e019a17d0e23d7")
 ```
 
 # Usage:

@@ -2,6 +2,6 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
-### 0.0.0 -- 2021-04-14
+### 0.0.1 -- 2021-06-21
 
-- 2021-04-14 -- Initial Implementation
+- 2021-06-21 -- Initial Implementation

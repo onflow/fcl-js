@@ -1,7 +1,7 @@
 {
-  "name": "@onflow/six-stakingcollection-withdraw-rewarded-tokens",
+  "name": "@onflow/six-stakingcollection-withdraw-from-machine-account",
   "version": "0.0.1",
-  "description": "Flow SDK Stored Interaction - Withdraws rewarded tokens for a stake held in Staking Collection",
+  "description": "Flow SDK Stored Interaction - Withdraws FLOW from a machine account",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
   "homepage": "https://onflow.org",
@@ -22,10 +22,10 @@
     "jest-esm-transformer": "1.0.0",
     "microbundle": "0.12.0-next.8"
   },
-  "source": "src/six-stakingcollection-withdraw-rewarded-tokens.js",
-  "main": "dist/six-stakingcollection-withdraw-rewarded-tokens.js",
-  "module": "dist/six-stakingcollection-withdraw-rewarded-tokens.module.js",
-  "unpkg": "dist/six-stakingcollection-withdraw-rewarded-tokens.umd.js",
+  "source": "src/six-stakingcollection-close-stake.js",
+  "main": "dist/six-stakingcollection-close-stake.js",
+  "module": "dist/six-stakingcollection-close-stake.module.js",
+  "unpkg": "dist/six-stakingcollection-close-stake.umd.js",
   "scripts": {
     "prepublishOnly": "npm test && npm run build",
     "test": "jest",

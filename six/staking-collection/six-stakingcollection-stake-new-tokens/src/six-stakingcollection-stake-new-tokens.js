@@ -5,9 +5,9 @@ const DEPS = new Set([
     "0xSTAKINGCOLLECTIONADDRESS",
 ])
 
-export const TITLE = "Request Unstaking"
-export const DESCRIPTION = "Requests unstaking for a stake held in a Staking Collection."
-export const VERSION = "0.0.0"
+export const TITLE = "Stake New Tokens"
+export const DESCRIPTION = "Stakes new tokens for a stake held in a Staking Collection."
+export const VERSION = "0.0.1"
 export const HASH = "0d83379faac487da7eaf4149d30eac0da9b816cebc57a0718cf3879c2edc1e31"
 export const CODE = 
 `import FlowStakingCollection from 0xSTAKINGCOLLECTIONADDRESS

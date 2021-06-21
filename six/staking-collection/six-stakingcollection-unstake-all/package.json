@@ -1,6 +1,6 @@
 {
   "name": "@onflow/six-stakingcollection-unstake-all",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Flow SDK Stored Interaction - Unstakes all tokens for a stake held in Staking Collection",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",

@@ -5,9 +5,9 @@ const DEPS = new Set([
     "0xSTAKINGCOLLECTIONADDRESS",
 ])
 
-export const TITLE = "Request Unstaking"
-export const DESCRIPTION = "Requests unstaking for a stake held in a Staking Collection."
-export const VERSION = "0.0.0"
+export const TITLE = "Stake Unstaked Tokens"
+export const DESCRIPTION = "Stakes unstaked tokens for a stake held in a Staking Collection."
+export const VERSION = "0.0.1"
 export const HASH = "a1a87be7d6db843716e4352217e61a0c64da5a5ad17a739c6e620d8dab327d4d"
 export const CODE = 
 `import FlowStakingCollection from 0xSTAKINGCOLLECTIONADDRESS
@@ -40,7 +40,6 @@ class UndefinedConfigurationError extends Error {
 const addressCheck = async address => {
     if (!await config().get(address)) throw new UndefinedConfigurationError(address)
 }
-
 
 export const template = async ({ proposer, authorization, payer, nodeId = "", delegatorId = null, amount = ""}) => {
     for (let addr of DEPS) await addressCheck(addr)
