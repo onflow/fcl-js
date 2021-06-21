@@ -5,17 +5,17 @@ const DEPS = new Set([
     "0xSTAKINGCOLLECTIONADDRESS",
 ])
 
-export const TITLE = "Register Delegator"
-export const DESCRIPTION = "Register a delegator held in a Staking Collection."
+export const TITLE = "Withdraw FLOW from Machine Account"
+export const DESCRIPTION = "Withdraws FLOW from a machine account."
 export const VERSION = "0.0.1"
-export const HASH = "611859738ce4185cc36a63baf13a2f4c28936e5a612ffc43e1291aecc8df4555"
+export const HASH = "c77ce3a9e3681a64880ec6c4a49b359fa143f25779ca6da46e57febe2f2e1fef"
 export const CODE = 
 `import FlowStakingCollection from 0xSTAKINGCOLLECTIONADDRESS
 
-/// Registers a delegator in the staking collection resource
-/// for the specified nodeID and the amount of tokens to commit
+/// Request to withdraw tokens from the machine account
+/// The tokens are automatically deposited to the unlocked account vault
 
-transaction(id: String, amount: UFix64) {
+transaction(nodeID: String, amount: UFix64) {
     
     let stakingCollectionRef: &FlowStakingCollection.StakingCollection
 
@@ -25,7 +25,7 @@ transaction(id: String, amount: UFix64) {
     }
 
     execute {
-        self.stakingCollectionRef.registerDelegator(nodeID: id, amount: amount)      
+        self.stakingCollectionRef.withdrawFromMachineAccount(nodeID: nodeID, amount: amount)
     }
 }
 `
@@ -44,15 +44,15 @@ const addressCheck = async address => {
 
 export const template = async ({ proposer, authorization, payer, nodeId = "", amount = ""}) => {
     for (let addr of DEPS) await addressCheck(addr)
-    
+
     return sdk.pipe([
         sdk.transaction(CODE),
-        sdk.args([sdk.arg(nodeId, t.String), sdk.arg(amount, t.String)]),
+        sdk.args([sdk.arg(nodeId, t.String), sdk.arg(amount, t.UFix64)]),
         sdk.proposer(proposer),
         sdk.authorizations([authorization]),
         sdk.payer(payer),
         sdk.validator(ix => {
-            if (ix.authorizations.length > 1) throw new Error("template only requires one authorization.")
+            if (ix.authorizations.length > 1) throw new error("template only requires one authorization.")
             return ix
         })
     ])

@@ -7,7 +7,7 @@ const DEPS = new Set([
 
 export const TITLE = "Close Stake"
 export const DESCRIPTION = "Closes a stake held in a Staking Collection."
-export const VERSION = "0.0.0"
+export const VERSION = "0.0.1"
 export const HASH = "d6598d888f9d2f9b93928c122b0b67852387275b5f4681353e3d28bfd889c819"
 export const CODE = 
 `import FlowStakingCollection from 0xSTAKINGCOLLECTIONADDRESS
