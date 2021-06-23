@@ -60,12 +60,12 @@ const addressCheck = async address => {
     if (!await config().get(address)) throw new UndefinedConfigurationError(address)
 }
 
-export const template = async ({ proposer, authorization, payer, nodeId = "", to = ""}) => {
+export const template = async ({ proposer, authorization, payer, nodeId = "", delegatorId = "", to = ""}) => {
     for (let addr of DEPS) await addressCheck(addr)
     
     return fcl.pipe([
         fcl.transaction(CODE),
-        fcl.args([fcl.arg(nodeId, t.String), fcl.arg(to, t.Address)]),
+        fcl.args([fcl.arg(nodeId, t.String), fcl.arg(delegatorId, t.String), fcl.arg(to, t.Address)]),
         fcl.proposer(proposer),
         fcl.authorizations([authorization]),
         fcl.payer(payer),
