@@ -20,7 +20,7 @@ import FlowStakingCollection from 0xSTAKINGCOLLECTIONADDRESS
 /// It will work regardless of whether they have a regular account, a two-account locked tokens setup,
 /// or staking objects stored in the unlocked account
 
-transaction(machineAccount: Address) {
+transaction() {
     prepare(signer: AuthAccount) {
 
         // If there isn't already a staking collection
