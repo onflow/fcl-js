@@ -58,6 +58,7 @@ test("Voucher in PreSignable", async () => {
     payloadSigs: [
       {address: "0x01", keyId: 1, sig: "123"},
       {address: "0x01", keyId: 1, sig: "123"},
+      {address: "0x01", keyId: 1, sig: "123"},
     ],
   })
 })

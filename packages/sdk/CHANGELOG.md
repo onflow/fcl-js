@@ -2,33 +2,7 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
-**Community Contributions:**
-
-[@orodio](https://github.com/orodio):
-
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-
-[@JeffreyDoyle](https://github.com/JeffreyDoyle):
-
-<br> 
-<br> 
-<br>
-<br>
-<br>
-<br>
-
-[@gregsantos](https://github.com/gregsantos):
-
-<br>
-<br>
-<br>
-<br>
-<br>
+- 2021-06-24 -- [@gregsantos](https://github.com/gregsantos): Added `payer` signature to `payloadSigs` on `voucher`.
 
 ## 0.0.50 - 2021-06-17
 

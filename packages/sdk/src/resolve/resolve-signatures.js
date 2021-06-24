@@ -75,11 +75,18 @@ export const createSignableVoucher = ix => {
       .reduce((prev, current) => {
         return prev.find(item => item === current) ? prev : [...prev, current]
       }, []),
-    payloadSigs: findInsideSigners(ix).map(id => ({
-      address: withPrefix(ix.accounts[id].addr),
-      keyId: ix.accounts[id].keyId,
-      sig: ix.accounts[id].signature,
-    })),
+    payloadSigs: [
+      ...findInsideSigners(ix).map(id => ({
+        address: withPrefix(ix.accounts[id].addr),
+        keyId: ix.accounts[id].keyId,
+        sig: ix.accounts[id].signature,
+      })),
+      ...findOutsideSigners(ix).map(id => ({
+        address: withPrefix(ix.accounts[id].addr),
+        keyId: ix.accounts[id].keyId,
+        sig: ix.accounts[id].signature,
+      })),
+    ],
   }
 }
 
