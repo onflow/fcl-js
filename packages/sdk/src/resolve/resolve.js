@@ -1,45 +1,88 @@
-import {pipe, isTransaction} from "../interaction/interaction.js"
+import {pipe, isTransaction} from "../interaction/interaction"
 import {config} from "../config"
 import {invariant} from "@onflow/util-invariant"
 
-import {send} from "../send/sdk-send.js"
-import {build} from "../build/build.js"
-import {getBlock} from "../build/build-get-block.js"
-import {getAccount} from "../build/build-get-account.js"
-import {decodeResponse as decode} from "../decode/decode.js"
+import {send} from "../send/sdk-send"
+import {build} from "../build/build"
+import {getBlock} from "../build/build-get-block"
+import {getAccount} from "../build/build-get-account"
+import {decodeResponse as decode} from "../decode/decode"
 
-import {resolveRefBlockId} from "./resolve-ref-block-id.js"
-import {resolveCadence} from "./resolve-cadence.js"
-import {resolveArguments} from "./resolve-arguments.js"
-import {resolveAccounts} from "./resolve-accounts.js"
-import {resolveSignatures} from "./resolve-signatures.js"
-import {resolveValidators} from "./resolve-validators.js"
-import {resolveFinalNormalization} from "./resolve-final-normalization.js"
+import {resolveRefBlockId} from "./resolve-ref-block-id"
+import {resolveCadence} from "./resolve-cadence"
+import {resolveArguments} from "./resolve-arguments"
+import {resolveAccounts} from "./resolve-accounts"
+import {resolveSignatures} from "./resolve-signatures"
+import {resolveValidators} from "./resolve-validators"
+import {resolveFinalNormalization} from "./resolve-final-normalization"
+
+const debug = key => async (...args) => {
+  if (await config().get(`debug.${key}`)) {
+    console.log(`debug.${key}`, "---\n\n", ...args, "\n\n---")
+  }
+}
 
 export const resolve = pipe([
   resolveCadence,
+  async ix => {
+    await debug("resolvedCadence")(ix.message.cadence)
+    return ix
+  },
   resolveArguments,
+  async ix => {
+    await debug("resolvedArguments")(ix.message.arguments, ix.arguments)
+    return ix
+  },
   resolveAccounts,
+  async ix => {
+    await debug("resolvedAccounts")(
+      {
+        proposer: ix.proposer,
+        payer: ix.payer,
+        authorizations: ix.authorizations,
+      },
+      ix.accounts
+    )
+    return ix
+  },
   /* special */ execFetchRef,
   /* special */ execFetchSequenceNumber,
   resolveSignatures,
+  async ix => {
+    await debug("resolvedSignatures")(
+      {
+        proposer: ix.proposer,
+        payer: ix.payer,
+        authorizations: ix.authorizations,
+      },
+      ix.accounts
+    )
+    return ix
+  },
   resolveFinalNormalization,
   resolveValidators,
+  async ix => {
+    await debug("resolved")(ix)
+    return ix
+  },
 ])
 
 async function execFetchRef(ix) {
   if (isTransaction(ix) && ix.message.refBlock == null) {
-    ix.message.refBlock = (await send(build([getBlock()])).then(decode)).id
+    const sendFn = await config().get("sdk.send", send)
+    ix.message.refBlock = (await sendFn(build([getBlock()])).then(decode)).id
   }
   return ix
 }
 
 async function execFetchSequenceNumber(ix) {
   if (isTransaction(ix)) {
-    var acct = Object.values(ix.accounts).find(a => a.role.proposer)
+    const sendFn = await config().get("sdk.send", send)
+    // console.log(">>>", ix.proposer, ix.accounts[ix.proposer])
+    var acct = ix.accounts[ix.proposer]
     invariant(acct, `Transactions require a proposer`)
     if (acct.sequenceNum == null) {
-      ix.accounts[acct.tempId].sequenceNum = await send(
+      ix.accounts[acct.tempId].sequenceNum = await sendFn(
         await build([getAccount(acct.addr)])
       )
         .then(decode)

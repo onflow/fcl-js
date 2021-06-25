@@ -1,3 +1,4 @@
+import {invariant} from "@onflow/util-invariant"
 import {isTransaction} from "../interaction/interaction.js"
 import {sansPrefix, withPrefix} from "@onflow/util-address"
 import {
@@ -48,12 +49,16 @@ function fetchSignature(ix, payload) {
   return async function innerFetchSignature(id) {
     const acct = ix.accounts[id]
     if (acct.signature != null) return
+    // prettier-ignore
+    invariant(typeof acct.addr === "string", "fetchSignature -- IX-Account `addr` must be a string", {acct, ix})
+    // prettier-ignore
+    invariant(typeof acct.keyId === "number", "fetchSignature -- IX-Account `keyId` must be a number", {acct, ix})
+    // prettier-ignore
+    invariant( typeof acct.signingFunction === "function", "fetchSignature -- IX-Account `signingFunction` must be a function", {acct, ix})
+
     const {signature} = await acct.signingFunction(
       buildSignable(acct, payload, ix)
     )
-    // if (!acct.role.proposer) {
-    //   ix.accounts[id].keyId = keyId
-    // }
     ix.accounts[id].signature = signature
   }
 }

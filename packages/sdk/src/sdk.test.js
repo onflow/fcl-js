@@ -51,8 +51,8 @@ describe("build", () => {
       ])
     )
 
-    console.log("one", one)
-    console.log("two", two)
+    // console.log("one", one)
+    // console.log("two", two)
 
     assert.equal(one.message.computeLimit, 156)
     assert.equal(two.message.computeLimit, 156)

@@ -1,15 +1,20 @@
-import { encode } from '@onflow/rlp';
+import {encode} from "@onflow/rlp"
 
-export const encodeTransactionPayload = tx => prependTransactionDomainTag(rlpEncode(preparePayload(tx)))
-export const encodeTransactionEnvelope = tx => prependTransactionDomainTag(rlpEncode(prepareEnvelope(tx)))
+export const encodeTransactionPayload = tx =>
+  prependTransactionDomainTag(rlpEncode(preparePayload(tx)))
+export const encodeTransactionEnvelope = tx =>
+  prependTransactionDomainTag(rlpEncode(prepareEnvelope(tx)))
 
 const rightPaddedHexBuffer = (value, pad) =>
-  Buffer.from(value.padEnd(pad * 2, 0), "hex")
+  Buffer.from((value || "").padEnd(pad * 2, 0), "hex")
 
 const leftPaddedHexBuffer = (value, pad) =>
-  Buffer.from(value.padStart(pad * 2, 0), "hex")
+  Buffer.from((value || "").padStart(pad * 2, 0), "hex")
 
-const TRANSACTION_DOMAIN_TAG = rightPaddedHexBuffer(Buffer.from("FLOW-V0.0-transaction").toString("hex"), 32).toString("hex")
+const TRANSACTION_DOMAIN_TAG = rightPaddedHexBuffer(
+  Buffer.from("FLOW-V0.0-transaction").toString("hex"),
+  32
+).toString("hex")
 const prependTransactionDomainTag = tx => TRANSACTION_DOMAIN_TAG + tx
 
 const addressBuffer = addr => leftPaddedHexBuffer(addr, 8)
