@@ -34,8 +34,6 @@
     "start": "microbundle watch"
   },
   "peerDependencies": {
-    "@onflow/config": ">=0.0.2",
-    "@onflow/fcl": ">=0.0.73",
-    "@onflow/types": ">=0.0.4"
+    "@onflow/fcl": ">=0.0.73"
   }
 }

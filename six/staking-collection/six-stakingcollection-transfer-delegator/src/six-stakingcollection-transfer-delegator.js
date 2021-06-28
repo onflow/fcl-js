@@ -1,6 +1,5 @@
 import * as fcl from "@onflow/fcl"
-import * as t from "@onflow/types"
-import {config} from "@onflow/config"
+import {t, config} from "@onflow/fcl"
 
 const DEPS = new Set([
     "0xSTAKINGCOLLECTIONADDRESS",
