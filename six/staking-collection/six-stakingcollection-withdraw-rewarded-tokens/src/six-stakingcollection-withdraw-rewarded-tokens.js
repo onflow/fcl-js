@@ -7,7 +7,7 @@ const DEPS = new Set([
 
 export const TITLE = "Withdraw Rewarded Tokens"
 export const DESCRIPTION = "Withdraws rewarded tokens from a stake held in a Staking Collection."
-export const VERSION = "0.0.1"
+export const VERSION = "0.0.3"
 export const HASH = "e6498dd05b42216dfaef433696c0988f6376d01adabb68233d8897eaba5973d7"
 export const CODE = 
 `import FlowStakingCollection from 0xSTAKINGCOLLECTIONADDRESS
@@ -48,7 +48,7 @@ export const template = async ({ proposer, authorization, payer, nodeId = "", de
     
     return fcl.pipe([
         fcl.transaction(CODE),
-        fcl.args([fcl.arg(nodeId, t.String), fcl.arg(delegatorId, t.Optional(t.UInt32), fcl.arg(amount, t.UFix64))]),
+        fcl.args([fcl.arg(nodeId, t.String), fcl.arg(delegatorId, t.Optional(t.UInt32)), fcl.arg(amount, t.UFix64)]),
         fcl.proposer(proposer),
         fcl.authorizations([authorization]),
         fcl.payer(payer),
