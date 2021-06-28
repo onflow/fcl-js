@@ -30,41 +30,24 @@ test("serialize returns voucher", async () => {
   const authz = {
     addr: "0x01",
     signingFunction: () => ({signature: "123"}),
-    keyId: 1,
+    keyId: 0,
     sequenceNum: 123,
   }
 
-  const serializedVoucher = JSON.stringify(
-    {
-      cadence: "",
-      refBlock: "123",
-      computeLimit: 156,
-      arguments: [],
-      proposalKey: {
-        address: "0x01",
-        keyId: 1,
-        sequenceNum: 123,
-      },
-      payer: "0x01",
-      authorizers: ["0x01"],
-      payloadSigs: [
-        {
-          address: "0x01",
-          keyId: 1,
-          sig: "123",
-        },
-        {
-          address: "0x01",
-          keyId: 1,
-          sig: "123",
-        },
-      ],
-    },
-    null,
-    2
+  const ix = await resolve(
+    await build([
+      transaction``,
+      limit(156),
+      proposer(authz),
+      authorizations([authz]),
+      payer(authz),
+      ref("123"),
+    ])
   )
 
-  const serializedIx = await serialize(
+  const voucher = createSignableVoucher(ix)
+
+  const serializedVoucher = await serialize(
     [
       transaction``,
       limit(156),
@@ -76,5 +59,5 @@ test("serialize returns voucher", async () => {
     {resolve}
   )
 
-  expect(serializedIx).toEqual(serializedVoucher)
+  expect(JSON.parse(serializedVoucher)).toEqual(voucher)
 })
