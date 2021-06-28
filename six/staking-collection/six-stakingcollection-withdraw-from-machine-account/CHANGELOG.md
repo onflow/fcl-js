@@ -2,6 +2,10 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
-### 0.0.1 -- 2021-04-14
+### 0.0.2 -- 2021-06-27
 
-- 2021-04-14 -- Initial Implementation
+- 2021-06-27 -- Adds config import
+
+### 0.0.1 -- 2021-06-21
+
+- 2021-06-21 -- Initial Implementation

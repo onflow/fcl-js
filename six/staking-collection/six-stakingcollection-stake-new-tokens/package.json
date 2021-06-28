@@ -1,6 +1,6 @@
 {
   "name": "@onflow/six-stakingcollection-stake-new-tokens",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Flow SDK Stored Interaction - Stakes new tokens for a stake held in Staking Collection",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",

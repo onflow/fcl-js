@@ -1,5 +1,6 @@
 import * as fcl from "@onflow/fcl"
 import * as t from "@onflow/types"
+import {config} from "@onflow/config"
 
 const DEPS = new Set([
     "0xSTAKINGCOLLECTIONADDRESS",
@@ -7,7 +8,7 @@ const DEPS = new Set([
 
 export const TITLE = "Stake Rewarded Tokens"
 export const DESCRIPTION = "Stakes rewarded tokens for a stake held in a Staking Collection."
-export const VERSION = "0.0.1"
+export const VERSION = "0.0.2"
 export const HASH = "738e32e05e3411602df14fad4e593e2e5d31fd3d3615f8389741380fdd44c67a"
 export const CODE = 
 `import FlowStakingCollection from 0xSTAKINGCOLLECTIONADDRESS

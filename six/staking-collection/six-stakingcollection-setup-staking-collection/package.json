@@ -1,6 +1,6 @@
 {
   "name": "@onflow/six-stakingcollection-setup-staking-collection",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Flow SDK Stored Interaction - Setup a Staking Collection for an account.",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
