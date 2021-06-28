@@ -1,5 +1,6 @@
 import * as fcl from "@onflow/fcl"
 import * as t from "@onflow/types"
+import {config} from "@onflow/config"
 
 const DEPS = new Set([
     "0xSTAKINGCOLLECTIONADDRESS",
@@ -7,7 +8,7 @@ const DEPS = new Set([
 
 export const TITLE = "Transfer Delegator"
 export const DESCRIPTION = "Transfers a delegator from one Staking Collection to another."
-export const VERSION = "0.0.1"
+export const VERSION = "0.0.2"
 export const HASH = "0057581fbae892f285a9ae9d87f043f34027c4bf96e2b2ee5cbeb2bdba8fcce0"
 export const CODE = 
 `import FlowStakingCollection from 0xSTAKINGCOLLECTIONADDRESS
