@@ -7,7 +7,7 @@ const DEPS = new Set([
 
 export const TITLE = "Transfer Delegator"
 export const DESCRIPTION = "Transfers a delegator from one Staking Collection to another."
-export const VERSION = "0.0.2"
+export const VERSION = "0.0.4"
 export const HASH = "0057581fbae892f285a9ae9d87f043f34027c4bf96e2b2ee5cbeb2bdba8fcce0"
 export const CODE = 
 `import FlowStakingCollection from 0xSTAKINGCOLLECTIONADDRESS
@@ -65,7 +65,7 @@ export const template = async ({ proposer, authorization, payer, nodeId = "", de
     
     return fcl.pipe([
         fcl.transaction(CODE),
-        fcl.args([fcl.arg(nodeId, t.String), fcl.arg(delegatorId, t.String), fcl.arg(to, t.Address)]),
+        fcl.args([fcl.arg(nodeId, t.String), fcl.arg(delegatorId, t.UInt32), fcl.arg(to, t.Address)]),
         fcl.proposer(proposer),
         fcl.authorizations([authorization]),
         fcl.payer(payer),

@@ -2,6 +2,10 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.0.4 -- 2021-06-29
+
+- 2021-06-29 -- Update Transaction arguments
+
 ### 0.0.3 -- 2021-06-27
 
 - 2021-06-27 -- Adds config import
