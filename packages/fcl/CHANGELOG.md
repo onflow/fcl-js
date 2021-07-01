@@ -2,6 +2,8 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+- 2021-06-30 -- Updates `fcl.serialize` to fix setting `resolveFunction`
+
 ## 0.0.73 - 2021-06-21
 
 - 2021-06-21 -- Full VSN release of FCL.
