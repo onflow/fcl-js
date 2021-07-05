@@ -10,7 +10,7 @@ const DEPS = new Set([
 
 export const TITLE = "Deposit Unlocked Tokens"
 export const DESCRIPTION = "Deposit Unlocked Tokens."
-export const VERSION = "0.0.8"
+export const VERSION = "0.0.9"
 export const HASH = "74355dc8df221bc0d170b2fe8deacd6f1f554d6beea58ad9fee7a07f740eaefe"
 export const CODE = 
 `import FungibleToken from 0xFUNGIBLETOKENADDRESS
@@ -56,10 +56,6 @@ export const template = async ({ proposer, authorization, payer, amount = ""}) =
         fcl.args([fcl.arg(amount, t.UFix64)]),
         fcl.proposer(proposer),
         fcl.authorizations([authorization]),
-        fcl.payer(payer),
-        fcl.validator(ix => {
-            if (ix.authorizations.length > 1) throw new Error("template only requires one authorization.")
-            return ix
-        })
+        fcl.payer(payer)
     ])
 }

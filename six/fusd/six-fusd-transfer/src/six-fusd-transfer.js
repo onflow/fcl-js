@@ -9,7 +9,7 @@ const DEPS = new Set([
 
 export const TITLE = "FUSD Transfer"
 export const DESCRIPTION = "Transfer FUSD to another Flow account."
-export const VERSION = "0.0.4"
+export const VERSION = "0.0.5"
 export const HASH = "0459184235a66fd5d7aef72a0b0e15de2b1b6c540a6aa7b68880860ff219979e"
 export const CODE = 
 `import FungibleToken from 0xFUNGIBLETOKENADDRESS
@@ -66,10 +66,6 @@ export const template = async ({ proposer, authorization, payer, amount = "", to
       fcl.args([fcl.arg(amount, t.UFix64), fcl.arg(to, t.Address)]),
       fcl.proposer(proposer),
       fcl.authorizations([authorization]),
-      fcl.payer(payer),
-      fcl.validator(ix => {
-          if (ix.authorizations.length > 1) throw new Error("template only requires one authorization.")
-          return ix
-      })
+      fcl.payer(payer)
   ])
 }

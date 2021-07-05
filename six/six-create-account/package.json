@@ -1,6 +1,6 @@
 {
   "name": "@onflow/six-create-account",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Flow SDK Stored Interaction - Create Account",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",

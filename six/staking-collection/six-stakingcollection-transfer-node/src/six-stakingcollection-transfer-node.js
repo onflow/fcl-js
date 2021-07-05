@@ -7,7 +7,7 @@ const DEPS = new Set([
 
 export const TITLE = "Transfer Node"
 export const DESCRIPTION = "Transfers a node from one Staking Collection to another."
-export const VERSION = "0.0.4"
+export const VERSION = "0.0.5"
 export const HASH = "27e948414b5c1324489a3f0934683c0007a532b15b2d269f534f81dcd6a4c38a"
 export const CODE = 
 `import FlowStakingCollection from 0xSTAKINGCOLLECTIONADDRESS
@@ -69,10 +69,6 @@ export const template = async ({ proposer, authorization, payer, nodeId = "", to
         fcl.args([fcl.arg(nodeId, t.String), fcl.arg(to, t.Address)]),
         fcl.proposer(proposer),
         fcl.authorizations([authorization]),
-        fcl.payer(payer),
-        fcl.validator(ix => {
-            if (ix.authorizations.length > 1) throw new Error("template only requires one authorization.")
-            return ix
-        })
+        fcl.payer(payer)
     ])
 }

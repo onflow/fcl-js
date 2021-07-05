@@ -9,7 +9,7 @@ const DEPS = new Set([
 
 export const TITLE = "Register Delegator"
 export const DESCRIPTION = "Register a Delegator on Flow."
-export const VERSION = "0.0.11"
+export const VERSION = "0.0.12"
 export const HASH = "3cb357a97a57d9abbe5c68f0df342ee96ba97ade2013753fd2ddf47695a8c08a"
 export const CODE =
 `import FlowToken from 0xFLOWTOKENADDRESS
@@ -73,10 +73,6 @@ export const template = async ({ proposer, authorization, payer, id = "", amount
         fcl.args([fcl.arg(id, t.String), fcl.arg(amount, t.UFix64)]),
         fcl.proposer(proposer),
         fcl.authorizations([authorization]),
-        fcl.payer(payer),
-        fcl.validator(ix => {
-            if (ix.authorizations.length > 1) throw new Error("template only requires one authorization.")
-            return ix
-        })
+        fcl.payer(payer)
     ])
 }

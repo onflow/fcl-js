@@ -7,7 +7,7 @@ const DEPS = new Set([
 
 export const TITLE = "Create Machine Account"
 export const DESCRIPTION = "Creates a Machine Account for node held in Staking Collection."
-export const VERSION = "0.0.1"
+export const VERSION = "0.0.2"
 export const HASH = "55ca5fe85d9b09aa9ab9fbaf3a2618d0cc5f23f5ad37b5bf045c022cd9058c27"
 export const CODE = 
 `import FlowStakingCollection from 0xSTAKINGCOLLECTIONADDRESS
@@ -57,10 +57,6 @@ export const template = async ({ proposer, authorization, payer, nodeId = "", pu
         fcl.args([fcl.arg(nodeId, t.String), fcl.arg(publicKeys, t.Array(t.String))]),
         fcl.proposer(proposer),
         fcl.authorizations([authorization]),
-        fcl.payer(payer),
-        fcl.validator(ix => {
-            if (ix.authorizations.length > 1) throw new error("template only requires one authorization.")
-            return ix
-        })
+        fcl.payer(payer)
     ])
 }
