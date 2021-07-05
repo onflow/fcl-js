@@ -56,7 +56,8 @@ const response = await fcl.send([
         networkingAddress: "abc123",
         networkingKey: "abc123",
         stakingKey: "abc123",                                        
-        amount: "123.456",                                        
+        amount: "123.456",
+        publicKeys: ["abc123"]                                        
     })
 ])
 
