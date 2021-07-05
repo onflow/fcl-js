@@ -7,7 +7,7 @@ const DEPS = new Set([
 
 export const TITLE = "Request Unstaking"
 export const DESCRIPTION = "Requests unstaking for a stake held in a Staking Collection."
-export const VERSION = "0.0.3"
+export const VERSION = "0.0.4"
 export const HASH = "02bab465a5a406f66700753a4f7889ab9a3c83ba1cf5e8aee792c80aea9ed7c1"
 export const CODE = 
 `import FlowStakingCollection from 0xSTAKINGCOLLECTIONADDRESS
@@ -49,10 +49,6 @@ export const template = async ({ proposer, authorization, payer, nodeId = ""}) =
         fcl.args([fcl.arg(nodeId, t.String)]),
         fcl.proposer(proposer),
         fcl.authorizations([authorization]),
-        fcl.payer(payer),
-        fcl.validator(ix => {
-            if (ix.authorizations.length > 1) throw new Error("template only requires one authorization.")
-            return ix
-        })
+        fcl.payer(payer)
     ])
 }

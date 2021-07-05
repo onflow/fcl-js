@@ -1,6 +1,6 @@
 {
   "name": "@onflow/six-restake-rewarded-flow",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "Flow SDK Stored Interaction - Restake Rewarded Flow",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",

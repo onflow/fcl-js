@@ -11,7 +11,7 @@ const DEPS = new Set([
 
 export const TITLE = "Stake New Locked Flow"
 export const DESCRIPTION = "Stakes New Locked Flow for an account."
-export const VERSION = "0.0.9"
+export const VERSION = "0.0.10"
 export const HASH = "1929e4f38894b8641848a3c0a3b9d35495b35083d42e8a3d4c928b9db4174ee8"
 export const CODE = 
 `import FlowToken from 0xFLOWTOKENADDRESS
@@ -76,10 +76,6 @@ export const template = async ({ proposer, authorization, payer, amount = ""}) =
         fcl.args([fcl.arg(amount, t.UFix64)]),
         fcl.proposer(proposer),
         fcl.authorizations([authorization]),
-        fcl.payer(payer),
-        fcl.validator(ix => {
-            if (ix.authorizations.length > 1) throw new Error("template only requires one authorization.")
-            return ix
-        })
+        fcl.payer(payer)
     ])
 }

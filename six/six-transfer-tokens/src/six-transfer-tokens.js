@@ -8,7 +8,7 @@ const DEPS = new Set([
 
 export const TITLE = "Transfer Tokens"
 export const DESCRIPTION = "Transfer tokens from one account to another."
-export const VERSION = "0.0.7"
+export const VERSION = "0.0.8"
 export const HASH = "47851586d962335e3f7d9e5d11a4c527ee4b5fd1c3895e3ce1b9c2821f60b166"
 export const CODE = 
 `import FungibleToken from 0xFUNGIBLETOKENADDRESS
@@ -47,10 +47,6 @@ export const template = async ({ proposer, authorization, payer, amount = "", to
         fcl.args([fcl.arg(amount, t.UFix64), fcl.arg(to, t.Address)]),
         fcl.proposer(proposer),
         fcl.authorizations([authorization]),
-        fcl.payer(payer),
-        fcl.validator(ix => {
-            if (ix.authorizations.length > 1) throw new Error("template only requires one authorization.")
-            return ix
-        })
+        fcl.payer(payer)
     ])
 }

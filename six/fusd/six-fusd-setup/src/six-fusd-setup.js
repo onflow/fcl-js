@@ -8,7 +8,7 @@ const DEPS = new Set([
 
 export const TITLE = "FUSD Setup"
 export const DESCRIPTION = "Set up a FUSD Vault and Receiver for an account."
-export const VERSION = "0.0.2"
+export const VERSION = "0.0.3"
 export const HASH = "187055772ca2912d1eaa13845485891fc854a5094e2fbd613a0c6e8c914b293f"
 export const CODE = 
 `import FungibleToken from 0xFUNGIBLETOKENADDRESS
@@ -63,10 +63,6 @@ export const template = async ({ proposer, authorization, payer }) => {
         fcl.transaction(CODE),
         fcl.proposer(proposer),
         fcl.authorizations([authorization]),
-        fcl.payer(payer),
-        fcl.validator(ix => {
-            if (ix.authorizations.length > 1) throw new Error("template only requires one authorization.")
-            return ix
-        })
+        fcl.payer(payer)
     ])
 }

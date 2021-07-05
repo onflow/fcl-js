@@ -1,6 +1,6 @@
 {
   "name": "@onflow/six-withdraw-unstaked-flow",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "Flow SDK Stored Interaction - Withdraw Unstaked Flow",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",

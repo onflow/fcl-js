@@ -7,7 +7,7 @@ const DEPS = new Set([
 
 export const TITLE = "Withdraw FLOW from Machine Account"
 export const DESCRIPTION = "Withdraws FLOW from a machine account."
-export const VERSION = "0.0.2"
+export const VERSION = "0.0.3"
 export const HASH = "c77ce3a9e3681a64880ec6c4a49b359fa143f25779ca6da46e57febe2f2e1fef"
 export const CODE = 
 `import FlowStakingCollection from 0xSTAKINGCOLLECTIONADDRESS
@@ -50,10 +50,6 @@ export const template = async ({ proposer, authorization, payer, nodeId = "", am
         fcl.args([fcl.arg(nodeId, t.String), fcl.arg(amount, t.UFix64)]),
         fcl.proposer(proposer),
         fcl.authorizations([authorization]),
-        fcl.payer(payer),
-        fcl.validator(ix => {
-            if (ix.authorizations.length > 1) throw new error("template only requires one authorization.")
-            return ix
-        })
+        fcl.payer(payer)
     ])
 }

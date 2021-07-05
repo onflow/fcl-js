@@ -8,7 +8,7 @@ const DEPS = new Set([
 
 export const TITLE = "Unstake Delegated Flow"
 export const DESCRIPTION = "Unstakes Delegated Flow for an account."
-export const VERSION = "0.0.8"
+export const VERSION = "0.0.9"
 export const HASH = "262aeddd3f49fd6222d706c02696bd7d359ba962b6c30232cc93d7cf4166a23e"
 export const CODE = 
 `import LockedTokens from 0xLOCKEDTOKENADDRESS
@@ -49,10 +49,6 @@ export const template = async ({ proposer, authorization, payer, amount = ""}) =
         fcl.args([fcl.arg(amount, t.UFix64)]),
         fcl.proposer(proposer),
         fcl.authorizations([authorization]),
-        fcl.payer(payer),
-        fcl.validator(ix => {
-            if (ix.authorizations.length > 1) throw new Error("template only requires one authorization.")
-            return ix
-        })
+        fcl.payer(payer)
     ])
 }

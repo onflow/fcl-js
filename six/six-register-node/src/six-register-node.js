@@ -10,7 +10,7 @@ const DEPS = new Set([
 
 export const TITLE = "Register Node"
 export const DESCRIPTION = "Register a Node on Flow."
-export const VERSION = "0.0.10"
+export const VERSION = "0.0.11"
 export const HASH = "b64e0e3ed9eb28789198f2b0437f55f750bfa76da99450f63be6543bde66122a"
 export const CODE = 
 `import FlowToken from 0xFLOWTOKENADDRESS
@@ -74,10 +74,6 @@ export const template = async ({ proposer, authorization, payer, nodeID = "", no
         fcl.args([fcl.arg(nodeID, t.String), fcl.arg(nodeRole, t.UInt8), fcl.arg(networkingAddress, t.String), fcl.arg(networkingKey, t.String), fcl.arg(stakingKey, t.String), fcl.arg(amount, t.UFix64)]),
         fcl.proposer(proposer),
         fcl.authorizations([authorization]),
-        fcl.payer(payer),
-        fcl.validator(ix => {
-            if (ix.authorizations.length > 1) throw new Error("template only requires one authorization.")
-            return ix
-        })
+        fcl.payer(payer)
     ])
 }
