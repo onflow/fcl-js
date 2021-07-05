@@ -8,7 +8,7 @@ const DEPS = new Set([
 export const TITLE = "Register Node"
 export const DESCRIPTION = "Register a node held in a Staking Collection."
 export const VERSION = "0.0.3"
-export const HASH = "06fa8ebe074b927515e4d4cd4f49be9aa86052b088972f153f905be5259474fb"
+export const HASH = "9d9eb5c942e14816f5146f207d8a36e3e4c059731d1909fefa3dcbcdee77c305"
 export const CODE = 
 `import FlowStakingCollection from 0xSTAKINGCOLLECTIONADDRESS
 
@@ -21,7 +21,7 @@ transaction(id: String,
             networkingKey: String,
             stakingKey: String,
             amount: UFix64,
-            publicKeys: [[UInt8]]?) {
+            publicKeys: [String]?) {
     
     let stakingCollectionRef: &FlowStakingCollection.StakingCollection
 
@@ -42,7 +42,7 @@ transaction(id: String,
                 panic("Cannot provide zero keys for the machine account")
             }
             for key in publicKeys! {
-                machineAccount.addPublicKey(key)
+                machineAccount.addPublicKey(key.decodeHex())
             }
         }
     }
@@ -61,12 +61,12 @@ const addressCheck = async address => {
     if (!await config().get(address)) throw new UndefinedConfigurationError(address)
 }
 
-export const template = async ({ proposer, authorization, payer, nodeID = "", nodeRole = "", networkingAddress = "", networkingKey = "", stakingKey = "", amount = "" }) => {
+export const template = async ({ proposer, authorization, payer, nodeID = "", nodeRole = "", networkingAddress = "", networkingKey = "", stakingKey = "", amount = "", publicKeys = null }) => {
     for (let addr of DEPS) await addressCheck(addr)
     
     return fcl.pipe([
         fcl.transaction(CODE),
-        fcl.args([fcl.arg(nodeID, t.String), fcl.arg(nodeRole, t.UInt8), fcl.arg(networkingAddress, t.String), fcl.arg(networkingKey, t.String), fcl.arg(stakingKey, t.String), fcl.arg(amount, t.UFix64)]),
+        fcl.args([fcl.arg(nodeID, t.String), fcl.arg(nodeRole, t.UInt8), fcl.arg(networkingAddress, t.String), fcl.arg(networkingKey, t.String), fcl.arg(stakingKey, t.String), fcl.arg(amount, t.UFix64), fcl.arg(publicKeys, t.Optional(t.Array(t.String))) ]),
         fcl.proposer(proposer),
         fcl.authorizations([authorization]),
         fcl.payer(payer)
