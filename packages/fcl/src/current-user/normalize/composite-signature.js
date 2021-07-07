@@ -10,8 +10,9 @@ import {sansPrefix} from "@onflow/util-address"
 // }
 export function normalizeCompositeSignature(resp) {
   if (resp == null) return null
+  if (Array.isArray(resp) && resp.length === 0) return null
 
-  switch (resp["f_vsn"]) {
+  switch (resp["f_vsn"] || resp[0]["f_vsn"]) {
     case "1.0.0":
       return resp
 
