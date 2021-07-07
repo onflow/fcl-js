@@ -1,7 +1,6 @@
 import {fetchService} from "./utils/fetch-service"
 import {serviceEndpoint} from "./utils/service-endpoint"
 import {normalizePollingResponse} from "../../normalize/polling-response"
-import {normalizeCompositeSignature} from "../../normalize/composite-signature"
 import {frame} from "./utils/frame"
 import {poll} from "./utils/poll"
 
@@ -26,7 +25,7 @@ export async function execHttpPost(service, signable, opts) {
     return poll(resp.updates, () => canContinue)
       .then(compositeSignature => {
         closeFrame()
-        return normalizeCompositeSignature(compositeSignature)
+        return compositeSignature
       })
       .catch(error => {
         console.error(error)

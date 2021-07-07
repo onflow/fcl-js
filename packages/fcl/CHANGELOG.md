@@ -2,7 +2,7 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
-- 2021-07-07 -- Updates `composite-signature` normalizer to accept `Array` of composite signatures
+- 2021-07-07 -- Move `composite-signature` normalization to `current-user`
 - 2021-06-30 -- Updates `fcl.serialize` to fix setting `resolveFunction`
 
 ## 0.0.73 - 2021-06-21

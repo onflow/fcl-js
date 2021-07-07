@@ -1,7 +1,6 @@
 import {uid} from "@onflow/util-uid"
 import {frame} from "./utils/frame"
 import {normalizePollingResponse} from "../../normalize/polling-response"
-import {normalizeCompositeSignature} from "../../normalize/composite-signature"
 
 export function execIframeRPC(service, body, opts) {
   return new Promise((resolve, reject) => {
@@ -41,7 +40,7 @@ export function execIframeRPC(service, body, opts) {
 
           switch (resp.status) {
             case "APPROVED":
-              resolve(normalizeCompositeSignature(resp.data))
+              resolve(resp.data)
               close()
               break
 
@@ -70,7 +69,7 @@ export function execIframeRPC(service, body, opts) {
 
           switch (resp.status) {
             case "APPROVED":
-              resolve(normalizeCompositeSignature(resp.data))
+              resolve(resp.data)
               close()
               break
 

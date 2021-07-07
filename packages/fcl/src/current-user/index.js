@@ -7,6 +7,7 @@ import {buildUser} from "./build-user"
 import {serviceOfType} from "./service-of-type"
 import {execService} from "./exec-service"
 import {frame} from "./exec-service/strategies/utils/frame"
+import {normalizeCompositeSignature} from "./normalize/composite-signature"
 
 const NAME = "CURRENT_USER"
 const UPDATED = "CURRENT_USER/UPDATED"
@@ -190,9 +191,11 @@ async function authorization(account) {
     sequenceNum: null,
     signature: null,
     async signingFunction(signable) {
-      return execService(authz, signable, {
-        includeOlderJsonRpcCall: true,
-      })
+      return normalizeCompositeSignature(
+        await execService(authz, signable, {
+          includeOlderJsonRpcCall: true,
+        })
+      )
     },
   }
 }
@@ -245,9 +248,14 @@ async function signUserMessage(msg, opts = {}) {
   )
 
   try {
-    return await execService(signingService, makeSignable(msg))
+    const data = await execService(signingService, makeSignable(msg))
+    if (Array.isArray(data)) {
+      return data.map(compSigs => normalizeCompositeSignature(compSigs))
+    } else {
+      return [normalizeCompositeSignature(data)]
+    }
   } catch (error) {
-    console.log(error)
+    return error
   }
 }
 
