@@ -23,9 +23,9 @@ export async function execHttpPost(service, signable, opts) {
     })
 
     return poll(resp.updates, () => canContinue)
-      .then(compositeSignature => {
+      .then(serviceResponse => {
         closeFrame()
-        return compositeSignature
+        return serviceResponse
       })
       .catch(error => {
         console.error(error)
