@@ -14,7 +14,7 @@ async function getEventsForHeightRange(eventType, start, end, opts) {
 
   req.setType(eventType)
   req.setStartHeight(start)
-  req.seQtEndHeight(end)
+  req.setEndHeight(end)
 
   const res = unary(opts.node, AccessAPI.GetEventsForHeightRange, req)
 
