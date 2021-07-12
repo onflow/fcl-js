@@ -7,7 +7,7 @@ const hexBuffer = hex => Buffer.from(hex, "hex")
 const isHeightRangeRequest = ix => "start" in ix.events
 const isBlockIdsRequest = ix => "blockIds" in ix.events
 
-async function getEventsForHeightRange(eventType, start, end, opts) {
+async function getEventsForHeightRange(eventType, start, end, opts, tag) {
   const unary = opts.unary || defaultUnary
 
   const req = new GetEventsForHeightRangeRequest()
@@ -18,10 +18,10 @@ async function getEventsForHeightRange(eventType, start, end, opts) {
 
   const res = unary(opts.node, AccessAPI.GetEventsForHeightRange, req)
 
-  return formatResponse(res)
+  return formatResponse(res, tag)
 }
 
-async function getEventsForBlockIDs(eventType, blockIds, opts) {
+async function getEventsForBlockIDs(eventType, blockIds, opts, tag) {
   const unary = opts.unary || defaultUnary
 
   const req = new GetEventsForBlockIDsRequest()
@@ -34,12 +34,12 @@ async function getEventsForBlockIDs(eventType, blockIds, opts) {
 
   const res = await unary(opts.node, AccessAPI.GetEventsForBlockIDs, req)
 
-  return formatResponse(res)
+  return formatResponse(res, tag)
 }
 
-function formatResponse(res) {
-  let ret = response()
-  ret.tag = ix.tag
+function formatResponse(res, tag) {
+  const ret = response()
+  ret.tag = tag
 
   const results = res.getResultsList()
   ret.events = results.reduce((blocks, result) => {
@@ -74,6 +74,7 @@ export async function sendGetEvents(ix, opts = {}) {
       Number(ix.events.start),
       Number(ix.events.end),
       opts,
+      ix.tag,
     )
   }
 
@@ -82,6 +83,7 @@ export async function sendGetEvents(ix, opts = {}) {
       ix.events.eventType,
       ix.events.blockIds,
       opts,
+      ix.tag,
     )
   }
 
