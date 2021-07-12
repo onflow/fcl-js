@@ -4,29 +4,40 @@ import {unary as defaultUnary} from "./unary"
 
 const u8ToHex = u8 => Buffer.from(u8).toString("hex")
 const hexBuffer = hex => Buffer.from(hex, "hex")
+const isHeightRangeRequest = ix => "start" in ix.events
+const isBlockIdsRequest = ix => "blockIds" in ix.events
 
-export async function sendGetEvents(ix, opts = {}) {
+async function getEventsForHeightRange(eventType, start, end, opts) {
   const unary = opts.unary || defaultUnary
-  
-  ix = await ix
- 
-  let res
-  const req = ix.events.start ? new GetEventsForHeightRangeRequest() : new GetEventsForBlockIDsRequest()
-  req.setType(ix.events.eventType)
-  
-  if (ix.events.start) {
-    req.setStartHeight(Number(ix.events.start))
-    req.setEndHeight(Number(ix.events.end))
 
-    res = await unary(opts.node, AccessAPI.GetEventsForHeightRange, req)
-  } else {
-    ix.events.blockIds.forEach(id =>
-      req.addBlockIds(hexBuffer(id))
-    )
+  const req = new GetEventsForHeightRangeRequest()
 
-    res = await unary(opts.node, AccessAPI.GetEventsForBlockIDs, req)
-  }
+  req.setType(eventType)
+  req.setStartHeight(start)
+  req.seQtEndHeight(end)
 
+  const res = unary(opts.node, AccessAPI.GetEventsForHeightRange, req)
+
+  return formatResponse(res)
+}
+
+async function getEventsForBlockIDs(eventType, blockIds, opts) {
+  const unary = opts.unary || defaultUnary
+
+  const req = new GetEventsForBlockIDsRequest()
+
+  req.setType(eventType)
+
+  blockIds.forEach(id =>
+    req.addBlockIds(hexBuffer(id))
+  )
+
+  const res = await unary(opts.node, AccessAPI.GetEventsForBlockIDs, req)
+
+  return formatResponse(res)
+}
+
+function formatResponse(res) {
   let ret = response()
   ret.tag = ix.tag
 
@@ -52,4 +63,27 @@ export async function sendGetEvents(ix, opts = {}) {
   }, [])
 
   return ret
+}
+
+export async function sendGetEvents(ix, opts = {}) {  
+  ix = await ix
+ 
+  if (isHeightRangeRequest(ix)) {
+    return getEventsForHeightRange(
+      ix.events.eventType,
+      Number(ix.events.start),
+      Number(ix.events.end),
+      opts,
+    )
+  }
+
+  if (isBlockIdsRequest(ix)) {
+    return getEventsForBlockIDs(
+      ix.events.eventType,
+      ix.events.blockIds,
+      opts,
+    )
+  }
+
+  throw new Error("Invalid event query, must specify height range or block IDs")
 }
