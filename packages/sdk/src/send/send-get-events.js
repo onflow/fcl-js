@@ -4,8 +4,8 @@ import {unary as defaultUnary} from "./unary"
 
 const u8ToHex = u8 => Buffer.from(u8).toString("hex")
 const hexBuffer = hex => Buffer.from(hex, "hex")
-const isHeightRangeRequest = ix => "start" in ix.events
-const isBlockIdsRequest = ix => "blockIds" in ix.events
+const isHeightRangeRequest = ix => ix.events.start !== null
+const isBlockIdsRequest = ix => !!ix.events.blockIds
 
 async function getEventsForHeightRange(eventType, start, end, opts, tag) {
   const unary = opts.unary || defaultUnary
