@@ -23,6 +23,7 @@ export const authz = currentUser().authorization
 import * as types from "@onflow/types"
 export const t = types
 
+export {TestUtils} from "@onflow/sdk"
 export {config} from "@onflow/sdk"
 export {send} from "@onflow/sdk"
 export {decode} from "@onflow/sdk"
