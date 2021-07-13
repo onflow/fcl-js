@@ -4,11 +4,16 @@ import {resolve as defaultResolve} from "../resolve/resolve.js"
 import {send as defaultSend} from "./sdk-send.js"
 
 export const send = async (args = [], opts = {}) => {
-  const sendFunction = await config().get("sdk.send", opts.send || defaultSend)
-  const resolveFunction = await config().get(
-    "sdk.resolve",
+  const sendFn = await config.first(
+    ["sdk.transport", "sdk.send"],
+    opts.send || defaultSend
+  )
+
+  const resolveFn = await config.first(
+    ["sdk.resolve"],
     opts.resolve || defaultResolve
   )
+
   if (Array.isArray(args)) args = pipe(interaction(), args)
-  return sendFunction(await resolveFunction(args), opts)
+  return sendFn(await resolveFn(args), opts)
 }
