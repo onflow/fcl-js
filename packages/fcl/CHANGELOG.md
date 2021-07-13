@@ -2,8 +2,54 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+## 0.0.74-alpha.1
+
+- 2021-07-13 -- VSN `@onflow/sdk` 0.0.50 -> 0.0.51-alpha.1
+  - Includes a fix for an issue in what `fcl.serialize` returned.
+  - Exposed new `TestUtils` Top Level
+  - Includes some new `config` functionality.
+    - `config().put("foo", "bar")` -> `config.put("foo", "bar")` config no longer needs to be invoked to access actor methods.
+    - `config.overload` allows for injecting configuration data during the execution of the callback.
+    - `config.first(["foo", "bar"], "fallback")` will return the first non null config or the fallback.
+    - `config.all()` will return the current configuration information.
 - 2021-07-08 -- Adds `verifyUserSignatures` util to `currentUser()` and refines use of `composite-signature` normalization
 - 2021-06-30 -- Updates `fcl.serialize` to fix setting `resolveFunction`
+
+Examples of `config` functionality.
+
+```javascript
+import {config} from "@onflow/fcl"
+
+expect(await config.all()).toEqual({})
+
+config({
+  "foo.bar": "baz",
+})
+config.put("bob", "pat")
+
+expect(await config.all()).toEqual({
+  "foo.bar": "baz",
+  bob: "pat",
+})
+
+var ret = await config.overload({bob: "bill"}, async () => {
+  expect(await config.all()).toEqual({
+    "foo.bar": "baz",
+    bob: "bill",
+  })
+  return "woot"
+})
+
+expect(ret).toBe("woot")
+
+expect(await config.all()).toEqual({
+  "foo.bar": "baz",
+  bob: "pat",
+})
+
+expect(await config.first(["bax", "foo.bar"], "FALLBACK")).toBe("baz")
+expect(await config.first(["nope", "oh-no"], "FALLBACK")).toBe("FALLBACK")
+```
 
 ## 0.0.73 - 2021-06-21
 
