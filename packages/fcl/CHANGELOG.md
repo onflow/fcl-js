@@ -2,6 +2,8 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+- 2021-06-30 -- Updates `fcl.serialize` to use new `config.first`
+
 ## 0.0.74-alpha.1
 
 - 2021-07-13 -- VSN `@onflow/sdk` 0.0.50 -> 0.0.51-alpha.1
