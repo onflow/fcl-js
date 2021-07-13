@@ -94,4 +94,7 @@ export const param = params =>
       "https://github.com/onflow/flow-js-sdk/blob/master/packages/sdk/TRANSITIONS.md#0001-deprecate-params",
   })
 
+import * as TestUtils from "./test-utils"
+export {TestUtils}
+
 export {VERSION} from "./VERSION"

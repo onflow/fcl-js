@@ -1,8 +1,90 @@
 ### Unreleased
 
-- YYYY-MM-DD **BREAKING?** -- description
+- YYYY-MM-DD **BREAKING?** -- Who: description
 
+## 0.0.51-alpha.1 -- 2021-07-13
+
+- 2021-07-13 -- [@orodio](https://github.com/orodio): Top level now exposes `TestUtils`
+- 2021-07-13 -- [@orodio](https://github.com/orodio): Config now exposes an `overload` function. `config.overload(otps, callback)`
+- 2021-07-13 -- [@orodio](https://github.com/orodio): Config now exposes a `first` function. `config.first(["A", "B"], "FALLBACK")`
+- 2021-07-13 -- [@orodo](https://github.com/orodio): Config functions can now be written like `config.get("foo")` instead of `config().get("foo")`
+- 2021-07-13 -- [@orodio](https://github.com/orodio): Config now exposes an `all` function. `config().all()`
 - 2021-06-24 -- [@gregsantos](https://github.com/gregsantos): Added `payer` signature to `payloadSigs` on `voucher`.
+
+### Example Updates to config.
+
+```javascript
+import {config} from "@onflow/sdk"
+
+expect(await config.all()).toEqual({})
+
+config({
+  "foo.bar": "baz",
+})
+config.put("bob", "pat")
+
+expect(await config.all()).toEqual({
+  "foo.bar": "baz",
+  bob: "pat",
+})
+
+var ret = await config.overload({bob: "bill"}, async () => {
+  expect(await config.all()).toEqual({
+    "foo.bar": "baz",
+    bob: "bill",
+  })
+  return "woot"
+})
+
+expect(ret).toBe("woot")
+
+expect(await config.all()).toEqual({
+  "foo.bar": "baz",
+  bob: "pat",
+})
+
+expect(await config.first(["bax", "foo.bar"], "FALLBACK")).toBe("baz")
+expect(await config.first(["nope", "oh-no"], "FALLBACK")).toBe("FALLBACK")
+```
+
+### Example of TestUtils.
+
+```javascript
+import {config, TestUtils} from "@onflow/sdk"
+import * as sdk from "@onflow/sdk"
+
+test("single account/key pair for all three signatory roles", async () => {
+  await config.overload(
+    {
+      // mockSend -- Mocks the internal send calls used in resolve
+      // can pass in a function that will be used as the return value of sdk.transport (Response)
+      "sdk.transport": TestUtils.mockSend(),
+    },
+    async () => {
+      const SIGNATORY = {addr: "0x1111222233334444", keyId: 1}
+      const idof = acct => `${acct.addr}-${acct.keyId}`
+
+      // authzFn -- stubs out an authorization function from a signatory
+      const authz = TestUtils.authzFn(SIGNATORY)
+
+      // run -- builds and resolves the transaction // sets a reference block
+      var ix = await run([
+        sdk.transaction`CODE`,
+        sdk.proposer(authz),
+        sdk.payer(authz),
+        sdk.authorizations([authz]),
+      ])
+
+      expect(Object.keys(ix.accounts).length).toBe(1)
+      expect(ix.accounts[TestUtils.idof(SIGNATORY)]).toBeDefined()
+
+      expect(ix.proposer).toBe(TestUtils.idof(SIGNATORY))
+      expect(ix.payer).toBe(TestUtils.idof(SIGNATORY))
+      expect(ix.authorizations).toEqual([TestUtils.idof(SIGNATORY)])
+    }
+  )
+})
+```
 
 ## 0.0.50 - 2021-06-17
 

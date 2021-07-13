@@ -32,6 +32,9 @@ async function collectAccounts(ix, accounts, last, depth = 3) {
     if (Array.isArray(ax)) {
       await collectAccounts(ix, ax, old, depth - 1)
     } else {
+      if (ax.addr != null && ax.keyId != null) {
+        ax.tempId = `${ax.addr}-${ax.keyId}`
+      }
       ix.accounts[ax.tempId] = ix.accounts[ax.tempId] || ax
       ix.accounts[ax.tempId].role.proposer =
         ix.accounts[ax.tempId].role.proposer || ax.role.proposer
@@ -51,12 +54,17 @@ async function collectAccounts(ix, accounts, last, depth = 3) {
       if (ix.accounts[ax.tempId].role.authorizer) {
         if (last) {
           // do group replacement
-          authorizations = [...authorizations, ax.tempId]
+          authorizations = Array.from(new Set([...authorizations, ax.tempId]))
         } else {
           // do 1-1 replacement
           ix.authorizations = ix.authorizations.map(d =>
             d === old.tempId ? ax.tempId : d
           )
+          // if (!new Set(ix.authorizations).has(ax.tempId)) {
+          //   ix.authorizations = Array.from(
+          //     new Set([...ix.authorizations, ax.tempId])
+          //   )
+          // }
         }
       }
     }
