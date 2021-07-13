@@ -104,7 +104,10 @@ async function authenticate(opts = {}) {
 
     serviceStrategy(
       {
-        endpoint: config.first(["discovery.wallet", "challenge.handshake"]),
+        endpoint: await config.first([
+          "discovery.wallet",
+          "challenge.handshake",
+        ]),
       },
       {
         async onReady(e, {send, close}) {
