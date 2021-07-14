@@ -30,7 +30,7 @@ async function sendGetAccountAtLatestBlockRequest(ix, opts) {
   return constructResponse(ix, res)
 }
 
-function constructResponse(res, ix) {
+function constructResponse(ix, res) {
   let ret = response()
   ret.tag = ix.tag
 

@@ -15,8 +15,6 @@ async function sendGetEventsForHeightRangeRequest(ix, opts) {
   req.setStartHeight(Number(ix.events.start))
   req.setEndHeight(Number(ix.events.end))
 
-  res = await unary(opts.node, AccessAPI.GetEventsForHeightRange, req)
-
   let res = await unary(opts.node, AccessAPI.GetEventsForHeightRange, req)
 
   return constructResponse(ix, res)
