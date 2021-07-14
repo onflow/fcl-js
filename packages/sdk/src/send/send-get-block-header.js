@@ -5,33 +5,43 @@ import {unary as defaultUnary} from "./unary"
 const u8ToHex = u8 => Buffer.from(u8).toString("hex")
 const hexBuffer = hex => Buffer.from(hex, "hex")
 
-export async function sendGetBlockHeader(ix, opts = {}) {
+async function sendGetBlockHeaderByIDRequest(ix, opts) {
   const unary = opts.unary || defaultUnary
 
-  ix = await ix
+  let req = new GetBlockHeaderByIDRequest()
+  req.setId(hexBuffer(ix.block.id))
 
-  let req
-  let res
-  if (ix.block.id) {
-    req = new GetBlockHeaderByIDRequest()
-    req.setId(hexBuffer(ix.block.id))
+  let res = await unary(opts.node, AccessAPI.GetBlockHeaderByID, req)
 
-    res = await unary(opts.node, AccessAPI.GetBlockHeaderByID, req)
-  } else if (ix.block.height) {
-    req = new GetBlockHeaderByHeightRequest()
-    req.setHeight(Number(ix.block.height))
+  return constructResponse(ix, res)
+}
 
-    res = await unary(opts.node, AccessAPI.GetBlockHeaderByHeight, req)
-  } else {
-    req = new GetLatestBlockHeaderRequest()
+async function sendGetBlockHeaderByHeightRequest(ix, opts) {
+  const unary = opts.unary || defaultUnary
 
-    if (ix.block && ix.block.isSealed) {
-      req.setIsSealed(ix.block.isSealed)
-    }
+  let req = new GetBlockHeaderByHeightRequest()
+  req.setHeight(Number(ix.block.height))
 
-    res = await unary(opts.node, AccessAPI.GetLatestBlockHeader, req)
+  let res = await unary(opts.node, AccessAPI.GetBlockHeaderByHeight, req)
+
+  return constructResponse(ix, res)
+}
+
+async function sendGetLatestBlockHeaderRequest(ix, opts) {
+  const unary = opts.unary || defaultUnary
+
+  let req = new GetLatestBlockHeaderRequest()
+
+  if (ix.block?.isSealed) {
+    req.setIsSealed(ix.block.isSealed)
   }
 
+  let res = await unary(opts.node, AccessAPI.GetLatestBlockHeader, req)
+
+  return constructResponse(ix, res)
+}
+
+function constructResponse(ix, res) {
   const blockHeader = res.getBlock()
 
   const ret = response()
@@ -44,4 +54,16 @@ export async function sendGetBlockHeader(ix, opts = {}) {
   }
 
   return ret
+}
+
+export async function sendGetBlockHeader(ix, opts = {}) {
+  ix = await ix
+
+  if (ix.block.id !== null) {
+    return await sendGetBlockHeaderByIDRequest(ix, opts)
+  } else if (ix.block.height !== null) {
+    return await sendGetBlockHeaderByHeightRequest(ix, opts)
+  } else {
+    return await sendGetLatestBlockHeaderRequest(ix, opts)
+  }
 }

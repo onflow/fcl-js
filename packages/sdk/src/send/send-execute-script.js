@@ -5,46 +5,68 @@ import {unary as defaultUnary} from "./unary"
 const argumentBuffer = arg => Buffer.from(JSON.stringify(arg), "utf8")
 const hexBuffer = hex => Buffer.from(hex, "hex")
 
-export async function sendExecuteScript(ix, opts = {}) {
+async function sendExecuteScriptAtBlockIDRequest(ix, opts) {
   const unary = opts.unary || defaultUnary
 
-  ix = await ix
+  let req = new ExecuteScriptAtBlockIDRequest()
 
-  let req
-  let res
-  if (ix.block.id) {
-    req = new ExecuteScriptAtBlockIDRequest()
-    
-    req.setBlockId(hexBuffer(ix.block.id))
+  req.setBlockId(hexBuffer(ix.block.id))
 
-    const code = Buffer.from(ix.message.cadence, "utf8")
-    ix.message.arguments.forEach(arg => req.addArguments(argumentBuffer(ix.arguments[arg].asArgument)))
-    req.setScript(code)
+  const code = Buffer.from(ix.message.cadence, "utf8")
+  ix.message.arguments.forEach(arg => req.addArguments(argumentBuffer(ix.arguments[arg].asArgument)))
+  req.setScript(code)
 
-    res = await unary(opts.node, AccessAPI.ExecuteScriptAtBlockID, req)
-  } else if (ix.block.height) {
-    req = new ExecuteScriptAtBlockHeightRequest()
+  let res = await unary(opts.node, AccessAPI.ExecuteScriptAtBlockID, req)
 
-    req.setBlockHeight(Number(ix.block.height))
+  return constructResponse(ix, res)
+}
 
-    const code = Buffer.from(ix.message.cadence, "utf8")
-    ix.message.arguments.forEach(arg => req.addArguments(argumentBuffer(ix.arguments[arg].asArgument)))
-    req.setScript(code)
+async function sendExecuteScriptAtBlockHeightRequest(ix, opts) {
+  const unary = opts.unary || defaultUnary
 
-    res = await unary(opts.node, AccessAPI.ExecuteScriptAtBlockHeight, req) 
-  } else {
-    req = new ExecuteScriptAtLatestBlockRequest()
+  let req = new ExecuteScriptAtBlockHeightRequest()
 
-    const code = Buffer.from(ix.message.cadence, "utf8")
-    ix.message.arguments.forEach(arg => req.addArguments(argumentBuffer(ix.arguments[arg].asArgument)))
-    req.setScript(code)
+  req.setBlockHeight(Number(ix.block.height))
 
-    res = await unary(opts.node, AccessAPI.ExecuteScriptAtLatestBlock, req)
-  }
+  const code = Buffer.from(ix.message.cadence, "utf8")
+  ix.message.arguments.forEach(arg => req.addArguments(argumentBuffer(ix.arguments[arg].asArgument)))
+  req.setScript(code)
 
+  let res = await unary(opts.node, AccessAPI.ExecuteScriptAtBlockHeight, req) 
+  
+  return constructResponse(ix, res)
+}
+
+async function sendExecuteScriptAtLatestBlockRequest(ix, opts) {
+  const unary = opts.unary || defaultUnary
+
+  let req = new ExecuteScriptAtLatestBlockRequest()
+  
+  const code = Buffer.from(ix.message.cadence, "utf8")
+  ix.message.arguments.forEach(arg => req.addArguments(argumentBuffer(ix.arguments[arg].asArgument)))
+  req.setScript(code)
+
+  let res = await unary(opts.node, AccessAPI.ExecuteScriptAtLatestBlock, req)
+
+  return constructResponse(ix, res)
+}
+
+function constructResponse(ix, res)  {
   let ret = response()
   ret.tag = ix.tag
   ret.encodedData = JSON.parse(Buffer.from(res.getValue_asU8()).toString("utf8"))
 
   return ret
+}
+
+export async function sendExecuteScript(ix, opts = {}) {
+  ix = await ix
+
+  if (ix.block.id) {
+    return await sendExecuteScriptAtBlockIDRequest(ix, opts)
+  } else if (ix.block.height) {
+    return await sendExecuteScriptAtBlockHeightRequest(ix, opts)
+  } else {
+    return await sendExecuteScriptAtLatestBlockRequest(ix, opts)
+  }
 }
