@@ -5,33 +5,43 @@ import {unary as defaultUnary} from "./unary"
 const u8ToHex = u8 => Buffer.from(u8).toString("hex")
 const hexBuffer = hex => Buffer.from(hex, "hex")
 
-export async function sendGetBlock(ix, opts = {}) {
+async function sendGetBlockByIDRequest(ix, opts) {
   const unary = opts.unary || defaultUnary
 
-  ix = await ix
+  let req = new GetBlockByIDRequest()
+  req.setId(hexBuffer(ix.block.id))
 
-  let req
-  let res
-  if (ix.block.id) {
-    req = new GetBlockByIDRequest()
-    req.setId(hexBuffer(ix.block.id))
+  let res = await unary(opts.node, AccessAPI.GetBlockByID, req)
 
-    res = await unary(opts.node, AccessAPI.GetBlockByID, req)
-  } else if (ix.block.height) {
-    req = new GetBlockByHeightRequest()
-    req.setHeight(Number(ix.block.height))
+  return constructResponse(ix, res)
+}
+
+async function sendGetBlockByHeightRequest(ix, opts) {
+  const unary = opts.unary || defaultUnary
+
+  let req = new GetBlockByHeightRequest()
+  req.setHeight(Number(ix.block.height))
     
-    res = await unary(opts.node, AccessAPI.GetBlockByHeight, req)
-  } else {
-    req = new GetLatestBlockRequest()
+  let res = await unary(opts.node, AccessAPI.GetBlockByHeight, req)
 
-    if (ix.block && ix.block.isSealed) {
-      req.setIsSealed(ix.block.isSealed)
-    }
+  return constructResponse(ix, res)
+}
 
-    res = await unary(opts.node, AccessAPI.GetLatestBlock, req)
+async function sendGetBlockRequest(ix, opts) {
+  const unary = opts.unary || defaultUnary
+
+  let req = new GetLatestBlockRequest()
+
+  if (ix.block?.isSealed) {
+    req.setIsSealed(ix.block.isSealed)
   }
 
+  let res = await unary(opts.node, AccessAPI.GetLatestBlock, req)
+
+  return constructResponse(ix, res)
+}
+
+function constructResponse(ix, res) {
   const block = res.getBlock()
 
   const collectionGuarantees = block.getCollectionGuaranteesList()
@@ -59,4 +69,16 @@ export async function sendGetBlock(ix, opts = {}) {
   }
 
   return ret
+}
+
+export async function sendGetBlock(ix, opts = {}) {
+  ix = await ix
+
+  if (ix.block.id !== null) {
+    return await sendGetBlockByIDRequest(ix, opts)
+  } else if (ix.block.height !== null) {
+    return await sendGetBlockByHeightRequest(ix, opts)
+  } else {
+    return await sendGetBlockRequest(ix, opts)
+  }
 }

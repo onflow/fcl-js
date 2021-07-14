@@ -9,17 +9,28 @@ const paddedHexBuffer = (hex, pad) =>
 
 const addressBuffer = addr => paddedHexBuffer(addr, 8)
 
-export async function sendGetAccount(ix, opts = {}) {
+async function sendGetAccountAtBlockHeightRequest(ix, opts) {
   const unary = opts.unary || defaultUnary
 
-  ix = await ix
+  const req = new GetAccountAtBlockHeightRequest()
+  req.setBlockHeight(Number(ix.block.height))
 
-  const req = ix.block.height ? new GetAccountAtBlockHeightRequest() : new GetAccountAtLatestBlockRequest()
-  if (ix.block.height) req.setBlockHeight(Number(ix.block.height))
-  req.setAddress(addressBuffer(sansPrefix(ix.account.addr)))
+  const res = await unary(opts.node, AccessAPI.GetAccountAtBlockHeight, req)
 
-  const res = await unary(opts.node, ix.block.height ? AccessAPI.GetAccountAtBlockHeight : AccessAPI.GetAccountAtLatestBlock, req)
+  return constructResponse(ix, res)
+}
 
+async function sendGetAccountAtLatestBlockRequest(ix, opts) {
+  const unary = opts.unary || defaultUnary
+
+  const req = new GetAccountAtLatestBlockRequest()
+
+  const res = await unary(opts.node, AccessAPI.GetAccountAtLatestBlock, req)
+
+  return constructResponse(ix, res)
+}
+
+function constructResponse(res, ix) {
   let ret = response()
   ret.tag = ix.tag
 
@@ -48,4 +59,15 @@ export async function sendGetAccount(ix, opts = {}) {
   }
 
   return ret
+}
+
+
+export async function sendGetAccount(ix, opts = {}) {
+  ix = await ix
+
+  if (ix.block.height !== null) {
+    return await sendGetAccountAtBlockHeightRequest(ix, opts)
+  } else {
+    return await sendGetAccountAtLatestBlockRequest(ix, opts)
+  }
 }
