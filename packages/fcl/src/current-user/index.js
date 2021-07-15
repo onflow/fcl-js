@@ -267,6 +267,7 @@ pub fun main(
   message: String,
   rawPublicKeys: [String],
   weights: [UFix64],
+  signAlgos: [UInt],
   signatures: [String],
 ): Bool {
 
@@ -277,7 +278,7 @@ pub fun main(
     keyList.add(
       PublicKey(
         publicKey: rawPublicKey.decodeHex(),
-        signatureAlgorithm: SignatureAlgorithm.ECDSA_P256
+        signatureAlgorithm: signAlgos[i] == 2 ? SignatureAlgorithm.ECDSA_P256 : SignatureAlgorithm.ECDSA_secp256k1 
       ),
       hashAlgorithm: HashAlgorithm.SHA3_256,
       weight: weights[i],
@@ -315,6 +316,7 @@ async function verifyUserSignatures(msg, compSigs) {
   )
 
   let weights = []
+  let signAlgos = []
   let signatures = []
   const rawPubKeys = await Promise.all(
     compSigs.map(async cs => {
@@ -325,6 +327,7 @@ async function verifyUserSignatures(msg, compSigs) {
       try {
         const account = await fcl.account(cs.addr)
         weights.push(account.keys[cs.keyId].weight.toFixed(1))
+        signAlgos.push(account.keys[cs.keyId].signAlgo)
         signatures.push(cs.signature)
         return account.keys[cs.keyId].publicKey
       } catch (err) {
@@ -339,6 +342,7 @@ async function verifyUserSignatures(msg, compSigs) {
       arg(msg, t.String),
       arg(rawPubKeys, t.Array([t.String])),
       arg(weights, t.Array(t.UFix64)),
+      arg(signAlgos, t.Array([t.UInt])),
       arg(signatures, t.Array([t.String])),
     ],
   })
