@@ -1,0 +1,81 @@
+---
+title: Signing and Verifying Arbitrary Data
+---
+
+## Signing Arbitrary Data
+
+Cryptographic signatures are a key part of the blockchain. They are used to prove ownership of an address without exposing its private key.
+While primarily used for signing transactions, cryptographic signatures can also be used to sign arbitrary messages.
+
+FCL has a feature that lets you send arbitrary data to a configured wallet/service where the
+user may approve signing it with their private key/s.
+
+## Verifying User Signatures
+
+What makes message signatures more interesting is that we can use Flow blockchain to verify the signatures.
+Cadence has a built-in function called `verify` that will recover the address of the private key that a message was signed with.
+
+FCL includes a utility function, `verifyUserSignatures`, for verifying one or more signatures against an account's public key on the Flow blockchain.
+
+You can use both in tandem to prove a user is in control of a private key or keys.
+This enables cryptographically-secure login flow using a message-signing-based authentication mechanism
+with a user’s public address as their identifier.
+
+---
+
+## `fcl.currentUser().signUserMessage(msg)`
+
+A method to use allowing current user to personally sign data via FCL Compatible Wallets.
+
+> :Note: **Requires authentication with an authorized signing service.**
+
+### Arguments
+
+| Name  | Type   | Description                       |
+| ----- | ------ | --------------------------------- |
+| `msg` | string | A hexadecimal string to be signed |
+
+### Usage
+
+```javascript
+import * as fcl from "@onflow/fcl"
+
+export const signMessage = async () => {
+  const MSG = Buffer.from("FOO").toString("hex")
+  try {
+    return await currentUser().signUserMessage(MSG)
+  } catch (error) {
+    console.log(error)
+  }
+}
+```
+
+---
+
+## `fcl.currentUser().verifyUserSignatures(message, compositeSignatures)`
+
+A method allowing application to cryptographically verify the ownership of a Flow account by signing a piece of data using a private key.
+Use cases include, Authentication, improved Application Login, message verification and others.
+
+### Arguments
+
+| Name                  | Type   | Description                       |
+| --------------------- | ------ | --------------------------------- |
+| `message`             | string | A signed hexadecimal string       |
+| `compositeSignatures` | Array  | An array of `CompositeSignatures` |
+
+### Usage
+
+```javascript
+import * as fcl from "@onflow/fcl"
+
+const verifySignature = async (message, compositeSignatures) => {
+  try {
+    return await verifyUserSignature(message, compositeSignatures)
+  } catch (error) {
+    console.log(error)
+  }
+}
+```
+
+---
