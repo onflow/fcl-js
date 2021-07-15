@@ -2,7 +2,8 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
-- 2021-06-30 -- Updates `fcl.serialize` to use new `config.first`
+- 2021-07-15 -- Update `verifyUserSignature` to pass publicKey signingAlgos into Cadence script. Allows for successfull verification of supported algorithms ECDSA_P256 and ECDSA_secp256k1
+- 2021-07-14 -- Updates `fcl.serialize` to use new `config.first`
 
 ## 0.0.74-alpha.1
 
