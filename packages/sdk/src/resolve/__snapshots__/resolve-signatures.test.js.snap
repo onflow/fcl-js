@@ -42,14 +42,15 @@ Object {
                 ],
                 "cadence": "",
                 "computeLimit": 156,
-                "payer": "0xfoo",
-                "payloadSigs": Array [
+                "envelopeSigs": Array [
                   Object {
                     "address": "0xfoo",
                     "keyId": 1,
                     "sig": null,
                   },
                 ],
+                "payer": "0xfoo",
+                "payloadSigs": Array [],
                 "proposalKey": Object {
                   "address": "0xfoo",
                   "keyId": 1,

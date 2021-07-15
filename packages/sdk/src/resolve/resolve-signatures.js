@@ -59,6 +59,20 @@ function fetchSignature(ix, payload) {
 }
 
 export const createSignableVoucher = ix => {
+  const buildInsideSigners = () =>
+    findInsideSigners(ix).map(id => ({
+      address: withPrefix(ix.accounts[id].addr),
+      keyId: ix.accounts[id].keyId,
+      sig: ix.accounts[id].signature,
+    }))
+
+  const buildOutsideSigners = () =>
+    findOutsideSigners(ix).map(id => ({
+      address: withPrefix(ix.accounts[id].addr),
+      keyId: ix.accounts[id].keyId,
+      sig: ix.accounts[id].signature,
+    }))
+
   return {
     cadence: ix.message.cadence,
     refBlock: ix.message.refBlock || null,
@@ -75,18 +89,8 @@ export const createSignableVoucher = ix => {
       .reduce((prev, current) => {
         return prev.find(item => item === current) ? prev : [...prev, current]
       }, []),
-    payloadSigs: [
-      ...findInsideSigners(ix).map(id => ({
-        address: withPrefix(ix.accounts[id].addr),
-        keyId: ix.accounts[id].keyId,
-        sig: ix.accounts[id].signature,
-      })),
-      ...findOutsideSigners(ix).map(id => ({
-        address: withPrefix(ix.accounts[id].addr),
-        keyId: ix.accounts[id].keyId,
-        sig: ix.accounts[id].signature,
-      })),
-    ],
+    payloadSigs: buildInsideSigners(),
+    envelopeSigs: buildOutsideSigners(),
   }
 }
 
