@@ -67,13 +67,17 @@ export async function sendGetEvents(ix, opts = {}) {
   ix = await ix
 
   invariant(
-    ix.events.start !== null || ix.events.blockIds.length > 0,
-    "SendGetEventsError: Unable to determine which get events request to send."
+    ix.events.start !== null || (
+      ix.events.blockIds !== null &&
+      Array.isArray(ix.events.blockIds) &&
+      ix.events.blockIds.length > 0
+    ),
+    "SendGetEventsError: Unable to determine which get events request to send. Either a block height range, or block IDs must be specified."
   )
   
   if (ix.events.start !== null) {
     return await sendGetEventsForHeightRangeRequest(ix, opts)
-  } else if (ix.events.blockIds.length > 0) {
+  } else {
     return await sendGetEventsForBlockIDsRequest(ix, opts)
   }
 }
