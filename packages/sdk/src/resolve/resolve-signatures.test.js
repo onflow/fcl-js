@@ -87,8 +87,8 @@ test("voucher in signable", async () => {
     payloadSigs: [
       {address: "0x01", keyId: 0, sig: "123"},
       {address: "0x01", keyId: 0, sig: "123"},
-      {address: "0x02", keyId: 0, sig: "123"},
     ],
+    envelopeSigs: [{address: "0x02", keyId: 0, sig: "123"}],
   })
 })
 
