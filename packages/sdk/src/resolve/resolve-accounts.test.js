@@ -40,7 +40,12 @@ test("Voucher in PreSignable", async () => {
       limit(156),
       proposer(authz),
       authorizations([authz]),
-      payer(authz),
+      payer({
+        addr: "0x02",
+        signingFunction: () => ({signature: "123"}),
+        keyId: 0,
+        sequenceNum: 123,
+      }),
       ref("123"),
     ])
   )
@@ -53,12 +58,12 @@ test("Voucher in PreSignable", async () => {
     computeLimit: 156,
     arguments: [],
     proposalKey: {address: "0x01", keyId: 1, sequenceNum: 123},
-    payer: "0x01",
+    payer: "0x02",
     authorizers: ["0x01"],
     payloadSigs: [
       {address: "0x01", keyId: 1, sig: "123"},
       {address: "0x01", keyId: 1, sig: "123"},
-      {address: "0x01", keyId: 1, sig: "123"},
     ],
+    envelopeSigs: [{address: "0x02", keyId: 0, sig: "123"}],
   })
 })
