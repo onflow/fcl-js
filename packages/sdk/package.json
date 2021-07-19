@@ -1,6 +1,6 @@
 {
   "name": "@onflow/sdk",
-  "version": "0.0.51-alpha.1",
+  "version": "0.0.51-alpha.2",
   "description": "Flow SDK",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
@@ -18,9 +18,9 @@
     }
   },
   "devDependencies": {
-    "jest": "26.4.2",
+    "jest": "^27.0.6",
     "jest-esm-transformer": "1.0.0",
-    "microbundle": "0.12.4"
+    "microbundle": "^0.13.3"
   },
   "source": "src/sdk.js",
   "main": "dist/sdk.js",
