@@ -2,6 +2,8 @@
 
 - YYYY-MM-DD **BREAKING?** -- Who: description
 
+## 0.0.51-alpha.2 -- 2021-07-19
+
 - 2021-07-14 -- Update `createSignableVoucher` to return `payloadSigs` and `envelopeSigs`. Addresses CORS bug.
 
 ## 0.0.51-alpha.1 -- 2021-07-13
