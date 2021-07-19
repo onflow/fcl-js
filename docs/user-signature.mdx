@@ -29,6 +29,8 @@ A method to use allowing current user to personally sign data via FCL Compatible
 
 > :Note: **Requires authentication with an authorized signing service.**
 
+Returns a standard `PollingResponse` with an array of `CompositeSignatures` or `null` as the data.
+
 ### Arguments
 
 | Name  | Type   | Description                       |
@@ -56,6 +58,8 @@ export const signMessage = async () => {
 
 A method allowing application to cryptographically verify the ownership of a Flow account by signing a piece of data using a private key.
 Use cases include, Authentication, improved Application Login, message verification and others.
+
+Returns Boolean `true` if verifed or `false`
 
 ### Arguments
 
