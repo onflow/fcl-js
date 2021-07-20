@@ -4,7 +4,6 @@ import {serviceEndpoint} from "./service-endpoint"
 const CLOSE_EVENT = "FCL:FRAME:CLOSE"
 const READY_EVENT = "FCL:FRAME:READY"
 const RESPONSE_EVENT = "FCL:FRAME:RESPONSE"
-const OPEN_EVENT = "FCL:FRAME:OPEN"
 
 const noop = () => {}
 
@@ -32,6 +31,8 @@ export function frame(service, opts = {}) {
     try {
       if (typeof e.data !== "object") return
       if (IGNORE.has(e.data.type)) return
+      // Do we trust the sender of this message?  Whitelist?
+      // if (IGNORE.has(e.origin)) return
       if (e.data.type === CLOSE_EVENT) close()
       if (e.data.type === READY_EVENT) onReady(e, {send, close})
       if (e.data.type === RESPONSE_EVENT) onResponse(e, {send, close})
@@ -63,7 +64,7 @@ export function frame(service, opts = {}) {
 
   function send(msg) {
     try {
-      $frame.contentWindow.postMessage(
+      $frame.postMessage(
         JSON.parse(JSON.stringify(msg || {})),
         "*"
       )
@@ -72,12 +73,4 @@ export function frame(service, opts = {}) {
     }
   }
 
-  function open(msg) {
-    try {
-      tab = window.open(msg.endpoint)
-      tab.focus()
-    } catch (error) {
-      console.error("Frame Open Error", msg, error)
-    }
-  }
 }
