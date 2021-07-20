@@ -1,4 +1,4 @@
-import {renderFrame} from "./render-frame"
+import {renderPop} from "./render-pop"
 import {serviceEndpoint} from "./service-endpoint"
 
 const CLOSE_EVENT = "FCL:FRAME:CLOSE"
@@ -14,7 +14,7 @@ const IGNORE = new Set([
   "monetizationstop",
 ])
 
-export function frame(service, opts = {}) {
+export function pop(service, opts = {}) {
   if (service == null) return {send: noop, close: noop}
 
   var tab = null
@@ -24,13 +24,15 @@ export function frame(service, opts = {}) {
   const onResponse = opts.onResponse || noop
 
   window.addEventListener("message", internal)
-  const [$frame, unmount] = renderFrame(serviceEndpoint(service))
+  const [$frame, unmount] = renderPop(serviceEndpoint(service))
   return {send, close}
 
   function internal(e) {
     try {
       if (typeof e.data !== "object") return
       if (IGNORE.has(e.data.type)) return
+      // Do we trust the sender of this message?  Whitelist?
+      // if (IGNORE.has(e.origin)) return
       if (e.data.type === CLOSE_EVENT) close()
       if (e.data.type === READY_EVENT) onReady(e, {send, close})
       if (e.data.type === RESPONSE_EVENT) onResponse(e, {send, close})
@@ -62,10 +64,7 @@ export function frame(service, opts = {}) {
 
   function send(msg) {
     try {
-      $frame.contentWindow.postMessage(
-        JSON.parse(JSON.stringify(msg || {})),
-        "*"
-      )
+      $frame.postMessage(JSON.parse(JSON.stringify(msg || {})), "*")
     } catch (error) {
       console.error("Frame Send Error", msg, error)
     }

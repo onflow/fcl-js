@@ -7,6 +7,7 @@ import {buildUser} from "./build-user"
 import {serviceOfType} from "./service-of-type"
 import {execService} from "./exec-service"
 import {frame} from "./exec-service/strategies/utils/frame"
+import {pop} from "./exec-service/strategies/utils/pop"
 import {normalizeCompositeSignature} from "./normalize/composite-signature"
 
 const NAME = "CURRENT_USER"
@@ -100,7 +101,7 @@ async function authenticate(opts = {}) {
     spawnCurrentUser()
     const user = await snapshot()
     if (user.loggedIn && notExpired(user)) return resolve(user)
-    const serviceStrategy = opts.serviceStrategy || frame
+    const serviceStrategy = opts.serviceStrategy === "pop" ? pop : frame
 
     serviceStrategy(
       {
