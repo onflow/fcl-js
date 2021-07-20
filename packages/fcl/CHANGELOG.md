@@ -2,12 +2,16 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
-## 0.0.74-alpha.2
+## 0.0.74 - 2021-07-20
+
+- 2021-07-20 -- SDK VSN 0.0.51
+
+## 0.0.74-alpha.2 - 2021-07-19
 
 - 2021-07-15 -- Update `verifyUserSignature` to pass publicKey signingAlgos into Cadence script. Allows for successfull verification of supported algorithms ECDSA_P256 and ECDSA_secp256k1
 - 2021-07-14 -- Updates `fcl.serialize` to use new `config.first`
 
-## 0.0.74-alpha.1
+## 0.0.74-alpha.1 - 2021-07-13
 
 - 2021-07-13 -- VSN `@onflow/sdk` 0.0.50 -> 0.0.51-alpha.1
   - Includes a fix for an issue in what `fcl.serialize` returned.
