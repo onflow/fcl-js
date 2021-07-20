@@ -8,10 +8,10 @@ const hexBuffer = hex => Buffer.from(hex, "hex")
 async function sendGetBlockByIDRequest(ix, opts) {
   const unary = opts.unary || defaultUnary
 
-  let req = new GetBlockByIDRequest()
+  const req = new GetBlockByIDRequest()
   req.setId(hexBuffer(ix.block.id))
 
-  let res = await unary(opts.node, AccessAPI.GetBlockByID, req)
+  const res = await unary(opts.node, AccessAPI.GetBlockByID, req)
 
   return constructResponse(ix, res)
 }
@@ -19,10 +19,10 @@ async function sendGetBlockByIDRequest(ix, opts) {
 async function sendGetBlockByHeightRequest(ix, opts) {
   const unary = opts.unary || defaultUnary
 
-  let req = new GetBlockByHeightRequest()
+  const req = new GetBlockByHeightRequest()
   req.setHeight(Number(ix.block.height))
     
-  let res = await unary(opts.node, AccessAPI.GetBlockByHeight, req)
+  const res = await unary(opts.node, AccessAPI.GetBlockByHeight, req)
 
   return constructResponse(ix, res)
 }
@@ -30,13 +30,13 @@ async function sendGetBlockByHeightRequest(ix, opts) {
 async function sendGetBlockRequest(ix, opts) {
   const unary = opts.unary || defaultUnary
 
-  let req = new GetLatestBlockRequest()
+  const req = new GetLatestBlockRequest()
 
   if (ix.block?.isSealed) {
     req.setIsSealed(ix.block.isSealed)
   }
 
-  let res = await unary(opts.node, AccessAPI.GetLatestBlock, req)
+  const res = await unary(opts.node, AccessAPI.GetLatestBlock, req)
 
   return constructResponse(ix, res)
 }

@@ -9,13 +9,13 @@ const hexBuffer = hex => Buffer.from(hex, "hex")
 async function sendGetEventsForHeightRangeRequest(ix, opts) {
   const unary = opts.unary || defaultUnary
 
-  let req = new GetEventsForHeightRangeRequest()
+  const req = new GetEventsForHeightRangeRequest()
   req.setType(ix.events.eventType)
 
   req.setStartHeight(Number(ix.events.start))
   req.setEndHeight(Number(ix.events.end))
 
-  let res = await unary(opts.node, AccessAPI.GetEventsForHeightRange, req)
+  const res = await unary(opts.node, AccessAPI.GetEventsForHeightRange, req)
 
   return constructResponse(ix, res)
 }
@@ -30,7 +30,7 @@ async function sendGetEventsForBlockIDsRequest(ix, opts) {
     req.addBlockIds(hexBuffer(id))
   )
 
-  let res = await unary(opts.node, AccessAPI.GetEventsForBlockIDs, req)
+  const res = await unary(opts.node, AccessAPI.GetEventsForBlockIDs, req)
 
   return constructResponse(ix, res)
 }
@@ -66,16 +66,15 @@ function constructResponse(ix, res) {
 export async function sendGetEvents(ix, opts = {}) {  
   ix = await ix
 
+  const interactionContainsBlockHeightRange = ix.events.start !== null 
+  const interactionContainsBlockIDsList = Array.isArray(ix.events.blockIds) && ix.events.blockIds.length > 0
+ 
   invariant(
-    ix.events.start !== null || (
-      ix.events.blockIds !== null &&
-      Array.isArray(ix.events.blockIds) &&
-      ix.events.blockIds.length > 0
-    ),
+    interactionContainsBlockHeightRange || interactionContainsBlockIDsList,
     "SendGetEventsError: Unable to determine which get events request to send. Either a block height range, or block IDs must be specified."
   )
   
-  if (ix.events.start !== null) {
+  if (interactionContainsBlockHeightRange) {
     return await sendGetEventsForHeightRangeRequest(ix, opts)
   } else {
     return await sendGetEventsForBlockIDsRequest(ix, opts)

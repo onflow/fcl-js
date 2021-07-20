@@ -40,13 +40,13 @@ async function sendExecuteScriptAtBlockHeightRequest(ix, opts) {
 async function sendExecuteScriptAtLatestBlockRequest(ix, opts) {
   const unary = opts.unary || defaultUnary
 
-  let req = new ExecuteScriptAtLatestBlockRequest()
+  const req = new ExecuteScriptAtLatestBlockRequest()
   
   const code = Buffer.from(ix.message.cadence, "utf8")
   ix.message.arguments.forEach(arg => req.addArguments(argumentBuffer(ix.arguments[arg].asArgument)))
   req.setScript(code)
 
-  let res = await unary(opts.node, AccessAPI.ExecuteScriptAtLatestBlock, req)
+  const res = await unary(opts.node, AccessAPI.ExecuteScriptAtLatestBlock, req)
 
   return constructResponse(ix, res)
 }

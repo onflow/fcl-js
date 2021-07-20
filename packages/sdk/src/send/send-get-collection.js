@@ -10,10 +10,10 @@ export async function sendGetCollection(ix, opts = {}) {
 
   ix = await ix
 
-  let req = new GetCollectionByIDRequest()
+  const req = new GetCollectionByIDRequest()
   req.setId(hexBuffer(ix.collection.id))
 
-  let res = await unary(opts.node, AccessAPI.GetCollectionByID, req)
+  const res = await unary(opts.node, AccessAPI.GetCollectionByID, req)
 
   const collection = res.getCollection()
 
