@@ -11,9 +11,9 @@ export {currentUser}
 
 export const authenticate = opts => currentUser().authenticate(opts)
 export const unauthenticate = () => currentUser().unauthenticate()
-export const reauthenticate = () => {
+export const reauthenticate = opts => {
   currentUser().unauthenticate()
-  return currentUser().authenticate()
+  return currentUser().authenticate(opts)
 }
 export const signUp = opts => currentUser().authenticate()
 export const logIn = opts => currentUser().authenticate()
@@ -22,6 +22,9 @@ export const authz = currentUser().authorization
 
 import * as types from "@onflow/types"
 export const t = types
+
+import {sendMessage} from "./wallet-utils"
+export {sendMessage}
 
 export {TestUtils} from "@onflow/sdk"
 export {config} from "@onflow/sdk"
