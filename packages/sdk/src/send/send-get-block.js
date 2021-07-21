@@ -74,9 +74,12 @@ function constructResponse(ix, res) {
 export async function sendGetBlock(ix, opts = {}) {
   ix = await ix
 
-  if (ix.block.id !== null) {
+  const interactionHasBlockID = ix.block.id !== null
+  const interactionHasBlockHeight = ix.block.height !== null
+
+  if (interactionHasBlockID) {
     return await sendGetBlockByIDRequest(ix, opts)
-  } else if (ix.block.height !== null) {
+  } else if (interactionHasBlockHeight) {
     return await sendGetBlockByHeightRequest(ix, opts)
   } else {
     return await sendGetBlockRequest(ix, opts)
