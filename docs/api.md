@@ -1626,7 +1626,7 @@ The format of all responses in FCL returned from `fcl.send(...)`. For full detai
 | `blockTimestamp` | string | The timestamp of when the block was sealed in a `DateString` format. eg. `'2021-06-25T13:42:04.227Z'` |
 | `type` | [EventName](#EventName) | A string containing the event name. |
 | `transactionId` | object | :tomato: TODO |
-| `transactionIndex` | object | :tomato: TODO |
+| `transactionIndex` | number | Used to prevent replay attacks. |
 | `eventIndex` | object | :tomato: TODO |
 | `data` | any | The data emitted from the event. |
 
