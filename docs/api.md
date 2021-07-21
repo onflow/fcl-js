@@ -1641,7 +1641,6 @@ The status of a transaction will depend on the Flow blockchain network and which
 | `3` | Transaction Executed - Awaiting Sealing
 | `4` | Transaction Sealed - Transaction Complete
 | `5` | Transaction Expired
-:tomato: TODO better descriptions.
 
 ## `GRPC Statuses`
 
