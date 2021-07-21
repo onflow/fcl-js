@@ -13,23 +13,41 @@ const jsonToUInt8Array = (json) => {
     return ret
 };
 
+const hexStrToUInt8Array = (hex) => {
+    return new Uint8Array(hex.match(/.{1,2}/g).map(byte => parseInt(byte, 16)));
+};
+
+const strToUInt8Array = (str) => {
+    var ret = new Uint8Array(str.length);
+    for (var i = 0; i < str.length; i++) {
+        ret[i] = str.charCodeAt(i);
+    }
+    return ret
+};
+
+
 describe("Send Get Collection", () => {
   test("GetCollection", async () => {
     const unaryMock = jest.fn();
 
+    const returnedCollection = {
+        id: "a1b2c3",
+        transactionIds: ["a1b2c3"]
+    }
+
     unaryMock.mockReturnValue({
         getCollection: () => ({
-            getId_asU8: () => jsonToUInt8Array({type: "String", value: "123abc"}),
+            getId_asU8: () => hexStrToUInt8Array("a1b2c3"),
             getTransactionIdsList: () => ([
-                jsonToUInt8Array({type: "String", value: "456def"})
+                hexStrToUInt8Array("a1b2c3")
             ]),
         })
     });
 
-    await sendGetCollection(
+    const response = await sendGetCollection(
         await resolve(
             await build([
-                getCollection("123abc"),
+                getCollection("a1b2c3"),
             ])
         ),
         {
@@ -51,6 +69,9 @@ describe("Send Get Collection", () => {
     const unaryMockCollectionId = unaryMockRequest.getId()
 
     expect(unaryMockCollectionId).not.toBeUndefined()
+
+    expect(response.collection.id).toBe(returnedCollection.id)
+    expect(response.collection.transactionIds[0]).toBe(returnedCollection.transactionIds[0])
   })
 
 })

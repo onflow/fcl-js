@@ -13,29 +13,58 @@ const jsonToUInt8Array = (json) => {
     return ret
 };
 
+const hexStrToUInt8Array = (hex) => {
+    return new Uint8Array(hex.match(/.{1,2}/g).map(byte => parseInt(byte, 16)));
+};
+
+const strToUInt8Array = (str) => {
+    var ret = new Uint8Array(str.length);
+    for (var i = 0; i < str.length; i++) {
+        ret[i] = str.charCodeAt(i);
+    }
+    return ret
+};
+
+
 describe("Get Transaction", () => {
   test("GetTransactionResult", async () => {
     const unaryMock = jest.fn();
 
+    const returnedTransaction = {
+        script: "Cadence Code",
+        args: [],
+        referenceBlockId: "a1b2c3",
+        gasLimit: 123,
+        proposalKey: {
+            address: "1654653399040a61",
+            keyId: 1,
+            sequenceNumber: 1
+        },
+        payer: "1654653399040a61",
+        authorizers: [],
+        payloadSignatures: [],
+        envelopeSignatures: []
+    }
+
     unaryMock.mockReturnValue({
         getTransaction: () => ({
-            getScript_asU8: () => jsonToUInt8Array({type: "String", value: "Cadence Code"}),
+            getScript_asU8: () => strToUInt8Array("Cadence Code"),
             getArgumentsList: () => ([]),
-            getReferenceBlockId_asU8: () => jsonToUInt8Array({type: "String", value: "abc123"}),
+            getReferenceBlockId_asU8: () => hexStrToUInt8Array("a1b2c3"),
             getGasLimit: () => 123,
             getProposalKey: () => ({
-                getAddress_asU8: () => jsonToUInt8Array({type: "Address", value: "0xABC123"}),
+                getAddress_asU8: () => hexStrToUInt8Array("1654653399040a61"),
                 getKeyId: () => 1,
                 getSequenceNumber: () => 1,
             }),
-            getPayer_asU8: () => jsonToUInt8Array({type: "Address", value: "0xABC123"}),
+            getPayer_asU8: () => hexStrToUInt8Array("1654653399040a61"),
             getAuthorizersList: () => ([]),
             getPayloadSignaturesList: () => ([]),
             getEnvelopeSignaturesList: () => ([])
         })
     });
 
-    await sendGetTransaction(
+    const response = await sendGetTransaction(
         await resolve(
             await build([
                 getTransaction("MyTxID"),
@@ -60,6 +89,8 @@ describe("Get Transaction", () => {
     const unaryMockId = unaryMockRequest.getId()
 
     expect(unaryMockId).not.toBeUndefined()
+
+    expect(response.transaction).toStrictEqual(returnedTransaction)
   })
 
 })

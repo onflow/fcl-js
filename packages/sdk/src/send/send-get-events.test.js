@@ -15,24 +15,51 @@ const jsonToUInt8Array = (json) => {
     return ret
 };
 
+const hexStrToUInt8Array = (hex) => {
+    return new Uint8Array(hex.match(/.{1,2}/g).map(byte => parseInt(byte, 16)));
+};
+
+const strToUInt8Array = (str) => {
+    var ret = new Uint8Array(str.length);
+    for (var i = 0; i < str.length; i++) {
+        ret[i] = str.charCodeAt(i);
+    }
+    return ret
+};
+
 describe("Send Get Events", () => {
   test("GetEventsForBlockIDs", async () => {
     const unaryMock = jest.fn();
 
+    const dateNow = new Date(Date.now())
+
+    const returnedEvents = [
+        {
+            blockId: "a1b2c3",
+            blockHeight: 123,
+            blockTimestamp: dateNow.toISOString(),
+            type: "MyEvent",
+            transactionId: "a1b2c3",
+            transactionIndex: 123,
+            eventIndex: 456,
+            payload: {type: "String", value: "Hello, Flow"}
+        }
+    ]   
+
     unaryMock.mockReturnValue({
         getResultsList: () => [
             {
-                getBlockId_asU8: () => jsonToUInt8Array({type: "String", value: "123abc"}),
+                getBlockId_asU8: () => hexStrToUInt8Array("a1b2c3"),
                 getBlockHeight: () => 123,
                 getBlockTimestamp: () => ({
                     toDate: () => ({
-                        toISOString: () => "05 October 2011 14:48 UTC"
+                        toISOString: () => dateNow.toISOString(),
                     })
                 }),
                 getEventsList: () => ([
                     {
                         getType: () => "MyEvent",
-                        getTransactionId_asU8: () => jsonToUInt8Array({type: "String", value: "TxId"}),
+                        getTransactionId_asU8: () => hexStrToUInt8Array("a1b2c3"),
                         getTransactionIndex: () => 123,
                         getEventIndex: () => 456,
                         getPayload_asU8: () => jsonToUInt8Array({type: "String", value: "Hello, Flow"}),
@@ -42,10 +69,10 @@ describe("Send Get Events", () => {
         ]
     });
 
-    await sendGetEvents(
+    const response = await sendGetEvents(
         await resolve(
             await build([
-                getEventsAtBlockIds("MyEvent", ["abc123"]),
+                getEventsAtBlockIds("MyEvent", ["a1b2c3"]),
             ])
         ),
         {
@@ -70,25 +97,42 @@ describe("Send Get Events", () => {
     expect(unaryMockType).not.toBeUndefined()
     expect(unaryMockBlockIds).not.toBeUndefined()
     expect(unaryMockBlockIds.length).toBe(1)
+
+    expect(response.events[0]).toStrictEqual(returnedEvents[0])
   })
 
   test("GetEventsForHeightRange", async () => {
     const unaryMock = jest.fn();
 
+    const dateNow = new Date(Date.now())
+
+    const returnedEvents = [
+        {
+            blockId: "a1b2c3",
+            blockHeight: 123,
+            blockTimestamp: dateNow.toISOString(),
+            type: "MyEvent",
+            transactionId: "a1b2c3",
+            transactionIndex: 123,
+            eventIndex: 456,
+            payload: {type: "String", value: "Hello, Flow"}
+        }
+    ]   
+
     unaryMock.mockReturnValue({
         getResultsList: () => [
             {
-                getBlockId_asU8: () => jsonToUInt8Array({type: "String", value: "123abc"}),
+                getBlockId_asU8: () => hexStrToUInt8Array("a1b2c3"),
                 getBlockHeight: () => 123,
                 getBlockTimestamp: () => ({
                     toDate: () => ({
-                        toISOString: () => "05 October 2011 14:48 UTC"
+                        toISOString: () => dateNow.toISOString(),
                     })
                 }),
                 getEventsList: () => ([
                     {
                         getType: () => "MyEvent",
-                        getTransactionId_asU8: () => jsonToUInt8Array({type: "String", value: "TxId"}),
+                        getTransactionId_asU8: () => hexStrToUInt8Array("a1b2c3"),
                         getTransactionIndex: () => 123,
                         getEventIndex: () => 456,
                         getPayload_asU8: () => jsonToUInt8Array({type: "String", value: "Hello, Flow"}),
@@ -98,7 +142,7 @@ describe("Send Get Events", () => {
         ]
     });
 
-    await sendGetEvents(
+    const response = await sendGetEvents(
         await resolve(
             await build([
                 getEventsAtBlockHeightRange("MyEvent", 123, 456),
@@ -127,6 +171,8 @@ describe("Send Get Events", () => {
     expect(unaryMockType).not.toBeUndefined()
     expect(unaryMockStartHeight).not.toBeUndefined()
     expect(unaryMockEndHeight).not.toBeUndefined()
+
+    expect(response.events[0]).toStrictEqual(returnedEvents[0])
   })
 
 })
