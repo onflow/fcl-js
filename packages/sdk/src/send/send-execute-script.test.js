@@ -19,11 +19,13 @@ describe("Send Execute Script", () => {
   test("ExecuteScriptAtLatestBlock", async () => {
     const unaryMock = jest.fn();
 
+    const returnedJSONCDC = {type: "Int", value: 123}
+
     unaryMock.mockReturnValue({
-        getValue_asU8: () => jsonToUInt8Array({type: "Int", value: 123})
+        getValue_asU8: () => jsonToUInt8Array(returnedJSONCDC)
     });
 
-    await sendExecuteScript(
+    let response = await sendExecuteScript(
         await resolve(
             await build([
                 script`pub fun main(): Int { return 123 }`
@@ -48,16 +50,20 @@ describe("Send Execute Script", () => {
     const unaryMockScript = unaryMockRequest.getScript()
 
     expect(unaryMockScript).not.toBeUndefined()
+
+    expect(response.encodedData).toEqual(returnedJSONCDC)
   })
 
   test("ExecuteScriptAtBlockID", async () => {
     const unaryMock = jest.fn();
 
+    const returnedJSONCDC = {type: "Int", value: 123}
+
     unaryMock.mockReturnValue({
-        getValue_asU8: () => jsonToUInt8Array({type: "Int", value: 123})
+        getValue_asU8: () => jsonToUInt8Array(returnedJSONCDC)
     });
 
-    await sendExecuteScript(
+    const response = await sendExecuteScript(
         await resolve(
             await build([
                 script`pub fun main(): Int { return 123 }`,
@@ -85,16 +91,20 @@ describe("Send Execute Script", () => {
 
     expect(unaryMockScript).not.toBeUndefined()
     expect(unaryMockBlockID).not.toBeUndefined()
+
+    expect(response.encodedData).toEqual(returnedJSONCDC)
   })
 
   test("ExecuteScriptAtBlockHeight", async () => {
     const unaryMock = jest.fn();
 
+    const returnedJSONCDC = {type: "Int", value: 123}
+
     unaryMock.mockReturnValue({
-        getValue_asU8: () => jsonToUInt8Array({type: "Int", value: 123})
+        getValue_asU8: () => jsonToUInt8Array(returnedJSONCDC)
     });
 
-    await sendExecuteScript(
+    const response = await sendExecuteScript(
         await resolve(
             await build([
                 script`pub fun main(): Int { return 123 }`,
@@ -122,6 +132,8 @@ describe("Send Execute Script", () => {
 
     expect(unaryMockScript).not.toBeUndefined()
     expect(unaryMockBlockHeight).not.toBeUndefined()
+
+    expect(response.encodedData).toEqual(returnedJSONCDC)
   })
 
 })

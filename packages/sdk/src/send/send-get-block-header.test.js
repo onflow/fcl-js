@@ -15,26 +15,47 @@ const jsonToUInt8Array = (json) => {
     return ret
 };
 
+const hexStrToUInt8Array = (hex) => {
+    return new Uint8Array(hex.match(/.{1,2}/g).map(byte => parseInt(byte, 16)));
+};
+
+const strToUInt8Array = (str) => {
+    var ret = new Uint8Array(str.length);
+    for (var i = 0; i < str.length; i++) {
+        ret[i] = str.charCodeAt(i);
+    }
+    return ret
+};
+
 describe("Send Get Block Header", () => {
   test("GetBlockHeaderByID", async () => {
     const unaryMock = jest.fn();
 
+    const dateNow = new Date(Date.now())
+
+    const returnedBlockHeader = {
+        id: "a1b2c3",
+        parentId: "a1b2c3",
+        height: 123,
+        timestamp: dateNow.toISOString(),
+    }
+
     unaryMock.mockReturnValue({
         getBlock: () => ({
-            getId_asU8: () => jsonToUInt8Array({type: "String", value: "123abc"}),
-            getParentId_asU8: () => jsonToUInt8Array({type: "String", value: "456def"}),
+            getId_asU8: () => hexStrToUInt8Array("a1b2c3"),
+            getParentId_asU8: () => hexStrToUInt8Array("a1b2c3"),
             getHeight: () => 123,
             getTimestamp: () => ({
-                toDate: () => new Date(Date.now())
+                toDate: () => dateNow
             })
         })
     });
 
-    await sendGetBlockHeader(
+    const response = await sendGetBlockHeader(
         await resolve(
             await build([
                 getBlockHeader(),
-                atBlockId("123abc")
+                atBlockId("a1b2c3")
             ])
         ),
         {
@@ -56,23 +77,34 @@ describe("Send Get Block Header", () => {
     const unaryMockId = unaryMockRequest.getId()
 
     expect(unaryMockId).not.toBeUndefined()
+
+    expect(response.blockHeader).toEqual(returnedBlockHeader)
   })
 
   test("GetBlockHeaderByHeight", async () => {
     const unaryMock = jest.fn();
 
+    const dateNow = new Date(Date.now())
+
+    const returnedBlockHeader = {
+        id: "a1b2c3",
+        parentId: "a1b2c3",
+        height: 123,
+        timestamp: dateNow.toISOString(),
+    }
+
     unaryMock.mockReturnValue({
         getBlock: () => ({
-            getId_asU8: () => jsonToUInt8Array({type: "String", value: "123abc"}),
-            getParentId_asU8: () => jsonToUInt8Array({type: "String", value: "456def"}),
+            getId_asU8: () => hexStrToUInt8Array("a1b2c3"),
+            getParentId_asU8: () => hexStrToUInt8Array("a1b2c3"),
             getHeight: () => 123,
             getTimestamp: () => ({
-                toDate: () => new Date(Date.now())
+                toDate: () => dateNow
             })
         })
     });
 
-    await sendGetBlockHeader(
+    const response = await sendGetBlockHeader(
         await resolve(
             await build([
                 getBlockHeader(),
@@ -98,23 +130,34 @@ describe("Send Get Block Header", () => {
     const unaryMockHeight = unaryMockRequest.getHeight()
 
     expect(unaryMockHeight).not.toBeUndefined()
+
+    expect(response.blockHeader).toEqual(returnedBlockHeader)
   })
 
   test("GetLatestBlockHeader - isSealed = false", async () => {
     const unaryMock = jest.fn();
 
+    const dateNow = new Date(Date.now())
+
+    const returnedBlockHeader = {
+        id: "a1b2c3",
+        parentId: "a1b2c3",
+        height: 123,
+        timestamp: dateNow.toISOString(),
+    }
+
     unaryMock.mockReturnValue({
         getBlock: () => ({
-            getId_asU8: () => jsonToUInt8Array({type: "String", value: "123abc"}),
-            getParentId_asU8: () => jsonToUInt8Array({type: "String", value: "456def"}),
+            getId_asU8: () => hexStrToUInt8Array("a1b2c3"),
+            getParentId_asU8: () => hexStrToUInt8Array("a1b2c3"),
             getHeight: () => 123,
             getTimestamp: () => ({
-                toDate: () => new Date(Date.now())
+                toDate: () => dateNow
             })
         })
     });
 
-    await sendGetBlockHeader(
+    const response = await sendGetBlockHeader(
         await resolve(
             await build([
                 getBlockHeader()
@@ -139,23 +182,34 @@ describe("Send Get Block Header", () => {
     const unaryMockIsSealed = unaryMockRequest.getIsSealed()
 
     expect(unaryMockIsSealed).toBe(false)
+
+    expect(response.blockHeader).toEqual(returnedBlockHeader)
   })
 
   test("GetLatestBlockHeader - isSealed = true", async () => {
     const unaryMock = jest.fn();
 
+    const dateNow = new Date(Date.now())
+
+    const returnedBlockHeader = {
+        id: "a1b2c3",
+        parentId: "a1b2c3",
+        height: 123,
+        timestamp: dateNow.toISOString(),
+    }
+
     unaryMock.mockReturnValue({
         getBlock: () => ({
-            getId_asU8: () => jsonToUInt8Array({type: "String", value: "123abc"}),
-            getParentId_asU8: () => jsonToUInt8Array({type: "String", value: "456def"}),
+            getId_asU8: () => hexStrToUInt8Array("a1b2c3"),
+            getParentId_asU8: () => hexStrToUInt8Array("a1b2c3"),
             getHeight: () => 123,
             getTimestamp: () => ({
-                toDate: () => new Date(Date.now())
+                toDate: () => dateNow
             })
         })
     });
 
-    await sendGetBlockHeader(
+    const response = await sendGetBlockHeader(
         await resolve(
             await build([
                 getBlockHeader(true)
@@ -180,6 +234,8 @@ describe("Send Get Block Header", () => {
     const unaryMockIsSealed = unaryMockRequest.getIsSealed()
 
     expect(unaryMockIsSealed).toBe(true)
+
+    expect(response.blockHeader).toEqual(returnedBlockHeader)
   })
 
 })
