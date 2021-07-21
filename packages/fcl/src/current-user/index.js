@@ -325,7 +325,7 @@ async function verifyUserSignatures(msg, compSigs) {
       invariant(typeof cs.signature === "string", "signature must be a string")
 
       try {
-        const account = await fcl.account(cs.addr)
+        const account = await account(cs.addr)
         weights.push(account.keys[cs.keyId].weight.toFixed(1))
         signAlgos.push(account.keys[cs.keyId].signAlgo)
         signatures.push(cs.signature)
