@@ -2,6 +2,11 @@
 
 - YYYY-MM-DD **BREAKING?** -- Who: description
 
+## 0.0.53 -- 2021-07-21
+
+- 2021-07-21 -- Full version bump
+- 2021-07-21 -- [@JeffreyDoyle](https://github.com/JeffreyDoyle): Corrects error in send-get-account where account address was not supplied to GRPC request object.
+
 ## 0.0.52 -- 2021-07-21
 
 - 2021-07-21 -- Full version bump

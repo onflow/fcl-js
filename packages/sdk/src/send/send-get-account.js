@@ -14,6 +14,7 @@ async function sendGetAccountAtBlockHeightRequest(ix, opts) {
 
   const req = new GetAccountAtBlockHeightRequest()
   req.setBlockHeight(Number(ix.block.height))
+  req.setAddress(addressBuffer(sansPrefix(ix.account.addr)))
 
   const res = await unary(opts.node, AccessAPI.GetAccountAtBlockHeight, req)
 
@@ -24,6 +25,7 @@ async function sendGetAccountAtLatestBlockRequest(ix, opts) {
   const unary = opts.unary || defaultUnary
 
   const req = new GetAccountAtLatestBlockRequest()
+  req.setAddress(addressBuffer(sansPrefix(ix.account.addr)))
 
   const res = await unary(opts.node, AccessAPI.GetAccountAtLatestBlock, req)
 
