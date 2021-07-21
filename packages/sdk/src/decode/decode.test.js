@@ -634,6 +634,36 @@ describe("unit tests to cover all types", () => {
 
     expect(decoded).toStrictEqual({a: "foo", b: {bar: 42}})
   })
+
+  it("returns the correct response given a json-cdc payload 45 TYPE", async () => {
+    const payload = {
+      type: "Type",
+      value: {
+        staticType: "FooType"
+      },
+    }
+
+    const decoded = await decode(payload)
+
+    expect(decoded).toStrictEqual("FooType")
+  })
+
+  it("returns the correct response given a json-cdc payload 46 PATH", async () => {
+    const payload = {
+      type: "Path",
+      value: {
+        domain: "storage",
+        identifier: "123abc"
+      },
+    }
+
+    const decoded = await decode(payload)
+
+    expect(decoded).toStrictEqual({
+      domain: "storage",
+      identifier: "123abc"
+    })
+  })
 })
 
 // Boolean
@@ -959,6 +989,44 @@ const genArraySpec = () => {
   }
 }
 
+const genType = () => {
+  const {payload, decoded} = genString()
+  return {
+    payload: {type: "Type", value: { staticType: payload.value }},
+    decoded: decoded,
+  }
+}
+const genTypeSpec = () => {
+  const {payload, decoded} = genType()
+  return {
+    label: `Type`,
+    payload,
+    decoded,
+  }
+}
+
+const genPath = () => {
+  const domains = ["storage", "private", "public"]
+  const randDomain = domains[~~Math.random() * domains.length]
+  const {payload, decoded} = genString()
+  return {
+    payload: {type: "Path", value: { domain: randDomain, identifier: payload.value }},
+    decoded: {
+      domain: randDomain,
+      identifier: decoded
+    },
+  }
+}
+const genPathSpec = () => {
+  const {payload, decoded} = genPath()
+  return {
+    label: `Path`,
+    payload,
+    decoded,
+  }
+}
+
+
 const times = fn => {
   const OPTS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
   return Array.from({length: OPTS[~~(Math.random() * OPTS.length)]}, () => fn)
@@ -980,6 +1048,8 @@ describe("generative tests", () => {
     ...times(genStructSpec),
     ...times(genEventSpec),
     ...times(genArraySpec),
+    ...times(genTypeSpec),
+    ...times(genPathSpec),
   ]
     .filter(d => d != null)
     .map(d => {
