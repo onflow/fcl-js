@@ -1639,7 +1639,7 @@ The status of a transaction will depend on the Flow blockchain network and which
 | `1` | Transaction Pending - Awaiting Finalization
 | `2` | Transaction Finalized - Awaiting Execution
 | `3` | Transaction Executed - Awaiting Sealing
-| `4` | Transaction Sealed - Transaction Complete
+| `4` | Transaction Sealed - Transaction Complete. At this point the transaction result has been committed to the blockchain.
 | `5` | Transaction Expired
 
 ## `GRPC Statuses`
