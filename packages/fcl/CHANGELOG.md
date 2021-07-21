@@ -2,6 +2,8 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+- 2021-07-21 -- **EXPERIMENTAL** **Replaces iFrame with pop-up window for authn and authz**. Add `WalletUtils` and use POP/RPC as default.
+
 ## 0.0.75 - 2021-07-201
 
 - 2021-07-21 -- SDK VSN 0.0.52
