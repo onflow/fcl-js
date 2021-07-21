@@ -8,7 +8,7 @@ const hexBuffer = hex => Buffer.from(hex, "hex")
 async function sendExecuteScriptAtBlockIDRequest(ix, opts) {
   const unary = opts.unary || defaultUnary
 
-  let req = new ExecuteScriptAtBlockIDRequest()
+  const req = new ExecuteScriptAtBlockIDRequest()
 
   req.setBlockId(hexBuffer(ix.block.id))
 
@@ -16,7 +16,7 @@ async function sendExecuteScriptAtBlockIDRequest(ix, opts) {
   ix.message.arguments.forEach(arg => req.addArguments(argumentBuffer(ix.arguments[arg].asArgument)))
   req.setScript(code)
 
-  let res = await unary(opts.node, AccessAPI.ExecuteScriptAtBlockID, req)
+  const res = await unary(opts.node, AccessAPI.ExecuteScriptAtBlockID, req)
 
   return constructResponse(ix, res)
 }
@@ -24,7 +24,7 @@ async function sendExecuteScriptAtBlockIDRequest(ix, opts) {
 async function sendExecuteScriptAtBlockHeightRequest(ix, opts) {
   const unary = opts.unary || defaultUnary
 
-  let req = new ExecuteScriptAtBlockHeightRequest()
+  const req = new ExecuteScriptAtBlockHeightRequest()
 
   req.setBlockHeight(Number(ix.block.height))
 
@@ -32,7 +32,7 @@ async function sendExecuteScriptAtBlockHeightRequest(ix, opts) {
   ix.message.arguments.forEach(arg => req.addArguments(argumentBuffer(ix.arguments[arg].asArgument)))
   req.setScript(code)
 
-  let res = await unary(opts.node, AccessAPI.ExecuteScriptAtBlockHeight, req) 
+  const res = await unary(opts.node, AccessAPI.ExecuteScriptAtBlockHeight, req) 
   
   return constructResponse(ix, res)
 }
