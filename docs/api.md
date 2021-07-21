@@ -506,7 +506,7 @@ _Pass in the following as a single object with the following keys. All keys are 
 | ---------- | ----------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
 | `cadence`  | string **(required)**                           | A valid cadence transaction.                                                                                                            |
 | `args`     | [ArgumentFunction](##`ArgumentFunction`)        | Any arguments to the script if needed should be supplied via a function that returns an array of arguments.                             |
-| `limit`    | number                                          | Compute limit for query. :tomato: WHAT UNITS ARE THESE IN?                                                                              |
+| `limit`    | number                                          | Compute (Gas) limit for query. Go to the [documentation about computation cost](https://docs.onflow.org/flow-go-sdk/building-transactions/#gas-limit) for information about how computation cost is calculated on Flow.                                                                               |
 | `proposer` | [AuthorizationFunction](#AuthorizationFunction) | The authorization function that returns a valid [AuthorizationObject](#AuthorizationObject) for the [proposer role](#TransactionRoles). |
 
 ### Returns
