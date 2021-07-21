@@ -1325,7 +1325,7 @@ An interaction is an object containing the information to perform an action on c
 | ----------- | ---------------------- | --------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `addr`      | [Address](##`Address`) | `null`    | The public address of the current user                                                                                                                            |
 | `cid`       | string                 | `null`    | Allows wallets to specify a [content identifier](https://docs.ipfs.io/concepts/content-addressing/) for user metadata. |
-| `expiresAt` | number                 | `null`    | If the current session expires the value will be non-null. :tomato: UNSURE                                                                                        |
+| `expiresAt` | number                 | `null`    |   Allows wallets to specify a time-frame for a valid session.  |
 | `f_type`    | string                 | `'USER'`  | A type identifier used internally by FCL.                                                                                                                         |
 | `f_vsn`     | string                 | `'1.0.0'` | The version to use when passing messages between the provider and the dapp. :tomato: UNSURE                                                                       |
 | `loggedIn`  | boolean                | `null`    | If the user is logged in.                                                                                                                                         |
