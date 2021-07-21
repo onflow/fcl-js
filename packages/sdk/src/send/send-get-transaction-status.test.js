@@ -13,9 +13,36 @@ const jsonToUInt8Array = (json) => {
     return ret
 };
 
+const hexStrToUInt8Array = (hex) => {
+    return new Uint8Array(hex.match(/.{1,2}/g).map(byte => parseInt(byte, 16)));
+};
+
+const strToUInt8Array = (str) => {
+    var ret = new Uint8Array(str.length);
+    for (var i = 0; i < str.length; i++) {
+        ret[i] = str.charCodeAt(i);
+    }
+    return ret
+};
+
 describe("Get Transaction Status", () => {
   test("GetTransactionResult", async () => {
     const unaryMock = jest.fn();
+
+    const returnedTransactionStatus = {
+        status: "123",
+        statusCode: 1,
+        errorMessage: "No Error",
+        events: [
+            {
+                type: "MyEvent",
+                transactionId: "a1b2c3",
+                transactionIndex: 123,
+                eventIndex: 456,
+                payload: {type: "String", value: "Hello, Flow"}
+            }
+        ]
+    }
 
     unaryMock.mockReturnValue({
         getStatus: () => "123",
@@ -24,7 +51,7 @@ describe("Get Transaction Status", () => {
         getEventsList: () => ([
             {
                 getType: () => "MyEvent",
-                getTransactionId_asU8: () => jsonToUInt8Array({type: "String", value: "TxId"}),
+                getTransactionId_asU8: () => hexStrToUInt8Array("a1b2c3"),
                 getTransactionIndex: () => 123,
                 getEventIndex: () => 456,
                 getPayload_asU8: () => jsonToUInt8Array({type: "String", value: "Hello, Flow"}),
@@ -32,7 +59,7 @@ describe("Get Transaction Status", () => {
         ])
     });
 
-    await sendGetTransactionStatus(
+    const response = await sendGetTransactionStatus(
         await resolve(
             await build([
                 getTransactionStatus("MyTxID"),
@@ -57,6 +84,8 @@ describe("Get Transaction Status", () => {
     const unaryMockId = unaryMockRequest.getId()
 
     expect(unaryMockId).not.toBeUndefined()
+
+    expect(response.transactionStatus).toStrictEqual(returnedTransactionStatus)
   })
 
 })

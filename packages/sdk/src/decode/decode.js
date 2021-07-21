@@ -27,6 +27,17 @@ const decodeImplicit = async (i) => i
 
 const decodeVoid = async () => null
 
+const decodeType = async (type) => {
+  return type.staticType
+}
+
+const decodePath = async (path) => {
+  return {
+    domain: path.domain,
+    identifier: path.identifier
+  }
+}
+
 const decodeOptional = async (optional, decoders, stack) =>
   optional ? await recurseDecode(optional, decoders, stack) : null
 
@@ -94,6 +105,8 @@ const defaultDecoders = {
   Event: decodeComposite,
   Resource: decodeComposite,
   Struct: decodeComposite,
+  Type: decodeType,
+  Path: decodePath,
 }
 
 const decoderLookup = (decoders, lookup) => {

@@ -15,18 +15,42 @@ const jsonToUInt8Array = (json) => {
     return ret
 };
 
+const hexStrToUInt8Array = (hex) => {
+    return new Uint8Array(hex.match(/.{1,2}/g).map(byte => parseInt(byte, 16)));
+};
+
+const strToUInt8Array = (str) => {
+    var ret = new Uint8Array(str.length);
+    for (var i = 0; i < str.length; i++) {
+        ret[i] = str.charCodeAt(i);
+    }
+    return ret
+};
+
 describe("Send Get Block", () => {
   test("GetBlockByID", async () => {
     const unaryMock = jest.fn();
 
+    const dateNow = new Date(Date.now())
+
+    const returnedBlock = {
+        id: "a1b2c3",
+        parentId: "a1b2c3",
+        height: 123,
+        timestamp: dateNow.toISOString(),
+        collectionGuarantees: [],
+        blockSeals: [],
+        signatures: []
+    }
+
     unaryMock.mockReturnValue({
         getBlock: () => ({
-            getId_asU8: () => jsonToUInt8Array({type: "String", value: "123abc"}),
-            getParentId_asU8: () => jsonToUInt8Array({type: "String", value: "456def"}),
+            getId_asU8: () => hexStrToUInt8Array("a1b2c3"),
+            getParentId_asU8: () => hexStrToUInt8Array("a1b2c3"),
             getHeight: () => 123,
             getTimestamp: () => ({
                 toDate: () => ({
-                    toISOString: () => "05 October 2011 14:48 UTC"
+                    toISOString: () => dateNow.toISOString()
                 })
             }),
             getCollectionGuaranteesList: () => [],
@@ -35,11 +59,11 @@ describe("Send Get Block", () => {
         })
     });
 
-    await sendGetBlock(
+    const response = await sendGetBlock(
         await resolve(
             await build([
                 getBlock(),
-                atBlockId("123abc")
+                atBlockId("a1b2c3")
             ])
         ),
         {
@@ -61,19 +85,33 @@ describe("Send Get Block", () => {
     const unaryMockBlockId = unaryMockRequest.getId()
 
     expect(unaryMockBlockId).not.toBeUndefined()
+
+    expect(response.block).toEqual(returnedBlock)
   })
 
   test("GetBlockByHeight", async () => {
     const unaryMock = jest.fn();
 
+    const dateNow = new Date(Date.now())
+
+    const returnedBlock = {
+        id: "a1b2c3",
+        parentId: "a1b2c3",
+        height: 123,
+        timestamp: dateNow.toISOString(),
+        collectionGuarantees: [],
+        blockSeals: [],
+        signatures: []
+    }
+
     unaryMock.mockReturnValue({
         getBlock: () => ({
-            getId_asU8: () => jsonToUInt8Array({type: "String", value: "123abc"}),
-            getParentId_asU8: () => jsonToUInt8Array({type: "String", value: "456def"}),
+            getId_asU8: () => hexStrToUInt8Array("a1b2c3"),
+            getParentId_asU8: () => hexStrToUInt8Array("a1b2c3"),
             getHeight: () => 123,
             getTimestamp: () => ({
                 toDate: () => ({
-                    toISOString: () => "05 October 2011 14:48 UTC"
+                    toISOString: () => dateNow.toISOString()
                 })
             }),
             getCollectionGuaranteesList: () => [],
@@ -82,7 +120,7 @@ describe("Send Get Block", () => {
         })
     });
 
-    await sendGetBlock(
+    const response = await sendGetBlock(
         await resolve(
             await build([
                 getBlock(),
@@ -108,19 +146,33 @@ describe("Send Get Block", () => {
     const unaryMockBlockHeight = unaryMockRequest.getHeight()
 
     expect(unaryMockBlockHeight).not.toBeUndefined()
+
+    expect(response.block).toEqual(returnedBlock)
   })
 
   test("GetLatestBlock - isSealed = false", async () => {
     const unaryMock = jest.fn();
 
+    const dateNow = new Date(Date.now())
+
+    const returnedBlock = {
+        id: "a1b2c3",
+        parentId: "a1b2c3",
+        height: 123,
+        timestamp: dateNow.toISOString(),
+        collectionGuarantees: [],
+        blockSeals: [],
+        signatures: []
+    }
+
     unaryMock.mockReturnValue({
         getBlock: () => ({
-            getId_asU8: () => jsonToUInt8Array({type: "String", value: "123abc"}),
-            getParentId_asU8: () => jsonToUInt8Array({type: "String", value: "456def"}),
+            getId_asU8: () => hexStrToUInt8Array("a1b2c3"),
+            getParentId_asU8: () => hexStrToUInt8Array("a1b2c3"),
             getHeight: () => 123,
             getTimestamp: () => ({
                 toDate: () => ({
-                    toISOString: () => "05 October 2011 14:48 UTC"
+                    toISOString: () => dateNow.toISOString()
                 })
             }),
             getCollectionGuaranteesList: () => [],
@@ -129,7 +181,7 @@ describe("Send Get Block", () => {
         })
     });
 
-    await sendGetBlock(
+    const response = await sendGetBlock(
         await resolve(
             await build([
                 getBlock()
@@ -154,19 +206,33 @@ describe("Send Get Block", () => {
     const unaryMockIsSealed = unaryMockRequest.getIsSealed()
 
     expect(unaryMockIsSealed).toBe(false)
+
+    expect(response.block).toEqual(returnedBlock)
   })
 
   test("GetLatestBlock - isSealed = true", async () => {
     const unaryMock = jest.fn();
 
+    const dateNow = new Date(Date.now())
+
+    const returnedBlock = {
+        id: "a1b2c3",
+        parentId: "a1b2c3",
+        height: 123,
+        timestamp: dateNow.toISOString(),
+        collectionGuarantees: [],
+        blockSeals: [],
+        signatures: []
+    }
+
     unaryMock.mockReturnValue({
         getBlock: () => ({
-            getId_asU8: () => jsonToUInt8Array({type: "String", value: "123abc"}),
-            getParentId_asU8: () => jsonToUInt8Array({type: "String", value: "456def"}),
+            getId_asU8: () => hexStrToUInt8Array("a1b2c3"),
+            getParentId_asU8: () => hexStrToUInt8Array("a1b2c3"),
             getHeight: () => 123,
             getTimestamp: () => ({
                 toDate: () => ({
-                    toISOString: () => "05 October 2011 14:48 UTC"
+                    toISOString: () => dateNow.toISOString()
                 })
             }),
             getCollectionGuaranteesList: () => [],
@@ -175,7 +241,7 @@ describe("Send Get Block", () => {
         })
     });
 
-    await sendGetBlock(
+    const response = await sendGetBlock(
         await resolve(
             await build([
                 getBlock(true)
@@ -200,6 +266,8 @@ describe("Send Get Block", () => {
     const unaryMockIsSealed = unaryMockRequest.getIsSealed()
 
     expect(unaryMockIsSealed).toBe(true)
+
+    expect(response.block).toEqual(returnedBlock)
   })
 
 })

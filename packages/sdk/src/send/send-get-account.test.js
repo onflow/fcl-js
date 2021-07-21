@@ -14,14 +14,34 @@ const jsonToUInt8Array = (json) => {
     return ret
 };
 
+const hexStrToUInt8Array = (hex) => {
+    return new Uint8Array(hex.match(/.{1,2}/g).map(byte => parseInt(byte, 16)));
+};
+
+const strToUInt8Array = (str) => {
+    var ret = new Uint8Array(str.length);
+    for (var i = 0; i < str.length; i++) {
+        ret[i] = str.charCodeAt(i);
+    }
+    return ret
+};
+
 describe("Send Get Account", () => {
   test("GetAccountAtBlockHeightRequest", async () => {
     const unaryMock = jest.fn();
 
+    const returnedAccount = {
+        address: "0x1654653399040a61",
+        code: "contract",
+        keys: [],
+        balance: 10,
+        contracts: {}
+    }
+
     unaryMock.mockReturnValue({
         getAccount: () => ({
-            getAddress_asU8: () => jsonToUInt8Array({type: "Address", value: "0xABC123"}),
-            getCode_asU8: () => jsonToUInt8Array({type: "String", value: "contract"}),
+            getAddress_asU8: () => hexStrToUInt8Array("1654653399040a61"),
+            getCode_asU8: () => strToUInt8Array("contract"),
             getKeysList: () => [],
             getBalance: () => 10,
             getContractsMap: () => ({
@@ -30,10 +50,10 @@ describe("Send Get Account", () => {
         })
     });
 
-    await sendGetAccount(
+    const response = await sendGetAccount(
         await resolve(
             await build([
-                getAccount("0xABC123"),
+                getAccount("0x1654653399040a61"),
                 atBlockHeight(123)
             ])
         ),
@@ -58,15 +78,25 @@ describe("Send Get Account", () => {
 
     expect(unaryMockAddress).not.toBeUndefined()
     expect(unaryMockBlockHeight).not.toBeUndefined()
+
+    expect(response.account).toEqual(returnedAccount)
   })
 
-  test("GetAccountAtBlockHeightRequest", async () => {
+  test("GetAccountAtLatestBlockRequest", async () => {
     const unaryMock = jest.fn();
+
+    const returnedAccount = {
+        address: "0x1654653399040a61",
+        code: "contract",
+        keys: [],
+        balance: 10,
+        contracts: {}
+    }
 
     unaryMock.mockReturnValue({
         getAccount: () => ({
-            getAddress_asU8: () => jsonToUInt8Array({type: "Address", value: "0xABC123"}),
-            getCode_asU8: () => jsonToUInt8Array({type: "String", value: "contract"}),
+            getAddress_asU8: () => hexStrToUInt8Array("1654653399040a61"),
+            getCode_asU8: () => strToUInt8Array("contract"),
             getKeysList: () => [],
             getBalance: () => 10,
             getContractsMap: () => ({
@@ -75,10 +105,10 @@ describe("Send Get Account", () => {
         })
     });
 
-    await sendGetAccount(
+    const response = await sendGetAccount(
         await resolve(
             await build([
-                getAccount("0xABC123")
+                getAccount("0x1654653399040a61")
             ])
         ),
         {
@@ -100,6 +130,8 @@ describe("Send Get Account", () => {
     const unaryMockAddress = unaryMockRequest.getAddress()
 
     expect(unaryMockAddress).not.toBeUndefined()
+
+    expect(response.account).toEqual(returnedAccount)
   })
 
 })

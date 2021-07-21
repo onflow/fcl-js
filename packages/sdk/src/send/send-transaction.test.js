@@ -18,15 +18,29 @@ const jsonToUInt8Array = (json) => {
     return ret
 };
 
+const hexStrToUInt8Array = (hex) => {
+    return new Uint8Array(hex.match(/.{1,2}/g).map(byte => parseInt(byte, 16)));
+};
+
+const strToUInt8Array = (str) => {
+    var ret = new Uint8Array(str.length);
+    for (var i = 0; i < str.length; i++) {
+        ret[i] = str.charCodeAt(i);
+    }
+    return ret
+};
+
 describe("Transaction", () => {
   test("SendTransaction", async () => {
     const unaryMock = jest.fn();
 
+    const returnedTransactionId = "a1b2c3"
+
     unaryMock.mockReturnValue({
-        getId_asU8: () => jsonToUInt8Array({type: "String", value: "abc123"})
+        getId_asU8: () => hexStrToUInt8Array("a1b2c3")
     });
 
-    await sendTransaction(
+    const response = await sendTransaction(
         await resolve(
             await build([
                 transaction`cadence transaction`,
@@ -89,6 +103,8 @@ describe("Transaction", () => {
     const unaryMockRequest = unaryMock.mock.calls[0][2]
 
     expect(unaryMockRequest).not.toBeUndefined()
+
+    expect(response.transactionId).toBe(returnedTransactionId)
   })
 
 })
