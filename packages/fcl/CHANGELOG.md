@@ -2,6 +2,8 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+- 2021-07-21 -- Updates `verifyUserSignatures` to use `account` util from `@onflow/sdk`
+
 ## 0.0.74 - 2021-07-20
 
 - 2021-07-20 -- SDK VSN 0.0.51
