@@ -1,6 +1,10 @@
 ### Unreleased
 
 - YYYY-MM-DD **BREAKING?** -- Who: description
+
+## 0.0.52 -- 2021-07-21
+
+- 2021-07-21 -- Full version bump
 - 2021-07-21 -- [@JeffreyDoyle](https://github.com/JeffreyDoyle): Adds support for decoding `Type` and `Path` JSON-CDC payloads.
 - 2021-07-14 -- [@JeffreyDoyle](https://github.com/JeffreyDoyle): Refactors Send Functions to prevent and mitigate cases where the expected request type cannot be determined.
 
