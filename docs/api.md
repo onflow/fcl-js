@@ -1627,7 +1627,7 @@ The format of all responses in FCL returned from `fcl.send(...)`. For full detai
 | `type` | [EventName](#EventName) | A string containing the event name. |
 | `transactionId` | object | :tomato: TODO |
 | `transactionIndex` | number | Used to prevent replay attacks. |
-| `eventIndex` | object | :tomato: TODO |
+| `eventIndex` | number | Used to prevent replay attacks. |
 | `data` | any | The data emitted from the event. |
 
 ## `Transaction Statuses`
