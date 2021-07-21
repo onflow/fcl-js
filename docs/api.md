@@ -1329,7 +1329,7 @@ An interaction is an object containing the information to perform an action on c
 | `f_type`    | string                 | `'USER'`  | A type identifier used internally by FCL.                                                                                                                         |
 | `f_vsn`     | string                 | `'1.0.0'` | FCL protocol version.                                                                       |
 | `loggedIn`  | boolean                | `null`    | If the user is logged in.                                                                                                                                         |
-| `services`  | [ServiceObject]        | `[]`      | A list of services that offer specific functionality (eg. authorization) from the wallet provider to the logged in user. :tomato: More documentation coming soon. |
+| `services`  | [ServiceObject]        | `[]`      |  A list of trusted services that express ways of interacting with the current user's identity, including means to further discovery, [authentication, authorization](https://gist.github.com/orodio/a74293f65e83145ec8b968294808cf35#you-know-who-the-user-is), or other kinds of interactions. |
 
 ---
 
