@@ -23,8 +23,8 @@ export const authz = currentUser().authorization
 import * as types from "@onflow/types"
 export const t = types
 
-import {sendMessage} from "./wallet-utils"
-export {sendMessage}
+import * as WalletUtils from "./wallet-utils"
+export {WalletUtils}
 
 export {TestUtils} from "@onflow/sdk"
 export {config} from "@onflow/sdk"

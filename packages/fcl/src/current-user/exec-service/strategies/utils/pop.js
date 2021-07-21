@@ -32,8 +32,6 @@ export function pop(service, opts = {}) {
     try {
       if (typeof e.data !== "object") return
       if (IGNORE.has(e.data.type)) return
-      // Do we trust the sender of this message?  Whitelist?
-      // if (IGNORE.has(e.origin)) return
       if (e.data.type === CLOSE_EVENT) close()
       if (e.data.type === READY_EVENT) onReady(e, {send, close})
       if (e.data.type === RESPONSE_EVENT) onResponse(e, {send, close})

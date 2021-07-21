@@ -101,9 +101,8 @@ async function authenticate(opts = {}) {
     spawnCurrentUser()
     const user = await snapshot()
     if (user.loggedIn && notExpired(user)) return resolve(user)
-    const serviceStrategy = opts.serviceStrategy === "pop" ? pop : frame
 
-    serviceStrategy(
+    pop(
       {
         endpoint: await config.first([
           "discovery.wallet",

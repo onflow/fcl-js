@@ -1,9 +1,1 @@
-export const sendMessage = (type, msg = {}) => {
-  if (window.location !== window.parent.location) {
-    // The page is in an iFrame
-    window.parent.postMessage({...msg, type}, "*")
-  } else {
-    // The page is not in an iFrame
-    window.opener.postMessage({...msg, type}, "*")
-  }
-}
+export {sendMsgToFCL} from "./send-msg-to-fcl.js"
