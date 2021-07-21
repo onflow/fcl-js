@@ -1625,7 +1625,7 @@ The format of all responses in FCL returned from `fcl.send(...)`. For full detai
 | `blockHeight` | number| Height of the block that contains the event. |
 | `blockTimestamp` | string | The timestamp of when the block was sealed in a `DateString` format. eg. `'2021-06-25T13:42:04.227Z'` |
 | `type` | [EventName](#EventName) | A string containing the event name. |
-| `transactionId` | object | :tomato: TODO |
+| `transactionId` | string | Can be used to query transaction information, eg. via a Flow block explorer. |
 | `transactionIndex` | number | Used to prevent replay attacks. |
 | `eventIndex` | number | Used to prevent replay attacks. |
 | `data` | any | The data emitted from the event. |
