@@ -1327,7 +1327,7 @@ An interaction is an object containing the information to perform an action on c
 | `cid`       | string                 | `null`    | Allows wallets to specify a [content identifier](https://docs.ipfs.io/concepts/content-addressing/) for user metadata. |
 | `expiresAt` | number                 | `null`    |   Allows wallets to specify a time-frame for a valid session.  |
 | `f_type`    | string                 | `'USER'`  | A type identifier used internally by FCL.                                                                                                                         |
-| `f_vsn`     | string                 | `'1.0.0'` | The version to use when passing messages between the provider and the dapp. :tomato: UNSURE                                                                       |
+| `f_vsn`     | string                 | `'1.0.0'` | FCL protocol version.                                                                       |
 | `loggedIn`  | boolean                | `null`    | If the user is logged in.                                                                                                                                         |
 | `services`  | [ServiceObject]        | `[]`      | A list of services that offer specific functionality (eg. authorization) from the wallet provider to the logged in user. :tomato: More documentation coming soon. |
 
