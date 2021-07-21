@@ -24,7 +24,8 @@ export function pop(service, opts = {}) {
   const onResponse = opts.onResponse || noop
 
   window.addEventListener("message", internal)
-  const [$frame, unmount] = renderPop(serviceEndpoint(service))
+
+  const [$pop, unmount] = renderPop(serviceEndpoint(service))
   return {send, close}
 
   function internal(e) {
@@ -64,7 +65,7 @@ export function pop(service, opts = {}) {
 
   function send(msg) {
     try {
-      $frame.postMessage(JSON.parse(JSON.stringify(msg || {})), "*")
+      $pop.postMessage(JSON.parse(JSON.stringify(msg || {})), "*")
     } catch (error) {
       console.error("Frame Send Error", msg, error)
     }
