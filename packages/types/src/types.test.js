@@ -21,8 +21,12 @@ import * as t from "./types.js"
   [t.Word16, 16, {type: "Word16", value: "16"}, 16],
   [t.Word32, 32, {type: "Word32", value: "32"}, 32],
   [t.Word64, 64, {type: "Word64", value: "64"}, 64],
-  [t.UFix64, "64", {type: "UFix64", value: "64"}, "64"],
-  [t.Fix64, "64", {type: "Fix64", value: "64"}, "64"],
+  [t.UFix64, "64", {type: "UFix64", value: "64"}, "64", true],
+  [t.Fix64, "64", {type: "Fix64", value: "64"}, "64", true],
+  [t.UFix64, "64.000000001", {type: "UFix64", value: "64.000000001"}, "64.000000001", true],
+  [t.Fix64, "64.000000001", {type: "Fix64", value: "64.000000001"}, "64.000000001", true],
+  [t.UFix64, "64.0", {type: "UFix64", value: "64.0"}, "64.0", false],
+  [t.Fix64, "64.0", {type: "Fix64", value: "64.0"}, "64.0", false],
   [
     t.String,
     "Go with the Flow",
@@ -159,10 +163,14 @@ import * as t from "./types.js"
       fields: [{name: "Jeffysaur_Name", value: "Mr Jeff The Dinosaur"}],
     },
   ],
-].forEach(([cast, input, asArgument, asInjection]) => {
+].forEach(([cast, input, asArgument, asInjection, shouldError = false]) => {
   describe(cast.label, () => {
     test(`t.${cast.label}.asArgument(${input})`, () => {
-      expect(cast.asArgument(input)).toStrictEqual(asArgument)
+      if (shouldError) {
+        expect(() => cast.asArgument(input)).toThrow()  
+      } else {
+        expect(cast.asArgument(input)).toStrictEqual(asArgument)  
+      }
     })
     test(`t.${cast.label}.asInjection(${input})`, () => {
       expect(cast.asInjection(input)).toStrictEqual(asInjection)
