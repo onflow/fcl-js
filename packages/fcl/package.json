@@ -1,6 +1,6 @@
 {
   "name": "@onflow/fcl",
-  "version": "0.0.76",
+  "version": "0.0.77-pain.1",
   "description": "Flow Client Library",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
@@ -27,6 +27,7 @@
   "module": "dist/fcl.module.js",
   "unpkg": "dist/fcl.umd.js",
   "scripts": {
+    "pain": "npm publish --tag pain",
     "alpha": "npm publish --tag alpha",
     "prepublishOnly": "npm install && npm test && npm run build",
     "test": "jest",

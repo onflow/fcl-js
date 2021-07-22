@@ -2,9 +2,16 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+## 0.0.77-pain.1
+
+> **PAIN** builds are experimental builds that change a fundamental feature in a not yet backwards compatible way.
+> They exist to test and vet ideas and concepts that may make their way into a non-pain build.
+> They are called a **PAIN** build because if you are not the intended consumer of the build you will have a really bad time.
+> Please use non-pain builds to avoid pain.
+
 - 2021-07-21 -- **EXPERIMENTAL** **Replaces iFrame with pop-up window for authn and authz**. Add `WalletUtils` and use POP/RPC as default.
 
-## 0.0.75 - 2021-07-201
+## 0.0.[75-76] - 2021-07-201
 
 - 2021-07-21 -- SDK VSN 0.0.52
 - 2021-07-21 -- Updates `verifyUserSignatures` to use `account` util from `@onflow/sdk`
