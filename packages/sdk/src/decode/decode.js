@@ -38,6 +38,14 @@ const decodePath = async (path) => {
   }
 }
 
+const decodeCapability = async (cap) => {
+  return {
+    path: cap.path,
+    address: cap.address,
+    borrowType: cap.borrowType
+  }
+}
+
 const decodeOptional = async (optional, decoders, stack) =>
   optional ? await recurseDecode(optional, decoders, stack) : null
 
@@ -105,8 +113,10 @@ const defaultDecoders = {
   Event: decodeComposite,
   Resource: decodeComposite,
   Struct: decodeComposite,
+  Enum: decodeComposite,
   Type: decodeType,
   Path: decodePath,
+  Capability: decodeCapability,
 }
 
 const decoderLookup = (decoders, lookup) => {

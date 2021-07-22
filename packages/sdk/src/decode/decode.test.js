@@ -756,6 +756,7 @@ const genDictionary = (depth = 0) => {
     () => genStruct(depth++),
     () => genEvent(depth++),
     () => genArray(depth++),
+    () => genEnum(depth++),
   ]
   const dictionaryLength = ~~(Math.random() * 10)
   const arr = Array.from({length: dictionaryLength}).reduce(
@@ -808,6 +809,7 @@ const genResource = (depth = 0) => {
     () => genStruct(depth++),
     () => genEvent(depth++),
     () => genArray(depth++),
+    () => genEnum(depth++),
   ]
   const fieldsLength = ~~(Math.random() * 10)
   const res = Array.from({length: fieldsLength}).reduce(
@@ -860,6 +862,7 @@ const genStruct = (depth = 0) => {
     () => genStruct(depth++),
     () => genEvent(depth++),
     () => genArray(depth++),
+    () => genEnum(depth++),
   ]
   const fieldsLength = ~~(Math.random() * 10)
   const res = Array.from({length: fieldsLength}).reduce(
@@ -912,6 +915,7 @@ const genEvent = (depth = 0) => {
     () => genStruct(depth++),
     () => genEvent(depth++),
     () => genArray(depth++),
+    () => genEnum(depth++),
   ]
   const fieldsLength = ~~(Math.random() * 10)
   const res = Array.from({length: fieldsLength}).reduce(
@@ -946,6 +950,59 @@ const genEventSpec = () => {
   }
 }
 
+const genEnum = (depth = 0) => {
+  const MAXDEPTH = 5
+  if (depth >= MAXDEPTH) {
+    return {
+      payload: {type: "Enum", value: {fields: []}},
+      decoded: {},
+    }
+  }
+  const OPTIONS = [
+    genString,
+    genInt,
+    genBool,
+    genVoid,
+    () => genDictionary(depth++),
+    () => genResource(depth++),
+    () => genStruct(depth++),
+    () => genEvent(depth++),
+    () => genArray(depth++),
+    () => genEnum(depth++),
+  ]
+  const fieldsLength = ~~(Math.random() * 10)
+  const res = Array.from({length: fieldsLength}).reduce(
+    acc => {
+      const {payload: valPayload, decoded: val} = OPTIONS[
+        ~~(Math.random() * OPTIONS.length)
+      ]()
+      const {decoded: ranStringName} = genString()
+      acc.fields.push({
+        name: ranStringName,
+        value: valPayload,
+      })
+      acc.decoded = {
+        ...acc.decoded,
+        [ranStringName]: val,
+      }
+      return acc
+    },
+    {fields: [], decoded: {}}
+  )
+  return {
+    payload: {type: "Enum", value: {fields: res.fields}},
+    decoded: res.decoded,
+  }
+}
+const genEnumSpec = () => {
+  const {payload, decoded} = genEnum()
+  return {
+    label: `Enum`,
+    payload,
+    decoded,
+  }
+}
+
 const genArray = (depth = 0) => {
   const MAXDEPTH = 5
   if (depth >= MAXDEPTH) {
@@ -964,6 +1021,7 @@ const genArray = (depth = 0) => {
     () => genStruct(depth++),
     () => genEvent(depth++),
     () => genArray(depth++),
+    () => genEnum(depth++),
   ]
   const fieldsLength = ~~(Math.random() * 10)
   const arr = Array.from({length: fieldsLength}).reduce(
@@ -1026,6 +1084,27 @@ const genPathSpec = () => {
   }
 }
 
+const genCapability = () => {
+  const {payload: payload1, decoded: decoded1} = genString()
+  const {payload: payload2, decoded: decoded2} = genString()
+  const {payload: payload3, decoded: decoded3} = genString()
+  return {
+    payload: {type: "Capability", value: { path: payload1.value, address: payload2.value, borrowType: payload3.value }},
+    decoded: {
+      path: decoded1,
+      address: decoded2,
+      borrowType: decoded3,
+    },
+  }
+}
+const genCapabilitySpec = () => {
+  const {payload, decoded} = genCapability()
+  return {
+    label: `Capability`,
+    payload,
+    decoded,
+  }
+}
 
 const times = fn => {
   const OPTS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
@@ -1050,6 +1129,8 @@ describe("generative tests", () => {
     ...times(genArraySpec),
     ...times(genTypeSpec),
     ...times(genPathSpec),
+    ...times(genEnumSpec),
+    ...times(genCapabilitySpec),
   ]
     .filter(d => d != null)
     .map(d => {
