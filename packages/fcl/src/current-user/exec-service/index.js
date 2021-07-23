@@ -5,7 +5,7 @@ import {execPopRPC} from "./strategies/pop-rpc"
 const STRATEGIES = {
   "HTTP/RPC": execHttpPost,
   "HTTP/POST": execHttpPost,
-  "IFRAME/RPC": execPopRPC,
+  "IFRAME/RPC": execIframeRPC,
   "POP/RPC": execPopRPC,
 }
 

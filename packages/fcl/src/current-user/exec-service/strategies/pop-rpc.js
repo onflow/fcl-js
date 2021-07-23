@@ -33,7 +33,7 @@ export function execPopRPC(service, body, opts) {
         }
       },
 
-      onResponse(e, {send, close}) {
+      onResponse(e, {close}) {
         try {
           if (typeof e.data !== "object") return
           const resp = normalizePollingResponse(e.data)
