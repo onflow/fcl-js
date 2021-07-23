@@ -2,7 +2,7 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
-## 0.0.77-alpha.1 - 2021-07-23
+## 0.0.78-alpha.1 - 2021-07-23
 
 - 2021-07-23 -- VSN `@onflow/sdk` 0.0.53 -> 0.0.54 
 - 2021-07-23 -- Reverts to iFrame as default wallet method/view.
