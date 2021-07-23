@@ -2,6 +2,8 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+- 2021-07-23 -- Reverts to iFrame as default wallet method/view.
+
 ## 0.0.77-pain.1
 
 > **PAIN** builds are experimental builds that change a fundamental feature in a not yet backwards compatible way.

@@ -6,6 +6,7 @@ import {invariant} from "@onflow/util-invariant"
 import {buildUser} from "./build-user"
 import {serviceOfType} from "./service-of-type"
 import {execService} from "./exec-service"
+import {query} from "../exec/query"
 import {frame} from "./exec-service/strategies/utils/frame"
 import {pop} from "./exec-service/strategies/utils/pop"
 import {normalizeCompositeSignature} from "./normalize/composite-signature"
@@ -96,13 +97,18 @@ async function configLens(regex) {
   )
 }
 
-async function authenticate(opts = {}) {
+async function authenticate() {
   return new Promise(async (resolve, reject) => {
     spawnCurrentUser()
     const user = await snapshot()
     if (user.loggedIn && notExpired(user)) return resolve(user)
 
-    pop(
+    const view =
+      (await config.first(["discovery.wallet.view"], "frame")) === "frame"
+        ? frame
+        : pop
+
+    view(
       {
         endpoint: await config.first([
           "discovery.wallet",
@@ -336,7 +342,7 @@ async function verifyUserSignatures(msg, compSigs) {
     })
   )
 
-  return await fcl.query({
+  return await query({
     cadence: `${VERIFY_SIG_SCRIPT}`,
     args: (arg, t) => [
       arg(msg, t.String),
