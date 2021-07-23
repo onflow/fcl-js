@@ -1,5 +1,6 @@
 # Flow Client Library (FCL) API Reference
 
+<div class="docs-site-omit">
 **Version**: 0.73.0
 
 **Last Updated**: July 20, 2021
@@ -87,6 +88,7 @@
   - [`Transaction Statuses`](#transaction-statuses)
   - [`GRPC Statuses`](#grpc-statuses)
   - [`FType`](#ftype)
+</div>
 
 # Configuration
 
