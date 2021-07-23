@@ -2,6 +2,8 @@
 
 - YYYY-MM-DD **BREAKING?** -- Who: description
 
+## 0.0.54 -- 2021-07-23
+
 - 2021-07-22 -- [@JeffreyDoyle](https://github.com/JeffreyDoyle): Adds support for decoding `Enum` and `Capability` JSON-CDC payloads.
 
 ## 0.0.53 -- 2021-07-21

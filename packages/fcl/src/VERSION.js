@@ -1,1 +1,1 @@
-export const VERSION = "0.0.77-pain.1"
+export const VERSION = "0.0.77-alpha.1"
