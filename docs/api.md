@@ -304,11 +304,11 @@ These methods allows dapps to interact with FCL compatible wallets in order to a
 
 > ⚠️**This method can only be used in web browsers.**
 
-Calling this method will authenticate the current user via any wallet that supports FCL. Once called, FCL will initiate communication with the configured `discovery.wallet` endpoint which lets the user select a wallet to authenticate with. Once the wallet provider has authenticated the user, FCL will set the values on the [current user](#CurrentUserObject) object for future use and authorization.
+Calling this method will authenticate the current user via any wallet that supports FCL. Once called, FCL will initiate communication with the configured `discovery.wallet` endpoint which lets the user select a wallet to authenticate with. Once the wallet provider has authenticated the user, FCL will set the values on the [current user](#currentuserobject) object for future use and authorization.
 
 #### Note
 
-⚠️`discovery.wallet` value **must** be set in the configuration before calling this method. See [FCL Configuration](#Configuration).
+⚠️`discovery.wallet` value **must** be set in the configuration before calling this method. See [FCL Configuration](#configuration).
 
 📣 The default discovery endpoint will open an iframe overlay to let the user choose a supported wallet.
 
@@ -334,7 +334,7 @@ fcl.authenticate();
 
 > ⚠️**This method can only be used in web browsers.**
 
-Logs out the current user and sets the values on the [current user](#`CurrentUserObject`) object to null.
+Logs out the current user and sets the values on the [current user](#currentuserobject) object to null.
 
 #### Note
 
@@ -362,7 +362,7 @@ fcl.unauthenticate();
 
 > ⚠️**This method can only be used in web browsers.**
 
-A **convenience method** that calls [`fcl.unauthenticate()`](<#unauthenticate>) and then [`fcl.authenticate()`](<#authenticate>) for the current user.
+A **convenience method** that calls [`fcl.unauthenticate()`](#unauthenticate) and then [`fcl.authenticate()`](#authenticate) for the current user.
 
 #### Note
 
@@ -405,13 +405,13 @@ A **convenience method** that calls and is equivalent to [`fcl.authenticate()`](
 
 A **convenience method** that produces the needed authorization details for the current user to submit transactions to Flow. It defines a signing function that connects to a user's wallet provider to produce signatures to submit transactions.
 
-> 📣 You can replace this function with your own [authorization function](#authorization-function) if needed.
+> 📣 You can replace this function with your own [authorization function](#authorizationfunction) if needed.
 
 #### Returns
 
 | Type                                        | Description                                                                                              |
 | ------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
-| [AuthorizationObject](#AuthorizationObject) | An object containing the necessary details from the current user to authorize a transaction in any role. |
+| [AuthorizationObject](#authorizationobject) | An object containing the necessary details from the current user to authorize a transaction in any role. |
 
 #### Usage
 
@@ -446,7 +446,7 @@ const txId = await fcl.mutate({
 
 ### Current User
 
-Holds the [current user](#`CurrentUserObject`), if set, and offers a set of functions to manage the authentication and authorization of the user.
+Holds the [current user](#currentuserobject), if set, and offers a set of functions to manage the authentication and authorization of the user.
 
 > ⚠️**The following methods can only be used in web browsers.**
 
@@ -460,9 +460,9 @@ The callback passed to subscribe will be called when the user authenticates and 
 
 #### Arguments
 
-| Name       | Type     |                                                                                                                                          |  |
-| ---------- | -------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| `callback` | function | The callback will be called with the [current user](#`CurrentUserObject`) as the first argument when the current user is set or removed. |
+| Name       | Type     |                                                                                                                                        |  |
+| ---------- | -------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| `callback` | function | The callback will be called with the [current user](#currentuserobject) as the first argument when the current user is set or removed. |
 
 #### Usage
 
@@ -497,7 +497,7 @@ export function AuthCluster() {
 
 ## `currentUser().snapshot`
 
-Returns the [current user](#`CurrentUserObject`) object. This is the same object that is set and available on [`fcl.currentUser().subscribe(callback)`](#currentusersubscribe).
+Returns the [current user](#currentuserobject) object. This is the same object that is set and available on [`fcl.currentUser().subscribe(callback)`](#currentusersubscribe).
 
 #### Usage
 
@@ -551,11 +551,11 @@ Allows you to submit scripts to query the blockchain.
 
 _Pass in the following as a single object with the following keys.All keys are optional unless otherwise stated._
 
-| Key       | Type                                    | Description                                                                                                                                                                                                            |
-| --------- | --------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `cadence` | string **(required)**                   | A valid cadence script.                                                                                                                                                                                                |
-| `args`    | [ArgumentFunction](#`ArgumentFunction`) | Any arguments to the script if needed should be supplied via a function that returns an array of arguments.                                                                                                            |
-| `limit`   | number                                  | Compute (Gas) limit for query. Read the [documentation about computation cost](https://docs.onflow.org/flow-go-sdk/building-transactions/#gas-limit) for information about how computation cost is calculated on Flow. |
+| Key       | Type                                  | Description                                                                                                                                                                                                            |
+| --------- | ------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `cadence` | string **(required)**                 | A valid cadence script.                                                                                                                                                                                                |
+| `args`    | [ArgumentFunction](#argumentfunction) | Any arguments to the script if needed should be supplied via a function that returns an array of arguments.                                                                                                            |
+| `limit`   | number                                | Compute (Gas) limit for query. Read the [documentation about computation cost](https://docs.onflow.org/flow-go-sdk/building-transactions/#gas-limit) for information about how computation cost is calculated on Flow. |
 
 #### Returns
 
@@ -603,9 +603,9 @@ _Pass in the following as a single object with the following keys. All keys are 
 | Key        | Type                                            | Description                                                                                                                                                                                                            |
 | ---------- | ----------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `cadence`  | string **(required)**                           | A valid cadence transaction.                                                                                                                                                                                           |
-| `args`     | [ArgumentFunction](###`ArgumentFunction`)       | Any arguments to the script if needed should be supplied via a function that returns an array of arguments.                                                                                                            |
+| `args`     | [ArgumentFunction](#argumentfunction)           | Any arguments to the script if needed should be supplied via a function that returns an array of arguments.                                                                                                            |
 | `limit`    | number                                          | Compute (Gas) limit for query. Read the [documentation about computation cost](https://docs.onflow.org/flow-go-sdk/building-transactions/#gas-limit) for information about how computation cost is calculated on Flow. |
-| `proposer` | [AuthorizationFunction](#AuthorizationFunction) | The authorization function that returns a valid [AuthorizationObject](#AuthorizationObject) for the [proposer role](#TransactionRoles).                                                                                |
+| `proposer` | [AuthorizationFunction](#authorizationfunction) | The authorization function that returns a valid [AuthorizationObject](#authorizationobject) for the [proposer role](#TransactionRoles).                                                                                |
 
 #### Returns
 
@@ -637,7 +637,7 @@ const txId = await fcl.mutate({
 #### Examples
 
 - [Additional explanation](https://gist.github.com/orodio/3bf977a0bd45b990d16fdc1459b129a2)
-- [Custom authorization function](#authorization-function)
+- [Custom authorization function](#authorizationfunction)
 
 ---
 
@@ -651,7 +651,7 @@ In some cases, you may want to utilize pre-built interactions or build more comp
 
 Sends arbitrary scripts, transactions, and requests to Flow.
 
-This method consumes an array of [builders](https://google.ca) that are to be resolved and sent. The builders required to be included in the array depend on the [interaction](#`Interactions`) that is being built.
+This method consumes an array of [builders](https://google.ca) that are to be resolved and sent. The builders required to be included in the array depend on the [interaction](#interactions) that is being built.
 
 #### Note
 
@@ -667,7 +667,7 @@ This method consumes an array of [builders](https://google.ca) that are to be re
 
 | Type                              | Description                                                                                                                                       |
 | --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [ResponseObject](#ResponseObject) | An object containing the data returned from the chain. Should always be decoded with `fcl.decode()` to get back appropriate JSON keys and values. |
+| [ResponseObject](#responseobject) | An object containing the data returned from the chain. Should always be decoded with `fcl.decode()` to get back appropriate JSON keys and values. |
 
 #### Usage
 
@@ -710,9 +710,9 @@ Decodes the response from `fcl.send()` into the appropriate JSON representation 
 
 #### Arguments
 
-| Name       | Type                                | Description                                            |
-| ---------- | ----------------------------------- | ------------------------------------------------------ |
-| `response` | [ResponseObject](#`ResponseObject`) | Should be the response returned from `fcl.send([...])` |
+| Name       | Type                              | Description                                            |
+| ---------- | --------------------------------- | ------------------------------------------------------ |
+| `response` | [ResponseObject](#responseobject) | Should be the response returned from `fcl.send([...])` |
 
 #### Returns
 
@@ -753,7 +753,7 @@ assert(typeof decoded === "number");
 ### Builders
 
 These methods fill out various portions of a transaction or script template in order to
-build, resolve, and send it to the blockchain. A valid populated template is referred to as an [Interaction](#Interaction).
+build, resolve, and send it to the blockchain. A valid populated template is referred to as an [Interaction](#interaction).
 
 ⚠️**These methods must be used with `fcl.send([...builders]).then(fcl.decode)`**
 
@@ -769,13 +769,13 @@ A builder function that returns the interaction to get an account by address.
 
 | Name      | Type                | Description                                                                        |
 | --------- | ------------------- | ---------------------------------------------------------------------------------- |
-| `address` | [Address](#Address) | Address of the user account with or without a prefix (both formats are supported). |
+| `address` | [Address](#address) | Address of the user account with or without a prefix (both formats are supported). |
 
 #### Returns after decoding
 
 | Type                      | Description                              |
 | ------------------------- | ---------------------------------------- |
-| [AccountObject](#Account) | A JSON representation of a user account. |
+| [AccountObject](#account) | A JSON representation of a user account. |
 
 #### Usage
 
@@ -798,13 +798,13 @@ A builder function that returns the interaction to get the latest block.
 
 📣 Use with `fcl.atBlockId()` and `fcl.atBlockHeight()` when building the interaction to get information for older blocks.
 
-⚠️Consider using the pre-built interaction [`fcl.latestBlock(isSealed)`](<#latestBlock>) if you do not need to pair with any other builders.
+⚠️Consider using the pre-built interaction [`fcl.latestBlock(isSealed)`](#latestblock) if you do not need to pair with any other builders.
 
 #### Arguments
 
-| Name       | Type    | Default | Description                                                                      |
-| ---------- | ------- | ------- | -------------------------------------------------------------------------------- |
-| `isSealed` | boolean | false   | If the latest block should be sealed or not. See [block states](#`Interaction`). |
+| Name       | Type    | Default | Description                                                                    |
+| ---------- | ------- | ------- | ------------------------------------------------------------------------------ |
+| `isSealed` | boolean | false   | If the latest block should be sealed or not. See [block states](#interaction). |
 
 #### Returns after decoding
 
@@ -830,7 +830,7 @@ const latestSealedBlock = await fcl
 
 A builder function that returns a partial interaction to a block at a specific height.
 
-⚠️Use with other interactions like [`fcl.getBlock()`](<#`getBlock`>) to get a full interaction at the specified block height.
+⚠️Use with other interactions like [`fcl.getBlock()`](#getblock) to get a full interaction at the specified block height.
 
 #### Arguments
 
@@ -840,9 +840,9 @@ A builder function that returns a partial interaction to a block at a specific h
 
 #### Returns
 
-| Type                                  | Description                                                                                                 |
-| ------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
-| [Partial Interaction](#`Interaction`) | A partial interaction to be paired with another interaction such as `fcl.getBlock()` or `fcl.getAccount()`. |
+| Type                                | Description                                                                                                 |
+| ----------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| [Partial Interaction](#interaction) | A partial interaction to be paired with another interaction such as `fcl.getBlock()` or `fcl.getAccount()`. |
 
 #### Usage
 
@@ -858,7 +858,7 @@ await fcl.send([fcl.getBlock(), fcl.atBlockHeight(123)]).then(fcl.decode);
 
 A builder function that returns a partial interaction to a block at a specific block ID.
 
-⚠️Use with other interactions like [`fcl.getBlock()`](<#`getBlock`>) to get a full interaction at the specified block ID.
+⚠️Use with other interactions like [`fcl.getBlock()`](#getblock) to get a full interaction at the specified block ID.
 
 #### Arguments
 
@@ -868,9 +868,9 @@ A builder function that returns a partial interaction to a block at a specific b
 
 #### Returns
 
-| Type                                  | Description                                                                                                 |
-| ------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
-| [Partial Interaction](#`Interaction`) | A partial interaction to be paired with another interaction such as `fcl.getBlock()` or `fcl.getAccount()`. |
+| Type                                | Description                                                                                                 |
+| ----------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| [Partial Interaction](#interaction) | A partial interaction to be paired with another interaction such as `fcl.getBlock()` or `fcl.getAccount()`. |
 
 #### Usage
 
@@ -892,7 +892,7 @@ A builder function that returns the interaction to get a block header.
 
 | Type                                    | Description                                                  |
 | --------------------------------------- | ------------------------------------------------------------ |
-| [BlockHeaderObject](#BlockHeaderObject) | The latest block header if not used with any other builders. |
+| [BlockHeaderObject](#blockheightobject) | The latest block header if not used with any other builders. |
 
 #### Usage
 
@@ -916,7 +916,7 @@ A builder function that returns all instances of a particular event (by name) wi
 
 | Name              | Type                    | Description                                                      |
 | ----------------- | ----------------------- | ---------------------------------------------------------------- |
-| `eventName`       | [EventName](#EventName) | The name of the event.                                           |
+| `eventName`       | [EventName](#eventname) | The name of the event.                                           |
 | `fromBlockHeight` | number                  | The height of the block to start looking for events (inclusive). |
 | `toBlockHeight`   | number                  | The height of the block to stop looking for events (inclusive).  |
 
@@ -954,7 +954,7 @@ A builder function that returns all instances of a particular event (by name) wi
 
 | Name        | Type                    | Description                               |
 | ----------- | ----------------------- | ----------------------------------------- |
-| `eventName` | [EventName](#EventName) | The name of the event.                    |
+| `eventName` | [EventName](#eventname) | The name of the event.                    |
 | `blockIds`  | number                  | The ids of the blocks to scan for events. |
 
 #### Returns after decoding
@@ -996,7 +996,7 @@ A builder function that returns all a collection containing a list of transactio
 
 | Type                                  | Description                                                                       |
 | ------------------------------------- | --------------------------------------------------------------------------------- |
-| [CollectionObject](#CollectionObject) | An object with the id and a list of transactions within the requested collection. |
+| [CollectionObject](#collectionobject) | An object with the id and a list of transactions within the requested collection. |
 
 #### Usage
 
@@ -1020,7 +1020,7 @@ A builder function that returns the status of transaction.
 
 ⚠️The transactionID provided must be from the current spork.
 
-📣 Considering [subscribing to the transaction from `fcl.tx(id)`](<###`fcl.tx(transactionId)>) instead of calling this method directly.
+📣 Considering [subscribing to the transaction from `fcl.tx(id)`](#tx) instead of calling this method directly.
 
 #### Arguments
 
@@ -1030,12 +1030,12 @@ A builder function that returns the status of transaction.
 
 #### Returns after decoding
 
-| Name           | Type                                      | Description                                                     |
-| -------------- | ----------------------------------------- | --------------------------------------------------------------- |
-| `events`       | [[EventObject]](#EventObject)             | An array of events that were emitted during the transaction.    |
-| `status`       | [TransactionStatus](#TransactionStatuses) | The status of the transaction on the blockchain.                |
-| `errorMessage` | string                                    | An error message if it exists. Default is an empty string `''`. |
-| `statusCode`   | [GRPCStatus](#grpc-statuses)              | The status from the GRPC response.                              |
+| Name           | Type                                       | Description                                                     |
+| -------------- | ------------------------------------------ | --------------------------------------------------------------- |
+| `events`       | [[EventObject]](#EventObject)              | An array of events that were emitted during the transaction.    |
+| `status`       | [TransactionStatus](#transaction-statuses) | The status of the transaction on the blockchain.                |
+| `errorMessage` | string                                     | An error message if it exists. Default is an empty string `''`. |
+| `statusCode`   | [GRPCStatus](#grpc-statuses)               | The status from the GRPC response.                              |
 
 #### Usage
 
@@ -1055,11 +1055,11 @@ const status = await fcl
 
 ## `getTransaction`
 
-A builder function that returns a [transaction object](###TransactionObject>) once decoded.
+A builder function that returns a [transaction object](#transactionobject) once decoded.
 
 ⚠️The transactionID provided must be from the current spork.
 
-📣 Considering using [`fcl.tx(id).onceSealed()`](<###`tx>) instead of calling this method directly.
+📣 Considering using [`fcl.tx(id).onceSealed()`](#tx) instead of calling this method directly.
 
 #### Arguments
 
@@ -1069,12 +1069,12 @@ A builder function that returns a [transaction object](###TransactionObject>) on
 
 #### Returns after decoding
 
-| Name           | Type                                        | Description                                                     |
-| -------------- | ------------------------------------------- | --------------------------------------------------------------- |
-| `events`       | [[EventObject]](#EventObject)               | An array of events that matched the eventName.                  |
-| `status`       | [TransactionStatus](###`TransactionStatus`) | The status of the transaction on the blockchain.                |
-| `errorMessage` | string                                      | An error message if it exists. Default is an empty string `''`. |
-| `statusCode`   | [GRPCStatus](###`TransactionStatus`)        | The status from the GRPC response.                              |
+| Name           | Type                                    | Description                                                     |
+| -------------- | --------------------------------------- | --------------------------------------------------------------- |
+| `events`       | [[EventObject]](#EventObject)           | An array of events that matched the eventName.                  |
+| `status`       | [TransactionStatus](#transactionstatus) | The status of the transaction on the blockchain.                |
+| `errorMessage` | string                                  | An error message if it exists. Default is an empty string `''`. |
+| `statusCode`   | [GRPCStatus](#transactionstatus)        | The status from the GRPC response.                              |
 
 #### Usage
 
@@ -1094,25 +1094,25 @@ const tx = await fcl
 
 ## `getEvents` (Deprecated)
 
-Use [`fcl.getEventsAtBlockHeightRange`](###`getEventsAtBlockHeightRange`) or [`fcl.getEventsAtBlockIds`](###`getEventsAtBlockIds`).
+Use [`fcl.getEventsAtBlockHeightRange`](#geteventsatblockheightrange) or [`fcl.getEventsAtBlockIds`](#geteventsatblockids).
 
 ---
 
 ## `getLatestBlock` (Deprecated)
 
-Use [`fcl.getBlock`](###`getBlock`).
+Use [`fcl.getBlock`](#getblock).
 
 ---
 
 ## `getBlockById` (Deprecated)
 
-Use [`fcl.getBlock`](###`getBlock`) and [`fcl.atBlockId`](###`atBlockId`).
+Use [`fcl.getBlock`](#getblock) and [`fcl.atBlockId`](#atblockid).
 
 ---
 
 ## `getBlockByHeight` (Deprecated)
 
-Use [`fcl.getBlock`](###`getBlock`) and [`fcl.atBlockHeight`](###`atBlockHeight`).
+Use [`fcl.getBlock`](#getblock) and [`fcl.atBlockHeight`](#atblockheight).
 
 ---
 
@@ -1128,16 +1128,16 @@ A utility builder to be used with `fcl.args[...]` to create FCL supported argume
 
 #### Arguments
 
-| Name    | Type                 | Description                                               |
-| ------- | -------------------- | --------------------------------------------------------- |
-| `value` | any                  | Any value that you are looking to pass to other builders. |
-| `type`  | [FType](###`FTypes`) | A type supported by Flow.                                 |
+| Name    | Type             | Description                                               |
+| ------- | ---------------- | --------------------------------------------------------- |
+| `value` | any              | Any value that you are looking to pass to other builders. |
+| `type`  | [FType](#ftypes) | A type supported by Flow.                                 |
 
 #### Returns
 
-| Type                                  | Description                         |
-| ------------------------------------- | ----------------------------------- |
-| [ArgumentObject](###`ArgumentObject`) | Holds the value and type passed in. |
+| Type                              | Description                         |
+| --------------------------------- | ----------------------------------- |
+| [ArgumentObject](#argumentobject) | Holds the value and type passed in. |
 
 #### Usage
 
@@ -1167,15 +1167,15 @@ A utility builder to be used with other builders to pass in arguments with a val
 
 #### Arguments
 
-| Name   | Type                                      | Description                                                           |
-| ------ | ----------------------------------------- | --------------------------------------------------------------------- |
-| `args` | [[Argument Objects]](###`ArgumentObject`) | An array of arguments that you are looking to pass to other builders. |
+| Name   | Type                                  | Description                                                           |
+| ------ | ------------------------------------- | --------------------------------------------------------------------- |
+| `args` | [[Argument Objects]](#argumentobject) | An array of arguments that you are looking to pass to other builders. |
 
 #### Returns
 
 | Type                                | Description                                                                                                         |
 | ----------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
-| [Partial Interaction](#Interaction) | An interaction that contains the arguments and types passed in. This alone is a partial and incomplete interaction. |
+| [Partial Interaction](#interaction) | An interaction that contains the arguments and types passed in. This alone is a partial and incomplete interaction. |
 
 #### Usage
 
@@ -1201,7 +1201,7 @@ await fcl
 
 ### Template Builders
 
-> ⚠️**_Reccomended:_** The following functionality is simplified by [`fcl.query({...options}`](<#query>) or [`fcl.mutate({...options})`](<#mutate>) and is reccomended to use over the functions below.
+> ⚠️**_Reccomended:_** The following functionality is simplified by [`fcl.query({...options}`](#query) or [`fcl.mutate({...options})`](#mutate) and is reccomended to use over the functions below.
 
 ## `script`
 
@@ -1219,7 +1219,7 @@ A template builder to use a Cadence script for an interaction.
 
 | Type                        | Description                                   |
 | --------------------------- | --------------------------------------------- |
-| [Interaction](#Interaction) | An interaction containing the code passed in. |
+| [Interaction](#interaction) | An interaction containing the code passed in. |
 
 #### Usage
 
@@ -1255,7 +1255,7 @@ A template builder to use a Cadence transaction for an interaction.
 
 | Type                                | Description                                                                                                                    |
 | ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| [Partial Interaction](#Interaction) | An partial interaction containing the code passed in. Further builders are required to complete the interaction - see warning. |
+| [Partial Interaction](#interaction) | An partial interaction containing the code passed in. Further builders are required to complete the interaction - see warning. |
 
 #### Usage
 
@@ -1283,15 +1283,15 @@ A pre-built interaction that returns the details of an account from their public
 
 #### Arguments
 
-| Name      | Type                    | Description                                                                        |
-| --------- | ----------------------- | ---------------------------------------------------------------------------------- |
-| `address` | [Address](###`Address`) | Address of the user account with or without a prefix (both formats are supported). |
+| Name      | Type                | Description                                                                        |
+| --------- | ------------------- | ---------------------------------------------------------------------------------- |
+| `address` | [Address](#address) | Address of the user account with or without a prefix (both formats are supported). |
 
 #### Returns
 
-| Type                          | Description                              |
-| ----------------------------- | ---------------------------------------- |
-| [AccountObject](###`Account`) | A JSON representation of a user account. |
+| Type                      | Description                              |
+| ------------------------- | ---------------------------------------- |
+| [AccountObject](#account) | A JSON representation of a user account. |
 
 #### Usage
 
@@ -1310,13 +1310,13 @@ A pre-built interaction that returns the latest block (optionally sealed or not)
 
 | Name       | Type    | Default | Description                                                                    |
 | ---------- | ------- | ------- | ------------------------------------------------------------------------------ |
-| `isSealed` | boolean | false   | If the latest block should be sealed or not. See [block states](#Interaction). |
+| `isSealed` | boolean | false   | If the latest block should be sealed or not. See [block states](#interaction). |
 
 #### Returns
 
 | Type                        | Description                       |
 | --------------------------- | --------------------------------- |
-| [BlockObject](#BlockObject) | A JSON representation of a block. |
+| [BlockObject](#blockobject) | A JSON representation of a block. |
 
 #### Usage
 
@@ -1342,13 +1342,13 @@ A utility function that lets you set the transaction to get subsequent status up
 
 #### Returns
 
-| Name              | Type     | Description                                                                                              |
-| ----------------- | -------- | -------------------------------------------------------------------------------------------------------- |
-| `snapshot()`      | function | Returns the current state of the transaction.                                                            |
-| `subscribe(cb)`   | function | Calls the `cb` passed in with the new transaction on a status change.                                    |
-| `onceFinalized()` | function | Provides the transaction once status `2` is returned. See [Tranasaction Statuses](#TransactionStatuses). |
-| `onceExecuted()`  | function | Provides the transaction once status `3` is returned. See [Tranasaction Statuses](#TransactionStatuses). |
-| `onceSealed()`    | function | Provides the transaction once status `4` is returned. See [Tranasaction Statuses](#TransactionStatuses). |
+| Name              | Type     | Description                                                                                               |
+| ----------------- | -------- | --------------------------------------------------------------------------------------------------------- |
+| `snapshot()`      | function | Returns the current state of the transaction.                                                             |
+| `subscribe(cb)`   | function | Calls the `cb` passed in with the new transaction on a status change.                                     |
+| `onceFinalized()` | function | Provides the transaction once status `2` is returned. See [Tranasaction Statuses](#transaction-statuses). |
+| `onceExecuted()`  | function | Provides the transaction once status `3` is returned. See [Tranasaction Statuses](#transaction-statuses). |
+| `onceSealed()`    | function | Provides the transaction once status `4` is returned. See [Tranasaction Statuses](#transaction-statuses). |
 
 #### Usage
 
@@ -1407,7 +1407,7 @@ fcl.events(eventKey).subscribe((event) => {
 
 ### `Builders`
 
-Builders are modular functions that can be coupled together with `fcl.send([...builders])` to create an [Interaction](###`Interactions`). The builders needed to create an interaction depend on the script or transaction that is being sent.
+Builders are modular functions that can be coupled together with `fcl.send([...builders])` to create an [Interaction](#interactions). The builders needed to create an interaction depend on the script or transaction that is being sent.
 
 ---
 
@@ -1419,15 +1419,15 @@ An interaction is an object containing the information to perform an action on c
 
 ### `CurrentUserObject`
 
-| Key         | Value Type              | Default   | Description                                                                                                                                                                                                                                                                                    |
-| ----------- | ----------------------- | --------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `addr`      | [Address](###`Address`) | `null`    | The public address of the current user                                                                                                                                                                                                                                                         |
-| `cid`       | string                  | `null`    | Allows wallets to specify a [content identifier](https://docs.ipfs.io/concepts/content-addressing/) for user metadata.                                                                                                                                                                         |
-| `expiresAt` | number                  | `null`    | Allows wallets to specify a time-frame for a valid session.                                                                                                                                                                                                                                    |
-| `f_type`    | string                  | `'USER'`  | A type identifier used internally by FCL.                                                                                                                                                                                                                                                      |
-| `f_vsn`     | string                  | `'1.0.0'` | FCL protocol version.                                                                                                                                                                                                                                                                          |
-| `loggedIn`  | boolean                 | `null`    | If the user is logged in.                                                                                                                                                                                                                                                                      |
-| `services`  | [ServiceObject]         | `[]`      | A list of trusted services that express ways of interacting with the current user's identity, including means to further discovery, [authentication, authorization](https://gist.github.com/orodio/a74293f65e83145ec8b968294808cf35#you-know-who-the-user-is), or other kinds of interactions. |
+| Key         | Value Type          | Default   | Description                                                                                                                                                                                                                                                                                    |
+| ----------- | ------------------- | --------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `addr`      | [Address](#address) | `null`    | The public address of the current user                                                                                                                                                                                                                                                         |
+| `cid`       | string              | `null`    | Allows wallets to specify a [content identifier](https://docs.ipfs.io/concepts/content-addressing/) for user metadata.                                                                                                                                                                         |
+| `expiresAt` | number              | `null`    | Allows wallets to specify a time-frame for a valid session.                                                                                                                                                                                                                                    |
+| `f_type`    | string              | `'USER'`  | A type identifier used internally by FCL.                                                                                                                                                                                                                                                      |
+| `f_vsn`     | string              | `'1.0.0'` | FCL protocol version.                                                                                                                                                                                                                                                                          |
+| `loggedIn`  | boolean             | `null`    | If the user is logged in.                                                                                                                                                                                                                                                                      |
+| `services`  | [ServiceObject]     | `[]`      | A list of trusted services that express ways of interacting with the current user's identity, including means to further discovery, [authentication, authorization](https://gist.github.com/orodio/a74293f65e83145ec8b968294808cf35#you-know-who-the-user-is), or other kinds of interactions. |
 
 ---
 
@@ -1435,12 +1435,12 @@ An interaction is an object containing the information to perform an action on c
 
 This type conforms to the interface required for FCL to authorize transaction on behalf o the current user.
 
-| Key               | Value Type              | Description                                                                                       |
-| ----------------- | ----------------------- | ------------------------------------------------------------------------------------------------- |
-| `addr`            | [Address](###`Address`) | The address of the authorizer                                                                     |
-| `signingFunction` | function                | A function that allows FCL to sign using the authorization details and produce a valid signature. |
-| `keyId`           | number                  | The index of the key to use during authorization. (Multiple keys on an account is possible).      |
-| `sequenceNum`     | number                  | A number that is incremented per transaction using they keyId.                                    |
+| Key               | Value Type          | Description                                                                                       |
+| ----------------- | ------------------- | ------------------------------------------------------------------------------------------------- |
+| `addr`            | [Address](#address) | The address of the authorizer                                                                     |
+| `signingFunction` | function            | A function that allows FCL to sign using the authorization details and produce a valid signature. |
+| `keyId`           | number              | The index of the key to use during authorization. (Multiple keys on an account is possible).      |
+| `sequenceNum`     | number              | A number that is incremented per transaction using they keyId.                                    |
 
 ---
 
@@ -1448,11 +1448,11 @@ This type conforms to the interface required for FCL to authorize transaction on
 
 An object that contains all the information needed for FCL to sign a message with the user's signature.
 
-| Key         | Value Type              | Description                                                                                          |
-| ----------- | ----------------------- | ---------------------------------------------------------------------------------------------------- |
-| `addr`      | [Address](###`Address`) | The address of the authorizer                                                                        |
-| `keyId`     | number                  | The index of the key to use during authorization. (Multiple keys on an account is possible).         |
-| `signature` | function                | A [SigningFunction](#Signing-Function) that can produce a valid signature for a user from a message. |
+| Key         | Value Type          | Description                                                                                          |
+| ----------- | ------------------- | ---------------------------------------------------------------------------------------------------- |
+| `addr`      | [Address](#address) | The address of the authorizer                                                                        |
+| `keyId`     | number              | The index of the key to use during authorization. (Multiple keys on an account is possible).         |
+| `signature` | function            | A [SigningFunction](#Signing-Function) that can produce a valid signature for a user from a message. |
 
 ---
 
@@ -1462,11 +1462,11 @@ The JSON representation of an account on the Flow blockchain.
 
 | Key         | Value Type                    | Description                                                                                |
 | ----------- | ----------------------------- | ------------------------------------------------------------------------------------------ |
-| `address`   | [Address](#Address)           | The address of the account                                                                 |
+| `address`   | [Address](#address)           | The address of the account                                                                 |
 | `balance`   | number                        | The FLOW balance of the account in 10\*6.                                                  |
-| `code`      | [Code](#Code)                 | The source code of any Cadence contracts stored in the account.                                   |
+| `code`      | [Code](#code)                 | The code of any Cadence contracts stored in the account.                                   |
 | `contracts` | Object: [Contract](#contract) | An object with keys as the contract name deployed and the value as the the cadence string. |
-| `keys`      | [[KeyObject]](#Key)           | Any contracts deployed to this account.                                                    |
+| `keys`      | [[KeyObject]](#keyobject)     | Any contracts deployed to this account.                                                    |
 
 ---
 
@@ -1482,10 +1482,10 @@ The JSON representation of an account on the Flow blockchain.
 
 An argument object created by `fcl.arg(value,type)`
 
-| Key     | Value Type          | Description                                       |
-| ------- | ------------------- | ------------------------------------------------- |
-| `value` | any                 | Any value to be used as an argument to a builder. |
-| `xform` | [FType](###`FType`) | Any of the supported types on Flow.               |
+| Key     | Value Type      | Description                                       |
+| ------- | --------------- | ------------------------------------------------- |
+| `value` | any             | Any value to be used as an argument to a builder. |
+| `xform` | [FType](#ftype) | Any of the supported types on Flow.               |
 
 ---
 
@@ -1495,10 +1495,10 @@ An function that takes the `fcl.arg` function and fcl types `t` and returns an a
 
 `(arg, t) => Array<Arg>`
 
-| Parameter Name | Value Type           | Description                                                                   |
-| -------------- | -------------------- | ----------------------------------------------------------------------------- |
-| `arg`          | function             | A function that returns an [ArgumentObject](###`ArgumentObject`) - `fcl.arg`. |
-| `t`            | [FTypes](###`FType`) | An object with acccess to all of the supported types on Flow.                 |
+| Parameter Name | Value Type       | Description                                                               |
+| -------------- | ---------------- | ------------------------------------------------------------------------- |
+| `arg`          | function         | A function that returns an [ArgumentObject](#argumentobject) - `fcl.arg`. |
+| `t`            | [FTypes](#ftype) | An object with acccess to all of the supported types on Flow.             |
 
 **Returns**
 
@@ -1518,13 +1518,13 @@ An authorization function must produce the information of the user that is going
 
 | Parameter Name | Value Type                      | Description                                    |
 | -------------- | ------------------------------- | ---------------------------------------------- |
-| `account`      | [AccountObject](#AccountObject) | The account of the user that is going to sign. |
+| `account`      | [AccountObject](#accountobject) | The account of the user that is going to sign. |
 
 **Returns**
 
 | Value Type                                           | Description                                                                                   |
 | ---------------------------------------------------- | --------------------------------------------------------------------------------------------- |
-| Promise<[AuthorizationObject](#AuthorizationObject)> | The object that contains all the information needed by FCL to authorize a user's transaction. |
+| Promise<[AuthorizationObject](#authorizationobject)> | The object that contains all the information needed by FCL to authorize a user's transaction. |
 
 #### Usage
 
@@ -1581,9 +1581,9 @@ Note: These values are destructed from the payload object in the first argument.
 
 **Returns**
 
-| Value Type                                     | Description                                                                                   |
-| ---------------------------------------------- | --------------------------------------------------------------------------------------------- |
-| Promise<[SignableObject](###`SignableObject`)> | The object that contains all the information needed by FCL to authorize a user's transaction. |
+| Value Type                                 | Description                                                                                   |
+| ------------------------------------------ | --------------------------------------------------------------------------------------------- |
+| Promise<[SignableObject](#signableobject)> | The object that contains all the information needed by FCL to authorize a user's transaction. |
 
 #### Usage
 
@@ -1680,7 +1680,7 @@ The JSON representation of a key on the Flow blockchain.
 
 ### `BlockHeaderObject`
 
-The subset of the [BlockObject](#BlockObject) containing only the header values of a block.
+The subset of the [BlockObject](#blockobject) containing only the header values of a block.
 
 | Key         | Value Type | Description                   |
 | ----------- | ---------- | ----------------------------- |
@@ -1732,7 +1732,7 @@ The format of all responses in FCL returned from `fcl.send(...)`. For full detai
 | `blockId`          | string                  | ID of the block that contains the event.                                                              |
 | `blockHeight`      | number                  | Height of the block that contains the event.                                                          |
 | `blockTimestamp`   | string                  | The timestamp of when the block was sealed in a `DateString` format. eg. `'2021-06-25T13:42:04.227Z'` |
-| `type`             | [EventName](#EventName) | A string containing the event name.                                                                   |
+| `type`             | [EventName](#eventname) | A string containing the event name.                                                                   |
 | `transactionId`    | string                  | Can be used to query transaction information, eg. via a Flow block explorer.                          |
 | `transactionIndex` | number                  | Used to prevent replay attacks.                                                                       |
 | `eventIndex`       | number                  | Used to prevent replay attacks.                                                                       |
