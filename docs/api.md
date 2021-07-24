@@ -1464,7 +1464,7 @@ The JSON representation of an account on the Flow blockchain.
 | ----------- | ----------------------------- | ------------------------------------------------------------------------------------------ |
 | `address`   | [Address](#Address)           | The address of the account                                                                 |
 | `balance`   | number                        | The FLOW balance of the account in 10\*6.                                                  |
-| `code`      | [Code](#Code)                 | The code of any Cadence contracts stored in the account.                                   |
+| `code`      | [Code](#Code)                 | The source code of any Cadence contracts stored in the account.                                   |
 | `contracts` | Object: [Contract](#contract) | An object with keys as the contract name deployed and the value as the the cadence string. |
 | `keys`      | [[KeyObject]](#Key)           | Any contracts deployed to this account.                                                    |
 
