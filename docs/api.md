@@ -497,7 +497,7 @@ export function AuthCluster() {
 
 ## `currentUser().snapshot`
 
-Returns the [current user](#`CurrentUserObject`) object. This is the same object that is set and available on [`fcl.currentUser().subscribe(callback)`](<###`currentUser().subscribe`>).
+Returns the [current user](#`CurrentUserObject`) object. This is the same object that is set and available on [`fcl.currentUser().subscribe(callback)`](#currentusersubscribe).
 
 #### Usage
 
