@@ -36,14 +36,14 @@
       - [Usage](#usage-3)
     - [Current User](#current-user)
     - [Methods](#methods-1)
-  - [`currentUser`](#currentuser)
+  - [`currentUser().subscribe`](#currentusersubscribe)
       - [Arguments](#arguments)
       - [Usage](#usage-4)
-  - [`currentUser`](#currentuser-1)
+  - [`currentUser().snapshot`](#currentusersnapshot)
       - [Usage](#usage-5)
-  - [`currentUser`](#currentuser-2)
-  - [`currentUser`](#currentuser-3)
-  - [`currentUser`](#currentuser-4)
+  - [`currentUser().authenticate`](#currentuserauthenticate)
+  - [`currentUser().unauthenticate`](#currentuserunauthenticate)
+  - [`currentUser().authorization`](#currentuserauthorization)
 - [On-chain Interactions](#on-chain-interactions)
     - [Methods](#methods-2)
     - [Query and Mutate Flow with Cadence](#query-and-mutate-flow-with-cadence)
@@ -111,10 +111,10 @@
       - [Arguments](#arguments-11)
       - [Returns after decoding](#returns-after-decoding-7)
       - [Usage](#usage-19)
-  - [`getEvents`](#getevents)
-  - [`getLatestBlock`](#getlatestblock)
-  - [`getBlockById`](#getblockbyid)
-  - [`getBlockByHeight`](#getblockbyheight)
+  - [`getEvents` (Deprecated)](#getevents-deprecated)
+  - [`getLatestBlock` (Deprecated)](#getlatestblock-deprecated)
+  - [`getBlockById` (Deprecated)](#getblockbyid-deprecated)
+  - [`getBlockByHeight` (Deprecated)](#getblockbyheight-deprecated)
     - [Utility Builders](#utility-builders)
   - [`arg`](#arg)
       - [Arguments](#arguments-12)
@@ -362,7 +362,7 @@ fcl.unauthenticate();
 
 > ⚠️**This method can only be used in web browsers.**
 
-A **convenience method** that calls [`fcl.unauthenticate()`](<#fcl.unauthenticate()>) and then [`fcl.authenticate()`](<#fcl.authenticate()>) for the current user.
+A **convenience method** that calls [`fcl.unauthenticate()`](<#unauthenticate>) and then [`fcl.authenticate()`](<#authenticate>) for the current user.
 
 #### Note
 
@@ -389,7 +389,7 @@ fcl.reauthenticate();
 
 > ⚠️**This method can only be used in web browsers.**
 
-A **convenience method** that calls and is equivalent to [`fcl.authenticate()`](<#fcl.authenticate()>).
+A **convenience method** that calls and is equivalent to [`fcl.authenticate()`](<#authenticate>).
 
 ---
 
@@ -397,7 +397,7 @@ A **convenience method** that calls and is equivalent to [`fcl.authenticate()`](
 
 > ⚠️**This method can only be used in web browsers.**
 
-A **convenience method** that calls and is equivalent to [`fcl.authenticate()`](<#fcl.authenticate()>).
+A **convenience method** that calls and is equivalent to [`fcl.authenticate()`](<#authenticate>).
 
 ---
 
@@ -454,7 +454,7 @@ Holds the [current user](#`CurrentUserObject`), if set, and offers a set of func
 
 ---
 
-## `currentUser`
+## `currentUser().subscribe`
 
 The callback passed to subscribe will be called when the user authenticates and un-authenticates, making it easy to update the UI accordingly.
 
@@ -495,9 +495,9 @@ export function AuthCluster() {
 
 ---
 
-## `currentUser`
+## `currentUser().snapshot`
 
-Returns the [current user](#`CurrentUserObject`) object. This is the same object that is set and available on [`fcl.currentUser().subscribe(callback)`](<###`fcl.currentUser().subscribe(callback)`>).
+Returns the [current user](#`CurrentUserObject`) object. This is the same object that is set and available on [`fcl.currentUser().subscribe(callback)`](<###`currentUser().subscribe`>).
 
 #### Usage
 
@@ -511,21 +511,21 @@ fcl.currentUser().subscribe(console.log);
 
 ---
 
-## `currentUser`
+## `currentUser().authenticate`
 
-Equivalent to `fcl.authenticate()`.
-
----
-
-## `currentUser`
-
-Equivalent to `fcl.unauthenticate()`.
+Equivalent to `fcl.authenticate`.
 
 ---
 
-## `currentUser`
+## `currentUser().unauthenticate`
 
-Equivalent to `fcl.authz`.
+Equivalent to `fcl.unauthenticate`.
+
+---
+
+## `currentUser().authorization`
+
+Equivalent to `fcl.authz`
 
 ---
 
@@ -655,7 +655,7 @@ This method consumes an array of [builders](https://google.ca) that are to be re
 
 #### Note
 
-⚠️Must be used in conjuction with [`fcl.decode(response)`](<#fcl.decode(response)>) to get back correct keys and all values in JSON.
+⚠️Must be used in conjuction with [`fcl.decode(response)`](<#decode>) to get back correct keys and all values in JSON.
 
 #### Arguments
 
@@ -763,7 +763,7 @@ build, resolve, and send it to the blockchain. A valid populated template is ref
 
 A builder function that returns the interaction to get an account by address.
 
-⚠️Consider using the pre-built interaction [`fcl.account(address)`](<#fcl.account(address)>) if you do not need to pair with any other builders.
+⚠️Consider using the pre-built interaction [`fcl.account(address)`](<#account>) if you do not need to pair with any other builders.
 
 #### Arguments
 
@@ -798,7 +798,7 @@ A builder function that returns the interaction to get the latest block.
 
 📣 Use with `fcl.atBlockId()` and `fcl.atBlockHeight()` when building the interaction to get information for older blocks.
 
-⚠️Consider using the pre-built interaction [`fcl.latestBlock(isSealed)`](<#fcl.latestBlock(isSealed)>) if you do not need to pair with any other builders.
+⚠️Consider using the pre-built interaction [`fcl.latestBlock(isSealed)`](<#latestBlock>) if you do not need to pair with any other builders.
 
 #### Arguments
 
@@ -830,7 +830,7 @@ const latestSealedBlock = await fcl
 
 A builder function that returns a partial interaction to a block at a specific height.
 
-⚠️Use with other interactions like [`fcl.getBlock()`](<#`fcl.getBlock(isSealed)`>) to get a full interaction at the specified block height.
+⚠️Use with other interactions like [`fcl.getBlock()`](<#`getBlock`>) to get a full interaction at the specified block height.
 
 #### Arguments
 
@@ -858,7 +858,7 @@ await fcl.send([fcl.getBlock(), fcl.atBlockHeight(123)]).then(fcl.decode);
 
 A builder function that returns a partial interaction to a block at a specific block ID.
 
-⚠️Use with other interactions like [`fcl.getBlock()`](<#`fcl.getBlock(isSealed)`>) to get a full interaction at the specified block ID.
+⚠️Use with other interactions like [`fcl.getBlock()`](<#`getBlock`>) to get a full interaction at the specified block ID.
 
 #### Arguments
 
@@ -1059,7 +1059,7 @@ A builder function that returns a [transaction object](###TransactionObject>) on
 
 ⚠️The transactionID provided must be from the current spork.
 
-📣 Considering using [`fcl.tx(id).onceSealed()`](<###`fcl.tx(transactionId)>) instead of calling this method directly.
+📣 Considering using [`fcl.tx(id).onceSealed()`](<###`tx>) instead of calling this method directly.
 
 #### Arguments
 
@@ -1092,27 +1092,27 @@ const tx = await fcl
 
 ---
 
-## `getEvents`
+## `getEvents` (Deprecated)
 
-Use [`fcl.getEventsAtBlockHeightRange`](###`fcl.getEventsAtBlockHeightRange`) or [`fcl.getEventsAtBlockIds`](###`fcl.getEventsAtBlockIds`).
-
----
-
-## `getLatestBlock`
-
-Use [`fcl.getBlock`](###`fcl.getBlock`).
+Use [`fcl.getEventsAtBlockHeightRange`](###`getEventsAtBlockHeightRange`) or [`fcl.getEventsAtBlockIds`](###`getEventsAtBlockIds`).
 
 ---
 
-## `getBlockById`
+## `getLatestBlock` (Deprecated)
 
-Use [`fcl.getBlock`](###`fcl.getBlock`) and [`fcl.atBlockId`](###`fcl.atBlockId`).
+Use [`fcl.getBlock`](###`getBlock`).
 
 ---
 
-## `getBlockByHeight`
+## `getBlockById` (Deprecated)
 
-Use [`fcl.getBlock`](###`fcl.getBlock`) and [`fcl.atBlockHeight`](###`fcl.atBlockHeight`).
+Use [`fcl.getBlock`](###`getBlock`) and [`fcl.atBlockId`](###`atBlockId`).
+
+---
+
+## `getBlockByHeight` (Deprecated)
+
+Use [`fcl.getBlock`](###`getBlock`) and [`fcl.atBlockHeight`](###`atBlockHeight`).
 
 ---
 
@@ -1201,7 +1201,7 @@ await fcl
 
 ### Template Builders
 
-> ⚠️**_Reccomended:_** The following functionality is simplified by [`fcl.query({...options}`](<#fcl.query({...options})>) or [`fcl.mutate({...options})`](<#fcl.mutate({...options})>) and is reccomended to use over the functions below.
+> ⚠️**_Reccomended:_** The following functionality is simplified by [`fcl.query({...options}`](<#query>) or [`fcl.mutate({...options})`](<#mutate>) and is reccomended to use over the functions below.
 
 ## `script`
 
@@ -1464,7 +1464,7 @@ The JSON representation of an account on the Flow blockchain.
 | ----------- | ----------------------------- | ------------------------------------------------------------------------------------------ |
 | `address`   | [Address](#Address)           | The address of the account                                                                 |
 | `balance`   | number                        | The FLOW balance of the account in 10\*6.                                                  |
-| `code`      | [Code](#Code)                 | ????                                                                                       |
+| `code`      | [Code](#Code)                 | The code of any Cadence contracts stored in the account.                                   |
 | `contracts` | Object: [Contract](#contract) | An object with keys as the contract name deployed and the value as the the cadence string. |
 | `keys`      | [[KeyObject]](#Key)           | Any contracts deployed to this account.                                                    |
 
