@@ -1,6 +1,7 @@
 import {uid} from "@onflow/util-uid"
 import {frame} from "./utils/frame"
 import {normalizePollingResponse} from "../../normalize/polling-response"
+import {configLens} from "../../../default-config"
 
 export function execIframeRPC(service, body, opts) {
   return new Promise((resolve, reject) => {
@@ -10,7 +11,7 @@ export function execIframeRPC(service, body, opts) {
     body.data = service.data
 
     frame(service, {
-      onReady(_, {send}) {
+      async onReady(_, {send}) {
         try {
           send({
             type: "FCL:FRAME:READY:RESPONSE",
@@ -18,6 +19,10 @@ export function execIframeRPC(service, body, opts) {
             service: {
               params: service.params,
               data: service.data,
+            },
+            config: {
+              services: await configLens(/^service\./),
+              app: await configLens(/^app\.detail\./),
             },
           })
           if (includeOlderJsonRpcCall) {

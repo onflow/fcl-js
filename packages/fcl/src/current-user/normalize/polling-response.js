@@ -13,6 +13,9 @@ import {normalizeFrame} from "./frame"
 // }
 export function normalizePollingResponse(resp) {
   if (resp == null) return null
+  if (!!resp.addr || !!resp.services) {
+    resp = {status: "APPROVED", data: {...resp}}
+  }
 
   switch (resp["f_vsn"]) {
     case "1.0.0":
@@ -22,7 +25,7 @@ export function normalizePollingResponse(resp) {
       return {
         ...POLLING_RESPONSE_PRAGMA,
         status: resp.status,
-        reason: resp.reason,
+        reason: resp.reason ?? null,
         data: resp.compositeSignature || resp.data || {},
         updates: normalizeBackChannelRpc(resp.authorizationUpdates),
         local: normalizeFrame((resp.local || [])[0]),
