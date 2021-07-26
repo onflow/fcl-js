@@ -103,36 +103,39 @@ async function authenticate() {
     const user = await snapshot()
     if (user.loggedIn && notExpired(user)) return resolve(user)
 
+    const discoveryWallet = await config.first([
+      "discovery.wallet",
+      "challenge.handshake",
+    ])
+
     const view =
       (await config.first(["discovery.wallet.view"], "frame")) === "frame"
-        ? frame
-        : pop
+        ? "IFRAME/RPC"
+        : "POP/RPC"
 
-    view(
-      {
-        endpoint: await config.first([
-          "discovery.wallet",
-          "challenge.handshake",
-        ]),
+    execService({
+      service: {
+        endpoint: discoveryWallet,
+        method: view,
       },
-      {
-        async onReady(e, {send, close}) {
+      opts: {
+        async onReady(e, {send}) {
           send({
             type: "FCL:AUTHN:CONFIG",
             services: await configLens(/^service\./),
             app: await configLens(/^app\.detail\./),
           })
         },
-        async onClose() {
-          resolve(await snapshot())
-        },
         async onResponse(e, {close}) {
           send(NAME, SET_CURRENT_USER, await buildUser(e.data))
           resolve(await snapshot())
           close()
         },
-      }
-    )
+        async onClose() {
+          resolve(await snapshot())
+        },
+      },
+    })
   })
 }
 
@@ -162,7 +165,7 @@ function resolvePreAuthz(authz) {
     addr: az.identity.address,
     keyId: az.identity.keyId,
     signingFunction(signable) {
-      return execService(az, signable)
+      return execService({service: az, msg: signable})
     },
     role: {
       proposer: role === "PROPOSER",
@@ -184,7 +187,9 @@ async function authorization(account) {
       ...account,
       tempId: "CURRENT_USER",
       async resolve(account, preSignable) {
-        return resolvePreAuthz(await execService(preAuthz, preSignable))
+        return resolvePreAuthz(
+          await execService({service: preAuthz, msg: preSignable})
+        )
       },
     }
   }
@@ -199,8 +204,12 @@ async function authorization(account) {
     signature: null,
     async signingFunction(signable) {
       return normalizeCompositeSignature(
-        await execService(authz, signable, {
-          includeOlderJsonRpcCall: true,
+        await execService({
+          service: authz,
+          msg: signable,
+          opts: {
+            includeOlderJsonRpcCall: true,
+          },
         })
       )
     },
@@ -244,9 +253,9 @@ const makeSignable = msg => {
   }
 }
 
-async function signUserMessage(msg, opts = {}) {
+async function signUserMessage(msg) {
   spawnCurrentUser()
-  const user = await authenticate(opts)
+  const user = await authenticate()
   const signingService = serviceOfType(user.services, "user-signature")
 
   invariant(
@@ -255,7 +264,10 @@ async function signUserMessage(msg, opts = {}) {
   )
 
   try {
-    const data = await execService(signingService, makeSignable(msg))
+    const data = await execService({
+      service: signingService,
+      msg: makeSignable(msg),
+    })
     if (Array.isArray(data)) {
       return data.map(compSigs => normalizeCompositeSignature(compSigs))
     } else {

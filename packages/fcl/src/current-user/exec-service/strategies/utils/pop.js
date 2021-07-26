@@ -45,7 +45,7 @@ export function pop(service, opts = {}) {
       if (e.data.type === "FCL::CHALLENGE::CANCEL") close()
       if (e.data.type === "FCL::CANCEL") close()
     } catch (error) {
-      console.error("Frame Callback Error", error)
+      console.error("Popup Callback Error", error)
       close()
     }
   }
@@ -57,7 +57,7 @@ export function pop(service, opts = {}) {
       unmount()
       onClose()
     } catch (error) {
-      console.error("Frame Close Error", error)
+      console.error("Popup Close Error", error)
     }
   }
 
@@ -65,7 +65,7 @@ export function pop(service, opts = {}) {
     try {
       $pop.postMessage(JSON.parse(JSON.stringify(msg || {})), "*")
     } catch (error) {
-      console.error("Frame Send Error", msg, error)
+      console.error("Popup Send Error", msg, error)
     }
   }
 }

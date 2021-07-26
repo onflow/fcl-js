@@ -9,7 +9,7 @@ export function execPopRPC(service, body, opts) {
 
     body.data = service.data
 
-    pop(service, {
+    const defaultOptions = {
       onReady(_, {send}) {
         try {
           send({
@@ -92,6 +92,7 @@ export function execPopRPC(service, body, opts) {
       onClose() {
         reject(`Declined: Externally Halted`)
       },
-    })
+    }
+    pop(service, {...defaultOptions, ...opts})
   })
 }

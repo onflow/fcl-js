@@ -9,7 +9,7 @@ export function execIframeRPC(service, body, opts) {
 
     body.data = service.data
 
-    frame(service, {
+    const defaultOptions = {
       onReady(_, {send}) {
         try {
           send({
@@ -92,6 +92,8 @@ export function execIframeRPC(service, body, opts) {
       onClose() {
         reject(`Declined: Externally Halted`)
       },
-    })
+    }
+
+    frame(service, {...defaultOptions, ...opts})
   })
 }
