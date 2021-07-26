@@ -1,6 +1,7 @@
 import {uid} from "@onflow/util-uid"
 import {pop} from "./utils/pop"
 import {normalizePollingResponse} from "../../normalize/polling-response"
+import {configLens} from "../../../default-config"
 
 export function execPopRPC(service, body, opts) {
   return new Promise((resolve, reject) => {
@@ -10,7 +11,7 @@ export function execPopRPC(service, body, opts) {
     body.data = service.data
 
     pop(service, {
-      onReady(_, {send}) {
+      async onReady(_, {send}) {
         try {
           send({
             type: "FCL:FRAME:READY:RESPONSE",
@@ -18,6 +19,10 @@ export function execPopRPC(service, body, opts) {
             service: {
               params: service.params,
               data: service.data,
+            },
+            config: {
+              services: await configLens(/^service\./),
+              app: await configLens(/^app\.detail\./),
             },
           })
           if (includeOlderJsonRpcCall) {

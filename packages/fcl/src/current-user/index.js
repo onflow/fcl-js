@@ -88,51 +88,35 @@ function notExpired(user) {
   )
 }
 
-async function configLens(regex) {
-  return Object.fromEntries(
-    Object.entries(await config().where(regex)).map(([key, value]) => [
-      key.replace(regex, ""),
-      value,
-    ])
-  )
-}
-
 async function authenticate() {
   return new Promise(async (resolve, reject) => {
     spawnCurrentUser()
     const user = await snapshot()
     if (user.loggedIn && notExpired(user)) return resolve(user)
 
-    const view =
-      (await config.first(["discovery.wallet.view"], "frame")) === "frame"
-        ? frame
-        : pop
+    const discoveryWallet = await config.first([
+      "discovery.wallet",
+      "challenge.handshake",
+    ])
 
-    view(
-      {
-        endpoint: await config.first([
-          "discovery.wallet",
-          "challenge.handshake",
-        ]),
-      },
-      {
-        async onReady(e, {send, close}) {
-          send({
-            type: "FCL:AUTHN:CONFIG",
-            services: await configLens(/^service\./),
-            app: await configLens(/^app\.detail\./),
-          })
+    const method =
+      (await config.first(["discovery.wallet.method"], "frame")) === "frame"
+        ? "IFRAME/RPC"
+        : "POP/RPC"
+
+    try {
+      const response = await execService({
+        service: {
+          endpoint: discoveryWallet,
+          method: method,
         },
-        async onClose() {
-          resolve(await snapshot())
-        },
-        async onResponse(e, {close}) {
-          send(NAME, SET_CURRENT_USER, await buildUser(e.data))
-          resolve(await snapshot())
-          close()
-        },
-      }
-    )
+      })
+      send(NAME, SET_CURRENT_USER, await buildUser(response))
+    } catch (e) {
+      console.error("Error while authenticating", e)
+    } finally {
+      resolve(await snapshot())
+    }
   })
 }
 
@@ -162,7 +146,7 @@ function resolvePreAuthz(authz) {
     addr: az.identity.address,
     keyId: az.identity.keyId,
     signingFunction(signable) {
-      return execService(az, signable)
+      return execService({service: az, msg: signable})
     },
     role: {
       proposer: role === "PROPOSER",
@@ -184,7 +168,9 @@ async function authorization(account) {
       ...account,
       tempId: "CURRENT_USER",
       async resolve(account, preSignable) {
-        return resolvePreAuthz(await execService(preAuthz, preSignable))
+        return resolvePreAuthz(
+          await execService({service: preAuthz, msg: preSignable})
+        )
       },
     }
   }
@@ -199,8 +185,12 @@ async function authorization(account) {
     signature: null,
     async signingFunction(signable) {
       return normalizeCompositeSignature(
-        await execService(authz, signable, {
-          includeOlderJsonRpcCall: true,
+        await execService({
+          service: authz,
+          msg: signable,
+          opts: {
+            includeOlderJsonRpcCall: true,
+          },
         })
       )
     },
@@ -244,9 +234,9 @@ const makeSignable = msg => {
   }
 }
 
-async function signUserMessage(msg, opts = {}) {
+async function signUserMessage(msg) {
   spawnCurrentUser()
-  const user = await authenticate(opts)
+  const user = await authenticate()
   const signingService = serviceOfType(user.services, "user-signature")
 
   invariant(
@@ -255,11 +245,14 @@ async function signUserMessage(msg, opts = {}) {
   )
 
   try {
-    const data = await execService(signingService, makeSignable(msg))
-    if (Array.isArray(data)) {
-      return data.map(compSigs => normalizeCompositeSignature(compSigs))
+    const response = await execService({
+      service: signingService,
+      msg: makeSignable(msg),
+    })
+    if (Array.isArray(response)) {
+      return response.map(compSigs => normalizeCompositeSignature(compSigs))
     } else {
-      return [normalizeCompositeSignature(data)]
+      return [normalizeCompositeSignature(response)]
     }
   } catch (error) {
     return error

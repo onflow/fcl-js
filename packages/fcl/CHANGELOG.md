@@ -2,9 +2,11 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+- 2021-07-26 -- Updates `currentUser.authenticate()` to use execService with parameter destructuring.
+
 ## 0.0.77-alpha.1 - 2021-07-23
 
-- 2021-07-23 -- VSN `@onflow/sdk` 0.0.53 -> 0.0.54 
+- 2021-07-23 -- VSN `@onflow/sdk` 0.0.53 -> 0.0.54
 - 2021-07-23 -- Reverts to iFrame as default wallet method/view.
 
 ## 0.0.77-pain.1
