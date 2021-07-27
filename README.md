@@ -31,7 +31,7 @@ npm i -S @onflow/fcl @onflow/types
 
 ```
 
-### Learn to use `@onflow/fcl`: [Flow App Quickstart](https://docs.onflow.org/flow-js-sdk/flow-app-quickstart)
+### Learn to use `@onflow/fcl`: [Flow App Quickstart](https://docs.onflow.org/fcl/flow-app-quickstart/)
 
 ---
 ## Requirements
