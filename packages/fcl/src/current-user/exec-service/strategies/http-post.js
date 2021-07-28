@@ -1,10 +1,10 @@
 import {fetchService} from "./utils/fetch-service"
-import {serviceEndpoint} from "./utils/service-endpoint"
 import {normalizePollingResponse} from "../../normalize/polling-response"
 import {frame} from "./utils/frame"
 import {poll} from "./utils/poll"
+import {execLocal} from "../exec-local"
 
-export async function execHttpPost(service, signable, opts) {
+export async function execHttpPost(service, signable, opts = {}) {
   signable.data = service.data
   const resp = await fetchService(service, {
     data: signable,
@@ -16,11 +16,16 @@ export async function execHttpPost(service, signable, opts) {
     throw new Error(`Declined: ${resp.reason || "No reason supplied."}`)
   } else if (resp.status === "PENDING") {
     var canContinue = true
-    const {close: closeFrame} = frame(resp.local, {
-      onClose() {
+    const [_, unmount] = await execLocal(resp.local)
+
+    const closeFrame = () => {
+      try {
+        unmount()
         canContinue = false
-      },
-    })
+      } catch (error) {
+        console.error("Frame Close Error", error)
+      }
+    }
 
     return poll(resp.updates, () => canContinue)
       .then(serviceResponse => {
