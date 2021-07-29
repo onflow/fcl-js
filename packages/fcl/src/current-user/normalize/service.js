@@ -5,6 +5,7 @@ import {normalizeFrame} from "./frame"
 import {normalizeBackChannelRpc} from "./back-channel-rpc"
 import {normalizeOpenId} from "./open-id"
 import {normalizeUserSignature} from "./user-signature"
+import {normalizeLocalView} from "./local-view"
 
 export function normalizeServices(services, data) {
   return services.map(service => normalizeService(service, data))
@@ -18,6 +19,7 @@ const serviceNormalizers = {
   frame: normalizeFrame,
   "open-id": normalizeOpenId,
   "user-signature": normalizeUserSignature,
+  "local-view": normalizeLocalView,
 }
 
 export function normalizeService(service, data) {

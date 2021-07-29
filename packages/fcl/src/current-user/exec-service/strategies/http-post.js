@@ -1,6 +1,6 @@
 import {fetchService} from "./utils/fetch-service"
 import {normalizePollingResponse} from "../../normalize/polling-response"
-import {frame} from "./utils/frame"
+import {normalizeLocalView} from "../../normalize/local-view"
 import {poll} from "./utils/poll"
 import {execLocal} from "../exec-local"
 
@@ -16,9 +16,9 @@ export async function execHttpPost(service, signable, opts = {}) {
     throw new Error(`Declined: ${resp.reason || "No reason supplied."}`)
   } else if (resp.status === "PENDING") {
     var canContinue = true
-    const [_, unmount] = await execLocal(resp.local)
+    const [_, unmount] = await execLocal(normalizeLocalView(resp.local))
 
-    const closeFrame = () => {
+    const close = () => {
       try {
         unmount()
         canContinue = false
@@ -29,12 +29,12 @@ export async function execHttpPost(service, signable, opts = {}) {
 
     return poll(resp.updates, () => canContinue)
       .then(serviceResponse => {
-        closeFrame()
+        close()
         return serviceResponse
       })
       .catch(error => {
         console.error(error)
-        closeFrame()
+        close()
         throw error
       })
   } else {
