@@ -31,7 +31,7 @@ npm i -S @onflow/fcl @onflow/types
 
 ```
 
-### Learn to use `@onflow/fcl`: [Flow App Quickstart](https://docs.onflow.org/flow-js-sdk/flow-app-quickstart)
+### Learn to use `@onflow/fcl`: [Flow App Quickstart](https://docs.onflow.org/fcl/flow-app-quickstart/)
 
 ---
 ## Requirements
@@ -56,4 +56,4 @@ Please note, that some code provided - e.g. `Object.fromEntries` - will require 
   - [x] [`encode`](./packages/sdk/src/encode) -- Transactions needs signatures, this module knows how to create the values that get signed.
 
 - Development Tools
-  - [x] [`@onflow/dev-wallet`](./packages/dev-wallet) -- A local fcl wallet provider for local development and testing.
+  - [x] [`@onflow/dev-wallet`](https://github.com/onflow/fcl-dev-wallet) -- A local fcl wallet provider for local development and testing.
