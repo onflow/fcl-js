@@ -2,6 +2,8 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+## 0.0.77-alpha.2 - 2021-07-30
+
 - 2021-07-29 -- Adds `execLocal` to handle rendering of `http-post` service `local-view`.
 - 2021-07-26 -- Updates `currentUser.authenticate()` to use execService with parameter destructuring.
 
