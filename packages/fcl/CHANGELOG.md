@@ -2,6 +2,8 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+- 2021-08-02 -- Adds `WalletUtils.onFclMessage`.
+
 ## 0.0.77-alpha.2 - 2021-07-30
 
 - 2021-07-29 -- Adds `execLocal` to handle rendering of `http-post` service `local-view`.
