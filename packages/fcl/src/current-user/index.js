@@ -7,8 +7,6 @@ import {buildUser} from "./build-user"
 import {serviceOfType} from "./service-of-type"
 import {execService} from "./exec-service"
 import {query} from "../exec/query"
-import {frame} from "./exec-service/strategies/utils/frame"
-import {pop} from "./exec-service/strategies/utils/pop"
 import {normalizeCompositeSignature} from "./normalize/composite-signature"
 
 const NAME = "CURRENT_USER"

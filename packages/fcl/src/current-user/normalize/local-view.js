@@ -1,4 +1,4 @@
-import {LOCAL_VIEW_PRAGMA} from "./__vsn"
+import {SERVICE_PRAGMA} from "./__vsn"
 
 // {
 //    "f_type": "Service",
@@ -21,7 +21,7 @@ export function normalizeLocalView(resp) {
 
     default:
       return {
-        ...LOCAL_VIEW_PRAGMA,
+        ...SERVICE_PRAGMA,
         type: resp.type || "local-view",
         method: resp.method,
         endpoint: resp.endpoint,

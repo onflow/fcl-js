@@ -1,6 +1,3 @@
-import {withPrefix} from "@onflow/util-address"
-import {SERVICE_PRAGMA} from "./__vsn"
-
 // {
 //   "f_type": "Service",
 //   "f_vsn": "1.0.0",
