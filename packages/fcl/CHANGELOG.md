@@ -2,7 +2,7 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
-- 2021-08-02 -- Adds `WalletUtils.onFclMessage`.
+- 2021-08-02 -- Adds `WalletUtils.onFclMessage`. Update response types to use `VIEW` and add deprecation warnings for `FRAME`.
 
 ## 0.0.77-alpha.2 - 2021-07-30
 
