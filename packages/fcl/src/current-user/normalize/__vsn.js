@@ -32,8 +32,3 @@ export const OPEN_ID_PRAGMA = {
   f_type: "OpenId",
   f_vsn: "1.0.0",
 }
-
-export const LOCAL_VIEW_PRAGMA = {
-  f_type: "Service",
-  f_vsn: "1.0.0",
-}
