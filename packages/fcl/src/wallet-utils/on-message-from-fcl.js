@@ -1,4 +1,4 @@
-export const onFclMessage = (msg, cb = () => {}) => {
+export const onMessageFromFCL = (msg, cb = () => {}) => {
   const internal = e => {
     if (typeof e.data !== "object") return
     if (e.data.type !== msg) return

@@ -14,7 +14,7 @@ export function execPopRPC(service, body, opts) {
       async onReady(_, {send}) {
         try {
           send({
-            type: "FCL:FRAME:READY:RESPONSE",
+            type: "FCL:VIEW:READY:RESPONSE",
             body,
             service: {
               params: service.params,

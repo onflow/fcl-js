@@ -7,6 +7,7 @@ const STRATEGIES = {
   "HTTP/POST": execHttpPost,
   "IFRAME/RPC": execIframeRPC,
   "POP/RPC": execPopRPC,
+  "TAB/RPC": execPopRPC,
 }
 
 export async function execService({service, msg = {}, opts = {}}) {

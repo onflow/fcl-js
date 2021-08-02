@@ -15,9 +15,9 @@ function popupWindow(url, windowName, win, w, h) {
 
 export function renderPop(src) {
   if (popup == null || popup?.closed) {
-    popup = popupWindow(src, POP, window, 600, 600)
+    popup = popupWindow(src, POP, window, 640, 600)
   } else if (previousUrl !== src) {
-    popup = popupWindow(src, POP, window, 600, 600)
+    popup = popupWindow(src, POP, window, 640, 600)
     popup.focus()
   } else {
     popup.focus()

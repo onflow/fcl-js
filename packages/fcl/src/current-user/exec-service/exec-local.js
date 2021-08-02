@@ -5,6 +5,7 @@ import {serviceEndpoint} from "./strategies/utils/service-endpoint"
 const VIEWS = {
   "VIEW/IFRAME": renderFrame,
   "VIEW/POP": renderPop,
+  "VIEW/TAB": renderPop,
 }
 
 export async function execLocal(service, opts = {}) {

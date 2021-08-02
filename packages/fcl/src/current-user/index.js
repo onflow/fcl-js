@@ -97,10 +97,7 @@ async function authenticate() {
       "challenge.handshake",
     ])
 
-    const method =
-      (await config.first(["discovery.wallet.method"], "frame")) === "frame"
-        ? "IFRAME/RPC"
-        : "POP/RPC"
+    const method = await config.first(["discovery.wallet.method"], "IFRAME/RPC")
 
     try {
       const response = await execService({

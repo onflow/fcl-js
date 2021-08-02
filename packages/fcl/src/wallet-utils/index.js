@@ -1,2 +1,2 @@
 export {sendMsgToFCL} from "./send-msg-to-fcl.js"
-export {onFclMessage} from "./on-fcl-message"
+export {onMessageFromFCL} from "./on-message-from-fcl.js"
