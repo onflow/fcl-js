@@ -7,9 +7,9 @@
 
 # Overview
 
-Flow Client Library (FCL) approaches the idea of blockchain wallets on Flow in a different way than how wallets may be supported on other blockchains. For example, with FCL, a wallet is not necessarily restricted to being a browser extention or even a native application on a users device. Wallets on Flow can take the shape of being many different types applications. Since waallet applications can take on many forms, we needed to create a way for these varying applications to be able to communicate and work together.
+Flow Client Library (FCL) approaches the idea of blockchain wallets on Flow in a different way than how wallets may be supported on other blockchains. For example, with FCL, a wallet is not necessarily restricted to being a browser extention or even a native application on a users device. Wallets on Flow can take the shape of being many different types applications. Since wallet applications can take on many forms, we needed to create a way for these varying applications to be able to communicate and work together.
 
-FCL acts in many ways as a protocol to facilitate communication and configuration between many different parties involved in a blockchain application. An _Application_ can use FCL to _authenticate_ their users, and request a users _authorizations_ for transactions. A _User_, through FCL, can configure an Applications instance of FCL with their preferred Wallet services of choice. A Wallet works to configure an Applications instance FCL with it's provided services, and works with it's User to facilitate interacting it's services.
+FCL acts in many ways as a protocol to facilitate communication and configuration between the different parties involved in a blockchain application. An _Application_ can use FCL to _authenticate_ users, and request _authorizations_ for transactions, as well as mutate and query the _Blockchain_. An application using FCL offers it's _Users_ a way to connect and select any number of Wallets Providers and their Wallet Services. A selected _Wallet_ configures an Applications instance of FCL with information about its services, of which the _User_ and _Application_ can interact with.
 
 In the following paragraphs we'll explore ways in which you, as a wallet developer, can integrate with FCL through providing implementataions of various FCL services. 
 
