@@ -1,4 +1,4 @@
-import {renderFrame} from "./render-frame"
+import {renderTab} from "./render-tab"
 import {serviceEndpoint} from "./service-endpoint"
 
 const CLOSE_EVENT = "FCL:VIEW:CLOSE"
@@ -20,7 +20,7 @@ const IGNORE = new Set([
   "monetizationstop",
 ])
 
-export function frame(service, opts = {}) {
+export function tab(service, opts = {}) {
   if (service == null) return {send: noop, close: noop}
 
   var tab = null
@@ -30,7 +30,7 @@ export function frame(service, opts = {}) {
   const onResponse = opts.onResponse || noop
 
   window.addEventListener("message", internal)
-  const [$frame, unmount] = renderFrame(serviceEndpoint(service))
+  const [$tab, unmount] = renderTab(serviceEndpoint(service))
   return {send, close}
 
   function internal(e) {
@@ -73,7 +73,7 @@ export function frame(service, opts = {}) {
         close()
       }
     } catch (error) {
-      console.error("Frame Callback Error", error)
+      console.error("Tab Callback Error", error)
       close()
     }
   }
@@ -85,15 +85,15 @@ export function frame(service, opts = {}) {
       unmount()
       onClose()
     } catch (error) {
-      console.error("Frame Close Error", error)
+      console.error("Tab Close Error", error)
     }
   }
 
   function send(msg) {
     try {
-      $frame.postMessage(JSON.parse(JSON.stringify(msg || {})), "*")
+      $tab.postMessage(JSON.parse(JSON.stringify(msg || {})), "*")
     } catch (error) {
-      console.error("Frame Send Error", msg, error)
+      console.error("Tab Send Error", msg, error)
     }
   }
 }
