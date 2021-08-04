@@ -37,5 +37,5 @@ export function renderFrame(src) {
     }
   }
 
-  return [$frame, unmount]
+  return [$frame.contentWindow, unmount]
 }

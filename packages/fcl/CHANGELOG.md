@@ -2,6 +2,7 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+- 2021-08-04 -- Adds `execTabRPC` strategy.
 - 2021-08-02 -- Adds `WalletUtils.onMessageFromFCL`. Update response types to use `VIEW` and add deprecation warnings for `FRAME`.
 
 ## 0.0.77-alpha.2 - 2021-07-30
