@@ -59,6 +59,15 @@ function fetchSignature(ix, payload) {
 }
 
 export const createSignableVoucher = ix => {
+  const buildAuthorizers = () => {
+    const authorizations = ix.authorizations
+      .map(cid => withPrefix(ix.accounts[cid].addr))
+      .reduce((prev, current) => {
+        return prev.find(item => item === current) ? prev : [...prev, current]
+      }, [])
+    return authorizations[0] ? authorizations : []
+  }
+
   const buildInsideSigners = () =>
     findInsideSigners(ix).map(id => ({
       address: withPrefix(ix.accounts[id].addr),
@@ -84,11 +93,7 @@ export const createSignableVoucher = ix => {
       sequenceNum: ix.accounts[ix.proposer].sequenceNum,
     },
     payer: withPrefix(ix.accounts[ix.payer].addr),
-    authorizers: ix.authorizations
-      .map(cid => withPrefix(ix.accounts[cid].addr))
-      .reduce((prev, current) => {
-        return prev.find(item => item === current) ? prev : [...prev, current]
-      }, []),
+    authorizers: buildAuthorizers(),
     payloadSigs: buildInsideSigners(),
     envelopeSigs: buildOutsideSigners(),
   }
