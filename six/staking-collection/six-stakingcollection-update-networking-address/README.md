@@ -14,7 +14,7 @@ Known Upcoming Changes:
 
 # Install
 
-npm install @onflow/six-stakingcollection-unstake-all
+npm install @onflow/six-stakingcollection-update-networking-address
 
 # Configuration 
 
@@ -42,7 +42,7 @@ fcl.config()
 
 ```javascript
 import * as fcl from "@onflow/fcl"
-import { template as updateNetworkingAddress } from "@onflow/six-stakingcollection-unstake-all"
+import { template as updateNetworkingAddress } from "@onflow/six-stakingcollection-update-networking-address"
 
 fcl.config().put("accessNode", "http://localhost:8080");
 
