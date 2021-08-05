@@ -9,7 +9,7 @@
 
 Flow Client Library (FCL) approaches the idea of blockchain wallets on Flow in a different way than how wallets may be supported on other blockchains. For example, with FCL, a wallet is not necessarily restricted to being a browser extention or even a native application on a users device. Wallets on Flow can take the shape of being many different types applications. Since wallet applications can take on many forms, we needed to create a way for these varying applications to be able to communicate and work together.
 
-FCL acts in many ways as a protocol to facilitate communication and configuration between the different parties involved in a blockchain application. An _Application_ can use FCL to _authenticate_ users, and request _authorizations_ for transactions, as well as mutate and query the _Blockchain_. An application using FCL offers it's _Users_ a way to connect and select any number of Wallets Providers and their Wallet Services. A selected _Wallet_ configures an Applications instance of FCL with information about its services, of which the _User_ and _Application_ can interact with.
+FCL acts in many ways as a protocol to facilitate communication and configuration between the different parties involved in a blockchain application. An _Application_ can use FCL to _authenticate_ users, and request _authorizations_ for transactions, as well as mutate and query the _Blockchain_. An application using FCL offers it's _Users_ a way to connect and select any number of Wallets Providers and their Wallet Services. A selected _Wallet_ provides an Applications instance of FCL with configuration information about itself and its Wallet Services, of which the _User_ and _Application_ can interact with.
 
 In the following paragraphs we'll explore ways in which you, as a wallet developer, can integrate with FCL by providing implementataions of various FCL services. 
 
@@ -50,7 +50,7 @@ function callback({ data }) {
   if (typeof data != "object") return
   if (typeof data.type !== "FCL:FRAME:READY:RESPONSE") return
 
-  ... // Do authentication things
+  ... // Do authentication things ...
 
   WalletUtils.sendMsgToFCL("PollingResponse", {
     "f_vsn": "1.0.0",
@@ -113,32 +113,32 @@ WalletUtils.sendMsgToFCL("PollingResponse", {
             
             // Authentication Service - REQUIRED
             {
-            f_type: "Service",                                         // Its a service!
-            f_vsn: "1.0.0",                                            // Follows the v1.0.0 spec for the service
-            type: "authn",                                             // the type of service it is
-            method: "DATA",                                            // Its data!
-            uid: "amazing-wallet#authn",                               // A unique identifier for the service
-            endpoint: "your-url-that-fcl-will-use-for-authentication", // should be the same as was passed into the config
-            id: "0xUSER",                                              // the wallets internal id for the user, use flow address if you dont have one
-            // The Users Info
-            identity: {
-                f_type: "Identity",  // Its an Identity!
-                f_vsn: "1.0.0",      // Follows the v1.0.0 spec for an identity
-                address: "0xUSER",   // The users address
-                keyId: 0,            // OPTIONAL - The Users KeyId they will use
-            },
-            // The Wallets Info
-            provider: {
-                f_type: "ServiceProvider",      // Its a Service Provider
-                f_vsn: "1.0.0",                 // Follows the v1.0.0 spec for service providers
-                address: "0xWallet",            // A flow address owned by the wallet
-                name: "Amazing Wallet",         // OPTIONAL - The name of your wallet. ie: "Dapper Wallet" or "Blocto Wallet"
-                description: "The best wallet", // OPTIONAL - A short description for your wallet
-                icon: "https://___",            // OPTIONAL - Image url for your wallets icon
-                website: "https://___",         // OPTIONAL - Your wallets website
-                supportUrl: "https://___",      // OPTIONAL - An url the user can use to get support from you
-                supportEmail: "help@aw.com",    // OPTIONAL - An email the user can use to get support from you
-            },
+                f_type: "Service",                                         // Its a service!
+                f_vsn: "1.0.0",                                            // Follows the v1.0.0 spec for the service
+                type: "authn",                                             // the type of service it is
+                method: "DATA",                                            // Its data!
+                uid: "amazing-wallet#authn",                               // A unique identifier for the service
+                endpoint: "your-url-that-fcl-will-use-for-authentication", // should be the same as was passed into the config
+                id: "0xUSER",                                              // the wallets internal id for the user, use flow address if you dont have one
+                // The Users Info
+                identity: {
+                    f_type: "Identity",  // Its an Identity!
+                    f_vsn: "1.0.0",      // Follows the v1.0.0 spec for an identity
+                    address: "0xUSER",   // The users address
+                    keyId: 0,            // OPTIONAL - The Users KeyId they will use
+                },
+                // The Wallets Info
+                provider: {
+                    f_type: "ServiceProvider",      // Its a Service Provider
+                    f_vsn: "1.0.0",                 // Follows the v1.0.0 spec for service providers
+                    address: "0xWallet",            // A flow address owned by the wallet
+                    name: "Amazing Wallet",         // OPTIONAL - The name of your wallet. ie: "Dapper Wallet" or "Blocto Wallet"
+                    description: "The best wallet", // OPTIONAL - A short description for your wallet
+                    icon: "https://___",            // OPTIONAL - Image url for your wallets icon
+                    website: "https://___",         // OPTIONAL - Your wallets website
+                    supportUrl: "https://___",      // OPTIONAL - An url the user can use to get support from you
+                    supportEmail: "help@aw.com",    // OPTIONAL - An email the user can use to get support from you
+                },
             },
 
             // Authorization Service
@@ -252,10 +252,10 @@ You have more or less already been doing this with authentication (though FCL ha
 
   ### TAB/RPC
 
-`TAB/RPC` works in an almost entirely similar way to `IFRAME/RPC`, except instead of rendering the `method` in an iframe, we render it in a new tab. The same communication protocol between the rendered view and FCL applies:
+`TAB/RPC` works in an almost entirely similar way to `IFRAME/RPC` and `POP/RPC`, except instead of rendering the `method` in an iframe or a popup, we render it in a new tab. The same communication protocol between the rendered view and FCL applies:
 
-- A popup is rendered (comes from `endpoint` in the service).
-- The rendered popup says its ready `WalletUtils.sendMsgToFCL("FCL:VIEW:READY")`.
+- A new tab is rendered (comes from `endpoint` in the service).
+- The rendered tab says its ready `WalletUtils.sendMsgToFCL("FCL:VIEW:READY")`.
 - FCL will send the data to be dealt with `WalletUtils.sendMsgToFCL("FCL:VIEW:READY:RESPONSE", { ...body, service: {params, data} })`
   - Where `body` is the stuff you care about, `params` and `data` are things you can provide in the service object.
 - The wallet sends back an Approved or Declined post message (It will be a `f_type: "PollingResponse"`, we will get to that in a bit)
