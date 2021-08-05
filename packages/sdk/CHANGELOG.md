@@ -2,6 +2,8 @@
 
 - YYYY-MM-DD **BREAKING?** -- Who: description
 
+- 2021-08-05 -- [@gregsantos](https://github.com/gregsantos): Update `createSignableVoucher` structure and move to separate module.
+
 ## 0.0.54 -- 2021-07-23
 
 - 2021-07-22 -- [@JeffreyDoyle](https://github.com/JeffreyDoyle): Adds support for decoding `Enum` and `Capability` JSON-CDC payloads.
