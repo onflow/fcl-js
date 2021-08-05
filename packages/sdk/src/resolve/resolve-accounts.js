@@ -1,6 +1,6 @@
 import {invariant} from "@onflow/util-invariant"
 import {isTransaction} from "../interaction/interaction.js"
-import {createSignableVoucher} from "./resolve-signatures"
+import {createSignableVoucher} from "./voucher.js"
 
 const isFn = v => typeof v === "function"
 export function buildPreSignable(acct, ix) {
