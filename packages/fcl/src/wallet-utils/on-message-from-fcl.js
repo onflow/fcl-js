@@ -1,11 +1,21 @@
 export const onMessageFromFCL = (msg, cb = () => {}) => {
-  const internal = e => {
-    if (typeof e.data !== "object") return
-    if (e.data.type !== msg) return
-    delete e.data.body.interaction
+  const buildData = data => {
+    if (data.deprecated)
+      console.warn("DEPRECATION NOTICE", data.deprecated.message)
+    delete data?.body?.interaction
 
-    cb(e.data)
+    return data
   }
+
+  const internal = e => {
+    const {data} = e
+    if (typeof data !== "object") return
+    if (typeof data == null) return
+    if (data.type === msg) return
+
+    cb(buildData(data))
+  }
+
   window.addEventListener("message", internal)
   return () => window.removeEventListener("message", internal)
 }

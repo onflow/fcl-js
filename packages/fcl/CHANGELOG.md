@@ -2,6 +2,8 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+- 2021-08-10 -- Update `frame` onReady response to include deprecated `FCL:FRAME:READY:RESPONSE`.
+
 ## 0.0.77-alpha.3 - 2021-08-04
 
 - 2021-08-04 -- Adds `execTabRPC` strategy.
