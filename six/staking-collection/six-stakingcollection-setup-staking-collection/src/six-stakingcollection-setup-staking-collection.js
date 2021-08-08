@@ -8,7 +8,7 @@ const DEPS = new Set([
 export const TITLE = "Setup Staking Collection"
 export const DESCRIPTION = "Sets up a Staking Collection for an account."
 export const VERSION = "0.0.5"
-export const HASH = "f110725f0bef8f83b4190022f41976a529376f879852710cbf9cf0504642af85"
+export const HASH = "7a418759877ccbe9dd3a8404fe2eda72c3ab10a95490378232fab3410f735ae8"
 export const CODE = 
 `import FungibleToken from 0xFUNGIBLETOKENADDRESS
 import FlowToken from 0xFLOWTOKENADDRESS
@@ -20,7 +20,7 @@ import FlowStakingCollection from 0xSTAKINGCOLLECTIONADDRESS
 /// It will work regardless of whether they have a regular account, a two-account locked tokens setup,
 /// or staking objects stored in the unlocked account
 
-transaction() {
+transaction {
     prepare(signer: AuthAccount) {
 
         // If there isn't already a staking collection
@@ -51,7 +51,7 @@ transaction() {
         // If there is a node staker object in the account, put it in the staking collection
         if signer.borrow<&FlowIDTableStaking.NodeStaker>(from: FlowIDTableStaking.NodeStakerStoragePath) != nil {
             let node <- signer.load<@FlowIDTableStaking.NodeStaker>(from: FlowIDTableStaking.NodeStakerStoragePath)!
-            collectionRef.addNodeObject(<-node)
+            collectionRef.addNodeObject(<-node, machineAccountInfo: nil)
         }
 
         // If there is a delegator object in the account, put it in the staking collection
