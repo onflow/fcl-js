@@ -1,6 +1,10 @@
 ### Unreleased
 
 - YYYY-MM-DD **BREAKING?** -- description
+- 
+### 0.0.6 -- 2021-08-10
+
+- 2021-08-10 -- Update Transaction code
 
 ### 0.0.4 -- 2021-06-29
 
