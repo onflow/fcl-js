@@ -6,9 +6,9 @@ const DEPS = new Set([
 ])
 
 export const TITLE = "Transfer Node"
-export const DESCRIPTION = "Transfers a node from one Staking Collection to another."
+export const DESCRIPTION = "Transfers a Node from one Staking Collection to another."
 export const VERSION = "0.0.5"
-export const HASH = "27e948414b5c1324489a3f0934683c0007a532b15b2d269f534f81dcd6a4c38a"
+export const HASH = "466783ba26ad0c4efeb794114242dc839325103721a18fec4ef6fbed965e7129"
 export const CODE = 
 `import FlowStakingCollection from 0xSTAKINGCOLLECTIONADDRESS
 
@@ -46,8 +46,7 @@ transaction(nodeID: String, to: Address) {
         // Deposit the NodeStaker to the receivers StakingCollection.
         self.toStakingCollectionCap.addNodeObject(<- nodeStaker!, machineAccountInfo: machineAccountInfo)
     }
-}
-`
+}`
 
 class UndefinedConfigurationError extends Error {
     constructor(address) {
