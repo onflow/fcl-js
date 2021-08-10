@@ -3,7 +3,7 @@
 <div class="docs-site-omit">
 **Version**: 0.73.0
 
-**Last Updated**: July 20, 2021
+**Last Updated**: August 10, 2021
 
 # Table of contents
 
@@ -44,6 +44,8 @@
   - [`currentUser().authenticate`](#currentuserauthenticate)
   - [`currentUser().unauthenticate`](#currentuserunauthenticate)
   - [`currentUser().authorization`](#currentuserauthorization)
+  - [`currentUser().signUserMessage`](#currentusersignusermessage)
+  - [`currentUser().verifyUserSignatures`](#currentuserverifyusersignatures)
 - [On-chain Interactions](#on-chain-interactions)
     - [Methods](#methods-2)
     - [Query and Mutate Flow with Cadence](#query-and-mutate-flow-with-cadence)
@@ -526,6 +528,80 @@ Equivalent to `fcl.unauthenticate`.
 ## `currentUser().authorization`
 
 Equivalent to `fcl.authz`
+
+---
+
+## `currentUser().signUserMessage`
+
+A method to use allowing the user to personally sign data via FCL Compatible Wallets/Services.
+
+> ⚠️ This method requires the current user's wallet to support a signing service endpoint. Currently, only Blocto is compatible with this feature by default.
+
+### Arguments
+
+| Name  | Type   | Description                       |
+| ----- | ------ | --------------------------------- |
+| `message` | string **(required)** | A hexadecimal string to be signed |
+
+#### Returns
+
+| Type    | Description                                                                                                                                                                             |
+| ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Array` | An Array of [CompositeSignatures](https://github.com/onflow/flow-js-sdk/blob/master/packages/fcl/src/wallet-provider-spec/draft-v2.md#compositesignature): {`addr`, `keyId`, `signature`} |
+
+#### Usage
+
+```javascript
+import * as fcl from "@onflow/fcl"
+
+export const signMessage = async () => {
+  const MSG = Buffer.from("FOO").toString("hex")
+  try {
+    return await currentUser().signUserMessage(MSG)
+  } catch (error) {
+    console.log(error)
+  }
+}
+```
+
+---
+
+## `currentUser().verifyUserSignatures`
+
+A method allowing applications to cryptographically verify the ownership of a Flow account by signing a piece of data using its private key. This is typically used with the response from `currentUser().signUserMessage`.
+
+### Arguments
+
+| Name                  | Type                  | Description                       |
+| --------------------- | --------------------- | --------------------------------- |
+| `message`             | string **(required)** | A signed hexadecimal string       |
+| `compositeSignatures` | Array **(required)**  | An Array of `CompositeSignatures` |
+
+#### Returns
+
+| Type    | Description                  |
+| ------- | ---------------------------- |
+| Boolean | `true` if verifed or `false` |
+
+#### Usage
+
+```javascript
+import * as fcl from "@onflow/fcl"
+
+const verifySignature = async (message, compositeSignatures) => {
+  try {
+    return await verifyUserSignature(message, compositeSignatures)
+  } catch (error) {
+    console.log(error)
+  }
+}
+```
+
+#### Examples
+
+Use cases include cryptographic login, message validation, verifiable credentials, and others.
+
+- [Cryptographic Login Example (coming soon)](#)
 
 ---
 
