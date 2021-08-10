@@ -1467,7 +1467,7 @@ A utility function that lets you set the transaction to get subsequent status up
 ```javascript
 import * as fcl from "@onflow/fcl";
 // in some react component
-fcl.events(eventKey).subscribe((event) => {
+fcl.events(eventName).subscribe((event) => {
   console.log(event)
 })
 ```
