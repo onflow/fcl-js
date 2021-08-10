@@ -2,6 +2,10 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.0.6 -- 2021-08-09
+
+- 2021-08-09 -- Update Transaction code
+
 ### 0.0.4 -- 2021-06-29
 
 - 2021-06-29 -- Update Transaction arguments

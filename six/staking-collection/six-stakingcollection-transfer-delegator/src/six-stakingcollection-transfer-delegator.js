@@ -6,9 +6,9 @@ const DEPS = new Set([
 ])
 
 export const TITLE = "Transfer Delegator"
-export const DESCRIPTION = "Transfers a delegator from one Staking Collection to another."
+export const DESCRIPTION = "Transfers a Delegator from one Staking Collection to another."
 export const VERSION = "0.0.5"
-export const HASH = "0057581fbae892f285a9ae9d87f043f34027c4bf96e2b2ee5cbeb2bdba8fcce0"
+export const HASH = "ff070fbf6b6b4fdfea5055edb86b3a3bebff95da976816ce1ebb3e8563a53663"
 export const CODE = 
 `import FlowStakingCollection from 0xSTAKINGCOLLECTIONADDRESS
 
@@ -45,8 +45,7 @@ transaction(nodeID: String, delegatorID: UInt32, to: Address) {
         // Deposit the NodeDelegator to the receivers StakingCollection.
         self.toStakingCollectionCap.addDelegatorObject(<- nodeDelegator!)
     }
-}
-`
+}`
 
 class UndefinedConfigurationError extends Error {
     constructor(address) {
