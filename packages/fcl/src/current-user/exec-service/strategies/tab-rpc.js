@@ -25,6 +25,22 @@ export function execTabRPC(service, body, opts) {
               app: await configLens(/^app\.detail\./),
             },
           })
+          send({
+            type: "FCL:FRAME:READY:RESPONSE",
+            body,
+            service: {
+              params: service.params,
+              data: service.data,
+            },
+            config: {
+              services: await configLens(/^service\./),
+              app: await configLens(/^app\.detail\./),
+            },
+            deprecated: {
+              message:
+                "FCL:FRAME:READY:RESPONSE is deprecated and replaced with type: FCL:VIEW:READY:RESPONSE",
+            },
+          })
           if (includeOlderJsonRpcCall) {
             send({
               jsonrpc: "2.0",
