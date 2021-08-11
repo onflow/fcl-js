@@ -15,6 +15,8 @@ const SNAPSHOT = "SNAPSHOT"
 const SET_CURRENT_USER = "SET_CURRENT_USER"
 const DEL_CURRENT_USER = "DEL_CURRENT_USER"
 
+// this is a test
+
 const DATA = `{
   "f_type": "User",
   "f_vsn": "1.0.0",
