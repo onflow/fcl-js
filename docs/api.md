@@ -1,9 +1,10 @@
 # Flow Client Library (FCL) API Reference
 
 <div class="docs-site-omit">
-**Version**: 0.73.0
 
-**Last Updated**: August 10, 2021
+**Version**: 0.76.0
+
+**Last Updated**: August 13, 2021
 
 # Table of contents
 
