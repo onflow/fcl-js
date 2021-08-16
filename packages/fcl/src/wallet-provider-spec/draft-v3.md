@@ -40,7 +40,7 @@ config({
 
 If the method specified is `IFRAME/RPC`, `POP/RPC` or `TAB/RPC`, then the URL specified as `discovery.wallet` will be rendered as a webpage. Otherwise, if the method specified is `HTTP/POST`, then the authentication process will happen over HTTP requests.
 
-Once the Authentication webpage is rendered, or the api is ready, the wallet then needs to tell FCL that it is ready. You will do this by sending a message to FCL, and FCL will send back a  message with some additional information that you can use about the application requesting authentication on behalf of the user.
+Once the Authentication webpage is rendered, or the API is ready, the wallet then needs to tell FCL that it is ready. You will do this by sending a message to FCL, and FCL will send back a message with some additional information that you can use about the application requesting authentication on behalf of the user.
 
 ```javascript
 // IN WALLET AUTHENTICATION FRAME
@@ -67,22 +67,24 @@ window.onMsgFromFCL("FCL:FRAME:READY:RESPONSE", callback)
 WalletUtils.sendMsgToFCL("FCL:VIEW:READY")
 ```
 
-You will learn fairly fast that almost everything in FCL is optional. The config that FCL sends here is the applications chance to suggest to you, the wallet, what they would like you to send back to them.
+During authentication, the application has a chance to request to you, the wallet, what they would like you to send back to them. These requests are included in the `FCL:FRAME:READY:RESPONSE` messsage sent to the wallet from FCL.
 
-An example of that is the OpenID service. The application can request for you, the wallet, to send them the email address of the current user. The application does this through the config highlighted in the example above. The application requesting this information does not mean you need to send it. It's entirely optional for you, the wallet, to do so.
+An example of such a request is the OpenID service. The application can request for you to send them the email address of the current user. The application requesting this information does not mean you need to send it. It's entirely optional for you to do so.
 
-In the config they can also tell you, the wallet, a variety of things about them, the application, such as the name of their application or a url for an icon of their application. You can use these pieces of information to customize your wallets user experience should you desire to do so.
+In the config they can also tell you a variety of things about them, such as the name of their application or a url for an icon of their application. You can use these pieces of information to customize your wallets user experience should you desire to do so.
 
-You, the wallet, having a visual distinction from the application, but still a seemless and connected experience is our goal here.
+Your wallet having a visual distinction from the application, but still a seemless and connected experience is our goal here.
+
+Whether your authentication process happens using a webpage using the `IFRAME/RPC`, `POP/RPC` or `TAB/RPC` methods, or using a backchannel to an API with the `HTTP/POST` method, the handshake is the same. The same messages are sent in both methods, however the transport mechanism changes. For `IFRAME/RPC`, `POP/RPC` or `TAB/RPC` methods, the transport is window post messsages, with the `HTTP/POST` method, the tranport is HTTP post messages. 
 
 As always, you must never trust anything you recieve from an application. Always do your due-dilligence and be alert as you, the wallet, are the users first line of defense against potentially malicious applications.
 
 ### Authenticate your User 
 
-It's important that you, the wallet, are confident that the user is the user.
+It's important that you are confident that the user is who the user claims to be.
 
 Have them provide enough proof to you that you are okay with passing their details back to FCL.
-If we were to use Blocto as an example, this is when the user is logging into Blocto, putting in their email and getting sent an authentication code to their email. Everything Blocto needs to do to be confident in the users identity.
+If we were to use Blocto as an example, this is when the user is logging into Blocto, putting in their email and getting sent an authentication code to their email. Everything Blocto needs to do to be confident in the users identity. 
 
 ### Once you know who your User is
 
@@ -207,7 +209,6 @@ import {WalletUtils} from "@onflow/fcl"
 
 WalletUtils.sendMsgToFCL("FCL:VIEW:CLOSE")
 ```
-
 # Service Methods
 
 In the previous section about authentication, you were introduced to the concept of FCL services. Services are your main way of configuring FCL.
@@ -277,7 +278,27 @@ It will repeat this cycle until it is either `APPROVED` or `DECLINED`.
 There is an additional feature that `HTTP/POST` enables in the first `PollingResponse` that is returned.
 This feature is the ability for FCL to render an iframe, popup or new tab, and it can be triggered by supplying a service `type: "VIEW/FRAME"`, `type: "VIEW/POP"` or `type: "VIEW/TAB"` and the `endpoint` that the wallet wishes to render.
 
+# Method Compatibility Matrix
+
+Below is a compatibility matrix, highlighting support for various FCL features with each available method.
+
+| Feature                           | IFRAME/RPC    | POP/RPC  | TAB/RPC  | HTTP/POST
+| --------------------------------- |:-------------:| --------:| --------:| --------:|
+| fcl.WalletUtils                   | ✅ Yes         | ✅ Yes   | ✅ Yes   | ⛔ No    |
+| Renders a Webpage                 | ✅ Yes         | ✅ Yes   | ✅ Yes   | ⛔ No    |
+| Communicates with Backchannel API | ⛔ No          | ⛔ No    | ⛔ No    | ✅ Yes   |
+| Authentication (Authn) Service    | ✅ Yes         | ✅ Yes   | ✅ Yes   | ✅ Yes   |
+| Authorization (Authz) Service     | ✅ Yes         | ✅ Yes   | ✅ Yes   | ✅ Yes   |
+| User Signature Service            | ✅ Yes         | ✅ Yes   | ✅ Yes   | ✅ Yes   |
+| Pre-Authz Service                 | ✅ Yes         | ✅ Yes   | ✅ Yes   | ✅ Yes   |
+
 ### Polling Response
+
+Each response back to FCL must be "wrapped" in a Polling Response. Each Polling Response can have it's status as `"APPROVED"`, `"DECLINED"`, or `"PENDING"`.
+
+It is entirely acceptible for your service to immediately return an `"APPROVED"` Polling Reponse, skipping a `"PENDING"` state.
+
+`"DECLINED"` Polling Responses must include a human readable reason for why it was declined.
 
 ```javascript
 // APPROVED
@@ -337,7 +358,7 @@ This feature is the ability for FCL to render an iframe, popup or new tab, and i
 }
 ```
 
-### data and params
+#### data and params
 
 `data` and `params` are information that the wallet can provide in the service config that FCL will pass back to the service.
 - `params` will be added onto the `endpoint` as query params.
