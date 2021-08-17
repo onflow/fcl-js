@@ -2,6 +2,7 @@ import {uid} from "@onflow/util-uid"
 import {tab} from "./utils/tab"
 import {normalizePollingResponse} from "../../normalize/polling-response"
 import {configLens} from "../../../default-config"
+import {coldStorage} from "../../../current-user/index"
 
 export function execTabRPC(service, body, opts) {
   return new Promise((resolve, reject) => {
@@ -54,15 +55,16 @@ export function execTabRPC(service, body, opts) {
         }
       },
 
-      onResponse(e, {close}) {
+      async onResponse(e, {close}) {
         try {
           if (typeof e.data !== "object") return
           const resp = normalizePollingResponse(e.data)
+          const user = await coldStorage.get()
 
           switch (resp.status) {
             case "APPROVED":
               resolve(resp.data)
-              close()
+              user.loggedIn && close()
               break
 
             case "DECLINED":
@@ -76,7 +78,7 @@ export function execTabRPC(service, body, opts) {
               break
           }
         } catch (error) {
-          console.error("execPopRPC onResponse error", error)
+          console.error("execTabRPC onResponse error", error)
           throw error
         }
       },
@@ -105,7 +107,7 @@ export function execTabRPC(service, body, opts) {
               break
           }
         } catch (error) {
-          console.error("execPopRPC onMessage error", error)
+          console.error("execTabRPC onMessage error", error)
           throw error
         }
       },

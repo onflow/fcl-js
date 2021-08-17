@@ -2,6 +2,7 @@ import {uid} from "@onflow/util-uid"
 import {pop} from "./utils/pop"
 import {normalizePollingResponse} from "../../normalize/polling-response"
 import {configLens} from "../../../default-config"
+import {coldStorage} from "../../../current-user/index"
 
 export function execPopRPC(service, body, opts) {
   return new Promise((resolve, reject) => {
@@ -54,15 +55,16 @@ export function execPopRPC(service, body, opts) {
         }
       },
 
-      onResponse(e, {close}) {
+      async onResponse(e, {close}) {
         try {
           if (typeof e.data !== "object") return
           const resp = normalizePollingResponse(e.data)
+          const user = await coldStorage.get()
 
           switch (resp.status) {
             case "APPROVED":
               resolve(resp.data)
-              close()
+              user.loggedIn && close()
               break
 
             case "DECLINED":

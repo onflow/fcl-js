@@ -25,7 +25,7 @@ const DATA = `{
   "services":[]
 }`
 
-const coldStorage = {
+export const coldStorage = {
   get: async () => {
     const fallback = JSON.parse(DATA)
     const stored = JSON.parse(sessionStorage.getItem(NAME))

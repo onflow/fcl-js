@@ -2,6 +2,7 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+- 2021-08-17 -- **EXPERIMENTAL** Updates service strategies `POP/RPC` and `TAB/RPC` to use a single `window` when `authentication` is needed.
 - 2021-08-12 -- Update `pop`, `tab` onReady response to include deprecated `FCL:FRAME:READY:RESPONSE`.
 - 2021-08-10 -- Update `frame` onReady response to include deprecated `FCL:FRAME:READY:RESPONSE`.
 
