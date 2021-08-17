@@ -5,11 +5,15 @@
 - **Risk of Breaking Change:** Medium
 - **Compatibility:** `>= @onflow/fcl@0.0.77`
 
+## Definitions
+
+This document is written with the perspective that _you_, who is reading this is an FCL Wallet Developer. All references to _you_ in this doc are done with this perspective in mind.
+
 # Overview
 
-Flow Client Library (FCL) approaches the idea of blockchain wallets on Flow in a different way than how wallets may be supported on other blockchains. For example, with FCL, a wallet is not necessarily restricted to being a browser extention or even a native application on a users device. Wallets on Flow can take the shape of being many different types applications. Since wallet applications can take on many forms, we needed to create a way for these varying applications to be able to communicate and work together.
+Flow Client Library (FCL) approaches the idea of blockchain wallets on Flow in a different way than how wallets may be supported on other blockchains. For example, with FCL, a wallet is not necessarily limited to being a browser extention or even a native application on a users device. FCL offers wallet developers the flexibility and freedom to build many different types of applications. Since wallet applications can take on many forms, we needed to create a way for these varying applications to be able to communicate and work together.
 
-FCL acts in many ways as a protocol to facilitate communication and configuration between the different parties involved in a blockchain application. An _Application_ can use FCL to _authenticate_ users, and request _authorizations_ for transactions, as well as mutate and query the _Blockchain_. An application using FCL offers it's _Users_ a way to connect and select any number of Wallets Providers and their Wallet Services. A selected _Wallet_ provides an Applications instance of FCL with configuration information about itself and its Wallet Services, of which the _User_ and _Application_ can interact with.
+FCL acts in many ways as a protocol to facilitate communication and configuration between the different parties involved in a blockchain application. An _Application_ can use FCL to _authenticate_ users, and request _authorizations_ for transactions, as well as mutate and query the _Blockchain_. An application using FCL offers it's _Users_ a way to connect and select any number of Wallets Providers and their Wallet Services. An selected _Wallet_ provides an Applications instance of FCL with configuration information about itself and its Wallet Services, allowing the _User_ and _Application_ to interact with them.
 
 In the following paragraphs we'll explore ways in which you, as a wallet developer, can integrate with FCL by providing implementataions of various FCL services. 
 
@@ -40,7 +44,7 @@ config({
 
 If the method specified is `IFRAME/RPC`, `POP/RPC` or `TAB/RPC`, then the URL specified as `discovery.wallet` will be rendered as a webpage. Otherwise, if the method specified is `HTTP/POST`, then the authentication process will happen over HTTP requests.
 
-Once the Authentication webpage is rendered, or the API is ready, the wallet then needs to tell FCL that it is ready. You will do this by sending a message to FCL, and FCL will send back a message with some additional information that you can use about the application requesting authentication on behalf of the user.
+Once the Authentication webpage is rendered, or the API is ready, you then need to tell FCL that it is ready. You will do this by sending a message to FCL, and FCL will send back a message with some additional information that you can use about the application requesting authentication on behalf of the user.
 
 ```javascript
 // IN WALLET AUTHENTICATION FRAME
@@ -48,7 +52,7 @@ import {WalletUtils} from "@onflow/fcl"
 
 function callback({ data }) {
   if (typeof data != "object") return
-  if (typeof data.type !== "FCL:FRAME:READY:RESPONSE") return
+  if (typeof data.type !== "FCL:VIEW:READY:RESPONSE") return
 
   ... // Do authentication things ...
 
@@ -61,30 +65,31 @@ function callback({ data }) {
   })
 }
 // add event listener first
-window.onMsgFromFCL("FCL:FRAME:READY:RESPONSE", callback)
+window.onMsgFromFCL("FCL:VIEW:READY:RESPONSE", callback)
 
 // tell fcl the wallet is ready
 WalletUtils.sendMsgToFCL("FCL:VIEW:READY")
 ```
 
-During authentication, the application has a chance to request to you, the wallet, what they would like you to send back to them. These requests are included in the `FCL:FRAME:READY:RESPONSE` messsage sent to the wallet from FCL.
+During authentication, the application has a chance to request to you what they would like you to send back to them. These requests are included in the `FCL:VIEW:READY:RESPONSE` messsage sent to the wallet from FCL.
 
-An example of such a request is the OpenID service. The application can request for you to send them the email address of the current user. The application requesting this information does not mean you need to send it. It's entirely optional for you to do so.
+An example of such a request is the OpenID service. The application can request for example that you to send them the email address of the current user. The application requesting this information does not mean you need to send it. It's entirely optional for you to do so. However, some applications may depened on you sending the requested informaation back, and should you decline to do so it may cause the application to not work.
 
-In the config they can also tell you a variety of things about them, such as the name of their application or a url for an icon of their application. You can use these pieces of information to customize your wallets user experience should you desire to do so.
+In the config they can also tell you a variety of things about them, such as the name of their application or a url for an icon of their application. You can use these pieces of information to customize your wallet's user experience should you desire to do so.
 
-Your wallet having a visual distinction from the application, but still a seemless and connected experience is our goal here.
+Your wallet having a visual distinction from the application, but still a seamless and connected experience is our goal here.
 
-Whether your authentication process happens using a webpage using the `IFRAME/RPC`, `POP/RPC` or `TAB/RPC` methods, or using a backchannel to an API with the `HTTP/POST` method, the handshake is the same. The same messages are sent in both methods, however the transport mechanism changes. For `IFRAME/RPC`, `POP/RPC` or `TAB/RPC` methods, the transport is window post messsages, with the `HTTP/POST` method, the tranport is HTTP post messages. 
+Whether your authentication process happens using a webpage with the `IFRAME/RPC`, `POP/RPC` or `TAB/RPC` methods, or using a backchannel to an API with the `HTTP/POST` method, the handshake is the same. The same messages are sent in both methods, however the transport mechanism changes. For `IFRAME/RPC`, `POP/RPC` or `TAB/RPC` methods, the transport is `window.postMessage()`, with the `HTTP/POST` method, the tranport is HTTP post messages. 
 
-As always, you must never trust anything you recieve from an application. Always do your due-dilligence and be alert as you, the wallet, are the users first line of defense against potentially malicious applications.
+As always, you must never trust anything you receive from an application. Always do your due-dilligence and be alert as you are the users first line of defense against potentially malicious applications.
 
 ### Authenticate your User 
 
 It's important that you are confident that the user is who the user claims to be.
 
 Have them provide enough proof to you that you are okay with passing their details back to FCL.
-If we were to use Blocto as an example, this is when the user is logging into Blocto, putting in their email and getting sent an authentication code to their email. Everything Blocto needs to do to be confident in the users identity. 
+Using Blocto as an example, an authentication code is sent to the email a user enters at login.
+This code can be used as validation and is everything Blocto needs to be confident in the users identity.
 
 ### Once you know who your User is
 
@@ -94,7 +99,7 @@ The authentication process is complete once FCL receives back a response, via a 
 
 You can kind of think of FCL as a plugin system. But since those plugins exist elsewhere outside of FCL, FCL needs to be configured with information on how to communicate with those plugins.
 
-What you are sending back to FCL is everything that it needs to communicate with the plugins that you, the wallet, are supplying.
+What you are sending back to FCL is everything that it needs to communicate with the plugins that you are supplying.
 Your wallet is like a plugin to FCL, and these details tell FCL how to use you as a plugin.
 
 Here is an example of an authentication resonse:
@@ -174,23 +179,23 @@ WalletUtils.sendMsgToFCL("PollingResponse", {
                     f_type: "OpenID",
                     f_vsn: "1.0.0",
                     profile: {
-                        name: "bob",
-                        family_name: "builder", // icky underscored names because of OpenID Connect spec
-                        given_name: "robert",
-                        middle_name: "the",
-                        nickname: "bob the builder",
-                        preferred_username: "bob",
-                        profile: "https://www.bobthebuilder.com/",
-                        picture: "https://avatars.onflow.org/avatar/bob-the-builder",
-                        website: "https://www.bobthebuilder.com",
-                        gender: "small cartoonish man",
-                        birthday: "1999-01-30", // can use 0000 for year if year is not known
-                        zoneinfo: "America/Vancouver", // they are so inconsistent :(
+                        name: "Jeff",
+                        family_name: "D", // icky underscored names because of OpenID Connect spec
+                        given_name: "Jeffrey",
+                        middle_name: "FakeMiddleName",
+                        nickname: "JeffJeff",
+                        preferred_username: "Jeff",
+                        profile: "https://www.jeff.jeff/",
+                        picture: "https://avatars.onflow.org/avatar/jeff",
+                        website: "https://www.jeff.jeff/",
+                        gender: "male",
+                        birthday: "1900-01-01", // can use 0000 for year if year is not known
+                        zoneinfo: "America/Vancouver",
                         locale: "en",
                         updated_at: "1625588304427"
                     },
                     email: {
-                        email: "bob@bob.bob",
+                        email: "jeff@jeff.jeff",
                         email_verified: false,
                     }
                 },
@@ -214,12 +219,12 @@ WalletUtils.sendMsgToFCL("FCL:VIEW:CLOSE")
 In the previous section about authentication, you were introduced to the concept of FCL services. Services are your main way of configuring FCL.
 
 Sometimes they just configure FCL and thats it. An example of this case can be seen with the Authn Service and the OpenID Service.
-With those two services, you as the wallet are simply telling FCL "here is a bunch of info about the current user".
+With those two services you are simply telling FCL "here is a bunch of info about the current user".
 You will see that those two services both have a `method: "DATA"` field in them.
 Currently these are the only two cases that can be a data service.
 
 Other services can be a little more complex. For example, they might require a back and forth communication between FCL and the Service in question.
-Ultimately we want to do this back and forth via a secure back-channel (https requests to servers), but in some situations that isn't a viable option, so there is also a front-channel option.
+Ultimately we want to do this back and forth via a secure back-channel (https requests to servers), **but in some situations that isn't a viable option, so there is also a front-channel option**.
 Where possible, you as a wallet provider should aim to provide a back-channel support for services, and only fall back to a front-channel if absolutely necessary.
 
 Back-channel communication use `method: "HTTP/POST"`, while front-channel communication use `method: "IFRAME/RPC"`, `method: "POP/RPC"` or `method: "TAB/RPC`.
@@ -272,8 +277,7 @@ Like the `IFRAME/RPC` or `POP/RPS`, our goal is to eventually get an `APPROVED` 
 But more than likely that isn't the case and it will be in a `PENDING` state (`PENDING` is not available to `IFRAME/RPC` or `POP/RPC`).
 When the polling response is `PENDING` it requires an `update` field that includes a service, `BackChannelRpc`, that FCL can use to request an updated `PollingResponse` from.
 FCL will use that `BackChannelRpc` to request a new `PollingResponse` which itself can be `APPROVED`, `DECLINED` or `PENDING`.
-If it is `APPROVED` or `DECLINED` FCL will halt and return/error, but if it is `PENDING` it will use the `BackChannelRpc` supplied in the new `PollingResponse` update field.
-It will repeat this cycle until it is either `APPROVED` or `DECLINED`.
+If it is `APPROVED` FCL will return, otherwise if it is `DECLINED` FCL will error. However, if it is `PENDING`, it will use the `BackChannelRpc` supplied in the new `PollingResponse` update field. It will repeat this cycle until it is either `APPROVED` or `DECLINED`.
 
 There is an additional feature that `HTTP/POST` enables in the first `PollingResponse` that is returned.
 This feature is the ability for FCL to render an iframe, popup or new tab, and it can be triggered by supplying a service `type: "VIEW/FRAME"`, `type: "VIEW/POP"` or `type: "VIEW/TAB"` and the `endpoint` that the wallet wishes to render.
@@ -390,11 +394,11 @@ An authorization service is expected to know the Account and the Key that will b
 }
 ```
 
-FCL will use the `method` provided to request a composite signature from authorization service (Wrapped in a `PollingResponse`).
+FCL will use the `method` provided to request an array of composite signature from authorization service (Wrapped in a `PollingResponse`).
 The authorization service will be sent a `Signable`.
 The service is expected to construct an encoded message to sign from `Signable.voucher`.
 It then needs to hash the encoded message, tag the message, and then sign it producing a signature.
-The signature needs to be sent back to FCL as a HEX string in the response object (which is a `CompositeSignature`).
+This signature, as a HEX string, is sent back to FCL as part of the `CompositeSignature` which includes the user address and keyID in the data property of a `PollingResponse`.
 
 ```elixir
 siganture = 
