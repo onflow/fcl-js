@@ -397,7 +397,8 @@ An authorization service is expected to know the Account and the Key that will b
 FCL will use the `method` provided to request an array of composite signature from authorization service (Wrapped in a `PollingResponse`).
 The authorization service will be sent a `Signable`.
 The service is expected to construct an encoded message to sign from `Signable.voucher`.
-It then needs to hash the encoded message, tag the message, and then sign it producing a signature.
+It then needs to hash the encoded message, and prepend a required [transaction domain tag](https://github.com/onflow/flow-js-sdk/blob/master/packages/sdk/src/encode/encode.js#L12-L13).
+Finally it signs the payload with the user/s keys, producing a signature.
 This signature, as a HEX string, is sent back to FCL as part of the `CompositeSignature` which includes the user address and keyID in the data property of a `PollingResponse`.
 
 ```elixir
