@@ -33,9 +33,9 @@ Currently these are the only two cases that can be a data service.)
 
 Other services can be a little more complex. For example, they might require a back and forth communication between FCL and the Service in question.
 Ultimately we want to do this back and forth via a secure back-channel (https requests to servers), **but in some situations that isn't a viable option, so there is also a front-channel option**.
-Where possible, you as a wallet provider should aim to provide a back-channel support for services, and only fall back to a front-channel if absolutely necessary.
+Where possible, you should aim to provide a back-channel support for services, and only fall back to a front-channel if absolutely necessary.
 
-Back-channel communication use `method: "HTTP/POST"`, while front-channel communication use `method: "IFRAME/RPC"`, `method: "POP/RPC"` or `method: "TAB/RPC`.
+Back-channel communications use `method: "HTTP/POST"`, while front-channel communications use `method: "IFRAME/RPC"`, `method: "POP/RPC"` or `method: "TAB/RPC`.
 
 It's important to note that regardless of the method of communication, the data that is sent back and forth between the parties involved is the same.
 
@@ -43,11 +43,11 @@ It's important to note that regardless of the method of communication, the data 
 
 `IFRAME/RPC` is the easiest to explain, so we will start with it:
 
-- An iframe is rendered (comes from `endpoint` in the service).
+- An iframe is rendered (comes from the `endpoint` in the service).
 - The rendered frames says its ready `WalletUtils.sendMsgToFCL("FCL:VIEW:READY")`.
-- FCL will send the data to be dealt with `WalletUtils.sendMsgToFCL("FCL:VIEW:READY:RESPONSE", {...body, service: {params, data} })`
-  - Where `body` is the stuff you care about, `params` and `data` are things you can provide in the service object.
-- The wallet sends back an Approved or Declined post message (It will be a `f_type: "PollingResponse"`, we will get to that in a bit)
+- FCL will send the data to be dealt with: `WalletUtils.sendMsgToFCL("FCL:VIEW:READY:RESPONSE", {...body, service: {params, data} })`
+  - Where `body` is the stuff you care about, `params` and `data` are additional information you can provide in the service object.
+- The wallet sends back an Approved or Declined post message. (It will be a `f_type: "PollingResponse"`, which we will get to in a bit)
   - If it's approved, the polling responses data field will need to be what FCL is expecting.
   - If it's declined, the polling responses reason field should say why it was declined.
 
@@ -58,7 +58,7 @@ It's important to note that regardless of the method of communication, the data 
 - A popup is rendered (comes from `endpoint` in the service).
 - The rendered popup says its ready `WalletUtils.sendMsgToFCL("FCL:VIEW:READY")`.
 - FCL will send the data to be dealt with `WalletUtils.sendMsgToFCL("FCL:VIEW:READY:RESPONSE", { ...body, service: {params, data} })`
-  - Where `body` is the stuff you care about, `params` and `data` are things you can provide in the service object.
+  - Where `body` is the stuff you care about, `params` and `data` are additional information you can provide in the service object.
 - The wallet sends back an Approved or Declined post message (It will be a `f_type: "PollingResponse"`, we will get to that in a bit)
   - If it's approved, the polling responses data field will need to be what FCL is expecting.
   - If it's declined, the polling responses reason field should say why it was declined.
@@ -70,7 +70,7 @@ It's important to note that regardless of the method of communication, the data 
 - A new tab is rendered (comes from `endpoint` in the service).
 - The rendered tab says its ready `WalletUtils.sendMsgToFCL("FCL:VIEW:READY")`.
 - FCL will send the data to be dealt with `WalletUtils.sendMsgToFCL("FCL:VIEW:READY:RESPONSE", { ...body, service: {params, data} })`
-  - Where `body` is the stuff you care about, `params` and `data` are things you can provide in the service object.
+  - Where `body` is the stuff you care about, `params` and `data` are additional information you can provide in the service object.
 - The wallet sends back an Approved or Declined post message (It will be a `f_type: "PollingResponse"`, we will get to that in a bit)
   - If it's approved, the polling responses data field will need to be what FCL is expecting.
   - If it's declined, the polling responses reason field should say why it was declined.
@@ -161,9 +161,9 @@ It is entirely acceptible for your service to immediately return an `"APPROVED"`
 - `params` will be added onto the `endpoint` as query params.
 - `data` will be included in the body of the `HTTP/POST` request or in the `FCL:VIEW:READY:RESPONSE` for a `IFRAME/RPC`, `POP/RPC` or `TAB/RPC`.
 
-# Authentication
+# Authentication Service
 
-In the following examples, we'll walk you through the process of building an authentication process.
+In the following examples, we'll walk you through the process of building an authentication service.
 
 In FCL, wallets are configured by passing in a wallet provider's authentication URL as the `discovery.wallet` config variable.
 
