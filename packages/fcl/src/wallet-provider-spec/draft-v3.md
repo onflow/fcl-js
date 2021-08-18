@@ -180,7 +180,7 @@ config({
 })
 ```
 
-If the method specified is `IFRAME/RPC`, `POP/RPC` or `TAB/RPC`, then the URL specified as `discovery.wallet` will be rendered as a webpage. Otherwise, if the method specified is `HTTP/POST`, then the authentication process will happen over HTTP requests.
+If the method specified is `IFRAME/RPC`, `POP/RPC` or `TAB/RPC`, then the URL specified as `discovery.wallet` will be rendered as a webpage. Otherwise, if the method specified is `HTTP/POST`, then the authentication process will happen over HTTP requests. (While authentication can be accomplished using any of those service methods, this example will use the `IFRAME/RPC` service method.)
 
 Once the Authentication webpage is rendered, or the API is ready, you then need to tell FCL that it is ready. You will do this by sending a message to FCL, and FCL will send back a message with some additional information that you can use about the application requesting authentication on behalf of the user.
 
