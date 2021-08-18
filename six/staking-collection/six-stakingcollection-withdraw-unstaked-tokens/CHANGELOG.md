@@ -2,6 +2,10 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.0.5 -- 2021-08-10
+
+- 2021-08-10 -- Updates Transaction Code
+
 ### 0.0.3 -- 2021-06-28
 
 - 2021-06-28 -- Repairs argument syntax

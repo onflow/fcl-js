@@ -7,8 +7,8 @@ const DEPS = new Set([
 
 export const TITLE = "Withdraw Unstaked Tokens"
 export const DESCRIPTION = "Withdraws unstaked tokens from a stake held in a Staking Collection."
-export const VERSION = "0.0.4"
-export const HASH = "8fb30dd7b1d534afeecfd9d1acbe9f0783403d52b61f3764d2aec9e70b11f762"
+export const VERSION = "0.0.5"
+export const HASH = "1c947f6ff0e428272d9906d7fff1ffa5073a223cba2fff4014dde2436843b064"
 export const CODE = 
 `import FlowStakingCollection from 0xSTAKINGCOLLECTIONADDRESS
 
@@ -17,7 +17,7 @@ export const CODE =
 /// And then any locked tokens are deposited into the locked account vault if it is there
 
 transaction(nodeID: String, delegatorID: UInt32?, amount: UFix64) {
-
+    
     let stakingCollectionRef: &FlowStakingCollection.StakingCollection
 
     prepare(account: AuthAccount) {
