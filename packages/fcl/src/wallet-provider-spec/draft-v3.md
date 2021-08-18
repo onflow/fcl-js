@@ -233,7 +233,7 @@ This code can be used as validation and is everything Blocto needs to be confide
 
 Once you're confident in the users identity, we can complete the authentication process.
 
-The authentication process is complete once FCL receives back a response, via a post message, that configures FCL with services (more on this concept later) for the current user. This response is extremeley important to FCL. At its core it tells FCL who the user is, and then via included services it tells FCL how the user authenticated, how to request transaction signatures, how to get a personal message signed and the user's email and other details if requested. In the future it may also inlude many more things!
+The authentication process is complete once FCL receives back a response that configures FCL with FCL Services for the current user. This response is extremeley important to FCL. At its core it tells FCL who the user is, and then via the included services it tells FCL how the user authenticated, how to request transaction signatures, how to get a personal message signed and the user's email and other details if requested. In the future it may also inlude many more things!
 
 You can kind of think of FCL as a plugin system. But since those plugins exist elsewhere outside of FCL, FCL needs to be configured with information on how to communicate with those plugins.
 
