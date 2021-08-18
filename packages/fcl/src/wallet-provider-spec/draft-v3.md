@@ -13,7 +13,7 @@ This document is written with the perspective that _you_, who is reading this is
 
 Flow Client Library (FCL) approaches the idea of blockchain wallets on Flow in a different way than how wallets may be supported on other blockchains. For example, with FCL, a wallet is not necessarily limited to being a browser extention or even a native application on a users device. FCL offers wallet developers the flexibility and freedom to build many different types of applications. Since wallet applications can take on many forms, we needed to create a way for these varying applications to be able to communicate and work together.
 
-FCL acts in many ways as a protocol to facilitate communication and configuration between the different parties involved in a blockchain application. An _Application_ can use FCL to _authenticate_ users, and request _authorizations_ for transactions, as well as mutate and query the _Blockchain_. An application using FCL offers it's _Users_ a way to connect and select any number of Wallets Providers and their Wallet Services. An selected _Wallet_ provides an Applications instance of FCL with configuration information about itself and its Wallet Services, allowing the _User_ and _Application_ to interact with them.
+FCL acts in many ways as a protocol to facilitate communication and configuration between the different parties involved in a blockchain application. An _Application_ can use FCL to _authenticate_ users, and request _authorizations_ for transactions, as well as mutate and query the _Blockchain_. An application using FCL offers it's _Users_ a way to connect and select any number of Wallets Providers and their Wallet Services. A selected _Wallet_ provides an Applications instance of FCL with configuration information about itself and its Wallet Services, allowing the _User_ and _Application_ to interact with them.
 
 In the following paragraphs we'll explore ways in which you, as a wallet developer, can integrate with FCL by providing implementataions of various FCL services. 
 
@@ -58,14 +58,14 @@ function callback({ data }) {
 
   WalletUtils.sendMsgToFCL("PollingResponse", {
     "f_vsn": "1.0.0",
-    "status": "APPROVED", // PENDING | APPROVED | DECLINED
+    "status": "APPROVED", // APPROVED | DECLINED
     "data": {
          ...
     }
   })
 }
 // add event listener first
-window.onMsgFromFCL("FCL:VIEW:READY:RESPONSE", callback)
+WalletUtils.onMsgFromFCL("FCL:VIEW:READY:RESPONSE", callback)
 
 // tell fcl the wallet is ready
 WalletUtils.sendMsgToFCL("FCL:VIEW:READY")
@@ -110,7 +110,7 @@ import {WalletUtils} from "@onflow/fcl"
 
 WalletUtils.sendMsgToFCL("PollingResponse", {
     f_vsn: "1.0.0",
-    status: "APPROVED", // PENDING | APPROVED | DECLINED
+    status: "APPROVED", // APPROVED | DECLINED
     data: {
         f_type: "FCL:VIEW:RESPONSE",
         f_vsn: "1.0.0",
@@ -281,20 +281,6 @@ If it is `APPROVED` FCL will return, otherwise if it is `DECLINED` FCL will erro
 
 There is an additional feature that `HTTP/POST` enables in the first `PollingResponse` that is returned.
 This feature is the ability for FCL to render an iframe, popup or new tab, and it can be triggered by supplying a service `type: "VIEW/FRAME"`, `type: "VIEW/POP"` or `type: "VIEW/TAB"` and the `endpoint` that the wallet wishes to render. This is a great way for a wallet provider to switch to a webpage if displaying a UI is necessary for the service it is performing.
-
-# Method Compatibility Matrix
-
-Below is a compatibility matrix, highlighting support for various FCL features with each available method.
-
-| Feature                           | IFRAME/RPC    | POP/RPC  | TAB/RPC  | HTTP/POST
-| --------------------------------- |:-------------:| --------:| --------:| --------:|
-| fcl.WalletUtils                   | ✅ Yes         | ✅ Yes   | ✅ Yes   | ⛔ No    |
-| Renders a Webpage                 | ✅ Yes         | ✅ Yes   | ✅ Yes   | ⛔ No    |
-| Communicates with Backchannel API | ⛔ No          | ⛔ No    | ⛔ No    | ✅ Yes   |
-| Authentication (Authn) Service    | ✅ Yes         | ✅ Yes   | ✅ Yes   | ✅ Yes   |
-| Authorization (Authz) Service     | ✅ Yes         | ✅ Yes   | ✅ Yes   | ✅ Yes   |
-| User Signature Service            | ✅ Yes         | ✅ Yes   | ✅ Yes   | ✅ Yes   |
-| Pre-Authz Service                 | ✅ Yes         | ✅ Yes   | ✅ Yes   | ✅ Yes   |
 
 ### Polling Response
 
