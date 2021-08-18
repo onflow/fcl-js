@@ -25,7 +25,7 @@ The following services will be covered:
 
 # Service Methods
 
-FCL Services are your way as a Wallet Provider of configuring FCL. In accomplisshing these service, FCL employs various Service Methods. You can think of these Service Methods as the strategies FCL and your Wallet Provider will use to provide the functionality of your wallets supported FCL services.
+FCL Services are your way as a Wallet Provider of configuring FCL. In accomplishing these service, FCL employs various Service Methods. Services Methods are the ways FCL can talk to your wallet. You as a Wallet Provider get to decide which of these service methods each of your services use to communicate with you.
 
 Sometimes services just configure FCL and thats it. An example of this case can be seen with the Authentication Service and the OpenID Service.
 With those two services you are simply telling FCL "here is a bunch of info about the current user". (You will see that those two services both have a `method: "DATA"` field in them.
@@ -36,6 +36,13 @@ Ultimately we want to do this back and forth via a secure back-channel (https re
 Where possible, you should aim to provide a back-channel support for services, and only fall back to a front-channel if absolutely necessary.
 
 Back-channel communications use `method: "HTTP/POST"`, while front-channel communications use `method: "IFRAME/RPC"`, `method: "POP/RPC"` or `method: "TAB/RPC`.
+
+| Service Method | Front  |  Back |
+|----------------|--------|-------|
+| HTTP/POST      |   ⛔   |   ✅   |
+| IFRAME/RPC     |   ✅   |   ⛔   |
+| POP/RPC        |   ✅   |   ⛔   |
+| TAB/RPC        |   ✅   |   ⛔   |
 
 It's important to note that regardless of the method of communication, the data that is sent back and forth between the parties involved is the same.
 
