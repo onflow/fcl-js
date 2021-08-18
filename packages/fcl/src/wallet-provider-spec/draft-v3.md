@@ -58,6 +58,8 @@ It's important to note that regardless of the method of communication, the data 
   - If it's approved, the polling responses data field will need to be what FCL is expecting.
   - If it's declined, the polling responses reason field should say why it was declined.
 
+![IFRAME/RPC Diagram](https://raw.githubusercontent.com/onflow/flow-js-sdk/master/packages/fcl/assets/service-method-diagrams/iframe-rpc.png)
+
 ### POP/RPC
 
 `POP/RPC` works in an almost entirely similar way to `IFRAME/RPC`, except instead of rendering the `method` in an iframe, we render it in a popup. The same communication protocol between the rendered view and FCL applies:
@@ -70,6 +72,8 @@ It's important to note that regardless of the method of communication, the data 
   - If it's approved, the polling responses data field will need to be what FCL is expecting.
   - If it's declined, the polling responses reason field should say why it was declined.
 
+![POP/RPC Diagram](https://raw.githubusercontent.com/onflow/flow-js-sdk/master/packages/fcl/assets/service-method-diagrams/pop-rpc.png)
+
 ### TAB/RPC
 
 `TAB/RPC` works in an almost entirely similar way to `IFRAME/RPC` and `POP/RPC`, except instead of rendering the `method` in an iframe or a popup, we render it in a new tab. The same communication protocol between the rendered view and FCL applies:
@@ -81,6 +85,8 @@ It's important to note that regardless of the method of communication, the data 
 - The wallet sends back an Approved or Declined post message (It will be a `f_type: "PollingResponse"`, we will get to that in a bit)
   - If it's approved, the polling responses data field will need to be what FCL is expecting.
   - If it's declined, the polling responses reason field should say why it was declined.
+
+![TAB/RPC Diagram](https://raw.githubusercontent.com/onflow/flow-js-sdk/master/packages/fcl/assets/service-method-diagrams/tab-rpc.png)
 
 ### HTTP/POST
 
@@ -95,6 +101,8 @@ If it is `APPROVED` FCL will return, otherwise if it is `DECLINED` FCL will erro
 
 There is an additional feature that `HTTP/POST` enables in the first `PollingResponse` that is returned.
 This feature is the ability for FCL to render an iframe, popup or new tab, and it can be triggered by supplying a service `type: "VIEW/FRAME"`, `type: "VIEW/POP"` or `type: "VIEW/TAB"` and the `endpoint` that the wallet wishes to render in the `local` field of the `PollingResponse`. This is a great way for a wallet provider to switch to a webpage if displaying a UI is necessary for the service it is performing.
+
+![HTTP/POST Diagram](https://raw.githubusercontent.com/onflow/flow-js-sdk/master/packages/fcl/assets/service-method-diagrams/http-post.png)
 
 ### Polling Response
 
