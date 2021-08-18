@@ -1,13 +1,13 @@
 ## Status
 
-- **Last Updated:** August 3rd 2021
+- **Last Updated:** August 18th 2021
 - **Stable:** Yes
 - **Risk of Breaking Change:** Medium
 - **Compatibility:** `>= @onflow/fcl@0.0.77`
 
 ## Definitions
 
-This document is written with the perspective that _you_, who is reading this is an FCL Wallet Developer. All references to _you_ in this doc are done with this perspective in mind.
+This document is written with the perspective that _you_ who are reading this right now are an FCL Wallet Developer. All references to _you_ in this doc are done with this perspective in mind.
 
 # Overview
 
