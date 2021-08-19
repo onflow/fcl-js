@@ -46,13 +46,13 @@ Back-channel communications use `method: "HTTP/POST"`, while front-channel commu
 
 It's important to note that regardless of the method of communication, the data that is sent back and forth between the parties involved is the same.
 
-### IFRAME/RPC
+### IFRAME/RPC (Front Channel)
 
 `IFRAME/RPC` is the easiest to explain, so we will start with it:
 
 - An iframe is rendered (comes from the `endpoint` in the service).
 - The rendered frames says its ready `WalletUtils.sendMsgToFCL("FCL:VIEW:READY")`.
-- FCL will send the data to be dealt with: `WalletUtils.sendMsgToFCL("FCL:VIEW:READY:RESPONSE", {...body, service: {params, data} })`
+- FCL will send the data to be dealt with: `WalletUtils.onMsgFromFCL("FCL:VIEW:READY:RESPONSE", ({ body, params, data }) => { ... })`
   - Where `body` is the stuff you care about, `params` and `data` are additional information you can provide in the service object.
 - The wallet sends back an Approved or Declined post message. (It will be a `f_type: "PollingResponse"`, which we will get to in a bit)
   - If it's approved, the polling responses data field will need to be what FCL is expecting.
@@ -60,13 +60,13 @@ It's important to note that regardless of the method of communication, the data 
 
 ![IFRAME/RPC Diagram](https://raw.githubusercontent.com/onflow/flow-js-sdk/master/packages/fcl/assets/service-method-diagrams/iframe-rpc.png)
 
-### POP/RPC
+### POP/RPC (Front Channel)
 
 `POP/RPC` works in an almost entirely similar way to `IFRAME/RPC`, except instead of rendering the `method` in an iframe, we render it in a popup. The same communication protocol between the rendered view and FCL applies:
 
 - A popup is rendered (comes from `endpoint` in the service).
 - The rendered popup says its ready `WalletUtils.sendMsgToFCL("FCL:VIEW:READY")`.
-- FCL will send the data to be dealt with `WalletUtils.sendMsgToFCL("FCL:VIEW:READY:RESPONSE", { ...body, service: {params, data} })`
+- FCL will send the data to be dealt with `WalletUtils.onMsgFromFCL("FCL:VIEW:READY:RESPONSE", ({ body, params, data }) => { ... })`
   - Where `body` is the stuff you care about, `params` and `data` are additional information you can provide in the service object.
 - The wallet sends back an Approved or Declined post message (It will be a `f_type: "PollingResponse"`, we will get to that in a bit)
   - If it's approved, the polling responses data field will need to be what FCL is expecting.
@@ -74,13 +74,13 @@ It's important to note that regardless of the method of communication, the data 
 
 ![POP/RPC Diagram](https://raw.githubusercontent.com/onflow/flow-js-sdk/master/packages/fcl/assets/service-method-diagrams/pop-rpc.png)
 
-### TAB/RPC
+### TAB/RPC (Front Channel)
 
 `TAB/RPC` works in an almost entirely similar way to `IFRAME/RPC` and `POP/RPC`, except instead of rendering the `method` in an iframe or a popup, we render it in a new tab. The same communication protocol between the rendered view and FCL applies:
 
 - A new tab is rendered (comes from `endpoint` in the service).
 - The rendered tab says its ready `WalletUtils.sendMsgToFCL("FCL:VIEW:READY")`.
-- FCL will send the data to be dealt with `WalletUtils.sendMsgToFCL("FCL:VIEW:READY:RESPONSE", { ...body, service: {params, data} })`
+- FCL will send the data to be dealt with `WalletUtils.onMsgFromFCL("FCL:VIEW:READY:RESPONSE", ({ body, params, data }) => { ... })`
   - Where `body` is the stuff you care about, `params` and `data` are additional information you can provide in the service object.
 - The wallet sends back an Approved or Declined post message (It will be a `f_type: "PollingResponse"`, we will get to that in a bit)
   - If it's approved, the polling responses data field will need to be what FCL is expecting.
@@ -88,19 +88,19 @@ It's important to note that regardless of the method of communication, the data 
 
 ![TAB/RPC Diagram](https://raw.githubusercontent.com/onflow/flow-js-sdk/master/packages/fcl/assets/service-method-diagrams/tab-rpc.png)
 
-### HTTP/POST
+### HTTP/POST (Back Channel)
 
 `HTTP/POST` initially sends a post request to the `endpoint` specified in the service, which should imediately return a `f_type: "PollingResponse"`.
 
-Like the `IFRAME/RPC` or `POP/RPS`, our goal is to eventually get an `APPROVED` or `DECLINED` polling response, and technically this endpoint could return one of those immediately.
+Like `IFRAME/RPC`, `POP/RPC` or `TAB/RPC`, our goal is to eventually get an `APPROVED` or `DECLINED` polling response, and technically this endpoint could return one of those immediately.
 
-But more than likely that isn't the case and it will be in a `PENDING` state (`PENDING` is not available to `IFRAME/RPC` or `POP/RPC`).
-When the polling response is `PENDING` it requires an `update` field that includes a service, `BackChannelRpc`, that FCL can use to request an updated `PollingResponse` from.
+But more than likely that isn't the case and it will be in a `PENDING` state (`PENDING` is not available to `IFRAME/RPC`, `POP/RPC` or `TAB/RPC`).
+When the polling response is `PENDING` it requires an `updates` field that includes a service, `BackChannelRpc`, that FCL can use to request an updated `PollingResponse` from.
 FCL will use that `BackChannelRpc` to request a new `PollingResponse` which itself can be `APPROVED`, `DECLINED` or `PENDING`.
-If it is `APPROVED` FCL will return, otherwise if it is `DECLINED` FCL will error. However, if it is `PENDING`, it will use the `BackChannelRpc` supplied in the new `PollingResponse` update field. It will repeat this cycle until it is either `APPROVED` or `DECLINED`.
+If it is `APPROVED` FCL will return, otherwise if it is `DECLINED` FCL will error. However, if it is `PENDING`, it will use the `BackChannelRpc` supplied in the new `PollingResponse` updates field. It will repeat this cycle until it is either `APPROVED` or `DECLINED`.
 
-There is an additional feature that `HTTP/POST` enables in the first `PollingResponse` that is returned.
-This feature is the ability for FCL to render an iframe, popup or new tab, and it can be triggered by supplying a service `type: "VIEW/FRAME"`, `type: "VIEW/POP"` or `type: "VIEW/TAB"` and the `endpoint` that the wallet wishes to render in the `local` field of the `PollingResponse`. This is a great way for a wallet provider to switch to a webpage if displaying a UI is necessary for the service it is performing.
+There is an additional optional feature that `HTTP/POST` enables in the first `PollingResponse` that is returned.
+This optional feature is the ability for FCL to render an iframe, popup or new tab, and it can be triggered by supplying a service `type: "VIEW/FRAME"`, `type: "VIEW/POP"` or `type: "VIEW/TAB"` and the `endpoint` that the wallet wishes to render in the `local` field of the `PollingResponse`. This is a great way for a wallet provider to switch to a webpage if displaying a UI is necessary for the service it is performing.
 
 ![HTTP/POST Diagram](https://raw.githubusercontent.com/onflow/flow-js-sdk/master/packages/fcl/assets/service-method-diagrams/http-post.png)
 
@@ -191,7 +191,7 @@ import {config} from "@onflow/fcl"
 
 config({
   "discovery.wallet": "your-url-that-fcl-will-use-for-authentication",
-  "discovery.wallet.method": "IFRAME/RPC" // Available methods are "IFRAME/RPC", "POP/RPC", "TAB/RPC" or "HTTP/POST"
+  "discovery.wallet.method": "IFRAME/RPC" // Optional. Available methods are "IFRAME/RPC", "POP/RPC", "TAB/RPC" or "HTTP/POST", defaults to "IFRAME/RPC".
 })
 ```
 
@@ -199,21 +199,26 @@ If the method specified is `IFRAME/RPC`, `POP/RPC` or `TAB/RPC`, then the URL sp
 
 Once the Authentication webpage is rendered, or the API is ready, you then need to tell FCL that it is ready. You will do this by sending a message to FCL, and FCL will send back a message with some additional information that you can use about the application requesting authentication on behalf of the user.
 
+The following example is using the `IFRAME/RPC` method. Your authentication webpage will likely resemble the following code: 
+
 ```javascript
 // IN WALLET AUTHENTICATION FRAME
 import {WalletUtils} from "@onflow/fcl"
 
-function callback({ data }) {
+function callback(data) {
   if (typeof data != "object") return
   if (typeof data.type !== "FCL:VIEW:READY:RESPONSE") return
 
   ... // Do authentication things ...
 
-  WalletUtils.sendMsgToFCL("PollingResponse", {
-    "f_vsn": "1.0.0",
-    "status": "APPROVED", // APPROVED | DECLINED
-    "data": {
-         ...
+  WalletUtils.sendMsgToFCL("FCL:VIEW:RESPONSE", {
+    f_type: "PollingResponse",
+    f_vsn: "1.0.0",
+    status: "APPROVED",
+    data: {
+      f_type: "AuthnResponse",
+      f_vsn: "1.0.0"
+      ...
     }
   })
 }
@@ -261,11 +266,12 @@ Here is an example of an authentication resonse:
 // IN WALLET AUTHENTICATION FRAME
 import {WalletUtils} from "@onflow/fcl"
 
-WalletUtils.sendMsgToFCL("PollingResponse", {
+WalletUtils.sendMsgToFCL("FCL:VIEW:RESPONSE", {
+    f_type: "PollingResponse",
     f_vsn: "1.0.0",
     status: "APPROVED", // APPROVED | DECLINED
     data: {
-        f_type: "FCL:VIEW:RESPONSE",
+        f_type: "AuthnResponse",
         f_vsn: "1.0.0",
         addr: "0xUSER",                      // The users flow address
 
