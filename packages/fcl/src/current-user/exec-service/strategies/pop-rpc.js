@@ -93,7 +93,7 @@ export function execPopRPC(service, body, opts) {
           switch (resp.status) {
             case "APPROVED":
               resolve(resp.data)
-              close()
+              user.loggedIn && close()
               break
 
             case "DECLINED":
