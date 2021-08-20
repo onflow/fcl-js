@@ -170,6 +170,25 @@ It is entirely acceptible for your service to immediately return an `"APPROVED"`
 }
 ```
 
+A `PollingResponse` can alternatively be constructed using `WalletUtils` when sending `APPROVED` or `DECLINED` responses.
+
+```javascript
+import {WalletUtils} from "@onflow/fcl"
+
+// Approving a PollingResponse
+// Example using an AuthnResponse as the PollingResponse data
+WalletUtils.approve({
+  f_type: "AuthnResponse",
+  f_vsn: "1.0.0"
+  ...
+})
+
+// Rejecting a PollingResponse
+// Supplys a reason for declining
+const reason = "User declined to authenticate."
+WalletUtils.decline(reason)
+```
+
 #### data and params
 
 `data` and `params` are information that the wallet can provide in the service config that FCL will pass back to the service.
@@ -211,6 +230,7 @@ function callback(data) {
 
   ... // Do authentication things ...
 
+  // Send back AuthnResponse
   WalletUtils.sendMsgToFCL("FCL:VIEW:RESPONSE", {
     f_type: "PollingResponse",
     f_vsn: "1.0.0",
@@ -220,6 +240,13 @@ function callback(data) {
       f_vsn: "1.0.0"
       ...
     }
+  })
+  
+  // The same AuthnResponse can alternatively be sent using WalletUtils.approve (or WalletUtils.decline)
+  WalletUtils.approve({
+    f_type: "AuthnResponse",
+    f_vsn: "1.0.0"
+    ...
   })
 }
 // add event listener first
