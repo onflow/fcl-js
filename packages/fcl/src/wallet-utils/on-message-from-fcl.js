@@ -1,4 +1,4 @@
-export const onMessageFromFCL = (msg, cb = () => {}) => {
+export const onMessageFromFCL = (messageType, cb = () => {}) => {
   const buildData = data => {
     if (data.deprecated)
       console.warn("DEPRECATION NOTICE", data.deprecated.message)
@@ -11,7 +11,7 @@ export const onMessageFromFCL = (msg, cb = () => {}) => {
     const {data} = e
     if (typeof data !== "object") return
     if (typeof data == null) return
-    if (data.type === msg) return
+    if (data.type !== messageType) return
 
     cb(buildData(data))
   }

@@ -1,4 +1,3 @@
-import "../default-config"
 import {account, config} from "@onflow/sdk"
 import {spawn, send, INIT, SUBSCRIBE, UNSUBSCRIBE} from "@onflow/util-actor"
 import {sansPrefix} from "@onflow/util-address"
