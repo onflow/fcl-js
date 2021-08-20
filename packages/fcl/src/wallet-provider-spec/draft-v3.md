@@ -13,9 +13,9 @@ This document is written with the perspective that _you_ who are reading this ri
 
 Flow Client Library (FCL) approaches the idea of blockchain wallets on Flow in a different way than how wallets may be supported on other blockchains. For example, with FCL, a wallet is not necessarily limited to being a browser extention or even a native application on a users device. FCL offers wallet developers the flexibility and freedom to build many different types of applications. Since wallet applications can take on many forms, we needed to create a way for these varying applications to be able to communicate and work together.
 
-FCL acts in many ways as a protocol to facilitate communication and configuration between the different parties involved in a blockchain application. An _Application_ can use FCL to _authenticate_ users, and request _authorizations_ for transactions, as well as mutate and query the _Blockchain_. An application using FCL offers it's _Users_ a way to connect and select any number of Wallets Providers and their Wallet Services. A selected _Wallet_ provides an Applications instance of FCL with configuration information about itself and its Wallet Services, allowing the _User_ and _Application_ to interact with them.
+FCL acts in many ways as a protocol to facilitate communication and configuration between the different parties involved in a blockchain application. An _Application_ can use FCL to _authenticate_ users, and request _authorizations_ for transactions, as well as mutate and query the _Blockchain_. An application using FCL offers it's _Users_ a way to connect and select any number of Wallet Providers and their Wallet Services. A selected _Wallet_ provides an Application's instance of FCL with configuration information about itself and its Wallet Services, allowing the _User_ and _Application_ to interact with them.
 
-In the following paragraphs we'll explore ways in which you, as a wallet developer, can integrate with FCL by providing implementataions of various FCL services. 
+In the following paragraphs we'll explore ways in which you can integrate with FCL by providing implementataions of various FCL services. 
 
 The following services will be covered:
 - Authentication (Authn) Service
@@ -25,9 +25,9 @@ The following services will be covered:
 
 # Service Methods
 
-FCL Services are your way as a Wallet Provider of configuring FCL. In accomplishing these service, FCL employs various Service Methods. Services Methods are the ways FCL can talk to your wallet. You as a Wallet Provider get to decide which of these service methods each of your services use to communicate with you.
+FCL Services are your way as a Wallet Provider of configuring FCL. In accomplishing these service, FCL employs various Service Methods. Services Methods are the ways FCL can talk to your wallet. Your wallet gets to decide which of these service methods each of your supported services use to communicate with you.
 
-Sometimes services just configure FCL and thats it. An example of this case can be seen with the Authentication Service and the OpenID Service.
+Sometimes services just configure FCL and that's it. An example of this can be seen with the Authentication Service and the OpenID Service.
 With those two services you are simply telling FCL "here is a bunch of info about the current user". (You will see that those two services both have a `method: "DATA"` field in them.
 Currently these are the only two cases that can be a data service.)
 
@@ -51,7 +51,7 @@ It's important to note that regardless of the method of communication, the data 
 `IFRAME/RPC` is the easiest to explain, so we will start with it:
 
 - An iframe is rendered (comes from the `endpoint` in the service).
-- The rendered frames says its ready `WalletUtils.sendMsgToFCL("FCL:VIEW:READY")`.
+- The rendered frame says its ready `WalletUtils.sendMsgToFCL("FCL:VIEW:READY")`.
 - FCL will send the data to be dealt with: `WalletUtils.onMsgFromFCL("FCL:VIEW:READY:RESPONSE", ({ body, params, data }) => { ... })`
   - Where `body` is the stuff you care about, `params` and `data` are additional information you can provide in the service object.
 - The wallet sends back an Approved or Declined post message. (It will be a `f_type: "PollingResponse"`, which we will get to in a bit)
@@ -90,7 +90,7 @@ It's important to note that regardless of the method of communication, the data 
 
 ### HTTP/POST (Back Channel)
 
-`HTTP/POST` initially sends a post request to the `endpoint` specified in the service, which should imediately return a `f_type: "PollingResponse"`.
+`HTTP/POST` initially sends a post request to the `endpoint` specified in the service, which should immediately return a `f_type: "PollingResponse"`.
 
 Like `IFRAME/RPC`, `POP/RPC` or `TAB/RPC`, our goal is to eventually get an `APPROVED` or `DECLINED` polling response, and technically this endpoint could return one of those immediately.
 
@@ -162,7 +162,7 @@ It is entirely acceptible for your service to immediately return an `"APPROVED"`
   local: {
     f_type: "Service",
     f_vsn: "1.0.0",
-    type: "view/frame",
+    type: "VIEW/FRAME",
     endpoint: "https://____", // the iframe that will be rendered,
     data: {}, // sent to frame when ready
     params: {}, // included as query params on endpoint
@@ -201,7 +201,7 @@ In the following examples, we'll walk you through the process of building an aut
 
 In FCL, wallets are configured by passing in a wallet provider's authentication URL as the `discovery.wallet` config variable.
 
-As someone who is making an FCL compatible wallet, you will need to make and expose a webpage or API hosted at an authentication endpoint that FCL will use.
+You will need to make and expose a webpage or API hosted at an authentication endpoint that FCL will use.
 
 ```javascript
 // IN APPLICATION
