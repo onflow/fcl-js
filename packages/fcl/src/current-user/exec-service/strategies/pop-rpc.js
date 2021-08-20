@@ -1,7 +1,7 @@
 import {uid} from "@onflow/util-uid"
 import {pop} from "./utils/pop"
 import {normalizePollingResponse} from "../../normalize/polling-response"
-import {configLens} from "../../../default-config"
+import {configLens} from "../../../config-utils"
 
 export function execPopRPC(service, body, opts) {
   return new Promise((resolve, reject) => {

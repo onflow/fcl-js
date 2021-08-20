@@ -3,6 +3,7 @@
 - YYYY-MM-DD **BREAKING?** -- description
 
 - 2021-08-25 -- Move `verifyUserSignatures` to separate module, removing from `currentUser`
+- 2021-08-20 -- Remove default `config`, fix message check in `onMessageFromFCL`
 - 2021-08-19 -- Add `WalletUtils.approve`, `WalletUtils.decline`, and `WalletUtils.close`
 - 2021-08-12 -- Update `pop`, `tab` onReady response to include deprecated `FCL:FRAME:READY:RESPONSE`.
 - 2021-08-10 -- Update `frame` onReady response to include deprecated `FCL:FRAME:READY:RESPONSE`.

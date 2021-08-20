@@ -14,11 +14,6 @@ import {
   createSignableVoucher,
 } from "@onflow/sdk"
 
-test("config", async () => {
-  const $ = fcl.config()
-  expect(await $.get("accessNode.api")).toBe("http://localhost:8080")
-})
-
 test("fcl.VERSION needs to match version in package.json", () => {
   const pkg = JSON.parse(
     fs.readFileSync(path.resolve(process.cwd(), "package.json"), "utf-8")

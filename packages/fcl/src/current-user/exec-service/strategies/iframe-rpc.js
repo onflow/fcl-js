@@ -1,7 +1,7 @@
 import {uid} from "@onflow/util-uid"
 import {frame} from "./utils/frame"
 import {normalizePollingResponse} from "../../normalize/polling-response"
-import {configLens} from "../../../default-config"
+import {configLens} from "../../../config-utils"
 
 export function execIframeRPC(service, body, opts) {
   return new Promise((resolve, reject) => {
