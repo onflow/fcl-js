@@ -25,7 +25,7 @@ The following services will be covered:
 
 # Service Methods
 
-FCL Services are your way as a Wallet Provider of configuring FCL. In accomplishing these service, FCL employs various Service Methods. Services Methods are the ways FCL can talk to your wallet. Your wallet gets to decide which of these service methods each of your supported services use to communicate with you.
+FCL Services are your way as a Wallet Provider of configuring FCL with information about what your wallet can do. FCL uses what it calls `Service Methods` to perform your supported FCL services. Services Methods are the ways FCL can talk to your wallet. Your wallet gets to decide which of these service methods each of your supported services use to communicate with you.
 
 Sometimes services just configure FCL and that's it. An example of this can be seen with the Authentication Service and the OpenID Service.
 With those two services you are simply telling FCL "here is a bunch of info about the current user". (You will see that those two services both have a `method: "DATA"` field in them.
