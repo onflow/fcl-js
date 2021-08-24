@@ -61,4 +61,9 @@ async function preQuery(opts) {
     isString(opts.cadence),
     "query({ cadence }) -- cadence must be a string"
   )
+
+  invariant(
+    await sdk.config.get("accessNode.api"),
+    `Required Config Value Not Defined. See ${"https://github.com/onflow/flow-js-sdk/blob/master/packages/fcl/src/exec/query.md#configuration"}`
+  )
 }

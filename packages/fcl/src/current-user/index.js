@@ -96,6 +96,17 @@ async function authenticate() {
       "challenge.handshake",
     ])
 
+    try {
+      if (discoveryWallet == null) {
+        console.warn(
+          `Required Config Value Not Defined. See ${"https://github.com/onflow/flow-js-sdk/blob/master/docs/configure-fcl.mdx"}`
+        )
+        throw new Error("Required Config Value Not Defined")
+      }
+    } catch (error) {
+      console.error(error)
+    }
+
     const method = await config.first(["discovery.wallet.method"], "IFRAME/RPC")
 
     try {
