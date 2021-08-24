@@ -282,7 +282,7 @@ Once you're confident in the users identity, we can complete the authentication 
 
 The authentication process is complete once FCL receives back a response that configures FCL with FCL Services for the current user. This response is extremeley important to FCL. At its core it tells FCL who the user is, and then via the included services it tells FCL how the user authenticated, how to request transaction signatures, how to get a personal message signed and the user's email and other details if requested. In the future it may also inlude many more things!
 
-You can kind of think of FCL as a plugin system. But since those plugins exist elsewhere outside of FCL, FCL needs to be configured with information on how to communicate with those plugins.
+You can kind of think of FCL as a plugin system. But since those plugins exist elsewhere outside of FCL, FCL needs to be configured with information on how to communicate with them.
 
 What you are sending back to FCL is everything that it needs to communicate with the plugins that you are supplying.
 Your wallet is like a plugin to FCL, and these details tell FCL how to use you as a plugin.
@@ -293,102 +293,97 @@ Here is an example of an authentication resonse:
 // IN WALLET AUTHENTICATION FRAME
 import {WalletUtils} from "@onflow/fcl"
 
-WalletUtils.sendMsgToFCL("FCL:VIEW:RESPONSE", {
-    f_type: "PollingResponse",
-    f_vsn: "1.0.0",
-    status: "APPROVED", // APPROVED | DECLINED
-    data: {
-        f_type: "AuthnResponse",
-        f_vsn: "1.0.0",
-        addr: "0xUSER",                      // The users flow address
+WalletUtils.approve({
+  f_type: "AuthnResponse",
+  f_vsn: "1.0.0",
+  addr: "0xUSER",                      // The users flow address
 
-        services: [                          // All the stuff that configures FCL
-            
-            // Authentication Service - REQUIRED
-            {
-                f_type: "Service",                                         // Its a service!
-                f_vsn: "1.0.0",                                            // Follows the v1.0.0 spec for the service
-                type: "authn",                                             // the type of service it is
-                method: "DATA",                                            // Its data!
-                uid: "amazing-wallet#authn",                               // A unique identifier for the service
-                endpoint: "your-url-that-fcl-will-use-for-authentication", // should be the same as was passed into the config
-                id: "0xUSER",                                              // the wallets internal id for the user, use flow address if you dont have one
-                // The Users Info
-                identity: {
-                    f_type: "Identity",  // Its an Identity!
-                    f_vsn: "1.0.0",      // Follows the v1.0.0 spec for an identity
-                    address: "0xUSER",   // The users address
-                    keyId: 0,            // OPTIONAL - The Users KeyId they will use
-                },
-                // The Wallets Info
-                provider: {
-                    f_type: "ServiceProvider",      // Its a Service Provider
-                    f_vsn: "1.0.0",                 // Follows the v1.0.0 spec for service providers
-                    address: "0xWallet",            // A flow address owned by the wallet
-                    name: "Amazing Wallet",         // OPTIONAL - The name of your wallet. ie: "Dapper Wallet" or "Blocto Wallet"
-                    description: "The best wallet", // OPTIONAL - A short description for your wallet
-                    icon: "https://___",            // OPTIONAL - Image url for your wallets icon
-                    website: "https://___",         // OPTIONAL - Your wallets website
-                    supportUrl: "https://___",      // OPTIONAL - An url the user can use to get support from you
-                    supportEmail: "help@aw.com",    // OPTIONAL - An email the user can use to get support from you
-                },
-            },
+  services: [                          // All the stuff that configures FCL
+      
+      // Authentication Service - REQUIRED
+      {
+          f_type: "Service",                                         // Its a service!
+          f_vsn: "1.0.0",                                            // Follows the v1.0.0 spec for the service
+          type: "authn",                                             // the type of service it is
+          method: "DATA",                                            // Its data!
+          uid: "amazing-wallet#authn",                               // A unique identifier for the service
+          endpoint: "your-url-that-fcl-will-use-for-authentication", // should be the same as was passed into the config
+          id: "0xUSER",                                              // the wallets internal id for the user, use flow address if you dont have one
+          // The Users Info
+          identity: {
+              f_type: "Identity",  // Its an Identity!
+              f_vsn: "1.0.0",      // Follows the v1.0.0 spec for an identity
+              address: "0xUSER",   // The users address
+              keyId: 0,            // OPTIONAL - The Users KeyId they will use
+          },
+          // The Wallets Info
+          provider: {
+              f_type: "ServiceProvider",      // Its a Service Provider
+              f_vsn: "1.0.0",                 // Follows the v1.0.0 spec for service providers
+              address: "0xWallet",            // A flow address owned by the wallet
+              name: "Amazing Wallet",         // OPTIONAL - The name of your wallet. ie: "Dapper Wallet" or "Blocto Wallet"
+              description: "The best wallet", // OPTIONAL - A short description for your wallet
+              icon: "https://___",            // OPTIONAL - Image url for your wallets icon
+              website: "https://___",         // OPTIONAL - Your wallets website
+              supportUrl: "https://___",      // OPTIONAL - An url the user can use to get support from you
+              supportEmail: "help@aw.com",    // OPTIONAL - An email the user can use to get support from you
+          },
+      },
 
-            // Authorization Service
-            {
-                f_type: "Service",
-                f_vsn: "1.0.0",
-                type: "authz",
-                uid: "amazing-wallet#authz",
-                ...
-                // We will cover this at length in the authorization section of this guide
-            },
-            
-            // User Signature Service
-            {
-                f_type: "Service",
-                f_vsn: "1.0.0",
-                type: "user-signature",
-                uid: "amazing-wallet#user-signature",
-                ...
-                // We will cover this at length in the user signature section of this guide
-            },
+      // Authorization Service
+      {
+          f_type: "Service",
+          f_vsn: "1.0.0",
+          type: "authz",
+          uid: "amazing-wallet#authz",
+          ...
+          // We will cover this at length in the authorization section of this guide
+      },
+      
+      // User Signature Service
+      {
+          f_type: "Service",
+          f_vsn: "1.0.0",
+          type: "user-signature",
+          uid: "amazing-wallet#user-signature",
+          ...
+          // We will cover this at length in the user signature section of this guide
+      },
 
-            // OpenID Service
-            {
-                f_type: "Service",
-                f_vsn: "1.0.0",
-                type: "open-id",
-                uid: "amazing-wallet#open-id",
-                method: "DATA",
-                data: { // only include data that was request, ideally only if the user approves the sharing of data, everything is optional
-                    f_type: "OpenID",
-                    f_vsn: "1.0.0",
-                    profile: {
-                        name: "Jeff",
-                        family_name: "D", // icky underscored names because of OpenID Connect spec
-                        given_name: "Jeffrey",
-                        middle_name: "FakeMiddleName",
-                        nickname: "JeffJeff",
-                        preferred_username: "Jeff",
-                        profile: "https://www.jeff.jeff/",
-                        picture: "https://avatars.onflow.org/avatar/jeff",
-                        website: "https://www.jeff.jeff/",
-                        gender: "male",
-                        birthday: "1900-01-01", // can use 0000 for year if year is not known
-                        zoneinfo: "America/Vancouver",
-                        locale: "en",
-                        updated_at: "1625588304427"
-                    },
-                    email: {
-                        email: "jeff@jeff.jeff",
-                        email_verified: false,
-                    }
-                },
-            }
-        ]
-    }
-  })
+      // OpenID Service
+      {
+          f_type: "Service",
+          f_vsn: "1.0.0",
+          type: "open-id",
+          uid: "amazing-wallet#open-id",
+          method: "DATA",
+          data: { // only include data that was request, ideally only if the user approves the sharing of data, everything is optional
+              f_type: "OpenID",
+              f_vsn: "1.0.0",
+              profile: {
+                  name: "Jeff",
+                  family_name: "D", // icky underscored names because of OpenID Connect spec
+                  given_name: "Jeffrey",
+                  middle_name: "FakeMiddleName",
+                  nickname: "JeffJeff",
+                  preferred_username: "Jeff",
+                  profile: "https://www.jeff.jeff/",
+                  picture: "https://avatars.onflow.org/avatar/jeff",
+                  website: "https://www.jeff.jeff/",
+                  gender: "male",
+                  birthday: "1900-01-01", // can use 0000 for year if year is not known
+                  zoneinfo: "America/Vancouver",
+                  locale: "en",
+                  updated_at: "1625588304427"
+              },
+              email: {
+                  email: "jeff@jeff.jeff",
+                  email_verified: false,
+              }
+          },
+      }
+  ]
+})
 ```
 
 ### Stoping an Authentication Process.
