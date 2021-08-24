@@ -100,4 +100,9 @@ async function prepMutation(opts) {
   invariant(isRequired(opts.cadence), "mutate({ cadence }) -- cadence is required")
   // prettier-ignore
   invariant(isString(opts.cadence), "mutate({ cadence }) -- cadence must be a string")
+  // prettier-ignore
+  invariant(
+    await sdk.config.get("accessNode.api"),
+    `Required Config Value Not Defined. See ${"https://github.com/onflow/flow-js-sdk/blob/master/packages/fcl/src/exec/mutate.md#configuration"}`
+  )
 }
