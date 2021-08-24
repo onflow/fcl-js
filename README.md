@@ -2,11 +2,10 @@
 
 ## Introducing `@onflow/fcl`
 
-Flow's JavaScript SDK was created to make developing JavaScript applications that connect to
+FCL was created to make developing JavaScript applications that connect to
 the Flow blockchain easy and secure.
 
-While it would be possible to create a Flow wallet as a browser plugin, we specifically created `@onflow/fcl` so that web-based dapps don’t have to depend on browser
-plugins. `@onflow/fcl` is able to connect browser-based dapps to a wallet service, or a wallet installed on your phone
+While it would be possible to create a Flow wallet as a browser plugin, we specifically created `@onflow/fcl` so that web-based dapps don’t have to depend on browser plugins. `@onflow/fcl` is able to connect browser-based dapps to a wallet service, or a wallet installed on your phone
 or running on your local computer without introducing the security risks that can come from installing
 a browser plugin.
 
