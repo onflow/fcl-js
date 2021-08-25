@@ -567,45 +567,6 @@ export const signMessage = async () => {
 
 ---
 
-## `currentUser().verifyUserSignatures`
-
-A method allowing applications to cryptographically verify the ownership of a Flow account by signing a piece of data using its private key. This is typically used with the response from `currentUser().signUserMessage`.
-
-### Arguments
-
-| Name                  | Type                  | Description                       |
-| --------------------- | --------------------- | --------------------------------- |
-| `message`             | string **(required)** | A signed hexadecimal string       |
-| `compositeSignatures` | Array **(required)**  | An Array of `CompositeSignatures` |
-
-#### Returns
-
-| Type    | Description                  |
-| ------- | ---------------------------- |
-| Boolean | `true` if verifed or `false` |
-
-#### Usage
-
-```javascript
-import * as fcl from "@onflow/fcl"
-
-const verifySignature = async (message, compositeSignatures) => {
-  try {
-    return await verifyUserSignature(message, compositeSignatures)
-  } catch (error) {
-    console.log(error)
-  }
-}
-```
-
-#### Examples
-
-Use cases include cryptographic login, message validation, verifiable credentials, and others.
-
-- [Cryptographic Login Example (coming soon)](#)
-
----
-
 # On-chain Interactions
 
 > 📣 **These methods can be used in browsers and NodeJS.**
@@ -715,6 +676,45 @@ const txId = await fcl.mutate({
 
 - [Additional explanation](https://gist.github.com/orodio/3bf977a0bd45b990d16fdc1459b129a2)
 - [Custom authorization function](#authorizationfunction)
+
+---
+
+## `verifyUserSignatures`
+
+A method allowing applications to cryptographically verify the ownership of a Flow account by verifying a message was signed by a user's private key/s. This is typically used with the response from `currentUser().signUserMessage`.
+
+### Arguments
+
+| Name                  | Type                  | Description                       |
+| --------------------- | --------------------- | --------------------------------- |
+| `message`             | string **(required)** | A hexadecimal string              |
+| `compositeSignatures` | Array **(required)**  | An Array of `CompositeSignatures` |
+
+#### Returns
+
+| Type    | Description                  |
+| ------- | ---------------------------- |
+| Boolean | `true` if verifed or `false` |
+
+#### Usage
+
+```javascript
+import * as fcl from "@onflow/fcl"
+
+const verifySignatures = async (message, compositeSignatures) => {
+  try {
+    return await verifyUserSignature(message, compositeSignatures)
+  } catch (error) {
+    console.log(error)
+  }
+}
+```
+
+#### Examples
+
+Use cases include cryptographic login, message validation, verifiable credentials, and others.
+
+- [Cryptographic Login Example (coming soon)](#)
 
 ---
 
