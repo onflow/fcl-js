@@ -1,3 +1,4 @@
+import {invariant} from "@onflow/util-invariant"
 import {GetBlockByHeightRequest, AccessAPI} from "@onflow/protobuf"
 import {response} from "../response/response.js"
 import {unary} from "./unary"
@@ -5,6 +6,8 @@ import {unary} from "./unary"
 const u8ToHex = u8 => Buffer.from(u8).toString("hex")
 
 export async function sendGetBlockByHeight(ix, opts = {}) {
+  invariant(opts.node, `SDK Send Get Block By Height Error: opts.node must be defined.`)
+
   ix = await ix
 
   const req = new GetBlockByHeightRequest()

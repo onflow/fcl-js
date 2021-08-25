@@ -1,3 +1,4 @@
+import {invariant} from "@onflow/util-invariant"
 import {GetLatestBlockRequest, AccessAPI} from "@onflow/protobuf"
 import {response} from "../response/response.js"
 import {unary} from "./unary"
@@ -22,6 +23,8 @@ const latestBlockDeprecationNotice = () => {
 }
 
 export async function sendGetLatestBlock(ix, opts = {}) {
+  invariant(opts.node, `SDK Send Get Latest Block Error: opts.node must be defined.`)
+
   ix = await ix
 
   const req = new GetLatestBlockRequest()

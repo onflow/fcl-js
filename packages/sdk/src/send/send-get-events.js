@@ -1,3 +1,4 @@
+import {invariant} from "@onflow/util-invariant"
 import {GetEventsForHeightRangeRequest, GetEventsForBlockIDsRequest, AccessAPI} from "@onflow/protobuf"
 import {invariant} from "@onflow/util-invariant"
 import {response} from "../response/response.js"
@@ -64,6 +65,8 @@ function constructResponse(ix, res) {
 }
 
 export async function sendGetEvents(ix, opts = {}) {  
+  invariant(opts.node, `SDK Send Get Events Error: opts.node must be defined.`)
+
   ix = await ix
 
   const interactionContainsBlockHeightRange = ix.events.start !== null 
