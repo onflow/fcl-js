@@ -23,7 +23,7 @@ with a user’s public address as their identifier.
 
 ---
 
-## `fcl.currentUser().signUserMessage()`
+## `currentUser().signUserMessage()`
 
 A method to use allowing the user to personally sign data via FCL Compatible Wallets/Services.
 
@@ -58,15 +58,15 @@ export const signMessage = async () => {
 
 ---
 
-## `fcl.currentUser().verifyUserSignatures()`
+## `verifyUserSignatures`
 
-A method allowing application to cryptographically verify the ownership of a Flow account by signing a piece of data using a private key.
+A method allowing applications to cryptographically verify the ownership of a Flow account by verifying a message was signed by a user's private key/s. This is typically used with the response from `currentUser().signUserMessage`.
 
 ### Arguments
 
 | Name                  | Type                  | Description                       |
 | --------------------- | --------------------- | --------------------------------- |
-| `message`             | string **(required)** | A signed hexadecimal string       |
+| `message`             | string **(required)** | A hexadecimal string              |
 | `compositeSignatures` | Array **(required)**  | An Array of `CompositeSignatures` |
 
 #### Returns
@@ -80,7 +80,7 @@ A method allowing application to cryptographically verify the ownership of a Flo
 ```javascript
 import * as fcl from "@onflow/fcl"
 
-const verifySignature = async (message, compositeSignatures) => {
+const verifySignatures = async (message, compositeSignatures) => {
   try {
     return await verifyUserSignature(message, compositeSignatures)
   } catch (error) {
