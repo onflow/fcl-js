@@ -575,7 +575,7 @@ A method allowing applications to cryptographically verify the ownership of a Fl
 
 | Name                  | Type                  | Description                       |
 | --------------------- | --------------------- | --------------------------------- |
-| `message`             | string **(required)** | A signed hexadecimal string       |
+| `message`             | string **(required)** | A hexadecimal string              |
 | `compositeSignatures` | Array **(required)**  | An Array of `CompositeSignatures` |
 
 #### Returns
