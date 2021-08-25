@@ -1,3 +1,4 @@
+import {invariant} from "@onflow/util-invariant"
 import {ExecuteScriptAtLatestBlockRequest, ExecuteScriptAtBlockIDRequest, ExecuteScriptAtBlockHeightRequest, AccessAPI} from "@onflow/protobuf"
 import {response} from "../response/response.js"
 import {unary as defaultUnary} from "./unary"
@@ -60,6 +61,8 @@ function constructResponse(ix, res)  {
 }
 
 export async function sendExecuteScript(ix, opts = {}) {
+  invariant(opts.node, `SDK Send Execute Script Error: opts.node must be defined.`)
+
   ix = await ix
 
   if (ix.block.id) {

@@ -1,3 +1,4 @@
+import {invariant} from "@onflow/util-invariant"
 import {GetBlockByIDRequest, AccessAPI} from "@onflow/protobuf"
 import {response} from "../response/response.js"
 import {unary} from "./unary"
@@ -6,6 +7,8 @@ const u8ToHex = u8 => Buffer.from(u8).toString("hex")
 const hexBuffer = hex => Buffer.from(hex, "hex")
 
 export async function sendGetBlockById(ix, opts = {}) {
+  invariant(opts.node, `SDK Send Get Block By ID Error: opts.node must be defined.`)
+
   ix = await ix
 
   const req = new GetBlockByIDRequest()

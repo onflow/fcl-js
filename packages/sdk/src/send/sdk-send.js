@@ -1,3 +1,4 @@
+import {invariant} from "@onflow/util-invariant"
 import {
   isTransaction,
   isGetTransaction,
@@ -30,6 +31,9 @@ import {config} from "../config"
 
 export const send = async (ix, opts = {}) => {
   opts.node = opts.node || (await config().get("accessNode.api"))
+
+  invariant(opts.node, `SDK Send Error: Either opts.node or "accessNode.api" in config must be defined.`)
+  
   ix = await ix
 
   // prettier-ignore
