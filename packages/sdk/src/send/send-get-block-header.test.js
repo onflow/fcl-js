@@ -59,7 +59,8 @@ describe("Send Get Block Header", () => {
             ])
         ),
         {
-            unary: unaryMock
+            unary: unaryMock,
+            node: "localhost:3000"
         }
     )
 
@@ -112,7 +113,8 @@ describe("Send Get Block Header", () => {
             ])
         ),
         {
-            unary: unaryMock
+            unary: unaryMock,
+            node: "localhost:3000"
         }
     )
 
@@ -164,7 +166,8 @@ describe("Send Get Block Header", () => {
             ])
         ),
         {
-            unary: unaryMock
+            unary: unaryMock,
+            node: "localhost:3000"
         }
     )
 
@@ -216,7 +219,8 @@ describe("Send Get Block Header", () => {
             ])
         ),
         {
-            unary: unaryMock
+            unary: unaryMock,
+            node: "localhost:3000"
         }
     )
 

@@ -76,7 +76,8 @@ describe("Send Get Events", () => {
             ])
         ),
         {
-            unary: unaryMock
+            unary: unaryMock,
+            node: "localhost:3000"
         }
     )
 
@@ -149,7 +150,8 @@ describe("Send Get Events", () => {
             ])
         ),
         {
-            unary: unaryMock
+            unary: unaryMock,
+            node: "localhost:3000"
         }
     )
 

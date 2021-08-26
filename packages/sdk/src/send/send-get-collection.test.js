@@ -51,7 +51,8 @@ describe("Send Get Collection", () => {
             ])
         ),
         {
-            unary: unaryMock
+            unary: unaryMock,
+            node: "localhost:3000"
         }
     )
 

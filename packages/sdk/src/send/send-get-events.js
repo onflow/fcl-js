@@ -1,6 +1,5 @@
 import {invariant} from "@onflow/util-invariant"
 import {GetEventsForHeightRangeRequest, GetEventsForBlockIDsRequest, AccessAPI} from "@onflow/protobuf"
-import {invariant} from "@onflow/util-invariant"
 import {response} from "../response/response.js"
 import {unary as defaultUnary} from "./unary"
 

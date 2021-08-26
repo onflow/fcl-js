@@ -66,7 +66,8 @@ describe("Get Transaction Status", () => {
             ])
         ),
         {
-            unary: unaryMock
+            unary: unaryMock,
+            node: "localhost:3000"
         }
     )
 
