@@ -1,3 +1,4 @@
+import "../default-config"
 import {account, config} from "@onflow/sdk"
 import {spawn, send, INIT, SUBSCRIBE, UNSUBSCRIBE} from "@onflow/util-actor"
 import {sansPrefix} from "@onflow/util-address"
@@ -93,13 +94,13 @@ async function authenticate() {
 
     const discoveryWallet = await config.first([
       "discovery.wallet",
-      "challenge.handshake",
+      "challenge.handshake"
     ])
 
     try {
       if (discoveryWallet == null) {
         console.warn(
-          `Required Config Value Not Defined. See ${"https://github.com/onflow/flow-js-sdk/blob/master/docs/configure-fcl.mdx"}`
+          `Required value for "discovery.wallet" not defined in config. See: ${"https://github.com/onflow/flow-js-sdk/blob/master/packages/fcl/src/exec/query.md#configuration"}`
         )
         throw new Error("Required Config Value Not Defined")
       }
@@ -107,7 +108,7 @@ async function authenticate() {
       console.error(error)
     }
 
-    const method = await config.first(["discovery.wallet.method"], "IFRAME/RPC")
+    const method = await config.first(["discovery.wallet.method", "discovery.wallet.method.default"], "IFRAME/RPC")
 
     try {
       const response = await execService({

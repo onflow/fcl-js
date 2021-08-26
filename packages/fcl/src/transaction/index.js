@@ -1,3 +1,4 @@
+import "../default-config"
 import {
   spawn,
   send,

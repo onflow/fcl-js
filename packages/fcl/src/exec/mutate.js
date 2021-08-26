@@ -103,6 +103,6 @@ async function prepMutation(opts) {
   // prettier-ignore
   invariant(
     await sdk.config.get("accessNode.api"),
-    `Required Config Value Not Defined. See ${"https://github.com/onflow/flow-js-sdk/blob/master/packages/fcl/src/exec/mutate.md#configuration"}`
+    `Required value for "accessNode.api" not defined in config. See: ${"https://github.com/onflow/flow-js-sdk/blob/master/packages/fcl/src/exec/query.md#configuration"}`
   )
 }
