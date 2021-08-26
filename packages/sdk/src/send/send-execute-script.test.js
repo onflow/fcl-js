@@ -32,7 +32,8 @@ describe("Send Execute Script", () => {
             ])
         ),
         {
-            unary: unaryMock
+            unary: unaryMock,
+            node: "localhost:3000"
         }
     )
 
@@ -71,7 +72,8 @@ describe("Send Execute Script", () => {
             ])
         ),
         {
-            unary: unaryMock
+            unary: unaryMock,
+            node: "localhost:3000"
         }
     )
 
@@ -112,7 +114,8 @@ describe("Send Execute Script", () => {
             ])
         ),
         {
-            unary: unaryMock
+            unary: unaryMock,
+            node: "localhost:3000"
         }
     )
 

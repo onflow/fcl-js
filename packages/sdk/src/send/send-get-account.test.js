@@ -59,6 +59,7 @@ describe("Send Get Account", () => {
         ),
         {
             unary: unaryMock,
+            node: "localhost:3000"
         }
     )
 
@@ -112,7 +113,8 @@ describe("Send Get Account", () => {
             ])
         ),
         {
-            unary: unaryMock
+            unary: unaryMock,
+            node: "localhost:3000"
         }
     )
 

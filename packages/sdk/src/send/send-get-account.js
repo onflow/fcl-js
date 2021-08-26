@@ -66,6 +66,8 @@ function constructResponse(ix, res) {
 
 
 export async function sendGetAccount(ix, opts = {}) {
+  invariant(opts.node, `SDK Send Get Account Error: opts.node must be defined.`)
+
   ix = await ix
 
   if (ix.block.height !== null) {
