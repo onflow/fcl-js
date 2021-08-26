@@ -64,6 +64,6 @@ async function preQuery(opts) {
 
   invariant(
     await sdk.config.get("accessNode.api"),
-    `Required Config Value Not Defined. See ${"https://github.com/onflow/flow-js-sdk/blob/master/packages/fcl/src/exec/query.md#configuration"}`
+    `Required value for "accessNode.api" not defined in config. See: ${"https://github.com/onflow/flow-js-sdk/blob/master/packages/fcl/src/exec/query.md#configuration"}`
   )
 }
