@@ -517,7 +517,7 @@
       "boundElementIds": [
         "goiBksgB2pTwoXPsezR5-"
       ],
-      "text": "{\n  \"f_type\": \"PollingResponse\",\n  \"f_vsn\": \"1.0.0\",\n  \"status\": \"PENDING\",\n  \"updates\": {\n    \"f_type\": \"Service\",\n    \"f_vsn\": \"1.0.0\",\n    \"type\": \"back-channel-rpc\",\n    \"endpoint\": \"https://app.com/tx/updates/endpoint\",\n    \"method\": \"HTTP/GET\", // \"HTTP/POST\" | \"HTTP/GET\",\n    \"data\": { \"woot\": \"boot\" }, // body of HTTP/POST\n    \"params\": { \"zomg\": \"pew\" },\n  },\n  \"local\": { // optional\n    \"f_type\": \"Service\",\n    \"f_vsn\": \"1.0.0\",\n    \"type\": \"local-view\",\n    \"method\": \"VIEW/IFRAME\", // \"VIEW/POP\" | \"VIEW/TAB\" | \"VIEW/FRAME\"\n    \"endpoint\" \"https://app.com/tx/approval/endpoint\",\n    \"data\": { \"woot\": \"boot\" },\n    \"params\": { \"zomg\": \"pew\" },\n  },\n}",
+      "text": "{\n  \"f_type\": \"PollingResponse\",\n  \"f_vsn\": \"1.0.0\",\n  \"status\": \"PENDING\",\n  \"updates\": {\n    \"f_type\": \"Service\",\n    \"f_vsn\": \"1.0.0\",\n    \"type\": \"back-channel-rpc\",\n    \"endpoint\": \"https://app.com/tx/updates/endpoint\",\n    \"method\": \"HTTP/GET\", // \"HTTP/POST\" | \"HTTP/GET\",\n    \"data\": { \"woot\": \"boot\" }, // body of HTTP/POST\n    \"params\": { \"zomg\": \"pew\" },\n  },\n  \"local\": { // optional\n    \"f_type\": \"Service\",\n    \"f_vsn\": \"1.0.0\",\n    \"type\": \"local-view\",\n    \"method\": \"VIEW/IFRAME\", // \"VIEW/POP\" | \"VIEW/TAB\" | \"VIEW/IFRAME\"\n    \"endpoint\" \"https://app.com/tx/approval/endpoint\",\n    \"data\": { \"woot\": \"boot\" },\n    \"params\": { \"zomg\": \"pew\" },\n  },\n}",
       "fontSize": 16,
       "fontFamily": 3,
       "textAlign": "left",

@@ -100,7 +100,7 @@ FCL will use that `BackChannelRpc` to request a new `PollingResponse` which itse
 If it is `APPROVED` FCL will return, otherwise if it is `DECLINED` FCL will error. However, if it is `PENDING`, it will use the `BackChannelRpc` supplied in the new `PollingResponse` updates field. It will repeat this cycle until it is either `APPROVED` or `DECLINED`.
 
 There is an additional optional feature that `HTTP/POST` enables in the first `PollingResponse` that is returned.
-This optional feature is the ability for FCL to render an iframe, popup or new tab, and it can be triggered by supplying a service `type: "VIEW/FRAME"`, `type: "VIEW/POP"` or `type: "VIEW/TAB"` and the `endpoint` that the wallet wishes to render in the `local` field of the `PollingResponse`. This is a great way for a wallet provider to switch to a webpage if displaying a UI is necessary for the service it is performing.
+This optional feature is the ability for FCL to render an iframe, popup or new tab, and it can be triggered by supplying a service `type: "VIEW/IFRAME"`, `type: "VIEW/POP"` or `type: "VIEW/TAB"` and the `endpoint` that the wallet wishes to render in the `local` field of the `PollingResponse`. This is a great way for a wallet provider to switch to a webpage if displaying a UI is necessary for the service it is performing.
 
 ![HTTP/POST Diagram](https://raw.githubusercontent.com/onflow/flow-js-sdk/master/packages/fcl/assets/service-method-diagrams/http-post.png)
 
@@ -163,7 +163,7 @@ It is entirely acceptible for your service to immediately return an `"APPROVED"`
     f_type: "Service",
     f_vsn: "1.0.0",
     endpoint: "https://____", // the iframe that will be rendered,
-    method: "VIEW/FRAME",
+    method: "VIEW/IFRAME",
     data: {}, // sent to frame when ready
     params: {}, // included as query params on endpoint
   }
