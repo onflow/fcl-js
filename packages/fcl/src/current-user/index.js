@@ -8,6 +8,7 @@ import {serviceOfType} from "./service-of-type"
 import {execService} from "./exec-service"
 import {verifyUserSignatures as verify} from "../exec/verify"
 import {normalizeCompositeSignature} from "./normalize/composite-signature"
+import {getStorageConfig, STORAGE_OPTIONS} from "../config-utils"
 
 const NAME = "CURRENT_USER"
 const UPDATED = "CURRENT_USER/UPDATED"
@@ -25,31 +26,22 @@ const DATA = `{
   "services":[]
 }`
 
-const coldStorage = {
-  get: async () => {
-    const fallback = JSON.parse(DATA)
-    const stored = JSON.parse(sessionStorage.getItem(NAME))
-    if (stored != null && fallback["f_vsn"] !== stored["f_vsn"]) {
-      sessionStorage.removeItem(NAME)
-      return fallback
-    }
-    return stored || fallback
-  },
-  put: async data => {
-    sessionStorage.setItem(NAME, JSON.stringify(data))
-    return data
-  },
-}
-
-const canColdStorage = () => {
-  return config().get("persistSession", true)
+const getStoredUser = async storage => {
+  const fallback = JSON.parse(DATA)
+  const stored = await storage.get(NAME)
+  if (stored != null && fallback["f_vsn"] !== stored["f_vsn"]) {
+    storage.removeItem(NAME)
+    return fallback
+  }
+  return stored || fallback
 }
 
 const HANDLERS = {
   [INIT]: async ctx => {
     ctx.merge(JSON.parse(DATA))
-    if (await canColdStorage()) {
-      const user = await coldStorage.get()
+    const storage = await getStorageConfig()
+    if (storage.can) {
+      const user = getStoredUser(storage)
       if (notExpired(user)) ctx.merge(user)
     }
   },
@@ -65,17 +57,18 @@ const HANDLERS = {
   },
   [SET_CURRENT_USER]: async (ctx, letter, data) => {
     ctx.merge(data)
-    if (await canColdStorage()) coldStorage.put(ctx.all())
+    const storage = await getStorageConfig()
+    if (storage.can) storage.put(NAME, ctx.all())
     ctx.broadcast(UPDATED, {...ctx.all()})
   },
   [DEL_CURRENT_USER]: async (ctx, letter) => {
     ctx.merge(JSON.parse(DATA))
-    if (await canColdStorage()) coldStorage.put(ctx.all())
+    const storage = await getStorageConfig()
+    if (storage.can) storage.put(NAME, ctx.all())
     ctx.broadcast(UPDATED, {...ctx.all()})
   },
 }
 
-const identity = v => v
 const spawnCurrentUser = () => spawn(HANDLERS, NAME)
 
 function notExpired(user) {
@@ -94,7 +87,7 @@ async function authenticate() {
 
     const discoveryWallet = await config.first([
       "discovery.wallet",
-      "challenge.handshake"
+      "challenge.handshake",
     ])
 
     try {
@@ -102,13 +95,16 @@ async function authenticate() {
         console.warn(
           `Required value for "discovery.wallet" not defined in config. See: ${"https://github.com/onflow/flow-js-sdk/blob/master/packages/fcl/src/exec/query.md#configuration"}`
         )
-        throw new Error("Required Config Value Not Defined")
+        throw new Error("config.discovery.wallet is not defined")
       }
     } catch (error) {
       console.error(error)
     }
 
-    const method = await config.first(["discovery.wallet.method", "discovery.wallet.method.default"], "IFRAME/RPC")
+    const method = await config.first(
+      ["discovery.wallet.method", "discovery.wallet.method.default"],
+      "IFRAME/RPC"
+    )
 
     try {
       const response = await execService({
