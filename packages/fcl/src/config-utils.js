@@ -10,9 +10,17 @@ export async function configLens(regex) {
 }
 
 export async function getStorageConfig() {
-  return STORAGE_OPTIONS[
-    await config.first(["fcl.storage", "fcl.storage.default"])
-  ]
+  const storageDefault =
+    STORAGE_OPTIONS[await config.get("fcl.storage.default")]
+  const storageConfig = await config.first([
+    "fcl.storage",
+    "fcl.storage.default",
+  ])
+  STORAGE_OPTIONS[storageConfig] == null &&
+    console.warn(
+      `Invalid fcl.storage value ${storageConfig}. Using default SESSION_STORAGE`
+    )
+  return STORAGE_OPTIONS[storageConfig] || storageDefault
 }
 
 export const STORAGE_OPTIONS = {

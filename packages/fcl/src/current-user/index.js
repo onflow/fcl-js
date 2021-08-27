@@ -8,7 +8,7 @@ import {serviceOfType} from "./service-of-type"
 import {execService} from "./exec-service"
 import {verifyUserSignatures as verify} from "../exec/verify"
 import {normalizeCompositeSignature} from "./normalize/composite-signature"
-import {getStorageConfig, STORAGE_OPTIONS} from "../config-utils"
+import {getStorageConfig} from "../config-utils"
 
 const NAME = "CURRENT_USER"
 const UPDATED = "CURRENT_USER/UPDATED"
