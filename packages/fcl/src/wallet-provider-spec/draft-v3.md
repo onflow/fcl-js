@@ -162,8 +162,8 @@ It is entirely acceptible for your service to immediately return an `"APPROVED"`
   local: {
     f_type: "Service",
     f_vsn: "1.0.0",
-    type: "VIEW/FRAME",
     endpoint: "https://____", // the iframe that will be rendered,
+    method: "VIEW/FRAME",
     data: {}, // sent to frame when ready
     params: {}, // included as query params on endpoint
   }
@@ -483,8 +483,10 @@ The signatures need to be sent back to FCL as HEX strings in an array of `Compos
 ```javascript
 // Pseudocode:
 // For every required signature
+import {WalletUtils} from "@onflow/fcl"
 
-const taggedMessage = tagMessage(signable.message) // Tag the messsage to sign
+const encoded = WalletUtils.encodeMessageFromSignable(signable)
+const taggedMessage = tagMessage(encoded) // Tag the messsage to sign
 const signature = signMessage(taggedMessage) // Sign the message
 const hexSignature = signatureToHex(signature) // Convert the signature to hex, if required.
 
