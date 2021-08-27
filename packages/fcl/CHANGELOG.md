@@ -2,6 +2,9 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+## 0.0.77-alpha.4 - 2021-08-27
+
+- 2021-08-27 -- Add `WalletUtils.encodeMessageFromSignable`.
 - 2021-08-25 -- Move `verifyUserSignatures` to separate module, removing from `currentUser`
 - 2021-08-20 -- Remove default `config`, fix message check in `onMessageFromFCL`
 - 2021-08-19 -- Add `WalletUtils.approve`, `WalletUtils.decline`, and `WalletUtils.close`
