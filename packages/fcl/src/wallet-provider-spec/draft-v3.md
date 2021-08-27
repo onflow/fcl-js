@@ -485,7 +485,7 @@ The signatures need to be sent back to FCL as HEX strings in an array of `Compos
 // For every required signature
 import {WalletUtils} from "@onflow/fcl"
 
-const encoded = WalletUtils.encodeMessageFromSignable(signable)
+const encoded = WalletUtils.encodeMessageFromSignable(signable, signerAddress)
 const taggedMessage = tagMessage(encoded) // Tag the messsage to sign
 const signature = signMessage(taggedMessage) // Sign the message
 const hexSignature = signatureToHex(signature) // Convert the signature to hex, if required.
