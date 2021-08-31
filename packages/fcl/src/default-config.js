@@ -1,5 +1,7 @@
 import {config} from "@onflow/sdk"
+import {SESSION_STORAGE} from "./config-utils"
 
-config()
-  .put("discovery.wallet.method.default", "POP/RPC")
-  .put("fcl.storage.default", "SESSION_STORAGE")
+config({
+  "discovery.wallet.method.default": "IFRAME/RPC",
+  "fcl.storage.default": SESSION_STORAGE,
+})

@@ -8,7 +8,6 @@ import {serviceOfType} from "./service-of-type"
 import {execService} from "./exec-service"
 import {verifyUserSignatures as verify} from "../exec/verify"
 import {normalizeCompositeSignature} from "./normalize/composite-signature"
-import {getStorageConfig} from "../config-utils"
 
 const NAME = "CURRENT_USER"
 const UPDATED = "CURRENT_USER/UPDATED"
@@ -39,9 +38,9 @@ const getStoredUser = async storage => {
 const HANDLERS = {
   [INIT]: async ctx => {
     ctx.merge(JSON.parse(DATA))
-    const storage = await getStorageConfig()
+    const storage = await config.first(["fcl.storage", "fcl.storage.default"])
     if (storage.can) {
-      const user = getStoredUser(storage)
+      const user = await getStoredUser(storage)
       if (notExpired(user)) ctx.merge(user)
     }
   },
@@ -57,13 +56,13 @@ const HANDLERS = {
   },
   [SET_CURRENT_USER]: async (ctx, letter, data) => {
     ctx.merge(data)
-    const storage = await getStorageConfig()
+    const storage = await config.first(["fcl.storage", "fcl.storage.default"])
     if (storage.can) storage.put(NAME, ctx.all())
     ctx.broadcast(UPDATED, {...ctx.all()})
   },
   [DEL_CURRENT_USER]: async (ctx, letter) => {
     ctx.merge(JSON.parse(DATA))
-    const storage = await getStorageConfig()
+    const storage = await config.first(["fcl.storage", "fcl.storage.default"])
     if (storage.can) storage.put(NAME, ctx.all())
     ctx.broadcast(UPDATED, {...ctx.all()})
   },
@@ -95,7 +94,9 @@ async function authenticate() {
         console.warn(
           `Required value for "discovery.wallet" not defined in config. See: ${"https://github.com/onflow/flow-js-sdk/blob/master/packages/fcl/src/exec/query.md#configuration"}`
         )
-        throw new Error("config.discovery.wallet is not defined")
+        throw new Error(
+          `Required config value "discovery.wallet" is not defined`
+        )
       }
     } catch (error) {
       console.error(error)
