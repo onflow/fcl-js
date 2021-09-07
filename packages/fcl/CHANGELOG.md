@@ -2,6 +2,7 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+<<<<<<< HEAD
 - 2021-09-21 -- Updates `fcl.authenticate` to include msg data `timestamp`, and optional `domainTag` for signing (**Proveable Authn**)
 
 ## 0.0.78-alpha.1 - 2021-09-17
@@ -22,6 +23,9 @@ currentUser.subscribe(callback)
 ```
 
 - 2021-09-14 -- Adds `WalletUtils.CompositeSignature` constructor.
+=======
+- 2021-09-07 -- Updates `fcl.authenticate` to include msg data (`timestamp`, `message`, `domainTag`) for signing (**Proveable Authn**)
+>>>>>>> PKG -- [fcl] Add msg data to fcl.authenticate
 - 2021-08-27 -- Adds `config.fcl.storage` allowing for injection of desired storage option. Defaults to `SESSION_STORAGE`.
 
 ```javascript
