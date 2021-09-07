@@ -6,6 +6,7 @@ import {normalizeBackChannelRpc} from "./back-channel-rpc"
 import {normalizeOpenId} from "./open-id"
 import {normalizeUserSignature} from "./user-signature"
 import {normalizeLocalView} from "./local-view"
+import {normalizeAccountProof} from "./account-proof"
 
 export function normalizeServices(services, data) {
   return services.map(service => normalizeService(service, data))
@@ -20,6 +21,7 @@ const serviceNormalizers = {
   "open-id": normalizeOpenId,
   "user-signature": normalizeUserSignature,
   "local-view": normalizeLocalView,
+  "account-proof": normalizeAccountProof,
 }
 
 export function normalizeService(service, data) {

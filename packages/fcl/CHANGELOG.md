@@ -2,6 +2,8 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+- 2021-09-21 -- Updates `fcl.authenticate` to include msg data `timestamp`, and optional `domainTag` for signing (**Proveable Authn**)
+
 ## 0.0.78-alpha.1 - 2021-09-17
 
 - 2021-09-16 -- Adds redirect option for `POP/RPC` and `TAB/RPC`
@@ -20,7 +22,15 @@ currentUser.subscribe(callback)
 ```
 
 - 2021-09-14 -- Adds `WalletUtils.CompositeSignature` constructor.
-- 2021-08-27 -- Adds `config.fcl.storage` allowing for injection of desired storage option. Accepts `SESSION_STORAGE`, `LOCAL_STORAGE`, or `NO_STORAGE` and defaults to `SESSION_STORAGE`.
+- 2021-08-27 -- Adds `config.fcl.storage` allowing for injection of desired storage option. Defaults to `SESSION_STORAGE`.
+
+```javascript
+  export const SESSION_STORAGE = {
+    can: true,
+    get: async key => JSON.parse(sessionStorage.getItem(key)),
+    put: async (key, value) => sessionStorage.setItem(key, JSON.stringify(value)),
+  }
+```
 
 ## 0.0.77-alpha.4 - 2021-08-27
 
