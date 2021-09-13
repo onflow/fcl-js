@@ -1278,7 +1278,7 @@ await fcl
 
 ### Template Builders
 
-> ⚠️**_Reccomended:_** The following functionality is simplified by [`fcl.query({...options}`](#query) or [`fcl.mutate({...options})`](#mutate) and is reccomended to use over the functions below.
+> ⚠️**_Recommended:_** The following functionality is simplified by [`fcl.query({...options}`](#query) or [`fcl.mutate({...options})`](#mutate) and is reccomended to use over the functions below.
 
 ## `script`
 
