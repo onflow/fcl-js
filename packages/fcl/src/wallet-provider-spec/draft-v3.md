@@ -455,6 +455,15 @@ The eventual response back from the authorization service should resolve to some
 }
 ```
 
+A `CompositeSignature` can alternatively be constructed using `WalletUtils`
+
+```javascript
+import {WalletUtils} from "@onflow/fcl"
+
+WalletUtils.CompositeSignature(addr: String, keyId: Number, signature: Hex)
+
+```
+
 # User Signature Service
 
 User Signature services are depicted with a `type: "user-signature"` and a `method` of either `HTTP/POST`, `IFRAME/RPC` or `POP/RPC`.
