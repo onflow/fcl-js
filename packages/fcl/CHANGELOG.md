@@ -1,6 +1,8 @@
 ## Unreleased
 
 - YYYY-MM-DD **BREAKING?** -- description
+
+- 2021-09-14 -- Adds `WalletUtils.CompositeSignature` constructor.
 - 2021-08-27 -- Adds `config.fcl.storage` allowing for injection of desired storage option. Accepts `SESSION_STORAGE`, `LOCAL_STORAGE`, or `NO_STORAGE` and defaults to `SESSION_STORAGE`.
 
 ## 0.0.77-alpha.4 - 2021-08-27
