@@ -1,0 +1,154 @@
+---
+title: Proving User Authentication
+---
+
+## Proving User Authentication
+
+A common desire that application developers have is to be able to prove that a
+user controls an on chain account. Fortunately, FCL provides multiple ways to
+achieve this.
+
+During user authentication, some FCL compatible wallets will choose to support
+the FCL `account-proof` service. If a wallet chooses to support this service,
+they will include within it specific pieces of information that you can use to
+prove that a user controls an on chain account. The service, and its data within
+it, will be returned from the wallet during authentication, and made available
+for your use in `FCL Current User`. 
+
+If a user's wallet does not choose to support the `account-proof` service, you
+can still prove that a user controls an on chain account provided that the
+wallet does support the `user-signature` service. Since all wallets may
+optionally choose to support either of these services, your application should
+be resiliant enough to handle cases where a user's wallet supports one, both or
+neither.
+
+The `account-proof` service, as the name implies, was designed specifically for
+proving authentication, while `user-signature` was designed for more generic use
+cases. We suggest that your application choose to use `account-proof` service
+first, if it's available, and then fall back to `user-signature` if needed.
+
+We'll walk through how you, an application developer, can use either service to
+prove a user's authentication.
+
+> Are you an FCL Wallet Developer? Check out the wallet provider specific docs
+here.
+
+### Proving User Authentication using `account-proof`
+
+To prove a user's authentication using the FCL `account-proof` service, the
+first step is to plan at which phase during your application's authentication
+process will you want to use it.
+
+Wallets will optionally return to your application the `account-proof` service
+after completing wallet authentication. The suggested order of operations of how
+your application might use `account-proof` begins with:
+
+- Optional: You application optionally configures FCL with an application
+  specific Domain Tag. A Domain Tag helps scope the cryptographic proof
+  generated for the `account-proof` service to your application. Your
+  application can configure a Domain Tag like:
+
+```javascript
+import {config} from "@onflow/fcl"
+
+config({
+    "fcl.domainTag": "YourApplicationsDomainTag"
+})
+```
+
+- Your application calls `fcl.authenticate()` to begin the user authentication
+  process.
+- Your user's wallet will optionally return the `account-proof` service as part
+  of authentication.
+- Your application extracts the data within the `account-proof` service.
+
+The data within the `account-proof` service will look like:
+
+```javascript
+{
+  f_type: "Service",  // Its a service!
+  f_vsn: "1.0.0",  // Follows the v1.0.0 spec for the service
+  type: "account-proof",  // the type of service it is
+  method: "DATA",  // Its data!
+  uid: "amazing-wallet#account-proof",  // A unique identifier for the service            
+  data: {
+    f_type: "account-proof",
+    f_vsn: "1.0.0"
+    signatures: [CompositeSignture],
+    address: "0xUSER",  // The users address
+    message: "abc123def456", // A random message
+    timestamp: 1630705495551, // UNIX timestamp
+    domainTag: "AWESOME_DAPP", // Optional, defaults to user signature domain tag `FLOW-V0.0-user`
+  }         
+}
+```
+
+- Your application will send the `account-proof` service data structure to it's
+  backend. 
+
+Once your application receives the `account-proof` data structure, it can then
+begin to use it to prove user authentication. The steps that your application's
+backend must follow in using this data are specific.
+
+- First your application must determine wether a user with the `address`
+  provided in the `account-proof` data structure has authenticated with your
+  application before.
+    - If a user with the `address` has authenticated with your application
+      before, then your system must query the `timestamp` associated with the
+      previous authentication for this user.
+        - If the `timestamp` is less than or equal to the `timestamp` associated
+          with the users previous authentication, your system must abort and
+          reject the authentication attempt.
+        - If the `timestamp` is greater than the `timestamp` associated with the
+          users previous authentication, then continue.
+    - If a user with the `address` _has not_ authenticated with your application
+      before, then continue.
+
+- Your application must determine whether the `CompositeSignture` in the
+  `account-proof` data structure contains a valid signature. Your application
+  will do this by:
+    - Reconstructing the data the was signed to produce the
+      `CompositeSignature`. Pseudocode:
+
+      ```javascript
+      import rlp from "@onflow/rlp"
+
+      const Address = AccountProof.address
+      const Timestamp = AccountProof.timestamp
+      const Message = AccountProof.message
+
+      const rightPaddedHexBuffer = (value, pad) =>
+        Buffer.from(value.padEnd(pad * 2, 0), "hex")
+
+      const YourApplicationsDomainTag = "Awesome-Dapp"
+      const DomainTag = 
+        rightPaddedHexBuffer(
+            Buffer.from("FLOW-V0.0-transaction" + YourApplicationsDomainTag).toString("hex"), 
+            32
+        ).toString("hex")
+
+      const Data = DomainTag + rlp([ 
+        Address,
+        Timestamp,
+        Message
+      ])
+      ```
+
+  - Verify that the `account-proof` signature is valid for the reconstructed
+    data. Your application can do this through executing it's own Cadence
+    script, or using `fcl.verifyUserSignature`:
+
+```javascript
+...
+const isValid = await fcl.verifyUserSignature(
+    Data,
+    AccountProof.signatures,
+    DomainTag
+)
+```
+
+- If the signature has been proved valid, your application has then successfully
+  proved that the user does control the account with address they authenticated
+  with.
+- Your application must finally save the `AccountProof.timestamp` associated
+  with this authentication attempt alongside the `address` for the user.
