@@ -1,8 +1,8 @@
 ---
-title: Proving User Authentication
+title: Proving Ownership of a Flow Account
 ---
 
-## Proving User Authentication
+## Proving Ownership of a Flow Account
 
 A common desire that application developers have is to be able to prove that a
 user controls an on chain account. Fortunately, FCL provides multiple ways to
@@ -35,15 +35,11 @@ prove a user's authentication.
 
 ### Proving User Authentication using `account-proof`
 
-To prove a user's authentication using the FCL `account-proof` service, the
-first step is to plan at which phase during your application's authentication
-process will you want to use it.
-
 Wallets will optionally return to your application the `account-proof` service
 after completing wallet authentication. The suggested order of operations of how
 your application might use `account-proof` begins with:
 
-- Optional: You application may optionally configure FCL with an application
+- Optional: Your application may choose to configure FCL with an application
   specific Domain Tag. A Domain Tag helps scope the cryptographic proof
   generated for the `account-proof` service to your application. Your
   application can configure a Domain Tag like:
@@ -74,7 +70,7 @@ The data within the `account-proof` service will look like:
   data: {
     f_type: "account-proof",
     f_vsn: "1.0.0"
-    signatures: [CompositeSignture],
+    signatures: [CompositeSignature],
     address: "0xUSER",  // The users address
     message: "abc123def456", // A random message
     timestamp: 1630705495551, // UNIX timestamp
@@ -160,10 +156,10 @@ If your user's wallet does not return the the FCL `account-proof` service, your
 application can still prove user authentication using the `user-signature`
 service, as long as it is supported by your user's wallet.
 
-Your application's backend must first generate a random message that you wish
-for your user to sign, with their wallet, using the `user-signature` service.
-Your application should retain this random message and associate it with the
-`address` of the account the user is authenticating with for future reference.
+Your application's backend must first generate a random message for the user to
+sign with their wallet, using the `user-signature`s service. Your application
+should retain this random message and associate it with the `address` of the
+account the user is authenticating with for future reference.
 
 Your application will then pass this message to it's frontend, where it will
 call:
