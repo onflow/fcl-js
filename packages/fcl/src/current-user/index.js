@@ -277,7 +277,7 @@ async function verifyUserSignatures(msg, compSigs) {
   return verify(msg, compSigs)
 }
 
-export const currentUser = () => {
+let currentUser = () => {
   return {
     authenticate,
     unauthenticate,
@@ -285,6 +285,16 @@ export const currentUser = () => {
     signUserMessage,
     verifyUserSignatures,
     subscribe,
-    snapshot,
+    snapshot
   }
 }
+
+currentUser.authenticate = authenticate
+currentUser.unauthenticate = unauthenticate
+currentUser.authorization = authorization
+currentUser.signUserMessage = signUserMessage
+currentUser.verifyUserSignatures = verifyUserSignatures
+currentUser.subscribe = subscribe
+currentUser.snapshot = snapshot
+
+export {currentUser}
