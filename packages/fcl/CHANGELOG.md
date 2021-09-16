@@ -2,7 +2,7 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
-- 2021-09-16 -- Adds ability to access current user as `currentUser` as object instead of function (e.g. `currentUser()`)
+- 2021-09-16 -- Simplifies current user syntax from `currentUser()` to `currentUser`
 
 Examples of `currentUser` functionality.
 
