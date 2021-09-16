@@ -1,8 +1,8 @@
 ---
-title: Proving User Authentication
+title: Proving Ownership of a Flow Account
 ---
 
-## Proving User Authentication
+## Proving Ownership of a Flow Account
 
 A common desire that application developers have is to be able to prove that a
 user controls an on chain account. Fortunately, FCL provides multiple ways to
@@ -19,7 +19,7 @@ If a user's wallet does not choose to support the `account-proof` service, you
 can still prove that a user controls an on chain account provided that the
 wallet does support the `user-signature` service. Since all wallets may
 optionally choose to support either of these services, your application should
-be resiliant enough to handle cases where a user's wallet supports one, both or
+be resilient enough to handle cases where a user's wallet supports one, both or
 neither.
 
 The `account-proof` service, as the name implies, was designed specifically for
@@ -35,15 +35,10 @@ prove a user's authentication.
 
 ### Proving User Authentication using `account-proof`
 
-To prove a user's authentication using the FCL `account-proof` service, the
-first step is to plan at which phase during your application's authentication
-process will you want to use it.
+The suggested order of operations of how your application might use
+`account-proof` begins with:
 
-Wallets will optionally return to your application the `account-proof` service
-after completing wallet authentication. The suggested order of operations of how
-your application might use `account-proof` begins with:
-
-- Optional: You application may optionally configure FCL with an application
+- Optional: Your application may choose to configure FCL with an application
   specific Domain Tag. A Domain Tag helps scope the cryptographic proof
   generated for the `account-proof` service to your application. Your
   application can configure a Domain Tag like:
@@ -74,7 +69,7 @@ The data within the `account-proof` service will look like:
   data: {
     f_type: "account-proof",
     f_vsn: "1.0.0"
-    signatures: [CompositeSignture],
+    signatures: [CompositeSignature],
     address: "0xUSER",  // The users address
     message: "abc123def456", // A random message
     timestamp: 1630705495551, // UNIX timestamp
@@ -84,7 +79,7 @@ The data within the `account-proof` service will look like:
 ```
 
 - Your application will send the `account-proof` service data structure to it's
-  backend. 
+  backend over a secure channel.
 
 Once your application receives the `account-proof` data structure, it can then
 begin to use it to prove user authentication. The steps that your application's
@@ -160,10 +155,10 @@ If your user's wallet does not return the the FCL `account-proof` service, your
 application can still prove user authentication using the `user-signature`
 service, as long as it is supported by your user's wallet.
 
-Your application's backend must first generate a random message that you wish
-for your user to sign, with their wallet, using the `user-signature` service.
-Your application should retain this random message and associate it with the
-`address` of the account the user is authenticating with for future reference.
+Your application's backend must first generate a random message for the user to
+sign with their wallet, using the `user-signature` service. Your application
+should retain this random message and associate it with the `address` of the
+account the user is authenticating with for future reference.
 
 Your application will then pass this message to it's frontend, where it will
 call:
@@ -172,7 +167,7 @@ call:
 const CompositeSignatures = await fcl.currentUser().signUserMessage(message)
 ```
 
-Once the user's wallet has signed the message, your application with then verify
+Once the user's wallet has signed the message, your application will then verify
 that the signature is correct. It will do this by passing the
 `CompositeSignatures` to your applications backend. Your application will then
 execute it's own Cadence script, or otherwise use `fcl.verifyUserSignature`:
