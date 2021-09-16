@@ -2,6 +2,17 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+- 2021-09-16 -- Adds ability to access current user as `currentUser` as object instead of function (e.g. `currentUser()`)
+
+Examples of `currentUser` functionality.
+
+```javascript
+import {currentUser} from "@onflow/fcl"
+
+currentUser.snapshot()
+currentUser.subscribe(callback)
+```
+
 - 2021-09-14 -- Adds `WalletUtils.CompositeSignature` constructor.
 - 2021-08-27 -- Adds `config.fcl.storage` allowing for injection of desired storage option. Accepts `SESSION_STORAGE`, `LOCAL_STORAGE`, or `NO_STORAGE` and defaults to `SESSION_STORAGE`.
 
