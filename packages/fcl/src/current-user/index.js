@@ -78,7 +78,7 @@ function notExpired(user) {
   )
 }
 
-async function authenticate() {
+async function authenticate(opts = {redir: false}) {
   return new Promise(async (resolve, reject) => {
     spawnCurrentUser()
     const user = await snapshot()
@@ -113,6 +113,7 @@ async function authenticate() {
           endpoint: discoveryWallet,
           method: method,
         },
+        opts,
       })
       send(NAME, SET_CURRENT_USER, await buildUser(response))
     } catch (e) {
@@ -162,7 +163,7 @@ function resolvePreAuthz(authz) {
 
 async function authorization(account) {
   spawnCurrentUser()
-  const user = await authenticate()
+  const user = await authenticate({redir: true})
   const authz = serviceOfType(user.services, "authz")
 
   const preAuthz = serviceOfType(user.services, "pre-authz")
@@ -172,7 +173,10 @@ async function authorization(account) {
       tempId: "CURRENT_USER",
       async resolve(account, preSignable) {
         return resolvePreAuthz(
-          await execService({service: preAuthz, msg: preSignable})
+          await execService({
+            service: preAuthz,
+            msg: preSignable,
+          })
         )
       },
     }
@@ -239,7 +243,8 @@ const makeSignable = msg => {
 
 async function signUserMessage(msg) {
   spawnCurrentUser()
-  const user = await authenticate()
+  const user = await authenticate({redir: true})
+
   const signingService = serviceOfType(user.services, "user-signature")
 
   invariant(
@@ -285,7 +290,7 @@ let currentUser = () => {
     signUserMessage,
     verifyUserSignatures,
     subscribe,
-    snapshot
+    snapshot,
   }
 }
 

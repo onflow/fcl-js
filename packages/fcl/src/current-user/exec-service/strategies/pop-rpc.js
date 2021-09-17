@@ -6,7 +6,7 @@ import {configLens} from "../../../config-utils"
 export function execPopRPC(service, body, opts) {
   return new Promise((resolve, reject) => {
     const id = uid()
-    const includeOlderJsonRpcCall = opts.includeOlderJsonRpcCall
+    const {redir, includeOlderJsonRpcCall} = opts
 
     body.data = service.data
 
@@ -62,7 +62,7 @@ export function execPopRPC(service, body, opts) {
           switch (resp.status) {
             case "APPROVED":
               resolve(resp.data)
-              close()
+              !redir && close()
               break
 
             case "DECLINED":
@@ -91,7 +91,7 @@ export function execPopRPC(service, body, opts) {
           switch (resp.status) {
             case "APPROVED":
               resolve(resp.data)
-              close()
+              !redir && close()
               break
 
             case "DECLINED":

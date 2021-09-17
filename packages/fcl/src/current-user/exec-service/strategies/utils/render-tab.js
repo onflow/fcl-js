@@ -7,7 +7,7 @@ export function renderTab(src) {
   if (tab == null || tab?.closed) {
     tab = window.open(src, "_blank")
   } else if (previousUrl !== src) {
-    tab = window.open(src, "_blank")
+    tab.location.replace(src)
     tab.focus()
   } else {
     tab.focus()
