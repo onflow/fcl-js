@@ -89,23 +89,23 @@ async function authenticate(opts = {redir: false}) {
       "challenge.handshake",
     ])
 
-    try {
-      if (discoveryWallet == null) {
-        console.warn(
-          `Required value for "discovery.wallet" not defined in config. See: ${"https://github.com/onflow/flow-js-sdk/blob/master/packages/fcl/src/exec/query.md#configuration"}`
-        )
-        throw new Error(
-          `Required config value "discovery.wallet" is not defined`
-        )
-      }
-    } catch (error) {
-      console.error(error)
-    }
+    invariant(
+      discoveryWallet,
+      `Required value for "discovery.wallet" not defined in config. See: ${"https://github.com/onflow/flow-js-sdk/blob/master/packages/fcl/src/exec/query.md#configuration"}`
+    )
 
     const method = await config.first(
       ["discovery.wallet.method", "discovery.wallet.method.default"],
       "IFRAME/RPC"
     )
+
+    const suppressRedirWarning = await config.get("fcl.warning.suppress.redir")
+    if (opts.redir && !suppressRedirWarning) {
+      console.warn(
+        `You are manually enabling a very experimental feature that is not yet standard, use at your own risk.
+         You can disable this warning by setting fcl.warning.suppress.redir to true in your config`
+      )
+    }
 
     try {
       const response = await execService({
