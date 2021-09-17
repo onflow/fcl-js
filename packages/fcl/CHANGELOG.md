@@ -2,6 +2,8 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+## 0.0.77-alpha.5 - 2021-09-17
+
 - 2021-09-16 -- Simplifies current user syntax from `currentUser()` to `currentUser`
 
 Examples of `currentUser` functionality.
