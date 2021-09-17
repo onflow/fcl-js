@@ -2,6 +2,8 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+## 0.0.78-alpha.1 - 2021-09-17
+
 - 2021-09-16 -- Adds redirect option for `POP/RPC` and `TAB/RPC`
 
 ## 0.0.77 - 2021-09-17
