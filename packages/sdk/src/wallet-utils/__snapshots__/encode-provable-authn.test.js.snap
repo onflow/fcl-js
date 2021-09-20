@@ -1,0 +1,5 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`encode provable authn encode provable authn with appTag 1`] = `"da8b464c4f572d4a532d53444b86abc123def45686017c05815137"`;
+
+exports[`encode provable authn encode provable authn without appTag 1`] = `"cf8086abc123def45686017c05815137"`;
