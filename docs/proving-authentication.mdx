@@ -19,7 +19,7 @@ If a user's wallet does not choose to support the `account-proof` service, you
 can still prove that a user controls an on chain account provided that the
 wallet does support the `user-signature` service. Since all wallets may
 optionally choose to support either of these services, your application should
-be resiliant enough to handle cases where a user's wallet supports one, both or
+be resilient enough to handle cases where a user's wallet supports one, both or
 neither.
 
 The `account-proof` service, as the name implies, was designed specifically for
@@ -156,7 +156,7 @@ application can still prove user authentication using the `user-signature`
 service, as long as it is supported by your user's wallet.
 
 Your application's backend must first generate a random message for the user to
-sign with their wallet, using the `user-signature`s service. Your application
+sign with their wallet, using the `user-signature` service. Your application
 should retain this random message and associate it with the `address` of the
 account the user is authenticating with for future reference.
 
@@ -167,7 +167,7 @@ call:
 const CompositeSignatures = await fcl.currentUser().signUserMessage(message)
 ```
 
-Once the user's wallet has signed the message, your application with then verify
+Once the user's wallet has signed the message, your application will then verify
 that the signature is correct. It will do this by passing the
 `CompositeSignatures` to your applications backend. Your application will then
 execute it's own Cadence script, or otherwise use `fcl.verifyUserSignature`:
