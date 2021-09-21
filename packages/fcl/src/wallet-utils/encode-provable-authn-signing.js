@@ -13,8 +13,8 @@ export const encodeMessageForProvableAuthnSigning = (address, timestamp, appTag 
     const APP_DOMAIN_TAG = rightPaddedHexBuffer(Buffer.from(appTag).toString("hex"), 32).toString("hex")
 
     return USER_DOMAIN_TAG + (appTag ? 
-        encode([withPrefix(address), timestamp]).toString("hex")
-        :
         encode([APP_DOMAIN_TAG, withPrefix(address), timestamp]).toString("hex")
+        :
+        encode([withPrefix(address), timestamp]).toString("hex")
     )
 }
