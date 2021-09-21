@@ -13,20 +13,30 @@ For example, it can be sent to the App’s backend and after validating the sign
 
 ## TL;DR Wallet Provider
 
-1. Wallet receives Authn request and parses out the `timestamp`, `message` and `domain tag`
+1. Wallet receives Authn request and parses out the `timestamp`, and `domain tag`
 2. The wallet authenticates the user however they choose to do, and figures out the users Account `address`
-3. Wallet Prepares and signs the message
-      - Combines, and encodes the `timestamp`, `message`, and `address`
-      - Prepends the `FLOW-V0.0-user` domain tag + optional custom App domain tag
-      - Hashes and signs the message with the signatureAlgorithm specified on user's key
+3. Wallet prepares and signs the message
+      - Combines, and encodes the `timestamp`, and `address`
+      - Prepends the `FLOW-V0.0-user` domain tag + optional custom App `domain tag`
+      - Signs the message with the signatureAlgorithm specified on user's key
 4. Wallet sends back a new service along with the other services when completing Authn
 
 ```jsx
 // Signing procedure
-const message = hash(rlp([timestamp, message, address]))
 
-const prependUserDomainTags = (msg) => FLOW_USER_DOMAIN_TAG CUSTOM_USER_DOMAIN_TAG + msg
+// Using WalletUtils
+import {WalletUtils, withPrefix} from "@onflow/fcl"
+const message = WalletUtils.encodeMessageForProvableAuthnSigning(
+  address,
+  timestamp,
+  APP_DOMAIN_TAG
+)
+sign(privateKey, message)
 
+// Without using FCL WalletUtils
+import {withPrefix} from "@onflow/fcl"
+const message = rlp([APP_DOMAIN_TAG,  withPrefix(address), timestamp])
+const prependUserDomainTags = (msg) => FLOW_USER_DOMAIN_TAG + msg
 sign(privateKey, prependUserDomainTags(message))
 
 // Authentication Proof Service
