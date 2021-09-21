@@ -1,6 +1,6 @@
 import {withPrefix} from "@onflow/util-address"
 import {invariant} from "@onflow/util-invariant"
-import {encode} from '@onflow/rlp';
+import {encode} from '@onflow/rlp'
 
 const rightPaddedHexBuffer = (value, pad) =>
   Buffer.from(value.padEnd(pad * 2, 0), "hex")
