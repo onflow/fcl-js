@@ -24,12 +24,7 @@ describe("resolveArguments", () => {
           value: argObj.value,
           xform: {
             label: "Address",
-            asArgument() {
-              return {
-                type: "Address",
-                value: argObj.value
-              }
-            }
+            asArgument: () => argObj
           }
         }
       }
@@ -52,12 +47,7 @@ describe("resolveArguments", () => {
           value: null,
           xform: {
             label: "Address",
-            asArgument() {
-              return {
-                type: "Address",
-                value: argObj.value
-              }
-            }
+            asArgument: () => argObj
           }
         }
       }
