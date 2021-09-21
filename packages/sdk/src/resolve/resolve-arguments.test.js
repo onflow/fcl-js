@@ -42,7 +42,7 @@ describe("resolveArguments", () => {
         [argID]: {
           asArgument: argObj,
           kind,
-          resolve: () => Promise.resolve(argObj),
+          resolve: jest.fn().mockResolvedValue(argObj),
           tempId,
           value: null,
           xform: {
@@ -54,6 +54,7 @@ describe("resolveArguments", () => {
     }
 
     const res = await resolveArguments(ix)
+    expect(res.arguments[argID].resolve).toHaveBeenCalled()
     expect(res.arguments[argID].asArgument).toEqual(argObj)
     expect(res.arguments[argID].value).toEqual(argObj.value)
   })
