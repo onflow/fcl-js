@@ -11,5 +11,9 @@ export const encodeMessageForProvableAuthnVerifying = (address, timestamp, appTa
 
     const APP_DOMAIN_TAG = appTag ? rightPaddedHexBuffer(Buffer.from(appTag).toString("hex"), 32).toString("hex") : null
 
-    return encode([APP_DOMAIN_TAG, withPrefix(address), timestamp]).toString("hex")
+    return (appTag ? 
+      encode([APP_DOMAIN_TAG, withPrefix(address), timestamp]).toString("hex")
+      :
+      encode([withPrefix(address), timestamp]).toString("hex")
+    )
 }
