@@ -18,7 +18,7 @@ const NO_STORAGE = {
 }
 
 export const STORAGE_DEFAULT = SESSION_STORAGE
-export const USER_DOMAIN_TAG = "FLOW-V0.0-user"
+export const APP_DOMAIN_TAG = "APP-V0.0-user"
 export const DISCOVERY_METHOD = "IFRAME/RPC"
 
 export async function configLens(regex) {
@@ -41,9 +41,9 @@ export async function buildAuthnConfig() {
     "discovery.wallet.method.default",
   ])
 
-  const domainTag = await config.first([
-    "fcl.domainTag",
-    "fcl.domainTag.default",
+  const appDomainTag = await config.first([
+    "fcl.appDomainTag",
+    "fcl.appDomainTag.default",
   ])
 
   invariant(
@@ -54,5 +54,5 @@ export async function buildAuthnConfig() {
     `
   )
 
-  return {discoveryWallet, discoveryWalletMethod, domainTag}
+  return {discoveryWallet, discoveryWalletMethod, appDomainTag}
 }

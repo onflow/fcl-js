@@ -86,7 +86,7 @@ async function authenticate(opts = {redir: false}) {
     const user = await snapshot()
     if (user.loggedIn && notExpired(user)) return resolve(user)
 
-    const {discoveryWallet, discoveryWalletMethod, domainTag} =
+    const {discoveryWallet, discoveryWalletMethod, appDomainTag} =
       await buildAuthnConfig()
 
     const suppressRedirWarning = await config.get("fcl.warning.suppress.redir")
@@ -105,8 +105,7 @@ async function authenticate(opts = {redir: false}) {
         },
         msg: {
           timestamp: Date.now(),
-          message: uid(),
-          domainTag,
+          appDomainTag,
         },
         opts,
       })
