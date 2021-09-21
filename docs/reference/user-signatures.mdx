@@ -13,7 +13,7 @@ user may approve signing it with their private key/s.
 ## Verifying User Signatures
 
 What makes message signatures more interesting is that we can use Flow blockchain to verify the signatures.
-Cadence has a built-in function called `verify` that will recover the address of the private key that a message was signed with.
+Cadence has a built-in function called verify that will verify a signature against a Flow account given the account address.
 
 FCL includes a utility function, `verifyUserSignatures`, for verifying one or more signatures against an account's public key on the Flow blockchain.
 
