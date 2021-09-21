@@ -71,7 +71,6 @@ The data within the `account-proof` service will look like:
     f_vsn: "1.0.0"
     signatures: [CompositeSignature],
     address: "0xUSER",  // The users address
-    message: "abc123def456", // A random message
     timestamp: 1630705495551, // UNIX timestamp
     domainTag: "AWESOME_DAPP", // Optional, defaults to user signature domain tag `FLOW-V0.0-user`
   }         
@@ -102,7 +101,23 @@ backend must follow in using this data are specific.
 - Your application must determine whether the `CompositeSignture` in the
   `account-proof` data structure contains a valid signature. Your application
   will do this by:
-    - Reconstructing the data the was signed to produce the
+    - Using FCL's provided utility for reconstructing the data that was signed
+    to produce the `CompositeSignature`:
+
+      ```javascript 
+      import {WalletUtils} from "@onflow/fcl"
+
+      const Address = AccountProof.address 
+      const Timestamp = AccountProof.timestamp
+
+      const Data = WalletUtils.encodeMessageForProvableAuthnVerifying(
+        Address,              // Address of the user authenticating
+        Timestamp,            // Timestamp associated with the authentication
+        "Awesome-Dapp"        // Application domain tag  
+      )
+      ```
+
+    - Alternatively you can manually reconstruct the data that was signed to produce the
       `CompositeSignature`. Pseudocode:
 
       ```javascript
@@ -110,7 +125,6 @@ backend must follow in using this data are specific.
 
       const Address = AccountProof.address
       const Timestamp = AccountProof.timestamp
-      const Message = AccountProof.message
 
       const rightPaddedHexBuffer = (value, pad) =>
         Buffer.from(value.padEnd(pad * 2, 0), "hex")
@@ -118,7 +132,7 @@ backend must follow in using this data are specific.
       const YourApplicationsDomainTag = "Awesome-Dapp"
       const DomainTag = 
         rightPaddedHexBuffer(
-            Buffer.from("FLOW-V0.0-user" + YourApplicationsDomainTag).toString("hex"), 
+            Buffer.from(YourApplicationsDomainTag).toString("hex"), 
             32
         ).toString("hex")
 
@@ -137,8 +151,7 @@ backend must follow in using this data are specific.
 ...
 const isValid = await fcl.verifyUserSignature(
     Data,
-    AccountProof.signatures,
-    DomainTag
+    AccountProof.signatures
 )
 ```
 
