@@ -10,9 +10,9 @@ describe("resolveArguments", () => {
   }
   const tag = "SCRIPT"
   const kind = "ARGUMENT"
-  const tempId = "28948a11n4"
+  const tempId = argID
   
-  test("resolve synchronous arguments", async () => {
+  test("should resolve synchronous arguments", async () => {
     const ix = {
       tag,
       arguments: {
@@ -35,7 +35,7 @@ describe("resolveArguments", () => {
     expect(res.arguments[argID].value).toEqual(argObj.value)
   })
 
-  test("resolve asynchronous arguments", async () => {
+  test("should resolve asynchronous arguments", async () => {
     const ix = {
       tag,
       arguments: {
