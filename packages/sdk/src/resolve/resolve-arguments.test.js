@@ -11,13 +11,13 @@ describe("resolveArguments", () => {
   const tag = "SCRIPT"
   const kind = "ARGUMENT"
   const tempId = argID
-  
+
   test("should resolve synchronous arguments", async () => {
     const ix = {
       tag,
       arguments: {
         [argID]: {
-          asArgument: argObj,
+          asArgument: null,
           kind,
           resolve: undefined,
           tempId,
@@ -32,7 +32,6 @@ describe("resolveArguments", () => {
 
     const res = await resolveArguments(ix)
     expect(res.arguments[argID].asArgument).toEqual(argObj)
-    expect(res.arguments[argID].value).toEqual(argObj.value)
   })
 
   test("should resolve asynchronous arguments", async () => {
@@ -40,9 +39,13 @@ describe("resolveArguments", () => {
       tag,
       arguments: {
         [argID]: {
-          asArgument: argObj,
+          asArgument: null,
           kind,
-          resolve: jest.fn().mockResolvedValue(argObj),
+          resolve: jest.fn().mockResolvedValue({
+            xform: {
+              asArgument: () => argObj
+            }
+          }),
           tempId,
           value: null,
           xform: {
@@ -56,7 +59,6 @@ describe("resolveArguments", () => {
     const res = await resolveArguments(ix)
     expect(res.arguments[argID].resolve).toHaveBeenCalled()
     expect(res.arguments[argID].asArgument).toEqual(argObj)
-    expect(res.arguments[argID].value).toEqual(argObj.value)
   })
 })
   
