@@ -81,7 +81,7 @@ Using upcoming functionalty of **FCL**, the signature can now be verified on the
 // this code example was done before compSig was an array of composite signatures.
 // An uptodate version will be updated here ASAP
 
-function validateSignedUserMessage(message, compSig) {
+function verifyUserSignatures(message, compSig) {
   return fcl.query({
     cadence: `
         import Crypto
