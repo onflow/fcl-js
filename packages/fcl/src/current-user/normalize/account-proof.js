@@ -8,9 +8,8 @@
 //     "f_type": "account-proof",
 //     "f_vsn": "1.0.0",
 //     "address": "0xUSER",   // The users address
-//     "message": "abc123def456", // Optional
 //     "timestamp": 1630705495551, // UNIX timestamp
-//     "domainTag": "AWESOME_DAPP", // Optional, defaults to user signature domain tag `FLOW-V0.0-user`
+//     "appDomainTag": "AWESOME_DAPP", // Optional, but recommended. Defaults to "APP-V0.0-user"
 //     "signature": CompositeSignature, // Optional
 //    }
 // }
