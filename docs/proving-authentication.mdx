@@ -95,10 +95,12 @@ backend must follow in using this data are specific.
           reject the authentication attempt.
         - If the `timestamp` is greater than the `timestamp` associated with the
           users previous authentication, then continue.
+        - Ensure the `timestamp` is reasonable. (e.g: Not a `timestamp`
+          associated with a time far in the future, or far in the past)
     - If a user with the `address` _has not_ authenticated with your application
       before, then continue.
 
-- Your application must determine whether the `CompositeSignture` in the
+- Your application must determine whether the `CompositeSignature` in the
   `account-proof` data structure contains a valid signature. Your application
   will do this by:
     - Using FCL's provided utility for reconstructing the data that was signed
@@ -110,7 +112,7 @@ backend must follow in using this data are specific.
       const Address = AccountProof.address 
       const Timestamp = AccountProof.timestamp
 
-      const Data = WalletUtils.encodeMessageForProvableAuthnVerifying(
+      const Message = WalletUtils.encodeMessageForProvableAuthnVerifying(
         Address,              // Address of the user authenticating
         Timestamp,            // Timestamp associated with the authentication
         "Awesome-Dapp"        // Application domain tag  
@@ -136,10 +138,9 @@ backend must follow in using this data are specific.
             32
         ).toString("hex")
 
-      const Data = DomainTag + rlp([ 
+      const Message = DomainTag + rlp([ 
         Address,
-        Timestamp,
-        Message
+        Timestamp
       ])
       ```
 
@@ -150,7 +151,7 @@ backend must follow in using this data are specific.
 ```javascript
 ...
 const isValid = await fcl.verifyUserSignature(
-    Data,
+    Message,
     AccountProof.signatures
 )
 ```
@@ -177,7 +178,7 @@ Your application will then pass this message to it's frontend, where it will
 call:
 
 ```javascript
-const CompositeSignatures = await fcl.currentUser().signUserMessage(message)
+const CompositeSignatures = await fcl.currentUser().signUserMessage(Message)
 ```
 
 Once the user's wallet has signed the message, your application will then verify
