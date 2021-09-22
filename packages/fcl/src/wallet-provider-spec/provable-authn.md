@@ -50,9 +50,9 @@ sign(privateKey, prependUserDomainTags(message))
     f_type: "account-proof",
     f_vsn: "1.0.0"
     signatures: [CompositeSignture],
-    address: "0xUSER",  // The users address
+    address: "0xUSER",  // The user's address
     timestamp: 1630705495551, // UNIX timestamp
-    domainTag: "AWESOME_DAPP", // Optional, defaults to user signature domain tag `FLOW-V0.0-user`
+    domainTag: "AWESOME_DAPP", // Optional
   }         
 }
 ```
