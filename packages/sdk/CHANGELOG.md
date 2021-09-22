@@ -2,6 +2,7 @@
 
 - YYYY-MM-DD **BREAKING?** -- Who: description
 
+- 2021-09-20 -- [@chasefleming](https://github.com/chasefleming): Support asynchronous resolve methods in `resolveArguments`
 - 2021-08-05 -- [@gregsantos](https://github.com/gregsantos): Update `createSignableVoucher` structure and move to separate module.
 
 ## 0.0.54 -- 2021-07-23

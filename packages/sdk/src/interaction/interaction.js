@@ -183,6 +183,7 @@ export const makeArgument = arg => ix => {
   ix.arguments[tempId].asArgument = arg.asArgument
   ix.arguments[tempId].xform = arg.xform
   ix.arguments[tempId].resolve = arg.resolve
+
   return Ok(ix)
 }
 

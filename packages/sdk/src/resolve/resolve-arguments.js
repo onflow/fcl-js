@@ -14,10 +14,22 @@ function cast(arg) {
   invariant(false, `Invalid Argument`, arg)
 }
 
+async function handleArgResolution(arg, depth = 3) {
+  invariant(depth > 0, `Argument Resolve Recursion Limit Exceeded for Arg: ${arg.tempId}`)
+
+  if (isFn(arg.resolve)) {
+    const resolvedArg = await arg.resolve()
+    return handleArgResolution(resolvedArg, depth - 1)
+  } else {
+    return arg
+  }
+}
+
 export async function resolveArguments(ix) {
   if (isTransaction(ix) || isScript(ix)) {
     for (let [id, arg] of Object.entries(ix.arguments)) {
-      ix.arguments[id].asArgument = cast(arg)
+      const res = await handleArgResolution(arg)
+      ix.arguments[id].asArgument = cast(res)
     }
   }
 
