@@ -19,7 +19,7 @@ async function handleArgResolution(arg, depth = 3) {
 
   if (isFn(arg.resolve)) {
     const resolvedArg = await arg.resolve()
-    return await handleArgResolution(resolvedArg, depth - 1)
+    return handleArgResolution(resolvedArg, depth - 1)
   } else {
     return arg
   }
