@@ -95,6 +95,8 @@ backend must follow in using this data are specific.
           reject the authentication attempt.
         - If the `timestamp` is greater than the `timestamp` associated with the
           users previous authentication, then continue.
+        - Ensure the `timestamp` is reasonable. (e.g: Not a `timestamp`
+          associated with a time far in the future, or far in the past)
     - If a user with the `address` _has not_ authenticated with your application
       before, then continue.
 
