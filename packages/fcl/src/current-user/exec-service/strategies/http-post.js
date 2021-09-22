@@ -3,11 +3,21 @@ import {normalizePollingResponse} from "../../normalize/polling-response"
 import {normalizeLocalView} from "../../normalize/local-view"
 import {poll} from "./utils/poll"
 import {execLocal} from "../exec-local"
+import {configLens} from "../../../config-utils"
 
 export async function execHttpPost(service, signable, opts = {}) {
-  signable.data = service.data
   const resp = await fetchService(service, {
-    data: signable,
+    data: {
+      service: {
+        params: service.params,
+        data: service.data,
+      },
+      config: {
+        services: await configLens(/^service\./),
+        app: await configLens(/^app\.detail\./),
+      },
+      ...signable,
+    },
   }).then(normalizePollingResponse)
 
   if (resp.status === "APPROVED") {
