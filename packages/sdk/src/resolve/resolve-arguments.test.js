@@ -62,60 +62,6 @@ describe("resolveArguments", () => {
   })
 
   test("should resolve nested asynchronous arguments", async () => {
-    const ix = {
-      tag,
-      arguments: {
-        [argID]: {
-          asArgument: null,
-          kind,
-          resolve: jest.fn().mockResolvedValue({
-            xform: {
-              asArgument: () => argObj
-            }
-          }),
-          tempId,
-          value: null,
-          xform: {
-            label: "Address",
-            asArgument: () => argObj
-          }
-        }
-      }
-    }
-
-    const res = await resolveArguments(ix)
-    expect(res.arguments[argID].resolve).toHaveBeenCalled()
-    expect(res.arguments[argID].asArgument).toEqual(argObj)
-  })
-
-  test("should resolve nested asynchronous arguments", async () => {
-    const ix = {
-      tag,
-      arguments: {
-        [argID]: {
-          asArgument: null,
-          kind,
-          resolve: jest.fn().mockResolvedValue({
-            xform: {
-              asArgument: () => argObj
-            }
-          }),
-          tempId,
-          value: null,
-          xform: {
-            label: "Address",
-            asArgument: () => argObj
-          }
-        }
-      }
-    }
-
-    const res = await resolveArguments(ix)
-    expect(res.arguments[argID].resolve).toHaveBeenCalled()
-    expect(res.arguments[argID].asArgument).toEqual(argObj)
-  })
-
-  test("should resolve nested asynchronous arguments", async () => {
 
     const resolveTwo = jest.fn().mockResolvedValue({
       xform: {
