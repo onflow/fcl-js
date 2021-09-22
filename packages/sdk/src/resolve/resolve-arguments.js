@@ -3,7 +3,7 @@ import {isTransaction, isScript} from "../interaction/interaction.js"
 
 const isFn = v => typeof v === "function"
 
-async function cast(arg) {
+function cast(arg) {
   // prettier-ignore
   invariant(typeof arg.xform != null, `No type specified for argument: ${arg.value}`)
 
@@ -29,7 +29,7 @@ export async function resolveArguments(ix) {
   if (isTransaction(ix) || isScript(ix)) {
     for (let [id, arg] of Object.entries(ix.arguments)) {
       const res = await handleArgResolution(arg)
-      ix.arguments[id].asArgument = await cast(res)
+      ix.arguments[id].asArgument = cast(res)
     }
   }
 
