@@ -4,10 +4,6 @@ import {isTransaction, isScript} from "../interaction/interaction.js"
 const isFn = v => typeof v === "function"
 
 async function cast(arg) {
-  if (isFn(arg.resolve)) {
-    arg = await arg.resolve()
-  }
-  
   // prettier-ignore
   invariant(typeof arg.xform != null, `No type specified for argument: ${arg.value}`)
 
@@ -18,11 +14,22 @@ async function cast(arg) {
   invariant(false, `Invalid Argument`, arg)
 }
 
+async function handleArgResolution(arg, depth = 3) {
+  invariant(depth > 0, `Argument Resolve Recursion Limit Exceeded for Arg: ${arg.tempId}`)
+
+  if (isFn(arg.resolve)) {
+    const resolvedArg = await arg.resolve()
+    return await handleArgResolution(resolvedArg, depth - 1)
+  } else {
+    return arg
+  }
+}
+
 export async function resolveArguments(ix) {
   if (isTransaction(ix) || isScript(ix)) {
     for (let [id, arg] of Object.entries(ix.arguments)) {
-      const castedArg = await cast(arg)
-      ix.arguments[id].asArgument = castedArg
+      const res = await handleArgResolution(arg)
+      ix.arguments[id].asArgument = await cast(res)
     }
   }
 
