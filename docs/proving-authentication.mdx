@@ -40,8 +40,9 @@ The suggested order of operations of how your application might use
 
 - Optional: Your application may choose to configure FCL with an application
   specific Domain Tag. A Domain Tag helps scope the cryptographic proof
-  generated for the `account-proof` service to your application. Your
-  application can configure a Domain Tag like:
+  generated for the `account-proof` service to your application. A Domain Tag is
+  a valid string less than 32 bytes long. Your application can configure a
+  Domain Tag like:
 
 ```javascript
 import {config} from "@onflow/fcl"
