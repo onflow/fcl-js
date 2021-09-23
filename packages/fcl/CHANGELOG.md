@@ -2,6 +2,25 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+- 2021-09-20 -- Simplify passing of currentUser as param
+
+Examples of `currentUser` as a param.
+
+```javascript
+import {query, currentUser} from "@onflow/fcl"
+
+await query({
+  cadence: `
+    pub fun main(currentUser: Address): Address {
+      return currentUser
+    }
+  `,
+  args: (arg, t) => [
+    currentUser
+  ]
+})
+```
+
 ## 0.0.78-alpha.1 - 2021-09-17
 
 - 2021-09-22 -- Adds `service` and `config` to `http-post` data
