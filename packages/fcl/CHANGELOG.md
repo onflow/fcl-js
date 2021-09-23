@@ -2,12 +2,14 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+## 0.0.78-alpha.2 - 2021-09-23
+
+- 2021-09-22 -- Adds `service` and `config` to `http-post` data
 - 2021-09-21 -- Updates `fcl.authenticate` to include msg data `timestamp`, and optional `appDomainTag` for signing (**Proveable Authn**)
 - 2021-09-20 -- Adds wallet utilities for encoding provable authentication messages
 
 ## 0.0.78-alpha.1 - 2021-09-17
 
-- 2021-09-22 -- Adds `service` and `config` to `http-post` data
 - 2021-09-16 -- Adds redirect option for `POP/RPC` and `TAB/RPC`
 
 ## 0.0.77 - 2021-09-17
