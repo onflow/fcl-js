@@ -47,11 +47,11 @@ import { template as topshotSetupCollection } from "@onflow/six-topshot-setup-co
 fcl.config().put("accessNode", "http://localhost:8080");
 
 const response = await fcl.send([
-    topshotSetupCollection({
-        proposer: fcl.currentUser().authorization,
-        authorization: fcl.currentUser().authorization,     
-        payer: fcl.currentUser().authorization,             
-    })
+  topshotSetupCollection({
+    proposer: fcl.currentUser().authorization,
+    authorization: fcl.currentUser().authorization,     
+    payer: fcl.currentUser().authorization,             
+  })
 ])
 
 ```
@@ -60,5 +60,5 @@ const response = await fcl.send([
 
 Hashing Code:
 ```javascript
-    console.log(crypto.createHash('sha256').update(CODE, 'utf8').digest('hex'))
+  console.log(crypto.createHash('sha256').update(CODE, 'utf8').digest('hex'))
 ```
