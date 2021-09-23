@@ -3,8 +3,8 @@ import * as t from "@onflow/types"
 import {config} from "@onflow/config"
 
 const DEPS = new Set([
-    "0xTOPSHOT",
-    "0xNONFUNGIBLETOKEN"
+  "0xTOPSHOT",
+  "0xNONFUNGIBLETOKEN"
 ])
 
 export const TITLE = "NBA Top Shot Transfer Moment"
@@ -57,25 +57,25 @@ transaction(recipient: Address, withdrawID: UInt64) {
 }`
 
 class UndefinedConfigurationError extends Error {
-    constructor(address) {
-      const msg = `Stored Interaction Error: Missing configuration for ${address}. Please see the following to learn more: https://github.com/onflow/flow-js-sdk/blob/master/six/six-topshot-transfer-moment/README.md`.trim()
-      super(msg)
-      this.name = "Stored Interaction Undefined Address Configuration Error"
-    }
+  constructor(address) {
+    const msg = `Stored Interaction Error: Missing configuration for ${address}. Please see the following to learn more: https://github.com/onflow/flow-js-sdk/blob/master/six/six-topshot-transfer-moment/README.md`.trim()
+    super(msg)
+    this.name = "Stored Interaction Undefined Address Configuration Error"
+  }
 }
 
 const addressCheck = async address => {
-    if (!await config().get(address)) throw new UndefinedConfigurationError(address)
+  if (!await config().get(address)) throw new UndefinedConfigurationError(address)
 }
 
 export const template = async ({ proposer, authorization, payer, recipient = "", withdrawID = ""}) => {
-    for (let addr of DEPS) await addressCheck(addr)
+  for (let addr of DEPS) await addressCheck(addr)
 
-    return fcl.pipe([
-        fcl.transaction(CODE),
-        fcl.args([fcl.arg(recipient, t.Address), fcl.arg(withdrawID, t.UInt64)]),
-        fcl.proposer(proposer),
-        fcl.authorizations([authorization]),
-        fcl.payer(payer)
-    ])
+  return fcl.pipe([
+    fcl.transaction(CODE),
+    fcl.args([fcl.arg(recipient, t.Address), fcl.arg(withdrawID, t.UInt64)]),
+    fcl.proposer(proposer),
+    fcl.authorizations([authorization]),
+    fcl.payer(payer)
+  ])
 }

@@ -50,13 +50,13 @@ import { template as topshotTransferMoment } from "@onflow/six-topshot-transfer-
 fcl.config().put("accessNode", "http://localhost:8080");
 
 const response = await fcl.send([
-    topshotTransferMoment({
-        proposer: fcl.currentUser().authorization,
-        authorization: fcl.currentUser().authorization,     
-        payer: fcl.currentUser().authorization,
-        recipient: "0xABC123DEF456",  // Address of the account to transfer the moment to
-        withdrawID: "123"             // ID of the moment to transfer
-    })
+  topshotTransferMoment({
+    proposer: fcl.currentUser().authorization,
+    authorization: fcl.currentUser().authorization,     
+    payer: fcl.currentUser().authorization,
+    recipient: "0xABC123DEF456",  // Address of the account to transfer the moment to
+    withdrawID: "123"             // ID of the moment to transfer
+  })
 ])
 
 ```
@@ -65,5 +65,5 @@ const response = await fcl.send([
 
 Hashing Code:
 ```javascript
-    console.log(crypto.createHash('sha256').update(CODE, 'utf8').digest('hex'))
+  console.log(crypto.createHash('sha256').update(CODE, 'utf8').digest('hex'))
 ```
