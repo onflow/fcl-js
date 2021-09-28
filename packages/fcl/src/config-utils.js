@@ -4,13 +4,13 @@ import {invariant} from "@onflow/util-invariant"
 const isServerSide = () => typeof window === 'undefined'
 
 const SESSION_STORAGE = {
-  can: !Boolean(isServerSide()),
+  can: !isServerSide(),
   get: async key => JSON.parse(sessionStorage.getItem(key)),
   put: async (key, value) => sessionStorage.setItem(key, JSON.stringify(value)),
 }
 
 const LOCAL_STORAGE = {
-  can: !Boolean(isServerSide()),
+  can: !isServerSide(),
   get: async key => JSON.parse(localStorage.getItem(key)),
   put: async (key, value) => localStorage.setItem(key, JSON.stringify(value)),
 }
