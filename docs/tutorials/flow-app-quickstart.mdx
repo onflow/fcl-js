@@ -49,7 +49,7 @@ We will then need to pass these environment variables to FCL before it talks to 
 To achieve this we will create two files (`./.env.local`, `./src/config.js`) one to hold our env. variables locally, one to import those env. variables and supply them to FCL.
 Then we will import our FCL configuration as the very first thing in our application.
 
-> **Note:** Create React App requires all environment variables to be prefixed with `REACT_APP_*`
+> **Note:** Create React App requires all environment variables to be prefixed with `REACT_APP_*`. Other systems are different, ie Next.js requires `NEXT_PUBLIC_` prefix.
 
 ```sh
 touch .env.local        # Create a .env.local file to store our environment variables
@@ -63,15 +63,15 @@ Now that we have our files we should add in our environment variables. Open `.en
 
 # ACCESS_NODE will be the endpoint our application
 # will use to talk to the Flow blockchain.
-REACT_APP_ACCESS_NODE=https://access-testnet.onflow.org
+REACT_APP_ACCESS_NODE="https://access-testnet.onflow.org"
 
 # WALLET_DISCOVERY will be the endpoint our application
 # will use to discover available FCL compatible wallets.
-REACT_APP_WALLET_DISCOVERY=https://fcl-discovery.onflow.org/testnet/authn
+REACT_APP_WALLET_DISCOVERY="https://fcl-discovery.onflow.org/testnet/authn"
 
 # CONTRACT_PROFILE will be the address that has the Profile
 # smart contract we will be using in this guide.
-REACT_APP_CONTRACT_PROFILE=0xba1132bc08f82fe2
+REACT_APP_CONTRACT_PROFILE="0xba1132bc08f82fe2"
 ```
 
 These environment variables should now be available for us to use when we configure FCL, which we will do next. Open `./src/config.js` and add the following to it.
@@ -83,7 +83,7 @@ import {config} from "@onflow/fcl"
 
 config()
   .put("accessNode.api", process.env.REACT_APP_ACCESS_NODE) // Configure FCL's Access Node
-  .put("challenge.handshake", process.env.REACT_APP_WALLET_DISCOVERY) // Configure FCL's Wallet Discovery mechanism
+  .put("discovery.wallet", process.env.REACT_APP_WALLET_DISCOVERY) // Configure FCL's Wallet Discovery mechanism
   .put("0xProfile", process.env.REACT_APP_CONTRACT_PROFILE) // Will let us use `0xProfile` in our Cadence
 ```
 
