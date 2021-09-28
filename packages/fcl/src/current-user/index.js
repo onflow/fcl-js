@@ -39,6 +39,20 @@ const getStoredUser = async storage => {
 
 const HANDLERS = {
   [INIT]: async ctx => {
+
+    if (typeof window === 'undefined') {
+      console.warn(
+        `
+        %cFCL Warning
+        ============================
+        "currentUser" is only available in the browser.
+        For more info, please see the docs: https://docs.onflow.org/fcl/
+        ============================
+        `,
+        "font-weight:bold;font-family:monospace;"
+      )
+    }
+
     ctx.merge(JSON.parse(DATA))
     const storage = await config.first(["fcl.storage", "fcl.storage.default"])
     if (storage.can) {
