@@ -2,6 +2,8 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+- 2021-09-27 - Add warning for using currentUser server side and turn off local and session storage if server side
+
 ## 0.0.78-alpha.2 - 2021-09-23
 
 - 2021-09-22 -- Adds `service` and `config` to `http-post` data
