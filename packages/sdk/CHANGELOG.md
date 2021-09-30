@@ -2,6 +2,7 @@
 
 - YYYY-MM-DD **BREAKING?** -- Who: description
 
+- 2021-09-20 -- [@chasefleming](https://github.com/chasefleming): Resolve argument with specific `resolveArgument` method over generic `resolve`
 - 2021-09-20 -- [@chasefleming](https://github.com/chasefleming): Support asynchronous resolve methods in `resolveArguments`
 - 2021-09-20 -- [@JeffreyDoyle](https://github.com/JeffreyDoyle): Adds wallet utility for encoding provable authentication messages.
 - 2021-08-05 -- [@gregsantos](https://github.com/gregsantos): Update `createSignableVoucher` structure and move to separate module.
