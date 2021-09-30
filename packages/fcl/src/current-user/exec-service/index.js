@@ -2,6 +2,7 @@ import {execHttpPost} from "./strategies/http-post"
 import {execIframeRPC} from "./strategies/iframe-rpc"
 import {execPopRPC} from "./strategies/pop-rpc"
 import {execTabRPC} from "./strategies/tab-rpc"
+import {execExtRPC} from "./strategies/ext-rpc"
 
 const STRATEGIES = {
   "HTTP/RPC": execHttpPost,
@@ -9,6 +10,7 @@ const STRATEGIES = {
   "IFRAME/RPC": execIframeRPC,
   "POP/RPC": execPopRPC,
   "TAB/RPC": execTabRPC,
+  "EXT/RPC": execExtRPC,
 }
 
 export async function execService({service, msg = {}, opts = {}}) {
