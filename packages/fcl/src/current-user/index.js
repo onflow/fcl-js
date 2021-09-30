@@ -4,11 +4,13 @@ import {account, arg, config} from "@onflow/sdk"
 import {spawn, send, INIT, SUBSCRIBE, UNSUBSCRIBE} from "@onflow/util-actor"
 import {withPrefix, sansPrefix} from "@onflow/util-address"
 import {invariant} from "@onflow/util-invariant"
+import {uid} from "@onflow/util-uid"
 import {buildUser} from "./build-user"
 import {serviceOfType} from "./service-of-type"
 import {execService} from "./exec-service"
 import {verifyUserSignatures as verify} from "../exec/verify"
 import {normalizeCompositeSignature} from "./normalize/composite-signature"
+import {buildAuthnConfig} from "../config-utils"
 
 const NAME = "CURRENT_USER"
 const UPDATED = "CURRENT_USER/UPDATED"
@@ -38,6 +40,20 @@ const getStoredUser = async storage => {
 
 const HANDLERS = {
   [INIT]: async ctx => {
+
+    if (typeof window === 'undefined') {
+      console.warn(
+        `
+        %cFCL Warning
+        ============================
+        "currentUser" is only available in the browser.
+        For more info, please see the docs: https://docs.onflow.org/fcl/
+        ============================
+        `,
+        "font-weight:bold;font-family:monospace;"
+      )
+    }
+
     ctx.merge(JSON.parse(DATA))
     const storage = await config.first(["fcl.storage", "fcl.storage.default"])
     if (storage.can) {
@@ -85,20 +101,8 @@ async function authenticate(opts = {redir: false}) {
     const user = await snapshot()
     if (user.loggedIn && notExpired(user)) return resolve(user)
 
-    const discoveryWallet = await config.first([
-      "discovery.wallet",
-      "challenge.handshake",
-    ])
-
-    invariant(
-      discoveryWallet,
-      `Required value for "discovery.wallet" not defined in config. See: ${"https://github.com/onflow/flow-js-sdk/blob/master/packages/fcl/src/exec/query.md#configuration"}`
-    )
-
-    const method = await config.first(
-      ["discovery.wallet.method", "discovery.wallet.method.default"],
-      "IFRAME/RPC"
-    )
+    const {discoveryWallet, discoveryWalletMethod, appDomainTag} =
+      await buildAuthnConfig()
 
     const suppressRedirWarning = await config.get("fcl.warning.suppress.redir")
     if (opts.redir && !suppressRedirWarning) {
@@ -112,7 +116,11 @@ async function authenticate(opts = {redir: false}) {
       const response = await execService({
         service: {
           endpoint: discoveryWallet,
-          method: method,
+          method: discoveryWalletMethod,
+        },
+        msg: {
+          timestamp: Date.now(),
+          appDomainTag,
         },
         opts,
       })

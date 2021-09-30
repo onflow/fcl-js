@@ -2,7 +2,7 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
-- 2021-09-20 -- Simplify passing currentUser data into args with the ability to pass currentUser as param instead of a creating a user snapshot before.
+- 2021-09-30 -- Simplify passing currentUser data into args with the ability to pass currentUser as param instead of a creating a user snapshot before.
 
 Examples of `currentUser` as a param.
 
@@ -21,9 +21,17 @@ await query({
 })
 ```
 
-## 0.0.78-alpha.1 - 2021-09-17
+- 2021-09-29 -- Update `pop` height
+- 2021-09-27 -- Add warning for using currentUser server side and turn off local and session storage if server side
+
+## 0.0.78-alpha.2 - 2021-09-23
 
 - 2021-09-22 -- Adds `service` and `config` to `http-post` data
+- 2021-09-21 -- Updates `fcl.authenticate` to include msg data `timestamp`, and optional `appDomainTag` for signing (**Proveable Authn**)
+- 2021-09-20 -- Adds wallet utilities for encoding provable authentication messages
+
+## 0.0.78-alpha.1 - 2021-09-17
+
 - 2021-09-16 -- Adds redirect option for `POP/RPC` and `TAB/RPC`
 
 ## 0.0.77 - 2021-09-17
@@ -40,7 +48,15 @@ currentUser.subscribe(callback)
 ```
 
 - 2021-09-14 -- Adds `WalletUtils.CompositeSignature` constructor.
-- 2021-08-27 -- Adds `config.fcl.storage` allowing for injection of desired storage option. Accepts `SESSION_STORAGE`, `LOCAL_STORAGE`, or `NO_STORAGE` and defaults to `SESSION_STORAGE`.
+- 2021-08-27 -- Adds `config.fcl.storage` allowing for injection of desired storage option. Defaults to `SESSION_STORAGE`.
+
+```javascript
+  export const SESSION_STORAGE = {
+    can: true,
+    get: async key => JSON.parse(sessionStorage.getItem(key)),
+    put: async (key, value) => sessionStorage.setItem(key, JSON.stringify(value)),
+  }
+```
 
 ## 0.0.77-alpha.4 - 2021-08-27
 
