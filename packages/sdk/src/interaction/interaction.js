@@ -59,7 +59,8 @@ const ARG = `{
   "value":null,
   "asArgument":null,
   "xform":null,
-  "resolve": null
+  "resolve": null,
+  "resolveArgument": null
 }`
 
 const IX = `{
