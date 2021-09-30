@@ -19,6 +19,7 @@ export function execTabRPC(service, body, opts) {
             service: {
               params: service.params,
               data: service.data,
+              type: service.type,
             },
             config: {
               services: await configLens(/^service\./),
