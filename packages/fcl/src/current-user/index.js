@@ -305,7 +305,7 @@ let currentUser = () => {
     verifyUserSignatures,
     subscribe,
     snapshot,
-    resolve: resolveArgument
+    resolveArgument
   }
 }
 
@@ -316,6 +316,6 @@ currentUser.signUserMessage = signUserMessage
 currentUser.verifyUserSignatures = verifyUserSignatures
 currentUser.subscribe = subscribe
 currentUser.snapshot = snapshot
-currentUser.resolve = resolveArgument
+currentUser.resolveArgument = resolveArgument
 
 export {currentUser}
