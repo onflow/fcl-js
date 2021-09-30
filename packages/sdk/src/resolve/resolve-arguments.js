@@ -17,8 +17,8 @@ function cast(arg) {
 async function handleArgResolution(arg, depth = 3) {
   invariant(depth > 0, `Argument Resolve Recursion Limit Exceeded for Arg: ${arg.tempId}`)
 
-  if (isFn(arg.resolve)) {
-    const resolvedArg = await arg.resolve()
+  if (isFn(arg.resolveArgument)) {
+    const resolvedArg = await arg.resolveArgument()
     return handleArgResolution(resolvedArg, depth - 1)
   } else {
     return arg
