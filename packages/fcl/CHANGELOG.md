@@ -2,6 +2,9 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+## 0.0.78-alpha.3 - 2021-10-01
+
+- 2021-10-01 -- SDK VSN 0.0.55
 - 2021-09-29 -- Update `pop` height
 - 2021-09-27 -- Add warning for using currentUser server side and turn off local and session storage if server side
 
