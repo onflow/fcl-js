@@ -16,7 +16,7 @@ There is a lot to unpack in the following code snippet.
 It sends a transaction to the Flow blockchain. For the transaction, the current user is authorizing it as both the `proposer` and the `payer`.
 Something that is unique to Flow is the one paying for the transaction doesn't always need to be the one performing the transaction.
 Proposers and Payers are special kinds of authorizations that are always required for a transaction.
-The `proposer` acts similar to the `nonce` in etherium transactions, and helps prevent repeat attacks.
+The `proposer` acts similar to the `nonce` in Ethereum transactions, and helps prevent repeat attacks.
 The `payer` is who will be paying for the transaction.
 As mentioned before, it is very important to always provide both a `proposer` and `payer`, the transaction will not work with out them, when in doubt its probably safe to make them the same.
 
