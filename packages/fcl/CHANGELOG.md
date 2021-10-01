@@ -2,7 +2,7 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
-- 2021-09-30 -- Simplify passing currentUser data into args with the ability to pass currentUser as param instead of a creating a user snapshot before.
+- 2021-10-01 -- Simplify passing `currentUser` data into args with the ability to pass `currentUser` as param instead of a creating a user snapshot before.
 
 Examples of `currentUser` as a param.
 
@@ -21,6 +21,9 @@ await query({
 })
 ```
 
+## 0.0.78-alpha.3 - 2021-10-01
+
+- 2021-10-01 -- SDK VSN 0.0.55
 - 2021-09-29 -- Update `pop` height
 - 2021-09-27 -- Add warning for using currentUser server side and turn off local and session storage if server side
 
