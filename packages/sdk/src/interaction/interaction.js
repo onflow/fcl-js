@@ -59,7 +59,8 @@ const ARG = `{
   "value":null,
   "asArgument":null,
   "xform":null,
-  "resolve": null
+  "resolve": null,
+  "resolveArgument": null
 }`
 
 const IX = `{
@@ -183,6 +184,7 @@ export const makeArgument = arg => ix => {
   ix.arguments[tempId].asArgument = arg.asArgument
   ix.arguments[tempId].xform = arg.xform
   ix.arguments[tempId].resolve = arg.resolve
+  ix.arguments[tempId].resolveArgument = arg.resolveArgument
 
   return Ok(ix)
 }

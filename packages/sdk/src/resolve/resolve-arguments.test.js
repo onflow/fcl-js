@@ -20,6 +20,7 @@ describe("resolveArguments", () => {
           asArgument: null,
           kind,
           resolve: undefined,
+          resolveArgument: undefined,
           tempId,
           value: argObj.value,
           xform: {
@@ -41,7 +42,8 @@ describe("resolveArguments", () => {
         [argID]: {
           asArgument: null,
           kind,
-          resolve: jest.fn().mockResolvedValue({
+          resolve: jest.fn(),
+          resolveArgument: jest.fn().mockResolvedValue({
             xform: {
               asArgument: () => argObj
             }
@@ -57,7 +59,8 @@ describe("resolveArguments", () => {
     }
 
     const res = await resolveArguments(ix)
-    expect(res.arguments[argID].resolve).toHaveBeenCalled()
+    expect(res.arguments[argID].resolve).not.toHaveBeenCalled()
+    expect(res.arguments[argID].resolveArgument).toHaveBeenCalled()
     expect(res.arguments[argID].asArgument).toEqual(argObj)
   })
 
@@ -75,11 +78,12 @@ describe("resolveArguments", () => {
         [argID]: {
           asArgument: null,
           kind,
-          resolve: jest.fn().mockResolvedValue({
+          resolve: undefined,
+          resolveArgument: jest.fn().mockResolvedValue({
             xform: {
               asArgument: () => argObj
             },
-            resolve: resolveTwo
+            resolveArgument: resolveTwo
           }),
           tempId,
           value: null,
@@ -92,7 +96,7 @@ describe("resolveArguments", () => {
     }
 
     const res = await resolveArguments(ix)
-    expect(res.arguments[argID].resolve).toHaveBeenCalled()
+    expect(res.arguments[argID].resolveArgument).toHaveBeenCalled()
     expect(resolveTwo).toHaveBeenCalled()
     expect(res.arguments[argID].asArgument).toEqual(argObj)
   })
@@ -104,17 +108,18 @@ describe("resolveArguments", () => {
         [argID]: {
           asArgument: null,
           kind,
-          resolve: jest.fn().mockResolvedValue({
+          resolve: undefined,
+          resolveArgument: jest.fn().mockResolvedValue({
             tempId: "1",
             xform: {
               asArgument: () => argObj
             },
-            resolve: jest.fn().mockResolvedValue({
+            resolveArgument: jest.fn().mockResolvedValue({
               tempId: "2",
               xform: {
                 asArgument: () => argObj
               },
-              resolve: jest.fn().mockResolvedValue({
+              resolveArgument: jest.fn().mockResolvedValue({
                 tempId: "3",
                 xform: {
                   asArgument: () => argObj
