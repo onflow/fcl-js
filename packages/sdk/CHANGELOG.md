@@ -2,6 +2,8 @@
 
 - YYYY-MM-DD **BREAKING?** -- Who: description
 
+## 0.0.55 -- 2021-10-01
+
 - 2021-09-30 -- [@chasefleming](https://github.com/chasefleming): Resolve asynchronous arguments with specific `resolveArgument` method over generic `resolve`
 
 Example of `resolveArgument` for async args.
