@@ -1,7 +1,8 @@
 import "../default-config"
-import {account, config} from "@onflow/sdk"
+import * as t from "@onflow/types"
+import {account, arg, config} from "@onflow/sdk"
 import {spawn, send, INIT, SUBSCRIBE, UNSUBSCRIBE} from "@onflow/util-actor"
-import {sansPrefix} from "@onflow/util-address"
+import {withPrefix, sansPrefix} from "@onflow/util-address"
 import {invariant} from "@onflow/util-invariant"
 import {uid} from "@onflow/util-uid"
 import {buildUser} from "./build-user"
@@ -241,6 +242,11 @@ async function info() {
   return account(addr)
 }
 
+async function resolveArgument() {
+  const {addr} = await authenticate()
+  return arg(withPrefix(addr), t.Address)
+}
+
 const makeSignable = msg => {
   invariant(/^[0-9a-f]+$/i.test(msg), "Message must be a hex string")
 
@@ -299,6 +305,7 @@ let currentUser = () => {
     verifyUserSignatures,
     subscribe,
     snapshot,
+    resolveArgument
   }
 }
 
@@ -309,5 +316,6 @@ currentUser.signUserMessage = signUserMessage
 currentUser.verifyUserSignatures = verifyUserSignatures
 currentUser.subscribe = subscribe
 currentUser.snapshot = snapshot
+currentUser.resolveArgument = resolveArgument
 
 export {currentUser}
