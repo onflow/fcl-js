@@ -4,7 +4,7 @@
 
 **Last Updated:** October 5th 2021
 
-FCL-JS is the easiest way to start building decentralized applications. FCL (aka Flow Client Library) wraps much of the logic you'd have to write yourself on other blockchains. Follow this quick start and you'll have a solid overview of how to ship a dapp on Flow.
+FCL-JS is the easiest way to start building decentralized applications. FCL (aka Flow Client Library) wraps much of the logic you'd have to write yourself on other blockchains. Follow this quick start and you'll have a solid overview of how to build a shippable dapp on Flow.
 
 We're going to make an assumption that you know or understand React, but the concepts should be easy to understand and transfer to another framework. While this tutorial will use Cadence (Flow's smart contract language), you do not need to know it, instead we recommend later diving into [learning the Cadence language](https://docs.onflow.org/cadence/) once you gotten the core FCL concepts down.
 
@@ -45,6 +45,8 @@ You should now see your React app running.
 ## Configuration
 
 The first thing you're going to want to do is configure your Dapp with FCL. Let's create a `config.js` file in the `src` directory and add the following.
+
+**Note**: These values are required to use FCL with your app.
 
 > **Create file:** `./src/config.js`
 ```javascript
@@ -129,7 +131,7 @@ function App() {
 export default App;
 ```
 
-You should now be able to log in or sign up a user and unauthenticate them. Upon logging in or signing up you'll see a popup where you can choose between wallet providers. Let's select the Blocto wallet for this example to create an account. Upon completing authentication, you'll see the component change and the user's wallet address appear on the screen if you've completed this properly.
+You should now be able to log in or sign up a user and unauthenticate them. Upon logging in or signing up you'll see a popup where you can choose between wallet providers. Let's select the [Blocto wallet](https://blocto.portto.io/) for this example to create an account. Upon completing authentication, you'll see the component change and the user's wallet address appear on the screen if you've completed this properly.
 
 ## Querying the Blockchain
 
@@ -245,11 +247,13 @@ Go ahead and click the "Send Query" button. You should see "No Profile." That's 
 
 ## Initializing the Account
 
-In order for an account to access and store resources (a profile being one of them) from a smart contract, the account needs to first give approval to Flow that's it's okay to do that.
+In order for a smart contract to access and store data in an account, the account needs to first give approval to Flow that's it's okay to do so. We do this by initializing what is called a "resource." A resource is an interface to the account state. You can store data/assets and expose functionality for accessing the data from this resource. This paradigm is known is as "resource-oriented-programming", a principle that is core to Cadence and differentiates its ownership model compared to other smart contract languages, [read more here](https://docs.onflow.org/cadence/#intuiting-ownership-with-resources). Cadence makes it so that this data only exists in one place at any time. It can't be copied.
 
-To do this account initialization, we're going to add another function called `initAccount`. Inside of that function, we're going to add some more potentially unfamiliar Cadence code which basically says, *"Hey, does this account have a profile? If it doesn't, let's add one."* We do that using something called a "transaction." Transactions occur when you want to change the state of the blockchain. And there is a cost in order to do that; unlike a query, which is read only.
+> There's a lot more to resources in Cadence than we'll cover in this guide, so if you'd like to know more, check out [this Cadence intro](https://docs.onflow.org/cadence/).
 
-That's where we jump back into FCL code. Instead of `query`, we use `mutate` for transactions. And because there is a cost, we need to add a few fields that tell Flow who is proposing the transaction, who is authorizing it, who is paying for it, and how much they're willing to pay for it. Those fields — not surprisingly — are called: `payer`, `proposer`, `authorizations`, and `limit`.
+To do this resource initialization on an account, we're going to add another function called `initAccount`. Inside of that function, we're going to add some more potentially unfamiliar Cadence code which basically says, *"Hey, does this account have a profile? If it doesn't, let's add one."* We do that using something called a "transaction." Transactions occur when you want to change the state of the blockchain. And there is a cost in order to do that; unlike a query, which is read only.
+
+That's where we jump back into FCL code. Instead of `query`, we use `mutate` for transactions. And because there is a cost, we need to add a few fields that tell Flow who is proposing the transaction, who is authorizing it, who is paying for it, and how much they're willing to pay for it. Those fields — not surprisingly — are called: `payer`, `proposer`, `authorizations`, and `limit`. For more information on these signatory roles, check out [this doc](https://docs.onflow.org/concepts/transaction-signing/#signer-roles).
 
 Let's take a look at what our account initialization function looks like:
 
