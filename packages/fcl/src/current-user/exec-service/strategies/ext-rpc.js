@@ -3,13 +3,20 @@ import {extension} from "./utils/extension"
 import {normalizePollingResponse} from "../../normalize/polling-response"
 import {configLens} from "../../../config-utils"
 
+export function extInstalled(endpoint) {
+  const extensions = window.fcl_extensions || []
+  return (
+    window[endpoint]?.onFlow != null &&
+    extensions.some(ext => ext.endpoint === endpoint)
+  )
+}
+
 export function execExtRPC(service, body, opts) {
   return new Promise((resolve, reject) => {
-    const extensions = window.fcl_extensions || []
-    const extInstalled = ext =>
-      extensions.includes(ext) && window[ext].onflow != null
-
-    invariant(extInstalled(service.endpoint), "No extension found")
+    invariant(
+      extInstalled(service.endpoint),
+      `${service.endpoint} extension not installed`
+    )
 
     extension(service, {
       async onReady(_, {send}) {
@@ -45,6 +52,11 @@ export function execExtRPC(service, body, opts) {
 
             case "DECLINED":
               reject(`Declined: ${resp.reason || "No reason supplied"}`)
+              close()
+              break
+
+            case "REDIRECT":
+              resolve(resp.data)
               close()
               break
 

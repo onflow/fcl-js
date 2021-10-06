@@ -5,7 +5,7 @@ import {normalizeFrame} from "./frame"
 // {
 //    "f_type": "PollingResponse",
 //    "f_vsn": "1.0.0",
-//    "status": "PENDING", // PENDING | APPROVED | DECLINED
+//    "status": "PENDING", // PENDING | APPROVED | DECLINED | REDIRECT
 //    "reason": null,      // Reason for Declining Transaction
 //    "data": null,        // Return value for APPROVED
 //    "updates": BackChannelRpc,
@@ -13,9 +13,6 @@ import {normalizeFrame} from "./frame"
 // }
 export function normalizePollingResponse(resp) {
   if (resp == null) return null
-  if (!!resp.addr || !!resp.services) {
-    resp = {status: "APPROVED", data: {...resp}}
-  }
 
   switch (resp["f_vsn"]) {
     case "1.0.0":
@@ -24,9 +21,9 @@ export function normalizePollingResponse(resp) {
     default:
       return {
         ...POLLING_RESPONSE_PRAGMA,
-        status: resp.status,
+        status: resp.status ?? "APPROVED",
         reason: resp.reason ?? null,
-        data: resp.compositeSignature || resp.data || {},
+        data: resp.compositeSignature || resp.data || {...resp} || {},
         updates: normalizeBackChannelRpc(resp.authorizationUpdates),
         local: normalizeFrame((resp.local || [])[0]),
       }

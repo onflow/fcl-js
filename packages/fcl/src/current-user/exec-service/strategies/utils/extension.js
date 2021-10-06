@@ -36,13 +36,6 @@ export async function extension(service, opts = {}) {
   const onReady = opts.onReady || noop
   const onResponse = opts.onResponse || noop
 
-  await window[ext].onflow.enable()
-  window.addEventListener(
-    "message",
-    buildInternal({close, send, onReady, onResponse, onMessage})
-  )
-  return {send, close}
-
   function close() {
     try {
       window.removeEventListener("message", buildInternal)
@@ -59,4 +52,11 @@ export async function extension(service, opts = {}) {
       console.error("Extension Send Error", msg, error)
     }
   }
+
+  window.addEventListener(
+    "message",
+    buildInternal({close, send, onReady, onResponse, onMessage})
+  )
+  await window[ext].onflow.enable()
+  return {send, close}
 }
