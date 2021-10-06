@@ -239,7 +239,7 @@ await fcl.query({
 })
 ```
 
-Inside the query you'll see we set two things: `cadence` and `args`. Cadence is Flow's smart contract language we mentioned above. For this tutorial, when you look at it you just need to notice that it's importing the Profile contract from the account we named `0xProfile` earlier in our config file, then taking an account address, and reading it. That's it until you're ready to [learn more Cadence](https://docs.onflow.org/cadence/tutorial/01-first-steps/).
+Inside the query you'll see we set two things: `cadence` and `args`. Cadence is Flow's smart contract language we mentioned. For this tutorial, when you look at it you just need to notice that it's importing the `Profile` contract from the account we named `0xProfile` earlier in our config file, then also taking an account address, and reading it. That's it until you're ready to [learn more Cadence](https://docs.onflow.org/cadence/tutorial/01-first-steps/).
 
 In the `args` section, we are simply passing it our user's account address from the user we set in state after authentication and giving it a type of `Address`.  For more possible types, [see this reference](https://docs.onflow.org/fcl/reference/api/#ftype).
 
