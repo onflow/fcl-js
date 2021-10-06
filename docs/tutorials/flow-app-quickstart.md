@@ -4,11 +4,11 @@
 
 **Last Updated:** October 5th 2021
 
-Flow FCL is the easiest way to start building decentralized applications. FCL (aka Flow Client Library) wraps much of the logic you'd have to write yourself on other blockchains. Follow this quick start guide and you'll have a shippable dapp by the end of this tutorial.
+FCL-JS is the easiest way to start building decentralized applications. FCL (aka Flow Client Library) wraps much of the logic you'd have to write yourself on other blockchains. Follow this quick start and you'll have a solid overview of how to ship a dapp on Flow.
 
-We're going to make an assumption that you know or understand React, but the concepts should be easy to understand and transfer to another framework. 
+We're going to make an assumption that you know or understand React, but the concepts should be easy to understand and transfer to another framework. While this tutorial will use Cadence (Flow's smart contract language), you do not need to know it, instead we recommend later diving into [learning the Cadence language](https://docs.onflow.org/cadence/) once you gotten the core FCL concepts down.
 
-In this tutorial, we are going to create and edit a user profile via an already created smart contract. In order to do this, the FCL concepts we'll cover are:
+In this tutorial, we are going to interact with an existing smart contract on Flow's testnet known as the [Profile Contract](https://testnet.flowscan.org/contract/A.ba1132bc08f82fe2.Profile). Using this contract, we will create a new profile and edit the profile information, both via a wallet. In order to do this, the FCL concepts we'll cover are:
 
 - Installation
 - Configuration
@@ -44,27 +44,10 @@ You should now see your React app running.
 
 ## Configuration
 
-Go ahead and replace the generated app home page with the following:
+The first thing you're going to want to do is configure your Dapp with FCL. Let's create a `config.js` file in the `src` directory and add the following.
 
+> **Create file:** `./src/config.js`
 ```javascript
-// File ./src/App.js
-
-function App() {
-  return (
-    <div>
-      <h1>Flow App</h1>
-    </div>
-  );
-}
-
-export default App;
-```
-
-The next thing you're going to want to do is configure your Dapp with FCL. Let's create a `config.js` file in the `src` directory and add the following. (Tip: It's recommend to replace these values with environment variables for easy deployments across different environments like development/production or Testnet/Mainnet).
-
-```javascript
-// File: ./src/config.js
-
 import { config } from "@onflow/fcl"
 
 config({
@@ -72,20 +55,16 @@ config({
   "discovery.wallet": "https://fcl-discovery.onflow.org/testnet/authn"
 })
 ```
+📣 **Tip**: It's recommend to replace these values with environment variables for easy deployments across different environments like development/production or Testnet/Mainnet.
 
-The `accessNode.api` key specifies which node we'd like to communicate with on the blockchain and `discovery.wallet` tells FCL the wallet we'd like to use. In this case, we're using Flow FCL's Discovery protocol to find all available wallets for a user. Flow's FCL Discovery service is an open-source service for wallet providers on Flow can add themselves and make themselves 'discoverable' to any dapp that uses the discovery.wallet endpoint.
+The `accessNode.api` key specifies which node we'd like to communicate with on the blockchain and `discovery.wallet` tells FCL the wallet we'd like to use. In this case, we're using Flow FCL's Discovery protocol to find all available wallets for a user. Flow's FCL Discovery service is an open-source service for wallet providers on Flow can add themselves and make themselves 'discoverable' to any dapp that uses the discovery.wallet endpoint. Learn more about configuration values [here](https://docs.onflow.org/fcl/reference/api/#setting-configuration-values).
 
-To finish configuring our dapp, let's import the config file into the top of our `App.js` file:
+To finish configuring our dapp, let's import the config file into the top of our `App.js` file, then swap out the default component in `App.js` to look like this:
 
+> **Replace file:** `./src/App.js`
 ```javascript
-// File ./src/App.js
-
 import "./config"
-```
 
-Let's then swap out the default component in `App.js` to look like this
-
-```javascript
 function App() {
   return (
     <div>
@@ -101,11 +80,13 @@ Now we're ready to start talking to Flow!
 
 ## Authentication
 
-To authenticate a user, all an app has to do is call `fcl.logIn()`. Sign up and unauthenticate are all also as simple as `fcl.signUp()` and `fcl.unauthenticate()`.  Once authenticated, FCL returns an object called `currentUser` which exposes methods for watching user data, singing transactions, and more. For more information on what you can do with `currentUser`, [check out the quick reference](../api). 
-Let's add in a few buttons for sign up/login and also subscribe to changes on the `currentUser`. When the user is updated, we'll set the user state in our component. To demonstrate user authenticated sessions, we'll conditionally render a component if the user is or is not logged in.
+To authenticate a user, all an app has to do is call `fcl.logIn()`. Sign up and unauthenticate are all also as simple as `fcl.signUp()` and `fcl.unauthenticate()`.  Once authenticated, FCL sets an object called `fcl.currentUser` which exposes methods for watching changes in user data, singing transactions, and more. For more information on the `currentUser`, read more [here](https://docs.onflow.org/fcl/reference/api/#current-user).
+
+Let's add in a few buttons for sign up/login and also subscribe to changes on the `currentUser`. When the user is updated (which it will be after authentication), we'll set the user state in our component to reflect this. To demonstrate user authenticated sessions, we'll conditionally render a component based on if the user is or is not logged in.
 
 This is what your file should look like now:
 
+> **Replace file:** `./src/App.js`
 ```javascript
 import "./config"
 import { useState, useEffect } from "react"
@@ -154,9 +135,8 @@ You should now be able to log in or sign up a user and unauthenticate them. Upon
 
 One of the main things you'll often need to do when building a dapp is query the Flow blockchain and the smart contracts deployed on it for data. Since smart contracts will live on both Testnet and Mainnet, let's put the account address where the smart contract lives into the configuration (remember, it's recommended that you change this later to use environment variables). Let's also give it a key of `Profile` and prefix it with `0x` so that the final key is `0xProfile`. The prefix is important because it tells FCL to pull the corresponding addresses needed from the configuration value.
 
+> **Replace file:** `./src/config.js`
 ```javascript
-// File: ./src/config.js
-
 import { config } from "@onflow/fcl"
 
 config({
@@ -166,12 +146,19 @@ config({
 })
 ```
 
-If you want to see the on chain smart contract we'll be speaking with next, you can [view the source here](https://flow-view-source.com/testnet/account/0xba1132bc08f82fe2/contract/Profile), but for this tutorial it's not necessary you understand it. We recommend later diving into [learning the Cadence language](https://docs.onflow.org/cadence/) used to write the smart contract once you gotten the core FCL concepts down.
+If you want to see the on chain smart contract we'll be speaking with next, you can view the [Profile Contract](https://testnet.flowscan.org/contract/A.ba1132bc08f82fe2.Profile) source code but again for this tutorial it's not necessary you understand it.
 
-The first thing we are going to do is query to see what the user's profile name is. A few things need to happen in order to do that: we need to import the contract, pass it the user's account address as an argument, call it with `fcl.query`, and set the result to state in React so we can display the profile name in our browser. We also want it to display "No Profile" if one was not found.
+**The first thing we are going to do is query to see what the user's profile name is from the contract.** 
 
-Take a look at the new code and we'll explain each new piece after. Remember, the cadence code is a separate language from JavaScript used to write smart contracts, so to learn FCL in this tutorial it's okay you only glance at that. You'll find other links for learning Cadence later.
+A few things need to happen in order to do that: 
+1. We need to import the contract and pass it the user's account address as an argument.
+2. Call it with `fcl.query`.
+3. Set the result to the app state in React so we can display the profile name in our browser.
+4. Display "No Profile" if one was not found.
 
+Take a look at the new code and we'll explain each new piece after. Remember, the cadence code is a separate language from JavaScript used to write smart contracts, so to learn FCL in this tutorial it's okay you only glance at that.
+
+> **Replace file:** `./src/App.js`
 ```javascript
 import "./config"
 import { useState, useEffect } from "react"
@@ -252,7 +239,7 @@ await fcl.query({
 
 Inside the query you'll see we set two things: `cadence` and `args`. Cadence is Flow's smart contract language we mentioned above. For this tutorial, when you look at it you just need to notice that it's importing the Profile contract from the account we named `0xProfile` earlier in our config file, then taking an account address, and reading it. That's it until you're ready to [learn more Cadence](https://docs.onflow.org/cadence/tutorial/01-first-steps/).
 
-In the `args` section, we are simply passing it our user's account address from the user we set in state after authentication and giving it a type of `Address`.  For more possible types, [see this reference](../api/#ftype).
+In the `args` section, we are simply passing it our user's account address from the user we set in state after authentication and giving it a type of `Address`.  For more possible types, [see this reference](https://docs.onflow.org/fcl/reference/api/#ftype).
 
 Go ahead and click the "Send Query" button. You should see "No Profile." That's because we haven't initialized the account yet.
 
@@ -296,12 +283,13 @@ const initAccount = async () => {
 }
 ```
 
-You can see the new fields we talked about. You'll also notice `fcl.authz`. That's shorthand for use the current user (you could also write it as `fcl.currentUser.authorization`. If you want to learn more about transactions and signing transactions, you can [view the docs here](../transactions/). For this example, we'll keep it simple with the user being each of these roles.
+You can see the new fields we talked about. You'll also notice `fcl.authz`. That's shorthand for use the current user (you could also write it as `fcl.currentUser.authorization`). If you want to learn more about transactions and signing transactions, you can [view the docs here](https://docs.onflow.org/concepts/accounts-and-keys/#signing-a-transaction). For this example, we'll keep it simple with the user being each of these roles.
 
 You'll also notice we are awaiting a response with our transaction data by using the syntax `fcl.tx(transactionId).onceSealed()`. This will return when the blockchain has sealed the transaction and it's complete in processing it and verifying it.
 
 Now your `App.js` file should look like this (we also added a button for calling the `initAccount` function in the `AuthedState`):
 
+> **Replace file:** `./src/App.js`
 ```javascript
 import "./config"
 import { useState, useEffect } from "react"
@@ -392,7 +380,7 @@ function App() {
 export default App;
 ```
 
-If you go ahead and press the "Init Account" button you should see the wallet ask you to approve a transaction. After clicking it, you will see a transaction response appear in your console (make sure to have that open). It may take a few moments.
+If you go ahead and press the "Init Account" button you should see the wallet ask you to approve a transaction. After clicking it, you will see a transaction response appear in your console (make sure to have that open). It may take a few moments. With the transaction result printed, you can use the `transactionId` to look up the details of the transaction the chain has stored via this [block explorer](https://testnet.flowscan.org).
 
 ## Mutating the Blockchain
 
@@ -431,6 +419,7 @@ Here you can see our argument is "Flow Developer" and at the bottom we've called
 
 Let's see how that works inside our whole `App.js` file. But, let's also set the statuses to our React component's state so we can see on screen what state we're in.
 
+> **Replace file:** `./src/App.js`
 ```javascript
 import "./config"
 import { useState, useEffect } from "react"
@@ -547,14 +536,22 @@ function App() {
 export default App;
 ```
 
-Now if you click the "Execute Transaction" button you'll see the statuses update next to "Transaction Status." When you see "4" that means it's sealed! Status code meanings [can be found here](../api/#transaction-statuses).
+Now if you click the "Execute Transaction" button you'll see the statuses update next to "Transaction Status." When you see "4" that means it's sealed! Status code meanings [can be found here](https://docs.onflow.org/fcl/reference/api/#transaction-statuses).
 
-That's it! You now have a shippable Flow dapp that can auth, query, init accounts, and mutate the chain. This is just the beginning. There is so much more to know. We have a lot more resources to help you build. To dive deeper, here are a few good places for taking the next step:
+That's it! You now have a shippable Flow dapp that can auth, query, init accounts, and mutate the chain. This is just the beginning. There is so much more to know. We have a lot more resources to help you build. To dive deeper, here are a few good places for taking the next steps:
 
-- [FCL API Quick Reference](../api)
-- [More on Scripts](../scripts)
-- [More on Transactions](../transactions)
-- [User Signatures](../user-signatures)
-- [Example Flow App](https://github.com/onflow/kitty-items)
-- [Why Cadence](https://www.onflow.org/post/flow-blockchain-cadence-programming-language-resources-assets)
-- [Learning Cadence](https://docs.onflow.org/cadence/)
+**Cadence**
+- [Cadence Playground Tutorials](https://docs.onflow.org/cadence/tutorial/01-first-steps/)
+- [Cadence Hello World Video](https://www.youtube.com/watch?v=pRz7EzrWchs)
+- [Why Cadence?](https://www.onflow.org/post/flow-blockchain-cadence-programming-language-resources-assets)
+
+**Full Stack NFT Marketplace Example**
+- [Beginner Example: CryptoDappy](https://github.com/bebner/crypto-dappy)
+- [Advanced Example: Kitty Items](https://github.com/onflow/kitty-items)
+
+**More FCL**
+- [FCL API Quick Reference](https://docs.onflow.org/fcl/reference/api/)
+- [More on Scripts](https://docs.onflow.org/fcl/reference/scripts/)
+- [More on Transactions](https://docs.onflow.org/fcl/reference/transactions/)
+- [User Signatures](https://docs.onflow.org/fcl/reference/user-signatures/)
+- [Proving Account Ownership](https://docs.onflow.org/fcl/reference/proving-authentication/)
