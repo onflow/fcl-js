@@ -59,7 +59,10 @@ config({
 ```
 📣 **Tip**: It's recommend to replace these values with environment variables for easy deployments across different environments like development/production or Testnet/Mainnet.
 
-The `accessNode.api` key specifies which node we'd like to communicate with on the blockchain and `discovery.wallet` tells FCL the wallet we'd like to use. In this case, we're using Flow FCL's Discovery protocol to find all available wallets for a user. Flow's FCL Discovery service is an open-source service for wallet providers on Flow can add themselves and make themselves 'discoverable' to any dapp that uses the discovery.wallet endpoint. Learn more about configuration values [here](https://docs.onflow.org/fcl/reference/api/#setting-configuration-values).
+The `accessNode.api` key specifies the address of a Flow access node. Flow provides these, but in the future access to Flow may be provided by other 3rd parties, through their own access nodes.
+`discovery.wallet` is an address that points to a service that lists FCL compatible wallets. Flow's FCL Discovery service is an open-source service that Flow wallet providers can add themselves to, and make themselves 'discoverable' to any dapp that uses the `discovery.wallet` endpoint. Any wallet that implements FCL's wallet discovery protocol can be added to the service.
+
+Learn more about configuration values [here](https://docs.onflow.org/fcl/reference/api/#setting-configuration-values).
 
 To finish configuring our dapp, let's import the config file into the top of our `App.js` file, then swap out the default component in `App.js` to look like this:
 
