@@ -32,6 +32,7 @@ export function execIframeRPC(service, body, opts) {
             service: {
               params: service.params,
               data: service.data,
+              type: service.type,
             },
             config: {
               services: await configLens(/^service\./),
@@ -75,6 +76,11 @@ export function execIframeRPC(service, body, opts) {
               close()
               break
 
+            case "REDIRECT":
+              resolve(resp.data)
+              close()
+              break
+
             default:
               reject(`Declined: No reason supplied`)
               close()
@@ -101,6 +107,11 @@ export function execIframeRPC(service, body, opts) {
 
             case "DECLINED":
               reject(`Declined: ${resp.reason || "No reason supplied"}`)
+              close()
+              break
+            
+            case "REDIRECT":
+              resolve(resp.data)
               close()
               break
 

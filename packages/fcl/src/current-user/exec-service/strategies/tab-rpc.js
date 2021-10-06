@@ -32,6 +32,7 @@ export function execTabRPC(service, body, opts) {
             service: {
               params: service.params,
               data: service.data,
+              type: service.type,
             },
             config: {
               services: await configLens(/^service\./),
@@ -71,6 +72,11 @@ export function execTabRPC(service, body, opts) {
               close()
               break
 
+            case "REDIRECT":
+              resolve(resp.data)
+              close()
+              break
+
             default:
               reject(`Declined: No reason supplied`)
               close()
@@ -100,6 +106,11 @@ export function execTabRPC(service, body, opts) {
               close()
               break
 
+            case "REDIRECT":
+              resolve(resp.data)
+              close()
+              break
+              
             default:
               reject(`Declined: No reason supplied`)
               close()
