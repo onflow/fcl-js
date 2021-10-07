@@ -290,7 +290,7 @@ const initAccount = async () => {
 }
 ```
 
-You can see the new fields we talked about. You'll also notice `fcl.authz`. That's shorthand for "use the current user", (you could also write it as `fcl.currentUser.authorization`). If you want to learn more about transactions and signing transactions, you can [view the docs here](https://docs.onflow.org/concepts/accounts-and-keys/#signing-a-transaction). For this example, we'll keep it simple with the user being each of these roles.
+You can see the new fields we talked about. You'll also notice `fcl.authz`. That's shorthand for "use the current user to authorize this transaction", (you could also write it as `fcl.currentUser.authorization`). If you want to learn more about transactions and signing transactions, you can [view the docs here](https://docs.onflow.org/concepts/accounts-and-keys/#signing-a-transaction). For this example, we'll keep it simple with the user being each of these roles.
 
 You'll also notice we are awaiting a response with our transaction data by using the syntax `fcl.tx(transactionId).onceSealed()`. This will return when the blockchain has sealed the transaction and it's complete in processing it and verifying it.
 
