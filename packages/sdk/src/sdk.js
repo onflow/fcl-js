@@ -31,7 +31,7 @@ export {
   isGetBlockHeader,
   isGetCollection,
 } from "./interaction/interaction.js"
-export {createSignableVoucher} from "./resolve/voucher.js"
+export {createSignableVoucher, voucherToTxId} from "./resolve/voucher.js"
 export {encodeMessageFromSignable} from "./wallet-utils/encode-signable.js"
 export {template as cadence} from "@onflow/util-template"
 export {template as cdc} from "@onflow/util-template"
@@ -66,6 +66,7 @@ export {script} from "./build/build-script.js"
 export {transaction} from "./build/build-transaction.js"
 export {validator} from "./build/build-validator.js"
 export {invariant} from "./build/build-invariant.js"
+export {preSendCheck} from "./build/build-pre-send-check.js"
 
 // Resolvers
 export {resolveCadence} from "./resolve/resolve-cadence.js"
@@ -76,6 +77,7 @@ export {resolveAccounts} from "./resolve/resolve-accounts.js"
 export {resolveSignatures} from "./resolve/resolve-signatures.js"
 export {resolveValidators} from "./resolve/resolve-validators.js"
 export {resolveRefBlockId} from "./resolve/resolve-ref-block-id.js"
+export {resolvePreSendCheck} from "./resolve/resolve-pre-send-check.js"
 
 // Config
 export {config} from "./config"

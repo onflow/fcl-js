@@ -7,6 +7,8 @@ import {payer} from "../build/build-payer.js"
 import {ref} from "../build/build-ref.js"
 import {authorizations} from "../build/build-authorizations.js"
 
+import {preSendCheck} from "../build/build-pre-send-check.js"
+import {voucherToTxId} from "../resolve/voucher.js"
 import {resolve} from "../resolve/resolve.js"
 
 const jsonToUInt8Array = (json) => {
@@ -82,7 +84,10 @@ describe("Transaction", () => {
                         roles: { proposer: true, authorizer: true, payer: true, param: false },
                     }
                 ]),
-                ref("abc123")
+                ref("abc123"),
+                preSendCheck(async voucher => {
+                    voucherToTxId(voucher)
+                }),
             ])
         ),
         {

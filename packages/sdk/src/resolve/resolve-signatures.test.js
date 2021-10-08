@@ -9,6 +9,7 @@ import {
   limit,
   authorizations,
   authorization,
+  preSendCheck,
 } from "../sdk.js"
 
 const signingFunction = jest.fn(() => ({
@@ -71,6 +72,7 @@ test("voucher in signable", async () => {
         sequenceNum: 123,
       }),
       ref("123"),
+      preSendCheck(async () => {}),
     ])
   )
 
