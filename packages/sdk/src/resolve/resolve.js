@@ -15,6 +15,7 @@ import {resolveAccounts} from "./resolve-accounts.js"
 import {resolveSignatures} from "./resolve-signatures.js"
 import {resolveValidators} from "./resolve-validators.js"
 import {resolveFinalNormalization} from "./resolve-final-normalization.js"
+import {resolvePreSendCheck} from "./resolve-pre-send-check.js"
 
 const noop = v => v
 const debug = (key, fn = noop) => async ix => {
@@ -56,6 +57,7 @@ export const resolve = pipe([
   debug("signatures", (ix, log, accts) => log(...accts(ix))),
   resolveFinalNormalization,
   resolveValidators,
+  resolvePreSendCheck,
   debug("resolved", (ix, log) => log(ix)),
 ])
 

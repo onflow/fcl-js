@@ -1,6 +1,6 @@
 const merge = require("deepmerge")
 
-import {encodeTransactionPayload, encodeTransactionEnvelope} from "./encode.js"
+import {encodeTransactionPayload, encodeTransactionEnvelope, encodeTxIdFromVoucher} from "./encode.js"
 import * as root from "./encode.js"
 
 it("export contract interface", () => {
@@ -8,6 +8,7 @@ it("export contract interface", () => {
     expect.objectContaining({
       encodeTransactionPayload: expect.any(Function),
       encodeTransactionEnvelope: expect.any(Function),
+      encodeTxIdFromVoucher: expect.any(Function),
     })
   )
 })
@@ -238,6 +239,197 @@ describe("encode transaction", () => {
       test.each(validEnvelopeCases)("%s", (_, tx, expectedEnvelope) => {
         expect(encodeTransactionEnvelope(tx)).toBe(expectedEnvelope)
       })
+    })
+  })
+})
+
+const baseVoucher = {
+  cadence: `transaction { execute { log("Hello, World!") } }`,
+  arguments: [],
+  refBlock: "f0e4c2f76c58916ec258f246851bea091d14d4247a2fc3e18694461b1816e13b",
+  computeLimit: 42,
+  proposalKey: {
+    address: "01",
+    keyId: 4,
+    sequenceNum: 10,
+  },
+  payer: "01",
+  authorizers: ["01"],
+  payloadSigs: [
+    {
+      address: "01",
+      keyId: 4,
+      sig: "f7225388c1d69d57e6251c9fda50cbbf9e05131e5adb81e5aa0422402f048162",
+    },
+  ],
+  envelopeSigs: [],
+}
+
+const buildVoucher = partialVoucher =>
+  merge(baseVoucher, partialVoucher, {arrayMerge: combineMerge})
+
+describe("encode txId from voucher", () => {
+  const invalidPayloadCases = [
+    ["empty", {}],
+    ["non-object", "foo"],
+
+    ["null cadence", buildVoucher({cadence: null})],
+    ["null computeLimit", buildVoucher({computeLimit: null})],
+    ["null proposalKey", buildVoucher({proposalKey: null})],
+    ["null proposalKey.address", buildVoucher({proposalKey: {address: null}})],
+    ["null proposalKey.keyId", buildVoucher({proposalKey: {keyId: null}})],
+    [
+      "null proposalKey.sequenceNum",
+      buildVoucher({proposalKey: {sequenceNum: null}}),
+    ],
+    ["null payer", buildVoucher({payer: null})],
+    ["null authorizers", buildVoucher({authorizers: null})],
+
+    ["non-string cadence", buildVoucher({cadence: 42})],
+    ["non-string refBlock", buildVoucher({refBlock: 42})],
+    ["non-number computeLimit", buildVoucher({computeLimit: "foo"})],
+    ["non-object proposalKey", buildVoucher({proposalKey: "foo"})],
+    ["non-string proposalKey.address", buildVoucher({proposalKey: {address: 42}})],
+    ["non-number proposalKey.keyId", buildVoucher({proposalKey: {keyId: "foo"}})],
+    [
+      "non-number proposalKey.sequenceNum",
+      buildVoucher({proposalKey: {sequenceNum: "foo"}}),
+    ],
+    ["non-string payer", buildVoucher({payer: 42})],
+    ["non-array authorizers", buildVoucher({authorizers: {}})],
+  ]
+
+  const invalidPayloadSigsCases = [
+    ["null payloadSigs", buildVoucher({payloadSigs: null})],
+    ["null payloadSigs.0.address", buildVoucher({payloadSigs: [{address: null}]})],
+    ["null payloadSigs.0.keyId", buildVoucher({payloadSigs: [{keyId: null}]})],
+    ["null payloadSigs.0.sig", buildVoucher({payloadSigs: [{sig: null}]})],
+
+    ["non-array payloadSigs", buildVoucher({payloadSigs: {}})],
+    [
+      "non-string payloadSigs.0.address",
+      buildVoucher({payloadSigs: [{address: 42}]}),
+    ],
+    [
+      "non-number payloadSigs.0.keyId",
+      buildVoucher({payloadSigs: [{keyId: "foo"}]}),
+    ],
+    ["non-string payloadSigs.0.sig", buildVoucher({payloadSigs: [{sig: 42}]})],
+  ]
+
+  const invalidEnvelopeSigsCases = [
+    ["null envelopeSigs", buildVoucher({envelopeSigs: null})],
+    ["null envelopeSigs.0.address", buildVoucher({envelopeSigs: [{address: null}]})],
+    ["null envelopeSigs.0.keyId", buildVoucher({envelopeSigs: [{keyId: null}]})],
+    ["null envelopeSigs.0.sig", buildVoucher({envelopeSigs: [{sig: null}]})],
+
+    ["non-array envelopeSigs", buildVoucher({envelopeSigs: {}})],
+    [
+      "non-string envelopeSigs.0.address",
+      buildVoucher({envelopeSigs: [{address: 42}]}),
+    ],
+    [
+      "non-number envelopeSigs.0.keyId",
+      buildVoucher({envelopeSigs: [{keyId: "foo"}]}),
+    ],
+    ["non-string envelopeSigs.0.sig", buildVoucher({envelopeSigs: [{sig: 42}]})],
+  ]
+
+  // Test case format:
+  // [
+  //   <test name>,
+  //   <tx obj>,
+  //   <tx id>, // These values are calculated using Flow Go SDK test code.
+  // ]
+  const validCases = [
+    [
+      "complete tx",
+      buildVoucher({}),
+      "118d6462f1c4182501d56f04a0cd23cf685283194bb316dceeb215b353120b2b"
+    ],
+    [
+      "complete tx with envelope sig",
+      buildVoucher({envelopeSigs: [{ address: "01", keyId: 4, sig: "f7225388c1d69d57e6251c9fda50cbbf9e05131e5adb81e5aa0422402f048162"}]}),
+      "363172029cc6bfc5df3f99e84393e82b6c11e2a920c0e8c3229d077ae8bc31f7"
+    ],
+    [
+      "empty cadence",
+      buildVoucher({cadence: ""}),
+      "41dbbb83852ec8aa84dbeff03e29c0ed9c4a17b374eb0aa81695d83ccb344faf",
+    ],
+    [
+      "null refBlock",
+      buildVoucher({refBlock: null}),
+      "b01ac14da3e2a64e4c2e0a341ae2da832ff366b4c18b665fdd1fb5837e6128e0",
+    ],
+    [
+      "zero computeLimit",
+      buildVoucher({computeLimit: 0}),
+      "c149bf2077e174ccbf190f28eecda915f355333afb247f5c2ec44c2d041faf64",
+    ],
+    [
+      "zero proposalKey.key",
+      buildVoucher({proposalKey: {keyId: 0}}),
+      "1627bf4a626af55e0230b466b3828cb54822e53585f704e99a37abbbe6fbe51a",
+    ],
+    [
+      "zero proposalKey.sequenceNum",
+      buildVoucher({proposalKey: {sequenceNum: 0}}),
+      "3e9541ecee13b87a1c7be5e9ef0a00e4d48937a6f3df25167ffab2d4b4c846f4",
+    ],
+    [
+      "multiple authorizers",
+      buildVoucher({authorizers: ["01", "02"]}),
+      "6c4b45769cabadf30a103693195845ae633907f701cdcfa775bb830b6c80cb5b",
+    ],
+    [
+      "empty payloadSigs",
+      buildVoucher({payloadSigs: []}),
+      "c56b673a57fb94d546b9c30ac637d20021d04faf046e2cd5ea32591b7175794e"
+    ],
+    [
+      "out-of-order payloadSigs -- by signer",
+      buildVoucher({
+        authorizers: ["01", "02", "03"],
+        payloadSigs: [
+          {address: "03", keyId: 0, sig: "f7225388c1d69d57e6251c9fda50cbbf9e05131e5adb81e5aa0422402f048162"},
+          {address: "01", keyId: 0, sig: "f7225388c1d69d57e6251c9fda50cbbf9e05131e5adb81e5aa0422402f048162"},
+          {address: "02", keyId: 0, sig: "f7225388c1d69d57e6251c9fda50cbbf9e05131e5adb81e5aa0422402f048162"},
+        ],
+      }),
+      "b67576744b0d051ba81e4d6635a47b9c8973b3adc7410bcd213880d5094b264a"
+    ],
+    [
+      "out-of-order payloadSigs -- by key ID",
+      buildVoucher({
+        authorizers: ["01"],
+        payloadSigs: [
+          {address: "01", keyId: 2, sig: "f7225388c1d69d57e6251c9fda50cbbf9e05131e5adb81e5aa0422402f048162"},
+          {address: "01", keyId: 0, sig: "f7225388c1d69d57e6251c9fda50cbbf9e05131e5adb81e5aa0422402f048162"},
+          {address: "01", keyId: 1, sig: "f7225388c1d69d57e6251c9fda50cbbf9e05131e5adb81e5aa0422402f048162"},
+        ],
+      }),
+      "183a74ecc0782fbffc364cac0c404ee01144ae258841b806a6274259bfc7ef8b"
+    ],
+  ]
+
+  describe("invalid", () => {
+    test.each(invalidPayloadCases)("%s", (_, voucher) => {
+      expect(() => encodeTxIdFromVoucher(voucher)).toThrow()
+    })
+
+    test.each(invalidPayloadSigsCases)("%s", (_, voucher) => {
+      expect(() => encodeTxIdFromVoucher(voucher)).toThrow()
+    })
+
+    test.each(invalidEnvelopeSigsCases)("%s", (_, voucher) => {
+      expect(() => encodeTxIdFromVoucher(voucher)).toThrow()
+    })
+  })
+
+  describe("valid", () => {
+    test.each(validCases)("%s", (_, voucher, expectedTxId) => {
+      expect(encodeTxIdFromVoucher(voucher)).toBe(expectedTxId)
     })
   })
 })

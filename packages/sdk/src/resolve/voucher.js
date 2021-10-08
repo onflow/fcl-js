@@ -1,4 +1,5 @@
 import {withPrefix} from "@onflow/util-address"
+import {encodeTxIdFromVoucher} from "../encode/encode.js"
 
 export function findInsideSigners(ix) {
   // Inside Signers Are: (authorizers + proposer) - payer
@@ -53,4 +54,9 @@ export const createSignableVoucher = ix => {
     payloadSigs: buildInsideSigners(),
     envelopeSigs: buildOutsideSigners(),
   }
+}
+
+export const voucherToTxId = voucher => {
+  // ref. https://github.com/onflow/flow-go-sdk/blob/d794a2/transaction.go#L119
+  return encodeTxIdFromVoucher(voucher)
 }

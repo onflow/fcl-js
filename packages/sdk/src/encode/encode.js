@@ -1,7 +1,10 @@
-import { encode } from '@onflow/rlp';
+import { SHA3 } from "sha3"
+import { encode } from "@onflow/rlp"
+import { sansPrefix } from "@onflow/util-address"
 
 export const encodeTransactionPayload = tx => prependTransactionDomainTag(rlpEncode(preparePayload(tx)))
 export const encodeTransactionEnvelope = tx => prependTransactionDomainTag(rlpEncode(prepareEnvelope(tx)))
+export const encodeTxIdFromVoucher = voucher => sha3_256(rlpEncode(prepareVoucher(voucher)))
 
 const rightPaddedHexBuffer = (value, pad) =>
   Buffer.from(value.padEnd(pad * 2, 0), "hex")
@@ -23,6 +26,12 @@ const signatureBuffer = signature => Buffer.from(signature, "hex")
 
 const rlpEncode = v => {
   return encode(v).toString("hex")
+}
+
+const sha3_256 = msg => {
+  const sha = new SHA3(256)
+  sha.update(Buffer.from(msg, "hex"))
+  return sha.digest().toString("hex")
 }
 
 const preparePayload = tx => {
@@ -88,6 +97,41 @@ const collectSigners = tx => {
   return signers
 }
 
+const prepareVoucher = voucher => {
+  validateVoucher(voucher)
+
+  const signers = collectSigners(voucher)
+
+  const prepareSigs = sigs => {
+    return sigs.map(({ address, keyId, sig }) => {
+      return { signerIndex: signers.get(address), keyId, sig }
+    }).sort((a, b) => {
+      if (a.signerIndex > b.signerIndex) return 1
+      if (a.signerIndex < b.signerIndex) return -1
+      if (a.keyId > b.keyId) return 1
+      if (a.keyId < b.keyId) return -1
+    }).map(sig => {
+      return [sig.signerIndex, sig.keyId, signatureBuffer(sig.sig)]
+    })
+  }
+
+  return [
+    [
+      scriptBuffer(voucher.cadence),
+      voucher.arguments.map(argumentToString),
+      blockBuffer(voucher.refBlock),
+      voucher.computeLimit,
+      addressBuffer(sansPrefix(voucher.proposalKey.address)),
+      voucher.proposalKey.keyId,
+      voucher.proposalKey.sequenceNum,
+      addressBuffer(sansPrefix(voucher.payer)),
+      voucher.authorizers.map(authorizer => addressBuffer(sansPrefix(authorizer))),
+    ],
+    prepareSigs(voucher.payloadSigs),
+    prepareSigs(voucher.envelopeSigs),
+  ]
+}
+
 const validatePayload = tx => {
   payloadFields.forEach(field => checkField(tx, field))
   proposalKeyFields.forEach(field =>
@@ -96,10 +140,29 @@ const validatePayload = tx => {
 }
 
 const validateEnvelope = tx => {
-  envelopeFields.forEach(field => checkField(tx, field))
+  payloadSigsFields.forEach(field => checkField(tx, field))
   tx.payloadSigs.forEach((sig, index) => {
     payloadSigFields.forEach(field =>
       checkField(sig, field, "payloadSigs", index)
+    )
+  })
+}
+
+const validateVoucher = voucher => {
+  payloadFields.forEach(field => checkField(voucher, field))
+  proposalKeyFields.forEach(field =>
+    checkField(voucher.proposalKey, field, "proposalKey")
+  )
+  payloadSigsFields.forEach(field => checkField(voucher, field))
+  voucher.payloadSigs.forEach((sig, index) => {
+    payloadSigFields.forEach(field =>
+      checkField(sig, field, "payloadSigs", index)
+    )
+  })
+  envelopeSigsFields.forEach(field => checkField(voucher, field))
+  voucher.envelopeSigs.forEach((sig, index) => {
+    envelopeSigFields.forEach(field =>
+      checkField(sig, field, "envelopeSigs", index)
     )
   })
 }
@@ -125,9 +188,17 @@ const proposalKeyFields = [
   {name: "sequenceNum", check: isNumber},
 ]
 
-const envelopeFields = [{name: "payloadSigs", check: isArray}]
+const payloadSigsFields = [{name: "payloadSigs", check: isArray}]
 
 const payloadSigFields = [
+  {name: "address", check: isString},
+  {name: "keyId", check: isNumber},
+  {name: "sig", check: isString},
+]
+
+const envelopeSigsFields = [{name: "envelopeSigs", check: isArray}]
+
+const envelopeSigFields = [
   {name: "address", check: isString},
   {name: "keyId", check: isNumber},
   {name: "sig", check: isString},
