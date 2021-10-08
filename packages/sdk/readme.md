@@ -354,6 +354,32 @@ The SDK additionally supplies builders to construct interactions of many differe
 
 Please reference the provided example project `react-simple` for example code.
 
+### Example: Pre Checking Before Sending A Transaction
+
+As an extension, it is possible to insert a pre-check process before sending a transaction. To do this, use `sdk.preSendCheck(...)`. This argument is an arbitrary async function that receives a voucher object containing information about the transaction before it is sent. Within this, you can call `sdk.voucherToTxId(voucher)` to get the txId. Furthermore, you can call any API to record this txId before sending the transaction. If an error is thrown in this, the transaction sending process will be aborted.
+
+```javascript
+import * as sdk from "@onflow/sdk"
+const response = await sdk.send(
+  await sdk.resolve(
+    await sdk.build([
+      sdk.transaction`transaction(msg: String) { prepare(acct: AuthAccount) {} execute { log(msg) } }`,
+      sdk.args([sdk.arg("Hello, Flow!", types.String)]),
+      sdk.payer(sdk.authorization("01", signingFunction, 0)),
+      sdk.proposer(sdk.authorization("01", signingFunction, 0, seqNum)),
+      sdk.authorizations([sdk.authorization("01", signingFunction, 0)]),
+      sdk.preSendCheck(async voucher => {
+        const txId = sdk.voucherToTxId(voucher)
+
+        // you can make an async to your backend to keep track of the hash
+        await sendHashToBackend(txId)
+
+        // could throw an error here if you wanted which would halt the transaction.
+      }),
+    ])
+  ), { node: "http://localhost:8080" })
+```
+
 ### GetAccount Usage
 
 ```javascript
@@ -431,6 +457,7 @@ const response = await sdk.send(await sdk.pipe(await sdk.build([
   sdk.payer(sdk.authorization("01", signingFunction, 0)),
   sdk.proposer(sdk.authorization("01", signingFunction, 0)),
   sdk.authorizations([sdk.authorization("01", signingFunction, 0)]),
+  sdk.preSendCheck(async voucher => {}), // Optional
 ]), [
   sdk.resolve([
     sdk.resolveArguments,
@@ -438,14 +465,15 @@ const response = await sdk.send(await sdk.pipe(await sdk.build([
     sdk.resolveAccounts,
     sdk.resolveProposerSequenceNumber({ node: "http://localhost:8080" }),
     sdk.resolveRefBlockId({ node: "http://localhost:8080" }),
-    sdk.resolveSignatures
+    sdk.resolveSignatures,
+    sdk.resolvePreSendCheck, // Optional
   ]),
 ]), { node: "http://localhost:8080" })
 ```
 
 ## Flow JS-SDK Exposes
 
-- [Top Level](./)
+- [Top Level](./src)
 
   - [`sdk.build`](./src/build)
   - [`sdk.resolve`](./src/resolve)
@@ -453,7 +481,7 @@ const response = await sdk.send(await sdk.pipe(await sdk.build([
   - [`sdk.decode`](./src/decode)
   - [`sdk.decodeResponse`](./src/decode)
 
-- [Utils](../interaction)
+- [Utils](./src/interaction)
 
   - [`sdk.isOk`](./src/interaction)
   - [`sdk.isBad`](./src/interaction)
@@ -462,24 +490,43 @@ const response = await sdk.send(await sdk.pipe(await sdk.build([
 
 - [Builders](./src/build)
 
-  - [`sdk.authorizations` & `sdk.authorization`](./src/build/authorizations.js)
-  - [`sdk.getAccount`](./src/build/get-account.js)
-  - [`sdk.getEvents`](./src/build/get-events.js)
-  - [`sdk.getLatestBlock`](./src/build/get-latest-block.js)
-  - [`sdk.getTransactionStatus`](./src/build/get-transaction-status.js)
-  - [`sdk.limit`](./src/build/limit.js)
-  - [`sdk.params` & `sdk.param`](./src/build/params.js)
-  - [`sdk.payer`](./src/build/payer.js)
-  - [`sdk.ping`](./src/build/ping.js)
-  - [`sdk.ref`](./src/build/ref.js)
-  - [`sdk.script`](./src/build/script.js)
-  - [`sdk.transaction`](./src/build/transaction.js)
+  - [`sdk.args` & `sdk.arg`](./src/build/build-arguments.js)
+  - [`sdk.atBlockHeight`](./src/build/build-at-block-height.js)
+  - [`sdk.atBlockId`](./src/build/build-at-block-id.js)
+  - [`sdk.authorizations` & `authorization`](./src/build/build-authorizations.js)
+  - [`sdk.getAccount`](./src/build/build-get-account.js)
+  - [`sdk.getBlock`](./src/build/build-get-block.js)
+  - [`sdk.getBlockByHeight`](./src/build/build-get-block-by-height)
+  - [`sdk.getBlockById`](./src/build/build-get-block-by-id.js)
+  - [`sdk.getBlockHeader`](./src/build/build-get-block-header.js)
+  - [`sdk.getCollection`](./src/build/build-get-collection)
+  - [`sdk.getEvents`](./src/build/build-get-events.js)
+  - [`sdk.getEventsAtBlockHeightRange`](./src/build/build-get-events-at-block-height-range.js)
+  - [`sdk.getEventsAtBlockIds`](./src/build/build-get-events-at-block-ids)
+  - [`sdk.getLatestBlock`](./src/build/build-get-latest-block.js)
+  - [`sdk.getTransactionStatus`](./src/build/build-get-transaction-status.js)
+  - [`sdk.getTransaction`](./src/build/build-get-transaction.js)
+  - [`sdk.invariant`](./src/build/build-invariant.js)
+  - [`sdk.limit`](./src/build/build-limit.js)
+  - [`sdk.payer`](./src/build/build-payer.js)
+  - [`sdk.ping`](./src/build/build-ping.js)
+  - [`sdk.preSendCheck`](./src/build/build-pre-send-check.js)
+  - [`sdk.proposer`](./src/build/build-proposer.js)
+  - [`sdk.ref`](./src/build/build-ref.js)
+  - [`sdk.script`](./src/build/build-script.js)
+  - [`sdk.transaction`](./src/build/build-transaction.js)
+  - [`sdk.validator`](./src/build/build-validator.js)
 
-- [Resolvers](./resolve)
+- [Resolvers](./src/resolve)
   - [`sdk.resolveAccounts`](./src/resolve/resolve-accounts.js)
-  - [`sdk.resolveParams`](./src/resolve/resolve-params.js)
-  - [`sdk.resolveSignatures`](./src/resolve/resolve-signatures.js)
   - [`sdk.resolveArguments`](./src/resolve/resolve-arguments.js)
+  - [`sdk.resolveCadence`](./src/resolve/resolve-cadence.js)
+  - [`sdk.resolveFinalNormalization`](./src/resolve/resolve-final-normalization.js)
+  - [`sdk.resolvePreSendCheck`](./src/resolve/resolve-pre-send-check.js)
   - [`sdk.resolveProposerSequenceNumber`](./src/resolve/resolve-proposer-sequence-number.js)
   - [`sdk.resolveRefBlockId`](./src/resolve/resolve-ref-block-id.js)
+  - [`sdk.resolveSignatures`](./src/resolve/resolve-signatures.js)
   - [`sdk.resolveValidators`](./src/resolve/resolve-validators.js)
+
+- [Other Utils](./src/)
+  - [`sdk.voucherToTxId`](./src/resolve/voucher.js)
