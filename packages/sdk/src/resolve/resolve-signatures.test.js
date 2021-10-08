@@ -8,7 +8,6 @@ import {
   payer,
   limit,
   authorizations,
-  authorization,
   preSendCheck,
 } from "../sdk.js"
 
