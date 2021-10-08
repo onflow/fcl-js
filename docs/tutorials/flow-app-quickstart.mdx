@@ -250,7 +250,7 @@ Go ahead and click the "Send Query" button. You should see "No Profile." That's 
 
 ## Initializing the Account
 
-In order for a smart contract to access and store data in an account, the account needs to first give approval. We do this by initializing what is called a "resource." A resource is an interface to some state in an account's storage. You can store data/assets and expose functionality for accessing the data from a resource. This paradigm is known is as "resource-oriented-programming", a principle that is core to Cadence and differentiates its ownership model from other smart contract languages, [read more here](https://docs.onflow.org/cadence/#intuiting-ownership-with-resources). Cadence makes it so that this data only exists in one place at any time. It can't be copied.
+For the Profile contract to store a Profile in a user's account, it does so by initializing what is called a "resource." A resource is an ownable piece of data and functionality that can live in the user's account storage. This paradigm is known is as "resource-oriented-programming", a principle that is core to Cadence and differentiates its ownership model from other smart contract languages, [read more here](https://docs.onflow.org/cadence/#intuiting-ownership-with-resources). Cadence makes it so that resources can only exist in one place at any time, they must be deliberately created, cannot be copied, and if desired, must be deliberately destroyed.
 
 > There's a lot more to resources in Cadence than we'll cover in this guide, so if you'd like to know more, check out [this Cadence intro](https://docs.onflow.org/cadence/).
 
