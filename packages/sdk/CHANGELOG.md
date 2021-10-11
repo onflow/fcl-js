@@ -2,7 +2,7 @@
 
 - YYYY-MM-DD **BREAKING?** -- Who: description
 
-- 2021-09-30 -- [@chasefleming](https://github.com/chasefleming): Access string status instead of just number value (e.g. `FINALIZED` for status `2`) by using the `statusString` property on the response of `getTransactionStatus`
+- 2021-10-11 -- [@chasefleming](https://github.com/chasefleming): Access string status instead of just number value (e.g. `FINALIZED` for status `2`) by using the `statusString` property on the response of `getTransactionStatus`
 
 Example of `statusString` for async args.
 
