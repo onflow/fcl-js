@@ -195,8 +195,8 @@ function App() {
     return (
       <div>
         <div>Address: {user?.addr ?? "No Address"}</div>
-        <div>Profile Name: {name ?? "--"}</div> // NEW
-        <button onClick={sendQuery}>Send Query</button> // NEW
+        <div>Profile Name: {name ?? "--"}</div> {/* NEW */}
+        <button onClick={sendQuery}>Send Query</button> {/* NEW */}
         <button onClick={fcl.unauthenticate}>Log Out</button>
       </div>
     )
@@ -358,7 +358,7 @@ function App() {
         <div>Address: {user?.addr ?? "No Address"}</div>
         <div>Profile Name: {name ?? "--"}</div>
         <button onClick={sendQuery}>Send Query</button>
-        <button onClick={initAccount}>Init Account</button> // NEW
+        <button onClick={initAccount}>Init Account</button> {/* NEW */}
         <button onClick={fcl.unauthenticate}>Log Out</button>
       </div>
     )
@@ -511,10 +511,10 @@ function App() {
       <div>
         <div>Address: {user?.addr ?? "No Address"}</div>
         <div>Profile Name: {name ?? "--"}</div>
-        <div>Transaction Status: {transactionStatus ?? "--"}</div> // NEW
+        <div>Transaction Status: {transactionStatus ?? "--"}</div> {/* NEW */}
         <button onClick={sendQuery}>Send Query</button>
         <button onClick={initAccount}>Init Account</button>
-        <button onClick={executeTransaction}>Execute Transaction</button> // NEW
+        <button onClick={executeTransaction}>Execute Transaction</button> {/* NEW */}
         <button onClick={fcl.unauthenticate}>Log Out</button>
       </div>
     )
