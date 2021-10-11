@@ -3,7 +3,7 @@ import {AccessAPI, GetTransactionRequest} from "@onflow/protobuf"
 import {response} from "../response/response.js"
 import {unary as defaultUnary} from "./unary"
 
-const statusMapping = {
+const STATUS_MAP = {
   '0': 'UNKNOWN',
   '1': 'PENDING',
   '2': 'FINALIZED',
@@ -17,7 +17,7 @@ const hexBuffer = hex => Buffer.from(hex, "hex")
 
 const convertStatusToString = code => {
   if (!code) return
-  return statusMapping[String(code)]
+  return STATUS_MAP[String(code)]
 }
 
 export async function sendGetTransactionStatus(ix, opts = {}) {
