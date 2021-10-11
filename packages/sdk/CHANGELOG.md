@@ -4,7 +4,7 @@
 
 - 2021-10-11 -- [@chasefleming](https://github.com/chasefleming): Access string status instead of just number value (e.g. `FINALIZED` for status `2`) by using the `statusString` property on the response of `getTransactionStatus`
 
-Example of `statusString` for async args.
+Example of `statusString`:
 
 ```javascript
 import * as sdk from "@onflow/sdk"
