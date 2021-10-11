@@ -16,7 +16,7 @@ const u8ToHex = u8 => Buffer.from(u8).toString("hex")
 const hexBuffer = hex => Buffer.from(hex, "hex")
 
 const convertStatusToString = code => {
-  if (!code) return
+  if (code == null) return
   return STATUS_MAP[String(code)]
 }
 
