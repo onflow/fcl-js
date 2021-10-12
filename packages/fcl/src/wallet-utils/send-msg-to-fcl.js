@@ -29,3 +29,13 @@ export const decline = reason => {
     data: null,
   })
 }
+
+export const redirect = data => {
+  sendMsgToFCL("FCL:VIEW:RESPONSE", {
+    f_type: "PollingResponse",
+    f_vsn: "1.0.0",
+    status: "REDIRECT",
+    reason: null,
+    data: data,
+  })
+}

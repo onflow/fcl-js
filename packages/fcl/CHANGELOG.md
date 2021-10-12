@@ -2,6 +2,30 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+- 2021-10-12 -- Adds `execExtRPC` strategy for use with browser extension communication and new `WalletUtils.redirect` and `WalletUtils.injectExtService` utils. `WalletUtils.injectExtService` can be used by browser extensions to tell FCL how to authenticate and to be shown as an option in Wallet Discovery.
+
+```javascript
+import {WalletUtils} from "@onflow/fcl"
+
+WalletUtils.injectExtService({
+  f_type: "Service",
+  f_vsn: "1.0.0",
+  type: "authn",
+  uid: "awesome-wallet-extension#authn",
+  endpoint: "awesome-wallet-extension",
+  id: "0x1234",
+  identity: {
+    address: "0x1234",
+  },
+  provider: {
+    address: null,
+    name: "Awesome Wallet Extension",
+    icon: null,
+    description: "Awesome Wallet Extension for Chrome",
+  },
+})
+```
+
 - 2021-10-01 -- Simplify passing `currentUser` data into args with the ability to pass `currentUser` as param instead of a creating a user snapshot before.
 
 Examples of `currentUser` as a param.
