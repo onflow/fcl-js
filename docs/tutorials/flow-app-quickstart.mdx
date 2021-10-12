@@ -49,8 +49,9 @@ Now that your app is running, you can configure FCL. Create a `config.js` file i
 **Note**: These values are required to use FCL with your app.
 
 > **Create file:** `./src/config.js`
+
 ```javascript
-import { config } from "@onflow/fcl"
+import { config } from "@onflow/fcl";
 
 config({
   "accessNode.api": "https://access-testnet.onflow.org",
@@ -67,8 +68,9 @@ Learn more about configuration values [here](https://docs.onflow.org/fcl/referen
 To finish configuring our dapp, let's import the config file into the top of our `App.js` file, then swap out the default component in `App.js` to look like this:
 
 > **Replace file:** `./src/App.js`
+
 ```javascript
-import "./config"
+import "./config";
 
 function App() {
   return (
@@ -79,6 +81,7 @@ function App() {
 }
 
 export default App;
+
 ```
 
 Now we're ready to start talking to Flow!
@@ -92,10 +95,11 @@ Let's add in a few buttons for sign up/login and also subscribe to changes on th
 This is what your file should look like now:
 
 > **Replace file:** `./src/App.js`
+
 ```javascript
-import "./config"
-import { useState, useEffect } from "react"
-import * as fcl from "@onflow/fcl"
+import "./config";
+import { useState, useEffect } from "react";
+import * as fcl from "@onflow/fcl";
 
 function App() {
   const [user, setUser] = useState({loggedIn: null})
@@ -132,6 +136,7 @@ function App() {
 }
 
 export default App;
+
 ```
 
 You should now be able to log in or sign up a user and unauthenticate them. Upon logging in or signing up your users will see a popup where they can choose between wallet providers. Let's select the [Blocto wallet](https://blocto.portto.io/) for this example to create an account. Upon completing authentication, you'll see the component change and the user's wallet address appear on the screen if you've completed this properly.
@@ -141,8 +146,9 @@ You should now be able to log in or sign up a user and unauthenticate them. Upon
 One of the main things you'll often need to do when building a dapp is query the Flow blockchain and the smart contracts deployed on it for data. Since smart contracts will live on both Testnet and Mainnet, let's put the account address where the smart contract lives into the configuration (remember, it's recommended that you change this later to use environment variables). Let's also give it a key of `Profile` and prefix it with `0x` so that the final key is `0xProfile`. The prefix is important because it tells FCL to pull the corresponding addresses needed from the configuration value.
 
 > **Replace file:** `./src/config.js`
+
 ```javascript
-import { config } from "@onflow/fcl"
+import { config } from "@onflow/fcl";
 
 config({
   "accessNode.api": "https://access-testnet.onflow.org",
@@ -165,9 +171,9 @@ Take a look at the new code. We'll explain each new piece as we go. Remember, th
 
 > **Replace file:** `./src/App.js`
 ```javascript
-import "./config"
-import { useState, useEffect } from "react"
-import * as fcl from "@onflow/fcl"
+import "./config";
+import { useState, useEffect } from "react";
+import * as fcl from "@onflow/fcl";
 
 function App() {
   const [user, setUser] = useState({loggedIn: null})
@@ -223,6 +229,7 @@ function App() {
 }
 
 export default App;
+
 ```
 
 A few things happened. In our `AuthedState` component, we added a button to send a query for the user's profile name and a div to display the result above it. The corresponding `useState` initialization can be seen at the top of the component.
@@ -239,7 +246,7 @@ await fcl.query({
     }
   `,
   args: (arg, t) => [arg(user.addr, t.Address)]
-})
+});
 ```
 
 Inside the query you'll see we set two things: `cadence` and `args`. Cadence is Flow's smart contract language we mentioned. For this tutorial, when you look at it you just need to notice that it's importing the `Profile` contract from the account we named `0xProfile` earlier in our config file, then also taking an account address, and reading it. That's it until you're ready to [learn more Cadence](https://docs.onflow.org/cadence/tutorial/01-first-steps/).
@@ -297,10 +304,11 @@ You'll also notice we are awaiting a response with our transaction data by using
 Now your `App.js` file should look like this (we also added a button for calling the `initAccount` function in the `AuthedState`):
 
 > **Replace file:** `./src/App.js`
+
 ```javascript
-import "./config"
-import { useState, useEffect } from "react"
-import * as fcl from "@onflow/fcl"
+import "./config";
+import { useState, useEffect } from "react";
+import * as fcl from "@onflow/fcl";
 
 function App() {
   const [user, setUser] = useState({loggedIn: null})
@@ -385,6 +393,7 @@ function App() {
 }
 
 export default App;
+
 ```
 
 Press the "Init Account" button you should see the wallet ask you to approve a transaction. After approving, you will see a transaction response appear in your console (make sure to have that open). It may take a few moments. With the transaction result printed, you can use the `transactionId` to look up the details of the transaction using a [block explorer](https://testnet.flowscan.org).
@@ -427,10 +436,11 @@ Here you can see our argument is "Flow Developer" and at the bottom we've called
 Let's see how that works inside our whole `App.js` file. But, let's also set the statuses to our React component's state so we can see on screen what state we're in.
 
 > **Replace file:** `./src/App.js`
+
 ```javascript
-import "./config"
-import { useState, useEffect } from "react"
-import * as fcl from "@onflow/fcl"
+import "./config";
+import { useState, useEffect } from "react";
+import * as fcl from "@onflow/fcl";
 
 function App() {
   const [user, setUser] = useState({loggedIn: null})
@@ -541,6 +551,7 @@ function App() {
 }
 
 export default App;
+
 ```
 
 Now if you click the "Execute Transaction" button you'll see the statuses update next to "Transaction Status." When you see "4" that means it's sealed! Status code meanings [can be found here](https://docs.onflow.org/fcl/reference/api/#transaction-statuses).
