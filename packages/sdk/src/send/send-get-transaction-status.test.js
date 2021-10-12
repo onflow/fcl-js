@@ -30,7 +30,8 @@ describe("Get Transaction Status", () => {
     const unaryMock = jest.fn();
 
     const returnedTransactionStatus = {
-        status: "123",
+        status: 2,
+        statusString: "FINALIZED",
         statusCode: 1,
         errorMessage: "No Error",
         events: [
@@ -45,7 +46,7 @@ describe("Get Transaction Status", () => {
     }
 
     unaryMock.mockReturnValue({
-        getStatus: () => "123",
+        getStatus: () => 2,
         getStatusCode: () => 1,
         getErrorMessage: () => "No Error",
         getEventsList: () => ([
