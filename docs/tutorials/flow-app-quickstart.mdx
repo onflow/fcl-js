@@ -81,6 +81,7 @@ function App() {
 }
 
 export default App;
+
 ```
 
 Now we're ready to start talking to Flow!
@@ -135,6 +136,7 @@ function App() {
 }
 
 export default App;
+
 ```
 
 You should now be able to log in or sign up a user and unauthenticate them. Upon logging in or signing up your users will see a popup where they can choose between wallet providers. Let's select the [Blocto wallet](https://blocto.portto.io/) for this example to create an account. Upon completing authentication, you'll see the component change and the user's wallet address appear on the screen if you've completed this properly.
@@ -227,6 +229,7 @@ function App() {
 }
 
 export default App;
+
 ```
 
 A few things happened. In our `AuthedState` component, we added a button to send a query for the user's profile name and a div to display the result above it. The corresponding `useState` initialization can be seen at the top of the component.
@@ -390,6 +393,7 @@ function App() {
 }
 
 export default App;
+
 ```
 
 Press the "Init Account" button you should see the wallet ask you to approve a transaction. After approving, you will see a transaction response appear in your console (make sure to have that open). It may take a few moments. With the transaction result printed, you can use the `transactionId` to look up the details of the transaction using a [block explorer](https://testnet.flowscan.org).
@@ -547,6 +551,7 @@ function App() {
 }
 
 export default App;
+
 ```
 
 Now if you click the "Execute Transaction" button you'll see the statuses update next to "Transaction Status." When you see "4" that means it's sealed! Status code meanings [can be found here](https://docs.onflow.org/fcl/reference/api/#transaction-statuses).
