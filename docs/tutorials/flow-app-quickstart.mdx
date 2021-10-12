@@ -69,7 +69,7 @@ To finish configuring our dapp, let's import the config file into the top of our
 
 > **Replace file:** `./src/App.js`
 
-```javascript
+```jsx
 import "./config";
 
 function App() {
@@ -96,7 +96,7 @@ This is what your file should look like now:
 
 > **Replace file:** `./src/App.js`
 
-```javascript
+```jsx
 import "./config";
 import { useState, useEffect } from "react";
 import * as fcl from "@onflow/fcl";
@@ -170,7 +170,8 @@ A few things need to happen in order to do that:
 Take a look at the new code. We'll explain each new piece as we go. Remember, the cadence code is a separate language from JavaScript used to write smart contracts, so you don't need to spend too much time trying to understand it. (Of course, you're more than welcome to, if you want to!)
 
 > **Replace file:** `./src/App.js`
-```javascript
+
+```jsx
 import "./config";
 import { useState, useEffect } from "react";
 import * as fcl from "@onflow/fcl";
@@ -305,7 +306,7 @@ Now your `App.js` file should look like this (we also added a button for calling
 
 > **Replace file:** `./src/App.js`
 
-```javascript
+```jsx
 import "./config";
 import { useState, useEffect } from "react";
 import * as fcl from "@onflow/fcl";
@@ -437,7 +438,7 @@ Let's see how that works inside our whole `App.js` file. But, let's also set the
 
 > **Replace file:** `./src/App.js`
 
-```javascript
+```jsx
 import "./config";
 import { useState, useEffect } from "react";
 import * as fcl from "@onflow/fcl";
@@ -492,7 +493,7 @@ function App() {
     console.log(transaction)
   }
 
-	// NEW
+  // NEW
   const executeTransaction = async () => {
     const transactionId = await fcl.mutate({
       cadence: `
