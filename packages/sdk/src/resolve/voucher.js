@@ -57,6 +57,5 @@ export const createSignableVoucher = ix => {
 }
 
 export const voucherToTxId = voucher => {
-  // ref. https://github.com/onflow/flow-go-sdk/blob/d794a2/transaction.go#L119
   return encodeTxIdFromVoucher(voucher)
 }
