@@ -2,6 +2,19 @@
 
 - YYYY-MM-DD **BREAKING?** -- Who: description
 
+- 2021-10-11 -- [@chasefleming](https://github.com/chasefleming): Access string status instead of just number value (e.g. `FINALIZED` for status `2`) by using the `statusString` property on the response of `getTransactionStatus`
+
+Example of `statusString`:
+
+```javascript
+import * as sdk from "@onflow/sdk"
+const response = await sdk.send(await sdk.build([
+  sdk.getTransactionStatus(txId)
+]), { node: "http://localhost:8080" })
+
+console.log(response.statusString)
+```
+
 ## 0.0.55 -- 2021-10-01
 
 - 2021-09-30 -- [@chasefleming](https://github.com/chasefleming): Resolve asynchronous arguments with specific `resolveArgument` method over generic `resolve`
