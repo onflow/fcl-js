@@ -2,6 +2,7 @@ import {uid} from "@onflow/util-uid"
 import {frame} from "./utils/frame"
 import {normalizePollingResponse} from "../../normalize/polling-response"
 import {configLens} from "../../../config-utils"
+import {VERSION} from "../../../VERSION"
 
 export function execIframeRPC(service, body, opts) {
   return new Promise((resolve, reject) => {
@@ -14,6 +15,7 @@ export function execIframeRPC(service, body, opts) {
       async onReady(_, {send}) {
         try {
           send({
+            fclVersion: VERSION,
             type: "FCL:VIEW:READY:RESPONSE",
             body,
             service: {
@@ -27,6 +29,7 @@ export function execIframeRPC(service, body, opts) {
             },
           })
           send({
+            fclVersion: VERSION,
             type: "FCL:FRAME:READY:RESPONSE",
             body,
             service: {
@@ -109,7 +112,7 @@ export function execIframeRPC(service, body, opts) {
               reject(`Declined: ${resp.reason || "No reason supplied"}`)
               close()
               break
-            
+
             case "REDIRECT":
               resolve(resp.data)
               close()

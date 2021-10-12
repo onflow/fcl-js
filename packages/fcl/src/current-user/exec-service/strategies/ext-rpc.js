@@ -2,6 +2,7 @@ import {invariant} from "@onflow/util-invariant"
 import {extension} from "./utils/extension"
 import {normalizePollingResponse} from "../../normalize/polling-response"
 import {configLens} from "../../../config-utils"
+import {VERSION} from "../../../VERSION"
 
 export function extInstalled(endpoint) {
   const extensions = window.fcl_extensions || []
@@ -22,6 +23,7 @@ export function execExtRPC(service, body, opts) {
       async onReady(_, {send}) {
         try {
           send({
+            fclVersion: VERSION,
             type: "FCL:VIEW:READY:RESPONSE",
             body,
             service: {
