@@ -3,8 +3,22 @@ import {AccessAPI, GetTransactionRequest} from "@onflow/protobuf"
 import {response} from "../response/response.js"
 import {unary as defaultUnary} from "./unary"
 
+const STATUS_MAP = {
+  '0': 'UNKNOWN',
+  '1': 'PENDING',
+  '2': 'FINALIZED',
+  '3': 'EXECUTED',
+  '4': 'SEALED',
+  '5': 'EXPIRED'
+}
+
 const u8ToHex = u8 => Buffer.from(u8).toString("hex")
 const hexBuffer = hex => Buffer.from(hex, "hex")
+
+const convertStatusToString = code => {
+  if (code == null) return
+  return STATUS_MAP[String(code)]
+}
 
 export async function sendGetTransactionStatus(ix, opts = {}) {
   invariant(opts.node, `SDK Send Get Transaction Status Error: opts.node must be defined.`)
@@ -21,9 +35,11 @@ export async function sendGetTransactionStatus(ix, opts = {}) {
   let events = res.getEventsList()
 
   let ret = response()
+  const status = res.getStatus()
   ret.tag = ix.tag
   ret.transactionStatus = {
-    status: res.getStatus(),
+    status: status,
+    statusString: convertStatusToString(status),
     statusCode: res.getStatusCode(),
     errorMessage: res.getErrorMessage(),
     events: events.map(event => ({
