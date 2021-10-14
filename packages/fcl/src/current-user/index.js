@@ -39,8 +39,7 @@ const getStoredUser = async storage => {
 
 const HANDLERS = {
   [INIT]: async ctx => {
-
-    if (typeof window === 'undefined') {
+    if (typeof window === "undefined") {
       console.warn(
         `
         %cFCL Warning
@@ -114,6 +113,7 @@ async function authenticate(opts = {redir: false}) {
     try {
       const response = await execService({
         service: {
+          type: "authn",
           endpoint: discoveryWallet,
           method: discoveryWalletMethod,
         },
@@ -304,7 +304,7 @@ let currentUser = () => {
     verifyUserSignatures,
     subscribe,
     snapshot,
-    resolveArgument
+    resolveArgument,
   }
 }
 

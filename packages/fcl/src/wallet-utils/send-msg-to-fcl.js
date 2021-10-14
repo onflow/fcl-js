@@ -1,3 +1,5 @@
+import {onMessageFromFCL} from "./on-message-from-fcl"
+
 export const sendMsgToFCL = (type, msg = {}) => {
   if (window.location !== window.parent.location) {
     window.parent.postMessage({...msg, type}, "*")
@@ -6,8 +8,9 @@ export const sendMsgToFCL = (type, msg = {}) => {
   }
 }
 
-export const ready = data => {
-  sendMsgToFCL("FCL:VIEW:READY", data)
+export const ready = (cb, msg = {}) => {
+  onMessageFromFCL("FCL:VIEW:READY:RESPONSE", cb)
+  sendMsgToFCL("FCL:VIEW:READY")
 }
 
 export const close = () => {

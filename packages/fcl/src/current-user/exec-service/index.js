@@ -18,13 +18,12 @@ export async function execService({service, msg = {}, opts = {}}) {
   try {
     const res = await STRATEGIES[service.method](service, msg, opts)
     if (res.status === "REDIRECT") {
-      const authnService = serviceOfType(res.services, "authn")
-      invariant(authnService, "Wallet must provide authn service.")
+      const {endpoint} = res.data
       try {
         return await execService({
           service: {
-            endpoint: authnService.endpoint,
-            method: authnService.method
+            endpoint: endpoint,
+            method: "EXT/RPC",
           },
         })
       } catch (e) {
@@ -34,7 +33,11 @@ export async function execService({service, msg = {}, opts = {}}) {
       return res
     }
   } catch (error) {
-    console.error("execService({service, msg = {}, opts = {}})", error, {service, msg, opts})
+    console.error("execService({service, msg = {}, opts = {}})", error, {
+      service,
+      msg,
+      opts,
+    })
     throw error
   }
 }
