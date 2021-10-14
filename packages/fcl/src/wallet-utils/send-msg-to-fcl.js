@@ -6,6 +6,10 @@ export const sendMsgToFCL = (type, msg = {}) => {
   }
 }
 
+export const ready = data => {
+  sendMsgToFCL("FCL:VIEW:READY", data)
+}
+
 export const close = () => {
   sendMsgToFCL("FCL:VIEW:CLOSE")
 }
