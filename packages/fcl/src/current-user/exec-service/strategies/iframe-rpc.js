@@ -8,8 +8,9 @@ export function execIframeRPC(service, body, opts) {
   return new Promise((resolve, reject) => {
     const id = uid()
     const includeOlderJsonRpcCall = opts.includeOlderJsonRpcCall
-
-    body.data = service.data
+    const extensions = window.fcl_extensions || []
+    body.data = service.data ?? null
+    service.type === "authn" && (body.extensions = extensions)
 
     frame(service, {
       async onReady(_, {send}) {
@@ -80,7 +81,7 @@ export function execIframeRPC(service, body, opts) {
               break
 
             case "REDIRECT":
-              resolve(resp.data)
+              resolve(resp)
               close()
               break
 

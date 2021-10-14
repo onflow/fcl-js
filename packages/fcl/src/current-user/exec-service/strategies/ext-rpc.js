@@ -4,21 +4,8 @@ import {normalizePollingResponse} from "../../normalize/polling-response"
 import {configLens} from "../../../config-utils"
 import {VERSION} from "../../../VERSION"
 
-export function extInstalled(endpoint) {
-  const extensions = window.fcl_extensions || []
-  return (
-    window[endpoint]?.onFlow != null &&
-    extensions.some(ext => ext.endpoint === endpoint)
-  )
-}
-
 export function execExtRPC(service, body, opts) {
   return new Promise((resolve, reject) => {
-    invariant(
-      extInstalled(service.endpoint),
-      `${service.endpoint} extension not installed`
-    )
-
     extension(service, {
       async onReady(_, {send}) {
         try {

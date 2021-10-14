@@ -2,7 +2,9 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
-- 2021-10-12 -- Adds `execExtRPC` strategy for use with browser extension communication and new `WalletUtils.ready`, `WalletUtils.redirect` and `WalletUtils.injectExtService` utils. `WalletUtils.injectExtService` can be used by browser extensions to tell FCL how to authenticate with it.
+- 2021-10-12 -- Adds `execExtRPC` strategy for use with browser extension communication. Adds new `WalletUtils.ready`, `WalletUtils.redirect` and `WalletUtils.injectExtService` utils. `WalletUtils.injectExtService` can be used by browser extensions to tell FCL how to authenticate with it.
+
+Extracts message event listener callbacks into `buildMessageHandler` on `extension`, `pop`, `frame`, and `tab`
 
 ```javascript
 import {WalletUtils} from "@onflow/fcl"
