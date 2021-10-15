@@ -2,7 +2,7 @@
 
 ---
 
-**Last Updated:** October 5th 2021
+**Last Updated:** October 15th 2021
 
 FCL-JS is the easiest way to start building decentralized applications. FCL (aka Flow Client Library) wraps much of the logic you'd have to write yourself on other blockchains. Follow this quick start and you'll have a solid overview of how to build a shippable dapp on Flow.
 
@@ -264,7 +264,7 @@ For the Profile contract to store a Profile in a user's account, it does so by i
 
 To do this resource initialization on an account, we're going to add another function called `initAccount`. Inside of that function, we're going to add some Cadence code which says, *"Hey, does this account have a profile? If it doesn't, let's add one."* We do that using something called a "transaction." Transactions occur when you want to change the state of the blockchain, in this case, some data in a resource, in a specific account. And there is a cost (transaction fee) in order to do that; unlike a query.
 
-That's where we jump back into FCL code. Instead of `query`, we use `mutate` for transactions. And because there is a cost, we need to add a few fields that tell Flow who is proposing the transaction, who is authorizing it, who is paying for it, and how much they're willing to pay for it. Those fields — not surprisingly — are called: `payer`, `proposer`, `authorizations`, and `limit`. For more information on these signatory roles, check out [this doc](https://docs.onflow.org/concepts/transaction-signing/#signer-roles).
+That's where we jump back into FCL code. Instead of `query`, we use `mutate` for transactions. And because there is a cost, we need to add a few fields that tell Flow who is proposing the transaction, who is authorizing it, who is paying for it, and how much they're willing to pay for it. Those fields — not surprisingly — are called: `proposer`, `authorizer`, `payer`, and `limit`. For more information on these signatory roles, check out [this doc](https://docs.onflow.org/concepts/transaction-signing/#signer-roles).
 
 Let's take a look at what our account initialization function looks like:
 
