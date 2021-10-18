@@ -76,7 +76,7 @@ export function execPopRPC(service, body, opts) {
               break
 
             case "REDIRECT":
-              resolve(resp.data)
+              resolve({...resp.data, status: "REDIRECT"})
               close()
               break
 
@@ -110,7 +110,7 @@ export function execPopRPC(service, body, opts) {
               break
 
             case "REDIRECT":
-              resolve(resp.data)
+              resolve({...resp.data, status: "REDIRECT"})
               close()
               break
 

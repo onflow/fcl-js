@@ -21,7 +21,7 @@ export async function extension(service, opts = {}) {
 
   function send(msg) {
     try {
-      window[ext].onflow.send(JSON.parse(JSON.stringify(msg || {})))
+      window[ext]?.flow.send(JSON.parse(JSON.stringify(msg || {})))
     } catch (error) {
       console.error("Extension Send Error", msg, error)
     }
@@ -31,6 +31,6 @@ export async function extension(service, opts = {}) {
     "message",
     buildMessageHandler({close, send, onReady, onResponse, onMessage})
   )
-  await window[ext]?.onflow.enable()
+  await window[ext]?.flow.enable()
   return {send, close}
 }

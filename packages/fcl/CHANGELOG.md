@@ -2,20 +2,21 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
-- 2021-10-12 -- Adds `execExtRPC` strategy for use with browser extension communication. Adds new `WalletUtils.ready`, `WalletUtils.redirect` and `WalletUtils.injectExtService` utils. `WalletUtils.injectExtService` can be used by browser extensions to tell FCL how to authenticate with it.
+- 2021-10-12 -- Adds `execExtRPC` strategy for use with browser extension communication. Adds new `WalletUtils.ready`, `WalletUtils.redirect` and `WalletUtils.injectExtService` utils. `WalletUtils.ready` takes a callback and optional message data. It tells FCL that the frame/window/tab is ready to receive messages and calls your callback with `FCL:VIEW:READY:RESPONSE` data.
 
-Extracts message event listener callbacks into `buildMessageHandler` on `extension`, `pop`, `frame`, and `tab`
+Internal: Extracts message event listener callbacks into `buildMessageHandler` on `extension`, `pop`, `frame`, and `tab`
+
+An extension can be made available in FCL Discovery and displayed as a wallet choice by pushing a  `Service` of type `authn` to an array of `fcl_extensions` on the window object or using the `injectExtService` wallet utility.
 
 ```javascript
-import {WalletUtils} from "@onflow/fcl"
-
-WalletUtils.injectExtService({
+let AuthnService = {
   f_type: "Service",
   f_vsn: "1.0.0",
   type: "authn",
   uid: "awesome-wallet-extension#authn",
   endpoint: "awesome-wallet-extension",
-  id: "0x1234",
+  method: "EXT/RPC",
+  id: "0x5678",
   identity: {
     address: "0x1234",
   },
@@ -25,7 +26,18 @@ WalletUtils.injectExtService({
     icon: null,
     description: "Awesome Wallet Extension for Chrome",
   },
-})
+}
+
+if (!Array.isArray(window.fcl_extensions)) {
+  window.fcl_extensions = []
+}
+window.fcl_extensions.push(AuthnService)
+```
+
+```javascript
+import {WalletUtils} from "@onflow/fcl"
+
+WalletUtils.injectExtService(AuthnService)
 ```
 
 - 2021-10-01 -- Simplify passing `currentUser` data into args with the ability to pass `currentUser` as param instead of a creating a user snapshot before.
