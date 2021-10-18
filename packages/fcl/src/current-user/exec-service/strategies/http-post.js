@@ -4,7 +4,7 @@ import {normalizeLocalView} from "../../normalize/local-view"
 import {poll} from "./utils/poll"
 import {execLocal} from "../exec-local"
 import {configLens} from "../../../config-utils"
-import {VERSION} from "../../../VERSION"
+import {VERSION} from "../../../VERSION" 
 
 export async function execHttpPost(service, signable, opts = {}) {
   const resp = await fetchService(service, {

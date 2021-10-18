@@ -120,6 +120,7 @@ async function authenticate(opts = {redir: false}) {
         msg: {
           timestamp: Date.now(),
           appDomainTag,
+          extensions: window.fcl_extensions || [],
         },
         opts,
       })
