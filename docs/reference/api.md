@@ -408,7 +408,7 @@ A **convenience method** that calls and is equivalent to [`fcl.authenticate()`](
 
 A **convenience method** that produces the needed authorization details for the current user to submit transactions to Flow. It defines a signing function that connects to a user's wallet provider to produce signatures to submit transactions.
 
-> 📣 You can replace this function with your own [authorization function](#authorizationfunction) if needed.
+> 📣 You can replace this function with your own [authorization function](#authorization-function) if needed.
 
 #### Returns
 
@@ -643,7 +643,7 @@ _Pass in the following as a single object with the following keys. All keys are 
 | `cadence`  | string **(required)**                           | A valid cadence transaction.                                                                                                                                                                                           |
 | `args`     | [ArgumentFunction](#argumentfunction)           | Any arguments to the script if needed should be supplied via a function that returns an array of arguments.                                                                                                            |
 | `limit`    | number                                          | Compute (Gas) limit for query. Read the [documentation about computation cost](https://docs.onflow.org/flow-go-sdk/building-transactions/#gas-limit) for information about how computation cost is calculated on Flow. |
-| `proposer` | [AuthorizationFunction](#authorizationfunction) | The authorization function that returns a valid [AuthorizationObject](#authorizationobject) for the [proposer role](#TransactionRoles).                                                                                |
+| `proposer` | [AuthorizationFunction](#authorization-function) | The authorization function that returns a valid [AuthorizationObject](#authorizationobject) for the [proposer role](#TransactionRoles).                                                                                |
 
 #### Returns
 
@@ -675,7 +675,7 @@ const txId = await fcl.mutate({
 #### Examples
 
 - [Additional explanation](https://gist.github.com/orodio/3bf977a0bd45b990d16fdc1459b129a2)
-- [Custom authorization function](#authorizationfunction)
+- [Custom authorization function](#authorization-function)
 
 ---
 
@@ -728,7 +728,7 @@ In some cases, you may want to utilize pre-built interactions or build more comp
 
 Sends arbitrary scripts, transactions, and requests to Flow.
 
-This method consumes an array of [builders](https://google.ca) that are to be resolved and sent. The builders required to be included in the array depend on the [interaction](#interactions) that is being built.
+This method consumes an array of [builders](#builders) that are to be resolved and sent. The builders required to be included in the array depend on the [interaction](#interaction) that is being built.
 
 #### Note
 
@@ -783,7 +783,7 @@ Decodes the response from `fcl.send()` into the appropriate JSON representation 
 
 #### Note
 
-📣 To define your own decoder, see [`tutorial`](#https://github.com/onflow/flow-js-sdk/tree/master/packages/sdk/src/decode).
+📣 To define your own decoder, see [`tutorial`](https://github.com/onflow/flow-js-sdk/tree/master/packages/sdk/src/decode).
 
 #### Arguments
 
@@ -887,7 +887,7 @@ A builder function that returns the interaction to get the latest block.
 
 | Type                          | Description                                           |
 | ----------------------------- | ----------------------------------------------------- |
-| [BlockObject](#`BlockObject`) | The latest block if not used with any other builders. |
+| [BlockObject](#blockobject) | The latest block if not used with any other builders. |
 
 #### Usage
 
@@ -969,7 +969,7 @@ A builder function that returns the interaction to get a block header.
 
 | Type                                    | Description                                                  |
 | --------------------------------------- | ------------------------------------------------------------ |
-| [BlockHeaderObject](#blockheightobject) | The latest block header if not used with any other builders. |
+| [BlockHeaderObject](#blockheaderobject) | The latest block header if not used with any other builders. |
 
 #### Usage
 
@@ -1001,7 +1001,7 @@ A builder function that returns all instances of a particular event (by name) wi
 
 | Type                          | Description                                    |
 | ----------------------------- | ---------------------------------------------- |
-| [[EventObject]](#EventObject) | An array of events that matched the eventName. |
+| [[EventObject]](#event-object) | An array of events that matched the eventName. |
 
 #### Usage
 
@@ -1038,7 +1038,7 @@ A builder function that returns all instances of a particular event (by name) wi
 
 | Type                          | Description                                    |
 | ----------------------------- | ---------------------------------------------- |
-| [[EventObject]](#EventObject) | An array of events that matched the eventName. |
+| [[EventObject]](#event-object) | An array of events that matched the eventName. |
 
 #### Usage
 
@@ -1109,7 +1109,7 @@ A builder function that returns the status of transaction.
 
 | Name           | Type                                       | Description                                                     |
 | -------------- | ------------------------------------------ | --------------------------------------------------------------- |
-| `events`       | [[EventObject]](#EventObject)              | An array of events that were emitted during the transaction.    |
+| `events`       | [[EventObject]](#event-object)              | An array of events that were emitted during the transaction.    |
 | `status`       | [TransactionStatus](#transaction-statuses) | The status of the transaction on the blockchain.                |
 | `errorMessage` | string                                     | An error message if it exists. Default is an empty string `''`. |
 | `statusCode`   | [GRPCStatus](#grpc-statuses)               | The status from the GRPC response.                              |
@@ -1148,10 +1148,10 @@ A builder function that returns a [transaction object](#transactionobject) once 
 
 | Name           | Type                                    | Description                                                     |
 | -------------- | --------------------------------------- | --------------------------------------------------------------- |
-| `events`       | [[EventObject]](#EventObject)           | An array of events that matched the eventName.                  |
-| `status`       | [TransactionStatus](#transactionstatus) | The status of the transaction on the blockchain.                |
+| `events`       | [[EventObject]](#event-object)           | An array of events that matched the eventName.                  |
+| `status`       | [TransactionStatus](#transaction-statuses) | The status of the transaction on the blockchain.                |
 | `errorMessage` | string                                  | An error message if it exists. Default is an empty string `''`. |
-| `statusCode`   | [GRPCStatus](#transactionstatus)        | The status from the GRPC response.                              |
+| `statusCode`   | [GRPCStatus](#grpc-statuses)        | The status from the GRPC response.                              |
 
 #### Usage
 
@@ -1208,7 +1208,7 @@ A utility builder to be used with `fcl.args[...]` to create FCL supported argume
 | Name    | Type             | Description                                               |
 | ------- | ---------------- | --------------------------------------------------------- |
 | `value` | any              | Any value that you are looking to pass to other builders. |
-| `type`  | [FType](#ftypes) | A type supported by Flow.                                 |
+| `type`  | [FType](#ftype) | A type supported by Flow.                                 |
 
 #### Returns
 
@@ -1484,7 +1484,7 @@ fcl.events(eventName).subscribe((event) => {
 
 ### `Builders`
 
-Builders are modular functions that can be coupled together with `fcl.send([...builders])` to create an [Interaction](#interactions). The builders needed to create an interaction depend on the script or transaction that is being sent.
+Builders are modular functions that can be coupled together with `fcl.send([...builders])` to create an [Interaction](#interaction). The builders needed to create an interaction depend on the script or transaction that is being sent.
 
 ---
 
@@ -1529,7 +1529,7 @@ An object that contains all the information needed for FCL to sign a message wit
 | ----------- | ------------------- | ---------------------------------------------------------------------------------------------------- |
 | `addr`      | [Address](#address) | The address of the authorizer                                                                        |
 | `keyId`     | number              | The index of the key to use during authorization. (Multiple keys on an account is possible).         |
-| `signature` | function            | A [SigningFunction](#Signing-Function) that can produce a valid signature for a user from a message. |
+| `signature` | function            | A [SigningFunction](#signing-function) that can produce a valid signature for a user from a message. |
 
 ---
 
@@ -1751,7 +1751,7 @@ The JSON representation of a key on the Flow blockchain.
 | `parentId`             | string                                                    | The id of the parent block.                                |
 | `height`               | number                                                    | The height of the block.                                   |
 | `timestamp`            | object                                                    | Contains time related fields.                              |
-| `collectionGuarantees` | [[CollectionGuaranteeObject](#CollectionGuaranteeObject)] | Contains the ids of collections included in the block.     |
+| `collectionGuarantees` | [[CollectionGuaranteeObject](#collectionguaranteeobject)] | Contains the ids of collections included in the block.     |
 | `blockSeals`           | [SealedBlockObject]                                       | The details of which nodes executed and sealed the blocks. |
 | `signatures`           | Uint8Array([numbers])                                     | All signatures.                                            |
 
