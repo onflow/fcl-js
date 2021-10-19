@@ -45,7 +45,7 @@ export function execExtRPC(service, body, opts) {
               break
 
             case "REDIRECT":
-              resolve({...resp.data, status: "REDIRECT"})
+              resolve(resp)
               close()
               break
 
