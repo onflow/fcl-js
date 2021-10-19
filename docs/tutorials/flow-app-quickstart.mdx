@@ -88,7 +88,7 @@ Now we're ready to start talking to Flow!
 
 ## Authentication
 
-To authenticate a user, all an app has to do is call `fcl.logIn()`. Sign up and unauthenticate are all also as simple as `fcl.signUp()` and `fcl.unauthenticate()`.  Once authenticated, FCL sets an object called `fcl.currentUser` which exposes methods for watching changes in user data, singing transactions, and more. For more information on the `currentUser`, read more [here](https://docs.onflow.org/fcl/reference/api/#current-user).
+To authenticate a user, all an app has to do is call `fcl.logIn()`. Sign up and unauthenticate are all also as simple as `fcl.signUp()` and `fcl.unauthenticate()`.  Once authenticated, FCL sets an object called `fcl.currentUser` which exposes methods for watching changes in user data, signing transactions, and more. For more information on the `currentUser`, read more [here](https://docs.onflow.org/fcl/reference/api/#current-user).
 
 Let's add in a few buttons for sign up/login and also subscribe to changes on the `currentUser`. When the user is updated (which it will be after authentication), we'll set the user state in our component to reflect this. To demonstrate user authenticated sessions, we'll conditionally render a component based on if the user is or is not logged in.
 
