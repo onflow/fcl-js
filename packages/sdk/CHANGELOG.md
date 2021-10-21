@@ -2,6 +2,9 @@
 
 - YYYY-MM-DD **BREAKING?** -- Who: description
 
+## 0.0.56-alpha.1 -- 2021-10-21
+
+- 2021-10-21 -- [@GregSantos](https://github.com/gregsantos): SDK Alpha Release `@onflow/sdk` 0.0.55 -> 0.0.56-alpha.1
 - 2021-10-13 -- **Community Contribution from** [@avcdsld](https://github.com/avcdsld): Adds initial implementation of a feature that allows for the transaction id to be computed before sending the transaction to the chain. It can be passed an asynchronous function that receives the voucher. Exports `voucherToTxId` to produce a transaction hash from `voucher`.
 - 2021-10-11 -- [@chasefleming](https://github.com/chasefleming): Access string status instead of just number value (e.g. `FINALIZED` for status `2`) by using the `statusString` property on the response of `getTransactionStatus`
 
