@@ -2,6 +2,10 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+## 0.0.78-alpha.5 - 2021-10-21
+
+- 2021-10-21 -- SDK VSN 0.0.55 -> 0.0.56-alpha.1
+
 ## 0.0.78-alpha.4 - 2021-10-19
 
 - 2021-10-12 -- Adds `execExtRPC` strategy for use with browser extension communication. Adds new `WalletUtils.ready`, `WalletUtils.redirect` and `WalletUtils.injectExtService` utils. `WalletUtils.ready` takes a callback and optional message data. It tells FCL that the frame/window/tab is ready to receive messages and calls your callback with `FCL:VIEW:READY:RESPONSE` data.
