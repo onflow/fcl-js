@@ -2,6 +2,10 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+## 0.0.78-alpha.6 - 2021-10-25
+
+- 2021-10-25 -- Corrects import error in `fcl.events`
+
 ## 0.0.78-alpha.5 - 2021-10-21
 
 - 2021-10-21 -- SDK VSN 0.0.55 -> 0.0.56-alpha.1
