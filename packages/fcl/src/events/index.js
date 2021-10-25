@@ -1,6 +1,6 @@
 import {spawn, subscriber, SUBSCRIBE, UNSUBSCRIBE} from "@onflow/util-actor"
 import {config, latestBlock} from "@onflow/sdk"
-export {getEvents} from "@onflow/sdk"
+import {getEvents} from "@onflow/sdk"
 import {send} from "@onflow/sdk"
 import {decode} from "@onflow/sdk"
 
