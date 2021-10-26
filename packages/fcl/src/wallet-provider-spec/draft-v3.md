@@ -52,7 +52,7 @@ It's important to note that regardless of the method of communication, the data 
 
 - An iframe is rendered (comes from the `endpoint` in the service).
 - The rendered frame says its ready `WalletUtils.sendMsgToFCL("FCL:VIEW:READY")`.
-- FCL will send the data to be dealt with: `WalletUtils.onMsgFromFCL("FCL:VIEW:READY:RESPONSE", ({ body, params, data }) => { ... })`
+- FCL will send the data to be dealt with: `WalletUtils.onMessageFromFCL("FCL:VIEW:READY:RESPONSE", ({ body, params, data }) => { ... })`
   - Where `body` is the stuff you care about, `params` and `data` are additional information you can provide in the service object.
 - The wallet sends back an Approved or Declined post message. (It will be a `f_type: "PollingResponse"`, which we will get to in a bit)
   - If it's approved, the polling responses data field will need to be what FCL is expecting.
@@ -226,7 +226,7 @@ import {WalletUtils} from "@onflow/fcl"
 
 function callback(data) {
   if (typeof data != "object") return
-  if (typeof data.type !== "FCL:VIEW:READY:RESPONSE") return
+  if (data.type !== "FCL:VIEW:READY:RESPONSE") return
 
   ... // Do authentication things ...
 
