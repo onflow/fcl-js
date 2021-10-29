@@ -54,8 +54,8 @@ Now that your app is running, you can configure FCL. Create a `config.js` file i
 import { config } from "@onflow/fcl";
 
 config({
-  "accessNode.api": "https://access-testnet.onflow.org",
-  "discovery.wallet": "https://fcl-discovery.onflow.org/testnet/authn"
+  "accessNode.api": "https://access-testnet.onflow.org", // Production/Mainnet: "https://access-mainnet-beta.onflow.org"
+  "discovery.wallet": "https://fcl-discovery.onflow.org/testnet/authn" // Production: "https://fcl-discovery.onflow.org/authn"
 })
 ```
 📣 **Tip**: It's recommend to replace these values with environment variables for easy deployments across different environments like development/production or Testnet/Mainnet.
