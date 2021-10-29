@@ -13,11 +13,11 @@ For example, it can be sent to the App’s backend and after validating the sign
 
 ## TL;DR Wallet Provider
 
-1. Wallet receives Authn request and parses out the `timestamp`, and `domain tag`
+1. Wallet receives Authn request and parses out the `timestamp`, and optional `appDomainTag`.
 2. The wallet authenticates the user however they choose to do, and figures out the users Account `address`
 3. Wallet prepares and signs the message
       - Combines, and encodes the `timestamp`, and `address`
-      - Prepends the `FLOW-V0.0-user` domain tag + optional custom App `domain tag`
+      - Prepends the `FLOW-V0.0-user` user domain tag + optional custom `appDomainTag`
       - Signs the message with the signatureAlgorithm specified on user's key
 4. Wallet sends back a new service along with the other services when completing Authn
 
@@ -45,14 +45,13 @@ sign(privateKey, prependUserDomainTags(message))
   f_vsn: "1.0.0",  // Follows the v1.0.0 spec for the service
   type: "account-proof",  // the type of service it is
   method: "DATA",  // Its data!
-  uid: "amazing-wallet#account-proof",  // A unique identifier for the service            
+  uid: "awesome-wallet#account-proof",  // A unique identifier for the service            
   data: {
     f_type: "account-proof",
     f_vsn: "1.0.0"
     signatures: [CompositeSignture],
-    address: "0xUSER",  // The user's address
+    address: "0xUSER",  // The user's address with prefix
     timestamp: 1630705495551, // UNIX timestamp
-    domainTag: "AWESOME_DAPP", // Optional
-  }         
+    appDomainTag: "AWESOME-APP-V0.0-user", // Optional
 }
 ```
