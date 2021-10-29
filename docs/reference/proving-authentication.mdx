@@ -39,16 +39,17 @@ The suggested order of operations of how your application might use
 `account-proof` begins with:
 
 - Optional: Your application may choose to configure FCL with an application
-  specific Domain Tag. A Domain Tag helps scope the cryptographic proof
+  specific Domain Tag. A custom configured Application Domain Tag helps scope the cryptographic proof
   generated for the `account-proof` service to your application. A Domain Tag is
-  a valid string less than 32 bytes long. Your application can configure a
-  Domain Tag like:
+  a valid string less than 32 bytes long. Your application can specify a custom 
+  Domain Tag via `config.fcl.appDomainTag`
+
 
 ```javascript
 import {config} from "@onflow/fcl"
 
 config({
-    "fcl.appDomainTag": "YourApplicationsDomainTag"
+    "fcl.appDomainTag": "AWESOME-APP-V0.0-user"
 })
 ```
 
@@ -73,7 +74,7 @@ The data within the `account-proof` service will look like:
     signatures: [CompositeSignature],
     address: "0xUSER",  // The user's address
     timestamp: 1630705495551, // UNIX timestamp
-    domainTag: "AWESOME_DAPP", // Optional
+    appDomainTag: "AWESOME-APP-V0.0-user", // Optional
   }         
 }
 ```
@@ -114,9 +115,9 @@ backend must follow in using this data are specific.
       const Timestamp = AccountProof.timestamp
 
       const Message = WalletUtils.encodeMessageForProvableAuthnVerifying(
-        Address,              // Address of the user authenticating
-        Timestamp,            // Timestamp associated with the authentication
-        "Awesome-Dapp"        // Application domain tag  
+        Address,                    // Address of the user authenticating
+        Timestamp,                  // Timestamp associated with the authentication
+        "AWESOME-APP-V0.0-user"     // Application domain tag  
       )
       ```
 
@@ -132,10 +133,10 @@ backend must follow in using this data are specific.
       const rightPaddedHexBuffer = (value, pad) =>
         Buffer.from(value.padEnd(pad * 2, 0), "hex")
 
-      const YourApplicationsDomainTag = "Awesome-Dapp"
+      const CUSTOM_APP_DOMAIN_TAG = "AWESOME-APP-V0.0-user"
       const DomainTag = 
         rightPaddedHexBuffer(
-            Buffer.from(YourApplicationsDomainTag).toString("hex"), 
+            Buffer.from(CUSTOM_APP_DOMAIN_TAG).toString("hex"), 
             32
         ).toString("hex")
 

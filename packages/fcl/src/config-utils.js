@@ -1,7 +1,7 @@
 import {config} from "@onflow/sdk"
 import {invariant} from "@onflow/util-invariant"
 
-const isServerSide = () => typeof window === 'undefined'
+const isServerSide = () => typeof window === "undefined"
 
 const SESSION_STORAGE = {
   can: !isServerSide(),
@@ -20,7 +20,6 @@ const NO_STORAGE = {
 }
 
 export const STORAGE_DEFAULT = SESSION_STORAGE
-export const APP_DOMAIN_TAG = "APP-V0.0-user"
 export const DISCOVERY_METHOD = "IFRAME/RPC"
 
 export async function configLens(regex) {
@@ -43,10 +42,7 @@ export async function buildAuthnConfig() {
     "discovery.wallet.method.default",
   ])
 
-  const appDomainTag = await config.first([
-    "fcl.appDomainTag",
-    "fcl.appDomainTag.default",
-  ])
+  const appDomainTag = await config.get("fcl.appDomainTag")
 
   invariant(
     discoveryWallet != null,
