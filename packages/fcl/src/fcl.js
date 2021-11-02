@@ -10,6 +10,9 @@ export {events} from "./events"
 import {currentUser} from "./current-user"
 export {currentUser}
 
+import {discovery} from "./discovery"
+export {discovery}
+
 export const authenticate = () => currentUser().authenticate()
 export const unauthenticate = () => currentUser().unauthenticate()
 export const reauthenticate = () => {
