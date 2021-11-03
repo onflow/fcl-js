@@ -93,7 +93,7 @@ function notExpired(user) {
   )
 }
 
-async function authenticate(opts = {redir: false}) {
+async function authenticate({ service, redir = false }) {
   return new Promise(async (resolve, reject) => {
     spawnCurrentUser()
     const user = await snapshot()
@@ -103,7 +103,7 @@ async function authenticate(opts = {redir: false}) {
       await buildAuthnConfig()
 
     const suppressRedirWarning = await config.get("fcl.warning.suppress.redir")
-    if (opts.redir && !suppressRedirWarning) {
+    if (redir && !suppressRedirWarning) {
       console.warn(
         `You are manually enabling a very experimental feature that is not yet standard, use at your own risk.
          You can disable this warning by setting fcl.warning.suppress.redir to true in your config`
@@ -112,7 +112,7 @@ async function authenticate(opts = {redir: false}) {
 
     try {
       const response = await execService({
-        service: {
+        service: service || {
           type: "authn",
           endpoint: discoveryWallet,
           method: discoveryWalletMethod,
@@ -122,7 +122,7 @@ async function authenticate(opts = {redir: false}) {
           appDomainTag,
           extensions: window.fcl_extensions || [],
         },
-        opts,
+        opts: { redir },
       })
       send(NAME, SET_CURRENT_USER, await buildUser(response))
     } catch (e) {
