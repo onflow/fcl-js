@@ -37,11 +37,9 @@ const HANDLERS = {
 
 const spawnProviders = () => spawn(HANDLERS, NAME)
 
-const authn = () => {
-  return {
-    subscribe: cb => subscriber(NAME, spawnProviders, cb),
-    snapshot: () => snapshoter(NAME, spawnProviders)
-  }
+const authn = {
+  subscribe: cb => subscriber(NAME, spawnProviders, cb),
+  snapshot: () => snapshoter(NAME, spawnProviders)
 }
 
 export default authn

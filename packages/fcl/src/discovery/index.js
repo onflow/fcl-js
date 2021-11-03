@@ -1,9 +1,7 @@
-import authn from "./providers/authn"
+import authn from "./services/authn"
 
 const discovery = {
-  providers: {
-    authn
-  }
+  authn
 }
 
 export {discovery}
