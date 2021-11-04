@@ -14,9 +14,20 @@ async function fetchServices() {
   }).then(d => d.json())
 }
 
-export async function getServices() {
+function getExtensions() {
+  return window.fcl_extensions || []
+}
+
+function filterServices(services = [], type) {
+  return services.filter(service => service.type === type)
+}
+
+export async function getServices({ type }) {
   try {
-    return await fetchServices()
+    const extensions = getExtensions()
+    const services = await fetchServices()
+    const combinedServices = [...extensions, ...services]
+    return filterServices(combinedServices, type)
   } catch(e) {
     return []
   }

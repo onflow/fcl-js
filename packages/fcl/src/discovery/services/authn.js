@@ -24,7 +24,7 @@ const warn = (fact, msg) => {
 const HANDLERS = {
   [INIT]: async ctx => {
     warn(typeof window === "undefined", '"fcl.discovery" is only available in the browser.')
-    const services = await getServices()
+    const services = await getServices({ type: NAME })
     ctx.put(RESULTS, services)
   },
   [SUBSCRIBE]: (ctx, letter) => {
