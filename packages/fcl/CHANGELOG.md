@@ -34,7 +34,7 @@ fcl.discovery.authn.snapshot()
 This will return a list a services which you can then authenticate with the following:
 
 ```javascript
-fcl.authenticate(service)
+fcl.authenticate({ service })
 ```
 
 An example React component could then wind up looking like this:
