@@ -1,7 +1,9 @@
 import {config} from "@onflow/sdk"
 import {invariant} from "@onflow/util-invariant"
 
-async function fetchServices() {
+const asyncPipe = (...fns) => input => fns.reduce((chain, fn) => chain.then(fn), Promise.resolve(input))
+
+async function addServices(services = []) {
   const endpoint = await config.first(["discovery.authn.api"])
   invariant(Boolean(endpoint), `"discovery.authn.api" in config must be defined.`)
   const url = new URL(endpoint)
@@ -12,23 +14,20 @@ async function fetchServices() {
       "Content-Type": "application/json",
     },
   }).then(d => d.json())
+  .then(json => [...services, ...json])
 }
 
-function getExtensions() {
-  return window.fcl_extensions || []
+function addExtensions(services = []) {
+  const extensions = window.fcl_extensions || []
+  return [...extensions, ...services]
 }
 
-function filterServices(services = [], type) {
+function filterServicesByType(services = [], type) {
   return services.filter(service => service.type === type)
 }
 
-export async function getServices({ type }) {
-  try {
-    const extensions = getExtensions()
-    const services = await fetchServices()
-    const combinedServices = [...extensions, ...services]
-    return filterServices(combinedServices, type)
-  } catch(e) {
-    return []
-  }
-}
+export const getServices = ({ type }) => asyncPipe(
+  addServices,
+  addExtensions,
+  s => filterServicesByType(s, type)
+)([])
