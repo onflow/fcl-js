@@ -3,6 +3,58 @@
 - YYYY-MM-DD **BREAKING?** -- description
 
 - 2021-10-29 -- Removes default `config.fcl.appDomainTag` and updates docs.
+- 2021-11=05 -- Allow configurable Discovery in FCL via `fcl.discovery` with current support for authn services.
+
+An app developer will now be able to list services for authentication ("authn") in their application and authenticate without having to point directly at a single wallet or `"discovery.wallet"` which is a pre-constructed UI for Flow services.
+
+To use this, first set in the config the API endpoint for fetching Flow services.
+
+```javascript
+import { config } from "@onflow/fcl"
+
+config({
+  "discovery.authn.api": "https://fcl-discovery.onflow.org/api/testnet/authn"
+})
+
+// On mainnet, you can use https://fcl-discovery.onflow.org/api/authn
+```
+
+Then in an application you can get services with the following:
+
+```javascript
+import * as fcl from "@onflow/fcl"
+
+fcl.discovery.authn.subscribe()
+
+// OR 
+
+fcl.discovery.authn.snapshot()
+```
+
+This will return a list a services which you can then authenticate with the following:
+
+```javascript
+fcl.authenticate(service)
+```
+
+An example React component could then wind up looking like this:
+
+```javascript
+import "./config"
+import { useState, useEffect } from "react"
+import * as fcl from "@onflow/fcl"
+
+function Component() {
+  const [services, setServices] = useState([])
+  useEffect(() => fcl.discovery.authn.subscribe(res => setServices(res.results)), [])
+
+  return (
+    <div>
+      {services.map(service => <button key={service.id} onClick={() => fcl.authenticate({ service })}>Login with {service.provider.name}</button>)}
+    </div>
+  )
+}
+```
 
 ## 0.0.78-alpha.6 - 2021-10-25
 
