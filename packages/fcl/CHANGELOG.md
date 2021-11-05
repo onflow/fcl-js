@@ -24,7 +24,7 @@ Then in an application you can get services with the following:
 ```javascript
 import * as fcl from "@onflow/fcl"
 
-fcl.discovery.authn.subscribe()
+fcl.discovery.authn.subscribe(callback)
 
 // OR 
 
