@@ -47,6 +47,7 @@
   - [`currentUser().authorization`](#currentuserauthorization)
   - [`currentUser().signUserMessage`](#currentusersignusermessage)
   - [`currentUser().verifyUserSignatures`](#currentuserverifyusersignatures)
+  - [`discovery`](#discovery)
 - [On-chain Interactions](#on-chain-interactions)
     - [Methods](#methods-2)
     - [Query and Mutate Flow with Cadence](#query-and-mutate-flow-with-cadence)
@@ -241,14 +242,15 @@ addStuff().then((d) => console.log(d)); // 13 (5 + 7 + 1)
 
 ### Common Configuration Keys
 
-| Name                            | Example                                              | Description                                                                                                                                                                                    |
-| ------------------------------- | ---------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `accessNode.api` **(required)** | `https://access-testnet.onflow.org`                  | API URL for the Flow Blockchain Access Node you want to be communicating with. See all available access node endpoints [here](https://docs.onflow.org/access-api/#flow-access-node-endpoints). |
-| `env`                           | `testnet`                                            | Used in conjunction with stored interactions. Possible values: `local`, `canarynet`, `testnet`, `mainnet`                                                                                      |
+| Name                              | Example                                              | Description                                                                                                                                                                                    |
+| --------------------------------- | ---------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `accessNode.api` **(required)**   | `https://access-testnet.onflow.org`                  | API URL for the Flow Blockchain Access Node you want to be communicating with. See all available access node endpoints [here](https://docs.onflow.org/access-api/#flow-access-node-endpoints). |
+| `env`                             | `testnet`                                            | Used in conjunction with stored interactions. Possible values: `local`, `canarynet`, `testnet`, `mainnet`                                                                                      |
 | `discovery.wallet` **(required)** | `https://fcl-discovery.onflow.org/testnet/authn`     | Points FCL at the Wallet or Wallet Discovery mechanism.                                                                                                                                        |
-| `app.detail.title`              | `Cryptokitties`                                      | Your applications title, can be requested by wallets and other services.                                                                                                                       |
-| `app.detail.icon`               | `https://fcl-discovery.onflow.org/images/blocto.png` | Url for your applications icon, can be requested by wallets and other services.                                                                                                                |
-| `challenge.handshake`           | **DEPRECATED**                                       | Use `discovery.wallet` instead.                                                                                                                                                                |
+| `discovery.authn.api`             | `https://fcl-discovery.onflow.org/api/testnet/authn` | Alternative configurable Wallet Discovery mechanism. Read more on [discovery](#discovery)                                                                                                      |
+| `app.detail.title`                | `Cryptokitties`                                      | Your applications title, can be requested by wallets and other services.                                                                                                                       |
+| `app.detail.icon`                 | `https://fcl-discovery.onflow.org/images/blocto.png` | Url for your applications icon, can be requested by wallets and other services.                                                                                                                |
+| `challenge.handshake`             | **DEPRECATED**                                       | Use `discovery.wallet` instead.                                                                                                                                                                |
 
 ### Address replacement in scripts and transactions
 
@@ -326,6 +328,10 @@ fcl
 // anywhere on the page
 fcl.authenticate();
 ```
+
+#### Note
+
+⚠️ `authenticate` can also take a service returned from (discovery)[#discovery] with `fcl.authenticate({ service })`.
 
 #### Examples
 
@@ -564,6 +570,60 @@ export const signMessage = async () => {
   }
 }
 ```
+
+---
+
+### Discovery
+
+## `discovery`
+
+An alternative to Discovery Wallet (a pre-built service list for authentication) where dapp developers can access services in directly in their code in order to build customized authentication experiences. 
+
+> ⚠️**The following methods can only be used in web browsers.**
+
+#### Note
+
+⚠️`discovery.authn.endpoint` value **must** be set in the configuration before calling this method. See [FCL Configuration](#configuration).
+
+### Suggested Configuration
+
+| Environment                     | Example                                              |
+| ------------------------------- | ---------------------------------------------------- |
+| Mainnet                         | `https://fcl-discovery.onflow.org/api/authn`         |
+| Testnet                         | `https://fcl-discovery.onflow.org/api/testnet/authn` |
+
+If the Discovery endpoint is set in config, then you can iterate through authn services and pass the chosen service to [authenticate](#authenticate) to authenticate a user.
+
+#### Usage
+
+```javascript
+import "./config"
+import { useState, useEffect } from "react"
+import * as fcl from "@onflow/fcl"
+
+function Component() {
+  const [services, setServices] = useState([])
+  useEffect(() => fcl.discovery.authn.subscribe(res => setServices(res.results)), [])
+
+  return (
+    <div>
+      {services.map(service => <button key={service.id} onClick={() => fcl.authenticate({ service })}>Login with {service.provider.name}</button>)}
+    </div>
+  )
+}
+```
+
+### authn
+
+---
+
+## `discovery.authn.snapshot()`
+
+Return a list of `authn` services.
+
+## `discovery.authn.subscribe(callback)`
+
+The callback sent to `subscribe` will be called with a list of `authn` services.
 
 ---
 
