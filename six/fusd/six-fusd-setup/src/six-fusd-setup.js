@@ -8,39 +8,45 @@ const DEPS = new Set([
 
 export const TITLE = "FUSD Setup"
 export const DESCRIPTION = "Set up a FUSD Vault and Receiver for an account."
-export const VERSION = "0.0.3"
-export const HASH = "187055772ca2912d1eaa13845485891fc854a5094e2fbd613a0c6e8c914b293f"
+export const VERSION = "0.0.4"
+export const HASH = "944bcb6058b3d5e8304e3657251207fd505e7c9381b022c55365451cfda5b48c"
 export const CODE = 
-`import FungibleToken from 0xFUNGIBLETOKENADDRESS
+`// This transaction configures the signer's account with an empty FUSD vault.
+//
+// It also links the following capabilities:
+//
+// - FungibleToken.Receiver: this capability allows this account to accept FUSD deposits.
+// - FungibleToken.Balance: this capability allows anybody to inspect the FUSD balance of this account.
+
+import FungibleToken from 0xFUNGIBLETOKENADDRESS
 import FUSD from 0xFUSDADDRESS
 
 transaction {
-  prepare(signer: AuthAccount) {
 
-    let existingVault = signer.borrow<&FUSD.Vault>(from: /storage/fusdVault)
+    prepare(signer: AuthAccount) {
 
-    // If the account is already set up that's not a problem, but we don't want to replace it
-    if (existingVault != nil) {
-        return
+        // It's OK if the account already has a Vault, but we don't want to replace it
+        if(signer.borrow<&FUSD.Vault>(from: /storage/fusdVault) != nil) {
+            return
+        }
+        
+        // Create a new FUSD Vault and put it in storage
+        signer.save(<-FUSD.createEmptyVault(), to: /storage/fusdVault)
+
+        // Create a public capability to the Vault that only exposes
+        // the deposit function through the Receiver interface
+        signer.link<&FUSD.Vault{FungibleToken.Receiver}>(
+            /public/fusdReceiver,
+            target: /storage/fusdVault
+        )
+
+        // Create a public capability to the Vault that only exposes
+        // the balance field through the Balance interface
+        signer.link<&FUSD.Vault{FungibleToken.Balance}>(
+            /public/fusdBalance,
+            target: /storage/fusdVault
+        )
     }
-    
-    // Create a new FUSD Vault and put it in storage
-    signer.save(<-FUSD.createEmptyVault(), to: /storage/fusdVault)
-
-    // Create a public capability to the Vault that only exposes
-    // the deposit function through the Receiver interface
-    signer.link<&FUSD.Vault{FungibleToken.Receiver}>(
-      /public/fusdReceiver,
-      target: /storage/fusdVault
-    )
-
-    // Create a public capability to the Vault that only exposes
-    // the balance field through the Balance interface
-    signer.link<&FUSD.Vault{FungibleToken.Balance}>(
-      /public/fusdBalance,
-      target: /storage/fusdVault
-    )
-  }
 }
 `
 
