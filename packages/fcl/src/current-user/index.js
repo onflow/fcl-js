@@ -100,7 +100,7 @@ async function authenticate({ service, redir = false }) {
     if (user.loggedIn && notExpired(user)) return resolve(user)
 
     const {discoveryWallet, discoveryWalletMethod, appDomainTag} =
-      await buildAuthnConfig()
+      await buildAuthnConfig({ service })
 
     const suppressRedirWarning = await config.get("fcl.warning.suppress.redir")
     if (redir && !suppressRedirWarning) {
