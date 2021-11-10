@@ -9,40 +9,50 @@ const DEPS = new Set([
 
 export const TITLE = "FUSD Transfer"
 export const DESCRIPTION = "Transfer FUSD to another Flow account."
-export const VERSION = "0.0.5"
-export const HASH = "0459184235a66fd5d7aef72a0b0e15de2b1b6c540a6aa7b68880860ff219979e"
+export const VERSION = "0.0.6"
+export const HASH = "f30aca02eb7fea98c55396c1eda24eacf7d85b48f88a1a337e7bae154e898587"
 export const CODE = 
-`import FungibleToken from 0xFUNGIBLETOKENADDRESS
+`// This transaction withdraws FUSD from the signer's account and deposits it into a recipient account. 
+// This transaction will fail if the recipient does not have an FUSD receiver. 
+// No funds are transferred or lost if the transaction fails.
+//
+// Parameters:
+// - amount: The amount of FUSD to transfer (e.g. 10.0)
+// - to: The recipient account address.
+//
+// This transaction will fail if either the sender or recipient does not have
+// an FUSD vault stored in their account. To check if an account has a vault
+// or initialize a new vault, use check_fusd_vault_setup.cdc and setup_fusd_vault.cdc
+// respectively.
+
+import FungibleToken from 0xFUNGIBLETOKENADDRESS
 import FUSD from 0xFUSDADDRESS
 
 transaction(amount: UFix64, to: Address) {
 
-  // The Vault resource that holds the tokens being transferred
-  let sentVault: @FungibleToken.Vault
+    // The Vault resource that holds the tokens that are being transferred
+    let sentVault: @FungibleToken.Vault
 
-  prepare(signer: AuthAccount) {
-    // Get a reference to the signer's stored vault
-    let vaultRef = signer
-      .borrow<&FUSD.Vault>(from: /storage/fusdVault)
-      ?? panic("Could not borrow reference to the owner's Vault!")
+    prepare(signer: AuthAccount) {
+        // Get a reference to the signer's stored vault
+        let vaultRef = signer.borrow<&FUSD.Vault>(from: /storage/fusdVault)
+            ?? panic("Could not borrow reference to the owner's Vault!")
 
-    // Withdraw tokens from the signer's stored vault
-    self.sentVault <- vaultRef.withdraw(amount: amount)
-  }
+        // Withdraw tokens from the signer's stored vault
+        self.sentVault <- vaultRef.withdraw(amount: amount)
+    }
 
-  execute {
-    // Get the recipient's public account object
-    let recipient = getAccount(to)
+    execute {
+        // Get the recipient's public account object
+        let recipient = getAccount(to)
 
-    // Get a reference to the recipient's Receiver
-    let receiverRef = recipient
-      .getCapability(/public/fusdReceiver)
-      .borrow<&{FungibleToken.Receiver}>()
-      ?? panic("Could not borrow receiver reference to the recipient's Vault")
+        // Get a reference to the recipient's Receiver
+        let receiverRef = recipient.getCapability(/public/fusdReceiver)!.borrow<&{FungibleToken.Receiver}>()
+            ?? panic("Could not borrow receiver reference to the recipient's Vault")
 
-    // Deposit the withdrawn tokens in the recipient's receiver
-    receiverRef.deposit(from: <-self.sentVault)
-  }
+        // Deposit the withdrawn tokens in the recipient's receiver
+        receiverRef.deposit(from: <-self.sentVault)
+    }
 }
 `
 
