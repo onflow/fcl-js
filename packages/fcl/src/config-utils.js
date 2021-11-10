@@ -43,11 +43,9 @@ export async function buildAuthnConfig() {
   ])
 
   const appDomainTag = await config.get("fcl.appDomainTag")
-  const authnEndpoint = await config.get("discovery.authn.endpoint")
-  const isAuthnConfigured = discoveryWallet != null || Boolean(authnEndpoint)
 
   invariant(
-    isAuthnConfigured,
+    discoveryWallet != null,
     `
       Required value for discovery.wallet not defined in config.
       See: "https://github.com/onflow/flow-js-sdk/blob/master/packages/fcl/src/exec/query.md#configuration"
