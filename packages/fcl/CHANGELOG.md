@@ -13,7 +13,7 @@ To use this, first set in the config the API endpoint for fetching Flow services
 import { config } from "@onflow/fcl"
 
 config({
-  "discovery.authn.api": "https://fcl-discovery.onflow.org/api/testnet/authn"
+  "discovery.authn.endpoint": "https://fcl-discovery.onflow.org/api/testnet/authn"
 })
 
 // On mainnet, you can use https://fcl-discovery.onflow.org/api/authn

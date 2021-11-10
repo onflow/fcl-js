@@ -4,8 +4,8 @@ import {invariant} from "@onflow/util-invariant"
 const asyncPipe = (...fns) => input => fns.reduce((chain, fn) => chain.then(fn), Promise.resolve(input))
 
 async function addServices(services = []) {
-  const endpoint = await config.first(["discovery.authn.api"])
-  invariant(Boolean(endpoint), `"discovery.authn.api" in config must be defined.`)
+  const endpoint = await config.get("discovery.authn.endpoint")
+  invariant(Boolean(endpoint), `"discovery.authn.endpoint" in config must be defined.`)
   const url = new URL(endpoint)
 
   return fetch(url, {
