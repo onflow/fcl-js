@@ -17,11 +17,18 @@ export function pop(service, opts = {}) {
     buildMessageHandler({close, send, onReady, onResponse, onMessage})
   )
   const [$pop, unmount] = renderPop(serviceEndpoint(service))
+  const timer = setInterval(function () {
+    if ($pop && $pop.closed) {
+      close()
+    }
+  }, 500)
+
   return {send, close}
 
   function close() {
     try {
       window.removeEventListener("message", buildMessageHandler)
+      clearInterval(timer)
       unmount()
       onClose()
     } catch (error) {

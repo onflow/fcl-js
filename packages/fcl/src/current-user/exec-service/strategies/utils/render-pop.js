@@ -25,18 +25,11 @@ export function renderPop(src) {
 
   previousUrl = src
 
-  var timer = setInterval(function () {
-    if (popup && popup.closed) {
-      clearInterval(timer)
-      popup = null
-    }
-  }, 1000)
-
   const unmount = () => {
     if (popup && !popup.closed) {
       popup.close()
-      popup = null
     }
+    popup = null
   }
 
   return [popup, unmount]
