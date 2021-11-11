@@ -31,7 +31,7 @@ export async function configLens(regex) {
   )
 }
 
-export async function buildAuthnConfig({ service }) {
+export async function buildAuthnConfig() {
   const discoveryWallet = await config.first([
     "discovery.wallet",
     "challenge.handshake",
@@ -43,17 +43,6 @@ export async function buildAuthnConfig({ service }) {
   ])
 
   const appDomainTag = await config.get("fcl.appDomainTag")
-  const authnEndpoint = await config.get("discovery.authn.endpoint")
-  const discoveryApiRequiredAndSet = Boolean(service) && Boolean(authnEndpoint)
-  const isAuthnConfigured = discoveryWallet != null || discoveryApiRequiredAndSet
-
-  invariant(
-    isAuthnConfigured,
-    `
-      Required value for "discovery.wallet" or "discovery.authn.endpoint" not defined in config.
-      See: "https://github.com/onflow/flow-js-sdk/blob/master/packages/fcl/src/exec/query.md#configuration"
-    `
-  )
 
   return {discoveryWallet, discoveryWalletMethod, appDomainTag}
 }

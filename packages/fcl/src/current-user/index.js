@@ -100,7 +100,15 @@ async function authenticate({ service, redir = false }) {
     if (user.loggedIn && notExpired(user)) return resolve(user)
 
     const {discoveryWallet, discoveryWalletMethod, appDomainTag} =
-      await buildAuthnConfig({ service })
+      await buildAuthnConfig()
+
+    invariant(
+      service || discoveryWallet,
+      `
+        If no service passed to "authenticate," then "discovery.wallet" must be defined in config.
+        See: "https://github.com/onflow/flow-js-sdk/blob/master/packages/fcl/src/exec/query.md#configuration"
+      `
+    )
 
     const suppressRedirWarning = await config.get("fcl.warning.suppress.redir")
     if (redir && !suppressRedirWarning) {
