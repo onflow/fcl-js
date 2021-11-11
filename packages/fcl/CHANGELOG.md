@@ -2,6 +2,7 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+- 2021-11-10 -- Updates pop/tab to reject on force window close
 - 2021-10-29 -- Removes default `config.fcl.appDomainTag` and updates docs.
 
 ## 0.0.78-alpha.6 - 2021-10-25
