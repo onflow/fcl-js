@@ -15,18 +15,11 @@ export function renderTab(src) {
 
   previousUrl = src
 
-  var timer = setInterval(function () {
-    if (tab && tab.closed) {
-      clearInterval(timer)
-      tab = null
-    }
-  }, 1000)
-
   const unmount = () => {
     if (tab && !tab.closed) {
       tab.close()
-      tab = null
     }
+    tab = null
   }
 
   return [tab, unmount]
