@@ -106,7 +106,7 @@ async function authenticate({ service, redir = false }) {
       service || discoveryWallet,
       `
         If no service passed to "authenticate," then "discovery.wallet" must be defined in config.
-        See: "https://github.com/onflow/flow-js-sdk/blob/master/packages/fcl/src/exec/query.md#configuration"
+        See: "https://docs.onflow.org/fcl/reference/api/#setting-configuration-values"
       `
     )
 
