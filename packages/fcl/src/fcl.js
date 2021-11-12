@@ -10,14 +10,17 @@ export {events} from "./events"
 import {currentUser} from "./current-user"
 export {currentUser}
 
-export const authenticate = () => currentUser().authenticate()
+import {discovery} from "./discovery"
+export {discovery}
+
+export const authenticate = (opts = {}) => currentUser().authenticate(opts)
 export const unauthenticate = () => currentUser().unauthenticate()
-export const reauthenticate = () => {
+export const reauthenticate = (opts = {}) => {
   currentUser().unauthenticate()
-  return currentUser().authenticate()
+  return currentUser().authenticate(opts)
 }
-export const signUp = () => currentUser().authenticate()
-export const logIn = () => currentUser().authenticate()
+export const signUp = (opts = {}) => currentUser().authenticate(opts)
+export const logIn = (opts = {}) => currentUser().authenticate(opts)
 
 export const authz = currentUser().authorization
 
