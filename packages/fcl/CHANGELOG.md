@@ -2,6 +2,8 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+## 0.0.78-alpha.7 - 2021-11-12
+
 - 2021-11-10 -- Allow configurable Discovery in FCL via `fcl.discovery` with current support for authn services.
 
 An app developer will now be able to list services for authentication ("authn") in their application and authenticate without having to point directly at a single wallet or `"discovery.wallet"` which is a pre-constructed UI for Flow services.
