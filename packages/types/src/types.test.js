@@ -163,6 +163,24 @@ import * as t from "./types.js"
       fields: [{name: "Jeffysaur_Name", value: "Mr Jeff The Dinosaur"}],
     },
   ],
+  [
+    t.Path,
+    {
+      domain: "public",
+      identifier: "flowTokenVault"
+    },
+    {
+      type: "Path",
+      value: {
+        domain: "public",
+        identifier: "flowTokenVault"
+      },
+    },
+    {
+      domain: "public",
+      identifier: "flowTokenVault"
+    },
+  ]
 ].forEach(([cast, input, asArgument, asInjection, shouldError = false]) => {
   describe(cast.label, () => {
     test(`t.${cast.label}.asArgument(${input})`, () => {

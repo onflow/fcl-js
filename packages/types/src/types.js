@@ -535,3 +535,19 @@ export const Struct = (id, fields = []) =>
     },
     (v) => v
   )
+
+export const Path = type(
+    "Path",
+    (v) => {
+      if (isObj(v))
+        return {
+          type: "Path",
+          value: {
+            domain: v.domain,
+            identifier: v.identifier
+          },
+        }
+      throwTypeError("Expected Object for type Path")
+    },
+    (v) => v
+  )
