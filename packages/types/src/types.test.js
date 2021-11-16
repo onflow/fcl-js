@@ -180,6 +180,25 @@ import * as t from "./types.js"
       domain: "public",
       identifier: "flowTokenVault"
     },
+  ],
+  [
+    t.Path,
+    {
+      domain: "notValidDomain",
+      identifier: "flowTokenVault"
+    },
+    {
+      type: "Path",
+      value: {
+        domain: "notValidDomain",
+        identifier: "flowTokenVault"
+      },
+    },
+    {
+      domain: "notValidDomain",
+      identifier: "flowTokenVault"
+    },
+    true
   ]
 ].forEach(([cast, input, asArgument, asInjection, shouldError = false]) => {
   describe(cast.label, () => {

@@ -539,7 +539,19 @@ export const Struct = (id, fields = []) =>
 export const Path = type(
     "Path",
     (v) => {
-      if (isObj(v))
+      if (isObj(v)) {
+        if (!isString(v.domain)) {
+          throwTypeError(`Expected a string for the Path domain but found ${v.domain}. Find out more about the Path type here: https://docs.onflow.org/cadence/json-cadence-spec/#path`)
+        }
+
+        if (!(v.domain === "storage" || v.domain === "private" || v.domain === "public")) {
+          throwTypeError(`Expected either "storage", "private" or "public" as the Path domain but found ${v.domain}. Find out more about the Path type here: https://docs.onflow.org/cadence/json-cadence-spec/#path`)
+        }
+
+        if (!isString(v.identifier)) {
+          throwTypeError(`Expected a string for the Path identifier but found ${v.identifier}. Find out more about the Path type here: https://docs.onflow.org/cadence/json-cadence-spec/#path`)
+        }
+
         return {
           type: "Path",
           value: {
@@ -547,6 +559,7 @@ export const Path = type(
             identifier: v.identifier
           },
         }
+      }
       throwTypeError("Expected Object for type Path")
     },
     (v) => v
