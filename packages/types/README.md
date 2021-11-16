@@ -438,3 +438,21 @@ sdk.build([
   ])
 ])
 ```
+
+### Path
+
+```javascript
+import * as t from "@onflow/types"
+
+sdk.build([
+  sdk.args([
+    sdk.arg(
+      {
+        domain: "public"                // public | private | storage
+        identifier: "flowTokenVault"
+      }
+      t.Path
+    )
+  ])
+])
+```

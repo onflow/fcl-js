@@ -2,6 +2,10 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.0.6 -- 2021-11-16
+
+- 2021-11-16 Added `t.Path`
+
 ### 0.0.5 -- 2021-07-22
 
 - 2021-07-22 -- Declaring a `UFix64` value without prodviding a correctly formatted fractional throws an error. 
