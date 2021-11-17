@@ -1,6 +1,10 @@
 ## Unreleased
 
 - YYYY-MM-DD **BREAKING?** -- description
+- 
+## 0.0.78-alpha.8 - 2021-11-17
+
+- 2021-11-17 -- VSN `@onflow/types` 0.0.5 -> 0.0.6
 
 ## 0.0.78-alpha.7 - 2021-11-12
 
