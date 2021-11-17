@@ -469,7 +469,7 @@ The callback passed to subscribe will be called when the user authenticates and 
 
 #### Arguments
 
-| Name       | Type     |                                                                                                                                        |  |
+| Name       | Type     |                                                                                                                                        |
 | ---------- | -------- | -------------------------------------------------------------------------------------------------------------------------------------- |
 | `callback` | function | The callback will be called with the [current user](#currentuserobject) as the first argument when the current user is set or removed. |
 
