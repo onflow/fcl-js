@@ -363,6 +363,24 @@ sdk.build([
 ])
 ```
 
+### Path
+
+```javascript
+import * as t from "@onflow/types"
+
+sdk.build([
+  sdk.args([
+    sdk.arg(
+      {
+        domain: "public"                // public | private | storage
+        identifier: "flowTokenVault"
+      }
+      t.Path
+    )
+  ])
+])
+```
+
 # Exist but not supported
 
 The following, while technically possible, are impracticle. We strongly recommend not using them as arguments for transactions or scripts.
@@ -434,24 +452,6 @@ sdk.build([
         fields: [{name: "Jeffysaur_Name", value: "Mr Jeff The Dinosaur"}],
       }
       t.Resource("0x01.Jeffysaur", [{value: t.String}]),
-    )
-  ])
-])
-```
-
-### Path
-
-```javascript
-import * as t from "@onflow/types"
-
-sdk.build([
-  sdk.args([
-    sdk.arg(
-      {
-        domain: "public"                // public | private | storage
-        identifier: "flowTokenVault"
-      }
-      t.Path
     )
   ])
 ])
