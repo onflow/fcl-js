@@ -40,6 +40,6 @@ export async function buildUser(data) {
     cid: deriveCompositeId(authn),
     loggedIn: true,
     services: services,
-    expiresAt: data.exp,
+    expiresAt: data.expires,
   }
 }
