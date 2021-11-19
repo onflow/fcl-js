@@ -152,7 +152,8 @@ export const prepAccount = (acct, opts = {}) => ix => {
   const role = opts.role
   const tempId = uuid()
 
-  acct = typeof acct === "function" ? {resolve: acct} : acct
+  if (acct.authorization && isFn(acct.authorization)) acct = {resolve: acct.authorization}
+  if (!acct.authorization && isFn(acct)) acct = {resolve: acct}
 
   ix.accounts[tempId] = {
     ...ACCOUNT,

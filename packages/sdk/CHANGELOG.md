@@ -2,6 +2,21 @@
 
 - YYYY-MM-DD **BREAKING?** -- Who: description
 
+- 2021-11-17 -- [@chasefleming](https://github.com/chasefleming): Support passing of current user as authorization. Simply pass `currentUser` instead of `currentUser.authorization` or `currentUser().authorization`.
+
+```javascript
+import {currentUser} from "@onflow/fcl"
+
+fcl.send([
+  fcl.transaction(CODE),
+  fcl.proposer(currentUser),
+  fcl.payer(currentUser),
+  fcl.authorizations([
+    currentUser,
+  ])
+]).then(fcl.decode)
+```
+
 ## 0.0.56-alpha.1 -- 2021-10-21
 
 - 2021-10-21 -- [@GregSantos](https://github.com/gregsantos): SDK Alpha Release `@onflow/sdk` 0.0.55 -> 0.0.56-alpha.1
