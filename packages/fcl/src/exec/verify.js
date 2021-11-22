@@ -46,67 +46,67 @@ export async function verifyUserSignatures(msg, compSigs) {
 }
 
 const VERIFY_SIG_SCRIPT = `
-import Crypto
+  import Crypto
 
-pub fun getHashAlgo(_ x: Int): HashAlgorithm {
-  switch x {
-  case 1:
-      return HashAlgorithm.SHA2_256
-  case 2:
-      return HashAlgorithm.SHA2_384
-  case 3:
-      return HashAlgorithm.SHA3_256
-  case 4:
-      return HashAlgorithm.SHA3_384
-  case 5:
-      return HashAlgorithm.KMAC128_BLS_BLS12_381
-  default:
-      return HashAlgorithm.SHA3_256
+  pub fun getHashAlgo(_ x: Int): HashAlgorithm {
+    switch x {
+    case 1:
+        return HashAlgorithm.SHA2_256
+    case 2:
+        return HashAlgorithm.SHA2_384
+    case 3:
+        return HashAlgorithm.SHA3_256
+    case 4:
+        return HashAlgorithm.SHA3_384
+    case 5:
+        return HashAlgorithm.KMAC128_BLS_BLS12_381
+    default:
+        return HashAlgorithm.SHA3_256
+    }
   }
-}
+      
+  pub fun main(
+    message: String,
+    rawPublicKeys: [String],
+    weights: [UFix64],
+    signAlgos: [UInt],
+    hashAlgos: [UInt],
+    signatures: [String],
+  ): Bool {
+
+    let keyList = Crypto.KeyList()
     
-pub fun main(
-  message: String,
-  rawPublicKeys: [String],
-  weights: [UFix64],
-  signAlgos: [UInt],
-  hashAlgos: [UInt],
-  signatures: [String],
-): Bool {
-
-  let keyList = Crypto.KeyList()
-  
-  var i = 0
-  for rawPublicKey in rawPublicKeys {
-    keyList.add(
-      PublicKey(
-        publicKey: rawPublicKey.decodeHex(),
-        signatureAlgorithm: signAlgos[i] == 2 ? SignatureAlgorithm.ECDSA_P256 : SignatureAlgorithm.ECDSA_secp256k1 
-      ),
-      hashAlgorithm: getHashAlgo(Int(hashAlgos[i])),
-      weight: weights[i],
-    )
-    i = i + 1
-  }
-
-  let signatureSet: [Crypto.KeyListSignature] = []
-
-  var j = 0
-  for signature in signatures {
-    signatureSet.append(
-      Crypto.KeyListSignature(
-        keyIndex: j,
-        signature: signature.decodeHex()
+    var i = 0
+    for rawPublicKey in rawPublicKeys {
+      keyList.add(
+        PublicKey(
+          publicKey: rawPublicKey.decodeHex(),
+          signatureAlgorithm: signAlgos[i] == 2 ? SignatureAlgorithm.ECDSA_P256 : SignatureAlgorithm.ECDSA_secp256k1 
+        ),
+        hashAlgorithm: getHashAlgo(Int(hashAlgos[i])),
+        weight: weights[i],
       )
-    )
-    j = j + 1
-  }
+      i = i + 1
+    }
+
+    let signatureSet: [Crypto.KeyListSignature] = []
+
+    var j = 0
+    for signature in signatures {
+      signatureSet.append(
+        Crypto.KeyListSignature(
+          keyIndex: j,
+          signature: signature.decodeHex()
+        )
+      )
+      j = j + 1
+    }
+      
+    let signedData = message.decodeHex()
     
-  let signedData = message.decodeHex()
-  
-  return keyList.verify(
-    signatureSet: signatureSet,
-    signedData: signedData
-  )
-}
+    return keyList.verify(
+      signatureSet: signatureSet,
+      signedData: signedData
+    )
+  }
 `
