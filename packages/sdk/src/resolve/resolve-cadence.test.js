@@ -31,7 +31,7 @@ describe('resolveCadence', () => {
     expect(ix.message.cadence).toBe(await CADENCE())
   })
   
-  test("cadence replaces all addresses in config", async () => {
+  test("replaces all addresses from config", async () => {
     const CADENCE = async function() {
       return `
         import MyContract from '0xMY_CONTRACT_ADDRESS'
