@@ -374,7 +374,7 @@ sdk.build([
       {
         domain: "public"                // public | private | storage
         identifier: "flowTokenVault"
-      }
+      },
       t.Path
     )
   ])
