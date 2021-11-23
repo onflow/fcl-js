@@ -34,7 +34,7 @@ describe('resolveCadence', () => {
   test("replaces all addresses from config", async () => {
     const CADENCE = async function() {
       return `
-        import MyContract from '0xMY_CONTRACT_ADDRESS'
+        import MyContract from 0xMY_CONTRACT_ADDRESS
   
         pub fun main(): Address {
           return 0xMY_CONTRACT_ADDRESS
@@ -44,7 +44,7 @@ describe('resolveCadence', () => {
   
     const RESULT = async function() {
       return `
-        import MyContract from '0x123abc'
+        import MyContract from 0x123abc
   
         pub fun main(): Address {
           return 0x123abc
@@ -53,6 +53,34 @@ describe('resolveCadence', () => {
     }
   
     config.put("0xMY_CONTRACT_ADDRESS", "0x123abc")
+  
+    const ix = await pipe([
+      makeScript,
+      put("ix.cadence", CADENCE),
+      resolveCadence,
+    ])(interaction())
+  
+    expect(ix.message.cadence).toEqual(await RESULT())
+  })
+
+  test("similar config names do not replace each other", async () => {
+    const CADENCE = async function() {
+      return `
+        import FooBar from 0xFoo
+        import FooBar from 0xFooBar
+      `
+    }
+  
+    const RESULT = async function() {
+      return `
+        import FooBar from 0x123
+        import FooBar from 0x456
+      `
+    }
+  
+    config
+      .put('0xFoo', '0x123')
+      .put('0xFooBar', '0x456')
   
     const ix = await pipe([
       makeScript,
