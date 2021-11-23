@@ -68,6 +68,19 @@ describe('resolveCadence', () => {
       return `
         import FooBar from 0xFoo
         import FooBar from 0xFooBar
+
+        pub fun main(): Address {
+          log(0xFoo)
+          return 0xFoo
+        }
+
+        pub fun other(): Address {
+          log(0xFooBar)
+          return 0xFooBar
+        }
+
+        pub fun otherTwo(): Address {return 0xFoo}
+        pub fun otherThree(): Address {return 0xFooBar}
       `
     }
   
@@ -75,6 +88,19 @@ describe('resolveCadence', () => {
       return `
         import FooBar from 0x123
         import FooBar from 0x456
+
+        pub fun main(): Address {
+          log(0x123)
+          return 0x123
+        }
+
+        pub fun other(): Address {
+          log(0x456)
+          return 0x456
+        }
+
+        pub fun otherTwo(): Address {return 0x123}
+        pub fun otherThree(): Address {return 0x456}
       `
     }
   
