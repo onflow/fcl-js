@@ -19,7 +19,7 @@ export async function resolveCadence(ix) {
       .then(d =>
         Object.entries(d).reduce(
           (cadence, [key, value]) => {
-            const regex = new RegExp(key, 'g')
+            const regex = new RegExp("(\\b" + key + "\\b)", 'g')
             return cadence.replace(regex, value)
           },
           cadence
