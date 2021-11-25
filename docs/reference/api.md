@@ -1890,7 +1890,7 @@ The format of all responses in FCL returned from `fcl.send(...)`. For full detai
 | `eventIndex`       | number                  | Used to prevent replay attacks.                                                                       |
 | `data`             | any                     | The data emitted from the event.                                                                      |
 
-### `Transaction Statuses`
+## `Transaction Statuses`
 
 The status of a transaction will depend on the Flow blockchain network and which phase it is in as it completes and is finalized.
 
@@ -1903,11 +1903,11 @@ The status of a transaction will depend on the Flow blockchain network and which
 | `4`         | Transaction Sealed - Transaction Complete. At this point the transaction result has been committed to the blockchain. |
 | `5`         | Transaction Expired                                                                                                   |
 
-### `GRPC Statuses`
+## `GRPC Statuses`
 
 The access node GRPC implementation follows the standard GRPC Core status code spec. View [here](https://grpc.github.io/grpc/core/md_doc_statuscodes.html).
 
-### `FType`
+## `FType`
 
 FCL arguments must specify one of the following support types for each value passed in.
 
