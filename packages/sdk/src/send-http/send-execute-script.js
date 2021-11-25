@@ -28,7 +28,7 @@ async function sendExecuteScriptAtBlockHeightRequest(ix, opts) {
   const res = await httpRequest({
     hostname: opts.node,
     port: 443,
-    path: `/scripts?block_height=${ix.block.id}`,
+    path: `/scripts?block_height=${ix.block.height}`,
     method: "POST",
     body: {
       script: ix.message.cadence,
