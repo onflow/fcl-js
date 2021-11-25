@@ -1,5 +1,35 @@
 import {invariant} from "@onflow/util-invariant"
 
+class HTTPRequestError extends Ersror {
+  constructor({error, hostname, path, port, method, body}) {
+    const msg = `
+      HTTP Request Error: An error occurred when interacting with the Access API.
+      error=${error}
+      hostname=${hostname}
+      path=${path}
+      port=${port}
+      method=${method}
+      body=${body}
+    `
+    super(msg)
+    this.name = "HTTP Request Error"
+  }
+}
+
+/**
+ * Creates an HTTP Request to an Access API.
+ * 
+ * Supports the Fetch API on Web Browsers and Deno.
+ * Uses the Node HTTP standard library for Node.
+ * 
+ * @param {String} hostname - Access API Hostname
+ * @param {Number} [port = 443] - Port of the Access API
+ * @param {String} path - Path to the resource on the Access API
+ * @param {String} method - HTTP Method
+ * @param {Object} body - HTTP Request Body
+ * 
+ * @returns Parsed JSON object response from Access API. 
+ */
 export async function httpRequest({
   hostname,
   port = 443,
@@ -18,7 +48,7 @@ export async function httpRequest({
       hostname + path,
       {
         method: method,
-        body: body,
+        body: JSON.stringify(body),
       }
     ).then(res => res.json())
 
@@ -52,7 +82,11 @@ export async function httpRequest({
         })
       })
 
-      req.on("error", reject)
+      req.on("error", error => {
+
+
+        reject(error)
+      })
       
       if (body) req.write(JSON.stringify(body))
       req.end()
