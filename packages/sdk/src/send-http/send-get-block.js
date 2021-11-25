@@ -36,7 +36,7 @@ async function sendGetBlockRequest(ix, opts) {
   const res = await httpRequest({
     hostname: opts.node,
     port: 443,
-    path: `/blocks?height=${ix.block.height}`,
+    path: `/blocks`,
     method: "GET",
     body: null
   })
@@ -47,7 +47,25 @@ async function sendGetBlockRequest(ix, opts) {
 function constructResponse(ix, res) {
   const ret = response()
   ret.tag = ix.tag
-  ret.block = res
+  ret.block = res.map(block => ({ // Multiple Blocks now are to be returned by the REST API, we'll need to account for that in how we return blocks back
+    id: block.header.id,
+    parentId: block.header.parent_id,
+    height: block.header.height,
+    timestamp: block.header.timestamp,
+    parentVoterSignature: block.header.parent_voter_signature, // NEW IN REST API!
+    collectionGuarantees: block.payload.collection_guarantees.map(collectionGuarantee => ({
+      collectionId: collectionGuarantee.collection_id,
+      signerIds: collectionGuarantee.signer_ids,
+      signatures: collectionGuarantee.signatures, // SCHEMA HAS THIS IS SINGULAR "SIGNATURE", CHECK ON THIS
+    })),
+    blockSeals:  block.payload.block_seals.map(blockSeal => ({ // LOTS OF ISSUES HERE, CHECK ON THIS
+      blockId: blockSeal.block_id,
+      executionReceiptId: null, // REMOVED IN SCHEMA, CHECK ON THIS
+      executionReceiptSignatures: null, // REMOVED IN SCHEMA, CHECK ON THIS
+      resultApprovalSignatures: null, // REMOVED IN SCHEMA, CHECK ON THIS
+    })),
+    signatures: null, // REMOVED IN SCHEMA, CHECK ON THIS
+  }))
 
   return ret
 }
