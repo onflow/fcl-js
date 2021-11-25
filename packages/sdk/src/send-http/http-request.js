@@ -1,6 +1,6 @@
 import {invariant} from "@onflow/util-invariant"
 
-class HTTPRequestError extends Ersror {
+class HTTPRequestError extends Error {
   constructor({error, hostname, path, port, method, body}) {
     const msg = `
       HTTP Request Error: An error occurred when interacting with the Access API.
@@ -17,7 +17,7 @@ class HTTPRequestError extends Ersror {
 }
 
 /**
- * Creates an HTTP Request to an Access API.
+ * Creates an HTTP Request to be sent to an Access API.
  * 
  * Supports the Fetch API on Web Browsers and Deno.
  * Uses the Node HTTP standard library for Node.
@@ -28,7 +28,7 @@ class HTTPRequestError extends Ersror {
  * @param {String} method - HTTP Method
  * @param {Object} body - HTTP Request Body
  * 
- * @returns Parsed JSON object response from Access API. 
+ * @returns JSON object response from Access API. 
  */
 export async function httpRequest({
   hostname,
@@ -38,9 +38,9 @@ export async function httpRequest({
   body,
 }) {
   const fetchTransport = fetch || window?.fetch
-  const nodeHttpsTransport = await import("https").catch(e => undefined)
+  const nodeHttpsTransport = await import("https").catch(_ => undefined)
 
-  invariant((fetchTransport || nodeHttpsTransport), "HTTP Request error: Could not find a supported http module.")
+  invariant((fetchTransport || nodeHttpsTransport), "HTTP Request error: Could not find a supported HTTP module.")
 
   if (fetchTransport) {
 
@@ -50,7 +50,14 @@ export async function httpRequest({
         method: method,
         body: JSON.stringify(body),
       }
-    ).then(res => res.json())
+    ).then(res => res.json()).catch(e => new HTTPRequestError({
+      error: e,
+      hostname,
+      port,
+      path,
+      method,
+      body
+    }))
 
   } else if (nodeHttpsTransport) {
 
@@ -76,16 +83,28 @@ export async function httpRequest({
           try {
             body = JSON.parse(Buffer.concat(body).toString());
           } catch(e) {
-              reject(e);
+            reject(new HTTPRequestError({
+              error: e,
+              hostname,
+              port,
+              path,
+              method,
+              body
+            }))
           }
           resolve(body);
         })
       })
 
-      req.on("error", error => {
-
-
-        reject(error)
+      req.on("error", e => {
+        reject(new HTTPRequestError({
+          error: e,
+          hostname,
+          port,
+          path,
+          method,
+          body
+        }))
       })
       
       if (body) req.write(JSON.stringify(body))
