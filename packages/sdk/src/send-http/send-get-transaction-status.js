@@ -1,7 +1,6 @@
 import {invariant} from "@onflow/util-invariant"
-import {AccessAPI, GetTransactionRequest} from "@onflow/protobuf"
 import {response} from "../response/response.js"
-import {unary as defaultUnary} from "./unary"
+import {httpRequest as defaultHttpRequest} from "./http-request.js"
 
 const STATUS_MAP = {
   '0': 'UNKNOWN',
@@ -12,9 +11,6 @@ const STATUS_MAP = {
   '5': 'EXPIRED'
 }
 
-const u8ToHex = u8 => Buffer.from(u8).toString("hex")
-const hexBuffer = hex => Buffer.from(hex, "hex")
-
 const convertStatusToString = code => {
   if (code == null) return
   return STATUS_MAP[String(code)]
@@ -23,32 +19,32 @@ const convertStatusToString = code => {
 export async function sendGetTransactionStatus(ix, opts = {}) {
   invariant(opts.node, `SDK Send Get Transaction Status Error: opts.node must be defined.`)
 
-  const unary = opts.unary || defaultUnary
+  const httpRequest = opts.httpRequest || defaultHttpRequest
 
   ix = await ix
 
-  const req = new GetTransactionRequest()
-  req.setId(hexBuffer(ix.transaction.id))
-
-  const res = await unary(opts.node, AccessAPI.GetTransactionResult, req)
-
-  let events = res.getEventsList()
+  const res = await httpRequest({
+    hostname: opts.node,
+    port: 443,
+    path: `/transaction_results?height=${ix.transaction.id}`,
+    method: "GET",
+    body: null
+  })
 
   let ret = response()
-  const status = res.getStatus()
   ret.tag = ix.tag
   ret.transactionStatus = {
-    status: status,
-    statusString: convertStatusToString(status),
-    statusCode: res.getStatusCode(),
-    errorMessage: res.getErrorMessage(),
-    events: events.map(event => ({
-      type: event.getType(),
-      transactionId: u8ToHex(event.getTransactionId_asU8()),
-      transactionIndex: event.getTransactionIndex(),
-      eventIndex: event.getEventIndex(),
-      payload: JSON.parse(Buffer.from(event.getPayload_asU8()).toString("utf8")),
-    })),
+    blockId: res.block_id, // THIS IS A NEW FIELD FROM REST API
+    status: res.status, // THIS IS NOW A STRING IN REST API LIKE "Pending"
+    statusString: null, // MAYBE SHOULD BE CONVERTED FROM res.status field
+    statusCode: null, // MAYBE SHOULD BE CONVERTED FROM res.status field 
+    events: res.events.map(event => ({
+      type: event.type,
+      transactionId: event.transaction_id,
+      transactionIndex: event.transaction_index,
+      eventIndex: event.event_index,
+      payload: event.payload
+    }))
   }
 
   return ret

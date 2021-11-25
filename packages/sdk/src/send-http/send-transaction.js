@@ -1,59 +1,26 @@
 import {invariant} from "@onflow/util-invariant"
-import {AccessAPI, Transaction, SendTransactionRequest} from "@onflow/protobuf"
 import {response} from "../response/response.js"
 import {sansPrefix} from "@onflow/util-address"
-import {unary as defaultUnary} from "./unary"
-
-const u8ToHex = u8 => Buffer.from(u8).toString("hex")
-const paddedHexBuffer = (hex, pad) =>
-  Buffer.from(hex.padStart(pad * 2, 0), "hex")
-const scriptBuffer = script => Buffer.from(script, "utf8")
-const hexBuffer = hex => Buffer.from(hex, "hex")
-const addressBuffer = addr => paddedHexBuffer(addr, 8)
-const argumentBuffer = arg => Buffer.from(JSON.stringify(arg), "utf8")
+import {httpRequest as defaultHttpRequest} from "./http-request.js"
 
 export async function sendTransaction(ix, opts = {}) {
   invariant(opts.node, `SDK Send Transaction Error: opts.node must be defined.`)
 
-  const unary = opts.unary || defaultUnary
+  const httpRequest = opts.httpRequest || defaultHttpRequest
 
   ix = await ix
 
-  const tx = new Transaction()
-  tx.setScript(scriptBuffer(ix.message.cadence))
-  tx.setGasLimit(ix.message.computeLimit)
-  tx.setReferenceBlockId(
-    ix.message.refBlock ? hexBuffer(ix.message.refBlock) : null
-  )
-  tx.setPayer(addressBuffer(sansPrefix(ix.accounts[ix.payer].addr)))
-  ix.message.arguments.forEach(arg =>
-    tx.addArguments(argumentBuffer(ix.arguments[arg].asArgument))
-  )
-  ix.authorizations
-    .map(tempId => ix.accounts[tempId].addr)
-    .reduce((prev, current) => {
-      return prev.find(item => item === current) ? prev : [...prev, current]
-    }, [])
-    .forEach(addr => tx.addAuthorizers(addressBuffer(sansPrefix(addr))))
-
-  const proposalKey = new Transaction.ProposalKey()
-  proposalKey.setAddress(
-    addressBuffer(sansPrefix(ix.accounts[ix.proposer].addr))
-  )
-  proposalKey.setKeyId(ix.accounts[ix.proposer].keyId)
-  proposalKey.setSequenceNumber(ix.accounts[ix.proposer].sequenceNum)
-
-  tx.setProposalKey(proposalKey)
-
   // Apply Non Payer Signatures to Payload Signatures
+  let payloadSignatures = []
   for (let acct of Object.values(ix.accounts)) {
     try {
       if (!acct.role.payer && acct.signature != null) {
-        const sig = new Transaction.Signature()
-        sig.setAddress(addressBuffer(sansPrefix(acct.addr)))
-        sig.setKeyId(acct.keyId)
-        sig.setSignature(hexBuffer(acct.signature))
-        tx.addPayloadSignatures(sig)
+        payloadSignatures.push({
+          address: sansPrefix(acct.addr),
+          signer_index: null, // WHAT IS THIS?
+          key_index: acct.keyId,
+          signature: acct.signature
+        })
       }
     } catch (error) {
       console.error("Trouble applying payload signature", {acct, ix})
@@ -62,14 +29,16 @@ export async function sendTransaction(ix, opts = {}) {
   }
 
   // Apply Payer Signatures to Envelope Signatures
+  let envelopeSignatures = []
   for (let acct of Object.values(ix.accounts)) {
     try {
       if (acct.role.payer && acct.signature != null) {
-        const sig = new Transaction.Signature()
-        sig.setAddress(addressBuffer(sansPrefix(acct.addr)))
-        sig.setKeyId(acct.keyId)
-        sig.setSignature(hexBuffer(acct.signature))
-        tx.addEnvelopeSignatures(sig)
+        envelopeSignatures.push({
+          address: sansPrefix(acct.addr),
+          signer_index: null, // WHAT IS THIS???
+          key_index: acct.keyId,
+          signature: acct.signature
+        })
       }
     } catch (error) {
       console.error("Trouble applying envelope signature", {acct, ix})
@@ -77,16 +46,39 @@ export async function sendTransaction(ix, opts = {}) {
     }
   }
 
-  const req = new SendTransactionRequest()
-  req.setTransaction(tx)
-
   var t1 = Date.now()
-  const res = await unary(opts.node, AccessAPI.SendTransaction, req)
+  const res = await httpRequest({
+    hostname: opts.node,
+    port: 443,
+    path: `/transactions`,
+    method: "POST",
+    body: {
+      script: ix.message.cadence,
+      arguments: ix.message.arguments.map(arg => ix.arguments[arg].asArgument),
+      reference_block_id: ix.message.refBlock ? ix.message.refBlock : null,
+      gas_limit: ix.message.computeLimit,
+      payer: sansPrefix(ix.accounts[ix.payer].addr),
+      proposal_key: {
+        address: sansPrefix(ix.accounts[ix.proposer].addr),
+        key_index: ix.accounts[ix.proposer].keyId,
+        sequence_number: ix.accounts[ix.proposer].sequenceNum,
+      },
+      authorizers: ix.authorizations
+        .map(tempId => ix.accounts[tempId].addr)
+        .reduce((prev, current) => {
+          return prev.find(item => item === current) ? prev : [...prev, current]
+        }, [])
+        .map(sansPrefix),
+      payload_signatures: payloadSignatures,
+      envelope_signatures: envelopeSignatures
+    }
+  })
   var t2 = Date.now()
 
+  // SHOULD WE RETURN THE FULL TRANSACTION OBJECT HERE?
   let ret = response()
-  ret.tag = ix.tag
-  ret.transactionId = u8ToHex(res.getId_asU8())
+  ret.tag = ix.tag 
+  ret.transactionId = res.id
 
   if (typeof window !== "undefined") {
     window.dispatchEvent(

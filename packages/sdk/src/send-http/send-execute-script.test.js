@@ -17,13 +17,13 @@ const jsonToUInt8Array = (json) => {
 
 describe("Send Execute Script", () => {
   test("ExecuteScriptAtLatestBlock", async () => {
-    const unaryMock = jest.fn();
+    const httpRequestMock = jest.fn();
 
     const returnedJSONCDC = {type: "Int", value: 123}
 
-    unaryMock.mockReturnValue({
-        getValue_asU8: () => jsonToUInt8Array(returnedJSONCDC)
-    });
+    httpRequestMock.mockReturnValue({
+        value: returnedJSONCDC
+    })
 
     let response = await sendExecuteScript(
         await resolve(
@@ -32,7 +32,7 @@ describe("Send Execute Script", () => {
             ])
         ),
         {
-            unary: unaryMock,
+            httpRequest: httpRequestMock,
             node: "localhost:3000"
         }
     )
