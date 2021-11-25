@@ -1,49 +1,48 @@
 import {invariant} from "@onflow/util-invariant"
-import {AccessAPI, GetTransactionRequest} from "@onflow/protobuf"
 import {response} from "../response/response.js"
-import {unary as defaultUnary} from "./unary"
-
-const u8ToHex = u8 => Buffer.from(u8).toString("hex")
-const hexBuffer = hex => Buffer.from(hex, "hex")
+import {httpRequest as defaultHttpRequest} from "./http-request.js"
 
 export async function sendGetTransaction(ix, opts = {}) {
   invariant(opts.node, `SDK Send Get Transaction Error: opts.node must be defined.`)
 
-  const unary = opts.unary || defaultUnary
+  const httpRequest = opts.httpRequest || defaultHttpRequest
 
   ix = await ix
 
-  const req = new GetTransactionRequest()
-  req.setId(hexBuffer(ix.transaction.id))
-
-  const res = await unary(opts.node, AccessAPI.GetTransaction, req)
-
-  let ret = response()
-  ret.tag = ix.tag
+  const res = await httpRequest({
+    hostname: opts.node,
+    port: 443,
+    path: `/transactions/${ix.transaction.id}`,
+    method: "GET",
+    body: null,
+  })
 
   const unwrapKey = key => ({
-    address: u8ToHex(key.getAddress_asU8()),
-    keyId: key.getKeyId(),
-    sequenceNumber: key.getSequenceNumber()
+    address: key.address,
+    keyId: key.key_id,
+    sequenceNumber: key.sequence_number
   })
 
   const unwrapSignature = sig => ({
-    address: u8ToHex(sig.getAddress_asU8()),
-    keyId: sig.getKeyId(),
-    signature: u8ToHex(sig.getSignature_asU8())
+    address: sig.address,
+    keyId: sig.key_index,
+    signerIndex: sig.signer_index, // WHAT IS THIS? THIS IS NEW
+    signature: sig.signature
   })
 
-  let transaction = res.getTransaction()
+  let ret = response()
+  ret.tag = ix.tag
   ret.transaction = {
-      script: Buffer.from(transaction.getScript_asU8()).toString("utf8"),
-      args: (transaction.getArgumentsList()).map(arg => JSON.parse(Buffer.from(arg).toString("utf8"))),
-      referenceBlockId: u8ToHex(transaction.getReferenceBlockId_asU8()),
-      gasLimit: transaction.getGasLimit(),
-      proposalKey: unwrapKey(transaction.getProposalKey()),
-      payer: u8ToHex(transaction.getPayer_asU8()),
-      authorizers: (transaction.getAuthorizersList()).map(u8ToHex),
-      payloadSignatures: (transaction.getPayloadSignaturesList()).map(unwrapSignature),
-      envelopeSignatures: (transaction.getEnvelopeSignaturesList()).map(unwrapSignature)
+    id: res.id,
+    script: res.script,
+    args: res.script.arguments,
+    referenceBlockId: res.reference_block_id,
+    gasLimit: res.gas_limit,
+    payer: res.payer,
+    proposalKey: unwrapKey(res.proposal_key),
+    authorizers: res.proposal_key.authorizers,
+    payloadSignatures: res.payload_signatures.map(unwrapSignature),
+    envelopeSignatures: res.envelope_signatures.map(unwrapSignature) 
   }
 
   return ret

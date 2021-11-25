@@ -1,30 +1,29 @@
 import {invariant} from "@onflow/util-invariant"
-import {GetCollectionByIDRequest, AccessAPI} from "@onflow/protobuf"
 import {response} from "../response/response.js"
-import {unary as defaultUnary} from "./unary"
+import {httpRequest as defaultHttpRequest} from "./http-request.js"
 
 const u8ToHex = u8 => Buffer.from(u8).toString("hex")
 const hexBuffer = hex => Buffer.from(hex, "hex")
 
 export async function sendGetCollection(ix, opts = {}) {
   invariant(opts.node, `SDK Send Get Collection Error: opts.node must be defined.`)
+  
+  const httpRequest = opts.httpRequest || defaultHttpRequest
 
-  const unary = opts.unary || defaultUnary
-
-  ix = await ix
-
-  const req = new GetCollectionByIDRequest()
-  req.setId(hexBuffer(ix.collection.id))
-
-  const res = await unary(opts.node, AccessAPI.GetCollectionByID, req)
-
-  const collection = res.getCollection()
+  const res = await httpRequest({
+    hostname: opts.node,
+    port: 443,
+    path: `/collections/${ix.collection.id}`,
+    method: "GET",
+    body: null
+  })
 
   const ret = response()
   ret.tag = ix.tag
   ret.collection = {
-    id: u8ToHex(collection.getId_asU8()),
-    transactionIds: (collection.getTransactionIdsList()).map(u8ToHex)
+    id: res.id,
+    transactionIds: null, // CHECK IF WE NEED TO HAVE BACKWARD COMPATIBILITY HERE
+    transactions: res.transactions
   }
 
   return ret
