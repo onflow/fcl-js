@@ -1,5 +1,16 @@
 ## Unreleased
 
+- 2021-11-30 -- Allow apps to add opt-in wallets in Discovery with config.
+
+```javascript
+import { config } from "@onflow/fcl"
+
+config({
+  "discovery.authn.endpoint": "https://fcl-discovery.onflow.org/api/testnet/authn",
+  "discovery.authn.optIn": ["0x123"]
+})
+```
+
 - 2021-11-22 -- Updates to use account key `HashAlgorithm` in `verifyUSerSignatures` instead of default `SHA3_256`
 - 2021-11-19 -- Update `buildUser` with with correct data prop for `expiresAt`
 

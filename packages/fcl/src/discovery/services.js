@@ -26,8 +26,18 @@ function filterServicesByType(services = [], type) {
   return services.filter(service => service.type === type)
 }
 
+// If it's an optIn service, make sure it's set in the config to show
+async function filterOptInServices(services = []) {
+  const optInList = await config.get("discovery.authn.optIn", [])
+  return services.filter(service => {
+    if (service.optIn) return optInList.includes(service?.provider?.address)
+    return true
+  })
+}
+
 export const getServices = ({ type }) => asyncPipe(
   addServices,
   addExtensions,
-  s => filterServicesByType(s, type)
+  s => filterServicesByType(s, type),
+  filterOptInServices
 )([])
