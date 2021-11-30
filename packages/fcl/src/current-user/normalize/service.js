@@ -7,6 +7,7 @@ import {normalizeOpenId} from "./open-id"
 import {normalizeUserSignature} from "./user-signature"
 import {normalizeLocalView} from "./local-view"
 import {normalizeAccountProof} from "./account-proof"
+import {normalizeAuthnRefresh} from "./authn-refresh"
 
 export function normalizeServices(services, data) {
   return services.map(service => normalizeService(service, data))
@@ -22,6 +23,7 @@ const serviceNormalizers = {
   "user-signature": normalizeUserSignature,
   "local-view": normalizeLocalView,
   "account-proof": normalizeAccountProof,
+  "authn-refresh": normalizeAuthnRefresh,
 }
 
 export function normalizeService(service, data) {
