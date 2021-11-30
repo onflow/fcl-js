@@ -1,6 +1,5 @@
 import {getServices} from "./services"
-import {config} from "@onflow/sdk"
-import { clearConfig } from "@onflow/sdk/src/config"
+import {config, clearConfig} from "@onflow/sdk"
 
 const serviceOne = {
   "f_type": "Service",
