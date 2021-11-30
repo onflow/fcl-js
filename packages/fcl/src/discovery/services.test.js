@@ -59,11 +59,6 @@ describe("getServices", () => {
   let windowSpy
   let configRef
 
-  // beforeAll(() => {
-  //   config()
-  //     .put("discovery.authn.endpoint", "https://fcl-discovery.onflow.org/api/testnet/authn")
-  // })
-
   beforeEach(() => {
     windowSpy = jest.spyOn(window, "window", "get")
     configRef = config()
