@@ -1,5 +1,5 @@
 import {getServices} from "./services"
-import {config, clearConfig} from "@onflow/sdk"
+import {config} from "@onflow/sdk"
 
 const serviceOne = {
   "f_type": "Service",
@@ -119,7 +119,5 @@ describe("getServices", () => {
     const expectedResponse = [serviceThree, serviceOne, serviceFour]
     expect(response).toEqual(expectedResponse)
     expect(response.length).toEqual(3)
-
-    clearConfig()
   })
 })
