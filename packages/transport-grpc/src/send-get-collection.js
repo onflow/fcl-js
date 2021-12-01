@@ -1,13 +1,13 @@
 import {invariant} from "@onflow/util-invariant"
 import {GetCollectionByIDRequest, AccessAPI} from "@onflow/protobuf"
-import {response} from "../response/response.js"
 import {unary as defaultUnary} from "./unary"
 
 const u8ToHex = u8 => Buffer.from(u8).toString("hex")
 const hexBuffer = hex => Buffer.from(hex, "hex")
 
-export async function sendGetCollection(ix, opts = {}) {
+export async function sendGetCollection(ix, context = {}, opts = {}) {
   invariant(opts.node, `SDK Send Get Collection Error: opts.node must be defined.`)
+  invariant(context.response, `SDK Send Get Collection Error: context.response must be defined.`)
 
   const unary = opts.unary || defaultUnary
 
@@ -20,7 +20,7 @@ export async function sendGetCollection(ix, opts = {}) {
 
   const collection = res.getCollection()
 
-  const ret = response()
+  const ret = context.response()
   ret.tag = ix.tag
   ret.collection = {
     id: u8ToHex(collection.getId_asU8()),

@@ -1,19 +1,20 @@
 import {invariant} from "@onflow/util-invariant"
-import {GetBlockByHeightRequest, AccessAPI} from "@onflow/protobuf"
-import {response} from "../response/response.js"
+import {GetBlockByIDRequest, AccessAPI} from "@onflow/protobuf"
 import {unary} from "./unary"
 
 const u8ToHex = u8 => Buffer.from(u8).toString("hex")
+const hexBuffer = hex => Buffer.from(hex, "hex")
 
-export async function sendGetBlockByHeight(ix, opts = {}) {
-  invariant(opts.node, `SDK Send Get Block By Height Error: opts.node must be defined.`)
+export async function sendGetBlockById(ix, context = {}, opts = {}) {
+  invariant(opts.node, `SDK Send Get Block By ID Error: opts.node must be defined.`)
+  invariant(context.response, `SDK Send Get Block By ID Error: context.response must be defined.`)
 
   ix = await ix
 
-  const req = new GetBlockByHeightRequest()
-  req.setHeight(Number(ix.block.height))
+  const req = new GetBlockByIDRequest()
+  req.setId(hexBuffer(ix.block.id))
 
-  const res = await unary(opts.node, AccessAPI.GetBlockByHeight, req)
+  const res = await unary(opts.node, AccessAPI.GetBlockByID, req)
 
   const block = res.getBlock()
 
@@ -21,7 +22,7 @@ export async function sendGetBlockByHeight(ix, opts = {}) {
   const blockSeals = block.getBlockSealsList()
   const signatures = block.getSignaturesList()
 
-  const ret = response()
+  const ret = context.response()
   ret.tag = ix.tag
   ret.block = {
     id: u8ToHex(block.getId_asU8()),

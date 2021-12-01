@@ -1,11 +1,10 @@
 import {invariant} from "@onflow/util-invariant"
-import {response} from "../response/response.js"
 import {httpRequest as defaultHttpRequest} from "./http-request.js"
 
 const argumentBuffer = arg => Buffer.from(JSON.stringify(arg), "utf8")
 const hexBuffer = hex => Buffer.from(hex, "hex")
 
-async function sendExecuteScriptAtBlockIDRequest(ix, opts) {
+async function sendExecuteScriptAtBlockIDRequest(ix, context, opts) {
   const httpRequest = opts.httpRequest || defaultHttpRequest
 
   const res = await httpRequest({
@@ -19,10 +18,10 @@ async function sendExecuteScriptAtBlockIDRequest(ix, opts) {
     }
   })
 
-  return constructResponse(ix, res)
+  return constructResponse(ix, context, res)
 }
 
-async function sendExecuteScriptAtBlockHeightRequest(ix, opts) {
+async function sendExecuteScriptAtBlockHeightRequest(ix, context, opts) {
   const httpRequest = opts.httpRequest || defaultHttpRequest
 
   const res = await httpRequest({
@@ -35,10 +34,10 @@ async function sendExecuteScriptAtBlockHeightRequest(ix, opts) {
     }
   })
   
-  return constructResponse(ix, res)
+  return constructResponse(ix, context, res)
 }
 
-async function sendExecuteScriptAtLatestBlockRequest(ix, opts) {
+async function sendExecuteScriptAtLatestBlockRequest(ix, context, opts) {
   const httpRequest = opts.httpRequest || defaultHttpRequest
 
   const res = await httpRequest({
@@ -51,27 +50,28 @@ async function sendExecuteScriptAtLatestBlockRequest(ix, opts) {
     }
   })
 
-  return constructResponse(ix, res)
+  return constructResponse(ix, context, res)
 }
 
-function constructResponse(ix, res)  {
-  let ret = response()
+function constructResponse(ix, context, res)  {
+  let ret = context.response()
   ret.tag = ix.tag
   ret.encodedData = res.value
 
   return ret
 }
 
-export async function sendExecuteScript(ix, opts = {}) {
+export async function sendExecuteScript(ix, context = {}, opts = {}) {
   invariant(opts.node, `SDK Send Execute Script Error: opts.node must be defined.`)
+  invariant(context.response, `SDK Send Execute Script Error: context.response must be defined.`)
 
   ix = await ix
 
   if (ix.block.id) {
-    return await sendExecuteScriptAtBlockIDRequest(ix, opts)
+    return await sendExecuteScriptAtBlockIDRequest(ix, context, opts)
   } else if (ix.block.height) {
-    return await sendExecuteScriptAtBlockHeightRequest(ix, opts)
+    return await sendExecuteScriptAtBlockHeightRequest(ix, context, opts)
   } else {
-    return await sendExecuteScriptAtLatestBlockRequest(ix, opts)
+    return await sendExecuteScriptAtLatestBlockRequest(ix, context, opts)
   }
 }

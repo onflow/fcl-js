@@ -1,12 +1,11 @@
 import {invariant} from "@onflow/util-invariant"
 import {GetBlockByIDRequest, GetBlockByHeightRequest, GetLatestBlockRequest, AccessAPI} from "@onflow/protobuf"
-import {response} from "../response/response.js"
 import {unary as defaultUnary} from "./unary"
 
 const u8ToHex = u8 => Buffer.from(u8).toString("hex")
 const hexBuffer = hex => Buffer.from(hex, "hex")
 
-async function sendGetBlockByIDRequest(ix, opts) {
+async function sendGetBlockByIDRequest(ix, context, opts) {
   const unary = opts.unary || defaultUnary
 
   const req = new GetBlockByIDRequest()
@@ -14,10 +13,10 @@ async function sendGetBlockByIDRequest(ix, opts) {
 
   const res = await unary(opts.node, AccessAPI.GetBlockByID, req)
 
-  return constructResponse(ix, res)
+  return constructResponse(ix, context, res)
 }
 
-async function sendGetBlockByHeightRequest(ix, opts) {
+async function sendGetBlockByHeightRequest(ix, context, opts) {
   const unary = opts.unary || defaultUnary
 
   const req = new GetBlockByHeightRequest()
@@ -25,10 +24,10 @@ async function sendGetBlockByHeightRequest(ix, opts) {
     
   const res = await unary(opts.node, AccessAPI.GetBlockByHeight, req)
 
-  return constructResponse(ix, res)
+  return constructResponse(ix, context, res)
 }
 
-async function sendGetBlockRequest(ix, opts) {
+async function sendGetBlockRequest(ix, context, opts) {
   const unary = opts.unary || defaultUnary
 
   const req = new GetLatestBlockRequest()
@@ -39,17 +38,17 @@ async function sendGetBlockRequest(ix, opts) {
 
   const res = await unary(opts.node, AccessAPI.GetLatestBlock, req)
 
-  return constructResponse(ix, res)
+  return constructResponse(ix, context, res)
 }
 
-function constructResponse(ix, res) {
+function constructResponse(ix, context, res) {
   const block = res.getBlock()
 
   const collectionGuarantees = block.getCollectionGuaranteesList()
   const blockSeals = block.getBlockSealsList()
   const signatures = (block.getSignaturesList()).map(u8ToHex)
 
-  const ret = response()
+  const ret = context.response()
   ret.tag = ix.tag
   ret.block = {
     id: u8ToHex(block.getId_asU8()),
@@ -72,8 +71,9 @@ function constructResponse(ix, res) {
   return ret
 }
 
-export async function sendGetBlock(ix, opts = {}) {
+export async function sendGetBlock(ix, context = {}, opts = {}) {
   invariant(opts.node, `SDK Send Get Block Error: opts.node must be defined.`)
+  invariant(context.response, `SDK Send Get Block Error: context.response must be defined.`)
 
   ix = await ix
 
@@ -81,10 +81,10 @@ export async function sendGetBlock(ix, opts = {}) {
   const interactionHasBlockHeight = ix.block.height !== null
 
   if (interactionHasBlockID) {
-    return await sendGetBlockByIDRequest(ix, opts)
+    return await sendGetBlockByIDRequest(ix, context, opts)
   } else if (interactionHasBlockHeight) {
-    return await sendGetBlockByHeightRequest(ix, opts)
+    return await sendGetBlockByHeightRequest(ix, context, opts)
   } else {
-    return await sendGetBlockRequest(ix, opts)
+    return await sendGetBlockRequest(ix, context, opts)
   }
 }

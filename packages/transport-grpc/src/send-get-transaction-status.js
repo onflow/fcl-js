@@ -1,6 +1,6 @@
 import {invariant} from "@onflow/util-invariant"
 import {AccessAPI, GetTransactionRequest} from "@onflow/protobuf"
-import {response} from "../response/response.js"
+import {response} from "../response/response.js.js.js.js.js"
 import {unary as defaultUnary} from "./unary"
 
 const STATUS_MAP = {
@@ -20,8 +20,9 @@ const convertStatusToString = code => {
   return STATUS_MAP[String(code)]
 }
 
-export async function sendGetTransactionStatus(ix, opts = {}) {
+export async function sendGetTransactionStatus(ix, context = {}, opts = {}) {
   invariant(opts.node, `SDK Send Get Transaction Status Error: opts.node must be defined.`)
+  invariant(context.response, `SDK Send Get Transaction Status Error: context.response must be defined.`)
 
   const unary = opts.unary || defaultUnary
 
@@ -34,7 +35,7 @@ export async function sendGetTransactionStatus(ix, opts = {}) {
 
   let events = res.getEventsList()
 
-  let ret = response()
+  let ret = context.response()
   const status = res.getStatus()
   ret.tag = ix.tag
   ret.transactionStatus = {

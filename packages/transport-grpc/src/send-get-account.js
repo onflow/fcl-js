@@ -1,6 +1,5 @@
 import {invariant} from "@onflow/util-invariant"
 import {GetAccountAtLatestBlockRequest, GetAccountAtBlockHeightRequest, AccessAPI} from "@onflow/protobuf"
-import {response} from "../response/response.js"
 import {sansPrefix, withPrefix} from "@onflow/util-address"
 import {unary as defaultUnary} from "./unary"
 
@@ -10,7 +9,7 @@ const paddedHexBuffer = (hex, pad) =>
 
 const addressBuffer = addr => paddedHexBuffer(addr, 8)
 
-async function sendGetAccountAtBlockHeightRequest(ix, opts) {
+async function sendGetAccountAtBlockHeightRequest(ix, context, opts) {
   const unary = opts.unary || defaultUnary
 
   const req = new GetAccountAtBlockHeightRequest()
@@ -19,10 +18,10 @@ async function sendGetAccountAtBlockHeightRequest(ix, opts) {
 
   const res = await unary(opts.node, AccessAPI.GetAccountAtBlockHeight, req)
 
-  return constructResponse(ix, res)
+  return constructResponse(ix, context, res)
 }
 
-async function sendGetAccountAtLatestBlockRequest(ix, opts) {
+async function sendGetAccountAtLatestBlockRequest(ix, context, opts) {
   const unary = opts.unary || defaultUnary
 
   const req = new GetAccountAtLatestBlockRequest()
@@ -30,11 +29,11 @@ async function sendGetAccountAtLatestBlockRequest(ix, opts) {
 
   const res = await unary(opts.node, AccessAPI.GetAccountAtLatestBlock, req)
 
-  return constructResponse(ix, res)
+  return constructResponse(ix, context, res)
 }
 
-function constructResponse(ix, res) {
-  let ret = response()
+function constructResponse(ix, context, res) {
+  let ret = context.response()
   ret.tag = ix.tag
 
   const account = res.getAccount()
@@ -65,14 +64,15 @@ function constructResponse(ix, res) {
 }
 
 
-export async function sendGetAccount(ix, opts = {}) {
+export async function sendGetAccount(ix, context = {}, opts = {}) {
   invariant(opts.node, `SDK Send Get Account Error: opts.node must be defined.`)
-
+  invariant(context.response, `SDK Get Account Error: context.response must be defined.`)
+  
   ix = await ix
 
   if (ix.block.height !== null) {
-    return await sendGetAccountAtBlockHeightRequest(ix, opts)
+    return await sendGetAccountAtBlockHeightRequest(ix, context, opts)
   } else {
-    return await sendGetAccountAtLatestBlockRequest(ix, opts)
+    return await sendGetAccountAtLatestBlockRequest(ix, context, opts)
   }
 }

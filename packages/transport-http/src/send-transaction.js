@@ -1,10 +1,10 @@
 import {invariant} from "@onflow/util-invariant"
-import {response} from "../response/response.js"
 import {sansPrefix} from "@onflow/util-address"
 import {httpRequest as defaultHttpRequest} from "./http-request.js"
 
-export async function sendTransaction(ix, opts = {}) {
+export async function sendTransaction(ix, context = {}, opts = {}) {
   invariant(opts.node, `SDK Send Transaction Error: opts.node must be defined.`)
+  invariant(context.response, `SDK Send Transaction Error: context.response must be defined.`)
 
   const httpRequest = opts.httpRequest || defaultHttpRequest
 
@@ -75,7 +75,7 @@ export async function sendTransaction(ix, opts = {}) {
   var t2 = Date.now()
 
   // SHOULD WE RETURN THE FULL TRANSACTION OBJECT HERE?
-  let ret = response()
+  let ret = context.response()
   ret.tag = ix.tag 
   ret.transactionId = res.id
 

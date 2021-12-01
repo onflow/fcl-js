@@ -1,14 +1,15 @@
 import {invariant} from "@onflow/util-invariant"
 import {AccessAPI, GetTransactionRequest} from "@onflow/protobuf"
-import {response} from "../response/response.js"
+import {response} from "../response/response.js.js.js.js.js"
 import {unary as defaultUnary} from "./unary"
 
 const u8ToHex = u8 => Buffer.from(u8).toString("hex")
 const hexBuffer = hex => Buffer.from(hex, "hex")
 
-export async function sendGetTransaction(ix, opts = {}) {
+export async function sendGetTransaction(ix, context = {}, opts = {}) {
   invariant(opts.node, `SDK Send Get Transaction Error: opts.node must be defined.`)
-
+  invariant(context.response, `SDK Send Get Transaction Error: context.response must be defined.`)
+  
   const unary = opts.unary || defaultUnary
 
   ix = await ix
@@ -18,7 +19,7 @@ export async function sendGetTransaction(ix, opts = {}) {
 
   const res = await unary(opts.node, AccessAPI.GetTransaction, req)
 
-  let ret = response()
+  let ret = context.response()
   ret.tag = ix.tag
 
   const unwrapKey = key => ({

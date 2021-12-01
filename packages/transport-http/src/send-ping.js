@@ -1,8 +1,8 @@
 import {invariant} from "@onflow/util-invariant"
-import {response} from "../response/response.js"
 
-export async function sendPing(ix, opts = {}) {
-  // invariant(opts.node, `SDK Send Ping Error: opts.node must be defined.`)
+export async function sendPing(ix, context = {}, opts = {}) {
+  invariant(opts.node, `SDK Send Ping Error: opts.node must be defined.`)
+  invariant(context.response, `SDK Send Ping Error: context.response must be defined.`)
 
   // const unary = opts.unary || defaultUnary
 
