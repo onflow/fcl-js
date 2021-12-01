@@ -1,10 +1,10 @@
 import {invariant} from "@onflow/util-invariant"
 import {AccessAPI, PingRequest} from "@onflow/protobuf"
-import {response} from "../response/response.js"
 import {unary as defaultUnary} from "./unary"
 
-export async function sendPing(ix, opts = {}) {
+export async function sendPing(ix, context = {}, opts = {}) {
   invariant(opts.node, `SDK Send Ping Error: opts.node must be defined.`)
+  invariant(context.response, `SDK Send Ping Error: context.response must be defined.`)
 
   const unary = opts.unary || defaultUnary
 
@@ -14,7 +14,7 @@ export async function sendPing(ix, opts = {}) {
 
   const res = await unary(opts.node, AccessAPI.Ping, req)
 
-  let ret = response()
+  let ret = context.response()
   ret.tag = ix.tag
 
   return ret

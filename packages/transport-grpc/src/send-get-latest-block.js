@@ -1,6 +1,5 @@
 import {invariant} from "@onflow/util-invariant"
 import {GetLatestBlockRequest, AccessAPI} from "@onflow/protobuf"
-import {response} from "../response/response.js"
 import {unary} from "./unary"
 
 const u8ToHex = u8 => Buffer.from(u8).toString("hex")
@@ -22,8 +21,9 @@ const latestBlockDeprecationNotice = () => {
   )
 }
 
-export async function sendGetLatestBlock(ix, opts = {}) {
+export async function sendGetLatestBlock(ix, context = {}, opts = {}) {
   invariant(opts.node, `SDK Send Get Latest Block Error: opts.node must be defined.`)
+  invariant(context.response, `SDK Send Get Latest Block Error: context.response must be defined.`)
 
   ix = await ix
 
@@ -46,7 +46,7 @@ export async function sendGetLatestBlock(ix, opts = {}) {
   const blockSeals = block.getBlockSealsList()
   const signatures = block.getSignaturesList()
 
-  const ret = response()
+  const ret = context.response()
   ret.tag = ix.tag
   ret.block = {
     id: u8ToHex(block.getId_asU8()),

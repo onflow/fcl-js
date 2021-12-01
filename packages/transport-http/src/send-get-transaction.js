@@ -1,9 +1,9 @@
 import {invariant} from "@onflow/util-invariant"
-import {response} from "../response/response.js"
 import {httpRequest as defaultHttpRequest} from "./http-request.js"
 
-export async function sendGetTransaction(ix, opts = {}) {
+export async function sendGetTransaction(ix, context = {}, opts = {}) {
   invariant(opts.node, `SDK Send Get Transaction Error: opts.node must be defined.`)
+  invariant(context.response, `SDK Send Get Transaction Error: context.response must be defined.`)
 
   const httpRequest = opts.httpRequest || defaultHttpRequest
 
@@ -29,7 +29,7 @@ export async function sendGetTransaction(ix, opts = {}) {
     signature: sig.signature
   })
 
-  let ret = response()
+  let ret = context.response()
   ret.tag = ix.tag
   ret.transaction = {
     id: res.id,

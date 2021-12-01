@@ -1,6 +1,5 @@
 import {invariant} from "@onflow/util-invariant"
 import {AccessAPI, Transaction, SendTransactionRequest} from "@onflow/protobuf"
-import {response} from "../response/response.js"
 import {sansPrefix} from "@onflow/util-address"
 import {unary as defaultUnary} from "./unary"
 
@@ -12,8 +11,9 @@ const hexBuffer = hex => Buffer.from(hex, "hex")
 const addressBuffer = addr => paddedHexBuffer(addr, 8)
 const argumentBuffer = arg => Buffer.from(JSON.stringify(arg), "utf8")
 
-export async function sendTransaction(ix, opts = {}) {
+export async function sendTransaction(ix, context = {}, opts = {}) {
   invariant(opts.node, `SDK Send Transaction Error: opts.node must be defined.`)
+  invariant(context.response, `SDK Send Transaction Error: context.response must be defined.`)
 
   const unary = opts.unary || defaultUnary
 
@@ -84,7 +84,7 @@ export async function sendTransaction(ix, opts = {}) {
   const res = await unary(opts.node, AccessAPI.SendTransaction, req)
   var t2 = Date.now()
 
-  let ret = response()
+  let ret = context.response()
   ret.tag = ix.tag
   ret.transactionId = u8ToHex(res.getId_asU8())
 

@@ -1,5 +1,4 @@
 import {invariant} from "@onflow/util-invariant"
-import {response} from "../response/response.js"
 import {httpRequest as defaultHttpRequest} from "./http-request.js"
 
 const STATUS_MAP = {
@@ -16,8 +15,9 @@ const convertStatusToString = code => {
   return STATUS_MAP[String(code)]
 }
 
-export async function sendGetTransactionStatus(ix, opts = {}) {
+export async function sendGetTransactionStatus(ix, context = {}, opts = {}) {
   invariant(opts.node, `SDK Send Get Transaction Status Error: opts.node must be defined.`)
+  invariant(context.response, `SDK Send Get Transaction Status Error: context.response must be defined.`)
 
   const httpRequest = opts.httpRequest || defaultHttpRequest
 
@@ -30,7 +30,7 @@ export async function sendGetTransactionStatus(ix, opts = {}) {
     body: null
   })
 
-  let ret = response()
+  let ret = context.response()
   ret.tag = ix.tag
   ret.transactionStatus = {
     blockId: res.block_id, // THIS IS A NEW FIELD FROM REST API

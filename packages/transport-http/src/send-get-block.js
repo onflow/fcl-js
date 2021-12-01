@@ -1,8 +1,7 @@
 import {invariant} from "@onflow/util-invariant"
-import {response} from "../response/response.js"
 import {httpRequest as defaultHttpRequest} from "./http-request.js"
 
-async function sendGetBlockByIDRequest(ix, opts) {
+async function sendGetBlockByIDRequest(ix, context, opts) {
   const httpRequest = opts.httpRequest || defaultHttpRequest
 
   const res = await httpRequest({
@@ -12,10 +11,10 @@ async function sendGetBlockByIDRequest(ix, opts) {
     body: null
   })
 
-  return constructResponse(ix, res)
+  return constructResponse(ix, context, res)
 }
 
-async function sendGetBlockByHeightRequest(ix, opts) {
+async function sendGetBlockByHeightRequest(ix, context, opts) {
   const httpRequest = opts.httpRequest || defaultHttpRequest
 
   const res = await httpRequest({
@@ -25,10 +24,10 @@ async function sendGetBlockByHeightRequest(ix, opts) {
     body: null
   })
 
-  return constructResponse(ix, res)
+  return constructResponse(ix, context, res)
 }
 
-async function sendGetBlockRequest(ix, opts) {
+async function sendGetBlockRequest(ix, context, opts) {
   const httpRequest = opts.httpRequest || defaultHttpRequest
 
   const res = await httpRequest({
@@ -38,13 +37,11 @@ async function sendGetBlockRequest(ix, opts) {
     body: null
   })
 
-  return constructResponse(ix, res)
+  return constructResponse(ix, context, res)
 }
 
-function constructResponse(ix, res) {
-  console.log("constructResponse", res)
-
-  const ret = response()
+function constructResponse(ix, context, res) {
+  const ret = context.response()
   ret.tag = ix.tag
   ret.block = res.map(block => ({ // Multiple Blocks now are to be returned by the REST API, we'll need to account for that in how we return blocks back
     id: block.header.id,
@@ -69,8 +66,9 @@ function constructResponse(ix, res) {
   return ret
 }
 
-export async function sendGetBlock(ix, opts = {}) {
+export async function sendGetBlock(ix, context = {}, opts = {}) {
   invariant(opts.node, `SDK Send Get Block Error: opts.node must be defined.`)
+  invariant(context.response, `SDK Send Get Block Error: context.response must be defined.`)
 
   ix = await ix
 
@@ -78,10 +76,10 @@ export async function sendGetBlock(ix, opts = {}) {
   const interactionHasBlockHeight = ix.block.height !== null
 
   if (interactionHasBlockID) {
-    return await sendGetBlockByIDRequest(ix, opts)
+    return await sendGetBlockByIDRequest(ix, context, opts)
   } else if (interactionHasBlockHeight) {
-    return await sendGetBlockByHeightRequest(ix, opts)
+    return await sendGetBlockByHeightRequest(ix, context, opts)
   } else {
-    return await sendGetBlockRequest(ix, opts)
+    return await sendGetBlockRequest(ix, context, opts)
   }
 }

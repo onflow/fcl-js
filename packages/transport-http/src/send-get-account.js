@@ -1,8 +1,7 @@
 import {invariant} from "@onflow/util-invariant"
-import {response} from "../response/response.js"
 import {httpRequest as defaultHttpRequest} from "./http-request.js"
 
-async function sendGetAccountAtBlockHeightRequest(ix, opts) {
+async function sendGetAccountAtBlockHeightRequest(ix, context, opts) {
   const httpRequest = opts.httpRequest || defaultHttpRequest
 
   const res = await httpRequest({
@@ -12,10 +11,10 @@ async function sendGetAccountAtBlockHeightRequest(ix, opts) {
     body: null
   })
 
-  return constructResponse(ix, res)
+  return constructResponse(ix, context, res)
 }
 
-async function sendGetAccountAtLatestBlockRequest(ix, opts) {
+async function sendGetAccountAtLatestBlockRequest(ix, context, opts) {
   const httpRequest = opts.httpRequest || defaultHttpRequest
 
   const res = await httpRequest({
@@ -25,11 +24,11 @@ async function sendGetAccountAtLatestBlockRequest(ix, opts) {
     body: null
   })
 
-  return constructResponse(ix, res)
+  return constructResponse(ix, context, res)
 }
 
-function constructResponse(ix, res) {
-  let ret = response()
+function constructResponse(ix, context, res) {
+  let ret = context.response()
   ret.tag = ix.tag
 
   ret.account = {
@@ -44,14 +43,15 @@ function constructResponse(ix, res) {
 }
 
 
-export async function sendGetAccount(ix, opts = {}) {
+export async function sendGetAccount(ix, context = {}, opts = {}) {
   invariant(opts.node, `SDK Send Get Account Error: opts.node must be defined.`)
+  invariant(context.response, `SDK Send Get Account Error: context.response must be defined.`)
 
   ix = await ix
 
   if (ix.block.height !== null) {
-    return await sendGetAccountAtBlockHeightRequest(ix, opts)
+    return await sendGetAccountAtBlockHeightRequest(ix, context, opts)
   } else {
-    return await sendGetAccountAtLatestBlockRequest(ix, opts)
+    return await sendGetAccountAtLatestBlockRequest(ix, context, opts)
   }
 }

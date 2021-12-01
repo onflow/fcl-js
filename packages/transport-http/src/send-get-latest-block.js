@@ -1,5 +1,4 @@
 import {invariant} from "@onflow/util-invariant"
-import {response} from "../response/response.js"
 
 const u8ToHex = u8 => Buffer.from(u8).toString("hex")
 
@@ -20,10 +19,11 @@ const latestBlockDeprecationNotice = () => {
   )
 }
 
-export async function sendGetLatestBlock(ix, opts = {}) {
-  // invariant(opts.node, `SDK Send Get Latest Block Error: opts.node must be defined.`)
+export async function sendGetLatestBlock(ix, context = {}, opts = {}) {
+  invariant(opts.node, `SDK Send Get Latest Block Error: opts.node must be defined.`)
+  invariant(context.response, `SDK Send Get Latest Block Error: context.response must be defined.`)
 
-  // ix = await ix
+  ix = await ix
 
   // const req = new GetLatestBlockRequest()
 
