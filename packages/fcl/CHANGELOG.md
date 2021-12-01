@@ -7,7 +7,7 @@ import { config } from "@onflow/fcl"
 
 config({
   "discovery.authn.endpoint": "https://fcl-discovery.onflow.org/api/testnet/authn",
-  "discovery.authn.optIn": ["0x123"]
+  "discovery.authn.include": ["0x123"] // Service account address
 })
 ```
 
