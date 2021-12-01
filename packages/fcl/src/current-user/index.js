@@ -93,11 +93,11 @@ function notExpired(user) {
   )
 }
 
-async function authenticate({ service, redir = false }) {
+async function authenticate({service, redir = false}) {
   return new Promise(async (resolve, reject) => {
     spawnCurrentUser()
     const user = await snapshot()
-    if (user.loggedIn && notExpired(user)) return resolve(user)
+    if (user.loggedIn) return resolve(user)
 
     const {discoveryWallet, discoveryWalletMethod, appDomainTag} =
       await buildAuthnConfig()
@@ -130,7 +130,7 @@ async function authenticate({ service, redir = false }) {
           appDomainTag,
           extensions: window.fcl_extensions || [],
         },
-        opts: { redir },
+        opts: {redir},
       })
       send(NAME, SET_CURRENT_USER, await buildUser(response))
     } catch (e) {
@@ -180,42 +180,45 @@ function resolvePreAuthz(authz) {
 
 async function authorization(account) {
   spawnCurrentUser()
-  const user = await authenticate({redir: true})
-  const authz = serviceOfType(user.services, "authz")
 
-  const preAuthz = serviceOfType(user.services, "pre-authz")
-  if (preAuthz) {
-    return {
-      ...account,
-      tempId: "CURRENT_USER",
-      async resolve(account, preSignable) {
+  return {
+    ...account,
+    tempId: "CURRENT_USER",
+    async resolve(account, preSignable) {
+      const user = await authenticate({redir: true})
+      const authz = serviceOfType(user.services, "authz")
+      const preAuthz = serviceOfType(user.services, "pre-authz")
+
+      if (preAuthz)
         return resolvePreAuthz(
           await execService({
             service: preAuthz,
             msg: preSignable,
           })
         )
-      },
-    }
-  }
-
-  return {
-    ...account,
-    tempId: "CURRENT_USER",
-    resolve: null,
-    addr: sansPrefix(authz.identity.address),
-    keyId: authz.identity.keyId,
-    sequenceNum: null,
-    signature: null,
-    async signingFunction(signable) {
-      return normalizeCompositeSignature(
-        await execService({
-          service: authz,
-          msg: signable,
-          opts: {
-            includeOlderJsonRpcCall: true,
+      if (authz)
+        return {
+          ...account,
+          tempId: "CURRENT_USER",
+          resolve: null,
+          addr: sansPrefix(authz.identity.address),
+          keyId: authz.identity.keyId,
+          sequenceNum: null,
+          signature: null,
+          async signingFunction(signable) {
+            return normalizeCompositeSignature(
+              await execService({
+                service: authz,
+                msg: signable,
+                opts: {
+                  includeOlderJsonRpcCall: true,
+                },
+              })
+            )
           },
-        })
+        }
+      throw new Error(
+        "No Authz or PreAuthz Service configured for CURRENT_USER"
       )
     },
   }
