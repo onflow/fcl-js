@@ -32,7 +32,7 @@ async function sendGetBlockRequest(ix, context, opts) {
 
   const res = await httpRequest({
     hostname: opts.node,
-    path: `/v1/blocks`,
+    path: `/v1/blocks?height=sealed`,
     method: "GET",
     body: null
   })

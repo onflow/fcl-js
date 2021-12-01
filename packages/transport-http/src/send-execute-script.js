@@ -1,9 +1,6 @@
 import {invariant} from "@onflow/util-invariant"
 import {httpRequest as defaultHttpRequest} from "./http-request.js"
 
-const argumentBuffer = arg => Buffer.from(JSON.stringify(arg), "utf8")
-const hexBuffer = hex => Buffer.from(hex, "hex")
-
 async function sendExecuteScriptAtBlockIDRequest(ix, context, opts) {
   const httpRequest = opts.httpRequest || defaultHttpRequest
 
@@ -13,7 +10,7 @@ async function sendExecuteScriptAtBlockIDRequest(ix, context, opts) {
     path: `/scripts?block_id=${ix.block.id}`,
     method: "POST",
     body: {
-      script: ix.message.cadence,
+      "script": ix.message.cadence,
       "arguments": ix.message.arguments.map(arg => ix.arguments[arg].asArgument)
     }
   })
@@ -29,7 +26,7 @@ async function sendExecuteScriptAtBlockHeightRequest(ix, context, opts) {
     path: `/scripts?block_height=${ix.block.height}`,
     method: "POST",
     body: {
-      script: ix.message.cadence,
+      "script": ix.message.cadence,
       "arguments": ix.message.arguments.map(arg => ix.arguments[arg].asArgument)
     }
   })
@@ -45,7 +42,7 @@ async function sendExecuteScriptAtLatestBlockRequest(ix, context, opts) {
     path: `/scripts`,
     method: "POST",
     body: {
-      script: ix.message.cadence,
+      "script": ix.message.cadence,
       "arguments": ix.message.arguments.map(arg => ix.arguments[arg].asArgument)
     }
   })
