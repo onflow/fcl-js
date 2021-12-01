@@ -1,4 +1,4 @@
-import {getServices} from "./services"
+import {constructApiQueryParams, getServices} from "./services"
 import {config} from "@onflow/sdk"
 
 const serviceOne = {
@@ -119,5 +119,15 @@ describe("getServices", () => {
     const expectedResponse = [serviceThree, serviceOne, serviceFour]
     expect(response).toEqual(expectedResponse)
     expect(response.length).toEqual(3)
+  })
+})
+
+describe("constructApiQueryParams", () => {
+  it("it should construct API query params", () => {
+    const filters = {
+      include: ["0x1", "0x2"]
+    }
+
+    expect(constructApiQueryParams(filters)).toEqual("?include=0x1&include=0x2")
   })
 })

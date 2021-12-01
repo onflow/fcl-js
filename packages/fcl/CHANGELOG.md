@@ -6,7 +6,9 @@
 ```javascript
 import { config } from "@onflow/fcl"
 
+// Include supports discovery.wallet or discovery.authn.endpoint
 config({
+  "discovery.wallet": "http://localhost:5000/testnet/authn",
   "discovery.authn.endpoint": "https://fcl-discovery.onflow.org/api/testnet/authn",
   "discovery.authn.include": ["0x123"] // Service account address
 })
