@@ -1,6 +1,9 @@
 import {config} from "@onflow/sdk"
+<<<<<<< HEAD
 import {constructApiQueryParams} from "./discovery/services"
 import {VERSION} from "./VERSION"
+=======
+>>>>>>> 3e41103 (PKG -- [fcl] Add buildDiscoveryService to authenticate)
 
 const isServerSide = () => typeof window === "undefined"
 
@@ -32,7 +35,7 @@ export async function configLens(regex) {
   )
 }
 
-export async function buildAuthnConfig() {
+export async function getDiscoveryService() {
   const discoveryWalletUrl = await config.first([
     "discovery.wallet",
     "challenge.handshake",
@@ -47,7 +50,9 @@ export async function buildAuthnConfig() {
     "discovery.wallet.method.default",
   ])
 
-  const appDomainTag = await config.get("fcl.appDomainTag")
-
-  return {discoveryWallet, discoveryWalletMethod, appDomainTag}
+  return {
+    type: "authn",
+    endpoint: discoveryWallet,
+    method: discoveryWalletMethod,
+  }
 }

@@ -9,7 +9,7 @@ import {serviceOfType} from "./service-of-type"
 import {execService} from "./exec-service"
 import {verifyUserSignatures as verify} from "../exec/verify"
 import {normalizeCompositeSignature} from "./normalize/composite-signature"
-import {buildAuthnConfig} from "../config-utils"
+import {getDiscoveryService} from "../config-utils"
 
 const NAME = "CURRENT_USER"
 const UPDATED = "CURRENT_USER/UPDATED"
@@ -93,17 +93,25 @@ function notExpired(user) {
   )
 }
 
+async function makeMessage() {
+  return {
+    timestamp: Date.now(),
+    appDomainTag: await config.get("fcl.appDomainTag"),
+    extensions: window.fcl_extensions || [],
+  }
+}
+
 async function authenticate({service, redir = false}) {
   return new Promise(async (resolve, reject) => {
     spawnCurrentUser()
     const user = await snapshot()
     if (user.loggedIn) return resolve(user)
 
-    const {discoveryWallet, discoveryWalletMethod, appDomainTag} =
-      await buildAuthnConfig()
+    const discoveryService = await getDiscoveryService()
+    const msg = await makeMessage()
 
     invariant(
-      service || discoveryWallet,
+      service || discoveryService.endpoint,
       `
         If no service passed to "authenticate," then "discovery.wallet" must be defined in config.
         See: "https://docs.onflow.org/fcl/reference/api/#setting-configuration-values"
@@ -120,16 +128,8 @@ async function authenticate({service, redir = false}) {
 
     try {
       const response = await execService({
-        service: service || {
-          type: "authn",
-          endpoint: discoveryWallet,
-          method: discoveryWalletMethod,
-        },
-        msg: {
-          timestamp: Date.now(),
-          appDomainTag,
-          extensions: window.fcl_extensions || [],
-        },
+        service: service || discoveryService,
+        msg,
         opts: {redir},
       })
       send(NAME, SET_CURRENT_USER, await buildUser(response))
