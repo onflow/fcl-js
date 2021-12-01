@@ -105,7 +105,7 @@ describe("getServices", () => {
 
   it("it should show optIn services if set in config", async () => {
     const mockData = [serviceOne, serviceFour]
-    configRef.put("discovery.authn.optIn", ["0x4"])
+    configRef.put("discovery.authn.include", ["0x4"])
 
     windowSpy.mockImplementation(() => ({
       fcl_extensions: [serviceThree]
