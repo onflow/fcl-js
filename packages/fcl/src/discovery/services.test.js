@@ -7,7 +7,7 @@ const serviceOne = {
   "type": "authn",
   "method": "IFRAME/RPC",
   "uid": "walletone#authn",
-  "endpoint": "https://something.hi",
+  "endpoint": "https://test.test",
   "provider": {
     "address": "0x1",
     "name": "Wallet One"
@@ -20,7 +20,7 @@ const serviceTwo = {
   "type": "authz",
   "method": "IFRAME/RPC",
   "uid": "wallettwo#authn",
-  "endpoint": "https://something.hello",
+  "endpoint": "https://test.test",
   "provider": {
     "address": "0x2",
     "name": "Wallet Two"
@@ -33,7 +33,7 @@ const serviceThree = {
   "type": "authn",
   "method": "IFRAME/RPC",
   "uid": "walletthree#authn",
-  "endpoint": "https://something.hi",
+  "endpoint": "https://test.test",
   "provider": {
     "address": "0x3",
     "name": "Wallet Three"
@@ -46,7 +46,7 @@ const serviceFour = {
   "type": "authn",
   "method": "IFRAME/RPC",
   "uid": "walletfour#authn",
-  "endpoint": "https://something.hi",
+  "endpoint": "https://test.test",
   "optIn": true,
   "provider": {
     "address": "0x4",
