@@ -9,6 +9,20 @@ const paddedHexBuffer = (hex, pad) =>
 
 const addressBuffer = addr => paddedHexBuffer(addr, 8)
 
+const HashAlgorithmNames = {
+  1: "SHA2_256",
+  2: "SHA2_384",
+  3: "SHA3_256",
+  4: "SHA3_384",
+  5: "KMAC128_BLS_BLS12_381",
+}
+
+const SignatureAlgorithmNames = {
+  1: "ECDSA_P256",
+  2: "ECDSA_secp256k1",
+  3: "BLS_BLS12_381",
+}
+
 async function sendGetAccountAtBlockHeightRequest(ix, context, opts) {
   const unary = opts.unary || defaultUnary
 
@@ -53,7 +67,9 @@ function constructResponse(ix, context, res) {
       index: publicKey.getIndex(),
       publicKey: u8ToHex(publicKey.getPublicKey_asU8()),
       signAlgo: publicKey.getSignAlgo(),
+      signAlgoName: SignatureAlgorithmNames[publicKey.getSignAlgo()], // New! Verify this field name for correctness.
       hashAlgo: publicKey.getHashAlgo(),
+      hashAlgoName: SignatureAlgorithmNames[publicKey.getHashAlgo()], // New! Verify this field name for correctness.
       weight: publicKey.getWeight(),
       sequenceNumber: publicKey.getSequenceNumber(),
       revoked: publicKey.getRevoked(),
@@ -67,7 +83,7 @@ function constructResponse(ix, context, res) {
 export async function sendGetAccount(ix, context = {}, opts = {}) {
   invariant(opts.node, `SDK Send Get Account Error: opts.node must be defined.`)
   invariant(context.response, `SDK Get Account Error: context.response must be defined.`)
-  
+
   ix = await ix
 
   if (ix.block.height !== null) {
