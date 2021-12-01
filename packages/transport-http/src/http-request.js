@@ -26,7 +26,6 @@ class HTTPRequestError extends Error {
  * Uses the Node HTTP standard library for Node.
  * 
  * @param {String} hostname - Access API Hostname
-//  * @param {Number} [port = 443] - Port of the Access API
  * @param {String} path - Path to the resource on the Access API
  * @param {String} method - HTTP Method
  * @param {Object} body - HTTP Request Body

@@ -1,54 +1,56 @@
 import {invariant} from "@onflow/util-invariant"
-
-const u8ToHex = u8 => Buffer.from(u8).toString("hex")
-const hexBuffer = hex => Buffer.from(hex, "hex")
+import {httpRequest as defaultHttpRequest} from "./http-request.js"
 
 async function sendGetBlockHeaderByIDRequest(ix, context, opts) {
-  // const unary = opts.unary || defaultUnary
+  const httpRequest = opts.httpRequest || defaultHttpRequest
 
-  // const req = new GetBlockHeaderByIDRequest()
-  // req.setId(hexBuffer(ix.block.id))
-
-  // const res = await unary(opts.node, AccessAPI.GetBlockHeaderByID, req)
+  const res = await httpRequest({
+    hostname: opts.node,
+    path: `/v1/blocks/${ix.block.id}`,
+    method: "GET",
+    body: null
+  })
 
   return constructResponse(ix, context, res)
 }
 
 async function sendGetBlockHeaderByHeightRequest(ix, context, opts) {
-  // const unary = opts.unary || defaultUnary
+  const httpRequest = opts.httpRequest || defaultHttpRequest
 
-  // const req = new GetBlockHeaderByHeightRequest()
-  // req.setHeight(Number(ix.block.height))
-
-  // const res = await unary(opts.node, AccessAPI.GetBlockHeaderByHeight, req)
+  const res = await httpRequest({
+    hostname: opts.node,
+    path: `/v1/blocks?height=${ix.block.height}`,
+    method: "GET",
+    body: null
+  })
 
   return constructResponse(ix, context, res)
 }
 
 async function sendGetLatestBlockHeaderRequest(ix, context, opts) {
-  // const unary = opts.unary || defaultUnary
+  const httpRequest = opts.httpRequest || defaultHttpRequest
 
-  // const req = new GetLatestBlockHeaderRequest()
-
-  // if (ix.block?.isSealed) {
-  //   req.setIsSealed(ix.block.isSealed)
-  // }
-
-  // const res = await unary(opts.node, AccessAPI.GetLatestBlockHeader, req)
+  const res = await httpRequest({
+    hostname: opts.node,
+    path: `/v1/blocks?height=sealed`,
+    method: "GET",
+    body: null
+  })
 
   return constructResponse(ix, context, res)
 }
 
 function constructResponse(ix, context, res) {
-  const blockHeader = res.getBlock()
+  // const blockHeader = res.getBlock()
 
   const ret = context.response()
   ret.tag = ix.tag
   ret.blockHeader = {
-    id: u8ToHex(blockHeader.getId_asU8()),
-    parentId: u8ToHex(blockHeader.getParentId_asU8()),
-    height: blockHeader.getHeight(),
-    timestamp: blockHeader.getTimestamp().toDate().toISOString(),
+    id: res.header.id,
+    parentId: res.header.parent_id,
+    height: res.header.height,
+    timestamp: res.header.timestamp,
+    parentVoterSignature: res.header.parent_voter_signature, // NEW IN REST API!
   }
 
   return ret

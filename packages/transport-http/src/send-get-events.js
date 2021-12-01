@@ -1,8 +1,5 @@
 import {invariant} from "@onflow/util-invariant"
 
-const u8ToHex = u8 => Buffer.from(u8).toString("hex")
-const hexBuffer = hex => Buffer.from(hex, "hex")
-
 async function sendGetEventsForHeightRangeRequest(ix, context, opts) {
   // const unary = opts.unary || defaultUnary
 
@@ -14,7 +11,7 @@ async function sendGetEventsForHeightRangeRequest(ix, context, opts) {
 
   // const res = await unary(opts.node, AccessAPI.GetEventsForHeightRange, req)
 
-  // return constructResponse(ix, context, res)
+  return constructResponse(ix, context, res)
 }
 
 async function sendGetEventsForBlockIDsRequest(ix, context, opts) {
@@ -29,12 +26,12 @@ async function sendGetEventsForBlockIDsRequest(ix, context, opts) {
 
   // const res = await unary(opts.node, AccessAPI.GetEventsForBlockIDs, req)
 
-  // return constructResponse(ix, context, res)
+  return constructResponse(ix, context, res)
 }
 
 function constructResponse(ix, context, res) {
-  // let ret = context.response()
-  // ret.tag = ix.tag
+  let ret = context.response()
+  ret.tag = ix.tag
 
   // const results = res.getResultsList()
   // ret.events = results.reduce((blocks, result) => {
@@ -57,7 +54,7 @@ function constructResponse(ix, context, res) {
   //   return blocks
   // }, [])
 
-  // return ret
+  return ret
 }
 
 export async function sendGetEvents(ix, context = {}, opts = {}) {  

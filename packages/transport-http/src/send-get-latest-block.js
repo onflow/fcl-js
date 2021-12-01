@@ -1,7 +1,5 @@
 import {invariant} from "@onflow/util-invariant"
 
-const u8ToHex = u8 => Buffer.from(u8).toString("hex")
-
 const latestBlockDeprecationNotice = () => {
   console.error(
     `
@@ -44,8 +42,8 @@ export async function sendGetLatestBlock(ix, context = {}, opts = {}) {
   // const blockSeals = block.getBlockSealsList()
   // const signatures = block.getSignaturesList()
 
-  // const ret = response()
-  // ret.tag = ix.tag
+  const ret = context.response()
+  ret.tag = ix.tag
   // ret.block = {
   //   id: u8ToHex(block.getId_asU8()),
   //   parentId: u8ToHex(block.getParentId_asU8()),
@@ -64,5 +62,5 @@ export async function sendGetLatestBlock(ix, context = {}, opts = {}) {
   //   signatures: signatures,
   // }
 
-  // return ret
+  return ret
 }

@@ -12,8 +12,8 @@ export async function sendPing(ix, context = {}, opts = {}) {
 
   // const res = await unary(opts.node, AccessAPI.Ping, req)
 
-  // let ret = response()
-  // ret.tag = ix.tag
+  let ret = contnext.response()
+  ret.tag = ix.tag
 
-  // return ret
+  return ret
 }
