@@ -47,12 +47,12 @@ export const getServices = ({ type }) => asyncPipe(
 )([])
 
 export const constructApiQueryParams = ({ include }) => {
-  let queryStr = '?'
+  let queryStr = ''
   
   if (include) {
-    let includeQueryStr = include.map(addr => `include=${addr}`).join('&')
+    const includeQueryStr = include.map(addr => `include=${addr}`).join('&')
     queryStr = queryStr.concat(includeQueryStr)
   }
 
-  return queryStr
+  return queryStr.length ? `?${queryStr}` : ''
 }

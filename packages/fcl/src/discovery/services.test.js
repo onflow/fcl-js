@@ -130,4 +130,15 @@ describe("constructApiQueryParams", () => {
 
     expect(constructApiQueryParams(filters)).toEqual("?include=0x1&include=0x2")
   })
+
+  it("it should return an empty string if nothing to construct", () => {
+    const filters = {
+      include: []
+    }
+
+    const filtersTwo = {}
+
+    expect(constructApiQueryParams(filters)).toEqual("")
+    expect(constructApiQueryParams(filtersTwo)).toEqual("")
+  })
 })
