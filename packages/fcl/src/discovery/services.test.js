@@ -85,41 +85,6 @@ describe("getServices", () => {
     expect(response.length).toEqual(2)
     expect(response).toEqual(expectedResponse)
   })
-
-  it("it should hide optIn services if NOT set in config", async () => {
-    const mockData = [serviceOne, serviceFour]
-
-    windowSpy.mockImplementation(() => ({
-      fcl_extensions: [serviceThree]
-    }))
-
-    global.fetch = jest.fn(() => Promise.resolve({
-      json: () => Promise.resolve(mockData)
-    }))
-
-    const response = await getServices({ type: "authn" })
-    const expectedResponse = [serviceThree, serviceOne]
-    expect(response).toEqual(expectedResponse)
-    expect(response.length).toEqual(2)
-  })
-
-  it("it should show optIn services if set in config", async () => {
-    const mockData = [serviceOne, serviceFour]
-    configRef.put("discovery.authn.include", ["0x4"])
-
-    windowSpy.mockImplementation(() => ({
-      fcl_extensions: [serviceThree]
-    }))
-
-    global.fetch = jest.fn(() => Promise.resolve({
-      json: () => Promise.resolve(mockData)
-    }))
-
-    const response = await getServices({ type: "authn" })
-    const expectedResponse = [serviceThree, serviceOne, serviceFour]
-    expect(response).toEqual(expectedResponse)
-    expect(response.length).toEqual(3)
-  })
 })
 
 describe("constructApiQueryParams", () => {
@@ -129,7 +94,7 @@ describe("constructApiQueryParams", () => {
       include: ["0x1", "0x2"]
     }
 
-    expect(constructApiQueryParams(filters)).toEqual("?version=0.0.78&include=0x1&include=0x2")
+    expect(constructApiQueryParams(filters)).toEqual("?fcl_version=0.0.78&include=0x1&include=0x2")
   })
 
   it("it should return an empty string if nothing to construct", () => {
