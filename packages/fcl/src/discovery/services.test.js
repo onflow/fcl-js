@@ -125,10 +125,11 @@ describe("getServices", () => {
 describe("constructApiQueryParams", () => {
   it("it should construct API query params", () => {
     const filters = {
+      version: '0.0.78',
       include: ["0x1", "0x2"]
     }
 
-    expect(constructApiQueryParams(filters)).toEqual("?include=0x1&include=0x2")
+    expect(constructApiQueryParams(filters)).toEqual("?version=0.0.78&include=0x1&include=0x2")
   })
 
   it("it should return an empty string if nothing to construct", () => {

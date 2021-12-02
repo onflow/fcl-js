@@ -1,5 +1,6 @@
 import {config} from "@onflow/sdk"
 import {invariant} from "@onflow/util-invariant"
+import {VERSION} from "../VERSION"
 
 const asyncPipe = (...fns) => input => fns.reduce((chain, fn) => chain.then(fn), Promise.resolve(input))
 
@@ -8,7 +9,7 @@ async function addServices(services = []) {
   invariant(Boolean(endpoint), `"discovery.authn.endpoint" in config must be defined.`)
 
   const include = await config.get("discovery.authn.include", [])
-  const queryParams = constructApiQueryParams({include})
+  const queryParams = constructApiQueryParams({version: VERSION, include})
   const constructedEndpoint = `${endpoint}${queryParams}`
   const url = new URL(constructedEndpoint)
 
@@ -30,24 +31,18 @@ function filterServicesByType(services = [], type) {
   return services.filter(service => service.type === type)
 }
 
-// If it's an optIn service, make sure it's set in the config to show
-async function filterOptInServices(services = []) {
-  const optInList = await config.get("discovery.authn.include", [])
-  return services.filter(service => {
-    if (service.optIn) return optInList.includes(service?.provider?.address)
-    return true
-  })
-}
-
 export const getServices = ({ type }) => asyncPipe(
   addServices,
   addExtensions,
-  s => filterServicesByType(s, type),
-  filterOptInServices
+  s => filterServicesByType(s, type)
 )([])
 
-export const constructApiQueryParams = ({ include }) => {
+export const constructApiQueryParams = ({version, include}) => {
   let queryStr = ''
+
+  if (version) {
+    queryStr = queryStr.concat(`fcl_version=${version}&`)
+  }
   
   if (include) {
     const includeQueryStr = include.map(addr => `include=${addr}`).join('&')
