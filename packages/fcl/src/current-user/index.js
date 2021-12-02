@@ -105,11 +105,18 @@ async function authenticate({service, redir = false}) {
   return new Promise(async (resolve, reject) => {
     spawnCurrentUser()
     const user = await snapshot()
-    if (user.loggedIn) return resolve(user)
-
-    const discoveryService = await getDiscoveryService()
     const msg = await makeMessage()
+    const opts = {redir}
+    const discoveryService = await getDiscoveryService()
+    const refreshService = serviceOfType(user.services, "authn-refresh")
+    const suppressRedirWarning = await config.get("fcl.warning.suppress.redir")
 
+    if (redir && !suppressRedirWarning) {
+      console.warn(
+        `You are manually enabling a very experimental feature that is not yet standard, use at your own risk.
+         You can disable this warning by setting fcl.warning.suppress.redir to true in your config`
+      )
+    }
     invariant(
       service || discoveryService.endpoint,
       `
@@ -118,19 +125,30 @@ async function authenticate({service, redir = false}) {
       `
     )
 
-    const suppressRedirWarning = await config.get("fcl.warning.suppress.redir")
-    if (redir && !suppressRedirWarning) {
-      console.warn(
-        `You are manually enabling a very experimental feature that is not yet standard, use at your own risk.
-         You can disable this warning by setting fcl.warning.suppress.redir to true in your config`
-      )
+    if (user.loggedIn) {
+      if (refreshService) {
+        try {
+          const response = await execService({
+            service: refreshService,
+            msg,
+            opts,
+          })
+          send(NAME, SET_CURRENT_USER, await buildUser(response))
+        } catch (e) {
+          console.error("Error: Could not refresh authentication.", e)
+        } finally {
+          return resolve(await snapshot())
+        }
+      } else {
+        return resolve(user)
+      }
     }
 
     try {
       const response = await execService({
         service: service || discoveryService,
         msg,
-        opts: {redir},
+        opts,
       })
       send(NAME, SET_CURRENT_USER, await buildUser(response))
     } catch (e) {

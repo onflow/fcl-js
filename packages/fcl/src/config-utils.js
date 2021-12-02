@@ -1,9 +1,6 @@
 import {config} from "@onflow/sdk"
-<<<<<<< HEAD
 import {constructApiQueryParams} from "./discovery/services"
 import {VERSION} from "./VERSION"
-=======
->>>>>>> 3e41103 (PKG -- [fcl] Add buildDiscoveryService to authenticate)
 
 const isServerSide = () => typeof window === "undefined"
 

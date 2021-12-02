@@ -4,7 +4,7 @@
 //   "type": "authn-refresh",
 //   "uid": "uniqueDedupeKey",
 //   "endpoint": "https://rawr",
-//   "method": "HTTP/POST", // HTTP/POST | IFRAME/RPC | HTTP/RPC
+//   "method": "HTTP/POST",  // "HTTP/POST", // HTTP/POST | IFRAME/RPC | HTTP/RPC
 //   "id": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx", // wallets internal id for the user
 //   "data": {}, // included in body of request
 //   "params": {}, // included as query params on endpoint url
