@@ -4,6 +4,56 @@
 
 ## 0.0.78-alpha.9 - 2021-12-03
 
+- 2021-12-02 -- Adds optional Authentication Refresh Service to `fcl.authenticate`
+
+Wallet Providers can now provide an optional **Authentication Refresh Service** to FCL upon initial configuration.
+If provided, FCL will attempt to refresh the user's session by executing this service before a transaction.
+
+FCL will use the service endpoint and method provided to request updated authentication data from the Wallet Provider.
+The service is expected to reauthenticate the user or prompt for approval if required. Updated authentication information
+(user data and services) should be sent back to FCL as part of an APPROVED `PollingResponse`. (see example below using `WalletUtils.approve`)
+
+If FCL receives back an APPROVED `PollingResponse`, it rebuilds `fcl.currentUser` with updated session data and services
+and the Authentication Refresh process is complete.
+The initial transaction can then be executed with confidence the user session is valid.
+
+```javascript
+import {WalletUtils} from "@onflow/fcl"
+
+WalletUtils.approve({
+  f_type: "AuthnResponse",
+  f_vsn: "1.0.0"
+  services: [                              // All the stuff that configures FCL
+  // Authentication Service - REQUIRED
+    {
+      f_type: "Service",                   // Its a service!
+      f_vsn: "1.0.0",                      // Follows the v1.0.0 spec for the service
+      type: "authn",                       // the type of service it is
+      ...
+    },
+  // Authentication Refresh Service
+  {
+    f_type: "Service",                      // Its a service!
+    f_vsn: "1.0.0",                         // Follows the v1.0.0 spec for the service
+    type: "authn-refresh",                  // The type of service it is
+    method: "HTTP/POST",                    // Back Channel
+    endpoint: "authentication-refresh-url", // The authentication refresh endpoint
+    uid: "awesome-wallet#authn-refresh",    // A unique identifier for the service
+    id: "0xUSER",                           // the wallets internal id for the user or flow address
+    data: {
+      f_type: "authn-refresh",
+      f_vsn: "1.0.0",
+      address: "0xUSER",                    // The user's address with prefix
+    },                                      // will be included in the requests body
+    params: { }                             // will be included in the requests url
+  },
+  /// Additional Services
+  ...
+  ]
+})
+
+```
+
 - 2021-12-01 -- Internal: Wrap authz in resolve to dedupe accounts. Remove user `notExpired` check.
 - 2021-11-30 -- Allow apps to add opt-in wallets in Discovery with config.
 
