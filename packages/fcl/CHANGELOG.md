@@ -72,7 +72,7 @@ function Component() {
 
   return (
     <div>
-      {services.map(service => <button key={service.id} onClick={() => fcl.authenticate({ service })}>Login with {service.provider.name}</button>)}
+      {services.map(service => <button key={service.provider.address} onClick={() => fcl.authenticate({ service })}>Login with {service.provider.name}</button>)}
     </div>
   )
 }
