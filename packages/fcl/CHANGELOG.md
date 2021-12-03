@@ -1,4 +1,4 @@
-## Unreleased
+## 0.0.78-alpha.9 - 2021-12-03
 
 - 2021-12-01 -- Internal: Wrap authz in resolve to dedupe accounts. Remove user `notExpired` check.
 - 2021-11-30 -- Allow apps to add opt-in wallets in Discovery with config.
