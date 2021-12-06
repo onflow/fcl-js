@@ -10,7 +10,7 @@ async function sendExecuteScriptAtBlockIDRequest(ix, context, opts) {
     path: `/scripts?block_id=${ix.block.id}`,
     method: "POST",
     body: {
-      "script": ix.message.cadence,
+      "script": Buffer.from(ix.message.cadence).toString("base64"),
       "arguments": ix.message.arguments.map(arg => ix.arguments[arg].asArgument)
     }
   })
@@ -26,7 +26,7 @@ async function sendExecuteScriptAtBlockHeightRequest(ix, context, opts) {
     path: `/scripts?block_height=${ix.block.height}`,
     method: "POST",
     body: {
-      "script": ix.message.cadence,
+      "script": Buffer.from(ix.message.cadence).toString("base64"),
       "arguments": ix.message.arguments.map(arg => ix.arguments[arg].asArgument)
     }
   })
@@ -39,10 +39,10 @@ async function sendExecuteScriptAtLatestBlockRequest(ix, context, opts) {
 
   const res = await httpRequest({
     hostname: opts.node,
-    path: `/scripts`,
+    path: `/scripts?block_height=sealed`,
     method: "POST",
     body: {
-      "script": ix.message.cadence,
+      "script": Buffer.from(ix.message.cadence).toString("base64"),
       "arguments": ix.message.arguments.map(arg => ix.arguments[arg].asArgument)
     }
   })
@@ -53,7 +53,7 @@ async function sendExecuteScriptAtLatestBlockRequest(ix, context, opts) {
 function constructResponse(ix, context, res)  {
   let ret = context.response()
   ret.tag = ix.tag
-  ret.encodedData = res.value
+  ret.encodedData = JSON.parse(Buffer.from(res, "base64").toString())
 
   return ret
 }
