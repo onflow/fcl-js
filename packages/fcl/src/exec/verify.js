@@ -1,21 +1,27 @@
 import {invariant} from "@onflow/util-invariant"
 import {query} from "../exec/query"
-import {account} from "@onflow/sdk"
+
+export const validateArgs = (msg, compSigs) => {
+  invariant(/^[0-9a-f]+$/i.test(msg), "Signed message must be a hex string")
+  invariant(
+    Array.isArray(compSigs) &&
+      compSigs.every((sig, i, arr) => sig.f_type === "CompositeSignature"),
+    "Must include an Array of CompositeSignatures to verify"
+  )
+  invariant(
+    compSigs.map(cs => cs.addr).every((addr, i, arr) => addr === arr[0]),
+    "User signatures to be verified must be from a single account address"
+  )
+  return true
+}
 
 export async function verifyUserSignatures(msg, compSigs) {
-  invariant(/^[0-9a-f]+$/i.test(msg), "Message must be a hex string")
-  invariant(
-    Array.isArray(compSigs),
-    "Must include an Array of composite signatures"
-  )
+  validateArgs(msg, compSigs)
 
   const acctAddress = compSigs[0].addr
   let signatures = []
   let keyIds = []
   compSigs.map(cs => {
-    invariant(typeof cs.addr === "string", "addr must be a string")
-    invariant(typeof cs.keyId === "number", "keyId must be a number")
-    invariant(typeof cs.signature === "string", "signature must be a string")
     signatures.push(cs.signature)
     keyIds.push(cs.keyId)
   })

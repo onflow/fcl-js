@@ -1,3 +1,7 @@
+## Unreleased
+
+- 2021-12-07 -- Internal: Updates `fcl.verifyUserSignatures` adding additional validation. Extends Cadence query script to add key weight threshold and enforces signatures need to be from a single account address.
+
 ## 0.0.78-alpha.9 - 2021-12-03
 
 - 2021-12-01 -- Internal: Wrap authz in resolve to dedupe accounts. Remove user `notExpired` check.
