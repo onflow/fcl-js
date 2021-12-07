@@ -14,12 +14,11 @@ export async function sendGetCollection(ix, context = {}, opts = {}) {
     body: null
   })
 
-  const ret = response()
+  const ret = context.response()
   ret.tag = ix.tag
   ret.collection = {
     id: res.id,
-    transactionIds: null, // CHECK IF WE NEED TO HAVE BACKWARD COMPATIBILITY HERE
-    transactions: res.transactions
+    transactionIds: res.transactions.map(transaction => transaction.id), // CHECK IF WE NEED TO HAVE BACKWARD COMPATIBILITY HERE
   }
 
   return ret
