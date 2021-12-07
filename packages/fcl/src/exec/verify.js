@@ -9,37 +9,23 @@ export async function verifyUserSignatures(msg, compSigs) {
     "Must include an Array of composite signatures"
   )
 
-  let weights = []
-  let signAlgos = []
-  let hashAlgos = []
+  const acctAddress = compSigs[0].addr
   let signatures = []
-  const rawPubKeys = await Promise.all(
-    compSigs.map(async cs => {
-      invariant(typeof cs.addr === "string", "addr must be a string")
-      invariant(typeof cs.keyId === "number", "keyId must be a number")
-      invariant(typeof cs.signature === "string", "signature must be a string")
-
-      try {
-        const account = await account(cs.addr)
-        weights.push(account.keys[cs.keyId].weight.toFixed(1))
-        signAlgos.push(account.keys[cs.keyId].signAlgo)
-        hashAlgos.push(account.keys[cs.keyId].hashAlgo)
-        signatures.push(cs.signature)
-        return account.keys[cs.keyId].publicKey
-      } catch (err) {
-        throw err
-      }
-    })
-  )
+  let keyIds = []
+  compSigs.map(cs => {
+    invariant(typeof cs.addr === "string", "addr must be a string")
+    invariant(typeof cs.keyId === "number", "keyId must be a number")
+    invariant(typeof cs.signature === "string", "signature must be a string")
+    signatures.push(cs.signature)
+    keyIds.push(cs.keyId)
+  })
 
   return await query({
     cadence: `${VERIFY_SIG_SCRIPT}`,
     args: (arg, t) => [
+      arg(acctAddress, t.Address),
       arg(msg, t.String),
-      arg(rawPubKeys, t.Array([t.String])),
-      arg(weights, t.Array(t.UFix64)),
-      arg(signAlgos, t.Array([t.UInt])),
-      arg(hashAlgos, t.Array([t.UInt])),
+      arg(keyIds, t.Array([t.Int])),
       arg(signatures, t.Array([t.String])),
     ],
   })
@@ -66,25 +52,53 @@ const VERIFY_SIG_SCRIPT = `
   }
       
   pub fun main(
+    acctAddress: Address,
     message: String,
-    rawPublicKeys: [String],
-    weights: [UFix64],
-    signAlgos: [UInt],
-    hashAlgos: [UInt],
+    keyIds: [Int],
     signatures: [String],
   ): Bool {
 
     let keyList = Crypto.KeyList()
+    let rawPublicKeys: [String] = []
+    let weights: [UFix64] = []
+    let signAlgos: [UInt] = []
+    let hashAlgos: [UInt] = []
+    let uniqueKeys: {Int: Bool} = {}
+    let account = getAccount(acctAddress)
     
+    for id in keyIds {
+      uniqueKeys[id] = true
+    }
+
+    assert(uniqueKeys.keys.length == keyIds.length, message: "Invalid KeyId: Duplicate key found for account")
+
+    var counter = 0
+    while (counter < keyIds.length) {
+      let accountKey = account.keys.get(keyIndex: keyIds[counter]) ?? panic("Key provided does not exist on account")
+      rawPublicKeys.append(String.encodeHex(accountKey.publicKey.publicKey))
+      weights.append(accountKey.weight)
+      signAlgos.append(UInt(accountKey.publicKey.signatureAlgorithm.rawValue))
+      hashAlgos.append(UInt(accountKey.hashAlgorithm.rawValue))
+      counter = counter + 1
+    }
+
+    var totalWeight = 0.0
+    var weightIndex = 0
+    while (weightIndex < weights.length) {
+      totalWeight = totalWeight + weights[weightIndex]
+      weightIndex = weightIndex + 1
+    }
+    assert(totalWeight >= 1000.0, message: "Signature key weights do not meet threshold >= 1000.0")
+
     var i = 0
     for rawPublicKey in rawPublicKeys {
       keyList.add(
         PublicKey(
           publicKey: rawPublicKey.decodeHex(),
-          signatureAlgorithm: signAlgos[i] == 2 ? SignatureAlgorithm.ECDSA_P256 : SignatureAlgorithm.ECDSA_secp256k1 
+          signatureAlgorithm: signAlgos[i] == 2 ? SignatureAlgorithm.ECDSA_secp256k1  : SignatureAlgorithm.ECDSA_P256
         ),
         hashAlgorithm: getHashAlgo(Int(hashAlgos[i])),
-        weight: weights[i],
+        weight: weights[i]
       )
       i = i + 1
     }
