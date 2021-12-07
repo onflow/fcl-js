@@ -6,7 +6,7 @@ async function sendGetBlockByIDRequest(ix, context, opts) {
 
   const res = await httpRequest({
     hostname: opts.node,
-    path: `/v1/blocks/${ix.block.id}`,
+    path: `/v1/blocks/${ix.block.id}?expand=payload,execution_result`,
     method: "GET",
     body: null
   })
@@ -19,7 +19,7 @@ async function sendGetBlockByHeightRequest(ix, context, opts) {
 
   const res = await httpRequest({
     hostname: opts.node,
-    path: `/v1/blocks?height=${ix.block.height}`,
+    path: `/v1/blocks?height=${ix.block.height}&expand=payload,execution_result`,
     method: "GET",
     body: null
   })
@@ -56,9 +56,9 @@ function constructResponse(ix, context, res) {
     })),
     blockSeals:  block.payload.block_seals.map(blockSeal => ({ // LOTS OF ISSUES HERE, CHECK ON THIS
       blockId: blockSeal.block_id,
-      executionReceiptId: null, // REMOVED IN SCHEMA, CHECK ON THIS
-      executionReceiptSignatures: null, // REMOVED IN SCHEMA, CHECK ON THIS
-      resultApprovalSignatures: null, // REMOVED IN SCHEMA, CHECK ON THIS
+      executionReceiptId: blockSeal.result_id, // REMOVED IN SCHEMA, CHECK ON THIS
+      executionReceiptSignatures: [], // REMOVED IN SCHEMA, CHECK ON THIS
+      resultApprovalSignatures: [], // REMOVED IN SCHEMA, CHECK ON THIS
     })),
     signatures: null, // REMOVED IN SCHEMA, CHECK ON THIS
   }))

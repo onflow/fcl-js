@@ -54,13 +54,13 @@ function constructResponse(ix, context, res) {
       index: key.index,
       publicKey: key.public_key,
       signAlgo: SignatureAlgorithmIDs[key.signing_algorithm],
-      signAlgoName: key.signing_algorithm, // New! Verify this field name for correctness.
+      signAlgoString: key.signing_algorithm, // New! Verify this field name for correctness.
       hashAlgo: HashAlgorithmIDs[key.hashing_algorithm],
-      hashAlgoName: key.hashing_algorithm, // New! Verify this field name for correctness.
+      hashAlgoString: key.hashing_algorithm, // New! Verify this field name for correctness.
       sequenceNumber: key.sequence_number,
       weight: key.weight,
       revoked: key.revoked,
-    })) // VERIFY THAT KEYS WILL CONTAIN NUMBERED REPRESENTATIONS OF SIG / HASH ALGOS FOR BACKWARDS COMPATIBILITY https://docs.onflow.org/cadence/language/crypto/#hashing
+    })) 
   }
 
   return ret

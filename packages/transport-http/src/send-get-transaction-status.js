@@ -2,17 +2,12 @@ import {invariant} from "@onflow/util-invariant"
 import {httpRequest as defaultHttpRequest} from "./http-request.js"
 
 const STATUS_MAP = {
-  '0': 'UNKNOWN',
-  '1': 'PENDING',
-  '2': 'FINALIZED',
-  '3': 'EXECUTED',
-  '4': 'SEALED',
-  '5': 'EXPIRED'
-}
-
-const convertStatusToString = code => {
-  if (code == null) return
-  return STATUS_MAP[String(code)]
+  "UNKNOWN": 0,
+  "PENDING": 1,
+  "FINALIZED": 2,
+  "EXECUTED": 3,
+  "SEALED": 4,
+  "EXPIRED": 5
 }
 
 export async function sendGetTransactionStatus(ix, context = {}, opts = {}) {
@@ -34,9 +29,8 @@ export async function sendGetTransactionStatus(ix, context = {}, opts = {}) {
   ret.tag = ix.tag
   ret.transactionStatus = {
     blockId: res.block_id, // THIS IS A NEW FIELD FROM REST API
-    status: res.status, // THIS IS NOW A STRING IN REST API LIKE "Pending"
-    statusString: null, // MAYBE SHOULD BE CONVERTED FROM res.status field
-    statusCode: null, // MAYBE SHOULD BE CONVERTED FROM res.status field 
+    status: STATUS_MAP[res.status.toUpperCase()], // THIS IS NOW A STRING IN REST API LIKE "Pending"
+    statusString: res.status.toUpperCase(), // MAYBE SHOULD BE CONVERTED FROM res.status field
     events: res.events.map(event => ({
       type: event.type,
       transactionId: event.transaction_id,
