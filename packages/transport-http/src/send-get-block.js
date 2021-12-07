@@ -6,7 +6,7 @@ async function sendGetBlockByIDRequest(ix, context, opts) {
 
   const res = await httpRequest({
     hostname: opts.node,
-    path: `/v1/blocks/${ix.block.id}?expand=payload,execution_result`,
+    path: `/blocks/${ix.block.id}?expand=payload,execution_result`,
     method: "GET",
     body: null
   })
@@ -19,7 +19,7 @@ async function sendGetBlockByHeightRequest(ix, context, opts) {
 
   const res = await httpRequest({
     hostname: opts.node,
-    path: `/v1/blocks?height=${ix.block.height}&expand=payload,execution_result`,
+    path: `/blocks?height=${ix.block.height}&expand=payload,execution_result`,
     method: "GET",
     body: null
   })
@@ -32,7 +32,7 @@ async function sendGetBlockRequest(ix, context, opts) {
 
   const res = await httpRequest({
     hostname: opts.node,
-    path: `/v1/blocks?height=sealed`,
+    path: `/blocks?height=sealed&expand=payload,execution_result`,
     method: "GET",
     body: null
   })
@@ -41,9 +41,11 @@ async function sendGetBlockRequest(ix, context, opts) {
 }
 
 function constructResponse(ix, context, res) {
+  const block = res.length ? res[0] : null
+  
   const ret = context.response()
   ret.tag = ix.tag
-  ret.block = res.map(block => ({ // Multiple Blocks now are to be returned by the REST API, we'll need to account for that in how we return blocks back
+  ret.block = { // Multiple Blocks now are to be returned by the REST API, we'll need to account for that in how we return blocks back
     id: block.header.id,
     parentId: block.header.parent_id,
     height: block.header.height,
@@ -56,12 +58,12 @@ function constructResponse(ix, context, res) {
     })),
     blockSeals:  block.payload.block_seals.map(blockSeal => ({ // LOTS OF ISSUES HERE, CHECK ON THIS
       blockId: blockSeal.block_id,
-      executionReceiptId: blockSeal.result_id, // REMOVED IN SCHEMA, CHECK ON THIS
+      executionReceiptId: blockSeal.result_id, 
       executionReceiptSignatures: [], // REMOVED IN SCHEMA, CHECK ON THIS
       resultApprovalSignatures: [], // REMOVED IN SCHEMA, CHECK ON THIS
     })),
     signatures: null, // REMOVED IN SCHEMA, CHECK ON THIS
-  }))
+  }
 
   return ret
 }

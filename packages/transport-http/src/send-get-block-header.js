@@ -6,7 +6,7 @@ async function sendGetBlockHeaderByIDRequest(ix, context, opts) {
 
   const res = await httpRequest({
     hostname: opts.node,
-    path: `/v1/blocks/${ix.block.id}`,
+    path: `/blocks/${ix.block.id}`,
     method: "GET",
     body: null
   })
@@ -19,7 +19,7 @@ async function sendGetBlockHeaderByHeightRequest(ix, context, opts) {
 
   const res = await httpRequest({
     hostname: opts.node,
-    path: `/v1/blocks?height=${ix.block.height}`,
+    path: `/blocks?height=${ix.block.height}`,
     method: "GET",
     body: null
   })
@@ -32,7 +32,7 @@ async function sendGetLatestBlockHeaderRequest(ix, context, opts) {
 
   const res = await httpRequest({
     hostname: opts.node,
-    path: `/v1/blocks?height=sealed`,
+    path: `/blocks?height=sealed`,
     method: "GET",
     body: null
   })
