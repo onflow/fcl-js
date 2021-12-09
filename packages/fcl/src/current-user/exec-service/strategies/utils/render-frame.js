@@ -8,7 +8,7 @@ const FRAME_STYLES = `
   right: 0px;
   bottom: 0px;
   left: 0px;
-  height: 100vh;
+  height: 100%;
   width: 100vw;
   display:block;
   background:rgba(0,0,0,0.25);
