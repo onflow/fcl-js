@@ -15,6 +15,23 @@ export const validateArgs = (msg, compSigs) => {
   return true
 }
 
+/**
+ * Verify a valid signature/s for an account on Flow.
+ *
+ * @param {string} msg - A message string in hexadecimal format
+ * @param {Array} compSigs - An array of Composite Signatures
+ * @param {string} compSigs[].addr - The account address
+ * @param {number} compSigs[].keyId - The account keyId
+ * @param {string} compSigs[].signature - The signature to verify
+ * @return {bool}
+ *
+ * @example
+ *
+ *  const isValid = await fcl.verifyUserSignature(
+ *    Buffer.from('FOO').toString("hex"),
+ *    [{f_type: "CompositeSignature", f_vsn: "1.0.0", addr: "0x123", keyId: 0, signature: "abc123"}]
+ *  )
+ */
 export async function verifyUserSignatures(msg, compSigs) {
   validateArgs(msg, compSigs)
 
@@ -27,7 +44,7 @@ export async function verifyUserSignatures(msg, compSigs) {
   })
 
   return await query({
-    cadence: `${VERIFY_SIG_SCRIPT}`,
+    cadence: VERIFY_SIG_SCRIPT,
     args: (arg, t) => [
       arg(acctAddress, t.Address),
       arg(msg, t.String),
@@ -65,12 +82,13 @@ const VERIFY_SIG_SCRIPT = `
   ): Bool {
 
     let keyList = Crypto.KeyList()
+    let account = getAccount(acctAddress)
+    
     let rawPublicKeys: [String] = []
     let weights: [UFix64] = []
     let signAlgos: [UInt] = []
     let hashAlgos: [UInt] = []
     let uniqueKeys: {Int: Bool} = {}
-    let account = getAccount(acctAddress)
     
     for id in keyIds {
       uniqueKeys[id] = true
@@ -89,11 +107,10 @@ const VERIFY_SIG_SCRIPT = `
     }
 
     var totalWeight = 0.0
-    var weightIndex = 0
-    while (weightIndex < weights.length) {
-      totalWeight = totalWeight + weights[weightIndex]
-      weightIndex = weightIndex + 1
+    for weight in weights {
+      totalWeight = totalWeight + weight
     }
+    
     assert(totalWeight >= 1000.0, message: "Signature key weights do not meet threshold >= 1000.0")
 
     var i = 0
