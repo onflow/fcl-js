@@ -346,7 +346,7 @@ fcl.authenticate();
 
 #### Note
 
-⚠️ `authenticate` can also take a service returned from (discovery)[#discovery] with `fcl.authenticate({ service })`.
+⚠️ `authenticate` can also take a service returned from [discovery](#discovery) with `fcl.authenticate({ service })`.
 
 #### Examples
 
@@ -1182,12 +1182,13 @@ A builder function that returns the status of transaction.
 
 #### Returns after decoding
 
-| Name           | Type                                       | Description                                                     |
-| -------------- | ------------------------------------------ | --------------------------------------------------------------- |
-| `events`       | [[EventObject]](#event-object)              | An array of events that were emitted during the transaction.    |
-| `status`       | [TransactionStatus](#transaction-statuses) | The status of the transaction on the blockchain.                |
-| `errorMessage` | string                                     | An error message if it exists. Default is an empty string `''`. |
-| `statusCode`   | [GRPCStatus](#grpc-statuses)               | The status from the GRPC response.                              |
+| Name                     | Type                                       | Description                                                     |
+| ------------------------ | ------------------------------------------ | --------------------------------------------------------------- |
+| `events`                 | [[EventObject]](#event-object)             | An array of events that were emitted during the transaction.    |
+| `status`                 | [TransactionStatus](#transaction-statuses) | The status of the transaction on the blockchain.                |
+| `statusString` **alpha** | [TransactionStatus](#transaction-statuses) | The `status` as as descriptive text (e.g. "FINALIZED").         |
+| `errorMessage`           | string                                     | An error message if it exists. Default is an empty string `''`. |
+| `statusCode`             | [GRPCStatus](#grpc-statuses)               | The status from the GRPC response.                              |
 
 #### Usage
 
