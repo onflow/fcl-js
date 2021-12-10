@@ -27,7 +27,7 @@ export const validateArgs = (msg, compSigs) => {
  *
  * @example
  *
- *  const isValid = await fcl.verifyUserSignature(
+ *  const isValid = await fcl.verifyUserSignatures(
  *    Buffer.from('FOO').toString("hex"),
  *    [{f_type: "CompositeSignature", f_vsn: "1.0.0", addr: "0x123", keyId: 0, signature: "abc123"}]
  *  )

@@ -13,7 +13,7 @@ the FCL `account-proof` service. If a wallet chooses to support this service,
 they will include within it specific pieces of information that you can use to
 prove that a user controls an on chain account. The service, and its data within
 it, will be returned from the wallet during authentication, and made available
-for your use in `FCL Current User`. 
+for your use in `FCL Current User`.
 
 If a user's wallet does not choose to support the `account-proof` service, you
 can still prove that a user controls an on chain account provided that the
@@ -31,7 +31,7 @@ We'll walk through how you, an application developer, can use either service to
 prove a user's authentication.
 
 > Are you an FCL Wallet Developer? Check out the wallet provider specific docs
-[here](https://github.com/onflow/fcl-js/tree/master/packages/fcl/src/wallet-provider-spec/provable-authn.md)
+> [here](https://github.com/onflow/fcl-js/tree/master/packages/fcl/src/wallet-provider-spec/provable-authn.md)
 
 ### Proving User Authentication using `account-proof`
 
@@ -41,15 +41,14 @@ The suggested order of operations of how your application might use
 - Optional: Your application may choose to configure FCL with an application
   specific Domain Tag. A custom configured Application Domain Tag helps scope the cryptographic proof
   generated for the `account-proof` service to your application. A Domain Tag is
-  a valid string less than 32 bytes long. Your application can specify a custom 
+  a valid string less than 32 bytes long. Your application can specify a custom
   Domain Tag via `config.fcl.appDomainTag`
-
 
 ```javascript
 import {config} from "@onflow/fcl"
 
 config({
-    "fcl.appDomainTag": "AWESOME-APP-V0.0-user"
+  "fcl.appDomainTag": "AWESOME-APP-V0.0-user",
 })
 ```
 
@@ -67,7 +66,7 @@ The data within the `account-proof` service will look like:
   f_vsn: "1.0.0",  // Follows the v1.0.0 spec for the service
   type: "account-proof",  // the type of service it is
   method: "DATA",  // Its data!
-  uid: "amazing-wallet#account-proof",  // A unique identifier for the service            
+  uid: "amazing-wallet#account-proof",  // A unique identifier for the service
   data: {
     f_type: "account-proof",
     f_vsn: "1.0.0"
@@ -75,7 +74,7 @@ The data within the `account-proof` service will look like:
     address: "0xUSER",  // The user's address
     timestamp: 1630705495551, // UNIX timestamp
     appDomainTag: "AWESOME-APP-V0.0-user", // Optional
-  }         
+  }
 }
 ```
 
@@ -89,62 +88,60 @@ backend must follow in using this data are specific.
 - First your application must determine wether a user with the `address`
   provided in the `account-proof` data structure has authenticated with your
   application before.
-    - If a user with the `address` has authenticated with your application
-      before, then your system must query the `timestamp` associated with the
-      previous authentication for this user.
-        - If the `timestamp` is less than or equal to the `timestamp` associated
-          with the users previous authentication, your system must abort and
-          reject the authentication attempt.
-        - If the `timestamp` is greater than the `timestamp` associated with the
-          users previous authentication, then continue.
-        - Ensure the `timestamp` is reasonable. (e.g: Not a `timestamp`
-          associated with a time far in the future, or far in the past)
-    - If a user with the `address` _has not_ authenticated with your application
-      before, then continue.
+
+  - If a user with the `address` has authenticated with your application
+    before, then your system must query the `timestamp` associated with the
+    previous authentication for this user.
+    - If the `timestamp` is less than or equal to the `timestamp` associated
+      with the users previous authentication, your system must abort and
+      reject the authentication attempt.
+    - If the `timestamp` is greater than the `timestamp` associated with the
+      users previous authentication, then continue.
+    - Ensure the `timestamp` is reasonable. (e.g: Not a `timestamp`
+      associated with a time far in the future, or far in the past)
+  - If a user with the `address` _has not_ authenticated with your application
+    before, then continue.
 
 - Your application must determine whether the `CompositeSignature` in the
   `account-proof` data structure contains a valid signature. Your application
   will do this by:
-    - Using FCL's provided utility for reconstructing the data that was signed
+
+  - Using FCL's provided utility for reconstructing the data that was signed
     to produce the `CompositeSignature`:
 
-      ```javascript 
-      import {WalletUtils} from "@onflow/fcl"
+    ```javascript
+    import {WalletUtils} from "@onflow/fcl"
 
-      const Address = AccountProof.address 
-      const Timestamp = AccountProof.timestamp
+    const Address = AccountProof.address
+    const Timestamp = AccountProof.timestamp
 
-      const Message = WalletUtils.encodeMessageForProvableAuthnVerifying(
-        Address,                    // Address of the user authenticating
-        Timestamp,                  // Timestamp associated with the authentication
-        "AWESOME-APP-V0.0-user"     // Application domain tag  
-      )
-      ```
+    const Message = WalletUtils.encodeMessageForProvableAuthnVerifying(
+      Address, // Address of the user authenticating
+      Timestamp, // Timestamp associated with the authentication
+      "AWESOME-APP-V0.0-user" // Application domain tag
+    )
+    ```
 
-    - Alternatively you can manually reconstruct the data that was signed to produce the
-      `CompositeSignature`. Pseudocode:
+  - Alternatively you can manually reconstruct the data that was signed to produce the
+    `CompositeSignature`. Pseudocode:
 
-      ```javascript
-      import rlp from "@onflow/rlp"
+    ```javascript
+    import rlp from "@onflow/rlp"
 
-      const Address = AccountProof.address
-      const Timestamp = AccountProof.timestamp
+    const Address = AccountProof.address
+    const Timestamp = AccountProof.timestamp
 
-      const rightPaddedHexBuffer = (value, pad) =>
-        Buffer.from(value.padEnd(pad * 2, 0), "hex")
+    const rightPaddedHexBuffer = (value, pad) =>
+      Buffer.from(value.padEnd(pad * 2, 0), "hex")
 
-      const CUSTOM_APP_DOMAIN_TAG = "AWESOME-APP-V0.0-user"
-      const DomainTag = 
-        rightPaddedHexBuffer(
-            Buffer.from(CUSTOM_APP_DOMAIN_TAG).toString("hex"), 
-            32
-        ).toString("hex")
+    const CUSTOM_APP_DOMAIN_TAG = "AWESOME-APP-V0.0-user"
+    const DomainTag = rightPaddedHexBuffer(
+      Buffer.from(CUSTOM_APP_DOMAIN_TAG).toString("hex"),
+      32
+    ).toString("hex")
 
-      const Message = DomainTag + rlp([ 
-        Address,
-        Timestamp
-      ])
-      ```
+    const Message = DomainTag + rlp([Address, Timestamp])
+    ```
 
   - Verify that the `account-proof` signature is valid for the reconstructed
     data. Your application can do this through executing it's own Cadence
@@ -152,7 +149,7 @@ backend must follow in using this data are specific.
 
 ```javascript
 ...
-const isValid = await fcl.verifyUserSignature(
+const isValid = await fcl.verifyUserSignatures(
     Message,
     AccountProof.signatures
 )
@@ -189,10 +186,7 @@ that the signature is correct. It will do this by passing the
 execute it's own Cadence script, or otherwise use `fcl.verifyUserSignature`:
 
 ```javascript
-const isValid = await fcl.verifyUserSignature(
-    Message,
-    CompositeSignatures
-)
+const isValid = await fcl.verifyUserSignatures(Message, CompositeSignatures)
 ```
 
 If the signature has been proved valid, your application has then successfully

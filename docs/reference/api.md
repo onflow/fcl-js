@@ -778,7 +778,7 @@ import * as fcl from "@onflow/fcl"
 
 const verifySignatures = async (message, compositeSignatures) => {
   try {
-    return await verifyUserSignature(message, compositeSignatures)
+    return await verifyUserSignatures(message, compositeSignatures)
   } catch (error) {
     console.log(error)
   }
