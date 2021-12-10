@@ -346,7 +346,7 @@ fcl.authenticate();
 
 #### Note
 
-⚠️ `authenticate` can also take a service returned from (discovery)[#discovery] with `fcl.authenticate({ service })`.
+⚠️ `authenticate` can also take a service returned from [discovery](#discovery) with `fcl.authenticate({ service })`.
 
 #### Examples
 
