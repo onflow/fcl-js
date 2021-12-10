@@ -1442,9 +1442,9 @@ A pre-built interaction that returns the details of an account from their public
 
 #### Returns
 
-| Type                      | Description                              |
-| ------------------------- | ---------------------------------------- |
-| [AccountObject](#account) | A JSON representation of a user account. |
+| Type                            | Description                              |
+| ------------------------------- | ---------------------------------------- |
+| [AccountObject](#accountobject) | A JSON representation of a user account. |
 
 #### Usage
 
