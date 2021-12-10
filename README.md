@@ -27,7 +27,10 @@ To use the Flow JavaScript SDK in your application, install using **yarn** or **
 
 ```shell
 npm i -S @onflow/fcl @onflow/types
+```
 
+```shell
+yarn add @onflow/fcl @onflow/types
 ```
 
 ### Learn to use `@onflow/fcl`: [Flow App Quickstart](https://docs.onflow.org/fcl/flow-app-quickstart/)
