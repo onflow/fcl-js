@@ -42,7 +42,7 @@ import * as types from "@onflow/types"
 ```
 
 ## Connect
-[<img src="https://raw.githubusercontent.com/onflow/sdks/main/templates/documentation/ref.svg" width="130">]() // TODO specs here
+[<img src="https://raw.githubusercontent.com/onflow/sdks/main/templates/documentation/ref.svg" width="130">](https://docs.onflow.org/fcl/reference/configure-fcl/)
 
 The library uses gRPC to communicate with the access nodes and it must be configured with correct access node API URL. 
 
@@ -54,7 +54,12 @@ The Access Nodes APIs hosted by DapperLabs are accessible at:
 
 Example:
 ```
-// TODO connect example here
+import { config } from "@onflow/fcl"
+
+config({
+  "accessNode.api": "access.devnet.nodes.onflow.org:9000"
+})
+
 ```
 
 ## Querying the Flow Network
