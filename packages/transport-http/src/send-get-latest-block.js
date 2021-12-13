@@ -23,44 +23,42 @@ export async function sendGetLatestBlock(ix, context = {}, opts = {}) {
 
   ix = await ix
 
-  // const req = new GetLatestBlockRequest()
+  if (ix.latestBlock && ix.latestBlock.isSealed) {
+    latestBlockDeprecationNotice()
+  }
 
-  // if (ix.latestBlock && ix.latestBlock.isSealed) {
-  //   req.setIsSealed(ix.latestBlock.isSealed)
-  //   latestBlockDeprecationNotice()
-  // }
+  const height = ix.latestBlock?.isSealed || ix.block?.isSealed
+    ? "sealed"
+    : "final"
 
-  // if (ix.block && ix.block.isSealed) {
-  //   req.setIsSealed(ix.block.isSealed)
-  // }
-
-  // const res = await unary(opts.node, AccessAPI.GetLatestBlock, req)
-
-  // const block = res.getBlock()
-
-  // const collectionGuarantees = block.getCollectionGuaranteesList()
-  // const blockSeals = block.getBlockSealsList()
-  // const signatures = block.getSignaturesList()
+  const res = await httpRequest({
+    hostname: opts.node,
+    path: `/blocks?height=${height}&expand=payload`,
+    method: "GET",
+    body: null
+  })
 
   const ret = context.response()
   ret.tag = ix.tag
-  // ret.block = {
-  //   id: u8ToHex(block.getId_asU8()),
-  //   parentId: u8ToHex(block.getParentId_asU8()),
-  //   height: block.getHeight(),
-  //   timestamp: block.getTimestamp(),
-  //   collectionGuarantees: collectionGuarantees.map(collectionGuarantee => ({
-  //     collectionId: u8ToHex(collectionGuarantee.getCollectionId_asU8()),
-  //     signatures: collectionGuarantee.getSignaturesList(),
-  //   })),
-  //   blockSeals: blockSeals.map(blockSeal => ({
-  //     blockId: u8ToHex(blockSeal.getBlockId_asU8()),
-  //     executionReceiptId: u8ToHex(blockSeal.getExecutionReceiptId_asU8()),
-  //     executionReceiptSignatures: blockSeal.getExecutionReceiptSignaturesList(),
-  //     resultApprovalSignatures: blockSeal.getResultApprovalSignaturesList(),
-  //   })),
-  //   signatures: signatures,
-  // }
+  ret.block = { // Multiple Blocks now are to be returned by the REST API, we'll need to account for that in how we return blocks back
+    id: block.header.id,
+    parentId: block.header.parent_id,
+    height: block.header.height,
+    timestamp: block.header.timestamp,
+    // parentVoterSignature: block.header.parent_voter_signature, // NEW IN REST API!
+    collectionGuarantees: block.payload.collection_guarantees.map(collectionGuarantee => ({
+      collectionId: collectionGuarantee.collection_id,
+      signerIds: collectionGuarantee.signer_ids,
+      signatures: [collectionGuarantee.signature], // SCHEMA HAS THIS IS SINGULAR "SIGNATURE", CHECK ON THIS
+    })),
+    blockSeals:  block.payload.block_seals.map(blockSeal => ({ // LOTS OF ISSUES HERE, CHECK ON THIS
+      blockId: blockSeal.block_id,
+      executionReceiptId: blockSeal.result_id, 
+      executionReceiptSignatures: [], // REMOVED IN SCHEMA, CHECK ON THIS. Gregor: Decode signatures from base 64 encoding sting => hex string
+      resultApprovalSignatures: [], // REMOVED IN SCHEMA, CHECK ON THIS. Gregor: Decode signatures from base 64 encoding sting => hex string
+    })),
+    signatures: null, // REMOVED IN SCHEMA, CHECK ON THIS. 
+  }
 
   return ret
 }
