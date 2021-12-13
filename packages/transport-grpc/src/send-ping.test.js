@@ -1,8 +1,8 @@
 import {AccessAPI} from "@onflow/protobuf"
 import {sendPing} from "./send-ping.js"
-import {build} from "../build/build.js"
-import {ping} from "../build/build-ping.js"
-import {resolve} from "../resolve/resolve.js"
+import {build} from "../../sdk/src/build/build.js"
+import {ping} from "../../sdk/src/build/build-ping.js"
+import {resolve} from "../../sdk/src/resolve/resolve.js"
 
 const jsonToUInt8Array = (json) => {
     var str = JSON.stringify(json, null, 0);

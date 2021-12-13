@@ -16,7 +16,7 @@ async function sendExecuteScriptAtBlockIDRequest(ix, context, opts) {
   ix.message.arguments.forEach(arg => req.addArguments(argumentBuffer(ix.arguments[arg].asArgument)))
   req.setScript(code)
 
-  const res = await unary(opts.node, AccessAPI.ExecuteScriptAtBlockID, req)
+  const res = await unary(opts.node, AccessAPI.ExecuteScriptAtBlockID, req, context)
 
   return constructResponse(ix, context, res)
 }
@@ -32,7 +32,7 @@ async function sendExecuteScriptAtBlockHeightRequest(ix, context, opts) {
   ix.message.arguments.forEach(arg => req.addArguments(argumentBuffer(ix.arguments[arg].asArgument)))
   req.setScript(code)
 
-  const res = await unary(opts.node, AccessAPI.ExecuteScriptAtBlockHeight, req) 
+  const res = await unary(opts.node, AccessAPI.ExecuteScriptAtBlockHeight, req, context) 
   
   return constructResponse(ix, context, res)
 }
@@ -46,14 +46,12 @@ async function sendExecuteScriptAtLatestBlockRequest(ix, context, opts) {
   ix.message.arguments.forEach(arg => req.addArguments(argumentBuffer(ix.arguments[arg].asArgument)))
   req.setScript(code)
 
-  const res = await unary(opts.node, AccessAPI.ExecuteScriptAtLatestBlock, req)
+  const res = await unary(opts.node, AccessAPI.ExecuteScriptAtLatestBlock, req, context)
 
   return constructResponse(ix, context, res)
 }
 
 function constructResponse(ix, context, res)  {
-  invariant(context.response, `SDK Send Execute Script Error: context.response must be defined.`)
-
   let ret = context.response()
   ret.tag = ix.tag
   ret.encodedData = JSON.parse(Buffer.from(res.getValue_asU8()).toString("utf8"))
@@ -63,7 +61,8 @@ function constructResponse(ix, context, res)  {
 
 export async function sendExecuteScript(ix, context = {}, opts = {}) {
   invariant(opts.node, `SDK Send Execute Script Error: opts.node must be defined.`)
-
+  invariant(context.response, `SDK Send Execute Script Error: context.response must be defined.`)
+  
   ix = await ix
 
   if (ix.block.id) {

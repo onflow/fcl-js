@@ -30,7 +30,7 @@ async function sendGetAccountAtBlockHeightRequest(ix, context, opts) {
   req.setBlockHeight(Number(ix.block.height))
   req.setAddress(addressBuffer(sansPrefix(ix.account.addr)))
 
-  const res = await unary(opts.node, AccessAPI.GetAccountAtBlockHeight, req)
+  const res = await unary(opts.node, AccessAPI.GetAccountAtBlockHeight, req, context)
 
   return constructResponse(ix, context, res)
 }
@@ -41,7 +41,7 @@ async function sendGetAccountAtLatestBlockRequest(ix, context, opts) {
   const req = new GetAccountAtLatestBlockRequest()
   req.setAddress(addressBuffer(sansPrefix(ix.account.addr)))
 
-  const res = await unary(opts.node, AccessAPI.GetAccountAtLatestBlock, req)
+  const res = await unary(opts.node, AccessAPI.GetAccountAtLatestBlock, req, context)
 
   return constructResponse(ix, context, res)
 }
@@ -67,9 +67,9 @@ function constructResponse(ix, context, res) {
       index: publicKey.getIndex(),
       publicKey: u8ToHex(publicKey.getPublicKey_asU8()),
       signAlgo: publicKey.getSignAlgo(),
-      signAlgoName: SignatureAlgorithmNames[publicKey.getSignAlgo()], // New! Verify this field name for correctness.
+      signAlgoString: SignatureAlgorithmNames[publicKey.getSignAlgo()], // New! Verify this field name for correctness.
       hashAlgo: publicKey.getHashAlgo(),
-      hashAlgoName: SignatureAlgorithmNames[publicKey.getHashAlgo()], // New! Verify this field name for correctness.
+      hashAlgoString: SignatureAlgorithmNames[publicKey.getHashAlgo()], // New! Verify this field name for correctness.
       weight: publicKey.getWeight(),
       sequenceNumber: publicKey.getSequenceNumber(),
       revoked: publicKey.getRevoked(),

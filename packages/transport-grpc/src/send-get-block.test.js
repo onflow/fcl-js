@@ -1,10 +1,10 @@
 import {AccessAPI} from "@onflow/protobuf"
 import {sendGetBlock} from "./send-get-block.js"
-import {build} from "../build/build.js"
-import {getBlock} from "../build/build-get-block.js"
-import {atBlockId} from "../build/build-at-block-id.js"
-import {atBlockHeight} from "../build/build-at-block-height.js"
-import {resolve} from "../resolve/resolve.js"
+import {build} from "../../sdk/src/build/build.js"
+import {getBlock} from "../../sdk/src/build/build-get-block.js"
+import {atBlockId} from "../../sdk/src/build/build-at-block-id.js"
+import {atBlockHeight} from "../../sdk/src/build/build-at-block-height.js"
+import {resolve} from "../../sdk/src/resolve/resolve.js"
 
 const jsonToUInt8Array = (json) => {
     var str = JSON.stringify(json, null, 0);

@@ -14,7 +14,7 @@ export async function sendGetBlockById(ix, context = {}, opts = {}) {
   const req = new GetBlockByIDRequest()
   req.setId(hexBuffer(ix.block.id))
 
-  const res = await unary(opts.node, AccessAPI.GetBlockByID, req)
+  const res = await unary(opts.node, AccessAPI.GetBlockByID, req, context)
 
   const block = res.getBlock()
 

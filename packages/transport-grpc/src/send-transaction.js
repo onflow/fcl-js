@@ -81,7 +81,7 @@ export async function sendTransaction(ix, context = {}, opts = {}) {
   req.setTransaction(tx)
 
   var t1 = Date.now()
-  const res = await unary(opts.node, AccessAPI.SendTransaction, req)
+  const res = await unary(opts.node, AccessAPI.SendTransaction, req, context)
   var t2 = Date.now()
 
   let ret = context.response()

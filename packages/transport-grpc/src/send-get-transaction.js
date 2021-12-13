@@ -1,6 +1,5 @@
 import {invariant} from "@onflow/util-invariant"
 import {AccessAPI, GetTransactionRequest} from "@onflow/protobuf"
-import {response} from "../response/response.js.js.js.js.js"
 import {unary as defaultUnary} from "./unary"
 
 const u8ToHex = u8 => Buffer.from(u8).toString("hex")
@@ -17,7 +16,7 @@ export async function sendGetTransaction(ix, context = {}, opts = {}) {
   const req = new GetTransactionRequest()
   req.setId(hexBuffer(ix.transaction.id))
 
-  const res = await unary(opts.node, AccessAPI.GetTransaction, req)
+  const res = await unary(opts.node, AccessAPI.GetTransaction, req, context)
 
   let ret = context.response()
   ret.tag = ix.tag

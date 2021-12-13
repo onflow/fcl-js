@@ -1,8 +1,8 @@
 import {AccessAPI} from "@onflow/protobuf"
 import {sendGetTransactionStatus} from "./send-get-transaction-status.js"
-import {build} from "../build/build.js"
-import {getTransactionStatus} from "../build/build-get-transaction-status.js"
-import {resolve} from "../resolve/resolve.js"
+import {build} from "../../sdk/src/build/build.js"
+import {getTransactionStatus} from "../../sdk/src/build/build-get-transaction-status.js"
+import {resolve} from "../../sdk/src/resolve/resolve.js"
 
 const jsonToUInt8Array = (json) => {
     var str = JSON.stringify(json, null, 0);
