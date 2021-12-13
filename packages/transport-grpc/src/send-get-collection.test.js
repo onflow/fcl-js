@@ -1,8 +1,8 @@
 import {AccessAPI} from "@onflow/protobuf"
 import {sendGetCollection} from "./send-get-collection.js"
-import {build} from "../build/build.js"
-import {getCollection} from "../build/build-get-collection.js"
-import {resolve} from "../resolve/resolve.js"
+import {build} from "../../sdk/src/build/build.js"
+import {getCollection} from "../../sdk/src/build/build-get-collection.js"
+import {resolve} from "../../sdk/src/resolve/resolve.js"
 
 const jsonToUInt8Array = (json) => {
     var str = JSON.stringify(json, null, 0);

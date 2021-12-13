@@ -38,7 +38,7 @@ export async function sendGetLatestBlock(ix, context = {}, opts = {}) {
     req.setIsSealed(ix.block.isSealed)
   }
 
-  const res = await unary(opts.node, AccessAPI.GetLatestBlock, req)
+  const res = await unary(opts.node, AccessAPI.GetLatestBlock, req, context)
 
   const block = res.getBlock()
 

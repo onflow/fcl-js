@@ -12,7 +12,7 @@ export async function sendPing(ix, context = {}, opts = {}) {
 
   const req = new PingRequest()
 
-  const res = await unary(opts.node, AccessAPI.Ping, req)
+  const res = await unary(opts.node, AccessAPI.Ping, req, context)
 
   let ret = context.response()
   ret.tag = ix.tag

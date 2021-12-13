@@ -1,19 +1,4 @@
 import {invariant} from "@onflow/util-invariant"
-import {
-  isTransaction,
-  isGetTransaction,
-  isGetTransactionStatus,
-  isScript,
-  isGetAccount,
-  isGetEvents,
-  isGetBlock,
-  isGetBlockHeader,
-  isGetLatestBlock,
-  isGetBlockById,
-  isGetBlockByHeight,
-  isPing,
-  isGetCollection,
-} from "../interaction/interaction.js.js.js.js.js"
 import {sendTransaction} from "./send-transaction.js"
 import {sendGetTransactionStatus} from "./send-get-transaction-status.js"
 import {sendGetTransaction} from "./send-get-transaction.js"
@@ -30,36 +15,37 @@ import {sendPing} from "./send-ping.js"
 
 export const send = async (ix, context = {}, opts = {}) => {
   invariant(opts.node, `SDK Send Error: Either opts.node or "accessNode.api" in config must be defined.`)
-  
+  invariant(context.ix, `SDK Send Error: context.ix must be defined.`)
+
   ix = await ix
 
   // prettier-ignore
   switch (true) {
-    case isTransaction(ix):
+    case context.ix.isTransaction(ix):
       return opts.sendTransaction ? opts.sendTransaction(ix, context, opts) : sendTransaction(ix, context, opts)
-    case isGetTransactionStatus(ix):
+    case context.ix.isGetTransactionStatus(ix):
       return opts.sendGetTransactionStatus ? opts.sendGetTransactionStatus(ix, context, opts) : sendGetTransactionStatus(ix, context, opts)
-    case isGetTransaction(ix):
+    case context.ix.isGetTransaction(ix):
       return opts.sendGetTransaction ? opts.sendGetTransaction(ix, context, opts) : sendGetTransaction(ix, context, opts)
-    case isScript(ix):
+    case context.ix.isScript(ix):
       return opts.sendExecuteScript ? opts.sendExecuteScript(ix, context, opts) : sendExecuteScript(ix, context, opts)
-    case isGetAccount(ix):
+    case context.ix.isGetAccount(ix):
       return opts.sendGetAccount ? opts.sendGetAccount(ix, context, opts) : sendGetAccount(ix, context, opts)
-    case isGetEvents(ix):
+    case context.ix.isGetEvents(ix):
       return opts.sendGetEvents ? opts.sendGetEvents(ix, context, opts) : sendGetEvents(ix, context, opts)
-    case isGetLatestBlock(ix):
+    case context.ix.isGetLatestBlock(ix):
       return opts.sendGetLatestBlock ? opts.sendGetLatestBlock(ix, context, opts) : sendGetLatestBlock(ix, context,  opts)
-    case isGetBlock(ix):
+    case context.ix.isGetBlock(ix):
       return opts.sendGetBlock ? opts.sendGetBlock(ix, context, opts) : sendGetBlock(ix, context, opts)
-    case isGetBlockHeader(ix):
+    case context.ix.isGetBlockHeader(ix):
       return opts.sendGetBlockHeader ? opts.sendGetBlockHeader(ix, context, opts) : sendGetBlockHeader(ix, context, opts)
-    case isGetBlockById(ix):
+    case context.ix.isGetBlockById(ix):
       return opts.sendGetBlockById ? opts.sendGetBlockById(ix, context, opts) : sendGetBlockById(ix, context, opts)
-    case isGetBlockByHeight(ix):
+    case context.ix.isGetBlockByHeight(ix):
       return opts.sendGetBlockByHeight ? opts.sendGetBlockByHeight(ix, context, opts) : sendGetBlockByHeight(ix, context, opts)
-    case isGetCollection(ix):
+    case context.ix.isGetCollection(ix):
       return opts.sendGetCollection ? opts.sendGetCollection(ix, context, opts) : sendGetCollection(ix, context, opts)
-    case isPing(ix):
+    case context.ix.isPing(ix):
       return opts.sendPing ? opts.sendPing(ix, context, opts) : sendPing(ix, context, opts)
     default:
       return ix

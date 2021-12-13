@@ -1,15 +1,15 @@
 import {AccessAPI} from "@onflow/protobuf"
 import {sendTransaction} from "./send-transaction.js"
-import {build} from "../build/build.js"
-import {transaction} from "../build/build-transaction.js"
-import {proposer} from "../build/build-proposer.js"
-import {payer} from "../build/build-payer.js"
-import {ref} from "../build/build-ref.js"
-import {authorizations} from "../build/build-authorizations.js"
+import {build} from "../build/build.js.js.js.js.js"
+import {transaction} from "../build/build-transaction.js.js.js.js.js"
+import {proposer} from "../../sdk/src/build/build-proposer.js"
+import {payer} from "../../sdk/src/build/build-payer.js"
+import {ref} from "../../sdk/src/build/build-ref.js"
+import {authorizations} from "../../sdk/src/build/build-authorizations.js"
 
-import {preSendCheck} from "../build/build-pre-send-check.js"
-import {voucherToTxId} from "../resolve/voucher.js"
-import {resolve} from "../resolve/resolve.js"
+import {preSendCheck} from "../../sdk/src/build/build-pre-send-check.js"
+import {voucherToTxId} from "../../sdk/src/resolve/voucher.js"
+import {resolve} from "../../sdk/src/resolve/resolve.js"
 
 const jsonToUInt8Array = (json) => {
     var str = JSON.stringify(json, null, 0);

@@ -14,7 +14,7 @@ async function sendGetEventsForHeightRangeRequest(ix, context, opts) {
   req.setStartHeight(Number(ix.events.start))
   req.setEndHeight(Number(ix.events.end))
 
-  const res = await unary(opts.node, AccessAPI.GetEventsForHeightRange, req)
+  const res = await unary(opts.node, AccessAPI.GetEventsForHeightRange, req, context)
 
   return constructResponse(ix, context, res)
 }
@@ -29,7 +29,7 @@ async function sendGetEventsForBlockIDsRequest(ix, context, opts) {
     req.addBlockIds(hexBuffer(id))
   )
 
-  const res = await unary(opts.node, AccessAPI.GetEventsForBlockIDs, req)
+  const res = await unary(opts.node, AccessAPI.GetEventsForBlockIDs, req, context)
 
   return constructResponse(ix, context, res)
 }

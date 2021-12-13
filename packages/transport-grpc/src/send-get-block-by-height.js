@@ -13,7 +13,7 @@ export async function sendGetBlockByHeight(ix, context = {}, opts = {}) {
   const req = new GetBlockByHeightRequest()
   req.setHeight(Number(ix.block.height))
 
-  const res = await unary(opts.node, AccessAPI.GetBlockByHeight, req)
+  const res = await unary(opts.node, AccessAPI.GetBlockByHeight, req, context)
 
   const block = res.getBlock()
 
