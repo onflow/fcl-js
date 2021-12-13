@@ -93,11 +93,10 @@ await fcl.send([fcl.getBlock(), fcl.atBlockId("23232323232")]).then(fcl.decode);
 // Get block at height (uses builder function)
 await fcl.send([fcl.getBlock(), fcl.atBlockHeight(123)]).then(fcl.decode)
 ```
-Result output:
-[BlockObject](https://docs.onflow.org/fcl/reference/api/#blockobject)
+Result output: [BlockObject](https://docs.onflow.org/fcl/reference/api/#blockobject)
 
 ### Get Account
-[<img src="https://raw.githubusercontent.com/onflow/sdks/main/templates/documentation/ref.svg" width="130">]() // TODO specs here
+[<img src="https://raw.githubusercontent.com/onflow/sdks/main/templates/documentation/ref.svg" width="130">](https://docs.onflow.org/fcl/reference/api/#account)
 
 Retrieve any account from Flow network's latest block or from a specified block height.
 
@@ -114,12 +113,10 @@ Example depicts ways to get an account at the latest block and at a specific blo
 
 **[<img src="https://raw.githubusercontent.com/onflow/sdks/main/templates/documentation/try.svg" width="130">]()** // TODO example link
 ```
-// TODO get example 
+import * as fcl from "@onflow/fcl";
+const account = await fcl.account("0x1d007d755706c469");
 ```
-Result output:
-```bash
-// TODO get account result
-```
+Result output: [AccountObject](https://docs.onflow.org/fcl/reference/api/#accountobject)
 
 
 ### Get Transactions
