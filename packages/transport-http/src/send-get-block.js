@@ -6,7 +6,7 @@ async function sendGetBlockByIDRequest(ix, context, opts) {
 
   const res = await httpRequest({
     hostname: opts.node,
-    path: `/blocks/${ix.block.id}?expand=payload,execution_result`,
+    path: `/blocks/${ix.block.id}?expand=payload`,
     method: "GET",
     body: null
   })
@@ -19,7 +19,7 @@ async function sendGetBlockByHeightRequest(ix, context, opts) {
 
   const res = await httpRequest({
     hostname: opts.node,
-    path: `/blocks?height=${ix.block.height}&expand=payload,execution_result`,
+    path: `/blocks?height=${ix.block.height}&expand=payload`,
     method: "GET",
     body: null
   })
@@ -30,9 +30,13 @@ async function sendGetBlockByHeightRequest(ix, context, opts) {
 async function sendGetBlockRequest(ix, context, opts) {
   const httpRequest = opts.httpRequest || defaultHttpRequest
 
+  const height = ix.block?.isSealed
+    ? "sealed"
+    : "final"
+
   const res = await httpRequest({
     hostname: opts.node,
-    path: `/blocks?height=sealed&expand=payload,execution_result`,
+    path: `/blocks?height=${height}&expand=payload`,
     method: "GET",
     body: null
   })
@@ -42,7 +46,7 @@ async function sendGetBlockRequest(ix, context, opts) {
 
 function constructResponse(ix, context, res) {
   const block = res.length ? res[0] : null
-  
+
   const ret = context.response()
   ret.tag = ix.tag
   ret.block = { // Multiple Blocks now are to be returned by the REST API, we'll need to account for that in how we return blocks back
@@ -50,19 +54,19 @@ function constructResponse(ix, context, res) {
     parentId: block.header.parent_id,
     height: block.header.height,
     timestamp: block.header.timestamp,
-    parentVoterSignature: block.header.parent_voter_signature, // NEW IN REST API!
+    // parentVoterSignature: block.header.parent_voter_signature, // NEW IN REST API!
     collectionGuarantees: block.payload.collection_guarantees.map(collectionGuarantee => ({
       collectionId: collectionGuarantee.collection_id,
       signerIds: collectionGuarantee.signer_ids,
-      signatures: collectionGuarantee.signatures, // SCHEMA HAS THIS IS SINGULAR "SIGNATURE", CHECK ON THIS
+      signatures: [collectionGuarantee.signature], // SCHEMA HAS THIS IS SINGULAR "SIGNATURE", CHECK ON THIS
     })),
     blockSeals:  block.payload.block_seals.map(blockSeal => ({ // LOTS OF ISSUES HERE, CHECK ON THIS
       blockId: blockSeal.block_id,
       executionReceiptId: blockSeal.result_id, 
-      executionReceiptSignatures: [], // REMOVED IN SCHEMA, CHECK ON THIS
-      resultApprovalSignatures: [], // REMOVED IN SCHEMA, CHECK ON THIS
+      executionReceiptSignatures: [], // REMOVED IN SCHEMA, CHECK ON THIS. Gregor: Decode signatures from base 64 encoding sting => hex string
+      resultApprovalSignatures: [], // REMOVED IN SCHEMA, CHECK ON THIS. Gregor: Decode signatures from base 64 encoding sting => hex string
     })),
-    signatures: null, // REMOVED IN SCHEMA, CHECK ON THIS
+    signatures: null, // REMOVED IN SCHEMA, CHECK ON THIS. 
   }
 
   return ret

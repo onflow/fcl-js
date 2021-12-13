@@ -1,30 +1,28 @@
 import {invariant} from "@onflow/util-invariant"
+import {httpRequest as defaultHttpRequest} from "./http-request.js"
 
 async function sendGetEventsForHeightRangeRequest(ix, context, opts) {
-  // const unary = opts.unary || defaultUnary
+  const httpRequest = opts.httpRequest || defaultHttpRequest
 
-  // const req = new GetEventsForHeightRangeRequest()
-  // req.setType(ix.events.eventType)
-
-  // req.setStartHeight(Number(ix.events.start))
-  // req.setEndHeight(Number(ix.events.end))
-
-  // const res = await unary(opts.node, AccessAPI.GetEventsForHeightRange, req)
+  const res = await httpRequest({
+    hostname: opts.node,
+    path: `/blocks?type=${ix.events.eventType}&start_height=${ix.events.start}&end_height=${ix.events.end}`,
+    method: "GET",
+    body: null
+  })
 
   return constructResponse(ix, context, res)
 }
 
 async function sendGetEventsForBlockIDsRequest(ix, context, opts) {
-  // const unary = opts.unary || defaultUnary
+  const httpRequest = opts.httpRequest || defaultHttpRequest
 
-  // const req = new GetEventsForBlockIDsRequest()
-  // req.setType(ix.events.eventType)
-
-  // ix.events.blockIds.forEach(id =>
-  //   req.addBlockIds(hexBuffer(id))
-  // )
-
-  // const res = await unary(opts.node, AccessAPI.GetEventsForBlockIDs, req)
+  const res = await httpRequest({
+    hostname: opts.node,
+    path: `/blocks?type=${ix.events.eventType}&block_ids=${ix.events.blockIds.join(",")}`,
+    method: "GET",
+    body: null
+  })
 
   return constructResponse(ix, context, res)
 }
@@ -33,26 +31,16 @@ function constructResponse(ix, context, res) {
   let ret = context.response()
   ret.tag = ix.tag
 
-  // const results = res.getResultsList()
-  // ret.events = results.reduce((blocks, result) => {
-  //   const blockId = u8ToHex(result.getBlockId_asU8())
-  //   const blockHeight = result.getBlockHeight()
-  //   const blockTimestamp = result.getBlockTimestamp().toDate().toISOString()
-  //   const events = result.getEventsList()
-  //   events.forEach(event => {
-  //     blocks.push({
-  //       blockId,
-  //       blockHeight,
-  //       blockTimestamp,
-  //       type: event.getType(),
-  //       transactionId: u8ToHex(event.getTransactionId_asU8()),
-  //       transactionIndex: event.getTransactionIndex(),
-  //       eventIndex: event.getEventIndex(),
-  //       payload: JSON.parse(Buffer.from(event.getPayload_asU8()).toString("utf8")),
-  //     })
-  //   })
-  //   return blocks
-  // }, [])
+  ret.events = res.events?.map(event => ({
+    blockId: res.block_id,
+    blockHeight: res.block_height,
+    blockTimestamp: res.block_timestamp,
+    type: event.type,
+    transactionId: event.transaction_id,
+    transactionIndex: event.transaction_index, 
+    eventIndex: event.event_index,
+    payload: JSON.parse(Buffer.from(event.payload, "base64").toString())
+  }))
 
   return ret
 }

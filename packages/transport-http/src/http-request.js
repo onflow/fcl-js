@@ -1,7 +1,7 @@
 import {invariant} from "@onflow/util-invariant"
 
 class HTTPRequestError extends Error {
-  constructor({transport, error, hostname, path, port, method, body, responseBody, reqOn}) {
+  constructor({transport, error, hostname, path, port, method, requestBody, responseBody, responseStatusText, reqOn}) {
     const msg = `
       HTTP Request Error: An error occurred when interacting with the Access API.
       transport=${transport}
@@ -10,8 +10,9 @@ class HTTPRequestError extends Error {
       path=${path}
       port=${port}
       method=${method}
-      body=${JSON.stringify(body)}
+      requestBody=${JSON.stringify(requestBody)}
       responseBody=${responseBody}
+      responseStatusText=${responseStatusText}
       reqOn=${reqOn}
     `
     super(msg)
@@ -63,14 +64,30 @@ export async function httpRequest({
         method: method,
         body: body ? JSON.stringify(body) : undefined,
       }
-    ).then(res => res.json()).catch(e => new HTTPRequestError({
-      transport: "NodeHTTPsTransport",
-      error: e,
-      hostname,
-      path,
-      method,
-      body
-    }))
+    ).then(res => {
+      if (res.ok) {
+        return res.json()
+      }
+      throw new HTTPRequestError({
+        transport: "FetchTransport",
+        error: e,
+        hostname,
+        path,
+        method,
+        requestBody: body,
+        responseBody: res.json(),
+        responseStatusText: res.statusText
+      })
+    }).catch(e => {
+      throw new HTTPRequestError({
+        transport: "FetchTransport",
+        error: e,
+        hostname,
+        path,
+        method,
+        requestBody: body
+      })
+    })
 
   } else if (nodeHttpsTransport && nodeHttpTransport) {
 
@@ -117,7 +134,7 @@ export async function httpRequest({
               path,
               port,
               method,
-              body,
+              requestBody: body,
               responseBody,
               reqOn: "end",
             }))
@@ -134,7 +151,7 @@ export async function httpRequest({
           path,
           port,
           method,
-          body,
+          requestBody: body,
           responseBody,
           reqOn: "error",
         }))

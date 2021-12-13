@@ -26,7 +26,7 @@ export const send = async (ix, context = {}, opts = {}) => {
     case context.ix.isGetTransactionStatus(ix):
       return opts.sendGetTransactionStatus ? opts.sendGetTransactionStatus(ix, context, opts) : sendGetTransactionStatus(ix, context, opts)
     case context.ix.isGetTransaction(ix):
-      return opts.sendGetTransaction ? opts.sendGetTransaction(ix, context, opts) : sendGetTransaction(ix, context. opts)
+      return opts.sendGetTransaction ? opts.sendGetTransaction(ix, context, opts) : sendGetTransaction(ix, context, opts)
     case context.ix.isScript(ix):
       return opts.sendExecuteScript ? opts.sendExecuteScript(ix, context, opts) : sendExecuteScript(ix, context, opts)
     case context.ix.isGetAccount(ix):
