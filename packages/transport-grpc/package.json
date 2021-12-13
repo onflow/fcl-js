@@ -1,5 +1,5 @@
 {
-    "name": "@onflow/sdk-send-grpc",
+    "name": "@onflow/transport-grpc",
     "version": "0.0.1",
     "description": "Flow SDK GRPC Send",
     "license": "Apache-2.0",
