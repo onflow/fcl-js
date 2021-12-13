@@ -68,7 +68,7 @@ config({
 After you have established a connection with an access node, you can query the Flow network to retrieve data about blocks, accounts, events and transactions. We will explore how to retrieve each of these entities in the sections below.
 
 ### Get Blocks
-[<img src="https://raw.githubusercontent.com/onflow/sdks/main/templates/documentation/ref.svg" width="130">]() // TODO specs here
+[<img src="https://raw.githubusercontent.com/onflow/sdks/main/templates/documentation/ref.svg" width="130">](https://docs.onflow.org/fcl/reference/api/#getblock)
 
 Query the network for block by id, height or get the latest block.
 
@@ -82,12 +82,19 @@ This example depicts ways to get the latest block as well as any other block by 
 
 **[<img src="https://raw.githubusercontent.com/onflow/sdks/main/templates/documentation/try.svg" width="130">]()** // TODO link to example
 ```
-// TODO example to get blocks
+import * as fcl from "@onflow/fcl";
+
+// Get latest block
+const latestBlock = await fcl.latestBlock(true); // If true, get the latest sealed block
+
+// Get block by ID (uses builder function)
+await fcl.send([fcl.getBlock(), fcl.atBlockId("23232323232")]).then(fcl.decode);
+
+// Get block at height (uses builder function)
+await fcl.send([fcl.getBlock(), fcl.atBlockHeight(123)]).then(fcl.decode)
 ```
 Result output:
-```bash
-// TODO example result
-```
+[BlockObject](https://docs.onflow.org/fcl/reference/api/#blockobject)
 
 ### Get Account
 [<img src="https://raw.githubusercontent.com/onflow/sdks/main/templates/documentation/ref.svg" width="130">]() // TODO specs here
