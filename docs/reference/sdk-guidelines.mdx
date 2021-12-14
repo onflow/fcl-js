@@ -163,7 +163,7 @@ Result output: [TransactionObject](https://docs.onflow.org/fcl/reference/api/#ge
 
 
 ### Get Events
-[<img src="https://raw.githubusercontent.com/onflow/sdks/main/templates/documentation/ref.svg" width="130">]() // TODO specs here
+[<img src="https://raw.githubusercontent.com/onflow/sdks/main/templates/documentation/ref.svg" width="130">](https://docs.onflow.org/fcl/reference/api/#geteventsatblockheightrange)
 
 Retrieve events by a given type in a specified block height range or through a list of block IDs.
 
@@ -180,14 +180,31 @@ core events, and you should read more about them in [this document](https://docs
 #### Examples
 Example depicts ways to get events within block range or by block IDs:
 
-**[<img src="https://raw.githubusercontent.com/onflow/sdks/main/templates/documentation/try.svg" width="130">]()** // TODO example link
 ```
-// TODO get events example
+import * as fcl from "@onflow/fcl";
+
+// Get events at block height range
+await fcl
+  .send([
+    fcl.getEventsAtBlockHeightRange(
+      "A.7e60df042a9c0868.FlowToken.TokensWithdrawn", // event name
+      35580624, // block to start looking for events at
+      35580624 // block to stop looking for events at
+    ),
+  ])
+  .then(fcl.decode);
+
+// Get events from list of block ids
+await fcl
+  .send([
+    fcl.getEventsAtBlockIds("A.7e60df042a9c0868.FlowToken.TokensWithdrawn", [
+      "c4f239d49e96d1e5fbcf1f31027a6e582e8c03fcd9954177b7723fdb03d938c7",
+      "5dbaa85922eb194a3dc463c946cc01c866f2ff2b88f3e59e21c0d8d00113273f",
+    ]),
+  ])
+  .then(fcl.decode);
 ```
-Example output:
-```bash
-// TODO event example output
-```
+Result output: [EventObject](https://docs.onflow.org/fcl/reference/api/#event-object)
 
 ### Get Collections
 [<img src="https://raw.githubusercontent.com/onflow/sdks/main/templates/documentation/ref.svg" width="130">]() // TODO specs here
