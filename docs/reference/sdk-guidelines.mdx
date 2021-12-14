@@ -207,7 +207,7 @@ await fcl
 Result output: [EventObject](https://docs.onflow.org/fcl/reference/api/#event-object)
 
 ### Get Collections
-[<img src="https://raw.githubusercontent.com/onflow/sdks/main/templates/documentation/ref.svg" width="130">]() // TODO specs here
+[<img src="https://raw.githubusercontent.com/onflow/sdks/main/templates/documentation/ref.svg" width="130">](https://docs.onflow.org/fcl/reference/api/#getcollection)
 
 Retrieve a batch of transactions that have been included in the same block, known as ***collections***. 
 Collections are used to improve consensus throughput by increasing the number of transactions per block and they act as a link between a block and a transaction.
@@ -215,13 +215,18 @@ Collections are used to improve consensus throughput by increasing the number of
 📖 **Collection ID** is SHA3-256 hash of the collection payload.
 
 Example retrieving a collection:
-```go
-// TODO get collection
+```javascript
+import * as fcl from "@onflow/fcl";
+
+const collection = await fcl
+  .send([
+    fcl.getCollection(
+      "cccdb0c67d015dc7f6444e8f62a3244ed650215ed66b90603006c70c5ef1f6e5"
+    ),
+  ])
+  .then(fcl.decode);
 ```
-Example output:
-```bash
-// TODO collection example
-```
+Result output: [CollectionObject](https://docs.onflow.org/fcl/reference/api/#collectionobject)
 
 ### Execute Scripts
 [<img src="https://raw.githubusercontent.com/onflow/sdks/main/templates/documentation/ref.svg" width="130">]() // TODO specs here
