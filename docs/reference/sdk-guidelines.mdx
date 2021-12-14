@@ -120,7 +120,7 @@ Result output: [AccountObject](https://docs.onflow.org/fcl/reference/api/#accoun
 
 
 ### Get Transactions
-[<img src="https://raw.githubusercontent.com/onflow/sdks/main/templates/documentation/ref.svg" width="130">]() // TODO specs here
+[<img src="https://raw.githubusercontent.com/onflow/sdks/main/templates/documentation/ref.svg" width="130">](https://docs.onflow.org/fcl/reference/api/#gettransaction)
 
 Retrieve transactions from the network by providing a transaction ID. After a transaction has been submitted, you can also get the transaction result to check the status.
 
@@ -130,24 +130,36 @@ Retrieve transactions from the network by providing a transaction ID. After a tr
 
 📖 **Transaction status** represents the state of transaction in the blockchain. Status can change until is finalized.
 
-| Status      | Final | Description |
-| ----------- | ----------- | ----------- |
+| Status       | Final   | Description |
+| ------------ | ------- | ----------- |
 |   UNKNOWN    |    ❌   |   The transaction has not yet been seen by the network  |
 |   PENDING    |    ❌   |   The transaction has not yet been included in a block   |
-|   FINALIZED    |   ❌     |  The transaction has been included in a block   |
-|   EXECUTED    |   ❌    |   The transaction has been executed but the result has not yet been sealed  |
-|   SEALED    |    ✅    |   The transaction has been executed and the result is sealed in a block  |
-|   EXPIRED    |   ✅     |  The transaction reference block is outdated before being executed    |
+|   FINALIZED  |    ❌   |  The transaction has been included in a block   |
+|   EXECUTED   |    ❌   |   The transaction has been executed but the result has not yet been sealed  |
+|   SEALED     |    ✅   |   The transaction has been executed and the result is sealed in a block  |
+|   EXPIRED    |    ✅   |  The transaction reference block is outdated before being executed    |
 
 
 **[<img src="https://raw.githubusercontent.com/onflow/sdks/main/templates/documentation/try.svg" width="130">]()** // TODO example link
 ```
-// TODO get transaction example
+import * as fcl from "@onflow/fcl";
+
+// Snapshot the transaction at a point in time
+fcl.tx(transactionId).snapshot();
+
+// Subscribe to a transaction's updates
+fcl.tx(transactionId).subscribe(callback);
+
+// Provides the transaction once the status is finalized
+fcl.tx(transactionId).onceFinalized();
+
+// Provides the transaction once the status is executed
+fcl.tx(transactionId).onceExecuted();
+
+// Provides the transaction once the status is sealed
+fcl.tx(transactionId).onceSealed();
 ```
-Example output:
-```bash
-// TODO example output
-```
+Result output: [TransactionObject](https://docs.onflow.org/fcl/reference/api/#gettransaction)
 
 
 ### Get Events
