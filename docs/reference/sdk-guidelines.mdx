@@ -229,7 +229,7 @@ const collection = await fcl
 Result output: [CollectionObject](https://docs.onflow.org/fcl/reference/api/#collectionobject)
 
 ### Execute Scripts
-[<img src="https://raw.githubusercontent.com/onflow/sdks/main/templates/documentation/ref.svg" width="130">]() // TODO specs here
+[<img src="https://raw.githubusercontent.com/onflow/sdks/main/templates/documentation/ref.svg" width="130">](https://docs.onflow.org/fcl/reference/api/#query)
 
 Scripts allow you to write arbitrary non-mutating Cadence code on the Flow blockchain and return data. You can learn more about [Cadence and scripts here](https://docs.onflow.org/cadence/language/), but we are now only interested in executing the script code and getting back the data.
 
@@ -239,38 +239,26 @@ We can execute a script using the latest state of the Flow blockchain or we can 
 
 📖 **Block height** expresses the height of the block in the chain.
 
-**[<img src="https://raw.githubusercontent.com/onflow/sdks/main/templates/documentation/try.svg" width="130">]()** // TODO example link
 ```
-// simple script
-pub fun main(a: Int): Int {
-    return a + 10
-}
-// complex script
-pub struct User {
-    pub var balance: UFix64
-    pub var address: Address
-    pub var name: String
+import * as fcl from "@onflow/fcl";
 
-    init(name: String, address: Address, balance: UFix64) {
-        self.name = name
-        self.address = address
-        self.balance = balance
+const result = await fcl.query({
+  cadence: `
+    pub fun main(a: Int, b: Int, addr: Address): Int {
+      log(addr)
+      return a + b
     }
-}
-
-pub fun main(name: String): User {
-    return User(
-        name: name,
-        address: 0x1,
-        balance: 10.0
-    )
-}
-
-// TODO example for above scripts
+  `,
+  args: (arg, t) => [
+    arg(7, t.Int), // a: Int
+    arg(6, t.Int), // b: Int
+    arg("0xba1132bc08f82fe2", t.Address), // addr: Address
+  ],
+});
 ```
 Example output:
 ```bash
-// TODO example output
+console.log(result); // 13
 ```
 
 ## Mutate Flow Network
