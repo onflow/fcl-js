@@ -36,7 +36,7 @@ yarn add @onflow/fcl @onflow/types
 ```
 
 ### Importing the Library
-```
+```javascript
 import * as fcl from "@onflow/fcl"
 import * as types from "@onflow/types"
 ```
@@ -55,7 +55,7 @@ The Access Nodes APIs hosted by DapperLabs are accessible at:
 For local development use the [flow emulator](https://github.com/onflow/flow-emulator) which once start provides a gRPC access endpoint at `127.0.0.1:3569`.
 
 Example:
-```
+```javascript
 import { config } from "@onflow/fcl"
 
 config({
@@ -139,7 +139,7 @@ Retrieve transactions from the network by providing a transaction ID. After a tr
 |   SEALED     |    ✅   |   The transaction has been executed and the result is sealed in a block  |
 |   EXPIRED    |    ✅   |  The transaction reference block is outdated before being executed    |
 
-```
+```javascript
 import * as fcl from "@onflow/fcl";
 
 // Snapshot the transaction at a point in time
@@ -178,7 +178,7 @@ core events, and you should read more about them in [this document](https://docs
 #### Examples
 Example depicts ways to get events within block range or by block IDs:
 
-```
+```javascript
 import * as fcl from "@onflow/fcl";
 
 // Get events at block height range
@@ -237,7 +237,7 @@ We can execute a script using the latest state of the Flow blockchain or we can 
 
 📖 **Block height** expresses the height of the block in the chain.
 
-```
+```javascript
 import * as fcl from "@onflow/fcl";
 
 const result = await fcl.query({
@@ -316,7 +316,7 @@ A transaction expires after `600` blocks are committed on top of the reference b
 
 FCL "mutate" does the work of building, singing, and sending a transaction behind the scenes. In order to mutate the blockchain state using FCL, you need to do the following:
 
-```
+```javascript
 import * as fcl from "@onflow/fcl"
 
 await fcl.mutate({
@@ -419,7 +419,7 @@ mutate({
 | `0x01`  | 2      | 500    |
 
 **[<img src="https://raw.githubusercontent.com/onflow/sdks/main/templates/documentation/try.svg" width="130">](https://github.com/onflow/flow-go-sdk/tree/master/examples#single-party-multiple-signatures)**
-```
+```javascript
 import * as fcl from "@onflow/fcl"
 
 const authzFn = async (txAccount) => {
@@ -478,7 +478,7 @@ mutate({
 | `0x02`  | 3      | 1000   |
 
 **[<img src="https://raw.githubusercontent.com/onflow/sdks/main/templates/documentation/try.svg" width="130">](https://github.com/onflow/flow-go-sdk/tree/master/examples#multiple-parties)**
-```
+```javascript
 import * as fcl from "@onflow/fcl"
 
 const authzFn = async (txAccount) => {
@@ -539,7 +539,7 @@ mutate({
 | `0x02`  | 3      | 1000   |
 
 **[<img src="https://raw.githubusercontent.com/onflow/sdks/main/templates/documentation/try.svg" width="130">](https://github.com/onflow/flow-go-sdk/tree/master/examples#multiple-parties-two-authorizers)**
-```
+```javascript
 import * as fcl from "@onflow/fcl"
 
 const authzFn = async (txAccount) => {
@@ -602,7 +602,7 @@ mutate({
 | `0x02`  | 4      | 500    |
 
 **[<img src="https://raw.githubusercontent.com/onflow/sdks/main/templates/documentation/try.svg" width="130">]()** // TODO example link
-```
+```javascript
 import * as fcl from "@onflow/fcl"
 
 const authzFn = async (txAccount) => {
