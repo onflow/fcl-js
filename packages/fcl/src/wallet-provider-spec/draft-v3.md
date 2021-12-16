@@ -591,6 +591,79 @@ The eventual response back from the pre-authz service should resolve to somethin
 }
 ```
 
+# Authentication Refresh Service
+Since synchronization of a user's session is important to provide a seamless user experience when using an app and transacting with the Flow Blockchain, a way to confirm, extend, and refresh a user session can be provided by the wallet.
+
+Authentication Refresh Services should include a `type: "authn-refresh"`, `endpoint`, and supported `method` (`HTTP/POST`, `IFRAME/RPC`, `POP/RPC`, etc).
+
+FCL will use the `endpoint` and service `method` provided to request updated authentication data.
+The `authn-refresh` service should refresh the user's session if neccessary and return updated authentication configuration and user session data.
+
+The service is expected to return a `PollingResponse` with a new `AuthnResponse` as data. If user input is required, a `PENDING` `PollingResponse` can be returned with a `local` view for approval/re-submission of user details.
+
+The Authentication Refresh Service is a stock/standard service.
+
+```javascript
+  {
+    "f_type": "Service",
+    "f_vsn": "1.0.0",
+    "type": "authn-refresh",
+    "uid": "uniqueDedupeKey",
+    "endpoint": "https://rawr",
+    "method": "HTTP/POST",  // "HTTP/POST", // HTTP/POST | IFRAME/RPC | HTTP/RPC
+    "id": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx", // wallets internal id for the user
+    "data": {}, // included in body of request
+    "params": {}, // included as query params on endpoint url
+  }
+```
+
+#### data and params
+
+`data` and `params` are information that the wallet can provide in the service config that FCL will pass back to the service.
+- `params` will be added onto the `endpoint` as query params.
+- `data` will be included in the body of the `HTTP/POST` request or in the `FCL:VIEW:READY:RESPONSE` for a `IFRAME/RPC`, `POP/RPC` or `TAB/RPC`.
+
+This data should include all the wallet needs to identify and re-authenticate the user if necessary.
+
+The eventual response back from the `authn-refresh` service should resolve to an `AuthnResponse` and look something like this:
+
+```javascript
+{
+  f_type: "PollingResponse",
+  f_vsn: "1.0.0",
+  status: "APPROVED",
+  data: {
+    f_type: "AuthnResponse",
+    f_vsn: "1.0.0",
+    addr: "0xUSER",
+    services: [
+      // Authentication Service - REQUIRED
+      {
+        f_type: "Service",
+        f_vsn: "1.0.0",
+        type: "authn",
+        ...
+      },
+      // Authorization Service
+      {
+        f_type: "Service",
+        f_vsn: "1.0.0",
+        type: "authz",
+        ...
+      },
+      // Authentication Refresh Service
+      {
+        f_type: "Service",
+        f_vsn: "1.0.0",
+        type: "authn-refresh",
+        ...
+      }
+      // Additional Services
+    ],
+  }
+}
+```
+
 # Data Structures
 
 FCL employs the following data structures, of which you have previously seen in use throughout this document.
