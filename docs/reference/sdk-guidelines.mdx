@@ -266,11 +266,6 @@ Flow, like most blockchains, allows anybody to submit a transaction that mutates
 
 Transaction data is composed and signed with help of the SDK. The signed payload of transaction then gets submitted to the access node API. If a transaction is invalid or the correct number of authorizing signatures are not provided, it gets rejected. 
 
-Executing a transaction requires couple of steps:
-- [Building a transaction](#build-transactions).
-- [Signing a transaction](#sign-transactions).
-- [Sending a transaction](#send-transactions).
-
 ## Transactions
 A transaction is nothing more than a signed set of data that includes script code which are instructions on how to mutate the network state and properties that define and limit it's execution. All these properties are explained bellow. 
 
@@ -318,53 +313,28 @@ The gas limit depends on the complexity of the transaction script. Until dedicat
 A transaction will be rejected if it is submitted past its expiry block. Flow calculates transaction expiry using the _reference block_ field on a transaction.
 A transaction expires after `600` blocks are committed on top of the reference block, which takes about 10 minutes at average Mainnet block rates.
 
-### Build Transactions
-[<img src="https://raw.githubusercontent.com/onflow/sdks/main/templates/documentation/ref.svg" width="130">]() // TODO specs here
+### Mutate
+[<img src="https://raw.githubusercontent.com/onflow/sdks/main/templates/documentation/ref.svg" width="130">](https://docs.onflow.org/fcl/reference/api/#mutate)
 
-Building a transaction involves setting the required properties explained above and producing a transaction object. 
-
-Here we define a simple transaction script that will be used to execute on the network and serve as a good learning example.
+FCL "mutate" does the work of building, singing, and sending a transaction behind the scenes. In order to mutate the blockchain state using FCL, you need to do the following:
 
 ```
-transaction(greeting: String) {
+import * as fcl from "@onflow/fcl"
 
-  let guest: Address
-
-  prepare(authorizer: AuthAccount) {
-    self.guest = authorizer.address
-  }
-
-  execute {
-    log(greeting.concat(",").concat(self.guest.toString()))
-  }
-}
-```
-
-**[<img src="https://raw.githubusercontent.com/onflow/sdks/main/templates/documentation/try.svg" width="130">]()** // TODO example link
-```go
-// TODO example for building a transaction
-```
-
-After you have successfully [built a transaction](#build-transactions) the next step in the process is to sign it.
-
-### Sign Transactions
-[<img src="https://raw.githubusercontent.com/onflow/sdks/main/templates/documentation/ref.svg" width="130">]() // TODO specs here
-
-Flow introduces new concepts that allow for more flexibility when creating and signing transactions.
-Before trying the examples below, we recommend that you read through the [transaction signature documentation](https://docs.onflow.org/concepts/accounts-and-keys/).
-
-After you have successfully [built a transaction](#build-transactions) the next step in the process is to sign it. Flow transactions have envelope and payload signatures, and you should learn about each in the [signature documentation](https://docs.onflow.org/concepts/accounts-and-keys/#anatomy-of-a-transaction).
-
-Quick example of building a transaction:
-```
-// TODO short example to build transaction
-```
-
-Signatures can be generated more securely using keys stored in a hardware device such as an [HSM](https://en.wikipedia.org/wiki/Hardware_security_module). The `crypto.Signer` interface is intended to be flexible enough to support a variety of signer implementations and is not limited to in-memory implementations.
-
-Simple signature example:
-```
-// TODO signature example
+await fcl.mutate({
+  cadence: `
+    transaction(a: Int) {
+      prepare(acct: AuthAccount) {
+        log(acct)
+        log(a)
+      }
+    }
+  `,
+  args: (arg, t) => [
+    arg(6, t.Int)
+  ],
+  limit: 50
+})
 ```
 
 Flow supports great flexibility when it comes to transaction signing, we can define multiple authorizers (multi-sig transactions) and have different payer account than proposer. We will explore advanced signing scenarios bellow.
@@ -380,10 +350,64 @@ Flow supports great flexibility when it comes to transaction signing, we can def
 | `0x01`  | 1      | 1000   |
 
 **[<img src="https://raw.githubusercontent.com/onflow/sdks/main/templates/documentation/try.svg" width="130">](https://github.com/onflow/flow-go-sdk/tree/master/examples#single-party-single-signature)**
-```
-// TODO example
-```
+```javascript
+// There are multiple ways to acheive this
+import * as fcl from "@onflow/fcl"
 
+// FCL provides currentUser as an authorization function
+await fcl.mutate({
+  cadence: `
+    transaction {
+      prepare(acct: AuthAccount) {}
+    }
+  `,
+  proposer: currentUser,
+  payer: currentUser,
+  authorizations: [currentUser],
+  limit: 50,
+})
+
+// Or, simplified
+
+mutate({
+  cadence: `
+    transaction {
+      prepare(acct: AuthAccount) {}
+    }
+  `,
+  authz: currentUser, // Optional. Will default to currentUser if not provided.
+  limit: 50,
+})
+
+
+// Or, create a custom authorization function
+const authzFn = async (txAccount) => {
+  return {
+    ...txAccount,
+    addr: "0x01",
+    keyId: 0,
+    signingFunction: async(signable) => {
+      return {
+        addr: "0x01",
+        keyId: 0,
+        signature
+      }
+    }
+  }
+}
+
+mutate({
+  cadence: `
+    transaction {
+      prepare(acct: AuthAccount) {}
+    }
+  `,
+  proposer: authzFn,
+  payer: authzFn,
+  authorizations: [authzFn],
+  limit: 50,
+})
+```
 
 ### [Single party, multiple signatures](https://docs.onflow.org/concepts/transaction-signing/#single-party-multiple-signatures)
 
@@ -398,7 +422,48 @@ Flow supports great flexibility when it comes to transaction signing, we can def
 
 **[<img src="https://raw.githubusercontent.com/onflow/sdks/main/templates/documentation/try.svg" width="130">](https://github.com/onflow/flow-go-sdk/tree/master/examples#single-party-multiple-signatures)**
 ```
-// TODO example
+import * as fcl from "@onflow/fcl"
+
+const authzFn = async (txAccount) => {
+  return [
+    {
+      ...txAccount,
+      addr: "0x01",
+      keyId: 0,
+      signingFunction: async(signable) => {
+        return {
+          addr: "0x01",
+          keyId: 0,
+          signature
+        }
+      }
+    },
+    {
+      ...txAccount,
+      addr: "0x01",
+      keyId: 1,
+      signingFunction: async(signable) => {
+        return {
+          addr: "0x01",
+          keyId: 1,
+          signature
+        }
+      }
+    }
+  ]
+}
+
+mutate({
+  cadence: `
+    transaction {
+      prepare(acct: AuthAccount) {}
+    }
+  `,
+  proposer: authzFn,
+  payer: authzFn,
+  authorizations: [authzFn],
+  limit: 50,
+})
 ```
 
 ### [Multiple parties](https://docs.onflow.org/concepts/transaction-signing/#multiple-parties)
@@ -416,7 +481,49 @@ Flow supports great flexibility when it comes to transaction signing, we can def
 
 **[<img src="https://raw.githubusercontent.com/onflow/sdks/main/templates/documentation/try.svg" width="130">](https://github.com/onflow/flow-go-sdk/tree/master/examples#multiple-parties)**
 ```
-// TODO example
+import * as fcl from "@onflow/fcl"
+
+const authzFn = async (txAccount) => {
+  return {
+    ...txAccount,
+    addr: "0x01",
+    keyId: 0,
+    signingFunction: async(signable) => {
+      return {
+        addr: "0x01",
+        keyId: 0,
+        signature
+      }
+    }
+  }
+}
+
+const authzTwoFn = async (txAccount) => {
+  return {
+    ...txAccount,
+    addr: "0x02",
+    keyId: 0,
+    signingFunction: async(signable) => {
+      return {
+        addr: "0x02",
+        keyId: 0,
+        signature
+      }
+    }
+  }
+}
+
+mutate({
+  cadence: `
+    transaction {
+      prepare(acct: AuthAccount) {}
+    }
+  `,
+  proposer: authzFn,
+  payer: authzTwoFn,
+  authorizations: [authzFn],
+  limit: 50,
+})
 ```
 
 ### [Multiple parties, two authorizers](https://docs.onflow.org/concepts/transaction-signing/#multiple-parties)
@@ -435,7 +542,49 @@ Flow supports great flexibility when it comes to transaction signing, we can def
 
 **[<img src="https://raw.githubusercontent.com/onflow/sdks/main/templates/documentation/try.svg" width="130">](https://github.com/onflow/flow-go-sdk/tree/master/examples#multiple-parties-two-authorizers)**
 ```
-// TODO example
+import * as fcl from "@onflow/fcl"
+
+const authzFn = async (txAccount) => {
+  return {
+    ...txAccount,
+    addr: "0x01",
+    keyId: 0,
+    signingFunction: async(signable) => {
+      return {
+        addr: "0x01",
+        keyId: 0,
+        signature
+      }
+    }
+  }
+}
+
+const authzTwoFn = async (txAccount) => {
+  return {
+    ...txAccount,
+    addr: "0x02",
+    keyId: 0,
+    signingFunction: async(signable) => {
+      return {
+        addr: "0x02",
+        keyId: 0,
+        signature
+      }
+    }
+  }
+}
+
+mutate({
+  cadence: `
+    transaction {
+      prepare(acct: AuthAccount, acct2: AuthAccount) {}
+    }
+  `,
+  proposer: authzFn,
+  payer: authzTwoFn,
+  authorizations: [authzFn, authzTwoFn],
+  limit: 50,
+})
 ```
 
 ### [Multiple parties, multiple signatures](https://docs.onflow.org/concepts/transaction-signing/#multiple-parties)
@@ -456,7 +605,77 @@ Flow supports great flexibility when it comes to transaction signing, we can def
 
 **[<img src="https://raw.githubusercontent.com/onflow/sdks/main/templates/documentation/try.svg" width="130">]()** // TODO example link
 ```
-// TODO example
+import * as fcl from "@onflow/fcl"
+
+const authzFn = async (txAccount) => {
+  return [
+    {
+      ...txAccount,
+      addr: "0x01",
+      keyId: 0,
+      signingFunction: async(signable) => {
+        return {
+          addr: "0x01",
+          keyId: 0,
+          signature
+        }
+      }
+    },
+    {
+      ...txAccount,
+      addr: "0x01",
+      keyId: 1,
+      signingFunction: async(signable) => {
+        return {
+          addr: "0x01",
+          keyId: 1,
+          signature
+        }
+      }
+    }
+  ]
+}
+
+const authzTwoFn = async (txAccount) => {
+  return [
+    {
+      ...txAccount,
+      addr: "0x02",
+      keyId: 0,
+      signingFunction: async(signable) => {
+        return {
+          addr: "0x02",
+          keyId: 0,
+          signature
+        }
+      }
+    },
+    {
+      ...txAccount,
+      addr: "0x02",
+      keyId: 1,
+      signingFunction: async(signable) => {
+        return {
+          addr: "0x02",
+          keyId: 1,
+          signature
+        }
+      }
+    }
+  ]
+}
+
+mutate({
+  cadence: `
+    transaction {
+      prepare(acct: AuthAccount) {}
+    }
+  `,
+  proposer: authzFn,
+  payer: authzTwoFn,
+  authorizations: [authzFn],
+  limit: 50,
+})
 ```
 
 
