@@ -101,7 +101,7 @@ async function makeMessage() {
   }
 }
 
-async function authenticate({service, redir = false}) {
+async function authenticate({service, redir = false} = {}) {
   return new Promise(async (resolve, reject) => {
     spawnCurrentUser()
     const user = await snapshot()
