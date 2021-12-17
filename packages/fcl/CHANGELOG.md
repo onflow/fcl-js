@@ -1,5 +1,6 @@
 ## Unreleased
 
+- 2021-12-17 -- Fix bug where `currentUser` passed as an argument is failing.
 - 2021-12-02 -- Adds optional Authentication Refresh Service to `fcl.authenticate`
 
 Wallet Providers can now provide an optional **Authentication Refresh Service** to FCL upon initial configuration.
@@ -70,8 +71,6 @@ config({
 
 - 2021-11-22 -- Updates to use account key `HashAlgorithm` in `verifyUSerSignatures` instead of default `SHA3_256`
 - 2021-11-19 -- Update `buildUser` with with correct data prop for `expiresAt`
-
-- YYYY-MM-DD **BREAKING?** -- description
 
 ## 0.0.78-alpha.8 - 2021-11-17
 
