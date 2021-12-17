@@ -185,7 +185,7 @@ export const makeArgument = arg => ix => {
   ix.arguments[tempId].asArgument = arg.asArgument
   ix.arguments[tempId].xform = arg.xform
   ix.arguments[tempId].resolve = arg.resolve
-  ix.arguments[tempId].resolveArgument = arg.resolveArgument.bind(arg)
+  ix.arguments[tempId].resolveArgument = isFn(arg.resolveArgument) ? arg.resolveArgument.bind(arg) : arg.resolveArgument
 
   return Ok(ix)
 }
