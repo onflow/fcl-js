@@ -109,9 +109,17 @@ An account includes the following data:
 #### Examples
 Example depicts ways to get an account at the latest block and at a specific block height:
 
-```
+```javascript
 import * as fcl from "@onflow/fcl";
+
+// Get account from latest block height
 const account = await fcl.account("0x1d007d755706c469");
+
+// Get account at a specific block height
+fcl.send([
+  fcl.getAccount("0x1d007d755706c469"),
+  fcl.atBlockHeight(123)
+]);
 ```
 Result output: [AccountObject](https://docs.onflow.org/fcl/reference/api/#accountobject)
 
