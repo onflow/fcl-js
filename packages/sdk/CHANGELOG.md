@@ -2,6 +2,7 @@
 
 - YYYY-MM-DD **BREAKING?** -- Who: description
 
+- 2021-12-17 -- [@chasefleming](https://github.com/chasefleming): Fix bug `resolveArgument` is being executed in the wrong context.
 - 2021-11-22 -- [@chasefleming](https://github.com/chasefleming): Fix bug where similar aliases in config can result in partial replacement of the wrong alias.
 - 2021-11-22 -- [@chasefleming](https://github.com/chasefleming): Fix bug where address aliases from config in cadence code are only replaced once. 
 - 2021-11-17 -- [@chasefleming](https://github.com/chasefleming): Support passing of current user as authorization. Simply pass `currentUser` instead of `currentUser.authorization` or `currentUser().authorization`.
