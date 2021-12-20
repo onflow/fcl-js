@@ -43,7 +43,7 @@ import * as types from "@onflow/types"
 ## Connect
 [<img src="https://raw.githubusercontent.com/onflow/sdks/main/templates/documentation/ref.svg" width="130">](https://docs.onflow.org/fcl/reference/configure-fcl/)
 
-The library uses gRPC to communicate with the access nodes and it must be configured with correct access node API URL. 
+The library uses gRPC to communicate with the access nodes and it must be configured with the correct access node API URL. 
 
 📖 **Access API URLs** can be found [here](https://docs.onflow.org/access-api/#flow-access-node-endpoints). An error will be returned if the host is unreachable.
 The Access Nodes APIs hosted by DapperLabs are accessible at:
@@ -51,7 +51,7 @@ The Access Nodes APIs hosted by DapperLabs are accessible at:
 - Mainnet `access.mainnet.nodes.onflow.org:9000`
 - Local Emulator `127.0.0.1:3569` 
 
-For local development use the [flow emulator](https://github.com/onflow/flow-emulator) which once start provides a gRPC access endpoint at `127.0.0.1:3569`.
+For local development, use the [flow emulator](https://github.com/onflow/flow-emulator) which once started provides a gRPC access endpoint at `127.0.0.1:3569`.
 
 Example:
 ```javascript
@@ -127,7 +127,7 @@ Retrieve transactions from the network by providing a transaction ID. After a tr
 
 ⚠️ The transaction ID provided must be from the current spork.
 
-📖 **Transaction status** represents the state of transaction in the blockchain. Status can change until is finalized.
+📖 **Transaction status** represents the state of a transaction in the blockchain. Status can change until it is finalized.
 
 | Status       | Final   | Description |
 | ------------ | ------- | ----------- |
