@@ -283,7 +283,7 @@ transaction(greeting: String) {
 
 📖 **Arguments**. A transaction can accept zero or more arguments that are passed into the Cadence script. The arguments on the transaction must match the number and order declared in the Cadence script. Sample script from above accepts a single `String` argument.
 
-📖 **[Proposal key](https://docs.onflow.org/concepts/transaction-signing/#proposal-key)** must be provided to act as a sequence number and prevent reply and other potential attacks.
+📖 **[Proposal key](https://docs.onflow.org/concepts/transaction-signing/#proposal-key)** must be provided to act as a sequence number and prevent replay and other potential attacks.
 
 Each account key maintains a separate transaction sequence counter; the key that lends its sequence number to a transaction is called the proposal key.
 
@@ -308,7 +308,7 @@ transaction {
 ```
 
 📖 **Gas limit** is the limit on the amount of computation a transaction requires, and it will abort if it exceeds its gas limit.
-Cadence uses metering to measure the number of operations per transaction. You can read more about it in the [Cadence documentation](/cadence).
+Cadence uses metering to measure the number of operations per transaction. You can read more about it in the [Cadence documentation](https://docs.onflow.org/cadence/).
 
 The gas limit depends on the complexity of the transaction script. Until dedicated gas estimation tooling exists, it's best to use the emulator to test complex transactions and determine a safe limit.
 
@@ -319,7 +319,7 @@ A transaction expires after `600` blocks are committed on top of the reference b
 ### Mutate
 [<img src="https://raw.githubusercontent.com/onflow/sdks/main/templates/documentation/ref.svg" width="130">](https://docs.onflow.org/fcl/reference/api/#mutate)
 
-FCL "mutate" does the work of building, singing, and sending a transaction behind the scenes. In order to mutate the blockchain state using FCL, you need to do the following:
+FCL "mutate" does the work of building, signing, and sending a transaction behind the scenes. In order to mutate the blockchain state using FCL, you need to do the following:
 
 ```javascript
 import * as fcl from "@onflow/fcl"
