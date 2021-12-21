@@ -86,25 +86,3 @@ describe("getServices", () => {
     expect(response).toEqual(expectedResponse)
   })
 })
-
-describe("constructApiQueryParams", () => {
-  it("it should construct API query params", () => {
-    const filters = {
-      version: '0.0.78',
-      include: ["0x1", "0x2"]
-    }
-
-    expect(constructApiQueryParams(filters)).toEqual("?fcl_version=0.0.78&include=0x1&include=0x2")
-  })
-
-  it("it should return an empty string if nothing to construct", () => {
-    const filters = {
-      include: []
-    }
-
-    const filtersTwo = {}
-
-    expect(constructApiQueryParams(filters)).toEqual("")
-    expect(constructApiQueryParams(filtersTwo)).toEqual("")
-  })
-})

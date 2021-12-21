@@ -117,6 +117,7 @@ async function authenticate({service, redir = false} = {}) {
          You can disable this warning by setting fcl.warning.suppress.redir to true in your config`
       )
     }
+    
     invariant(
       service || discoveryService.endpoint,
       `
@@ -149,6 +150,9 @@ async function authenticate({service, redir = false} = {}) {
         service: service || discoveryService,
         msg,
         opts,
+        config: {
+          walletInclude: discoveryService.walletInclude
+        }
       })
       send(NAME, SET_CURRENT_USER, await buildUser(response))
     } catch (e) {

@@ -4,7 +4,7 @@ import {normalizePollingResponse} from "../../normalize/polling-response"
 import {configLens} from "../../../config-utils"
 import {VERSION} from "../../../VERSION"
 
-export function execIframeRPC(service, body, opts) {
+export function execIframeRPC(service, body, opts, config) {
   return new Promise((resolve, reject) => {
     const id = uid()
     const includeOlderJsonRpcCall = opts.includeOlderJsonRpcCall
@@ -14,8 +14,8 @@ export function execIframeRPC(service, body, opts) {
       async onReady(_, {send}) {
         try {
           send({
-            fclVersion: VERSION,
             type: "FCL:VIEW:READY:RESPONSE",
+            fclVersion: VERSION,
             body,
             service: {
               params: service.params,
@@ -23,6 +23,7 @@ export function execIframeRPC(service, body, opts) {
               type: service.type,
             },
             config: {
+              ...config,
               services: await configLens(/^service\./),
               app: await configLens(/^app\.detail\./),
             },
@@ -37,6 +38,7 @@ export function execIframeRPC(service, body, opts) {
               type: service.type,
             },
             config: {
+              ...config,
               services: await configLens(/^service\./),
               app: await configLens(/^app\.detail\./),
             },

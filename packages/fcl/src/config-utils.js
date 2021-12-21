@@ -33,14 +33,12 @@ export async function configLens(regex) {
 }
 
 export async function getDiscoveryService() {
-  const discoveryWalletUrl = await config.first([
+  const discoveryWallet = await config.first([
     "discovery.wallet",
     "challenge.handshake",
   ])
 
   const include = await config.get("discovery.authn.include", [])
-  const queryParams = constructApiQueryParams({version: VERSION, include})
-  const discoveryWallet = `${discoveryWalletUrl}${queryParams}`
 
   const discoveryWalletMethod = await config.first([
     "discovery.wallet.method",
@@ -51,5 +49,6 @@ export async function getDiscoveryService() {
     type: "authn",
     endpoint: discoveryWallet,
     method: discoveryWalletMethod,
+    walletInclude: include
   }
 }

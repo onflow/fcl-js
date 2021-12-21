@@ -14,24 +14,25 @@ const STRATEGIES = {
   "EXT/RPC": execExtRPC,
 }
 
-export async function execService({service, msg = {}, opts = {}}) {
+export async function execService({service, msg = {}, opts = {}, config = {}}) {
   try {
-    const res = await STRATEGIES[service.method](service, msg, opts)
+    const res = await STRATEGIES[service.method](service, msg, opts, config)
     if (res.status === "REDIRECT") {
       invariant(
         service.type === res.data.type,
         "Cannot shift recursive service type in execService"
       )
       service = res.data
-      return await execService({service, msg, opts})
+      return await execService({service, msg, opts, config})
     } else {
       return res
     }
   } catch (error) {
-    console.error("execService({service, msg = {}, opts = {}})", error, {
+    console.error("execService({service, msg = {}, opts = {}, config = {}})", error, {
       service,
       msg,
       opts,
+      config
     })
     throw error
   }
