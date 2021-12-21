@@ -1,5 +1,4 @@
 import {config} from "@onflow/sdk"
-import {constructApiQueryParams} from "./discovery/services"
 import {VERSION} from "./VERSION"
 
 const isServerSide = () => typeof window === "undefined"

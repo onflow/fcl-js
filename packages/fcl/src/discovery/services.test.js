@@ -1,4 +1,4 @@
-import {constructApiQueryParams, getServices} from "./services"
+import {getServices} from "./services"
 import {config} from "@onflow/sdk"
 
 const serviceOne = {
