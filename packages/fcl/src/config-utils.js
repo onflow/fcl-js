@@ -37,7 +37,7 @@ export async function getDiscoveryService() {
     "challenge.handshake",
   ])
 
-  const include = await config.get("discovery.authn.include", [])
+  const discoveryAuthnInclude = await config.get("discovery.authn.include", [])
 
   const discoveryWalletMethod = await config.first([
     "discovery.wallet.method",
@@ -48,6 +48,6 @@ export async function getDiscoveryService() {
     type: "authn",
     endpoint: discoveryWallet,
     method: discoveryWalletMethod,
-    walletInclude: include
+    discoveryAuthnInclude
   }
 }

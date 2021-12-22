@@ -151,7 +151,7 @@ async function authenticate({service, redir = false} = {}) {
         msg,
         opts,
         config: {
-          walletInclude: discoveryService.walletInclude
+          discoveryAuthnInclude: discoveryService.discoveryAuthnInclude
         }
       })
       send(NAME, SET_CURRENT_USER, await buildUser(response))
