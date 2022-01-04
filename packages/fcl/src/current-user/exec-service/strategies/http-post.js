@@ -3,7 +3,6 @@ import {normalizePollingResponse} from "../../normalize/polling-response"
 import {normalizeLocalView} from "../../normalize/local-view"
 import {poll} from "./utils/poll"
 import {execLocal} from "../exec-local"
-import {configLens} from "../../../config-utils"
 import {VERSION} from "../../../VERSION"
 
 export async function execHttpPost(service, signable, opts = {}) {
@@ -15,10 +14,7 @@ export async function execHttpPost(service, signable, opts = {}) {
         data: service.data,
         type: service.type,
       },
-      config: {
-        services: await configLens(/^service\./),
-        app: await configLens(/^app\.detail\./),
-      },
+      config,
       ...signable,
     },
   }).then(normalizePollingResponse)

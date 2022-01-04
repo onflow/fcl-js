@@ -1,7 +1,6 @@
 import {uid} from "@onflow/util-uid"
 import {frame} from "./utils/frame"
 import {normalizePollingResponse} from "../../normalize/polling-response"
-import {configLens} from "../../../config-utils"
 import {VERSION} from "../../../VERSION"
 
 export function execIframeRPC(service, body, opts, config) {
@@ -22,11 +21,7 @@ export function execIframeRPC(service, body, opts, config) {
               data: service.data,
               type: service.type,
             },
-            config: {
-              ...config,
-              services: await configLens(/^service\./),
-              app: await configLens(/^app\.detail\./),
-            },
+            config,
           })
           send({
             fclVersion: VERSION,
@@ -37,11 +32,7 @@ export function execIframeRPC(service, body, opts, config) {
               data: service.data,
               type: service.type,
             },
-            config: {
-              ...config,
-              services: await configLens(/^service\./),
-              app: await configLens(/^app\.detail\./),
-            },
+            config,
             deprecated: {
               message:
                 "FCL:FRAME:READY:RESPONSE is deprecated and replaced with type: FCL:VIEW:READY:RESPONSE",

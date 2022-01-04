@@ -1,10 +1,9 @@
 import {invariant} from "@onflow/util-invariant"
 import {extension} from "./utils/extension"
 import {normalizePollingResponse} from "../../normalize/polling-response"
-import {configLens} from "../../../config-utils"
 import {VERSION} from "../../../VERSION"
 
-export function execExtRPC(service, body, opts) {
+export function execExtRPC(service, body, opts, config) {
   return new Promise((resolve, reject) => {
     extension(service, {
       async onReady(_, {send}) {
@@ -18,10 +17,7 @@ export function execExtRPC(service, body, opts) {
               data: service.data,
               type: service.type,
             },
-            config: {
-              services: await configLens(/^service\./),
-              app: await configLens(/^app\.detail\./),
-            },
+            config,
           })
         } catch (error) {
           throw error
