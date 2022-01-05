@@ -12,7 +12,7 @@ async function addServices(services = []) {
   const url = new URL(endpoint)
 
   return fetch(url, {
-    method: "post",
+    method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
