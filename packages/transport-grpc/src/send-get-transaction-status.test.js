@@ -3,6 +3,7 @@ import {sendGetTransactionStatus} from "./send-get-transaction-status.js"
 import {build} from "../../sdk/src/build/build.js"
 import {getTransactionStatus} from "../../sdk/src/build/build-get-transaction-status.js"
 import {resolve} from "../../sdk/src/resolve/resolve.js"
+import {response as responseADT} from "../../sdk/src/response/response.js"
 
 const jsonToUInt8Array = (json) => {
     var str = JSON.stringify(json, null, 0);
@@ -32,7 +33,7 @@ describe("Get Transaction Status", () => {
     const returnedTransactionStatus = {
         status: 2,
         statusString: "FINALIZED",
-        statusCode: 1,
+        statusCode: 2,
         errorMessage: "No Error",
         events: [
             {
@@ -47,7 +48,7 @@ describe("Get Transaction Status", () => {
 
     unaryMock.mockReturnValue({
         getStatus: () => 2,
-        getStatusCode: () => 1,
+        getStatusCode: () => 2,
         getErrorMessage: () => "No Error",
         getEventsList: () => ([
             {
@@ -67,6 +68,9 @@ describe("Get Transaction Status", () => {
             ])
         ),
         {
+            response: responseADT
+        },
+        {
             unary: unaryMock,
             node: "localhost:3000"
         }
@@ -76,7 +80,7 @@ describe("Get Transaction Status", () => {
 
     const unaryMockArgs = unaryMock.mock.calls[0]
 
-    expect(unaryMockArgs.length).toEqual(3)
+    expect(unaryMockArgs.length).toEqual(4)
 
     const unaryType = unaryMock.mock.calls[0][1]
 

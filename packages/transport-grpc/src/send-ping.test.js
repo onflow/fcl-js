@@ -3,6 +3,7 @@ import {sendPing} from "./send-ping.js"
 import {build} from "../../sdk/src/build/build.js"
 import {ping} from "../../sdk/src/build/build-ping.js"
 import {resolve} from "../../sdk/src/resolve/resolve.js"
+import {response as responseADT} from "../../sdk/src/response/response.js"
 
 const jsonToUInt8Array = (json) => {
     var str = JSON.stringify(json, null, 0);
@@ -26,6 +27,9 @@ describe("Ping", () => {
             ])
         ),
         {
+            response: responseADT
+        },
+        {
             unary: unaryMock,
             node: "localhost:3000"
         }
@@ -35,7 +39,7 @@ describe("Ping", () => {
 
     const unaryMockArgs = unaryMock.mock.calls[0]
 
-    expect(unaryMockArgs.length).toEqual(3)
+    expect(unaryMockArgs.length).toEqual(4)
 
     const unaryType = unaryMock.mock.calls[0][1]
 

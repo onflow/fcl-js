@@ -3,6 +3,7 @@ import {sendGetTransaction} from "./send-get-transaction.js"
 import {build} from "../../sdk/src/build/build.js"
 import {getTransaction} from "../../sdk/src/build/build-get-transaction.js"
 import {resolve} from "../../sdk/src/resolve/resolve.js"
+import {response as responseADT} from "../../sdk/src/response/response.js"
 
 const jsonToUInt8Array = (json) => {
     var str = JSON.stringify(json, null, 0);
@@ -71,6 +72,9 @@ describe("Get Transaction", () => {
             ])
         ),
         {
+            response: responseADT
+        },
+        {
             unary: unaryMock,
             node: "localhost:3000"
         }
@@ -80,7 +84,7 @@ describe("Get Transaction", () => {
 
     const unaryMockArgs = unaryMock.mock.calls[0]
 
-    expect(unaryMockArgs.length).toEqual(3)
+    expect(unaryMockArgs.length).toEqual(4)
 
     const unaryType = unaryMock.mock.calls[0][1]
 

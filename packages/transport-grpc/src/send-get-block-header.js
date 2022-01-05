@@ -44,7 +44,7 @@ async function sendGetLatestBlockHeaderRequest(ix, context, opts) {
 function constructResponse(ix, context, res) {
   const blockHeader = res.getBlock()
 
-  const ret = response()
+  const ret = context.response()
   ret.tag = ix.tag
   ret.blockHeader = {
     id: u8ToHex(blockHeader.getId_asU8()),
