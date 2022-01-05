@@ -39,10 +39,10 @@ The suggested order of operations of how your application might use
 `account-proof` begins with:
 
 - Optional: Your application may choose to configure FCL with an application
-  specific Domain Tag. A custom configured Application Domain Tag helps scope the cryptographic proof
-  generated for the `account-proof` service to your application. A Domain Tag is
-  a valid string less than 32 bytes long. Your application can specify a custom
-  Domain Tag via `config.fcl.appDomainTag`
+  specific Domain Separation Tag. A custom configured Domain Separation Tag helps scope the cryptographic proof
+  generated for the `account-proof` service to your application. A Domain Separation Tag is a valid string less 
+  than 32 bytes long. (Note, inclusion of a Domain Separation Tag does not help to prevent Man-in-the-middle attacks.)
+  Your application can specify a custom Domain Separation Tag via `config.fcl.appDomainTag`.
 
 ```javascript
 import {config} from "@onflow/fcl"
