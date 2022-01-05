@@ -18,7 +18,7 @@ export async function sendGetCollection(ix, context = {}, opts = {}) {
   ret.tag = ix.tag
   ret.collection = {
     id: res.id,
-    transactionIds: res.transactions.map(transaction => transaction.id), // CHECK IF WE NEED TO HAVE BACKWARD COMPATIBILITY HERE
+    transactionIds: res.transactions.map(transaction => transaction.id),
   }
 
   return ret

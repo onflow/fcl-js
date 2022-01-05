@@ -123,9 +123,7 @@ export async function httpRequest({
 
         res.on("end", () => {
           try {
-            console.log("responseBody 1", responseBody)
             responseBody = JSON.parse(responseBody.join(""))
-            console.log("responseBody 2", responseBody)
           } catch(e) {
             reject(new HTTPRequestError({
               transport: isHTTPs ? "NodeHTTPsTransport" : "NodeHTTPTransport",

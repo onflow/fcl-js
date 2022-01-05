@@ -1,23 +1,14 @@
-import {AccessAPI} from "@onflow/protobuf"
 import {sendPing} from "./send-ping.js"
-import {build} from "../build/build.js"
-import {ping} from "../build/build-ping.js"
-import {resolve} from "../resolve/resolve.js"
-
-const jsonToUInt8Array = (json) => {
-    var str = JSON.stringify(json, null, 0);
-    var ret = new Uint8Array(str.length);
-    for (var i = 0; i < str.length; i++) {
-        ret[i] = str.charCodeAt(i);
-    }
-    return ret
-};
+import {build} from "../../sdk/src/build/build.js"
+import {ping} from "../../sdk/src/build/build-ping.js"
+import {resolve} from "../../sdk/src/resolve/resolve.js"
+import {response as responseADT} from "../../sdk/src/response/response.js"
 
 describe("Ping", () => {
   test("Ping", async () => {
-    const unaryMock = jest.fn();
+    const httpRequestMock = jest.fn();
 
-    unaryMock.mockReturnValue({});
+    httpRequestMock.mockReturnValue({});
 
     await sendPing(
         await resolve(
@@ -26,24 +17,28 @@ describe("Ping", () => {
             ])
         ),
         {
-            unary: unaryMock,
-            node: "localhost:3000"
+            response: responseADT
+        },
+        {
+            httpRequest: httpRequestMock,
+            node: "localhost"
         }
     )
 
-    expect(unaryMock.mock.calls.length).toEqual(1)
+    expect(httpRequestMock.mock.calls.length).toEqual(1)
 
-    const unaryMockArgs = unaryMock.mock.calls[0]
+    const httpRequestMockArgs = httpRequestMock.mock.calls[0]
 
-    expect(unaryMockArgs.length).toEqual(3)
+    expect(httpRequestMockArgs.length).toEqual(1)
 
-    const unaryType = unaryMock.mock.calls[0][1]
+    const valueSent = httpRequestMock.mock.calls[0][0]
 
-    expect(unaryType).toEqual(AccessAPI.Ping)
-
-    const unaryMockRequest = unaryMock.mock.calls[0][2]
-
-    expect(unaryMockRequest).not.toBeUndefined()
+    expect(valueSent).toEqual({
+        hostname: "localhost",
+        path: "/blocks&height=sealed",
+        method: "GET",
+        body: null
+    })
   })
 
 })

@@ -1,37 +1,64 @@
-import {AccessAPI} from "@onflow/protobuf"
 import {sendGetTransactionStatus} from "./send-get-transaction-status.js"
-import {build} from "../build/build.js"
-import {getTransactionStatus} from "../build/build-get-transaction-status.js"
-import {resolve} from "../resolve/resolve.js"
-
-const jsonToUInt8Array = (json) => {
-    var str = JSON.stringify(json, null, 0);
-    var ret = new Uint8Array(str.length);
-    for (var i = 0; i < str.length; i++) {
-        ret[i] = str.charCodeAt(i);
-    }
-    return ret
-};
-
-const hexStrToUInt8Array = (hex) => {
-    return new Uint8Array(hex.match(/.{1,2}/g).map(byte => parseInt(byte, 16)));
-};
-
-const strToUInt8Array = (str) => {
-    var ret = new Uint8Array(str.length);
-    for (var i = 0; i < str.length; i++) {
-        ret[i] = str.charCodeAt(i);
-    }
-    return ret
-};
+import {build} from "../../sdk/src/build/build.js"
+import {getTransactionStatus} from "../../sdk/src/build/build-get-transaction-status.js"
+import {resolve} from "../../sdk/src/resolve/resolve.js"
+import {response as responseADT} from "../../sdk/src/response/response.js"
 
 describe("Get Transaction Status", () => {
   test("GetTransactionResult", async () => {
-    const unaryMock = jest.fn();
+    const httpRequestMock = jest.fn();
 
     const returnedTransactionStatus = {
-        status: 2,
-        statusString: "FINALIZED",
+        status: "Pending",
+        error_message: "No Error",
+        computation_used: 100,
+        block_id: "abc123",
+        events: [
+            {
+                type: "MyEvent",
+                transaction_id: "a1b2c3",
+                transaction_index: 123,
+                event_index: 456,
+                payload: {type: "String", value: "Hello, Flow"}
+            }
+        ]
+    }
+
+    httpRequestMock.mockReturnValue(returnedTransactionStatus);
+
+    const response = await sendGetTransactionStatus(
+        await resolve(
+            await build([
+                getTransactionStatus("MyTxID"),
+            ])
+        ),
+        {
+            response: responseADT
+        },
+        {
+            httpRequest: httpRequestMock,
+            node: "localhost"
+        }
+    )
+
+    expect(httpRequestMock.mock.calls.length).toEqual(1)
+
+    const httpRequestMockArgs = httpRequestMock.mock.calls[0]
+
+    expect(httpRequestMockArgs.length).toEqual(1)
+
+    const valueSent = httpRequestMock.mock.calls[0][0]
+
+    expect(valueSent).toEqual({
+        hostname: "localhost",
+        path: "/transaction_results/MyTxID",
+        method: "GET",
+        body: null
+    })
+
+    expect(response.transactionStatus).toStrictEqual({
+        status: 1,
+        statusString: "PENDING",
         statusCode: 1,
         errorMessage: "No Error",
         events: [
@@ -43,51 +70,7 @@ describe("Get Transaction Status", () => {
                 payload: {type: "String", value: "Hello, Flow"}
             }
         ]
-    }
-
-    unaryMock.mockReturnValue({
-        getStatus: () => 2,
-        getStatusCode: () => 1,
-        getErrorMessage: () => "No Error",
-        getEventsList: () => ([
-            {
-                getType: () => "MyEvent",
-                getTransactionId_asU8: () => hexStrToUInt8Array("a1b2c3"),
-                getTransactionIndex: () => 123,
-                getEventIndex: () => 456,
-                getPayload_asU8: () => jsonToUInt8Array({type: "String", value: "Hello, Flow"}),
-            }
-        ])
-    });
-
-    const response = await sendGetTransactionStatus(
-        await resolve(
-            await build([
-                getTransactionStatus("MyTxID"),
-            ])
-        ),
-        {
-            unary: unaryMock,
-            node: "localhost:3000"
-        }
-    )
-
-    expect(unaryMock.mock.calls.length).toEqual(1)
-
-    const unaryMockArgs = unaryMock.mock.calls[0]
-
-    expect(unaryMockArgs.length).toEqual(3)
-
-    const unaryType = unaryMock.mock.calls[0][1]
-
-    expect(unaryType).toEqual(AccessAPI.GetTransactionResult)
-
-    const unaryMockRequest = unaryMock.mock.calls[0][2]
-    const unaryMockId = unaryMockRequest.getId()
-
-    expect(unaryMockId).not.toBeUndefined()
-
-    expect(response.transactionStatus).toStrictEqual(returnedTransactionStatus)
+    })
   })
 
 })

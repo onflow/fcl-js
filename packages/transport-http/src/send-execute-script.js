@@ -6,7 +6,6 @@ async function sendExecuteScriptAtBlockIDRequest(ix, context, opts) {
 
   const res = await httpRequest({
     hostname: opts.node,
-    port: 443,
     path: `/scripts?block_id=${ix.block.id}`,
     method: "POST",
     body: {
@@ -53,6 +52,7 @@ async function sendExecuteScriptAtLatestBlockRequest(ix, context, opts) {
 function constructResponse(ix, context, res)  {
   let ret = context.response()
   ret.tag = ix.tag
+  
   ret.encodedData = JSON.parse(Buffer.from(res, "base64").toString())
 
   return ret

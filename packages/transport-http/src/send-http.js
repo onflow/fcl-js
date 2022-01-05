@@ -8,8 +8,6 @@ import {sendGetEvents} from "./send-get-events.js"
 import {sendGetBlock} from "./send-get-block.js"
 import {sendGetBlockHeader} from "./send-get-block-header.js"
 import {sendGetLatestBlock} from "./send-get-latest-block.js"
-// import {sendGetBlockById} from "./send-get-block-by-id.js"
-// import {sendGetBlockByHeight} from "./send-get-block-by-height.js"
 import {sendGetCollection} from "./send-get-collection.js"
 import {sendPing} from "./send-ping.js"
 
@@ -39,10 +37,6 @@ export const send = async (ix, context = {}, opts = {}) => {
       return opts.sendGetBlock ? opts.sendGetBlock(ix, context, opts) : sendGetBlock(ix, context, opts)
     case context.ix.isGetBlockHeader(ix):
       return opts.sendGetBlockHeader ? opts.sendGetBlockHeader(ix, context, opts) : sendGetBlockHeader(ix, context, opts)
-    // case context.ix.isGetBlockById(ix):
-    //   return opts.sendGetBlockById ? opts.sendGetBlockById(ix, opts) : sendGetBlockById(ix, opts)
-    // case context.ix.isGetBlockByHeight(ix):
-    //   return opts.sendGetBlockByHeight ? opts.sendGetBlockByHeight(ix, opts) : sendGetBlockByHeight(ix, opts)
     case context.ix.isGetCollection(ix):
       return opts.sendGetCollection ? opts.sendGetCollection(ix, context, opts) : sendGetCollection(ix, context, opts)
     case context.ix.isPing(ix):

@@ -32,7 +32,7 @@ async function sendGetBlockRequest(ix, context, opts) {
 
   const height = ix.block?.isSealed
     ? "sealed"
-    : "final"
+    : "finalized"
 
   const res = await httpRequest({
     hostname: opts.node,
@@ -49,24 +49,23 @@ function constructResponse(ix, context, res) {
 
   const ret = context.response()
   ret.tag = ix.tag
-  ret.block = { // Multiple Blocks now are to be returned by the REST API, we'll need to account for that in how we return blocks back
+  ret.block = {
     id: block.header.id,
     parentId: block.header.parent_id,
     height: block.header.height,
     timestamp: block.header.timestamp,
-    // parentVoterSignature: block.header.parent_voter_signature, // NEW IN REST API!
     collectionGuarantees: block.payload.collection_guarantees.map(collectionGuarantee => ({
       collectionId: collectionGuarantee.collection_id,
       signerIds: collectionGuarantee.signer_ids,
-      signatures: [collectionGuarantee.signature], // SCHEMA HAS THIS IS SINGULAR "SIGNATURE", CHECK ON THIS
+      signatures: collectionGuarantee.signature ? [collectionGuarantee.signature] : [],
     })),
-    blockSeals:  block.payload.block_seals.map(blockSeal => ({ // LOTS OF ISSUES HERE, CHECK ON THIS
+    blockSeals:  block.payload.block_seals.map(blockSeal => ({
       blockId: blockSeal.block_id,
       executionReceiptId: blockSeal.result_id, 
-      executionReceiptSignatures: [], // REMOVED IN SCHEMA, CHECK ON THIS. Gregor: Decode signatures from base 64 encoding sting => hex string
-      resultApprovalSignatures: [], // REMOVED IN SCHEMA, CHECK ON THIS. Gregor: Decode signatures from base 64 encoding sting => hex string
+      executionReceiptSignatures: [], 
+      resultApprovalSignatures: [],
     })),
-    signatures: null, // REMOVED IN SCHEMA, CHECK ON THIS. 
+    signatures: []
   }
 
   return ret
