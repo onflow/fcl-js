@@ -30,9 +30,13 @@ async function sendGetBlockHeaderByHeightRequest(ix, context, opts) {
 async function sendGetLatestBlockHeaderRequest(ix, context, opts) {
   const httpRequest = opts.httpRequest || defaultHttpRequest
 
+  const height = ix.block?.isSealed
+  ? "sealed"
+  : "finalized"
+
   const res = await httpRequest({
     hostname: opts.node,
-    path: `/blocks?height=sealed`,
+    path: `/blocks?height=${height}`,
     method: "GET",
     body: null
   })
@@ -41,7 +45,6 @@ async function sendGetLatestBlockHeaderRequest(ix, context, opts) {
 }
 
 function constructResponse(ix, context, res) {
-  // const blockHeader = res.getBlock()
 
   const ret = context.response()
   ret.tag = ix.tag
@@ -50,7 +53,6 @@ function constructResponse(ix, context, res) {
     parentId: res.header.parent_id,
     height: res.header.height,
     timestamp: res.header.timestamp,
-    parentVoterSignature: res.header.parent_voter_signature, // NEW IN REST API!
   }
 
   return ret

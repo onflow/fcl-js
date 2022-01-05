@@ -1,46 +1,24 @@
-import {AccessAPI} from "@onflow/protobuf"
 import {sendTransaction} from "./send-transaction.js"
-import {build} from "../build/build.js.js"
-import {transaction} from "../build/build-transaction.js.js"
-import {proposer} from "../build/build-proposer.js.js"
-import {payer} from "../build/build-payer.js.js"
-import {ref} from "../build/build-ref.js.js"
-import {authorizations} from "../build/build-authorizations.js.js"
+import {build} from "../../sdk/src/build/build.js"
+import {transaction} from "../../sdk/src/build/build-transaction.js"
+import {proposer} from "../../sdk/src/build/build-proposer.js"
+import {payer} from "../../sdk/src/build/build-payer.js"
+import {ref} from "../../sdk/src/build/build-ref.js"
+import {limit} from "../../sdk/src/build/build-limit.js"
+import {authorizations} from "../../sdk/src/build/build-authorizations.js"
 
-import {preSendCheck} from "../build/build-pre-send-check.js.js"
-import {voucherToTxId} from "../resolve/voucher.js.js"
-import {resolve} from "../resolve/resolve.js.js"
-
-const jsonToUInt8Array = (json) => {
-    var str = JSON.stringify(json, null, 0);
-    var ret = new Uint8Array(str.length);
-    for (var i = 0; i < str.length; i++) {
-        ret[i] = str.charCodeAt(i);
-    }
-    return ret
-};
-
-const hexStrToUInt8Array = (hex) => {
-    return new Uint8Array(hex.match(/.{1,2}/g).map(byte => parseInt(byte, 16)));
-};
-
-const strToUInt8Array = (str) => {
-    var ret = new Uint8Array(str.length);
-    for (var i = 0; i < str.length; i++) {
-        ret[i] = str.charCodeAt(i);
-    }
-    return ret
-};
+import {preSendCheck} from "../../sdk/src/build/build-pre-send-check.js"
+import {voucherToTxId} from "../../sdk/src/resolve/voucher.js"
+import {resolve} from "../../sdk/src/resolve/resolve.js"
+import {response as responseADT} from "../../sdk/src/response/response.js"
 
 describe("Transaction", () => {
   test("SendTransaction", async () => {
-    const unaryMock = jest.fn();
+    const httpRequestMock = jest.fn();
 
     const returnedTransactionId = "a1b2c3"
 
-    unaryMock.mockReturnValue({
-        getId_asU8: () => hexStrToUInt8Array("a1b2c3")
-    });
+    httpRequestMock.mockReturnValue(returnedTransactionId);
 
     const response = await sendTransaction(
         await resolve(
@@ -56,7 +34,7 @@ describe("Transaction", () => {
                         signature: "abc123"
                     }),
                     resolve: null,
-                    roles: { proposer: true, authorizer: true, payer: true, param: false },
+                    roles: { proposer: true, authorizer: false, payer: false, param: false },
                 }),
                 payer({
                     addr: "f8d6e0586b0a20c7",
@@ -68,7 +46,7 @@ describe("Transaction", () => {
                         signature: "abc123"
                     }),
                     resolve: null,
-                    roles: { proposer: true, authorizer: true, payer: true, param: false },
+                    roles: { proposer: false, authorizer: false, payer: true, param: false },
                 }),
                 authorizations([
                     {
@@ -81,34 +59,69 @@ describe("Transaction", () => {
                             signature: "abc123"
                         }),
                         resolve: null,
-                        roles: { proposer: true, authorizer: true, payer: true, param: false },
+                        roles: { proposer: false, authorizer: true, payer: false, param: false },
                     }
                 ]),
                 ref("abc123"),
+                limit(500),
                 preSendCheck(async voucher => {
                     voucherToTxId(voucher)
                 }),
             ])
         ),
         {
-            unary: unaryMock,
-            node: "localhost:3000"
+            response: responseADT
+        },
+        {
+            httpRequest: httpRequestMock,
+            node: "localhost"
         }
     )
 
-    expect(unaryMock.mock.calls.length).toEqual(1)
+    expect(httpRequestMock.mock.calls.length).toEqual(1)
 
-    const unaryMockArgs = unaryMock.mock.calls[0]
+    const httpRequestMockArgs = httpRequestMock.mock.calls[0]
 
-    expect(unaryMockArgs.length).toEqual(3)
+    expect(httpRequestMockArgs.length).toEqual(1)
 
-    const unaryType = unaryMock.mock.calls[0][1]
+    const valueSent = httpRequestMock.mock.calls[0][0]
 
-    expect(unaryType).toEqual(AccessAPI.SendTransaction)
-
-    const unaryMockRequest = unaryMock.mock.calls[0][2]
-
-    expect(unaryMockRequest).not.toBeUndefined()
+    expect(valueSent).toEqual({
+        hostname: "localhost",
+        path: "/transactions",
+        method: "POST",
+        body: {
+            "script": "cadence transaction",
+            "arguments": [],
+            "reference_block_id": "abc123",
+            "gas_limit": 500,
+            "payer": "f8d6e0586b0a20c7",
+            "proposal_key": {
+                "address": "f8d6e0586b0a20c7",
+                "key_index": 1,
+                "sequence_number": 123
+            },
+            "authorizers": [
+                "f8d6e0586b0a20c7"
+            ],
+            "payload_signatures": [
+                {
+                    "address": "f8d6e0586b0a20c7",
+                    "signer_index": 0,
+                    "key_index": 1,
+                    "signature": "abc123",
+                }
+            ],
+            "envelope_signatures": [
+                {
+                    "address": "f8d6e0586b0a20c7",
+                    "signer_index": 0,
+                    "key_index": 1,
+                    "signature": "abc123"
+                }
+            ]
+        }
+    })
 
     expect(response.transactionId).toBe(returnedTransactionId)
   })

@@ -1,55 +1,27 @@
-import {AccessAPI} from "@onflow/protobuf"
 import {sendGetBlockHeader} from "./send-get-block-header.js"
-import {build} from "../build/build.js"
-import {getBlockHeader} from "../build/build-get-block-header.js"
-import {atBlockId} from "../build/build-at-block-id.js"
-import {atBlockHeight} from "../build/build-at-block-height.js"
-import {resolve} from "../resolve/resolve.js"
-
-const jsonToUInt8Array = (json) => {
-    var str = JSON.stringify(json, null, 0);
-    var ret = new Uint8Array(str.length);
-    for (var i = 0; i < str.length; i++) {
-        ret[i] = str.charCodeAt(i);
-    }
-    return ret
-};
-
-const hexStrToUInt8Array = (hex) => {
-    return new Uint8Array(hex.match(/.{1,2}/g).map(byte => parseInt(byte, 16)));
-};
-
-const strToUInt8Array = (str) => {
-    var ret = new Uint8Array(str.length);
-    for (var i = 0; i < str.length; i++) {
-        ret[i] = str.charCodeAt(i);
-    }
-    return ret
-};
+import {build} from "../../sdk/src/build/build.js"
+import {getBlockHeader} from "../../sdk/src/build/build-get-block-header.js"
+import {atBlockId} from "../../sdk/src/build/build-at-block-id.js"
+import {atBlockHeight} from "../../sdk/src/build/build-at-block-height.js"
+import {resolve} from "../../sdk/src/resolve/resolve.js"
+import {response as responseADT} from "../../sdk/src/response/response.js"
 
 describe("Send Get Block Header", () => {
   test("GetBlockHeaderByID", async () => {
-    const unaryMock = jest.fn();
+    const httpRequestMock = jest.fn();
 
     const dateNow = new Date(Date.now())
 
     const returnedBlockHeader = {
-        id: "a1b2c3",
-        parentId: "a1b2c3",
-        height: 123,
-        timestamp: dateNow.toISOString(),
+        header: {
+            id: "a1b2c3",
+            parent_id: "a1b2c3",
+            height: 123,
+            timestamp: dateNow.toISOString(),
+        }
     }
 
-    unaryMock.mockReturnValue({
-        getBlock: () => ({
-            getId_asU8: () => hexStrToUInt8Array("a1b2c3"),
-            getParentId_asU8: () => hexStrToUInt8Array("a1b2c3"),
-            getHeight: () => 123,
-            getTimestamp: () => ({
-                toDate: () => dateNow
-            })
-        })
-    });
+    httpRequestMock.mockReturnValue(returnedBlockHeader);
 
     const response = await sendGetBlockHeader(
         await resolve(
@@ -59,51 +31,52 @@ describe("Send Get Block Header", () => {
             ])
         ),
         {
-            unary: unaryMock,
-            node: "localhost:3000"
+            response: responseADT
+        },
+        {
+            httpRequest: httpRequestMock,
+            node: "localhost"
         }
     )
 
-    expect(unaryMock.mock.calls.length).toEqual(1)
+    expect(httpRequestMock.mock.calls.length).toEqual(1)
 
-    const unaryMockArgs = unaryMock.mock.calls[0]
+    const httpRequestMockArgs = httpRequestMock.mock.calls[0]
 
-    expect(unaryMockArgs.length).toEqual(3)
+    expect(httpRequestMockArgs.length).toEqual(1)
 
-    const unaryType = unaryMock.mock.calls[0][1]
+    const valueSent = httpRequestMock.mock.calls[0][0]
 
-    expect(unaryType).toEqual(AccessAPI.GetBlockHeaderByID)
+    expect(valueSent).toEqual({
+        hostname: "localhost",
+        path: "/blocks/a1b2c3",
+        method: "GET",
+        body: null
+    })
 
-    const unaryMockRequest = unaryMock.mock.calls[0][2]
-    const unaryMockId = unaryMockRequest.getId()
-
-    expect(unaryMockId).not.toBeUndefined()
-
-    expect(response.blockHeader).toEqual(returnedBlockHeader)
-  })
-
-  test("GetBlockHeaderByHeight", async () => {
-    const unaryMock = jest.fn();
-
-    const dateNow = new Date(Date.now())
-
-    const returnedBlockHeader = {
+    expect(response.blockHeader).toEqual({
         id: "a1b2c3",
         parentId: "a1b2c3",
         height: 123,
         timestamp: dateNow.toISOString(),
+    })
+  })
+
+  test("GetBlockHeaderByHeight", async () => {
+    const httpRequestMock = jest.fn();
+
+    const dateNow = new Date(Date.now())
+
+    const returnedBlockHeader = {
+        header: {
+            id: "a1b2c3",
+            parent_id: "a1b2c3",
+            height: 123,
+            timestamp: dateNow.toISOString(),
+        }
     }
 
-    unaryMock.mockReturnValue({
-        getBlock: () => ({
-            getId_asU8: () => hexStrToUInt8Array("a1b2c3"),
-            getParentId_asU8: () => hexStrToUInt8Array("a1b2c3"),
-            getHeight: () => 123,
-            getTimestamp: () => ({
-                toDate: () => dateNow
-            })
-        })
-    });
+    httpRequestMock.mockReturnValue(returnedBlockHeader);
 
     const response = await sendGetBlockHeader(
         await resolve(
@@ -113,51 +86,52 @@ describe("Send Get Block Header", () => {
             ])
         ),
         {
-            unary: unaryMock,
-            node: "localhost:3000"
+            response: responseADT
+        },
+        {
+            httpRequest: httpRequestMock,
+            node: "localhost"
         }
     )
 
-    expect(unaryMock.mock.calls.length).toEqual(1)
+    expect(httpRequestMock.mock.calls.length).toEqual(1)
 
-    const unaryMockArgs = unaryMock.mock.calls[0]
+    const httpRequestMockArgs = httpRequestMock.mock.calls[0]
 
-    expect(unaryMockArgs.length).toEqual(3)
+    expect(httpRequestMockArgs.length).toEqual(1)
 
-    const unaryType = unaryMock.mock.calls[0][1]
+    const valueSent = httpRequestMock.mock.calls[0][0]
 
-    expect(unaryType).toEqual(AccessAPI.GetBlockHeaderByHeight)
+    expect(valueSent).toEqual({
+        hostname: "localhost",
+        path: "/blocks?height=123",
+        method: "GET",
+        body: null
+    })
 
-    const unaryMockRequest = unaryMock.mock.calls[0][2]
-    const unaryMockHeight = unaryMockRequest.getHeight()
-
-    expect(unaryMockHeight).not.toBeUndefined()
-
-    expect(response.blockHeader).toEqual(returnedBlockHeader)
-  })
-
-  test("GetLatestBlockHeader - isSealed = false", async () => {
-    const unaryMock = jest.fn();
-
-    const dateNow = new Date(Date.now())
-
-    const returnedBlockHeader = {
+    expect(response.blockHeader).toEqual({
         id: "a1b2c3",
         parentId: "a1b2c3",
         height: 123,
         timestamp: dateNow.toISOString(),
+    })
+  })
+
+  test("GetLatestBlockHeader - isSealed = false", async () => {
+    const httpRequestMock = jest.fn();
+
+    const dateNow = new Date(Date.now())
+
+    const returnedBlockHeader = {
+        header: {
+            id: "a1b2c3",
+            parent_id: "a1b2c3",
+            height: 123,
+            timestamp: dateNow.toISOString(),
+        }
     }
 
-    unaryMock.mockReturnValue({
-        getBlock: () => ({
-            getId_asU8: () => hexStrToUInt8Array("a1b2c3"),
-            getParentId_asU8: () => hexStrToUInt8Array("a1b2c3"),
-            getHeight: () => 123,
-            getTimestamp: () => ({
-                toDate: () => dateNow
-            })
-        })
-    });
+    httpRequestMock.mockReturnValue(returnedBlockHeader);
 
     const response = await sendGetBlockHeader(
         await resolve(
@@ -166,51 +140,52 @@ describe("Send Get Block Header", () => {
             ])
         ),
         {
-            unary: unaryMock,
-            node: "localhost:3000"
+            response: responseADT
+        },
+        {
+            httpRequest: httpRequestMock,
+            node: "localhost"
         }
     )
 
-    expect(unaryMock.mock.calls.length).toEqual(1)
+    expect(httpRequestMock.mock.calls.length).toEqual(1)
 
-    const unaryMockArgs = unaryMock.mock.calls[0]
+    const httpRequestMockArgs = httpRequestMock.mock.calls[0]
 
-    expect(unaryMockArgs.length).toEqual(3)
+    expect(httpRequestMockArgs.length).toEqual(1)
 
-    const unaryType = unaryMock.mock.calls[0][1]
+    const valueSent = httpRequestMock.mock.calls[0][0]
 
-    expect(unaryType).toEqual(AccessAPI.GetLatestBlockHeader)
+    expect(valueSent).toEqual({
+        hostname: "localhost",
+        path: "/blocks?height=finalized",
+        method: "GET",
+        body: null
+    })
 
-    const unaryMockRequest = unaryMock.mock.calls[0][2]
-    const unaryMockIsSealed = unaryMockRequest.getIsSealed()
-
-    expect(unaryMockIsSealed).toBe(false)
-
-    expect(response.blockHeader).toEqual(returnedBlockHeader)
-  })
-
-  test("GetLatestBlockHeader - isSealed = true", async () => {
-    const unaryMock = jest.fn();
-
-    const dateNow = new Date(Date.now())
-
-    const returnedBlockHeader = {
+    expect(response.blockHeader).toEqual({
         id: "a1b2c3",
         parentId: "a1b2c3",
         height: 123,
         timestamp: dateNow.toISOString(),
+    })
+  })
+
+  test("GetLatestBlockHeader - isSealed = true", async () => {
+    const httpRequestMock = jest.fn();
+
+    const dateNow = new Date(Date.now())
+
+    const returnedBlockHeader = {
+        header: {
+            id: "a1b2c3",
+            parent_id: "a1b2c3",
+            height: 123,
+            timestamp: dateNow.toISOString(),
+        }
     }
 
-    unaryMock.mockReturnValue({
-        getBlock: () => ({
-            getId_asU8: () => hexStrToUInt8Array("a1b2c3"),
-            getParentId_asU8: () => hexStrToUInt8Array("a1b2c3"),
-            getHeight: () => 123,
-            getTimestamp: () => ({
-                toDate: () => dateNow
-            })
-        })
-    });
+    httpRequestMock.mockReturnValue(returnedBlockHeader);
 
     const response = await sendGetBlockHeader(
         await resolve(
@@ -219,27 +194,35 @@ describe("Send Get Block Header", () => {
             ])
         ),
         {
-            unary: unaryMock,
-            node: "localhost:3000"
+            response: responseADT
+        },
+        {
+            httpRequest: httpRequestMock,
+            node: "localhost"
         }
     )
 
-    expect(unaryMock.mock.calls.length).toEqual(1)
+    expect(httpRequestMock.mock.calls.length).toEqual(1)
 
-    const unaryMockArgs = unaryMock.mock.calls[0]
+    const httpRequestMockArgs = httpRequestMock.mock.calls[0]
 
-    expect(unaryMockArgs.length).toEqual(3)
+    expect(httpRequestMockArgs.length).toEqual(1)
 
-    const unaryType = unaryMock.mock.calls[0][1]
+    const valueSent = httpRequestMock.mock.calls[0][0]
 
-    expect(unaryType).toEqual(AccessAPI.GetLatestBlockHeader)
+    expect(valueSent).toEqual({
+        hostname: "localhost",
+        path: "/blocks?height=sealed",
+        method: "GET",
+        body: null
+    })
 
-    const unaryMockRequest = unaryMock.mock.calls[0][2]
-    const unaryMockIsSealed = unaryMockRequest.getIsSealed()
-
-    expect(unaryMockIsSealed).toBe(true)
-
-    expect(response.blockHeader).toEqual(returnedBlockHeader)
+    expect(response.blockHeader).toEqual({
+        id: "a1b2c3",
+        parentId: "a1b2c3",
+        height: 123,
+        timestamp: dateNow.toISOString(),
+    })
   })
 
 })

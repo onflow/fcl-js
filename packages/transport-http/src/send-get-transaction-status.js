@@ -20,7 +20,7 @@ export async function sendGetTransactionStatus(ix, context = {}, opts = {}) {
 
   const res = await httpRequest({
     hostname: opts.node,
-    path: `/transaction_results?height=${ix.transaction.id}`,
+    path: `/transaction_results/${ix.transaction.id}`,
     method: "GET",
     body: null
   })
@@ -28,9 +28,10 @@ export async function sendGetTransactionStatus(ix, context = {}, opts = {}) {
   let ret = context.response()
   ret.tag = ix.tag
   ret.transactionStatus = {
-    blockId: res.block_id, // THIS IS A NEW FIELD FROM REST API
-    status: STATUS_MAP[res.status.toUpperCase()], // THIS IS NOW A STRING IN REST API LIKE "Pending"
-    statusString: res.status.toUpperCase(), // MAYBE SHOULD BE CONVERTED FROM res.status field
+    status: STATUS_MAP[res.status.toUpperCase()], 
+    statusString: res.status.toUpperCase(), 
+    statusCode: STATUS_MAP[res.status.toUpperCase()],
+    errorMessage: res.error_message,
     events: res.events.map(event => ({
       type: event.type,
       transactionId: event.transaction_id,

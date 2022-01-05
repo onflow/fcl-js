@@ -12,36 +12,42 @@ export async function sendTransaction(ix, context = {}, opts = {}) {
 
   // Apply Non Payer Signatures to Payload Signatures
   let payloadSignatures = []
+  var i = 0
   for (let acct of Object.values(ix.accounts)) {
     try {
       if (!acct.role.payer && acct.signature != null) {
         payloadSignatures.push({
           address: sansPrefix(acct.addr),
-          signer_index: null, // WHAT IS THIS?
+          signer_index: i,
           key_index: acct.keyId,
           signature: acct.signature
         })
+        i = i + 1
       }
     } catch (error) {
-      console.error("Trouble applying payload signature", {acct, ix})
+      console.error("SDK HTTP Send Error: Trouble applying payload signature", {acct, ix})
       throw error
     }
   }
 
   // Apply Payer Signatures to Envelope Signatures
+
+  // TODO: NEED TO DEDUPE ENVELOPE SIGNATURES. Look into impact on grpc send-transaction as well.
   let envelopeSignatures = []
+  var j = 0
   for (let acct of Object.values(ix.accounts)) {
     try {
       if (acct.role.payer && acct.signature != null) {
         envelopeSignatures.push({
           address: sansPrefix(acct.addr),
-          signer_index: null, // WHAT IS THIS???
+          signer_index: j,
           key_index: acct.keyId,
           signature: acct.signature
         })
+        j = j + 1
       }
     } catch (error) {
-      console.error("Trouble applying envelope signature", {acct, ix})
+      console.error("SDK HTTP Send Error: Trouble applying envelope signature", {acct, ix})
       throw error
     }
   }
@@ -53,7 +59,7 @@ export async function sendTransaction(ix, context = {}, opts = {}) {
     method: "POST",
     body: {
       script: ix.message.cadence,
-      arguments: ix.message.arguments.map(arg => ix.arguments[arg].asArgument),
+      arguments: [...ix.message.arguments.map(arg => ix.arguments[arg].asArgument)],
       reference_block_id: ix.message.refBlock ? ix.message.refBlock : null,
       gas_limit: ix.message.computeLimit,
       payer: sansPrefix(ix.accounts[ix.payer].addr),
@@ -74,7 +80,6 @@ export async function sendTransaction(ix, context = {}, opts = {}) {
   })
   var t2 = Date.now()
 
-  // SHOULD WE RETURN THE FULL TRANSACTION OBJECT HERE?
   let ret = context.response()
   ret.tag = ix.tag 
   ret.transactionId = res.id
