@@ -25,16 +25,15 @@ export async function sendGetTransactionStatus(ix, context = {}, opts = {}) {
   const req = new GetTransactionRequest()
   req.setId(hexBuffer(ix.transaction.id))
 
-  const res = await unary(opts.node, AccessAPI.GetTransactionResult, req)
+  const res = await unary(opts.node, AccessAPI.GetTransactionResult, req, context)
 
   let events = res.getEventsList()
 
   let ret = context.response()
-  const status = res.getStatus()
   ret.tag = ix.tag
   ret.transactionStatus = {
-    status: status,
-    statusString: convertStatusToString(status),
+    status: res.getStatus(),
+    statusString: STATUS_MAP[res.getStatusCode()],
     statusCode: res.getStatusCode(),
     errorMessage: res.getErrorMessage(),
     events: events.map(event => ({

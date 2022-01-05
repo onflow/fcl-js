@@ -4,6 +4,7 @@ import {build} from "../../sdk/src/build/build.js"
 import {getAccount} from "../../sdk/src/build/build-get-account.js"
 import {atBlockHeight} from "../../sdk/src/build/build-at-block-height.js"
 import {resolve} from "../../sdk/src/resolve/resolve.js"
+import {response as responseADT} from "../../sdk/src/response/response.js"
 
 const jsonToUInt8Array = (json) => {
     var str = JSON.stringify(json, null, 0);
@@ -58,6 +59,9 @@ describe("Send Get Account", () => {
             ])
         ),
         {
+            response: responseADT
+        },
+        {
             unary: unaryMock,
             node: "localhost:3000"
         }
@@ -67,7 +71,7 @@ describe("Send Get Account", () => {
 
     const unaryMockArgs = unaryMock.mock.calls[0]
 
-    expect(unaryMockArgs.length).toEqual(3)
+    expect(unaryMockArgs.length).toEqual(4)
 
     const unaryType = unaryMock.mock.calls[0][1]
 
@@ -113,6 +117,9 @@ describe("Send Get Account", () => {
             ])
         ),
         {
+            response: responseADT
+        },
+        {
             unary: unaryMock,
             node: "localhost:3000"
         }
@@ -122,7 +129,7 @@ describe("Send Get Account", () => {
 
     const unaryMockArgs = unaryMock.mock.calls[0]
 
-    expect(unaryMockArgs.length).toEqual(3)
+    expect(unaryMockArgs.length).toEqual(4)
 
     const unaryType = unaryMock.mock.calls[0][1]
 

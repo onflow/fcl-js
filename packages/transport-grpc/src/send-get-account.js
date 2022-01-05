@@ -69,7 +69,7 @@ function constructResponse(ix, context, res) {
       signAlgo: publicKey.getSignAlgo(),
       signAlgoString: SignatureAlgorithmNames[publicKey.getSignAlgo()], // New! Verify this field name for correctness.
       hashAlgo: publicKey.getHashAlgo(),
-      hashAlgoString: SignatureAlgorithmNames[publicKey.getHashAlgo()], // New! Verify this field name for correctness.
+      hashAlgoString: HashAlgorithmNames[publicKey.getHashAlgo()], // New! Verify this field name for correctness.
       weight: publicKey.getWeight(),
       sequenceNumber: publicKey.getSequenceNumber(),
       revoked: publicKey.getRevoked(),
