@@ -18,7 +18,7 @@ describe("Transaction", () => {
 
     const returnedTransactionId = "a1b2c3"
 
-    httpRequestMock.mockReturnValue(returnedTransactionId);
+    httpRequestMock.mockReturnValue({ id: returnedTransactionId });
 
     const response = await sendTransaction(
         await resolve(

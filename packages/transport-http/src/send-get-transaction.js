@@ -37,7 +37,7 @@ export async function sendGetTransaction(ix, context = {}, opts = {}) {
     gasLimit: res.gas_limit,
     payer: res.payer,
     proposalKey: res.proposal_key ? unwrapKey(res.proposal_key) : res.proposal_key,
-    authorizers: [...res.proposal_key?.authorizers],
+    authorizers: res.authorizers,
     payloadSignatures: [...res.payload_signatures.map(unwrapSignature)],
     envelopeSignatures: [...res.envelope_signatures.map(unwrapSignature)] 
   }

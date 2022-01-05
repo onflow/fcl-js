@@ -33,17 +33,18 @@ export async function sendTransaction(ix, context = {}, opts = {}) {
   // Apply Payer Signatures to Envelope Signatures
 
   // TODO: NEED TO DEDUPE ENVELOPE SIGNATURES. Look into impact on grpc send-transaction as well.
-  let envelopeSignatures = []
+  let envelopeSignatures = {}
   var j = 0
   for (let acct of Object.values(ix.accounts)) {
     try {
       if (acct.role.payer && acct.signature != null) {
-        envelopeSignatures.push({
+        let id = acct.tempId || `${acct.addr}-${acct.keyId}`
+        envelopeSignatures[id] = envelopeSignatures[id] || {
           address: sansPrefix(acct.addr),
           signer_index: j,
           key_index: acct.keyId,
           signature: acct.signature
-        })
+        }
         j = j + 1
       }
     } catch (error) {
@@ -51,6 +52,7 @@ export async function sendTransaction(ix, context = {}, opts = {}) {
       throw error
     }
   }
+  envelopeSignatures = Object.values(envelopeSignatures)
 
   var t1 = Date.now()
   const res = await httpRequest({
