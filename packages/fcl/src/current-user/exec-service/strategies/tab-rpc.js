@@ -3,7 +3,7 @@ import {tab} from "./utils/tab"
 import {normalizePollingResponse} from "../../normalize/polling-response"
 import {VERSION} from "../../../VERSION"
 
-export function execTabRPC(service, body, opts, config = {}) {
+export function execTabRPC(service, body, opts, config) {
   return new Promise((resolve, reject) => {
     const id = uid()
     const {redir, includeOlderJsonRpcCall} = opts
