@@ -1,10 +1,12 @@
 import {sendExecuteScript} from "./send-execute-script.js"
 import {build} from "../../sdk/src/build/build.js"
 import {script} from "../../sdk/src/build/build-script.js"
+import { args, arg } from "../../sdk/src/build/build-arguments.js"
 import {atBlockId} from "../../sdk/src/build/build-at-block-id.js"
 import {atBlockHeight} from "../../sdk/src/build/build-at-block-height.js"
 import {resolve} from "../../sdk/src/resolve/resolve.js"
 import {response as responseADT} from "../../sdk/src/response/response.js"
+import * as types from "@onflow/types"
 
 describe("Send Execute Script", () => {
   test("ExecuteScriptAtLatestBlock", async () => {
@@ -16,12 +18,13 @@ describe("Send Execute Script", () => {
         returnedJSONCDC
     )
 
-    const cadence = "pub fun main(): Int { return 123 }"
+    const cadence = "pub fun main(a: Int): Int { return a }"
 
     let response = await sendExecuteScript(
         await resolve(
             await build([
-                script(cadence)
+                script(cadence),
+                args([ arg( 123, types.Int ) ])
             ])
         ),
         {
@@ -45,7 +48,7 @@ describe("Send Execute Script", () => {
         hostname: "localhost",
         path: "/scripts?block_height=sealed",
         method: "POST",
-        body: { script: "cHViIGZ1biBtYWluKCk6IEludCB7IHJldHVybiAxMjMgfQ==", arguments: [] }
+        body: { script: "cHViIGZ1biBtYWluKGE6IEludCk6IEludCB7IHJldHVybiBhIH0=", arguments: ["eyJ0eXBlIjoiSW50IiwidmFsdWUiOiIxMjMifQ=="] }
     })
     expect(response.encodedData).toEqual(JSON.parse(Buffer.from(returnedJSONCDC, "base64").toString()))
   })
