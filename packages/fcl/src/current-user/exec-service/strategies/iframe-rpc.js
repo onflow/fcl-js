@@ -1,10 +1,9 @@
 import {uid} from "@onflow/util-uid"
 import {frame} from "./utils/frame"
 import {normalizePollingResponse} from "../../normalize/polling-response"
-import {configLens} from "../../../config-utils"
 import {VERSION} from "../../../VERSION"
 
-export function execIframeRPC(service, body, opts) {
+export function execIframeRPC(service, body, opts, config) {
   return new Promise((resolve, reject) => {
     const id = uid()
     const includeOlderJsonRpcCall = opts.includeOlderJsonRpcCall
@@ -14,18 +13,15 @@ export function execIframeRPC(service, body, opts) {
       async onReady(_, {send}) {
         try {
           send({
-            fclVersion: VERSION,
             type: "FCL:VIEW:READY:RESPONSE",
+            fclVersion: VERSION,
             body,
             service: {
               params: service.params,
               data: service.data,
               type: service.type,
             },
-            config: {
-              services: await configLens(/^service\./),
-              app: await configLens(/^app\.detail\./),
-            },
+            config,
           })
           send({
             fclVersion: VERSION,
@@ -36,10 +32,7 @@ export function execIframeRPC(service, body, opts) {
               data: service.data,
               type: service.type,
             },
-            config: {
-              services: await configLens(/^service\./),
-              app: await configLens(/^app\.detail\./),
-            },
+            config,
             deprecated: {
               message:
                 "FCL:FRAME:READY:RESPONSE is deprecated and replaced with type: FCL:VIEW:READY:RESPONSE",

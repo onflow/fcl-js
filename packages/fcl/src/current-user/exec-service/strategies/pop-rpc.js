@@ -1,10 +1,9 @@
 import {uid} from "@onflow/util-uid"
 import {pop} from "./utils/pop"
 import {normalizePollingResponse} from "../../normalize/polling-response"
-import {configLens} from "../../../config-utils"
 import {VERSION} from "../../../VERSION"
 
-export function execPopRPC(service, body, opts) {
+export function execPopRPC(service, body, opts, config) {
   return new Promise((resolve, reject) => {
     const id = uid()
     const {redir, includeOlderJsonRpcCall} = opts
@@ -23,10 +22,7 @@ export function execPopRPC(service, body, opts) {
               data: service.data,
               type: service.type,
             },
-            config: {
-              services: await configLens(/^service\./),
-              app: await configLens(/^app\.detail\./),
-            },
+            config,
           })
           send({
             fclVersion: VERSION,
@@ -37,10 +33,7 @@ export function execPopRPC(service, body, opts) {
               data: service.data,
               type: service.type,
             },
-            config: {
-              services: await configLens(/^service\./),
-              app: await configLens(/^app\.detail\./),
-            },
+            config,
             deprecated: {
               message:
                 "FCL:FRAME:READY:RESPONSE is deprecated and replaced with type: FCL:VIEW:READY:RESPONSE",

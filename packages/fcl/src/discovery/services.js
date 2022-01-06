@@ -9,15 +9,17 @@ async function addServices(services = []) {
   invariant(Boolean(endpoint), `"discovery.authn.endpoint" in config must be defined.`)
 
   const include = await config.get("discovery.authn.include", [])
-  const queryParams = constructApiQueryParams({version: VERSION, include})
-  const constructedEndpoint = `${endpoint}${queryParams}`
-  const url = new URL(constructedEndpoint)
+  const url = new URL(endpoint)
 
   return fetch(url, {
-    method: "GET",
+    method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
+    body: JSON.stringify({
+      fclVersion: VERSION,
+      include
+    })
   }).then(d => d.json())
   .then(json => [...services, ...json])
 }
@@ -36,18 +38,3 @@ export const getServices = ({ type }) => asyncPipe(
   addExtensions,
   s => filterServicesByType(s, type)
 )([])
-
-export const constructApiQueryParams = ({version, include}) => {
-  let queryStr = ''
-
-  if (version) {
-    queryStr = queryStr.concat(`fcl_version=${version}&`)
-  }
-  
-  if (include) {
-    const includeQueryStr = include.map(addr => `include=${addr}`).join('&')
-    queryStr = queryStr.concat(includeQueryStr)
-  }
-
-  return queryStr.length ? `?${queryStr}` : ''
-}
