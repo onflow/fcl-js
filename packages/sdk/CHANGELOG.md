@@ -1,6 +1,4 @@
-## Unreleased
-
-- YYYY-MM-DD **BREAKING?** -- Who: description
+## 0.0.56-alpha.2 -- 2021-01-05
 
 - 2021-12-17 -- [@chasefleming](https://github.com/chasefleming): Fix bug `resolveArgument` is being executed in the wrong context.
 - 2021-11-22 -- [@chasefleming](https://github.com/chasefleming): Fix bug where similar aliases in config can result in partial replacement of the wrong alias.
