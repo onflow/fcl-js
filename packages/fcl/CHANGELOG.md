@@ -1,4 +1,4 @@
-## Unreleased
+## 0.0.78-alpha.10 - 2022-01-05
 
 - 2021-12-17 -- Fix bug where `currentUser` passed as an argument is failing.
 - 2021-12-02 -- Adds optional Authentication Refresh Service to `fcl.authenticate`
