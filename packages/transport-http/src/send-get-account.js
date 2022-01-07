@@ -31,9 +31,13 @@ async function sendGetAccountAtBlockHeightRequest(ix, context, opts) {
 async function sendGetAccountAtLatestBlockRequest(ix, context, opts) {
   const httpRequest = opts.httpRequest || defaultHttpRequest
 
+  const height = ix.block?.isSealed
+  ? "sealed"
+  : "final"
+
   const res = await httpRequest({
     hostname: opts.node,
-    path: `/accounts/${ix.account.addr}`,
+    path: `/accounts/${ix.account.addr}?block_height=${height}&expand=contracts,keys`,
     method: "GET",
     body: null
   })
@@ -45,19 +49,28 @@ function constructResponse(ix, context, res) {
   let ret = context.response()
   ret.tag = ix.tag
 
+  const unwrapContracts = contracts => {
+    const c = {}
+    if (!contracts) return c
+    for (let key of Object.keys(contracts)) {
+      c[key] = Buffer.from(contracts[key], "base64").toString()
+    }
+    return c
+  }
+
   ret.account = {
     address: res.address,
     balance: res.balance,
-    code: null, // CHECK IF THIS WILL BE RETURNED AS WELL
-    contracts: res.contracts,
+    code: null,
+    contracts: unwrapContracts(res.contracts),
     keys: res.keys.map(key => ({
-      index: key.index,
+      index: Number(key.index),
       publicKey: key.public_key,
       signAlgo: SignatureAlgorithmIDs[key.signing_algorithm],
-      signAlgoString: key.signing_algorithm, // New! Verify this field name for correctness.
+      signAlgoString: key.signing_algorithm,
       hashAlgo: HashAlgorithmIDs[key.hashing_algorithm],
-      hashAlgoString: key.hashing_algorithm, // New! Verify this field name for correctness.
-      sequenceNumber: key.sequence_number,
+      hashAlgoString: key.hashing_algorithm,
+      sequenceNumber: Number(key.sequence_number),
       weight: key.weight,
       revoked: key.revoked,
     })) 

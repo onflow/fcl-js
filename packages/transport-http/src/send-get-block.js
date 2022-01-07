@@ -32,7 +32,7 @@ async function sendGetBlockRequest(ix, context, opts) {
 
   const height = ix.block?.isSealed
     ? "sealed"
-    : "finalized"
+    : "final"
 
   const res = await httpRequest({
     hostname: opts.node,

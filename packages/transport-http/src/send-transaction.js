@@ -18,8 +18,8 @@ export async function sendTransaction(ix, context = {}, opts = {}) {
       if (!acct.role.payer && acct.signature != null) {
         payloadSignatures.push({
           address: sansPrefix(acct.addr),
-          signer_index: i,
-          key_index: acct.keyId,
+          signer_index: String(i),
+          key_index: String(acct.keyId),
           signature: acct.signature
         })
         i = i + 1
@@ -41,8 +41,8 @@ export async function sendTransaction(ix, context = {}, opts = {}) {
         let id = acct.tempId || `${acct.addr}-${acct.keyId}`
         envelopeSignatures[id] = envelopeSignatures[id] || {
           address: sansPrefix(acct.addr),
-          signer_index: j,
-          key_index: acct.keyId,
+          signer_index: String(j),
+          key_index: String(acct.keyId),
           signature: acct.signature
         }
         j = j + 1
@@ -60,15 +60,15 @@ export async function sendTransaction(ix, context = {}, opts = {}) {
     path: `/transactions`,
     method: "POST",
     body: {
-      script: ix.message.cadence,
-      arguments: [...ix.message.arguments.map(arg => ix.arguments[arg].asArgument)],
+      script: Buffer.from(ix.message.cadence).toString("base64"),
+      "arguments": [...ix.message.arguments.map(arg => Buffer.from(JSON.stringify(ix.arguments[arg].asArgument)).toString("base64"))],
       reference_block_id: ix.message.refBlock ? ix.message.refBlock : null,
-      gas_limit: ix.message.computeLimit,
+      gas_limit: String(ix.message.computeLimit),
       payer: sansPrefix(ix.accounts[ix.payer].addr),
       proposal_key: {
         address: sansPrefix(ix.accounts[ix.proposer].addr),
-        key_index: ix.accounts[ix.proposer].keyId,
-        sequence_number: ix.accounts[ix.proposer].sequenceNum,
+        key_index: String(ix.accounts[ix.proposer].keyId),
+        sequence_number: String(ix.accounts[ix.proposer].sequenceNum),
       },
       authorizers: ix.authorizations
         .map(tempId => ix.accounts[tempId].addr)
