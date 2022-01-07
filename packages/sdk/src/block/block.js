@@ -11,10 +11,10 @@ export function block({sealed = false, id, height} = {}) {
   )
 
   // Get block by ID
-  if (id) return send([getBlock(sealed), atBlockId(id)]).then(decode)
+  if (id) return send([getBlock(), atBlockId(id)]).then(decode)
 
   // Get block by height
-  if (height) return send([getBlock(sealed), atBlockHeight(height)]).then(decode)
+  if (height) return send([getBlock(), atBlockHeight(height)]).then(decode)
 
   // Get latest block
   return send([getBlock(sealed)]).then(decode)
