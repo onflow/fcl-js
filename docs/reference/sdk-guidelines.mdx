@@ -94,7 +94,7 @@ await fcl.send([fcl.getBlock(), fcl.atBlockHeight(123)]).then(fcl.decode)
 Result output: [BlockObject](https://docs.onflow.org/fcl/reference/api/#blockobject)
 
 ### Get Account
-[<img src="https://raw.githubusercontent.com/onflow/sdks/main/templates/documentation/ref.svg" width="130">](https://docs.onflow.org/fcl/reference/api/#account)
+[<img src="https://raw.githubusercontent.com/onflow/sdks/main/templates/documentation/ref.svg" width="130" />](https://docs.onflow.org/fcl/reference/api/#account)
 
 Retrieve any account from Flow network's latest block or from a specified block height.
 
@@ -125,7 +125,7 @@ Result output: [AccountObject](https://docs.onflow.org/fcl/reference/api/#accoun
 
 
 ### Get Transactions
-[<img src="https://raw.githubusercontent.com/onflow/sdks/main/templates/documentation/ref.svg" width="130">](https://docs.onflow.org/fcl/reference/api/#gettransaction)
+[<img src="https://raw.githubusercontent.com/onflow/sdks/main/templates/documentation/ref.svg" width="130" />](https://docs.onflow.org/fcl/reference/api/#gettransaction)
 
 Retrieve transactions from the network by providing a transaction ID. After a transaction has been submitted, you can also get the transaction result to check the status.
 
@@ -166,7 +166,7 @@ Result output: [TransactionObject](https://docs.onflow.org/fcl/reference/api/#ge
 
 
 ### Get Events
-[<img src="https://raw.githubusercontent.com/onflow/sdks/main/templates/documentation/ref.svg" width="130">](https://docs.onflow.org/fcl/reference/api/#geteventsatblockheightrange)
+[<img src="https://raw.githubusercontent.com/onflow/sdks/main/templates/documentation/ref.svg" width="130" />](https://docs.onflow.org/fcl/reference/api/#geteventsatblockheightrange)
 
 Retrieve events by a given type in a specified block height range or through a list of block IDs.
 
@@ -210,7 +210,7 @@ await fcl
 Result output: [EventObject](https://docs.onflow.org/fcl/reference/api/#event-object)
 
 ### Get Collections
-[<img src="https://raw.githubusercontent.com/onflow/sdks/main/templates/documentation/ref.svg" width="130">](https://docs.onflow.org/fcl/reference/api/#getcollection)
+[<img src="https://raw.githubusercontent.com/onflow/sdks/main/templates/documentation/ref.svg" width="130" />](https://docs.onflow.org/fcl/reference/api/#getcollection)
 
 Retrieve a batch of transactions that have been included in the same block, known as ***collections***. 
 Collections are used to improve consensus throughput by increasing the number of transactions per block and they act as a link between a block and a transaction.
@@ -232,7 +232,7 @@ const collection = await fcl
 Result output: [CollectionObject](https://docs.onflow.org/fcl/reference/api/#collectionobject)
 
 ### Execute Scripts
-[<img src="https://raw.githubusercontent.com/onflow/sdks/main/templates/documentation/ref.svg" width="130">](https://docs.onflow.org/fcl/reference/api/#query)
+[<img src="https://raw.githubusercontent.com/onflow/sdks/main/templates/documentation/ref.svg" width="130" />](https://docs.onflow.org/fcl/reference/api/#query)
 
 Scripts allow you to write arbitrary non-mutating Cadence code on the Flow blockchain and return data. You can learn more about [Cadence here](https://docs.onflow.org/cadence/language/) and [scripts here](https://docs.onflow.org/fcl/reference/scripts/), but we are now only interested in executing the script code and getting back the data.
 
@@ -317,7 +317,7 @@ A transaction will be rejected if it is submitted past its expiry block. Flow ca
 A transaction expires after `600` blocks are committed on top of the reference block, which takes about 10 minutes at average Mainnet block rates.
 
 ### Mutate
-[<img src="https://raw.githubusercontent.com/onflow/sdks/main/templates/documentation/ref.svg" width="130">](https://docs.onflow.org/fcl/reference/api/#mutate)
+[<img src="https://raw.githubusercontent.com/onflow/sdks/main/templates/documentation/ref.svg" width="130" />](https://docs.onflow.org/fcl/reference/api/#mutate)
 
 FCL "mutate" does the work of building, signing, and sending a transaction behind the scenes. In order to mutate the blockchain state using FCL, you need to do the following:
 
@@ -422,7 +422,7 @@ mutate({
 | `0x01`  | 1      | 500    |
 | `0x01`  | 2      | 500    |
 
-**[<img src="https://raw.githubusercontent.com/onflow/sdks/main/templates/documentation/try.svg" width="130">](https://github.com/onflow/flow-go-sdk/tree/master/examples#single-party-multiple-signatures)**
+**[<img src="https://raw.githubusercontent.com/onflow/sdks/main/templates/documentation/try.svg" width="130" />](https://github.com/onflow/flow-go-sdk/tree/master/examples#single-party-multiple-signatures)**
 ```javascript
 import * as fcl from "@onflow/fcl"
 
@@ -481,7 +481,7 @@ mutate({
 | `0x01`  | 1      | 1000   |
 | `0x02`  | 3      | 1000   |
 
-**[<img src="https://raw.githubusercontent.com/onflow/sdks/main/templates/documentation/try.svg" width="130">](https://github.com/onflow/flow-go-sdk/tree/master/examples#multiple-parties)**
+**[<img src="https://raw.githubusercontent.com/onflow/sdks/main/templates/documentation/try.svg" width="130" />](https://github.com/onflow/flow-go-sdk/tree/master/examples#multiple-parties)**
 ```javascript
 import * as fcl from "@onflow/fcl"
 
@@ -542,7 +542,7 @@ mutate({
 | `0x01`  | 1      | 1000   |
 | `0x02`  | 3      | 1000   |
 
-**[<img src="https://raw.githubusercontent.com/onflow/sdks/main/templates/documentation/try.svg" width="130">](https://github.com/onflow/flow-go-sdk/tree/master/examples#multiple-parties-two-authorizers)**
+**[<img src="https://raw.githubusercontent.com/onflow/sdks/main/templates/documentation/try.svg" width="130" />](https://github.com/onflow/flow-go-sdk/tree/master/examples#multiple-parties-two-authorizers)**
 ```javascript
 import * as fcl from "@onflow/fcl"
 
@@ -605,7 +605,7 @@ mutate({
 | `0x02`  | 3      | 500    |
 | `0x02`  | 4      | 500    |
 
-**[<img src="https://raw.githubusercontent.com/onflow/sdks/main/templates/documentation/try.svg" width="130">]()** // TODO example link
+**[<img src="https://raw.githubusercontent.com/onflow/sdks/main/templates/documentation/try.svg" width="130" />]()** // TODO example link
 ```javascript
 import * as fcl from "@onflow/fcl"
 
