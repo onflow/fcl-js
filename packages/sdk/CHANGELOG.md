@@ -5,8 +5,8 @@
 ```javascript
 await sdk.block() // get latest block
 await sdk.block({sealed: true}) // get latest sealed block
-await sdk.block({ id: 'abc' }) // get block by id
-await sdk.block({ height: 123 }) // get block by height
+await sdk.block({id: 'abc'}) // get block by id
+await sdk.block({height: 123}) // get block by height
 ```
 
 ## 0.0.56-alpha.2 -- 2022-01-05
