@@ -39,6 +39,7 @@ export {template as cdc} from "@onflow/util-template"
 // Helpers
 export {latestBlock} from "./latest-block/latest-block.js"
 export {account} from "./account/account.js"
+export {block} from "./block/block.js"
 
 // Builders
 export {authorizations, authorization} from "./build/build-authorizations.js"
