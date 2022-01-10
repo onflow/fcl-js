@@ -1,7 +1,7 @@
 <br />
 <div align="center">
   <a href="">
-    <img src="./" alt="Logo" width="300" height="auto">
+    <img src="./" alt="Logo" width="300" height="auto" />
   </a>
   <p align="center"> <br />
     <a href=""><strong>View on GitHub »</strong></a> <br /><br />
