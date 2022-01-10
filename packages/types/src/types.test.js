@@ -13,6 +13,7 @@ import * as t from "./types.js"
   [t.UInt32, 32, {type: "UInt32", value: "32"}, 32],
   [t.Int64, 64, {type: "Int64", value: "64"}, 64],
   [t.UInt64, 64, {type: "UInt64", value: "64"}, 64],
+  [t.UInt64, 18446744073709551615n, {type: "UInt64", value: "18446744073709551615"}, 18446744073709551615n],
   [t.Int128, 128, {type: "Int128", value: "128"}, 128],
   [t.UInt128, 128, {type: "UInt128", value: "128"}, 128],
   [t.Int256, 256, {type: "Int256", value: "256"}, 256],

@@ -2,6 +2,8 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+- 2022-01-10 -- Support `bigint` numbers being encoded as JSON-Cadence Data Interchange Format for `UInt64`.
+
 ### 0.0.6 -- 2021-11-16
 
 - 2021-11-16 Added `t.Path`

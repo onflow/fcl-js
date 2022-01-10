@@ -11,6 +11,7 @@ const isBoolean = (d) => typeof d === "boolean"
 const isNumber = (d) => typeof d === "number"
 const isInteger = (d) => Number.isInteger(d)
 const isString = (d) => typeof d === "string"
+const isBigInt = (d) => typeof d === "bigint"
 
 const throwTypeError = (msg) => {
   throw new Error("Type Error: " + msg)
@@ -129,12 +130,12 @@ export const Int32 = type(
 export const UInt64 = type(
   "UInt64",
   (v) => {
-    if (isNumber(v) && isInteger(v))
+    if ((isNumber(v) && isInteger(v)) || isBigInt(v))
       return {
         type: "UInt64",
         value: v.toString(),
       }
-    throwTypeError("Expected integer for UInt64")
+    throwTypeError("Expected integer or bigint for UInt64")
   },
   (v) => v
 )
