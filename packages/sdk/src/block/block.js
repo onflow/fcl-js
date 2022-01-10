@@ -6,6 +6,11 @@ import {atBlockHeight, atBlockId} from "../sdk"
 
 export function block({sealed = false, id, height} = {}) {
   invariant(
+    !((sealed && id) || (sealed && height)),
+    `Cannot pass "sealed" with "id" or "height"`
+  )
+
+  invariant(
     !(id && height),
     `Cannot pass "id" and "height" simultaneously`
   )
