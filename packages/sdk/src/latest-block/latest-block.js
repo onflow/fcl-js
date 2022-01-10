@@ -21,5 +21,17 @@ export function latestBlock(...args) {
     )
   }
 
+  console.warn(
+    `
+      %cFCL/SDK Deprecation Notice
+      ============================
+  
+      "latestBlock()" is deprecated, please use "block()" for this and future versions of FCL
+  
+      ============================
+    `,
+      "font-weight:bold;font-family:monospace;"
+  ) 
+
   return send([getBlock(isSealed)], opts).then(decode)
 }
