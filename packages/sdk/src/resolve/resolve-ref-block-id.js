@@ -1,12 +1,25 @@
 import {isTransaction, Ok, interaction, pipe} from "../interaction/interaction.js"
-import {send} from "../send/sdk-send.js"
+import {send as defaultGRPCSend} from "@onflow/transport-grpc"
+import * as ixModule from "../interaction/interaction.js"
+import {response} from "../response/response.js"
+import {config} from "../config"
 import {decodeResponse} from "../decode/decode.js"
 import {getBlock} from "../build/build-get-block.js"
 
 async function getRefId (opts) {
+  const node = await config().get("accessNode.api")
+  const sendFn = await config.first(
+    ["sdk.transport", "sdk.send"],
+    defaultGRPCSend
+  )
+
   var ix
   ix = await pipe(interaction(), [getBlock()])
-  ix = await send(ix, opts)
+  ix = await sendFn(
+    ix,
+    {config, response, ix: ixModule},
+    {node}
+  )
   ix = await decodeResponse(ix)
   return ix.id
 }

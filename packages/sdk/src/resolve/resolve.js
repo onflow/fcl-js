@@ -1,8 +1,9 @@
 import {pipe, isTransaction} from "../interaction/interaction.js"
 import {config} from "../config"
 import {invariant} from "@onflow/util-invariant"
-
-import {send} from "../send/sdk-send.js"
+import * as ixModule from "../interaction/interaction.js"
+import {response} from "../response/response.js"
+import {send as defaultGRPCSend} from "@onflow/transport-grpc"
 import {build} from "../build/build.js"
 import {getBlock} from "../build/build-get-block.js"
 import {getAccount} from "../build/build-get-account.js"
@@ -63,20 +64,32 @@ export const resolve = pipe([
 
 async function execFetchRef(ix) {
   if (isTransaction(ix) && ix.message.refBlock == null) {
-    const sendFn = await config.first(["sdk.transport", "sdk.send"], send)
-    ix.message.refBlock = (await sendFn(build([getBlock()])).then(decode)).id
+    const node = await config().get("accessNode.api")
+    const sendFn = await config.first(
+      ["sdk.transport", "sdk.send"],
+      defaultGRPCSend
+    )
+
+    ix.message.refBlock = (await sendFn(build([getBlock()]), {config, response, ix: ixModule}, {node}).then(decode)).id
   }
   return ix
 }
 
 async function execFetchSequenceNumber(ix) {
   if (isTransaction(ix)) {
-    const sendFn = await config.first(["sdk.transport", "sdk.send"], send)
+    const node = await config().get("accessNode.api")
+    const sendFn = await config.first(
+      ["sdk.transport", "sdk.send"],
+      defaultGRPCSend
+    )
+
     var acct = Object.values(ix.accounts).find(a => a.role.proposer)
     invariant(acct, `Transactions require a proposer`)
     if (acct.sequenceNum == null) {
       ix.accounts[acct.tempId].sequenceNum = await sendFn(
-        await build([getAccount(acct.addr)])
+        await build([getAccount(acct.addr)]),
+        {config, response, ix: ixModule},
+        {node}
       )
         .then(decode)
         .then(acct => acct.keys)
