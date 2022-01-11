@@ -20,7 +20,7 @@ export async function sendTransaction(ix, context = {}, opts = {}) {
           address: sansPrefix(acct.addr),
           signer_index: String(i),
           key_index: String(acct.keyId),
-          signature: acct.signature
+          signature: Buffer.from(acct.signature).toString("base64")
         })
         i = i + 1
       }
@@ -43,7 +43,7 @@ export async function sendTransaction(ix, context = {}, opts = {}) {
           address: sansPrefix(acct.addr),
           signer_index: String(j),
           key_index: String(acct.keyId),
-          signature: acct.signature
+          signature: Buffer.from(acct.signature).toString("base64")
         }
         j = j + 1
       }
