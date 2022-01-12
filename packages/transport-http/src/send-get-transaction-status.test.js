@@ -11,14 +11,14 @@ describe("Get Transaction Status", () => {
     const returnedTransactionStatus = {
         status: "Pending",
         error_message: "No Error",
-        computation_used: 100,
+        computation_used: "100",
         block_id: "abc123",
         events: [
             {
                 type: "MyEvent",
                 transaction_id: "a1b2c3",
-                transaction_index: 123,
-                event_index: 456,
+                transaction_index: "123",
+                event_index: "456",
                 payload: {type: "String", value: "Hello, Flow"}
             }
         ]

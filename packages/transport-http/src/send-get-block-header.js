@@ -45,14 +45,15 @@ async function sendGetLatestBlockHeaderRequest(ix, context, opts) {
 }
 
 function constructResponse(ix, context, res) {
+  const block = res.length ? res[0] : null
 
   const ret = context.response()
   ret.tag = ix.tag
   ret.blockHeader = {
-    id: res.header.id,
-    parentId: res.header.parent_id,
-    height: res.header.height,
-    timestamp: res.header.timestamp,
+    id: block.header.id,
+    parentId: block.header.parent_id,
+    height: Number(block.header.height),
+    timestamp: block.header.timestamp,
   }
 
   return ret

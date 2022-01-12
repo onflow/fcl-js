@@ -12,12 +12,12 @@ describe("Get Transaction", () => {
         script: "Cadence Code",
         arguments: [],
         reference_block_id: "a1b2c3",
-        gas_limit: 123,
+        gas_limit: "123",
         proposal_key: {
             address: "1654653399040a61",
-            key_id: 1,
-            signer_index: 0,
-            sequence_number: 1
+            key_id: "1",
+            signer_index: "0",
+            sequence_number: "1"
         },
         payer: "1654653399040a61",
         authorizers: [],

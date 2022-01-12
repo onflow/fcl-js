@@ -12,14 +12,14 @@ describe("Send Get Block Header", () => {
 
     const dateNow = new Date(Date.now())
 
-    const returnedBlockHeader = {
+    const returnedBlockHeader = [{
         header: {
             id: "a1b2c3",
             parent_id: "a1b2c3",
-            height: 123,
+            height: "123",
             timestamp: dateNow.toISOString(),
         }
-    }
+    }]
 
     httpRequestMock.mockReturnValue(returnedBlockHeader);
 
@@ -67,14 +67,14 @@ describe("Send Get Block Header", () => {
 
     const dateNow = new Date(Date.now())
 
-    const returnedBlockHeader = {
+    const returnedBlockHeader = [{
         header: {
             id: "a1b2c3",
             parent_id: "a1b2c3",
-            height: 123,
+            height: "123",
             timestamp: dateNow.toISOString(),
         }
-    }
+    }]
 
     httpRequestMock.mockReturnValue(returnedBlockHeader);
 
@@ -122,14 +122,14 @@ describe("Send Get Block Header", () => {
 
     const dateNow = new Date(Date.now())
 
-    const returnedBlockHeader = {
+    const returnedBlockHeader = [{
         header: {
             id: "a1b2c3",
             parent_id: "a1b2c3",
-            height: 123,
+            height: "123",
             timestamp: dateNow.toISOString(),
         }
-    }
+    }]
 
     httpRequestMock.mockReturnValue(returnedBlockHeader);
 
@@ -176,14 +176,14 @@ describe("Send Get Block Header", () => {
 
     const dateNow = new Date(Date.now())
 
-    const returnedBlockHeader = {
+    const returnedBlockHeader = [{
         header: {
             id: "a1b2c3",
             parent_id: "a1b2c3",
             height: 123,
             timestamp: dateNow.toISOString(),
         }
-    }
+    }]
 
     httpRequestMock.mockReturnValue(returnedBlockHeader);
 

@@ -31,16 +31,19 @@ function constructResponse(ix, context, res) {
   let ret = context.response()
   ret.tag = ix.tag
 
-  ret.events = res.events?.map(event => ({
-    blockId: res.block_id,
-    blockHeight: res.block_height,
-    blockTimestamp: res.block_timestamp,
-    type: event.type,
-    transactionId: event.transaction_id,
-    transactionIndex: event.transaction_index, 
-    eventIndex: event.event_index,
-    payload: JSON.parse(Buffer.from(event.payload, "base64").toString())
-  }))
+  ret.events = []
+  res.forEach(block => block.events ? 
+    block.events.forEach(event => ret.events.push({
+      blockId: block.block_id,
+      blockHeight: Number(block.block_height),
+      blockTimestamp: block.block_timestamp,
+      type: event.type,
+      transactionId: event.transaction_id,
+      transactionIndex: Number(event.transaction_index), 
+      eventIndex: Number(event.event_index),
+      payload: JSON.parse(Buffer.from(event.payload, "base64").toString())
+    })) : null
+  )
 
   return ret
 }

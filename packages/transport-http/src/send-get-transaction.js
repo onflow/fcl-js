@@ -18,13 +18,13 @@ export async function sendGetTransaction(ix, context = {}, opts = {}) {
 
   const unwrapKey = key => ({
     address: key.address,
-    keyId: key.key_id,
-    sequenceNumber: key.sequence_number
+    keyId: Number(key.key_id),
+    sequenceNumber: Number(key.sequence_number)
   })
 
   const unwrapSignature = sig => ({
     address: sig.address,
-    keyId: sig.key_index,
+    keyId: Number(sig.key_index),
     signature: sig.signature
   })
 
@@ -34,7 +34,7 @@ export async function sendGetTransaction(ix, context = {}, opts = {}) {
     script: res.script,
     args: [...res.arguments],
     referenceBlockId: res.reference_block_id,
-    gasLimit: res.gas_limit,
+    gasLimit: Number(res.gas_limit),
     payer: res.payer,
     proposalKey: res.proposal_key ? unwrapKey(res.proposal_key) : res.proposal_key,
     authorizers: res.authorizers,

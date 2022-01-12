@@ -16,7 +16,7 @@ describe("Send Get Block", () => {
         header: {
             id: "a1b2c3",
             parent_id: "a1b2c3",
-            height: 123,
+            height: "123",
             timestamp: dateNow.toISOString(),
         },
         payload: {
@@ -79,7 +79,7 @@ describe("Send Get Block", () => {
         header: {
             id: "a1b2c3",
             parent_id: "a1b2c3",
-            height: 123,
+            height: "123",
             timestamp: dateNow.toISOString(),
         },
         payload: {
@@ -142,7 +142,7 @@ describe("Send Get Block", () => {
         header: {
             id: "a1b2c3",
             parent_id: "a1b2c3",
-            height: 123,
+            height: "123",
             timestamp: dateNow.toISOString(),
         },
         payload: {
@@ -179,7 +179,7 @@ describe("Send Get Block", () => {
 
     expect(valueSent).toEqual({
         hostname: "localhost",
-        path: "/blocks?height=finalized&expand=payload",
+        path: "/blocks?height=final&expand=payload",
         method: "GET",
         body: null
     })
@@ -204,7 +204,7 @@ describe("Send Get Block", () => {
         header: {
             id: "a1b2c3",
             parent_id: "a1b2c3",
-            height: 123,
+            height: "123",
             timestamp: dateNow.toISOString(),
         },
         payload: {
