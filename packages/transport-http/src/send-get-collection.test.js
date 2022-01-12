@@ -43,7 +43,7 @@ describe("Send Get Collection", () => {
 
     expect(valueSent).toEqual({
         hostname: "localhost",
-        path: "/collections/a1b2c3",
+        path: "/collections/a1b2c3?expand=transactions",
         method: "GET",
         body: null
     })

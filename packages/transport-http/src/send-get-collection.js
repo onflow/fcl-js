@@ -9,7 +9,7 @@ export async function sendGetCollection(ix, context = {}, opts = {}) {
 
   const res = await httpRequest({
     hostname: opts.node,
-    path: `/collections/${ix.collection.id}`,
+    path: `/collections/${ix.collection.id}?expand=transactions`,
     method: "GET",
     body: null
   })

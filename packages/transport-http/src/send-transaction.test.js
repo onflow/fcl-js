@@ -91,15 +91,15 @@ describe("Transaction", () => {
         path: "/transactions",
         method: "POST",
         body: {
-            "script": "cadence transaction",
+            "script": "Y2FkZW5jZSB0cmFuc2FjdGlvbg==",
             "arguments": [],
             "reference_block_id": "abc123",
-            "gas_limit": 500,
+            "gas_limit": "500",
             "payer": "f8d6e0586b0a20c7",
             "proposal_key": {
                 "address": "f8d6e0586b0a20c7",
-                "key_index": 1,
-                "sequence_number": 123
+                "key_index": "1",
+                "sequence_number": "123"
             },
             "authorizers": [
                 "f8d6e0586b0a20c7"
@@ -107,17 +107,17 @@ describe("Transaction", () => {
             "payload_signatures": [
                 {
                     "address": "f8d6e0586b0a20c7",
-                    "signer_index": 0,
-                    "key_index": 1,
-                    "signature": "abc123",
+                    "signer_index": "0",
+                    "key_index": "1",
+                    "signature": "YWJjMTIz",
                 }
             ],
             "envelope_signatures": [
                 {
                     "address": "f8d6e0586b0a20c7",
-                    "signer_index": 0,
-                    "key_index": 1,
-                    "signature": "abc123"
+                    "signer_index": "0",
+                    "key_index": "1",
+                    "signature": "YWJjMTIz"
                 }
             ]
         }

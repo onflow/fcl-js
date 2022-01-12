@@ -35,8 +35,8 @@ export async function sendGetTransactionStatus(ix, context = {}, opts = {}) {
     events: res.events.map(event => ({
       type: event.type,
       transactionId: event.transaction_id,
-      transactionIndex: event.transaction_index,
-      eventIndex: event.event_index,
+      transactionIndex: Number(event.transaction_index),
+      eventIndex: Number(event.event_index),
       payload: event.payload
     }))
   }

@@ -13,16 +13,18 @@ describe("Send Get Events", () => {
 
     const returnedEvents = [
         {
-            blockId: "a1b2c3",
-            blockHeight: 123,
-            blockTimestamp: dateNow.toISOString(),
-            type: "MyEvent",
-            transactionId: "a1b2c3",
-            transactionIndex: 123,
-            eventIndex: 456,
-            payload: {type: "String", value: "Hello, Flow"}
+            block_id: "a1b2c3",
+            block_height: "123",
+            block_timestamp: dateNow.toISOString(),
+            events: [{
+                type: "MyEvent",
+                transaction_id: "a1b2c3",
+                transaction_index: "123",
+                event_index: "456",
+                payload: Buffer.from(JSON.stringify({type: "String", value: "Hello, Flow"})).toString("base64")
+            }]
         }
-    ]   
+    ] 
 
     httpRequestMock.mockReturnValue(returnedEvents)
 
@@ -56,7 +58,16 @@ describe("Send Get Events", () => {
         body: null
     })
 
-    expect(response.events[0]).toStrictEqual(returnedEvents[0])
+    expect(response.events[0]).toStrictEqual({
+        blockId: "a1b2c3",
+        blockHeight: 123,
+        blockTimestamp: dateNow.toISOString(),
+        type: "MyEvent",
+        transactionId: "a1b2c3",
+        transactionIndex: 123,
+        eventIndex: 456,
+        payload: {type: "String", value: "Hello, Flow"}
+    })
   })
 
   test("GetEventsForHeightRange", async () => {
@@ -66,14 +77,16 @@ describe("Send Get Events", () => {
 
     const returnedEvents = [
         {
-            blockId: "a1b2c3",
-            blockHeight: 123,
-            blockTimestamp: dateNow.toISOString(),
-            type: "MyEvent",
-            transactionId: "a1b2c3",
-            transactionIndex: 123,
-            eventIndex: 456,
-            payload: {type: "String", value: "Hello, Flow"}
+            block_id: "a1b2c3",
+            block_height: "123",
+            block_timestamp: dateNow.toISOString(),
+            events: [{
+                type: "MyEvent",
+                transaction_id: "a1b2c3",
+                transaction_index: "123",
+                event_index: "456",
+                payload: Buffer.from(JSON.stringify({type: "String", value: "Hello, Flow"})).toString("base64")
+            }]
         }
     ]   
 
@@ -109,7 +122,16 @@ describe("Send Get Events", () => {
         body: null
     })
 
-    expect(response.events[0]).toStrictEqual(returnedEvents[0])
+    expect(response.events[0]).toStrictEqual({
+        blockId: "a1b2c3",
+        blockHeight: 123,
+        blockTimestamp: dateNow.toISOString(),
+        type: "MyEvent",
+        transactionId: "a1b2c3",
+        transactionIndex: 123,
+        eventIndex: 456,
+        payload: {type: "String", value: "Hello, Flow"}
+    })
   })
 
 })

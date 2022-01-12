@@ -52,7 +52,7 @@ function constructResponse(ix, context, res) {
   ret.block = {
     id: block.header.id,
     parentId: block.header.parent_id,
-    height: block.header.height,
+    height: Number(block.header.height),
     timestamp: block.header.timestamp,
     collectionGuarantees: block.payload.collection_guarantees.map(collectionGuarantee => ({
       collectionId: collectionGuarantee.collection_id,
