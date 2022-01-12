@@ -1,5 +1,5 @@
 import {isTransaction, Ok} from "../interaction/interaction.js"
-import {send as defaultGRPCSend} from "@onflow/transport-grpc"
+import {send as defaultHTTPSend} from "@onflow/transport-http"
 import * as ixModule from "../interaction/interaction.js"
 import {response as responseModule} from "../response/response.js"
 import {config} from "../config"
@@ -13,7 +13,7 @@ export const resolveProposerSequenceNumber = ({ node }) => async (ix) => {
 
   const sendFn = await config.first(
     ["sdk.transport", "sdk.send"],
-    defaultGRPCSend
+    defaultHTTPSend
   )
 
   const response = await sendFn(

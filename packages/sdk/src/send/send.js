@@ -2,12 +2,12 @@ import * as ix from "../interaction/interaction.js"
 import {response} from "../response/response.js"
 import {config} from "../config"
 import {resolve as defaultResolve} from "../resolve/resolve.js"
-import {send as defaultGRPCSend} from "@onflow/transport-grpc"
+import {send as defaultHTTPsend} from "@onflow/transport-http"
 
 export const send = async (args = [], opts = {}) => {
   const sendFn = await config.first(
     ["sdk.transport", "sdk.send"],
-    opts.send || defaultGRPCSend
+    opts.send || defaultHTTPsend
   )
 
   const resolveFn = await config.first(

@@ -1,5 +1,5 @@
 import {isTransaction, Ok, interaction, pipe} from "../interaction/interaction.js"
-import {send as defaultGRPCSend} from "@onflow/transport-grpc"
+import {send as defaultHTTPSend} from "@onflow/transport-http"
 import * as ixModule from "../interaction/interaction.js"
 import {response} from "../response/response.js"
 import {config} from "../config"
@@ -10,7 +10,7 @@ async function getRefId (opts) {
   const node = await config().get("accessNode.api")
   const sendFn = await config.first(
     ["sdk.transport", "sdk.send"],
-    defaultGRPCSend
+    defaultHTTPSend
   )
 
   var ix

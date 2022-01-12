@@ -3,7 +3,7 @@ import {config} from "../config"
 import {invariant} from "@onflow/util-invariant"
 import * as ixModule from "../interaction/interaction.js"
 import {response} from "../response/response.js"
-import {send as defaultGRPCSend} from "@onflow/transport-grpc"
+import {send as defaultHTTPSend} from "@onflow/transport-http"
 import {build} from "../build/build.js"
 import {getBlock} from "../build/build-get-block.js"
 import {getAccount} from "../build/build-get-account.js"
@@ -67,7 +67,7 @@ async function execFetchRef(ix) {
     const node = await config().get("accessNode.api")
     const sendFn = await config.first(
       ["sdk.transport", "sdk.send"],
-      defaultGRPCSend
+      defaultHTTPSend
     )
 
     ix.message.refBlock = (await sendFn(build([getBlock()]), {config, response, ix: ixModule}, {node}).then(decode)).id
@@ -80,7 +80,7 @@ async function execFetchSequenceNumber(ix) {
     const node = await config().get("accessNode.api")
     const sendFn = await config.first(
       ["sdk.transport", "sdk.send"],
-      defaultGRPCSend
+      defaultHTTPSend
     )
 
     var acct = Object.values(ix.accounts).find(a => a.role.proposer)
