@@ -12,7 +12,7 @@ describe("Send Get Account", () => {
     const returnedAccount = {
         address: "0x1654653399040a61",
         keys: [],
-        balance: 10,
+        balance: "10",
         contracts: {},
         code: null
     }
@@ -49,7 +49,13 @@ describe("Send Get Account", () => {
         method: "GET",
         body: null
     })
-    expect(response.account).toEqual(returnedAccount)
+    expect(response.account).toEqual({
+        address: "0x1654653399040a61",
+        keys: [],
+        balance: 10,
+        contracts: {},
+        code: ""
+    })
   
   })
 
@@ -59,7 +65,7 @@ describe("Send Get Account", () => {
     const returnedAccount = {
         address: "0x1654653399040a61",
         keys: [],
-        balance: 10,
+        balance: "10",
         contracts: {},
         code: null
     }
@@ -95,7 +101,13 @@ describe("Send Get Account", () => {
         method: "GET",
         body: null
     })
-    expect(response.account).toEqual(returnedAccount)
+    expect(response.account).toEqual({
+        address: "0x1654653399040a61",
+        keys: [],
+        balance: 10,
+        contracts: {},
+        code: ""
+    })
   })
 
 })

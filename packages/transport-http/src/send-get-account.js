@@ -60,8 +60,8 @@ function constructResponse(ix, context, res) {
 
   ret.account = {
     address: res.address,
-    balance: res.balance,
-    code: null,
+    balance: Number(res.balance),
+    code: "",
     contracts: unwrapContracts(res.contracts),
     keys: res.keys.map(key => ({
       index: Number(key.index),
@@ -71,7 +71,7 @@ function constructResponse(ix, context, res) {
       hashAlgo: HashAlgorithmIDs[key.hashing_algorithm],
       hashAlgoString: key.hashing_algorithm,
       sequenceNumber: Number(key.sequence_number),
-      weight: key.weight,
+      weight: Number(key.weight),
       revoked: key.revoked,
     })) 
   }
