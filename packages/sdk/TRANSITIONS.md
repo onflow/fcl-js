@@ -2,7 +2,7 @@
 
 ## 0008 Deprecate Latest Block Method
 
-- **Date:** Jan 14th 2021
+- **Date:** Jan 14th 2022
 - **Type:** Deprecation of latestBlock method
 
 For JS-SDK versions 0.0.55 and below, getting the latest block looked like this:
@@ -34,7 +34,7 @@ cease to exist.
 
 - **Date:** Feb 2nd 2021
 - **Type:** Deprecation of options as first arguemnt to latestBlock
-- **Removed:** Jan 14th 2021
+- **Removed:** Jan 14th 2022
 
 For JS-SDK versions 0.0.44 and below, getting the latest block looked like this:
 
