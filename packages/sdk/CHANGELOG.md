@@ -1,12 +1,20 @@
-## 0.0.56-alpha.3 -- 2022-01-19
+## 0.0.56-alpha.3 -- 2022-01-13
 
-- 2022-01-07 -- [@chasefleming](https://github.com/chasefleming): Create methods for more easily getting a block by height or by id.
+- 2022-01-13 -- [@JeffreyDoyle](https://github.com/JeffreyDoyle): Abstracts away the SDK transport modules into their own packages. The JS-SDK now makes use of transport modules for sending an interaction to an access api and receiving a response. By default, the SDK is configured to use `@onflow/transport-http` as it's transport module, however it can be overridden by specifying the desired transport module in config:
 
 ```javascript
-await sdk.block() // get latest finalized block
-await sdk.block({sealed: true}) // get latest sealed block
-await sdk.block({id: 'abc'}) // get block by id
-await sdk.block({height: 123}) // get block by height
+import {send as grpcSend} from "@onflow/transport-grpc"
+import {send as httpSend} from "@onflow/transport-http"
+
+// Configure SDK to use GRPC
+sdk.config()
+.put("accessNode.api", "https://access-testnet.onflow.org")
+.put("sdk.transport", grpcSend)
+
+// Configure SDK to use HTTP (by default the SDK will use the HTTP transport)
+sdk.config()
+.put("accessNode.api", "https://rest-testnet.onflow.org/v1")
+.put("sdk.transport", httpSend)
 ```
 
 ## 0.0.56-alpha.2 -- 2022-01-05
