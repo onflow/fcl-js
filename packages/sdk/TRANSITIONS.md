@@ -34,6 +34,7 @@ cease to exist.
 
 - **Date:** Feb 2nd 2021
 - **Type:** Deprecation of options as first arguemnt to latestBlock
+- **Removed:** Jan 14th 2021
 
 For JS-SDK versions 0.0.44 and below, getting the latest block looked like this:
 
