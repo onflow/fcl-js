@@ -33,7 +33,7 @@ export async function sendGetLatestBlock(ix, context = {}, opts = {}) {
 
   const res = await httpRequest({
     hostname: opts.node,
-    path: `/blocks?height=${height}&expand=payload`,
+    path: `/v1/blocks?height=${height}&expand=payload`,
     method: "GET",
     body: null
   })

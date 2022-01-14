@@ -49,7 +49,7 @@ describe("Send Get Block Header", () => {
 
     expect(valueSent).toEqual({
         hostname: "localhost",
-        path: "/blocks/a1b2c3",
+        path: "/v1/blocks/a1b2c3",
         method: "GET",
         body: null
     })
@@ -104,7 +104,7 @@ describe("Send Get Block Header", () => {
 
     expect(valueSent).toEqual({
         hostname: "localhost",
-        path: "/blocks?height=123",
+        path: "/v1/blocks?height=123",
         method: "GET",
         body: null
     })
@@ -158,7 +158,7 @@ describe("Send Get Block Header", () => {
 
     expect(valueSent).toEqual({
         hostname: "localhost",
-        path: "/blocks?height=finalized",
+        path: "/v1/blocks?height=finalized",
         method: "GET",
         body: null
     })
@@ -212,7 +212,7 @@ describe("Send Get Block Header", () => {
 
     expect(valueSent).toEqual({
         hostname: "localhost",
-        path: "/blocks?height=sealed",
+        path: "/v1/blocks?height=sealed",
         method: "GET",
         body: null
     })

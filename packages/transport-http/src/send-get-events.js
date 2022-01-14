@@ -6,7 +6,7 @@ async function sendGetEventsForHeightRangeRequest(ix, context, opts) {
 
   const res = await httpRequest({
     hostname: opts.node,
-    path: `/events?type=${ix.events.eventType}&start_height=${ix.events.start}&end_height=${ix.events.end}`,
+    path: `/v1/events?type=${ix.events.eventType}&start_height=${ix.events.start}&end_height=${ix.events.end}`,
     method: "GET",
     body: null
   })
@@ -19,7 +19,7 @@ async function sendGetEventsForBlockIDsRequest(ix, context, opts) {
 
   const res = await httpRequest({
     hostname: opts.node,
-    path: `/events?type=${ix.events.eventType}&block_ids=${ix.events.blockIds.join(",")}`,
+    path: `/v1/events?type=${ix.events.eventType}&block_ids=${ix.events.blockIds.join(",")}`,
     method: "GET",
     body: null
   })

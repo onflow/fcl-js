@@ -21,10 +21,10 @@ class HTTPRequestError extends Error {
 }
 
 /**
- * Creates an HTTP Request to be sent to an Access API.
+ * Creates an HTTP Request to be sent to a REST Access API.
  * 
  * Supports the Fetch API on Web Browsers and Deno.
- * Uses the Node HTTP standard library for Node.
+ * Uses the Node HTTP(S) standard libraries for Node.
  * 
  * @param {String} hostname - Access API Hostname
  * @param {String} path - Path to the resource on the Access API
@@ -112,9 +112,8 @@ export async function httpRequest({
         } : undefined
       }
 
+      var responseBody = []
       const req = transport.request(options, (res) => {
-        var responseBody = []
-
         res.setEncoding('utf8');
         
         res.on("data", dataChunk => {

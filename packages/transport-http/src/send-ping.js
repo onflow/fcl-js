@@ -9,7 +9,7 @@ export async function sendPing(ix, context = {}, opts = {}) {
 
   await httpRequest({
     hostname: opts.node,
-    path: "/blocks?height=sealed",
+    path: "/v1/blocks?height=sealed",
     method: "GET",
     body: null
   })

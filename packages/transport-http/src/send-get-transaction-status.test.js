@@ -51,7 +51,7 @@ describe("Get Transaction Status", () => {
 
     expect(valueSent).toEqual({
         hostname: "localhost",
-        path: "/transaction_results/MyTxID",
+        path: "/v1/transaction_results/MyTxID",
         method: "GET",
         body: null
     })

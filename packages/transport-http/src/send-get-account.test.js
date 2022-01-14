@@ -45,7 +45,7 @@ describe("Send Get Account", () => {
 
     expect(valueSent).toEqual({
         hostname: "localhost",
-        path: "/accounts/1654653399040a61?block_height=123&expand=contracts,keys",
+        path: "/v1/accounts/1654653399040a61?block_height=123&expand=contracts,keys",
         method: "GET",
         body: null
     })
@@ -91,7 +91,7 @@ describe("Send Get Account", () => {
 
     expect(valueSent).toEqual({
         hostname: "localhost",
-        path: "/accounts/1654653399040a61?block_height=final&expand=contracts,keys",
+        path: "/v1/accounts/1654653399040a61?block_height=final&expand=contracts,keys",
         method: "GET",
         body: null
     })

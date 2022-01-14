@@ -53,7 +53,7 @@ describe("Send Get Events", () => {
 
     expect(valueSent).toEqual({
         hostname: "localhost",
-        path: "/events?type=MyEvent&block_ids=a1b2c3",
+        path: "/v1/events?type=MyEvent&block_ids=a1b2c3",
         method: "GET",
         body: null
     })
@@ -117,7 +117,7 @@ describe("Send Get Events", () => {
 
     expect(valueSent).toEqual({
         hostname: "localhost",
-        path: "/events?type=MyEvent&start_height=123&end_height=456",
+        path: "/v1/events?type=MyEvent&start_height=123&end_height=456",
         method: "GET",
         body: null
     })

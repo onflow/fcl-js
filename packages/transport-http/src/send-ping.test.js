@@ -35,7 +35,7 @@ describe("Ping", () => {
 
     expect(valueSent).toEqual({
         hostname: "localhost",
-        path: "/blocks?height=sealed",
+        path: "/v1/blocks?height=sealed",
         method: "GET",
         body: null
     })

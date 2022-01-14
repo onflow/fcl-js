@@ -88,7 +88,7 @@ describe("Transaction", () => {
 
     expect(valueSent).toEqual({
         hostname: "localhost",
-        path: "/transactions",
+        path: "/v1/transactions",
         method: "POST",
         body: {
             "script": "Y2FkZW5jZSB0cmFuc2FjdGlvbg==",
@@ -109,7 +109,7 @@ describe("Transaction", () => {
                     "address": "f8d6e0586b0a20c7",
                     "signer_index": "0",
                     "key_index": "1",
-                    "signature": "YWJjMTIz",
+                    "signature": "q8Ej",
                 }
             ],
             "envelope_signatures": [
@@ -117,7 +117,7 @@ describe("Transaction", () => {
                     "address": "f8d6e0586b0a20c7",
                     "signer_index": "0",
                     "key_index": "1",
-                    "signature": "YWJjMTIz"
+                    "signature": "q8Ej"
                 }
             ]
         }

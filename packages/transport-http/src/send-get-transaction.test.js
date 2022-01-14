@@ -9,7 +9,7 @@ describe("Get Transaction", () => {
     const httpRequestMock = jest.fn();
 
     const returnedTransaction = {
-        script: "Cadence Code",
+        script: "Q2FkZW5jZSBDb2Rl",
         arguments: [],
         reference_block_id: "a1b2c3",
         gas_limit: "123",
@@ -52,7 +52,7 @@ describe("Get Transaction", () => {
 
     expect(valueSent).toEqual({
         hostname: "localhost",
-        path: "/transactions/MyTxID",
+        path: "/v1/transactions/MyTxID",
         method: "GET",
         body: null
     })
