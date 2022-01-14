@@ -1,7 +1,7 @@
 {
     "name": "@onflow/transport-http",
     "version": "0.0.1",
-    "description": "Flow SDK HTTP Transport Send Module",
+    "description": "Flow SDK HTTP Transport Module",
     "license": "Apache-2.0",
     "author": "Dapper Labs <dev@dapperlabs.com>",
     "homepage": "https://onflow.org",
