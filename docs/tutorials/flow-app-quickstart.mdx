@@ -2,7 +2,9 @@
 
 ---
 
-**Last Updated:** October 15th 2021
+**Last Updated:** January 11th 2022
+
+> **Note**: This page will walk you through a very bare bones project to get started building a web3 dapp using the Flow Client Library (FCL). If you are looking for a clonable repo, Flow community members have created quickstart templates for different JavaScript frameworks (e.g. [Next.js](https://github.com/muttoni/fcl-nextjs-quickstart), [SvelteKit](https://github.com/muttoni/fcl-sveltekit-quickstart), [Nuxt](https://github.com/bluesign/nuxt3-fcl)). You can consult the complete list [here](https://github.com/ph0ph0/Get-The-Flow-Down#fcl).
 
 FCL-JS is the easiest way to start building decentralized applications. FCL (aka Flow Client Library) wraps much of the logic you'd have to write yourself on other blockchains. Follow this quick start and you'll have a solid overview of how to build a shippable dapp on Flow.
 
@@ -21,10 +23,10 @@ And if you ever have any questions we're always happy to help on [Discord](https
 
 ## Installation
 
-The first step is to generate a React app using [create-react-app](https://reactjs.org/docs/create-a-new-react-app.html). From your terminal, run the following:
+The first step is to generate a React app using Next.js and [create-next-app](https://nextjs.org/docs/api-reference/create-next-app). From your terminal, run the following:
 
 ```sh
-npx create-react-app flow-app
+npx create-next-app@latest flow-app
 cd flow-app
 ```
 
@@ -37,18 +39,18 @@ npm install @onflow/fcl --save
 Now run the app using the following command in your terminal.
 
 ```sh
-npm start
+npm run dev
 ```
 
-You should now see your React app running.
+You should now see your app running.
 
 ## Configuration
 
-Now that your app is running, you can configure FCL. Create a `config.js` file in the `src` directory and add the following.
+Now that your app is running, you can configure FCL. Within the main project directory, create a folder called `flow` and create a file called `config.js`. This file will contain configuration information for FCL, such as what Access Node and wallet discovery endpoint to use (e.g. testnet or a local emulator). Add the following contents to the file:
 
 **Note**: These values are required to use FCL with your app.
 
-> **Create file:** `./src/config.js`
+> **Create file:** `./flow/config.js`
 
 ```javascript
 import { config } from "@onflow/fcl";
@@ -65,22 +67,31 @@ The `accessNode.api` key specifies the address of a Flow access node. Flow provi
 
 Learn more about configuration values [here](../reference/api.md#setting-configuration-values).
 
-To finish configuring our dapp, let's import the config file into the top of our `App.js` file, then swap out the default component in `App.js` to look like this:
+The main page for Next.js apps is located in `pages/index.js`. So let's finish configuring our dapp by going in the `pages/` directory and importing the config file into the top of our `index.js` file. We'll then swap out the default component in `index.js` to look like this:
 
-> **Replace file:** `./src/App.js`
+> **Replace file:** `./pages/index.js`
 
 ```jsx
-import "./config";
+import "../flow/config";
 
-function App() {
+import Head from 'next/head'
+
+export default function Home() {
   return (
     <div>
-      <h1>Flow App</h1>
-    </div>
-  );
-}
+      <Head>
+        <title>FCL Quickstart with NextJS</title>
+        <meta name="description" content="My first web3 app on Flow!" />
+        <link rel="icon" href="/favicon.png" />
+      </Head>
 
-export default App;
+      <main>
+        Hello World
+      </main>
+
+    </div>
+  )
+}
 
 ```
 
@@ -94,14 +105,16 @@ Let's add in a few buttons for sign up/login and also subscribe to changes on th
 
 This is what your file should look like now:
 
-> **Replace file:** `./src/App.js`
+> **Replace file:** `./pages/index.js`
 
 ```jsx
-import "./config";
+import Head from 'next/head'
+import "../flow/config";
 import { useState, useEffect } from "react";
 import * as fcl from "@onflow/fcl";
 
-function App() {
+export default function Home() {
+
   const [user, setUser] = useState({loggedIn: null})
 
   useEffect(() => fcl.currentUser.subscribe(setUser), [])
@@ -126,6 +139,11 @@ function App() {
 
   return (
     <div>
+      <Head>
+        <title>FCL Quickstart with NextJS</title>
+        <meta name="description" content="My first web3 app on Flow!" />
+        <link rel="icon" href="/favicon.png" />
+      </Head>
       <h1>Flow App</h1>
       {user.loggedIn
         ? <AuthedState />
@@ -134,8 +152,6 @@ function App() {
     </div>
   );
 }
-
-export default App;
 
 ```
 
@@ -169,14 +185,16 @@ A few things need to happen in order to do that:
 
 Take a look at the new code. We'll explain each new piece as we go. Remember, the cadence code is a separate language from JavaScript used to write smart contracts, so you don't need to spend too much time trying to understand it. (Of course, you're more than welcome to, if you want to!)
 
-> **Replace file:** `./src/App.js`
+> **Replace file:** `./pages/index.js`
 
 ```jsx
-import "./config";
+import Head from 'next/head'
+import "../flow/config";
 import { useState, useEffect } from "react";
 import * as fcl from "@onflow/fcl";
 
-function App() {
+export default function Home() {
+
   const [user, setUser] = useState({loggedIn: null})
   const [name, setName] = useState('') // NEW
 
@@ -228,8 +246,6 @@ function App() {
     </div>
   );
 }
-
-export default App;
 
 ```
 
@@ -302,16 +318,18 @@ You can see the new fields we talked about. You'll also notice `fcl.authz`. That
 
 You'll also notice we are awaiting a response with our transaction data by using the syntax `fcl.tx(transactionId).onceSealed()`. This will return when the blockchain has sealed the transaction and it's complete in processing it and verifying it.
 
-Now your `App.js` file should look like this (we also added a button for calling the `initAccount` function in the `AuthedState`):
+Now your `index.js` file should look like this (we also added a button for calling the `initAccount` function in the `AuthedState`):
 
-> **Replace file:** `./src/App.js`
+> **Replace file:** `./pages/index.js`
 
 ```jsx
-import "./config";
+import Head from 'next/head'
+import "../flow/config";
 import { useState, useEffect } from "react";
 import * as fcl from "@onflow/fcl";
 
-function App() {
+export default function Home() {
+
   const [user, setUser] = useState({loggedIn: null})
   const [name, setName] = useState('')
 
@@ -393,8 +411,6 @@ function App() {
   )
 }
 
-export default App;
-
 ```
 
 Press the "Init Account" button you should see the wallet ask you to approve a transaction. After approving, you will see a transaction response appear in your console (make sure to have that open). It may take a few moments. With the transaction result printed, you can use the `transactionId` to look up the details of the transaction using a [block explorer](https://testnet.flowscan.org).
@@ -434,16 +450,18 @@ const executeTransaction = async () => {
 
 Here you can see our argument is "Flow Developer" and at the bottom we've called the `subscribe` method instead of `onceSealed`.
 
-Let's see how that works inside our whole `App.js` file. But, let's also set the statuses to our React component's state so we can see on screen what state we're in.
+Let's see how that works inside our whole `index.js` file. But, let's also set the statuses to our React component's state so we can see on screen what state we're in.
 
-> **Replace file:** `./src/App.js`
+> **Replace file:** `./pages/index.js`
 
 ```jsx
-import "./config";
+import Head from 'next/head'
+import "../flow/config";
 import { useState, useEffect } from "react";
 import * as fcl from "@onflow/fcl";
 
-function App() {
+export default function Home() {
+
   const [user, setUser] = useState({loggedIn: null})
   const [name, setName] = useState('')
   const [transactionStatus, setTransactionStatus] = useState(null) // NEW
@@ -550,8 +568,6 @@ function App() {
     </div>
   )
 }
-
-export default App;
 
 ```
 
