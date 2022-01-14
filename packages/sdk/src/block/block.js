@@ -4,7 +4,7 @@ import {decodeResponse as decode} from "../decode/decode.js"
 import {invariant} from "@onflow/util-invariant"
 import {atBlockHeight, atBlockId} from "../sdk"
 
-export function block({sealed = false, id, height} = {}) {
+export function block({sealed = false, id, height} = {}, opts) {
   invariant(
     !((sealed && id) || (sealed && height)),
     `Method: block -- Cannot pass "sealed" with "id" or "height"`
@@ -16,11 +16,11 @@ export function block({sealed = false, id, height} = {}) {
   )
 
   // Get block by ID
-  if (id) return send([getBlock(), atBlockId(id)]).then(decode)
+  if (id) return send([getBlock(), atBlockId(id), opts]).then(decode)
 
   // Get block by height
-  if (height) return send([getBlock(), atBlockHeight(height)]).then(decode)
+  if (height) return send([getBlock(), atBlockHeight(height), opts]).then(decode)
 
   // Get latest block
-  return send([getBlock(sealed)]).then(decode)
+  return send([getBlock(sealed), opts]).then(decode)
 }

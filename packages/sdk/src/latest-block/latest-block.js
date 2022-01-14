@@ -27,6 +27,7 @@ export function latestBlock(...args) {
       ============================
   
       "latestBlock()" is deprecated, please use "block()" for this and future versions of FCL
+      You can learn more (including a guide on common transition paths) here: https://github.com/onflow/flow-js-sdk/blob/master/packages/sdk/TRANSITIONS.md#0008-deprecate-latest-block-method
   
       ============================
     `,
