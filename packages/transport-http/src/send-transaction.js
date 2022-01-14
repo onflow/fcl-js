@@ -20,7 +20,7 @@ export async function sendTransaction(ix, context = {}, opts = {}) {
           address: sansPrefix(acct.addr),
           signer_index: String(i),
           key_index: String(acct.keyId),
-          signature: Buffer.from(acct.signature).toString("base64")
+          signature: Buffer.from(acct.signature, "hex").toString("base64")
         })
         i = i + 1
       }
@@ -31,8 +31,6 @@ export async function sendTransaction(ix, context = {}, opts = {}) {
   }
 
   // Apply Payer Signatures to Envelope Signatures
-
-  // TODO: NEED TO DEDUPE ENVELOPE SIGNATURES. Look into impact on grpc send-transaction as well.
   let envelopeSignatures = {}
   var j = 0
   for (let acct of Object.values(ix.accounts)) {
@@ -43,7 +41,7 @@ export async function sendTransaction(ix, context = {}, opts = {}) {
           address: sansPrefix(acct.addr),
           signer_index: String(j),
           key_index: String(acct.keyId),
-          signature: Buffer.from(acct.signature).toString("base64")
+          signature: Buffer.from(acct.signature, "hex").toString("base64")
         }
         j = j + 1
       }
