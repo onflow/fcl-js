@@ -11,7 +11,7 @@ export async function sendGetTransaction(ix, context = {}, opts = {}) {
 
   const res = await httpRequest({
     hostname: opts.node,
-    path: `/transactions/${ix.transaction.id}`,
+    path: `/v1/transactions/${ix.transaction.id}`,
     method: "GET",
     body: null,
   })

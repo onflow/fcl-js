@@ -20,7 +20,7 @@ export async function sendGetTransactionStatus(ix, context = {}, opts = {}) {
 
   const res = await httpRequest({
     hostname: opts.node,
-    path: `/transaction_results/${ix.transaction.id}`,
+    path: `/v1/transaction_results/${ix.transaction.id}`,
     method: "GET",
     body: null
   })

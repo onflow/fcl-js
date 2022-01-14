@@ -55,7 +55,7 @@ export async function sendTransaction(ix, context = {}, opts = {}) {
   var t1 = Date.now()
   const res = await httpRequest({
     hostname: opts.node,
-    path: `/transactions`,
+    path: `/v1/transactions`,
     method: "POST",
     body: {
       script: Buffer.from(ix.message.cadence).toString("base64"),

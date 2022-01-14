@@ -54,7 +54,7 @@ describe("Send Get Block", () => {
 
     expect(valueSent).toEqual({
         hostname: "localhost",
-        path: "/blocks/a1b2c3?expand=payload",
+        path: "/v1/blocks/a1b2c3?expand=payload",
         method: "GET",
         body: null
     })
@@ -117,7 +117,7 @@ describe("Send Get Block", () => {
 
     expect(valueSent).toEqual({
         hostname: "localhost",
-        path: "/blocks?height=123&expand=payload",
+        path: "/v1/blocks?height=123&expand=payload",
         method: "GET",
         body: null
     })
@@ -179,7 +179,7 @@ describe("Send Get Block", () => {
 
     expect(valueSent).toEqual({
         hostname: "localhost",
-        path: "/blocks?height=final&expand=payload",
+        path: "/v1/blocks?height=final&expand=payload",
         method: "GET",
         body: null
     })
@@ -241,7 +241,7 @@ describe("Send Get Block", () => {
 
     expect(valueSent).toEqual({
         hostname: "localhost",
-        path: "/blocks?height=sealed&expand=payload",
+        path: "/v1/blocks?height=sealed&expand=payload",
         method: "GET",
         body: null
     })

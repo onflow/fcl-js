@@ -46,7 +46,7 @@ describe("Send Execute Script", () => {
 
     expect(valueSent).toEqual({
         hostname: "localhost",
-        path: "/scripts?block_height=sealed",
+        path: "/v1/scripts?block_height=sealed",
         method: "POST",
         body: { script: "cHViIGZ1biBtYWluKGE6IEludCk6IEludCB7IHJldHVybiBhIH0=", arguments: ["eyJ0eXBlIjoiSW50IiwidmFsdWUiOiIxMjMifQ=="] }
     })
@@ -90,7 +90,7 @@ describe("Send Execute Script", () => {
 
     expect(valueSent).toEqual({
         hostname: "localhost",
-        path: "/scripts?block_id=123",
+        path: "/v1/scripts?block_id=123",
         method: "POST",
         body: { script: "cHViIGZ1biBtYWluKCk6IEludCB7IHJldHVybiAxMjMgfQ==", arguments: [] }
     })
@@ -134,7 +134,7 @@ describe("Send Execute Script", () => {
 
     expect(valueSent).toEqual({
         hostname: "localhost",
-        path: "/scripts?block_height=123",
+        path: "/v1/scripts?block_height=123",
         method: "POST",
         body: { script: "cHViIGZ1biBtYWluKCk6IEludCB7IHJldHVybiAxMjMgfQ==", arguments: [] }
     })

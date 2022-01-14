@@ -6,7 +6,7 @@ async function sendExecuteScriptAtBlockIDRequest(ix, context, opts) {
 
   const res = await httpRequest({
     hostname: opts.node,
-    path: `/scripts?block_id=${ix.block.id}`,
+    path: `/v1/scripts?block_id=${ix.block.id}`,
     method: "POST",
     body: {
       "script": Buffer.from(ix.message.cadence).toString("base64"),
@@ -22,7 +22,7 @@ async function sendExecuteScriptAtBlockHeightRequest(ix, context, opts) {
 
   const res = await httpRequest({
     hostname: opts.node,
-    path: `/scripts?block_height=${ix.block.height}`,
+    path: `/v1/scripts?block_height=${ix.block.height}`,
     method: "POST",
     body: {
       "script": Buffer.from(ix.message.cadence).toString("base64"),
@@ -38,7 +38,7 @@ async function sendExecuteScriptAtLatestBlockRequest(ix, context, opts) {
 
   const res = await httpRequest({
     hostname: opts.node,
-    path: `/scripts?block_height=sealed`,
+    path: `/v1/scripts?block_height=sealed`,
     method: "POST",
     body: {
       "script": Buffer.from(ix.message.cadence).toString("base64"),
