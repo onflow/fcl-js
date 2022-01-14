@@ -13,7 +13,7 @@ sdk.config()
 
 // Configure SDK to use HTTP (by default the SDK will use the HTTP transport)
 sdk.config()
-.put("accessNode.api", "https://rest-testnet.onflow.org/v1")
+.put("accessNode.api", "https://rest-testnet.onflow.org")
 .put("sdk.transport", httpSend)
 ```
 
