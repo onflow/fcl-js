@@ -1,10 +1,13 @@
-import {invariant} from "@onflow/util-invariant"
 import {extension} from "./utils/extension"
 import {normalizePollingResponse} from "../../normalize/polling-response"
 import {VERSION} from "../../../VERSION"
 
 export function execExtRPC(service, body, opts, config) {
   return new Promise((resolve, reject) => {
+    const {redir} = opts
+
+    body.data = service.data
+
     extension(service, {
       async onReady(_, {send}) {
         try {
@@ -19,6 +22,21 @@ export function execExtRPC(service, body, opts, config) {
             },
             config,
           })
+          send({
+            fclVersion: VERSION,
+            type: "FCL:FRAME:READY:RESPONSE",
+            body,
+            service: {
+              params: service.params,
+              data: service.data,
+              type: service.type,
+            },
+            config,
+            deprecated: {
+              message:
+                "FCL:FRAME:READY:RESPONSE is deprecated and replaced with type: FCL:VIEW:READY:RESPONSE",
+            },
+          })
         } catch (error) {
           throw error
         }
@@ -32,7 +50,7 @@ export function execExtRPC(service, body, opts, config) {
           switch (resp.status) {
             case "APPROVED":
               resolve(resp.data)
-              close()
+              !redir && close()
               break
 
             case "DECLINED":
