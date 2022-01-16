@@ -1,36 +1,42 @@
 import {buildMessageHandler} from "./buildMessageHandler"
+
 const noop = () => {}
 
-export async function extension(service, opts = {}) {
+export function extension(service, opts = {}) {
   if (service == null) return {send: noop, close: noop}
-  const {endpoint: ext} = service
+  const url = new URL(service.endpoint)
 
   const onClose = opts.onClose || noop
   const onMessage = opts.onMessage || noop
   const onReady = opts.onReady || noop
   const onResponse = opts.onResponse || noop
 
+  window.addEventListener(
+    "message",
+    buildMessageHandler({close, send, onReady, onResponse, onMessage})
+  )
+
+  send({
+    type: "FCL:OPEN:EXTENSION",
+    service,
+  })
+
+  return {send, close}
+
   function close() {
     try {
       window.removeEventListener("message", buildMessageHandler)
       onClose()
     } catch (error) {
-      console.error("Extension Close Error", error)
+      console.error("Popup Close Error", error)
     }
   }
 
   function send(msg) {
     try {
-      window[ext]?.flow.send(JSON.parse(JSON.stringify(msg || {})))
+      window && window.postMessage(JSON.parse(JSON.stringify(msg || {})), "*")
     } catch (error) {
-      console.error("Extension Send Error", msg, error)
+      console.error("Ext Send Error", msg, error)
     }
   }
-
-  window.addEventListener(
-    "message",
-    buildMessageHandler({close, send, onReady, onResponse, onMessage})
-  )
-  await window[ext]?.flow.enable()
-  return {send, close}
 }
