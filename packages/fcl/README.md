@@ -2,7 +2,7 @@
 ### Making secure web applications powered by the Flow Blockchain
 
 Flow Client Library (FCL) enables applications to easily integrate with all FCL-compatible wallets and
-other services (e.g. (Comming Soon) profiles, private information, notifications). This offers developers a strong
+other services (e.g. (Coming Soon) profiles, private information, notifications). This offers developers a strong
 foundation to compose their apps with existing building blocks. It’s currently supported for browser
 applications, and will be extended to other platforms.
 
