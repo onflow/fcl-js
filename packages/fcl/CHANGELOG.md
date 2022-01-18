@@ -1,3 +1,7 @@
+## Unreleased
+
+- 2022-01-18 -- Add missing `service` and `app` to config for exec service redirect.
+
 ## 0.0.78-alpha.10 - 2022-01-05
 
 - 2021-12-17 -- Fix bug where `currentUser` passed as an argument is failing.
