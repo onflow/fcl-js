@@ -4,7 +4,8 @@
 
 ```javascript
 await sdk.block() // get latest block
-await sdk.block({sealed: true}) // get latest executed block
+await sdk.block({sealed: true}) // get latest executed sealed block
+await sdk.block({sealed: false}) // get latest executed finalized block
 await sdk.block({id: 'abc'}) // get block by id
 await sdk.block({height: 123}) // get block by height
 ```
