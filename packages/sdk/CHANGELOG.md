@@ -3,9 +3,8 @@
 - 2022-01-07 -- [@chasefleming](https://github.com/chasefleming): Create methods for more easily getting a block by height or by id.
 
 ```javascript
-await sdk.block() // get latest block
-await sdk.block({sealed: true}) // get latest executed sealed block
-await sdk.block({sealed: false}) // get latest executed finalized block
+await sdk.block() // get latest finalized block
+await sdk.block({sealed: true}) // get latest sealed block
 await sdk.block({id: 'abc'}) // get block by id
 await sdk.block({height: 123}) // get block by height
 ```

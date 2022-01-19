@@ -20,10 +20,8 @@ like such:
 ```javascript
 let options = {...}
 
-await sdk.block() // gets the latest block
-await sdk.block({sealed: true}) // get latest executed sealed block
-await sdk.block({sealed: false}) // get latest executed finalized block
-await sdk.block({ sealed: true }, options) // (optional) gets latest executed block with options
+await sdk.block() // gets the latest finalized block
+await sdk.block({sealed: true}) // get latest sealed block
 ```
 
 The first argument to `block` is an optional object with either `sealed`, `id`, or `height`. The second argument is for optional options.
