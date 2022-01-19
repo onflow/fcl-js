@@ -1,3 +1,14 @@
+## Unreleased
+
+- 2022-01-07 -- [@chasefleming](https://github.com/chasefleming): Create methods for more easily getting a block by height or by id.
+
+```javascript
+await sdk.block() // get latest finalized block
+await sdk.block({sealed: true}) // get latest sealed block
+await sdk.block({id: 'abc'}) // get block by id
+await sdk.block({height: 123}) // get block by height
+```
+
 ## 0.0.56-alpha.2 -- 2022-01-05
 
 - 2021-12-17 -- [@chasefleming](https://github.com/chasefleming): Fix bug `resolveArgument` is being executed in the wrong context.
