@@ -147,7 +147,10 @@ async function authenticate({service, redir = false} = {}) {
 
     try {
       const response = await execService({
-        service: service || discoveryService,
+        service: {
+          ...(service || discoveryService),
+          method: discoveryService?.method || service.method || "IFRAME/RPC"
+        },
         msg,
         opts,
         config: {

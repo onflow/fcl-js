@@ -1,5 +1,6 @@
 ## Unreleased
 
+- 2022-01-18 -- Support `discovery.wallet.method` options when set in config for authentication with Discovery API services.
 - 2022-01-18 -- Add missing `service` and `app` to config for exec service redirect.
 
 ## 0.0.78-alpha.10 - 2022-01-05
