@@ -21,7 +21,8 @@ like such:
 let options = {...}
 
 await sdk.block() // gets the latest block
-await sdk.block({ sealed: true }) // gets the executed block
+await sdk.block({sealed: true}) // get latest executed sealed block
+await sdk.block({sealed: false}) // get latest executed finalized block
 await sdk.block({ sealed: true }, options) // (optional) gets latest executed block with options
 ```
 
