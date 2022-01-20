@@ -50,12 +50,13 @@
     - [Arguments](#arguments-1)
       - [Returns](#returns-1)
       - [Usage](#usage-6)
-    - [Discovery](#discovery)
-  - [`discovery`](#discovery-1)
+    - [Discovery **(alpha)**](#discovery-alpha)
+  - [`discovery`](#discovery)
       - [Note](#note-4)
     - [Suggested Configuration](#suggested-configuration)
       - [Usage](#usage-7)
     - [authn](#authn)
+      - [More Configuration](#more-configuration)
   - [`discovery.authn.snapshot()`](#discoveryauthnsnapshot)
   - [`discovery.authn.subscribe(callback)`](#discoveryauthnsubscribecallback)
 - [On-chain Interactions](#on-chain-interactions)
@@ -200,9 +201,9 @@
     - [`CollectionObject`](#collectionobject)
     - [`ResponseObject`](#responseobject)
     - [`Event Object`](#event-object)
-    - [`Transaction Statuses`](#transaction-statuses)
-    - [`GRPC Statuses`](#grpc-statuses)
-    - [`FType`](#ftype)
+  - [`Transaction Statuses`](#transaction-statuses)
+  - [`GRPC Statuses`](#grpc-statuses)
+  - [`FType`](#ftype)
 </div>
 
 # Configuration
@@ -629,6 +630,26 @@ function Component() {
 ```
 
 ### authn
+
+#### More Configuration
+
+By default, limited functionality services, like Ledger, require apps to opt-in in order to display to users. This is so users don't authenticate only to later find out certain services cannot complete certain actions. To enable specific limited functionality services in an application, use the `discovery.authn.include` property in your configuration with a value of an array of services you'd like your app to opt-in to displaying for users.
+
+```javascript
+
+import { config } from "@onflow/fcl"
+
+config({
+  "discovery.authn.endpoint": "https://fcl-discovery.onflow.org/api/testnet/authn", // Endpoint set to Testnet
+  "discovery.authn.include": ["0x9d2e44203cb13051"] // Ledger wallet address on Testnet set to be included
+})
+```
+
+**Service Addresses on Testnet and Mainnet**
+
+| Service    | Testnet            | Mainnet            |
+| ---------- | ------------------ | ------------------ |
+| `Ledger`   | 0x9d2e44203cb13051 | 0xe5cd26afebe62781 |
 
 ---
 
