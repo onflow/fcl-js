@@ -1,6 +1,6 @@
 ## 0.0.78-alpha.11 - 2022-01-19
 
-- 2022-01-19 -- Expose new `block` method from SDK.
+- 2022-01-19 -- Expose new `block` method from `@onflow/sdk`.
 - 2022-01-19 -- VSN `@onflow/sdk` 0.0.56-alpha.2 -> 0.0.56-alpha.3
 - 2022-01-18 -- Support `discovery.wallet.method` options when set in config for authentication with Discovery API services.
 - 2022-01-18 -- Add missing `service` and `app` to config for exec service redirect.
