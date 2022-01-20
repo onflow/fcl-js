@@ -1,4 +1,4 @@
-## Unreleased
+## 0.0.56-alpha.3 -- 2022-01-19
 
 - 2022-01-07 -- [@chasefleming](https://github.com/chasefleming): Create methods for more easily getting a block by height or by id.
 
