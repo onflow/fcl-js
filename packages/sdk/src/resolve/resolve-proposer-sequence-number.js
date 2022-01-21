@@ -5,6 +5,7 @@ import {config} from "../config"
 import {decodeResponse} from "../decode/decode.js"
 import {getAccount} from "../build/build-get-account.js"
 import {build} from "../build/build.js"
+import {invariant} from "@onflow/util-invariant"
 
 export const resolveProposerSequenceNumber = ({ node }) => async (ix) => {
   if (!(isTransaction(ix))) return Ok(ix)

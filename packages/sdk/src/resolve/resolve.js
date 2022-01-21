@@ -80,19 +80,19 @@ async function execFetchRef(ix) {
 
 async function execFetchSequenceNumber(ix) {
   if (isTransaction(ix)) {
-    const node = await config().get("accessNode.api")
-    const sendFn = await config.first(
-      ["sdk.transport", "sdk.send"]
-    )
-
-    invariant(
-      sendFn, 
-      `Required value for sdk.transport is not defined in config. See: ${"https://github.com/onflow/fcl-js/blob/master/packages/sdk/CHANGELOG.md#0057-alpha1----2022-01-21"}`
-    )
-
     var acct = Object.values(ix.accounts).find(a => a.role.proposer)
     invariant(acct, `Transactions require a proposer`)
     if (acct.sequenceNum == null) {
+      const node = await config().get("accessNode.api")
+      const sendFn = await config.first(
+        ["sdk.transport", "sdk.send"]
+      )
+
+      invariant(
+        sendFn, 
+        `Required value for sdk.transport is not defined in config. See: ${"https://github.com/onflow/fcl-js/blob/master/packages/sdk/CHANGELOG.md#0057-alpha1----2022-01-21"}`
+      )
+
       ix.accounts[acct.tempId].sequenceNum = await sendFn(
         await build([getAccount(acct.addr)]),
         {config, response, ix: ixModule},
