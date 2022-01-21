@@ -1,5 +1,4 @@
 import {isTransaction, Ok} from "../interaction/interaction.js"
-import {send as defaultHTTPSend} from "@onflow/transport-http"
 import * as ixModule from "../interaction/interaction.js"
 import {response as responseModule} from "../response/response.js"
 import {config} from "../config"
@@ -12,8 +11,12 @@ export const resolveProposerSequenceNumber = ({ node }) => async (ix) => {
   if (ix.accounts[ix.proposer].sequenceNum) return Ok(ix)
 
   const sendFn = await config.first(
-    ["sdk.transport", "sdk.send"],
-    defaultHTTPSend
+    ["sdk.transport", "sdk.send"]
+  )
+
+  invariant(
+    sendFn, 
+    `Required value for sdk.transport is not defined in config. See: ${"https://github.com/onflow/fcl-js/blob/master/packages/sdk/CHANGELOG.md#0056-alpha4----2022-01-21"}`
   )
 
   const response = await sendFn(
