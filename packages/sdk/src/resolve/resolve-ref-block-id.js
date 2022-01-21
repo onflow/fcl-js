@@ -1,5 +1,4 @@
 import {isTransaction, Ok, interaction, pipe} from "../interaction/interaction.js"
-import {send as defaultHTTPSend} from "@onflow/transport-http"
 import * as ixModule from "../interaction/interaction.js"
 import {response} from "../response/response.js"
 import {config} from "../config"
@@ -9,8 +8,12 @@ import {getBlock} from "../build/build-get-block.js"
 async function getRefId (opts) {
   const node = await config().get("accessNode.api")
   const sendFn = await config.first(
-    ["sdk.transport", "sdk.send"],
-    defaultHTTPSend
+    ["sdk.transport", "sdk.send"]
+  )
+
+  invariant(
+    sendFn, 
+    `Required value for sdk.transport is not defined in config. See: ${"https://github.com/onflow/fcl-js/blob/master/packages/sdk/CHANGELOG.md#0056-alpha4----2022-01-21"}`
   )
 
   var ix
