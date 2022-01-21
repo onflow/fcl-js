@@ -1,3 +1,7 @@
+## 0.0.79-alpha.2 - 2022-01-21
+
+- 2022-01-21 -- [@JeffreyDoyle](https://github.com/JeffreyDoyle): VSN `@onflow/sdk` 0.0.57-alpha.1 -> 0.0.57-alpha.2
+
 ## 0.0.79-alpha.1 - 2022-01-21
 
 - 2022-01-21 -- [@JeffreyDoyle](https://github.com/JeffreyDoyle): VSN `@onflow/sdk` 0.0.56 -> 0.0.57-alpha.1
