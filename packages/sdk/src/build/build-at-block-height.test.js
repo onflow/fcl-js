@@ -1,5 +1,5 @@
 import {interaction} from "../interaction/interaction.js"
-import {atBlockHeight} from "../../sdk/src/build/build-at-block-height.js"
+import {atBlockHeight} from "./build-at-block-height.js"
 
 describe("Build At Block ID", () => {
   test("At Block ID", async () => {

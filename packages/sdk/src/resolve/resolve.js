@@ -3,7 +3,6 @@ import {config} from "../config"
 import {invariant} from "@onflow/util-invariant"
 import * as ixModule from "../interaction/interaction.js"
 import {response} from "../response/response.js"
-import {send as defaultHTTPSend} from "@onflow/transport-http"
 import {build} from "../build/build.js"
 import {getBlock} from "../build/build-get-block.js"
 import {getAccount} from "../build/build-get-account.js"
@@ -66,8 +65,12 @@ async function execFetchRef(ix) {
   if (isTransaction(ix) && ix.message.refBlock == null) {
     const node = await config().get("accessNode.api")
     const sendFn = await config.first(
-      ["sdk.transport", "sdk.send"],
-      defaultHTTPSend
+      ["sdk.transport", "sdk.send"]
+    )
+
+    invariant(
+      sendFn, 
+      `Required value for sdk.transport is not defined in config. See: ${"https://github.com/onflow/fcl-js/blob/master/packages/sdk/CHANGELOG.md#0057-alpha1----2022-01-21"}`
     )
 
     ix.message.refBlock = (await sendFn(build([getBlock()]), {config, response, ix: ixModule}, {node}).then(decode)).id
@@ -79,8 +82,12 @@ async function execFetchSequenceNumber(ix) {
   if (isTransaction(ix)) {
     const node = await config().get("accessNode.api")
     const sendFn = await config.first(
-      ["sdk.transport", "sdk.send"],
-      defaultHTTPSend
+      ["sdk.transport", "sdk.send"]
+    )
+
+    invariant(
+      sendFn, 
+      `Required value for sdk.transport is not defined in config. See: ${"https://github.com/onflow/fcl-js/blob/master/packages/sdk/CHANGELOG.md#0057-alpha1----2022-01-21"}`
     )
 
     var acct = Object.values(ix.accounts).find(a => a.role.proposer)
