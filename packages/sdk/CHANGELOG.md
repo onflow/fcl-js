@@ -1,4 +1,4 @@
-## 0.0.56-alpha.4 -- 2022-01-21
+## 0.0.57-alpha.1 -- 2022-01-21
 
 - 2022-01-21 -- [@JeffreyDoyle](https://github.com/JeffreyDoyle): Abstracts away the SDK transport modules into their own packages. The JS-SDK now makes use of transport modules for sending an interaction to an access api and receiving a response. A transport module must be defined in config:
 

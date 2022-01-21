@@ -1,10 +1,6 @@
 {
   "name": "@onflow/sdk",
-<<<<<<< HEAD
-  "version": "0.0.56",
-=======
   "version": "0.0.56-alpha.4",
->>>>>>> PKG -- [sdk] Removes transport http as default transport module
   "description": "Flow SDK",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
