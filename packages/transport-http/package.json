@@ -1,0 +1,43 @@
+{
+    "name": "@onflow/transport-http",
+    "version": "0.0.1",
+    "description": "Flow SDK HTTP Transport Module",
+    "license": "Apache-2.0",
+    "author": "Dapper Labs <dev@dapperlabs.com>",
+    "homepage": "https://onflow.org",
+    "repository": {
+        "type": "git",
+        "url": "git+ssh://git@github.com/onflow/flow-js-sdk.git"
+    },
+    "bugs": {
+        "url": "https://github.com/onflow/flow-js-sdk/issues"
+    },
+    "jest": {
+        "transform": {
+            ".js": "jest-esm-transformer"
+        }
+    },
+    "devDependencies": {
+        "@onflow/types": "0.0.6",
+        "jest": "^27.0.6",
+        "jest-esm-transformer": "1.0.0",
+        "microbundle": "^0.13.3"
+    },
+    "source": "src/sdk-send-http.js",
+    "main": "dist/sdk-send-http.js",
+    "module": "dist/sdk-send-http.module.js",
+    "unpkg": "dist/sdk-send-http.umd.js",
+    "scripts": {
+        "alpha": "npm publish --tag alpha",
+        "prepublishOnly": "npm test && npm run build",
+        "test": "jest",
+        "build": "microbundle",
+        "test:watch": "jest --watch",
+        "start": "microbundle watch"
+    },
+    "dependencies": {
+        "@onflow/util-address": "^0.0.0",
+        "@onflow/util-invariant": "^0.0.0",
+        "@onflow/util-template": "0.0.1"
+    }
+}

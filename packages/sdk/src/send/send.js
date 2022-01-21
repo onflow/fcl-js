@@ -1,12 +1,18 @@
-import {interaction, pipe} from "../interaction/interaction.js"
+import * as ixModule from "../interaction/interaction.js"
+import {invariant} from "../build/build-invariant.js"
+import {response} from "../response/response.js"
 import {config} from "../config"
 import {resolve as defaultResolve} from "../resolve/resolve.js"
-import {send as defaultSend} from "./sdk-send.js"
 
 export const send = async (args = [], opts = {}) => {
   const sendFn = await config.first(
     ["sdk.transport", "sdk.send"],
-    opts.send || defaultSend
+    opts.send
+  )
+
+  invariant(
+    sendFn, 
+    `Required value for sdk.transport is not defined in config. See: ${"https://github.com/onflow/fcl-js/blob/master/packages/sdk/CHANGELOG.md#0057-alpha1----2022-01-21"}`
   )
 
   const resolveFn = await config.first(
@@ -14,6 +20,8 @@ export const send = async (args = [], opts = {}) => {
     opts.resolve || defaultResolve
   )
 
-  if (Array.isArray(args)) args = pipe(interaction(), args)
-  return sendFn(await resolveFn(args), opts)
+  opts.node = opts.node || (await config().get("accessNode.api"))
+
+  if (Array.isArray(args)) args = ix.pipe(ix.interaction(), args)
+  return sendFn(await resolveFn(args), {config, response, ix: ixModule}, opts)
 }
