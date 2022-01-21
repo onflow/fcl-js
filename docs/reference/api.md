@@ -158,20 +158,23 @@
       - [Arguments](#arguments-18)
       - [Returns](#returns-13)
       - [Usage](#usage-27)
-  - [`latestBlock`](#latestblock)
+  - [`block`](#block)
       - [Arguments](#arguments-19)
       - [Returns](#returns-14)
+  - [`latestBlock`](#latestblock)
+      - [Arguments](#arguments-20)
+      - [Returns](#returns-15)
       - [Usage](#usage-28)
     - [Transaction Status Utility](#transaction-status-utility)
   - [`tx`](#tx)
-      - [Arguments](#arguments-20)
-      - [Returns](#returns-15)
+      - [Arguments](#arguments-21)
+      - [Returns](#returns-16)
       - [Usage](#usage-29)
       - [Examples](#examples-8)
     - [Event Polling Utility](#event-polling-utility)
   - [`events`](#events)
-      - [Arguments](#arguments-21)
-      - [Returns](#returns-16)
+      - [Arguments](#arguments-22)
+      - [Returns](#returns-17)
       - [Usage](#usage-30)
       - [Examples](#examples-9)
 - [Types, Interfaces, and Definitions](#types-interfaces-and-definitions)
@@ -1473,6 +1476,26 @@ A pre-built interaction that returns the details of an account from their public
 import * as fcl from "@onflow/fcl";
 const account = await fcl.account("0x1d007d755706c469");
 ```
+
+---
+
+## `block`
+
+A pre-built interaction that returns the latest block (optionally sealed or not), by id, or by height.
+
+#### Arguments
+
+| Name     | Type    | Default | Description                                                                    |
+| -------- | ------- | ------- | ------------------------------------------------------------------------------ |
+| `sealed` | boolean | false   | If the latest block should be sealed or not. See [block states](#interaction). |
+| `id`     | boolean | string  | ID of block to get. See [block states](#interaction).                          |
+| `height` | boolean | int     | Height of block to get. See [block states](#interaction).                      |
+
+#### Returns
+
+| Type                        | Description                       |
+| --------------------------- | --------------------------------- |
+| [BlockObject](#blockobject) | A JSON representation of a block. |
 
 ---
 
