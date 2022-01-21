@@ -1,10 +1,6 @@
 {
   "name": "@onflow/fcl",
-<<<<<<< HEAD
-  "version": "0.0.78",
-=======
   "version": "0.0.79-alpha.1",
->>>>>>> PKG -- [sdk] Corrects version number
   "description": "Flow Client Library",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
@@ -46,11 +42,7 @@
   "dependencies": {
     "@onflow/interaction": "0.0.11",
     "@onflow/rlp": "0.0.3",
-<<<<<<< HEAD
-    "@onflow/sdk": "0.0.56",
-=======
     "@onflow/sdk": "file:../sdk",
->>>>>>> PKG -- [sdk] Corrects version number
     "@onflow/types": "0.0.6",
     "@onflow/util-actor": "0.0.2",
     "@onflow/util-address": "0.0.0",
