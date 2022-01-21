@@ -2,6 +2,13 @@
 
 - 2022-01-21 -- [@JeffreyDoyle](https://github.com/JeffreyDoyle): VSN `@onflow/sdk` 0.0.56-alpha.3 -> 0.0.56-alpha.4
 
+## 0.0.78-alpha.11 - 2022-01-19
+
+- 2022-01-19 -- Expose new `block` method from `@onflow/sdk`.
+- 2022-01-19 -- VSN `@onflow/sdk` 0.0.56-alpha.2 -> 0.0.56-alpha.3
+- 2022-01-18 -- Support `discovery.wallet.method` options when set in config for authentication with Discovery API services.
+- 2022-01-18 -- Add missing `service` and `app` to config for exec service redirect.
+
 ## 0.0.78-alpha.10 - 2022-01-05
 
 - 2021-12-17 -- Fix bug where `currentUser` passed as an argument is failing.
