@@ -161,21 +161,22 @@
   - [`block`](#block)
       - [Arguments](#arguments-19)
       - [Returns](#returns-14)
+      - [Usage](#usage-28)
   - [`latestBlock` (Deprecated)](#latestblock-deprecated)
       - [Arguments](#arguments-20)
       - [Returns](#returns-15)
-      - [Usage](#usage-28)
+      - [Usage](#usage-29)
     - [Transaction Status Utility](#transaction-status-utility)
   - [`tx`](#tx)
       - [Arguments](#arguments-21)
       - [Returns](#returns-16)
-      - [Usage](#usage-29)
+      - [Usage](#usage-30)
       - [Examples](#examples-8)
     - [Event Polling Utility](#event-polling-utility)
   - [`events`](#events)
       - [Arguments](#arguments-22)
       - [Returns](#returns-17)
-      - [Usage](#usage-30)
+      - [Usage](#usage-31)
       - [Examples](#examples-9)
 - [Types, Interfaces, and Definitions](#types-interfaces-and-definitions)
     - [`Builders`](#builders-1)
@@ -188,11 +189,11 @@
     - [`ArgumentObject`](#argumentobject)
     - [`ArgumentFunction`](#argumentfunction)
     - [`Authorization Function`](#authorization-function)
-      - [Usage](#usage-31)
+      - [Usage](#usage-32)
       - [Examples:](#examples-10)
     - [`Signing Function`](#signing-function)
       - [Payload](#payload)
-      - [Usage](#usage-32)
+      - [Usage](#usage-33)
       - [Examples:](#examples-11)
     - [`TransactionRolesObject`](#transactionrolesobject)
     - [`EventName`](#eventname)
@@ -1496,6 +1497,16 @@ A pre-built interaction that returns the latest block (optionally sealed or not)
 | Type                        | Description                       |
 | --------------------------- | --------------------------------- |
 | [BlockObject](#blockobject) | A JSON representation of a block. |
+
+#### Usage
+
+```javascript
+import * as fcl from "@onflow/fcl";
+await fcl.block() // get latest finalized block
+await fcl.block({sealed: true}) // get latest sealed block
+await fcl.block({id: 'abc'}) // get block by id
+await fcl.block({height: 123}) // get block by height
+```
 
 ---
 
