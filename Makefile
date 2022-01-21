@@ -26,20 +26,17 @@ clean:
 .PHONY: install
 install:
 	$(info TSK: install)
-	$(info run "npm ci" in packages/*)
-	$(EXEC) sh -c 'npm ci --prefix $$0 || exit 255'
+	sh -c 'npm ci || exit 255'
 
 .PHONY: build
 build:
 	$(info TSK: build)
-	$(info run "npm run build" in packages/*)
-	$(EXEC) sh -c 'npm run build --prefix $$0 || exit 255'
+	sh -c 'npm run build -ws || exit 255'
 
 .PHONY: test
 test:
 	$(info TSK: test)
-	$(info run "npm test" in packages/*)
-	$(EXEC) sh -c 'npm run test --prefix $$0 || exit 255'
+	sh -c 'npm run test exit 255'
 
 .PHONY: publish
 publish:
@@ -50,5 +47,4 @@ publish:
 .PHONY: ci
 ci: clean install build
 	$(info TSK: ci)
-	$(info run "npm test --ci" in packages/*)
-	$(EXEC) sh -c 'npm run test --prefix $$0 -- --ci || exit 255'
+	sh -c 'npm run test --ws -- --ci || exit 255'
