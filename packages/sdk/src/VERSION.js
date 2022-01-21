@@ -1,1 +1,1 @@
-export const VERSION = "0.0.57-alpha.2"
+export const VERSION = process.env.CURRENT_VERSION || "TESTVERSION"

@@ -1,6 +1,4 @@
 import assert from "assert"
-import fs from "fs"
-import path from "path"
 import {
   build,
   resolve,
@@ -11,16 +9,11 @@ import {
   authorizations,
   payer,
   authorization,
-  params,
-  param,
   VERSION,
 } from "./sdk.js"
 
 test("fcl.VERSION needs to match version in package.json", () => {
-  const pkg = JSON.parse(
-    fs.readFileSync(path.resolve(__dirname, "../package.json"), "utf-8")
-  )
-  expect(pkg.version).toBe(VERSION)
+  expect(VERSION).toBe("TESTVERSION")
 })
 
 describe("build", () => {
