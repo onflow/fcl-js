@@ -1489,8 +1489,8 @@ A pre-built interaction that returns the latest block (optionally sealed or not)
 | Name     | Type    | Default | Description                                                                    |
 | -------- | ------- | ------- | ------------------------------------------------------------------------------ |
 | `sealed` | boolean | false   | If the latest block should be sealed or not. See [block states](#interaction). |
-| `id`     | boolean | string  | ID of block to get.                         |
-| `height` | boolean | int     | Height of block to get.                     |
+| `id`     | string  |         | ID of block to get.                                                            |
+| `height` | int     |         | Height of block to get.                                                        |
 
 #### Returns
 
