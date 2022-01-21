@@ -4,6 +4,7 @@ import {response} from "../response/response.js"
 import {config} from "../config"
 import {decodeResponse} from "../decode/decode.js"
 import {getBlock} from "../build/build-get-block.js"
+import {invariant} from "@onflow/util-invariant"
 
 async function getRefId (opts) {
   const node = await config().get("accessNode.api")
