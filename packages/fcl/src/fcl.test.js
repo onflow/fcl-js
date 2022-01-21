@@ -1,6 +1,3 @@
-import * as fcl from "./fcl"
-import fs from "fs"
-import path from "path"
 import {serialize} from "./serialize"
 import {
   resolve,
@@ -13,12 +10,10 @@ import {
   ref,
   createSignableVoucher,
 } from "@onflow/sdk"
+import {VERSION} from "@onflow/sdk/src/VERSION"
 
 test("fcl.VERSION needs to match version in package.json", () => {
-  const pkg = JSON.parse(
-    fs.readFileSync(path.resolve(__dirname, "../package.json"), "utf-8")
-  )
-  expect(pkg.version).toBe(fcl.VERSION)
+  expect(VERSION).toBe("TESTVERSION")
 })
 
 test("serialize returns voucher", async () => {
