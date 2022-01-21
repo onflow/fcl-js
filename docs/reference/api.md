@@ -161,7 +161,7 @@
   - [`block`](#block)
       - [Arguments](#arguments-19)
       - [Returns](#returns-14)
-  - [`latestBlock`](#latestblock)
+  - [`latestBlock` (Deprecated)](#latestblock-deprecated)
       - [Arguments](#arguments-20)
       - [Returns](#returns-15)
       - [Usage](#usage-28)
@@ -1499,7 +1499,7 @@ A pre-built interaction that returns the latest block (optionally sealed or not)
 
 ---
 
-## `latestBlock`
+## `latestBlock` (Deprecated)
 
 A pre-built interaction that returns the latest block (optionally sealed or not).
 
