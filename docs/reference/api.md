@@ -38,15 +38,15 @@
       - [Usage](#usage-3)
     - [Current User](#current-user)
     - [Methods](#methods-1)
-  - [`currentUser().subscribe`](#currentusersubscribe)
+  - [`currentUser.subscribe`](#currentusersubscribe)
       - [Arguments](#arguments)
       - [Usage](#usage-4)
-  - [`currentUser().snapshot`](#currentusersnapshot)
+  - [`currentUser.snapshot`](#currentusersnapshot)
       - [Usage](#usage-5)
-  - [`currentUser().authenticate`](#currentuserauthenticate)
-  - [`currentUser().unauthenticate`](#currentuserunauthenticate)
-  - [`currentUser().authorization`](#currentuserauthorization)
-  - [`currentUser().signUserMessage`](#currentusersignusermessage)
+  - [`currentUser.authenticate`](#currentuserauthenticate)
+  - [`currentUser.unauthenticate`](#currentuserunauthenticate)
+  - [`currentUser.authorization`](#currentuserauthorization)
+  - [`currentUser.signUserMessage`](#currentusersignusermessage)
     - [Arguments](#arguments-1)
       - [Returns](#returns-1)
       - [Usage](#usage-6)
@@ -378,7 +378,7 @@ fcl.config().put("accessNode.api", "https://access-testnet.onflow.org");
 fcl.authenticate();
 // ... somewhere else & sometime later
 fcl.unauthenticate();
-// fcl.currentUser().loggedIn === null
+// fcl.currentUser.loggedIn === null
 ```
 
 #### Examples
@@ -483,7 +483,7 @@ Holds the [current user](#currentuserobject), if set, and offers a set of functi
 
 ---
 
-## `currentUser().subscribe`
+## `currentUser.subscribe`
 
 The callback passed to subscribe will be called when the user authenticates and un-authenticates, making it easy to update the UI accordingly.
 
@@ -501,7 +501,7 @@ import * as fcl from "@onflow/fcl";
 
 export function AuthCluster() {
   const [user, setUser] = useState({ loggedIn: null });
-  useEffect(() => fcl.currentUser().subscribe(setUser), []); // sets the callback for FCL to use
+  useEffect(() => fcl.currentUser.subscribe(setUser), []); // sets the callback for FCL to use
 
   if (user.loggedIn) {
     return (
@@ -524,41 +524,41 @@ export function AuthCluster() {
 
 ---
 
-## `currentUser().snapshot`
+## `currentUser.snapshot`
 
-Returns the [current user](#currentuserobject) object. This is the same object that is set and available on [`fcl.currentUser().subscribe(callback)`](#currentusersubscribe).
+Returns the [current user](#currentuserobject) object. This is the same object that is set and available on [`fcl.currentUser.subscribe(callback)`](#currentusersubscribe).
 
 #### Usage
 
 ```javascript
 // returns the current user object
-const user = fcl.currentUser().snapshot();
+const user = fcl.currentUser.snapshot();
 
 // subscribes to the current user object and logs to console on changes
-fcl.currentUser().subscribe(console.log);
+fcl.currentUser.subscribe(console.log);
 ```
 
 ---
 
-## `currentUser().authenticate`
+## `currentUser.authenticate`
 
 Equivalent to `fcl.authenticate`.
 
 ---
 
-## `currentUser().unauthenticate`
+## `currentUser.unauthenticate`
 
 Equivalent to `fcl.unauthenticate`.
 
 ---
 
-## `currentUser().authorization`
+## `currentUser.authorization`
 
 Equivalent to `fcl.authz`
 
 ---
 
-## `currentUser().signUserMessage`
+## `currentUser.signUserMessage`
 
 A method to use allowing the user to personally sign data via FCL Compatible Wallets/Services.
 
@@ -584,7 +584,7 @@ import * as fcl from "@onflow/fcl"
 export const signMessage = async () => {
   const MSG = Buffer.from("FOO").toString("hex")
   try {
-    return await currentUser().signUserMessage(MSG)
+    return await currentUser.signUserMessage(MSG)
   } catch (error) {
     console.log(error)
   }
@@ -781,7 +781,7 @@ const txId = await fcl.mutate({
 
 ## `verifyUserSignatures`
 
-A method allowing applications to cryptographically verify the ownership of a Flow account by verifying a message was signed by a user's private key/s. This is typically used with the response from `currentUser().signUserMessage`.
+A method allowing applications to cryptographically verify the ownership of a Flow account by verifying a message was signed by a user's private key/s. This is typically used with the response from `currentUser.signUserMessage`.
 
 ### Arguments
 
