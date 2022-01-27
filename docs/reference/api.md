@@ -658,11 +658,13 @@ config({
 })
 ```
 
-**Service Addresses on Testnet and Mainnet**
+**Wallet Addresses on Testnet and Mainnet**
 
 | Service    | Testnet            | Mainnet            |
 | ---------- | ------------------ | ------------------ |
 | `Ledger`   | 0x9d2e44203cb13051 | 0xe5cd26afebe62781 |
+
+For more details on wallets, view the [service list here](https://github.com/onflow/fcl-discovery/blob/master/data/services.json).
 
 ---
 
