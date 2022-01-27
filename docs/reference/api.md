@@ -597,7 +597,9 @@ export const signMessage = async () => {
 
 ## `discovery`
 
-An alternative to Discovery Wallet (a pre-built service list for authentication) where dapp developers can access services in directly in their code in order to build customized authentication experiences. 
+Discovery abstracts away code so that developers don't have to deal with the discovery of Flow compatible wallets, integration, or authentication. Using `discovery` from FCL allows dapps to list and authenticate with wallets while having full control over the UI. Common use cases for this are login or registration pages.
+
+(Alternatively, if you don't need control over your UI you can continue to use the `discovery.wallet` config value documented in the [Quickstart](https://docs.onflow.org/fcl/tutorials/flow-app-quickstart/) for the simplest configuration.)
 
 > ⚠️**The following methods can only be used in web browsers.**
 
@@ -622,12 +624,19 @@ import { useState, useEffect } from "react"
 import * as fcl from "@onflow/fcl"
 
 function Component() {
-  const [services, setServices] = useState([])
-  useEffect(() => fcl.discovery.authn.subscribe(res => setServices(res.results)), [])
+  const [wallets, setWallets] = useState([])
+  useEffect(() => fcl.discovery.authn.subscribe(res => setWallets(res.results)), [])
 
   return (
     <div>
-      {services.map(service => <button key={service.provider.address} onClick={() => fcl.authenticate({ service })}>Login with {service.provider.name}</button>)}
+      {wallets.map((wallet) => (
+        <button
+          key={wallet.provider.address}
+          onClick={() => fcl.authenticate({ wallet })}
+        >
+          Login with {wallet.provider.name}
+        </button>
+      ))}
     </div>
   )
 }
@@ -649,11 +658,13 @@ config({
 })
 ```
 
-**Service Addresses on Testnet and Mainnet**
+**Wallet Addresses on Testnet and Mainnet**
 
 | Service    | Testnet            | Mainnet            |
 | ---------- | ------------------ | ------------------ |
 | `Ledger`   | 0x9d2e44203cb13051 | 0xe5cd26afebe62781 |
+
+For more details on wallets, view the [service list here](https://github.com/onflow/fcl-discovery/blob/master/data/services.json).
 
 ---
 
