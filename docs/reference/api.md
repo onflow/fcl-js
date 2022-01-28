@@ -632,7 +632,7 @@ function Component() {
       {wallets.map((wallet) => (
         <button
           key={wallet.provider.address}
-          onClick={() => fcl.authenticate({ wallet })}
+          onClick={() => fcl.authenticate({ service: wallet })}
         >
           Login with {wallet.provider.name}
         </button>
