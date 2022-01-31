@@ -1,3 +1,7 @@
+## Unreleased
+
+- 2022-01-31 -- [@chasefleming](https://github.com/chasefleming): Fix SDK circular dependency in `src/block.js` file.
+
 ## 0.0.57-alpha.1 -- 2022-01-21
 
 - 2022-01-21 -- [@JeffreyDoyle](https://github.com/JeffreyDoyle): Abstracts away the SDK transport modules into their own packages. The JS-SDK now makes use of transport modules for sending an interaction to an access api and receiving a response. A transport module must be defined in config:
