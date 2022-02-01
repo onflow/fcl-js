@@ -1,5 +1,5 @@
 {
-  "name": "@onflow/util-string",
+  "name": "@onflow/util-transform-string",
   "version": "0.0.1",
   "description": "String utilities for use throughout FCL and JS-SDK",
   "license": "Apache-2.0",
