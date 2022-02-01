@@ -107,7 +107,6 @@ describe("Transaction", () => {
             "payload_signatures": [
                 {
                     "address": "f8d6e0586b0a20c7",
-                    "signer_index": "0",
                     "key_index": "1",
                     "signature": "q8Ej",
                 }
@@ -115,7 +114,6 @@ describe("Transaction", () => {
             "envelope_signatures": [
                 {
                     "address": "f8d6e0586b0a20c7",
-                    "signer_index": "0",
                     "key_index": "1",
                     "signature": "q8Ej"
                 }

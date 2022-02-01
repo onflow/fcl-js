@@ -12,17 +12,14 @@ export async function sendTransaction(ix, context = {}, opts = {}) {
 
   // Apply Non Payer Signatures to Payload Signatures
   let payloadSignatures = []
-  var i = 0
   for (let acct of Object.values(ix.accounts)) {
     try {
       if (!acct.role.payer && acct.signature != null) {
         payloadSignatures.push({
           address: sansPrefix(acct.addr),
-          signer_index: String(i),
           key_index: String(acct.keyId),
           signature: Buffer.from(acct.signature, "hex").toString("base64")
         })
-        i = i + 1
       }
     } catch (error) {
       console.error("SDK HTTP Send Error: Trouble applying payload signature", {acct, ix})
@@ -32,18 +29,15 @@ export async function sendTransaction(ix, context = {}, opts = {}) {
 
   // Apply Payer Signatures to Envelope Signatures
   let envelopeSignatures = {}
-  var j = 0
   for (let acct of Object.values(ix.accounts)) {
     try {
       if (acct.role.payer && acct.signature != null) {
         let id = acct.tempId || `${acct.addr}-${acct.keyId}`
         envelopeSignatures[id] = envelopeSignatures[id] || {
           address: sansPrefix(acct.addr),
-          signer_index: String(j),
           key_index: String(acct.keyId),
           signature: Buffer.from(acct.signature, "hex").toString("base64")
         }
-        j = j + 1
       }
     } catch (error) {
       console.error("SDK HTTP Send Error: Trouble applying envelope signature", {acct, ix})
