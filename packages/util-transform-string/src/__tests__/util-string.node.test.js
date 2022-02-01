@@ -30,75 +30,93 @@ function _genHexString() {
 }
 
 describe("String Lib :: Node", () => {
-  test("utf8 -> hex", () => {
-    Array.from({ length: 100 })
-      .forEach(() => {
-        let testStr = _genUtf8String()
-        expect(
-          utf8_to_hex(testStr)
-        ).toEqual(
-          Buffer.from(testStr).toString("hex")
-        )
+  Array.from({ length: 100 })
+    .forEach(() => {
+      let testStr = _genUtf8String()
+      test(`utf8 -> hex :: input = ${testStr}`, () => {
+        Array.from({ length: 100 })
+          .forEach(() => {
+            expect(
+              utf8_to_hex(testStr)
+            ).toEqual(
+              Buffer.from(testStr).toString("hex")
+            )
+          })
       })
-  })
+    })
 
-  test("utf8 -> base64", () => {
-    Array.from({ length: 100 })
-      .forEach(() => {
-        let testStr = _genUtf8String()
-        expect(
-          utf8_to_base64(testStr)
-        ).toEqual(
-          Buffer.from(testStr).toString("base64")
-        )
+  Array.from({ length: 100 })
+    .forEach(() => {
+      let testStr = _genUtf8String()
+      test(`utf8 -> base64 :: input = ${testStr}`, () => {
+        Array.from({ length: 100 })
+          .forEach(() => {
+            expect(
+              utf8_to_base64(testStr)
+            ).toEqual(
+              Buffer.from(testStr).toString("base64")
+            )
+          })
       })
-  })
+    })
 
-  test("hex -> base64", () => {
-    Array.from({ length: 100 })
-      .forEach(() => {
-        let testStr = _genHexString()
-        expect(
-          hex_to_base64(testStr)
-        ).toEqual(
-          Buffer.from(testStr, "hex").toString("base64")
-        )
+  Array.from({ length: 100 })
+    .forEach(() => {
+      let testStr = _genHexString()
+      test(`hex -> base64 :: input = ${testStr}`, () => {
+        Array.from({ length: 100 })
+          .forEach(() => {
+            expect(
+              hex_to_base64(testStr)
+            ).toEqual(
+              Buffer.from(testStr, "hex").toString("base64")
+            )
+          })
       })
-  })
+    })
 
-  test("hex -> utf8", () => {
-    Array.from({ length: 100 })
-      .forEach(() => {
-        let testStr = _genHexString()
-        expect(
-          hex_to_utf8(testStr)
-        ).toEqual(
-          Buffer.from(testStr, "hex").toString()
-        )
+  Array.from({ length: 100 })
+    .forEach(() => {
+      let testStr = _genHexString()
+      test(`hex -> utf8 :: input = ${testStr}`, () => {
+        Array.from({ length: 100 })
+          .forEach(() => {
+            expect(
+              hex_to_utf8(testStr)
+            ).toEqual(
+              Buffer.from(testStr, "hex").toString()
+            )
+          })
       })
-  })
+    })
 
-  test("base64 -> hex", () => {
-    Array.from({ length: 100 })
-      .forEach(() => {
-        let testStr = _genBase64String()
-        expect(
-          base64_to_hex(testStr)
-        ).toEqual(
-          Buffer.from(testStr, "base64").toString("hex")
-        )
+  Array.from({ length: 100 })
+    .forEach(() => {
+      let testStr = _genBase64String()
+      test(`base64 -> hex :: input = ${testStr}`, () => {
+        Array.from({ length: 100 })
+          .forEach(() => {
+            expect(
+              base64_to_hex(testStr)
+            ).toEqual(
+              Buffer.from(testStr, "base64").toString("hex")
+            )
+          })
       })
-  })
+    })
 
-  test("base64 -> utf8", () => {
-    Array.from({ length: 100 })
-      .forEach(() => {
-        let testStr = _genBase64String()
-        expect(
-          base64_to_utf8(testStr)
-        ).toEqual(
-          Buffer.from(testStr, "base64").toString()
-        )
+  Array.from({ length: 100 })
+    .forEach(() => {
+      let testStr = _genBase64String()
+      test(`base64 -> utf8 :: input = ${testStr}`, () => {
+        Array.from({ length: 100 })
+          .forEach(() => {
+            expect(
+              base64_to_utf8(testStr)
+            ).toEqual(
+              Buffer.from(testStr, "base64").toString()
+            )
+          })
       })
-  })
+    })
 })
