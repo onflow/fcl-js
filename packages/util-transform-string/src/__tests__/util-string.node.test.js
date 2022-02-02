@@ -11,25 +11,44 @@ import {
   base64_to_utf8,
 } from "../util-string.js"
 
-const ALPHABET = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ123456789".split("")
-let TEST_STRING_MAX_LEN = 50
-let TEST_STRING_MIN_LEN = 5
+const UTF16_ALPHABET = " !\"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[ ]^_\`abcdefghijklmnopqrstuvwxyz{|}~ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿĂăĄąĆćČčĎďĐđĘęĚěĹĺĽľŁłŃńŇňŐőŒœŔŕŘřŚśŞşŠšŢţŤťŮůŰűŸŹźŻżŽžƒˆˇ˘˙˛˜˝–—‘’‚“”„†‡•…‰‹›€™".split("")
+const ASCII_ALPHABET = " !\"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[]^_`abcdefghijklmnopqrstuvwxyz{|}~".split("")
+
+let TEST_STRING_MAX_LEN = 500
+let TEST_STRING_MIN_LEN = 50
 
 function _genUtf8String() {
   return Array.from({ length: Math.max(~~(Math.random() * TEST_STRING_MAX_LEN), TEST_STRING_MIN_LEN) })
-    .map(() => ALPHABET[Math.max(~~(Math.random() * ALPHABET.length) - 1, 0)])
+    .map(() => UTF16_ALPHABET[Math.max(~~(Math.random() * UTF16_ALPHABET.length) - 1, 0)])
+    .join("")
+}
+
+function _genBase64SafeUtf8String() {
+  return Array.from({ length: Math.max(~~(Math.random() * TEST_STRING_MAX_LEN), TEST_STRING_MIN_LEN) })
+    .map(() => ASCII_ALPHABET[Math.max(~~(Math.random() * ASCII_ALPHABET.length) - 1, 0)])
     .join("")
 }
 
 function _genBase64String() {
-  return Buffer.from(_genUtf8String()).toString("base64")
+  return Buffer.from(_genBase64SafeUtf8String()).toString("base64")
 }
 
 function _genHexString() {
-  return Buffer.from(_genUtf8String()).toString("hex")
+  return Buffer.from(_genBase64SafeUtf8String()).toString("hex")
 }
 
-describe("String Lib :: Node", () => {
+describe("String Lib :: Browser", () => {
+  test("README Example", () => {
+    const test_string = "Flow Blockchain"
+    expect(
+        base64_to_utf8(
+            utf8_to_base64(test_string)
+        )
+    ).toEqual(
+        test_string
+    )
+  })
+
   Array.from({ length: 100 })
     .forEach(() => {
       let testStr = _genUtf8String()
@@ -47,7 +66,7 @@ describe("String Lib :: Node", () => {
 
   Array.from({ length: 100 })
     .forEach(() => {
-      let testStr = _genUtf8String()
+      let testStr = _genBase64SafeUtf8String()
       test(`utf8 -> base64 :: input = ${testStr}`, () => {
         Array.from({ length: 100 })
           .forEach(() => {
