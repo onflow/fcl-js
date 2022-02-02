@@ -33,7 +33,7 @@ describe("Get Transaction Status", () => {
     const returnedTransactionStatus = {
         status: 2,
         statusString: "FINALIZED",
-        statusCode: 2,
+        statusCode: 0,
         errorMessage: "No Error",
         events: [
             {
@@ -48,7 +48,7 @@ describe("Get Transaction Status", () => {
 
     unaryMock.mockReturnValue({
         getStatus: () => 2,
-        getStatusCode: () => 2,
+        getStatusCode: () => 0,
         getErrorMessage: () => "No Error",
         getEventsList: () => ([
             {

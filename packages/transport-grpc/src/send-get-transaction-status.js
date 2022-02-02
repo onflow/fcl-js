@@ -33,7 +33,7 @@ export async function sendGetTransactionStatus(ix, context = {}, opts = {}) {
   ret.tag = ix.tag
   ret.transactionStatus = {
     status: res.getStatus(),
-    statusString: STATUS_MAP[res.getStatusCode()],
+    statusString: STATUS_MAP[res.getStatus()],
     statusCode: res.getStatusCode(),
     errorMessage: res.getErrorMessage(),
     events: events.map(event => ({
