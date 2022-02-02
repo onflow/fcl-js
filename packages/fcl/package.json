@@ -37,7 +37,7 @@
     "test": "jest",
     "build": "microbundle --define process.env.CURRENT_VERSION=\"$(node -e \"console.log(require('./package.json').version)\")\"",
     "test:watch": "jest --watch",
-    "start": "microbundle watch"
+    "start": "microbundle watch --define process.env.CURRENT_VERSION=\"$(node -e \"console.log(require('./package.json').version)\")\""
   },
   "dependencies": {
     "@onflow/interaction": "0.0.11",
