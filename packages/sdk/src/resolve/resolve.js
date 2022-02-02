@@ -15,34 +15,36 @@ import {resolveAccounts} from "./resolve-accounts.js"
 import {resolveSignatures} from "./resolve-signatures.js"
 import {resolveValidators} from "./resolve-validators.js"
 import {resolveFinalNormalization} from "./resolve-final-normalization.js"
-import {resolvePreSendCheck} from "./resolve-pre-send-check.js"
+import {resolveVoucherIntercept} from "./resolve-voucher-intercept.js"
 
 const noop = v => v
-const debug = (key, fn = noop) => async ix => {
-  const take = (obj, keys = []) => {
-    if (typeof keys === "string") keys = keys.split(" ")
-    keys.reduce((acc, key) => ({...acc, [key]: obj[key]}), {})
+const debug =
+  (key, fn = noop) =>
+  async ix => {
+    const take = (obj, keys = []) => {
+      if (typeof keys === "string") keys = keys.split(" ")
+      keys.reduce((acc, key) => ({...acc, [key]: obj[key]}), {})
+    }
+
+    const accts = ix =>
+      [
+        "\nAccounts:",
+        {
+          proposer: ix.proposer,
+          authorizations: ix.authorizations,
+          payer: ix.payer,
+        },
+        "\n\nDetails:",
+        ix.accounts,
+      ].filter(Boolean)
+
+    const log = (...msg) => {
+      console.log(`debug[${key}] ---\n`, ...msg, "\n\n\n---")
+    }
+
+    if (await config.get(`debug.${key}`)) await fn(ix, log, accts)
+    return ix
   }
-
-  const accts = ix =>
-    [
-      "\nAccounts:",
-      {
-        proposer: ix.proposer,
-        authorizations: ix.authorizations,
-        payer: ix.payer,
-      },
-      "\n\nDetails:",
-      ix.accounts,
-    ].filter(Boolean)
-
-  const log = (...msg) => {
-    console.log(`debug[${key}] ---\n`, ...msg, "\n\n\n---")
-  }
-
-  if (await config.get(`debug.${key}`)) await fn(ix, log, accts)
-  return ix
-}
 
 export const resolve = pipe([
   resolveCadence,
@@ -57,23 +59,27 @@ export const resolve = pipe([
   debug("signatures", (ix, log, accts) => log(...accts(ix))),
   resolveFinalNormalization,
   resolveValidators,
-  resolvePreSendCheck,
+  resolveVoucherIntercept,
   debug("resolved", (ix, log) => log(ix)),
 ])
 
 async function execFetchRef(ix) {
   if (isTransaction(ix) && ix.message.refBlock == null) {
     const node = await config().get("accessNode.api")
-    const sendFn = await config.first(
-      ["sdk.transport", "sdk.send"]
-    )
+    const sendFn = await config.first(["sdk.transport", "sdk.send"])
 
     invariant(
-      sendFn, 
+      sendFn,
       `Required value for sdk.transport is not defined in config. See: ${"https://github.com/onflow/fcl-js/blob/master/packages/sdk/CHANGELOG.md#0057-alpha1----2022-01-21"}`
     )
 
-    ix.message.refBlock = (await sendFn(build([getBlock()]), {config, response, ix: ixModule}, {node}).then(decode)).id
+    ix.message.refBlock = (
+      await sendFn(
+        build([getBlock()]),
+        {config, response, ix: ixModule},
+        {node}
+      ).then(decode)
+    ).id
   }
   return ix
 }
@@ -84,12 +90,10 @@ async function execFetchSequenceNumber(ix) {
     invariant(acct, `Transactions require a proposer`)
     if (acct.sequenceNum == null) {
       const node = await config().get("accessNode.api")
-      const sendFn = await config.first(
-        ["sdk.transport", "sdk.send"]
-      )
+      const sendFn = await config.first(["sdk.transport", "sdk.send"])
 
       invariant(
-        sendFn, 
+        sendFn,
         `Required value for sdk.transport is not defined in config. See: ${"https://github.com/onflow/fcl-js/blob/master/packages/sdk/CHANGELOG.md#0057-alpha1----2022-01-21"}`
       )
 
