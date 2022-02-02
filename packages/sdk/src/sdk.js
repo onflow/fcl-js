@@ -78,7 +78,7 @@ export {resolveAccounts} from "./resolve/resolve-accounts.js"
 export {resolveSignatures} from "./resolve/resolve-signatures.js"
 export {resolveValidators} from "./resolve/resolve-validators.js"
 export {resolveRefBlockId} from "./resolve/resolve-ref-block-id.js"
-// export {resolvePreSendCheck} from "./resolve/resolve-pre-send-check.js"
+export {resolveVoucherIntercept} from "./resolve/resolve-voucher-intercept.js"
 
 // Config
 export {config} from "./config"
