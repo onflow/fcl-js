@@ -59,7 +59,7 @@ describe("Get Transaction Status", () => {
     expect(response.transactionStatus).toStrictEqual({
         status: 1,
         statusString: "PENDING",
-        statusCode: 1,
+        statusCode: 0,
         errorMessage: "No Error",
         events: [
             {
