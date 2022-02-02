@@ -30,7 +30,7 @@ export async function sendGetTransactionStatus(ix, context = {}, opts = {}) {
   ret.transactionStatus = {
     status: STATUS_MAP[res.status.toUpperCase()] || "", 
     statusString: res.status.toUpperCase(), 
-    statusCode: 0, // TODO: Use field when becomes available on HTTP api https://github.com/dapperlabs/flow-go/issues/6133
+    statusCode: 0, // TODO: Use field when it becomes available on HTTP Access API
     errorMessage: res.error_message,
     events: res.events.map(event => ({
       type: event.type,
