@@ -67,7 +67,7 @@ export {script} from "./build/build-script.js"
 export {transaction} from "./build/build-transaction.js"
 export {validator} from "./build/build-validator.js"
 export {invariant} from "./build/build-invariant.js"
-// export {preSendCheck} from "./build/build-pre-send-check.js"
+export {voucherIntercept} from "./build/build-voucher-intercept.js"
 
 // Resolvers
 export {resolveCadence} from "./resolve/resolve-cadence.js"

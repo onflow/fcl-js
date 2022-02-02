@@ -510,7 +510,7 @@ const response = await sdk.send(await sdk.pipe(await sdk.build([
   - [`sdk.limit`](./src/build/build-limit.js)
   - [`sdk.payer`](./src/build/build-payer.js)
   - [`sdk.ping`](./src/build/build-ping.js)
-  - [`sdk.preSendCheck`](./src/build/build-pre-send-check.js)
+  - [`sdk.voucherIntercept`](./src/build/build-voucher-intercept.js)
   - [`sdk.proposer`](./src/build/build-proposer.js)
   - [`sdk.ref`](./src/build/build-ref.js)
   - [`sdk.script`](./src/build/build-script.js)
