@@ -18,8 +18,6 @@ title: Flow Client Library (FCL)
 
   </p>
 </p>
-<br />
-<br />
 
 ## What is FCL?
 
