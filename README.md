@@ -15,8 +15,6 @@
 
   </p>
 </p>
-<br />
-<br />
 
 ## What is FCL?
 
