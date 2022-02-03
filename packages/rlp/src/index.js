@@ -1,3 +1,5 @@
+import {Buffer} from "buffer"
+
 /**
  * Built on top of rlp library, removing the BN dependency for the flow.
  * Package : https://github.com/ethereumjs/rlp
