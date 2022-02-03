@@ -70,7 +70,7 @@ fcl.config({
 
 fcl.authenticate()
 ```
-![FCL Default Discovery UI](docs/images/fcl-discovery-screenshot.jpg)
+![FCL Default Discovery UI](images/fcl-discovery-screenshot.jpg)
 
 
 - *Interact with smart contracts*: Authorize transactions via the user's chosen wallet 
