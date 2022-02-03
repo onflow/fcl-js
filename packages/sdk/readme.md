@@ -356,7 +356,7 @@ Please reference the provided example project `react-simple` for example code.
 
 ### Example: Pre Checking Before Sending A Transaction
 
-As an extension, it is possible to insert a pre-check process before sending a transaction. To do this, use `sdk.preSendCheck(...)`. This argument is an arbitrary async function that receives a voucher object containing information about the transaction before it is sent. Within this, you can call `sdk.voucherToTxId(voucher)` to get the txId. Furthermore, you can call any API to record this txId before sending the transaction. If an error is thrown in this, the transaction sending process will be aborted.
+As an extension, it is possible to intercept the voucher before sending a transaction. To do this, use `sdk.voucherIntercept(...)`. This argument is an arbitrary async function that receives a voucher object containing information about the transaction before it is sent. Within this, you can call `sdk.voucherToTxId(voucher)` to get the txId. Furthermore, you can call any API to record this txId before sending the transaction. If an error is thrown in this, the transaction sending process will be aborted.
 
 ```javascript
 import * as sdk from "@onflow/sdk"
@@ -368,7 +368,7 @@ const response = await sdk.send(
       sdk.payer(sdk.authorization("01", signingFunction, 0)),
       sdk.proposer(sdk.authorization("01", signingFunction, 0, seqNum)),
       sdk.authorizations([sdk.authorization("01", signingFunction, 0)]),
-      sdk.preSendCheck(async voucher => {
+      sdk.voucherIntercept(async voucher => {
         const txId = sdk.voucherToTxId(voucher)
 
         // you can make an async to your backend to keep track of the hash
@@ -457,7 +457,7 @@ const response = await sdk.send(await sdk.pipe(await sdk.build([
   sdk.payer(sdk.authorization("01", signingFunction, 0)),
   sdk.proposer(sdk.authorization("01", signingFunction, 0)),
   sdk.authorizations([sdk.authorization("01", signingFunction, 0)]),
-  sdk.preSendCheck(async voucher => {}), // Optional
+  sdk.voucherIntercept(async voucher => {}), // Optional
 ]), [
   sdk.resolve([
     sdk.resolveArguments,
@@ -466,7 +466,7 @@ const response = await sdk.send(await sdk.pipe(await sdk.build([
     sdk.resolveProposerSequenceNumber({ node: "http://localhost:8080" }),
     sdk.resolveRefBlockId({ node: "http://localhost:8080" }),
     sdk.resolveSignatures,
-    sdk.resolvePreSendCheck, // Optional
+    sdk.resolveVoucherIntercept, // Optional
   ]),
 ]), { node: "http://localhost:8080" })
 ```
@@ -510,7 +510,7 @@ const response = await sdk.send(await sdk.pipe(await sdk.build([
   - [`sdk.limit`](./src/build/build-limit.js)
   - [`sdk.payer`](./src/build/build-payer.js)
   - [`sdk.ping`](./src/build/build-ping.js)
-  - [`sdk.preSendCheck`](./src/build/build-pre-send-check.js)
+  - [`sdk.voucherIntercept`](./src/build/build-voucher-intercept.js)
   - [`sdk.proposer`](./src/build/build-proposer.js)
   - [`sdk.ref`](./src/build/build-ref.js)
   - [`sdk.script`](./src/build/build-script.js)
@@ -522,7 +522,7 @@ const response = await sdk.send(await sdk.pipe(await sdk.build([
   - [`sdk.resolveArguments`](./src/resolve/resolve-arguments.js)
   - [`sdk.resolveCadence`](./src/resolve/resolve-cadence.js)
   - [`sdk.resolveFinalNormalization`](./src/resolve/resolve-final-normalization.js)
-  - [`sdk.resolvePreSendCheck`](./src/resolve/resolve-pre-send-check.js)
+  - [`sdk.resolveVoucherIntercept`](./src/resolve/resolve-voucher-intercept.js)
   - [`sdk.resolveProposerSequenceNumber`](./src/resolve/resolve-proposer-sequence-number.js)
   - [`sdk.resolveRefBlockId`](./src/resolve/resolve-ref-block-id.js)
   - [`sdk.resolveSignatures`](./src/resolve/resolve-signatures.js)
