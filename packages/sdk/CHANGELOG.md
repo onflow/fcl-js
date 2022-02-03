@@ -1,6 +1,8 @@
 ## Unreleased
 
-- 2022-02-02 -- [@gregsantos](https://github.com/gregsantos): Rename `preSendCheck` to `voucherIntercept` and expose.
+## 0.0.57-alpha.3 -- 2022-02-02
+
+- 2022-02-03 -- [@gregsantos](https://github.com/gregsantos): Rename `preSendCheck` to `voucherIntercept` and expose.
 - 2022-01-31 -- [@chasefleming](https://github.com/chasefleming): Fix SDK circular dependency in `src/block.js` file.
 
 ## 0.0.57-alpha.1 -- 2022-01-21
