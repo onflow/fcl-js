@@ -2,7 +2,7 @@
 <p align="center">
   <h1 align="center"> FCL JS</h1>
   <p align="center">
-    <i>FCL JS is the best way to connect your dapp to users, their wallets and Flow.</i>
+    <i>Connect your dapp to users, their wallets and Flow.</i>
     <br />
     <a href="https://docs.onflow.org/fcl-js/"><strong>Read the docs»</strong></a>
     <br />
