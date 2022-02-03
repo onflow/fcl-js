@@ -1,5 +1,12 @@
 ## Unreleased
 
+- 2022-02-3 -- [@chasefleming](https://github.com/chasefleming): Add options for for getting account by block height.
+
+```javascript
+await sdk.account("0x123") // Existing: get account at the latest block
+await sdk.account("0x123", {height: 123}) // New: get account at the block with the provided height
+```
+
 - 2022-01-31 -- [@chasefleming](https://github.com/chasefleming): Fix SDK circular dependency in `src/block.js` file.
 
 ## 0.0.57-alpha.1 -- 2022-01-21
