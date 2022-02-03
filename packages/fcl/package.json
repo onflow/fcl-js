@@ -33,7 +33,7 @@
   "scripts": {
     "pain": "npm publish --tag pain",
     "alpha": "npm publish --tag alpha",
-    "prepublishOnly": "npm install && npm test && npm run build",
+    "prepublishOnly": "npm test && npm run build",
     "test": "jest",
     "build": "microbundle --define process.env.CURRENT_VERSION=\"$(node -e \"console.log(require('./package.json').version)\")\"",
     "test:watch": "jest --watch",
