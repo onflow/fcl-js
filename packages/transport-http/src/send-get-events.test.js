@@ -1,3 +1,4 @@
+import {Buffer} from "buffer"
 import {sendGetEvents} from "./send-get-events.js"
 import {build} from "../../sdk/src/build/build.js"
 import {getEventsAtBlockIds} from "../../sdk/src/build/build-get-events-at-block-ids.js"

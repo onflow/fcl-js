@@ -1,3 +1,4 @@
+import {Buffer} from "buffer"
 import {sendExecuteScript} from "./send-execute-script.js"
 import {build} from "../../sdk/src/build/build.js"
 import {script} from "../../sdk/src/build/build-script.js"
