@@ -1,4 +1,5 @@
 import { SHA3 } from "sha3"
+import { Buffer } from "buffer"
 import { encode } from "@onflow/rlp"
 import { sansPrefix } from "@onflow/util-address"
 

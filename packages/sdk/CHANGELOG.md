@@ -1,5 +1,9 @@
 ## Unreleased
 
+## 0.0.57-alpha.3 -- 2022-02-03
+
+- 2022-02-03 -- [@JeffreyDoyle](https://github.com/JeffreyDoyle): VSN `@onflow/rlp` 0.0.3 -> 0.0.4.
+- 2022-02-03 -- [@JeffreyDoyle](https://github.com/JeffreyDoyle): Adds `buffer` as dependency.
 - 2022-01-31 -- [@chasefleming](https://github.com/chasefleming): Fix SDK circular dependency in `src/block.js` file.
 
 ## 0.0.57-alpha.1 -- 2022-01-21

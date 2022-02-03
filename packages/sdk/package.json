@@ -1,6 +1,6 @@
 {
   "name": "@onflow/sdk",
-  "version": "0.0.57-alpha.2",
+  "version": "0.0.57-alpha.3",
   "description": "Flow SDK",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
@@ -36,11 +36,12 @@
     "start": "microbundle watch"
   },
   "dependencies": {
-    "@onflow/rlp": "^0.0.3",
+    "@onflow/rlp": "^0.0.4",
     "@onflow/util-actor": "0.0.2",
     "@onflow/util-address": "^0.0.0",
     "@onflow/util-invariant": "^0.0.0",
     "@onflow/util-template": "0.0.1",
+    "buffer": "^6.0.3",
     "deepmerge": "^4.2.2",
     "sha3": "^2.1.4"
   }

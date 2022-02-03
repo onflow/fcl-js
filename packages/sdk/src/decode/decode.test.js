@@ -1,3 +1,4 @@
+import {Buffer} from "buffer"
 import * as root from "./decode.js"
 import {decode, decodeResponse} from "./decode.js"
 
