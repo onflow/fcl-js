@@ -1,3 +1,4 @@
+import {Buffer} from "buffer"
 import {withPrefix} from "@onflow/util-address"
 import {invariant} from "@onflow/util-invariant"
 import {encode} from '@onflow/rlp'

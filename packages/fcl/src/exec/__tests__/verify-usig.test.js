@@ -1,3 +1,4 @@
+import {Buffer} from "buffer"
 import {verifyUserSignatures, validateArgs} from "../verify"
 
 const message = Buffer.from("FOO").toString("hex")
