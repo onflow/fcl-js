@@ -1,6 +1,6 @@
 ## Unreleased
 
-- 2022-02-3 -- [@chasefleming](https://github.com/chasefleming): Add options for for getting account by block height.
+- 2022-02-03 -- [@chasefleming](https://github.com/chasefleming): Add options for for getting account by block height.
 
 ```javascript
 await sdk.account("0x123") // Existing: get account at the latest block
