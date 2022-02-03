@@ -1,6 +1,3 @@
----
-title: Flow Client Library (FCL)
----
 <br />
 <p align="center">
   <h1 align="center"> FCL JS</h1>
