@@ -1,3 +1,4 @@
+import {Buffer} from "buffer"
 import {invariant} from "@onflow/util-invariant"
 import {GetLatestBlockRequest, AccessAPI} from "@onflow/protobuf"
 import {unary} from "./unary"

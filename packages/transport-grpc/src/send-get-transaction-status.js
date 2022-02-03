@@ -1,3 +1,4 @@
+import {Buffer} from "buffer"
 import {invariant} from "@onflow/util-invariant"
 import {AccessAPI, GetTransactionRequest} from "@onflow/protobuf"
 import {unary as defaultUnary} from "./unary"

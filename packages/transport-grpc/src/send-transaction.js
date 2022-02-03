@@ -1,3 +1,4 @@
+import {Buffer} from "buffer"
 import {invariant} from "@onflow/util-invariant"
 import {AccessAPI, Transaction, SendTransactionRequest} from "@onflow/protobuf"
 import {sansPrefix} from "@onflow/util-address"

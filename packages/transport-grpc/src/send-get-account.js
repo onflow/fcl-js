@@ -1,3 +1,4 @@
+import {Buffer} from "buffer"
 import {invariant} from "@onflow/util-invariant"
 import {GetAccountAtLatestBlockRequest, GetAccountAtBlockHeightRequest, AccessAPI} from "@onflow/protobuf"
 import {sansPrefix, withPrefix} from "@onflow/util-address"
