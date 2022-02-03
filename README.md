@@ -42,11 +42,11 @@ For FCL on iOS, see [FCL Swift](https://github.com/zed-io/fcl-swift) contributed
 To use the FCL JS in your application, install using **yarn** or **npm**
 
 ```shell
-npm i -S @onflow/fcl @onflow/types
+npm i -S @onflow/fcl
 ```
 
 ```shell
-yarn add @onflow/fcl @onflow/types
+yarn add @onflow/fcl
 ```
 #### Importing
 
