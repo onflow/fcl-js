@@ -19,7 +19,7 @@ describe("Get Transaction Status", () => {
                 transaction_id: "a1b2c3",
                 transaction_index: "123",
                 event_index: "456",
-                payload: {type: "String", value: "Hello, Flow"}
+                payload: Buffer.from(JSON.stringify({type: "String", value: "Hello, Flow"})).toString("base64")
             }
         ]
     }
