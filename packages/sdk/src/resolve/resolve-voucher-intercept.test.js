@@ -1,13 +1,13 @@
-import {resolvePreSendCheck} from "./resolve-pre-send-check.js"
+import {resolveVoucherIntercept} from "./resolve-voucher-intercept.js"
 
 test("exports function", () => {
-  expect(typeof resolvePreSendCheck).toBe("function")
+  expect(typeof resolveVoucherIntercept).toBe("function")
 })
 
-test("preSendCheck is executed", async () => {
+test("voucherIntercept is executed", async () => {
   let executed = false
 
-  const checkFunc = async (voucher) => {
+  const checkFunc = async voucher => {
     executed = true
     expect(typeof voucher).toBe("object")
   }
@@ -15,7 +15,7 @@ test("preSendCheck is executed", async () => {
   const ix = {
     tag: "TRANSACTION",
     assigns: {
-      "ix.pre-send-check": checkFunc,
+      "ix.voucher-intercept": checkFunc,
     },
     message: {
       cadence: "",
@@ -45,15 +45,15 @@ test("preSendCheck is executed", async () => {
     payer: "foo",
   }
 
-  await resolvePreSendCheck(ix)
+  await resolveVoucherIntercept(ix)
 
   expect(executed).toBe(true)
 })
 
-test("preSendCheck throws error", async () => {
+test("voucherIntercept throws error", async () => {
   let executed = false
 
-  const checkFuncThrowError = async (voucher) => {
+  const checkFuncThrowError = async voucher => {
     executed = true
     throw new Error("test error")
   }
@@ -61,7 +61,7 @@ test("preSendCheck throws error", async () => {
   const ix = {
     tag: "TRANSACTION",
     assigns: {
-      "ix.pre-send-check": checkFuncThrowError,
+      "ix.voucher-intercept": checkFuncThrowError,
     },
     message: {
       cadence: "",
@@ -91,9 +91,7 @@ test("preSendCheck throws error", async () => {
     payer: "foo",
   }
 
-  await expect(resolvePreSendCheck(ix))
-    .rejects
-    .toThrow();
+  await expect(resolveVoucherIntercept(ix)).rejects.toThrow()
 
   expect(executed).toBe(true)
 })

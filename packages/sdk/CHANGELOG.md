@@ -1,12 +1,15 @@
 ## Unreleased
 
-- 2022-02-03 -- [@chasefleming](https://github.com/chasefleming): Add options for for getting account by block height.
+- 2022-02-04 -- [@chasefleming](https://github.com/chasefleming): Add options for for getting account by block height.
 
 ```javascript
 await sdk.account("0x123") // Existing: get account at the latest block
 await sdk.account("0x123", {height: 123}) // New: get account at the block with the provided height
 ```
 
+## 0.0.57-alpha.3 -- 2022-02-02
+
+- 2022-02-03 -- [@gregsantos](https://github.com/gregsantos): Rename `preSendCheck` to `voucherIntercept` and expose.
 - 2022-01-31 -- [@chasefleming](https://github.com/chasefleming): Fix SDK circular dependency in `src/block.js` file.
 
 ## 0.0.57-alpha.1 -- 2022-01-21

@@ -1,6 +1,6 @@
-[![FLOW-JS-SDK Continuous Integration](https://github.com/onflow/flow-js-sdk/actions/workflows/integrate.yml/badge.svg)](https://github.com/onflow/flow-js-sdk/actions/workflows/integrate.yml)
-[![lerna](https://img.shields.io/badge/maintained%20with-lerna-cc00ff.svg)](https://lerna.js.org/)
-
+---
+title: Flow Client Library (FCL)
+---
 <br />
 <p align="center">
   <h1 align="center"> FCL JS</h1>
@@ -70,7 +70,7 @@ fcl.config({
 
 fcl.authenticate()
 ```
-![FCL Default Discovery UI](docs/images/fcl-discovery-screenshot.jpg)
+![FCL Default Discovery UI](images/fcl-discovery-screenshot.jpg)
 
 
 - *Interact with smart contracts*: Authorize transactions via the user's chosen wallet 

@@ -1,5 +1,9 @@
 ## Unreleased
 
+## 0.0.79-alpha.3 - 2022-02-03
+
+- 2022-02-03 -- [gregsantos](https://github.com/gregsantos): VSN `@onflow/sdk` 0.0.57-alpha.2 -> 0.0.57-alpha.3
+- 2022-02-03 -- [gregsantos](https://github.com/gregsantos): Export `voucherIntercept` and `voucherToTxId` from `sdk`
 - 2022-02-02 -- [gregsantos](https://github.com/gregsantos): Update start script to set current `VERSION`
 
 ## 0.0.79-alpha.2 - 2022-01-21
