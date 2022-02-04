@@ -37,7 +37,7 @@ export async function sendGetTransactionStatus(ix, context = {}, opts = {}) {
       transactionId: event.transaction_id,
       transactionIndex: Number(event.transaction_index),
       eventIndex: Number(event.event_index),
-      payload: event.payload
+      payload: JSON.parse(Buffer.from(event.payload, "base64").toString())
     }))
   }
 
