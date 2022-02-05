@@ -1,3 +1,7 @@
+### 0.0.6 -- 2022-02-04
+
+- 2022-02-04 -- Remove `0x` prefix from public keys in get account response.
+
 ### 0.0.5 -- 2022-02-04
 
 - 2022-02-04 -- Decodes event payloads from base64
