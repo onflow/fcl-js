@@ -32,7 +32,7 @@ const response = await fcl.send([
         publicKey: "abc123",
         signatureAlgorithm: 1,
         hashAlgorithm: 2,
-        weight: "1000"
+        weight: "1000.0"
     })
 ])
 

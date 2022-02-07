@@ -3,21 +3,22 @@ import * as t from "@onflow/types"
 
 export const TITLE = "Create Account"
 export const DESCRIPTION = "Create an Account on Flow with a Public Key."
-export const VERSION = "0.0.8"
-export const HASH = "8ffc53838bd37a609bf3205d386c4b2d8010bba1eda108d9eb55eab6e9e62940"
+export const VERSION = "0.0.9"
+export const HASH = "a0a78aa7821144efd5ebb974bb52ba04609ce76c3863af9d45348db93937cf98"
 export const CODE = 
-`transaction(publicKey: String, signatureAlgorithm: UInt8, hashAlgorithm: UInt8, weight: UFix64) {
+`import Crypto
+transaction(publicKey: String, signatureAlgorithm: UInt8, hashAlgorithm: UInt8, weight: UFix64) {
     prepare(signer: AuthAccount) {
         let key = PublicKey(
             publicKey: publicKey.decodeHex(),
-            signatureAlgorithm: signatureAlgorithm
+            signatureAlgorithm: SignatureAlgorithm(rawValue: signatureAlgorithm)!
         )
 
         let account = AuthAccount(payer: signer)
 
         account.keys.add(
             publicKey: key,
-            hashAlgorithm: hashAlgorithm,
+            hashAlgorithm: HashAlgorithm(rawValue: hashAlgorithm)!,
             weight: weight
         )
     }   
