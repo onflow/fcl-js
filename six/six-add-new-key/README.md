@@ -29,7 +29,10 @@ const response = await fcl.send([
         proposer: fcl.currentUser().authorization,
         authorization: fcl.currentUser().authorization,     
         payer: fcl.currentUser().authorization,             
-        publicKey: [publicKey]                          // New Public Key as a hex encoded string.
+        publicKey: "abc123",
+        signatureAlgorithm: 1,
+        hashAlgorithm: 2,
+        weight: "1000"
     })
 ])
 
