@@ -2,6 +2,10 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.0.8 -- 2022-02-07
+
+- 2022-02-07 -- Updates transaction code to use the correct Cadence create account functionality.
+
 ### 0.0.6 -- 2021-06-03
 
 - 2021-06-03 -- Updates peerDependencies versioning
