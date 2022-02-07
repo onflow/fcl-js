@@ -2,6 +2,10 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+### 0.0.9 -- 2022-02-07
+
+- 2022-02-07 -- Updates transaction code to use the correct Cadence create account functionality.
+
 ### 0.0.8 -- 2022-02-07
 
 - 2022-02-07 -- Updates transaction code to use the correct Cadence create account functionality.
