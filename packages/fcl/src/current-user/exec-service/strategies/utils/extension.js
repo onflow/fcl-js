@@ -17,7 +17,7 @@ export function extension(service, opts = {}) {
   )
 
   send({
-    type: "FCL:OPEN:EXTENSION",
+    type: "FCL:LAUNCH:EXTENSION",
     service,
   })
 
@@ -28,7 +28,7 @@ export function extension(service, opts = {}) {
       window.removeEventListener("message", buildMessageHandler)
       onClose()
     } catch (error) {
-      console.error("Popup Close Error", error)
+      console.error("Ext Close Error", error)
     }
   }
 
