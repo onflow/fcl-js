@@ -2,6 +2,8 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+- 2022-02-11 -- Use Buffer from dependency
+
 ### 0.0.2 && 0.0.3 -- 2020-10-28
 
 - 2020-10-28 -- Version Bump to force NPM update
