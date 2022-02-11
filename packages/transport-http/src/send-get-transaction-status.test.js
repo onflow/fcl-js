@@ -3,6 +3,7 @@ import {build} from "../../sdk/src/build/build.js"
 import {getTransactionStatus} from "../../sdk/src/build/build-get-transaction-status.js"
 import {resolve} from "../../sdk/src/resolve/resolve.js"
 import {response as responseADT} from "../../sdk/src/response/response.js"
+import {Buffer} from "@onflow/rlp"
 
 describe("Get Transaction Status", () => {
   test("GetTransactionResult", async () => {

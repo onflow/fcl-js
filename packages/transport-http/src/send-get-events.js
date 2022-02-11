@@ -41,7 +41,7 @@ function constructResponse(ix, context, res) {
       transactionId: event.transaction_id,
       transactionIndex: Number(event.transaction_index), 
       eventIndex: Number(event.event_index),
-      payload: JSON.parse(Buffer.from(event.payload, "base64").toString())
+      payload: JSON.parse(context.Buffer.from(event.payload, "base64").toString())
     })) : null
   )
 
@@ -51,6 +51,7 @@ function constructResponse(ix, context, res) {
 export async function sendGetEvents(ix, context = {}, opts = {}) {  
   invariant(opts.node, `SDK Send Get Events Error: opts.node must be defined.`)
   invariant(context.response, `SDK Send Get Events Error: context.response must be defined.`)
+  invariant(context.Buffer, `SDK Send Get Events Error: context.Buffer must be defined.`)
 
   ix = await ix
 

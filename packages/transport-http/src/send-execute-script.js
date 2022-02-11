@@ -9,8 +9,8 @@ async function sendExecuteScriptAtBlockIDRequest(ix, context, opts) {
     path: `/v1/scripts?block_id=${ix.block.id}`,
     method: "POST",
     body: {
-      "script": Buffer.from(ix.message.cadence).toString("base64"),
-      "arguments": ix.message.arguments.map(arg => Buffer.from(JSON.stringify(ix.arguments[arg].asArgument)).toString("base64"))
+      "script": context.Buffer.from(ix.message.cadence).toString("base64"),
+      "arguments": ix.message.arguments.map(arg => context.Buffer.from(JSON.stringify(ix.arguments[arg].asArgument)).toString("base64"))
     }
   })
 
@@ -25,8 +25,8 @@ async function sendExecuteScriptAtBlockHeightRequest(ix, context, opts) {
     path: `/v1/scripts?block_height=${ix.block.height}`,
     method: "POST",
     body: {
-      "script": Buffer.from(ix.message.cadence).toString("base64"),
-      "arguments": ix.message.arguments.map(arg => Buffer.from(JSON.stringify(ix.arguments[arg].asArgument)).toString("base64"))
+      "script": context.Buffer.from(ix.message.cadence).toString("base64"),
+      "arguments": ix.message.arguments.map(arg => context.Buffer.from(JSON.stringify(ix.arguments[arg].asArgument)).toString("base64"))
     }
   })
   
@@ -41,8 +41,8 @@ async function sendExecuteScriptAtLatestBlockRequest(ix, context, opts) {
     path: `/v1/scripts?block_height=sealed`,
     method: "POST",
     body: {
-      "script": Buffer.from(ix.message.cadence).toString("base64"),
-      "arguments": ix.message.arguments.map(arg => Buffer.from(JSON.stringify(ix.arguments[arg].asArgument)).toString("base64"))
+      "script": context.Buffer.from(ix.message.cadence).toString("base64"),
+      "arguments": ix.message.arguments.map(arg => context.Buffer.from(JSON.stringify(ix.arguments[arg].asArgument)).toString("base64"))
     }
   })
 
@@ -53,7 +53,7 @@ function constructResponse(ix, context, res)  {
   let ret = context.response()
   ret.tag = ix.tag
   
-  ret.encodedData = JSON.parse(Buffer.from(res, "base64").toString())
+  ret.encodedData = JSON.parse(context.Buffer.from(res, "base64").toString())
 
   return ret
 }
@@ -61,6 +61,7 @@ function constructResponse(ix, context, res)  {
 export async function sendExecuteScript(ix, context = {}, opts = {}) {
   invariant(opts.node, `SDK Send Execute Script Error: opts.node must be defined.`)
   invariant(context.response, `SDK Send Execute Script Error: context.response must be defined.`)
+  invariant(context.Buffer, `SDK Send Execute Script Error: context.Buffer must be defined.`)
 
   ix = await ix
 

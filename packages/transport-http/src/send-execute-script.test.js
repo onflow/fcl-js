@@ -7,6 +7,7 @@ import {atBlockHeight} from "../../sdk/src/build/build-at-block-height.js"
 import {resolve} from "../../sdk/src/resolve/resolve.js"
 import {response as responseADT} from "../../sdk/src/response/response.js"
 import * as types from "@onflow/types"
+import {Buffer} from "@onflow/rlp"
 
 describe("Send Execute Script", () => {
   test("ExecuteScriptAtLatestBlock", async () => {

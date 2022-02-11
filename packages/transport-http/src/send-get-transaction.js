@@ -4,6 +4,7 @@ import {httpRequest as defaultHttpRequest} from "./http-request.js"
 export async function sendGetTransaction(ix, context = {}, opts = {}) {
   invariant(opts.node, `SDK Send Get Transaction Error: opts.node must be defined.`)
   invariant(context.response, `SDK Send Get Transaction Error: context.response must be defined.`)
+  invariant(context.Buffer, `SDK Send Get Transaction Error: context.Buffer must be defined.`)
 
   const httpRequest = opts.httpRequest || defaultHttpRequest
 
@@ -28,12 +29,12 @@ export async function sendGetTransaction(ix, context = {}, opts = {}) {
     signature: sig.signature
   })
 
-  const unwrapArg = arg => JSON.parse(Buffer.from(arg, "base64").toString())
+  const unwrapArg = arg => JSON.parse(context.Buffer.from(arg, "base64").toString())
 
   let ret = context.response()
   ret.tag = ix.tag
   ret.transaction = {
-    script: Buffer.from(res.script, "base64").toString(),
+    script: context.Buffer.from(res.script, "base64").toString(),
     args: [...res.arguments.map(unwrapArg)],
     referenceBlockId: res.reference_block_id,
     gasLimit: Number(res.gas_limit),
