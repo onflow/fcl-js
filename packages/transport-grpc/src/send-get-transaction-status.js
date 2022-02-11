@@ -11,19 +11,20 @@ const STATUS_MAP = {
   5: "EXPIRED"
 }
 
-const u8ToHex = u8 => Buffer.from(u8).toString("hex")
-const hexBuffer = hex => Buffer.from(hex, "hex")
+const u8ToHex = (u8, context) => context.Buffer.from(u8).toString("hex")
+const hexBuffer = (hex, context) => context.Buffer.from(hex, "hex")
 
 export async function sendGetTransactionStatus(ix, context = {}, opts = {}) {
   invariant(opts.node, `SDK Send Get Transaction Status Error: opts.node must be defined.`)
   invariant(context.response, `SDK Send Get Transaction Status Error: context.response must be defined.`)
+  invariant(context.Buffer, `SDK Send Get Transaction Status Error: context.Buffer must be defined.`)
 
   const unary = opts.unary || defaultUnary
 
   ix = await ix
 
   const req = new GetTransactionRequest()
-  req.setId(hexBuffer(ix.transaction.id))
+  req.setId(hexBuffer(ix.transaction.id, context))
 
   const res = await unary(opts.node, AccessAPI.GetTransactionResult, req, context)
 
@@ -38,10 +39,10 @@ export async function sendGetTransactionStatus(ix, context = {}, opts = {}) {
     errorMessage: res.getErrorMessage(),
     events: events.map(event => ({
       type: event.getType(),
-      transactionId: u8ToHex(event.getTransactionId_asU8()),
+      transactionId: u8ToHex(event.getTransactionId_asU8(), context),
       transactionIndex: event.getTransactionIndex(),
       eventIndex: event.getEventIndex(),
-      payload: JSON.parse(Buffer.from(event.getPayload_asU8()).toString("utf8")),
+      payload: JSON.parse(context.Buffer.from(event.getPayload_asU8()).toString("utf8")),
     })),
   }
 
