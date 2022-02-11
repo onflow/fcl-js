@@ -1,5 +1,6 @@
 import * as root from "./decode.js"
 import {decode, decodeResponse} from "./decode.js"
+import {Buffer} from "@onflow/rlp"
 
 it("exported interface contract", () => {
   expect(root).toStrictEqual(

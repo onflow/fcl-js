@@ -1,5 +1,7 @@
 ## Unreleased
 
+- 2022-02-11 -- Uses Buffer from @onflow/rlp in encode.
+- 2022-02-11 -- Injects Buffer from @onflow/rlp to transport send modules.
 - 2022-02-04 -- [@chasefleming](https://github.com/chasefleming): Add options for for getting account by block height.
 
 ```javascript
