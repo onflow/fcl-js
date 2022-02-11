@@ -2,7 +2,7 @@ import {invariant} from "@onflow/util-invariant"
 import {GetLatestBlockRequest, AccessAPI} from "@onflow/protobuf"
 import {unary} from "./unary"
 
-const u8ToHex = u8 => Buffer.from(u8).toString("hex")
+const u8ToHex = (u8, context) => context.Buffer.from(u8).toString("hex")
 
 const latestBlockDeprecationNotice = () => {
   console.error(
@@ -24,6 +24,7 @@ const latestBlockDeprecationNotice = () => {
 export async function sendGetLatestBlock(ix, context = {}, opts = {}) {
   invariant(opts.node, `SDK Send Get Latest Block Error: opts.node must be defined.`)
   invariant(context.response, `SDK Send Get Latest Block Error: context.response must be defined.`)
+  invariant(context.Buffer, `SDK Send Get Latest Block Error: context.Buffer must be defined.`)
 
   ix = await ix
 
@@ -49,17 +50,17 @@ export async function sendGetLatestBlock(ix, context = {}, opts = {}) {
   const ret = context.response()
   ret.tag = ix.tag
   ret.block = {
-    id: u8ToHex(block.getId_asU8()),
-    parentId: u8ToHex(block.getParentId_asU8()),
+    id: u8ToHex(block.getId_asU8(), context),
+    parentId: u8ToHex(block.getParentId_asU8(), context),
     height: block.getHeight(),
     timestamp: block.getTimestamp(),
     collectionGuarantees: collectionGuarantees.map(collectionGuarantee => ({
-      collectionId: u8ToHex(collectionGuarantee.getCollectionId_asU8()),
+      collectionId: u8ToHex(collectionGuarantee.getCollectionId_asU8(), context),
       signatures: collectionGuarantee.getSignaturesList(),
     })),
     blockSeals: blockSeals.map(blockSeal => ({
-      blockId: u8ToHex(blockSeal.getBlockId_asU8()),
-      executionReceiptId: u8ToHex(blockSeal.getExecutionReceiptId_asU8()),
+      blockId: u8ToHex(blockSeal.getBlockId_asU8(), context),
+      executionReceiptId: u8ToHex(blockSeal.getExecutionReceiptId_asU8(), context),
       executionReceiptSignatures: blockSeal.getExecutionReceiptSignaturesList(),
       resultApprovalSignatures: blockSeal.getResultApprovalSignaturesList(),
     })),

@@ -1,3 +1,7 @@
+### Unreleased
+
+- 2022-02-11 -- Uses Buffer as provided by context injection
+
 ## 0.0.2 -- 2022-02-02
 
 - 2022-02-02 -- [@JeffreyDoyle](https://github.com/JeffreyDoyle): Adds statusString lookup based off of status field.
