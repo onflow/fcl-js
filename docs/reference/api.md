@@ -32,7 +32,7 @@
       - [Usage](#usage-2)
       - [Examples](#examples-2)
   - [`signUp`](#signup)
-  - [`login`](#login)
+  - [`logIn`](#login)
   - [`authz`](#authz)
       - [Returns](#returns)
       - [Usage](#usage-3)
@@ -422,7 +422,7 @@ A **convenience method** that calls and is equivalent to [`fcl.authenticate()`](
 
 ---
 
-## `login`
+## `logIn`
 
 > ⚠️**This method can only be used in web browsers.**
 
