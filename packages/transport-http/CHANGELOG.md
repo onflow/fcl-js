@@ -1,6 +1,7 @@
 ### 0.0.7 -- 2022-02-25
 
 - 2022-02-25 -- Use node require to consume node standard libraries
+- 2022-02-11 -- Uses Buffer as provided by context injection
 
 ### 0.0.6 -- 2022-02-04
 
