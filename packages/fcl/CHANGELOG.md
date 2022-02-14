@@ -1,5 +1,6 @@
 ## Unreleased
 
+- 2022-02-14 -- [chasefleming](https://github.com/chasefleming): Remove experimental redir warning from previous alpha build.
 - 2022-02-08 -- [gregsantos](https://github.com/gregsantos): Update extension strategy to add support for `EXT/RPC` service method
 
 ## 0.0.79-alpha.3 - 2022-02-03
