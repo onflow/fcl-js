@@ -1,5 +1,19 @@
 ## Unreleased
 
+- 2022-02-14 -- [gregsantos](https://github.com/gregsantos): Update `WalletUtils` encoding for authn-signing and auth-verifying.
+Encoding should leave all field that can exist as Buffers before RLP encoding as Buffers. This strategy will help maintain greater consistency with how these fields are treated when encoded in other areas of Flow.
+
+```js
+MESSAGE = 
+  HEX(
+    USER_DOMAIN_TAG, // Buffer, right padded to 32 bytes long
+    RLP(
+      APP_DOMAIN_TAG, // [Optional] Buffer, right padded to 32 bytes long
+      ADDRESS,  // Buffer, left padded to 8 bytes long
+      TIMESTAMP // Number
+    )
+  )
+```
 - 2022-02-14 -- [chasefleming](https://github.com/chasefleming): Remove experimental redir warning from previous alpha build.
 - 2022-02-08 -- [gregsantos](https://github.com/gregsantos): Update extension strategy to add support for `EXT/RPC` service method
 
