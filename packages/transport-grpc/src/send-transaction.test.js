@@ -10,6 +10,7 @@ import {voucherIntercept} from "../../sdk/src/build/build-voucher-intercept.js"
 import {voucherToTxId} from "../../sdk/src/resolve/voucher.js"
 import {resolve} from "../../sdk/src/resolve/resolve.js"
 import {response as responseADT} from "../../sdk/src/response/response.js"
+import {Buffer} from "@onflow/rlp"
 
 const jsonToUInt8Array = json => {
   var str = JSON.stringify(json, null, 0)
@@ -107,6 +108,7 @@ describe("Transaction", () => {
       ),
       {
         response: responseADT,
+        Buffer,
       },
       {
         unary: unaryMock,

@@ -29,7 +29,8 @@ describe("Send Execute Script", () => {
             ])
         ),
         {
-            response: responseADT
+            response: responseADT,
+            Buffer,
         },
         {
             httpRequest: httpRequestMock,
@@ -73,7 +74,8 @@ describe("Send Execute Script", () => {
             ])
         ),
         {
-            response: responseADT
+            response: responseADT,
+            Buffer,
         },
         {
             httpRequest: httpRequestMock,
@@ -117,7 +119,8 @@ describe("Send Execute Script", () => {
             ])
         ),
         {
-            response: responseADT
+            response: responseADT,
+            Buffer,
         },
         {
             httpRequest: httpRequestMock,

@@ -3,6 +3,7 @@ import {build} from "../../sdk/src/build/build.js"
 import {ping} from "../../sdk/src/build/build-ping.js"
 import {resolve} from "../../sdk/src/resolve/resolve.js"
 import {response as responseADT} from "../../sdk/src/response/response.js"
+import {Buffer} from "@onflow/rlp"
 
 describe("Ping", () => {
   test("Ping", async () => {
@@ -17,7 +18,8 @@ describe("Ping", () => {
             ])
         ),
         {
-            response: responseADT
+            response: responseADT,
+            Buffer,
         },
         {
             httpRequest: httpRequestMock,

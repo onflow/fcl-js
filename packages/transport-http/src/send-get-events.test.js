@@ -4,6 +4,7 @@ import {getEventsAtBlockIds} from "../../sdk/src/build/build-get-events-at-block
 import {getEventsAtBlockHeightRange} from "../../sdk/src/build/build-get-events-at-block-height-range.js"
 import {resolve} from "../../sdk/src/resolve/resolve.js"
 import {response as responseADT} from "../../sdk/src/response/response.js"
+import {Buffer} from "@onflow/rlp"
 
 describe("Send Get Events", () => {
   test("GetEventsForBlockIDs", async () => {
@@ -35,7 +36,8 @@ describe("Send Get Events", () => {
             ])
         ),
         {
-            response: responseADT
+            response: responseADT,
+            Buffer,
         },
         {
             httpRequest: httpRequestMock,
@@ -99,7 +101,8 @@ describe("Send Get Events", () => {
             ])
         ),
         {
-            response: responseADT
+            response: responseADT,
+            Buffer,
         },
         {
             httpRequest: httpRequestMock,

@@ -1,4 +1,5 @@
 import {invariant} from "@onflow/util-invariant"
+import {Buffer} from "@onflow/rlp"
 import {httpRequest as defaultHttpRequest} from "./http-request.js"
 
 async function sendExecuteScriptAtBlockIDRequest(ix, context, opts) {
