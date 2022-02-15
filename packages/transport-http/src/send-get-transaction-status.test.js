@@ -34,7 +34,8 @@ describe("Get Transaction Status", () => {
             ])
         ),
         {
-            response: responseADT
+            response: responseADT,
+            Buffer,
         },
         {
             httpRequest: httpRequestMock,

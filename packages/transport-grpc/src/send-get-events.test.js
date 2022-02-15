@@ -6,6 +6,7 @@ import {getEventsAtBlockHeightRange} from "../../sdk/src/build/build-get-events-
 import {atBlockHeight} from "../../sdk/src/build/build-at-block-height.js"
 import {resolve} from "../../sdk/src/resolve/resolve.js"
 import {response as responseADT} from "../../sdk/src/response/response.js"
+import {Buffer} from "@onflow/rlp"
 
 const jsonToUInt8Array = (json) => {
     var str = JSON.stringify(json, null, 0);
@@ -77,7 +78,8 @@ describe("Send Get Events", () => {
             ])
         ),
         {
-            response: responseADT
+            response: responseADT,
+            Buffer,
         },
         {
             unary: unaryMock,
@@ -154,7 +156,8 @@ describe("Send Get Events", () => {
             ])
         ),
         {
-            response: responseADT
+            response: responseADT,
+            Buffer,
         },
         {
             unary: unaryMock,

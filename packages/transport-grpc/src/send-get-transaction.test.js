@@ -4,6 +4,7 @@ import {build} from "../../sdk/src/build/build.js"
 import {getTransaction} from "../../sdk/src/build/build-get-transaction.js"
 import {resolve} from "../../sdk/src/resolve/resolve.js"
 import {response as responseADT} from "../../sdk/src/response/response.js"
+import {Buffer} from "@onflow/rlp"
 
 const jsonToUInt8Array = (json) => {
     var str = JSON.stringify(json, null, 0);
@@ -72,7 +73,8 @@ describe("Get Transaction", () => {
             ])
         ),
         {
-            response: responseADT
+            response: responseADT,
+            Buffer,
         },
         {
             unary: unaryMock,

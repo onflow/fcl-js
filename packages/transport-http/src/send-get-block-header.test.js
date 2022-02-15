@@ -5,6 +5,7 @@ import {atBlockId} from "../../sdk/src/build/build-at-block-id.js"
 import {atBlockHeight} from "../../sdk/src/build/build-at-block-height.js"
 import {resolve} from "../../sdk/src/resolve/resolve.js"
 import {response as responseADT} from "../../sdk/src/response/response.js"
+import {Buffer} from "@onflow/rlp"
 
 describe("Send Get Block Header", () => {
   test("GetBlockHeaderByID", async () => {
@@ -31,7 +32,8 @@ describe("Send Get Block Header", () => {
             ])
         ),
         {
-            response: responseADT
+            response: responseADT,
+            Buffer,
         },
         {
             httpRequest: httpRequestMock,
@@ -86,7 +88,8 @@ describe("Send Get Block Header", () => {
             ])
         ),
         {
-            response: responseADT
+            response: responseADT,
+            Buffer,
         },
         {
             httpRequest: httpRequestMock,
@@ -140,7 +143,8 @@ describe("Send Get Block Header", () => {
             ])
         ),
         {
-            response: responseADT
+            response: responseADT,
+            Buffer,
         },
         {
             httpRequest: httpRequestMock,
@@ -194,7 +198,8 @@ describe("Send Get Block Header", () => {
             ])
         ),
         {
-            response: responseADT
+            response: responseADT,
+            Buffer,
         },
         {
             httpRequest: httpRequestMock,
