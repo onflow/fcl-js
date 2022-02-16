@@ -5,6 +5,7 @@ import {execTabRPC} from "./strategies/tab-rpc"
 import {execExtRPC} from "./strategies/ext-rpc"
 import {invariant} from "@onflow/util-invariant"
 import {configLens} from "../../config-utils"
+import {VERSION} from "../../VERSION"
 
 const STRATEGIES = {
   "HTTP/RPC": execHttpPost,
@@ -20,6 +21,11 @@ export async function execService({service, msg = {}, opts = {}, config = {}}) {
     ...config,
     services: await configLens(/^service\./),
     app: await configLens(/^app\.detail\./),
+    client: {
+      fclVersion: VERSION,
+      fclLibrary: "https://github.com/onflow/fcl-js",
+      hostname: window?.location?.hostname ?? null
+    }
   }
 
   try {
