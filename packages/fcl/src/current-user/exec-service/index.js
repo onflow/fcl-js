@@ -24,7 +24,7 @@ export async function execService({service, msg = {}, opts = {}, config = {}}) {
     client: {
       fclVersion: VERSION,
       fclLibrary: "https://github.com/onflow/fcl-js",
-      hostname: window.location.hostname
+      hostname: window?.location?.hostname ?? null
     }
   }
 
