@@ -169,7 +169,7 @@ import { config } from "@onflow/fcl";
 config({
   "accessNode.api": "https://access-testnet.onflow.org",
   "discovery.wallet": "https://fcl-discovery.onflow.org/testnet/authn",
-  "0xProfile": "0xba1132bc08f82fe2" // The account address where the smart contract lives
+  "0xProfile": "0xba1132bc08f82fe2" // The account address where the Profile smart contract lives on Testnet
 })
 ```
 
@@ -444,7 +444,7 @@ const executeTransaction = async () => {
     limit: 50
   })
 
-  fcl.tx(transactionId).subscribe()
+  fcl.tx(transactionId).subscribe(res => setTransactionStatus(res.status))
 }
 ```
 
@@ -572,6 +572,7 @@ export default function Home() {
 ```
 
 Now if you click the "Execute Transaction" button you'll see the statuses update next to "Transaction Status." When you see "4" that means it's sealed! Status code meanings [can be found here](../reference/api.md#transaction-statuses).
+If you query the account profile again, "Profile Name:" should now display "Flow Developer".
 
 That's it! You now have a shippable Flow dapp that can auth, query, init accounts, and mutate the chain. This is just the beginning. There is so much more to know. We have a lot more resources to help you build. To dive deeper, here are a few good places for taking the next steps:
 
