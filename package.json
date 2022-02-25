@@ -1,5 +1,7 @@
 {
-  "workspaces": ["./packages/*"],
+  "workspaces": [
+    "./packages/*"
+  ],
   "scripts": {
     "lerna": "lerna",
     "test": "jest"
@@ -7,5 +9,8 @@
   "devDependencies": {
     "lerna": "^4.0.0"
   },
-  "name": "fcl-js"
+  "name": "fcl-js",
+  "dependencies": {
+    "@onflow/fcl": "file:packages/fcl"
+  }
 }
