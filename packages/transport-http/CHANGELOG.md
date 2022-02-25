@@ -1,3 +1,7 @@
+### 0.0.7 -- 2022-02-25
+
+- 2022-02-25 -- Use node require to consume node standard libraries
+
 ### 0.0.6 -- 2022-02-04
 
 - 2022-02-04 -- Remove `0x` prefix from public keys in get account response.
