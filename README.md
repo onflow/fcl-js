@@ -33,6 +33,11 @@ While FCL itself is a concept and standard, FCL JS is the javascript implementat
 ### Requirements
 -  Node version `v12.0.0 or higher`.
 
+### Build
+```shell
+npm i
+npm run build
+```
 ### Installation
 
 To use the FCL JS in your application, install using **yarn** or **npm**
