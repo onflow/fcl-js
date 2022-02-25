@@ -45,16 +45,17 @@ export async function httpRequest({
   try {
     fetchTransport = window?.fetch || fetch
   } catch (e) {}
+
   let nodeHttpsTransport
   try {
-    nodeHttpsTransport = await import("https").catch(_ => undefined)
+    nodeHttpsTransport = require("https")
   } catch (e) {}
   let nodeHttpTransport
   try {
-    nodeHttpTransport = await import("http").catch(_ => undefined)
+    nodeHttpTransport = require("http")
   } catch (e) {}
 
-  invariant((fetchTransport || nodeHttpsTransport), "HTTP Request error: Could not find a supported HTTP module.")
+  invariant((fetchTransport || nodeHttpsTransport || nodeHttpTransport), "HTTP Request error: Could not find a supported HTTP module.")
 
   if (fetchTransport) {
 
