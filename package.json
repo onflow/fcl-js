@@ -3,6 +3,7 @@
     "./packages/*"
   ],
   "scripts": {
+    "build": "npm run build --ws",
     "lerna": "lerna",
     "test": "jest"
   },
