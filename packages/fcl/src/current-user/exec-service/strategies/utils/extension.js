@@ -4,7 +4,6 @@ const noop = () => {}
 
 export function extension(service, opts = {}) {
   if (service == null) return {send: noop, close: noop}
-  const url = new URL(service.endpoint)
 
   const onClose = opts.onClose || noop
   const onMessage = opts.onMessage || noop
@@ -16,10 +15,7 @@ export function extension(service, opts = {}) {
     buildMessageHandler({close, send, onReady, onResponse, onMessage})
   )
 
-  send({
-    type: "FCL:LAUNCH:EXTENSION",
-    service,
-  })
+  send({service})
 
   return {send, close}
 
