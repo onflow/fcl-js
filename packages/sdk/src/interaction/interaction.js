@@ -83,7 +83,7 @@ const IX = `{
   },
   "proposer":null,
   "authorizations":[],
-  "payer":null,
+  "payer":[],
   "events": {
     "eventType":null,
     "start":null,

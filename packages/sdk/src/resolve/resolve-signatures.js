@@ -42,9 +42,6 @@ function fetchSignature(ix, payload) {
     const {signature} = await acct.signingFunction(
       buildSignable(acct, payload, ix)
     )
-    // if (!acct.role.proposer) {
-    //   ix.accounts[id].keyId = keyId
-    // }
     ix.accounts[id].signature = signature
   }
 }
@@ -71,6 +68,9 @@ export function buildSignable(acct, message, ix) {
 }
 
 function prepForEncoding(ix) {
+  const payerAddress = sansPrefix((Array.isArray(ix.payer) 
+  ? ix.accounts[ix.payer[0]]
+  : ix.accounts[ix.payer]).addr);
   return {
     cadence: ix.message.cadence,
     refBlock: ix.message.refBlock || null,
@@ -81,7 +81,7 @@ function prepForEncoding(ix) {
       keyId: ix.accounts[ix.proposer].keyId,
       sequenceNum: ix.accounts[ix.proposer].sequenceNum,
     },
-    payer: sansPrefix(ix.accounts[ix.payer].addr),
+    payer: payerAddress,
     authorizers: ix.authorizations
       .map(cid => sansPrefix(ix.accounts[cid].addr))
       .reduce((prev, current) => {

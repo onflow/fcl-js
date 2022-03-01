@@ -25,6 +25,7 @@ async function collectAccounts(ix, accounts, last, depth = 3) {
   invariant(depth, "Account Resolve Recursion Limit Exceeded", {ix, accounts})
 
   let authorizations = []
+  let payers = []
   for (let ax of accounts) {
     var old = last || ax
     if (isFn(ax.resolve)) ax = await ax.resolve(ax, buildPreSignable(ax, ix))
@@ -47,8 +48,18 @@ async function collectAccounts(ix, accounts, last, depth = 3) {
         ix.proposer = ax.tempId
       }
 
-      if (ix.accounts[ax.tempId].role.payer && ix.payer === old.tempId) {
-        ix.payer = ax.tempId
+      if (ix.accounts[ax.tempId].role.payer) {
+        if (last) {
+          // do group replacement
+          payers = Array.from(new Set([...payers, ax.tempId]))
+        } else {
+          // do 1-1 replacement
+          ix.payer = Array.isArray(ix.payer) ? ix.payer.map(d =>
+            d === old.tempId ? ax.tempId : d
+          ) : [ix.payer]
+
+          console.log('in last payer', ix.payer)
+        }
       }
 
       if (ix.accounts[ax.tempId].role.authorizer) {
@@ -60,11 +71,6 @@ async function collectAccounts(ix, accounts, last, depth = 3) {
           ix.authorizations = ix.authorizations.map(d =>
             d === old.tempId ? ax.tempId : d
           )
-          // if (!new Set(ix.authorizations).has(ax.tempId)) {
-          //   ix.authorizations = Array.from(
-          //     new Set([...ix.authorizations, ax.tempId])
-          //   )
-          // }
         }
       }
     }
@@ -80,6 +86,16 @@ async function collectAccounts(ix, accounts, last, depth = 3) {
           Array.isArray(curr) ? [...prev, ...curr] : [...prev, curr],
         []
       )
+
+    // complete (flatmap) group replacement
+    // treat payer like authorizations, there can be multiple keys
+    ix.payer = Array.isArray(ix.payer) ? ix.payer
+    .map(d => (d === last.tempId ? payers : d))
+    .reduce(
+      (prev, curr) =>
+        Array.isArray(curr) ? [...prev, ...curr] : [...prev, curr],
+      []    
+    ) : [ix.payer]
   }
 }
 
