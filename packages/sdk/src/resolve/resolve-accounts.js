@@ -57,8 +57,6 @@ async function collectAccounts(ix, accounts, last, depth = 3) {
           ix.payer = Array.isArray(ix.payer) ? ix.payer.map(d =>
             d === old.tempId ? ax.tempId : d
           ) : [ix.payer]
-
-          console.log('in last payer', ix.payer)
         }
       }
 
@@ -101,6 +99,18 @@ async function collectAccounts(ix, accounts, last, depth = 3) {
 
 export async function resolveAccounts(ix) {
   if (isTransaction(ix)) {
+    if (!Array.isArray(ix.payer)) {
+      console.warn(
+        `
+        %cFCL Warning
+        ============================
+        "ix.payer" must be an array. Support for ix.payer as a singular is deprecated,
+        see changelog for more info: https://docs.onflow.org/fcl/
+        ============================
+        `,
+        "font-weight:bold;font-family:monospace;"
+      )
+    }
     try {
       await collectAccounts(ix, Object.values(ix.accounts))
       await collectAccounts(ix, Object.values(ix.accounts))
