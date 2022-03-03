@@ -80,16 +80,6 @@ async function collectAccounts(ix, accounts, last, depth = 3) {
           Array.isArray(curr) ? [...prev, ...curr] : [...prev, curr],
         []
       )
-
-    // complete (flatmap) group replacement
-    // treat payer like authorizations, there can be multiple keys
-    ix.payer = Array.isArray(ix.payer) ? ix.payer
-    .map(d => (d === last.tempId ? payers : d))
-    .reduce(
-      (prev, curr) =>
-        Array.isArray(curr) ? [...prev, ...curr] : [...prev, curr],
-      []    
-    ) : [ix.payer]
   }
 }
 
