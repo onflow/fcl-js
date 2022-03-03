@@ -49,14 +49,10 @@ async function collectAccounts(ix, accounts, last, depth = 3) {
       }
 
       if (ix.accounts[ax.tempId].role.payer) {
-        if (last) {
-          // do group replacement
-          payers = Array.from(new Set([...payers, ax.tempId]))
-        } else {
-          // do 1-1 replacement
-          ix.payer = Array.isArray(ix.payer) ? ix.payer.map(d =>
-            d === old.tempId ? ax.tempId : d
-          ) : [ix.payer]
+        if (Array.isArray(ix.payer)) {
+          ix.payer = Array.from(new Set([...ix.payer, ax.tempId]))
+        } else if (ix.payer === old.tempId) {
+          ix.payer = ax.tempId
         }
       }
 

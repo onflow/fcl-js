@@ -43,10 +43,6 @@ export const createSignableVoucher = ix => {
       sig: ix.accounts[id].signature,
     }))
 
-    const findPayerAddress = () =>  
-      Array.isArray(ix.payer)
-        ? ix.accounts[ix.payer[0]].addr
-        : ix.accounts[ix.payer].addr
   return {
     cadence: ix.message.cadence,
     refBlock: ix.message.refBlock || null,
@@ -57,7 +53,7 @@ export const createSignableVoucher = ix => {
       keyId: ix.accounts[ix.proposer].keyId,
       sequenceNum: ix.accounts[ix.proposer].sequenceNum,
     },
-    payer: withPrefix(findPayerAddress()),
+    payer: withPrefix(ix.accounts[Array.isArray(ix.payer) ? ix.payer[0] : ix.payer].addr),
     authorizers: buildAuthorizers(),
     payloadSigs: buildInsideSigners(),
     envelopeSigs: buildOutsideSigners(),
