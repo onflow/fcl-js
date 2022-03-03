@@ -1,0 +1,42 @@
+{
+    "name": "@onflow/util-node-http-modules",
+    "version": "0.0.1",
+    "description": "Flow SDK Util Get Node Http Modules",
+    "license": "Apache-2.0",
+    "author": "Dapper Labs <dev@dapperlabs.com>",
+    "homepage": "https://onflow.org",
+    "repository": {
+        "type": "git",
+        "url": "git+ssh://git@github.com/onflow/flow-js-sdk.git"
+    },
+    "bugs": {
+        "url": "https://github.com/onflow/flow-js-sdk/issues"
+    },
+    "jest": {
+        "transform": {
+            ".js": "jest-esm-transformer"
+        }
+    },
+    "devDependencies": {
+        "jest": "^27.0.6",
+        "jest-esm-transformer": "1.0.0",
+        "microbundle": "^0.13.3"
+    },
+    "main": "./src/util-node-http-modules.noop.js",
+    "exports": {
+        "node": {
+            "import": "./src/util-node-http-modules.module.js",
+            "require": "./src/util-node-http-modules.cjs.js"
+        },
+        "default": "./src/util-node-http-modules.noop.js"
+    },
+    "scripts": {
+        "alpha": "npm publish --tag alpha",
+        "prepublishOnly": "npm test && npm run build",
+        "test": "jest",
+        "build": "microbundle",
+        "test:watch": "jest --watch",
+        "start": "microbundle watch"
+    },
+    "dependencies": {}
+}
