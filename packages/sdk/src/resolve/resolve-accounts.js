@@ -25,7 +25,6 @@ async function collectAccounts(ix, accounts, last, depth = 3) {
   invariant(depth, "Account Resolve Recursion Limit Exceeded", {ix, accounts})
 
   let authorizations = []
-  let payers = []
   for (let ax of accounts) {
     var old = last || ax
     if (isFn(ax.resolve)) ax = await ax.resolve(ax, buildPreSignable(ax, ix))
@@ -50,9 +49,24 @@ async function collectAccounts(ix, accounts, last, depth = 3) {
 
       if (ix.accounts[ax.tempId].role.payer) {
         if (Array.isArray(ix.payer)) {
-          ix.payer = Array.from(new Set([...ix.payer, ax.tempId]))
-        } else if (ix.payer === old.tempId) {
-          ix.payer = ax.tempId
+          ix.payer = Array.from(new Set([...ix.payer, ax.tempId].map(d =>
+            d === old.tempId ? ax.tempId : d
+          )))
+        } else {
+          ix.payer = Array.from(new Set([ix.payer, ax.tempId].map(d =>
+            d === old.tempId ? ax.tempId : d
+          )))
+        }
+        if (ix.payer.length > 1) {
+          // remove payer dups based on addr and keyId
+          const dupList = []
+          ix.payer = ix.payer.reduce((g, tempId) => {
+            const { addr, keyId } = ix.accounts[tempId];
+            const key = `${addr}-${keyId}`;
+            if (dupList.includes(key)) return g;
+            dupList.push(key)
+            return [...g, tempId]                        
+          }, [])
         }
       }
 
