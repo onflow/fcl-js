@@ -2,6 +2,8 @@
 
 - YYYY-MM-DD **BREAKING?** -- description
 
+- 2022-03-04 -- Deprecated Number as value for [U]Int* and Word* types.
+
 ### 0.0.6 -- 2021-11-16
 
 - 2021-11-16 Added `t.Path`
