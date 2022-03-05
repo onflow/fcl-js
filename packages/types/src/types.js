@@ -24,7 +24,7 @@ const numberValuesDeprecationNotice = (type) => {
 
           Passing in Number as value for ${type} is deprecated and will cease to work in future releases of @onflow/types.
           Going forward, use String as value for ${type}. 
-          Find out more here: https://github.com/onflow/flow-js-sdk/blob/master/packages/types/WARNINGS.md#0001-[U]Fix64-as-Number
+          Find out more here: https://github.com/onflow/flow-js-sdk/blob/master/packages/types/WARNINGS.md#0002-[U]Int*-and-Word*-as-Number
 
           =======================
         `
