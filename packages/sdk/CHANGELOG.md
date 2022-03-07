@@ -7,7 +7,7 @@
 sdk.config("logger.level", 2)
 ```
 
-- 2022-03-07 -- **BREAKING** [@JeffreyDoyle](https://github.com/JeffreyDoyle): Decode number types implicitly. Number types, `[U]Int*` and `Word*`, will now be decoded into String. This is done to protect against decoding such types into JavaScript Number when the value they represent exceeds the largest support value for Number. Developers should adjust their use of the JS-SDK accordingly to this new return type for decode.
+- 2022-03-07 -- **BREAKING** [@JeffreyDoyle](https://github.com/JeffreyDoyle): Decode number types implicitly. Number types, `[U]Int*` and `Word*`, will now be decoded into String. This is done to protect against decoding such types into JavaScript Number when the value they represent exceeds the largest supported value for Number. Developers should adjust their use of the JS-SDK accordingly to this new return type when decoding number `[U]Int*` and `Word*` types.
 - 2022-02-11 -- Uses Buffer from @onflow/rlp in encode.
 - 2022-02-11 -- Injects Buffer from @onflow/rlp to transport send modules.
 - 2022-02-04 -- [@chasefleming](https://github.com/chasefleming): Add options for for getting account by block height.
