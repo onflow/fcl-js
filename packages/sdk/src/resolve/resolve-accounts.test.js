@@ -63,6 +63,7 @@ test("Voucher in PreSignable multiple payer keys", async () => {
 
   const authzPayer = {
     addr: "0x02",
+    address: "0x02",
     resolve: (account, preSignable) => [{
       ...account,
       tempId: "0x02-0",
@@ -92,6 +93,8 @@ test("Voucher in PreSignable multiple payer keys", async () => {
   ]);
 
   const ix = await resolve(built)
+  expect(ix.payer).toEqual(["0x02-0", "0x02-1"])
+
   const ps = buildPreSignable(ix.accounts[ix.proposer], ix)
 
   expect(ps.voucher).toEqual({
