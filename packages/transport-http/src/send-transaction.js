@@ -46,7 +46,6 @@ export async function sendTransaction(ix, context = {}, opts = {}) {
   }
   envelopeSignatures = Object.values(envelopeSignatures)
 
-  console.log('ix.accounts[ix.payer].addr', ix.accounts, ix.payer)
   var t1 = Date.now()
   const res = await httpRequest({
     hostname: opts.node,
