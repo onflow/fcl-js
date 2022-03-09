@@ -46,7 +46,7 @@ function constructResponse(ix, context, res) {
 
   const collectionGuarantees = block.getCollectionGuaranteesList()
   const blockSeals = block.getBlockSealsList()
-  const signatures = (block.getSignaturesList()).map(u8ToHex)
+  const signatures = (block.getSignaturesList()).map(sig => u8ToHex(sig, context))
 
   const ret = context.response()
   ret.tag = ix.tag
