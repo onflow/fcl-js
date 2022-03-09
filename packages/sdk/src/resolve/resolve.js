@@ -1,6 +1,7 @@
 import {pipe, isTransaction} from "../interaction/interaction.js"
 import {config} from "../config"
 import {invariant} from "@onflow/util-invariant"
+import {Buffer} from "@onflow/rlp"
 import * as ixModule from "../interaction/interaction.js"
 import {response} from "../response/response.js"
 import {build} from "../build/build.js"
@@ -76,7 +77,7 @@ async function execFetchRef(ix) {
     ix.message.refBlock = (
       await sendFn(
         build([getBlock()]),
-        {config, response, ix: ixModule},
+        {config, response, Buffer, ix: ixModule},
         {node}
       ).then(decode)
     ).id
@@ -99,7 +100,7 @@ async function execFetchSequenceNumber(ix) {
 
       ix.accounts[acct.tempId].sequenceNum = await sendFn(
         await build([getAccount(acct.addr)]),
-        {config, response, ix: ixModule},
+        {config, response, Buffer, ix: ixModule},
         {node}
       )
         .then(decode)

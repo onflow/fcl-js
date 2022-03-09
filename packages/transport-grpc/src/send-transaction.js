@@ -3,42 +3,43 @@ import {AccessAPI, Transaction, SendTransactionRequest} from "@onflow/protobuf"
 import {sansPrefix} from "@onflow/util-address"
 import {unary as defaultUnary} from "./unary"
 
-const u8ToHex = u8 => Buffer.from(u8).toString("hex")
-const paddedHexBuffer = (hex, pad) =>
-  Buffer.from(hex.padStart(pad * 2, 0), "hex")
-const scriptBuffer = script => Buffer.from(script, "utf8")
-const hexBuffer = hex => Buffer.from(hex, "hex")
-const addressBuffer = addr => paddedHexBuffer(addr, 8)
-const argumentBuffer = arg => Buffer.from(JSON.stringify(arg), "utf8")
+const u8ToHex = (u8, context) => context.Buffer.from(u8).toString("hex")
+const paddedHexBuffer = (hex, pad, context) =>
+  context.Buffer.from(hex.padStart(pad * 2, 0), "hex")
+const scriptBuffer = (script, context) => context.Buffer.from(script, "utf8")
+const hexBuffer = (hex, context) => context.Buffer.from(hex, "hex")
+const addressBuffer = (addr, context) => paddedHexBuffer(addr, 8, context)
+const argumentBuffer = (arg, context) => context.Buffer.from(JSON.stringify(arg), "utf8")
 
 export async function sendTransaction(ix, context = {}, opts = {}) {
   invariant(opts.node, `SDK Send Transaction Error: opts.node must be defined.`)
   invariant(context.response, `SDK Send Transaction Error: context.response must be defined.`)
+  invariant(context.Buffer, `SDK Send Transaction Error: context.Buffer must be defined.`)
 
   const unary = opts.unary || defaultUnary
 
   ix = await ix
 
   const tx = new Transaction()
-  tx.setScript(scriptBuffer(ix.message.cadence))
+  tx.setScript(scriptBuffer(ix.message.cadence, context))
   tx.setGasLimit(ix.message.computeLimit)
   tx.setReferenceBlockId(
-    ix.message.refBlock ? hexBuffer(ix.message.refBlock) : null
+    ix.message.refBlock ? hexBuffer(ix.message.refBlock, context) : null
   )
-  tx.setPayer(addressBuffer(sansPrefix(ix.accounts[ix.payer].addr)))
+  tx.setPayer(addressBuffer(sansPrefix(ix.accounts[ix.payer].addr), context))
   ix.message.arguments.forEach(arg =>
-    tx.addArguments(argumentBuffer(ix.arguments[arg].asArgument))
+    tx.addArguments(argumentBuffer(ix.arguments[arg].asArgument, context))
   )
   ix.authorizations
     .map(tempId => ix.accounts[tempId].addr)
     .reduce((prev, current) => {
       return prev.find(item => item === current) ? prev : [...prev, current]
     }, [])
-    .forEach(addr => tx.addAuthorizers(addressBuffer(sansPrefix(addr))))
+    .forEach(addr => tx.addAuthorizers(addressBuffer(sansPrefix(addr), context)))
 
   const proposalKey = new Transaction.ProposalKey()
   proposalKey.setAddress(
-    addressBuffer(sansPrefix(ix.accounts[ix.proposer].addr))
+    addressBuffer(sansPrefix(ix.accounts[ix.proposer].addr), context)
   )
   proposalKey.setKeyId(ix.accounts[ix.proposer].keyId)
   proposalKey.setSequenceNumber(ix.accounts[ix.proposer].sequenceNum)
@@ -50,9 +51,9 @@ export async function sendTransaction(ix, context = {}, opts = {}) {
     try {
       if (!acct.role.payer && acct.signature != null) {
         const sig = new Transaction.Signature()
-        sig.setAddress(addressBuffer(sansPrefix(acct.addr)))
+        sig.setAddress(addressBuffer(sansPrefix(acct.addr), context))
         sig.setKeyId(acct.keyId)
-        sig.setSignature(hexBuffer(acct.signature))
+        sig.setSignature(hexBuffer(acct.signature, context))
         tx.addPayloadSignatures(sig)
       }
     } catch (error) {
@@ -66,9 +67,9 @@ export async function sendTransaction(ix, context = {}, opts = {}) {
     try {
       if (acct.role.payer && acct.signature != null) {
         const sig = new Transaction.Signature()
-        sig.setAddress(addressBuffer(sansPrefix(acct.addr)))
+        sig.setAddress(addressBuffer(sansPrefix(acct.addr), context))
         sig.setKeyId(acct.keyId)
-        sig.setSignature(hexBuffer(acct.signature))
+        sig.setSignature(hexBuffer(acct.signature, context))
         tx.addEnvelopeSignatures(sig)
       }
     } catch (error) {
@@ -86,7 +87,7 @@ export async function sendTransaction(ix, context = {}, opts = {}) {
 
   let ret = context.response()
   ret.tag = ix.tag
-  ret.transactionId = u8ToHex(res.getId_asU8())
+  ret.transactionId = u8ToHex(res.getId_asU8(), context)
 
   if (typeof window !== "undefined") {
     window.dispatchEvent(

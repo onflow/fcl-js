@@ -1,7 +1,7 @@
 {
-    "name": "@onflow/transport-http",
-    "version": "0.0.6",
-    "description": "Flow SDK HTTP Transport Module",
+    "name": "@onflow/util-node-http-modules",
+    "version": "0.0.1",
+    "description": "Flow SDK Util Get Node Http Modules",
     "license": "Apache-2.0",
     "author": "Dapper Labs <dev@dapperlabs.com>",
     "homepage": "https://onflow.org",
@@ -18,16 +18,18 @@
         }
     },
     "devDependencies": {
-        "@onflow/rlp": "^0.0.3",
-        "@onflow/types": "0.0.6",
         "jest": "^27.0.6",
         "jest-esm-transformer": "1.0.0",
         "microbundle": "^0.13.3"
     },
-    "source": "src/sdk-send-http.js",
-    "main": "dist/sdk-send-http.js",
-    "module": "dist/sdk-send-http.module.js",
-    "unpkg": "dist/sdk-send-http.umd.js",
+    "main": "./src/util-node-http-modules.noop.js",
+    "exports": {
+        "node": {
+            "import": "./src/util-node-http-modules.module.js",
+            "require": "./src/util-node-http-modules.cjs.js"
+        },
+        "default": "./src/util-node-http-modules.noop.js"
+    },
     "scripts": {
         "alpha": "npm publish --tag alpha",
         "prepublishOnly": "npm test && npm run build",
@@ -36,10 +38,5 @@
         "test:watch": "jest --watch",
         "start": "microbundle watch"
     },
-    "dependencies": {
-        "@onflow/util-address": "^0.0.0",
-        "@onflow/util-invariant": "^0.0.0",
-        "@onflow/util-template": "0.0.1",
-        "@onflow/util-node-http-modules": "0.0.1"
-    }
+    "dependencies": {}
 }

@@ -4,6 +4,7 @@ import {getAccount} from "../../sdk/src/build/build-get-account.js"
 import {atBlockHeight} from "../../sdk/src/build/build-at-block-height.js"
 import {resolve} from "../../sdk/src/resolve/resolve.js"
 import {response as responseADT} from "../../sdk/src/response/response.js"
+import {Buffer} from "@onflow/rlp"
 
 describe("Send Get Account", () => {
   test("GetAccountAtBlockHeightRequest", async () => {
@@ -27,7 +28,8 @@ describe("Send Get Account", () => {
             ])
         ),
         {
-            response: responseADT
+            response: responseADT,
+            Buffer,
         },
         {
             httpRequest: httpRequestMock,
@@ -79,7 +81,8 @@ describe("Send Get Account", () => {
             ])
         ),
         {
-            response: responseADT
+            response: responseADT,
+            Buffer,
         },
         {
             httpRequest: httpRequestMock,

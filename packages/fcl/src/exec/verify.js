@@ -1,5 +1,6 @@
 import {invariant} from "@onflow/util-invariant"
 import {query} from "../exec/query"
+import {Buffer} from "@onflow/rlp"
 
 export const validateArgs = (msg, compSigs) => {
   invariant(/^[0-9a-f]+$/i.test(msg), "Signed message must be a hex string")

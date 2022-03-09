@@ -2,14 +2,14 @@ import {invariant} from "@onflow/util-invariant"
 import {GetLatestBlockHeaderRequest, GetBlockHeaderByIDRequest, GetBlockHeaderByHeightRequest, AccessAPI} from "@onflow/protobuf"
 import {unary as defaultUnary} from "./unary"
 
-const u8ToHex = u8 => Buffer.from(u8).toString("hex")
-const hexBuffer = hex => Buffer.from(hex, "hex")
+const u8ToHex = (u8, context) => context.Buffer.from(u8).toString("hex")
+const hexBuffer = (hex, context) => context.Buffer.from(hex, "hex")
 
 async function sendGetBlockHeaderByIDRequest(ix, context, opts) {
   const unary = opts.unary || defaultUnary
 
   const req = new GetBlockHeaderByIDRequest()
-  req.setId(hexBuffer(ix.block.id))
+  req.setId(hexBuffer(ix.block.id, context))
 
   const res = await unary(opts.node, AccessAPI.GetBlockHeaderByID, req, context)
 
@@ -47,8 +47,8 @@ function constructResponse(ix, context, res) {
   const ret = context.response()
   ret.tag = ix.tag
   ret.blockHeader = {
-    id: u8ToHex(blockHeader.getId_asU8()),
-    parentId: u8ToHex(blockHeader.getParentId_asU8()),
+    id: u8ToHex(blockHeader.getId_asU8(), context),
+    parentId: u8ToHex(blockHeader.getParentId_asU8(), context),
     height: blockHeader.getHeight(),
     timestamp: blockHeader.getTimestamp().toDate().toISOString(),
   }
@@ -59,6 +59,7 @@ function constructResponse(ix, context, res) {
 export async function sendGetBlockHeader(ix, context = {}, opts = {}) {
   invariant(opts.node, `SDK Send Get Block Header Error: opts.node must be defined.`)
   invariant(context.response, `SDK Send Get Block Header Error: context.response must be defined.`)
+  invariant(context.Buffer, `SDK Send Get Block Header Error: context.Buffer must be defined.`)
 
   ix = await ix
 
