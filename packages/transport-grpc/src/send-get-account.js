@@ -65,7 +65,7 @@ function constructResponse(ix, context, res) {
     contracts,
     keys: account.getKeysList().map(publicKey => ({
       index: publicKey.getIndex(),
-      publicKey: u8ToHex(publicKey.getPublicKey_asU8()),
+      publicKey: u8ToHex(publicKey.getPublicKey_asU8(), context),
       signAlgo: publicKey.getSignAlgo(),
       signAlgoString: SignatureAlgorithmNames[publicKey.getSignAlgo()], // New! Verify this field name for correctness.
       hashAlgo: publicKey.getHashAlgo(),
