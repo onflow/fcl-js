@@ -25,7 +25,7 @@ export async function sendTransaction(ix, context = {}, opts = {}) {
   tx.setReferenceBlockId(
     ix.message.refBlock ? hexBuffer(ix.message.refBlock) : null
   )
-  tx.setPayer(addressBuffer(sansPrefix(Array.isArray(ix.payer) ? ix.accounts[ix.payer[0]] : ix.accounts[ix.payer].addr)))
+  tx.setPayer(addressBuffer(sansPrefix(ix.accounts[Array.isArray(ix.payer) ? ix.payer[0] : ix.payer].addr)))
   ix.message.arguments.forEach(arg =>
     tx.addArguments(argumentBuffer(ix.arguments[arg].asArgument))
   )
