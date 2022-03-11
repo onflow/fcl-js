@@ -116,9 +116,9 @@ const LOGGER_LEVELS = {
 }
 
 const logger = async (title, message, level) => {
-  const logLevel =  await config.get("logger.level", LOGGER_LEVELS.debug)
+  const configLoggerLevel =  await config.get("logger.level", LOGGER_LEVELS.debug)
 
-  if (logLevel >= level) {
+  if (configLoggerLevel >= level) {
     console.warn(
       `
       %c${title}
@@ -208,7 +208,7 @@ const makeIx = wat => ix => {
   return Ok(ix)
 }
 
-export const prepAccount = (acct, opts = {}) => async (ix) => {
+export const prepAccount = (acct, opts = {}) => (ix) => {
   invariant(
     typeof acct === "function" || typeof acct === "object",
     "prepAccount must be passed an authorization function or an account object"
