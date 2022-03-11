@@ -1,5 +1,5 @@
 import {invariant} from "@onflow/util-invariant"
-import {config} from "@onflow/sdk"
+import {config} from "../config"
 
 export const UNKNOWN /*                       */ = "UNKNOWN"
 export const SCRIPT /*                        */ = "SCRIPT"
