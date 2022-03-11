@@ -208,7 +208,7 @@ const makeIx = wat => ix => {
   return Ok(ix)
 }
 
-export const prepAccount = (acct, opts = {}) => (ix) => {
+export const prepAccount = (acct, opts = {}) => ix => {
   invariant(
     typeof acct === "function" || typeof acct === "object",
     "prepAccount must be passed an authorization function or an account object"
