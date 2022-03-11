@@ -108,7 +108,44 @@ const IX = `{
 
 const KEYS = new Set(Object.keys(JSON.parse(IX)))
 
-export const interaction = () => JSON.parse(IX)
+const getByValue = (map, searchValue) => {
+  for (let [key, value] of map.entries()) {
+    if (value === searchValue) return key;
+  }
+}
+
+// Current field, followed by renaming
+// addr => address
+const PROP_DEPRECATIONS = new Map([
+  ["addr", "address"],
+  ["sequenceNum", "seqNum"],
+  ["keyId", "keyIndex"]
+])
+
+const addDeprecations = (originalObject, deprecated) => {
+  return new Proxy(originalObject, {
+    get: (obj, property) => {
+      if (getByValue(deprecated, property)) {
+        const originalProperty = getByValue(deprecated, property)
+        return Reflect.get(obj, originalProperty)
+      }
+      if (deprecated.has(property)) {
+        console.warn(`Field deprecation: "${property}" will be deprecated in a future version. Please use "${deprecated.get(property)}" instead.`)
+      }
+      return Reflect.get(obj, property)
+    }
+  })
+}
+
+export const interaction = () => {
+  const ix = JSON.parse(IX)
+  const account = addDeprecations(ix.account, PROP_DEPRECATIONS)
+
+  return {
+    ...ix,
+    account
+  }
+}
 
 const CHARS = "abcdefghijklmnopqrstuvwxyz0123456789".split("")
 const randChar = () => CHARS[~~(Math.random() * CHARS.length)]
@@ -148,7 +185,9 @@ export const prepAccount = (acct, opts = {}) => ix => {
   )
   invariant(opts.role != null, "Account must have a role")
 
-  const ACCOUNT = JSON.parse(ACCT)
+  const ACCOUNT_OG = JSON.parse(ACCT)
+  const ACCOUNT = addDeprecations(ACCOUNT_OG, PROP_DEPRECATIONS)
+
   const role = opts.role
   const tempId = uuid()
 
