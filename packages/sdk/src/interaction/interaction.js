@@ -115,6 +115,22 @@ const LOGGER_LEVELS = {
   "error": 4
 }
 
+const logger = async (title, message, level) => {
+  const logLevel =  await config.get("logger.level", LOGGER_LEVELS.debug)
+
+  if (logLevel >= level) {
+    console.warn(
+      `
+      %c${title}
+      ============================
+      ${message}
+      ============================
+      `,
+      "font-weight:bold;font-family:monospace;"
+    )
+  }
+}
+
 const KEYS = new Set(Object.keys(JSON.parse(IX)))
 
 const getByValue = (map, searchValue) => {
@@ -131,25 +147,19 @@ const PROP_DEPRECATIONS = new Map([
   ["keyId", "keyIndex"]
 ])
 
-const addDeprecations = async (originalObject, deprecated) => {
-  const logLevel =  await config.get("log.level", LOGGER_LEVELS.debug)
-
+const applyDeprecations = (originalObject, deprecated) => {
   return new Proxy(originalObject, {
     get: (obj, property) => {
       if (getByValue(deprecated, property)) {
         const originalProperty = getByValue(deprecated, property)
         return Reflect.get(obj, originalProperty)
       }
-      if (deprecated.has(property) && logLevel >= LOGGER_LEVELS.warn) {
-        console.warn(
-          `
-          %cFCL/SDK Deprecation Notice
-          ============================
-          "${property}" will be deprecated in a future version.
-          Please use "${deprecated.get(property)}" instead.
-          ============================
-          `,
-          "font-weight:bold;font-family:monospace;"
+      if (deprecated.has(property)) {
+        logger(
+          "FCL/SDK Deprecation Notice",
+          `"${property}" will be deprecated in a future version.
+          Please use "${deprecated.get(property)}" instead.`,
+          LOGGER_LEVELS.warn
         )
       }
       return Reflect.get(obj, property)
@@ -157,9 +167,9 @@ const addDeprecations = async (originalObject, deprecated) => {
   })
 }
 
-export const interaction = async () => {
+export const interaction = () => {
   const ix = JSON.parse(IX)
-  const account = await addDeprecations(ix.account, PROP_DEPRECATIONS)
+  const account = applyDeprecations(ix.account, PROP_DEPRECATIONS)
 
   return {
     ...ix,
@@ -206,7 +216,7 @@ export const prepAccount = (acct, opts = {}) => async (ix) => {
   invariant(opts.role != null, "Account must have a role")
 
   const ACCOUNT_OG = JSON.parse(ACCT)
-  const ACCOUNT = await addDeprecations(ACCOUNT_OG, PROP_DEPRECATIONS)
+  const ACCOUNT = applyDeprecations(ACCOUNT_OG, PROP_DEPRECATIONS)
 
   const role = opts.role
   const tempId = uuid()

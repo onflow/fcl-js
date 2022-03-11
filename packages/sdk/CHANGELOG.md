@@ -3,7 +3,7 @@
 - 2022-03-11 -- [@chasefleming](https://github.com/chasefleming): Allow developers to access new field names and warn on usage of field renamings/deprecations. To turn on warnings, set config `log.level` to `3`.
 
 ```js
-sdk.config("log.level", 3)
+sdk.config("logger.level", 3)
 ```
 
 - 2022-02-11 -- Uses Buffer from @onflow/rlp in encode.
