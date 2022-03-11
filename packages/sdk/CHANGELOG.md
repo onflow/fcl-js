@@ -1,5 +1,11 @@
 ## Unreleased
 
+- 2022-03-11 -- [@chasefleming](https://github.com/chasefleming): Allow developers to access new field names and warn on usage of field renamings/deprecations. To turn on warnings, set config `log.level` to `3`.
+
+```js
+sdk.config("log.level", 3)
+```
+
 - 2022-02-11 -- Uses Buffer from @onflow/rlp in encode.
 - 2022-02-11 -- Injects Buffer from @onflow/rlp to transport send modules.
 - 2022-02-04 -- [@chasefleming](https://github.com/chasefleming): Add options for for getting account by block height.

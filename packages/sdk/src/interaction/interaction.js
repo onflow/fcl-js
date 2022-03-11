@@ -1,4 +1,5 @@
 import {invariant} from "@onflow/util-invariant"
+import {config} from "@onflow/sdk"
 
 export const UNKNOWN /*                       */ = "UNKNOWN"
 export const SCRIPT /*                        */ = "SCRIPT"
@@ -106,6 +107,14 @@ const IX = `{
   }
 }`
 
+const LOGGER_LEVELS = {
+  "debug": 0,
+  "info": 1,
+  "log": 2,
+  "warn": 3,
+  "error": 4
+}
+
 const KEYS = new Set(Object.keys(JSON.parse(IX)))
 
 const getByValue = (map, searchValue) => {
@@ -122,24 +131,35 @@ const PROP_DEPRECATIONS = new Map([
   ["keyId", "keyIndex"]
 ])
 
-const addDeprecations = (originalObject, deprecated) => {
+const addDeprecations = async (originalObject, deprecated) => {
+  const logLevel =  await config.get("log.level", LOGGER_LEVELS.debug)
+
   return new Proxy(originalObject, {
     get: (obj, property) => {
       if (getByValue(deprecated, property)) {
         const originalProperty = getByValue(deprecated, property)
         return Reflect.get(obj, originalProperty)
       }
-      if (deprecated.has(property)) {
-        console.warn(`Field deprecation: "${property}" will be deprecated in a future version. Please use "${deprecated.get(property)}" instead.`)
+      if (deprecated.has(property) && logLevel >= LOGGER_LEVELS.warn) {
+        console.warn(
+          `
+          %cFCL/SDK Deprecation Notice
+          ============================
+          "${property}" will be deprecated in a future version.
+          Please use "${deprecated.get(property)}" instead.
+          ============================
+          `,
+          "font-weight:bold;font-family:monospace;"
+        )
       }
       return Reflect.get(obj, property)
     }
   })
 }
 
-export const interaction = () => {
+export const interaction = async () => {
   const ix = JSON.parse(IX)
-  const account = addDeprecations(ix.account, PROP_DEPRECATIONS)
+  const account = await addDeprecations(ix.account, PROP_DEPRECATIONS)
 
   return {
     ...ix,
@@ -178,7 +198,7 @@ const makeIx = wat => ix => {
   return Ok(ix)
 }
 
-export const prepAccount = (acct, opts = {}) => ix => {
+export const prepAccount = (acct, opts = {}) => async (ix) => {
   invariant(
     typeof acct === "function" || typeof acct === "object",
     "prepAccount must be passed an authorization function or an account object"
@@ -186,7 +206,7 @@ export const prepAccount = (acct, opts = {}) => ix => {
   invariant(opts.role != null, "Account must have a role")
 
   const ACCOUNT_OG = JSON.parse(ACCT)
-  const ACCOUNT = addDeprecations(ACCOUNT_OG, PROP_DEPRECATIONS)
+  const ACCOUNT = await addDeprecations(ACCOUNT_OG, PROP_DEPRECATIONS)
 
   const role = opts.role
   const tempId = uuid()
