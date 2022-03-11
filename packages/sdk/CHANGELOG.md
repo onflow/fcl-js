@@ -1,6 +1,6 @@
 ## Unreleased
 
-- 2022-03-11 -- [@chasefleming](https://github.com/chasefleming): Allow developers to access new field names and warn on usage of field renamings/deprecations. To turn on warnings, set config `log.level` to `3`.
+- 2022-03-11 -- [@chasefleming](https://github.com/chasefleming): Warn about field renamings/deprecations. To turn on warnings, set config `log.level` to `3`.
 
 ```js
 sdk.config("logger.level", 3)
