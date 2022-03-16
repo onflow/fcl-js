@@ -1,3 +1,5 @@
+import {logger, LOGGER_LEVELS} from "./logger"
+
 const buildWarningMessage = ({name, transitionsPath}) => {
   console.warn(
     `
@@ -33,4 +35,31 @@ const error = deprecated => {
 export const deprecate = {
   warn,
   error,
+}
+
+const getByValue = (map, searchValue) => {
+  for (let [key, value] of map.entries()) {
+    if (value === searchValue) return key;
+  }
+}
+
+// Allows access to old and new field names while showing deprecation warning for old
+export const applyRenamings = (originalObject, deprecationsMap) => {
+  return new Proxy(originalObject, {
+    get: (obj, property) => {
+      if (getByValue(deprecationsMap, property)) {
+        const originalProperty = getByValue(deprecationsMap, property)
+        return Reflect.get(obj, originalProperty)
+      }
+      if (deprecationsMap.has(property)) {
+        logger(
+          "FCL/SDK Deprecation Notice",
+          `"${property}" will be deprecated in a future version.
+          Please use "${deprecationsMap.get(property)}" instead.`,
+          LOGGER_LEVELS.warn
+        )
+      }
+      return Reflect.get(obj, property)
+    }
+  })
 }
