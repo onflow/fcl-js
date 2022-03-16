@@ -1,11 +1,11 @@
 import {config} from "../config"
 
 export const LOGGER_LEVELS = {
-  "debug": 0,
-  "info": 1,
-  "log": 2,
-  "warn": 3,
-  "error": 4
+  "debug": 5,
+  "info": 4,
+  "log": 3,
+  "warn": 2,
+  "error": 1
 }
 
 const buildLoggerMessage = (title, message) => {
@@ -19,7 +19,7 @@ const buildLoggerMessage = (title, message) => {
 }
 
 export const logger = async (title, message, level) => {
-  const configLoggerLevel =  await config.get("logger.level", LOGGER_LEVELS.debug)
+  const configLoggerLevel =  await config.get("logger.level", 0)
 
   // If config level is below message level then don't show it
   if (configLoggerLevel < level) return
