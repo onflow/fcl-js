@@ -53,7 +53,7 @@ function constructResponse(ix, context, res) {
     const c = {}
     if (!contracts) return c
     for (let key of Object.keys(contracts)) {
-      c[key] = Buffer.from(contracts[key], "base64").toString()
+      c[key] = context.Buffer.from(contracts[key], "base64").toString()
     }
     return c
   }
@@ -83,6 +83,7 @@ function constructResponse(ix, context, res) {
 export async function sendGetAccount(ix, context = {}, opts = {}) {
   invariant(opts.node, `SDK Send Get Account Error: opts.node must be defined.`)
   invariant(context.response, `SDK Send Get Account Error: context.response must be defined.`)
+  invariant(context.Buffer, `SDK Send Get Account Error: context.Buffer must be defined.`)
 
   ix = await ix
 

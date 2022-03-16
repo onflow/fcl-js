@@ -1,4 +1,5 @@
 import {invariant} from "@onflow/util-invariant"
+import {getNodeHttpModules} from "@onflow/util-node-http-modules"
 
 class HTTPRequestError extends Error {
   constructor({transport, error, hostname, path, port, method, requestBody, responseBody, responseStatusText, reqOn}) {
@@ -45,16 +46,13 @@ export async function httpRequest({
   try {
     fetchTransport = window?.fetch || fetch
   } catch (e) {}
-  let nodeHttpsTransport
-  try {
-    nodeHttpsTransport = await import("https").catch(_ => undefined)
-  } catch (e) {}
-  let nodeHttpTransport
-  try {
-    nodeHttpTransport = await import("http").catch(_ => undefined)
-  } catch (e) {}
 
-  invariant((fetchTransport || nodeHttpsTransport), "HTTP Request error: Could not find a supported HTTP module.")
+  const {
+    nodeHttpsTransport,
+    nodeHttpTransport
+  } = await getNodeHttpModules()
+
+  invariant((fetchTransport || nodeHttpsTransport || nodeHttpTransport), "HTTP Request error: Could not find a supported HTTP module.")
 
   if (fetchTransport) {
 

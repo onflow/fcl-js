@@ -2,8 +2,8 @@ import {invariant} from "@onflow/util-invariant"
 import {GetEventsForHeightRangeRequest, GetEventsForBlockIDsRequest, AccessAPI} from "@onflow/protobuf"
 import {unary as defaultUnary} from "./unary"
 
-const u8ToHex = u8 => Buffer.from(u8).toString("hex")
-const hexBuffer = hex => Buffer.from(hex, "hex")
+const u8ToHex = (u8, context) => context.Buffer.from(u8).toString("hex")
+const hexBuffer = (hex, context) => context.Buffer.from(hex, "hex")
 
 async function sendGetEventsForHeightRangeRequest(ix, context, opts) {
   const unary = opts.unary || defaultUnary
@@ -26,7 +26,7 @@ async function sendGetEventsForBlockIDsRequest(ix, context, opts) {
   req.setType(ix.events.eventType)
 
   ix.events.blockIds.forEach(id =>
-    req.addBlockIds(hexBuffer(id))
+    req.addBlockIds(hexBuffer(id, context))
   )
 
   const res = await unary(opts.node, AccessAPI.GetEventsForBlockIDs, req, context)
@@ -40,7 +40,7 @@ function constructResponse(ix, context, res) {
 
   const results = res.getResultsList()
   ret.events = results.reduce((blocks, result) => {
-    const blockId = u8ToHex(result.getBlockId_asU8())
+    const blockId = u8ToHex(result.getBlockId_asU8(), context)
     const blockHeight = result.getBlockHeight()
     const blockTimestamp = result.getBlockTimestamp().toDate().toISOString()
     const events = result.getEventsList()
@@ -50,10 +50,10 @@ function constructResponse(ix, context, res) {
         blockHeight,
         blockTimestamp,
         type: event.getType(),
-        transactionId: u8ToHex(event.getTransactionId_asU8()),
+        transactionId: u8ToHex(event.getTransactionId_asU8(), context),
         transactionIndex: event.getTransactionIndex(),
         eventIndex: event.getEventIndex(),
-        payload: JSON.parse(Buffer.from(event.getPayload_asU8()).toString("utf8")),
+        payload: JSON.parse(context.Buffer.from(event.getPayload_asU8()).toString("utf8")),
       })
     })
     return blocks
@@ -65,6 +65,7 @@ function constructResponse(ix, context, res) {
 export async function sendGetEvents(ix, context = {}, opts = {}) {  
   invariant(opts.node, `SDK Send Get Events Error: opts.node must be defined.`)
   invariant(context.response, `SDK Send Get Events Error: context.response must be defined.`)
+  invariant(context.Buffer, `SDK Send Get Events Error: context.Buffer must be defined.`)
 
   ix = await ix
 

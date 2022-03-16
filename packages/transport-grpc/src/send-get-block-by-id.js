@@ -2,17 +2,18 @@ import {invariant} from "@onflow/util-invariant"
 import {GetBlockByIDRequest, AccessAPI} from "@onflow/protobuf"
 import {unary} from "./unary"
 
-const u8ToHex = u8 => Buffer.from(u8).toString("hex")
-const hexBuffer = hex => Buffer.from(hex, "hex")
+const u8ToHex = (u8, context) => context.Buffer.from(u8).toString("hex")
+const hexBuffer = (hex, context) => context.Buffer.from(hex, "hex")
 
 export async function sendGetBlockById(ix, context = {}, opts = {}) {
   invariant(opts.node, `SDK Send Get Block By ID Error: opts.node must be defined.`)
   invariant(context.response, `SDK Send Get Block By ID Error: context.response must be defined.`)
+  invariant(context.Buffer, `SDK Send Get Block By ID Error: context.Buffer must be defined.`)
 
   ix = await ix
 
   const req = new GetBlockByIDRequest()
-  req.setId(hexBuffer(ix.block.id))
+  req.setId(hexBuffer(ix.block.id, context))
 
   const res = await unary(opts.node, AccessAPI.GetBlockByID, req, context)
 
@@ -25,17 +26,17 @@ export async function sendGetBlockById(ix, context = {}, opts = {}) {
   const ret = context.response()
   ret.tag = ix.tag
   ret.block = {
-    id: u8ToHex(block.getId_asU8()),
-    parentId: u8ToHex(block.getParentId_asU8()),
+    id: u8ToHex(block.getId_asU8(), context),
+    parentId: u8ToHex(block.getParentId_asU8(), context),
     height: block.getHeight(),
     timestamp: block.getTimestamp(),
     collectionGuarantees: collectionGuarantees.map(collectionGuarantee => ({
-      collectionId: u8ToHex(collectionGuarantee.getCollectionId_asU8()),
+      collectionId: u8ToHex(collectionGuarantee.getCollectionId_asU8(), context),
       signatures: collectionGuarantee.getSignaturesList(),
     })),
     blockSeals: blockSeals.map(blockSeal => ({
-      blockId: u8ToHex(blockSeal.getBlockId_asU8()),
-      executionReceiptId: u8ToHex(blockSeal.getExecutionReceiptId_asU8()),
+      blockId: u8ToHex(blockSeal.getBlockId_asU8(), context),
+      executionReceiptId: u8ToHex(blockSeal.getExecutionReceiptId_asU8(), context),
       executionReceiptSignatures: blockSeal.getExecutionReceiptSignaturesList(),
       resultApprovalSignatures: blockSeal.getResultApprovalSignaturesList(),
     })),

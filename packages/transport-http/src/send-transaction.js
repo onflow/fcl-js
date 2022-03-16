@@ -5,6 +5,7 @@ import {httpRequest as defaultHttpRequest} from "./http-request.js"
 export async function sendTransaction(ix, context = {}, opts = {}) {
   invariant(opts.node, `SDK Send Transaction Error: opts.node must be defined.`)
   invariant(context.response, `SDK Send Transaction Error: context.response must be defined.`)
+  invariant(context.Buffer, `SDK Send Transaction Error: context.Buffer must be defined.`)
 
   const httpRequest = opts.httpRequest || defaultHttpRequest
 
@@ -18,7 +19,7 @@ export async function sendTransaction(ix, context = {}, opts = {}) {
         payloadSignatures.push({
           address: sansPrefix(acct.addr),
           key_index: String(acct.keyId),
-          signature: Buffer.from(acct.signature, "hex").toString("base64")
+          signature: context.Buffer.from(acct.signature, "hex").toString("base64")
         })
       }
     } catch (error) {
@@ -36,7 +37,7 @@ export async function sendTransaction(ix, context = {}, opts = {}) {
         envelopeSignatures[id] = envelopeSignatures[id] || {
           address: sansPrefix(acct.addr),
           key_index: String(acct.keyId),
-          signature: Buffer.from(acct.signature, "hex").toString("base64")
+          signature: context.Buffer.from(acct.signature, "hex").toString("base64")
         }
       }
     } catch (error) {
@@ -52,8 +53,8 @@ export async function sendTransaction(ix, context = {}, opts = {}) {
     path: `/v1/transactions`,
     method: "POST",
     body: {
-      script: Buffer.from(ix.message.cadence).toString("base64"),
-      "arguments": [...ix.message.arguments.map(arg => Buffer.from(JSON.stringify(ix.arguments[arg].asArgument)).toString("base64"))],
+      script: context.Buffer.from(ix.message.cadence).toString("base64"),
+      "arguments": [...ix.message.arguments.map(arg => context.Buffer.from(JSON.stringify(ix.arguments[arg].asArgument)).toString("base64"))],
       reference_block_id: ix.message.refBlock ? ix.message.refBlock : null,
       gas_limit: String(ix.message.computeLimit),
       payer: sansPrefix(ix.accounts[Array.isArray(ix.payer) ? ix.payer[0] : ix.payer].addr),

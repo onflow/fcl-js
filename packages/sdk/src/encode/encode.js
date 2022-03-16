@@ -1,5 +1,5 @@
 import { SHA3 } from "sha3"
-import { encode } from "@onflow/rlp"
+import { encode, Buffer } from "@onflow/rlp"
 import { sansPrefix } from "@onflow/util-address"
 
 export const encodeTransactionPayload = tx => prependTransactionDomainTag(rlpEncode(preparePayload(tx)))

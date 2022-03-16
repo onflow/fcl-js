@@ -13,6 +13,7 @@ const STATUS_MAP = {
 export async function sendGetTransactionStatus(ix, context = {}, opts = {}) {
   invariant(opts.node, `SDK Send Get Transaction Status Error: opts.node must be defined.`)
   invariant(context.response, `SDK Send Get Transaction Status Error: context.response must be defined.`)
+  invariant(context.Buffer, `SDK Send Get Transaction Status Error: context.Buffer must be defined.`)
 
   const httpRequest = opts.httpRequest || defaultHttpRequest
 
@@ -37,7 +38,7 @@ export async function sendGetTransactionStatus(ix, context = {}, opts = {}) {
       transactionId: event.transaction_id,
       transactionIndex: Number(event.transaction_index),
       eventIndex: Number(event.event_index),
-      payload: JSON.parse(Buffer.from(event.payload, "base64").toString())
+      payload: JSON.parse(context.Buffer.from(event.payload, "base64").toString())
     }))
   }
 

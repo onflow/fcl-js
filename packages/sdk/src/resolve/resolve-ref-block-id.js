@@ -5,6 +5,7 @@ import {config} from "../config"
 import {decodeResponse} from "../decode/decode.js"
 import {getBlock} from "../build/build-get-block.js"
 import {invariant} from "@onflow/util-invariant"
+import {Buffer} from "@onflow/rlp"
 
 async function getRefId (opts) {
   const node = await config().get("accessNode.api")
@@ -21,7 +22,7 @@ async function getRefId (opts) {
   ix = await pipe(interaction(), [getBlock()])
   ix = await sendFn(
     ix,
-    {config, response, ix: ixModule},
+    {config, response, Buffer, ix: ixModule},
     {node}
   )
   ix = await decodeResponse(ix)

@@ -6,11 +6,11 @@ import {payer} from "../../sdk/src/build/build-payer.js"
 import {ref} from "../../sdk/src/build/build-ref.js"
 import {limit} from "../../sdk/src/build/build-limit.js"
 import {authorizations} from "../../sdk/src/build/build-authorizations.js"
-
 import {voucherIntercept} from "../../sdk/src/build/build-voucher-intercept.js"
 import {voucherToTxId} from "../../sdk/src/resolve/voucher.js"
 import {resolve} from "../../sdk/src/resolve/resolve.js"
 import {response as responseADT} from "../../sdk/src/response/response.js"
+import {Buffer} from "@onflow/rlp"
 
 describe("Transaction", () => {
   test("SendTransaction", async () => {
@@ -86,6 +86,7 @@ describe("Transaction", () => {
       ),
       {
         response: responseADT,
+        Buffer,
       },
       {
         httpRequest: httpRequestMock,
