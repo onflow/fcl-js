@@ -113,7 +113,7 @@ export async function resolveAccounts(ix) {
         %cFCL Warning
         ============================
         "ix.payer" must be an array. Support for ix.payer as a singular is deprecated,
-        see the @onflow/sdk changelog for more info. 
+        see changelog for more info.
         ============================
         `,
         "font-weight:bold;font-family:monospace;"
