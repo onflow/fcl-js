@@ -21,7 +21,16 @@ const buildLoggerMessage = (title, message) => {
 export const logger = async (title, message, level) => {
   const configLoggerLevel =  await config.get("logger.level", LOGGER_LEVELS.debug)
 
-  if (configLoggerLevel >= level) {
-    console.warn(buildLoggerMessage(title, message))
+  // If config level is below message level then don't show it
+  if (configLoggerLevel < level) return
+
+  switch(level) {
+    case LOGGER_LEVELS.warn:
+      console.warn(buildLoggerMessage(title, message))
+    case LOGGER_LEVELS.error:
+      console.error(buildLoggerMessage(title, message))
+      break;
+    default:
+      console.log(buildLoggerMessage(title, message))
   }
 }
