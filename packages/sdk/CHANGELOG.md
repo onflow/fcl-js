@@ -1,5 +1,5 @@
 ## Unreleased
-
+- 2022-03-16 -- [@bthaile](https://github.com/bthaile) Payer can now be an array of keys on a single account. Non-array payer is deprecated and will error in future versions of sdk. 
 - 2022-02-11 -- Uses Buffer from @onflow/rlp in encode.
 - 2022-02-11 -- Injects Buffer from @onflow/rlp to transport send modules.
 - 2022-02-04 -- [@chasefleming](https://github.com/chasefleming): Add options for for getting account by block height.

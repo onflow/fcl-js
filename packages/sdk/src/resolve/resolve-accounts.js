@@ -67,7 +67,7 @@ async function collectAccounts(ix, accounts, last, depth = 3) {
             payerAccts.push(addr)
             if (dupList.includes(key)) return g;
             dupList.push(key)
-            return [...g, tempId]                        
+            return [...g, tempId]
           }, [])
           const multiAccts = Array.from(new Set(payerAccts))
           if (multiAccts.length > 1) {
@@ -113,7 +113,7 @@ export async function resolveAccounts(ix) {
         %cFCL Warning
         ============================
         "ix.payer" must be an array. Support for ix.payer as a singular is deprecated,
-        see changelog for more info: https://docs.onflow.org/fcl/
+        see the @onflow/sdk changelog for more info. 
         ============================
         `,
         "font-weight:bold;font-family:monospace;"
