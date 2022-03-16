@@ -38,7 +38,7 @@ export const deprecate = {
 }
 
 // Allows access to old and new field names while showing deprecation warning for old
-export const renameAndDeprecate = (originalObject, deprecationsMap) => {
+export const applyRenamings = (originalObject, deprecationsMap) => {
   return new Proxy(originalObject, {
     get: (obj, property) => {
       if (getByValue(deprecationsMap, property)) {

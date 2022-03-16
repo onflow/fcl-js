@@ -1,5 +1,5 @@
 import {invariant} from "@onflow/util-invariant"
-import {renameAndDeprecate} from "../utils/deprecate"
+import {applyRenamings} from "../utils/deprecate"
 
 export const UNKNOWN /*                       */ = "UNKNOWN"
 export const SCRIPT /*                        */ = "SCRIPT"
@@ -125,7 +125,7 @@ const PROP_DEPRECATIONS = new Map([
 
 export const interaction = () => {
   const ix = JSON.parse(IX)
-  const account = renameAndDeprecate(ix.account, PROP_DEPRECATIONS)
+  const account = applyRenamings(ix.account, PROP_DEPRECATIONS)
 
   return {
     ...ix,
@@ -171,7 +171,7 @@ export const prepAccount = (acct, opts = {}) => ix => {
   )
   invariant(opts.role != null, "Account must have a role")
 
-  const ACCOUNT = renameAndDeprecate(JSON.parse(ACCT), PROP_DEPRECATIONS)
+  const ACCOUNT = applyRenamings(JSON.parse(ACCT), PROP_DEPRECATIONS)
 
   const role = opts.role
   const tempId = uuid()
