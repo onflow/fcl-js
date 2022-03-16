@@ -25,8 +25,15 @@ export const logger = async (title, message, level) => {
   if (configLoggerLevel < level) return
 
   switch(level) {
+    case LOGGER_LEVELS.debug:
+      console.debug(buildLoggerMessage(title, message))
+      break;
+    case LOGGER_LEVELS.info:
+      console.info(buildLoggerMessage(title, message))
+      break;
     case LOGGER_LEVELS.warn:
       console.warn(buildLoggerMessage(title, message))
+      break;
     case LOGGER_LEVELS.error:
       console.error(buildLoggerMessage(title, message))
       break;
