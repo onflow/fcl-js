@@ -37,6 +37,12 @@ export const deprecate = {
   error,
 }
 
+const getByValue = (map, searchValue) => {
+  for (let [key, value] of map.entries()) {
+    if (value === searchValue) return key;
+  }
+}
+
 // Allows access to old and new field names while showing deprecation warning for old
 export const applyRenamings = (originalObject, deprecationsMap) => {
   return new Proxy(originalObject, {

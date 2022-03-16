@@ -109,12 +109,6 @@ const IX = `{
 
 const KEYS = new Set(Object.keys(JSON.parse(IX)))
 
-const getByValue = (map, searchValue) => {
-  for (let [key, value] of map.entries()) {
-    if (value === searchValue) return key;
-  }
-}
-
 // Current field, followed by renaming
 // addr => address
 const PROP_DEPRECATIONS = new Map([

@@ -8,14 +8,15 @@ export const LOGGER_LEVELS = {
   "error": 1
 }
 
-const buildLoggerMessage = (title, message) => {
-  return `
+const buildLoggerMessageArgs = ({title, message}) => {
+  return [`
     %c${title}
     ============================
     ${message}
     ============================
     `,
     "font-weight:bold;font-family:monospace;"
+  ]
 }
 
 export const logger = async (title, message, level) => {
@@ -24,20 +25,22 @@ export const logger = async (title, message, level) => {
   // If config level is below message level then don't show it
   if (configLoggerLevel < level) return
 
+  const loggerMessageArgs = buildLoggerMessageArgs({title, message})
+
   switch(level) {
     case LOGGER_LEVELS.debug:
-      console.debug(buildLoggerMessage(title, message))
+      console.debug(...loggerMessageArgs)
       break;
     case LOGGER_LEVELS.info:
-      console.info(buildLoggerMessage(title, message))
+      console.info(...loggerMessageArgs)
       break;
     case LOGGER_LEVELS.warn:
-      console.warn(buildLoggerMessage(title, message))
+      console.warn(...loggerMessageArgs)
       break;
     case LOGGER_LEVELS.error:
-      console.error(buildLoggerMessage(title, message))
+      console.error(...loggerMessageArgs)
       break;
     default:
-      console.log(buildLoggerMessage(title, message))
+      console.log(...loggerMessageArgs)
   }
 }
