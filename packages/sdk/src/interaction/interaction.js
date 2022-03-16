@@ -84,7 +84,7 @@ const IX = `{
   },
   "proposer":null,
   "authorizations":[],
-  "payer":null,
+  "payer":[],
   "events": {
     "eventType":null,
     "start":null,
@@ -186,6 +186,8 @@ export const prepAccount = (acct, opts = {}) => ix => {
 
   if (role === AUTHORIZER) {
     ix.authorizations.push(tempId)
+  } else if (role === PAYER) {
+    ix.payer.push(tempId)
   } else {
     ix[role] = tempId
   }

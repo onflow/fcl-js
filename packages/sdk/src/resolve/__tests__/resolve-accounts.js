@@ -34,7 +34,7 @@ test("single account/key pair for all three signatory roles", async () => {
       expect(ix.accounts[TestUtils.idof(S1a)]).toBeDefined()
 
       expect(ix.proposer).toBe(TestUtils.idof(S1a))
-      expect(ix.payer).toBe(TestUtils.idof(S1a))
+      expect(ix.payer).toEqual([TestUtils.idof(S1a)])
       expect(ix.authorizations).toEqual([TestUtils.idof(S1a)])
     }
   )
@@ -60,7 +60,7 @@ test("single account/key pair for all three signatory roles but an additinal aut
       expect(ix.accounts[TestUtils.idof(S1b)]).toBeDefined()
 
       expect(ix.proposer).toBe(TestUtils.idof(S1a))
-      expect(ix.payer).toBe(TestUtils.idof(S1a))
+      expect(ix.payer).toEqual([TestUtils.idof(S1a)])
       expect(ix.authorizations).toEqual([
         TestUtils.idof(S1a),
         TestUtils.idof(S1b),
@@ -91,7 +91,7 @@ test("All three signatories are different accounts", async () => {
 
       expect(ix.proposer).toBe(TestUtils.idof(S1a))
       expect(ix.authorizations).toEqual([TestUtils.idof(S2a)])
-      expect(ix.payer).toBe(TestUtils.idof(S3a))
+      expect(ix.payer).toEqual([TestUtils.idof(S3a)])
     }
   )
 })
@@ -122,7 +122,7 @@ test("The PreAuthz Usecase same signatories", async () => {
       expect(ix.accounts[TestUtils.idof(S1a)]).toBeDefined()
 
       expect(ix.proposer).toBe(TestUtils.idof(S1a))
-      expect(ix.payer).toBe(TestUtils.idof(S1a))
+      expect(ix.payer).toEqual([TestUtils.idof(S1a)])
 
       expect(ix.authorizations.length).toBe(1)
       expect(ix.authorizations).toEqual([TestUtils.idof(S1a)])
@@ -159,7 +159,7 @@ test("The PreAuthz Usecase - mixed signatories (wallet covers transaction fees)"
       expect(ix.accounts[TestUtils.idof(S2a)]).toBeDefined()
 
       expect(ix.proposer).toBe(TestUtils.idof(S1a))
-      expect(ix.payer).toBe(TestUtils.idof(S2a))
+      expect(ix.payer).toEqual([TestUtils.idof(S2a)])
 
       expect(ix.authorizations.length).toBe(3)
       expect(ix.authorizations).toEqual([

@@ -57,7 +57,7 @@ export async function sendTransaction(ix, context = {}, opts = {}) {
       "arguments": [...ix.message.arguments.map(arg => context.Buffer.from(JSON.stringify(ix.arguments[arg].asArgument)).toString("base64"))],
       reference_block_id: ix.message.refBlock ? ix.message.refBlock : null,
       gas_limit: String(ix.message.computeLimit),
-      payer: sansPrefix(ix.accounts[ix.payer].addr),
+      payer: sansPrefix(ix.accounts[Array.isArray(ix.payer) ? ix.payer[0] : ix.payer].addr),
       proposal_key: {
         address: sansPrefix(ix.accounts[ix.proposer].addr),
         key_index: String(ix.accounts[ix.proposer].keyId),

@@ -47,8 +47,35 @@ async function collectAccounts(ix, accounts, last, depth = 3) {
         ix.proposer = ax.tempId
       }
 
-      if (ix.accounts[ax.tempId].role.payer && ix.payer === old.tempId) {
-        ix.payer = ax.tempId
+      if (ix.accounts[ax.tempId].role.payer) {
+        if (Array.isArray(ix.payer)) {
+          ix.payer = Array.from(new Set([...ix.payer, ax.tempId].map(d =>
+            d === old.tempId ? ax.tempId : d
+          )))
+        } else {
+          ix.payer = Array.from(new Set([ix.payer, ax.tempId].map(d =>
+            d === old.tempId ? ax.tempId : d
+          )))
+        }
+        if (ix.payer.length > 1) {
+          // remove payer dups based on addr and keyId
+          const dupList = []
+          const payerAccts = []
+          ix.payer = ix.payer.reduce((g, tempId) => {
+            const { addr, keyId } = ix.accounts[tempId];
+            const key = `${addr}-${keyId}`;
+            payerAccts.push(addr)
+            if (dupList.includes(key)) return g;
+            dupList.push(key)
+            return [...g, tempId]
+          }, [])
+          const multiAccts = Array.from(new Set(payerAccts))
+          if (multiAccts.length > 1) {
+            throw new Error(
+              "Payer can not be different accounts"
+            )
+          }
+        }
       }
 
       if (ix.accounts[ax.tempId].role.authorizer) {
@@ -60,11 +87,6 @@ async function collectAccounts(ix, accounts, last, depth = 3) {
           ix.authorizations = ix.authorizations.map(d =>
             d === old.tempId ? ax.tempId : d
           )
-          // if (!new Set(ix.authorizations).has(ax.tempId)) {
-          //   ix.authorizations = Array.from(
-          //     new Set([...ix.authorizations, ax.tempId])
-          //   )
-          // }
         }
       }
     }
@@ -85,6 +107,18 @@ async function collectAccounts(ix, accounts, last, depth = 3) {
 
 export async function resolveAccounts(ix) {
   if (isTransaction(ix)) {
+    if (!Array.isArray(ix.payer)) {
+      console.warn(
+        `
+        %cFCL Warning
+        ============================
+        "ix.payer" must be an array. Support for ix.payer as a singular is deprecated,
+        see changelog for more info.
+        ============================
+        `,
+        "font-weight:bold;font-family:monospace;"
+      )
+    }
     try {
       await collectAccounts(ix, Object.values(ix.accounts))
       await collectAccounts(ix, Object.values(ix.accounts))

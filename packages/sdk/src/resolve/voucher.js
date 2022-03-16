@@ -5,13 +5,17 @@ export function findInsideSigners(ix) {
   // Inside Signers Are: (authorizers + proposer) - payer
   let inside = new Set(ix.authorizations)
   inside.add(ix.proposer)
-  inside.delete(ix.payer)
+  if (Array.isArray(ix.payer)) {
+    ix.payer.forEach(p => inside.delete(p));
+  } else {
+    inside.delete(ix.payer)
+  }
   return Array.from(inside)
 }
 
 export function findOutsideSigners(ix) {
   // Outside Signers Are: (payer)
-  let outside = new Set([ix.payer])
+  let outside = new Set(Array.isArray(ix.payer) ? ix.payer : [ix.payer])
   return Array.from(outside)
 }
 
@@ -32,7 +36,7 @@ export const createSignableVoucher = ix => {
       sig: ix.accounts[id].signature,
     }))
 
-  const buildOutsideSigners = () =>
+    const buildOutsideSigners = () =>
     findOutsideSigners(ix).map(id => ({
       address: withPrefix(ix.accounts[id].addr),
       keyId: ix.accounts[id].keyId,
@@ -49,7 +53,7 @@ export const createSignableVoucher = ix => {
       keyId: ix.accounts[ix.proposer].keyId,
       sequenceNum: ix.accounts[ix.proposer].sequenceNum,
     },
-    payer: withPrefix(ix.accounts[ix.payer].addr),
+    payer: withPrefix(ix.accounts[Array.isArray(ix.payer) ? ix.payer[0] : ix.payer].addr),
     authorizers: buildAuthorizers(),
     payloadSigs: buildInsideSigners(),
     envelopeSigs: buildOutsideSigners(),

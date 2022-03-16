@@ -1,5 +1,6 @@
 ### Unreleased
 
+- 2022-03-16 -- [@bthaile](https://github.com/bthaile) Payer can now be an array.
 - 2022-02-25 -- Use node require to consume node standard libraries
 - 2022-02-11 -- Uses Buffer as provided by context injection
 
