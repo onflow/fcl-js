@@ -2,11 +2,7 @@
   "workspaces": ["./packages/*"],
   "scripts": {
     "build": "npm run build --ws",
-    "lerna": "lerna",
     "test": "jest"
-  },
-  "devDependencies": {
-    "lerna": "^4.0.0"
   },
   "name": "fcl-js"
 }
