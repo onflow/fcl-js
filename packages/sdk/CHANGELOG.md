@@ -1,9 +1,9 @@
 ## Unreleased
 
-- 2022-03-11 -- [@chasefleming](https://github.com/chasefleming): Warn about field renamings/deprecations. To turn on warnings, set config `log.level` to `3`.
+- 2022-03-11 -- [@chasefleming](https://github.com/chasefleming): Warn about field renamings/deprecations. To turn on warnings, set config `log.level` to `2`.
 
 ```js
-sdk.config("logger.level", 3)
+sdk.config("logger.level", 2)
 ```
 
 - 2022-02-11 -- Uses Buffer from @onflow/rlp in encode.
