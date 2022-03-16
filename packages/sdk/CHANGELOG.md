@@ -1,6 +1,6 @@
 ## Unreleased
 
-- 2022-03-11 -- [@chasefleming](https://github.com/chasefleming): Warn about field renamings/deprecations. To turn on warnings, set config `log.level` to `2`.
+- 2022-03-16 -- [@chasefleming](https://github.com/chasefleming): Warn about field renamings/deprecations. To turn on warnings, set config `log.level` to `2`.
 
 ```js
 sdk.config("logger.level", 2)
