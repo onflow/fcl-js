@@ -60,13 +60,21 @@ async function collectAccounts(ix, accounts, last, depth = 3) {
         if (ix.payer.length > 1) {
           // remove payer dups based on addr and keyId
           const dupList = []
+          const payerAccts = []
           ix.payer = ix.payer.reduce((g, tempId) => {
             const { addr, keyId } = ix.accounts[tempId];
             const key = `${addr}-${keyId}`;
+            payerAccts.push(addr)
             if (dupList.includes(key)) return g;
             dupList.push(key)
             return [...g, tempId]                        
           }, [])
+          const multiAccts = Array.from(new Set(payerAccts))
+          if (multiAccts.length > 1) {
+            throw new Error(
+              "Payer can not be different accounts"
+            )
+          }
         }
       }
 

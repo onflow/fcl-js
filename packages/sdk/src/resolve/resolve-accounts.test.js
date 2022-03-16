@@ -115,3 +115,48 @@ test("Voucher in PreSignable multiple payer keys", async () => {
     ],
   })
 })
+
+
+
+test("Voucher in PreSignable multiple payer keys different accounts", async () => {
+  const authz = {
+    addr: "0x01",
+    tempId: "0x01-1",
+    signingFunction: () => ({ signature: "123" }),
+    keyId: 1,
+    sequenceNum: 123,
+  }
+
+  const authzPayer = {
+    addr: "0x02",
+    address: "0x02",
+    resolve: (account, preSignable) => [{
+      ...account,
+      tempId: "0x02-0",
+      addr: "0x02",
+      keyId: 0,
+      sequenceNum: 123,
+      signingFunction: (signable) => ({ signature: "123", addr: "0x02", keyId: 0 }),
+      resolve: null,
+    }, {
+      ...account,
+      tempId: "0x01-1",
+      addr: "0x01",
+      keyId: 1,
+      sequenceNum: 123,
+      signingFunction: (signable) => ({ signature: "333", addr: "0x02", keyId: 1 }),
+      resolve: null,
+    }]
+  }
+
+  const built = await build([
+    transaction``,
+    limit(156),
+    proposer(authz),
+    authorizations([authz]),
+    payer(authzPayer),
+    ref("123"),
+  ]);
+
+  await expect(resolve(built)).rejects.toThrow()
+})
