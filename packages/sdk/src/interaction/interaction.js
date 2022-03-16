@@ -1,5 +1,5 @@
 import {invariant} from "@onflow/util-invariant"
-import {config} from "../config"
+import {logger, LOGGER_LEVELS} from "../utils/logger"
 
 export const UNKNOWN /*                       */ = "UNKNOWN"
 export const SCRIPT /*                        */ = "SCRIPT"
@@ -106,30 +106,6 @@ const IX = `{
     "id":null
   }
 }`
-
-const LOGGER_LEVELS = {
-  "debug": 0,
-  "info": 1,
-  "log": 2,
-  "warn": 3,
-  "error": 4
-}
-
-const logger = async (title, message, level) => {
-  const configLoggerLevel =  await config.get("logger.level", LOGGER_LEVELS.debug)
-
-  if (configLoggerLevel >= level) {
-    console.warn(
-      `
-      %c${title}
-      ============================
-      ${message}
-      ============================
-      `,
-      "font-weight:bold;font-family:monospace;"
-    )
-  }
-}
 
 const KEYS = new Set(Object.keys(JSON.parse(IX)))
 
