@@ -1,5 +1,5 @@
 import {invariant} from "@onflow/util-invariant"
-import {logger, LOGGER_LEVELS} from "../utils/logger"
+import {renameAndDeprecate} from "../utils/deprecate"
 
 export const UNKNOWN /*                       */ = "UNKNOWN"
 export const SCRIPT /*                        */ = "SCRIPT"
@@ -123,29 +123,9 @@ const PROP_DEPRECATIONS = new Map([
   ["keyId", "keyIndex"]
 ])
 
-const applyDeprecations = (originalObject, deprecated) => {
-  return new Proxy(originalObject, {
-    get: (obj, property) => {
-      if (getByValue(deprecated, property)) {
-        const originalProperty = getByValue(deprecated, property)
-        return Reflect.get(obj, originalProperty)
-      }
-      if (deprecated.has(property)) {
-        logger(
-          "FCL/SDK Deprecation Notice",
-          `"${property}" will be deprecated in a future version.
-          Please use "${deprecated.get(property)}" instead.`,
-          LOGGER_LEVELS.warn
-        )
-      }
-      return Reflect.get(obj, property)
-    }
-  })
-}
-
 export const interaction = () => {
   const ix = JSON.parse(IX)
-  const account = applyDeprecations(ix.account, PROP_DEPRECATIONS)
+  const account = renameAndDeprecate(ix.account, PROP_DEPRECATIONS)
 
   return {
     ...ix,
@@ -191,8 +171,7 @@ export const prepAccount = (acct, opts = {}) => ix => {
   )
   invariant(opts.role != null, "Account must have a role")
 
-  const ACCOUNT_OG = JSON.parse(ACCT)
-  const ACCOUNT = applyDeprecations(ACCOUNT_OG, PROP_DEPRECATIONS)
+  const ACCOUNT = renameAndDeprecate(JSON.parse(ACCT), PROP_DEPRECATIONS)
 
   const role = opts.role
   const tempId = uuid()
