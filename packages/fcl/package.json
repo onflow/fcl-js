@@ -35,9 +35,9 @@
     "alpha": "npm publish --tag alpha",
     "prepublishOnly": "npm test && npm run build",
     "test": "jest",
-    "build": "microbundle --define process.env.CURRENT_VERSION=\"$(node -e \"console.log(require('./package.json').version)\")\"",
     "test:watch": "jest --watch",
-    "start": "microbundle watch --define process.env.CURRENT_VERSION=\"$(node -e \"console.log(require('./package.json').version)\")\""
+    "build": "microbundle --define MICROBUNDLE_CURRENT_VERSION=$npm_package_version",
+    "start": "microbundle watch --define MICROBUNDLE_CURRENT_VERSION=$npm_package_version"
   },
   "dependencies": {
     "@onflow/interaction": "0.0.11",
