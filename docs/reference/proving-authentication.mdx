@@ -5,190 +5,174 @@ title: Proving Ownership of a Flow Account
 ## Proving Ownership of a Flow Account
 
 A common desire that application developers have is to be able to prove that a
-user controls an on chain account. Fortunately, FCL provides multiple ways to
-achieve this.
+user controls an on-chain account. Proving ownership of an on-chain account is a
+way to authenticate a user with an application backend. Fortunately,
+FCL provides a way to achieve this.
 
 During user authentication, some FCL compatible wallets will choose to support
-the FCL `account-proof` service. If a wallet chooses to support this service,
-they will include within it specific pieces of information that you can use to
-prove that a user controls an on chain account. The service, and its data within
-it, will be returned from the wallet during authentication, and made available
-for your use in `FCL Current User`.
+the FCL `account-proof` service. If a wallet chooses to support this service, and
+the user approves the signing of message data, they will return `account-proof` data
+and a signature(s) that can be used to prove a user controls an on-chain account.
 
-If a user's wallet does not choose to support the `account-proof` service, you
-can still prove that a user controls an on chain account provided that the
-wallet does support the `user-signature` service. Since all wallets may
-optionally choose to support either of these services, your application should
-be resilient enough to handle cases where a user's wallet supports one, both or
-neither.
-
-The `account-proof` service, as the name implies, was designed specifically for
-proving authentication, while `user-signature` was designed for more generic use
-cases. We suggest that your application choose to use `account-proof` service
-first, if it's available, and then fall back to `user-signature` if needed.
-
-We'll walk through how you, an application developer, can use either service to
-prove a user's authentication.
+We'll walk through how you, an application developer, can use the `account-proof` service to
+authenticate a user.
 
 > Are you an FCL Wallet Developer? Check out the wallet provider specific docs
 > [here](https://github.com/onflow/fcl-js/tree/master/packages/fcl/src/wallet-provider-spec/provable-authn.md)
 
-### Proving User Authentication using `account-proof`
+### Authenticating a user using `account-proof`
 
-The suggested order of operations of how your application might use
-`account-proof` begins with:
+In order to authenticate your users via a wallet provider's account-proof service, your application needs to
+configure FCL by setting `fcl.accountProof.resolver` and providing two pieces of information.
 
-- Optional: Your application may choose to configure FCL with an application
-  specific Domain Separation Tag. A custom configured Domain Separation Tag helps scope the cryptographic proof
-  generated for the `account-proof` service to your application. A Domain Separation Tag is a valid string less 
-  than 32 bytes long. (Note, inclusion of a Domain Separation Tag does not help to prevent Man-in-the-middle attacks.)
-  Your application can specify a custom Domain Separation Tag via `config.fcl.appDomainTag`.
+The `fcl.accountProof.resolver` is an async resolver function used by FCL to retrieve account proof data
+from your application server. It can be set in your application configuration under the `fcl.accountProof.resolver`
+key. The resolved data should include a specific application identifier (`appIdentifier`) and a random `nonce`.
+This data will be sent to the wallet for signing by the user. If the user approves and authentication is successfull,
+a signature is returned to the client in the data field of an `account-proof` service.
 
-```javascript
+**Application Identifier**
+
+An application identifier is a human-readable string that uniquely identifies your application name.
+The identifier is displayed by wallets when users are asked to approve a signing request.
+It helps users compare against the request origin and detect some malicious phishing attempts,
+improving trust of the application and signing process.
+
+**Random Nonce**
+
+In addition to the `appIdentifier` your application must provide a **minimum 32-byte random nonce** as a hex string.
+
+If for any reason your application backend does not want to request an `account-proof` during authentication,
+it should send a response of `null`. If FCL receives a `null` response from the `accountProof.resolver` it will
+continue the authentication process with the wallet but will not request an account-proof and no signature will be returned.
+
+> In the case of a network or server error FCL will cancel the authentication process and return a rejected promise.
+
+```js
 import {config} from "@onflow/fcl"
 
+type AccountProofData {
+  // e.g. "Awesome App (v0.0)" - A human readable string to identify your application during signing
+  appIdentifier: string;  
+
+  // e.g. "75f8587e5bd5f9dcc9909d0dae1f0ac5814458b2ae129620502cb936fde7120a" - minimum 32-byte random nonce as hex string
+  nonce: string;          
+}
+
+type AccountProofDataResolver = () => Promise<AccountProofData | null>;
+
 config({
-  "fcl.appDomainTag": "AWESOME-APP-V0.0-user",
+  "fcl.accountProof.resolver": accountProofDataResolver
 })
 ```
 
-- Your application calls `fcl.authenticate()` to begin the user authentication
-  process.
-- Your user's wallet will optionally return the `account-proof` service as part
-  of authentication.
-- Your application extracts the data within the `account-proof` service.
+Here is the suggested order of operations of how your application might use the
+`account-proof` service:
 
-The data within the `account-proof` service will look like:
+- A user would like to authenticate via your application client using FCL. The process is triggered
+  by a call to `fcl.authenticate()`. If `fcl.accountProof.resolver` is configured, FCL will attempt
+  to retrieve the account proof data (`appIdentifier` and `nonce`) and trigger your server to start a new
+  account proof authentication process.
+- Your application server generates a **minimum 32-byte random nonce** using a local source of entropy and
+  sends it to the client. The server saves the challenge for future look-ups.
+- If FCL successfully retrieves the `account-proof` data, it continues the authentication process over a secure channel with the wallet.
+  FCL includes the `appIdentifier` and `nonce` as part of the `FCL:VIEW:READY:RESPONSE` or HTTP POST request body.
+  If the resolver function call fails to retrieve the nonce, FCL will cancel the authentication process.
+- If the wallet supports account proofs and the user approves authentication with the wallet, the wallet will return the `account-proof`
+  service with its response.
 
-```javascript
+The data within the `account-proof` service will look like this:
+
+```js
 {
-  f_type: "Service",  // Its a service!
-  f_vsn: "1.0.0",  // Follows the v1.0.0 spec for the service
-  type: "account-proof",  // the type of service it is
-  method: "DATA",  // Its data!
-  uid: "amazing-wallet#account-proof",  // A unique identifier for the service
+  f_type: "Service",                    // Its a service!
+  f_vsn: "1.0.0",                       // Follows the v1.0.0 spec for the service
+  type: "account-proof",                // The type of service it is
+  method: "DATA",                       // Its data!
+  uid: "awesome-wallet#account-proof",  // A unique identifier for the service
   data: {
     f_type: "account-proof",
-    f_vsn: "1.0.0"
+    f_vsn: "2.0.0"
+
+    // The user's address (8 bytes, i.e 16 hex characters)
+    address: "0xf8d6e0586b0a20c7",                 
+
+    // Nonce signed by the current account-proof (minimum 32 bytes in total, i.e 64 hex characters)
+    nonce: "75f8587e5bd5f9dcc9909d0dae1f0ac5814458b2ae129620502cb936fde7120a",
+
     signatures: [CompositeSignature],
-    address: "0xUSER",  // The user's address
-    timestamp: 1630705495551, // UNIX timestamp
-    appDomainTag: "AWESOME-APP-V0.0-user", // Optional
   }
 }
 ```
 
-- Your application will send the `account-proof` service data structure to it's
-  backend over a secure channel.
+- Your application client initiates a secure channel with your application server
+  to relay the `account-proof` data and authenticate the user with your server.
+  Subsequent exchanges between the client and server will happen over this channel.
 
-Once your application receives the `account-proof` data structure, it can then
-begin to use it to prove user authentication. The steps that your application's
-backend must follow in using this data are specific.
+- Your application server receives the `account-proof` data structure, and can then
+  begin the verification process.
 
-- First your application must determine wether a user with the `address`
-  provided in the `account-proof` data structure has authenticated with your
-  application before.
+  - The server checks if the Flow address corresponds to an existing application
+    account and determines whether it needs to sign in a returning user or create
+    a new account. It is up to your application to decide how to manage
+    the two cases.
+  - The server looks the challenge up. If the nonce is not found or the nonce
+    has expired, reject the authentication request, otherwise continue.
+  - The server determines whether the `CompositeSignature` in the
+    `account-proof` data structure contains valid signatures for the nonce
+    and on-chain accounts (more details in the section below on how this is done).
+  - If the verification is successful, delete the `nonce` or mark it as expired,
+    the application account defined by the on-chain address is successfully
+    logged in. Otherwise the authentication fails and the `nonce` is not deleted.
 
-  - If a user with the `address` has authenticated with your application
-    before, then your system must query the `timestamp` associated with the
-    previous authentication for this user.
-    - If the `timestamp` is less than or equal to the `timestamp` associated
-      with the users previous authentication, your system must abort and
-      reject the authentication attempt.
-    - If the `timestamp` is greater than the `timestamp` associated with the
-      users previous authentication, then continue.
-    - Ensure the `timestamp` is reasonable. (e.g: Not a `timestamp`
-      associated with a time far in the future, or far in the past)
-  - If a user with the `address` _has not_ authenticated with your application
-    before, then continue.
+**Verification**
 
-- Your application must determine whether the `CompositeSignature` in the
-  `account-proof` data structure contains a valid signature. Your application
-  will do this by:
+Your application can verify the signature against the data from `account-proof`
+data using FCL's provided utility:
 
-  - Using FCL's provided utility for reconstructing the data that was signed
-    to produce the `CompositeSignature`:
+```js
 
-    ```javascript
-    import {WalletUtils} from "@onflow/fcl"
+import { AppUtils } from "@onflow/fcl"
 
-    const Address = AccountProof.address
-    const Timestamp = AccountProof.timestamp
-
-    const Message = WalletUtils.encodeMessageForProvableAuthnVerifying(
-      Address, // Address of the user authenticating
-      Timestamp, // Timestamp associated with the authentication
-      "AWESOME-APP-V0.0-user" // Application domain tag
-    )
-    ```
-
-  - Alternatively you can manually reconstruct the data that was signed to produce the
-    `CompositeSignature`. Pseudocode:
-
-    ```javascript
-    import rlp from "@onflow/rlp"
-
-    const Address = AccountProof.address
-    const Timestamp = AccountProof.timestamp
-
-    const rightPaddedHexBuffer = (value, pad) =>
-      Buffer.from(value.padEnd(pad * 2, 0), "hex")
-
-    const CUSTOM_APP_DOMAIN_TAG = "AWESOME-APP-V0.0-user"
-    const DomainTag = rightPaddedHexBuffer(
-      Buffer.from(CUSTOM_APP_DOMAIN_TAG).toString("hex"),
-      32
-    ).toString("hex")
-
-    const Message = DomainTag + rlp([Address, Timestamp])
-    ```
-
-  - Verify that the `account-proof` signature is valid for the reconstructed
-    data. Your application can do this through executing it's own Cadence
-    script, or using `fcl.verifyUserSignature`:
-
-```javascript
-...
-const isValid = await fcl.verifyUserSignatures(
-    Message,
-    AccountProof.signatures
-)
+  const accountProofData = {
+    accountProof.address,   // address of the user authenticating
+    accountProof.nonce,     // nonce
+    accountProof.signatures // signatures
+  }
+  
+  const isValid = await AppUtils.verifyAccountProof(
+    appIdentifier,
+    accountProofData
+  )
 ```
 
-- If the signature has been proven valid, your application has then successfully
-  proved that the user does control the account with address they authenticated
-  with.
-- Your application must finally save the `AccountProof.timestamp` associated
-  with this authentication attempt alongside the `address` for the user for
-  future reference.
+## Implementation considerations:
 
-### Proving User Authentication using `user-signature`
-
-If your user's wallet does not return the the FCL `account-proof` service, your
-application can still prove user authentication using the `user-signature`
-service, as long as it is supported by your user's wallet.
-
-Your application's backend must first generate a random message for the user to
-sign with their wallet, using the `user-signature` service. Your application
-should retain this random message and associate it with the `address` of the
-account the user is authenticating with for future reference.
-
-Your application will then pass this message to it's frontend, where it will
-call:
-
-```javascript
-const CompositeSignatures = await fcl.currentUser().signUserMessage(Message)
-```
-
-Once the user's wallet has signed the message, your application will then verify
-that the signature is correct. It will do this by passing the
-`CompositeSignatures` to your applications backend. Your application will then
-execute it's own Cadence script, or otherwise use `fcl.verifyUserSignature`:
-
-```javascript
-const isValid = await fcl.verifyUserSignatures(Message, CompositeSignatures)
-```
-
-If the signature has been proved valid, your application has then successfully
-proved that the user does control the account with address they authenticated
-with.
+- The authentication assumes the Flow address is the identifier of the user's application account.
+  If an existing user doesn't have a Flow address in their profile, or if they decide to authenticate using
+  a Flow address different than the one saved in their profile, the user's account won't be found and the
+  process would consider a new user creating an account. It is useful for your application to consider
+  other authentication methods that allow an existing user to update the Flow address in their profile so
+  they are able to use FCL authentication.
+- In the `account-proof` flow as described in this document,
+  the backend doesn't know the user's account address at the moment of generating a nonce.
+  This results in the nonces not being tied to particular Flow addresses. The backend should
+  enforce an expiry window for each nonce to avoid the pool of valid nonces from growing indefinitely.
+  Your application is encouraged to implement further mitigations against malicious attempts and
+  maintain a scalable authentication process.
+- FCL `account-proof` provides functionality to prove a user is in control of
+  a Flow address. All other aspects of authentication, authorization and session management
+  are up to the application. There are many resources available for setting up secure user
+  authentication systems. Application developers should carefully consider what's best for their use
+  case and follow industry best practices.
+- It is important to use a secure source of entropy to generate the random nonces. The source should insure
+  nonces are not predictable by looking at previously generated nonces. Moreover, backend should use its own
+  local source and not rely on a publicly available source. Using a nonce of at least 32-bytes insures
+  it is extremely unlikely to have a nonce collision.
+- Your application identifier `appIdentifier` is a constant defined by your backend. It is
+  important that the backend uses the `appIdentifier` it expects when verifying the signatures,
+  and not rely on an identifier passed along with the `account-proof`. For this reason,
+  `appIdentifier` is not included in the `account-proof` data.
+- A successful FCL authentication proves the user fully controls a Flow account. This means the user
+  controls one or many account keys with weights that add up to the full account weight. The authentication
+  would fail if the user doesn't control keys that add up to a full weight.

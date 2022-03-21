@@ -8,8 +8,6 @@ export function execPopRPC(service, body, opts, config) {
     const id = uid()
     const {redir, includeOlderJsonRpcCall} = opts
 
-    body.data = service.data
-
     pop(service, {
       async onReady(_, {send}) {
         try {

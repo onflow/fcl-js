@@ -8,8 +8,6 @@ export function execTabRPC(service, body, opts, config) {
     const id = uid()
     const {redir, includeOlderJsonRpcCall} = opts
 
-    body.data = service.data
-
     tab(service, {
       async onReady(_, {send}) {
         try {

@@ -30,6 +30,9 @@ export const t = types
 import * as WalletUtils from "./wallet-utils"
 export {WalletUtils}
 
+import * as AppUtils from "./app-utils"
+export {AppUtils}
+
 export {TestUtils} from "@onflow/sdk"
 export {config} from "@onflow/sdk"
 export {send} from "@onflow/sdk"

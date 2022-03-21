@@ -7,7 +7,6 @@ export function execIframeRPC(service, body, opts, config) {
   return new Promise((resolve, reject) => {
     const id = uid()
     const includeOlderJsonRpcCall = opts.includeOlderJsonRpcCall
-    body.data = service.data ?? null
 
     frame(service, {
       async onReady(_, {send}) {

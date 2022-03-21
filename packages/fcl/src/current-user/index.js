@@ -93,23 +93,44 @@ function notExpired(user) {
   )
 }
 
-async function makeMessage() {
-  return {
-    timestamp: Date.now(),
-    appDomainTag: await config.get("fcl.appDomainTag"),
-    extensions: window.fcl_extensions || [],
-  }
+async function getAccountProofData() {
+  const accountProofDataResolver = await config.get("fcl.accountProof.resolver")
+  const accountProofData =
+    accountProofDataResolver ?? (await accountProofDataResolver())
+
+  if (accountProofData == null) return
+
+  invariant(
+    typeof accountProofData.appIdentifier === "string",
+    "appIdentifier must be a string"
+  )
+  invariant(
+    /^[0-9a-f]+$/i.test(accountProofData.nonce),
+    "Nonce must be a hex string"
+  )
+
+  return accountProofData
 }
 
 async function authenticate({service, redir = false} = {}) {
   return new Promise(async (resolve, reject) => {
     spawnCurrentUser()
-    const user = await snapshot()
-    const msg = await makeMessage()
     const opts = {redir}
+    const user = await snapshot()
     const discoveryService = await getDiscoveryService()
     const refreshService = serviceOfType(user.services, "authn-refresh")
-    
+    let accountProofData
+
+    try {
+      accountProofData = await getAccountProofData()
+    } catch (error) {
+      console.error(
+        `Error During Authentication: Could not resolve account proof data.
+        ${error}`
+      )
+      return reject(error)
+    }
+
     invariant(
       service || discoveryService.endpoint,
       `
@@ -123,7 +144,7 @@ async function authenticate({service, redir = false} = {}) {
         try {
           const response = await execService({
             service: refreshService,
-            msg,
+            msg: accountProofData,
             opts,
           })
           send(NAME, SET_CURRENT_USER, await buildUser(response))
@@ -141,13 +162,13 @@ async function authenticate({service, redir = false} = {}) {
       const response = await execService({
         service: {
           ...(service || discoveryService),
-          method: discoveryService?.method || service.method || "IFRAME/RPC"
+          method: discoveryService?.method || service.method || "IFRAME/RPC",
         },
-        msg,
+        msg: accountProofData,
         opts,
         config: {
-          discoveryAuthnInclude: discoveryService.discoveryAuthnInclude
-        }
+          discoveryAuthnInclude: discoveryService.discoveryAuthnInclude,
+        },
       })
       send(NAME, SET_CURRENT_USER, await buildUser(response))
     } catch (e) {

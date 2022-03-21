@@ -1,4 +1,3 @@
-import * as fcl from "../fcl"
 import {CompositeSignature} from "./CompositeSignature"
 
 describe("wallet utils", () => {

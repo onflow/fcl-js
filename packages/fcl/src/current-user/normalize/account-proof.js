@@ -1,17 +1,15 @@
 // {
-//   "f_type": "Service",
-//   "f_vsn": "1.0.0",
-//   "type": "account-proof",
-//   "method": "DATA",
-//   "uid": "awesome-wallet#account-proof",
+//   "f_type": "Service",                    // Its a service!
+//   "f_vsn": "2.0.0",                       // Follows the v2.0.0 spec for the service
+//   "type": "account-proof",                // the type of service it is
+//   "method": "DATA",                       // Its data!
+//   "uid": "awesome-wallet#account-proof",  // A unique identifier for the service
 //   "data": {
 //     "f_type": "account-proof",
 //     "f_vsn": "1.0.0",
-//     "address": "0xUSER",   // The users address
-//     "timestamp": 1630705495551, // UNIX timestamp
-//     "appDomainTag": "AWESOME_DAPP", // Optional, but recommended. Defaults to "APP-V0.0-user"
-//     "signature": CompositeSignature, // Optional
-//    }
+//     "nonce": "0A1BC2FF",                  // Nonce signed by the current account-proof (minimum 32 bytes in total, i.e 64 hex characters)
+//     "address": "0xUSER",                  // The user's address (8 bytes, i.e 16 hex characters)
+//     "signature": CompositeSignature,      // address (sans-prefix), keyId, signature (hex)
 // }
 
 export function normalizeAccountProof(service) {
@@ -22,6 +20,6 @@ export function normalizeAccountProof(service) {
       return service
 
     default:
-      throw new Error("Invalid account-proof service")
+      throw new Error(`FCL Normalizer Error: Invalid account-proof service`)
   }
 }
