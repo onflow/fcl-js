@@ -1998,16 +1998,15 @@ FCL arguments must specify one of the following support types for each value pas
 | `Word16`     | `fcl.arg(16, t.Word16)`                                                                                              |
 | `Word32`     | `fcl.arg(32, t.Word32)`                                                                                              |
 | `Word64`     | `fcl.arg(64, t.Word64)`                                                                                              |
-| `UFix64`     | `fcl.arg("64.123", t.UFix256)`                                                                                       |
-| `Fix64`      | `fcl.arg("64.123", t.Fix256)`                                                                                        |
+| `UFix64`     | `fcl.arg("64.123", t.UFix64)`                                                                                        |
+| `Fix64`      | `fcl.arg("64.123", t.Fix64)`                                                                                         |
 | `String`     | `fcl.arg("Flow", t.String)`                                                                                          |
 | `Character`  | `fcl.arg("c", t.String)`                                                                                             |
 | `Bool`       | `fcl.arg(true, t.String)`                                                                                            |
-| `Address`    | `fcl.arg("0xABC123DEF456", t.String)`                                                                                |
+| `Address`    | `fcl.arg("0xABC123DEF456", t.Address)`                                                                               |
 | `Optional`   | `fcl.arg("Flow", t.Optional(t.String))`                                                                              |
 | `Array`      | `fcl.args([ fcl.arg(["First", "Second"], t.Array(t.String)) ])`                                                      |
 | `Dictionary` | `fcl.args([fcl.arg([{key: 1, value: "one"}, {key: 2, value: "two"}], t.Dictionary({key: t.Int, value: t.String}))])` |
-
-| `Path` | `fcl.arg({ domain: "public", identifier: "flowTokenVault" }, t.Path)` |
+| `Path`       | `fcl.arg({ domain: "public", identifier: "flowTokenVault" }, t.Path)`                                                |
 
 ---
