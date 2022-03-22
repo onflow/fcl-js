@@ -912,7 +912,6 @@ Decodes the response from `fcl.send()` into the appropriate JSON representation 
 
 ```javascript
 import * as fcl from "@onflow/fcl";
-import * as types from "@onflow/types";
 
 // simple script to add 2 numbers
 const response = await fcl.send([
@@ -921,7 +920,10 @@ const response = await fcl.send([
             return int1 + int2
         }
     `,
-  fcl.args([fcl.arg(1, types.Int), fcl.arg(2, types.Int)]),
+  fcl.args([
+    fcl.arg(1, fcl.t.Int),
+    fcl.arg(2, fcl.t.Int)
+  ]),
 ]);
 
 const decoded = await fcl.decode(response);
@@ -1341,8 +1343,8 @@ await fcl
       }
     `,
     fcl.args([
-      fcl.arg(5, t.Int), // a
-      fcl.arg(4, t.Int), // b
+      fcl.arg(5, fcl.t.Int), // a
+      fcl.arg(4, fcl.t.Int), // b
     ]),
   ])
   .then(fcl.decode);
@@ -1379,8 +1381,8 @@ await fcl
       }
     `,
     fcl.args([
-      fcl.arg(5, t.Int), // a
-      fcl.arg(4, t.Int), // b
+      fcl.arg(5, fcl.t.Int), // a
+      fcl.arg(4, fcl.t.Int), // b
     ]),
   ])
   .then(fcl.decode); // 9
