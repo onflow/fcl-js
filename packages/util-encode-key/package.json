@@ -1,6 +1,6 @@
 {
   "name": "@onflow/util-encode-key",
-  "version": "0.0.2",
+  "version": "0.0.3-multisig.0",
   "description": "Flow JS SDK Util -- Encode Key",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
@@ -35,7 +35,7 @@
     "start": "microbundle watch"
   },
   "dependencies": {
-    "@onflow/rlp": "0.0.3",
+    "@onflow/rlp": "^0.0.4-multisig.0",
     "@onflow/util-invariant": "0.0.0"
   }
 }
