@@ -1,6 +1,6 @@
 {
   "name": "@onflow/six-usdc-setup",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Flow SDK Stored Interaction - USDC Setup",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
