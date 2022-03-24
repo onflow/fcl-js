@@ -16,7 +16,7 @@ Something that is unique to Flow is the one paying for the transaction doesn't a
 Proposers and Payers are special kinds of authorizations that are always required for a transaction.
 The `proposer` acts similar to the `nonce` in Ethereum transactions, and helps prevent repeat attacks.
 The `payer` is who will be paying for the transaction.
-As mentioned before, it is very important to always provide both a `proposer` and `payer`, the transaction will not work with out them, when in doubt its probably safe to make them the same.
+If these are not set, FCL defaults to using the current user for all roles.
 
 This `fcl.mutate` will return a `transactionId`. We can pass the response directly to `fcl.tx` and then use the `onceSealed` method which resolves a promise when the transaction is sealed.
 
