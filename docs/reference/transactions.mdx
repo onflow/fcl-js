@@ -19,7 +19,7 @@ The `proposer` acts similar to the `nonce` in Ethereum transactions, and helps p
 The `payer` is who will be paying for the transaction.
 As mentioned before, it is very important to always provide both a `proposer` and `payer`, the transaction will not work with out them, when in doubt its probably safe to make them the same.
 
-This `fcl.mutate` will return a `transactionId`. We can pass the response directly to `fcl.tx` and then use the `onceSealed` method which resolves a promise when the transaction is sealed.
+`fcl.mutate` will return a `transactionId`. We can pass the response directly to `fcl.tx` and then use the `onceSealed` method which resolves a promise when the transaction is sealed.
 
 ```javascript
 import * as fcl from "@onflow/fcl"
