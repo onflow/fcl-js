@@ -8,7 +8,7 @@ const DEPS = new Set([
 
 export const TITLE = "USDC Setup"
 export const DESCRIPTION = "Set up a USDC Vault and Receiver for an account."
-export const VERSION = "0.0.1"
+export const VERSION = "0.0.3"
 export const HASH = "887673892a2e2c12337394570dfa30c5669e93f537ae426690f402799514a9a1"
 export const CODE = 
 `import FungibleToken from 0xFUNGIBLETOKENADDRESS
@@ -51,7 +51,7 @@ transaction {
         )
 
     }
-`
+}`
 
 class UndefinedConfigurationError extends Error {
     constructor(address) {

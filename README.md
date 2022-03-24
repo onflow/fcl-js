@@ -161,11 +161,13 @@ The communication channels involve responding to a set of pre-defined FCL messag
 - [Dapper Wallet](https://www.meetdapper.com/) (beta access - general availability coming soon)
 
 ### Wallet Discovery
-It can be difficult to get users to discover new wallets on a chain. To solve this, we created a wallet discovery service that can be configured and accessed through FCL to display all available Flow wallet providers to the user. This means:
+It can be difficult to get users to discover new wallets on a chain. To solve this, we created a [wallet discovery service](https://github.com/onflow/fcl-discovery) that can be configured and accessed through FCL to display all available Flow wallet providers to the user. This means:
 - Dapps can display and support all FCL compatible wallets that launch on Flow without needing to change any code
 - Users don't need to sign up for new wallets - they can carry over their existing one to any dapp that uses FCL for authentication and authorization.
 
 The discovery feature can be used via API allowing you to customize your own UI or you can use the default UI without any additional configuration.
+
+> Note: To get your wallet added to the discovery service, make a PR in [fcl-discovery](https://github.com/onflow/fcl-discovery).
 
 ### Building a FCL compatible wallet
 
