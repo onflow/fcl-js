@@ -16,7 +16,7 @@ The script is going to add two numbers, and return them.
 ```javascript
 import * as fcl from "@onflow/fcl"
 
-let response = await fcl.query({
+const response = await fcl.query({
   cadence: `
     pub fun main(): Int {
       return 1 + 2
@@ -38,7 +38,7 @@ The closest thing to a Structure in JavaScript is an object. In this case when w
 ```javascript
 import * as fcl from "@onflow/fcl"
 
-let response = await fcl.query({
+const response = await fcl.query({
   cadence: `
     pub struct Point {
       pub var x: Int
@@ -83,7 +83,7 @@ class Point {
 fcl.config()
   .put("decoder.Point", point => new Point(point))
 
-let response = await fcl.query({
+const response = await fcl.query({
   cadence: `
     pub struct Point {
       pub var x: Int
