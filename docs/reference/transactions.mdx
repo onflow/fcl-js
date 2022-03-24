@@ -4,11 +4,9 @@ Transactions let you send Cadence code to the Flow blockchain that permanently a
 
 We are assuming you have read the [Scripts Documentation](../scripts) before this, as transactions are sort of scripts with more required things.
 
-Just like [scripts](../scripts), transactions are a type of [interaction](../../../interaction) that we send to an Access Node using `fcl.send`.
-Also just like scripts, `fcl.transaction` is a [JavaScript Tagged Template Literal](https://styled-components.com/docs/advanced#tagged-template-literals) that we can pass Cadence code into.
+While `query` is used for sending scripts to the chain, `mutate` is used for building and sending transactions. Just like [scripts](../scripts), `fcl.mutate` is a [JavaScript Tagged Template Literal](https://styled-components.com/docs/advanced#tagged-template-literals) that we can pass Cadence code into.
 
 Unlike scripts, they require a little more information, things like a proposer, authorizations and a payer, which may be a little confusing and overwhelming.
-If you run into trouble, get stuck or need some help, reach out to us on [Discord](https://discord.gg/k6cZ7QC), we are more than happy to help.
 
 # Sending your first Transaction
 
@@ -18,35 +16,36 @@ Something that is unique to Flow is the one paying for the transaction doesn't a
 Proposers and Payers are special kinds of authorizations that are always required for a transaction.
 The `proposer` acts similar to the `nonce` in Ethereum transactions, and helps prevent repeat attacks.
 The `payer` is who will be paying for the transaction.
-As mentioned before, it is very important to always provide both a `proposer` and `payer`, the transaction will not work with out them, when in doubt its probably safe to make them the same.
+If these are not set, FCL defaults to using the current user for all roles.
 
-This `fcl.send` will return a `response`, that will include a `transactionId`. We can pass the response directly to `fcl.tx` and then use the `onceSealed` method which resolves a promise when the transaction is sealed.
+`fcl.mutate` will return a `transactionId`. We can pass the response directly to `fcl.tx` and then use the `onceSealed` method which resolves a promise when the transaction is sealed.
 
 ```javascript
 import * as fcl from "@onflow/fcl"
 
-var response = await fcl.send([
-  fcl.transaction`
+const transactionId = await fcl.mutate({
+  cadence: `
     transaction {
       execute {
         log("Hello from execute")
       }
     }
   `,
-  fcl.proposer(fcl.currentUser().authorization),
-  fcl.payer(fcl.currentUser().authorization),
-])
+  proposer: fcl.currentUser,
+  payer: fcl.currentUser,
+  limit: 50
+})
 
-var transaction = await fcl.tx(response).onceSealed()
+const transaction = await fcl.tx(transactionId).onceSealed()
 console.log(transaction) // The transactions status and events after being sealed
 ```
 
 # Authorizing a transaction
 
 The below code snippet is the same as the above one, except for one extremely important difference.
-Our Cadence code this time has a prepare statement, and we are using the `fcl.authorizations` builder when constructing our transaction.
+Our Cadence code this time has a prepare statement, and we are using the `fcl.currentUser` when constructing our transaction.
 
-The `prepare` statements arguments directly map to the order of the authorizations in the `fcl.authorizations` builder.
+The `prepare` statement's arguments directly map to the order of the authorizations in the `authorizations` array.
 Four authorizations means four `AuthAccount`s as arguments passed to `prepare`. In this case though there is only one, and it is the `currentUser`.
 
 These authorizations are important as you can only access/modify an accounts storage if you have the said ccounts authorization.
@@ -54,8 +53,8 @@ These authorizations are important as you can only access/modify an accounts sto
 ```javascript
 import * as fcl from "@onflow/fcl"
 
-var response = await fcl.send([
-  fcl.transaction`
+const transactionId = await fcl.mutate({
+  cadence: `
     transaction {
       prepare(acct: AuthAccount) {
         log("Hello from prepare")
@@ -65,13 +64,14 @@ var response = await fcl.send([
       }
     }
   `,
-  fcl.proposer(fcl.currentUser().authorization),
-  fcl.authorizations([
-    fcl.currentUser().authorization,
-  ]),
-  fcl.payer(fcl.currentUser().authorization),
-])
+  proposer: fcl.currentUser,
+  payer: fcl.currentUser,
+  authorizations: [fcl.currentUser],
+  limit: 50
+})
 
-var transaction = await fcl.tx(response).onceSealed()
+const transaction = await fcl.tx(transactionId).onceSealed()
 console.log(transaction) // The transactions status and events after being sealed
 ```
+
+To learn more about `mutate`, check out the [API documentation](../api).
