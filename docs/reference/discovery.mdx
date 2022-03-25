@@ -1,12 +1,14 @@
 ---
-title: Discovery
+title: Wallet Discovery
 ---
 
-## Discovery
+## Wallet Discovery
 
 Knowing all the wallets available to users on a blockchain can be challenging. FCL's Discovery mechanism relieves much of the burden of integrating with Flow compatible wallets and let's developers focus on building their dapp and providing as many options as possible to their users.
 
-There are two ways an app can use Discovery: our **UI version** which can be configured for display via iFrame, Popup, and Tab, or the **API version** wwhich allows you to access authentication services directly in your code via `fcl.discovery.authn` method which we'll describe below.
+There are two ways an app can use Discovery: 
+ 1. The **UI version** which can be configured for display via iFrame, Popup, or Tab.
+ 2. The **API version** which allows you to access authentication services directly in your code via `fcl.discovery.authn` method which we'll describe below.
 
 ## UI Version
 
@@ -27,11 +29,11 @@ config({
 
 Any time you call `fcl.authenticate` the user will be presented with that screen.
 
-> ** NOTE: to change the view from iFrame to popup or tab set `discovery.wallet.method` to "POP/RPC" or "TAB/RPC". More info about service methods can be [found here](https://github.com/onflow/fcl-js/blob/9bce741d3b32fde18b07084b62ea15f9bbdb85bc/packages/fcl/src/wallet-provider-spec/draft-v3.md).
+To change the default view from iFrame to popup or tab set `discovery.wallet.method` to `POP/RPC` (opens as a popup) or `TAB/RPC` (opens in a new tab). More info about service methods can be [found here](https://github.com/onflow/fcl-js/blob/9bce741d3b32fde18b07084b62ea15f9bbdb85bc/packages/fcl/src/wallet-provider-spec/draft-v3.md).
 
 ### Branding Discovery UI
 
-Starting in version 0.0.79-alpha.4, dapps now have the ability to display app a title and app icon in the Discovery UI by setting a few values in their FCL app config. Branding is important because it adds an element of trust to your site by showing an app icon and title that a user is before going on to take an action in a wallet.
+Starting in version 0.0.79-alpha.4, dapps now have the ability to display app a title and app icon in the Discovery UI by setting a few values in their FCL app config. This branding provides users with messaging that has clear intent before authenticating to add a layer of trust.
 
 All you have to do is set `app.detail.icon` and `app.detail.title` like this:
 
@@ -44,7 +46,7 @@ config({
 })
 ```
 
-> ** NOTE: If these configuration options aren't set, Dapps using the Discovery API will still display a default icon and "Unknown App" title when attempting to authorize a user who is not logged in. **
+**Note:** If these configuration options aren't set, Dapps using the Discovery API will still display a default icon and "Unknown App" as the title when attempting to authorize a user who is not logged in. It is highly recommended to set these values accurately before going live.
 
 ## API Version
 
@@ -99,9 +101,9 @@ function Component() {
 
 Helpful fields for your UI can be found in the `provider` object inside of the service. Fields include the following:
 
-```
+```json
 {
-	...,
+  ...,
   "provider": {
     "address": "0xf086a545ce3c552d",
       "name": "Blocto",
@@ -117,4 +119,4 @@ Helpful fields for your UI can be found in the `provider` object inside of the s
 
 To learn more about other possible configurations, check out the following links:
 - [Discovery API Docs](https://docs.onflow.org/fcl/reference/api/#discovery)
-- [Discovery Repo](https://github.com/onflow/fcl-discovery)
+- [Discovery Github Repo](https://github.com/onflow/fcl-discovery)
