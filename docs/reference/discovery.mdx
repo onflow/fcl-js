@@ -1,0 +1,122 @@
+---
+title: Wallet Discovery
+---
+
+## Wallet Discovery
+
+Knowing all the wallets available to users on a blockchain can be challenging. FCL's Discovery mechanism relieves much of the burden of integrating with Flow compatible wallets and let's developers focus on building their dapp and providing as many options as possible to their users.
+
+There are two ways an app can use Discovery: 
+ 1. The **UI version** which can be configured for display via iFrame, Popup, or Tab.
+ 2. The **API version** which allows you to access authentication services directly in your code via `fcl.discovery.authn` method which we'll describe below.
+
+## UI Version
+
+When authenticating via FCL using Discovery UI, a user is shown a list of services they can use to login.
+
+![FCL Default Discovery UI](../images/discovery-ui.jpg)
+
+This method is the simplest way to integrate Discovery and its wallets and services into your app. All you have to do is configure `discovery.wallet` with the host endpoint for testnet or mainnet.
+
+```javascript
+import { config } from "@onflow/fcl";
+
+config({
+  "accessNode.api": "https://access-testnet.onflow.org", // Mainnet: "https://access-mainnet-beta.onflow.org"
+  "discovery.wallet": "https://fcl-discovery.onflow.org/testnet/authn" // Mainnet: "https://fcl-discovery.onflow.org/authn"
+})
+```
+
+Any time you call `fcl.authenticate` the user will be presented with that screen.
+
+To change the default view from iFrame to popup or tab set `discovery.wallet.method` to `POP/RPC` (opens as a popup) or `TAB/RPC` (opens in a new tab). More info about service methods can be [found here](https://github.com/onflow/fcl-js/blob/9bce741d3b32fde18b07084b62ea15f9bbdb85bc/packages/fcl/src/wallet-provider-spec/draft-v3.md).
+
+### Branding Discovery UI
+
+Starting in version 0.0.79-alpha.4, dapps now have the ability to display app a title and app icon in the Discovery UI by setting a few values in their FCL app config. This branding provides users with messaging that has clear intent before authenticating to add a layer of trust.
+
+All you have to do is set `app.detail.icon` and `app.detail.title` like this:
+
+```javascript
+import { config } from "@onflow/fcl";
+
+config({
+  "app.detail.icon": "https://placekitten.com/g/200/200",
+  "app.detail.title": "Kitten Dapp"
+})
+```
+
+**Note:** If these configuration options aren't set, Dapps using the Discovery API will still display a default icon and "Unknown App" as the title when attempting to authorize a user who is not logged in. It is highly recommended to set these values accurately before going live.
+
+## API Version
+
+If you want more control over your authentication UI, the Discovery API is also simple to use as it exposes Discovery directly in your code via `fcl`.
+
+Setup still requires configuration of the Discovery endpoint, but when using the API it is set via `discovery.authn.api` as shown below.
+
+```javascript
+import { config } from "@onflow/fcl"
+
+config({
+  "accessNode.api": "https://access-testnet.onflow.org", // Mainnet: "https://access-mainnet-beta.onflow.org"
+  "discovery.authn.api": "https://fcl-discovery.onflow.org/api/testnet/authn" // Mainnet: "https://fcl-discovery.onflow.org/api/authn"
+})
+```
+
+You can access services in your Dapp from `fcl.discovery`:
+
+```javascript
+import * as fcl from "@onflow/fcl"
+
+fcl.discovery.authn.subscribe(callback)
+
+// OR 
+
+fcl.discovery.authn.snapshot()
+```
+In order to authenticate with a service (for example, when a user click's "login"), pass the selected service to the `fcl.authenticate` method described here [in the API reference](./api/#authenticate):
+
+```jsx
+fcl.authenticate({ service })
+```
+
+A simple React component may end up looking like this:
+
+```jsx
+import "./config"
+import { useState, useEffect } from "react"
+import * as fcl from "@onflow/fcl"
+
+function Component() {
+  const [services, setServices] = useState([])
+  useEffect(() => fcl.discovery.authn.subscribe(res => setServices(res.results)), [])
+
+  return (
+    <div>
+      {services.map(service => <button key={service.id} onClick={() => fcl.authenticate({ service })}>Login with {service.provider.name}</button>)}
+    </div>
+  )
+}
+```
+
+Helpful fields for your UI can be found in the `provider` object inside of the service. Fields include the following:
+
+```json
+{
+  ...,
+  "provider": {
+    "address": "0xf086a545ce3c552d",
+      "name": "Blocto",
+      "icon": "/images/blocto.png",
+      "description": "Your entrance to the blockchain world.",
+      "color": "#afd8f7",
+      "supportEmail": "support@blocto.app",
+      "authn_endpoint": "https://flow-wallet-testnet.blocto.app/authn",
+      "website": "https://blocto.portto.io"
+    }
+}
+```
+
+To learn more about other possible configurations, check out the following links:
+- [Discovery API Docs](./api/#discovery)
+- [Discovery Github Repo](https://github.com/onflow/fcl-discovery)
