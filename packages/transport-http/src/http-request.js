@@ -44,7 +44,7 @@ export async function httpRequest({
 
   let fetchTransport
   try {
-    fetchTransport = window?.fetch || fetch
+    fetchTransport = fetch || window?.fetch
   } catch (e) {}
 
   const {
