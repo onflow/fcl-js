@@ -22,7 +22,7 @@ it("decodeResponse", async () => {
   }
 
   const data = await decodeResponse(response)
-  expect(data).toBe(7)
+  expect(data).toBe("7")
 })
 
 describe("unit tests to cover all types", () => {
@@ -39,7 +39,7 @@ describe("unit tests to cover all types", () => {
 
     const decoded = await decode(payload)
 
-    expect(decoded).toStrictEqual(42)
+    expect(decoded).toStrictEqual("42")
   })
 
   it("returns the correct response given a json-cdc payload 4 VOID", async () => {
@@ -109,7 +109,7 @@ describe("unit tests to cover all types", () => {
 
     const decoded = await decode(payload)
 
-    expect(decoded).toStrictEqual(-42)
+    expect(decoded).toStrictEqual("-42")
   })
 
   it("returns the correct response given a json-cdc payload 11 INT", async () => {
@@ -122,7 +122,7 @@ describe("unit tests to cover all types", () => {
     const decoded = await decode(payload)
 
     expect(decoded).toStrictEqual(
-      115792089237316195423570985008687907853269984665640564039457584007913129639945
+      "115792089237316195423570985008687907853269984665640564039457584007913129639945"
     )
   })
 
@@ -136,7 +136,7 @@ describe("unit tests to cover all types", () => {
     const decoded = await decode(payload)
 
     expect(decoded).toStrictEqual(
-      -57896044618658097711785492504343953926634992332820282019728792003956564819978
+      "-57896044618658097711785492504343953926634992332820282019728792003956564819978"
     )
   })
 
@@ -145,7 +145,7 @@ describe("unit tests to cover all types", () => {
 
     const decoded = await decode(payload)
 
-    expect(decoded).toStrictEqual(0)
+    expect(decoded).toStrictEqual("0")
   })
 
   it("returns the correct response given a json-cdc payload 14 INT8", async () => {
@@ -153,7 +153,7 @@ describe("unit tests to cover all types", () => {
 
     const decoded = await decode(payload)
 
-    expect(decoded).toStrictEqual(-128)
+    expect(decoded).toStrictEqual("-128")
   })
 
   it("returns the correct response given a json-cdc payload 15 INT16", async () => {
@@ -161,7 +161,7 @@ describe("unit tests to cover all types", () => {
 
     const decoded = await decode(payload)
 
-    expect(decoded).toStrictEqual(32767)
+    expect(decoded).toStrictEqual("32767")
   })
 
   it("returns the correct response given a json-cdc payload 16 INT32", async () => {
@@ -169,7 +169,7 @@ describe("unit tests to cover all types", () => {
 
     const decoded = await decode(payload)
 
-    expect(decoded).toStrictEqual(2147483647)
+    expect(decoded).toStrictEqual("2147483647")
   })
 
   it("returns the correct response given a json-cdc payload 17 INT64", async () => {
@@ -177,7 +177,7 @@ describe("unit tests to cover all types", () => {
 
     const decoded = await decode(payload)
 
-    expect(decoded).toStrictEqual(-9223372036854775808)
+    expect(decoded).toStrictEqual("-9223372036854775808")
   })
 
   it("returns the correct response given a json-cdc payload 18 INT128", async () => {
@@ -188,7 +188,7 @@ describe("unit tests to cover all types", () => {
 
     const decoded = await decode(payload)
 
-    expect(decoded).toStrictEqual(-170141183460469231731687303715884105727)
+    expect(decoded).toStrictEqual("-170141183460469231731687303715884105727")
   })
 
   it("returns the correct response given a json-cdc payload 19 INT256", async () => {
@@ -201,7 +201,7 @@ describe("unit tests to cover all types", () => {
     const decoded = await decode(payload)
 
     expect(decoded).toStrictEqual(
-      57896044618658097711785492504343953926634992332820282019728792003956564819967
+      "57896044618658097711785492504343953926634992332820282019728792003956564819967"
     )
   })
 
@@ -215,7 +215,7 @@ describe("unit tests to cover all types", () => {
     const decoded = await decode(payload)
 
     expect(decoded).toStrictEqual(
-      115792089237316195423570985008687907853269984665640564039457584007913129639945
+      "115792089237316195423570985008687907853269984665640564039457584007913129639945"
     )
   })
 
@@ -224,7 +224,7 @@ describe("unit tests to cover all types", () => {
 
     const decoded = await decode(payload)
 
-    expect(decoded).toStrictEqual(255)
+    expect(decoded).toStrictEqual("255")
   })
 
   it("returns the correct response given a json-cdc payload 22 UINT16", async () => {
@@ -232,7 +232,7 @@ describe("unit tests to cover all types", () => {
 
     const decoded = await decode(payload)
 
-    expect(decoded).toStrictEqual(65535)
+    expect(decoded).toStrictEqual("65535")
   })
 
   it("returns the correct response given a json-cdc payload 23 UINT32", async () => {
@@ -240,7 +240,7 @@ describe("unit tests to cover all types", () => {
 
     const decoded = await decode(payload)
 
-    expect(decoded).toStrictEqual(4294967295)
+    expect(decoded).toStrictEqual("4294967295")
   })
 
   it("returns the correct response given a json-cdc payload 24 UINT64", async () => {
@@ -248,7 +248,7 @@ describe("unit tests to cover all types", () => {
 
     const decoded = await decode(payload)
 
-    expect(decoded).toStrictEqual(18446744073709551615)
+    expect(decoded).toStrictEqual("18446744073709551615")
   })
 
   it("returns the correct response given a json-cdc payload 25 UINT128", async () => {
@@ -259,7 +259,7 @@ describe("unit tests to cover all types", () => {
 
     const decoded = await decode(payload)
 
-    expect(decoded).toStrictEqual(340282366920938463463374607431768211455)
+    expect(decoded).toStrictEqual("340282366920938463463374607431768211455")
   })
 
   it("returns the correct response given a json-cdc payload 26 UINT256", async () => {
@@ -272,7 +272,7 @@ describe("unit tests to cover all types", () => {
     const decoded = await decode(payload)
 
     expect(decoded).toStrictEqual(
-      115792089237316195423570985008687907853269984665640564039457584007913129639935
+      "115792089237316195423570985008687907853269984665640564039457584007913129639935"
     )
   })
 
@@ -281,7 +281,7 @@ describe("unit tests to cover all types", () => {
 
     const decoded = await decode(payload)
 
-    expect(decoded).toStrictEqual(255)
+    expect(decoded).toStrictEqual("255")
   })
 
   it("returns the correct response given a json-cdc payload 28 WORD16", async () => {
@@ -289,7 +289,7 @@ describe("unit tests to cover all types", () => {
 
     const decoded = await decode(payload)
 
-    expect(decoded).toStrictEqual(65535)
+    expect(decoded).toStrictEqual("65535")
   })
 
   it("returns the correct response given a json-cdc payload 29 WORD32", async () => {
@@ -297,7 +297,7 @@ describe("unit tests to cover all types", () => {
 
     const decoded = await decode(payload)
 
-    expect(decoded).toStrictEqual(4294967295)
+    expect(decoded).toStrictEqual("4294967295")
   })
 
   it("returns the correct response given a json-cdc payload 30 WORD64", async () => {
@@ -305,7 +305,7 @@ describe("unit tests to cover all types", () => {
 
     const decoded = await decode(payload)
 
-    expect(decoded).toStrictEqual(18446744073709551615)
+    expect(decoded).toStrictEqual("18446744073709551615")
   })
 
   it("returns the correct response given a json-cdc payload 31 FIX64", async () => {
@@ -344,7 +344,7 @@ describe("unit tests to cover all types", () => {
 
     const decoded = await decode(payload)
 
-    expect(decoded).toStrictEqual([1, 2, 3])
+    expect(decoded).toStrictEqual(["1", "2", "3"])
   })
 
   it("returns the correct response given a json-cdc payload 35 ARRAY", async () => {
@@ -377,7 +377,7 @@ describe("unit tests to cover all types", () => {
 
     const decoded = await decode(payload)
 
-    expect(decoded).toStrictEqual([{bar: 1}, {bar: 2}, {bar: 3}])
+    expect(decoded).toStrictEqual([{bar: "1"}, {bar: "2"}, {bar: "3"}])
   })
 
   it("returns the correct response given a json-cdc payload 36 DICTIONARY", async () => {
@@ -392,7 +392,7 @@ describe("unit tests to cover all types", () => {
 
     const decoded = await decode(payload)
 
-    expect(decoded).toStrictEqual({a: 1, b: 2, c: 3})
+    expect(decoded).toStrictEqual({a: "1", b: "2", c: "3"})
   })
 
   it("returns the correct response given a json-cdc payload 37 DICTIONARY", async () => {
@@ -440,7 +440,7 @@ describe("unit tests to cover all types", () => {
 
     const decoded = await decode(payload)
 
-    expect(decoded).toStrictEqual({a: {1: 1}, b: {2: 2}, c: {3: 3}})
+    expect(decoded).toStrictEqual({a: {1: "1"}, b: {2: "2"}, c: {3: "3"}})
   })
 
   it("returns the correct response given a json-cdc payload 38 DICTIONARY", async () => {
@@ -482,7 +482,7 @@ describe("unit tests to cover all types", () => {
 
     const decoded = await decode(payload)
 
-    expect(decoded).toStrictEqual({a: {bar: 1}, b: {bar: 2}, c: {bar: 3}})
+    expect(decoded).toStrictEqual({a: {bar: "1"}, b: {bar: "2"}, c: {bar: "3"}})
   })
 
   it("returns the correct response given a json-cdc payload 39 RESOURCE", async () => {
@@ -496,7 +496,7 @@ describe("unit tests to cover all types", () => {
 
     const decoded = await decode(payload)
 
-    expect(decoded).toStrictEqual({bar: 42})
+    expect(decoded).toStrictEqual({bar: "42"})
   })
 
   it("returns the correct response given a json-cdc payload 40 RESOURCE", async () => {
@@ -521,7 +521,7 @@ describe("unit tests to cover all types", () => {
 
     const decoded = await decode(payload)
 
-    expect(decoded).toStrictEqual({bar: {x: 42}})
+    expect(decoded).toStrictEqual({bar: {x: "42"}})
   })
 
   it("returns the correct response given a json-cdc payload 41 STRUCT", async () => {
@@ -538,7 +538,7 @@ describe("unit tests to cover all types", () => {
 
     const decoded = await decode(payload)
 
-    expect(decoded).toStrictEqual({a: 1, b: "foo"})
+    expect(decoded).toStrictEqual({a: "1", b: "foo"})
   })
 
   it("returns the correct response given a json-cdc payload 42 STRUCT", async () => {
@@ -564,7 +564,7 @@ describe("unit tests to cover all types", () => {
 
     const decoded = await decode(payload)
 
-    expect(decoded).toStrictEqual({a: "foo", b: {bar: 42}})
+    expect(decoded).toStrictEqual({a: "foo", b: {bar: "42"}})
   })
 
   it("returns the correct response given a json-cdc payload 43 STRUCT", async () => {
@@ -590,7 +590,7 @@ describe("unit tests to cover all types", () => {
 
     const decoded = await decode(payload)
 
-    expect(decoded).toStrictEqual({a: "foo", b: {bar: 42}})
+    expect(decoded).toStrictEqual({a: "foo", b: {bar: "42"}})
   })
 
   it("returns the correct response given a json-cdc payload 44 EVENT", async () => {
@@ -607,7 +607,7 @@ describe("unit tests to cover all types", () => {
 
     const decoded = await decode(payload)
 
-    expect(decoded).toStrictEqual({a: 1, b: "foo"})
+    expect(decoded).toStrictEqual({a: "1", b: "foo"})
   })
 
   it("returns the correct response given a json-cdc payload 44 EVENT", async () => {
@@ -633,7 +633,7 @@ describe("unit tests to cover all types", () => {
 
     const decoded = await decode(payload)
 
-    expect(decoded).toStrictEqual({a: "foo", b: {bar: 42}})
+    expect(decoded).toStrictEqual({a: "foo", b: {bar: "42"}})
   })
 
   it("returns the correct response given a json-cdc payload 45 TYPE", async () => {
@@ -705,7 +705,7 @@ const genInt = () => {
   const ranInt = ~~(Math.random() * (maxUInt256 - minInt256) + minInt256)
   return {
     payload: {type: "Int", value: ranInt.toString()},
-    decoded: ranInt,
+    decoded: ranInt.toString(),
   }
 }
 const genIntSpec = () => {
