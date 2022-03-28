@@ -1,8 +1,11 @@
 import {spawn, subscriber, SUBSCRIBE, UNSUBSCRIBE} from "@onflow/util-actor"
-import {config, latestBlock} from "@onflow/sdk"
-import {getEvents} from "@onflow/sdk"
-import {send} from "@onflow/sdk"
-import {decode} from "@onflow/sdk"
+import {
+  config,
+  block,
+  getEventsAtBlockHeightRange,
+  send,
+  decode
+} from "@onflow/sdk"
 
 const RATE = 10000
 const UPDATED = "UPDATED"
@@ -20,13 +23,13 @@ const HANDLERS = {
     if (!ctx.hasSubs()) return
     let hwm = ctx.get("hwm")
     if (hwm == null) {
-      ctx.put("hwm", await latestBlock())
+      ctx.put("hwm", await block())
       ctx.put("tick", await scheduleTick(ctx))
     } else {
-      let next = await latestBlock()
+      let next = await block()
       ctx.put("hwm", next)
       const data = await send([
-        getEvents(ctx.self(), hwm.height, next.height - 1),
+        getEventsAtBlockHeightRange(ctx.self(), hwm.height, next.height - 1),
       ]).then(decode)
       for (let d of data) ctx.broadcast(UPDATED, d.data)
       ctx.put("tick", await scheduleTick(ctx))
