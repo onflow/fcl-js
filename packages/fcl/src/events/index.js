@@ -10,6 +10,7 @@ import {
 const RATE = 10000
 const UPDATED = "UPDATED"
 const TICK = "TICK"
+const HIGH_WATER_MARK = "hwm"
 
 const scheduleTick = async ctx => {
   return setTimeout(
@@ -21,32 +22,32 @@ const scheduleTick = async ctx => {
 const HANDLERS = {
   [TICK]: async ctx => {
     if (!ctx.hasSubs()) return
-    let hwm = ctx.get("hwm")
+    let hwm = ctx.get(HIGH_WATER_MARK)
     if (hwm == null) {
-      ctx.put("hwm", await block())
-      ctx.put("tick", await scheduleTick(ctx))
+      ctx.put(HIGH_WATER_MARK, await block())
+      ctx.put(TICK, await scheduleTick(ctx))
     } else {
       let next = await block()
-      ctx.put("hwm", next)
+      ctx.put(HIGH_WATER_MARK, next)
       const data = await send([
         getEventsAtBlockHeightRange(ctx.self(), hwm.height, next.height - 1),
       ]).then(decode)
       for (let d of data) ctx.broadcast(UPDATED, d.data)
-      ctx.put("tick", await scheduleTick(ctx))
+      ctx.put(TICK, await scheduleTick(ctx))
     }
   },
   [SUBSCRIBE]: async (ctx, letter) => {
     if (!ctx.hasSubs()) {
-      ctx.put("tick", await scheduleTick(ctx))
+      ctx.put(TICK, await scheduleTick(ctx))
     }
     ctx.subscribe(letter.from)
   },
   [UNSUBSCRIBE]: (ctx, letter) => {
     ctx.unsubscribe(letter.from)
     if (!ctx.hasSubs()) {
-      clearTimeout(ctx.get("tick"))
-      ctx.delete("tick")
-      ctx.delete("hwm")
+      clearTimeout(ctx.get(TICK))
+      ctx.delete(TICK)
+      ctx.delete(HIGH_WATER_MARK)
     }
   },
 }
