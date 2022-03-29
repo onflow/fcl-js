@@ -5,6 +5,7 @@
     "lerna": "lerna",
     "test": "jest"
   },
+  "private": true,
   "devDependencies": {
     "lerna": "^4.0.0"
   },
