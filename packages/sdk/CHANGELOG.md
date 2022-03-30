@@ -1,5 +1,6 @@
 ## Unreleased
 
+- 2022-03-28 -- **BREAKING** [@JeffreyDoyle](https://github.com/JeffreyDoyle): Makes `@onflow/transport-http` the default send module used by SDK. By default, SDK will need to be configured with `accessNode.api` corresponding to a REST/HTTP access node, unless another send module is configured.
 - 2022-03-16 -- [@bthaile](https://github.com/bthaile) Payer can now be an array of keys on a single account. Non-array payer is deprecated and will error in future versions of sdk. 
 - 2022-03-16 -- [@chasefleming](https://github.com/chasefleming): Warn about field renamings/deprecations. To turn on warnings, set config `log.level` to `2`.
 
@@ -24,7 +25,7 @@ await sdk.account("0x123", {height: 123}) // New: get account at the block with 
 
 ## 0.0.57-alpha.1 -- 2022-01-21
 
-- 2022-01-21 -- [@JeffreyDoyle](https://github.com/JeffreyDoyle): Abstracts away the SDK transport modules into their own packages. The JS-SDK now makes use of transport modules for sending an interaction to an access api and receiving a response. A transport module must be defined in config:
+- 2022-01-21 -- [@JeffreyDoyle](https://github.com/JeffreyDoyle): Abstracts away the SDK transport modules into their own packages. The JS-SDK now makes use of transport modules for sending an interaction to an access api and receiving a response. A transport module can be defined in config:
 
 ```javascript
 import {send as grpcSend} from "@onflow/transport-grpc"

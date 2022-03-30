@@ -6,11 +6,13 @@ import {decodeResponse} from "../decode/decode.js"
 import {getBlock} from "../build/build-get-block.js"
 import {invariant} from "@onflow/util-invariant"
 import {Buffer} from "@onflow/rlp"
+import {send as defaultSend} from "@onflow/transport-http"
 
 async function getRefId (opts) {
   const node = await config().get("accessNode.api")
   const sendFn = await config.first(
-    ["sdk.transport", "sdk.send"]
+    ["sdk.transport", "sdk.send"],
+    defaultSend
   )
 
   invariant(
