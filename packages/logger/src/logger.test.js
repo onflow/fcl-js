@@ -28,6 +28,14 @@ describe("logger", () => {
     expect(consoleSpy).not.toHaveBeenCalled()
   })
 
+  it("should fire logger if config level is less than log level and always is true", async () => {
+    const consoleSpy = jest.spyOn(console, "warn").mockImplementation()
+    configRef.put(loggerLevelConfigKey, 0)
+
+    await logger.log(...testArgs, 2, true)
+    expect(consoleSpy).toHaveBeenCalled()
+  })
+
   it("should call correct console method for level log", async () => {
     const consoleSpy = jest.spyOn(console, "log").mockImplementation()
     configRef.put(loggerLevelConfigKey, 0)

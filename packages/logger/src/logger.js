@@ -19,11 +19,11 @@ const buildLoggerMessageArgs = ({title, message}) => {
   ]
 }
 
-export const log = async (title, message, level) => {
+export const log = async (title, message, level, always = false) => {
   const configLoggerLevel =  await config.get("logger.level", 0)
 
   // If config level is below message level then don't show it
-  if (configLoggerLevel < level) return
+  if (!always && configLoggerLevel < level) return
 
   const loggerMessageArgs = buildLoggerMessageArgs({title, message})
 
