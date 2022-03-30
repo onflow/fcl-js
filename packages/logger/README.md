@@ -30,5 +30,9 @@ npm install --save @onflow/logger
 import * as logger from "./logger"
 
 // This will fire if the config "logger.level" value is set to the error level or above
-logger.log("Title of error", "Message body", logger.LEVELS.error)
+logger.log({
+  title: "Title of error", 
+  message: "Message body", 
+  level: logger.LEVELS.error
+})
 ```
