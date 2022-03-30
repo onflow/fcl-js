@@ -14,7 +14,10 @@ describe("logger.LEVELS", () => {
 describe("logger", () => {
   let configRef
   const loggerLevelConfigKey = "logger.level"
-  const testArgs = ["test title", "test message"]
+  const testArgs = {
+    title: "test title", 
+    message: "test message"
+  }
 
   beforeEach(() => {
     configRef = config()
@@ -24,7 +27,7 @@ describe("logger", () => {
     const consoleSpy = jest.spyOn(console, "log").mockImplementation()
     configRef.put(loggerLevelConfigKey, 0)
 
-    await logger.log(...testArgs, 1)
+    await logger.log({...testArgs, level: 1})
     expect(consoleSpy).not.toHaveBeenCalled()
   })
 
@@ -32,7 +35,7 @@ describe("logger", () => {
     const consoleSpy = jest.spyOn(console, "warn").mockImplementation()
     configRef.put(loggerLevelConfigKey, 0)
 
-    await logger.log(...testArgs, 2, true)
+    await logger.log({...testArgs, level: 2, always: true})
     expect(consoleSpy).toHaveBeenCalled()
   })
 
@@ -40,7 +43,7 @@ describe("logger", () => {
     const consoleSpy = jest.spyOn(console, "log").mockImplementation()
     configRef.put(loggerLevelConfigKey, 0)
 
-    await logger.log(...testArgs, 0)
+    await logger.log({...testArgs, level: 0})
     expect(consoleSpy).toHaveBeenCalled()
   })
 
@@ -48,7 +51,7 @@ describe("logger", () => {
     const consoleSpy = jest.spyOn(console, "error").mockImplementation()
     configRef.put(loggerLevelConfigKey, logger.LEVELS.error)
 
-    await logger.log(...testArgs, logger.LEVELS.error)
+    await logger.log({...testArgs, level: logger.LEVELS.error})
     expect(consoleSpy).toHaveBeenCalled()
   })
 
@@ -56,7 +59,7 @@ describe("logger", () => {
     const consoleSpy = jest.spyOn(console, "warn").mockImplementation()
     configRef.put(loggerLevelConfigKey, logger.LEVELS.warn)
 
-    await logger.log(...testArgs, logger.LEVELS.warn)
+    await logger.log({...testArgs, level: logger.LEVELS.warn})
     expect(consoleSpy).toHaveBeenCalled()
   })
 
@@ -64,7 +67,7 @@ describe("logger", () => {
     const consoleSpy = jest.spyOn(console, "log").mockImplementation()
     configRef.put(loggerLevelConfigKey, logger.LEVELS.log)
 
-    await logger.log(...testArgs, logger.LEVELS.log)
+    await logger.log({...testArgs, level: logger.LEVELS.log})
     expect(consoleSpy).toHaveBeenCalled()
   })
 
@@ -72,7 +75,7 @@ describe("logger", () => {
     const consoleSpy = jest.spyOn(console, "info").mockImplementation()
     configRef.put(loggerLevelConfigKey, logger.LEVELS.info)
 
-    await logger.log(...testArgs, logger.LEVELS.info)
+    await logger.log({...testArgs, level: logger.LEVELS.info})
     expect(consoleSpy).toHaveBeenCalled()
   })
 
@@ -80,7 +83,7 @@ describe("logger", () => {
     const consoleSpy = jest.spyOn(console, "debug").mockImplementation()
     configRef.put(loggerLevelConfigKey, logger.LEVELS.debug)
 
-    await logger.log(...testArgs, logger.LEVELS.debug)
+    await logger.log({...testArgs, level: logger.LEVELS.debug})
     expect(consoleSpy).toHaveBeenCalled()
   })
 })
