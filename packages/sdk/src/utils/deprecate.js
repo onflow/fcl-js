@@ -1,4 +1,4 @@
-import {logger, LOGGER_LEVELS} from "@onflow/logger"
+import {logger, LOGGER_LEVELS} from "./logger"
 
 const buildWarningMessage = ({name, transitionsPath}) => {
   console.warn(
