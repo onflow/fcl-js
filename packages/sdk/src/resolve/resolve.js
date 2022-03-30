@@ -2,6 +2,7 @@ import {pipe, isTransaction} from "../interaction/interaction.js"
 import {config} from "../config"
 import {invariant} from "@onflow/util-invariant"
 import {Buffer} from "@onflow/rlp"
+import {send as defaultSend} from "@onflow/transport-http"
 import * as ixModule from "../interaction/interaction.js"
 import {response} from "../response/response.js"
 import {build} from "../build/build.js"
@@ -67,7 +68,7 @@ export const resolve = pipe([
 async function execFetchRef(ix) {
   if (isTransaction(ix) && ix.message.refBlock == null) {
     const node = await config().get("accessNode.api")
-    const sendFn = await config.first(["sdk.transport", "sdk.send"])
+    const sendFn = await config.first(["sdk.transport", "sdk.send"], defaultSend)
 
     invariant(
       sendFn,
@@ -91,7 +92,7 @@ async function execFetchSequenceNumber(ix) {
     invariant(acct, `Transactions require a proposer`)
     if (acct.sequenceNum == null) {
       const node = await config().get("accessNode.api")
-      const sendFn = await config.first(["sdk.transport", "sdk.send"])
+      const sendFn = await config.first(["sdk.transport", "sdk.send"], defaultSend)
 
       invariant(
         sendFn,

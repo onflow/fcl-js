@@ -1,4 +1,5 @@
 import {Buffer} from "@onflow/rlp"
+import {send as defaultSend} from "@onflow/transport-http"
 import {interaction, pipe} from "../interaction/interaction.js"
 import * as ixModule from "../interaction/interaction.js"
 import {invariant} from "../build/build-invariant.js"
@@ -9,7 +10,7 @@ import {resolve as defaultResolve} from "../resolve/resolve.js"
 export const send = async (args = [], opts = {}) => {
   const sendFn = await config.first(
     ["sdk.transport", "sdk.send"],
-    opts.send
+    opts.send || defaultSend
   )
 
   invariant(

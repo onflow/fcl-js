@@ -40,6 +40,7 @@
   },
   "dependencies": {
     "@onflow/rlp": "^0.0.3",
+    "@onflow/transport-http": "^0.0.6",
     "@onflow/util-actor": "0.0.2",
     "@onflow/util-address": "^0.0.0",
     "@onflow/util-invariant": "^0.0.0",

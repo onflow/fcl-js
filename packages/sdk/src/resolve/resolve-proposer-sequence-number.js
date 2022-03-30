@@ -7,13 +7,15 @@ import {getAccount} from "../build/build-get-account.js"
 import {build} from "../build/build.js"
 import {invariant} from "@onflow/util-invariant"
 import {Buffer} from "@onflow/rlp"
+import {send as defaultSend} from "@onflow/transport-http"
 
 export const resolveProposerSequenceNumber = ({ node }) => async (ix) => {
   if (!(isTransaction(ix))) return Ok(ix)
   if (ix.accounts[ix.proposer].sequenceNum) return Ok(ix)
 
   const sendFn = await config.first(
-    ["sdk.transport", "sdk.send"]
+    ["sdk.transport", "sdk.send"],
+    defaultSend
   )
 
   invariant(
