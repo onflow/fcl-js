@@ -44,6 +44,7 @@
     "@onflow/util-actor": "0.0.2",
     "@onflow/util-address": "^0.0.0",
     "@onflow/util-invariant": "^0.0.0",
+    "@onflow/util-logger": "^0.0.1",
     "@onflow/util-template": "0.0.1",
     "deepmerge": "^4.2.2",
     "sha3": "^2.1.4"
