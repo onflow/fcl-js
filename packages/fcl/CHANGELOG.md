@@ -1,5 +1,6 @@
 ## Unreleased
 
+- 2022-03-28 -- [@JeffreyDoyle](https://github.com/JeffreyDoyle) Use latest SDK methods in fcl events subscriber.
 - 2022-02-11 -- [@JeffreyDoyle](https://github.com/JeffreyDoyle) Uses Buffer from @onflow/rlp.
 - 2022-02-25 -- [gregsantos](https://github.com/gregsantos): Remove `"FCL:LAUNCH:EXTENSION"` type from extension util send
 - 2022-02-14 -- [gregsantos](https://github.com/gregsantos): Update `WalletUtils` encoding for authn-signing and auth-verifying.

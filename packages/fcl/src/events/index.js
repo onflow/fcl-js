@@ -1,12 +1,16 @@
 import {spawn, subscriber, SUBSCRIBE, UNSUBSCRIBE} from "@onflow/util-actor"
-import {config, latestBlock} from "@onflow/sdk"
-import {getEvents} from "@onflow/sdk"
-import {send} from "@onflow/sdk"
-import {decode} from "@onflow/sdk"
+import {
+  config,
+  block,
+  getEventsAtBlockHeightRange,
+  send,
+  decode
+} from "@onflow/sdk"
 
 const RATE = 10000
 const UPDATED = "UPDATED"
 const TICK = "TICK"
+const HIGH_WATER_MARK = "hwm"
 
 const scheduleTick = async ctx => {
   return setTimeout(
@@ -18,32 +22,32 @@ const scheduleTick = async ctx => {
 const HANDLERS = {
   [TICK]: async ctx => {
     if (!ctx.hasSubs()) return
-    let hwm = ctx.get("hwm")
+    let hwm = ctx.get(HIGH_WATER_MARK)
     if (hwm == null) {
-      ctx.put("hwm", await latestBlock())
-      ctx.put("tick", await scheduleTick(ctx))
+      ctx.put(HIGH_WATER_MARK, await block())
+      ctx.put(TICK, await scheduleTick(ctx))
     } else {
-      let next = await latestBlock()
-      ctx.put("hwm", next)
+      let next = await block()
+      ctx.put(HIGH_WATER_MARK, next)
       const data = await send([
-        getEvents(ctx.self(), hwm.height, next.height - 1),
+        getEventsAtBlockHeightRange(ctx.self(), hwm.height, next.height - 1),
       ]).then(decode)
       for (let d of data) ctx.broadcast(UPDATED, d.data)
-      ctx.put("tick", await scheduleTick(ctx))
+      ctx.put(TICK, await scheduleTick(ctx))
     }
   },
   [SUBSCRIBE]: async (ctx, letter) => {
     if (!ctx.hasSubs()) {
-      ctx.put("tick", await scheduleTick(ctx))
+      ctx.put(TICK, await scheduleTick(ctx))
     }
     ctx.subscribe(letter.from)
   },
   [UNSUBSCRIBE]: (ctx, letter) => {
     ctx.unsubscribe(letter.from)
     if (!ctx.hasSubs()) {
-      clearTimeout(ctx.get("tick"))
-      ctx.delete("tick")
-      ctx.delete("hwm")
+      clearTimeout(ctx.get(TICK))
+      ctx.delete(TICK)
+      ctx.delete(HIGH_WATER_MARK)
     }
   },
 }
