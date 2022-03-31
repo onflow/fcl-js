@@ -1,4 +1,4 @@
-import {logger, LOGGER_LEVELS} from "./logger"
+import * as logger from "@onflow/util-logger"
 
 const buildWarningMessage = ({name, transitionsPath}) => {
   console.warn(
@@ -52,12 +52,12 @@ export const applyRenamings = (originalObject, deprecationsMap) => {
         return Reflect.get(obj, originalProperty)
       }
       if (deprecationsMap.has(property)) {
-        logger(
-          "FCL/SDK Deprecation Notice",
-          `"${property}" will be deprecated in a future version.
-          Please use "${deprecationsMap.get(property)}" instead.`,
-          LOGGER_LEVELS.warn
-        )
+        logger.log({
+          title: "FCL/SDK Deprecation Notice",
+          message: `"${property}" will be deprecated in a future version.
+            Please use "${deprecationsMap.get(property)}" instead.`,
+          level: logger.LEVELS.warn
+        })
       }
       return Reflect.get(obj, property)
     }

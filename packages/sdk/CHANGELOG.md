@@ -1,5 +1,6 @@
 ## Unreleased
 
+- 2022-03-31 -- [@chasefleming](https://github.com/chasefleming): Convert SDK logger functionality to use `@onflow/util-logger`.
 - 2022-03-28 -- **BREAKING** [@JeffreyDoyle](https://github.com/JeffreyDoyle): Makes `@onflow/transport-http` the default send module used by SDK. By default, SDK will need to be configured with `accessNode.api` corresponding to a REST/HTTP access node, unless another send module is configured.
 - 2022-03-16 -- [@bthaile](https://github.com/bthaile) Payer can now be an array of keys on a single account. Non-array payer is deprecated and will error in future versions of sdk. 
 - 2022-03-16 -- [@chasefleming](https://github.com/chasefleming): Warn about field renamings/deprecations. To turn on warnings, set config `log.level` to `2`.
