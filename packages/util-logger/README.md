@@ -1,4 +1,4 @@
-# @onflow/logger
+# @onflow/util-logger
 
 Logger for FCL-JS.
 
@@ -11,7 +11,7 @@ Logger for FCL-JS.
 # Install
 
 ```bash
-npm install --save @onflow/logger
+npm install --save @onflow/util-logger
 ```
 
 # Usage
@@ -27,7 +27,7 @@ npm install --save @onflow/logger
 | `debug` |   5   |
 
 ```javascript
-import * as logger from "./logger"
+import * as logger from "@onflow/util-logger"
 
 // This will fire if the config "logger.level" value is set to the error level or above
 logger.log({

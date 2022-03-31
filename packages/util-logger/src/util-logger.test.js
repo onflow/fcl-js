@@ -1,5 +1,5 @@
 import {config} from "@onflow/sdk"
-import * as logger from "./logger"
+import * as logger from "./util-logger"
 
 describe("logger.LEVELS", () => {
   it("should return correct number for level", () => {
