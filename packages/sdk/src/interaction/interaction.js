@@ -16,22 +16,22 @@ export const GET_BLOCK /*                     */ = "GET_BLOCK"
 export const GET_BLOCK_HEADER /*              */ = "GET_BLOCK_HEADER"
 export const GET_COLLECTION /*                */ = "GET_COLLECTION"
 
-export const BAD /* */ = "BAD"
-export const OK /*  */ = "OK"
+export const BAD /*         */ = "BAD"
+export const OK /*          */ = "OK"
 
-export const ACCOUNT /*  */ = "ACCOUNT"
-export const PARAM /*    */ = "PARAM"
-export const ARGUMENT /* */ = "ARGUMENT"
+export const ACCOUNT /*     */ = "ACCOUNT"
+export const PARAM /*       */ = "PARAM"
+export const ARGUMENT /*    */ = "ARGUMENT"
 
-export const AUTHORIZER /* */ = "authorizer"
-export const PAYER /*      */ = "payer"
-export const PROPOSER /*   */ = "proposer"
+export const AUTHORIZER /*  */ = "authorizer"
+export const PAYER /*       */ = "payer"
+export const PROPOSER /*    */ = "proposer"
 
 const ACCT = `{
   "kind":"${ACCOUNT}",
   "tempId":null,
-  "addr":null,
-  "keyId":null,
+  "address":null,
+  "keyIndex":null,
   "sequenceNum":null,
   "signature":null,
   "signingFunction":null,
@@ -90,7 +90,7 @@ const IX = `{
     "isSealed":null
   },
   "account": {
-    "addr":null
+    "address":null
   },
   "collection": {
     "id":null
