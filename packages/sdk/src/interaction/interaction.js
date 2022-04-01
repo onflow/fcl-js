@@ -44,16 +44,6 @@ const ACCT = `{
   }
 }`
 
-const PRM = `{
-  "kind":"${PARAM}",
-  "tempId":null,
-  "key":null,
-  "value":null,
-  "asParam":null,
-  "xform":null,
-  "resolve": null
-}`
-
 const ARG = `{
   "kind":"${ARGUMENT}",
   "tempId":null,
@@ -123,7 +113,7 @@ export const interaction = () => {
 
   return {
     ...ix,
-    account
+    account,
   }
 }
 
@@ -158,42 +148,45 @@ const makeIx = wat => ix => {
   return Ok(ix)
 }
 
-export const prepAccount = (acct, opts = {}) => ix => {
-  invariant(
-    typeof acct === "function" || typeof acct === "object",
-    "prepAccount must be passed an authorization function or an account object"
-  )
-  invariant(opts.role != null, "Account must have a role")
+export const prepAccount =
+  (acct, opts = {}) =>
+  ix => {
+    invariant(
+      typeof acct === "function" || typeof acct === "object",
+      "prepAccount must be passed an authorization function or an account object"
+    )
+    invariant(opts.role != null, "Account must have a role")
 
-  const ACCOUNT = applyRenamings(JSON.parse(ACCT), PROP_DEPRECATIONS)
+    const ACCOUNT = applyRenamings(JSON.parse(ACCT), PROP_DEPRECATIONS)
 
-  const role = opts.role
-  const tempId = uuid()
+    const role = opts.role
+    const tempId = uuid()
 
-  if (acct.authorization && isFn(acct.authorization)) acct = {resolve: acct.authorization}
-  if (!acct.authorization && isFn(acct)) acct = {resolve: acct}
+    if (acct.authorization && isFn(acct.authorization))
+      acct = {resolve: acct.authorization}
+    if (!acct.authorization && isFn(acct)) acct = {resolve: acct}
 
-  ix.accounts[tempId] = {
-    ...ACCOUNT,
-    tempId,
-    ...acct,
-    role: {
-      ...ACCOUNT.role,
-      ...(typeof acct.role === "object" ? acct.role : {}),
-      [role]: true,
-    },
+    ix.accounts[tempId] = {
+      ...ACCOUNT,
+      tempId,
+      ...acct,
+      role: {
+        ...ACCOUNT.role,
+        ...(typeof acct.role === "object" ? acct.role : {}),
+        [role]: true,
+      },
+    }
+
+    if (role === AUTHORIZER) {
+      ix.authorizations.push(tempId)
+    } else if (role === PAYER) {
+      ix.payer.push(tempId)
+    } else {
+      ix[role] = tempId
+    }
+
+    return ix
   }
-
-  if (role === AUTHORIZER) {
-    ix.authorizations.push(tempId)
-  } else if (role === PAYER) {
-    ix.payer.push(tempId)
-  } else {
-    ix[role] = tempId
-  }
-
-  return ix
-}
 
 export const makeArgument = arg => ix => {
   let tempId = uuid()
@@ -205,7 +198,9 @@ export const makeArgument = arg => ix => {
   ix.arguments[tempId].asArgument = arg.asArgument
   ix.arguments[tempId].xform = arg.xform
   ix.arguments[tempId].resolve = arg.resolve
-  ix.arguments[tempId].resolveArgument = isFn(arg.resolveArgument) ? arg.resolveArgument.bind(arg) : arg.resolveArgument
+  ix.arguments[tempId].resolveArgument = isFn(arg.resolveArgument)
+    ? arg.resolveArgument.bind(arg)
+    : arg.resolveArgument
 
   return Ok(ix)
 }
@@ -291,10 +286,12 @@ export const put = (key, value) => ix => {
   return Ok(ix)
 }
 
-export const update = (key, fn = identity) => ix => {
-  ix.assigns[key] = fn(ix.assigns[key], ix)
-  return Ok(ix)
-}
+export const update =
+  (key, fn = identity) =>
+  ix => {
+    ix.assigns[key] = fn(ix.assigns[key], ix)
+    return Ok(ix)
+  }
 
 export const destroy = key => ix => {
   delete ix.assigns[key]
