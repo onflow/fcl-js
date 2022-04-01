@@ -113,8 +113,8 @@ const KEYS = new Set(Object.keys(JSON.parse(IX)))
 // addr => address
 const PROP_DEPRECATIONS = new Map([
   ["addr", "address"],
-  ["sequenceNum", "seqNum"],
-  ["keyId", "keyIndex"]
+  ["sequenceNum", "sequenceNumber"],
+  ["keyId", "keyIndex"],
 ])
 
 export const interaction = () => {
