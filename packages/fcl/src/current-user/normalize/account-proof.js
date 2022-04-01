@@ -1,6 +1,6 @@
 // {
 //   "f_type": "Service",                    // Its a service!
-//   "f_vsn": "2.0.0",                       // Follows the v2.0.0 spec for the service
+//   "f_vsn": "1.0.0",                       // Follows the v1.0.0 spec for the service
 //   "type": "account-proof",                // the type of service it is
 //   "method": "DATA",                       // Its data!
 //   "uid": "awesome-wallet#account-proof",  // A unique identifier for the service
