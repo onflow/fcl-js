@@ -1,6 +1,6 @@
 {
   "name": "@onflow/util-logger",
-  "version": "0.0.1",
+  "version": "1.0.0-alpha.0",
   "description": "Logger for FCL-JS",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
@@ -34,6 +34,6 @@
     "start": "microbundle watch"
   },
   "dependencies": {
-    "@onflow/sdk": "^0.0.57-alpha.3"
+    "@onflow/sdk": "^1.0.0-alpha.0"
   }
 }

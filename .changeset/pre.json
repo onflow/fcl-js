@@ -18,5 +18,8 @@
     "@onflow/util-template": "0.0.1",
     "@onflow/util-uid": "0.0.1"
   },
-  "changesets": []
+  "changesets": [
+    "heavy-rabbits-hear",
+    "spicy-wombats-taste"
+  ]
 }

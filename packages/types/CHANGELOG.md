@@ -1,4 +1,8 @@
-### Unreleased
+## 1.0.0-alpha.0
+
+### Major Changes
+
+- Release 1.0.0 alpha
 
 - YYYY-MM-DD **BREAKING?** -- description
 
@@ -10,7 +14,7 @@
 
 ### 0.0.5 -- 2021-07-22
 
-- 2021-07-22 -- Declaring a `UFix64` value without prodviding a correctly formatted fractional throws an error. 
+- 2021-07-22 -- Declaring a `UFix64` value without prodviding a correctly formatted fractional throws an error.
 
 ### 0.0.4 -- 2020-08-24
 

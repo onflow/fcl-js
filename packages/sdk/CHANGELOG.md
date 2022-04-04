@@ -1,8 +1,27 @@
 ## Unreleased
 
+## 1.0.0-alpha.0
+
+### Major Changes
+
+- Release 1.0.0 alpha
+
+### Patch Changes
+
+- Updated dependencies [7469c5c3]
+- Updated dependencies
+
+  - @onflow/util-address@1.0.0-alpha.0
+  - @onflow/util-invariant@1.0.0-alpha.0
+  - @onflow/rlp@1.0.0-alpha.0
+  - @onflow/transport-http@1.0.0-alpha.0
+  - @onflow/util-actor@1.0.0-alpha.0
+  - @onflow/util-logger@1.0.0-alpha.0
+  - @onflow/util-template@1.0.0-alpha.0
+
 - 2022-03-31 -- [@chasefleming](https://github.com/chasefleming): Convert SDK logger functionality to use `@onflow/util-logger`.
 - 2022-03-28 -- **BREAKING** [@JeffreyDoyle](https://github.com/JeffreyDoyle): Makes `@onflow/transport-http` the default send module used by SDK. By default, SDK will need to be configured with `accessNode.api` corresponding to a REST/HTTP access node, unless another send module is configured.
-- 2022-03-16 -- [@bthaile](https://github.com/bthaile) Payer can now be an array of keys on a single account. Non-array payer is deprecated and will error in future versions of sdk. 
+- 2022-03-16 -- [@bthaile](https://github.com/bthaile) Payer can now be an array of keys on a single account. Non-array payer is deprecated and will error in future versions of sdk.
 - 2022-03-16 -- [@chasefleming](https://github.com/chasefleming): Warn about field renamings/deprecations. To turn on warnings, set config `log.level` to `2`.
 
 ```js
@@ -33,14 +52,16 @@ import {send as grpcSend} from "@onflow/transport-grpc"
 import {send as httpSend} from "@onflow/transport-http"
 
 // Configure SDK to use GRPC
-sdk.config()
-.put("accessNode.api", "https://access-testnet.onflow.org")
-.put("sdk.transport", grpcSend)
+sdk
+  .config()
+  .put("accessNode.api", "https://access-testnet.onflow.org")
+  .put("sdk.transport", grpcSend)
 
 // Configure SDK to use HTTP
-sdk.config()
-.put("accessNode.api", "https://rest-testnet.onflow.org")
-.put("sdk.transport", httpSend)
+sdk
+  .config()
+  .put("accessNode.api", "https://rest-testnet.onflow.org")
+  .put("sdk.transport", httpSend)
 ```
 
 ## 0.0.56-alpha.3 -- 2022-01-19
@@ -50,7 +71,7 @@ sdk.config()
 ```javascript
 await sdk.block() // get latest finalized block
 await sdk.block({sealed: true}) // get latest sealed block
-await sdk.block({id: 'abc'}) // get block by id
+await sdk.block({id: "abc"}) // get block by id
 await sdk.block({height: 123}) // get block by height
 ```
 
@@ -58,20 +79,20 @@ await sdk.block({height: 123}) // get block by height
 
 - 2021-12-17 -- [@chasefleming](https://github.com/chasefleming): Fix bug `resolveArgument` is being executed in the wrong context.
 - 2021-11-22 -- [@chasefleming](https://github.com/chasefleming): Fix bug where similar aliases in config can result in partial replacement of the wrong alias.
-- 2021-11-22 -- [@chasefleming](https://github.com/chasefleming): Fix bug where address aliases from config in cadence code are only replaced once. 
+- 2021-11-22 -- [@chasefleming](https://github.com/chasefleming): Fix bug where address aliases from config in cadence code are only replaced once.
 - 2021-11-17 -- [@chasefleming](https://github.com/chasefleming): Support passing of current user as authorization. Simply pass `currentUser` instead of `currentUser.authorization` or `currentUser().authorization`.
 
 ```javascript
 import {currentUser} from "@onflow/fcl"
 
-fcl.send([
-  fcl.transaction(CODE),
-  fcl.proposer(currentUser),
-  fcl.payer(currentUser),
-  fcl.authorizations([
-    currentUser,
+fcl
+  .send([
+    fcl.transaction(CODE),
+    fcl.proposer(currentUser),
+    fcl.payer(currentUser),
+    fcl.authorizations([currentUser]),
   ])
-]).then(fcl.decode)
+  .then(fcl.decode)
 ```
 
 ## 0.0.56-alpha.1 -- 2021-10-21
@@ -84,9 +105,10 @@ Example of `statusString`:
 
 ```javascript
 import * as sdk from "@onflow/sdk"
-const response = await sdk.send(await sdk.build([
-  sdk.getTransactionStatus(txId)
-]), { node: "http://localhost:8080" })
+const response = await sdk.send(
+  await sdk.build([sdk.getTransactionStatus(txId)]),
+  {node: "http://localhost:8080"}
+)
 
 console.log(response.statusString)
 ```
@@ -104,12 +126,10 @@ const argument = {
       value: "0x12341324",
       xform: t.Address,
     }
-  }
+  },
 }
 
-sdk.args([
-  argument
-])
+sdk.args([argument])
 ```
 
 - 2021-09-20 -- [@chasefleming](https://github.com/chasefleming): Support asynchronous resolve methods in `resolveArguments`
