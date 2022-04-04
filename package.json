@@ -1,8 +1,14 @@
 {
-  "workspaces": ["./packages/*"],
+  "workspaces": [
+    "./packages/*"
+  ],
   "scripts": {
     "build": "npm run build --ws",
+    "changeset": "changeset",
     "test": "jest"
   },
-  "name": "fcl-js"
+  "name": "fcl-js",
+  "dependencies": {
+    "@changesets/cli": "^2.21.1"
+  }
 }
