@@ -1,22 +1,40 @@
-## Unreleased
+## 1.0.0-alpha.0
+
+### Major Changes
+
+- Release 1.0.0 alpha
+
+### Patch Changes
+
+- Updated dependencies [7469c5c3]
+- Updated dependencies
+
+  - @onflow/util-address@1.0.0-alpha.0
+  - @onflow/util-invariant@1.0.0-alpha.0
+  - @onflow/rlp@1.0.0-alpha.0
+  - @onflow/sdk@1.0.0-alpha.0
+  - @onflow/types@1.0.0-alpha.0
+  - @onflow/util-actor@1.0.0-alpha.0
+  - @onflow/util-template@1.0.0-alpha.0
+  - @onflow/util-uid@1.0.0-alpha.0
 
 - 2022-03-28 -- [@JeffreyDoyle](https://github.com/JeffreyDoyle) Use latest SDK methods in fcl events subscriber.
 - 2022-02-11 -- [@JeffreyDoyle](https://github.com/JeffreyDoyle) Uses Buffer from @onflow/rlp.
 - 2022-02-25 -- [gregsantos](https://github.com/gregsantos): Remove `"FCL:LAUNCH:EXTENSION"` type from extension util send
 - 2022-02-14 -- [gregsantos](https://github.com/gregsantos): Update `WalletUtils` encoding for authn-signing and auth-verifying.
-Encoding should leave all field that can exist as Buffers before RLP encoding as Buffers. This strategy will help maintain greater consistency with how these fields are treated when encoded in other areas of Flow.
+  Encoding should leave all field that can exist as Buffers before RLP encoding as Buffers. This strategy will help maintain greater consistency with how these fields are treated when encoded in other areas of Flow.
 
 ```js
-MESSAGE = 
-  HEX(
-    USER_DOMAIN_TAG, // Buffer, right padded to 32 bytes long
-    RLP(
-      APP_DOMAIN_TAG, // [Optional] Buffer, right padded to 32 bytes long
-      ADDRESS,  // Buffer, left padded to 8 bytes long
-      TIMESTAMP // Number
-    )
+MESSAGE = HEX(
+  USER_DOMAIN_TAG, // Buffer, right padded to 32 bytes long
+  RLP(
+    APP_DOMAIN_TAG, // [Optional] Buffer, right padded to 32 bytes long
+    ADDRESS, // Buffer, left padded to 8 bytes long
+    TIMESTAMP // Number
   )
+)
 ```
+
 - 2022-02-14 -- [chasefleming](https://github.com/chasefleming): Remove experimental redir warning from previous alpha build.
 - 2022-02-08 -- [gregsantos](https://github.com/gregsantos): Update extension strategy to add support for `EXT/RPC` service method
 
@@ -102,13 +120,14 @@ WalletUtils.approve({
 - 2021-11-30 -- Allow apps to add opt-in wallets in Discovery with config.
 
 ```javascript
-import { config } from "@onflow/fcl"
+import {config} from "@onflow/fcl"
 
 // Include supports discovery.wallet or discovery.authn.endpoint
 config({
   "discovery.wallet": "https://fcl-discovery.onflow.org/testnet/authn",
-  "discovery.authn.endpoint": "https://fcl-discovery.onflow.org/api/testnet/authn",
-  "discovery.authn.include": ["0x123"] // Service account address
+  "discovery.authn.endpoint":
+    "https://fcl-discovery.onflow.org/api/testnet/authn",
+  "discovery.authn.include": ["0x123"], // Service account address
 })
 ```
 
@@ -128,10 +147,11 @@ An app developer will now be able to list services for authentication ("authn") 
 To use this, first set in the config the API endpoint for fetching Flow services.
 
 ```javascript
-import { config } from "@onflow/fcl"
+import {config} from "@onflow/fcl"
 
 config({
-  "discovery.authn.endpoint": "https://fcl-discovery.onflow.org/api/testnet/authn"
+  "discovery.authn.endpoint":
+    "https://fcl-discovery.onflow.org/api/testnet/authn",
 })
 
 // On mainnet, you can use https://fcl-discovery.onflow.org/api/authn
@@ -144,7 +164,7 @@ import * as fcl from "@onflow/fcl"
 
 fcl.discovery.authn.subscribe(callback)
 
-// OR 
+// OR
 
 fcl.discovery.authn.snapshot()
 ```
@@ -152,23 +172,33 @@ fcl.discovery.authn.snapshot()
 This will return a list a services which you can then authenticate with the following:
 
 ```javascript
-fcl.authenticate({ service })
+fcl.authenticate({service})
 ```
 
 An example React component could then wind up looking like this:
 
 ```javascript
 import "./config"
-import { useState, useEffect } from "react"
+import {useState, useEffect} from "react"
 import * as fcl from "@onflow/fcl"
 
 function Component() {
   const [services, setServices] = useState([])
-  useEffect(() => fcl.discovery.authn.subscribe(res => setServices(res.results)), [])
+  useEffect(
+    () => fcl.discovery.authn.subscribe(res => setServices(res.results)),
+    []
+  )
 
   return (
     <div>
-      {services.map(service => <button key={service.provider.address} onClick={() => fcl.authenticate({ service })}>Login with {service.provider.name}</button>)}
+      {services.map(service => (
+        <button
+          key={service.provider.address}
+          onClick={() => fcl.authenticate({service})}
+        >
+          Login with {service.provider.name}
+        </button>
+      ))}
     </div>
   )
 }
@@ -191,7 +221,7 @@ function Component() {
 
 Internal: Extracts message event listener callbacks into `buildMessageHandler` on `extension`, `pop`, `frame`, and `tab`
 
-An extension can be made available in FCL Discovery and displayed as a wallet choice by pushing a  `Service` of type `authn` to an array of `fcl_extensions` on the window object or using the `injectExtService` wallet utility.
+An extension can be made available in FCL Discovery and displayed as a wallet choice by pushing a `Service` of type `authn` to an array of `fcl_extensions` on the window object or using the `injectExtService` wallet utility.
 
 ```javascript
 let AuthnService = {
@@ -238,9 +268,7 @@ await query({
       return currentUser
     }
   `,
-  args: (arg, t) => [
-    currentUser
-  ]
+  args: (arg, t) => [currentUser],
 })
 ```
 
@@ -277,11 +305,11 @@ currentUser.subscribe(callback)
 - 2021-08-27 -- Adds `config.fcl.storage` allowing for injection of desired storage option. Defaults to `SESSION_STORAGE`.
 
 ```javascript
-  export const SESSION_STORAGE = {
-    can: true,
-    get: async key => JSON.parse(sessionStorage.getItem(key)),
-    put: async (key, value) => sessionStorage.setItem(key, JSON.stringify(value)),
-  }
+export const SESSION_STORAGE = {
+  can: true,
+  get: async key => JSON.parse(sessionStorage.getItem(key)),
+  put: async (key, value) => sessionStorage.setItem(key, JSON.stringify(value)),
+}
 ```
 
 ## 0.0.77-alpha.4 - 2021-08-27

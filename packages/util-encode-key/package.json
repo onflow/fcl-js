@@ -1,6 +1,6 @@
 {
   "name": "@onflow/util-encode-key",
-  "version": "0.0.2",
+  "version": "1.0.0-alpha.0",
   "description": "Flow JS SDK Util -- Encode Key",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
@@ -18,7 +18,7 @@
     }
   },
   "devDependencies": {
-    "@onflow/types": "0.0.6",
+    "@onflow/types": "^1.0.0-alpha.0",
     "jest": "^26.6.3",
     "jest-esm-transformer": "1.0.0",
     "microbundle": "^0.13.0"
@@ -35,7 +35,7 @@
     "start": "microbundle watch"
   },
   "dependencies": {
-    "@onflow/rlp": "0.0.3",
-    "@onflow/util-invariant": "0.0.0"
+    "@onflow/rlp": "^1.0.0-alpha.0",
+    "@onflow/util-invariant": "^1.0.0-alpha.0"
   }
 }
