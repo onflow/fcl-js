@@ -36,50 +36,54 @@ MESSAGE =
 
 with the following values:
 
-- `USER_DOMAIN_TAG` is the constant `"FLOW-V0.0-user"`, encoded as UTF-8 byte array and right-padded with zero bytes to a length of 32 bytes.
+- `ACCOUNT_PROOF_DOMAIN_TAG` is the constant `"FCL-ACCOUNT-PROOF-V0.0"`, encoded as UTF-8 byte array and right-padded with zero bytes to a length of 32 bytes.
 - `APP_IDENTIFIER` is an arbitrary length string.
 - `ADDRESS` is a byte array containing the address bytes, left-padded with zero bytes to a length of 8 bytes.
 - `NONCE` is an byte array with a minimum length of 32 bytes.
 
 `RLP_ENCODE` is a function that performs [RLP encoding](https://eth.wiki/fundamentals/rlp) and returns the encoded value as bytes.
 
-### JavaScript Example
+### JavaScript Signing Example
 
-```jsx
-// Signing procedure
-
+```javascript
 // Using WalletUtils
-import {WalletUtils, withPrefix} from "@onflow/fcl"
-const message = WalletUtils.encodeMessageForProvableAuthnSigning(
-      appIdentifier, 
-      address, // Flow address of the user authenticating
-      nonce, // minimum 32-btye nonce
+import {WalletUtils} from "@onflow/fcl"
+
+const message = WalletUtils.encodeAccountProof(
+  appIdentifier, // A human readable string to identify your application during signing
+  address,       // Flow address of the user authenticating
+  nonce,         // minimum 32-btye nonce
 )
+
 sign(privateKey, message)
 
 // Without using FCL WalletUtils
-import {withPrefix} from "@onflow/fcl"
+const ACCOUNT_PROOF_DOMAIN_TAG = rightPaddedHexBuffer(
+  Buffer.from("FCL-ACCOUNT-PROOF-V0.0").toString("hex"),
+  32
+)
 const message =  rlp([appIdentifier, address, nonce])
-const prependUserDomainTag = (message) => USER_DOMAIN_TAG + message
-sign(privateKey, prependUserDomainTag(message))
+const prependUserDomainTag = (message) => ACCOUNT_PROOF_DOMAIN_TAG + message
 
+sign(privateKey, prependUserDomainTag(message))
+```
+
+```json
 // Authentication Proof Service
 {
-  f_type: "Service",  // Its a service!
-  f_vsn: "1.0.0",  // Follows the v1.0.0 spec for the service
-  type: "account-proof",  // the type of service it is
-  method: "DATA",  // Its data!
-  uid: "awesome-wallet#account-proof",  // A unique identifier for the service            
+  f_type: "Service",                       // Its a service!
+  f_vsn: "1.0.0",                          // Follows the v1.0.0 spec for the service
+  type: "account-proof",                   // the type of service it is
+  method: "DATA",                          // Its data!
+  uid: "awesome-wallet#account-proof",     // A unique identifier for the service            
   data: {
     f_type: "account-proof",
     f_vsn: "1.0.0"
-
     // The user's address (8 bytes, i.e 16 hex characters)
     address: "0xf8d6e0586b0a20c7",                 
-
     // Nonce signed by the current account-proof (minimum 32 bytes in total, i.e 64 hex characters)
     nonce: "75f8587e5bd5f9dcc9909d0dae1f0ac5814458b2ae129620502cb936fde7120a",
-
     signatures: [CompositeSignature],
   }
+}
 ```
