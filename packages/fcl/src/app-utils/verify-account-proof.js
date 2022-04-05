@@ -78,7 +78,7 @@ export async function verifyAccountProof(
     `
   }
 
-  return await query({
+  return query({
     cadence: await getVerifyAccountProofSignaturesScript(),
     args: (arg, t) => [
       arg(address, t.Address),
