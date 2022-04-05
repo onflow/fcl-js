@@ -241,7 +241,7 @@ WalletUtils.decline(reason)
 
 In the following examples, we'll walk you through the process of building an authentication service.
 
-In FCL, wallets are configured by passing in a wallet provider's authentication URL as the `discovery.wallet` config variable.
+In FCL, wallets are configured by passing in a wallet provider's authentication URL or extension endpoint as the `discovery.wallet` config variable.
 
 You will need to make and expose a webpage or API hosted at an authentication endpoint that FCL will use.
 
@@ -251,8 +251,8 @@ You will need to make and expose a webpage or API hosted at an authentication en
 import {config} from "@onflow/fcl"
 
 config({
-  "discovery.wallet": "your-url-that-fcl-will-use-for-authentication",
-  "discovery.wallet.method": "IFRAME/RPC" // Optional. Available methods are "IFRAME/RPC", "POP/RPC", "TAB/RPC" or "HTTP/POST", defaults to "IFRAME/RPC".
+  "discovery.wallet": "url-or-endpoint-fcl-will-use-for-authentication", // FCL Discovery endpoint, wallet provider's authentication URL or extension endpoint
+  "discovery.wallet.method": "IFRAME/RPC" // Optional. Available methods are "IFRAME/RPC", "POP/RPC", "TAB/RPC", "EXT/RPC" or "HTTP/POST", defaults to "IFRAME/RPC".
 })
 ```
 
@@ -284,7 +284,8 @@ function callback(data) {
     }
   })
   
-  // The same AuthnResponse can alternatively be sent using WalletUtils.approve (or WalletUtils.decline)
+  // Alternatively be sent using WalletUtils.approve (or WalletUtils.decline)
+  // which will wrap AuthnResponse in a PollingResponse
   WalletUtils.approve({
     f_type: "AuthnResponse",
     f_vsn: "1.0.0"
@@ -296,6 +297,9 @@ WalletUtils.onMsgFromFCL("FCL:VIEW:READY:RESPONSE", callback)
 
 // tell fcl the wallet is ready
 WalletUtils.sendMsgToFCL("FCL:VIEW:READY")
+
+// alternatively adds "FCL:VIEW:READY:RESPONSE" listener and sends "FCL:VIEW:READY"
+WalletUtils.ready(callback)
 ```
 
 During authentication, the application has a chance to request to you what they would like you to send back to them. These requests are included in the `FCL:VIEW:READY:RESPONSE` messsage sent to the wallet from FCL.
