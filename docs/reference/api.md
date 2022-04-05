@@ -790,7 +790,9 @@ const txId = await fcl.mutate({
 
 ---
 
-## `verifyUserSignatures`
+## `verifyUserSignatures` (Deprecated)
+
+Use `fcl.AppUtils.verifyUserSignatures`
 
 A method allowing applications to cryptographically verify the ownership of a Flow account by verifying a message was signed by a user's private key/s. This is typically used with the response from `currentUser.signUserMessage`.
 
@@ -814,7 +816,7 @@ import * as fcl from "@onflow/fcl"
 
 const verifySignatures = async (message, compositeSignatures) => {
   try {
-    return await verifyUserSignatures(message, compositeSignatures)
+    return await fcl.AppUtils.verifyUserSignatures(message, compositeSignatures)
   } catch (error) {
     console.log(error)
   }
@@ -824,8 +826,6 @@ const verifySignatures = async (message, compositeSignatures) => {
 #### Examples
 
 Use cases include cryptographic login, message validation, verifiable credentials, and others.
-
-- [Cryptographic Login Example (coming soon)](#)
 
 ---
 
