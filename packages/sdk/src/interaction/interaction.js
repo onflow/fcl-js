@@ -1,4 +1,5 @@
 import {invariant} from "@onflow/util-invariant"
+import {applyRenamings} from "../utils/deprecate"
 
 export const UNKNOWN /*                       */ = "UNKNOWN"
 export const SCRIPT /*                        */ = "SCRIPT"
@@ -105,7 +106,23 @@ const IX = `{
 
 const KEYS = new Set(Object.keys(JSON.parse(IX)))
 
-export const interaction = () => JSON.parse(IX)
+// Current field, followed by renaming
+// addr => address
+const PROP_DEPRECATIONS = new Map([
+  ["addr", "address"],
+  ["sequenceNum", "seqNum"],
+  ["keyId", "keyIndex"]
+])
+
+export const interaction = () => {
+  const ix = JSON.parse(IX)
+  const account = applyRenamings(ix.account, PROP_DEPRECATIONS)
+
+  return {
+    ...ix,
+    account
+  }
+}
 
 const CHARS = "abcdefghijklmnopqrstuvwxyz0123456789".split("")
 const randChar = () => CHARS[~~(Math.random() * CHARS.length)]
@@ -145,7 +162,8 @@ export const prepAccount = (acct, opts = {}) => ix => {
   )
   invariant(opts.role != null, "Account must have a role")
 
-  const ACCOUNT = JSON.parse(ACCT)
+  const ACCOUNT = applyRenamings(JSON.parse(ACCT), PROP_DEPRECATIONS)
+
   const role = opts.role
   const tempId = uuid()
 
@@ -165,6 +183,8 @@ export const prepAccount = (acct, opts = {}) => ix => {
 
   if (role === AUTHORIZER) {
     ix.authorizations.push(tempId)
+  } else if (role === PAYER) {
+    ix.payer.push(tempId)
   } else {
     ix[role] = tempId
   }
