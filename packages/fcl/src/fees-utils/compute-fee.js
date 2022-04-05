@@ -27,7 +27,7 @@ export const computeFee = async (opts) => {
   invariant(isRequired(opts), "computeFees(opts) -- opts is required")
   invariant(isObject(opts), "computeFees(opts) -- opts must be an object")
   invariant(isRequired(opts?.inclusionEffort), "computeFees({ inclusionEffort }) -- inclusionEffort is required")
-  invariant(isRequired(opts?.executionEffort), "computeFees({ executionEffort }) -- inclusionEffort is required")
+  invariant(isRequired(opts?.executionEffort), "computeFees({ executionEffort }) -- executionEffort is required")
 
   const { inclusionEffort, executionEffort } = opts
 
