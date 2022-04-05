@@ -7,7 +7,6 @@ import {invariant} from "@onflow/util-invariant"
 import {buildUser} from "./build-user"
 import {serviceOfType} from "./service-of-type"
 import {execService} from "./exec-service"
-import {verifyUserSignatures as verify} from "../exec/verify"
 import {normalizeCompositeSignature} from "./normalize/composite-signature"
 import {getDiscoveryService} from "../config-utils"
 
@@ -330,28 +329,12 @@ async function signUserMessage(msg) {
   }
 }
 
-// Deprecated
-async function verifyUserSignatures(msg, compSigs) {
-  console.warn(
-    `
-    %cFCL/SDK Deprecation Notice
-    ============================
-    verifyUserSignatures is no longer exported as fcl.currentUser().verifyUserSignatures
-    and is now available as fcl.verifyUserSignatures
-    ============================
-    `,
-    "font-weight:bold;font-family:monospace;"
-  )
-  return verify(msg, compSigs)
-}
-
 let currentUser = () => {
   return {
     authenticate,
     unauthenticate,
     authorization,
     signUserMessage,
-    verifyUserSignatures,
     subscribe,
     snapshot,
     resolveArgument,
@@ -362,7 +345,6 @@ currentUser.authenticate = authenticate
 currentUser.unauthenticate = unauthenticate
 currentUser.authorization = authorization
 currentUser.signUserMessage = signUserMessage
-currentUser.verifyUserSignatures = verifyUserSignatures
 currentUser.subscribe = subscribe
 currentUser.snapshot = snapshot
 currentUser.resolveArgument = resolveArgument
