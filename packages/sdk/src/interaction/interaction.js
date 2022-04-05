@@ -1,5 +1,4 @@
 import {invariant} from "@onflow/util-invariant"
-import {applyRenamings} from "../utils/deprecate"
 
 export const UNKNOWN /*                       */ = "UNKNOWN"
 export const SCRIPT /*                        */ = "SCRIPT"
@@ -7,11 +6,8 @@ export const TRANSACTION /*                   */ = "TRANSACTION"
 export const GET_TRANSACTION_STATUS /*        */ = "GET_TRANSACTION_STATUS"
 export const GET_ACCOUNT /*                   */ = "GET_ACCOUNT"
 export const GET_EVENTS /*                    */ = "GET_EVENTS"
-export const GET_LATEST_BLOCK /*              */ = "GET_LATEST_BLOCK"
 export const PING /*                          */ = "PING"
 export const GET_TRANSACTION /*               */ = "GET_TRANSACTION"
-export const GET_BLOCK_BY_ID /*               */ = "GET_BLOCK_BY_ID"
-export const GET_BLOCK_BY_HEIGHT /*           */ = "GET_BLOCK_BY_HEIGHT"
 export const GET_BLOCK /*                     */ = "GET_BLOCK"
 export const GET_BLOCK_HEADER /*              */ = "GET_BLOCK_HEADER"
 export const GET_COLLECTION /*                */ = "GET_COLLECTION"
@@ -109,23 +105,7 @@ const IX = `{
 
 const KEYS = new Set(Object.keys(JSON.parse(IX)))
 
-// Current field, followed by renaming
-// addr => address
-const PROP_DEPRECATIONS = new Map([
-  ["addr", "address"],
-  ["sequenceNum", "seqNum"],
-  ["keyId", "keyIndex"]
-])
-
-export const interaction = () => {
-  const ix = JSON.parse(IX)
-  const account = applyRenamings(ix.account, PROP_DEPRECATIONS)
-
-  return {
-    ...ix,
-    account
-  }
-}
+export const interaction = () => JSON.parse(IX)
 
 const CHARS = "abcdefghijklmnopqrstuvwxyz0123456789".split("")
 const randChar = () => CHARS[~~(Math.random() * CHARS.length)]
@@ -165,8 +145,7 @@ export const prepAccount = (acct, opts = {}) => ix => {
   )
   invariant(opts.role != null, "Account must have a role")
 
-  const ACCOUNT = applyRenamings(JSON.parse(ACCT), PROP_DEPRECATIONS)
-
+  const ACCOUNT = JSON.parse(ACCT)
   const role = opts.role
   const tempId = uuid()
 
@@ -186,8 +165,6 @@ export const prepAccount = (acct, opts = {}) => ix => {
 
   if (role === AUTHORIZER) {
     ix.authorizations.push(tempId)
-  } else if (role === PAYER) {
-    ix.payer.push(tempId)
   } else {
     ix[role] = tempId
   }
@@ -217,9 +194,6 @@ export const makeGetTransactionStatus /*    */ = makeIx(GET_TRANSACTION_STATUS)
 export const makeGetTransaction /*          */ = makeIx(GET_TRANSACTION)
 export const makeGetAccount /*              */ = makeIx(GET_ACCOUNT)
 export const makeGetEvents /*               */ = makeIx(GET_EVENTS)
-export const makeGetLatestBlock /*          */ = makeIx(GET_LATEST_BLOCK)
-export const makeGetBlockById /*            */ = makeIx(GET_BLOCK_BY_ID)
-export const makeGetBlockByHeight /*        */ = makeIx(GET_BLOCK_BY_HEIGHT)
 export const makePing /*                    */ = makeIx(PING)
 export const makeGetBlock /*                */ = makeIx(GET_BLOCK)
 export const makeGetBlockHeader /*          */ = makeIx(GET_BLOCK_HEADER)
@@ -234,9 +208,6 @@ export const isGetTransactionStatus /*    */ = is(GET_TRANSACTION_STATUS)
 export const isGetTransaction /*          */ = is(GET_TRANSACTION)
 export const isGetAccount /*              */ = is(GET_ACCOUNT)
 export const isGetEvents /*               */ = is(GET_EVENTS)
-export const isGetLatestBlock /*          */ = is(GET_LATEST_BLOCK)
-export const isGetBlockById /*            */ = is(GET_BLOCK_BY_ID)
-export const isGetBlockByHeight /*        */ = is(GET_BLOCK_BY_HEIGHT)
 export const isPing /*                    */ = is(PING)
 export const isGetBlock /*                */ = is(GET_BLOCK)
 export const isGetBlockHeader /*          */ = is(GET_BLOCK_HEADER)

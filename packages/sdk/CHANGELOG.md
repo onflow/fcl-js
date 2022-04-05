@@ -1,5 +1,10 @@
 ## Unreleased
 
+- 2022-04-05 -- **BREAKING** [@JeffreyDoyle](https://github.com/JeffreyDoyle): Remove latestBlock method
+- 2022-04-05 -- **BREAKING** [@JeffreyDoyle](https://github.com/JeffreyDoyle): Remove getLatestBlock builder and interaction type
+- 2022-04-05 -- **BREAKING** [@JeffreyDoyle](https://github.com/JeffreyDoyle): Remove getBlockById builder and interaction type
+- 2022-04-05 -- **BREAKING** [@JeffreyDoyle](https://github.com/JeffreyDoyle): Remove getBlockByHeight builder and interaction type
+
 ## 1.0.0-alpha.0
 
 ### Major Changes
