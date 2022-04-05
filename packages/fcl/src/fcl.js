@@ -27,6 +27,9 @@ export const authz = currentUser().authorization
 import * as types from "@onflow/types"
 export const t = types
 
+import * as FeeUtils from "./fees-utils"
+export {FeeUtils}
+
 import * as WalletUtils from "./wallet-utils"
 export {WalletUtils}
 
