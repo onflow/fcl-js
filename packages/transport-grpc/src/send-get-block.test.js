@@ -41,8 +41,7 @@ describe("Send Get Block", () => {
         height: 123,
         timestamp: dateNow.toISOString(),
         collectionGuarantees: [],
-        blockSeals: [],
-        signatures: []
+        blockSeals: []
     }
 
     unaryMock.mockReturnValue({
@@ -107,8 +106,7 @@ describe("Send Get Block", () => {
         height: 123,
         timestamp: dateNow.toISOString(),
         collectionGuarantees: [],
-        blockSeals: [],
-        signatures: []
+        blockSeals: []
     }
 
     unaryMock.mockReturnValue({
@@ -173,8 +171,7 @@ describe("Send Get Block", () => {
         height: 123,
         timestamp: dateNow.toISOString(),
         collectionGuarantees: [],
-        blockSeals: [],
-        signatures: []
+        blockSeals: []
     }
 
     unaryMock.mockReturnValue({
@@ -238,8 +235,7 @@ describe("Send Get Block", () => {
         height: 123,
         timestamp: dateNow.toISOString(),
         collectionGuarantees: [],
-        blockSeals: [],
-        signatures: []
+        blockSeals: []
     }
 
     unaryMock.mockReturnValue({
