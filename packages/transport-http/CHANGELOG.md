@@ -4,7 +4,6 @@
 
   - `block.collectionGuarantees.signatures`
   - `block.blockSeals.executionReceiptSignatures`
-  - `block.blockSeals.executionReceiptSignatures`
   - `block.blockSeals.resultApprovalSignatures`
   - `block.signatures`
 
