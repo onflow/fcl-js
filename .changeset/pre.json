@@ -19,6 +19,7 @@
     "@onflow/util-uid": "0.0.1"
   },
   "changesets": [
+    "heavy-cats-draw",
     "heavy-rabbits-hear",
     "spicy-wombats-taste"
   ]
