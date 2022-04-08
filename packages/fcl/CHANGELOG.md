@@ -1,4 +1,8 @@
-## 1.0.0-alpha.0
+## 1.0.0-alpha.1
+
+### Minor Changes
+
+- 21a2dda: Import Buffer from rlp in encode-account-proof
 
 ### Major Changes
 
