@@ -36,7 +36,7 @@ export const validateArgs = (appIdentifier, address, nonce, signatures) => {
  *   signatures: [{f_type: "CompositeSignature", f_vsn: "1.0.0", addr: "0x123", keyId: 0, signature: "abc123"}],
  *  }
  *
- *  const isValid = await fcl.verifyAccountProof(
+ *  const isValid = await fcl.AppUtils.verifyAccountProof(
  *    "AwesomeAppId",
  *    accountProofData,
  *  )
@@ -78,7 +78,7 @@ export async function verifyAccountProof(
     `
   }
 
-  return await query({
+  return query({
     cadence: await getVerifyAccountProofSignaturesScript(),
     args: (arg, t) => [
       arg(address, t.Address),
