@@ -1,3 +1,12 @@
+## Unreleased
+
+- 2022-04-05 -- **BREAKING** [@chasefleming](https://github.com/chasefleming): Remove the following from block response:
+
+  - `block.collectionGuarantees.signatures`
+  - `block.blockSeals.executionReceiptSignatures`
+  - `block.blockSeals.resultApprovalSignatures`
+  - `block.signatures`
+
 ## 1.0.0-alpha.1
 
 ### Major Changes

@@ -46,7 +46,6 @@ function constructResponse(ix, context, res) {
 
   const collectionGuarantees = block.getCollectionGuaranteesList()
   const blockSeals = block.getBlockSealsList()
-  const signatures = (block.getSignaturesList()).map(sig => u8ToHex(sig, context))
 
   const ret = context.response()
   ret.tag = ix.tag
@@ -57,15 +56,11 @@ function constructResponse(ix, context, res) {
     timestamp: block.getTimestamp().toDate().toISOString(),
     collectionGuarantees: collectionGuarantees.map(collectionGuarantee => ({
       collectionId: u8ToHex(collectionGuarantee.getCollectionId_asU8(), context),
-      signatures: (collectionGuarantee.getSignaturesList()).map(x => u8ToHex(x, context)),
     })),
     blockSeals: blockSeals.map(blockSeal => ({
       blockId: u8ToHex(blockSeal.getBlockId_asU8(), context),
       executionReceiptId: u8ToHex(blockSeal.getExecutionReceiptId_asU8(), context),
-      executionReceiptSignatures: (blockSeal.getExecutionReceiptSignaturesList()).map(x => u8ToHex(x, context)),
-      resultApprovalSignatures: (blockSeal.getResultApprovalSignaturesList()).map(x => u8ToHex(x, context)),
-    })),
-    signatures: signatures,
+    }))
   }
 
   return ret

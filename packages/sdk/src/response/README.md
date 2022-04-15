@@ -113,13 +113,13 @@ npm install --save @onflow/sdk
   - **timestamp** `string` -- ISO timestamp of the block
   - **collectionGuarantees** `Array<CollectionGuarantee`
     - **collectionId** `string` -- ID of the collection
-    - **signatures** `string` -- Signatures in the collection
+    - **DEPRECATED: signatures** `string` -- Signatures in the collection
   - **blockSeals**
     - **blockId** `string` -- ID of the block
     - **executionReceiptId** `string` -- ID of the execution receipt
-    - **executionReceiptSignatures** `Array<string>` -- Execution receipt signatures
-    - **resultApprovalSignatures** `Array<string>` -- Result approval signatures
-  - **signatures** `Array<string>` -- Signatures included in this block
+    - **DEPRECATED: executionReceiptSignatures** `Array<string>` -- Execution receipt signatures
+    - **DEPRECATED: resultApprovalSignatures** `Array<string>` -- Result approval signatures
+  - **DEPRECATED: signatures** `Array<string>` -- Signatures included in this block
 - **collection** _GetCollection_ -- The collection returned from a GetCollection request
   - **id** `string` -- ID of the collection
   - **transactionIds** `Array<string>` -- The ids of transactions included in the collection
