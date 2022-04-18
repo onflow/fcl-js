@@ -171,7 +171,7 @@ sdk.args([argument])
 Example Updates to config.
 
 ```javascript
-import {config} from "@onflow/sdk"
+import {config} from "@onflow/config"
 
 expect(await config.all()).toEqual({})
 
@@ -253,7 +253,7 @@ test("single account/key pair for all three signatory roles", async () => {
 - 2021-06-16 -- [@orodio](https://github.com/orodio): Added the ability to set configuration values in `sdk.config` from initializer.
 
 ```javascript
-import {config} from "@onflow/sdk"
+import {config} from "@onflow/config"
 
 config({
   "accessNode.api": "https://access-testnet.onflow.org",

@@ -10,16 +10,19 @@ Reactive configuration for Flow JS SDK and FCL
 
 # Overview
 
+- [config](#config)
+- [Status](#status)
+- [Overview](#overview)
 - [Usage](#usage)
 - [Configurations](#configurations)
   - [Access Node](#access-node)
   - [Decode](#decode)
-  - [Wallets](#Wallets)
+  - [Wallets](#wallets)
 
 # Usage
 
 ```javascript
-import {config} from "@onflow/sdk"
+import {config} from "@onflow/config"
 
 // Reactively subscribe to config changes
 config().subscribe(configData => console.log("CONFIG", configData))

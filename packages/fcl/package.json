@@ -41,6 +41,7 @@
     "start": "microbundle watch --define MICROBUNDLE_CURRENT_VERSION=$npm_package_version"
   },
   "dependencies": {
+    "@onflow/config": "^1.0.0-alpha.0",
     "@onflow/interaction": "0.0.11",
     "@onflow/rlp": "^1.0.0-alpha.0",
     "@onflow/sdk": "^1.0.0-alpha.0",
