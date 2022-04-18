@@ -75,42 +75,29 @@ Before hashing and signing the message, the wallet must add a specified DOMAIN T
 
 A domain tag is encoded as **UTF-8 bytes, right padded to a total length of 32 bytes**, prepended to the message.
 
-Using upcoming functionalty of **FCL**, the signature can now be verified on the Flow blockchain. The following illustrates an example.
+The signature can now be verified on the Flow blockchain. The following illustrates an example using `fcl.verifyUserSignatures`
 
 ```javascript
-// this code example was done before compSig was an array of composite signatures.
-// An uptodate version will be updated here ASAP
-
-function verifyUserSignatures(message, compSig) {
-  return fcl.query({
-    cadence: `
-        import Crypto
-        pub fun main(message: String, addr: Address, keyId: Int, signature: String): Bool {
-          let acct = getAccount(addr)
-          let key = acct.keys.get(keyIndex: keyId)
-          let publicKey = PublicKey(
-            publicKey: key.publicKey,
-            signatureAlgorithm: key.signatureAlgorithm,
-          )
-          return publicKey.verify(
-            signature: signature.decodeHex(),
-            signedData: message.decodeHex(),
-            domainSeparationTag: "FLOW-V0.0-user",
-            hashAlgorithm: key.hashAlgorithm,
-          )
-        }
-      `,
-    args: (arg, t) => [
-      arg(message, t.String),
-      arg(compSig.addr, t.Address),
-      arg(compSig.keyId, t.Int),
-      arg(compSig.signature, t.String),
-    ],
-  })
-}
+/**
+ * Verify a valid signature/s for an account on Flow.
+ *
+ * @param {string} msg - A message string in hexadecimal format
+ * @param {Array} compSigs - An array of Composite Signatures
+ * @param {string} compSigs[].addr - The account address
+ * @param {number} compSigs[].keyId - The account keyId
+ * @param {string} compSigs[].signature - The signature to verify
+ * @return {bool}
+ *
+ * @example
+ *
+ *  const isValid = await fcl.verifyUserSignatures(
+ *    Buffer.from('FOO').toString("hex"),
+ *    [{f_type: "CompositeSignature", f_vsn: "1.0.0", addr: "0x123", keyId: 0, signature: "abc123"}]
+ *  )
+ */
 ```
 
-# TL;DR Wallet Provider
+## TL;DR Wallet Provider
 
 - Register with **FCL** and provide signing service endpoint. No further configuration is needed.
 - On receipt of message, prompt user to approve or decline
