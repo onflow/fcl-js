@@ -23,8 +23,7 @@ describe("Send Get Block", () => {
         payload: {
             collection_guarantees: [],
             block_seals: [],
-        },
-        signatures: []
+        }
     }]
 
     httpRequestMock.mockReturnValue(returnedBlock)
@@ -67,8 +66,7 @@ describe("Send Get Block", () => {
         height: 123,
         timestamp: dateNow.toISOString(),
         collectionGuarantees: [],
-        blockSeals: [],
-        signatures: []
+        blockSeals: []
     })
   })
 
@@ -87,8 +85,7 @@ describe("Send Get Block", () => {
         payload: {
             collection_guarantees: [],
             block_seals: [],
-        },
-        signatures: []
+        }
     }]
 
     httpRequestMock.mockReturnValue(returnedBlock);
@@ -131,8 +128,7 @@ describe("Send Get Block", () => {
         height: 123,
         timestamp: dateNow.toISOString(),
         collectionGuarantees: [],
-        blockSeals: [],
-        signatures: []
+        blockSeals: []
     })
   })
 
@@ -151,8 +147,7 @@ describe("Send Get Block", () => {
         payload: {
             collection_guarantees: [],
             block_seals: [],
-        },
-        signatures: []
+        }
     }]
 
     httpRequestMock.mockReturnValue(returnedBlock)
@@ -194,8 +189,7 @@ describe("Send Get Block", () => {
         height: 123,
         timestamp: dateNow.toISOString(),
         collectionGuarantees: [],
-        blockSeals: [],
-        signatures: []
+        blockSeals: []
     })
   })
 
@@ -214,8 +208,7 @@ describe("Send Get Block", () => {
         payload: {
             collection_guarantees: [],
             block_seals: [],
-        },
-        signatures: []
+        }
     }]
 
     httpRequestMock.mockReturnValue(returnedBlock)
@@ -257,8 +250,7 @@ describe("Send Get Block", () => {
         height: 123,
         timestamp: dateNow.toISOString(),
         collectionGuarantees: [],
-        blockSeals: [],
-        signatures: []
+        blockSeals: []
     })
   })
 

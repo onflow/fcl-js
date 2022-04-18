@@ -57,15 +57,11 @@ function constructResponse(ix, context, res) {
     collectionGuarantees: block.payload.collection_guarantees.map(collectionGuarantee => ({
       collectionId: collectionGuarantee.collection_id,
       signerIds: collectionGuarantee.signer_ids,
-      signatures: collectionGuarantee.signature ? [collectionGuarantee.signature] : [],
     })),
     blockSeals:  block.payload.block_seals.map(blockSeal => ({
       blockId: blockSeal.block_id,
-      executionReceiptId: blockSeal.result_id, 
-      executionReceiptSignatures: [], 
-      resultApprovalSignatures: [],
-    })),
-    signatures: []
+      executionReceiptId: blockSeal.result_id,
+    }))
   }
 
   return ret
