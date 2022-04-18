@@ -1,6 +1,6 @@
 import {isTransaction, isScript, get} from "../interaction/interaction.js"
 import {invariant} from "@onflow/util-invariant"
-import {config} from "../config"
+import {config} from "@onflow/config"
 
 const isFn = v => typeof v === "function"
 const isString = v => typeof v === "string"

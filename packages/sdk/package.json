@@ -39,6 +39,7 @@
     "start": "microbundle watch"
   },
   "dependencies": {
+    "@onflow/config": "^1.0.0-alpha.0",
     "@onflow/rlp": "^1.0.0-alpha.0",
     "@onflow/transport-http": "^1.0.0-alpha.0",
     "@onflow/util-actor": "^1.0.0-alpha.0",

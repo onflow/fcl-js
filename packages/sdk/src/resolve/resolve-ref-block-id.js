@@ -1,7 +1,7 @@
 import {isTransaction, Ok, interaction, pipe} from "../interaction/interaction.js"
 import * as ixModule from "../interaction/interaction.js"
 import {response} from "../response/response.js"
-import {config} from "../config"
+import {config} from "@onflow/config"
 import {decodeResponse} from "../decode/decode.js"
 import {getBlock} from "../build/build-get-block.js"
 import {invariant} from "@onflow/util-invariant"
