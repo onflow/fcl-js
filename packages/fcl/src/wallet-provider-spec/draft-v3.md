@@ -1,9 +1,9 @@
 ## Status
 
-- **Last Updated:** August 18th 2021
+- **Last Updated:** April 4th 2022
 - **Stable:** Yes
 - **Risk of Breaking Change:** Medium
-- **Compatibility:** `>= @onflow/fcl@0.0.77`
+- **Compatibility:** `>= @onflow/fcl@1.0.0-alpha.0`
 
 ## Definitions
 
@@ -15,9 +15,10 @@ Flow Client Library (FCL) approaches the idea of blockchain wallets on Flow in a
 
 FCL acts in many ways as a protocol to facilitate communication and configuration between the different parties involved in a blockchain application. An _Application_ can use FCL to _authenticate_ users, and request _authorizations_ for transactions, as well as mutate and query the _Blockchain_. An application using FCL offers it's _Users_ a way to connect and select any number of Wallet Providers and their Wallet Services. A selected _Wallet_ provides an Application's instance of FCL with configuration information about itself and its Wallet Services, allowing the _User_ and _Application_ to interact with them.
 
-In the following paragraphs we'll explore ways in which you can integrate with FCL by providing implementataions of various FCL services. 
+In the following paragraphs we'll explore ways in which you can integrate with FCL by providing implementataions of various FCL services.
 
 The following services will be covered:
+
 - Authentication (Authn) Service
 - Authorization (Authz) Service
 - User Signature Service
@@ -35,7 +36,7 @@ Other services can be a little more complex. For example, they might require a b
 Ultimately we want to do this back and forth via a secure back-channel (https requests to servers), **but in some situations that isn't a viable option, so there is also a front-channel option**.
 Where possible, you should aim to provide a back-channel support for services, and only fall back to a front-channel if absolutely necessary.
 
-Back-channel communications use `method: "HTTP/POST"`, while front-channel communications use `method: "IFRAME/RPC"`, `method: "POP/RPC"` or `method: "TAB/RPC`.
+Back-channel communications use `method: "HTTP/POST"`, while front-channel communications use `method: "IFRAME/RPC"`, `method: "POP/RPC"`, `method: "TAB/RPC` and `method: "EXT/RPC"`.
 
 | Service Method | Front  |  Back |
 |----------------|--------|-------|
@@ -43,48 +44,51 @@ Back-channel communications use `method: "HTTP/POST"`, while front-channel commu
 | IFRAME/RPC     |   ✅   |   ⛔   |
 | POP/RPC        |   ✅   |   ⛔   |
 | TAB/RPC        |   ✅   |   ⛔   |
+| EXT/RPC        |   ✅   |   ⛔   |
 
 It's important to note that regardless of the method of communication, the data that is sent back and forth between the parties involved is the same.
 
-### IFRAME/RPC (Front Channel)
+## IFRAME/RPC (Front Channel)
 
 `IFRAME/RPC` is the easiest to explain, so we will start with it:
 
 - An iframe is rendered (comes from the `endpoint` in the service).
-- The rendered frame says its ready `WalletUtils.sendMsgToFCL("FCL:VIEW:READY")`.
-- FCL will send the data to be dealt with: `WalletUtils.onMessageFromFCL("FCL:VIEW:READY:RESPONSE", ({ body, params, data }) => { ... })`
+- The rendered iframe adds a listener and sends the `"FCL:VIEW:READY"` message. This can be simplified `WalletUtils.ready(callback)`
+- FCL will send the data to be dealt with:
   - Where `body` is the stuff you care about, `params` and `data` are additional information you can provide in the service object.
-- The wallet sends back an Approved or Declined post message. (It will be a `f_type: "PollingResponse"`, which we will get to in a bit)
+- The wallet sends back an `"APPROVED"` or `"DECLINED"` post message. (It will be a `f_type: "PollingResponse"`, which we will get to in a bit). This can be simplified using `WalletUtils.approve` and `WalletUtils.decline`
   - If it's approved, the polling responses data field will need to be what FCL is expecting.
   - If it's declined, the polling responses reason field should say why it was declined.
+
+```javascript
+export const WalletUtils.approve = data => {
+  sendMsgToFCL("FCL:VIEW:RESPONSE", {
+    f_type: "PollingResponse",
+    f_vsn: "1.0.0",
+    status: "APPROVED",
+    reason: null,
+    data: data,
+  })
+}
+
+export const WalletUtils.decline = reason => {
+  sendMsgToFCL("FCL:VIEW:RESPONSE", {
+    f_type: "PollingResponse",
+    f_vsn: "1.0.0",
+    status: "DECLINED",
+    reason: reason,
+    data: null,
+  })
+}
+```
 
 ![IFRAME/RPC Diagram](https://raw.githubusercontent.com/onflow/flow-js-sdk/master/packages/fcl/assets/service-method-diagrams/iframe-rpc.png)
 
-### POP/RPC (Front Channel)
+### POP/RPC | TAB/RPC (Front Channel)
 
-`POP/RPC` works in an almost entirely similar way to `IFRAME/RPC`, except instead of rendering the `method` in an iframe, we render it in a popup. The same communication protocol between the rendered view and FCL applies:
-
-- A popup is rendered (comes from `endpoint` in the service).
-- The rendered popup says its ready `WalletUtils.sendMsgToFCL("FCL:VIEW:READY")`.
-- FCL will send the data to be dealt with `WalletUtils.onMsgFromFCL("FCL:VIEW:READY:RESPONSE", ({ body, params, data }) => { ... })`
-  - Where `body` is the stuff you care about, `params` and `data` are additional information you can provide in the service object.
-- The wallet sends back an Approved or Declined post message (It will be a `f_type: "PollingResponse"`, we will get to that in a bit)
-  - If it's approved, the polling responses data field will need to be what FCL is expecting.
-  - If it's declined, the polling responses reason field should say why it was declined.
+`POP/RPC` and `TAB/RPC` work in an almost entirely similar way to `IFRAME/RPC`, except instead of rendering the `method` in an iframe, we render it in a popup or new tab. The same communication protocol between the rendered view and FCL applies.
 
 ![POP/RPC Diagram](https://raw.githubusercontent.com/onflow/flow-js-sdk/master/packages/fcl/assets/service-method-diagrams/pop-rpc.png)
-
-### TAB/RPC (Front Channel)
-
-`TAB/RPC` works in an almost entirely similar way to `IFRAME/RPC` and `POP/RPC`, except instead of rendering the `method` in an iframe or a popup, we render it in a new tab. The same communication protocol between the rendered view and FCL applies:
-
-- A new tab is rendered (comes from `endpoint` in the service).
-- The rendered tab says its ready `WalletUtils.sendMsgToFCL("FCL:VIEW:READY")`.
-- FCL will send the data to be dealt with `WalletUtils.onMsgFromFCL("FCL:VIEW:READY:RESPONSE", ({ body, params, data }) => { ... })`
-  - Where `body` is the stuff you care about, `params` and `data` are additional information you can provide in the service object.
-- The wallet sends back an Approved or Declined post message (It will be a `f_type: "PollingResponse"`, we will get to that in a bit)
-  - If it's approved, the polling responses data field will need to be what FCL is expecting.
-  - If it's declined, the polling responses reason field should say why it was declined.
 
 ![TAB/RPC Diagram](https://raw.githubusercontent.com/onflow/flow-js-sdk/master/packages/fcl/assets/service-method-diagrams/tab-rpc.png)
 
@@ -103,6 +107,44 @@ There is an additional optional feature that `HTTP/POST` enables in the first `P
 This optional feature is the ability for FCL to render an iframe, popup or new tab, and it can be triggered by supplying a service `type: "VIEW/IFRAME"`, `type: "VIEW/POP"` or `type: "VIEW/TAB"` and the `endpoint` that the wallet wishes to render in the `local` field of the `PollingResponse`. This is a great way for a wallet provider to switch to a webpage if displaying a UI is necessary for the service it is performing.
 
 ![HTTP/POST Diagram](https://raw.githubusercontent.com/onflow/flow-js-sdk/master/packages/fcl/assets/service-method-diagrams/http-post.png)
+
+### EXT/RPC (Front Channel)
+
+`EXT/RPC` is used to enable and communicate between FCL and an installed (Chrome) browser extension. Usage of `EXT/RPC` is a bit more complex and relies on 3 key scripts to allow message passing between an installed extension and FCL. The global separation of context created by Chrome between the two and the availability of Chrome APIs within those contexts require these scripts to be setup in a particular sequence so that the communication channels needed by FCL's `EXT/RPC` service method will work.
+
+The following is an overview of these scripts and the functionality they need to support FCL:
+
+- `background.js`: Used to launch the extension with `chrome.windows.create` if selected by the user from Discovery or set directly via `fcl.config.discovery.wallet`
+- `content.js`: Used to proxy messages between the dapp to the extension via `chrome.runtime.sendMessage`.
+- `script.js`: Injected by `content.js` into the dapp's HTML page. It adds the extension authn service to `window.fcl_extensions` list on page load. This allows FCL to confirm installation and send extension details to Discovery or launch your wallet as the default wallet.
+
+An example and guide showing how to build an FCL compatible wallet extension on Flow can be found [here](https://github.com/onflow/wallet-extension-example).
+
+Once the extension is enabled, the same communication protocol between the rendered view and FCL applies:
+
+- A extension is rendered in a popup or new tab (comes from `endpoint` in the service).
+- The rendered popup says its ready by sending a `"FCL:VIEW:READY"` message to the content script in the specified tab.
+- FCL will send the service data via `window.postMessage()` including the `type`: `"FCL:VIEW:READY:RESPONSE"`, `body`, and optional `params` or `data`.
+- The wallet sends back an `"APPROVED"` or `"DECLINED"` response via `chrome.tabs.sendMessage()` (It will be a `f_type: "PollingResponse"`)
+  - If it's approved, the polling responses data field will need to be what FCL is expecting.
+  - If it's declined, the polling responses reason field should say why it was declined.
+
+```javascript
+  chrome.tabs.sendMessage(tabs[0].id, {
+    f_type: "PollingResponse",
+    f_vsn: "1.0.0",
+    status: "APPROVED",
+    reason: null,
+    data: {
+      f_type: "AuthnResponse",
+      f_vsn: "1.0.0",
+      addr: address,
+      services: services,
+    },
+  });
+```
+
+![EXT/RPC Diagram](https://raw.githubusercontent.com/onflow/flow-js-sdk/master/packages/fcl/assets/service-method-diagrams/ext-rpc.png)
 
 ### Polling Response
 
@@ -170,7 +212,7 @@ It is entirely acceptible for your service to immediately return an `"APPROVED"`
 }
 ```
 
-A `PollingResponse` can alternatively be constructed using `WalletUtils` when sending `APPROVED` or `DECLINED` responses.
+A `PollingResponse` can alternatively be constructed using `WalletUtils` when sending `"APPROVED"` or `"DECLINED"` responses.
 
 ```javascript
 import {WalletUtils} from "@onflow/fcl"
@@ -189,17 +231,17 @@ const reason = "User declined to authenticate."
 WalletUtils.decline(reason)
 ```
 
-#### data and params
+### `data` and `params`
 
 `data` and `params` are information that the wallet can provide in the service config that FCL will pass back to the service.
 - `params` will be added onto the `endpoint` as query params.
-- `data` will be included in the body of the `HTTP/POST` request or in the `FCL:VIEW:READY:RESPONSE` for a `IFRAME/RPC`, `POP/RPC` or `TAB/RPC`.
+- `data` will be included in the body of the `HTTP/POST` request or in the `FCL:VIEW:READY:RESPONSE` for a `IFRAME/RPC`, `POP/RPC`, `TAB/RPC` or `EXT/RPC`.
 
 # Authentication Service
 
 In the following examples, we'll walk you through the process of building an authentication service.
 
-In FCL, wallets are configured by passing in a wallet provider's authentication URL as the `discovery.wallet` config variable.
+In FCL, wallets are configured by passing in a wallet provider's authentication URL or extension endpoint as the `discovery.wallet` config variable.
 
 You will need to make and expose a webpage or API hosted at an authentication endpoint that FCL will use.
 
@@ -209,16 +251,16 @@ You will need to make and expose a webpage or API hosted at an authentication en
 import {config} from "@onflow/fcl"
 
 config({
-  "discovery.wallet": "your-url-that-fcl-will-use-for-authentication",
-  "discovery.wallet.method": "IFRAME/RPC" // Optional. Available methods are "IFRAME/RPC", "POP/RPC", "TAB/RPC" or "HTTP/POST", defaults to "IFRAME/RPC".
+  "discovery.wallet": "url-or-endpoint-fcl-will-use-for-authentication", // FCL Discovery endpoint, wallet provider's authentication URL or extension endpoint
+  "discovery.wallet.method": "IFRAME/RPC" // Optional. Available methods are "IFRAME/RPC", "POP/RPC", "TAB/RPC", "EXT/RPC" or "HTTP/POST", defaults to "IFRAME/RPC".
 })
 ```
 
-If the method specified is `IFRAME/RPC`, `POP/RPC` or `TAB/RPC`, then the URL specified as `discovery.wallet` will be rendered as a webpage. Otherwise, if the method specified is `HTTP/POST`, then the authentication process will happen over HTTP requests. (While authentication can be accomplished using any of those service methods, this example will use the `IFRAME/RPC` service method.)
+If the method specified is `IFRAME/RPC`, `POP/RPC` or `TAB/RPC`, then the URL specified as `discovery.wallet` will be rendered as a webpage. If the configured method is `EXT/RPC`, `discovery.wallet` should be set to the extension's `authn` `endpoint`. Otherwise, if the method specified is `HTTP/POST`, then the authentication process will happen over HTTP requests. (While authentication can be accomplished using any of those service methods, this example will use the `IFRAME/RPC` service method.)
 
-Once the Authentication webpage is rendered, or the API is ready, you then need to tell FCL that it is ready. You will do this by sending a message to FCL, and FCL will send back a message with some additional information that you can use about the application requesting authentication on behalf of the user.
+Once the Authentication webpage is rendered, the extension popup is enabled, or the API is ready, you then need to tell FCL that it is ready. You will do this by sending a message to FCL, and FCL will send back a message with some additional information that you can use about the application requesting authentication on behalf of the user.
 
-The following example is using the `IFRAME/RPC` method. Your authentication webpage will likely resemble the following code: 
+The following example is using the `IFRAME/RPC` method. Your authentication webpage will likely resemble the following code:
 
 ```javascript
 // IN WALLET AUTHENTICATION FRAME
@@ -242,7 +284,8 @@ function callback(data) {
     }
   })
   
-  // The same AuthnResponse can alternatively be sent using WalletUtils.approve (or WalletUtils.decline)
+  // Alternatively be sent using WalletUtils.approve (or WalletUtils.decline)
+  // which will wrap AuthnResponse in a PollingResponse
   WalletUtils.approve({
     f_type: "AuthnResponse",
     f_vsn: "1.0.0"
@@ -254,6 +297,9 @@ WalletUtils.onMsgFromFCL("FCL:VIEW:READY:RESPONSE", callback)
 
 // tell fcl the wallet is ready
 WalletUtils.sendMsgToFCL("FCL:VIEW:READY")
+
+// alternatively adds "FCL:VIEW:READY:RESPONSE" listener and sends "FCL:VIEW:READY"
+WalletUtils.ready(callback)
 ```
 
 During authentication, the application has a chance to request to you what they would like you to send back to them. These requests are included in the `FCL:VIEW:READY:RESPONSE` messsage sent to the wallet from FCL.
@@ -264,7 +310,7 @@ In the config they can also tell you a variety of things about them, such as the
 
 Your wallet having a visual distinction from the application, but still a seamless and connected experience is our goal here.
 
-Whether your authentication process happens using a webpage with the `IFRAME/RPC`, `POP/RPC` or `TAB/RPC` methods, or using a backchannel to an API with the `HTTP/POST` method, the handshake is the same. The same messages are sent in both methods, however the transport mechanism changes. For `IFRAME/RPC`, `POP/RPC` or `TAB/RPC` methods, the transport is `window.postMessage()`, with the `HTTP/POST` method, the tranport is HTTP post messages. 
+Whether your authentication process happens using a webpage with the `IFRAME/RPC`, `POP/RPC` or `TAB/RPC` methods, via an enabled extension using the `EXT/RPC` method, or using a backchannel to an API with the `HTTP/POST` method, the handshake is the same. The same messages are sent in all methods, however the transport mechanism changes. For `IFRAME/RPC`, `POP/RPC`, `TAB/RPC` or `EXT/RPC` methods, the transport is `window.postMessage()`, with the `HTTP/POST` method, the tranport is HTTP post messages.
 
 As always, you must never trust anything you receive from an application. Always do your due-dilligence and be alert as you are the users first line of defense against potentially malicious applications.
 
@@ -386,7 +432,7 @@ WalletUtils.approve({
 })
 ```
 
-### Stoping an Authentication Process.
+### Stoping an Authentication Process
 
 From any frame, you can send a `FCL:VIEW:CLOSE` post message to FCL, which will halt FCL's current routine and close the frame.
 
@@ -398,7 +444,7 @@ WalletUtils.sendMsgToFCL("FCL:VIEW:CLOSE")
 
 # Authorization Service
 
-Authorization services are depicted with with a `type: "authz"`, and a `method` of either `HTTP/POST`, `IFRAME/RPC`, `POP/RPC` or `TAB/RPC`.
+Authorization services are depicted with with a `type: "authz"`, and a `method` of either `HTTP/POST`, `IFRAME/RPC`, `POP/RPC`, `TAB/RPC` or `EXT/RPC`.
 They are expected to eventually return a `f_type: "CompositeSignature"`.
 
 An authorization service is expected to know the Account and the Key that will be used to sign the transaction at the time the service is sent to FCL (during authentication).
@@ -466,7 +512,7 @@ WalletUtils.CompositeSignature(addr: String, keyId: Number, signature: Hex)
 
 # User Signature Service
 
-User Signature services are depicted with a `type: "user-signature"` and a `method` of either `HTTP/POST`, `IFRAME/RPC` or `POP/RPC`.
+User Signature services are depicted with a `type: "user-signature"` and a `method` of either `HTTP/POST`, `IFRAME/RPC`, `POP/RPC`, `TAB/RPC` or `EXT/RPC`.
 They are expected to eventually return an array of `f_type: "CompositeSignature"`.
 
 The User Signature service is a stock/standard service.
@@ -531,7 +577,7 @@ The eventual response back from the user signature service should resolve to som
 
 This is a strange one, but extremely powerful. This service should be used when a wallet is responsible for an account that's signing as multiple roles of a transaction, and wants the ability to change the accounts on a per role basis.
 
-Pre Authz Services are depicted with a `type: "pre-authz"` and a `method` of either `HTTP/POST`, `IFRAME/RPC` or `POP/RPC`.
+Pre Authz Services are depicted with a `type: "pre-authz"` and a `method` of either `HTTP/POST`, `IFRAME/RPC`, `POP/RPC`, `TAB/RPC` or `EXT/RPC`.
 They are expected to eventually return a `f_type: "PreAuthzResponse"`.
 
 The Pre Authz Service is a stock/standard service.
@@ -592,9 +638,10 @@ The eventual response back from the pre-authz service should resolve to somethin
 ```
 
 # Authentication Refresh Service
+
 Since synchronization of a user's session is important to provide a seamless user experience when using an app and transacting with the Flow Blockchain, a way to confirm, extend, and refresh a user session can be provided by the wallet.
 
-Authentication Refresh Services should include a `type: "authn-refresh"`, `endpoint`, and supported `method` (`HTTP/POST`, `IFRAME/RPC`, `POP/RPC`, etc).
+Authentication Refresh Services should include a `type: "authn-refresh"`, `endpoint`, and supported `method` (`HTTP/POST`, `IFRAME/RPC`, `POP/RPC`, or `EXT/RPC`).
 
 FCL will use the `endpoint` and service `method` provided to request updated authentication data.
 The `authn-refresh` service should refresh the user's session if neccessary and return updated authentication configuration and user session data.
@@ -617,13 +664,7 @@ The Authentication Refresh Service is a stock/standard service.
   }
 ```
 
-#### data and params
-
-`data` and `params` are information that the wallet can provide in the service config that FCL will pass back to the service.
-- `params` will be added onto the `endpoint` as query params.
-- `data` will be included in the body of the `HTTP/POST` request or in the `FCL:VIEW:READY:RESPONSE` for a `IFRAME/RPC`, `POP/RPC` or `TAB/RPC`.
-
-This data should include all the wallet needs to identify and re-authenticate the user if necessary.
+The provided `data` and `params` should include all the wallet needs to identify and re-authenticate the user if necessary.
 
 The eventual response back from the `authn-refresh` service should resolve to an `AuthnResponse` and look something like this:
 
@@ -678,4 +719,3 @@ FCL employs the following data structures, of which you have previously seen in 
 - [frame](https://github.com/onflow/flow-js-sdk/blob/master/packages/fcl/src/current-user/normalize/frame.js)
 - [back-channel-rpc](https://github.com/onflow/flow-js-sdk/blob/master/packages/fcl/src/current-user/normalize/back-channel-rpc.js)
 - [open-id](https://github.com/onflow/flow-js-sdk/blob/master/packages/fcl/src/current-user/normalize/open-id.js)
-  
