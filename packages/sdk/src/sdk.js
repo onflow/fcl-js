@@ -23,7 +23,6 @@ export {
   isGetTransactionStatus,
   isGetAccount,
   isGetEvents,
-  isGetLatestBlock,
   isGetBlockById,
   isGetBlockByHeight,
   isPing,
@@ -37,7 +36,6 @@ export {template as cadence} from "@onflow/util-template"
 export {template as cdc} from "@onflow/util-template"
 
 // Helpers
-export {latestBlock} from "./latest-block/latest-block.js"
 export {account} from "./account/account.js"
 export {block} from "./block/block.js"
 

@@ -19,7 +19,7 @@ interfaceContract("export", root)`
   build resolve send
   decode
   isOk isBad why pipe
-  getAccount getEvents getLatestBlock getTransactionStatus
+  getAccount getEvents getTransactionStatus
   authorizations authorization
   params param
   proposer payer
@@ -44,7 +44,7 @@ describe("consume", () => {
     interaction
     pipe Ok isOk isBad why
     put get update
-    makeGetAccount makeGetEvents makeGetLatestBlock
+    makeGetAccount makeGetEvents
     makeGetTransactionStatus makePing
     makeScript makeTransaction
     isTransaction isScript
