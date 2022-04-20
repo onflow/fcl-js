@@ -29,6 +29,7 @@ export async function sendGetTransactionStatus(ix, context = {}, opts = {}) {
   let ret = context.response()
   ret.tag = ix.tag
   ret.transactionStatus = {
+    blockId: res.block_id,
     status: STATUS_MAP[res.status.toUpperCase()] || "", 
     statusString: res.status.toUpperCase(), 
     statusCode: 0, // TODO: Use field when it becomes available on HTTP Access API

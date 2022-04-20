@@ -10,6 +10,7 @@ describe("Get Transaction Status", () => {
     const httpRequestMock = jest.fn();
 
     const returnedTransactionStatus = {
+        blockId: "abc123",
         status: "Pending",
         error_message: "No Error",
         computation_used: "100",
@@ -59,6 +60,7 @@ describe("Get Transaction Status", () => {
     })
 
     expect(response.transactionStatus).toStrictEqual({
+        blockId: "abc123",
         status: 1,
         statusString: "PENDING",
         statusCode: 0,

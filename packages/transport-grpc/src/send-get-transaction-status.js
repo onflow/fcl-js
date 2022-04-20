@@ -33,6 +33,7 @@ export async function sendGetTransactionStatus(ix, context = {}, opts = {}) {
   let ret = context.response()
   ret.tag = ix.tag
   ret.transactionStatus = {
+    blockId: null,
     status: res.getStatus(),
     statusString: STATUS_MAP[res.getStatus()],
     statusCode: res.getStatusCode(),
