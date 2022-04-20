@@ -35,7 +35,7 @@ npm install --save @onflow/sdk
 > The response is a monomorphic data structure. It has fields for each of the possible data that can be returned from the AccessAPI. The response tag corresponds to the tag of the interaction that generated the response.
 
 - **tag** _(all)_ `int` -- a marker that represents the type of the response. See @onflow/interaction for information on the possible tag values.
-- **transaction** _GetTransactionStatus_ -- The response from a GetTransactionStatus requrest.
+- **transaction** _GetTransaction_ -- The response from a GetTransaction request.
   - **script** `string` -- The Cadence code used to execute this transaction
   - **args** `Array<string>` -- The arguments passed in to the transaction
   - **referenceBlockId** `string` -- The reference block id for this transaction
@@ -55,7 +55,8 @@ npm install --save @onflow/sdk
     - **sequenceNumber** `string` -- Sequence number of the key used to perform this signature
     - **keyId** `number` -- ID of the key in the account used to perform this signature
     - **signature** `string`-- The signature
-- **transactionStatus** _GetTransactionStatus_ -- The response from a GetTransactionStatus requrest.
+- **transactionStatus** _GetTransactionStatus_ -- The response from a GetTransactionStatus request.
+  - **blockId** `string` -- The ID of the Block the transaction is included in.
   - **status** `int` -- The status of the transaction
   - **statusCode** `int` -- The status code of the transaction
   - **errorMessage** `string` -- The error message of the transaction
