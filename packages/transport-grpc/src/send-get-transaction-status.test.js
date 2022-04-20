@@ -32,6 +32,7 @@ describe("Get Transaction Status", () => {
     const unaryMock = jest.fn();
 
     const returnedTransactionStatus = {
+        blockId: null,
         status: 2,
         statusString: "FINALIZED",
         statusCode: 0,
