@@ -1,6 +1,6 @@
 import {interaction, pipe, put, makeScript} from "../interaction/interaction.js"
 import {resolveCadence} from "./resolve-cadence.js"
-import {config} from "../sdk.js"
+import {config} from "@onflow/config"
 
 const log = msg => ix => (console.log(msg, ix), ix)
 

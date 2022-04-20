@@ -1,4 +1,4 @@
-import {config} from "@onflow/sdk"
+import {config} from "@onflow/config"
 
 export const LEVELS = Object.freeze({
   "debug": 5,

@@ -80,8 +80,7 @@ export {resolveValidators} from "./resolve/resolve-validators.js"
 export {resolveRefBlockId} from "./resolve/resolve-ref-block-id.js"
 export {resolveVoucherIntercept} from "./resolve/resolve-voucher-intercept.js"
 
-// Config
-export {config} from "./config"
+export {config} from "@onflow/config"
 
 // Deprecated
 export const params = params =>

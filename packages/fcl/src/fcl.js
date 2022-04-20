@@ -34,7 +34,7 @@ import * as AppUtils from "./app-utils"
 export {AppUtils}
 
 export {TestUtils} from "@onflow/sdk"
-export {config} from "@onflow/sdk"
+export {config} from "@onflow/config"
 export {send} from "@onflow/sdk"
 export {decode} from "@onflow/sdk"
 export {account} from "@onflow/sdk"

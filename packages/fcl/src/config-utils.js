@@ -1,4 +1,4 @@
-import {config} from "@onflow/sdk"
+import {config} from "@onflow/config"
 import {VERSION} from "./VERSION"
 
 const isServerSide = () => typeof window === "undefined"

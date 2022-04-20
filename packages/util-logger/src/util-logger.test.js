@@ -1,4 +1,4 @@
-import {config} from "@onflow/sdk"
+import {config} from "@onflow/config"
 import * as logger from "./util-logger"
 
 describe("logger.LEVELS", () => {

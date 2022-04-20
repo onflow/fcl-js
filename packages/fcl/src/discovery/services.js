@@ -1,4 +1,4 @@
-import {config} from "@onflow/sdk"
+import {config} from "@onflow/config"
 import {invariant} from "@onflow/util-invariant"
 import {VERSION} from "../VERSION"
 
