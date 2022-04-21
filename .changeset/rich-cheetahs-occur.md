@@ -5,4 +5,4 @@
 "@onflow/transport-http": patch
 ---
 
-Remove deprecated block methods and interaction types
+**BREAKING** Remove deprecated block builders, interaction types and send methods.
