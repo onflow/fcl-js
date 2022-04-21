@@ -1,10 +1,3 @@
-## Unreleased
-
-- 2022-04-05 -- **BREAKING** [@JeffreyDoyle](https://github.com/JeffreyDoyle): Remove latestBlock method
-- 2022-04-05 -- **BREAKING** [@JeffreyDoyle](https://github.com/JeffreyDoyle): Remove getLatestBlock builder
-- 2022-04-05 -- **BREAKING** [@JeffreyDoyle](https://github.com/JeffreyDoyle): Remove getBlockById builder
-- 2022-04-05 -- **BREAKING** [@JeffreyDoyle](https://github.com/JeffreyDoyle): Remove getBlockByHeight builder
-
 ## 1.0.0-alpha.1
 
 ### Minor Changes

@@ -6,7 +6,6 @@
   - `block.blockSeals.executionReceiptSignatures`
   - `block.blockSeals.resultApprovalSignatures`
   - `block.signatures`
-- 2022-04-05 -- **BREAKING** [@JeffreyDoyle](https://github.com/JeffreyDoyle): Remove getLatestBlock send method
 
 ## 1.0.0-alpha.0
 
