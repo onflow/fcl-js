@@ -4,8 +4,6 @@
 
 - 21a2dda: Import Buffer from rlp in encode-account-proof
 
-## 1.0.0-alpha.0
-
 ### Major Changes
 
 - Release 1.0.0 alpha
