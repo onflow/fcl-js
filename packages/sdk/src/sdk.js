@@ -23,8 +23,6 @@ export {
   isGetTransactionStatus,
   isGetAccount,
   isGetEvents,
-  isGetBlockById,
-  isGetBlockByHeight,
   isPing,
   isGetBlock,
   isGetBlockHeader,
