@@ -5,16 +5,15 @@ class HTTPRequestError extends Error {
   constructor({transport, error, hostname, path, port, method, requestBody, responseBody, responseStatusText, reqOn}) {
     const msg = `
       HTTP Request Error: An error occurred when interacting with the Access API.
-      transport=${transport}
-      error=${error}
-      hostname=${hostname}
-      path=${path}
-      port=${port}
-      method=${method}
-      requestBody=${JSON.stringify(requestBody)}
-      responseBody=${responseBody}
-      responseStatusText=${responseStatusText}
-      reqOn=${reqOn}
+      ${transport ? `transport=${transport}` : ""}
+      ${error ? `error=${error}` : ""}
+      ${hostname ? `hostname=${hostname}` : ""}
+      ${path ? `path=${path}` : ""}
+      ${method ? `method=${method}` : ""}
+      ${requestBody ? `requestBody=${JSON.stringify(requestBody)}` : ""}
+      ${responseBody ? `responseBody=${responseBody}` : ""}
+      ${responseStatusText ? `responseStatusText=${responseStatusText}` : ""}
+      ${reqOn ? `reqOn=${reqOn}` : ""}
     `
     super(msg)
     this.name = "HTTP Request Error"
@@ -62,24 +61,29 @@ export async function httpRequest({
         method: method,
         body: body ? JSON.stringify(body) : undefined,
       }
-    ).then(res => {
+    ).then(async res => {
       if (res.ok) {
         return res.json()
       }
+      let responseJSON = JSON.stringify(await res.json())
       throw new HTTPRequestError({
         transport: "FetchTransport",
-        error: e,
+        error: responseJSON?.message,
         hostname,
         path,
         method,
         requestBody: body,
-        responseBody: res.json(),
+        responseBody: responseJSON,
         responseStatusText: res.statusText
       })
     }).catch(e => {
+      if (e instanceof HTTPRequestError) {
+        throw e
+        return
+      }
       throw new HTTPRequestError({
         transport: "FetchTransport",
-        error: e,
+        error: e?.message,
         hostname,
         path,
         method,
