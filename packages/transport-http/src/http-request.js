@@ -65,7 +65,7 @@ export async function httpRequest({
       if (res.ok) {
         return res.json()
       }
-      let responseJSON = JSON.stringify(await res.json())
+      const responseJSON = JSON.stringify(await res.json())
       throw new HTTPRequestError({
         transport: "FetchTransport",
         error: responseJSON?.message,
