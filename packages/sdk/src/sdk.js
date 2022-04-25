@@ -23,9 +23,6 @@ export {
   isGetTransactionStatus,
   isGetAccount,
   isGetEvents,
-  isGetLatestBlock,
-  isGetBlockById,
-  isGetBlockByHeight,
   isPing,
   isGetBlock,
   isGetBlockHeader,
@@ -37,7 +34,6 @@ export {template as cadence} from "@onflow/util-template"
 export {template as cdc} from "@onflow/util-template"
 
 // Helpers
-export {latestBlock} from "./latest-block/latest-block.js"
 export {account} from "./account/account.js"
 export {block} from "./block/block.js"
 
@@ -51,9 +47,6 @@ export {getEventsAtBlockHeightRange} from "./build/build-get-events-at-block-hei
 export {getEventsAtBlockIds} from "./build/build-get-events-at-block-ids"
 export {getBlock} from "./build/build-get-block.js"
 export {getBlockHeader} from "./build/build-get-block-header.js"
-export {getLatestBlock} from "./build/build-get-latest-block.js"
-export {getBlockById} from "./build/build-get-block-by-id.js"
-export {getBlockByHeight} from "./build/build-get-block-by-height"
 export {getCollection} from "./build/build-get-collection"
 export {getTransactionStatus} from "./build/build-get-transaction-status.js"
 export {getTransaction} from "./build/build-get-transaction.js"
