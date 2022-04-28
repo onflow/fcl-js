@@ -1,6 +1,7 @@
 import "../default-config"
 import * as t from "@onflow/types"
-import {account, arg, config} from "@onflow/sdk"
+import {account, arg} from "@onflow/sdk"
+import {config} from "@onflow/config"
 import {spawn, send, INIT, SUBSCRIBE, UNSUBSCRIBE} from "@onflow/util-actor"
 import {withPrefix, sansPrefix} from "@onflow/util-address"
 import {invariant} from "@onflow/util-invariant"
