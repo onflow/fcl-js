@@ -1,2 +1,1 @@
-export {verifyAccountProof} from "./verify-account-proof.js"
-export {verifyUserSignatures} from "./verify-user-signatures.js"
+export {verifyAccountProof, verifyUserSignatures} from "./verify-signatures.js"

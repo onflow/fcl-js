@@ -1,4 +1,4 @@
-import {verifyUserSignatures, validateArgs} from "../verify-user-signatures"
+import {verifyUserSignatures, validateArgs} from "../verify-signatures"
 
 const message = Buffer.from("FOO").toString("hex")
 
@@ -29,7 +29,7 @@ const compSigThree = {
 describe("verifyUserSignatures", () => {
   it("should return true if valid args", async () => {
     const compSigs = [compSigOne, compSigTwo]
-    const res = await validateArgs(message, compSigs)
+    const res = await validateArgs({message, compSigs})
     expect.assertions(1)
     expect(res).toEqual(true)
   })
