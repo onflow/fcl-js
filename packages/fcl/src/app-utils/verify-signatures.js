@@ -2,6 +2,7 @@ import {config} from "@onflow/config"
 import {invariant} from "@onflow/util-invariant"
 import {query} from "../exec/query"
 import {encodeAccountProof} from "../wallet-utils"
+import {sansPrefix} from "@onflow/util-address"
 
 const ACCOUNT_PROOF = "ACCOUNT_PROOF"
 const USER_SIGNATURE = "USER_SIGNATURE"
@@ -13,7 +14,11 @@ export const validateArgs = args => {
       typeof appIdentifier === "string",
       "appIdentifier must be a string"
     )
-    invariant(/^[0-9a-f]+$/i.test(nonce), "Nonce must be a hex string")
+    invariant(
+      typeof address === "string" && sansPrefix(address).length === 16,
+      "address must be a valid address"
+    )
+    invariant(/^[0-9a-f]+$/i.test(nonce), "nonce must be a hex string")
     invariant(
       Array.isArray(signatures) &&
         signatures.every((sig, i, arr) => sig.f_type === "CompositeSignature"),
@@ -44,11 +49,12 @@ export const validateArgs = args => {
 }
 
 const getVerifySignaturesScript = async (sig, opts) => {
-  let contractAddress
   const verifyFunction =
     sig === "ACCOUNT_PROOF"
       ? "verifyAccountProofSignatures"
       : "verifyUserSignatures"
+
+  let fclCryptoContract
   const network = await config.first(["env", "network"])
   invariant(
     network,
@@ -58,23 +64,23 @@ const getVerifySignaturesScript = async (sig, opts) => {
   switch (network) {
     case "local":
       invariant(
-        opts.contractAddress,
-        `In ${verifyFunction}: opts.contractAddress required for FCLCrypto contract on ${network} env`
+        opts.fclCryptoContract,
+        `In ${verifyFunction}: opts.fclCryptoContract address required for local network`
       )
-      contractAddress = opts.contractAddress
+      fclCryptoContract = opts.fclCryptoContract
       break
     case "testnet":
-      contractAddress = "0x74daa6f9c7ef24b1"
+      fclCryptoContract = "0x74daa6f9c7ef24b1"
       break
     case "mainnet":
-      contractAddress = "0xb4b82a1c9d21d284"
+      fclCryptoContract = "0xb4b82a1c9d21d284"
       break
     default:
-      contractAddress = "0xb4b82a1c9d21d284"
+      fclCryptoContract = "0x74daa6f9c7ef24b1"
   }
 
   return `
-      import FCLCrypto from ${contractAddress}
+      import FCLCrypto from ${fclCryptoContract}
 
       pub fun main(
           address: Address, 
@@ -96,7 +102,7 @@ const getVerifySignaturesScript = async (sig, opts) => {
  * @param {string} accountProofData.nonce - A random string in hexadecimal format (minimum 32 bytes in total, i.e 64 hex characters)
  * @param {Object[]} accountProofData.signatures - An array of composite signatures to verify
  * @param {Object} [opts={}] - Options object
- * @param {string} opts.contractAddress - An optional Flow account address where the FCLCrypto contract is deployed
+ * @param {string} opts.fclCryptoContract - An optional override Flow account address where the FCLCrypto contract is deployed
  * @return {bool}
  *
  * @example
@@ -110,7 +116,7 @@ const getVerifySignaturesScript = async (sig, opts) => {
  *  const isValid = await fcl.AppUtils.verifyAccountProof(
  *    "AwesomeAppId",
  *    accountProofData,
- *    {contractAddress}
+ *    {fclCryptoContract}
  *  )
  */
 
@@ -151,7 +157,7 @@ export async function verifyAccountProof(
  * @param {number} compSigs[].keyId - The account keyId
  * @param {string} compSigs[].signature - The signature to verify
  * @param {Object} [opts={}] - Options object
- * @param {string} opts.contractAddress - An optional Flow account address where the FCLCrypto contract is deployed
+ * @param {string} opts.fclCryptoContract - An optional override of Flow account address where the FCLCrypto contract is deployed
  * @return {bool}
  *
  * @example
@@ -159,7 +165,7 @@ export async function verifyAccountProof(
  *  const isValid = await fcl.AppUtils.verifyUserSignatures(
  *    Buffer.from('FOO').toString("hex"),
  *    [{f_type: "CompositeSignature", f_vsn: "1.0.0", addr: "0x123", keyId: 0, signature: "abc123"}],
- *    {contractAddress}
+ *    {fclCryptoContract}
  *  )
  */
 export async function verifyUserSignatures(message, compSigs, opts = {}) {
