@@ -72,7 +72,13 @@
       - [Returns](#returns-3)
       - [Usage](#usage-9)
       - [Examples](#examples-4)
-  - [`verifyUserSignatures`](#verifyusersignatures)
+- [AppUtils](#apputils)
+  - [`AppUtils.verifyUserSignatures`](#verifyusersignatures)
+    - [Arguments](#arguments-2)
+      - [Returns](#returns-4)
+      - [Usage](#usage-10)
+      - [Examples](#examples-5)
+  - [`AppUtils.verifyAccountProof`](#verifyaccountproof)
     - [Arguments](#arguments-2)
       - [Returns](#returns-4)
       - [Usage](#usage-10)
@@ -794,7 +800,14 @@ const txId = await fcl.mutate({
 
 Use `fcl.AppUtils.verifyUserSignatures`
 
-A method allowing applications to cryptographically verify the ownership of a Flow account by verifying a message was signed by a user's private key/s. This is typically used with the response from `currentUser.signUserMessage`.
+## AppUtils
+
+### `AppUtils.verifyUserSignatures`
+A method allowing applications to cryptographically verify a message was signed by a user's private key/s. This is typically used with the response from `currentUser.signUserMessage`.
+
+#### Note
+
+⚠️ `fcl.config.network`, `fcl.config.env` or options override is required to use this api. See [FCL Configuration](#configuration).
 
 ### Arguments
 
@@ -825,7 +838,52 @@ const verifySignatures = async (message, compositeSignatures) => {
 
 #### Examples
 
-Use cases include cryptographic login, message validation, verifiable credentials, and others.
+- [fcl-next-harness](https://github.com/onflow/fcl-next-harness)
+
+---
+## `AppUtils.verifyAccountProof`
+
+A method allowing applications to cryptographically prove that a user controls an on-chain account. During user authentication, some FCL compatible wallets will choose to support the FCL `account-proof` service. If a wallet chooses to support this service, and the user approves the signing of message data, they will return `account-proof` data and a signature(s) that can be used to prove a user controls an on-chain account. 
+See [proving-authentication](https://github.com/onflow/fcl-js/blob/master/docs/reference/proving-authentication.mdx) documentaion for more details.
+
+⚠️ `fcl.config.network`, `fcl.config.env` or options override is required to use this api. See [FCL Configuration](#configuration).
+
+### Arguments
+
+| Name                  | Type                  | Description                       |
+| --------------------- | --------------------- | --------------------------------- |
+| `appIdentifier`       | string **(required)** | A hexadecimal string              |
+| `accountProofData`    | Object **(required)** | Object with properties: <br >`address`  {string} - A Flow account address. <br > `nonce` {string} - A random string in hexadecimal format (minimum 32 bytes in total, i.e 64 hex characters) <br > `signatures` {Object[ ]} - An array of composite signatures to verify                                                                              |
+| `opts`                | Object **(optional)** | `opts.fclCryptoContract` can be provided to overide FCLCryptoContract address for local development                 |
+
+#### Returns
+
+| Type    | Description                  |
+| ------- | ---------------------------- |
+| Boolean | `true` if verifed or `false` |
+
+#### Usage
+
+```javascript
+import * as fcl from "@onflow/fcl"
+
+const accountProofData = {
+  address: "0x123",
+  nonce: "F0123"
+  signatures: [{f_type: "CompositeSignature", f_vsn: "1.0.0", addr: "0x123", keyId: 0, signature: "abc123"}],
+}
+
+const isValid = await fcl.AppUtils.verifyAccountProof(
+  "AwesomeAppId",
+  accountProofData,
+  {fclCryptoContract}
+)
+
+```
+
+#### Examples
+
+- [fcl-next-harness](https://github.com/onflow/fcl-next-harness)
 
 ---
 
