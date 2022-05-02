@@ -43,10 +43,16 @@ export const send = (addr, tag, data, opts = {}) =>
     }
 
     try {
-      root.FCL_REGISTRY[addr].mailbox.deliver(payload)
+      root.FCL_REGISTRY[addr] &&
+        root.FCL_REGISTRY[addr].mailbox.deliver(payload)
       if (!expectReply) reply(true)
     } catch (error) {
-      console.error("FCL.Actor -- Could Not Deliver Message", payload, error)
+      console.error(
+        "FCL.Actor -- Could Not Deliver Message",
+        payload,
+        root.FCL_REGISTRY[addr],
+        error
+      )
     }
   })
 
