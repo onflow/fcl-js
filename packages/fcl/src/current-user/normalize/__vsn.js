@@ -8,7 +8,7 @@ export const IDENTITY_PRAGMA = {
   f_vsn: "1.0.0",
 }
 
-export const PROVIDER_PRAGME = {
+export const PROVIDER_PRAGMA = {
   f_type: "Provider",
   f_vsn: "1.0.0",
 }
@@ -28,7 +28,7 @@ export const COMPOSITE_SIGNATURE_PRAGMA = {
   f_vsn: "1.0.0",
 }
 
-export const OPEN_ID_PRAGME = {
+export const OPEN_ID_PRAGMA = {
   f_type: "OpenId",
   f_vsn: "1.0.0",
 }

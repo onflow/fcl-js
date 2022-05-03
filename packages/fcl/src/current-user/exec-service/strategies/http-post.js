@@ -1,36 +1,51 @@
 import {fetchService} from "./utils/fetch-service"
-import {serviceEndpoint} from "./utils/service-endpoint"
 import {normalizePollingResponse} from "../../normalize/polling-response"
-import {normalizeCompositeSignature} from "../../normalize/composite-signature"
-import {frame} from "./utils/frame"
+import {normalizeLocalView} from "../../normalize/local-view"
 import {poll} from "./utils/poll"
+import {execLocal} from "../exec-local"
+import {VERSION} from "../../../VERSION"
 
-export async function execHttpPost(service, signable) {
-  signable.data = service.data
+export async function execHttpPost(service, signable, opts, config) {
   const resp = await fetchService(service, {
-    data: signable,
+    data: {
+      fclVersion: VERSION,
+      service: {
+        params: service.params,
+        data: service.data,
+        type: service.type,
+      },
+      config,
+      ...signable,
+    },
   }).then(normalizePollingResponse)
 
   if (resp.status === "APPROVED") {
     return resp.data
   } else if (resp.status === "DECLINED") {
     throw new Error(`Declined: ${resp.reason || "No reason supplied."}`)
+  } else if (resp.status === "REDIRECT") {
+    return resp
   } else if (resp.status === "PENDING") {
     var canContinue = true
-    const {close: closeFrame} = frame(resp.local, {
-      onClose() {
+    const [_, unmount] = await execLocal(normalizeLocalView(resp.local))
+
+    const close = () => {
+      try {
+        unmount()
         canContinue = false
-      },
-    })
+      } catch (error) {
+        console.error("Frame Close Error", error)
+      }
+    }
 
     return poll(resp.updates, () => canContinue)
-      .then(compositeSignature => {
-        closeFrame()
-        return normalizeCompositeSignature(compositeSignature)
+      .then(serviceResponse => {
+        close()
+        return serviceResponse
       })
       .catch(error => {
         console.error(error)
-        closeFrame()
+        close()
         throw error
       })
   } else {

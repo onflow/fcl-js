@@ -1,5 +1,7 @@
 import {config} from "@onflow/config"
+import {DISCOVERY_METHOD, STORAGE_DEFAULT} from "./config-utils"
 
-config()
-  .put("accessNode.api", "http://localhost:8080")
-  .put("challenge.handshake", "http://localhost:8700/authenticate")
+config({
+  "discovery.wallet.method.default": DISCOVERY_METHOD,
+  "fcl.storage.default": STORAGE_DEFAULT,
+})

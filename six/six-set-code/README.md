@@ -4,13 +4,13 @@ Stored Interaction for setting an Accounts Code on Flow
 
 # Status
 
-- **Last Updated:** August 31 2020
+- **Last Updated:** April 28 2021
 - **Stable:** No
 - **Risk of Breaking Change:** Very High
 
 Known Upcoming Changes:
 
-- Potential changes to all aspects of Stored Interactions
+To use this Stored Interaction, you must configure FCL with certain account addresses which contain contracts imported by this Stored Interaction.
 
 # Install
 

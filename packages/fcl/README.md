@@ -1,10 +1,8 @@
----
-title: FCL
-description: Making secure web applications powered by the Flow Blockchain
----
+# FCL: Flow Client Library
+### Making secure web applications powered by the Flow Blockchain
 
 Flow Client Library (FCL) enables applications to easily integrate with all FCL-compatible wallets and
-other services (e.g. (Comming Soon) profiles, private information, notifications). This offers developers a strong
+other services (e.g. (Coming Soon) profiles, private information, notifications). This offers developers a strong
 foundation to compose their apps with existing building blocks. It’s currently supported for browser
 applications, and will be extended to other platforms.
 
@@ -37,6 +35,6 @@ npm install --save @onflow/fcl @onflow/types
 
 ## Getting Started
 
-For a detailed guid explaining how to use `@onflow/fcl` to interact with Flow please see the [Flow App Quick Start](https://docs.onflow.org/flow-js-sdk/flow-app-quickstart)
+For a detailed guid explaining how to use `@onflow/fcl` to interact with Flow please see the [Flow App Quick Start](https://docs.onflow.org/fcl/flow-app-quickstart/)
 
 Having trouble with something? Reach out to us on [Discord](https://discord.gg/k6cZ7QC), we are more than happy to help.

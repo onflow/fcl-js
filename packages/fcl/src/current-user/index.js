@@ -1,12 +1,15 @@
 import "../default-config"
-import {account} from "@onflow/sdk"
+import * as t from "@onflow/types"
+import {account, arg} from "@onflow/sdk"
 import {config} from "@onflow/config"
 import {spawn, send, INIT, SUBSCRIBE, UNSUBSCRIBE} from "@onflow/util-actor"
-import {sansPrefix} from "@onflow/util-address"
+import {withPrefix, sansPrefix} from "@onflow/util-address"
+import {invariant} from "@onflow/util-invariant"
 import {buildUser} from "./build-user"
 import {serviceOfType} from "./service-of-type"
 import {execService} from "./exec-service"
-import {frame} from "./exec-service/strategies/utils/frame"
+import {normalizeCompositeSignature} from "./normalize/composite-signature"
+import {getDiscoveryService} from "../config-utils"
 
 const NAME = "CURRENT_USER"
 const UPDATED = "CURRENT_USER/UPDATED"
@@ -24,31 +27,35 @@ const DATA = `{
   "services":[]
 }`
 
-const coldStorage = {
-  get: async () => {
-    const fallback = JSON.parse(DATA)
-    const stored = JSON.parse(sessionStorage.getItem(NAME))
-    if (stored != null && fallback["f_vsn"] !== stored["f_vsn"]) {
-      sessionStorage.removeItem(NAME)
-      return fallback
-    }
-    return stored || fallback
-  },
-  put: async data => {
-    sessionStorage.setItem(NAME, JSON.stringify(data))
-    return data
-  },
-}
-
-const canColdStorage = () => {
-  return config().get("persistSession", true)
+const getStoredUser = async storage => {
+  const fallback = JSON.parse(DATA)
+  const stored = await storage.get(NAME)
+  if (stored != null && fallback["f_vsn"] !== stored["f_vsn"]) {
+    storage.removeItem(NAME)
+    return fallback
+  }
+  return stored || fallback
 }
 
 const HANDLERS = {
   [INIT]: async ctx => {
+    if (typeof window === "undefined") {
+      console.warn(
+        `
+        %cFCL Warning
+        ============================
+        "currentUser" is only available in the browser.
+        For more info, please see the docs: https://docs.onflow.org/fcl/
+        ============================
+        `,
+        "font-weight:bold;font-family:monospace;"
+      )
+    }
+
     ctx.merge(JSON.parse(DATA))
-    if (await canColdStorage()) {
-      const user = await coldStorage.get()
+    const storage = await config.first(["fcl.storage", "fcl.storage.default"])
+    if (storage.can) {
+      const user = await getStoredUser(storage)
       if (notExpired(user)) ctx.merge(user)
     }
   },
@@ -64,17 +71,18 @@ const HANDLERS = {
   },
   [SET_CURRENT_USER]: async (ctx, letter, data) => {
     ctx.merge(data)
-    if (await canColdStorage()) coldStorage.put(ctx.all())
+    const storage = await config.first(["fcl.storage", "fcl.storage.default"])
+    if (storage.can) storage.put(NAME, ctx.all())
     ctx.broadcast(UPDATED, {...ctx.all()})
   },
   [DEL_CURRENT_USER]: async (ctx, letter) => {
     ctx.merge(JSON.parse(DATA))
-    if (await canColdStorage()) coldStorage.put(ctx.all())
+    const storage = await config.first(["fcl.storage", "fcl.storage.default"])
+    if (storage.can) storage.put(NAME, ctx.all())
     ctx.broadcast(UPDATED, {...ctx.all()})
   },
 }
 
-const identity = v => v
 const spawnCurrentUser = () => spawn(HANDLERS, NAME)
 
 function notExpired(user) {
@@ -85,45 +93,89 @@ function notExpired(user) {
   )
 }
 
-async function configLens(regex) {
-  return Object.fromEntries(
-    Object.entries(await fcl.config().where(regex)).map(([key, value]) => [
-      key.replace(regex, ""),
-      value,
-    ])
+async function getAccountProofData() {
+  const accountProofDataResolver = await config.get("fcl.accountProof.resolver")
+  const accountProofData =
+    accountProofDataResolver ?? (await accountProofDataResolver())
+
+  if (accountProofData == null) return
+
+  invariant(
+    typeof accountProofData.appIdentifier === "string",
+    "appIdentifier must be a string"
   )
+  invariant(
+    /^[0-9a-f]+$/i.test(accountProofData.nonce),
+    "Nonce must be a hex string"
+  )
+
+  return accountProofData
 }
 
-async function authenticate() {
+async function authenticate({service, redir = false} = {}) {
   return new Promise(async (resolve, reject) => {
     spawnCurrentUser()
+    const opts = {redir}
     const user = await snapshot()
-    if (user.loggedIn && notExpired(user)) return resolve(user)
+    const discoveryService = await getDiscoveryService()
+    const refreshService = serviceOfType(user.services, "authn-refresh")
+    let accountProofData
 
-    frame(
-      {
-        endpoint:
-          (await config().get("discovery.wallet")) ||
-          (await config().get("challenge.handshake")),
-      },
-      {
-        async onReady(e, {send, close}) {
-          send({
-            type: "FCL:AUTHN:CONFIG",
-            services: await configLens(/^service\./),
-            app: await configLens(/^app\.detail\./),
-          })
-        },
-        async onClose() {
-          resolve(await snapshot())
-        },
-        async onResponse(e, {close}) {
-          send(NAME, SET_CURRENT_USER, await buildUser(e.data))
-          resolve(await snapshot())
-          close()
-        },
-      }
+    try {
+      accountProofData = await getAccountProofData()
+    } catch (error) {
+      console.error(
+        `Error During Authentication: Could not resolve account proof data.
+        ${error}`
+      )
+      return reject(error)
+    }
+
+    invariant(
+      service || discoveryService.endpoint,
+      `
+        If no service passed to "authenticate," then "discovery.wallet" must be defined in config.
+        See: "https://docs.onflow.org/fcl/reference/api/#setting-configuration-values"
+      `
     )
+
+    if (user.loggedIn) {
+      if (refreshService) {
+        try {
+          const response = await execService({
+            service: refreshService,
+            msg: accountProofData,
+            opts,
+          })
+          send(NAME, SET_CURRENT_USER, await buildUser(response))
+        } catch (e) {
+          console.error("Error: Could not refresh authentication.", e)
+        } finally {
+          return resolve(await snapshot())
+        }
+      } else {
+        return resolve(user)
+      }
+    }
+
+    try {
+      const response = await execService({
+        service: {
+          ...(service || discoveryService),
+          method: discoveryService?.method || service.method || "IFRAME/RPC",
+        },
+        msg: accountProofData,
+        opts,
+        config: {
+          discoveryAuthnInclude: discoveryService.discoveryAuthnInclude,
+        },
+      })
+      send(NAME, SET_CURRENT_USER, await buildUser(response))
+    } catch (e) {
+      console.error("Error while authenticating", e)
+    } finally {
+      resolve(await snapshot())
+    }
   })
 }
 
@@ -153,7 +205,7 @@ function resolvePreAuthz(authz) {
     addr: az.identity.address,
     keyId: az.identity.keyId,
     signingFunction(signable) {
-      return execService(az, signable)
+      return execService({service: az, msg: signable})
     },
     role: {
       proposer: role === "PROPOSER",
@@ -166,30 +218,46 @@ function resolvePreAuthz(authz) {
 
 async function authorization(account) {
   spawnCurrentUser()
-  const user = await authenticate()
-  const authz = serviceOfType(user.services, "authz")
-
-  const preAuthz = serviceOfType(user.services, "pre-authz")
-  if (preAuthz) {
-    return {
-      ...account,
-      tempId: "CURRENT_USER",
-      async resolve(account, preSignable) {
-        return resolvePreAuthz(await execService(preAuthz, preSignable))
-      },
-    }
-  }
 
   return {
     ...account,
     tempId: "CURRENT_USER",
-    resolve: null,
-    addr: sansPrefix(authz.identity.address),
-    keyId: authz.identity.keyId,
-    sequenceNum: null,
-    signature: null,
-    async signingFunction(signable) {
-      return execService(authz, signable)
+    async resolve(account, preSignable) {
+      const user = await authenticate({redir: true})
+      const authz = serviceOfType(user.services, "authz")
+      const preAuthz = serviceOfType(user.services, "pre-authz")
+
+      if (preAuthz)
+        return resolvePreAuthz(
+          await execService({
+            service: preAuthz,
+            msg: preSignable,
+          })
+        )
+      if (authz)
+        return {
+          ...account,
+          tempId: "CURRENT_USER",
+          resolve: null,
+          addr: sansPrefix(authz.identity.address),
+          keyId: authz.identity.keyId,
+          sequenceNum: null,
+          signature: null,
+          async signingFunction(signable) {
+            return normalizeCompositeSignature(
+              await execService({
+                service: authz,
+                msg: signable,
+                opts: {
+                  includeOlderJsonRpcCall: true,
+                },
+              })
+            )
+          },
+        }
+      throw new Error(
+        "No Authz or PreAuthz Service configured for CURRENT_USER"
+      )
     },
   }
 }
@@ -223,12 +291,63 @@ async function info() {
   return account(addr)
 }
 
-export const currentUser = () => {
+async function resolveArgument() {
+  const {addr} = await authenticate()
+  return arg(withPrefix(addr), t.Address)
+}
+
+const makeSignable = msg => {
+  invariant(/^[0-9a-f]+$/i.test(msg), "Message must be a hex string")
+
+  return {
+    message: msg,
+  }
+}
+
+async function signUserMessage(msg) {
+  spawnCurrentUser()
+  const user = await authenticate({redir: true})
+
+  const signingService = serviceOfType(user.services, "user-signature")
+
+  invariant(
+    signingService,
+    "Current user must have authorized a signing service."
+  )
+
+  try {
+    const response = await execService({
+      service: signingService,
+      msg: makeSignable(msg),
+    })
+    if (Array.isArray(response)) {
+      return response.map(compSigs => normalizeCompositeSignature(compSigs))
+    } else {
+      return [normalizeCompositeSignature(response)]
+    }
+  } catch (error) {
+    return error
+  }
+}
+
+let currentUser = () => {
   return {
     authenticate,
     unauthenticate,
     authorization,
+    signUserMessage,
     subscribe,
     snapshot,
+    resolveArgument,
   }
 }
+
+currentUser.authenticate = authenticate
+currentUser.unauthenticate = unauthenticate
+currentUser.authorization = authorization
+currentUser.signUserMessage = signUserMessage
+currentUser.subscribe = subscribe
+currentUser.snapshot = snapshot
+currentUser.resolveArgument = resolveArgument
+
+export {currentUser}

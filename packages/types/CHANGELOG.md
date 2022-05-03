@@ -1,6 +1,20 @@
-### Unreleased
+## 1.0.0-alpha.0
+
+### Major Changes
+
+- Release 1.0.0 alpha
 
 - YYYY-MM-DD **BREAKING?** -- description
+
+- 2022-03-04 -- Deprecated Number as value for [U]Int* and Word* types.
+
+### 0.0.6 -- 2021-11-16
+
+- 2021-11-16 Added `t.Path`
+
+### 0.0.5 -- 2021-07-22
+
+- 2021-07-22 -- Declaring a `UFix64` value without prodviding a correctly formatted fractional throws an error.
 
 ### 0.0.4 -- 2020-08-24
 

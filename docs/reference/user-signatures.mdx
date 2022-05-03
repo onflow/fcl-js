@@ -1,0 +1,104 @@
+---
+title: Signing and Verifying Arbitrary Data
+---
+
+## Signing Arbitrary Data
+
+Cryptographic signatures are a key part of the blockchain. They are used to prove ownership of an address without exposing its private key.
+While primarily used for signing transactions, cryptographic signatures can also be used to sign arbitrary messages.
+
+FCL has a feature that lets you send arbitrary data to a configured wallet/service where the
+user may approve signing it with their private key/s.
+
+## Verifying User Signatures
+
+What makes message signatures more interesting is that we can use Flow blockchain to verify the signatures.
+Cadence has a built-in function called verify that will verify a signature against a Flow account given the account address.
+
+FCL includes a utility function, `verifyUserSignatures`, for verifying one or more signatures against an account's public key on the Flow blockchain.
+
+You can use both in tandem to prove a user is in control of a private key or keys.
+This enables cryptographically-secure login flow using a message-signing-based authentication mechanism
+with a user’s public address as their identifier.
+
+---
+
+## `currentUser().signUserMessage()`
+
+A method to use allowing the user to personally sign data via FCL Compatible Wallets/Services.
+
+> :Note: **Requires authentication/configuration with an authorized signing service.**
+
+### Arguments
+
+| Name      | Type   | Description                       |
+| --------- | ------ | --------------------------------- |
+| `message` | string | A hexadecimal string to be signed |
+
+#### Returns
+
+| Type    | Description                                                                                                                                                                               |
+| ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Array` | An Array of [CompositeSignatures](https://github.com/onflow/flow-js-sdk/blob/master/packages/fcl/src/wallet-provider-spec/draft-v2.md#compositesignature): {`addr`, `keyId`, `signature`} |
+
+#### Usage
+
+```javascript
+import * as fcl from "@onflow/fcl"
+
+export const signMessage = async () => {
+  const MSG = Buffer.from("FOO").toString("hex")
+  try {
+    return await currentUser().signUserMessage(MSG)
+  } catch (error) {
+    console.log(error)
+  }
+}
+```
+
+---
+
+## `verifyUserSignatures`
+
+A method allowing applications to cryptographically verify the ownership of a Flow account by verifying a message was signed by a user's private key/s. This is typically used with the response from `currentUser().signUserMessage`.
+
+### Arguments
+
+| Name                  | Type                  | Description                       |
+| --------------------- | --------------------- | --------------------------------- |
+| `message`             | string **(required)** | A hexadecimal string              |
+| `compositeSignatures` | Array **(required)**  | An Array of `CompositeSignatures` |
+
+#### Returns
+
+| Type    | Description                  |
+| ------- | ---------------------------- |
+| Boolean | `true` if verifed or `false` |
+
+#### Usage
+
+```javascript
+/**
+ * Verify a valid signature/s for an account on Flow.
+ *
+ * @param {string} msg - A message string in hexadecimal format
+ * @param {Array} compSigs - An array of Composite Signatures
+ * @param {string} compSigs[].addr - The account address
+ * @param {number} compSigs[].keyId - The account keyId
+ * @param {string} compSigs[].signature - The signature to verify
+ * @return {bool}
+ *
+ * @example
+ *
+ *  const isValid = await fcl.verifyUserSignatures(
+ *    Buffer.from('FOO').toString("hex"),
+ *    [{f_type: "CompositeSignature", f_vsn: "1.0.0", addr: "0x123", keyId: 0, signature: "abc123"}]
+ *  )
+ */
+```
+
+#### Examples
+
+Use cases include cryptographic login, message validation, verifiable credentials, and others.
+
+---

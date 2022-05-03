@@ -1,6 +1,6 @@
 {
   "name": "@onflow/sdk",
-  "version": "0.0.45-alpha.15",
+  "version": "1.0.0-alpha.0",
   "description": "Flow SDK",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
@@ -15,33 +15,39 @@
   "jest": {
     "transform": {
       ".js": "jest-esm-transformer"
+    },
+    "globals": {
+      "MICROBUNDLE_CURRENT_VERSION": "TESTVERSION"
     }
   },
   "devDependencies": {
-    "jest": "26.4.2",
+    "jest": "^27.0.6",
     "jest-esm-transformer": "1.0.0",
-    "microbundle": "0.12.4"
+    "microbundle": "^0.13.3"
   },
   "source": "src/sdk.js",
   "main": "dist/sdk.js",
   "module": "dist/sdk.module.js",
   "unpkg": "dist/sdk.umd.js",
   "scripts": {
+    "alpha": "npm publish --tag alpha",
     "prepublishOnly": "npm test && npm run build",
     "test": "jest",
-    "build": "microbundle",
+    "build": "microbundle --define MICROBUNDLE_CURRENT_VERSION=$npm_package_version",
+    "currentVersion": "node -e MICROBUNDLE_CURRENT_VERSION=$npm_package_version",
     "test:watch": "jest --watch",
     "start": "microbundle watch"
   },
   "dependencies": {
-    "@improbable-eng/grpc-web": "^0.14.0",
-    "@improbable-eng/grpc-web-node-http-transport": "^0.14.0",
-    "@onflow/config": "^0.0.2",
-    "@onflow/protobuf": "^0.1.8",
-    "@onflow/rlp": "^0.0.3",
-    "@onflow/util-address": "^0.0.0",
-    "@onflow/util-invariant": "^0.0.0",
-    "@onflow/util-template": "0.0.1",
-    "deepmerge": "^4.2.2"
+    "@onflow/config": "^1.0.0-alpha.0",
+    "@onflow/rlp": "^1.0.0-alpha.0",
+    "@onflow/transport-http": "^1.0.0-alpha.0",
+    "@onflow/util-actor": "^1.0.0-alpha.0",
+    "@onflow/util-address": "^1.0.0-alpha.0",
+    "@onflow/util-invariant": "^1.0.0-alpha.0",
+    "@onflow/util-logger": "^1.0.0-alpha.0",
+    "@onflow/util-template": "^1.0.0-alpha.0",
+    "deepmerge": "^4.2.2",
+    "sha3": "^2.1.4"
   }
 }

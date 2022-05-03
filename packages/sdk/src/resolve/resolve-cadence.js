@@ -18,7 +18,10 @@ export async function resolveCadence(ix) {
       .where(/^0x/)
       .then(d =>
         Object.entries(d).reduce(
-          (cadence, [key, value]) => cadence.replace(key, value),
+          (cadence, [key, value]) => {
+            const regex = new RegExp("(\\b" + key + "\\b)", 'g')
+            return cadence.replace(regex, value)
+          },
           cadence
         )
       )

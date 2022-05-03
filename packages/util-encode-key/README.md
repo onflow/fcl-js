@@ -2,7 +2,7 @@
 
 Encodes public keys so that the Flow Blockchain can use them.
 
-You can learn more about keys, curves, hashes, weights and signing here: https://github.com/onflow/flow/blob/master/docs/accounts-and-keys.md#supported-signature--hash-algorithms
+You can learn more about keys, curves, hashes, weights and signing here: https://github.com/onflow/flow/blob/master/docs/content/concepts/accounts-and-keys.md#supported-signature--hash-algorithms
 
 ```javascript
 import { template as addNewKey } from "@onflow/six-add-new-key"

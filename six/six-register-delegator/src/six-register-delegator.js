@@ -1,30 +1,15 @@
-import * as sdk from "@onflow/sdk"
+import * as fcl from "@onflow/fcl"
 import * as t from "@onflow/types"
 import {config} from "@onflow/config"
 
-const Deps = {
-    FLOWTOKENADDRESS: "0xFLOWTOKENADDRESS",
-    LOCKEDTOKENADDRESS: "0xLOCKEDTOKENADDRESS",
-}
-
-const Env = {
-    local: {
-        [Deps.FLOWTOKENADDRESS]: "0x0",
-        [Deps.LOCKEDTOKENADDRESS]: "0x0",
-    },
-    testnet: {
-        [Deps.FLOWTOKENADDRESS]: "0x7e60df042a9c0868",
-        [Deps.LOCKEDTOKENADDRESS]: "0x95e019a17d0e23d7",
-    },
-    mainnet: {
-        [Deps.FLOWTOKENADDRESS]: "0x1654653399040a61",
-        [Deps.LOCKEDTOKENADDRESS]: "0x8d0e87b65159ae63",
-    }
-}
+const DEPS = new Set([
+    "0xFLOWTOKENADDRESS",
+    "0xLOCKEDTOKENADDRESS"
+])
 
 export const TITLE = "Register Delegator"
 export const DESCRIPTION = "Register a Delegator on Flow."
-export const VERSION = "0.0.7"
+export const VERSION = "0.0.12"
 export const HASH = "3cb357a97a57d9abbe5c68f0df342ee96ba97ade2013753fd2ddf47695a8c08a"
 export const CODE =
 `import FlowToken from 0xFLOWTOKENADDRESS
@@ -68,20 +53,26 @@ transaction(id: String, amount: UFix64) {
 }
 `
 
-export const template = async ({ proposer, authorization, payer, id = "", amount = ""}) => {
-    const env = await config().get("env", "mainnet")
-    let code = CODE.replace(Deps.LOCKEDTOKENADDRESS, Env[env][Deps.LOCKEDTOKENADDRESS])
-    code = code.replace(Deps.FLOWTOKENADDRESS, Env[env][Deps.FLOWTOKENADDRESS])
+class UndefinedConfigurationError extends Error {
+    constructor(address) {
+      const msg = `Stored Interaction Error: Missing configuration for ${address}. Please see the following to learn more: https://github.com/onflow/flow-js-sdk/blob/master/six/six-register-delegator/README.md`.trim()
+      super(msg)
+      this.name = "Stored Interaction Undefined Address Configuration Error"
+    }
+}
 
-    return sdk.pipe([
-        sdk.transaction(code),
-        sdk.args([sdk.arg(id, t.String), sdk.arg(amount, t.UFix64)]),
-        sdk.proposer(proposer),
-        sdk.authorizations([authorization]),
-        sdk.payer(payer),
-        sdk.validator((ix, {Ok, Bad}) => {
-            if (ix.authorizations.length > 1) return Bad(ix, "template only requires one authorization.")
-            return Ok(ix)
-        })
+const addressCheck = async address => {
+    if (!await config().get(address)) throw new UndefinedConfigurationError(address)
+}
+
+export const template = async ({ proposer, authorization, payer, id = "", amount = ""}) => {
+    for (let addr of DEPS) await addressCheck(addr)
+
+    return fcl.pipe([
+        fcl.transaction(CODE),
+        fcl.args([fcl.arg(id, t.String), fcl.arg(amount, t.UFix64)]),
+        fcl.proposer(proposer),
+        fcl.authorizations([authorization]),
+        fcl.payer(payer)
     ])
 }

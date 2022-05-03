@@ -1,26 +1,14 @@
-import * as sdk from "@onflow/sdk"
+import * as fcl from "@onflow/fcl"
 import * as t from "@onflow/types"
 import {config} from "@onflow/config"
 
-const Deps = {
-    LOCKEDTOKENADDRESS: "0xLOCKEDTOKENADDRESS",
-}
-
-const Env = {
-    local: {
-        [Deps.LOCKEDTOKENADDRESS]: "0x0",
-    },
-    testnet: {
-        [Deps.LOCKEDTOKENADDRESS]: "0x95e019a17d0e23d7",
-    },
-    mainnet: {
-        [Deps.LOCKEDTOKENADDRESS]: "0x8d0e87b65159ae63",
-    }
-}
+const DEPS = new Set([
+    "0xLOCKEDTOKENADDRESS"
+])
 
 export const TITLE = "Get Delegator ID"
 export const DESCRIPTION = "Gets a delegators ID."
-export const VERSION = "0.0.1"
+export const VERSION = "0.0.7"
 export const HASH = "20236b89c6f8ac93f51c4b7785cbe266727b41141d4ffc97229c9d60a4605ed8"
 export const CODE = 
 `import LockedTokens from 0xLOCKEDTOKENADDRESS
@@ -35,12 +23,23 @@ pub fun main(account: Address): UInt32 {
 }
 `
 
-export const template = async ({ account = "" }) => {
-    const env = await config().get("env", "mainnet")
-    let code = CODE.replace(Deps.LOCKEDTOKENADDRESS, Env[env][Deps.LOCKEDTOKENADDRESS])
+class UndefinedConfigurationError extends Error {
+    constructor(address) {
+      const msg = `Stored Interaction Error: Missing configuration for ${address}. Please see the following to learn more: https://github.com/onflow/flow-js-sdk/blob/master/six/six-get-delegator-id/README.md`.trim()
+      super(msg)
+      this.name = "Stored Interaction Undefined Address Configuration Error"
+    }
+}
 
-    return sdk.pipe([
-        sdk.script(code),
-        sdk.args([sdk.arg(account, t.Address)])
+const addressCheck = async address => {
+    if (!await config().get(address)) throw new UndefinedConfigurationError(address)
+}
+
+export const template = async ({ account = "" }) => {
+    for (let addr of DEPS) await addressCheck(addr)
+
+    return fcl.pipe([
+        fcl.script(CODE),
+        fcl.args([fcl.arg(account, t.Address)])
     ])
 }

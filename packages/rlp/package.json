@@ -1,7 +1,7 @@
 {
   "name": "@onflow/rlp",
-  "version": "0.0.3",
-  "description": "Port of ehteriumjs/rlp",
+  "version": "1.0.0-alpha.0",
+  "description": "Port of ethereumjs/rlp",
   "license": "MPL-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
   "homepage": "https://onflow.org",
@@ -32,5 +32,8 @@
     "build": "microbundle",
     "test:watch": "jest --watch",
     "start": "microbundle watch"
+  },
+  "dependencies": {
+    "buffer": "^6.0.3"
   }
 }

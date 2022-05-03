@@ -115,7 +115,7 @@ After Build, the next phase of use of the JS-SDK is the Resolve phase. During Bu
 
 Some things, however, we don't know. For example, when developing your dApp, you don't know the signature that will be produced when a user signs a transaction. You don't know the specific encoding that your Interaction needs to be in, or maybe you don't yet know the sequence number for a transactions proposer authorization. All of these things need to be discovered, produced or conceptually _resolved_ before your Interaction can be sent to the Flow Blockchain.
 
-This is where the _Resolve_ phase comes in. Resolves takes your built interaction containing all the information you do know and does it's best to get it into a position where it can be sent to the Flow Blockchain. The Flow JS-SDK comes with several _resolver_ functions that your dApp can use to do just this.
+This is where the _Resolve_ phase comes in. Resolve takes your built interaction containing all the information you do know and does it's best to get it into a position where it can be sent to the Flow Blockchain. The Flow JS-SDK comes with several _resolver_ functions that your dApp can use to do just this.
 
 Example 4
     : Building an Execute Script Interaction
@@ -141,7 +141,7 @@ const resolvedInteraction = await sdk.pipe(builtInteraction, [
 In Example 4 we Build an Execute Script Interaction by using the script builder to specify a Cadence script and the args and arg builders to specify some arguments to pass into the Cadence Script. To Resolve this built interaction, we pipe'd the built interaction through an array of resolvers. The resolveParams resolver encoded the Cadence script into a format the Flow Blockchain accepts, and the resolveArguments resolver prepared the arguments into the correct encoding that the Flow Blockchain accepts.
 
 Example 5
-    : Building an Execute Script Interaction
+    : Building a Transaction Interaction
 ```javascript
 import * as sdk from "@onflow/sdk"
 import * as types from "@onflow/types"
@@ -171,7 +171,7 @@ const resolvedInteraction = await sdk.pipe(builtInteraction, [
 
 In Example 5 we build a Transaction Interaction by building an interaction and calling the transaction builder with a piece of transaction Cadence code, and then specify an authorization for the payer, proposer and one authorizer.
 
-After the Transaction Interaction is built, we pipe it through a series of resolvers. We resolve the reference block id to execute this transaction against by calling the resolveRefBlockId resovler. We resolve the sequence number for the proposer authorization for this transaction by calling the resolveProposerSequenceNumber resolver. Then we resolve the arguments and params for the transaction by calling the resolveArguments and resolveParams resolvers. We then call the resolveAccounts resolver to prepare each specified authorization into a format that they could be used to produce their correct signature(s) for the transaction. Finally, at the end, we call the resolveSignatures resolver which will asyncronously using the signingFunction available for the specified authorizations to retrieve a signature for each.
+After the Transaction Interaction is built, we pipe it through a series of resolvers. We resolve the reference block id to execute this transaction against by calling the resolveRefBlockId resovler. We resolve the sequence number for the proposer authorization for this transaction by calling the resolveProposerSequenceNumber resolver. Then we resolve the arguments and params for the transaction by calling the resolveArguments and resolveParams resolvers. We then call the resolveAccounts resolver to prepare each specified authorization into a format that they could be used to produce their correct signature(s) for the transaction. Finally, at the end, we call the resolveSignatures resolver which will asyncronously use the signingFunction available for the specified authorizations to retrieve a signature for each.
 
 ## Send
 
@@ -354,6 +354,32 @@ The SDK additionally supplies builders to construct interactions of many differe
 
 Please reference the provided example project `react-simple` for example code.
 
+### Example: Pre Checking Before Sending A Transaction
+
+As an extension, it is possible to intercept the voucher before sending a transaction. To do this, use `sdk.voucherIntercept(...)`. This argument is an arbitrary async function that receives a voucher object containing information about the transaction before it is sent. Within this, you can call `sdk.voucherToTxId(voucher)` to get the txId. Furthermore, you can call any API to record this txId before sending the transaction. If an error is thrown in this, the transaction sending process will be aborted.
+
+```javascript
+import * as sdk from "@onflow/sdk"
+const response = await sdk.send(
+  await sdk.resolve(
+    await sdk.build([
+      sdk.transaction`transaction(msg: String) { prepare(acct: AuthAccount) {} execute { log(msg) } }`,
+      sdk.args([sdk.arg("Hello, Flow!", types.String)]),
+      sdk.payer(sdk.authorization("01", signingFunction, 0)),
+      sdk.proposer(sdk.authorization("01", signingFunction, 0, seqNum)),
+      sdk.authorizations([sdk.authorization("01", signingFunction, 0)]),
+      sdk.voucherIntercept(async voucher => {
+        const txId = sdk.voucherToTxId(voucher)
+
+        // you can make an async to your backend to keep track of the hash
+        await sendHashToBackend(txId)
+
+        // could throw an error here if you wanted which would halt the transaction.
+      }),
+    ])
+  ), { node: "http://localhost:8080" })
+```
+
 ### GetAccount Usage
 
 ```javascript
@@ -431,6 +457,7 @@ const response = await sdk.send(await sdk.pipe(await sdk.build([
   sdk.payer(sdk.authorization("01", signingFunction, 0)),
   sdk.proposer(sdk.authorization("01", signingFunction, 0)),
   sdk.authorizations([sdk.authorization("01", signingFunction, 0)]),
+  sdk.voucherIntercept(async voucher => {}), // Optional
 ]), [
   sdk.resolve([
     sdk.resolveArguments,
@@ -438,48 +465,68 @@ const response = await sdk.send(await sdk.pipe(await sdk.build([
     sdk.resolveAccounts,
     sdk.resolveProposerSequenceNumber({ node: "http://localhost:8080" }),
     sdk.resolveRefBlockId({ node: "http://localhost:8080" }),
-    sdk.resolveSignatures
+    sdk.resolveSignatures,
+    sdk.resolveVoucherIntercept, // Optional
   ]),
 ]), { node: "http://localhost:8080" })
 ```
 
 ## Flow JS-SDK Exposes
 
-- [Top Level](./)
+- [Top Level](./src)
 
   - [`sdk.build`](./src/build)
   - [`sdk.resolve`](./src/resolve)
-  - [`sdk.send`](../send)
-  - [`sdk.decode`](../decode)
-  - [`sdk.decodeResponse`](../decode)
+  - [`sdk.send`](./src/send)
+  - [`sdk.decode`](./src/decode)
+  - [`sdk.decodeResponse`](./src/decode)
 
-- [Utils](../interaction)
+- [Utils](./src/interaction)
 
-  - [`sdk.isOk`](../interaction)
-  - [`sdk.isBad`](../interaction)
-  - [`sdk.why`](../interaction)
-  - [`sdk.pipe`](../interaction)
+  - [`sdk.isOk`](./src/interaction)
+  - [`sdk.isBad`](./src/interaction)
+  - [`sdk.why`](./src/interaction)
+  - [`sdk.pipe`](./src/interaction)
 
 - [Builders](./src/build)
 
-  - [`sdk.authorizations` & `sdk.authorization`](./src/build/authorizations.js)
-  - [`sdk.getAccount`](./src/build/get-account.js)
-  - [`sdk.getEvents`](./src/build/get-events.js)
-  - [`sdk.getLatestBlock`](./src/build/get-latest-block.js)
-  - [`sdk.getTransactionStatus`](./src/build/get-transaction-status.js)
-  - [`sdk.limit`](./src/build/limit.js)
-  - [`sdk.params` & `sdk.param`](./src/build/params.js)
-  - [`sdk.payer`](./src/build/payer.js)
-  - [`sdk.ping`](./src/build/ping.js)
-  - [`sdk.ref`](./src/build/ref.js)
-  - [`sdk.script`](./src/build/script.js)
-  - [`sdk.transaction`](./src/build/transaction.js)
+  - [`sdk.args` & `sdk.arg`](./src/build/build-arguments.js)
+  - [`sdk.atBlockHeight`](./src/build/build-at-block-height.js)
+  - [`sdk.atBlockId`](./src/build/build-at-block-id.js)
+  - [`sdk.authorizations` & `authorization`](./src/build/build-authorizations.js)
+  - [`sdk.getAccount`](./src/build/build-get-account.js)
+  - [`sdk.getBlock`](./src/build/build-get-block.js)
+  - [`sdk.getBlockByHeight`](./src/build/build-get-block-by-height)
+  - [`sdk.getBlockById`](./src/build/build-get-block-by-id.js)
+  - [`sdk.getBlockHeader`](./src/build/build-get-block-header.js)
+  - [`sdk.getCollection`](./src/build/build-get-collection)
+  - [`sdk.getEvents`](./src/build/build-get-events.js)
+  - [`sdk.getEventsAtBlockHeightRange`](./src/build/build-get-events-at-block-height-range.js)
+  - [`sdk.getEventsAtBlockIds`](./src/build/build-get-events-at-block-ids)
+  - [`sdk.getLatestBlock`](./src/build/build-get-latest-block.js)
+  - [`sdk.getTransactionStatus`](./src/build/build-get-transaction-status.js)
+  - [`sdk.getTransaction`](./src/build/build-get-transaction.js)
+  - [`sdk.invariant`](./src/build/build-invariant.js)
+  - [`sdk.limit`](./src/build/build-limit.js)
+  - [`sdk.payer`](./src/build/build-payer.js)
+  - [`sdk.ping`](./src/build/build-ping.js)
+  - [`sdk.voucherIntercept`](./src/build/build-voucher-intercept.js)
+  - [`sdk.proposer`](./src/build/build-proposer.js)
+  - [`sdk.ref`](./src/build/build-ref.js)
+  - [`sdk.script`](./src/build/build-script.js)
+  - [`sdk.transaction`](./src/build/build-transaction.js)
+  - [`sdk.validator`](./src/build/build-validator.js)
 
-- [Resolvers](./resolve)
+- [Resolvers](./src/resolve)
   - [`sdk.resolveAccounts`](./src/resolve/resolve-accounts.js)
-  - [`sdk.resolveParams`](./src/resolve/resolve-params.js)
-  - [`sdk.resolveSignatures`](./src/resolve/resolve-signatures.js)
   - [`sdk.resolveArguments`](./src/resolve/resolve-arguments.js)
+  - [`sdk.resolveCadence`](./src/resolve/resolve-cadence.js)
+  - [`sdk.resolveFinalNormalization`](./src/resolve/resolve-final-normalization.js)
+  - [`sdk.resolveVoucherIntercept`](./src/resolve/resolve-voucher-intercept.js)
   - [`sdk.resolveProposerSequenceNumber`](./src/resolve/resolve-proposer-sequence-number.js)
   - [`sdk.resolveRefBlockId`](./src/resolve/resolve-ref-block-id.js)
+  - [`sdk.resolveSignatures`](./src/resolve/resolve-signatures.js)
   - [`sdk.resolveValidators`](./src/resolve/resolve-validators.js)
+
+- [Other Utils](./src/)
+  - [`sdk.voucherToTxId`](./src/resolve/voucher.js)

@@ -4,6 +4,11 @@ import {
   encodeTransactionPayload as encodeInsideMessage,
   encodeTransactionEnvelope as encodeOutsideMessage,
 } from "../encode/encode.js"
+import {
+  createSignableVoucher,
+  findInsideSigners,
+  findOutsideSigners,
+} from "./voucher.js"
 
 export async function resolveSignatures(ix) {
   if (isTransaction(ix)) {
@@ -30,20 +35,6 @@ export async function resolveSignatures(ix) {
   return ix
 }
 
-function findInsideSigners(ix) {
-  // Inside Signers Are: (authorizers + proposer) - payer
-  let inside = new Set(ix.authorizations)
-  inside.add(ix.proposer)
-  inside.delete(ix.payer)
-  return Array.from(inside)
-}
-
-function findOutsideSigners(ix) {
-  // Outside Signers Are: (payer)
-  let outside = new Set([ix.payer])
-  return Array.from(outside)
-}
-
 function fetchSignature(ix, payload) {
   return async function innerFetchSignature(id) {
     const acct = ix.accounts[id]
@@ -51,18 +42,15 @@ function fetchSignature(ix, payload) {
     const {signature} = await acct.signingFunction(
       buildSignable(acct, payload, ix)
     )
-    // if (!acct.role.proposer) {
-    //   ix.accounts[id].keyId = keyId
-    // }
     ix.accounts[id].signature = signature
   }
 }
 
-function buildSignable(acct, message, ix) {
+export function buildSignable(acct, message, ix) {
   try {
     return {
       f_type: "Signable",
-      f_vsn: "1.0.0",
+      f_vsn: "1.0.1",
       message,
       addr: sansPrefix(acct.addr),
       keyId: acct.keyId,
@@ -71,6 +59,7 @@ function buildSignable(acct, message, ix) {
       args: ix.message.arguments.map(d => ix.arguments[d].asArgument),
       data: {},
       interaction: ix,
+      voucher: createSignableVoucher(ix),
     }
   } catch (error) {
     console.error("buildSignable", error)
@@ -79,17 +68,20 @@ function buildSignable(acct, message, ix) {
 }
 
 function prepForEncoding(ix) {
+  const payerAddress = sansPrefix((Array.isArray(ix.payer) 
+  ? ix.accounts[ix.payer[0]]
+  : ix.accounts[ix.payer]).addr);
   return {
-    script: ix.message.cadence,
+    cadence: ix.message.cadence,
     refBlock: ix.message.refBlock || null,
-    gasLimit: ix.message.computeLimit,
+    computeLimit: ix.message.computeLimit,
     arguments: ix.message.arguments.map(id => ix.arguments[id].asArgument),
     proposalKey: {
       address: sansPrefix(ix.accounts[ix.proposer].addr),
       keyId: ix.accounts[ix.proposer].keyId,
       sequenceNum: ix.accounts[ix.proposer].sequenceNum,
     },
-    payer: sansPrefix(ix.accounts[ix.payer].addr),
+    payer: payerAddress,
     authorizers: ix.authorizations
       .map(cid => sansPrefix(ix.accounts[cid].addr))
       .reduce((prev, current) => {

@@ -1,9 +1,39 @@
 # Transitions
 
+## 0008 Deprecate Latest Block Method
+
+- **Date:** Jan 14th 2022
+- **Type:** Deprecation of latestBlock method
+
+For JS-SDK versions 0.0.55 and below, getting the latest block looked like this:
+
+```javascript
+let options = {...}
+let isSealed = false
+
+await sdk.latestBlock(isSealed, options)
+```
+
+Getting the latest block now works slightly differently. If you wish to get the latest block, you must now pass in arguments
+like such:
+
+```javascript
+let options = {...}
+
+await sdk.block() // gets the latest finalized block
+await sdk.block({sealed: true}) // get latest sealed block
+```
+
+The first argument to `block` is an optional object with either `sealed`, `id`, or `height`. The second argument is for optional options.
+
+We recommend migrating your code to the new format as soon as you can. In future versions of the JS-SDK, `latestBlock` may
+cease to exist.
+
 ## 0007 Deprecate Opts First Arg Latest Block
 
 - **Date:** Feb 2nd 2021
 - **Type:** Deprecation of options as first arguemnt to latestBlock
+- **Removed:** Jan 14th 2022
 
 For JS-SDK versions 0.0.44 and below, getting the latest block looked like this:
 

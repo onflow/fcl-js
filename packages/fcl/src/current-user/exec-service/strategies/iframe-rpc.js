@@ -1,30 +1,89 @@
 import {uid} from "@onflow/util-uid"
 import {frame} from "./utils/frame"
 import {normalizePollingResponse} from "../../normalize/polling-response"
-import {normalizeCompositeSignature} from "../../normalize/composite-signature"
+import {VERSION} from "../../../VERSION"
 
-export function execIframeRPC(service, signable) {
+export function execIframeRPC(service, body, opts, config) {
   return new Promise((resolve, reject) => {
     const id = uid()
-    signable.data = service.data
+    const includeOlderJsonRpcCall = opts.includeOlderJsonRpcCall
 
     frame(service, {
-      onReady(_, {send}) {
+      async onReady(_, {send}) {
         try {
-          // This is out of place, we need to find an alternative
           send({
-            jsonrpc: "2.0",
-            id: id,
-            method: "fcl:sign",
-            params: [signable, service.params],
+            type: "FCL:VIEW:READY:RESPONSE",
+            fclVersion: VERSION,
+            body,
+            service: {
+              params: service.params,
+              data: service.data,
+              type: service.type,
+            },
+            config,
           })
+          send({
+            fclVersion: VERSION,
+            type: "FCL:FRAME:READY:RESPONSE",
+            body,
+            service: {
+              params: service.params,
+              data: service.data,
+              type: service.type,
+            },
+            config,
+            deprecated: {
+              message:
+                "FCL:FRAME:READY:RESPONSE is deprecated and replaced with type: FCL:VIEW:READY:RESPONSE",
+            },
+          })
+          if (includeOlderJsonRpcCall) {
+            send({
+              jsonrpc: "2.0",
+              id: id,
+              method: "fcl:sign",
+              params: [body, service.params],
+              deprecated: {
+                message:
+                  "jsonrpc is deprecated and replaced with type: FCL:VIEW:READY:RESPONSE",
+              },
+            })
+          }
         } catch (error) {
           throw error
         }
       },
 
-      onClose() {
-        reject(`Declined: Externally Halted`)
+      onResponse(e, {close}) {
+        try {
+          if (typeof e.data !== "object") return
+          const resp = normalizePollingResponse(e.data)
+
+          switch (resp.status) {
+            case "APPROVED":
+              resolve(resp.data)
+              close()
+              break
+
+            case "DECLINED":
+              reject(`Declined: ${resp.reason || "No reason supplied"}`)
+              close()
+              break
+
+            case "REDIRECT":
+              resolve(resp)
+              close()
+              break
+
+            default:
+              reject(`Declined: No reason supplied`)
+              close()
+              break
+          }
+        } catch (error) {
+          console.error("execIframeRPC onResponse error", error)
+          throw error
+        }
       },
 
       onMessage(e, {close}) {
@@ -36,12 +95,17 @@ export function execIframeRPC(service, signable) {
 
           switch (resp.status) {
             case "APPROVED":
-              resolve(normalizeCompositeSignature(resp.data))
+              resolve(resp.data)
               close()
               break
 
             case "DECLINED":
               reject(`Declined: ${resp.reason || "No reason supplied"}`)
+              close()
+              break
+
+            case "REDIRECT":
+              resolve(resp)
               close()
               break
 
@@ -54,6 +118,10 @@ export function execIframeRPC(service, signable) {
           console.error("execIframeRPC onMessage error", error)
           throw error
         }
+      },
+
+      onClose() {
+        reject(`Declined: Externally Halted`)
       },
     })
   })

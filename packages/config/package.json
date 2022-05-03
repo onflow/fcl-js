@@ -1,7 +1,7 @@
 {
   "name": "@onflow/config",
-  "version": "0.0.2",
-  "description": "A mechanism for configuring the Flow JS SDK and FCL",
+  "version": "1.0.0-alpha.0",
+  "description": "Config for FCL-JS",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
   "homepage": "https://onflow.org",
@@ -18,14 +18,11 @@
     }
   },
   "devDependencies": {
-    "jest": "26.4.0",
+    "jest": "25.3.0",
     "jest-esm-transformer": "1.0.0",
-    "microbundle": "0.12.3"
+    "microbundle": "0.12.0-next.8"
   },
-  "dependencies": {
-    "@onflow/util-actor": "0.0.2"
-  },
-  "source": "src/index.js",
+  "source": "src/config.js",
   "main": "dist/config.js",
   "module": "dist/config.module.js",
   "unpkg": "dist/config.umd.js",
@@ -35,5 +32,8 @@
     "build": "microbundle",
     "test:watch": "jest --watch",
     "start": "microbundle watch"
+  },
+  "dependencies": {
+    "@onflow/util-actor": "^1.0.0-alpha.0"
   }
 }

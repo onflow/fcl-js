@@ -27,6 +27,25 @@ const decodeImplicit = async (i) => i
 
 const decodeVoid = async () => null
 
+const decodeType = async (type) => {
+  return type.staticType
+}
+
+const decodePath = async (path) => {
+  return {
+    domain: path.domain,
+    identifier: path.identifier
+  }
+}
+
+const decodeCapability = async (cap) => {
+  return {
+    path: cap.path,
+    address: cap.address,
+    borrowType: cap.borrowType
+  }
+}
+
 const decodeOptional = async (optional, decoders, stack) =>
   optional ? await recurseDecode(optional, decoders, stack) : null
 
@@ -62,24 +81,24 @@ const decodeComposite = async (composite, decoders, stack) => {
 }
 
 const defaultDecoders = {
-  UInt: decodeNumber,
-  Int: decodeNumber,
-  UInt8: decodeNumber,
-  Int8: decodeNumber,
-  UInt16: decodeNumber,
-  Int16: decodeNumber,
-  UInt32: decodeNumber,
-  Int32: decodeNumber,
-  UInt64: decodeNumber,
-  Int64: decodeNumber,
-  UInt128: decodeNumber,
-  Int128: decodeNumber,
-  UInt256: decodeNumber,
-  Int256: decodeNumber,
-  Word8: decodeNumber,
-  Word16: decodeNumber,
-  Word32: decodeNumber,
-  Word64: decodeNumber,
+  UInt: decodeImplicit,
+  Int: decodeImplicit,
+  UInt8: decodeImplicit,
+  Int8: decodeImplicit,
+  UInt16: decodeImplicit,
+  Int16: decodeImplicit,
+  UInt32: decodeImplicit,
+  Int32: decodeImplicit,
+  UInt64: decodeImplicit,
+  Int64: decodeImplicit,
+  UInt128: decodeImplicit,
+  Int128: decodeImplicit,
+  UInt256: decodeImplicit,
+  Int256: decodeImplicit,
+  Word8: decodeImplicit,
+  Word16: decodeImplicit,
+  Word32: decodeImplicit,
+  Word64: decodeImplicit,
   UFix64: decodeImplicit,
   Fix64: decodeImplicit,
   String: decodeImplicit,
@@ -94,6 +113,10 @@ const defaultDecoders = {
   Event: decodeComposite,
   Resource: decodeComposite,
   Struct: decodeComposite,
+  Enum: decodeComposite,
+  Type: decodeType,
+  Path: decodePath,
+  Capability: decodeCapability,
 }
 
 const decoderLookup = (decoders, lookup) => {
@@ -173,6 +196,8 @@ export const decodeResponse = async (response, customDecoders = {}) => {
     return response.latestBlock
   } else if (response.transactionId) {
     return response.transactionId
+  } else if (response.collection) {
+    return response.collection
   }
 
   return null
