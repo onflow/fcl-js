@@ -4,6 +4,7 @@ export {build} from "./build/build.js"
 export {resolve} from "./resolve/resolve.js"
 export {send} from "./send/send.js"
 export {decode} from "./decode/sdk-decode.js"
+export {encode} from "./encode/encode.js"
 
 // Utils
 export {
