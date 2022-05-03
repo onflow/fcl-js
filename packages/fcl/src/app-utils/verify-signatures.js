@@ -1,8 +1,9 @@
 import {config} from "@onflow/config"
 import {invariant} from "@onflow/util-invariant"
+import {sansPrefix} from "@onflow/util-address"
 import {query} from "../exec/query"
 import {encodeAccountProof} from "../wallet-utils"
-import {sansPrefix} from "@onflow/util-address"
+import {isString} from "../exec/utils/is"
 
 const ACCOUNT_PROOF = "ACCOUNT_PROOF"
 const USER_SIGNATURE = "USER_SIGNATURE"
@@ -11,12 +12,12 @@ export const validateArgs = args => {
   if (args.appIdentifier) {
     const {appIdentifier, address, nonce, signatures} = args
     invariant(
-      typeof appIdentifier === "string",
-      "appIdentifier must be a string"
+      isString(appIdentifier),
+      "verifyAccountProof({ appIdentifier }) -- appIdentifier must be a string"
     )
     invariant(
-      typeof address === "string" && sansPrefix(address).length === 16,
-      "address must be a valid address"
+      isString(address) && sansPrefix(address).length === 16,
+      "verifyAccountProof({ address }) -- address must be a valid address"
     )
     invariant(/^[0-9a-f]+$/i.test(nonce), "nonce must be a hex string")
     invariant(
@@ -54,29 +55,19 @@ const getVerifySignaturesScript = async (sig, opts) => {
       ? "verifyAccountProofSignatures"
       : "verifyUserSignatures"
 
+  const network = await config.first(["env", "flow.network"])
   let fclCryptoContract
-  const network = await config.first(["env", "network"])
+
   invariant(
-    network,
-    "Network (local, testnet, mainnet) must be provided via fcl.config.env or fcl.config.network"
+    opts.fclCryptoContract || network === "testnet" || network === "mainnet",
+    "${verifyFunction}({ fclCryptoContract }) -- config.flow.network must be specified (testnet || mainnet) or contract address provided via opts.fclCryptoContract"
   )
 
-  switch (network) {
-    case "local":
-      invariant(
-        opts.fclCryptoContract,
-        `In ${verifyFunction}: opts.fclCryptoContract address required for local network`
-      )
-      fclCryptoContract = opts.fclCryptoContract
-      break
-    case "testnet":
-      fclCryptoContract = "0x74daa6f9c7ef24b1"
-      break
-    case "mainnet":
-      fclCryptoContract = "0xb4b82a1c9d21d284"
-      break
-    default:
-      fclCryptoContract = "0x74daa6f9c7ef24b1"
+  if (opts.fclCryptoContract) {
+    fclCryptoContract = opts.fclCryptoContract
+  } else {
+    fclCryptoContract =
+      network === "testnet" ? "0x74daa6f9c7ef24b1" : "0xb4b82a1c9d21d284"
   }
 
   return `

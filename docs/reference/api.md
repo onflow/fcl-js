@@ -807,7 +807,7 @@ A method allowing applications to cryptographically verify a message was signed 
 
 #### Note
 
-⚠️ `fcl.config.network`, `fcl.config.env` or options override is required to use this api. See [FCL Configuration](#configuration).
+⚠️ `fcl.config.flow.network` or options override is required to use this api. See [FCL Configuration](#configuration).
 
 ### Arguments
 
@@ -846,7 +846,7 @@ const verifySignatures = async (message, compositeSignatures) => {
 A method allowing applications to cryptographically prove that a user controls an on-chain account. During user authentication, some FCL compatible wallets will choose to support the FCL `account-proof` service. If a wallet chooses to support this service, and the user approves the signing of message data, they will return `account-proof` data and a signature(s) that can be used to prove a user controls an on-chain account. 
 See [proving-authentication](https://github.com/onflow/fcl-js/blob/master/docs/reference/proving-authentication.mdx) documentaion for more details.
 
-⚠️ `fcl.config.network`, `fcl.config.env` or options override is required to use this api. See [FCL Configuration](#configuration).
+⚠️ `fcl.config.flow.network` or options override is required to use this api. See [FCL Configuration](#configuration).
 
 ### Arguments
 
