@@ -54,8 +54,7 @@ export async function httpRequest({
   invariant((fetchTransport || nodeHttpsTransport || nodeHttpTransport), "HTTP Request error: Could not find a supported HTTP module.")
 
   if (fetchTransport) {
-
-    return await fetchTransport(
+    return fetchTransport(
       `${hostname}${path}`,
       {
         method: method,
@@ -79,7 +78,6 @@ export async function httpRequest({
     }).catch(e => {
       if (e instanceof HTTPRequestError) {
         throw e
-        return
       }
       throw new HTTPRequestError({
         transport: "FetchTransport",
@@ -125,25 +123,41 @@ export async function httpRequest({
         res.on("end", () => {
           try {
             responseBody = JSON.parse(responseBody.join(""))
+            if (res?.statusCode
+              && (Number(res?.statusCode) < 200 || Number(res?.statusCode) >= 300)
+            ) {
+              throw new HTTPRequestError({
+                transport: isHTTPs ? "NodeHTTPsTransport" : "NodeHTTPTransport",
+                error: JSON.stringify(responseBody),
+                hostname: parsedHostname,
+                path,
+                port,
+                method,
+                requestBody: body ? JSON.stringify(body) : null,
+                responseBody: JSON.stringify(responseBody),
+                reqOn: "end",
+              })
+            }
           } catch(e) {
-            reject(new HTTPRequestError({
+            if (e instanceof HTTPRequestError) {
+              throw e
+            }
+            throw new HTTPRequestError({
               transport: isHTTPs ? "NodeHTTPsTransport" : "NodeHTTPTransport",
               error: e,
               hostname: parsedHostname,
               path,
               port,
               method,
-              requestBody: body,
-              responseBody,
               reqOn: "end",
-            }))
+            })
           }
           resolve(responseBody)
         })
       })
 
       req.on("error", e => {
-        reject(new HTTPRequestError({
+        throw new HTTPRequestError({
           transport: isHTTPs ? "NodeHTTPsTransport" : "NodeHTTPTransport",
           error: e,
           hostname: parsedHostname,
@@ -153,7 +167,7 @@ export async function httpRequest({
           requestBody: body,
           responseBody,
           reqOn: "error",
-        }))
+        })
       })
       
       if (body) req.write(bodyString)
