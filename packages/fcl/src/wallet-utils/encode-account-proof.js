@@ -35,7 +35,7 @@ export const encodeAccountProof = (
   )
 
   const ACCOUNT_PROOF_DOMAIN_TAG = rightPaddedHexBuffer(
-    Buffer.from("FLOW-V0.0-user").toString("hex"),
+    Buffer.from("FCL-ACCOUNT-PROOF-V0.0").toString("hex"),
     32
   )
 
