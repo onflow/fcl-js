@@ -47,8 +47,8 @@ The library uses gRPC to communicate with the access nodes and it must be config
 
 📖 **Access API URLs** can be found [here](https://docs.onflow.org/access-api/#flow-access-node-endpoints). An error will be returned if the host is unreachable.
 The Access Nodes APIs hosted by DapperLabs are accessible at:
-- Testnet `access.devnet.nodes.onflow.org:9000`
-- Mainnet `access.mainnet.nodes.onflow.org:9000`
+- Testnet `https://rest-testnet.onflow.org`
+- Mainnet `https://rest-mainnet.onflow.org`
 - Local Emulator `127.0.0.1:3569` 
 
 For local development, use the [flow emulator](https://github.com/onflow/flow-emulator) which once started provides a gRPC access endpoint at `127.0.0.1:3569`.
@@ -58,7 +58,7 @@ Example:
 import { config } from "@onflow/fcl"
 
 config({
-  "accessNode.api": "access.devnet.nodes.onflow.org:9000"
+  "accessNode.api": "https://rest-testnet.onflow.org"
 })
 
 ```
