@@ -1,5 +1,22 @@
 # @onflow/sdk
 
+## 1.0.0-alpha.1
+
+### Patch Changes
+
+- [#1155](https://github.com/onflow/fcl-js/pull/1155) [`700433d5`](https://github.com/onflow/fcl-js/commit/700433d50d4156183b09b13781f7f74f23882586) Thanks [@caosbad](https://github.com/caosbad)! - Export encodeTransactionPayload, encodeTransactionEnvelope, and encodeTxIdFromVoucher from sdk.
+
+* [#1153](https://github.com/onflow/fcl-js/pull/1153) [`6ff970df`](https://github.com/onflow/fcl-js/commit/6ff970dfc04281c86043e1cf8f5bceb633dc4186) Thanks [@lmcmz](https://github.com/lmcmz)! - Add sansPrefix for address before RLP encoding
+
+- [#1129](https://github.com/onflow/fcl-js/pull/1129) [`7287ff14`](https://github.com/onflow/fcl-js/commit/7287ff14d20e19270ff345cd8b274ad5c8509eb7) Thanks [@JeffreyDoyle](https://github.com/JeffreyDoyle)! - Add blockId to GetTransactionStatus response
+
+* [#1115](https://github.com/onflow/fcl-js/pull/1115) [`f7a985b3`](https://github.com/onflow/fcl-js/commit/f7a985b3cb64ed80c7354f97177ae7ef006530fe) Thanks [@JeffreyDoyle](https://github.com/JeffreyDoyle)! - **BREAKING** Remove deprecated block builders, interaction types and send methods.
+
+* Updated dependencies [[`7287ff14`](https://github.com/onflow/fcl-js/commit/7287ff14d20e19270ff345cd8b274ad5c8509eb7), [`9c191c15`](https://github.com/onflow/fcl-js/commit/9c191c1520ee772b4343265a42ad0e995a92dd9a), [`de47af64`](https://github.com/onflow/fcl-js/commit/de47af647a5bdad154a2d83e2ea2260ab54f0c60), [`b2c95e77`](https://github.com/onflow/fcl-js/commit/b2c95e776a3bbfd769778e0bae767fdd69ba6143), [`828a7b2b`](https://github.com/onflow/fcl-js/commit/828a7b2b4babb6485218e67e49f3a8ba9d4488fd), [`f7a985b3`](https://github.com/onflow/fcl-js/commit/f7a985b3cb64ed80c7354f97177ae7ef006530fe)]:
+  - @onflow/transport-http@1.0.0-alpha.1
+  - @onflow/config@1.0.0-alpha.1
+  - @onflow/util-actor@1.0.0-alpha.1
+
 ## 1.0.0-alpha.0
 
 ### Major Changes
