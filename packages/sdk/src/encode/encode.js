@@ -42,11 +42,11 @@ const preparePayload = tx => {
     tx.arguments.map(argumentToString),
     blockBuffer(tx.refBlock),
     tx.computeLimit,
-    addressBuffer(tx.proposalKey.address),
+    addressBuffer(sansPrefix(tx.proposalKey.address)),
     tx.proposalKey.keyId,
     tx.proposalKey.sequenceNum,
-    addressBuffer(tx.payer),
-    tx.authorizers.map(addressBuffer),
+    addressBuffer(sansPrefix(tx.payer)),
+    tx.authorizers.map(authorizer => addressBuffer(sansPrefix(authorizer))),
   ]
 }
 
