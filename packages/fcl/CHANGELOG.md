@@ -1,5 +1,28 @@
 # @onflow/fcl
 
+## 1.0.0-alpha.2
+
+### Major Changes
+
+- [#1158](https://github.com/onflow/fcl-js/pull/1158) [`f4ae08bb`](https://github.com/onflow/fcl-js/commit/f4ae08bb7e2bdfd1a0364ad1e37b90a489cd104c) Thanks [@gregsantos](https://github.com/gregsantos)! - # Removed default contract address for verifyAccountProof, verifyUserSignatures
+
+  AppUtils.verifyAccountProof and AppUtils.verifyUserSignatures now requires
+  setting `fcl.config.flow.network` (testnet or mainnet) or override contract address via
+  `opts.fclCryptoContract`
+
+### Patch Changes
+
+- [#1143](https://github.com/onflow/fcl-js/pull/1143) [`de47af64`](https://github.com/onflow/fcl-js/commit/de47af647a5bdad154a2d83e2ea2260ab54f0c60) Thanks [@gregsantos](https://github.com/gregsantos)! - Internal update to util-actor
+
+* [#1141](https://github.com/onflow/fcl-js/pull/1141) [`ac108e20`](https://github.com/onflow/fcl-js/commit/ac108e2082659cd9f763c42638d2664e593f514c) Thanks [@gregsantos](https://github.com/gregsantos)! - Add support for local FCLCrypto contract account-proof/user-signature verification. fcl.config.network or opts.fclCryptoContract override is now required to use this api.
+
+- [#1115](https://github.com/onflow/fcl-js/pull/1115) [`f7a985b3`](https://github.com/onflow/fcl-js/commit/f7a985b3cb64ed80c7354f97177ae7ef006530fe) Thanks [@JeffreyDoyle](https://github.com/JeffreyDoyle)! - **BREAKING** Remove deprecated block builders, interaction types and send methods.
+
+- Updated dependencies [[`700433d5`](https://github.com/onflow/fcl-js/commit/700433d50d4156183b09b13781f7f74f23882586), [`6ff970df`](https://github.com/onflow/fcl-js/commit/6ff970dfc04281c86043e1cf8f5bceb633dc4186), [`7287ff14`](https://github.com/onflow/fcl-js/commit/7287ff14d20e19270ff345cd8b274ad5c8509eb7), [`9c191c15`](https://github.com/onflow/fcl-js/commit/9c191c1520ee772b4343265a42ad0e995a92dd9a), [`de47af64`](https://github.com/onflow/fcl-js/commit/de47af647a5bdad154a2d83e2ea2260ab54f0c60), [`f7a985b3`](https://github.com/onflow/fcl-js/commit/f7a985b3cb64ed80c7354f97177ae7ef006530fe)]:
+  - @onflow/sdk@1.0.0-alpha.1
+  - @onflow/config@1.0.0-alpha.1
+  - @onflow/util-actor@1.0.0-alpha.1
+
 ## 1.0.0-alpha.1
 
 ### Minor Changes

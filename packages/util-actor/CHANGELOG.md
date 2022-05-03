@@ -1,5 +1,11 @@
 # @onflow/util-actor
 
+## 1.0.0-alpha.1
+
+### Patch Changes
+
+- [#1143](https://github.com/onflow/fcl-js/pull/1143) [`de47af64`](https://github.com/onflow/fcl-js/commit/de47af647a5bdad154a2d83e2ea2260ab54f0c60) Thanks [@gregsantos](https://github.com/gregsantos)! - Internal update to util-actor
+
 ## 1.0.0-alpha.0
 
 ### Major Changes
