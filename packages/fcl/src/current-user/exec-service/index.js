@@ -17,7 +17,6 @@ const STRATEGIES = {
 }
 
 export async function execService({service, msg = {}, opts = {}, config = {}}) {
-  msg.extensions = window.fcl_extensions || []
   msg.data = service.data
   const fullConfig = {
     ...config,
