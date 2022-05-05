@@ -33,7 +33,7 @@
     "alpha": "npm publish --tag alpha",
     "prepublishOnly": "npm test && npm run build",
     "test": "jest",
-    "build": "microbundle --define MICROBUNDLE_CURRENT_VERSION=$npm_package_version",
+    "build": "microbundle --no-compress --define MICROBUNDLE_CURRENT_VERSION=$npm_package_version",
     "currentVersion": "node -e MICROBUNDLE_CURRENT_VERSION=$npm_package_version",
     "test:watch": "jest --watch",
     "start": "microbundle watch"
