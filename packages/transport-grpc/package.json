@@ -30,7 +30,7 @@
         "alpha": "npm publish --tag alpha",
         "prepublishOnly": "npm test && npm run build",
         "test": "jest",
-        "build": "microbundle",
+        "build": "microbundle --no-compress",
         "test:watch": "jest --watch",
         "start": "microbundle watch"
     },
