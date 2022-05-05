@@ -3,10 +3,10 @@ import {invariant} from "@onflow/util-invariant"
 import {Buffer, encode as rlpEncode} from "@onflow/rlp"
 
 const rightPaddedHexBuffer = (value, pad) =>
-  Buffer.from(value.padEnd(pad * 2, 0), "hex")
+  Buffer.from(value.padEnd(pad * 2, "0"), "hex")
 
 const leftPaddedHexBuffer = (value, pad) =>
-  Buffer.from(value.padStart(pad * 2, 0), "hex")
+  Buffer.from(value.padStart(pad * 2, "0"), "hex")
 
 const addressBuffer = addr => leftPaddedHexBuffer(addr, 8)
 
