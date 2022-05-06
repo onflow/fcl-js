@@ -1,5 +1,28 @@
 # @onflow/fcl
 
+## 1.0.0-alpha.3
+
+### Major Changes
+
+- [#1159](https://github.com/onflow/fcl-js/pull/1159) [`28b482fa`](https://github.com/onflow/fcl-js/commit/28b482fa45131faa9d3fad4195a6790b0d301210) Thanks [@gregsantos](https://github.com/gregsantos)! - Updated Account Proof Domain Tag in WalletUtils encode to "FCL-ACCOUNT-PROOF-V0.0", Update encodeAccountProof padStart
+
+### Patch Changes
+
+- [#1165](https://github.com/onflow/fcl-js/pull/1165) [`f4ce7b6e`](https://github.com/onflow/fcl-js/commit/f4ce7b6eef551dba1ba6fd94ee18a99176f4a041) Thanks [@gregsantos](https://github.com/gregsantos)! - Remove window.extensions from service msg
+
+* [#1164](https://github.com/onflow/fcl-js/pull/1164) [`11229868`](https://github.com/onflow/fcl-js/commit/11229868cf916d204901f8bb3f76ee234e9152a8) Thanks [@justinbarry](https://github.com/justinbarry)! - No longer minify released source code.
+
+* Updated dependencies [[`11229868`](https://github.com/onflow/fcl-js/commit/11229868cf916d204901f8bb3f76ee234e9152a8)]:
+  - @onflow/config@1.0.0-alpha.2
+  - @onflow/rlp@1.0.0-alpha.1
+  - @onflow/sdk@1.0.0-alpha.2
+  - @onflow/types@1.0.0-alpha.1
+  - @onflow/util-actor@1.0.0-alpha.2
+  - @onflow/util-address@1.0.0-alpha.1
+  - @onflow/util-invariant@1.0.0-alpha.1
+  - @onflow/util-template@1.0.0-alpha.1
+  - @onflow/util-uid@1.0.0-alpha.1
+
 ## 1.0.0-alpha.2
 
 ### Major Changes
