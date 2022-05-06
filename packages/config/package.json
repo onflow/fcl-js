@@ -1,6 +1,6 @@
 {
   "name": "@onflow/config",
-  "version": "1.0.0-alpha.1",
+  "version": "1.0.0-alpha.2",
   "description": "Config for FCL-JS",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
@@ -34,6 +34,6 @@
     "start": "microbundle watch"
   },
   "dependencies": {
-    "@onflow/util-actor": "^1.0.0-alpha.1"
+    "@onflow/util-actor": "^1.0.0-alpha.2"
   }
 }
