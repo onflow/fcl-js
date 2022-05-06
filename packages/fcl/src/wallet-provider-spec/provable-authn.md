@@ -16,7 +16,7 @@ For example, it can be sent to the App’s backend and after validating the sign
 1. Wallet receives Authn `FCL:VIEW:READY:RESPONSE` request and parses out the `appIdentifier`, and `nonce`.
 2. The wallet authenticates the user however they choose to do, and determines the user's account `address`
 3. Wallet prepares and signs the message:
-      - Encodes the `appIdentifier`, `nonce`, and `address` along with the `FLOW-V0.0-user` domain separation tag, [using the encoding scheme described below](#account-proof-message-encoding).
+      - Encodes the `appIdentifier`, `nonce`, and `address` along with the `"FCL-ACCOUNT-PROOF-V0.0"` domain separation tag, [using the encoding scheme described below](#account-proof-message-encoding).
       - Signs the message with the `signatureAlgorithm` and `hashAlgorithm` specified on user's key. **It is highly recommended that the wallet display the message data and receive user approval before signing.**
 4. Wallet sends back this new service and data along with the other service configuration when completing Authn.
 
