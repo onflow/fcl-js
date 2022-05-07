@@ -9,7 +9,7 @@ const SESSION_STORAGE = {
   put: async (key, value) => sessionStorage.setItem(key, JSON.stringify(value)),
 }
 
-const LOCAL_STORAGE = {
+export const LOCAL_STORAGE = {
   can: !isServerSide(),
   get: async key => JSON.parse(localStorage.getItem(key)),
   put: async (key, value) => localStorage.setItem(key, JSON.stringify(value)),
