@@ -6,6 +6,8 @@
 
 - [#1164](https://github.com/onflow/fcl-js/pull/1164) [`11229868`](https://github.com/onflow/fcl-js/commit/11229868cf916d204901f8bb3f76ee234e9152a8) Thanks [@justinbarry](https://github.com/justinbarry)! - No longer minify released source code.
 
+* [#1167](https://github.com/onflow/fcl-js/pull/1167) [`d6d0d1`](https://github.com/onflow/fcl-js/commit/cd6d0d1b43f57d316e1325ae415bd862e9eea200) Thanks [@justinbarry](https://github.com/justinbarry)! - Remove warning about interaction field renamings/deprecations.
+
 - Updated dependencies [[`11229868`](https://github.com/onflow/fcl-js/commit/11229868cf916d204901f8bb3f76ee234e9152a8)]:
   - @onflow/config@1.0.0-alpha.2
   - @onflow/rlp@1.0.0-alpha.1
