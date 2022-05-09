@@ -169,7 +169,7 @@ You should now be able to log in or sign up a user and unauthenticate them. Upon
 
 One of the main things you'll often need to do when building a dapp is query the Flow blockchain and the smart contracts deployed on it for data. Since smart contracts will live on both Testnet and Mainnet, let's put the account address where the smart contract lives into the configuration (remember, it's recommended that you change this later to use environment variables). Let's also give it a key of `Profile` and prefix it with `0x` so that the final key is `0xProfile`. The prefix is important because it tells FCL to pull the corresponding addresses needed from the configuration value.
 
-> **Replace file:** `./src/config.js`
+> **Replace file:** `./flow/config.js`
 
 ```javascript
 import { config } from "@onflow/fcl";
