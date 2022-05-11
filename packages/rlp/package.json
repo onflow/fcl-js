@@ -1,6 +1,6 @@
 {
   "name": "@onflow/rlp",
-  "version": "1.0.0-alpha.1",
+  "version": "1.0.0",
   "description": "Port of ethereumjs/rlp",
   "license": "MPL-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",

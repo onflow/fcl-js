@@ -1,5 +1,11 @@
 # @onflow/protobuf
 
+## 1.0.0
+
+### Major Changes
+
+- [#1100](https://github.com/onflow/fcl-js/pull/1100) [`ced27ea8`](https://github.com/onflow/fcl-js/commit/ced27ea855988f02f1312c7b732aa107a410c854) Thanks [@justinbarry](https://github.com/justinbarry)! - Release 1.0.0 alpha
+
 ## 1.0.0-alpha.0
 
 ### Major Changes

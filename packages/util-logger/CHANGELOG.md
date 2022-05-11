@@ -1,5 +1,18 @@
 # @onflow/util-logger
 
+## 1.0.0
+
+### Major Changes
+
+- [#1100](https://github.com/onflow/fcl-js/pull/1100) [`ced27ea8`](https://github.com/onflow/fcl-js/commit/ced27ea855988f02f1312c7b732aa107a410c854) Thanks [@justinbarry](https://github.com/justinbarry)! - Release 1.0.0 alpha
+
+### Patch Changes
+
+- [#1164](https://github.com/onflow/fcl-js/pull/1164) [`11229868`](https://github.com/onflow/fcl-js/commit/11229868cf916d204901f8bb3f76ee234e9152a8) Thanks [@justinbarry](https://github.com/justinbarry)! - No longer minify released source code.
+
+- Updated dependencies [[`700433d5`](https://github.com/onflow/fcl-js/commit/700433d50d4156183b09b13781f7f74f23882586), [`6ff970df`](https://github.com/onflow/fcl-js/commit/6ff970dfc04281c86043e1cf8f5bceb633dc4186), [`7287ff14`](https://github.com/onflow/fcl-js/commit/7287ff14d20e19270ff345cd8b274ad5c8509eb7), [`11229868`](https://github.com/onflow/fcl-js/commit/11229868cf916d204901f8bb3f76ee234e9152a8), [`f7a985b3`](https://github.com/onflow/fcl-js/commit/f7a985b3cb64ed80c7354f97177ae7ef006530fe), [`ced27ea8`](https://github.com/onflow/fcl-js/commit/ced27ea855988f02f1312c7b732aa107a410c854)]:
+  - @onflow/sdk@1.0.0
+
 ## 1.0.0-alpha.1
 
 ### Patch Changes
