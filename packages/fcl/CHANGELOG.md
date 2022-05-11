@@ -833,7 +833,7 @@ FCL                         Wallet
 // Config fcl with contract addresses
 // Their config key must start with `0x`
 fcl.config()
-  .put("env", "testnet")
+  .put("flow.network", "testnet")
   .put("0xProfile", "0x1d007d755506c469")
 
 // Your transactions can now look like this

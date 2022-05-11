@@ -92,7 +92,7 @@ async function myTransaction () {
 import * as fcl from "@onflow/fcl"
 
 fcl.config()
-  .put("env", "testnet")
+  .put("flow.network", "testnet")
   .put("accessNode.api", "https://access-testnet.onflow.org")
   .put("discovery.wallet", "http://localhost:3000/fcl/authn")
   .put("app.detail.title", "Test Harness")
