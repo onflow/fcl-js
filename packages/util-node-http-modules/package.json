@@ -32,6 +32,6 @@
         "test": "jest",
         "build": "microbundle --no-compress --external http,https",
         "test:watch": "jest --watch",
-        "start": "microbundle watch --external http,https"
+        "start": "microbundle watch --no-compress --external http,https"
     }
 }
