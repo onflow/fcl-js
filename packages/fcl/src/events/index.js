@@ -29,7 +29,6 @@ const HANDLERS = {
     } else {
       let next = await block()
       ctx.put(HIGH_WATER_MARK, next)
-      console.log(hwm.height, next.height)
       if (hwm.height < next.height) {
         const data = await send([
           getEventsAtBlockHeightRange(ctx.self(), hwm.height + 1, next.height),
