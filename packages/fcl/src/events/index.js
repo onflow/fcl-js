@@ -4,7 +4,7 @@ import {
   block,
   getEventsAtBlockHeightRange,
   send,
-  decode
+  decode,
 } from "@onflow/sdk"
 
 const RATE = 10000
@@ -29,10 +29,13 @@ const HANDLERS = {
     } else {
       let next = await block()
       ctx.put(HIGH_WATER_MARK, next)
-      const data = await send([
-        getEventsAtBlockHeightRange(ctx.self(), hwm.height, next.height - 1),
-      ]).then(decode)
-      for (let d of data) ctx.broadcast(UPDATED, d.data)
+      console.log(hwm.height, next.height)
+      if (hwm.height < next.height) {
+        const data = await send([
+          getEventsAtBlockHeightRange(ctx.self(), hwm.height + 1, next.height),
+        ]).then(decode)
+        for (let d of data) ctx.broadcast(UPDATED, d.data)
+      }
       ctx.put(TICK, await scheduleTick(ctx))
     }
   },
