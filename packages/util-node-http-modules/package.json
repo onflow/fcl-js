@@ -22,21 +22,16 @@
         "jest-esm-transformer": "1.0.0",
         "microbundle": "^0.13.3"
     },
-    "main": "./src/util-node-http-modules.noop.js",
-    "exports": {
-        "node": {
-            "import": "./src/util-node-http-modules.module.js",
-            "require": "./src/util-node-http-modules.cjs.js"
-        },
-        "default": "./src/util-node-http-modules.noop.js"
-    },
+    "source": "src/util-node-http-modules.js",
+    "main": "dist/util-node-http-modules.js",
+    "module": "dist/util-node-http-modules.module.js",
+    "unpkg": "dist/util-node-http-modules.umd.js",
     "scripts": {
         "alpha": "npm publish --tag alpha",
         "prepublishOnly": "npm test && npm run build",
         "test": "jest",
-        "build": "microbundle --no-compress",
+        "build": "microbundle --no-compress --external http,https",
         "test:watch": "jest --watch",
-        "start": "microbundle watch --no-compress"
-    },
-    "dependencies": {}
+        "start": "microbundle watch --no-compress --external http,https"
+    }
 }
