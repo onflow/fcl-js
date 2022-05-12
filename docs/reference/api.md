@@ -1654,8 +1654,11 @@ useEffect(() => fcl.tx(txId).subscribe(setTxStatus));
 A utility function that lets you set the transaction to get subsequent status updates (via polling) and the finalized result once available.
 ⚠️The poll rate is set at `10000ms` and will update at that interval for getting new events.
 
-#### Arguments
 
+Note:
+⚠️`fcl.eventPollRate` value **could** be set to change the polling rate of all events subcriber ,check [FCL Configuration](#configuration) for guide.
+
+#### Arguments
 | Name        | Type   | Description         |
 | ----------- | ------ | ------------------- |
 | `eventName` | string | A valid event name. |
