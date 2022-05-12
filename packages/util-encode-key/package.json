@@ -32,7 +32,7 @@
     "test": "jest",
     "build": "microbundle --no-compress",
     "test:watch": "jest --watch",
-    "start": "microbundle watch"
+    "start": "microbundle watch --no-compress"
   },
   "dependencies": {
     "@onflow/rlp": "^1.0.0",

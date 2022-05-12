@@ -31,7 +31,7 @@
     "test": "jest",
     "build": "microbundle --no-compress",
     "test:watch": "jest --watch",
-    "start": "microbundle watch"
+    "start": "microbundle watch --no-compress"
   },
   "dependencies": {
     "buffer": "^6.0.3"
