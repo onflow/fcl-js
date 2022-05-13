@@ -1,0 +1,37 @@
+{
+  "name": "@onflow/fcl-wc",
+  "version": "1.0.0-alpha.0",
+  "description": "WalletConnect adapter for FCL",
+  "source": "src/fcl-wc.js",
+  "main": "dist/fcl-wc.js",
+  "module": "dist/fcl-wc.module.js",
+  "unpkg": "dist/fcl-wc.umd.js",
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "prepublishOnly": "npm test && npm run build",
+    "build": "microbundle --no-compress",
+    "start": "microbundle watch --no-compress"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/onflow/fcl-js.git"
+  },
+  "author": "Dapper Labs <dev@dapperlabs.com>",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/onflow/fcl-js/issues"
+  },
+  "homepage": "https://github.com/onflow/fcl-js#readme",
+  "devDependencies": {
+    "jest": "^28.1.0",
+    "jest-esm-transformer": "^1.0.0",
+    "microbundle": "^0.15.0"
+  },
+  "dependencies": {
+    "@walletconnect/client": "^2.0.0-beta.26",
+    "@walletconnect/legacy-modal": "^2.0.0-beta.26",
+    "@walletconnect/types": "^2.0.0-beta.26",
+    "@walletconnect/utils": "^2.0.0-beta.26"
+  }
+}
