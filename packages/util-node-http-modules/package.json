@@ -1,37 +1,42 @@
 {
-    "name": "@onflow/util-node-http-modules",
-    "version": "1.0.0",
-    "description": "Flow SDK Util Get Node Http Modules",
-    "license": "Apache-2.0",
-    "author": "Dapper Labs <dev@dapperlabs.com>",
-    "homepage": "https://onflow.org",
-    "repository": {
-        "type": "git",
-        "url": "git+ssh://git@github.com/onflow/flow-js-sdk.git"
-    },
-    "bugs": {
-        "url": "https://github.com/onflow/flow-js-sdk/issues"
-    },
-    "jest": {
-        "transform": {
-            ".js": "jest-esm-transformer"
-        }
-    },
-    "devDependencies": {
-        "jest": "^27.0.6",
-        "jest-esm-transformer": "1.0.0",
-        "microbundle": "^0.13.3"
-    },
-    "source": "src/util-node-http-modules.js",
-    "main": "dist/util-node-http-modules.js",
-    "module": "dist/util-node-http-modules.module.js",
-    "unpkg": "dist/util-node-http-modules.umd.js",
-    "scripts": {
-        "alpha": "npm publish --tag alpha",
-        "prepublishOnly": "npm test && npm run build",
-        "test": "jest",
-        "build": "microbundle --no-compress --external http,https",
-        "test:watch": "jest --watch",
-        "start": "microbundle watch --no-compress --external http,https"
+  "name": "@onflow/util-node-http-modules",
+  "version": "1.0.0",
+  "description": "Flow SDK Util Get Node Http Modules",
+  "license": "Apache-2.0",
+  "author": "Dapper Labs <dev@dapperlabs.com>",
+  "homepage": "https://onflow.org",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/onflow/flow-js-sdk.git"
+  },
+  "bugs": {
+    "url": "https://github.com/onflow/flow-js-sdk/issues"
+  },
+  "jest": {
+    "transform": {
+      ".js": "jest-esm-transformer"
     }
+  },
+  "devDependencies": {
+    "jest": "^27.0.6",
+    "jest-esm-transformer": "1.0.0",
+    "microbundle": "^0.13.3"
+  },
+  "source": [
+    "./src/util-node-http-modules.module.js",
+    "./src/util-node-http-modules.noop.js"
+  ],
+  "main": "dist/util-node-http-modules.noop.js",
+  "exports": {
+    "node": "./dist/util-node-http-modules.module.js",
+    "import": "./dist/util-node-http-modules.noop.js"
+  },
+  "scripts": {
+    "alpha": "npm publish --tag alpha",
+    "prepublishOnly": "npm test && npm run build",
+    "test": "jest",
+    "build": "microbundle --no-compress --external http,https",
+    "test:watch": "jest --watch",
+    "start": "microbundle watch --no-compress --external http,https"
+  }
 }
