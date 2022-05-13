@@ -47,7 +47,14 @@ const HANDLERS = {
     letter.reply(ctx.all())
   },
   [POLL]: async ctx => {
-    const tx = await fetchTxStatus(ctx.self())
+    let tx
+    try {
+      tx = await fetchTxStatus(ctx.self())
+    } catch (e) {
+      console.error(e)
+      setTimeout(() => ctx.sendSelf(POLL), RATE)
+      return
+    }
     if (!isSealed(tx)) setTimeout(() => ctx.sendSelf(POLL), RATE)
     if (isDiff(ctx.all(), tx)) ctx.broadcast(UPDATED, tx)
     ctx.merge(tx)
