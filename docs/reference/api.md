@@ -1656,7 +1656,7 @@ A utility function that lets you set the transaction to get subsequent status up
 
 
 Note:
-⚠️`fcl.eventPollRate` value **could** be set to change the polling rate of all events subcriber ,check [FCL Configuration](#configuration) for guide.
+⚠️`fcl.eventPollRate` value **could** be set to change the polling rate of all events subcribers, check [FCL Configuration](#configuration) for guide.
 
 #### Arguments
 | Name        | Type   | Description         |
