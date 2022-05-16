@@ -1,19 +1,19 @@
 ---
-"@onflow/config": minor
-"@onflow/fcl": minor
-"@onflow/rlp": minor
-"@onflow/sdk": minor
-"@onflow/transport-grpc": minor
-"@onflow/transport-http": minor
-"@onflow/types": minor
-"@onflow/util-actor": minor
-"@onflow/util-address": minor
-"@onflow/util-encode-key": minor
-"@onflow/util-invariant": minor
-"@onflow/util-logger": minor
-"@onflow/util-node-http-modules": minor
-"@onflow/util-template": minor
-"@onflow/util-uid": minor
+"@onflow/config": patch
+"@onflow/fcl": patch
+"@onflow/rlp": patch
+"@onflow/sdk": patch
+"@onflow/transport-grpc": patch
+"@onflow/transport-http": patch
+"@onflow/types": patch
+"@onflow/util-actor": patch
+"@onflow/util-address": patch
+"@onflow/util-encode-key": patch
+"@onflow/util-invariant": patch
+"@onflow/util-logger": patch
+"@onflow/util-node-http-modules": patch
+"@onflow/util-template": patch
+"@onflow/util-uid": patch
 ---
 
 Add --no-compress to watch scripts for easier debugging
