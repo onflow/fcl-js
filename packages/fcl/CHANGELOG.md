@@ -1,5 +1,24 @@
 # @onflow/fcl
 
+## 1.0.1
+
+### Patch Changes
+
+- [#1181](https://github.com/onflow/fcl-js/pull/1181) [`25e87101`](https://github.com/onflow/fcl-js/commit/25e8710162a105771d1629eced6270ce37718a1b) Thanks [@jribbink](https://github.com/jribbink)! - Added exception handling in transaction subscriber polling to handle network disconnect/server error events
+
+* [#1178](https://github.com/onflow/fcl-js/pull/1178) [`9e7e4cfb`](https://github.com/onflow/fcl-js/commit/9e7e4cfbc026765019653b0e891e63a2d789ceb4) Thanks [@jribbink](https://github.com/jribbink)! - Add --no-compress to watch scripts for easier debugging
+
+* Updated dependencies [[`9e7e4cfb`](https://github.com/onflow/fcl-js/commit/9e7e4cfbc026765019653b0e891e63a2d789ceb4)]:
+  - @onflow/config@1.0.1
+  - @onflow/rlp@1.0.1
+  - @onflow/sdk@1.0.1
+  - @onflow/types@1.0.1
+  - @onflow/util-actor@1.0.1
+  - @onflow/util-address@1.0.1
+  - @onflow/util-invariant@1.0.1
+  - @onflow/util-template@1.0.1
+  - @onflow/util-uid@1.0.1
+
 ## 1.0.0
 
 ### Major Changes

@@ -1,5 +1,21 @@
 # @onflow/sdk
 
+## 1.0.1
+
+### Patch Changes
+
+- [#1178](https://github.com/onflow/fcl-js/pull/1178) [`9e7e4cfb`](https://github.com/onflow/fcl-js/commit/9e7e4cfbc026765019653b0e891e63a2d789ceb4) Thanks [@jribbink](https://github.com/jribbink)! - Add --no-compress to watch scripts for easier debugging
+
+- Updated dependencies [[`9e7e4cfb`](https://github.com/onflow/fcl-js/commit/9e7e4cfbc026765019653b0e891e63a2d789ceb4), [`f348803d`](https://github.com/onflow/fcl-js/commit/f348803dbaaebad6d7081248b41f5582d5627d86)]:
+  - @onflow/config@1.0.1
+  - @onflow/rlp@1.0.1
+  - @onflow/transport-http@1.1.0
+  - @onflow/util-actor@1.0.1
+  - @onflow/util-address@1.0.1
+  - @onflow/util-invariant@1.0.1
+  - @onflow/util-logger@1.0.1
+  - @onflow/util-template@1.0.1
+
 ## 1.0.0
 
 ### Major Changes
