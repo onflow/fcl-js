@@ -138,6 +138,16 @@ const makeIx = wat => ix => {
   return Ok(ix)
 }
 
+const prepAccountKeyId = acct => {
+  if (!acct.keyId) return acct
+
+  invariant(Number.isInteger(+acct.keyId), "account.keyId must be an integer")
+  return {
+    ...acct,
+    keyId: +acct.keyId,
+  }
+}
+
 export const prepAccount = (acct, opts = {}) => ix => {
   invariant(
     typeof acct === "function" || typeof acct === "object",
@@ -149,8 +159,15 @@ export const prepAccount = (acct, opts = {}) => ix => {
   const role = opts.role
   const tempId = uuid()
 
-  if (acct.authorization && isFn(acct.authorization)) acct = {resolve: acct.authorization}
+  if (acct.authorization && isFn(acct.authorization))
+    acct = {resolve: acct.authorization}
   if (!acct.authorization && isFn(acct)) acct = {resolve: acct}
+
+  const resolve = acct.resolve
+  if (resolve)
+    acct.resolve = acct =>
+      [resolve, prepAccountKeyId].reduce((d, fn) => fn(d), acct)
+  acct = prepAccountKeyId(acct)
 
   ix.accounts[tempId] = {
     ...ACCOUNT,
@@ -184,7 +201,9 @@ export const makeArgument = arg => ix => {
   ix.arguments[tempId].asArgument = arg.asArgument
   ix.arguments[tempId].xform = arg.xform
   ix.arguments[tempId].resolve = arg.resolve
-  ix.arguments[tempId].resolveArgument = isFn(arg.resolveArgument) ? arg.resolveArgument.bind(arg) : arg.resolveArgument
+  ix.arguments[tempId].resolveArgument = isFn(arg.resolveArgument)
+    ? arg.resolveArgument.bind(arg)
+    : arg.resolveArgument
 
   return Ok(ix)
 }
