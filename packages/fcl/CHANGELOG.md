@@ -1,5 +1,11 @@
 # @onflow/fcl
 
+## 1.0.2
+
+### Patch Changes
+
+- [#1190](https://github.com/onflow/fcl-js/pull/1190) [`3355cb14`](https://github.com/onflow/fcl-js/commit/3355cb148f2e6a447d8076b3ae62c40747c338ce) Thanks [@jribbink](https://github.com/jribbink)! - Updated wallet provider spec for sansPrefix/withPrefix address requirements for acct.address/compSig.address
+
 ## 1.0.1
 
 ### Patch Changes
