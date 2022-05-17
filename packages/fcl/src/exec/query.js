@@ -9,6 +9,7 @@ import {normalizeArgs} from "./utils/normalize-args"
  *  @arg {Object} opts         - Query Options and configuration
  *  @arg {string} opts.cadence - Cadence Script used to query Flow
  *  @arg {ArgsFn} opts.args    - Arguments passed to cadence script
+ *  @arg {Object} opts.template - Template passed to cadence transaction
  *  @arg {number} opts.limit   - Compute Limit for Query
  *  @returns {Promise<Response>}
  *
@@ -45,8 +46,9 @@ export async function query(opts = {}) {
 
   // prettier-ignore
   return sdk.send([
-    sdk.script(opts.cadence),
+    sdk.script(opts.cadence || opts?.template?.data?.cadence),
     sdk.args(normalizeArgs(opts.args || [])),
+    sdk.template(opts.template || null),
     opts.limit && typeof opts.limit === "number" && sdk.limit(opts.limit)
   ]).then(sdk.decode)
 }

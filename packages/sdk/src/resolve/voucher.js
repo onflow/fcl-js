@@ -15,7 +15,7 @@ export function findInsideSigners(ix) {
 
 export function findOutsideSigners(ix) {
   // Outside Signers Are: (payer)
-  let outside = new Set(Array.isArray(ix.payer) ? ix.payer : [ix.payer])
+  let outside = new Set(ix.payer)
   return Array.from(outside)
 }
 
@@ -47,6 +47,7 @@ export const createSignableVoucher = ix => {
     cadence: ix.message.cadence,
     refBlock: ix.message.refBlock || null,
     computeLimit: ix.message.computeLimit,
+    template: ix.template,
     arguments: ix.message.arguments.map(id => ix.arguments[id].asArgument),
     proposalKey: {
       address: withPrefix(ix.accounts[ix.proposer].addr),

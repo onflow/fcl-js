@@ -10,6 +10,7 @@ import {transaction} from "../transaction"
  *  @arg {Object} opts - Mutation Options and configuration
  *  @arg {string} opts.cadence - Cadence Transaction used to mutate Flow
  *  @arg {ArgsFn} opts.args - Arguments passed to cadence transaction
+ *  @arg {Object} opts.template - Template passed to cadence transaction
  *  @arg {number} opts.limit - Compute Limit for transaction
  *  @returns {string} Transaction Id
  *
@@ -69,7 +70,7 @@ export async function mutate(opts = {}) {
 
     // prettier-ignore
     txid = sdk.send([
-      sdk.transaction(opts.cadence),
+      sdk.transaction(opts.cadence || opts?.template?.data?.cadence),
 
       sdk.args(normalizeArgs(opts.args || [])),
 
@@ -80,6 +81,8 @@ export async function mutate(opts = {}) {
 
       // opts.payer > opts.authz > authz
       sdk.payer(opts.payer || opts.authz || authz),
+
+      sdk.template(opts.template || null),
 
       // opts.authorizations > [opts.authz > authz]
       sdk.authorizations(opts.authorizations || [opts.authz || authz]),
@@ -97,9 +100,9 @@ async function prepMutation(opts) {
   // prettier-ignore
   invariant(isObject(opts), "mutate(opts) -- opts must be an object")
   // prettier-ignore
-  invariant(isRequired(opts.cadence), "mutate({ cadence }) -- cadence is required")
+  invariant(isRequired(opts.cadence || opts?.template), "mutate({ cadence }) -- cadence is required")
   // prettier-ignore
-  invariant(isString(opts.cadence), "mutate({ cadence }) -- cadence must be a string")
+  invariant(isString(opts.cadence) || isString(opts?.template?.data.cadence), "mutate({ cadence }) -- cadence must be a string")
   // prettier-ignore
   invariant(
     await sdk.config.get("accessNode.api"),

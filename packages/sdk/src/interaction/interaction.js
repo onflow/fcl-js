@@ -68,6 +68,7 @@ const IX = `{
   "accounts":{},
   "params":{},
   "arguments":{},
+  "template":null,
   "message": {
     "cadence":null,
     "refBlock":null,
