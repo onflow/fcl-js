@@ -1,5 +1,16 @@
 # @onflow/transport-http
 
+## 1.2.0
+
+### Minor Changes
+
+- [#1188](https://github.com/onflow/fcl-js/pull/1188) [`b873a0fa`](https://github.com/onflow/fcl-js/commit/b873a0fa401d46b831f089118e746ab91b264f6c) Thanks [@jribbink](https://github.com/jribbink)! - Added `statusCode` to `transactionStatus` (previously always 0)
+
+### Patch Changes
+
+- Updated dependencies [[`5fd10864`](https://github.com/onflow/fcl-js/commit/5fd10864c33ec5fb178b7cd85ef823ae08c4ff04)]:
+  - @onflow/util-node-http-modules@1.0.2
+
 ## 1.1.0
 
 ### Minor Changes
