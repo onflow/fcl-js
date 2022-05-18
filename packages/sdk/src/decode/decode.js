@@ -23,39 +23,39 @@ const decodeNumber = async (num, _, stack) => {
   }
 }
 
-const decodeImplicit = async (i) => i
+const decodeImplicit = async i => i
 
 const decodeVoid = async () => null
 
-const decodeType = async (type) => {
+const decodeType = async type => {
   return type.staticType
 }
 
-const decodePath = async (path) => {
+const decodePath = async path => {
   return {
     domain: path.domain,
-    identifier: path.identifier
+    identifier: path.identifier,
   }
 }
 
-const decodeCapability = async (cap) => {
+const decodeCapability = async cap => {
   return {
     path: cap.path,
     address: cap.address,
-    borrowType: cap.borrowType
+    borrowType: cap.borrowType,
   }
 }
 
 const decodeOptional = async (optional, decoders, stack) =>
   optional ? await recurseDecode(optional, decoders, stack) : null
 
-const decodeReference = async (v) => ({address: v.address, type: v.type})
+const decodeReference = async v => ({address: v.address, type: v.type})
 
 const decodeArray = async (array, decoders, stack) =>
   await Promise.all(
     array.map(
-      (v) =>
-        new Promise(async (res) =>
+      v =>
+        new Promise(async res =>
           res(await recurseDecode(v, decoders, [...stack, v.type]))
         )
     )
@@ -120,7 +120,7 @@ const defaultDecoders = {
 }
 
 const decoderLookup = (decoders, lookup) => {
-  const found = Object.keys(decoders).find((decoder) => {
+  const found = Object.keys(decoders).find(decoder => {
     if (/^\/.*\/$/.test(decoder)) {
       const reg = new RegExp(decoder.substring(1, decoder.length - 1))
       return reg.test(lookup)
@@ -144,15 +144,29 @@ export const decode = async (
   customDecoders = {},
   stack = []
 ) => {
-  let decoders = {...defaultDecoders, ...customDecoders}
+  // Filter out all default decoders which are overriden by a custom decoder regex
+  const filteredDecoders = Object.keys(defaultDecoders)
+    .filter(
+      decoder =>
+        !Object.keys(customDecoders).find(customDecoder =>
+          new RegExp(customDecoder).test(decoder)
+        )
+    )
+    .reduce((decoders, decoderKey) => {
+      decoders[decoderKey] = defaultDecoders[decoderKey]
+      return decoders
+    }, customDecoders)
+
+  const decoders = {
+    ...filteredDecoders,
+    ...customDecoders,
+  }
   return await recurseDecode(decodeInstructions, decoders, stack)
 }
 
 export const decodeResponse = async (response, customDecoders = {}) => {
-  let decoders = {...defaultDecoders, ...customDecoders}
-
   if (response.encodedData) {
-    return await decode(response.encodedData, decoders)
+    return await decode(response.encodedData, customDecoders)
   } else if (response.transactionStatus) {
     return {
       ...response.transactionStatus,
@@ -163,7 +177,7 @@ export const decodeResponse = async (response, customDecoders = {}) => {
             transactionId: e.transactionId,
             transactionIndex: e.transactionIndex,
             eventIndex: e.eventIndex,
-            data: await decode(e.payload, decoders),
+            data: await decode(e.payload, customDecoders),
           }
         })
       ),
@@ -181,7 +195,7 @@ export const decodeResponse = async (response, customDecoders = {}) => {
           transactionId: e.transactionId,
           transactionIndex: e.transactionIndex,
           eventIndex: e.eventIndex,
-          data: await decode(e.payload, decoders),
+          data: await decode(e.payload, customDecoders),
         }
       })
     )
