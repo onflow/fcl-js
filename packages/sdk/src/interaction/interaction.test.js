@@ -36,7 +36,7 @@ describe("prepAccount", () => {
         accounts: {},
       })
     )
-    ix.accounts[ix.proposer] = ix.accounts[ix.proposer].resolve()
+    ix.accounts[ix.proposer] = await ix.accounts[ix.proposer].resolve()
     expect(ix.accounts[ix.proposer].keyId).toBe(parseInt(keyId))
   })
 })
