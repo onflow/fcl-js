@@ -139,12 +139,12 @@ const makeIx = wat => ix => {
 }
 
 const prepAccountKeyId = acct => {
-  if (!acct.keyId) return acct
+  if (acct.keyId == null || acct.keyId == undefined) return acct
 
-  invariant(Number.isInteger(+acct.keyId), "account.keyId must be an integer")
+  invariant(!isNaN(parseInt(acct.keyId)), "account.keyId must be an integer")
   return {
     ...acct,
-    keyId: +acct.keyId,
+    keyId: parseInt(acct.keyId),
   }
 }
 
