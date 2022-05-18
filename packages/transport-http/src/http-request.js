@@ -21,16 +21,18 @@ class HTTPRequestError extends Error {
       ${error ? `error=${error}` : ""}
       ${hostname ? `hostname=${hostname}` : ""}
       ${path ? `path=${path}` : ""}
+      ${port ? `port=${port}` : ""}
       ${method ? `method=${method}` : ""}
       ${requestBody ? `requestBody=${JSON.stringify(requestBody)}` : ""}
-      ${responseBody ? `responseBody=${responseBody}` : ""}
+      ${responseBody ? `responseBody=${JSON.stringify(responseBody)}` : ""}
       ${responseStatusText ? `responseStatusText=${responseStatusText}` : ""}
       ${reqOn ? `reqOn=${reqOn}` : ""}
       ${statusCode ? `statusCode=${statusCode}` : ""}
     `
     super(msg)
     this.name = "HTTP Request Error"
-    this.statusCode = statusCode
+    this.statusCode = responseBody?.code ?? statusCode
+    this.errorMessage = responseBody?.message
   }
 }
 
@@ -105,7 +107,7 @@ export async function httpRequest({
           if (res.ok) {
             return res.json()
           }
-          const responseJSON = JSON.stringify(await res.json())
+          const responseJSON = await res.json()
           throw new HTTPRequestError({
             transport: "FetchTransport",
             error: responseJSON?.message,
@@ -182,8 +184,8 @@ export async function httpRequest({
                   path,
                   port,
                   method,
-                  requestBody: body ? JSON.stringify(body) : null,
-                  responseBody: JSON.stringify(responseBody),
+                  requestBody: body ?? null,
+                  responseBody: responseBody,
                   reqOn: "end",
                   statusCode: res?.statusCode,
                 })
