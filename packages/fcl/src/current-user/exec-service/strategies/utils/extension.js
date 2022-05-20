@@ -10,10 +10,14 @@ export function extension(service, opts = {}) {
   const onReady = opts.onReady || noop
   const onResponse = opts.onResponse || noop
 
-  window.addEventListener(
-    "message",
-    buildMessageHandler({close, send, onReady, onResponse, onMessage})
-  )
+  const handler = buildMessageHandler({
+    close,
+    send,
+    onReady,
+    onResponse,
+    onMessage,
+  })
+  window.addEventListener("message", handler)
 
   send({service})
 
@@ -21,7 +25,7 @@ export function extension(service, opts = {}) {
 
   function close() {
     try {
-      window.removeEventListener("message", buildMessageHandler)
+      window.removeEventListener("message", handler)
       onClose()
     } catch (error) {
       console.error("Ext Close Error", error)

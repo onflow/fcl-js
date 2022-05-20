@@ -12,12 +12,18 @@ export function pop(service, opts = {}) {
   const onReady = opts.onReady || noop
   const onResponse = opts.onResponse || noop
 
-  window.addEventListener(
-    "message",
-    buildMessageHandler({close, send, onReady, onResponse, onMessage})
-  )
+  const handler = buildMessageHandler({
+    close,
+    send,
+    onReady,
+    onResponse,
+    onMessage,
+  })
+  window.addEventListener("message", handler)
+
   const [$pop, unmount] = renderPop(serviceEndpoint(service))
-  const timer = setInterval(function () {
+
+  const timer = setInterval(function() {
     if ($pop && $pop.closed) {
       close()
     }
@@ -27,7 +33,7 @@ export function pop(service, opts = {}) {
 
   function close() {
     try {
-      window.removeEventListener("message", buildMessageHandler)
+      window.removeEventListener("message", handler)
       clearInterval(timer)
       unmount()
       onClose()

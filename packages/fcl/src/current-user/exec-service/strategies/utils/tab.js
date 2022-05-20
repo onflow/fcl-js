@@ -12,12 +12,17 @@ export function tab(service, opts = {}) {
   const onReady = opts.onReady || noop
   const onResponse = opts.onResponse || noop
 
-  window.addEventListener(
-    "message",
-    buildMessageHandler({close, send, onReady, onResponse, onMessage})
-  )
+  const handler = buildMessageHandler({
+    close,
+    send,
+    onReady,
+    onResponse,
+    onMessage,
+  })
+  window.addEventListener("message", handler)
+
   const [$tab, unmount] = renderTab(serviceEndpoint(service))
-  const timer = setInterval(function () {
+  const timer = setInterval(function() {
     if ($tab && $tab.closed) {
       close()
     }
@@ -27,7 +32,7 @@ export function tab(service, opts = {}) {
 
   function close() {
     try {
-      window.removeEventListener("message", buildMessageHandler)
+      window.removeEventListener("message", handler)
       clearInterval(timer)
       unmount()
       onClose()
