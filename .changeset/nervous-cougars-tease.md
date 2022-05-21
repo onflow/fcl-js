@@ -2,4 +2,4 @@
 "@onflow/fcl": patch
 ---
 
-export LOCAL_STORAGE const
+export storage options consumed by `fcl.storage` so it can be injected as needed into the fcl.config
