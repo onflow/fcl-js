@@ -3,7 +3,7 @@ import {VERSION} from "./VERSION"
 
 const isServerSide = () => typeof window === "undefined"
 
-const SESSION_STORAGE = {
+export const SESSION_STORAGE = {
   can: !isServerSide(),
   get: async key => JSON.parse(sessionStorage.getItem(key)),
   put: async (key, value) => sessionStorage.setItem(key, JSON.stringify(value)),
@@ -15,7 +15,7 @@ export const LOCAL_STORAGE = {
   put: async (key, value) => localStorage.setItem(key, JSON.stringify(value)),
 }
 
-const NO_STORAGE = {
+export const NO_STORAGE = {
   can: false,
 }
 
