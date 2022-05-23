@@ -113,6 +113,11 @@ async function getAccountProofData() {
 }
 
 async function authenticate({service, redir = false} = {}) {
+  if (service?.provider?.requires_install) {
+    window.open(service?.provider?.install_link, '_blank')
+    return
+  }
+
   return new Promise(async (resolve, reject) => {
     spawnCurrentUser()
     const opts = {redir}
