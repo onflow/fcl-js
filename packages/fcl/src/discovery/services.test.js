@@ -54,6 +54,8 @@ const serviceFour = {
   }
 }
 
+const endpoint = "https://fcl-discovery.onflow.org/api/testnet/authn"
+
 describe("getServices", () => {
   let windowSpy
   let configRef
@@ -81,8 +83,6 @@ describe("getServices", () => {
     }))
 
     const response = await getServices({ type: "authn" })
-    const expectedResponse = [serviceThree, serviceOne] // returns extensions first
-    expect(response.length).toEqual(2)
-    expect(response).toEqual(expectedResponse)
+    expect(global.fetch).toHaveBeenCalledTimes(1)
   })
 })
