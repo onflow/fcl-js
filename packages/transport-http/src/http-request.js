@@ -88,7 +88,7 @@ export async function httpRequest({
               resolve(requestLoop(retryAttempt + 1))
             }, retryIntervalMs)
           } else {
-            throw error
+            reject(error)
           }
         })
       } else {
@@ -175,11 +175,33 @@ export async function httpRequest({
                 (Number(res?.statusCode) < 200 ||
                   Number(res?.statusCode) >= 300)
               ) {
-                throw new HTTPRequestError({
+                reject(
+                  new HTTPRequestError({
+                    transport: isHTTPs
+                      ? "NodeHTTPsTransport"
+                      : "NodeHTTPTransport",
+                    error: JSON.stringify(responseBody),
+                    hostname: parsedHostname,
+                    path,
+                    port,
+                    method,
+                    requestBody: body ? JSON.stringify(body) : null,
+                    responseBody: JSON.stringify(responseBody),
+                    reqOn: "end",
+                    statusCode: res?.statusCode,
+                  })
+                )
+              }
+            } catch (e) {
+              if (e instanceof HTTPRequestError) {
+                reject(e)
+              }
+              reject(
+                new HTTPRequestError({
                   transport: isHTTPs
                     ? "NodeHTTPsTransport"
                     : "NodeHTTPTransport",
-                  error: JSON.stringify(responseBody),
+                  error: e,
                   hostname: parsedHostname,
                   path,
                   port,
@@ -187,39 +209,27 @@ export async function httpRequest({
                   requestBody: body ?? null,
                   responseBody: responseBody,
                   reqOn: "end",
-                  statusCode: res?.statusCode,
                 })
-              }
-            } catch (e) {
-              if (e instanceof HTTPRequestError) {
-                throw e
-              }
-              throw new HTTPRequestError({
-                transport: isHTTPs ? "NodeHTTPsTransport" : "NodeHTTPTransport",
-                error: e,
-                hostname: parsedHostname,
-                path,
-                port,
-                method,
-                reqOn: "end",
-              })
+              )
             }
             resolve(responseBody)
           })
         })
 
         req.on("error", e => {
-          throw new HTTPRequestError({
-            transport: isHTTPs ? "NodeHTTPsTransport" : "NodeHTTPTransport",
-            error: e,
-            hostname: parsedHostname,
-            path,
-            port,
-            method,
-            requestBody: body,
-            responseBody,
-            reqOn: "error",
-          })
+          reject(
+            new HTTPRequestError({
+              transport: isHTTPs ? "NodeHTTPsTransport" : "NodeHTTPTransport",
+              error: e,
+              hostname: parsedHostname,
+              path,
+              port,
+              method,
+              requestBody: body,
+              responseBody,
+              reqOn: "error",
+            })
+          )
         })
 
         if (body) req.write(bodyString)

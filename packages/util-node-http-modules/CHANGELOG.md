@@ -1,5 +1,11 @@
 # @onflow/util-node-http-modules
 
+## 1.0.2
+
+### Patch Changes
+
+- [#1194](https://github.com/onflow/fcl-js/pull/1194) [`5fd10864`](https://github.com/onflow/fcl-js/commit/5fd10864c33ec5fb178b7cd85ef823ae08c4ff04) Thanks [@jribbink](https://github.com/jribbink)! - Fix support for jest-dom in util-node-http-modules
+
 ## 1.0.1
 
 ### Patch Changes
