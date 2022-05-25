@@ -144,7 +144,7 @@ export const decode = async (
   customDecoders = {},
   stack = []
 ) => {
-  // Filter out all default decoders which are overriden by a custom decoder regex
+  // Filter out all default decoders which are overridden by a custom decoder regex
   const filteredDecoders = Object.keys(defaultDecoders)
     .filter(
       decoder =>
