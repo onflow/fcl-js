@@ -166,7 +166,7 @@ export const decode = async (
 
 export const decodeResponse = async (response, customDecoders = {}) => {
   if (response.encodedData) {
-    return await decode(response.encodedData, customDecoders)
+    return decode(response.encodedData, customDecoders)
   } else if (response.transactionStatus) {
     return {
       ...response.transactionStatus,
