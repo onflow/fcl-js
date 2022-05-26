@@ -55,7 +55,22 @@ const getVerifySignaturesScript = async (sig, opts) => {
       ? "verifyAccountProofSignatures"
       : "verifyUserSignatures"
 
-  const network = await config.first(["env", "flow.network"])
+  let network = await config.get("flow.network")
+  if (!network) {
+    network = await config.get("env")
+    if (network)
+      console.warn(
+        `%cFCL/SDK Deprecation Notice
+============================
+
+Using the "env" configuration key for specifying the flow network has been deprecated in favor of "flow.network" and will not be supported in future versions of the FCL.
+You can learn more (including a guide on common transition paths) here: https://github.com/onflow/flow-js-sdk/blob/master/packages/fcl/TRANSITIONS.md#0002-deprecate-env-config-key
+
+============================`,
+        "font-weight:bold;font-family:monospace;"
+      )
+  }
+
   let fclCryptoContract
 
   invariant(
