@@ -161,7 +161,7 @@ export const decode = async (
     ...filteredDecoders,
     ...customDecoders,
   }
-  return await recurseDecode(decodeInstructions, decoders, stack)
+  return recurseDecode(decodeInstructions, decoders, stack)
 }
 
 export const decodeResponse = async (response, customDecoders = {}) => {
