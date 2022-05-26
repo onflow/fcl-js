@@ -165,8 +165,11 @@ export const prepAccount = (acct, opts = {}) => ix => {
 
   const resolve = acct.resolve
   if (resolve)
-    acct.resolve = acct =>
-      [resolve, prepAccountKeyId].reduce(async (d, fn) => fn(await d), acct)
+    acct.resolve = (acct, ...rest) =>
+      [resolve, prepAccountKeyId].reduce(
+        async (d, fn) => fn(await d, ...rest),
+        acct
+      )
   acct = prepAccountKeyId(acct)
 
   ix.accounts[tempId] = {
