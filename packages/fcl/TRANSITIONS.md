@@ -1,7 +1,7 @@
 # Transitions
 
 ## 0002 Deprecate `env` config key
-- **Date:** July 22nd 2020
+- **Date:** May 26th 2022
 - **Type:** Deprecation of `env` in config
 
 When specifying which flow network for FCL to use, use the `flow.network` config key instead of `env` (e.g. `fcl.config.put("flow.network", "testnet")`).  Permitted values are currently `local`, `canarynet`, `testnet`, `mainnet`.
