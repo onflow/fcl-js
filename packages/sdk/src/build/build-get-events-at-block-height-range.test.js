@@ -7,7 +7,11 @@ describe("Build Get Events At Block Height Range", () => {
     const start = 123
     const end = 456
 
-    let ix = await getEventsAtBlockHeightRange(eventName, start, end)(interaction())
+    let ix = await getEventsAtBlockHeightRange(
+      eventName,
+      start,
+      end
+    )(interaction())
 
     expect(isGetEvents(ix)).toBe(true)
     expect(ix.events.eventType).toBe(eventName)

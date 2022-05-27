@@ -1,7 +1,7 @@
 import authn from "./services/authn"
 
 const discovery = {
-  authn
+  authn,
 }
 
 export {discovery}

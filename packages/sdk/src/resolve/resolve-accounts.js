@@ -49,31 +49,35 @@ async function collectAccounts(ix, accounts, last, depth = 3) {
 
       if (ix.accounts[ax.tempId].role.payer) {
         if (Array.isArray(ix.payer)) {
-          ix.payer = Array.from(new Set([...ix.payer, ax.tempId].map(d =>
-            d === old.tempId ? ax.tempId : d
-          )))
+          ix.payer = Array.from(
+            new Set(
+              [...ix.payer, ax.tempId].map(d =>
+                d === old.tempId ? ax.tempId : d
+              )
+            )
+          )
         } else {
-          ix.payer = Array.from(new Set([ix.payer, ax.tempId].map(d =>
-            d === old.tempId ? ax.tempId : d
-          )))
+          ix.payer = Array.from(
+            new Set(
+              [ix.payer, ax.tempId].map(d => (d === old.tempId ? ax.tempId : d))
+            )
+          )
         }
         if (ix.payer.length > 1) {
           // remove payer dups based on addr and keyId
           const dupList = []
           const payerAccts = []
           ix.payer = ix.payer.reduce((g, tempId) => {
-            const { addr, keyId } = ix.accounts[tempId];
-            const key = `${addr}-${keyId}`;
+            const {addr, keyId} = ix.accounts[tempId]
+            const key = `${addr}-${keyId}`
             payerAccts.push(addr)
-            if (dupList.includes(key)) return g;
+            if (dupList.includes(key)) return g
             dupList.push(key)
             return [...g, tempId]
           }, [])
           const multiAccts = Array.from(new Set(payerAccts))
           if (multiAccts.length > 1) {
-            throw new Error(
-              "Payer can not be different accounts"
-            )
+            throw new Error("Payer can not be different accounts")
           }
         }
       }

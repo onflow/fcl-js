@@ -1,4 +1,11 @@
-import {spawn, subscriber, snapshoter, INIT, SUBSCRIBE, UNSUBSCRIBE} from "@onflow/util-actor"
+import {
+  spawn,
+  subscriber,
+  snapshoter,
+  INIT,
+  SUBSCRIBE,
+  UNSUBSCRIBE,
+} from "@onflow/util-actor"
 import {getServices} from "../services"
 
 const NAME = "authn"
@@ -23,8 +30,11 @@ const warn = (fact, msg) => {
 
 const HANDLERS = {
   [INIT]: async ctx => {
-    warn(typeof window === "undefined", '"fcl.discovery" is only available in the browser.')
-    const services = await getServices({ type: NAME })
+    warn(
+      typeof window === "undefined",
+      '"fcl.discovery" is only available in the browser.'
+    )
+    const services = await getServices({type: NAME})
     ctx.put(RESULTS, services)
   },
   [SUBSCRIBE]: (ctx, letter) => {
@@ -39,7 +49,7 @@ const spawnProviders = () => spawn(HANDLERS, NAME)
 
 const authn = {
   subscribe: cb => subscriber(NAME, spawnProviders, cb),
-  snapshot: () => snapshoter(NAME, spawnProviders)
+  snapshot: () => snapshoter(NAME, spawnProviders),
 }
 
 export default authn

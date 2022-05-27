@@ -6,9 +6,18 @@ const u8ToHex = (u8, context) => context.Buffer.from(u8).toString("hex")
 const hexBuffer = (hex, context) => context.Buffer.from(hex, "hex")
 
 export async function sendGetCollection(ix, context = {}, opts = {}) {
-  invariant(opts.node, `SDK Send Get Collection Error: opts.node must be defined.`)
-  invariant(context.response, `SDK Send Get Collection Error: context.response must be defined.`)
-  invariant(context.Buffer, `SDK Send Get Collection Error: context.Buffer must be defined.`)
+  invariant(
+    opts.node,
+    `SDK Send Get Collection Error: opts.node must be defined.`
+  )
+  invariant(
+    context.response,
+    `SDK Send Get Collection Error: context.response must be defined.`
+  )
+  invariant(
+    context.Buffer,
+    `SDK Send Get Collection Error: context.Buffer must be defined.`
+  )
 
   const unary = opts.unary || defaultUnary
 
@@ -25,7 +34,9 @@ export async function sendGetCollection(ix, context = {}, opts = {}) {
   ret.tag = ix.tag
   ret.collection = {
     id: u8ToHex(collection.getId_asU8(), context),
-    transactionIds: (collection.getTransactionIdsList()).map(x => u8ToHex(x, context))
+    transactionIds: collection
+      .getTransactionIdsList()
+      .map(x => u8ToHex(x, context)),
   }
 
   return ret

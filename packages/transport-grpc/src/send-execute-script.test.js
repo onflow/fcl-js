@@ -8,39 +8,35 @@ import {resolve} from "../../sdk/src/resolve/resolve.js"
 import {response as responseADT} from "../../sdk/src/response/response.js"
 import {Buffer} from "@onflow/rlp"
 
-const jsonToUInt8Array = (json) => {
-    var str = JSON.stringify(json, null, 0);
-    var ret = new Uint8Array(str.length);
-    for (var i = 0; i < str.length; i++) {
-        ret[i] = str.charCodeAt(i);
-    }
-    return ret
-};
+const jsonToUInt8Array = json => {
+  var str = JSON.stringify(json, null, 0)
+  var ret = new Uint8Array(str.length)
+  for (var i = 0; i < str.length; i++) {
+    ret[i] = str.charCodeAt(i)
+  }
+  return ret
+}
 
 describe("Send Execute Script", () => {
   test("ExecuteScriptAtLatestBlock", async () => {
-    const unaryMock = jest.fn();
+    const unaryMock = jest.fn()
 
     const returnedJSONCDC = {type: "Int", value: 123}
 
     unaryMock.mockReturnValue({
-        getValue_asU8: () => jsonToUInt8Array(returnedJSONCDC)
-    });
+      getValue_asU8: () => jsonToUInt8Array(returnedJSONCDC),
+    })
 
     let response = await sendExecuteScript(
-        await resolve(
-            await build([
-                script`pub fun main(): Int { return 123 }`
-            ])
-        ),
-        {
-            response: responseADT,
-            Buffer,
-        },
-        {
-            unary: unaryMock,
-            node: "localhost:3000"
-        }
+      await resolve(await build([script`pub fun main(): Int { return 123 }`])),
+      {
+        response: responseADT,
+        Buffer,
+      },
+      {
+        unary: unaryMock,
+        node: "localhost:3000",
+      }
     )
 
     expect(unaryMock.mock.calls.length).toEqual(1)
@@ -62,29 +58,29 @@ describe("Send Execute Script", () => {
   })
 
   test("ExecuteScriptAtBlockID", async () => {
-    const unaryMock = jest.fn();
+    const unaryMock = jest.fn()
 
     const returnedJSONCDC = {type: "Int", value: 123}
 
     unaryMock.mockReturnValue({
-        getValue_asU8: () => jsonToUInt8Array(returnedJSONCDC)
-    });
+      getValue_asU8: () => jsonToUInt8Array(returnedJSONCDC),
+    })
 
     const response = await sendExecuteScript(
-        await resolve(
-            await build([
-                script`pub fun main(): Int { return 123 }`,
-                atBlockId("abc123")
-            ])
-        ),
-        {
-            response: responseADT,
-            Buffer,
-        },
-        {
-            unary: unaryMock,
-            node: "localhost:3000"
-        }
+      await resolve(
+        await build([
+          script`pub fun main(): Int { return 123 }`,
+          atBlockId("abc123"),
+        ])
+      ),
+      {
+        response: responseADT,
+        Buffer,
+      },
+      {
+        unary: unaryMock,
+        node: "localhost:3000",
+      }
     )
 
     expect(unaryMock.mock.calls.length).toEqual(1)
@@ -108,29 +104,29 @@ describe("Send Execute Script", () => {
   })
 
   test("ExecuteScriptAtBlockHeight", async () => {
-    const unaryMock = jest.fn();
+    const unaryMock = jest.fn()
 
     const returnedJSONCDC = {type: "Int", value: 123}
 
     unaryMock.mockReturnValue({
-        getValue_asU8: () => jsonToUInt8Array(returnedJSONCDC)
-    });
+      getValue_asU8: () => jsonToUInt8Array(returnedJSONCDC),
+    })
 
     const response = await sendExecuteScript(
-        await resolve(
-            await build([
-                script`pub fun main(): Int { return 123 }`,
-                atBlockHeight(123)
-            ])
-        ),
-        {
-            response: responseADT,
-            Buffer,
-        },
-        {
-            unary: unaryMock,
-            node: "localhost:3000"
-        }
+      await resolve(
+        await build([
+          script`pub fun main(): Int { return 123 }`,
+          atBlockHeight(123),
+        ])
+      ),
+      {
+        response: responseADT,
+        Buffer,
+      },
+      {
+        unary: unaryMock,
+        node: "localhost:3000",
+      }
     )
 
     expect(unaryMock.mock.calls.length).toEqual(1)
@@ -152,5 +148,4 @@ describe("Send Execute Script", () => {
 
     expect(response.encodedData).toEqual(returnedJSONCDC)
   })
-
 })

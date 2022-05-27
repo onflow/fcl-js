@@ -68,9 +68,10 @@ export function buildSignable(acct, message, ix) {
 }
 
 function prepForEncoding(ix) {
-  const payerAddress = sansPrefix((Array.isArray(ix.payer) 
-  ? ix.accounts[ix.payer[0]]
-  : ix.accounts[ix.payer]).addr);
+  const payerAddress = sansPrefix(
+    (Array.isArray(ix.payer) ? ix.accounts[ix.payer[0]] : ix.accounts[ix.payer])
+      .addr
+  )
   return {
     cadence: ix.message.cadence,
     refBlock: ix.message.refBlock || null,
