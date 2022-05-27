@@ -22,7 +22,7 @@ export function tab(service, opts = {}) {
   window.addEventListener("message", handler)
 
   const [$tab, unmount] = renderTab(serviceEndpoint(service))
-  const timer = setInterval(function() {
+  const timer = setInterval(function () {
     if ($tab && $tab.closed) {
       close()
     }

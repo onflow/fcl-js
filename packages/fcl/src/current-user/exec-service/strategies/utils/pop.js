@@ -23,7 +23,7 @@ export function pop(service, opts = {}) {
 
   const [$pop, unmount] = renderPop(serviceEndpoint(service))
 
-  const timer = setInterval(function() {
+  const timer = setInterval(function () {
     if ($pop && $pop.closed) {
       close()
     }

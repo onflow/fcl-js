@@ -20,7 +20,7 @@ export function frame(service, opts = {}) {
     onMessage,
   })
   window.addEventListener("message", handler)
-  
+
   const [$frame, unmount] = renderFrame(serviceEndpoint(service))
   return {send, close}
 
