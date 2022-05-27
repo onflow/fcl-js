@@ -138,44 +138,61 @@ const makeIx = wat => ix => {
   return Ok(ix)
 }
 
-export const prepAccount =
-  (acct, opts = {}) =>
-  ix => {
-    invariant(
-      typeof acct === "function" || typeof acct === "object",
-      "prepAccount must be passed an authorization function or an account object"
-    )
-    invariant(opts.role != null, "Account must have a role")
+const prepAccountKeyId = acct => {
+  if (acct.keyId == null) return acct
 
-    const ACCOUNT = JSON.parse(ACCT)
-    const role = opts.role
-    const tempId = uuid()
-
-    if (acct.authorization && isFn(acct.authorization))
-      acct = {resolve: acct.authorization}
-    if (!acct.authorization && isFn(acct)) acct = {resolve: acct}
-
-    ix.accounts[tempId] = {
-      ...ACCOUNT,
-      tempId,
-      ...acct,
-      role: {
-        ...ACCOUNT.role,
-        ...(typeof acct.role === "object" ? acct.role : {}),
-        [role]: true,
-      },
-    }
-
-    if (role === AUTHORIZER) {
-      ix.authorizations.push(tempId)
-    } else if (role === PAYER) {
-      ix.payer.push(tempId)
-    } else {
-      ix[role] = tempId
-    }
-
-    return ix
+  invariant(!isNaN(parseInt(acct.keyId)), "account.keyId must be an integer")
+  return {
+    ...acct,
+    keyId: parseInt(acct.keyId),
   }
+}
+
+export const prepAccount = (acct, opts = {}) => ix => {
+  invariant(
+    typeof acct === "function" || typeof acct === "object",
+    "prepAccount must be passed an authorization function or an account object"
+  )
+  invariant(opts.role != null, "Account must have a role")
+
+  const ACCOUNT = JSON.parse(ACCT)
+  const role = opts.role
+  const tempId = uuid()
+
+  if (acct.authorization && isFn(acct.authorization))
+    acct = {resolve: acct.authorization}
+  if (!acct.authorization && isFn(acct)) acct = {resolve: acct}
+
+  const resolve = acct.resolve
+  if (resolve)
+    acct.resolve = (acct, ...rest) =>
+      [resolve, prepAccountKeyId].reduce(
+        async (d, fn) => fn(await d, ...rest),
+        acct
+      )
+  acct = prepAccountKeyId(acct)
+
+  ix.accounts[tempId] = {
+    ...ACCOUNT,
+    tempId,
+    ...acct,
+    role: {
+      ...ACCOUNT.role,
+      ...(typeof acct.role === "object" ? acct.role : {}),
+      [role]: true,
+    },
+  }
+
+  if (role === AUTHORIZER) {
+    ix.authorizations.push(tempId)
+  } else if (role === PAYER) {
+    ix.payer.push(tempId)
+  } else {
+    ix[role] = tempId
+  }
+
+  return ix
+}
 
 export const makeArgument = arg => ix => {
   let tempId = uuid()
@@ -269,12 +286,10 @@ export const put = (key, value) => ix => {
   return Ok(ix)
 }
 
-export const update =
-  (key, fn = identity) =>
-  ix => {
-    ix.assigns[key] = fn(ix.assigns[key], ix)
-    return Ok(ix)
-  }
+export const update = (key, fn = identity) => ix => {
+  ix.assigns[key] = fn(ix.assigns[key], ix)
+  return Ok(ix)
+}
 
 export const destroy = key => ix => {
   delete ix.assigns[key]
