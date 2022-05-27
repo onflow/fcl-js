@@ -19,5 +19,12 @@
     "@onflow/util-template": "1.0.1",
     "@onflow/util-uid": "1.0.1"
   },
-  "changesets": []
+  "changesets": [
+    "empty-ants-switch",
+    "friendly-berries-admire",
+    "itchy-pumpkins-dream",
+    "short-colts-beg",
+    "smart-toys-joke",
+    "tall-zebras-tie"
+  ]
 }
