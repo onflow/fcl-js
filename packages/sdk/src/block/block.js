@@ -20,7 +20,8 @@ export function block({sealed = false, id, height} = {}, opts = {}) {
   if (id) return send([getBlock(), atBlockId(id)], opts).then(decode)
 
   // Get block by height
-  if (height) return send([getBlock(), atBlockHeight(height)], opts).then(decode)
+  if (height)
+    return send([getBlock(), atBlockHeight(height)], opts).then(decode)
 
   // Get latest block
   return send([getBlock(sealed)], opts).then(decode)

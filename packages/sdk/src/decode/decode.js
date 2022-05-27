@@ -64,9 +64,8 @@ const decodeArray = async (array, decoders, stack) =>
 const decodeDictionary = async (dictionary, decoders, stack) =>
   await dictionary.reduce(async (acc, v) => {
     acc = await acc
-    acc[
-      await recurseDecode(v.key, decoders, [...stack, v.key])
-    ] = await recurseDecode(v.value, decoders, [...stack, v.key])
+    acc[await recurseDecode(v.key, decoders, [...stack, v.key])] =
+      await recurseDecode(v.value, decoders, [...stack, v.key])
     return acc
   }, Promise.resolve({}))
 

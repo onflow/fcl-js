@@ -6,6 +6,6 @@ export function getBlock(isSealed = null) {
     ix => {
       ix.block.isSealed = isSealed
       return Ok(ix)
-    }
+    },
   ])
 }

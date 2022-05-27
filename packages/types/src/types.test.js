@@ -23,8 +23,20 @@ import * as t from "./types.js"
   [t.Word64, "64", {type: "Word64", value: "64"}, "64"],
   [t.UFix64, "64", {type: "UFix64", value: "64"}, "64", true],
   [t.Fix64, "64", {type: "Fix64", value: "64"}, "64", true],
-  [t.UFix64, "64.000000001", {type: "UFix64", value: "64.000000001"}, "64.000000001", true],
-  [t.Fix64, "64.000000001", {type: "Fix64", value: "64.000000001"}, "64.000000001", true],
+  [
+    t.UFix64,
+    "64.000000001",
+    {type: "UFix64", value: "64.000000001"},
+    "64.000000001",
+    true,
+  ],
+  [
+    t.Fix64,
+    "64.000000001",
+    {type: "Fix64", value: "64.000000001"},
+    "64.000000001",
+    true,
+  ],
   [t.UFix64, "64.0", {type: "UFix64", value: "64.0"}, "64.0", false],
   [t.Fix64, "64.0", {type: "Fix64", value: "64.0"}, "64.0", false],
   [
@@ -167,46 +179,46 @@ import * as t from "./types.js"
     t.Path,
     {
       domain: "public",
-      identifier: "flowTokenVault"
+      identifier: "flowTokenVault",
     },
     {
       type: "Path",
       value: {
         domain: "public",
-        identifier: "flowTokenVault"
+        identifier: "flowTokenVault",
       },
     },
     {
       domain: "public",
-      identifier: "flowTokenVault"
+      identifier: "flowTokenVault",
     },
   ],
   [
     t.Path,
     {
       domain: "notValidDomain",
-      identifier: "flowTokenVault"
+      identifier: "flowTokenVault",
     },
     {
       type: "Path",
       value: {
         domain: "notValidDomain",
-        identifier: "flowTokenVault"
+        identifier: "flowTokenVault",
       },
     },
     {
       domain: "notValidDomain",
-      identifier: "flowTokenVault"
+      identifier: "flowTokenVault",
     },
-    true
-  ]
+    true,
+  ],
 ].forEach(([cast, input, asArgument, asInjection, shouldError = false]) => {
   describe(cast.label, () => {
     test(`t.${cast.label}.asArgument(${input})`, () => {
       if (shouldError) {
-        expect(() => cast.asArgument(input)).toThrow()  
+        expect(() => cast.asArgument(input)).toThrow()
       } else {
-        expect(cast.asArgument(input)).toStrictEqual(asArgument)  
+        expect(cast.asArgument(input)).toStrictEqual(asArgument)
       }
     })
     test(`t.${cast.label}.asInjection(${input})`, () => {

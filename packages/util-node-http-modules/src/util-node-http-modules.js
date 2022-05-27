@@ -10,6 +10,6 @@ export async function getNodeHttpModules() {
 
   return {
     nodeHttpsTransport,
-    nodeHttpTransport
+    nodeHttpTransport,
   }
 }

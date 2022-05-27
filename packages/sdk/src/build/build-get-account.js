@@ -7,6 +7,6 @@ export function getAccount(addr) {
     ix => {
       ix.account.addr = sansPrefix(addr)
       return Ok(ix)
-    }
+    },
   ])
 }

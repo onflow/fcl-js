@@ -704,7 +704,8 @@ const genVoidSpec = () => {
 
 // Int
 const genInt = () => {
-  const minInt256 = -57896044618658097711785492504343953926634992332820282019728792003956564819978
+  const minInt256 =
+    -57896044618658097711785492504343953926634992332820282019728792003956564819978
   const maxUInt256 = 115792089237316195423570985008687907853269984665640564039457584007913129639945
   const ranInt = ~~(Math.random() * (maxUInt256 - minInt256) + minInt256)
   return {
@@ -766,9 +767,8 @@ const genDictionary = (depth = 0) => {
   const dictionaryLength = ~~(Math.random() * 10)
   const arr = Array.from({length: dictionaryLength}).reduce(
     acc => {
-      const {payload: valPayload, decoded: val} = OPTIONS[
-        ~~(Math.random() * OPTIONS.length)
-      ]()
+      const {payload: valPayload, decoded: val} =
+        OPTIONS[~~(Math.random() * OPTIONS.length)]()
       const {payload: keyPayload, decoded: ranStringKey} = genString()
       acc.dict.push({
         key: keyPayload,
@@ -819,9 +819,8 @@ const genResource = (depth = 0) => {
   const fieldsLength = ~~(Math.random() * 10)
   const res = Array.from({length: fieldsLength}).reduce(
     acc => {
-      const {payload: valPayload, decoded: val} = OPTIONS[
-        ~~(Math.random() * OPTIONS.length)
-      ]()
+      const {payload: valPayload, decoded: val} =
+        OPTIONS[~~(Math.random() * OPTIONS.length)]()
       const {decoded: ranStringName} = genString()
       acc.fields.push({
         name: ranStringName,
@@ -872,9 +871,8 @@ const genStruct = (depth = 0) => {
   const fieldsLength = ~~(Math.random() * 10)
   const res = Array.from({length: fieldsLength}).reduce(
     acc => {
-      const {payload: valPayload, decoded: val} = OPTIONS[
-        ~~(Math.random() * OPTIONS.length)
-      ]()
+      const {payload: valPayload, decoded: val} =
+        OPTIONS[~~(Math.random() * OPTIONS.length)]()
       const {decoded: ranStringName} = genString()
       acc.fields.push({
         name: ranStringName,
@@ -925,9 +923,8 @@ const genEvent = (depth = 0) => {
   const fieldsLength = ~~(Math.random() * 10)
   const res = Array.from({length: fieldsLength}).reduce(
     acc => {
-      const {payload: valPayload, decoded: val} = OPTIONS[
-        ~~(Math.random() * OPTIONS.length)
-      ]()
+      const {payload: valPayload, decoded: val} =
+        OPTIONS[~~(Math.random() * OPTIONS.length)]()
       const {decoded: ranStringName} = genString()
       acc.fields.push({
         name: ranStringName,
@@ -978,9 +975,8 @@ const genEnum = (depth = 0) => {
   const fieldsLength = ~~(Math.random() * 10)
   const res = Array.from({length: fieldsLength}).reduce(
     acc => {
-      const {payload: valPayload, decoded: val} = OPTIONS[
-        ~~(Math.random() * OPTIONS.length)
-      ]()
+      const {payload: valPayload, decoded: val} =
+        OPTIONS[~~(Math.random() * OPTIONS.length)]()
       const {decoded: ranStringName} = genString()
       acc.fields.push({
         name: ranStringName,
@@ -1206,7 +1202,7 @@ describe("custom decoder tests", () => {
       },
     }
 
-    const Jeff = function(resource) {
+    const Jeff = function (resource) {
       if (!(this instanceof Jeff)) return new Jeff(resource)
       this.firstName = resource.firstName
       this.lastName = resource.lastName
