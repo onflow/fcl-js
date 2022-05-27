@@ -6,6 +6,6 @@ export function getCollection(id = null) {
     ix => {
       ix.collection.id = id
       return ix
-    }
+    },
   ])
 }

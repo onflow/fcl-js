@@ -31,33 +31,32 @@ export async function execService({service, msg = {}, opts = {}, config = {}}) {
   }
 
   try {
-    const res = await STRATEGIES[service.method](
-      service, 
-      msg, 
-      opts, 
-      fullConfig
-    )
+    const res = await STRATEGIES[service.method](service, msg, opts, fullConfig)
     if (res.status === "REDIRECT") {
       invariant(
         service.type === res.data.type,
         "Cannot shift recursive service type in execService"
       )
       return await execService({
-        service: res.data, 
-        msg, 
-        opts, 
-        config: fullConfig
+        service: res.data,
+        msg,
+        opts,
+        config: fullConfig,
       })
     } else {
       return res
     }
   } catch (error) {
-    console.error("execService({service, msg = {}, opts = {}, config = {}})", error, {
-      service,
-      msg,
-      opts,
-      config
-    })
+    console.error(
+      "execService({service, msg = {}, opts = {}, config = {}})",
+      error,
+      {
+        service,
+        msg,
+        opts,
+        config,
+      }
+    )
     throw error
   }
 }

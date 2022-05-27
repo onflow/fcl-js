@@ -1,8 +1,6 @@
 export function sansPrefix(address) {
   if (address == null) return null
-  return address
-    .replace(/^0x/, "")
-    .replace(/^Fx/, "")
+  return address.replace(/^0x/, "").replace(/^Fx/, "")
 }
 
 export function withPrefix(address) {

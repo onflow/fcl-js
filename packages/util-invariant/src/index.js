@@ -1,4 +1,4 @@
-export function invariant (fact, msg, ...rest) {
+export function invariant(fact, msg, ...rest) {
   if (!fact) {
     const error = new Error(`INVARIANT ${msg}`)
     error.stack = error.stack

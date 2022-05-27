@@ -5,6 +5,6 @@ export function ref(refBlock) {
     ix => {
       ix.message.refBlock = refBlock
       return Ok(ix)
-    }
+    },
   ])
 }
