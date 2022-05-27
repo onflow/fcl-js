@@ -1,5 +1,15 @@
 # @onflow/transport-http
 
+## 1.3.0-alpha.0
+
+### Minor Changes
+
+- [#1196](https://github.com/onflow/fcl-js/pull/1196) [`cd218e84`](https://github.com/onflow/fcl-js/commit/cd218e843acfc390049b391d36c447ce93668221) Thanks [@jribbink](https://github.com/jribbink)! - Added errorMessage property to HTTPRequestError to expose Access API errors when making requests
+
+### Patch Changes
+
+- [#1197](https://github.com/onflow/fcl-js/pull/1197) [`d9bc1cc6`](https://github.com/onflow/fcl-js/commit/d9bc1cc671f143d2f37cad6eb6b80123f1f3d760) Thanks [@jribbink](https://github.com/jribbink)! - Fix issue where httpRequest errors were thrown inside a promise and could not be caught on node
+
 ## 1.2.0
 
 ### Minor Changes
