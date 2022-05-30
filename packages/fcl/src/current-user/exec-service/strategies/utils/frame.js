@@ -12,16 +12,21 @@ export function frame(service, opts = {}) {
   const onReady = opts.onReady || noop
   const onResponse = opts.onResponse || noop
 
-  window.addEventListener(
-    "message",
-    buildMessageHandler({close, send, onReady, onResponse, onMessage})
-  )
+  const handler = buildMessageHandler({
+    close,
+    send,
+    onReady,
+    onResponse,
+    onMessage,
+  })
+  window.addEventListener("message", handler)
+
   const [$frame, unmount] = renderFrame(serviceEndpoint(service))
   return {send, close}
 
   function close() {
     try {
-      window.removeEventListener("message", buildMessageHandler)
+      window.removeEventListener("message", handler)
       unmount()
       onClose()
     } catch (error) {

@@ -109,6 +109,33 @@ AccessAPI.GetTransactionResult = {
   responseType: flow_access_access_pb.TransactionResultResponse
 };
 
+AccessAPI.GetTransactionResultByIndex = {
+  methodName: "GetTransactionResultByIndex",
+  service: AccessAPI,
+  requestStream: false,
+  responseStream: false,
+  requestType: flow_access_access_pb.GetTransactionByIndexRequest,
+  responseType: flow_access_access_pb.TransactionResultResponse
+};
+
+AccessAPI.GetTransactionResultsByBlockID = {
+  methodName: "GetTransactionResultsByBlockID",
+  service: AccessAPI,
+  requestStream: false,
+  responseStream: false,
+  requestType: flow_access_access_pb.GetTransactionsByBlockIDRequest,
+  responseType: flow_access_access_pb.TransactionResultsResponse
+};
+
+AccessAPI.GetTransactionsByBlockID = {
+  methodName: "GetTransactionsByBlockID",
+  service: AccessAPI,
+  requestStream: false,
+  responseStream: false,
+  requestType: flow_access_access_pb.GetTransactionsByBlockIDRequest,
+  responseType: flow_access_access_pb.TransactionsResponse
+};
+
 AccessAPI.GetAccount = {
   methodName: "GetAccount",
   service: AccessAPI,
@@ -188,6 +215,24 @@ AccessAPI.GetNetworkParameters = {
   responseStream: false,
   requestType: flow_access_access_pb.GetNetworkParametersRequest,
   responseType: flow_access_access_pb.GetNetworkParametersResponse
+};
+
+AccessAPI.GetLatestProtocolStateSnapshot = {
+  methodName: "GetLatestProtocolStateSnapshot",
+  service: AccessAPI,
+  requestStream: false,
+  responseStream: false,
+  requestType: flow_access_access_pb.GetLatestProtocolStateSnapshotRequest,
+  responseType: flow_access_access_pb.ProtocolStateSnapshotResponse
+};
+
+AccessAPI.GetExecutionResultForBlockID = {
+  methodName: "GetExecutionResultForBlockID",
+  service: AccessAPI,
+  requestStream: false,
+  responseStream: false,
+  requestType: flow_access_access_pb.GetExecutionResultForBlockIDRequest,
+  responseType: flow_access_access_pb.ExecutionResultForBlockIDResponse
 };
 
 exports.AccessAPI = AccessAPI;
@@ -538,6 +583,99 @@ AccessAPIClient.prototype.getTransactionResult = function getTransactionResult(r
   };
 };
 
+AccessAPIClient.prototype.getTransactionResultByIndex = function getTransactionResultByIndex(requestMessage, metadata, callback) {
+  if (arguments.length === 2) {
+    callback = arguments[1];
+  }
+  var client = grpc.unary(AccessAPI.GetTransactionResultByIndex, {
+    request: requestMessage,
+    host: this.serviceHost,
+    metadata: metadata,
+    transport: this.options.transport,
+    debug: this.options.debug,
+    onEnd: function (response) {
+      if (callback) {
+        if (response.status !== grpc.Code.OK) {
+          var err = new Error(response.statusMessage);
+          err.code = response.status;
+          err.metadata = response.trailers;
+          callback(err, null);
+        } else {
+          callback(null, response.message);
+        }
+      }
+    }
+  });
+  return {
+    cancel: function () {
+      callback = null;
+      client.close();
+    }
+  };
+};
+
+AccessAPIClient.prototype.getTransactionResultsByBlockID = function getTransactionResultsByBlockID(requestMessage, metadata, callback) {
+  if (arguments.length === 2) {
+    callback = arguments[1];
+  }
+  var client = grpc.unary(AccessAPI.GetTransactionResultsByBlockID, {
+    request: requestMessage,
+    host: this.serviceHost,
+    metadata: metadata,
+    transport: this.options.transport,
+    debug: this.options.debug,
+    onEnd: function (response) {
+      if (callback) {
+        if (response.status !== grpc.Code.OK) {
+          var err = new Error(response.statusMessage);
+          err.code = response.status;
+          err.metadata = response.trailers;
+          callback(err, null);
+        } else {
+          callback(null, response.message);
+        }
+      }
+    }
+  });
+  return {
+    cancel: function () {
+      callback = null;
+      client.close();
+    }
+  };
+};
+
+AccessAPIClient.prototype.getTransactionsByBlockID = function getTransactionsByBlockID(requestMessage, metadata, callback) {
+  if (arguments.length === 2) {
+    callback = arguments[1];
+  }
+  var client = grpc.unary(AccessAPI.GetTransactionsByBlockID, {
+    request: requestMessage,
+    host: this.serviceHost,
+    metadata: metadata,
+    transport: this.options.transport,
+    debug: this.options.debug,
+    onEnd: function (response) {
+      if (callback) {
+        if (response.status !== grpc.Code.OK) {
+          var err = new Error(response.statusMessage);
+          err.code = response.status;
+          err.metadata = response.trailers;
+          callback(err, null);
+        } else {
+          callback(null, response.message);
+        }
+      }
+    }
+  });
+  return {
+    cancel: function () {
+      callback = null;
+      client.close();
+    }
+  };
+};
+
 AccessAPIClient.prototype.getAccount = function getAccount(requestMessage, metadata, callback) {
   if (arguments.length === 2) {
     callback = arguments[1];
@@ -791,6 +929,68 @@ AccessAPIClient.prototype.getNetworkParameters = function getNetworkParameters(r
     callback = arguments[1];
   }
   var client = grpc.unary(AccessAPI.GetNetworkParameters, {
+    request: requestMessage,
+    host: this.serviceHost,
+    metadata: metadata,
+    transport: this.options.transport,
+    debug: this.options.debug,
+    onEnd: function (response) {
+      if (callback) {
+        if (response.status !== grpc.Code.OK) {
+          var err = new Error(response.statusMessage);
+          err.code = response.status;
+          err.metadata = response.trailers;
+          callback(err, null);
+        } else {
+          callback(null, response.message);
+        }
+      }
+    }
+  });
+  return {
+    cancel: function () {
+      callback = null;
+      client.close();
+    }
+  };
+};
+
+AccessAPIClient.prototype.getLatestProtocolStateSnapshot = function getLatestProtocolStateSnapshot(requestMessage, metadata, callback) {
+  if (arguments.length === 2) {
+    callback = arguments[1];
+  }
+  var client = grpc.unary(AccessAPI.GetLatestProtocolStateSnapshot, {
+    request: requestMessage,
+    host: this.serviceHost,
+    metadata: metadata,
+    transport: this.options.transport,
+    debug: this.options.debug,
+    onEnd: function (response) {
+      if (callback) {
+        if (response.status !== grpc.Code.OK) {
+          var err = new Error(response.statusMessage);
+          err.code = response.status;
+          err.metadata = response.trailers;
+          callback(err, null);
+        } else {
+          callback(null, response.message);
+        }
+      }
+    }
+  });
+  return {
+    cancel: function () {
+      callback = null;
+      client.close();
+    }
+  };
+};
+
+AccessAPIClient.prototype.getExecutionResultForBlockID = function getExecutionResultForBlockID(requestMessage, metadata, callback) {
+  if (arguments.length === 2) {
+    callback = arguments[1];
+  }
+  var client = grpc.unary(AccessAPI.GetExecutionResultForBlockID, {
     request: requestMessage,
     host: this.serviceHost,
     metadata: metadata,

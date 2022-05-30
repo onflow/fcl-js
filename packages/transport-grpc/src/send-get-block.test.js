@@ -100,7 +100,12 @@ describe("Send Get Block", () => {
       parentId: "a1b2c3",
       height: 123,
       timestamp: dateNow.toISOString(),
-      collectionGuarantees: [],
+      collectionGuarantees: [
+        {
+          collectionId: "abc32111",
+          signerIds: ["abc32121"],
+        },
+      ],
       blockSeals: [],
     }
 
@@ -114,7 +119,12 @@ describe("Send Get Block", () => {
             toISOString: () => dateNow.toISOString(),
           }),
         }),
-        getCollectionGuaranteesList: () => [],
+        getCollectionGuaranteesList: () => [
+          {
+            getCollectionId_asU8: () => hexStrToUInt8Array("abc32111"),
+            getSignerIdsList_asU8: () => [hexStrToUInt8Array("abc32121")],
+          },
+        ],
         getBlockSealsList: () => [],
         getSignaturesList: () => [],
       }),

@@ -31,7 +31,7 @@
     "prepublishOnly": "npm test && npm run build",
     "test": "jest",
     "build": "webpack --mode=production",
-    "generate": "protoc --plugin='protoc-gen-ts=./node_modules/.bin/protoc-gen-ts' --js_out='import_style=commonjs,binary:src/generated' --ts_out='service=grpc-web:src/generated' -I ./src/proto ./src/proto/flow/**/*.proto;"
+    "generate": "protoc --plugin='protoc-gen-ts=../../node_modules/.bin/protoc-gen-ts' --js_out='import_style=commonjs,binary:src/generated' --ts_out='service=grpc-web:src/generated' -I ./src/proto ./src/proto/flow/**/*.proto;"
   },
   "dependencies": {
     "@improbable-eng/grpc-web": "^0.12.0",
