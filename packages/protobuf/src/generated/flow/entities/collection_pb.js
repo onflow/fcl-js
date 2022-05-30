@@ -2,15 +2,24 @@
 /**
  * @fileoverview
  * @enhanceable
+ * @suppress {missingRequire} reports error on implicit type usages.
  * @suppress {messageConventions} JS Compiler reports an error if a variable or
  *     field starts with 'MSG_' and isn't a translatable message.
  * @public
  */
 // GENERATED CODE -- DO NOT EDIT!
+/* eslint-disable */
+// @ts-nocheck
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global = Function('return this')();
+var global = (function() {
+  if (this) { return this; }
+  if (typeof window !== 'undefined') { return window; }
+  if (typeof global !== 'undefined') { return global; }
+  if (typeof self !== 'undefined') { return self; }
+  return Function('return this')();
+}.call(null));
 
 goog.exportSymbol('proto.flow.entities.Collection', null, global);
 goog.exportSymbol('proto.flow.entities.CollectionGuarantee', null, global);
@@ -296,7 +305,7 @@ proto.flow.entities.Collection.prototype.clearTransactionIdsList = function() {
  * @private {!Array<number>}
  * @const
  */
-proto.flow.entities.CollectionGuarantee.repeatedFields_ = [2];
+proto.flow.entities.CollectionGuarantee.repeatedFields_ = [2,5];
 
 
 
@@ -330,7 +339,11 @@ proto.flow.entities.CollectionGuarantee.prototype.toObject = function(opt_includ
 proto.flow.entities.CollectionGuarantee.toObject = function(includeInstance, msg) {
   var f, obj = {
     collectionId: msg.getCollectionId_asB64(),
-    signaturesList: msg.getSignaturesList_asB64()
+    signaturesList: msg.getSignaturesList_asB64(),
+    referenceBlockId: msg.getReferenceBlockId_asB64(),
+    signature: msg.getSignature_asB64(),
+    signerIdsList: msg.getSignerIdsList_asB64(),
+    signerIndices: msg.getSignerIndices_asB64()
   };
 
   if (includeInstance) {
@@ -375,6 +388,22 @@ proto.flow.entities.CollectionGuarantee.deserializeBinaryFromReader = function(m
       var value = /** @type {!Uint8Array} */ (reader.readBytes());
       msg.addSignatures(value);
       break;
+    case 3:
+      var value = /** @type {!Uint8Array} */ (reader.readBytes());
+      msg.setReferenceBlockId(value);
+      break;
+    case 4:
+      var value = /** @type {!Uint8Array} */ (reader.readBytes());
+      msg.setSignature(value);
+      break;
+    case 5:
+      var value = /** @type {!Uint8Array} */ (reader.readBytes());
+      msg.addSignerIds(value);
+      break;
+    case 6:
+      var value = /** @type {!Uint8Array} */ (reader.readBytes());
+      msg.setSignerIndices(value);
+      break;
     default:
       reader.skipField();
       break;
@@ -415,6 +444,34 @@ proto.flow.entities.CollectionGuarantee.serializeBinaryToWriter = function(messa
   if (f.length > 0) {
     writer.writeRepeatedBytes(
       2,
+      f
+    );
+  }
+  f = message.getReferenceBlockId_asU8();
+  if (f.length > 0) {
+    writer.writeBytes(
+      3,
+      f
+    );
+  }
+  f = message.getSignature_asU8();
+  if (f.length > 0) {
+    writer.writeBytes(
+      4,
+      f
+    );
+  }
+  f = message.getSignerIdsList_asU8();
+  if (f.length > 0) {
+    writer.writeRepeatedBytes(
+      5,
+      f
+    );
+  }
+  f = message.getSignerIndices_asU8();
+  if (f.length > 0) {
+    writer.writeBytes(
+      6,
       f
     );
   }
@@ -521,6 +578,193 @@ proto.flow.entities.CollectionGuarantee.prototype.addSignatures = function(value
  */
 proto.flow.entities.CollectionGuarantee.prototype.clearSignaturesList = function() {
   return this.setSignaturesList([]);
+};
+
+
+/**
+ * optional bytes reference_block_id = 3;
+ * @return {!(string|Uint8Array)}
+ */
+proto.flow.entities.CollectionGuarantee.prototype.getReferenceBlockId = function() {
+  return /** @type {!(string|Uint8Array)} */ (jspb.Message.getFieldWithDefault(this, 3, ""));
+};
+
+
+/**
+ * optional bytes reference_block_id = 3;
+ * This is a type-conversion wrapper around `getReferenceBlockId()`
+ * @return {string}
+ */
+proto.flow.entities.CollectionGuarantee.prototype.getReferenceBlockId_asB64 = function() {
+  return /** @type {string} */ (jspb.Message.bytesAsB64(
+      this.getReferenceBlockId()));
+};
+
+
+/**
+ * optional bytes reference_block_id = 3;
+ * Note that Uint8Array is not supported on all browsers.
+ * @see http://caniuse.com/Uint8Array
+ * This is a type-conversion wrapper around `getReferenceBlockId()`
+ * @return {!Uint8Array}
+ */
+proto.flow.entities.CollectionGuarantee.prototype.getReferenceBlockId_asU8 = function() {
+  return /** @type {!Uint8Array} */ (jspb.Message.bytesAsU8(
+      this.getReferenceBlockId()));
+};
+
+
+/**
+ * @param {!(string|Uint8Array)} value
+ * @return {!proto.flow.entities.CollectionGuarantee} returns this
+ */
+proto.flow.entities.CollectionGuarantee.prototype.setReferenceBlockId = function(value) {
+  return jspb.Message.setProto3BytesField(this, 3, value);
+};
+
+
+/**
+ * optional bytes signature = 4;
+ * @return {!(string|Uint8Array)}
+ */
+proto.flow.entities.CollectionGuarantee.prototype.getSignature = function() {
+  return /** @type {!(string|Uint8Array)} */ (jspb.Message.getFieldWithDefault(this, 4, ""));
+};
+
+
+/**
+ * optional bytes signature = 4;
+ * This is a type-conversion wrapper around `getSignature()`
+ * @return {string}
+ */
+proto.flow.entities.CollectionGuarantee.prototype.getSignature_asB64 = function() {
+  return /** @type {string} */ (jspb.Message.bytesAsB64(
+      this.getSignature()));
+};
+
+
+/**
+ * optional bytes signature = 4;
+ * Note that Uint8Array is not supported on all browsers.
+ * @see http://caniuse.com/Uint8Array
+ * This is a type-conversion wrapper around `getSignature()`
+ * @return {!Uint8Array}
+ */
+proto.flow.entities.CollectionGuarantee.prototype.getSignature_asU8 = function() {
+  return /** @type {!Uint8Array} */ (jspb.Message.bytesAsU8(
+      this.getSignature()));
+};
+
+
+/**
+ * @param {!(string|Uint8Array)} value
+ * @return {!proto.flow.entities.CollectionGuarantee} returns this
+ */
+proto.flow.entities.CollectionGuarantee.prototype.setSignature = function(value) {
+  return jspb.Message.setProto3BytesField(this, 4, value);
+};
+
+
+/**
+ * repeated bytes signer_ids = 5;
+ * @return {!(Array<!Uint8Array>|Array<string>)}
+ */
+proto.flow.entities.CollectionGuarantee.prototype.getSignerIdsList = function() {
+  return /** @type {!(Array<!Uint8Array>|Array<string>)} */ (jspb.Message.getRepeatedField(this, 5));
+};
+
+
+/**
+ * repeated bytes signer_ids = 5;
+ * This is a type-conversion wrapper around `getSignerIdsList()`
+ * @return {!Array<string>}
+ */
+proto.flow.entities.CollectionGuarantee.prototype.getSignerIdsList_asB64 = function() {
+  return /** @type {!Array<string>} */ (jspb.Message.bytesListAsB64(
+      this.getSignerIdsList()));
+};
+
+
+/**
+ * repeated bytes signer_ids = 5;
+ * Note that Uint8Array is not supported on all browsers.
+ * @see http://caniuse.com/Uint8Array
+ * This is a type-conversion wrapper around `getSignerIdsList()`
+ * @return {!Array<!Uint8Array>}
+ */
+proto.flow.entities.CollectionGuarantee.prototype.getSignerIdsList_asU8 = function() {
+  return /** @type {!Array<!Uint8Array>} */ (jspb.Message.bytesListAsU8(
+      this.getSignerIdsList()));
+};
+
+
+/**
+ * @param {!(Array<!Uint8Array>|Array<string>)} value
+ * @return {!proto.flow.entities.CollectionGuarantee} returns this
+ */
+proto.flow.entities.CollectionGuarantee.prototype.setSignerIdsList = function(value) {
+  return jspb.Message.setField(this, 5, value || []);
+};
+
+
+/**
+ * @param {!(string|Uint8Array)} value
+ * @param {number=} opt_index
+ * @return {!proto.flow.entities.CollectionGuarantee} returns this
+ */
+proto.flow.entities.CollectionGuarantee.prototype.addSignerIds = function(value, opt_index) {
+  return jspb.Message.addToRepeatedField(this, 5, value, opt_index);
+};
+
+
+/**
+ * Clears the list making it empty but non-null.
+ * @return {!proto.flow.entities.CollectionGuarantee} returns this
+ */
+proto.flow.entities.CollectionGuarantee.prototype.clearSignerIdsList = function() {
+  return this.setSignerIdsList([]);
+};
+
+
+/**
+ * optional bytes signer_indices = 6;
+ * @return {!(string|Uint8Array)}
+ */
+proto.flow.entities.CollectionGuarantee.prototype.getSignerIndices = function() {
+  return /** @type {!(string|Uint8Array)} */ (jspb.Message.getFieldWithDefault(this, 6, ""));
+};
+
+
+/**
+ * optional bytes signer_indices = 6;
+ * This is a type-conversion wrapper around `getSignerIndices()`
+ * @return {string}
+ */
+proto.flow.entities.CollectionGuarantee.prototype.getSignerIndices_asB64 = function() {
+  return /** @type {string} */ (jspb.Message.bytesAsB64(
+      this.getSignerIndices()));
+};
+
+
+/**
+ * optional bytes signer_indices = 6;
+ * Note that Uint8Array is not supported on all browsers.
+ * @see http://caniuse.com/Uint8Array
+ * This is a type-conversion wrapper around `getSignerIndices()`
+ * @return {!Uint8Array}
+ */
+proto.flow.entities.CollectionGuarantee.prototype.getSignerIndices_asU8 = function() {
+  return /** @type {!Uint8Array} */ (jspb.Message.bytesAsU8(
+      this.getSignerIndices()));
+};
+
+
+/**
+ * @param {!(string|Uint8Array)} value
+ * @return {!proto.flow.entities.CollectionGuarantee} returns this
+ */
+proto.flow.entities.CollectionGuarantee.prototype.setSignerIndices = function(value) {
+  return jspb.Message.setProto3BytesField(this, 6, value);
 };
 
 

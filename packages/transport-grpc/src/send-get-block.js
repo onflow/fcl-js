@@ -58,12 +58,18 @@ function constructResponse(ix, context, res) {
     id: u8ToHex(block.getId_asU8(), context),
     parentId: u8ToHex(block.getParentId_asU8(), context),
     height: block.getHeight(),
-    timestamp: block.getTimestamp().toDate().toISOString(),
+    timestamp: block
+      .getTimestamp()
+      .toDate()
+      .toISOString(),
     collectionGuarantees: collectionGuarantees.map(collectionGuarantee => ({
       collectionId: u8ToHex(
         collectionGuarantee.getCollectionId_asU8(),
         context
       ),
+      signerIds: collectionGuarantee
+        .getSignerIdsList_asU8()
+        .map(id => u8ToHex(id, context)),
     })),
     blockSeals: blockSeals.map(blockSeal => ({
       blockId: u8ToHex(blockSeal.getBlockId_asU8(), context),
