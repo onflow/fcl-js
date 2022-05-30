@@ -1,5 +1,10 @@
 import {invariant} from "@onflow/util-invariant"
-import {GetBlockByIDRequest, GetBlockByHeightRequest, GetLatestBlockRequest, AccessAPI} from "@onflow/protobuf"
+import {
+  GetBlockByIDRequest,
+  GetBlockByHeightRequest,
+  GetLatestBlockRequest,
+  AccessAPI,
+} from "@onflow/protobuf"
 import {unary as defaultUnary} from "./unary"
 
 const u8ToHex = (u8, context) => context.Buffer.from(u8).toString("hex")
@@ -21,7 +26,7 @@ async function sendGetBlockByHeightRequest(ix, context, opts) {
 
   const req = new GetBlockByHeightRequest()
   req.setHeight(Number(ix.block.height))
-    
+
   const res = await unary(opts.node, AccessAPI.GetBlockByHeight, req, context)
 
   return constructResponse(ix, context, res)
@@ -55,12 +60,18 @@ function constructResponse(ix, context, res) {
     height: block.getHeight(),
     timestamp: block.getTimestamp().toDate().toISOString(),
     collectionGuarantees: collectionGuarantees.map(collectionGuarantee => ({
-      collectionId: u8ToHex(collectionGuarantee.getCollectionId_asU8(), context),
+      collectionId: u8ToHex(
+        collectionGuarantee.getCollectionId_asU8(),
+        context
+      ),
     })),
     blockSeals: blockSeals.map(blockSeal => ({
       blockId: u8ToHex(blockSeal.getBlockId_asU8(), context),
-      executionReceiptId: u8ToHex(blockSeal.getExecutionReceiptId_asU8(), context),
-    }))
+      executionReceiptId: u8ToHex(
+        blockSeal.getExecutionReceiptId_asU8(),
+        context
+      ),
+    })),
   }
 
   return ret
@@ -68,8 +79,14 @@ function constructResponse(ix, context, res) {
 
 export async function sendGetBlock(ix, context = {}, opts = {}) {
   invariant(opts.node, `SDK Send Get Block Error: opts.node must be defined.`)
-  invariant(context.response, `SDK Send Get Block Error: context.response must be defined.`)
-  invariant(context.Buffer, `SDK Send Get Block Error: context.Buffer must be defined.`)
+  invariant(
+    context.response,
+    `SDK Send Get Block Error: context.response must be defined.`
+  )
+  invariant(
+    context.Buffer,
+    `SDK Send Get Block Error: context.Buffer must be defined.`
+  )
 
   ix = await ix
 

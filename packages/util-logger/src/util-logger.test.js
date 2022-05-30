@@ -15,8 +15,8 @@ describe("logger", () => {
   let configRef
   const loggerLevelConfigKey = "logger.level"
   const testArgs = {
-    title: "test title", 
-    message: "test message"
+    title: "test title",
+    message: "test message",
   }
 
   beforeEach(() => {

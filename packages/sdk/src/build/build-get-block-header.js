@@ -6,6 +6,6 @@ export function getBlockHeader(isSealed = null) {
     ix => {
       ix.block.isSealed = isSealed
       return Ok(ix)
-    }
+    },
   ])
 }

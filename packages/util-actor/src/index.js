@@ -60,25 +60,27 @@ export const kill = addr => {
   delete root.FCL_REGISTRY[addr]
 }
 
-const fromHandlers = (handlers = {}) => async ctx => {
-  if (typeof handlers[INIT] === "function") await handlers[INIT](ctx)
-  __loop: while (1) {
-    const letter = await ctx.receive()
-    try {
-      if (letter.tag === EXIT) {
-        if (typeof handlers[TERMINATE] === "function") {
-          await handlers[TERMINATE](ctx, letter, letter.data || {})
+const fromHandlers =
+  (handlers = {}) =>
+  async ctx => {
+    if (typeof handlers[INIT] === "function") await handlers[INIT](ctx)
+    __loop: while (1) {
+      const letter = await ctx.receive()
+      try {
+        if (letter.tag === EXIT) {
+          if (typeof handlers[TERMINATE] === "function") {
+            await handlers[TERMINATE](ctx, letter, letter.data || {})
+          }
+          break __loop
         }
-        break __loop
+        await handlers[letter.tag](ctx, letter, letter.data || {})
+      } catch (error) {
+        console.error(`${ctx.self()} Error`, letter, error)
+      } finally {
+        continue __loop
       }
-      await handlers[letter.tag](ctx, letter, letter.data || {})
-    } catch (error) {
-      console.error(`${ctx.self()} Error`, letter, error)
-    } finally {
-      continue __loop
     }
   }
-}
 
 export const spawn = (fn, addr = null) => {
   if (addr == null) addr = ++pid

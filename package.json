@@ -11,5 +11,8 @@
   "dependencies": {
     "@changesets/cli": "^2.21.1",
     "@changesets/changelog-github": "^0.4.4"
+  },
+  "devDependencies": {
+    "prettier": "^2.6.2"
   }
 }
