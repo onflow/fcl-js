@@ -63,7 +63,7 @@ const getVerifySignaturesScript = async (sig, opts) => {
       deprecate({
         title: "FCL Deprecation Notice",
         message: `Using the "env" configuration key for specifying the flow network has been deprecated in favor of "flow.network" and will not be supported in future versions of the FCL.
-You can learn more (including a guide on common transition paths) here: https://github.com/onflow/flow-js-sdk/blob/master/packages/fcl/TRANSITIONS.md#0002-deprecate-env-config-key`,
+You can learn more (including a guide on common transition paths) here: https://github.com/onflow/flow-js-sdk/blob/master/packages/fcl/TRANSITIONS.md#0001-deprecate-env-config-key`,
         level: logger.LEVELS.warn,
       })
   }
