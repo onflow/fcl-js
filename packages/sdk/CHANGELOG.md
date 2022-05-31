@@ -1,5 +1,16 @@
 # @onflow/sdk
 
+## 1.0.2-alpha.1
+
+### Patch Changes
+
+- [#1191](https://github.com/onflow/fcl-js/pull/1191) [`90d5163a`](https://github.com/onflow/fcl-js/commit/90d5163a7723dd529324a271ea8accaa43a3d7be) Thanks [@jribbink](https://github.com/jribbink)! - Allow for integer string account.keyId in authorization function
+
+* [#1218](https://github.com/onflow/fcl-js/pull/1218) [`cc422a78`](https://github.com/onflow/fcl-js/commit/cc422a781d0e87ba8945c336902bbc9542d5b4c4) Thanks [@jribbink](https://github.com/jribbink)! - Fix interaction arguments in http request body broken by prettier
+
+* Updated dependencies [[`cc422a78`](https://github.com/onflow/fcl-js/commit/cc422a781d0e87ba8945c336902bbc9542d5b4c4)]:
+  - @onflow/transport-http@1.3.0-alpha.1
+
 ## 1.0.2-alpha.0
 
 ### Patch Changes

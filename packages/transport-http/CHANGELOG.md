@@ -1,5 +1,11 @@
 # @onflow/transport-http
 
+## 1.3.0-alpha.1
+
+### Patch Changes
+
+- [#1218](https://github.com/onflow/fcl-js/pull/1218) [`cc422a78`](https://github.com/onflow/fcl-js/commit/cc422a781d0e87ba8945c336902bbc9542d5b4c4) Thanks [@jribbink](https://github.com/jribbink)! - Fix interaction arguments in http request body broken by prettier
+
 ## 1.3.0-alpha.0
 
 ### Minor Changes
