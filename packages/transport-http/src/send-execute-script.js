@@ -11,7 +11,7 @@ async function sendExecuteScriptAtBlockIDRequest(ix, context, opts) {
     method: "POST",
     body: {
       script: context.Buffer.from(ix.message.cadence).toString("base64"),
-      arguments: ix.message.arguments.map(arg =>
+      ["arguments"]: ix.message.arguments.map(arg =>
         context.Buffer.from(
           JSON.stringify(ix.arguments[arg].asArgument)
         ).toString("base64")
@@ -31,7 +31,7 @@ async function sendExecuteScriptAtBlockHeightRequest(ix, context, opts) {
     method: "POST",
     body: {
       script: context.Buffer.from(ix.message.cadence).toString("base64"),
-      arguments: ix.message.arguments.map(arg =>
+      ["arguments"]: ix.message.arguments.map(arg =>
         context.Buffer.from(
           JSON.stringify(ix.arguments[arg].asArgument)
         ).toString("base64")
@@ -51,7 +51,7 @@ async function sendExecuteScriptAtLatestBlockRequest(ix, context, opts) {
     method: "POST",
     body: {
       script: context.Buffer.from(ix.message.cadence).toString("base64"),
-      arguments: ix.message.arguments.map(arg =>
+      ["arguments"]: ix.message.arguments.map(arg =>
         context.Buffer.from(
           JSON.stringify(ix.arguments[arg].asArgument)
         ).toString("base64")

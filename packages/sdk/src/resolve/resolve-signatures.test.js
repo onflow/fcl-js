@@ -26,7 +26,7 @@ const TRANSACTION = {
     payer: null,
     authorizations: [],
     params: [],
-    arguments: [],
+    ["arguments"]: [],
   },
   accounts: {
     foo: {
@@ -79,7 +79,7 @@ test("voucher in signable", async () => {
     cadence: "",
     refBlock: "123",
     computeLimit: 156,
-    arguments: [],
+    ["arguments"]: [],
     proposalKey: {address: "0x01", keyId: 0, sequenceNum: 123},
     payer: "0x02",
     authorizers: ["0x01"],

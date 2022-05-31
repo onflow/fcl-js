@@ -19,7 +19,7 @@ it("export contract interface", () => {
 
 const baseTx = {
   cadence: `transaction { execute { log("Hello, World!") } }`,
-  arguments: [],
+  ["arguments"]: [],
   refBlock: "f0e4c2f76c58916ec258f246851bea091d14d4247a2fc3e18694461b1816e13b",
   computeLimit: 42,
   proposalKey: {
@@ -249,7 +249,7 @@ describe("encode transaction", () => {
 
 const baseVoucher = {
   cadence: `transaction { execute { log("Hello, World!") } }`,
-  arguments: [],
+  ["arguments"]: [],
   refBlock: "f0e4c2f76c58916ec258f246851bea091d14d4247a2fc3e18694461b1816e13b",
   computeLimit: 42,
   proposalKey: {
@@ -376,7 +376,8 @@ describe("encode txId from voucher", () => {
           {
             address: "01",
             keyId: 4,
-            sig: "f7225388c1d69d57e6251c9fda50cbbf9e05131e5adb81e5aa0422402f048162",
+            sig:
+              "f7225388c1d69d57e6251c9fda50cbbf9e05131e5adb81e5aa0422402f048162",
           },
         ],
       }),
@@ -425,17 +426,20 @@ describe("encode txId from voucher", () => {
           {
             address: "03",
             keyId: 0,
-            sig: "f7225388c1d69d57e6251c9fda50cbbf9e05131e5adb81e5aa0422402f048162",
+            sig:
+              "f7225388c1d69d57e6251c9fda50cbbf9e05131e5adb81e5aa0422402f048162",
           },
           {
             address: "01",
             keyId: 0,
-            sig: "f7225388c1d69d57e6251c9fda50cbbf9e05131e5adb81e5aa0422402f048162",
+            sig:
+              "f7225388c1d69d57e6251c9fda50cbbf9e05131e5adb81e5aa0422402f048162",
           },
           {
             address: "02",
             keyId: 0,
-            sig: "f7225388c1d69d57e6251c9fda50cbbf9e05131e5adb81e5aa0422402f048162",
+            sig:
+              "f7225388c1d69d57e6251c9fda50cbbf9e05131e5adb81e5aa0422402f048162",
           },
         ],
       }),
@@ -449,17 +453,20 @@ describe("encode txId from voucher", () => {
           {
             address: "01",
             keyId: 2,
-            sig: "f7225388c1d69d57e6251c9fda50cbbf9e05131e5adb81e5aa0422402f048162",
+            sig:
+              "f7225388c1d69d57e6251c9fda50cbbf9e05131e5adb81e5aa0422402f048162",
           },
           {
             address: "01",
             keyId: 0,
-            sig: "f7225388c1d69d57e6251c9fda50cbbf9e05131e5adb81e5aa0422402f048162",
+            sig:
+              "f7225388c1d69d57e6251c9fda50cbbf9e05131e5adb81e5aa0422402f048162",
           },
           {
             address: "01",
             keyId: 1,
-            sig: "f7225388c1d69d57e6251c9fda50cbbf9e05131e5adb81e5aa0422402f048162",
+            sig:
+              "f7225388c1d69d57e6251c9fda50cbbf9e05131e5adb81e5aa0422402f048162",
           },
         ],
       }),
