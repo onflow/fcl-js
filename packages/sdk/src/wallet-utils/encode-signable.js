@@ -46,7 +46,7 @@ export const encodeMessageFromSignable = (signable, signerAddress) => {
     cadence: signable.voucher.cadence,
     refBlock: signable.voucher.refBlock,
     computeLimit: signable.voucher.computeLimit,
-    arguments: signable.voucher.arguments,
+    ["arguments"]: signable.voucher.arguments,
     proposalKey: {
       ...signable.voucher.proposalKey,
       address: sansPrefix(signable.voucher.proposalKey.address),

@@ -70,7 +70,7 @@ export async function sendTransaction(ix, context = {}, opts = {}) {
     method: "POST",
     body: {
       script: context.Buffer.from(ix.message.cadence).toString("base64"),
-      arguments: [
+      ["arguments"]: [
         ...ix.message.arguments.map(arg =>
           context.Buffer.from(
             JSON.stringify(ix.arguments[arg].asArgument)

@@ -13,7 +13,7 @@ describe("resolveArguments", () => {
   test("should resolve synchronous arguments", async () => {
     const ix = {
       tag,
-      arguments: {
+      ["arguments"]: {
         [argID]: {
           asArgument: null,
           kind,
@@ -36,7 +36,7 @@ describe("resolveArguments", () => {
   test("should resolve asynchronous arguments", async () => {
     const ix = {
       tag,
-      arguments: {
+      ["arguments"]: {
         [argID]: {
           asArgument: null,
           kind,
@@ -71,7 +71,7 @@ describe("resolveArguments", () => {
 
     const ix = {
       tag,
-      arguments: {
+      ["arguments"]: {
         [argID]: {
           asArgument: null,
           kind,
@@ -101,7 +101,7 @@ describe("resolveArguments", () => {
   test("should throw an error if resolve recursion exceeds depth limit", async () => {
     const ix = {
       tag,
-      arguments: {
+      ["arguments"]: {
         [argID]: {
           asArgument: null,
           kind,

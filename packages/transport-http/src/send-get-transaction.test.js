@@ -11,7 +11,7 @@ describe("Get Transaction", () => {
 
     const returnedTransaction = {
       script: "Q2FkZW5jZSBDb2Rl",
-      arguments: [],
+      ["arguments"]: [],
       reference_block_id: "a1b2c3",
       gas_limit: "123",
       proposal_key: {
