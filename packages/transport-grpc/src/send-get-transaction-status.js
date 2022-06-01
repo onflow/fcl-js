@@ -12,6 +12,8 @@ const STATUS_MAP = {
 }
 
 const u8ToHex = (u8, context) => context.Buffer.from(u8).toString("hex")
+const nonEmptyU8ToHex = (u8, context) =>
+  !u8.reduce((empty, b) => empty && !b, true) ? u8ToHex(u8, context) : null
 const hexBuffer = (hex, context) => context.Buffer.from(hex, "hex")
 
 export async function sendGetTransactionStatus(ix, context = {}, opts = {}) {
@@ -47,7 +49,7 @@ export async function sendGetTransactionStatus(ix, context = {}, opts = {}) {
   let ret = context.response()
   ret.tag = ix.tag
   ret.transactionStatus = {
-    blockId: null,
+    blockId: nonEmptyU8ToHex(res.getBlockId_asU8(), context),
     status: res.getStatus(),
     statusString: STATUS_MAP[res.getStatus()],
     statusCode: res.getStatusCode(),

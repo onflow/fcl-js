@@ -32,7 +32,7 @@ describe("Get Transaction Status", () => {
     const unaryMock = jest.fn()
 
     const returnedTransactionStatus = {
-      blockId: null,
+      blockId: "aafb34",
       status: 2,
       statusString: "FINALIZED",
       statusCode: 0,
@@ -49,6 +49,7 @@ describe("Get Transaction Status", () => {
     }
 
     unaryMock.mockReturnValue({
+      getBlockId_asU8: () => hexStrToUInt8Array("aafb34"),
       getStatus: () => 2,
       getStatusCode: () => 0,
       getErrorMessage: () => "No Error",
