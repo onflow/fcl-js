@@ -11,7 +11,7 @@ const STATUS_MAP = {
   5: "EXPIRED",
 }
 
-const nonNullU8ToHex = (u8, context) =>
+const nonEmptyU8ToHex = (u8, context) =>
   !u8.reduce((empty, b) => empty && !b, true)
     ? context.Buffer.from(u8).toString("hex")
     : null
@@ -50,14 +50,14 @@ export async function sendGetTransactionStatus(ix, context = {}, opts = {}) {
   let ret = context.response()
   ret.tag = ix.tag
   ret.transactionStatus = {
-    blockId: nonNullU8ToHex(res.getBlockId_asU8(), context),
+    blockId: nonEmptyU8ToHex(res.getBlockId_asU8(), context),
     status: res.getStatus(),
     statusString: STATUS_MAP[res.getStatus()],
     statusCode: res.getStatusCode(),
     errorMessage: res.getErrorMessage(),
     events: events.map(event => ({
       type: event.getType(),
-      transactionId: nonNullU8ToHex(event.getTransactionId_asU8(), context),
+      transactionId: nonEmptyU8ToHex(event.getTransactionId_asU8(), context),
       transactionIndex: event.getTransactionIndex(),
       eventIndex: event.getEventIndex(),
       payload: JSON.parse(
