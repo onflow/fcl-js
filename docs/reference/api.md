@@ -1282,6 +1282,7 @@ A builder function that returns the status of transaction.
 
 | Name                     | Type                                       | Description                                                     |
 | ------------------------ | ------------------------------------------ | --------------------------------------------------------------- |
+| `blockId`                | string                                     | ID of the block that contains the transaction.                  |
 | `events`                 | [[EventObject]](#event-object)             | An array of events that were emitted during the transaction.    |
 | `status`                 | [TransactionStatus](#transaction-statuses) | The status of the transaction on the blockchain.                |
 | `statusString` **alpha** | [TransactionStatus](#transaction-statuses) | The `status` as as descriptive text (e.g. "FINALIZED").         |
