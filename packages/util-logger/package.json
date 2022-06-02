@@ -19,21 +19,21 @@
   },
   "devDependencies": {
     "jest": "25.3.0",
-    "jest-esm-transformer": "1.0.0",
-    "microbundle": "0.12.0-next.8"
+    "jest-esm-transformer": "1.0.0"
   },
-  "source": "src/util-logger.js",
+  "build": "src/util-logger.js",
   "main": "dist/util-logger.js",
   "module": "dist/util-logger.module.js",
   "unpkg": "dist/util-logger.umd.js",
   "scripts": {
     "prepublishOnly": "npm test && npm run build",
     "test": "jest",
-    "build": "microbundle --no-compress",
+    "build": "fcl-build",
     "test:watch": "jest --watch",
-    "start": "microbundle watch --no-compress"
+    "start": "fcl-build --watch"
   },
   "dependencies": {
+    "@onflow/fcl-build": "^1.0.0",
     "@onflow/sdk": "^1.0.2-alpha.0"
   }
 }

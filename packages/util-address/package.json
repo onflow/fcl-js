@@ -20,18 +20,20 @@
   "devDependencies": {
     "@onflow/types": "^1.0.1",
     "jest": "26.4.2",
-    "jest-esm-transformer": "1.0.0",
-    "microbundle": "0.12.4"
+    "jest-esm-transformer": "1.0.0"
   },
-  "source": "src/index.js",
+  "build": "src/index.js",
   "main": "dist/util-address.js",
   "module": "dist/util-address.module.js",
   "unpkg": "dist/util-address.umd.js",
   "scripts": {
     "prepublishOnly": "npm test && npm run build",
     "test": "jest",
-    "build": "microbundle --no-compress",
+    "build": "fcl-build",
     "test:watch": "jest --watch",
-    "start": "microbundle watch --no-compress"
+    "start": "fcl-build --watch"
+  },
+  "dependencies": {
+    "@onflow/fcl-build": "^1.0.0"
   }
 }

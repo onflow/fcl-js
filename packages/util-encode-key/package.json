@@ -20,21 +20,21 @@
   "devDependencies": {
     "@onflow/types": "^1.0.1",
     "jest": "^26.6.3",
-    "jest-esm-transformer": "1.0.0",
-    "microbundle": "^0.13.0"
+    "jest-esm-transformer": "1.0.0"
   },
-  "source": "src/index.js",
+  "build": "src/index.js",
   "main": "dist/util-encode-key.js",
   "module": "dist/util-encode-key.module.js",
   "unpkg": "dist/util-encode-key.umd.js",
   "scripts": {
     "prepublishOnly": "npm test && npm run build",
     "test": "jest",
-    "build": "microbundle --no-compress",
+    "build": "fcl-build",
     "test:watch": "jest --watch",
-    "start": "microbundle watch --no-compress"
+    "start": "fcl-build --watch"
   },
   "dependencies": {
+    "@onflow/fcl-build": "^1.0.0",
     "@onflow/rlp": "^1.0.1",
     "@onflow/util-invariant": "^1.0.1"
   }

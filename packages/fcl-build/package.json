@@ -1,0 +1,28 @@
+{
+  "name": "@onflow/fcl-build",
+  "version": "1.0.0",
+  "description": "FCL Build Tool",
+  "license": "Apache-2.0",
+  "author": "Dapper Labs <dev@dapperlabs.com>",
+  "homepage": "https://onflow.org",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/onflow/flow-js-sdk.git"
+  },
+  "bugs": {
+    "url": "https://github.com/onflow/flow-js-sdk/issues"
+  },
+  "dependencies": {
+    "@rollup/plugin-replace": "^4.0.0",
+    "@rollup/plugin-commonjs": "^22.0.0",
+    "@rollup/plugin-node-resolve": "^13.3.0",
+    "commander": "^9.3.0",
+    "rollup": "^2.75.5"
+  },
+  "scripts": {
+    "build": ":"
+  },
+  "bin": {
+    "fcl-build": "src/cli.js"
+  }
+}

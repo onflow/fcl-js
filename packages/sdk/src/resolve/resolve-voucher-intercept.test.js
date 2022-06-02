@@ -25,7 +25,7 @@ test("voucherIntercept is executed", async () => {
       payer: null,
       authorizations: [],
       params: [],
-      ["arguments"]: [],
+      arguments: [],
     },
     accounts: {
       foo: {
@@ -71,7 +71,7 @@ test("voucherIntercept throws error", async () => {
       payer: null,
       authorizations: [],
       params: [],
-      ["arguments"]: [],
+      arguments: [],
     },
     accounts: {
       foo: {

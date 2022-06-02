@@ -19,21 +19,21 @@
   },
   "devDependencies": {
     "jest": "26.4.0",
-    "jest-esm-transformer": "1.0.0",
-    "microbundle": "0.12.3"
+    "jest-esm-transformer": "1.0.0"
   },
   "dependencies": {
+    "@onflow/fcl-build": "^1.0.0",
     "queue-microtask": "1.1.2"
   },
-  "source": "src/index.js",
+  "build": "src/index.js",
   "main": "dist/actor.js",
   "module": "dist/actor.module.js",
   "unpkg": "dist/actor.umd.js",
   "scripts": {
     "prepublishOnly": "npm test && npm run build",
     "test": "jest",
-    "build": "microbundle --no-compress",
+    "build": "fcl-build",
     "test:watch": "jest --watch",
-    "start": "microbundle watch --no-compress"
+    "start": "fcl-build --watch"
   }
 }

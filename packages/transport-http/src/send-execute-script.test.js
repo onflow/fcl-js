@@ -49,7 +49,7 @@ describe("Send Execute Script", () => {
       method: "POST",
       body: {
         script: "cHViIGZ1biBtYWluKGE6IEludCk6IEludCB7IHJldHVybiBhIH0=",
-        ["arguments"]: ["eyJ0eXBlIjoiSW50IiwidmFsdWUiOiIxMjMifQ=="],
+        arguments: ["eyJ0eXBlIjoiSW50IiwidmFsdWUiOiIxMjMifQ=="],
       },
     })
     expect(response.encodedData).toEqual(
@@ -94,7 +94,7 @@ describe("Send Execute Script", () => {
       method: "POST",
       body: {
         script: "cHViIGZ1biBtYWluKCk6IEludCB7IHJldHVybiAxMjMgfQ==",
-        ["arguments"]: [],
+        arguments: [],
       },
     })
     expect(response.encodedData).toEqual(
@@ -139,7 +139,7 @@ describe("Send Execute Script", () => {
       method: "POST",
       body: {
         script: "cHViIGZ1biBtYWluKCk6IEludCB7IHJldHVybiAxMjMgfQ==",
-        ["arguments"]: [],
+        arguments: [],
       },
     })
     expect(response.encodedData).toEqual(

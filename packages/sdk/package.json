@@ -21,11 +21,11 @@
     }
   },
   "devDependencies": {
+    "@onflow/fcl-build": "^1.0.0",
     "jest": "^27.0.6",
-    "jest-esm-transformer": "1.0.0",
-    "microbundle": "^0.13.3"
+    "jest-esm-transformer": "1.0.0"
   },
-  "source": "src/sdk.js",
+  "build": "src/sdk.js",
   "main": "dist/sdk.js",
   "module": "dist/sdk.module.js",
   "unpkg": "dist/sdk.umd.js",
@@ -33,10 +33,10 @@
     "alpha": "npm publish --tag alpha",
     "prepublishOnly": "npm test && npm run build",
     "test": "jest",
-    "build": "microbundle --no-compress --define MICROBUNDLE_CURRENT_VERSION=$npm_package_version",
+    "build": "fcl-build",
     "currentVersion": "node -e MICROBUNDLE_CURRENT_VERSION=$npm_package_version",
     "test:watch": "jest --watch",
-    "start": "microbundle --no-compress --define MICROBUNDLE_CURRENT_VERSION=$npm_package_version watch"
+    "start": "fcl-build watch"
   },
   "dependencies": {
     "@onflow/config": "^1.0.1",

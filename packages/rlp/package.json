@@ -18,20 +18,20 @@
     }
   },
   "devDependencies": {
+    "@onflow/fcl-build": "^1.0.0",
     "jest": "26.4.2",
-    "jest-esm-transformer": "1.0.0",
-    "microbundle": "0.12.4"
+    "jest-esm-transformer": "1.0.0"
   },
-  "source": "src/index.js",
+  "build": "src/index.js",
   "main": "dist/rlp.js",
   "module": "dist/rlp.module.js",
   "unpkg": "dist/rlp.umd.js",
   "scripts": {
     "prepublishOnly": "npm test && npm run build",
     "test": "jest",
-    "build": "microbundle --no-compress",
+    "build": "fcl-build",
     "test:watch": "jest --watch",
-    "start": "microbundle watch --no-compress"
+    "start": "fcl-build watch"
   },
   "dependencies": {
     "buffer": "^6.0.3"

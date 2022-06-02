@@ -18,11 +18,11 @@
     }
   },
   "devDependencies": {
+    "@onflow/fcl-build": "^1.0.0",
     "jest": "^27.0.6",
-    "jest-esm-transformer": "1.0.0",
-    "microbundle": "^0.13.3"
+    "jest-esm-transformer": "1.0.0"
   },
-  "source": "src/sdk-send-grpc.js",
+  "build": "src/sdk-send-grpc.js",
   "main": "dist/sdk-send-grpc.js",
   "module": "dist/sdk-send-grpc.module.js",
   "unpkg": "dist/sdk-send-grpc.umd.js",
@@ -30,9 +30,9 @@
     "alpha": "npm publish --tag alpha",
     "prepublishOnly": "npm test && npm run build",
     "test": "jest",
-    "build": "microbundle --no-compress",
+    "build": "fcl-build",
     "test:watch": "jest --watch",
-    "start": "microbundle watch --no-compress"
+    "start": "fcl-build watch"
   },
   "dependencies": {
     "@improbable-eng/grpc-web": "^0.14.0",
