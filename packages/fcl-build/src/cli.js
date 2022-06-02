@@ -6,6 +6,4 @@ const config = require("./package-config")
 const packageJSON = getPackageJSON()
 const packageConfig = config(packageJSON)
 
-console.log(packageConfig)
-
 program(packageConfig)(packageJSON)

@@ -19,8 +19,6 @@ function determineBuildPaths(rawPaths, entryName) {
     .filter(pathKey => Object.keys(defaultOutputDirs).find(x => x == pathKey))
     .reduce((paths, pathKey) => ({...paths, [pathKey]: rawPaths[pathKey]}), {})
 
-  console.log(paths)
-
   assert(
     !Object.keys(paths).find(x =>
       Object.keys(paths).find(y => paths[x] == paths[y] && x != y)
