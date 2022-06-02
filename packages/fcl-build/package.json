@@ -13,9 +13,9 @@
     "url": "https://github.com/onflow/flow-js-sdk/issues"
   },
   "dependencies": {
-    "@rollup/plugin-replace": "^4.0.0",
     "@rollup/plugin-commonjs": "^22.0.0",
     "@rollup/plugin-node-resolve": "^13.3.0",
+    "@rollup/plugin-replace": "^4.0.0",
     "commander": "^9.3.0",
     "rollup": "^2.75.5"
   },

@@ -39,9 +39,7 @@ function determineBuildPaths(rawPaths, entryName) {
 }
 
 module.exports = package => {
-  let builds = package.build || package.builds
-
-  assert(builds, "Module entry point(s) (package.build) must be defined")
+  let builds = package.build || package.builds || []
 
   if (isObject(builds)) {
     builds = Object.keys(builds).map(key => ({

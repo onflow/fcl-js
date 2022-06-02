@@ -31,7 +31,7 @@ install:
 .PHONY: build
 build:
 	$(info TSK: build)
-	sh -c 'npm run build -ws || exit 255'
+	sh -c 'npm run build || exit 255'
 
 .PHONY: test
 test:

@@ -1,5 +1,6 @@
 const {program} = require("commander")
 const buildModule = require("./build")
+const assert = require("assert")
 
 module.exports = packageConfig => package => {
   program
@@ -14,9 +15,15 @@ module.exports = packageConfig => package => {
     ...commandLineConfig,
   }
 
-  program.action(async (_, options) => {
+  program.action(async () => {
     console.log(`Building ${package.name}...`)
+
+    assert(
+      config.builds,
+      "Module entry point(s) (package.build) must be defined"
+    )
     await Promise.all(config.builds.map(build => buildModule(build, package)))
+
     console.log("Build Success!")
   })
 
