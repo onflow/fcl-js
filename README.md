@@ -141,7 +141,7 @@ const txId = await fcl.mutate({
 
 See the [Flow App Quick Start](https://docs.onflow.org/flow-js-sdk/flow-app-quickstart).
 
-See the full [API Reference](https://docs.onflow.org/fcl/api/) for all FCL functionality.
+See the full [API Reference](https://docs.onflow.org/fcl/reference/api/) for all FCL functionality.
 
 Learn Flow's smart contract language to build any script or transactions: [Cadence](https://docs.onflow.org/cadence/).
 
