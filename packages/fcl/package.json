@@ -19,7 +19,7 @@
     "testEnvironment": "jsdom",
     "globals": {
       "window": {},
-      "MICROBUNDLE_CURRENT_VERSION": "TESTVERSION"
+      "PACKAGE_CURRENT_VERSION": "TESTVERSION"
     }
   },
   "devDependencies": {

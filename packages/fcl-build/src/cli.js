@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 const program = require("./program")
 const getPackageJSON = require("./get-package-json")
-const config = require("./package-config")
+const parsePackageJSON = require("./package-config")
 
-const packageJSON = getPackageJSON()
-const packageConfig = config(packageJSON)
+const package = getPackageJSON()
+const config = parsePackageJSON(package)
 
-program(packageConfig)(packageJSON)
+program(config)(package)

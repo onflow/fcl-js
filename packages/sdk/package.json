@@ -17,7 +17,7 @@
       ".js": "jest-esm-transformer"
     },
     "globals": {
-      "MICROBUNDLE_CURRENT_VERSION": "TESTVERSION"
+      "PACKAGE_CURRENT_VERSION": "TESTVERSION"
     }
   },
   "devDependencies": {
@@ -34,7 +34,6 @@
     "prepublishOnly": "npm test && npm run build",
     "test": "jest",
     "build": "fcl-build",
-    "currentVersion": "node -e MICROBUNDLE_CURRENT_VERSION=$npm_package_version",
     "test:watch": "jest --watch",
     "start": "fcl-build watch"
   },

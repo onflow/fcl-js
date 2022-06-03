@@ -61,10 +61,14 @@ module.exports = package => {
       }
       let entryName = basename(entry)
 
-      buildConfigs.push({
-        source: entry,
-        outputs: determineBuildPaths({...package, ...buildPaths}, entryName),
-      })
+      buildConfigs.push(
+        ...determineBuildPaths({...package, ...buildPaths}, entryName).map(
+          build => ({
+            ...build,
+            source: entry,
+          })
+        )
+      )
       return buildConfigs
     }, []),
   }

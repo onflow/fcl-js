@@ -1,5 +1,5 @@
 const {program} = require("commander")
-const buildModule = require("./build")
+const buildModule = require("./build/build")
 const assert = require("assert")
 
 module.exports = packageConfig => package => {
