@@ -22,9 +22,6 @@
     "rollup-plugin-polyfill-node": "^0.9.0",
     "rollup-plugin-sourcemaps": "^0.6.3"
   },
-  "scripts": {
-    "build": ":"
-  },
   "bin": {
     "fcl-build": "src/cli.js"
   }

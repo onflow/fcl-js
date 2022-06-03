@@ -27,7 +27,6 @@ module.exports = function getOutputOptions(package, build) {
           .replace(/-([A-Za-z0-9])/, s => s.toUpperCase().substr(1))
 
       return _.merge(options, {
-        preserveModules: false,
         name: generateUMDName(package.name),
         plugins: [...options.plugins],
       })

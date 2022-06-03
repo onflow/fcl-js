@@ -4,8 +4,8 @@
   ],
   "scripts": {
     "build": "lerna run build",
-    "changeset": "changeset",
-    "test": "jest"
+    "test": "lerna run test",
+    "changeset": "changeset"
   },
   "name": "fcl-js",
   "dependencies": {
