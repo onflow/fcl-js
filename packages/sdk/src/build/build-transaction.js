@@ -1,7 +1,7 @@
 import {pipe, put, Ok, makeTransaction} from "../interaction/interaction.js"
 import {template} from "@onflow/util-template"
 
-const DEFAULT_COMPUTE_LIMIT = 10
+const DEFAULT_COMPUTE_LIMIT = 9999
 const DEFAULT_SCRIPT_ACCOUNTS = []
 const DEFUALT_REF = null
 
