@@ -36,6 +36,81 @@ The first step is to generate a React app using Next.js and [create-next-app](ht
 ```sh
 npx create-next-app@latest flow-app
 cd flow-app
+mkdir -p ssl/certs # we create these directories for ssl configuration
+touch ssl/server.js  # we will populate this file in a moment to enable (self-signed) HTTPS serving on localhost to comply with the API's [useful] CORS security requirements
+```
+
+Then, in your favourite editor, open `ssl/server.js` from your `flow-app` project. Paste &amp; save this:
+
+
+```js
+const { createServer } = require('https');
+const fs = require('fs');
+const { parse } = require('url');
+const next = require('next');
+
+const dev = process.env.NODE_ENV !== 'production';
+const port = process.env.PORT || 3000;
+const app = next({ dev });
+const handle = app.getRequestHandler();
+
+const httpsOptions = {
+    key: fs.readFileSync('ssl/certs/localhost.key'),
+    cert: fs.readFileSync('ssl/certs/localhost.crt')
+};
+
+
+app.prepare().then(() => {
+    createServer(httpsOptions, (req, res) => {
+
+        const parsedUrl = parse(req.url, true)
+        const { pathname, query } = parsedUrl
+
+        // note this is placeholder but could be used to handle custom routing if necessary
+        if (pathname === '/a') {
+            app.render(req, res, '/a', query)
+        } else if (pathname === '/b') {
+            app.render(req, res, '/b', query)
+        } else {
+            handle(req, res, parsedUrl)
+        }
+    }).listen(port, (err) => {
+        if (err) throw err
+        console.log(`> Ready on https://localhost:${port}`)
+    })
+})
+```
+
+Then, replace the `npm run start` start command in `package.json`...
+
+Original:
+
+```json
+    "start": "next start",
+```
+New:
+
+```json
+    "start": "node ssl/server.js",
+```
+
+Finally, we generate our self-signed certificates inside `flow-app`.
+
+To do so, please ensure you have `openssl` installed by executing:
+
+```sh
+openssl --version
+```
+
+If a value is returned, great. If not, please find installation instructions for your OS/distro and come back when it's installed.
+
+The command to generate certs is:
+
+```sh
+openssl req -x509 -out ssl/certs/localhost.crt -keyout ssl/certs/localhost.key \
+  -newkey rsa:2048 -nodes -sha256 \
+  -subj '/CN=localhost' -extensions EXT -config <( \
+printf "[dn]\nCN=localhost\n[req]\ndistinguished_name = dn\n[EXT]\nsubjectAltName=DNS:localhost\nkeyUsage=digitalSignature\nextendedKeyUsage=serverAuth")
 ```
 
 Next, install FCL so we can use it in our app.
@@ -47,10 +122,12 @@ npm install @onflow/fcl --save
 Now run the app using the following command in your terminal.
 
 ```sh
-npm run dev
+npm run start
 ```
 
-You should now see your app running.
+You should now see your app running, note that it's running on https ([https://localhost:3000](`https://localhost:3000`)).
+
+Open this in your preferred browser &amp; you will likely see a warning/error asking you if you want to continue. This is merely because a valid Certificate Authority has not generated our localhost cert (we did), so we can happily dismiss this warning permanently. To all intents and purposes our local comms are secured now, and will work correctly with the CORS `access-control-allow-origin` headers the rest API specifies.
 
 ## Configuration
 
