@@ -35,7 +35,7 @@
     "test": "jest",
     "build": "fcl-build",
     "test:watch": "jest --watch",
-    "start": "fcl-build watch"
+    "start": "fcl-build --watch"
   },
   "dependencies": {
     "@onflow/config": "^1.0.1",

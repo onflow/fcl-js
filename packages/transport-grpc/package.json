@@ -32,7 +32,7 @@
     "test": "jest",
     "build": "fcl-build",
     "test:watch": "jest --watch",
-    "start": "fcl-build watch"
+    "start": "fcl-build --watch"
   },
   "dependencies": {
     "@improbable-eng/grpc-web": "^0.14.0",

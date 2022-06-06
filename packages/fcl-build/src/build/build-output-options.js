@@ -2,8 +2,15 @@ const _ = require("lodash")
 const {resolve} = require("path")
 const builtinModules = require("builtin-modules")
 
+const generateModuleName = pkgName =>
+  pkgName
+    .replace("@", "")
+    .replace("/", "-")
+    .replace(/-([A-Za-z0-9])/, s => s.toUpperCase().substr(1))
+
 module.exports = function getOutputOptions(package, build) {
   let options = {
+    name: generateModuleName(package.name),
     file: resolve(build.dir, build.entry),
     format: build.type,
     preserveModules: false,
@@ -21,14 +28,7 @@ module.exports = function getOutputOptions(package, build) {
         plugins: [...options.plugins],
       })
     case "umd":
-      const generateUMDName = pkgName =>
-        pkgName
-          .replace("@", "")
-          .replace("/", "-")
-          .replace(/-([A-Za-z0-9])/, s => s.toUpperCase().substr(1))
-
       return _.merge(options, {
-        name: generateUMDName(package.name),
         plugins: [...options.plugins],
       })
   }
