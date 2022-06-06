@@ -19,8 +19,6 @@ module.exports = packageConfig => package => {
   }
 
   program.action(async () => {
-    console.log(`Building ${package.name}...`)
-
     assert(
       config.builds,
       "Module entry point(s) (package.build) must be defined"
@@ -29,9 +27,8 @@ module.exports = packageConfig => package => {
     const buildAction = program.getOptionValue("watch")
       ? watchModule
       : buildModule
-    await Promise.all(config.builds.map(build => buildAction(build, package)))
 
-    console.log("Build Success!")
+    await buildAction(config.builds, package)
   })
 
   program.parse()

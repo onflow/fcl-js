@@ -3,7 +3,13 @@ const {rollup} = require("rollup")
 const getInputOptions = require("./build-input-options")
 const getOutputOptions = require("./build-output-options")
 
-module.exports = async (build, package) => {
+module.exports = async function buildModules(builds, package) {
+  console.log(`Building ${package.name}...`)
+  await Promise.all(builds.map(build => buildModule(build, package)))
+  console.log("Build Success!")
+}
+
+async function buildModule(build, package) {
   const inputOptions = getInputOptions(package, build)
   const outputOptions = getOutputOptions(package, build)
 
