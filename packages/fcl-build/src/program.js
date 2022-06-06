@@ -1,5 +1,6 @@
 const {program} = require("commander")
 const buildModule = require("./build/build")
+const watchModule = require("./build/build-watch")
 const assert = require("assert")
 
 module.exports = packageConfig => package => {
@@ -7,6 +8,8 @@ module.exports = packageConfig => package => {
     .name("FCL Build Tool")
     .description("Zero-configuration CLI to build FCL packages")
     .version("1.0.0")
+    .option("-w, --watch", "Run the build in watch-mode")
+    .parse()
 
   let commandLineConfig = {} // TODO populate using command line
 
@@ -22,7 +25,11 @@ module.exports = packageConfig => package => {
       config.builds,
       "Module entry point(s) (package.build) must be defined"
     )
-    await Promise.all(config.builds.map(build => buildModule(build, package)))
+
+    const buildAction = program.getOptionValue("watch")
+      ? watchModule
+      : buildModule
+    await Promise.all(config.builds.map(build => buildAction(build, package)))
 
     console.log("Build Success!")
   })

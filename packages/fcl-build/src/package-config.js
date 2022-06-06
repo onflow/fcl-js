@@ -1,6 +1,7 @@
 const assert = require("assert")
-const {resolve, relative, dirname, basename, extname, join} = require("path")
-const {isString, isArray, isObject} = require("./util")
+const {resolve, dirname, basename, join} = require("path")
+const {isArray, isObject} = require("./util")
+const {existsSync, mkdirSync} = require("fs")
 
 function determineBuildPaths(rawPaths, entryName) {
   const defaultOutputDirs = {
@@ -50,7 +51,7 @@ module.exports = package => {
     builds = [builds]
   }
 
-  return {
+  const cfg = {
     builds: builds.reduce((buildConfigs, build) => {
       let entry
       let buildPaths = {}
@@ -72,4 +73,10 @@ module.exports = package => {
       return buildConfigs
     }, []),
   }
+
+  cfg.builds.forEach(build =>
+    !existsSync(build.dir) ? mkdirSync(build.dir) : null
+  )
+
+  return cfg
 }
