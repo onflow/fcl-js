@@ -154,6 +154,7 @@ The communication channels involve responding to a set of pre-defined FCL messag
 - [Blocto](https://blocto.portto.io/en/)
 - [Ledger](https://ledger.com) (limited transaction support)
 - [Dapper Wallet](https://www.meetdapper.com/) (beta access - general availability coming soon)
+- [Lilico Wallet](https://lilico.app/) Fully non-custodial web wallet focused on NFTs
 
 ### Wallet Discovery
 It can be difficult to get users to discover new wallets on a chain. To solve this, we created a wallet discovery service that can be configured and accessed through FCL to display all available Flow wallet providers to the user. This means:
