@@ -4,6 +4,7 @@
   ],
   "scripts": {
     "build": "lerna run build",
+    "start": "npm run build && lerna run start --parallel",
     "test": "lerna run test",
     "changeset": "changeset"
   },

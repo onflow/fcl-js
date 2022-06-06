@@ -5,11 +5,12 @@ const getOutputOptions = require("./build-output-options")
 
 module.exports = async (build, package) => {
   const inputOptions = getInputOptions(package, build)
+  const outputOptions = getOutputOptions(package, build)
 
   let bundle, buildError
   try {
     bundle = await rollup(inputOptions)
-    await generateOutput(bundle, build, package)
+    await generateOutput(bundle, outputOptions)
   } catch (error) {
     buildError = error
   }
@@ -20,7 +21,6 @@ module.exports = async (build, package) => {
   }
 }
 
-async function generateOutput(bundle, build, package) {
-  const outputOptions = getOutputOptions(package, build)
+async function generateOutput(bundle, outputOptions) {
   const {output} = await bundle.write(outputOptions)
 }

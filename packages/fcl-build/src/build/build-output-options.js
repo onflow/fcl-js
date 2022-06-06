@@ -1,5 +1,6 @@
 const _ = require("lodash")
 const {resolve} = require("path")
+const builtinModules = require("builtin-modules")
 
 module.exports = function getOutputOptions(package, build) {
   let options = {
