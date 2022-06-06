@@ -13,6 +13,7 @@
     "url": "https://github.com/onflow/flow-js-sdk/issues"
   },
   "dependencies": {
+    "@rollup/plugin-babel": "^5.3.1",
     "@rollup/plugin-commonjs": "^22.0.0",
     "@rollup/plugin-node-resolve": "^13.3.0",
     "@rollup/plugin-replace": "^4.0.0",

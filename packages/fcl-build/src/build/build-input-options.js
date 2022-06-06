@@ -5,6 +5,7 @@ const commonjs = require("@rollup/plugin-commonjs")
 const replace = require("@rollup/plugin-replace")
 const sourcemap = require("rollup-plugin-sourcemaps")
 const {nodeResolve} = require("@rollup/plugin-node-resolve")
+const {babel} = require("@rollup/plugin-babel")
 
 const builtinModules = require("builtin-modules")
 
@@ -37,7 +38,10 @@ module.exports = function getInputOptions(package, build) {
         browser: true,
         preferBuiltins: build.type !== "umd",
       }),
-      commonjs({}),
+      commonjs(),
+      babel({
+        babelHelpers: "bundled",
+      }),
       replace({
         preventAssignment: true,
         PACKAGE_CURRENT_VERSION: JSON.stringify(package.version),

@@ -21,10 +21,7 @@ module.exports = async function buildModulesWatch(builds, package) {
       case "BUNDLE_END":
         break
       case "END":
-        console.log("Build Success!")
-        break
-      case "ERROR":
-        console.error("Build failed!")
+        console.log("Done!")
         break
     }
   }

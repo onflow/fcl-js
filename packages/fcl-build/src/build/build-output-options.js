@@ -1,6 +1,5 @@
 const _ = require("lodash")
 const {resolve} = require("path")
-const builtinModules = require("builtin-modules")
 
 const generateModuleName = pkgName =>
   pkgName

@@ -14,6 +14,12 @@ module.exports = function WatcherFactory(numWatchers) {
     watcher.on("event", event => {
       const {code} = event
 
+      switch (code) {
+        case "ERROR":
+          console.error("Build failed!", event.error)
+          break
+      }
+
       if (!this.eventBuffers[code]) this.eventBuffers[code] = new EventBuffer()
       this.eventBuffers[code].put(watcher, event)
 
