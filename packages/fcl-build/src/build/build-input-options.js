@@ -13,7 +13,7 @@ module.exports = function getInputOptions(package, build) {
       sourcemap(),
       nodeResolve({
         browser: true,
-        preferBuiltins: false,
+        preferBuiltins: true,
       }),
       commonjs(),
       replace({
