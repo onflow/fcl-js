@@ -1,12 +1,14 @@
 import {isTransaction} from "../interaction/interaction.js"
 import {config} from "@onflow/config"
+import * as logger from "@onflow/util-logger"
 
 const DEFAULT_COMPUTE_LIMIT = 10
 
 export async function resolveComputeLimit(ix) {
   if (isTransaction(ix)) {
     ix.message.computeLimit =
-      ix.message.computeLimit || (await config.get("sdk.defaultComputeLimit"))
+      ix.message.computeLimit || (await config.get("fcl.limit"))
+
     if (!ix.message.computeLimit) {
       logger.log({
         title: "FCL/SDK Deprecation Notice",
@@ -17,4 +19,5 @@ You can learn more (including a guide on common transition paths) here: https://
       ix.message.computeLimit = DEFAULT_COMPUTE_LIMIT
     }
   }
+  return ix
 }
