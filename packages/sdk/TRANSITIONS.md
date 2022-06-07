@@ -13,10 +13,10 @@ In lieu of this feature, a configuration option has been added `sdk.defaultCompu
 import {config} from "@onflow/config"
 
 const DEFAULT_COMPUTE_LIMIT = ...
-config().put("sdk.defaultComputeLimit", DEFAULT_COMPUTE_LIMIT)
+config().put("fcl.limit", DEFAULT_COMPUTE_LIMIT)
 ```
 
-Compute limits may still be applied explicitly in a transaction, with these taking precedent above `sdk.defaultComputeLimit`, as follows:
+Compute limits may still be applied explicitly in a transaction, with these taking priority above `fcl.limit`, as follows:
 
 ```javascript
 import * as sdk from "@onflow/fcl"
