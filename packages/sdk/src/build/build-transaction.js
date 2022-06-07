@@ -8,7 +8,7 @@ export function transaction(...args) {
   return pipe([
     makeTransaction,
     put("ix.cadence", template(...args)),
-    async ix => {
+    ix => {
       ix.message.refBlock = ix.message.refBlock || DEFUALT_REF
       ix.authorizations = ix.authorizations || DEFAULT_SCRIPT_ACCOUNTS
       return Ok(ix)
