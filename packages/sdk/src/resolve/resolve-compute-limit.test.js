@@ -25,7 +25,7 @@ describe("resolveComputeLimit", () => {
 
   test("config compute limit is used if exists", async () => {
     const CONFIG_COMPUTE_LIMIT = 4321
-    config.put("fcl.limit", 4321)
+    config.put("fcl.limit", CONFIG_COMPUTE_LIMIT)
 
     const ix = await pipe([makeTransaction, resolveComputeLimit])(interaction())
 
