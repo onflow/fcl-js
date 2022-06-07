@@ -141,7 +141,7 @@ const txId = await fcl.mutate({
 
 See the [Flow App Quick Start](https://docs.onflow.org/flow-js-sdk/flow-app-quickstart).
 
-See the full [API Reference](https://docs.onflow.org/fcl/api/) for all FCL functionality.
+See the full [API Reference](https://docs.onflow.org/fcl/reference/api/) for all FCL functionality.
 
 Learn Flow's smart contract language to build any script or transactions: [Cadence](https://docs.onflow.org/cadence/).
 
@@ -163,6 +163,7 @@ The communication channels involve responding to a set of pre-defined FCL messag
 - [Blocto](https://blocto.portto.io/en/)
 - [Ledger](https://ledger.com) (limited transaction support)
 - [Dapper Wallet](https://www.meetdapper.com/) (beta access - general availability coming soon)
+- [Lilico Wallet](https://lilico.app/) Fully non-custodial chrome extension wallet focused on NFTs
 
 ### Wallet Discovery
 It can be difficult to get users to discover new wallets on a chain. To solve this, we created a [wallet discovery service](https://github.com/onflow/fcl-discovery) that can be configured and accessed through FCL to display all available Flow wallet providers to the user. This means:
