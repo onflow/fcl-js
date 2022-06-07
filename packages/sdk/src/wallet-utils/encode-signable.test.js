@@ -1,4 +1,7 @@
-import {encodeMessageFromSignable, UnableToDetermineMessageEncodingTypeForSignerAddress} from "./encode-signable.js"
+import {
+  encodeMessageFromSignable,
+  UnableToDetermineMessageEncodingTypeForSignerAddress,
+} from "./encode-signable.js"
 import {
   encodeTransactionPayload as encodeInsideMessage,
   encodeTransactionEnvelope as encodeOutsideMessage,
@@ -8,13 +11,11 @@ const MESSAGE = {
   cadence: "transaction()...",
   computeLimit: 156,
   refBlock: "123",
-  arguments: [],
+  ["arguments"]: [],
   proposalKey: {address: "02", keyId: 1, sequenceNum: 123},
   payer: "01",
   authorizers: ["02"],
-  payloadSigs: [
-    {address: "02", keyId: 1, sig: "123"},
-  ],
+  payloadSigs: [{address: "02", keyId: 1, sig: "123"}],
 }
 
 const encodedPayerMessage = encodeOutsideMessage(MESSAGE)
@@ -24,13 +25,11 @@ const VOUCHER = {
   cadence: "transaction()...",
   computeLimit: 156,
   refBlock: "123",
-  arguments: [],
+  ["arguments"]: [],
   proposalKey: {address: "0x02", keyId: 1, sequenceNum: 123},
   payer: "0x01",
   authorizers: ["0x02"],
-  payloadSigs: [
-    {address: "0x02", keyId: 1, sig: "123"},
-  ],
+  payloadSigs: [{address: "0x02", keyId: 1, sig: "123"}],
 }
 
 const PAYER_SIGNABLE = {
@@ -68,9 +67,11 @@ describe("encode signable", () => {
 
   test("encode signable for address NOT included in signable", () => {
     const runTest = () => {
-        return encodeMessageFromSignable(NON_PAYER_SIGNABLE, "0x09")
+      return encodeMessageFromSignable(NON_PAYER_SIGNABLE, "0x09")
     }
 
-    expect(runTest).toThrow(UnableToDetermineMessageEncodingTypeForSignerAddress)
+    expect(runTest).toThrow(
+      UnableToDetermineMessageEncodingTypeForSignerAddress
+    )
   })
 })

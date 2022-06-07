@@ -1,5 +1,41 @@
 # @onflow/fcl
 
+## 1.0.3-alpha.0
+
+### Patch Changes
+
+- [#1177](https://github.com/onflow/fcl-js/pull/1177) [`e38f9fe4`](https://github.com/onflow/fcl-js/commit/e38f9fe4ba030693984ab74bffd5bca387ac9a09) Thanks [@hotrungnhan](https://github.com/hotrungnhan)! - Fix events subcribe block height issue and add polling rate guide to docs.
+
+* [#1211](https://github.com/onflow/fcl-js/pull/1211) [`f4c6fb9a`](https://github.com/onflow/fcl-js/commit/f4c6fb9a05e8cf717afcd6a3b3b4c8b102f253e3) Thanks [@gregsantos](https://github.com/gregsantos)! - Update event listeners in strategies
+  Fixes a bug where event listener was not being removed on close
+* Updated dependencies [[`1654ebbe`](https://github.com/onflow/fcl-js/commit/1654ebbe45ea5e4ca13536ed2139520ce21ee314), [`d1765950`](https://github.com/onflow/fcl-js/commit/d176595021681e660ae0a06161340833280091fb)]:
+  - @onflow/sdk@1.0.2-alpha.0
+
+## 1.0.2
+
+### Patch Changes
+
+- [#1190](https://github.com/onflow/fcl-js/pull/1190) [`3355cb14`](https://github.com/onflow/fcl-js/commit/3355cb148f2e6a447d8076b3ae62c40747c338ce) Thanks [@jribbink](https://github.com/jribbink)! - Updated wallet provider spec for sansPrefix/withPrefix address requirements for acct.address/compSig.address
+
+## 1.0.1
+
+### Patch Changes
+
+- [#1181](https://github.com/onflow/fcl-js/pull/1181) [`25e87101`](https://github.com/onflow/fcl-js/commit/25e8710162a105771d1629eced6270ce37718a1b) Thanks [@jribbink](https://github.com/jribbink)! - Added exception handling in transaction subscriber polling to handle network disconnect/server error events
+
+* [#1178](https://github.com/onflow/fcl-js/pull/1178) [`9e7e4cfb`](https://github.com/onflow/fcl-js/commit/9e7e4cfbc026765019653b0e891e63a2d789ceb4) Thanks [@jribbink](https://github.com/jribbink)! - Add --no-compress to watch scripts for easier debugging
+
+* Updated dependencies [[`9e7e4cfb`](https://github.com/onflow/fcl-js/commit/9e7e4cfbc026765019653b0e891e63a2d789ceb4)]:
+  - @onflow/config@1.0.1
+  - @onflow/rlp@1.0.1
+  - @onflow/sdk@1.0.1
+  - @onflow/types@1.0.1
+  - @onflow/util-actor@1.0.1
+  - @onflow/util-address@1.0.1
+  - @onflow/util-invariant@1.0.1
+  - @onflow/util-template@1.0.1
+  - @onflow/util-uid@1.0.1
+
 ## 1.0.0
 
 ### Major Changes

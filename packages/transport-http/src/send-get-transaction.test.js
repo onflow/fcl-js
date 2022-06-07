@@ -7,41 +7,37 @@ import {Buffer} from "@onflow/rlp"
 
 describe("Get Transaction", () => {
   test("GetTransactionResult", async () => {
-    const httpRequestMock = jest.fn();
+    const httpRequestMock = jest.fn()
 
     const returnedTransaction = {
-        script: "Q2FkZW5jZSBDb2Rl",
-        arguments: [],
-        reference_block_id: "a1b2c3",
-        gas_limit: "123",
-        proposal_key: {
-            address: "1654653399040a61",
-            key_id: "1",
-            signer_index: "0",
-            sequence_number: "1"
-        },
-        payer: "1654653399040a61",
-        authorizers: [],
-        payload_signatures: [],
-        envelope_signatures: []
+      script: "Q2FkZW5jZSBDb2Rl",
+      ["arguments"]: [],
+      reference_block_id: "a1b2c3",
+      gas_limit: "123",
+      proposal_key: {
+        address: "1654653399040a61",
+        key_id: "1",
+        signer_index: "0",
+        sequence_number: "1",
+      },
+      payer: "1654653399040a61",
+      authorizers: [],
+      payload_signatures: [],
+      envelope_signatures: [],
     }
 
     httpRequestMock.mockReturnValue(returnedTransaction)
 
     const response = await sendGetTransaction(
-        await resolve(
-            await build([
-                getTransaction("MyTxID"),
-            ])
-        ),
-        {
-            response: responseADT,
-            Buffer,
-        },
-        {
-            httpRequest: httpRequestMock,
-            node: "localhost"
-        }
+      await resolve(await build([getTransaction("MyTxID")])),
+      {
+        response: responseADT,
+        Buffer,
+      },
+      {
+        httpRequest: httpRequestMock,
+        node: "localhost",
+      }
     )
 
     expect(httpRequestMock.mock.calls.length).toEqual(1)
@@ -53,27 +49,26 @@ describe("Get Transaction", () => {
     const valueSent = httpRequestMock.mock.calls[0][0]
 
     expect(valueSent).toEqual({
-        hostname: "localhost",
-        path: "/v1/transactions/MyTxID",
-        method: "GET",
-        body: null
+      hostname: "localhost",
+      path: "/v1/transactions/MyTxID",
+      method: "GET",
+      body: null,
     })
 
     expect(response.transaction).toStrictEqual({
-        script: "Cadence Code",
-        args: [],
-        referenceBlockId: "a1b2c3",
-        gasLimit: 123,
-        proposalKey: {
-            address: "1654653399040a61",
-            keyId: 1,
-            sequenceNumber: 1
-        },
-        payer: "1654653399040a61",
-        authorizers: [],
-        payloadSignatures: [],
-        envelopeSignatures: []
+      script: "Cadence Code",
+      args: [],
+      referenceBlockId: "a1b2c3",
+      gasLimit: 123,
+      proposalKey: {
+        address: "1654653399040a61",
+        keyId: 1,
+        sequenceNumber: 1,
+      },
+      payer: "1654653399040a61",
+      authorizers: [],
+      payloadSignatures: [],
+      envelopeSignatures: [],
     })
   })
-
 })

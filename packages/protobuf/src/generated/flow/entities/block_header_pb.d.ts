@@ -23,6 +23,44 @@ export class BlockHeader extends jspb.Message {
   getTimestamp(): google_protobuf_timestamp_pb.Timestamp | undefined;
   setTimestamp(value?: google_protobuf_timestamp_pb.Timestamp): void;
 
+  getPayloadHash(): Uint8Array | string;
+  getPayloadHash_asU8(): Uint8Array;
+  getPayloadHash_asB64(): string;
+  setPayloadHash(value: Uint8Array | string): void;
+
+  getView(): number;
+  setView(value: number): void;
+
+  clearParentVoterIdsList(): void;
+  getParentVoterIdsList(): Array<Uint8Array | string>;
+  getParentVoterIdsList_asU8(): Array<Uint8Array>;
+  getParentVoterIdsList_asB64(): Array<string>;
+  setParentVoterIdsList(value: Array<Uint8Array | string>): void;
+  addParentVoterIds(value: Uint8Array | string, index?: number): Uint8Array | string;
+
+  getParentVoterSigData(): Uint8Array | string;
+  getParentVoterSigData_asU8(): Uint8Array;
+  getParentVoterSigData_asB64(): string;
+  setParentVoterSigData(value: Uint8Array | string): void;
+
+  getProposerId(): Uint8Array | string;
+  getProposerId_asU8(): Uint8Array;
+  getProposerId_asB64(): string;
+  setProposerId(value: Uint8Array | string): void;
+
+  getProposerSigData(): Uint8Array | string;
+  getProposerSigData_asU8(): Uint8Array;
+  getProposerSigData_asB64(): string;
+  setProposerSigData(value: Uint8Array | string): void;
+
+  getChainId(): string;
+  setChainId(value: string): void;
+
+  getParentVoterIndices(): Uint8Array | string;
+  getParentVoterIndices_asU8(): Uint8Array;
+  getParentVoterIndices_asB64(): string;
+  setParentVoterIndices(value: Uint8Array | string): void;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): BlockHeader.AsObject;
   static toObject(includeInstance: boolean, msg: BlockHeader): BlockHeader.AsObject;
@@ -39,6 +77,14 @@ export namespace BlockHeader {
     parentId: Uint8Array | string,
     height: number,
     timestamp?: google_protobuf_timestamp_pb.Timestamp.AsObject,
+    payloadHash: Uint8Array | string,
+    view: number,
+    parentVoterIdsList: Array<Uint8Array | string>,
+    parentVoterSigData: Uint8Array | string,
+    proposerId: Uint8Array | string,
+    proposerSigData: Uint8Array | string,
+    chainId: string,
+    parentVoterIndices: Uint8Array | string,
   }
 }
 

@@ -1,6 +1,10 @@
 [![FLOW-JS-SDK Continuous Integration](https://github.com/onflow/flow-js-sdk/actions/workflows/integrate.yml/badge.svg)](https://github.com/onflow/flow-js-sdk/actions/workflows/integrate.yml)
 [![lerna](https://img.shields.io/badge/maintained%20with-lerna-cc00ff.svg)](https://lerna.js.org/)
 
+> ## Upgrading to FCL 1.0.0
+> FCL 1.0.0 has arrived! When upgrading your project, reference the <a href="https://github.com/onflow/fcl-js/releases/tag/%40onflow%2Ffcl%401.0.0">Release Notes</a> for information on how to make your app compatible with its breaking changes.
+
+<br />
 <br />
 <p align="center">
   <h1 align="center"> FCL JS</h1>

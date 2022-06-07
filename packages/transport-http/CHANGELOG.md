@@ -1,5 +1,48 @@
 # @onflow/transport-http
 
+## 1.3.0-alpha.1
+
+### Patch Changes
+
+- [#1218](https://github.com/onflow/fcl-js/pull/1218) [`cc422a78`](https://github.com/onflow/fcl-js/commit/cc422a781d0e87ba8945c336902bbc9542d5b4c4) Thanks [@jribbink](https://github.com/jribbink)! - Fix interaction arguments in http request body broken by prettier
+
+## 1.3.0-alpha.0
+
+### Minor Changes
+
+- [#1196](https://github.com/onflow/fcl-js/pull/1196) [`cd218e84`](https://github.com/onflow/fcl-js/commit/cd218e843acfc390049b391d36c447ce93668221) Thanks [@jribbink](https://github.com/jribbink)! - Added errorMessage property to HTTPRequestError to expose Access API errors when making requests
+
+### Patch Changes
+
+- [#1197](https://github.com/onflow/fcl-js/pull/1197) [`d9bc1cc6`](https://github.com/onflow/fcl-js/commit/d9bc1cc671f143d2f37cad6eb6b80123f1f3d760) Thanks [@jribbink](https://github.com/jribbink)! - Fix issue where httpRequest errors were thrown inside a promise and could not be caught on node
+
+## 1.2.0
+
+### Minor Changes
+
+- [#1188](https://github.com/onflow/fcl-js/pull/1188) [`b873a0fa`](https://github.com/onflow/fcl-js/commit/b873a0fa401d46b831f089118e746ab91b264f6c) Thanks [@jribbink](https://github.com/jribbink)! - Added `statusCode` to `transactionStatus` (previously always 0)
+
+### Patch Changes
+
+- Updated dependencies [[`5fd10864`](https://github.com/onflow/fcl-js/commit/5fd10864c33ec5fb178b7cd85ef823ae08c4ff04)]:
+  - @onflow/util-node-http-modules@1.0.2
+
+## 1.1.0
+
+### Minor Changes
+
+- [#1180](https://github.com/onflow/fcl-js/pull/1180) [`f348803d`](https://github.com/onflow/fcl-js/commit/f348803dbaaebad6d7081248b41f5582d5627d86) Thanks [@jribbink](https://github.com/jribbink)! - Added automatic retries for failed requests with 500,502,503,504 status code
+
+### Patch Changes
+
+- [#1178](https://github.com/onflow/fcl-js/pull/1178) [`9e7e4cfb`](https://github.com/onflow/fcl-js/commit/9e7e4cfbc026765019653b0e891e63a2d789ceb4) Thanks [@jribbink](https://github.com/jribbink)! - Add --no-compress to watch scripts for easier debugging
+
+- Updated dependencies [[`48d2b11e`](https://github.com/onflow/fcl-js/commit/48d2b11e3c88fac8f503283fd080d161b38460a3), [`67bc4f61`](https://github.com/onflow/fcl-js/commit/67bc4f612193c6e703acfb09fc756a28c9c4f28a), [`9e7e4cfb`](https://github.com/onflow/fcl-js/commit/9e7e4cfbc026765019653b0e891e63a2d789ceb4)]:
+  - @onflow/util-node-http-modules@1.0.1
+  - @onflow/util-address@1.0.1
+  - @onflow/util-invariant@1.0.1
+  - @onflow/util-template@1.0.1
+
 ## 1.0.0
 
 ### Major Changes

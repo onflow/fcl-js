@@ -1282,6 +1282,7 @@ A builder function that returns the status of transaction.
 
 | Name                     | Type                                       | Description                                                     |
 | ------------------------ | ------------------------------------------ | --------------------------------------------------------------- |
+| `blockId`                | string                                     | ID of the block that contains the transaction.                  |
 | `events`                 | [[EventObject]](#event-object)             | An array of events that were emitted during the transaction.    |
 | `status`                 | [TransactionStatus](#transaction-statuses) | The status of the transaction on the blockchain.                |
 | `statusString` **alpha** | [TransactionStatus](#transaction-statuses) | The `status` as as descriptive text (e.g. "FINALIZED").         |
@@ -1654,8 +1655,11 @@ useEffect(() => fcl.tx(txId).subscribe(setTxStatus));
 A utility function that lets you set the transaction to get subsequent status updates (via polling) and the finalized result once available.
 ⚠️The poll rate is set at `10000ms` and will update at that interval for getting new events.
 
-#### Arguments
 
+Note:
+⚠️`fcl.eventPollRate` value **could** be set to change the polling rate of all events subcribers, check [FCL Configuration](#configuration) for guide.
+
+#### Arguments
 | Name        | Type   | Description         |
 | ----------- | ------ | ------------------- |
 | `eventName` | string | A valid event name. |

@@ -1,5 +1,11 @@
 # @onflow/util-address
 
+## 1.0.1
+
+### Patch Changes
+
+- [#1178](https://github.com/onflow/fcl-js/pull/1178) [`9e7e4cfb`](https://github.com/onflow/fcl-js/commit/9e7e4cfbc026765019653b0e891e63a2d789ceb4) Thanks [@jribbink](https://github.com/jribbink)! - Add --no-compress to watch scripts for easier debugging
+
 ## 1.0.0
 
 ### Major Changes

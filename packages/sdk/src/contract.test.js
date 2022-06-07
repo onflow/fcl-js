@@ -5,15 +5,17 @@ import * as interaction from "./interaction/interaction.js"
 import * as send from "./send/send.js"
 import * as template from "@onflow/util-template"
 
-const interfaceContract = (label, wat) => ([template]) => {
-  const keys = template.replace(/\s+/g, "|").split("|").filter(Boolean)
+const interfaceContract =
+  (label, wat) =>
+  ([template]) => {
+    const keys = template.replace(/\s+/g, "|").split("|").filter(Boolean)
 
-  describe(label, () => {
-    for (let key of keys)
-      test(`${label}.${key}`, () =>
-        expect(wat[key]).toStrictEqual(expect.any(Function)))
-  })
-}
+    describe(label, () => {
+      for (let key of keys)
+        test(`${label}.${key}`, () =>
+          expect(wat[key]).toStrictEqual(expect.any(Function)))
+    })
+  }
 
 interfaceContract("export", root)`
   build resolve send

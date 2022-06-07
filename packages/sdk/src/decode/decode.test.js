@@ -13,12 +13,16 @@ it("exported interface contract", () => {
 
 it("decodeResponse", async () => {
   const response = {
-    encodedData: JSON.parse(Buffer.from(Uint8Array.from(
+    encodedData: JSON.parse(
       Buffer.from(
-        "7b2274797065223a22496e74222c2276616c7565223a2237227d0a",
-        "hex"
-      )
-    )).toString("utf8")),
+        Uint8Array.from(
+          Buffer.from(
+            "7b2274797065223a22496e74222c2276616c7565223a2237227d0a",
+            "hex"
+          )
+        )
+      ).toString("utf8")
+    ),
   }
 
   const data = await decodeResponse(response)
@@ -640,7 +644,7 @@ describe("unit tests to cover all types", () => {
     const payload = {
       type: "Type",
       value: {
-        staticType: "FooType"
+        staticType: "FooType",
       },
     }
 
@@ -654,7 +658,7 @@ describe("unit tests to cover all types", () => {
       type: "Path",
       value: {
         domain: "storage",
-        identifier: "123abc"
+        identifier: "123abc",
       },
     }
 
@@ -662,7 +666,7 @@ describe("unit tests to cover all types", () => {
 
     expect(decoded).toStrictEqual({
       domain: "storage",
-      identifier: "123abc"
+      identifier: "123abc",
     })
   })
 })
@@ -700,7 +704,8 @@ const genVoidSpec = () => {
 
 // Int
 const genInt = () => {
-  const minInt256 = -57896044618658097711785492504343953926634992332820282019728792003956564819978
+  const minInt256 =
+    -57896044618658097711785492504343953926634992332820282019728792003956564819978
   const maxUInt256 = 115792089237316195423570985008687907853269984665640564039457584007913129639945
   const ranInt = ~~(Math.random() * (maxUInt256 - minInt256) + minInt256)
   return {
@@ -762,9 +767,8 @@ const genDictionary = (depth = 0) => {
   const dictionaryLength = ~~(Math.random() * 10)
   const arr = Array.from({length: dictionaryLength}).reduce(
     acc => {
-      const {payload: valPayload, decoded: val} = OPTIONS[
-        ~~(Math.random() * OPTIONS.length)
-      ]()
+      const {payload: valPayload, decoded: val} =
+        OPTIONS[~~(Math.random() * OPTIONS.length)]()
       const {payload: keyPayload, decoded: ranStringKey} = genString()
       acc.dict.push({
         key: keyPayload,
@@ -815,9 +819,8 @@ const genResource = (depth = 0) => {
   const fieldsLength = ~~(Math.random() * 10)
   const res = Array.from({length: fieldsLength}).reduce(
     acc => {
-      const {payload: valPayload, decoded: val} = OPTIONS[
-        ~~(Math.random() * OPTIONS.length)
-      ]()
+      const {payload: valPayload, decoded: val} =
+        OPTIONS[~~(Math.random() * OPTIONS.length)]()
       const {decoded: ranStringName} = genString()
       acc.fields.push({
         name: ranStringName,
@@ -868,9 +871,8 @@ const genStruct = (depth = 0) => {
   const fieldsLength = ~~(Math.random() * 10)
   const res = Array.from({length: fieldsLength}).reduce(
     acc => {
-      const {payload: valPayload, decoded: val} = OPTIONS[
-        ~~(Math.random() * OPTIONS.length)
-      ]()
+      const {payload: valPayload, decoded: val} =
+        OPTIONS[~~(Math.random() * OPTIONS.length)]()
       const {decoded: ranStringName} = genString()
       acc.fields.push({
         name: ranStringName,
@@ -921,9 +923,8 @@ const genEvent = (depth = 0) => {
   const fieldsLength = ~~(Math.random() * 10)
   const res = Array.from({length: fieldsLength}).reduce(
     acc => {
-      const {payload: valPayload, decoded: val} = OPTIONS[
-        ~~(Math.random() * OPTIONS.length)
-      ]()
+      const {payload: valPayload, decoded: val} =
+        OPTIONS[~~(Math.random() * OPTIONS.length)]()
       const {decoded: ranStringName} = genString()
       acc.fields.push({
         name: ranStringName,
@@ -974,9 +975,8 @@ const genEnum = (depth = 0) => {
   const fieldsLength = ~~(Math.random() * 10)
   const res = Array.from({length: fieldsLength}).reduce(
     acc => {
-      const {payload: valPayload, decoded: val} = OPTIONS[
-        ~~(Math.random() * OPTIONS.length)
-      ]()
+      const {payload: valPayload, decoded: val} =
+        OPTIONS[~~(Math.random() * OPTIONS.length)]()
       const {decoded: ranStringName} = genString()
       acc.fields.push({
         name: ranStringName,
@@ -1051,7 +1051,7 @@ const genArraySpec = () => {
 const genType = () => {
   const {payload, decoded} = genString()
   return {
-    payload: {type: "Type", value: { staticType: payload.value }},
+    payload: {type: "Type", value: {staticType: payload.value}},
     decoded: decoded,
   }
 }
@@ -1069,10 +1069,13 @@ const genPath = () => {
   const randDomain = domains[~~Math.random() * domains.length]
   const {payload, decoded} = genString()
   return {
-    payload: {type: "Path", value: { domain: randDomain, identifier: payload.value }},
+    payload: {
+      type: "Path",
+      value: {domain: randDomain, identifier: payload.value},
+    },
     decoded: {
       domain: randDomain,
-      identifier: decoded
+      identifier: decoded,
     },
   }
 }
@@ -1090,7 +1093,14 @@ const genCapability = () => {
   const {payload: payload2, decoded: decoded2} = genString()
   const {payload: payload3, decoded: decoded3} = genString()
   return {
-    payload: {type: "Capability", value: { path: payload1.value, address: payload2.value, borrowType: payload3.value }},
+    payload: {
+      type: "Capability",
+      value: {
+        path: payload1.value,
+        address: payload2.value,
+        borrowType: payload3.value,
+      },
+    },
     decoded: {
       path: decoded1,
       address: decoded2,
@@ -1167,6 +1177,19 @@ describe("custom decoder tests", () => {
     })
   })
 
+  it("custom regex decoder overrides default decoder correctly", async () => {
+    const resource = {
+      type: "String",
+      value: "original value",
+    }
+
+    const stringDecoder = _ => "replaced value"
+
+    const decoded = await decode(resource, {"/String/": stringDecoder})
+
+    expect(decoded).toStrictEqual("replaced value")
+  })
+
   it("decodes using a custom nested decoder correctly", async () => {
     const resource = {
       type: "Resource",
@@ -1179,7 +1202,7 @@ describe("custom decoder tests", () => {
       },
     }
 
-    const Jeff = function(resource) {
+    const Jeff = function (resource) {
       if (!(this instanceof Jeff)) return new Jeff(resource)
       this.firstName = resource.firstName
       this.lastName = resource.lastName
@@ -1294,10 +1317,11 @@ describe("custom decoder tests", () => {
 
 describe("decode GetEvents tests", () => {
   it("decodes a GetEvents response correctly", async () => {
-      const timestampISOString =new Date().toISOString()
+    const timestampISOString = new Date().toISOString()
 
-      const getEventsResponse = {
-        events: [{
+    const getEventsResponse = {
+      events: [
+        {
           blockHeight: 123,
           blockId: "abc123",
           blockTimestamp: timestampISOString,
@@ -1305,55 +1329,61 @@ describe("decode GetEvents tests", () => {
           transactionId: "abc-123",
           transactionIndex: 123,
           type: "MyFunAndCoolEvent",
-          payload: {type: "String", value: "foo"}
-        }]
-      }
+          payload: {type: "String", value: "foo"},
+        },
+      ],
+    }
 
-      expect(await decodeResponse(getEventsResponse)).toStrictEqual(
-        [{
-          blockHeight: 123,
-          blockId: "abc123",
-          blockTimestamp: timestampISOString,
-          eventIndex: 123,
-          transactionId: "abc-123",
-          transactionIndex: 123,
-          type: "MyFunAndCoolEvent",
-          data: "foo"
-        }]
-      )
+    expect(await decodeResponse(getEventsResponse)).toStrictEqual([
+      {
+        blockHeight: 123,
+        blockId: "abc123",
+        blockTimestamp: timestampISOString,
+        eventIndex: 123,
+        transactionId: "abc-123",
+        transactionIndex: 123,
+        type: "MyFunAndCoolEvent",
+        data: "foo",
+      },
+    ])
   })
 })
 
 describe("decode GetTransactionStatus tests", () => {
   it("decodes a GetEvents response correctly", async () => {
-      const getTransactionStatusResponse = {
-        transactionStatus: {
-          status: 4,
-          statusCode: 1,
-          errorMessage: null,
-          events: [{
+    const getTransactionStatusResponse = {
+      transactionStatus: {
+        status: 4,
+        statusCode: 1,
+        errorMessage: null,
+        events: [
+          {
             type: "LilBUBTheMagicalSpaceCat.LandedOnMars",
             transactionId: "my-fun-and-very-special-txn-id",
             transactionIndex: 123456,
             eventIndex: 7891011,
-            payload: {type: "String", value: "Thanks for reviewing these tests!"}
-          }]
-        }
-      }
+            payload: {
+              type: "String",
+              value: "Thanks for reviewing these tests!",
+            },
+          },
+        ],
+      },
+    }
 
-      expect(await decodeResponse(getTransactionStatusResponse)).toStrictEqual(
-        { 
-          status: 4,
-          statusCode: 1,
-          errorMessage: null,
-          events: [{
-            type: "LilBUBTheMagicalSpaceCat.LandedOnMars",
-            transactionId: "my-fun-and-very-special-txn-id",
-            transactionIndex: 123456,
-            eventIndex: 7891011,
-            data: "Thanks for reviewing these tests!"
-          }]
-        }
-      )
+    expect(await decodeResponse(getTransactionStatusResponse)).toStrictEqual({
+      status: 4,
+      statusCode: 1,
+      errorMessage: null,
+      events: [
+        {
+          type: "LilBUBTheMagicalSpaceCat.LandedOnMars",
+          transactionId: "my-fun-and-very-special-txn-id",
+          transactionIndex: 123456,
+          eventIndex: 7891011,
+          data: "Thanks for reviewing these tests!",
+        },
+      ],
+    })
   })
 })

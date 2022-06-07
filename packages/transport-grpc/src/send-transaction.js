@@ -9,12 +9,19 @@ const paddedHexBuffer = (hex, pad, context) =>
 const scriptBuffer = (script, context) => context.Buffer.from(script, "utf8")
 const hexBuffer = (hex, context) => context.Buffer.from(hex, "hex")
 const addressBuffer = (addr, context) => paddedHexBuffer(addr, 8, context)
-const argumentBuffer = (arg, context) => context.Buffer.from(JSON.stringify(arg), "utf8")
+const argumentBuffer = (arg, context) =>
+  context.Buffer.from(JSON.stringify(arg), "utf8")
 
 export async function sendTransaction(ix, context = {}, opts = {}) {
   invariant(opts.node, `SDK Send Transaction Error: opts.node must be defined.`)
-  invariant(context.response, `SDK Send Transaction Error: context.response must be defined.`)
-  invariant(context.Buffer, `SDK Send Transaction Error: context.Buffer must be defined.`)
+  invariant(
+    context.response,
+    `SDK Send Transaction Error: context.response must be defined.`
+  )
+  invariant(
+    context.Buffer,
+    `SDK Send Transaction Error: context.Buffer must be defined.`
+  )
 
   const unary = opts.unary || defaultUnary
 
@@ -26,7 +33,14 @@ export async function sendTransaction(ix, context = {}, opts = {}) {
   tx.setReferenceBlockId(
     ix.message.refBlock ? hexBuffer(ix.message.refBlock, context) : null
   )
-  tx.setPayer(addressBuffer(sansPrefix(ix.accounts[Array.isArray(ix.payer) ? ix.payer[0] : ix.payer].addr), context))
+  tx.setPayer(
+    addressBuffer(
+      sansPrefix(
+        ix.accounts[Array.isArray(ix.payer) ? ix.payer[0] : ix.payer].addr
+      ),
+      context
+    )
+  )
 
   ix.message.arguments.forEach(arg =>
     tx.addArguments(argumentBuffer(ix.arguments[arg].asArgument, context))
@@ -36,7 +50,9 @@ export async function sendTransaction(ix, context = {}, opts = {}) {
     .reduce((prev, current) => {
       return prev.find(item => item === current) ? prev : [...prev, current]
     }, [])
-    .forEach(addr => tx.addAuthorizers(addressBuffer(sansPrefix(addr), context)))
+    .forEach(addr =>
+      tx.addAuthorizers(addressBuffer(sansPrefix(addr), context))
+    )
 
   const proposalKey = new Transaction.ProposalKey()
   proposalKey.setAddress(

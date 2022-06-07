@@ -1,5 +1,44 @@
 # @onflow/sdk
 
+## 1.0.2-alpha.1
+
+### Patch Changes
+
+- [#1191](https://github.com/onflow/fcl-js/pull/1191) [`90d5163a`](https://github.com/onflow/fcl-js/commit/90d5163a7723dd529324a271ea8accaa43a3d7be) Thanks [@jribbink](https://github.com/jribbink)! - Allow for integer string account.keyId in authorization function
+
+* [#1218](https://github.com/onflow/fcl-js/pull/1218) [`cc422a78`](https://github.com/onflow/fcl-js/commit/cc422a781d0e87ba8945c336902bbc9542d5b4c4) Thanks [@jribbink](https://github.com/jribbink)! - Fix interaction arguments in http request body broken by prettier
+
+* Updated dependencies [[`cc422a78`](https://github.com/onflow/fcl-js/commit/cc422a781d0e87ba8945c336902bbc9542d5b4c4)]:
+  - @onflow/transport-http@1.3.0-alpha.1
+
+## 1.0.2-alpha.0
+
+### Patch Changes
+
+- [#1212](https://github.com/onflow/fcl-js/pull/1212) [`1654ebbe`](https://github.com/onflow/fcl-js/commit/1654ebbe45ea5e4ca13536ed2139520ce21ee314) Thanks [@jribbink](https://github.com/jribbink)! - Make deprecation notice for getEvents use @onflow/util-logger instead of console.warn
+
+* [#1199](https://github.com/onflow/fcl-js/pull/1199) [`d1765950`](https://github.com/onflow/fcl-js/commit/d176595021681e660ae0a06161340833280091fb) Thanks [@jribbink](https://github.com/jribbink)! - Fix issue where custom decoders did not properly override default decoders
+
+* Updated dependencies [[`d9bc1cc6`](https://github.com/onflow/fcl-js/commit/d9bc1cc671f143d2f37cad6eb6b80123f1f3d760), [`cd218e84`](https://github.com/onflow/fcl-js/commit/cd218e843acfc390049b391d36c447ce93668221)]:
+  - @onflow/transport-http@1.3.0-alpha.0
+  - @onflow/util-logger@1.0.2-alpha.0
+
+## 1.0.1
+
+### Patch Changes
+
+- [#1178](https://github.com/onflow/fcl-js/pull/1178) [`9e7e4cfb`](https://github.com/onflow/fcl-js/commit/9e7e4cfbc026765019653b0e891e63a2d789ceb4) Thanks [@jribbink](https://github.com/jribbink)! - Add --no-compress to watch scripts for easier debugging
+
+- Updated dependencies [[`9e7e4cfb`](https://github.com/onflow/fcl-js/commit/9e7e4cfbc026765019653b0e891e63a2d789ceb4), [`f348803d`](https://github.com/onflow/fcl-js/commit/f348803dbaaebad6d7081248b41f5582d5627d86)]:
+  - @onflow/config@1.0.1
+  - @onflow/rlp@1.0.1
+  - @onflow/transport-http@1.1.0
+  - @onflow/util-actor@1.0.1
+  - @onflow/util-address@1.0.1
+  - @onflow/util-invariant@1.0.1
+  - @onflow/util-logger@1.0.1
+  - @onflow/util-template@1.0.1
+
 ## 1.0.0
 
 ### Major Changes

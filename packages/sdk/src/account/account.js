@@ -15,7 +15,8 @@ export function account(address, {height, id} = {}, opts) {
   if (id) return send([getAccount(address), atBlockId(id)], opts).then(decode)
 
   // Get account by height
-  if (height) return send([getAccount(address), atBlockHeight(height)], opts).then(decode)
+  if (height)
+    return send([getAccount(address), atBlockHeight(height)], opts).then(decode)
 
   return send([getAccount(address)], opts).then(decode)
 }

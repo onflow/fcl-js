@@ -5,6 +5,8 @@ import * as jspb from "google-protobuf";
 import * as google_protobuf_timestamp_pb from "google-protobuf/google/protobuf/timestamp_pb";
 import * as flow_entities_collection_pb from "../../flow/entities/collection_pb";
 import * as flow_entities_block_seal_pb from "../../flow/entities/block_seal_pb";
+import * as flow_entities_execution_result_pb from "../../flow/entities/execution_result_pb";
+import * as flow_entities_block_header_pb from "../../flow/entities/block_header_pb";
 
 export class Block extends jspb.Message {
   getId(): Uint8Array | string;
@@ -42,6 +44,21 @@ export class Block extends jspb.Message {
   setSignaturesList(value: Array<Uint8Array | string>): void;
   addSignatures(value: Uint8Array | string, index?: number): Uint8Array | string;
 
+  clearExecutionReceiptMetalistList(): void;
+  getExecutionReceiptMetalistList(): Array<flow_entities_execution_result_pb.ExecutionReceiptMeta>;
+  setExecutionReceiptMetalistList(value: Array<flow_entities_execution_result_pb.ExecutionReceiptMeta>): void;
+  addExecutionReceiptMetalist(value?: flow_entities_execution_result_pb.ExecutionReceiptMeta, index?: number): flow_entities_execution_result_pb.ExecutionReceiptMeta;
+
+  clearExecutionResultListList(): void;
+  getExecutionResultListList(): Array<flow_entities_execution_result_pb.ExecutionResult>;
+  setExecutionResultListList(value: Array<flow_entities_execution_result_pb.ExecutionResult>): void;
+  addExecutionResultList(value?: flow_entities_execution_result_pb.ExecutionResult, index?: number): flow_entities_execution_result_pb.ExecutionResult;
+
+  hasBlockHeader(): boolean;
+  clearBlockHeader(): void;
+  getBlockHeader(): flow_entities_block_header_pb.BlockHeader | undefined;
+  setBlockHeader(value?: flow_entities_block_header_pb.BlockHeader): void;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): Block.AsObject;
   static toObject(includeInstance: boolean, msg: Block): Block.AsObject;
@@ -61,6 +78,9 @@ export namespace Block {
     collectionGuaranteesList: Array<flow_entities_collection_pb.CollectionGuarantee.AsObject>,
     blockSealsList: Array<flow_entities_block_seal_pb.BlockSeal.AsObject>,
     signaturesList: Array<Uint8Array | string>,
+    executionReceiptMetalistList: Array<flow_entities_execution_result_pb.ExecutionReceiptMeta.AsObject>,
+    executionResultListList: Array<flow_entities_execution_result_pb.ExecutionResult.AsObject>,
+    blockHeader?: flow_entities_block_header_pb.BlockHeader.AsObject,
   }
 }
 
