@@ -16,9 +16,16 @@ const SUPPRESSED_WARNING_CODES = [
 ]
 
 module.exports = function getInputOptions(package, build) {
-  let externals = [/node:.*/].concat(builtinModules)
+  let external =
+    build.type !== "umd"
+      ? [/node:.*/]
+          .concat(builtinModules)
+          .concat(Object.keys(package.peerDependencies || {}))
+          .concat(Object.keys(package.dependencies || {}))
+      : []
+
   let testExternal = id =>
-    externals.reduce((state, ext) => {
+    external.reduce((state, ext) => {
       return (
         state ||
         (ext instanceof RegExp && ext.test(id)) ||
