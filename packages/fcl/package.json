@@ -28,7 +28,7 @@
   },
   "build": "src/fcl.js",
   "main": "dist/fcl.js",
-  "module": "dist/fcl.esm.js",
+  "module": "dist/fcl.module.js",
   "unpkg": "dist/fcl.umd.js",
   "scripts": {
     "pain": "npm publish --tag pain",

@@ -41,21 +41,16 @@ module.exports = function getInputOptions(package, build) {
       console.warn(message.toString())
     },
     plugins: [
-      replace({
-        preventAssignment: true,
-        PACKAGE_CURRENT_VERSION: JSON.stringify(package.version),
-      }),
+      commonjs(),
       nodeResolve({
         browser: true,
         preferBuiltins: build.type !== "umd",
       }),
-      commonjs(),
-      sourcemap({
-        exclude: resolve(process.cwd(), "/**/*"),
+      replace({
+        preventAssignment: true,
+        PACKAGE_CURRENT_VERSION: JSON.stringify(package.version),
       }),
-      babel({
-        babelHelpers: "bundled",
-      }),
+      sourcemap(),
     ],
   }
 
@@ -68,6 +63,5 @@ module.exports = function getInputOptions(package, build) {
       return _.merge(options, {})
   }
 
-  console.warn("Build type was not recognized (accepted values cjs,esm,umd)")
-  return options
+  throw new Error("Build type was not recognized (accepted values cjs,esm,umd)")
 }

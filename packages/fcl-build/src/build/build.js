@@ -11,12 +11,12 @@ module.exports = async function buildModules(builds, package) {
 
 async function buildModule(build, package) {
   const inputOptions = getInputOptions(package, build)
-  const outputOptionsList = getOutputOptions(package, build)
+  const outputOptions = getOutputOptions(package, build)
 
   let bundle, buildError
   try {
     bundle = await rollup(inputOptions)
-    await generateOutput(bundle, outputOptionsList)
+    await generateOutput(bundle, outputOptions)
   } catch (error) {
     buildError = error
   }
@@ -27,8 +27,6 @@ async function buildModule(build, package) {
   }
 }
 
-async function generateOutput(bundle, outputOptionsList) {
-  for (const outputOption of outputOptionsList) {
-    const {output} = await bundle.write(outputOption)
-  }
+async function generateOutput(bundle, outputOptions) {
+  const {output} = await bundle.write(outputOptions)
 }
