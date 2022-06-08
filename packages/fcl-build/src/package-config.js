@@ -3,39 +3,58 @@ const {resolve, dirname, basename, join} = require("path")
 const {isArray, isObject} = require("./util")
 const {existsSync, mkdirSync} = require("fs")
 
-function determineBuildPaths(rawPaths, entryName) {
-  const defaultOutputDirs = {
-    main: "/lib/",
-    module: "/lib.esm/",
-    unpkg: "/lib.umd/",
-  }
-
+function determineBuildPaths(package, outputs, entryName) {
   const buildTypeMap = {
     main: "cjs",
     module: "esm",
     unpkg: "umd",
   }
 
-  const paths = Object.keys(rawPaths)
-    .filter(pathKey => Object.keys(defaultOutputDirs).find(x => x == pathKey))
-    .reduce((paths, pathKey) => ({...paths, [pathKey]: rawPaths[pathKey]}), {})
+  const packageOutputs = Object.keys(package).reduce((outputs, key) => {
+    if (Object.keys(buildTypeMap).includes(key)) {
+      outputs[buildTypeMap[key]] = package[key]
+    }
+    return outputs
+  }, {})
+
+  const unsupportedOutput = Object.keys(outputs).find(
+    type => !Object.values(buildTypeMap).includes(type)
+  )
+  if (unsupportedOutput) {
+    throw new Error(
+      `An unsupported output format "${unsupportedOutput}" was provided - supported types are ${Object.values(
+        buildTypeMap
+      ).join(", ")}`
+    )
+  }
+
+  outputs = {
+    ...packageOutputs,
+    ...outputs,
+  }
+
+  if (!outputs) {
+    console.warn(
+      `No outputs were specified in building ${entryName} from ${package.name}, using defaults for cjs,esm,umd ...`
+    )
+    outputs = {
+      cjs: `/dist/${entryName}.js`,
+      esm: `/dist/${entryName}.module.js`,
+      umd: `/dist/${entryName}.umd.js`,
+    }
+  }
 
   assert(
-    !Object.keys(paths).find(x =>
-      Object.keys(paths).find(y => paths[x] == paths[y] && x != y)
+    !Object.keys(outputs).find(x =>
+      Object.keys(outputs).find(y => outputs[x] == outputs[y] && x != y)
     ),
     "Cannot have duplicate output paths!"
   )
 
-  return Object.keys(defaultOutputDirs).map(key => ({
-    type: buildTypeMap[key],
-    dir: resolve(
-      join(
-        process.cwd(),
-        paths[key] ? dirname(paths[key]) : defaultOutputDirs[key]
-      )
-    ),
-    entry: basename(paths[key] || entryName),
+  return Object.keys(outputs).map(type => ({
+    type,
+    dir: resolve(join(process.cwd(), dirname(outputs[type]))),
+    entry: basename(outputs[type]),
   }))
 }
 
@@ -44,7 +63,7 @@ module.exports = package => {
 
   if (isObject(builds)) {
     builds = Object.keys(builds).map(key => ({
-      entry: key,
+      source: key,
       ...builds[key],
     }))
   } else if (!isArray(builds)) {
@@ -53,22 +72,20 @@ module.exports = package => {
 
   const cfg = {
     builds: builds.reduce((buildConfigs, build) => {
-      let entry
-      let buildPaths = {}
+      let source
+      let outputs = {}
       if (isObject(build)) {
-        ;({entry, ...buildPaths} = build)
+        ;({source, ...outputs} = build)
       } else {
-        entry = build
+        source = build
       }
-      let entryName = basename(entry)
+      let entryName = basename(source)
 
       buildConfigs.push(
-        ...determineBuildPaths({...package, ...buildPaths}, entryName).map(
-          build => ({
-            ...build,
-            source: entry,
-          })
-        )
+        ...determineBuildPaths(package, outputs, entryName).map(build => ({
+          ...build,
+          source,
+        }))
       )
       return buildConfigs
     }, []),
