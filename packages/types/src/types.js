@@ -750,11 +750,33 @@ export const Path = type(
 export const AnyStruct = type(
   "AnyStruct",
   (v) => {
-    if (isNumber(v) || isInteger(v)) {
-      numberValuesDeprecationNotice("Integers")
+    if (isNumber(v)) {
+      if (isInteger(v))
+        numberValuesDeprecationNotice("Integer")
+      else
+        UFix64AndFix64NumberDeprecationNotice()
+
       return {
         type: "AnyStruct",
         value: v.toString(),
+      }
+    }
+    if (isString(v)) {
+      const vParts = v.split(".")
+      if (vParts.length !== 2) {
+        throwTypeError(
+          `Expected one decimal but found ${vParts.length} in the [U]Fix64 value. Find out more about [U]Fix64 types here: https://docs.onflow.org/cadence/json-cadence-spec/#fixed-point-numbers`
+        )
+      }
+      if (vParts[1].length == 0 || vParts[1].length > 8) {
+        throwTypeError(
+          `Expected at least one digit, and at most 8 digits following the decimal of the [U]Fix64 value but found ${vParts[1].length} digits. Find out more about [U]Fix64 types here: https://docs.onflow.org/cadence/json-cadence-spec/#fixed-point-numbers`
+        )
+      }
+
+      return {
+        type: "AnyStruct",
+        value: v,
       }
     }
     throwTypeError("Expected AnyStruct")
