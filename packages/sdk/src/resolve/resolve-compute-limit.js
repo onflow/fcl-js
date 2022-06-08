@@ -2,7 +2,7 @@ import {isTransaction} from "../interaction/interaction.js"
 import {config} from "@onflow/config"
 import * as logger from "@onflow/util-logger"
 
-const DEFAULT_COMPUTE_LIMIT = 10
+const DEFAULT_COMPUTE_LIMIT = 100
 
 export async function resolveComputeLimit(ix) {
   if (isTransaction(ix)) {
