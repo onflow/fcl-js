@@ -1,5 +1,39 @@
 # Transitions
 
+## 0009 Deprecate default compute limit
+
+- **Date:** Jun 7th 2022
+- **Type:** Deprecation of default compute limit (DEFAULT_COMPUTE_LIMIT=10)
+
+Previously, providing a compute limit for transactions was optional and a fallback existed (DEFAULT_COMPUTE_LIMIT=10).  This will be removed in a future version of the JS-SDK.
+
+In lieu of this feature, a configuration option has been added `fcl.limit` which allows developers to specify their desired fallback compute limit.  This configuration option can be used as such:
+
+```javascript
+import {config} from "@onflow/config"
+
+const DEFAULT_COMPUTE_LIMIT = ...
+config().put("fcl.limit", DEFAULT_COMPUTE_LIMIT)
+```
+
+Compute limits may still be applied explicitly in a transaction, with these taking priority above `fcl.limit`, as follows:
+
+```javascript
+import * as sdk from "@onflow/fcl"
+
+const TX_COMPUTE_LIMIT = ...
+
+sdk.send([
+  sdk.transaction`MY CADENCE CODE...`,
+  sdk.limit(TX_COMPUTE_LIMIT),
+  sdk.proposer(...),
+  sdk.authorizations([...]),
+  sdk.payer([...]),
+  ...
+])
+```
+
+
 ## 0008 Deprecate Latest Block Method
 
 - **Date:** Jan 14th 2022
