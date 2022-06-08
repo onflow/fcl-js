@@ -746,3 +746,24 @@ export const Path = type(
   },
   v => v
 )
+
+export const AnyStruct = type(
+  "AnyStruct",
+  (v) => {
+    if (isNumber(v) || isInteger(v) || isString(v) || isBoolean(v))
+      return {
+        type: "AnyStruct",
+        value: v.toString(),
+      }
+    else if (isArray(v)) {
+      return {
+        type: "AnyStruct",
+        value: isArray(children)
+          ? children.map((c, i) => c.asArgument(v[i]))
+          : v.map((x) => children.asArgument(x)),
+      }
+    }
+    throwTypeError("Expected AnyStruct")
+  },
+  (v) => v
+)
