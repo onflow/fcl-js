@@ -487,7 +487,7 @@ export const Fix64 = type(
         )
       }
 
-      // make sure the number is extended to 8 decimal places so it matches cadence encoding of UFix values
+      // make sure the number is extended to 8 decimal places so it matches cadence encoding of Fix64 values
       vParts[1] = vParts[1].padEnd(8, '0')
       v = vParts.join(".")
 
