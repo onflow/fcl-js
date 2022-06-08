@@ -218,7 +218,24 @@ import * as t from "./types.js"
     [t.AnyStruct, "32", { type: "AnyStruct", value: "32" }, "32"],
     [t.AnyStruct, "64", { type: "AnyStruct", value: "64" }, "64"],
     [t.AnyStruct, "128", { type: "AnyStruct", value: "128" }, "128"],
-    [t.AnyStruct, "256", { type: "AnyStruct", value: "256" }, "256"]
+    [t.AnyStruct, "256", { type: "AnyStruct", value: "256" }, "256"],
+    [
+      t.AnyStruct,
+      "64.000000001",
+      { type: "AnyStruct", value: "64.000000001" },
+      "64.000000001",
+      true,
+    ],
+    [
+      t.AnyStruct,
+      "64.000000001",
+      { type: "AnyStruct", value: "64.000000001" },
+      "64.000000001",
+      true,
+    ],
+    [t.AnyStruct, "64.0", { type: "AnyStruct", value: "64.0" }, "64.0", false],
+    [t.AnyStruct, "64.0", { type: "AnyStruct", value: "64.0" }, "64.0", false],
+
   ].forEach(([cast, input, asArgument, asInjection, shouldError = false]) => {
     describe(cast.label, () => {
       test(`t.${cast.label}.asArgument(${input})`, () => {
