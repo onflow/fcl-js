@@ -235,7 +235,13 @@ import * as t from "./types.js"
     ],
     [t.AnyStruct, "64.0", { type: "AnyStruct", value: "64.0" }, "64.0", false],
     [t.AnyStruct, "64.0", { type: "AnyStruct", value: "64.0" }, "64.0", false],
-
+    [
+      t.AnyStruct,
+      "Go with the Flow",
+      { type: "AnyStruct", value: "Go with the Flow" },
+      "Go with the Flow",
+    ],
+    [t.AnyStruct, "c", { type: "AnyStruct", value: "c" }, "c"],
   ].forEach(([cast, input, asArgument, asInjection, shouldError = false]) => {
     describe(cast.label, () => {
       test(`t.${cast.label}.asArgument(${input})`, () => {
