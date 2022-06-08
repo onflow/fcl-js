@@ -41,15 +41,21 @@ module.exports = function getInputOptions(package, build) {
       console.warn(message.toString())
     },
     plugins: [
+      replace({
+        preventAssignment: true,
+        PACKAGE_CURRENT_VERSION: JSON.stringify(package.version),
+      }),
       commonjs(),
       nodeResolve({
         browser: true,
         preferBuiltins: build.type !== "umd",
       }),
-      replace({
-        preventAssignment: true,
-        PACKAGE_CURRENT_VERSION: JSON.stringify(package.version),
-      }),
+      build.type === "uamd"
+        ? babel({
+            babelHelpers: "runtime",
+            plugins: ["@babel/plugin-transform-runtime"],
+          })
+        : null,
       sourcemap(),
     ],
   }

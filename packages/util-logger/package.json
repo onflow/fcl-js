@@ -33,7 +33,6 @@
     "start": "fcl-build --watch"
   },
   "dependencies": {
-    "@onflow/fcl-build": "^1.0.0",
-    "@onflow/sdk": "^1.0.2-alpha.0"
+    "@onflow/fcl-build": "^1.0.0"
   }
 }

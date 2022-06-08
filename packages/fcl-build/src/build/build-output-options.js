@@ -24,7 +24,8 @@ module.exports = function getOutputOptions(package, build) {
         plugins: [
           ...options.plugins,
           getBabelOutputPlugin({
-            presets: [["@babel/preset-env"]],
+            presets: [["@babel/preset-env", {modules: "commonjs"}]],
+            plugins: [["@babel/plugin-transform-runtime"]],
             sourceMaps: true,
           }),
         ],
@@ -35,6 +36,7 @@ module.exports = function getOutputOptions(package, build) {
           ...options.plugins,
           getBabelOutputPlugin({
             presets: [["@babel/preset-env", {modules: false}]],
+            plugins: [["@babel/plugin-transform-runtime"]],
             sourceMaps: true,
           }),
         ],
