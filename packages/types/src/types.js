@@ -600,7 +600,7 @@ export const _Array = (children = []) =>
     v => v
   )
 
-export {_Array as Array}
+export { _Array as Array }
 
 export const Dictionary = (children = []) =>
   type(
@@ -611,15 +611,15 @@ export const Dictionary = (children = []) =>
           type: "Dictionary",
           value: isArray(children)
             ? children.map((c, i) => ({
-                key: c.key.asArgument(v[i].key),
-                value: c.value.asArgument(v[i].value),
-              }))
+              key: c.key.asArgument(v[i].key),
+              value: c.value.asArgument(v[i].value),
+            }))
             : isArray(v)
-            ? v.map(x => ({
+              ? v.map(x => ({
                 key: children.key.asArgument(x.key),
                 value: children.value.asArgument(x.value),
               }))
-            : [
+              : [
                 {
                   key: children.key.asArgument(v.key),
                   value: children.value.asArgument(v.value),
@@ -642,13 +642,13 @@ export const Event = (id, fields = []) =>
             id: id,
             fields: isArray(fields)
               ? fields.map((c, i) => ({
-                  name: v.fields[i].name,
-                  value: c.value.asArgument(v.fields[i].value),
-                }))
+                name: v.fields[i].name,
+                value: c.value.asArgument(v.fields[i].value),
+              }))
               : v.fields.map(x => ({
-                  name: x.name,
-                  value: fields.value.asArgument(x.value),
-                })),
+                name: x.name,
+                value: fields.value.asArgument(x.value),
+              })),
           },
         }
       throwTypeError("Expected Object for type Event")
@@ -667,13 +667,13 @@ export const Resource = (id, fields = []) =>
             id: id,
             fields: isArray(fields)
               ? fields.map((c, i) => ({
-                  name: v.fields[i].name,
-                  value: c.value.asArgument(v.fields[i].value),
-                }))
+                name: v.fields[i].name,
+                value: c.value.asArgument(v.fields[i].value),
+              }))
               : v.fields.map(x => ({
-                  name: x.name,
-                  value: fields.value.asArgument(x.value),
-                })),
+                name: x.name,
+                value: fields.value.asArgument(x.value),
+              })),
           },
         }
       throwTypeError("Expected Object for type Resource")
@@ -692,13 +692,13 @@ export const Struct = (id, fields = []) =>
             id: id,
             fields: isArray(fields)
               ? fields.map((c, i) => ({
-                  name: v.fields[i].name,
-                  value: c.value.asArgument(v.fields[i].value),
-                }))
+                name: v.fields[i].name,
+                value: c.value.asArgument(v.fields[i].value),
+              }))
               : v.fields.map(x => ({
-                  name: x.name,
-                  value: fields.value.asArgument(x.value),
-                })),
+                name: x.name,
+                value: fields.value.asArgument(x.value),
+              })),
           },
         }
       throwTypeError("Expected Object for type Struct")
@@ -750,17 +750,11 @@ export const Path = type(
 export const AnyStruct = type(
   "AnyStruct",
   (v) => {
-    if (isNumber(v) || isInteger(v) || isString(v) || isBoolean(v))
+    if (isNumber(v) || isInteger(v)) {
+      numberValuesDeprecationNotice("Integers")
       return {
         type: "AnyStruct",
         value: v.toString(),
-      }
-    else if (isArray(v)) {
-      return {
-        type: "AnyStruct",
-        value: isArray(children)
-          ? children.map((c, i) => c.asArgument(v[i]))
-          : v.map((x) => children.asArgument(x)),
       }
     }
     throwTypeError("Expected AnyStruct")
