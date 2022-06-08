@@ -90,4 +90,4 @@ A build configuration object is provided as any one of, or an array of (for mult
  - Replace `PACKAGE_CURRENT_VERSION` in bundled code with the current `version` of the package being bundled from `package.json`
  - Bundles dependencies with UMD builds for use in browser
  - Source map bundled dependencies (uses [sourcemap plugin for rollup](https://www.npmjs.com/package/rollup-plugin-sourcemaps)).  This is only relevant for UMD builds as dependencies are not bundled in other builds
- - Transpiles output bundles using `@babel/preset-env`
+ - Transpiles output bundles using `@babel/preset-env` and [babel rollup plugin](https://www.npmjs.com/package/@rollup/plugin-babel)
