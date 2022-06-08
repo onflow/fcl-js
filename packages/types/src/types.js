@@ -780,8 +780,13 @@ export const AnyStruct = type(
         type: "AnyStruct",
         value: v,
       }
-
     }
+    if (isBoolean(v))
+      return {
+        type: "AnyStruct",
+        value: v,
+      }
+
     throwTypeError("Expected AnyStruct")
   },
   (v) => v

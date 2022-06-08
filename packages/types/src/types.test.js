@@ -242,6 +242,9 @@ import * as t from "./types.js"
       "Go with the Flow",
     ],
     [t.AnyStruct, "c", { type: "AnyStruct", value: "c" }, "c"],
+    [t.AnyStruct, true, { type: "AnyStruct", value: true }, true],
+    [t.AnyStruct, "0x1", { type: "AnyStruct", value: "0x1" }, "0x1"],
+
   ].forEach(([cast, input, asArgument, asInjection, shouldError = false]) => {
     describe(cast.label, () => {
       test(`t.${cast.label}.asArgument(${input})`, () => {
