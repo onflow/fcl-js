@@ -7,16 +7,16 @@
 
 Previously, providing a compute limit for transactions was optional and a fallback existed (DEFAULT_COMPUTE_LIMIT=10).  This will be removed in a future version of the JS-SDK.
 
-In lieu of this feature, a configuration option has been added `sdk.defaultComputeLimit` which allows developers to specify their desired fallback compute limit.  This configuration option can be used as such:
+In lieu of this feature, a configuration option has been added `fcl.limit` which allows developers to specify their desired fallback compute limit.  This configuration option can be used as such:
 
 ```javascript
 import {config} from "@onflow/config"
 
 const DEFAULT_COMPUTE_LIMIT = ...
-config().put("sdk.defaultComputeLimit", DEFAULT_COMPUTE_LIMIT)
+config().put("fcl.limit", DEFAULT_COMPUTE_LIMIT)
 ```
 
-Compute limits may still be applied explicitly in a transaction, with these taking precedent above `sdk.defaultComputeLimit`, as follows:
+Compute limits may still be applied explicitly in a transaction, with these taking priority above `fcl.limit`, as follows:
 
 ```javascript
 import * as sdk from "@onflow/fcl"
