@@ -8,7 +8,7 @@ module.exports = packageConfig => package => {
     .name("FCL Build Tool")
     .description("Zero-configuration CLI to build FCL packages")
     .version("1.0.0")
-    .option("-w, --watch", "Run the build in watch-mode")
+    .option("-w, --watch", "Run the build in watch mode")
     .parse()
 
   let commandLineConfig = {} // TODO populate using command line
