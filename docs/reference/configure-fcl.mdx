@@ -48,11 +48,12 @@ addStuff().then(d => console.log(d)) // 13 (5 + 7 + 1)
 ## Common Configuration Keys
 
 - `accessNode.api` -- Api URL for the Flow Blockchain Access Node you want to be communicating with.
+- `app.detail.title` - **(INTRODUCED `@onflow/fcl@0.0.68`)** Your applications title, can be requested by wallets and other services.
+- `app.detail.icon` - **(INTRODUCED `@onflow/fcl@0.0.68`)** Url for your applications icon, can be requested by wallets and other services.
 - `challenge.handshake` -- **(DEPRECATED `@onflow/fcl@0.0.68`)** Points FCL at the Wallet or Wallet Discovery mechanism.
 - `discovery.wallet` -- **(INTRODUCED `@onflow/fcl@0.0.68`)** Points FCL at the Wallet or Wallet Discovery mechanism.
 - `env` -- Used in conjunction with stored interactions. Possible values: `local`, `canarynet`, `testnet`, `mainnet`
-- `app.detail.title` - **(INTRODUCED `@onflow/fcl@0.0.68`)** Your applications title, can be requested by wallets and other services.
-- `app.detail.icon` - **(INTRODUCED `@onflow/fcl@0.0.68`)** Url for your applications icon, can be requested by wallets and other services.
+- `fcl.limit` -- Specifies fallback compute limit if not provided in transaction.  Provided as integer.
 - `service.OpenID.scopes` - **(INTRODUCED `@onflow/fcl@0.0.68`)** Open ID Connect claims for Wallets and OpenID services.
 
 ## Address replacement in scripts and transactions
