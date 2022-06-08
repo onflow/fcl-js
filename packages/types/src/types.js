@@ -451,6 +451,10 @@ export const UFix64 = type(
         )
       }
 
+      // make sure the number is extended to 8 decimal places so it matches cadence encoding of UFix values
+      vParts[1] = vParts[1].padEnd(8, '0')
+      v = vParts.join(".")
+
       return {
         type: "UFix64",
         value: v,
@@ -482,6 +486,10 @@ export const Fix64 = type(
           `Expected at least one digit, and at most 8 digits following the decimal of the [U]Fix64 value but found ${vParts[1].length} digits. Find out more about [U]Fix64 types here: https://docs.onflow.org/cadence/json-cadence-spec/#fixed-point-numbers`
         )
       }
+
+      // make sure the number is extended to 8 decimal places so it matches cadence encoding of Fix64 values
+      vParts[1] = vParts[1].padEnd(8, '0')
+      v = vParts.join(".")
 
       return {
         type: "Fix64",

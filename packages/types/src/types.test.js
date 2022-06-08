@@ -37,8 +37,8 @@ import * as t from "./types.js"
     "64.000000001",
     true,
   ],
-  [t.UFix64, "64.0", {type: "UFix64", value: "64.0"}, "64.0", false],
-  [t.Fix64, "64.0", {type: "Fix64", value: "64.0"}, "64.0", false],
+  [t.UFix64, "64.0", {type: "UFix64", value: "64.00000000"}, "64.0", false],
+  [t.Fix64, "64.0", {type: "Fix64", value: "64.00000000"}, "64.0", false],
   [
     t.String,
     "Go with the Flow",
