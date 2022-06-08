@@ -62,21 +62,17 @@ module.exports = package => {
       }
       let entryName = basename(entry)
 
-      buildConfigs.push(
-        ...determineBuildPaths({...package, ...buildPaths}, entryName).map(
-          build => ({
-            ...build,
-            source: entry,
-          })
-        )
-      )
+      buildConfigs.push({
+        source: entry,
+        builds: determineBuildPaths({...package, ...buildPaths}, entryName),
+      })
       return buildConfigs
     }, []),
   }
 
-  cfg.builds.forEach(build =>
-    !existsSync(build.dir) ? mkdirSync(build.dir) : null
-  )
+  cfg.builds
+    .reduce((acc, b) => [...acc, ...b.builds], [])
+    .forEach(build => (!existsSync(build.dir) ? mkdirSync(build.dir) : null))
 
   return cfg
 }

@@ -41,20 +41,20 @@ module.exports = function getInputOptions(package, build) {
       console.warn(message.toString())
     },
     plugins: [
+      replace({
+        preventAssignment: true,
+        PACKAGE_CURRENT_VERSION: JSON.stringify(package.version),
+      }),
       nodeResolve({
         browser: true,
         preferBuiltins: build.type !== "umd",
       }),
       commonjs(),
-      babel({
-        babelHelpers: "bundled",
-      }),
-      replace({
-        preventAssignment: true,
-        PACKAGE_CURRENT_VERSION: JSON.stringify(package.version),
-      }),
       sourcemap({
         exclude: resolve(process.cwd(), "/**/*"),
+      }),
+      babel({
+        babelHelpers: "bundled",
       }),
     ],
   }
