@@ -76,7 +76,7 @@ export async function httpRequest({
       const resp = await makeRequest()
       return resp
     } catch (error) {
-      const retryStatusCodes = [500, 502, 503, 504]
+      const retryStatusCodes = [408, 500, 502, 503, 504]
 
       if (retryStatusCodes.includes(error.statusCode)) {
         return await new Promise((resolve, reject) => {
