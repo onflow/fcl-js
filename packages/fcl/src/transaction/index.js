@@ -9,6 +9,7 @@ import {
   INIT,
   SUBSCRIBE,
   UNSUBSCRIBE,
+  ERROR,
 } from "@onflow/util-actor"
 import {send as fclSend, decode, getTransactionStatus} from "@onflow/sdk"
 
@@ -49,7 +50,7 @@ const HANDLERS = {
     try {
       tx = await fetchTxStatus(ctx.self())
     } catch (e) {
-      ctx.merge({error: e})
+      ctx.error(e)
       return
     }
 
@@ -83,9 +84,9 @@ export function transaction(transactionId) {
     return function innerOnce(opts = {}) {
       const suppress = opts.suppress || false
       return new Promise((resolve, reject) => {
-        const unsub = subscribe(txStatus => {
-          if ((txStatus.statusCode || txStatus.error) && !suppress) {
-            reject(txStatus.error || txStatus.errorMessage)
+        const unsub = subscribe((txStatus, error) => {
+          if ((txStatus.statusCode || error) && !suppress) {
+            reject(error || txStatus.errorMessage)
             unsub()
           } else if (predicate(txStatus)) {
             resolve(txStatus)
