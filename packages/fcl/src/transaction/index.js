@@ -84,7 +84,6 @@ export function transaction(transactionId) {
       const suppress = opts.suppress || false
       return new Promise((resolve, reject) => {
         const unsub = subscribe(txStatus => {
-          console.log(txStatus)
           if ((txStatus.statusCode || txStatus.error) && !suppress) {
             reject(txStatus.error || txStatus.errorMessage)
             unsub()
