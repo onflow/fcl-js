@@ -1,7 +1,7 @@
-const WatcherFactory = require("./build-watcher-factory")
+const WatcherFactory = require("./watcher-factory")
 
-const getInputOptions = require("./build-input-options")
-const getOutputOptions = require("./build-output-options")
+const getInputOptions = require("./get-input-options")
+const getOutputOptions = require("./get-output-options")
 
 module.exports = async function buildModulesWatch(builds, package) {
   const watcherFactory = new WatcherFactory(builds.length)
