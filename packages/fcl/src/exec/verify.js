@@ -12,7 +12,7 @@ export const verifyUserSignatures = log.deprecate({
   pkg: "FCL",
   action: "fcl.verifyUserSignatures()",
   message: "Please use fcl.AppUtils.verifyUserSignatures()",
-  fn: function verifyUserSignatures(message, compSigs) {
+  callback: function verifyUserSignatures(message, compSigs) {
     return verify(message, compSigs)
   },
 })

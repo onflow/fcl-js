@@ -57,7 +57,7 @@ log.deprecate = ({
   transition,
   level = LEVELS.warn,
   message = "",
-  fn = null,
+  callback = null,
 }) => {
   const capitalizeFirstLetter = string => {
     return string.charAt(0).toUpperCase() + string.slice(1)
@@ -84,10 +84,10 @@ log.deprecate = ({
       level,
     })
 
-  if (typeof fn === "function") {
+  if (typeof callback === "function") {
     return async (...args) => {
       await logMessage()
-      return await fn(...args)
+      return await callback(...args)
     }
   }
   return logMessage()
