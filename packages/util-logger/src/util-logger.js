@@ -13,10 +13,12 @@ const buildLoggerMessageArgs = ({title, message}) => {
     `
     %c${title}
     ============================
+
     ${message}
+
     ============================
     `
-      .replace(/\n\s+/g, "\n")
+      .replace(/\n[^\S\r\n]+/g, "\n")
       .trim(),
     ,
     "font-weight:bold;font-family:monospace;",
@@ -24,7 +26,7 @@ const buildLoggerMessageArgs = ({title, message}) => {
 }
 
 export const log = async ({title, message, level, always = false}) => {
-  const configLoggerLevel = await config.get("logger.level", 0)
+  const configLoggerLevel = await config.get("logger.level", LEVELS.warn)
 
   // If config level is below message level then don't show it
   if (!always && configLoggerLevel < level) return
@@ -61,9 +63,10 @@ log.deprecate = async ({
     return string.charAt(0).toUpperCase() + string.slice(1)
   }
 
-  const logMessage = () => log({
-    title: `${pkg ? pkg + " " : ""}Deprecation Notice`,
-    message: `
+  const logMessage = () =>
+    log({
+      title: `${pkg ? pkg + " " : ""}Deprecation Notice`,
+      message: `
       ${
         action
           ? `${capitalizeFirstLetter(
@@ -72,16 +75,14 @@ log.deprecate = async ({
               pkg ? " of " + pkg : ""
             }.`
           : ""
-      }
-      ${message}
-      ${
+      }${message ? "\n" + message : ""}${
         transition
-          ? `You can learn more (including a guide on common transition paths) here: ${transition}`
+          ? `\nYou can learn more (including a guide on common transition paths) here: ${transition}`
           : ""
       }
     `.trim(),
-    level,
-  })
+      level,
+    })
 
   if (typeof fn === "function") {
     return async (...args) => {
