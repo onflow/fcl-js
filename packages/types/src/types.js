@@ -419,6 +419,7 @@ const UFix64AndFix64NumberDeprecationNotice = () => {
     pkg: "@onflow/types",
     transition:
       "https://github.com/onflow/flow-js-sdk/blob/master/packages/types/WARNINGS.md#0001-[U]Fix64-as-Number",
+    level: LEVELS.error,
   })
 }
 

@@ -11,7 +11,7 @@ const buildWarningMessage = ({name, transitionsPath}) => {
 const buildErrorMessage = ({name, transitionsPath}) => {
   logger.log.deprecate({
     pkg: "FCL/SDK",
-    subject: `The ${name} builder has been removed from the Flow JS-SDK/FCL.`,
+    message: `The ${name} builder has been removed from the Flow JS-SDK/FCL.`,
     transition: transitionsPath,
     level: logger.LEVELS.error,
   })
