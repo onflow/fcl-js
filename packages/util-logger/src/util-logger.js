@@ -55,12 +55,13 @@ log.deprecate = async ({
   transition,
   level = LEVELS.warn,
   message = "",
+  fn = null,
 }) => {
   const capitalizeFirstLetter = string => {
     return string.charAt(0).toUpperCase() + string.slice(1)
   }
 
-  log({
+  const logMessage = await log({
     title: `${pkg ? pkg + " " : ""}Deprecation Notice`,
     message: `
       ${
@@ -81,4 +82,12 @@ log.deprecate = async ({
     `.trim(),
     level,
   })
+
+  if (typeof fn === "function") {
+    return async (...args) => {
+      logMessage()
+      return await fn(...args)
+    }
+  }
+  logMessage()
 }

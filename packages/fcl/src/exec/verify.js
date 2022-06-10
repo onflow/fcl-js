@@ -8,11 +8,11 @@ import {deprecate} from "../utils/deprecate"
  * @deprecated since version '1.0.0-alpha.0', use AppUtils.verifyUserSignatures instead
  *
  */
-export async function verifyUserSignatures(message, compSigs) {
-  log.deprecate({
-    pkg: "FCL",
-    action: "fcl.verifyUserSignatures()",
-    message: "Please use fcl.AppUtils.verifyUserSignatures()",
-  })
-  return verify(message, compSigs)
-}
+export const verifyUserSignatures = log.deprecate({
+  pkg: "FCL",
+  action: "fcl.verifyUserSignatures()",
+  message: "Please use fcl.AppUtils.verifyUserSignatures()",
+  fn: function verifyUserSignatures(message, compSigs) {
+    return verify(message, compSigs)
+  },
+})
