@@ -1,3 +1,5 @@
+import {log} from "@onflow/util-logger"
+
 export function interleave(a = [], b = [], c = []) {
   if (!a.length && !b.length) return c
   if (!a.length) return c
@@ -15,18 +17,12 @@ export function interleave(a = [], b = [], c = []) {
 function recApply(d) {
   return function (arg1) {
     if (typeof arg1 === "function") {
-      console.warn(
-        `
-        %cFCL/SDK Deprecation Notice
-        ============================
-
-        Interopolation of functions into template literals will not be a thing in future versions of the Flow-JS-SDK or FCL.
-        You can learn more (including a guide on common transition paths) here: https://github.com/onflow/flow-js-sdk/blob/master/packages/sdk/TRANSITIONS.md#0001-deprecate-params
-
-        ============================
-      `,
-        "font-weight:bold;font-family:monospace;"
-      )
+      log.deprecate({
+        pkg: "FCL/SDK",
+        action: "Interopolation of functions into template literals",
+        transition:
+          "https://github.com/onflow/flow-js-sdk/blob/master/packages/sdk/TRANSITIONS.md#0001-deprecate-params",
+      })
       return recApply(d)(arg1(d))
     }
     return String(arg1)

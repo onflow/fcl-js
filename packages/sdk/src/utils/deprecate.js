@@ -1,29 +1,20 @@
 import * as logger from "@onflow/util-logger"
 
 const buildWarningMessage = ({name, transitionsPath}) => {
-  console.warn(
-    `
-    %cFCL/SDK Deprecation Notice
-    ============================
-    The ${name} builder has been deprecated and will be removed in future versions of the Flow JS-SDK/FCL.
-    You can learn more (including a guide on common transition paths) here: ${transitionsPath}
-    ============================
-  `,
-    "font-weight:bold;font-family:monospace;"
-  )
+  logger.log.deprecate({
+    pkg: "FCL/SDK",
+    action: `The ${name} builder`,
+    transition: transitionsPath,
+  })
 }
 
 const buildErrorMessage = ({name, transitionsPath}) => {
-  console.error(
-    `
-    %cFCL/SDK Deprecation Notice
-    ============================
-    The ${name} builder has been removed from the Flow JS-SDK/FCL.
-    You can learn more (including a guide on common transition paths) here: ${transitionsPath}
-    ============================
-  `,
-    "font-weight:bold;font-family:monospace;"
-  )
+  logger.log.deprecate({
+    pkg: "FCL/SDK",
+    action: `The ${name} builder has been removed from the Flow JS-SDK/FCL.`,
+    transition: transitionsPath,
+    level: logger.LEVELS.error,
+  })
 }
 
 const warn = deprecated => buildWarningMessage(deprecated)
@@ -52,11 +43,10 @@ export const applyRenamings = (originalObject, deprecationsMap) => {
         return Reflect.get(obj, originalProperty)
       }
       if (deprecationsMap.has(property)) {
-        logger.log({
-          title: "FCL/SDK Deprecation Notice",
-          message: `"${property}" will be deprecated in a future version.
-            Please use "${deprecationsMap.get(property)}" instead.`,
-          level: logger.LEVELS.warn,
+        logger.log.deprecate({
+          pkg: "FCL/SDK",
+          action: property,
+          message: `Please use "${deprecationsMap.get(property)}" instead.`,
         })
       }
       return Reflect.get(obj, property)

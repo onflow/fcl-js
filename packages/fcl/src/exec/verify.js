@@ -1,3 +1,4 @@
+import {log} from "@onflow/util-logger"
 import {verifyUserSignatures as verify} from "../app-utils"
 import {deprecate} from "../utils/deprecate"
 
@@ -8,13 +9,10 @@ import {deprecate} from "../utils/deprecate"
  *
  */
 export async function verifyUserSignatures(message, compSigs) {
-  deprecate({
-    title: "FCL Deprecation Notice",
-    message: `
-    fcl.verifyUserSignatures() is deprecated and will be removed in a future release
-    Please use fcl.AppUtils.verifyUserSignatures()`,
-    level: 2,
-    always: true,
+  log.deprecate({
+    pkg: "FCL",
+    action: "fcl.verifyUserSignatures()",
+    message: "Please use fcl.AppUtils.verifyUserSignatures()",
   })
   return verify(message, compSigs)
 }

@@ -1,4 +1,5 @@
 import {invariant} from "@onflow/util-invariant"
+import {log} from "@onflow/util-logger"
 import {isTransaction} from "../interaction/interaction.js"
 import {createSignableVoucher} from "./voucher.js"
 
@@ -112,16 +113,12 @@ async function collectAccounts(ix, accounts, last, depth = 3) {
 export async function resolveAccounts(ix) {
   if (isTransaction(ix)) {
     if (!Array.isArray(ix.payer)) {
-      console.warn(
-        `
-        %cFCL Warning
-        ============================
-        "ix.payer" must be an array. Support for ix.payer as a singular is deprecated,
-        see changelog for more info.
-        ============================
-        `,
-        "font-weight:bold;font-family:monospace;"
-      )
+      log.deprecate({
+        pkg: "FCL",
+        action:
+          '"ix.payer" must be an array. Support for ix.payer as a singular',
+        message: "See changelog for more info.",
+      })
     }
     try {
       await collectAccounts(ix, Object.values(ix.accounts))
