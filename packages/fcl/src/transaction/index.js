@@ -50,8 +50,7 @@ const HANDLERS = {
     try {
       tx = await fetchTxStatus(ctx.self())
     } catch (e) {
-      ctx.error(e)
-      return
+      return ctx.fatalError(e)
     }
 
     if (!isSealed(tx)) setTimeout(() => ctx.sendSelf(POLL), RATE)

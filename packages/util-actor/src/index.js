@@ -8,6 +8,7 @@ export const UPDATED = "UPDATED"
 export const SNAPSHOT = "SNAPSHOT"
 export const EXIT = "EXIT"
 export const TERMINATE = "TERMINATE"
+export const ERROR = "ERROR"
 
 const root =
   (typeof self === "object" && self.self === self && self) ||
@@ -144,7 +145,7 @@ export const spawn = (fn, addr = null) => {
         key => (root.FCL_REGISTRY[addr].kvs[key] = data[key])
       )
     },
-    error: error => {
+    fatalError: error => {
       root.FCL_REGISTRY[addr].error = error
       for (let to of root.FCL_REGISTRY[addr].subs) send(to, UPDATED)
     },
