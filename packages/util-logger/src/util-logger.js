@@ -61,7 +61,7 @@ log.deprecate = async ({
     return string.charAt(0).toUpperCase() + string.slice(1)
   }
 
-  const logMessage = await log({
+  const logMessage = () => log({
     title: `${pkg ? pkg + " " : ""}Deprecation Notice`,
     message: `
       ${
@@ -85,9 +85,9 @@ log.deprecate = async ({
 
   if (typeof fn === "function") {
     return async (...args) => {
-      logMessage()
+      await logMessage()
       return await fn(...args)
     }
   }
-  logMessage()
+  await logMessage()
 }
