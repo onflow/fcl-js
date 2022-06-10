@@ -51,7 +51,7 @@ export const log = async ({title, message, level, always = false}) => {
   }
 }
 
-log.deprecate = async ({
+log.deprecate = ({
   pkg,
   action,
   transition,
@@ -90,5 +90,5 @@ log.deprecate = async ({
       return await fn(...args)
     }
   }
-  await logMessage()
+  return logMessage()
 }
