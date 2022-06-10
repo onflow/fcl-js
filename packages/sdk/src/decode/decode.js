@@ -7,7 +7,6 @@ const latestBlockDeprecationNotice = () => {
       "Operating upon data of the latestBlock field of the response object",
     transition:
       "https://github.com/onflow/flow-js-sdk/blob/master/packages/decode/WARNINGS.md#0001-Deprecating-latestBlock-field",
-    level: LEVELS.error,
   })
 }
 
