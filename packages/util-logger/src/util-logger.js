@@ -15,7 +15,10 @@ const buildLoggerMessageArgs = ({title, message}) => {
     ============================
     ${message}
     ============================
-    `,
+    `
+      .replace(/\n\s+/g, "\n")
+      .trim(),
+    ,
     "font-weight:bold;font-family:monospace;",
   ]
 }
@@ -44,4 +47,38 @@ export const log = async ({title, message, level, always = false}) => {
     default:
       console.log(...loggerMessageArgs)
   }
+}
+
+log.deprecate = async ({
+  pkg,
+  action,
+  transition,
+  level = LEVELS.warn,
+  message = "",
+}) => {
+  const capitalizeFirstLetter = string => {
+    return string.charAt(0).toUpperCase() + string.slice(1)
+  }
+
+  log({
+    title: `${pkg ? pkg + " " : ""}Deprecation Notice`,
+    message: `
+      ${
+        action
+          ? `${capitalizeFirstLetter(
+              action
+            )} is deprecated and will cease to work in future releases${
+              pkg ? " of " + pkg : ""
+            }.`
+          : ""
+      }
+      ${message}
+      ${
+        transition
+          ? `You can learn more (including a guide on common transition paths) here: ${transition}`
+          : ""
+      }
+    `.trim(),
+    level,
+  })
 }
