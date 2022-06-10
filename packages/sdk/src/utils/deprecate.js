@@ -3,7 +3,7 @@ import * as logger from "@onflow/util-logger"
 const buildWarningMessage = ({name, transitionsPath}) => {
   logger.log.deprecate({
     pkg: "FCL/SDK",
-    action: `The ${name} builder`,
+    subject: `The ${name} builder`,
     transition: transitionsPath,
   })
 }
@@ -11,7 +11,7 @@ const buildWarningMessage = ({name, transitionsPath}) => {
 const buildErrorMessage = ({name, transitionsPath}) => {
   logger.log.deprecate({
     pkg: "FCL/SDK",
-    action: `The ${name} builder has been removed from the Flow JS-SDK/FCL.`,
+    subject: `The ${name} builder has been removed from the Flow JS-SDK/FCL.`,
     transition: transitionsPath,
     level: logger.LEVELS.error,
   })
@@ -45,7 +45,7 @@ export const applyRenamings = (originalObject, deprecationsMap) => {
       if (deprecationsMap.has(property)) {
         logger.log.deprecate({
           pkg: "FCL/SDK",
-          action: property,
+          subject: property,
           message: `Please use "${deprecationsMap.get(property)}" instead.`,
         })
       }

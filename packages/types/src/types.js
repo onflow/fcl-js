@@ -21,7 +21,7 @@ const throwTypeError = msg => {
 const numberValuesDeprecationNotice = type => {
   log.deprecate({
     pkg: "@onflow/types",
-    action: `Passing in Number as value for ${type}`,
+    subject: `Passing in Number as value for ${type}`,
     message: `Going forward, use String as value for ${type}.`,
     transition:
       "https://github.com/onflow/flow-js-sdk/blob/master/packages/types/WARNINGS.md#0002-[U]Int*-and-Word*-as-Number",
@@ -415,7 +415,7 @@ export const Word64 = type(
 
 const UFix64AndFix64NumberDeprecationNotice = () => {
   log.deprecate({
-    action: "Passing in Numbers as values for Fix64 and UFix64 types",
+    subject: "Passing in Numbers as values for Fix64 and UFix64 types",
     pkg: "@onflow/types",
     transition:
       "https://github.com/onflow/flow-js-sdk/blob/master/packages/types/WARNINGS.md#0001-[U]Fix64-as-Number",

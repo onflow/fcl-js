@@ -19,7 +19,7 @@ function recApply(d) {
     if (typeof arg1 === "function") {
       log.deprecate({
         pkg: "FCL/SDK",
-        action: "Interopolation of functions into template literals",
+        subject: "Interopolation of functions into template literals",
         transition:
           "https://github.com/onflow/flow-js-sdk/blob/master/packages/sdk/TRANSITIONS.md#0001-deprecate-params",
       })

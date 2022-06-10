@@ -12,7 +12,8 @@ export async function resolveComputeLimit(ix) {
     if (!ix.message.computeLimit) {
       logger.log.deprecate({
         pkg: "FCL/SDK",
-        action: "The built-in default compute limit (DEFAULT_COMPUTE_LIMIT=10)",
+        subject:
+          "The built-in default compute limit (DEFAULT_COMPUTE_LIMIT=10)",
         transition:
           "https://github.com/onflow/flow-js-sdk/blob/master/packages/sdk/TRANSITIONS.md#0009-deprecate-default-compute-limit",
       })

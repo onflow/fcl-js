@@ -53,7 +53,7 @@ export const log = async ({title, message, level, always = false}) => {
 
 log.deprecate = ({
   pkg,
-  action,
+  subject,
   transition,
   level = LEVELS.warn,
   message = "",
@@ -68,9 +68,9 @@ log.deprecate = ({
       title: `${pkg ? pkg + " " : ""}Deprecation Notice`,
       message: `
       ${
-        action
+        subject
           ? `${capitalizeFirstLetter(
-              action
+              subject
             )} is deprecated and will cease to work in future releases${
               pkg ? " of " + pkg : ""
             }.`

@@ -10,7 +10,7 @@ import {deprecate} from "../utils/deprecate"
  */
 export const verifyUserSignatures = log.deprecate({
   pkg: "FCL",
-  action: "fcl.verifyUserSignatures()",
+  subject: "fcl.verifyUserSignatures()",
   message: "Please use fcl.AppUtils.verifyUserSignatures()",
   callback: function verifyUserSignatures(message, compSigs) {
     return verify(message, compSigs)
