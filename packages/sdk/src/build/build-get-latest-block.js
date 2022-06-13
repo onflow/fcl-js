@@ -1,7 +1,6 @@
 import {pipe, Ok, makeGetLatestBlock} from "../interaction/interaction.js"
 
 export function getLatestBlock(isSealed = false) {
-
   console.warn(
     `
     %cFCL/SDK Deprecation Notice
@@ -20,6 +19,6 @@ export function getLatestBlock(isSealed = false) {
     ix => {
       ix.block.isSealed = isSealed
       return Ok(ix)
-    }
+    },
   ])
 }

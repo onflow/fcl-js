@@ -8,33 +8,30 @@ import {Buffer} from "@onflow/rlp"
 
 describe("Send Get Account", () => {
   test("GetAccountAtBlockHeightRequest", async () => {
-    const httpRequestMock = jest.fn();
+    const httpRequestMock = jest.fn()
 
     const returnedAccount = {
-        address: "0x1654653399040a61",
-        keys: [],
-        balance: "10",
-        contracts: {},
-        code: null
+      address: "0x1654653399040a61",
+      keys: [],
+      balance: "10",
+      contracts: {},
+      code: null,
     }
 
     httpRequestMock.mockReturnValue(returnedAccount)
 
     const response = await sendGetAccount(
-        await resolve(
-            await build([
-                getAccount("0x1654653399040a61"),
-                atBlockHeight(123)
-            ])
-        ),
-        {
-            response: responseADT,
-            Buffer,
-        },
-        {
-            httpRequest: httpRequestMock,
-            node: "localhost"
-        }
+      await resolve(
+        await build([getAccount("0x1654653399040a61"), atBlockHeight(123)])
+      ),
+      {
+        response: responseADT,
+        Buffer,
+      },
+      {
+        httpRequest: httpRequestMock,
+        node: "localhost",
+      }
     )
 
     expect(httpRequestMock.mock.calls.length).toEqual(1)
@@ -46,48 +43,43 @@ describe("Send Get Account", () => {
     const valueSent = httpRequestMock.mock.calls[0][0]
 
     expect(valueSent).toEqual({
-        hostname: "localhost",
-        path: "/v1/accounts/1654653399040a61?block_height=123&expand=contracts,keys",
-        method: "GET",
-        body: null
+      hostname: "localhost",
+      path: "/v1/accounts/1654653399040a61?block_height=123&expand=contracts,keys",
+      method: "GET",
+      body: null,
     })
     expect(response.account).toEqual({
-        address: "0x1654653399040a61",
-        keys: [],
-        balance: 10,
-        contracts: {},
-        code: ""
+      address: "0x1654653399040a61",
+      keys: [],
+      balance: 10,
+      contracts: {},
+      code: "",
     })
-  
   })
 
   test("GetAccountAtLatestBlockRequest", async () => {
-    const httpRequestMock = jest.fn();
+    const httpRequestMock = jest.fn()
 
     const returnedAccount = {
-        address: "0x1654653399040a61",
-        keys: [],
-        balance: "10",
-        contracts: {},
-        code: null
+      address: "0x1654653399040a61",
+      keys: [],
+      balance: "10",
+      contracts: {},
+      code: null,
     }
 
     httpRequestMock.mockReturnValue(returnedAccount)
 
     const response = await sendGetAccount(
-        await resolve(
-            await build([
-                getAccount("0x1654653399040a61"),
-            ])
-        ),
-        {
-            response: responseADT,
-            Buffer,
-        },
-        {
-            httpRequest: httpRequestMock,
-            node: "localhost"
-        }
+      await resolve(await build([getAccount("0x1654653399040a61")])),
+      {
+        response: responseADT,
+        Buffer,
+      },
+      {
+        httpRequest: httpRequestMock,
+        node: "localhost",
+      }
     )
 
     expect(httpRequestMock.mock.calls.length).toEqual(1)
@@ -99,18 +91,17 @@ describe("Send Get Account", () => {
     const valueSent = httpRequestMock.mock.calls[0][0]
 
     expect(valueSent).toEqual({
-        hostname: "localhost",
-        path: "/v1/accounts/1654653399040a61?block_height=final&expand=contracts,keys",
-        method: "GET",
-        body: null
+      hostname: "localhost",
+      path: "/v1/accounts/1654653399040a61?block_height=final&expand=contracts,keys",
+      method: "GET",
+      body: null,
     })
     expect(response.account).toEqual({
-        address: "0x1654653399040a61",
-        keys: [],
-        balance: 10,
-        contracts: {},
-        code: ""
+      address: "0x1654653399040a61",
+      keys: [],
+      balance: 10,
+      contracts: {},
+      code: "",
     })
   })
-
 })

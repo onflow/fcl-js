@@ -1,45 +1,46 @@
 import {config} from "@onflow/config"
 
 export const LEVELS = Object.freeze({
-  "debug": 5,
-  "info": 4,
-  "log": 3,
-  "warn": 2,
-  "error": 1
+  debug: 5,
+  info: 4,
+  log: 3,
+  warn: 2,
+  error: 1,
 })
 
 const buildLoggerMessageArgs = ({title, message}) => {
-  return [`
+  return [
+    `
     %c${title}
     ============================
     ${message}
     ============================
     `,
-    "font-weight:bold;font-family:monospace;"
+    "font-weight:bold;font-family:monospace;",
   ]
 }
 
 export const log = async ({title, message, level, always = false}) => {
-  const configLoggerLevel =  await config.get("logger.level", 0)
+  const configLoggerLevel = await config.get("logger.level", 0)
 
   // If config level is below message level then don't show it
   if (!always && configLoggerLevel < level) return
 
   const loggerMessageArgs = buildLoggerMessageArgs({title, message})
 
-  switch(level) {
+  switch (level) {
     case LEVELS.debug:
       console.debug(...loggerMessageArgs)
-      break;
+      break
     case LEVELS.info:
       console.info(...loggerMessageArgs)
-      break;
+      break
     case LEVELS.warn:
       console.warn(...loggerMessageArgs)
-      break;
+      break
     case LEVELS.error:
       console.error(...loggerMessageArgs)
-      break;
+      break
     default:
       console.log(...loggerMessageArgs)
   }

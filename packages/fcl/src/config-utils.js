@@ -48,6 +48,6 @@ export async function getDiscoveryService() {
     type: "authn",
     endpoint: discoveryWallet,
     method: discoveryWalletMethod,
-    discoveryAuthnInclude
+    discoveryAuthnInclude,
   }
 }

@@ -146,11 +146,10 @@ FCL is agnostic to the communication channel and be configured to create both cu
 
 The communication channels involve responding to a set of pre-defined FCL messages to deliver the requested information to the dapp.  Implementing a FCL compatible wallet on Flow is as simple as filling in the responses with the appropriate data when FCL requests them. If using any of the front-channel communication methods, FCL also provides a set of [wallet utilities](https://github.com/onflow/fcl-js/blob/master/packages/fcl/src/wallet-utils/index.js) to simplify this process.
 
-
 ### Current Wallet Providers
 - [Blocto](https://blocto.portto.io/en/)
 - [Ledger](https://ledger.com) (limited transaction support)
-- [Dapper Wallet](https://www.meetdapper.com/) (beta access - general availability coming soon)
+- [Lilico Wallet](https://lilico.app/) Fully non-custodial chrome extension wallet focused on NFTs
 
 ### Wallet Discovery
 It can be difficult to get users to discover new wallets on a chain. To solve this, we created a wallet discovery service that can be configured and accessed through FCL to display all available Flow wallet providers to the user. This means:

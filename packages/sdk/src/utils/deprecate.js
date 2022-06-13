@@ -39,7 +39,7 @@ export const deprecate = {
 
 const getByValue = (map, searchValue) => {
   for (let [key, value] of map.entries()) {
-    if (value === searchValue) return key;
+    if (value === searchValue) return key
   }
 }
 
@@ -56,10 +56,10 @@ export const applyRenamings = (originalObject, deprecationsMap) => {
           title: "FCL/SDK Deprecation Notice",
           message: `"${property}" will be deprecated in a future version.
             Please use "${deprecationsMap.get(property)}" instead.`,
-          level: logger.LEVELS.warn
+          level: logger.LEVELS.warn,
         })
       }
       return Reflect.get(obj, property)
-    }
+    },
   })
 }

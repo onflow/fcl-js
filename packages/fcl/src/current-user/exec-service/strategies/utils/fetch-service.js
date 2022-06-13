@@ -15,5 +15,5 @@ export function fetchService(service, opts = {}) {
       "Content-Type": "application/json",
     },
     body: body,
-  }).then((d) => d.json())
+  }).then(d => d.json())
 }

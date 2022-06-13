@@ -4,35 +4,35 @@ import {config} from "@onflow/config"
 
 const log = msg => ix => (console.log(msg, ix), ix)
 
-describe('resolveCadence', () => {
+describe("resolveCadence", () => {
   test("cadence is a string", async () => {
     const CADENCE = "CADENCE_STRING"
-  
+
     const ix = await pipe([
       makeScript,
       put("ix.cadence", CADENCE),
       resolveCadence,
     ])(interaction())
-  
+
     expect(ix.message.cadence).toBe(CADENCE)
   })
-  
+
   test("cadence is a function", async () => {
-    const CADENCE = async function() {
+    const CADENCE = async function () {
       return "CADENCE_ASYNC_FUNCTION"
     }
-  
+
     const ix = await pipe([
       makeScript,
       put("ix.cadence", CADENCE),
       resolveCadence,
     ])(interaction())
-  
+
     expect(ix.message.cadence).toBe(await CADENCE())
   })
-  
+
   test("replaces all addresses from config", async () => {
-    const CADENCE = async function() {
+    const CADENCE = async function () {
       return `
         import MyContract from 0xMY_CONTRACT_ADDRESS
   
@@ -41,8 +41,8 @@ describe('resolveCadence', () => {
         }
       `
     }
-  
-    const RESULT = async function() {
+
+    const RESULT = async function () {
       return `
         import MyContract from 0x123abc
   
@@ -51,20 +51,20 @@ describe('resolveCadence', () => {
         }
       `
     }
-  
+
     config.put("0xMY_CONTRACT_ADDRESS", "0x123abc")
-  
+
     const ix = await pipe([
       makeScript,
       put("ix.cadence", CADENCE),
       resolveCadence,
     ])(interaction())
-  
+
     expect(ix.message.cadence).toEqual(await RESULT())
   })
 
   test("similar config names do not replace each other", async () => {
-    const CADENCE = async function() {
+    const CADENCE = async function () {
       return `
         import FooBar from 0xFoo
         import FooBar from 0xFooBar
@@ -83,8 +83,8 @@ describe('resolveCadence', () => {
         pub fun otherThree(): Address {return 0xFooBar}
       `
     }
-  
-    const RESULT = async function() {
+
+    const RESULT = async function () {
       return `
         import FooBar from 0x123
         import FooBar from 0x456
@@ -103,17 +103,15 @@ describe('resolveCadence', () => {
         pub fun otherThree(): Address {return 0x456}
       `
     }
-  
-    config
-      .put('0xFoo', '0x123')
-      .put('0xFooBar', '0x456')
-  
+
+    config.put("0xFoo", "0x123").put("0xFooBar", "0x456")
+
     const ix = await pipe([
       makeScript,
       put("ix.cadence", CADENCE),
       resolveCadence,
     ])(interaction())
-  
+
     expect(ix.message.cadence).toEqual(await RESULT())
   })
 })

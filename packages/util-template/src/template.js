@@ -13,7 +13,7 @@ export function interleave(a = [], b = [], c = []) {
 }
 
 function recApply(d) {
-  return function(arg1) {
+  return function (arg1) {
     if (typeof arg1 === "function") {
       console.warn(
         `

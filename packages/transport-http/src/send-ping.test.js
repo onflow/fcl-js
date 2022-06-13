@@ -7,24 +7,20 @@ import {Buffer} from "@onflow/rlp"
 
 describe("Ping", () => {
   test("Ping", async () => {
-    const httpRequestMock = jest.fn();
+    const httpRequestMock = jest.fn()
 
-    httpRequestMock.mockReturnValue({});
+    httpRequestMock.mockReturnValue({})
 
     await sendPing(
-        await resolve(
-            await build([
-                ping(),
-            ])
-        ),
-        {
-            response: responseADT,
-            Buffer,
-        },
-        {
-            httpRequest: httpRequestMock,
-            node: "localhost"
-        }
+      await resolve(await build([ping()])),
+      {
+        response: responseADT,
+        Buffer,
+      },
+      {
+        httpRequest: httpRequestMock,
+        node: "localhost",
+      }
     )
 
     expect(httpRequestMock.mock.calls.length).toEqual(1)
@@ -36,11 +32,10 @@ describe("Ping", () => {
     const valueSent = httpRequestMock.mock.calls[0][0]
 
     expect(valueSent).toEqual({
-        hostname: "localhost",
-        path: "/v1/blocks?height=sealed",
-        method: "GET",
-        body: null
+      hostname: "localhost",
+      path: "/v1/blocks?height=sealed",
+      method: "GET",
+      body: null,
     })
   })
-
 })
