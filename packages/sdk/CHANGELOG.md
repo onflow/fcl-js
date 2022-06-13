@@ -1,5 +1,17 @@
 # @onflow/sdk
 
+## 1.1.0-alpha.2
+
+### Minor Changes
+
+- [#1183](https://github.com/onflow/fcl-js/pull/1183) [`e0d3a377`](https://github.com/onflow/fcl-js/commit/e0d3a377260338a37518f0ad2a52dcc618fd9bc5) Thanks [@jribbink](https://github.com/jribbink)! - Added deprecation warning for hard-coded DEFAULT_COMPUTE_LIMIT=10 (and increase to DEFAULT_COMPUTE_LIMIT=100 for now) and added sdk.defaultComputeLimit to config
+
+### Patch Changes
+
+- Updated dependencies [[`06279c1d`](https://github.com/onflow/fcl-js/commit/06279c1d27433893494b6a79b7f742ea9a7fab8e)]:
+  - @onflow/transport-http@1.3.0-alpha.2
+  - @onflow/util-logger@1.0.2-alpha.1
+
 ## 1.0.2-alpha.1
 
 ### Patch Changes

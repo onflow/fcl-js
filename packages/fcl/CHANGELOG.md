@@ -1,5 +1,14 @@
 # @onflow/fcl
 
+## 1.0.3-alpha.1
+
+### Patch Changes
+
+- [#1210](https://github.com/onflow/fcl-js/pull/1210) [`457f4996`](https://github.com/onflow/fcl-js/commit/457f49964dd2a0e849ae18a8dd0864bcb52082e8) Thanks [@jribbink](https://github.com/jribbink)! - Add deprecation warning when "env" is used instead of "flow.network" in config
+
+- Updated dependencies [[`e0d3a377`](https://github.com/onflow/fcl-js/commit/e0d3a377260338a37518f0ad2a52dcc618fd9bc5)]:
+  - @onflow/sdk@1.1.0-alpha.2
+
 ## 1.0.3-alpha.0
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @onflow/protobuf
 
+## 1.1.0-alpha.0
+
+### Minor Changes
+
+- [#1206](https://github.com/onflow/fcl-js/pull/1206) [`6ae4469c`](https://github.com/onflow/fcl-js/commit/6ae4469cdaa9590ef110ed1c0ec6928d9ac09845) Thanks [@jribbink](https://github.com/jribbink)! - Updated & regenerated protobuf definitions to match current access node specification
+
 ## 1.0.0
 
 ### Major Changes
