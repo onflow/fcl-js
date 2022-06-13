@@ -1,6 +1,5 @@
 import {log} from "@onflow/util-logger"
 import {verifyUserSignatures as verify} from "../app-utils"
-import {deprecate} from "../utils/deprecate"
 
 /**
  * Verify a valid signature/s for an account on Flow.

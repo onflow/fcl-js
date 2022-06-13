@@ -1,4 +1,4 @@
-import {deprecate} from "./utils"
+import * as logger from "@onflow/util-logger"
 // Base
 export {build} from "./build/build.js"
 export {resolve} from "./resolve/resolve.js"
@@ -81,15 +81,18 @@ export {config} from "@onflow/config"
 
 // Deprecated
 export const params = params =>
-  deprecate.error({
-    name: "params",
-    transitionsPath:
+  logger.log.deprecate({
+    pkg: "FCL/SDK",
+    message: `The params builder has been removed from the Flow JS-SDK/FCL.`,
+    transition:
       "https://github.com/onflow/flow-js-sdk/blob/master/packages/sdk/TRANSITIONS.md#0001-deprecate-params",
+    level: logger.LEVELS.error,
   })
 export const param = params =>
-  deprecate.warn({
-    name: "param",
-    transitionsPath:
+  logger.log.deprecate({
+    pkg: "FCL/SDK",
+    message: `The param builder has been removed from the Flow JS-SDK/FCL.`,
+    transition:
       "https://github.com/onflow/flow-js-sdk/blob/master/packages/sdk/TRANSITIONS.md#0001-deprecate-params",
   })
 
