@@ -94,6 +94,7 @@ export const param = params =>
     message: `The param builder has been removed from the Flow JS-SDK/FCL.`,
     transition:
       "https://github.com/onflow/flow-js-sdk/blob/master/packages/sdk/TRANSITIONS.md#0001-deprecate-params",
+    level: logger.LEVELS.error,
   })
 
 import * as TestUtils from "./test-utils"
