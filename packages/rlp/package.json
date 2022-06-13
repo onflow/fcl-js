@@ -29,9 +29,9 @@
   "scripts": {
     "prepublishOnly": "npm test && npm run build",
     "test": "jest",
-    "build": "fcl-build",
+    "build": "fcl-bundle",
     "test:watch": "jest --watch",
-    "start": "fcl-build --watch"
+    "start": "fcl-bundle --watch"
   },
   "dependencies": {
     "buffer": "^6.0.3"

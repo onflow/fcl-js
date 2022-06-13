@@ -33,9 +33,9 @@
     "alpha": "npm publish --tag alpha",
     "prepublishOnly": "npm test && npm run build",
     "test": "jest",
-    "build": "fcl-build",
+    "build": "fcl-bundle",
     "test:watch": "jest --watch",
-    "start": "fcl-build --watch"
+    "start": "fcl-bundle --watch"
   },
   "dependencies": {
     "@onflow/config": "^1.0.1",
