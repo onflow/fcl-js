@@ -747,9 +747,10 @@ export const Path = type(
   v => v
 )
 
-export const AnyStruct = type(
+export const AnyStruct = (children = []) => type(
   "AnyStruct",
   (v) => {
+
     if (isNumber(v)) {
       if (isInteger(v))
         numberValuesDeprecationNotice("Integer")
@@ -786,6 +787,15 @@ export const AnyStruct = type(
         type: "AnyStruct",
         value: v,
       }
+
+    if (isArray(v)) {
+      return {
+        type: "AnyStruct",
+        value: isArray(children)
+          ? children.map((c, i) => c.asArgument(v[i]))
+          : v.map(x => children.asArgument(x)),
+      }
+    }
 
     throwTypeError("Expected AnyStruct")
   },
