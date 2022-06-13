@@ -34,7 +34,7 @@
     "start": "fcl-bundle --watch"
   },
   "dependencies": {
-    "@onflow/fcl-build": "^1.0.0",
+    "@onflow/fcl-bundle": "^1.0.0",
     "@onflow/rlp": "^1.0.1",
     "@onflow/util-invariant": "^1.0.1"
   }

@@ -22,7 +22,7 @@
     "jest-esm-transformer": "1.0.0"
   },
   "dependencies": {
-    "@onflow/fcl-build": "^1.0.0",
+    "@onflow/fcl-bundle": "^1.0.0",
     "queue-microtask": "1.1.2"
   },
   "build": "src/index.js",
