@@ -5,14 +5,13 @@
   "scripts": {
     "build": "npm run build --ws",
     "changeset": "changeset",
+    "release": "npm run build && npm run changeset publish",
     "test": "jest"
   },
   "name": "fcl-js",
-  "dependencies": {
-    "@changesets/cli": "^2.21.1",
-    "@changesets/changelog-github": "^0.4.4"
-  },
   "devDependencies": {
+    "@changesets/changelog-github": "^0.4.4",
+    "@changesets/cli": "^2.21.1",
     "prettier": "^2.6.2"
   }
 }
