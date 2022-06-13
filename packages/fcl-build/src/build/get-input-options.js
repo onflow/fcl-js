@@ -50,12 +50,6 @@ module.exports = function getInputOptions(package, build) {
         browser: true,
         preferBuiltins: build.type !== "umd",
       }),
-      build.type === "uamd"
-        ? babel({
-            babelHelpers: "runtime",
-            plugins: ["@babel/plugin-transform-runtime"],
-          })
-        : null,
       sourcemap(),
     ],
   }
