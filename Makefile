@@ -36,7 +36,7 @@ build:
 .PHONY: test
 test:
 	$(info TSK: test)
-	sh -c 'npm run test exit 255'
+	sh -c 'npm run test || exit 255'
 
 .PHONY: publish
 publish:
