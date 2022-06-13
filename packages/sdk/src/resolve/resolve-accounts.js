@@ -115,7 +115,7 @@ export async function resolveAccounts(ix) {
     if (!Array.isArray(ix.payer)) {
       log.deprecate({
         pkg: "FCL",
-        action:
+        subject:
           '"ix.payer" must be an array. Support for ix.payer as a singular',
         message: "See changelog for more info.",
       })
