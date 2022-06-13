@@ -1,7 +1,7 @@
 {
-  "name": "@onflow/fcl-build",
+  "name": "@onflow/fcl-bundle",
   "version": "1.0.0",
-  "description": "FCL Build Tool",
+  "description": "FCL Bundler Tool",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
   "homepage": "https://onflow.org",
@@ -26,6 +26,6 @@
     "rollup-plugin-sourcemaps": "^0.6.3"
   },
   "bin": {
-    "fcl-build": "src/cli.js"
+    "fcl-bundle": "src/cli.js"
   }
 }
