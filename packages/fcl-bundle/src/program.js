@@ -11,16 +11,9 @@ module.exports = packageConfig => package => {
     .option("-w, --watch", "Run the build in watch mode")
     .parse()
 
-  let commandLineConfig = {} // TODO populate using command line
-
-  const config = {
-    ...packageConfig,
-    ...commandLineConfig,
-  }
-
   program.action(async () => {
     assert(
-      config.builds,
+      packageConfig.builds,
       "Module entry point(s) (package.build) must be defined"
     )
 
@@ -28,7 +21,7 @@ module.exports = packageConfig => package => {
       ? watchModule
       : buildModule
 
-    await buildAction(config.builds, package)
+    await buildAction(packageConfig.builds, package)
   })
 
   program.parse()
