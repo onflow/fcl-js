@@ -294,7 +294,64 @@ import * as t from "./types.js"
       },
       { key: "1", value: "one" },
     ],
-
+    [
+      t.AnyStruct([], "0x01.Jeffysaur", [{ value: t.String }]),
+      {
+        fields: [{ name: "Jeffysaur_Name", value: "Mr Jeff The Dinosaur" }],
+      },
+      {
+        type: "AnyStruct",
+        value: {
+          id: "0x01.Jeffysaur",
+          fields: [
+            {
+              name: "Jeffysaur_Name",
+              value: { type: "String", value: "Mr Jeff The Dinosaur" },
+            },
+          ],
+        },
+      },
+      {
+        fields: [{ name: "Jeffysaur_Name", value: "Mr Jeff The Dinosaur" }],
+      },
+    ],
+    [
+      t.AnyStruct(),
+      {
+        domain: "public",
+        identifier: "flowTokenVault",
+      },
+      {
+        type: "AnyStruct",
+        value: {
+          domain: "public",
+          identifier: "flowTokenVault",
+        },
+      },
+      {
+        domain: "public",
+        identifier: "flowTokenVault",
+      },
+    ],
+    [
+      t.AnyStruct(),
+      {
+        domain: "notValidDomain",
+        identifier: "flowTokenVault",
+      },
+      {
+        type: "AnyStruct",
+        value: {
+          domain: "notValidDomain",
+          identifier: "flowTokenVault",
+        },
+      },
+      {
+        domain: "notValidDomain",
+        identifier: "flowTokenVault",
+      },
+      true,
+    ],
   ].forEach(([cast, input, asArgument, asInjection, shouldError = false]) => {
     describe(cast.label, () => {
       test(`t.${cast.label}.asArgument(${input})`, () => {

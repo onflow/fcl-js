@@ -747,7 +747,7 @@ export const Path = type(
   v => v
 )
 
-export const AnyStruct = (children = []) => type(
+export const AnyStruct = (children = [], id = null, fields = []) => type(
   "AnyStruct",
   (v) => {
 
@@ -789,6 +789,59 @@ export const AnyStruct = (children = []) => type(
       }
 
     if (isObj(v)) {
+
+      if (v.domain && v.identifier) {
+        if (!isString(v.domain)) {
+          throwTypeError(
+            `Expected a string for the Path domain but found ${v.domain}. Find out more about the Path type here: https://docs.onflow.org/cadence/json-cadence-spec/#path`
+          )
+        }
+
+        if (
+          !(
+            v.domain === "storage" ||
+            v.domain === "private" ||
+            v.domain === "public"
+          )
+        ) {
+          throwTypeError(
+            `Expected either "storage", "private" or "public" as the Path domain but found ${v.domain}. Find out more about the Path type here: https://docs.onflow.org/cadence/json-cadence-spec/#path`
+          )
+        }
+
+        if (!isString(v.identifier)) {
+          throwTypeError(
+            `Expected a string for the Path identifier but found ${v.identifier}. Find out more about the Path type here: https://docs.onflow.org/cadence/json-cadence-spec/#path`
+          )
+        }
+
+        return {
+          type: "AnyStruct",
+          value: {
+            domain: v.domain,
+            identifier: v.identifier,
+          },
+        }
+
+      }
+
+      if (id)
+        return {
+          type: "AnyStruct",
+          value: {
+            id: id,
+            fields: isArray(fields)
+              ? fields.map((c, i) => ({
+                name: v.fields[i].name,
+                value: c.value.asArgument(v.fields[i].value),
+              }))
+              : v.fields.map(x => ({
+                name: x.name,
+                value: fields.value.asArgument(x.value),
+              })),
+          },
+        }
+
       return {
         type: "AnyStruct",
         value: isArray(children)
@@ -804,7 +857,7 @@ export const AnyStruct = (children = []) => type(
           ))
           : isArray(v)
             ? v.map(x => (
-              isObj(x) && console.log("x = ", x) ?
+              isObj(x) ?
                 {
                   key: children.key.asArgument(x.key),
                   value: children.value.asArgument(x.value),
@@ -821,40 +874,6 @@ export const AnyStruct = (children = []) => type(
     }
 
 
-    // if (isObj(v)) {
-    //   console.log("I am dictionary = ", v)
-    //   return {
-    //     type: "AnyStruct",
-    //     value: isArray(children)
-    //       ?
-    //       children.map((c, i) => ({
-    //         key: c.key.asArgument(v[i].key),
-    //         value: c.value.asArgument(v[i].value),
-    //       }))
-    //       : isArray(v)
-    //         ? v.map(x => ({
-    //           key: children.key.asArgument(x.key),
-    //           value: children.value.asArgument(x.value),
-    //         }))
-    //         : [
-    //           {
-    //             key: children.key.asArgument(v.key),
-    //             value: children.value.asArgument(v.value),
-    //           },
-    //         ],
-    //   }
-    // }
-
-    // if (isArray(v)) {
-    //   console.log("I am an Array = ", v)
-
-    //   return {
-    //     type: "AnyStruct",
-    //     value: isArray(children)
-    //       ? children.map((c, i) => c.asArgument(v[i]))
-    //       : v.map(x => children.asArgument(x)),
-    //   }
-    // }
 
     throwTypeError("Expected AnyStruct")
   },
