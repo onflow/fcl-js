@@ -9,6 +9,7 @@ import {
   INIT,
   SUBSCRIBE,
   UNSUBSCRIBE,
+  ERROR,
 } from "@onflow/util-actor"
 import {send as fclSend, decode, getTransactionStatus} from "@onflow/sdk"
 
@@ -32,9 +33,7 @@ const isDiff = (cur, next) => {
 
 const HANDLERS = {
   [INIT]: async ctx => {
-    const tx = await fetchTxStatus(ctx.self())
-    if (!isSealed(tx)) setTimeout(() => ctx.sendSelf(POLL), RATE)
-    ctx.merge(tx)
+    ctx.sendSelf(POLL)
   },
   [SUBSCRIBE]: (ctx, letter) => {
     ctx.subscribe(letter.from)
@@ -51,10 +50,9 @@ const HANDLERS = {
     try {
       tx = await fetchTxStatus(ctx.self())
     } catch (e) {
-      console.error(e)
-      setTimeout(() => ctx.sendSelf(POLL), RATE)
-      return
+      return ctx.fatalError(e)
     }
+
     if (!isSealed(tx)) setTimeout(() => ctx.sendSelf(POLL), RATE)
     if (isDiff(ctx.all(), tx)) ctx.broadcast(UPDATED, tx)
     ctx.merge(tx)
@@ -85,9 +83,9 @@ export function transaction(transactionId) {
     return function innerOnce(opts = {}) {
       const suppress = opts.suppress || false
       return new Promise((resolve, reject) => {
-        const unsub = subscribe(txStatus => {
-          if (txStatus.statusCode && !suppress) {
-            reject(txStatus.errorMessage)
+        const unsub = subscribe((txStatus, error) => {
+          if ((error || txStatus.statusCode) && !suppress) {
+            reject(error || txStatus.errorMessage)
             unsub()
           } else if (predicate(txStatus)) {
             resolve(txStatus)
