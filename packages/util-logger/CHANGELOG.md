@@ -1,5 +1,12 @@
 # @onflow/util-logger
 
+## 1.0.2-alpha.1
+
+### Patch Changes
+
+- Updated dependencies [[`e0d3a377`](https://github.com/onflow/fcl-js/commit/e0d3a377260338a37518f0ad2a52dcc618fd9bc5)]:
+  - @onflow/sdk@1.1.0-alpha.2
+
 ## 1.0.2-alpha.0
 
 ### Patch Changes
