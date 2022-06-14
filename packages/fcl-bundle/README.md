@@ -11,7 +11,7 @@ Options:
   -h, --help     display help for command  
 
 ## Configuration
-All of the configuration for FCL-Build currently takes place withing the `package.json` of the modules which you wish to bundle.  The following configuration options are available:
+All of the configuration for FCL-Build currently takes place within the `package.json` of the modules which you wish to bundle.  The following configuration options are available:
 
  - `build` / `builds` **(required)** - Specify a [BuildConfiguration](https://github.com/onflow/fcl-js/tree/master/packages/fcl-build/README.md#buildconfiguration) object or an array of [BuildConfiguration](https://github.com/onflow/fcl-js/tree/master/packages/fcl-build/README.md#buildconfiguration) objects
  - `main` - Specify cjs bundle output path if not specified by [BuildConfiguration](https://github.com/onflow/fcl-js/tree/master/packages/fcl-build/README.md#buildconfiguration) (as well as cjs entry point if not overriden by `package.exports`)
