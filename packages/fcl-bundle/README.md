@@ -13,12 +13,12 @@ Options:
 ## Configuration
 All of the configuration for FCL-Build currently takes place within the `package.json` of the modules which you wish to bundle.  The following configuration options are available:
 
- - `build` / `builds` **(required)** - Specify a [BuildConfiguration](https://github.com/onflow/fcl-js/tree/master/packages/fcl-build/README.md#buildconfiguration) object or an array of [BuildConfiguration](https://github.com/onflow/fcl-js/tree/master/packages/fcl-build/README.md#buildconfiguration) objects
- - `main` - Specify cjs bundle output path if not specified by [BuildConfiguration](https://github.com/onflow/fcl-js/tree/master/packages/fcl-build/README.md#buildconfiguration) (as well as cjs entry point if not overriden by `package.exports`)
- - `module` Specify esm bundle output path if not specified by [BuildConfiguration](https://github.com/onflow/fcl-js/tree/master/packages/fcl-build/README.md#buildconfiguration) (as well as esm entry point if not overriden by `package.exports`) 
- - `unpkg` Specify umd bundle output path if not specified by [BuildConfiguration](https://github.com/onflow/fcl-js/tree/master/packages/fcl-build/README.md#buildconfiguration) (as well as umd entry point if not overriden by `package.exports`) 
+ - `build` / `builds` **(required)** - Specify a [Build Configuration](https://github.com/onflow/fcl-js/tree/master/packages/fcl-build/README.md#build-configuration) object or an array of [Build Configuration](https://github.com/onflow/fcl-js/tree/master/packages/fcl-build/README.md#build-configuration) objects
+ - `main` - Specify cjs bundle output path if not specified by [Build Configuration](https://github.com/onflow/fcl-js/tree/master/packages/fcl-build/README.md#build-configuration) (as well as cjs entry point if not overriden by `package.exports`)
+ - `module` Specify esm bundle output path if not specified by [Build Configuration](https://github.com/onflow/fcl-js/tree/master/packages/fcl-build/README.md#build-configuration) (as well as esm entry point if not overriden by `package.exports`) 
+ - `unpkg` Specify umd bundle output path if not specified by [Build Configuration](https://github.com/onflow/fcl-js/tree/master/packages/fcl-build/README.md#build-configuration) (as well as umd entry point if not overriden by `package.exports`) 
 
-### BuildConfiguration
+### Build Configuration
 
 A build configuration object is provided as any one of, or an array of (for multiple builds), these three things:
 1. A `string` identifying the path to the entry source file: I.e.
