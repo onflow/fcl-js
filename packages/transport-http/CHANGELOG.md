@@ -1,5 +1,11 @@
 # @onflow/transport-http
 
+## 1.3.0-alpha.2
+
+### Minor Changes
+
+- [#1242](https://github.com/onflow/fcl-js/pull/1242) [`06279c1d`](https://github.com/onflow/fcl-js/commit/06279c1d27433893494b6a79b7f742ea9a7fab8e) Thanks [@jribbink](https://github.com/jribbink)! - Add request retry for 408 (Request Timeout) status code
+
 ## 1.3.0-alpha.1
 
 ### Patch Changes
