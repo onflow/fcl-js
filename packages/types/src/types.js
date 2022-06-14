@@ -793,15 +793,24 @@ export const AnyStruct = (children = []) => type(
         type: "AnyStruct",
         value: isArray(children)
           ?
-          children.map((c, i) => ({
-            key: c.key.asArgument(v[i].key),
-            value: c.value.asArgument(v[i].value),
-          }))
+          children.map((c, i) => (
+
+            isObj(v[i]) ?
+              {
+                key: c.key.asArgument(v[i].key),
+                value: c.value.asArgument(v[i].value),
+              } :
+              c.asArgument(v[i])
+          ))
           : isArray(v)
-            ? v.map(x => ({
-              key: children.key.asArgument(x.key),
-              value: children.value.asArgument(x.value),
-            }))
+            ? v.map(x => (
+              isObj(x) && console.log("x = ", x) ?
+                {
+                  key: children.key.asArgument(x.key),
+                  value: children.value.asArgument(x.value),
+                } :
+                children.asArgument(x)
+            ))
             : [
               {
                 key: children.key.asArgument(v.key),
@@ -811,7 +820,34 @@ export const AnyStruct = (children = []) => type(
       }
     }
 
+
+    // if (isObj(v)) {
+    //   console.log("I am dictionary = ", v)
+    //   return {
+    //     type: "AnyStruct",
+    //     value: isArray(children)
+    //       ?
+    //       children.map((c, i) => ({
+    //         key: c.key.asArgument(v[i].key),
+    //         value: c.value.asArgument(v[i].value),
+    //       }))
+    //       : isArray(v)
+    //         ? v.map(x => ({
+    //           key: children.key.asArgument(x.key),
+    //           value: children.value.asArgument(x.value),
+    //         }))
+    //         : [
+    //           {
+    //             key: children.key.asArgument(v.key),
+    //             value: children.value.asArgument(v.value),
+    //           },
+    //         ],
+    //   }
+    // }
+
     // if (isArray(v)) {
+    //   console.log("I am an Array = ", v)
+
     //   return {
     //     type: "AnyStruct",
     //     value: isArray(children)

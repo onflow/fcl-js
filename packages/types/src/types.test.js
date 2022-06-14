@@ -244,25 +244,24 @@ import * as t from "./types.js"
     [t.AnyStruct(), "c", { type: "AnyStruct", value: "c" }, "c"],
     [t.AnyStruct(), true, { type: "AnyStruct", value: true }, true],
     [t.AnyStruct(), "0x1", { type: "AnyStruct", value: "0x1" }, "0x1"],
-    // [
-    //   t.AnyStruct(t.String),
-    //   ["test"],
-    //   { type: "AnyStruct", value: [{ type: "String", value: "test" }] },
-    //   ["test"],
-    // ],
-    // [
-    //   t.AnyStruct([t.String, t.UFix64]),
-    //   ["test1", "64.00000001"],
-    //   {
-    //     type: "AnyStruct",
-    //     value: [
-    //       { type: "String", value: "test1" },
-    //       { type: "UFix64", value: "64.00000001" },
-    //     ],
-    //   },
-    //   ["test1", "64.00000001"],
-    // ],
-
+    [
+      t.AnyStruct(t.String),
+      ["test"],
+      { type: "AnyStruct", value: [{ type: "String", value: "test" }] },
+      ["test"],
+    ],
+    [
+      t.AnyStruct([t.String, t.UFix64]),
+      ["test1", "64.00000001"],
+      {
+        type: "AnyStruct",
+        value: [
+          { type: "String", value: "test1" },
+          { type: "UFix64", value: "64.00000001" },
+        ],
+      },
+      ["test1", "64.00000001"],
+    ],
     [
       t.AnyStruct([
         { key: t.Int, value: t.String },
