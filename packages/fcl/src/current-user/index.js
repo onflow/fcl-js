@@ -98,7 +98,6 @@ async function getAccountProofData() {
   const accountProofData =
     accountProofDataResolver ?? (await accountProofDataResolver())
 
-  console.log(accountProofData)
 
   if (accountProofData == null) return
 
