@@ -244,25 +244,57 @@ import * as t from "./types.js"
     [t.AnyStruct(), "c", { type: "AnyStruct", value: "c" }, "c"],
     [t.AnyStruct(), true, { type: "AnyStruct", value: true }, true],
     [t.AnyStruct(), "0x1", { type: "AnyStruct", value: "0x1" }, "0x1"],
+    // [
+    //   t.AnyStruct(t.String),
+    //   ["test"],
+    //   { type: "AnyStruct", value: [{ type: "String", value: "test" }] },
+    //   ["test"],
+    // ],
+    // [
+    //   t.AnyStruct([t.String, t.UFix64]),
+    //   ["test1", "64.00000001"],
+    //   {
+    //     type: "AnyStruct",
+    //     value: [
+    //       { type: "String", value: "test1" },
+    //       { type: "UFix64", value: "64.00000001" },
+    //     ],
+    //   },
+    //   ["test1", "64.00000001"],
+    // ],
+
     [
-      t.AnyStruct(t.String),
-      ["test"],
-      { type: "AnyStruct", value: [{ type: "String", value: "test" }] },
-      ["test"],
-    ],
-    [
-      t.AnyStruct([t.String, t.String]),
-      ["test1", "test2"],
+      t.AnyStruct([
+        { key: t.Int, value: t.String },
+        { key: t.Int, value: t.String },
+      ]),
+      [
+        { key: "1", value: "one" },
+        { key: "2", value: "two" },
+      ],
       {
         type: "AnyStruct",
         value: [
-          { type: "String", value: "test1" },
-          { type: "String", value: "test2" },
+          { key: { type: "Int", value: "1" }, value: { type: "String", value: "one" } },
+          { key: { type: "Int", value: "2" }, value: { type: "String", value: "two" } },
         ],
       },
-      ["test1", "test2"],
+      [
+        { key: "1", value: "one" },
+        { key: "2", value: "two" },
+      ],
     ],
-
+    [
+      t.AnyStruct({ key: t.Int, value: t.String }),
+      { key: "1", value: "one" },
+      {
+        type: "AnyStruct",
+        value: [
+          { key: { type: "Int", value: "1" }, value: { type: "String", value: "one" } },
+        ],
+      },
+      { key: "1", value: "one" },
+    ],
 
   ].forEach(([cast, input, asArgument, asInjection, shouldError = false]) => {
     describe(cast.label, () => {

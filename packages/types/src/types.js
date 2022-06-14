@@ -788,14 +788,37 @@ export const AnyStruct = (children = []) => type(
         value: v,
       }
 
-    if (isArray(v)) {
+    if (isObj(v)) {
       return {
         type: "AnyStruct",
         value: isArray(children)
-          ? children.map((c, i) => c.asArgument(v[i]))
-          : v.map(x => children.asArgument(x)),
+          ?
+          children.map((c, i) => ({
+            key: c.key.asArgument(v[i].key),
+            value: c.value.asArgument(v[i].value),
+          }))
+          : isArray(v)
+            ? v.map(x => ({
+              key: children.key.asArgument(x.key),
+              value: children.value.asArgument(x.value),
+            }))
+            : [
+              {
+                key: children.key.asArgument(v.key),
+                value: children.value.asArgument(v.value),
+              },
+            ],
       }
     }
+
+    // if (isArray(v)) {
+    //   return {
+    //     type: "AnyStruct",
+    //     value: isArray(children)
+    //       ? children.map((c, i) => c.asArgument(v[i]))
+    //       : v.map(x => children.asArgument(x)),
+    //   }
+    // }
 
     throwTypeError("Expected AnyStruct")
   },
