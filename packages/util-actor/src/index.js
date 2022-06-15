@@ -91,6 +91,7 @@ export const spawn = (fn, addr = null) => {
     mailbox: createMailbox(),
     subs: new Set(),
     kvs: {},
+    error: null,
   }
 
   const ctx = {
@@ -143,6 +144,10 @@ export const spawn = (fn, addr = null) => {
         key => (root.FCL_REGISTRY[addr].kvs[key] = data[key])
       )
     },
+    fatalError: error => {
+      root.FCL_REGISTRY[addr].error = error
+      for (let to of root.FCL_REGISTRY[addr].subs) send(to, UPDATED)
+    },
   }
 
   if (typeof fn === "object") fn = fromHandlers(fn)
@@ -170,11 +175,18 @@ export function subscriber(address, spawnFn, callback) {
     ctx.send(address, SUBSCRIBE)
     while (1) {
       const letter = await ctx.receive()
+      const error = root.FCL_REGISTRY[address].error
       if (letter.tag === EXIT) {
         ctx.send(address, UNSUBSCRIBE)
         return
       }
-      callback(letter.data)
+      if (error) {
+        callback(null, error)
+        ctx.send(address, UNSUBSCRIBE)
+        return
+      }
+
+      callback(letter.data, null)
     }
   })
   return () => send(self, EXIT)

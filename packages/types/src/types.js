@@ -1,3 +1,5 @@
+import {log, LEVELS} from "@onflow/util-logger"
+
 const type = (label, asArgument, asInjection) => ({
   label,
   asArgument,
@@ -17,21 +19,13 @@ const throwTypeError = msg => {
 }
 
 const numberValuesDeprecationNotice = type => {
-  console.error(
-    `
-          %c@onflow/types Deprecation Notice
-          ========================
-
-          Passing in Number as value for ${type} is deprecated and will cease to work in future releases of @onflow/types.
-          Going forward, use String as value for ${type}. 
-          Find out more here: https://github.com/onflow/flow-js-sdk/blob/master/packages/types/WARNINGS.md#0002-[U]Int*-and-Word*-as-Number
-
-          =======================
-        `
-      .replace(/\n\s+/g, "\n")
-      .trim(),
-    "font-weight:bold;font-family:monospace;"
-  )
+  log.deprecate({
+    pkg: "@onflow/types",
+    subject: `Passing in Number as value for ${type}`,
+    message: `Going forward, use String as value for ${type}.`,
+    transition:
+      "https://github.com/onflow/flow-js-sdk/blob/master/packages/types/WARNINGS.md#0002-[U]Int*-and-Word*-as-Number",
+  })
 }
 
 export const Identity = type(
@@ -419,20 +413,12 @@ export const Word64 = type(
 )
 
 const UFix64AndFix64NumberDeprecationNotice = () => {
-  console.error(
-    `
-          %c@onflow/types Deprecation Notice
-          ========================
-
-          Passing in Numbers as values for Fix64 and UFix64 types is deprecated and will cease to work in future releases of @onflow/types.
-          Find out more here: https://github.com/onflow/flow-js-sdk/blob/master/packages/types/WARNINGS.md#0001-[U]Fix64-as-Number
-
-          =======================
-        `
-      .replace(/\n\s+/g, "\n")
-      .trim(),
-    "font-weight:bold;font-family:monospace;"
-  )
+  log.deprecate({
+    subject: "Passing in Numbers as values for Fix64 and UFix64 types",
+    pkg: "@onflow/types",
+    transition:
+      "https://github.com/onflow/flow-js-sdk/blob/master/packages/types/WARNINGS.md#0001-[U]Fix64-as-Number",
+  })
 }
 
 export const UFix64 = type(
@@ -450,6 +436,10 @@ export const UFix64 = type(
           `Expected at least one digit, and at most 8 digits following the decimal of the [U]Fix64 value but found ${vParts[1].length} digits. Find out more about [U]Fix64 types here: https://docs.onflow.org/cadence/json-cadence-spec/#fixed-point-numbers`
         )
       }
+
+      // make sure the number is extended to 8 decimal places so it matches cadence encoding of UFix values
+      vParts[1] = vParts[1].padEnd(8, "0")
+      v = vParts.join(".")
 
       return {
         type: "UFix64",
@@ -482,6 +472,10 @@ export const Fix64 = type(
           `Expected at least one digit, and at most 8 digits following the decimal of the [U]Fix64 value but found ${vParts[1].length} digits. Find out more about [U]Fix64 types here: https://docs.onflow.org/cadence/json-cadence-spec/#fixed-point-numbers`
         )
       }
+
+      // make sure the number is extended to 8 decimal places so it matches cadence encoding of Fix64 values
+      vParts[1] = vParts[1].padEnd(8, "0")
+      v = vParts.join(".")
 
       return {
         type: "Fix64",
