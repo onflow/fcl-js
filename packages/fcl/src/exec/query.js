@@ -3,6 +3,7 @@ import * as sdk from "@onflow/sdk"
 import * as t from "@onflow/types"
 import {isRequired, isObject, isString, isFunc} from "./utils/is"
 import {normalizeArgs} from "./utils/normalize-args"
+import {log} from "@onflow/util-logger"
 
 /** Query the Flow Blockchain
  *
@@ -62,8 +63,25 @@ async function preQuery(opts) {
     "query({ cadence }) -- cadence must be a string"
   )
 
+  let node =
+    (await sdk.config.get("accessNode.restApi")) ||
+    (await sdk.config.get("accessNode.grpcApi"))
+
+  if (!node) {
+    node = await sdk.config.get("accessNode.api")
+    log.deprecate({
+      pkg: "FCL/SDK",
+      subject:
+        'Providing the access node endpoint via the "accessNode.api" configuration key',
+      message:
+        'Please provide either "accessNode.restApi" or "accessNode.grpcApi" instead.',
+      transition:
+        "https://github.com/onflow/flow-js-sdk/blob/master/packages/sdk/TRANSITIONS.md#0010-deprecate-accessNode-api",
+    })
+  }
+
   invariant(
-    await sdk.config.get("accessNode.api"),
-    `Required value for "accessNode.api" not defined in config. See: ${"https://github.com/onflow/flow-js-sdk/blob/master/packages/fcl/src/exec/query.md#configuration"}`
+    node,
+    `Required value for either "accessNode.restApi" or "accessNode.grpcApi" not defined in config. See: ${"https://github.com/onflow/flow-js-sdk/blob/master/packages/fcl/src/exec/query.md#configuration"}`
   )
 }
