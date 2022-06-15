@@ -64,13 +64,13 @@ Now that your app is running, you can configure FCL. Within the main project dir
 import { config } from "@onflow/fcl";
 
 config({
-  "accessNode.api": "https://rest-testnet.onflow.org", // Mainnet: "https://rest-mainnet.onflow.org"
+  "accessNode.httpApi": "https://rest-testnet.onflow.org", // Mainnet: "https://rest-mainnet.onflow.org"
   "discovery.wallet": "https://fcl-discovery.onflow.org/testnet/authn" // Mainnet: "https://fcl-discovery.onflow.org/authn"
 })
 ```
 📣 **Tip**: It's recommend to replace these values with environment variables for easy deployments across different environments like development/production or Testnet/Mainnet.
 
-The `accessNode.api` key specifies the address of a Flow access node. Flow provides these, but in the future access to Flow may be provided by other 3rd parties, through their own access nodes.
+The `accessNode.httpApi` key specifies the address of a Flow access node HTTP API (can use `accessNode.grpcApi` for GRPC endpoint instead). Flow provides these, but in the future access to Flow may be provided by other 3rd parties, through their own access nodes.
 `discovery.wallet` is an address that points to a service that lists FCL compatible wallets. Flow's FCL Discovery service is a service that FCL wallet providers can be added to, and be made 'discoverable' to any application that uses the `discovery.wallet` endpoint.
 
 > Learn more about [configuring Discovery](../reference/discovery) or [setting configuration values](../reference/api.md#setting-configuration-values).
@@ -175,7 +175,7 @@ One of the main things you'll often need to do when building a dapp is query the
 import { config } from "@onflow/fcl";
 
 config({
- "accessNode.api": "https://rest-testnet.onflow.org", // Mainnet: "https://rest-mainnet.onflow.org"
+ "accessNode.httpApi": "https://rest-testnet.onflow.org", // Mainnet: "https://rest-mainnet.onflow.org"
   "discovery.wallet": "https://fcl-discovery.onflow.org/testnet/authn", // Mainnet: "https://fcl-discovery.onflow.org/authn"
   "0xProfile": "0xba1132bc08f82fe2" // The account address where the Profile smart contract lives on Testnet
 })

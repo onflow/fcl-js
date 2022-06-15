@@ -76,7 +76,8 @@ Known configuration values in FCL
 
 ## Access Node
 
-- `accessNode.api` _(default: emulator url)_ -- Where FCL will used to communicate with the Flow blockchain.
+- `accessNode.httpApi` -- Where FCL will used to communicate with the Flow blockchain if using HTTP API.
+- - `accessNode.grpcApi` -- Where FCL will used to communicate with the Flow blockchain if using GRPC API.
 - `accessNode.key` _(default: null)_ -- Some Access Nodes require an api key.
 
 ```javascript
@@ -84,7 +85,7 @@ import {config} from "@onflow/fcl"
 
 if (process.env.NODE_ENV === "production") {
   config()
-    .put("accessNode.api", process.env.ACCESS_NODE_API)
+    .put("accessNode.httpApi", process.env.ACCESS_NODE_API)
     .put("accessNode.key", process.env.ACCESS_NODE_KEY)
 }
 ```

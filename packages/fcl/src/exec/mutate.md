@@ -19,7 +19,7 @@ Configuration only needs to happen once, but it must happen before mutate is cal
 
 `mutate` requires two pieces of configuration.
 
-- `accessNode.api` - How to talk to Flow.
+- `accessNode.httpApi` - How to talk to Flow.
 - `discovery.wallet` - How to connect to wallets.
 
 Below is an example of configuring FCL to talk to Flow (testnet)
@@ -29,7 +29,7 @@ import * as fcl from "@onflow/fcl"
 
 // prettier-ignore
 fcl.config()
-  .put("accessNode.api", "https://access-testnet.onflow.org")
+  .put("accessNode.httpApi", "https://rest-testnet.onflow.org")
   .put("discovery.wallet", "https://fcl-discovery.onflow.org/testnet/authn")
 ```
 

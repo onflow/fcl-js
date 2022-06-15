@@ -17,14 +17,14 @@ Programmatically Query Flow. A light, stable and approachable higher level wrapp
 You can learn more about configuring FCL here: [Configure FCL](https://github.com/onflow/flow-js-sdk/blob/master/docs/configure-fcl.mdx)
 Configuration only needs to happen once, but it must happen before query is called. We always recommend configuring FCL as early in your application as possible/reasonable.
 
-The main thing you will want to configure is the `accessNode.api` which is the channel FCL will use to communicate with Flow.
+The main thing you will want to configure is the `accessNode.httpApi` which is the channel FCL will use to communicate with Flow.
 
 Below is an example of configuring FCL to talk to Flow (testnet)
 
 ```javascript
 import * as fcl from "@onflow/fcl"
 
-fcl.config().put("accessNode.api", "https://access-testnet.onflow.org")
+fcl.config().put("accessNode.httpApi", "https://rest-testnet.onflow.org")
 ```
 
 `query` also respects [Address Replacement](https://github.com/onflow/flow-js-sdk/blob/master/docs/configure-fcl.mdx#address-replacement-in-scripts-and-transactions) configuration.
@@ -157,7 +157,7 @@ import * as fcl from "@onflow/fcl"
 
 // prettier-ignore
 fcl.config()
-  .put("accessNode.api", "https://access-testnet.onflow.org")
+  .put("accessNode.httpApi", "https://rest-testnet.onflow.org")
   .put("0xProfile", "0xba1132bc08f82fe2")
 ```
 

@@ -272,7 +272,7 @@ addStuff().then((d) => console.log(d)); // 13 (5 + 7 + 1)
 
 | Name                                   | Example                                              | Description                                                                                                                                                                                    |
 | --------------------------------- | --------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `accessNode.api` **(required)**        | `https://access-testnet.onflow.org`                  | API URL for the Flow Blockchain Access Node you want to be communicating with. See all available access node endpoints [here](https://docs.onflow.org/access-api/#flow-access-node-endpoints). |
+| `accessNode.httpApi` or `accessNode.grpcApi` **(required)**        | `https://access-testnet.onflow.org` (HTTP) or `https://access-testnet.onflow.org` (GRPC)                  | API URL for the Flow Blockchain Access Node you want to be communicating with (either HTTP or GRPC API). See all available access node endpoints [here](https://docs.onflow.org/access-api/#flow-access-node-endpoints). |
 | `app.detail.title`                     | `Cryptokitties`                                      | Your applications title, can be requested by wallets and other services.                                                                                                                       |
 | `app.detail.icon`                      | `https://fcl-discovery.onflow.org/images/blocto.png` | Url for your applications icon, can be requested by wallets and other services.                                                                                                                |
 | `challenge.handshake`                  | **DEPRECATED**                                       | Use `discovery.wallet` instead.|
@@ -291,7 +291,7 @@ import * as fcl from "@onflow/fcl";
 
 fcl
   .config()
-  .put("accessNode.api", "https://rest-testnet.onflow.org")
+  .put("accessNode.httpApi", "https://rest-testnet.onflow.org")
   .put("0xFlowToken", "0x7e60df042a9c0868");
 
 async function myScript() {
@@ -315,7 +315,7 @@ import * as fcl from "@onflow/fcl";
 fcl
   .config()
   .put("flow.network", "testnet")
-  .put("accessNode.api", "https://rest-testnet.onflow.org")
+  .put("accessNode.httpApi", "https://rest-testnet.onflow.org")
   .put("discovery.wallet", "https://fcl-discovery.onflow.org/testnet/authn")
   .put("app.detail.title", "Test Harness")
   .put("app.detail.icon", "https://i.imgur.com/r23Zhvu.png")
@@ -352,7 +352,7 @@ Calling this method will authenticate the current user via any wallet that suppo
 import * as fcl from "@onflow/fcl";
 fcl
   .config()
-  .put("accessNode.api", "https://rest-testnet.onflow.org")
+  .put("accessNode.httpApi", "https://rest-testnet.onflow.org")
   .put("discovery.wallet", "https://fcl-discovery.onflow.org/testnet/authn");
 // anywhere on the page
 fcl.authenticate();
@@ -382,7 +382,7 @@ Logs out the current user and sets the values on the [current user](#currentuser
 
 ```javascript
 import * as fcl from "@onflow/fcl";
-fcl.config().put("accessNode.api", "https://rest-testnet.onflow.org");
+fcl.config().put("accessNode.httpApi", "https://rest-testnet.onflow.org");
 // first authenticate to set current user
 fcl.authenticate();
 // ... somewhere else & sometime later
