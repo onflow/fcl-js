@@ -101,7 +101,7 @@ async function prepMutation(opts) {
   // prettier-ignore
   invariant(isString(opts.cadence), "mutate({ cadence }) -- cadence must be a string")
   let node =
-    (await sdk.config.get("accessNode.restApi")) ||
+    (await sdk.config.get("accessNode.httpApi")) ||
     (await sdk.config.get("accessNode.grpcApi"))
 
   if (!node) {
@@ -111,11 +111,11 @@ async function prepMutation(opts) {
       subject:
         'Providing the access node endpoint via the "accessNode.api" configuration key',
       message:
-        'Please provide either "accessNode.restApi" or "accessNode.grpcApi" instead.',
+        'Please provide either "accessNode.httpApi" or "accessNode.grpcApi" instead.',
       transition:
         "https://github.com/onflow/flow-js-sdk/blob/master/packages/sdk/TRANSITIONS.md#0010-deprecate-accessNode-api",
     })
   }
   // prettier-ignore
-  invariant(node, `Required value for either "accessNode.restApi" or "accessNode.grpcApi" not defined in config. See: ${"https://github.com/onflow/flow-js-sdk/blob/master/packages/fcl/src/exec/query.md#configuration"}`)
+  invariant(node, `Required value for either "accessNode.httpApi" or "accessNode.grpcApi" not defined in config. See: ${"https://github.com/onflow/flow-js-sdk/blob/master/packages/fcl/src/exec/query.md#configuration"}`)
 }

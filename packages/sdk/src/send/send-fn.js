@@ -9,7 +9,7 @@ function defaultSendGRPC() {
 }
 
 export async function sendFn(ix, context = {}, opts = {}) {
-  const restNode = await config().get("accessNode.restApi")
+  const restNode = await config().get("accessNode.httpApi")
   const grpcNode = await config().get("accessNode.grpcApi")
 
   if (!restNode && !grpcNode) {
@@ -19,14 +19,14 @@ export async function sendFn(ix, context = {}, opts = {}) {
       subject:
         'Providing the access node endpoint via the "accessNode.api" configuration key',
       message:
-        'Please provide either "accessNode.restApi" or "accessNode.grpcApi" instead.',
+        'Please provide either "accessNode.httpApi" or "accessNode.grpcApi" instead.',
       transition:
         "https://github.com/onflow/flow-js-sdk/blob/master/packages/sdk/TRANSITIONS.md#0010-deprecate-accessNode-api",
     })
   } else {
     invariant(
       !(restNode && grpcNode),
-      "One of either accessNode.restApi or accessNode.grpcApi must be provided but not both"
+      "One of either accessNode.httpApi or accessNode.grpcApi must be provided but not both"
     )
     opts.node = restNode || grpcNode
   }

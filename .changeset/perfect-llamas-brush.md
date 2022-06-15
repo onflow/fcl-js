@@ -3,4 +3,4 @@
 "@onflow/sdk": minor
 ---
 
-Deprecate accessNode.api in favor of accessNode.restApi and accessNode.grpcApi
+Deprecate accessNode.api in favor of accessNode.httpApi and accessNode.grpcApi

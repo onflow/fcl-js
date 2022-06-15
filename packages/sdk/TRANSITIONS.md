@@ -5,7 +5,7 @@
 - **Date:** Jun 15 2022
 - **Type:** Deprecation of accessNode.api configuration key
 
-Previously, a shared configuration key existed for specifying the access node API endpoint (`accessNode.api`) for both the REST and GRPC API.  This was responsible for confusion and has been deprecated in favor of two more explicit configuration keys: `accessNode.restApi` and `accessNode.grpcApi` - these should be used to specify REST and GRPC API endpoints respectively.
+Previously, a shared configuration key existed for specifying the access node API endpoint (`accessNode.api`) for both the REST and GRPC API.  This was responsible for confusion and has been deprecated in favor of two more explicit configuration keys: `accessNode.httpApi` and `accessNode.grpcApi` - these should be used to specify REST and GRPC API endpoints respectively.
 
 Only one of these keys should be provided based on the preferred transport and the SDK will automatically configure either the REST or GRPC transport accordingly.  This transport can still be overriden using the `sdk.transport` configuration key.
 
@@ -16,7 +16,7 @@ import {config} from "@onflow/config"
 
 // REST API
 config()
-  .put("accessNode.restApi", "https://rest-testnet.onflow.org")
+  .put("accessNode.httpApi", "https://rest-testnet.onflow.org")
   // ... other configuration options
 
 // GRPC API
@@ -26,7 +26,7 @@ config()
 
 // To override using custom transport
 config()
-  .put("accessNode.restApi", "https://rest-testnet.onflow.org")
+  .put("accessNode.httpApi", "https://rest-testnet.onflow.org")
   .put("sdk.transport", customHttpTransportFunction)
 ```
 

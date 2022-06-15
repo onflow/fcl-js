@@ -13,7 +13,7 @@ import {sendPing} from "./send-ping.js"
 export const send = async (ix, context = {}, opts = {}) => {
   invariant(
     opts.node,
-    `SDK Send Error: Either opts.node or "acccessNode.grpcApi" in config must be defined.`
+    `SDK Send Error: Either opts.node or "accessNode.grpcApi" in config must be defined.`
   )
   invariant(context.ix, `SDK Send Error: context.ix must be defined.`)
 

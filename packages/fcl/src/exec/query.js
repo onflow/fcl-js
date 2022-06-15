@@ -64,7 +64,7 @@ async function preQuery(opts) {
   )
 
   let node =
-    (await sdk.config.get("accessNode.restApi")) ||
+    (await sdk.config.get("accessNode.httpApi")) ||
     (await sdk.config.get("accessNode.grpcApi"))
 
   if (!node) {
@@ -74,7 +74,7 @@ async function preQuery(opts) {
       subject:
         'Providing the access node endpoint via the "accessNode.api" configuration key',
       message:
-        'Please provide either "accessNode.restApi" or "accessNode.grpcApi" instead.',
+        'Please provide either "accessNode.httpApi" or "accessNode.grpcApi" instead.',
       transition:
         "https://github.com/onflow/flow-js-sdk/blob/master/packages/sdk/TRANSITIONS.md#0010-deprecate-accessNode-api",
     })
@@ -82,6 +82,6 @@ async function preQuery(opts) {
 
   invariant(
     node,
-    `Required value for either "accessNode.restApi" or "accessNode.grpcApi" not defined in config. See: ${"https://github.com/onflow/flow-js-sdk/blob/master/packages/fcl/src/exec/query.md#configuration"}`
+    `Required value for either "accessNode.httpApi" or "accessNode.grpcApi" not defined in config. See: ${"https://github.com/onflow/flow-js-sdk/blob/master/packages/fcl/src/exec/query.md#configuration"}`
   )
 }
