@@ -1,5 +1,11 @@
 # @onflow/util-template
 
+## 1.0.2-alpha.0
+
+### Patch Changes
+
+- [#1245](https://github.com/onflow/fcl-js/pull/1245) [`d09ba0f0`](https://github.com/onflow/fcl-js/commit/d09ba0f00f53f93feb351a3da5e821eada6287f0) Thanks [@jribbink](https://github.com/jribbink)! - Switch deprecation warnings to standardized warnings introduced by @onflow/util-logger (log.deprecate)
+
 ## 1.0.1
 
 ### Patch Changes

@@ -1,5 +1,12 @@
 # @onflow/transport-http
 
+## 1.3.0-alpha.3
+
+### Patch Changes
+
+- Updated dependencies [[`d09ba0f0`](https://github.com/onflow/fcl-js/commit/d09ba0f00f53f93feb351a3da5e821eada6287f0)]:
+  - @onflow/util-template@1.0.2-alpha.0
+
 ## 1.3.0-alpha.2
 
 ### Minor Changes

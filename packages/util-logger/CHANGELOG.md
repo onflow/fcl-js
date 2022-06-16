@@ -1,5 +1,18 @@
 # @onflow/util-logger
 
+## 1.1.0-alpha.2
+
+### Minor Changes
+
+- [#1245](https://github.com/onflow/fcl-js/pull/1245) [`d09ba0f0`](https://github.com/onflow/fcl-js/commit/d09ba0f00f53f93feb351a3da5e821eada6287f0) Thanks [@jribbink](https://github.com/jribbink)! - Add log.deprecate function for standardized deprecation warnings. Set default log level to warn.
+
+### Patch Changes
+
+- [#1245](https://github.com/onflow/fcl-js/pull/1245) [`d09ba0f0`](https://github.com/onflow/fcl-js/commit/d09ba0f00f53f93feb351a3da5e821eada6287f0) Thanks [@jribbink](https://github.com/jribbink)! - Switch deprecation warnings to standardized warnings introduced by @onflow/util-logger (log.deprecate)
+
+- Updated dependencies [[`d09ba0f0`](https://github.com/onflow/fcl-js/commit/d09ba0f00f53f93feb351a3da5e821eada6287f0)]:
+  - @onflow/sdk@1.1.0-alpha.3
+
 ## 1.0.2-alpha.1
 
 ### Patch Changes

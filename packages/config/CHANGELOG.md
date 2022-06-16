@@ -1,5 +1,12 @@
 # @onflow/config
 
+## 1.0.2-alpha.0
+
+### Patch Changes
+
+- Updated dependencies [[`4ec2bdc9`](https://github.com/onflow/fcl-js/commit/4ec2bdc9805ac081bdc8003b6e1ea52e02d3909d)]:
+  - @onflow/util-actor@1.1.0-alpha.0
+
 ## 1.0.1
 
 ### Patch Changes

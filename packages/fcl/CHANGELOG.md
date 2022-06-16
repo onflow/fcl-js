@@ -1,5 +1,23 @@
 # @onflow/fcl
 
+## 1.1.0-alpha.2
+
+### Minor Changes
+
+- [#1243](https://github.com/onflow/fcl-js/pull/1243) [`4ec2bdc9`](https://github.com/onflow/fcl-js/commit/4ec2bdc9805ac081bdc8003b6e1ea52e02d3909d) Thanks [@jribbink](https://github.com/jribbink)! - Make errors accessible to subscribers from fcl.tx polling (second argument of callback) and throw error for onceSealed, onceExecuted, onceFinalized promises. Also removed retried polling requests as they are a redundancy already implemented by @onflow/transport-http
+
+### Patch Changes
+
+- [#1245](https://github.com/onflow/fcl-js/pull/1245) [`d09ba0f0`](https://github.com/onflow/fcl-js/commit/d09ba0f00f53f93feb351a3da5e821eada6287f0) Thanks [@jribbink](https://github.com/jribbink)! - Switch deprecation warnings to standardized warnings introduced by @onflow/util-logger (log.deprecate)
+
+- Updated dependencies [[`d09ba0f0`](https://github.com/onflow/fcl-js/commit/d09ba0f00f53f93feb351a3da5e821eada6287f0), [`d09ba0f0`](https://github.com/onflow/fcl-js/commit/d09ba0f00f53f93feb351a3da5e821eada6287f0), [`4ec2bdc9`](https://github.com/onflow/fcl-js/commit/4ec2bdc9805ac081bdc8003b6e1ea52e02d3909d)]:
+  - @onflow/sdk@1.1.0-alpha.3
+  - @onflow/types@1.0.2-alpha.0
+  - @onflow/util-logger@1.1.0-alpha.2
+  - @onflow/util-template@1.0.2-alpha.0
+  - @onflow/util-actor@1.1.0-alpha.0
+  - @onflow/config@1.0.2-alpha.0
+
 ## 1.0.3-alpha.1
 
 ### Patch Changes
