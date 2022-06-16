@@ -18,11 +18,11 @@
     }
   },
   "devDependencies": {
+    "@onflow/fcl-bundle": "^1.0.0",
     "jest": "26.4.0",
     "jest-esm-transformer": "1.0.0"
   },
   "dependencies": {
-    "@onflow/fcl-bundle": "^1.0.0",
     "queue-microtask": "1.1.2"
   },
   "build": "src/index.js",

@@ -23,6 +23,7 @@
     }
   },
   "devDependencies": {
+    "@onflow/fcl-bundle": "^1.0.0",
     "jest": "^27.0.6",
     "jest-esm-transformer": "1.0.0"
   },
@@ -41,7 +42,6 @@
   },
   "dependencies": {
     "@onflow/config": "^1.0.1",
-    "@onflow/fcl-bundle": "^1.0.0",
     "@onflow/interaction": "0.0.11",
     "@onflow/rlp": "^1.0.1",
     "@onflow/sdk": "^1.1.0-alpha.2",
