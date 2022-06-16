@@ -16,4 +16,4 @@
 "@onflow/util-uid": patch
 ---
 
-Switch to fcl-build instead of microbundle for build scripts
+Switch to fcl-bundle instead of microbundle for build scripts
