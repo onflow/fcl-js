@@ -32,14 +32,14 @@ In practice, these Output Configuration objects will be consumed as shown in the
 ### Source Configuration
 
 A source configuration can be provided in one of three ways:
-1. A `string` identifying the path to the entry source file.  Build outputs will be inferred from either the root level 
+1. A `string` identifying the path to the entry source file.  Build outputs will be inferred from either the root level `main`, `module`, and `unpkg` fields or from the [default outputs](https://github.com/onflow/fcl-js/tree/master/packages/fcl-build/README.md#default-outputs) if none are provided.
     ```json
     {
       ...
       "source": "./src/index.js",
     }
     ```
-2. An array of entry source files.  Build outputs will be inferred from [default outputs](https://github.com/onflow/fcl-js/tree/master/packages/fcl-build/README.md#default-outputs).
+2. An array of entry source files.  Build outputs will be inferred from the [default outputs](https://github.com/onflow/fcl-js/tree/master/packages/fcl-build/README.md#default-outputs).
     ```json
     {
       ...
@@ -72,7 +72,7 @@ A source configuration can be provided in one of three ways:
     ```
     
 ### Default Outputs
-***Note:*** if no output bundles (cjs,esm,umd) are specifified in either the root of package.json or an Output Configuration, the bundler will produce the following defaults:
+***Note:*** if no output bundles (cjs,esm,umd) are specifified in either the root of package.json (`main`, `module`, `unpkg`) or an Output Configuration object, the bundler will produce the following defaults:
  - `cjs` -> `dist/${basename(entry)}.js`
  - `esm` -> `dist/${basename(entry)}.module.js`
  - `umd` -> `dist/${basename(entry)}.umd.js`
