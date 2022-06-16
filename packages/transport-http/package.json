@@ -1,6 +1,6 @@
 {
   "name": "@onflow/transport-http",
-  "version": "1.3.0-alpha.2",
+  "version": "1.3.0-alpha.3",
   "description": "Flow SDK HTTP Transport Module",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
@@ -20,7 +20,7 @@
   "devDependencies": {
     "@onflow/fcl-bundle": "^1.0.0",
     "@onflow/rlp": "^1.0.1",
-    "@onflow/types": "^1.0.1",
+    "@onflow/types": "^1.0.2-alpha.0",
     "jest": "^27.0.6",
     "jest-esm-transformer": "1.0.0"
   },
@@ -39,7 +39,7 @@
   "dependencies": {
     "@onflow/util-address": "^1.0.1",
     "@onflow/util-invariant": "^1.0.1",
-    "@onflow/util-node-http-modules": "^1.0.2",
-    "@onflow/util-template": "^1.0.1"
+    "@onflow/util-template": "^1.0.2-alpha.0",
+    "@onflow/util-node-http-modules": "^1.0.2"
   }
 }
