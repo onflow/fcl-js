@@ -1,5 +1,18 @@
 # @onflow/sdk
 
+## 1.1.0-alpha.3
+
+### Patch Changes
+
+- [#1245](https://github.com/onflow/fcl-js/pull/1245) [`d09ba0f0`](https://github.com/onflow/fcl-js/commit/d09ba0f00f53f93feb351a3da5e821eada6287f0) Thanks [@jribbink](https://github.com/jribbink)! - Switch deprecation warnings to standardized warnings introduced by @onflow/util-logger (log.deprecate)
+
+- Updated dependencies [[`d09ba0f0`](https://github.com/onflow/fcl-js/commit/d09ba0f00f53f93feb351a3da5e821eada6287f0), [`d09ba0f0`](https://github.com/onflow/fcl-js/commit/d09ba0f00f53f93feb351a3da5e821eada6287f0), [`4ec2bdc9`](https://github.com/onflow/fcl-js/commit/4ec2bdc9805ac081bdc8003b6e1ea52e02d3909d)]:
+  - @onflow/util-logger@1.1.0-alpha.2
+  - @onflow/util-template@1.0.2-alpha.0
+  - @onflow/util-actor@1.1.0-alpha.0
+  - @onflow/transport-http@1.3.0-alpha.3
+  - @onflow/config@1.0.2-alpha.0
+
 ## 1.1.0-alpha.2
 
 ### Minor Changes
