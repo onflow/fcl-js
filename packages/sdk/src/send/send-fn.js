@@ -1,19 +1,21 @@
 import {config} from "@onflow/config"
 import {invariant} from "@onflow/util-invariant"
 import {send as defaultSendREST} from "@onflow/transport-http"
+import {send as defaultSendGRPC} from "@onflow/transport-grpc"
 import {log} from "@onflow/util-logger"
-//import {send as defaultSendGRPC} from "@onflow/transport-grpc"
-
-function defaultSendGRPC() {
-  console.log("SUP")
-}
 
 export async function sendFn(ix, context = {}, opts = {}) {
-  const restNode = await config().get("accessNode.httpApi")
-  const grpcNode = await config().get("accessNode.grpcApi")
+  const httpNode = await config.get("accessNode.httpApi")
+  const grpcNode = await config.get("accessNode.grpcApi")
 
-  if (!restNode && !grpcNode) {
+  if (!httpNode && !grpcNode) {
     opts.node = opts.node || (await config().get("accessNode.api"))
+
+    invariant(
+      opts.node,
+      'Either opts.node, "accessNode.httpApi", or "accessNode.grpcApi" must be provided'
+    )
+
     log.deprecate({
       pkg: "FCL/SDK",
       subject:
@@ -25,10 +27,11 @@ export async function sendFn(ix, context = {}, opts = {}) {
     })
   } else {
     invariant(
-      !(restNode && grpcNode),
+      !(httpNode && grpcNode),
       "One of either accessNode.httpApi or accessNode.grpcApi must be provided but not both"
     )
-    opts.node = restNode || grpcNode
+    console.log(httpNode, grpcNode)
+    opts.node = httpNode || grpcNode
   }
 
   const sendFn = await config.first(
