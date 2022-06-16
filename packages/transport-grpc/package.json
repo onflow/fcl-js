@@ -22,7 +22,7 @@
     "jest": "^27.0.6",
     "jest-esm-transformer": "1.0.0"
   },
-  "build": "src/sdk-send-grpc.js",
+  "source": "src/sdk-send-grpc.js",
   "main": "dist/sdk-send-grpc.js",
   "module": "dist/sdk-send-grpc.module.js",
   "unpkg": "dist/sdk-send-grpc.umd.js",

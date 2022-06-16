@@ -22,7 +22,7 @@
     "jest": "26.4.2",
     "jest-esm-transformer": "1.0.0"
   },
-  "build": "src/index.js",
+  "source": "src/index.js",
   "main": "dist/rlp.js",
   "module": "dist/rlp.module.js",
   "unpkg": "dist/rlp.umd.js",

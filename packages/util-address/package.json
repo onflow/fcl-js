@@ -23,7 +23,7 @@
     "jest": "26.4.2",
     "jest-esm-transformer": "1.0.0"
   },
-  "build": "src/index.js",
+  "source": "src/index.js",
   "main": "dist/util-address.js",
   "module": "dist/util-address.module.js",
   "unpkg": "dist/util-address.umd.js",

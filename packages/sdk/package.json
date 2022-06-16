@@ -25,7 +25,7 @@
     "jest": "^27.0.6",
     "jest-esm-transformer": "1.0.0"
   },
-  "build": "src/sdk.js",
+  "source": "src/sdk.js",
   "main": "dist/sdk.js",
   "module": "dist/sdk.module.js",
   "unpkg": "dist/sdk.umd.js",

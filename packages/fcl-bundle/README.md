@@ -13,75 +13,66 @@ Options:
 ## Configuration
 All of the configuration for FCL-Build currently takes place within the `package.json` of the modules which you wish to bundle.  The following configuration options are available:
 
- - `build` / `builds` **(required)** - Specify a [Build Configuration](https://github.com/onflow/fcl-js/tree/master/packages/fcl-build/README.md#build-configuration) object or an array of [Build Configuration](https://github.com/onflow/fcl-js/tree/master/packages/fcl-build/README.md#build-configuration) objects
- - `main` - Specify cjs bundle output path if not specified by [Build Configuration](https://github.com/onflow/fcl-js/tree/master/packages/fcl-build/README.md#build-configuration) (as well as cjs entry point if not overriden by `package.exports`)
- - `module` Specify esm bundle output path if not specified by [Build Configuration](https://github.com/onflow/fcl-js/tree/master/packages/fcl-build/README.md#build-configuration) (as well as esm entry point if not overriden by `package.exports`) 
- - `unpkg` Specify umd bundle output path if not specified by [Build Configuration](https://github.com/onflow/fcl-js/tree/master/packages/fcl-build/README.md#build-configuration) (as well as umd entry point if not overriden by `package.exports`) 
+ - `source` **(required)** - Specify a source file entry point or an dictionary of [Output Configuration](https://github.com/onflow/fcl-js/tree/master/packages/fcl-build/README.md#output-configuration) objects keyed by respective source files (for multiple builds) - see [Source Configuration](https://github.com/onflow/fcl-js/tree/master/packages/fcl-build/README.md#source-configuration) for more details
+ - `main` - Specify cjs bundle output path if not manually specified by [Output Configuration](https://github.com/onflow/fcl-js/tree/master/packages/fcl-build/README.md#output-configuration) (as well as cjs entry point if not overriden by `package.exports`)
+ - `module` Specify esm bundle output path if not manually specified by [Output Configuration](https://github.com/onflow/fcl-js/tree/master/packages/fcl-build/README.md#output-configuration) (as well as esm entry point if not overriden by `package.exports`) 
+ - `unpkg` Specify umd bundle output path if not manually specified by [Output Configuration](https://github.com/onflow/fcl-js/tree/master/packages/fcl-build/README.md#output-configuration) (as well as umd entry point if not overriden by `package.exports`) 
 
-### Build Configuration
+### Output Configuration
 
-A build configuration object is provided as any one of, or an array of (for multiple builds), these three things:
-1. A `string` identifying the path to the entry source file: I.e.
+An Output Configuration object exists with the following properties:
+  - `cjs` *(optional)* - Path of the cjs output bundle 
+  - `esm` *(optional)* - Path of the esm output bundle
+  - `umd` *(optional)* - Path of the umd output bundle
+
+An empty Output Configuration will fallback to the [default outputs](https://github.com/onflow/fcl-js/tree/master/packages/fcl-build/README.md#default-outputs) if none are provided.  However, if at least one output format is provided, the missing outputs will be excluded from the final build.
+
+In practice, these Output Configuration objects will be consumed as shown in the [Source Configuration](https://github.com/onflow/fcl-js/tree/master/packages/fcl-build/README.md#source-configuration) below.
+
+### Source Configuration
+
+A source configuration can be provided in one of three ways:
+1. A `string` identifying the path to the entry source file.  Build outputs will be inferred from either the root level 
     ```json
     {
       ...
-      "build": "./src/index.js",
+      "source": "./src/index.js",
     }
     ```
-2. As an object with the following properties
-    - `source` **(required)** - Entry source file of the build
-    - `cjs` *(optional)* - Path of the cjs output bundle 
-    - `esm` *(optional)* - Path of the esm output bundle
-    - `umd` *(optional)* - Path of the umd output bundle  
-   <br />
-
-   Some examples:  
-
+2. An array of entry source files.  Build outputs will be inferred from [default outputs](https://github.com/onflow/fcl-js/tree/master/packages/fcl-build/README.md#default-outputs).
     ```json
     {
       ...
-      "build": {
-        "source": "./src/index.js",
-        "cjs": "./dist/index.js",
-        "esm": "./dist/index.module.js",
-        "umd": "./dist/index.umd.js"
-      }
-    }
-
-    {
-      ...
-      "builds": [
-        {
-          "source": "./src/indexA.js",
-          "cjs": "./dist/indexA.js"
-        },
-        {
-          "source": "./src/indexB.js",
-          "cjs": "./dist/indexB.js",
-          "esm": "./dist/indexB.module.js"
-        }
+      "source": [
+        "./src/indexA.js",
+        "./src/indexB.js"
       ]
     }
-
     ```
-3. An object containing several builds whose keys are entry source files to the build and whose values are the remaining properties excluding `source` above.  For instance:
+
+3. A dictionary of [Output Configuration](https://github.com/onflow/fcl-js/tree/master/packages/fcl-build/README.md#output-configuration) objects keyed by respective source files.
     ```json
     {
       ...
-      "build": {
+      "source": {
         "./src/indexA.js": {
           "cjs": "./dist/indexA.js"
         },
         "./src/indexB.js": {
           "cjs": "./dist/indexB.js",
-          "esm": "./dist/indexB.module.js",
+          "esm": "./dist/indexB.module.js"
+        },
+        "./src/indexC.js": {
+          "cjs": "./dist/indexC.js",
+          "esm": "./dist/indexC.module.js",
+          "umd": "./dist/indexC.umd.js"
         }
       }
     }
     ```
     
-
-***Note:*** if no output bundles (cjs,esm,umd) are specifified in either the root of package.json or the BuildConfiguration, the bundler will produce the following defaults:
+### Default Outputs
+***Note:*** if no output bundles (cjs,esm,umd) are specifified in either the root of package.json or an Output Configuration, the bundler will produce the following defaults:
  - `cjs` -> `dist/${basename(entry)}.js`
  - `esm` -> `dist/${basename(entry)}.module.js`
  - `umd` -> `dist/${basename(entry)}.umd.js`

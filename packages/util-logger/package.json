@@ -22,7 +22,7 @@
     "jest": "25.3.0",
     "jest-esm-transformer": "1.0.0"
   },
-  "build": "src/util-logger.js",
+  "source": "src/util-logger.js",
   "main": "dist/util-logger.js",
   "module": "dist/util-logger.module.js",
   "unpkg": "dist/util-logger.umd.js",

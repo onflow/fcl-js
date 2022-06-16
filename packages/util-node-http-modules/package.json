@@ -22,18 +22,16 @@
     "jest": "^27.0.6",
     "jest-esm-transformer": "1.0.0"
   },
-  "build": [
-    {
-      "source": "./src/util-node-http-modules.js",
+  "source": {
+    "./src/util-node-http-modules.js": {
       "cjs": "./dist/util-node-http-modules.js",
       "esm": "./dist/util-node-http-modules.esm.js"
     },
-    {
-      "source": "./src/util-node-http-modules.noop.js",
+    "./src/util-node-http-modules.noop.js": {
       "cjs": "./dist/util-node-http-modules.noop.js",
       "esm": "./dist/util-node-http-modules.noop.esm.js"
     }
-  ],
+  },
   "exports": {
     "node": {
       "import": "./dist/util-node-http-modules.esm.js",

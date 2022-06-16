@@ -22,7 +22,7 @@
     "jest": "25.3.0",
     "jest-esm-transformer": "1.0.0"
   },
-  "build": "src/config.js",
+  "source": "src/config.js",
   "main": "dist/config.js",
   "module": "dist/config.module.js",
   "unpkg": "dist/config.umd.js",

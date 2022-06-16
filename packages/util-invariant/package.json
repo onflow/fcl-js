@@ -23,7 +23,7 @@
     "jest": "26.4.2",
     "jest-esm-transformer": "1.0.0"
   },
-  "build": "src/index.js",
+  "source": "src/index.js",
   "main": "dist/util-invariant.js",
   "module": "dist/util-invariant.module.js",
   "unpkg": "dist/util-invariant.umd.js",

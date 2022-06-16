@@ -24,7 +24,7 @@
     "jest": "^27.0.6",
     "jest-esm-transformer": "1.0.0"
   },
-  "build": "src/sdk-send-http.js",
+  "source": "src/sdk-send-http.js",
   "main": "dist/sdk-send-http.js",
   "module": "dist/sdk-send-http.module.js",
   "unpkg": "dist/sdk-send-http.umd.js",

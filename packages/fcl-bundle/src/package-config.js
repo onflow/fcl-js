@@ -1,6 +1,6 @@
 const assert = require("assert")
 const {resolve, dirname, basename, join} = require("path")
-const {isArray, isObject} = require("./util")
+const {isArray, isObject, isString} = require("./util")
 const {existsSync, mkdirSync} = require("fs")
 
 function determineBuildPaths(package, outputs, entryName) {
@@ -59,14 +59,24 @@ function determineBuildPaths(package, outputs, entryName) {
 }
 
 module.exports = package => {
-  let builds = package.build || package.builds || []
+  let builds = package.source
+
+  assert(
+    builds,
+    'The "source" root level configuration property must be specified'
+  )
 
   if (isObject(builds)) {
     builds = Object.keys(builds).map(key => ({
       source: key,
       ...builds[key],
     }))
-  } else if (!isArray(builds)) {
+  } else if (isArray(builds)) {
+    assert(
+      !builds.find(x => !isString(x)),
+      "Source files must be provided as strings"
+    )
+  } else {
     builds = [builds]
   }
 
@@ -75,7 +85,18 @@ module.exports = package => {
       let source
       let outputs = {}
       if (isObject(build)) {
-        ;({source, ...outputs} = build)
+        source = build.source
+        outputs = {
+          cjs: build.cjs,
+          esm: build.esm,
+          umd: build.umd,
+        }
+
+        // Filter out missing outputs
+        outputs = Object.keys(outputs).reduce((acc, key) => {
+          if (outputs[key]) acc[key] = outputs[key]
+          return acc
+        }, {})
       } else {
         source = build
       }

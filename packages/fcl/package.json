@@ -27,7 +27,7 @@
     "jest": "^27.0.6",
     "jest-esm-transformer": "1.0.0"
   },
-  "build": "src/fcl.js",
+  "source": "src/fcl.js",
   "main": "dist/fcl.js",
   "module": "dist/fcl.module.js",
   "unpkg": "dist/fcl.umd.js",
