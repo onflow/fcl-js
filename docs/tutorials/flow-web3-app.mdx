@@ -9,12 +9,9 @@ Below is a video walkthrough covering the contents of this tutorial. You are wel
 
 In this tutorial, you will learn how to interact with an existing smart contract on Flow's testnet, the Profile Contract. Using this contract, you will create a new profile and edit the profile information, both via a wallet.
 
-While this tutorial will use Cadence (Flow's smart contract language), you do not need to know it. Instead, we recommend diving into learning the Cadence language later once you've passed the core FCL concepts down.
-
 ## Prerequisite
-- Completed flow quick start guide
-- Cadence programming language
-- Basic knowledge of command line
+- Completed the Flow quick start guide
+- Basic understanding of Cadence programming language
 
 ## Querying the Blockchain
 
@@ -184,7 +181,7 @@ const initAccount = async () => {
 }
 ```
 
-You will notice `fcl.authz`. That's shorthand for "use the current user to authorize this transaction", (you could also write it as `fcl.currentUser.authorization`). You can view the docs here to learn more about transactions and signing transactions. Again, you will keep this example simple with the user in each of these roles.
+You will notice `fcl.authz`. That's shorthand for "use the current user to authorize this transaction" (you could also write it as `fcl.currentUser.authorization`). You can view the docs here to learn more about transactions and signing transactions. Again, you will keep this example simple with the user in each of these roles.
 You will also notice an awaiting response with your transaction data using the syntax `fcl.tx(transactionId).onceSealed()`. This will return when the blockchain has sealed the transaction and is complete in processing and verifying it.
 Now your `index.js` file should look like this (you also added a button for calling the `initAccount` function in the `AuthedState`):
 
@@ -449,5 +446,5 @@ export default function Home() {
 ![Mutation image](../images/4.png)
 
 Now, if you click the `Execute Transaction` button, you will see the statuses update next to `Transaction Status`.
-When you see **4** that means it's sealed! Status code meanings can be found here. If you query the account profile again, `Profile Name:` should now display `Flow Developer`.
+When you see **4** that means it's sealed! Status code meanings [can be found here](../reference/api.md#transaction-statuses). If you query the account profile again, `Profile Name:` should now display `Flow Developer`.
 That's it! You now have a shippable Flow dapp that can auth, query, init accounts, and mutate the chain.
