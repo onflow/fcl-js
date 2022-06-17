@@ -1,9 +1,9 @@
-# FCL-Build Overview
-FCL-Build is a module bundler used internally by FCL which aims to be low configuration and consistent across the monorepo.  FCL-Build uses [rollup](https://rollupjs.org/) and generates cjs, esm, and umd formats of the bundled modules.
+# FCL-Bundle Overview
+FCL-Bundle is a module bundler used internally by FCL which aims to be low configuration and consistent across the monorepo.  FCL-Bundle uses [rollup](https://rollupjs.org/) and generates cjs, esm, and umd formats of the bundled modules.
 
 ## CLI Usage
 
-Usage: `fcl-build [options]` 
+Usage: `fcl-bundle [options]` 
 
 Options:  
   -V, --version  output the version number  
@@ -11,12 +11,12 @@ Options:
   -h, --help     display help for command  
 
 ## Configuration
-All of the configuration for FCL-Build currently takes place within the `package.json` of the modules which you wish to bundle.  The following configuration options are available:
+All of the configuration for FCL-Bundle currently takes place within the `package.json` of the modules which you wish to bundle.  The following configuration options are available:
 
- - `source` **(required)** - Specify a source file entry point or an dictionary of [Output Configuration](https://github.com/onflow/fcl-js/tree/master/packages/fcl-build/README.md#output-configuration) objects keyed by respective source files (for multiple builds) - see [Source Configuration](https://github.com/onflow/fcl-js/tree/master/packages/fcl-build/README.md#source-configuration) for more details
- - `main` - Specify cjs bundle output path if not manually specified by [Output Configuration](https://github.com/onflow/fcl-js/tree/master/packages/fcl-build/README.md#output-configuration) (as well as cjs entry point if not overriden by `package.exports`)
- - `module` Specify esm bundle output path if not manually specified by [Output Configuration](https://github.com/onflow/fcl-js/tree/master/packages/fcl-build/README.md#output-configuration) (as well as esm entry point if not overriden by `package.exports`) 
- - `unpkg` Specify umd bundle output path if not manually specified by [Output Configuration](https://github.com/onflow/fcl-js/tree/master/packages/fcl-build/README.md#output-configuration) (as well as umd entry point if not overriden by `package.exports`) 
+ - `source` **(required)** - Specify a source file entry point or an dictionary of [Output Configuration](https://github.com/onflow/fcl-js/tree/master/packages/fcl-bundle/README.md#output-configuration) objects keyed by respective source files (for multiple builds) - see [Source Configuration](https://github.com/onflow/fcl-js/tree/master/packages/fcl-bundle/README.md#source-configuration) for more details
+ - `main` - Specify cjs bundle output path if not manually specified by [Output Configuration](https://github.com/onflow/fcl-js/tree/master/packages/fcl-bundle/README.md#output-configuration) (as well as cjs entry point if not overriden by `package.exports`)
+ - `module` Specify esm bundle output path if not manually specified by [Output Configuration](https://github.com/onflow/fcl-js/tree/master/packages/fcl-bundle/README.md#output-configuration) (as well as esm entry point if not overriden by `package.exports`) 
+ - `unpkg` Specify umd bundle output path if not manually specified by [Output Configuration](https://github.com/onflow/fcl-js/tree/master/packages/fcl-bundle/README.md#output-configuration) (as well as umd entry point if not overriden by `package.exports`) 
 
 ### Output Configuration
 
@@ -25,21 +25,21 @@ An Output Configuration object exists with the following properties:
   - `esm` *(optional)* - Path of the esm output bundle
   - `umd` *(optional)* - Path of the umd output bundle
 
-An empty Output Configuration will fallback to the [default outputs](https://github.com/onflow/fcl-js/tree/master/packages/fcl-build/README.md#default-outputs) if none are provided.  However, if at least one output format is provided, the missing outputs will be excluded from the final build.
+An empty Output Configuration will fallback to the [default outputs](https://github.com/onflow/fcl-js/tree/master/packages/fcl-bundle/README.md#default-outputs) if none are provided.  However, if at least one output format is provided, the missing outputs will be excluded from the final build.
 
-In practice, these Output Configuration objects will be consumed as shown in the [Source Configuration](https://github.com/onflow/fcl-js/tree/master/packages/fcl-build/README.md#source-configuration) below.
+In practice, these Output Configuration objects will be consumed as shown in the [Source Configuration](https://github.com/onflow/fcl-js/tree/master/packages/fcl-bundle/README.md#source-configuration) below.
 
 ### Source Configuration
 
 A source configuration can be provided in one of three ways:
-1. A `string` identifying the path to the entry source file.  Build outputs will be inferred from either the root level `main`, `module`, and `unpkg` fields or from the [default outputs](https://github.com/onflow/fcl-js/tree/master/packages/fcl-build/README.md#default-outputs) if none are provided.
+1. A `string` identifying the path to the entry source file.  Build outputs will be inferred from either the root level `main`, `module`, and `unpkg` fields or from the [default outputs](https://github.com/onflow/fcl-js/tree/master/packages/fcl-bundle/README.md#default-outputs) if none are provided.
     ```json
     {
       ...
       "source": "./src/index.js",
     }
     ```
-2. An array of entry source files.  Build outputs will be inferred from the [default outputs](https://github.com/onflow/fcl-js/tree/master/packages/fcl-build/README.md#default-outputs).
+2. An array of entry source files.  Build outputs will be inferred from the [default outputs](https://github.com/onflow/fcl-js/tree/master/packages/fcl-bundle/README.md#default-outputs).
     ```json
     {
       ...
@@ -50,7 +50,7 @@ A source configuration can be provided in one of three ways:
     }
     ```
 
-3. A dictionary of [Output Configuration](https://github.com/onflow/fcl-js/tree/master/packages/fcl-build/README.md#output-configuration) objects keyed by respective source files.
+3. A dictionary of [Output Configuration](https://github.com/onflow/fcl-js/tree/master/packages/fcl-bundle/README.md#output-configuration) objects keyed by respective source files.
     ```json
     {
       ...
