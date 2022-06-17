@@ -96,11 +96,11 @@ function notExpired(user) {
 }
 
 async function getAccountProofData() {
-  let accountProofData = await config.get("fcl.accountProof.resolver")
+  let accountProofDataResolver = await config.get("fcl.accountProof.resolver")
 
-  if (isFn(accountProofData)) {
-    accountProofData = await accountProofData()
-  }
+  if (!isFn(accountProofData)) return
+
+  const accountProofData = await accountProofDataResolver()
 
   if (accountProofData == null) return
 
