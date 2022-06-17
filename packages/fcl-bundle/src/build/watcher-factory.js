@@ -38,8 +38,7 @@ module.exports = function WatcherFactory(numWatchers) {
 
 function EventBuffer() {
   this.events = []
-  this.get = watcher =>
-    this.events.find(evt => evt.watcher === watcher)?.event ?? null
+  this.get = watcher => this.events.find(evt => evt.watcher === watcher)?.event
   this.put = (watcher, event) =>
     this.events.push({
       watcher,
