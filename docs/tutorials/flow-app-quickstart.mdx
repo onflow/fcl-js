@@ -9,11 +9,10 @@
 
 ## Introduction
 
-FCL-JS (Flow Client Library) is the easiest way to build decentralized applications. FCL wraps much of the logic you would have to write on other blockchains. Follow this quick start, and you will have a solid overview of building a shippable dapp on Flow.
+FCL (Flow Client Library) is the easiest way to build decentralized applications. FCL wraps much of the logic you would have to write on other blockchains. Follow this quick start, and you will have a solid overview of building a shippable dapp on Flow.
 
 ## Prerequisite
-- Basic understanding of React
-- Basic understanding of Cadence programming language 
+- Basic understanding of React 
 - Basic understanding of CLI knowledge
 
 In this tutorial, you will learn how to do the following FCL concepts below:
@@ -32,7 +31,7 @@ The first step is to generate a React app using Next.js and [create-next-app](ht
 npx create-next-app@latest flow-app
 
 ```
-Next,Locate the flow-app folder.
+Next,locate the flow-app folder.
 ```
 cd flow-app
 
@@ -50,7 +49,16 @@ Now run the app using the following command in your terminal.
 npm run dev
 ```
 
-The above command will return an output similar to the following.
+The above command will return an output similar to the following on your terminal.
+
+```sh
+ready - started server on 0.0.0.0:3000, url: http://localhost:3000
+wait  - compiling...
+event - compiled client and server successfully in 362 ms (125 modules)
+
+```
+
+when you enter `http://localhost:3000`on your browser, you will get a similar output.
 
 ![Installation image](../images/1.png)
 
@@ -75,7 +83,7 @@ The folder structure should look similar to the image below.
 
 ![Configuration image](../images/2.png)
 
-📣 **Tip**: It's recommend to replace these values with environment variables for easy deployments across different environments like development/production or Testnet/Mainnet.
+📣 **Tip**: It is recommended to replace these values with environment variables for easy deployments across different environments like development/production or Testnet/Mainnet.
 
 - The `accessNode.api` key specifies the address of a Flow access node. Flow provides these, but in the future access to Flow may be provided by other 3rd parties, through their access nodes. 
 - The `discovery.wallet` is an address pointing to a service that lists FCL-compatible wallets. Flow's FCL Discovery service is a service that FCL wallet providers can be added to and be made 'discoverable' to any application that uses the discovery.wallet endpoint.
@@ -96,10 +104,10 @@ Now you are ready to start talking to Flow!
 
 ## Authentication
 
-In this section, you will learn how to add sign-up and sign-in functionality in your flow dapp.
+In this section, you will learn how to add sign-up and sign-in functionality in your Flow dapp.
 To authenticate a user, you will call `fcl.logIn()`, if the user is authenticated, FCL sets an object called `fcl.currentUser`, which exposes methods for watching changes in user data, signing transactions, and more. For more information on the `currentUser`, read more [here](../reference/api.md#current-user).
 
-For the sake of this tutorial, you will add a few buttons for sign up/log in and subscribe to changes on the `currentUser`. When the user is updated (which it will be after authentication), you will set the user state in our component to reflect this. To demonstrate user authenticated sessions, you will conditionally render a component based on if the user is or is not logged in.
+For the sake of this tutorial, you will add a few buttons for sign up/log in and subscribe to changes on the `currentUser`. When the user is updated (which it will be after authentication), you will set the user state in your component to reflect this. To demonstrate user authenticated sessions, you will conditionally render a component based on if the user is or is not logged in.
 
 This is what your file should look like now:
 
