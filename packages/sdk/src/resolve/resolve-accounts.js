@@ -27,8 +27,10 @@ async function collectAccounts(ix, accounts, last, depth = 3) {
 
   let authorizations = []
   for (let ax of accounts) {
+    let resolve = ax.resolve
+    ax.resolve = null
     var old = last || ax
-    if (isFn(ax.resolve)) ax = await ax.resolve(ax, buildPreSignable(ax, ix))
+    if (isFn(resolve)) ax = await resolve(ax, buildPreSignable(ax, ix))
 
     if (Array.isArray(ax)) {
       await collectAccounts(ix, ax, old, depth - 1)
