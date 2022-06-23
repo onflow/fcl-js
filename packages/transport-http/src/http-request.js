@@ -64,7 +64,7 @@ export async function httpRequest({
     fetchTransport = fetch || window?.fetch
   } catch (e) {}
 
-  const {nodeHttpsTransport, nodeHttpTransport} = await getNodeHttpModules()
+  //const {nodeHttpsTransport, nodeHttpTransport} = await getNodeHttpModules()
 
   invariant(
     fetchTransport || nodeHttpsTransport || nodeHttpTransport,
