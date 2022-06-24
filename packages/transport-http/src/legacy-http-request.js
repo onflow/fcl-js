@@ -15,7 +15,6 @@ Some features of @onflow/transport-http may not be supported - find out more her
           })
         }
 
-        //add warning if unsupported axios args are passed??
         logger.log.deprecate({
           pkg: "@onflow/transport-http",
           subject: "Passing httpRequest override through opts.httpRequest",
