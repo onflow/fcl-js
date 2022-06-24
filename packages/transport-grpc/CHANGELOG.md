@@ -1,5 +1,17 @@
 # @onflow/transport-grpc
 
+## 1.1.0
+
+### Minor Changes
+
+- [#1206](https://github.com/onflow/fcl-js/pull/1206) [`6ae4469c`](https://github.com/onflow/fcl-js/commit/6ae4469cdaa9590ef110ed1c0ec6928d9ac09845) Thanks [@jribbink](https://github.com/jribbink)! - Added blockId to transport-grpc transaction status
+
+### Patch Changes
+
+- Updated dependencies [[`d09ba0f0`](https://github.com/onflow/fcl-js/commit/d09ba0f00f53f93feb351a3da5e821eada6287f0), [`6ae4469c`](https://github.com/onflow/fcl-js/commit/6ae4469cdaa9590ef110ed1c0ec6928d9ac09845)]:
+  - @onflow/util-template@1.0.2
+  - @onflow/protobuf@1.1.0
+
 ## 1.1.0-alpha.1
 
 ### Patch Changes

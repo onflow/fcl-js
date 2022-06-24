@@ -1,5 +1,11 @@
 # @onflow/util-actor
 
+## 1.1.0
+
+### Minor Changes
+
+- [#1243](https://github.com/onflow/fcl-js/pull/1243) [`4ec2bdc9`](https://github.com/onflow/fcl-js/commit/4ec2bdc9805ac081bdc8003b6e1ea52e02d3909d) Thanks [@jribbink](https://github.com/jribbink)! - Add error handling to actors. Second argument of callback is now an error object and fatal errors can be thrown with ctx.fatalError(e).
+
 ## 1.1.0-alpha.0
 
 ### Minor Changes
