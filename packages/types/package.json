@@ -1,6 +1,6 @@
 {
   "name": "@onflow/types",
-  "version": "1.0.2-alpha.0",
+  "version": "1.0.2",
   "description": "Utilities to transform javascript values into Cadence understandable values",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
