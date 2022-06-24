@@ -1,5 +1,11 @@
 # @onflow/sdk
 
+## 1.1.0-alpha.4
+
+### Patch Changes
+
+- [#1263](https://github.com/onflow/fcl-js/pull/1263) [`45951f1a`](https://github.com/onflow/fcl-js/commit/45951f1af310d302ee708e43d1a939265f404d2c) Thanks [@jribbink](https://github.com/jribbink)! - Fix infinite recursion bug when using array authorization function (used for multiple signing keys)
+
 ## 1.1.0-alpha.3
 
 ### Patch Changes
