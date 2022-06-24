@@ -1,5 +1,6 @@
 import {invariant} from "@onflow/util-invariant"
 import {httpRequest as defaultHttpRequest} from "./http-request.js"
+import {legacyHttpRequest} from "./legacy-http-request.js"
 
 export async function sendGetTransaction(ix, context = {}, opts = {}) {
   invariant(
@@ -15,15 +16,18 @@ export async function sendGetTransaction(ix, context = {}, opts = {}) {
     `SDK Send Get Transaction Error: context.Buffer must be defined.`
   )
 
-  const httpRequest = opts.httpRequest || defaultHttpRequest
+  const httpRequest =
+    opts.axiosInstance ||
+    legacyHttpRequest(opts.httpRequest) ||
+    defaultHttpRequest
 
   ix = await ix
 
-  const res = await httpRequest({
-    hostname: opts.node,
-    path: `/v1/transactions/${ix.transaction.id}`,
+  const {data: res} = await httpRequest({
+    baseURL: opts.node,
+    url: `/v1/transactions/${ix.transaction.id}`,
     method: "GET",
-    body: null,
+    data: null,
   })
 
   const unwrapKey = key => ({

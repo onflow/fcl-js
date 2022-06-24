@@ -1,5 +1,6 @@
 import {invariant} from "@onflow/util-invariant"
 import {httpRequest as defaultHttpRequest} from "./http-request.js"
+import {legacyHttpRequest} from "./legacy-http-request.js"
 
 export async function sendGetCollection(ix, context = {}, opts = {}) {
   invariant(
@@ -11,13 +12,16 @@ export async function sendGetCollection(ix, context = {}, opts = {}) {
     `SDK Send Get Collection Error: context.response must be defined.`
   )
 
-  const httpRequest = opts.httpRequest || defaultHttpRequest
+  const httpRequest =
+    opts.axiosInstance ||
+    legacyHttpRequest(opts.httpRequest) ||
+    defaultHttpRequest
 
-  const res = await httpRequest({
-    hostname: opts.node,
-    path: `/v1/collections/${ix.collection.id}?expand=transactions`,
+  const {data: res} = await httpRequest({
+    baseURL: opts.node,
+    url: `/v1/collections/${ix.collection.id}?expand=transactions`,
     method: "GET",
-    body: null,
+    data: null,
   })
 
   const ret = context.response()

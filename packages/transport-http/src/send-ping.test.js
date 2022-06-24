@@ -18,7 +18,7 @@ describe("Ping", () => {
         Buffer,
       },
       {
-        httpRequest: httpRequestMock,
+        axiosInstance: httpRequestMock,
         node: "localhost",
       }
     )
@@ -32,10 +32,10 @@ describe("Ping", () => {
     const valueSent = httpRequestMock.mock.calls[0][0]
 
     expect(valueSent).toEqual({
-      hostname: "localhost",
-      path: "/v1/blocks?height=sealed",
+      baseURL: "localhost",
+      url: "/v1/blocks?height=sealed",
       method: "GET",
-      body: null,
+      data: null,
     })
   })
 })

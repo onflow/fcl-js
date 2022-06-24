@@ -17,7 +17,7 @@ describe("Send Execute Script", () => {
       JSON.stringify({type: "Int", value: 123})
     ).toString("base64")
 
-    httpRequestMock.mockReturnValue(returnedJSONCDC)
+    httpRequestMock.mockReturnValue({data: returnedJSONCDC})
 
     const cadence = "pub fun main(a: Int): Int { return a }"
 
@@ -30,7 +30,7 @@ describe("Send Execute Script", () => {
         Buffer,
       },
       {
-        httpRequest: httpRequestMock,
+        axiosInstance: httpRequestMock,
         node: "localhost",
       }
     )
@@ -44,10 +44,10 @@ describe("Send Execute Script", () => {
     const valueSent = httpRequestMock.mock.calls[0][0]
 
     expect(valueSent).toEqual({
-      hostname: "localhost",
-      path: "/v1/scripts?block_height=sealed",
+      baseURL: "localhost",
+      url: "/v1/scripts?block_height=sealed",
       method: "POST",
-      body: {
+      data: {
         script: "cHViIGZ1biBtYWluKGE6IEludCk6IEludCB7IHJldHVybiBhIH0=",
         ["arguments"]: ["eyJ0eXBlIjoiSW50IiwidmFsdWUiOiIxMjMifQ=="],
       },
@@ -64,7 +64,7 @@ describe("Send Execute Script", () => {
       JSON.stringify({type: "Int", value: 123})
     ).toString("base64")
 
-    httpRequestMock.mockReturnValue(returnedJSONCDC)
+    httpRequestMock.mockReturnValue({data: returnedJSONCDC})
 
     const cadence = "pub fun main(): Int { return 123 }"
 
@@ -75,7 +75,7 @@ describe("Send Execute Script", () => {
         Buffer,
       },
       {
-        httpRequest: httpRequestMock,
+        axiosInstance: httpRequestMock,
         node: "localhost",
       }
     )
@@ -89,10 +89,10 @@ describe("Send Execute Script", () => {
     const valueSent = httpRequestMock.mock.calls[0][0]
 
     expect(valueSent).toEqual({
-      hostname: "localhost",
-      path: "/v1/scripts?block_id=123",
+      baseURL: "localhost",
+      url: "/v1/scripts?block_id=123",
       method: "POST",
-      body: {
+      data: {
         script: "cHViIGZ1biBtYWluKCk6IEludCB7IHJldHVybiAxMjMgfQ==",
         ["arguments"]: [],
       },
@@ -109,7 +109,7 @@ describe("Send Execute Script", () => {
       JSON.stringify({type: "Int", value: 123})
     ).toString("base64")
 
-    httpRequestMock.mockReturnValue(returnedJSONCDC)
+    httpRequestMock.mockReturnValue({data: returnedJSONCDC})
 
     const cadence = "pub fun main(): Int { return 123 }"
 
@@ -120,7 +120,7 @@ describe("Send Execute Script", () => {
         Buffer,
       },
       {
-        httpRequest: httpRequestMock,
+        axiosInstance: httpRequestMock,
         node: "localhost",
       }
     )
@@ -134,10 +134,10 @@ describe("Send Execute Script", () => {
     const valueSent = httpRequestMock.mock.calls[0][0]
 
     expect(valueSent).toEqual({
-      hostname: "localhost",
-      path: "/v1/scripts?block_height=123",
+      baseURL: "localhost",
+      url: "/v1/scripts?block_height=123",
       method: "POST",
-      body: {
+      data: {
         script: "cHViIGZ1biBtYWluKCk6IEludCB7IHJldHVybiAxMjMgfQ==",
         ["arguments"]: [],
       },

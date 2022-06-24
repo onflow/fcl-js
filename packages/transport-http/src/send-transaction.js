@@ -1,6 +1,7 @@
 import {invariant} from "@onflow/util-invariant"
 import {sansPrefix} from "@onflow/util-address"
 import {httpRequest as defaultHttpRequest} from "./http-request.js"
+import {legacyHttpRequest} from "./legacy-http-request.js"
 
 export async function sendTransaction(ix, context = {}, opts = {}) {
   invariant(opts.node, `SDK Send Transaction Error: opts.node must be defined.`)
@@ -13,7 +14,10 @@ export async function sendTransaction(ix, context = {}, opts = {}) {
     `SDK Send Transaction Error: context.Buffer must be defined.`
   )
 
-  const httpRequest = opts.httpRequest || defaultHttpRequest
+  const httpRequest =
+    opts.axiosInstance ||
+    legacyHttpRequest(opts.httpRequest) ||
+    defaultHttpRequest
 
   ix = await ix
 
@@ -64,11 +68,11 @@ export async function sendTransaction(ix, context = {}, opts = {}) {
   envelopeSignatures = Object.values(envelopeSignatures)
 
   var t1 = Date.now()
-  const res = await httpRequest({
-    hostname: opts.node,
-    path: `/v1/transactions`,
+  const {data: res} = await httpRequest({
+    baseURL: opts.node,
+    url: `/v1/transactions`,
     method: "POST",
-    body: {
+    data: {
       script: context.Buffer.from(ix.message.cadence).toString("base64"),
       ["arguments"]: [
         ...ix.message.arguments.map(arg =>

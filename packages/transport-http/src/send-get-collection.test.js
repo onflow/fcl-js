@@ -18,7 +18,7 @@ describe("Send Get Collection", () => {
       ],
     }
 
-    httpRequestMock.mockReturnValue(returnedCollection)
+    httpRequestMock.mockReturnValue({data: returnedCollection})
 
     const response = await sendGetCollection(
       await resolve(await build([getCollection("a1b2c3")])),
@@ -27,7 +27,7 @@ describe("Send Get Collection", () => {
         Buffer,
       },
       {
-        httpRequest: httpRequestMock,
+        axiosInstance: httpRequestMock,
         node: "localhost",
       }
     )
@@ -41,10 +41,10 @@ describe("Send Get Collection", () => {
     const valueSent = httpRequestMock.mock.calls[0][0]
 
     expect(valueSent).toEqual({
-      hostname: "localhost",
-      path: "/v1/collections/a1b2c3?expand=transactions",
+      baseURL: "localhost",
+      url: "/v1/collections/a1b2c3?expand=transactions",
       method: "GET",
-      body: null,
+      data: null,
     })
 
     expect(response.collection.id).toBe(returnedCollection.id)

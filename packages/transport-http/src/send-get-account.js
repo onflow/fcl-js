@@ -1,5 +1,6 @@
 import {invariant} from "@onflow/util-invariant"
 import {httpRequest as defaultHttpRequest} from "./http-request.js"
+import {legacyHttpRequest} from "./legacy-http-request.js"
 
 const HashAlgorithmIDs = {
   SHA2_256: 1,
@@ -16,28 +17,34 @@ const SignatureAlgorithmIDs = {
 }
 
 async function sendGetAccountAtBlockHeightRequest(ix, context, opts) {
-  const httpRequest = opts.httpRequest || defaultHttpRequest
+  const httpRequest =
+    opts.axiosInstance ||
+    legacyHttpRequest(opts.httpRequest) ||
+    defaultHttpRequest
 
-  const res = await httpRequest({
-    hostname: opts.node,
-    path: `/v1/accounts/${ix.account.addr}?block_height=${ix.block.height}&expand=contracts,keys`,
+  const {data: res} = await httpRequest({
+    baseURL: opts.node,
+    url: `/v1/accounts/${ix.account.addr}?block_height=${ix.block.height}&expand=contracts,keys`,
     method: "GET",
-    body: null,
+    data: null,
   })
 
   return constructResponse(ix, context, res)
 }
 
 async function sendGetAccountAtLatestBlockRequest(ix, context, opts) {
-  const httpRequest = opts.httpRequest || defaultHttpRequest
+  const httpRequest =
+    opts.axiosInstance ||
+    legacyHttpRequest(opts.httpRequest) ||
+    defaultHttpRequest
 
   const height = ix.block?.isSealed ? "sealed" : "final"
 
-  const res = await httpRequest({
-    hostname: opts.node,
-    path: `/v1/accounts/${ix.account.addr}?block_height=${height}&expand=contracts,keys`,
+  const {data: res} = await httpRequest({
+    baseURL: opts.node,
+    url: `/v1/accounts/${ix.account.addr}?block_height=${height}&expand=contracts,keys`,
     method: "GET",
-    body: null,
+    data: null,
   })
 
   return constructResponse(ix, context, res)

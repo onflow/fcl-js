@@ -26,7 +26,7 @@ describe("Get Transaction", () => {
       envelope_signatures: [],
     }
 
-    httpRequestMock.mockReturnValue(returnedTransaction)
+    httpRequestMock.mockReturnValue({data: returnedTransaction})
 
     const response = await sendGetTransaction(
       await resolve(await build([getTransaction("MyTxID")])),
@@ -35,7 +35,7 @@ describe("Get Transaction", () => {
         Buffer,
       },
       {
-        httpRequest: httpRequestMock,
+        axiosInstance: httpRequestMock,
         node: "localhost",
       }
     )
@@ -49,10 +49,10 @@ describe("Get Transaction", () => {
     const valueSent = httpRequestMock.mock.calls[0][0]
 
     expect(valueSent).toEqual({
-      hostname: "localhost",
-      path: "/v1/transactions/MyTxID",
+      baseURL: "localhost",
+      url: "/v1/transactions/MyTxID",
       method: "GET",
-      body: null,
+      data: null,
     })
 
     expect(response.transaction).toStrictEqual({

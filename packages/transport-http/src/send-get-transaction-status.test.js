@@ -29,7 +29,7 @@ describe("Get Transaction Status", () => {
       ],
     }
 
-    httpRequestMock.mockReturnValue(returnedTransactionStatus)
+    httpRequestMock.mockReturnValue({data: returnedTransactionStatus})
 
     const response = await sendGetTransactionStatus(
       await resolve(await build([getTransactionStatus("MyTxID")])),
@@ -38,7 +38,7 @@ describe("Get Transaction Status", () => {
         Buffer,
       },
       {
-        httpRequest: httpRequestMock,
+        axiosInstance: httpRequestMock,
         node: "localhost",
       }
     )
@@ -52,10 +52,10 @@ describe("Get Transaction Status", () => {
     const valueSent = httpRequestMock.mock.calls[0][0]
 
     expect(valueSent).toEqual({
-      hostname: "localhost",
-      path: "/v1/transaction_results/MyTxID",
+      baseURL: "localhost",
+      url: "/v1/transaction_results/MyTxID",
       method: "GET",
-      body: null,
+      data: null,
     })
 
     expect(response.transactionStatus).toStrictEqual({

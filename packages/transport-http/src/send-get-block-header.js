@@ -1,49 +1,59 @@
 import {invariant} from "@onflow/util-invariant"
 import {httpRequest as defaultHttpRequest} from "./http-request.js"
+import {legacyHttpRequest} from "./legacy-http-request.js"
 
 async function sendGetBlockHeaderByIDRequest(ix, context, opts) {
-  const httpRequest = opts.httpRequest || defaultHttpRequest
+  const httpRequest =
+    opts.axiosInstance ||
+    legacyHttpRequest(opts.httpRequest) ||
+    defaultHttpRequest
 
-  const res = await httpRequest({
-    hostname: opts.node,
-    path: `/v1/blocks/${ix.block.id}`,
+  const {data: res} = await httpRequest({
+    baseURL: opts.node,
+    url: `/v1/blocks/${ix.block.id}`,
     method: "GET",
-    body: null,
+    data: null,
   })
 
   return constructResponse(ix, context, res)
 }
 
 async function sendGetBlockHeaderByHeightRequest(ix, context, opts) {
-  const httpRequest = opts.httpRequest || defaultHttpRequest
+  const httpRequest =
+    opts.axiosInstance ||
+    legacyHttpRequest(opts.httpRequest) ||
+    defaultHttpRequest
 
-  const res = await httpRequest({
-    hostname: opts.node,
-    path: `/v1/blocks?height=${ix.block.height}`,
+  const {data: res} = await httpRequest({
+    baseURL: opts.node,
+    url: `/v1/blocks?height=${ix.block.height}`,
     method: "GET",
-    body: null,
+    data: null,
   })
 
   return constructResponse(ix, context, res)
 }
 
 async function sendGetLatestBlockHeaderRequest(ix, context, opts) {
-  const httpRequest = opts.httpRequest || defaultHttpRequest
+  const httpRequest =
+    opts.axiosInstance ||
+    legacyHttpRequest(opts.httpRequest) ||
+    defaultHttpRequest
 
   const height = ix.block?.isSealed ? "sealed" : "finalized"
 
-  const res = await httpRequest({
-    hostname: opts.node,
-    path: `/v1/blocks?height=${height}`,
+  const {data: res} = await httpRequest({
+    baseURL: opts.node,
+    url: `/v1/blocks?height=${height}`,
     method: "GET",
-    body: null,
+    data: null,
   })
 
   return constructResponse(ix, context, res)
 }
 
 function constructResponse(ix, context, res) {
-  const block = res.length ? res[0] : null
+  const block = res?.length ? res[0] : null
 
   const ret = context.response()
   ret.tag = ix.tag

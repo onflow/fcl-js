@@ -1,29 +1,36 @@
 import {invariant} from "@onflow/util-invariant"
 import {httpRequest as defaultHttpRequest} from "./http-request.js"
+import {legacyHttpRequest} from "./legacy-http-request.js"
 
 async function sendGetEventsForHeightRangeRequest(ix, context, opts) {
-  const httpRequest = opts.httpRequest || defaultHttpRequest
+  const httpRequest =
+    opts.axiosInstance ||
+    legacyHttpRequest(opts.httpRequest) ||
+    defaultHttpRequest
 
-  const res = await httpRequest({
-    hostname: opts.node,
-    path: `/v1/events?type=${ix.events.eventType}&start_height=${ix.events.start}&end_height=${ix.events.end}`,
+  const {data: res} = await httpRequest({
+    baseURL: opts.node,
+    url: `/v1/events?type=${ix.events.eventType}&start_height=${ix.events.start}&end_height=${ix.events.end}`,
     method: "GET",
-    body: null,
+    data: null,
   })
 
   return constructResponse(ix, context, res)
 }
 
 async function sendGetEventsForBlockIDsRequest(ix, context, opts) {
-  const httpRequest = opts.httpRequest || defaultHttpRequest
+  const httpRequest =
+    opts.axiosInstance ||
+    legacyHttpRequest(opts.httpRequest) ||
+    defaultHttpRequest
 
-  const res = await httpRequest({
-    hostname: opts.node,
-    path: `/v1/events?type=${
+  const {data: res} = await httpRequest({
+    baseURL: opts.node,
+    url: `/v1/events?type=${
       ix.events.eventType
     }&block_ids=${ix.events.blockIds.join(",")}`,
     method: "GET",
-    body: null,
+    data: null,
   })
 
   return constructResponse(ix, context, res)

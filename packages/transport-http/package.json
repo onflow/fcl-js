@@ -40,6 +40,7 @@
     "@onflow/util-address": "^1.0.1",
     "@onflow/util-invariant": "^1.0.1",
     "@onflow/util-template": "^1.0.2-alpha.0",
-    "@onflow/util-node-http-modules": "^1.0.2"
+    "axios": "^0.27.2",
+    "axios-retry": "^3.2.5"
   }
 }

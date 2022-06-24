@@ -31,7 +31,7 @@ describe("Send Get Events", () => {
       },
     ]
 
-    httpRequestMock.mockReturnValue(returnedEvents)
+    httpRequestMock.mockReturnValue({data: returnedEvents})
 
     const response = await sendGetEvents(
       await resolve(await build([getEventsAtBlockIds("MyEvent", ["a1b2c3"])])),
@@ -40,7 +40,7 @@ describe("Send Get Events", () => {
         Buffer,
       },
       {
-        httpRequest: httpRequestMock,
+        axiosInstance: httpRequestMock,
         node: "localhost",
       }
     )
@@ -54,10 +54,10 @@ describe("Send Get Events", () => {
     const valueSent = httpRequestMock.mock.calls[0][0]
 
     expect(valueSent).toEqual({
-      hostname: "localhost",
-      path: "/v1/events?type=MyEvent&block_ids=a1b2c3",
+      baseURL: "localhost",
+      url: "/v1/events?type=MyEvent&block_ids=a1b2c3",
       method: "GET",
-      body: null,
+      data: null,
     })
 
     expect(response.events[0]).toStrictEqual({
@@ -96,7 +96,7 @@ describe("Send Get Events", () => {
       },
     ]
 
-    httpRequestMock.mockReturnValue(returnedEvents)
+    httpRequestMock.mockReturnValue({data: returnedEvents})
 
     const response = await sendGetEvents(
       await resolve(
@@ -107,7 +107,7 @@ describe("Send Get Events", () => {
         Buffer,
       },
       {
-        httpRequest: httpRequestMock,
+        axiosInstance: httpRequestMock,
         node: "localhost",
       }
     )
@@ -121,10 +121,10 @@ describe("Send Get Events", () => {
     const valueSent = httpRequestMock.mock.calls[0][0]
 
     expect(valueSent).toEqual({
-      hostname: "localhost",
-      path: "/v1/events?type=MyEvent&start_height=123&end_height=456",
+      baseURL: "localhost",
+      url: "/v1/events?type=MyEvent&start_height=123&end_height=456",
       method: "GET",
-      body: null,
+      data: null,
     })
 
     expect(response.events[0]).toStrictEqual({

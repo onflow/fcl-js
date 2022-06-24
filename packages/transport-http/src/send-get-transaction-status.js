@@ -1,5 +1,6 @@
 import {invariant} from "@onflow/util-invariant"
 import {httpRequest as defaultHttpRequest} from "./http-request.js"
+import {legacyHttpRequest} from "./legacy-http-request.js"
 
 const STATUS_MAP = {
   UNKNOWN: 0,
@@ -24,15 +25,18 @@ export async function sendGetTransactionStatus(ix, context = {}, opts = {}) {
     `SDK Send Get Transaction Status Error: context.Buffer must be defined.`
   )
 
-  const httpRequest = opts.httpRequest || defaultHttpRequest
+  const httpRequest =
+    opts.axiosInstance ||
+    legacyHttpRequest(opts.httpRequest) ||
+    defaultHttpRequest
 
   ix = await ix
 
-  const res = await httpRequest({
-    hostname: opts.node,
-    path: `/v1/transaction_results/${ix.transaction.id}`,
+  const {data: res} = await httpRequest({
+    baseURL: opts.node,
+    url: `/v1/transaction_results/${ix.transaction.id}`,
     method: "GET",
-    body: null,
+    data: null,
   })
 
   let ret = context.response()

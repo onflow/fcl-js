@@ -18,7 +18,7 @@ describe("Send Get Account", () => {
       code: null,
     }
 
-    httpRequestMock.mockReturnValue(returnedAccount)
+    httpRequestMock.mockReturnValue({data: returnedAccount})
 
     const response = await sendGetAccount(
       await resolve(
@@ -29,7 +29,7 @@ describe("Send Get Account", () => {
         Buffer,
       },
       {
-        httpRequest: httpRequestMock,
+        axiosInstance: httpRequestMock,
         node: "localhost",
       }
     )
@@ -43,10 +43,10 @@ describe("Send Get Account", () => {
     const valueSent = httpRequestMock.mock.calls[0][0]
 
     expect(valueSent).toEqual({
-      hostname: "localhost",
-      path: "/v1/accounts/1654653399040a61?block_height=123&expand=contracts,keys",
+      baseURL: "localhost",
+      url: "/v1/accounts/1654653399040a61?block_height=123&expand=contracts,keys",
       method: "GET",
-      body: null,
+      data: null,
     })
     expect(response.account).toEqual({
       address: "0x1654653399040a61",
@@ -68,7 +68,7 @@ describe("Send Get Account", () => {
       code: null,
     }
 
-    httpRequestMock.mockReturnValue(returnedAccount)
+    httpRequestMock.mockReturnValue({data: returnedAccount})
 
     const response = await sendGetAccount(
       await resolve(await build([getAccount("0x1654653399040a61")])),
@@ -77,7 +77,7 @@ describe("Send Get Account", () => {
         Buffer,
       },
       {
-        httpRequest: httpRequestMock,
+        axiosInstance: httpRequestMock,
         node: "localhost",
       }
     )
@@ -91,10 +91,10 @@ describe("Send Get Account", () => {
     const valueSent = httpRequestMock.mock.calls[0][0]
 
     expect(valueSent).toEqual({
-      hostname: "localhost",
-      path: "/v1/accounts/1654653399040a61?block_height=final&expand=contracts,keys",
+      baseURL: "localhost",
+      url: "/v1/accounts/1654653399040a61?block_height=final&expand=contracts,keys",
       method: "GET",
-      body: null,
+      data: null,
     })
     expect(response.account).toEqual({
       address: "0x1654653399040a61",

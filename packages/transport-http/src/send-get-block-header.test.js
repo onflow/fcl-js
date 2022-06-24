@@ -24,7 +24,7 @@ describe("Send Get Block Header", () => {
       },
     ]
 
-    httpRequestMock.mockReturnValue(returnedBlockHeader)
+    httpRequestMock.mockReturnValue({data: returnedBlockHeader})
 
     const response = await sendGetBlockHeader(
       await resolve(await build([getBlockHeader(), atBlockId("a1b2c3")])),
@@ -33,7 +33,7 @@ describe("Send Get Block Header", () => {
         Buffer,
       },
       {
-        httpRequest: httpRequestMock,
+        axiosInstance: httpRequestMock,
         node: "localhost",
       }
     )
@@ -47,10 +47,10 @@ describe("Send Get Block Header", () => {
     const valueSent = httpRequestMock.mock.calls[0][0]
 
     expect(valueSent).toEqual({
-      hostname: "localhost",
-      path: "/v1/blocks/a1b2c3",
+      baseURL: "localhost",
+      url: "/v1/blocks/a1b2c3",
       method: "GET",
-      body: null,
+      data: null,
     })
 
     expect(response.blockHeader).toEqual({
@@ -77,7 +77,7 @@ describe("Send Get Block Header", () => {
       },
     ]
 
-    httpRequestMock.mockReturnValue(returnedBlockHeader)
+    httpRequestMock.mockReturnValue({data: returnedBlockHeader})
 
     const response = await sendGetBlockHeader(
       await resolve(await build([getBlockHeader(), atBlockHeight(123)])),
@@ -86,7 +86,7 @@ describe("Send Get Block Header", () => {
         Buffer,
       },
       {
-        httpRequest: httpRequestMock,
+        axiosInstance: httpRequestMock,
         node: "localhost",
       }
     )
@@ -100,10 +100,10 @@ describe("Send Get Block Header", () => {
     const valueSent = httpRequestMock.mock.calls[0][0]
 
     expect(valueSent).toEqual({
-      hostname: "localhost",
-      path: "/v1/blocks?height=123",
+      baseURL: "localhost",
+      url: "/v1/blocks?height=123",
       method: "GET",
-      body: null,
+      data: null,
     })
 
     expect(response.blockHeader).toEqual({
@@ -130,7 +130,7 @@ describe("Send Get Block Header", () => {
       },
     ]
 
-    httpRequestMock.mockReturnValue(returnedBlockHeader)
+    httpRequestMock.mockReturnValue({data: returnedBlockHeader})
 
     const response = await sendGetBlockHeader(
       await resolve(await build([getBlockHeader()])),
@@ -139,7 +139,7 @@ describe("Send Get Block Header", () => {
         Buffer,
       },
       {
-        httpRequest: httpRequestMock,
+        axiosInstance: httpRequestMock,
         node: "localhost",
       }
     )
@@ -153,10 +153,10 @@ describe("Send Get Block Header", () => {
     const valueSent = httpRequestMock.mock.calls[0][0]
 
     expect(valueSent).toEqual({
-      hostname: "localhost",
-      path: "/v1/blocks?height=finalized",
+      baseURL: "localhost",
+      url: "/v1/blocks?height=finalized",
       method: "GET",
-      body: null,
+      data: null,
     })
 
     expect(response.blockHeader).toEqual({
@@ -183,7 +183,7 @@ describe("Send Get Block Header", () => {
       },
     ]
 
-    httpRequestMock.mockReturnValue(returnedBlockHeader)
+    httpRequestMock.mockReturnValue({data: returnedBlockHeader})
 
     const response = await sendGetBlockHeader(
       await resolve(await build([getBlockHeader(true)])),
@@ -192,7 +192,7 @@ describe("Send Get Block Header", () => {
         Buffer,
       },
       {
-        httpRequest: httpRequestMock,
+        axiosInstance: httpRequestMock,
         node: "localhost",
       }
     )
@@ -206,10 +206,10 @@ describe("Send Get Block Header", () => {
     const valueSent = httpRequestMock.mock.calls[0][0]
 
     expect(valueSent).toEqual({
-      hostname: "localhost",
-      path: "/v1/blocks?height=sealed",
+      baseURL: "localhost",
+      url: "/v1/blocks?height=sealed",
       method: "GET",
-      body: null,
+      data: null,
     })
 
     expect(response.blockHeader).toEqual({

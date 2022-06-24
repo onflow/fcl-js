@@ -18,7 +18,7 @@ describe("Transaction", () => {
 
     const returnedTransactionId = "a1b2c3"
 
-    httpRequestMock.mockReturnValue({id: returnedTransactionId})
+    httpRequestMock.mockReturnValue({data: {id: returnedTransactionId}})
 
     const response = await sendTransaction(
       await resolve(
@@ -89,7 +89,7 @@ describe("Transaction", () => {
         Buffer,
       },
       {
-        httpRequest: httpRequestMock,
+        axiosInstance: httpRequestMock,
         node: "localhost",
       }
     )
@@ -103,10 +103,10 @@ describe("Transaction", () => {
     const valueSent = httpRequestMock.mock.calls[0][0]
 
     expect(valueSent).toEqual({
-      hostname: "localhost",
-      path: "/v1/transactions",
+      baseURL: "localhost",
+      url: "/v1/transactions",
       method: "POST",
-      body: {
+      data: {
         script: "Y2FkZW5jZSB0cmFuc2FjdGlvbg==",
         ["arguments"]: [],
         reference_block_id: "abc123",

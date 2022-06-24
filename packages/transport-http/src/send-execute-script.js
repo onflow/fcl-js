@@ -1,15 +1,18 @@
 import {invariant} from "@onflow/util-invariant"
-import {Buffer} from "@onflow/rlp"
 import {httpRequest as defaultHttpRequest} from "./http-request.js"
+import {legacyHttpRequest} from "./legacy-http-request.js"
 
 async function sendExecuteScriptAtBlockIDRequest(ix, context, opts) {
-  const httpRequest = opts.httpRequest || defaultHttpRequest
+  const httpRequest =
+    opts.axiosInstance ||
+    legacyHttpRequest(opts.httpRequest) ||
+    defaultHttpRequest
 
-  const res = await httpRequest({
-    hostname: opts.node,
-    path: `/v1/scripts?block_id=${ix.block.id}`,
+  const {data: res} = await httpRequest({
+    baseURL: opts.node,
+    url: `/v1/scripts?block_id=${ix.block.id}`,
     method: "POST",
-    body: {
+    data: {
       script: context.Buffer.from(ix.message.cadence).toString("base64"),
       ["arguments"]: ix.message.arguments.map(arg =>
         context.Buffer.from(
@@ -23,13 +26,16 @@ async function sendExecuteScriptAtBlockIDRequest(ix, context, opts) {
 }
 
 async function sendExecuteScriptAtBlockHeightRequest(ix, context, opts) {
-  const httpRequest = opts.httpRequest || defaultHttpRequest
+  const httpRequest =
+    opts.axiosInstance ||
+    legacyHttpRequest(opts.httpRequest) ||
+    defaultHttpRequest
 
-  const res = await httpRequest({
-    hostname: opts.node,
-    path: `/v1/scripts?block_height=${ix.block.height}`,
+  const {data: res} = await httpRequest({
+    baseURL: opts.node,
+    url: `/v1/scripts?block_height=${ix.block.height}`,
     method: "POST",
-    body: {
+    data: {
       script: context.Buffer.from(ix.message.cadence).toString("base64"),
       ["arguments"]: ix.message.arguments.map(arg =>
         context.Buffer.from(
@@ -43,13 +49,16 @@ async function sendExecuteScriptAtBlockHeightRequest(ix, context, opts) {
 }
 
 async function sendExecuteScriptAtLatestBlockRequest(ix, context, opts) {
-  const httpRequest = opts.httpRequest || defaultHttpRequest
+  const httpRequest =
+    opts.axiosInstance ||
+    legacyHttpRequest(opts.httpRequest) ||
+    defaultHttpRequest
 
-  const res = await httpRequest({
-    hostname: opts.node,
-    path: `/v1/scripts?block_height=sealed`,
+  const {data: res} = await httpRequest({
+    baseURL: opts.node,
+    url: `/v1/scripts?block_height=sealed`,
     method: "POST",
-    body: {
+    data: {
       script: context.Buffer.from(ix.message.cadence).toString("base64"),
       ["arguments"]: ix.message.arguments.map(arg =>
         context.Buffer.from(
