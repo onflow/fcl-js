@@ -4,6 +4,7 @@ const commonjs = require("@rollup/plugin-commonjs")
 const replace = require("@rollup/plugin-replace")
 const sourcemap = require("rollup-plugin-sourcemaps")
 const {nodeResolve} = require("@rollup/plugin-node-resolve")
+const {babel} = require("@rollup/plugin-babel")
 
 const builtinModules = require("builtin-modules")
 
@@ -14,6 +15,17 @@ const SUPPRESSED_WARNING_CODES = [
 ]
 
 module.exports = function getInputOptions(package, build) {
+  if (!package.dependencies["@babel/runtime"]) {
+    throw new Error(
+      `${package.name} is missing required @babel/runtime dependency.  Please add this to the package.json and try again.`
+    )
+  }
+
+  const babelRuntimeVersion = package.dependencies["@babel/runtime"].replace(
+    /^[^0-9]*/,
+    ""
+  )
+
   let external =
     build.type !== "umd"
       ? [/node:.*/]
@@ -23,6 +35,7 @@ module.exports = function getInputOptions(package, build) {
       : []
 
   let testExternal = id =>
+    /@babel\/runtime/g.test(id) ||
     external.reduce((state, ext) => {
       return (
         state ||
@@ -47,6 +60,19 @@ module.exports = function getInputOptions(package, build) {
       nodeResolve({
         browser: true,
         preferBuiltins: build.type !== "umd",
+      }),
+      babel({
+        babelHelpers: "runtime",
+        presets: [["@babel/preset-env"]],
+        plugins: [
+          [
+            "@babel/plugin-transform-runtime",
+            {
+              version: babelRuntimeVersion,
+            },
+          ],
+        ],
+        sourceMaps: true,
       }),
       sourcemap(),
     ],

@@ -35,6 +35,7 @@
     "start": "fcl-bundle --watch"
   },
   "dependencies": {
+    "@babel/runtime": "^7.18.6",
     "@improbable-eng/grpc-web": "^0.14.0",
     "@improbable-eng/grpc-web-node-http-transport": "^0.14.0",
     "@onflow/protobuf": "^1.1.0-alpha.0",

@@ -35,6 +35,7 @@
     "start": "fcl-bundle --watch"
   },
   "dependencies": {
+    "@babel/runtime": "^7.18.6",
     "@onflow/rlp": "^1.0.1",
     "@onflow/util-invariant": "^1.0.1"
   }

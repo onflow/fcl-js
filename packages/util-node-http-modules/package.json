@@ -50,5 +50,8 @@
     "build": "fcl-bundle",
     "test:watch": "jest --watch",
     "start": "fcl-bundle --watch"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.18.6"
   }
 }

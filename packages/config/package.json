@@ -34,6 +34,7 @@
     "start": "fcl-bundle --watch"
   },
   "dependencies": {
+    "@babel/runtime": "^7.18.6",
     "@onflow/util-actor": "^1.1.0-alpha.0"
   }
 }

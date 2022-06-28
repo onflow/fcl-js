@@ -37,9 +37,10 @@
     "start": "fcl-bundle --watch"
   },
   "dependencies": {
+    "@babel/runtime": "^7.18.6",
     "@onflow/util-address": "^1.0.1",
     "@onflow/util-invariant": "^1.0.1",
-    "@onflow/util-template": "^1.0.2-alpha.0",
-    "@onflow/util-node-http-modules": "^1.0.2"
+    "@onflow/util-node-http-modules": "^1.0.2",
+    "@onflow/util-template": "^1.0.2-alpha.0"
   }
 }

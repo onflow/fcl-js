@@ -23,6 +23,7 @@
     "jest-esm-transformer": "1.0.0"
   },
   "dependencies": {
+    "@babel/runtime": "^7.18.6",
     "queue-microtask": "1.1.2"
   },
   "source": "src/index.js",

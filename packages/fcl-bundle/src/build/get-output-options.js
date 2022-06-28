@@ -21,25 +21,11 @@ module.exports = function getOutputOptions(package, build) {
   switch (build.type) {
     case "cjs":
       return _.merge(options, {
-        plugins: [
-          ...options.plugins,
-          getBabelOutputPlugin({
-            presets: [["@babel/preset-env", {modules: "commonjs"}]],
-            plugins: [["@babel/plugin-transform-runtime"]],
-            sourceMaps: true,
-          }),
-        ],
+        plugins: [...options.plugins],
       })
     case "esm":
       return _.merge(options, {
-        plugins: [
-          ...options.plugins,
-          getBabelOutputPlugin({
-            presets: [["@babel/preset-env", {modules: false}]],
-            plugins: [["@babel/plugin-transform-runtime"]],
-            sourceMaps: true,
-          }),
-        ],
+        plugins: [...options.plugins],
       })
     case "umd":
       return _.merge(options, {

@@ -34,6 +34,7 @@
     "start": "fcl-bundle --watch"
   },
   "dependencies": {
+    "@babel/runtime": "^7.18.6",
     "buffer": "^6.0.3"
   }
 }
