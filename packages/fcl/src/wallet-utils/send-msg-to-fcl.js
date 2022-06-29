@@ -3,8 +3,13 @@ import {onMessageFromFCL} from "./on-message-from-fcl"
 export const sendMsgToFCL = (type, msg = {}) => {
   if (window.location !== window.parent.location) {
     window.parent.postMessage({...msg, type}, "*")
-  } else {
+  } else if (window.opener) {
     window.opener.postMessage({...msg, type}, "*")
+  } else {
+    document.write("Session expired")
+    setTimeout(() => {
+      window.close()
+    }, 2500)
   }
 }
 
