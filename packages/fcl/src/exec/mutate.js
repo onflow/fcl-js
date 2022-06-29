@@ -70,7 +70,8 @@ export async function mutate(opts = {}) {
 
     // prettier-ignore
     txid = sdk.send([
-      sdk.transaction(opts.cadence || opts?.template?.data?.cadence),
+      // sdk.transaction(opts.cadence || opts?.template?.data?.cadence),
+      sdk.transaction(opts.cadence),
 
       sdk.args(normalizeArgs(opts.args || [])),
 
@@ -100,9 +101,9 @@ async function prepMutation(opts) {
   // prettier-ignore
   invariant(isObject(opts), "mutate(opts) -- opts must be an object")
   // prettier-ignore
-  invariant(isRequired(opts.cadence || opts?.template), "mutate({ cadence }) -- cadence is required")
-  // prettier-ignore
-  invariant(isString(opts.cadence) || isString(opts?.template?.data.cadence), "mutate({ cadence }) -- cadence must be a string")
+  // invariant(isRequired(opts.cadence || opts?.template), "mutate({ cadence }) -- cadence is required")
+  // // prettier-ignore
+  // invariant(isString(opts.cadence) || isString(opts?.template?.data.cadence), "mutate({ cadence }) -- cadence must be a string")
   // prettier-ignore
   invariant(
     await sdk.config.get("accessNode.api"),
