@@ -61,17 +61,18 @@ function constructResponse(ix, context, res) {
     balance: Number(res.balance),
     code: "",
     contracts: unwrapContracts(res.contracts),
-    keys: res.keys.map(key => ({
-      index: Number(key.index),
-      publicKey: key.public_key.replace(/^0x/, ""),
-      signAlgo: SignatureAlgorithmIDs[key.signing_algorithm],
-      signAlgoString: key.signing_algorithm,
-      hashAlgo: HashAlgorithmIDs[key.hashing_algorithm],
-      hashAlgoString: key.hashing_algorithm,
-      sequenceNumber: Number(key.sequence_number),
-      weight: Number(key.weight),
-      revoked: key.revoked,
-    })),
+    keys:
+      res.keys?.map(key => ({
+        index: Number(key.index),
+        publicKey: key.public_key.replace(/^0x/, ""),
+        signAlgo: SignatureAlgorithmIDs[key.signing_algorithm],
+        signAlgoString: key.signing_algorithm,
+        hashAlgo: HashAlgorithmIDs[key.hashing_algorithm],
+        hashAlgoString: key.hashing_algorithm,
+        sequenceNumber: Number(key.sequence_number),
+        weight: Number(key.weight),
+        revoked: key.revoked,
+      })) ?? [],
   }
 
   return ret
