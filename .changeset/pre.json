@@ -19,5 +19,8 @@
     "@onflow/util-template": "1.0.2",
     "@onflow/util-uid": "1.0.1"
   },
-  "changesets": []
+  "changesets": [
+    "lovely-candles-relax",
+    "thin-parents-approve"
+  ]
 }
