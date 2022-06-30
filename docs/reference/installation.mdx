@@ -1,0 +1,41 @@
+# Installation
+
+This chapter explains the installation of the FCL library in your system. However, before moving to the installation, let us verify the prerequisite first.
+
+## Prerequisite
+- You need to have Node version v12.0.0 or higher.
+
+FCL JS depend on Node.js and must be installed in your system. But if you have installed Node.js on your system. You can check it using the below command −
+
+```javascript
+node --version
+```
+
+You will see the Nodejs version you installed, as shown below. The version below is mine.
+
+```javascript
+v14.2.0
+```
+
+If Nodejs is not installed on your system, you can download and install it by visiting https://nodejs.org/en/download/. 
+
+
+To use the FCL JS in your application, install using **yarn** or **npm**
+
+```shell
+npm i -S @onflow/fcl
+```
+
+```shell
+yarn add @onflow/fcl
+```
+#### Importing
+
+**ES6**
+```js
+import * as fcl from "@onflow/fcl";
+```
+**Node.js**
+```js
+const fcl = require("@onflow/fcl");
+```
