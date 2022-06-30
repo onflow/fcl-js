@@ -2,4 +2,4 @@
 "@onflow/fcl": patch
 ---
 
-Throw error if FCL popup is blocked. Show "session expired" if sendMsgToFCL cannot access parent window for postMessage.
+Throw error if FCL popup/tab is blocked from opening or if sendMsgToFCL cannot access parent window reference for postMessage.
