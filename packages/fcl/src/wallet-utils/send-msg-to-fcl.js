@@ -3,8 +3,10 @@ import {onMessageFromFCL} from "./on-message-from-fcl"
 export const sendMsgToFCL = (type, msg = {}) => {
   if (window.location !== window.parent.location) {
     window.parent.postMessage({...msg, type}, "*")
-  } else {
+  } else if (window.opener) {
     window.opener.postMessage({...msg, type}, "*")
+  } else {
+    throw new Error("Unable to communicate with parent FCL instance")
   }
 }
 
