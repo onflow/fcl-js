@@ -6,10 +6,7 @@ export const sendMsgToFCL = (type, msg = {}) => {
   } else if (window.opener) {
     window.opener.postMessage({...msg, type}, "*")
   } else {
-    document.write("Session expired")
-    setTimeout(() => {
-      window.close()
-    }, 2500)
+    throw new Error("Unable to communicate with parent FCL instance")
   }
 }
 
