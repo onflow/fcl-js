@@ -1,5 +1,12 @@
 # @onflow/util-logger
 
+## 1.1.1-alpha.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @onflow/sdk@1.1.1-alpha.0
+
 ## 1.1.0
 
 ### Minor Changes

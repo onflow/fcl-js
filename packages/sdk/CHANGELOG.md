@@ -1,5 +1,13 @@
 # @onflow/sdk
 
+## 1.1.1-alpha.0
+
+### Patch Changes
+
+- Updated dependencies [[`4d59f80c`](https://github.com/onflow/fcl-js/commit/4d59f80c0a8b45c82a28a05e6c579f4376107b86)]:
+  - @onflow/transport-http@1.3.1-alpha.0
+  - @onflow/util-logger@1.1.1-alpha.0
+
 ## 1.1.0
 
 ### Minor Changes

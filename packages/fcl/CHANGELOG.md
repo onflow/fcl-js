@@ -1,5 +1,15 @@
 # @onflow/fcl
 
+## 1.1.1-alpha.0
+
+### Patch Changes
+
+- [#1274](https://github.com/onflow/fcl-js/pull/1274) [`865e412c`](https://github.com/onflow/fcl-js/commit/865e412c5c975e68f30e9c8b4b225030560a5187) Thanks [@jribbink](https://github.com/jribbink)! - Throw error if FCL popup is blocked. Show "session expired" if sendMsgToFCL cannot access parent window for postMessage.
+
+- Updated dependencies []:
+  - @onflow/sdk@1.1.1-alpha.0
+  - @onflow/util-logger@1.1.1-alpha.0
+
 ## 1.1.0
 
 ### Minor Changes
