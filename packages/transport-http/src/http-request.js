@@ -1,5 +1,6 @@
 import {invariant} from "@onflow/util-invariant"
 import {getNodeHttpModules} from "@onflow/util-node-http-modules"
+import * as logger from "@onflow/util-logger"
 
 class HTTPRequestError extends Error {
   constructor({
@@ -97,17 +98,34 @@ export async function httpRequest({
     }
   }
 
+  function showAccessNodeErrorMessage() {
+    logger.log({
+      title: "Access Node Error",
+      message: `The provided access node ${hostname} does not appear to be a valid REST/HTTP access node.
+Please verify that you are not unintentionally using a GRPC access node.
+See more here: https://docs.onflow.org/fcl/reference/sdk-guidelines/#connect`,
+      level: logger.LEVELS.error,
+    })
+  }
+
   function makeRequest() {
     if (fetchTransport) {
       return fetchTransport(`${hostname}${path}`, {
         method: method,
         body: body ? JSON.stringify(body) : undefined,
+        mode: "no-cors",
       })
-        .then(async res => {
+        .then(res => {
           if (res.ok) {
             return res.json()
           }
-          const responseJSON = await res.json()
+
+          if (res.status === 0) {
+            showAccessNodeErrorMessage()
+          }
+
+          const responseJSON = res.body ? res.json() : null
+
           throw new HTTPRequestError({
             transport: "FetchTransport",
             error: responseJSON?.message,
@@ -169,12 +187,18 @@ export async function httpRequest({
 
           res.on("end", () => {
             try {
-              responseBody = JSON.parse(responseBody.join(""))
+              responseBody =
+                responseBody && responseBody.length
+                  ? JSON.parse(responseBody.join(""))
+                  : null
               if (
                 res?.statusCode &&
                 (Number(res?.statusCode) < 200 ||
                   Number(res?.statusCode) >= 300)
               ) {
+                if (res.statusCode == 404) {
+                  showAccessNodeErrorMessage()
+                }
                 reject(
                   new HTTPRequestError({
                     transport: isHTTPs
