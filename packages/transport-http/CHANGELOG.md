@@ -1,5 +1,11 @@
 # @onflow/transport-http
 
+## 1.3.1-alpha.0
+
+### Patch Changes
+
+- [#1270](https://github.com/onflow/fcl-js/pull/1270) [`4d59f80c`](https://github.com/onflow/fcl-js/commit/4d59f80c0a8b45c82a28a05e6c579f4376107b86) Thanks [@jribbink](https://github.com/jribbink)! - Fix sendGetAccount throwing error if account has no keys
+
 ## 1.3.0
 
 ### Minor Changes
