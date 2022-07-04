@@ -113,15 +113,10 @@ See more here: https://docs.onflow.org/fcl/reference/sdk-guidelines/#connect`,
       return fetchTransport(`${hostname}${path}`, {
         method: method,
         body: body ? JSON.stringify(body) : undefined,
-        mode: "no-cors",
       })
         .then(res => {
           if (res.ok) {
             return res.json()
-          }
-
-          if (res.status === 0) {
-            showAccessNodeErrorMessage()
           }
 
           const responseJSON = res.body ? res.json() : null
@@ -139,6 +134,9 @@ See more here: https://docs.onflow.org/fcl/reference/sdk-guidelines/#connect`,
           })
         })
         .catch(e => {
+          if (e.message === "Failed to fetch") {
+            showAccessNodeErrorMessage()
+          }
           if (e instanceof HTTPRequestError) {
             throw e
           }
