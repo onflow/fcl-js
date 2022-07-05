@@ -114,12 +114,12 @@ See more here: https://docs.onflow.org/fcl/reference/sdk-guidelines/#connect`,
         method: method,
         body: body ? JSON.stringify(body) : undefined,
       })
-        .then(res => {
+        .then(async res => {
           if (res.ok) {
             return res.json()
           }
 
-          const responseJSON = res.body ? res.json() : null
+          const responseJSON = res.body ? await res.json() : null
 
           throw new HTTPRequestError({
             transport: "FetchTransport",
@@ -134,12 +134,13 @@ See more here: https://docs.onflow.org/fcl/reference/sdk-guidelines/#connect`,
           })
         })
         .catch(e => {
-          if (e.message === "Failed to fetch") {
-            showAccessNodeErrorMessage()
-          }
           if (e instanceof HTTPRequestError) {
             throw e
           }
+
+          // Show AN error for all network errors
+          showAccessNodeErrorMessage()
+
           throw new HTTPRequestError({
             transport: "FetchTransport",
             error: e?.message,
