@@ -1,6 +1,5 @@
 const _ = require("lodash")
 const {resolve} = require("path")
-const {getBabelOutputPlugin} = require("@rollup/plugin-babel")
 
 const generateModuleName = pkgName =>
   pkgName
