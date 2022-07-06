@@ -1,5 +1,6 @@
 import {invariant} from "@onflow/util-invariant"
 import {getNodeHttpModules} from "@onflow/util-node-http-modules"
+import * as logger from "@onflow/util-logger"
 
 class HTTPRequestError extends Error {
   constructor({
@@ -97,6 +98,16 @@ export async function httpRequest({
     }
   }
 
+  function showAccessNodeErrorMessage() {
+    logger.log({
+      title: "Access Node Error",
+      message: `The provided access node ${hostname} does not appear to be a valid REST/HTTP access node.
+Please verify that you are not unintentionally using a GRPC access node.
+See more here: https://docs.onflow.org/fcl/reference/sdk-guidelines/#connect`,
+      level: logger.LEVELS.error,
+    })
+  }
+
   function makeRequest() {
     if (fetchTransport) {
       return fetchTransport(`${hostname}${path}`, {
@@ -107,7 +118,9 @@ export async function httpRequest({
           if (res.ok) {
             return res.json()
           }
-          const responseJSON = await res.json()
+
+          const responseJSON = res.body ? await res.json() : null
+
           throw new HTTPRequestError({
             transport: "FetchTransport",
             error: responseJSON?.message,
@@ -124,6 +137,10 @@ export async function httpRequest({
           if (e instanceof HTTPRequestError) {
             throw e
           }
+
+          // Show AN error for all network errors
+          showAccessNodeErrorMessage()
+
           throw new HTTPRequestError({
             transport: "FetchTransport",
             error: e?.message,
@@ -169,12 +186,18 @@ export async function httpRequest({
 
           res.on("end", () => {
             try {
-              responseBody = JSON.parse(responseBody.join(""))
+              responseBody =
+                responseBody && responseBody.length
+                  ? JSON.parse(responseBody.join(""))
+                  : null
               if (
                 res?.statusCode &&
                 (Number(res?.statusCode) < 200 ||
                   Number(res?.statusCode) >= 300)
               ) {
+                if (res.statusCode == 404) {
+                  showAccessNodeErrorMessage()
+                }
                 reject(
                   new HTTPRequestError({
                     transport: isHTTPs

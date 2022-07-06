@@ -76,7 +76,6 @@ test("Voucher in PreSignable multiple payer keys", async () => {
           addr: "0x02",
           keyId: 0,
         }),
-        resolve: null,
       },
       {
         ...account,
@@ -89,7 +88,6 @@ test("Voucher in PreSignable multiple payer keys", async () => {
           addr: "0x02",
           keyId: 1,
         }),
-        resolve: null,
       },
     ],
   }
@@ -151,7 +149,6 @@ test("Voucher in PreSignable multiple payer keys different accounts", async () =
           addr: "0x02",
           keyId: 0,
         }),
-        resolve: null,
       },
       {
         ...account,
@@ -164,7 +161,6 @@ test("Voucher in PreSignable multiple payer keys different accounts", async () =
           addr: "0x02",
           keyId: 1,
         }),
-        resolve: null,
       },
     ],
   }

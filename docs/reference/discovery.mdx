@@ -22,7 +22,7 @@ This method is the simplest way to integrate Discovery and its wallets and servi
 import { config } from "@onflow/fcl";
 
 config({
-  "accessNode.api": "https://access-testnet.onflow.org", // Mainnet: "https://access-mainnet-beta.onflow.org"
+  "accessNode.api": "https://rest-testnet.onflow.org", // Mainnet: "https://rest-mainnet.onflow.org"
   "discovery.wallet": "https://fcl-discovery.onflow.org/testnet/authn" // Mainnet: "https://fcl-discovery.onflow.org/authn"
 })
 ```
@@ -58,7 +58,7 @@ Setup still requires configuration of the Discovery endpoint, but when using the
 import { config } from "@onflow/fcl"
 
 config({
-  "accessNode.api": "https://access-testnet.onflow.org", // Mainnet: "https://access-mainnet-beta.onflow.org"
+  "accessNode.api": "https://rest-testnet.onflow.org", // Mainnet: "https://rest-mainnet.onflow.org"
   "discovery.authn.api": "https://fcl-discovery.onflow.org/api/testnet/authn" // Mainnet: "https://fcl-discovery.onflow.org/api/authn"
 })
 ```

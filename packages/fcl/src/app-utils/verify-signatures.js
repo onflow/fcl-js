@@ -139,7 +139,7 @@ export async function verifyAccountProof(
 
   for (const el of signatures) {
     signaturesArr.push(el.signature)
-    keyIndices.push(el.keyId)
+    keyIndices.push(el.keyId.toString())
   }
 
   return query({
@@ -182,7 +182,7 @@ export async function verifyUserSignatures(message, compSigs, opts = {}) {
 
   for (const el of compSigs) {
     signaturesArr.push(el.signature)
-    keyIndices.push(el.keyId)
+    keyIndices.push(el.keyId.toString())
   }
 
   return query({

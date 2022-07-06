@@ -6,7 +6,7 @@ Programmatically mutate state on Flow. A light, stable and approachable higher l
 
 ## Status
 
-- **Last Updated:** June 16th 2021
+- **Last Updated:** June 30th 2022
 - **Stable:** Yes
 - **Risk of Breaking Change:** Low
 - **Introduced:** `0.0.73`
@@ -29,7 +29,7 @@ import * as fcl from "@onflow/fcl"
 
 // prettier-ignore
 fcl.config()
-  .put("accessNode.api", "https://access-testnet.onflow.org")
+  .put("accessNode.api", "https://rest-testnet.onflow.org")
   .put("discovery.wallet", "https://fcl-discovery.onflow.org/testnet/authn")
 ```
 
