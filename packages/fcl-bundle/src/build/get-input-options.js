@@ -26,23 +26,21 @@ module.exports = function getInputOptions(package, build) {
     ""
   )
 
-  let external =
-    build.type !== "umd"
-      ? [/node:.*/]
-          .concat(builtinModules)
-          .concat(Object.keys(package.peerDependencies || {}))
-          .concat(Object.keys(package.dependencies || {}))
-      : []
+  let external = [/node:.*/]
+    .concat(builtinModules)
+    .concat(Object.keys(package.peerDependencies || {}))
+    .concat(Object.keys(package.dependencies || {}))
 
   let testExternal = id =>
-    /@babel\/runtime/g.test(id) ||
-    external.reduce((state, ext) => {
-      return (
-        state ||
-        (ext instanceof RegExp && ext.test(id)) ||
-        (typeof ext === "string" && ext === id)
-      )
-    }, false)
+    build.type !== "umd" &&
+    (/@babel\/runtime/g.test(id) ||
+      external.reduce((state, ext) => {
+        return (
+          state ||
+          (ext instanceof RegExp && ext.test(id)) ||
+          (typeof ext === "string" && ext === id)
+        )
+      }, false))
 
   let options = {
     input: build.source,
