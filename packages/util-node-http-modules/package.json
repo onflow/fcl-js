@@ -18,11 +18,20 @@
     }
   },
   "devDependencies": {
+    "@onflow/fcl-bundle": "^1.0.0",
     "jest": "^27.0.6",
-    "jest-esm-transformer": "1.0.0",
-    "microbundle": "^0.13.3"
+    "jest-esm-transformer": "1.0.0"
   },
-  "main": "./dist/util-node-http-modules.noop.js",
+  "source": {
+    "./src/util-node-http-modules.js": {
+      "cjs": "./dist/util-node-http-modules.js",
+      "esm": "./dist/util-node-http-modules.esm.js"
+    },
+    "./src/util-node-http-modules.noop.js": {
+      "cjs": "./dist/util-node-http-modules.noop.js",
+      "esm": "./dist/util-node-http-modules.noop.esm.js"
+    }
+  },
   "exports": {
     "node": {
       "import": "./dist/util-node-http-modules.esm.js",
@@ -38,12 +47,11 @@
     "alpha": "npm publish --tag alpha",
     "prepublishOnly": "npm test && npm run build",
     "test": "jest",
-    "build": "npm run build:node && npm run build:noop",
-    "build:node": "microbundle --no-compress --external http,https -i ./src/util-node-http-modules.js -o ./dist --format cjs,esm,umd",
-    "build:noop": "microbundle --no-compress -i ./src/util-node-http-modules.noop.js -o ./dist/util-node-http-modules.noop --format cjs,esm,umd",
+    "build": "fcl-bundle",
     "test:watch": "jest --watch",
-    "start": "npm run watch:node & npm run watch:noop",
-    "watch:node": "microbundle --no-compress --external http,https -i ./src/util-node-http-modules.js -o ./dist --format cjs,esm,umd",
-    "watch:noop": "microbundle --no-compress -i ./src/util-node-http-modules.noop.js -o ./dist/util-node-http-modules.noop --format cjs,esm,umd"
+    "start": "fcl-bundle --watch"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.18.6"
   }
 }

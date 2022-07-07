@@ -108,7 +108,7 @@ describe("Transaction", () => {
       method: "POST",
       body: {
         script: "Y2FkZW5jZSB0cmFuc2FjdGlvbg==",
-        ["arguments"]: [],
+        arguments: [],
         reference_block_id: "abc123",
         gas_limit: "500",
         payer: "f8d6e0586b0a20c7",

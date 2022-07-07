@@ -11,6 +11,8 @@ import {execService} from "./exec-service"
 import {normalizeCompositeSignature} from "./normalize/composite-signature"
 import {getDiscoveryService} from "../config-utils"
 
+export const isFn = d => typeof d === "function"
+
 const NAME = "CURRENT_USER"
 const UPDATED = "CURRENT_USER/UPDATED"
 const SNAPSHOT = "SNAPSHOT"
@@ -94,9 +96,11 @@ function notExpired(user) {
 }
 
 async function getAccountProofData() {
-  const accountProofDataResolver = await config.get("fcl.accountProof.resolver")
-  const accountProofData =
-    accountProofDataResolver ?? (await accountProofDataResolver())
+  let accountProofDataResolver = await config.get("fcl.accountProof.resolver")
+
+  if (!isFn(accountProofDataResolver)) return
+
+  const accountProofData = await accountProofDataResolver()
 
   if (accountProofData == null) return
 

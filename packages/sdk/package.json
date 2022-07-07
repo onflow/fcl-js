@@ -17,13 +17,13 @@
       ".js": "jest-esm-transformer"
     },
     "globals": {
-      "MICROBUNDLE_CURRENT_VERSION": "TESTVERSION"
+      "PACKAGE_CURRENT_VERSION": "TESTVERSION"
     }
   },
   "devDependencies": {
+    "@onflow/fcl-bundle": "^1.0.0",
     "jest": "^27.0.6",
-    "jest-esm-transformer": "1.0.0",
-    "microbundle": "^0.13.3"
+    "jest-esm-transformer": "1.0.0"
   },
   "source": "src/sdk.js",
   "main": "dist/sdk.js",
@@ -33,12 +33,12 @@
     "alpha": "npm publish --tag alpha",
     "prepublishOnly": "npm test && npm run build",
     "test": "jest",
-    "build": "microbundle --no-compress --define MICROBUNDLE_CURRENT_VERSION=$npm_package_version",
-    "currentVersion": "node -e MICROBUNDLE_CURRENT_VERSION=$npm_package_version",
+    "build": "fcl-bundle",
     "test:watch": "jest --watch",
-    "start": "microbundle --no-compress --define MICROBUNDLE_CURRENT_VERSION=$npm_package_version watch"
+    "start": "fcl-bundle --watch"
   },
   "dependencies": {
+    "@babel/runtime": "^7.18.6",
     "@onflow/config": "^1.0.2",
     "@onflow/rlp": "^1.0.1",
     "@onflow/transport-http": "^1.3.1-alpha.0",
