@@ -1,6 +1,5 @@
-import {invariant} from "@onflow/util-invariant"
-import {getNodeHttpModules} from "@onflow/util-node-http-modules"
 import * as logger from "@onflow/util-logger"
+import fetchTransport from "node-fetch"
 
 class HTTPRequestError extends Error {
   constructor({
@@ -8,12 +7,10 @@ class HTTPRequestError extends Error {
     error,
     hostname,
     path,
-    port,
     method,
     requestBody,
     responseBody,
     responseStatusText,
-    reqOn,
     statusCode,
   }) {
     const msg = `
@@ -22,12 +19,10 @@ class HTTPRequestError extends Error {
       ${error ? `error=${error}` : ""}
       ${hostname ? `hostname=${hostname}` : ""}
       ${path ? `path=${path}` : ""}
-      ${port ? `port=${port}` : ""}
       ${method ? `method=${method}` : ""}
       ${requestBody ? `requestBody=${JSON.stringify(requestBody)}` : ""}
       ${responseBody ? `responseBody=${JSON.stringify(responseBody)}` : ""}
       ${responseStatusText ? `responseStatusText=${responseStatusText}` : ""}
-      ${reqOn ? `reqOn=${reqOn}` : ""}
       ${statusCode ? `statusCode=${statusCode}` : ""}
     `
     super(msg)
@@ -58,20 +53,6 @@ export async function httpRequest({
   retryLimit = 5,
   retryIntervalMs = 1000,
 }) {
-  const isHTTPs = hostname.substring(0, 5) === "https"
-
-  let fetchTransport
-  try {
-    fetchTransport = fetch || window?.fetch
-  } catch (e) {}
-
-  const {nodeHttpsTransport, nodeHttpTransport} = await getNodeHttpModules()
-
-  invariant(
-    fetchTransport || nodeHttpsTransport || nodeHttpTransport,
-    "HTTP Request error: Could not find a supported HTTP module."
-  )
-
   async function requestLoop(retryAttempt = 0) {
     try {
       const resp = await makeRequest()
@@ -98,167 +79,53 @@ export async function httpRequest({
     }
   }
 
-  function showAccessNodeErrorMessage() {
-    logger.log({
-      title: "Access Node Error",
-      message: `The provided access node ${hostname} does not appear to be a valid REST/HTTP access node.
-Please verify that you are not unintentionally using a GRPC access node.
-See more here: https://docs.onflow.org/fcl/reference/sdk-guidelines/#connect`,
-      level: logger.LEVELS.error,
-    })
-  }
-
   function makeRequest() {
-    if (fetchTransport) {
-      return fetchTransport(`${hostname}${path}`, {
-        method: method,
-        body: body ? JSON.stringify(body) : undefined,
-      })
-        .then(async res => {
-          if (res.ok) {
-            return res.json()
-          }
-
-          const responseJSON = res.body ? await res.json() : null
-
-          throw new HTTPRequestError({
-            transport: "FetchTransport",
-            error: responseJSON?.message,
-            hostname,
-            path,
-            method,
-            requestBody: body,
-            responseBody: responseJSON,
-            responseStatusText: res.statusText,
-            statusCode: res.status,
-          })
-        })
-        .catch(e => {
-          if (e instanceof HTTPRequestError) {
-            throw e
-          }
-
-          // Show AN error for all network errors
-          showAccessNodeErrorMessage()
-
-          throw new HTTPRequestError({
-            transport: "FetchTransport",
-            error: e?.message,
-            hostname,
-            path,
-            method,
-            requestBody: body,
-          })
-        })
-    } else if (nodeHttpsTransport && nodeHttpTransport) {
-      return new Promise((resolve, reject) => {
-        const hostnameParts = hostname.split(":")
-        const port = hostnameParts.length == 3 ? hostnameParts[2] : undefined
-
-        let parsedHostname =
-          hostnameParts.length > 1
-            ? hostnameParts[1].substring(2)
-            : hostnameParts[0]
-
-        const transport = isHTTPs ? nodeHttpsTransport : nodeHttpTransport
-        const bodyString = body ? JSON.stringify(body) : null
-
-        const options = {
-          hostname: parsedHostname,
-          path,
-          port,
-          method,
-          headers: body
-            ? {
-                "Content-Type": "application/json",
-                "Content-Length": bodyString.length,
-              }
-            : undefined,
+    return fetchTransport(`${hostname}${path}`, {
+      method: method,
+      body: body ? JSON.stringify(body) : undefined,
+    })
+      .then(async res => {
+        if (res.ok) {
+          return res.json()
         }
 
-        var responseBody = []
-        const req = transport.request(options, res => {
-          res.setEncoding("utf8")
+        const responseJSON = res.body ? await res.json() : null
 
-          res.on("data", dataChunk => {
-            responseBody.push(dataChunk)
-          })
-
-          res.on("end", () => {
-            try {
-              responseBody =
-                responseBody && responseBody.length
-                  ? JSON.parse(responseBody.join(""))
-                  : null
-              if (
-                res?.statusCode &&
-                (Number(res?.statusCode) < 200 ||
-                  Number(res?.statusCode) >= 300)
-              ) {
-                if (res.statusCode == 404) {
-                  showAccessNodeErrorMessage()
-                }
-                reject(
-                  new HTTPRequestError({
-                    transport: isHTTPs
-                      ? "NodeHTTPsTransport"
-                      : "NodeHTTPTransport",
-                    error: JSON.stringify(responseBody),
-                    hostname: parsedHostname,
-                    path,
-                    port,
-                    method,
-                    requestBody: body ? JSON.stringify(body) : null,
-                    responseBody: JSON.stringify(responseBody),
-                    reqOn: "end",
-                    statusCode: res?.statusCode,
-                  })
-                )
-              }
-            } catch (e) {
-              if (e instanceof HTTPRequestError) {
-                reject(e)
-              }
-              reject(
-                new HTTPRequestError({
-                  transport: isHTTPs
-                    ? "NodeHTTPsTransport"
-                    : "NodeHTTPTransport",
-                  error: e,
-                  hostname: parsedHostname,
-                  path,
-                  port,
-                  method,
-                  requestBody: body ?? null,
-                  responseBody: responseBody,
-                  reqOn: "end",
-                })
-              )
-            }
-            resolve(responseBody)
-          })
+        throw new HTTPRequestError({
+          transport: "FetchTransport",
+          error: responseJSON?.message,
+          hostname,
+          path,
+          method,
+          requestBody: body,
+          responseBody: responseJSON,
+          responseStatusText: res.statusText,
+          statusCode: res.status,
         })
-
-        req.on("error", e => {
-          reject(
-            new HTTPRequestError({
-              transport: isHTTPs ? "NodeHTTPsTransport" : "NodeHTTPTransport",
-              error: e,
-              hostname: parsedHostname,
-              path,
-              port,
-              method,
-              requestBody: body,
-              responseBody,
-              reqOn: "error",
-            })
-          )
-        })
-
-        if (body) req.write(bodyString)
-        req.end()
       })
-    }
+      .catch(e => {
+        if (e instanceof HTTPRequestError) {
+          throw e
+        }
+
+        // Show AN error for all network errors
+        logger.log({
+          title: "Access Node Error",
+          message: `The provided access node ${hostname} does not appear to be a valid REST/HTTP access node.
+Please verify that you are not unintentionally using a GRPC access node.
+See more here: https://docs.onflow.org/fcl/reference/sdk-guidelines/#connect`,
+          level: logger.LEVELS.error,
+        })
+
+        throw new HTTPRequestError({
+          transport: "FetchTransport",
+          error: e?.message,
+          hostname,
+          path,
+          method,
+          requestBody: body,
+        })
+      })
   }
 
   // Keep retrying request until server available or max attempts exceeded
