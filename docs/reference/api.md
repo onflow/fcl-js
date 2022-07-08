@@ -272,7 +272,7 @@ addStuff().then((d) => console.log(d)); // 13 (5 + 7 + 1)
 
 | Name                                   | Example                                              | Description                                                                                                                                                                                    |
 | --------------------------------- | --------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `accessNode.api` **(required)**        | `https://rest-testnet.onflow.org` (testnet)<br />`https://rest-mainnet.onflow.org` (mainnet)                  | API URL for the Flow Blockchain Access Node you want to be communicating with. For more information, see [here](https://docs.onflow.org/fcl/reference/sdk-guidelines/#connect) |
+| `accessNode.api` **(required)**        | `https://rest-testnet.onflow.org`                  | API URL for the Flow Blockchain Access Node you want to be communicating with. See all available access node endpoints [here](https://developers.onflow.org/http-api/). |
 | `app.detail.title`                     | `Cryptokitties`                                      | Your applications title, can be requested by wallets and other services.                                                                                                                       |
 | `app.detail.icon`                      | `https://fcl-discovery.onflow.org/images/blocto.png` | Url for your applications icon, can be requested by wallets and other services.                                                                                                                |
 | `challenge.handshake`                  | **DEPRECATED**                                       | Use `discovery.wallet` instead.|
@@ -856,7 +856,7 @@ See [proving-authentication](https://github.com/onflow/fcl-js/blob/master/docs/r
 | Name                  | Type                  | Description                       |
 | --------------------- | --------------------- | --------------------------------- |
 | `appIdentifier`       | string **(required)** | A hexadecimal string              |
-| `accountProofData`    | Object **(required)** | Object with properties: <br >`address`  {string} - A Flow account address. <br > `nonce` {string} - A random string in hexadecimal format (minimum 32 bytes in total, i.e 64 hex characters) <br > `signatures` {Object[ ]} - An array of composite signatures to verify                                                                              |
+| `accountProofData`    | Object **(required)** | Object with properties: <br/>`address` {string} - A Flow account address. <br/> `nonce`: `string` - A random string in hexadecimal format (minimum 32 bytes in total, i.e 64 hex characters) <br/> `signatures`: `Object[]` - An array of composite signatures to verify                                                                              |
 | `opts`                | Object **(optional)** | `opts.fclCryptoContract` can be provided to overide FCLCryptoContract address for local development                 |
 
 #### Returns
@@ -967,7 +967,7 @@ Decodes the response from `fcl.send()` into the appropriate JSON representation 
 
 | Type | Description                                                                                                                                                                    |
 | ---- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| any  | A JSON representation of the raw string response depending on the cadence code executed.<br> The return value can be a single value and type or an object with multiple types. |
+| any  | A JSON representation of the raw string response depending on the cadence code executed.<br/> The return value can be a single value and type or an object with multiple types. |
 
 #### Usage
 
@@ -1760,7 +1760,7 @@ The JSON representation of an account on the Flow blockchain.
 
 | Value Type        | Description                                                                                                                     |
 | ----------------- | ------------------------------------------------------------------------------------------------------------------------------- |
-| string(formatted) | A valid Flow address should be 16 characters in length. <br>A `0x` prefix is optional during inputs. <br>eg. `f8d6e0586b0a20c1` |
+| string(formatted) | A valid Flow address should be 16 characters in length. <br/>A `0x` prefix is optional during inputs. <br/>eg. `f8d6e0586b0a20c1` |
 
 ---
 
@@ -1810,7 +1810,7 @@ An authorization function must produce the information of the user that is going
 
 | Value Type                                           | Description                                                                                   |
 | ---------------------------------------------------- | --------------------------------------------------------------------------------------------- |
-| Promise<[AuthorizationObject](#authorizationobject)> | The object that contains all the information needed by FCL to authorize a user's transaction. |
+| ```Promise<[AuthorizationObject](#authorizationobject)>``` | The object that contains all the information needed by FCL to authorize a user's transaction. |
 
 #### Usage
 
@@ -1869,7 +1869,7 @@ Note: These values are destructed from the payload object in the first argument.
 
 | Value Type                                 | Description                                                                                   |
 | ------------------------------------------ | --------------------------------------------------------------------------------------------- |
-| Promise<[SignableObject](#signableobject)> | The object that contains all the information needed by FCL to authorize a user's transaction. |
+| ```Promise<[SignableObject](#signableobject)>``` | The object that contains all the information needed by FCL to authorize a user's transaction. |
 
 #### Usage
 
@@ -1928,7 +1928,7 @@ For more on what each transaction role means, see [singing roles](https://docs.o
 
 | Value Type        | Description                                                                                                                        |
 | ----------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
-| string(formatted) | A event name in Flow must follow the format `A.{AccountAddress}.{ContractName}.{EventName}` <br>eg. `A.ba1132bc08f82fe2.Debug.Log` |
+| string(formatted) | A event name in Flow must follow the format `A.{AccountAddress}.{ContractName}.{EventName}` <br/>eg. `A.ba1132bc08f82fe2.Debug.Log` |
 
 ### `Contract`
 
