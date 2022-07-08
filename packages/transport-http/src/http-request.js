@@ -3,7 +3,6 @@ import fetchTransport from "node-fetch"
 
 class HTTPRequestError extends Error {
   constructor({
-    transport,
     error,
     hostname,
     path,
@@ -15,7 +14,6 @@ class HTTPRequestError extends Error {
   }) {
     const msg = `
       HTTP Request Error: An error occurred when interacting with the Access API.
-      ${transport ? `transport=${transport}` : ""}
       ${error ? `error=${error}` : ""}
       ${hostname ? `hostname=${hostname}` : ""}
       ${path ? `path=${path}` : ""}
@@ -92,7 +90,6 @@ export async function httpRequest({
         const responseJSON = res.body ? await res.json() : null
 
         throw new HTTPRequestError({
-          transport: "FetchTransport",
           error: responseJSON?.message,
           hostname,
           path,
@@ -118,7 +115,6 @@ See more here: https://docs.onflow.org/fcl/reference/sdk-guidelines/#connect`,
         })
 
         throw new HTTPRequestError({
-          transport: "FetchTransport",
           error: e?.message,
           hostname,
           path,
