@@ -78,6 +78,21 @@ async () => {
     });
 };
 
+async (message: string, compositeSignatures: fcl.CompositeSignatures[]) => {
+    const isVerified: boolean = await fcl.AppUtils.verifyUserSignatures(message, compositeSignatures)
+  }
+
+const accountProofData = {
+    address: "0x123",
+    nonce: "F0123",
+    signatures: [{f_type: "CompositeSignature", f_vsn: "1.0.0", addr: "0x123", keyId: 0, signature: "abc123"}]
+}
+
+const isValid = await fcl.AppUtils.verifyAccountProof(
+    "AwesomeAppId",
+    accountProofData,
+)
+
 async (address: fcl.Address) => {
     const account: fcl.AccountObject = await fcl.send([fcl.getAccount(address)]).then(fcl.decode);
 };

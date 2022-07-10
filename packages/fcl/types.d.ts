@@ -208,20 +208,53 @@ declare module "@onflow/fcl" {
 
   export interface CompositeSignatures {
     addr: Address;
-    keyId: string;
+    keyId: string | number;
     signature: string;
   }
 
-  /**
-   * A method allowing applications to cryptographically verify the ownership of a
-   * Flow account by verifying a message was signed by a user's private key/s.
-   * This is typically used with the response from `currentUser.signUserMessage`.
-   * @param message A hexadecimal string
-   * @param compositeSignatures An Array of CompositeSignatures
-   * @return true if verifed
-   * @see {@link https://docs.onflow.org/fcl/reference/api/#verifyusersignatures}
-   */
-  export function verifyUserSignatures(message: string, compositeSignatures: CompositeSignatures[]): Promise<boolean>;
+  export namespace AppUtils {
+    /**
+     * A method allowing applications to cryptographically verify the ownership of a
+     * Flow account by verifying a message was signed by a user's private key/s.
+     * This is typically used with the response from `currentUser.signUserMessage`.
+     * @param message A hexadecimal string
+     * @param compositeSignatures An Array of CompositeSignatures
+     * @return true if verifed
+     * @see {@link https://docs.onflow.org/fcl/reference/api/#verifyusersignatures}
+     */
+    export function verifyUserSignatures(message: string, compositeSignatures: CompositeSignatures[]): Promise<boolean>;
+
+    /**
+     * A method allowing applications to cryptographically prove that a user controls
+     * an on-chain account. During user authentication, some FCL compatible wallets
+     * will choose to support the FCL `account-proof` service. If a wallet chooses
+     * to support this service, and the user approves the signing of message data,
+     * they will return `account-proof` data and a signature(s) that can be used to
+     * prove a user controls an on-chain account. 
+     * See [proving-authentication](https://github.com/onflow/fcl-js/blob/master/docs/reference/proving-authentication.mdx)
+     * documentaion for more details.
+     * @param appIdentifier A hexadecimal string
+     * @param accountProofData
+     * @param opts `opts.fclCryptoContract` can be provided to overide FCLCryptoContract address for local development
+     * @return true if verifed
+     */
+    export function verifyAccountProof(appIdentifier: string, accountProofData: AccountProofData, opts?: object): boolean;
+  }
+
+  export interface AccountProofData {
+    /**
+     * A Flow account address.
+     */
+    address: Address;
+    /**
+     * A random string in hexadecimal format (minimum 32 bytes in total, i.e 64 hex characters)
+     */
+    nonce: string;
+    /**
+     * An array of composite signatures to verify
+     */
+    signatures: CompositeSignatures[]
+  }
 
   /**
    * Sends arbitrary scripts, transactions, and requests to Flow.
