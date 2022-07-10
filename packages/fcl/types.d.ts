@@ -3,6 +3,7 @@ declare module "@onflow/fcl" {
 
   export interface AuthenticateOptions {
     service: WalletService;
+    redir?: boolean;
   }
 
   /**
@@ -16,7 +17,7 @@ declare module "@onflow/fcl" {
    *
    * @see {@link https://docs.onflow.org/fcl/reference/api/#authenticate}
    */
-  export function authenticate(options?: AuthenticateOptions): void;
+  export function authenticate(options?: AuthenticateOptions): Promise<CurrentUserObject>;
 
   // Ref: https://docs.onflow.org/fcl/reference/api/#unauthenticate
   /**
@@ -28,19 +29,19 @@ declare module "@onflow/fcl" {
    * A **convenience method** that calls {@link unauthenticate} and then {@link authenticate} for the current user.
    * @see {@link https://docs.onflow.org/fcl/reference/api/#reauthenticate}
    */
-  export function reauthenticate(): void;
+  export function reauthenticate(): Promise<CurrentUserObject>;
 
   /**
    * A **convenience method** that calls and is equivalent to {@link authenticate}.
    * @see {@link https://docs.onflow.org/fcl/reference/api/#signup}
    */
-  export function signUp(): void;
+  export function signUp(): Promise<CurrentUserObject>;
 
   /**
    * A **convenience method** that calls and is equivalent to {@link authenticate}.
    * @see {@link https://docs.onflow.org/fcl/reference/api/#login}
    */
-  export function logIn(): void;
+  export function logIn(): Promise<CurrentUserObject>;
 
   /**
    * A **convenience method** that produces the needed authorization details for the
@@ -494,8 +495,9 @@ declare module "@onflow/fcl" {
     f_type: "Service";
     f_vsn: string;
     type: "authn";
-    method?: string;
+    method?: "HTTP/POST" | "IFRAME/RPC" | "POP/RPC" | "TAB/RPC";
     uid: string;
+    id?: string;
     endpoint: string;
   }
 
@@ -507,10 +509,10 @@ declare module "@onflow/fcl" {
       address: Address;
       name: string;
       icon: string;
-      description: string;
-      color: string;
-      supportEmail: string;
-      website: string;
+      description?: string;
+      color?: string;
+      supportEmail?: string;
+      website?: string;
     };
   }
 
@@ -611,7 +613,10 @@ declare module "@onflow/fcl" {
     // TODO: add validator
     // TODO: add invariant
 
-  // TODO: Double check with FCL dev team if Interaction needs to be added from https://github.com/onflow/fcl-js/blob/master/packages/sdk/src/interaction/interaction.js#L66
+  // @qvvg: "Interaction should be considered an internal data structure.
+  // People generally shouldn't be touching it directly,
+  // and internally we think of this structure as something we can change as needed.
+  // It being typed wouldn't be a bad thing, but it is also the most likely thing to change between versions."
   /**
    * An interaction is an object containing the information to perform an action on chain.
    * This object is populated through builders and converted into the approriate access node API call.
@@ -630,15 +635,15 @@ declare module "@onflow/fcl" {
     /**
     * The public address of the current user
     */
-    addr: Address | undefined;
+    addr: Address | undefined | null;
     /**
     * Allows wallets to specify a [content identifier]{@link https://docs.ipfs.io/concepts/content-addressing/} for user metadata.
     */
-    cid: string | undefined;
+    cid: string | undefined | null;
     /**
     * Allows wallets to specify a time-frame for a valid session.
     */
-    expiresAt: number | undefined;
+    expiresAt: number | undefined | null;
     /**
     * A type identifier used internally by FCL.
     */
@@ -650,7 +655,7 @@ declare module "@onflow/fcl" {
     /**
     * If the user is logged in.
     */
-    loggedIn: boolean | undefined;
+    loggedIn: boolean | undefined | null;
     /**
     * A list of trusted services that express ways of interacting with the current user's identity,
     * including means to further discovery, [authentication, authorization]{@link https://gist.github.com/orodio/a74293f65e83145ec8b968294808cf35#you-know-who-the-user-is}, or other kinds of interactions.
