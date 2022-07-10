@@ -594,11 +594,22 @@ declare module "@onflow/fcl" {
     | ReturnType<typeof getCollection>
     | ReturnType<typeof getTransactionStatus>
     | ReturnType<typeof getTransaction>
+    | ReturnType<typeof args>
     | ReturnType<typeof arg>
     | ReturnType<typeof script>
     | ReturnType<typeof transaction>
     | ReturnType<typeof account>
     | ReturnType<typeof block>;
+    // TODO: add ping
+    // TODO: add getEvents
+    // TODO: add authorizations, authorization
+    // TODO: add proposer
+    // TODO: add payer
+    // TODO: add limit
+    // TODO: add ref
+    // TODO: add params, param
+    // TODO: add validator
+    // TODO: add invariant
 
   // TODO: Double check with FCL dev team if Interaction needs to be added from https://github.com/onflow/fcl-js/blob/master/packages/sdk/src/interaction/interaction.js#L66
   /**
@@ -1314,5 +1325,13 @@ declare module "@onflow/fcl" {
      */
     revoked: boolean;
   }
+
+  // TODO: add TestUtils
+  // TODO: add isOk, isBad, why, pipe, build
+  // TODO: add display
+  // TODO: add cadence, cdc
+  // TODO: add createSignableVoucher
+  // TODO: add voucherIntercept
+  // TODO: add voucherToTxId
 }
   
