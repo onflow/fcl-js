@@ -11,7 +11,6 @@
 "@onflow/util-encode-key": patch
 "@onflow/util-invariant": patch
 "@onflow/util-logger": patch
-"@onflow/util-node-http-modules": patch
 "@onflow/util-template": patch
 "@onflow/util-uid": patch
 ---
