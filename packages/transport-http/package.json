@@ -40,7 +40,7 @@
     "@babel/runtime": "^7.18.6",
     "@onflow/util-address": "^1.0.1",
     "@onflow/util-invariant": "^1.0.1",
-    "@onflow/util-logger": "^1.1.0",
+    "@onflow/util-logger": "^1.1.1-alpha.0",
     "@onflow/util-template": "^1.0.2",
     "node-fetch": "^2.6.7"
   }
