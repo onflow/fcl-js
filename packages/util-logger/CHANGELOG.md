@@ -1,5 +1,14 @@
 # @onflow/util-logger
 
+## 1.1.1-alpha.1
+
+### Patch Changes
+
+- [#1227](https://github.com/onflow/fcl-js/pull/1227) [`352f1460`](https://github.com/onflow/fcl-js/commit/352f1460a2f34d228a74fa4bbc6fcf6e68a968b6) Thanks [@jribbink](https://github.com/jribbink)! - Switch to fcl-bundle instead of microbundle for build scripts
+
+- Updated dependencies [[`352f1460`](https://github.com/onflow/fcl-js/commit/352f1460a2f34d228a74fa4bbc6fcf6e68a968b6)]:
+  - @onflow/config@1.0.3-alpha.0
+
 ## 1.1.1-alpha.0
 
 ### Patch Changes
