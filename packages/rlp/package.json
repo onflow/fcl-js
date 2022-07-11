@@ -1,6 +1,6 @@
 {
   "name": "@onflow/rlp",
-  "version": "1.0.1",
+  "version": "1.0.2-alpha.0",
   "description": "Port of ethereumjs/rlp",
   "license": "MPL-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
@@ -18,7 +18,7 @@
     }
   },
   "devDependencies": {
-    "@onflow/fcl-bundle": "^1.0.0",
+    "@onflow/fcl-bundle": "^1.0.1-alpha.0",
     "jest": "26.4.2",
     "jest-esm-transformer": "1.0.0"
   },

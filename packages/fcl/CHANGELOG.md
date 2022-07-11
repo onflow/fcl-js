@@ -1,5 +1,25 @@
 # @onflow/fcl
 
+## 1.1.1-alpha.1
+
+### Patch Changes
+
+- [#1283](https://github.com/onflow/fcl-js/pull/1283) [`b0f7a234`](https://github.com/onflow/fcl-js/commit/b0f7a234a6e71c28e4a02d8edf4927f73e76fa72) Thanks [@gregsantos](https://github.com/gregsantos)! - Updates keyIndices args passed in as Numbers in fcl.verify functions
+
+* [#1227](https://github.com/onflow/fcl-js/pull/1227) [`352f1460`](https://github.com/onflow/fcl-js/commit/352f1460a2f34d228a74fa4bbc6fcf6e68a968b6) Thanks [@jribbink](https://github.com/jribbink)! - Switch to fcl-bundle instead of microbundle for build scripts
+
+* Updated dependencies [[`352f1460`](https://github.com/onflow/fcl-js/commit/352f1460a2f34d228a74fa4bbc6fcf6e68a968b6)]:
+  - @onflow/config@1.0.3-alpha.0
+  - @onflow/rlp@1.0.2-alpha.0
+  - @onflow/sdk@1.1.1-alpha.1
+  - @onflow/types@1.0.3-alpha.0
+  - @onflow/util-actor@1.1.1-alpha.0
+  - @onflow/util-address@1.0.2-alpha.0
+  - @onflow/util-invariant@1.0.2-alpha.0
+  - @onflow/util-logger@1.1.1-alpha.1
+  - @onflow/util-template@1.0.3-alpha.0
+  - @onflow/util-uid@1.0.2-alpha.0
+
 ## 1.1.1-alpha.0
 
 ### Patch Changes

@@ -1,5 +1,21 @@
 # @onflow/transport-http
 
+## 1.3.1-alpha.1
+
+### Patch Changes
+
+- [#1278](https://github.com/onflow/fcl-js/pull/1278) [`b9577b63`](https://github.com/onflow/fcl-js/commit/b9577b6355be06dec98f1e11101594fa65e66cf7) Thanks [@jribbink](https://github.com/jribbink)! - Add error message if using non-HTTP/REST endpoint via transport-http
+
+* [#1303](https://github.com/onflow/fcl-js/pull/1303) [`c83c4606`](https://github.com/onflow/fcl-js/commit/c83c4606f1c78e7addaadece89350b19cb5544d6) Thanks [@jribbink](https://github.com/jribbink)! - Removed @onflow/util-node-http-modules, added node-fetch
+
+- [#1227](https://github.com/onflow/fcl-js/pull/1227) [`352f1460`](https://github.com/onflow/fcl-js/commit/352f1460a2f34d228a74fa4bbc6fcf6e68a968b6) Thanks [@jribbink](https://github.com/jribbink)! - Switch to fcl-bundle instead of microbundle for build scripts
+
+- Updated dependencies [[`352f1460`](https://github.com/onflow/fcl-js/commit/352f1460a2f34d228a74fa4bbc6fcf6e68a968b6)]:
+  - @onflow/util-address@1.0.2-alpha.0
+  - @onflow/util-invariant@1.0.2-alpha.0
+  - @onflow/util-logger@1.1.1-alpha.1
+  - @onflow/util-template@1.0.3-alpha.0
+
 ## 1.3.1-alpha.0
 
 ### Patch Changes

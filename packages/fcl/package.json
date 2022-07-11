@@ -1,6 +1,6 @@
 {
   "name": "@onflow/fcl",
-  "version": "1.1.1-alpha.0",
+  "version": "1.1.1-alpha.1",
   "description": "Flow Client Library",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
@@ -23,7 +23,7 @@
     }
   },
   "devDependencies": {
-    "@onflow/fcl-bundle": "^1.0.0",
+    "@onflow/fcl-bundle": "^1.0.1-alpha.0",
     "jest": "^27.0.6",
     "jest-esm-transformer": "1.0.0"
   },
@@ -42,16 +42,16 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.18.6",
-    "@onflow/config": "^1.0.2",
+    "@onflow/config": "^1.0.3-alpha.0",
     "@onflow/interaction": "0.0.11",
-    "@onflow/rlp": "^1.0.1",
-    "@onflow/sdk": "^1.1.1-alpha.0",
-    "@onflow/types": "^1.0.2",
-    "@onflow/util-actor": "^1.1.0",
-    "@onflow/util-address": "^1.0.1",
-    "@onflow/util-invariant": "^1.0.1",
-    "@onflow/util-logger": "^1.1.1-alpha.0",
-    "@onflow/util-template": "^1.0.2",
-    "@onflow/util-uid": "^1.0.1"
+    "@onflow/rlp": "^1.0.2-alpha.0",
+    "@onflow/sdk": "^1.1.1-alpha.1",
+    "@onflow/types": "^1.0.3-alpha.0",
+    "@onflow/util-actor": "^1.1.1-alpha.0",
+    "@onflow/util-address": "^1.0.2-alpha.0",
+    "@onflow/util-invariant": "^1.0.2-alpha.0",
+    "@onflow/util-logger": "^1.1.1-alpha.1",
+    "@onflow/util-template": "^1.0.3-alpha.0",
+    "@onflow/util-uid": "^1.0.2-alpha.0"
   }
 }

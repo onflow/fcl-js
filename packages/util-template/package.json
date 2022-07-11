@@ -1,6 +1,6 @@
 {
   "name": "@onflow/util-template",
-  "version": "1.0.2",
+  "version": "1.0.3-alpha.0",
   "description": "Template Literal used for Cadence Interop",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
@@ -18,7 +18,7 @@
     }
   },
   "devDependencies": {
-    "@onflow/fcl-bundle": "^1.0.0",
+    "@onflow/fcl-bundle": "^1.0.1-alpha.0",
     "jest": "25.3.0",
     "jest-esm-transformer": "1.0.0"
   },
