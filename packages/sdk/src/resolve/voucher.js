@@ -47,7 +47,7 @@ export const createSignableVoucher = ix => {
     cadence: ix.message.cadence,
     refBlock: ix.message.refBlock || null,
     computeLimit: ix.message.computeLimit,
-    template: ix.template,
+    template: ix.template || null,
     arguments: ix.message.arguments.map(id => ix.arguments[id].asArgument),
     proposalKey: {
       address: withPrefix(ix.accounts[ix.proposer].addr),
