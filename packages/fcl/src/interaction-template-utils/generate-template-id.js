@@ -54,6 +54,7 @@ export async function generateTemplateId({
             [
                 templateData?.["arguments"]?.[argumentLabel].index,
                 templateData?.["arguments"]?.[argumentLabel].type,
+                templateData?.["arguments"]?.[argumentLabel].balance || "",
                 Object.keys(templateData?.["arguments"]?.[argumentLabel].messages).map(
                     argumentMessageKey => ([
                         argumentMessageKey,

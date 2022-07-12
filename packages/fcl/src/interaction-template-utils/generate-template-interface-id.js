@@ -2,13 +2,13 @@ import { encode as rlpEncode } from "@onflow/rlp"
 import {genHash} from "./utils/hash.js"
 
 export async function generateTemplateInterfaceId({
-    interface,
+    templateInterface,
 }) {
-    invariant(template != undefined, "interface must be defined")
-    invariant(typeof template === "object", "interface must be an object")
-    invariant(typeof template.f_type === "InteractionTemplateInterface", "Object must be an InteractionTemplate")
+    invariant(templateInterface != undefined, "interface must be defined")
+    invariant(typeof templateInterface === "object", "interface must be an object")
+    invariant(typeof templateInterface.f_type === "InteractionTemplateInterface", "Object must be an InteractionTemplate")
 
-    const interfaceData = interface.data
+    const interfaceData = templateInterface.data
 
     const encodedHex = rlpEncode([
         interfaceData.flip,
