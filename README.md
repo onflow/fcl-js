@@ -11,8 +11,6 @@
   <p align="center">
     <i>Connect your dapp to users, their wallets and Flow.</i>
     <br />
-    <a href="https://docs.onflow.org/fcl/"><strong>Read the docs»</strong></a>
-    <br />
     <br />
     <a href="https://docs.onflow.org/fcl/tutorials/flow-app-quickstart/">Quickstart</a>
     ·
