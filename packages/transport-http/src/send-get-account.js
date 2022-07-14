@@ -31,11 +31,9 @@ async function sendGetAccountAtBlockHeightRequest(ix, context, opts) {
 async function sendGetAccountAtLatestBlockRequest(ix, context, opts) {
   const httpRequest = opts.httpRequest || defaultHttpRequest
 
-  const height = ix.block?.isSealed ? "sealed" : "final"
-
   const res = await httpRequest({
     hostname: opts.node,
-    path: `/v1/accounts/${ix.account.addr}?block_height=${height}&expand=contracts,keys`,
+    path: `/v1/accounts/${ix.account.addr}?block_height=sealed&expand=contracts,keys`,
     method: "GET",
     body: null,
   })
