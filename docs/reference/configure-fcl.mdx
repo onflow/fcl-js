@@ -2,28 +2,64 @@
 title: How to Configure FCL
 ---
 
-## Configuration
+# Configuration
 
-FCL has a mechanism that lets you configure various aspects of FCL.
-The main idea here (from an FCL perspective) should be that when you move from one instance of the Flow Blockchain to another (Local Emulator to Testnet to Mainnet) the only thing you should need to change (once again from an FCL perspective) is your configuration.
+FCL has a mechanism that lets you configure various aspects of FCL. The main idea is that you can move from one instance of the 
+Flow Blockchain to another, for example, the `Local Emulator`, `Testnet`, or `Mainnet`. So the only thing you need to change is your configuration.
 
 ## Setting Configuration Values
 
-Values only need to be set once. We recomend doing this once and as early in the life cycle as possible.
-To set a configuation value, the `put` method on the `config` instance needs to be called, the `put` method returns the `config` instance so they can be chained.
+First, you need to call the `put` method on the `config` instance to set a configuration value because the put method will return the `config` instance so it can be chained.
+We recommend doing this once and as early in the life cycle.
+
+> Values only need to be set once.
+
+## Example 1
+Local emulator configuration
 
 ```javascript
 import * as fcl from "@onflow/fcl"
 
-fcl.config()         // returns the config instance
-  .put("foo", "bar") // configures "foo" to be "bar"
-  .put("baz", "buz") // configures "baz" to be "buz"
+fcl
+	 .config()
+	 .put("debug.accounts", true)
+	 .put("logger.level", 2)
+	 .put("flow.network", "local")
+	 .put("accessNode.api", "http://localhost:8888")
+	 .put("discovery.wallet", "http://localhost:8701/fcl/authn")
+```
+
+## Example 2
+Testnet configuration
+
+```javascript
+import * as fcl from "@onflow/fcl"
+
+fcl
+	 .config()
+	 .put("logger.level", 2)
+	 .put("flow.network", "testnet")
+	 .put("accessNode.api", "https://rest-testnet.onflow.org")
+   .put("discovery.wallet","https://fcldiscovery.onflow.org/testnet/authn")
+```
+
+## Example 3
+Mainnet configuration
+
+```javascript
+import * as fcl from "@onflow/fcl"
+
+fcl
+      .config()
+      .put("flow.network", "mainnet")
+	    .put("accessNode.api", "https://rest-mainnet.onflow.org")
+	    .put("discovery.wallet", "https://fcl-discovery.onflow.org/authn")
 ```
 
 ## Getting Configuration Values
 
-The `config` instance has an asynchronous `get` method. You can also pass it a fallback value incase the configuration state does not include what you are wanting.
-
+The `config` instance has an asynchronous `get` method which you can pass as a 
+fallback value in case the configuration state does not include what you want.
 ```javascript
 import * as fcl from "@onflow/fcl"
 
@@ -59,7 +95,7 @@ addStuff().then(d => console.log(d)) // 13 (5 + 7 + 1)
 
 ## Address replacement in scripts and transactions
 
-Configuration keys that start with `0x` will be replaced in FCL scripts and transactions, this allows you to write your script or transaction Cadence code once and not have to change it when you point your application at a difference instance of the Flow Blockchain.
+Configuration keys that start with `0x` are replaced in FCL scripts and transactions, and this allows you to write your script or transaction Cadence code once and not have to change it when you point your application at a different instance of the Flow Blockchain.
 
 ```javascript
 import * as fcl from "@onflow/fcl"
