@@ -4,21 +4,21 @@ import {genHash} from "./utils/hash.js"
 export async function generateTemplateInterfaceId({
     templateInterface,
 }) {
-    invariant(templateInterface != undefined, "interface must be defined")
-    invariant(typeof templateInterface === "object", "interface must be an object")
-    invariant(typeof templateInterface.f_type === "InteractionTemplateInterface", "Object must be an InteractionTemplate")
+    invariant(templateInterface != undefined, "generateTemplateInterfaceId({ templateInterface }) -- templateInterface must be defined")
+    invariant(typeof templateInterface === "object", "generateTemplateInterfaceId({ templateInterface }) -- templateInterface must be an object")
+    invariant(typeof templateInterface.f_type === "InteractionTemplateInterface", "generateTemplateInterfaceId({ templateInterface }) -- templateInterface object must be an InteractionTemplate")
 
     const interfaceData = templateInterface.data
 
     const encodedHex = rlpEncode([
-        interfaceData.flip,
-        Object.keys(interfaceData.arguments).map(
-            argumentLabel => ([
-                argumentLabel,
-                interfaceData.arguments[argumentLabel].index,
-                interfaceData.arguments[argumentLabel].type,
+        await genHash(interfaceData.flip),
+        await Promise.all(Object.keys(interfaceData.arguments).map(
+            async argumentLabel => ([
+                await genHash(argumentLabel),
+                await genHash(String(interfaceData.arguments[argumentLabel].index)),
+                await genHash(interfaceData.arguments[argumentLabel].type),
             ])
-        )
+        ))
     ]).toString("hex")
 
     return genHash(encodedHex)

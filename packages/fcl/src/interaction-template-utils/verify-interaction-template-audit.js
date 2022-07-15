@@ -61,11 +61,11 @@ export async function verifyInteractionTemplateAudit({
     audit,
     template,
 }) {
-    invariant(audit != undefined, "InteractionTemplateAudit must be defined")
-    invariant(template != undefined, "InteractionTemplate must be defined")
+    invariant(audit != undefined, "verifyInteractionTemplateAudit({ audit }) -- audit must be defined")
+    invariant(template != undefined, "verifyInteractionTemplateAudit({ template }) -- template must be defined")
 
-    invariant(audit.f_type === "InteractionTemplateAudit", "Audit must be an InteractionTemplateAudit")
-    invariant(template.f_type === "InteractionTemplate", "Template must be an InteractionTemplate")
+    invariant(audit.f_type === "InteractionTemplateAudit", "verifyInteractionTemplateAudit({ audit }) -- audit must be an InteractionTemplateAudit")
+    invariant(template.f_type === "InteractionTemplate", "verifyInteractionTemplateAudit({ template }) -- template must be an InteractionTemplate")
 
     log({
         title: "verifyInteractionTemplateAudit Debug",

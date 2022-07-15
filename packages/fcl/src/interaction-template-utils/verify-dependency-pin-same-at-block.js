@@ -22,9 +22,9 @@ export async function verifyDependencyPinsSame({
     blockHeight,
     networks = ["mainnet", "testnet", "emulator"]
 }) {
-    invariant(template != undefined, "generateDependencyPin({ template }) InteractionTemplate must be defined")
-    invariant(typeof template === "object", "generateDependencyPin({ template }) InteractionTemplate must be an object")
-    invariant(template.f_type === "InteractionTemplate", "generateDependencyPin({ template }) Template must be an InteractionTemplate")
+    invariant(template != undefined, "generateDependencyPin({ template }) -- template must be defined")
+    invariant(typeof template === "object", "generateDependencyPin({ template }) -- template must be an object")
+    invariant(template.f_type === "InteractionTemplate", "generateDependencyPin({ template }) -- template must be an InteractionTemplate")
 
     invariant(networks != undefined, "generateDependencyPin({ networks }) networks must be defined")
     invariant(blockHeight != undefined, "generateDependencyPin({ blockHeight }) blockHeight must be defined")

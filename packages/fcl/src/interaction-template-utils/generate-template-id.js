@@ -5,90 +5,79 @@ import { query } from "../exec/query.js"
 import {genHash} from "./utils/hash.js"
 
 export async function generateTemplateId({
-    template,
+    template
 }) {
-    invariant(template != undefined, "template must be defined")
-    invariant(typeof template === "object", "template must be an object")
-    invariant(typeof template.f_type === "InteractionTemplate", "Object must be an InteractionTemplate")
+    invariant(template != undefined, "generateTemplateId({ template }) -- template must be defined")
+    invariant(typeof template === "object", "generateTemplateId({ template }) -- template must be an object")
+    invariant(typeof template.f_type === "InteractionTemplate", "generateTemplateId({ template }) -- template object must be an InteractionTemplate")
 
     const templateData = template.data
 
-    const messages = Object.keys(templateData.messages).map(
-        messageKey => ([
-            messageKey,
-            Object.keys(templateData.messages?.[messageKey]?.i18n).map(
-                i18nkeylanguage => ([
-                    i18nkeylanguage,
-                    templateData.messages?.i18n?.[messageKey]?.[i18nkeylanguage]
+    const messages = await Promise.all(Object.keys(templateData.messages).map(
+        async messageKey => ([
+            await genHash(messageKey),
+            await Promise.all(Object.keys(templateData.messages?.[messageKey]?.i18n).map(
+                async i18nkeylanguage => ([
+                    await genHash(i18nkeylanguage),
+                    await genHash(templateData.messages?.[messageKey]?.i18n?.[i18nkeylanguage])
                 ])
-            )
+            ))
         ])
-    )
+    ))
 
-    const dependencies = Object.keys(templateData?.dependencies).map(
-        dependencyAddressPlaceholder => ([
-            dependencyAddressPlaceholder,
-            Object.keys(templateData?.dependencies?.[dependencyAddressPlaceholder]).map(
-                dependencyContract => ([
-                    dependencyContract,
-                    Object.keys(templateData?.dependencies?.[dependencyAddressPlaceholder]?.[dependencyContract]).map(
-                        dependencyContractNetwork => ([
-                            dependencyContractNetwork,
+    const dependencies = await Promise.all(Object.keys(templateData?.dependencies).map(
+        async dependencyAddressPlaceholder => ([
+            await genHash(dependencyAddressPlaceholder),
+            await Promise.all(Object.keys(templateData?.dependencies?.[dependencyAddressPlaceholder]).map(
+                async dependencyContract => ([
+                    await genHash(dependencyContract),
+                    await Promise.all(Object.keys(templateData?.dependencies?.[dependencyAddressPlaceholder]?.[dependencyContract]).map(
+                        async dependencyContractNetwork => ([
+                            await genHash(dependencyContractNetwork),
                             [
-                                templateData?.dependencies?.[dependencyAddressPlaceholder]?.[dependencyContract]?.[dependencyContractNetwork].address,
-                                templateData?.dependencies?.[dependencyAddressPlaceholder]?.[dependencyContract]?.[dependencyContractNetwork].contract,
-                                templateData?.dependencies?.[dependencyAddressPlaceholder]?.[dependencyContract]?.[dependencyContractNetwork].fq_address,
-                                templateData?.dependencies?.[dependencyAddressPlaceholder]?.[dependencyContract]?.[dependencyContractNetwork].pin,
-                                templateData?.dependencies?.[dependencyAddressPlaceholder]?.[dependencyContract]?.[dependencyContractNetwork].pin_block_height,
+                                await genHash(templateData?.dependencies?.[dependencyAddressPlaceholder]?.[dependencyContract]?.[dependencyContractNetwork].address),
+                                await genHash(templateData?.dependencies?.[dependencyAddressPlaceholder]?.[dependencyContract]?.[dependencyContractNetwork].contract),
+                                await genHash(templateData?.dependencies?.[dependencyAddressPlaceholder]?.[dependencyContract]?.[dependencyContractNetwork].fq_address),
+                                await genHash(templateData?.dependencies?.[dependencyAddressPlaceholder]?.[dependencyContract]?.[dependencyContractNetwork].pin),
+                                await genHash(String(templateData?.dependencies?.[dependencyAddressPlaceholder]?.[dependencyContract]?.[dependencyContractNetwork].pin_block_height)),
                             ]
                         ])
-                    )
+                    ))
                 ])
-            )
+            ))
         ])
-    )
+    ))
 
-    const _arguments = Object.keys(templateData?.["arguments"]).map(
-        argumentLabel => ([
-            argumentLabel,
+    const _arguments = await Promise.all(Object.keys(templateData?.["arguments"]).map(
+        async argumentLabel => ([
+            await genHash(argumentLabel),
             [
-                templateData?.["arguments"]?.[argumentLabel].index,
-                templateData?.["arguments"]?.[argumentLabel].type,
-                templateData?.["arguments"]?.[argumentLabel].balance || "",
-                Object.keys(templateData?.["arguments"]?.[argumentLabel].messages).map(
-                    argumentMessageKey => ([
-                        argumentMessageKey,
-                        Object.keys(templateData?.["arguments"]?.[argumentLabel].messages?.[argumentMessageKey].i18n).map(
-                            i18nkeylanguage => ([
-                                i18nkeylanguage,
-                                templateData?.["arguments"]?.[argumentLabel].messages?.[argumentMessageKey].i18n?.[i18nkeylanguage]
+                await genHash(String(templateData?.["arguments"]?.[argumentLabel].index)),
+                await genHash(templateData?.["arguments"]?.[argumentLabel].type),
+                await genHash(templateData?.["arguments"]?.[argumentLabel].balance || ""),
+                await Promise.all(Object.keys(templateData?.["arguments"]?.[argumentLabel].messages).map(
+                    async argumentMessageKey => ([
+                        await genHash(argumentMessageKey),
+                        await Promise.all(Object.keys(templateData?.["arguments"]?.[argumentLabel].messages?.[argumentMessageKey].i18n).map(
+                            async i18nkeylanguage => ([
+                                await genHash(i18nkeylanguage),
+                                await genHash(templateData?.["arguments"]?.[argumentLabel].messages?.[argumentMessageKey].i18n?.[i18nkeylanguage])
                             ])
-                        )
+                        ))
                     ])
-                )
+                ))
             ]
         ])
-    )
-
-    console.log("pre rlp encode", [
-        templateData?.type,
-        templateData?.interface,
-        messages,
-        templateData?.cadence,
-        dependencies,
-        _arguments
-    ])
+    ))
 
     const encodedHex = rlpEncode([
-        templateData?.type,
-        templateData?.interface,
+        await genHash(templateData?.type),
+        await genHash(templateData?.interface),
         messages,
-        templateData?.cadence,
+        await genHash(templateData?.cadence),
         dependencies,
         _arguments
     ]).toString("hex")
-
-    console.log("post rlp encode encodedHex", encodedHex)
 
     return genHash(encodedHex)
 }

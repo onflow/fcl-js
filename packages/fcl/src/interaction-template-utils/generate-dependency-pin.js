@@ -22,12 +22,12 @@ export async function generateDependencyPin({
     contractName,
     blockHeight,
 }) {
-    invariant(address != undefined, "generateDependencyPin({ address }) must be defined")
-    invariant(contractName != undefined, "generateDependencyPin({ contractName }) must be defined")
-    invariant(blockHeight != undefined, "generateDependencyPin({ blockHeight }) must be defined")
-    invariant(typeof address === "string", "generateDependencyPin({ address }) must be a string")
-    invariant(typeof contractName === "string", "generateDependencyPin({ contractName }) must be a string")
-    invariant(typeof blockHeight === "number", "generateDependencyPin({ blockHeight }) must be a number")
+    invariant(address != undefined, "generateDependencyPin({ address }) -- address must be defined")
+    invariant(contractName != undefined, "generateDependencyPin({ contractName }) -- contractName must be defined")
+    invariant(blockHeight != undefined, "generateDependencyPin({ blockHeight }) -- blockHeight must be defined")
+    invariant(typeof address === "string", "generateDependencyPin({ address }) -- address must be a string")
+    invariant(typeof contractName === "string", "generateDependencyPin({ contractName }) -- contractName must be a string")
+    invariant(typeof blockHeight === "number", "generateDependencyPin({ blockHeight }) -- blockHeight must be a number")
     
     let horizon = [
         generateImport({ contractName, address })
