@@ -1,5 +1,11 @@
 # @onflow/transport-http
 
+## 1.3.1-alpha.2
+
+### Patch Changes
+
+- [#1321](https://github.com/onflow/fcl-js/pull/1321) [`422914bc`](https://github.com/onflow/fcl-js/commit/422914bcdc4c1b44c61d3ec1850bf57114f31a6b) Thanks [@jribbink](https://github.com/jribbink)! - Make sendGetAccountAtLatestBlockRequest execute at latest sealed block instead of latest finalized block
+
 ## 1.3.1-alpha.1
 
 ### Patch Changes
