@@ -92,7 +92,7 @@ describe("Send Get Account", () => {
 
     expect(valueSent).toEqual({
       hostname: "localhost",
-      path: "/v1/accounts/1654653399040a61?block_height=final&expand=contracts,keys",
+      path: "/v1/accounts/1654653399040a61?block_height=sealed&expand=contracts,keys",
       method: "GET",
       body: null,
     })
