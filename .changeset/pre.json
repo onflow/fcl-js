@@ -20,6 +20,7 @@
     "@onflow/fcl-bundle": "1.0.0"
   },
   "changesets": [
+    "big-bats-sneeze",
     "few-news-raise",
     "hungry-otters-relate",
     "lovely-candles-relax",
