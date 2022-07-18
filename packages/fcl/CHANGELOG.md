@@ -1,5 +1,14 @@
 # @onflow/fcl
 
+## 1.1.1-alpha.2
+
+### Patch Changes
+
+- Fix getAccount executing at latest finalized block instead of sealed block (version bump `@onflow/transport-http`)
+
+- Updated dependencies []:
+  - @onflow/sdk@1.1.1-alpha.2
+
 ## 1.1.1-alpha.1
 
 ### Patch Changes
