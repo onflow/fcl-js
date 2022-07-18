@@ -31,15 +31,14 @@ class HTTPRequestError extends Error {
 }
 
 /**
- * Creates an HTTP Request to be sent to a REST Access API.
+ * Creates an HTTP Request to be sent to a REST Access API via Fetch API.
  *
- * Supports the Fetch API on Web Browsers and Deno.
- * Uses the Node HTTP(S) standard libraries for Node.
- *
- * @param {String} hostname - Access API Hostname
- * @param {String} path - Path to the resource on the Access API
- * @param {String} method - HTTP Method
- * @param {Object} body - HTTP Request Body
+ * @param {Object} options - Options for the HTTP Request
+ * @param {String} options.hostname - Access API Hostname
+ * @param {String} options.path - Path to the resource on the Access API
+ * @param {String} options.method - HTTP Method
+ * @param {any} options.body - HTTP Request Body
+ * @param {Object | Headers} options.headers - HTTP Request Headers
  *
  * @returns JSON object response from Access API.
  */
@@ -48,6 +47,7 @@ export async function httpRequest({
   path,
   method,
   body,
+  headers,
   retryLimit = 5,
   retryIntervalMs = 1000,
 }) {
@@ -81,6 +81,7 @@ export async function httpRequest({
     return fetchTransport(`${hostname}${path}`, {
       method: method,
       body: body ? JSON.stringify(body) : undefined,
+      headers,
     })
       .then(async res => {
         if (res.ok) {
@@ -100,13 +101,13 @@ export async function httpRequest({
           statusCode: res.status,
         })
       })
-      .catch(e => {
+      .catch(async e => {
         if (e instanceof HTTPRequestError) {
           throw e
         }
 
         // Show AN error for all network errors
-        logger.log({
+        await logger.log({
           title: "Access Node Error",
           message: `The provided access node ${hostname} does not appear to be a valid REST/HTTP access node.
 Please verify that you are not unintentionally using a GRPC access node.
