@@ -38,7 +38,7 @@ class HTTPRequestError extends Error {
  * @param {String} options.path - Path to the resource on the Access API
  * @param {String} options.method - HTTP Method
  * @param {any} options.body - HTTP Request Body
- * @param {Object | Headers} options.headers - HTTP Request Headers
+ * @param {Object | Headers} [options.headers] - HTTP Request Headers
  *
  * @returns JSON object response from Access API.
  */
