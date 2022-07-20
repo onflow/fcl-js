@@ -1,6 +1,6 @@
 {
   "name": "@onflow/util-actor",
-  "version": "1.0.1",
+  "version": "1.1.1-alpha.0",
   "description": "A mechanism for forcing order/transitions of scoped async state",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
@@ -18,11 +18,12 @@
     }
   },
   "devDependencies": {
+    "@onflow/fcl-bundle": "^1.0.1-alpha.0",
     "jest": "26.4.0",
-    "jest-esm-transformer": "1.0.0",
-    "microbundle": "0.12.3"
+    "jest-esm-transformer": "1.0.0"
   },
   "dependencies": {
+    "@babel/runtime": "^7.18.6",
     "queue-microtask": "1.1.2"
   },
   "source": "src/index.js",
@@ -32,8 +33,8 @@
   "scripts": {
     "prepublishOnly": "npm test && npm run build",
     "test": "jest",
-    "build": "microbundle --no-compress",
+    "build": "fcl-bundle",
     "test:watch": "jest --watch",
-    "start": "microbundle watch --no-compress"
+    "start": "fcl-bundle --watch"
   }
 }

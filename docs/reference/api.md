@@ -134,10 +134,12 @@
   - [`getTransactionStatus`](#gettransactionstatus)
       - [Arguments](#arguments-13)
       - [Returns after decoding](#returns-after-decoding-6)
+      - [Returns](#returns-10)
       - [Usage](#usage-22)
   - [`getTransaction`](#gettransaction)
       - [Arguments](#arguments-14)
       - [Returns after decoding](#returns-after-decoding-7)
+      - [Returns](#returns-11)
       - [Usage](#usage-23)
   - [`getEvents` (Deprecated)](#getevents-deprecated)
   - [`getLatestBlock` (Deprecated)](#getlatestblock-deprecated)
@@ -146,44 +148,44 @@
     - [Utility Builders](#utility-builders)
   - [`arg`](#arg)
       - [Arguments](#arguments-15)
-      - [Returns](#returns-10)
+      - [Returns](#returns-12)
       - [Usage](#usage-24)
   - [`args`](#args)
       - [Arguments](#arguments-16)
-      - [Returns](#returns-11)
+      - [Returns](#returns-13)
       - [Usage](#usage-25)
     - [Template Builders](#template-builders)
   - [`script`](#script)
       - [Arguments](#arguments-17)
-      - [Returns](#returns-12)
+      - [Returns](#returns-14)
       - [Usage](#usage-26)
   - [`transaction`](#transaction)
       - [Arguments](#arguments-18)
-      - [Returns](#returns-13)
+      - [Returns](#returns-15)
       - [Usage](#usage-27)
     - [Pre-built Interactions](#pre-built-interactions)
   - [`account`](#account)
       - [Arguments](#arguments-19)
-      - [Returns](#returns-14)
+      - [Returns](#returns-16)
       - [Usage](#usage-28)
   - [`block`](#block)
       - [Arguments](#arguments-20)
-      - [Returns](#returns-15)
+      - [Returns](#returns-17)
       - [Usage](#usage-29)
   - [`latestBlock` (Deprecated)](#latestblock-deprecated)
       - [Arguments](#arguments-21)
-      - [Returns](#returns-16)
+      - [Returns](#returns-18)
       - [Usage](#usage-30)
     - [Transaction Status Utility](#transaction-status-utility)
   - [`tx`](#tx)
       - [Arguments](#arguments-22)
-      - [Returns](#returns-17)
+      - [Returns](#returns-19)
       - [Usage](#usage-31)
       - [Examples](#examples-9)
     - [Event Polling Utility](#event-polling-utility)
   - [`events`](#events)
       - [Arguments](#arguments-23)
-      - [Returns](#returns-18)
+      - [Returns](#returns-20)
       - [Usage](#usage-32)
       - [Examples](#examples-10)
 - [Types, Interfaces, and Definitions](#types-interfaces-and-definitions)
@@ -203,10 +205,13 @@
       - [Payload](#payload)
       - [Usage](#usage-34)
       - [Examples:](#examples-12)
+    - [`TransactionObject`](#transactionobject)
     - [`TransactionRolesObject`](#transactionrolesobject)
+    - [`TransactionStatusObject`](#transactionstatusobject)
     - [`EventName`](#eventname)
     - [`Contract`](#contract)
     - [`KeyObject`](#keyobject)
+    - [`ProposalKeyObject`](#proposalkeyobject)
     - [`BlockObject`](#blockobject)
     - [`BlockHeaderObject`](#blockheaderobject)
     - [`CollectionGuaranteeObject`](#collectionguaranteeobject)
@@ -272,13 +277,14 @@ addStuff().then((d) => console.log(d)); // 13 (5 + 7 + 1)
 
 | Name                                   | Example                                              | Description                                                                                                                                                                                    |
 | --------------------------------- | --------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `accessNode.api` **(required)**        | `https://access-testnet.onflow.org`                  | API URL for the Flow Blockchain Access Node you want to be communicating with. See all available access node endpoints [here](https://docs.onflow.org/access-api/#flow-access-node-endpoints). |
-| `flow.network`                         | `testnet`                                            | Used in conjunction with stored interactions. Possible values: `local`, `canarynet`, `testnet`, `mainnet`                                                                                      |
-| `discovery.wallet` **(required)**      | `https://fcl-discovery.onflow.org/testnet/authn`     | Points FCL at the Wallet or Wallet Discovery mechanism.                                                                                                                                        |
-| `discovery.authn.endpoint`             | `https://fcl-discovery.onflow.org/api/testnet/authn` | Endpoint for alternative configurable Wallet Discovery mechanism. Read more on [discovery](#discovery)                                                                                         |
+| `accessNode.api` **(required)**        | `https://rest-testnet.onflow.org`                  | API URL for the Flow Blockchain Access Node you want to be communicating with. See all available access node endpoints [here](https://developers.onflow.org/http-api/). |
 | `app.detail.title`                     | `Cryptokitties`                                      | Your applications title, can be requested by wallets and other services.                                                                                                                       |
 | `app.detail.icon`                      | `https://fcl-discovery.onflow.org/images/blocto.png` | Url for your applications icon, can be requested by wallets and other services.                                                                                                                |
-| `challenge.handshake`                  | **DEPRECATED**                                       | Use `discovery.wallet` instead.                                                                                                                                                                |
+| `challenge.handshake`                  | **DEPRECATED**                                       | Use `discovery.wallet` instead.|
+| `discovery.authn.endpoint`             | `https://fcl-discovery.onflow.org/api/testnet/authn` | Endpoint for alternative configurable Wallet Discovery mechanism. Read more on [discovery](#discovery)                                                                                         |
+| `discovery.wallet` **(required)**      | `https://fcl-discovery.onflow.org/testnet/authn`     | Points FCL at the Wallet or Wallet Discovery mechanism.                                                                                                                                        |
+| `fcl.limit`                         | `100`                                            | Specifies fallback compute limit if not provided in transaction.  Provided as integer.                                                                                      |
+| `flow.network`                         | `testnet`                                            | Used in conjunction with stored interactions and provides FCLCryptoContract address for `testnet` and `mainnet`. Possible values: `local`, `canarynet`, `testnet`, `mainnet`.                                                                            |
 
 ### Address replacement in scripts and transactions
 
@@ -712,7 +718,7 @@ _Pass in the following as a single object with the following keys.All keys are o
 | --------- | ------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `cadence` | string **(required)**                 | A valid cadence script.                                                                                                                                                                                                |
 | `args`    | [ArgumentFunction](#argumentfunction) | Any arguments to the script if needed should be supplied via a function that returns an array of arguments.                                                                                                            |
-| `limit`   | number                                | Compute (Gas) limit for query. Read the [documentation about computation cost](https://docs.onflow.org/flow-go-sdk/building-transactions/#gas-limit) for information about how computation cost is calculated on Flow. |
+| `limit`   | number                                | Compute (Gas) limit for query. Read the [documentation about computation cost](https://docs.onflow.org/concepts/variable-transaction-fees/) for information about how computation cost is calculated on Flow. |
 
 #### Returns
 
@@ -855,7 +861,7 @@ See [proving-authentication](https://github.com/onflow/fcl-js/blob/master/docs/r
 | Name                  | Type                  | Description                       |
 | --------------------- | --------------------- | --------------------------------- |
 | `appIdentifier`       | string **(required)** | A hexadecimal string              |
-| `accountProofData`    | Object **(required)** | Object with properties: <br >`address`  {string} - A Flow account address. <br > `nonce` {string} - A random string in hexadecimal format (minimum 32 bytes in total, i.e 64 hex characters) <br > `signatures` {Object[ ]} - An array of composite signatures to verify                                                                              |
+| `accountProofData`    | Object **(required)** | Object with properties: <br/>`address` {string} - A Flow account address. <br/> `nonce`: `string` - A random string in hexadecimal format (minimum 32 bytes in total, i.e 64 hex characters) <br/> `signatures`: `Object[]` - An array of composite signatures to verify                                                                              |
 | `opts`                | Object **(optional)** | `opts.fclCryptoContract` can be provided to overide FCLCryptoContract address for local development                 |
 
 #### Returns
@@ -966,7 +972,7 @@ Decodes the response from `fcl.send()` into the appropriate JSON representation 
 
 | Type | Description                                                                                                                                                                    |
 | ---- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| any  | A JSON representation of the raw string response depending on the cadence code executed.<br> The return value can be a single value and type or an object with multiple types. |
+| any  | A JSON representation of the raw string response depending on the cadence code executed.<br/> The return value can be a single value and type or an object with multiple types. |
 
 #### Usage
 
@@ -1266,7 +1272,7 @@ const collection = await fcl
 
 ## `getTransactionStatus`
 
-A builder function that returns the status of transaction.
+A builder function that returns the status of transaction in the form of a [TransactionStatusObject](#transactionstatusobject).
 
 ⚠️The transactionID provided must be from the current spork.
 
@@ -1280,13 +1286,11 @@ A builder function that returns the status of transaction.
 
 #### Returns after decoding
 
-| Name                     | Type                                       | Description                                                     |
-| ------------------------ | ------------------------------------------ | --------------------------------------------------------------- |
-| `events`                 | [[EventObject]](#event-object)             | An array of events that were emitted during the transaction.    |
-| `status`                 | [TransactionStatus](#transaction-statuses) | The status of the transaction on the blockchain.                |
-| `statusString` **alpha** | [TransactionStatus](#transaction-statuses) | The `status` as as descriptive text (e.g. "FINALIZED").         |
-| `errorMessage`           | string                                     | An error message if it exists. Default is an empty string `''`. |
-| `statusCode`             | [GRPCStatus](#grpc-statuses)               | The status from the GRPC response.                              |
+#### Returns
+
+| Type                                                | Description                                            |
+| --------------------------------------------------- | ------------------------------------------------------ |
+| [TransactionStatusObject](#transactionstatusobject) | Object representing the result/status of a transaction |
 
 #### Usage
 
@@ -1320,12 +1324,11 @@ A builder function that returns a [transaction object](#transactionobject) once 
 
 #### Returns after decoding
 
-| Name           | Type                                    | Description                                                     |
-| -------------- | --------------------------------------- | --------------------------------------------------------------- |
-| `events`       | [[EventObject]](#event-object)           | An array of events that matched the eventName.                  |
-| `status`       | [TransactionStatus](#transaction-statuses) | The status of the transaction on the blockchain.                |
-| `errorMessage` | string                                  | An error message if it exists. Default is an empty string `''`. |
-| `statusCode`   | [GRPCStatus](#grpc-statuses)        | The status from the GRPC response.                              |
+#### Returns
+
+| Type                                    | Description                                                    |
+| --------------------------------------- | -------------------------------------------------------------- |
+| [TransactionObject](#transactionobject) | An full transaction object containing a payload and signatures |
 
 #### Usage
 
@@ -1758,7 +1761,7 @@ The JSON representation of an account on the Flow blockchain.
 
 | Value Type        | Description                                                                                                                     |
 | ----------------- | ------------------------------------------------------------------------------------------------------------------------------- |
-| string(formatted) | A valid Flow address should be 16 characters in length. <br>A `0x` prefix is optional during inputs. <br>eg. `f8d6e0586b0a20c1` |
+| string(formatted) | A valid Flow address should be 16 characters in length. <br/>A `0x` prefix is optional during inputs. <br/>eg. `f8d6e0586b0a20c1` |
 
 ---
 
@@ -1808,7 +1811,7 @@ An authorization function must produce the information of the user that is going
 
 | Value Type                                           | Description                                                                                   |
 | ---------------------------------------------------- | --------------------------------------------------------------------------------------------- |
-| Promise<[AuthorizationObject](#authorizationobject)> | The object that contains all the information needed by FCL to authorize a user's transaction. |
+| ```Promise<[AuthorizationObject](#authorizationobject)>``` | The object that contains all the information needed by FCL to authorize a user's transaction. |
 
 #### Usage
 
@@ -1867,7 +1870,7 @@ Note: These values are destructed from the payload object in the first argument.
 
 | Value Type                                 | Description                                                                                   |
 | ------------------------------------------ | --------------------------------------------------------------------------------------------- |
-| Promise<[SignableObject](#signableobject)> | The object that contains all the information needed by FCL to authorize a user's transaction. |
+| ```Promise<[SignableObject](#signableobject)>``` | The object that contains all the information needed by FCL to authorize a user's transaction. |
 
 #### Usage
 
@@ -1912,6 +1915,20 @@ const signingFunction = ({
 
 ---
 
+### `TransactionObject`
+
+| Key                  | Value Type                            | Description                                                                                                                                                                                   |
+| -------------------- | ------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `args`               | object                                     | A list of encoded Cadence values passed into this transaction.  These have not been decoded by the JS-SDK.                                                       |
+| `authorizers`        | [\[Address\]](#address)               | A list of the accounts that are authorizing this transaction to mutate to their on-chain account state.  [See more here](https://docs.onflow.org/concepts/transaction-signing/#signer-roles). |
+| `envelopeSignatures` | [\[SignableObject\]](#signableobject) | A list of signatures generated by the payer role. [See more here](https://docs.onflow.org/concepts/transaction-signing/#anatomy-of-a-transaction).                                            |
+| `gasLimit`           | number                                | The maximum number of computational units that can be used to execute this transaction.  [See more here](https://docs.onflow.org/concepts/variable-transaction-fees/).                                  |
+| `payer`              | [Address](#address)                   | The account that pays the fee for this transaction.  [See more here](https://docs.onflow.org/concepts/transaction-signing/#signer-roles).                                                     |
+| `payloadSignatures`  | [\[SignableObject\]](#signableobject) | A list of signatures generated by the proposer and authorizer roles. [See more here](https://docs.onflow.org/concepts/transaction-signing/#anatomy-of-a-transaction).                         |
+| `proposalKey`        | [\[ProposalKey\]](#proposalkeyobject) | The account key used to propose this transaction                                                                                                                                              |
+| `referenceBlockId`   | string                                | A reference to the block used to calculate the expiry of this transaction.                                                                                                                    |
+| `script`             | string                                | The UTF-8 encoded Cadence source code that defines the execution logic for this transaction                                                                                                   |
+
 ### `TransactionRolesObject`
 
 | Key Name   | Value Type | Description                                                                |
@@ -1922,11 +1939,22 @@ const signingFunction = ({
 
 For more on what each transaction role means, see [singing roles](https://docs.onflow.org/concepts/transaction-signing/#signer-roles).
 
+### `TransactionStatusObject`
+
+| Key                     | Value Type                                       | Description                                                     |
+| ------------------------ | ------------------------------------------ | --------------------------------------------------------------- |
+| `blockId`                | string                                     | ID of the block that contains the transaction.                  |
+| `events`                 | [[EventObject]](#event-object)             | An array of events that were emitted during the transaction.    |
+| `status`                 | [TransactionStatus](#transaction-statuses) | The status of the transaction on the blockchain.                |
+| `statusString` | [TransactionStatus](#transaction-statuses) | The `status` as as descriptive text (e.g. "FINALIZED").         |
+| `errorMessage`           | string                                     | An error message if it exists. Default is an empty string `''`. |
+| `statusCode`             | [GRPCStatus](#grpc-statuses)               | The status from the GRPC response.                              |
+
 ### `EventName`
 
 | Value Type        | Description                                                                                                                        |
 | ----------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
-| string(formatted) | A event name in Flow must follow the format `A.{AccountAddress}.{ContractName}.{EventName}` <br>eg. `A.ba1132bc08f82fe2.Debug.Log` |
+| string(formatted) | A event name in Flow must follow the format `A.{AccountAddress}.{ContractName}.{EventName}` <br/>eg. `A.ba1132bc08f82fe2.Debug.Log` |
 
 ### `Contract`
 
@@ -1947,6 +1975,20 @@ This is the JSON representation of a key on the Flow blockchain.
 | `weight`         | number     | A number between 1 and 1000 indicating the relative weight to other keys on the account. |
 | `sequenceNumber` | number     | This number is incremented for every transaction signed using this key.                  |
 | `revoked`        | boolean    | If this key has been disabled for use.                                                   |
+
+### `ProposalKeyObject`
+
+ProposalKey is the account key used to propose this transaction.
+
+A proposal key references a specific key on an account, along with an up-to-date sequence number for that key. This sequence number is used to prevent replay attacks.
+
+You can find more information about sequence numbers here: https://docs.onflow.org/concepts/transaction-signing/#sequence-numbers
+
+ Key              | Value Type | Description                                                                              |
+| ---------------- | ---------- | ---------------------------------------------------------------------------------------- |
+| `address`          | [Address](#address)     | The address of the account                                                               |
+| `keyIndex`      | number     | The index of the account key being referenced                                                |
+| `sequenceNumber`       | number     | The sequence number associated with this account key for this transaction                           |
 
 ### `BlockObject`
 

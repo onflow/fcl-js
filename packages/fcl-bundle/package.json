@@ -1,0 +1,31 @@
+{
+  "name": "@onflow/fcl-bundle",
+  "version": "1.0.1-alpha.0",
+  "description": "FCL Bundler Tool",
+  "license": "Apache-2.0",
+  "author": "Dapper Labs <dev@dapperlabs.com>",
+  "homepage": "https://onflow.org",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/onflow/flow-js-sdk.git"
+  },
+  "bugs": {
+    "url": "https://github.com/onflow/flow-js-sdk/issues"
+  },
+  "dependencies": {
+    "@babel/plugin-transform-runtime": "^7.18.2",
+    "@babel/preset-env": "^7.18.2",
+    "@rollup/plugin-babel": "^5.3.1",
+    "@rollup/plugin-commonjs": "^22.0.0",
+    "@rollup/plugin-node-resolve": "^13.3.0",
+    "@rollup/plugin-replace": "^4.0.0",
+    "builtin-modules": "^3.3.0",
+    "commander": "^9.3.0",
+    "lodash": "^4.17.21",
+    "rollup": "^2.75.5",
+    "rollup-plugin-sourcemaps": "^0.6.3"
+  },
+  "bin": {
+    "fcl-bundle": "src/cli.js"
+  }
+}

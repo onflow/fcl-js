@@ -8,16 +8,27 @@ const STATUS_MAP = {
   2: "FINALIZED",
   3: "EXECUTED",
   4: "SEALED",
-  5: "EXPIRED"
+  5: "EXPIRED",
 }
 
 const u8ToHex = (u8, context) => context.Buffer.from(u8).toString("hex")
+const nonEmptyU8ToHex = (u8, context) =>
+  !u8.reduce((empty, b) => empty && !b, true) ? u8ToHex(u8, context) : null
 const hexBuffer = (hex, context) => context.Buffer.from(hex, "hex")
 
 export async function sendGetTransactionStatus(ix, context = {}, opts = {}) {
-  invariant(opts.node, `SDK Send Get Transaction Status Error: opts.node must be defined.`)
-  invariant(context.response, `SDK Send Get Transaction Status Error: context.response must be defined.`)
-  invariant(context.Buffer, `SDK Send Get Transaction Status Error: context.Buffer must be defined.`)
+  invariant(
+    opts.node,
+    `SDK Send Get Transaction Status Error: opts.node must be defined.`
+  )
+  invariant(
+    context.response,
+    `SDK Send Get Transaction Status Error: context.response must be defined.`
+  )
+  invariant(
+    context.Buffer,
+    `SDK Send Get Transaction Status Error: context.Buffer must be defined.`
+  )
 
   const unary = opts.unary || defaultUnary
 
@@ -26,14 +37,19 @@ export async function sendGetTransactionStatus(ix, context = {}, opts = {}) {
   const req = new GetTransactionRequest()
   req.setId(hexBuffer(ix.transaction.id, context))
 
-  const res = await unary(opts.node, AccessAPI.GetTransactionResult, req, context)
+  const res = await unary(
+    opts.node,
+    AccessAPI.GetTransactionResult,
+    req,
+    context
+  )
 
   let events = res.getEventsList()
 
   let ret = context.response()
   ret.tag = ix.tag
   ret.transactionStatus = {
-    blockId: null,
+    blockId: nonEmptyU8ToHex(res.getBlockId_asU8(), context),
     status: res.getStatus(),
     statusString: STATUS_MAP[res.getStatus()],
     statusCode: res.getStatusCode(),
@@ -43,7 +59,9 @@ export async function sendGetTransactionStatus(ix, context = {}, opts = {}) {
       transactionId: u8ToHex(event.getTransactionId_asU8(), context),
       transactionIndex: event.getTransactionIndex(),
       eventIndex: event.getEventIndex(),
-      payload: JSON.parse(context.Buffer.from(event.getPayload_asU8()).toString("utf8")),
+      payload: JSON.parse(
+        context.Buffer.from(event.getPayload_asU8()).toString("utf8")
+      ),
     })),
   }
 

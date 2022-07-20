@@ -60,25 +60,27 @@ export const kill = addr => {
   delete root.FCL_REGISTRY[addr]
 }
 
-const fromHandlers = (handlers = {}) => async ctx => {
-  if (typeof handlers[INIT] === "function") await handlers[INIT](ctx)
-  __loop: while (1) {
-    const letter = await ctx.receive()
-    try {
-      if (letter.tag === EXIT) {
-        if (typeof handlers[TERMINATE] === "function") {
-          await handlers[TERMINATE](ctx, letter, letter.data || {})
+const fromHandlers =
+  (handlers = {}) =>
+  async ctx => {
+    if (typeof handlers[INIT] === "function") await handlers[INIT](ctx)
+    __loop: while (1) {
+      const letter = await ctx.receive()
+      try {
+        if (letter.tag === EXIT) {
+          if (typeof handlers[TERMINATE] === "function") {
+            await handlers[TERMINATE](ctx, letter, letter.data || {})
+          }
+          break __loop
         }
-        break __loop
+        await handlers[letter.tag](ctx, letter, letter.data || {})
+      } catch (error) {
+        console.error(`${ctx.self()} Error`, letter, error)
+      } finally {
+        continue __loop
       }
-      await handlers[letter.tag](ctx, letter, letter.data || {})
-    } catch (error) {
-      console.error(`${ctx.self()} Error`, letter, error)
-    } finally {
-      continue __loop
     }
   }
-}
 
 export const spawn = (fn, addr = null) => {
   if (addr == null) addr = ++pid
@@ -89,6 +91,7 @@ export const spawn = (fn, addr = null) => {
     mailbox: createMailbox(),
     subs: new Set(),
     kvs: {},
+    error: null,
   }
 
   const ctx = {
@@ -141,6 +144,10 @@ export const spawn = (fn, addr = null) => {
         key => (root.FCL_REGISTRY[addr].kvs[key] = data[key])
       )
     },
+    fatalError: error => {
+      root.FCL_REGISTRY[addr].error = error
+      for (let to of root.FCL_REGISTRY[addr].subs) send(to, UPDATED)
+    },
   }
 
   if (typeof fn === "object") fn = fromHandlers(fn)
@@ -168,11 +175,18 @@ export function subscriber(address, spawnFn, callback) {
     ctx.send(address, SUBSCRIBE)
     while (1) {
       const letter = await ctx.receive()
+      const error = root.FCL_REGISTRY[address].error
       if (letter.tag === EXIT) {
         ctx.send(address, UNSUBSCRIBE)
         return
       }
-      callback(letter.data)
+      if (error) {
+        callback(null, error)
+        ctx.send(address, UNSUBSCRIBE)
+        return
+      }
+
+      callback(letter.data, null)
     }
   })
   return () => send(self, EXIT)

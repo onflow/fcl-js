@@ -11,7 +11,10 @@ import {sendGetCollection} from "./send-get-collection.js"
 import {sendPing} from "./send-ping.js"
 
 export const send = async (ix, context = {}, opts = {}) => {
-  invariant(opts.node, `SDK Send Error: Either opts.node or "accessNode.api" in config must be defined.`)
+  invariant(
+    opts.node,
+    `SDK Send Error: Either opts.node or "accessNode.api" in config must be defined.`
+  )
   invariant(context.ix, `SDK Send Error: context.ix must be defined.`)
 
   ix = await ix

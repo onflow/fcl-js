@@ -1,12 +1,10 @@
-import {
-  resolveArguments
-} from "../sdk.js"
+import {resolveArguments} from "../sdk.js"
 
 describe("resolveArguments", () => {
   const argID = "28948a11n4"
   const argObj = {
     type: "Address",
-    value: "0xf8d6e0586b0a20c7"
+    value: "0xf8d6e0586b0a20c7",
   }
   const tag = "SCRIPT"
   const kind = "ARGUMENT"
@@ -25,10 +23,10 @@ describe("resolveArguments", () => {
           value: argObj.value,
           xform: {
             label: "Address",
-            asArgument: () => argObj
-          }
-        }
-      }
+            asArgument: () => argObj,
+          },
+        },
+      },
     }
 
     const res = await resolveArguments(ix)
@@ -45,17 +43,17 @@ describe("resolveArguments", () => {
           resolve: jest.fn(),
           resolveArgument: jest.fn().mockResolvedValue({
             xform: {
-              asArgument: () => argObj
-            }
+              asArgument: () => argObj,
+            },
           }),
           tempId,
           value: null,
           xform: {
             label: "Address",
-            asArgument: () => argObj
-          }
-        }
-      }
+            asArgument: () => argObj,
+          },
+        },
+      },
     }
 
     const res = await resolveArguments(ix)
@@ -65,11 +63,10 @@ describe("resolveArguments", () => {
   })
 
   test("should resolve nested asynchronous arguments", async () => {
-
     const resolveTwo = jest.fn().mockResolvedValue({
       xform: {
-        asArgument: () => argObj
-      }
+        asArgument: () => argObj,
+      },
     })
 
     const ix = {
@@ -81,18 +78,18 @@ describe("resolveArguments", () => {
           resolve: undefined,
           resolveArgument: jest.fn().mockResolvedValue({
             xform: {
-              asArgument: () => argObj
+              asArgument: () => argObj,
             },
-            resolveArgument: resolveTwo
+            resolveArgument: resolveTwo,
           }),
           tempId,
           value: null,
           xform: {
             label: "Address",
-            asArgument: () => argObj
-          }
-        }
-      }
+            asArgument: () => argObj,
+          },
+        },
+      },
     }
 
     const res = await resolveArguments(ix)
@@ -112,34 +109,31 @@ describe("resolveArguments", () => {
           resolveArgument: jest.fn().mockResolvedValue({
             tempId: "1",
             xform: {
-              asArgument: () => argObj
+              asArgument: () => argObj,
             },
             resolveArgument: jest.fn().mockResolvedValue({
               tempId: "2",
               xform: {
-                asArgument: () => argObj
+                asArgument: () => argObj,
               },
               resolveArgument: jest.fn().mockResolvedValue({
                 tempId: "3",
                 xform: {
-                  asArgument: () => argObj
-                }
-              })
-            })
+                  asArgument: () => argObj,
+                },
+              }),
+            }),
           }),
           tempId,
           value: null,
           xform: {
             label: "Address",
-            asArgument: () => argObj
-          }
-        }
-      }
+            asArgument: () => argObj,
+          },
+        },
+      },
     }
 
-    await expect(resolveArguments(ix))
-      .rejects
-      .toThrow();
+    await expect(resolveArguments(ix)).rejects.toThrow()
   })
 })
-  

@@ -1,5 +1,104 @@
 # @onflow/fcl
 
+## 1.1.1-alpha.2
+
+### Patch Changes
+
+- Fix getAccount executing at latest finalized block instead of sealed block (version bump `@onflow/transport-http`)
+
+## 1.1.1-alpha.1
+
+### Patch Changes
+
+- [#1283](https://github.com/onflow/fcl-js/pull/1283) [`b0f7a234`](https://github.com/onflow/fcl-js/commit/b0f7a234a6e71c28e4a02d8edf4927f73e76fa72) Thanks [@gregsantos](https://github.com/gregsantos)! - Updates keyIndices args passed in as Numbers in fcl.verify functions
+
+* [#1227](https://github.com/onflow/fcl-js/pull/1227) [`352f1460`](https://github.com/onflow/fcl-js/commit/352f1460a2f34d228a74fa4bbc6fcf6e68a968b6) Thanks [@jribbink](https://github.com/jribbink)! - Switch to fcl-bundle instead of microbundle for build scripts
+
+* Updated dependencies [[`352f1460`](https://github.com/onflow/fcl-js/commit/352f1460a2f34d228a74fa4bbc6fcf6e68a968b6)]:
+  - @onflow/config@1.0.3-alpha.0
+  - @onflow/rlp@1.0.2-alpha.0
+  - @onflow/sdk@1.1.1-alpha.1
+  - @onflow/types@1.0.3-alpha.0
+  - @onflow/util-actor@1.1.1-alpha.0
+  - @onflow/util-address@1.0.2-alpha.0
+  - @onflow/util-invariant@1.0.2-alpha.0
+  - @onflow/util-logger@1.1.1-alpha.1
+  - @onflow/util-template@1.0.3-alpha.0
+  - @onflow/util-uid@1.0.2-alpha.0
+
+## 1.1.1-alpha.0
+
+### Patch Changes
+
+- [#1274](https://github.com/onflow/fcl-js/pull/1274) [`865e412c`](https://github.com/onflow/fcl-js/commit/865e412c5c975e68f30e9c8b4b225030560a5187) Thanks [@jribbink](https://github.com/jribbink)! - Throw error if FCL popup/tab is blocked from opening or if sendMsgToFCL cannot access parent window reference for postMessage.
+
+- Updated dependencies []:
+  - @onflow/sdk@1.1.1-alpha.0
+  - @onflow/util-logger@1.1.1-alpha.0
+
+## 1.1.0
+
+### Minor Changes
+
+- [#1243](https://github.com/onflow/fcl-js/pull/1243) [`4ec2bdc9`](https://github.com/onflow/fcl-js/commit/4ec2bdc9805ac081bdc8003b6e1ea52e02d3909d) Thanks [@jribbink](https://github.com/jribbink)! - Make errors accessible to subscribers from fcl.tx polling (second argument of callback) and throw error for onceSealed, onceExecuted, onceFinalized promises. Also removed retried polling requests as they are a redundancy already implemented by @onflow/transport-http
+
+### Patch Changes
+
+- [#1177](https://github.com/onflow/fcl-js/pull/1177) [`e38f9fe4`](https://github.com/onflow/fcl-js/commit/e38f9fe4ba030693984ab74bffd5bca387ac9a09) Thanks [@hotrungnhan](https://github.com/hotrungnhan)! - Fix events subcribe block height issue and add polling rate guide to docs.
+
+* [#1245](https://github.com/onflow/fcl-js/pull/1245) [`d09ba0f0`](https://github.com/onflow/fcl-js/commit/d09ba0f00f53f93feb351a3da5e821eada6287f0) Thanks [@jribbink](https://github.com/jribbink)! - Switch deprecation warnings to standardized warnings introduced by @onflow/util-logger (log.deprecate)
+
+- [#1211](https://github.com/onflow/fcl-js/pull/1211) [`f4c6fb9a`](https://github.com/onflow/fcl-js/commit/f4c6fb9a05e8cf717afcd6a3b3b4c8b102f253e3) Thanks [@gregsantos](https://github.com/gregsantos)! - Update event listeners in strategies
+  Fixes a bug where event listener was not being removed on close
+
+* [#1210](https://github.com/onflow/fcl-js/pull/1210) [`457f4996`](https://github.com/onflow/fcl-js/commit/457f49964dd2a0e849ae18a8dd0864bcb52082e8) Thanks [@jribbink](https://github.com/jribbink)! - Add deprecation warning when "env" is used instead of "flow.network" in config
+
+* Updated dependencies [[`d09ba0f0`](https://github.com/onflow/fcl-js/commit/d09ba0f00f53f93feb351a3da5e821eada6287f0), [`90d5163a`](https://github.com/onflow/fcl-js/commit/90d5163a7723dd529324a271ea8accaa43a3d7be), [`45951f1a`](https://github.com/onflow/fcl-js/commit/45951f1af310d302ee708e43d1a939265f404d2c), [`cc422a78`](https://github.com/onflow/fcl-js/commit/cc422a781d0e87ba8945c336902bbc9542d5b4c4), [`1654ebbe`](https://github.com/onflow/fcl-js/commit/1654ebbe45ea5e4ca13536ed2139520ce21ee314), [`d09ba0f0`](https://github.com/onflow/fcl-js/commit/d09ba0f00f53f93feb351a3da5e821eada6287f0), [`e0d3a377`](https://github.com/onflow/fcl-js/commit/e0d3a377260338a37518f0ad2a52dcc618fd9bc5), [`d1765950`](https://github.com/onflow/fcl-js/commit/d176595021681e660ae0a06161340833280091fb), [`4ec2bdc9`](https://github.com/onflow/fcl-js/commit/4ec2bdc9805ac081bdc8003b6e1ea52e02d3909d)]:
+  - @onflow/sdk@1.1.0
+  - @onflow/types@1.0.2
+  - @onflow/util-logger@1.1.0
+  - @onflow/util-template@1.0.2
+  - @onflow/util-actor@1.1.0
+  - @onflow/config@1.0.2
+
+## 1.1.0-alpha.2
+
+### Minor Changes
+
+- [#1243](https://github.com/onflow/fcl-js/pull/1243) [`4ec2bdc9`](https://github.com/onflow/fcl-js/commit/4ec2bdc9805ac081bdc8003b6e1ea52e02d3909d) Thanks [@jribbink](https://github.com/jribbink)! - Make errors accessible to subscribers from fcl.tx polling (second argument of callback) and throw error for onceSealed, onceExecuted, onceFinalized promises. Also removed retried polling requests as they are a redundancy already implemented by @onflow/transport-http
+
+### Patch Changes
+
+- [#1245](https://github.com/onflow/fcl-js/pull/1245) [`d09ba0f0`](https://github.com/onflow/fcl-js/commit/d09ba0f00f53f93feb351a3da5e821eada6287f0) Thanks [@jribbink](https://github.com/jribbink)! - Switch deprecation warnings to standardized warnings introduced by @onflow/util-logger (log.deprecate)
+
+- Updated dependencies [[`d09ba0f0`](https://github.com/onflow/fcl-js/commit/d09ba0f00f53f93feb351a3da5e821eada6287f0), [`d09ba0f0`](https://github.com/onflow/fcl-js/commit/d09ba0f00f53f93feb351a3da5e821eada6287f0), [`4ec2bdc9`](https://github.com/onflow/fcl-js/commit/4ec2bdc9805ac081bdc8003b6e1ea52e02d3909d)]:
+  - @onflow/sdk@1.1.0-alpha.3
+  - @onflow/types@1.0.2-alpha.0
+  - @onflow/util-logger@1.1.0-alpha.2
+  - @onflow/util-template@1.0.2-alpha.0
+  - @onflow/util-actor@1.1.0-alpha.0
+  - @onflow/config@1.0.2-alpha.0
+
+## 1.0.3-alpha.1
+
+### Patch Changes
+
+- [#1210](https://github.com/onflow/fcl-js/pull/1210) [`457f4996`](https://github.com/onflow/fcl-js/commit/457f49964dd2a0e849ae18a8dd0864bcb52082e8) Thanks [@jribbink](https://github.com/jribbink)! - Add deprecation warning when "env" is used instead of "flow.network" in config
+
+- Updated dependencies [[`e0d3a377`](https://github.com/onflow/fcl-js/commit/e0d3a377260338a37518f0ad2a52dcc618fd9bc5)]:
+  - @onflow/sdk@1.1.0-alpha.2
+
+## 1.0.3-alpha.0
+
+### Patch Changes
+
+- [#1177](https://github.com/onflow/fcl-js/pull/1177) [`e38f9fe4`](https://github.com/onflow/fcl-js/commit/e38f9fe4ba030693984ab74bffd5bca387ac9a09) Thanks [@hotrungnhan](https://github.com/hotrungnhan)! - Fix events subcribe block height issue and add polling rate guide to docs.
+
+* [#1211](https://github.com/onflow/fcl-js/pull/1211) [`f4c6fb9a`](https://github.com/onflow/fcl-js/commit/f4c6fb9a05e8cf717afcd6a3b3b4c8b102f253e3) Thanks [@gregsantos](https://github.com/gregsantos)! - Update event listeners in strategies
+  Fixes a bug where event listener was not being removed on close
+* Updated dependencies [[`1654ebbe`](https://github.com/onflow/fcl-js/commit/1654ebbe45ea5e4ca13536ed2139520ce21ee314), [`d1765950`](https://github.com/onflow/fcl-js/commit/d176595021681e660ae0a06161340833280091fb)]:
+  - @onflow/sdk@1.0.2-alpha.0
+
 ## 1.0.2
 
 ### Patch Changes

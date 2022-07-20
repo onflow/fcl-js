@@ -2,6 +2,7 @@
 // file: flow/entities/transaction.proto
 
 import * as jspb from "google-protobuf";
+import * as flow_entities_event_pb from "../../flow/entities/event_pb";
 
 export class Transaction extends jspb.Message {
   getScript(): Uint8Array | string;

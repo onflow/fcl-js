@@ -1,10 +1,13 @@
-import { SHA3 } from "sha3"
-import { encode, Buffer } from "@onflow/rlp"
-import { sansPrefix } from "@onflow/util-address"
+import {SHA3} from "sha3"
+import {encode, Buffer} from "@onflow/rlp"
+import {sansPrefix} from "@onflow/util-address"
 
-export const encodeTransactionPayload = tx => prependTransactionDomainTag(rlpEncode(preparePayload(tx)))
-export const encodeTransactionEnvelope = tx => prependTransactionDomainTag(rlpEncode(prepareEnvelope(tx)))
-export const encodeTxIdFromVoucher = voucher => sha3_256(rlpEncode(prepareVoucher(voucher)))
+export const encodeTransactionPayload = tx =>
+  prependTransactionDomainTag(rlpEncode(preparePayload(tx)))
+export const encodeTransactionEnvelope = tx =>
+  prependTransactionDomainTag(rlpEncode(prepareEnvelope(tx)))
+export const encodeTxIdFromVoucher = voucher =>
+  sha3_256(rlpEncode(prepareVoucher(voucher)))
 
 const rightPaddedHexBuffer = (value, pad) =>
   Buffer.from(value.padEnd(pad * 2, 0), "hex")
@@ -12,7 +15,10 @@ const rightPaddedHexBuffer = (value, pad) =>
 const leftPaddedHexBuffer = (value, pad) =>
   Buffer.from(value.padStart(pad * 2, 0), "hex")
 
-const TRANSACTION_DOMAIN_TAG = rightPaddedHexBuffer(Buffer.from("FLOW-V0.0-transaction").toString("hex"), 32).toString("hex")
+const TRANSACTION_DOMAIN_TAG = rightPaddedHexBuffer(
+  Buffer.from("FLOW-V0.0-transaction").toString("hex"),
+  32
+).toString("hex")
 const prependTransactionDomainTag = tx => TRANSACTION_DOMAIN_TAG + tx
 
 const addressBuffer = addr => leftPaddedHexBuffer(addr, 8)
@@ -103,16 +109,19 @@ const prepareVoucher = voucher => {
   const signers = collectSigners(voucher)
 
   const prepareSigs = sigs => {
-    return sigs.map(({ address, keyId, sig }) => {
-      return { signerIndex: signers.get(address), keyId, sig }
-    }).sort((a, b) => {
-      if (a.signerIndex > b.signerIndex) return 1
-      if (a.signerIndex < b.signerIndex) return -1
-      if (a.keyId > b.keyId) return 1
-      if (a.keyId < b.keyId) return -1
-    }).map(sig => {
-      return [sig.signerIndex, sig.keyId, signatureBuffer(sig.sig)]
-    })
+    return sigs
+      .map(({address, keyId, sig}) => {
+        return {signerIndex: signers.get(address), keyId, sig}
+      })
+      .sort((a, b) => {
+        if (a.signerIndex > b.signerIndex) return 1
+        if (a.signerIndex < b.signerIndex) return -1
+        if (a.keyId > b.keyId) return 1
+        if (a.keyId < b.keyId) return -1
+      })
+      .map(sig => {
+        return [sig.signerIndex, sig.keyId, signatureBuffer(sig.sig)]
+      })
   }
 
   return [
@@ -125,7 +134,9 @@ const prepareVoucher = voucher => {
       voucher.proposalKey.keyId,
       voucher.proposalKey.sequenceNum,
       addressBuffer(sansPrefix(voucher.payer)),
-      voucher.authorizers.map(authorizer => addressBuffer(sansPrefix(authorizer))),
+      voucher.authorizers.map(authorizer =>
+        addressBuffer(sansPrefix(authorizer))
+      ),
     ],
     prepareSigs(voucher.payloadSigs),
     prepareSigs(voucher.envelopeSigs),

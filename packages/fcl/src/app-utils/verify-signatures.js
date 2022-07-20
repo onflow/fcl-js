@@ -1,4 +1,5 @@
 import {config} from "@onflow/config"
+import {log} from "@onflow/util-logger"
 import {invariant} from "@onflow/util-invariant"
 import {sansPrefix} from "@onflow/util-address"
 import {query} from "../exec/query"
@@ -55,7 +56,20 @@ const getVerifySignaturesScript = async (sig, opts) => {
       ? "verifyAccountProofSignatures"
       : "verifyUserSignatures"
 
-  const network = await config.first(["env", "flow.network"])
+  let network = await config.get("flow.network")
+  if (!network) {
+    network = await config.get("env")
+    if (network)
+      log.deprecate({
+        pkg: "FCL",
+        subject:
+          'Using the "env" configuration key for specifying the flow network',
+        message: 'Please use "flow.network" instead.',
+        transition:
+          "https://github.com/onflow/flow-js-sdk/blob/master/packages/fcl/TRANSITIONS.md#0001-deprecate-env-config-key",
+      })
+  }
+
   let fclCryptoContract
 
   invariant(
@@ -125,7 +139,7 @@ export async function verifyAccountProof(
 
   for (const el of signatures) {
     signaturesArr.push(el.signature)
-    keyIndices.push(el.keyId)
+    keyIndices.push(el.keyId.toString())
   }
 
   return query({
@@ -168,7 +182,7 @@ export async function verifyUserSignatures(message, compSigs, opts = {}) {
 
   for (const el of compSigs) {
     signaturesArr.push(el.signature)
-    keyIndices.push(el.keyId)
+    keyIndices.push(el.keyId.toString())
   }
 
   return query({

@@ -1,4 +1,11 @@
-import {spawn, subscriber, snapshoter, INIT, SUBSCRIBE, UNSUBSCRIBE} from "@onflow/util-actor"
+import {
+  spawn,
+  subscriber,
+  snapshoter,
+  INIT,
+  SUBSCRIBE,
+  UNSUBSCRIBE,
+} from "@onflow/util-actor"
 import {getServices} from "../services"
 
 export const SERVICE_ACTOR_KEYS = {

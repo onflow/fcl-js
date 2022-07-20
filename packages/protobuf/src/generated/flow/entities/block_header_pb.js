@@ -2,15 +2,24 @@
 /**
  * @fileoverview
  * @enhanceable
+ * @suppress {missingRequire} reports error on implicit type usages.
  * @suppress {messageConventions} JS Compiler reports an error if a variable or
  *     field starts with 'MSG_' and isn't a translatable message.
  * @public
  */
 // GENERATED CODE -- DO NOT EDIT!
+/* eslint-disable */
+// @ts-nocheck
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global = Function('return this')();
+var global = (function() {
+  if (this) { return this; }
+  if (typeof window !== 'undefined') { return window; }
+  if (typeof global !== 'undefined') { return global; }
+  if (typeof self !== 'undefined') { return self; }
+  return Function('return this')();
+}.call(null));
 
 var google_protobuf_timestamp_pb = require('google-protobuf/google/protobuf/timestamp_pb.js');
 goog.object.extend(proto, google_protobuf_timestamp_pb);
@@ -26,7 +35,7 @@ goog.exportSymbol('proto.flow.entities.BlockHeader', null, global);
  * @constructor
  */
 proto.flow.entities.BlockHeader = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
+  jspb.Message.initialize(this, opt_data, 0, -1, proto.flow.entities.BlockHeader.repeatedFields_, null);
 };
 goog.inherits(proto.flow.entities.BlockHeader, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
@@ -36,6 +45,13 @@ if (goog.DEBUG && !COMPILED) {
    */
   proto.flow.entities.BlockHeader.displayName = 'proto.flow.entities.BlockHeader';
 }
+
+/**
+ * List of repeated fields within this message type.
+ * @private {!Array<number>}
+ * @const
+ */
+proto.flow.entities.BlockHeader.repeatedFields_ = [7];
 
 
 
@@ -71,7 +87,15 @@ proto.flow.entities.BlockHeader.toObject = function(includeInstance, msg) {
     id: msg.getId_asB64(),
     parentId: msg.getParentId_asB64(),
     height: jspb.Message.getFieldWithDefault(msg, 3, 0),
-    timestamp: (f = msg.getTimestamp()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f)
+    timestamp: (f = msg.getTimestamp()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
+    payloadHash: msg.getPayloadHash_asB64(),
+    view: jspb.Message.getFieldWithDefault(msg, 6, 0),
+    parentVoterIdsList: msg.getParentVoterIdsList_asB64(),
+    parentVoterSigData: msg.getParentVoterSigData_asB64(),
+    proposerId: msg.getProposerId_asB64(),
+    proposerSigData: msg.getProposerSigData_asB64(),
+    chainId: jspb.Message.getFieldWithDefault(msg, 11, ""),
+    parentVoterIndices: msg.getParentVoterIndices_asB64()
   };
 
   if (includeInstance) {
@@ -124,6 +148,38 @@ proto.flow.entities.BlockHeader.deserializeBinaryFromReader = function(msg, read
       var value = new google_protobuf_timestamp_pb.Timestamp;
       reader.readMessage(value,google_protobuf_timestamp_pb.Timestamp.deserializeBinaryFromReader);
       msg.setTimestamp(value);
+      break;
+    case 5:
+      var value = /** @type {!Uint8Array} */ (reader.readBytes());
+      msg.setPayloadHash(value);
+      break;
+    case 6:
+      var value = /** @type {number} */ (reader.readUint64());
+      msg.setView(value);
+      break;
+    case 7:
+      var value = /** @type {!Uint8Array} */ (reader.readBytes());
+      msg.addParentVoterIds(value);
+      break;
+    case 8:
+      var value = /** @type {!Uint8Array} */ (reader.readBytes());
+      msg.setParentVoterSigData(value);
+      break;
+    case 9:
+      var value = /** @type {!Uint8Array} */ (reader.readBytes());
+      msg.setProposerId(value);
+      break;
+    case 10:
+      var value = /** @type {!Uint8Array} */ (reader.readBytes());
+      msg.setProposerSigData(value);
+      break;
+    case 11:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setChainId(value);
+      break;
+    case 12:
+      var value = /** @type {!Uint8Array} */ (reader.readBytes());
+      msg.setParentVoterIndices(value);
       break;
     default:
       reader.skipField();
@@ -181,6 +237,62 @@ proto.flow.entities.BlockHeader.serializeBinaryToWriter = function(message, writ
       4,
       f,
       google_protobuf_timestamp_pb.Timestamp.serializeBinaryToWriter
+    );
+  }
+  f = message.getPayloadHash_asU8();
+  if (f.length > 0) {
+    writer.writeBytes(
+      5,
+      f
+    );
+  }
+  f = message.getView();
+  if (f !== 0) {
+    writer.writeUint64(
+      6,
+      f
+    );
+  }
+  f = message.getParentVoterIdsList_asU8();
+  if (f.length > 0) {
+    writer.writeRepeatedBytes(
+      7,
+      f
+    );
+  }
+  f = message.getParentVoterSigData_asU8();
+  if (f.length > 0) {
+    writer.writeBytes(
+      8,
+      f
+    );
+  }
+  f = message.getProposerId_asU8();
+  if (f.length > 0) {
+    writer.writeBytes(
+      9,
+      f
+    );
+  }
+  f = message.getProposerSigData_asU8();
+  if (f.length > 0) {
+    writer.writeBytes(
+      10,
+      f
+    );
+  }
+  f = message.getChainId();
+  if (f.length > 0) {
+    writer.writeString(
+      11,
+      f
+    );
+  }
+  f = message.getParentVoterIndices_asU8();
+  if (f.length > 0) {
+    writer.writeBytes(
+      12,
+      f
     );
   }
 };
@@ -322,6 +434,313 @@ proto.flow.entities.BlockHeader.prototype.clearTimestamp = function() {
  */
 proto.flow.entities.BlockHeader.prototype.hasTimestamp = function() {
   return jspb.Message.getField(this, 4) != null;
+};
+
+
+/**
+ * optional bytes payload_hash = 5;
+ * @return {!(string|Uint8Array)}
+ */
+proto.flow.entities.BlockHeader.prototype.getPayloadHash = function() {
+  return /** @type {!(string|Uint8Array)} */ (jspb.Message.getFieldWithDefault(this, 5, ""));
+};
+
+
+/**
+ * optional bytes payload_hash = 5;
+ * This is a type-conversion wrapper around `getPayloadHash()`
+ * @return {string}
+ */
+proto.flow.entities.BlockHeader.prototype.getPayloadHash_asB64 = function() {
+  return /** @type {string} */ (jspb.Message.bytesAsB64(
+      this.getPayloadHash()));
+};
+
+
+/**
+ * optional bytes payload_hash = 5;
+ * Note that Uint8Array is not supported on all browsers.
+ * @see http://caniuse.com/Uint8Array
+ * This is a type-conversion wrapper around `getPayloadHash()`
+ * @return {!Uint8Array}
+ */
+proto.flow.entities.BlockHeader.prototype.getPayloadHash_asU8 = function() {
+  return /** @type {!Uint8Array} */ (jspb.Message.bytesAsU8(
+      this.getPayloadHash()));
+};
+
+
+/**
+ * @param {!(string|Uint8Array)} value
+ * @return {!proto.flow.entities.BlockHeader} returns this
+ */
+proto.flow.entities.BlockHeader.prototype.setPayloadHash = function(value) {
+  return jspb.Message.setProto3BytesField(this, 5, value);
+};
+
+
+/**
+ * optional uint64 view = 6;
+ * @return {number}
+ */
+proto.flow.entities.BlockHeader.prototype.getView = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 6, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.flow.entities.BlockHeader} returns this
+ */
+proto.flow.entities.BlockHeader.prototype.setView = function(value) {
+  return jspb.Message.setProto3IntField(this, 6, value);
+};
+
+
+/**
+ * repeated bytes parent_voter_ids = 7;
+ * @return {!(Array<!Uint8Array>|Array<string>)}
+ */
+proto.flow.entities.BlockHeader.prototype.getParentVoterIdsList = function() {
+  return /** @type {!(Array<!Uint8Array>|Array<string>)} */ (jspb.Message.getRepeatedField(this, 7));
+};
+
+
+/**
+ * repeated bytes parent_voter_ids = 7;
+ * This is a type-conversion wrapper around `getParentVoterIdsList()`
+ * @return {!Array<string>}
+ */
+proto.flow.entities.BlockHeader.prototype.getParentVoterIdsList_asB64 = function() {
+  return /** @type {!Array<string>} */ (jspb.Message.bytesListAsB64(
+      this.getParentVoterIdsList()));
+};
+
+
+/**
+ * repeated bytes parent_voter_ids = 7;
+ * Note that Uint8Array is not supported on all browsers.
+ * @see http://caniuse.com/Uint8Array
+ * This is a type-conversion wrapper around `getParentVoterIdsList()`
+ * @return {!Array<!Uint8Array>}
+ */
+proto.flow.entities.BlockHeader.prototype.getParentVoterIdsList_asU8 = function() {
+  return /** @type {!Array<!Uint8Array>} */ (jspb.Message.bytesListAsU8(
+      this.getParentVoterIdsList()));
+};
+
+
+/**
+ * @param {!(Array<!Uint8Array>|Array<string>)} value
+ * @return {!proto.flow.entities.BlockHeader} returns this
+ */
+proto.flow.entities.BlockHeader.prototype.setParentVoterIdsList = function(value) {
+  return jspb.Message.setField(this, 7, value || []);
+};
+
+
+/**
+ * @param {!(string|Uint8Array)} value
+ * @param {number=} opt_index
+ * @return {!proto.flow.entities.BlockHeader} returns this
+ */
+proto.flow.entities.BlockHeader.prototype.addParentVoterIds = function(value, opt_index) {
+  return jspb.Message.addToRepeatedField(this, 7, value, opt_index);
+};
+
+
+/**
+ * Clears the list making it empty but non-null.
+ * @return {!proto.flow.entities.BlockHeader} returns this
+ */
+proto.flow.entities.BlockHeader.prototype.clearParentVoterIdsList = function() {
+  return this.setParentVoterIdsList([]);
+};
+
+
+/**
+ * optional bytes parent_voter_sig_data = 8;
+ * @return {!(string|Uint8Array)}
+ */
+proto.flow.entities.BlockHeader.prototype.getParentVoterSigData = function() {
+  return /** @type {!(string|Uint8Array)} */ (jspb.Message.getFieldWithDefault(this, 8, ""));
+};
+
+
+/**
+ * optional bytes parent_voter_sig_data = 8;
+ * This is a type-conversion wrapper around `getParentVoterSigData()`
+ * @return {string}
+ */
+proto.flow.entities.BlockHeader.prototype.getParentVoterSigData_asB64 = function() {
+  return /** @type {string} */ (jspb.Message.bytesAsB64(
+      this.getParentVoterSigData()));
+};
+
+
+/**
+ * optional bytes parent_voter_sig_data = 8;
+ * Note that Uint8Array is not supported on all browsers.
+ * @see http://caniuse.com/Uint8Array
+ * This is a type-conversion wrapper around `getParentVoterSigData()`
+ * @return {!Uint8Array}
+ */
+proto.flow.entities.BlockHeader.prototype.getParentVoterSigData_asU8 = function() {
+  return /** @type {!Uint8Array} */ (jspb.Message.bytesAsU8(
+      this.getParentVoterSigData()));
+};
+
+
+/**
+ * @param {!(string|Uint8Array)} value
+ * @return {!proto.flow.entities.BlockHeader} returns this
+ */
+proto.flow.entities.BlockHeader.prototype.setParentVoterSigData = function(value) {
+  return jspb.Message.setProto3BytesField(this, 8, value);
+};
+
+
+/**
+ * optional bytes proposer_id = 9;
+ * @return {!(string|Uint8Array)}
+ */
+proto.flow.entities.BlockHeader.prototype.getProposerId = function() {
+  return /** @type {!(string|Uint8Array)} */ (jspb.Message.getFieldWithDefault(this, 9, ""));
+};
+
+
+/**
+ * optional bytes proposer_id = 9;
+ * This is a type-conversion wrapper around `getProposerId()`
+ * @return {string}
+ */
+proto.flow.entities.BlockHeader.prototype.getProposerId_asB64 = function() {
+  return /** @type {string} */ (jspb.Message.bytesAsB64(
+      this.getProposerId()));
+};
+
+
+/**
+ * optional bytes proposer_id = 9;
+ * Note that Uint8Array is not supported on all browsers.
+ * @see http://caniuse.com/Uint8Array
+ * This is a type-conversion wrapper around `getProposerId()`
+ * @return {!Uint8Array}
+ */
+proto.flow.entities.BlockHeader.prototype.getProposerId_asU8 = function() {
+  return /** @type {!Uint8Array} */ (jspb.Message.bytesAsU8(
+      this.getProposerId()));
+};
+
+
+/**
+ * @param {!(string|Uint8Array)} value
+ * @return {!proto.flow.entities.BlockHeader} returns this
+ */
+proto.flow.entities.BlockHeader.prototype.setProposerId = function(value) {
+  return jspb.Message.setProto3BytesField(this, 9, value);
+};
+
+
+/**
+ * optional bytes proposer_sig_data = 10;
+ * @return {!(string|Uint8Array)}
+ */
+proto.flow.entities.BlockHeader.prototype.getProposerSigData = function() {
+  return /** @type {!(string|Uint8Array)} */ (jspb.Message.getFieldWithDefault(this, 10, ""));
+};
+
+
+/**
+ * optional bytes proposer_sig_data = 10;
+ * This is a type-conversion wrapper around `getProposerSigData()`
+ * @return {string}
+ */
+proto.flow.entities.BlockHeader.prototype.getProposerSigData_asB64 = function() {
+  return /** @type {string} */ (jspb.Message.bytesAsB64(
+      this.getProposerSigData()));
+};
+
+
+/**
+ * optional bytes proposer_sig_data = 10;
+ * Note that Uint8Array is not supported on all browsers.
+ * @see http://caniuse.com/Uint8Array
+ * This is a type-conversion wrapper around `getProposerSigData()`
+ * @return {!Uint8Array}
+ */
+proto.flow.entities.BlockHeader.prototype.getProposerSigData_asU8 = function() {
+  return /** @type {!Uint8Array} */ (jspb.Message.bytesAsU8(
+      this.getProposerSigData()));
+};
+
+
+/**
+ * @param {!(string|Uint8Array)} value
+ * @return {!proto.flow.entities.BlockHeader} returns this
+ */
+proto.flow.entities.BlockHeader.prototype.setProposerSigData = function(value) {
+  return jspb.Message.setProto3BytesField(this, 10, value);
+};
+
+
+/**
+ * optional string chain_id = 11;
+ * @return {string}
+ */
+proto.flow.entities.BlockHeader.prototype.getChainId = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 11, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.flow.entities.BlockHeader} returns this
+ */
+proto.flow.entities.BlockHeader.prototype.setChainId = function(value) {
+  return jspb.Message.setProto3StringField(this, 11, value);
+};
+
+
+/**
+ * optional bytes parent_voter_indices = 12;
+ * @return {!(string|Uint8Array)}
+ */
+proto.flow.entities.BlockHeader.prototype.getParentVoterIndices = function() {
+  return /** @type {!(string|Uint8Array)} */ (jspb.Message.getFieldWithDefault(this, 12, ""));
+};
+
+
+/**
+ * optional bytes parent_voter_indices = 12;
+ * This is a type-conversion wrapper around `getParentVoterIndices()`
+ * @return {string}
+ */
+proto.flow.entities.BlockHeader.prototype.getParentVoterIndices_asB64 = function() {
+  return /** @type {string} */ (jspb.Message.bytesAsB64(
+      this.getParentVoterIndices()));
+};
+
+
+/**
+ * optional bytes parent_voter_indices = 12;
+ * Note that Uint8Array is not supported on all browsers.
+ * @see http://caniuse.com/Uint8Array
+ * This is a type-conversion wrapper around `getParentVoterIndices()`
+ * @return {!Uint8Array}
+ */
+proto.flow.entities.BlockHeader.prototype.getParentVoterIndices_asU8 = function() {
+  return /** @type {!Uint8Array} */ (jspb.Message.bytesAsU8(
+      this.getParentVoterIndices()));
+};
+
+
+/**
+ * @param {!(string|Uint8Array)} value
+ * @return {!proto.flow.entities.BlockHeader} returns this
+ */
+proto.flow.entities.BlockHeader.prototype.setParentVoterIndices = function(value) {
+  return jspb.Message.setProto3BytesField(this, 12, value);
 };
 
 

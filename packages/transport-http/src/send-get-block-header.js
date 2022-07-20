@@ -8,7 +8,7 @@ async function sendGetBlockHeaderByIDRequest(ix, context, opts) {
     hostname: opts.node,
     path: `/v1/blocks/${ix.block.id}`,
     method: "GET",
-    body: null
+    body: null,
   })
 
   return constructResponse(ix, context, res)
@@ -21,7 +21,7 @@ async function sendGetBlockHeaderByHeightRequest(ix, context, opts) {
     hostname: opts.node,
     path: `/v1/blocks?height=${ix.block.height}`,
     method: "GET",
-    body: null
+    body: null,
   })
 
   return constructResponse(ix, context, res)
@@ -30,15 +30,13 @@ async function sendGetBlockHeaderByHeightRequest(ix, context, opts) {
 async function sendGetLatestBlockHeaderRequest(ix, context, opts) {
   const httpRequest = opts.httpRequest || defaultHttpRequest
 
-  const height = ix.block?.isSealed
-  ? "sealed"
-  : "finalized"
+  const height = ix.block?.isSealed ? "sealed" : "finalized"
 
   const res = await httpRequest({
     hostname: opts.node,
     path: `/v1/blocks?height=${height}`,
     method: "GET",
-    body: null
+    body: null,
   })
 
   return constructResponse(ix, context, res)
@@ -60,8 +58,14 @@ function constructResponse(ix, context, res) {
 }
 
 export async function sendGetBlockHeader(ix, context = {}, opts = {}) {
-  invariant(opts.node, `SDK Send Get Block Header Error: opts.node must be defined.`)
-  invariant(context.response, `SDK Send Get Block Header Error: context.response must be defined.`)
+  invariant(
+    opts.node,
+    `SDK Send Get Block Header Error: opts.node must be defined.`
+  )
+  invariant(
+    context.response,
+    `SDK Send Get Block Header Error: context.response must be defined.`
+  )
 
   ix = await ix
 

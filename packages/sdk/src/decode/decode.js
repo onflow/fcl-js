@@ -1,18 +1,13 @@
+import {log, LEVELS} from "@onflow/util-logger"
+
 const latestBlockDeprecationNotice = () => {
-  console.error(
-    `
-          %c@onflow/decode Deprecation Notice
-          ========================
-
-          Operating upon data of the latestBlock field of the response object is deprecated and will no longer be recognized in future releases of @onflow/decode.
-          Find out more here: https://github.com/onflow/flow-js-sdk/blob/master/packages/decode/WARNINGS.md#0001-Deprecating-latestBlock-field
-
-          =======================
-        `
-      .replace(/\n\s+/g, "\n")
-      .trim(),
-    "font-weight:bold;font-family:monospace;"
-  )
+  log.deprecate({
+    pkg: "@onflow/decode",
+    subject:
+      "Operating upon data of the latestBlock field of the response object",
+    transition:
+      "https://github.com/onflow/flow-js-sdk/blob/master/packages/decode/WARNINGS.md#0001-Deprecating-latestBlock-field",
+  })
 }
 
 const decodeNumber = async (num, _, stack) => {
@@ -23,39 +18,39 @@ const decodeNumber = async (num, _, stack) => {
   }
 }
 
-const decodeImplicit = async (i) => i
+const decodeImplicit = async i => i
 
 const decodeVoid = async () => null
 
-const decodeType = async (type) => {
+const decodeType = async type => {
   return type.staticType
 }
 
-const decodePath = async (path) => {
+const decodePath = async path => {
   return {
     domain: path.domain,
-    identifier: path.identifier
+    identifier: path.identifier,
   }
 }
 
-const decodeCapability = async (cap) => {
+const decodeCapability = async cap => {
   return {
     path: cap.path,
     address: cap.address,
-    borrowType: cap.borrowType
+    borrowType: cap.borrowType,
   }
 }
 
 const decodeOptional = async (optional, decoders, stack) =>
   optional ? await recurseDecode(optional, decoders, stack) : null
 
-const decodeReference = async (v) => ({address: v.address, type: v.type})
+const decodeReference = async v => ({address: v.address, type: v.type})
 
 const decodeArray = async (array, decoders, stack) =>
   await Promise.all(
     array.map(
-      (v) =>
-        new Promise(async (res) =>
+      v =>
+        new Promise(async res =>
           res(await recurseDecode(v, decoders, [...stack, v.type]))
         )
     )
@@ -64,9 +59,8 @@ const decodeArray = async (array, decoders, stack) =>
 const decodeDictionary = async (dictionary, decoders, stack) =>
   await dictionary.reduce(async (acc, v) => {
     acc = await acc
-    acc[
-      await recurseDecode(v.key, decoders, [...stack, v.key])
-    ] = await recurseDecode(v.value, decoders, [...stack, v.key])
+    acc[await recurseDecode(v.key, decoders, [...stack, v.key])] =
+      await recurseDecode(v.value, decoders, [...stack, v.key])
     return acc
   }, Promise.resolve({}))
 
@@ -120,7 +114,7 @@ const defaultDecoders = {
 }
 
 const decoderLookup = (decoders, lookup) => {
-  const found = Object.keys(decoders).find((decoder) => {
+  const found = Object.keys(decoders).find(decoder => {
     if (/^\/.*\/$/.test(decoder)) {
       const reg = new RegExp(decoder.substring(1, decoder.length - 1))
       return reg.test(lookup)
@@ -144,15 +138,29 @@ export const decode = async (
   customDecoders = {},
   stack = []
 ) => {
-  let decoders = {...defaultDecoders, ...customDecoders}
-  return await recurseDecode(decodeInstructions, decoders, stack)
+  // Filter out all default decoders which are overridden by a custom decoder regex
+  const filteredDecoders = Object.keys(defaultDecoders)
+    .filter(
+      decoder =>
+        !Object.keys(customDecoders).find(customDecoder =>
+          new RegExp(customDecoder).test(decoder)
+        )
+    )
+    .reduce((decoders, decoderKey) => {
+      decoders[decoderKey] = defaultDecoders[decoderKey]
+      return decoders
+    }, customDecoders)
+
+  const decoders = {
+    ...filteredDecoders,
+    ...customDecoders,
+  }
+  return recurseDecode(decodeInstructions, decoders, stack)
 }
 
 export const decodeResponse = async (response, customDecoders = {}) => {
-  let decoders = {...defaultDecoders, ...customDecoders}
-
   if (response.encodedData) {
-    return await decode(response.encodedData, decoders)
+    return decode(response.encodedData, customDecoders)
   } else if (response.transactionStatus) {
     return {
       ...response.transactionStatus,
@@ -163,7 +171,7 @@ export const decodeResponse = async (response, customDecoders = {}) => {
             transactionId: e.transactionId,
             transactionIndex: e.transactionIndex,
             eventIndex: e.eventIndex,
-            data: await decode(e.payload, decoders),
+            data: await decode(e.payload, customDecoders),
           }
         })
       ),
@@ -181,7 +189,7 @@ export const decodeResponse = async (response, customDecoders = {}) => {
           transactionId: e.transactionId,
           transactionIndex: e.transactionIndex,
           eventIndex: e.eventIndex,
-          data: await decode(e.payload, decoders),
+          data: await decode(e.payload, customDecoders),
         }
       })
     )

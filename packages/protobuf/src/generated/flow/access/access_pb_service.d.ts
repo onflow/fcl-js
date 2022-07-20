@@ -103,6 +103,33 @@ type AccessAPIGetTransactionResult = {
   readonly responseType: typeof flow_access_access_pb.TransactionResultResponse;
 };
 
+type AccessAPIGetTransactionResultByIndex = {
+  readonly methodName: string;
+  readonly service: typeof AccessAPI;
+  readonly requestStream: false;
+  readonly responseStream: false;
+  readonly requestType: typeof flow_access_access_pb.GetTransactionByIndexRequest;
+  readonly responseType: typeof flow_access_access_pb.TransactionResultResponse;
+};
+
+type AccessAPIGetTransactionResultsByBlockID = {
+  readonly methodName: string;
+  readonly service: typeof AccessAPI;
+  readonly requestStream: false;
+  readonly responseStream: false;
+  readonly requestType: typeof flow_access_access_pb.GetTransactionsByBlockIDRequest;
+  readonly responseType: typeof flow_access_access_pb.TransactionResultsResponse;
+};
+
+type AccessAPIGetTransactionsByBlockID = {
+  readonly methodName: string;
+  readonly service: typeof AccessAPI;
+  readonly requestStream: false;
+  readonly responseStream: false;
+  readonly requestType: typeof flow_access_access_pb.GetTransactionsByBlockIDRequest;
+  readonly responseType: typeof flow_access_access_pb.TransactionsResponse;
+};
+
 type AccessAPIGetAccount = {
   readonly methodName: string;
   readonly service: typeof AccessAPI;
@@ -184,6 +211,24 @@ type AccessAPIGetNetworkParameters = {
   readonly responseType: typeof flow_access_access_pb.GetNetworkParametersResponse;
 };
 
+type AccessAPIGetLatestProtocolStateSnapshot = {
+  readonly methodName: string;
+  readonly service: typeof AccessAPI;
+  readonly requestStream: false;
+  readonly responseStream: false;
+  readonly requestType: typeof flow_access_access_pb.GetLatestProtocolStateSnapshotRequest;
+  readonly responseType: typeof flow_access_access_pb.ProtocolStateSnapshotResponse;
+};
+
+type AccessAPIGetExecutionResultForBlockID = {
+  readonly methodName: string;
+  readonly service: typeof AccessAPI;
+  readonly requestStream: false;
+  readonly responseStream: false;
+  readonly requestType: typeof flow_access_access_pb.GetExecutionResultForBlockIDRequest;
+  readonly responseType: typeof flow_access_access_pb.ExecutionResultForBlockIDResponse;
+};
+
 export class AccessAPI {
   static readonly serviceName: string;
   static readonly Ping: AccessAPIPing;
@@ -197,6 +242,9 @@ export class AccessAPI {
   static readonly SendTransaction: AccessAPISendTransaction;
   static readonly GetTransaction: AccessAPIGetTransaction;
   static readonly GetTransactionResult: AccessAPIGetTransactionResult;
+  static readonly GetTransactionResultByIndex: AccessAPIGetTransactionResultByIndex;
+  static readonly GetTransactionResultsByBlockID: AccessAPIGetTransactionResultsByBlockID;
+  static readonly GetTransactionsByBlockID: AccessAPIGetTransactionsByBlockID;
   static readonly GetAccount: AccessAPIGetAccount;
   static readonly GetAccountAtLatestBlock: AccessAPIGetAccountAtLatestBlock;
   static readonly GetAccountAtBlockHeight: AccessAPIGetAccountAtBlockHeight;
@@ -206,6 +254,8 @@ export class AccessAPI {
   static readonly GetEventsForHeightRange: AccessAPIGetEventsForHeightRange;
   static readonly GetEventsForBlockIDs: AccessAPIGetEventsForBlockIDs;
   static readonly GetNetworkParameters: AccessAPIGetNetworkParameters;
+  static readonly GetLatestProtocolStateSnapshot: AccessAPIGetLatestProtocolStateSnapshot;
+  static readonly GetExecutionResultForBlockID: AccessAPIGetExecutionResultForBlockID;
 }
 
 export type ServiceError = { message: string, code: number; metadata: grpc.Metadata }
@@ -339,6 +389,33 @@ export class AccessAPIClient {
     requestMessage: flow_access_access_pb.GetTransactionRequest,
     callback: (error: ServiceError|null, responseMessage: flow_access_access_pb.TransactionResultResponse|null) => void
   ): UnaryResponse;
+  getTransactionResultByIndex(
+    requestMessage: flow_access_access_pb.GetTransactionByIndexRequest,
+    metadata: grpc.Metadata,
+    callback: (error: ServiceError|null, responseMessage: flow_access_access_pb.TransactionResultResponse|null) => void
+  ): UnaryResponse;
+  getTransactionResultByIndex(
+    requestMessage: flow_access_access_pb.GetTransactionByIndexRequest,
+    callback: (error: ServiceError|null, responseMessage: flow_access_access_pb.TransactionResultResponse|null) => void
+  ): UnaryResponse;
+  getTransactionResultsByBlockID(
+    requestMessage: flow_access_access_pb.GetTransactionsByBlockIDRequest,
+    metadata: grpc.Metadata,
+    callback: (error: ServiceError|null, responseMessage: flow_access_access_pb.TransactionResultsResponse|null) => void
+  ): UnaryResponse;
+  getTransactionResultsByBlockID(
+    requestMessage: flow_access_access_pb.GetTransactionsByBlockIDRequest,
+    callback: (error: ServiceError|null, responseMessage: flow_access_access_pb.TransactionResultsResponse|null) => void
+  ): UnaryResponse;
+  getTransactionsByBlockID(
+    requestMessage: flow_access_access_pb.GetTransactionsByBlockIDRequest,
+    metadata: grpc.Metadata,
+    callback: (error: ServiceError|null, responseMessage: flow_access_access_pb.TransactionsResponse|null) => void
+  ): UnaryResponse;
+  getTransactionsByBlockID(
+    requestMessage: flow_access_access_pb.GetTransactionsByBlockIDRequest,
+    callback: (error: ServiceError|null, responseMessage: flow_access_access_pb.TransactionsResponse|null) => void
+  ): UnaryResponse;
   getAccount(
     requestMessage: flow_access_access_pb.GetAccountRequest,
     metadata: grpc.Metadata,
@@ -419,6 +496,24 @@ export class AccessAPIClient {
   getNetworkParameters(
     requestMessage: flow_access_access_pb.GetNetworkParametersRequest,
     callback: (error: ServiceError|null, responseMessage: flow_access_access_pb.GetNetworkParametersResponse|null) => void
+  ): UnaryResponse;
+  getLatestProtocolStateSnapshot(
+    requestMessage: flow_access_access_pb.GetLatestProtocolStateSnapshotRequest,
+    metadata: grpc.Metadata,
+    callback: (error: ServiceError|null, responseMessage: flow_access_access_pb.ProtocolStateSnapshotResponse|null) => void
+  ): UnaryResponse;
+  getLatestProtocolStateSnapshot(
+    requestMessage: flow_access_access_pb.GetLatestProtocolStateSnapshotRequest,
+    callback: (error: ServiceError|null, responseMessage: flow_access_access_pb.ProtocolStateSnapshotResponse|null) => void
+  ): UnaryResponse;
+  getExecutionResultForBlockID(
+    requestMessage: flow_access_access_pb.GetExecutionResultForBlockIDRequest,
+    metadata: grpc.Metadata,
+    callback: (error: ServiceError|null, responseMessage: flow_access_access_pb.ExecutionResultForBlockIDResponse|null) => void
+  ): UnaryResponse;
+  getExecutionResultForBlockID(
+    requestMessage: flow_access_access_pb.GetExecutionResultForBlockIDRequest,
+    callback: (error: ServiceError|null, responseMessage: flow_access_access_pb.ExecutionResultForBlockIDResponse|null) => void
   ): UnaryResponse;
 }
 

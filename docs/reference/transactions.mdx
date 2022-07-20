@@ -1,10 +1,10 @@
-# @onflow/fcl -- transactions
+# Transactions
 
 Transactions let you send Cadence code to the Flow blockchain that permanently alters its state.
 
-We are assuming you have read the [Scripts Documentation](../scripts) before this, as transactions are sort of scripts with more required things.
+We are assuming you have read the [Scripts Documentation](https://docs.onflow.org/fcl/reference/scripts/) before this, as transactions are sort of scripts with more required things.
 
-While `query` is used for sending scripts to the chain, `mutate` is used for building and sending transactions. Just like [scripts](../scripts), `fcl.mutate` is a [JavaScript Tagged Template Literal](https://styled-components.com/docs/advanced#tagged-template-literals) that we can pass Cadence code into.
+While `query` is used for sending scripts to the chain, `mutate` is used for building and sending transactions. Just like [scripts](https://docs.onflow.org/fcl/reference/scripts/), `fcl.mutate` is a [JavaScript Tagged Template Literal](https://styled-components.com/docs/advanced#tagged-template-literals) that we can pass Cadence code into.
 
 Unlike scripts, they require a little more information, things like a proposer, authorizations and a payer, which may be a little confusing and overwhelming.
 
@@ -48,7 +48,7 @@ Our Cadence code this time has a prepare statement, and we are using the `fcl.cu
 The `prepare` statement's arguments directly map to the order of the authorizations in the `authorizations` array.
 Four authorizations means four `AuthAccount`s as arguments passed to `prepare`. In this case though there is only one, and it is the `currentUser`.
 
-These authorizations are important as you can only access/modify an accounts storage if you have the said ccounts authorization.
+These authorizations are important as you can only access/modify an accounts storage if you have the said accounts authorization.
 
 ```javascript
 import * as fcl from "@onflow/fcl"

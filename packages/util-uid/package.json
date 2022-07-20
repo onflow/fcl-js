@@ -1,6 +1,6 @@
 {
   "name": "@onflow/util-uid",
-  "version": "1.0.1",
+  "version": "1.0.2-alpha.0",
   "description": "Utilities to generate Unique Identifiers",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
@@ -18,9 +18,9 @@
     }
   },
   "devDependencies": {
+    "@onflow/fcl-bundle": "^1.0.1-alpha.0",
     "jest": "25.3.0",
-    "jest-esm-transformer": "1.0.0",
-    "microbundle": "0.12.0-next.8"
+    "jest-esm-transformer": "1.0.0"
   },
   "source": "src/util-uid.js",
   "main": "dist/util-uid.js",
@@ -29,8 +29,11 @@
   "scripts": {
     "prepublishOnly": "npm test && npm run build",
     "test": "jest",
-    "build": "microbundle --no-compress",
+    "build": "fcl-bundle",
     "test:watch": "jest --watch",
-    "start": "microbundle watch --no-compress"
+    "start": "fcl-bundle --watch"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.18.6"
   }
 }

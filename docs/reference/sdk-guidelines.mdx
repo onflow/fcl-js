@@ -43,15 +43,12 @@ import * as types from "@onflow/types"
 ## Connect
 [<img src="https://raw.githubusercontent.com/onflow/sdks/main/templates/documentation/ref.svg" width="130" />](https://docs.onflow.org/fcl/reference/configure-fcl/)
 
-The library uses gRPC to communicate with the access nodes and it must be configured with the correct access node API URL. 
+By default, the library uses HTTP to communicate with the access nodes and it must be configured with the correct access node API URL.  An error will be returned if the host is unreachable.
 
-📖 **Access API URLs** can be found [here](https://docs.onflow.org/access-api/#flow-access-node-endpoints). An error will be returned if the host is unreachable.
-The Access Nodes APIs hosted by DapperLabs are accessible at:
+📖**The HTTP/REST API information** can be found [here](https://docs.onflow.org/http-api/).  The HTTP/REST Access Node APIs hosted by DapperLabs are accessible at:
 - Testnet `https://rest-testnet.onflow.org`
 - Mainnet `https://rest-mainnet.onflow.org`
-- Local Emulator `127.0.0.1:3569` 
-
-For local development, use the [flow emulator](https://github.com/onflow/flow-emulator) which once started provides a gRPC access endpoint at `127.0.0.1:3569`.
+- Local Emulator `127.0.0.1:8888` 
 
 Example:
 ```javascript
@@ -60,7 +57,24 @@ import { config } from "@onflow/fcl"
 config({
   "accessNode.api": "https://rest-testnet.onflow.org"
 })
+```
 
+📖 **gRPC Access API URLs** can be found [here](https://docs.onflow.org/access-api/#flow-access-node-endpoints). `sdk.transport` must be specified if you wish to use the gRPC API.  The gRPC Access Nodes APIs hosted by DapperLabs are accessible at:
+- Testnet `https://access-testnet.onflow.org`
+- Mainnet `https://access-mainnet.onflow.org`
+- Local Emulator `127.0.0.1:3569`
+
+For local development, use the [flow emulator](https://github.com/onflow/flow-emulator) which once started provides an HTTP access endpoint at `127.0.0.1:8888` and a gRPC access endpoint at `127.0.0.1:3569`.
+
+If using the gRPC Access API, the `sdk.transport` configuration key must be populated as this value defaults to the HTTP API transport.  The SDK can be configured to use the gRPC API transport as follows:
+```javascript
+import { config } from "@onflow/fcl"
+import { send as transportGRPC } from "@onflow/transport-grpc"
+
+config({
+  "accessNode.api": "https://access-testnet.onflow.org",
+  "sdk.transport": transportGRPC
+})
 ```
 
 ## Querying the Flow Network
@@ -162,7 +176,7 @@ fcl.tx(transactionId).onceExecuted();
 // Provides the transaction once the status is sealed
 fcl.tx(transactionId).onceSealed();
 ```
-Result output: [TransactionObject](https://docs.onflow.org/fcl/reference/api/#gettransaction)
+Result output: [TransactionStatusObject](https://docs.onflow.org/fcl/reference/api/#gettransactionstatus)
 
 
 ### Get Events

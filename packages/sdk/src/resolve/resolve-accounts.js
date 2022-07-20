@@ -1,4 +1,5 @@
 import {invariant} from "@onflow/util-invariant"
+import {log} from "@onflow/util-logger"
 import {isTransaction} from "../interaction/interaction.js"
 import {createSignableVoucher} from "./voucher.js"
 
@@ -26,8 +27,10 @@ async function collectAccounts(ix, accounts, last, depth = 3) {
 
   let authorizations = []
   for (let ax of accounts) {
+    let resolve = ax.resolve
+    ax.resolve = null
     var old = last || ax
-    if (isFn(ax.resolve)) ax = await ax.resolve(ax, buildPreSignable(ax, ix))
+    if (isFn(resolve)) ax = await resolve(ax, buildPreSignable(ax, ix))
 
     if (Array.isArray(ax)) {
       await collectAccounts(ix, ax, old, depth - 1)
@@ -49,31 +52,35 @@ async function collectAccounts(ix, accounts, last, depth = 3) {
 
       if (ix.accounts[ax.tempId].role.payer) {
         if (Array.isArray(ix.payer)) {
-          ix.payer = Array.from(new Set([...ix.payer, ax.tempId].map(d =>
-            d === old.tempId ? ax.tempId : d
-          )))
+          ix.payer = Array.from(
+            new Set(
+              [...ix.payer, ax.tempId].map(d =>
+                d === old.tempId ? ax.tempId : d
+              )
+            )
+          )
         } else {
-          ix.payer = Array.from(new Set([ix.payer, ax.tempId].map(d =>
-            d === old.tempId ? ax.tempId : d
-          )))
+          ix.payer = Array.from(
+            new Set(
+              [ix.payer, ax.tempId].map(d => (d === old.tempId ? ax.tempId : d))
+            )
+          )
         }
         if (ix.payer.length > 1) {
           // remove payer dups based on addr and keyId
           const dupList = []
           const payerAccts = []
           ix.payer = ix.payer.reduce((g, tempId) => {
-            const { addr, keyId } = ix.accounts[tempId];
-            const key = `${addr}-${keyId}`;
+            const {addr, keyId} = ix.accounts[tempId]
+            const key = `${addr}-${keyId}`
             payerAccts.push(addr)
-            if (dupList.includes(key)) return g;
+            if (dupList.includes(key)) return g
             dupList.push(key)
             return [...g, tempId]
           }, [])
           const multiAccts = Array.from(new Set(payerAccts))
           if (multiAccts.length > 1) {
-            throw new Error(
-              "Payer can not be different accounts"
-            )
+            throw new Error("Payer can not be different accounts")
           }
         }
       }
@@ -108,16 +115,12 @@ async function collectAccounts(ix, accounts, last, depth = 3) {
 export async function resolveAccounts(ix) {
   if (isTransaction(ix)) {
     if (!Array.isArray(ix.payer)) {
-      console.warn(
-        `
-        %cFCL Warning
-        ============================
-        "ix.payer" must be an array. Support for ix.payer as a singular is deprecated,
-        see changelog for more info.
-        ============================
-        `,
-        "font-weight:bold;font-family:monospace;"
-      )
+      log.deprecate({
+        pkg: "FCL",
+        subject:
+          '"ix.payer" must be an array. Support for ix.payer as a singular',
+        message: "See changelog for more info.",
+      })
     }
     try {
       await collectAccounts(ix, Object.values(ix.accounts))

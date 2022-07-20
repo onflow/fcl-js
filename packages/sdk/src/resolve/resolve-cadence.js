@@ -17,13 +17,10 @@ export async function resolveCadence(ix) {
     ix.message.cadence = await config()
       .where(/^0x/)
       .then(d =>
-        Object.entries(d).reduce(
-          (cadence, [key, value]) => {
-            const regex = new RegExp("(\\b" + key + "\\b)", 'g')
-            return cadence.replace(regex, value)
-          },
-          cadence
-        )
+        Object.entries(d).reduce((cadence, [key, value]) => {
+          const regex = new RegExp("(\\b" + key + "\\b)", "g")
+          return cadence.replace(regex, value)
+        }, cadence)
       )
   }
 

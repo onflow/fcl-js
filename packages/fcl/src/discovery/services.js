@@ -16,7 +16,10 @@ if (isWindow()) {
 
 export async function getServices({ type }) {
   const endpoint = await config.get("discovery.authn.endpoint")
-  invariant(Boolean(endpoint), `"discovery.authn.endpoint" in config must be defined.`)
+  invariant(
+    Boolean(endpoint),
+    `"discovery.authn.endpoint" in config must be defined.`
+  )
 
   const include = await config.get("discovery.authn.include", [])
   const url = new URL(endpoint)

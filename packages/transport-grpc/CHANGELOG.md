@@ -1,5 +1,47 @@
 # @onflow/transport-grpc
 
+## 1.1.1-alpha.0
+
+### Patch Changes
+
+- [#1227](https://github.com/onflow/fcl-js/pull/1227) [`352f1460`](https://github.com/onflow/fcl-js/commit/352f1460a2f34d228a74fa4bbc6fcf6e68a968b6) Thanks [@jribbink](https://github.com/jribbink)! - Switch to fcl-bundle instead of microbundle for build scripts
+
+- Updated dependencies [[`352f1460`](https://github.com/onflow/fcl-js/commit/352f1460a2f34d228a74fa4bbc6fcf6e68a968b6)]:
+  - @onflow/rlp@1.0.2-alpha.0
+  - @onflow/util-address@1.0.2-alpha.0
+  - @onflow/util-invariant@1.0.2-alpha.0
+  - @onflow/util-template@1.0.3-alpha.0
+
+## 1.1.0
+
+### Minor Changes
+
+- [#1206](https://github.com/onflow/fcl-js/pull/1206) [`6ae4469c`](https://github.com/onflow/fcl-js/commit/6ae4469cdaa9590ef110ed1c0ec6928d9ac09845) Thanks [@jribbink](https://github.com/jribbink)! - Added blockId to transport-grpc transaction status
+
+### Patch Changes
+
+- Updated dependencies [[`d09ba0f0`](https://github.com/onflow/fcl-js/commit/d09ba0f00f53f93feb351a3da5e821eada6287f0), [`6ae4469c`](https://github.com/onflow/fcl-js/commit/6ae4469cdaa9590ef110ed1c0ec6928d9ac09845)]:
+  - @onflow/util-template@1.0.2
+  - @onflow/protobuf@1.1.0
+
+## 1.1.0-alpha.1
+
+### Patch Changes
+
+- Updated dependencies [[`d09ba0f0`](https://github.com/onflow/fcl-js/commit/d09ba0f00f53f93feb351a3da5e821eada6287f0)]:
+  - @onflow/util-template@1.0.2-alpha.0
+
+## 1.1.0-alpha.0
+
+### Minor Changes
+
+- [#1206](https://github.com/onflow/fcl-js/pull/1206) [`6ae4469c`](https://github.com/onflow/fcl-js/commit/6ae4469cdaa9590ef110ed1c0ec6928d9ac09845) Thanks [@jribbink](https://github.com/jribbink)! - Added blockId to transport-grpc transaction status
+
+### Patch Changes
+
+- Updated dependencies [[`6ae4469c`](https://github.com/onflow/fcl-js/commit/6ae4469cdaa9590ef110ed1c0ec6928d9ac09845)]:
+  - @onflow/protobuf@1.1.0-alpha.0
+
 ## 1.0.1
 
 ### Patch Changes

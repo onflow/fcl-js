@@ -18,6 +18,7 @@ import {resolveSignatures} from "./resolve-signatures.js"
 import {resolveValidators} from "./resolve-validators.js"
 import {resolveFinalNormalization} from "./resolve-final-normalization.js"
 import {resolveVoucherIntercept} from "./resolve-voucher-intercept.js"
+import {resolveComputeLimit} from "./resolve-compute-limit.js"
 
 const noop = v => v
 const debug =
@@ -51,6 +52,8 @@ const debug =
 export const resolve = pipe([
   resolveCadence,
   debug("cadence", (ix, log) => log(ix.message.cadence)),
+  resolveComputeLimit,
+  debug("compute limit", (ix, log) => log(ix.message.computeLimit)),
   resolveArguments,
   debug("arguments", (ix, log) => log(ix.message.arguments, ix.message)),
   resolveAccounts,
@@ -68,7 +71,10 @@ export const resolve = pipe([
 async function execFetchRef(ix) {
   if (isTransaction(ix) && ix.message.refBlock == null) {
     const node = await config().get("accessNode.api")
-    const sendFn = await config.first(["sdk.transport", "sdk.send"], defaultSend)
+    const sendFn = await config.first(
+      ["sdk.transport", "sdk.send"],
+      defaultSend
+    )
 
     invariant(
       sendFn,
@@ -92,7 +98,10 @@ async function execFetchSequenceNumber(ix) {
     invariant(acct, `Transactions require a proposer`)
     if (acct.sequenceNum == null) {
       const node = await config().get("accessNode.api")
-      const sendFn = await config.first(["sdk.transport", "sdk.send"], defaultSend)
+      const sendFn = await config.first(
+        ["sdk.transport", "sdk.send"],
+        defaultSend
+      )
 
       invariant(
         sendFn,

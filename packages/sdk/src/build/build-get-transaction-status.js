@@ -6,6 +6,6 @@ export function getTransactionStatus(transactionId) {
     ix => {
       ix.transaction.id = transactionId
       return Ok(ix)
-    }
+    },
   ])
 }

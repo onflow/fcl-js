@@ -1,6 +1,6 @@
 {
   "name": "@onflow/protobuf",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Access Node Protobuf",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
@@ -31,11 +31,11 @@
     "prepublishOnly": "npm test && npm run build",
     "test": "jest",
     "build": "webpack --mode=production",
-    "generate": "protoc --plugin='protoc-gen-ts=./node_modules/.bin/protoc-gen-ts' --js_out='import_style=commonjs,binary:src/generated' --ts_out='service=grpc-web:src/generated' -I ./src/proto ./src/proto/flow/**/*.proto;"
+    "generate": "protoc --plugin='protoc-gen-ts=../../node_modules/.bin/protoc-gen-ts' --js_out='import_style=commonjs,binary:src/generated' --ts_out='service=grpc-web:src/generated' -I ./src/proto ./src/proto/flow/**/*.proto;"
   },
   "dependencies": {
     "@improbable-eng/grpc-web": "^0.12.0",
     "elliptic": "^6.5.4",
-    "google-protobuf": "^3.11.4"
+    "google-protobuf": "3.11.4"
   }
 }

@@ -1,5 +1,116 @@
 # @onflow/sdk
 
+## 1.1.1-alpha.2
+
+### Patch Changes
+
+- Fix getAccount executing at latest finalized block instead of sealed block (version bump `@onflow/transport-http`)
+
+## 1.1.1-alpha.1
+
+### Patch Changes
+
+- [#1227](https://github.com/onflow/fcl-js/pull/1227) [`352f1460`](https://github.com/onflow/fcl-js/commit/352f1460a2f34d228a74fa4bbc6fcf6e68a968b6) Thanks [@jribbink](https://github.com/jribbink)! - Switch to fcl-bundle instead of microbundle for build scripts
+
+- Updated dependencies [[`b9577b63`](https://github.com/onflow/fcl-js/commit/b9577b6355be06dec98f1e11101594fa65e66cf7), [`c83c4606`](https://github.com/onflow/fcl-js/commit/c83c4606f1c78e7addaadece89350b19cb5544d6), [`352f1460`](https://github.com/onflow/fcl-js/commit/352f1460a2f34d228a74fa4bbc6fcf6e68a968b6)]:
+  - @onflow/transport-http@1.3.1-alpha.1
+  - @onflow/config@1.0.3-alpha.0
+  - @onflow/rlp@1.0.2-alpha.0
+  - @onflow/util-actor@1.1.1-alpha.0
+  - @onflow/util-address@1.0.2-alpha.0
+  - @onflow/util-invariant@1.0.2-alpha.0
+  - @onflow/util-logger@1.1.1-alpha.1
+  - @onflow/util-template@1.0.3-alpha.0
+
+## 1.1.1-alpha.0
+
+### Patch Changes
+
+- Updated dependencies [[`4d59f80c`](https://github.com/onflow/fcl-js/commit/4d59f80c0a8b45c82a28a05e6c579f4376107b86)]:
+  - @onflow/transport-http@1.3.1-alpha.0
+  - @onflow/util-logger@1.1.1-alpha.0
+
+## 1.1.0
+
+### Minor Changes
+
+- [#1183](https://github.com/onflow/fcl-js/pull/1183) [`e0d3a377`](https://github.com/onflow/fcl-js/commit/e0d3a377260338a37518f0ad2a52dcc618fd9bc5) Thanks [@jribbink](https://github.com/jribbink)! - Added deprecation warning for hard-coded DEFAULT_COMPUTE_LIMIT=10 (and increase to DEFAULT_COMPUTE_LIMIT=100 for now) and added sdk.defaultComputeLimit to config
+
+### Patch Changes
+
+- [#1245](https://github.com/onflow/fcl-js/pull/1245) [`d09ba0f0`](https://github.com/onflow/fcl-js/commit/d09ba0f00f53f93feb351a3da5e821eada6287f0) Thanks [@jribbink](https://github.com/jribbink)! - Switch deprecation warnings to standardized warnings introduced by @onflow/util-logger (log.deprecate)
+
+* [#1191](https://github.com/onflow/fcl-js/pull/1191) [`90d5163a`](https://github.com/onflow/fcl-js/commit/90d5163a7723dd529324a271ea8accaa43a3d7be) Thanks [@jribbink](https://github.com/jribbink)! - Allow for integer string account.keyId in authorization function
+
+- [#1263](https://github.com/onflow/fcl-js/pull/1263) [`45951f1a`](https://github.com/onflow/fcl-js/commit/45951f1af310d302ee708e43d1a939265f404d2c) Thanks [@jribbink](https://github.com/jribbink)! - Fix infinite recursion bug when using array authorization function (used for multiple signing keys)
+
+* [#1218](https://github.com/onflow/fcl-js/pull/1218) [`cc422a78`](https://github.com/onflow/fcl-js/commit/cc422a781d0e87ba8945c336902bbc9542d5b4c4) Thanks [@jribbink](https://github.com/jribbink)! - Fix interaction arguments in http request body broken by prettier
+
+- [#1212](https://github.com/onflow/fcl-js/pull/1212) [`1654ebbe`](https://github.com/onflow/fcl-js/commit/1654ebbe45ea5e4ca13536ed2139520ce21ee314) Thanks [@jribbink](https://github.com/jribbink)! - Make deprecation notice for getEvents use @onflow/util-logger instead of console.warn
+
+* [#1199](https://github.com/onflow/fcl-js/pull/1199) [`d1765950`](https://github.com/onflow/fcl-js/commit/d176595021681e660ae0a06161340833280091fb) Thanks [@jribbink](https://github.com/jribbink)! - Fix issue where custom decoders did not properly override default decoders
+
+* Updated dependencies [[`06279c1d`](https://github.com/onflow/fcl-js/commit/06279c1d27433893494b6a79b7f742ea9a7fab8e), [`d9bc1cc6`](https://github.com/onflow/fcl-js/commit/d9bc1cc671f143d2f37cad6eb6b80123f1f3d760), [`d09ba0f0`](https://github.com/onflow/fcl-js/commit/d09ba0f00f53f93feb351a3da5e821eada6287f0), [`cd218e84`](https://github.com/onflow/fcl-js/commit/cd218e843acfc390049b391d36c447ce93668221), [`cc422a78`](https://github.com/onflow/fcl-js/commit/cc422a781d0e87ba8945c336902bbc9542d5b4c4), [`d09ba0f0`](https://github.com/onflow/fcl-js/commit/d09ba0f00f53f93feb351a3da5e821eada6287f0), [`4ec2bdc9`](https://github.com/onflow/fcl-js/commit/4ec2bdc9805ac081bdc8003b6e1ea52e02d3909d)]:
+  - @onflow/transport-http@1.3.0
+  - @onflow/util-logger@1.1.0
+  - @onflow/util-template@1.0.2
+  - @onflow/util-actor@1.1.0
+  - @onflow/config@1.0.2
+
+## 1.1.0-alpha.4
+
+### Patch Changes
+
+- [#1263](https://github.com/onflow/fcl-js/pull/1263) [`45951f1a`](https://github.com/onflow/fcl-js/commit/45951f1af310d302ee708e43d1a939265f404d2c) Thanks [@jribbink](https://github.com/jribbink)! - Fix infinite recursion bug when using array authorization function (used for multiple signing keys)
+
+## 1.1.0-alpha.3
+
+### Patch Changes
+
+- [#1245](https://github.com/onflow/fcl-js/pull/1245) [`d09ba0f0`](https://github.com/onflow/fcl-js/commit/d09ba0f00f53f93feb351a3da5e821eada6287f0) Thanks [@jribbink](https://github.com/jribbink)! - Switch deprecation warnings to standardized warnings introduced by @onflow/util-logger (log.deprecate)
+
+- Updated dependencies [[`d09ba0f0`](https://github.com/onflow/fcl-js/commit/d09ba0f00f53f93feb351a3da5e821eada6287f0), [`d09ba0f0`](https://github.com/onflow/fcl-js/commit/d09ba0f00f53f93feb351a3da5e821eada6287f0), [`4ec2bdc9`](https://github.com/onflow/fcl-js/commit/4ec2bdc9805ac081bdc8003b6e1ea52e02d3909d)]:
+  - @onflow/util-logger@1.1.0-alpha.2
+  - @onflow/util-template@1.0.2-alpha.0
+  - @onflow/util-actor@1.1.0-alpha.0
+  - @onflow/transport-http@1.3.0-alpha.3
+  - @onflow/config@1.0.2-alpha.0
+
+## 1.1.0-alpha.2
+
+### Minor Changes
+
+- [#1183](https://github.com/onflow/fcl-js/pull/1183) [`e0d3a377`](https://github.com/onflow/fcl-js/commit/e0d3a377260338a37518f0ad2a52dcc618fd9bc5) Thanks [@jribbink](https://github.com/jribbink)! - Added deprecation warning for hard-coded DEFAULT_COMPUTE_LIMIT=10 (and increase to DEFAULT_COMPUTE_LIMIT=100 for now) and added sdk.defaultComputeLimit to config
+
+### Patch Changes
+
+- Updated dependencies [[`06279c1d`](https://github.com/onflow/fcl-js/commit/06279c1d27433893494b6a79b7f742ea9a7fab8e)]:
+  - @onflow/transport-http@1.3.0-alpha.2
+  - @onflow/util-logger@1.0.2-alpha.1
+
+## 1.0.2-alpha.1
+
+### Patch Changes
+
+- [#1191](https://github.com/onflow/fcl-js/pull/1191) [`90d5163a`](https://github.com/onflow/fcl-js/commit/90d5163a7723dd529324a271ea8accaa43a3d7be) Thanks [@jribbink](https://github.com/jribbink)! - Allow for integer string account.keyId in authorization function
+
+* [#1218](https://github.com/onflow/fcl-js/pull/1218) [`cc422a78`](https://github.com/onflow/fcl-js/commit/cc422a781d0e87ba8945c336902bbc9542d5b4c4) Thanks [@jribbink](https://github.com/jribbink)! - Fix interaction arguments in http request body broken by prettier
+
+* Updated dependencies [[`cc422a78`](https://github.com/onflow/fcl-js/commit/cc422a781d0e87ba8945c336902bbc9542d5b4c4)]:
+  - @onflow/transport-http@1.3.0-alpha.1
+
+## 1.0.2-alpha.0
+
+### Patch Changes
+
+- [#1212](https://github.com/onflow/fcl-js/pull/1212) [`1654ebbe`](https://github.com/onflow/fcl-js/commit/1654ebbe45ea5e4ca13536ed2139520ce21ee314) Thanks [@jribbink](https://github.com/jribbink)! - Make deprecation notice for getEvents use @onflow/util-logger instead of console.warn
+
+* [#1199](https://github.com/onflow/fcl-js/pull/1199) [`d1765950`](https://github.com/onflow/fcl-js/commit/d176595021681e660ae0a06161340833280091fb) Thanks [@jribbink](https://github.com/jribbink)! - Fix issue where custom decoders did not properly override default decoders
+
+* Updated dependencies [[`d9bc1cc6`](https://github.com/onflow/fcl-js/commit/d9bc1cc671f143d2f37cad6eb6b80123f1f3d760), [`cd218e84`](https://github.com/onflow/fcl-js/commit/cd218e843acfc390049b391d36c447ce93668221)]:
+  - @onflow/transport-http@1.3.0-alpha.0
+  - @onflow/util-logger@1.0.2-alpha.0
+
 ## 1.0.1
 
 ### Patch Changes
