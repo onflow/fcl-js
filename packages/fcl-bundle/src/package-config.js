@@ -82,10 +82,12 @@ module.exports = package => {
 
   const cfg = {
     builds: builds.reduce((buildConfigs, build) => {
-      let source
+      let source, banner
       let outputs = {}
+
       if (isObject(build)) {
         source = build.source
+        banner = build.banner
         outputs = {
           cjs: build.cjs,
           esm: build.esm,
@@ -106,6 +108,7 @@ module.exports = package => {
         ...determineBuildPaths(package, outputs, entryName).map(build => ({
           ...build,
           source,
+          banner,
         }))
       )
       return buildConfigs
