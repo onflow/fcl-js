@@ -1,33 +1,36 @@
-import Client, {CLIENT_EVENTS} from "@walletconnect/client"
-import QRCodeModal from "@walletconnect/legacy-modal"
-import {ERROR, getAppMetadata} from "@walletconnect/utils"
+import SignClient from "@walletconnect/sign-client"
+import QRCodeModal from "@walletconnect/qrcode-modal"
+export {getSdkError} from "@walletconnect/utils"
 
-const INIT_DATA = {
-  RELAY_URL: "wss://relay.walletconnect.com",
-  LOGGER: "debug",
-}
-const data = {
-  client: null,
+const DEFAULT_RELAY_URL = "wss://relay.walletconnect.com"
+const DEFAULT_LOGGER = "debug"
+const DEFAULT_APP_METADATA = {
+  name: "FCL WalletConnect",
+  description: "FCL DApp for WalletConnect",
+  url: "https://flow.com/",
+  icons: ["https://avatars.githubusercontent.com/u/62387156?s=280&v=4"],
 }
 
-const fclWC = {
-  init: async projectId => {
-    if (data.client) {
-      return data.client
-    }
-    data.client = await Client.init({
-      logger: INIT_DATA.LOGGER,
-      relayUrl: INIT_DATA.RELAY_URL,
+const initClient = async ({projectId, metadata}) => {
+  if (typeof projectId === "undefined") {
+    throw new Error("WalletConnect projectId is required")
+  }
+  try {
+    return SignClient.init({
+      logger: DEFAULT_LOGGER,
+      relayUrl: DEFAULT_RELAY_URL,
       projectId: projectId,
+      metadata: metadata || DEFAULT_APP_METADATA,
     })
-
-    return {client: data.client, CLIENT_EVENTS, QRCodeModal}
-  },
-  Client,
-  CLIENT_EVENTS,
-  QRCodeModal,
-  ERROR,
-  getAppMetadata,
+  } catch (error) {
+    console.error(error)
+    throw error
+  }
 }
 
-export default fclWC
+export const wcAdapter = async ({projectId, metadata} = {}) => {
+  return {
+    signClient: await initClient({projectId, metadata}),
+    QRCodeModal,
+  }
+}
