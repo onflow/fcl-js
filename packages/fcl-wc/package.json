@@ -2,36 +2,43 @@
   "name": "@onflow/fcl-wc",
   "version": "1.0.0-alpha.0",
   "description": "WalletConnect adapter for FCL",
-  "source": "src/fcl-wc.js",
-  "main": "dist/fcl-wc.js",
-  "module": "dist/fcl-wc.module.js",
-  "unpkg": "dist/fcl-wc.umd.js",
-  "scripts": {
-    "test": "jest",
-    "test:watch": "jest --watch",
-    "prepublishOnly": "npm test && npm run build",
-    "build": "microbundle --no-compress",
-    "start": "microbundle watch --no-compress"
-  },
+  "license": "Apache-2.0",
+  "author": "Dapper Labs <dev@dapperlabs.com>",
+  "homepage": "https://onflow.org",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/onflow/fcl-js.git"
+    "url": "git+ssh://git@github.com/onflow/fcl-js.git"
   },
-  "author": "Dapper Labs <dev@dapperlabs.com>",
-  "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/onflow/fcl-js/issues"
   },
-  "homepage": "https://github.com/onflow/fcl-js#readme",
+  "jest": {
+    "transform": {
+      ".js": "jest-esm-transformer"
+    }
+  },
+  "source": "src/fcl-wc.js",
+  "main": "dist/fcl-wc.js",
+  "module": "dist/fcl-wc.module.js",
+  "unpkg": "dist/util-logger.umd.js",
+  "scripts": {
+    "prepublishOnly": "npm test && npm run build",
+    "test": "jest",
+    "build": "fcl-bundle",
+    "test:watch": "jest --watch",
+    "start": "fcl-bundle --watch"
+  },
   "devDependencies": {
-    "jest": "^28.1.0",
-    "jest-esm-transformer": "^1.0.0",
-    "microbundle": "^0.15.0"
+    "@onflow/fcl-bundle": "^1.0.1-alpha.0",
+    "jest": "^28.1.2",
+    "jest-esm-transformer": "1.0.0"
   },
   "dependencies": {
-    "@walletconnect/client": "^2.0.0-beta.26",
-    "@walletconnect/legacy-modal": "^2.0.0-beta.26",
-    "@walletconnect/types": "^2.0.0-beta.26",
-    "@walletconnect/utils": "^2.0.0-beta.26"
+    "@babel/runtime": "^7.18.9",
+    "@walletconnect/encoding": "^1.0.1",
+    "@walletconnect/qrcode-modal": "^1.7.8",
+    "@walletconnect/sign-client": "2.0.0-beta.102",
+    "@walletconnect/types": "2.0.0-beta.102",
+    "@walletconnect/utils": "2.0.0-beta.102"
   }
 }
