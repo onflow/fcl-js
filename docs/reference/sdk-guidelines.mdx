@@ -45,7 +45,7 @@ import * as types from "@onflow/types"
 
 By default, the library uses HTTP to communicate with the access nodes and it must be configured with the correct access node API URL.  An error will be returned if the host is unreachable.
 
-📖**The HTTP/REST API information** can be found [here](https://docs.onflow.org/http-api/).  The HTTP/REST Access Node APIs hosted by DapperLabs are accessible at:
+📖**The HTTP/REST API information** can be found [here](https://docs.onflow.org/http-api/).  The public Flow HTTP/REST access nodes are accessible at:
 - Testnet `https://rest-testnet.onflow.org`
 - Mainnet `https://rest-mainnet.onflow.org`
 - Local Emulator `127.0.0.1:8888` 
@@ -59,7 +59,7 @@ config({
 })
 ```
 
-📖 **gRPC Access API URLs** can be found [here](https://docs.onflow.org/access-api/#flow-access-node-endpoints). `sdk.transport` must be specified if you wish to use the gRPC API.  The gRPC Access Nodes APIs hosted by DapperLabs are accessible at:
+📖 **gRPC Access API URLs** can be found [here](https://docs.onflow.org/access-api/#flow-access-node-endpoints). `sdk.transport` must be specified if you wish to use the gRPC API.  The public Flow gRPC access nodes are accessible at:
 - Testnet `https://access-testnet.onflow.org`
 - Mainnet `https://access-mainnet.onflow.org`
 - Local Emulator `127.0.0.1:3569`

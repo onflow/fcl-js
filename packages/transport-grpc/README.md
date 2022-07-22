@@ -37,7 +37,7 @@ config({
 
 This will override the HTTP Transport and use the gRPC Transport instead.
 
-📖 **gRPC Access API URLs** can be found [here](https://docs.onflow.org/access-api/#flow-access-node-endpoints).  The gRPC Access Nodes APIs hosted by DapperLabs are accessible at:
+📖 **gRPC Access API URLs** can be found [here](https://docs.onflow.org/access-api/#flow-access-node-endpoints).  The public Flow gRPC access nodes are accessible at:
 - Testnet `https://access-testnet.onflow.org`
 - Mainnet `https://access-mainnet.onflow.org`
 - Local Emulator `127.0.0.1:3569`
