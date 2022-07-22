@@ -28,9 +28,10 @@ const initClient = async ({projectId, metadata}) => {
   }
 }
 
-export const wcAdapter = async ({projectId, metadata} = {}) => {
+export const initWcAdapter = async ({projectId, metadata} = {}) => {
+  const client = await initClient({projectId, metadata})
   return {
-    signClient: await initClient({projectId, metadata}),
+    client,
     QRCodeModal,
   }
 }
