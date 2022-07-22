@@ -19,7 +19,7 @@ npm install --save @onflow/fcl-wc
 ```javascript
 import * as fclWC from '@onflow/fcl-wc'
 
-const wcAdapter = fclWC.wcAdapter({
+const wcAdapter = fclWC.initWcAdapter({
   projectId: WC_PROJECT_ID,
   metadata: {
     name: 'FCL WalletConnect',
