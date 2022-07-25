@@ -116,9 +116,12 @@ async function getAccountProofData() {
   return accountProofData
 }
 
+// Certain method types cannot be overridden to use other methods like POP/RCP
+const isServiceMethodUnchangable = method => ["EXT/RPC"].includes(method)
+
 async function authenticate({service, redir = false} = {}) {
-  if (service?.provider?.requires_install) {
-    window.open(service?.provider?.install_link, '_blank')
+  if (!service?.provider?.is_installed && service?.provider?.requires_install) {
+    window.location.href = service?.provider?.install_link
     return
   }
 
@@ -171,7 +174,9 @@ async function authenticate({service, redir = false} = {}) {
       const response = await execService({
         service: {
           ...(service || discoveryService),
-          method: discoveryService?.method || service.method || "IFRAME/RPC",
+          method: isServiceMethodUnchangable(service.method)
+            ? service.method 
+            : discoveryService?.method || service.method || "IFRAME/RPC",
         },
         msg: accountProofData,
         opts,
