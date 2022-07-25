@@ -3,6 +3,7 @@ import {normalizePollingResponse} from "../../normalize/polling-response"
 
 const connectWc = async (onClose, {client, QRCodeModal, pairing}) => {
   try {
+    // need to get chain from config or api ping endpoint
     const requiredNamespaces = {
       flow: {
         methods: ["flow_signMessage", "flow_authz", "flow_authn"],
@@ -27,6 +28,7 @@ const connectWc = async (onClose, {client, QRCodeModal, pairing}) => {
     return session
   } catch (e) {
     console.error("Erroring connecting session", e)
+    throw e
   } finally {
     QRCodeModal.close()
   }
@@ -35,7 +37,6 @@ const connectWc = async (onClose, {client, QRCodeModal, pairing}) => {
 export function execWcRPC(service, body, opts, fullConfig) {
   return new Promise(async (resolve, reject) => {
     const {client, QRCodeModal} = await config.get("wc.adapter")
-
     if (typeof client === "undefined") {
       throw new Error("WalletConnect is not initialized")
     }
@@ -85,7 +86,8 @@ export function execWcRPC(service, body, opts, fullConfig) {
       })
     }
 
-    const addr = session?.namespaces["flow"].accounts[0].split(":")[2]
+    const addr = session?.namespaces["flow"]?.accounts[0].split(":")[2]
+    const data = {...body, addr}
 
     if (service.endpoint === "flow_authn") {
       try {
@@ -94,12 +96,13 @@ export function execWcRPC(service, body, opts, fullConfig) {
           chainId: "flow:testnet",
           request: {
             method: service.endpoint,
-            params: [JSON.stringify({addr})],
+            params: [JSON.stringify(data)],
           },
         })
         onResponse(result)
       } catch (e) {
-        console.error(e)
+        console.error("Error authenticating with WalletConnect", e)
+        reject(`Declined: Externally Halted`)
       }
     }
 
@@ -110,13 +113,12 @@ export function execWcRPC(service, body, opts, fullConfig) {
           chainId: "flow:testnet",
           request: {
             method: service.endpoint,
-            params: [JSON.stringify(body)],
+            params: [JSON.stringify(data)],
           },
         })
-        console.log(" handle Authz ->", result)
         onResponse(result)
       } catch (e) {
-        console.error(e, "rejected GGg")
+        console.error("Error authorizing with WalletConnect", e)
         reject(`Declined: Externally Halted`)
       }
     }
