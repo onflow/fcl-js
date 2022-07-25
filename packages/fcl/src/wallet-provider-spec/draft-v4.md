@@ -1,6 +1,6 @@
 ## Status
 
-- **Last Updated:** April 4th 2022
+- **Last Updated:** June 20th 2022
 - **Stable:** Yes
 - **Risk of Breaking Change:** Medium
 - **Compatibility:** `>= @onflow/fcl@1.0.0-alpha.0`
@@ -48,112 +48,81 @@ Back-channel communications use `method: "HTTP/POST"`, while front-channel commu
 
 It's important to note that regardless of the method of communication, the data that is sent back and forth between the parties involved is the same.
 
-## IFRAME/RPC (Front Channel)
+# Protocol schema definitions
+In this section we define the schema of objects used in the protocol. While they are JavaScript objects, only features supported by JSON should be used. (Meaning that conversion of an object to and from JSON should not result in any loss.)
 
-`IFRAME/RPC` is the easiest to explain, so we will start with it:
+For the schema definition language we choose TypeScript, so that the schema closely resembles the actual type definitions one would use when making an FCL implementation.
 
-- An iframe is rendered (comes from the `endpoint` in the service).
-- The rendered iframe adds a listener and sends the `"FCL:VIEW:READY"` message. This can be simplified `WalletUtils.ready(callback)`
-- FCL will send the data to be dealt with:
-  - Where `body` is the stuff you care about, `params` and `data` are additional information you can provide in the service object.
-- The wallet sends back an `"APPROVED"` or `"DECLINED"` post message. (It will be a `f_type: "PollingResponse"`, which we will get to in a bit). This can be simplified using `WalletUtils.approve` and `WalletUtils.decline`
-  - If it's approved, the polling response's data field will need to be what FCL is expecting.
-  - If it's declined, the polling response's reason field should say why it was declined.
+**Note that currently there are no official type definitions available for FCL. If you are using TypeScript, you will have to create your own type definitions (possibly based on the schema definitions presented in this document).**
 
-```javascript
-export const WalletUtils.approve = data => {
-  sendMsgToFCL("FCL:VIEW:RESPONSE", {
-    f_type: "PollingResponse",
-    f_vsn: "1.0.0",
-    status: "APPROVED",
-    reason: null,
-    data: data,
-  })
-}
+## Common definitions
+In this section we introduce some common definitions that the individual object definitions will be deriving from.
 
-export const WalletUtils.decline = reason => {
-  sendMsgToFCL("FCL:VIEW:RESPONSE", {
-    f_type: "PollingResponse",
-    f_vsn: "1.0.0",
-    status: "DECLINED",
-    reason: reason,
-    data: null,
-  })
+First, let us define the kinds of FCL objects available:
+```typescript
+type ObjectType =
+  | 'PollingResponse'
+  | 'Service'
+  | 'Identity'
+  | 'ServiceProvider'
+  | 'AuthnResponse'
+  | 'Signable'
+  | 'CompositeSignature'
+  | 'OpenID'
+```
+
+The fields common to all FCL objects then can be defined as follows:
+```typescript
+interface ObjectBase<Version = '1.0.0'> {
+  f_vsn: Version
+  f_type: ObjectType
 }
 ```
 
-![IFRAME/RPC Diagram](https://raw.githubusercontent.com/onflow/flow-js-sdk/master/packages/fcl/assets/service-method-diagrams/iframe-rpc.png)
+The `f_vsn` field is usually `1.0.0` for this specification, but some exceptions will be defined by passing a different `Version` type parameter to `ObjectBase`.
 
-### POP/RPC | TAB/RPC (Front Channel)
+All FCL objects carry an `f_type` field so that their types can be identified at runtime.
 
-`POP/RPC` and `TAB/RPC` work in an almost entirely similar way to `IFRAME/RPC`, except instead of rendering the `method` in an iframe, we render it in a popup or new tab. The same communication protocol between the rendered view and FCL applies.
+## FCL objects
+In this section we will define the FCL objects with each `ObjectType`.
 
-![POP/RPC Diagram](https://raw.githubusercontent.com/onflow/flow-js-sdk/master/packages/fcl/assets/service-method-diagrams/pop-rpc.png)
-
-![TAB/RPC Diagram](https://raw.githubusercontent.com/onflow/flow-js-sdk/master/packages/fcl/assets/service-method-diagrams/tab-rpc.png)
-
-### HTTP/POST (Back Channel)
-
-`HTTP/POST` initially sends a post request to the `endpoint` specified in the service, which should immediately return a `f_type: "PollingResponse"`.
-
-Like `IFRAME/RPC`, `POP/RPC` or `TAB/RPC`, our goal is to eventually get an `APPROVED` or `DECLINED` polling response, and technically this endpoint could return one of those immediately.
-
-But more than likely that isn't the case and it will be in a `PENDING` state (`PENDING` is not available to `IFRAME/RPC`, `POP/RPC` or `TAB/RPC`).
-When the polling response is `PENDING` it requires an `updates` field that includes a service, `BackChannelRpc`, that FCL can use to request an updated `PollingResponse` from.
-FCL will use that `BackChannelRpc` to request a new `PollingResponse` which itself can be `APPROVED`, `DECLINED` or `PENDING`.
-If it is `APPROVED` FCL will return, otherwise if it is `DECLINED` FCL will error. However, if it is `PENDING`, it will use the `BackChannelRpc` supplied in the new `PollingResponse` updates field. It will repeat this cycle until it is either `APPROVED` or `DECLINED`.
-
-There is an additional optional feature that `HTTP/POST` enables in the first `PollingResponse` that is returned.
-This optional feature is the ability for FCL to render an iframe, popup or new tab, and it can be triggered by supplying a service `type: "VIEW/IFRAME"`, `type: "VIEW/POP"` or `type: "VIEW/TAB"` and the `endpoint` that the wallet wishes to render in the `local` field of the `PollingResponse`. This is a great way for a wallet provider to switch to a webpage if displaying a UI is necessary for the service it is performing.
-
-![HTTP/POST Diagram](https://raw.githubusercontent.com/onflow/flow-js-sdk/master/packages/fcl/assets/service-method-diagrams/http-post.png)
-
-### EXT/RPC (Front Channel)
-
-`EXT/RPC` is used to enable and communicate between FCL and an installed (Chrome) browser extension. Usage of `EXT/RPC` is a bit more complex and relies on 3 key scripts to allow message passing between an installed extension and FCL. The global separation of context created by Chrome between the two and the availability of Chrome APIs within those contexts require these scripts to be setup in a particular sequence so that the communication channels needed by FCL's `EXT/RPC` service method will work.
-
-The following is an overview of these scripts and the functionality they need to support FCL:
-
-- `background.js`: Used to launch the extension with `chrome.windows.create` if selected by the user from Discovery or set directly via `fcl.config.discovery.wallet`
-- `content.js`: Used to proxy messages between the dapp to the extension via `chrome.runtime.sendMessage`.
-- `script.js`: Injected by `content.js` into the dapp's HTML page. It adds the extension authn service to `window.fcl_extensions` list on page load. This allows FCL to confirm installation and send extension details to Discovery or launch your wallet as the default wallet.
-
-An example and guide showing how to build an FCL compatible wallet extension on Flow can be found [here](https://github.com/onflow/wallet-extension-example).
-
-Once the extension is enabled, the same communication protocol between the rendered view and FCL applies:
-
-- A extension is rendered in a popup or new tab (comes from `endpoint` in the service).
-- The rendered popup says it's ready by sending a `"FCL:VIEW:READY"` message to the content script in the specified tab.
-- FCL will send the service data via `window.postMessage()` including the `type`: `"FCL:VIEW:READY:RESPONSE"`, `body`, and optional `params` or `data`.
-- The wallet sends back an `"APPROVED"` or `"DECLINED"` response via `chrome.tabs.sendMessage()` (It will be a `f_type: "PollingResponse"`)
-  - If it's approved, the polling response's data field will need to be what FCL is expecting.
-  - If it's declined, the polling response's reason field should say why it was declined.
-
-```javascript
-  chrome.tabs.sendMessage(tabs[0].id, {
-    f_type: "PollingResponse",
-    f_vsn: "1.0.0",
-    status: "APPROVED",
-    reason: null,
-    data: {
-      f_type: "AuthnResponse",
-      f_vsn: "1.0.0",
-      addr: address,
-      services: services,
-    },
-  });
+We also define the union of them to mean any FCL object:
+```typescript
+type FclObject =
+  | PollingResponse
+  | Service
+  | Identity
+  | ServiceProvider
+  | AuthnResponse
+  | Signable
+  | CompositeSignature
+  | OpenID
 ```
 
-![EXT/RPC Diagram](https://raw.githubusercontent.com/onflow/flow-js-sdk/master/packages/fcl/assets/service-method-diagrams/ext-rpc.png)
+### `PollingResponse`
 
-### Polling Response
+```typescript
+interface PollingResponse extends ObjectBase {
+  f_type: 'PollingResponse'
+  status: 'APPROVED' | 'DECLINED' | 'PENDING' | 'REDIRECT'
+  reason: string | null
+  data?: FclObject
+  updates?: FclObject
+  local?: FclObject
+}
+```
 
-Each response back to FCL must be "wrapped" in a Polling Response. Each Polling Response can have its status as `"APPROVED"`, `"DECLINED"`, or `"PENDING"`.
+Each response back to FCL must be "wrapped" in a `PollingResponse`. The `status` field determines the meaning of the response:
+- An `APPROVED` status means that the request has been approved. The `data` field should be present.
+- A `DECLINED` status means that the request has been declined. The `reason` field should contain a human readable reason for the refusal.
+- A `PENDING` status means that the request is being processed. More `PENDING` responses may follow, but eventually a non-pending status should be returned. The `updates` and `local` fields may be present.
+- The `REDIRECT` status is reserved, and should not be used by wallet services.
 
-It is entirely acceptable for your service to immediately return an `"APPROVED"` Polling Response, skipping a `"PENDING"` state.
+In summary, zero or more `PENDING` responses should be followed by a non-pending response. It is entirely acceptable for your service to immediately return an `APPROVED` Polling Response, skipping a `PENDING` state.
 
-`"DECLINED"` Polling Responses must include a human readable reason for why it was declined.
+See also [PollingResponse](https://github.com/onflow/flow-js-sdk/blob/master/packages/fcl/src/current-user/normalize/polling-response.js).
 
+Here are some examples of valid `PollingResponse` objects:
 ```javascript
 // APPROVED
 {
@@ -231,7 +200,299 @@ const reason = "User declined to authenticate."
 WalletUtils.decline(reason)
 ```
 
-### `data` and `params`
+### `Service`
+
+```typescript
+type ServiceType =
+  | 'authn'
+  | 'authz'
+  | 'user-signature'
+  | 'pre-authz'
+  | 'open-id'
+  | 'back-channel-rpc'
+  | 'authn-refresh'
+
+type ServiceMethod =
+  | 'HTTP/POST'
+  | 'IFRAME/RPC'
+  | 'POP/RPC'
+  | 'TAB/RPC'
+  | 'EXT/RPC'
+  | 'DATA'
+
+interface Service extends ObjectBase {
+  f_type: 'Service'
+  type: ServiceType
+  method: ServiceMethod
+  uid: string
+  endpoint: string
+  id: string
+  identity: Identity
+  provider?: ServiceProvider
+  data?: FclObject
+}
+```
+
+The meaning of the fields is as follows.
+- `type`: The type of this service.
+- `method`: The service method this service uses. `DATA` means that the purpose of this service is just to provide the information in this `Service` object, and no active communication services are provided.
+- `uid`: A unique identifier for the service. A common scheme for deriving this is to use `'wallet-name#${type}'`, where `${type}` refers to the type of this service.
+- `endpoint`: Defines where to communicate with the service.
+  - When `method` is `EXT/RPC`, this can be an arbitrary unique string, and the extension will need to use it to identify its own services. A common scheme for deriving the `endpoint` is to use `'ext:${address}'`, where `${address}` refers to the wallet's address. (See `ServiceProvider` for more information.)
+- `id`: The wallet's internal identifier for the user. If no other identifier is used, simply the user's flow account address can be used here.
+- `identity`: Information about the identity of the user.
+- `provider`: Information about the wallet.
+- `data`: Additional information used with a service of type `open-id`.
+
+See also:
+- [authn](https://github.com/onflow/flow-js-sdk/blob/master/packages/fcl/src/current-user/normalize/authn.js)
+- [authz](https://github.com/onflow/flow-js-sdk/blob/master/packages/fcl/src/current-user/normalize/authz.js)
+- [user-signature](https://github.com/onflow/flow-js-sdk/blob/master/packages/fcl/src/current-user/normalize/user-signature.js)
+- [pre-authz](https://github.com/onflow/flow-js-sdk/blob/master/packages/fcl/src/current-user/normalize/pre-authz.js)
+- [open-id](https://github.com/onflow/flow-js-sdk/blob/master/packages/fcl/src/current-user/normalize/open-id.js)
+- [back-channel-rpc](https://github.com/onflow/flow-js-sdk/blob/master/packages/fcl/src/current-user/normalize/back-channel-rpc.js)
+
+### `Identity`
+This object is used to define the identity of the user.
+
+```typescript
+interface Identity extends ObjectBase {
+  f_type: 'Identity'
+  address: string
+  keyId?: number
+}
+```
+
+The meaning of the fields is as follows.
+- `address`: The flow account address of the user.
+- `keyId`: The id of the key associated with this account that will be used for signing.
+
+### `ServiceProvider`
+This object is used to communicate information about a wallet.
+
+```typescript
+interface ServiceProvider extends ObjectBase {
+  f_type: 'ServiceProvider'
+  address: string
+  name?: string
+  description?: string
+  icon?: string
+  website?: string
+  supportUrl?: string
+  supportEmail?: string
+}
+```
+
+The meaning of the fields is as follows.
+- `address`: A flow account address owned by the wallet. It is unspecified what this will be used for.
+- `name`: The name of the wallet.
+- `description`: A short description for the wallet.
+- `icon`: An image URL for the wallet's icon.
+- `website`: The wallet's website.
+- `supportUrl`: A URL the user can use to get support with the wallet.
+- `supportEmail`: An e-mail address the user can use to get support with the wallet.
+
+### `AuthnResponse`
+This object is used to inform FCL about the services a wallet provides.
+
+```typescript
+interface AuthnResponse extends ObjectBase {
+  f_type: 'AuthnResponse'
+  addr: string
+  services: Service[]
+}
+```
+
+The meaning of the fields is as follows.
+- `addr`: The flow account address of the user.
+- `services`: The list of services provided by the wallet.
+
+### `Signable`
+
+```typescript
+interface Signable extends ObjectBase<'1.0.1'> {
+  f_type: 'Signable'
+  addr: string
+  keyId: number
+  voucher: {
+    cadence: string
+    refBlock: string
+    computeLimit: number
+    arguments: {
+      type: string
+      value: unknown
+    }[]
+    proposalKey: {
+      address: string
+      keyId: number
+      sequenceNum: number
+    }
+    payer: string
+    authorizers: string[]
+  }
+}
+```
+
+The `WalletUtils.encodeMessageFromSignable` function can be used to calculate the message that needs to be signed.
+
+### `CompositeSignature`
+
+```typescript
+interface CompositeSignature extends ObjectBase {
+  f_type: 'CompositeSignature'
+  addr: string
+  keyId: number
+  signature: string
+}
+```
+
+See also [CompositeSignature](https://github.com/onflow/flow-js-sdk/blob/master/packages/fcl/src/current-user/normalize/composite-signature.js).
+
+### `OpenID`
+TODO
+
+## Miscellaneous objects
+
+### `Message`
+```typescript
+type MessageType =
+  | 'FCL:VIEW:READY'
+  | 'FCL:VIEW:READY:RESPONSE'
+  | 'FCL:VIEW:RESPONSE'
+  | 'FCL:VIEW:CLOSE'
+
+type Message = {
+  type: MessageType
+}
+```
+
+A message that indicates the status of the protocol invocation.
+
+This type is sometimes used as part of an _intersection type_. For example, the type `Message & PollingResponse` means a `PollingResponse` extended with the `type` field from `Message`.
+
+### `ExtensionServiceInitiationMessage`
+```typescript
+type ExtensionServiceInitiationMessage = {
+  service: Service
+}
+```
+
+This object is used to invoke a service when the `EXT/RPC` service method is used.
+
+## See also
+- [local-view](https://github.com/onflow/flow-js-sdk/blob/master/packages/fcl/src/current-user/normalize/local-view.js)
+- [frame](https://github.com/onflow/flow-js-sdk/blob/master/packages/fcl/src/current-user/normalize/frame.js)
+
+# Service Methods
+
+## IFRAME/RPC (Front Channel)
+
+`IFRAME/RPC` is the easiest to explain, so we will start with it:
+
+- An iframe is rendered (comes from the `endpoint` in the service).
+- The rendered iframe adds a listener and sends the `"FCL:VIEW:READY"` message. This can be simplified `WalletUtils.ready(callback)`
+- FCL will send the data to be dealt with:
+  - Where `body` is the stuff you care about, `params` and `data` are additional information you can provide in the service object.
+- The wallet sends back an `"APPROVED"` or `"DECLINED"` post message. (It will be a `f_type: "PollingResponse"`, which we will get to in a bit). This can be simplified using `WalletUtils.approve` and `WalletUtils.decline`
+  - If it's approved, the polling response's data field will need to be what FCL is expecting.
+  - If it's declined, the polling response's reason field should say why it was declined.
+
+```javascript
+export const WalletUtils.approve = data => {
+  sendMsgToFCL("FCL:VIEW:RESPONSE", {
+    f_type: "PollingResponse",
+    f_vsn: "1.0.0",
+    status: "APPROVED",
+    reason: null,
+    data: data,
+  })
+}
+
+export const WalletUtils.decline = reason => {
+  sendMsgToFCL("FCL:VIEW:RESPONSE", {
+    f_type: "PollingResponse",
+    f_vsn: "1.0.0",
+    status: "DECLINED",
+    reason: reason,
+    data: null,
+  })
+}
+```
+
+![IFRAME/RPC Diagram](https://raw.githubusercontent.com/onflow/flow-js-sdk/master/packages/fcl/assets/service-method-diagrams/iframe-rpc.png)
+
+## POP/RPC | TAB/RPC (Front Channel)
+
+`POP/RPC` and `TAB/RPC` work in an almost entirely similar way to `IFRAME/RPC`, except instead of rendering the `method` in an iframe, we render it in a popup or new tab. The same communication protocol between the rendered view and FCL applies.
+
+![POP/RPC Diagram](https://raw.githubusercontent.com/onflow/flow-js-sdk/master/packages/fcl/assets/service-method-diagrams/pop-rpc.png)
+
+![TAB/RPC Diagram](https://raw.githubusercontent.com/onflow/flow-js-sdk/master/packages/fcl/assets/service-method-diagrams/tab-rpc.png)
+
+## HTTP/POST (Back Channel)
+
+`HTTP/POST` initially sends a post request to the `endpoint` specified in the service, which should immediately return a `f_type: "PollingResponse"`.
+
+Like `IFRAME/RPC`, `POP/RPC` or `TAB/RPC`, our goal is to eventually get an `APPROVED` or `DECLINED` polling response, and technically this endpoint could return one of those immediately.
+
+But more than likely that isn't the case and it will be in a `PENDING` state (`PENDING` is not available to `IFRAME/RPC`, `POP/RPC` or `TAB/RPC`).
+When the polling response is `PENDING` it requires an `updates` field that includes a service, `BackChannelRpc`, that FCL can use to request an updated `PollingResponse` from.
+FCL will use that `BackChannelRpc` to request a new `PollingResponse` which itself can be `APPROVED`, `DECLINED` or `PENDING`.
+If it is `APPROVED` FCL will return, otherwise if it is `DECLINED` FCL will error. However, if it is `PENDING`, it will use the `BackChannelRpc` supplied in the new `PollingResponse` updates field. It will repeat this cycle until it is either `APPROVED` or `DECLINED`.
+
+There is an additional optional feature that `HTTP/POST` enables in the first `PollingResponse` that is returned.
+This optional feature is the ability for FCL to render an iframe, popup or new tab, and it can be triggered by supplying a service `type: "VIEW/IFRAME"`, `type: "VIEW/POP"` or `type: "VIEW/TAB"` and the `endpoint` that the wallet wishes to render in the `local` field of the `PollingResponse`. This is a great way for a wallet provider to switch to a webpage if displaying a UI is necessary for the service it is performing.
+
+![HTTP/POST Diagram](https://raw.githubusercontent.com/onflow/flow-js-sdk/master/packages/fcl/assets/service-method-diagrams/http-post.png)
+
+## EXT/RPC (Front Channel)
+
+`EXT/RPC` is used to enable and communicate between FCL and an installed web browser extension. (Though this specification is geared towards Chromium based browsers, it should be implementable in any browser with similar extension APIs available. From now on we will be using the word _Chrome_ to refer to Chromium based browsers.)
+
+An implementation of `EXT/RPC` needs to somehow enable communication between the application and the extension context. Implementing this is a bit more complex and usually relies on 3 key scripts to allow message passing between an installed extension and FCL. The separation of contexts enforced by Chrome and the availability of different Chrome APIs within those contexts require these scripts to be set up in a particular sequence so that the communication channels needed by FCL's `EXT/RPC` service method will work.
+
+The following is an overview of these scripts and the functionality they need to support FCL:
+
+- `background.js`: Used to launch the extension popup with `chrome.windows.create` if selected by the user from Discovery or set directly via `fcl.config.discovery.wallet`
+- `content.js`: Used to proxy messages between the application to the extension via `chrome.runtime.sendMessage`.
+- `script.js`: Injected by `content.js` into the application's HTML page. It appends the extension authn service to the `window.fcl_extensions` array on page load. This allows FCL to confirm installation and send extension details to Discovery or launch your wallet as the default wallet.
+
+An example and guide showing how to build an FCL compatible wallet extension on Flow can be found [here](https://github.com/onflow/wallet-extension-example).
+
+Once the extension is enabled (for example when the user selects it through the discovery service), the following communication protocol applies. (The term _send_ should specifically refer to using `window.postMessage` in the application context, as this is the only interface between the application and the extension. Note that since `window.postMessage` broadcasts messages to all message event handlers, care should be taken by each party to filter only the messages targeted at them.)
+
+- An `ExtensionServiceInitiationMessage` object is sent by FCL. It is the extension's responsibility to inspect the `endpoint` field of the service, and only activate itself (e.g. by opening a popup) if it is the provider of this service.
+- The extension should respond by sending a `Message` with type `FCL:VIEW:READY`. (Usually this message will originate from the extension popup, and be relayed to the application context.)
+- FCL will send a `Message` with type `FCL:VIEW:READY:RESPONSE`. Additional fields specific to the service (such as `body`, `params` or `data`) are usually present. See the section on the specific service for a description of these fields.
+- The wallet sends back a `Message & PollingResponse` with type `FCL:VIEW:RESPONSE` with either an `APPROVED` or `DECLINED` status.
+  - If it's approved, the polling response's data field will need to be what FCL is expecting.
+  - If it's declined, the polling response's reason field should say why it was declined.
+
+The extension can send a `Message` with type `FCL:VIEW:CLOSE` at any point during this protocol to indicate an interruption. This will halt FCL's current routine. On the other hand, once a `PollingResponse` with either an `APPROVED` or `DECLINED` status was sent, the protocol is considered finished, and the extension should not send any further messages as part of this exchange.
+
+Conversely, when FCL sends a new `ExtensionServiceInitiationMessage`, the previous routine is interrupted. (This is the case even when the new service invocation is targeted at a different extension.)
+
+Note that as a consequence of the above restrictions, only single service invocation can be in progress at a time.
+
+Here is a code example for how an extension popup might send its response:
+```javascript
+  chrome.tabs.sendMessage(tabs[0].id, {
+    f_type: "PollingResponse",
+    f_vsn: "1.0.0",
+    status: "APPROVED",
+    reason: null,
+    data: {
+      f_type: "AuthnResponse",
+      f_vsn: "1.0.0",
+      addr: address,
+      services: services,
+    },
+  });
+```
+
+![EXT/RPC Diagram](https://raw.githubusercontent.com/onflow/flow-js-sdk/master/packages/fcl/assets/service-method-diagrams/ext-rpc.png)
+
+## `data` and `params`
 
 `data` and `params` are information that the wallet can provide in the service config that FCL will pass back to the service.
 - `params` will be added onto the `endpoint` as query params.
@@ -283,7 +544,7 @@ function callback(data) {
       ...
     }
   })
-  
+
   // Alternatively be sent using WalletUtils.approve (or WalletUtils.decline)
   // which will wrap AuthnResponse in a PollingResponse
   WalletUtils.approve({
@@ -314,7 +575,7 @@ Whether your authentication process happens using a webpage with the `IFRAME/RPC
 
 As always, you must never trust anything you receive from an application. Always do your due-diligence and be alert as you are the user's first line of defense against potentially malicious applications.
 
-### Authenticate your User 
+### Authenticate your User
 
 It's important that you are confident that the user is who the user claims to be.
 
@@ -345,7 +606,7 @@ WalletUtils.approve({
   addr: "0xUSER",                      // The user's flow address
 
   services: [                          // All the stuff that configures FCL
-      
+
       // Authentication Service - REQUIRED
       {
           f_type: "Service",                                         // It's a service!
@@ -385,7 +646,7 @@ WalletUtils.approve({
           ...
           // We will cover this at length in the authorization section of this guide
       },
-      
+
       // User Signature Service
       {
           f_type: "Service",
@@ -476,7 +737,7 @@ Finally it signs the payload with the user/s keys, producing a signature.
 This signature, as a HEX string, is sent back to FCL as part of the `CompositeSignature` which includes the user address and keyID in the data property of a `PollingResponse`.
 
 ```elixir
-signature = 
+signature =
   signable.voucher
     |> encode
     |> hash
@@ -704,18 +965,3 @@ The eventual response back from the `authn-refresh` service should resolve to an
   }
 }
 ```
-
-# Data Structures
-
-FCL employs the following data structures, of which you have previously seen in use throughout this document.
-
-- [CompositeSignature](https://github.com/onflow/flow-js-sdk/blob/master/packages/fcl/src/current-user/normalize/composite-signature.js)
-- [PollingResponse](https://github.com/onflow/flow-js-sdk/blob/master/packages/fcl/src/current-user/normalize/polling-response.js)
-- [authn](https://github.com/onflow/flow-js-sdk/blob/master/packages/fcl/src/current-user/normalize/authn.js)
-- [authz](https://github.com/onflow/flow-js-sdk/blob/master/packages/fcl/src/current-user/normalize/authz.js)
-- [pre-authz](https://github.com/onflow/flow-js-sdk/blob/master/packages/fcl/src/current-user/normalize/pre-authz.js)
-- [user-signature](https://github.com/onflow/flow-js-sdk/blob/master/packages/fcl/src/current-user/normalize/user-signature.js)
-- [local-view](https://github.com/onflow/flow-js-sdk/blob/master/packages/fcl/src/current-user/normalize/local-view.js)
-- [frame](https://github.com/onflow/flow-js-sdk/blob/master/packages/fcl/src/current-user/normalize/frame.js)
-- [back-channel-rpc](https://github.com/onflow/flow-js-sdk/blob/master/packages/fcl/src/current-user/normalize/back-channel-rpc.js)
-- [open-id](https://github.com/onflow/flow-js-sdk/blob/master/packages/fcl/src/current-user/normalize/open-id.js)
