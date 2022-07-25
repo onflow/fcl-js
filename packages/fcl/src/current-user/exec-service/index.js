@@ -1,3 +1,4 @@
+import {config as fclConfig} from "@onflow/config"
 import {execHttpPost} from "./strategies/http-post"
 import {execIframeRPC} from "./strategies/iframe-rpc"
 import {execPopRPC} from "./strategies/pop-rpc"
@@ -18,8 +19,11 @@ const STRATEGIES = {
   "WC/RPC": execWcRPC,
 }
 
-export async function execService({service, msg = {}, opts = {}, config = {}}) {
+export async function execService({service, msg = {}, config = {}, opts = {}}) {
   msg.data = service.data
+  const {client} = await fclConfig.get("wc.adapter")
+  const pairings = client ? client.pairing.getAll({active: true}) : []
+
   const fullConfig = {
     ...config,
     services: await configLens(/^service\./),
@@ -29,12 +33,12 @@ export async function execService({service, msg = {}, opts = {}, config = {}}) {
       fclLibrary: "https://github.com/onflow/fcl-js",
       hostname: window?.location?.hostname ?? null,
       extensions: window?.fcl_extensions || [],
+      wc: {pairings, projectId: client?.core?.projectId},
     },
   }
 
   try {
     const res = await STRATEGIES[service.method](service, msg, opts, fullConfig)
-    console.log("execService res", res)
     if (res.status === "REDIRECT") {
       invariant(
         service.type === res.data.type,
