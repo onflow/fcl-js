@@ -5,6 +5,7 @@ import {
   INIT,
   SUBSCRIBE,
   UNSUBSCRIBE,
+  send,
 } from "@onflow/util-actor"
 import {getServices} from "../services"
 
@@ -34,8 +35,15 @@ const warn = (fact, msg) => {
 const HANDLERS = {
   [INIT]: async ctx => {
     warn(typeof window === "undefined", '"fcl.discovery" is only available in the browser.')
-    const services = await getServices({ type: SERVICE_ACTOR_KEYS.NAME })
-    ctx.put(SERVICE_ACTOR_KEYS.RESULTS, services)
+    // If you call this before the window is loaded extensions will not be set yet
+    window.onload = async () => {
+      try {
+        const services = await getServices({ type: SERVICE_ACTOR_KEYS.NAME })
+        send(SERVICE_ACTOR_KEYS.NAME, SERVICE_ACTOR_KEYS.UPDATE_RESULTS, { results: services })
+      } catch (_) {
+        console.log("Error fetching Discovery API services.")
+      }
+    }
   },
   [SERVICE_ACTOR_KEYS.UPDATE_RESULTS]: (ctx, _letter, data) => {
     ctx.merge(data)
