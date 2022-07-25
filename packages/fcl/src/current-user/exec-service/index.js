@@ -3,6 +3,7 @@ import {execIframeRPC} from "./strategies/iframe-rpc"
 import {execPopRPC} from "./strategies/pop-rpc"
 import {execTabRPC} from "./strategies/tab-rpc"
 import {execExtRPC} from "./strategies/ext-rpc"
+import {execWcRPC} from "./strategies/wc-rpc"
 import {invariant} from "@onflow/util-invariant"
 import {configLens} from "../../config-utils"
 import {VERSION} from "../../VERSION"
@@ -14,6 +15,7 @@ const STRATEGIES = {
   "POP/RPC": execPopRPC,
   "TAB/RPC": execTabRPC,
   "EXT/RPC": execExtRPC,
+  "WC/RPC": execWcRPC,
 }
 
 export async function execService({service, msg = {}, opts = {}, config = {}}) {
@@ -32,6 +34,7 @@ export async function execService({service, msg = {}, opts = {}, config = {}}) {
 
   try {
     const res = await STRATEGIES[service.method](service, msg, opts, fullConfig)
+    console.log("execService res", res)
     if (res.status === "REDIRECT") {
       invariant(
         service.type === res.data.type,
