@@ -20,6 +20,7 @@ export async function getServices({ type }) {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
+      type,
       fclVersion: VERSION,
       include,
       extensions: isWindow() ? (window.fcl_extensions || []) : [],
