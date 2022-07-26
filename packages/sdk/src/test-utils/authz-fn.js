@@ -1,4 +1,6 @@
-export const idof = acct => `${acct.addr}-${acct.keyId}`
+import {withPrefix} from "@onflow/util-address"
+
+export const idof = acct => `${withPrefix(acct.addr)}-${acct.keyId}`
 
 export function sig(opts) {
   return ["SIGNATURE", opts.addr, opts.keyId].join(".")

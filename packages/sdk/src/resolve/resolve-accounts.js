@@ -1,3 +1,4 @@
+import {sansPrefix, withPrefix} from "@onflow/util-address"
 import {invariant} from "@onflow/util-invariant"
 import {log} from "@onflow/util-logger"
 import {isTransaction} from "../interaction/interaction.js"
@@ -35,8 +36,9 @@ async function collectAccounts(ix, accounts, last, depth = 3) {
     if (Array.isArray(ax)) {
       await collectAccounts(ix, ax, old, depth - 1)
     } else {
+      if (ax.addr) ax.addr = sansPrefix(ax.addr)
       if (ax.addr != null && ax.keyId != null) {
-        ax.tempId = `${ax.addr}-${ax.keyId}`
+        ax.tempId = `${withPrefix(ax.addr)}-${ax.keyId}`
       }
       ix.accounts[ax.tempId] = ix.accounts[ax.tempId] || ax
       ix.accounts[ax.tempId].role.proposer =
@@ -72,7 +74,8 @@ async function collectAccounts(ix, accounts, last, depth = 3) {
           const payerAccts = []
           ix.payer = ix.payer.reduce((g, tempId) => {
             const {addr, keyId} = ix.accounts[tempId]
-            const key = `${addr}-${keyId}`
+
+            const key = `${withPrefix(addr)}-${keyId}`
             payerAccts.push(addr)
             if (dupList.includes(key)) return g
             dupList.push(key)

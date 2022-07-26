@@ -63,7 +63,6 @@ test("Voucher in PreSignable multiple payer keys", async () => {
 
   const authzPayer = {
     addr: "0x02",
-    address: "0x02",
     resolve: (account, preSignable) => [
       {
         ...account,

@@ -44,7 +44,7 @@ export async function sendTransaction(ix, context = {}, opts = {}) {
   for (let acct of Object.values(ix.accounts)) {
     try {
       if (acct.role.payer && acct.signature != null) {
-        let id = acct.tempId || `${acct.addr}-${acct.keyId}`
+        let id = acct.tempId || `${withPrefix(acct.addr)}-${acct.keyId}`
         envelopeSignatures[id] = envelopeSignatures[id] || {
           address: sansPrefix(acct.addr),
           key_index: String(acct.keyId),
