@@ -120,7 +120,8 @@ async function getAccountProofData() {
 const isServiceMethodUnchangable = method => ["EXT/RPC"].includes(method)
 
 async function authenticate({service, redir = false} = {}) {
-  if (!service?.provider?.is_installed && service?.provider?.requires_install) {
+  if (service && !service?.provider?.is_installed && service?.provider?.requires_install) {
+    console.log('is it here?')
     window.location.href = service?.provider?.install_link
     return
   }
@@ -174,7 +175,7 @@ async function authenticate({service, redir = false} = {}) {
       const response = await execService({
         service: {
           ...(service || discoveryService),
-          method: isServiceMethodUnchangable(service.method)
+          method: isServiceMethodUnchangable(service?.method)
             ? service.method 
             : discoveryService?.method || service.method || "IFRAME/RPC",
         },
