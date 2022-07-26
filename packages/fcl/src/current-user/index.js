@@ -121,7 +121,6 @@ const isServiceMethodUnchangable = method => ["EXT/RPC"].includes(method)
 
 async function authenticate({service, redir = false} = {}) {
   if (service && !service?.provider?.is_installed && service?.provider?.requires_install) {
-    console.log('is it here?')
     window.location.href = service?.provider?.install_link
     return
   }
