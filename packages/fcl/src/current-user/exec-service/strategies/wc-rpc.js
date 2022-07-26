@@ -86,59 +86,30 @@ export function execWcRPC(service, body, opts, fullConfig) {
       })
     }
 
-    const addr = session?.namespaces["flow"]?.accounts[0].split(":")[2]
+    const [namespace, reference, address] = Object.values(session.namespaces)
+      .map(namespace => namespace.accounts)
+      .flat()
+      .filter(account => account.startsWith("flow:"))[0]
+      .split(":")
+
+    const method = service.endpoint
+    const chainId = `${namespace}:${reference}`
+    const addr = address
     const data = {...body, addr}
 
-    switch (service.endpoint) {
-      case "flow_authn":
-        try {
-          const result = await client.request({
-            topic: session.topic,
-            chainId: "flow:testnet",
-            request: {
-              method: service.endpoint,
-              params: [JSON.stringify(data)],
-            },
-          })
-          onResponse(result)
-        } catch (e) {
-          console.error("Error authenticating with WalletConnect", e)
-          reject(`Declined: Externally Halted`)
-        }
-        break
-      case "flow_authz":
-        try {
-          const result = await client.request({
-            topic: session.topic,
-            chainId: "flow:testnet",
-            request: {
-              method: service.endpoint,
-              params: [JSON.stringify(data)],
-            },
-          })
-          onResponse(result)
-        } catch (e) {
-          console.error("Error authorizing with WalletConnect", e)
-          reject(`Declined: Externally Halted`)
-        }
-        break
-      case "flow_user_sign":
-        try {
-          const result = await client.request({
-            topic: session.topic,
-            chainId: "flow:testnet",
-            request: {
-              method: service.endpoint,
-              params: [JSON.stringify(data)],
-            },
-          })
-          onResponse(result)
-        } catch (e) {
-          console.error("Error signing user message with WalletConnect", e)
-          reject(`Declined: Externally Halted`)
-        }
-      default:
-        break
+    try {
+      const result = await client.request({
+        topic: session.topic,
+        chainId,
+        request: {
+          method,
+          params: [JSON.stringify(data)],
+        },
+      })
+      onResponse(result)
+    } catch (e) {
+      console.error("WalletConnect error on request", e)
+      reject(`Declined: Externally Halted`)
     }
   })
 }
