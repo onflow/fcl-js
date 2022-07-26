@@ -1,5 +1,29 @@
 # @onflow/transport-http
 
+## 1.4.0
+
+### Minor Changes
+
+- [#1324](https://github.com/onflow/fcl-js/pull/1324) [`45607fae`](https://github.com/onflow/fcl-js/commit/45607fae1d99adaa6e2c9ebbb8dc2f7e0c267033) Thanks [@jribbink](https://github.com/jribbink)! - Add http headers as option to in httpRequest
+
+### Patch Changes
+
+- [#1321](https://github.com/onflow/fcl-js/pull/1321) [`422914bc`](https://github.com/onflow/fcl-js/commit/422914bcdc4c1b44c61d3ec1850bf57114f31a6b) Thanks [@jribbink](https://github.com/jribbink)! - Make sendGetAccountAtLatestBlockRequest execute at latest sealed block instead of latest finalized block
+
+* [#1278](https://github.com/onflow/fcl-js/pull/1278) [`b9577b63`](https://github.com/onflow/fcl-js/commit/b9577b6355be06dec98f1e11101594fa65e66cf7) Thanks [@jribbink](https://github.com/jribbink)! - Add error message if using non-HTTP/REST endpoint via transport-http
+
+- [#1303](https://github.com/onflow/fcl-js/pull/1303) [`c83c4606`](https://github.com/onflow/fcl-js/commit/c83c4606f1c78e7addaadece89350b19cb5544d6) Thanks [@jribbink](https://github.com/jribbink)! - Removed @onflow/util-node-http-modules, added node-fetch
+
+* [#1227](https://github.com/onflow/fcl-js/pull/1227) [`352f1460`](https://github.com/onflow/fcl-js/commit/352f1460a2f34d228a74fa4bbc6fcf6e68a968b6) Thanks [@jribbink](https://github.com/jribbink)! - Switch to fcl-bundle instead of microbundle for build scripts
+
+- [#1270](https://github.com/onflow/fcl-js/pull/1270) [`4d59f80c`](https://github.com/onflow/fcl-js/commit/4d59f80c0a8b45c82a28a05e6c579f4376107b86) Thanks [@jribbink](https://github.com/jribbink)! - Fix sendGetAccount throwing error if account has no keys
+
+- Updated dependencies [[`352f1460`](https://github.com/onflow/fcl-js/commit/352f1460a2f34d228a74fa4bbc6fcf6e68a968b6)]:
+  - @onflow/util-address@1.0.2
+  - @onflow/util-invariant@1.0.2
+  - @onflow/util-logger@1.1.1
+  - @onflow/util-template@1.0.3
+
 ## 1.3.1-alpha.2
 
 ### Patch Changes
