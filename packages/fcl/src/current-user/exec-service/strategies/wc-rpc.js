@@ -6,7 +6,7 @@ const connectWc = async (onClose, {client, QRCodeModal, pairing}) => {
     // need to get chain from config or api ping endpoint
     const requiredNamespaces = {
       flow: {
-        methods: ["flow_signMessage", "flow_authz", "flow_authn"],
+        methods: ["flow_authn", "flow_authz", "flow_user_sign"],
         chains: ["flow:testnet"],
         events: ["chainChanged", "accountsChanged"],
       },
@@ -119,6 +119,22 @@ export function execWcRPC(service, body, opts, fullConfig) {
           onResponse(result)
         } catch (e) {
           console.error("Error authorizing with WalletConnect", e)
+          reject(`Declined: Externally Halted`)
+        }
+        break
+      case "flow_user_sign":
+        try {
+          const result = await client.request({
+            topic: session.topic,
+            chainId: "flow:testnet",
+            request: {
+              method: service.endpoint,
+              params: [JSON.stringify(data)],
+            },
+          })
+          onResponse(result)
+        } catch (e) {
+          console.error("Error signing user message with WalletConnect", e)
           reject(`Declined: Externally Halted`)
         }
       default:
