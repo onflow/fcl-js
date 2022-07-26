@@ -1,5 +1,29 @@
 # @onflow/fcl
 
+## 1.1.1
+
+### Patch Changes
+
+- [#1326](https://github.com/onflow/fcl-js/pull/1326) [`053ff10d`](https://github.com/onflow/fcl-js/commit/053ff10dbc1d6ec64b1cafec9dad6b58ad154552) Thanks [@jribbink](https://github.com/jribbink)! - Fix getAccount executing at latest finalized block instead of sealed block (version bump `@onflow/transport-http`)
+
+* [#1283](https://github.com/onflow/fcl-js/pull/1283) [`b0f7a234`](https://github.com/onflow/fcl-js/commit/b0f7a234a6e71c28e4a02d8edf4927f73e76fa72) Thanks [@gregsantos](https://github.com/gregsantos)! - Updates keyIndices args passed in as Numbers in fcl.verify functions
+
+- [#1274](https://github.com/onflow/fcl-js/pull/1274) [`865e412c`](https://github.com/onflow/fcl-js/commit/865e412c5c975e68f30e9c8b4b225030560a5187) Thanks [@jribbink](https://github.com/jribbink)! - Throw error if FCL popup/tab is blocked from opening or if sendMsgToFCL cannot access parent window reference for postMessage.
+
+* [#1227](https://github.com/onflow/fcl-js/pull/1227) [`352f1460`](https://github.com/onflow/fcl-js/commit/352f1460a2f34d228a74fa4bbc6fcf6e68a968b6) Thanks [@jribbink](https://github.com/jribbink)! - Switch to fcl-bundle instead of microbundle for build scripts
+
+* Updated dependencies [[`053ff10d`](https://github.com/onflow/fcl-js/commit/053ff10dbc1d6ec64b1cafec9dad6b58ad154552), [`352f1460`](https://github.com/onflow/fcl-js/commit/352f1460a2f34d228a74fa4bbc6fcf6e68a968b6)]:
+  - @onflow/sdk@1.1.1
+  - @onflow/config@1.0.3
+  - @onflow/rlp@1.0.2
+  - @onflow/types@1.0.3
+  - @onflow/util-actor@1.1.1
+  - @onflow/util-address@1.0.2
+  - @onflow/util-invariant@1.0.2
+  - @onflow/util-logger@1.1.1
+  - @onflow/util-template@1.0.3
+  - @onflow/util-uid@1.0.2
+
 ## 1.1.1-alpha.2
 
 ### Patch Changes
