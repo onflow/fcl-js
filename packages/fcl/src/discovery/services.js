@@ -2,12 +2,9 @@ import {config} from "@onflow/config"
 import {invariant} from "@onflow/util-invariant"
 import {VERSION} from "../VERSION"
 
-const asyncPipe =
-  (...fns) =>
-  input =>
-    fns.reduce((chain, fn) => chain.then(fn), Promise.resolve(input))
+const isWindow = () => typeof window !== "undefined"
 
-async function addServices(services = []) {
+export async function getServices({ types }) {
   const endpoint = await config.get("discovery.authn.endpoint")
   invariant(
     Boolean(endpoint),
@@ -23,22 +20,11 @@ async function addServices(services = []) {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
+      type: types,
       fclVersion: VERSION,
       include,
-    }),
-  })
-    .then(d => d.json())
-    .then(json => [...services, ...json])
+      extensions: isWindow() ? (window.fcl_extensions || []) : [],
+      userAgent: window?.navigator?.userAgent
+    })
+  }).then(d => d.json())
 }
-
-function addExtensions(services = []) {
-  const extensions = window.fcl_extensions || []
-  return [...extensions, ...services]
-}
-
-function filterServicesByType(services = [], type) {
-  return services.filter(service => service.type === type)
-}
-
-export const getServices = ({type}) =>
-  asyncPipe(addServices, addExtensions, s => filterServicesByType(s, type))([])

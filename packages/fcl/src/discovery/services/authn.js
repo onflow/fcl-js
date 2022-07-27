@@ -5,13 +5,17 @@ import {
   INIT,
   SUBSCRIBE,
   UNSUBSCRIBE,
+  send,
 } from "@onflow/util-actor"
 import {getServices} from "../services"
 
-const NAME = "authn"
-const RESULTS = "results"
-const SNAPSHOT = "SNAPSHOT"
-const UPDATED = "UPDATED"
+export const SERVICE_ACTOR_KEYS = {
+  AUTHN: "authn",
+  RESULTS: "results",
+  SNAPSHOT: "SNAPSHOT",
+  UPDATED: "UPDATED",
+  UPDATE_RESULTS: "UPDATE_RESULTS"
+}
 
 const warn = (fact, msg) => {
   if (fact) {
@@ -30,26 +34,34 @@ const warn = (fact, msg) => {
 
 const HANDLERS = {
   [INIT]: async ctx => {
-    warn(
-      typeof window === "undefined",
-      '"fcl.discovery" is only available in the browser.'
-    )
-    const services = await getServices({type: NAME})
-    ctx.put(RESULTS, services)
+    warn(typeof window === "undefined", '"fcl.discovery" is only available in the browser.')
+    // If you call this before the window is loaded extensions will not be set yet
+    window.onload = async () => {
+      try {
+        const services = await getServices({ types: [SERVICE_ACTOR_KEYS.AUTHN] })
+        send(SERVICE_ACTOR_KEYS.AUTHN, SERVICE_ACTOR_KEYS.UPDATE_RESULTS, { results: services })
+      } catch (_) {
+        console.log("Error fetching Discovery API services.")
+      }
+    }
+  },
+  [SERVICE_ACTOR_KEYS.UPDATE_RESULTS]: (ctx, _letter, data) => {
+    ctx.merge(data)
+    ctx.broadcast(SERVICE_ACTOR_KEYS.UPDATED, {...ctx.all()})
   },
   [SUBSCRIBE]: (ctx, letter) => {
     ctx.subscribe(letter.from)
-    ctx.send(letter.from, UPDATED, {...ctx.all()})
+    ctx.send(letter.from, SERVICE_ACTOR_KEYS.UPDATED, {...ctx.all()})
   },
   [UNSUBSCRIBE]: (ctx, letter) => ctx.unsubscribe(letter.from),
-  [SNAPSHOT]: async (ctx, letter) => letter.reply({...ctx.all()}),
+  [SERVICE_ACTOR_KEYS.SNAPSHOT]: async (ctx, letter) => letter.reply({...ctx.all()}),
 }
 
-const spawnProviders = () => spawn(HANDLERS, NAME)
+const spawnProviders = () => spawn(HANDLERS, SERVICE_ACTOR_KEYS.AUTHN)
 
 const authn = {
-  subscribe: cb => subscriber(NAME, spawnProviders, cb),
-  snapshot: () => snapshoter(NAME, spawnProviders),
+  subscribe: cb => subscriber(SERVICE_ACTOR_KEYS.AUTHN, spawnProviders, cb),
+  snapshot: () => snapshoter(SERVICE_ACTOR_KEYS.AUTHN, spawnProviders)
 }
 
 export default authn
