@@ -4,7 +4,7 @@ import {VERSION} from "../VERSION"
 
 const isWindow = () => typeof window !== "undefined"
 
-export async function getServices({ type }) {
+export async function getServices({ types }) {
   const endpoint = await config.get("discovery.authn.endpoint")
   invariant(
     Boolean(endpoint),
@@ -20,7 +20,7 @@ export async function getServices({ type }) {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      type,
+      type: types,
       fclVersion: VERSION,
       include,
       extensions: isWindow() ? (window.fcl_extensions || []) : [],

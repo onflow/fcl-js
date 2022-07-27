@@ -10,7 +10,7 @@ import {
 import {getServices} from "../services"
 
 export const SERVICE_ACTOR_KEYS = {
-  NAME: "authn",
+  AUTHN: "authn",
   RESULTS: "results",
   SNAPSHOT: "SNAPSHOT",
   UPDATED: "UPDATED",
@@ -38,8 +38,8 @@ const HANDLERS = {
     // If you call this before the window is loaded extensions will not be set yet
     window.onload = async () => {
       try {
-        const services = await getServices({ type: SERVICE_ACTOR_KEYS.NAME })
-        send(SERVICE_ACTOR_KEYS.NAME, SERVICE_ACTOR_KEYS.UPDATE_RESULTS, { results: services })
+        const services = await getServices({ types: [SERVICE_ACTOR_KEYS.AUTHN] })
+        send(SERVICE_ACTOR_KEYS.AUTHN, SERVICE_ACTOR_KEYS.UPDATE_RESULTS, { results: services })
       } catch (_) {
         console.log("Error fetching Discovery API services.")
       }
@@ -57,11 +57,11 @@ const HANDLERS = {
   [SERVICE_ACTOR_KEYS.SNAPSHOT]: async (ctx, letter) => letter.reply({...ctx.all()}),
 }
 
-const spawnProviders = () => spawn(HANDLERS, SERVICE_ACTOR_KEYS.NAME)
+const spawnProviders = () => spawn(HANDLERS, SERVICE_ACTOR_KEYS.AUTHN)
 
 const authn = {
-  subscribe: cb => subscriber(SERVICE_ACTOR_KEYS.NAME, spawnProviders, cb),
-  snapshot: () => snapshoter(SERVICE_ACTOR_KEYS.NAME, spawnProviders)
+  subscribe: cb => subscriber(SERVICE_ACTOR_KEYS.AUTHN, spawnProviders, cb),
+  snapshot: () => snapshoter(SERVICE_ACTOR_KEYS.AUTHN, spawnProviders)
 }
 
 export default authn

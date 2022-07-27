@@ -87,7 +87,7 @@ describe("getServices", () => {
       })
     )
 
-    const response = await getServices({ type: "authn" })
+    const response = await getServices({ type: ["authn"] })
     expect(global.fetch).toHaveBeenCalledTimes(1)
   })
 })
