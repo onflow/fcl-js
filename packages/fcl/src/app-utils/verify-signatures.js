@@ -1,7 +1,7 @@
 import {config} from "@onflow/config"
 import {log} from "@onflow/util-logger"
 import {invariant} from "@onflow/util-invariant"
-import {sansPrefix} from "@onflow/util-address"
+import {withPrefix, sansPrefix} from "@onflow/util-address"
 import {query} from "../exec/query"
 import {encodeAccountProof} from "../wallet-utils"
 import {isString} from "../exec/utils/is"
@@ -32,10 +32,14 @@ export const validateArgs = args => {
     )
     return true
   } else {
-    const {message, compSigs} = args
+    const {message, address, compSigs} = args
     invariant(
       /^[0-9a-f]+$/i.test(message),
       "Signed message must be a hex string"
+    )
+    invariant(
+      isString(address) && sansPrefix(address).length === 16,
+      "verifyUserSignatures({ address }) -- address must be a valid address"
     )
     invariant(
       Array.isArray(compSigs) &&
@@ -131,7 +135,6 @@ export async function verifyAccountProof(
   opts = {}
 ) {
   validateArgs({appIdentifier, address, nonce, signatures})
-
   const message = encodeAccountProof({address, nonce, appIdentifier}, false)
 
   let signaturesArr = []
@@ -145,7 +148,7 @@ export async function verifyAccountProof(
   return query({
     cadence: await getVerifySignaturesScript(ACCOUNT_PROOF, opts),
     args: (arg, t) => [
-      arg(address, t.Address),
+      arg(withPrefix(address), t.Address),
       arg(message, t.String),
       arg(keyIndices, t.Array([t.Int])),
       arg(signaturesArr, t.Array([t.String])),
@@ -174,9 +177,9 @@ export async function verifyAccountProof(
  *  )
  */
 export async function verifyUserSignatures(message, compSigs, opts = {}) {
-  validateArgs({message, compSigs})
+  const address = withPrefix(compSigs[0].addr)
+  validateArgs({message, address, compSigs})
 
-  const address = compSigs[0].addr
   let signaturesArr = []
   let keyIndices = []
 
