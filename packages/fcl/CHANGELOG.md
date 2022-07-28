@@ -1,5 +1,15 @@
 # @onflow/fcl
 
+## 1.2.0
+
+### Minor Changes
+
+- [#1202](https://github.com/onflow/fcl-js/pull/1202) [`13c1192e`](https://github.com/onflow/fcl-js/commit/13c1192e972c182bbad8fd7f6c68ec08a6920d7a) Thanks [@chasefleming](https://github.com/chasefleming)! - Show uninstalled extensions in Discovery API
+
+### Patch Changes
+
+- [#1337](https://github.com/onflow/fcl-js/pull/1337) [`0c05ae39`](https://github.com/onflow/fcl-js/commit/0c05ae39b2925398029c5b74370fe158b6707d00) Thanks [@gregsantos](https://github.com/gregsantos)! - Adds withPrefix to addresses in verifyAccountProof and verifyUserSignature
+
 ## 1.1.1
 
 ### Patch Changes
