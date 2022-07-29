@@ -1,5 +1,11 @@
 # @onflow/fcl-bundle
 
+## 1.1.0
+
+### Minor Changes
+
+- [#1328](https://github.com/onflow/fcl-js/pull/1328) [`cc9cf95e`](https://github.com/onflow/fcl-js/commit/cc9cf95ec40b5a97de8b76bbb00e6c3b35ec7b51) Thanks [@jribbink](https://github.com/jribbink)! - Add banner configuration option (see [README.md](/packages/fcl-bundle/README.md) for usage)
+
 ## 1.0.1
 
 ### Patch Changes
