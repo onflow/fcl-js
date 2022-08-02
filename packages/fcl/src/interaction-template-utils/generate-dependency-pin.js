@@ -21,7 +21,7 @@ export async function generateDependencyPin({
     address,
     contractName,
     blockHeight,
-}) {
+}, opts = {}) {
     invariant(address != undefined, "generateDependencyPin({ address }) -- address must be defined")
     invariant(contractName != undefined, "generateDependencyPin({ contractName }) -- contractName must be defined")
     invariant(blockHeight != undefined, "generateDependencyPin({ blockHeight }) -- blockHeight must be defined")
@@ -39,9 +39,14 @@ export async function generateDependencyPin({
                 await config().get(horizonImport.address, horizonImport.address)
             ),
             atBlockHeight(blockHeight)
-        ]).then(decode)
+        ], opts).then(decode)
 
         horizonImport.contract = account.contracts?.[horizonImport.contractName]
+
+        if (!horizonImport.contract) {
+            console.error("Did not find expected contract", horizonImport, account)
+            throw new Error("Did not find expected contract")
+        }
 
         let contractImports = findImports(horizonImport.contract)
 
@@ -58,9 +63,9 @@ export async function generateDependencyPin({
 export async function generateDependencyPinAtLatestSealedBlock({
     address,
     contractName,
-}) {
-    let latestSealedBlock = await block({ sealed: true })
+}, opts = {}) {
+    let latestSealedBlock = await block({ sealed: true }, opts)
     let latestSealedBlockHeight = latestSealedBlock?.height
 
-    return generateDependencyPin({ address, contractName, blockHeight: latestSealedBlockHeight})
+    return generateDependencyPin({ address, contractName, blockHeight: latestSealedBlockHeight}, opts)
 }

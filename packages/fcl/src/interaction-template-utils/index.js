@@ -10,3 +10,4 @@ export {
     verifyDependencyPinsSame,
     verifyDependencyPinsSameAtLatestSealedBlock
 } from "./verify-dependency-pin-same-at-block.js"
+export {deriveCadenceByNetwork} from "./derive-cadence-by-network.js"
