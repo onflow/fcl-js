@@ -73,11 +73,16 @@ test("voucher in signable", async () => {
     ])
   )
 
+  console.log("IX ==>> ", ix)
+
   const signable = buildSignable(ix.accounts[ix.proposer], {}, ix)
+
+  console.log("signable ==>> ", signable)
 
   expect(signable.voucher).toEqual({
     cadence: "",
     refBlock: "123",
+    template: null,
     computeLimit: 156,
     arguments: [],
     proposalKey: {address: "0x01", keyId: 0, sequenceNum: 123},

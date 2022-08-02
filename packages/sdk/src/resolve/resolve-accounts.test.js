@@ -39,6 +39,7 @@ test("Voucher in PreSignable", async () => {
   expect(ps.voucher).toEqual({
     cadence: "",
     refBlock: "123",
+    template: null,
     computeLimit: 156,
     arguments: [],
     proposalKey: {address: "0x01", keyId: 1, sequenceNum: 123},
@@ -109,6 +110,7 @@ test("Voucher in PreSignable multiple payer keys", async () => {
   expect(ps.voucher).toEqual({
     cadence: "",
     refBlock: "123",
+    template: null,
     computeLimit: 156,
     arguments: [],
     proposalKey: {address: "0x01", keyId: 1, sequenceNum: 123},

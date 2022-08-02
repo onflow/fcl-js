@@ -1,20 +1,15 @@
 import {isTransaction, isScript, get, put, pipe} from "../interaction/interaction.js"
 import {invariant} from "@onflow/util-invariant"
 import {config} from "@onflow/config"
-
-const isFn = v => typeof v === "function"
-const isString = v => typeof v === "string"
+import {retrieve} from "../document/document.js"
 
 export async function resolveTemplate(ix) {
   if (isTransaction(ix) || isScript(ix)) {
     let template = ix.template
     if (!template) return ix
 
-    // TODO: Support proper template resolvers
     if (typeof template === "string") {
-        template = await fetch(template)
-            .then(res => res.json())
-            .catch(e => null)
+        template = await retrieve({ url: template })
     }
 
     invariant(template !== null, "Failed to resolve template")

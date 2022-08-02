@@ -15,7 +15,7 @@ export function findInsideSigners(ix) {
 
 export function findOutsideSigners(ix) {
   // Outside Signers Are: (payer)
-  let outside = new Set(ix.payer)
+  let outside = new Set(Array.isArray(ix.payer) ? ix.payer : [ix.payer])
   return Array.from(outside)
 }
 
