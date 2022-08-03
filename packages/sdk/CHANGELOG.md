@@ -1,5 +1,32 @@
 # @onflow/sdk
 
+## 1.1.1-templates.5
+
+### Patch Changes
+
+- Adds InteractionTemplateUtils and resolver
+
+## 1.1.1-templates.4
+
+### Patch Changes
+
+- Bump version
+
+## 1.1.1-templates.3
+
+### Patch Changes
+
+- Update dependencies
+
+## 1.1.1-templates.2
+
+### Patch Changes
+
+- Initial integration with FLIP-934 InteractionTemplate support
+
+- Updated dependencies [[`422914bc`](https://github.com/onflow/fcl-js/commit/422914bcdc4c1b44c61d3ec1850bf57114f31a6b)]:
+  - @onflow/transport-http@1.3.1-templates.2
+
 ## 1.1.1-alpha.1
 
 ### Patch Changes
