@@ -4,7 +4,9 @@ import {log} from "@onflow/util-logger"
 import {isTransaction} from "../interaction/interaction.js"
 import {createSignableVoucher} from "./voucher.js"
 
+const idof = acct => `${withPrefix(acct.addr)}-${acct.keyId}`
 const isFn = v => typeof v === "function"
+
 export function buildPreSignable(acct, ix) {
   try {
     return {
@@ -38,7 +40,7 @@ async function collectAccounts(ix, accounts, last, depth = 3) {
     } else {
       if (ax.addr) ax.addr = sansPrefix(ax.addr)
       if (ax.addr != null && ax.keyId != null) {
-        ax.tempId = `${withPrefix(ax.addr)}-${ax.keyId}`
+        ax.tempId = idof(ax)
       }
       ix.accounts[ax.tempId] = ix.accounts[ax.tempId] || ax
       ix.accounts[ax.tempId].role.proposer =
@@ -73,9 +75,9 @@ async function collectAccounts(ix, accounts, last, depth = 3) {
           const dupList = []
           const payerAccts = []
           ix.payer = ix.payer.reduce((g, tempId) => {
-            const {addr, keyId} = ix.accounts[tempId]
+            const {addr} = ix.accounts[tempId]
 
-            const key = `${withPrefix(addr)}-${keyId}`
+            const key = idof(ix.accounts[tempId])
             payerAccts.push(addr)
             if (dupList.includes(key)) return g
             dupList.push(key)
