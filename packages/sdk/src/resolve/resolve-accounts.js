@@ -38,7 +38,9 @@ async function collectAccounts(ix, accounts, last, depth = 3) {
     if (Array.isArray(ax)) {
       await collectAccounts(ix, ax, old, depth - 1)
     } else {
-      if (ax.addr) ax.addr = sansPrefix(ax.addr)
+      if (ax.addr) {
+        ax.addr = sansPrefix(ax.addr)
+      }
       if (ax.addr != null && ax.keyId != null) {
         ax.tempId = idof(ax)
       }
@@ -76,7 +78,6 @@ async function collectAccounts(ix, accounts, last, depth = 3) {
           const payerAccts = []
           ix.payer = ix.payer.reduce((g, tempId) => {
             const {addr} = ix.accounts[tempId]
-
             const key = idof(ix.accounts[tempId])
             payerAccts.push(addr)
             if (dupList.includes(key)) return g
