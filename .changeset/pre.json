@@ -19,5 +19,8 @@
     "@onflow/util-template": "1.0.3",
     "@onflow/util-uid": "1.0.2"
   },
-  "changesets": []
+  "changesets": [
+    "perfect-houses-join",
+    "wet-brooms-tap"
+  ]
 }
