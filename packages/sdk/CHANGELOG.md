@@ -1,5 +1,14 @@
 # @onflow/sdk
 
+## 1.1.2-alpha.0
+
+### Patch Changes
+
+- [#1339](https://github.com/onflow/fcl-js/pull/1339) [`99e03af7`](https://github.com/onflow/fcl-js/commit/99e03af76e526593e5c989e43754ce23420e317f) Thanks [@jribbink](https://github.com/jribbink)! - Fix erroneous sansPrefix requirement for acct.addr in authorization function which occured when proposer and authorizer did not match
+
+- Updated dependencies [[`99e03af7`](https://github.com/onflow/fcl-js/commit/99e03af76e526593e5c989e43754ce23420e317f)]:
+  - @onflow/transport-http@1.4.1-alpha.0
+
 ## 1.1.1
 
 ### Patch Changes
