@@ -19,23 +19,5 @@
     "@onflow/util-template": "1.0.3",
     "@onflow/util-uid": "1.0.2"
   },
-<<<<<<< Updated upstream
   "changesets": []
-=======
-  "changesets": [
-    "afraid-radios-talk",
-    "big-bats-sneeze",
-    "few-news-raise",
-    "hungry-otters-relate",
-    "lovely-candles-relax",
-    "mighty-tomatoes-repeat",
-    "poor-cheetahs-sin",
-    "shiny-adults-kneel",
-    "silver-actors-grin",
-    "strong-impalas-sleep",
-    "thick-bugs-begin",
-    "thin-parents-approve",
-    "weak-dragons-cheer"
-  ]
->>>>>>> Stashed changes
 }
