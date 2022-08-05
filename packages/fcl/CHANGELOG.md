@@ -1,5 +1,11 @@
 # @onflow/fcl
 
+## 1.1.1-templates.5
+
+### Patch Changes
+
+- Pin SDK dependency to tagged version
+
 ## 1.1.1-templates.4
 
 ### Patch Changes

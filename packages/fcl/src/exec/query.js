@@ -3,6 +3,7 @@ import * as sdk from "@onflow/sdk"
 import * as t from "@onflow/types"
 import {isRequired, isObject, isString, isFunc} from "./utils/is"
 import {normalizeArgs} from "./utils/normalize-args"
+import {retrieve} from "../document/document.js"
 
 /** Query the Flow Blockchain
  *
@@ -44,9 +45,18 @@ import {normalizeArgs} from "./utils/normalize-args"
 export async function query(opts = {}) {
   await preQuery(opts)
 
+  if (isString(opts?.template)) {
+    opts.template = await retrieve({ url: opts?.template })
+  }
+
+  const cadence = opts.cadence || deriveCadenceByNetwork({
+    template: opts.template,
+    network: await sdk.config().get("flow.network")
+  })
+
   // prettier-ignore
   return sdk.send([
-    sdk.script(opts.cadence || opts?.template?.data?.cadence),
+    sdk.script(cadence),
     sdk.args(normalizeArgs(opts.args || [])),
     sdk.template(opts.template || null),
     opts.limit && typeof opts.limit === "number" && sdk.limit(opts.limit)

@@ -1,5 +1,4 @@
 import {
-    account,
     invariant,
     block,
     send,
@@ -8,14 +7,9 @@ import {
     config,
     decode
 } from "@onflow/sdk"
-import {log} from "@onflow/util-logger"
-import {query} from "../exec/query.js"
 import {genHash} from "./utils/hash.js"
 import {findImports} from "./utils/find-imports.js"
-
-function generateImport({contractName, address}) {
-    return ({ contractName, address, contract: "" })
-}
+import {generateImport} from "./utils/generate-import.js"
 
 export async function generateDependencyPin({
     address,

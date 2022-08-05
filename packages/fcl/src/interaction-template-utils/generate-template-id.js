@@ -1,7 +1,5 @@
-import {account, invariant} from "@onflow/sdk"
-import {log} from "@onflow/util-logger"
-import { encode as rlpEncode, Buffer } from "@onflow/rlp"
-import { query } from "../exec/query.js"
+import {invariant} from "@onflow/sdk"
+import { encode as rlpEncode } from "@onflow/rlp"
 import {genHash} from "./utils/hash.js"
 
 export async function generateTemplateId({

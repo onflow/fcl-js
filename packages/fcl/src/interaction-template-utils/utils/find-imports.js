@@ -1,6 +1,4 @@
-function generateImport({contractName, address}) {
-    return ({ contractName, address, contract: "" })
-}
+import {generateImport} from "./generate-import.js"
 
 export function findImports(cadence) {
     let iports = []
