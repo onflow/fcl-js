@@ -21,9 +21,8 @@ const STRATEGIES = {
 
 export async function execService({service, msg = {}, config = {}, opts = {}}) {
   msg.data = service.data
-  const {client} = await fclConfig.get("wc.adapter", {})
+  const {client} = await fclConfig.get("wc.adapter", {client: null})
   const pairings = client ? client.pairing.getAll({active: true}) : []
-
   const fullConfig = {
     ...config,
     services: await configLens(/^service\./),
