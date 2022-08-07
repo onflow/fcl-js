@@ -19,10 +19,20 @@ const STRATEGIES = {
   "WC/RPC": execWcRPC,
 }
 
+const makeDiscoveryServices = servicePlugin => {
+  return servicePlugin.services
+}
+
 export async function execService({service, msg = {}, config = {}, opts = {}}) {
+  let discoveryServices = []
   msg.data = service.data
-  const {client} = await fclConfig.get("wc.adapter", {client: null})
-  const pairings = client ? client.pairing.getAll({active: true}) : []
+  const {client, servicePlugin} = await fclConfig.get("wc.adapter", {
+    client: null,
+    servicePlugin: null,
+  })
+  if (service.type === "authn") {
+    discoveryServices = makeDiscoveryServices(servicePlugin)
+  }
   const fullConfig = {
     ...config,
     services: await configLens(/^service\./),
@@ -32,7 +42,8 @@ export async function execService({service, msg = {}, config = {}, opts = {}}) {
       fclLibrary: "https://github.com/onflow/fcl-js",
       hostname: window?.location?.hostname ?? null,
       extensions: window?.fcl_extensions || [],
-      wc: {pairings, projectId: client?.core?.projectId},
+      wc: {projectId: client?.core?.projectId},
+      discoveryServices,
     },
   }
 
