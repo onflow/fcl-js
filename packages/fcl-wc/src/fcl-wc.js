@@ -1,5 +1,6 @@
 import SignClient from "@walletconnect/sign-client"
 import QRCodeModal from "@walletconnect/qrcode-modal"
+import {ServicePlugin} from "./service"
 export {getSdkError} from "@walletconnect/utils"
 
 const DEFAULT_RELAY_URL = "wss://relay.walletconnect.com"
@@ -30,8 +31,11 @@ const initClient = async ({projectId, metadata}) => {
 
 export const initWcAdapter = async ({projectId, metadata} = {}) => {
   const client = await initClient({projectId, metadata})
+  const servicePlugin = ServicePlugin(client)
+
   return {
     client,
     QRCodeModal,
+    servicePlugin,
   }
 }
