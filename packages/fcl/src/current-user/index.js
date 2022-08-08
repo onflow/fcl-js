@@ -9,7 +9,8 @@ import {buildUser} from "./build-user"
 import {serviceOfType} from "./service-of-type"
 import {execService} from "./exec-service"
 import {normalizeCompositeSignature} from "./normalize/composite-signature"
-import {getDiscoveryService} from "../config-utils"
+import {getDiscoveryService, configLens} from "../config-utils"
+import {VERSION} from "../VERSION"
 
 export const isFn = d => typeof d === "function"
 
@@ -118,9 +119,39 @@ async function getAccountProofData() {
 
 // Certain method types cannot be overridden to use other methods like POP/RCP
 const isServiceMethodUnchangable = method => ["EXT/RPC"].includes(method)
+const makeDiscoveryServices = servicePlugin => {
+  // get installed extensions
+  const extensionServices = window?.fcl_extensions || []
+  // get services from service plugins
+  const pluginServices = servicePlugin ? servicePlugin.services : []
+  return [...extensionServices, ...pluginServices]
+}
+
+const makeConfig = async ({endpoint, discoveryAuthnInclude}) => {
+  const {servicePlugin} = await config.get("wc.adapter", {
+    servicePlugin: null,
+  })
+
+  return {
+    discoveryAuthnInclude: endpoint ? discoveryAuthnInclude : [],
+    services: await configLens(/^service\./),
+    app: await configLens(/^app\.detail\./),
+    client: {
+      fclVersion: VERSION,
+      fclLibrary: "https://github.com/onflow/fcl-js",
+      hostname: window?.location?.hostname ?? null,
+      // extensions: window?.fcl_extensions || [],
+      discoveryServices: makeDiscoveryServices(servicePlugin),
+    },
+  }
+}
 
 async function authenticate({service, redir = false} = {}) {
-  if (service && !service?.provider?.is_installed && service?.provider?.requires_install) {
+  if (
+    service &&
+    !service?.provider?.is_installed &&
+    service?.provider?.requires_install
+  ) {
     window.location.href = service?.provider?.install_link
     return
   }
@@ -175,14 +206,12 @@ async function authenticate({service, redir = false} = {}) {
         service: {
           ...(service || discoveryService),
           method: isServiceMethodUnchangable(service?.method)
-            ? service.method 
+            ? service.method
             : discoveryService?.method || service.method || "IFRAME/RPC",
         },
         msg: accountProofData,
+        config: await makeConfig(discoveryService),
         opts,
-        config: {
-          discoveryAuthnInclude: discoveryService.discoveryAuthnInclude,
-        },
       })
       send(NAME, SET_CURRENT_USER, await buildUser(response))
     } catch (e) {
