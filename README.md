@@ -77,7 +77,7 @@ fcl.config({
 
 fcl.authenticate()
 ```
-![FCL Default Discovery UI](docs/images/discovery.jpg)
+![FCL Default Discovery UI](docs/images/discovery.png)
 
 > **Note**: A [Dapper Wallet](https://meetdapper.com/developers) developer account is required. To enable Dapper Wallet inside FCL, you need to [follow this guide](https://docs.meetdapper.com/get-started).
 
