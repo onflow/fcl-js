@@ -34,7 +34,7 @@ const connectWc = async (onClose, {client, QRCodeModal, pairing}) => {
   }
 }
 
-export function execWcRPC(service, body, opts, fullConfig) {
+export function execWcRPC({service, body, opts}) {
   return new Promise(async (resolve, reject) => {
     const {client, QRCodeModal} = await config.get("wc.adapter")
     if (typeof client === "undefined") {

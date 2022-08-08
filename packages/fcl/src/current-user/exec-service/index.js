@@ -20,14 +20,15 @@ const STRATEGIES = {
 }
 
 const makeDiscoveryServices = servicePlugin => {
-  return servicePlugin.services
+  // get services from any service plugins
+  const discoveryServices = servicePlugin ? servicePlugin.services : null
+  return discoveryServices
 }
 
 export async function execService({service, msg = {}, config = {}, opts = {}}) {
-  let discoveryServices = []
   msg.data = service.data
-  const {client, servicePlugin} = await fclConfig.get("wc.adapter", {
-    client: null,
+  let discoveryServices = []
+  const {servicePlugin} = await fclConfig.get("wc.adapter", {
     servicePlugin: null,
   })
   if (service.type === "authn") {
@@ -42,13 +43,17 @@ export async function execService({service, msg = {}, config = {}, opts = {}}) {
       fclLibrary: "https://github.com/onflow/fcl-js",
       hostname: window?.location?.hostname ?? null,
       extensions: window?.fcl_extensions || [],
-      wc: {projectId: client?.core?.projectId},
       discoveryServices,
     },
   }
 
   try {
-    const res = await STRATEGIES[service.method](service, msg, opts, fullConfig)
+    const res = await STRATEGIES[service.method]({
+      service,
+      body: msg,
+      config: fullConfig,
+      opts,
+    })
     if (res.status === "REDIRECT") {
       invariant(
         service.type === res.data.type,
@@ -64,16 +69,12 @@ export async function execService({service, msg = {}, config = {}, opts = {}}) {
       return res
     }
   } catch (error) {
-    console.error(
-      "execService({service, msg = {}, opts = {}, config = {}})",
-      error,
-      {
-        service,
-        msg,
-        opts,
-        config,
-      }
-    )
+    console.error("Error on execService", error, {
+      service,
+      msg,
+      config,
+      opts,
+    })
     throw error
   }
 }
