@@ -1,4 +1,5 @@
 import { invariant } from "@onflow/sdk"
+import { normalizeInteractionTemplate } from "./normalize/interaction-template"
 
 export function deriveCadenceByNetwork({
     network,
@@ -11,32 +12,40 @@ export function deriveCadenceByNetwork({
     invariant(typeof template === "object", "generateDependencyPin({ template }) -- template must be an object")
     invariant(template.f_type === "InteractionTemplate", "generateDependencyPin({ template }) -- template must be an InteractionTemplate")
 
-    let networkDependencies = Object.keys(template?.data?.dependencies).map(dependencyPlaceholder => {
-        let dependencyNetworkContracts = Object.values(template?.data?.dependencies?.[dependencyPlaceholder])
+    template = normalizeInteractionTemplate(template)
 
-        invariant(
-            dependencyNetworkContracts,
-            `deriveCadenceByNetwork -- Could not find contracts for dependency placeholder: ${dependencyPlaceholder}`
-        )
+    switch(template.f_vsn) {
+        case("1.0.0"):
+            let networkDependencies = Object.keys(template?.data?.dependencies).map(dependencyPlaceholder => {
+                let dependencyNetworkContracts = Object.values(template?.data?.dependencies?.[dependencyPlaceholder])
 
-        invariant(
-            dependencyNetworkContracts.length === 0,
-            `deriveCadenceByNetwork -- Could not find contracts for dependency placeholder: ${dependencyPlaceholder}`
-        )
+                invariant(
+                    dependencyNetworkContracts,
+                    `deriveCadenceByNetwork -- Could not find contracts for dependency placeholder: ${dependencyPlaceholder}`
+                )
 
-        let dependencyContract = dependencyNetworkContracts[0]
-        let dependencyContractForNetwork = dependencyContract?.[network]
+                invariant(
+                    dependencyNetworkContracts.length === 0,
+                    `deriveCadenceByNetwork -- Could not find contracts for dependency placeholder: ${dependencyPlaceholder}`
+                )
 
-        invariant(
-            dependencyContractForNetwork,
-            `deriveCadenceByNetwork -- Could not find ${network} network information for dependency: ${dependencyPlaceholder}`
-        )
-        
-        return [dependencyPlaceholder, dependencyContractForNetwork.address]
-    })
+                let dependencyContract = dependencyNetworkContracts[0]
+                let dependencyContractForNetwork = dependencyContract?.[network]
 
-    return networkDependencies.reduce((cadence, [placeholder, address]) => {
-          const regex = new RegExp("(\\b" + placeholder + "\\b)", "g")
-          return cadence.replace(regex, address)
-    }, template.data.cadence)
+                invariant(
+                    dependencyContractForNetwork,
+                    `deriveCadenceByNetwork -- Could not find ${network} network information for dependency: ${dependencyPlaceholder}`
+                )
+                
+                return [dependencyPlaceholder, dependencyContractForNetwork.address]
+            })
+
+            return networkDependencies.reduce((cadence, [placeholder, address]) => {
+                const regex = new RegExp("(\\b" + placeholder + "\\b)", "g")
+                return cadence.replace(regex, address)
+            }, template.data.cadence)
+
+        default:
+            throw new Error("deriveCadenceByNetwork Error: Unsupported template version")
+    }
 }

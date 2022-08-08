@@ -3,65 +3,74 @@ import {
     invariant,
     block,
 } from "@onflow/sdk"
-import {log} from "@onflow/util-logger"
+import {log, LEVELS} from "@onflow/util-logger"
+import { normalizeInteractionTemplate } from "./normalize/interaction-template.js"
 
 export async function verifyDependencyPinsSame({
     template,
     blockHeight,
     network,
-}) {
+}, opts = {}) {
     invariant(template != undefined, "generateDependencyPin({ template }) -- template must be defined")
     invariant(typeof template === "object", "generateDependencyPin({ template }) -- template must be an object")
     invariant(template.f_type === "InteractionTemplate", "generateDependencyPin({ template }) -- template must be an InteractionTemplate")
+
+    template = normalizeInteractionTemplate(template)
 
     invariant(network != undefined, "generateDependencyPin({ network }) network must be defined")
     invariant(blockHeight != undefined, "generateDependencyPin({ blockHeight }) blockHeight must be defined")
     invariant(typeof blockHeight === "number", "generateDependencyPin({ blockHeight }) blockHeight must be a number")
 
-    let templateDependenciesPlaceholderKeys = Object.keys(template.data.dependencies)
+    switch(template.f_vsn) {
+        case("1.0.0"):
+            let templateDependenciesPlaceholderKeys = Object.keys(template.data.dependencies)
 
-    for (let templateDependencyPlaceholderKey of templateDependenciesPlaceholderKeys) {
-        let templateDependencyPlaceholder = template.data.dependencies[templateDependencyPlaceholderKey]
+            for (let templateDependencyPlaceholderKey of templateDependenciesPlaceholderKeys) {
+                let templateDependencyPlaceholder = template.data.dependencies[templateDependencyPlaceholderKey]
 
-        let templateDependencyPlaceholderContractNames = Object.keys(templateDependencyPlaceholder)
+                let templateDependencyPlaceholderContractNames = Object.keys(templateDependencyPlaceholder)
 
-        for (let templateDependencyPlaceholderContractName of templateDependencyPlaceholderContractNames) {
-            let templateDependencyPlaceholderContractNetworks = 
-                template.data.dependencies[templateDependencyPlaceholderKey][templateDependencyPlaceholderContractName]
+                for (let templateDependencyPlaceholderContractName of templateDependencyPlaceholderContractNames) {
+                    let templateDependencyPlaceholderContractNetworks = 
+                        template.data.dependencies[templateDependencyPlaceholderKey][templateDependencyPlaceholderContractName]
 
-            let templateDependency = templateDependencyPlaceholderContractNetworks[network]
-            if (typeof templateDependency === "undefined") continue
+                    let templateDependency = templateDependencyPlaceholderContractNetworks[network]
+                    if (typeof templateDependency === "undefined") continue
 
-            let pin = await generateDependencyPin({
-                address: templateDependency.address,
-                contractName: templateDependency.contract,
-                blockHeight,
-            })
+                    let pin = await generateDependencyPin({
+                        address: templateDependency.address,
+                        contractName: templateDependency.contract,
+                        blockHeight,
+                    }, opts)
 
-            if (pin !== templateDependency.pin) {
-                log({
-                    title: "verifyDependencyPinsSame Debug Error",
-                    message: `Could not recompute and match dependency pin.
-                        address: ${templateDependency.address} | contract: ${templateDependency.contract}
-                        computed: ${pin}
-                        template: ${templateDependency.pin}
-                    `,
-                    level: 0
-                })
-                return false
+                    if (pin !== templateDependency.pin) {
+                        log({
+                            title: "verifyDependencyPinsSame Debug Error",
+                            message: `Could not recompute and match dependency pin.
+                                address: ${templateDependency.address} | contract: ${templateDependency.contract}
+                                computed: ${pin}
+                                template: ${templateDependency.pin}
+                            `,
+                            level: LEVELS.debug
+                        })
+                        return false
+                    }
+                }
             }
-        }
-    }
 
-    return true
+            return true
+        
+        default:
+            throw new Error("verifyDependencyPinsSame Error: Unsupported template version")
+    }
 }
 
 export async function verifyDependencyPinsSameAtLatestSealedBlock({
     template,
     network,
-}) {
+}, opts = {}) {
     let latestSealedBlock = await block({ sealed: true })
     let latestSealedBlockHeight = latestSealedBlock?.height
 
-    return verifyDependencyPinsSame({ template, network, blockHeight: latestSealedBlockHeight})
+    return verifyDependencyPinsSame({ template, network, blockHeight: latestSealedBlockHeight}, opts)
 }   
