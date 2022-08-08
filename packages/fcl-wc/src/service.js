@@ -1,24 +1,17 @@
 export const ServicePlugin = client => ({
   name: "WalletConnect",
   type: "DiscoveryService",
-  services: createWcServices(client.pairing.getAll({active: true})),
-  /*  serviceStrategy
-    returns Promise that returns a PollingResponse
-    return new Promise((resolve, reject) => {
-      resolve(PollingResponse)
-      reject(`Declined: ${resp.reason || "No reason supplied"}`)
-    }) 
-*/
-  serviceStrategy: serviceStrategy(client),
+  services: makeWcServices(client.pairing.getAll({active: true})),
+  serviceStrategy: makeServiceStrategy(client),
 })
 
-const serviceStrategy = client => {
-  return ({service, msg, opts, config} = {}) => {
-    return client
+const makeServiceStrategy = client => {
+  return (service, body, opts, fullConfig) => {
+    return new Promise(async (resolve, reject) => {})
   }
 }
 
-function createWcServices(pairings = []) {
+function makeWcServices(pairings = []) {
   return [
     {
       f_type: "Service",
@@ -28,26 +21,26 @@ function createWcServices(pairings = []) {
       method: "WC/RPC",
       uid: "wc#authn",
       endpoint: "flow_authn",
-      optIn: true,
+      optIn: false,
       provider: {
-        address: "0x123",
+        address: null,
         name: "WalletConnect",
         icon: "https://avatars.githubusercontent.com/u/37784886",
         description: "",
         color: "",
         supportEmail: "",
-        website: "",
+        website: "https://walletconnect.com/",
       },
     },
     ...pairings.map(pairing => {
       return {
         f_type: "Service",
         f_vsn: "1.0.0",
-        type: "Authn",
+        type: "authn",
         method: "WC/RPC",
-        uid: null,
+        uid: "wc#authn",
         endpoint: "flow_authn",
-        optIn: true,
+        optIn: false,
         provider: {
           ...pairing,
           address: pairing.topic,
