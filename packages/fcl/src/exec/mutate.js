@@ -1,11 +1,14 @@
 import {invariant} from "@onflow/util-invariant"
 import * as sdk from "@onflow/sdk"
+import {config} from "@onflow/config"
 import {isRequired, isObject, isString, isFunc, isNumber} from "./utils/is"
 import {normalizeArgs} from "./utils/normalize-args"
 import {currentUser} from "../current-user"
 import {transaction} from "../transaction"
 import {deriveCadenceByNetwork} from "../interaction-template-utils"
 import {retrieve} from "../document/document.js"
+import {deriveDependencies} from "./utils/derive-dependencies"
+import {normalizeInteractionTemplate} from "../interaction-template-utils/normalize/interaction-template"
 
 /** As the current user Mutate the Flow Blockchain
  *
@@ -69,34 +72,47 @@ export async function mutate(opts = {}) {
     const authz = await sdk.config().get("fcl.authz", currentUser().authorization)
 
     if (isString(opts?.template)) {
-      opts.template = await retrieve({ url: opts?.template })
+      opts.template = await retrieve({url: opts?.template})
     }
 
-    const cadence = opts.cadence || deriveCadenceByNetwork({
-      template: opts.template,
-      network: await sdk.config().get("flow.network")
-    })
+    if (opts?.template) {
+      opts.template = normalizeInteractionTemplate(opts?.template)
+    }
 
-    // prettier-ignore
-    txid = sdk.send([
-      // sdk.transaction(opts.cadence || opts?.template?.data?.cadence),
-      sdk.transaction(cadence),
+    let dependencies = {}
+    if (opts?.template) {
+      dependencies = await deriveDependencies({template})
+    }
 
-      sdk.args(normalizeArgs(opts.args || [])),
+    const cadence =
+      opts.cadence ||
+      deriveCadenceByNetwork({
+        template: opts.template,
+        network: await sdk.config().get("flow.network"),
+      })
 
-      opts.limit && isNumber(opts.limit) && sdk.limit(opts.limit),
+    txid = config.overload(dependencies, async () =>
+      // prettier-ignore
+      sdk.send([
+        // sdk.transaction(opts.cadence || opts?.template?.data?.cadence),
+        sdk.transaction(cadence),
 
-      // opts.proposer > opts.authz > authz
-      sdk.proposer(opts.proposer || opts.authz || authz),
+        sdk.args(normalizeArgs(opts.args || [])),
 
-      // opts.payer > opts.authz > authz
-      sdk.payer(opts.payer || opts.authz || authz),
+        opts.limit && isNumber(opts.limit) && sdk.limit(opts.limit),
 
-      sdk.template(opts.template || null),
+        // opts.proposer > opts.authz > authz
+        sdk.proposer(opts.proposer || opts.authz || authz),
 
-      // opts.authorizations > [opts.authz > authz]
-      sdk.authorizations(opts.authorizations || [opts.authz || authz]),
-    ]).then(sdk.decode)
+        // opts.payer > opts.authz > authz
+        sdk.payer(opts.payer || opts.authz || authz),
+
+        sdk.template(opts.template || null),
+
+        // opts.authorizations > [opts.authz > authz]
+        sdk.authorizations(opts.authorizations || [opts.authz || authz]),
+      ]).then(sdk.decode)
+    )
 
     return txid
   } catch (error) {
@@ -112,7 +128,10 @@ async function prepMutation(opts) {
   // prettier-ignore
   invariant(isRequired(opts.cadence || opts?.template), "mutate({ cadence }) -- cadence is required")
   // // prettier-ignore
-  invariant(isString(opts.cadence) || opts?.template, "mutate({ cadence }) -- cadence must be a string")
+  invariant(
+    isString(opts.cadence) || opts?.template,
+    "mutate({ cadence }) -- cadence must be a string"
+  )
   // prettier-ignore
   invariant(
     await sdk.config.get("accessNode.api"),

@@ -4,6 +4,7 @@ import * as t from "@onflow/types"
 import {isRequired, isObject, isString, isFunc} from "./utils/is"
 import {normalizeArgs} from "./utils/normalize-args"
 import {retrieve} from "../document/document.js"
+import {deriveDependencies} from "./utils/derive-dependencies"
 
 /** Query the Flow Blockchain
  *
@@ -46,21 +47,34 @@ export async function query(opts = {}) {
   await preQuery(opts)
 
   if (isString(opts?.template)) {
-    opts.template = await retrieve({ url: opts?.template })
+    opts.template = await retrieve({url: opts?.template})
   }
 
-  const cadence = opts.cadence || deriveCadenceByNetwork({
-    template: opts.template,
-    network: await sdk.config().get("flow.network")
-  })
+  if (opts?.template) {
+    opts.template = normalizeInteractionTemplate(opts?.template)
+  }
 
-  // prettier-ignore
-  return sdk.send([
-    sdk.script(cadence),
-    sdk.args(normalizeArgs(opts.args || [])),
-    sdk.template(opts.template || null),
-    opts.limit && typeof opts.limit === "number" && sdk.limit(opts.limit)
-  ]).then(sdk.decode)
+  let dependencies = {}
+  if (opts?.template) {
+    dependencies = await deriveDependencies({template})
+  }
+
+  const cadence =
+    opts.cadence ||
+    deriveCadenceByNetwork({
+      template: opts.template,
+      network: await sdk.config().get("flow.network"),
+    })
+
+  return config.overload(dependencies, async () =>
+    // prettier-ignore
+    sdk.send([
+      sdk.script(cadence),
+      sdk.args(normalizeArgs(opts.args || [])),
+      sdk.template(opts.template || null),
+      opts.limit && typeof opts.limit === "number" && sdk.limit(opts.limit)
+    ]).then(sdk.decode)
+  )
 }
 
 async function preQuery(opts) {
