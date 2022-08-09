@@ -861,7 +861,7 @@ See [proving-authentication](https://github.com/onflow/fcl-js/blob/master/docs/r
 | Name                  | Type                  | Description                       |
 | --------------------- | --------------------- | --------------------------------- |
 | `appIdentifier`       | string **(required)** | A hexadecimal string              |
-| `accountProofData`    | Object **(required)** | Object with properties: <br/>`address` {string} - A Flow account address. <br/> `nonce`: `string` - A random string in hexadecimal format (minimum 32 bytes in total, i.e 64 hex characters) <br/> `signatures`: `Object[]` - An array of composite signatures to verify                                                                              |
+| `accountProofData`    | Object **(required)** | Object with properties: <br/>`address`: `string` - A Flow account address. <br/> `nonce`: `string` - A random string in hexadecimal format (minimum 32 bytes in total, i.e 64 hex characters) <br/> `signatures`: `Object[]` - An array of composite signatures to verify                                                                              |
 | `opts`                | Object **(optional)** | `opts.fclCryptoContract` can be provided to overide FCLCryptoContract address for local development                 |
 
 #### Returns
