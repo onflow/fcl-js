@@ -1,5 +1,14 @@
 # @onflow/fcl
 
+## 1.1.1-templates.7
+
+### Patch Changes
+
+- Adds node-fetch dependency to fcl
+
+- Updated dependencies []:
+  - @onflow/sdk@1.1.1-templates.7
+
 ## 1.1.1-templates.6
 
 ### Patch Changes
