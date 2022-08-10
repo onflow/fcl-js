@@ -3,7 +3,7 @@ import {deriveCadenceByNetwork} from "./derive-cadence-by-network.js"
 describe("Derive cadence by network", () => {
   let template = {
     f_type: "InteractionTemplate",
-    f_vsn: "1.0.0",
+    f_version: "1.0.0",
     id: "abc123",
     data: {
       type: "transaction",
