@@ -1,3 +1,3 @@
 export function generateImport({contractName, address}) {
-    return ({ contractName, address, contract: "" })
+  return {contractName, address, contract: ""}
 }

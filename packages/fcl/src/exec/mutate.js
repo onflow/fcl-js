@@ -81,7 +81,7 @@ export async function mutate(opts = {}) {
 
     let dependencies = {}
     if (opts?.template) {
-      dependencies = await deriveDependencies({template})
+      dependencies = await deriveDependencies({template: opts.template})
     }
 
     const cadence =
@@ -94,7 +94,6 @@ export async function mutate(opts = {}) {
     txid = config.overload(dependencies, async () =>
       // prettier-ignore
       sdk.send([
-        // sdk.transaction(opts.cadence || opts?.template?.data?.cadence),
         sdk.transaction(cadence),
 
         sdk.args(normalizeArgs(opts.args || [])),

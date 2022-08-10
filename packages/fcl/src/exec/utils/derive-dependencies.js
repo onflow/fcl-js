@@ -45,6 +45,8 @@ export async function deriveDependencies({template}) {
         )
       }
 
+      return derivedDependencies
+
     default:
       throw new Error(
         "FCL configureDependencies Error: Unsupported template version"

@@ -1,14 +1,14 @@
 import {account, invariant} from "@onflow/sdk"
 import {log, LEVELS} from "@onflow/util-logger"
-import { query } from "../exec/query.js"
+import {query} from "../exec/query.js"
 import {genHash} from "./utils/hash.js"
 import {generateTemplateId} from "./generate-template-id.js"
-import { normalizeInteractionTemplate } from "./normalize/interaction-template.js"
-import { normalizeInteractionTemplateAudit } from "./normalize/interaction-template-audit.js"
+import {normalizeInteractionTemplate} from "./normalize/interaction-template.js"
+import {normalizeInteractionTemplateAudit} from "./normalize/interaction-template-audit.js"
 
-const getAccountKeys = async (address) => {
-    return query({
-        cadence: `
+const getAccountKeys = async address => {
+  return query({
+    cadence: `
         pub struct _PublicKey {
           pub var signatureAlgorithm: SignatureAlgorithm
           pub var publicKey: String
@@ -55,107 +55,117 @@ const getAccountKeys = async (address) => {
           return keys
         }
         `,
-        args: (arg, t) => ([arg(address, t.Address)])
-    })
+    args: (arg, t) => [arg(address, t.Address)],
+  })
 }
 
-export async function verifyInteractionTemplateAudit({
-    audit,
-    template,
-}) {
-    invariant(audit != undefined, "verifyInteractionTemplateAudit({ audit }) -- audit must be defined")
-    invariant(template != undefined, "verifyInteractionTemplateAudit({ template }) -- template must be defined")
+export async function verifyInteractionTemplateAudit({audit, template}) {
+  invariant(
+    audit != undefined,
+    "verifyInteractionTemplateAudit({ audit }) -- audit must be defined"
+  )
+  invariant(
+    template != undefined,
+    "verifyInteractionTemplateAudit({ template }) -- template must be defined"
+  )
 
-    audit = normalizeInteractionTemplateAudit(audit)
-    template = normalizeInteractionTemplate(template)
+  audit = normalizeInteractionTemplateAudit(audit)
+  template = normalizeInteractionTemplate(template)
 
-    invariant(audit.f_type === "InteractionTemplateAudit", "verifyInteractionTemplateAudit({ audit }) -- audit must be an InteractionTemplateAudit")
-    invariant(template.f_type === "InteractionTemplate", "verifyInteractionTemplateAudit({ template }) -- template must be an InteractionTemplate")
+  invariant(
+    audit.f_type === "InteractionTemplateAudit",
+    "verifyInteractionTemplateAudit({ audit }) -- audit must be an InteractionTemplateAudit"
+  )
+  invariant(
+    template.f_type === "InteractionTemplate",
+    "verifyInteractionTemplateAudit({ template }) -- template must be an InteractionTemplate"
+  )
 
+  log({
+    title: "verifyInteractionTemplateAudit Debug",
+    message: "verifyInteractionTemplateAudit debug messaging is enabled",
+    level: LEVELS.debug,
+  })
+
+  // Recompute ID to be sure it matches
+  let recomputedTemplateID = await generateTemplateId({template})
+
+  if (recomputedTemplateID !== template.id) {
     log({
-        title: "verifyInteractionTemplateAudit Debug",
-        message: "verifyInteractionTemplateAudit debug messaging is enabled",
-        level: LEVELS.debug
-    })
-
-    // Recompute ID to be sure it matches
-    let recomputedTemplateID = await generateTemplateId({ template })
-
-    if (recomputedTemplateID !== template.id) {
-        log({
-            title: "verifyInteractionTemplateAudit Debug Error",
-            message: `Could not recompute and match template ID
+      title: "verifyInteractionTemplateAudit Debug Error",
+      message: `Could not recompute and match template ID
                 computed: ${recomputedTemplateID}
                 template: ${template.id}
             `,
-            level: LEVELS.debug
-        })
-        return false
-    }
+      level: LEVELS.debug,
+    })
+    return false
+  }
 
-    switch(audit.f_vsn) {
-        case("1.0.0"):
-
-            // Ensure ID matches id in InteractionTemplateAudit
-            if (template.id !== audit.data.id) {
-                log({
-                    title: "verifyInteractionTemplateAudit Debug Error",
-                    message: `Recomputed template id does not match template id in audit
+  switch (audit.f_version) {
+    case "1.0.0":
+      // Ensure ID matches id in InteractionTemplateAudit
+      if (template.id !== audit.data.id) {
+        log({
+          title: "verifyInteractionTemplateAudit Debug Error",
+          message: `Recomputed template id does not match template id in audit
                         template id: ${template.id}
                         template id from audit: ${audit.data.id}
                     `,
-                    level: LEVELS.debug
-                })
-                return false
-            }
+          level: LEVELS.debug,
+        })
+        return false
+      }
 
-            // Ensure account that produced InteractionTemplateAudit exists
-            let auditorAccount = await account(audit.data.signer.address)
-            if (!auditorAccount) {
-                log({
-                    title: "verifyInteractionTemplateAudit Debug Error",
-                    message: "Could not find account that produced InteractionTemplateAudit",
-                    level: LEVELS.debug
-                })
-                return false
-            }
+      // Ensure account that produced InteractionTemplateAudit exists
+      let auditorAccount = await account(audit.data.signer.address)
+      if (!auditorAccount) {
+        log({
+          title: "verifyInteractionTemplateAudit Debug Error",
+          message:
+            "Could not find account that produced InteractionTemplateAudit",
+          level: LEVELS.debug,
+        })
+        return false
+      }
 
-            // Ensure key that produced InteractionTemplateAudit exists
-            let auditorAccountKeys = await getAccountKeys(audit.data.signer.address)
-            if (!auditorAccountKeys) {
-                log({
-                    title: "verifyInteractionTemplateAudit Debug Error",
-                    message: "Could not find auditor account keys",
-                    level: LEVELS.debug
-                })
-                return false
-            }
+      // Ensure key that produced InteractionTemplateAudit exists
+      let auditorAccountKeys = await getAccountKeys(audit.data.signer.address)
+      if (!auditorAccountKeys) {
+        log({
+          title: "verifyInteractionTemplateAudit Debug Error",
+          message: "Could not find auditor account keys",
+          level: LEVELS.debug,
+        })
+        return false
+      }
 
-            let auditorKey = auditorAccountKeys[audit.data.signer.key_id]
-            if (!auditorKey) {
-                log({
-                    title: "verifyInteractionTemplateAudit Debug Error",
-                    message: "Could not find auditor account keys",
-                    level: LEVELS.debug
-                })
-                return false
-            }
+      let auditorKey = auditorAccountKeys[audit.data.signer.key_id]
+      if (!auditorKey) {
+        log({
+          title: "verifyInteractionTemplateAudit Debug Error",
+          message: "Could not find auditor account keys",
+          level: LEVELS.debug,
+        })
+        return false
+      }
 
-            // Ensure key that produced InteractionTemplateAudit is not revoked
-            if (auditorKey.isRevoked) {
-                log({
-                    title: "verifyInteractionTemplateAudit Debug Error",
-                    message: "Auditor key that produced InteractionTemplateAudit is revoked",
-                    level: LEVELS.debug
-                })
-                return false
-            }
+      // Ensure key that produced InteractionTemplateAudit is not revoked
+      if (auditorKey.isRevoked) {
+        log({
+          title: "verifyInteractionTemplateAudit Debug Error",
+          message:
+            "Auditor key that produced InteractionTemplateAudit is revoked",
+          level: LEVELS.debug,
+        })
+        return false
+      }
 
-            // Verify audit signature
-            let isVerified;
-            try {
-                isVerified = await query({
-                    cadence: `
+      // Verify audit signature
+      let isVerified
+      try {
+        isVerified = await query({
+          cadence: `
                         pub fun main(
                             address: Address,
                             message: String,
@@ -184,26 +194,28 @@ export async function verifyInteractionTemplateAudit({
                             )
                         }
                     `,
-                    args: (arg, t) => ([
-                        arg(audit.data.signer.address, t.Address),
-                        arg(template.id, t.String),
-                        arg(String(audit.data.signer.key_id), t.Int),
-                        arg(audit.data.signer.signature, t.String),
-                        arg("FLOW-V0.0-user", t.String),
-                    ])
-                })
-            } catch(e) {
-                log({
-                    title: "verifyInteractionTemplateAudit Debug Error",
-                    message: `Error executing verification script: ${e}`,
-                    level: LEVELS.debug
-                })
-                isVerified = false
-            }
+          args: (arg, t) => [
+            arg(audit.data.signer.address, t.Address),
+            arg(template.id, t.String),
+            arg(String(audit.data.signer.key_id), t.Int),
+            arg(audit.data.signer.signature, t.String),
+            arg("FLOW-V0.0-user", t.String),
+          ],
+        })
+      } catch (e) {
+        log({
+          title: "verifyInteractionTemplateAudit Debug Error",
+          message: `Error executing verification script: ${e}`,
+          level: LEVELS.debug,
+        })
+        isVerified = false
+      }
 
-            return isVerified
+      return isVerified
 
-        default:
-            throw new Error("verifyInteractionTemplateAudit Error: Unsupported audit version")
-    }
+    default:
+      throw new Error(
+        "verifyInteractionTemplateAudit Error: Unsupported audit version"
+      )
+  }
 }

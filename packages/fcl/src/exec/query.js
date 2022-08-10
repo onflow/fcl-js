@@ -1,6 +1,7 @@
 import {invariant} from "@onflow/util-invariant"
 import * as sdk from "@onflow/sdk"
 import * as t from "@onflow/types"
+import {config} from "@onflow/config"
 import {isRequired, isObject, isString, isFunc} from "./utils/is"
 import {normalizeArgs} from "./utils/normalize-args"
 import {retrieve} from "../document/document.js"
@@ -56,7 +57,7 @@ export async function query(opts = {}) {
 
   let dependencies = {}
   if (opts?.template) {
-    dependencies = await deriveDependencies({template})
+    dependencies = await deriveDependencies({template: opts.template})
   }
 
   const cadence =
