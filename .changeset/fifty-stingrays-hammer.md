@@ -3,4 +3,4 @@
 "@onflow/sdk": patch
 ---
 
-Run Prettier
+Bump version

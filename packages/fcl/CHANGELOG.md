@@ -1,5 +1,14 @@
 # @onflow/fcl
 
+## 1.1.1-templates.6
+
+### Patch Changes
+
+- Bump version
+
+- Updated dependencies []:
+  - @onflow/sdk@1.1.1-templates.6
+
 ## 1.1.1-templates.5
 
 ### Patch Changes

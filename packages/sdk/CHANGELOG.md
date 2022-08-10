@@ -1,5 +1,11 @@
 # @onflow/sdk
 
+## 1.1.1-templates.6
+
+### Patch Changes
+
+- Bump version
+
 ## 1.1.1-templates.5
 
 ### Patch Changes
