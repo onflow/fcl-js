@@ -133,8 +133,8 @@ export async function generateTemplateId({template}) {
       )
 
       const encodedHex = rlpEncode([
-        await genHash(template.f_type),
-        await genHash(template.f_version),
+        await genHash("InteractionTemplate"),
+        await genHash("1.0.0"),
         await genHash(templateData?.type),
         await genHash(templateData?.interface),
         messages,

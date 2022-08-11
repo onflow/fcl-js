@@ -12,7 +12,7 @@ export async function deriveDependencies({template}) {
 
   const derivedDependencies = {}
 
-  switch (template["f_vsn"]) {
+  switch (template["f_version"]) {
     case "1.0.0":
       const dependencyPlaceholderKeys = Object.keys(
         template?.data?.dependencies

@@ -1,5 +1,23 @@
 # @onflow/fcl
 
+## 1.1.1-templates.9
+
+### Patch Changes
+
+- Derive dependencies using fcl templates current spec
+
+- Updated dependencies []:
+  - @onflow/sdk@1.1.1-templates.9
+
+## 1.1.1-templates.8
+
+### Patch Changes
+
+- Adds signer network to serialization format for InteractionTemplateAudit
+
+- Updated dependencies []:
+  - @onflow/sdk@1.1.1-templates.8
+
 ## 1.1.1-templates.7
 
 ### Patch Changes

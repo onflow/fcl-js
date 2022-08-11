@@ -26,6 +26,7 @@ export async function generateTemplateAuditId({audit}) {
         await genHash("InteractionTemplateAudit"),
         await genHash("1.0.0"),
         await genHash(auditData.id),
+        await genHash(auditData.signer.network),
         await genHash(auditData.signer.account),
         await genHash(String(auditData.signer.key_id)),
         await genHash(auditData.signer.signature),
