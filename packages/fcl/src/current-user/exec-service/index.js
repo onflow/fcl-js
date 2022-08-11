@@ -6,21 +6,39 @@ import {execExtRPC} from "./strategies/ext-rpc"
 import {execWcRPC} from "./strategies/wc-rpc"
 import {invariant} from "@onflow/util-invariant"
 
-const STRATEGIES = {
+const CORE_STRATEGIES = {
   "HTTP/RPC": execHttpPost,
   "HTTP/POST": execHttpPost,
   "IFRAME/RPC": execIframeRPC,
   "POP/RPC": execPopRPC,
   "TAB/RPC": execTabRPC,
   "EXT/RPC": execExtRPC,
-  "WC/RPC": execWcRPC,
+}
+
+const ServiceRegistry = () => {
+  const strategies = {...CORE_STRATEGIES}
+  const addStrategy = servicePlugin => {
+    strategies[servicePlugin.name] = servicePlugin
+  }
+  const getStrategy = method => strategies[method]
+
+  return Object.freeze({
+    strategies,
+    addStrategy,
+    getStrategy,
+  })
+}
+
+const execStrategy = async ({service, body, config, opts}) => {
+  const strategy = ServiceRegistry().getStrategy(service.method)
+  return strategy({service, body, config, opts})
 }
 
 export async function execService({service, msg = {}, config = {}, opts = {}}) {
   msg.data = service.data
 
   try {
-    const res = await STRATEGIES[service.method]({
+    const res = await execStrategy({
       service,
       body: msg,
       config,
