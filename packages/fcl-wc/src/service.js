@@ -1,4 +1,4 @@
-import {config} from "@onflow/config"
+import QRCodeModal from "@walletconnect/qrcode-modal"
 
 export const ServicePlugin = client => ({
   name: "WalletConnect",
@@ -10,7 +10,6 @@ export const ServicePlugin = client => ({
 const makeServiceStrategy = client => {
   return ({service, body, opts}) => {
     return new Promise(async (resolve, reject) => {
-      const {client, QRCodeModal} = await config.get("wc.adapter")
       if (typeof client === "undefined") {
         throw new Error("WalletConnect is not initialized")
       }
