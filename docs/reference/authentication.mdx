@@ -1,119 +1,40 @@
-
-# Authentication
-
-Authentication verifies whether someone is who they say they are. Once verified, the user gains access to their wallet. 
-FCL supports authentication so users can connect to Flow apps with their wallets.
-
-
+---
+title: Authentication
+---
+In authentication, a user or application proves they are who they say they are by providing valid credentials.
 Authentication is essential in any application or system to keep the user's data safe and adequately access information.
-FCL authentication is very straightforward and requires less technical knowledge to implement on your project.
 
-Also, the concept of authentication in FCL is tied closely to FCL's concept of currentUser. In fact, `fcl.authenticate` and `fcl.unauthenticate` are both aliases to `fcl.currentUser.authenticate()` and `fcl.currentUser.unauthenticate()` respectively. 
+Also, the concept of authentication in FCL is tied closely to FCL's concept of currentUser. In fact, `fcl.authenticate` and `fcl.unauthenticate` are both aliases to `fcl.currentUser.authenticate()` and `fcl.currentUser.unauthenticate()` respectively.
 
-## How does it work?
+## How FCL authentication works
+Authentication is triggered either through Discovery or default configuration (fcl.config.discovery.wallet).
+- The Wallet Provider has an FCL Authentication URL: https://example.wallet/fcl/authn
+- The Application lives at: https://example.app
 
-To sign a user into your dapp, you first get authentication credentials from the user. These credentials can be the user's email address and Flow address, and when you authenticate with FCL, you are connected to a user's wallet. 
-You approve that connection `authentication` through the side of the wallet, and then it returns user data and services.
+First, configure FCL to point to the Wallet Providers Authentication URL:
 
-The services returned by the wallet through FCL are
-- Authentication (Authn) Service
-- Authorization (Authz) Service
-- User Signature Service
-- Pre-Authz Service
+```javascript
+import {config} from "@onflow/config"
 
-### Authentication (Authn) Service
-This service is responsible for requesting information from a user and validating it against the configured identity.
-Have them provide enough proof to you that you are okay with passing their details back to FCL. Using Blocto as an example, 
-an authentication code is sent to the email a user enters at login. This code can be used as validation and is everything Blocto needs 
-to be confident in the user's identity.
-
-```json
-   {
-            "f_type": "Service",
-            "f_vsn": "1.0.0",
-            "type": "authn", // say its an authentication service
-            "uid": "blocto#authn",   // standard service uid
-            "id": "4a1faa24-0399-4d37-9788-ad35a41e1c71",
-            "identity": {
-                "address": "0xd9b64fa5ae9e7f3b"  // the address that the signature will be for
-            },
-            "scoped": {
-                "email": "wise4rmgod@gmail.com"
-            },
-            "provider": {
-                "address": "0xf086a545ce3c552d",
-                "name": "Blocto",
-                "icon": "https://blocto.portto.io/icons/icon-512x512.png",
-                "description": "Blocto is your entrance to blockchain world."
-            },
-            "authn": ""  // where to talk to the service
-        }
- ```
-
-### Authorization (Authz) Service
-An authorization service knows the Account and the Key to sign the transaction when the service is sent to FCL (during authentication).
-
-```json
-  {
-            "f_type": "Service",  
-            "f_vsn": "1.0.0",
-            "type": "authz",    // say its an authorization service
-            "uid": "blocto#authz",  // standard service uid
-            "method": "HTTP/POST",   // can also be `IFRAME/RPC` or `POP/RPC`
-            "identity": {
-                "address": "",   // the address that the signature will be for
-                "keyId": 1,  // the key for the address that the signature will be
-                "addr": "0xd9b64fa5ae9e7f3b"
-            },
-            "address": "0xd9b64fa5ae9e7f3b",
-            "addr": "0xd9b64fa5ae9e7f3b",
-            "keyId": 1,
-            "endpoint": "",  // where to talk to the service
-            "params": {
-                "sessionId": "fdIkGrDNi-xgYlTlV7bi"
-            }
-       }
+fcl.config().put("discovery.wallet","https://example.wallet/fcl/authn")
 ```
-### User Signature Service
-User Signature service is responsible for signing transactions and is depicted with a type: "user-signature" and a method of either HTTP/POST, IFRAME/RPC, POP/RPC, TAB/RPC, or EXT/RPC. In addition, return an array of f_type: "CompositeSignature eventually".
-The User Signature service is a stock/standard service.
+Next, the user authenticates by clicking a button(Eg, sign in button or something) to trigger the `fcl.authenticate`call.
 
-```json
+```javascript
+import React from "react"
 
-   {
-            "f_type": "Service",
-            "f_vsn": "1.0.0", 
-            "type": "user-signature",  // say its an user-signature service
-            "uid": "blocto#user-signature",  // standard service uid
-            "endpoint": "",  // where to talk to the service
-            "method": "IFRAME/RPC",   // can also be `HTTP/POST`
-            "id": "fdIkGrDNi-xgYlTlV7bi",
-            "params": {
-                "sessionId": "fdIkGrDNi-xgYlTlV7bi"
-            }
-        }
+export const Authenticate = () => (
+  <button onClick={() => fcl.authenticate()}>Sign In/Up</button>
+) 
 ```
 
-### Pre-Authz Service
-This service should be used when a wallet is responsible for an 
-account that's signing as multiple roles of a transaction and wants the ability to change the accounts on a per role basis.
+Then, when `fcl.authenticate()` is triggered, It looks up the discovery wallet url with `fcl.config().put("discovery.wallet","")`. FCL will render an iframe using the discovery wallet Url at the src, also passing in several query parameters. 
 
-```json
-{
-            "f_type": "Service",
-            "f_vsn": "1.0.0",
-            "type": "pre-authz", // say its a pre-authz service
-            "uid": "blocto#pre-authz", // standard service uid
-            "method": "HTTP/POST",   // can also be IFRAME/RPC, POP/RPC, TAB/RPC
-            "endpoint": "",  // where to talk to the service
-            "params": {
-                "sessionId": "fdIkGrDNi-xgYlTlV7bi"
-            }
-        }
-```
-The user data and services returned will be stored in the `current user` object. 
+![Blocto image](../images/blocto-ui.png)
 
-## The current user object.
+Inside this iframe, everything is up to the wallet; once the wallet is confident the user is who they say they are, it will send (via postMessage) back to FCL a bunch of information (Eg, user data and services). This information configures FCL in the application for future user actions.
+
+Here is an example of an authentication response:
 
 ```json
  {
@@ -131,13 +52,13 @@ The user data and services returned will be stored in the `current user` object.
             "uid": "blocto#authn",
             "id": "4a1faa24-0399-4d37-9788-ad35a41e1c71",
             "identity": {
-                "address": "0xd9b64fa5ae9e7f3b"
+                "address": ""
             },
             "scoped": {
-                "email": "wise4rmgod@gmail.com"
+                "email": ""
             },
             "provider": {
-                "address": "0xf086a545ce3c552d",
+                "address": "",  
                 "name": "Blocto",
                 "icon": "https://blocto.portto.io/icons/icon-512x512.png",
                 "description": "Blocto is your entrance to blockchain world."
@@ -151,12 +72,12 @@ The user data and services returned will be stored in the `current user` object.
             "uid": "blocto#authz",
             "method": "HTTP/POST",
             "identity": {
-                "address": "0xd9b64fa5ae9e7f3b",
+                "address": "",
                 "keyId": 1,
-                "addr": "0xd9b64fa5ae9e7f3b"
+                "addr": ""
             },
-            "address": "0xd9b64fa5ae9e7f3b",
-            "addr": "0xd9b64fa5ae9e7f3b",
+            "address": "",
+            "addr": "",
             "keyId": 1,
             "endpoint": "https://flow-wallet-testnet.blocto.app/api/flow/authz",
             "params": {
@@ -196,7 +117,7 @@ The user data and services returned will be stored in the `current user` object.
                 "f_type": "OpenID",
                 "f_vsn": "1.0.0",
                 "email": {
-                    "email": "wise4rmgod@gmail.com",
+                    "email": "",
                     "email_verified": true
                 }
             }
@@ -211,7 +132,7 @@ The user data and services returned will be stored in the `current user` object.
             "identity": {
                 "f_type": "Identity",
                 "f_vsn": "1.0.0",
-                "address": "0xd9b64fa5ae9e7f3b",
+                "address": "",
                 "keyId": 1
             },
             "params": {
@@ -226,7 +147,7 @@ The user data and services returned will be stored in the `current user` object.
             "endpoint": "https://flow-wallet-testnet.blocto.app/authn",
             "id": "d9b64fa5ae9e7f3b",
             "provider": {
-                "address": "0xf086a545ce3c552d",
+                "address": "",
                 "name": "Blocto",
                 "icon": "https://blocto.portto.io/icons/icon-512x512.png"
             }
@@ -236,7 +157,38 @@ The user data and services returned will be stored in the `current user` object.
 
 ```
 
+The authentication process is complete once FCL receives a response configuring FCL with FCL Services for the current user. This response tells FCL who the user is. Then via the included services, it tells FCL the following:
+- How the user is authenticated, 
+- How to request transaction signatures, 
+- How to get a personal message signed, 
+- Shows the user's email and other details if requested. 
 
+## Authentication (Authn) Service
+This service is responsible for requesting information from a user, validating it against the configured identity, and providing enough proof that you are okay with passing their details back to FCL. 
+FCL now has a Current User and should know how to talk to the wallet so that a transaction can be signed.
+
+```json
+   {
+            "f_type": "Service",        // It's a service!
+            "f_vsn": "1.0.0",           // Follows the v1.0.0 spec for the service
+            "type": "authn",            // the type of service it is
+            "uid": "blocto#authn",   // standard service uid
+            "id": "4a1faa24-0399-4d37-9788-ad35a41e1c71",
+            "identity": {
+                "address": ""  // the address that the signature will be for
+            },
+            "scoped": {
+                "email": ""
+            },
+            "provider": {
+                "address": "", // provider address
+                "name": "Blocto",
+                "icon": "https://blocto.portto.io/icons/icon-512x512.png",
+                "description": "Blocto is your entrance to blockchain world."
+            },
+            "authn": ""  // where to talk to the service
+        }
+ ```
 
 ## Two ways a Dapp can access the current user data
 FCL provides two ways of getting the current user's information. 
