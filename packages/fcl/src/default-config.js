@@ -1,7 +1,23 @@
 import {config} from "@onflow/config"
-import {DISCOVERY_METHOD, STORAGE_DEFAULT} from "./config-utils"
+
+const isServerSide = () => typeof window === "undefined"
+
+const SESSION_STORAGE = {
+  can: !isServerSide(),
+  get: async key => JSON.parse(sessionStorage.getItem(key)),
+  put: async (key, value) => sessionStorage.setItem(key, JSON.stringify(value)),
+}
 
 config({
-  "discovery.wallet.method.default": DISCOVERY_METHOD,
-  "fcl.storage.default": STORAGE_DEFAULT,
+  "discovery.wallet.method.default": "IFRAME/RPC",
+  "fcl.storage.default": SESSION_STORAGE,
 })
+
+export async function configLens(regex) {
+  return Object.fromEntries(
+    Object.entries(await config().where(regex)).map(([key, value]) => [
+      key.replace(regex, ""),
+      value,
+    ])
+  )
+}
