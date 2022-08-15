@@ -45,15 +45,12 @@ export async function verifyInteractionTemplateIsAudited({template, auditors}) {
         "verifyInteractionTemplateIsAudited Error: Required configuration for 'fcl.auditors' is not an array"
       )
 
-      let FlowInteractionAuditContract = await config().get(
-        "0xFlowInteractionAudit"
-      )
-
+      let FlowInteractionAuditContract = opts.flowInteractionAuditContract
       if (!FlowInteractionAuditContract) {
         const fclNetwork = await config().get("flow.network")
         invariant(
           fclNetwork === "mainnet" || fclNetwork === "testnet",
-          "verifyInteractionTemplateIsAudited Error: Unable to set address for placeholder '0xFlowInteractionAudit'. Either set the address for placeholder '0xFlowInteractionAudit' manually in config, or set configuration for 'fcl.network' to 'mainnet' or 'testnet'"
+          "verifyInteractionTemplateIsAudited Error: Unable to determine address for FlowInteractionTemplateAudit contract. Set configuration for 'fcl.network' to 'mainnet' or 'testnet'"
         )
         if (fclNetwork === "mainnet") {
           FlowInteractionAuditContract = ""
@@ -62,24 +59,18 @@ export async function verifyInteractionTemplateIsAudited({template, auditors}) {
         }
       }
 
-      const audits = await config.overload(
-        {
-          "0xFlowInteractionAudit": FlowInteractionAuditContract,
-        },
-        async () =>
-          query({
-            cadence: `
-            import FlowInteractionAudit from 0xFlowInteractionAudit
-            pub fun main(templateId: String, auditors: [Address]): {Address:Bool} {
-              return FlowInteractionAudit.getHasAuditedTemplateByAuditors(templateId: templateId, auditors: auditors)
-            }
-            `,
-            args: (arg, t) => [
-              arg(recomputedTemplateID, t.String),
-              arg(_auditors, t.Array(t.Address)),
-            ],
-          })
-      )
+      const audits = await query({
+        cadence: `
+        import FlowInteractionTemplateAudit from ${FlowInteractionAuditContract}
+        pub fun main(templateId: String, auditors: [Address]): {Address:Bool} {
+          return FlowInteractionAudit.getHasAuditedTemplateByAuditors(templateId: templateId, auditors: auditors)
+        }
+        `,
+        args: (arg, t) => [
+          arg(recomputedTemplateID, t.String),
+          arg(_auditors, t.Array(t.Address)),
+        ],
+      })
 
       return audits
 
