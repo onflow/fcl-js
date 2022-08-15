@@ -140,7 +140,6 @@ const makeConfig = async ({endpoint, discoveryAuthnInclude}) => {
       fclVersion: VERSION,
       fclLibrary: "https://github.com/onflow/fcl-js",
       hostname: window?.location?.hostname ?? null,
-      // extensions: window?.fcl_extensions || [],
       discoveryServices: makeDiscoveryServices(servicePlugin),
     },
   }

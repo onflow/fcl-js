@@ -13,6 +13,7 @@ const CORE_STRATEGIES = {
   "POP/RPC": execPopRPC,
   "TAB/RPC": execTabRPC,
   "EXT/RPC": execExtRPC,
+  "WC/RPC": execWcRPC,
 }
 
 const ServiceRegistry = () => {
