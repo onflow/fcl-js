@@ -81,7 +81,7 @@ export async function verifyInteractionTemplateIsAudited({template, auditors}) {
           })
       )
 
-      return Boolean(Object.values(audits).find(a => a === true))
+      return audits
 
     default:
       throw new Error(
