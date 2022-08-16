@@ -11,6 +11,7 @@ import {execService} from "./exec-service"
 import {normalizeCompositeSignature} from "./normalize/composite-signature"
 import {getDiscoveryService, configLens} from "../config-utils"
 import {VERSION} from "../VERSION"
+import {pluginRegistry, serviceRegistry} from "./exec-service/plugins"
 
 export const isFn = d => typeof d === "function"
 
@@ -119,19 +120,12 @@ async function getAccountProofData() {
 
 // Certain method types cannot be overridden to use other methods like POP/RCP
 const isServiceMethodUnchangable = method => ["EXT/RPC"].includes(method)
-const makeDiscoveryServices = servicePlugin => {
-  // get installed extensions
+const makeDiscoveryServices = async () => {
   const extensionServices = window?.fcl_extensions || []
-  // get services from service plugins
-  const pluginServices = servicePlugin ? servicePlugin.services : []
-  return [...extensionServices, ...pluginServices]
+  return [...extensionServices, ...serviceRegistry.getServices()]
 }
 
 const makeConfig = async ({endpoint, discoveryAuthnInclude}) => {
-  const {servicePlugin} = await config.get("wc.adapter", {
-    servicePlugin: null,
-  })
-
   return {
     discoveryAuthnInclude: endpoint ? discoveryAuthnInclude : [],
     services: await configLens(/^service\./),
@@ -140,7 +134,7 @@ const makeConfig = async ({endpoint, discoveryAuthnInclude}) => {
       fclVersion: VERSION,
       fclLibrary: "https://github.com/onflow/fcl-js",
       hostname: window?.location?.hostname ?? null,
-      discoveryServices: makeDiscoveryServices(servicePlugin),
+      discoveryServices: await makeDiscoveryServices(),
     },
   }
 }
