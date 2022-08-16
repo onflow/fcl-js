@@ -57,7 +57,6 @@ Object {
                   "sequenceNum": 123,
                 },
                 "refBlock": "123",
-                "template": null,
               },
             },
           ],

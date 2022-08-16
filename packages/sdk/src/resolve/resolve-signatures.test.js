@@ -82,7 +82,6 @@ test("voucher in signable", async () => {
   expect(signable.voucher).toEqual({
     cadence: "",
     refBlock: "123",
-    template: null,
     computeLimit: 156,
     arguments: [],
     proposalKey: {address: "0x01", keyId: 0, sequenceNum: 123},
