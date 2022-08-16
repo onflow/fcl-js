@@ -39,7 +39,7 @@ An Interaction Template can also be used with `query`:
 import * as fcl from "@onflow/fcl"
 import myScriptTemplate from "./my-script-template.template.json"
 
-const txId = await fcl.query({
+const info = await fcl.query({
   template: myScriptTemplate
 })
 ```
@@ -53,7 +53,7 @@ const txId = await fcl.mutate({
   template: "http://interactions.awesome-crypto-project.com/buy-nft"
 })
 
-const txId = await fcl.query({
+const nftInfo = await fcl.query({
   template: "http://interactions.awesome-crypto-project.com/read-nft",
   args: (arg, t) => [arg("nft-id", t.String)]
 })
@@ -100,7 +100,7 @@ const interactionTemplate = await fetch(
 )
 ```
 
-> 📖 For more on the "Interaction Template Discovery Service" that Flow operates, see [here](https://github.com/onflow/flow-interaction-template-service)
+> 📖  For more on the "Interaction Template Discovery Service" that Flow operates, see [here](https://github.com/onflow/flow-interaction-template-service)
 
 > ❗️ Not all transactions will have a corresponding Interaction Template. Wallets are encouraged to always support signing transactions that do not have a corresponding Interaction Template, or if they fail to discover one.
 
@@ -108,9 +108,9 @@ Once a wallet has a corresponding Interaction Template for a given transaction, 
 
 To do so, wallets can rely on themselves, along with external Interaction Template Auditors to gain confidence in the Interaction Template and it's underlying transaction. Interaction Template Auditors are entities that audit Interaction Templates for correctness and safety.
 
-> 💡 Anyone can be an Interaction Template Auditor. Wallets can choose from auditors that exists the ones they trust, if any.
+> 💡 Anyone can be an Interaction Template Auditor. Wallets can choose auditors they trust, if any.
 
-Wallets can specify auditors it trusts to FCL by configuring FCL with auditor Flow account addresses:
+Wallets can specify auditors it trusts to FCL by configuring FCL with the address of each auditor:
 
 ```javascript
 import * as fcl from "@onflow/fcl"
@@ -126,7 +126,7 @@ await fcl.config().put("fcl.auditors", [
 ])
 ```
 
-Wallets can check if each of the auditors they configured with FCL have audited a given Interaction Template:
+Wallets can check if the auditors they configured FCL with have audited a given Interaction Template:
 
 ```javascript
 import * as fcl from "@onflow/fcl"
@@ -162,6 +162,14 @@ const hasDependencyTreeChanged = await fcl.InteractionTemplateUtils
 ```
 
 If the dependency tree has changed, wallets may choose to disregard the Interaction Template (and it's audits).
+
+Once the Interaction Template has been sufficiently audited by auditors the wallet trusts, and it's dependency tree determined unchanged since the interaction was created and audited against, then the wallet can use the Interaction Template with greater confidence in it's correctness and safety.
+
+The wallet may then decide to render human readable information about the transaction such as:
+- Internationalized 'title' and 'description' of the transaction
+- Internationalized 'title' for each of the transactions arguments alongside the arguments value
+
+The wallet may then also make the status of it's audits known to the user in their UI. This allows the user to have greater confidence in the safety of the transaction. 
 
 ## Data Structure
 
