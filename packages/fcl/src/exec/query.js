@@ -12,7 +12,7 @@ import {deriveDependencies} from "./utils/derive-dependencies"
  *  @arg {Object} opts         - Query Options and configuration
  *  @arg {string} opts.cadence - Cadence Script used to query Flow
  *  @arg {ArgsFn} opts.args    - Arguments passed to cadence script
- *  @arg {Object} opts.template - Template passed to cadence transaction
+ *  @arg {Object} opts.template - Interaction Template for a script
  *  @arg {number} opts.limit   - Compute Limit for Query
  *  @returns {Promise<Response>}
  *
@@ -72,23 +72,30 @@ export async function query(opts = {}) {
     sdk.send([
       sdk.script(cadence),
       sdk.args(normalizeArgs(opts.args || [])),
-      sdk.template(opts.template || null),
       opts.limit && typeof opts.limit === "number" && sdk.limit(opts.limit)
     ]).then(sdk.decode)
   )
 }
 
 async function preQuery(opts) {
+  invariant(isRequired(opts), "mutate(opts) -- opts is required")
+  // prettier-ignore
+  invariant(isObject(opts), "mutate(opts) -- opts must be an object")
+  // prettier-ignore
+  invariant(!(opts.cadence && opts.template), "mutate({ template, cadence }) -- cannot pass both cadence and template")
+  // prettier-ignore
+  invariant(isRequired(opts.cadence || opts?.template), "mutate({ cadence }) -- cadence is required")
+  // prettier-ignore
   invariant(
-    isRequired(opts.cadence),
-    "query({ cadence }) -- cadence is required"
+    isString(opts.cadence) || opts?.template,
+    "mutate({ cadence }) -- cadence must be a string"
   )
-
+  // prettier-ignore
   invariant(
-    isString(opts.cadence),
-    "query({ cadence }) -- cadence must be a string"
+    opts.cadence || (await sdk.config().get("flow.network")),
+    `Required value for "flow.network" not defined in config. See: ${"https://github.com/onflow/flow-js-sdk/blob/master/packages/fcl/src/exec/query.md#configuration"}`
   )
-
+  // prettier-ignore
   invariant(
     await sdk.config.get("accessNode.api"),
     `Required value for "accessNode.api" not defined in config. See: ${"https://github.com/onflow/flow-js-sdk/blob/master/packages/fcl/src/exec/query.md#configuration"}`

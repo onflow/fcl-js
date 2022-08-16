@@ -34,7 +34,7 @@ export async function verifyInteractionTemplateIsAudited({template, auditors}) {
 
   switch (template.f_version) {
     case "1.0.0":
-      const _auditors = auditors || (await config().get("fcl.auditors", []))
+      const _auditors = auditors || (await config().get("fcl.auditors"))
 
       invariant(
         _auditors,
@@ -53,9 +53,9 @@ export async function verifyInteractionTemplateIsAudited({template, auditors}) {
           "verifyInteractionTemplateIsAudited Error: Unable to determine address for FlowInteractionTemplateAudit contract. Set configuration for 'fcl.network' to 'mainnet' or 'testnet'"
         )
         if (fclNetwork === "mainnet") {
-          FlowInteractionAuditContract = ""
+          FlowInteractionAuditContract = "0xb4b82a1c9d21d284"
         } else {
-          FlowInteractionAuditContract = "0xf8a5da6d9710021a"
+          FlowInteractionAuditContract = "0x74daa6f9c7ef24b1"
         }
       }
 

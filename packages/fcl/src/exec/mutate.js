@@ -15,7 +15,7 @@ import {normalizeInteractionTemplate} from "../interaction-template-utils/normal
  *  @arg {Object} opts - Mutation Options and configuration
  *  @arg {string} opts.cadence - Cadence Transaction used to mutate Flow
  *  @arg {ArgsFn} opts.args - Arguments passed to cadence transaction
- *  @arg {Object} opts.template - InteractionTemplate passed to cadence transaction
+ *  @arg {Object} opts.template - Interaction Template for a transaction
  *  @arg {number} opts.limit - Compute Limit for transaction
  *  @returns {string} Transaction Id
  *
@@ -106,8 +106,6 @@ export async function mutate(opts = {}) {
         // opts.payer > opts.authz > authz
         sdk.payer(opts.payer || opts.authz || authz),
 
-        sdk.template(opts.template || null),
-
         // opts.authorizations > [opts.authz > authz]
         sdk.authorizations(opts.authorizations || [opts.authz || authz]),
       ]).then(sdk.decode)
@@ -125,11 +123,18 @@ async function prepMutation(opts) {
   // prettier-ignore
   invariant(isObject(opts), "mutate(opts) -- opts must be an object")
   // prettier-ignore
+  invariant(!(opts.cadence && opts.template), "mutate({ template, cadence }) -- cannot pass both cadence and template")
+  // prettier-ignore
   invariant(isRequired(opts.cadence || opts?.template), "mutate({ cadence }) -- cadence is required")
   // // prettier-ignore
   invariant(
     isString(opts.cadence) || opts?.template,
     "mutate({ cadence }) -- cadence must be a string"
+  )
+  // prettier-ignore
+  invariant(
+    opts.cadence || (await sdk.config().get("flow.network")),
+    `Required value for "flow.network" not defined in config. See: ${"https://github.com/onflow/flow-js-sdk/blob/master/packages/fcl/src/exec/query.md#configuration"}`
   )
   // prettier-ignore
   invariant(

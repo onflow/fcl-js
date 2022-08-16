@@ -73,11 +73,7 @@ test("voucher in signable", async () => {
     ])
   )
 
-  console.log("IX ==>> ", ix)
-
   const signable = buildSignable(ix.accounts[ix.proposer], {}, ix)
-
-  console.log("signable ==>> ", signable)
 
   expect(signable.voucher).toEqual({
     cadence: "",
