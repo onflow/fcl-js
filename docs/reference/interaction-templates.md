@@ -19,7 +19,7 @@ For example Applications and Wallets can extract the internationalized human rea
 
 ## For Applications
 
-FCL can accept an Interaction Template during a `muatate` or `query` call. FCL will use the Interaction Template to:
+FCL `mutate` and `query` can accept an Interaction Template. FCL `mutate` and `query` will use the Interaction Template to:
 
 - Extract the Cadence code to carry out the interaction
 - Extract dependency configuration for the interaction (eg: Information about contract import addresses)
@@ -61,7 +61,7 @@ const txId = await fcl.query({
 
 FCL will resolve the template from the remote location before using it to execute its underlying transaction or script.
 
-> 💡 By requesting an Interaction Template from an external location, applications have a mechanism to always retrieve the most up-to-date way of accomplishing an interaction.
+> 💡 By requesting an Interaction Template from an external location, applications have a mechanism to always retrieve the most up to date way of accomplishing an interaction.
 
 By default FCL supports resolving Interaction Templates over http/https, but FCL can also be configured with various other ways to resolve Interaction Templates:
 
@@ -81,13 +81,13 @@ const txId = await fcl.mutate({
 ## For Wallets
 
 Wallets can use Interaction Templates to:
-- Render internationalized human readable information about a transaction to their users during signing
+- Display internationalized human readable information about a transaction to their users during signing
 - Verify the dependencies of an Interaction Template have not changed since when the Interaction Template was created
 - Using Interaction Template Audits, gain confidence in the correctness and safety of an Interaction Template and it's underlying transaction
 
 When recieving a transaction to sign, wallets can query for an Interaction Template that corresponds to it.
 
-Flow operates an "Interaction Template Service" which wallets can use to query for Interaction Templates. Anyone can run an "Interaction Template Service" and wallets can choose to query from any of them.
+Flow operates an "Interaction Template Discovery Service" which wallets can use to query for Interaction Templates. Anyone can run an "Interaction Template Discovery Service" and wallets can choose to query from any of them.
 
 ```javascript
 const cadence = cadenceFromTransactionToSign
@@ -100,13 +100,15 @@ const interactionTemplate = await fetch(
 )
 ```
 
-> For more on the "Interaction Template Service" that Flow operates, see [here](https://github.com/onflow/flow-interaction-template-service)
+> 📖 For more on the "Interaction Template Discovery Service" that Flow operates, see [here](https://github.com/onflow/flow-interaction-template-service)
 
-> ❗️ Not all transactions will have a corresponding Interaction Template. Wallets are encouraged to always support signing transactions that do not have a corresponding Interaction Template.
+> ❗️ Not all transactions will have a corresponding Interaction Template. Wallets are encouraged to always support signing transactions that do not have a corresponding Interaction Template, or if they fail to discover one.
 
 Once a wallet has a corresponding Interaction Template for a given transaction, they may also may wish to verify that the transaction it represents is safe to sign, and that the Interaction Template is accurate for that transaction.
 
-To do so, wallets can rely on themselves, along with external Interaction Template Auditors to gain confidence in the Interaction Template and it's underlying transaction.
+To do so, wallets can rely on themselves, along with external Interaction Template Auditors to gain confidence in the Interaction Template and it's underlying transaction. Interaction Template Auditors are entities that audit Interaction Templates for correctness and safety.
+
+> 💡 Anyone can be an Interaction Template Auditor. Wallets can choose from auditors that exists the ones they trust, if any.
 
 Wallets can specify auditors it trusts to FCL by configuring FCL with auditor Flow account addresses:
 
@@ -216,8 +218,7 @@ The following is an example Interaction Template that corresponds to a "Transfer
               "en-US": "The amount of FLOW tokens to send"
             }
           }
-        },
-        "balance": ""
+        }
       },
       "to": {
         "index": 1,
@@ -228,8 +229,7 @@ The following is an example Interaction Template that corresponds to a "Transfer
               "en-US": "The Flow account the tokens will go to"
             }
           }
-        },
-        "balance": ""
+        }
       }
     }
   }
