@@ -1,5 +1,11 @@
 # @onflow/sdk
 
+## 1.1.1-templates.10
+
+### Patch Changes
+
+- Moves to on-chain audit system
+
 ## 1.1.1-templates.9
 
 ### Patch Changes
