@@ -62,9 +62,56 @@ describe("httpRequest", () => {
     await expect(httpRequest(opts)).rejects.toThrow("HTTP Request Error:")
   })
 
+  test("retries retriable error", async () => {
+    const spy = jest.spyOn(fetchTransport, "default")
+
+    const mockBadResponse = {
+      ok: false,
+      body: "",
+      async json() {
+        return JSON.parse(this.body)
+      },
+      async text() {
+        return this.body
+      },
+      status: 429, // 429 is a retriable error
+      statusText: "Too many requests",
+    }
+
+    const mockGoodResponse = {
+      ok: true,
+      body: JSON.stringify({
+        foo: "bar",
+      }),
+      async json() {
+        return JSON.parse(this.body)
+      },
+      async text() {
+        return this.body
+      },
+      status: 200,
+    }
+
+    spy.mockImplementation(async () => {
+      if (spy.mock.calls.length === 1) return mockBadResponse
+      return mockGoodResponse
+    })
+
+    const opts = {
+      hostname: "https://example.com",
+      path: "/foo/bar",
+      body: "abc123",
+      method: "POST",
+    }
+
+    const response = await httpRequest(opts)
+
+    await expect(response).toEqual(JSON.parse(mockGoodResponse.body))
+  })
+
   test("handles fetch error properly, displays AN error", async () => {
     const fetchSpy = jest.spyOn(fetchTransport, "default")
-    
+
     fetchSpy.mockImplementation(() =>
       Promise.reject({
         ok: false,
