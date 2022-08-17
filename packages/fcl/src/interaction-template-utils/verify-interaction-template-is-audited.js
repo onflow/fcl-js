@@ -22,14 +22,16 @@ export async function verifyInteractionTemplateIsAudited({template, auditors}) {
 
   if (recomputedTemplateID !== template.id) {
     log({
-      title: "verifyInteractionTemplateAudit Debug Error",
+      title: "verifyInteractionTemplateIsAudited Debug Error",
       message: `Could not recompute and match template ID
                 computed: ${recomputedTemplateID}
                 template: ${template.id}
             `,
       level: LEVELS.debug,
     })
-    return false
+    throw new Error(
+      "verifyInteractionTemplateIsAudited Error: Could not recompute and match template ID"
+    )
   }
 
   switch (template.f_version) {
@@ -63,7 +65,7 @@ export async function verifyInteractionTemplateIsAudited({template, auditors}) {
         cadence: `
         import FlowInteractionTemplateAudit from ${FlowInteractionAuditContract}
         pub fun main(templateId: String, auditors: [Address]): {Address:Bool} {
-          return FlowInteractionAudit.getHasAuditedTemplateByAuditors(templateId: templateId, auditors: auditors)
+          return FlowInteractionAudit.getHasTemplateBeenAuditedByAuditors(templateId: templateId, auditors: auditors)
         }
         `,
         args: (arg, t) => [
