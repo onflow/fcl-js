@@ -1,6 +1,8 @@
 [![FLOW-JS-SDK Continuous Integration](https://github.com/onflow/flow-js-sdk/actions/workflows/integrate.yml/badge.svg)](https://github.com/onflow/flow-js-sdk/actions/workflows/integrate.yml)
 [![lerna](https://img.shields.io/badge/maintained%20with-lerna-cc00ff.svg)](https://lerna.js.org/)
 
+> **Note**: This repository makes use of [ZenHub](https://www.zenhub.com/) to track issue dependencies and long term planning. Please follow along [here](https://app.zenhub.com/workspaces/fcl-js-622b8a6bfe0fcc0012ac5e8b/board). You will be asked to create a (free) ZenHub account to view.
+
 > ## Upgrading to FCL 1.0.0
 > FCL 1.0.0 has arrived! When upgrading your project, reference the <a href="https://github.com/onflow/fcl-js/releases/tag/%40onflow%2Ffcl%401.0.0">Release Notes</a> for information on how to make your app compatible with its breaking changes.
 
@@ -10,8 +12,6 @@
   <h1 align="center"> FCL JS</h1>
   <p align="center">
     <i>Connect your dapp to users, their wallets and Flow.</i>
-    <br />
-    <a href="https://docs.onflow.org/fcl/"><strong>Read the docs»</strong></a>
     <br />
     <br />
     <a href="https://docs.onflow.org/fcl/tutorials/flow-app-quickstart/">Quickstart</a>
@@ -79,8 +79,9 @@ fcl.config({
 
 fcl.authenticate()
 ```
-![FCL Default Discovery UI](docs/images/fcl-discovery-screenshot.jpg)
+![FCL Default Discovery UI](docs/images/discovery.png)
 
+> **Note**: A [Dapper Wallet](https://meetdapper.com/developers) developer account is required. To enable Dapper Wallet inside FCL, you need to [follow this guide](https://docs.meetdapper.com/get-started).
 
 - *Interact with smart contracts*: Authorize transactions via the user's chosen wallet 
 - *Prove ownership of a wallet address*: Signing and verifying user signed data
