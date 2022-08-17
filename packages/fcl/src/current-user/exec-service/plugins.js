@@ -13,21 +13,25 @@ const CORE_STRATEGIES = {
   "EXT/RPC": execExtRPC,
 }
 
+const supportedPlugins = ["DiscoveryService"]
+
 const ServiceRegistry = () => {
-  let services = []
+  let services = new Set()
   let strategies = new Map(Object.entries(CORE_STRATEGIES))
 
   const setServices = pluginServices =>
-    (services = [...services, ...pluginServices])
+    (services = new Set([...services, ...pluginServices]))
+  const getServices = () => [...services].map(service => service.definition)
 
-  const getServices = () => services
   const add = servicePlugins => {
-    setServices(servicePlugins.services)
-    for (const s of servicePlugins.services) {
-      if (!strategies.has(s.method)) {
-        strategies.set(s.method, servicePlugins.serviceStrategy)
+    setServices(servicePlugins)
+    for (const s of servicePlugins) {
+      if (!strategies.has(s.definition?.method)) {
+        strategies.set(s.definition?.method, s.strategy)
       } else {
-        console.warn(`Service strategy for ${s.method} already exists`)
+        console.warn(
+          `Service strategy for ${s.definition.method} already exists`
+        )
       }
     }
   }
@@ -38,10 +42,6 @@ const ServiceRegistry = () => {
     getStrategy,
   })
 }
-
-const supportedPlugins = ["DiscoveryService"]
-
-export const serviceRegistry = ServiceRegistry()
 
 const PluginRegistry = () => {
   const pluginsMap = new Map()
@@ -61,8 +61,7 @@ const PluginRegistry = () => {
       }
       pluginsMap.set(p.name, p)
       if (p.type === "DiscoveryService") {
-        //serviceRegistry.add(p.services)
-        serviceRegistry.add(p)
+        serviceRegistry.add(p.services)
       }
     }
   }
@@ -72,4 +71,5 @@ const PluginRegistry = () => {
   })
 }
 
+export const serviceRegistry = ServiceRegistry()
 export const pluginRegistry = PluginRegistry()

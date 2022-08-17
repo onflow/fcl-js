@@ -122,7 +122,7 @@ async function getAccountProofData() {
 const isServiceMethodUnchangable = method => ["EXT/RPC"].includes(method)
 const makeDiscoveryServices = async () => {
   const extensionServices = window?.fcl_extensions || []
-  return [...extensionServices, ...serviceRegistry.getServices()]
+  return [...extensionServices, ...[...serviceRegistry.getServices()]]
 }
 
 const makeConfig = async ({endpoint, discoveryAuthnInclude}) => {
