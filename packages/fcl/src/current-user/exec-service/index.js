@@ -4,7 +4,7 @@ import {execPopRPC} from "./strategies/pop-rpc"
 import {execTabRPC} from "./strategies/tab-rpc"
 import {execExtRPC} from "./strategies/ext-rpc"
 import {invariant} from "@onflow/util-invariant"
-import {configLens} from "../../config-utils"
+import {configLens} from "../../default-config"
 import {VERSION} from "../../VERSION"
 
 const STRATEGIES = {
