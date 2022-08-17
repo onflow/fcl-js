@@ -1,10 +1,9 @@
 import QRCodeModal from "@walletconnect/qrcode-modal"
 
-export const ServicePlugin = client => ({
-  name: "WalletConnect",
+export const makeServicePlugin = client => ({
+  name: "FCLConnect",
   type: "DiscoveryService",
-  services: makeWcServices(client.pairing.getAll({active: true})),
-  serviceStrategy: makeServiceStrategy(client),
+  services: makeWcServices(client),
 })
 
 const makeServiceStrategy = client => {
@@ -14,10 +13,9 @@ const makeServiceStrategy = client => {
         throw new Error("WalletConnect is not initialized")
       }
       let session
-      const onResponse = data => {
+      const onResponse = resp => {
         try {
-          if (typeof data !== "object") return
-          const resp = normalizePollingResponse(data)
+          if (typeof resp !== "object") return
 
           switch (resp.status) {
             case "APPROVED":
@@ -54,7 +52,6 @@ const makeServiceStrategy = client => {
         let pairing = {topic: service?.provider?.address ?? undefined}
         session = await connectWc(onClose, {
           client,
-          QRCodeModal,
           pairing,
         })
       }
@@ -68,7 +65,7 @@ const makeServiceStrategy = client => {
       const method = service.endpoint
       const chainId = `${namespace}:${reference}`
       const addr = address
-      const data = {...body, addr}
+      const data = JSON.stringify({...body, addr})
 
       try {
         const result = await client.request({
@@ -76,19 +73,19 @@ const makeServiceStrategy = client => {
           chainId,
           request: {
             method,
-            params: [JSON.stringify(data)],
+            params: [data],
           },
         })
         onResponse(result)
       } catch (e) {
-        console.error("WalletConnect error on request", e)
+        console.error("Error on WalletConnect request", e)
         reject(`Declined: Externally Halted`)
       }
     })
   }
 }
 
-async function connectWc(onClose, {client, QRCodeModal, pairing}) {
+async function connectWc(onClose, {client, pairing}) {
   try {
     // need to get chain from config or api ping endpoint
     const requiredNamespaces = {
@@ -114,53 +111,60 @@ async function connectWc(onClose, {client, QRCodeModal, pairing}) {
     const session = await approval()
     return session
   } catch (e) {
-    console.error("Erroring connecting session", e)
+    console.error("Error establishing session", e)
     throw e
   } finally {
     QRCodeModal.close()
   }
 }
 
-function makeWcServices(pairings = []) {
+function makeWcServices(client) {
+  const pairings = client.pairing.getAll({active: true})
   return [
     {
-      f_type: "Service",
-      f_vsn: "1.0.0",
-      type: "authn",
-      name: "WC",
-      method: "WC/RPC",
-      uid: "wc#authn",
-      endpoint: "flow_authn",
-      optIn: false,
-      provider: {
-        address: null,
-        name: "WalletConnect",
-        icon: "https://avatars.githubusercontent.com/u/37784886",
-        description: "",
-        color: "",
-        supportEmail: "",
-        website: "https://walletconnect.com/",
-      },
-    },
-    ...pairings.map(pairing => {
-      return {
+      definition: {
         f_type: "Service",
         f_vsn: "1.0.0",
         type: "authn",
+        name: "WC",
         method: "WC/RPC",
         uid: "wc#authn",
         endpoint: "flow_authn",
         optIn: false,
         provider: {
-          ...pairing,
-          address: pairing.topic,
-          name: pairing.peerMetadata.name,
-          icon: pairing.peerMetadata.icons[0],
-          description: pairing.peerMetadata.description,
-          website: pairing.peerMetadata.url,
+          address: null,
+          name: "WalletConnect",
+          icon: "https://avatars.githubusercontent.com/u/37784886",
+          description: "",
           color: "",
           supportEmail: "",
+          website: "https://walletconnect.com/",
         },
+      },
+      strategy: makeServiceStrategy(client),
+    },
+    ...pairings.map(pairing => {
+      return {
+        definition: {
+          f_type: "Service",
+          f_vsn: "1.0.0",
+          type: "authn",
+          method: "WC/RPC",
+          uid: "wc#authn",
+          endpoint: "flow_authn",
+          optIn: false,
+          provider: {
+            ...pairing,
+            address: pairing.topic,
+            name: pairing.peerMetadata.name,
+            icon: pairing.peerMetadata.icons[0],
+            description: pairing.peerMetadata.description,
+            website: pairing.peerMetadata.url,
+            color: "",
+            supportEmail: "",
+          },
+        },
+        strategy: makeServiceStrategy(client),
       }
     }),
   ]
