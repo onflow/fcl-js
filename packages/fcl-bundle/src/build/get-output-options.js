@@ -17,16 +17,15 @@ module.exports = function getOutputOptions(package, build) {
     preserveModules: false,
     sourcemap: true,
     plugins: [
-      build.banner
-        ? banner(
-            isObject(build.banner)
-              ? build.banner
-              : {
-                  banner: build.banner,
-                  raw: true,
-                }
-          )
-        : null,
+      build.banner &&
+        banner(
+          isObject(build.banner)
+            ? build.banner
+            : {
+                banner: build.banner,
+                raw: true,
+              }
+        ),
     ],
   }
 

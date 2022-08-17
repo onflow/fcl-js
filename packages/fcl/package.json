@@ -30,7 +30,7 @@
   "source": "src/fcl.js",
   "main": "dist/fcl.js",
   "module": "dist/fcl.module.js",
-  "unpkg": "dist/fcl.umd.js",
+  "unpkg": "dist/fcl.umd.min.js",
   "scripts": {
     "pain": "npm publish --tag pain",
     "alpha": "npm publish --tag alpha",
