@@ -6,7 +6,7 @@ Programmatically Query Flow. A light, stable and approachable higher level wrapp
 
 ## Status
 
-- **Last Updated:** June 30th 2022
+- **Last Updated:** Aug 17th 2022
 - **Stable:** Yes
 - **Risk of Breaking Change:** Low
 - **Introduced:** `0.0.68`
@@ -17,14 +17,18 @@ Programmatically Query Flow. A light, stable and approachable higher level wrapp
 You can learn more about configuring FCL here: [Configure FCL](https://github.com/onflow/flow-js-sdk/blob/master/docs/configure-fcl.mdx)
 Configuration only needs to happen once, but it must happen before query is called. We always recommend configuring FCL as early in your application as possible/reasonable.
 
-The main thing you will want to configure is the `accessNode.api` which is the channel FCL will use to communicate with Flow.
+The main things you will want to configure is are:
+- `accessNode.api` - How to talk to Flow.
+- `flow.network` - which network are you on ("mainnet", "testnet", etc).
 
 Below is an example of configuring FCL to talk to Flow (testnet)
 
 ```javascript
 import * as fcl from "@onflow/fcl"
 
-fcl.config().put("accessNode.api", "https://rest-testnet.onflow.org")
+fcl.config()
+  .put("accessNode.api", "https://rest-testnet.onflow.org")
+  .put("flow.network", "testnet")
 ```
 
 `query` also respects [Address Replacement](https://github.com/onflow/flow-js-sdk/blob/master/docs/configure-fcl.mdx#address-replacement-in-scripts-and-transactions) configuration.
@@ -206,3 +210,29 @@ Which should return something like this:
   }
 }
 ```
+
+## Interaction Templates
+
+If you have an Interaction Template, you can use it with `query`:
+
+```javascript
+import * as fcl from "@onflow/fcl"
+import myScriptTemplate from "script-template.json"
+
+const scriptResult = await fcl.query({
+  template: myScriptTemplate,
+})
+```
+
+In place of a JSON template, you can specify a URL that points to one, and FCL will retrieve it from the remote location:
+
+```javascript
+import * as fcl from "@onflow/fcl"
+
+const scriptResult = await fcl.mutate({
+  template: "https://interactions.my-project.com/read-nft",
+})
+```
+
+`query` will use the Interaction Template to carry out it's underlying script. Read more on Interaction Templates with FCL [here](https://github.com/onflow/fcl-js/blob/master/docs/reference/interaction-templates.md)
+

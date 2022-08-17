@@ -6,7 +6,7 @@ Programmatically mutate state on Flow. A light, stable and approachable higher l
 
 ## Status
 
-- **Last Updated:** June 30th 2022
+- **Last Updated:** Aug 17th 2022
 - **Stable:** Yes
 - **Risk of Breaking Change:** Low
 - **Introduced:** `0.0.73`
@@ -17,10 +17,11 @@ Programmatically mutate state on Flow. A light, stable and approachable higher l
 You can learn more about configuring FCL here: [Configure FCL](https://github.com/onflow/flow-js-sdk/blob/master/docs/configure-fcl.mdx)
 Configuration only needs to happen once, but it must happen before mutate is called. We always recommend configuring FCL as early in your application as possible/reasonable.
 
-`mutate` requires two pieces of configuration.
+`mutate` requires a few pieces of configuration.
 
 - `accessNode.api` - How to talk to Flow.
 - `discovery.wallet` - How to connect to wallets.
+- `flow.network` - which network are you on ("mainnet", "testnet", etc).
 
 Below is an example of configuring FCL to talk to Flow (testnet)
 
@@ -31,6 +32,7 @@ import * as fcl from "@onflow/fcl"
 fcl.config()
   .put("accessNode.api", "https://rest-testnet.onflow.org")
   .put("discovery.wallet", "https://fcl-discovery.onflow.org/testnet/authn")
+  .put("flow.network", "testnet")
 ```
 
 `mutate` also respects [Address Replacement](https://github.com/onflow/flow-js-sdk/blob/master/docs/configure-fcl.mdx#address-replacement-in-scripts-and-transactions) configuration.
@@ -217,3 +219,28 @@ const txId = await fcl.mutate({
 ```
 
 More specific options overload less specific options. So `payer` will be used over `authz` which will be used over the default of current user.
+
+## Interaction Templates
+
+If you have an Interaction Template, you can use it with `mutate`:
+
+```javascript
+import * as fcl from "@onflow/fcl"
+import myTransactionTemplate from "transaction-template.json"
+
+const txId = await fcl.mutate({
+  template: myTransactionTemplate,
+})
+```
+
+In place of a JSON template, you can specify a URL that points to one, and FCL will retrieve it from the remote location:
+
+```javascript
+import * as fcl from "@onflow/fcl"
+
+const txId = await fcl.mutate({
+  template: "https://interactions.my-project.com/buy-nft",
+})
+```
+
+`muatate` will use the Interaction Template to carry out it's underlying transaction. Read more on Interaction Templates with FCL [here](https://github.com/onflow/fcl-js/blob/master/docs/reference/interaction-templates.md)
