@@ -142,7 +142,7 @@ const audits = await fcl.InteractionTemplateUtils
  *   "0xABC123DEF456": true,
  *   "0xFFAA1212DEFF": false
  * }
- * /
+ ** /
 ```
 
 Since not all auditors that a wallet trusts may have audited a given Interaction Template, trusting multiple auditors can increase the chance that at least one of the trusted auditors has audited the Interaction Template.
