@@ -28,12 +28,11 @@ const initClient = async ({projectId, metadata}) => {
   }
 }
 
-export const initFclConnect = async ({projectId, metadata} = {}) => {
+export const initFclWc = async ({projectId, metadata} = {}) => {
   const client = await initClient({projectId, metadata})
-  const fclConnectServicePlugin = makeServicePlugin(client)
-
+  const FclWcServicePlugin = makeServicePlugin(client)
   return {
-    fclConnectServicePlugin,
+    FclWcServicePlugin,
     client,
   }
 }
