@@ -16,25 +16,25 @@ npm install --save @onflow/fcl-wc
 
 ## Usage
 
-The package exports `initFclConnect` and utils.
+The package exports `initFclWc` and utils.
 Currently, a WalletConnect `projectId` is required and can be obtained @ https://cloud.walletconnect.com. Metadata is optional.
 
-Initializtion returns `fclConnectServicePlugin` and `client`. The `client` can be used to subscribe to events, disconnect, and query session and pairing status.
-Passing `fclConnectServicePlugin` to `fcl.pluginRegistry.add()` will enable `"WC/RPC"` service strategy and add new and existing services to FCL Discovery.
+Initializtion returns `FclWcServicePlugin` and a Walletconnect `client`. The `client` can be used to subscribe to events, disconnect from a wallet, and query session and pairing status.
+Passing `FclWcServicePlugin` to `fcl.pluginRegistry.add()` will enable use of the `"WC/RPC"` service strategy and add new and existing WalletConnect services to FCL Discovery.
 
 ```javascript
 import * as fcl from '@onflow/fcl'
-import { initFclConnect } from '@onflow/fcl-wc'
+import { initFclWc } from '@onflow/fcl-wc'
 
-const { fclConnectServicePlugin, client } = await initFclConnect({
+const { FclWcServicePlugin, client } = await initFclWc({
   projectId: PROJECT_ID,
   metadata: {
-    name: 'FCL Connect',
+    name: 'FCL WC DApp',
     description: 'FCL DApp with support for WalletConnect',
     url: 'https://flow.com/',
     icons: ['https://avatars.githubusercontent.com/u/62387156?s=280&v=4']
   }
 })
 
-fcl.pluginRegistry.add(fclConnectServicePlugin)
+fcl.pluginRegistry.add(FclWcServicePlugin)
 ```

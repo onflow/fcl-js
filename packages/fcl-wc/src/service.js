@@ -1,8 +1,8 @@
 import QRCodeModal from "@walletconnect/qrcode-modal"
 
 export const makeServicePlugin = client => ({
-  name: "FCLConnect",
-  type: "DiscoveryService",
+  name: "fcl-service-walletconnect",
+  type: "discovery-service",
   services: makeWcServices(client),
 })
 
@@ -126,7 +126,6 @@ function makeWcServices(client) {
         f_type: "Service",
         f_vsn: "1.0.0",
         type: "authn",
-        name: "WC",
         method: "WC/RPC",
         uid: "wc#authn",
         endpoint: "flow_authn",
@@ -135,7 +134,7 @@ function makeWcServices(client) {
           address: null,
           name: "WalletConnect",
           icon: "https://avatars.githubusercontent.com/u/37784886",
-          description: "",
+          description: "WalletConnect Generic Provider",
           color: "",
           supportEmail: "",
           website: "https://walletconnect.com/",
@@ -150,7 +149,7 @@ function makeWcServices(client) {
           f_vsn: "1.0.0",
           type: "authn",
           method: "WC/RPC",
-          uid: "wc#authn",
+          uid: pairing.topic,
           endpoint: "flow_authn",
           optIn: false,
           provider: {
