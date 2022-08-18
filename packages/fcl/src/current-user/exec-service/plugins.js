@@ -13,14 +13,15 @@ const CORE_STRATEGIES = {
   "EXT/RPC": execExtRPC,
 }
 
-const supportedPlugins = ["DiscoveryService"]
+const supportedPlugins = ["discovery-service"]
 
 const ServiceRegistry = () => {
   let services = new Set()
   let strategies = new Map(Object.entries(CORE_STRATEGIES))
 
   const setServices = pluginServices =>
-    (services = new Set([...services, ...pluginServices]))
+    (services = new Set([...pluginServices]))
+
   const getServices = () => [...services].map(service => service.definition)
 
   const add = servicePlugins => {
@@ -60,7 +61,7 @@ const PluginRegistry = () => {
         throw new Error(`Plugin type ${p.type} is not supported`)
       }
       pluginsMap.set(p.name, p)
-      if (p.type === "DiscoveryService") {
+      if (p.type === "discovery-service") {
         serviceRegistry.add(p.services)
       }
     }

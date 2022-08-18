@@ -119,10 +119,9 @@ async function getAccountProofData() {
   return accountProofData
 }
 
-// Certain method types cannot be overridden to use other methods like POP/RCP
 const makeDiscoveryServices = async () => {
   const extensionServices = window?.fcl_extensions || []
-  return [...extensionServices, ...[...serviceRegistry.getServices()]]
+  return [...extensionServices, ...serviceRegistry.getServices()]
 }
 
 const makeConfig = async ({endpoint, discoveryAuthnInclude}) => {
