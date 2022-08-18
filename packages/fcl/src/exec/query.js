@@ -4,8 +4,10 @@ import * as t from "@onflow/types"
 import {config} from "@onflow/config"
 import {isRequired, isObject, isString, isFunc} from "./utils/is"
 import {normalizeArgs} from "./utils/normalize-args"
+import {deriveCadenceByNetwork} from "../interaction-template-utils"
 import {retrieve} from "../document/document.js"
 import {deriveDependencies} from "./utils/derive-dependencies"
+import {normalizeInteractionTemplate} from "../interaction-template-utils/normalize/interaction-template"
 
 /** Query the Flow Blockchain
  *
