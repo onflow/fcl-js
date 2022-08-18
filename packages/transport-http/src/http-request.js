@@ -18,15 +18,16 @@ class HTTPRequestError extends Error {
       ${hostname ? `hostname=${hostname}` : ""}
       ${path ? `path=${path}` : ""}
       ${method ? `method=${method}` : ""}
-      ${requestBody ? `requestBody=${JSON.stringify(requestBody)}` : ""}
-      ${responseBody ? `responseBody=${JSON.stringify(responseBody)}` : ""}
+      ${requestBody ? `requestBody=${requestBody}` : ""}
+      ${responseBody ? `responseBody=${responseBody}` : ""}
       ${responseStatusText ? `responseStatusText=${responseStatusText}` : ""}
       ${statusCode ? `statusCode=${statusCode}` : ""}
     `
     super(msg)
+
     this.name = "HTTP Request Error"
-    this.statusCode = responseBody?.code ?? statusCode
-    this.errorMessage = responseBody?.message
+    this.statusCode = statusCode
+    this.errorMessage = error
   }
 }
 
@@ -37,7 +38,7 @@ class HTTPRequestError extends Error {
  * @param {String} options.hostname - Access API Hostname
  * @param {String} options.path - Path to the resource on the Access API
  * @param {String} options.method - HTTP Method
- * @param {any} options.body - HTTP Request Body
+ * @param {Object} options.body - HTTP Request Body
  * @param {Object | Headers} [options.headers] - HTTP Request Headers
  *
  * @returns JSON object response from Access API.
@@ -51,36 +52,12 @@ export async function httpRequest({
   retryLimit = 5,
   retryIntervalMs = 1000,
 }) {
-  async function requestLoop(retryAttempt = 0) {
-    try {
-      const resp = await makeRequest()
-      return resp
-    } catch (error) {
-      const retryStatusCodes = [408, 500, 502, 503, 504]
-
-      if (retryStatusCodes.includes(error.statusCode)) {
-        return await new Promise((resolve, reject) => {
-          if (retryAttempt < retryLimit) {
-            console.log(
-              `Access node unavailable, retrying in ${retryIntervalMs} ms...`
-            )
-            setTimeout(() => {
-              resolve(requestLoop(retryAttempt + 1))
-            }, retryIntervalMs)
-          } else {
-            reject(error)
-          }
-        })
-      } else {
-        throw error
-      }
-    }
-  }
+  const bodyJSON = body ? JSON.stringify(body) : null
 
   function makeRequest() {
     return fetchTransport(`${hostname}${path}`, {
       method: method,
-      body: body ? JSON.stringify(body) : undefined,
+      body: bodyJSON,
       headers,
     })
       .then(async res => {
@@ -88,15 +65,16 @@ export async function httpRequest({
           return res.json()
         }
 
-        const responseJSON = res.body ? await res.json() : null
+        const responseText = res.body ? await res.text() : null
+        const response = safeParseJSON(responseText)
 
         throw new HTTPRequestError({
-          error: responseJSON?.message,
+          error: response?.message,
           hostname,
           path,
           method,
-          requestBody: body,
-          responseBody: responseJSON,
+          requestBody: bodyJSON,
+          responseBody: responseText,
           responseStatusText: res.statusText,
           statusCode: res.status,
         })
@@ -120,11 +98,45 @@ See more here: https://docs.onflow.org/fcl/reference/sdk-guidelines/#connect`,
           hostname,
           path,
           method,
-          requestBody: body,
+          requestBody: bodyJSON,
         })
       })
   }
 
+  async function requestLoop(retryAttempt = 0) {
+    try {
+      const resp = await makeRequest()
+      return resp
+    } catch (error) {
+      const retryStatusCodes = [408, 429, 500, 502, 503, 504]
+
+      if (retryStatusCodes.includes(error.statusCode)) {
+        return await new Promise((resolve, reject) => {
+          if (retryAttempt < retryLimit) {
+            console.warn(
+              `Access node unavailable, retrying in ${retryIntervalMs} ms...`
+            )
+            setTimeout(() => {
+              resolve(requestLoop(retryAttempt + 1))
+            }, retryIntervalMs)
+          } else {
+            reject(error)
+          }
+        })
+      } else {
+        throw error
+      }
+    }
+  }
+
   // Keep retrying request until server available or max attempts exceeded
   return await requestLoop()
+}
+
+function safeParseJSON(data) {
+  try {
+    return JSON.parse(data)
+  } catch {
+    return null
+  }
 }
