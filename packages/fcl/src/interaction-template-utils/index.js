@@ -1,4 +1,4 @@
-export {verifyInteractionTemplateIsAudited} from "./verify-interaction-template-is-audited.js"
+export {getInteractionTemplateAudits} from "./get-interaction-template-audits.js"
 export {
   generateDependencyPin,
   generateDependencyPinAtLatestSealedBlock,

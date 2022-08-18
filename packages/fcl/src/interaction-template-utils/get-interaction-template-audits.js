@@ -4,17 +4,17 @@ import {query} from "../exec/query.js"
 import {generateTemplateId} from "./generate-template-id.js"
 import {normalizeInteractionTemplate} from "./normalize/interaction-template.js"
 
-export async function verifyInteractionTemplateIsAudited({template, auditors}) {
+export async function getInteractionTemplateAudits({template, auditors}) {
   invariant(
     template != undefined,
-    "verifyInteractionTemplateIsAudited({ template }) -- template must be defined"
+    "getInteractionTemplateAudits({ template }) -- template must be defined"
   )
 
   template = normalizeInteractionTemplate(template)
 
   invariant(
     template.f_type === "InteractionTemplate",
-    "verifyInteractionTemplateIsAudited({ template }) -- template must be an InteractionTemplate"
+    "getInteractionTemplateAudits({ template }) -- template must be an InteractionTemplate"
   )
 
   // Recompute ID to be sure it matches
@@ -22,7 +22,7 @@ export async function verifyInteractionTemplateIsAudited({template, auditors}) {
 
   if (recomputedTemplateID !== template.id) {
     log({
-      title: "verifyInteractionTemplateIsAudited Debug Error",
+      title: "getInteractionTemplateAudits Debug Error",
       message: `Could not recompute and match template ID
                 computed: ${recomputedTemplateID}
                 template: ${template.id}
@@ -30,7 +30,7 @@ export async function verifyInteractionTemplateIsAudited({template, auditors}) {
       level: LEVELS.debug,
     })
     throw new Error(
-      "verifyInteractionTemplateIsAudited Error: Could not recompute and match template ID"
+      "getInteractionTemplateAudits Error: Could not recompute and match template ID"
     )
   }
 
@@ -40,11 +40,11 @@ export async function verifyInteractionTemplateIsAudited({template, auditors}) {
 
       invariant(
         _auditors,
-        "verifyInteractionTemplateIsAudited Error: Required configuration for 'fcl.auditors' is not set"
+        "getInteractionTemplateAudits Error: Required configuration for 'fcl.auditors' is not set"
       )
       invariant(
         Array.isArray(_auditors),
-        "verifyInteractionTemplateIsAudited Error: Required configuration for 'fcl.auditors' is not an array"
+        "getInteractionTemplateAudits Error: Required configuration for 'fcl.auditors' is not an array"
       )
 
       let FlowInteractionAuditContract = opts.flowInteractionAuditContract
@@ -52,7 +52,7 @@ export async function verifyInteractionTemplateIsAudited({template, auditors}) {
         const fclNetwork = await config().get("flow.network")
         invariant(
           fclNetwork === "mainnet" || fclNetwork === "testnet",
-          "verifyInteractionTemplateIsAudited Error: Unable to determine address for FlowInteractionTemplateAudit contract. Set configuration for 'fcl.network' to 'mainnet' or 'testnet'"
+          "getInteractionTemplateAudits Error: Unable to determine address for FlowInteractionTemplateAudit contract. Set configuration for 'fcl.network' to 'mainnet' or 'testnet'"
         )
         if (fclNetwork === "mainnet") {
           FlowInteractionAuditContract = "0xb4b82a1c9d21d284"
@@ -78,7 +78,7 @@ export async function verifyInteractionTemplateIsAudited({template, auditors}) {
 
     default:
       throw new Error(
-        "verifyInteractionTemplateIsAudited Error: Unsupported template version"
+        "getInteractionTemplateAudits Error: Unsupported template version"
       )
   }
 }
