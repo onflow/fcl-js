@@ -1,6 +1,7 @@
 import SignClient from "@walletconnect/sign-client"
 import {makeServicePlugin} from "./service"
 export {getSdkError} from "@walletconnect/utils"
+import {invariant} from "@onflow/util-invariant"
 
 const DEFAULT_RELAY_URL = "wss://relay.walletconnect.com"
 const DEFAULT_LOGGER = "debug"
@@ -12,9 +13,10 @@ const DEFAULT_APP_METADATA = {
 }
 
 const initClient = async ({projectId, metadata}) => {
-  if (typeof projectId === "undefined") {
-    throw new Error("WalletConnect projectId is required")
-  }
+  invariant(
+    projectId != null,
+    "FCL Wallet Connect Error: WalletConnect projectId is required"
+  )
   try {
     return SignClient.init({
       logger: DEFAULT_LOGGER,

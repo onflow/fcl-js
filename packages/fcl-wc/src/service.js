@@ -1,4 +1,6 @@
 import QRCodeModal from "@walletconnect/qrcode-modal"
+import {config} from "@onflow/config"
+import {invariant} from "@onflow/util-invariant"
 
 export const makeServicePlugin = client => ({
   name: "fcl-service-walletconnect",
@@ -9,9 +11,7 @@ export const makeServicePlugin = client => ({
 const makeServiceStrategy = client => {
   return ({service, body, opts}) => {
     return new Promise(async (resolve, reject) => {
-      if (typeof client === "undefined") {
-        throw new Error("WalletConnect is not initialized")
-      }
+      invariant(client, "WalletConnect is not initialized")
       let session
       const onResponse = resp => {
         try {
@@ -46,7 +46,7 @@ const makeServiceStrategy = client => {
 
       if (client.session.length) {
         const lastKeyIndex = client.session.keys.length - 1
-        session = client.session.get(client.session.keys[lastKeyIndex])
+        session = client.session.get(client.session.keys.at(lastKeyIndex))
       }
       if (session == null) {
         const pairing =
@@ -91,11 +91,16 @@ const makeServiceStrategy = client => {
 
 async function connectWc(onClose, {client, pairing}) {
   try {
-    // need to get chain from config or api ping endpoint
+    const network = await config.get("flow.network")
+    invariant(
+      network === "mainnet" || network === "testnet",
+      "FCL Configuration value for 'flow.network' is required (testnet || mainnet)"
+    )
+
     const requiredNamespaces = {
       flow: {
         methods: ["flow_authn", "flow_authz", "flow_user_sign"],
-        chains: ["flow:testnet"],
+        chains: [`flow:${network}`],
         events: ["chainChanged", "accountsChanged"],
       },
     }
