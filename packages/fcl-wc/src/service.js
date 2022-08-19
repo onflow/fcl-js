@@ -49,7 +49,7 @@ const makeServiceStrategy = client => {
         session = client.session.get(client.session.keys[lastKeyIndex])
       }
       if (session == null) {
-        let pairing = {topic: service?.provider?.address ?? undefined}
+        const pairing = {topic: service?.provider?.address ?? undefined}
         session = await connectWc(onClose, {
           client,
           pairing,
@@ -135,9 +135,9 @@ function makeWcServices(client) {
           name: "WalletConnect",
           icon: "https://avatars.githubusercontent.com/u/37784886",
           description: "WalletConnect Generic Provider",
-          color: "",
-          supportEmail: "",
           website: "https://walletconnect.com/",
+          color: null,
+          supportEmail: null,
         },
       },
       strategy: makeServiceStrategy(client),
@@ -159,8 +159,8 @@ function makeWcServices(client) {
             icon: pairing.peerMetadata.icons[0],
             description: pairing.peerMetadata.description,
             website: pairing.peerMetadata.url,
-            color: "",
-            supportEmail: "",
+            color: null,
+            supportEmail: null,
           },
         },
         strategy: makeServiceStrategy(client),
