@@ -133,7 +133,7 @@ import * as fcl from "@onflow/fcl"
 import myTransactionTemplate from "./my-transaction-template.template.json"
 
 const audits = await fcl.InteractionTemplateUtils
-  .verifyInteractionTemplateIsAudited({
+  .getInteractionTemplateAudits({
     template: myTransactionTemplate
   })
 
