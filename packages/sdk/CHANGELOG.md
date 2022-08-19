@@ -1,5 +1,11 @@
 # @onflow/sdk
 
+## 1.1.1-templates.11
+
+### Patch Changes
+
+- Update Interaction Template utils
+
 ## 1.1.1-templates.10
 
 ### Patch Changes

@@ -1,6 +1,6 @@
 {
   "name": "@onflow/sdk",
-  "version": "1.1.1-templates.10",
+  "version": "1.1.1-templates.11",
   "description": "Flow SDK",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
