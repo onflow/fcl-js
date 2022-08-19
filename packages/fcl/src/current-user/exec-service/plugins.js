@@ -3,6 +3,7 @@ import {execIframeRPC} from "./strategies/iframe-rpc"
 import {execPopRPC} from "./strategies/pop-rpc"
 import {execTabRPC} from "./strategies/tab-rpc"
 import {execExtRPC} from "./strategies/ext-rpc"
+import {invariant} from "@onflow/util-invariant"
 
 const CORE_STRATEGIES = {
   "HTTP/RPC": execHttpPost,
@@ -25,6 +26,7 @@ const ServiceRegistry = () => {
   const getServices = () => [...services].map(service => service.definition)
 
   const add = servicePlugins => {
+    invariant(servicePlugins.length, "Discovery services are required")
     setServices(servicePlugins)
     for (const s of servicePlugins) {
       if (!strategies.has(s.definition?.method)) {
@@ -44,28 +46,41 @@ const ServiceRegistry = () => {
   })
 }
 
+const validatePlugins = plugins => {
+  let pluginsArray
+  invariant(plugins, "No plugins supplied")
+
+  if (!Array.isArray(plugins)) {
+    pluginsArray = [plugins]
+  } else {
+    pluginsArray = [...plugins]
+  }
+  for (const p of pluginsArray) {
+    invariant(p.name, "Plugin name is required")
+    invariant(
+      supportedPlugins.includes(p.type),
+      `Plugin type ${p.type} is not supported`
+    )
+  }
+
+  return pluginsArray
+}
+
 const PluginRegistry = () => {
   const pluginsMap = new Map()
 
   const getPlugins = () => pluginsMap
+
   const add = plugins => {
-    let pluginsArray
-    if (plugins == null) throw new Error("No plugins supplied")
-    if (!Array.isArray(plugins)) {
-      pluginsArray = [plugins]
-    } else {
-      pluginsArray = [...plugins]
-    }
+    const pluginsArray = validatePlugins(plugins)
     for (const p of pluginsArray) {
-      if (!supportedPlugins.includes(p.type)) {
-        throw new Error(`Plugin type ${p.type} is not supported`)
-      }
       pluginsMap.set(p.name, p)
       if (p.type === "discovery-service") {
         serviceRegistry.add(p.services)
       }
     }
   }
+
   return Object.freeze({
     add,
     getPlugins,
