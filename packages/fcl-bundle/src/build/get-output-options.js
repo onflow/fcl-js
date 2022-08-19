@@ -15,6 +15,7 @@ module.exports = function getOutputOptions(package, build) {
     file: resolve(build.dir, build.entry),
     format: build.type,
     preserveModules: false,
+    inlineDynamicImports: true,
     sourcemap: true,
     plugins: [
       build.banner
