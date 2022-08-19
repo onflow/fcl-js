@@ -2,6 +2,7 @@ import SignClient from "@walletconnect/sign-client"
 import {makeServicePlugin} from "./service"
 export {getSdkError} from "@walletconnect/utils"
 import {invariant} from "@onflow/util-invariant"
+import {log} from "@onflow/util-logger"
 
 const DEFAULT_RELAY_URL = "wss://relay.walletconnect.com"
 const DEFAULT_LOGGER = "debug"
@@ -25,7 +26,11 @@ const initClient = async ({projectId, metadata}) => {
       metadata: metadata || DEFAULT_APP_METADATA,
     })
   } catch (error) {
-    console.error(error)
+    log({
+      title: `${error.name} fcl-wc Init Client`,
+      message: error.message,
+      level: 1,
+    })
     throw error
   }
 }
