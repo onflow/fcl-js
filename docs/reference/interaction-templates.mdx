@@ -1,3 +1,7 @@
+---
+title: Interaction Templates
+---
+
 # Interaction Templates
 
 > Interaction Templates are a concept established in FLIP-934. Read the FLIP [here](https://github.com/onflow/flips/blob/main/flips/20220503-interaction-templates.md)
@@ -120,7 +124,7 @@ await fcl.config().put("flow.network", "mainnet")
 const auditorA_FlowAddress = "0xABC123DEF456"
 const auditorB_FlowAddress = "0xFFAA1212DEFF"
 
-await fcl.config().put("fcl.auditors", [
+await fcl.config().put("flow.auditors", [
   auditorA_FlowAddress,
   auditorB_FlowAddress
 ])
