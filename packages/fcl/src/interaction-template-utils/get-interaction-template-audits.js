@@ -36,7 +36,7 @@ export async function getInteractionTemplateAudits({template, auditors}) {
 
   switch (template.f_version) {
     case "1.0.0":
-      const _auditors = auditors || (await config().get("fcl.auditors"))
+      const _auditors = auditors || (await config().get("flow.auditors"))
 
       invariant(
         _auditors,
