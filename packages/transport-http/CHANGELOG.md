@@ -1,5 +1,15 @@
 # @onflow/transport-http
 
+## 1.5.0-alpha.1
+
+### Minor Changes
+
+- [#1362](https://github.com/onflow/fcl-js/pull/1362) [`9a1eb2b3`](https://github.com/onflow/fcl-js/commit/9a1eb2b3dec369d4f35ec2aa8b753ec1230c0efe) Thanks [@jribbink](https://github.com/jribbink)! - Retry 429 (Too many requests) responses which are used for access node rate limiting
+
+### Patch Changes
+
+- [#1362](https://github.com/onflow/fcl-js/pull/1362) [`9a1eb2b3`](https://github.com/onflow/fcl-js/commit/9a1eb2b3dec369d4f35ec2aa8b753ec1230c0efe) Thanks [@jribbink](https://github.com/jribbink)! - Catch JSON error when response body is empty
+
 ## 1.4.1-alpha.0
 
 ### Patch Changes
