@@ -4,6 +4,7 @@ import {execPopRPC} from "./strategies/pop-rpc"
 import {execTabRPC} from "./strategies/tab-rpc"
 import {execExtRPC} from "./strategies/ext-rpc"
 import {invariant} from "@onflow/util-invariant"
+import {log} from "@onflow/util-logger"
 
 const CORE_STRATEGIES = {
   "HTTP/RPC": execHttpPost,
@@ -32,9 +33,11 @@ const ServiceRegistry = () => {
       if (!strategies.has(s.definition?.method)) {
         strategies.set(s.definition?.method, s.strategy)
       } else {
-        console.warn(
-          `Service strategy for ${s.definition.method} already exists`
-        )
+        log({
+          title: `Add Service Plugin`,
+          message: `Service strategy for ${s.definition.method} already exists`,
+          level: 2,
+        })
       }
     }
   }

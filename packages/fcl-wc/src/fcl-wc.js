@@ -3,6 +3,7 @@ import {makeServicePlugin} from "./service"
 export {getSdkError} from "@walletconnect/utils"
 import {invariant} from "@onflow/util-invariant"
 import {log} from "@onflow/util-logger"
+import * as fcl from "@onflow/fcl"
 
 const DEFAULT_RELAY_URL = "wss://relay.walletconnect.com"
 const DEFAULT_LOGGER = "debug"
@@ -38,6 +39,7 @@ const initClient = async ({projectId, metadata}) => {
 export const initFclWc = async ({projectId, metadata} = {}) => {
   const client = await initClient({projectId, metadata})
   const FclWcServicePlugin = makeServicePlugin(client)
+  fcl.discovery.authn.update()
   return {
     FclWcServicePlugin,
     client,

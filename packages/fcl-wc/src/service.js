@@ -1,6 +1,7 @@
 import QRCodeModal from "@walletconnect/qrcode-modal"
 import {config} from "@onflow/config"
 import {invariant} from "@onflow/util-invariant"
+import {isMobile} from "./utils"
 
 export const makeServicePlugin = client => ({
   name: "fcl-service-walletconnect",
@@ -55,6 +56,7 @@ const makeServiceStrategy = client => {
             : {topic: service.provider.address}
 
         session = await connectWc(onClose, {
+          service,
           client,
           pairing,
         })
@@ -89,7 +91,7 @@ const makeServiceStrategy = client => {
   }
 }
 
-async function connectWc(onClose, {client, pairing}) {
+async function connectWc(onClose, {service, client, pairing}) {
   try {
     const network = await config.get("flow.network")
     invariant(
@@ -111,10 +113,17 @@ async function connectWc(onClose, {client, pairing}) {
     })
 
     if (uri) {
-      QRCodeModal.open(uri, () => {
-        console.log("EVENT", "QR Code Modal closed")
-        onClose()
-      })
+      if (isMobile()) {
+        const queryString = new URLSearchParams({uri: uri}).toString()
+        // need deep link url for mobile
+        let url = "" + queryString
+        window.open(url, "blank").focus()
+      } else {
+        QRCodeModal.open(uri, () => {
+          console.log("EVENT", "QR Code Modal closed")
+          onClose()
+        })
+      }
     }
 
     const session = await approval()

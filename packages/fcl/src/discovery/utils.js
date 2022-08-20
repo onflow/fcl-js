@@ -21,12 +21,13 @@ export async function getDiscoveryService(service) {
   invariant(
     endpoint,
     `
-      If no service is passed to "authenticate," then "discovery.wallet" must be defined in fcl config.
-      See: "https://docs.onflow.org/fcl/reference/api/#setting-configuration-values"
+    If no service is passed to "authenticate," then "discovery.wallet" must be defined in fcl config.
+    See: "https://docs.onflow.org/fcl/reference/api/#setting-configuration-values"
     `
   )
 
   return {
+    ...service,
     type: "authn",
     endpoint,
     method,

@@ -43,5 +43,8 @@
     "@walletconnect/sign-client": "^2.0.0-rc.2",
     "@walletconnect/types": "^2.0.0-rc.2",
     "@walletconnect/utils": "^2.0.0-rc.2"
+  },
+  "peerDependencies": {
+    "@onflow/fcl": "^1.2.1-alpha.0"
   }
 }
