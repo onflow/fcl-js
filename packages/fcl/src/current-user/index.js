@@ -9,7 +9,7 @@ import {buildUser} from "./build-user"
 import {serviceOfType} from "./service-of-type"
 import {execService} from "./exec-service"
 import {normalizeCompositeSignature} from "./normalize/composite-signature"
-import {getDiscoveryService} from "../config-utils"
+import {getDiscoveryService} from "../discovery"
 
 export const isFn = d => typeof d === "function"
 
@@ -116,11 +116,12 @@ async function getAccountProofData() {
   return accountProofData
 }
 
-// Certain method types cannot be overridden to use other methods like POP/RCP
-const isServiceMethodUnchangable = method => ["EXT/RPC"].includes(method)
-
 async function authenticate({service, redir = false} = {}) {
-  if (service && !service?.provider?.is_installed && service?.provider?.requires_install) {
+  if (
+    service &&
+    !service?.provider?.is_installed &&
+    service?.provider?.requires_install
+  ) {
     window.location.href = service?.provider?.install_link
     return
   }
@@ -129,7 +130,7 @@ async function authenticate({service, redir = false} = {}) {
     spawnCurrentUser()
     const opts = {redir}
     const user = await snapshot()
-    const discoveryService = await getDiscoveryService()
+    const discoveryService = await getDiscoveryService(service)
     const refreshService = serviceOfType(user.services, "authn-refresh")
     let accountProofData
 
@@ -142,14 +143,6 @@ async function authenticate({service, redir = false} = {}) {
       )
       return reject(error)
     }
-
-    invariant(
-      service || discoveryService.endpoint,
-      `
-        If no service passed to "authenticate," then "discovery.wallet" must be defined in config.
-        See: "https://docs.onflow.org/fcl/reference/api/#setting-configuration-values"
-      `
-    )
 
     if (user.loggedIn) {
       if (refreshService) {
@@ -172,12 +165,7 @@ async function authenticate({service, redir = false} = {}) {
 
     try {
       const response = await execService({
-        service: {
-          ...(service || discoveryService),
-          method: isServiceMethodUnchangable(service?.method)
-            ? service.method 
-            : discoveryService?.method || service.method || "IFRAME/RPC",
-        },
+        service: discoveryService,
         msg: accountProofData,
         opts,
         config: {
