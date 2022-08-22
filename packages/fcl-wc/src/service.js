@@ -1,6 +1,7 @@
 import QRCodeModal from "@walletconnect/qrcode-modal"
 import {config} from "@onflow/config"
 import {invariant} from "@onflow/util-invariant"
+import {log} from "@onflow/util-logger"
 import {isMobile} from "./utils"
 
 export const makeServicePlugin = client => ({
@@ -36,7 +37,11 @@ const makeServiceStrategy = client => {
               break
           }
         } catch (error) {
-          console.error("execWcRPC onResponse error", error)
+          log({
+            title: `${error.name} "WC/RPC onResponse error"`,
+            message: error.message,
+            level: 1,
+          })
           throw error
         }
       }
