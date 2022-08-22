@@ -660,7 +660,7 @@ function Component() {
 
 #### More Configuration
 
-By default, limited functionality services, like Ledger, require apps to opt-in in order to display to users. This is so users don't authenticate only to later find out certain services cannot complete certain actions. To enable specific limited functionality services in an application, use the `discovery.authn.include` property in your configuration with a value of an array of services you'd like your app to opt-in to displaying for users.
+By default, limited functionality services or services that require developer registration, like Ledger or Dapper Wallet, require apps to opt-in in order to display to users. This is so users don't authenticate only to later find out certain services cannot complete certain actions. To enable opt-in services in an application, use the `discovery.authn.include` property in your configuration with a value of an array of services you'd like your app to opt-in to displaying for users.
 
 ```javascript
 
@@ -672,11 +672,12 @@ config({
 })
 ```
 
-**Wallet Addresses on Testnet and Mainnet**
+**Opt-In Wallet Addresses on Testnet and Mainnet**
 
-| Service    | Testnet            | Mainnet            |
-| ---------- | ------------------ | ------------------ |
-| `Ledger`   | 0x9d2e44203cb13051 | 0xe5cd26afebe62781 |
+| Service           | Testnet            | Mainnet            |
+| ------------------| ------------------ | ------------------ |
+| `Dapper Wallet`   | 0x82ec283f88a62e65 | 0xead892083b3e2c6c |
+| `Ledger`          | 0x9d2e44203cb13051 | 0xe5cd26afebe62781 |
 
 For more details on wallets, view the [service list here](https://github.com/onflow/fcl-discovery/blob/master/data/services.json).
 
