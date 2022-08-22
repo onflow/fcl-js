@@ -176,7 +176,7 @@ function makeWcServices(client) {
           endpoint: "flow_authn",
           optIn: false,
           provider: {
-            address: pairing.topic,
+            address: null,
             name: pairing.peerMetadata.name,
             uid: pairing.topic,
             icon: pairing.peerMetadata.icons[0],
