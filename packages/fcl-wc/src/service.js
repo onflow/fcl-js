@@ -51,9 +51,7 @@ const makeServiceStrategy = client => {
       }
       if (session == null) {
         const pairing =
-          service.provider.address === "WalletConnect"
-            ? null
-            : {topic: service.provider.address}
+          service.provider.uid === null ? null : {topic: service.provider.uid}
 
         session = await connectWc(onClose, {
           service,
@@ -151,6 +149,7 @@ function makeWcServices(client) {
         provider: {
           address: "WalletConnect",
           name: "WalletConnect",
+          uid: null,
           icon: "https://avatars.githubusercontent.com/u/37784886",
           description: "WalletConnect Generic Provider",
           website: "https://walletconnect.com/",
@@ -171,9 +170,9 @@ function makeWcServices(client) {
           endpoint: "flow_authn",
           optIn: false,
           provider: {
-            ...pairing,
             address: pairing.topic,
             name: pairing.peerMetadata.name,
+            uid: pairing.topic,
             icon: pairing.peerMetadata.icons[0],
             description: pairing.peerMetadata.description,
             website: pairing.peerMetadata.url,
