@@ -6,7 +6,7 @@ import {isMobile} from "./utils"
 export const makeServicePlugin = client => ({
   name: "fcl-service-walletconnect",
   type: "discovery-service",
-  services: makeWcServices(client),
+  discoveryServices: makeWcServices(client),
 })
 
 const makeServiceStrategy = client => {
