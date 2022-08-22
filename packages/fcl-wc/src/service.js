@@ -88,7 +88,11 @@ const makeServiceStrategy = client => {
         })
         onResponse(result)
       } catch (e) {
-        console.error("Error on WalletConnect request", e)
+        log({
+          title: `${e.name} Error on WalletConnect request`,
+          message: e.message,
+          level: 1,
+        })
         reject(`Declined: Externally Halted`)
       }
     })
@@ -124,7 +128,6 @@ async function connectWc(onClose, {service, client, pairing}) {
         window.open(url, "blank").focus()
       } else {
         QRCodeModal.open(uri, () => {
-          console.log("EVENT", "QR Code Modal closed")
           onClose()
         })
       }
@@ -133,7 +136,11 @@ async function connectWc(onClose, {service, client, pairing}) {
     const session = await approval()
     return session
   } catch (e) {
-    console.error("Error establishing session", e)
+    log({
+      title: `${e.name} "Error establishing Walletconnect session"`,
+      message: e.message,
+      level: 1,
+    })
     throw e
   } finally {
     QRCodeModal.close()

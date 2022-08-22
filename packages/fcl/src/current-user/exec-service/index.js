@@ -31,11 +31,10 @@ export async function execService({service, msg = {}, config = {}, opts = {}}) {
       return res
     }
   } catch (error) {
-    console.error("Error on execService", error, {
-      service,
-      msg,
-      config,
-      opts,
+    log({
+      title: `${error.name} Error on execService: ${service}, ${msg}, ${config}, ${opts}`,
+      message: error.message,
+      level: 1,
     })
     throw error
   }
