@@ -27,6 +27,7 @@ export async function getDiscoveryService(service) {
   )
 
   return {
+    ...service,
     type: "authn",
     endpoint,
     method,

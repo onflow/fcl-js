@@ -10,6 +10,7 @@ import {serviceOfType} from "./service-of-type"
 import {execService} from "./exec-service"
 import {normalizeCompositeSignature} from "./normalize/composite-signature"
 import {getDiscoveryService} from "../discovery"
+import {getNetwork} from "../utils"
 
 export const isFn = d => typeof d === "function"
 
@@ -130,6 +131,7 @@ async function authenticate({service, redir = false} = {}) {
     spawnCurrentUser()
     const opts = {redir}
     const user = await snapshot()
+    await getNetwork()
     const discoveryService = await getDiscoveryService(service)
     const refreshService = serviceOfType(user.services, "authn-refresh")
     let accountProofData
