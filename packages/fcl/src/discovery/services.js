@@ -1,7 +1,7 @@
 import {config} from "@onflow/config"
 import {invariant} from "@onflow/util-invariant"
 import {VERSION} from "../VERSION"
-import {makeDiscoveryServices} from "../current-user"
+import {makeDiscoveryServices} from "./utils"
 
 export async function getServices({types}) {
   const endpoint = await config.get("discovery.authn.endpoint")

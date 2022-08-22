@@ -1,5 +1,11 @@
 import {config} from "@onflow/config"
 import {invariant} from "@onflow/util-invariant"
+import {serviceRegistry} from "../current-user/exec-service/plugins"
+
+export const makeDiscoveryServices = async () => {
+  const extensionServices = window?.fcl_extensions || []
+  return [...extensionServices, ...serviceRegistry.getServices()]
+}
 
 // Certain method types cannot be overridden to use other methods like POP/RCP
 const isServiceMethodUnchangable = method =>

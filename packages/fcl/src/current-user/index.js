@@ -11,8 +11,7 @@ import {execService} from "./exec-service"
 import {normalizeCompositeSignature} from "./normalize/composite-signature"
 import {configLens} from "../default-config"
 import {VERSION} from "../VERSION"
-import {serviceRegistry} from "./exec-service/plugins"
-import {getDiscoveryService} from "../discovery"
+import {getDiscoveryService, makeDiscoveryServices} from "../discovery"
 
 export const isFn = d => typeof d === "function"
 
@@ -119,14 +118,9 @@ async function getAccountProofData() {
   return accountProofData
 }
 
-export const makeDiscoveryServices = async () => {
-  const extensionServices = window?.fcl_extensions || []
-  return [...extensionServices, ...serviceRegistry.getServices()]
-}
-
-const makeConfig = async ({endpoint, discoveryAuthnInclude}) => {
+const makeConfig = async ({discoveryAuthnInclude}) => {
   return {
-    discoveryAuthnInclude: endpoint ? discoveryAuthnInclude : [],
+    discoveryAuthnInclude,
     services: await configLens(/^service\./),
     app: await configLens(/^app\.detail\./),
     client: {
