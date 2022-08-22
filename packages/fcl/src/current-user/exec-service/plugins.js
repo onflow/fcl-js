@@ -16,18 +16,17 @@ const CORE_STRATEGIES = {
   "EXT/RPC": execExtRPC,
 }
 
-const supportedPlugins = ["discovery-service"]
+const supportedPlugins = ["ServicePlugin"]
+const supportedServicePlugins = ["discovery-service"]
 
-const validateDiscoveryServices = discoveryServices => {
-  let discoveryServiceArray
-  invariant(discoveryServices.length, "Discovery services are required")
+const validateDiscoveryServices = servicePlugin => {
+  const discoveryServices = servicePlugin.discoveryServices
+  invariant(
+    Array.isArray(discoveryServices) && discoveryServices.length,
+    "Array of Discovery Services is required"
+  )
 
-  if (!Array.isArray(discoveryServices)) {
-    discoveryServiceArray = [discoveryServices]
-  } else {
-    discoveryServiceArray = [...discoveryServices]
-  }
-  for (const ds of discoveryServiceArray) {
+  for (const ds of discoveryServices) {
     invariant(
       isRequired(ds.definition) &&
         isObject(ds.definition) &&
@@ -40,7 +39,7 @@ const validateDiscoveryServices = discoveryServices => {
     )
   }
 
-  return discoveryServiceArray
+  return discoveryServices
 }
 
 const ServiceRegistry = () => {
@@ -52,19 +51,25 @@ const ServiceRegistry = () => {
 
   const getServices = () => [...services].map(service => service.definition)
 
-  const add = discoveryServices => {
-    const discoveryServicesArray = validateDiscoveryServices(discoveryServices)
+  const add = servicePlugin => {
+    invariant(
+      supportedServicePlugins.includes(servicePlugin.type),
+      `Service Plugin type ${servicePlugin.type} is not supported`
+    )
+    if (servicePlugin.type === "discovery-service") {
+      const discoveryServices = validateDiscoveryServices(servicePlugin)
 
-    setServices(discoveryServicesArray)
-    for (const dsp of discoveryServicesArray) {
-      if (!strategies.has(dsp.definition?.method)) {
-        strategies.set(dsp.definition?.method, dsp.strategy)
-      } else {
-        log({
-          title: `Add Service Plugin`,
-          message: `Service strategy for ${dsp.definition.method} already exists`,
-          level: 2,
-        })
+      setServices(discoveryServices)
+      for (const dsp of discoveryServices) {
+        if (!strategies.has(dsp.definition?.method)) {
+          strategies.set(dsp.definition?.method, dsp.strategy)
+        } else {
+          log({
+            title: `Add Service Plugin`,
+            message: `Service strategy for ${dsp.definition.method} already exists`,
+            level: 2,
+          })
+        }
       }
     }
   }
@@ -87,9 +92,10 @@ const validatePlugins = plugins => {
   }
   for (const p of pluginsArray) {
     invariant(isRequired(p.name), "Plugin name is required")
+    invariant(isRequired(p.f_type), "Plugin f_type is required")
     invariant(
-      supportedPlugins.includes(p.type),
-      `Plugin type ${p.type} is not supported`
+      supportedPlugins.includes(p.f_type),
+      `Plugin type ${p.f_type} is not supported`
     )
   }
 
@@ -105,8 +111,8 @@ const PluginRegistry = () => {
     const pluginsArray = validatePlugins(plugins)
     for (const p of pluginsArray) {
       pluginsMap.set(p.name, p)
-      if (p.type === "discovery-service") {
-        serviceRegistry.add(p.discoveryServices)
+      if (p.f_type === "ServicePlugin") {
+        serviceRegistry.add(p)
       }
     }
   }
