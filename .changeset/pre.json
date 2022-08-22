@@ -20,7 +20,10 @@
     "@onflow/util-uid": "1.0.2"
   },
   "changesets": [
+    "eleven-bobcats-complain",
+    "empty-donkeys-trade",
     "perfect-houses-join",
+    "tasty-masks-turn",
     "wet-brooms-tap"
   ]
 }

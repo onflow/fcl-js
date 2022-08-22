@@ -1,5 +1,14 @@
 # @onflow/fcl
 
+## 1.2.1-alpha.1
+
+### Patch Changes
+
+- [#1357](https://github.com/onflow/fcl-js/pull/1357) [`ecbd77b2`](https://github.com/onflow/fcl-js/commit/ecbd77b2acfbe4a28793baca3db47c1d5347247d) Thanks [@gregsantos](https://github.com/gregsantos)! - Improve building discovery service on authn
+
+- Updated dependencies []:
+  - @onflow/sdk@1.1.2-alpha.1
+
 ## 1.2.1-alpha.0
 
 ### Patch Changes
