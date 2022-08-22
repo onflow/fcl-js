@@ -1,15 +1,15 @@
-const WatcherFactory = require("./watcher-factory")
+const WatcherPool = require("./watcher-pool")
+const {watch} = require("rollup")
 
 const getInputOptions = require("./get-input-options")
 const getOutputOptions = require("./get-output-options")
 
 module.exports = async function buildModulesWatch(builds, package) {
-  const watcherFactory = new WatcherFactory(builds.length)
-  watcherFactory.eventEmitter.on("event", handleWatcherEvent)
-
-  await Promise.all(
-    builds.map(build => buildModuleWatch(build, package, watcherFactory))
+  const watcherOptionsList = builds.map(build =>
+    getWatcherOptions(build, package)
   )
+  const watcherPool = new WatcherPool(watcherOptionsList)
+  watcherPool.on("event", handleWatcherEvent)
 
   function handleWatcherEvent(event) {
     switch (event.code) {
@@ -27,24 +27,13 @@ module.exports = async function buildModulesWatch(builds, package) {
   }
 }
 
-async function buildModuleWatch(build, package, watcherFactory) {
+function getWatcherOptions(build, package) {
   const inputOptions = getInputOptions(package, build)
   const outputOptions = getOutputOptions(package, build)
-  const watchOptions = {
+  const watcherOptions = {
     ...inputOptions,
     output: [outputOptions],
   }
 
-  let watcher, buildError
-  try {
-    watcher = watcherFactory.makeWatcher(watchOptions)
-  } catch (error) {
-    buildError = error
-  }
-
-  if (watcher) watcher.close()
-
-  if (buildError) {
-    throw new Error(buildError)
-  }
+  return watcherOptions
 }

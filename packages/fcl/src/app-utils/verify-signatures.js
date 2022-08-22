@@ -150,8 +150,8 @@ export async function verifyAccountProof(
     args: (arg, t) => [
       arg(withPrefix(address), t.Address),
       arg(message, t.String),
-      arg(keyIndices, t.Array([t.Int])),
-      arg(signaturesArr, t.Array([t.String])),
+      arg(keyIndices, t.Array(t.Int)),
+      arg(signaturesArr, t.Array(t.String)),
     ],
   })
 }
@@ -193,8 +193,8 @@ export async function verifyUserSignatures(message, compSigs, opts = {}) {
     args: (arg, t) => [
       arg(address, t.Address),
       arg(message, t.String),
-      arg(keyIndices, t.Array([t.Int])),
-      arg(signaturesArr, t.Array([t.String])),
+      arg(keyIndices, t.Array(t.Int)),
+      arg(signaturesArr, t.Array(t.String)),
     ],
   })
 }

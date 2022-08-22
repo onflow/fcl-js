@@ -20,6 +20,8 @@ All of the configuration for FCL-Bundle currently takes place within the `packag
 | `module` | No       | string     | Specify esm bundle output path if not manually specified by [Output Configuration](#output-configuration) (as well as esm entry point if not overriden by `package.exports`)                                                                                                                                      |
 | `unpkg`  | No       | string     | Specify umd bundle output path if not manually specified by [Output Configuration](#output-configuration) (as well as umd entry point if not overriden by `package.exports`)                                                                                                                                      |
 
+> **Note:** If output paths end in ".min.js", the resulting bundle will be minified
+
 
 ### Output Configuration
 
@@ -34,6 +36,8 @@ An Output Configuration object exists with the following properties:
 An empty Output Configuration will fallback to the [default outputs](#default-outputs) if none are provided.  However, if at least one output format is provided, the missing outputs will be excluded from the final build.
 
 In practice, these Output Configuration objects will be consumed as shown in the [Source Configuration](#source-configuration) below.
+
+> **Note:** If output paths end in ".min.js", the resulting bundle will be minified
 
 ### Source Configuration
 
