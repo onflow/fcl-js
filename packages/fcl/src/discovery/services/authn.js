@@ -8,6 +8,7 @@ import {
   send,
 } from "@onflow/util-actor"
 import {getServices} from "../services"
+import {log} from "@onflow/util-logger"
 
 export const SERVICE_ACTOR_KEYS = {
   AUTHN: "authn",
@@ -38,8 +39,12 @@ const fetchServicesFromDiscovery = async () => {
     send(SERVICE_ACTOR_KEYS.AUTHN, SERVICE_ACTOR_KEYS.UPDATE_RESULTS, {
       results: services,
     })
-  } catch (_) {
-    console.log("Error fetching Discovery API services.")
+  } catch (error) {
+    log({
+      title: `${error.name} Error fetching Discovery API services.`,
+      message: error.message,
+      level: 1,
+    })
   }
 }
 

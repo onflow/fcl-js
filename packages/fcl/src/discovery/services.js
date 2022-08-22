@@ -2,8 +2,6 @@ import {config} from "@onflow/config"
 import {invariant} from "@onflow/util-invariant"
 import {VERSION} from "../VERSION"
 import {makeDiscoveryServices} from "../current-user"
-import {serviceRegistry} from "../current-user/exec-service/plugins"
-const isWindow = () => typeof window !== "undefined"
 
 export async function getServices({types}) {
   const endpoint = await config.get("discovery.authn.endpoint")
