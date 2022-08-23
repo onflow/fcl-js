@@ -8,13 +8,14 @@ import {
   send,
 } from "@onflow/util-actor"
 import {getServices} from "../services"
+import {log} from "@onflow/util-logger"
 
 export const SERVICE_ACTOR_KEYS = {
   AUTHN: "authn",
   RESULTS: "results",
   SNAPSHOT: "SNAPSHOT",
   UPDATED: "UPDATED",
-  UPDATE_RESULTS: "UPDATE_RESULTS"
+  UPDATE_RESULTS: "UPDATE_RESULTS",
 }
 
 const warn = (fact, msg) => {
@@ -32,17 +33,30 @@ const warn = (fact, msg) => {
   }
 }
 
+const fetchServicesFromDiscovery = async () => {
+  try {
+    const services = await getServices({types: [SERVICE_ACTOR_KEYS.AUTHN]})
+    send(SERVICE_ACTOR_KEYS.AUTHN, SERVICE_ACTOR_KEYS.UPDATE_RESULTS, {
+      results: services,
+    })
+  } catch (error) {
+    log({
+      title: `${error.name} Error fetching Discovery API services.`,
+      message: error.message,
+      level: 1,
+    })
+  }
+}
+
 const HANDLERS = {
   [INIT]: async ctx => {
-    warn(typeof window === "undefined", '"fcl.discovery" is only available in the browser.')
+    warn(
+      typeof window === "undefined",
+      '"fcl.discovery" is only available in the browser.'
+    )
     // If you call this before the window is loaded extensions will not be set yet
     window.onload = async () => {
-      try {
-        const services = await getServices({ types: [SERVICE_ACTOR_KEYS.AUTHN] })
-        send(SERVICE_ACTOR_KEYS.AUTHN, SERVICE_ACTOR_KEYS.UPDATE_RESULTS, { results: services })
-      } catch (_) {
-        console.log("Error fetching Discovery API services.")
-      }
+      fetchServicesFromDiscovery()
     }
   },
   [SERVICE_ACTOR_KEYS.UPDATE_RESULTS]: (ctx, _letter, data) => {
@@ -54,14 +68,16 @@ const HANDLERS = {
     ctx.send(letter.from, SERVICE_ACTOR_KEYS.UPDATED, {...ctx.all()})
   },
   [UNSUBSCRIBE]: (ctx, letter) => ctx.unsubscribe(letter.from),
-  [SERVICE_ACTOR_KEYS.SNAPSHOT]: async (ctx, letter) => letter.reply({...ctx.all()}),
+  [SERVICE_ACTOR_KEYS.SNAPSHOT]: async (ctx, letter) =>
+    letter.reply({...ctx.all()}),
 }
 
 const spawnProviders = () => spawn(HANDLERS, SERVICE_ACTOR_KEYS.AUTHN)
 
 const authn = {
   subscribe: cb => subscriber(SERVICE_ACTOR_KEYS.AUTHN, spawnProviders, cb),
-  snapshot: () => snapshoter(SERVICE_ACTOR_KEYS.AUTHN, spawnProviders)
+  snapshot: () => snapshoter(SERVICE_ACTOR_KEYS.AUTHN, spawnProviders),
+  update: () => fetchServicesFromDiscovery(),
 }
 
 export default authn

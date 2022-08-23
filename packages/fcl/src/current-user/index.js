@@ -9,7 +9,9 @@ import {buildUser} from "./build-user"
 import {serviceOfType} from "./service-of-type"
 import {execService} from "./exec-service"
 import {normalizeCompositeSignature} from "./normalize/composite-signature"
-import {getDiscoveryService} from "../discovery"
+import {configLens} from "../default-config"
+import {VERSION} from "../VERSION"
+import {getDiscoveryService, makeDiscoveryServices} from "../discovery"
 
 export const isFn = d => typeof d === "function"
 
@@ -116,6 +118,20 @@ async function getAccountProofData() {
   return accountProofData
 }
 
+const makeConfig = async ({discoveryAuthnInclude}) => {
+  return {
+    discoveryAuthnInclude,
+    services: await configLens(/^service\./),
+    app: await configLens(/^app\.detail\./),
+    client: {
+      fclVersion: VERSION,
+      fclLibrary: "https://github.com/onflow/fcl-js",
+      hostname: window?.location?.hostname ?? null,
+      clientServices: await makeDiscoveryServices(),
+    },
+  }
+}
+
 async function authenticate({service, redir = false} = {}) {
   if (
     service &&
@@ -167,10 +183,8 @@ async function authenticate({service, redir = false} = {}) {
       const response = await execService({
         service: discoveryService,
         msg: accountProofData,
+        config: await makeConfig(discoveryService),
         opts,
-        config: {
-          discoveryAuthnInclude: discoveryService.discoveryAuthnInclude,
-        },
       })
       send(NAME, SET_CURRENT_USER, await buildUser(response))
     } catch (e) {

@@ -3,7 +3,7 @@ import {extension} from "./utils/extension"
 import {normalizePollingResponse} from "../../normalize/polling-response"
 import {VERSION} from "../../../VERSION"
 
-export function execExtRPC(service, body, opts, config) {
+export function execExtRPC({service, body, config, opts}) {
   return new Promise((resolve, reject) => {
     extension(service, {
       async onReady(_, {send}) {
