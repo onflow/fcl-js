@@ -18,7 +18,10 @@ function popupWindow(url, windowName, win, w, h) {
 
 export function renderPop(src) {
   if (popup == null || popup?.closed) {
-    popup = popupWindow(src, POP, window, 640, 770)
+    const urlParams = new URLSearchParams(window.location.search);
+    const width = urlParams.get('width') || 640
+    const height = urlParams.get('height') || 770
+    popup = popupWindow(src, POP, window, width, height)
   } else if (previousUrl !== src) {
     popup.location.replace(src)
     popup.focus()
