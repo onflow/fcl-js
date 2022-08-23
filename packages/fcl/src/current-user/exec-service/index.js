@@ -1,5 +1,6 @@
 import {invariant} from "@onflow/util-invariant"
 import {serviceRegistry} from "./plugins"
+import {log} from "@onflow/util-logger"
 
 const execStrategy = async ({service, body, config, opts}) => {
   const strategy = serviceRegistry.getStrategy(service.method)
@@ -32,8 +33,8 @@ export async function execService({service, msg = {}, config = {}, opts = {}}) {
     }
   } catch (error) {
     log({
-      title: `${error.name} Error on execService: ${service}, ${msg}, ${config}, ${opts}`,
-      message: error.message,
+      title: `Error on execService ${service?.type}`,
+      message: error,
       level: 1,
     })
     throw error
