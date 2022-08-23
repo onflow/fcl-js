@@ -1,5 +1,11 @@
 # @onflow/fcl
 
+## 1.3.0-alpha.3
+
+### Patch Changes
+
+- [#1372](https://github.com/onflow/fcl-js/pull/1372) [`6708494d`](https://github.com/onflow/fcl-js/commit/6708494df236dc8c7375a2f91dc04fbcc03235c8) Thanks [@gregsantos](https://github.com/gregsantos)! - Add missing logger package to execService
+
 ## 1.3.0-alpha.2
 
 ### Minor Changes
