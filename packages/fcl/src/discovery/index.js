@@ -1,5 +1,5 @@
 import authn from "./services/authn"
-export {getDiscoveryService} from "./utils"
+export {getDiscoveryService, makeDiscoveryServices} from "./utils"
 
 const discovery = {
   authn,

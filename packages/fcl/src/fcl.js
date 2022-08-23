@@ -6,6 +6,7 @@ export {verifyUserSignatures} from "./exec/verify"
 export {serialize} from "./serialize"
 export {transaction as tx} from "./transaction"
 export {events} from "./events"
+export {pluginRegistry} from "./current-user/exec-service/plugins"
 
 import {currentUser} from "./current-user"
 export {currentUser}
