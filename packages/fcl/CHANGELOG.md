@@ -1,5 +1,15 @@
 # @onflow/fcl
 
+## 1.3.0-alpha.2
+
+### Minor Changes
+
+- [#1352](https://github.com/onflow/fcl-js/pull/1352) [`e33fa8df`](https://github.com/onflow/fcl-js/commit/e33fa8df764ec4f10696eedf520cc92ee402623d) Thanks [@gregsantos](https://github.com/gregsantos)! - Add plugin registry and allow for service and strategy injection
+
+### Patch Changes
+
+- [#1359](https://github.com/onflow/fcl-js/pull/1359) [`9ea98850`](https://github.com/onflow/fcl-js/commit/9ea988503bbf4760bdee2a8bd8098be1cd95acb6) Thanks [@jribbink](https://github.com/jribbink)! - Minify UMD build
+
 ## 1.2.1-alpha.1
 
 ### Patch Changes
