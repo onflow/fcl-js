@@ -7,6 +7,7 @@
     "start": "npm run build && lerna run start --parallel",
     "test": "lerna run test",
     "release": "npm run build && npm run changeset publish",
+    "verify-markdown": "node ./.github/scripts/verify-markdown-links.js ./docs/",
     "changeset": "changeset"
   },
   "name": "fcl-js",
@@ -14,6 +15,7 @@
     "@changesets/changelog-github": "^0.4.4",
     "@changesets/cli": "^2.21.1",
     "lerna": "^5.0.0",
-    "prettier": "^2.6.2"
+    "prettier": "^2.6.2",
+    "request": "^2.88.2"
   }
 }

@@ -13,3 +13,5 @@ jobs:
         with:
           node-version: 16.x
       - run: make ci
+      - name: "Verify markdown links valid"
+        run: "npm run verify-markdown"

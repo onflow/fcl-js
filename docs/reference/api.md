@@ -397,7 +397,7 @@ fcl.unauthenticate();
 
 #### Examples
 
-- [React Hook to manage FCL authentication: Kitty-items](https://github.com/onflow/kitty-items/blob/master/web/src/hooks/use-current-user.hook.js)
+- [React Hook to manage FCL authentication: Kitty-items](https://github.com/onflow/kitty-items/blob/master/web/src/contexts/AppContext.jsx)
 
 ---
 
@@ -424,7 +424,7 @@ fcl.reauthenticate();
 
 #### Examples
 
-- [React Hook to manage FCL authentication: Kitty-items](https://github.com/onflow/kitty-items/blob/master/web/src/hooks/use-current-user.hook.js)
+- [React Hook to manage FCL authentication: Kitty-items](https://github.com/onflow/kitty-items/blob/master/web/src/contexts/AppContext.jsx)
 
 ---
 
@@ -432,7 +432,7 @@ fcl.reauthenticate();
 
 > ⚠️**This method can only be used in web browsers.**
 
-A **convenience method** that calls and is equivalent to [`fcl.authenticate()`](<#authenticate>).
+A **convenience method** that calls and is equivalent to [`fcl.authenticate()`](#authenticate).
 
 ---
 
@@ -440,7 +440,7 @@ A **convenience method** that calls and is equivalent to [`fcl.authenticate()`](
 
 > ⚠️**This method can only be used in web browsers.**
 
-A **convenience method** that calls and is equivalent to [`fcl.authenticate()`](<#authenticate>).
+A **convenience method** that calls and is equivalent to [`fcl.authenticate()`](#authenticate).
 
 ---
 
@@ -910,7 +910,7 @@ This method consumes an array of [builders](#builders) that are to be resolved a
 
 #### Note
 
-⚠️Must be used in conjuction with [`fcl.decode(response)`](<#decode>) to get back correct keys and all values in JSON.
+⚠️Must be used in conjuction with [`fcl.decode(response)`](#decode) to get back correct keys and all values in JSON.
 
 #### Arguments
 
@@ -1020,7 +1020,7 @@ build, resolve, and send it to the blockchain. A valid populated template is ref
 
 A builder function that returns the interaction to get an account by address.
 
-⚠️Consider using the pre-built interaction [`fcl.account(address)`](<#account>) if you do not need to pair with any other builders.
+⚠️Consider using the pre-built interaction [`fcl.account(address)`](#account) if you do not need to pair with any other builders.
 
 #### Arguments
 
