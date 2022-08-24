@@ -20,12 +20,12 @@ We're going to make an assumption that you know or understand React; however, th
 
 In this tutorial, we are going to interact with an existing smart contract on Flow's testnet known as the [Profile Contract](https://testnet.flowscan.org/contract/A.ba1132bc08f82fe2.Profile). Using this contract, we will create a new profile and edit the profile information, both via a wallet. In order to do this, the FCL concepts we'll cover are:
 
-- [Installation](#installation)
-- [Configuration](#configuration)
-- [Authentication](#authentication)
-- [Querying the Blockchain](#querying-the-blockchain)
-- [Initializing an Account](#initializing-an-account)
-- [Mutating the Blockchain](#mutating-the-blockchain)
+- [Installation](./flow-app-quickstart#installation)
+- [Configuration](./flow-app-quickstart#configuration)
+- [Authentication](./flow-app-quickstart#authentication)
+- [Querying the Blockchain](./flow-app-quickstart#querying-the-blockchain)
+- [Initializing an Account](./flow-app-quickstart#initializing-an-account)
+- [Mutating the Blockchain](./flow-app-quickstart#mutating-the-blockchain)
 
 And if you ever have any questions we're always happy to help on [Discord](https://discord.gg/flow). There are also links at the end of this article for diving deeper into building on Flow.
 
@@ -73,7 +73,7 @@ config({
 The `accessNode.api` key specifies the address of a Flow access node. Flow provides these, but in the future access to Flow may be provided by other 3rd parties, through their own access nodes.
 `discovery.wallet` is an address that points to a service that lists FCL compatible wallets. Flow's FCL Discovery service is a service that FCL wallet providers can be added to, and be made 'discoverable' to any application that uses the `discovery.wallet` endpoint.
 
-> Learn more about [configuring Discovery](../reference/discovery) or [setting configuration values](../reference/api.md#setting-configuration-values).
+> Learn more about [configuring Discovery](../reference/discovery) or [setting configuration values](../reference/api#setting-configuration-values).
 
 The main page for Next.js apps is located in `pages/index.js`. So let's finish configuring our dapp by going in the `pages/` directory and importing the config file into the top of our `index.js` file. We'll then swap out the default component in `index.js` to look like this:
 
@@ -107,7 +107,7 @@ Now we're ready to start talking to Flow!
 
 ## Authentication
 
-To authenticate a user, all an app has to do is call `fcl.logIn()`. Sign up and unauthenticate are all also as simple as `fcl.signUp()` and `fcl.unauthenticate()`.  Once authenticated, FCL sets an object called `fcl.currentUser` which exposes methods for watching changes in user data, signing transactions, and more. For more information on the `currentUser`, read more [here](../reference/api.md#current-user).
+To authenticate a user, all an app has to do is call `fcl.logIn()`. Sign up and unauthenticate are all also as simple as `fcl.signUp()` and `fcl.unauthenticate()`.  Once authenticated, FCL sets an object called `fcl.currentUser` which exposes methods for watching changes in user data, signing transactions, and more. For more information on the `currentUser`, read more [here](../reference/api#current-user).
 
 Let's add in a few buttons for sign up/login and also subscribe to changes on the `currentUser`. When the user is updated (which it will be after authentication), we'll set the user state in our component to reflect this. To demonstrate user authenticated sessions, we'll conditionally render a component based on if the user is or is not logged in.
 
@@ -281,7 +281,7 @@ await fcl.query({
 
 Inside the query you'll see we set two things: `cadence` and `args`. Cadence is Flow's smart contract language we mentioned. For this tutorial, when you look at it you just need to notice that it's importing the `Profile` contract from the account we named `0xProfile` earlier in our config file, then also taking an account address, and reading it. That's it until you're ready to [learn more Cadence](https://docs.onflow.org/cadence/tutorial/01-first-steps/).
 
-In the `args` section, we are simply passing it our user's account address from the user we set in state after authentication and giving it a type of `Address`.  For more possible types, [see this reference](../reference/api.md#ftype).
+In the `args` section, we are simply passing it our user's account address from the user we set in state after authentication and giving it a type of `Address`.  For more possible types, [see this reference](../reference/api#ftype).
 
 Go ahead and click the "Send Query" button. You should see "No Profile." That's because we haven't initialized the account yet.
 
@@ -594,7 +594,7 @@ export default function Home() {
 
 ```
 
-Now if you click the "Execute Transaction" button you'll see the statuses update next to "Transaction Status." When you see "4" that means it's sealed! Status code meanings [can be found here](../reference/api.md#transaction-statuses).
+Now if you click the "Execute Transaction" button you'll see the statuses update next to "Transaction Status." When you see "4" that means it's sealed! Status code meanings [can be found here](../reference/api#transaction-statuses).
 If you query the account profile again, "Profile Name:" should now display "Flow Developer".
 
 That's it! You now have a shippable Flow dapp that can auth, query, init accounts, and mutate the chain. This is just the beginning. There is so much more to know. We have a lot more resources to help you build. To dive deeper, here are a few good places for taking the next steps:
@@ -617,3 +617,6 @@ That's it! You now have a shippable Flow dapp that can auth, query, init account
 
 **Other**
 - [Flow Developer Onboarding Guide](https://docs.onflow.org/dapp-development/)
+velopment/)
+velopment/)
+velopment/)

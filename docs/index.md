@@ -59,7 +59,7 @@ const fcl = require("@onflow/fcl");
 #### Wallet Interactions
 
 - *Wallet Discovery* and *Sign-up/Login*: Onboard users with ease. Never worry about supporting multiple wallets. 
-Authenticate users with any [FCL compatible wallet](#current-wallet-providers).
+Authenticate users with any [FCL compatible wallet](./index#current-wallet-providers).
 ```js
 // in the browser
 import * as fcl from "@onflow/fcl"
@@ -179,3 +179,4 @@ Notice an problem or want to request a feature? [Add an issue](https://github.co
 Discuss FCL with the community on the [forum](https://forum.onflow.org/c/developer-tools/flow-fcl/22).
 
 Join the Flow community on [Discord](https://discord.gg/k6cZ7QC) to keep up to date and to talk to the team.
+m.
