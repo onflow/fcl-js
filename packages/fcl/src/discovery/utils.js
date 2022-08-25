@@ -7,19 +7,15 @@ export const makeDiscoveryServices = async () => {
   return [...extensionServices, ...serviceRegistry.getServices()]
 }
 
-// Certain method types cannot be overridden to use other methods like POP/RCP
-const isServiceMethodUnchangable = method =>
-  ["EXT/RPC", "WC/RPC"].includes(method)
-
 export async function getDiscoveryService(service) {
   const discoveryAuthnInclude = await config.get("discovery.authn.include", [])
   const discoveryWalletMethod = await config.first([
     "discovery.wallet.method",
     "discovery.wallet.method.default",
   ])
-  const method = isServiceMethodUnchangable(service?.method)
+  const method = service?.method
     ? service.method
-    : discoveryWalletMethod || service.method
+    : discoveryWalletMethod
   const endpoint =
     service?.endpoint ??
     (await config.first(["discovery.wallet", "challenge.handshake"]))
