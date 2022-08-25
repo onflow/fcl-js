@@ -6,8 +6,10 @@ let previousUrl = null
 export function renderTab(src) {
   if (tab == null || tab?.closed) {
     tab = window.open(src, "_blank")
-    if (!tab)
-      throw new Error("Tab failed to open (was it blocked by the browser?)")
+    if (!tab){
+      // use current window to navigate to dapper wallet
+      window.location.assign(src);
+    }
   } else if (previousUrl !== src) {
     tab.location.replace(src)
     tab.focus()
@@ -20,6 +22,9 @@ export function renderTab(src) {
   const unmount = () => {
     if (tab && !tab.closed) {
       tab.close()
+    } else {
+      // somehow get the referrer and redirect back
+      window.location.assign(document.referrer);
     }
     tab = null
   }
