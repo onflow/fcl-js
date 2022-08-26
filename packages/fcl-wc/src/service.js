@@ -9,9 +9,10 @@ export const makeServicePlugin = client => ({
   f_type: "ServicePlugin",
   type: "discovery-service",
   discoveryServices: makeWcServices(client),
+  serviceStrategy: {method: "WC/RPC", exec: makeExec(client)},
 })
 
-const makeServiceStrategy = client => {
+const makeExec = client => {
   return ({service, body, opts}) => {
     return new Promise(async (resolve, reject) => {
       invariant(client, "WalletConnect is not initialized")
@@ -151,49 +152,43 @@ function makeWcServices(client) {
   const pairings = client.pairing.getAll({active: true})
   return [
     {
-      definition: {
+      f_type: "Service",
+      f_vsn: "1.0.0",
+      type: "authn",
+      method: "WC/RPC",
+      uid: "wc#authn",
+      endpoint: "flow_authn",
+      optIn: false,
+      provider: {
+        address: "WalletConnect",
+        name: "WalletConnect",
+        uid: null,
+        icon: "https://avatars.githubusercontent.com/u/37784886",
+        description: "WalletConnect Generic Provider",
+        website: "https://walletconnect.com/",
+        color: null,
+        supportEmail: null,
+      },
+    },
+    ...pairings.map(pairing => {
+      return {
         f_type: "Service",
         f_vsn: "1.0.0",
         type: "authn",
         method: "WC/RPC",
-        uid: "wc#authn",
+        uid: pairing.topic,
         endpoint: "flow_authn",
         optIn: false,
         provider: {
-          address: "WalletConnect",
-          name: "WalletConnect",
-          uid: null,
-          icon: "https://avatars.githubusercontent.com/u/37784886",
-          description: "WalletConnect Generic Provider",
-          website: "https://walletconnect.com/",
+          address: null,
+          name: pairing.peerMetadata.name,
+          uid: pairing.topic,
+          icon: pairing.peerMetadata.icons[0],
+          description: pairing.peerMetadata.description,
+          website: pairing.peerMetadata.url,
           color: null,
           supportEmail: null,
         },
-      },
-      strategy: makeServiceStrategy(client),
-    },
-    ...pairings.map(pairing => {
-      return {
-        definition: {
-          f_type: "Service",
-          f_vsn: "1.0.0",
-          type: "authn",
-          method: "WC/RPC",
-          uid: pairing.topic,
-          endpoint: "flow_authn",
-          optIn: false,
-          provider: {
-            address: null,
-            name: pairing.peerMetadata.name,
-            uid: pairing.topic,
-            icon: pairing.peerMetadata.icons[0],
-            description: pairing.peerMetadata.description,
-            website: pairing.peerMetadata.url,
-            color: null,
-            supportEmail: null,
-          },
-        },
-        strategy: makeServiceStrategy(client),
       }
     }),
   ]
