@@ -7,9 +7,7 @@ description: A collection of modules that make interacting with Flow easier
 
 ## Status
 
-- **Last Updated:** August 13th 2020
-- **Stable:** Yes
-- **Risk of Breaking Change:** Medium
+> For release updates, [see the repo](https://github.com/onflow/fcl-js/releases)
 
 This package is working and in active development, breaking changes may happen.
 
