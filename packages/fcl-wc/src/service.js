@@ -57,8 +57,8 @@ const makeExec = client => {
         session = client.session.get(client.session.keys.at(lastKeyIndex))
       }
       if (session == null) {
-        const pairing =
-          service.provider.uid === null ? null : {topic: service.provider.uid}
+        const pairings = client.pairing.getAll({active: true})
+        const pairing = pairings?.find(p => p.topic === service.provider.uid)
 
         session = await connectWc(onClose, {
           service,
@@ -121,11 +121,17 @@ async function connectWc(onClose, {service, client, pairing}) {
       requiredNamespaces,
     })
 
+    const appLink = pairing
+      ? pairing?.peerMetadata?.url
+      : service.provider.website
+
     if (uri) {
-      if (isMobile()) {
+      if (isMobile() && appLink) {
+        const appLink = pairing
+          ? pairing?.peerMetadata?.url
+          : service.provider.website
         const queryString = new URLSearchParams({uri: uri}).toString()
-        // need deep link url for mobile
-        let url = "" + queryString
+        let url = appLink + queryString
         window.open(url, "blank").focus()
       } else {
         QRCodeModal.open(uri, () => {
@@ -165,7 +171,7 @@ function makeWcServices(client) {
         uid: null,
         icon: "https://avatars.githubusercontent.com/u/37784886",
         description: "WalletConnect Generic Provider",
-        website: "https://walletconnect.com/",
+        website: null,
         color: null,
         supportEmail: null,
       },
