@@ -17,7 +17,7 @@ Programmatically Query Flow. A light, stable and approachable higher level wrapp
 You can learn more about configuring FCL here: [Configure FCL](https://github.com/onflow/flow-js-sdk/blob/master/docs/configure-fcl.mdx)
 Configuration only needs to happen once, but it must happen before query is called. We always recommend configuring FCL as early in your application as possible/reasonable.
 
-The main things you will want to configure is are:
+The main things you will need to configure is are:
 - `accessNode.api` - How to talk to Flow.
 - `flow.network` - which network are you on ("mainnet", "testnet", etc).
 

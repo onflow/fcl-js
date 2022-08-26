@@ -18,26 +18,27 @@ export async function deriveDependencies({template}) {
         template?.data?.dependencies
       )
       for (let dependencyPlaceholderKey of dependencyPlaceholderKeys) {
-        let dependencyPlacholder =
+        let dependencyPlaceholder =
           template?.data?.dependencies[dependencyPlaceholderKey]
 
-        const dependencyPlacholderContractsKeys =
-          Object.keys(dependencyPlacholder)
+        const dependencyPlaceholderContractsKeys = Object.keys(
+          dependencyPlaceholder
+        )
         invariant(
-          dependencyPlacholderContractsKeys.length > 0,
+          dependencyPlaceholderContractsKeys.length > 0,
           `FCL configureDependencies Error: No contracts found in template for placeholder=${dependencyPlaceholderKey}`
         )
-        const dependencyPlacholderContract =
-          dependencyPlacholder[dependencyPlacholderContractsKeys[0]]
-        const dependency = dependencyPlacholderContract[network]
+        const dependencyPlaceholderContract =
+          dependencyPlaceholder[dependencyPlaceholderContractsKeys[0]]
+        const dependency = dependencyPlaceholderContract[network]
 
         invariant(
           dependency,
-          `FCL configureDependencies Error: No dependency information for placholder=${dependencyPlaceholderKey} contract=${dependencyPlacholderContractsKeys[0]} network=${network}`
+          `FCL configureDependencies Error: No dependency information for placeholder=${dependencyPlaceholderKey} contract=${dependencyPlaceholderContractsKeys[0]} network=${network}`
         )
         invariant(
           dependency?.address,
-          `FCL configureDependencies Error: No address information for placholder=${dependencyPlaceholderKey} contract=${dependencyPlacholderContractsKeys[0]} network=${network}`
+          `FCL configureDependencies Error: No address information for placeholder=${dependencyPlaceholderKey} contract=${dependencyPlaceholderContractsKeys[0]} network=${network}`
         )
 
         derivedDependencies[dependencyPlaceholderKey] = withPrefix(

@@ -100,7 +100,7 @@ const network = "mainnet" // "mainnet" | "testnet"
 const cadenceBase64 = btoa(cadence)
 
 const interactionTemplate = await fetch(
-  `https://flow-ix-template-svc.herokuapp.com/v1/templates?network=${network}&cadence=${cadenceBase64}`
+  `https://flix.flow.com/v1/templates?network=${network}&cadence=${cadenceBase64}`
 )
 ```
 

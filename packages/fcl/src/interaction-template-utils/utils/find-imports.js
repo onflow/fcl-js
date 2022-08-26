@@ -1,7 +1,7 @@
 import {generateImport} from "./generate-import.js"
 
 export function findImports(cadence) {
-  let iports = []
+  let imports = []
 
   let importsReg = /import ((\w|,| )+)* from 0x\w+/g
   let fileImports = cadence.match(importsReg) || []
@@ -14,7 +14,7 @@ export function findImports(cadence) {
     const contracts = importLine[1].match(contractsReg) || []
 
     for (const contract of contracts) {
-      iports.push(
+      imports.push(
         generateImport({
           address: importLine[3],
           contractName: contract.replace(/,/g, ""),
@@ -23,5 +23,5 @@ export function findImports(cadence) {
     }
   }
 
-  return iports
+  return imports
 }
