@@ -2,9 +2,7 @@
 
 <div class="docs-site-omit">
 
-**Version**: 0.76.0
-
-**Last Updated**: August 13, 2021
+> For release updates, [see the repo](https://github.com/onflow/fcl-js/releases)
 
 # Table of contents
 
