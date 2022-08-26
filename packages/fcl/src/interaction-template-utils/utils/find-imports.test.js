@@ -21,6 +21,18 @@ describe("Find imports", () => {
         }
     `
 
+  const cadenceC = `
+    // Go Flow!
+    import Crypto
+    import ContractA, ContractB, ContractD from 0xABC123
+    import ContractC from 0xDEF456
+    import Crypto
+
+    pub fun main(): Int {
+        return 12
+    }
+`
+
   test("It parses contracts correctly for cadence A", async () => {
     let imports = findImports(cadenceA)
 
@@ -46,6 +58,29 @@ describe("Find imports", () => {
       }),
       generateImport({
         contractName: "ContractB",
+        address: "0xDEF456",
+      }),
+    ])
+  })
+
+  test("It parses contracts correctly for cadence C", async () => {
+    let imports = findImports(cadenceC)
+
+    expect(imports).toEqual([
+      generateImport({
+        contractName: "ContractA",
+        address: "0xABC123",
+      }),
+      generateImport({
+        contractName: "ContractB",
+        address: "0xABC123",
+      }),
+      generateImport({
+        contractName: "ContractD",
+        address: "0xABC123",
+      }),
+      generateImport({
+        contractName: "ContractC",
         address: "0xDEF456",
       }),
     ])
