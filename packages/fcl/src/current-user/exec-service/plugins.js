@@ -19,8 +19,8 @@ const CORE_STRATEGIES = {
 const supportedPlugins = ["ServicePlugin"]
 const supportedServicePlugins = ["discovery-service"]
 
-const validateDiscoveryServices = servicePlugin => {
-  const discoveryServices = servicePlugin.discoveryServices
+const validateDiscoveryPlugin = servicePlugin => {
+  const {discoveryServices, serviceStrategy} = servicePlugin
   invariant(
     Array.isArray(discoveryServices) && discoveryServices.length,
     "Array of Discovery Services is required"
@@ -28,18 +28,25 @@ const validateDiscoveryServices = servicePlugin => {
 
   for (const ds of discoveryServices) {
     invariant(
-      isRequired(ds.definition) &&
-        isObject(ds.definition) &&
-        ds.definition.f_type === "Service",
-      "Service definition is required"
+      isRequired(ds.f_type) && ds.f_type === "Service",
+      "Service is required"
     )
     invariant(
-      isRequired(ds.strategy) && isFunc(ds.strategy),
-      "Service strategy is required"
+      isRequired(ds.type) && ds.type === "authn",
+      `Service must be type authn. Received ${ds.type}`
     )
   }
+  invariant(isRequired(serviceStrategy), "Service strategy is required")
+  invariant(
+    isRequired(serviceStrategy.method) && isString(serviceStrategy.method),
+    "Service strategy method is required"
+  )
+  invariant(
+    isRequired(serviceStrategy.exec) && isFunc(serviceStrategy.exec),
+    "Service strategy exec function is required"
+  )
 
-  return discoveryServices
+  return {discoveryServices, serviceStrategy}
 }
 
 const ServiceRegistry = () => {
@@ -49,27 +56,26 @@ const ServiceRegistry = () => {
   const setServices = discoveryServicePlugins =>
     (services = new Set([...discoveryServicePlugins]))
 
-  const getServices = () => [...services].map(service => service.definition)
+  const getServices = () => [...services]
 
   const add = servicePlugin => {
     invariant(
       supportedServicePlugins.includes(servicePlugin.type),
       `Service Plugin type ${servicePlugin.type} is not supported`
     )
-    if (servicePlugin.type === "discovery-service") {
-      const discoveryServices = validateDiscoveryServices(servicePlugin)
 
+    if (servicePlugin.type === "discovery-service") {
+      const {discoveryServices, serviceStrategy} =
+        validateDiscoveryPlugin(servicePlugin)
       setServices(discoveryServices)
-      for (const dsp of discoveryServices) {
-        if (!strategies.has(dsp.definition?.method)) {
-          strategies.set(dsp.definition?.method, dsp.strategy)
-        } else {
-          log({
-            title: `Add Service Plugin`,
-            message: `Service strategy for ${dsp.definition.method} already exists`,
-            level: 2,
-          })
-        }
+      if (!strategies.has(serviceStrategy.method)) {
+        strategies.set(serviceStrategy.method, serviceStrategy.exec)
+      } else {
+        log({
+          title: `Add Service Plugin`,
+          message: `Service strategy for ${serviceStrategy.method} already exists`,
+          level: 2,
+        })
       }
     }
   }
