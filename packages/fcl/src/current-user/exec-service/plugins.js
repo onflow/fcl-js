@@ -20,21 +20,24 @@ const supportedPlugins = ["ServicePlugin"]
 const supportedServicePlugins = ["discovery-service"]
 
 const validateDiscoveryPlugin = servicePlugin => {
-  const {discoveryServices, serviceStrategy} = servicePlugin
-  invariant(
-    Array.isArray(discoveryServices) && discoveryServices.length,
-    "Array of Discovery Services is required"
-  )
+  const {services, serviceStrategy} = servicePlugin
+  invariant(Array.isArray(services), "Array of Discovery Services is required")
 
-  for (const ds of discoveryServices) {
-    invariant(
-      isRequired(ds.f_type) && ds.f_type === "Service",
-      "Service is required"
-    )
-    invariant(
-      isRequired(ds.type) && ds.type === "authn",
-      `Service must be type authn. Received ${ds.type}`
-    )
+  if (services.length) {
+    for (const ds of services) {
+      invariant(
+        isRequired(ds.f_type) && ds.f_type === "Service",
+        "Service is required"
+      )
+      invariant(
+        isRequired(ds.type) && ds.type === "authn",
+        `Service must be type authn. Received ${ds.type}`
+      )
+      invariant(
+        ds.method in CORE_STRATEGIES || serviceStrategy.method === ds.method,
+        `Service method ${ds.method} is not supported`
+      )
+    }
   }
   invariant(isRequired(serviceStrategy), "Service strategy is required")
   invariant(
@@ -46,24 +49,18 @@ const validateDiscoveryPlugin = servicePlugin => {
     "Service strategy exec function is required"
   )
 
-  return {discoveryServices, serviceStrategy}
+  return {discoveryServices: services, serviceStrategy}
 }
 
 const ServiceRegistry = () => {
   let services = new Set()
   let strategies = new Map(Object.entries(CORE_STRATEGIES))
 
-  const setServices = discoveryServicePlugins =>
-    (services = new Set([...discoveryServicePlugins]))
-
-  const getServices = () => [...services]
-
   const add = servicePlugin => {
     invariant(
       supportedServicePlugins.includes(servicePlugin.type),
       `Service Plugin type ${servicePlugin.type} is not supported`
     )
-
     if (servicePlugin.type === "discovery-service") {
       const {discoveryServices, serviceStrategy} =
         validateDiscoveryPlugin(servicePlugin)
@@ -79,11 +76,21 @@ const ServiceRegistry = () => {
       }
     }
   }
+
+  const setServices = discoveryServices =>
+    (services = new Set([...discoveryServices]))
+
+  const getServices = () => [...services]
+
   const getStrategy = method => strategies.get(method)
+
+  const getStrategies = () => [...strategies.keys()]
+
   return Object.freeze({
     add,
     getServices,
     getStrategy,
+    getStrategies,
   })
 }
 
