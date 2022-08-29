@@ -5,7 +5,7 @@ import {normalizeArgs} from "./utils/normalize-args"
 import {deriveCadenceByNetwork} from "../interaction-template-utils/derive-cadence-by-network.js"
 import {retrieve} from "../document/document.js"
 import {deriveDependencies} from "./utils/derive-dependencies"
-import {normalizeInteractionTemplate} from "../interaction-template-utils/normalize/interaction-template"
+import {normalizeInteractionTemplate} from "../normalizers/interaction-template/interaction-template"
 
 /** Query the Flow Blockchain
  *

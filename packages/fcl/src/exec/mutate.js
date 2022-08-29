@@ -6,7 +6,7 @@ import {currentUser} from "../current-user"
 import {deriveCadenceByNetwork} from "../interaction-template-utils"
 import {retrieve} from "../document/document.js"
 import {deriveDependencies} from "./utils/derive-dependencies"
-import {normalizeInteractionTemplate} from "../interaction-template-utils/normalize/interaction-template"
+import {normalizeInteractionTemplate} from "../normalizers/interaction-template/interaction-template"
 
 /** As the current user Mutate the Flow Blockchain
  *

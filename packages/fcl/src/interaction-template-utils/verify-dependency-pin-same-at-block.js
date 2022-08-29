@@ -1,7 +1,7 @@
 import {generateDependencyPin} from "./generate-dependency-pin.js"
 import {invariant, block} from "@onflow/sdk"
 import {log, LEVELS} from "@onflow/util-logger"
-import {normalizeInteractionTemplate} from "./normalize/interaction-template.js"
+import {normalizeInteractionTemplate} from "../normalizers/interaction-template/interaction-template.js"
 
 export async function verifyDependencyPinsSame(
   {template, blockHeight, network},

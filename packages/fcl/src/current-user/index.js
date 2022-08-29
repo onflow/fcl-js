@@ -8,7 +8,7 @@ import {invariant} from "@onflow/util-invariant"
 import {buildUser} from "./build-user"
 import {serviceOfType} from "./service-of-type"
 import {execService} from "./exec-service"
-import {normalizeCompositeSignature} from "./normalize/composite-signature"
+import {normalizeCompositeSignature} from "../normalizers/service/composite-signature"
 import {getDiscoveryService} from "../config-utils"
 
 export const isFn = d => typeof d === "function"

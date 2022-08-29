@@ -1,6 +1,6 @@
 import {invariant} from "@onflow/util-invariant"
 import {extension} from "./utils/extension"
-import {normalizePollingResponse} from "../../normalize/polling-response"
+import {normalizePollingResponse} from "../../../normalizers/service/polling-response"
 import {VERSION} from "../../../VERSION"
 
 export function execExtRPC(service, body, opts, config) {

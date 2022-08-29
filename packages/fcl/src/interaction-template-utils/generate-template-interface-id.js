@@ -1,6 +1,6 @@
 import {encode as rlpEncode} from "@onflow/rlp"
 import {genHash} from "./utils/hash.js"
-import {normalizeInteractionTemplateInterface} from "./normalize/interaction-template-interface.js"
+import {normalizeInteractionTemplateInterface} from "../normalizers/interaction-template/interaction-template-interface.js"
 
 export async function generateTemplateInterfaceId({templateInterface}) {
   invariant(
