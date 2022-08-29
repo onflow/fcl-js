@@ -4,6 +4,7 @@ import {isRequired, isObject, isString, isNumber} from "./utils/is"
 import {normalizeArgs} from "./utils/normalize-args"
 import {currentUser} from "../current-user"
 import {prepTemplateOpts} from "./utils/prep-template-opts.js"
+import {preMutate} from "./utils/pre.js"
 
 /** As the current user Mutate the Flow Blockchain
  *
@@ -60,7 +61,7 @@ import {prepTemplateOpts} from "./utils/prep-template-opts.js"
 export async function mutate(opts = {}) {
   var txid
   try {
-    await prepMutation(opts)
+    await preMutate(opts)
     opts = await prepTemplateOpts(opts)
 
     // Allow for a config to overwrite the authorization function.
@@ -91,30 +92,4 @@ export async function mutate(opts = {}) {
   } catch (error) {
     throw error
   }
-}
-
-async function prepMutation(opts) {
-  // prettier-ignore
-  invariant(isRequired(opts), "mutate(opts) -- opts is required")
-  // prettier-ignore
-  invariant(isObject(opts), "mutate(opts) -- opts must be an object")
-  // prettier-ignore
-  invariant(!(opts.cadence && opts.template), "mutate({ template, cadence }) -- cannot pass both cadence and template")
-  // prettier-ignore
-  invariant(isRequired(opts.cadence || opts?.template), "mutate({ cadence }) -- cadence is required")
-  // // prettier-ignore
-  invariant(
-    isString(opts.cadence) || opts?.template,
-    "mutate({ cadence }) -- cadence must be a string"
-  )
-  // prettier-ignore
-  invariant(
-    opts.cadence || (await sdk.config().get("flow.network")),
-    `Required value for "flow.network" not defined in config. See: ${"https://github.com/onflow/flow-js-sdk/blob/master/packages/fcl/src/exec/query.md#configuration"}`
-  )
-  // prettier-ignore
-  invariant(
-    await sdk.config().get("accessNode.api"),
-    `Required value for "accessNode.api" not defined in config. See: ${"https://github.com/onflow/flow-js-sdk/blob/master/packages/fcl/src/exec/query.md#configuration"}`
-  )
 }

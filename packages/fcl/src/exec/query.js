@@ -3,6 +3,7 @@ import * as sdk from "@onflow/sdk"
 import {isRequired, isObject, isString} from "./utils/is"
 import {normalizeArgs} from "./utils/normalize-args"
 import {prepTemplateOpts} from "./utils/prep-template-opts.js"
+import {preQuery} from "./utils/pre.js"
 
 /** Query the Flow Blockchain
  *
@@ -52,30 +53,5 @@ export async function query(opts = {}) {
       sdk.args(normalizeArgs(opts.args || [])),
       opts.limit && typeof opts.limit === "number" && sdk.limit(opts.limit)
     ]).then(sdk.decode)
-  )
-}
-
-async function preQuery(opts) {
-  invariant(isRequired(opts), "mutate(opts) -- opts is required")
-  // prettier-ignore
-  invariant(isObject(opts), "mutate(opts) -- opts must be an object")
-  // prettier-ignore
-  invariant(!(opts.cadence && opts.template), "mutate({ template, cadence }) -- cannot pass both cadence and template")
-  // prettier-ignore
-  invariant(isRequired(opts.cadence || opts?.template), "mutate({ cadence }) -- cadence is required")
-  // prettier-ignore
-  invariant(
-    isString(opts.cadence) || opts?.template,
-    "mutate({ cadence }) -- cadence must be a string"
-  )
-  // prettier-ignore
-  invariant(
-    opts.cadence || (await sdk.config().get("flow.network")),
-    `Required value for "flow.network" not defined in config. See: ${"https://github.com/onflow/flow-js-sdk/blob/master/packages/fcl/src/exec/query.md#configuration"}`
-  )
-  // prettier-ignore
-  invariant(
-    await sdk.config().get("accessNode.api"),
-    `Required value for "accessNode.api" not defined in config. See: ${"https://github.com/onflow/flow-js-sdk/blob/master/packages/fcl/src/exec/query.md#configuration"}`
   )
 }
