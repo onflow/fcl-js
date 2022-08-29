@@ -128,7 +128,6 @@ async function connectWc(onClose, {service, client, pairing}) {
     if (isMobile()) {
       const queryString = new URLSearchParams({uri: uri}).toString()
       let url = pairing ? appLink : appLink + "?" + queryString
-      console.log("deepLink", url)
       window.open(url, "blank").focus()
     } else {
       if (!pairing) {
@@ -187,7 +186,6 @@ const baseWalletConnectService = includeBaseWC => {
 const makePairedWalletConnectServices = client => {
   const pairings = client.pairing.getAll({active: true})
   return pairings.map(pairing => {
-    console.log("pairing", pairing)
     return {
       f_type: "Service",
       f_vsn: "1.0.0",
@@ -217,21 +215,6 @@ async function makeWcServices(
   const flowWcWalletServices = await fetchFlowWallets()
   const pairedWalletServices = makePairedWalletConnectServices(client)
 
-  console.log(
-    "pairings",
-    client.pairing.values,
-    "client",
-    client,
-    includeBaseWC,
-    "wcBaseService",
-    wcBaseService,
-    "pairedWalletServices",
-    pairedWalletServices,
-    "injectedWallets",
-    injectedWalletsServices,
-    "WCAPI flow wallets",
-    flowWcWalletServices
-  )
   return [
     ...wcBaseService,
     ...flowWcWalletServices,
