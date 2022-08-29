@@ -215,6 +215,8 @@ Which should return something like this:
 
 If you have an Interaction Template, you can use it with `query`:
 
+### Using Template JSON 
+
 ```javascript
 import * as fcl from "@onflow/fcl"
 import myScriptTemplate from "script-template.json"
@@ -223,6 +225,8 @@ const scriptResult = await fcl.query({
   template: myScriptTemplate,
 })
 ```
+
+### Using Template URL 
 
 In place of a JSON template, you can specify a URL that points to one, and FCL will retrieve it from the remote location:
 
@@ -234,5 +238,5 @@ const scriptResult = await fcl.mutate({
 })
 ```
 
-`query` will use the Interaction Template to carry out it's underlying script. Read more on Interaction Templates with FCL [here](https://github.com/onflow/fcl-js/blob/master/docs/reference/interaction-templates.md)
+`query` will use the Interaction Template to carry out it's underlying script. Read more on Interaction Templates with FCL [here](https://github.com/onflow/fcl-js/blob/master/docs/reference/interaction-templates.mdx)
 

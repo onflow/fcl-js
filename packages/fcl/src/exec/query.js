@@ -1,10 +1,8 @@
 import {invariant} from "@onflow/util-invariant"
 import * as sdk from "@onflow/sdk"
-import * as t from "@onflow/types"
-import {config} from "@onflow/config"
-import {isRequired, isObject, isString, isFunc} from "./utils/is"
+import {isRequired, isObject, isString} from "./utils/is"
 import {normalizeArgs} from "./utils/normalize-args"
-import {deriveCadenceByNetwork} from "../interaction-template-utils"
+import {deriveCadenceByNetwork} from "../interaction-template-utils/derive-cadence-by-network.js"
 import {retrieve} from "../document/document.js"
 import {deriveDependencies} from "./utils/derive-dependencies"
 import {normalizeInteractionTemplate} from "../interaction-template-utils/normalize/interaction-template"
@@ -59,17 +57,11 @@ export async function query(opts = {}) {
 
   let dependencies = {}
   if (opts?.template) {
+    opts.template = normalizeInteractionTemplate(opts?.template)
     dependencies = await deriveDependencies({template: opts.template})
   }
 
-  const cadence =
-    opts.cadence ||
-    deriveCadenceByNetwork({
-      template: opts.template,
-      network: await sdk.config().get("flow.network"),
-    })
-
-  return config.overload(dependencies, async () =>
+  return sdk.config().overload(dependencies, async () =>
     // prettier-ignore
     sdk.send([
       sdk.script(cadence),
@@ -99,7 +91,7 @@ async function preQuery(opts) {
   )
   // prettier-ignore
   invariant(
-    await sdk.config.get("accessNode.api"),
+    await sdk.config().get("accessNode.api"),
     `Required value for "accessNode.api" not defined in config. See: ${"https://github.com/onflow/flow-js-sdk/blob/master/packages/fcl/src/exec/query.md#configuration"}`
   )
 }

@@ -224,6 +224,8 @@ More specific options overload less specific options. So `payer` will be used ov
 
 If you have an Interaction Template, you can use it with `mutate`:
 
+### Using Template JSON 
+
 ```javascript
 import * as fcl from "@onflow/fcl"
 import myTransactionTemplate from "transaction-template.json"
@@ -232,6 +234,8 @@ const txId = await fcl.mutate({
   template: myTransactionTemplate,
 })
 ```
+
+### Using Template URL 
 
 In place of a JSON template, you can specify a URL that points to one, and FCL will retrieve it from the remote location:
 
@@ -243,4 +247,4 @@ const txId = await fcl.mutate({
 })
 ```
 
-`muatate` will use the Interaction Template to carry out it's underlying transaction. Read more on Interaction Templates with FCL [here](https://github.com/onflow/fcl-js/blob/master/docs/reference/interaction-templates.md)
+`muatate` will use the Interaction Template to carry out it's underlying transaction. Read more on Interaction Templates with FCL [here](https://github.com/onflow/fcl-js/blob/master/docs/reference/interaction-templates.mdx)

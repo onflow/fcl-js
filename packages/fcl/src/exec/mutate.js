@@ -1,10 +1,8 @@
 import {invariant} from "@onflow/util-invariant"
 import * as sdk from "@onflow/sdk"
-import {config} from "@onflow/config"
-import {isRequired, isObject, isString, isFunc, isNumber} from "./utils/is"
+import {isRequired, isObject, isString, isNumber} from "./utils/is"
 import {normalizeArgs} from "./utils/normalize-args"
 import {currentUser} from "../current-user"
-import {transaction} from "../transaction"
 import {deriveCadenceByNetwork} from "../interaction-template-utils"
 import {retrieve} from "../document/document.js"
 import {deriveDependencies} from "./utils/derive-dependencies"
@@ -75,12 +73,9 @@ export async function mutate(opts = {}) {
       opts.template = await retrieve({url: opts?.template})
     }
 
-    if (opts?.template) {
-      opts.template = normalizeInteractionTemplate(opts?.template)
-    }
-
     let dependencies = {}
     if (opts?.template) {
+      opts.template = normalizeInteractionTemplate(opts?.template)
       dependencies = await deriveDependencies({template: opts.template})
     }
 
@@ -91,7 +86,7 @@ export async function mutate(opts = {}) {
         network: await sdk.config().get("flow.network"),
       })
 
-    txid = config.overload(dependencies, async () =>
+    txid = sdk.config().overload(dependencies, async () =>
       // prettier-ignore
       sdk.send([
         sdk.transaction(cadence),
@@ -138,7 +133,7 @@ async function prepMutation(opts) {
   )
   // prettier-ignore
   invariant(
-    await sdk.config.get("accessNode.api"),
+    await sdk.config().get("accessNode.api"),
     `Required value for "accessNode.api" not defined in config. See: ${"https://github.com/onflow/flow-js-sdk/blob/master/packages/fcl/src/exec/query.md#configuration"}`
   )
 }
