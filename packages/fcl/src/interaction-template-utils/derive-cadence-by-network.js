@@ -1,5 +1,5 @@
 import {invariant} from "@onflow/sdk"
-import {normalizeInteractionTemplate} from "./normalize/interaction-template"
+import {normalizeInteractionTemplate} from "../normalizers/normalize/interaction-template"
 
 export function deriveCadenceByNetwork({network, template}) {
   invariant(
