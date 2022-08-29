@@ -10,6 +10,9 @@ import {serviceOfType} from "./service-of-type"
 import {execService} from "./exec-service"
 import {normalizeCompositeSignature} from "../normalizers/service/composite-signature"
 import {getDiscoveryService} from "../config-utils"
+import {configLens} from "../default-config"
+import {VERSION} from "../VERSION"
+import {getDiscoveryService, makeDiscoveryServices} from "../discovery"
 
 export const isFn = d => typeof d === "function"
 
@@ -116,12 +119,35 @@ async function getAccountProofData() {
   return accountProofData
 }
 
+const makeConfig = async ({discoveryAuthnInclude}) => {
+  return {
+    discoveryAuthnInclude,
+    services: await configLens(/^service\./),
+    app: await configLens(/^app\.detail\./),
+    client: {
+      fclVersion: VERSION,
+      fclLibrary: "https://github.com/onflow/fcl-js",
+      hostname: window?.location?.hostname ?? null,
+      clientServices: await makeDiscoveryServices(),
+    },
+  }
+}
+
 async function authenticate({service, redir = false} = {}) {
+  if (
+    service &&
+    !service?.provider?.is_installed &&
+    service?.provider?.requires_install
+  ) {
+    window.location.href = service?.provider?.install_link
+    return
+  }
+
   return new Promise(async (resolve, reject) => {
     spawnCurrentUser()
     const opts = {redir}
     const user = await snapshot()
-    const discoveryService = await getDiscoveryService()
+    const discoveryService = await getDiscoveryService(service)
     const refreshService = serviceOfType(user.services, "authn-refresh")
     let accountProofData
 
@@ -134,14 +160,6 @@ async function authenticate({service, redir = false} = {}) {
       )
       return reject(error)
     }
-
-    invariant(
-      service || discoveryService.endpoint,
-      `
-        If no service passed to "authenticate," then "discovery.wallet" must be defined in config.
-        See: "https://docs.onflow.org/fcl/reference/api/#setting-configuration-values"
-      `
-    )
 
     if (user.loggedIn) {
       if (refreshService) {
@@ -164,15 +182,10 @@ async function authenticate({service, redir = false} = {}) {
 
     try {
       const response = await execService({
-        service: {
-          ...(service || discoveryService),
-          method: discoveryService?.method || service.method || "IFRAME/RPC",
-        },
+        service: discoveryService,
         msg: accountProofData,
+        config: await makeConfig(discoveryService),
         opts,
-        config: {
-          discoveryAuthnInclude: discoveryService.discoveryAuthnInclude,
-        },
       })
       send(NAME, SET_CURRENT_USER, await buildUser(response))
     } catch (e) {

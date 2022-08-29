@@ -1,5 +1,7 @@
 const _ = require("lodash")
 const {resolve} = require("path")
+const {isObject} = require("../util")
+const banner = require("../plugins/banner")
 
 const generateModuleName = pkgName =>
   pkgName
@@ -13,8 +15,19 @@ module.exports = function getOutputOptions(package, build) {
     file: resolve(build.dir, build.entry),
     format: build.type,
     preserveModules: false,
+    inlineDynamicImports: true,
     sourcemap: true,
-    plugins: [],
+    plugins: [
+      build.banner &&
+        banner(
+          isObject(build.banner)
+            ? build.banner
+            : {
+                banner: build.banner,
+                raw: true,
+              }
+        ),
+    ],
   }
 
   switch (build.type) {

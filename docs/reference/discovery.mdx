@@ -14,9 +14,13 @@ There are two ways an app can use Discovery:
 
 When authenticating via FCL using Discovery UI, a user is shown a list of services they can use to login.
 
-![FCL Default Discovery UI](../images/discovery-ui.jpg)
+![FCL Default Discovery UI](../images/discovery.png)
 
 This method is the simplest way to integrate Discovery and its wallets and services into your app. All you have to do is configure `discovery.wallet` with the host endpoint for testnet or mainnet.
+
+> **Note**: Opt-in wallets, like Ledger and Dapper Wallet, require you to explicitly state you'd like to use them. For more information on including opt-in wallets, (see these docs)[./api#more-configuration]. 
+> 
+> A [Dapper Wallet](https://meetdapper.com/developers) developer account is required. To enable Dapper Wallet inside FCL, you need to [follow this guide](https://docs.meetdapper.com/get-started).
 
 ```javascript
 import { config } from "@onflow/fcl";
@@ -52,14 +56,14 @@ config({
 
 If you want more control over your authentication UI, the Discovery API is also simple to use as it exposes Discovery directly in your code via `fcl`.
 
-Setup still requires configuration of the Discovery endpoint, but when using the API it is set via `discovery.authn.api` as shown below.
+Setup still requires configuration of the Discovery endpoint, but when using the API it is set via `discovery.authn.endpoint` as shown below.
 
 ```javascript
 import { config } from "@onflow/fcl"
 
 config({
   "accessNode.api": "https://rest-testnet.onflow.org", // Mainnet: "https://rest-mainnet.onflow.org"
-  "discovery.authn.api": "https://fcl-discovery.onflow.org/api/testnet/authn" // Mainnet: "https://fcl-discovery.onflow.org/api/authn"
+  "discovery.authn.endpoint": "https://fcl-discovery.onflow.org/api/testnet/authn" // Mainnet: "https://fcl-discovery.onflow.org/api/authn"
 })
 ```
 
@@ -93,7 +97,7 @@ function Component() {
 
   return (
     <div>
-      {services.map(service => <button key={service.id} onClick={() => fcl.authenticate({ service })}>Login with {service.provider.name}</button>)}
+      {services.map(service => <button key={service.provider.address} onClick={() => fcl.authenticate({ service })}>Login with {service.provider.name}</button>)}
     </div>
   )
 }
@@ -118,5 +122,5 @@ Helpful fields for your UI can be found in the `provider` object inside of the s
 ```
 
 To learn more about other possible configurations, check out the following links:
-- [Discovery API Docs](./api/#discovery)
+- [Discovery API Docs](./api#discovery)
 - [Discovery Github Repo](https://github.com/onflow/fcl-discovery)

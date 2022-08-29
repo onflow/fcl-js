@@ -2,6 +2,8 @@ import {invariant} from "@onflow/util-invariant"
 import {sansPrefix} from "@onflow/util-address"
 import {httpRequest as defaultHttpRequest} from "./http-request.js"
 
+const idof = acct => `${withPrefix(acct.addr)}-${acct.keyId}`
+
 export async function sendTransaction(ix, context = {}, opts = {}) {
   invariant(opts.node, `SDK Send Transaction Error: opts.node must be defined.`)
   invariant(
@@ -44,7 +46,7 @@ export async function sendTransaction(ix, context = {}, opts = {}) {
   for (let acct of Object.values(ix.accounts)) {
     try {
       if (acct.role.payer && acct.signature != null) {
-        let id = acct.tempId || `${acct.addr}-${acct.keyId}`
+        let id = acct.tempId || idof(acct)
         envelopeSignatures[id] = envelopeSignatures[id] || {
           address: sansPrefix(acct.addr),
           key_index: String(acct.keyId),

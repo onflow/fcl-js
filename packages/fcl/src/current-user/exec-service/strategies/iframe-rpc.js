@@ -3,7 +3,7 @@ import {frame} from "./utils/frame"
 import {normalizePollingResponse} from "../../../normalizers/service/polling-response"
 import {VERSION} from "../../../VERSION"
 
-export function execIframeRPC(service, body, opts, config) {
+export function execIframeRPC({service, body, config, opts}) {
   return new Promise((resolve, reject) => {
     const id = uid()
     const includeOlderJsonRpcCall = opts.includeOlderJsonRpcCall

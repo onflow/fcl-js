@@ -56,7 +56,7 @@ const fcl = require("@onflow/fcl");
 #### Wallet Interactions
 
 - *Wallet Discovery* and *Sign-up/Login*: Onboard users with ease. Never worry about supporting multiple wallets. 
-Authenticate users with any [FCL compatible wallet](#current-wallet-providers).
+Authenticate users with any [FCL compatible wallet](./index.mdx#current-wallet-providers).
 ```js
 // in the browser
 import * as fcl from "@onflow/fcl"
@@ -67,8 +67,9 @@ fcl.config({
 
 fcl.authenticate()
 ```
-![FCL Default Discovery UI](images/fcl-discovery-screenshot.jpg)
+![FCL Default Discovery UI](images/discovery.png)
 
+> **Note**: A [Dapper Wallet](https://meetdapper.com/developers) developer account is required. To enable Dapper Wallet inside FCL, you need to [follow this guide](https://docs.meetdapper.com/get-started).
 
 - *Interact with smart contracts*: Authorize transactions via the user's chosen wallet 
 - *Prove ownership of a wallet address*: Signing and verifying user signed data

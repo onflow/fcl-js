@@ -5,7 +5,7 @@ import {poll} from "./utils/poll"
 import {execLocal} from "../exec-local"
 import {VERSION} from "../../../VERSION"
 
-export async function execHttpPost(service, signable, opts, config) {
+export async function execHttpPost({service, body, config, opts}) {
   const resp = await fetchService(service, {
     data: {
       fclVersion: VERSION,
@@ -15,7 +15,7 @@ export async function execHttpPost(service, signable, opts, config) {
         type: service.type,
       },
       config,
-      ...signable,
+      ...body,
     },
   }).then(normalizePollingResponse)
 

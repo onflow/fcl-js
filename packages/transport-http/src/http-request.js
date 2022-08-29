@@ -18,28 +18,28 @@ class HTTPRequestError extends Error {
       ${hostname ? `hostname=${hostname}` : ""}
       ${path ? `path=${path}` : ""}
       ${method ? `method=${method}` : ""}
-      ${requestBody ? `requestBody=${JSON.stringify(requestBody)}` : ""}
-      ${responseBody ? `responseBody=${JSON.stringify(responseBody)}` : ""}
+      ${requestBody ? `requestBody=${requestBody}` : ""}
+      ${responseBody ? `responseBody=${responseBody}` : ""}
       ${responseStatusText ? `responseStatusText=${responseStatusText}` : ""}
       ${statusCode ? `statusCode=${statusCode}` : ""}
     `
     super(msg)
+
     this.name = "HTTP Request Error"
-    this.statusCode = responseBody?.code ?? statusCode
-    this.errorMessage = responseBody?.message
+    this.statusCode = statusCode
+    this.errorMessage = error
   }
 }
 
 /**
- * Creates an HTTP Request to be sent to a REST Access API.
+ * Creates an HTTP Request to be sent to a REST Access API via Fetch API.
  *
- * Supports the Fetch API on Web Browsers and Deno.
- * Uses the Node HTTP(S) standard libraries for Node.
- *
- * @param {String} hostname - Access API Hostname
- * @param {String} path - Path to the resource on the Access API
- * @param {String} method - HTTP Method
- * @param {Object} body - HTTP Request Body
+ * @param {Object} options - Options for the HTTP Request
+ * @param {String} options.hostname - Access API Hostname
+ * @param {String} options.path - Path to the resource on the Access API
+ * @param {String} options.method - HTTP Method
+ * @param {Object} options.body - HTTP Request Body
+ * @param {Object | Headers} [options.headers] - HTTP Request Headers
  *
  * @returns JSON object response from Access API.
  */
@@ -48,20 +48,72 @@ export async function httpRequest({
   path,
   method,
   body,
+  headers,
   retryLimit = 5,
   retryIntervalMs = 1000,
 }) {
+  const bodyJSON = body ? JSON.stringify(body) : null
+
+  function makeRequest() {
+    return fetchTransport(`${hostname}${path}`, {
+      method: method,
+      body: bodyJSON,
+      headers,
+    })
+      .then(async res => {
+        if (res.ok) {
+          return res.json()
+        }
+
+        const responseText = res.body ? await res.text() : null
+        const response = safeParseJSON(responseText)
+
+        throw new HTTPRequestError({
+          error: response?.message,
+          hostname,
+          path,
+          method,
+          requestBody: bodyJSON,
+          responseBody: responseText,
+          responseStatusText: res.statusText,
+          statusCode: res.status,
+        })
+      })
+      .catch(async e => {
+        if (e instanceof HTTPRequestError) {
+          throw e
+        }
+
+        // Show AN error for all network errors
+        await logger.log({
+          title: "Access Node Error",
+          message: `The provided access node ${hostname} does not appear to be a valid REST/HTTP access node.
+Please verify that you are not unintentionally using a GRPC access node.
+See more here: https://docs.onflow.org/fcl/reference/sdk-guidelines/#connect`,
+          level: logger.LEVELS.error,
+        })
+
+        throw new HTTPRequestError({
+          error: e?.message,
+          hostname,
+          path,
+          method,
+          requestBody: bodyJSON,
+        })
+      })
+  }
+
   async function requestLoop(retryAttempt = 0) {
     try {
       const resp = await makeRequest()
       return resp
     } catch (error) {
-      const retryStatusCodes = [408, 500, 502, 503, 504]
+      const retryStatusCodes = [408, 429, 500, 502, 503, 504]
 
       if (retryStatusCodes.includes(error.statusCode)) {
         return await new Promise((resolve, reject) => {
           if (retryAttempt < retryLimit) {
-            console.log(
+            console.warn(
               `Access node unavailable, retrying in ${retryIntervalMs} ms...`
             )
             setTimeout(() => {
@@ -77,53 +129,14 @@ export async function httpRequest({
     }
   }
 
-  function makeRequest() {
-    return fetchTransport(`${hostname}${path}`, {
-      method: method,
-      body: body ? JSON.stringify(body) : undefined,
-    })
-      .then(async res => {
-        if (res.ok) {
-          return res.json()
-        }
-
-        const responseJSON = res.body ? await res.json() : null
-
-        throw new HTTPRequestError({
-          error: responseJSON?.message,
-          hostname,
-          path,
-          method,
-          requestBody: body,
-          responseBody: responseJSON,
-          responseStatusText: res.statusText,
-          statusCode: res.status,
-        })
-      })
-      .catch(e => {
-        if (e instanceof HTTPRequestError) {
-          throw e
-        }
-
-        // Show AN error for all network errors
-        logger.log({
-          title: "Access Node Error",
-          message: `The provided access node ${hostname} does not appear to be a valid REST/HTTP access node.
-Please verify that you are not unintentionally using a GRPC access node.
-See more here: https://docs.onflow.org/fcl/reference/sdk-guidelines/#connect`,
-          level: logger.LEVELS.error,
-        })
-
-        throw new HTTPRequestError({
-          error: e?.message,
-          hostname,
-          path,
-          method,
-          requestBody: body,
-        })
-      })
-  }
-
   // Keep retrying request until server available or max attempts exceeded
   return await requestLoop()
+}
+
+function safeParseJSON(data) {
+  try {
+    return JSON.parse(data)
+  } catch {
+    return null
+  }
 }

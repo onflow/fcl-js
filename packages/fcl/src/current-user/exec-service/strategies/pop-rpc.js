@@ -3,7 +3,7 @@ import {pop} from "./utils/pop"
 import {normalizePollingResponse} from "../../../normalizers/service/polling-response"
 import {VERSION} from "../../../VERSION"
 
-export function execPopRPC(service, body, opts, config) {
+export function execPopRPC({service, body, config, opts}) {
   return new Promise((resolve, reject) => {
     const id = uid()
     const {redir, includeOlderJsonRpcCall} = opts

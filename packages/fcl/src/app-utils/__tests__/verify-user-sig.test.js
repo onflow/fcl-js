@@ -29,7 +29,8 @@ const compSigThree = {
 describe("verifyUserSignatures", () => {
   it("should return true if valid args", async () => {
     const compSigs = [compSigOne, compSigTwo]
-    const res = await validateArgs({message, compSigs})
+    const address = "0x6a32b81933f0ee64"
+    const res = await validateArgs({message, address, compSigs})
     expect.assertions(1)
     expect(res).toEqual(true)
   })
