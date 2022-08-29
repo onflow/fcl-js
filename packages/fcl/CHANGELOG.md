@@ -1,5 +1,37 @@
 # @onflow/fcl
 
+## 1.3.0-alpha.3
+
+### Patch Changes
+
+- [#1372](https://github.com/onflow/fcl-js/pull/1372) [`6708494d`](https://github.com/onflow/fcl-js/commit/6708494df236dc8c7375a2f91dc04fbcc03235c8) Thanks [@gregsantos](https://github.com/gregsantos)! - Add missing logger package to execService
+
+## 1.3.0-alpha.2
+
+### Minor Changes
+
+- [#1352](https://github.com/onflow/fcl-js/pull/1352) [`e33fa8df`](https://github.com/onflow/fcl-js/commit/e33fa8df764ec4f10696eedf520cc92ee402623d) Thanks [@gregsantos](https://github.com/gregsantos)! - Add plugin registry and allow for service and strategy injection
+
+### Patch Changes
+
+- [#1359](https://github.com/onflow/fcl-js/pull/1359) [`9ea98850`](https://github.com/onflow/fcl-js/commit/9ea988503bbf4760bdee2a8bd8098be1cd95acb6) Thanks [@jribbink](https://github.com/jribbink)! - Minify UMD build
+
+## 1.2.1-alpha.1
+
+### Patch Changes
+
+- [#1357](https://github.com/onflow/fcl-js/pull/1357) [`ecbd77b2`](https://github.com/onflow/fcl-js/commit/ecbd77b2acfbe4a28793baca3db47c1d5347247d) Thanks [@gregsantos](https://github.com/gregsantos)! - Improve building discovery service on authn
+
+- Updated dependencies []:
+  - @onflow/sdk@1.1.2-alpha.1
+
+## 1.2.1-alpha.0
+
+### Patch Changes
+
+- Updated dependencies [[`99e03af7`](https://github.com/onflow/fcl-js/commit/99e03af76e526593e5c989e43754ce23420e317f)]:
+  - @onflow/sdk@1.1.2-alpha.0
+
 ## 1.2.0
 
 ### Minor Changes
