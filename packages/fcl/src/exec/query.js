@@ -2,10 +2,7 @@ import {invariant} from "@onflow/util-invariant"
 import * as sdk from "@onflow/sdk"
 import {isRequired, isObject, isString} from "./utils/is"
 import {normalizeArgs} from "./utils/normalize-args"
-import {deriveCadenceByNetwork} from "../interaction-template-utils/derive-cadence-by-network.js"
-import {retrieve} from "../document/document.js"
-import {deriveDependencies} from "./utils/derive-dependencies"
-import {normalizeInteractionTemplate} from "../normalizers/interaction-template/interaction-template"
+import {prepTemplateOpts} from "./utils/prep-template-opts.js"
 
 /** Query the Flow Blockchain
  *
@@ -46,25 +43,12 @@ import {normalizeInteractionTemplate} from "../normalizers/interaction-template/
  */
 export async function query(opts = {}) {
   await preQuery(opts)
+  opts = await prepTemplateOpts(opts)
 
-  if (isString(opts?.template)) {
-    opts.template = await retrieve({url: opts?.template})
-  }
-
-  if (opts?.template) {
-    opts.template = normalizeInteractionTemplate(opts?.template)
-  }
-
-  let dependencies = {}
-  if (opts?.template) {
-    opts.template = normalizeInteractionTemplate(opts?.template)
-    dependencies = await deriveDependencies({template: opts.template})
-  }
-
-  return sdk.config().overload(dependencies, async () =>
+  return sdk.config().overload(opts.dependencies || {}, async () =>
     // prettier-ignore
     sdk.send([
-      sdk.script(cadence),
+      sdk.script(opts.cadence),
       sdk.args(normalizeArgs(opts.args || [])),
       opts.limit && typeof opts.limit === "number" && sdk.limit(opts.limit)
     ]).then(sdk.decode)

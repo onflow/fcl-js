@@ -3,10 +3,7 @@ import * as sdk from "@onflow/sdk"
 import {isRequired, isObject, isString, isNumber} from "./utils/is"
 import {normalizeArgs} from "./utils/normalize-args"
 import {currentUser} from "../current-user"
-import {deriveCadenceByNetwork} from "../interaction-template-utils"
-import {retrieve} from "../document/document.js"
-import {deriveDependencies} from "./utils/derive-dependencies"
-import {normalizeInteractionTemplate} from "../normalizers/interaction-template/interaction-template"
+import {prepTemplateOpts} from "./utils/prep-template-opts.js"
 
 /** As the current user Mutate the Flow Blockchain
  *
@@ -64,32 +61,16 @@ export async function mutate(opts = {}) {
   var txid
   try {
     await prepMutation(opts)
+    opts = await prepTemplateOpts(opts)
 
     // Allow for a config to overwrite the authorization function.
     // prettier-ignore
     const authz = await sdk.config().get("fcl.authz", currentUser().authorization)
 
-    if (isString(opts?.template)) {
-      opts.template = await retrieve({url: opts?.template})
-    }
-
-    let dependencies = {}
-    if (opts?.template) {
-      opts.template = normalizeInteractionTemplate(opts?.template)
-      dependencies = await deriveDependencies({template: opts.template})
-    }
-
-    const cadence =
-      opts.cadence ||
-      deriveCadenceByNetwork({
-        template: opts.template,
-        network: await sdk.config().get("flow.network"),
-      })
-
-    txid = sdk.config().overload(dependencies, async () =>
+    txid = sdk.config().overload(opts.dependencies || {}, async () =>
       // prettier-ignore
       sdk.send([
-        sdk.transaction(cadence),
+        sdk.transaction(opts.cadence),
 
         sdk.args(normalizeArgs(opts.args || [])),
 
