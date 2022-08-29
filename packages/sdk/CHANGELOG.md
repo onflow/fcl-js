@@ -1,67 +1,28 @@
 # @onflow/sdk
 
-## 1.1.1-templates.11
+## 1.1.1
 
 ### Patch Changes
 
-- Update Interaction Template utils
+- [#1326](https://github.com/onflow/fcl-js/pull/1326) [`053ff10d`](https://github.com/onflow/fcl-js/commit/053ff10dbc1d6ec64b1cafec9dad6b58ad154552) Thanks [@jribbink](https://github.com/jribbink)! - Fix getAccount executing at latest finalized block instead of sealed block (version bump `@onflow/transport-http`)
 
-## 1.1.1-templates.10
+* [#1227](https://github.com/onflow/fcl-js/pull/1227) [`352f1460`](https://github.com/onflow/fcl-js/commit/352f1460a2f34d228a74fa4bbc6fcf6e68a968b6) Thanks [@jribbink](https://github.com/jribbink)! - Switch to fcl-bundle instead of microbundle for build scripts
 
-### Patch Changes
+* Updated dependencies [[`422914bc`](https://github.com/onflow/fcl-js/commit/422914bcdc4c1b44c61d3ec1850bf57114f31a6b), [`b9577b63`](https://github.com/onflow/fcl-js/commit/b9577b6355be06dec98f1e11101594fa65e66cf7), [`c83c4606`](https://github.com/onflow/fcl-js/commit/c83c4606f1c78e7addaadece89350b19cb5544d6), [`352f1460`](https://github.com/onflow/fcl-js/commit/352f1460a2f34d228a74fa4bbc6fcf6e68a968b6), [`4d59f80c`](https://github.com/onflow/fcl-js/commit/4d59f80c0a8b45c82a28a05e6c579f4376107b86), [`45607fae`](https://github.com/onflow/fcl-js/commit/45607fae1d99adaa6e2c9ebbb8dc2f7e0c267033)]:
+  - @onflow/transport-http@1.4.0
+  - @onflow/config@1.0.3
+  - @onflow/rlp@1.0.2
+  - @onflow/util-actor@1.1.1
+  - @onflow/util-address@1.0.2
+  - @onflow/util-invariant@1.0.2
+  - @onflow/util-logger@1.1.1
+  - @onflow/util-template@1.0.3
 
-- Moves to on-chain audit system
-
-## 1.1.1-templates.9
-
-### Patch Changes
-
-- Derive dependencies using fcl templates current spec
-
-## 1.1.1-templates.8
-
-### Patch Changes
-
-- Adds signer network to serialization format for InteractionTemplateAudit
-
-## 1.1.1-templates.7
+## 1.1.1-alpha.2
 
 ### Patch Changes
 
-- Adds node-fetch dependency to fcl
-
-## 1.1.1-templates.6
-
-### Patch Changes
-
-- Bump version
-
-## 1.1.1-templates.5
-
-### Patch Changes
-
-- Adds InteractionTemplateUtils and resolver
-
-## 1.1.1-templates.4
-
-### Patch Changes
-
-- Bump version
-
-## 1.1.1-templates.3
-
-### Patch Changes
-
-- Update dependencies
-
-## 1.1.1-templates.2
-
-### Patch Changes
-
-- Initial integration with FLIP-934 InteractionTemplate support
-
-- Updated dependencies [[`422914bc`](https://github.com/onflow/fcl-js/commit/422914bcdc4c1b44c61d3ec1850bf57114f31a6b)]:
-  - @onflow/transport-http@1.3.1-templates.2
+- Fix getAccount executing at latest finalized block instead of sealed block (version bump `@onflow/transport-http`)
 
 ## 1.1.1-alpha.1
 

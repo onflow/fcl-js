@@ -1,91 +1,44 @@
 # @onflow/fcl
 
-## 1.1.1-templates.11
+## 1.2.0
+
+### Minor Changes
+
+- [#1202](https://github.com/onflow/fcl-js/pull/1202) [`13c1192e`](https://github.com/onflow/fcl-js/commit/13c1192e972c182bbad8fd7f6c68ec08a6920d7a) Thanks [@chasefleming](https://github.com/chasefleming)! - Show uninstalled extensions in Discovery API
 
 ### Patch Changes
 
-- Update Interaction Template utils
+- [#1337](https://github.com/onflow/fcl-js/pull/1337) [`0c05ae39`](https://github.com/onflow/fcl-js/commit/0c05ae39b2925398029c5b74370fe158b6707d00) Thanks [@gregsantos](https://github.com/gregsantos)! - Adds withPrefix to addresses in verifyAccountProof and verifyUserSignature
 
-- Updated dependencies []:
-  - @onflow/sdk@1.1.1-templates.11
-
-## 1.1.1-templates.10
+## 1.1.1
 
 ### Patch Changes
 
-- Moves to on-chain audit system
+- [#1326](https://github.com/onflow/fcl-js/pull/1326) [`053ff10d`](https://github.com/onflow/fcl-js/commit/053ff10dbc1d6ec64b1cafec9dad6b58ad154552) Thanks [@jribbink](https://github.com/jribbink)! - Fix getAccount executing at latest finalized block instead of sealed block (version bump `@onflow/transport-http`)
 
-- Updated dependencies []:
-  - @onflow/sdk@1.1.1-templates.10
+* [#1283](https://github.com/onflow/fcl-js/pull/1283) [`b0f7a234`](https://github.com/onflow/fcl-js/commit/b0f7a234a6e71c28e4a02d8edf4927f73e76fa72) Thanks [@gregsantos](https://github.com/gregsantos)! - Updates keyIndices args passed in as Numbers in fcl.verify functions
 
-## 1.1.1-templates.9
+- [#1274](https://github.com/onflow/fcl-js/pull/1274) [`865e412c`](https://github.com/onflow/fcl-js/commit/865e412c5c975e68f30e9c8b4b225030560a5187) Thanks [@jribbink](https://github.com/jribbink)! - Throw error if FCL popup/tab is blocked from opening or if sendMsgToFCL cannot access parent window reference for postMessage.
 
-### Patch Changes
+* [#1227](https://github.com/onflow/fcl-js/pull/1227) [`352f1460`](https://github.com/onflow/fcl-js/commit/352f1460a2f34d228a74fa4bbc6fcf6e68a968b6) Thanks [@jribbink](https://github.com/jribbink)! - Switch to fcl-bundle instead of microbundle for build scripts
 
-- Derive dependencies using fcl templates current spec
+* Updated dependencies [[`053ff10d`](https://github.com/onflow/fcl-js/commit/053ff10dbc1d6ec64b1cafec9dad6b58ad154552), [`352f1460`](https://github.com/onflow/fcl-js/commit/352f1460a2f34d228a74fa4bbc6fcf6e68a968b6)]:
+  - @onflow/sdk@1.1.1
+  - @onflow/config@1.0.3
+  - @onflow/rlp@1.0.2
+  - @onflow/types@1.0.3
+  - @onflow/util-actor@1.1.1
+  - @onflow/util-address@1.0.2
+  - @onflow/util-invariant@1.0.2
+  - @onflow/util-logger@1.1.1
+  - @onflow/util-template@1.0.3
+  - @onflow/util-uid@1.0.2
 
-- Updated dependencies []:
-  - @onflow/sdk@1.1.1-templates.9
-
-## 1.1.1-templates.8
-
-### Patch Changes
-
-- Adds signer network to serialization format for InteractionTemplateAudit
-
-- Updated dependencies []:
-  - @onflow/sdk@1.1.1-templates.8
-
-## 1.1.1-templates.7
+## 1.1.1-alpha.2
 
 ### Patch Changes
 
-- Adds node-fetch dependency to fcl
-
-- Updated dependencies []:
-  - @onflow/sdk@1.1.1-templates.7
-
-## 1.1.1-templates.6
-
-### Patch Changes
-
-- Bump version
-
-- Updated dependencies []:
-  - @onflow/sdk@1.1.1-templates.6
-
-## 1.1.1-templates.5
-
-### Patch Changes
-
-- Pin SDK dependency to tagged version
-
-## 1.1.1-templates.4
-
-### Patch Changes
-
-- Adds InteractionTemplateUtils and resolver
-
-- Updated dependencies []:
-  - @onflow/sdk@1.1.1-templates.5
-
-## 1.1.1-templates.3
-
-### Patch Changes
-
-- Bump version
-
-- Updated dependencies []:
-  - @onflow/sdk@1.1.1-templates.4
-
-## 1.1.1-templates.2
-
-### Patch Changes
-
-- Initial integration with FLIP-934 InteractionTemplate support
-
-- Updated dependencies []:
-  - @onflow/sdk@1.1.1-templates.2
+- Fix getAccount executing at latest finalized block instead of sealed block (version bump `@onflow/transport-http`)
 
 ## 1.1.1-alpha.1
 

@@ -1,35 +1,23 @@
 {
   "mode": "pre",
-  "tag": "templates",
+  "tag": "alpha",
   "initialVersions": {
-    "@onflow/config": "1.0.3-alpha.0",
-    "@onflow/fcl": "1.1.1-alpha.1",
-    "@onflow/fcl-bundle": "1.0.1-alpha.0",
+    "@onflow/config": "1.0.3",
+    "@onflow/fcl": "1.2.0",
+    "@onflow/fcl-bundle": "1.1.0",
     "@onflow/protobuf": "1.1.0",
-    "@onflow/rlp": "1.0.2-alpha.0",
-    "@onflow/sdk": "1.1.1-alpha.1",
-    "@onflow/transport-grpc": "1.1.1-alpha.0",
-    "@onflow/transport-http": "1.3.1-alpha.1",
-    "@onflow/types": "1.0.3-alpha.0",
-    "@onflow/util-actor": "1.1.1-alpha.0",
-    "@onflow/util-address": "1.0.2-alpha.0",
-    "@onflow/util-encode-key": "1.0.2-alpha.0",
-    "@onflow/util-invariant": "1.0.2-alpha.0",
-    "@onflow/util-logger": "1.1.1-alpha.1",
-    "@onflow/util-template": "1.0.3-alpha.0",
-    "@onflow/util-uid": "1.0.2-alpha.0"
+    "@onflow/rlp": "1.0.2",
+    "@onflow/sdk": "1.1.1",
+    "@onflow/transport-grpc": "1.1.1",
+    "@onflow/transport-http": "1.4.0",
+    "@onflow/types": "1.0.3",
+    "@onflow/util-actor": "1.1.1",
+    "@onflow/util-address": "1.0.2",
+    "@onflow/util-encode-key": "1.0.2",
+    "@onflow/util-invariant": "1.0.2",
+    "@onflow/util-logger": "1.1.1",
+    "@onflow/util-template": "1.0.3",
+    "@onflow/util-uid": "1.0.2"
   },
-  "changesets": [
-    "afraid-radios-talk",
-    "early-carpets-shout",
-    "fifty-stingrays-hammer",
-    "flat-teachers-agree",
-    "large-rules-kiss",
-    "mighty-tomatoes-repeat",
-    "perfect-cats-worry",
-    "shiny-adults-kneel",
-    "silver-actors-grin",
-    "soft-ligers-relate",
-    "weak-dragons-cheer"
-  ]
+  "changesets": []
 }
