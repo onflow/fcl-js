@@ -4,13 +4,14 @@ import {invariant} from "@onflow/util-invariant"
 import {log} from "@onflow/util-logger"
 import * as fcl from "@onflow/fcl"
 export {getSdkError} from "@walletconnect/utils"
+import {config} from "@onflow/config"
 
 const DEFAULT_RELAY_URL = "wss://relay.walletconnect.com"
 const DEFAULT_LOGGER = "debug"
 const DEFAULT_APP_METADATA = {
   name: "FCL WalletConnect",
-  description: "FCL DApp for WalletConnect",
-  url: "https://flow.com/",
+  description: "FCL App with WalletConnect",
+  url: "https://flow.com",
   icons: ["https://avatars.githubusercontent.com/u/62387156?s=280&v=4"],
 }
 
@@ -36,10 +37,23 @@ const initClient = async ({projectId, metadata}) => {
   }
 }
 
-export const initFclWc = async ({projectId, metadata} = {}) => {
-  const client = await initClient({projectId, metadata})
-  const FclWcServicePlugin = makeServicePlugin(client)
+const updateFcl = async projectId => {
+  await config().put("fcl.wc.projectId", projectId)
   fcl.discovery.authn.update()
+}
+
+export const initFclWc = async ({
+  projectId,
+  metadata,
+  includeBaseWC = false,
+  wallets = [],
+} = {}) => {
+  const client = await initClient({projectId, metadata})
+  await updateFcl()
+  const FclWcServicePlugin = await makeServicePlugin(client, {
+    includeBaseWC,
+    wallets,
+  })
   return {
     FclWcServicePlugin,
     client,
