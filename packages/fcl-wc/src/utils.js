@@ -13,7 +13,7 @@ const makeFlowWcWalletServices = wallets => {
         endpoint: "flow_authn",
         optIn: false,
         provider: {
-          address: wallet.id,
+          address: null,
           name: wallet.name,
           icon: wallet.image_url?.sm,
           description: wallet.description,
