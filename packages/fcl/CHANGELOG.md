@@ -1,5 +1,11 @@
 # @onflow/fcl
 
+## 1.3.0-alpha.5
+
+### Patch Changes
+
+- [#1386](https://github.com/onflow/fcl-js/pull/1386) [`3fdcc3be`](https://github.com/onflow/fcl-js/commit/3fdcc3be2d206c0df3f3b250012db5c18cac3bed) Thanks [@JeffreyDoyle](https://github.com/JeffreyDoyle)! - Remove support for InteractionTemplateUtils.getInteractionTemplateAudits on mainnet until support is added
+
 ## 1.3.0-alpha.4
 
 ### Minor Changes
