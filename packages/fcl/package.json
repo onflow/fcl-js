@@ -52,6 +52,7 @@
     "@onflow/util-invariant": "^1.0.2",
     "@onflow/util-logger": "^1.1.1",
     "@onflow/util-template": "^1.0.3",
-    "@onflow/util-uid": "^1.0.2"
+    "@onflow/util-uid": "^1.0.2",
+    "node-fetch": "^2.6.7"
   }
 }

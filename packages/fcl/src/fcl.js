@@ -34,6 +34,9 @@ export {WalletUtils}
 import * as AppUtils from "./app-utils"
 export {AppUtils}
 
+import * as InteractionTemplateUtils from "./interaction-template-utils"
+export {InteractionTemplateUtils}
+
 export {TestUtils} from "@onflow/sdk"
 export {config} from "@onflow/config"
 export {send} from "@onflow/sdk"

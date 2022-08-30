@@ -1,15 +1,17 @@
 import {invariant} from "@onflow/util-invariant"
 import * as sdk from "@onflow/sdk"
-import {isRequired, isObject, isString, isFunc, isNumber} from "./utils/is"
+import {isRequired, isObject, isString, isNumber} from "./utils/is"
 import {normalizeArgs} from "./utils/normalize-args"
 import {currentUser} from "../current-user"
-import {transaction} from "../transaction"
+import {prepTemplateOpts} from "./utils/prep-template-opts.js"
+import {preMutate} from "./utils/pre.js"
 
 /** As the current user Mutate the Flow Blockchain
  *
  *  @arg {Object} opts - Mutation Options and configuration
  *  @arg {string} opts.cadence - Cadence Transaction used to mutate Flow
  *  @arg {ArgsFn} opts.args - Arguments passed to cadence transaction
+ *  @arg {Object} opts.template - Interaction Template for a transaction
  *  @arg {number} opts.limit - Compute Limit for transaction
  *  @returns {string} Transaction Id
  *
@@ -46,6 +48,7 @@ import {transaction} from "../transaction"
  *
  *  Options:
  *    type Options = {
+ *      template: InteractionTemplate | String // InteractionTemplate or url to one
  *      cadence: String!,
  *      args: (arg, t) => Array<Arg>,
  *      limit: Number,
@@ -55,54 +58,38 @@ import {transaction} from "../transaction"
  *      authorizations: [AuthzFn], // an array of authorization functions used as authorizations signatory roles
  *    }
  */
-
-const noop = () => {}
-
 export async function mutate(opts = {}) {
   var txid
   try {
-    await prepMutation(opts)
+    await preMutate(opts)
+    opts = await prepTemplateOpts(opts)
 
     // Allow for a config to overwrite the authorization function.
     // prettier-ignore
     const authz = await sdk.config().get("fcl.authz", currentUser().authorization)
 
-    // prettier-ignore
-    txid = sdk.send([
-      sdk.transaction(opts.cadence),
+    txid = sdk.config().overload(opts.dependencies || {}, async () =>
+      // prettier-ignore
+      sdk.send([
+        sdk.transaction(opts.cadence),
 
-      sdk.args(normalizeArgs(opts.args || [])),
+        sdk.args(normalizeArgs(opts.args || [])),
 
-      opts.limit && isNumber(opts.limit) && sdk.limit(opts.limit),
+        opts.limit && isNumber(opts.limit) && sdk.limit(opts.limit),
 
-      // opts.proposer > opts.authz > authz
-      sdk.proposer(opts.proposer || opts.authz || authz),
+        // opts.proposer > opts.authz > authz
+        sdk.proposer(opts.proposer || opts.authz || authz),
 
-      // opts.payer > opts.authz > authz
-      sdk.payer(opts.payer || opts.authz || authz),
+        // opts.payer > opts.authz > authz
+        sdk.payer(opts.payer || opts.authz || authz),
 
-      // opts.authorizations > [opts.authz > authz]
-      sdk.authorizations(opts.authorizations || [opts.authz || authz]),
-    ]).then(sdk.decode)
+        // opts.authorizations > [opts.authz > authz]
+        sdk.authorizations(opts.authorizations || [opts.authz || authz]),
+      ]).then(sdk.decode)
+    )
 
     return txid
   } catch (error) {
     throw error
   }
-}
-
-async function prepMutation(opts) {
-  // prettier-ignore
-  invariant(isRequired(opts), "mutate(opts) -- opts is required")
-  // prettier-ignore
-  invariant(isObject(opts), "mutate(opts) -- opts must be an object")
-  // prettier-ignore
-  invariant(isRequired(opts.cadence), "mutate({ cadence }) -- cadence is required")
-  // prettier-ignore
-  invariant(isString(opts.cadence), "mutate({ cadence }) -- cadence must be a string")
-  // prettier-ignore
-  invariant(
-    await sdk.config.get("accessNode.api"),
-    `Required value for "accessNode.api" not defined in config. See: ${"https://github.com/onflow/flow-js-sdk/blob/master/packages/fcl/src/exec/query.md#configuration"}`
-  )
 }

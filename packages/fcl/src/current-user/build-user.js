@@ -2,8 +2,8 @@ import {withPrefix} from "@onflow/util-address"
 import * as rlp from "@onflow/rlp"
 import {fetchServices} from "./fetch-services"
 import {mergeServices} from "./merge-services"
-import {USER_PRAGMA} from "./normalize/__vsn"
-import {normalizeService} from "./normalize/service"
+import {USER_PRAGMA} from "../normalizers/service/__vsn"
+import {normalizeService} from "../normalizers/service/service"
 
 function deriveCompositeId(authn) {
   return rlp

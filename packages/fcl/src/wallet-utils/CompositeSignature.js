@@ -1,5 +1,5 @@
 import {withPrefix} from "@onflow/util-address"
-import {COMPOSITE_SIGNATURE_PRAGMA} from "../current-user/normalize/__vsn"
+import {COMPOSITE_SIGNATURE_PRAGMA} from "../normalizers/service/__vsn"
 
 export function CompositeSignature(addr, keyId, signature) {
   this.f_type = COMPOSITE_SIGNATURE_PRAGMA.f_type
