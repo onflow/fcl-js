@@ -4,10 +4,14 @@ import {query} from "../exec/query.js"
 import {generateTemplateId} from "./generate-template-id.js"
 import {normalizeInteractionTemplate} from "../normalizers/interaction-template/interaction-template.js"
 
+<<<<<<< HEAD
 export async function getInteractionTemplateAudits(
   {template, auditors},
   opts = {}
 ) {
+=======
+export async function getInteractionTemplateAudits({template, auditors}) {
+>>>>>>> 7ce51c4c47e180d4fd9614c5e61e8d2f7f33ddaf
   invariant(
     template != undefined,
     "getInteractionTemplateAudits({ template }) -- template must be defined"

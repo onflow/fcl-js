@@ -21,6 +21,7 @@
     "@onflow/fcl-wc": "0.0.0"
   },
   "changesets": [
+    "brown-bears-remain",
     "clean-years-drop",
     "curly-garlics-behave",
     "eleven-bobcats-complain",
@@ -31,6 +32,7 @@
     "swift-chairs-rhyme",
     "tame-bags-kneel",
     "tasty-masks-turn",
+    "unlucky-pears-wash",
     "wet-brooms-tap"
   ]
 }
