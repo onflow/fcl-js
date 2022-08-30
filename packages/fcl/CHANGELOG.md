@@ -1,5 +1,17 @@
 # @onflow/fcl
 
+## 1.3.0-alpha.4
+
+### Minor Changes
+
+- [#1323](https://github.com/onflow/fcl-js/pull/1323) [`1982c00b`](https://github.com/onflow/fcl-js/commit/1982c00bc334403bb603762a7f921bbe1887ee2b) Thanks [@JeffreyDoyle](https://github.com/JeffreyDoyle)! - Adds FLIP-934 Interaction Template support to FCL.
+
+  Interaction Template is a concept established in FLIP-934. Read more about the FLIP here: https://github.com/onflow/flips/blob/main/flips/20220503-interaction-templates.md
+
+### Patch Changes
+
+- [#1375](https://github.com/onflow/fcl-js/pull/1375) [`2a5fa910`](https://github.com/onflow/fcl-js/commit/2a5fa910009501c7c789efc9b1c1731668578361) Thanks [@chasefleming](https://github.com/chasefleming)! - Fix issue where authenticating a Discovery API service would not respect service method.
+
 ## 1.3.0-alpha.3
 
 ### Patch Changes
