@@ -160,51 +160,24 @@ async function connectWc(onClose, {service, client, pairing}) {
 }
 
 const baseWalletConnectService = includeBaseWC => {
-  return includeBaseWC
-    ? {
-        f_type: "Service",
-        f_vsn: "1.0.0",
-        type: "authn",
-        method: "WC/RPC",
-        uid: "wc#authn",
-        endpoint: "flow_authn",
-        optIn: false,
-        provider: {
-          address: "0xWalletConnect",
-          name: "WalletConnect",
-          uid: null,
-          icon: "https://avatars.githubusercontent.com/u/37784886",
-          description: "WalletConnect Generic Provider",
-          website: null,
-          color: null,
-          supportEmail: null,
-        },
-      }
-    : []
-}
-
-const makePairedWalletConnectServices = client => {
-  const pairings = client.pairing.getAll({active: true})
-  return pairings.map(pairing => {
-    return {
-      f_type: "Service",
-      f_vsn: "1.0.0",
-      type: "authn",
-      method: "WC/RPC",
-      uid: pairing.topic,
-      endpoint: "flow_authn",
-      optIn: false,
-      provider: {
-        address: null,
-        name: pairing.peerMetadata.name,
-        icon: pairing.peerMetadata.icons[0],
-        description: pairing.peerMetadata.description,
-        website: pairing.peerMetadata.url,
-        color: null,
-        supportEmail: null,
-      },
-    }
-  })
+  return {
+    f_type: "Service",
+    f_vsn: "1.0.0",
+    type: "authn",
+    method: "WC/RPC",
+    uid: "wc#authn",
+    endpoint: "flow_authn",
+    optIn: !includeBaseWC,
+    provider: {
+      address: null,
+      name: "WalletConnect",
+      icon: "https://avatars.githubusercontent.com/u/37784886",
+      description: "WalletConnect Base Service",
+      website: null,
+      color: null,
+      supportEmail: null,
+    },
+  }
 }
 
 async function makeWcServices(
@@ -213,12 +186,6 @@ async function makeWcServices(
 ) {
   const wcBaseService = baseWalletConnectService(includeBaseWC)
   const flowWcWalletServices = await fetchFlowWallets()
-  const pairedWalletServices = makePairedWalletConnectServices(client)
 
-  return [
-    ...wcBaseService,
-    ...flowWcWalletServices,
-    ...injectedWalletsServices,
-    ...pairedWalletServices,
-  ]
+  return [wcBaseService, ...flowWcWalletServices, ...injectedWalletsServices]
 }
