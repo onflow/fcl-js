@@ -21,24 +21,26 @@ const supportedServicePlugins = ["discovery-service"]
 
 const validateDiscoveryPlugin = servicePlugin => {
   const {services, serviceStrategy} = servicePlugin
-  invariant(Array.isArray(services), "Array of Discovery Services is required")
+  invariant(
+    Array.isArray(services) && services.length,
+    "Array of Discovery Services is required"
+  )
 
-  if (services.length) {
-    for (const ds of services) {
-      invariant(
-        isRequired(ds.f_type) && ds.f_type === "Service",
-        "Service is required"
-      )
-      invariant(
-        isRequired(ds.type) && ds.type === "authn",
-        `Service must be type authn. Received ${ds.type}`
-      )
-      invariant(
-        ds.method in CORE_STRATEGIES || serviceStrategy.method === ds.method,
-        `Service method ${ds.method} is not supported`
-      )
-    }
+  for (const ds of services) {
+    invariant(
+      isRequired(ds.f_type) && ds.f_type === "Service",
+      "Service is required"
+    )
+    invariant(
+      isRequired(ds.type) && ds.type === "authn",
+      `Service must be type authn. Received ${ds.type}`
+    )
+    invariant(
+      ds.method in CORE_STRATEGIES || serviceStrategy.method === ds.method,
+      `Service method ${ds.method} is not supported`
+    )
   }
+
   invariant(isRequired(serviceStrategy), "Service strategy is required")
   invariant(
     isRequired(serviceStrategy.method) && isString(serviceStrategy.method),
