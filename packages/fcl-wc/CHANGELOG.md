@@ -1,5 +1,12 @@
 # @onflow/fcl-wc
 
+## 1.0.0-alpha.1
+
+### Patch Changes
+
+- Updated dependencies [[`2a5fa910`](https://github.com/onflow/fcl-js/commit/2a5fa910009501c7c789efc9b1c1731668578361), [`1982c00b`](https://github.com/onflow/fcl-js/commit/1982c00bc334403bb603762a7f921bbe1887ee2b)]:
+  - @onflow/fcl@1.3.0-alpha.4
+
 ## 0.1.0-alpha.0
 
 ### Minor Changes
