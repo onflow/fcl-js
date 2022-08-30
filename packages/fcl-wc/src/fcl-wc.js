@@ -42,7 +42,7 @@ const updateFcl = async projectId => {
   fcl.discovery.authn.update()
 }
 
-export const initFclWc = async ({
+export const init = async ({
   projectId,
   metadata,
   includeBaseWC = false,
