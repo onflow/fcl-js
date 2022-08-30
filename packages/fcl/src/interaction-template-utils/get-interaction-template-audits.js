@@ -4,7 +4,10 @@ import {query} from "../exec/query.js"
 import {generateTemplateId} from "./generate-template-id.js"
 import {normalizeInteractionTemplate} from "../normalizers/interaction-template/interaction-template.js"
 
-export async function getInteractionTemplateAudits({template, auditors}) {
+export async function getInteractionTemplateAudits(
+  {template, auditors},
+  opts = {}
+) {
   invariant(
     template != undefined,
     "getInteractionTemplateAudits({ template }) -- template must be defined"
@@ -55,9 +58,12 @@ export async function getInteractionTemplateAudits({template, auditors}) {
           "getInteractionTemplateAudits Error: Unable to determine address for FlowInteractionTemplateAudit contract. Set configuration for 'fcl.network' to 'mainnet' or 'testnet'"
         )
         if (fclNetwork === "mainnet") {
-          FlowInteractionAuditContract = "0xb4b82a1c9d21d284"
+          FlowInteractionAuditContract = ""
+          throw new Error(
+            "getInteractionTemplateAudits Error: Not supported on MainNet in this release. MainNet support Coming Soon!"
+          )
         } else {
-          FlowInteractionAuditContract = "0x74daa6f9c7ef24b1"
+          FlowInteractionAuditContract = "0xf78bfc12d0a786dc"
         }
       }
 
@@ -65,7 +71,7 @@ export async function getInteractionTemplateAudits({template, auditors}) {
         cadence: `
         import FlowInteractionTemplateAudit from ${FlowInteractionAuditContract}
         pub fun main(templateId: String, auditors: [Address]): {Address:Bool} {
-          return FlowInteractionAudit.getHasTemplateBeenAuditedByAuditors(templateId: templateId, auditors: auditors)
+          return FlowInteractionTemplateAudit.getHasTemplateBeenAuditedByAuditors(templateId: templateId, auditors: auditors)
         }
         `,
         args: (arg, t) => [
