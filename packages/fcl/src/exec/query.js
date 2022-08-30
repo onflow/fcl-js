@@ -1,14 +1,16 @@
 import {invariant} from "@onflow/util-invariant"
 import * as sdk from "@onflow/sdk"
-import * as t from "@onflow/types"
-import {isRequired, isObject, isString, isFunc} from "./utils/is"
+import {isRequired, isObject, isString} from "./utils/is"
 import {normalizeArgs} from "./utils/normalize-args"
+import {prepTemplateOpts} from "./utils/prep-template-opts.js"
+import {preQuery} from "./utils/pre.js"
 
 /** Query the Flow Blockchain
  *
  *  @arg {Object} opts         - Query Options and configuration
  *  @arg {string} opts.cadence - Cadence Script used to query Flow
  *  @arg {ArgsFn} opts.args    - Arguments passed to cadence script
+ *  @arg {Object} opts.template - Interaction Template for a script
  *  @arg {number} opts.limit   - Compute Limit for Query
  *  @returns {Promise<Response>}
  *
@@ -42,28 +44,14 @@ import {normalizeArgs} from "./utils/normalize-args"
  */
 export async function query(opts = {}) {
   await preQuery(opts)
+  opts = await prepTemplateOpts(opts)
 
-  // prettier-ignore
-  return sdk.send([
-    sdk.script(opts.cadence),
-    sdk.args(normalizeArgs(opts.args || [])),
-    opts.limit && typeof opts.limit === "number" && sdk.limit(opts.limit)
-  ]).then(sdk.decode)
-}
-
-async function preQuery(opts) {
-  invariant(
-    isRequired(opts.cadence),
-    "query({ cadence }) -- cadence is required"
-  )
-
-  invariant(
-    isString(opts.cadence),
-    "query({ cadence }) -- cadence must be a string"
-  )
-
-  invariant(
-    await sdk.config.get("accessNode.api"),
-    `Required value for "accessNode.api" not defined in config. See: ${"https://github.com/onflow/flow-js-sdk/blob/master/packages/fcl/src/exec/query.md#configuration"}`
+  return sdk.config().overload(opts.dependencies || {}, async () =>
+    // prettier-ignore
+    sdk.send([
+      sdk.script(opts.cadence),
+      sdk.args(normalizeArgs(opts.args || [])),
+      opts.limit && typeof opts.limit === "number" && sdk.limit(opts.limit)
+    ]).then(sdk.decode)
   )
 }

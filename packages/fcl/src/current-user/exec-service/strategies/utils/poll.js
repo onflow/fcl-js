@@ -1,4 +1,4 @@
-import {normalizePollingResponse} from "../../../normalize/polling-response"
+import {normalizePollingResponse} from "../../../../normalizers/service/polling-response"
 import {serviceEndpoint} from "./service-endpoint"
 import {invariant} from "@onflow/util-invariant"
 import {fetchService} from "./fetch-service"
