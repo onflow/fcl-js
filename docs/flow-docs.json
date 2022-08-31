@@ -77,6 +77,10 @@
             "href": "reference/discovery"
           },
           {
+            "title": "Interaction Templates",
+            "href": "reference/interaction-templates"
+          },
+          {
             "title": "Proving Authentication",
             "href": "reference/proving-authentication"
           },
