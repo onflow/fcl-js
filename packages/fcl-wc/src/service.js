@@ -92,7 +92,7 @@ const makeExec = (client, {sessionRequestHook}) => {
         onResponse(result)
       } catch (e) {
         log({
-          title: `${e.name} Error on WalletConnect request`,
+          title: `${e.name} Error on WalletConnect client ${method} request`,
           message: e.message,
           level: 1,
         })
