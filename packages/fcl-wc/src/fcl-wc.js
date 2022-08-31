@@ -4,7 +4,7 @@ import {invariant} from "@onflow/util-invariant"
 import {log} from "@onflow/util-logger"
 import * as fcl from "@onflow/fcl"
 export {getSdkError} from "@walletconnect/utils"
-import {config} from "@onflow/config"
+import {setConfiguredNetwork} from "./utils"
 
 const DEFAULT_RELAY_URL = "wss://relay.walletconnect.com"
 const DEFAULT_LOGGER = "debug"
@@ -31,11 +31,6 @@ const initClient = async ({projectId, metadata}) => {
   }
 }
 
-const updateFcl = async projectId => {
-  await config().put("fcl.wc.projectId", projectId)
-  fcl.discovery.authn.update()
-}
-
 export const init = async ({
   projectId,
   metadata,
@@ -44,12 +39,14 @@ export const init = async ({
   wallets = [],
 } = {}) => {
   const client = await initClient({projectId, metadata})
+  await setConfiguredNetwork()
   const FclWcServicePlugin = await makeServicePlugin(client, {
     includeBaseWC,
     sessionRequestHook,
     wallets,
   })
-  await updateFcl(projectId)
+  fcl.discovery.authn.update()
+
   return {
     FclWcServicePlugin,
     client,

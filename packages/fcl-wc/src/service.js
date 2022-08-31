@@ -1,8 +1,7 @@
 import QRCodeModal from "@walletconnect/qrcode-modal"
-import {config} from "@onflow/config"
 import {invariant} from "@onflow/util-invariant"
 import {log} from "@onflow/util-logger"
-import {fetchFlowWallets, isMobile} from "./utils"
+import {fetchFlowWallets, isMobile, CONFIGURED_NETWORK} from "./utils"
 
 export const makeServicePlugin = async (client, opts = {}) => ({
   name: "fcl-plugin-service-walletconnect",
@@ -107,16 +106,10 @@ async function connectWc(
   {service, client, pairing, sessionRequestHook}
 ) {
   try {
-    const network = await config.get("flow.network")
-    invariant(
-      network === "mainnet" || network === "testnet",
-      "FCL Configuration value for 'flow.network' is required (testnet || mainnet)"
-    )
-
     const requiredNamespaces = {
       flow: {
         methods: ["flow_authn", "flow_authz", "flow_user_sign"],
-        chains: [`flow:${network}`],
+        chains: [`flow:${CONFIGURED_NETWORK}`],
         events: ["chainChanged", "accountsChanged"],
       },
     }
@@ -183,12 +176,10 @@ const baseWalletConnectService = includeBaseWC => {
   }
 }
 
-async function makeWcServices({
-  includeBaseWC,
-  wallets: injectedWalletsServices,
-}) {
+async function makeWcServices({includeBaseWC, wallets}) {
   const wcBaseService = baseWalletConnectService(includeBaseWC)
   const flowWcWalletServices = await fetchFlowWallets()
-
+  const injectedWalletsServices =
+    CONFIGURED_NETWORK === "testnet" ? wallets : []
   return [wcBaseService, ...flowWcWalletServices, ...injectedWalletsServices]
 }
