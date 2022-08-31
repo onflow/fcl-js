@@ -280,9 +280,10 @@ addStuff().then((d) => console.log(d)); // 13 (5 + 7 + 1)
 | `app.detail.icon`                      | `https://fcl-discovery.onflow.org/images/blocto.png` | Url for your applications icon, can be requested by wallets and other services.                                                                                                                |
 | `challenge.handshake`                  | **DEPRECATED**                                       | Use `discovery.wallet` instead.|
 | `discovery.authn.endpoint`             | `https://fcl-discovery.onflow.org/api/testnet/authn` | Endpoint for alternative configurable Wallet Discovery mechanism. Read more on [discovery](./api.md#discovery)                                                                                         |
-| `discovery.wallet` **(required)**      | `https://fcl-discovery.onflow.org/testnet/authn`     | Points FCL at the Wallet or Wallet Discovery mechanism.                                                                                                                                        |
+| `discovery.wallet` **(required)**      | `https://fcl-discovery.onflow.org/testnet/authn`     | Points FCL at the Wallet or Wallet Discovery mechanism.     
+| `discovery.wallet.method`     | `IFRAME/RPC`, `POP/RPC`, `TAB/RPC`, `HTTP/POST`, or `EXT/RPC`     | Describes which service strategy a wallet should use.                                                                                                                                      |
 | `fcl.limit`                         | `100`                                            | Specifies fallback compute limit if not provided in transaction.  Provided as integer.                                                                                      |
-| `flow.network`                         | `testnet`                                            | Used in conjunction with stored interactions and provides FCLCryptoContract address for `testnet` and `mainnet`. Possible values: `local`, `canarynet`, `testnet`, `mainnet`.                                                                            |
+| `flow.network` **(recommended)**                      | `testnet`                                            | Used in conjunction with stored interactions and provides FCLCryptoContract address for `testnet` and `mainnet`. Possible values: `local`, `canarynet`, `testnet`, `mainnet`.                                                                            |
 
 ### Address replacement in scripts and transactions
 
