@@ -1,6 +1,6 @@
 import {log} from "@onflow/util-logger"
 
-const makeFlowWcWalletServices = wallets => {
+const makeFlowServicesFromWallets = wallets => {
   return Object.values(wallets)
     .filter(w => w.app_type === "wallet")
     .map(wallet => {
@@ -17,7 +17,7 @@ const makeFlowWcWalletServices = wallets => {
           name: wallet.name,
           icon: wallet.image_url?.sm,
           description: wallet.description,
-          website: wallet.mobile?.universal,
+          website: wallet.homepage,
           color: wallet.metadata?.colors?.primary,
           supportEmail: null,
         },
@@ -27,16 +27,18 @@ const makeFlowWcWalletServices = wallets => {
 
 export async function fetchFlowWallets() {
   try {
-    const wallets = await fetch(
+    const wcApiWallets = await fetch(
       "https://explorer-api.walletconnect.com/v1/wallets?entries=5&page=1&search=flow"
     ).then(res => res.json())
-    if (wallets.length === 0) return []
-    const flowWcWalletServices = makeFlowWcWalletServices(wallets.listings)
 
-    return flowWcWalletServices
+    if (wcApiWallets?.count > 0) {
+      return makeFlowServicesFromWallets(wcApiWallets.listings)
+    }
+
+    return []
   } catch (error) {
     log({
-      title: `${error.name} Error connecting to WalletConnect API`,
+      title: `${error.name} Error fetching wallets from WalletConnect API`,
       message: error.message,
       level: 1,
     })
