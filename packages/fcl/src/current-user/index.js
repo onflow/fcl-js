@@ -13,6 +13,7 @@ import {configLens} from "../default-config"
 import {VERSION} from "../VERSION"
 import {getDiscoveryService, makeDiscoveryServices} from "../discovery"
 import {getNetwork} from "../utils"
+import {serviceRegistry} from "./exec-service/plugins"
 
 export const isFn = d => typeof d === "function"
 
@@ -129,6 +130,7 @@ const makeConfig = async ({discoveryAuthnInclude}) => {
       fclLibrary: "https://github.com/onflow/fcl-js",
       hostname: window?.location?.hostname ?? null,
       clientServices: await makeDiscoveryServices(),
+      supportedStrategies: serviceRegistry.getStrategies(),
     },
   }
 }

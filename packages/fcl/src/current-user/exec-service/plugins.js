@@ -4,7 +4,7 @@ import {execPopRPC} from "./strategies/pop-rpc"
 import {execTabRPC} from "./strategies/tab-rpc"
 import {execExtRPC} from "./strategies/ext-rpc"
 import {invariant} from "@onflow/util-invariant"
-import {log} from "@onflow/util-logger"
+import {LEVELS, log} from "@onflow/util-logger"
 import {isRequired, isString, isObject, isFunc} from "../../exec/utils/is"
 
 const CORE_STRATEGIES = {
@@ -19,37 +19,44 @@ const CORE_STRATEGIES = {
 const supportedPlugins = ["ServicePlugin"]
 const supportedServicePlugins = ["discovery-service"]
 
-const validateDiscoveryServices = servicePlugin => {
-  const discoveryServices = servicePlugin.discoveryServices
+const validateDiscoveryPlugin = servicePlugin => {
+  const {services, serviceStrategy} = servicePlugin
   invariant(
-    Array.isArray(discoveryServices) && discoveryServices.length,
+    Array.isArray(services) && services.length,
     "Array of Discovery Services is required"
   )
 
-  for (const ds of discoveryServices) {
+  for (const ds of services) {
     invariant(
-      isRequired(ds.definition) &&
-        isObject(ds.definition) &&
-        ds.definition.f_type === "Service",
-      "Service definition is required"
+      isRequired(ds.f_type) && ds.f_type === "Service",
+      "Service is required"
     )
     invariant(
-      isRequired(ds.strategy) && isFunc(ds.strategy),
-      "Service strategy is required"
+      isRequired(ds.type) && ds.type === "authn",
+      `Service must be type authn. Received ${ds.type}`
+    )
+    invariant(
+      ds.method in CORE_STRATEGIES || serviceStrategy.method === ds.method,
+      `Service method ${ds.method} is not supported`
     )
   }
 
-  return discoveryServices
+  invariant(isRequired(serviceStrategy), "Service strategy is required")
+  invariant(
+    isRequired(serviceStrategy.method) && isString(serviceStrategy.method),
+    "Service strategy method is required"
+  )
+  invariant(
+    isRequired(serviceStrategy.exec) && isFunc(serviceStrategy.exec),
+    "Service strategy exec function is required"
+  )
+
+  return {discoveryServices: services, serviceStrategy}
 }
 
 const ServiceRegistry = () => {
   let services = new Set()
   let strategies = new Map(Object.entries(CORE_STRATEGIES))
-
-  const setServices = discoveryServicePlugins =>
-    (services = new Set([...discoveryServicePlugins]))
-
-  const getServices = () => [...services].map(service => service.definition)
 
   const add = servicePlugin => {
     invariant(
@@ -57,27 +64,35 @@ const ServiceRegistry = () => {
       `Service Plugin type ${servicePlugin.type} is not supported`
     )
     if (servicePlugin.type === "discovery-service") {
-      const discoveryServices = validateDiscoveryServices(servicePlugin)
-
+      const {discoveryServices, serviceStrategy} =
+        validateDiscoveryPlugin(servicePlugin)
       setServices(discoveryServices)
-      for (const dsp of discoveryServices) {
-        if (!strategies.has(dsp.definition?.method)) {
-          strategies.set(dsp.definition?.method, dsp.strategy)
-        } else {
-          log({
-            title: `Add Service Plugin`,
-            message: `Service strategy for ${dsp.definition.method} already exists`,
-            level: 2,
-          })
-        }
+      if (!strategies.has(serviceStrategy.method)) {
+        strategies.set(serviceStrategy.method, serviceStrategy.exec)
+      } else {
+        log({
+          title: `Add Service Plugin`,
+          message: `Service strategy for ${serviceStrategy.method} already exists`,
+          level: LEVELS.warn,
+        })
       }
     }
   }
+
+  const setServices = discoveryServices =>
+    (services = new Set([...discoveryServices]))
+
+  const getServices = () => [...services]
+
   const getStrategy = method => strategies.get(method)
+
+  const getStrategies = () => [...strategies.keys()]
+
   return Object.freeze({
     add,
     getServices,
     getStrategy,
+    getStrategies,
   })
 }
 

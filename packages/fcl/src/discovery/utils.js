@@ -13,9 +13,7 @@ export async function getDiscoveryService(service) {
     "discovery.wallet.method",
     "discovery.wallet.method.default",
   ])
-  const method = service?.method
-    ? service.method
-    : discoveryWalletMethod
+  const method = service?.method ? service.method : discoveryWalletMethod
   const endpoint =
     service?.endpoint ??
     (await config.first(["discovery.wallet", "challenge.handshake"]))

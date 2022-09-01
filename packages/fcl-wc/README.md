@@ -16,7 +16,7 @@ npm install --save @onflow/fcl-wc
 
 ## Usage
 
-The package exports `initFclWc` and utils.
+The package exports `init` and utils.
 Currently, a WalletConnect `projectId` is required and can be obtained @ https://cloud.walletconnect.com. Metadata is optional.
 
 Initializtion returns `FclWcServicePlugin` and a Walletconnect `client`. The `client` can be used to subscribe to events, disconnect from a wallet, and query session and pairing status.
@@ -24,9 +24,9 @@ Passing `FclWcServicePlugin` to `fcl.pluginRegistry.add()` will enable use of th
 
 ```javascript
 import * as fcl from '@onflow/fcl'
-import { initFclWc } from '@onflow/fcl-wc'
+import { init } from '@onflow/fcl-wc'
 
-const { FclWcServicePlugin, client } = await initFclWc({
+const { FclWcServicePlugin, client } = await init({
   projectId: PROJECT_ID,
   metadata: {
     name: 'FCL WC DApp',
