@@ -10,3 +10,5 @@ export {
   verifyDependencyPinsSameAtLatestSealedBlock,
 } from "./verify-dependency-pin-same-at-block.js"
 export {deriveCadenceByNetwork} from "./derive-cadence-by-network.js"
+export {getTemplateMessage} from "./get-template-message.js"
+export {getTemplateArgumentMessage} from "./get-template-argument-message.js"
