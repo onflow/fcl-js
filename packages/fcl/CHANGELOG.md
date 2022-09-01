@@ -1,5 +1,22 @@
 # @onflow/fcl
 
+## 1.3.0-alpha.6
+
+### Patch Changes
+
+- [#1396](https://github.com/onflow/fcl-js/pull/1396) [`8475d5a4`](https://github.com/onflow/fcl-js/commit/8475d5a49e07a678da35a1b8f45751f599256e79) Thanks [@gregsantos](https://github.com/gregsantos)! - ### fcl
+
+  - Added sending `supportedStrategies` to Discovery (UI/API) on client.config
+
+  ***
+
+  ### fcl-wc
+
+  - updated `initFclWC` export/name to `init`
+  - Added `sessionRequestHook` and `injectedWallets` opts, updated pairing match to use service.uid.
+
+* [#1396](https://github.com/onflow/fcl-js/pull/1396) [`8475d5a4`](https://github.com/onflow/fcl-js/commit/8475d5a49e07a678da35a1b8f45751f599256e79) Thanks [@gregsantos](https://github.com/gregsantos)! - Updates Service Plugin validation to match spec, adds required serviceStrategy: {method: string, exec: () => {})
+
 ## 1.3.0-alpha.5
 
 ### Patch Changes
