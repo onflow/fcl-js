@@ -100,7 +100,17 @@ const network = "mainnet" // "mainnet" | "testnet"
 const cadence_SHA3_256_hash = await sha3_256_hash(cadence)
 
 const interactionTemplate = await fetch(
-  `https://flix.flow.com/v1/templates?network=${network}&cadence=${cadence_SHA3_256_hash}`
+  "https://flix.flow.com/v1/templates/search",
+  {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    }
+    body: JSON.stringify({
+      cadence_base64: "aW1wb3J0IEZ1bmdpYmxlVG9rZW4gZnJvbSAweDlhMDc2NmQ5M2I2NjA4YjcKdHJhbnNhY3Rpb24oYW1vdW50OiBVRml4NjQsIHRvOiBBZGRyZXNzKSB7CmxldCB2YXVsdDogQEZ1bmdpYmxlVG9rZW4uVmF1bHQKcHJlcGFyZShzaWduZXI6IEF1dGhBY2NvdW50KSB7CnNlbGYudmF1bHQgPC0gc2lnbmVyCi5ib3Jyb3c8JntGdW5naWJsZVRva2VuLlByb3ZpZGVyfT4oZnJvbTogL3N0b3JhZ2UvZmxvd1Rva2VuVmF1bHQpIQoud2l0aGRyYXcoYW1vdW50OiBhbW91bnQpCn0KZXhlY3V0ZSB7CmdldEFjY291bnQodG8pCi5nZXRDYXBhYmlsaXR5KC9wdWJsaWMvZmxvd1Rva2VuUmVjZWl2ZXIpIQouYm9ycm93PCZ7RnVuZ2libGVUb2tlbi5SZWNlaXZlcn0+KCkhCi5kZXBvc2l0KGZyb206IDwtc2VsZi52YXVsdCkKfQp9",
+      network: "testnet"
+    })
+  }
 )
 ```
 
