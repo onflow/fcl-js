@@ -97,7 +97,7 @@ Flow operates an "Interaction Template Discovery Service" which wallets can use 
 const cadence = cadenceFromTransactionToSign
 const network = "mainnet" // "mainnet" | "testnet"
 
-const cadence_SHA3_256_hash = await sha3_256_hash(cadence)
+const cadence_base64 = await btoa(cadence)
 
 const interactionTemplate = await fetch(
   "https://flix.flow.com/v1/templates/search",
