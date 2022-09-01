@@ -4,7 +4,7 @@ import {execPopRPC} from "./strategies/pop-rpc"
 import {execTabRPC} from "./strategies/tab-rpc"
 import {execExtRPC} from "./strategies/ext-rpc"
 import {invariant} from "@onflow/util-invariant"
-import {log} from "@onflow/util-logger"
+import {LEVELS, log} from "@onflow/util-logger"
 import {isRequired, isString, isObject, isFunc} from "../../exec/utils/is"
 
 const CORE_STRATEGIES = {
@@ -73,7 +73,7 @@ const ServiceRegistry = () => {
         log({
           title: `Add Service Plugin`,
           message: `Service strategy for ${serviceStrategy.method} already exists`,
-          level: 2,
+          level: LEVELS.warn,
         })
       }
     }

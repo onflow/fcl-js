@@ -1,6 +1,6 @@
 import QRCodeModal from "@walletconnect/qrcode-modal"
 import {invariant} from "@onflow/util-invariant"
-import {log} from "@onflow/util-logger"
+import {log, LEVELS} from "@onflow/util-logger"
 import {fetchFlowWallets, isMobile, CONFIGURED_NETWORK} from "./utils"
 
 export const makeServicePlugin = async (client, opts = {}) => ({
@@ -41,7 +41,7 @@ const makeExec = (client, {sessionRequestHook}) => {
           log({
             title: `${error.name} "WC/RPC onResponse error"`,
             message: error.message,
-            level: 1,
+            level: LEVELS.error,
           })
           throw error
         }
@@ -93,7 +93,7 @@ const makeExec = (client, {sessionRequestHook}) => {
         log({
           title: `${e.name} Error on WalletConnect client ${method} request`,
           message: e.message,
-          level: 1,
+          level: LEVELS.error,
         })
         reject(`Declined: Externally Halted`)
       }
@@ -132,7 +132,7 @@ async function connectWc(
           ${pairing.peerMetadata.name}
           Pairing exists, Approve Session in your Mobile Wallet
         `,
-        level: 2,
+        level: LEVELS.warn,
       })
       sessionRequestHook && sessionRequestHook(pairing.peerMetadata)
     } else {
@@ -147,7 +147,7 @@ async function connectWc(
     log({
       title: `${e.name} "Error establishing Walletconnect session"`,
       message: e.message,
-      level: 1,
+      level: LEVELS.error,
     })
     throw e
   } finally {

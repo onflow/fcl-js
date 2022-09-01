@@ -1,7 +1,7 @@
 import SignClient from "@walletconnect/sign-client"
 import {makeServicePlugin} from "./service"
 import {invariant} from "@onflow/util-invariant"
-import {log} from "@onflow/util-logger"
+import {LEVELS, log} from "@onflow/util-logger"
 import * as fcl from "@onflow/fcl"
 export {getSdkError} from "@walletconnect/utils"
 import {setConfiguredNetwork} from "./utils"
@@ -25,7 +25,7 @@ const initClient = async ({projectId, metadata}) => {
     log({
       title: `${error.name} fcl-wc Init Client`,
       message: error.message,
-      level: 1,
+      level: LEVELS.error,
     })
     throw error
   }
