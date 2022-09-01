@@ -1,17 +1,17 @@
 import QRCodeModal from "@walletconnect/qrcode-modal"
-import {config} from "@onflow/config"
 import {invariant} from "@onflow/util-invariant"
-import {log} from "@onflow/util-logger"
-import {isMobile} from "./utils"
+import {log, LEVELS} from "@onflow/util-logger"
+import {fetchFlowWallets, isMobile, CONFIGURED_NETWORK} from "./utils"
 
-export const makeServicePlugin = client => ({
-  name: "fcl-service-walletconnect",
+export const makeServicePlugin = async (client, opts = {}) => ({
+  name: "fcl-plugin-service-walletconnect",
   f_type: "ServicePlugin",
   type: "discovery-service",
-  discoveryServices: makeWcServices(client),
+  services: await makeWcServices(opts),
+  serviceStrategy: {method: "WC/RPC", exec: makeExec(client, opts)},
 })
 
-const makeServiceStrategy = client => {
+const makeExec = (client, {sessionRequestHook}) => {
   return ({service, body, opts}) => {
     return new Promise(async (resolve, reject) => {
       invariant(client, "WalletConnect is not initialized")
@@ -41,7 +41,7 @@ const makeServiceStrategy = client => {
           log({
             title: `${error.name} "WC/RPC onResponse error"`,
             message: error.message,
-            level: 1,
+            level: LEVELS.error,
           })
           throw error
         }
@@ -55,14 +55,16 @@ const makeServiceStrategy = client => {
         const lastKeyIndex = client.session.keys.length - 1
         session = client.session.get(client.session.keys.at(lastKeyIndex))
       }
+
       if (session == null) {
-        const pairing =
-          service.provider.uid === null ? null : {topic: service.provider.uid}
+        const pairings = client.pairing.getAll({active: true})
+        const pairing = pairings?.find(p => p.peerMetadata.url === service.uid)
 
         session = await connectWc(onClose, {
           service,
           client,
           pairing,
+          sessionRequestHook,
         })
       }
 
@@ -89,9 +91,9 @@ const makeServiceStrategy = client => {
         onResponse(result)
       } catch (e) {
         log({
-          title: `${e.name} Error on WalletConnect request`,
+          title: `${e.name} Error on WalletConnect client ${method} request`,
           message: e.message,
-          level: 1,
+          level: LEVELS.error,
         })
         reject(`Declined: Externally Halted`)
       }
@@ -99,18 +101,15 @@ const makeServiceStrategy = client => {
   }
 }
 
-async function connectWc(onClose, {service, client, pairing}) {
+async function connectWc(
+  onClose,
+  {service, client, pairing, sessionRequestHook}
+) {
   try {
-    const network = await config.get("flow.network")
-    invariant(
-      network === "mainnet" || network === "testnet",
-      "FCL Configuration value for 'flow.network' is required (testnet || mainnet)"
-    )
-
     const requiredNamespaces = {
       flow: {
         methods: ["flow_authn", "flow_authz", "flow_user_sign"],
-        chains: [`flow:${network}`],
+        chains: [`flow:${CONFIGURED_NETWORK}`],
         events: ["chainChanged", "accountsChanged"],
       },
     }
@@ -120,17 +119,26 @@ async function connectWc(onClose, {service, client, pairing}) {
       requiredNamespaces,
     })
 
-    if (uri) {
-      if (isMobile()) {
-        const queryString = new URLSearchParams({uri: uri}).toString()
-        // need deep link url for mobile
-        let url = "" + queryString
-        window.open(url, "blank").focus()
-      } else {
-        QRCodeModal.open(uri, () => {
-          onClose()
-        })
-      }
+    const appLink = service.uid || pairing?.peerMetadata?.url
+
+    if (!isMobile() && !pairing) {
+      QRCodeModal.open(uri, () => {
+        onClose()
+      })
+    } else if (!isMobile() && pairing) {
+      log({
+        title: "WalletConnect Session request",
+        message: `
+          ${pairing.peerMetadata.name}
+          Pairing exists, Approve Session in your Mobile Wallet
+        `,
+        level: LEVELS.warn,
+      })
+      sessionRequestHook && sessionRequestHook(pairing.peerMetadata)
+    } else {
+      const queryString = new URLSearchParams({uri: uri}).toString()
+      let url = pairing == null ? appLink + "?" + queryString : appLink
+      window.open(url, "blank").focus()
     }
 
     const session = await approval()
@@ -139,7 +147,7 @@ async function connectWc(onClose, {service, client, pairing}) {
     log({
       title: `${e.name} "Error establishing Walletconnect session"`,
       message: e.message,
-      level: 1,
+      level: LEVELS.error,
     })
     throw e
   } finally {
@@ -147,54 +155,31 @@ async function connectWc(onClose, {service, client, pairing}) {
   }
 }
 
-function makeWcServices(client) {
-  const pairings = client.pairing.getAll({active: true})
-  return [
-    {
-      definition: {
-        f_type: "Service",
-        f_vsn: "1.0.0",
-        type: "authn",
-        method: "WC/RPC",
-        uid: "wc#authn",
-        endpoint: "flow_authn",
-        optIn: false,
-        provider: {
-          address: "WalletConnect",
-          name: "WalletConnect",
-          uid: null,
-          icon: "https://avatars.githubusercontent.com/u/37784886",
-          description: "WalletConnect Generic Provider",
-          website: "https://walletconnect.com/",
-          color: null,
-          supportEmail: null,
-        },
-      },
-      strategy: makeServiceStrategy(client),
+const baseWalletConnectService = includeBaseWC => {
+  return {
+    f_type: "Service",
+    f_vsn: "1.0.0",
+    type: "authn",
+    method: "WC/RPC",
+    uid: "https://walletconnect.com",
+    endpoint: "flow_authn",
+    optIn: !includeBaseWC,
+    provider: {
+      address: null,
+      name: "WalletConnect",
+      icon: "https://avatars.githubusercontent.com/u/37784886",
+      description: "WalletConnect Base Service",
+      website: "https://walletconnect.com",
+      color: null,
+      supportEmail: null,
     },
-    ...pairings.map(pairing => {
-      return {
-        definition: {
-          f_type: "Service",
-          f_vsn: "1.0.0",
-          type: "authn",
-          method: "WC/RPC",
-          uid: pairing.topic,
-          endpoint: "flow_authn",
-          optIn: false,
-          provider: {
-            address: null,
-            name: pairing.peerMetadata.name,
-            uid: pairing.topic,
-            icon: pairing.peerMetadata.icons[0],
-            description: pairing.peerMetadata.description,
-            website: pairing.peerMetadata.url,
-            color: null,
-            supportEmail: null,
-          },
-        },
-        strategy: makeServiceStrategy(client),
-      }
-    }),
-  ]
+  }
+}
+
+async function makeWcServices({includeBaseWC, wallets}) {
+  const wcBaseService = baseWalletConnectService(includeBaseWC)
+  const flowWcWalletServices = await fetchFlowWallets()
+  const injectedWalletsServices =
+    CONFIGURED_NETWORK === "testnet" ? wallets : []
+  return [wcBaseService, ...flowWcWalletServices, ...injectedWalletsServices]
 }
