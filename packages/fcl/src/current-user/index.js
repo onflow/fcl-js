@@ -117,7 +117,7 @@ async function getAccountProofData() {
 }
 
 // Certain method types cannot be overridden to use other methods like POP/RCP
-const isServiceMethodUnchangable = method => ["EXT/RPC"].includes(method)
+const isServiceMethodUnchangable = method => ["EXT/RPC", "HTTP/POST"].includes(method)
 
 async function authenticate({service, redir = false} = {}) {
   if (service && !service?.provider?.is_installed && service?.provider?.requires_install) {
