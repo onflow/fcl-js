@@ -159,13 +159,20 @@ const audits = await fcl.InteractionTemplateUtils
  ** /
 ```
 
+The Flow team operates these auditor accounts:
+
+| Flow Team Auditor Accounts | Address            |
+|----------------------------|:-------------------|
+| TestNet                    | 0xf78bfc12d0a786dc |
+| MainNet                    | Coming Soon!       |
+
 Since not all auditors that a wallet trusts may have audited a given Interaction Template, trusting multiple auditors can increase the chance that at least one of the trusted auditors has audited the Interaction Template.
 
 > ❗️ Auditors can revoke audits at any time, so be sure to always check an Interaction Template's audit status. 
 
 Since contracts on Flow are mutable, wallets may additionally wish to verify that none of the dependency tree for the transaction an Interaction Template represents has changed since when it was created and of what it was audited against.
 
-```javascript
+```javascript◊
 import * as fcl from "@onflow/fcl"
 import myTransactionTemplate from "./my-transaction-template.template.json"
 
