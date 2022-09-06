@@ -1,5 +1,11 @@
 # @onflow/fcl
 
+## 1.2.1
+
+### Patch Changes
+
+- [`42c8fe89`](https://github.com/onflow/fcl-js/commit/42c8fe8995b5fcbdf570eccf701cea21446173f5) Thanks [@chasefleming](https://github.com/chasefleming)! - Added HTTP Post to the unchangeable services array
+
 ## 1.2.0
 
 ### Minor Changes
