@@ -134,7 +134,9 @@ async function connectWc(
         `,
         level: LEVELS.warn,
       })
-      sessionRequestHook && sessionRequestHook(pairing.peerMetadata)
+      if (sessionRequestHook && sessionRequestHook instanceof Function) {
+        sessionRequestHook(pairing.peerMetadata)
+      }
     } else {
       const queryString = new URLSearchParams({uri: uri}).toString()
       let url = pairing == null ? appLink + "?" + queryString : appLink
