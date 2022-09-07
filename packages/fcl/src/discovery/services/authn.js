@@ -55,8 +55,12 @@ const HANDLERS = {
       '"fcl.discovery" is only available in the browser.'
     )
     // If you call this before the window is loaded extensions will not be set yet
-    window.onload = async () => {
+    if (document.readyState === 'complete') {
       fetchServicesFromDiscovery()
+    } else {
+      window.onload = async () => {
+        fetchServicesFromDiscovery()
+      }
     }
   },
   [SERVICE_ACTOR_KEYS.UPDATE_RESULTS]: (ctx, _letter, data) => {
