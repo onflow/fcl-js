@@ -1,5 +1,11 @@
 # @onflow/fcl
 
+## 1.3.0-alpha.8
+
+### Patch Changes
+
+- [#1404](https://github.com/onflow/fcl-js/pull/1404) [`f9f1dab7`](https://github.com/onflow/fcl-js/commit/f9f1dab70a6014b68ce5197544fae396340b6670) Thanks [@chasefleming](https://github.com/chasefleming)! - Fixes issue where Discovery API was not loading for server side rendered applications on Safari or Chrome Incognito.
+
 ## 1.3.0-alpha.7
 
 ### Patch Changes
