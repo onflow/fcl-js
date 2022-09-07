@@ -1,4 +1,4 @@
-import {log} from "@onflow/util-logger"
+import {log, LEVELS} from "@onflow/util-logger"
 import {config} from "@onflow/config"
 import {invariant} from "@onflow/util-invariant"
 
@@ -21,7 +21,7 @@ const makeFlowServicesFromWallets = wallets => {
         f_vsn: "1.0.0",
         type: "authn",
         method: "WC/RPC",
-        uid: wallet.mobile.universal,
+        uid: wallet.mobile?.universal,
         endpoint: "flow_authn",
         optIn: false,
         provider: {
@@ -37,10 +37,10 @@ const makeFlowServicesFromWallets = wallets => {
     })
 }
 
-export async function fetchFlowWallets() {
+export const fetchFlowWallets = async projectId => {
   try {
     const wcApiWallets = await fetch(
-      "https://explorer-api.walletconnect.com/v1/wallets?entries=5&page=1&search=flow"
+      `https://explorer-api.walletconnect.com/v3/wallets?projectId=${projectId}&chains=flow:${CONFIGURED_NETWORK}&entries=5&page=1`
     ).then(res => res.json())
 
     if (wcApiWallets?.count > 0) {
@@ -52,7 +52,7 @@ export async function fetchFlowWallets() {
     log({
       title: `${error.name} Error fetching wallets from WalletConnect API`,
       message: error.message,
-      level: 1,
+      level: LEVELS.error,
     })
   }
 }

@@ -89,10 +89,10 @@ const makeExec = (client, {sessionRequestHook}) => {
           },
         })
         onResponse(result)
-      } catch (e) {
+      } catch (error) {
         log({
-          title: `${e.name} Error on WalletConnect client ${method} request`,
-          message: e.message,
+          title: `${error.name} Error on WalletConnect client ${method} request`,
+          message: error.message,
           level: LEVELS.error,
         })
         reject(`Declined: Externally Halted`)
@@ -143,13 +143,13 @@ async function connectWc(
 
     const session = await approval()
     return session
-  } catch (e) {
+  } catch (error) {
     log({
-      title: `${e.name} "Error establishing Walletconnect session"`,
-      message: e.message,
+      title: `${error.name} "Error establishing Walletconnect session"`,
+      message: error.message,
       level: LEVELS.error,
     })
-    throw e
+    throw error
   } finally {
     QRCodeModal.close()
   }
@@ -176,10 +176,9 @@ const baseWalletConnectService = includeBaseWC => {
   }
 }
 
-async function makeWcServices({includeBaseWC, wallets}) {
+async function makeWcServices({projectId, includeBaseWC, wallets}) {
   const wcBaseService = baseWalletConnectService(includeBaseWC)
-  const flowWcWalletServices = await fetchFlowWallets()
-  const injectedWalletsServices =
-    CONFIGURED_NETWORK === "testnet" ? wallets : []
-  return [wcBaseService, ...flowWcWalletServices, ...injectedWalletsServices]
+  const flowWcWalletServices = (await fetchFlowWallets(projectId)) ?? []
+  const injectedWalletServices = CONFIGURED_NETWORK === "testnet" ? wallets : []
+  return [wcBaseService, ...flowWcWalletServices, ...injectedWalletServices]
 }

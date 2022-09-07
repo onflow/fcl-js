@@ -38,9 +38,10 @@ export const init = async ({
   sessionRequestHook = null,
   wallets = [],
 } = {}) => {
-  const client = await initClient({projectId, metadata})
   await setConfiguredNetwork()
+  const client = await initClient({projectId, metadata})
   const FclWcServicePlugin = await makeServicePlugin(client, {
+    projectId,
     includeBaseWC,
     sessionRequestHook,
     wallets,
