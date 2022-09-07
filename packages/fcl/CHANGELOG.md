@@ -1,5 +1,13 @@
 # @onflow/fcl
 
+## 1.3.0-alpha.7
+
+### Patch Changes
+
+- [#1397](https://github.com/onflow/fcl-js/pull/1397) [`f14b730c`](https://github.com/onflow/fcl-js/commit/f14b730c52bec664bda7bf222e3f0c0ab9c70f40) Thanks [@JeffreyDoyle](https://github.com/JeffreyDoyle)! - Adds interaction template message getter utils
+
+* [#1403](https://github.com/onflow/fcl-js/pull/1403) [`0a9c9677`](https://github.com/onflow/fcl-js/commit/0a9c96770933df4e0ed685b0ee4575533e345ecb) Thanks [@JeffreyDoyle](https://github.com/JeffreyDoyle)! - Hotfix to FCL query mutate prep ops
+
 ## 1.3.0-alpha.6
 
 ### Patch Changes
