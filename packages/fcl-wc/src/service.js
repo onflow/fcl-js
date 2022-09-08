@@ -15,54 +15,24 @@ const makeExec = (client, {sessionRequestHook}) => {
   return ({service, body, opts}) => {
     return new Promise(async (resolve, reject) => {
       invariant(client, "WalletConnect is not initialized")
-      let session
-      const onResponse = resp => {
-        try {
-          if (typeof resp !== "object") return
+      let session, pairing
+      const pairings = client.pairing.getAll({active: true})
+      const windowRef = window.open("", "_blank")
 
-          switch (resp.status) {
-            case "APPROVED":
-              resolve(resp.data)
-              break
-
-            case "DECLINED":
-              reject(`Declined: ${resp.reason || "No reason supplied"}`)
-              break
-
-            case "REDIRECT":
-              resolve(resp)
-              break
-
-            default:
-              reject(`Declined: No reason supplied`)
-              break
-          }
-        } catch (error) {
-          log({
-            title: `${error.name} "WC/RPC onResponse error"`,
-            message: error.message,
-            level: LEVELS.error,
-          })
-          throw error
-        }
-      }
-
-      const onClose = () => {
-        reject(`Declined: Externally Halted`)
-      }
-
-      if (client.session.length) {
+      if (client.session.length > 0) {
         const lastKeyIndex = client.session.keys.length - 1
         session = client.session.get(client.session.keys.at(lastKeyIndex))
       }
+      if (pairings.length > 0) {
+        pairing = pairings?.find(p => p.peerMetadata?.url === service.uid)
+      }
 
       if (session == null) {
-        const pairings = client.pairing.getAll({active: true})
-        const pairing = pairings?.find(p => p.peerMetadata.url === service.uid)
-
-        session = await connectWc(onClose, {
-          service,
+        session = await connectWc({
+          windowRef,
+          onClose,
           client,
+          service,
           pairing,
           sessionRequestHook,
         })
@@ -97,14 +67,53 @@ const makeExec = (client, {sessionRequestHook}) => {
         })
         reject(`Declined: Externally Halted`)
       }
+
+      function onResponse(resp) {
+        try {
+          if (typeof resp !== "object") return
+
+          switch (resp.status) {
+            case "APPROVED":
+              resolve(resp.data)
+              break
+
+            case "DECLINED":
+              reject(`Declined: ${resp.reason || "No reason supplied"}`)
+              break
+
+            case "REDIRECT":
+              resolve(resp)
+              break
+
+            default:
+              reject(`Declined: No reason supplied`)
+              break
+          }
+        } catch (error) {
+          log({
+            title: `${error.name} "WC/RPC onResponse error"`,
+            message: error.message,
+            level: LEVELS.error,
+          })
+          throw error
+        }
+      }
+
+      function onClose() {
+        reject(`Declined: Externally Halted`)
+      }
     })
   }
 }
 
-async function connectWc(
+async function connectWc({
+  windowRef,
   onClose,
-  {service, client, pairing, sessionRequestHook}
-) {
+  client,
+  service,
+  pairing,
+  sessionRequestHook,
+}) {
   try {
     const requiredNamespaces = {
       flow: {
@@ -140,7 +149,8 @@ async function connectWc(
     } else {
       const queryString = new URLSearchParams({uri: uri}).toString()
       let url = pairing == null ? appLink + "?" + queryString : appLink
-      window.open(url, "blank").focus()
+      windowRef.location.href = url
+      windowRef.focus()
     }
 
     const session = await approval()
@@ -153,6 +163,9 @@ async function connectWc(
     })
     throw error
   } finally {
+    if (windowRef && !windowRef.closed) {
+      windowRef.close()
+    }
     QRCodeModal.close()
   }
 }
