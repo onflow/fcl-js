@@ -15,9 +15,14 @@ const makeExec = (client, {sessionRequestHook}) => {
   return ({service, body, opts}) => {
     return new Promise(async (resolve, reject) => {
       invariant(client, "WalletConnect is not initialized")
-      let session, pairing
+      let session, pairing, windowRef
+      const appLink = service.uid
+      const endpoint = service.endpoint
       const pairings = client.pairing.getAll({active: true})
-      const windowRef = window.open("", "_blank")
+
+      if (isMobile() && endpoint === "flow_authn") {
+        windowRef = window.open("", "_blank")
+      }
 
       if (client.session.length > 0) {
         const lastKeyIndex = client.session.keys.length - 1
@@ -26,11 +31,25 @@ const makeExec = (client, {sessionRequestHook}) => {
       if (pairings.length > 0) {
         pairing = pairings?.find(p => p.peerMetadata?.url === service.uid)
       }
+      if (session || pairing) {
+        log({
+          title: "WalletConnect Session request",
+          message: `
+          ${pairing.peerMetadata.name}
+          Pairing exists, Approve Session in your Mobile Wallet
+        `,
+          level: LEVELS.warn,
+        })
+        if (sessionRequestHook && sessionRequestHook instanceof Function) {
+          sessionRequestHook(pairing.peerMetadata)
+        }
+      }
 
       if (session == null) {
         session = await connectWc({
-          windowRef,
           onClose,
+          windowRef,
+          appLink,
           client,
           service,
           pairing,
@@ -109,10 +128,10 @@ const makeExec = (client, {sessionRequestHook}) => {
 async function connectWc({
   windowRef,
   onClose,
+  appLink,
   client,
   service,
   pairing,
-  sessionRequestHook,
 }) {
   try {
     const requiredNamespaces = {
@@ -128,25 +147,11 @@ async function connectWc({
       requiredNamespaces,
     })
 
-    const appLink = service.uid || pairing?.peerMetadata?.url
-
     if (!isMobile() && !pairing) {
       QRCodeModal.open(uri, () => {
         onClose()
       })
-    } else if (!isMobile() && pairing) {
-      log({
-        title: "WalletConnect Session request",
-        message: `
-          ${pairing.peerMetadata.name}
-          Pairing exists, Approve Session in your Mobile Wallet
-        `,
-        level: LEVELS.warn,
-      })
-      if (sessionRequestHook && sessionRequestHook instanceof Function) {
-        sessionRequestHook(pairing.peerMetadata)
-      }
-    } else {
+    } else if (isMobile()) {
       const queryString = new URLSearchParams({uri: uri}).toString()
       let url = pairing == null ? appLink + "?" + queryString : appLink
       windowRef.location.href = url
