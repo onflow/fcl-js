@@ -18,30 +18,33 @@ const makeExec = (client, {sessionRequestHook}) => {
       let session, pairing, windowRef
       const appLink = service.uid
       const endpoint = service.endpoint
-      const pairings = client.pairing.getAll({active: true})
 
       if (isMobile() && endpoint === "flow_authn") {
         windowRef = window.open("", "_blank")
+      }
+
+      const pairings = client.pairing.getAll({active: true})
+      if (pairings.length > 0) {
+        pairing = pairings?.find(p => p.peerMetadata?.url === service.uid)
       }
 
       if (client.session.length > 0) {
         const lastKeyIndex = client.session.keys.length - 1
         session = client.session.get(client.session.keys.at(lastKeyIndex))
       }
-      if (pairings.length > 0) {
-        pairing = pairings?.find(p => p.peerMetadata?.url === service.uid)
-      }
-      if (session || pairing) {
+
+      if (session) {
         log({
-          title: "WalletConnect Session request",
+          title: "WalletConnect Request",
           message: `
-          ${pairing.peerMetadata.name}
-          Pairing exists, Approve Session in your Mobile Wallet
+          Check your ${
+            session?.peer?.metadata?.name || pairing?.peerMetadata?.name
+          } Mobile Wallet to Approve
         `,
           level: LEVELS.warn,
         })
         if (sessionRequestHook && sessionRequestHook instanceof Function) {
-          sessionRequestHook(pairing.peerMetadata)
+          sessionRequestHook({session, pairing, uri: null})
         }
       }
 
@@ -130,8 +133,8 @@ async function connectWc({
   onClose,
   appLink,
   client,
-  service,
   pairing,
+  sessionRequestHook,
 }) {
   try {
     const requiredNamespaces = {
@@ -146,6 +149,10 @@ async function connectWc({
       pairingTopic: pairing?.topic,
       requiredNamespaces,
     })
+
+    if (sessionRequestHook && sessionRequestHook instanceof Function) {
+      sessionRequestHook({session, pairing, uri})
+    }
 
     if (!isMobile() && !pairing) {
       QRCodeModal.open(uri, () => {
