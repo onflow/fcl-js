@@ -154,15 +154,15 @@ async function connectWc({
       sessionRequestHook({session, pairing, uri})
     }
 
-    if (!isMobile() && !pairing) {
-      QRCodeModal.open(uri, () => {
-        onClose()
-      })
-    } else if (isMobile()) {
+    if (isMobile()) {
       const queryString = new URLSearchParams({uri: uri}).toString()
       let url = pairing == null ? appLink + "?" + queryString : appLink
       windowRef.location.href = url
       windowRef.focus()
+    } else if (!pairing) {
+      QRCodeModal.open(uri, () => {
+        onClose()
+      })
     }
 
     const session = await approval()
