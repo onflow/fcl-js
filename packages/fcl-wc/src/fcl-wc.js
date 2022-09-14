@@ -38,6 +38,7 @@ export const init = async ({
   metadata,
   includeBaseWC = false,
   sessionRequestHook = null,
+  pairingModalOveride = null,
   wallets = [],
 } = {}) => {
   await setConfiguredNetwork()
@@ -46,6 +47,7 @@ export const init = async ({
     projectId,
     includeBaseWC,
     sessionRequestHook,
+    pairingModalOveride,
     wallets,
   })
   fcl.discovery.authn.update()

@@ -11,7 +11,7 @@ export const makeServicePlugin = async (client, opts = {}) => ({
   serviceStrategy: {method: "WC/RPC", exec: makeExec(client, opts)},
 })
 
-const makeExec = (client, {sessionRequestHook}) => {
+const makeExec = (client, {sessionRequestHook, pairingModalOveride}) => {
   return ({service, body, opts}) => {
     return new Promise(async (resolve, reject) => {
       invariant(client, "WalletConnect is not initialized")
@@ -57,6 +57,7 @@ const makeExec = (client, {sessionRequestHook}) => {
           service,
           pairing,
           sessionRequestHook,
+          pairingModalOveride,
         })
       }
 
@@ -135,6 +136,7 @@ async function connectWc({
   client,
   pairing,
   sessionRequestHook,
+  pairingModalOveride,
 }) {
   try {
     const requiredNamespaces = {
@@ -144,11 +146,11 @@ async function connectWc({
         events: ["chainChanged", "accountsChanged"],
       },
     }
-
     const {uri, approval} = await client.connect({
       pairingTopic: pairing?.topic,
       requiredNamespaces,
     })
+    var _uri = uri
 
     if (sessionRequestHook && sessionRequestHook instanceof Function) {
       sessionRequestHook({session, pairing, uri})
@@ -159,18 +161,33 @@ async function connectWc({
       let url = pairing == null ? appLink + "?" + queryString : appLink
       windowRef.location.href = url
       windowRef.focus()
-    } else if (!pairing) {
-      QRCodeModal.open(uri, () => {
-        onClose()
-      })
+    } else if (!pairing && uri) {
+      if (!pairingModalOveride) {
+        QRCodeModal.open(uri, () => {
+          onClose()
+        })
+      } else {
+        pairingModalOveride.open
+          ? pairingModalOveride.open(uri, () => {
+              onClose()
+            })
+          : log({
+              title: "No open method found on pairingModalOveride",
+              message:
+                "pairingModalOveride should have modal open/close handlers",
+              level: LEVELS.warn,
+            })
+      }
     }
 
     const session = await approval()
     return session
   } catch (error) {
     log({
-      title: `${error.name} "Error establishing Walletconnect session"`,
-      message: error.message,
+      title: `${error.name}: Error establishing Walletconnect session`,
+      message: `${error.message}
+      uri: ${_uri}
+      `,
       level: LEVELS.error,
     })
     throw error
@@ -179,6 +196,13 @@ async function connectWc({
       windowRef.close()
     }
     QRCodeModal.close()
+    pairingModalOveride?.close
+      ? pairingModalOveride.close()
+      : log({
+          title: "No close method found on pairingModalOveride",
+          message: "pairingModalOveride should have a modal close handler",
+          level: LEVELS.warn,
+        })
   }
 }
 
