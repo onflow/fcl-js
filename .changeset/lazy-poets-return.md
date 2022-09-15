@@ -18,18 +18,9 @@ const { FclWcServicePlugin, client } = await init({
     setSessionRequestData(peerMetadata)
     setShowRequestModal(true)
   },
-  pairingModalOverride: {
-    // required
-    open: (uri: string = '', closeCallback: () => void) => {
-      // open modal for WalletConnect uri
-      // closeCallback() if user closes modal
-      openModal(uri, closeCallback)
-    },
-    // required
-    close: () => {
-      // handle close modal, called by fcl-wc after approval or rejection
-      closeModal()
-    }
+  pairingModalOverride: (uri: string = '', rejectPairingRequest: () => void) => {
+    openCustomPairingModal(uri)
+    // call rejectPairingRequest() to manually reject pairing request from client
   }
 })
 

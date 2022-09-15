@@ -184,16 +184,7 @@ async function connectWc({
           onClose()
         })
       } else {
-        pairingModalOverride.open
-          ? pairingModalOverride.open(uri, () => {
-              onClose()
-            })
-          : log({
-              title: "No open method found on pairingModalOverride",
-              message:
-                "pairingModalOverride should have modal open/close handlers",
-              level: LEVELS.warn,
-            })
+        pairingModalOverride(uri, onClose)
       }
     }
 
@@ -201,25 +192,19 @@ async function connectWc({
     return session
   } catch (error) {
     log({
-      title: `${error.name}: Error establishing Walletconnect session`,
+      title: `Error establishing Walletconnect session`,
       message: `${error.message}
       uri: ${_uri}
       `,
       level: LEVELS.error,
     })
+    onClose()
     throw error
   } finally {
     if (windowRef && !windowRef.closed) {
       windowRef.close()
     }
     QRCodeModal.close()
-    pairingModalOverride?.close
-      ? pairingModalOverride.close()
-      : log({
-          title: "No close method found on pairingModalOverride",
-          message: "pairingModalOverride should have a modal close handler",
-          level: LEVELS.warn,
-        })
   }
 }
 
