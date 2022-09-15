@@ -16,13 +16,9 @@ const makeExec = (client, {wcRequestHook, pairingModalOverride}) => {
   return ({service, body, opts}) => {
     return new Promise(async (resolve, reject) => {
       invariant(client, "WalletConnect is not initialized")
-      let session, pairing, windowRef
+      let session, pairing
       const appLink = service.uid
       const method = service.endpoint
-
-      if (isMobile() && method === FLOW_METHODS.FLOW_AUTHN) {
-        windowRef = window.open("", "_blank")
-      }
 
       const pairings = client.pairing.getAll({active: true})
       if (pairings.length > 0) {
@@ -58,7 +54,6 @@ const makeExec = (client, {wcRequestHook, pairingModalOverride}) => {
       if (session == null) {
         session = await connectWc({
           onClose,
-          windowRef,
           appLink,
           client,
           method,
@@ -136,7 +131,6 @@ const makeExec = (client, {wcRequestHook, pairingModalOverride}) => {
 }
 
 async function connectWc({
-  windowRef,
   onClose,
   appLink,
   client,
@@ -176,8 +170,7 @@ async function connectWc({
     if (isMobile()) {
       const queryString = new URLSearchParams({uri: uri}).toString()
       let url = pairing == null ? appLink + "?" + queryString : appLink
-      windowRef.location.href = url
-      windowRef.focus()
+      window.location.href = url
     } else if (!pairing && uri) {
       if (!pairingModalOverride) {
         QRCodeModal.open(uri, () => {
@@ -201,9 +194,6 @@ async function connectWc({
     onClose()
     throw error
   } finally {
-    if (windowRef && !windowRef.closed) {
-      windowRef.close()
-    }
     QRCodeModal.close()
   }
 }
