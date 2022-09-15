@@ -37,8 +37,8 @@ export const init = async ({
   projectId,
   metadata,
   includeBaseWC = false,
-  sessionRequestHook = null,
-  pairingModalOveride = null,
+  wcRequestHook = null,
+  pairingModalOverride = null,
   wallets = [],
 } = {}) => {
   await setConfiguredNetwork()
@@ -46,8 +46,8 @@ export const init = async ({
   const FclWcServicePlugin = await makeServicePlugin(_client, {
     projectId,
     includeBaseWC,
-    sessionRequestHook,
-    pairingModalOveride,
+    wcRequestHook,
+    pairingModalOverride,
     wallets,
   })
   fcl.discovery.authn.update()

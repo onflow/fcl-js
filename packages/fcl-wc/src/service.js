@@ -2,6 +2,7 @@ import QRCodeModal from "@walletconnect/qrcode-modal"
 import {invariant} from "@onflow/util-invariant"
 import {log, LEVELS} from "@onflow/util-logger"
 import {fetchFlowWallets, isMobile, CONFIGURED_NETWORK} from "./utils"
+import {FLOW_METHODS, REQUEST_TYPES} from "./constants"
 
 export const makeServicePlugin = async (client, opts = {}) => ({
   name: "fcl-plugin-service-walletconnect",
@@ -11,15 +12,15 @@ export const makeServicePlugin = async (client, opts = {}) => ({
   serviceStrategy: {method: "WC/RPC", exec: makeExec(client, opts)},
 })
 
-const makeExec = (client, {sessionRequestHook, pairingModalOveride}) => {
+const makeExec = (client, {wcRequestHook, pairingModalOverride}) => {
   return ({service, body, opts}) => {
     return new Promise(async (resolve, reject) => {
       invariant(client, "WalletConnect is not initialized")
       let session, pairing, windowRef
       const appLink = service.uid
-      const endpoint = service.endpoint
+      const method = service.endpoint
 
-      if (isMobile() && endpoint === "flow_authn") {
+      if (isMobile() && method === FLOW_METHODS.FLOW_AUTHN) {
         windowRef = window.open("", "_blank")
       }
 
@@ -39,12 +40,18 @@ const makeExec = (client, {sessionRequestHook, pairingModalOveride}) => {
           message: `
           Check your ${
             session?.peer?.metadata?.name || pairing?.peerMetadata?.name
-          } Mobile Wallet to Approve
+          } Mobile Wallet to Approve/Reject this request
         `,
           level: LEVELS.warn,
         })
-        if (sessionRequestHook && sessionRequestHook instanceof Function) {
-          sessionRequestHook({session, pairing, uri: null})
+        if (wcRequestHook && wcRequestHook instanceof Function) {
+          wcRequestHook({
+            type: REQUEST_TYPES.SESSION,
+            session,
+            pairing,
+            method,
+            uri: null,
+          })
         }
       }
 
@@ -54,10 +61,10 @@ const makeExec = (client, {sessionRequestHook, pairingModalOveride}) => {
           windowRef,
           appLink,
           client,
-          service,
+          method,
           pairing,
-          sessionRequestHook,
-          pairingModalOveride,
+          wcRequestHook,
+          pairingModalOverride,
         })
       }
 
@@ -67,7 +74,6 @@ const makeExec = (client, {sessionRequestHook, pairingModalOveride}) => {
         .filter(account => account.startsWith("flow:"))[0]
         .split(":")
 
-      const method = service.endpoint
       const chainId = `${namespace}:${reference}`
       const addr = address
       const data = JSON.stringify({...body, addr})
@@ -134,14 +140,19 @@ async function connectWc({
   onClose,
   appLink,
   client,
+  method,
   pairing,
-  sessionRequestHook,
-  pairingModalOveride,
+  wcRequestHook,
+  pairingModalOverride,
 }) {
   try {
     const requiredNamespaces = {
       flow: {
-        methods: ["flow_authn", "flow_authz", "flow_user_sign"],
+        methods: [
+          FLOW_METHODS.FLOW_AUTHN,
+          FLOW_METHODS.FLOW_AUTHZ,
+          FLOW_METHODS.FLOW_USER_SIGN,
+        ],
         chains: [`flow:${CONFIGURED_NETWORK}`],
         events: ["chainChanged", "accountsChanged"],
       },
@@ -152,8 +163,14 @@ async function connectWc({
     })
     var _uri = uri
 
-    if (sessionRequestHook && sessionRequestHook instanceof Function) {
-      sessionRequestHook({session, pairing, uri})
+    if (wcRequestHook && wcRequestHook instanceof Function) {
+      wcRequestHook({
+        type: REQUEST_TYPES.PAIRING,
+        session,
+        pairing,
+        method,
+        uri,
+      })
     }
 
     if (isMobile()) {
@@ -162,19 +179,19 @@ async function connectWc({
       windowRef.location.href = url
       windowRef.focus()
     } else if (!pairing && uri) {
-      if (!pairingModalOveride) {
+      if (!pairingModalOverride) {
         QRCodeModal.open(uri, () => {
           onClose()
         })
       } else {
-        pairingModalOveride.open
-          ? pairingModalOveride.open(uri, () => {
+        pairingModalOverride.open
+          ? pairingModalOverride.open(uri, () => {
               onClose()
             })
           : log({
-              title: "No open method found on pairingModalOveride",
+              title: "No open method found on pairingModalOverride",
               message:
-                "pairingModalOveride should have modal open/close handlers",
+                "pairingModalOverride should have modal open/close handlers",
               level: LEVELS.warn,
             })
       }
@@ -196,11 +213,11 @@ async function connectWc({
       windowRef.close()
     }
     QRCodeModal.close()
-    pairingModalOveride?.close
-      ? pairingModalOveride.close()
+    pairingModalOverride?.close
+      ? pairingModalOverride.close()
       : log({
-          title: "No close method found on pairingModalOveride",
-          message: "pairingModalOveride should have a modal close handler",
+          title: "No close method found on pairingModalOverride",
+          message: "pairingModalOverride should have a modal close handler",
           level: LEVELS.warn,
         })
   }
