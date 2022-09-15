@@ -31,6 +31,7 @@ const makeExec = (client, {wcRequestHook, pairingModalOverride}) => {
       }
 
       if (session) {
+        if (isMobile()) window.location.href = appLink
         log({
           title: "WalletConnect Request",
           message: `
