@@ -1,6 +1,6 @@
 {
   "name": "@onflow/fcl",
-  "version": "1.3.0-alpha.8",
+  "version": "1.3.0-alpha.9",
   "description": "Flow Client Library",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",

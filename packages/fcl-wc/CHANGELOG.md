@@ -1,5 +1,50 @@
 # @onflow/fcl-wc
 
+## 1.0.0-alpha.3
+
+### Patch Changes
+
+- [#1411](https://github.com/onflow/fcl-js/pull/1411) [`3c7a1bd6`](https://github.com/onflow/fcl-js/commit/3c7a1bd6686ff41dcd4953b471c54c1256a599a0) Thanks [@gregsantos](https://github.com/gregsantos)! - Adds additional options to `init` for `pairingModalOverride` and `wcRequestHook`
+
+  ```js
+  import * as fcl from "@onflow/fcl"
+  import {init} from "@onflow/fcl-wc"
+  // example using pairing data from wcRequestHook and providing a custom pairing modal
+  const {FclWcServicePlugin, client} = await init({
+    projectId: PROJECT_ID,
+    metadata: PROJECT_METADATA,
+    includeBaseWC: false,
+    wallets: [],
+    wcRequestHook: (data: WcRequestData) => {
+      const peerMetadata = data?.pairing?.peerMetadata
+      setSessionRequestData(peerMetadata)
+      setShowRequestModal(true)
+    },
+    pairingModalOverride: (
+      uri: string = "",
+      rejectPairingRequest: () => void
+    ) => {
+      openCustomPairingModal(uri)
+      // call rejectPairingRequest() to manually reject pairing request from client
+    },
+  })
+
+  fcl.pluginRegistry.add(FclWcServicePlugin)
+  ```
+
+  ```ts
+  interface WcRequestData {
+    type: string // 'session_request' | 'pairing_request'
+    session: SessionTypes.Struct | undefined // https://www.npmjs.com/package/@walletconnect/types
+    pairing: PairingTypes.Struct | undefined // https://www.npmjs.com/package/@walletconnect/types
+    method: string // "flow_authn" | "flow_authz" | "flow_user_sign"
+    uri: string | undefined
+  }
+  ```
+
+- Updated dependencies [[`15d77220`](https://github.com/onflow/fcl-js/commit/15d77220a90be66b440129b73ffe889fe20335ab), [`75d06938`](https://github.com/onflow/fcl-js/commit/75d069380c2dbb2040af57ce39a9847fb33a7db4)]:
+  - @onflow/fcl@1.3.0-alpha.9
+
 ## 1.0.0-alpha.2
 
 ### Patch Changes
