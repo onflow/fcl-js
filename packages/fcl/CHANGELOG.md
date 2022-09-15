@@ -1,5 +1,13 @@
 # @onflow/fcl
 
+## 1.3.0-alpha.9
+
+### Patch Changes
+
+- [#1409](https://github.com/onflow/fcl-js/pull/1409) [`15d77220`](https://github.com/onflow/fcl-js/commit/15d77220a90be66b440129b73ffe889fe20335ab) Thanks [@JeffreyDoyle](https://github.com/JeffreyDoyle)! - Hotfix to generate template interface id util
+
+* [#1407](https://github.com/onflow/fcl-js/pull/1407) [`75d06938`](https://github.com/onflow/fcl-js/commit/75d069380c2dbb2040af57ce39a9847fb33a7db4) Thanks [@JeffreyDoyle](https://github.com/JeffreyDoyle)! - Fix circular dep in FCL prep-template-opts
+
 ## 1.3.0-alpha.8
 
 ### Patch Changes
