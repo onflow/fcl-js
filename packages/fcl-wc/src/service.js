@@ -2,6 +2,7 @@ import QRCodeModal from "@walletconnect/qrcode-modal"
 import {invariant} from "@onflow/util-invariant"
 import {log, LEVELS} from "@onflow/util-logger"
 import {fetchFlowWallets, isMobile, CONFIGURED_NETWORK} from "./utils"
+import {FLOW_METHODS, REQUEST_TYPES} from "./constants"
 
 export const makeServicePlugin = async (client, opts = {}) => ({
   name: "fcl-plugin-service-walletconnect",
@@ -11,12 +12,88 @@ export const makeServicePlugin = async (client, opts = {}) => ({
   serviceStrategy: {method: "WC/RPC", exec: makeExec(client, opts)},
 })
 
-const makeExec = (client, {sessionRequestHook}) => {
+const makeExec = (client, {wcRequestHook, pairingModalOverride}) => {
   return ({service, body, opts}) => {
     return new Promise(async (resolve, reject) => {
       invariant(client, "WalletConnect is not initialized")
-      let session
-      const onResponse = resp => {
+      let session, pairing
+      const appLink = service.uid
+      const method = service.endpoint
+
+      const pairings = client.pairing.getAll({active: true})
+      if (pairings.length > 0) {
+        pairing = pairings?.find(p => p.peerMetadata?.url === service.uid)
+      }
+
+      if (client.session.length > 0) {
+        const lastKeyIndex = client.session.keys.length - 1
+        session = client.session.get(client.session.keys.at(lastKeyIndex))
+      }
+
+      if (session) {
+        if (isMobile()) window.location.href = appLink
+        log({
+          title: "WalletConnect Request",
+          message: `
+          Check your ${
+            session?.peer?.metadata?.name || pairing?.peerMetadata?.name
+          } Mobile Wallet to Approve/Reject this request
+        `,
+          level: LEVELS.warn,
+        })
+        if (wcRequestHook && wcRequestHook instanceof Function) {
+          wcRequestHook({
+            type: REQUEST_TYPES.SESSION,
+            session,
+            pairing,
+            method,
+            uri: null,
+          })
+        }
+      }
+
+      if (session == null) {
+        session = await connectWc({
+          onClose,
+          appLink,
+          client,
+          method,
+          pairing,
+          wcRequestHook,
+          pairingModalOverride,
+        })
+      }
+
+      const [namespace, reference, address] = Object.values(session.namespaces)
+        .map(namespace => namespace.accounts)
+        .flat()
+        .filter(account => account.startsWith("flow:"))[0]
+        .split(":")
+
+      const chainId = `${namespace}:${reference}`
+      const addr = address
+      const data = JSON.stringify({...body, addr})
+
+      try {
+        const result = await client.request({
+          topic: session.topic,
+          chainId,
+          request: {
+            method,
+            params: [data],
+          },
+        })
+        onResponse(result)
+      } catch (error) {
+        log({
+          title: `${error.name} Error on WalletConnect client ${method} request`,
+          message: error.message,
+          level: LEVELS.error,
+        })
+        reject(`Declined: Externally Halted`)
+      }
+
+      function onResponse(resp) {
         try {
           if (typeof resp !== "object") return
 
@@ -47,109 +124,76 @@ const makeExec = (client, {sessionRequestHook}) => {
         }
       }
 
-      const onClose = () => {
-        reject(`Declined: Externally Halted`)
-      }
-
-      if (client.session.length) {
-        const lastKeyIndex = client.session.keys.length - 1
-        session = client.session.get(client.session.keys.at(lastKeyIndex))
-      }
-
-      if (session == null) {
-        const pairings = client.pairing.getAll({active: true})
-        const pairing = pairings?.find(p => p.peerMetadata.url === service.uid)
-
-        session = await connectWc(onClose, {
-          service,
-          client,
-          pairing,
-          sessionRequestHook,
-        })
-      }
-
-      const [namespace, reference, address] = Object.values(session.namespaces)
-        .map(namespace => namespace.accounts)
-        .flat()
-        .filter(account => account.startsWith("flow:"))[0]
-        .split(":")
-
-      const method = service.endpoint
-      const chainId = `${namespace}:${reference}`
-      const addr = address
-      const data = JSON.stringify({...body, addr})
-
-      try {
-        const result = await client.request({
-          topic: session.topic,
-          chainId,
-          request: {
-            method,
-            params: [data],
-          },
-        })
-        onResponse(result)
-      } catch (e) {
-        log({
-          title: `${e.name} Error on WalletConnect client ${method} request`,
-          message: e.message,
-          level: LEVELS.error,
-        })
+      function onClose() {
         reject(`Declined: Externally Halted`)
       }
     })
   }
 }
 
-async function connectWc(
+async function connectWc({
   onClose,
-  {service, client, pairing, sessionRequestHook}
-) {
+  appLink,
+  client,
+  method,
+  pairing,
+  wcRequestHook,
+  pairingModalOverride,
+}) {
   try {
     const requiredNamespaces = {
       flow: {
-        methods: ["flow_authn", "flow_authz", "flow_user_sign"],
+        methods: [
+          FLOW_METHODS.FLOW_AUTHN,
+          FLOW_METHODS.FLOW_AUTHZ,
+          FLOW_METHODS.FLOW_USER_SIGN,
+        ],
         chains: [`flow:${CONFIGURED_NETWORK}`],
         events: ["chainChanged", "accountsChanged"],
       },
     }
-
     const {uri, approval} = await client.connect({
       pairingTopic: pairing?.topic,
       requiredNamespaces,
     })
+    var _uri = uri
 
-    const appLink = service.uid || pairing?.peerMetadata?.url
+    if (wcRequestHook && wcRequestHook instanceof Function) {
+      wcRequestHook({
+        type: REQUEST_TYPES.PAIRING,
+        session,
+        pairing,
+        method,
+        uri,
+      })
+    }
 
-    if (!isMobile() && !pairing) {
-      QRCodeModal.open(uri, () => {
-        onClose()
-      })
-    } else if (!isMobile() && pairing) {
-      log({
-        title: "WalletConnect Session request",
-        message: `
-          ${pairing.peerMetadata.name}
-          Pairing exists, Approve Session in your Mobile Wallet
-        `,
-        level: LEVELS.warn,
-      })
-      sessionRequestHook && sessionRequestHook(pairing.peerMetadata)
-    } else {
+    if (isMobile()) {
       const queryString = new URLSearchParams({uri: uri}).toString()
       let url = pairing == null ? appLink + "?" + queryString : appLink
-      window.open(url, "blank").focus()
+      window.location.href = url
+    } else if (!pairing && uri) {
+      if (!pairingModalOverride) {
+        QRCodeModal.open(uri, () => {
+          onClose()
+        })
+      } else {
+        pairingModalOverride(uri, onClose)
+      }
     }
 
     const session = await approval()
     return session
-  } catch (e) {
+  } catch (error) {
     log({
-      title: `${e.name} "Error establishing Walletconnect session"`,
-      message: e.message,
+      title: `Error establishing Walletconnect session`,
+      message: `${error.message}
+      uri: ${_uri}
+      `,
       level: LEVELS.error,
     })
-    throw e
+    onClose()
+    throw error
   } finally {
     QRCodeModal.close()
   }
@@ -176,10 +220,9 @@ const baseWalletConnectService = includeBaseWC => {
   }
 }
 
-async function makeWcServices({includeBaseWC, wallets}) {
+async function makeWcServices({projectId, includeBaseWC, wallets}) {
   const wcBaseService = baseWalletConnectService(includeBaseWC)
-  const flowWcWalletServices = await fetchFlowWallets()
-  const injectedWalletsServices =
-    CONFIGURED_NETWORK === "testnet" ? wallets : []
-  return [wcBaseService, ...flowWcWalletServices, ...injectedWalletsServices]
+  const flowWcWalletServices = (await fetchFlowWallets(projectId)) ?? []
+  const injectedWalletServices = CONFIGURED_NETWORK === "testnet" ? wallets : []
+  return [wcBaseService, ...flowWcWalletServices, ...injectedWalletServices]
 }
