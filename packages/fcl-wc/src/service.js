@@ -16,22 +16,32 @@ const makeExec = (client, {wcRequestHook, pairingModalOverride}) => {
   return ({service, body, opts}) => {
     return new Promise(async (resolve, reject) => {
       invariant(client, "WalletConnect is not initialized")
-      let session, pairing
+      let session, pairing, windowRef
       const appLink = service.uid
       const method = service.endpoint
-
+      if (isMobile()) {
+        windowRef = window.open("", "_blank")
+        if (method !== FLOW_METHODS.FLOW_AUTHN) {
+          openUniversalLink()
+        }
+      }
+      function openUniversalLink(uri = appLink) {
+        if (windowRef) windowRef.location.href = uri
+        setTimeout(() => {
+          if (windowRef && !windowRef.closed) {
+            windowRef.close()
+          }
+        }, 1500)
+      }
       const pairings = client.pairing.getAll({active: true})
       if (pairings.length > 0) {
         pairing = pairings?.find(p => p.peerMetadata?.url === service.uid)
       }
-
       if (client.session.length > 0) {
         const lastKeyIndex = client.session.keys.length - 1
         session = client.session.get(client.session.keys.at(lastKeyIndex))
       }
-
       if (session) {
-        if (isMobile()) window.location.href = appLink
         log({
           title: "WalletConnect Request",
           message: `
@@ -44,6 +54,7 @@ const makeExec = (client, {wcRequestHook, pairingModalOverride}) => {
         if (wcRequestHook && wcRequestHook instanceof Function) {
           wcRequestHook({
             type: REQUEST_TYPES.SESSION,
+            service,
             session,
             pairing,
             method,
@@ -54,8 +65,11 @@ const makeExec = (client, {wcRequestHook, pairingModalOverride}) => {
 
       if (session == null) {
         session = await connectWc({
+          service,
           onClose,
           appLink,
+          openUniversalLink,
+          windowRef,
           client,
           method,
           pairing,
@@ -132,8 +146,10 @@ const makeExec = (client, {wcRequestHook, pairingModalOverride}) => {
 }
 
 async function connectWc({
+  service,
   onClose,
   appLink,
+  windowRef,
   client,
   method,
   pairing,
@@ -161,6 +177,7 @@ async function connectWc({
     if (wcRequestHook && wcRequestHook instanceof Function) {
       wcRequestHook({
         type: REQUEST_TYPES.PAIRING,
+        service,
         session,
         pairing,
         method,
@@ -171,8 +188,9 @@ async function connectWc({
     if (isMobile()) {
       const queryString = new URLSearchParams({uri: uri}).toString()
       let url = pairing == null ? appLink + "?" + queryString : appLink
-      window.location.href = url
+      windowRef.location.href = url
     } else if (!pairing && uri) {
+      if (!uri) throw new Error("WalletConnect URI is undefined")
       if (!pairingModalOverride) {
         QRCodeModal.open(uri, () => {
           onClose()
@@ -195,6 +213,9 @@ async function connectWc({
     onClose()
     throw error
   } finally {
+    if (windowRef && !windowRef.closed) {
+      windowRef.close()
+    }
     QRCodeModal.close()
   }
 }
