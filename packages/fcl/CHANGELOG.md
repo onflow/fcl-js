@@ -1,5 +1,11 @@
 # @onflow/fcl
 
+## 1.3.0-alpha.10
+
+### Patch Changes
+
+- [#1413](https://github.com/onflow/fcl-js/pull/1413) [`5e6d114a`](https://github.com/onflow/fcl-js/commit/5e6d114a8fb0489c6bc70df8ec02d7ec4bb9ea1d) Thanks [@JeffreyDoyle](https://github.com/JeffreyDoyle)! - PKG -- [fcl] Adds mainnet Interaction Template Audit contract to Interaction Template Utils
+
 ## 1.3.0-alpha.9
 
 ### Patch Changes
