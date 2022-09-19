@@ -1,6 +1,8 @@
 import {invariant} from "@onflow/util-invariant"
+import {log, LEVELS} from "@onflow/util-logger"
 import {serviceRegistry} from "./plugins"
-import {log} from "@onflow/util-logger"
+import {configLens} from "../../default-config"
+import {VERSION} from "../../VERSION"
 
 const execStrategy = async ({service, body, config, opts}) => {
   const strategy = serviceRegistry.getStrategy(service.method)
@@ -9,12 +11,22 @@ const execStrategy = async ({service, body, config, opts}) => {
 
 export async function execService({service, msg = {}, config = {}, opts = {}}) {
   msg.data = service.data
+  const execConfig = {
+    services: await configLens(/^service\./),
+    app: await configLens(/^app\.detail\./),
+    client: {
+      ...config.client,
+      fclVersion: VERSION,
+      fclLibrary: "https://github.com/onflow/fcl-js",
+      hostname: window?.location?.hostname ?? null,
+    },
+  }
 
   try {
     const res = await execStrategy({
       service,
       body: msg,
-      config,
+      config: execConfig,
       opts,
     })
     if (res.status === "REDIRECT") {
@@ -25,8 +37,8 @@ export async function execService({service, msg = {}, config = {}, opts = {}}) {
       return await execService({
         service: res.data,
         msg,
+        config: execConfig,
         opts,
-        config,
       })
     } else {
       return res
@@ -35,7 +47,7 @@ export async function execService({service, msg = {}, config = {}, opts = {}}) {
     log({
       title: `Error on execService ${service?.type}`,
       message: error,
-      level: 1,
+      level: LEVELS.error,
     })
     throw error
   }

@@ -9,8 +9,6 @@ import {buildUser} from "./build-user"
 import {serviceOfType} from "./service-of-type"
 import {execService} from "./exec-service"
 import {normalizeCompositeSignature} from "../normalizers/service/composite-signature"
-import {configLens} from "../default-config"
-import {VERSION} from "../VERSION"
 import {getDiscoveryService, makeDiscoveryServices} from "../discovery"
 import {serviceRegistry} from "./exec-service/plugins"
 
@@ -122,12 +120,7 @@ async function getAccountProofData() {
 const makeConfig = async ({discoveryAuthnInclude}) => {
   return {
     discoveryAuthnInclude,
-    services: await configLens(/^service\./),
-    app: await configLens(/^app\.detail\./),
     client: {
-      fclVersion: VERSION,
-      fclLibrary: "https://github.com/onflow/fcl-js",
-      hostname: window?.location?.hostname ?? null,
       clientServices: await makeDiscoveryServices(),
       supportedStrategies: serviceRegistry.getStrategies(),
     },
