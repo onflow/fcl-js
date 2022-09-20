@@ -124,6 +124,8 @@ npm install --save @onflow/sdk
 - **collection** _GetCollection_ -- The collection returned from a GetCollection request
   - **id** `string` -- ID of the collection
   - **transactionIds** `Array<string>` -- The ids of transactions included in the collection
+- **networkParameters** _GetNetworkParameters_ -- The network parameters returned from a GetNetworkParameters request
+  - **chainId** `string` -- ID of the blockchain
 
 ## Exposed Functions
 
