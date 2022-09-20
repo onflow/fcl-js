@@ -9,6 +9,7 @@ import {sendGetBlock} from "./send-get-block.js"
 import {sendGetBlockHeader} from "./send-get-block-header.js"
 import {sendGetCollection} from "./send-get-collection.js"
 import {sendPing} from "./send-ping.js"
+import {sendGetNetworkParameters} from "./send-get-network-parameters.js"
 
 export const send = async (ix, context = {}, opts = {}) => {
   invariant(
@@ -41,6 +42,8 @@ export const send = async (ix, context = {}, opts = {}) => {
       return opts.sendGetCollection ? opts.sendGetCollection(ix, context, opts) : sendGetCollection(ix, context, opts)
     case context.ix.isPing(ix):
       return opts.sendPing ? opts.sendPing(ix, context, opts) : sendPing(ix, context, opts)
+    case context.ix.isGetNetworkParameters(ix):
+      return opts.sendGetNetworkParameters ? opts.sendGetNetworkParameters(ix, context, opts) : sendGetNetworkParameters(ix, context, opts)
     default:
       return ix
   }
