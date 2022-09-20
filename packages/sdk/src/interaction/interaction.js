@@ -11,6 +11,7 @@ export const GET_TRANSACTION /*               */ = "GET_TRANSACTION"
 export const GET_BLOCK /*                     */ = "GET_BLOCK"
 export const GET_BLOCK_HEADER /*              */ = "GET_BLOCK_HEADER"
 export const GET_COLLECTION /*                */ = "GET_COLLECTION"
+export const GET_NETWORK_PARAMETERS /*      */ = "GET_NETWORK_PARAMETERS"
 
 export const BAD /* */ = "BAD"
 export const OK /*  */ = "OK"
@@ -222,6 +223,7 @@ export const makePing /*                    */ = makeIx(PING)
 export const makeGetBlock /*                */ = makeIx(GET_BLOCK)
 export const makeGetBlockHeader /*          */ = makeIx(GET_BLOCK_HEADER)
 export const makeGetCollection /*           */ = makeIx(GET_COLLECTION)
+export const makeGetNetworkParameters /*    */ = makeIx(GET_NETWORK_PARAMETERS)
 
 const is = wat => ix => ix.tag === wat
 
@@ -236,6 +238,7 @@ export const isPing /*                    */ = is(PING)
 export const isGetBlock /*                */ = is(GET_BLOCK)
 export const isGetBlockHeader /*          */ = is(GET_BLOCK_HEADER)
 export const isGetCollection /*           */ = is(GET_COLLECTION)
+export const isGetNetworkParameters /*    */ = is(GET_NETWORK_PARAMETERS)
 
 export const isOk /*  */ = ix => ix.status === OK
 export const isBad /* */ = ix => ix.status === BAD
