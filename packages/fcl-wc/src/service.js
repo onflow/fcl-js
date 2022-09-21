@@ -19,20 +19,21 @@ const makeExec = (client, {wcRequestHook, pairingModalOverride}) => {
       let session, pairing, windowRef
       const appLink = service.uid
       const method = service.endpoint
+      invariant(
+        appLink && /^(ftp|http|https):\/\/[^ "]+$/.test(appLink),
+        `WalletConnect service.uid must be a valid universal link url. Found: ${appLink}`
+      )
       if (isMobile()) {
         windowRef = window.open("", "_blank")
         if (method !== FLOW_METHODS.FLOW_AUTHN) {
           openUniversalLink()
         }
       }
+
       function openUniversalLink(uri = appLink) {
         if (windowRef) windowRef.location.href = uri
-        setTimeout(() => {
-          if (windowRef && !windowRef.closed) {
-            windowRef.close()
-          }
-        }, 1500)
       }
+
       const pairings = client.pairing.getAll({active: true})
       if (pairings.length > 0) {
         pairing = pairings?.find(p => p.peerMetadata?.url === service.uid)
@@ -86,7 +87,7 @@ const makeExec = (client, {wcRequestHook, pairingModalOverride}) => {
 
       const chainId = `${namespace}:${reference}`
       const addr = address
-      const data = JSON.stringify({...body, addr})
+      const data = JSON.stringify({...body, addr, address})
 
       try {
         const result = await client.request({
@@ -105,6 +106,10 @@ const makeExec = (client, {wcRequestHook, pairingModalOverride}) => {
           level: LEVELS.error,
         })
         reject(`Declined: Externally Halted`)
+      } finally {
+        if (windowRef && !windowRef.closed) {
+          windowRef.close()
+        }
       }
 
       function onResponse(resp) {
@@ -156,18 +161,19 @@ async function connectWc({
   wcRequestHook,
   pairingModalOverride,
 }) {
+  const requiredNamespaces = {
+    flow: {
+      methods: [
+        FLOW_METHODS.FLOW_AUTHN,
+        FLOW_METHODS.FLOW_AUTHZ,
+        FLOW_METHODS.FLOW_USER_SIGN,
+      ],
+      chains: [`flow:${CONFIGURED_NETWORK}`],
+      events: ["chainChanged", "accountsChanged"],
+    },
+  }
+
   try {
-    const requiredNamespaces = {
-      flow: {
-        methods: [
-          FLOW_METHODS.FLOW_AUTHN,
-          FLOW_METHODS.FLOW_AUTHZ,
-          FLOW_METHODS.FLOW_USER_SIGN,
-        ],
-        chains: [`flow:${CONFIGURED_NETWORK}`],
-        events: ["chainChanged", "accountsChanged"],
-      },
-    }
     const {uri, approval} = await client.connect({
       pairingTopic: pairing?.topic,
       requiredNamespaces,
@@ -185,12 +191,18 @@ async function connectWc({
       })
     }
 
+    if (!pairing) {
+      invariant(
+        uri,
+        "Cannot establish connection, WalletConnect URI is undefined"
+      )
+    }
+
     if (isMobile()) {
       const queryString = new URLSearchParams({uri: uri}).toString()
       let url = pairing == null ? appLink + "?" + queryString : appLink
       windowRef.location.href = url
-    } else if (!pairing && uri) {
-      if (!uri) throw new Error("WalletConnect URI is undefined")
+    } else if (!pairing) {
       if (!pairingModalOverride) {
         QRCodeModal.open(uri, () => {
           onClose()
