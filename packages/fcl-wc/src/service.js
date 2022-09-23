@@ -17,34 +17,21 @@ const makeExec = (client, {wcRequestHook, pairingModalOverride}) => {
     return new Promise(async (resolve, reject) => {
       invariant(client, "WalletConnect is not initialized")
       let session, pairing, windowRef
-      const appLink = makeAppLink(service)
       const method = service.endpoint
-
-      if (isMobile()) {
-        if (method === FLOW_METHODS.FLOW_AUTHN) {
-          windowRef = window.open("", "_blank")
-        }
-      }
-
+      const appLink = validateAppLink(service)
       const pairings = client.pairing.getAll({active: true})
+
       if (pairings.length > 0) {
         pairing = pairings?.find(p => p.peerMetadata?.url === service.uid)
       }
+      
       if (client.session.length > 0) {
         const lastKeyIndex = client.session.keys.length - 1
         session = client.session.get(client.session.keys.at(lastKeyIndex))
       }
-      if (session) {
-        if (wcRequestHook && wcRequestHook instanceof Function) {
-          wcRequestHook({
-            type: REQUEST_TYPES.SIGNING_REQUEST,
-            method,
-            service,
-            session: session ?? null,
-            pairing: pairing ?? null,
-            uri: null,
-          })
-        }
+
+      if (isMobile()) {
+        windowRef = window.open("", "_blank")
       }
 
       if (session == null) {
@@ -52,7 +39,6 @@ const makeExec = (client, {wcRequestHook, pairingModalOverride}) => {
           service,
           onClose,
           appLink,
-          openUniversalLink,
           windowRef,
           client,
           method,
@@ -60,6 +46,21 @@ const makeExec = (client, {wcRequestHook, pairingModalOverride}) => {
           wcRequestHook,
           pairingModalOverride,
         })
+      }
+
+      if (wcRequestHook && wcRequestHook instanceof Function) {
+        wcRequestHook({
+          type: REQUEST_TYPES.SIGNING_REQUEST,
+          method,
+          service,
+          session: session ?? null,
+          pairing: pairing ?? null,
+          uri: null,
+        })
+      }
+
+      if (isMobile() && method !== FLOW_METHODS.FLOW_AUTHN) {
+        openDeepLink()
       }
 
       const [chainId, addr, address] = makeSessionData(session)
@@ -88,7 +89,7 @@ const makeExec = (client, {wcRequestHook, pairingModalOverride}) => {
         }
       }
 
-      function makeAppLink({uid}) {
+      function validateAppLink({uid}) {
         if (!(uid && /^(ftp|http|https):\/\/[^ "]+$/.test(uid))) {
           log({
             title: "WalletConnect Service Warning",
@@ -99,8 +100,17 @@ const makeExec = (client, {wcRequestHook, pairingModalOverride}) => {
         return uid
       }
 
-      function openUniversalLink(uri = appLink) {
-        if (windowRef) windowRef.location.href = uri
+      function openDeepLink() {
+        if (windowRef) {
+          windowRef.focus()
+          windowRef.location.href = appLink
+        } else {
+          log({
+            title: "Problem opening deep link in new window",
+            message: `Window failed to open (was it blocked by the browser?)`,
+            level: LEVELS.warn,
+          })
+        }
       }
 
       function makeSessionData(session) {
@@ -221,9 +231,10 @@ async function connectWc({
     return session
   } catch (error) {
     log({
-      title: `Error establishing Walletconnect session`,
-      message: `${error.message}
-      uri: ${_uri}
+      title: `${error.name} Error establishing WalletConnect session`,
+      message: `
+        ${error.message}
+        uri: ${_uri}
       `,
       level: LEVELS.error,
     })
@@ -237,7 +248,7 @@ async function connectWc({
   }
 }
 
-const baseWalletConnectService = includeBaseWC => {
+const makeBaseWalletConnectService = includeBaseWC => {
   return {
     f_type: "Service",
     f_vsn: "1.0.0",
@@ -259,7 +270,7 @@ const baseWalletConnectService = includeBaseWC => {
 }
 
 async function makeWcServices({projectId, includeBaseWC, wallets}) {
-  const wcBaseService = baseWalletConnectService(includeBaseWC)
+  const wcBaseService = makeBaseWalletConnectService(includeBaseWC)
   const flowWcWalletServices = (await fetchFlowWallets(projectId)) ?? []
   const injectedWalletServices = CONFIGURED_NETWORK === "testnet" ? wallets : []
   return [wcBaseService, ...flowWcWalletServices, ...injectedWalletServices]
