@@ -1,9 +1,9 @@
 import * as fcl from "@onflow/fcl"
 import SignClient from "@walletconnect/sign-client"
-import {makeServicePlugin} from "./service"
 import {invariant} from "@onflow/util-invariant"
 import {LEVELS, log} from "@onflow/util-logger"
 export {getSdkError} from "@walletconnect/utils"
+import {makeServicePlugin} from "./service"
 import {setConfiguredNetwork} from "./utils"
 
 const DEFAULT_RELAY_URL = "wss://relay.walletconnect.com"

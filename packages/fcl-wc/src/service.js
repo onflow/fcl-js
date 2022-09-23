@@ -54,11 +54,11 @@ const makeExec = (client, {wcRequestHook, pairingModalOverride}) => {
         })
         if (wcRequestHook && wcRequestHook instanceof Function) {
           wcRequestHook({
-            type: REQUEST_TYPES.SESSION,
-            service,
-            session,
-            pairing,
+            type: REQUEST_TYPES.SIGNING_REQUEST,
             method,
+            service,
+            session: session ?? null,
+            pairing: pairing ?? null,
             uri: null,
           })
         }
@@ -182,12 +182,12 @@ async function connectWc({
 
     if (wcRequestHook && wcRequestHook instanceof Function) {
       wcRequestHook({
-        type: REQUEST_TYPES.PAIRING,
-        service,
-        session,
-        pairing,
+        type: REQUEST_TYPES.SESSION_REQUEST,
         method,
-        uri,
+        service,
+        session: session ?? null,
+        pairing: pairing ?? null,
+        uri: uri ?? null,
       })
     }
 
