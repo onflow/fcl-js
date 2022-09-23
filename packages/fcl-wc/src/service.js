@@ -17,21 +17,13 @@ const makeExec = (client, {wcRequestHook, pairingModalOverride}) => {
     return new Promise(async (resolve, reject) => {
       invariant(client, "WalletConnect is not initialized")
       let session, pairing, windowRef
-      const appLink = service.uid
+      const appLink = makeAppLink(service)
       const method = service.endpoint
-      invariant(
-        appLink && /^(ftp|http|https):\/\/[^ "]+$/.test(appLink),
-        `WalletConnect service.uid must be a valid universal link url. Found: ${appLink}`
-      )
-      if (isMobile()) {
-        windowRef = window.open("", "_blank")
-        if (method !== FLOW_METHODS.FLOW_AUTHN) {
-          openUniversalLink()
-        }
-      }
 
-      function openUniversalLink(uri = appLink) {
-        if (windowRef) windowRef.location.href = uri
+      if (isMobile()) {
+        if (method === FLOW_METHODS.FLOW_AUTHN) {
+          windowRef = window.open("", "_blank")
+        }
       }
 
       const pairings = client.pairing.getAll({active: true})
@@ -43,15 +35,6 @@ const makeExec = (client, {wcRequestHook, pairingModalOverride}) => {
         session = client.session.get(client.session.keys.at(lastKeyIndex))
       }
       if (session) {
-        log({
-          title: "WalletConnect Request",
-          message: `
-          Check your ${
-            session?.peer?.metadata?.name || pairing?.peerMetadata?.name
-          } Mobile Wallet to Approve/Reject this request
-        `,
-          level: LEVELS.warn,
-        })
         if (wcRequestHook && wcRequestHook instanceof Function) {
           wcRequestHook({
             type: REQUEST_TYPES.SIGNING_REQUEST,
@@ -79,14 +62,7 @@ const makeExec = (client, {wcRequestHook, pairingModalOverride}) => {
         })
       }
 
-      const [namespace, reference, address] = Object.values(session.namespaces)
-        .map(namespace => namespace.accounts)
-        .flat()
-        .filter(account => account.startsWith("flow:"))[0]
-        .split(":")
-
-      const chainId = `${namespace}:${reference}`
-      const addr = address
+      const [chainId, addr, address] = makeSessionData(session)
       const data = JSON.stringify({...body, addr, address})
 
       try {
@@ -110,6 +86,35 @@ const makeExec = (client, {wcRequestHook, pairingModalOverride}) => {
         if (windowRef && !windowRef.closed) {
           windowRef.close()
         }
+      }
+
+      function makeAppLink({uid}) {
+        if (!(uid && /^(ftp|http|https):\/\/[^ "]+$/.test(uid))) {
+          log({
+            title: "WalletConnect Service Warning",
+            message: `service.uid should be a valid universal link url. Found: ${uid}`,
+            level: LEVELS.warn,
+          })
+        }
+        return uid
+      }
+
+      function openUniversalLink(uri = appLink) {
+        if (windowRef) windowRef.location.href = uri
+      }
+
+      function makeSessionData(session) {
+        const [namespace, reference, address] = Object.values(
+          session.namespaces
+        )
+          .map(namespace => namespace.accounts)
+          .flat()
+          .filter(account => account.startsWith("flow:"))[0]
+          .split(":")
+
+        const chainId = `${namespace}:${reference}`
+        const addr = address
+        return [chainId, addr, address]
       }
 
       function onResponse(resp) {
