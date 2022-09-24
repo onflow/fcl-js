@@ -4,7 +4,6 @@ import {getNetworkConfig} from "../../default-config"
 
 export async function deriveDependencies({template}) {
   const network = await getNetworkConfig()
-  console.log("Network in derive Dependencies")
 
   invariant(
     network,

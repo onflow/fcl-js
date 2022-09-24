@@ -1,7 +1,6 @@
 import {config} from "@onflow/config"
 import {invariant} from "@onflow/util-invariant"
 import {serviceRegistry} from "../current-user/exec-service/plugins"
-import {getNetworkConfig} from "../default-config"
 import {VERSION} from "../VERSION"
 import {makeDiscoveryServices} from "./utils"
 
