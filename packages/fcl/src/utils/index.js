@@ -1,1 +1,1 @@
-export {getNetwork} from "./flow"
+export {getNetwork} from "./getNetwork"
