@@ -1,10 +1,9 @@
-import {config} from "@onflow/config"
-import {log} from "@onflow/util-logger"
 import {invariant} from "@onflow/util-invariant"
 import {withPrefix, sansPrefix} from "@onflow/util-address"
 import {query} from "../exec/query"
 import {encodeAccountProof} from "../wallet-utils"
 import {isString} from "../exec/utils/is"
+import {getNetworkConfig} from "../default-config"
 
 const ACCOUNT_PROOF = "ACCOUNT_PROOF"
 const USER_SIGNATURE = "USER_SIGNATURE"
@@ -54,25 +53,15 @@ export const validateArgs = args => {
   }
 }
 
+// TODO: pass in option for contract but we're connected to testnet
+// log address + network -> in sync?
 const getVerifySignaturesScript = async (sig, opts) => {
   const verifyFunction =
     sig === "ACCOUNT_PROOF"
       ? "verifyAccountProofSignatures"
       : "verifyUserSignatures"
 
-  let network = await config.get("flow.network")
-  if (!network) {
-    network = await config.get("env")
-    if (network)
-      log.deprecate({
-        pkg: "FCL",
-        subject:
-          'Using the "env" configuration key for specifying the flow network',
-        message: 'Please use "flow.network" instead.',
-        transition:
-          "https://github.com/onflow/flow-js-sdk/blob/master/packages/fcl/TRANSITIONS.md#0001-deprecate-env-config-key",
-      })
-  }
+  let network = await getNetworkConfig()
 
   let fclCryptoContract
 
