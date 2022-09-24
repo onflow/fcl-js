@@ -3,6 +3,7 @@ import {log, LEVELS} from "@onflow/util-logger"
 import {query} from "../exec/query.js"
 import {generateTemplateId} from "./generate-template-id.js"
 import {normalizeInteractionTemplate} from "../normalizers/interaction-template/interaction-template.js"
+import {getNetworkConfig} from "../default-config.js"
 
 export async function getInteractionTemplateAudits(
   {template, auditors},
@@ -52,7 +53,7 @@ export async function getInteractionTemplateAudits(
 
       let FlowInteractionAuditContract = opts.flowInteractionAuditContract
       if (!FlowInteractionAuditContract) {
-        const fclNetwork = await config().get("flow.network")
+        const fclNetwork = await getNetworkConfig()
         invariant(
           fclNetwork === "mainnet" || fclNetwork === "testnet",
           "getInteractionTemplateAudits Error: Unable to determine address for FlowInteractionTemplateAudit contract. Set configuration for 'fcl.network' to 'mainnet' or 'testnet'"

@@ -1,9 +1,10 @@
-import {config} from "@onflow/config"
 import {invariant} from "@onflow/util-invariant"
 import {withPrefix} from "@onflow/util-address"
+import {getNetworkConfig} from "../../default-config"
 
 export async function deriveDependencies({template}) {
-  const network = await config.get("flow.network")
+  const network = await getNetworkConfig()
+  console.log("Network in derive Dependencies")
 
   invariant(
     network,
