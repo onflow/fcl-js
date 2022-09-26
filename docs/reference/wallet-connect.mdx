@@ -58,7 +58,7 @@ Initialize WalletConnect `SignClient` and `FclWcServicePlugin` with the followin
 | `metadata` | object | `{ }`  | Optional dApp metadata to describe your application and define its appearance in a web browser. More details can be found [here](https://docs.walletconnect.com/2.0/swift/sign/dapp-usage) |
 | `includeBaseWC` | boolean | false   | Optional configuration to include a generic WalletConnect service in FCL Discovery (UI/API). <br /> :exclamation: BaseWC Service offers no deeplink support for mobile. |
 | `wcRequestHook` | function | null  | Optional function is called on all desktop WalletConnect client session proposals and signing requests. Use this to handle alerting user to check wallet for approval. |
-| `pairingModalOverride` | function | null  | Optional function called to allow override of included QRCodeModal. Function receives two arguments: <br> 1. Connection `uri` to display QR code or send to wallet to create pairing. <br> 2. Callback function to manually cancel the request. |
+| `pairingModalOverride` | function | null  | Optional function called to allow override of included QRCodeModal. Function receives two arguments: <br /> 1. Connection `uri` to display QR code or send to wallet to create pairing. <br /> 2. Callback function to manually cancel the request. |
 | `wallets` | array | `[ ]` | Optional list of WalletConnect `authn` services to include in FCL Wallet Discovery (UI/API). <br /> :exclamation: Only available for use on **`testnet`**. These services will be combined with wallets returned from [WalletConnect cloud registry API](https://cloud.walletconnect.com/) and sent to Discovery for display in UI and inclusion in API response. |
 
 #### Returns
