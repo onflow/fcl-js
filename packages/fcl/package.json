@@ -1,6 +1,6 @@
 {
   "name": "@onflow/fcl",
-  "version": "1.3.0-alpha.10",
+  "version": "1.3.0",
   "description": "Flow Client Library",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
@@ -23,7 +23,7 @@
     }
   },
   "devDependencies": {
-    "@onflow/fcl-bundle": "^1.2.0-alpha.0",
+    "@onflow/fcl-bundle": "^1.2.0",
     "jest": "^27.0.6",
     "jest-esm-transformer": "1.0.0"
   },
@@ -45,7 +45,7 @@
     "@onflow/config": "^1.0.3",
     "@onflow/interaction": "0.0.11",
     "@onflow/rlp": "^1.0.2",
-    "@onflow/sdk": "^1.1.2-alpha.1",
+    "@onflow/sdk": "^1.1.2",
     "@onflow/types": "^1.0.3",
     "@onflow/util-actor": "^1.1.1",
     "@onflow/util-address": "^1.0.2",
