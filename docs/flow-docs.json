@@ -9,28 +9,19 @@
       "headerCards": [
         {
           "title": "Installation",
-          "tags": [
-            "setup",
-            "guide"
-          ],
+          "tags": ["setup", "guide"],
           "description": "Set up your local environment and install the necessary dependencies to start using FCL",
           "href": "/tools/fcl-js#getting-started"
         },
         {
           "title": "Flow App Quickstart",
-          "tags": [
-            "tutorial",
-            "dapp"
-          ],
+          "tags": ["tutorial", "dapp"],
           "description": "A tutorial that will allow you to start building with web3 on the Flow blockchain and FCL",
           "href": "/tools/fcl-js/tutorials/flow-app-quickstart"
         },
         {
           "title": "Wallet Discovery",
-          "tags": [
-            "wallets",
-            "reference"
-          ],
+          "tags": ["wallets", "reference"],
           "description": "Learn more about integrating Flow compatible wallets with your dapp",
           "href": "/tools/fcl-js/reference/discovery"
         }
@@ -99,6 +90,10 @@
           {
             "title": "User Signatures",
             "href": "reference/user-signatures"
+          },
+          {
+            "title": "Add FCL Support for WalletConnect 2.0",
+            "href": "reference/wallet-connect"
           }
         ]
       }
