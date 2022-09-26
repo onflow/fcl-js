@@ -24,7 +24,7 @@ const makeExec = (client, {wcRequestHook, pairingModalOverride}) => {
       if (pairings.length > 0) {
         pairing = pairings?.find(p => p.peerMetadata?.url === service.uid)
       }
-      
+
       if (client.session.length > 0) {
         const lastKeyIndex = client.session.keys.length - 1
         session = client.session.get(client.session.keys.at(lastKeyIndex))
@@ -102,9 +102,26 @@ const makeExec = (client, {wcRequestHook, pairingModalOverride}) => {
 
       function openDeepLink() {
         if (windowRef) {
-          windowRef.focus()
           windowRef.location.href = appLink
         } else {
+          if (appLink.startsWith("http")) {
+            // Workaround for https://github.com/rainbow-me/rainbowkit/issues/524.
+            // Using 'window.open' causes issues on iOS in non-Safari browsers and
+            // WebViews where a blank tab is left behind after connecting.
+            // This is especially bad in some WebView scenarios (e.g. following a
+            // link from Twitter) where the user doesn't have any mechanism for
+            // closing the blank tab.
+            // For whatever reason, links with a target of "_blank" don't suffer
+            // from this problem, and programmatically clicking a detached link
+            // element with the same attributes also avoids the issue.
+            const link = document.createElement("a")
+            link.href = appLink
+            link.target = "_blank"
+            link.rel = "noreferrer noopener"
+            link.click()
+          } else {
+            window.location.href = appLink
+          }
           log({
             title: "Problem opening deep link in new window",
             message: `Window failed to open (was it blocked by the browser?)`,
