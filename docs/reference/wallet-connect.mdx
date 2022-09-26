@@ -161,25 +161,20 @@ FCL tells Wallet Discovery which services are supported by the client (installed
 
 ![Wallet Discovery UI](../images/wc-discovery.png)
 
-## FCL Compatible Wallet Provider Spec
+## Wallet Provider Spec
 
-- Obtain a `projectId` from the [WalletConnect Cloud Registry](https://cloud.walletconnect.com/)
-- Submit your wallet to be included in the WalletConnect Cloud Registry API (optional)
-- Conform to [FCL Wallet Provider Spec](https://github.com/onflow/fcl-js/blob/master/packages/fcl/src/wallet-provider-spec/draft-v4.md)
-  - chains
-  - methods
-    - `flow_authn`
-      - AuthnResponse
-        - used to create FCL currentUser
-        - account
-        - services
-      - optional* [account-proof](https://github.com/onflow/fcl-js/blob/master/docs/reference/proving-authentication.mdx)
-    - `flow_authz`
-    - `flow_user_sign`
-  - Responses 
-    - All responses need to be wrapped in a `PollingResponse`
-  - Metadata requirements
-    - :exclamation: In order to correctly identify, improve pairing, and include deep link support for mobile, services using the `WC/RPC` method need to use the same universal link as their `uid` and `url` in Wallet metadata.
+### Implementation path
+
+|     |    |    |
+| :-: | :- | :- |
+| **1** | Obtain a WalletConnect `projectId` |  Register to receive a `projectId` from the [WalletConnect Cloud Registry](https://cloud.walletconnect.com/). |
+| **2** | Conform to [FCL Wallet Provider Spec](https://github.com/onflow/fcl-js/blob/master/packages/fcl/src/wallet-provider-spec/draft-v4.md) | Compatible wallets must support `flow_authn`, `flow_authz`, and `flow_user_sign` methods and wrap data in the appropriate FCL Response type. Services returned with the `AuthnResponse` of `flow_authn` should set `service.endpoint` to corresponding methods.<br> **ServiceType** `authz` : `flow_authz` <br> **ServiceType** `user-signature` : `flow_user_sign`
+| **3** | Add wallet to WalletConnect Cloud Registry API **(optional)** | Submit your wallet to be included in the [WalletConnect Cloud Registry API and Explorer](https://explorer.walletconnect.com/) |
+| **4** | Responses | All responses need to be wrapped in a [`PollingResponse`](https://github.com/onflow/fcl-js/blob/master/packages/fcl/src/wallet-provider-spec/draft-v4.md#pollingresponse) |
+
+#### Metadata requirements
+
+:exclamation: In order to correctly identify, improve pairing, and include deep link support for mobile, services using the `WC/RPC` method need to use the same universal link as their `uid` and `url` in Wallet metadata.
 Wallets sourced from WalletConnect Cloud Registry automatically build the service from data and will set the `service.uid` to the universal link.
 
 ```javascript
@@ -190,12 +185,12 @@ export let signClient: SignClient
 
 export async function createSignClient() {
   signClient = await SignClient.init({
-    projectId: process.env.NEXT_PUBLIC_PROJECT_ID,
-    relayUrl: process.env.NEXT_PUBLIC_RELAY_URL ?? 'wss://relay.walletconnect.com',
+    projectId: PROJECT_ID,
+    relayUrl: 'wss://relay.walletconnect.com',
     metadata: {
-      name: 'React Wallet',
-      description: 'React Wallet for WalletConnect',
-      url: 'https://walletconnect.com/',
+      name: 'Awesome Wallet',
+      description: 'Awesome Wallet with FCL Support for WalletConnect',
+      url: 'https://deeplink.awesome-wallet.com/',
       icons: ['https://avatars.githubusercontent.com/u/37784886']
     }
   })
@@ -203,29 +198,8 @@ export async function createSignClient() {
 
 ````
 
----
-## Browser and Mobile Support
-
-- Deep Link Format
-- FCL will attempt to open the following
-- `let url = yourWebsiteURL + "?uri=" + queryString`
-
-## Mobile Flow
-
-- User presses button to connect and is redirected to wallet of choice
-- Wallet prompts user to approve or reject session
-- Wallet prompts user to return to dApp manually
-- User presses back/return button to return to dApp
-- Similar pattern happens when signing requests are required from the user:
-- Dapp redirects user automatically to previously chosen wallet
-- Wallet prompts user to approve or reject request
-- Wallet prompts user to return to dApp manually
-- User presses back/return button to return to dApp
-
 ## Next steps
 
-1. Learn about most common use cases and how to implement them.
-2. Check out [WalletConnect examples and resources](https://docs.walletconnect.com/2.0/introduction/examples-and-resources) and build a wallet.
-
-- Link to React Wallet
-- Link to Lilico Wallet
+1. Read the [FCL Wallet Provider Spec](https://github.com/onflow/fcl-js/blob/master/packages/fcl/src/wallet-provider-spec/draft-v4.md).
+2. Check out the a WalletConnect 2.0 [React POC Wallet](https://github.com/gregsantos/flow-walletconnect-v2-react-wallet) and [FCL Flow dApp](https://github.com/gregsantos/flow-walletconnect-v2-react-dapp) with support for WalletConnect v2.0.
+3. Read and review the [WalletConnect 2.0 Docs](https://docs.walletconnect.com/2.0/), [examples and resources](https://docs.walletconnect.com/2.0/introduction/examples-and-resources).
