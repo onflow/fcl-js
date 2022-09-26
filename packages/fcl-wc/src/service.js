@@ -1,7 +1,7 @@
 import QRCodeModal from "@walletconnect/qrcode-modal"
 import {invariant} from "@onflow/util-invariant"
 import {log, LEVELS} from "@onflow/util-logger"
-import {fetchFlowWallets, isMobile, CONFIGURED_NETWORK} from "./utils"
+import {fetchFlowWallets, isMobile, CONFIGURED_NETWORK, isIOS} from "./utils"
 import {FLOW_METHODS, REQUEST_TYPES} from "./constants"
 
 export const makeServicePlugin = async (client, opts = {}) => ({
@@ -31,7 +31,11 @@ const makeExec = (client, {wcRequestHook, pairingModalOverride}) => {
       }
 
       if (isMobile()) {
-        windowRef = window.open("", "_blank")
+        if (opts.windowRef) {
+          windowRef = opts.windowRef
+        } else {
+          windowRef = window.open("", "_blank")
+        }
       }
 
       if (session == null) {
@@ -102,9 +106,7 @@ const makeExec = (client, {wcRequestHook, pairingModalOverride}) => {
 
       function openDeepLink() {
         if (windowRef) {
-          windowRef.location.href = appLink
-        } else {
-          if (appLink.startsWith("http")) {
+          if (appLink.startsWith("http") && !isIOS()) {
             // Workaround for https://github.com/rainbow-me/rainbowkit/issues/524.
             // Using 'window.open' causes issues on iOS in non-Safari browsers and
             // WebViews where a blank tab is left behind after connecting.
@@ -120,8 +122,9 @@ const makeExec = (client, {wcRequestHook, pairingModalOverride}) => {
             link.rel = "noreferrer noopener"
             link.click()
           } else {
-            window.location.href = appLink
+            windowRef.location.href = appLink
           }
+        } else {
           log({
             title: "Problem opening deep link in new window",
             message: `Window failed to open (was it blocked by the browser?)`,
