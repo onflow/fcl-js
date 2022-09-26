@@ -9,7 +9,7 @@ These instructions explain how dApps can also add support for FCL compatible wal
 
 ## How does it work?
 
-- The **`fc-wc`** package is used to initialize a **WalletConnect 2.0** **`SignClient`** instance, and build a **`discovery-service`** **`ServicePlugin`** based on dApp specified options.
+- The **`fc-wc`** package is used to initialize a **WalletConnect 2.0** [**`SignClient`**](https://docs.walletconnect.com/2.0/introduction/sign) instance, and build a **`discovery-service`** **`ServicePlugin`** based on dApp specified options.
 - **`discovery-service`** plugins are used to add opt-in wallets and other services to **FCL Wallet Discovery** (UI/API).
 - The **FCL Plugin Registry** offers dApps the ability to add new services, methods, and the execution strategies needed to interact with them.
 
@@ -41,7 +41,7 @@ Visit [WalletConnect Cloud Registry](https://cloud.walletconnect.com/) and regis
 
 ### 3. Initialize WalletConnect `SignClient` and `FclWcServicePlugin`
 
-In addition to the WalletConnect `SignClient`, the `init` method of `fcl-wc` returns a `ServicePlugin` object. This object can be injected using the FCL Plugin Registry to add support for new service methods and their corresponding execution strategies (like `WC/RPC` for WalletConnect ).
+In addition to the WalletConnect `SignClient`, the `init` method of `fcl-wc` returns a [`ServicePlugin`](#serviceplugin-spec) object. This object can be injected using the [FCL Plugin Registry](#pluginregistry) to add support for new service methods and their corresponding execution strategies (like `WC/RPC` for WalletConnect ).
 A `discovery-service` `ServicePlugin` may also include additional opt-in wallets to offer your users through FCL Wallet Discovery.
 
 #### Configuration options
@@ -55,14 +55,14 @@ Initialize WalletConnect `SignClient` and `FclWcServicePlugin` with the followin
 | `includeBaseWC` | boolean | false   | Optional configuration to include a generic WalletConnect service in FCL Discovery (UI/API). <br /> :exclamation: BaseWC Service offers no deeplink support for mobile. |
 | `wcRequestHook` | function | null  | Optional function is called on all desktop WalletConnect client session proposals and signing requests. Use this to handle alerting user to check wallet for approval. |
 | `pairingModalOverride` | function | null  | Optional function called to allow override of included QRCodeModal. Function receives two arguments: <br> 1. Connection `uri` to display QR code or send to wallet to create pairing. <br> 2. Callback function to manually cancel the request. |
-| `wallets` | array | [ ] | Optional list of WalletConnect `authn` services to include in Discovery UI/API. <br /> :exclamation: Only available for use on **`testnet`**. These will be combined with wallets returned from [WalletConnect cloud registry API](https://cloud.walletconnect.com/), deduped by `service.uid`, and sent to Discovery for display in UI and inclusion in API response. |
+| `wallets` | array | [ ] | Optional list of WalletConnect `authn` services to include in FCL Wallet Discovery (UI/API). <br /> :exclamation: Only available for use on **`testnet`**. These services will be combined with wallets returned from [WalletConnect cloud registry API](https://cloud.walletconnect.com/) and sent to Discovery for display in UI and inclusion in API response. |
 
 #### Returns
 
 |  Name  |  Type  |  Description  |
 | ----- | ------- | ---------- |
-| [FclWcServicePlugin](#fclwcserviceplugin) | `ServicePlugin` | A ServicePlugin of type `discovery-service`.  May also include optional `authn` services to offer through FCL Wallet Discovery (UI/API). |
-| [client](#) | `SignClient` | An initialized WalletConnect `SignClient`. |
+| [FclWcServicePlugin](#fclwcserviceplugin) | `ServicePlugin` | A `ServicePlugin` of type `discovery-service`.  May also include optional `authn` services to offer through FCL Wallet Discovery (UI/API). |
+| [client](#) | `SignClient` | An initialized WalletConnect [`SignClient`](https://docs.walletconnect.com/2.0/introduction/sign). |
 
 ```js
 const FclWcServicePlugin = {
@@ -74,8 +74,7 @@ const FclWcServicePlugin = {
 }
 ```
 
-:exclamation: Setting FCL config `flow.network` to **`testnet`** or **`mainnet`** is required to use `fcl-wc`
-as it enable `"WC/RPC"` service strategy to request correct chain permissions.
+:exclamation: Setting FCL config `flow.network` to **`testnet`** or **`mainnet`** is required to use `fcl-wc` as it enables `"WC/RPC"` service strategy to request correct chain permissions.
 
 ```
 import {config} from '@onflow/config'
@@ -91,16 +90,7 @@ See [FCL Configuration](https://developers.flow.com/tools/fcl-js/reference/confi
 
 ### 4. Add FclWcServicePlugin to FCL Plugin Registry
 
-In addition to the WalletConnect `SignClient`, the `init` method of `fcl-wc` returns a `ServicePlugin` object. This object can be injected into the FCL Plugin Registry to add FCL support for new service methods, like (WC/RPC) for WalletConnect and corresponding execution strategies.
-
-A subtype of FCL [ServicePlugin](#serviceplugin-spec).
-When using FCL Discovery for authentication, dApps are able to support FCL-compatible wallets on Flow without any custom integrations or changes needed to the dApp code.
-
-A `ServicePlugin` may also include optional services to offer through FCL Wallet Discovery.
-
-Once a valid `FclWcServicePlugin` is registered, FCL shares client supported services with Discovery to add registered and injected wallets to the UI and API. To connect a Flow supported wallet using WalletConnect 2.0, users of your dApp will go through the authentication process and have the option to select their preferred wallet.
-
-Once a WalletConnect session is established and a `currentUser` is authenticated, FCL will handle client pairings and sessions during FCL `authn`, and initiate signing requests as part of `authz` using `fcl.mutate` and [`user-sign`](https://github.com/onflow/fcl-js/blob/master/docs/reference/user-signatures.mdx) using `fcl.signUserMessage`.
+In addition to the WalletConnect `SignClient`, the `init` method of `fcl-wc` returns a [`ServicePlugin`](#serviceplugin-spec) object. This object can be injected into the FCL Plugin Registry to add FCL support for new service methods, (like WC/RPC for WalletConnect) and their corresponding execution strategies.
 
 #### Usage
 
@@ -132,10 +122,10 @@ fcl.pluginRegistry.add(FclWcServicePlugin)
 | Key         | Value Type | Description                   |
 | ----------- | ---------- | ----------------------------- |
 | `name`        | string     | The name of the plugin.         |
-| `f_type`  | string     | The type of plugin. (currently only supports `ServicePlugin` type) |
-| `type`    | string     | The plugin subtype. (currently only supports `discovery-service` type) |
+| `f_type`  | string     | The type of plugin (currently only supports `ServicePlugin` type). |
+| `type`    | string     | The plugin subtype (currently only supports `discovery-service` type). |
 | `services` | array     | A list of services to add to FCL. |
-| `serviceStrategy` | {method: string, exec: function }     | The method and corresponding strategy FCL uses to interact with the service. A service with the `service.method` property set to `"WC/RPC"` tells FCL to use the corresponding service strategy if it is supported by the dApp. |
+| `serviceStrategy` | { method: string, exec: function }     | The method and corresponding strategy FCL uses to interact with the service. A service with the `service.method` property set to `"WC/RPC"` tells FCL to use the corresponding service strategy if it is supported by the dApp. |
 
 ---
 
@@ -149,60 +139,33 @@ There are two ways an app can use Discovery:
 
 2. The API version which allows you to access authentication services directly in your code via fcl.discovery.authn method which we'll describe below.](<https://github.com/onflow/fcl-js/blob/master/docs/reference/discovery.mdx>)
 
-![Wallet Discovery UI](../images/discovery.png)
+When using FCL Wallet Discovery for authentication, dApps are able to support FCL-compatible wallets on Flow without any custom integrations or changes needed to the dApp code.
 
-### How to add your flow enabled wc wallet to Discovery (UI/API)
+#### `discovery-service` ServicePlugin
 
-1. Add to Discovery services.json PR
-2. Add to WC Wallet Registry
-3. dApp Adds Wallet Service to init options
+`FclWcServicePlugin` is a `ServicePlugin` of type `discovery-service`. `discovery-service` plugins may include additional authentication services to offer through FCL Wallet Discovery.
 
-FCL tells Discovery which services are supported by the client (installed extensions, ServicePlugins, WalletConnect, extension) so only those supported will be shown in Discovery UI or returned via Discovery API.
+Once a valid `discovery-service` plugin is registered, FCL shares client supported services with Discovery to add registered and injected wallets to the UI and API. 
 
-## Wallet Provider Spec
-- Link to Wallet Provider Spec
+To connect a Flow supported wallet using WalletConnect 2.0, users of your dApp will go through the authentication process and have the option to select their preferred wallet.
 
+:exclamation: Once a WalletConnect session is established and a `currentUser` is authenticated, FCL will handle client pairings and sessions during FCL `authn`, and initiate signing requests as part of `authz` using `fcl.mutate` and [`user-sign`](https://github.com/onflow/fcl-js/blob/master/docs/reference/user-signatures.mdx) using `fcl.signUserMessage`.
 
----
-## Browser and Mobile Support
+### How to add your FCL compatible WalletConnect wallet to Discovery (UI/API)
 
-- Deep Link Format
-- FCL will attempt to open the following
-- `let url = yourWebsiteURL + "?uri=" + queryString`
+1. [Submit a PR](https://github.com/onflow/fcl-discovery/blob/master/data/services.json) to add your wallet to FCL Wallet Discovery `services.json`
+2. Submit your FCL compatible wallet to [WalletConnect Cloud Registry](https://cloud.walletconnect.com/)
+3. Add Wallet Service to `fcl-wc` init options. :exclamation: testnet only.
 
-**Mobile Flow**
+FCL tells Wallet Discovery which services are supported by the client (installed extensions and `discovery-service` `ServicePlugins`) so only those supported will be shown in Discovery UI or returned via Discovery API.
 
-- User presses button to connect and is redirected to wallet of choice
-- Wallet prompts user to approve or reject session
-- Wallet prompts user to return to dApp manually
-- User presses back/return button to return to dApp
-- Similar pattern happens when signing requests are required from the user:
-- Dapp redirects user automatically to previously chosen wallet
-- Wallet prompts user to approve or reject request
-- Wallet prompts user to return to dApp manually
-- User presses back/return button to return to dApp
+![Wallet Discovery UI](../images/wc-discovery.png)
 
+## FCL Compatible Wallet Provider Spec
 
-**Using the client**
-import { getSdkError } from '@onflow/fcl-wc'
-
-client.on('session_update', ({ topic, params }) => {
-  const session = client.session.get(topic)
-  console.log('EVENT', 'session_update', { topic, params, session })
-})
-
-await client.disconnect({
-  topic: session.topic,
-  reason: getSdkError('USER_DISCONNECTED')
-})
-
-# Wallet Support for FCL x WalletConnect
-
-## Wallet Provider Spec
-
-- Obtain a WC projectID
-- Register with WalletConnect Cloud Registry (optional)
-- Conform to FCL Spec
+- Obtain a `projectId` from the [WalletConnect Cloud Registry](https://cloud.walletconnect.com/)
+- Submit your wallet to be included in the WalletConnect Cloud Registry API (optional)
+- Conform to [FCL Wallet Provider Spec](https://github.com/onflow/fcl-js/blob/master/packages/fcl/src/wallet-provider-spec/draft-v4.md)
   - chains
   - methods
     - `flow_authn`
@@ -213,6 +176,11 @@ await client.disconnect({
       - optional* [account-proof](https://github.com/onflow/fcl-js/blob/master/docs/reference/proving-authentication.mdx)
     - `flow_authz`
     - `flow_user_sign`
+  - Responses 
+    - All responses need to be wrapped in a `PollingResponse`
+  - Metadata requirements
+    - :exclamation: In order to correctly identify, improve pairing, and include deep link support for mobile, services using the `WC/RPC` method need to use the same universal link as their `uid` and `url` in Wallet metadata.
+Wallets sourced from WalletConnect Cloud Registry automatically build the service from data and will set the `service.uid` to the universal link.
 
 ```javascript
 
@@ -235,9 +203,26 @@ export async function createSignClient() {
 
 ````
 
-:exclamation: In order to correctly identify, improve pairing, and include deep link support for mobile, services using the WC/RPC method need to use the same universal link as their `uid` and `url` in Wallet metadata.
+---
+## Browser and Mobile Support
 
-### Next steps
+- Deep Link Format
+- FCL will attempt to open the following
+- `let url = yourWebsiteURL + "?uri=" + queryString`
+
+## Mobile Flow
+
+- User presses button to connect and is redirected to wallet of choice
+- Wallet prompts user to approve or reject session
+- Wallet prompts user to return to dApp manually
+- User presses back/return button to return to dApp
+- Similar pattern happens when signing requests are required from the user:
+- Dapp redirects user automatically to previously chosen wallet
+- Wallet prompts user to approve or reject request
+- Wallet prompts user to return to dApp manually
+- User presses back/return button to return to dApp
+
+## Next steps
 
 1. Learn about most common use cases and how to implement them.
 2. Check out [WalletConnect examples and resources](https://docs.walletconnect.com/2.0/introduction/examples-and-resources) and build a wallet.
