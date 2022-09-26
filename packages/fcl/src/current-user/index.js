@@ -11,6 +11,7 @@ import {execService} from "./exec-service"
 import {normalizeCompositeSignature} from "../normalizers/service/composite-signature"
 import {getDiscoveryService, makeDiscoveryServices} from "../discovery"
 import {serviceRegistry} from "./exec-service/plugins"
+import {isMobile} from "../utils"
 
 export const isFn = d => typeof d === "function"
 
@@ -245,7 +246,11 @@ async function authorization(account) {
             msg: preSignable,
           })
         )
-      if (authz)
+      if (authz) {
+        let windowRef
+        if (isMobile() && authz.method === "WC/RPC") {
+          windowRef = window.open("", "_blank")
+        }
         return {
           ...account,
           tempId: "CURRENT_USER",
@@ -261,11 +266,13 @@ async function authorization(account) {
                 msg: signable,
                 opts: {
                   includeOlderJsonRpcCall: true,
+                  windowRef,
                 },
               })
             )
           },
         }
+      }
       throw new Error(
         "No Authz or PreAuthz Service configured for CURRENT_USER"
       )

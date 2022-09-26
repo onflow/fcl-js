@@ -23,7 +23,7 @@ const makeFlowServicesFromWallets = wallets => {
         method: "WC/RPC",
         uid: wallet.mobile?.universal,
         endpoint: "flow_authn",
-        optIn: false,
+        optIn: true,
         provider: {
           address: null,
           name: wallet.name,
