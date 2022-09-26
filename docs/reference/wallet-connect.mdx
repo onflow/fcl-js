@@ -1,3 +1,7 @@
+---
+title: Add FCL Support for WalletConnect 2.0
+---
+
 # Add FCL Support for WalletConnect 2.0
 
 To improve developer experience and streamline **Flow** dApp integration with **WalletConnect 2.0** wallets, **FCL `^1.3.0`** introduces support for **`discovery-service`** plugins. These **`ServicePlugins`** allow for injection of client configured **services**, service **methods**, and the execution **strategies** required to interact with them.
@@ -51,11 +55,11 @@ Initialize WalletConnect `SignClient` and `FclWcServicePlugin` with the followin
 | Name       | Type    | Default | Description                                                                    |
 | ---------- | ------- | ------- | ------------------------------------------------------------------------------ |
 | `projectId` | boolean **(required)** | null   | A WalletConnect projectId for public relay server access. Your Project ID can be obtained from [WalletConnect Cloud Dashboard](https://cloud.walletconnect.com/app)  |
-| `metadata` | object | { }  | Optional dApp metadata to describe your application and define its appearance in a web browser. More details can be found [here](https://docs.walletconnect.com/2.0/swift/sign/dapp-usage) |
+| `metadata` | object | `{ }`  | Optional dApp metadata to describe your application and define its appearance in a web browser. More details can be found [here](https://docs.walletconnect.com/2.0/swift/sign/dapp-usage) |
 | `includeBaseWC` | boolean | false   | Optional configuration to include a generic WalletConnect service in FCL Discovery (UI/API). <br /> :exclamation: BaseWC Service offers no deeplink support for mobile. |
 | `wcRequestHook` | function | null  | Optional function is called on all desktop WalletConnect client session proposals and signing requests. Use this to handle alerting user to check wallet for approval. |
 | `pairingModalOverride` | function | null  | Optional function called to allow override of included QRCodeModal. Function receives two arguments: <br> 1. Connection `uri` to display QR code or send to wallet to create pairing. <br> 2. Callback function to manually cancel the request. |
-| `wallets` | array | [ ] | Optional list of WalletConnect `authn` services to include in FCL Wallet Discovery (UI/API). <br /> :exclamation: Only available for use on **`testnet`**. These services will be combined with wallets returned from [WalletConnect cloud registry API](https://cloud.walletconnect.com/) and sent to Discovery for display in UI and inclusion in API response. |
+| `wallets` | array | `[ ]` | Optional list of WalletConnect `authn` services to include in FCL Wallet Discovery (UI/API). <br /> :exclamation: Only available for use on **`testnet`**. These services will be combined with wallets returned from [WalletConnect cloud registry API](https://cloud.walletconnect.com/) and sent to Discovery for display in UI and inclusion in API response. |
 
 #### Returns
 
@@ -125,7 +129,7 @@ fcl.pluginRegistry.add(FclWcServicePlugin)
 | `f_type`  | string     | The type of plugin (currently only supports `ServicePlugin` type). |
 | `type`    | string     | The plugin subtype (currently only supports `discovery-service` type). |
 | `services` | array     | A list of services to add to FCL. |
-| `serviceStrategy` | { method: string, exec: function }     | The method and corresponding strategy FCL uses to interact with the service. A service with the `service.method` property set to `"WC/RPC"` tells FCL to use the corresponding service strategy if it is supported by the dApp. |
+| `serviceStrategy` | `{ method: string, exec: function }`     | The method and corresponding strategy FCL uses to interact with the service. A service with the `service.method` property set to `"WC/RPC"` tells FCL to use the corresponding service strategy if it is supported by the dApp. |
 
 ---
 
