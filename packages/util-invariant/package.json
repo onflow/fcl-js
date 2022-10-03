@@ -18,7 +18,7 @@
     }
   },
   "devDependencies": {
-    "@onflow/fcl-bundle": "^1.2.0-alpha.0",
+    "@onflow/fcl-bundle": "^1.2.0",
     "@onflow/types": "^1.0.3",
     "jest": "26.4.2",
     "jest-esm-transformer": "1.0.0"
