@@ -120,8 +120,8 @@ async function getAccountProofData() {
 
 const makeConfig = async ({discoveryAuthnInclude}) => {
   return {
-    discoveryAuthnInclude,
     client: {
+      discoveryAuthnInclude,
       clientServices: await makeDiscoveryServices(),
       supportedStrategies: serviceRegistry.getStrategies(),
     },
