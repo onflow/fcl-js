@@ -1,5 +1,14 @@
 # @onflow/config
 
+## 1.0.4
+
+### Patch Changes
+
+- [#1436](https://github.com/onflow/fcl-js/pull/1436) [`87771cd6`](https://github.com/onflow/fcl-js/commit/87771cd6db2cea13787502522a292e75ce43c4f0) Thanks [@justinbarry](https://github.com/justinbarry)! - Upgrade @onflow/fcl-bundle 1.2.0-alpha.0 -> 1.2.0
+
+- Updated dependencies [[`87771cd6`](https://github.com/onflow/fcl-js/commit/87771cd6db2cea13787502522a292e75ce43c4f0)]:
+  - @onflow/util-actor@1.1.2
+
 ## 1.0.3
 
 ### Patch Changes
