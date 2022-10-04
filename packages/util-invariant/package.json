@@ -1,6 +1,6 @@
 {
   "name": "@onflow/util-invariant",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Flow JS SDK Util -- Invariant",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
@@ -19,7 +19,7 @@
   },
   "devDependencies": {
     "@onflow/fcl-bundle": "^1.2.0",
-    "@onflow/types": "^1.0.3",
+    "@onflow/types": "^1.0.4",
     "jest": "26.4.2",
     "jest-esm-transformer": "1.0.0"
   },
