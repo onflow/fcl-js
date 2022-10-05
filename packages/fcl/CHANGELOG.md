@@ -1,5 +1,11 @@
 # @onflow/fcl
 
+## 1.3.1
+
+### Patch Changes
+
+- [#1439](https://github.com/onflow/fcl-js/pull/1439) [`a9347ffe`](https://github.com/onflow/fcl-js/commit/a9347ffe4dc1ebafb81999348956a95f56448632) Thanks [@gregsantos](https://github.com/gregsantos)! - Discovery include now sent as part of authn client config
+
 ## 1.3.0
 
 ### Minor Changes
