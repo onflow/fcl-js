@@ -59,6 +59,7 @@ npm install --save @onflow/sdk
   - **blockId** `string` -- The ID of the Block the transaction is included in.
   - **status** `int` -- The status of the transaction
   - **statusCode** `int` -- The status code of the transaction
+  - **executionStatus** `string` -- The execution status of the transaction. Possible values are `Success`, `Failure` or `Pending`
   - **errorMessage** `string` -- The error message of the transaction
   - **events** `Array<Event>` -- The events for this result
     - **type** `string` -- The type of this event

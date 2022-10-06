@@ -16,6 +16,7 @@ describe("Get Transaction Status", () => {
       error_message: "No Error",
       computation_used: "100",
       block_id: "abc123",
+      execution: "Success",
       events: [
         {
           type: "MyEvent",
@@ -64,6 +65,7 @@ describe("Get Transaction Status", () => {
       statusString: "PENDING",
       statusCode: 0,
       errorMessage: "No Error",
+      executionStatus: "Success",
       events: [
         {
           type: "MyEvent",
