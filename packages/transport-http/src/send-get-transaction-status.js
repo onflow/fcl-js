@@ -36,12 +36,14 @@ export async function sendGetTransactionStatus(ix, context = {}, opts = {}) {
   })
 
   let ret = context.response()
+  console.log("Result: ", res)
   ret.tag = ix.tag
   ret.transactionStatus = {
     blockId: res.block_id,
     status: STATUS_MAP[res.status.toUpperCase()] || "",
     statusString: res.status.toUpperCase(),
     statusCode: res.status_code,
+    executionStatus: res.execution,
     errorMessage: res.error_message,
     events: res.events.map(event => ({
       type: event.type,
