@@ -104,6 +104,10 @@ export function clearConfig() {
   return send(NAME, CLEAR)
 }
 
+function resetConfig(oldConfig) {
+  return clearConfig().then(config(oldConfig))
+}
+
 function config(values) {
   if (values != null && typeof values === "object") {
     Object.keys(values).map(d => put(d, values[d]))
@@ -141,12 +145,10 @@ function overload(opts = {}, callback = noop) {
     try {
       config(opts)
       var result = await callback(await all())
-      await clearConfig()
-      await config(oldConfig)
+      await resetConfig(oldConfig)
       resolve(result)
     } catch (error) {
-      await clearConfig()
-      await config(oldConfig)
+      await resetConfig(oldConfig)
       reject(error)
     }
   })
