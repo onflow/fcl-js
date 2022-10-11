@@ -1,5 +1,25 @@
 # @onflow/fcl-bundle
 
+## 1.2.0
+
+### Minor Changes
+
+- [#1359](https://github.com/onflow/fcl-js/pull/1359) [`9ea98850`](https://github.com/onflow/fcl-js/commit/9ea988503bbf4760bdee2a8bd8098be1cd95acb6) Thanks [@jribbink](https://github.com/jribbink)! - Automatically compress bundle if entry file ends in .min.js
+
+### Patch Changes
+
+- [#1366](https://github.com/onflow/fcl-js/pull/1366) [`ec6f6a65`](https://github.com/onflow/fcl-js/commit/ec6f6a659eae2157cae3def76fab0eeefccd1c28) Thanks [@jribbink](https://github.com/jribbink)! - Set inlineDynamicImports to true as dynamic imports would cause build to fail
+
+## 1.2.0-alpha.0
+
+### Minor Changes
+
+- [#1359](https://github.com/onflow/fcl-js/pull/1359) [`9ea98850`](https://github.com/onflow/fcl-js/commit/9ea988503bbf4760bdee2a8bd8098be1cd95acb6) Thanks [@jribbink](https://github.com/jribbink)! - Automatically compress bundle if entry file ends in .min.js
+
+### Patch Changes
+
+- [#1366](https://github.com/onflow/fcl-js/pull/1366) [`ec6f6a65`](https://github.com/onflow/fcl-js/commit/ec6f6a659eae2157cae3def76fab0eeefccd1c28) Thanks [@jribbink](https://github.com/jribbink)! - Set inlineDynamicImports to true as dynamic imports would cause build to fail
+
 ## 1.1.0
 
 ### Minor Changes

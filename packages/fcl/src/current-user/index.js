@@ -8,8 +8,10 @@ import {invariant} from "@onflow/util-invariant"
 import {buildUser} from "./build-user"
 import {serviceOfType} from "./service-of-type"
 import {execService} from "./exec-service"
-import {normalizeCompositeSignature} from "./normalize/composite-signature"
-import {getDiscoveryService} from "../discovery"
+import {normalizeCompositeSignature} from "../normalizers/service/composite-signature"
+import {getDiscoveryService, makeDiscoveryServices} from "../discovery"
+import {serviceRegistry} from "./exec-service/plugins"
+import {isMobile} from "../utils"
 
 export const isFn = d => typeof d === "function"
 
@@ -116,6 +118,16 @@ async function getAccountProofData() {
   return accountProofData
 }
 
+const makeConfig = async ({discoveryAuthnInclude}) => {
+  return {
+    client: {
+      discoveryAuthnInclude,
+      clientServices: await makeDiscoveryServices(),
+      supportedStrategies: serviceRegistry.getStrategies(),
+    },
+  }
+}
+
 async function authenticate({service, redir = false} = {}) {
   if (
     service &&
@@ -167,10 +179,8 @@ async function authenticate({service, redir = false} = {}) {
       const response = await execService({
         service: discoveryService,
         msg: accountProofData,
+        config: await makeConfig(discoveryService),
         opts,
-        config: {
-          discoveryAuthnInclude: discoveryService.discoveryAuthnInclude,
-        },
       })
       send(NAME, SET_CURRENT_USER, await buildUser(response))
     } catch (e) {
@@ -236,7 +246,11 @@ async function authorization(account) {
             msg: preSignable,
           })
         )
-      if (authz)
+      if (authz) {
+        let windowRef
+        if (isMobile() && authz.method === "WC/RPC") {
+          windowRef = window.open("", "_blank")
+        }
         return {
           ...account,
           tempId: "CURRENT_USER",
@@ -252,11 +266,13 @@ async function authorization(account) {
                 msg: signable,
                 opts: {
                   includeOlderJsonRpcCall: true,
+                  windowRef,
                 },
               })
             )
           },
         }
+      }
       throw new Error(
         "No Authz or PreAuthz Service configured for CURRENT_USER"
       )

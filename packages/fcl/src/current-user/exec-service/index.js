@@ -1,37 +1,34 @@
-import {execHttpPost} from "./strategies/http-post"
-import {execIframeRPC} from "./strategies/iframe-rpc"
-import {execPopRPC} from "./strategies/pop-rpc"
-import {execTabRPC} from "./strategies/tab-rpc"
-import {execExtRPC} from "./strategies/ext-rpc"
 import {invariant} from "@onflow/util-invariant"
+import {log, LEVELS} from "@onflow/util-logger"
+import {serviceRegistry} from "./plugins"
 import {configLens} from "../../default-config"
 import {VERSION} from "../../VERSION"
 
-const STRATEGIES = {
-  "HTTP/RPC": execHttpPost,
-  "HTTP/POST": execHttpPost,
-  "IFRAME/RPC": execIframeRPC,
-  "POP/RPC": execPopRPC,
-  "TAB/RPC": execTabRPC,
-  "EXT/RPC": execExtRPC,
+const execStrategy = async ({service, body, config, opts}) => {
+  const strategy = serviceRegistry.getStrategy(service.method)
+  return strategy({service, body, config, opts})
 }
 
-export async function execService({service, msg = {}, opts = {}, config = {}}) {
+export async function execService({service, msg = {}, config = {}, opts = {}}) {
   msg.data = service.data
-  const fullConfig = {
-    ...config,
+  const execConfig = {
     services: await configLens(/^service\./),
     app: await configLens(/^app\.detail\./),
     client: {
+      ...config.client,
       fclVersion: VERSION,
       fclLibrary: "https://github.com/onflow/fcl-js",
       hostname: window?.location?.hostname ?? null,
-      extensions: window?.fcl_extensions || [],
     },
   }
 
   try {
-    const res = await STRATEGIES[service.method](service, msg, opts, fullConfig)
+    const res = await execStrategy({
+      service,
+      body: msg,
+      config: execConfig,
+      opts,
+    })
     if (res.status === "REDIRECT") {
       invariant(
         service.type === res.data.type,
@@ -40,23 +37,18 @@ export async function execService({service, msg = {}, opts = {}, config = {}}) {
       return await execService({
         service: res.data,
         msg,
+        config: execConfig,
         opts,
-        config: fullConfig,
       })
     } else {
       return res
     }
   } catch (error) {
-    console.error(
-      "execService({service, msg = {}, opts = {}, config = {}})",
-      error,
-      {
-        service,
-        msg,
-        opts,
-        config,
-      }
-    )
+    log({
+      title: `Error on execService ${service?.type}`,
+      message: error,
+      level: LEVELS.error,
+    })
     throw error
   }
 }

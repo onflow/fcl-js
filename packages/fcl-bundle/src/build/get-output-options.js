@@ -15,18 +15,18 @@ module.exports = function getOutputOptions(package, build) {
     file: resolve(build.dir, build.entry),
     format: build.type,
     preserveModules: false,
+    inlineDynamicImports: true,
     sourcemap: true,
     plugins: [
-      build.banner
-        ? banner(
-            isObject(build.banner)
-              ? build.banner
-              : {
-                  banner: build.banner,
-                  raw: true,
-                }
-          )
-        : null,
+      build.banner &&
+        banner(
+          isObject(build.banner)
+            ? build.banner
+            : {
+                banner: build.banner,
+                raw: true,
+              }
+        ),
     ],
   }
 

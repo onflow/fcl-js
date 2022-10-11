@@ -1,10 +1,10 @@
 import {config} from "@onflow/config"
 import {invariant} from "@onflow/util-invariant"
+import {serviceRegistry} from "../current-user/exec-service/plugins"
 import {VERSION} from "../VERSION"
+import {makeDiscoveryServices} from "./utils"
 
-const isWindow = () => typeof window !== "undefined"
-
-export async function getServices({ types }) {
+export async function getServices({types}) {
   const endpoint = await config.get("discovery.authn.endpoint")
   invariant(
     Boolean(endpoint),
@@ -23,8 +23,9 @@ export async function getServices({ types }) {
       type: types,
       fclVersion: VERSION,
       include,
-      extensions: isWindow() ? (window.fcl_extensions || []) : [],
-      userAgent: window?.navigator?.userAgent
-    })
+      clientServices: await makeDiscoveryServices(),
+      supportedStrategies: serviceRegistry.getStrategies(),
+      userAgent: window?.navigator?.userAgent,
+    }),
   }).then(d => d.json())
 }
