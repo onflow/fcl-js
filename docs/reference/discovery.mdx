@@ -26,8 +26,8 @@ This method is the simplest way to integrate Discovery and its wallets and servi
 import { config } from "@onflow/fcl";
 
 config({
-  "accessNode.api": "https://rest-testnet.onflow.org", // Mainnet: "https://rest-mainnet.onflow.org"
-  "discovery.wallet": "https://fcl-discovery.onflow.org/testnet/authn" // Mainnet: "https://fcl-discovery.onflow.org/authn"
+  "accessNode.api": "https://rest-testnet.onflow.org",
+  "discovery.wallet": "https://fcl-discovery.onflow.org/testnet/authn"
 })
 ```
 
@@ -62,8 +62,8 @@ Setup still requires configuration of the Discovery endpoint, but when using the
 import { config } from "@onflow/fcl"
 
 config({
-  "accessNode.api": "https://rest-testnet.onflow.org", // Mainnet: "https://rest-mainnet.onflow.org"
-  "discovery.authn.endpoint": "https://fcl-discovery.onflow.org/api/testnet/authn" // Mainnet: "https://fcl-discovery.onflow.org/api/authn"
+  "accessNode.api": "https://rest-testnet.onflow.org",
+  "discovery.authn.endpoint": "https://fcl-discovery.onflow.org/api/testnet/authn"
 })
 ```
 
@@ -120,6 +120,51 @@ Helpful fields for your UI can be found in the `provider` object inside of the s
     }
 }
 ```
+
+## Network Configuration
+
+### Discovery UI URLs
+
+| Environment | Example                               |
+| ----------- | ------------------------------------- |
+| Mainnet     | `http://localhost:3000/authn`         |
+| Testnet     | `http://localhost:3000/testnet/authn` |
+
+### Discovery API Endpoints
+
+| Environment | Example                                   |
+| ----------- | ----------------------------------------- |
+| Mainnet     | `http://localhost:3000/api/authn`         |
+| Testnet     | `http://localhost:3000/api/testnet/authn` |
+
+## Other Configuration
+
+> Note: Configuration works across both UI and API versions of Discovery.
+
+### Include Opt-In Wallets
+
+**Starting in FCL v0.0.78-alpha.10**
+
+Opt-in wallets are those that don't have support for authentication, authorization, and user signature services. Or, support only a limited set of transactions.
+
+To include opt-in wallets from FCL:
+
+```
+import * as fcl from "@onflow/fcl"
+
+fcl.config({
+  "discovery.wallet": "https://fcl-discovery.onflow.org/testnet/authn",
+  "discovery.authn.endpoint": "https://fcl-discovery.onflow.org/api/testnet/authn",
+  "discovery.authn.include": ["0x123"] // Service account address
+})
+```
+
+**Opt-In Wallet Addresses on Testnet and Mainnet**
+
+| Service         | Testnet            | Mainnet            |
+| --------------- | ------------------ | ------------------ |
+| `Dapper Wallet` | 0x82ec283f88a62e65 | 0xead892083b3e2c6c |
+| `Ledger`        | 0x9d2e44203cb13051 | 0xe5cd26afebe62781 |
 
 To learn more about other possible configurations, check out the following links:
 - [Discovery API Docs](./api#discovery)
