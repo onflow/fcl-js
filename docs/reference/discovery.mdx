@@ -125,17 +125,21 @@ Helpful fields for your UI can be found in the `provider` object inside of the s
 
 ### Discovery UI URLs
 
-| Environment | Example                               |
-| ----------- | ------------------------------------- |
-| Mainnet     | `http://localhost:3000/authn`         |
-| Testnet     | `http://localhost:3000/testnet/authn` |
+| Environment | Example                                          |
+| ----------- | ------------------------------------------------ |
+| Mainnet     | `https://fcl-discovery.onflow.org/authn`         |
+| Testnet     | `https://fcl-discovery.onflow.org/testnet/authn` |
+| Local       | `https://fcl-discovery.onflow.org/local/authn`   |
 
 ### Discovery API Endpoints
 
-| Environment | Example                                   |
-| ----------- | ----------------------------------------- |
-| Mainnet     | `http://localhost:3000/api/authn`         |
-| Testnet     | `http://localhost:3000/api/testnet/authn` |
+| Environment | Example                                              |
+| ----------- | ---------------------------------------------------- |
+| Mainnet     | `https://fcl-discovery.onflow.org/api/authn`         |
+| Testnet     | `https://fcl-discovery.onflow.org/api/testnet/authn` |
+| Local       | `https://fcl-discovery.onflow.org/api/local/authn`   |
+
+> Note: Local will return Dev Wallet as a service for developing locally with the default port of 8701. If you'd like to override the default port add ?port=0000 with the port being whatever you'd like to override it to.
 
 ## Other Configuration
 
