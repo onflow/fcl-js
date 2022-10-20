@@ -823,25 +823,25 @@ A method allowing applications to cryptographically verify a message was signed 
 | --------------------- | --------------------- | --------------------------------- |
 | `message`             | string **(required)** | A hexadecimal string              |
 | `compositeSignatures` | Array **(required)**  | An Array of `CompositeSignatures` |
+| `opts`                | Object **(optional)** | `opts.fclCryptoContract` can be provided to override FCLCryptoContract address for local development                 |
 
 #### Returns
 
 | Type    | Description                  |
 | ------- | ---------------------------- |
-| Boolean | `true` if verifed or `false` |
+| Boolean | `true` if verified or `false` |
 
 #### Usage
 
 ```javascript
 import * as fcl from "@onflow/fcl"
 
-const verifySignatures = async (message, compositeSignatures) => {
-  try {
-    return await fcl.AppUtils.verifyUserSignatures(message, compositeSignatures)
-  } catch (error) {
-    console.log(error)
-  }
-}
+const isValid = await fcl.AppUtils.verifyUserSignatures(
+  Buffer.from('FOO').toString("hex"),
+  [{f_type: "CompositeSignature", f_vsn: "1.0.0", addr: "0x123", keyId: 0, signature: "abc123"}],
+  {fclCryptoContract}
+)
+
 ```
 
 #### Examples
@@ -849,6 +849,7 @@ const verifySignatures = async (message, compositeSignatures) => {
 - [fcl-next-harness](https://github.com/onflow/fcl-next-harness)
 
 ---
+
 ## `AppUtils.verifyAccountProof`
 
 A method allowing applications to cryptographically prove that a user controls an on-chain account. During user authentication, some FCL compatible wallets will choose to support the FCL `account-proof` service. If a wallet chooses to support this service, and the user approves the signing of message data, they will return `account-proof` data and a signature(s) that can be used to prove a user controls an on-chain account. 
@@ -868,7 +869,7 @@ See [proving-authentication](https://github.com/onflow/fcl-js/blob/master/docs/r
 
 | Type    | Description                  |
 | ------- | ---------------------------- |
-| Boolean | `true` if verifed or `false` |
+| Boolean | `true` if verified or `false` |
 
 #### Usage
 
