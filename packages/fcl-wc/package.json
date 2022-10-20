@@ -1,6 +1,6 @@
 {
   "name": "@onflow/fcl-wc",
-  "version": "1.0.0-alpha.3",
+  "version": "1.0.0",
   "description": "WalletConnect adapter for FCL",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
@@ -34,7 +34,7 @@
     "start": "fcl-bundle --watch"
   },
   "devDependencies": {
-    "@onflow/fcl-bundle": "^1.2.0-alpha.0",
+    "@onflow/fcl-bundle": "^1.2.0",
     "better-sqlite3": "^7.6.2",
     "jest": "^27.0.6",
     "jest-esm-transformer": "1.0.0"
@@ -50,6 +50,6 @@
     "@walletconnect/utils": "^2.0.0-rc.2"
   },
   "peerDependencies": {
-    "@onflow/fcl": "^1.3.0-alpha.9"
+    "@onflow/fcl": "^1.3.0"
   }
 }

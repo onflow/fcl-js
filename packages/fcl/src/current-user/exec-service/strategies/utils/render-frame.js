@@ -14,6 +14,7 @@ const FRAME_STYLES = `
   background:rgba(0,0,0,0.25);
   z-index: 2147483647;
   box-sizing: border-box;
+  color-scheme: light;
 `
 
 export function renderFrame(src) {

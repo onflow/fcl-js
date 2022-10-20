@@ -5,6 +5,6 @@ export const FLOW_METHODS = {
 }
 
 export const REQUEST_TYPES = {
-  SESSION: "session_request",
-  PAIRING: "pairing_request",
+  SESSION_REQUEST: "session_proposal",
+  SIGNING_REQUEST: "signing_request",
 }

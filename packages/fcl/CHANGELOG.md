@@ -1,5 +1,69 @@
 # @onflow/fcl
 
+## 1.3.1
+
+### Patch Changes
+
+- [#1439](https://github.com/onflow/fcl-js/pull/1439) [`a9347ffe`](https://github.com/onflow/fcl-js/commit/a9347ffe4dc1ebafb81999348956a95f56448632) Thanks [@gregsantos](https://github.com/gregsantos)! - Discovery include now sent as part of authn client config
+
+## 1.3.0
+
+### Minor Changes
+
+- [#1352](https://github.com/onflow/fcl-js/pull/1352) [`e33fa8df`](https://github.com/onflow/fcl-js/commit/e33fa8df764ec4f10696eedf520cc92ee402623d) Thanks [@gregsantos](https://github.com/gregsantos)! - Add plugin registry and allow for service and strategy injection
+
+* [#1323](https://github.com/onflow/fcl-js/pull/1323) [`1982c00b`](https://github.com/onflow/fcl-js/commit/1982c00bc334403bb603762a7f921bbe1887ee2b) Thanks [@JeffreyDoyle](https://github.com/JeffreyDoyle)! - Adds FLIP-934 Interaction Template support to FCL.
+
+  Interaction Template is a concept established in FLIP-934. Read more about the FLIP here: https://github.com/onflow/flips/blob/main/flips/20220503-interaction-templates.md
+
+### Patch Changes
+
+- [#1396](https://github.com/onflow/fcl-js/pull/1396) [`8475d5a4`](https://github.com/onflow/fcl-js/commit/8475d5a49e07a678da35a1b8f45751f599256e79) Thanks [@gregsantos](https://github.com/gregsantos)! - ### fcl
+
+  - Added sending `supportedStrategies` to Discovery (UI/API) on client.config
+
+  ***
+
+  ### fcl-wc
+
+  - updated `initFclWC` export/name to `init`
+  - Added `sessionRequestHook` and `injectedWallets` opts, updated pairing match to use service.uid.
+
+* [#1375](https://github.com/onflow/fcl-js/pull/1375) [`2a5fa910`](https://github.com/onflow/fcl-js/commit/2a5fa910009501c7c789efc9b1c1731668578361) Thanks [@chasefleming](https://github.com/chasefleming)! - Fix issue where authenticating a Discovery API service would not respect service method.
+
+- [#1359](https://github.com/onflow/fcl-js/pull/1359) [`9ea98850`](https://github.com/onflow/fcl-js/commit/9ea988503bbf4760bdee2a8bd8098be1cd95acb6) Thanks [@jribbink](https://github.com/jribbink)! - Minify UMD build
+
+* [#1386](https://github.com/onflow/fcl-js/pull/1386) [`3fdcc3be`](https://github.com/onflow/fcl-js/commit/3fdcc3be2d206c0df3f3b250012db5c18cac3bed) Thanks [@JeffreyDoyle](https://github.com/JeffreyDoyle)! - Remove support for InteractionTemplateUtils.getInteractionTemplateAudits on mainnet until support is added
+
+- [#1372](https://github.com/onflow/fcl-js/pull/1372) [`6708494d`](https://github.com/onflow/fcl-js/commit/6708494df236dc8c7375a2f91dc04fbcc03235c8) Thanks [@gregsantos](https://github.com/gregsantos)! - Add missing logger package to execService
+
+* [#1409](https://github.com/onflow/fcl-js/pull/1409) [`15d77220`](https://github.com/onflow/fcl-js/commit/15d77220a90be66b440129b73ffe889fe20335ab) Thanks [@JeffreyDoyle](https://github.com/JeffreyDoyle)! - Hotfix to generate template interface id util
+
+- [#1397](https://github.com/onflow/fcl-js/pull/1397) [`f14b730c`](https://github.com/onflow/fcl-js/commit/f14b730c52bec664bda7bf222e3f0c0ab9c70f40) Thanks [@JeffreyDoyle](https://github.com/JeffreyDoyle)! - Adds interaction template message getter utils
+
+* [#1403](https://github.com/onflow/fcl-js/pull/1403) [`0a9c9677`](https://github.com/onflow/fcl-js/commit/0a9c96770933df4e0ed685b0ee4575533e345ecb) Thanks [@JeffreyDoyle](https://github.com/JeffreyDoyle)! - Hotfix to FCL query mutate prep ops
+
+- [#1417](https://github.com/onflow/fcl-js/pull/1417) [`17a7f1e4`](https://github.com/onflow/fcl-js/commit/17a7f1e413340f72f45350075e8ea79ce1c2b711) Thanks [@gregsantos](https://github.com/gregsantos)! - Moves some client configuration to execService as it may be useful for services other than `authn`
+
+* [#1413](https://github.com/onflow/fcl-js/pull/1413) [`5e6d114a`](https://github.com/onflow/fcl-js/commit/5e6d114a8fb0489c6bc70df8ec02d7ec4bb9ea1d) Thanks [@JeffreyDoyle](https://github.com/JeffreyDoyle)! - PKG -- [fcl] Adds mainnet Interaction Template Audit contract to Interaction Template Utils
+
+- [#1357](https://github.com/onflow/fcl-js/pull/1357) [`ecbd77b2`](https://github.com/onflow/fcl-js/commit/ecbd77b2acfbe4a28793baca3db47c1d5347247d) Thanks [@gregsantos](https://github.com/gregsantos)! - Improve building discovery service on authn
+
+* [#1407](https://github.com/onflow/fcl-js/pull/1407) [`75d06938`](https://github.com/onflow/fcl-js/commit/75d069380c2dbb2040af57ce39a9847fb33a7db4) Thanks [@JeffreyDoyle](https://github.com/JeffreyDoyle)! - Fix circular dep in FCL prep-template-opts
+
+- [#1396](https://github.com/onflow/fcl-js/pull/1396) [`8475d5a4`](https://github.com/onflow/fcl-js/commit/8475d5a49e07a678da35a1b8f45751f599256e79) Thanks [@gregsantos](https://github.com/gregsantos)! - Updates Service Plugin validation to match spec, adds required serviceStrategy: {method: string, exec: () => {})
+
+* [#1404](https://github.com/onflow/fcl-js/pull/1404) [`f9f1dab7`](https://github.com/onflow/fcl-js/commit/f9f1dab70a6014b68ce5197544fae396340b6670) Thanks [@chasefleming](https://github.com/chasefleming)! - Fixes issue where Discovery API was not loading for server side rendered applications on Safari or Chrome Incognito.
+
+* Updated dependencies [[`99e03af7`](https://github.com/onflow/fcl-js/commit/99e03af76e526593e5c989e43754ce23420e317f)]:
+  - @onflow/sdk@1.1.2
+
+## 1.3.0-alpha.10
+
+### Patch Changes
+
+- [#1413](https://github.com/onflow/fcl-js/pull/1413) [`5e6d114a`](https://github.com/onflow/fcl-js/commit/5e6d114a8fb0489c6bc70df8ec02d7ec4bb9ea1d) Thanks [@JeffreyDoyle](https://github.com/JeffreyDoyle)! - PKG -- [fcl] Adds mainnet Interaction Template Audit contract to Interaction Template Utils
+
 ## 1.3.0-alpha.9
 
 ### Patch Changes

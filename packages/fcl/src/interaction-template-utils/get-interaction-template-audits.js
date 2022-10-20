@@ -58,10 +58,7 @@ export async function getInteractionTemplateAudits(
           "getInteractionTemplateAudits Error: Unable to determine address for FlowInteractionTemplateAudit contract. Set configuration for 'fcl.network' to 'mainnet' or 'testnet'"
         )
         if (fclNetwork === "mainnet") {
-          FlowInteractionAuditContract = ""
-          throw new Error(
-            "getInteractionTemplateAudits Error: Not supported on MainNet in this release. MainNet support Coming Soon!"
-          )
+          FlowInteractionAuditContract = "0xfd100e39d50a13e6"
         } else {
           FlowInteractionAuditContract = "0xf78bfc12d0a786dc"
         }
