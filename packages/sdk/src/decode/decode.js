@@ -206,6 +206,8 @@ export const decodeResponse = async (response, customDecoders = {}) => {
     return response.transactionId
   } else if (response.collection) {
     return response.collection
+  } else if (response.networkParameters) {
+    return response.networkParameters
   }
 
   return null
