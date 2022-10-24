@@ -5,11 +5,11 @@ import {unary as defaultUnary} from "./unary"
 export async function sendGetNetworkParameters(ix, context = {}, opts = {}) {
   invariant(
     opts.node,
-    `SDK Send Get Transaction Error: opts.node must be defined.`
+    `SDK Send Get Network Parameters Error: opts.node must be defined.`
   )
   invariant(
     context.response,
-    `SDK Send Get Transaction Error: context.response must be defined.`
+    `SDK Send Get Network Parameters Error: context.response must be defined.`
   )
 
   const unary = opts.unary || defaultUnary
@@ -18,14 +18,19 @@ export async function sendGetNetworkParameters(ix, context = {}, opts = {}) {
 
   const req = new GetNetworkParametersRequest()
 
-  const res = await unary(opts.node, AccessAPI.GetNetworkParameters, req, context)
+  const res = await unary(
+    opts.node,
+    AccessAPI.GetNetworkParameters,
+    req,
+    context
+  )
 
   let ret = context.response()
   ret.tag = ix.tag
 
   let chainId = res.getChainId()
   ret.networkParameters = {
-    chainId: chainId
+    chainId: chainId,
   }
 
   return ret
