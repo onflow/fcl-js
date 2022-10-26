@@ -4,22 +4,19 @@ title: Signing and Verifying Arbitrary Data
 
 ## Signing Arbitrary Data
 
-Cryptographic signatures are a key part of the blockchain. They are used to prove ownership of an address without exposing its private key.
-While primarily used for signing transactions, cryptographic signatures can also be used to sign arbitrary messages.
+Cryptographic signatures are a key part of the blockchain. They are used to prove ownership of an address without exposing its private key. While primarily used for signing transactions, cryptographic signatures can also be used to sign arbitrary messages.
 
-FCL has a feature that lets you send arbitrary data to a configured wallet/service where the
-user may approve signing it with their private key/s.
+FCL has a feature that lets you send arbitrary data to a configured wallet/service where the user may approve signing it with their private key/s.
 
 ## Verifying User Signatures
 
-What makes message signatures more interesting is that we can use Flow blockchain to verify the signatures.
-Cadence has a built-in function called verify that will verify a signature against a Flow account given the account address.
+What makes message signatures more interesting is that we can use Flow blockchain to verify the signatures. Cadence has a built-in function  `publicKey.verify` that will verify a signature against a Flow account given the account address.
 
-FCL includes a utility function, `verifyUserSignatures`, for verifying one or more signatures against an account's public key on the Flow blockchain.
+FCL includes a utility function, `AppUtils.verifyUserSignatures`, for verifying one or more signatures against an account's public key on the Flow blockchain.
 
 You can use both in tandem to prove a user is in control of a private key or keys.
-This enables cryptographically-secure login flow using a message-signing-based authentication mechanism
-with a user’s public address as their identifier.
+
+This enables cryptographically-secure login flow using a message-signing-based authentication mechanism with a user’s public address as their identifier.
 
 ---
 
@@ -46,7 +43,7 @@ A method to use allowing the user to personally sign data via FCL Compatible Wal
 ```javascript
 import * as fcl from "@onflow/fcl"
 
-export const signMessage = async () => {
+const signMessage = async () => {
   const MSG = Buffer.from("FOO").toString("hex")
   try {
     return await fcl.currentUser.signUserMessage(MSG)
@@ -58,7 +55,11 @@ export const signMessage = async () => {
 
 ---
 
-## `verifyUserSignatures`
+## `AppUtils.verifyUserSignatures`
+
+#### Note
+
+⚠️ `fcl.config.flow.network` or options override is required to use this API. See [FCL Configuration](#configuration).
 
 A method allowing applications to cryptographically verify the ownership of a Flow account by verifying a message was signed by a user's private key/s. This is typically used with the response from `currentUser.signUserMessage`.
 
@@ -68,12 +69,13 @@ A method allowing applications to cryptographically verify the ownership of a Fl
 | --------------------- | --------------------- | --------------------------------- |
 | `message`             | string **(required)** | A hexadecimal string              |
 | `compositeSignatures` | Array **(required)**  | An Array of `CompositeSignatures` |
+| `opts`                | Object **(optional)** | `opts.fclCryptoContract` can be provided to override FCLCryptoContract address for local development                 |
 
 #### Returns
 
 | Type    | Description                  |
 | ------- | ---------------------------- |
-| Boolean | `true` if verifed or `false` |
+| Boolean | `true` if verified or `false` |
 
 #### Usage
 
@@ -86,13 +88,16 @@ A method allowing applications to cryptographically verify the ownership of a Fl
  * @param {string} compSigs[].addr - The account address
  * @param {number} compSigs[].keyId - The account keyId
  * @param {string} compSigs[].signature - The signature to verify
+ * @param {Object} [opts={}] - Options object
+ * @param {string} opts.fclCryptoContract - An optional override of Flow account address where the FCLCrypto contract is deployed
  * @return {bool}
  *
  * @example
  *
- *  const isValid = await fcl.verifyUserSignatures(
+ *  const isValid = await fcl.AppUtils.verifyUserSignatures(
  *    Buffer.from('FOO').toString("hex"),
- *    [{f_type: "CompositeSignature", f_vsn: "1.0.0", addr: "0x123", keyId: 0, signature: "abc123"}]
+ *    [{f_type: "CompositeSignature", f_vsn: "1.0.0", addr: "0x123", keyId: 0, signature: "abc123"}],
+ *    {fclCryptoContract}
  *  )
  */
 ```
