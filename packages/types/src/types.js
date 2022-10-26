@@ -700,6 +700,31 @@ export const Struct = (id, fields = []) =>
     v => v
   )
 
+export const Enum = (id, fields = []) =>
+  type(
+    "Enum",
+    v => {
+      if (isObj(v))
+        return {
+          type: "Enum",
+          value: {
+            id: id,
+            fields: isArray(fields)
+              ? fields.map((c, i) => ({
+                  name: v.fields[i].name,
+                  value: c.value.asArgument(v.fields[i].value),
+                }))
+              : v.fields.map(x => ({
+                  name: x.name,
+                  value: fields.value.asArgument(x.value),
+                })),
+          },
+        }
+      throwTypeError("Expected Object for type Enum")
+    },
+    v => v
+  )
+
 export const Path = type(
   "Path",
   v => {
