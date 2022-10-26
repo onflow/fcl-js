@@ -1,7 +1,7 @@
 import {invariant} from "@onflow/util-invariant"
 import {log, LEVELS} from "@onflow/util-logger"
 import {serviceRegistry} from "./plugins"
-import {configLens} from "../../default-config"
+import {configLens, getNetworkConfig} from "../../default-config"
 import {VERSION} from "../../VERSION"
 
 const execStrategy = async ({service, body, config, opts}) => {
@@ -19,6 +19,7 @@ export async function execService({service, msg = {}, config = {}, opts = {}}) {
       fclVersion: VERSION,
       fclLibrary: "https://github.com/onflow/fcl-js",
       hostname: window?.location?.hostname ?? null,
+      network: await getNetworkConfig(),
     },
   }
 
