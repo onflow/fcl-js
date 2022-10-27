@@ -1,5 +1,11 @@
 # @onflow/config
 
+## 1.0.5
+
+### Patch Changes
+
+- [#1443](https://github.com/onflow/fcl-js/pull/1443) [`7bdfa016`](https://github.com/onflow/fcl-js/commit/7bdfa016823d1caac23143351940b42f65d4d1c4) Thanks [@huyndo](https://github.com/huyndo)! - PKG - [config] Fix config overload prone to race condition
+
 ## 1.0.4
 
 ### Patch Changes

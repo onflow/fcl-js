@@ -1,5 +1,11 @@
 # @onflow/types
 
+## 1.0.5
+
+### Patch Changes
+
+- [#1468](https://github.com/onflow/fcl-js/pull/1468) [`f14cfb61`](https://github.com/onflow/fcl-js/commit/f14cfb61abcb877b3c8924508df593c6621413b4) Thanks [@JeffreyDoyle](https://github.com/JeffreyDoyle)! - Adds Enum type support
+
 ## 1.0.4
 
 ### Patch Changes
