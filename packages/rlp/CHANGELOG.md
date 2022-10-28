@@ -1,5 +1,11 @@
 # @onflow/rlp
 
+## 1.0.4
+
+### Patch Changes
+
+- [#1471](https://github.com/onflow/fcl-js/pull/1471) [`fb4af2a6`](https://github.com/onflow/fcl-js/commit/fb4af2a6ce054fc5abd806dbb7234522b78dcfc4) Thanks [@bthaile](https://github.com/bthaile)! - export decode method
+
 ## 1.0.3
 
 ### Patch Changes
