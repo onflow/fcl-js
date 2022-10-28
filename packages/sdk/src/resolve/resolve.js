@@ -8,9 +8,9 @@ import {response} from "../response/response.js"
 import {build} from "../build/build.js"
 import {getBlock} from "../build/build-get-block.js"
 import {getAccount} from "../build/build-get-account.js"
+import {getNetworkParameters} from "../build/build-get-network-parameters.js"
 import {decodeResponse as decode} from "../decode/decode.js"
 
-import {resolveRefBlockId} from "./resolve-ref-block-id.js"
 import {resolveCadence} from "./resolve-cadence.js"
 import {resolveArguments} from "./resolve-arguments.js"
 import {resolveAccounts} from "./resolve-accounts.js"
@@ -50,6 +50,7 @@ const debug =
   }
 
 export const resolve = pipe([
+  execFetchChainId,
   resolveCadence,
   debug("cadence", (ix, log) => log(ix.message.cadence)),
   resolveComputeLimit,
@@ -117,6 +118,36 @@ async function execFetchSequenceNumber(ix) {
         .then(acct => acct.keys)
         .then(keys => keys.find(key => key.index === acct.keyId))
         .then(key => key.sequenceNumber)
+    }
+  }
+  return ix
+}
+
+async function execFetchChainId(ix) {
+  if (!ixModule.isGetNetworkParameters(ix)) {
+    const networkConfig = await config().get("flow.network.default")
+
+    if (!networkConfig) {
+      const node = await config().get("accessNode.api")
+      const sendFn = await config.first(
+        ["sdk.transport", "sdk.send"],
+        defaultSend
+      )
+
+      invariant(
+        sendFn,
+        `Required value for sdk.transport is not defined in config. See: ${"https://github.com/onflow/fcl-js/blob/master/packages/sdk/CHANGELOG.md#0057-alpha1----2022-01-21"}`
+      )
+
+      const chainId = await sendFn(
+        await build([getNetworkParameters()]),
+        {config, response, Buffer, ix: ixModule},
+        {node}
+      )
+        .then(decode)
+        .then(res => res.chainId)
+
+      config.put("flow.network.default", chainId)
     }
   }
   return ix
