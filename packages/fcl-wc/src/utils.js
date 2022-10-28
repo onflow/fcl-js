@@ -1,11 +1,11 @@
 import {log, LEVELS} from "@onflow/util-logger"
 import {invariant} from "@onflow/util-invariant"
-import {getNetworkConfig} from "../../fcl/src/default-config"
+import * as fcl from "@onflow/fcl"
 
 export let CONFIGURED_NETWORK = null
 
 export const setConfiguredNetwork = async () => {
-  CONFIGURED_NETWORK = await getNetworkConfig()
+  CONFIGURED_NETWORK = await fcl.getChainId()
   invariant(
     CONFIGURED_NETWORK === "mainnet" || CONFIGURED_NETWORK === "testnet",
     "FCL Configuration value for 'flow.network' is required (testnet || mainnet)"

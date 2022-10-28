@@ -3,7 +3,7 @@ import {normalizeInteractionTemplate} from "../../normalizers/interaction-templa
 import {deriveCadenceByNetwork} from "../../interaction-template-utils/derive-cadence-by-network.js"
 import {deriveDependencies} from "./derive-dependencies"
 import {isString} from "./is"
-import {getNetworkConfig} from "../../default-config.js"
+import {getChainId} from "../../utils"
 
 export async function prepTemplateOpts(opts) {
   if (isString(opts?.template)) {
@@ -20,7 +20,7 @@ export async function prepTemplateOpts(opts) {
     opts.cadence ||
     deriveCadenceByNetwork({
       template: opts.template,
-      network: await getNetworkConfig(),
+      network: await getChainId(),
     })
 
   opts.cadence = cadence

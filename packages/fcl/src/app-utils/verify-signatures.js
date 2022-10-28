@@ -3,7 +3,7 @@ import {withPrefix, sansPrefix} from "@onflow/util-address"
 import {query} from "../exec/query"
 import {encodeAccountProof} from "../wallet-utils"
 import {isString} from "../exec/utils/is"
-import {getNetworkConfig} from "../default-config"
+import {getChainId} from "../utils"
 
 const ACCOUNT_PROOF = "ACCOUNT_PROOF"
 const USER_SIGNATURE = "USER_SIGNATURE"
@@ -61,7 +61,7 @@ const getVerifySignaturesScript = async (sig, opts) => {
       ? "verifyAccountProofSignatures"
       : "verifyUserSignatures"
 
-  let network = await getNetworkConfig()
+  let network = await getChainId()
 
   let fclCryptoContract
 
