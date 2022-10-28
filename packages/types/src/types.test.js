@@ -134,6 +134,27 @@ import * as t from "./types.js"
     },
   ],
   [
+    t.Enum("0x01.SuperEnum", [{value: t.String}]),
+    {
+      fields: [{name: "SuperKey1", value: "SuperValue1"}],
+    },
+    {
+      type: "Enum",
+      value: {
+        id: "0x01.SuperEnum",
+        fields: [
+          {
+            name: "SuperKey1",
+            value: {type: "String", value: "SuperValue1"},
+          },
+        ],
+      },
+    },
+    {
+      fields: [{name: "SuperKey1", value: "SuperValue1"}],
+    },
+  ],
+  [
     t.Event("0x01.JeffWroteSomeJS", [{value: t.String}]),
     {
       fields: [{name: "wasTheCodeClean?", value: "absolutely"}],
