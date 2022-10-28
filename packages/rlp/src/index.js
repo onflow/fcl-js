@@ -55,6 +55,39 @@ function encodeLength(len, offset) {
 }
 
 /**
+ * Built on top of rlp library, removing the BN dependency for the flow.
+ * Package : https://github.com/ethereumjs/rlp
+ * RLP License : https://github.com/ethereumjs/rlp/blob/master/LICENSE
+ *
+ * ethereumjs/rlp is licensed under the
+ * Mozilla Public License 2.0
+ * Permissions of this weak copyleft license are conditioned on making available source code of licensed files and modifications of those files under the same license (or in certain cases, one of the GNU licenses). Copyright and license notices must be preserved. Contributors provide an express grant of patent rights. However, a larger work using the licensed work may be distributed under different terms and without source code for files added in the larger work.
+ **/
+
+/**
+ * @param input - will be converted to buffer
+ * @param stream Is the input a stream (false by default)
+ * @returns returns buffer of encoded data
+ **/
+export function decode(input, stream) {
+  if (stream === void 0) {
+    stream = false
+  }
+  if (!input || input.length === 0) {
+    return Buffer.from([])
+  }
+  var inputBuffer = toBuffer(input)
+  var decoded = _decode(inputBuffer)
+  if (stream) {
+    return decoded
+  }
+  if (decoded.remainder.length !== 0) {
+    throw new Error("invalid remainder")
+  }
+  return decoded.data
+}
+
+/**
  * Get the length of the RLP input
  * @param input
  * @returns The length of the input or an empty Buffer if no input
@@ -83,22 +116,7 @@ export function getLength(input) {
 }
 
 /** Decode an input with RLP */
-
-/**
- * Built on top of rlp library, removing the BN dependency for the flow.
- * Package : https://github.com/ethereumjs/rlp
- * RLP License : https://github.com/ethereumjs/rlp/blob/master/LICENSE
- *
- * ethereumjs/rlp is licensed under the
- * Mozilla Public License 2.0
- * Permissions of this weak copyleft license are conditioned on making available source code of licensed files and modifications of those files under the same license (or in certain cases, one of the GNU licenses). Copyright and license notices must be preserved. Contributors provide an express grant of patent rights. However, a larger work using the licensed work may be distributed under different terms and without source code for files added in the larger work.
- **/
-
-/**
- * @param input - input Will be converted to Uint8Array
- * @returns returns buffer of decoded data
- **/
-export function decode(input) {
+function _decode(input) {
   var length, llength, data, innerRemainder, d
   var decoded = []
   var firstByte = input[0]
@@ -141,7 +159,7 @@ export function decode(input) {
     length = firstByte - 0xbf
     innerRemainder = input.slice(1, length)
     while (innerRemainder.length) {
-      d = decode(innerRemainder)
+      d = _decode(innerRemainder)
       decoded.push(d.data)
       innerRemainder = d.remainder
     }
@@ -162,7 +180,7 @@ export function decode(input) {
       throw new Error("invalid rlp, List has a invalid length")
     }
     while (innerRemainder.length) {
-      d = decode(innerRemainder)
+      d = _decode(innerRemainder)
       decoded.push(d.data)
       innerRemainder = d.remainder
     }
