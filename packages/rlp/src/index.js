@@ -83,6 +83,21 @@ export function getLength(input) {
 }
 
 /** Decode an input with RLP */
+
+/**
+ * Built on top of rlp library, removing the BN dependency for the flow.
+ * Package : https://github.com/ethereumjs/rlp
+ * RLP License : https://github.com/ethereumjs/rlp/blob/master/LICENSE
+ *
+ * ethereumjs/rlp is licensed under the
+ * Mozilla Public License 2.0
+ * Permissions of this weak copyleft license are conditioned on making available source code of licensed files and modifications of those files under the same license (or in certain cases, one of the GNU licenses). Copyright and license notices must be preserved. Contributors provide an express grant of patent rights. However, a larger work using the licensed work may be distributed under different terms and without source code for files added in the larger work.
+ **/
+
+/**
+ * @param input - input Will be converted to Uint8Array
+ * @returns returns buffer of decoded data
+ **/
 export function decode(input) {
   var length, llength, data, innerRemainder, d
   var decoded = []
