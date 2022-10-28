@@ -1,5 +1,11 @@
 # @onflow/transport-grpc
 
+## 1.1.3
+
+### Patch Changes
+
+- [#1466](https://github.com/onflow/fcl-js/pull/1466) [`d1ad4c02`](https://github.com/onflow/fcl-js/commit/d1ad4c02a62e09548554bbf75df2ce3b8bd3fca5) Thanks [@JeffreyDoyle](https://github.com/JeffreyDoyle)! - Retry on 503/504 http status responses
+
 ## 1.1.2
 
 ### Patch Changes
