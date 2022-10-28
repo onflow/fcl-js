@@ -1,4 +1,4 @@
-export {getNetwork} from "./getNetwork"
+export {getChainId} from "./getChainId"
 
 export function isAndroid() {
   return (
