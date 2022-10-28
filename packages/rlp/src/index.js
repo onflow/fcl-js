@@ -54,24 +54,6 @@ function encodeLength(len, offset) {
   }
 }
 
-function decode(input, stream) {
-  if (stream === void 0) {
-    stream = false
-  }
-  if (!input || input.length === 0) {
-    return Buffer.from([])
-  }
-  var inputBuffer = toBuffer(input)
-  var decoded = _decode(inputBuffer)
-  if (stream) {
-    return decoded
-  }
-  if (decoded.remainder.length !== 0) {
-    throw new Error("invalid remainder")
-  }
-  return decoded.data
-}
-
 /**
  * Get the length of the RLP input
  * @param input
@@ -101,7 +83,7 @@ export function getLength(input) {
 }
 
 /** Decode an input with RLP */
-function _decode(input) {
+export function decode(input) {
   var length, llength, data, innerRemainder, d
   var decoded = []
   var firstByte = input[0]
@@ -144,7 +126,7 @@ function _decode(input) {
     length = firstByte - 0xbf
     innerRemainder = input.slice(1, length)
     while (innerRemainder.length) {
-      d = _decode(innerRemainder)
+      d = decode(innerRemainder)
       decoded.push(d.data)
       innerRemainder = d.remainder
     }
@@ -165,7 +147,7 @@ function _decode(input) {
       throw new Error("invalid rlp, List has a invalid length")
     }
     while (innerRemainder.length) {
-      d = _decode(innerRemainder)
+      d = decode(innerRemainder)
       decoded.push(d.data)
       innerRemainder = d.remainder
     }
