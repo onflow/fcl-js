@@ -1,0 +1,54 @@
+{
+  "name": "@onflow/fcl-react-native",
+  "version": "1.0.0",
+  "description": "React Native adapter for FCL",
+  "license": "Apache-2.0",
+  "author": "Dapper Labs <dev@dapperlabs.com>",
+  "homepage": "https://onflow.org",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/onflow/fcl-js.git"
+  },
+  "bugs": {
+    "url": "https://github.com/onflow/fcl-js/issues"
+  },
+  "jest": {
+    "transform": {
+      ".js": "jest-esm-transformer"
+    },
+    "testEnvironment": "./jest-test-environment.js",
+    "globals": {
+      "window": {},
+      "PACKAGE_CURRENT_VERSION": "TESTVERSION"
+    }
+  },
+  "source": "src/fcl-react-native.js",
+  "main": "dist/fcl-react-native.js",
+  "module": "dist/fcl-react-native.module.js",
+  "unpkg": "dist/fcl-react-native.umd.js",
+  "scripts": {
+    "prepublishOnly": "npm test && npm run build",
+    "test": "jest",
+    "build": "fcl-bundle",
+    "test:watch": "jest --watch",
+    "start": "fcl-bundle --watch"
+  },
+  "devDependencies": {
+    "@onflow/fcl-bundle": "^1.2.0",
+    "better-sqlite3": "^7.6.2",
+    "jest": "^27.0.6",
+    "jest-esm-transformer": "1.0.0"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.18.9",
+    "@onflow/config": "^1.0.3",
+    "@onflow/util-invariant": "^1.0.2",
+    "@onflow/util-logger": "^1.1.1",
+    "react": "18.0.0",
+    "react-native": "0.69.6",
+    "react-native-webview": "^11.23.1"
+  },
+  "peerDependencies": {
+    "@onflow/fcl": "^1.3.0"
+  }
+}
