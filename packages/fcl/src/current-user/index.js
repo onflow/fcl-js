@@ -5,6 +5,7 @@ import {config} from "@onflow/config"
 import {spawn, send, INIT, SUBSCRIBE, UNSUBSCRIBE} from "@onflow/util-actor"
 import {withPrefix, sansPrefix} from "@onflow/util-address"
 import {invariant} from "@onflow/util-invariant"
+import {log, LEVELS} from "@onflow/util-logger"
 import {buildUser} from "./build-user"
 import {serviceOfType} from "./service-of-type"
 import {execService} from "./exec-service"
@@ -99,11 +100,20 @@ function notExpired(user) {
 
 async function getAccountProofData() {
   let accountProofDataResolver = await config.get("fcl.accountProof.resolver")
+  if (accountProofDataResolver == null) return
 
-  if (!isFn(accountProofDataResolver)) return
+  if (!isAsyncFunction(accountProofDataResolver)) {
+    log({
+      title: "Account Proof Data Resolver must be an async function",
+      message: `Check fcl.accountProof.resolver configuration.
+                Expected: fcl.accountProof.resolver: async () => { ... }
+                Received: fcl.accountProof.resolver: ${typeof accountProofDataResolver}
+                `,
+      level: LEVELS.warn,
+    })
+  }
 
   const accountProofData = await accountProofDataResolver()
-
   if (accountProofData == null) return
 
   invariant(
@@ -114,6 +124,15 @@ async function getAccountProofData() {
     /^[0-9a-f]+$/i.test(accountProofData.nonce),
     "Nonce must be a hex string"
   )
+
+  function isAsyncFunction(func) {
+    const string = func.toString().trim()
+    return !!(
+      string.match(/^async /) ||
+      string.match(/return _ref[^\.]*\.apply/) ||
+      (typeof func === "object" && typeof func.then === "function")
+    )
+  }
 
   return accountProofData
 }
@@ -146,16 +165,6 @@ async function authenticate({service, redir = false} = {}) {
     const refreshService = serviceOfType(user.services, "authn-refresh")
     let accountProofData
 
-    try {
-      accountProofData = await getAccountProofData()
-    } catch (error) {
-      console.error(
-        `Error During Authentication: Could not resolve account proof data.
-        ${error}`
-      )
-      return reject(error)
-    }
-
     if (user.loggedIn) {
       if (refreshService) {
         try {
@@ -165,14 +174,29 @@ async function authenticate({service, redir = false} = {}) {
             opts,
           })
           send(NAME, SET_CURRENT_USER, await buildUser(response))
-        } catch (e) {
-          console.error("Error: Could not refresh authentication.", e)
+        } catch (error) {
+          log({
+            title: `${error.name} Could not refresh wallet authentication.`,
+            message: error.message,
+            level: LEVELS.error,
+          })
         } finally {
           return resolve(await snapshot())
         }
       } else {
         return resolve(user)
       }
+    }
+
+    try {
+      accountProofData = await getAccountProofData()
+    } catch (error) {
+      log({
+        title: `${error.name} On Authentication: Could not resolve account proof data.`,
+        message: error.message,
+        level: LEVELS.error,
+      })
+      return reject(error)
     }
 
     try {
@@ -183,8 +207,12 @@ async function authenticate({service, redir = false} = {}) {
         opts,
       })
       send(NAME, SET_CURRENT_USER, await buildUser(response))
-    } catch (e) {
-      console.error("Error while authenticating", e)
+    } catch (error) {
+      log({
+        title: `${error} On Authentication`,
+        message: error,
+        level: LEVELS.error,
+      })
     } finally {
       resolve(await snapshot())
     }
