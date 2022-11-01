@@ -49,27 +49,32 @@ const debug =
     return ix
   }
 
-export const resolve = pipe([
-  execFetchChainId,
-  resolveCadence,
-  debug("cadence", (ix, log) => log(ix.message.cadence)),
-  resolveComputeLimit,
-  debug("compute limit", (ix, log) => log(ix.message.computeLimit)),
-  resolveArguments,
-  debug("arguments", (ix, log) => log(ix.message.arguments, ix.message)),
-  resolveAccounts,
-  debug("accounts", (ix, log, accts) => log(...accts(ix))),
-  /* special */ execFetchRef,
-  /* special */ execFetchSequenceNumber,
-  resolveSignatures,
-  debug("signatures", (ix, log, accts) => log(...accts(ix))),
-  resolveFinalNormalization,
-  resolveValidators,
-  resolveVoucherIntercept,
-  debug("resolved", (ix, log) => log(ix)),
-])
+// resolver pipeline. opts is used for testing purposes
+export const resolve = (ix, opts) => {
+  return pipe(ix, [
+    resolveCadence,
+    debug("cadence", (ix, log) => log(ix.message.cadence)),
+    resolveComputeLimit,
+    debug("compute limit", (ix, log) => log(ix.message.computeLimit)),
+    resolveArguments,
+    debug("arguments", (ix, log) => log(ix.message.arguments, ix.message)),
+    resolveAccounts,
+    debug("accounts", (ix, log, accts) => log(...accts(ix))),
+    (ix) => execFetchChainId(ix, opts),
+    (ix) => execFetchRef(ix, opts),
+    (ix) => execFetchSequenceNumber(ix, opts),
+    resolveSignatures,
+    debug("signatures", (ix, log, accts) => log(...accts(ix))),
+    resolveFinalNormalization,
+    resolveValidators,
+    resolveVoucherIntercept,
+    debug("resolved", (ix, log) => log(ix)),
+  ])
+}
 
-async function execFetchRef(ix) {
+async function execFetchRef(ix, opts) {
+  if (opts && opts.skipExec) return ix
+  
   if (isTransaction(ix) && ix.message.refBlock == null) {
     const node = await config().get("accessNode.api")
     const sendFn = await config.first(
@@ -93,7 +98,9 @@ async function execFetchRef(ix) {
   return ix
 }
 
-async function execFetchSequenceNumber(ix) {
+async function execFetchSequenceNumber(ix, opts) {
+  if (opts && opts.skipExec) return ix
+
   if (isTransaction(ix)) {
     var acct = Object.values(ix.accounts).find(a => a.role.proposer)
     invariant(acct, `Transactions require a proposer`)
@@ -123,7 +130,9 @@ async function execFetchSequenceNumber(ix) {
   return ix
 }
 
-async function execFetchChainId(ix) {
+async function execFetchChainId(ix, opts) {
+  if (opts && opts.skipExec) return ix
+
   if (!ixModule.isGetNetworkParameters(ix)) {
     const networkConfig = await config().get("flow.network.default")
 
@@ -150,5 +159,6 @@ async function execFetchChainId(ix) {
       config.put("flow.network.default", chainId)
     }
   }
+
   return ix
 }

@@ -70,7 +70,10 @@ test("voucher in signable", async () => {
         sequenceNum: 123,
       }),
       ref("123"),
-    ])
+    ]),
+    {
+      skipExec: true,
+    }
   )
 
   const signable = buildSignable(ix.accounts[ix.proposer], {}, ix)

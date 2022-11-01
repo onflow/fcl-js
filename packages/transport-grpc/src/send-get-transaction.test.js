@@ -66,7 +66,9 @@ describe("Get Transaction", () => {
     })
 
     const response = await sendGetTransaction(
-      await resolve(await build([getTransaction("MyTxID")])),
+      await resolve(await build([getTransaction("MyTxID")]), {
+        skipExec: true,
+      }),
       {
         response: responseADT,
         Buffer,

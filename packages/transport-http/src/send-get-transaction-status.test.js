@@ -32,7 +32,9 @@ describe("Get Transaction Status", () => {
     httpRequestMock.mockReturnValue(returnedTransactionStatus)
 
     const response = await sendGetTransactionStatus(
-      await resolve(await build([getTransactionStatus("MyTxID")])),
+      await resolve(await build([getTransactionStatus("MyTxID")]), {
+        skipExec: true,
+      }),
       {
         response: responseADT,
         Buffer,

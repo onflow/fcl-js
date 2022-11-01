@@ -18,7 +18,9 @@ describe("Get Network Parameters", () => {
     })
 
     const response = await sendGetNetworkParameters(
-      await resolve(await build([getNetworkParameters()])),
+      await resolve(await build([getNetworkParameters()]), {
+        skipExec: true,
+      }),
       {
         response: responseADT,
       },
@@ -27,7 +29,7 @@ describe("Get Network Parameters", () => {
         node: "localhost:3000",
       }
     )
-    
+
     expect(unaryMock.mock.calls.length).toEqual(1)
 
     const unaryMockArgs = unaryMock.mock.calls[0]

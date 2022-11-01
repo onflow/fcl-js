@@ -22,7 +22,9 @@ describe("Ping", () => {
     unaryMock.mockReturnValue({})
 
     await sendPing(
-      await resolve(await build([ping()])),
+      await resolve(await build([ping()]), {
+        skipExec: true,
+      }),
       {
         response: responseADT,
         Buffer,

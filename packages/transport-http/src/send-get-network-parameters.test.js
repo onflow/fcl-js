@@ -18,7 +18,9 @@ describe("Get Network Parameters", () => {
     httpRequestMock.mockReturnValue(returnedNetworkParameters)
 
     const response = await sendGetNetworkParameters(
-      await resolve(await build([getNetworkParameters()])),
+      await resolve(await build([getNetworkParameters()]), {
+        skipExec: true,
+      }),
       {
         response: responseADT,
       },

@@ -61,7 +61,9 @@ describe("Send Get Block", () => {
     })
 
     const response = await sendGetBlock(
-      await resolve(await build([getBlock(), atBlockId("a1b2c3")])),
+      await resolve(await build([getBlock(), atBlockId("a1b2c3")]), {
+        skipExec: true,
+      }),
       {
         response: responseADT,
         Buffer,
@@ -131,7 +133,9 @@ describe("Send Get Block", () => {
     })
 
     const response = await sendGetBlock(
-      await resolve(await build([getBlock(), atBlockHeight(123)])),
+      await resolve(await build([getBlock(), atBlockHeight(123)]), {
+        skipExec: true,
+      }),
       {
         response: responseADT,
         Buffer,
@@ -191,7 +195,9 @@ describe("Send Get Block", () => {
     })
 
     const response = await sendGetBlock(
-      await resolve(await build([getBlock()])),
+      await resolve(await build([getBlock()]), {
+        skipExec: true,
+      }),
       {
         response: responseADT,
         Buffer,
@@ -251,7 +257,9 @@ describe("Send Get Block", () => {
     })
 
     const response = await sendGetBlock(
-      await resolve(await build([getBlock(true)])),
+      await resolve(await build([getBlock(true)]), {
+        skipExec: true,
+      }),
       {
         response: responseADT,
         Buffer,

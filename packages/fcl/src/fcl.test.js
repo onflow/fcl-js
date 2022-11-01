@@ -1,3 +1,6 @@
+// mock send function so getChainId does not hit the chain at startup
+config.put("sdk.transport", async ix => ix)
+
 import {serialize} from "./serialize"
 import {
   resolve,
@@ -9,6 +12,7 @@ import {
   payer,
   ref,
   createSignableVoucher,
+  config,
 } from "@onflow/sdk"
 import {VERSION} from "@onflow/sdk/src/VERSION"
 
@@ -32,7 +36,10 @@ test("serialize returns voucher", async () => {
       authorizations([authz]),
       payer(authz),
       ref("123"),
-    ])
+    ]),
+    {
+      skipExec: true,
+    }
   )
 
   const voucher = createSignableVoucher(ix)
@@ -46,7 +53,7 @@ test("serialize returns voucher", async () => {
       payer(authz),
       ref("123"),
     ],
-    {resolve}
+    {resolve, skipExec: true}
   )
 
   expect(JSON.parse(serializedVoucher)).toEqual(voucher)

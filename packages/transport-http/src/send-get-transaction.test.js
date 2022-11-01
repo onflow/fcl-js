@@ -29,7 +29,9 @@ describe("Get Transaction", () => {
     httpRequestMock.mockReturnValue(returnedTransaction)
 
     const response = await sendGetTransaction(
-      await resolve(await build([getTransaction("MyTxID")])),
+      await resolve(await build([getTransaction("MyTxID")]), {
+        skipExec: true,
+      }),
       {
         response: responseADT,
         Buffer,

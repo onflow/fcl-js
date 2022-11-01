@@ -54,7 +54,8 @@ describe("Send Get Account", () => {
 
     const response = await sendGetAccount(
       await resolve(
-        await build([getAccount("0x1654653399040a61"), atBlockHeight(123)])
+        await build([getAccount("0x1654653399040a61"), atBlockHeight(123)]),
+        {skipExec: true}
       ),
       {
         response: responseADT,
@@ -110,7 +111,9 @@ describe("Send Get Account", () => {
     })
 
     const response = await sendGetAccount(
-      await resolve(await build([getAccount("0x1654653399040a61")])),
+      await resolve(await build([getAccount("0x1654653399040a61")]), {
+        skipExec: true,
+      }),
       {
         response: responseADT,
         Buffer,

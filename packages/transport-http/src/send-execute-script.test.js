@@ -23,7 +23,10 @@ describe("Send Execute Script", () => {
 
     let response = await sendExecuteScript(
       await resolve(
-        await build([script(cadence), args([arg(123, types.Int)])])
+        await build([script(cadence), args([arg(123, types.Int)])]),
+        {
+          skipExec: true,
+        }
       ),
       {
         response: responseADT,
@@ -69,7 +72,9 @@ describe("Send Execute Script", () => {
     const cadence = "pub fun main(): Int { return 123 }"
 
     let response = await sendExecuteScript(
-      await resolve(await build([script(cadence), atBlockId(123)])),
+      await resolve(await build([script(cadence), atBlockId(123)]), {
+        skipExec: true,
+      }),
       {
         response: responseADT,
         Buffer,
@@ -114,7 +119,9 @@ describe("Send Execute Script", () => {
     const cadence = "pub fun main(): Int { return 123 }"
 
     let response = await sendExecuteScript(
-      await resolve(await build([script(cadence), atBlockHeight(123)])),
+      await resolve(await build([script(cadence), atBlockHeight(123)]), {
+        skipExec: true,
+      }),
       {
         response: responseADT,
         Buffer,
