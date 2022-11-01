@@ -3,14 +3,8 @@ import {config} from "@onflow/config"
 import {log} from "@onflow/util-logger"
 
 async function getChainIdFromAccessNode() {
-  const chainIdMap = {
-    "flow-testnet": "testnet",
-    "flow-mainnet": "mainnet",
-    "flow-emulator": "local",
-  }
-
   const response = await sdk.send([sdk.getNetworkParameters()]).then(sdk.decode)
-  return chainIdMap[response.chainId]
+  return response.chainId
 }
 
 export async function setChainIdDefault() {
