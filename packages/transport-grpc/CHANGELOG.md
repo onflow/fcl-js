@@ -1,5 +1,11 @@
 # @onflow/transport-grpc
 
+## 1.1.4
+
+### Patch Changes
+
+- [#1476](https://github.com/onflow/fcl-js/pull/1476) [`458e2914`](https://github.com/onflow/fcl-js/commit/458e291416fcd6237b4dfd82cc558ec0a0ef4d03) Thanks [@justinbarry](https://github.com/justinbarry)! - Remove logic to retry 503/504 http status responses
+
 ## 1.1.3
 
 ### Patch Changes
