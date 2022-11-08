@@ -30,9 +30,9 @@
   "scripts": {
     "prepublishOnly": "npm test && npm run build",
     "test": "jest",
-    "build": "fcl-bundle",
+    "build": "tsc",
     "test:watch": "jest --watch",
-    "start": "fcl-bundle --watch"
+    "start": "tsc --watch"
   },
   "dependencies": {
     "@babel/runtime": "^7.18.6"
