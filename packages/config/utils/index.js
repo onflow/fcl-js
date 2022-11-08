@@ -77,3 +77,10 @@ export const accumulate = (jsons, network) => {
     getContractsByNetwork(network)
   )(jsons)
 }
+
+export const hasPrivateKeys = flowJSON => {
+  return Object.entries(flowJSON?.accounts).reduce((hasPrivateKey, [key, value]) => {
+    if (hasPrivateKey) return true
+    return value?.hasOwnProperty("key")
+  }, false)
+}
