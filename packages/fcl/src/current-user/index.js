@@ -101,16 +101,16 @@ function notExpired(user) {
 async function getAccountProofData() {
   let accountProofDataResolver = await config.get("fcl.accountProof.resolver")
   if (accountProofDataResolver == null) return
-
-  if (!isAsyncFunction(accountProofDataResolver)) {
+  if (!isFn(accountProofDataResolver)) {
     log({
-      title: "Account Proof Data Resolver must be an async function",
+      title: "Account Proof Data Resolver must be a function",
       message: `Check fcl.accountProof.resolver configuration.
                 Expected: fcl.accountProof.resolver: async () => { ... }
                 Received: fcl.accountProof.resolver: ${typeof accountProofDataResolver}
                 `,
       level: LEVELS.warn,
     })
+    return
   }
 
   const accountProofData = await accountProofDataResolver()
@@ -124,15 +124,6 @@ async function getAccountProofData() {
     /^[0-9a-f]+$/i.test(accountProofData.nonce),
     "Nonce must be a hex string"
   )
-
-  function isAsyncFunction(func) {
-    const string = func.toString().trim()
-    return !!(
-      string.match(/^async /) ||
-      string.match(/return _ref[^\.]*\.apply/) ||
-      (typeof func === "object" && typeof func.then === "function")
-    )
-  }
 
   return accountProofData
 }
