@@ -18,10 +18,10 @@
     }
   },
   "devDependencies": {
-    "@onflow/fcl-bundle": "^1.2.0",
     "@onflow/types": "^1.0.4",
     "jest": "26.4.2",
-    "jest-esm-transformer": "1.0.0"
+    "jest-esm-transformer": "1.0.0",
+    "typescript": "^4.8.4"
   },
   "source": "src/index.js",
   "main": "dist/util-address.js",
