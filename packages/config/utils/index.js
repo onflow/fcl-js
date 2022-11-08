@@ -50,13 +50,30 @@ const mergeFlowJSONs = value => Array.isArray(value) ? mergeDeep({}, ...value) :
 const filterContracts = obj => obj.contracts ? obj.contracts : {}
 
 /**
+ * Gathers contract addresses by network
+ * @param {string} network local, emulator, testnet, mainnet
+ * @returns {Object} { "HelloWorld": "f8d6e0586b0a20c7" }
+ */
+const getContractsByNetwork = network => contracts => {
+  return Object.entries(contracts).reduce((c, [key, value]) => {
+    const networkContractAlias = value?.aliases?.[network]
+    if (networkContractAlias) {
+      c[key] = networkContractAlias
+    }
+
+    return c
+  }, {})
+}
+
+/**
  * Take in flow.json files and return combined contracts
  * @param {Object|Object[]} value
  * @returns {Object}
  */
-export const accumulate = (jsons) => {
+export const accumulate = (jsons, network) => {
   return pipe(
     mergeFlowJSONs,
-    filterContracts
+    filterContracts,
+    getContractsByNetwork(network)
   )(jsons)
 }
