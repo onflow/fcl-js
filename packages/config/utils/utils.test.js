@@ -1,4 +1,4 @@
-import {accumulate, hasPrivateKeys} from "./"
+import {accumulate, hasPrivateKeys} from "./utils"
 
 describe("accumulate", () => {
   test("it should gather contract aliases for flow.json", () => {

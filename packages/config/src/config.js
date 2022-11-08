@@ -5,6 +5,8 @@ import {
   SUBSCRIBE,
   UNSUBSCRIBE,
 } from "@onflow/util-actor"
+import * as logger from "@onflow/util-logger"
+import { accumulate, cleanNetwork } from "../utils/utils"
 
 const NAME = "config"
 const PUT = "PUT_CONFIG"
@@ -108,6 +110,28 @@ function resetConfig(oldConfig) {
   return clearConfig().then(config(oldConfig))
 }
 
+async function load(data) {
+  const network = await get("flow.network")
+
+  // If no network, do not continue
+  if (!network) {
+    logger.log({
+      title: "Flow Network Required",
+      message: `In order for FCL to load your contracts please define "flow.network" to "emulator", "local", "testnet", or "mainnet" in your config. See more here: https://developers.flow.com/tools/fcl-js/reference/configure-fcl`,
+      level: logger.LEVELS.error,
+    })
+    return
+  }
+
+  const accumulatedFlowJSON = accumulate(data?.flowJSON, cleanNetwork(network))
+
+  // Add contract mappings to config
+  // Keep '0x' so that under the hood we can identify what is a contract import in config
+  for (const [key, value] of Object.entries(accumulatedFlowJSON)) {
+    put(`0x${key}`, value)
+  }
+}
+
 function config(values) {
   if (values != null && typeof values === "object") {
     Object.keys(values).map(d => put(d, values[d]))
@@ -123,6 +147,7 @@ function config(values) {
     where,
     subscribe,
     overload,
+    load,
   }
 }
 
@@ -135,6 +160,7 @@ config.delete = _delete
 config.where = where
 config.subscribe = subscribe
 config.overload = overload
+config.load = load
 
 export {config}
 

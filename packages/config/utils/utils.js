@@ -78,9 +78,21 @@ export const accumulate = (jsons, network) => {
   )(jsons)
 }
 
+/**
+ * Take in flow.json file for private keys
+ * @param {Object} flowJSON
+ * @returns {boolean}
+ */
 export const hasPrivateKeys = flowJSON => {
   return Object.entries(flowJSON?.accounts).reduce((hasPrivateKey, [key, value]) => {
     if (hasPrivateKey) return true
     return value?.hasOwnProperty("key")
   }, false)
 }
+
+/**
+ * Format network to always be 'emulator', 'testnet', or 'mainnet'
+ * @param {string} network
+ * @returns {string}
+ */
+export const cleanNetwork = network => network.toLowerCase() === 'local' ? 'emulator' : network.toLowerCase()
