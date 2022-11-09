@@ -2,7 +2,9 @@
   "extends": "../../tsconfig-base",
   "compilerOptions": {
     "outDir": "./dist",
-    "rootDir": "./src"
+    "rootDir": "./src",
+    "strict": false,
+    "types": ["node"]
   },
   "references": [
   ],

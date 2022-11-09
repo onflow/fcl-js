@@ -2,9 +2,13 @@
   "extends": "../../tsconfig-base",
   "compilerOptions": {
     "outDir": "./dist",
-    "rootDir": "./src"
+    "rootDir": "./src",
+    "strict": false,
+    "paths": {
+      "@onflow/util-invariant": ["../util-invariant"],
+      "@onflow/rlp": ["../rlp"]
+    }
   },
-  "references": [
-  ],
+  "references": [{"path": "../util-invariant"}, {"path": "../rlp"}],
   "include": ["./src"]
 }

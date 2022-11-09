@@ -2,9 +2,11 @@
   "extends": "../../tsconfig-base",
   "compilerOptions": {
     "outDir": "./dist",
-    "rootDir": "./src"
+    "rootDir": "./src",
+    "paths": {
+      "@onflow/sdk": ["../sdk"]
+    }
   },
-  "references": [
-  ],
+  "references": [{"path": "../sdk"}],
   "include": ["./src"]
 }

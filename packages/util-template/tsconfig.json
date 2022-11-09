@@ -2,9 +2,12 @@
   "extends": "../../tsconfig-base",
   "compilerOptions": {
     "outDir": "./dist",
-    "rootDir": "./src"
+    "rootDir": "./src",
+    "strict": false,
+    "paths": {
+      "@onflow/util-logger": ["../util-logger"]
+    }
   },
-  "references": [
-  ],
+  "references": [{"path": "../util-logger"}],
   "include": ["./src"]
 }

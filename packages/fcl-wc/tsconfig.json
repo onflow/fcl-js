@@ -2,9 +2,12 @@
   "extends": "../../tsconfig-base",
   "compilerOptions": {
     "outDir": "./dist",
-    "rootDir": "./src"
+    "rootDir": "./src",
+    "strict": false,
+    "paths": {
+      "@onflow/fcl": ["../fcl"]
+    }
   },
-  "references": [
-  ],
+  "references": [{"path": "../fcl"}],
   "include": ["./src"]
 }
