@@ -13,3 +13,4 @@ todo.md
 **/debug.log
 *.log
 .vscode/*
+*.tsbuildinfo
