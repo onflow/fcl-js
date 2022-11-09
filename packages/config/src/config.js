@@ -113,7 +113,6 @@ function resetConfig(oldConfig) {
 async function load(data) {
   const network = await get("flow.network")
 
-  // If no network, do not continue
   if (!network) {
     logger.log({
       title: "Flow Network Required",
