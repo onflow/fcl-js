@@ -1,0 +1,22 @@
+{
+  "files": [],
+  "include": [],
+  "references": [
+    { "path": "./packages/config" },
+    { "path": "./packages/fcl" },
+    { "path": "./packages/fcl-wc" },
+    { "path": "./packages/protobuf" },
+    { "path": "./packages/rlp" },
+    { "path": "./packages/sdk" },
+    { "path": "./packages/transport-grpc" },
+    { "path": "./packages/transport-http" },
+    { "path": "./packages/types" },
+    { "path": "./packages/util-actor" },
+    { "path": "./packages/util-address" },
+    { "path": "./packages/util-encode-key" },
+    { "path": "./packages/util-invariant" },
+    { "path": "./packages/util-logger" },
+    { "path": "./packages/util-template" },
+    { "path": "./packages/util-uid" },
+  ]
+}
