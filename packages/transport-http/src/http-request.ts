@@ -2,6 +2,9 @@ import * as logger from "@onflow/util-logger"
 import fetchTransport from "node-fetch"
 
 class HTTPRequestError extends Error {
+  statusCode
+  errorMessage
+
   constructor({
     error,
     hostname,
@@ -11,6 +14,15 @@ class HTTPRequestError extends Error {
     responseBody,
     responseStatusText,
     statusCode,
+  }: {
+    error?
+    hostname?
+    path?
+    method?
+    requestBody?
+    responseBody?
+    responseStatusText?
+    statusCode?
   }) {
     const msg = `
       HTTP Request Error: An error occurred when interacting with the Access API.
