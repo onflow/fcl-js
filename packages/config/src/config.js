@@ -6,7 +6,7 @@ import {
   UNSUBSCRIBE,
 } from "@onflow/util-actor"
 import * as logger from "@onflow/util-logger"
-import { accumulate, cleanNetwork } from "../utils/utils"
+import { accumulate, cleanNetwork, anyHasPrivateKeys } from "../utils/utils"
 
 const NAME = "config"
 const PUT = "PUT_CONFIG"
@@ -112,8 +112,10 @@ function resetConfig(oldConfig) {
 
 async function load(data) {
   const network = await get("flow.network")
+  const cleanedNetwork = cleanNetwork(network)
+  const { flowJSON } = data
 
-  if (!network) {
+  if (!cleanedNetwork) {
     logger.log({
       title: "Flow Network Required",
       message: `In order for FCL to load your contracts please define "flow.network" to "emulator", "local", "testnet", or "mainnet" in your config. See more here: https://developers.flow.com/tools/fcl-js/reference/configure-fcl`,
@@ -122,12 +124,22 @@ async function load(data) {
     return
   }
 
-  const accumulatedFlowJSON = accumulate(data?.flowJSON, cleanNetwork(network))
+  if (anyHasPrivateKeys(flowJSON)) {
+    const isEmulator = cleanedNetwork === 'emulator'
 
+    logger.log({
+      title: "Private Keys Detected",
+      message: `Private keys should be stored in a separate flow.json file for security. See more here: https://developers.flow.com/tools/flow-cli/security`,
+      level: isEmulator ? logger.LEVELS.warn : logger.LEVELS.error,
+    })
+
+    if (!isEmulator) return
+  }
+  
   // Add contract mappings to config
   // Keep '0x' so that under the hood we can identify what is a contract import in config
-  for (const [key, value] of Object.entries(accumulatedFlowJSON)) {
-    put(`0x${key}`, value)
+  for (const [key, value] of Object.entries(accumulate(flowJSON, cleanedNetwork))) {
+    put(`0x${key}.contract`, value)
   }
 }
 

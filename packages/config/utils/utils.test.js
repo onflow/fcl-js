@@ -1,4 +1,4 @@
-import {accumulate, hasPrivateKeys} from "./utils"
+import {accumulate, anyHasPrivateKeys} from "./utils"
 
 describe("accumulate", () => {
   test("it should gather contract aliases for flow.json", () => {
@@ -65,7 +65,7 @@ describe("accumulate", () => {
   })
 })
 
-describe("hasPrivateKeys", () => {
+describe("anyHasPrivateKeys", () => {
   test("it should return true if private keys exist in account", () => {
     const flowJSON = {
       "accounts": {
@@ -76,7 +76,26 @@ describe("hasPrivateKeys", () => {
       }
     }
 
-    expect(hasPrivateKeys(flowJSON)).toBe(true)
+    const flowJSONTwo = {
+      "accounts": {
+        "testnet-account": {
+          "address": "f8d6e0586b0a20c7",
+          "key": "ba68d45a5acaa52f3cacf4ad3a64d9523e0ce0ae3addb1ee6805385b380b7646"
+        }
+      }
+    }
+
+    const flowJSONThree = {
+      "accounts": {
+        "emulator-account": {
+          "address": "f8d6e0586b0a20c7"
+        }
+      }
+    }
+
+    expect(anyHasPrivateKeys(flowJSON)).toBe(true)
+    expect(anyHasPrivateKeys([flowJSON, flowJSONTwo])).toBe(true)
+    expect(anyHasPrivateKeys([flowJSON, flowJSONTwo, flowJSONThree])).toBe(true)
   })
 
   test("it should return false if no private keys exist in account", () => {
@@ -88,6 +107,15 @@ describe("hasPrivateKeys", () => {
       }
     }
 
-    expect(hasPrivateKeys(flowJSON)).toBe(false)
+    const flowJSONTwo = {
+      "accounts": {
+        "emulator-account": {
+          "address": "f8d6e0586b0a20c7"
+        }
+      }
+    }
+
+    expect(anyHasPrivateKeys(flowJSON)).toBe(false)
+    expect(anyHasPrivateKeys([flowJSON, flowJSONTwo])).toBe(false)
   })
 })
