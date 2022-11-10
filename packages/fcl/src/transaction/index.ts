@@ -79,7 +79,7 @@ export function transaction(transactionId) {
   }
 
   function once(predicate) {
-    return function innerOnce(opts = {}) {
+    return function innerOnce(opts: any = {}) {
       const suppress = opts.suppress || false
       return new Promise((resolve, reject) => {
         const unsub = subscribe((txStatus, error) => {

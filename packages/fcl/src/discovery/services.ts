@@ -5,7 +5,7 @@ import {VERSION} from "../VERSION"
 import {makeDiscoveryServices} from "./utils"
 
 export async function getServices({types}) {
-  const endpoint = await config.get("discovery.authn.endpoint")
+  const endpoint: any = await config.get("discovery.authn.endpoint")
   invariant(
     Boolean(endpoint),
     `"discovery.authn.endpoint" in config must be defined.`

@@ -99,7 +99,9 @@ function notExpired(user) {
 }
 
 async function getAccountProofData() {
-  let accountProofDataResolver = await config.get("fcl.accountProof.resolver")
+  let accountProofDataResolver: any = await config.get(
+    "fcl.accountProof.resolver"
+  )
   if (accountProofDataResolver == null) return
   if (!isFn(accountProofDataResolver)) {
     log({
@@ -138,7 +140,7 @@ const makeConfig = async ({discoveryAuthnInclude}) => {
   }
 }
 
-async function authenticate({service, redir = false} = {}) {
+async function authenticate({service, redir = false}: {service?; redir?} = {}) {
   if (
     service &&
     !service?.provider?.is_installed &&
@@ -151,7 +153,7 @@ async function authenticate({service, redir = false} = {}) {
   return new Promise(async (resolve, reject) => {
     spawnCurrentUser()
     const opts = {redir}
-    const user = await snapshot()
+    const user: any = await snapshot()
     const discoveryService = await getDiscoveryService(service)
     const refreshService = serviceOfType(user.services, "authn-refresh")
     let accountProofData
@@ -254,7 +256,7 @@ async function authorization(account) {
     ...account,
     tempId: "CURRENT_USER",
     async resolve(account, preSignable) {
-      const user = await authenticate({redir: true})
+      const user: any = await authenticate({redir: true})
       const authz = serviceOfType(user.services, "authz")
       const preAuthz = serviceOfType(user.services, "pre-authz")
 
@@ -323,13 +325,13 @@ function snapshot() {
 
 async function info() {
   spawnCurrentUser()
-  const {addr} = await snapshot()
+  const {addr}: any = await snapshot()
   if (addr == null) throw new Error("No Flow Address for Current User")
   return account(addr)
 }
 
 async function resolveArgument() {
-  const {addr} = await authenticate()
+  const {addr}: any = await authenticate()
   return arg(withPrefix(addr), t.Address)
 }
 
@@ -343,7 +345,7 @@ const makeSignable = msg => {
 
 async function signUserMessage(msg) {
   spawnCurrentUser()
-  const user = await authenticate({redir: true})
+  const user: any = await authenticate({redir: true})
 
   const signingService = serviceOfType(user.services, "user-signature")
 
@@ -367,24 +369,16 @@ async function signUserMessage(msg) {
   }
 }
 
-let currentUser = () => {
-  return {
-    authenticate,
-    unauthenticate,
-    authorization,
-    signUserMessage,
-    subscribe,
-    snapshot,
-    resolveArgument,
-  }
+const user = {
+  authenticate,
+  unauthenticate,
+  authorization,
+  signUserMessage,
+  subscribe,
+  snapshot,
+  resolveArgument,
 }
 
-currentUser.authenticate = authenticate
-currentUser.unauthenticate = unauthenticate
-currentUser.authorization = authorization
-currentUser.signUserMessage = signUserMessage
-currentUser.subscribe = subscribe
-currentUser.snapshot = snapshot
-currentUser.resolveArgument = resolveArgument
+const currentUser = Object.assign(() => user, user)
 
 export {currentUser}

@@ -4,7 +4,7 @@ import {buildMessageHandler} from "./buildMessageHandler"
 
 const noop = () => {}
 
-export function tab(service, opts = {}) {
+export function tab(service, opts: any = {}) {
   if (service == null) return {send: noop, close: noop}
 
   const onClose = opts.onClose || noop

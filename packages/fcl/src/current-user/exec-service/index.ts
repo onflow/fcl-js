@@ -9,7 +9,17 @@ const execStrategy = async ({service, body, config, opts}) => {
   return strategy({service, body, config, opts})
 }
 
-export async function execService({service, msg = {}, config = {}, opts = {}}) {
+export async function execService({
+  service,
+  msg = {},
+  config = {},
+  opts = {},
+}: {
+  service
+  msg?
+  config?
+  opts?
+}) {
   msg.data = service.data
   const execConfig = {
     services: await configLens(/^service\./),
@@ -23,7 +33,7 @@ export async function execService({service, msg = {}, config = {}, opts = {}}) {
   }
 
   try {
-    const res = await execStrategy({
+    const res: any = await execStrategy({
       service,
       body: msg,
       config: execConfig,

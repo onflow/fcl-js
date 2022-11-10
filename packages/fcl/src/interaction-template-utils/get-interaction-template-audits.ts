@@ -6,7 +6,7 @@ import {normalizeInteractionTemplate} from "../normalizers/interaction-template/
 
 export async function getInteractionTemplateAudits(
   {template, auditors},
-  opts = {}
+  opts: any = {}
 ) {
   invariant(
     template != undefined,

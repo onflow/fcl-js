@@ -15,7 +15,7 @@ const HIGH_WATER_MARK = "hwm"
 const scheduleTick = async ctx => {
   return setTimeout(
     () => ctx.sendSelf(TICK),
-    await config().get("fcl.eventPollRate", RATE)
+    (await config().get("fcl.eventPollRate", RATE)) as number
   )
 }
 

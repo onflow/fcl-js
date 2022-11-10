@@ -42,7 +42,7 @@ export function getTemplateArgumentMessage({
     "generateTemplateId({ template }) -- template must be an object"
   )
   invariant(
-    typeof template.f_type === "InteractionTemplate",
+    template.f_type === "InteractionTemplate",
     "generateTemplateId({ template }) -- template object must be an InteractionTemplate"
   )
 

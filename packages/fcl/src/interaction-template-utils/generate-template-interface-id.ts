@@ -13,7 +13,7 @@ export async function generateTemplateInterfaceId({templateInterface}) {
     "generateTemplateInterfaceId({ templateInterface }) -- templateInterface must be an object"
   )
   invariant(
-    typeof templateInterface.f_type === "InteractionTemplateInterface",
+    templateInterface.f_type === "InteractionTemplateInterface",
     "generateTemplateInterfaceId({ templateInterface }) -- templateInterface object must be an InteractionTemplate"
   )
 

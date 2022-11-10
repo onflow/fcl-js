@@ -3,7 +3,7 @@ import {invariant} from "@onflow/util-invariant"
 import {withPrefix} from "@onflow/util-address"
 
 export async function deriveDependencies({template}) {
-  const network = await config.get("flow.network")
+  const network: any = await config.get("flow.network")
 
   invariant(
     network,

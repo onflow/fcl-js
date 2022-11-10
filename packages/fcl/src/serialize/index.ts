@@ -2,7 +2,7 @@ import {interaction, pipe} from "@onflow/sdk"
 import {resolve as defaultResolve} from "@onflow/sdk"
 import {config, createSignableVoucher} from "@onflow/sdk"
 
-export const serialize = async (args = [], opts = {}) => {
+export const serialize = async (args: any[] = [], opts: any = {}) => {
   const resolveFunction = await config.first(
     ["sdk.resolve"],
     opts.resolve || defaultResolve

@@ -17,7 +17,7 @@ const FRAME_STYLES = `
   color-scheme: light;
 `
 
-export function renderFrame(src) {
+export function renderFrame(src): [Window, () => void] {
   invariant(
     !document.getElementById(FRAME),
     "Attempt at triggering multiple Frames",

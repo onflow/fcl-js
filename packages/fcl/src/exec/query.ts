@@ -42,7 +42,7 @@ import {preQuery} from "./utils/pre.js"
  *
  *    await query({ cadence, args })
  */
-export async function query(opts = {}) {
+export async function query(opts: any = {}) {
   await preQuery(opts)
   opts = await prepTemplateOpts(opts)
 

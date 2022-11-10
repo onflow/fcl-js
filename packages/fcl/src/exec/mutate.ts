@@ -58,7 +58,7 @@ import {preMutate} from "./utils/pre.js"
  *      authorizations: [AuthzFn], // an array of authorization functions used as authorizations signatory roles
  *    }
  */
-export async function mutate(opts = {}) {
+export async function mutate(opts: any = {}) {
   var txid
   try {
     await preMutate(opts)
@@ -66,7 +66,7 @@ export async function mutate(opts = {}) {
 
     // Allow for a config to overwrite the authorization function.
     // prettier-ignore
-    const authz = await sdk.config().get("fcl.authz", currentUser().authorization)
+    const authz = await sdk.config().get("fcl.authz", currentUser.authorization)
 
     txid = sdk.config().overload(opts.dependencies || {}, async () =>
       // prettier-ignore

@@ -1,4 +1,4 @@
-export const onMessageFromFCL = (messageType, cb = () => {}) => {
+export const onMessageFromFCL = (messageType, cb: (arg) => void = () => {}) => {
   const buildData = data => {
     if (data.deprecated)
       console.warn("DEPRECATION NOTICE", data.deprecated.message)

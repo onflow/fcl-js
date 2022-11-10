@@ -1,6 +1,6 @@
 import {serviceEndpoint} from "./service-endpoint"
 
-export function fetchService(service, opts = {}) {
+export function fetchService(service, opts: any = {}) {
   const method = opts.method || "POST"
   const body =
     method === "GET"

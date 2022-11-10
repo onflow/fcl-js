@@ -4,7 +4,7 @@ import {buildMessageHandler} from "./buildMessageHandler"
 
 const noop = () => {}
 
-export function pop(service, opts = {}) {
+export function pop(service, opts: any = {}) {
   if (service == null) return {send: noop, close: noop}
 
   const onClose = opts.onClose || noop

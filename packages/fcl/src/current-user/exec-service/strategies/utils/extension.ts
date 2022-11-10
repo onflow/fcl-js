@@ -2,7 +2,7 @@ import {buildMessageHandler} from "./buildMessageHandler"
 
 const noop = () => {}
 
-export function extension(service, opts = {}) {
+export function extension(service, opts: any = {}) {
   if (service == null) return {send: noop, close: noop}
 
   const onClose = opts.onClose || noop
