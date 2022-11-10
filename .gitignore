@@ -12,3 +12,4 @@ dev-wallet/db/*.db
 todo.md
 **/debug.log
 *.log
+.vscode/*
