@@ -5,7 +5,7 @@ import {invariant} from "@onflow/util-invariant"
 import {decodeResponse as decode} from "../decode/decode.js"
 import {send} from "../send/send.js"
 
-export function account(address, {height, id} = {}, opts) {
+export function account(address, {height, id}: {height?; id?} = {}, opts?) {
   invariant(
     !(id && height),
     `Method: account -- Cannot pass "id" and "height" simultaneously`

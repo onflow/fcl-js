@@ -2,7 +2,7 @@ import {invariant} from "@onflow/util-invariant"
 import {AccessAPI, PingRequest} from "@onflow/protobuf"
 import {unary as defaultUnary} from "./unary"
 
-export async function sendPing(ix, context = {}, opts = {}) {
+export async function sendPing(ix, context: any = {}, opts: any = {}) {
   invariant(opts.node, `SDK Send Ping Error: opts.node must be defined.`)
   invariant(
     context.response,

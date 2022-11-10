@@ -22,9 +22,9 @@ import {resolveComputeLimit} from "./resolve-compute-limit.js"
 
 const noop = v => v
 const debug =
-  (key, fn = noop) =>
+  (key, fn: (ix, log, accts) => void = noop) =>
   async ix => {
-    const take = (obj, keys = []) => {
+    const take = (obj, keys: any = []) => {
       if (typeof keys === "string") keys = keys.split(" ")
       keys.reduce((acc, key) => ({...acc, [key]: obj[key]}), {})
     }
@@ -94,7 +94,7 @@ async function execFetchRef(ix) {
 
 async function execFetchSequenceNumber(ix) {
   if (isTransaction(ix)) {
-    var acct = Object.values(ix.accounts).find(a => a.role.proposer)
+    var acct = Object.values<any>(ix.accounts).find(a => a.role.proposer)
     invariant(acct, `Transactions require a proposer`)
     if (acct.sequenceNum == null) {
       const node = await config().get("accessNode.api")

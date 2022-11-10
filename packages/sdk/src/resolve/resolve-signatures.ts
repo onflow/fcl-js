@@ -20,7 +20,7 @@ export async function resolveSignatures(ix) {
       let outsideSigners = findOutsideSigners(ix)
       const outsidePayload = encodeOutsideMessage({
         ...prepForEncoding(ix),
-        payloadSigs: insideSigners.map(id => ({
+        payloadSigs: insideSigners.map((id: any) => ({
           address: ix.accounts[id].addr,
           keyId: ix.accounts[id].keyId,
           sig: ix.accounts[id].signature,

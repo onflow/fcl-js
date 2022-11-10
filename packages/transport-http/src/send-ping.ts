@@ -1,7 +1,7 @@
 import {invariant} from "@onflow/util-invariant"
 import {httpRequest as defaultHttpRequest} from "./http-request.js"
 
-export async function sendPing(ix, context = {}, opts = {}) {
+export async function sendPing(ix, context: any = {}, opts: any = {}) {
   invariant(opts.node, `SDK Send Ping Error: opts.node must be defined.`)
   invariant(
     context.response,

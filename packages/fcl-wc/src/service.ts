@@ -4,7 +4,7 @@ import {log, LEVELS} from "@onflow/util-logger"
 import {fetchFlowWallets, isMobile, CONFIGURED_NETWORK, isIOS} from "./utils"
 import {FLOW_METHODS, REQUEST_TYPES} from "./constants"
 
-export const makeServicePlugin = async (client, opts = {}) => ({
+export const makeServicePlugin = async (client, opts: any = {}) => ({
   name: "fcl-plugin-service-walletconnect",
   f_type: "ServicePlugin",
   type: "discovery-service",
@@ -137,7 +137,7 @@ const makeExec = (client, {wcRequestHook, pairingModalOverride}) => {
         const [namespace, reference, address] = Object.values(
           session.namespaces
         )
-          .map(namespace => namespace.accounts)
+          .map((namespace: any) => namespace.accounts)
           .flat()
           .filter(account => account.startsWith("flow:"))[0]
           .split(":")

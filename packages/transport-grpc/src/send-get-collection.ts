@@ -5,7 +5,7 @@ import {unary as defaultUnary} from "./unary"
 const u8ToHex = (u8, context) => context.Buffer.from(u8).toString("hex")
 const hexBuffer = (hex, context) => context.Buffer.from(hex, "hex")
 
-export async function sendGetCollection(ix, context = {}, opts = {}) {
+export async function sendGetCollection(ix, context: any = {}, opts: any = {}) {
   invariant(
     opts.node,
     `SDK Send Get Collection Error: opts.node must be defined.`

@@ -1,7 +1,11 @@
 import {invariant} from "@onflow/util-invariant"
 import {httpRequest as defaultHttpRequest} from "./http-request.js"
 
-export async function sendGetTransaction(ix, context = {}, opts = {}) {
+export async function sendGetTransaction(
+  ix,
+  context: any = {},
+  opts: any = {}
+) {
   invariant(
     opts.node,
     `SDK Send Get Transaction Error: opts.node must be defined.`

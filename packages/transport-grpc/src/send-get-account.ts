@@ -102,7 +102,7 @@ function constructResponse(ix, context, res) {
   return ret
 }
 
-export async function sendGetAccount(ix, context = {}, opts = {}) {
+export async function sendGetAccount(ix, context: any = {}, opts: any = {}) {
   invariant(opts.node, `SDK Send Get Account Error: opts.node must be defined.`)
   invariant(
     context.response,

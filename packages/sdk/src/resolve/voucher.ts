@@ -30,14 +30,14 @@ export const createSignableVoucher = ix => {
   }
 
   const buildInsideSigners = () =>
-    findInsideSigners(ix).map(id => ({
+    findInsideSigners(ix).map((id: any) => ({
       address: withPrefix(ix.accounts[id].addr),
       keyId: ix.accounts[id].keyId,
       sig: ix.accounts[id].signature,
     }))
 
   const buildOutsideSigners = () =>
-    findOutsideSigners(ix).map(id => ({
+    findOutsideSigners(ix).map((id: any) => ({
       address: withPrefix(ix.accounts[id].addr),
       keyId: ix.accounts[id].keyId,
       sig: ix.accounts[id].signature,

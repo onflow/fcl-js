@@ -4,7 +4,7 @@ import {httpRequest as defaultHttpRequest} from "./http-request.js"
 
 const idof = acct => `${withPrefix(acct.addr)}-${acct.keyId}`
 
-export async function sendTransaction(ix, context = {}, opts = {}) {
+export async function sendTransaction(ix, context: any = {}, opts: any = {}) {
   invariant(opts.node, `SDK Send Transaction Error: opts.node must be defined.`)
   invariant(
     context.response,
@@ -21,7 +21,7 @@ export async function sendTransaction(ix, context = {}, opts = {}) {
 
   // Apply Non Payer Signatures to Payload Signatures
   let payloadSignatures = []
-  for (let acct of Object.values(ix.accounts)) {
+  for (let acct of Object.values<any>(ix.accounts)) {
     try {
       if (!acct.role.payer && acct.signature != null) {
         payloadSignatures.push({
@@ -43,7 +43,7 @@ export async function sendTransaction(ix, context = {}, opts = {}) {
 
   // Apply Payer Signatures to Envelope Signatures
   let envelopeSignatures = {}
-  for (let acct of Object.values(ix.accounts)) {
+  for (let acct of Object.values<any>(ix.accounts)) {
     try {
       if (acct.role.payer && acct.signature != null) {
         let id = acct.tempId || idof(acct)

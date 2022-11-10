@@ -13,7 +13,7 @@ export const setConfiguredNetwork = async () => {
 }
 
 const makeFlowServicesFromWallets = wallets => {
-  return Object.values(wallets)
+  return Object.values<any>(wallets)
     .filter(w => w.app_type === "wallet")
     .map(wallet => {
       return {

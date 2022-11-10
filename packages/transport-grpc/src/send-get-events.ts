@@ -76,7 +76,7 @@ function constructResponse(ix, context, res) {
   return ret
 }
 
-export async function sendGetEvents(ix, context = {}, opts = {}) {
+export async function sendGetEvents(ix, context: any = {}, opts: any = {}) {
   invariant(opts.node, `SDK Send Get Events Error: opts.node must be defined.`)
   invariant(
     context.response,

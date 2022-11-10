@@ -5,7 +5,7 @@ import {atBlockId} from "../build/build-at-block-id.js"
 import {decodeResponse as decode} from "../decode/decode.js"
 import {invariant} from "@onflow/util-invariant"
 
-export function block({sealed = false, id, height} = {}, opts = {}) {
+export function block({sealed = false, id, height}: any = {}, opts = {}) {
   invariant(
     !((sealed && id) || (sealed && height)),
     `Method: block -- Cannot pass "sealed" with "id" or "height"`

@@ -67,7 +67,7 @@ function constructResponse(ix, context, res) {
   return ret
 }
 
-export async function sendGetBlock(ix, context = {}, opts = {}) {
+export async function sendGetBlock(ix, context: any = {}, opts: any = {}) {
   invariant(opts.node, `SDK Send Get Block Error: opts.node must be defined.`)
   invariant(
     context.response,

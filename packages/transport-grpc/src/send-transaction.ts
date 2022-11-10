@@ -12,7 +12,7 @@ const addressBuffer = (addr, context) => paddedHexBuffer(addr, 8, context)
 const argumentBuffer = (arg, context) =>
   context.Buffer.from(JSON.stringify(arg), "utf8")
 
-export async function sendTransaction(ix, context = {}, opts = {}) {
+export async function sendTransaction(ix, context: any = {}, opts: any = {}) {
   invariant(opts.node, `SDK Send Transaction Error: opts.node must be defined.`)
   invariant(
     context.response,
@@ -64,7 +64,7 @@ export async function sendTransaction(ix, context = {}, opts = {}) {
   tx.setProposalKey(proposalKey)
 
   // Apply Non Payer Signatures to Payload Signatures
-  for (let acct of Object.values(ix.accounts)) {
+  for (let acct of Object.values<any>(ix.accounts)) {
     try {
       if (!acct.role.payer && acct.signature != null) {
         const sig = new Transaction.Signature()
@@ -80,7 +80,7 @@ export async function sendTransaction(ix, context = {}, opts = {}) {
   }
 
   // Apply Payer Signatures to Envelope Signatures
-  for (let acct of Object.values(ix.accounts)) {
+  for (let acct of Object.values<any>(ix.accounts)) {
     try {
       if (acct.role.payer && acct.signature != null) {
         const sig = new Transaction.Signature()

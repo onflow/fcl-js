@@ -14,14 +14,14 @@ export {currentUser}
 import {discovery} from "./discovery"
 export {discovery}
 
-export const authenticate = (opts = {}) => currentUser().authenticate(opts)
+export const authenticate = (opts: any = {}) => currentUser().authenticate(opts)
 export const unauthenticate = () => currentUser().unauthenticate()
-export const reauthenticate = (opts = {}) => {
+export const reauthenticate = (opts: any = {}) => {
   currentUser().unauthenticate()
   return currentUser().authenticate(opts)
 }
-export const signUp = (opts = {}) => currentUser().authenticate(opts)
-export const logIn = (opts = {}) => currentUser().authenticate(opts)
+export const signUp = (opts: any = {}) => currentUser().authenticate(opts)
+export const logIn = (opts: any = {}) => currentUser().authenticate(opts)
 
 export const authz = currentUser().authorization
 

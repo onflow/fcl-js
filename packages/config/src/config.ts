@@ -66,11 +66,11 @@ function put(key, value) {
   return config()
 }
 
-function get(key, fallback) {
+function get(key, fallback?) {
   return send(NAME, GET, {key, fallback}, {expectReply: true, timeout: 10})
 }
 
-async function first(wants = [], fallback) {
+async function first(wants = [], fallback?) {
   if (!wants.length) return fallback
   const [head, ...rest] = wants
   const ret = await get(head)
@@ -108,7 +108,7 @@ function resetConfig(oldConfig) {
   return clearConfig().then(config(oldConfig))
 }
 
-function config(values) {
+function config(values?: any) {
   if (values != null && typeof values === "object") {
     Object.keys(values).map(d => put(d, values[d]))
   }

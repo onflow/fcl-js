@@ -1,7 +1,7 @@
 import {invariant} from "@onflow/util-invariant"
 import {httpRequest as defaultHttpRequest} from "./http-request.js"
 
-export async function sendGetCollection(ix, context = {}, opts = {}) {
+export async function sendGetCollection(ix, context: any = {}, opts: any = {}) {
   invariant(
     opts.node,
     `SDK Send Get Collection Error: opts.node must be defined.`

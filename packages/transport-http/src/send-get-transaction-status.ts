@@ -10,7 +10,11 @@ const STATUS_MAP = {
   EXPIRED: 5,
 }
 
-export async function sendGetTransactionStatus(ix, context = {}, opts = {}) {
+export async function sendGetTransactionStatus(
+  ix,
+  context: any = {},
+  opts: any = {}
+) {
   invariant(
     opts.node,
     `SDK Send Get Transaction Status Error: opts.node must be defined.`

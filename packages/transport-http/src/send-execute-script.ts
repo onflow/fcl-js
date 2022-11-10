@@ -71,7 +71,7 @@ function constructResponse(ix, context, res) {
   return ret
 }
 
-export async function sendExecuteScript(ix, context = {}, opts = {}) {
+export async function sendExecuteScript(ix, context: any = {}, opts: any = {}) {
   invariant(
     opts.node,
     `SDK Send Execute Script Error: opts.node must be defined.`

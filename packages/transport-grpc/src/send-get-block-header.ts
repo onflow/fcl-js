@@ -71,7 +71,11 @@ function constructResponse(ix, context, res) {
   return ret
 }
 
-export async function sendGetBlockHeader(ix, context = {}, opts = {}) {
+export async function sendGetBlockHeader(
+  ix,
+  context: any = {},
+  opts: any = {}
+) {
   invariant(
     opts.node,
     `SDK Send Get Block Header Error: opts.node must be defined.`

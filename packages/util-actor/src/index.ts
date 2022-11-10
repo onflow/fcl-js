@@ -19,7 +19,7 @@ var pid = 0b0
 
 const DEFAULT_TIMEOUT = 5000
 const DEFAULT_TAG = "---"
-export const send = (addr, tag, data, opts = {}) =>
+export const send = (addr, tag, data?, opts: any = {}) =>
   new Promise((reply, reject) => {
     const expectReply = opts.expectReply || false
     const timeout = opts.timeout != null ? opts.timeout : DEFAULT_TIMEOUT
@@ -97,14 +97,14 @@ export const spawn = (fn, addr = null) => {
   const ctx = {
     self: () => addr,
     receive: () => root.FCL_REGISTRY[addr].mailbox.receive(),
-    send: (to, tag, data, opts = {}) => {
+    send: (to, tag, data, opts: any = {}) => {
       opts.from = addr
       return send(to, tag, data, opts)
     },
     sendSelf: (tag, data, opts) => {
       if (root.FCL_REGISTRY[addr]) send(addr, tag, data, opts)
     },
-    broadcast: (tag, data, opts = {}) => {
+    broadcast: (tag, data, opts: any = {}) => {
       opts.from = addr
       for (let to of root.FCL_REGISTRY[addr].subs) send(to, tag, data, opts)
     },

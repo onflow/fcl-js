@@ -10,7 +10,7 @@ import {sendGetBlockHeader} from "./send-get-block-header.js"
 import {sendGetCollection} from "./send-get-collection.js"
 import {sendPing} from "./send-ping.js"
 
-export const send = async (ix, context = {}, opts = {}) => {
+export const send = async (ix, context: any = {}, opts: any = {}) => {
   invariant(
     opts.node,
     `SDK Send Error: Either opts.node or "accessNode.api" in config must be defined.`

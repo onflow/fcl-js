@@ -580,7 +580,7 @@ export const Reference = type(
   v => v
 )
 
-export const _Array = (children = []) =>
+export const _Array = (children: any = []) =>
   type(
     "Array",
     v => {
@@ -596,7 +596,7 @@ export const _Array = (children = []) =>
 
 export {_Array as Array}
 
-export const Dictionary = (children = []) =>
+export const Dictionary = (children: any = []) =>
   type(
     "Dictionary",
     v => {
@@ -625,7 +625,7 @@ export const Dictionary = (children = []) =>
     v => v
   )
 
-export const Event = (id, fields = []) =>
+export const Event = (id, fields: any = []) =>
   type(
     "Event",
     v => {
@@ -650,7 +650,7 @@ export const Event = (id, fields = []) =>
     v => v
   )
 
-export const Resource = (id, fields = []) =>
+export const Resource = (id, fields: any = []) =>
   type(
     "Resource",
     v => {
@@ -675,7 +675,7 @@ export const Resource = (id, fields = []) =>
     v => v
   )
 
-export const Struct = (id, fields = []) =>
+export const Struct = (id, fields: any = []) =>
   type(
     "Struct",
     v => {
@@ -700,7 +700,7 @@ export const Struct = (id, fields = []) =>
     v => v
   )
 
-export const Enum = (id, fields = []) =>
+export const Enum = (id, fields: any = []) =>
   type(
     "Enum",
     v => {

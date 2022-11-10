@@ -16,7 +16,11 @@ const nonEmptyU8ToHex = (u8, context) =>
   !u8.reduce((empty, b) => empty && !b, true) ? u8ToHex(u8, context) : null
 const hexBuffer = (hex, context) => context.Buffer.from(hex, "hex")
 
-export async function sendGetTransactionStatus(ix, context = {}, opts = {}) {
+export async function sendGetTransactionStatus(
+  ix,
+  context: any = {},
+  opts: any = {}
+) {
   invariant(
     opts.node,
     `SDK Send Get Transaction Status Error: opts.node must be defined.`
