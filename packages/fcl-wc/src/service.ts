@@ -220,6 +220,7 @@ async function connectWc({
         type: REQUEST_TYPES.SESSION_REQUEST,
         method,
         service,
+        // @ts-ignore
         session: session ?? null,
         pairing: pairing ?? null,
         uri: uri ?? null,
