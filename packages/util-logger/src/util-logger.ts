@@ -53,8 +53,8 @@ export const log = async ({title, message, level, always = false}) => {
 
 log.deprecate = ({
   pkg,
-  subject,
-  transition,
+  subject = null,
+  transition = null,
   level = LEVELS.warn,
   message = "",
   callback = null,
