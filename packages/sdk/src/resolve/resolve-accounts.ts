@@ -25,7 +25,7 @@ export function buildPreSignable(acct, ix) {
   }
 }
 
-async function collectAccounts(ix, accounts, last, depth = 3) {
+async function collectAccounts(ix, accounts, last?, depth = 3) {
   invariant(depth, "Account Resolve Recursion Limit Exceeded", {ix, accounts})
 
   let authorizations = []

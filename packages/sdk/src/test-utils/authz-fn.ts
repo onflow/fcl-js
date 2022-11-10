@@ -6,7 +6,7 @@ export function sig(opts) {
   return ["SIGNATURE", opts.addr, opts.keyId].join(".")
 }
 
-export function authzFn(opts = {}) {
+export function authzFn(opts: any = {}) {
   return function (account) {
     const acct = {
       ...account,
@@ -29,7 +29,7 @@ export function authzFn(opts = {}) {
   }
 }
 
-export function authzResolve(opts = {}) {
+export function authzResolve(opts: any = {}) {
   return function (account) {
     const {tempId, ...rest} = opts
     return {
@@ -43,7 +43,7 @@ export function authzResolve(opts = {}) {
 const ROLE = {proposer: false, authorizer: false, payer: false}
 const noop = () => {}
 
-export function authzResolveMany(opts = {}) {
+export function authzResolveMany(opts: any = {}) {
   return function (account) {
     const tempId = opts.tempId || "AUTHZ_RESOLVE_MANY"
     return {

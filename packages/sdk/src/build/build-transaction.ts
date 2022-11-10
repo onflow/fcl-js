@@ -4,7 +4,7 @@ import {template} from "@onflow/util-template"
 const DEFAULT_SCRIPT_ACCOUNTS = []
 const DEFUALT_REF = null
 
-export function transaction(...args) {
+export function transaction(...args: Parameters<typeof template>) {
   return pipe([
     makeTransaction,
     put("ix.cadence", template(...args)),

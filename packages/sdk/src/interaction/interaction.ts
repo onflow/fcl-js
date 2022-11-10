@@ -148,7 +148,7 @@ const prepAccountKeyId = acct => {
   }
 }
 
-export const prepAccount = (acct, opts = {}) => ix => {
+export const prepAccount = (acct, opts: any = {}) => ix => {
   invariant(
     typeof acct === "function" || typeof acct === "object",
     "prepAccount must be passed an authorization function or an account object"
@@ -277,7 +277,7 @@ export const pipe = (...args) => {
 
 const identity = v => v
 
-export const get = (ix, key, fallback) => {
+export const get = (ix, key, fallback?) => {
   return ix.assigns[key] == null ? fallback : ix.assigns[key]
 }
 
@@ -286,7 +286,7 @@ export const put = (key, value) => ix => {
   return Ok(ix)
 }
 
-export const update = (key, fn = identity) => ix => {
+export const update = (key, fn: (prev, ix) => any = identity) => ix => {
   ix.assigns[key] = fn(ix.assigns[key], ix)
   return Ok(ix)
 }

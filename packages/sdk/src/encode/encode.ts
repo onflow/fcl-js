@@ -215,7 +215,7 @@ const envelopeSigFields = [
   {name: "sig", check: isString},
 ]
 
-const checkField = (obj, field, base, index) => {
+const checkField = (obj, field, base?, index?) => {
   const {name, check, defaultVal} = field
   if (obj[name] == null && defaultVal != null) obj[name] = defaultVal
   if (obj[name] == null) throw missingFieldError(name, base, index)
