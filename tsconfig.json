@@ -4,10 +4,12 @@
   "references": [
     { "path": "./packages/config" },
     { "path": "./packages/fcl" },
+    { "path": "./packages/fcl/src" },
     { "path": "./packages/fcl-wc" },
     { "path": "./packages/protobuf" },
     { "path": "./packages/rlp" },
     { "path": "./packages/sdk" },
+    { "path": "./packages/sdk/src" },
     { "path": "./packages/transport-grpc" },
     { "path": "./packages/transport-http" },
     { "path": "./packages/types" },

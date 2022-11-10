@@ -1,3 +1,4 @@
+import pkg from "../package.json"
 import assert from "assert"
 import {
   build,
@@ -13,7 +14,7 @@ import {
 } from "./sdk.js"
 
 test("fcl.VERSION needs to match version in package.json", () => {
-  expect(VERSION).toBe("TESTVERSION")
+  expect(VERSION).toBe(pkg.version)
 })
 
 describe("build", () => {

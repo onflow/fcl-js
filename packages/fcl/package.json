@@ -18,8 +18,7 @@
     },
     "testEnvironment": "jsdom",
     "globals": {
-      "window": {},
-      "PACKAGE_CURRENT_VERSION": "TESTVERSION"
+      "window": {}
     }
   },
   "devDependencies": {
@@ -38,7 +37,7 @@
     "prepublishOnly": "npm test && npm run build",
     "test": "jest",
     "test:watch": "jest --watch",
-    "build": "tsc",
+    "build": "tsc --build src",
     "start": "tsc --watch"
   },
   "dependencies": {

@@ -18,8 +18,7 @@
     },
     "testEnvironment": "./jest-test-environment.js",
     "globals": {
-      "window": {},
-      "PACKAGE_CURRENT_VERSION": "TESTVERSION"
+      "window": {}
     }
   },
   "source": "src/fcl-wc.js",

@@ -1,3 +1,4 @@
+import pkg from "../package.json"
 import {serialize} from "./serialize"
 import {
   resolve,
@@ -10,10 +11,10 @@ import {
   ref,
   createSignableVoucher,
 } from "@onflow/sdk"
-import {VERSION} from "@onflow/sdk/src/VERSION"
+import {VERSION} from "./fcl"
 
 test("fcl.VERSION needs to match version in package.json", () => {
-  expect(VERSION).toBe("TESTVERSION")
+  expect(VERSION).toBe(pkg.version)
 })
 
 test("serialize returns voucher", async () => {

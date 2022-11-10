@@ -16,9 +16,7 @@
     "transform": {
       ".js": "jest-esm-transformer"
     },
-    "globals": {
-      "PACKAGE_CURRENT_VERSION": "TESTVERSION"
-    }
+    "globals": {}
   },
   "devDependencies": {
     "@types/jest": "^29.2.2",
@@ -35,7 +33,7 @@
     "alpha": "npm publish --tag alpha",
     "prepublishOnly": "npm test && npm run build",
     "test": "jest",
-    "build": "tsc",
+    "build": "tsc --build src",
     "test:watch": "jest --watch",
     "start": "tsc --watch"
   },

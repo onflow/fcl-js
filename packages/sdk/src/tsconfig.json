@@ -1,0 +1,10 @@
+{
+  "extends": "../../../tsconfig-base",
+  "compilerOptions": {
+    "outDir": "../dist",
+    "rootDir": ".",
+    "strict": false,
+    "types": ["node"]
+  },
+  "references": [{"path": "../"}]
+}

@@ -5,9 +5,9 @@
     "rootDir": "./src",
     "strict": false,
     "paths": {
-      "@onflow/fcl": ["../fcl"]
+      "@onflow/fcl": ["../fcl/src"]
     }
   },
-  "references": [{"path": "../fcl"}],
+  "references": [{"path": "../fcl/src"}],
   "include": ["./src"]
 }
