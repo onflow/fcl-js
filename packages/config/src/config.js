@@ -139,7 +139,18 @@ async function load(data) {
   // Add contract mappings to config
   // Keep '0x' so that under the hood we can identify what is a contract import in config
   for (const [key, value] of Object.entries(accumulate(flowJSON, cleanedNetwork))) {
-    put(`0x${key}`, value)
+    const contractConfigKey = `0x${key}`
+    const existingContractConfigKey = await get(contractConfigKey)
+
+    if (existingContractConfigKey) {
+      logger.log({
+        title: "Contract Placeholder Conflict Detected",
+        message: `A generated contract placeholder from config.load and a placeholder you've set manually in config have the same name.`,
+        level: logger.LEVELS.warn,
+      })
+    } else {
+      put(contractConfigKey, value)
+    }
   }
 }
 
