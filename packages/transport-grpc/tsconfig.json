@@ -5,6 +5,9 @@
     "rootDir": "./src",
     "strict": false,
     "paths": {
+      "@improbable-eng/grpc-web-node-http-transport": [
+        "./node_modules/@improbable-eng/grpc-web-node-http-transport/lib/index.d.ts"
+      ],
       "@onflow/util-address": ["../util-address"]
     }
   },
