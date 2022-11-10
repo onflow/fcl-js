@@ -135,11 +135,11 @@ async function load(data) {
 
     if (!isEmulator) return
   }
-  
+
   // Add contract mappings to config
   // Keep '0x' so that under the hood we can identify what is a contract import in config
   for (const [key, value] of Object.entries(accumulate(flowJSON, cleanedNetwork))) {
-    put(`0x${key}.contract`, value)
+    put(`0x${key}`, value)
   }
 }
 
