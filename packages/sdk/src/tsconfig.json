@@ -4,7 +4,25 @@
     "outDir": "../dist",
     "rootDir": ".",
     "strict": false,
-    "types": ["node"]
+    "types": ["node"],
+    "paths": {
+      "@onflow/config": ["../../config"],
+      "@onflow/rlp": ["../../rlp"],
+      "@onflow/transport-http": ["../../transport-http"],
+      "@onflow/util-address": ["../../util-address"],
+      "@onflow/util-invariant": ["../../util-invariant"],
+      "@onflow/util-logger": ["../../util-logger"],
+      "@onflow/util-template": ["../../util-template"]
+    }
   },
-  "references": [{"path": "../"}]
+  "references": [
+    {"path": "../"},
+    {"path": "../../config"},
+    {"path": "../../rlp"},
+    {"path": "../../transport-http"},
+    {"path": "../../util-address"},
+    {"path": "../../util-invariant"},
+    {"path": "../../util-logger"},
+    {"path": "../../util-template"}
+  ]
 }
