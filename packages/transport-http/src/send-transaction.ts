@@ -1,5 +1,5 @@
 import {invariant} from "@onflow/util-invariant"
-import {sansPrefix} from "@onflow/util-address"
+import {sansPrefix, withPrefix} from "@onflow/util-address"
 import {httpRequest as defaultHttpRequest} from "./http-request.js"
 
 const idof = acct => `${withPrefix(acct.addr)}-${acct.keyId}`
