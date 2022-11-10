@@ -10,7 +10,7 @@ export function getTemplateMessage({
     "getMessage({ messageKey }) -- messageKey must be defined"
   )
   invariant(
-    typeof messageKey === "stirng",
+    typeof messageKey === "string",
     "getMessage({ messageKey }) -- messageKey must be a string"
   )
 
@@ -19,7 +19,7 @@ export function getTemplateMessage({
     "getMessage({ localization }) -- localization must be defined"
   )
   invariant(
-    typeof localization === "stirng",
+    typeof localization === "string",
     "getMessage({ localization }) -- localization must be a string"
   )
 
