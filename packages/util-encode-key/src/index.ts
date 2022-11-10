@@ -1,5 +1,5 @@
 import {invariant} from "@onflow/util-invariant"
-import {encode} from "@onflow/rlp"
+import {Buffer, encode} from "@onflow/rlp"
 
 // Curves
 export const ECDSA_P256 = 2
