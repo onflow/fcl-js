@@ -104,8 +104,9 @@ export function clearConfig() {
   return send(NAME, CLEAR)
 }
 
-function resetConfig(oldConfig) {
-  return clearConfig().then(config(oldConfig))
+async function resetConfig(oldConfig) {
+  await clearConfig()
+  config(oldConfig)
 }
 
 function config(values?: any) {
