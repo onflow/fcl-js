@@ -9,7 +9,6 @@ import {
   INIT,
   SUBSCRIBE,
   UNSUBSCRIBE,
-  ERROR,
 } from "@onflow/util-actor"
 import {send as fclSend, decode, getTransactionStatus} from "@onflow/sdk"
 
