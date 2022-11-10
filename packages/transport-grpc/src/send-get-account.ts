@@ -72,7 +72,7 @@ function constructResponse(ix, context, res) {
         (acc, contract) => ({
           ...acc,
           [contract[0]]: context.Buffer.from(
-            contract[1] || new UInt8Array()
+            contract[1] || new Uint8Array()
           ).toString("utf8"),
         }),
         {}
@@ -83,7 +83,7 @@ function constructResponse(ix, context, res) {
     address: withPrefix(u8ToHex(account.getAddress_asU8(), context)),
     balance: account.getBalance(),
     code: context.Buffer.from(
-      account.getCode_asU8() || new UInt8Array()
+      account.getCode_asU8() || new Uint8Array()
     ).toString("utf8"),
     contracts,
     keys: account.getKeysList().map(publicKey => ({
