@@ -5,8 +5,29 @@
     "rootDir": ".",
     "strict": false,
     "paths": {
-      "@onflow/sdk": ["../../sdk/src"]
+      "@onflow/config": ["../../config"],
+      "@onflow/rlp": ["../../rlp"],
+      "@onflow/sdk": ["../../sdk/src"],
+      "@onflow/types": ["../../types"],
+      "@onflow/util-actor": ["../../util-actor"],
+      "@onflow/util-address": ["../../util-address"],
+      "@onflow/util-invariant": ["../../util-invariant"],
+      "@onflow/util-logger": ["../../util-logger"],
+      "@onflow/util-template": ["../../util-template"],
+      "@onflow/util-uid": ["../../util-uid"],
     }
   },
-  "references": [{"path": "../"}, {"path": "../../sdk/src"}]
+  "references": [
+    {"path": "../"},
+    {"path": "../../config"},
+    {"path": "../../rlp"},
+    {"path": "../../sdk/src"},
+    {"path": "../../types"},
+    {"path": "../../util-actor"},
+    {"path": "../../util-address"},
+    {"path": "../../util-invariant"},
+    {"path": "../../util-logger"},
+    {"path": "../../util-template"},
+    {"path": "../../util-uid"}
+  ]
 }
