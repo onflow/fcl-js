@@ -6,5 +6,6 @@
     "strict": false
   },
   "references": [],
-  "include": ["./src"]
+  "include": ["./src"],
+  "exclude": ["**/*.test.ts"]
 }

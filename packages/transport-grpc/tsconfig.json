@@ -12,5 +12,6 @@
     }
   },
   "references": [{"path": "../util-address"}],
-  "include": ["./src"]
+  "include": ["./src"],
+  "exclude": ["**/*.test.ts"]
 }

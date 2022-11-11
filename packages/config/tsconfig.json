@@ -9,5 +9,6 @@
     }
   },
   "references": [{"path": "../util-actor"}],
-  "include": ["./src"]
+  "include": ["./src"],
+  "exclude": ["**/*.test.ts"]
 }

@@ -14,16 +14,31 @@
   },
   "jest": {
     "transform": {
-      ".js": "jest-esm-transformer"
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.tsx?$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node"
+    ],
+    "globals": {
+      "ts-jest": {
+        "tsconfig": "tsconfig.test.json"
+      }
     }
   },
   "devDependencies": {
     "@onflow/rlp": "^1.0.2",
     "@onflow/types": "^1.0.3",
-    "@types/jest": "^29.2.2",
+    "@types/jest": "^27.5.2",
     "@types/node-fetch": "^2.6.2",
-    "jest": "^27.0.6",
+    "jest": "^27.5.1",
     "jest-esm-transformer": "1.0.0",
+    "ts-jest": "^27.1.5",
     "typescript": "^4.8.4"
   },
   "source": "src/sdk-send-http.js",

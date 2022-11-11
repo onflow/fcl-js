@@ -9,5 +9,6 @@
     }
   },
   "references": [{"path": "../util-logger"}],
-  "include": ["./src"]
+  "include": ["./src"],
+  "exclude": ["**/*.test.ts"]
 }

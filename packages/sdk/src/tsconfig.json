@@ -24,5 +24,6 @@
     {"path": "../../util-invariant"},
     {"path": "../../util-logger"},
     {"path": "../../util-template"}
-  ]
+  ],
+  "exclude": ["**/*.test.ts", "**/__tests__/**"]
 }

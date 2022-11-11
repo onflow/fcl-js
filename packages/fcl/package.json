@@ -14,17 +14,30 @@
   },
   "jest": {
     "transform": {
-      ".js": "jest-esm-transformer"
+      "^.+\\.tsx?$": "ts-jest"
     },
-    "testEnvironment": "jsdom",
+    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.tsx?$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node"
+    ],
     "globals": {
+      "ts-jest": {
+        "tsconfig": "src/tsconfig.test.json"
+      },
       "window": {}
-    }
+    },
+    "testEnvironment": "jsdom"
   },
   "devDependencies": {
-    "@types/jest": "^29.2.2",
-    "jest": "^27.0.6",
+    "@types/jest": "^27.5.2",
+    "jest": "^27.5.1",
     "jest-esm-transformer": "1.0.0",
+    "ts-jest": "^27.1.5",
     "typescript": "^4.8.4"
   },
   "source": "src/fcl.js",

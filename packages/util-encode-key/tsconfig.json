@@ -10,5 +10,6 @@
     }
   },
   "references": [{"path": "../util-invariant"}, {"path": "../rlp"}],
-  "include": ["./src"]
+  "include": ["./src"],
+  "exclude": ["**/*.test.ts"]
 }

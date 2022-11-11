@@ -29,5 +29,6 @@
     {"path": "../../util-logger"},
     {"path": "../../util-template"},
     {"path": "../../util-uid"}
-  ]
+  ],
+  "exclude": ["**/*.test.ts"]
 }
