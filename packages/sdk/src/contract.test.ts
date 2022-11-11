@@ -7,7 +7,7 @@ import * as template from "@onflow/util-template"
 
 const interfaceContract =
   (label, wat) =>
-  ([template]) => {
+  ([template]: TemplateStringsArray) => {
     const keys = template.replace(/\s+/g, "|").split("|").filter(Boolean)
 
     describe(label, () => {

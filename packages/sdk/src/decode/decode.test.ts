@@ -765,7 +765,7 @@ const genDictionary = (depth = 0) => {
     () => genEnum(depth++),
   ]
   const dictionaryLength = ~~(Math.random() * 10)
-  const arr = Array.from({length: dictionaryLength}).reduce(
+  const arr = Array.from<any>({length: dictionaryLength}).reduce(
     acc => {
       const {payload: valPayload, decoded: val} =
         OPTIONS[~~(Math.random() * OPTIONS.length)]()
@@ -817,7 +817,7 @@ const genResource = (depth = 0) => {
     () => genEnum(depth++),
   ]
   const fieldsLength = ~~(Math.random() * 10)
-  const res = Array.from({length: fieldsLength}).reduce(
+  const res = Array.from<any>({length: fieldsLength}).reduce(
     acc => {
       const {payload: valPayload, decoded: val} =
         OPTIONS[~~(Math.random() * OPTIONS.length)]()
@@ -869,7 +869,7 @@ const genStruct = (depth = 0) => {
     () => genEnum(depth++),
   ]
   const fieldsLength = ~~(Math.random() * 10)
-  const res = Array.from({length: fieldsLength}).reduce(
+  const res = Array.from<any>({length: fieldsLength}).reduce(
     acc => {
       const {payload: valPayload, decoded: val} =
         OPTIONS[~~(Math.random() * OPTIONS.length)]()
@@ -921,7 +921,7 @@ const genEvent = (depth = 0) => {
     () => genEnum(depth++),
   ]
   const fieldsLength = ~~(Math.random() * 10)
-  const res = Array.from({length: fieldsLength}).reduce(
+  const res = Array.from<any>({length: fieldsLength}).reduce(
     acc => {
       const {payload: valPayload, decoded: val} =
         OPTIONS[~~(Math.random() * OPTIONS.length)]()
@@ -973,7 +973,7 @@ const genEnum = (depth = 0) => {
     () => genEnum(depth++),
   ]
   const fieldsLength = ~~(Math.random() * 10)
-  const res = Array.from({length: fieldsLength}).reduce(
+  const res = Array.from<any>({length: fieldsLength}).reduce(
     acc => {
       const {payload: valPayload, decoded: val} =
         OPTIONS[~~(Math.random() * OPTIONS.length)]()
@@ -1025,7 +1025,7 @@ const genArray = (depth = 0) => {
     () => genEnum(depth++),
   ]
   const fieldsLength = ~~(Math.random() * 10)
-  const arr = Array.from({length: fieldsLength}).reduce(
+  const arr = Array.from<any>({length: fieldsLength}).reduce(
     acc => {
       const {payload, decoded} = OPTIONS[~~(Math.random() * OPTIONS.length)]()
       acc.values.push(payload)
@@ -1202,7 +1202,7 @@ describe("custom decoder tests", () => {
       },
     }
 
-    const Jeff = function (resource) {
+    const Jeff = function (resource): void {
       if (!(this instanceof Jeff)) return new Jeff(resource)
       this.firstName = resource.firstName
       this.lastName = resource.lastName
