@@ -85,9 +85,9 @@ describe("getServices", () => {
       Promise.resolve({
         json: () => Promise.resolve(mockData),
       })
-    )
+    ) as unknown as typeof global.fetch
 
-    const response = await getServices({ type: ["authn"] })
+    const response = await getServices({types: ["authn"]})
     expect(global.fetch).toHaveBeenCalledTimes(1)
   })
 })
