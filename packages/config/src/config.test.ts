@@ -1,6 +1,6 @@
 import {config, clearConfig} from "./config"
 
-const idle = () => new Promise(resolve => setTimeout(resolve), 0)
+const idle = () => new Promise(resolve => setTimeout(resolve, 0))
 
 describe("config()", () => {
   clearConfig()
