@@ -82,7 +82,7 @@ const fromHandlers =
     }
   }
 
-export const spawn = (fn, addr = null) => {
+export const spawn = (fn, addr: any = null) => {
   if (addr == null) addr = ++pid
   if (root.FCL_REGISTRY[addr] != null) return addr
 

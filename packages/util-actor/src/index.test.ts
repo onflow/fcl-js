@@ -44,7 +44,7 @@ const counterLogic = async ctx => {
   }
 }
 
-const counter = name => spawn(counterLogic, name)
+const counter = (name?) => spawn(counterLogic, name)
 const dump = addr => send(addr, DUMP, null, {expectReply: true, timeout: 100})
 const inc = (addr, delta = 1) => send(addr, INC, {delta})
 

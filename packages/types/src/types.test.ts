@@ -1,4 +1,4 @@
-import * as t from "./types.js"
+import * as t from "./types"
 ;[
   [t.Identity, 0, 0, 0],
   [t.Identity, "a", "a", "a"],
@@ -233,17 +233,19 @@ import * as t from "./types.js"
     },
     true,
   ],
-].forEach(([cast, input, asArgument, asInjection, shouldError = false]) => {
-  describe(cast.label, () => {
-    test(`t.${cast.label}.asArgument(${input})`, () => {
-      if (shouldError) {
-        expect(() => cast.asArgument(input)).toThrow()
-      } else {
-        expect(cast.asArgument(input)).toStrictEqual(asArgument)
-      }
+].forEach(
+  ([cast, input, asArgument, asInjection, shouldError = false]: any[]) => {
+    describe(cast.label, () => {
+      test(`t.${cast.label}.asArgument(${input})`, () => {
+        if (shouldError) {
+          expect(() => cast.asArgument(input)).toThrow()
+        } else {
+          expect(cast.asArgument(input)).toStrictEqual(asArgument)
+        }
+      })
+      test(`t.${cast.label}.asInjection(${input})`, () => {
+        expect(cast.asInjection(input)).toStrictEqual(asInjection)
+      })
     })
-    test(`t.${cast.label}.asInjection(${input})`, () => {
-      expect(cast.asInjection(input)).toStrictEqual(asInjection)
-    })
-  })
-})
+  }
+)

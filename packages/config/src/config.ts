@@ -70,7 +70,7 @@ function get(key, fallback?) {
   return send(NAME, GET, {key, fallback}, {expectReply: true, timeout: 10})
 }
 
-async function first(wants = [], fallback?) {
+async function first(wants: any = [], fallback?) {
   if (!wants.length) return fallback
   const [head, ...rest] = wants
   const ret = await get(head)

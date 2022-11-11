@@ -23,7 +23,7 @@ describe("interleave", () => {
   })
 })
 
-const _ = (msg, a, b) => {
+const _ = (msg, a, b?) => {
   if (b == null) {
     test(msg, () => expect(a).toMatchSnapshot())
   } else {
