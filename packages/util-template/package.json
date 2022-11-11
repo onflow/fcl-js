@@ -35,6 +35,7 @@
     "start": "tsc --watch"
   },
   "dependencies": {
-    "@babel/runtime": "^7.18.6"
+    "@babel/runtime": "^7.18.6",
+    "@onflow/util-logger": "^1.1.2"
   }
 }
