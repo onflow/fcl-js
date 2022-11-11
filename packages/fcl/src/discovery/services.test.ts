@@ -71,7 +71,7 @@ describe("getServices", () => {
 
   afterEach(() => {
     windowSpy.mockRestore()
-    global.fetch.mockClear()
+    ;(global.fetch as jest.Mock).mockClear()
   })
 
   it("it should get only services of type authn", async () => {

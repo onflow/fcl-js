@@ -13,7 +13,7 @@ const addressBuffer = addr => leftPaddedHexBuffer(addr, 8)
 const nonceBuffer = nonce => Buffer.from(nonce, "hex")
 
 export const encodeAccountProof = (
-  {address, nonce, appIdentifier},
+  {address, nonce, appIdentifier}: {address?; nonce; appIdentifier?},
   includeDomainTag = true
 ) => {
   invariant(
