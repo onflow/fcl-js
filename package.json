@@ -4,6 +4,7 @@
   ],
   "scripts": {
     "build": "lerna run build",
+    "clean": "lerna run clean",
     "start": "npm run build && lerna run start --parallel",
     "test": "lerna run test",
     "release": "npm run build && npm run changeset publish",

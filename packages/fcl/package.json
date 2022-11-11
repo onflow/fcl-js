@@ -38,6 +38,7 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "build": "tsc --build src",
+    "clean": "tsc --build --clean src",
     "start": "tsc --watch"
   },
   "dependencies": {

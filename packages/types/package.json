@@ -31,6 +31,7 @@
     "prepublishOnly": "npm test && npm run build",
     "test": "jest",
     "build": "tsc",
+    "clean": "tsc --build --clean",
     "test:watch": "jest --watch",
     "start": "tsc --watch"
   },
