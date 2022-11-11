@@ -1,11 +1,11 @@
 import {AccessAPI} from "@onflow/protobuf"
-import {sendExecuteScript} from "./send-execute-script.js"
-import {build} from "../../sdk/src/build/build.js"
-import {script} from "../../sdk/src/build/build-script.js"
-import {atBlockId} from "../../sdk/src/build/build-at-block-id.js"
-import {atBlockHeight} from "../../sdk/src/build/build-at-block-height.js"
-import {resolve} from "../../sdk/src/resolve/resolve.js"
-import {response as responseADT} from "../../sdk/src/response/response.js"
+import {sendExecuteScript} from "./send-execute-script"
+import {build} from "../../sdk/src/build/build"
+import {script} from "../../sdk/src/build/build-script"
+import {atBlockId} from "../../sdk/src/build/build-at-block-id"
+import {atBlockHeight} from "../../sdk/src/build/build-at-block-height"
+import {resolve} from "../../sdk/src/resolve/resolve"
+import {response as responseADT} from "../../sdk/src/response/response"
 import {Buffer} from "@onflow/rlp"
 
 const jsonToUInt8Array = json => {

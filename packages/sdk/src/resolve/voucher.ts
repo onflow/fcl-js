@@ -1,5 +1,5 @@
 import {withPrefix} from "@onflow/util-address"
-import {encodeTxIdFromVoucher} from "../encode/encode.js"
+import {encodeTxIdFromVoucher} from "../encode/encode"
 
 export function findInsideSigners(ix) {
   // Inside Signers Are: (authorizers + proposer) - payer

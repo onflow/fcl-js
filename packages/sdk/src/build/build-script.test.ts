@@ -1,5 +1,5 @@
-import {interaction, isScript} from "../interaction/interaction.js"
-import {script} from "./build-script.js"
+import {interaction, isScript} from "../interaction/interaction"
+import {script} from "./build-script"
 
 describe("Build Script", () => {
   test("Build Script", async () => {

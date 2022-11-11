@@ -1,4 +1,4 @@
-import {get, pipe, Ok, Bad} from "../interaction/interaction.js"
+import {get, pipe, Ok, Bad} from "../interaction/interaction"
 
 export async function resolveValidators(ix) {
   const validators = get(ix, "ix.validators", [])

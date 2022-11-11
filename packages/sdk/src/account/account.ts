@@ -1,9 +1,9 @@
-import {atBlockHeight} from "../build/build-at-block-height.js"
-import {atBlockId} from "../build/build-at-block-id.js"
-import {getAccount} from "../build/build-get-account.js"
+import {atBlockHeight} from "../build/build-at-block-height"
+import {atBlockId} from "../build/build-at-block-id"
+import {getAccount} from "../build/build-get-account"
 import {invariant} from "@onflow/util-invariant"
-import {decodeResponse as decode} from "../decode/decode.js"
-import {send} from "../send/send.js"
+import {decodeResponse as decode} from "../decode/decode"
+import {send} from "../send/send"
 
 export function account(address, {height, id}: {height?; id?} = {}, opts?) {
   invariant(

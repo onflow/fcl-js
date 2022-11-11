@@ -1,5 +1,5 @@
-import {interaction} from "../interaction/interaction.js"
-import {atBlockId} from "./build-at-block-id.js"
+import {interaction} from "../interaction/interaction"
+import {atBlockId} from "./build-at-block-id"
 
 describe("Build At Block ID", () => {
   test("At Block ID", async () => {

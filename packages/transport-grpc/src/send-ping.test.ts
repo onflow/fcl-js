@@ -1,9 +1,9 @@
 import {AccessAPI} from "@onflow/protobuf"
-import {sendPing} from "./send-ping.js"
-import {build} from "../../sdk/src/build/build.js"
-import {ping} from "../../sdk/src/build/build-ping.js"
-import {resolve} from "../../sdk/src/resolve/resolve.js"
-import {response as responseADT} from "../../sdk/src/response/response.js"
+import {sendPing} from "./send-ping"
+import {build} from "../../sdk/src/build/build"
+import {ping} from "../../sdk/src/build/build-ping"
+import {resolve} from "../../sdk/src/resolve/resolve"
+import {response as responseADT} from "../../sdk/src/response/response"
 import {Buffer} from "@onflow/rlp"
 
 const jsonToUInt8Array = json => {

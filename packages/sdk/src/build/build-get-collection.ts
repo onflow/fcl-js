@@ -1,4 +1,4 @@
-import {pipe, makeGetCollection} from "../interaction/interaction.js"
+import {pipe, makeGetCollection} from "../interaction/interaction"
 
 export function getCollection(id = null) {
   return pipe([

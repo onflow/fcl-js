@@ -1,14 +1,9 @@
-import {
-  isTransaction,
-  Ok,
-  interaction,
-  pipe,
-} from "../interaction/interaction.js"
-import * as ixModule from "../interaction/interaction.js"
-import {response} from "../response/response.js"
+import {isTransaction, Ok, interaction, pipe} from "../interaction/interaction"
+import * as ixModule from "../interaction/interaction"
+import {response} from "../response/response"
 import {config} from "@onflow/config"
-import {decodeResponse} from "../decode/decode.js"
-import {getBlock} from "../build/build-get-block.js"
+import {decodeResponse} from "../decode/decode"
+import {getBlock} from "../build/build-get-block"
 import {invariant} from "@onflow/util-invariant"
 import {Buffer} from "@onflow/rlp"
 import {send as defaultSend} from "@onflow/transport-http"

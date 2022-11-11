@@ -1,4 +1,4 @@
-import {decodeResponse} from "./decode.js"
+import {decodeResponse} from "./decode"
 import {config} from "@onflow/config"
 
 export async function decode(response) {

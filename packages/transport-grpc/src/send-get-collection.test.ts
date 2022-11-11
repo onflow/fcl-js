@@ -1,9 +1,9 @@
 import {AccessAPI} from "@onflow/protobuf"
-import {sendGetCollection} from "./send-get-collection.js"
-import {build} from "../../sdk/src/build/build.js"
-import {getCollection} from "../../sdk/src/build/build-get-collection.js"
-import {resolve} from "../../sdk/src/resolve/resolve.js"
-import {response as responseADT} from "../../sdk/src/response/response.js"
+import {sendGetCollection} from "./send-get-collection"
+import {build} from "../../sdk/src/build/build"
+import {getCollection} from "../../sdk/src/build/build-get-collection"
+import {resolve} from "../../sdk/src/resolve/resolve"
+import {response as responseADT} from "../../sdk/src/response/response"
 import {Buffer} from "@onflow/rlp"
 
 const jsonToUInt8Array = json => {

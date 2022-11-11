@@ -1,4 +1,4 @@
-import {pipe, Ok, makeGetBlock} from "../interaction/interaction.js"
+import {pipe, Ok, makeGetBlock} from "../interaction/interaction"
 
 export function getBlock(isSealed = null) {
   return pipe([

@@ -1,8 +1,8 @@
 import {sansPrefix, withPrefix} from "@onflow/util-address"
 import {invariant} from "@onflow/util-invariant"
 import {log} from "@onflow/util-logger"
-import {isTransaction} from "../interaction/interaction.js"
-import {createSignableVoucher} from "./voucher.js"
+import {isTransaction} from "../interaction/interaction"
+import {createSignableVoucher} from "./voucher"
 
 const idof = acct => `${withPrefix(acct.addr)}-${acct.keyId}`
 const isFn = v => typeof v === "function"

@@ -1,9 +1,9 @@
 import {AccessAPI} from "@onflow/protobuf"
-import {sendGetTransaction} from "./send-get-transaction.js"
-import {build} from "../../sdk/src/build/build.js"
-import {getTransaction} from "../../sdk/src/build/build-get-transaction.js"
-import {resolve} from "../../sdk/src/resolve/resolve.js"
-import {response as responseADT} from "../../sdk/src/response/response.js"
+import {sendGetTransaction} from "./send-get-transaction"
+import {build} from "../../sdk/src/build/build"
+import {getTransaction} from "../../sdk/src/build/build-get-transaction"
+import {resolve} from "../../sdk/src/resolve/resolve"
+import {response as responseADT} from "../../sdk/src/response/response"
 import {Buffer} from "@onflow/rlp"
 
 const jsonToUInt8Array = json => {

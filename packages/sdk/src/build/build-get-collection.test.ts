@@ -1,5 +1,5 @@
-import {interaction, isGetCollection} from "../interaction/interaction.js"
-import {getCollection} from "./build-get-collection.js"
+import {interaction, isGetCollection} from "../interaction/interaction"
+import {getCollection} from "./build-get-collection"
 
 describe("Build Get Collection", () => {
   test("Get Collection", async () => {

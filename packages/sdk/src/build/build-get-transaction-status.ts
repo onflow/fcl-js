@@ -1,4 +1,4 @@
-import {pipe, Ok, makeGetTransactionStatus} from "../interaction/interaction.js"
+import {pipe, Ok, makeGetTransactionStatus} from "../interaction/interaction"
 
 export function getTransactionStatus(transactionId) {
   return pipe([

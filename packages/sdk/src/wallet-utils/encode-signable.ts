@@ -2,7 +2,7 @@ import {withPrefix, sansPrefix} from "@onflow/util-address"
 import {
   encodeTransactionPayload,
   encodeTransactionEnvelope,
-} from "../encode/encode.js"
+} from "../encode/encode"
 
 const findPayloadSigners = voucher => {
   // Payload Signers Are: (authorizers + proposer) - payer

@@ -1,4 +1,4 @@
-import {pipe, makeArgument} from "../interaction/interaction.js"
+import {pipe, makeArgument} from "../interaction/interaction"
 
 export function args(ax = []) {
   return pipe(ax.map(makeArgument))

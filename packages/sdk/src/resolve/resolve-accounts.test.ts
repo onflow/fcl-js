@@ -7,7 +7,7 @@ import {
   payer,
   limit,
   authorizations,
-} from "../sdk.js"
+} from "../sdk"
 import {buildPreSignable} from "./resolve-accounts"
 
 test("Voucher in PreSignable", async () => {

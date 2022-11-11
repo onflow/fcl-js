@@ -1,5 +1,5 @@
 import {invariant} from "@onflow/util-invariant"
-import {httpRequest as defaultHttpRequest} from "./http-request.js"
+import {httpRequest as defaultHttpRequest} from "./http-request"
 
 export async function sendGetCollection(ix, context: any = {}, opts: any = {}) {
   invariant(

@@ -1,4 +1,4 @@
-import {getTemplateArgumentMessage} from "./get-template-argument-message.js"
+import {getTemplateArgumentMessage} from "./get-template-argument-message"
 
 describe("Derive cadence by network", () => {
   let template = {

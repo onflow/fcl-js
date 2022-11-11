@@ -3,8 +3,8 @@ import * as sdk from "@onflow/sdk"
 import {isRequired, isObject, isString, isNumber} from "./utils/is"
 import {normalizeArgs} from "./utils/normalize-args"
 import {currentUser} from "../current-user"
-import {prepTemplateOpts} from "./utils/prep-template-opts.js"
-import {preMutate} from "./utils/pre.js"
+import {prepTemplateOpts} from "./utils/prep-template-opts"
+import {preMutate} from "./utils/pre"
 
 /** As the current user Mutate the Flow Blockchain
  *

@@ -1,4 +1,4 @@
-import {resolveArguments} from "../sdk.js"
+import {resolveArguments} from "../sdk"
 
 describe("resolveArguments", () => {
   const argID = "28948a11n4"

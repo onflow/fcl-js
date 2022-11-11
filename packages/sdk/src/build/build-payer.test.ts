@@ -1,5 +1,5 @@
-import {interaction} from "../interaction/interaction.js"
-import {payer} from "./build-payer.js"
+import {interaction} from "../interaction/interaction"
+import {payer} from "./build-payer"
 
 describe("Build Payer", () => {
   test("Build Payer", async () => {

@@ -1,4 +1,4 @@
-import {pipe, Ok} from "../interaction/interaction.js"
+import {pipe, Ok} from "../interaction/interaction"
 
 export function ref(refBlock) {
   return pipe([

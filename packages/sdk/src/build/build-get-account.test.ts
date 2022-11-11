@@ -1,6 +1,6 @@
-import {interaction} from "../interaction/interaction.js"
+import {interaction} from "../interaction/interaction"
 import {sansPrefix, withPrefix} from "@onflow/util-address"
-import {getAccount} from "./build-get-account.js"
+import {getAccount} from "./build-get-account"
 
 const ADDRESS = "0xf117a8efa34ffd58"
 

@@ -1,6 +1,6 @@
 import {log} from "@onflow/util-logger"
 // @ts-ignore
-import {pipe, Ok, makeGetLatestBlock} from "../interaction/interaction.js"
+import {pipe, Ok, makeGetLatestBlock} from "../interaction/interaction"
 
 export function getLatestBlock(isSealed = false) {
   log.deprecate({

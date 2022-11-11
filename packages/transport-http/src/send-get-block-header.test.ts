@@ -1,10 +1,10 @@
-import {sendGetBlockHeader} from "./send-get-block-header.js"
-import {build} from "../../sdk/src/build/build.js"
-import {getBlockHeader} from "../../sdk/src/build/build-get-block-header.js"
-import {atBlockId} from "../../sdk/src/build/build-at-block-id.js"
-import {atBlockHeight} from "../../sdk/src/build/build-at-block-height.js"
-import {resolve} from "../../sdk/src/resolve/resolve.js"
-import {response as responseADT} from "../../sdk/src/response/response.js"
+import {sendGetBlockHeader} from "./send-get-block-header"
+import {build} from "../../sdk/src/build/build"
+import {getBlockHeader} from "../../sdk/src/build/build-get-block-header"
+import {atBlockId} from "../../sdk/src/build/build-at-block-id"
+import {atBlockHeight} from "../../sdk/src/build/build-at-block-height"
+import {resolve} from "../../sdk/src/resolve/resolve"
+import {response as responseADT} from "../../sdk/src/response/response"
 import {Buffer} from "@onflow/rlp"
 
 describe("Send Get Block Header", () => {

@@ -1,4 +1,4 @@
-import {pipe, Ok, makeGetBlockHeader} from "../interaction/interaction.js"
+import {pipe, Ok, makeGetBlockHeader} from "../interaction/interaction"
 
 export function getBlockHeader(isSealed = null) {
   return pipe([

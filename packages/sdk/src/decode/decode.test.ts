@@ -1,5 +1,5 @@
-import * as root from "./decode.js"
-import {decode, decodeResponse} from "./decode.js"
+import * as root from "./decode"
+import {decode, decodeResponse} from "./decode"
 import {Buffer} from "@onflow/rlp"
 
 it("exported interface contract", () => {

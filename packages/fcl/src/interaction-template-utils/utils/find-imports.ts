@@ -1,4 +1,4 @@
-import {generateImport} from "./generate-import.js"
+import {generateImport} from "./generate-import"
 
 export function findImports(cadence) {
   let imports = []

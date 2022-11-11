@@ -1,5 +1,5 @@
-import {interaction, isGetTransaction} from "../interaction/interaction.js"
-import {getTransaction} from "./build-get-transaction.js"
+import {interaction, isGetTransaction} from "../interaction/interaction"
+import {getTransaction} from "./build-get-transaction"
 
 describe("Build Get Transaction", () => {
   test("Get Transaction", async () => {

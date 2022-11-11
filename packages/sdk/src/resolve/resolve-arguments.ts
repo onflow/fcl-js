@@ -1,5 +1,5 @@
 import {invariant} from "@onflow/util-invariant"
-import {isTransaction, isScript} from "../interaction/interaction.js"
+import {isTransaction, isScript} from "../interaction/interaction"
 
 const isFn = v => typeof v === "function"
 

@@ -1,5 +1,5 @@
-import {interaction, isGetBlockHeader} from "../interaction/interaction.js"
-import {getBlockHeader} from "./build-get-block-header.js"
+import {interaction, isGetBlockHeader} from "../interaction/interaction"
+import {getBlockHeader} from "./build-get-block-header"
 
 describe("Build Get Block Header", () => {
   test("Get Block Header, isSealed = false", async () => {

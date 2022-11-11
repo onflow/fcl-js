@@ -7,9 +7,9 @@ import {
   config,
   decode,
 } from "@onflow/sdk"
-import {genHash} from "./utils/hash.js"
-import {findImports} from "./utils/find-imports.js"
-import {generateImport} from "./utils/generate-import.js"
+import {genHash} from "./utils/hash"
+import {findImports} from "./utils/find-imports"
+import {generateImport} from "./utils/generate-import"
 
 export async function generateDependencyPin(
   {address, contractName, blockHeight},

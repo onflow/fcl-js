@@ -1,5 +1,5 @@
-import {pipe} from "../interaction/interaction.js"
-import {validator} from "./build-validator.js"
+import {pipe} from "../interaction/interaction"
+import {validator} from "./build-validator"
 
 export function atBlockHeight(height) {
   return pipe([

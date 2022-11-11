@@ -1,5 +1,5 @@
-import {interaction} from "../interaction/interaction.js"
-import {ref} from "./build-ref.js"
+import {interaction} from "../interaction/interaction"
+import {ref} from "./build-ref"
 
 describe("Build Ref", () => {
   test("Build Ref", async () => {

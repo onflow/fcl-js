@@ -1,4 +1,4 @@
-import {resolveVoucherIntercept} from "./resolve-voucher-intercept.js"
+import {resolveVoucherIntercept} from "./resolve-voucher-intercept"
 
 test("exports function", () => {
   expect(typeof resolveVoucherIntercept).toBe("function")

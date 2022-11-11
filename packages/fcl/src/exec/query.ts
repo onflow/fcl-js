@@ -2,8 +2,8 @@ import {invariant} from "@onflow/util-invariant"
 import * as sdk from "@onflow/sdk"
 import {isRequired, isObject, isString} from "./utils/is"
 import {normalizeArgs} from "./utils/normalize-args"
-import {prepTemplateOpts} from "./utils/prep-template-opts.js"
-import {preQuery} from "./utils/pre.js"
+import {prepTemplateOpts} from "./utils/prep-template-opts"
+import {preQuery} from "./utils/pre"
 
 /** Query the Flow Blockchain
  *

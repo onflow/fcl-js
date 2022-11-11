@@ -1,4 +1,4 @@
-import {deriveCadenceByNetwork} from "./derive-cadence-by-network.js"
+import {deriveCadenceByNetwork} from "./derive-cadence-by-network"
 
 describe("Derive cadence by network", () => {
   let template = {

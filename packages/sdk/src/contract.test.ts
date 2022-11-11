@@ -1,8 +1,8 @@
 import * as root from "./sdk"
-import * as decode from "./decode/decode.js"
-import * as encode from "./encode/encode.js"
-import * as interaction from "./interaction/interaction.js"
-import * as send from "./send/send.js"
+import * as decode from "./decode/decode"
+import * as encode from "./encode/encode"
+import * as interaction from "./interaction/interaction"
+import * as send from "./send/send"
 import * as template from "@onflow/util-template"
 
 const interfaceContract =

@@ -1,2 +1,2 @@
-export {validateSignableTransaction} from "./validate-tx.js"
-export {encodeMessageFromSignable} from "./encode-signable.js"
+export {validateSignableTransaction} from "./validate-tx"
+export {encodeMessageFromSignable} from "./encode-signable"

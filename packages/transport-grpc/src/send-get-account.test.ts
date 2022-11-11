@@ -1,10 +1,10 @@
 import {AccessAPI} from "@onflow/protobuf"
-import {sendGetAccount} from "./send-get-account.js"
-import {build} from "../../sdk/src/build/build.js"
-import {getAccount} from "../../sdk/src/build/build-get-account.js"
-import {atBlockHeight} from "../../sdk/src/build/build-at-block-height.js"
-import {resolve} from "../../sdk/src/resolve/resolve.js"
-import {response as responseADT} from "../../sdk/src/response/response.js"
+import {sendGetAccount} from "./send-get-account"
+import {build} from "../../sdk/src/build/build"
+import {getAccount} from "../../sdk/src/build/build-get-account"
+import {atBlockHeight} from "../../sdk/src/build/build-at-block-height"
+import {resolve} from "../../sdk/src/resolve/resolve"
+import {response as responseADT} from "../../sdk/src/response/response"
 import {Buffer} from "@onflow/rlp"
 
 const jsonToUInt8Array = json => {

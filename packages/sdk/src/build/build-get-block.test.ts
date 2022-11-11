@@ -1,5 +1,5 @@
-import {interaction, isGetBlock} from "../interaction/interaction.js"
-import {getBlock} from "./build-get-block.js"
+import {interaction, isGetBlock} from "../interaction/interaction"
+import {getBlock} from "./build-get-block"
 
 describe("Build Get Block", () => {
   test("Get Block - isSealed = false", async () => {

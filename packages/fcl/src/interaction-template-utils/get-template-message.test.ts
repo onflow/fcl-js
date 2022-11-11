@@ -1,4 +1,4 @@
-import {getTemplateMessage} from "./get-template-message.js"
+import {getTemplateMessage} from "./get-template-message"
 
 describe("Derive cadence by network", () => {
   let template = {

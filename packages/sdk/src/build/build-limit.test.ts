@@ -1,5 +1,5 @@
-import {interaction} from "../interaction/interaction.js"
-import {limit} from "./build-limit.js"
+import {interaction} from "../interaction/interaction"
+import {limit} from "./build-limit"
 
 describe("Build Limit", () => {
   test("Build Limit", async () => {

@@ -1,5 +1,5 @@
-import {interaction} from "../interaction/interaction.js"
-import {authorizations, authorization} from "./build-authorizations.js"
+import {interaction} from "../interaction/interaction"
+import {authorizations, authorization} from "./build-authorizations"
 
 describe("Build Authorizations", () => {
   test("build authorizer", async () => {

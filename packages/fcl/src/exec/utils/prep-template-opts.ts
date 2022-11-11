@@ -1,7 +1,7 @@
 import * as sdk from "@onflow/sdk"
-import {retrieve} from "../../document/document.js"
+import {retrieve} from "../../document/document"
 import {normalizeInteractionTemplate} from "../../normalizers/interaction-template/interaction-template"
-import {deriveCadenceByNetwork} from "../../interaction-template-utils/derive-cadence-by-network.js"
+import {deriveCadenceByNetwork} from "../../interaction-template-utils/derive-cadence-by-network"
 import {deriveDependencies} from "./derive-dependencies"
 import {isString} from "./is"
 

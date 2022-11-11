@@ -1,11 +1,11 @@
 import {Buffer} from "@onflow/rlp"
 import {send as defaultSend} from "@onflow/transport-http"
-import {interaction, pipe} from "../interaction/interaction.js"
-import * as ixModule from "../interaction/interaction.js"
-import {invariant} from "../build/build-invariant.js"
-import {response} from "../response/response.js"
+import {interaction, pipe} from "../interaction/interaction"
+import * as ixModule from "../interaction/interaction"
+import {invariant} from "../build/build-invariant"
+import {response} from "../response/response"
 import {config} from "@onflow/config"
-import {resolve as defaultResolve} from "../resolve/resolve.js"
+import {resolve as defaultResolve} from "../resolve/resolve"
 
 export const send = async (args = [], opts: any = {}) => {
   const sendFn = await config.first(

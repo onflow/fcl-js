@@ -1,5 +1,5 @@
 import {invariant} from "@onflow/util-invariant"
-import {httpRequest as defaultHttpRequest} from "./http-request.js"
+import {httpRequest as defaultHttpRequest} from "./http-request"
 
 async function sendGetBlockByIDRequest(ix, context, opts) {
   const httpRequest = opts.httpRequest || defaultHttpRequest

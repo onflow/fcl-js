@@ -1,4 +1,4 @@
-import {pipe, prepAccount, AUTHORIZER} from "../interaction/interaction.js"
+import {pipe, prepAccount, AUTHORIZER} from "../interaction/interaction"
 
 export function authorizations(ax = []) {
   return pipe(

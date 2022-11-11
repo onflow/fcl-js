@@ -1,5 +1,5 @@
-import {interaction} from "../interaction/interaction.js"
-import {proposer} from "./build-proposer.js"
+import {interaction} from "../interaction/interaction"
+import {proposer} from "./build-proposer"
 
 describe("Build Proposer", () => {
   test("Build Proposer", async () => {
