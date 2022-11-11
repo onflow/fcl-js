@@ -4,7 +4,7 @@
     "outDir": "./dist",
     "rootDir": "./src",
     "strict": false,
-    "types": ["node"]
+    "types": ["node", "jest"]
   },
   "references": [
   ],

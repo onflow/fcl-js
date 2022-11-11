@@ -4,7 +4,7 @@
     "outDir": "../dist",
     "rootDir": ".",
     "strict": false,
-    "types": ["node"],
+    "types": ["node", "jest"],
     "paths": {
       "@onflow/config": ["../../config"],
       "@onflow/rlp": ["../../rlp"],
