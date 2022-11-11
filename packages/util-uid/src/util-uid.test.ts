@@ -1,4 +1,4 @@
-import {uid} from "./util-uid.js"
+import {uid} from "./util-uid"
 
 test("placeholder", () => {
   expect(uid()).not.toBe(1)
