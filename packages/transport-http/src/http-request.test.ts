@@ -32,22 +32,25 @@ const mockHttpResponse = ({
     },
     statusText,
     ...args,
-  }
+  } as unknown as fetchTransport.Response
 }
 
 describe("httpRequest", () => {
   test("makes valid fetch request", async () => {
     const spy = jest.spyOn(fetchTransport, "default")
-    spy.mockImplementation(async () => ({
-      ok: true,
-      status: 200,
-      body: JSON.stringify({
-        foo: "bar",
-      }),
-      async json() {
-        return JSON.parse(this.body)
-      },
-    }))
+    spy.mockImplementation(
+      async () =>
+        ({
+          ok: true,
+          status: 200,
+          body: JSON.stringify({
+            foo: "bar",
+          }),
+          async json() {
+            return JSON.parse(this.body)
+          },
+        } as unknown as fetchTransport.Response)
+    )
 
     const opts = {
       hostname: "https://example.com",
@@ -168,7 +171,7 @@ describe("httpRequest", () => {
     )
 
     const loggerSpy = jest.spyOn(logger, "log")
-    loggerSpy.mockImplementation(() => {})
+    loggerSpy.mockImplementation(async () => {})
 
     const opts = {
       hostname: "https://example.com",

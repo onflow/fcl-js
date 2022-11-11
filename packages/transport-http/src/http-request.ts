@@ -63,6 +63,14 @@ export async function httpRequest({
   headers,
   retryLimit = 5,
   retryIntervalMs = 1000,
+}: {
+  hostname
+  path
+  method
+  body?
+  headers?
+  retryLimit?
+  retryIntervalMs?
 }) {
   const bodyJSON = body ? JSON.stringify(body) : null
 
