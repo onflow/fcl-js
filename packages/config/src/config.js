@@ -110,6 +110,11 @@ function resetConfig(oldConfig) {
   return clearConfig().then(config(oldConfig))
 }
 
+/**
+ * Takes in flow.json or array of flow.json files and creates contract placeholders
+ * @param {Object|Object[]} value
+ * @returns {Object}
+ */
 async function load(data) {
   const network = await get("flow.network")
   const cleanedNetwork = cleanNetwork(network)
@@ -136,8 +141,6 @@ async function load(data) {
     if (!isEmulator) return
   }
 
-  // Add contract mappings to config
-  // Keep '0x' so that under the hood we can identify what is a contract import in config
   for (const [key, value] of Object.entries(accumulate(flowJSON, cleanedNetwork))) {
     const contractConfigKey = `0x${key}`
     const existingContractConfigKey = await get(contractConfigKey)
