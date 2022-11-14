@@ -326,17 +326,6 @@ fcl
   .put("0xFlowToken", "0x7e60df042a9c0868");
 ```
 
-### Load flow.json
-
-You can also avoid configuring contracts yourself by letting `config.load` ingest your flow.json for you and create these address placeholders under the hood.
-
-```
-import flowJson from "./flow.json"
-import * as fcl from "@onflow/fcl"
-
-fcl.config().load(flowJson)
-```
-
 ---
 
 # Wallet Interactions
