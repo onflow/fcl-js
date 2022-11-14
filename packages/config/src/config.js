@@ -6,6 +6,7 @@ import {
   UNSUBSCRIBE,
 } from "@onflow/util-actor"
 import * as logger from "@onflow/util-logger"
+import {invariant} from "@onflow/util-invariant"
 import { accumulate, cleanNetwork, anyHasPrivateKeys } from "../utils/utils"
 
 const NAME = "config"
@@ -119,14 +120,15 @@ async function load(data) {
   const cleanedNetwork = cleanNetwork(network)
   const { flowJSON } = data
 
-  if (!cleanedNetwork) {
-    logger.log({
-      title: "Flow Network Required",
-      message: `In order for FCL to load your contracts please define "flow.network" to "emulator", "local", "testnet", or "mainnet" in your config. See more here: https://developers.flow.com/tools/fcl-js/reference/configure-fcl`,
-      level: logger.LEVELS.error,
-    })
-    return
-  }
+  invariant(
+    Boolean(flowJSON),
+    "config.load -- 'flowJSON' must be defined"
+  )
+
+  invariant(
+    !cleanedNetwork,
+    `Flow Network Required -- In order for FCL to load your contracts please define "flow.network" to "emulator", "local", "testnet", or "mainnet" in your config. See more here: https://developers.flow.com/tools/fcl-js/reference/configure-fcl`
+  )
 
   if (anyHasPrivateKeys(flowJSON)) {
     const isEmulator = cleanedNetwork === 'emulator'
