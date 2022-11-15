@@ -200,6 +200,7 @@ async function connectWc({
     flow: {
       methods: [
         FLOW_METHODS.FLOW_AUTHN,
+        FLOW_METHODS.FLOW_PRE_AUTHZ,
         FLOW_METHODS.FLOW_AUTHZ,
         FLOW_METHODS.FLOW_USER_SIGN,
       ],
