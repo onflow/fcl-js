@@ -103,7 +103,7 @@ export const anyHasPrivateKeys = value => {
 
 /**
  * Format network to always be 'emulator', 'testnet', or 'mainnet'
- * @param {string} network local, emulator, testnet, mainnet
- * @returns {string} emulator, testnet, mainnet
+ * @param {string} network 'local', 'emulator', 'testnet', 'mainnet'
+ * @returns {string} 'emulator', 'testnet', 'mainnet'
  */
 export const cleanNetwork = network => network?.toLowerCase() === 'local' ? 'emulator' : network?.toLowerCase()
