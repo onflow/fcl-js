@@ -1,5 +1,12 @@
 # @onflow/transport-http
 
+## 1.5.1-alpha.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @onflow/util-logger@1.1.3-alpha.0
+
 ## 1.5.0
 
 ### Minor Changes

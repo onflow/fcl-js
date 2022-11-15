@@ -1,5 +1,11 @@
 # @onflow/config
 
+## 1.1.0-alpha.0
+
+### Minor Changes
+
+- [#1481](https://github.com/onflow/fcl-js/pull/1481) [`e10e3c9c`](https://github.com/onflow/fcl-js/commit/e10e3c9c1f611e7dfd8a0bf7292473c71c2e04b9) Thanks [@chasefleming](https://github.com/chasefleming)! - Remove need to manually add contract placeholders in config by ingesting flow.json with config.load
+
 ## 1.0.5
 
 ### Patch Changes
