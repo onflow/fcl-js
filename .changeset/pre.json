@@ -1,0 +1,24 @@
+{
+  "mode": "pre",
+  "tag": "alpha",
+  "initialVersions": {
+    "@onflow/config": "1.0.5",
+    "@onflow/fcl": "1.3.2",
+    "@onflow/fcl-bundle": "1.2.0",
+    "@onflow/fcl-wc": "1.0.0",
+    "@onflow/protobuf": "1.1.0",
+    "@onflow/rlp": "1.0.4",
+    "@onflow/sdk": "1.1.2",
+    "@onflow/transport-grpc": "1.1.4",
+    "@onflow/transport-http": "1.5.0",
+    "@onflow/types": "1.0.5",
+    "@onflow/util-actor": "1.1.2",
+    "@onflow/util-address": "1.0.3",
+    "@onflow/util-encode-key": "1.0.3",
+    "@onflow/util-invariant": "1.0.3",
+    "@onflow/util-logger": "1.1.2",
+    "@onflow/util-template": "1.0.4",
+    "@onflow/util-uid": "1.0.3"
+  },
+  "changesets": []
+}
