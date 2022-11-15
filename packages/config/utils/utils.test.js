@@ -1,6 +1,6 @@
-import {accumulate, anyHasPrivateKeys} from "./utils"
+import {getContracts, anyHasPrivateKeys} from "./utils"
 
-describe("accumulate", () => {
+describe("getContracts", () => {
   test("it should gather contract aliases for flow.json", () => {
     const flowJSON = {
       "networks": {
@@ -54,14 +54,14 @@ describe("accumulate", () => {
       "FooBar": "0x225"
     }
 
-    expect(accumulate(flowJSON, "emulator")).toEqual(emulatorMappings)
-    expect(accumulate(flowJSON, "testnet")).toEqual(testnetMappings)
-    expect(accumulate(flowJSON, "mainnet")).toEqual(mainnetMappings)
+    expect(getContracts(flowJSON, "emulator")).toEqual(emulatorMappings)
+    expect(getContracts(flowJSON, "testnet")).toEqual(testnetMappings)
+    expect(getContracts(flowJSON, "mainnet")).toEqual(mainnetMappings)
 
     // Also takes array
-    expect(accumulate([flowJSON], "emulator")).toEqual(emulatorMappings)
-    expect(accumulate([flowJSON], "testnet")).toEqual(testnetMappings)
-    expect(accumulate([flowJSON], "mainnet")).toEqual(mainnetMappings)
+    expect(getContracts([flowJSON], "emulator")).toEqual(emulatorMappings)
+    expect(getContracts([flowJSON], "testnet")).toEqual(testnetMappings)
+    expect(getContracts([flowJSON], "mainnet")).toEqual(mainnetMappings)
   })
 })
 

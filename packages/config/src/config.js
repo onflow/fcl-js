@@ -7,7 +7,7 @@ import {
 } from "@onflow/util-actor"
 import * as logger from "@onflow/util-logger"
 import {invariant} from "@onflow/util-invariant"
-import { accumulate, cleanNetwork, anyHasPrivateKeys } from "../utils/utils"
+import {getContracts, cleanNetwork, anyHasPrivateKeys} from "../utils/utils"
 
 const NAME = "config"
 const PUT = "PUT_CONFIG"
@@ -127,7 +127,7 @@ async function load(data) {
   )
 
   invariant(
-    !cleanedNetwork,
+    cleanedNetwork,
     `Flow Network Required -- In order for FCL to load your contracts please define "flow.network" to "emulator", "local", "testnet", or "mainnet" in your config. See more here: https://developers.flow.com/tools/fcl-js/reference/configure-fcl`
   )
 
@@ -143,7 +143,7 @@ async function load(data) {
     if (!isEmulator) return
   }
 
-  for (const [key, value] of Object.entries(accumulate(flowJSON, cleanedNetwork))) {
+  for (const [key, value] of Object.entries(getContracts(flowJSON, cleanedNetwork))) {
     const contractConfigKey = `0x${key}`
     const existingContractConfigKey = await get(contractConfigKey)
 

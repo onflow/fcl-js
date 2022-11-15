@@ -54,7 +54,7 @@ const filterContracts = obj => obj.contracts ? obj.contracts : {}
  * @param {string} network local, emulator, testnet, mainnet
  * @returns {Object} { "HelloWorld": "f8d6e0586b0a20c7" }
  */
-const getContractsByNetwork = network => contracts => {
+const getAddressByNetworkForContracts = network => contracts => {
   return Object.entries(contracts).reduce((c, [key, value]) => {
     const networkContractAlias = value?.aliases?.[network]
     if (networkContractAlias) {
@@ -70,11 +70,11 @@ const getContractsByNetwork = network => contracts => {
  * @param {Object|Object[]} value
  * @returns {Object}
  */
-export const accumulate = (jsons, network) => {
+export const getContracts = (jsons, network) => {
   return pipe(
     mergeFlowJSONs,
     filterContracts,
-    getContractsByNetwork(network)
+    getAddressByNetworkForContracts(network)
   )(jsons)
 }
 
