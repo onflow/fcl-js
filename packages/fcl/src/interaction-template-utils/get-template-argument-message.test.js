@@ -1,6 +1,6 @@
 import {getTemplateArgumentMessage} from "./get-template-argument-message.js"
 
-describe("Derive cadence by network", () => {
+describe("Get interaction template argument messages", () => {
   let template = {
     f_type: "InteractionTemplate",
     f_version: "1.0.0",

@@ -8,42 +8,42 @@ export function getTemplateArgumentMessage({
 }) {
   invariant(
     messageKey,
-    "getMessage({ messageKey }) -- messageKey must be defined"
+    "getTemplateArgumentMessage({ messageKey }) -- messageKey must be defined"
   )
   invariant(
-    typeof messageKey === "stirng",
-    "getMessage({ messageKey }) -- messageKey must be a string"
+    typeof messageKey === "string",
+    "getTemplateArgumentMessage({ messageKey }) -- messageKey must be a string"
   )
 
   invariant(
     argumentLabel,
-    "getMessage({ argumentLabel }) -- argumentLabel must be defined"
+    "getTemplateArgumentMessage({ argumentLabel }) -- argumentLabel must be defined"
   )
   invariant(
-    typeof messageKey === "stirng",
-    "getMessage({ argumentLabel }) -- argumentLabel must be a string"
+    typeof messageKey === "string",
+    "getTemplateArgumentMessage({ argumentLabel }) -- argumentLabel must be a string"
   )
 
   invariant(
     localization,
-    "getMessage({ localization }) -- localization must be defined"
+    "getTemplateArgumentMessage({ localization }) -- localization must be defined"
   )
   invariant(
-    typeof localization === "stirng",
-    "getMessage({ localization }) -- localization must be a string"
+    typeof localization === "string",
+    "getTemplateArgumentMessage({ localization }) -- localization must be a string"
   )
 
   invariant(
     template != undefined,
-    "generateTemplateId({ template }) -- template must be defined"
+    "getTemplateArgumentMessage({ template }) -- template must be defined"
   )
   invariant(
     typeof template === "object",
-    "generateTemplateId({ template }) -- template must be an object"
+    "getTemplateArgumentMessage({ template }) -- template must be an object"
   )
   invariant(
     typeof template.f_type === "InteractionTemplate",
-    "generateTemplateId({ template }) -- template object must be an InteractionTemplate"
+    "getTemplateArgumentMessage({ template }) -- template object must be an InteractionTemplate"
   )
 
   const args = template?.data?.arguments
