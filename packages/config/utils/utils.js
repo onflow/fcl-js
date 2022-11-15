@@ -51,7 +51,7 @@ const filterContracts = obj => obj.contracts ? obj.contracts : {}
 
 /**
  * Gathers contract addresses by network
- * @param {string} network local, emulator, testnet, mainnet
+ * @param {string} network emulator, testnet, mainnet
  * @returns {Object} { "HelloWorld": "0x123" }
  */
 const mapContractToNetworkAddress = network => contracts => {
@@ -67,7 +67,8 @@ const mapContractToNetworkAddress = network => contracts => {
 
 /**
  * Take in flow.json files and return contract to address mapping by network
- * @param {Object|Object[]} value
+ * @param {Object|Object[]} jsons
+ * @param {string} network emulator, testnet, mainnet
  * @returns {Object} { "HelloWorld": "0x123" }
  */
 export const getContracts = (jsons, network) => {
@@ -102,7 +103,7 @@ export const anyHasPrivateKeys = value => {
 
 /**
  * Format network to always be 'emulator', 'testnet', or 'mainnet'
- * @param {string} network
+ * @param {string} network local, emulator, testnet, mainnet
  * @returns {string}
  */
 export const cleanNetwork = network => network?.toLowerCase() === 'local' ? 'emulator' : network?.toLowerCase()
