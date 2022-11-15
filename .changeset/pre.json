@@ -20,5 +20,9 @@
     "@onflow/util-template": "1.0.4",
     "@onflow/util-uid": "1.0.3"
   },
-  "changesets": []
+  "changesets": [
+    "chatty-lizards-push",
+    "gorgeous-eagles-invent",
+    "thirty-snails-jog"
+  ]
 }
