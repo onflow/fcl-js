@@ -114,6 +114,7 @@ function resetConfig(oldConfig) {
 /**
  * Takes in flow.json or array of flow.json files and creates contract placeholders
  * @param {Object|Object[]} data
+ * @returns {void}
  */
 async function load(data) {
   const network = await get("flow.network")
