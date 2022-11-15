@@ -44,7 +44,7 @@ const mergeFlowJSONs = value => Array.isArray(value) ? mergeDeep({}, ...value) :
 
 /**
  * Filter out contracts section of flow.json.
- * @param {Object|Object[]} value
+ * @param {Object|Object[]} obj
  * @returns {Object}
  */
 const filterContracts = obj => obj.contracts ? obj.contracts : {}
