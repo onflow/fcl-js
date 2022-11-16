@@ -1,3 +1,11 @@
+/**
+ * @typedef {Object} FlowJSON
+ * @property {object} networks
+ * @property {object} contracts
+ * @property {object} accounts
+ * @property {object} deployments
+ */
+
 const pipe = (...funcs) => v => {
   return funcs.reduce((res, func) => {
     return func(res)
@@ -13,9 +21,9 @@ const isObject = value => value && typeof value === 'object' && !Array.isArray(v
 
 /**
  * Deep merge multiple objects.
- * @param {Object} target
- * @param {Object[]} ...sources
- * @returns {Object}
+ * @param {object} target
+ * @param {object[]} ...sources
+ * @returns {object}
  */
 const mergeDeep = (target, ...sources) => {
   if (!sources.length) return target
@@ -37,14 +45,14 @@ const mergeDeep = (target, ...sources) => {
 
 /**
  * Deep merge multiple Flow JSON.
- * @param {Object|Object[]} value
+ * @param {FlowJSON|FlowJSON[]} value
  * @returns {Object}
  */
 const mergeFlowJSONs = value => Array.isArray(value) ? mergeDeep({}, ...value) : value
 
 /**
  * Filter out contracts section of flow.json.
- * @param {Object|Object[]} obj
+ * @param {FlowJSON|FlowJSON[]} obj
  * @returns {Object}
  */
 const filterContracts = obj => obj.contracts ? obj.contracts : {}
@@ -52,7 +60,7 @@ const filterContracts = obj => obj.contracts ? obj.contracts : {}
 /**
  * Gathers contract addresses by network
  * @param {string} network emulator, testnet, mainnet
- * @returns {Object} { "HelloWorld": "0x123" }
+ * @returns {Object.<string, string>} { "HelloWorld": "0x123" }
  */
 const mapContractToNetworkAddress = network => contracts => {
   return Object.entries(contracts).reduce((c, [key, value]) => {
@@ -67,9 +75,9 @@ const mapContractToNetworkAddress = network => contracts => {
 
 /**
  * Take in flow.json files and return contract to address mapping by network
- * @param {Object|Object[]} jsons
+ * @param {FlowJSON|FlowJSON[]} jsons
  * @param {string} network emulator, testnet, mainnet
- * @returns {Object} { "HelloWorld": "0x123" }
+ * @returns {Object.<string, string>} { "HelloWorld": "0x123" }
  */
 export const getContracts = (jsons, network) => {
   return pipe(
@@ -81,7 +89,7 @@ export const getContracts = (jsons, network) => {
 
 /**
  * Checks flow.json file for private keys
- * @param {Object} flowJSON
+ * @param {FlowJSON} flowJSON
  * @returns {boolean}
  */
 const hasPrivateKeys = flowJSON => {
@@ -93,7 +101,7 @@ const hasPrivateKeys = flowJSON => {
 
 /**
  * Take in flow.json or array of flow.json files and checks for private keys
- * @param {Object|Object[]} value
+ * @param {FlowJSON|FlowJSON[]} value
  * @returns {boolean}
  */
 export const anyHasPrivateKeys = value => {
