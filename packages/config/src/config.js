@@ -1,3 +1,11 @@
+/**
+ * @typedef {Object} FlowJSON
+ * @property {object} networks
+ * @property {object} contracts
+ * @property {object} accounts
+ * @property {object} deployments
+ */
+
 import {
   spawn,
   send,
@@ -113,7 +121,7 @@ function resetConfig(oldConfig) {
 
 /**
  * Takes in flow.json or array of flow.json files and creates contract placeholders
- * @param {Object|Object[]} data
+ * @param {FlowJSON|FlowJSON[]} data
  * @returns {void}
  */
 async function load(data) {
