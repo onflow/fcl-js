@@ -72,15 +72,36 @@ const HANDLERS = {
 
 spawn(HANDLERS, NAME)
 
+/**
+ * Add a new config with {@link key} and {@link value}
+ * @callback put
+ * @param {string} key 
+ * @param {any} value 
+ * @returns {config}
+ */
 function put(key, value) {
   send(NAME, PUT, {key, value})
   return config()
 }
 
+/**
+ * Returns the config whose key matches {@link key}. Returns {@link fallback} if nothing matches. 
+ * @callback get
+ * @param {string} key 
+ * @param {any} fallback 
+ * @returns {Promise<any>}
+ */
 function get(key, fallback) {
   return send(NAME, GET, {key, fallback}, {expectReply: true, timeout: 10})
 }
 
+/**
+ * Returns the first config whose key is in {@link wants}. Returns {@link fallback} if nothing matches.
+ * @callback first
+ * @param {string[]} wants 
+ * @param {any} fallback 
+ * @returns {Promise<any>}
+ */
 async function first(wants = [], fallback) {
   if (!wants.length) return fallback
   const [head, ...rest] = wants
@@ -89,38 +110,79 @@ async function first(wants = [], fallback) {
   return ret
 }
 
+/**
+ * Get all configs
+ * @callback all
+ * @returns {Promise<any>}
+ */
 function all() {
   return send(NAME, GET_ALL, null, {expectReply: true, timeout: 10})
 }
 
+/**
+ * Update the config with the given {@link key} using {@link fn}
+ * @callback update
+ * @param {string} key
+ * @param {function} fn
+ * @returns {config}
+ */
 function update(key, fn = identity) {
   send(NAME, UPDATE, {key, fn})
   return config()
 }
 
+/**
+ * Delete the config with the given {@link key}
+ * @callback _delete
+ * @param {string} key
+ * @returns {config}
+ */
 function _delete(key) {
   send(NAME, DELETE, {key})
   return config()
 }
 
+/**
+ * Takes a regex and returns an object of configs whose keys match the regex
+ * @callback where
+ * @param {string} pattern
+ * @returns {Promise<object>}
+ */
 function where(pattern) {
   return send(NAME, WHERE, {pattern}, {expectReply: true, timeout: 10})
 }
 
+/**
+ * Calls {@link callback} when config is changed
+ * @callback subscribe
+ * @param {function} callback
+ * @returns {Promise<any>}
+ */
 function subscribe(callback) {
   return subscriber(NAME, () => spawn(HANDLERS, NAME), callback)
 }
 
+/**
+ * @callback clearConfig
+ * @returns {Promise<any>}
+ */
 export function clearConfig() {
   return send(NAME, CLEAR)
 }
 
+/**
+ * Clears config then set config as {@link oldConfig}
+ * @callback resetConfig
+ * @param {config} oldConfig
+ * @returns {Promise<any>}
+ */
 function resetConfig(oldConfig) {
   return clearConfig().then(config(oldConfig))
 }
 
 /**
  * Takes in flow.json or array of flow.json files and creates contract placeholders
+ * @callback load
  * @param {FlowJSON|FlowJSON[]} data
  * @returns {void}
  */
@@ -167,6 +229,25 @@ async function load(data) {
   }
 }
 
+/**
+ * @typedef {Object} config
+ * @property {put} put
+ * @property {get} get
+ * @property {all} all
+ * @property {first} first
+ * @property {update} update
+ * @property {_delete} delete
+ * @property {where} where
+ * @property {subscribe} subscribe
+ * @property {overload} overload
+ * @property {load} load
+ */
+
+/**
+ * 
+ * @param {object.<string, string>} values 
+ * @returns {config}
+ */
 function config(values) {
   if (values != null && typeof values === "object") {
     Object.keys(values).map(d => put(d, values[d]))
@@ -200,6 +281,15 @@ config.load = load
 export {config}
 
 const noop = v => v
+
+/**
+ * Set config as {@link opts}, calls {@link callback} then set config as it was.
+ * Returns the result of {@link callback} if succeeds
+ * @callback overload
+ * @param {config} opts 
+ * @param {function} callback 
+ * @returns {Promise<any>}
+ */
 function overload(opts = {}, callback = noop) {
   return new Promise(async (resolve, reject) => {
     const oldConfig = await all()
