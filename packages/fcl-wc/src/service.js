@@ -293,6 +293,6 @@ const makeBaseWalletConnectService = includeBaseWC => {
 async function makeWcServices({projectId, includeBaseWC, wallets}) {
   const wcBaseService = makeBaseWalletConnectService(includeBaseWC)
   const flowWcWalletServices = (await fetchFlowWallets(projectId)) ?? []
-  const injectedWalletServices = CONFIGURED_NETWORK === "testnet" ? wallets : []
+  const injectedWalletServices = CONFIGURED_NETWORK !== "mainnet" ? wallets : []
   return [wcBaseService, ...flowWcWalletServices, ...injectedWalletServices]
 }
