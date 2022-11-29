@@ -1,6 +1,7 @@
 import * as sdk from "@onflow/sdk"
 import {config} from "@onflow/config"
 import {log} from "@onflow/util-logger"
+import { invariant } from "@onflow/util-invariant"
 
 async function getChainIdFromAccessNode() {
   const response = await sdk.send([sdk.getNetworkParameters()]).then(sdk.decode)
@@ -47,6 +48,11 @@ export async function getChainId() {
       }
     }
   }
+
+  invariant(
+    network,
+    "Error getting chainId from access node. Please configure flow.network instead"
+  )
 
   return network
 }
