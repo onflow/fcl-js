@@ -207,8 +207,6 @@ export const decodeResponse = async (response, customDecoders = {}) => {
   } else if (response.collection) {
     return response.collection
   } else if (response.networkParameters) {
-
-    // TODO: have a set standard for chainId so this is no longer needed
     const chainIdMap = {
       "flow-testnet": "testnet",
       "flow-mainnet": "mainnet",
