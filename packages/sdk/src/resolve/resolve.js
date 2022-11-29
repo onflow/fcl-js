@@ -8,7 +8,6 @@ import {response} from "../response/response.js"
 import {build} from "../build/build.js"
 import {getBlock} from "../build/build-get-block.js"
 import {getAccount} from "../build/build-get-account.js"
-import {getNetworkParameters} from "../build/build-get-network-parameters.js"
 import {decodeResponse as decode} from "../decode/decode.js"
 
 import {resolveCadence} from "./resolve-cadence.js"
@@ -49,32 +48,26 @@ const debug =
     return ix
   }
 
-// resolver pipeline. opts is used for testing purposes
-export const resolve = (ix, opts) => {
-  return pipe(ix, [
-    resolveCadence,
-    debug("cadence", (ix, log) => log(ix.message.cadence)),
-    resolveComputeLimit,
-    debug("compute limit", (ix, log) => log(ix.message.computeLimit)),
-    resolveArguments,
-    debug("arguments", (ix, log) => log(ix.message.arguments, ix.message)),
-    resolveAccounts,
-    debug("accounts", (ix, log, accts) => log(...accts(ix))),
-    (ix) => execFetchChainId(ix, opts),
-    (ix) => execFetchRef(ix, opts),
-    (ix) => execFetchSequenceNumber(ix, opts),
-    resolveSignatures,
-    debug("signatures", (ix, log, accts) => log(...accts(ix))),
-    resolveFinalNormalization,
-    resolveValidators,
-    resolveVoucherIntercept,
-    debug("resolved", (ix, log) => log(ix)),
-  ])
-}
+export const resolve = pipe([
+  resolveCadence,
+  debug("cadence", (ix, log) => log(ix.message.cadence)),
+  resolveComputeLimit,
+  debug("compute limit", (ix, log) => log(ix.message.computeLimit)),
+  resolveArguments,
+  debug("arguments", (ix, log) => log(ix.message.arguments, ix.message)),
+  resolveAccounts,
+  debug("accounts", (ix, log, accts) => log(...accts(ix))),
+  /* special */ execFetchRef,
+  /* special */ execFetchSequenceNumber,
+  resolveSignatures,
+  debug("signatures", (ix, log, accts) => log(...accts(ix))),
+  resolveFinalNormalization,
+  resolveValidators,
+  resolveVoucherIntercept,
+  debug("resolved", (ix, log) => log(ix)),
+])
 
-async function execFetchRef(ix, opts) {
-  if (opts && opts.skipExec) return ix
-  
+async function execFetchRef(ix) {
   if (isTransaction(ix) && ix.message.refBlock == null) {
     const node = await config().get("accessNode.api")
     const sendFn = await config.first(
@@ -98,9 +91,7 @@ async function execFetchRef(ix, opts) {
   return ix
 }
 
-async function execFetchSequenceNumber(ix, opts) {
-  if (opts && opts.skipExec) return ix
-
+async function execFetchSequenceNumber(ix) {
   if (isTransaction(ix)) {
     var acct = Object.values(ix.accounts).find(a => a.role.proposer)
     invariant(acct, `Transactions require a proposer`)
@@ -127,38 +118,5 @@ async function execFetchSequenceNumber(ix, opts) {
         .then(key => key.sequenceNumber)
     }
   }
-  return ix
-}
-
-async function execFetchChainId(ix, opts) {
-  if (opts && opts.skipExec) return ix
-
-  if (!ixModule.isGetNetworkParameters(ix)) {
-    const networkConfig = await config().get("flow.network.default")
-
-    if (!networkConfig) {
-      const node = await config().get("accessNode.api")
-      const sendFn = await config.first(
-        ["sdk.transport", "sdk.send"],
-        defaultSend
-      )
-
-      invariant(
-        sendFn,
-        `Required value for sdk.transport is not defined in config. See: ${"https://github.com/onflow/fcl-js/blob/master/packages/sdk/CHANGELOG.md#0057-alpha1----2022-01-21"}`
-      )
-
-      const chainId = await sendFn(
-        await build([getNetworkParameters()]),
-        {config, response, Buffer, ix: ixModule},
-        {node}
-      )
-        .then(decode)
-        .then(res => res.chainId)
-
-      config.put("flow.network.default", chainId)
-    }
-  }
-
   return ix
 }

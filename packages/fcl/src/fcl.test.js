@@ -36,10 +36,7 @@ test("serialize returns voucher", async () => {
       authorizations([authz]),
       payer(authz),
       ref("123"),
-    ]),
-    {
-      skipExec: true,
-    }
+    ])
   )
 
   const voucher = createSignableVoucher(ix)
@@ -53,7 +50,7 @@ test("serialize returns voucher", async () => {
       payer(authz),
       ref("123"),
     ],
-    {resolve, skipExec: true}
+    {resolve}
   )
 
   expect(JSON.parse(serializedVoucher)).toEqual(voucher)

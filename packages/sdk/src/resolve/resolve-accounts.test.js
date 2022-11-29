@@ -31,10 +31,7 @@ test("Voucher in PreSignable", async () => {
         sequenceNum: 123,
       }),
       ref("123"),
-    ]),
-    {
-      skipExec: true,
-    }
+    ])
   )
 
   const ps = buildPreSignable(ix.accounts[ix.proposer], ix)
@@ -103,9 +100,7 @@ test("Voucher in PreSignable multiple payer keys", async () => {
     ref("123"),
   ])
 
-  const ix = await resolve(built, {
-    skipExec: true,
-  })
+  const ix = await resolve(built)
   expect(ix.payer).toEqual(["0x02-0", "0x02-1"])
 
   const ps = buildPreSignable(ix.accounts[ix.proposer], ix)
@@ -178,9 +173,5 @@ test("Voucher in PreSignable multiple payer keys different accounts", async () =
     ref("123"),
   ])
 
-  await expect(
-    resolve(built, {
-      skipExec: true,
-    })
-  ).rejects.toThrow()
+  await expect(resolve(built)).rejects.toThrow()
 })

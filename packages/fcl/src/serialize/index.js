@@ -11,7 +11,7 @@ export const serialize = async (args = [], opts = {}) => {
   if (Array.isArray(args)) args = await pipe(interaction(), args)
 
   return JSON.stringify(
-    createSignableVoucher(await resolveFunction(args, opts)),
+    createSignableVoucher(await resolveFunction(args)),
     null,
     2
   )

@@ -18,9 +18,7 @@ describe("Get Network Parameters", () => {
     })
 
     const response = await sendGetNetworkParameters(
-      await resolve(await build([getNetworkParameters()]), {
-        skipExec: true,
-      }),
+      await resolve(await build([getNetworkParameters()])),
       {
         response: responseADT,
       },

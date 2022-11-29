@@ -44,9 +44,7 @@ describe("Send Get Collection", () => {
     })
 
     const response = await sendGetCollection(
-      await resolve(await build([getCollection("a1b2c3")]), {
-        skipExec: true,
-      }),
+      await resolve(await build([getCollection("a1b2c3")])),
       {
         response: responseADT,
         Buffer,

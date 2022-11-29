@@ -28,10 +28,7 @@ describe("build", () => {
         ]),
         payer(authorization("01", () => ({signature: "123"}), 1, 123)),
         ref("123"),
-      ]),
-      {
-        skipExec: true,
-      }
+      ])
     )
 
     const two = await resolve(
@@ -44,10 +41,7 @@ describe("build", () => {
         ]),
         payer(authorization("01", () => ({signature: "123"}), 1, 123)),
         ref("123"),
-      ]),
-      {
-        skipExec: true,
-      }
+      ])
     )
 
     // console.log("one", one)
@@ -68,10 +62,7 @@ describe("build", () => {
         ]),
         payer(authorization("01", () => ({signature: "123"}), 1, 123)),
         ref("123"),
-      ]),
-      {
-        skipExec: true,
-      }
+      ])
     )
 
     const txProposer = ix.accounts[ix.proposer]

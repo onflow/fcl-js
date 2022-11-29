@@ -34,9 +34,7 @@ describe("Send Get Events", () => {
     httpRequestMock.mockReturnValue(returnedEvents)
 
     const response = await sendGetEvents(
-      await resolve(await build([getEventsAtBlockIds("MyEvent", ["a1b2c3"])]), {
-        skipExec: true,
-      }),
+      await resolve(await build([getEventsAtBlockIds("MyEvent", ["a1b2c3"])])),
       {
         response: responseADT,
         Buffer,
@@ -102,10 +100,7 @@ describe("Send Get Events", () => {
 
     const response = await sendGetEvents(
       await resolve(
-        await build([getEventsAtBlockHeightRange("MyEvent", 123, 456)]),
-        {
-          skipExec: true,
-        }
+        await build([getEventsAtBlockHeightRange("MyEvent", 123, 456)])
       ),
       {
         response: responseADT,

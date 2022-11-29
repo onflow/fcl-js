@@ -27,9 +27,7 @@ describe("Send Get Block Header", () => {
     httpRequestMock.mockReturnValue(returnedBlockHeader)
 
     const response = await sendGetBlockHeader(
-      await resolve(await build([getBlockHeader(), atBlockId("a1b2c3")]), {
-        skipExec: true,
-      }),
+      await resolve(await build([getBlockHeader(), atBlockId("a1b2c3")])),
       {
         response: responseADT,
         Buffer,
@@ -82,9 +80,7 @@ describe("Send Get Block Header", () => {
     httpRequestMock.mockReturnValue(returnedBlockHeader)
 
     const response = await sendGetBlockHeader(
-      await resolve(await build([getBlockHeader(), atBlockHeight(123)]), {
-        skipExec: true,
-      }),
+      await resolve(await build([getBlockHeader(), atBlockHeight(123)])),
       {
         response: responseADT,
         Buffer,
@@ -137,9 +133,7 @@ describe("Send Get Block Header", () => {
     httpRequestMock.mockReturnValue(returnedBlockHeader)
 
     const response = await sendGetBlockHeader(
-      await resolve(await build([getBlockHeader()]), {
-        skipExec: true,
-      }),
+      await resolve(await build([getBlockHeader()])),
       {
         response: responseADT,
         Buffer,
@@ -192,9 +186,7 @@ describe("Send Get Block Header", () => {
     httpRequestMock.mockReturnValue(returnedBlockHeader)
 
     const response = await sendGetBlockHeader(
-      await resolve(await build([getBlockHeader(true)]), {
-        skipExec: true,
-      }),
+      await resolve(await build([getBlockHeader(true)])),
       {
         response: responseADT,
         Buffer,

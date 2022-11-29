@@ -82,10 +82,7 @@ describe("Transaction", () => {
           voucherIntercept(async voucher => {
             voucherToTxId(voucher)
           }),
-        ]),
-        {
-          skipExec: true,
-        }
+        ])
       ),
       {
         response: responseADT,
