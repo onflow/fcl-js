@@ -1,5 +1,6 @@
 export const FLOW_METHODS = {
   FLOW_AUTHN: "flow_authn",
+  FLOW_PRE_AUTHZ: "flow_pre_authz",
   FLOW_AUTHZ: "flow_authz",
   FLOW_USER_SIGN: "flow_user_sign",
 }

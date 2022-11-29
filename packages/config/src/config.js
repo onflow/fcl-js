@@ -5,6 +5,9 @@ import {
   SUBSCRIBE,
   UNSUBSCRIBE,
 } from "@onflow/util-actor"
+import * as logger from "@onflow/util-logger"
+import {invariant} from "@onflow/util-invariant"
+import {getContracts, cleanNetwork, anyHasPrivateKeys} from "../utils/utils"
 
 const NAME = "config"
 const PUT = "PUT_CONFIG"
@@ -108,6 +111,54 @@ function resetConfig(oldConfig) {
   return clearConfig().then(config(oldConfig))
 }
 
+/**
+ * Takes in flow.json or array of flow.json files and creates contract placeholders
+ * @param {Object|Object[]} data
+ * @returns {void}
+ */
+async function load(data) {
+  const network = await get("flow.network")
+  const cleanedNetwork = cleanNetwork(network)
+  const { flowJSON } = data
+
+  invariant(
+    Boolean(flowJSON),
+    "config.load -- 'flowJSON' must be defined"
+  )
+
+  invariant(
+    cleanedNetwork,
+    `Flow Network Required -- In order for FCL to load your contracts please define "flow.network" to "emulator", "local", "testnet", or "mainnet" in your config. See more here: https://developers.flow.com/tools/fcl-js/reference/configure-fcl`
+  )
+
+  if (anyHasPrivateKeys(flowJSON)) {
+    const isEmulator = cleanedNetwork === 'emulator'
+
+    logger.log({
+      title: "Private Keys Detected",
+      message: `Private keys should be stored in a separate flow.json file for security. See more here: https://developers.flow.com/tools/flow-cli/security`,
+      level: isEmulator ? logger.LEVELS.warn : logger.LEVELS.error,
+    })
+
+    if (!isEmulator) return
+  }
+
+  for (const [key, value] of Object.entries(getContracts(flowJSON, cleanedNetwork))) {
+    const contractConfigKey = `0x${key}`
+    const existingContractConfigKey = await get(contractConfigKey)
+
+    if (existingContractConfigKey) {
+      logger.log({
+        title: "Contract Placeholder Conflict Detected",
+        message: `A generated contract placeholder from config.load and a placeholder you've set manually in config have the same name.`,
+        level: logger.LEVELS.warn,
+      })
+    } else {
+      put(contractConfigKey, value)
+    }
+  }
+}
+
 function config(values) {
   if (values != null && typeof values === "object") {
     Object.keys(values).map(d => put(d, values[d]))
@@ -123,6 +174,7 @@ function config(values) {
     where,
     subscribe,
     overload,
+    load,
   }
 }
 
@@ -135,6 +187,7 @@ config.delete = _delete
 config.where = where
 config.subscribe = subscribe
 config.overload = overload
+config.load = load
 
 export {config}
 

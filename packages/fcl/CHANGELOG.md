@@ -1,5 +1,18 @@
 # @onflow/fcl
 
+## 1.3.3-alpha.0
+
+### Patch Changes
+
+- [#1475](https://github.com/onflow/fcl-js/pull/1475) [`6051030f`](https://github.com/onflow/fcl-js/commit/6051030f81fb102447bec40c758657ec20f43129) Thanks [@gregsantos](https://github.com/gregsantos)! - Updates to only call account proof resolver if not logged in. Adds warning if not async resolver function.
+
+- [#1490](https://github.com/onflow/fcl-js/pull/1490) [`b2881f74`](https://github.com/onflow/fcl-js/commit/b2881f74f024aeca52d534d2ca6081fb57efd06d) Thanks [@JeffreyDoyle](https://github.com/JeffreyDoyle)! - Fix invariant type checks in FCL Interaction Template getter utils
+
+- Updated dependencies [[`e10e3c9c`](https://github.com/onflow/fcl-js/commit/e10e3c9c1f611e7dfd8a0bf7292473c71c2e04b9)]:
+  - @onflow/config@1.1.0-alpha.0
+  - @onflow/sdk@1.1.3-alpha.0
+  - @onflow/util-logger@1.1.3-alpha.0
+
 ## 1.3.2
 
 ### Patch Changes

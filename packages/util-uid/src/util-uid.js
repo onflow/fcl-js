@@ -1,5 +1,7 @@
-// Inspired by: https://github.com/lukeed/uid/blob/master/src/index.js , thank you Luke! https://github.com/lukeed
-
+/**
+ * Generates a unique identifier
+ * @returns {string}
+ */
 var HEX = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 var T = HEX.length
 
