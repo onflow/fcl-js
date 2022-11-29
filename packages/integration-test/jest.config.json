@@ -1,0 +1,9 @@
+{
+  "testEnvironment": "node",
+  "verbose": true,
+  "coveragePathIgnorePatterns": ["/node_modules/"],
+  "testTimeout": 50000,
+  "globalSetup": "./src/setup/global-setup.js",
+  "globalTeardown": "./src/teardown/teardown.js",
+  "setupFilesAfterEnv": []
+}
