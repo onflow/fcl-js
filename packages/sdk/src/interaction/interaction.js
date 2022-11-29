@@ -11,7 +11,7 @@ export const GET_TRANSACTION /*               */ = "GET_TRANSACTION"
 export const GET_BLOCK /*                     */ = "GET_BLOCK"
 export const GET_BLOCK_HEADER /*              */ = "GET_BLOCK_HEADER"
 export const GET_COLLECTION /*                */ = "GET_COLLECTION"
-export const GET_NETWORK_PARAMETERS /*      */ = "GET_NETWORK_PARAMETERS"
+export const GET_NETWORK_PARAMETERS /*        */ = "GET_NETWORK_PARAMETERS"
 
 export const BAD /* */ = "BAD"
 export const OK /*  */ = "OK"
