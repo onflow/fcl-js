@@ -1,6 +1,3 @@
-// mock send function so getChainId does not hit the chain at startup
-config.put("sdk.transport", async ix => ix)
-
 import {serialize} from "./serialize"
 import {
   resolve,
