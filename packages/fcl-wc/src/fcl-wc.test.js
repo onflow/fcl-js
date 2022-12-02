@@ -2,20 +2,22 @@ import {config} from "@onflow/config"
 
 describe("Init Client", () => {
   it("should throw without projectId", async () => {
-    async function initWC() {
+    async function testFn() {
+
+      // Mock transport then import fcl-wc because startup of fcl will call getChainId util which hits the chain
       await config.overload(
         {
           "flow.network.default": "testnet",
+          "sdk.transport": async ix => ix
         },
-        fclWC.init
+        async () => {
+          const fclWC = require("./fcl-wc")
+          await fclWC.init()
+        }
       )
     }
 
-    // Mock transport then import fcl-wc because startup of fcl will call getChainId util which hits the chain
-    config.put("sdk.transport", async ix => ix)
-    const fclWC = require("./fcl-wc")
-
     expect.assertions(1)
-    await expect(initWC).rejects.toThrow(Error)
+    await expect(testFn).rejects.toThrow(Error)
   })
 })
