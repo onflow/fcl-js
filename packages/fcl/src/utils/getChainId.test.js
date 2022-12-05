@@ -1,13 +1,15 @@
 import {config} from "@onflow/config"
 import assert from "assert"
-import { getChainId } from "./getChainId"
+import {getChainId} from "./getChainId"
 
 describe("getChainId", () => {
-
   it("getChainId assuming it's already in config", async () => {
-    config.put("flow.network.default", "testnet")
+    let network
 
-    const network = await getChainId()
-    assert.equal("testnet", network)
+    await config.overload({"flow.network.default": "testnet"}, async () => {
+      network = await getChainId()
+    })
+
+    assert.equal(network, "testnet")
   })
 })
