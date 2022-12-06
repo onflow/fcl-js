@@ -1,6 +1,7 @@
 import {config} from "@onflow/config"
 import {invariant} from "@onflow/util-invariant"
 import {serviceRegistry} from "../current-user/exec-service/plugins"
+import {getChainId} from "../utils"
 import {VERSION} from "../VERSION"
 import {makeDiscoveryServices} from "./utils"
 
@@ -26,6 +27,7 @@ export async function getServices({types}) {
       clientServices: await makeDiscoveryServices(),
       supportedStrategies: serviceRegistry.getStrategies(),
       userAgent: window?.navigator?.userAgent,
+      network: await getChainId(),
     }),
   }).then(d => d.json())
 }

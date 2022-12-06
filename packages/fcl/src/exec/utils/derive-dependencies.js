@@ -1,9 +1,9 @@
-import {config} from "@onflow/config"
 import {invariant} from "@onflow/util-invariant"
 import {withPrefix} from "@onflow/util-address"
+import {getChainId} from "../../utils"
 
 export async function deriveDependencies({template}) {
-  const network = await config.get("flow.network")
+  const network = await getChainId()
 
   invariant(
     network,

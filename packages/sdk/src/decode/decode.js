@@ -206,6 +206,16 @@ export const decodeResponse = async (response, customDecoders = {}) => {
     return response.transactionId
   } else if (response.collection) {
     return response.collection
+  } else if (response.networkParameters) {
+    const chainIdMap = {
+      "flow-testnet": "testnet",
+      "flow-mainnet": "mainnet",
+      "flow-emulator": "local",
+    }
+
+    return {
+      chainId: chainIdMap[response.networkParameters.chainId],
+    }
   }
 
   return null
