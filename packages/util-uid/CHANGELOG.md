@@ -1,5 +1,11 @@
 # @onflow/util-uid
 
+## 1.1.0-alpha.0
+
+### Minor Changes
+
+- [#1496](https://github.com/onflow/fcl-js/pull/1496) [`687f45ec`](https://github.com/onflow/fcl-js/commit/687f45ec25e613399f031497634c4102935d114d) Thanks [@chasefleming](https://github.com/chasefleming)! - Add JSDoc for util-uid package.
+
 ## 1.0.3
 
 ### Patch Changes
