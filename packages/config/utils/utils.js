@@ -36,6 +36,16 @@ const mergeDeep = (target, ...sources) => {
 }
 
 /**
+ * Support if/then/else behavior in a function way.
+ * @param{function(Object): boolean} testFn
+ * @param{function(Object): *} posCond - Function to run if testFn is true
+ * @param{function(Object): *} negCond - Function to run it testFn is false
+ * @returns {function(*): *}
+ */
+export const ifElse = (testFn, posCond, negCond) => obj =>
+  testFn(obj) ? posCond(obj) : negCond(obj)
+
+/**
  * Deep merge multiple Flow JSON.
  * @param {Object|Object[]} value
  * @returns {Object}
