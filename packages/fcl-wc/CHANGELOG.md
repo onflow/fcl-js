@@ -1,5 +1,27 @@
 # @onflow/fcl-wc
 
+## 2.0.0-alpha.1
+
+### Minor Changes
+
+- [#1497](https://github.com/onflow/fcl-js/pull/1497) [`60b4c351`](https://github.com/onflow/fcl-js/commit/60b4c351ca84fa1fc88607fa9c58d0a6ed43b017) Thanks [@gregsantos](https://github.com/gregsantos)! - Add support for pre-authz method
+
+### Patch Changes
+
+- [#1420](https://github.com/onflow/fcl-js/pull/1420) [`c20bc344`](https://github.com/onflow/fcl-js/commit/c20bc34448a22966d349b0b1c4c0f742ae93a355) Thanks [@huyndo](https://github.com/huyndo)! - Add GetNetworkParameters interaction and a util to get chain ID
+
+- Updated dependencies [[`c20bc344`](https://github.com/onflow/fcl-js/commit/c20bc34448a22966d349b0b1c4c0f742ae93a355)]:
+  - @onflow/fcl@1.4.0-alpha.1
+
+## 1.0.1-alpha.0
+
+### Patch Changes
+
+- Updated dependencies [[`e10e3c9c`](https://github.com/onflow/fcl-js/commit/e10e3c9c1f611e7dfd8a0bf7292473c71c2e04b9), [`6051030f`](https://github.com/onflow/fcl-js/commit/6051030f81fb102447bec40c758657ec20f43129), [`b2881f74`](https://github.com/onflow/fcl-js/commit/b2881f74f024aeca52d534d2ca6081fb57efd06d)]:
+  - @onflow/config@1.1.0-alpha.0
+  - @onflow/fcl@1.3.3-alpha.0
+  - @onflow/util-logger@1.1.3-alpha.0
+
 ## 1.0.0
 
 ### Minor Changes

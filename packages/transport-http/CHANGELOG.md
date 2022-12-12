@@ -1,5 +1,23 @@
 # @onflow/transport-http
 
+## 1.6.0-alpha.1
+
+### Minor Changes
+
+- [#1420](https://github.com/onflow/fcl-js/pull/1420) [`c20bc344`](https://github.com/onflow/fcl-js/commit/c20bc34448a22966d349b0b1c4c0f742ae93a355) Thanks [@huyndo](https://github.com/huyndo)! - Add GetNetworkParameters interaction and a util to get chain ID
+
+### Patch Changes
+
+- Updated dependencies [[`5bec5576`](https://github.com/onflow/fcl-js/commit/5bec5576a79809d0684411736e3f4c02b8051c22)]:
+  - @onflow/util-address@1.1.0-alpha.0
+
+## 1.5.1-alpha.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @onflow/util-logger@1.1.3-alpha.0
+
 ## 1.5.0
 
 ### Minor Changes

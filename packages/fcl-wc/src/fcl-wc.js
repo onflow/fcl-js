@@ -34,8 +34,8 @@ const initClient = async ({projectId, metadata}) => {
 }
 
 export const init = async ({
-  projectId,
-  metadata,
+  projectId = null,
+  metadata = {},
   includeBaseWC = false,
   wcRequestHook = null,
   pairingModalOverride = null,

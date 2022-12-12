@@ -9,6 +9,7 @@ Object {
   "encodedData": null,
   "events": null,
   "latestBlock": null,
+  "networkParameters": null,
   "tag": null,
   "transaction": null,
   "transactionId": null,

@@ -1,6 +1,6 @@
 {
   "name": "@onflow/transport-grpc",
-  "version": "1.1.4",
+  "version": "1.2.0-alpha.0",
   "description": "Flow SDK GRPC Transport Module",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
@@ -40,7 +40,7 @@
     "@improbable-eng/grpc-web-node-http-transport": "^0.14.0",
     "@onflow/protobuf": "^1.1.0",
     "@onflow/rlp": "^1.0.3",
-    "@onflow/util-address": "^1.0.3",
+    "@onflow/util-address": "^1.1.0-alpha.0",
     "@onflow/util-invariant": "^1.0.3",
     "@onflow/util-template": "^1.0.4"
   }

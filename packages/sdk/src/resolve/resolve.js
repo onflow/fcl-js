@@ -10,7 +10,6 @@ import {getBlock} from "../build/build-get-block.js"
 import {getAccount} from "../build/build-get-account.js"
 import {decodeResponse as decode} from "../decode/decode.js"
 
-import {resolveRefBlockId} from "./resolve-ref-block-id.js"
 import {resolveCadence} from "./resolve-cadence.js"
 import {resolveArguments} from "./resolve-arguments.js"
 import {resolveAccounts} from "./resolve-accounts.js"

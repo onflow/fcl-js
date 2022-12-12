@@ -1,5 +1,11 @@
 # @onflow/util-address
 
+## 1.1.0-alpha.0
+
+### Minor Changes
+
+- [#1494](https://github.com/onflow/fcl-js/pull/1494) [`5bec5576`](https://github.com/onflow/fcl-js/commit/5bec5576a79809d0684411736e3f4c02b8051c22) Thanks [@chasefleming](https://github.com/chasefleming)! - Add JSDoc to util-address package.
+
 ## 1.0.3
 
 ### Patch Changes

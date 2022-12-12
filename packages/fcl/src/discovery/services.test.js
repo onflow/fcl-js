@@ -67,6 +67,7 @@ describe("getServices", () => {
       "discovery.authn.endpoint",
       "https://fcl-discovery.onflow.org/api/testnet/authn"
     )
+    .put("accessNode.api", "https://rest-testnet.onflow.org")
   })
 
   afterEach(() => {
