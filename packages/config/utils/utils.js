@@ -14,7 +14,7 @@ const isObject = value => value && typeof value === 'object' && !Array.isArray(v
 /**
  * Deep merge multiple objects.
  * @param {Object} target
- * @param {Object[]} ...sources
+ * @param {...Object[]} sources
  * @returns {Object}
  */
 const mergeDeep = (target, ...sources) => {
