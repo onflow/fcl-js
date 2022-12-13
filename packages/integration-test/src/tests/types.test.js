@@ -616,8 +616,8 @@ describe("types test", () => {
     // Dictionary
     [
       [
-        {key: 1, value: "one"},
-        {key: 2, value: "two"},
+        {key: "1", value: "one"},
+        {key: "2", value: "two"},
       ],
       "{Int: String}",
       fcl.t.Dictionary({key: fcl.t.Int, value: fcl.t.String}),
