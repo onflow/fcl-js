@@ -12,4 +12,6 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: 16.x
+      # install flow CLI for integration testing
+      - run: sh -ci "$(curl -fsSL https://raw.githubusercontent.com/onflow/flow-cli/master/install.sh)"
       - run: make ci
