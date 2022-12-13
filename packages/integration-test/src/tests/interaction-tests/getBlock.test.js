@@ -18,7 +18,7 @@ describe("getBlock test", () => {
       .then(fcl.decode)
 
     expect(block).toBeDefined()
-    expect(block.parentId == parentId).toBeTruthy()
+    expect(block.parentId).toMatch(parentId)
   })
 
   test("get block atBlockHeight test", async () => {
