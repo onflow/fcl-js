@@ -4,10 +4,9 @@
   "description": "Integration testing for FCL-JS",
   "main": "src/index.js",
   "scripts": {
-    "test": "jest",
+    "test": "npm run test:http && npm run test:grpc",
     "test:grpc": "jest --setupFilesAfterEnv './src/setup/grpc-setup.js' -i",
-    "test:http": "jest --setupFilesAfterEnv './src/setup/http-setup.js' -i",
-    "//": "-- tx.test.js"
+    "test:http": "jest --setupFilesAfterEnv './src/setup/http-setup.js' -i"
   },
   "repository": {
     "type": "git",
@@ -21,7 +20,7 @@
   "homepage": "https://github.com/onflow/flow-js-sdk#readme",
   "dependencies": {
     "@freshmint/core": "^0.2.2-alpha",
-    "@onflow/fcl": "^1.3.2"
+    "@onflow/fcl": "1.4.0-alpha.1"
   },
   "keywords": [],
   "devDependencies": {
