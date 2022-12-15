@@ -13,5 +13,5 @@ jobs:
         with:
           node-version: 16.x
       # install flow CLI for integration testing
-      - run: sh -ci "$(curl -fsSL https://raw.githubusercontent.com/onflow/flow-cli/master/install.sh)"
+      - run: brew install flow-cli
       - run: make ci
