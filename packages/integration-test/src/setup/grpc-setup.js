@@ -1,8 +1,9 @@
-import "./common-setup"
-import * as fcl from "@onflow/fcl"
+import {config} from "@onflow/config"
 import {send as transportGRPC} from "@onflow/transport-grpc"
+import {makeAuthzFn} from "./common-setup"
 
-fcl
-  .config()
+config()
   .put("accessNode.api", "http://localhost:8080")
   .put("sdk.transport", transportGRPC)
+
+makeAuthzFn()
