@@ -11,7 +11,7 @@ on:
 
 jobs:
   test_pull_request:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     steps:
       - name: Download flow-cli atrifact
         if: github.event.inputs.CLI_URL != ''
@@ -37,7 +37,11 @@ jobs:
       # if no beta flow-cli is provided, install official version 
       - name: Install released flow-cli
         if: github.event.inputs.CLI_URL == ''
-        run: brew install flow-cli
+        run: |
+          sh -ci "$(curl -fsSL https://raw.githubusercontent.com/onflow/flow-cli/master/install.sh)"
+          flow version
+      # /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+      # brew install flow-cli
 
       ### Run tests
 
