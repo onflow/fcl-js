@@ -1,17 +1,54 @@
 name: FLOW-JS-SDK Continuous Integration
 
 on:
+  workflow_dispatch:
+    inputs:
+      CLI_URL:
+        description: "flow-cli artifact url"
+        type: string
   pull_request:
     branches: [master]
 
 jobs:
   test_pull_request:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     steps:
+      - name: Download flow-cli atrifact
+        if: github.event.inputs.CLI_URL != ''
+        run: >
+          curl -L -o artifact.zip 
+          -H "Accept: application/vnd.github+json" 
+          -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}"
+          -H "X-GitHub-Api-Version: 2022-11-28"
+          ${{ github.event.inputs.CLI_URL }}
+        # https://api.github.com/repos/onflow/devex-tests/actions/artifacts/479746403/zip
+
+      - name: Unzip artifact
+        if: github.event.inputs.CLI_URL != ''
+        run: unzip -j -o artifact.zip
+
+      - name: Copy flow binary 
+        if: github.event.inputs.CLI_URL != ''
+        run: |
+          sudo cp flow-x86_64-linux- /usr/local/bin/flow
+          sudo chmod a+x /usr/local/bin/flow
+          uname -a
+          ls -l /usr/local/bin/flow
+          flow version
+            
+      # if no beta flow-cli is provided, install official version 
+      - name: Install released flow-cli
+        if: github.event.inputs.CLI_URL == ''
+        run: |
+          sh -ci "$(curl -fsSL https://raw.githubusercontent.com/onflow/flow-cli/master/install.sh)"
+          flow version
+      # /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+      # brew install flow-cli
+
+      ### Run tests
+
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
         with:
           node-version: 16.x
-      # install flow CLI for integration testing
-      - run: brew install flow-cli
       - run: make ci
