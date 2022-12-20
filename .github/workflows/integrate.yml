@@ -31,8 +31,9 @@ jobs:
         if: github.event.inputs.CLI_URL != ''
         run: |
           sudo cp flow-arm64-linux- /usr/local/bin/flow
+          sudo chmod a+x /usr/local/bin/flow
           uname -a
-          ls /usr/local/bin/flow
+          ls -l /usr/local/bin/flow
           flow version
             
       # if no beta flow-cli is provided, install official version 
