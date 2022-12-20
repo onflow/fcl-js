@@ -30,7 +30,7 @@ jobs:
       - name: Copy flow binary 
         if: github.event.inputs.CLI_URL != ''
         run: |
-          sudo cp flow-arm64-linux- /usr/local/bin/flow
+          sudo cp flow-x86_64-linux- /usr/local/bin/flow
           sudo chmod a+x /usr/local/bin/flow
           uname -a
           ls -l /usr/local/bin/flow
