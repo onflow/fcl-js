@@ -30,10 +30,11 @@ jobs:
       - name: Copy flow binary 
         if: github.event.inputs.CLI_URL != ''
         run: |
-          sudo cp flow-x86_64-linux- /usr/local/bin/flow
+          sudo cp flow-arm64-linux- /usr/local/bin/flow
+          uname -a
           ls /usr/local/bin/flow
           flow version
-      
+            
       # if no beta flow-cli is provided, install official version 
       - name: Install released flow-cli
         if: github.event.inputs.CLI_URL == ''
