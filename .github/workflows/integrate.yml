@@ -12,6 +12,7 @@ on:
 jobs:
   test_pull_request:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - name: Download flow-cli atrifact
         if: github.event.inputs.CLI_URL != ''
