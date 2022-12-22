@@ -27,7 +27,7 @@ jobs:
           && echo ARTIFACT_ID=${ARTIFACT_ID}
           && echo "ARTIFACT_ID=${ARTIFACT_ID}" >> $GITHUB_ENV
           && echo "CLI_URL=https://api.github.com/repos/onflow/devex-tests/actions/artifacts/${ARTIFACT_ID}/zip" >> $GITHUB_ENV
-          && echo CLI_URL=${CLI_URL}
+          && echo CLI_URL=${{ env.CLI_URL }}
      
       - name: Download flow-cli atrifact
         if: github.event.inputs.CLI_BUILD_RUN_ID != ''
