@@ -30,7 +30,7 @@ jobs:
           $$ echo CLI_URL=${CLI_URL}
      
       - name: Download flow-cli atrifact
-        if: ${{ env.ARTIFACT_ID }} != ''
+        if: github.event.inputs.CLI_BUILD_RUN_ID != ''
         run: >
           curl -L -o artifact.zip 
           -H "Accept: application/vnd.github+json" 
@@ -40,11 +40,11 @@ jobs:
         # https://api.github.com/repos/onflow/devex-tests/actions/artifacts/479746403/zip
 
       - name: Unzip artifact
-        if: ${{ env.ARTIFACT_ID }} != ''
+        if: github.event.inputs.CLI_BUILD_RUN_ID != ''
         run: unzip -j -o artifact.zip
 
       - name: Copy flow binary 
-        if: ${{ env.ARTIFACT_ID }} != ''
+        if: github.event.inputs.CLI_BUILD_RUN_ID != ''
         run: |
           sudo cp flow-x86_64-linux- /usr/local/bin/flow
           sudo chmod a+x /usr/local/bin/flow
@@ -54,7 +54,7 @@ jobs:
             
       # if no beta flow-cli is provided, install official version 
       - name: Install released flow-cli
-        if: ${{ env.ARTIFACT_ID }} == ''
+        if: github.event.inputs.CLI_BUILD_RUN_ID == ''
         run: |
           sh -ci "$(curl -fsSL https://raw.githubusercontent.com/onflow/flow-cli/master/install.sh)"
           flow version
