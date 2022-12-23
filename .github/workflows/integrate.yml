@@ -57,6 +57,7 @@ jobs:
         if: github.event.inputs.CLI_BUILD_RUN_ID == ''
         run: |
           sh -ci "$(curl -fsSL https://raw.githubusercontent.com/onflow/flow-cli/master/install.sh)"
+          export PATH=/root/.local/bin:$PATH
           flow version
       # /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
       # brew install flow-cli
