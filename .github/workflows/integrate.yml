@@ -67,4 +67,4 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: 16.x
-      - run: npx lerna run test --stream
+      - run: make ci

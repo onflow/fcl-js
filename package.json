@@ -5,7 +5,7 @@
   "scripts": {
     "build": "lerna run build",
     "start": "npm run build && lerna run start --parallel",
-    "test": "lerna run test",
+    "test": "lerna run test --stream",
     "release": "npm run build && npm run changeset publish",
     "changeset": "changeset"
   },
@@ -13,7 +13,7 @@
   "devDependencies": {
     "@changesets/changelog-github": "^0.4.4",
     "@changesets/cli": "^2.21.1",
-    "lerna": "^5.0.0",
+    "lerna": "^6.1.0",
     "prettier": "^2.6.2"
   }
 }
