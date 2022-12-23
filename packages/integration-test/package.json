@@ -4,7 +4,7 @@
   "description": "Integration testing for FCL-JS",
   "main": "src/index.js",
   "scripts": {
-    "test": "npm run test:grpc",
+    "test": "npm run test:grpc && npm run test:http",
     "test_orig": "npm run test:http && npm run test:grpc",
     "test:grpc": "jest --setupFilesAfterEnv './src/setup/grpc-setup.js' -i --detectOpenHandles --forceExit",
     "test:http": "jest --setupFilesAfterEnv './src/setup/http-setup.js' -i --detectOpenHandles --forceExit"
