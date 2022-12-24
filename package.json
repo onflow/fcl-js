@@ -5,7 +5,7 @@
   "scripts": {
     "build": "lerna run build",
     "start": "npm run build && lerna run start --parallel",
-    "test": "lerna run test --stream --scope=fcl-integration-test",
+    "test": "lerna run test --stream",
     "release": "npm run build && npm run changeset publish",
     "changeset": "changeset"
   },

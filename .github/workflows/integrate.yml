@@ -68,4 +68,7 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: 16.x
-      - run: make ci
+      - run: |
+          export PATH=/root/.local/bin:$PATH
+          flow version
+          make ci
