@@ -10,7 +10,7 @@ on:
     branches: [master]
 
 jobs:
-  test_pull_request:
+  integration:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
