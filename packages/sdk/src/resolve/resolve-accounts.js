@@ -25,6 +25,21 @@ export function buildPreSignable(acct, ix) {
   }
 }
 
+function mergeRoles(ix, ax) {
+  const tempAccountRoles = Object.assign({}, ix.accounts[ax.tempId].role)
+
+  // remove false roles
+  const axTrueRoles =  Object.keys(ax.role)
+    .filter(key => ax.role[key])
+    .reduce((acc, key) => {
+      acc[key] = ax.role[key];
+      return acc;
+    }, {})
+
+  // Override true roles from account on temp account
+  return {...tempAccountRoles, ...axTrueRoles}
+}
+
 async function collectAccounts(ix, accounts, last, depth = 3) {
   invariant(depth, "Account Resolve Recursion Limit Exceeded", {ix, accounts})
 
@@ -44,34 +59,23 @@ async function collectAccounts(ix, accounts, last, depth = 3) {
       if (ax.addr != null && ax.keyId != null) {
         ax.tempId = idof(ax)
       }
+
       ix.accounts[ax.tempId] = ix.accounts[ax.tempId] || ax
-      ix.accounts[ax.tempId].role.proposer =
-        ix.accounts[ax.tempId].role.proposer || ax.role.proposer
-      ix.accounts[ax.tempId].role.payer =
-        ix.accounts[ax.tempId].role.payer || ax.role.payer
-      ix.accounts[ax.tempId].role.authorizer =
-        ix.accounts[ax.tempId].role.authorizer || ax.role.authorizer
+      ix.accounts[ax.tempId].role = mergeRoles(ix, ax)
 
       if (ix.accounts[ax.tempId].role.proposer && ix.proposer === old.tempId) {
         ix.proposer = ax.tempId
       }
 
       if (ix.accounts[ax.tempId].role.payer) {
-        if (Array.isArray(ix.payer)) {
-          ix.payer = Array.from(
-            new Set(
-              [...ix.payer, ax.tempId].map(d =>
-                d === old.tempId ? ax.tempId : d
-              )
-            )
+
+        const payer = Array.isArray(ix.payer) ? ix.payer : [ix.payer]
+        ix.payer = Array.from(
+          new Set(
+            [...payer, ax.tempId].map(d => (d === old.tempId ? ax.tempId : d))
           )
-        } else {
-          ix.payer = Array.from(
-            new Set(
-              [ix.payer, ax.tempId].map(d => (d === old.tempId ? ax.tempId : d))
-            )
-          )
-        }
+        )
+
         if (ix.payer.length > 1) {
           // remove payer dups based on addr and keyId
           const dupList = []
