@@ -368,7 +368,7 @@ fcl.authenticate();
 
 #### Examples
 
-- [Press Login: Live Kitty Items](http://kitty-items-flow-testnet.herokuapp.com/)
+- [Press Login: Explore Kitty Items](https://github.com/onflow/kitty-items)
 
 ---
 
@@ -696,7 +696,7 @@ The callback sent to `subscribe` will be called with a list of `authn` services.
 
 > 📣 **These methods can be used in browsers and NodeJS.**
 
-These methods allows dapps to interact directly with the Flow blockchain via a set of functions that currently use the [Access Node API](https://docs.onflow.org/access-api/).
+These methods allows dapps to interact directly with the Flow blockchain via a set of functions that currently use the [Access Node API](https://developers.flow.com/nodes/access-api).
 
 ### Methods
 
@@ -949,9 +949,9 @@ const response = await fcl.send([
 
 #### Examples
 
-- [Getting a user account](https://github.com/onflow/kitty-items/blob/master/web/src/hooks/use-current-user.hook.js)
-- [Getting the latest block](https://github.com/onflow/kitty-items/blob/master/web/src/hooks/use-current-user.hook.js)
-- [Sending a transaction](https://github.com/onflow/kitty-items/blob/master/web/src/hooks/use-current-user.hook.js)
+- [Getting a user account](https://github.com/onflow/kitty-items/blob/master/web/src/contexts/AppContext.jsx#L47)
+- [Getting the latest block](https://github.com/onflow/kitty-items/blob/master/api/src/services/flow.ts#L92)
+- [Sending a transaction](https://github.com/onflow/kitty-items/blob/master/web/src/flow/util/tx.js)
 
 ---
 
@@ -1001,9 +1001,9 @@ assert(typeof decoded === "number");
 
 #### Examples
 
-- [Getting a user account](https://github.com/onflow/kitty-items/blob/master/web/src/hooks/use-current-user.hook.js)
-- [Getting the latest block](https://github.com/onflow/kitty-items/blob/master/web/src/hooks/use-current-user.hook.js)
-- [Sending a transaction](https://github.com/onflow/kitty-items/blob/master/web/src/hooks/use-current-user.hook.js)
+- [Getting a user account](https://github.com/onflow/kitty-items/blob/master/web/src/contexts/AppContext.jsx#L47)
+- [Getting the latest block](https://github.com/onflow/kitty-items/blob/master/api/src/services/flow.ts#L92)
+- [Sending a transaction](https://github.com/onflow/kitty-items/blob/master/web/src/flow/util/tx.js)
 
 ---
 
@@ -1646,7 +1646,7 @@ useEffect(() => fcl.tx(txId).subscribe(setTxStatus));
 
 #### Examples
 
-- [React Effect to get the transaction status on submit](https://github.com/onflow/flow-port/blob/staging/src/pages/transaction-status.js#L158-L183)
+- [React Effect to get the transaction status on submit](https://github.com/onflow/kitty-items/blob/master/web/src/components/Transactions/TransactionsContext.jsx#L15)
 - [Example usage in Kitty Items app](https://github.com/onflow/kitty-items/blob/master/web/src/flow/util/tx.js#L21-L22)
 
 ---
