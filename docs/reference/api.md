@@ -396,7 +396,7 @@ fcl.unauthenticate();
 
 #### Examples
 
-- [React Hook to manage FCL authentication: Kitty-items](https://github.com/onflow/kitty-items/blob/master/web/src/hooks/use-current-user.hook.js)
+- [React Hook to manage FCL authentication: Kitty-items](https://github.com/onflow/kitty-items/blob/master/web/src/contexts/AppContext.jsx#L45)
 
 ---
 
@@ -423,7 +423,7 @@ fcl.reauthenticate();
 
 #### Examples
 
-- [React Hook to manage FCL authentication: Kitty-items](https://github.com/onflow/kitty-items/blob/master/web/src/hooks/use-current-user.hook.js)
+- [React Hook to manage FCL authentication: Kitty-items](https://github.com/onflow/kitty-items/blob/master/web/src/contexts/AppContext.jsx#L45)
 
 ---
 
