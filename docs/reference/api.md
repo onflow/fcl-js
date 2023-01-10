@@ -696,7 +696,7 @@ The callback sent to `subscribe` will be called with a list of `authn` services.
 
 > 📣 **These methods can be used in browsers and NodeJS.**
 
-These methods allows dapps to interact directly with the Flow blockchain via a set of functions that currently use the [Access Node API](https://docs.onflow.org/access-api/).
+These methods allows dapps to interact directly with the Flow blockchain via a set of functions that currently use the [Access Node API](https://developers.flow.com/nodes/access-api).
 
 ### Methods
 
@@ -1646,7 +1646,7 @@ useEffect(() => fcl.tx(txId).subscribe(setTxStatus));
 
 #### Examples
 
-- [React Effect to get the transaction status on submit](https://github.com/onflow/flow-port/blob/staging/src/pages/transaction-status.js#L158-L183)
+- [React Effect to get the transaction status on submit](https://github.com/onflow/kitty-items/blob/master/web/src/components/Transactions/TransactionsContext.jsx#L15)
 - [Example usage in Kitty Items app](https://github.com/onflow/kitty-items/blob/master/web/src/flow/util/tx.js#L21-L22)
 
 ---
