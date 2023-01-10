@@ -949,9 +949,9 @@ const response = await fcl.send([
 
 #### Examples
 
-- [Getting a user account](https://github.com/onflow/kitty-items/blob/master/web/src/hooks/use-current-user.hook.js)
-- [Getting the latest block](https://github.com/onflow/kitty-items/blob/master/web/src/hooks/use-current-user.hook.js)
-- [Sending a transaction](https://github.com/onflow/kitty-items/blob/master/web/src/hooks/use-current-user.hook.js)
+- [Getting a user account](https://github.com/onflow/kitty-items/blob/master/web/src/contexts/AppContext.jsx#L47)
+- [Getting the latest block](https://github.com/onflow/kitty-items/blob/master/api/src/services/flow.ts#L92)
+- [Sending a transaction](https://github.com/onflow/kitty-items/blob/master/web/src/flow/util/tx.js)
 
 ---
 
