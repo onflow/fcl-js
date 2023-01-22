@@ -25,96 +25,133 @@ export function buildPreSignable(acct, ix) {
   }
 }
 
-async function collectAccounts(ix, accounts, last, depth = 3) {
-  invariant(depth, "Account Resolve Recursion Limit Exceeded", {ix, accounts})
+const addAccountToIx = (ix, newAccount) => {
+  const existingAccount = ix.accounts[newAccount.tempId] || newAccount
 
-  let authorizations = []
-  for (let ax of accounts) {
-    let resolve = ax.resolve
-    ax.resolve = null
-    var old = last || ax
-    if (isFn(resolve)) ax = await resolve(ax, buildPreSignable(ax, ix))
+  ix.accounts[newAccount.tempId] = newAccount
 
-    if (Array.isArray(ax)) {
-      await collectAccounts(ix, ax, old, depth - 1)
+  ix.accounts[newAccount.tempId].role.proposer =
+    existingAccount.role.proposer || newAccount.role.proposer
+  ix.accounts[newAccount.tempId].role.payer =
+    existingAccount.role.payer || newAccount.role.payer
+  ix.accounts[newAccount.tempId].role.authorizer =
+    existingAccount.role.authorizer || newAccount.role.authorizer
+
+  return ix.accounts[newAccount.tempId]
+}
+
+const recurseFlatMap = (el, depthLimit = 3) => {
+  if (depthLimit <= 0) return el
+  if (!Array.isArray(el)) return el
+  return recurseFlatMap(
+    el.flatMap(e => e),
+    depthLimit - 1
+  )
+}
+const uniqueAccountsFlatMap = accounts => {
+  const flatMapped = recurseFlatMap(accounts)
+  const seen = new Set()
+
+  const uniqueAccountsFlatMapped = flatMapped
+    .map(account => {
+      if (
+        seen.has(
+          `${account.tempId}-payer-${account.role.payer}-proposer-${account.role.proposer}-authorizer-${account.role.authorizer}-param-${account.role.param}}`
+        )
+      )
+        return null
+      seen.add(
+        `${account.tempId}-payer-${account.role.payer}-proposer-${account.role.proposer}-authorizer-${account.role.authorizer}-param-${account.role.param}}`
+      )
+      return account
+    })
+    .filter(e => e !== null)
+
+  return uniqueAccountsFlatMapped
+}
+
+async function recurseResolveAccount(ix, account, depthLimit = 3) {
+  if (depthLimit <= 0) return account
+
+  if (!account) return null
+
+  account = addAccountToIx(ix, account)
+
+  if (account?.resolve) {
+    if (isFn(account?.resolve)) {
+      let resolvedAccounts = await account.resolve(
+        account,
+        buildPreSignable(account, ix)
+      )
+
+      resolvedAccounts = Array.isArray(resolvedAccounts)
+        ? resolvedAccounts
+        : [resolvedAccounts]
+
+      account.resolve = resolvedAccounts
+
+      account = addAccountToIx(ix, account)
+
+      let recursedAccounts = await Promise.all(
+        resolvedAccounts.map(
+          async resolvedAccount =>
+            await recurseResolveAccount(ix, resolvedAccount, depthLimit - 1)
+        )
+      )
+
+      return recursedAccounts ? recursedAccounts : account
     } else {
-      if (ax.addr) {
-        ax.addr = sansPrefix(ax.addr)
-      }
-      if (ax.addr != null && ax.keyId != null) {
-        ax.tempId = idof(ax)
-      }
-      ix.accounts[ax.tempId] = ix.accounts[ax.tempId] || ax
-      ix.accounts[ax.tempId].role.proposer =
-        ix.accounts[ax.tempId].role.proposer || ax.role.proposer
-      ix.accounts[ax.tempId].role.payer =
-        ix.accounts[ax.tempId].role.payer || ax.role.payer
-      ix.accounts[ax.tempId].role.authorizer =
-        ix.accounts[ax.tempId].role.authorizer || ax.role.authorizer
+      return account.resolve
+    }
+  }
+  return account
+}
 
-      if (ix.accounts[ax.tempId].role.proposer && ix.proposer === old.tempId) {
-        ix.proposer = ax.tempId
-      }
+async function resolveAccountType(ix, type) {
+  invariant(
+    ix && typeof ix === "object",
+    "recurseResolveAccount Error: ix not defined"
+  )
+  invariant(
+    type === "payer" || type === "proposer" || type === "authorizations",
+    "recurseResolveAccount Error: type must be 'payer', 'proposer' or 'authorizations'"
+  )
 
-      if (ix.accounts[ax.tempId].role.payer) {
-        if (Array.isArray(ix.payer)) {
-          ix.payer = Array.from(
-            new Set(
-              [...ix.payer, ax.tempId].map(d =>
-                d === old.tempId ? ax.tempId : d
-              )
-            )
-          )
-        } else {
-          ix.payer = Array.from(
-            new Set(
-              [ix.payer, ax.tempId].map(d => (d === old.tempId ? ax.tempId : d))
-            )
-          )
-        }
-        if (ix.payer.length > 1) {
-          // remove payer dups based on addr and keyId
-          const dupList = []
-          const payerAccts = []
-          ix.payer = ix.payer.reduce((g, tempId) => {
-            const {addr} = ix.accounts[tempId]
-            const key = idof(ix.accounts[tempId])
-            payerAccts.push(addr)
-            if (dupList.includes(key)) return g
-            dupList.push(key)
-            return [...g, tempId]
-          }, [])
-          const multiAccts = Array.from(new Set(payerAccts))
-          if (multiAccts.length > 1) {
-            throw new Error("Payer can not be different accounts")
-          }
-        }
-      }
+  let accountTempIDs = Array.isArray(ix[type]) ? ix[type] : [ix[type]]
 
-      if (ix.accounts[ax.tempId].role.authorizer) {
-        if (last) {
-          // do group replacement
-          authorizations = Array.from(new Set([...authorizations, ax.tempId]))
-        } else {
-          // do 1-1 replacement
-          ix.authorizations = ix.authorizations.map(d =>
-            d === old.tempId ? ax.tempId : d
+  let accounts = accountTempIDs.map(tempId => ix.accounts[tempId])
+
+  accounts.forEach(account => {
+    invariant(account, `recurseResolveAccount Error: account not found`)
+  })
+
+  for (let account of accounts) {
+    let resolvedAccounts = await recurseResolveAccount(ix, account)
+
+    resolvedAccounts = Array.isArray(resolvedAccounts)
+      ? resolvedAccounts
+      : [resolvedAccounts]
+
+    let flatResolvedAccounts = uniqueAccountsFlatMap(resolvedAccounts)
+
+    for (const resolvedAccount of flatResolvedAccounts) {
+      ix[type] = Array.isArray(ix[type])
+        ? [...new Set(flatResolvedAccounts.map(acct => acct.tempId))]
+        : resolvedAccount.tempId
+    }
+
+    // Ensure all payers are of the same account
+    if (type === "payer") {
+      let address
+      for (const payerTempID of ix["payer"]) {
+        let pAcct = ix.accounts[payerTempID]
+        if (!address) address = pAcct.addr
+        else if (address !== pAcct.addr)
+          throw new Error(
+            "recurseResolveAccount Error: payers from different accounts detected"
           )
-        }
       }
     }
-    if (old.tempId != ax.tempId) delete ix.accounts[old.tempId]
-  }
-
-  if (last) {
-    // complete (flatmap) group replacement
-    ix.authorizations = ix.authorizations
-      .map(d => (d === last.tempId ? authorizations : d))
-      .reduce(
-        (prev, curr) =>
-          Array.isArray(curr) ? [...prev, ...curr] : [...prev, curr],
-        []
-      )
   }
 }
 
@@ -129,8 +166,9 @@ export async function resolveAccounts(ix) {
       })
     }
     try {
-      await collectAccounts(ix, Object.values(ix.accounts))
-      await collectAccounts(ix, Object.values(ix.accounts))
+      await resolveAccountType(ix, "proposer")
+      await resolveAccountType(ix, "payer")
+      await resolveAccountType(ix, "authorizations")
     } catch (error) {
       console.error("=== SAD PANDA ===\n\n", error, "\n\n=== SAD PANDA ===")
       throw error

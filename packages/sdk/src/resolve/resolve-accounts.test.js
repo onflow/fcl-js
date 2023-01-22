@@ -105,6 +105,8 @@ test("Voucher in PreSignable multiple payer keys", async () => {
 
   const ps = buildPreSignable(ix.accounts[ix.proposer], ix)
 
+  console.log("PS.VOUCHER", ps.voucher)
+
   expect(ps.voucher).toEqual({
     cadence: "",
     refBlock: "123",
