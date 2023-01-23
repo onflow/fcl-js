@@ -7,7 +7,7 @@ import {createSignableVoucher} from "./voucher.js"
 const idof = acct => `${withPrefix(acct.addr)}-${acct.keyId}`
 const isFn = v => typeof v === "function"
 
-const genAccountId = (...ids) => ids.map(id => id).join("-")
+const genAccountId = (...ids) => ids.join("-")
 
 export function buildPreSignable(acct, ix) {
   try {
