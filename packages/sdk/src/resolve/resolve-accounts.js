@@ -9,6 +9,12 @@ const isFn = v => typeof v === "function"
 
 const genAccountId = (...ids) => ids.join("-")
 
+const ROLES = {
+  PAYER: "payer",
+  PROPOSER: "proposer",
+  AUTHORIZATIONS: "authorizations",
+}
+
 export function buildPreSignable(acct, ix) {
   try {
     return {
@@ -116,7 +122,9 @@ async function resolveAccountType(ix, type) {
     "recurseResolveAccount Error: ix not defined"
   )
   invariant(
-    type === "payer" || type === "proposer" || type === "authorizations",
+    type === ROLES.PAYER ||
+      type === ROLES.PROPOSER ||
+      type === ROLES.AUTHORIZATIONS,
     "recurseResolveAccount Error: type must be 'payer', 'proposer' or 'authorizations'"
   )
 
@@ -144,9 +152,9 @@ async function resolveAccountType(ix, type) {
     }
 
     // Ensure all payers are of the same account
-    if (type === "payer") {
+    if (type === ROLES.PAYER) {
       let address
-      for (const payerTempID of ix["payer"]) {
+      for (const payerTempID of ix[ROLES.PAYER]) {
         let pAcct = ix.accounts[payerTempID]
         if (!address) address = pAcct.addr
         else if (address !== pAcct.addr)
@@ -169,9 +177,9 @@ export async function resolveAccounts(ix) {
       })
     }
     try {
-      await resolveAccountType(ix, "proposer")
-      await resolveAccountType(ix, "payer")
-      await resolveAccountType(ix, "authorizations")
+      await resolveAccountType(ix, ROLES.PROPOSER)
+      await resolveAccountType(ix, ROLES.PAYER)
+      await resolveAccountType(ix, ROLES.AUTHORIZATIONS)
     } catch (error) {
       console.error("=== SAD PANDA ===\n\n", error, "\n\n=== SAD PANDA ===")
       throw error
