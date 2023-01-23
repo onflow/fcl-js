@@ -7,6 +7,8 @@ import {createSignableVoucher} from "./voucher.js"
 const idof = acct => `${withPrefix(acct.addr)}-${acct.keyId}`
 const isFn = v => typeof v === "function"
 
+const genAccountId = (...ids) => ids.map(id => id).join("-")
+
 export function buildPreSignable(acct, ix) {
   try {
     return {
@@ -48,21 +50,22 @@ const recurseFlatMap = (el, depthLimit = 3) => {
     depthLimit - 1
   )
 }
+
 const uniqueAccountsFlatMap = accounts => {
   const flatMapped = recurseFlatMap(accounts)
   const seen = new Set()
 
   const uniqueAccountsFlatMapped = flatMapped
     .map(account => {
-      if (
-        seen.has(
-          `${account.tempId}-payer-${account.role.payer}-proposer-${account.role.proposer}-authorizer-${account.role.authorizer}-param-${account.role.param}}`
-        )
+      const accountId = genAccountId(
+        account.tempId,
+        account.role.payer,
+        account.role.proposer,
+        account.role.authorizer,
+        account.role.param
       )
-        return null
-      seen.add(
-        `${account.tempId}-payer-${account.role.payer}-proposer-${account.role.proposer}-authorizer-${account.role.authorizer}-param-${account.role.param}}`
-      )
+      if (seen.has(accountId)) return null
+      seen.add(accountId)
       return account
     })
     .filter(e => e !== null)
