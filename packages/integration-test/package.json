@@ -1,0 +1,35 @@
+{
+  "name": "fcl-integration-test",
+  "version": "0.0.1",
+  "description": "Integration testing for FCL-JS",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "npm run test:http && npm run test:grpc",
+    "test:grpc": "jest --setupFilesAfterEnv './src/setup/grpc-setup.js' -i ",
+    "test:http": "jest --setupFilesAfterEnv './src/setup/http-setup.js' -i "
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/onflow/flow-js-sdk.git"
+  },
+  "author": "Dapper Labs <dev@dapperlabs.com>",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/onflow/flow-js-sdk/issues"
+  },
+  "homepage": "https://github.com/onflow/flow-js-sdk#readme",
+  "dependencies": {
+    "@freshmint/core": "^0.2.2-alpha",
+    "@onflow/fcl": "1.4.0-alpha.1"
+  },
+  "keywords": [],
+  "devDependencies": {
+    "@babel/core": "^7.20.2",
+    "@babel/preset-env": "^7.20.2",
+    "@onflow/transport-grpc": "^1.2.0-alpha.0",
+    "babel-jest": "^29.3.1",
+    "jest": "^29.3.1",
+    "jest-environment-node": "^29.3.1",
+    "wait-on": "^7.0.1"
+  }
+}
