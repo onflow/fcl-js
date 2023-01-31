@@ -3,16 +3,16 @@ const {resolve, dirname, basename, join} = require("path")
 const {isArray, isObject, isString} = require("./util")
 const {existsSync, mkdirSync} = require("fs")
 
-function determineBuildPaths(package, outputs, entryName) {
+function determineBuildPaths(pkg, outputs, entryName) {
   const buildTypeMap = {
     main: "cjs",
     module: "esm",
     unpkg: "umd",
   }
 
-  const packageOutputs = Object.keys(package).reduce((outputs, key) => {
+  const packageOutputs = Object.keys(pkg).reduce((outputs, key) => {
     if (Object.keys(buildTypeMap).includes(key)) {
-      outputs[buildTypeMap[key]] = package[key]
+      outputs[buildTypeMap[key]] = pkg[key]
     }
     return outputs
   }, {})
@@ -35,7 +35,7 @@ function determineBuildPaths(package, outputs, entryName) {
 
   if (!outputs) {
     console.warn(
-      `No outputs were specified in building ${entryName} from ${package.name}, using defaults for cjs,esm,umd ...`
+      `No outputs were specified in building ${entryName} from ${pkg.name}, using defaults for cjs,esm,umd ...`
     )
     outputs = {
       cjs: `/dist/${entryName}.js`,
@@ -58,8 +58,8 @@ function determineBuildPaths(package, outputs, entryName) {
   }))
 }
 
-module.exports = package => {
-  let builds = package.source
+module.exports = pkg => {
+  let builds = pkg.source
 
   assert(
     builds,
@@ -105,7 +105,7 @@ module.exports = package => {
       let entryName = basename(source)
 
       buildConfigs.push(
-        ...determineBuildPaths(package, outputs, entryName).map(build => ({
+        ...determineBuildPaths(pkg, outputs, entryName).map(build => ({
           ...build,
           source,
           banner,

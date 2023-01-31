@@ -5,7 +5,7 @@ const assert = require("assert")
 const getPackageJson = require("./get-package-json")
 const {resolve} = require("path")
 
-module.exports = packageConfig => package => {
+module.exports = packageConfig => pkg => {
   let bundlerPackageJson = getPackageJson(resolve(__dirname, ".."))
 
   program
@@ -25,7 +25,7 @@ module.exports = packageConfig => package => {
       ? watchModule
       : buildModule
 
-    await buildAction(packageConfig.builds, package)
+    await buildAction(packageConfig.builds, pkg)
   })
 
   program.parse()

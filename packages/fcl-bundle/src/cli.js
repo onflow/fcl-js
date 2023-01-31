@@ -3,7 +3,7 @@ const program = require("./program")
 const getPackageJSON = require("./get-package-json")
 const parsePackageJSON = require("./package-config")
 
-const package = getPackageJSON()
-const config = parsePackageJSON(package)
+const pkg = getPackageJSON()
+const config = parsePackageJSON(pkg)
 
-program(config)(package)
+program(config)(pkg)

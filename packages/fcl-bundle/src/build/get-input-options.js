@@ -15,22 +15,22 @@ const SUPPRESSED_WARNING_CODES = [
   "EVAL",
 ]
 
-module.exports = function getInputOptions(package, build) {
-  if (!package.dependencies["@babel/runtime"]) {
+module.exports = function getInputOptions(pkg, build) {
+  if (!pkg.dependencies["@babel/runtime"]) {
     throw new Error(
-      `${package.name} is missing required @babel/runtime dependency.  Please add this to the package.json and try again.`
+      `${pkg.name} is missing required @babel/runtime dependency.  Please add this to the package.json and try again.`
     )
   }
 
-  const babelRuntimeVersion = package.dependencies["@babel/runtime"].replace(
+  const babelRuntimeVersion = pkg.dependencies["@babel/runtime"].replace(
     /^[^0-9]*/,
     ""
   )
 
   let external = [/node:.*/]
     .concat(builtinModules)
-    .concat(Object.keys(package.peerDependencies || {}))
-    .concat(Object.keys(package.dependencies || {}))
+    .concat(Object.keys(pkg.peerDependencies || {}))
+    .concat(Object.keys(pkg.dependencies || {}))
 
   let testExternal = id =>
     build.type !== "umd" &&
@@ -53,7 +53,7 @@ module.exports = function getInputOptions(package, build) {
     plugins: [
       replace({
         preventAssignment: true,
-        PACKAGE_CURRENT_VERSION: JSON.stringify(package.version),
+        PACKAGE_CURRENT_VERSION: JSON.stringify(pkg.version),
       }),
       commonjs(),
       nodeResolve({

@@ -9,9 +9,9 @@ const generateModuleName = pkgName =>
     .replace("/", "-")
     .replace(/-([A-Za-z0-9])/, s => s.toUpperCase().substr(1))
 
-module.exports = function getOutputOptions(package, build) {
+module.exports = function getOutputOptions(pkg, build) {
   let options = {
-    name: generateModuleName(package.name),
+    name: generateModuleName(pkg.name),
     file: resolve(build.dir, build.entry),
     format: build.type,
     preserveModules: false,
