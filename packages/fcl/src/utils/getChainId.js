@@ -8,12 +8,32 @@ async function getChainIdFromAccessNode() {
   return response.chainId
 }
 
+/**
+ * Sets the default chain id to the chain id of the access node
+ * 
+ * @returns {string} The chain id of the access node
+ * 
+ * @example
+ * // returns "testnet"
+ * setChainIdDefault()
+ */
 export async function setChainIdDefault() {
   const network = await getChainIdFromAccessNode()
   config.put("flow.network.default", network)
   return network
 }
 
+/**
+ * Gets the chain ID if its set, otherwise gets the chain ID from the access node
+ * 
+ * @returns {string} The chain ID of the access node
+ * 
+ * @throws {Error} If the chain ID is not found
+ * 
+ * @example
+ * // returns "testnet"
+ * getChainId()
+ */
 export async function getChainId() {
   let network = await config.get("flow.network.default")
 
