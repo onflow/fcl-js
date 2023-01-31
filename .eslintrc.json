@@ -5,10 +5,23 @@
     "jest": true,
     "node": true
   },
-  "extends": [],
+  "extends": [
+    "plugin:jsdoc/recommended"
+  ],
+  "plugins": [
+    "jsdoc"
+  ],
   "parserOptions": {
     "ecmaVersion": "latest",
     "sourceType": "module"
   },
-  "ignorePatterns": ["**/dist/"]
+  "ignorePatterns": ["**/dist/"],
+  "rules": {
+    "jsdoc/require-jsdoc": [
+      "error",
+      {
+        "publicOnly": true
+      }
+    ]
+  }
 }

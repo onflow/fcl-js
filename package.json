@@ -16,6 +16,7 @@
     "@changesets/changelog-github": "^0.4.4",
     "@changesets/cli": "^2.21.1",
     "eslint": "^8.33.0",
+    "eslint-plugin-jsdoc": "^39.7.4",
     "lerna": "^5.0.0",
     "prettier": "^2.6.2"
   }
