@@ -29,6 +29,11 @@ function recApply(d) {
   }
 }
 
+/**
+ * @param {(string|Array.<*>)} head
+ * @param {Array.<*>} rest
+ * @returns {{function(): string}}
+ */
 export function template(head, ...rest) {
   if (typeof head === "string") return () => head
   if (Array.isArray(head)) {
