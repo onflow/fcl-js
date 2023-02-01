@@ -30,10 +30,12 @@
   "main": "dist/util-address.js",
   "module": "dist/util-address.module.js",
   "unpkg": "dist/util-address.umd.js",
+  "types": "types/index.d.ts",
   "scripts": {
     "prepublishOnly": "npm test && npm run build",
     "test": "jest",
     "build": "npm run lint && fcl-bundle",
+    "build:types": "tsc",
     "test:watch": "jest --watch",
     "start": "fcl-bundle --watch",
     "lint": "eslint ."
