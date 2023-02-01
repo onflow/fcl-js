@@ -159,6 +159,27 @@ async function load(data) {
   }
 }
 
+/**
+ * Takes an object of config keys and returns an object with config methods
+ * 
+ * @param {Object} values
+ * @returns {Object} config
+ * @returns {Function} config.put
+ * @returns {Function} config.get
+ * @returns {Function} config.all
+ * @returns {Function} config.first
+ * @returns {Function} config.update
+ * @returns {Function} config.delete
+ * @returns {Function} config.where
+ * @returns {Function} config.subscribe
+ * @returns {Function} config.overload
+ * @returns {Function} config.load
+ * 
+ * @example
+ * import {config} from "@onflow/fcl"
+ * config({ "flow.network": "testnet" })
+ * 
+ */
 function config(values) {
   if (values != null && typeof values === "object") {
     Object.keys(values).map(d => put(d, values[d]))
