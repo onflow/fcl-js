@@ -20,6 +20,8 @@
   "devDependencies": {
     "@onflow/fcl-bundle": "^1.2.0",
     "@onflow/types": "^1.0.4",
+    "eslint": "^8.33.0",
+    "eslint-plugin-jsdoc": "^39.7.5",
     "jest": "26.4.2",
     "jest-esm-transformer": "1.0.0",
     "typescript": "^4.9.5"
@@ -31,9 +33,10 @@
   "scripts": {
     "prepublishOnly": "npm test && npm run build",
     "test": "jest",
-    "build": "fcl-bundle",
+    "build": "npm run lint && fcl-bundle",
     "test:watch": "jest --watch",
-    "start": "fcl-bundle --watch"
+    "start": "fcl-bundle --watch",
+    "lint": "eslint ."
   },
   "dependencies": {
     "@babel/runtime": "^7.18.6"
