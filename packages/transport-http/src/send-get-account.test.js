@@ -1,10 +1,12 @@
 import {sendGetAccount} from "./send-get-account.js"
-import {build} from "../../sdk/src/build/build.js"
-import {getAccount} from "../../sdk/src/build/build-get-account.js"
-import {atBlockHeight} from "../../sdk/src/build/build-at-block-height.js"
-import {resolve} from "../../sdk/src/resolve/resolve.js"
-import {response as responseADT} from "../../sdk/src/response/response.js"
 import {Buffer} from "@onflow/rlp"
+import {
+  atBlockHeight,
+  build,
+  getAccount,
+  resolve,
+  response as responseADT,
+} from "@onflow/sdk"
 
 describe("Send Get Account", () => {
   test("GetAccountAtBlockHeightRequest", async () => {

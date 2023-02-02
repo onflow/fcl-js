@@ -1,30 +1,15 @@
 import {AccessAPI} from "@onflow/protobuf"
 import {sendGetCollection} from "./send-get-collection.js"
-import {build} from "../../sdk/src/build/build.js"
-import {getCollection} from "../../sdk/src/build/build-get-collection.js"
-import {resolve} from "../../sdk/src/resolve/resolve.js"
-import {response as responseADT} from "../../sdk/src/response/response.js"
 import {Buffer} from "@onflow/rlp"
-
-const jsonToUInt8Array = json => {
-  var str = JSON.stringify(json, null, 0)
-  var ret = new Uint8Array(str.length)
-  for (var i = 0; i < str.length; i++) {
-    ret[i] = str.charCodeAt(i)
-  }
-  return ret
-}
+import {
+  build,
+  getCollection,
+  resolve,
+  response as responseADT,
+} from "@onflow/sdk"
 
 const hexStrToUInt8Array = hex => {
   return new Uint8Array(hex.match(/.{1,2}/g).map(byte => parseInt(byte, 16)))
-}
-
-const strToUInt8Array = str => {
-  var ret = new Uint8Array(str.length)
-  for (var i = 0; i < str.length; i++) {
-    ret[i] = str.charCodeAt(i)
-  }
-  return ret
 }
 
 describe("Send Get Collection", () => {

@@ -1,32 +1,17 @@
 import {AccessAPI} from "@onflow/protobuf"
 import {sendGetBlockHeader} from "./send-get-block-header.js"
-import {build} from "../../sdk/src/build/build.js"
-import {getBlockHeader} from "../../sdk/src/build/build-get-block-header.js"
-import {atBlockId} from "../../sdk/src/build/build-at-block-id.js"
-import {atBlockHeight} from "../../sdk/src/build/build-at-block-height.js"
-import {resolve} from "../../sdk/src/resolve/resolve.js"
-import {response as responseADT} from "../../sdk/src/response/response.js"
 import {Buffer} from "@onflow/rlp"
-
-const jsonToUInt8Array = json => {
-  var str = JSON.stringify(json, null, 0)
-  var ret = new Uint8Array(str.length)
-  for (var i = 0; i < str.length; i++) {
-    ret[i] = str.charCodeAt(i)
-  }
-  return ret
-}
+import {
+  atBlockHeight,
+  atBlockId,
+  build,
+  getBlockHeader,
+  resolve,
+  response as responseADT,
+} from "@onflow/sdk"
 
 const hexStrToUInt8Array = hex => {
   return new Uint8Array(hex.match(/.{1,2}/g).map(byte => parseInt(byte, 16)))
-}
-
-const strToUInt8Array = str => {
-  var ret = new Uint8Array(str.length)
-  for (var i = 0; i < str.length; i++) {
-    ret[i] = str.charCodeAt(i)
-  }
-  return ret
 }
 
 describe("Send Get Block Header", () => {

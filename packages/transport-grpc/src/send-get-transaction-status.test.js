@@ -1,10 +1,12 @@
 import {AccessAPI} from "@onflow/protobuf"
 import {sendGetTransactionStatus} from "./send-get-transaction-status.js"
-import {build} from "../../sdk/src/build/build.js"
-import {getTransactionStatus} from "../../sdk/src/build/build-get-transaction-status.js"
-import {resolve} from "../../sdk/src/resolve/resolve.js"
-import {response as responseADT} from "../../sdk/src/response/response.js"
 import {Buffer} from "@onflow/rlp"
+import {
+  build,
+  getTransactionStatus,
+  resolve,
+  response as responseADT,
+} from "@onflow/sdk"
 
 const jsonToUInt8Array = json => {
   var str = JSON.stringify(json, null, 0)
@@ -17,14 +19,6 @@ const jsonToUInt8Array = json => {
 
 const hexStrToUInt8Array = hex => {
   return new Uint8Array(hex.match(/.{1,2}/g).map(byte => parseInt(byte, 16)))
-}
-
-const strToUInt8Array = str => {
-  var ret = new Uint8Array(str.length)
-  for (var i = 0; i < str.length; i++) {
-    ret[i] = str.charCodeAt(i)
-  }
-  return ret
 }
 
 describe("Get Transaction Status", () => {

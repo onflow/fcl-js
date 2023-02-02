@@ -1,9 +1,11 @@
 import {AccessAPI} from "@onflow/protobuf"
-import {getNetworkParameters} from "../../sdk/src/build/build-get-network-parameters.js"
-import {build} from "../../sdk/src/build/build.js"
-import {resolve} from "../../sdk/src/resolve/resolve.js"
-import {response as responseADT} from "../../sdk/src/response/response.js"
 import {sendGetNetworkParameters} from "./send-get-network-parameters.js"
+import {
+  build,
+  getNetworkParameters,
+  resolve,
+  response as responseADT,
+} from "@onflow/sdk"
 
 describe("Get Network Parameters", () => {
   test("GetNetworkParametersResult", async () => {

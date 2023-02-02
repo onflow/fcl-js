@@ -1,11 +1,10 @@
-import {sendGetTransactionStatus} from "./send-get-transaction-status.js"
-import {build} from "../../sdk/src/build/build.js"
-import {getTransactionStatus} from "../../sdk/src/build/build-get-transaction-status.js"
-import {resolve} from "../../sdk/src/resolve/resolve.js"
-import {response as responseADT} from "../../sdk/src/response/response.js"
-import {Buffer} from "@onflow/rlp"
 import {sendGetNetworkParameters} from "./send-get-network-parameters.js"
-import {getNetworkParameters} from "../../sdk/src/build/build-get-network-parameters.js"
+import {
+  build,
+  getNetworkParameters,
+  resolve,
+  response as responseADT,
+} from "@onflow/sdk"
 
 describe("Get Network Parameters", () => {
   test("GetNetworkParameters", async () => {

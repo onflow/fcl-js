@@ -1,14 +1,14 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Golden Path 1`] = `
-Object {
-  "accounts": Object {
-    "foo": Object {
+{
+  "accounts": {
+    "foo": {
       "addr": "foo",
       "keyId": 1,
       "kind": "ACCOUNT",
       "resolve": null,
-      "role": Object {
+      "role": {
         "authorizer": false,
         "param": false,
         "payer": true,
@@ -17,41 +17,41 @@ Object {
       "sequenceNum": 123,
       "signature": "SIGNATURE",
       "signingFunction": [MockFunction] {
-        "calls": Array [
-          Array [
-            Object {
+        "calls": [
+          [
+            {
               "addr": "foo",
-              "args": Array [],
+              "args": [],
               "cadence": "",
-              "data": Object {},
+              "data": {},
               "f_type": "Signable",
               "f_vsn": "1.0.1",
               "interaction": [Circular],
               "keyId": 1,
               "message": "464c4f572d56302e302d7472616e73616374696f6e0000000000000000000000f843f84080c0a00000000000000000000000000000000000000000000000000000000000000123819c870000000000000f017b870000000000000fc8870000000000000fc0",
-              "roles": Object {
+              "roles": {
                 "authorizer": false,
                 "param": false,
                 "payer": true,
                 "proposer": false,
               },
-              "voucher": Object {
-                "arguments": Array [],
-                "authorizers": Array [
+              "voucher": {
+                "arguments": [],
+                "authorizers": [
                   "0xfoo",
                 ],
                 "cadence": "",
                 "computeLimit": 156,
-                "envelopeSigs": Array [
-                  Object {
+                "envelopeSigs": [
+                  {
                     "address": "0xfoo",
                     "keyId": 1,
                     "sig": null,
                   },
                 ],
                 "payer": "0xfoo",
-                "payloadSigs": Array [],
-                "proposalKey": Object {
+                "payloadSigs": [],
+                "proposalKey": {
                   "address": "0xfoo",
                   "keyId": 1,
                   "sequenceNum": 123,
@@ -61,10 +61,10 @@ Object {
             },
           ],
         ],
-        "results": Array [
-          Object {
+        "results": [
+          {
             "type": "return",
-            "value": Object {
+            "value": {
               "addr": "foo",
               "keyId": 0,
               "signature": "SIGNATURE",
@@ -75,15 +75,15 @@ Object {
       "tempId": "foo",
     },
   },
-  "authorizations": Array [
+  "authorizations": [
     "foo",
   ],
-  "message": Object {
-    "arguments": Array [],
-    "authorizations": Array [],
+  "message": {
+    "arguments": [],
+    "authorizations": [],
     "cadence": "",
     "computeLimit": 156,
-    "params": Array [],
+    "params": [],
     "payer": null,
     "proposer": null,
     "refBlock": "123",

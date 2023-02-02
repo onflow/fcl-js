@@ -1,11 +1,13 @@
 import {sendGetBlock} from "./send-get-block.js"
-import {build} from "../../sdk/src/build/build.js"
-import {getBlock} from "../../sdk/src/build/build-get-block.js"
-import {atBlockId} from "../../sdk/src/build/build-at-block-id.js"
-import {atBlockHeight} from "../../sdk/src/build/build-at-block-height.js"
-import {resolve} from "../../sdk/src/resolve/resolve.js"
-import {response as responseADT} from "../../sdk/src/response/response.js"
 import {Buffer} from "@onflow/rlp"
+import {
+  atBlockHeight,
+  atBlockId,
+  build,
+  getBlock,
+  resolve,
+  response as responseADT,
+} from "@onflow/sdk"
 
 describe("Send Get Block", () => {
   test("GetBlockByID", async () => {
