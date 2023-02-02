@@ -427,9 +427,9 @@ async function signUserMessage(msg) {
 }
 
 /**
- * @description - Current User
+ * @description - Methods for interacting with the current user
  * 
- * @returns {Object} - currentUser
+ * @returns {Object} currentUser
  * @returns {Function} currentUser.authenticate - Authenticate the current user
  * @returns {Function} currentUser.unauthenticate - Unauthenticate the current user
  * @returns {Function} currentUser.authorization - Authorization for the current user
