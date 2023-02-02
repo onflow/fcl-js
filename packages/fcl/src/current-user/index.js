@@ -14,6 +14,26 @@ import {getDiscoveryService, makeDiscoveryServices} from "../discovery"
 import {serviceRegistry} from "./exec-service/plugins"
 import {isMobile} from "../utils"
 
+/**
+ * @typedef {Object} CurrentUser
+ * @property {(string|null)} addr - The public address of the current user
+ * @property {(string|null)} cid - A wallet specified content identifier for user metadata
+ * @property {(number|null)} expiresAt - A wallet specified time-frame for a valid session
+ * @property {string} f_type - A type identifier used internally by FCL
+ * @property {string} f_vsn - FCL protocol version
+ * @property {(boolean|null)} loggedIn - Whether or not the current user is logged in
+ * @property {Array<Object>} services - A list of trusted services that express ways of interacting with the current user's identity
+ */
+
+/**
+ * @typedef {Object} CompositeSignature
+ * @property {string} f_type - A type identifier used internally by FCL
+ * @property {string} f_vsn - FCL protocol version
+ * @property {string} addr - Flow Address (sans prefix)
+ * @property {number} keyId - Key ID
+ * @property {string} signature - Signature as a hex string
+ */
+
 export const isFn = d => typeof d === "function"
 
 const NAME = "CURRENT_USER"
@@ -138,6 +158,13 @@ const makeConfig = async ({discoveryAuthnInclude}) => {
   }
 }
 
+/**
+ * @description - Authenticate a user
+ * @param {Object} [opts] - Options
+ * @param {Object} [opts.service] - Optional service to use for authentication
+ * @param {Boolean} [opts.redir=false] - Optional flag to allow window to stay open after authentication
+ * @returns {Promise<CurrentUser>} - User object
+ */
 async function authenticate({service, redir = false} = {}) {
   if (
     service &&
@@ -210,6 +237,10 @@ async function authenticate({service, redir = false} = {}) {
   })
 }
 
+/**
+ * @description - Unauthenticate a user
+ * @returns {Promise<CurrentUser>} - User object
+ */
 function unauthenticate() {
   spawnCurrentUser()
   send(NAME, DEL_CURRENT_USER)
@@ -247,6 +278,14 @@ function resolvePreAuthz(authz) {
   return result
 }
 
+/**
+ * @description
+ * Produces the needed authorization details for the current user to submit transactions to Flow
+ * It defines a signing function that connects to a user's wallet provider to produce signatures to submit transactions.
+ * 
+ * @param {Object} account - Account object
+ * @returns {Promise<Object>} - Account object with signing function
+ */
 async function authorization(account) {
   spawnCurrentUser()
 
@@ -299,6 +338,13 @@ async function authorization(account) {
   }
 }
 
+/**
+ * @description
+ * The callback passed to subscribe will be called when the user authenticates and un-authenticates, making it easy to update the UI accordingly.
+ * 
+ * @param {Function} callback - Callback function
+ * @returns {Function} - Unsubscribe function
+ */
 function subscribe(callback) {
   spawnCurrentUser()
   const EXIT = "@EXIT"
@@ -316,6 +362,10 @@ function subscribe(callback) {
   return () => send(self, EXIT)
 }
 
+/**
+ * @description - Gets the current user
+ * @returns {Promise<CurrentUser>} - User object
+ */
 function snapshot() {
   spawnCurrentUser()
   return send(NAME, SNAPSHOT, null, {expectReply: true, timeout: 0})
@@ -328,6 +378,10 @@ async function info() {
   return account(addr)
 }
 
+/**
+ * @description - Resolves the current user as an argument
+ * @returns {Promise<Function>}
+ */
 async function resolveArgument() {
   const {addr} = await authenticate()
   return arg(withPrefix(addr), t.Address)
@@ -341,6 +395,11 @@ const makeSignable = msg => {
   }
 }
 
+/**
+ * @description - A method to use allowing the user to personally sign data via FCL Compatible Wallets/Services.
+ * @param {string} msg - Message to sign
+ * @returns {Promise<CompositeSignature>} - Array of CompositeSignatures
+ */
 async function signUserMessage(msg) {
   spawnCurrentUser()
   const user = await authenticate({redir: true})
@@ -367,6 +426,18 @@ async function signUserMessage(msg) {
   }
 }
 
+/**
+ * @description - Current User
+ * 
+ * @returns {Object} - currentUser
+ * @returns {Function} currentUser.authenticate - Authenticate the current user
+ * @returns {Function} currentUser.unauthenticate - Unauthenticate the current user
+ * @returns {Function} currentUser.authorization - Authorization for the current user
+ * @returns {Function} currentUser.signUserMessage - Sign a message with the current user
+ * @returns {Function} currentUser.subscribe - Subscribe to the current user
+ * @returns {Function} currentUser.snapshot - Snapshot of the current user
+ * @returns {Function} currentUser.resolveArgument - Resolve the current user as an argument
+ */
 let currentUser = () => {
   return {
     authenticate,
