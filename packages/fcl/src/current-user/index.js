@@ -239,7 +239,7 @@ async function authenticate({service, redir = false} = {}) {
 
 /**
  * @description - Unauthenticate a user
- * @returns {Promise<CurrentUser>} - User object
+ * @returns {void}
  */
 function unauthenticate() {
   spawnCurrentUser()
@@ -426,18 +426,6 @@ async function signUserMessage(msg) {
   }
 }
 
-/**
- * @description - Methods for interacting with the current user
- * 
- * @returns {Object} currentUser
- * @returns {Function} currentUser.authenticate - Authenticate the current user
- * @returns {Function} currentUser.unauthenticate - Unauthenticate the current user
- * @returns {Function} currentUser.authorization - Authorization for the current user
- * @returns {Function} currentUser.signUserMessage - Sign a message with the current user
- * @returns {Function} currentUser.subscribe - Subscribe to the current user
- * @returns {Function} currentUser.snapshot - Snapshot of the current user
- * @returns {Function} currentUser.resolveArgument - Resolve the current user as an argument
- */
 let currentUser = () => {
   return {
     authenticate,
