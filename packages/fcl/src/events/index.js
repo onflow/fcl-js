@@ -56,6 +56,20 @@ const HANDLERS = {
 
 const spawnEvents = key => spawn(HANDLERS, key)
 
+/**
+ * @typedef {object} SubscribeObject
+ * @property {function} subscribe - The subscribe function.
+ */
+
+/**
+ * @description - Subscribe to events
+ * @param {string} key - A valid event name
+ * @returns {SubscribeObject}
+ * 
+ * @example
+ * import * as fcl from "@onflow/fcl"
+ * fcl.events(eventName).subscribe((event) => console.log(event))
+ */
 export function events(key) {
   return {
     subscribe: callback => subscriber(key, spawnEvents, callback),
