@@ -57,8 +57,25 @@ const HANDLERS = {
 const spawnEvents = key => spawn(HANDLERS, key)
 
 /**
+ * @typedef {object} Event
+ * @property {string} blockId - ID of the block that contains the event.
+ * @property {number} blockHeight - Height of the block that contains the event.
+ * @property {string} blockTimestamp - The timestamp of when the block was sealed in a DateString format. eg. '2021-06-25T13:42:04.227Z'
+ * @property {string} type - A string containing the event name.
+ * @property {string} transactionId - Can be used to query transaction information, eg. via a Flow block explorer.
+ * @property {number} transactionIndex - Used to prevent replay attacks.
+ * @property {number} eventIndex - Used to prevent replay attacks.
+ * @property {any} data - The data emitted from the event.
+ */
+
+/**
  * @typedef {object} SubscribeObject
  * @property {function} subscribe - The subscribe function.
+ */
+
+/**
+ * @callback SubscriptionCallback
+ * @returns {Event}
  */
 
 /**
@@ -72,6 +89,10 @@ const spawnEvents = key => spawn(HANDLERS, key)
  */
 export function events(key) {
   return {
+    /**
+     * @description - Subscribe to events
+     * @returns {SubscriptionCallback}
+     */
     subscribe: callback => subscriber(key, spawnEvents, callback),
   }
 }
