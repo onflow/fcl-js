@@ -39,7 +39,7 @@
     "prepublishOnly": "npm test && npm run build",
     "test": "jest",
     "test:watch": "jest --watch",
-    "build": "npm run lint && fcl-bundle",
+    "build": "fcl-bundle",
     "build:types": "tsc",
     "start": "fcl-bundle --watch"
   },
