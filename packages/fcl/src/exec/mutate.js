@@ -1,32 +1,32 @@
-import {invariant} from "@onflow/util-invariant"
 import * as sdk from "@onflow/sdk"
-import {isRequired, isObject, isString, isNumber} from "./utils/is"
 import {normalizeArgs} from "./utils/normalize-args"
 import {currentUser} from "../current-user"
 import {prepTemplateOpts} from "./utils/prep-template-opts.js"
 import {preMutate} from "./utils/pre.js"
 
-/** As the current user Mutate the Flow Blockchain
+/**
+ * @description
+ * Allows you to submit transactions to the blockchain to potentially mutate the state.
  *
- *  @arg {Object} opts - Mutation Options and configuration
- *  @arg {string} opts.cadence - Cadence Transaction used to mutate Flow
- *  @arg {ArgsFn} opts.args - Arguments passed to cadence transaction
- *  @arg {Object} opts.template - Interaction Template for a transaction
- *  @arg {number} opts.limit - Compute Limit for transaction
+ *  @param {Object} opts - Mutation Options and configuration
+ *  @param {string} opts.cadence - Cadence Transaction used to mutate Flow
+ *  @param {ArgsFn} [opts.args] - Arguments passed to cadence transaction
+ *  @param {Object} [opts.template] - Interaction Template for a transaction
+ *  @param {number} [opts.limit] - Compute Limit for transaction
  *  @returns {string} Transaction Id
  *
  *  Where:
  *    @callback ArgsFn
- *    @arg {ArgFn}  arg - Argument function to define a single argument
- *    @arg {Object} t   - Cadence Types object used to define the type
+ *    @param {ArgFn}  arg - Argument function to define a single argument
+ *    @param {Object} t   - Cadence Types object used to define the type
  *    @returns {args[]}
  *
  *    @callback ArgFn
- *    @arg {Any}  value - the value of the argument
- *    @arg {Type} type  - the cadence type of the value
+ *    @param {Any}  value - the value of the argument
+ *    @param {Type} type  - the cadence type of the value
  *    @returns {arg}
  *
- *  Example:
+ * @example
  *    fcl.mutate({
  *      cadence: `
  *        transaction(a: Int, b: Int, c: Address) {
