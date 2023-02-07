@@ -165,7 +165,7 @@ describe("config()", () => {
       describe("flow.json v1", () => {
         let flowJSON
 
-        describe("without default accounts", () => {
+        describe("without aliases", () => {
           beforeEach(async () => {
             flowJSON = {
               accounts: {
@@ -252,7 +252,7 @@ describe("config()", () => {
             })
           })
         })
-        describe("with default account", () => {
+        describe("without contract aliases", () => {
           beforeEach(async () => {
             flowJSON = {
               networks: {
@@ -273,9 +273,56 @@ describe("config()", () => {
                 },
               },
             }
+            await config().load({flowJSON})
+            await idle()
           })
 
-          test("should ", async () => {})
+          test("should resolve to the default address through the deployment link", async () => {
+            await expect(config().get("0xHelloWorld")).resolves.toBe(
+              "f8d6e0586b0a20c7"
+            )
+            await expect(
+              config().get("system.contracts.HelloWorld")
+            ).resolves.toBe("f8d6e0586b0a20c7")
+          })
+        })
+
+        describe("with both contract aliases and deployments", () => {
+          beforeEach(async () => {
+            flowJSON = {
+              networks: {
+                emulator: "127.0.0.1:3569",
+              },
+              accounts: {
+                default: {
+                  address: "f8d6e0586b0a20c7",
+                  key: "ba68d45a5acaa52f3cacf4ad3a64d9523e0ce0ae3addb1ee6805385b380b7646",
+                },
+              },
+              contracts: {
+                HelloWorld: {
+                  source: "./cadence/contracts/HelloWorld.cdc",
+                  aliases: {
+                    emulator: "0x1",
+                  },
+                },
+              },
+              deployments: {
+                emulator: {
+                  default: ["HelloWorld"],
+                },
+              },
+            }
+            await config().load({flowJSON})
+            await idle()
+          })
+
+          test("should return the alias, not the deployment address", async () => {
+            await expect(config().get("0xHelloWorld")).resolves.toBe("0x1")
+            await expect(
+              config().get("system.contracts.HelloWorld")
+            ).resolves.toBe("0x1")
+          })
         })
       })
     })
