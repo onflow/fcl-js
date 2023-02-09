@@ -1,5 +1,13 @@
 # @onflow/config
 
+## 1.1.0-alpha.1
+
+### Minor Changes
+
+- [#1511](https://github.com/onflow/fcl-js/pull/1511) [`de7ffa47`](https://github.com/onflow/fcl-js/commit/de7ffa4768ea19e9378e7db74c85750b6554027c) Thanks [@justinbarry](https://github.com/justinbarry)! - Put contract addr in `system.contracts.*` namespace
+
+- [#1511](https://github.com/onflow/fcl-js/pull/1511) [`48ff4330`](https://github.com/onflow/fcl-js/commit/48ff43303c30bab86274bd281f6af28affdb2f25) Thanks [@justinbarry](https://github.com/justinbarry)! - Add support for `import "ContractName"` syntax in scripts and transactions.
+
 ## 1.1.0-alpha.0
 
 ### Minor Changes
