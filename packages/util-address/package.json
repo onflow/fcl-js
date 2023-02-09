@@ -1,6 +1,6 @@
 {
   "name": "@onflow/util-address",
-  "version": "1.1.0-alpha.0",
+  "version": "1.1.0-alpha.1",
   "description": "Flow JS SDK Util -- Address",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
