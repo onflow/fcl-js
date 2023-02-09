@@ -34,10 +34,11 @@
   "scripts": {
     "prepublishOnly": "npm test && npm run build",
     "test": "jest",
-    "build": "fcl-bundle",
+    "build": "npm run lint && fcl-bundle",
     "build:types": "tsc",
     "test:watch": "jest --watch",
-    "start": "fcl-bundle --watch"
+    "start": "fcl-bundle --watch",
+    "lint": "eslint ."
   },
   "dependencies": {
     "@babel/runtime": "^7.18.6",
