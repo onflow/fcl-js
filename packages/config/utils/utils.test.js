@@ -3,55 +3,55 @@ import {getContracts, anyHasPrivateKeys} from "./utils"
 describe("getContracts", () => {
   test("it should gather contract aliases for flow.json", () => {
     const flowJSON = {
-      "networks": {
-        "emulator": "127.0.0.1:3569",
-        "mainnet": "access.mainnet.nodes.onflow.org:9000",
-        "testnet": "access.devnet.nodes.onflow.org:9000"
+      networks: {
+        emulator: "127.0.0.1:3569",
+        mainnet: "access.mainnet.nodes.onflow.org:9000",
+        testnet: "access.devnet.nodes.onflow.org:9000",
       },
-      "contracts": {
-        "HelloWorld": {
-          "source": "./cadence/contracts/HelloWorld.cdc",
-          "aliases": {
-            "emulator": "0x123",
-            "testnet": "0x124",
-            "mainnet": "0x125"
-          }
+      contracts: {
+        HelloWorld: {
+          source: "./cadence/contracts/HelloWorld.cdc",
+          aliases: {
+            emulator: "0x123",
+            testnet: "0x124",
+            mainnet: "0x125",
+          },
         },
-        "FooBar": {
-          "source": "./cadence/contracts/FooBar.cdc",
-          "aliases": {
-            "emulator": "0x223",
-            "testnet": "0x224",
-            "mainnet": "0x225"
-          }
-        }
+        FooBar: {
+          source: "./cadence/contracts/FooBar.cdc",
+          aliases: {
+            emulator: "0x223",
+            testnet: "0x224",
+            mainnet: "0x225",
+          },
+        },
       },
-      "accounts": {
+      accounts: {
         "emulator-account": {
-          "address": "f8d6e0586b0a20c7",
-          "key": "ba68d45a5acaa52f3cacf4ad3a64d9523e0ce0ae3addb1ee6805385b380b7646"
-        }
+          address: "f8d6e0586b0a20c7",
+          key: "ba68d45a5acaa52f3cacf4ad3a64d9523e0ce0ae3addb1ee6805385b380b7646",
+        },
       },
-      "deployments": {
-        "emulator": {
-          "emulator-account": ["HelloWorld"]
-        }
-      }
+      deployments: {
+        emulator: {
+          "emulator-account": ["HelloWorld"],
+        },
+      },
     }
 
     const emulatorMappings = {
-      "HelloWorld": "0x123",
-      "FooBar": "0x223"
+      HelloWorld: "0x123",
+      FooBar: "0x223",
     }
 
     const testnetMappings = {
-      "HelloWorld": "0x124",
-      "FooBar": "0x224"
+      HelloWorld: "0x124",
+      FooBar: "0x224",
     }
 
     const mainnetMappings = {
-      "HelloWorld": "0x125",
-      "FooBar": "0x225"
+      HelloWorld: "0x125",
+      FooBar: "0x225",
     }
 
     expect(getContracts(flowJSON, "emulator")).toEqual(emulatorMappings)
@@ -68,29 +68,29 @@ describe("getContracts", () => {
 describe("anyHasPrivateKeys", () => {
   test("it should return true if private keys exist in account", () => {
     const flowJSON = {
-      "accounts": {
+      accounts: {
         "emulator-account": {
-          "address": "f8d6e0586b0a20c7",
-          "key": "ba68d45a5acaa52f3cacf4ad3a64d9523e0ce0ae3addb1ee6805385b380b7646"
-        }
-      }
+          address: "f8d6e0586b0a20c7",
+          key: "ba68d45a5acaa52f3cacf4ad3a64d9523e0ce0ae3addb1ee6805385b380b7646",
+        },
+      },
     }
 
     const flowJSONTwo = {
-      "accounts": {
+      accounts: {
         "testnet-account": {
-          "address": "f8d6e0586b0a20c7",
-          "key": "ba68d45a5acaa52f3cacf4ad3a64d9523e0ce0ae3addb1ee6805385b380b7646"
-        }
-      }
+          address: "f8d6e0586b0a20c7",
+          key: "ba68d45a5acaa52f3cacf4ad3a64d9523e0ce0ae3addb1ee6805385b380b7646",
+        },
+      },
     }
 
     const flowJSONThree = {
-      "accounts": {
+      accounts: {
         "emulator-account": {
-          "address": "f8d6e0586b0a20c7"
-        }
-      }
+          address: "f8d6e0586b0a20c7",
+        },
+      },
     }
 
     expect(anyHasPrivateKeys(flowJSON)).toBe(true)
@@ -98,21 +98,34 @@ describe("anyHasPrivateKeys", () => {
     expect(anyHasPrivateKeys([flowJSON, flowJSONTwo, flowJSONThree])).toBe(true)
   })
 
+  test("should return false for environmental variables", async () => {
+    const flowJSON = {
+      accounts: {
+        "emulator-account": {
+          address: "f8d6e0586b0a20c7",
+          key: "$FLOW_EMULATOR_PRIVATE_KEY",
+        },
+      },
+    }
+
+    expect(anyHasPrivateKeys(flowJSON)).toBe(false)
+  })
+
   test("it should return false if no private keys exist in account", () => {
     const flowJSON = {
-      "accounts": {
+      accounts: {
         "emulator-account": {
-          "address": "f8d6e0586b0a20c7"
-        }
-      }
+          address: "f8d6e0586b0a20c7",
+        },
+      },
     }
 
     const flowJSONTwo = {
-      "accounts": {
+      accounts: {
         "emulator-account": {
-          "address": "f8d6e0586b0a20c7"
-        }
-      }
+          address: "f8d6e0586b0a20c7",
+        },
+      },
     }
 
     expect(anyHasPrivateKeys(flowJSON)).toBe(false)
