@@ -17,5 +17,17 @@
     // go to js file when using IDE functions like
     // "Go to Definition" in VSCode
     "declarationMap": false,
+    "types": [
+      "../util-address",
+      "../util-encode-key"
+    ],
+    "typeRoots": [
+      "../util-address/types",
+      "../util-encode-key/types"
+    ],
+    "paths": {
+      "util-address": ["../util-address/index.ts"],
+      "util-encode-key": ["../util-encode-key/index.ts"]
+    }
   }
 }
