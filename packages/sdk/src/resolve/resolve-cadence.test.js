@@ -197,5 +197,30 @@ pub fun main(): Address {
 
       expect(ix.message.cadence).toEqual(expected)
     })
+
+    test("should prefix addresses with `0x` if not already present", async () => {
+      const CADENCE = `import "Foo"
+
+pub fun main(): Address {
+  return "Foo"
+}`
+
+      const expected = `import Foo from 0x1
+
+pub fun main(): Address {
+  return "Foo"
+}`
+
+      await config().put("system.contracts.Foo", "1")
+      await idle()
+
+      const ix = await pipe([
+        makeScript,
+        put("ix.cadence", CADENCE),
+        resolveCadence,
+      ])(interaction())
+
+      expect(ix.message.cadence).toEqual(expected)
+    })
   })
 })
