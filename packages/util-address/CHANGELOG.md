@@ -1,5 +1,11 @@
 # @onflow/util-address
 
+## 1.1.0-alpha.1
+
+### Minor Changes
+
+- [#1547](https://github.com/onflow/fcl-js/pull/1547) [`2d143bc7`](https://github.com/onflow/fcl-js/commit/2d143bc7b30f59e9f9289eee020cfaae74b4f4e1) Thanks [@chasefleming](https://github.com/chasefleming)! - Add types for util-address package
+
 ## 1.1.0-alpha.0
 
 ### Minor Changes
