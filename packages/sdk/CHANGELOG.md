@@ -1,5 +1,11 @@
 # @onflow/sdk
 
+## 1.2.0-alpha.2
+
+### Minor Changes
+
+- [#1564](https://github.com/onflow/fcl-js/pull/1564) [`66fe102a`](https://github.com/onflow/fcl-js/commit/66fe102a269aca71bd82c6ac55bb23527d04db01) Thanks [@justinbarry](https://github.com/justinbarry)! - Add support for import "ContractName" syntax in scripts and transactions.
+
 ## 1.2.0-alpha.1
 
 ### Minor Changes
