@@ -2,6 +2,7 @@ import {isTransaction, isScript, get} from "../interaction/interaction.js"
 import {invariant} from "@onflow/util-invariant"
 import {config} from "@onflow/config"
 import * as logger from "@onflow/util-logger"
+import {withPrefix} from "@onflow/util-address"
 
 const isFn = v => typeof v === "function"
 const isString = v => typeof v === "string"
@@ -54,7 +55,7 @@ export async function resolveCadence(ix) {
       if (address) {
         cadence = cadence.replace(
           fullMatch,
-          `import ${contractName} from ${address}`
+          `import ${contractName} from ${withPrefix(address)}`
         )
       } else {
         logger.log({
