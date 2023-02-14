@@ -3,7 +3,7 @@
     "./packages/*"
   ],
   "scripts": {
-    "build": "lerna run build",
+    "build": "lerna run build:types && lerna run build",
     "start": "npm run build && lerna run start --parallel",
     "test": "lerna run test",
     "release": "npm run build && npm run changeset publish",

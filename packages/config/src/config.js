@@ -119,12 +119,9 @@ function resetConfig(oldConfig) {
 async function load(data) {
   const network = await get("flow.network")
   const cleanedNetwork = cleanNetwork(network)
-  const { flowJSON } = data
+  const {flowJSON} = data
 
-  invariant(
-    Boolean(flowJSON),
-    "config.load -- 'flowJSON' must be defined"
-  )
+  invariant(Boolean(flowJSON), "config.load -- 'flowJSON' must be defined")
 
   invariant(
     cleanedNetwork,
@@ -132,7 +129,7 @@ async function load(data) {
   )
 
   if (anyHasPrivateKeys(flowJSON)) {
-    const isEmulator = cleanedNetwork === 'emulator'
+    const isEmulator = cleanedNetwork === "emulator"
 
     logger.log({
       title: "Private Keys Detected",
@@ -143,25 +140,43 @@ async function load(data) {
     if (!isEmulator) return
   }
 
-  for (const [key, value] of Object.entries(getContracts(flowJSON, cleanedNetwork))) {
+  for (const [key, value] of Object.entries(
+    getContracts(flowJSON, cleanedNetwork)
+  )) {
     const contractConfigKey = `0x${key}`
     const existingContractConfigKey = await get(contractConfigKey)
-
-    if (existingContractConfigKey) {
+    if (existingContractConfigKey && existingContractConfigKey !== value) {
       logger.log({
         title: "Contract Placeholder Conflict Detected",
-        message: `A generated contract placeholder from config.load and a placeholder you've set manually in config have the same name.`,
+        message: `A generated contract placeholder from config.load conflicts with a placeholder you've set manually in config have the same name.`,
         level: logger.LEVELS.warn,
       })
     } else {
       put(contractConfigKey, value)
+    }
+
+    const systemContractConfigKey = `system.contracts.${key}`
+    const systemExistingContractConfigKeyValue = await get(
+      systemContractConfigKey
+    )
+    if (
+      systemExistingContractConfigKeyValue &&
+      systemExistingContractConfigKeyValue !== value
+    ) {
+      logger.log({
+        title: "Contract Placeholder Conflict Detected",
+        message: `A generated contract placeholder from config.load conflicts with a placeholder you've set manually in config have the same name.`,
+        level: logger.LEVELS.warn,
+      })
+    } else {
+      put(systemContractConfigKey, value)
     }
   }
 }
 
 /**
  * Takes an object of config keys and returns an object with config methods
- * 
+ *
  * @param {Object} values
  * @returns {Object} config
  * @returns {Function} config.put
@@ -174,11 +189,11 @@ async function load(data) {
  * @returns {Function} config.subscribe
  * @returns {Function} config.overload
  * @returns {Function} config.load
- * 
+ *
  * @example
  * import {config} from "@onflow/fcl"
  * config({ "flow.network": "testnet" })
- * 
+ *
  */
 function config(values) {
   if (values != null && typeof values === "object") {

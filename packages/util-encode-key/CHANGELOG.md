@@ -1,5 +1,11 @@
 # @onflow/util-encode-key
 
+## 1.1.0-alpha.0
+
+### Minor Changes
+
+- [#1558](https://github.com/onflow/fcl-js/pull/1558) [`a829f9c2`](https://github.com/onflow/fcl-js/commit/a829f9c2357cd2bcddff03a7257df51e8045eed0) Thanks [@chasefleming](https://github.com/chasefleming)! - Add types for util-encode-key package
+
 ## 1.0.3
 
 ### Patch Changes

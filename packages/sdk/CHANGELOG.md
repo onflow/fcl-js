@@ -1,5 +1,17 @@
 # @onflow/sdk
 
+## 1.2.0-alpha.3
+
+### Patch Changes
+
+- [#1565](https://github.com/onflow/fcl-js/pull/1565) [`8c921ba2`](https://github.com/onflow/fcl-js/commit/8c921ba2098d2449846bb4a3fdf44a633f4cb11e) Thanks [@justinbarry](https://github.com/justinbarry)! - Prefix contract addresses with 0x if not preset in the config during Address replacement.
+
+## 1.2.0-alpha.2
+
+### Minor Changes
+
+- [#1564](https://github.com/onflow/fcl-js/pull/1564) [`66fe102a`](https://github.com/onflow/fcl-js/commit/66fe102a269aca71bd82c6ac55bb23527d04db01) Thanks [@justinbarry](https://github.com/justinbarry)! - Add support for import "ContractName" syntax in scripts and transactions.
+
 ## 1.2.0-alpha.1
 
 ### Minor Changes
