@@ -9,38 +9,26 @@ import {preQuery} from "./utils/pre.js"
  *
  *  @param {Object} opts         - Query Options and configuration
  *  @param {string} opts.cadence - Cadence Script used to query Flow
- *  @param {ArgsFn} [opts.args]    - Arguments passed to cadence script
+ *  @param {Function} [opts.args] - Arguments passed to cadence script
  *  @param {Object} [opts.template] - Interaction Template for a script
  *  @param {number} [opts.limit]   - Compute Limit for Query
- *  @returns {Promise<Response>}
- *
- *  Where:
- *    @callback ArgsFn
- *    @param {ArgFn}  arg - Argument function to define a single argument
- *    @param {Object} t   - Cadence Types object used to define the type
- *    @returns {args[]}
- *
- *    @callback ArgFn
- *    @param {Any}  value - the value of the argument
- *    @param {Type} type  - the cadence type of the value
- *    @returns {arg}
- *
- *  @example
- *    const cadence = `
- *      cadence: `
- *        pub fun main(a: Int, b: Int, c: Address): Int {
- *          log(c)
- *          return a + b
- *        }
- *    `.trim()
- *
- *    const args = (arg, t) => [
- *      arg(5, t.Int),
- *      arg(7, t.Int),
- *      arg("0xb2db43ad6bc345fec9", t.Address),
- *    ]
- *
- *    await query({ cadence, args })
+ *  @returns {Promise}
+ * 
+ * @example
+ * import * as fcl from "@onflow/fcl"
+ * 
+ * fcl.query({
+ *  cadence: `
+ *   pub fun main(a: Int, b: Int): Int {
+ *    return a + b
+ *  }
+ * `,
+ *  args: (args, t) => [
+ *    arg(5, t.Int),
+ *    arg(7, t.Int),
+ *    arg("0xb2db43ad6bc345fec9", t.Address),
+ *  ],
+ * })
  */
 export async function query(opts = {}) {
   await preQuery(opts)
