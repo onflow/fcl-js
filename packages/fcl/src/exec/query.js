@@ -1,31 +1,31 @@
-import {invariant} from "@onflow/util-invariant"
 import * as sdk from "@onflow/sdk"
-import {isRequired, isObject, isString} from "./utils/is"
 import {normalizeArgs} from "./utils/normalize-args"
 import {prepTemplateOpts} from "./utils/prep-template-opts.js"
 import {preQuery} from "./utils/pre.js"
 
-/** Query the Flow Blockchain
+/**
+ * @description
+ * Allows you to submit scripts to query the blockchain.
  *
- *  @arg {Object} opts         - Query Options and configuration
- *  @arg {string} opts.cadence - Cadence Script used to query Flow
- *  @arg {ArgsFn} opts.args    - Arguments passed to cadence script
- *  @arg {Object} opts.template - Interaction Template for a script
- *  @arg {number} opts.limit   - Compute Limit for Query
+ *  @param {Object} opts         - Query Options and configuration
+ *  @param {string} opts.cadence - Cadence Script used to query Flow
+ *  @param {ArgsFn} [opts.args]    - Arguments passed to cadence script
+ *  @param {Object} [opts.template] - Interaction Template for a script
+ *  @param {number} [opts.limit]   - Compute Limit for Query
  *  @returns {Promise<Response>}
  *
  *  Where:
  *    @callback ArgsFn
- *    @arg {ArgFn}  arg - Argument function to define a single argument
- *    @arg {Object} t   - Cadence Types object used to define the type
+ *    @param {ArgFn}  arg - Argument function to define a single argument
+ *    @param {Object} t   - Cadence Types object used to define the type
  *    @returns {args[]}
  *
  *    @callback ArgFn
- *    @arg {Any}  value - the value of the argument
- *    @arg {Type} type  - the cadence type of the value
+ *    @param {Any}  value - the value of the argument
+ *    @param {Type} type  - the cadence type of the value
  *    @returns {arg}
  *
- *  Example:
+ *  @example
  *    const cadence = `
  *      cadence: `
  *        pub fun main(a: Int, b: Int, c: Address): Int {
