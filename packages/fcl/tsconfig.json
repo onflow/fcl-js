@@ -1,6 +1,11 @@
 {
   // Change this to match your project
   "include": ["src/**/*"],
+  "exclude": [
+    "src/**/*.test.js",
+    "src/**/**/*.test.js",
+    "src/**/**/**/*.test.js",
+  ],
   "compilerOptions": {
     "types" : ["node"],
     // Tells TypeScript to read JS files, as

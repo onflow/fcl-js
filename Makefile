@@ -22,6 +22,8 @@ clean:
 	$(EXEC) sh -c 'rm -rf $$0/node_modules'
 	$(info delete packages/*/dist)
 	$(EXEC) sh -c 'rm -rf $$0/dist'
+	$(info delete packages/*/types)
+	$(EXEC) sh -c 'rm -rf $$0/types'
 
 .PHONY: install
 install:
