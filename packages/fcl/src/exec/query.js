@@ -9,21 +9,10 @@ import {preQuery} from "./utils/pre.js"
  *
  *  @param {Object} opts         - Query Options and configuration
  *  @param {string} opts.cadence - Cadence Script used to query Flow
- *  @param {ArgsFn} [opts.args]    - Arguments passed to cadence script
+ *  @param {import("../fcl").ArgsFn} [opts.args]    - Arguments passed to cadence script
  *  @param {Object} [opts.template] - Interaction Template for a script
  *  @param {number} [opts.limit]   - Compute Limit for Query
- *  @returns {Promise<Response>}
- *
- *  Where:
- *    @callback ArgsFn
- *    @param {ArgFn} arg - Argument function to define a single argument
- *    @param {Object} t - Cadence Types object used to define the type
- *    @returns {Array<any>}
- *
- *    @callback ArgFn
- *    @param {any} value - the value of the argument
- *    @param {Type} type - the cadence type of the value
- *    @returns {any}
+ *  @returns {Promise}
  *
  *  @example
  *    const cadence = `
