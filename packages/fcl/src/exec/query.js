@@ -7,9 +7,9 @@ import {preQuery} from "./utils/pre.js"
  * @description
  * Allows you to submit scripts to query the blockchain.
  *
- *  @param {Object} opts         - Query Options and configuration
+ *  @param {Object} opts - Query Options and configuration
  *  @param {string} opts.cadence - Cadence Script used to query Flow
- *  @param {import("../fcl").ArgsFn} [opts.args]    - Arguments passed to cadence script
+ *  @param {import("../fcl").ArgsFn} [opts.args] - Arguments passed to cadence script
  *  @param {Object} [opts.template] - Interaction Template for a script
  *  @param {number} [opts.limit]   - Compute Limit for Query
  *  @returns {Promise}
