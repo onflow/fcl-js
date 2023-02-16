@@ -17,14 +17,14 @@ import {preMutate} from "./utils/pre.js"
  *
  *  Where:
  *    @callback ArgsFn
- *    @param {ArgFn}  arg - Argument function to define a single argument
- *    @param {Object} t   - Cadence Types object used to define the type
- *    @returns {args[]}
+ *    @param {ArgFn} arg - Argument function to define a single argument
+ *    @param {Object} t - Cadence Types object used to define the type
+ *    @returns {Array<any>}
  *
  *    @callback ArgFn
- *    @param {Any}  value - the value of the argument
- *    @param {Type} type  - the cadence type of the value
- *    @returns {arg}
+ *    @param {any} value - the value of the argument
+ *    @param {Type} type - the cadence type of the value
+ *    @returns {any}
  *
  * @example
  *    fcl.mutate({
