@@ -24,10 +24,10 @@ export async function setChainIdDefault() {
 }
 
 /**
+ * @description
  * Gets the chain ID if its set, otherwise gets the chain ID from the access node
  * 
  * @returns {string} The chain ID of the access node
- * 
  * @throws {Error} If the chain ID is not found
  * 
  * @example
