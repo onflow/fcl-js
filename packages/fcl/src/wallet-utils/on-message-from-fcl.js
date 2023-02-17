@@ -1,3 +1,11 @@
+/**
+ * @description
+ * Listens for messages from FCL
+ * 
+ * @param {string} messageType - Message type
+ * @param {Function} cb - Callback function
+ * @returns {Function} - Function to remove event listener
+ */
 export const onMessageFromFCL = (messageType, cb = () => {}) => {
   const buildData = data => {
     if (data.deprecated)
