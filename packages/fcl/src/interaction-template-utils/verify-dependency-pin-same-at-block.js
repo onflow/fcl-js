@@ -103,7 +103,7 @@ export async function verifyDependencyPinsSame(
 }
 
 /**
- * @description Checks if an Interaction Template's pins match at latest block
+ * @description Checks if an Interaction Template's pins match those generated at the latest block height
  * 
  * @param {Object} params
  * @param {Object} params.template - Interaction Template to check pins for
