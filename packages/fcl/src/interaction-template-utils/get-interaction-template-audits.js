@@ -6,7 +6,7 @@ import {normalizeInteractionTemplate} from "../normalizers/interaction-template/
 import {getChainId} from "../utils"
 
 /**
- * @description Determines audit status by auditors for Interaction Template
+ * @description Returns whether a set of auditors have audited a given Interaction Template
  * 
  * @param {Object} params
  * @param {Object} params.template - Interaction Template
