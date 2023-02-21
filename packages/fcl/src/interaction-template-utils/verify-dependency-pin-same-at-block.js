@@ -4,7 +4,7 @@ import {log, LEVELS} from "@onflow/util-logger"
 import {normalizeInteractionTemplate} from "../normalizers/interaction-template/interaction-template.js"
 
 /**
- * @description Checks if an Interaction Template's pins match
+ * @description Checks if an Interaction Template's pins match those generated at a block height
  * 
  * @param {Object} params
  * @param {Object} params.template - Interaction Template to check pins for
