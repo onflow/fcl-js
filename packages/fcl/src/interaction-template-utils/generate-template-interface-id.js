@@ -3,6 +3,13 @@ import {encode as rlpEncode} from "@onflow/rlp"
 import {genHash} from "./utils/hash.js"
 import {normalizeInteractionTemplateInterface} from "../normalizers/interaction-template/interaction-template-interface.js"
 
+/**
+ * @description Generates Interaction Template Interact ID for a given Interaction Template Interface
+ * 
+ * @param {Object} params
+ * @param {Object} params.templateInterface - Interaction Template Interface
+ * @returns {Promise<string>} - Interaction Template Interface ID
+ */
 export async function generateTemplateInterfaceId({templateInterface}) {
   invariant(
     templateInterface != undefined,

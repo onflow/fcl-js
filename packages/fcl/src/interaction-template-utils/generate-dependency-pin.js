@@ -11,6 +11,14 @@ import {genHash} from "./utils/hash.js"
 import {findImports} from "./utils/find-imports.js"
 import {generateImport} from "./utils/generate-import.js"
 
+/**
+ * @description Produces a dependency pin for a contract at a given block height
+ * @param {Object} params
+ * @param {string} params.address - The address of the account containing the contract
+ * @param {string} params.contractName - The name of the contract
+ * @param {number} params.blockHeight - The block height to produce the dependency pin for
+ * @returns {Promise<string>} - The dependency pin
+ */
 export async function generateDependencyPin(
   {address, contractName, blockHeight},
   opts = {}
@@ -72,6 +80,9 @@ export async function generateDependencyPin(
   return genHash(contractHashesJoined)
 }
 
+/**
+ * @description Produces a dependency pin for a contract at latest sealed block
+ */
 export async function generateDependencyPinAtLatestSealedBlock(
   {address, contractName},
   opts = {}

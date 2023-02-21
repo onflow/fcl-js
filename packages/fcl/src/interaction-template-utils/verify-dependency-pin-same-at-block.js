@@ -3,6 +3,16 @@ import {invariant, block} from "@onflow/sdk"
 import {log, LEVELS} from "@onflow/util-logger"
 import {normalizeInteractionTemplate} from "../normalizers/interaction-template/interaction-template.js"
 
+/**
+ * @description Checks if an Interaction Template's pins match
+ * 
+ * @param {Object} params
+ * @param {Object} params.template - Interaction Template to check pins for
+ * @param {number} params.blockHeight - Block height to check pins at
+ * @param {string} params.network - Network to check pins on
+ * @param {Object} opts
+ * @returns {Promise<boolean>} - Whether or not the pins match
+ */
 export async function verifyDependencyPinsSame(
   {template, blockHeight, network},
   opts = {}
@@ -92,6 +102,15 @@ export async function verifyDependencyPinsSame(
   }
 }
 
+/**
+ * @description Checks if an Interaction Template's pins match at latest block
+ * 
+ * @param {Object} params
+ * @param {Object} params.template - Interaction Template to check pins for
+ * @param {string} params.network - Network to check pins on
+ * @param {Object} opts
+ * @returns {Promise<boolean>} - Whether or not the pins match
+ */
 export async function verifyDependencyPinsSameAtLatestSealedBlock(
   {template, network},
   opts = {}

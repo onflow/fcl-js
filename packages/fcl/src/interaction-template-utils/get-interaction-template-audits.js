@@ -5,6 +5,16 @@ import {generateTemplateId} from "./generate-template-id.js"
 import {normalizeInteractionTemplate} from "../normalizers/interaction-template/interaction-template.js"
 import {getChainId} from "../utils"
 
+/**
+ * @description Determines audit status by auditors for Interaction Template
+ * 
+ * @param {Object} params
+ * @param {Object} params.template - Interaction Template
+ * @param {Array<string>} params.auditors - Array of auditors
+ * @param {Object} opts
+ * @param {string} opts.flowInteractionAuditContract - Flow Interaction Template Audit contract address
+ * @returns {Promise<Object>} - Object of auditor addresses and audit status
+ */
 export async function getInteractionTemplateAudits(
   {template, auditors},
   opts = {}
