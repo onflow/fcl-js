@@ -4,7 +4,7 @@ import {genHash} from "./utils/hash.js"
 import {normalizeInteractionTemplateInterface} from "../normalizers/interaction-template/interaction-template-interface.js"
 
 /**
- * @description Generates Interaction Template Interact ID for a given Interaction Template Interface
+ * @description Generates Interaction Template Interface ID for a given Interaction Template Interface
  * 
  * @param {Object} params
  * @param {Object} params.templateInterface - Interaction Template Interface
