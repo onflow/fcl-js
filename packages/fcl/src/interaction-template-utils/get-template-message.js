@@ -1,7 +1,7 @@
 import {invariant} from "@onflow/sdk"
 
 /**
- * @description "Get Interaction Template argument message
+ * @description Get Interaction Template argument message
  * 
  * @param {Object} params
  * @param {string} params.localization [localization="en-US"] - Localization code
