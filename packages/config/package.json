@@ -31,13 +31,16 @@
   "scripts": {
     "prepublishOnly": "npm test && npm run build",
     "test": "jest",
-    "build": "fcl-bundle",
+    "build": "npm run lint && fcl-bundle",
     "build:types": "tsc",
     "test:watch": "jest --watch",
-    "start": "fcl-bundle --watch"
+    "start": "fcl-bundle --watch",
+    "lint": "eslint ."
   },
   "dependencies": {
     "@babel/runtime": "^7.18.6",
-    "@onflow/util-actor": "^1.1.2"
+    "@onflow/util-actor": "^1.1.2",
+    "eslint": "^8.34.0",
+    "eslint-plugin-jsdoc": "^40.0.0"
   }
 }
