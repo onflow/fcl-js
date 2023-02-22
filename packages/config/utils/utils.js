@@ -8,8 +8,8 @@ const pipe =
 
 /***
  * Merge multiple functions returning objects into one object.
- * @param {...function(*): Object} funcs
- * @return {Object}
+ * @param {...function(*): object} funcs - Functions to merge
+ * @return {object} - Merged object
  */
 const mergePipe =
   (...funcs) =>
@@ -20,18 +20,18 @@ const mergePipe =
   }
 
 /**
- * Object check.
- * @param value
- * @returns {boolean}
+ * @description Object check
+ * @param {*} value - Value to check
+ * @returns {boolean} - Is object status
  */
 const isObject = value =>
   value && typeof value === "object" && !Array.isArray(value)
 
 /**
- * Deep merge multiple objects.
- * @param {Object} target
- * @param {...Object[]} sources
- * @returns {Object}
+ * @description Deep merge multiple objects.
+ * @param {object} target - Target object
+ * @param {...object[]} sources - Source objects
+ * @returns {object} - Merged object
  */
 const mergeDeep = (target, ...sources) => {
   if (!sources.length) return target
@@ -52,34 +52,34 @@ const mergeDeep = (target, ...sources) => {
 }
 
 /**
- * Support if/then/else behavior in a function way.
- * @param{function(Object): boolean} testFn
- * @param{function(Object): *} posCond - Function to run if testFn is true
- * @param{function(Object): *} negCond - Function to run it testFn is false
- * @returns {function(*): *}
+ * @description Support if/then/else behavior in a function way.
+ * @param {function(object): boolean} testFn - Function to test
+ * @param {function(object): *} posCond - Function to run if testFn is true
+ * @param {function(object): *} negCond - Function to run it testFn is false
+ * @returns {function(*): *} - Function that returns the result of posCond or negCond
  */
 export const ifElse = (testFn, posCond, negCond) => obj =>
   testFn(obj) ? posCond(obj) : negCond(obj)
 
 /**
- * Deep merge multiple Flow JSON.
- * @param {Object|Object[]} value
- * @returns {Object}
+ * @description Deep merge multiple Flow JSON.
+ * @param {object|object[]} value - Flow JSON or array of Flow JSONs
+ * @returns {object} - Merged Flow JSON
  */
 const mergeFlowJSONs = value =>
   Array.isArray(value) ? mergeDeep({}, ...value) : value
 
 /**
- * Filter out contracts section of flow.json.
- * @param {Object|Object[]} obj
- * @returns {Object}
+ * @description Filter out contracts section of flow.json.
+ * @param {object|object[]} obj - Flow JSON or array of Flow JSONs
+ * @returns {object} - Contracts section of Flow JSON
  */
 const filterContracts = obj => (obj.contracts ? obj.contracts : {})
 
 /**
- * Gathers contract addresses by network
- * @param {string} network emulator, testnet, mainnet
- * @returns {Object} { "HelloWorld": "0x123" }
+ * @description Gathers contract addresses by network
+ * @param {string} network - Network to gather addresses for
+ * @returns {object} - Contract names by addresses mapping e.g { "HelloWorld": "0x123" }
  */
 const mapContractAliasesToNetworkAddress = network => contracts => {
   return Object.entries(contracts).reduce((c, [key, value]) => {
@@ -111,10 +111,10 @@ const mapDeploymentsToNetworkAddress =
   }
 
 /**
- * Take in flow.json files and return contract to address mapping by network
- * @param {Object|Object[]} jsons
- * @param {string} network emulator, testnet, mainnet
- * @returns {Object} { "HelloWorld": "0x123" }
+ * @description Take in flow.json files and return contract to address mapping by network
+ * @param {object|object[]} jsons - Flow JSON or array of Flow JSONs
+ * @param {string} network - Network to gather addresses for
+ * @returns {object} - Contract names by addresses mapping e.g { "HelloWorld": "0x123" }
  */
 export const getContracts = (jsons, network) => {
   return pipe(
@@ -127,9 +127,9 @@ export const getContracts = (jsons, network) => {
 }
 
 /**
- * Checks flow.json file for private keys
- * @param {Object} flowJSON
- * @returns {boolean}
+ * @description Checks flow.json file for private keys
+ * @param {object} flowJSON - Flow JSON
+ * @returns {boolean} - Has private keys status
  */
 const hasPrivateKeys = flowJSON => {
   return Object.entries(flowJSON?.accounts).reduce(
@@ -142,9 +142,9 @@ const hasPrivateKeys = flowJSON => {
 }
 
 /**
- * Take in flow.json or array of flow.json files and checks for private keys
- * @param {Object|Object[]} value
- * @returns {boolean}
+ * @description Take in flow.json or array of flow.json files and checks for private keys
+ * @param {object|object[]} value - Flow JSON or array of Flow JSONs
+ * @returns {boolean} - Has private keys status
  */
 export const anyHasPrivateKeys = value => {
   if (isObject(value)) return hasPrivateKeys(value)
@@ -152,9 +152,9 @@ export const anyHasPrivateKeys = value => {
 }
 
 /**
- * Format network to always be 'emulator', 'testnet', or 'mainnet'
- * @param {string} network 'local', 'emulator', 'testnet', 'mainnet'
- * @returns {string} 'emulator', 'testnet', 'mainnet'
+ * @description Format network to always be 'emulator', 'testnet', or 'mainnet'
+ * @param {string} network - Network to format
+ * @returns {string} - Formatted network name (either 'emulator', 'testnet', or 'mainnet')
  */
 export const cleanNetwork = network =>
   network?.toLowerCase() === "local" ? "emulator" : network?.toLowerCase()
