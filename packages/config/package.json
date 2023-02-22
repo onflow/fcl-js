@@ -20,16 +20,19 @@
   "devDependencies": {
     "@onflow/fcl-bundle": "^1.2.0",
     "jest": "25.3.0",
-    "jest-esm-transformer": "1.0.0"
+    "jest-esm-transformer": "1.0.0",
+    "typescript": "^4.9.5"
   },
   "source": "src/config.js",
   "main": "dist/config.js",
   "module": "dist/config.module.js",
   "unpkg": "dist/config.umd.js",
+  "types": "types/src/config.d.ts",
   "scripts": {
     "prepublishOnly": "npm test && npm run build",
     "test": "jest",
     "build": "fcl-bundle",
+    "build:types": "tsc",
     "test:watch": "jest --watch",
     "start": "fcl-bundle --watch"
   },
