@@ -64,15 +64,36 @@ const HANDLERS = {
 
 spawn(HANDLERS, NAME)
 
+/**
+ * @description Adds a key-value pair to the config
+ * 
+ * @param {string} key - The key to add
+ * @param {*} value - The value to add
+ * @returns {Promise<Object>} - The current config
+ */
 function put(key, value) {
   send(NAME, PUT, {key, value})
   return config()
 }
 
+/**
+ * @description Gets a key-value pair with a fallback from the config
+ * 
+ * @param {string} key - The key to add
+ * @param {*} fallback - The fallback value to return if key is not found
+ * @returns {Promise<*>} - The value found at key or fallback
+ */
 function get(key, fallback) {
   return send(NAME, GET, {key, fallback}, {expectReply: true, timeout: 10})
 }
 
+/**
+ * @description Returns the first non null config value or the fallback
+ * 
+ * @param {string[]} wants - The keys to search for
+ * @param {*} fallback - The fallback value to return if key is not found
+ * @returns {Promsie<*>} - The value found at key or fallback
+ */
 async function first(wants = [], fallback) {
   if (!wants.length) return fallback
   const [head, ...rest] = wants
@@ -81,32 +102,72 @@ async function first(wants = [], fallback) {
   return ret
 }
 
+/**
+ * @description Returns the current config
+ * @returns {Promise<Object>} - The current config
+ */
 function all() {
   return send(NAME, GET_ALL, null, {expectReply: true, timeout: 10})
 }
 
+/**
+ * @description Updates a key-value pair in the config
+ * 
+ * @param {string} key - The key to update
+ * @param {Function} fn - The function to update the value with
+ * @returns {Promise<Object>} - The current config
+ */
 function update(key, fn = identity) {
   send(NAME, UPDATE, {key, fn})
   return config()
 }
 
+/**
+ * @description Deletes a key-value pair from the config
+ * 
+ * @param {string} key - The key to delete
+ * @returns {Promise<Object>} - The current config
+ */
 function _delete(key) {
   send(NAME, DELETE, {key})
   return config()
 }
 
+/**
+ * @description Returns a subset of the config based on a pattern
+ * 
+ * @param {string} pattern - The pattern to match keys against
+ * @returns {Promise<Object>} - The subset of the config
+ */
 function where(pattern) {
   return send(NAME, WHERE, {pattern}, {expectReply: true, timeout: 10})
 }
 
+/**
+ * @description Subscribes to config updates
+ * 
+ * @param {Function} callback - The callback to call when config is updated
+ * @returns {Function} - The unsubscribe function
+ */
 function subscribe(callback) {
   return subscriber(NAME, () => spawn(HANDLERS, NAME), callback)
 }
 
+/**
+ * @description Clears the config
+ * 
+ * @returns {void}
+ */
 export function clearConfig() {
   return send(NAME, CLEAR)
 }
 
+/**
+ * @description Resets the config to a previous state
+ * 
+ * @param {Object} oldConfig - The previous config state
+ * @returns {Promise<Object>} - The current config
+ */
 function resetConfig(oldConfig) {
   return clearConfig().then(config(oldConfig))
 }
@@ -175,25 +236,10 @@ async function load(data) {
 }
 
 /**
- * Takes an object of config keys and returns an object with config methods
- *
- * @param {Object} values
- * @returns {Object} config
- * @returns {Function} config.put
- * @returns {Function} config.get
- * @returns {Function} config.all
- * @returns {Function} config.first
- * @returns {Function} config.update
- * @returns {Function} config.delete
- * @returns {Function} config.where
- * @returns {Function} config.subscribe
- * @returns {Function} config.overload
- * @returns {Function} config.load
- *
- * @example
- * import {config} from "@onflow/fcl"
- * config({ "flow.network": "testnet" })
- *
+ * @description Sets the config
+ * 
+ * @param {Object} values - The values to set
+ * @returns {Object} - The config methods
  */
 function config(values) {
   if (values != null && typeof values === "object") {
