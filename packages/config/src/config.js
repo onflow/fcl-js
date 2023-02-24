@@ -78,7 +78,7 @@ function put(key, value) {
 /**
  * @description Gets a key-value pair with a fallback from the config
  * @param {string} key - The key to add
- * @param {*} fallback - The fallback value to return if key is not found
+ * @param {*} [fallback] - The fallback value to return if key is not found
  * @returns {Promise<*>} - The value found at key or fallback
  */
 function get(key, fallback) {
@@ -228,7 +228,7 @@ async function load(data) {
 
 /**
  * @description Sets the config
- * @param {object} values - The values to set
+ * @param {object} [values] - The values to set
  * @returns {object} - The config methods
  */
 function config(values) {
