@@ -24,6 +24,7 @@
     // "Go to Definition" in VSCode
     "declarationMap": false,
     "typeRoots": [
+      "../config/config",
       "../util-address/types",
       "../util-encode-key/types"
     ]
