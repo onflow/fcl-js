@@ -5,6 +5,15 @@ import {atBlockId} from "../build/build-at-block-id.js"
 import {decodeResponse as decode} from "../decode/decode.js"
 import {invariant} from "@onflow/util-invariant"
 
+/**
+ * @description Returns the latest block (optionally sealed or not), by id, or by height
+ * @param {Object} [queryOptions] - Query parameters
+ * @param {boolean} [queryOptions.sealed=false] - Whether to query for a sealed block
+ * @param {number} [queryOptions.height] - Block height to query
+ * @param {string} [queryOptions.id] - Block ID to query
+ * @param {Object} [opts] - Optional parameters
+ * @returns {Promise<import("../sdk.js").Block>} - A promise that resolves to a block response
+ */
 export function block({sealed = false, id, height} = {}, opts = {}) {
   invariant(
     !((sealed && id) || (sealed && height)),

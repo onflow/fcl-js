@@ -103,3 +103,20 @@ import * as TestUtils from "./test-utils"
 export {TestUtils}
 
 export {VERSION} from "./VERSION"
+
+/**
+ * @typedef {Object} Block
+ * @property {string} id - The id of the block
+ * @property {string} parentId - The id of the parent block
+ * @property {number} height - The height of the block
+ * @property {object} timestamp - Time related fields
+ * @property {CollectionGuaranteeObject} collectionGuarantees - Contains the ids of collections included in the block
+ * @property {object} blockSeals - The details of which nodes executed and sealed the blocks
+ * @property {Array<number>} signatures - The cryptographic signature of the block
+ */
+
+/**
+ * @typedef {Object} CollectionGuaranteeObject
+ * @property {string} collectionId - The id of the block
+ * @property {Array<object>} signatures - All signatures
+ */

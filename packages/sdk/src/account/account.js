@@ -5,6 +5,15 @@ import {invariant} from "@onflow/util-invariant"
 import {decodeResponse as decode} from "../decode/decode.js"
 import {send} from "../send/send.js"
 
+/**
+ * @description  Returns the details of an account from their public address
+ * @param {string} address - Address of the account
+ * @param {Object} [queryOptions] - Query parameters
+ * @param {number} [queryOptions.height] - Block height to query
+ * @param {string} [queryOptions.id] - Block ID to query
+ * @param {Object} [opts] - Optional parameters
+ * @returns {Promise<Object>} - A promise that resolves to an account response
+ */
 export function account(address, {height, id} = {}, opts) {
   invariant(
     !(id && height),
