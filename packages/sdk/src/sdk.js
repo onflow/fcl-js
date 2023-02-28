@@ -105,7 +105,7 @@ export {TestUtils}
 export {VERSION} from "./VERSION"
 
 /**
- * @typedef {Object} Block
+ * @typedef {object} Block
  * @property {string} id - The id of the block
  * @property {string} parentId - The id of the parent block
  * @property {number} height - The height of the block
@@ -116,7 +116,16 @@ export {VERSION} from "./VERSION"
  */
 
 /**
- * @typedef {Object} CollectionGuaranteeObject
+ * @typedef {object} CollectionGuaranteeObject
  * @property {string} collectionId - The id of the block
  * @property {Array<object>} signatures - All signatures
+ */
+
+/**
+ * @typedef {object} AccountObject
+ * @property {string} address - The address of the account
+ * @property {number} balance - The FLOW balance of the account in 10^8
+ * @property {number} code - The code of any Cadence contracts stored in the account
+ * @property {contracts} contracts - An object with keys as the contract name deployed and the value as the the cadence string
+ * @property {object} keys - Any contracts deployed to this account
  */

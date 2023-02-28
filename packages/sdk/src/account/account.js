@@ -12,7 +12,7 @@ import {send} from "../send/send.js"
  * @param {number} [queryOptions.height] - Block height to query
  * @param {string} [queryOptions.id] - Block ID to query
  * @param {Object} [opts] - Optional parameters
- * @returns {Promise<Object>} - A promise that resolves to an account response
+ * @returns {Promise<import("../sdk.js").AccountObject>} - A promise that resolves to an account response
  */
 export function account(address, {height, id} = {}, opts) {
   invariant(
