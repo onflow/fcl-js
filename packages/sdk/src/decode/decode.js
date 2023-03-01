@@ -133,6 +133,13 @@ const recurseDecode = async (decodeInstructions, decoders, stack) => {
   return await decoder(decodeInstructions.value, decoders, stack)
 }
 
+/**
+ * @description - Decodes a response from Flow into JSON
+ * @param {*} decodeInstructions - The response object from Flow
+ * @param {Object} customDecoders - An object of custom decoders
+ * @param {Array<*>} stack - The stack of the current decoding
+ * @returns {Promise<*>} - The decoded response
+ */
 export const decode = async (
   decodeInstructions,
   customDecoders = {},
