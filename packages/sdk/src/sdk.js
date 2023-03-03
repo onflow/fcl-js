@@ -103,29 +103,3 @@ import * as TestUtils from "./test-utils"
 export {TestUtils}
 
 export {VERSION} from "./VERSION"
-
-/**
- * @typedef {object} Block
- * @property {string} id - The id of the block
- * @property {string} parentId - The id of the parent block
- * @property {number} height - The height of the block
- * @property {object} timestamp - Time related fields
- * @property {CollectionGuaranteeObject} collectionGuarantees - Contains the ids of collections included in the block
- * @property {object} blockSeals - The details of which nodes executed and sealed the blocks
- * @property {Array<number>} signatures - The cryptographic signature of the block
- */
-
-/**
- * @typedef {object} CollectionGuaranteeObject
- * @property {string} collectionId - The id of the block
- * @property {Array<object>} signatures - All signatures
- */
-
-/**
- * @typedef {object} AccountObject
- * @property {string} address - The address of the account
- * @property {number} balance - The FLOW balance of the account in 10^8
- * @property {number} code - The code of any Cadence contracts stored in the account
- * @property {contracts} contracts - An object with keys as the contract name deployed and the value as the the cadence string
- * @property {object} keys - Any contracts deployed to this account
- */

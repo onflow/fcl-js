@@ -6,13 +6,30 @@ import {decodeResponse as decode} from "../decode/decode.js"
 import {invariant} from "@onflow/util-invariant"
 
 /**
+ * @typedef {object} Block
+ * @property {string} id - The id of the block
+ * @property {string} parentId - The id of the parent block
+ * @property {number} height - The height of the block
+ * @property {object} timestamp - Time related fields
+ * @property {CollectionGuaranteeObject} collectionGuarantees - Contains the ids of collections included in the block
+ * @property {object} blockSeals - The details of which nodes executed and sealed the blocks
+ * @property {Array<number>} signatures - The cryptographic signature of the block
+ */
+
+/**
+ * @typedef {object} CollectionGuaranteeObject
+ * @property {string} collectionId - The id of the block
+ * @property {Array<object>} signatures - All signatures
+ */
+
+/**
  * @description Returns the latest block (optionally sealed or not), by id, or by height
- * @param {Object} [queryOptions] - Query parameters
+ * @param {object} [queryOptions] - Query parameters
  * @param {boolean} [queryOptions.sealed=false] - Whether to query for a sealed block
  * @param {number} [queryOptions.height] - Block height to query
  * @param {string} [queryOptions.id] - Block ID to query
- * @param {Object} [opts] - Optional parameters
- * @returns {Promise<import("../sdk.js").Block>} - A promise that resolves to a block response
+ * @param {object} [opts] - Optional parameters
+ * @returns {Promise<Block>} - A promise that resolves to a block response
  */
 export function block({sealed = false, id, height} = {}, opts = {}) {
   invariant(

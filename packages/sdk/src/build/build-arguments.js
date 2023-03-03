@@ -12,7 +12,7 @@ export function args(ax = []) {
 /**
  * @description - A utility builder to be used with fcl.args[...] to create FCL supported arguments for interactions
  * @param {any} value - The value of the argument
- * @param {function} xform - A function to transform the value
+ * @param {Function} xform - A function to transform the value
  * @returns {object} - An argument object
  */
 export function arg(value, xform) {
