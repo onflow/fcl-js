@@ -3,6 +3,8 @@
   "include": ["src/**/*"],
   "exclude": [
     "src/**/*.test.js",
+    "src/**/**/*.test.js",
+    "src/**/**/**/*.test.js",
   ],
   "compilerOptions": {
     "types" : ["node"],
@@ -21,5 +23,11 @@
     // go to js file when using IDE functions like
     // "Go to Definition" in VSCode
     "declarationMap": false,
+    "typeRoots": [
+      "../config/config",
+      "../sdk/sdk",
+      "../util-address/types",
+      "../util-encode-key/types"
+    ]
   }
 }

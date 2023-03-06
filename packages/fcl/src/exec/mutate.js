@@ -10,21 +10,10 @@ import {preMutate} from "./utils/pre.js"
  *
  *  @param {Object} opts - Mutation Options and configuration
  *  @param {string} opts.cadence - Cadence Transaction used to mutate Flow
- *  @param {ArgsFn} [opts.args] - Arguments passed to cadence transaction
+ *  @param {import("../fcl").ArgsFn} [opts.args] - Arguments passed to cadence transaction
  *  @param {Object} [opts.template] - Interaction Template for a transaction
  *  @param {number} [opts.limit] - Compute Limit for transaction
  *  @returns {string} Transaction Id
- *
- *  Where:
- *    @callback ArgsFn
- *    @param {ArgFn}  arg - Argument function to define a single argument
- *    @param {Object} t   - Cadence Types object used to define the type
- *    @returns {args[]}
- *
- *    @callback ArgFn
- *    @param {Any}  value - the value of the argument
- *    @param {Type} type  - the cadence type of the value
- *    @returns {arg}
  *
  * @example
  *    fcl.mutate({

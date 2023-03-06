@@ -92,6 +92,7 @@ const getVerifySignaturesScript = async (sig, opts) => {
 }
 
 /**
+ * @description
  * Verify a valid account proof signature or signatures for an account on Flow.
  *
  * @param {string} appIdentifier - A message string in hexadecimal format
@@ -117,7 +118,6 @@ const getVerifySignaturesScript = async (sig, opts) => {
  *    {fclCryptoContract}
  *  )
  */
-
 export async function verifyAccountProof(
   appIdentifier,
   {address, nonce, signatures},
@@ -146,6 +146,7 @@ export async function verifyAccountProof(
 }
 
 /**
+ * @description
  * Verify a valid signature/s for an account on Flow.
  *
  * @param {string} msg - A message string in hexadecimal format
