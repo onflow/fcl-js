@@ -1,6 +1,11 @@
 import {pipe} from "../interaction/interaction.js"
 import {validator} from "./build-validator.js"
 
+/**
+ * @description - A builder function that returns a partial interaction to a block at a specific height
+ * @param {number} height - The height of the block to get
+ * @returns {object} - A partial interaction object
+ */
 export function atBlockHeight(height) {
   return pipe([
     ix => {
