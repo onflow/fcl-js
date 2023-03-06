@@ -1,5 +1,16 @@
 # @onflow/sdk
 
+## 1.2.0-alpha.4
+
+### Minor Changes
+
+- [#1573](https://github.com/onflow/fcl-js/pull/1573) [`74c75d51`](https://github.com/onflow/fcl-js/commit/74c75d5167560eb07da6e21f9f7835b5639ee7d5) Thanks [@chasefleming](https://github.com/chasefleming)! - Add JSDoc to SDK and generate types
+
+### Patch Changes
+
+- Updated dependencies [[`f68c1433`](https://github.com/onflow/fcl-js/commit/f68c14337b5470b4d79ec682f7bb41ddeae2e020)]:
+  - @onflow/config@1.1.0-alpha.2
+
 ## 1.2.0-alpha.3
 
 ### Patch Changes

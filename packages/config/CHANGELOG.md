@@ -1,5 +1,11 @@
 # @onflow/config
 
+## 1.1.0-alpha.2
+
+### Minor Changes
+
+- [#1570](https://github.com/onflow/fcl-js/pull/1570) [`f68c1433`](https://github.com/onflow/fcl-js/commit/f68c14337b5470b4d79ec682f7bb41ddeae2e020) Thanks [@chasefleming](https://github.com/chasefleming)! - Add types for config package.
+
 ## 1.1.0-alpha.1
 
 ### Minor Changes
