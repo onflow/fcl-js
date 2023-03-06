@@ -1,5 +1,11 @@
 # @onflow/config
 
+## 1.1.0-alpha.3
+
+### Minor Changes
+
+- [#1575](https://github.com/onflow/fcl-js/pull/1575) [`bbdeea32`](https://github.com/onflow/fcl-js/commit/bbdeea32f024d6eea4a74c94023e01688a38b6cb) Thanks [@chasefleming](https://github.com/chasefleming)! - Exclude tests from type gen
+
 ## 1.1.0-alpha.2
 
 ### Minor Changes
