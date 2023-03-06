@@ -25,6 +25,7 @@
     "declarationMap": false,
     "typeRoots": [
       "../config/config",
+      "../sdk/sdk",
       "../util-address/types",
       "../util-encode-key/types"
     ]
