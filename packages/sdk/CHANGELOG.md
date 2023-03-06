@@ -1,5 +1,23 @@
 # @onflow/sdk
 
+## 1.2.0-alpha.6
+
+### Minor Changes
+
+- [#1577](https://github.com/onflow/fcl-js/pull/1577) [`d9a49531`](https://github.com/onflow/fcl-js/commit/d9a495316cd03ed0de99e0f01d1b8850a1f0eec4) Thanks [@chasefleming](https://github.com/chasefleming)! - Add npmignore file for build
+
+### Patch Changes
+
+- Updated dependencies [[`d9a49531`](https://github.com/onflow/fcl-js/commit/d9a495316cd03ed0de99e0f01d1b8850a1f0eec4)]:
+  - @onflow/config@1.1.0-alpha.4
+  - @onflow/rlp@1.1.0-alpha.0
+  - @onflow/transport-http@1.6.0-alpha.2
+  - @onflow/util-actor@1.2.0-alpha.0
+  - @onflow/util-address@1.1.0-alpha.3
+  - @onflow/util-invariant@1.1.0-alpha.0
+  - @onflow/util-logger@1.2.0-alpha.1
+  - @onflow/util-template@1.1.0-alpha.0
+
 ## 1.2.0-alpha.5
 
 ### Minor Changes
