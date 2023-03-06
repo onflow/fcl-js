@@ -10,7 +10,7 @@ import {send} from "../send/send.js"
  * @property {string} address - The address of the account
  * @property {number} balance - The FLOW balance of the account in 10^8
  * @property {number} code - The code of any Cadence contracts stored in the account
- * @property {contracts} contracts - An object with keys as the contract name deployed and the value as the the cadence string
+ * @property {object} contracts - An object with keys as the contract name deployed and the value as the the cadence string
  * @property {object} keys - Any contracts deployed to this account
  */
 
