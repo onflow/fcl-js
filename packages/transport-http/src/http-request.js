@@ -1,5 +1,5 @@
 import * as logger from "@onflow/util-logger"
-import fetchTransport, {AbortError} from "node-fetch"
+import fetchTransport from "node-fetch"
 import AbortController from "abort-controller"
 
 class HTTPRequestError extends Error {
