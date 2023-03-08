@@ -92,7 +92,7 @@ export async function httpRequest({
           throw e
         }
 
-        if (e instanceof AbortError) {
+        if (e.name === "AbortError") {
           throw e
         }
 
@@ -126,7 +126,7 @@ See more here: https://docs.onflow.org/fcl/reference/sdk-guidelines/#connect`,
       const retryStatusCodes = [408, 429, 500, 502, 503, 504]
 
       if (
-        error instanceof AbortError ||
+        error.name === "AbortError" ||
         retryStatusCodes.includes(error.statusCode)
       ) {
         return await new Promise((resolve, reject) => {
