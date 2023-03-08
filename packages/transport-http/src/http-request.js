@@ -1,5 +1,6 @@
 import * as logger from "@onflow/util-logger"
-import fetchTransport from "node-fetch"
+import fetchTransport, {AbortError} from "node-fetch"
+import AbortController from "abort-controller"
 
 class HTTPRequestError extends Error {
   constructor({
@@ -51,14 +52,21 @@ export async function httpRequest({
   headers,
   retryLimit = 5,
   retryIntervalMs = 1000,
+  timeoutLimit = 30000,
 }) {
   const bodyJSON = body ? JSON.stringify(body) : null
 
   function makeRequest() {
+    const controller = new AbortController()
+    const fetchTimeout = setTimeout(() => {
+      controller.abort()
+    }, timeoutLimit)
+
     return fetchTransport(`${hostname}${path}`, {
       method: method,
       body: bodyJSON,
       headers,
+      signal: controller.signal,
     })
       .then(async res => {
         if (res.ok) {
@@ -84,6 +92,10 @@ export async function httpRequest({
           throw e
         }
 
+        if (e instanceof AbortError) {
+          throw e
+        }
+
         // Show AN error for all network errors
         await logger.log({
           title: "Access Node Error",
@@ -101,6 +113,9 @@ See more here: https://docs.onflow.org/fcl/reference/sdk-guidelines/#connect`,
           requestBody: bodyJSON,
         })
       })
+      .finally(() => {
+        clearTimeout(fetchTimeout)
+      })
   }
 
   async function requestLoop(retryAttempt = 0) {
@@ -110,7 +125,10 @@ See more here: https://docs.onflow.org/fcl/reference/sdk-guidelines/#connect`,
     } catch (error) {
       const retryStatusCodes = [408, 429, 500, 502, 503, 504]
 
-      if (retryStatusCodes.includes(error.statusCode)) {
+      if (
+        error instanceof AbortError ||
+        retryStatusCodes.includes(error.statusCode)
+      ) {
         return await new Promise((resolve, reject) => {
           if (retryAttempt < retryLimit) {
             console.warn(

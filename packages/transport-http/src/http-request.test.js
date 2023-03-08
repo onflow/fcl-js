@@ -1,4 +1,5 @@
 import * as fetchTransport from "node-fetch"
+import AbortController from "abort-controller"
 import * as logger from "@onflow/util-logger"
 import {httpRequest} from "./http-request"
 import {Readable} from "stream"
@@ -65,6 +66,7 @@ describe("httpRequest", () => {
       method: opts.method,
       body: JSON.stringify(opts.body),
       headers: opts.headers,
+      signal: new AbortController().signal,
     })
   })
 
@@ -145,6 +147,45 @@ describe("httpRequest", () => {
       path: "/foo/bar",
       body: "abc123",
       method: "POST",
+    }
+
+    const response = await httpRequest(opts)
+
+    await expect(response).toEqual(goodBody)
+  })
+
+  test("retries on request timeout", async () => {
+    const spy = jest.spyOn(fetchTransport, "default")
+
+    const mockBadResponse = mockHttpResponse({
+      body: "",
+      status: 500,
+      statusText: "Error",
+    })
+
+    const goodBody = {
+      foo: "bar",
+    }
+    const mockGoodResponse = mockHttpResponse({
+      body: JSON.stringify(goodBody),
+      status: 200,
+    })
+
+    spy.mockImplementation(async () => {
+      if (spy.mock.calls.length === 1) {
+        return new Promise((res, rej) =>
+          setTimeout(() => res(mockBadResponse), 2000)
+        )
+      }
+      return mockGoodResponse
+    })
+
+    const opts = {
+      hostname: "https://example.com",
+      path: "/foo/bar",
+      body: "abc123",
+      method: "POST",
+      timeoutLimit: 500,
     }
 
     const response = await httpRequest(opts)
