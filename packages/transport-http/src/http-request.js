@@ -1,6 +1,8 @@
 import * as logger from "@onflow/util-logger"
 import fetchTransport from "node-fetch"
-import AbortController from "abort-controller"
+
+const AbortController =
+  globalThis.AbortController || require("abort-controller")
 
 class HTTPRequestError extends Error {
   constructor({

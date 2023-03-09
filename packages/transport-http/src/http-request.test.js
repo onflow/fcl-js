@@ -1,5 +1,4 @@
 import * as fetchTransport from "node-fetch"
-import AbortController from "abort-controller"
 import * as logger from "@onflow/util-logger"
 import {httpRequest} from "./http-request"
 import {Readable} from "stream"
@@ -66,7 +65,7 @@ describe("httpRequest", () => {
       method: opts.method,
       body: JSON.stringify(opts.body),
       headers: opts.headers,
-      signal: new AbortController().signal,
+      signal: expect.anything(),
     })
   })
 
