@@ -1,5 +1,16 @@
 # @onflow/util-logger
 
+## 1.2.0-alpha.1
+
+### Minor Changes
+
+- [#1577](https://github.com/onflow/fcl-js/pull/1577) [`d9a49531`](https://github.com/onflow/fcl-js/commit/d9a495316cd03ed0de99e0f01d1b8850a1f0eec4) Thanks [@chasefleming](https://github.com/chasefleming)! - Add npmignore file for build
+
+### Patch Changes
+
+- Updated dependencies [[`d9a49531`](https://github.com/onflow/fcl-js/commit/d9a495316cd03ed0de99e0f01d1b8850a1f0eec4)]:
+  - @onflow/config@1.1.0-alpha.4
+
 ## 1.1.3-alpha.0
 
 ### Patch Changes

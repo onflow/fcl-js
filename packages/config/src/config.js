@@ -64,15 +64,33 @@ const HANDLERS = {
 
 spawn(HANDLERS, NAME)
 
+/**
+ * @description Adds a key-value pair to the config
+ * @param {string} key - The key to add
+ * @param {*} value - The value to add
+ * @returns {Promise<object>} - The current config
+ */
 function put(key, value) {
   send(NAME, PUT, {key, value})
   return config()
 }
 
+/**
+ * @description Gets a key-value pair with a fallback from the config
+ * @param {string} key - The key to add
+ * @param {*} [fallback] - The fallback value to return if key is not found
+ * @returns {Promise<*>} - The value found at key or fallback
+ */
 function get(key, fallback) {
   return send(NAME, GET, {key, fallback}, {expectReply: true, timeout: 10})
 }
 
+/**
+ * @description Returns the first non null config value or the fallback
+ * @param {string[]} wants - The keys to search for
+ * @param {*} fallback - The fallback value to return if key is not found
+ * @returns {Promise<*>} - The value found at key or fallback
+ */
 async function first(wants = [], fallback) {
   if (!wants.length) return fallback
   const [head, ...rest] = wants
@@ -81,50 +99,81 @@ async function first(wants = [], fallback) {
   return ret
 }
 
+/**
+ * @description Returns the current config
+ * @returns {Promise<object>} - The current config
+ */
 function all() {
   return send(NAME, GET_ALL, null, {expectReply: true, timeout: 10})
 }
 
+/**
+ * @description Updates a key-value pair in the config
+ * @param {string} key - The key to update
+ * @param {Function} fn - The function to update the value with
+ * @returns {Promise<object>} - The current config
+ */
 function update(key, fn = identity) {
   send(NAME, UPDATE, {key, fn})
   return config()
 }
 
+/**
+ * @description Deletes a key-value pair from the config
+ * @param {string} key - The key to delete
+ * @returns {Promise<object>} - The current config
+ */
 function _delete(key) {
   send(NAME, DELETE, {key})
   return config()
 }
 
+/**
+ * @description Returns a subset of the config based on a pattern
+ * @param {string} pattern - The pattern to match keys against
+ * @returns {Promise<object>} - The subset of the config
+ */
 function where(pattern) {
   return send(NAME, WHERE, {pattern}, {expectReply: true, timeout: 10})
 }
 
+/**
+ * @description Subscribes to config updates
+ * @param {Function} callback - The callback to call when config is updated
+ * @returns {Function} - The unsubscribe function
+ */
 function subscribe(callback) {
   return subscriber(NAME, () => spawn(HANDLERS, NAME), callback)
 }
 
+/**
+ * @description Clears the config
+ * @returns {void}
+ */
 export function clearConfig() {
   return send(NAME, CLEAR)
 }
 
+/**
+ * @description Resets the config to a previous state
+ * @param {object} oldConfig - The previous config state
+ * @returns {Promise<object>} - The current config
+ */
 function resetConfig(oldConfig) {
   return clearConfig().then(config(oldConfig))
 }
 
 /**
- * Takes in flow.json or array of flow.json files and creates contract placeholders
- * @param {Object|Object[]} data
+ * @description Takes in flow.json or array of flow.json files and creates contract placeholders
+ * @param {object|object[]} data - The flow.json or array of flow.json files
  * @returns {void}
  */
 async function load(data) {
   const network = await get("flow.network")
   const cleanedNetwork = cleanNetwork(network)
-  const { flowJSON } = data
+  const {flowJSON} = data
 
-  invariant(
-    Boolean(flowJSON),
-    "config.load -- 'flowJSON' must be defined"
-  )
+  invariant(Boolean(flowJSON), "config.load -- 'flowJSON' must be defined")
 
   invariant(
     cleanedNetwork,
@@ -132,7 +181,7 @@ async function load(data) {
   )
 
   if (anyHasPrivateKeys(flowJSON)) {
-    const isEmulator = cleanedNetwork === 'emulator'
+    const isEmulator = cleanedNetwork === "emulator"
 
     logger.log({
       title: "Private Keys Detected",
@@ -143,22 +192,45 @@ async function load(data) {
     if (!isEmulator) return
   }
 
-  for (const [key, value] of Object.entries(getContracts(flowJSON, cleanedNetwork))) {
+  for (const [key, value] of Object.entries(
+    getContracts(flowJSON, cleanedNetwork)
+  )) {
     const contractConfigKey = `0x${key}`
     const existingContractConfigKey = await get(contractConfigKey)
-
-    if (existingContractConfigKey) {
+    if (existingContractConfigKey && existingContractConfigKey !== value) {
       logger.log({
         title: "Contract Placeholder Conflict Detected",
-        message: `A generated contract placeholder from config.load and a placeholder you've set manually in config have the same name.`,
+        message: `A generated contract placeholder from config.load conflicts with a placeholder you've set manually in config have the same name.`,
         level: logger.LEVELS.warn,
       })
     } else {
       put(contractConfigKey, value)
     }
+
+    const systemContractConfigKey = `system.contracts.${key}`
+    const systemExistingContractConfigKeyValue = await get(
+      systemContractConfigKey
+    )
+    if (
+      systemExistingContractConfigKeyValue &&
+      systemExistingContractConfigKeyValue !== value
+    ) {
+      logger.log({
+        title: "Contract Placeholder Conflict Detected",
+        message: `A generated contract placeholder from config.load conflicts with a placeholder you've set manually in config have the same name.`,
+        level: logger.LEVELS.warn,
+      })
+    } else {
+      put(systemContractConfigKey, value)
+    }
   }
 }
 
+/**
+ * @description Sets the config
+ * @param {object} [values] - The values to set
+ * @returns {object} - The config methods
+ */
 function config(values) {
   if (values != null && typeof values === "object") {
     Object.keys(values).map(d => put(d, values[d]))

@@ -45,7 +45,6 @@ const VALID_HASHINGS = new Set([SHA2_256, SHA3_256])
  * @param {number} hash - The hashing algorythm Flow needs to use with your key [SHA2_256|SHA3_256]
  * @param {number} weight - The weight you want this key to have [Range: 0..1000]
  * @returns {string} - The encoded key
- * 
  * @throws {Error} - Throws if the key is not a string
  * @throws {Error} - Throws if the key is not in the correct format
  * @throws {Error} - Throws if the curve is not a number
@@ -53,7 +52,6 @@ const VALID_HASHINGS = new Set([SHA2_256, SHA3_256])
  * @throws {Error} - Throws if the hash is not a number
  * @throws {Error} - Throws if the hash is not a valid hashing algorithm
  * @throws {Error} - Throws if the weight is not between 0 and 1000
- * 
  * @example
  * import {encodeKey, ECDSA_P256, SHA3_256} from "@onflow/util-encode-key"
  * encodeKey("aabbccdd", ECDSA_P256, SHA3_256, 1000) // => "aabbccdd0201000"

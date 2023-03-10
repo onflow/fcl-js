@@ -1,7 +1,7 @@
 /**
- * Removes 0x from address if present
- * @param {string} address
- * @returns {string}
+ * @description Removes 0x from address if present
+ * @param {string} address - Flow address
+ * @returns {string} - Flow address without 0x prefix
  */
  export function sansPrefix(address) {
   if (address == null) return null
@@ -9,9 +9,9 @@
 }
 
 /**
- * Adds 0x to address if not already present
- * @param {string} address
- * @returns {string}
+ * @description Adds 0x to address if not already present
+ * @param {string} address - Flow address
+ * @returns {string} - Flow address with 0x prefix
  */
 export function withPrefix(address) {
   if (address == null) return null
@@ -19,9 +19,9 @@ export function withPrefix(address) {
 }
 
 /**
- * Adds 0x to address if not already present
- * @param {string} address
- * @returns {string}
+ * @description Adds 0x to address if not already present
+ * @param {string} address - Flow address
+ * @returns {string} - Flow address with 0x prefix
  */
 export function display(address) {
   return withPrefix(address)

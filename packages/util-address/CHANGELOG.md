@@ -1,5 +1,23 @@
 # @onflow/util-address
 
+## 1.1.0-alpha.3
+
+### Minor Changes
+
+- [#1577](https://github.com/onflow/fcl-js/pull/1577) [`d9a49531`](https://github.com/onflow/fcl-js/commit/d9a495316cd03ed0de99e0f01d1b8850a1f0eec4) Thanks [@chasefleming](https://github.com/chasefleming)! - Add npmignore file for build
+
+## 1.1.0-alpha.2
+
+### Minor Changes
+
+- [#1575](https://github.com/onflow/fcl-js/pull/1575) [`bbdeea32`](https://github.com/onflow/fcl-js/commit/bbdeea32f024d6eea4a74c94023e01688a38b6cb) Thanks [@chasefleming](https://github.com/chasefleming)! - Exclude tests from type gen
+
+## 1.1.0-alpha.1
+
+### Minor Changes
+
+- [#1547](https://github.com/onflow/fcl-js/pull/1547) [`2d143bc7`](https://github.com/onflow/fcl-js/commit/2d143bc7b30f59e9f9289eee020cfaae74b4f4e1) Thanks [@chasefleming](https://github.com/chasefleming)! - Add types for util-address package
+
 ## 1.1.0-alpha.0
 
 ### Minor Changes
