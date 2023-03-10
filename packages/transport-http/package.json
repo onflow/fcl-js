@@ -42,6 +42,7 @@
     "@onflow/util-invariant": "^1.1.0-alpha.0",
     "@onflow/util-logger": "^1.2.0-alpha.1",
     "@onflow/util-template": "^1.1.0-alpha.0",
+    "abort-controller": "^3.0.0",
     "node-fetch": "^2.6.7"
   }
 }
