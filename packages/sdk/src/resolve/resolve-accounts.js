@@ -158,7 +158,7 @@ async function resolveAccountType(ix, type) {
 
   let accountTempIDs = Array.isArray(ix[type]) ? ix[type] : [ix[type]]
 
-  let resolvedTempIds = []
+  let resolvedAccounts = []
   for (let accountId of accountTempIDs) {
     let account = ix.accounts[accountId]
 
@@ -172,31 +172,31 @@ async function resolveAccountType(ix, type) {
 
     let flatResolvedAccounts = uniqueAccountsFlatMap(resolvedAccounts)
 
-    resolvedTempIds = resolvedTempIds.concat(flatResolvedAccounts)
+    resolvedAccounts = resolvedAccounts.concat(flatResolvedAccounts)
   }
 
   invariant(
-    resolvedTempIds.length > 0,
+    resolvedAccounts.length > 0,
     "recurseResolveAccount Error: failed to resolve any accounts"
   )
 
   if (type === ROLES.PAYER) {
-    resolvedTempIds = resolvedTempIds.filter(acct => acct.role.payer === true)
+    resolvedAccounts = resolvedAccounts.filter(acct => acct.role.payer === true)
   }
   if (type === ROLES.PROPOSER) {
-    resolvedTempIds = resolvedTempIds.filter(
+    resolvedAccounts = resolvedAccounts.filter(
       acct => acct.role.proposer === true
     )
   }
   if (type === ROLES.AUTHORIZATIONS) {
-    resolvedTempIds = resolvedTempIds.filter(
+    resolvedAccounts = resolvedAccounts.filter(
       acct => acct.role.authorizer === true
     )
   }
 
   ix[type] = Array.isArray(ix[type])
-    ? [...new Set(resolvedTempIds.map(acct => acct.tempId))]
-    : resolvedTempIds[0].tempId
+    ? [...new Set(resolvedAccounts.map(acct => acct.tempId))]
+    : resolvedAccounts[0].tempId
 
   // Ensure all payers are of the same account
   if (type === ROLES.PAYER) {
