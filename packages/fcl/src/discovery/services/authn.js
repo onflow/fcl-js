@@ -80,14 +80,14 @@ const spawnProviders = () => spawn(HANDLERS, SERVICE_ACTOR_KEYS.AUTHN)
 
 
 /**
- * @typedef {Object} Service
+ * @typedef {object} Service
  * @property {string} f_type - A type identifier used internally by FCL
  * @property {string} f_vsn - FCL protocol version
  * @property {string} type - Service type
  * @property {string} method - Service method
  * @property {string} [uid] - Service uid
  * @property {string} endpoint - Service endpoint
- * @property {Object} provider - Service provider object
+ * @property {object} provider - Service provider object
  */
 
 /**
@@ -99,7 +99,7 @@ const spawnProviders = () => spawn(HANDLERS, SERVICE_ACTOR_KEYS.AUTHN)
  * @description
  * Discovery methods for interacting with Authn.
  * 
- * @typedef {Object} Authn
+ * @typedef {object} Authn
  * @property {Function} subscribe - Subscribe to Discovery authn services
  * @property {Function} snapshot - Get the current Discovery authn services spanshot
  * @property {Function} update - Trigger an update of authn services
@@ -107,6 +107,7 @@ const spawnProviders = () => spawn(HANDLERS, SERVICE_ACTOR_KEYS.AUTHN)
 const authn = {
   /**
    * @description - Subscribe to Discovery authn services
+   * @param {Function} cb
    * @returns {SubscriptionCallback}
    */
   subscribe: cb => subscriber(SERVICE_ACTOR_KEYS.AUTHN, spawnProviders, cb),

@@ -8,10 +8,10 @@ import {preMutate} from "./utils/pre.js"
  * @description
  * Allows you to submit transactions to the blockchain to potentially mutate the state.
  *
- *  @param {Object} opts - Mutation Options and configuration
+ *  @param {object} opts - Mutation Options and configuration
  *  @param {string} opts.cadence - Cadence Transaction used to mutate Flow
  *  @param {import("../fcl").ArgsFn} [opts.args] - Arguments passed to cadence transaction
- *  @param {Object} [opts.template] - Interaction Template for a transaction
+ *  @param {object} [opts.template] - Interaction Template for a transaction
  *  @param {number} [opts.limit] - Compute Limit for transaction
  *  @returns {string} Transaction Id
  *

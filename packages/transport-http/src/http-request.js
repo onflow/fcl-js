@@ -37,12 +37,12 @@ class HTTPRequestError extends Error {
 /**
  * Creates an HTTP Request to be sent to a REST Access API via Fetch API.
  *
- * @param {Object} options - Options for the HTTP Request
+ * @param {object} options - Options for the HTTP Request
  * @param {String} options.hostname - Access API Hostname
  * @param {String} options.path - Path to the resource on the Access API
  * @param {String} options.method - HTTP Method
- * @param {Object} options.body - HTTP Request Body
- * @param {Object | Headers} [options.headers] - HTTP Request Headers
+ * @param {object} options.body - HTTP Request Body
+ * @param {object} [options.headers] - HTTP Request Headers
  *
  * @returns JSON object response from Access API.
  */

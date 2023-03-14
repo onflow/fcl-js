@@ -82,13 +82,13 @@ export {invariant} from "@onflow/sdk"
 /**
  * @callback ArgsFn
  * @param {ArgFn} arg - Argument function to define a single argument
- * @param {Object} t - Cadence Types object used to define the type
+ * @param {object} t - Cadence Types object used to define the type
  * @returns {any[]}
  */
 
 /**
  * @callback ArgFn
  * @param {any} value - the value of the argument
- * @param {Type} type - the cadence type of the value
+ * @param {any} type - the cadence type of the value
  * @returns {any}
  */

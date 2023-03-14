@@ -6,8 +6,8 @@ import {normalizeInteractionTemplate} from "../normalizers/interaction-template/
 /**
  * @description Generates Interaction Template ID for a given Interaction Template
  *  
- * @param {Object} params
- * @param {Object} params.template - Interaction Template
+ * @param {object} params
+ * @param {object} params.template - Interaction Template
  * @returns {Promise<string>} - Interaction Template ID
  */
 export async function generateTemplateId({template}) {

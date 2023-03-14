@@ -70,7 +70,7 @@ const spawnEvents = key => spawn(HANDLERS, key)
 
 /**
  * @typedef {object} SubscribeObject
- * @property {function} subscribe - The subscribe function.
+ * @property {Function} subscribe - The subscribe function.
  */
 
 /**
@@ -91,6 +91,7 @@ export function events(key) {
   return {
     /**
      * @description - Subscribe to events
+     * @param {Function} callback - The callback function
      * @returns {SubscriptionCallback}
      */
     subscribe: callback => subscriber(key, spawnEvents, callback),
