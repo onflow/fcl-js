@@ -4,8 +4,16 @@ import {log} from "@onflow/util-logger"
 import {isTransaction} from "../interaction/interaction.js"
 import {createSignableVoucher} from "./voucher.js"
 
+const CHARS = "abcdefghijklmnopqrstuvwxyz0123456789".split("")
+const randChar = () => CHARS[~~(Math.random() * CHARS.length)]
+const uuid = () => Array.from({length: 10}, randChar).join("")
+
 const idof = acct => `${withPrefix(acct.addr)}-${acct.keyId}`
-const isFn = v => typeof v === "function"
+const isFn = v =>
+  v &&
+  (Object.prototype.toString.call(v) === "[object Function]" ||
+    "function" === typeof v ||
+    v instanceof Function)
 
 const genAccountId = (...ids) => ids.join("-")
 
@@ -13,6 +21,15 @@ const ROLES = {
   PAYER: "payer",
   PROPOSER: "proposer",
   AUTHORIZATIONS: "authorizations",
+}
+
+function recurseFlatMap(el, depthLimit = 3) {
+  if (depthLimit <= 0) return el
+  if (!Array.isArray(el)) return el
+  return recurseFlatMap(
+    el.flatMap(e => e),
+    depthLimit - 1
+  )
 }
 
 export function buildPreSignable(acct, ix) {
@@ -54,12 +71,15 @@ async function removeUnusedIxAccounts(ix) {
   }
 }
 
-const addAccountToIx = (ix, newAccount) => {
+function addAccountToIx(ix, newAccount) {
   if (
-    typeof newAccount.addr !== undefined &&
-    typeof newAccount.keyId !== undefined
+    typeof newAccount.addr === "string" &&
+    (typeof newAccount.keyId === "number" ||
+      typeof newAccount.keyId === "string")
   ) {
     newAccount.tempId = idof(newAccount)
+  } else {
+    newAccount.tempId = uuid()
   }
 
   const existingAccount = ix.accounts[newAccount.tempId] || newAccount
@@ -73,19 +93,14 @@ const addAccountToIx = (ix, newAccount) => {
   ix.accounts[newAccount.tempId].role.authorizer =
     existingAccount.role.authorizer || newAccount.role.authorizer
 
+  ix.accounts[newAccount.tempId].role.proposer = newAccount.role.proposer
+  ix.accounts[newAccount.tempId].role.payer = newAccount.role.payer
+  ix.accounts[newAccount.tempId].role.authorizer = newAccount.role.authorizer
+
   return ix.accounts[newAccount.tempId]
 }
 
-const recurseFlatMap = (el, depthLimit = 3) => {
-  if (depthLimit <= 0) return el
-  if (!Array.isArray(el)) return el
-  return recurseFlatMap(
-    el.flatMap(e => e),
-    depthLimit - 1
-  )
-}
-
-const uniqueAccountsFlatMap = accounts => {
+function uniqueAccountsFlatMap(accounts) {
   const flatMapped = recurseFlatMap(accounts)
   const seen = new Set()
 
@@ -109,7 +124,6 @@ const uniqueAccountsFlatMap = accounts => {
 
 async function recurseResolveAccount(ix, account, depthLimit = 3) {
   if (depthLimit <= 0) return account
-
   if (!account) return null
 
   account = addAccountToIx(ix, account)
@@ -125,19 +139,31 @@ async function recurseResolveAccount(ix, account, depthLimit = 3) {
         ? resolvedAccounts
         : [resolvedAccounts]
 
-      account.resolve = resolvedAccounts
+      const flatResolvedAccounts = recurseFlatMap(resolvedAccounts)
+
+      account.resolve = flatResolvedAccounts
 
       account = addAccountToIx(ix, account)
 
-      let recursedAccounts = await Promise.all(
-        resolvedAccounts.map(
-          async resolvedAccount =>
-            await recurseResolveAccount(ix, resolvedAccount, depthLimit - 1)
-        )
+      const recursedAccounts = await Promise.all(
+        flatResolvedAccounts.map(async resolvedAccount => {
+          const addedResolvedAccount = addAccountToIx(ix, resolvedAccount)
+          return await recurseResolveAccount(
+            ix,
+            addedResolvedAccount,
+            depthLimit - 1
+          )
+        })
       )
 
       return recursedAccounts ? recursedAccounts : account
     } else {
+      if (Array.isArray(account.resolve)) {
+        account.resolve = account.resolve.map(acct => addAccountToIx(ix, acct))
+      } else {
+        account.resolve = addAccountToIx(ix, account.resolve)
+      }
+
       return account.resolve
     }
   }
@@ -206,10 +232,11 @@ async function resolveAccountType(ix, type) {
     for (const payerTempID of ix[ROLES.PAYER]) {
       let pAcct = ix.accounts[payerTempID]
       if (!address) address = pAcct.addr
-      else if (address !== pAcct.addr)
+      else if (address !== pAcct.addr) {
         throw new Error(
           "recurseResolveAccount Error: payers from different accounts detected"
         )
+      }
     }
   }
 }
@@ -226,8 +253,8 @@ export async function resolveAccounts(ix) {
     }
     try {
       await resolveAccountType(ix, ROLES.PROPOSER)
-      await resolveAccountType(ix, ROLES.PAYER)
       await resolveAccountType(ix, ROLES.AUTHORIZATIONS)
+      await resolveAccountType(ix, ROLES.PAYER)
 
       await removeUnusedIxAccounts(ix)
     } catch (error) {
