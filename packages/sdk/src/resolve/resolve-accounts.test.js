@@ -212,7 +212,7 @@ test("mulitple payer scenario (One from dev and one from pre-authz)", async () =
         tempId: "72f6325947f76d3a|1",
         addr: "72f6325947f76d3a",
         sequenceNum: 12,
-        signingFunction: () => ({signature: "3"}),
+        signingFunction: () => ({signature: "1"}),
         keyId: 1,
         role: {proposer: false, payer: false, authorizer: true},
       },
@@ -234,5 +234,92 @@ test("mulitple payer scenario (One from dev and one from pre-authz)", async () =
     ref("123"),
   ])
 
-  await expect(resolve(built)).resolves.not.toThrow()
+  const ix = await resolve(built)
+
+  const ps = buildPreSignable(ix.accounts[ix.proposer], ix)
+
+  expect(ps.voucher).toEqual({
+    cadence: "",
+    refBlock: "123",
+    computeLimit: 156,
+    arguments: [],
+    proposalKey: {address: "0x72f6325947f76d3a", keyId: 1, sequenceNum: 12},
+    payer: "0x01",
+    authorizers: ["0x72f6325947f76d3a"],
+    payloadSigs: [
+      {address: "0x72f6325947f76d3a", keyId: 1, sig: "1"},
+      {address: "0x72f6325947f76d3a", keyId: 1, sig: "1"},
+    ],
+    envelopeSigs: [{address: "0x01", keyId: 1, sig: "123"}],
+  })
+})
+
+test("payer from pre-authz", async () => {
+  const authz = {
+    kind: "ACCOUNT",
+    tempId: "CURRENT_USER",
+    addr: null,
+    keyId: null,
+    signature: null,
+    signingFunction: null,
+    resolve: (account, preSignable) => [
+      {
+        tempId: "72f6325947f76d3a|1",
+        addr: "72f6325947f76d3a",
+        sequenceNum: 12,
+        signingFunction: () => ({signature: "1"}),
+        keyId: 1,
+        role: {proposer: true, payer: false, authorizer: false},
+      },
+      {
+        tempId: "f086a545ce3c552d|12",
+        addr: "f086a545ce3c552d",
+        signingFunction: () => ({signature: "2"}),
+        keyId: 12,
+        role: {proposer: false, payer: true, authorizer: false},
+      },
+      {
+        tempId: "72f6325947f76d3a|1",
+        addr: "72f6325947f76d3a",
+        sequenceNum: 12,
+        signingFunction: () => ({signature: "1"}),
+        keyId: 1,
+        role: {proposer: false, payer: false, authorizer: true},
+      },
+    ],
+    role: {
+      proposer: true,
+      authorizer: true,
+      payer: false,
+      param: false,
+    },
+  }
+
+  const built = await build([
+    transaction``,
+    limit(156),
+    proposer(authz),
+    authorizations([authz]),
+    payer(authz),
+    ref("123"),
+  ])
+
+  const ix = await resolve(built)
+
+  const ps = buildPreSignable(ix.accounts[ix.proposer], ix)
+
+  expect(ps.voucher).toEqual({
+    cadence: "",
+    refBlock: "123",
+    computeLimit: 156,
+    arguments: [],
+    proposalKey: {address: "0x72f6325947f76d3a", keyId: 1, sequenceNum: 12},
+    payer: "0xf086a545ce3c552d",
+    authorizers: ["0x72f6325947f76d3a"],
+    payloadSigs: [
+      {address: "0x72f6325947f76d3a", keyId: 1, sig: "1"},
+      {address: "0x72f6325947f76d3a", keyId: 1, sig: "1"},
+    ],
+    envelopeSigs: [{address: "0xf086a545ce3c552d", keyId: 12, sig: "2"}],
+  })
 })
