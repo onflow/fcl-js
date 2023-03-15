@@ -4,6 +4,8 @@ import {log} from "@onflow/util-logger"
 import {isTransaction} from "../interaction/interaction.js"
 import {createSignableVoucher} from "./voucher.js"
 
+const MAX_DEPTH_LIMIT = 5
+
 const CHARS = "abcdefghijklmnopqrstuvwxyz0123456789".split("")
 const randChar = () => CHARS[~~(Math.random() * CHARS.length)]
 const uuid = () => Array.from({length: 10}, randChar).join("")
@@ -122,8 +124,16 @@ function uniqueAccountsFlatMap(accounts) {
   return uniqueAccountsFlatMapped
 }
 
-async function recurseResolveAccount(ix, account, depthLimit = 3) {
-  if (depthLimit <= 0) return account
+async function recurseResolveAccount(
+  ix,
+  account,
+  depthLimit = MAX_DEPTH_LIMIT
+) {
+  if (depthLimit <= 0) {
+    throw new Error(
+      `recurseResolveAccount Error: Depth limit (${MAX_DEPTH_LIMIT}) reached. Ensure your authorization functions resolve to an account after ${MAX_DEPTH_LIMIT} resolves.`
+    )
+  }
   if (!account) return null
 
   account = addAccountToIx(ix, account)
