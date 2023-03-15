@@ -63,22 +63,27 @@ export function authzResolveMany(opts = {}) {
   }
 }
 
-export function authzDeepResolveMany(opts = {}) {
+export function authzDeepResolveMany(opts = {}, depth = 1) {
   return function (account) {
     const tempId = opts.tempId || "AUTHZ_DEEP_RESOLVE_MANY"
     return {
       ...account,
       tempId,
-      resolve: () =>
-        [
-          opts.proposer &&
-            authzResolve(opts.proposer)({role: {...ROLE, proposer: true}}),
-          ...opts.authorizations
-            .map(authzResolve)
-            .map(d => d({role: {...ROLE, authorizer: true}})),
-          opts.payer &&
-            authzResolve(opts.payer)({role: {...ROLE, payer: true}}),
-        ].filter(Boolean),
+      resolve:
+        depth > 0
+          ? () => authzDeepResolveMany(opts, depth - 1)(account)
+          : () =>
+              [
+                opts.proposer &&
+                  authzResolve(opts.proposer)({
+                    role: {...ROLE, proposer: true},
+                  }),
+                ...opts.authorizations
+                  .map(authzResolve)
+                  .map(d => d({role: {...ROLE, authorizer: true}})),
+                opts.payer &&
+                  authzResolve(opts.payer)({role: {...ROLE, payer: true}}),
+              ].filter(Boolean),
     }
   }
 }
