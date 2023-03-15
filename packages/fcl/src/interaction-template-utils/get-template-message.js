@@ -3,10 +3,10 @@ import {invariant} from "@onflow/sdk"
 /**
  * @description Get Interaction Template argument message
  * 
- * @param {Object} params
+ * @param {object} params
  * @param {string} params.localization [localization="en-US"] - Localization code
  * @param {string} params.messageKey - Message key
- * @param {Object} params.template - Interaction Template
+ * @param {object} params.template - Interaction Template
  * @returns {string} - Message
  */
 export function getTemplateMessage({

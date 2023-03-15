@@ -4,9 +4,9 @@ import {normalizeInteractionTemplate} from "../normalizers/interaction-template/
 /**
  * @description Fills import addresses in Cadence for network
  * 
- * @param {Object} params
+ * @param {object} params
  * @param {string} params.network - Network to derive Cadence for
- * @param {Object} params.template - Interaction Template to derive Cadence from
+ * @param {object} params.template - Interaction Template to derive Cadence from
  * @returns {string} - Cadence
  */
 export function deriveCadenceByNetwork({network, template}) {
