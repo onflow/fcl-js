@@ -211,3 +211,32 @@ test("Deep resolve usecase - multiple layer deep resolves on account", async () 
     }
   )
 })
+
+test("Deep resolve usecase - excess resolves throw an eror", async () => {
+  await config.overload(
+    {
+      "sdk.transport": TestUtils.mockSend(),
+      "debug.accounts": false,
+    },
+    async c => {
+      const authz = TestUtils.authzDeepResolveMany(
+        {
+          tempId: "CURRENT_USER",
+          proposer: S1a,
+          authorizations: [S1a, S1b, S1c],
+          payer: S2a, // wallet covers transaction
+        },
+        5
+      )
+
+      expect(
+        await TestUtils.run([
+          sdk.transaction`CODE`,
+          sdk.proposer(authz),
+          sdk.payer(authz),
+          sdk.authorizations([authz]),
+        ])
+      ).toThrow()
+    }
+  )
+})
