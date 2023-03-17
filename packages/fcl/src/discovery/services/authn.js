@@ -78,16 +78,8 @@ const HANDLERS = {
 
 const spawnProviders = () => spawn(HANDLERS, SERVICE_ACTOR_KEYS.AUTHN)
 
-
 /**
- * @typedef {object} Service
- * @property {string} f_type - A type identifier used internally by FCL
- * @property {string} f_vsn - FCL protocol version
- * @property {string} type - Service type
- * @property {string} method - Service method
- * @property {string} [uid] - Service uid
- * @property {string} endpoint - Service endpoint
- * @property {object} provider - Service provider object
+ * @typedef {import("@onflow/typescript").Service} Service
  */
 
 /**
