@@ -17,7 +17,11 @@
   },
   "ignorePatterns": ["**/dist/"],
   "rules": {
-    "jsdoc/require-jsdoc": 0,
-    "jsdoc/valid-types": 0
+    "jsdoc/require-jsdoc": [
+      "error",
+      {
+        "publicOnly": true
+      }
+    ]
   }
 }
