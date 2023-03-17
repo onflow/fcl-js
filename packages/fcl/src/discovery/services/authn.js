@@ -79,7 +79,7 @@ const HANDLERS = {
 const spawnProviders = () => spawn(HANDLERS, SERVICE_ACTOR_KEYS.AUTHN)
 
 /**
- * @typedef {import("@onflow/typescript").Service} Service
+ * @typedef {import("@onflow/typedefs").Service} Service
  */
 
 /**

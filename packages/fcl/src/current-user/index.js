@@ -15,8 +15,8 @@ import {serviceRegistry} from "./exec-service/plugins"
 import {isMobile} from "../utils"
 
 /**
- * @typedef {import("@onflow/typescript").CurrentUser} CurrentUser
- * @typedef {import("@onflow/typescript").CompositeSignature} CompositeSignature
+ * @typedef {import("@onflow/typedefs").CurrentUser} CurrentUser
+ * @typedef {import("@onflow/typedefs").CompositeSignature} CompositeSignature
  */
 
 export const isFn = d => typeof d === "function"

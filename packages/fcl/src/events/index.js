@@ -57,7 +57,7 @@ const HANDLERS = {
 const spawnEvents = key => spawn(HANDLERS, key)
 
 /**
- * @typedef {import("@onflow/typescript").Event} Event
+ * @typedef {import("@onflow/typedefs").Event} Event
  */
 
 /**

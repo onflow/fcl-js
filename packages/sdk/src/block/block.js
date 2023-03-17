@@ -6,7 +6,7 @@ import {decodeResponse as decode} from "../decode/decode.js"
 import {invariant} from "@onflow/util-invariant"
 
 /**
- * @typedef {import("@onflow/typescript").Block} Block
+ * @typedef {import("@onflow/typedefs").Block} Block
  */
 
 /**

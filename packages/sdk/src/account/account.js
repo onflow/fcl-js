@@ -6,7 +6,7 @@ import {decodeResponse as decode} from "../decode/decode.js"
 import {send} from "../send/send.js"
 
 /**
- * @typedef {import("@onflow/typescript").Account} Account
+ * @typedef {import("@onflow/typedefs").Account} Account
  */
 
 /**
