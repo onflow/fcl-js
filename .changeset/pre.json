@@ -18,11 +18,13 @@
     "@onflow/util-invariant": "1.0.3",
     "@onflow/util-logger": "1.1.2",
     "@onflow/util-template": "1.0.4",
-    "@onflow/util-uid": "1.0.3"
+    "@onflow/util-uid": "1.0.3",
+    "@onflow/typedefs": "1.1.0-alpha.3"
   },
   "changesets": [
     "chatty-lizards-push",
     "clean-sloths-report",
+    "cool-cars-collect",
     "early-carrots-dance",
     "eleven-hornets-happen",
     "gold-cougars-run",
@@ -33,6 +35,7 @@
     "seven-rules-travel",
     "shiny-bobcats-fold",
     "soft-files-explain",
+    "soft-hats-boil",
     "strange-worms-give",
     "swift-birds-fold",
     "thirty-snails-jog",

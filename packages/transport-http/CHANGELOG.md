@@ -1,5 +1,12 @@
 # @onflow/transport-http
 
+## 1.6.0-alpha.3
+
+### Minor Changes
+
+- [#1580](https://github.com/onflow/fcl-js/pull/1580) [`82810ef0`](https://github.com/onflow/fcl-js/commit/82810ef000ebdf4dde4dbd7846d31dd335cd9cbb) Thanks [@JeffreyDoyle](https://github.com/JeffreyDoyle)! - - Adds support for retrying requests when an ETIMEDOUT error occurs.
+  - Adds a default 30 second timeout to all requests, after which they will be retried.
+
 ## 1.6.0-alpha.2
 
 ### Minor Changes
