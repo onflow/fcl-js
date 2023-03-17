@@ -102,7 +102,7 @@ const getVerifySignaturesScript = async (sig, opts) => {
  * @param {object[]} accountProofData.signatures - An array of composite signatures to verify
  * @param {object} [opts={}] - Options object
  * @param {string} opts.fclCryptoContract - An optional override Flow account address where the FCLCrypto contract is deployed
- * @returns {boolean} - Returns true if the signature is valid, false otherwise
+ * @returns {Promise<boolean>} - Returns true if the signature is valid, false otherwise
  *
  * @example
  *
