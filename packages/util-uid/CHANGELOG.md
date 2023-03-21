@@ -1,5 +1,17 @@
 # @onflow/util-uid
 
+## 1.1.0-alpha.1
+
+### Minor Changes
+
+- [#1577](https://github.com/onflow/fcl-js/pull/1577) [`d9a49531`](https://github.com/onflow/fcl-js/commit/d9a495316cd03ed0de99e0f01d1b8850a1f0eec4) Thanks [@chasefleming](https://github.com/chasefleming)! - Add npmignore file for build
+
+## 1.1.0-alpha.0
+
+### Minor Changes
+
+- [#1496](https://github.com/onflow/fcl-js/pull/1496) [`687f45ec`](https://github.com/onflow/fcl-js/commit/687f45ec25e613399f031497634c4102935d114d) Thanks [@chasefleming](https://github.com/chasefleming)! - Add JSDoc for util-uid package.
+
 ## 1.0.3
 
 ### Patch Changes

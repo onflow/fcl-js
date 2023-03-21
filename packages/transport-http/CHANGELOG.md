@@ -1,5 +1,44 @@
 # @onflow/transport-http
 
+## 1.6.0-alpha.3
+
+### Minor Changes
+
+- [#1580](https://github.com/onflow/fcl-js/pull/1580) [`82810ef0`](https://github.com/onflow/fcl-js/commit/82810ef000ebdf4dde4dbd7846d31dd335cd9cbb) Thanks [@JeffreyDoyle](https://github.com/JeffreyDoyle)! - - Adds support for retrying requests when an ETIMEDOUT error occurs.
+  - Adds a default 30 second timeout to all requests, after which they will be retried.
+
+## 1.6.0-alpha.2
+
+### Minor Changes
+
+- [#1577](https://github.com/onflow/fcl-js/pull/1577) [`d9a49531`](https://github.com/onflow/fcl-js/commit/d9a495316cd03ed0de99e0f01d1b8850a1f0eec4) Thanks [@chasefleming](https://github.com/chasefleming)! - Add npmignore file for build
+
+### Patch Changes
+
+- Updated dependencies [[`d9a49531`](https://github.com/onflow/fcl-js/commit/d9a495316cd03ed0de99e0f01d1b8850a1f0eec4)]:
+  - @onflow/util-address@1.1.0-alpha.3
+  - @onflow/util-invariant@1.1.0-alpha.0
+  - @onflow/util-logger@1.2.0-alpha.1
+  - @onflow/util-template@1.1.0-alpha.0
+
+## 1.6.0-alpha.1
+
+### Minor Changes
+
+- [#1420](https://github.com/onflow/fcl-js/pull/1420) [`c20bc344`](https://github.com/onflow/fcl-js/commit/c20bc34448a22966d349b0b1c4c0f742ae93a355) Thanks [@huyndo](https://github.com/huyndo)! - Add GetNetworkParameters interaction and a util to get chain ID
+
+### Patch Changes
+
+- Updated dependencies [[`5bec5576`](https://github.com/onflow/fcl-js/commit/5bec5576a79809d0684411736e3f4c02b8051c22)]:
+  - @onflow/util-address@1.1.0-alpha.0
+
+## 1.5.1-alpha.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @onflow/util-logger@1.1.3-alpha.0
+
 ## 1.5.0
 
 ### Minor Changes

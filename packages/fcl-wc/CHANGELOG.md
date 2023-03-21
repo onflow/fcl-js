@@ -1,5 +1,64 @@
 # @onflow/fcl-wc
 
+## 2.0.0-alpha.5
+
+### Patch Changes
+
+- Updated dependencies [[`7b122a49`](https://github.com/onflow/fcl-js/commit/7b122a49b47b2f261e67d4b08d0d8d32d35d3a72)]:
+  - @onflow/fcl@1.4.0-alpha.5
+
+## 2.0.0-alpha.4
+
+### Minor Changes
+
+- [#1577](https://github.com/onflow/fcl-js/pull/1577) [`d9a49531`](https://github.com/onflow/fcl-js/commit/d9a495316cd03ed0de99e0f01d1b8850a1f0eec4) Thanks [@chasefleming](https://github.com/chasefleming)! - Add npmignore file for build
+
+### Patch Changes
+
+- Updated dependencies [[`d9a49531`](https://github.com/onflow/fcl-js/commit/d9a495316cd03ed0de99e0f01d1b8850a1f0eec4)]:
+  - @onflow/config@1.1.0-alpha.4
+  - @onflow/util-invariant@1.1.0-alpha.0
+  - @onflow/util-logger@1.2.0-alpha.1
+  - @onflow/fcl@1.4.0-alpha.4
+
+## 2.0.0-alpha.3
+
+### Patch Changes
+
+- Updated dependencies [[`bbdeea32`](https://github.com/onflow/fcl-js/commit/bbdeea32f024d6eea4a74c94023e01688a38b6cb)]:
+  - @onflow/config@1.1.0-alpha.3
+  - @onflow/fcl@1.4.0-alpha.3
+
+## 2.0.0-alpha.2
+
+### Patch Changes
+
+- Updated dependencies [[`f68c1433`](https://github.com/onflow/fcl-js/commit/f68c14337b5470b4d79ec682f7bb41ddeae2e020), [`be73c297`](https://github.com/onflow/fcl-js/commit/be73c2975330b3a8a33e8fa3edfdc25a7dc1a2b0)]:
+  - @onflow/config@1.1.0-alpha.2
+  - @onflow/fcl@1.4.0-alpha.2
+
+## 2.0.0-alpha.1
+
+### Minor Changes
+
+- [#1497](https://github.com/onflow/fcl-js/pull/1497) [`60b4c351`](https://github.com/onflow/fcl-js/commit/60b4c351ca84fa1fc88607fa9c58d0a6ed43b017) Thanks [@gregsantos](https://github.com/gregsantos)! - Add support for pre-authz method
+
+### Patch Changes
+
+- [#1420](https://github.com/onflow/fcl-js/pull/1420) [`c20bc344`](https://github.com/onflow/fcl-js/commit/c20bc34448a22966d349b0b1c4c0f742ae93a355) Thanks [@huyndo](https://github.com/huyndo)! - Add GetNetworkParameters interaction and a util to get chain ID
+
+- Updated dependencies [[`c20bc344`](https://github.com/onflow/fcl-js/commit/c20bc34448a22966d349b0b1c4c0f742ae93a355)]:
+  - @onflow/fcl@1.4.0-alpha.1
+
+## 1.0.1-alpha.0
+
+### Patch Changes
+
+- Updated dependencies [[`e10e3c9c`](https://github.com/onflow/fcl-js/commit/e10e3c9c1f611e7dfd8a0bf7292473c71c2e04b9), [`6051030f`](https://github.com/onflow/fcl-js/commit/6051030f81fb102447bec40c758657ec20f43129), [`b2881f74`](https://github.com/onflow/fcl-js/commit/b2881f74f024aeca52d534d2ca6081fb57efd06d)]:
+  - @onflow/config@1.1.0-alpha.0
+  - @onflow/fcl@1.3.3-alpha.0
+  - @onflow/util-logger@1.1.3-alpha.0
+
 ## 1.0.0
 
 ### Minor Changes

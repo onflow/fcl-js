@@ -1,10 +1,9 @@
-import {config} from "@onflow/config"
-import {log} from "@onflow/util-logger"
 import {invariant} from "@onflow/util-invariant"
 import {withPrefix, sansPrefix} from "@onflow/util-address"
 import {query} from "../exec/query"
 import {encodeAccountProof} from "../wallet-utils"
 import {isString} from "../exec/utils/is"
+import {getChainId} from "../utils"
 
 const ACCOUNT_PROOF = "ACCOUNT_PROOF"
 const USER_SIGNATURE = "USER_SIGNATURE"
@@ -54,25 +53,15 @@ export const validateArgs = args => {
   }
 }
 
+// TODO: pass in option for contract but we're connected to testnet
+// log address + network -> in sync?
 const getVerifySignaturesScript = async (sig, opts) => {
   const verifyFunction =
     sig === "ACCOUNT_PROOF"
       ? "verifyAccountProofSignatures"
       : "verifyUserSignatures"
 
-  let network = await config.get("flow.network")
-  if (!network) {
-    network = await config.get("env")
-    if (network)
-      log.deprecate({
-        pkg: "FCL",
-        subject:
-          'Using the "env" configuration key for specifying the flow network',
-        message: 'Please use "flow.network" instead.',
-        transition:
-          "https://github.com/onflow/flow-js-sdk/blob/master/packages/fcl/TRANSITIONS.md#0001-deprecate-env-config-key",
-      })
-  }
+  let network = await getChainId()
 
   let fclCryptoContract
 
@@ -103,16 +92,17 @@ const getVerifySignaturesScript = async (sig, opts) => {
 }
 
 /**
+ * @description
  * Verify a valid account proof signature or signatures for an account on Flow.
  *
  * @param {string} appIdentifier - A message string in hexadecimal format
- * @param {Object} accountProofData - An object consisting of address, nonce, and signatures
+ * @param {object} accountProofData - An object consisting of address, nonce, and signatures
  * @param {string} accountProofData.address - A Flow account address
  * @param {string} accountProofData.nonce - A random string in hexadecimal format (minimum 32 bytes in total, i.e 64 hex characters)
- * @param {Object[]} accountProofData.signatures - An array of composite signatures to verify
- * @param {Object} [opts={}] - Options object
+ * @param {object[]} accountProofData.signatures - An array of composite signatures to verify
+ * @param {object} [opts={}] - Options object
  * @param {string} opts.fclCryptoContract - An optional override Flow account address where the FCLCrypto contract is deployed
- * @return {bool}
+ * @returns {Promise<boolean>} - Returns true if the signature is valid, false otherwise
  *
  * @example
  *
@@ -128,7 +118,6 @@ const getVerifySignaturesScript = async (sig, opts) => {
  *    {fclCryptoContract}
  *  )
  */
-
 export async function verifyAccountProof(
   appIdentifier,
   {address, nonce, signatures},
@@ -157,16 +146,17 @@ export async function verifyAccountProof(
 }
 
 /**
+ * @description
  * Verify a valid signature/s for an account on Flow.
  *
- * @param {string} msg - A message string in hexadecimal format
+ * @param {string} message - A message string in hexadecimal format
  * @param {Array} compSigs - An array of Composite Signatures
  * @param {string} compSigs[].addr - The account address
  * @param {number} compSigs[].keyId - The account keyId
  * @param {string} compSigs[].signature - The signature to verify
- * @param {Object} [opts={}] - Options object
+ * @param {object} [opts={}] - Options object
  * @param {string} opts.fclCryptoContract - An optional override of Flow account address where the FCLCrypto contract is deployed
- * @return {bool}
+ * @returns {boolean} - Returns true if the signature is valid, false otherwise
  *
  * @example
  *

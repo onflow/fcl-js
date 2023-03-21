@@ -65,7 +65,7 @@ In our dapp, we probably have a way of representing these Cadence values interna
 
 FCL enables us to provide custom decoders that we can use to transform the data we receive from the Flow blockchain at the edge, before anything else in our dapp gets a chance to look at it.
 
-We add these custom decoders by [Configuring FCL](../configure-fcl.mdx).
+We add these custom decoders by [Configuring FCL](./configure-fcl.mdx).
 This lets us set it once when our dapp starts up and use our normalized data through out the rest of our dapp.
 
 In the below example we will use the concept of a `Point` again, but this time, we will add a custom decoder, that enables `fcl.decode` to transform it into a custom JavaScript `Point` class.

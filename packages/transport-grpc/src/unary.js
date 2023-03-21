@@ -4,21 +4,13 @@ import {NodeHttpTransport} from "@improbable-eng/grpc-web-node-http-transport"
 
 grpc.setDefaultTransport(NodeHttpTransport())
 
-export async function unary(
-  host,
-  method,
-  request,
-  context,
-  retryLimit = 5,
-  retryIntervalMs = 1000
-) {
+export async function unary(host, method, request, context) {
   invariant(
     context.config,
     `SDK GRPC Unary Error: context.config must be defined.`
   )
   const metadataFromConfig = await context.config().get("grpc.metadata", {})
-
-  const execUnary = (resolve, reject) => {
+  return new Promise((resolve, reject) => {
     grpc.unary(method, {
       request: request,
       host: host,
@@ -26,19 +18,10 @@ export async function unary(
       onEnd: ({status, statusMessage, message}) => {
         if (status === grpc.Code.OK) {
           resolve(message)
-        } else if (
-          (status === grpc.Code.Unavailable ||
-            status === grpc.Code.DeadlineExceeded) &&
-          retryLimit > 0
-        ) {
-          retryLimit = retryLimit - 1
-          setTimeout(() => execUnary(resolve, reject), retryIntervalMs)
         } else {
           reject(new Error(statusMessage))
         }
       },
     })
-  }
-
-  return new Promise(execUnary)
+  })
 }

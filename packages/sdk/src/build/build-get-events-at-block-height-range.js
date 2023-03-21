@@ -1,12 +1,22 @@
 import {pipe, Ok, makeGetEvents} from "../interaction/interaction.js"
 
-export function getEventsAtBlockHeightRange(eventType, start, end) {
+/**
+ * @description - A builder function that returns all instances of a particular event (by name) within a height range
+ * NOTE:
+ * - The block range provided must be from the current spork.
+ * - The block range provided must be 250 blocks or lower per request.
+ * @param {string} eventName - The name of the event to get
+ * @param {number} fromBlockHeight - The height of the block to start looking for events (inclusive)
+ * @param {number} toBlockHeight - The height of the block to stop looking for events (inclusive)
+ * @returns {object} - An interaction object
+ */
+export function getEventsAtBlockHeightRange(eventName, fromBlockHeight, toBlockHeight) {
   return pipe([
     makeGetEvents,
     ix => {
-      ix.events.eventType = eventType
-      ix.events.start = start
-      ix.events.end = end
+      ix.events.eventType = eventName
+      ix.events.start = fromBlockHeight
+      ix.events.end = toBlockHeight
       return Ok(ix)
     },
   ])

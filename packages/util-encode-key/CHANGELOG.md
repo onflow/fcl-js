@@ -1,5 +1,29 @@
 # @onflow/util-encode-key
 
+## 1.1.0-alpha.2
+
+### Minor Changes
+
+- [#1577](https://github.com/onflow/fcl-js/pull/1577) [`d9a49531`](https://github.com/onflow/fcl-js/commit/d9a495316cd03ed0de99e0f01d1b8850a1f0eec4) Thanks [@chasefleming](https://github.com/chasefleming)! - Add npmignore file for build
+
+### Patch Changes
+
+- Updated dependencies [[`d9a49531`](https://github.com/onflow/fcl-js/commit/d9a495316cd03ed0de99e0f01d1b8850a1f0eec4)]:
+  - @onflow/rlp@1.1.0-alpha.0
+  - @onflow/util-invariant@1.1.0-alpha.0
+
+## 1.1.0-alpha.1
+
+### Minor Changes
+
+- [#1575](https://github.com/onflow/fcl-js/pull/1575) [`bbdeea32`](https://github.com/onflow/fcl-js/commit/bbdeea32f024d6eea4a74c94023e01688a38b6cb) Thanks [@chasefleming](https://github.com/chasefleming)! - Exclude tests from type gen
+
+## 1.1.0-alpha.0
+
+### Minor Changes
+
+- [#1558](https://github.com/onflow/fcl-js/pull/1558) [`a829f9c2`](https://github.com/onflow/fcl-js/commit/a829f9c2357cd2bcddff03a7257df51e8045eed0) Thanks [@chasefleming](https://github.com/chasefleming)! - Add types for util-encode-key package
+
 ## 1.0.3
 
 ### Patch Changes

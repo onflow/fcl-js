@@ -154,7 +154,7 @@ describe("Send Get Block Header", () => {
 
     expect(valueSent).toEqual({
       hostname: "localhost",
-      path: "/v1/blocks?height=finalized",
+      path: "/v1/blocks?height=final",
       method: "GET",
       body: null,
     })

@@ -5,6 +5,7 @@ import {config} from "@onflow/config"
 import {spawn, send, INIT, SUBSCRIBE, UNSUBSCRIBE} from "@onflow/util-actor"
 import {withPrefix, sansPrefix} from "@onflow/util-address"
 import {invariant} from "@onflow/util-invariant"
+import {log, LEVELS} from "@onflow/util-logger"
 import {buildUser} from "./build-user"
 import {serviceOfType} from "./service-of-type"
 import {execService} from "./exec-service"
@@ -12,6 +13,11 @@ import {normalizeCompositeSignature} from "../normalizers/service/composite-sign
 import {getDiscoveryService, makeDiscoveryServices} from "../discovery"
 import {serviceRegistry} from "./exec-service/plugins"
 import {isMobile} from "../utils"
+
+/**
+ * @typedef {import("@onflow/typedefs").CurrentUser} CurrentUser
+ * @typedef {import("@onflow/typedefs").CompositeSignature} CompositeSignature
+ */
 
 export const isFn = d => typeof d === "function"
 
@@ -99,11 +105,20 @@ function notExpired(user) {
 
 async function getAccountProofData() {
   let accountProofDataResolver = await config.get("fcl.accountProof.resolver")
-
-  if (!isFn(accountProofDataResolver)) return
+  if (accountProofDataResolver == null) return
+  if (!isFn(accountProofDataResolver)) {
+    log({
+      title: "Account Proof Data Resolver must be a function",
+      message: `Check fcl.accountProof.resolver configuration.
+                Expected: fcl.accountProof.resolver: async () => { ... }
+                Received: fcl.accountProof.resolver: ${typeof accountProofDataResolver}
+                `,
+      level: LEVELS.warn,
+    })
+    return
+  }
 
   const accountProofData = await accountProofDataResolver()
-
   if (accountProofData == null) return
 
   invariant(
@@ -128,6 +143,13 @@ const makeConfig = async ({discoveryAuthnInclude}) => {
   }
 }
 
+/**
+ * @description - Authenticate a user
+ * @param {object} [opts] - Options
+ * @param {object} [opts.service] - Optional service to use for authentication
+ * @param {boolean} [opts.redir=false] - Optional flag to allow window to stay open after authentication
+ * @returns {Promise<CurrentUser>} - User object
+ */
 async function authenticate({service, redir = false} = {}) {
   if (
     service &&
@@ -146,16 +168,6 @@ async function authenticate({service, redir = false} = {}) {
     const refreshService = serviceOfType(user.services, "authn-refresh")
     let accountProofData
 
-    try {
-      accountProofData = await getAccountProofData()
-    } catch (error) {
-      console.error(
-        `Error During Authentication: Could not resolve account proof data.
-        ${error}`
-      )
-      return reject(error)
-    }
-
     if (user.loggedIn) {
       if (refreshService) {
         try {
@@ -165,14 +177,29 @@ async function authenticate({service, redir = false} = {}) {
             opts,
           })
           send(NAME, SET_CURRENT_USER, await buildUser(response))
-        } catch (e) {
-          console.error("Error: Could not refresh authentication.", e)
+        } catch (error) {
+          log({
+            title: `${error.name} Could not refresh wallet authentication.`,
+            message: error.message,
+            level: LEVELS.error,
+          })
         } finally {
           return resolve(await snapshot())
         }
       } else {
         return resolve(user)
       }
+    }
+
+    try {
+      accountProofData = await getAccountProofData()
+    } catch (error) {
+      log({
+        title: `${error.name} On Authentication: Could not resolve account proof data.`,
+        message: error.message,
+        level: LEVELS.error,
+      })
+      return reject(error)
     }
 
     try {
@@ -183,14 +210,22 @@ async function authenticate({service, redir = false} = {}) {
         opts,
       })
       send(NAME, SET_CURRENT_USER, await buildUser(response))
-    } catch (e) {
-      console.error("Error while authenticating", e)
+    } catch (error) {
+      log({
+        title: `${error} On Authentication`,
+        message: error,
+        level: LEVELS.error,
+      })
     } finally {
       resolve(await snapshot())
     }
   })
 }
 
+/**
+ * @description - Unauthenticate a user
+ * @returns {void}
+ */
 function unauthenticate() {
   spawnCurrentUser()
   send(NAME, DEL_CURRENT_USER)
@@ -228,6 +263,14 @@ function resolvePreAuthz(authz) {
   return result
 }
 
+/**
+ * @description
+ * Produces the needed authorization details for the current user to submit transactions to Flow
+ * It defines a signing function that connects to a user's wallet provider to produce signatures to submit transactions.
+ * 
+ * @param {object} account - Account object
+ * @returns {Promise<object>} - Account object with signing function
+ */
 async function authorization(account) {
   spawnCurrentUser()
 
@@ -280,6 +323,13 @@ async function authorization(account) {
   }
 }
 
+/**
+ * @description
+ * The callback passed to subscribe will be called when the user authenticates and un-authenticates, making it easy to update the UI accordingly.
+ * 
+ * @param {Function} callback - Callback function
+ * @returns {Function} - Unsubscribe function
+ */
 function subscribe(callback) {
   spawnCurrentUser()
   const EXIT = "@EXIT"
@@ -297,6 +347,10 @@ function subscribe(callback) {
   return () => send(self, EXIT)
 }
 
+/**
+ * @description - Gets the current user
+ * @returns {Promise<CurrentUser>} - User object
+ */
 function snapshot() {
   spawnCurrentUser()
   return send(NAME, SNAPSHOT, null, {expectReply: true, timeout: 0})
@@ -309,6 +363,10 @@ async function info() {
   return account(addr)
 }
 
+/**
+ * @description - Resolves the current user as an argument
+ * @returns {Promise<Function>}
+ */
 async function resolveArgument() {
   const {addr} = await authenticate()
   return arg(withPrefix(addr), t.Address)
@@ -322,6 +380,11 @@ const makeSignable = msg => {
   }
 }
 
+/**
+ * @description - A method to use allowing the user to personally sign data via FCL Compatible Wallets/Services.
+ * @param {string} msg - Message to sign
+ * @returns {Promise<CompositeSignature>} - Array of CompositeSignatures
+ */
 async function signUserMessage(msg) {
   spawnCurrentUser()
   const user = await authenticate({redir: true})

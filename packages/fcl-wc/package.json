@@ -1,6 +1,6 @@
 {
   "name": "@onflow/fcl-wc",
-  "version": "1.0.0",
+  "version": "2.0.0-alpha.5",
   "description": "WalletConnect adapter for FCL",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
@@ -34,22 +34,22 @@
     "start": "fcl-bundle --watch"
   },
   "devDependencies": {
-    "@onflow/fcl-bundle": "^1.2.0",
+    "@onflow/fcl-bundle": "^1.3.0-alpha.0",
     "better-sqlite3": "^7.6.2",
     "jest": "^27.0.6",
     "jest-esm-transformer": "1.0.0"
   },
   "dependencies": {
     "@babel/runtime": "^7.18.9",
-    "@onflow/config": "^1.0.3",
-    "@onflow/util-invariant": "^1.0.2",
-    "@onflow/util-logger": "^1.1.1",
+    "@onflow/config": "^1.1.0-alpha.4",
+    "@onflow/util-invariant": "^1.1.0-alpha.0",
+    "@onflow/util-logger": "^1.2.0-alpha.1",
     "@walletconnect/qrcode-modal": "^1.7.8",
     "@walletconnect/sign-client": "^2.0.0-rc.2",
     "@walletconnect/types": "^2.0.0-rc.2",
     "@walletconnect/utils": "^2.0.0-rc.2"
   },
   "peerDependencies": {
-    "@onflow/fcl": "^1.3.0"
+    "@onflow/fcl": "^1.4.0-alpha.5"
   }
 }

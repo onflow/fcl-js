@@ -7,6 +7,12 @@ import {response} from "../response/response.js"
 import {config} from "@onflow/config"
 import {resolve as defaultResolve} from "../resolve/resolve.js"
 
+/**
+ * @description - Sends arbitrary scripts, transactions, and requests to Flow
+ * @param {Array.<Function>} args - An array of functions that take interaction and return interaction
+ * @param {object} opts - Optional parameters
+ * @returns {Promise<*>} - A promise that resolves to a response
+ */
 export const send = async (args = [], opts = {}) => {
   const sendFn = await config.first(
     ["sdk.transport", "sdk.send"],

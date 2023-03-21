@@ -31,6 +31,7 @@ export {
   isGetBlock,
   isGetBlockHeader,
   isGetCollection,
+  isGetNetworkParameters,
 } from "./interaction/interaction.js"
 export {createSignableVoucher, voucherToTxId} from "./resolve/voucher.js"
 export {encodeMessageFromSignable} from "./wallet-utils/encode-signable.js"
@@ -54,6 +55,7 @@ export {getBlockHeader} from "./build/build-get-block-header.js"
 export {getCollection} from "./build/build-get-collection"
 export {getTransactionStatus} from "./build/build-get-transaction-status.js"
 export {getTransaction} from "./build/build-get-transaction.js"
+export {getNetworkParameters} from "./build/build-get-network-parameters.js"
 export {limit} from "./build/build-limit.js"
 export {args, arg} from "./build/build-arguments.js"
 export {proposer} from "./build/build-proposer.js"

@@ -9,6 +9,7 @@ import {
   payer,
   ref,
   createSignableVoucher,
+  config,
 } from "@onflow/sdk"
 import {VERSION} from "@onflow/sdk/src/VERSION"
 

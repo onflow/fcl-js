@@ -78,9 +78,40 @@ const HANDLERS = {
 
 const spawnProviders = () => spawn(HANDLERS, SERVICE_ACTOR_KEYS.AUTHN)
 
+/**
+ * @typedef {import("@onflow/typedefs").Service} Service
+ */
+
+/**
+ * @callback SubscriptionCallback
+ * @returns {Service[]}
+ */
+
+/**
+ * @description
+ * Discovery methods for interacting with Authn.
+ * 
+ * @typedef {object} Authn
+ * @property {Function} subscribe - Subscribe to Discovery authn services
+ * @property {Function} snapshot - Get the current Discovery authn services spanshot
+ * @property {Function} update - Trigger an update of authn services
+ */
 const authn = {
+  /**
+   * @description - Subscribe to Discovery authn services
+   * @param {Function} cb
+   * @returns {SubscriptionCallback}
+   */
   subscribe: cb => subscriber(SERVICE_ACTOR_KEYS.AUTHN, spawnProviders, cb),
+  /**
+   * @description - Get the current Discovery authn services spanshot
+   * @returns {Service[]}
+   */
   snapshot: () => snapshoter(SERVICE_ACTOR_KEYS.AUTHN, spawnProviders),
+  /**
+   * @description - Trigger an update of authn services
+   * @returns {void}
+   */
   update: () => fetchServicesFromDiscovery(),
 }
 

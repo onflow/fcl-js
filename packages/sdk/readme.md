@@ -469,6 +469,15 @@ const response = await sdk.send(await sdk.pipe(await sdk.build([
 ]), { node: "http://localhost:8080" })
 ```
 
+### Get Network Parameters Usage
+
+``` javascript
+import * as sdk from "@onflow/sdk"
+const response = await sdk.send(await sdk.build([
+  sdk.getNetworkParameters()
+]), { node: "http://localhost:8080" })
+```
+
 ## Flow JS-SDK Exposes
 
 - [Top Level](./src)
@@ -504,6 +513,7 @@ const response = await sdk.send(await sdk.pipe(await sdk.build([
   - [`sdk.getLatestBlock`](./src/build/build-get-latest-block.js)
   - [`sdk.getTransactionStatus`](./src/build/build-get-transaction-status.js)
   - [`sdk.getTransaction`](./src/build/build-get-transaction.js)
+  - [`sdk.getNetworkParameters`](./src/build/build-get-network-parameters.js)
   - [`sdk.invariant`](./src/build/build-invariant.js)
   - [`sdk.limit`](./src/build/build-limit.js)
   - [`sdk.payer`](./src/build/build-payer.js)

@@ -30,7 +30,7 @@ async function sendGetBlockHeaderByHeightRequest(ix, context, opts) {
 async function sendGetLatestBlockHeaderRequest(ix, context, opts) {
   const httpRequest = opts.httpRequest || defaultHttpRequest
 
-  const height = ix.block?.isSealed ? "sealed" : "finalized"
+  const height = ix.block?.isSealed ? "sealed" : "final"
 
   const res = await httpRequest({
     hostname: opts.node,

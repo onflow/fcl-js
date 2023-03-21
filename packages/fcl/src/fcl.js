@@ -37,6 +37,8 @@ export {AppUtils}
 import * as InteractionTemplateUtils from "./interaction-template-utils"
 export {InteractionTemplateUtils}
 
+export {getChainId} from "./utils"
+
 export {TestUtils} from "@onflow/sdk"
 export {config} from "@onflow/config"
 export {send} from "@onflow/sdk"
@@ -66,6 +68,7 @@ export {getBlockHeader} from "@onflow/sdk"
 export {getCollection} from "@onflow/sdk"
 export {getTransactionStatus} from "@onflow/sdk"
 export {getTransaction} from "@onflow/sdk"
+export {getNetworkParameters} from "@onflow/sdk"
 export {authorizations, authorization} from "@onflow/sdk"
 export {args, arg} from "@onflow/sdk"
 export {proposer} from "@onflow/sdk"
@@ -75,3 +78,17 @@ export {ref} from "@onflow/sdk"
 export {params, param} from "@onflow/sdk"
 export {validator} from "@onflow/sdk"
 export {invariant} from "@onflow/sdk"
+
+/**
+ * @callback ArgsFn
+ * @param {ArgFn} arg - Argument function to define a single argument
+ * @param {object} t - Cadence Types object used to define the type
+ * @returns {any[]}
+ */
+
+/**
+ * @callback ArgFn
+ * @param {any} value - the value of the argument
+ * @param {any} type - the cadence type of the value
+ * @returns {any}
+ */

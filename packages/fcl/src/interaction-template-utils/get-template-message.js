@@ -1,5 +1,14 @@
 import {invariant} from "@onflow/sdk"
 
+/**
+ * @description Get Interaction Template argument message
+ * 
+ * @param {object} params
+ * @param {string} params.localization [localization="en-US"] - Localization code
+ * @param {string} params.messageKey - Message key
+ * @param {object} params.template - Interaction Template
+ * @returns {string} - Message
+ */
 export function getTemplateMessage({
   localization = "en-US",
   messageKey,
@@ -7,33 +16,33 @@ export function getTemplateMessage({
 }) {
   invariant(
     messageKey,
-    "getMessage({ messageKey }) -- messageKey must be defined"
+    "getTemplateMessage({ messageKey }) -- messageKey must be defined"
   )
   invariant(
-    typeof messageKey === "stirng",
-    "getMessage({ messageKey }) -- messageKey must be a string"
+    typeof messageKey === "string",
+    "getTemplateMessage({ messageKey }) -- messageKey must be a string"
   )
 
   invariant(
     localization,
-    "getMessage({ localization }) -- localization must be defined"
+    "getTemplateMessage({ localization }) -- localization must be defined"
   )
   invariant(
-    typeof localization === "stirng",
-    "getMessage({ localization }) -- localization must be a string"
+    typeof localization === "string",
+    "getTemplateMessage({ localization }) -- localization must be a string"
   )
 
   invariant(
     template != undefined,
-    "generateTemplateId({ template }) -- template must be defined"
+    "getTemplateMessage({ template }) -- template must be defined"
   )
   invariant(
     typeof template === "object",
-    "generateTemplateId({ template }) -- template must be an object"
+    "getTemplateMessage({ template }) -- template must be an object"
   )
   invariant(
     typeof template.f_type === "InteractionTemplate",
-    "generateTemplateId({ template }) -- template object must be an InteractionTemplate"
+    "getTemplateMessage({ template }) -- template object must be an InteractionTemplate"
   )
 
   const messages = template?.data?.messages
