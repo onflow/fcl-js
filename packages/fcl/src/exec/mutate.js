@@ -3,6 +3,7 @@ import {normalizeArgs} from "./utils/normalize-args"
 import {currentUser} from "../current-user"
 import {prepTemplateOpts} from "./utils/prep-template-opts.js"
 import {preMutate} from "./utils/pre.js"
+import {isNumber} from "./utils/is"
 
 /**
  * @description
