@@ -1,5 +1,11 @@
 # @onflow/fcl
 
+## 1.4.0-alpha.6
+
+### Patch Changes
+
+- [#1595](https://github.com/onflow/fcl-js/pull/1595) [`a46a6650`](https://github.com/onflow/fcl-js/commit/a46a6650b643e8545a7d58f96a1fe55a3ab0d414) Thanks [@justinbarry](https://github.com/justinbarry)! - Restore missing import statement
+
 ## 1.4.0-alpha.5
 
 ### Minor Changes
