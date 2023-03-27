@@ -1968,9 +1968,9 @@ For more on what each transaction role means, see [singing roles](https://docs.o
 This is the JSON representation of a key on the Flow blockchain.
 
 | Key              | Value Type | Description                                                                              |
-| ---------------- | ---------- | ---------------------------------------------------------------------------------------- |
+| ---------------- | ---------- |------------------------------------------------------------------------------------------|
 | `index`          | number     | The address of the account                                                               |
-| `publicKey`      | string     | The FLOW balance of the account in 10\*6.                                                |
+| `publicKey`      | string     | The public portion of a public/private key pair                                          |
 | `signAlgo`       | number     | An index referring to one of `ECDSA_P256` or `ECDSA_secp256k1`                           |
 | `hashAlgo`       | number     | An index referring to one of `SHA2_256` or `SHA3_256`                                    |
 | `weight`         | number     | A number between 1 and 1000 indicating the relative weight to other keys on the account. |
