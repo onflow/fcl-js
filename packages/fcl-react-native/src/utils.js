@@ -1,37 +1,77 @@
-import { log, LEVELS } from "@onflow/util-logger";
-import { config } from "@onflow/config";
-import { invariant } from "@onflow/util-invariant";
+const CLOSE_EVENT = "FCL:VIEW:CLOSE"
+const READY_EVENT = "FCL:VIEW:READY"
+const RESPONSE_EVENT = "FCL:VIEW:RESPONSE"
 
-export let CONFIGURED_NETWORK = null;
+const _ = e => typeof e === "string" && e.toLowerCase()
 
-// export const setConfiguredNetwork = async () => {
-//   CONFIGURED_NETWORK = await config.get("flow.network");
-//   invariant(
-//     CONFIGURED_NETWORK === "mainnet" || CONFIGURED_NETWORK === "testnet",
-//     "FCL Configuration value for 'flow.network' is required (testnet || mainnet)"
-//   );
-// };
+const IGNORE = new Set([
+  "monetizationstart",
+  "monetizationpending",
+  "monetizationprogress",
+  "monetizationstop",
+])
 
-export function isAndroid() {
-  return (
-    typeof navigator !== "undefined" && /android/i.test(navigator.userAgent)
-  );
-}
+const deprecate = (was, want) =>
+  console.warn(
+    "DEPRECATION NOTICE",
+    `Received ${was}, please use ${want} for this and future versions of FCL`
+  )
 
-export function isSmallIOS() {
-  return (
-    typeof navigator !== "undefined" && /iPhone|iPod/.test(navigator.userAgent)
-  );
-}
+const parseData = (rawData) => {
+  try {
+    const data = JSON.parse(rawData)
+    return data
+  } catch (error) {
+    console.error('Error parsing data', error)
+    return
+  } 
+} 
 
-export function isLargeIOS() {
-  return typeof navigator !== "undefined" && /iPad/.test(navigator.userAgent);
-}
+export const buildMessageHandler =
+  ({close, send, onReady, onResponse, onMessage}) =>
+  ({ nativeEvent }) => {
+    const data = parseData(nativeEvent.data)
+    const e = { data }
+    try {
+      if (typeof e.data !== "object") return
+      if (IGNORE.has(e.data.type)) return
+      if (_(e.data.type) === _(CLOSE_EVENT)) close()
+      if (_(e.data.type) === _(READY_EVENT)) onReady(e, {send, close})
+      if (_(e.data.type) === _(RESPONSE_EVENT)) onResponse(e, {send, close})
+      onMessage(e, {send, close})
 
-export function isIOS() {
-  return isSmallIOS() || isLargeIOS();
-}
-
-export function isMobile() {
-  return isAndroid() || isIOS();
-}
+      // Backwards Compatible
+      if (_(e.data.type) === _("FCL:FRAME:READY")) {
+        deprecate(e.data.type, READY_EVENT)
+        onReady(e, {send, close})
+      }
+      if (_(e.data.type) === _("FCL:FRAME:RESPONSE")) {
+        deprecate(e.data.type, RESPONSE_EVENT)
+        onResponse(e, {send, close})
+      }
+      if (_(e.data.type) === _("FCL:FRAME:CLOSE")) {
+        deprecate(e.data.type, CLOSE_EVENT)
+        close()
+      }
+      //
+      if (_(e.data.type) === _("FCL::CHALLENGE::RESPONSE")) {
+        deprecate(e.data.type, RESPONSE_EVENT)
+        onResponse(e, {send, close})
+      }
+      if (_(e.data.type) === _("FCL::AUTHZ_READY")) {
+        deprecate(e.data.type, READY_EVENT)
+        onReady(e, {send, close})
+      }
+      if (_(e.data.type) === _("FCL::CHALLENGE::CANCEL")) {
+        deprecate(e.data.type, CLOSE_EVENT)
+        close()
+      }
+      if (_(e.data.type) === _("FCL::CANCEL")) {
+        deprecate(e.data.type, CLOSE_EVENT)
+        close()
+      }
+    } catch (error) {
+      console.error("WebView Callback Error", error)
+      close()
+    }
+  }

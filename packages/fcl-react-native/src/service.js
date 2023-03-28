@@ -1,9 +1,3 @@
-import { WebView } from "react-native";
-import { invariant } from "@onflow/util-invariant";
-import { log, LEVELS } from "@onflow/util-logger";
-import { fetchFlowWallets, isMobile, CONFIGURED_NETWORK, isIOS } from "./utils";
-import { FLOW_METHODS, REQUEST_TYPES } from "./constants";
-
 export const makeServicePlugin = (opts = {}) => ({
   name: "fcl-plugin-service-ReactNative",
   f_type: "ServicePlugin",
@@ -13,15 +7,10 @@ export const makeServicePlugin = (opts = {}) => ({
 });
 
 const makeExec = ({ mountWebView, unMountWebView }) => {
-  return ({ service, body, opts }) => {
-    return new Promise(async (resolve, reject) => {
-      // invariant(client, "ReactNative is not initialized");
-      let session, pairing, windowRef;
-      const method = service.endpoint;
+  return ({ service, body, opts, config }) => {
+    return new Promise((resolve, reject) => {
 
-      console.log("in exec!!! :) ", mountWebView);
-
-      mountWebView({ endpoint: method });
+      mountWebView({ service, body, opts, config, resolve, reject });
     });
   };
 };

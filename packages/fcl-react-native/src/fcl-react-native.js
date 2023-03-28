@@ -1,54 +1,29 @@
+import './config'
 import * as fcl from "@onflow/fcl"
-import React, {useEffect} from "react"
-import {View} from "react-native"
-// import { WebView } from "react-native-webview";
-import {ReactDOM, useState} from "react"
-import {invariant} from "@onflow/util-invariant"
-import {LEVELS, log} from "@onflow/util-logger"
+import {useEffect, useState, createElement, Fragment} from "react"
 import {makeServicePlugin} from "./service"
-// import { setConfiguredNetwork } from "./utils";
-import {WebViewHandler} from "./web-view.js"
-
-const DEFAULT_RELAY_URL = "wss://relay.reactnative.dev"
-const DEFAULT_LOGGER = "debug"
-let client = null
-
-// let webViewCompSetter = () => {};
-
-// const mountWebView = ({ endpoint = "" } = {}) => {
-//   console.log("in mountWebView", webViewCompSetter);
-//   webViewCompSetter(<WebView source={{ uri: endpoint }} />);
-// };
-// const unMountWebView = () => {
-//   webViewCompSetter(null);
-// };
+import {WebViewHandler} from "./web-view"
 
 const useMountWebView = () => {
-  const [WebViewComp, setWebViewComp] = useState(null)
-
-  const mountWebView = ({endpoint}) => {
-    setWebViewComp(
-      <WebViewHandler
-        endpoint={endpoint}
-        handleClose={() => setWebViewComp(null)}
-      ></WebViewHandler>
-    )
-  }
+  const [props, setProps] = useState(null)
+  const showWebviewComponent = !!props
   const unMountWebView = () => {
-    setWebViewComp(null)
+    setProps(null)
   }
-
+  const mountWebView = (props) => {
+    setProps(props)
+  }
+  const WebViewComp = createElement(WebViewHandler, { ...props, onClose: unMountWebView })
   return {
     WebViewComp,
+    showWebviewComponent,
     mountWebView,
     unMountWebView,
   }
 }
 
 export const FCLReactNativeProvider = ({children}) => {
-  const [fclReactNativeServicePlugin, setFCLReactNativeServicePlugin] =
-    useState(null)
-  const {WebViewComp, mountWebView, unMountWebView} = useMountWebView()
+  const {WebViewComp, mountWebView, unMountWebView, showWebviewComponent} = useMountWebView()
 
   useEffect(() => {
     const FclReactNativeServicePlugin = makeServicePlugin({
@@ -57,28 +32,12 @@ export const FCLReactNativeProvider = ({children}) => {
       unMountWebView,
     })
     fcl.pluginRegistry.add(FclReactNativeServicePlugin)
-    setFCLReactNativeServicePlugin(FclReactNativeServicePlugin)
   }, [])
 
-  return (
-    <>
-      {WebViewComp}
-      {children}
-    </>
-  )
+  const childrenArray = [
+    showWebviewComponent ? WebViewComp : null,
+    children
+  ].filter(Boolean);
+
+  return createElement(Fragment, null, ...childrenArray)
 }
-
-// export const init = ({ wallets = [] } = {}) => {
-//   // setConfiguredNetwork();
-//   // const FclReactNativeServicePlugin = makeServicePlugin({
-//   //   wallets,
-//   //   mountWebView,
-//   //   unMountWebView,
-//   // });
-//   // // fcl.discovery.authn.update();
-
-//   return {
-//     // FclReactNativeServicePlugin,
-//     FCLReactNativeProvider,
-//   };
-// };

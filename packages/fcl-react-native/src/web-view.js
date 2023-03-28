@@ -1,38 +1,41 @@
+import { uid } from "@onflow/util-uid"
 import { WebView } from "react-native-webview";
-import { useRef, useEffect } from "react";
+import { useRef, createElement } from "react";
+import { buildMessageHandler } from './utils'
+import { VERSION, normalizePollingResponse } from "@onflow/fcl";
 
-export const WebViewHandler = ({ service, endpoint = "", handleClose }) => {
+export const WebViewHandler = ({ service, body, config, opts, onClose, resolve, reject }) => {
+  const id = uid()
+  const includeOlderJsonRpcCall = opts.includeOlderJsonRpcCall
+  const { endpoint } = service
   const webViewRef = useRef(null);
 
-  useEffect(() => {
-    webViewRef.current.injectJavaScript(
-      `window.addEventListener("message", (event) => window.ReactNativeWebView.postMessage(event)));`
-    );
-  }, []);
-
-  useEffect(() => {
-    webViewRef.current.injectJavaScript(
-      `window.ReactNativeWebView.postMessage("test1");`
-    );
-  }, []);
-
-  const onClose = () => {
-    handleClose();
-  };
+  function close() {
+    try {
+      webViewRef.current.injectJavaScript(`
+        window.removeEventListener("message", (event) => window.ReactNativeWebView.postMessage(event));
+        true;
+      `)
+      onClose()
+    } catch (error) {
+      console.error("Tab Close Error", error)
+    }
+  }
 
   const send = (msg) => {
-    webViewRef.current.injectJavaScript(
-      `window.postMessage(
+    webViewRef.current.injectJavaScript(`
+      window.postMessage(
         ${JSON.stringify(msg || {})}
-      , "*");`
-    );
+      , "*");
+      true;
+    `);
   };
 
   const onReady = () => {
     try {
       send({
         type: "FCL:VIEW:READY:RESPONSE",
-        fclVersion: "1.0.0",
+        fclVersion: VERSION,
         body,
         service: {
           params: service.params,
@@ -42,7 +45,7 @@ export const WebViewHandler = ({ service, endpoint = "", handleClose }) => {
         config,
       });
       send({
-        fclVersion: "1.0.0",
+        fclVersion: VERSION,
         type: "FCL:FRAME:READY:RESPONSE",
         body,
         service: {
@@ -61,7 +64,7 @@ export const WebViewHandler = ({ service, endpoint = "", handleClose }) => {
           jsonrpc: "2.0",
           id: id,
           method: "fcl:sign",
-          params: [body, service.params],
+          params: [service.params],
           deprecated: {
             message:
               "jsonrpc is deprecated and replaced with type: FCL:VIEW:READY:RESPONSE",
@@ -100,7 +103,7 @@ export const WebViewHandler = ({ service, endpoint = "", handleClose }) => {
           break;
       }
     } catch (error) {
-      console.error("execIframeRPC onResponse error", error);
+      console.error("WebView onResponse error", error);
       throw error;
     }
   };
@@ -134,20 +137,26 @@ export const WebViewHandler = ({ service, endpoint = "", handleClose }) => {
           break;
       }
     } catch (error) {
-      console.error("execIframeRPC onMessage error", error);
+      console.error("WebView onMessage error", error);
       throw error;
     }
   };
 
-  console.log("RENDER WEB VIEW");
+  const handler = buildMessageHandler({
+    close,
+    send,
+    onReady,
+    onResponse,
+    onMessage,
+  })
 
-  return (
-    <WebView
-      ref={webViewRef}
-      source={{ uri: endpoint }}
-      onMessage={(message) => {
-        console.log("message from webview", message);
-      }}
-    ></WebView>
-  );
+  return createElement(WebView, {ref: webViewRef,
+    source: { uri: endpoint },
+    onMessage: handler,
+    javaScriptEnabled: true,
+    injectedJavaScriptBeforeContentLoaded: `
+      window.addEventListener("message", (event) => window.ReactNativeWebView.postMessage(JSON.stringify(event.data)));
+      true;
+    `
+  })
 };
