@@ -22,7 +22,7 @@ const parseData = (rawData) => {
     const data = JSON.parse(rawData)
     return data
   } catch (error) {
-    console.error('Error parsing data', error)
+    console.error('Error parsing rawData', error, rawData)
     return
   } 
 } 
