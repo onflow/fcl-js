@@ -38,6 +38,7 @@ import * as InteractionTemplateUtils from "./interaction-template-utils"
 export {InteractionTemplateUtils}
 
 export {getChainId} from "./utils"
+export {normalizePollingResponse} from './normalizers/service/polling-response'
 
 export {TestUtils} from "@onflow/sdk"
 export {config} from "@onflow/config"
