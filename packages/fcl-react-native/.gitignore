@@ -1,0 +1,17 @@
+types/
+
+!src/
+src/**
+!src/default-config.js
+!src/current-user/
+src/current-user/**
+!src/current-user/exec-service/
+src/current-user/exec-service/**
+!src/current-user/exec-service/exec-local.js
+!src/current-user/exec-service/strategies/
+src/current-user/exec-service/strategies/**
+!src/current-user/exec-service/strategies/iframe-rpc.js
+!src/current-user/exec-service/strategies/utils
+src/current-user/exec-service/strategies/utils/**
+!src/current-user/exec-service/strategies/utils/render-webview.js
+!src/current-user/exec-service/strategies/utils/webview.js
