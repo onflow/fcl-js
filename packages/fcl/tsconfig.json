@@ -26,6 +26,7 @@
       "../sdk/sdk",
       "../util-address/types",
       "../util-encode-key/types"
-    ]
+    ],
+    "skipLibCheck": true,
   }
 }
