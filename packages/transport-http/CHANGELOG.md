@@ -1,5 +1,11 @@
 # @onflow/transport-http
 
+## 1.6.0-alpha.4
+
+### Patch Changes
+
+- [#1608](https://github.com/onflow/fcl-js/pull/1608) [`0ec0c5d4`](https://github.com/onflow/fcl-js/commit/0ec0c5d46b780e2b277846f9271ab311aa048b19) Thanks [@nialexsan](https://github.com/nialexsan)! - prep for react-native package
+
 ## 1.6.0-alpha.3
 
 ### Minor Changes
