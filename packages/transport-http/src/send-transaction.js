@@ -105,7 +105,7 @@ export async function sendTransaction(ix, context = {}, opts = {}) {
   ret.tag = ix.tag
   ret.transactionId = res.id
 
-  if (typeof window !== "undefined") {
+  if (typeof window !== "undefined" && typeof CustomEvent !== "undefined") {
     window.dispatchEvent(
       new CustomEvent("FLOW::TX", {
         detail: {txId: ret.transactionId, delta: t2 - t1},
