@@ -9,6 +9,8 @@ const destDir = './src';
 // const ignoreFiles = fs.readFileSync('.gitignore').toString().split('\n').filter(path => path.match(/^!.+\.js$/)).map(path => path.slice(1))
 const ignoreFiles = [
   'src/default-config.js',
+  'src/current-user/exec-service/exec-local.js',
+  'src/current-user/exec-service/strategies/iframe-rpc.js',
   'src/current-user/exec-service/strategies/utils/render-webview.js',
   'src/current-user/exec-service/strategies/utils/webview.js',
 ]
