@@ -28,7 +28,7 @@
     "@types/node": "^18.13.0",
     "eslint": "^8.35.0",
     "eslint-plugin-jsdoc": "^40.0.1",
-    "jest": "^27.0.6",
+    "jest": "^27.5.1",
     "jest-esm-transformer": "1.0.0",
     "typescript": "^4.9.5"
   },
