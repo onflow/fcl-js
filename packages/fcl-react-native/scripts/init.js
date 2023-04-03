@@ -13,6 +13,7 @@ const ignoreFiles = [
   'src/current-user/exec-service/strategies/iframe-rpc.js',
   'src/current-user/exec-service/strategies/utils/render-webview.js',
   'src/current-user/exec-service/strategies/utils/webview.js',
+  'src/discovery/services.test.js',
 ]
 
 // don't copy ignored files
