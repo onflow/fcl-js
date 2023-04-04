@@ -24,8 +24,8 @@ export async function generateTemplateId({template}) {
     "generateTemplateId({ template }) -- template object must be an InteractionTemplate"
   )
   invariant(
-    template.f_version === "1.0.0",
-    "generateTemplateId({ template }) -- template object must be an version 1.0.0"
+    template.f_version === "1.1.0",
+    "generateTemplateId({ template }) -- template object must be an version 1.1.0"
   )
 
   const templateData = template.data

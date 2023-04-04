@@ -69,7 +69,7 @@ describe("Get interaction template argument messages", () => {
   }
 
   test("It gets argument message for given argument and internationalization", async () => {
-    let message = getTemplateArgumentMessage({
+    let message = await getTemplateArgumentMessage({
       localization: "en-US",
       argumentLabel: "amount",
       messageKey: "title",
@@ -80,7 +80,7 @@ describe("Get interaction template argument messages", () => {
   })
 
   test("It fails to get message for an unknown argument", async () => {
-    let message = getTemplateArgumentMessage({
+    let message = await getTemplateArgumentMessage({
       localization: "en-US",
       argumentLabel: "foo",
       messageKey: "title",
@@ -91,7 +91,7 @@ describe("Get interaction template argument messages", () => {
   })
 
   test("It fails to get message for an unknown message key", async () => {
-    let message = getTemplateArgumentMessage({
+    let message = await getTemplateArgumentMessage({
       localization: "en-US",
       argumentLabel: "amount",
       messageKey: "baz",

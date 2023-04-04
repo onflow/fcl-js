@@ -31,7 +31,7 @@ export async function generateTemplateInterfaceId({templateInterface}) {
 
   const encodedHex = rlpEncode([
     await genHash("InteractionTemplateInterface"),
-    await genHash("1.0.0"),
+    await genHash("1.1.0"),
     await genHash(interfaceData.flip),
     await Promise.all(
       interfaceData.arguments.map(async arg => [

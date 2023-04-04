@@ -7,7 +7,7 @@ import {getChainId} from "../utils"
 
 /**
  * @description Returns whether a set of auditors have audited a given Interaction Template
- * 
+ *
  * @param {object} params
  * @param {object} params.template - Interaction Template
  * @param {Array<string>} params.auditors - Array of auditors
@@ -23,9 +23,6 @@ export async function getInteractionTemplateAudits(
     template != undefined,
     "getInteractionTemplateAudits({ template }) -- template must be defined"
   )
-
-  template = normalizeInteractionTemplate(template)
-
   invariant(
     template.f_type === "InteractionTemplate",
     "getInteractionTemplateAudits({ template }) -- template must be an InteractionTemplate"
@@ -49,6 +46,7 @@ export async function getInteractionTemplateAudits(
   }
 
   switch (template.f_version) {
+    case "1.1.0":
     case "1.0.0":
       const _auditors = auditors || (await config().get("flow.auditors"))
 
