@@ -1,5 +1,11 @@
 # @onflow/config
 
+## 1.1.0-alpha.5
+
+### Patch Changes
+
+- [#1604](https://github.com/onflow/fcl-js/pull/1604) [`a4a1c7bf`](https://github.com/onflow/fcl-js/commit/a4a1c7bf0be9facb213f56a91d1a66b60bdea64b) Thanks [@chasefleming](https://github.com/chasefleming)! - Fix config types when invoked as a function
+
 ## 1.1.0-alpha.4
 
 ### Minor Changes
