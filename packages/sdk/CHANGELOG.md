@@ -1,5 +1,11 @@
 # @onflow/sdk
 
+## 1.2.0-alpha.8
+
+### Patch Changes
+
+- [#1610](https://github.com/onflow/fcl-js/pull/1610) [`bd6ebb8e`](https://github.com/onflow/fcl-js/commit/bd6ebb8eea5b0de26c0de9b2e0e7561006783040) Thanks [@nialexsan](https://github.com/nialexsan)! - Updated transport-http dependency
+
 ## 1.2.0-alpha.7
 
 ### Minor Changes
