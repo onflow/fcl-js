@@ -79,8 +79,6 @@ export {params, param} from "@onflow/sdk"
 export {validator} from "@onflow/sdk"
 export {invariant} from "@onflow/sdk"
 
-export * from "@onflow/typedefs"
-
 /**
  * @callback ArgsFn
  * @param {ArgFn} arg - Argument function to define a single argument
