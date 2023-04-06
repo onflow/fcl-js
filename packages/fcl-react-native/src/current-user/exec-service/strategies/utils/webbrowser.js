@@ -12,21 +12,21 @@ const fetcher = (url, opts) => {
     body: JSON.stringify(opts),
   }).then(d => d.json())
 }
-const DefaultLoadingComponent = () => createElement(Text, {children:"Loading..."});
-const DefaultEmptyComponent = () => createElement(Text, {children: "No Wallets Found"});
-
+const DefaultLoadingComponent = () => createElement(Text, null, "Loading...");
+const DefaultEmptyComponent = () => createElement(Text, null, "No Wallets Found");
 
 const DefaultServiceCard = ({
   service,
   onPress
 }) => {
-  return createElement(TouchableOpacity, {
-    onPress, 
-    children: createElement(Text, {children: service?.provider?.name})
-  })
+  return createElement(
+    TouchableOpacity,
+    { onPress },
+    createElement(Text, null, service?.provider?.name),
+  )
 }
 
-const DefaultWrapper = ({ children }) => createElement(View, { style: styles.container, children})
+const DefaultWrapper = ({ children }) => createElement(View, { style: styles.container}, ...children)
 
 // interface IWebBrowserProps {
 //   discoveryApi: string,
@@ -38,10 +38,10 @@ const DefaultWrapper = ({ children }) => createElement(View, { style: styles.con
 
 export const ServiceDiscovery = ({
   discoveryApi, 
-  Loading=DefaultLoadingComponent, 
-  Empty=DefaultEmptyComponent, 
-  ServiceCard=DefaultServiceCard, 
-  Wrapper=DefaultWrapper
+  Loading = DefaultLoadingComponent, 
+  Empty = DefaultEmptyComponent, 
+  ServiceCard = DefaultServiceCard, 
+  Wrapper = DefaultWrapper
 }) => {
   const [services, setServices] = useState([])
   const [isLoading, setIsLoading] = useState(false)
@@ -67,22 +67,22 @@ export const ServiceDiscovery = ({
     getServices()
   }, []);
 
-  return createElement(Wrapper, {
-    children: [
-      isLoading && createElement(Loading),
-      !isLoading && services.length === 0 && createElement(Empty),
-      !isLoading && services.map((service, index) => {
-        return (
-          createElement(ServiceCard, {
-            key:service?.provider?.address ?? index,
-            service,
-            onPress: () => {
-              authenticate({service})
-            }
+  return createElement(
+    Wrapper,
+    null, 
+    isLoading && createElement(Loading),
+    !isLoading && services.length === 0 && createElement(Empty),
+    !isLoading && services.map((service, index) => {
+      return (
+        createElement(ServiceCard, {
+          key: service?.provider?.address ?? index,
+          service,
+          onPress: () => {
+            authenticate({service})
+          }
         })
       )})
-    ].filter(Boolean)
-  });
+  );
 }
 
 const styles = StyleSheet.create({
