@@ -1,10 +1,10 @@
-import { renderWebview } from "./strategies/utils/render-webview"
+import { renderWebbrowser } from "./strategies/utils/render-webbrowser"
 import {serviceEndpoint} from "./strategies/utils/service-endpoint"
 
 const VIEWS = {
-  "VIEW/IFRAME": renderWebview,
-  "VIEW/POP": renderWebview,
-  "VIEW/TAB": renderWebview,
+  "VIEW/IFRAME": renderWebbrowser,
+  "VIEW/POP": renderWebbrowser,
+  "VIEW/TAB": renderWebbrowser,
 }
 
 export async function execLocal(service, opts = {}) {

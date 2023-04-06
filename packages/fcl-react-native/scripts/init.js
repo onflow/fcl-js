@@ -10,9 +10,8 @@ const destDir = './src';
 const ignoreFiles = [
   'src/default-config.js',
   'src/current-user/exec-service/exec-local.js',
-  'src/current-user/exec-service/strategies/iframe-rpc.js',
-  'src/current-user/exec-service/strategies/utils/render-webview.js',
-  'src/current-user/exec-service/strategies/utils/webview.js',
+  'src/current-user/exec-service/strategies/utils/render-webbrowser.js',
+  'src/current-user/exec-service/strategies/utils/webbrowser.js',
   'src/discovery/services.test.js',
 ]
 
@@ -23,4 +22,4 @@ fse.copySync(srcDir, destDir, (src, dest) => {
   return shouldCopy
 })
 
-fs.appendFileSync('./src/fcl.js', `${os.EOL}export {FCLWebView} from "./current-user/exec-service/strategies/utils/webview"${os.EOL}`)
+fs.appendFileSync('./src/fcl.js', `${os.EOL}export {ServiceDiscovery} from "./current-user/exec-service/strategies/utils/webbrowser"${os.EOL}`)

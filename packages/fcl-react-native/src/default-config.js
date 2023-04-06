@@ -9,7 +9,7 @@ const SESSION_STORAGE = {
 }
 
 config({
-  "discovery.wallet.method.default": "IFRAME/RPC",
+  "discovery.wallet.method.default": "HTTP/POST",
   "fcl.storage.default": SESSION_STORAGE,
 })
 

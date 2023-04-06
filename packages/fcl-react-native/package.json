@@ -66,10 +66,7 @@
     "@onflow/util-uid": "^1.1.0-alpha.1",
     "@react-native-async-storage/async-storage": "^1.17.12",
     "node-fetch": "^2.6.7",
-    "@react-rxjs/core": "^0.10.4",
-    "@react-rxjs/utils": "^0.9.5",
-    "react-native-webview": "12.0.0",
-    "rxjs": "^7.8.0"
+    "expo-web-browser": "12.1.1"
   },
   "peerDependencies": {
     "react": "^18.0.0",

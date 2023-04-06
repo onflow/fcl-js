@@ -1,5 +1,5 @@
 import {uid} from "@onflow/util-uid"
-import {webview} from "./utils/webview"
+import {frame} from "./utils/frame"
 import {normalizePollingResponse} from "../../../normalizers/service/polling-response"
 import {VERSION} from "../../../VERSION"
 
@@ -8,7 +8,7 @@ export function execIframeRPC({service, body, config, opts}) {
     const id = uid()
     const includeOlderJsonRpcCall = opts.includeOlderJsonRpcCall
 
-    webview(service, {
+    frame(service, {
       async onReady(_, {send}) {
         try {
           send({
