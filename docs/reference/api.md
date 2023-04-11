@@ -219,6 +219,7 @@
   - [`Transaction Statuses`](#transaction-statuses)
   - [`GRPC Statuses`](#grpc-statuses)
   - [`FType`](#ftype)
+
 </div>
 
 # Configuration
@@ -1386,7 +1387,8 @@ A utility builder to be used with `fcl.args[...]` to create FCL supported argume
 | Name    | Type             | Description                                               |
 | ------- | ---------------- | --------------------------------------------------------- |
 | `value` | any              | Any value that you are looking to pass to other builders. |
-| `type`  | [FType](#ftype) | A type supported by Flow.                                 |
+| `type`  | [FType](#ftype)
+ | A type supported by Flow.                                 |
 
 #### Returns
 
@@ -1773,7 +1775,8 @@ An argument object created by `fcl.arg(value,type)`
 | Key     | Value Type      | Description                                       |
 | ------- | --------------- | ------------------------------------------------- |
 | `value` | any             | Any value to be used as an argument to a builder. |
-| `xform` | [FType](#ftype) | Any of the supported types on Flow.               |
+| `xform` | [FType](#ftype)
+ | Any of the supported types on Flow.               |
 
 ---
 
@@ -1786,7 +1789,8 @@ An function that takes the `fcl.arg` function and fcl types `t` and returns an a
 | Parameter Name | Value Type       | Description                                                               |
 | -------------- | ---------------- | ------------------------------------------------------------------------- |
 | `arg`          | function         | A function that returns an [ArgumentObject](#argumentobject) - `fcl.arg`. |
-| `t`            | [FTypes](#ftype) | An object with acccess to all of the supported types on Flow.             |
+| `t`            | [FTypes](#ftype)
+ | An object with acccess to all of the supported types on Flow.             |
 
 **Returns**
 
