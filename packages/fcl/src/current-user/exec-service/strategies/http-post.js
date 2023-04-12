@@ -13,7 +13,7 @@ const getExecLocal = () => {
     }
   } catch {
   }
-  const {execLocal} = require("@onflow/util-web")
+  const {execLocal} = require("@onflow/util-web/util-web")
   return execLocal
 }
 

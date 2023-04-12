@@ -12,7 +12,10 @@
   "bugs": {
     "url": "https://github.com/onflow/flow-js-sdk/issues"
   },
-  "main": "index.js",
+  "source": "src/util-react-native.js",
+  "main": "dist/util-react-native.js",
+  "module": "dist/util-react-native.module.js",
+  "unpkg": "dist/util-react-native.umd.js",
   "scripts": {
     "prepublishOnly": "npm test && npm run build",
     "test": "jest",
@@ -21,6 +24,7 @@
     "start": "fcl-bundle --watch"
   },
   "dependencies": {
+    "@babel/runtime": "^7.18.6",
     "@react-native-async-storage/async-storage": "^1.18.1"
   },
   "peerDependencies": {

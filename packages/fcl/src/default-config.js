@@ -10,7 +10,7 @@ const getDefaultConfig = () => {
   } catch {
   }
 
-  const {getDefaultConfig: getDefaultConfigForWeb} = require("@onflow/util-web")
+  const {getDefaultConfig: getDefaultConfigForWeb} = require("@onflow/util-web/util-web")
   return getDefaultConfigForWeb()
 }
 

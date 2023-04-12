@@ -1,4 +1,4 @@
-import {renderFrame} from "@onflow/util-web"
+import {renderFrame} from "@onflow/util-web/util-web"
 import {serviceEndpoint} from "./service-endpoint"
 import {buildMessageHandler} from "./buildMessageHandler"
 
