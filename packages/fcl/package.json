@@ -62,5 +62,13 @@
     "@onflow/util-template": "^1.1.0-alpha.0",
     "@onflow/util-uid": "^1.1.0-alpha.1",
     "node-fetch": "^2.6.7"
+  },
+  "optionalDependencies": {
+    "@react-native-async-storage/async-storage": "^1.17.12",
+    "@onflow/util-web": "^1.0.0",
+    "@onflow/util-react-native": "^1.0.0",
+    "expo-web-browser": "12.1.1",
+    "react": "^18.0.0",
+    "react-native": "^0.71.0"
   }
 }

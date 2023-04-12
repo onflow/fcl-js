@@ -1,7 +1,5 @@
 import { useState, useEffect, createElement } from 'react'
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
-import { authenticate } from '../../../../fcl';
-import { VERSION } from '../../../../VERSION';
 
 const fetcher = (url, opts) => {
   return fetch(url, {
@@ -28,29 +26,16 @@ const DefaultServiceCard = ({
 
 const DefaultWrapper = ({ children }) => createElement(View, { style: styles.container}, ...children)
 
-// interface IWebBrowserProps {
-//   discoveryApi: string,
-//   Loading: () => JSX.Element,
-//   Empty: () => JSX.Element,
-//   Wrapper: () => JSX.Element,
-//   ServiceCard: ({service, onPress, key}) => JSX.Element,
-// }
-
-export const ServiceDiscovery = ({
-  discoveryApi, 
-  Loading = DefaultLoadingComponent, 
-  Empty = DefaultEmptyComponent, 
-  ServiceCard = DefaultServiceCard, 
-  Wrapper = DefaultWrapper
-}) => {
+export const useServiceDiscovery = ({ fcl }) => {
   const [services, setServices] = useState([])
   const [isLoading, setIsLoading] = useState(false)
-
+  
   const getServices = async () => {
     setIsLoading(true);
+    const endpoint = await fcl.config.get("discovery.authn.endpoint")
     try {
-      const response = await fetcher(discoveryApi, {
-        fclVersion: VERSION,
+      const response = await fetcher(endpoint, {
+        fclVersion: fcl.VERSION,
         userAgent: 'ReactNative',
         supportedStrategies: [
           'HTTP/POST',
@@ -67,6 +52,36 @@ export const ServiceDiscovery = ({
     getServices()
   }, []);
 
+  const authenticateService = (service) => {
+    if (services.includes(service)) {
+      fcl.authenticate({service})
+    }
+  } 
+
+  return {
+    services,
+    isLoading,
+    authenticateService,
+  }
+}
+
+// interface IWebBrowserProps {
+//   fcl: FCL,
+//   Loading: () => JSX.Element,
+//   Empty: () => JSX.Element,
+//   Wrapper: () => JSX.Element,
+//   ServiceCard: ({service, onPress, key}) => JSX.Element,
+// }
+
+export const ServiceDiscovery = ({
+  fcl, 
+  Loading = DefaultLoadingComponent, 
+  Empty = DefaultEmptyComponent, 
+  ServiceCard = DefaultServiceCard, 
+  Wrapper = DefaultWrapper
+}) => {
+  const { services, isLoading, authenticateService } = useServiceDiscovery({ fcl })
+
   return createElement(
     Wrapper,
     null, 
@@ -78,7 +93,7 @@ export const ServiceDiscovery = ({
           key: service?.provider?.address ?? index,
           service,
           onPress: () => {
-            authenticate({service})
+            authenticateService(service)
           }
         })
       )})

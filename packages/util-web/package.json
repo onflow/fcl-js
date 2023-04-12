@@ -1,0 +1,22 @@
+{
+  "name": "@onflow/util-web",
+  "version": "1.0.0",
+  "description": "utils for web environment",
+  "license": "Apache-2.0",
+  "author": "Dapper Labs <dev@dapperlabs.com>",
+  "homepage": "https://onflow.org",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/onflow/flow-js-sdk.git"
+  },
+  "bugs": {
+    "url": "https://github.com/onflow/flow-js-sdk/issues"
+  },
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "@onflow/util-invariant": "1.0.3"
+  }
+}

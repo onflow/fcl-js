@@ -1,18 +1,20 @@
 import {config} from "@onflow/config"
 import {setChainIdDefault} from "./utils/getChainId"
 
-const isServerSide = () => typeof window === "undefined"
+const getDefaultConfig = () => {
+  try {
+    const {getDefaultConfig: getDefaultConfigForReactNative} = require("@onflow/util-react-native")
+    if (getDefaultConfigForReactNative) {
+      return getDefaultConfigForReactNative()
+    }
+  } catch {
+  }
 
-const SESSION_STORAGE = {
-  can: !isServerSide(),
-  get: async key => JSON.parse(sessionStorage.getItem(key)),
-  put: async (key, value) => sessionStorage.setItem(key, JSON.stringify(value)),
+  const {getDefaultConfig: getDefaultConfigForWeb} = require("@onflow/util-web")
+  return getDefaultConfigForWeb()
 }
 
-config({
-  "discovery.wallet.method.default": "IFRAME/RPC",
-  "fcl.storage.default": SESSION_STORAGE,
-})
+config(getDefaultConfig())
 
 // this is an async function but we can't await bc it's run at top level.
 // NOT guaranteed that flow.network.default is set after this call (or at startup)

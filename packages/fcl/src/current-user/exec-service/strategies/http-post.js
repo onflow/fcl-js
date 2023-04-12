@@ -2,8 +2,20 @@ import {fetchService} from "./utils/fetch-service"
 import {normalizePollingResponse} from "../../../normalizers/service/polling-response"
 import {normalizeLocalView} from "../../../normalizers/service/local-view"
 import {poll} from "./utils/poll"
-import {execLocal} from "../exec-local"
 import {VERSION} from "../../../VERSION"
+import {serviceEndpoint} from "../strategies/utils/service-endpoint"
+
+const getExecLocal = () => {
+  try {
+    const {execLocal} = require("@onflow/util-react-native")
+    if (execLocal) {
+      return execLocal
+    }
+  } catch {
+  }
+  const {execLocal} = require("@onflow/util-web")
+  return execLocal
+}
 
 export async function execHttpPost({service, body, config, opts}) {
   const resp = await fetchService(service, {
@@ -27,7 +39,8 @@ export async function execHttpPost({service, body, config, opts}) {
     return resp
   } else if (resp.status === "PENDING") {
     var canContinue = true
-    const [_, unmount] = await execLocal(normalizeLocalView(resp.local))
+    const execLocal = getExecLocal()
+    const [_, unmount] = await execLocal(normalizeLocalView(resp.local), {serviceEndpoint})
 
     const close = () => {
       try {

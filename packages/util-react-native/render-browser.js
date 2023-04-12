@@ -1,6 +1,6 @@
 import * as WebBrowser from 'expo-web-browser';
 
-export function renderWebbrowser(src) {
+export function renderBrowser(src) {
   const webbrowser = WebBrowser.openAuthSessionAsync(src.toString());
 
   const unmount = () => {
