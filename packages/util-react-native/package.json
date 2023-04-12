@@ -1,14 +1,30 @@
 {
   "name": "@onflow/util-react-native",
   "version": "1.0.0",
-  "description": "",
+  "description": "utils for react native environment",
+  "license": "Apache-2.0",
+  "author": "Dapper Labs <dev@dapperlabs.com>",
+  "homepage": "https://onflow.org",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/onflow/flow-js-sdk.git"
+  },
+  "bugs": {
+    "url": "https://github.com/onflow/flow-js-sdk/issues"
+  },
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "prepublishOnly": "npm test && npm run build",
+    "test": "jest",
+    "build": "fcl-bundle",
+    "test:watch": "jest --watch",
+    "start": "fcl-bundle --watch"
   },
-  "author": "",
-  "license": "ISC",
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.18.1"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0",
+    "react-native": "^0.71.0"
   }
 }
