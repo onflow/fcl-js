@@ -18,9 +18,6 @@ const FRAME_STYLES = `
 `
 
 export function renderFrame(src) {
-  invariant(typeof document === "undefined",
-    "document is not defined"
-  )
   invariant(
     !document.getElementById(FRAME),
     "Attempt at triggering multiple Frames",
