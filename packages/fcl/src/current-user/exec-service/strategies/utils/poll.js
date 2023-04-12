@@ -36,12 +36,13 @@ export async function poll(service, canContinue = () => true) {
   } catch (error) {
     if (
       typeof document !== "undefined" &&
-      document.visibilityState === "visible"
+      document.visibilityState === "hidden"
     ) {
       await new Promise(r => setTimeout(r, 500))
-      return poll(resp.updates, canContinue)
+      return poll(service, canContinue)
+    } else {
+      throw error
     }
-    throw error
   }
 
   switch (resp.status) {
