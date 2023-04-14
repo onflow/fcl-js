@@ -28,9 +28,22 @@ export async function poll(service, canContinue = () => true) {
   invariant(service, "Missing Polling Service", {service})
   if (!canContinue()) throw new Error("Externally Halted")
 
-  const resp = await fetchService(service, {
-    method: serviceMethod(service),
-  }).then(normalizePollingResponse)
+  let resp
+  try {
+    resp = await fetchService(service, {
+      method: serviceMethod(service),
+    }).then(normalizePollingResponse)
+  } catch (error) {
+    if (
+      typeof document !== "undefined" &&
+      document.visibilityState === "hidden"
+    ) {
+      await new Promise(r => setTimeout(r, 500))
+      return poll(service, canContinue)
+    } else {
+      throw error
+    }
+  }
 
   switch (resp.status) {
     case "APPROVED":

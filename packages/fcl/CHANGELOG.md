@@ -1,5 +1,11 @@
 # @onflow/fcl
 
+## 1.4.0-alpha.8
+
+### Patch Changes
+
+- [#1623](https://github.com/onflow/fcl-js/pull/1623) [`31140ef0`](https://github.com/onflow/fcl-js/commit/31140ef07b9c830759deb5545875dcc89e6f2e81) Thanks [@JeffreyDoyle](https://github.com/JeffreyDoyle)! - PKG -- [fcl] Retry on network error is page is not visible during backchannel polling
+
 ## 1.4.0-alpha.7
 
 ### Patch Changes
