@@ -24,7 +24,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.18.6",
-    "queue-microtask": "1.1.2"
+    "queue-microtask": "^1.2.3"
   },
   "source": "src/index.js",
   "main": "dist/actor.js",
