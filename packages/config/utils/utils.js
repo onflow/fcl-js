@@ -146,7 +146,7 @@ const hasPrivateKeys = flowJSON => {
   return Object.entries(flowJSON?.accounts).reduce(
     (hasPrivateKey, [key, value]) => {
       if (hasPrivateKey) return true
-      return value?.hasOwnProperty("key") && isHexidecimal(value.key)
+      return value?.hasOwnProperty("key") && isHexidecimal(value?.key)
     },
     false
   )
