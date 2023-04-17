@@ -131,4 +131,29 @@ describe("anyHasPrivateKeys", () => {
     expect(anyHasPrivateKeys(flowJSON)).toBe(false)
     expect(anyHasPrivateKeys([flowJSON, flowJSONTwo])).toBe(false)
   })
+
+  test("it should return false if private key value is in separate file", () => {
+    const flowJSON = {
+      accounts: {
+        "emulator-account": {
+          address: "f8d6e0586b0a20c7",
+          key: {
+            type: "file",
+            location: "./emulator.key"
+          }
+        },
+      },
+    }
+
+    const flowJSONTwo = {
+      accounts: {
+        "emulator-account": {
+          address: "f8d6e0586b0a20c7",
+        },
+      },
+    }
+
+    expect(anyHasPrivateKeys(flowJSON)).toBe(false)
+    expect(anyHasPrivateKeys([flowJSON, flowJSONTwo])).toBe(false)
+  })
 })

@@ -127,6 +127,17 @@ export const getContracts = (jsons, network) => {
 }
 
 /**
+ * @descriptions Checks if string is hexidecimal
+ * @param {string} str - String to check
+ * @returns {boolean} - Is hexidecimal status
+ */
+const isHexidecimal = str => {
+  // Check that it is a string
+  if (typeof str !== "string") return false
+  return /^[0-9A-Fa-f]+$/.test(str)
+}
+
+/**
  * @description Checks flow.json file for private keys
  * @param {object} flowJSON - Flow JSON
  * @returns {boolean} - Has private keys status
@@ -135,7 +146,7 @@ const hasPrivateKeys = flowJSON => {
   return Object.entries(flowJSON?.accounts).reduce(
     (hasPrivateKey, [key, value]) => {
       if (hasPrivateKey) return true
-      return value?.hasOwnProperty("key") && !value?.key?.startsWith("$")
+      return value?.hasOwnProperty("key") && isHexidecimal(value.key)
     },
     false
   )
