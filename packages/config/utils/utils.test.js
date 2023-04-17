@@ -153,7 +153,17 @@ describe("anyHasPrivateKeys", () => {
       },
     }
 
+    const flowJSONThree = {
+      accounts: {
+        "emulator-account": {
+          address: "f8d6e0586b0a20c7",
+          "key": "ba68d45a5acaa52f3cacf4ad3a64d9523e0ce0ae3addb1ee6805385b380b7646"
+        },
+      },
+    }
+
     expect(anyHasPrivateKeys(flowJSON)).toBe(false)
     expect(anyHasPrivateKeys([flowJSON, flowJSONTwo])).toBe(false)
+    expect(anyHasPrivateKeys(flowJSONThree)).toBe(true)
   })
 })
