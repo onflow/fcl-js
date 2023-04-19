@@ -1,5 +1,14 @@
 # @onflow/config
 
+## 1.1.0-alpha.6
+
+### Patch Changes
+
+- [#1629](https://github.com/onflow/fcl-js/pull/1629) [`544d8ebb`](https://github.com/onflow/fcl-js/commit/544d8ebb298ce1be8491d5609729110211b83242) Thanks [@chasefleming](https://github.com/chasefleming)! - Fix key warning when key/file/location format is used in flow.json
+
+- Updated dependencies [[`35052784`](https://github.com/onflow/fcl-js/commit/3505278418e64045248c04fd21f0c09ddbb3132e)]:
+  - @onflow/util-actor@1.2.0-alpha.1
+
 ## 1.1.0-alpha.5
 
 ### Patch Changes
