@@ -99,6 +99,9 @@ export function transaction(transactionId) {
   return {
     snapshot,
     subscribe,
+    /**
+     * @description Provides the transaction once status 2 is returned
+     */
     onceFinalized: once(isFinalized),
     onceExecuted: once(isExecuted),
     onceSealed: once(isSealed),

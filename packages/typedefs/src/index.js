@@ -58,6 +58,13 @@
  */
 
 /**
+ * @typedef {object} Key
+ * @property {number} sequenceNumber - Sequence number of key used by the proposer of this transaction
+ * @property {number} keyId - The ID of the key in the account used by the proposer of this transaction
+ * @property {string} address - The address of the proposer of this transaction
+ * 
+
+/**
  * @typedef {object} Service
  * @property {string} f_type - A type identifier used internally by FCL
  * @property {string} f_vsn - FCL protocol version
@@ -66,6 +73,30 @@
  * @property {string} [uid] - Service uid
  * @property {string} endpoint - Service endpoint
  * @property {object} provider - Service provider object
+ */
+
+/**
+ * @typedef {Object} Signature
+ * @property {string} sequenceNumber - Sequence number of the key used to perform this signature.
+ * @property {number} keyId - ID of the key in the account used to perform this signature.
+ * @property {string} signature - The signature.
+ */
+
+/**
+ * @typedef {Object} Transaction
+ * @property {string} script - The Cadence code used to execute this transaction.
+ * @property {Array<string>} args - The arguments passed in to the transaction.
+ * @property {string} referenceBlockId - The reference block id for this transaction.
+ * @property {number} gasLimit - The gas limit for the transaction.
+ * @property {Key} proposalKey - The key used by the proposer of this transaction.
+ * @property {string} sequenceNumber - Sequence number of the key used by the proposer of this transaction.
+ * @property {number} keyId - The ID of the key in the account used by the proposer of this transaction.
+ * @property {string} address - The address of the proposer of this transaction.
+ * @property {string} payer - Address of the payer of the transaction.
+ * @property {string} proposer - Address of the proposer of this transaction.
+ * @property {Array<string>} authorizers - Array of addresses of authorizers of this transaction.
+ * @property {Array<Signature>} payloadSignatures - The payload signatures for the transaction.
+ * @property {Array<Signature>} envelopeSignatures - The envelope signatures for the transaction.
  */
 
 // Needed for bundler to export this file
