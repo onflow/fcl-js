@@ -13,6 +13,14 @@ import {
 } from "@onflow/util-actor"
 import {send as fclSend, decode, getTransactionStatus} from "@onflow/sdk"
 
+/**
+ * @typedef {import("@onflow/typedefs").Transaction} Transaction
+ */
+
+/**
+ * @typedef {import("@onflow/typedefs").TransactionStatus} TransactionStatus
+ */
+
 const RATE = 2500
 const POLL = "POLL"
 
@@ -70,6 +78,15 @@ const spawnTransaction = transactionId => {
   return spawn(HANDLERS, scoped(transactionId))
 }
 
+/**
+ * @callback SubscriptionCallback
+ * @returns {TransactionStatus}
+ */
+
+/**
+ * @description Provides methods for interacting with a transaction
+ * @property {string} transactionId - The transaction ID
+ */
 export function transaction(transactionId) {
   function snapshot() {
     return snapshoter(transactionId, spawnTransaction)
@@ -97,13 +114,31 @@ export function transaction(transactionId) {
   }
 
   return {
+    /**
+     * @description Returns the current state of the transaction
+     * @returns {Promise<Transaction>} - Promise that resolves with the transaction
+     */
     snapshot,
+    /**
+     * @description Subscribes to the transaction and provides updates
+     * @param {Function} cb - Callback function that receives updates
+     * @returns {SubscriptionCallback} - Unsubscribe function
+     */
     subscribe,
     /**
      * @description Provides the transaction once status 2 is returned
+     * @returns {Promise<Transaction>} - Promise that resolves with the transaction
      */
     onceFinalized: once(isFinalized),
+    /**
+     * @description Provides the transaction once status 3 is returned
+     * @returns {Promise<Transaction>} - Promise that resolves with the transaction
+     */
     onceExecuted: once(isExecuted),
+    /**
+     * @description Provides the transaction once status 4 is returned
+     * @returns {Promise<Transaction>} - Promise that resolves with the transaction
+     */
     onceSealed: once(isSealed),
   }
 }
