@@ -76,14 +76,14 @@
  */
 
 /**
- * @typedef {Object} Signature
+ * @typedef {object} Signature
  * @property {string} sequenceNumber - Sequence number of the key used to perform this signature.
  * @property {number} keyId - ID of the key in the account used to perform this signature.
  * @property {string} signature - The signature.
  */
 
 /**
- * @typedef {Object} Transaction
+ * @typedef {object} Transaction
  * @property {string} script - The Cadence code used to execute this transaction.
  * @property {Array<string>} args - The arguments passed in to the transaction.
  * @property {string} referenceBlockId - The reference block id for this transaction.
@@ -97,6 +97,15 @@
  * @property {Array<string>} authorizers - Array of addresses of authorizers of this transaction.
  * @property {Array<Signature>} payloadSignatures - The payload signatures for the transaction.
  * @property {Array<Signature>} envelopeSignatures - The envelope signatures for the transaction.
+ */
+
+/**
+ * @typedef {object} TransactionStatus
+ * @property {string} blockId - The ID of the Block the transaction is included in.
+ * @property {number} status - The status of the transaction.
+ * @property {number} statusCode - The status code of the transaction.
+ * @property {string} errorMessage - The error message of the transaction.
+ * @property {Array<Event>} events - The events for this result.
  */
 
 // Needed for bundler to export this file
