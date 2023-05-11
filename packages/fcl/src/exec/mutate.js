@@ -14,7 +14,7 @@ import {isNumber} from "./utils/is"
  *  @param {import("../fcl").ArgsFn} [opts.args] - Arguments passed to cadence transaction
  *  @param {object} [opts.template] - Interaction Template for a transaction
  *  @param {number} [opts.limit] - Compute Limit for transaction
- *  @returns {string} Transaction Id
+ *  @returns {Promise<string>} Transaction Id
  *
  * @example
  *    fcl.mutate({
