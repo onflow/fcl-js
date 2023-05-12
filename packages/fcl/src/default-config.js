@@ -14,9 +14,14 @@ config({
   "fcl.storage.default": SESSION_STORAGE,
 })
 
-// this is an async function but we can't await bc it's run at top level.
-// NOT guaranteed that flow.network.default is set after this call (or at startup)
-setChainIdDefault()
+// Set chain id default on access node change
+config.subscribe(
+  function configSubscriber(config) {
+    const nextAccessNode = config?.["accessNode.api"]
+    if (prevAccessNode !== nextAccessNode) setChainIdDefault()
+    this.prevAccessNode = nextAccessNode
+  }.bind({})
+)
 
 export async function configLens(regex) {
   return Object.fromEntries(
