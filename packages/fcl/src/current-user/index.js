@@ -383,7 +383,7 @@ const makeSignable = msg => {
 /**
  * @description - A method to use allowing the user to personally sign data via FCL Compatible Wallets/Services.
  * @param {string} msg - Message to sign
- * @returns {Promise<CompositeSignature>} - Array of CompositeSignatures
+ * @returns {Promise<CompositeSignature[]>} - Array of CompositeSignatures
  */
 async function signUserMessage(msg) {
   spawnCurrentUser()
