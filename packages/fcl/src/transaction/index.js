@@ -80,13 +80,21 @@ const spawnTransaction = transactionId => {
 
 /**
  * @callback SubscriptionCallback
- * @returns {TransactionStatus}
+ * @param {TransactionStatus} txStatus
+ * @returns {void}
  */
 
 /**
- * @description Provides methods for interacting with a transaction
- * @property {string} transactionId - The transaction ID
- */
+ * Provides methods for interacting with a transaction
+ * @param {string} transactionId - The transaction ID
+ * @returns {{
+ *    snapshot: function(): Promise<TransactionStatus>,
+ *    subscribe: function(SubscriptionCallback): function(): void,
+ *    onceFinalized: function(): Promise<TransactionStatus>,
+ *    onceExecuted: function(): Promise<TransactionStatus>,
+ *    onceSealed: function(): Promise<TransactionStatus>
+ * }}
+*/
 export function transaction(transactionId) {
   function snapshot() {
     return snapshoter(transactionId, spawnTransaction)
@@ -114,31 +122,10 @@ export function transaction(transactionId) {
   }
 
   return {
-    /**
-     * @description Returns the current state of the transaction
-     * @returns {Promise<Transaction>} - Promise that resolves with the transaction
-     */
     snapshot,
-    /**
-     * @description Subscribes to the transaction and provides updates
-     * @param {Function} cb - Callback function that receives updates
-     * @returns {SubscriptionCallback} - Unsubscribe function
-     */
     subscribe,
-    /**
-     * @description Provides the transaction once status 2 is returned
-     * @returns {Promise<Transaction>} - Promise that resolves with the transaction
-     */
     onceFinalized: once(isFinalized),
-    /**
-     * @description Provides the transaction once status 3 is returned
-     * @returns {Promise<Transaction>} - Promise that resolves with the transaction
-     */
     onceExecuted: once(isExecuted),
-    /**
-     * @description Provides the transaction once status 4 is returned
-     * @returns {Promise<Transaction>} - Promise that resolves with the transaction
-     */
     onceSealed: once(isSealed),
   }
 }

@@ -102,8 +102,8 @@
 /**
  * @typedef {object} TransactionStatus
  * @property {string} blockId - The ID of the Block the transaction is included in.
- * @property {number} status - The status of the transaction.
- * @property {number} statusCode - The status code of the transaction.
+ * @property {number} status - The status code of the transaction.
+ * @property {number} statusString - The status as as descriptive text (e.g. "FINALIZED").
  * @property {string} errorMessage - The error message of the transaction.
  * @property {Array<Event>} events - The events for this result.
  */
