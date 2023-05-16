@@ -85,7 +85,7 @@
 /**
  * @typedef {object} Transaction
  * @property {string} script - The Cadence code used to execute this transaction.
- * @property {Array<string>} args - The arguments passed in to the transaction.
+ * @property {Array<string>} args - The JSON-CDC encoded arguments passed in to the transaction.
  * @property {string} referenceBlockId - The reference block id for this transaction.
  * @property {number} gasLimit - The gas limit for the transaction.
  * @property {Key} proposalKey - The key used by the proposer of this transaction.
