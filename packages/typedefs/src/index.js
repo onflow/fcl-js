@@ -79,7 +79,7 @@
  * @typedef {object} Signature
  * @property {string} sequenceNumber - Sequence number of the key used to perform this signature.
  * @property {number} keyId - ID of the key in the account used to perform this signature.
- * @property {string} signature - The signature.
+ * @property {string} signature - The signature represented as a hex string.
  */
 
 /**
