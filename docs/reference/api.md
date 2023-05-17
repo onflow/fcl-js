@@ -219,6 +219,7 @@
   - [`Transaction Statuses`](#transaction-statuses)
   - [`GRPC Statuses`](#grpc-statuses)
   - [`FType`](#ftype)
+
 </div>
 
 # Configuration
@@ -1386,7 +1387,7 @@ A utility builder to be used with `fcl.args[...]` to create FCL supported argume
 | Name    | Type             | Description                                               |
 | ------- | ---------------- | --------------------------------------------------------- |
 | `value` | any              | Any value that you are looking to pass to other builders. |
-| `type`  | [FType](#ftype) | A type supported by Flow.                                 |
+| `type`  | [FType](#ftype)  | A type supported by Flow.                                 |
 
 #### Returns
 

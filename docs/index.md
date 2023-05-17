@@ -146,7 +146,7 @@ Wallet providers on Flow have the flexibility to build their user interactions a
 - Front channel communication via Iframe, pop-up, tab, or extension
 - Back channel communication via HTTP
 
-FCL is agnostic to the communication channel and be configured to create both custodial and non-custodial wallets. This enables users to interact with wallet providers without needing to download an app or extension.
+FCL is agnostic to the communication channel and is configured to create both custodial and non-custodial wallets. This enables users to interact with wallet providers without needing to download an app or extension.
 
 The communication channels involve responding to a set of pre-defined FCL messages to deliver the requested information to the dapp.  Implementing a FCL compatible wallet on Flow is as simple as filling in the responses with the appropriate data when FCL requests them. If using any of the front-channel communication methods, FCL also provides a set of [wallet utilities](https://github.com/onflow/fcl-js/blob/master/packages/fcl/src/wallet-utils/index.js) to simplify this process.
 
@@ -162,7 +162,7 @@ It can be difficult to get users to discover new wallets on a chain. To solve th
 - Dapps can display and support all FCL compatible wallets that launch on Flow without needing to change any code
 - Users don't need to sign up for new wallets - they can carry over their existing one to any dapp that uses FCL for authentication and authorization.
 
-The discovery feature can be used via API allowing you to customize your own UI or you can use the default UI without any additional configuration.
+The discovery feature can be used via API, allowing you to customize your own UI or use the default UI without any additional configuration.
 
 ### Building a FCL compatible wallet
 
