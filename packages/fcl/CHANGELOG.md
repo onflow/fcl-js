@@ -1,5 +1,19 @@
 # @onflow/fcl
 
+## 1.4.0-alpha.9
+
+### Minor Changes
+
+- [#1639](https://github.com/onflow/fcl-js/pull/1639) [`434c2f48`](https://github.com/onflow/fcl-js/commit/434c2f4887c7d8fd0101ff79cc901d0c66795065) Thanks [@chasefleming](https://github.com/chasefleming)! - Add types for fcl.tx
+
+### Patch Changes
+
+- [#1648](https://github.com/onflow/fcl-js/pull/1648) [`06655aee`](https://github.com/onflow/fcl-js/commit/06655aee2039f3e88741a5ee3b041ecfabb813c9) Thanks [@jribbink](https://github.com/jribbink)! - Fixed `setChainIdDefault()` race condition, instead run function on accessNode.api value changes
+
+- [#1640](https://github.com/onflow/fcl-js/pull/1640) [`b9b957c0`](https://github.com/onflow/fcl-js/commit/b9b957c0fa8829ae0f40d31225a524ddf0d56340) Thanks [@JeffreyDoyle](https://github.com/JeffreyDoyle)! - PKG -- [fcl] Skip network requests when polling on service if document is not visible
+
+- [#1647](https://github.com/onflow/fcl-js/pull/1647) [`2f10082e`](https://github.com/onflow/fcl-js/commit/2f10082e7bd2d174c1b88c782756097c415289b3) Thanks [@jribbink](https://github.com/jribbink)! - Fix return type for fcl.mutate
+
 ## 1.4.0-alpha.8
 
 ### Patch Changes
