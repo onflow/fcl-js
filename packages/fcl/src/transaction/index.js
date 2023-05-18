@@ -1,7 +1,6 @@
 import "../default-config"
 import {
   spawn,
-  send,
   subscriber,
   snapshoter,
   UPDATED,
@@ -9,7 +8,6 @@ import {
   INIT,
   SUBSCRIBE,
   UNSUBSCRIBE,
-  ERROR,
 } from "@onflow/util-actor"
 import {send as fclSend, decode, getTransactionStatus} from "@onflow/sdk"
 
@@ -86,6 +84,7 @@ const spawnTransaction = transactionId => {
 
 /**
  * Provides methods for interacting with a transaction
+ *  
  * @param {string} transactionId - The transaction ID
  * @returns {{
  *    snapshot: function(): Promise<TransactionStatus>,
@@ -94,7 +93,7 @@ const spawnTransaction = transactionId => {
  *    onceExecuted: function(): Promise<TransactionStatus>,
  *    onceSealed: function(): Promise<TransactionStatus>
  * }}
-*/
+ */
 export function transaction(transactionId) {
   function snapshot() {
     return snapshoter(transactionId, spawnTransaction)

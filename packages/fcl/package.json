@@ -32,7 +32,18 @@
     "jest-esm-transformer": "1.0.0",
     "typescript": "^4.9.5"
   },
-  "source": "src/fcl.js",
+  "source": {
+    "src/fcl.js": {
+      "cjs": "./dist/fcl.js",
+      "esm": "./dist/fcl.module.js",
+      "umd": "./dist/fcl.umd.min.js"
+    },
+    "src/fcl-react-native.js": {
+      "cjs": "./dist/fcl-react-native.js",
+      "esm": "./dist/fcl-react-native.module.js",
+      "umd": "./dist/fcl-react-native.umd.min.js"
+    }
+  },
   "main": "dist/fcl.js",
   "module": "dist/fcl.module.js",
   "unpkg": "dist/fcl.umd.min.js",
@@ -59,16 +70,10 @@
     "@onflow/util-address": "^1.1.0-alpha.3",
     "@onflow/util-invariant": "^1.1.0-alpha.0",
     "@onflow/util-logger": "^1.2.0-alpha.1",
+    "@onflow/util-react-native": "^1.0.0",
     "@onflow/util-template": "^1.1.0-alpha.0",
     "@onflow/util-uid": "^1.1.0-alpha.1",
-    "node-fetch": "^2.6.7"
-  },
-  "optionalDependencies": {
-    "@react-native-async-storage/async-storage": "^1.17.12",
     "@onflow/util-web": "^1.0.0",
-    "@onflow/util-react-native": "^1.0.0",
-    "expo-web-browser": "12.1.1",
-    "react": "^18.0.0",
-    "react-native": "^0.71.0"
+    "node-fetch": "^2.6.7"
   }
 }

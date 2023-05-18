@@ -96,14 +96,14 @@ export {invariant} from "@onflow/sdk"
  * @returns {any}
  */
 
-import {getDefaultConfig} from "@onflow/util-web"
+import {getDefaultConfig} from "@onflow/util-react-native"
 import {setChainIdDefault} from "./utils/getChainId"
 import {initServiceRegistry} from "./current-user/exec-service/plugins"
-import {execLocal} from "@onflow/util-web"
+import {execLocal} from "@onflow/util-react-native"
 
 config(getDefaultConfig())
 
 // this is an async function but we can't await bc it's run at top level.
 // NOT guaranteed that flow.network.default is set after this call (or at startup)
 setChainIdDefault()
-initServiceRegistry(execLocal)
+initServiceRegistry({execLocal})

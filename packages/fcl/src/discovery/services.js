@@ -1,6 +1,6 @@
 import {config} from "@onflow/config"
 import {invariant} from "@onflow/util-invariant"
-import {serviceRegistry} from "../current-user/exec-service/plugins"
+import {getServiceRegistry} from "../current-user/exec-service/plugins"
 import {getChainId} from "../utils"
 import {VERSION} from "../VERSION"
 import {makeDiscoveryServices} from "./utils"
@@ -25,7 +25,7 @@ export async function getServices({types}) {
       fclVersion: VERSION,
       include,
       clientServices: await makeDiscoveryServices(),
-      supportedStrategies: serviceRegistry.getStrategies(),
+      supportedStrategies: getServiceRegistry().getStrategies(),
       userAgent: window?.navigator?.userAgent,
       network: await getChainId(),
     }),

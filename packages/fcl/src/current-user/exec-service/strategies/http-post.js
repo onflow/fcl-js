@@ -5,19 +5,7 @@ import {poll} from "./utils/poll"
 import {VERSION} from "../../../VERSION"
 import {serviceEndpoint} from "../strategies/utils/service-endpoint"
 
-const getExecLocal = () => {
-  try {
-    const {execLocal} = require("@onflow/util-react-native")
-    if (execLocal) {
-      return execLocal
-    }
-  } catch {
-  }
-  const {execLocal} = require("@onflow/util-web")
-  return execLocal
-}
-
-export async function execHttpPost({service, body, config, opts}) {
+export const getExecHttpPost = (execLocal) => async({service, body, config, opts}) => {
   const resp = await fetchService(service, {
     data: {
       fclVersion: VERSION,
@@ -39,7 +27,6 @@ export async function execHttpPost({service, body, config, opts}) {
     return resp
   } else if (resp.status === "PENDING") {
     var canContinue = true
-    const execLocal = getExecLocal()
     const [_, unmount] = await execLocal(normalizeLocalView(resp.local), {serviceEndpoint})
 
     const close = () => {
