@@ -4,7 +4,7 @@ import {invariant} from "@onflow/util-invariant"
  * Parses a Cadence transaction to extract function arguments.
  *
  * @param {string} cadenceCode - The Cadence transaction code.
- * @returns {Array<Object>} An array of objects each containing 'name' and 'type' of each argument in the transaction.
+ * @returns {Array<object>} An array of objects each containing 'name' and 'type' of each argument in the transaction.
  * Each object has the format: { name: string, type: string }. If no valid arguments are found, or if the Cadence
  * transaction is not properly formatted, the function will return an empty array.
  *
