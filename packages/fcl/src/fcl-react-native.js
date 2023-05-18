@@ -96,10 +96,9 @@ export {invariant} from "@onflow/sdk"
  * @returns {any}
  */
 
-import {getDefaultConfig} from "@onflow/util-react-native"
+import {execLocal, getDefaultConfig, useServiceDiscovery, ServiceDiscovery} from "@onflow/util-react-native"
 import {setChainIdDefault} from "./utils/getChainId"
 import {initServiceRegistry} from "./current-user/exec-service/plugins"
-import {execLocal} from "@onflow/util-react-native"
 
 config(getDefaultConfig())
 
@@ -107,3 +106,5 @@ config(getDefaultConfig())
 // NOT guaranteed that flow.network.default is set after this call (or at startup)
 setChainIdDefault()
 initServiceRegistry({execLocal})
+
+export {useServiceDiscovery, ServiceDiscovery}
