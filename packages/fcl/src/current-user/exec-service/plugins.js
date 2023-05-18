@@ -148,10 +148,10 @@ const PluginRegistry = () => {
 }
 
 let serviceRegistry
-const isServiceRegistryInitialized = () => typeof serviceRegistry === 'undefined'
+const getIsServiceRegistryInitialized = () => typeof serviceRegistry !== 'undefined'
 
 export const initServiceRegistry = ({execLocal}) => {
-  if (isServiceRegistryInitialized()) {
+  if (getIsServiceRegistryInitialized()) {
     return serviceRegistry
   }
   const _serviceRegistry = ServiceRegistry({execLocal});
@@ -160,7 +160,7 @@ export const initServiceRegistry = ({execLocal}) => {
   return _serviceRegistry
 }
 export const getServiceRegistry = () => {
-  if (!isServiceRegistryInitialized()) {
+  if (!getIsServiceRegistryInitialized()) {
     return initServiceRegistry()
   }
 

@@ -106,4 +106,4 @@ config(getDefaultConfig())
 // this is an async function but we can't await bc it's run at top level.
 // NOT guaranteed that flow.network.default is set after this call (or at startup)
 setChainIdDefault()
-initServiceRegistry(execLocal)
+initServiceRegistry({execLocal})
