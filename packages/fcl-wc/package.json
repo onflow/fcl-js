@@ -18,7 +18,6 @@
     },
     "testEnvironment": "./jest-test-environment.js",
     "globals": {
-      "window": {},
       "PACKAGE_CURRENT_VERSION": "TESTVERSION"
     }
   },
