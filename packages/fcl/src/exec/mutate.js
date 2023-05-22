@@ -4,6 +4,7 @@ import {currentUser} from "../current-user"
 import {prepTemplateOpts} from "./utils/prep-template-opts.js"
 import {preMutate} from "./utils/pre.js"
 import {isNumber} from "./utils/is"
+import {formatArgs} from "./utils/args"
 
 /**
  * @description
@@ -63,7 +64,7 @@ export async function mutate(opts = {}) {
       sdk.send([
         sdk.transaction(opts.cadence),
 
-        sdk.args(normalizeArgs(opts.args || [])),
+        sdk.args(normalizeArgs(formatArgs(opts.args, opts.cadence) || [])),
 
         opts.limit && isNumber(opts.limit) && sdk.limit(opts.limit),
 

@@ -2,6 +2,7 @@ import * as sdk from "@onflow/sdk"
 import {normalizeArgs} from "./utils/normalize-args"
 import {prepTemplateOpts} from "./utils/prep-template-opts.js"
 import {preQuery} from "./utils/pre.js"
+import {formatArgs} from "./utils/args"
 
 /**
  * @description
@@ -39,7 +40,7 @@ export async function query(opts = {}) {
     // prettier-ignore
     sdk.send([
       sdk.script(opts.cadence),
-      sdk.args(normalizeArgs(opts.args || [])),
+      sdk.args(normalizeArgs(formatArgs(opts.args, opts.cadence) || [])),
       opts.limit && typeof opts.limit === "number" && sdk.limit(opts.limit)
     ]).then(sdk.decode)
   )
