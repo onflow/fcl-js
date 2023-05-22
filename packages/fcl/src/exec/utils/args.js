@@ -20,7 +20,7 @@ const isCompositeType = value => COMPOSITE_TYPES.includes(value)
  * @description If object format, validates and converts args to proper format, otherwise if normal format it continues on
  * @param {object | function} argsValue - the args value to format
  * @param {object} cadence - the cadence object
- * @returns {function} - the formatted args function
+ * @returns {function} - the formatted args function e.g. (arg, t) => [ arg("0xABC123", t.Address), arg("1.0", t.UFix64) ]
  */
 export function formatArgs(argsValue, cadence) {
   // If it's not an object or function, it's not a valid args function
@@ -33,7 +33,7 @@ export function formatArgs(argsValue, cadence) {
 
   // Parse args from Cadence
   const parsedCadenceArgs = parseArguments(cadence)
-  const hasCompositeTypes = parsedCadenceArgs.some(cadenceArg => !isCompositeType(cadenceArg.type))
+  const hasCompositeTypes = parsedCadenceArgs.some(cadenceArg => isCompositeType(cadenceArg.type))
 
   invariant(Object.keys(argsValue).length === parsedCadenceArgs.length, "Invalid number of arguments")
 
@@ -43,23 +43,12 @@ export function formatArgs(argsValue, cadence) {
     "Composite types are not supported in object format, please use the args function format"
   )
 
-  // If it's an object, we need to validate and convert it
-  const formattedArgs = (arg, t) => {
-    // If the arg is not in the cadence args, it's invalid
-    invariant(
-      parsedCadenceArgs.some(parsedArg => parsedArg.name === arg),
-      `Invalid argument: ${arg}`
-    )
+  // Format arguments into FCL types
+  const formattedArgs = parsedCadenceArgs.map(({ name, type }) => {
+    invariant(argsValue.hasOwnProperty(name), `Missing argument: ${name}`)
+    return (arg, t) => arg(argsValue[name], t[type])
+  })
 
-    // If the arg is not a valid type, it's invalid
-    invariant(
-      parsedCadenceArgs.some(parsedArg => parsedArg.type === t),
-      `Invalid argument type: ${t}`
-    )
-
-    // Return the arg in the proper format
-    return arg(argsValue[arg], t[parsedArg.type])
-  }
-
-  return formattedArgs
+  // Return a function that, when invoked, returns the array of formatted args
+  return (arg, t) => formattedArgs.map(fn => fn(arg, t))
 }
