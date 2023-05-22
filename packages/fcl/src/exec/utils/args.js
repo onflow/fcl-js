@@ -1,5 +1,6 @@
-import {invariant} from "@onflow/sdk"
+import {invariant} from "@onflow/util-invariant"
 import {isFunc, isObject} from "./is"
+import {parseArguments} from "@onflow/cadence-parser"
 
 // array can be recursive
 
@@ -32,11 +33,14 @@ export function formatArgs(argsValue, cadence) {
 
   // Parse args from Cadence
   const parsedCadenceArgs = parseArguments(cadence)
+  const hasCompositeTypes = parsedCadenceArgs.some(cadenceArg => !isCompositeType(cadenceArg.type))
+
+  invariant(Object.keys(argsValue).length === parsedCadenceArgs.length, "Invalid number of arguments")
 
   // If any of the cadence args are composite types, we cannot support them
   invariant(
-    parsedCadenceArgs.every(arg => !isCompositeType(arg.type)),
-    "Composite types are not supported in object format, please use the sargs function format"
+    !hasCompositeTypes,
+    "Composite types are not supported in object format, please use the args function format"
   )
 
   // If it's an object, we need to validate and convert it
