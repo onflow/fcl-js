@@ -96,10 +96,9 @@ export {invariant} from "@onflow/sdk"
  * @returns {any}
  */
 
-import {getDefaultConfig} from "@onflow/util-web"
+import {getDefaultConfig, execLocal} from "./utils/web"
 import {setChainIdDefault} from "./utils/getChainId"
 import {initServiceRegistry} from "./current-user/exec-service/plugins"
-import {execLocal} from "@onflow/util-web"
 
 config(getDefaultConfig())
 

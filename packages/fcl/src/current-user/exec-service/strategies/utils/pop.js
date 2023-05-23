@@ -1,4 +1,4 @@
-import {renderPop} from "@onflow/util-web"
+import {renderPop} from "../../../../utils/web"
 import {serviceEndpoint} from "./service-endpoint"
 import {buildMessageHandler} from "./buildMessageHandler"
 

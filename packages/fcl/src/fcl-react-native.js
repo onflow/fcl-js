@@ -96,7 +96,7 @@ export {invariant} from "@onflow/sdk"
  * @returns {any}
  */
 
-import {execLocal, getDefaultConfig, useServiceDiscovery, ServiceDiscovery} from "@onflow/util-react-native"
+import {execLocal, getDefaultConfig, useServiceDiscovery, ServiceDiscovery} from "./utils/react-native"
 import {setChainIdDefault} from "./utils/getChainId"
 import {initServiceRegistry} from "./current-user/exec-service/plugins"
 

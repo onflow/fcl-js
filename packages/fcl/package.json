@@ -70,10 +70,28 @@
     "@onflow/util-address": "^1.1.0-alpha.3",
     "@onflow/util-invariant": "^1.1.0-alpha.0",
     "@onflow/util-logger": "^1.2.0-alpha.1",
-    "@onflow/util-react-native": "^1.0.0",
     "@onflow/util-template": "^1.1.0-alpha.0",
     "@onflow/util-uid": "^1.1.0-alpha.1",
-    "@onflow/util-web": "^1.0.0",
     "node-fetch": "^2.6.7"
+  },
+  "peerDependencies": {
+    "@react-native-async-storage/async-storage": "^1.18.0",
+    "expo-web-browser": "^12.0.0",
+    "react": "^18.0.0",
+    "react-native": "^0.71.0"
+  },
+  "peerDependenciesMeta": {
+    "@react-native-async-storage/async-storage": {
+      "optional": true
+    },
+    "expo-web-browser": {
+      "optional": true
+    },
+    "react": {
+      "optional": true
+    },
+    "react-native": {
+      "optional": true
+    }
   }
 }
