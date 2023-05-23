@@ -97,14 +97,13 @@ export {invariant} from "@onflow/sdk"
  */
 
 import {execLocal, getDefaultConfig, useServiceDiscovery, ServiceDiscovery} from "./utils/react-native"
-import {setChainIdDefault} from "./utils/getChainId"
+import {watchForChainIdChanges} from "./utils"
 import {initServiceRegistry} from "./current-user/exec-service/plugins"
 
 config(getDefaultConfig())
 
-// this is an async function but we can't await bc it's run at top level.
-// NOT guaranteed that flow.network.default is set after this call (or at startup)
-setChainIdDefault()
+// Set chain id default on access node change
+watchForChainIdChanges()
 initServiceRegistry({execLocal})
 
 export {useServiceDiscovery, ServiceDiscovery}
