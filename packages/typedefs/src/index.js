@@ -62,7 +62,7 @@
  * @property {number} sequenceNumber - Sequence number of key used by the proposer of this transaction
  * @property {number} keyId - The ID of the key in the account used by the proposer of this transaction
  * @property {string} address - The address of the proposer of this transaction
- * 
+ */
 
 /**
  * @typedef {object} Service
