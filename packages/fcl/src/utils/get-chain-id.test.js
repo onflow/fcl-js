@@ -1,6 +1,6 @@
 import {config} from "@onflow/config"
 import assert from "assert"
-import {getChainId} from "./getChainId"
+import {getChainId} from "./get-chain-id"
 
 describe("getChainId", () => {
   it("getChainId assuming it's already in config", async () => {
