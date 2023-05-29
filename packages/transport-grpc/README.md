@@ -37,11 +37,11 @@ config({
 
 This will override the HTTP Transport and use the gRPC Transport instead.
 
-📖 **gRPC Access API URLs** can be found [here](https://docs.onflow.org/access-api/#flow-access-node-endpoints).  The public Flow gRPC access nodes are accessible at:
+📖 **gRPC Access API URLs** can be found [here](https://developers.flow.com/concepts/nodes/access-api#flow-access-node-endpoints).  The public Flow gRPC access nodes are accessible at:
 - Testnet `https://access-testnet.onflow.org`
 - Mainnet `https://access-mainnet.onflow.org`
 - Local Emulator `127.0.0.1:3569`
 
-For more information, please consult the [FCL-JS SDK guidelines](/docs/reference/sdk-guidelines.mdx).
+For more information, please consult the [FCL-JS SDK guidelines](https://developers.flow.com/tooling/fcl-js/sdk-guidelines).
 
-For information about installing and configuring FCL, see the [FCL Quick Start Tutorial](/docs/tutorials/flow-app-quickstart.mdx).
+For information about installing and configuring FCL, see the [FCL Quick Start Tutorial](https://developers.flow.com/tutorials/flow-app-quickstart).
