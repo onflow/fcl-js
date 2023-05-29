@@ -21,7 +21,7 @@
     "@onflow/fcl-bundle": "^1.3.0-alpha.0",
     "@onflow/rlp": "^1.1.0-alpha.0",
     "@onflow/types": "^1.1.0-alpha.0",
-    "jest": "^27.0.6",
+    "jest": "^27.5.1",
     "jest-esm-transformer": "1.0.0"
   },
   "source": "src/sdk-send-http.js",
