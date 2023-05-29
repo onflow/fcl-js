@@ -1,5 +1,89 @@
 # @onflow/fcl
 
+## 1.4.0-alpha.9
+
+### Minor Changes
+
+- [#1639](https://github.com/onflow/fcl-js/pull/1639) [`434c2f48`](https://github.com/onflow/fcl-js/commit/434c2f4887c7d8fd0101ff79cc901d0c66795065) Thanks [@chasefleming](https://github.com/chasefleming)! - Add types for fcl.tx
+
+### Patch Changes
+
+- [#1648](https://github.com/onflow/fcl-js/pull/1648) [`06655aee`](https://github.com/onflow/fcl-js/commit/06655aee2039f3e88741a5ee3b041ecfabb813c9) Thanks [@jribbink](https://github.com/jribbink)! - Fixed `setChainIdDefault()` race condition, instead run function on accessNode.api value changes
+
+- [#1640](https://github.com/onflow/fcl-js/pull/1640) [`b9b957c0`](https://github.com/onflow/fcl-js/commit/b9b957c0fa8829ae0f40d31225a524ddf0d56340) Thanks [@JeffreyDoyle](https://github.com/JeffreyDoyle)! - PKG -- [fcl] Skip network requests when polling on service if document is not visible
+
+- [#1647](https://github.com/onflow/fcl-js/pull/1647) [`2f10082e`](https://github.com/onflow/fcl-js/commit/2f10082e7bd2d174c1b88c782756097c415289b3) Thanks [@jribbink](https://github.com/jribbink)! - Fix return type for fcl.mutate
+
+## 1.4.0-alpha.8
+
+### Patch Changes
+
+- [#1623](https://github.com/onflow/fcl-js/pull/1623) [`31140ef0`](https://github.com/onflow/fcl-js/commit/31140ef07b9c830759deb5545875dcc89e6f2e81) Thanks [@JeffreyDoyle](https://github.com/JeffreyDoyle)! - PKG -- [fcl] Retry on network error is page is not visible during backchannel polling
+
+## 1.4.0-alpha.7
+
+### Patch Changes
+
+- [#1608](https://github.com/onflow/fcl-js/pull/1608) [`0ec0c5d4`](https://github.com/onflow/fcl-js/commit/0ec0c5d46b780e2b277846f9271ab311aa048b19) Thanks [@nialexsan](https://github.com/nialexsan)! - prep for react-native package
+
+## 1.4.0-alpha.6
+
+### Patch Changes
+
+- [#1595](https://github.com/onflow/fcl-js/pull/1595) [`a46a6650`](https://github.com/onflow/fcl-js/commit/a46a6650b643e8545a7d58f96a1fe55a3ab0d414) Thanks [@justinbarry](https://github.com/justinbarry)! - Restore missing import statement
+
+## 1.4.0-alpha.5
+
+### Minor Changes
+
+- [#1591](https://github.com/onflow/fcl-js/pull/1591) [`7b122a49`](https://github.com/onflow/fcl-js/commit/7b122a49b47b2f261e67d4b08d0d8d32d35d3a72) Thanks [@chasefleming](https://github.com/chasefleming)! - Create typedefs package for JSDoc typedefs and TypeScript types
+
+### Patch Changes
+
+- Updated dependencies [[`7b122a49`](https://github.com/onflow/fcl-js/commit/7b122a49b47b2f261e67d4b08d0d8d32d35d3a72)]:
+  - @onflow/sdk@1.2.0-alpha.7
+
+## 1.4.0-alpha.4
+
+### Patch Changes
+
+- Updated dependencies [[`d9a49531`](https://github.com/onflow/fcl-js/commit/d9a495316cd03ed0de99e0f01d1b8850a1f0eec4)]:
+  - @onflow/config@1.1.0-alpha.4
+  - @onflow/rlp@1.1.0-alpha.0
+  - @onflow/sdk@1.2.0-alpha.6
+  - @onflow/types@1.1.0-alpha.0
+  - @onflow/util-actor@1.2.0-alpha.0
+  - @onflow/util-address@1.1.0-alpha.3
+  - @onflow/util-invariant@1.1.0-alpha.0
+  - @onflow/util-logger@1.2.0-alpha.1
+  - @onflow/util-template@1.1.0-alpha.0
+  - @onflow/util-uid@1.1.0-alpha.1
+
+## 1.4.0-alpha.3
+
+### Minor Changes
+
+- [#1575](https://github.com/onflow/fcl-js/pull/1575) [`bbdeea32`](https://github.com/onflow/fcl-js/commit/bbdeea32f024d6eea4a74c94023e01688a38b6cb) Thanks [@chasefleming](https://github.com/chasefleming)! - Exclude tests from type gen
+
+### Patch Changes
+
+- Updated dependencies [[`bbdeea32`](https://github.com/onflow/fcl-js/commit/bbdeea32f024d6eea4a74c94023e01688a38b6cb)]:
+  - @onflow/config@1.1.0-alpha.3
+  - @onflow/sdk@1.2.0-alpha.5
+  - @onflow/util-address@1.1.0-alpha.2
+
+## 1.4.0-alpha.2
+
+### Minor Changes
+
+- [#1574](https://github.com/onflow/fcl-js/pull/1574) [`be73c297`](https://github.com/onflow/fcl-js/commit/be73c2975330b3a8a33e8fa3edfdc25a7dc1a2b0) Thanks [@chasefleming](https://github.com/chasefleming)! - Generate types for FCL
+
+### Patch Changes
+
+- Updated dependencies [[`74c75d51`](https://github.com/onflow/fcl-js/commit/74c75d5167560eb07da6e21f9f7835b5639ee7d5), [`f68c1433`](https://github.com/onflow/fcl-js/commit/f68c14337b5470b4d79ec682f7bb41ddeae2e020)]:
+  - @onflow/sdk@1.2.0-alpha.4
+  - @onflow/config@1.1.0-alpha.2
+
 ## 1.4.0-alpha.1
 
 ### Minor Changes

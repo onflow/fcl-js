@@ -1,5 +1,49 @@
 # @onflow/fcl-wc
 
+## 2.0.0-alpha.6
+
+### Patch Changes
+
+- Updated dependencies [[`06655aee`](https://github.com/onflow/fcl-js/commit/06655aee2039f3e88741a5ee3b041ecfabb813c9), [`b9b957c0`](https://github.com/onflow/fcl-js/commit/b9b957c0fa8829ae0f40d31225a524ddf0d56340), [`2f10082e`](https://github.com/onflow/fcl-js/commit/2f10082e7bd2d174c1b88c782756097c415289b3), [`434c2f48`](https://github.com/onflow/fcl-js/commit/434c2f4887c7d8fd0101ff79cc901d0c66795065)]:
+  - @onflow/fcl@1.4.0-alpha.9
+
+## 2.0.0-alpha.5
+
+### Patch Changes
+
+- Updated dependencies [[`7b122a49`](https://github.com/onflow/fcl-js/commit/7b122a49b47b2f261e67d4b08d0d8d32d35d3a72)]:
+  - @onflow/fcl@1.4.0-alpha.5
+
+## 2.0.0-alpha.4
+
+### Minor Changes
+
+- [#1577](https://github.com/onflow/fcl-js/pull/1577) [`d9a49531`](https://github.com/onflow/fcl-js/commit/d9a495316cd03ed0de99e0f01d1b8850a1f0eec4) Thanks [@chasefleming](https://github.com/chasefleming)! - Add npmignore file for build
+
+### Patch Changes
+
+- Updated dependencies [[`d9a49531`](https://github.com/onflow/fcl-js/commit/d9a495316cd03ed0de99e0f01d1b8850a1f0eec4)]:
+  - @onflow/config@1.1.0-alpha.4
+  - @onflow/util-invariant@1.1.0-alpha.0
+  - @onflow/util-logger@1.2.0-alpha.1
+  - @onflow/fcl@1.4.0-alpha.4
+
+## 2.0.0-alpha.3
+
+### Patch Changes
+
+- Updated dependencies [[`bbdeea32`](https://github.com/onflow/fcl-js/commit/bbdeea32f024d6eea4a74c94023e01688a38b6cb)]:
+  - @onflow/config@1.1.0-alpha.3
+  - @onflow/fcl@1.4.0-alpha.3
+
+## 2.0.0-alpha.2
+
+### Patch Changes
+
+- Updated dependencies [[`f68c1433`](https://github.com/onflow/fcl-js/commit/f68c14337b5470b4d79ec682f7bb41ddeae2e020), [`be73c297`](https://github.com/onflow/fcl-js/commit/be73c2975330b3a8a33e8fa3edfdc25a7dc1a2b0)]:
+  - @onflow/config@1.1.0-alpha.2
+  - @onflow/fcl@1.4.0-alpha.2
+
 ## 2.0.0-alpha.1
 
 ### Minor Changes

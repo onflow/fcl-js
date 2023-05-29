@@ -1,6 +1,14 @@
 import {invariant} from "@onflow/sdk"
 import {normalizeInteractionTemplate} from "../normalizers/interaction-template/interaction-template"
 
+/**
+ * @description Fills import addresses in Cadence for network
+ * 
+ * @param {object} params
+ * @param {string} params.network - Network to derive Cadence for
+ * @param {object} params.template - Interaction Template to derive Cadence from
+ * @returns {string} - Cadence
+ */
 export function deriveCadenceByNetwork({network, template}) {
   invariant(
     network != undefined,

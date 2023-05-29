@@ -1,5 +1,43 @@
 # @onflow/config
 
+## 1.1.0-alpha.6
+
+### Patch Changes
+
+- [#1629](https://github.com/onflow/fcl-js/pull/1629) [`544d8ebb`](https://github.com/onflow/fcl-js/commit/544d8ebb298ce1be8491d5609729110211b83242) Thanks [@chasefleming](https://github.com/chasefleming)! - Fix key warning when key/file/location format is used in flow.json
+
+- Updated dependencies [[`35052784`](https://github.com/onflow/fcl-js/commit/3505278418e64045248c04fd21f0c09ddbb3132e)]:
+  - @onflow/util-actor@1.2.0-alpha.1
+
+## 1.1.0-alpha.5
+
+### Patch Changes
+
+- [#1604](https://github.com/onflow/fcl-js/pull/1604) [`a4a1c7bf`](https://github.com/onflow/fcl-js/commit/a4a1c7bf0be9facb213f56a91d1a66b60bdea64b) Thanks [@chasefleming](https://github.com/chasefleming)! - Fix config types when invoked as a function
+
+## 1.1.0-alpha.4
+
+### Minor Changes
+
+- [#1577](https://github.com/onflow/fcl-js/pull/1577) [`d9a49531`](https://github.com/onflow/fcl-js/commit/d9a495316cd03ed0de99e0f01d1b8850a1f0eec4) Thanks [@chasefleming](https://github.com/chasefleming)! - Add npmignore file for build
+
+### Patch Changes
+
+- Updated dependencies [[`d9a49531`](https://github.com/onflow/fcl-js/commit/d9a495316cd03ed0de99e0f01d1b8850a1f0eec4)]:
+  - @onflow/util-actor@1.2.0-alpha.0
+
+## 1.1.0-alpha.3
+
+### Minor Changes
+
+- [#1575](https://github.com/onflow/fcl-js/pull/1575) [`bbdeea32`](https://github.com/onflow/fcl-js/commit/bbdeea32f024d6eea4a74c94023e01688a38b6cb) Thanks [@chasefleming](https://github.com/chasefleming)! - Exclude tests from type gen
+
+## 1.1.0-alpha.2
+
+### Minor Changes
+
+- [#1570](https://github.com/onflow/fcl-js/pull/1570) [`f68c1433`](https://github.com/onflow/fcl-js/commit/f68c14337b5470b4d79ec682f7bb41ddeae2e020) Thanks [@chasefleming](https://github.com/chasefleming)! - Add types for config package.
+
 ## 1.1.0-alpha.1
 
 ### Minor Changes

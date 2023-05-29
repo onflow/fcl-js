@@ -78,3 +78,17 @@ export {ref} from "@onflow/sdk"
 export {params, param} from "@onflow/sdk"
 export {validator} from "@onflow/sdk"
 export {invariant} from "@onflow/sdk"
+
+/**
+ * @callback ArgsFn
+ * @param {ArgFn} arg - Argument function to define a single argument
+ * @param {object} t - Cadence Types object used to define the type
+ * @returns {any[]}
+ */
+
+/**
+ * @callback ArgFn
+ * @param {any} value - the value of the argument
+ * @param {any} type - the cadence type of the value
+ * @returns {any}
+ */

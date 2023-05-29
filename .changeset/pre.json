@@ -18,21 +18,41 @@
     "@onflow/util-invariant": "1.0.3",
     "@onflow/util-logger": "1.1.2",
     "@onflow/util-template": "1.0.4",
-    "@onflow/util-uid": "1.0.3"
+    "@onflow/util-uid": "1.0.3",
+    "@onflow/typedefs": "1.1.0-alpha.3"
   },
   "changesets": [
     "chatty-lizards-push",
     "clean-sloths-report",
+    "cool-cars-collect",
+    "early-carrots-dance",
     "eleven-hornets-happen",
     "gold-cougars-run",
     "gorgeous-eagles-invent",
+    "honest-lemons-remain",
     "khaki-apricots-train",
+    "lazy-goats-play",
     "light-dogs-stare",
+    "metal-steaks-bake",
+    "modern-goats-drum",
+    "nasty-toes-kneel",
+    "orange-years-clap",
+    "polite-moons-study",
+    "selfish-parents-argue",
+    "serious-spiders-argue",
     "seven-rules-travel",
     "shiny-bobcats-fold",
+    "silver-pans-lie",
+    "smooth-wasps-impress",
+    "soft-files-explain",
+    "soft-hats-boil",
+    "strange-worms-give",
     "swift-birds-fold",
     "thirty-snails-jog",
+    "three-paws-occur",
     "tiny-lies-cheer",
-    "warm-schools-jump"
+    "unlucky-pugs-battle",
+    "warm-schools-jump",
+    "witty-scissors-boil"
   ]
 }

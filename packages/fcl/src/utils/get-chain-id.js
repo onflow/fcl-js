@@ -1,7 +1,7 @@
 import * as sdk from "@onflow/sdk"
 import {config} from "@onflow/config"
 import {log} from "@onflow/util-logger"
-import { invariant } from "@onflow/util-invariant"
+import {invariant} from "@onflow/util-invariant"
 
 async function getChainIdFromAccessNode() {
   const response = await sdk.send([sdk.getNetworkParameters()]).then(sdk.decode)
@@ -10,9 +10,9 @@ async function getChainIdFromAccessNode() {
 
 /**
  * Sets the default chain id to the chain id of the access node
- * 
+ *
  * @returns {string} The chain id of the access node
- * 
+ *
  * @example
  * // returns "testnet"
  * setChainIdDefault()
@@ -24,12 +24,12 @@ export async function setChainIdDefault() {
 }
 
 /**
+ * @description
  * Gets the chain ID if its set, otherwise gets the chain ID from the access node
- * 
+ *
  * @returns {string} The chain ID of the access node
- * 
  * @throws {Error} If the chain ID is not found
- * 
+ *
  * @example
  * // returns "testnet"
  * getChainId()

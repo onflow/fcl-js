@@ -13,6 +13,14 @@ import {
 } from "@onflow/util-actor"
 import {send as fclSend, decode, getTransactionStatus} from "@onflow/sdk"
 
+/**
+ * @typedef {import("@onflow/typedefs").Transaction} Transaction
+ */
+
+/**
+ * @typedef {import("@onflow/typedefs").TransactionStatus} TransactionStatus
+ */
+
 const RATE = 2500
 const POLL = "POLL"
 
@@ -70,6 +78,23 @@ const spawnTransaction = transactionId => {
   return spawn(HANDLERS, scoped(transactionId))
 }
 
+/**
+ * @callback SubscriptionCallback
+ * @param {TransactionStatus} txStatus
+ * @returns {void}
+ */
+
+/**
+ * Provides methods for interacting with a transaction
+ * @param {string} transactionId - The transaction ID
+ * @returns {{
+ *    snapshot: function(): Promise<TransactionStatus>,
+ *    subscribe: function(SubscriptionCallback): function(): void,
+ *    onceFinalized: function(): Promise<TransactionStatus>,
+ *    onceExecuted: function(): Promise<TransactionStatus>,
+ *    onceSealed: function(): Promise<TransactionStatus>
+ * }}
+*/
 export function transaction(transactionId) {
   function snapshot() {
     return snapshoter(transactionId, spawnTransaction)

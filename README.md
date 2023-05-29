@@ -1,11 +1,6 @@
 [![FLOW-JS-SDK Continuous Integration](https://github.com/onflow/flow-js-sdk/actions/workflows/integrate.yml/badge.svg)](https://github.com/onflow/flow-js-sdk/actions/workflows/integrate.yml)
 [![lerna](https://img.shields.io/badge/maintained%20with-lerna-cc00ff.svg)](https://lerna.js.org/)
 
-> **Note**: This repository makes use of [ZenHub](https://www.zenhub.com/) to track issue dependencies and long term planning. Please follow along [here](https://app.zenhub.com/workspaces/fcl-js-622b8a6bfe0fcc0012ac5e8b/board). You will be asked to create a (free) ZenHub account to view.
-
-> ## Upgrading to FCL 1.0.0
-> FCL 1.0.0 has arrived! When upgrading your project, reference the <a href="https://github.com/onflow/fcl-js/releases/tag/%40onflow%2Ffcl%401.0.0">Release Notes</a> for information on how to make your app compatible with its breaking changes.
-
 <br />
 <br />
 <p align="center">
@@ -14,7 +9,7 @@
     <i>Connect your dapp to users, their wallets and Flow.</i>
     <br />
     <br />
-    <a href="https://docs.onflow.org/fcl/tutorials/flow-app-quickstart/">Quickstart</a>
+    <a href="https://developers.flow.com/tutorials/flow-app-quickstart">Quickstart</a>
     ·
     <a href="https://github.com/onflow/fcl-js/issues">Report Bug</a>
     ·
@@ -86,7 +81,7 @@ fcl.authenticate()
 - *Interact with smart contracts*: Authorize transactions via the user's chosen wallet 
 - *Prove ownership of a wallet address*: Signing and verifying user signed data
 
-[Learn more about wallet interactions >](https://docs.onflow.org/fcl/reference/api/#wallet-interactions)
+[Learn more about wallet interactions >](https://developers.flow.com/tooling/fcl-js/api#wallet-interactions)
 
 #### Blockchain Interactions
 - *Query the chain*: Send arbitrary Cadence scripts to the chain and receive back decoded values
@@ -126,7 +121,7 @@ const txId = await fcl.mutate({
 });
 ```
 
-[Learn more about on-chain interactions >](https://docs.onflow.org/fcl/reference/api/#on-chain-interactions)
+[Learn more about on-chain interactions >](https://developers.flow.com/tooling/fcl-js/api#on-chain-interactions)
 
 #### Utilities
 - Get account details from any Flow address
@@ -135,18 +130,18 @@ const txId = await fcl.mutate({
 - Event polling
 - Custom authorization functions
 
-[Learn more about utilities >](https://docs.onflow.org/fcl/reference/api/#pre-built-interactions)
+[Learn more about utilities >](https://developers.flow.com/tooling/fcl-js/api#pre-built-interactions)
 
 
 ## Next Steps
 
-See the [Flow App Quick Start](https://developers.flow.com/tools/fcl-js/tutorials/flow-app-quickstart).
+See the [Flow App Quick Start](https://developers.flow.com/tutorials/flow-app-quickstart).
 
-See the full [API Reference](https://docs.onflow.org/fcl/reference/api/) for all FCL functionality.
+See the full [API Reference](https://developers.flow.com/tooling/fcl-js/api) for all FCL functionality.
 
-Learn Flow's smart contract language to build any script or transactions: [Cadence](https://docs.onflow.org/cadence/).
+Learn Flow's smart contract language to build any script or transactions: [Cadence](https://developers.flow.com/cadence).
 
-Explore all of Flow [docs and tools](https://docs.onflow.org).
+Explore all of Flow [docs and tools](https://developers.flow.com).
 
 
 ---

@@ -1,0 +1,46 @@
+{
+  "name": "@onflow/typedefs",
+  "version": "1.1.0-alpha.5",
+  "description": "Flow JS Type Defs",
+  "license": "Apache-2.0",
+  "author": "Dapper Labs <dev@dapperlabs.com>",
+  "homepage": "https://onflow.org",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/onflow/flow-js-sdk.git"
+  },
+  "bugs": {
+    "url": "https://github.com/onflow/flow-js-sdk/issues"
+  },
+  "jest": {
+    "transform": {
+      ".js": "jest-esm-transformer"
+    }
+  },
+  "devDependencies": {
+    "@onflow/fcl-bundle": "^1.3.0-alpha.0",
+    "@types/node": "^18.13.0",
+    "eslint": "^8.33.0",
+    "eslint-plugin-jsdoc": "^39.7.5",
+    "jest": "26.4.2",
+    "jest-esm-transformer": "1.0.0",
+    "typescript": "^4.9.5"
+  },
+  "source": "src/index.js",
+  "main": "dist/typedefs.js",
+  "module": "dist/typedefs.module.js",
+  "unpkg": "dist/typedefs.umd.js",
+  "types": "types/index.d.ts",
+  "scripts": {
+    "prepublishOnly": "npm test && npm run build",
+    "test": "jest",
+    "build": "npm run lint && fcl-bundle",
+    "build:types": "tsc",
+    "test:watch": "jest --watch",
+    "start": "fcl-bundle --watch",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.18.6"
+  }
+}
