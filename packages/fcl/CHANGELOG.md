@@ -1,5 +1,23 @@
 # @onflow/fcl
 
+## 1.4.0-alpha.10
+
+### Patch Changes
+
+- [#1658](https://github.com/onflow/fcl-js/pull/1658) [`2512b5c5`](https://github.com/onflow/fcl-js/commit/2512b5c53dff708fca97cd8afdbb1f4a46b2f106) Thanks [@nialexsan](https://github.com/nialexsan)! - Align jest version
+
+- Updated dependencies [[`2512b5c5`](https://github.com/onflow/fcl-js/commit/2512b5c53dff708fca97cd8afdbb1f4a46b2f106)]:
+  - @onflow/util-invariant@1.1.0-alpha.1
+  - @onflow/util-template@1.1.0-alpha.1
+  - @onflow/util-address@1.1.0-alpha.4
+  - @onflow/util-logger@1.2.0-alpha.2
+  - @onflow/util-actor@1.2.0-alpha.2
+  - @onflow/util-uid@1.1.0-alpha.2
+  - @onflow/config@1.1.0-alpha.7
+  - @onflow/types@1.1.0-alpha.1
+  - @onflow/rlp@1.1.0-alpha.1
+  - @onflow/sdk@1.2.0-alpha.9
+
 ## 1.4.0-alpha.9
 
 ### Minor Changes
