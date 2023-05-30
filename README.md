@@ -9,7 +9,7 @@
     <i>Connect your dapp to users, their wallets and Flow.</i>
     <br />
     <br />
-    <a href="https://docs.onflow.org/fcl/tutorials/flow-app-quickstart/">Quickstart</a>
+    <a href="https://developers.flow.com/tutorials/flow-app-quickstart">Quickstart</a>
     ·
     <a href="https://github.com/onflow/fcl-js/issues">Report Bug</a>
     ·
@@ -81,7 +81,7 @@ fcl.authenticate()
 - *Interact with smart contracts*: Authorize transactions via the user's chosen wallet 
 - *Prove ownership of a wallet address*: Signing and verifying user signed data
 
-[Learn more about wallet interactions >](https://docs.onflow.org/fcl/reference/api/#wallet-interactions)
+[Learn more about wallet interactions >](https://developers.flow.com/tooling/fcl-js/api#wallet-interactions)
 
 #### Blockchain Interactions
 - *Query the chain*: Send arbitrary Cadence scripts to the chain and receive back decoded values
@@ -121,7 +121,7 @@ const txId = await fcl.mutate({
 });
 ```
 
-[Learn more about on-chain interactions >](https://docs.onflow.org/fcl/reference/api/#on-chain-interactions)
+[Learn more about on-chain interactions >](https://developers.flow.com/tooling/fcl-js/api#on-chain-interactions)
 
 #### Utilities
 - Get account details from any Flow address
@@ -130,18 +130,18 @@ const txId = await fcl.mutate({
 - Event polling
 - Custom authorization functions
 
-[Learn more about utilities >](https://docs.onflow.org/fcl/reference/api/#pre-built-interactions)
+[Learn more about utilities >](https://developers.flow.com/tooling/fcl-js/api#pre-built-interactions)
 
 
 ## Next Steps
 
-See the [Flow App Quick Start](https://developers.flow.com/tools/fcl-js/tutorials/flow-app-quickstart).
+See the [Flow App Quick Start](https://developers.flow.com/tutorials/flow-app-quickstart).
 
-See the full [API Reference](https://docs.onflow.org/fcl/reference/api/) for all FCL functionality.
+See the full [API Reference](https://developers.flow.com/tooling/fcl-js/api) for all FCL functionality.
 
-Learn Flow's smart contract language to build any script or transactions: [Cadence](https://docs.onflow.org/cadence/).
+Learn Flow's smart contract language to build any script or transactions: [Cadence](https://developers.flow.com/cadence).
 
-Explore all of Flow [docs and tools](https://docs.onflow.org).
+Explore all of Flow [docs and tools](https://developers.flow.com).
 
 
 ---
