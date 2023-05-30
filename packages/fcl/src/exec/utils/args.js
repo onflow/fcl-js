@@ -44,7 +44,10 @@ export function formatArgs(argsValue, cadence) {
   // Format arguments into FCL types
   const formattedArgs = parsedCadenceArgs.map(({ name, type }) => {
     invariant(argsValue.hasOwnProperty(name), `Missing argument: ${name}`)
-    return (arg, t) => arg(argsValue[name], t[type])
+    return (arg, t) => {
+      invariant(Boolean(t[type]), `Unsupported type: ${type}`)
+      return arg(argsValue[name], t[type])
+    }
   })
 
   // Return a function that, when invoked, returns the array of formatted args

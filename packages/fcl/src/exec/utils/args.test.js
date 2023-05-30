@@ -30,20 +30,29 @@ describe("formatArgs", () => {
     expect(() => formatArgs(argsValue, cadence)).toThrow()
   })
 
+  it("throws an error if any of the types are invalid", () => {
+    const argsValue = { name: "John", age: "30" }
+    const cadence = `
+      pub fun main(name: String, age: UnsupportedType) {
+        ...
+      }
+    `
+
+    const arg = jest.fn() // Mock arg function
+    const t = { String: jest.fn(), UInt8: jest.fn() } // Mock t object
+
+    const result = formatArgs(argsValue, cadence)
+
+    expect(result).toBeInstanceOf(Function)
+
+    // Call the resulting function should error
+    expect(() => result(arg, t)).toThrow()
+  })
+
   it("throws an error if an invalid argument is provided", () => {
     const argsValue = { name: "John", invalidArg: "value" }
     const cadence = `
       pub fun main(name: String, age: UInt8) {
-        ...
-      }
-    `
-    expect(() => formatArgs(argsValue, cadence)).toThrow()
-  })
-
-  it("throws an error if an argument with an invalid type is provided", () => {
-    const argsValue = { name: "John" }
-    const cadence = `
-      pub fun main(name: UInt8) {
         ...
       }
     `
