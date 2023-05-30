@@ -1,4 +1,4 @@
-import * as fetchTransport from "node-fetch"
+import * as fetchTransport from "cross-fetch"
 import * as logger from "@onflow/util-logger"
 import {httpRequest} from "./http-request"
 import {Readable} from "stream"

@@ -1,5 +1,5 @@
 import {invariant} from "@onflow/util-invariant"
-import fetchTransport from "node-fetch"
+import fetchTransport from "cross-fetch"
 import {config} from "@onflow/config"
 
 async function httpDocumentResolver({url}) {
