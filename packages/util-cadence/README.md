@@ -1,6 +1,6 @@
 ```javascript
 
-import {parseArguments} from "@onflow/cadence-parser"
+import {parseArguments} from "@onflow/util-cadence"
 
 const cadence = `
   pub fun main(name: String, age: UInt8) {

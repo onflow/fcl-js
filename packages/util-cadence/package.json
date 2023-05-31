@@ -1,5 +1,5 @@
 {
-  "name": "@onflow/cadence-parser",
+  "name": "@onflow/util-cadence",
   "version": "1.0.0",
   "description": "Flow JS Cadence Parser",
   "license": "Apache-2.0",
@@ -28,9 +28,9 @@
     "typescript": "^4.9.5"
   },
   "source": "src/index.js",
-  "main": "dist/cadence-parser.js",
-  "module": "dist/cadence-parser.module.js",
-  "unpkg": "dist/cadence-parser.umd.js",
+  "main": "dist/util-cadence.js",
+  "module": "dist/util-cadence.module.js",
+  "unpkg": "dist/util-cadence.umd.js",
   "types": "types/index.d.ts",
   "scripts": {
     "prepublishOnly": "npm test && npm run build",

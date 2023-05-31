@@ -1,6 +1,6 @@
 import {invariant} from "@onflow/util-invariant"
 import {isFunc, isObject} from "./is"
-import {parseArguments} from "@onflow/cadence-parser"
+import {parseArguments} from "@onflow/util-cadence"
 
 const COMPOSITE_TYPES = ["Struct", "Resource", "Event", "Contract", "StructInterface", "ResourceInterface", "ContractInterface"]
 
