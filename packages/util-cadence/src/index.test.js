@@ -1,5 +1,3 @@
-// parseArguments.test.js
-
 import {parseArguments} from './index'
 
 describe('parseArguments', () => {
