@@ -229,6 +229,7 @@ async function load(data) {
 /**
  * @description Sets the config
  * @param {object} [values] - The values to set
+ * @returns {object} - config object
  */
 function config(values) {
   if (values != null && typeof values === "object") {
