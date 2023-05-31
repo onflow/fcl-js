@@ -1,7 +1,23 @@
 import {parseArguments} from './index'
 
 describe('parseArguments', () => {
-  it('should correctly parse a well-formatted cadence transaction', () => {
+  it('should correctly parse arguments from a Cadence script', () => {
+    const cadenceCode = `
+      pub struct ExampleStruct {
+        pub var exampleMsg: String
+        init(exampleMsg: String) {
+         self.exampleMsg = exampleMsg
+        }
+      }
+  
+      pub fun main(msg: String): ExampleStruct {
+        return ExampleStruct(exampleMsg: msg)
+      }
+    `
+    expect(parseArguments(cadenceCode)).toEqual([{ name: 'msg', type: 'String' }])
+  })
+
+  it('should correctly parse a Cadence transaction', () => {
     const cadenceCode = `
       transaction(amount: UFix64, to: Address) {
         // ... 

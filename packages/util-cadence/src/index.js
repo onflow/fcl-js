@@ -19,10 +19,17 @@ import {invariant} from "@onflow/util-invariant"
  * // Returns: []
  */
 export const parseArguments = cadenceCode => {
-  const start = cadenceCode.indexOf('(') + 1
-  const end = cadenceCode.indexOf(')')
+  const mainFunctionIndex = cadenceCode.indexOf('pub fun main')
+  const transactionIndex = cadenceCode.indexOf('transaction')
+  
+  const funcStartIndex = mainFunctionIndex !== -1 ? mainFunctionIndex : transactionIndex
 
-  invariant(start !== 0 && end !== -1, "Invalid cadence code")
+  invariant(funcStartIndex !== -1, "Invalid cadence code")
+
+  const start = cadenceCode.indexOf('(', funcStartIndex) + 1
+  const end = cadenceCode.indexOf(')', funcStartIndex)
+
+  invariant(start > funcStartIndex && end >= start, "Invalid cadence code")
 
   const argString = cadenceCode.slice(start, end)
 
