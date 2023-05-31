@@ -1,6 +1,6 @@
 {
   "name": "@onflow/protobuf",
-  "version": "1.2.0-alpha.0",
+  "version": "1.2.0-alpha.1",
   "description": "Access Node Protobuf",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
@@ -13,7 +13,6 @@
     "url": "https://github.com/onflow/flow-js-sdk/issues"
   },
   "devDependencies": {
-
     "jest": "^29.5.0",
     "path": "0.12.7",
     "ts-protoc-gen": "0.12.0",
