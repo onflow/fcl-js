@@ -1,9 +1,11 @@
 import {sendGetTransaction} from "./send-get-transaction.js"
-import {build} from "../../sdk/src/build/build.js"
-import {getTransaction} from "../../sdk/src/build/build-get-transaction.js"
-import {resolve} from "../../sdk/src/resolve/resolve.js"
-import {response as responseADT} from "../../sdk/src/response/response.js"
 import {Buffer} from "@onflow/rlp"
+import {
+  build,
+  getTransaction,
+  resolve,
+  response as responseADT,
+} from "@onflow/sdk"
 
 describe("Get Transaction", () => {
   test("GetTransactionResult", async () => {
