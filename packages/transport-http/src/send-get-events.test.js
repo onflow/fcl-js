@@ -1,10 +1,12 @@
 import {sendGetEvents} from "./send-get-events.js"
-import {build} from "../../sdk/src/build/build.js"
-import {getEventsAtBlockIds} from "../../sdk/src/build/build-get-events-at-block-ids.js"
-import {getEventsAtBlockHeightRange} from "../../sdk/src/build/build-get-events-at-block-height-range.js"
-import {resolve} from "../../sdk/src/resolve/resolve.js"
-import {response as responseADT} from "../../sdk/src/response/response.js"
 import {Buffer} from "@onflow/rlp"
+import {
+  build,
+  getEventsAtBlockHeightRange,
+  getEventsAtBlockIds,
+  resolve,
+  response as responseADT,
+} from "@onflow/sdk"
 
 describe("Send Get Events", () => {
   test("GetEventsForBlockIDs", async () => {
