@@ -17,4 +17,4 @@
 "@onflow/util-uid": patch
 ---
 
-Upgrade jest to v29.4 and update tests accordingly. Change build to transpile with ESM modules.
+Upgrade jest to v29.5 and update tests accordingly. Change build to transpile with ESM modules.
