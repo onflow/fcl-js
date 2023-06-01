@@ -86,6 +86,7 @@ const spawnTransaction = transactionId => {
 
 /**
  * Provides methods for interacting with a transaction
+ * 
  * @param {string} transactionId - The transaction ID
  * @returns {{
  *    snapshot: function(): Promise<TransactionStatus>,
@@ -94,7 +95,7 @@ const spawnTransaction = transactionId => {
  *    onceExecuted: function(): Promise<TransactionStatus>,
  *    onceSealed: function(): Promise<TransactionStatus>
  * }}
-*/
+ */
 export function transaction(transactionId) {
   function snapshot() {
     return snapshoter(transactionId, spawnTransaction)
