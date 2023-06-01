@@ -1,5 +1,11 @@
 # @onflow/util-uid
 
+## 1.1.0-alpha.3
+
+### Patch Changes
+
+- [#1663](https://github.com/onflow/fcl-js/pull/1663) [`62dfafa9`](https://github.com/onflow/fcl-js/commit/62dfafa9c7adc3933822b0d3171d6eb025f1719e) Thanks [@nialexsan](https://github.com/nialexsan)! - Upgrade jest to v29.5 and update tests accordingly. Change build to transpile with ESM modules.
+
 ## 1.1.0-alpha.2
 
 ### Patch Changes
