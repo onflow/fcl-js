@@ -96,7 +96,7 @@ export {invariant} from "@onflow/sdk"
  * @returns {any}
  */
 
-import {getDefaultConfig, execLocal} from "./utils/web"
+import {execLocal, getDefaultConfig, useServiceDiscovery, ServiceDiscovery} from "./utils/react-native"
 import {watchForChainIdChanges} from "./utils"
 import {initServiceRegistry} from "./current-user/exec-service/plugins"
 
@@ -105,3 +105,5 @@ config(getDefaultConfig())
 // Set chain id default on access node change
 watchForChainIdChanges()
 initServiceRegistry({execLocal})
+
+export {useServiceDiscovery, ServiceDiscovery}

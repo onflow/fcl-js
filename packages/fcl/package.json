@@ -31,7 +31,18 @@
     "jest-esm-transformer": "1.0.0",
     "typescript": "^4.9.5"
   },
-  "source": "src/fcl.js",
+  "source": {
+    "src/fcl.js": {
+      "cjs": "./dist/fcl.js",
+      "esm": "./dist/fcl.module.js",
+      "umd": "./dist/fcl.umd.min.js"
+    },
+    "src/fcl-react-native.js": {
+      "cjs": "./dist/fcl-react-native.js",
+      "esm": "./dist/fcl-react-native.module.js",
+      "umd": "./dist/fcl-react-native.umd.min.js"
+    }
+  },
   "main": "dist/fcl.js",
   "module": "dist/fcl.module.js",
   "unpkg": "dist/fcl.umd.min.js",
@@ -61,5 +72,25 @@
     "@onflow/util-template": "^1.1.0-alpha.1",
     "@onflow/util-uid": "^1.1.0-alpha.2",
     "node-fetch": "^2.6.7"
+  },
+  "peerDependencies": {
+    "@react-native-async-storage/async-storage": "^1.18.0",
+    "expo-web-browser": "^12.0.0",
+    "react": "^18.0.0",
+    "react-native": "^0.71.0"
+  },
+  "peerDependenciesMeta": {
+    "@react-native-async-storage/async-storage": {
+      "optional": true
+    },
+    "expo-web-browser": {
+      "optional": true
+    },
+    "react": {
+      "optional": true
+    },
+    "react-native": {
+      "optional": true
+    }
   }
 }

@@ -1,4 +1,4 @@
-import {execHttpPost} from "./strategies/http-post"
+import {getExecHttpPost} from "./strategies/http-post"
 import {execIframeRPC} from "./strategies/iframe-rpc"
 import {execPopRPC} from "./strategies/pop-rpc"
 import {execTabRPC} from "./strategies/tab-rpc"
@@ -8,13 +8,22 @@ import {LEVELS, log} from "@onflow/util-logger"
 import {isRequired, isString, isObject, isFunc} from "../../exec/utils/is"
 
 const CORE_STRATEGIES = {
-  "HTTP/RPC": execHttpPost,
-  "HTTP/POST": execHttpPost,
-  "IFRAME/RPC": execIframeRPC,
-  "POP/RPC": execPopRPC,
-  "TAB/RPC": execTabRPC,
-  "EXT/RPC": execExtRPC,
+  "HTTP/RPC": "HTTP/RPC",
+  "HTTP/POST": "HTTP/POST",
+  "IFRAME/RPC": "IFRAME/RPC",
+  "POP/RPC": "POP/RPC",
+  "TAB/RPC": "TAB/RPC",
+  "EXT/RPC": "EXT/RPC",
 }
+
+const getCoreStrategies = ({execLocal}) => ({
+  [CORE_STRATEGIES["EXT/RPC"]]: getExecHttpPost(execLocal),
+  [CORE_STRATEGIES["HTTP/POST"]]: getExecHttpPost(execLocal),
+  [CORE_STRATEGIES["IFRAME/RPC"]]: execIframeRPC,
+  [CORE_STRATEGIES["POP/RPC"]]: execPopRPC,
+  [CORE_STRATEGIES["TAB/RPC"]]: execTabRPC,
+  [CORE_STRATEGIES["EXT/RPC"]]: execExtRPC,
+})
 
 const supportedPlugins = ["ServicePlugin"]
 const supportedServicePlugins = ["discovery-service"]
@@ -54,9 +63,9 @@ const validateDiscoveryPlugin = servicePlugin => {
   return {discoveryServices: services, serviceStrategy}
 }
 
-const ServiceRegistry = () => {
+const ServiceRegistry = ({execLocal}) => {
   let services = new Set()
-  let strategies = new Map(Object.entries(CORE_STRATEGIES))
+  let strategies = new Map(Object.entries(getCoreStrategies({execLocal})))
 
   const add = servicePlugin => {
     invariant(
@@ -138,5 +147,23 @@ const PluginRegistry = () => {
   })
 }
 
-export const serviceRegistry = ServiceRegistry()
+let serviceRegistry
+const getIsServiceRegistryInitialized = () => typeof serviceRegistry !== 'undefined'
+
+export const initServiceRegistry = ({execLocal}) => {
+  if (getIsServiceRegistryInitialized()) {
+    return serviceRegistry
+  }
+  const _serviceRegistry = ServiceRegistry({execLocal});
+  serviceRegistry = _serviceRegistry;
+
+  return _serviceRegistry
+}
+export const getServiceRegistry = () => {
+  if (!getIsServiceRegistryInitialized()) {
+    return initServiceRegistry()
+  }
+
+  return serviceRegistry
+}
 export const pluginRegistry = PluginRegistry()
