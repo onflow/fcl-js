@@ -35,19 +35,6 @@ function recursivelyFlattenArray(element, depthLimit = 3) {
   )
 }
 
-// Function to create a memoized version of a function
-function memoizeAsync(fn) {
-  const cache = new Map();
-  return async function(arg) {
-    if (cache.has(arg)) {
-      return cache.get(arg);
-    }
-    const result = await fn(arg);
-    cache.set(arg, result);
-    return result;
-  };
-}
-
 // Builds a pre-signable object from the given account and interaction.
 export function buildPreSignable(account, interaction) {
   try {
@@ -168,7 +155,7 @@ async function recursivelyResolveAccount(
       const recursedAccounts = await Promise.all(
         flatResolvedAccounts.map(async resolvedAccount => {
           const addedResolvedAccount = addAccountToInteraction(interaction, resolvedAccount)
-          return await memoizedRecursivelyResolveAccount(
+          return await recursivelyResolveAccount(
             interaction,
             addedResolvedAccount,
             depthLimit - 1
@@ -189,9 +176,6 @@ async function recursivelyResolveAccount(
   }
   return account
 }
-
-// Wrap recursivelyResolveAccount with memoizeAsync
-const memoizedRecursivelyResolveAccount = memoizeAsync(recursivelyResolveAccount);
 
 // Resolves accounts of a particular type (payer, proposer, or authorizations) within the interaction.
 async function resolveAccountType(interaction, type) {
@@ -214,30 +198,55 @@ async function resolveAccountType(interaction, type) {
 
     invariant(account, `recurseResolveAccount Error: account not found`)
 
-    let resolvedAccounts = await memoizedRecursivelyResolveAccount(interaction, account)
+    let resolvedAccounts = await recursivelyResolveAccount(interaction, account)
 
-    if (resolvedAccounts) {
-      allResolvedAccounts = allResolvedAccounts.concat(resolvedAccounts)
-    } else {
-      allResolvedAccounts = allResolvedAccounts.concat(account)
-    }
+    resolvedAccounts = Array.isArray(resolvedAccounts)
+      ? resolvedAccounts
+      : [resolvedAccounts]
+
+    let uniqueAccounts = getUniqueAccounts(resolvedAccounts)
+
+    allResolvedAccounts = allResolvedAccounts.concat(uniqueAccounts)
   }
 
-  return getUniqueAccounts(allResolvedAccounts)
-}
-
-// Recurses through the interaction accounts and resolves them.
-export async function recurseResolveAccounts(interaction) {
   invariant(
-    isTransaction(interaction),
-    "recurseResolveAccounts Error: Must be transaction interaction"
+    allResolvedAccounts.length > 0,
+    "recurseResolveAccount Error: failed to resolve any accounts"
   )
 
-  interaction.payer = await resolveAccountType(interaction, ROLES.PAYER)
-  interaction.authorizations = await resolveAccountType(interaction, ROLES.AUTHORIZATIONS)
-  interaction.proposer = await resolveAccountType(interaction, ROLES.PROPOSER)
+  allResolvedAccounts = filterByRole(allResolvedAccounts, type)
 
-  await removeUnusedInteractionAccounts(interaction)
+  interaction[type] = Array.isArray(interaction[type])
+    ? [...new Set(allResolvedAccounts.map(acct => acct.tempId))]
+    : allResolvedAccounts[0].tempId
 
+  // Ensure all payers are of the same account
+  if (type === ROLES.PAYER) {
+    ensureSinglePayer(interaction)
+  }
+}
+
+// Main function to resolve all accounts within an interaction.
+export async function resolveAccounts(interaction) {
+  if (isTransaction(interaction)) {
+    if (!Array.isArray(interaction.payer)) {
+      log.deprecate({
+        pkg: "FCL",
+        subject:
+          '"interaction.payer" must be an array. Support for interaction.payer as a singular',
+        message: "See changelog for more info.",
+      })
+    }
+    try {
+      await resolveAccountType(interaction, ROLES.PROPOSER)
+      await resolveAccountType(interaction, ROLES.AUTHORIZATIONS)
+      await resolveAccountType(interaction, ROLES.PAYER)
+
+      await removeUnusedInteractionAccounts(interaction)
+    } catch (error) {
+      console.error("=== Error in resolveAccounts ===\n\n", error, "\n\n=== Error in resolveAccounts ===")
+      throw error
+    }
+  }
   return interaction
 }
