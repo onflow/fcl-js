@@ -1,5 +1,36 @@
 # @onflow/fcl-wc
 
+## 2.0.0-alpha.8
+
+### Patch Changes
+
+- [#1663](https://github.com/onflow/fcl-js/pull/1663) [`62dfafa9`](https://github.com/onflow/fcl-js/commit/62dfafa9c7adc3933822b0d3171d6eb025f1719e) Thanks [@nialexsan](https://github.com/nialexsan)! - Upgrade jest to v29.5 and update tests accordingly. Change build to transpile with ESM modules.
+
+- Updated dependencies [[`62dfafa9`](https://github.com/onflow/fcl-js/commit/62dfafa9c7adc3933822b0d3171d6eb025f1719e)]:
+  - @onflow/config@1.1.0-alpha.8
+  - @onflow/fcl@1.4.0-alpha.11
+  - @onflow/util-invariant@1.1.0-alpha.2
+  - @onflow/util-logger@1.2.0-alpha.3
+
+## 2.0.0-alpha.7
+
+### Patch Changes
+
+- [#1658](https://github.com/onflow/fcl-js/pull/1658) [`2512b5c5`](https://github.com/onflow/fcl-js/commit/2512b5c53dff708fca97cd8afdbb1f4a46b2f106) Thanks [@nialexsan](https://github.com/nialexsan)! - Align jest version
+
+- Updated dependencies [[`2512b5c5`](https://github.com/onflow/fcl-js/commit/2512b5c53dff708fca97cd8afdbb1f4a46b2f106)]:
+  - @onflow/util-invariant@1.1.0-alpha.1
+  - @onflow/util-logger@1.2.0-alpha.2
+  - @onflow/config@1.1.0-alpha.7
+  - @onflow/fcl@1.4.0-alpha.10
+
+## 2.0.0-alpha.6
+
+### Patch Changes
+
+- Updated dependencies [[`06655aee`](https://github.com/onflow/fcl-js/commit/06655aee2039f3e88741a5ee3b041ecfabb813c9), [`b9b957c0`](https://github.com/onflow/fcl-js/commit/b9b957c0fa8829ae0f40d31225a524ddf0d56340), [`2f10082e`](https://github.com/onflow/fcl-js/commit/2f10082e7bd2d174c1b88c782756097c415289b3), [`434c2f48`](https://github.com/onflow/fcl-js/commit/434c2f4887c7d8fd0101ff79cc901d0c66795065)]:
+  - @onflow/fcl@1.4.0-alpha.9
+
 ## 2.0.0-alpha.5
 
 ### Patch Changes

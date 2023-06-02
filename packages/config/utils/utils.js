@@ -127,7 +127,7 @@ export const getContracts = (jsons, network) => {
 }
 
 /**
- * @descriptions Checks if string is hexidecimal
+ * @description Checks if string is hexidecimal
  * @param {string} str - String to check
  * @returns {boolean} - Is hexidecimal status
  */

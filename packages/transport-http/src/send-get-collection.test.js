@@ -1,9 +1,11 @@
 import {sendGetCollection} from "./send-get-collection.js"
-import {build} from "../../sdk/src/build/build.js"
-import {getCollection} from "../../sdk/src/build/build-get-collection.js"
-import {resolve} from "../../sdk/src/resolve/resolve.js"
-import {response as responseADT} from "../../sdk/src/response/response.js"
 import {Buffer} from "@onflow/rlp"
+import {
+  build,
+  getCollection,
+  resolve,
+  response as responseADT,
+} from "@onflow/sdk"
 
 describe("Send Get Collection", () => {
   test("GetCollection", async () => {

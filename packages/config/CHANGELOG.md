@@ -1,5 +1,32 @@
 # @onflow/config
 
+## 1.1.0-alpha.8
+
+### Patch Changes
+
+- [#1663](https://github.com/onflow/fcl-js/pull/1663) [`62dfafa9`](https://github.com/onflow/fcl-js/commit/62dfafa9c7adc3933822b0d3171d6eb025f1719e) Thanks [@nialexsan](https://github.com/nialexsan)! - Upgrade jest to v29.5 and update tests accordingly. Change build to transpile with ESM modules.
+
+- Updated dependencies [[`62dfafa9`](https://github.com/onflow/fcl-js/commit/62dfafa9c7adc3933822b0d3171d6eb025f1719e)]:
+  - @onflow/util-actor@1.2.0-alpha.3
+
+## 1.1.0-alpha.7
+
+### Patch Changes
+
+- [#1658](https://github.com/onflow/fcl-js/pull/1658) [`2512b5c5`](https://github.com/onflow/fcl-js/commit/2512b5c53dff708fca97cd8afdbb1f4a46b2f106) Thanks [@nialexsan](https://github.com/nialexsan)! - Align jest version
+
+- Updated dependencies [[`2512b5c5`](https://github.com/onflow/fcl-js/commit/2512b5c53dff708fca97cd8afdbb1f4a46b2f106)]:
+  - @onflow/util-actor@1.2.0-alpha.2
+
+## 1.1.0-alpha.6
+
+### Patch Changes
+
+- [#1629](https://github.com/onflow/fcl-js/pull/1629) [`544d8ebb`](https://github.com/onflow/fcl-js/commit/544d8ebb298ce1be8491d5609729110211b83242) Thanks [@chasefleming](https://github.com/chasefleming)! - Fix key warning when key/file/location format is used in flow.json
+
+- Updated dependencies [[`35052784`](https://github.com/onflow/fcl-js/commit/3505278418e64045248c04fd21f0c09ddbb3132e)]:
+  - @onflow/util-actor@1.2.0-alpha.1
+
 ## 1.1.0-alpha.5
 
 ### Patch Changes
