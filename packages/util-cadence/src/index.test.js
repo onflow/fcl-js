@@ -17,6 +17,31 @@ describe('parseArguments', () => {
     expect(parseArguments(cadenceCode)).toEqual([{ name: 'msg', type: 'String' }])
   })
 
+  it('should correctly parse arguments from a Cadence script', () => {
+    const cadenceCode = `
+      // pub fun main()
+      /* pub fun main() */
+      // transaction()
+      /* transaction */
+      /* 
+        transaction 
+      */
+      #transactionIsInAPragma
+      pub struct Foo {
+          pub fun main() {}
+          init() {
+              let bar = "pub fun main()"
+          }
+      }
+      
+      pub fun main(amount: UFix64, to: Address) {}
+    `
+    expect(parseArguments(cadenceCode)).toEqual([
+      { name: 'amount', type: 'UFix64' },
+      { name: 'to', type: 'Address' }
+    ])
+  })
+
   it('should correctly parse a Cadence transaction', () => {
     const cadenceCode = `
       transaction(amount: UFix64, to: Address) {
