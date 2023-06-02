@@ -2,6 +2,7 @@ import * as fetchTransport from "cross-fetch"
 import * as logger from "@onflow/util-logger"
 import {httpRequest} from "./http-request"
 import {Readable} from "stream"
+jest.mock("cross-fetch")
 
 const mockHttpResponse = ({
   status = 200,
