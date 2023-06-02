@@ -29,6 +29,29 @@ describe('parseArguments', () => {
     ])
   })
 
+  it('should correctly parse a Cadence transaction with no args', () => {
+    const cadenceCode = `
+      transaction {
+        prepare(signer1: AuthAccount, signer2: AuthAccount) {
+            // ...
+        }
+    
+        pre {
+            // ...
+        }
+    
+        execute {
+            // ...
+        }
+    
+        post {
+            // ...
+        }
+      }
+    `
+    expect(parseArguments(cadenceCode)).toEqual([])
+  })
+
   it('should return an empty array if no arguments are provided', () => {
     const cadenceCode = `
       transaction() {
