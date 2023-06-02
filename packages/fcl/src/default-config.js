@@ -1,5 +1,5 @@
 import {config} from "@onflow/config"
-import {setChainIdDefault} from "./utils/getChainId"
+import {setChainIdDefault, watchForChainIdChanges} from "./utils"
 
 const isServerSide = () => typeof window === "undefined"
 
@@ -14,9 +14,8 @@ config({
   "fcl.storage.default": SESSION_STORAGE,
 })
 
-// this is an async function but we can't await bc it's run at top level.
-// NOT guaranteed that flow.network.default is set after this call (or at startup)
-setChainIdDefault()
+// Set chain id default on access node change
+watchForChainIdChanges()
 
 export async function configLens(regex) {
   return Object.fromEntries(

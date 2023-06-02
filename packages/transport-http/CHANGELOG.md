@@ -1,5 +1,30 @@
 # @onflow/transport-http
 
+## 1.6.0-alpha.5
+
+### Patch Changes
+
+- [#1658](https://github.com/onflow/fcl-js/pull/1658) [`2512b5c5`](https://github.com/onflow/fcl-js/commit/2512b5c53dff708fca97cd8afdbb1f4a46b2f106) Thanks [@nialexsan](https://github.com/nialexsan)! - Align jest version
+
+- Updated dependencies [[`2512b5c5`](https://github.com/onflow/fcl-js/commit/2512b5c53dff708fca97cd8afdbb1f4a46b2f106)]:
+  - @onflow/util-invariant@1.1.0-alpha.1
+  - @onflow/util-template@1.1.0-alpha.1
+  - @onflow/util-address@1.1.0-alpha.4
+  - @onflow/util-logger@1.2.0-alpha.2
+
+## 1.6.0-alpha.4
+
+### Patch Changes
+
+- [#1608](https://github.com/onflow/fcl-js/pull/1608) [`0ec0c5d4`](https://github.com/onflow/fcl-js/commit/0ec0c5d46b780e2b277846f9271ab311aa048b19) Thanks [@nialexsan](https://github.com/nialexsan)! - prep for react-native package
+
+## 1.6.0-alpha.3
+
+### Minor Changes
+
+- [#1580](https://github.com/onflow/fcl-js/pull/1580) [`82810ef0`](https://github.com/onflow/fcl-js/commit/82810ef000ebdf4dde4dbd7846d31dd335cd9cbb) Thanks [@JeffreyDoyle](https://github.com/JeffreyDoyle)! - - Adds support for retrying requests when an ETIMEDOUT error occurs.
+  - Adds a default 30 second timeout to all requests, after which they will be retried.
+
 ## 1.6.0-alpha.2
 
 ### Minor Changes

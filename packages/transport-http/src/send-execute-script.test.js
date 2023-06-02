@@ -1,13 +1,16 @@
 import {sendExecuteScript} from "./send-execute-script.js"
-import {build} from "../../sdk/src/build/build.js"
-import {script} from "../../sdk/src/build/build-script.js"
-import {args, arg} from "../../sdk/src/build/build-arguments.js"
-import {atBlockId} from "../../sdk/src/build/build-at-block-id.js"
-import {atBlockHeight} from "../../sdk/src/build/build-at-block-height.js"
-import {resolve} from "../../sdk/src/resolve/resolve.js"
-import {response as responseADT} from "../../sdk/src/response/response.js"
 import * as types from "@onflow/types"
 import {Buffer} from "@onflow/rlp"
+import {
+  arg,
+  args,
+  atBlockHeight,
+  atBlockId,
+  build,
+  resolve,
+  response as responseADT,
+  script,
+} from "@onflow/sdk"
 
 describe("Send Execute Script", () => {
   test("ExecuteScriptAtLatestBlock", async () => {

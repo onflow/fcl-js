@@ -15,23 +15,8 @@ import {serviceRegistry} from "./exec-service/plugins"
 import {isMobile} from "../utils"
 
 /**
- * @typedef {Object} CurrentUser
- * @property {(string|null)} addr - The public address of the current user
- * @property {(string|null)} cid - A wallet specified content identifier for user metadata
- * @property {(number|null)} expiresAt - A wallet specified time-frame for a valid session
- * @property {string} f_type - A type identifier used internally by FCL
- * @property {string} f_vsn - FCL protocol version
- * @property {(boolean|null)} loggedIn - Whether or not the current user is logged in
- * @property {Array<Object>} services - A list of trusted services that express ways of interacting with the current user's identity
- */
-
-/**
- * @typedef {Object} CompositeSignature
- * @property {string} f_type - A type identifier used internally by FCL
- * @property {string} f_vsn - FCL protocol version
- * @property {string} addr - Flow Address (sans prefix)
- * @property {number} keyId - Key ID
- * @property {string} signature - Signature as a hex string
+ * @typedef {import("@onflow/typedefs").CurrentUser} CurrentUser
+ * @typedef {import("@onflow/typedefs").CompositeSignature} CompositeSignature
  */
 
 export const isFn = d => typeof d === "function"
@@ -160,9 +145,9 @@ const makeConfig = async ({discoveryAuthnInclude}) => {
 
 /**
  * @description - Authenticate a user
- * @param {Object} [opts] - Options
- * @param {Object} [opts.service] - Optional service to use for authentication
- * @param {Boolean} [opts.redir=false] - Optional flag to allow window to stay open after authentication
+ * @param {object} [opts] - Options
+ * @param {object} [opts.service] - Optional service to use for authentication
+ * @param {boolean} [opts.redir=false] - Optional flag to allow window to stay open after authentication
  * @returns {Promise<CurrentUser>} - User object
  */
 async function authenticate({service, redir = false} = {}) {
@@ -283,8 +268,8 @@ function resolvePreAuthz(authz) {
  * Produces the needed authorization details for the current user to submit transactions to Flow
  * It defines a signing function that connects to a user's wallet provider to produce signatures to submit transactions.
  * 
- * @param {Object} account - Account object
- * @returns {Promise<Object>} - Account object with signing function
+ * @param {object} account - Account object
+ * @returns {Promise<object>} - Account object with signing function
  */
 async function authorization(account) {
   spawnCurrentUser()
@@ -398,7 +383,7 @@ const makeSignable = msg => {
 /**
  * @description - A method to use allowing the user to personally sign data via FCL Compatible Wallets/Services.
  * @param {string} msg - Message to sign
- * @returns {Promise<CompositeSignature>} - Array of CompositeSignatures
+ * @returns {Promise<CompositeSignature[]>} - Array of CompositeSignatures
  */
 async function signUserMessage(msg) {
   spawnCurrentUser()

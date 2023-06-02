@@ -1,5 +1,38 @@
 # @onflow/sdk
 
+## 1.2.0-alpha.9
+
+### Patch Changes
+
+- [#1658](https://github.com/onflow/fcl-js/pull/1658) [`2512b5c5`](https://github.com/onflow/fcl-js/commit/2512b5c53dff708fca97cd8afdbb1f4a46b2f106) Thanks [@nialexsan](https://github.com/nialexsan)! - Align jest version
+
+- Updated dependencies [[`2512b5c5`](https://github.com/onflow/fcl-js/commit/2512b5c53dff708fca97cd8afdbb1f4a46b2f106)]:
+  - @onflow/transport-http@1.6.0-alpha.5
+  - @onflow/util-invariant@1.1.0-alpha.1
+  - @onflow/util-template@1.1.0-alpha.1
+  - @onflow/util-address@1.1.0-alpha.4
+  - @onflow/util-logger@1.2.0-alpha.2
+  - @onflow/util-actor@1.2.0-alpha.2
+  - @onflow/config@1.1.0-alpha.7
+  - @onflow/rlp@1.1.0-alpha.1
+
+## 1.2.0-alpha.8
+
+### Patch Changes
+
+- [#1610](https://github.com/onflow/fcl-js/pull/1610) [`bd6ebb8e`](https://github.com/onflow/fcl-js/commit/bd6ebb8eea5b0de26c0de9b2e0e7561006783040) Thanks [@nialexsan](https://github.com/nialexsan)! - Updated transport-http dependency
+
+## 1.2.0-alpha.7
+
+### Minor Changes
+
+- [#1591](https://github.com/onflow/fcl-js/pull/1591) [`7b122a49`](https://github.com/onflow/fcl-js/commit/7b122a49b47b2f261e67d4b08d0d8d32d35d3a72) Thanks [@chasefleming](https://github.com/chasefleming)! - Create typedefs package for JSDoc typedefs and TypeScript types
+
+### Patch Changes
+
+- Updated dependencies [[`82810ef0`](https://github.com/onflow/fcl-js/commit/82810ef000ebdf4dde4dbd7846d31dd335cd9cbb)]:
+  - @onflow/transport-http@1.6.0-alpha.3
+
 ## 1.2.0-alpha.6
 
 ### Minor Changes

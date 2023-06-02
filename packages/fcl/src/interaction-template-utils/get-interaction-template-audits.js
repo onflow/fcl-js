@@ -8,12 +8,12 @@ import {getChainId} from "../utils"
 /**
  * @description Returns whether a set of auditors have audited a given Interaction Template
  * 
- * @param {Object} params
- * @param {Object} params.template - Interaction Template
+ * @param {object} params
+ * @param {object} params.template - Interaction Template
  * @param {Array<string>} params.auditors - Array of auditors
- * @param {Object} opts
+ * @param {object} opts
  * @param {string} opts.flowInteractionAuditContract - Flow Interaction Template Audit contract address
- * @returns {Promise<Object>} - Object of auditor addresses and audit status
+ * @returns {Promise<object>} - Object of auditor addresses and audit status
  */
 export async function getInteractionTemplateAudits(
   {template, auditors},

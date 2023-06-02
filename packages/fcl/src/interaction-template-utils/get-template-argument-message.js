@@ -3,11 +3,11 @@ import {invariant} from "@onflow/sdk"
 /**
  * @description Gets Interaction Template argument message by message key, argument label, and localization
  * 
- * @param {Object} opts
+ * @param {object} opts
  * @param {string} opts.localization [localization="en-US"] - Localization to get message for
  * @param {string} opts.argumentLabel - Argument label to get message for
  * @param {string} opts.messageKey - Message key to get message for
- * @param {Object} opts.template - Interaction Template to get message from
+ * @param {object} opts.template - Interaction Template to get message from
  * @returns {string} - Message
  */
 export function getTemplateArgumentMessage({

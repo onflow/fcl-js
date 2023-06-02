@@ -6,11 +6,11 @@ import {normalizeInteractionTemplate} from "../normalizers/interaction-template/
 /**
  * @description Checks if an Interaction Template's pins match those generated at a block height
  * 
- * @param {Object} params
- * @param {Object} params.template - Interaction Template to check pins for
+ * @param {object} params
+ * @param {object} params.template - Interaction Template to check pins for
  * @param {number} params.blockHeight - Block height to check pins at
  * @param {string} params.network - Network to check pins on
- * @param {Object} opts
+ * @param {object} opts
  * @returns {Promise<boolean>} - Whether or not the pins match
  */
 export async function verifyDependencyPinsSame(
@@ -105,10 +105,10 @@ export async function verifyDependencyPinsSame(
 /**
  * @description Checks if an Interaction Template's pins match those generated at the latest block height
  * 
- * @param {Object} params
- * @param {Object} params.template - Interaction Template to check pins for
+ * @param {object} params
+ * @param {object} params.template - Interaction Template to check pins for
  * @param {string} params.network - Network to check pins on
- * @param {Object} opts
+ * @param {object} opts
  * @returns {Promise<boolean>} - Whether or not the pins match
  */
 export async function verifyDependencyPinsSameAtLatestSealedBlock(

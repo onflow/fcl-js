@@ -5,7 +5,7 @@ import {onMessageFromFCL} from "./on-message-from-fcl"
  * Sends message to FCL window
  * 
  * @param {string} type - Message type
- * @param {Object} msg - Message object
+ * @param {object} msg - Message object
  * @returns {void}
  * 
  * @example
@@ -32,7 +32,7 @@ export const sendMsgToFCL = (type, msg = {}) => {
  * Listens for "FCL:VIEW:READY:RESPONSE" and sends "FCL:VIEW:READY"
  * 
  * @param {Function} cb - Callback function
- * @param {Object} msg - Message object
+ * @param {object} msg - Message object
  * @returns {void}
  */
 export const ready = (cb, msg = {}) => {
@@ -54,7 +54,7 @@ export const close = () => {
  * @description
  * Sends "FCL:VIEW:RESPONSE" with status "APPROVED"
  * 
- * @param {Object} data - Data object
+ * @param {object} data - Data object
  * @returns {void}
  */
 export const approve = data => {
@@ -88,7 +88,7 @@ export const decline = reason => {
  * @description
  * Sends "FCL:VIEW:RESPONSE" with status "REDIRECT"
  * 
- * @param {Object} data - Data object
+ * @param {object} data - Data object
  * @returns {void}
  */
 export const redirect = data => {

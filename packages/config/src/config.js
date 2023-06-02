@@ -226,10 +226,10 @@ async function load(data) {
   }
 }
 
+// eslint-disable-next-line jsdoc/require-returns
 /**
  * @description Sets the config
  * @param {object} [values] - The values to set
- * @returns {object} - The config methods
  */
 function config(values) {
   if (values != null && typeof values === "object") {

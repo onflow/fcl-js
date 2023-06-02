@@ -96,13 +96,13 @@ const getVerifySignaturesScript = async (sig, opts) => {
  * Verify a valid account proof signature or signatures for an account on Flow.
  *
  * @param {string} appIdentifier - A message string in hexadecimal format
- * @param {Object} accountProofData - An object consisting of address, nonce, and signatures
+ * @param {object} accountProofData - An object consisting of address, nonce, and signatures
  * @param {string} accountProofData.address - A Flow account address
  * @param {string} accountProofData.nonce - A random string in hexadecimal format (minimum 32 bytes in total, i.e 64 hex characters)
- * @param {Object[]} accountProofData.signatures - An array of composite signatures to verify
- * @param {Object} [opts={}] - Options object
+ * @param {object[]} accountProofData.signatures - An array of composite signatures to verify
+ * @param {object} [opts={}] - Options object
  * @param {string} opts.fclCryptoContract - An optional override Flow account address where the FCLCrypto contract is deployed
- * @return {bool}
+ * @returns {Promise<boolean>} - Returns true if the signature is valid, false otherwise
  *
  * @example
  *
@@ -149,14 +149,14 @@ export async function verifyAccountProof(
  * @description
  * Verify a valid signature/s for an account on Flow.
  *
- * @param {string} msg - A message string in hexadecimal format
+ * @param {string} message - A message string in hexadecimal format
  * @param {Array} compSigs - An array of Composite Signatures
  * @param {string} compSigs[].addr - The account address
  * @param {number} compSigs[].keyId - The account keyId
  * @param {string} compSigs[].signature - The signature to verify
- * @param {Object} [opts={}] - Options object
+ * @param {object} [opts={}] - Options object
  * @param {string} opts.fclCryptoContract - An optional override of Flow account address where the FCLCrypto contract is deployed
- * @return {bool}
+ * @returns {boolean} - Returns true if the signature is valid, false otherwise
  *
  * @example
  *

@@ -1,5 +1,11 @@
 # @onflow/util-address
 
+## 1.1.0-alpha.4
+
+### Patch Changes
+
+- [#1658](https://github.com/onflow/fcl-js/pull/1658) [`2512b5c5`](https://github.com/onflow/fcl-js/commit/2512b5c53dff708fca97cd8afdbb1f4a46b2f106) Thanks [@nialexsan](https://github.com/nialexsan)! - Align jest version
+
 ## 1.1.0-alpha.3
 
 ### Minor Changes
