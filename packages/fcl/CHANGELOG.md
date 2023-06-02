@@ -1,5 +1,11 @@
 # @onflow/fcl
 
+## 1.4.0-alpha.12
+
+### Patch Changes
+
+- [#1660](https://github.com/onflow/fcl-js/pull/1660) [`9276f6ea`](https://github.com/onflow/fcl-js/commit/9276f6ea37367dfacce19bbffbad6fda56a1a645) Thanks [@nialexsan](https://github.com/nialexsan)! - Switch to cross-fetch
+
 ## 1.4.0-alpha.11
 
 ### Patch Changes
