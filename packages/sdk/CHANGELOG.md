@@ -1,5 +1,61 @@
 # @onflow/sdk
 
+## 1.2.0
+
+### Minor Changes
+
+- [#1573](https://github.com/onflow/fcl-js/pull/1573) [`74c75d51`](https://github.com/onflow/fcl-js/commit/74c75d5167560eb07da6e21f9f7835b5639ee7d5) Thanks [@chasefleming](https://github.com/chasefleming)! - Add JSDoc to SDK and generate types
+
+- [#1564](https://github.com/onflow/fcl-js/pull/1564) [`66fe102a`](https://github.com/onflow/fcl-js/commit/66fe102a269aca71bd82c6ac55bb23527d04db01) Thanks [@justinbarry](https://github.com/justinbarry)! - Add support for import "ContractName" syntax in scripts and transactions.
+
+- [#1420](https://github.com/onflow/fcl-js/pull/1420) [`c20bc344`](https://github.com/onflow/fcl-js/commit/c20bc34448a22966d349b0b1c4c0f742ae93a355) Thanks [@huyndo](https://github.com/huyndo)! - Add GetNetworkParameters interaction and a util to get chain ID
+
+- [#1575](https://github.com/onflow/fcl-js/pull/1575) [`bbdeea32`](https://github.com/onflow/fcl-js/commit/bbdeea32f024d6eea4a74c94023e01688a38b6cb) Thanks [@chasefleming](https://github.com/chasefleming)! - Exclude tests from type gen
+
+- [#1577](https://github.com/onflow/fcl-js/pull/1577) [`d9a49531`](https://github.com/onflow/fcl-js/commit/d9a495316cd03ed0de99e0f01d1b8850a1f0eec4) Thanks [@chasefleming](https://github.com/chasefleming)! - Add npmignore file for build
+
+- [#1591](https://github.com/onflow/fcl-js/pull/1591) [`7b122a49`](https://github.com/onflow/fcl-js/commit/7b122a49b47b2f261e67d4b08d0d8d32d35d3a72) Thanks [@chasefleming](https://github.com/chasefleming)! - Create typedefs package for JSDoc typedefs and TypeScript types
+
+### Patch Changes
+
+- [#1663](https://github.com/onflow/fcl-js/pull/1663) [`62dfafa9`](https://github.com/onflow/fcl-js/commit/62dfafa9c7adc3933822b0d3171d6eb025f1719e) Thanks [@nialexsan](https://github.com/nialexsan)! - Export 'response' function for testing
+
+- [#1663](https://github.com/onflow/fcl-js/pull/1663) [`62dfafa9`](https://github.com/onflow/fcl-js/commit/62dfafa9c7adc3933822b0d3171d6eb025f1719e) Thanks [@nialexsan](https://github.com/nialexsan)! - Upgrade jest to v29.5 and update tests accordingly. Change build to transpile with ESM modules.
+
+- [#1658](https://github.com/onflow/fcl-js/pull/1658) [`2512b5c5`](https://github.com/onflow/fcl-js/commit/2512b5c53dff708fca97cd8afdbb1f4a46b2f106) Thanks [@nialexsan](https://github.com/nialexsan)! - Align jest version
+
+- [#1610](https://github.com/onflow/fcl-js/pull/1610) [`bd6ebb8e`](https://github.com/onflow/fcl-js/commit/bd6ebb8eea5b0de26c0de9b2e0e7561006783040) Thanks [@nialexsan](https://github.com/nialexsan)! - Updated transport-http dependency
+
+- [#1565](https://github.com/onflow/fcl-js/pull/1565) [`8c921ba2`](https://github.com/onflow/fcl-js/commit/8c921ba2098d2449846bb4a3fdf44a633f4cb11e) Thanks [@justinbarry](https://github.com/justinbarry)! - Prefix contract addresses with 0x if not preset in the config during Address replacement.
+
+- Updated dependencies [[`e10e3c9c`](https://github.com/onflow/fcl-js/commit/e10e3c9c1f611e7dfd8a0bf7292473c71c2e04b9), [`2d143bc7`](https://github.com/onflow/fcl-js/commit/2d143bc7b30f59e9f9289eee020cfaae74b4f4e1), [`82810ef0`](https://github.com/onflow/fcl-js/commit/82810ef000ebdf4dde4dbd7846d31dd335cd9cbb), [`62dfafa9`](https://github.com/onflow/fcl-js/commit/62dfafa9c7adc3933822b0d3171d6eb025f1719e), [`c20bc344`](https://github.com/onflow/fcl-js/commit/c20bc34448a22966d349b0b1c4c0f742ae93a355), [`de7ffa47`](https://github.com/onflow/fcl-js/commit/de7ffa4768ea19e9378e7db74c85750b6554027c), [`bbdeea32`](https://github.com/onflow/fcl-js/commit/bbdeea32f024d6eea4a74c94023e01688a38b6cb), [`2512b5c5`](https://github.com/onflow/fcl-js/commit/2512b5c53dff708fca97cd8afdbb1f4a46b2f106), [`544d8ebb`](https://github.com/onflow/fcl-js/commit/544d8ebb298ce1be8491d5609729110211b83242), [`0ec0c5d4`](https://github.com/onflow/fcl-js/commit/0ec0c5d46b780e2b277846f9271ab311aa048b19), [`35052784`](https://github.com/onflow/fcl-js/commit/3505278418e64045248c04fd21f0c09ddbb3132e), [`5bec5576`](https://github.com/onflow/fcl-js/commit/5bec5576a79809d0684411736e3f4c02b8051c22), [`48ff4330`](https://github.com/onflow/fcl-js/commit/48ff43303c30bab86274bd281f6af28affdb2f25), [`d9a49531`](https://github.com/onflow/fcl-js/commit/d9a495316cd03ed0de99e0f01d1b8850a1f0eec4), [`f68c1433`](https://github.com/onflow/fcl-js/commit/f68c14337b5470b4d79ec682f7bb41ddeae2e020), [`9276f6ea`](https://github.com/onflow/fcl-js/commit/9276f6ea37367dfacce19bbffbad6fda56a1a645), [`a4a1c7bf`](https://github.com/onflow/fcl-js/commit/a4a1c7bf0be9facb213f56a91d1a66b60bdea64b)]:
+  - @onflow/config@1.1.0
+  - @onflow/util-address@1.1.0
+  - @onflow/transport-http@1.6.0
+  - @onflow/rlp@1.1.0
+  - @onflow/util-actor@1.2.0
+  - @onflow/util-invariant@1.1.0
+  - @onflow/util-logger@1.2.0
+  - @onflow/util-template@1.1.0
+
+## 1.2.0-alpha.10
+
+### Patch Changes
+
+- [#1663](https://github.com/onflow/fcl-js/pull/1663) [`62dfafa9`](https://github.com/onflow/fcl-js/commit/62dfafa9c7adc3933822b0d3171d6eb025f1719e) Thanks [@nialexsan](https://github.com/nialexsan)! - Export 'response' function for testing
+
+- [#1663](https://github.com/onflow/fcl-js/pull/1663) [`62dfafa9`](https://github.com/onflow/fcl-js/commit/62dfafa9c7adc3933822b0d3171d6eb025f1719e) Thanks [@nialexsan](https://github.com/nialexsan)! - Upgrade jest to v29.5 and update tests accordingly. Change build to transpile with ESM modules.
+
+- Updated dependencies [[`62dfafa9`](https://github.com/onflow/fcl-js/commit/62dfafa9c7adc3933822b0d3171d6eb025f1719e)]:
+  - @onflow/config@1.1.0-alpha.8
+  - @onflow/rlp@1.1.0-alpha.2
+  - @onflow/transport-http@1.6.0-alpha.6
+  - @onflow/util-actor@1.2.0-alpha.3
+  - @onflow/util-address@1.1.0-alpha.5
+  - @onflow/util-invariant@1.1.0-alpha.2
+  - @onflow/util-logger@1.2.0-alpha.3
+  - @onflow/util-template@1.1.0-alpha.2
+
 ## 1.2.0-alpha.9
 
 ### Patch Changes

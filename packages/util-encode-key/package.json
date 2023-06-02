@@ -1,6 +1,6 @@
 {
   "name": "@onflow/util-encode-key",
-  "version": "1.1.0-alpha.3",
+  "version": "1.1.0",
   "description": "Flow JS SDK Util -- Encode Key",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
@@ -13,8 +13,8 @@
     "url": "https://github.com/onflow/flow-js-sdk/issues"
   },
   "devDependencies": {
-    "@onflow/fcl-bundle": "^1.3.0-alpha.0",
-    "@onflow/types": "^1.1.0-alpha.1",
+    "@onflow/fcl-bundle": "^1.3.0",
+    "@onflow/types": "^1.1.0",
     "@types/node": "^18.13.0",
     "eslint": "^8.33.0",
     "eslint-plugin-jsdoc": "^39.8.0",
@@ -37,7 +37,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.18.6",
-    "@onflow/rlp": "^1.1.0-alpha.1",
-    "@onflow/util-invariant": "^1.1.0-alpha.1"
+    "@onflow/rlp": "^1.1.0",
+    "@onflow/util-invariant": "^1.1.0"
   }
 }
