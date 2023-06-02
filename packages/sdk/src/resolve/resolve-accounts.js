@@ -4,20 +4,62 @@ import {log} from "@onflow/util-logger"
 import {isTransaction} from "../interaction/interaction.js"
 import {createSignableVoucher} from "./voucher.js"
 
-const idof = acct => `${withPrefix(acct.addr)}-${acct.keyId}`
-const isFn = v => typeof v === "function"
+const MAX_DEPTH_LIMIT = 5
 
-export function buildPreSignable(acct, ix) {
+const CHARACTERS = "abcdefghijklmnopqrstuvwxyz0123456789".split("")
+const generateRandomChar = () => CHARACTERS[~~(Math.random() * CHARACTERS.length)]
+const generateUuid = () => Array.from({length: 10}, generateRandomChar).join("")
+
+const createAccountId = acct => `${withPrefix(acct.addr)}-${acct.keyId}`
+const isFunction = value =>
+  value &&
+  (Object.prototype.toString.call(value) === "[object Function]" ||
+    "function" === typeof value ||
+    value instanceof Function)
+
+const concatenateAccountIds = (...ids) => ids.join("-")
+
+const ROLES = {
+  PAYER: "payer",
+  PROPOSER: "proposer",
+  AUTHORIZATIONS: "authorizations",
+}
+
+// Flattens a nested array recursively up to a specified depth limit.
+function recursivelyFlattenArray(element, depthLimit = 3) {
+  if (depthLimit <= 0) return element
+  if (!Array.isArray(element)) return element
+  return recursivelyFlattenArray(
+    element.flatMap(e => e),
+    depthLimit - 1
+  )
+}
+
+// Function to create a memoized version of a function
+function memoizeAsync(fn) {
+  const cache = new Map();
+  return async function(arg) {
+    if (cache.has(arg)) {
+      return cache.get(arg);
+    }
+    const result = await fn(arg);
+    cache.set(arg, result);
+    return result;
+  };
+}
+
+// Builds a pre-signable object from the given account and interaction.
+export function buildPreSignable(account, interaction) {
   try {
     return {
       f_type: "PreSignable",
       f_vsn: "1.0.1",
-      roles: acct.role,
-      cadence: ix.message.cadence,
-      args: ix.message.arguments.map(d => ix.arguments[d].asArgument),
+      roles: account.role,
+      cadence: interaction.message.cadence,
+      args: interaction.message.arguments.map(d => interaction.arguments[d].asArgument),
       data: {},
-      interaction: ix,
-      voucher: createSignableVoucher(ix),
+      interaction: interaction,
+      voucher: createSignableVoucher(interaction),
     }
   } catch (error) {
     console.error("buildPreSignable", error)
@@ -25,116 +67,177 @@ export function buildPreSignable(acct, ix) {
   }
 }
 
-async function collectAccounts(ix, accounts, last, depth = 3) {
-  invariant(depth, "Account Resolve Recursion Limit Exceeded", {ix, accounts})
+// Removes unused accounts from the interaction.
+async function removeUnusedInteractionAccounts(interaction) {
+  const payerTempIds = Array.isArray(interaction.payer) ? interaction.payer : [interaction.payer]
+  const authorizersTempIds = Array.isArray(interaction.authorizations)
+    ? interaction.authorizations
+    : [interaction.authorizations]
+  const proposerTempIds = Array.isArray(interaction.proposer)
+    ? interaction.proposer
+    : [interaction.proposer]
 
-  let authorizations = []
-  for (let ax of accounts) {
-    let resolve = ax.resolve
-    ax.resolve = null
-    var old = last || ax
-    if (isFn(resolve)) ax = await resolve(ax, buildPreSignable(ax, ix))
+  const interactionAccountKeys = Object.keys(interaction.accounts)
+  const uniqueTempIds = [
+    ...new Set(payerTempIds.concat(authorizersTempIds, proposerTempIds)),
+  ]
 
-    if (Array.isArray(ax)) {
-      await collectAccounts(ix, ax, old, depth - 1)
-    } else {
-      if (ax.addr) {
-        ax.addr = sansPrefix(ax.addr)
-      }
-      if (ax.addr != null && ax.keyId != null) {
-        ax.tempId = idof(ax)
-      }
-      ix.accounts[ax.tempId] = ix.accounts[ax.tempId] || ax
-      ix.accounts[ax.tempId].role.proposer =
-        ix.accounts[ax.tempId].role.proposer || ax.role.proposer
-      ix.accounts[ax.tempId].role.payer =
-        ix.accounts[ax.tempId].role.payer || ax.role.payer
-      ix.accounts[ax.tempId].role.authorizer =
-        ix.accounts[ax.tempId].role.authorizer || ax.role.authorizer
-
-      if (ix.accounts[ax.tempId].role.proposer && ix.proposer === old.tempId) {
-        ix.proposer = ax.tempId
-      }
-
-      if (ix.accounts[ax.tempId].role.payer) {
-        if (Array.isArray(ix.payer)) {
-          ix.payer = Array.from(
-            new Set(
-              [...ix.payer, ax.tempId].map(d =>
-                d === old.tempId ? ax.tempId : d
-              )
-            )
-          )
-        } else {
-          ix.payer = Array.from(
-            new Set(
-              [ix.payer, ax.tempId].map(d => (d === old.tempId ? ax.tempId : d))
-            )
-          )
-        }
-        if (ix.payer.length > 1) {
-          // remove payer dups based on addr and keyId
-          const dupList = []
-          const payerAccts = []
-          ix.payer = ix.payer.reduce((g, tempId) => {
-            const {addr} = ix.accounts[tempId]
-            const key = idof(ix.accounts[tempId])
-            payerAccts.push(addr)
-            if (dupList.includes(key)) return g
-            dupList.push(key)
-            return [...g, tempId]
-          }, [])
-          const multiAccts = Array.from(new Set(payerAccts))
-          if (multiAccts.length > 1) {
-            throw new Error("Payer can not be different accounts")
-          }
-        }
-      }
-
-      if (ix.accounts[ax.tempId].role.authorizer) {
-        if (last) {
-          // do group replacement
-          authorizations = Array.from(new Set([...authorizations, ax.tempId]))
-        } else {
-          // do 1-1 replacement
-          ix.authorizations = ix.authorizations.map(d =>
-            d === old.tempId ? ax.tempId : d
-          )
-        }
-      }
+  for (const interactionAccountKey of interactionAccountKeys) {
+    if (!uniqueTempIds.find(id => id === interactionAccountKey)) {
+      delete interaction.accounts[interactionAccountKey]
     }
-    if (old.tempId != ax.tempId) delete ix.accounts[old.tempId]
-  }
-
-  if (last) {
-    // complete (flatmap) group replacement
-    ix.authorizations = ix.authorizations
-      .map(d => (d === last.tempId ? authorizations : d))
-      .reduce(
-        (prev, curr) =>
-          Array.isArray(curr) ? [...prev, ...curr] : [...prev, curr],
-        []
-      )
   }
 }
 
-export async function resolveAccounts(ix) {
-  if (isTransaction(ix)) {
-    if (!Array.isArray(ix.payer)) {
-      log.deprecate({
-        pkg: "FCL",
-        subject:
-          '"ix.payer" must be an array. Support for ix.payer as a singular',
-        message: "See changelog for more info.",
-      })
-    }
-    try {
-      await collectAccounts(ix, Object.values(ix.accounts))
-      await collectAccounts(ix, Object.values(ix.accounts))
-    } catch (error) {
-      console.error("=== SAD PANDA ===\n\n", error, "\n\n=== SAD PANDA ===")
-      throw error
+// Adds an account to the interaction.
+function addAccountToInteraction(interaction, newAccount) {
+  if (
+    typeof newAccount.addr === "string" &&
+    (typeof newAccount.keyId === "number" ||
+      typeof newAccount.keyId === "string")
+  ) {
+    newAccount.tempId = createAccountId(newAccount)
+  } else {
+    newAccount.tempId = generateUuid()
+  }
+
+  const existingAccount = interaction.accounts[newAccount.tempId] || newAccount
+  interaction.accounts[newAccount.tempId] = existingAccount
+
+  interaction.accounts[newAccount.tempId].role = {
+    ...existingAccount.role,
+    ...newAccount.role,
+  }
+
+  return interaction.accounts[newAccount.tempId]
+}
+
+// Returns an array of unique accounts by flattening and removing duplicates.
+function getUniqueAccounts(accounts) {
+  const flatAccounts = recursivelyFlattenArray(accounts)
+  const seen = new Set()
+
+  return flatAccounts
+    .map(account => {
+      const accountId = concatenateAccountIds(
+        account.tempId,
+        account.role.payer,
+        account.role.proposer,
+        account.role.authorizer,
+        account.role.param
+      )
+      if (seen.has(accountId)) return null
+      seen.add(accountId)
+      return account
+    })
+    .filter(account => account !== null)
+}
+
+// Recursively resolves an account.
+async function recursivelyResolveAccount(
+  interaction,
+  account,
+  depthLimit = MAX_DEPTH_LIMIT
+) {
+  if (depthLimit <= 0) {
+    throw new Error(
+      `recursivelyResolveAccount Error: Depth limit (${MAX_DEPTH_LIMIT}) reached. Ensure your authorization functions resolve to an account after ${MAX_DEPTH_LIMIT} resolves.`
+    )
+  }
+  if (!account) return null
+
+  account = addAccountToInteraction(interaction, account)
+
+  if (account?.resolve) {
+    if (isFunction(account?.resolve)) {
+      let resolvedAccounts = await account.resolve(
+        account,
+        buildPreSignable(account, interaction)
+      )
+
+      resolvedAccounts = Array.isArray(resolvedAccounts)
+        ? resolvedAccounts
+        : [resolvedAccounts]
+
+      const flatResolvedAccounts = recursivelyFlattenArray(resolvedAccounts)
+
+      account.resolve = flatResolvedAccounts
+
+      account = addAccountToInteraction(interaction, account)
+
+      const recursedAccounts = await Promise.all(
+        flatResolvedAccounts.map(async resolvedAccount => {
+          const addedResolvedAccount = addAccountToInteraction(interaction, resolvedAccount)
+          return await memoizedRecursivelyResolveAccount(
+            interaction,
+            addedResolvedAccount,
+            depthLimit - 1
+          )
+        })
+      )
+
+      return recursedAccounts ? recursedAccounts : account
+    } else {
+      if (Array.isArray(account.resolve)) {
+        account.resolve = account.resolve.map(acct => addAccountToInteraction(interaction, acct))
+      } else {
+        account.resolve = addAccountToInteraction(interaction, account.resolve)
+      }
+
+      return account.resolve
     }
   }
-  return ix
+  return account
+}
+
+// Wrap recursivelyResolveAccount with memoizeAsync
+const memoizedRecursivelyResolveAccount = memoizeAsync(recursivelyResolveAccount);
+
+// Resolves accounts of a particular type (payer, proposer, or authorizations) within the interaction.
+async function resolveAccountType(interaction, type) {
+  invariant(
+    interaction && typeof interaction === "object",
+    "recurseResolveAccount Error: interaction not defined"
+  )
+  invariant(
+    type === ROLES.PAYER ||
+      type === ROLES.PROPOSER ||
+      type === ROLES.AUTHORIZATIONS,
+    "recurseResolveAccount Error: type must be 'payer', 'proposer' or 'authorizations'"
+  )
+
+  let accountTempIDs = Array.isArray(interaction[type]) ? interaction[type] : [interaction[type]]
+
+  let allResolvedAccounts = []
+  for (let accountId of accountTempIDs) {
+    let account = interaction.accounts[accountId]
+
+    invariant(account, `recurseResolveAccount Error: account not found`)
+
+    let resolvedAccounts = await memoizedRecursivelyResolveAccount(interaction, account)
+
+    if (resolvedAccounts) {
+      allResolvedAccounts = allResolvedAccounts.concat(resolvedAccounts)
+    } else {
+      allResolvedAccounts = allResolvedAccounts.concat(account)
+    }
+  }
+
+  return getUniqueAccounts(allResolvedAccounts)
+}
+
+// Recurses through the interaction accounts and resolves them.
+export async function recurseResolveAccounts(interaction) {
+  invariant(
+    isTransaction(interaction),
+    "recurseResolveAccounts Error: Must be transaction interaction"
+  )
+
+  interaction.payer = await resolveAccountType(interaction, ROLES.PAYER)
+  interaction.authorizations = await resolveAccountType(interaction, ROLES.AUTHORIZATIONS)
+  interaction.proposer = await resolveAccountType(interaction, ROLES.PROPOSER)
+
+  await removeUnusedInteractionAccounts(interaction)
+
+  return interaction
 }
