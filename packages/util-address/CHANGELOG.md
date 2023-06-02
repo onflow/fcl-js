@@ -1,5 +1,23 @@
 # @onflow/util-address
 
+## 1.1.0
+
+### Minor Changes
+
+- [#1547](https://github.com/onflow/fcl-js/pull/1547) [`2d143bc7`](https://github.com/onflow/fcl-js/commit/2d143bc7b30f59e9f9289eee020cfaae74b4f4e1) Thanks [@chasefleming](https://github.com/chasefleming)! - Add types for util-address package
+
+- [#1575](https://github.com/onflow/fcl-js/pull/1575) [`bbdeea32`](https://github.com/onflow/fcl-js/commit/bbdeea32f024d6eea4a74c94023e01688a38b6cb) Thanks [@chasefleming](https://github.com/chasefleming)! - Exclude tests from type gen
+
+- [#1494](https://github.com/onflow/fcl-js/pull/1494) [`5bec5576`](https://github.com/onflow/fcl-js/commit/5bec5576a79809d0684411736e3f4c02b8051c22) Thanks [@chasefleming](https://github.com/chasefleming)! - Add JSDoc to util-address package.
+
+- [#1577](https://github.com/onflow/fcl-js/pull/1577) [`d9a49531`](https://github.com/onflow/fcl-js/commit/d9a495316cd03ed0de99e0f01d1b8850a1f0eec4) Thanks [@chasefleming](https://github.com/chasefleming)! - Add npmignore file for build
+
+### Patch Changes
+
+- [#1663](https://github.com/onflow/fcl-js/pull/1663) [`62dfafa9`](https://github.com/onflow/fcl-js/commit/62dfafa9c7adc3933822b0d3171d6eb025f1719e) Thanks [@nialexsan](https://github.com/nialexsan)! - Upgrade jest to v29.5 and update tests accordingly. Change build to transpile with ESM modules.
+
+- [#1658](https://github.com/onflow/fcl-js/pull/1658) [`2512b5c5`](https://github.com/onflow/fcl-js/commit/2512b5c53dff708fca97cd8afdbb1f4a46b2f106) Thanks [@nialexsan](https://github.com/nialexsan)! - Align jest version
+
 ## 1.1.0-alpha.5
 
 ### Patch Changes
