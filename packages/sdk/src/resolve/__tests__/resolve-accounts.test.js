@@ -228,15 +228,20 @@ test("Deep resolve usecase - excess resolves throw an eror", async () => {
         },
         5
       )
-
-      expect(
+      // expect(...).toThrow doesn't work in this case
+      let error
+      try{
         await TestUtils.run([
           sdk.transaction`CODE`,
           sdk.proposer(authz),
           sdk.payer(authz),
           sdk.authorizations([authz]),
         ])
-      ).toThrow()
+      } catch (e){
+        error = e
+        
+      }
+      expect(error).toMatchInlineSnapshot("[Error: recurseResolveAccount Error: Depth limit (5) reached. Ensure your authorization functions resolve to an account after 5 resolves.]")
     }
   )
 })
