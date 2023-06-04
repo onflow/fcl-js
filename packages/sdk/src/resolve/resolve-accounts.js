@@ -140,9 +140,11 @@ async function recurseResolveAccount(
 
   if (account?.resolve) {
     if (isFn(account?.resolve)) {
-      let resolvedAccounts = await account.resolve(
-        account,
-        buildPreSignable(account, ix)
+      const { resolve, ...accountWithoutResolve } = account
+
+      let resolvedAccounts = await resolve(
+        accountWithoutResolve,
+        buildPreSignable(accountWithoutResolve, ix)
       )
 
       resolvedAccounts = Array.isArray(resolvedAccounts)
