@@ -161,7 +161,9 @@ export const initServiceRegistry = ({execLocal}) => {
 }
 export const getServiceRegistry = () => {
   if (!getIsServiceRegistryInitialized()) {
-    return initServiceRegistry()
+    console.warn("Registry is not initalized, it will be initialized with a stub execLocal")
+
+    return initServiceRegistry({execLocal: () => {}})
   }
 
   return serviceRegistry
