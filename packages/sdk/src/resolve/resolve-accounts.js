@@ -140,7 +140,7 @@ async function recurseResolveAccount(
 
   if (account?.resolve) {
     if (isFn(account?.resolve)) {
-      const { resolve, ...accountWithoutResolve } = account
+      const {resolve, ...accountWithoutResolve} = account
 
       let resolvedAccounts = await resolve(
         accountWithoutResolve,
@@ -185,13 +185,13 @@ async function recurseResolveAccount(
 async function resolveAccountType(ix, type) {
   invariant(
     ix && typeof ix === "object",
-    "recurseResolveAccount Error: ix not defined"
+    "resolveAccountType Error: ix not defined"
   )
   invariant(
     type === ROLES.PAYER ||
       type === ROLES.PROPOSER ||
       type === ROLES.AUTHORIZATIONS,
-    "recurseResolveAccount Error: type must be 'payer', 'proposer' or 'authorizations'"
+    "resolveAccountType Error: type must be 'payer', 'proposer' or 'authorizations'"
   )
 
   let accountTempIDs = Array.isArray(ix[type]) ? ix[type] : [ix[type]]
@@ -200,7 +200,7 @@ async function resolveAccountType(ix, type) {
   for (let accountId of accountTempIDs) {
     let account = ix.accounts[accountId]
 
-    invariant(account, `recurseResolveAccount Error: account not found`)
+    invariant(account, `resolveAccountType Error: account not found`)
 
     let resolvedAccounts = await recurseResolveAccount(ix, account)
 
@@ -215,7 +215,7 @@ async function resolveAccountType(ix, type) {
 
   invariant(
     allResolvedAccounts.length > 0,
-    "recurseResolveAccount Error: failed to resolve any accounts"
+    "resolveAccountType Error: failed to resolve any accounts"
   )
 
   if (type === ROLES.PAYER) {
@@ -246,7 +246,7 @@ async function resolveAccountType(ix, type) {
       if (!address) address = pAcct.addr
       else if (address !== pAcct.addr) {
         throw new Error(
-          "recurseResolveAccount Error: payers from different accounts detected"
+          "resolveAccountType Error: payers from different accounts detected"
         )
       }
     }
