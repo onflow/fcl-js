@@ -59,7 +59,6 @@ module.exports = function getInputOptions(package, build) {
       nodeResolve({
         browser: true,
         preferBuiltins: build.type !== "umd",
-        resolveOnly: [/^(?!react)$/], // don't resolve react and react-native libraries
       }),
       babel({
         babelHelpers: "runtime",
