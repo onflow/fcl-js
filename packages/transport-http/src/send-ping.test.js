@@ -1,9 +1,6 @@
 import {sendPing} from "./send-ping.js"
-import {build} from "../../sdk/src/build/build.js"
-import {ping} from "../../sdk/src/build/build-ping.js"
-import {resolve} from "../../sdk/src/resolve/resolve.js"
-import {response as responseADT} from "../../sdk/src/response/response.js"
 import {Buffer} from "@onflow/rlp"
+import {build, ping, resolve, response as responseADT} from "@onflow/sdk"
 
 describe("Ping", () => {
   test("Ping", async () => {

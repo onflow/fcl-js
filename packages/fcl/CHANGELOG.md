@@ -1,5 +1,79 @@
 # @onflow/fcl
 
+## 1.4.0
+
+### Minor Changes
+
+- [#1420](https://github.com/onflow/fcl-js/pull/1420) [`c20bc344`](https://github.com/onflow/fcl-js/commit/c20bc34448a22966d349b0b1c4c0f742ae93a355) Thanks [@huyndo](https://github.com/huyndo)! - Add GetNetworkParameters interaction and a util to get chain ID
+
+- [#1575](https://github.com/onflow/fcl-js/pull/1575) [`bbdeea32`](https://github.com/onflow/fcl-js/commit/bbdeea32f024d6eea4a74c94023e01688a38b6cb) Thanks [@chasefleming](https://github.com/chasefleming)! - Exclude tests from type gen
+
+- [#1639](https://github.com/onflow/fcl-js/pull/1639) [`434c2f48`](https://github.com/onflow/fcl-js/commit/434c2f4887c7d8fd0101ff79cc901d0c66795065) Thanks [@chasefleming](https://github.com/chasefleming)! - Add types for fcl.tx
+
+- [#1591](https://github.com/onflow/fcl-js/pull/1591) [`7b122a49`](https://github.com/onflow/fcl-js/commit/7b122a49b47b2f261e67d4b08d0d8d32d35d3a72) Thanks [@chasefleming](https://github.com/chasefleming)! - Create typedefs package for JSDoc typedefs and TypeScript types
+
+- [#1574](https://github.com/onflow/fcl-js/pull/1574) [`be73c297`](https://github.com/onflow/fcl-js/commit/be73c2975330b3a8a33e8fa3edfdc25a7dc1a2b0) Thanks [@chasefleming](https://github.com/chasefleming)! - Generate types for FCL
+
+### Patch Changes
+
+- [#1663](https://github.com/onflow/fcl-js/pull/1663) [`62dfafa9`](https://github.com/onflow/fcl-js/commit/62dfafa9c7adc3933822b0d3171d6eb025f1719e) Thanks [@nialexsan](https://github.com/nialexsan)! - Upgrade jest to v29.5 and update tests accordingly. Change build to transpile with ESM modules.
+
+- [#1475](https://github.com/onflow/fcl-js/pull/1475) [`6051030f`](https://github.com/onflow/fcl-js/commit/6051030f81fb102447bec40c758657ec20f43129) Thanks [@gregsantos](https://github.com/gregsantos)! - Updates to only call account proof resolver if not logged in. Adds warning if not async resolver function.
+
+- [#1595](https://github.com/onflow/fcl-js/pull/1595) [`a46a6650`](https://github.com/onflow/fcl-js/commit/a46a6650b643e8545a7d58f96a1fe55a3ab0d414) Thanks [@justinbarry](https://github.com/justinbarry)! - Restore missing import statement
+
+- [#1658](https://github.com/onflow/fcl-js/pull/1658) [`2512b5c5`](https://github.com/onflow/fcl-js/commit/2512b5c53dff708fca97cd8afdbb1f4a46b2f106) Thanks [@nialexsan](https://github.com/nialexsan)! - Align jest version
+
+- [#1608](https://github.com/onflow/fcl-js/pull/1608) [`0ec0c5d4`](https://github.com/onflow/fcl-js/commit/0ec0c5d46b780e2b277846f9271ab311aa048b19) Thanks [@nialexsan](https://github.com/nialexsan)! - prep for react-native package
+
+- [#1648](https://github.com/onflow/fcl-js/pull/1648) [`06655aee`](https://github.com/onflow/fcl-js/commit/06655aee2039f3e88741a5ee3b041ecfabb813c9) Thanks [@jribbink](https://github.com/jribbink)! - Fixed `setChainIdDefault()` race condition, instead run function on accessNode.api value changes
+
+- [#1640](https://github.com/onflow/fcl-js/pull/1640) [`b9b957c0`](https://github.com/onflow/fcl-js/commit/b9b957c0fa8829ae0f40d31225a524ddf0d56340) Thanks [@JeffreyDoyle](https://github.com/JeffreyDoyle)! - PKG -- [fcl] Skip network requests when polling on service if document is not visible
+
+- [#1647](https://github.com/onflow/fcl-js/pull/1647) [`2f10082e`](https://github.com/onflow/fcl-js/commit/2f10082e7bd2d174c1b88c782756097c415289b3) Thanks [@jribbink](https://github.com/jribbink)! - Fix return type for fcl.mutate
+
+- [#1490](https://github.com/onflow/fcl-js/pull/1490) [`b2881f74`](https://github.com/onflow/fcl-js/commit/b2881f74f024aeca52d534d2ca6081fb57efd06d) Thanks [@JeffreyDoyle](https://github.com/JeffreyDoyle)! - Fix invariant type checks in FCL Interaction Template getter utils
+
+- [#1660](https://github.com/onflow/fcl-js/pull/1660) [`9276f6ea`](https://github.com/onflow/fcl-js/commit/9276f6ea37367dfacce19bbffbad6fda56a1a645) Thanks [@nialexsan](https://github.com/nialexsan)! - Switch to cross-fetch
+
+- [#1623](https://github.com/onflow/fcl-js/pull/1623) [`31140ef0`](https://github.com/onflow/fcl-js/commit/31140ef07b9c830759deb5545875dcc89e6f2e81) Thanks [@JeffreyDoyle](https://github.com/JeffreyDoyle)! - PKG -- [fcl] Retry on network error is page is not visible during backchannel polling
+
+- Updated dependencies [[`e10e3c9c`](https://github.com/onflow/fcl-js/commit/e10e3c9c1f611e7dfd8a0bf7292473c71c2e04b9), [`2d143bc7`](https://github.com/onflow/fcl-js/commit/2d143bc7b30f59e9f9289eee020cfaae74b4f4e1), [`74c75d51`](https://github.com/onflow/fcl-js/commit/74c75d5167560eb07da6e21f9f7835b5639ee7d5), [`62dfafa9`](https://github.com/onflow/fcl-js/commit/62dfafa9c7adc3933822b0d3171d6eb025f1719e), [`66fe102a`](https://github.com/onflow/fcl-js/commit/66fe102a269aca71bd82c6ac55bb23527d04db01), [`62dfafa9`](https://github.com/onflow/fcl-js/commit/62dfafa9c7adc3933822b0d3171d6eb025f1719e), [`c20bc344`](https://github.com/onflow/fcl-js/commit/c20bc34448a22966d349b0b1c4c0f742ae93a355), [`de7ffa47`](https://github.com/onflow/fcl-js/commit/de7ffa4768ea19e9378e7db74c85750b6554027c), [`bbdeea32`](https://github.com/onflow/fcl-js/commit/bbdeea32f024d6eea4a74c94023e01688a38b6cb), [`2512b5c5`](https://github.com/onflow/fcl-js/commit/2512b5c53dff708fca97cd8afdbb1f4a46b2f106), [`544d8ebb`](https://github.com/onflow/fcl-js/commit/544d8ebb298ce1be8491d5609729110211b83242), [`bd6ebb8e`](https://github.com/onflow/fcl-js/commit/bd6ebb8eea5b0de26c0de9b2e0e7561006783040), [`35052784`](https://github.com/onflow/fcl-js/commit/3505278418e64045248c04fd21f0c09ddbb3132e), [`5bec5576`](https://github.com/onflow/fcl-js/commit/5bec5576a79809d0684411736e3f4c02b8051c22), [`48ff4330`](https://github.com/onflow/fcl-js/commit/48ff43303c30bab86274bd281f6af28affdb2f25), [`d9a49531`](https://github.com/onflow/fcl-js/commit/d9a495316cd03ed0de99e0f01d1b8850a1f0eec4), [`7b122a49`](https://github.com/onflow/fcl-js/commit/7b122a49b47b2f261e67d4b08d0d8d32d35d3a72), [`f68c1433`](https://github.com/onflow/fcl-js/commit/f68c14337b5470b4d79ec682f7bb41ddeae2e020), [`687f45ec`](https://github.com/onflow/fcl-js/commit/687f45ec25e613399f031497634c4102935d114d), [`8c921ba2`](https://github.com/onflow/fcl-js/commit/8c921ba2098d2449846bb4a3fdf44a633f4cb11e), [`a4a1c7bf`](https://github.com/onflow/fcl-js/commit/a4a1c7bf0be9facb213f56a91d1a66b60bdea64b)]:
+  - @onflow/config@1.1.0
+  - @onflow/util-address@1.1.0
+  - @onflow/sdk@1.2.0
+  - @onflow/rlp@1.1.0
+  - @onflow/types@1.1.0
+  - @onflow/util-actor@1.2.0
+  - @onflow/util-invariant@1.1.0
+  - @onflow/util-logger@1.2.0
+  - @onflow/util-template@1.1.0
+  - @onflow/util-uid@1.1.0
+
+## 1.4.0-alpha.12
+
+### Patch Changes
+
+- [#1660](https://github.com/onflow/fcl-js/pull/1660) [`9276f6ea`](https://github.com/onflow/fcl-js/commit/9276f6ea37367dfacce19bbffbad6fda56a1a645) Thanks [@nialexsan](https://github.com/nialexsan)! - Switch to cross-fetch
+
+## 1.4.0-alpha.11
+
+### Patch Changes
+
+- [#1663](https://github.com/onflow/fcl-js/pull/1663) [`62dfafa9`](https://github.com/onflow/fcl-js/commit/62dfafa9c7adc3933822b0d3171d6eb025f1719e) Thanks [@nialexsan](https://github.com/nialexsan)! - Upgrade jest to v29.5 and update tests accordingly. Change build to transpile with ESM modules.
+
+- Updated dependencies [[`62dfafa9`](https://github.com/onflow/fcl-js/commit/62dfafa9c7adc3933822b0d3171d6eb025f1719e), [`62dfafa9`](https://github.com/onflow/fcl-js/commit/62dfafa9c7adc3933822b0d3171d6eb025f1719e)]:
+  - @onflow/sdk@1.2.0-alpha.10
+  - @onflow/config@1.1.0-alpha.8
+  - @onflow/rlp@1.1.0-alpha.2
+  - @onflow/types@1.1.0-alpha.2
+  - @onflow/util-actor@1.2.0-alpha.3
+  - @onflow/util-address@1.1.0-alpha.5
+  - @onflow/util-invariant@1.1.0-alpha.2
+  - @onflow/util-logger@1.2.0-alpha.3
+  - @onflow/util-template@1.1.0-alpha.2
+  - @onflow/util-uid@1.1.0-alpha.3
+
 ## 1.4.0-alpha.10
 
 ### Patch Changes

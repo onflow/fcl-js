@@ -1,21 +1,15 @@
 import {serialize} from "./serialize"
 import {
-  resolve,
-  build,
-  transaction,
-  limit,
-  proposer,
   authorizations,
-  payer,
-  ref,
+  build,
   createSignableVoucher,
-  config,
+  limit,
+  payer,
+  proposer,
+  ref,
+  resolve,
+  transaction,
 } from "@onflow/sdk"
-import {VERSION} from "@onflow/sdk/src/VERSION"
-
-test("fcl.VERSION needs to match version in package.json", () => {
-  expect(VERSION).toBe("TESTVERSION")
-})
 
 test("serialize returns voucher", async () => {
   const authz = {

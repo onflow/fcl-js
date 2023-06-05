@@ -1,5 +1,39 @@
 # @onflow/fcl-wc
 
+## 2.0.0
+
+### Minor Changes
+
+- [#1577](https://github.com/onflow/fcl-js/pull/1577) [`d9a49531`](https://github.com/onflow/fcl-js/commit/d9a495316cd03ed0de99e0f01d1b8850a1f0eec4) Thanks [@chasefleming](https://github.com/chasefleming)! - Add npmignore file for build
+
+- [#1497](https://github.com/onflow/fcl-js/pull/1497) [`60b4c351`](https://github.com/onflow/fcl-js/commit/60b4c351ca84fa1fc88607fa9c58d0a6ed43b017) Thanks [@gregsantos](https://github.com/gregsantos)! - Add support for pre-authz method
+
+### Patch Changes
+
+- [#1663](https://github.com/onflow/fcl-js/pull/1663) [`62dfafa9`](https://github.com/onflow/fcl-js/commit/62dfafa9c7adc3933822b0d3171d6eb025f1719e) Thanks [@nialexsan](https://github.com/nialexsan)! - Upgrade jest to v29.5 and update tests accordingly. Change build to transpile with ESM modules.
+
+- [#1420](https://github.com/onflow/fcl-js/pull/1420) [`c20bc344`](https://github.com/onflow/fcl-js/commit/c20bc34448a22966d349b0b1c4c0f742ae93a355) Thanks [@huyndo](https://github.com/huyndo)! - Add GetNetworkParameters interaction and a util to get chain ID
+
+- [#1658](https://github.com/onflow/fcl-js/pull/1658) [`2512b5c5`](https://github.com/onflow/fcl-js/commit/2512b5c53dff708fca97cd8afdbb1f4a46b2f106) Thanks [@nialexsan](https://github.com/nialexsan)! - Align jest version
+
+- Updated dependencies [[`e10e3c9c`](https://github.com/onflow/fcl-js/commit/e10e3c9c1f611e7dfd8a0bf7292473c71c2e04b9), [`62dfafa9`](https://github.com/onflow/fcl-js/commit/62dfafa9c7adc3933822b0d3171d6eb025f1719e), [`c20bc344`](https://github.com/onflow/fcl-js/commit/c20bc34448a22966d349b0b1c4c0f742ae93a355), [`6051030f`](https://github.com/onflow/fcl-js/commit/6051030f81fb102447bec40c758657ec20f43129), [`a46a6650`](https://github.com/onflow/fcl-js/commit/a46a6650b643e8545a7d58f96a1fe55a3ab0d414), [`de7ffa47`](https://github.com/onflow/fcl-js/commit/de7ffa4768ea19e9378e7db74c85750b6554027c), [`bbdeea32`](https://github.com/onflow/fcl-js/commit/bbdeea32f024d6eea4a74c94023e01688a38b6cb), [`2512b5c5`](https://github.com/onflow/fcl-js/commit/2512b5c53dff708fca97cd8afdbb1f4a46b2f106), [`544d8ebb`](https://github.com/onflow/fcl-js/commit/544d8ebb298ce1be8491d5609729110211b83242), [`0ec0c5d4`](https://github.com/onflow/fcl-js/commit/0ec0c5d46b780e2b277846f9271ab311aa048b19), [`06655aee`](https://github.com/onflow/fcl-js/commit/06655aee2039f3e88741a5ee3b041ecfabb813c9), [`b9b957c0`](https://github.com/onflow/fcl-js/commit/b9b957c0fa8829ae0f40d31225a524ddf0d56340), [`2f10082e`](https://github.com/onflow/fcl-js/commit/2f10082e7bd2d174c1b88c782756097c415289b3), [`48ff4330`](https://github.com/onflow/fcl-js/commit/48ff43303c30bab86274bd281f6af28affdb2f25), [`434c2f48`](https://github.com/onflow/fcl-js/commit/434c2f4887c7d8fd0101ff79cc901d0c66795065), [`d9a49531`](https://github.com/onflow/fcl-js/commit/d9a495316cd03ed0de99e0f01d1b8850a1f0eec4), [`7b122a49`](https://github.com/onflow/fcl-js/commit/7b122a49b47b2f261e67d4b08d0d8d32d35d3a72), [`f68c1433`](https://github.com/onflow/fcl-js/commit/f68c14337b5470b4d79ec682f7bb41ddeae2e020), [`b2881f74`](https://github.com/onflow/fcl-js/commit/b2881f74f024aeca52d534d2ca6081fb57efd06d), [`be73c297`](https://github.com/onflow/fcl-js/commit/be73c2975330b3a8a33e8fa3edfdc25a7dc1a2b0), [`9276f6ea`](https://github.com/onflow/fcl-js/commit/9276f6ea37367dfacce19bbffbad6fda56a1a645), [`31140ef0`](https://github.com/onflow/fcl-js/commit/31140ef07b9c830759deb5545875dcc89e6f2e81), [`a4a1c7bf`](https://github.com/onflow/fcl-js/commit/a4a1c7bf0be9facb213f56a91d1a66b60bdea64b)]:
+  - @onflow/config@1.1.0
+  - @onflow/fcl@1.4.0
+  - @onflow/util-invariant@1.1.0
+  - @onflow/util-logger@1.2.0
+
+## 2.0.0-alpha.8
+
+### Patch Changes
+
+- [#1663](https://github.com/onflow/fcl-js/pull/1663) [`62dfafa9`](https://github.com/onflow/fcl-js/commit/62dfafa9c7adc3933822b0d3171d6eb025f1719e) Thanks [@nialexsan](https://github.com/nialexsan)! - Upgrade jest to v29.5 and update tests accordingly. Change build to transpile with ESM modules.
+
+- Updated dependencies [[`62dfafa9`](https://github.com/onflow/fcl-js/commit/62dfafa9c7adc3933822b0d3171d6eb025f1719e)]:
+  - @onflow/config@1.1.0-alpha.8
+  - @onflow/fcl@1.4.0-alpha.11
+  - @onflow/util-invariant@1.1.0-alpha.2
+  - @onflow/util-logger@1.2.0-alpha.3
+
 ## 2.0.0-alpha.7
 
 ### Patch Changes

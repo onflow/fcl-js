@@ -1,5 +1,5 @@
 import * as logger from "@onflow/util-logger"
-import fetchTransport from "node-fetch"
+import fetchTransport from "cross-fetch"
 
 const AbortController =
   globalThis.AbortController || require("abort-controller")
