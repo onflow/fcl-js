@@ -132,6 +132,23 @@ const txId = await fcl.mutate({
 
 [Learn more about utilities >](https://developers.flow.com/tooling/fcl-js/api#pre-built-interactions)
 
+## Typescript Support
+
+FCL JS supports TypeScript. If you need to import specific types, you can do so via the [@onflow/typedefs](./packages/typedefs/README.md) package.
+
+```typescript
+import {CurrentUser} from "@onflow/typedefs"
+
+const newUser: CurrentUser = { 
+  addr: null,
+  cid: null,
+  expiresAt: null,
+  f_type: 'User',
+  f_vsn: '1.0.0',
+  loggedIn: null,
+  services: []
+}
+```
 
 ## Next Steps
 
