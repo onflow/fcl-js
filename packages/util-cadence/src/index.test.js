@@ -34,7 +34,10 @@ describe('parseArguments', () => {
           }
       }
       
-      pub fun main(amount: UFix64, to: Address) {}
+      pub fun main(
+        amount: UFix64, 
+        to: Address
+      ) {}
     `
     expect(parseArguments(cadenceCode)).toEqual([
       { name: 'amount', type: 'UFix64' },
