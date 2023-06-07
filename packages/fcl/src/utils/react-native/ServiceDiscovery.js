@@ -2,6 +2,10 @@ import { useState, useEffect, createElement } from 'react'
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native'
 
 /**
+ * @typedef {import("@onflow/typedefs").Service} Service
+ */
+
+/**
  * Fetches data from a URL using the POST method and returns the parsed JSON response.
  *
  * @param {string} url - The URL to fetch.
@@ -36,7 +40,7 @@ const DefaultEmptyComponent = () => createElement(Text, null, "No Wallets Found"
  * Default service card component that renders a TouchableOpacity with the service provider's name as text.
  *
  * @param {object} props - The component props.
- * @param {object} props.service - The service object.
+ * @param {Service} props.service - The service object.
  * @param {Function} props.onPress - The onPress event handler.
  * @returns {JSX.Element} - The service card component.
  */
