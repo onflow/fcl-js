@@ -39,9 +39,12 @@ function fetchSignature(ix, payload) {
   return async function innerFetchSignature(id) {
     const acct = ix.accounts[id]
     if (acct.signature != null) return
-    const {signature} = await acct.signingFunction(
+    const { signature, keyId } = await acct.signingFunction(
       buildSignable(acct, payload, ix)
     )
+    if (!acct.role.proposer && keyId) {
+      ix.accounts[id].keyId = keyId
+    }
     ix.accounts[id].signature = signature
   }
 }
