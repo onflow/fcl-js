@@ -1,6 +1,6 @@
-import {renderFrame} from "../../../../utils/web"
-import {serviceEndpoint} from "./service-endpoint"
-import {buildMessageHandler} from "./buildMessageHandler"
+import {renderFrame} from "./render/render-frame"
+import {serviceEndpoint} from "../shared/service-endpoint"
+import {buildMessageHandler} from "../shared/buildMessageHandler"
 
 const noop = () => {}
 

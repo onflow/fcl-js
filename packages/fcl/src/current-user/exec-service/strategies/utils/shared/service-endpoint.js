@@ -8,6 +8,5 @@ export function serviceEndpoint(service) {
       url.searchParams.append(key, value)
     }
   }
-  console.log(url.href)
   return url
 }

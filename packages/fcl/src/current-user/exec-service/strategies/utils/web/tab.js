@@ -1,10 +1,10 @@
-import {renderPop} from "../../../../utils/web"
-import {serviceEndpoint} from "./service-endpoint"
-import {buildMessageHandler} from "./buildMessageHandler"
+import {renderTab} from "./render/render-tab"
+import {serviceEndpoint} from "../shared/service-endpoint"
+import {buildMessageHandler} from "../shared/buildMessageHandler"
 
 const noop = () => {}
 
-export function pop(service, opts = {}) {
+export function tab(service, opts = {}) {
   if (service == null) return {send: noop, close: noop}
 
   const onClose = opts.onClose || noop
@@ -21,10 +21,9 @@ export function pop(service, opts = {}) {
   })
   window.addEventListener("message", handler)
 
-  const [$pop, unmount] = renderPop(serviceEndpoint(service))
-
+  const [$tab, unmount] = renderTab(serviceEndpoint(service))
   const timer = setInterval(function () {
-    if ($pop && $pop.closed) {
+    if ($tab && $tab.closed) {
       close()
     }
   }, 500)
@@ -38,15 +37,15 @@ export function pop(service, opts = {}) {
       unmount()
       onClose()
     } catch (error) {
-      console.error("Popup Close Error", error)
+      console.error("Tab Close Error", error)
     }
   }
 
   function send(msg) {
     try {
-      $pop.postMessage(JSON.parse(JSON.stringify(msg || {})), "*")
+      $tab.postMessage(JSON.parse(JSON.stringify(msg || {})), "*")
     } catch (error) {
-      console.error("Popup Send Error", msg, error)
+      console.error("Tab Send Error", msg, error)
     }
   }
 }

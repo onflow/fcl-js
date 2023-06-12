@@ -1,4 +1,4 @@
-import {buildMessageHandler} from "./buildMessageHandler"
+import {buildMessageHandler} from "../shared/buildMessageHandler"
 
 const noop = () => {}
 

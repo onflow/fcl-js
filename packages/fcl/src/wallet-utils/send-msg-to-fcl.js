@@ -21,17 +21,15 @@ import {onMessageFromFCL} from "./on-message-from-fcl"
 export const sendMsgToFCL = (type, msg = {}) => {
   const data = {...msg, type}
 
-  if(getEnvironment() === "ReactNative") {
-    const urlParams = new URLSearchParams(window.location.search)
-    const redirectUrl = urlParams.get("fcl_redirect_url")
-    if (redirectUrl) {
-      const url = new URL(redirectUrl)
-      url.searchParams.append(
-        "fclResponseJson",
-        JSON.stringify(data)
-      )
-      window.location.href = url.href
-    }
+  const urlParams = new URLSearchParams(window.location.search)
+  const redirectUrl = urlParams.get("fcl_redirect_url")
+  if(redirectUrl) {
+    const url = new URL(redirectUrl)
+    url.searchParams.append(
+      "fclResponseJson",
+      JSON.stringify(data)
+    )
+    window.location.href = url.href
   } else if (window.location !== window.parent.location) {
     window.parent.postMessage({...msg, type}, "*")
   } else if (window.opener) {

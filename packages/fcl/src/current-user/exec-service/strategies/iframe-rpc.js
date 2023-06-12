@@ -1,14 +1,14 @@
 import {uid} from "@onflow/util-uid"
-import {frame} from "./utils/frame-native"
 import {normalizePollingResponse} from "../../../normalizers/service/polling-response"
 import {VERSION} from "../../../VERSION"
+import { STRATEGY_UTIL_REGISTRY } from "./utils/strategy-util-registry"
 
 export function execIframeRPC({service, body, config, opts}) {
   return new Promise((resolve, reject) => {
     const id = uid()
     const includeOlderJsonRpcCall = opts.includeOlderJsonRpcCall
 
-    frame(service, {
+    STRATEGY_UTIL_REGISTRY.FRAME(service, {
       async onReady(_, {send}) {
         try {
           send({

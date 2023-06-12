@@ -1,5 +1,5 @@
 import {invariant} from "@onflow/util-invariant"
-import {extension} from "./utils/extension"
+import {extension} from "./utils/web/extension"
 import {normalizePollingResponse} from "../../../normalizers/service/polling-response"
 import {VERSION} from "../../../VERSION"
 

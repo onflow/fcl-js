@@ -1,10 +1,10 @@
-import {serviceEndpoint} from "./service-endpoint"
-import { renderBrowser } from "../../../../utils/react-native/render-browser"
+import {serviceEndpoint} from "../shared/service-endpoint"
+import { renderBrowser } from "./render/render-browser"
 import * as Linking from 'expo-linking'
 
 const noop = () => {}
 
-export function frame(service, opts = {}) {
+export function browser(service, opts = {}) {
   if (service == null) return noop
 
   const onClose = opts.onClose || noop

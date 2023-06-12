@@ -1,6 +1,6 @@
-import {renderFrame} from "./render-frame"
-import {renderPop} from "./render-pop"
-import {renderTab} from "./render-tab"
+import {renderFrame} from "../../current-user/exec-service/strategies/utils/web/render/render-frame"
+import {renderPop} from "../../current-user/exec-service/strategies/utils/web/render/render-pop"
+import {renderTab} from "../../current-user/exec-service/strategies/utils/web/render/render-tab"
 
 const VIEWS = {
   "VIEW/IFRAME": renderFrame,

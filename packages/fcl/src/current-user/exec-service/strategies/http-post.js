@@ -1,9 +1,9 @@
-import {fetchService} from "./utils/fetch-service"
+import {fetchService} from "./utils/shared/fetch-service"
 import {normalizePollingResponse} from "../../../normalizers/service/polling-response"
 import {normalizeLocalView} from "../../../normalizers/service/local-view"
-import {poll} from "./utils/poll"
+import {poll} from "./utils/shared/poll"
 import {VERSION} from "../../../VERSION"
-import {serviceEndpoint} from "../strategies/utils/service-endpoint"
+import {serviceEndpoint} from "./utils/shared/service-endpoint"
 
 export const getExecHttpPost = (execLocal) => async({service, body, config, opts}) => {
   const resp = await fetchService(service, {

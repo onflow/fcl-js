@@ -1,4 +1,4 @@
-import {renderBrowser} from "./render-browser"
+import {renderBrowser} from "../../current-user/exec-service/strategies/utils/react-native/render/render-browser"
 
 const VIEWS = {
   "VIEW/IFRAME": renderBrowser,

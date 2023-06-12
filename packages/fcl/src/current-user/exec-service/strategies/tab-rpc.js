@@ -1,14 +1,14 @@
 import {uid} from "@onflow/util-uid"
-import {tab} from "./utils/tab"
 import {normalizePollingResponse} from "../../../normalizers/service/polling-response"
 import {VERSION} from "../../../VERSION"
+import { STRATEGY_UTIL_REGISTRY } from "./utils/strategy-util-registry"
 
 export function execTabRPC({service, body, config, opts}) {
   return new Promise((resolve, reject) => {
     const id = uid()
     const {redir, includeOlderJsonRpcCall} = opts
 
-    tab(service, {
+    STRATEGY_UTIL_REGISTRY.TAB(service, {
       async onReady(_, {send}) {
         try {
           send({
