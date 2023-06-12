@@ -1,5 +1,5 @@
 import {uid} from "@onflow/util-uid"
-import {frame} from "./utils/frame"
+import {frame} from "./utils/frame-native"
 import {normalizePollingResponse} from "../../../normalizers/service/polling-response"
 import {VERSION} from "../../../VERSION"
 

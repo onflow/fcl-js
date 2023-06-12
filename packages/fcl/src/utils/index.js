@@ -24,3 +24,21 @@ export function isIOS() {
 export function isMobile() {
   return isAndroid() || isIOS()
 }
+
+
+/**
+ * Gets the current environment that the code is running in.
+ * 
+ * @returns {"ReactNative" | "Web" | "NodeJS"}
+ */
+export function getEnvironment() {
+  if (typeof document !== 'undefined') {
+    return "Web"
+  }
+  else if (typeof navigator !== 'undefined' && navigator.product === 'ReactNative') {
+    return "ReactNative"
+  }
+  else {
+    return "NodeJS"
+  }
+}

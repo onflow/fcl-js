@@ -85,7 +85,7 @@ export const useServiceDiscovery = ({ fcl }) => {
       const response = await fetcher(endpoint, {
         fclVersion: fcl.VERSION,
         userAgent: 'ReactNative',
-        supportedStrategies: ['HTTP/POST'],
+        supportedStrategies: ['HTTP/POST', "IFRAME/RPC"],
       })
       setServices(response)
       setIsLoading(false)

@@ -6,7 +6,6 @@ import {initServiceRegistry} from "./current-user/exec-service/plugins"
 
 config(getDefaultConfig())
 
-// Set chain id default on access node change
 initServiceRegistry({execLocal})
 
 export {useServiceDiscovery, ServiceDiscovery}

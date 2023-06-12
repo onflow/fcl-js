@@ -1,3 +1,4 @@
+import { getEnvironment } from "../utils"
 import {onMessageFromFCL} from "./on-message-from-fcl"
 
 /**
@@ -18,7 +19,20 @@ import {onMessageFromFCL} from "./on-message-from-fcl"
  *  })
  */
 export const sendMsgToFCL = (type, msg = {}) => {
-  if (window.location !== window.parent.location) {
+  const data = {...msg, type}
+
+  if(getEnvironment() === "ReactNative") {
+    const urlParams = new URLSearchParams(window.location.search)
+    const redirectUrl = urlParams.get("fcl_redirect_url")
+    if (redirectUrl) {
+      const url = new URL(redirectUrl)
+      url.searchParams.append(
+        "fclResponseJson",
+        JSON.stringify(data)
+      )
+      window.location.href = url.href
+    }
+  } else if (window.location !== window.parent.location) {
     window.parent.postMessage({...msg, type}, "*")
   } else if (window.opener) {
     window.opener.postMessage({...msg, type}, "*")
@@ -36,8 +50,16 @@ export const sendMsgToFCL = (type, msg = {}) => {
  * @returns {void}
  */
 export const ready = (cb, msg = {}) => {
-  onMessageFromFCL("FCL:VIEW:READY:RESPONSE", cb)
-  sendMsgToFCL("FCL:VIEW:READY")
+  if(getEnvironment() === "ReactNative") {
+    const fclDataJson = urlParams.get("fcl_data")
+    if (fclDataJson) {
+      const data = JSON.parse(fclDataJson)
+      callback(data)
+    }
+  } else {
+    onMessageFromFCL("FCL:VIEW:READY:RESPONSE", cb)
+    sendMsgToFCL("FCL:VIEW:READY")
+  }
 }
 
 /**
