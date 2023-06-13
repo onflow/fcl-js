@@ -1,5 +1,11 @@
 # @onflow/fcl
 
+## 1.4.1
+
+### Patch Changes
+
+- [#1684](https://github.com/onflow/fcl-js/pull/1684) [`86173c99`](https://github.com/onflow/fcl-js/commit/86173c990ffbb34ef6ee25a9a1aae09866cc3f84) Thanks [@chasefleming](https://github.com/chasefleming)! - Add types to t object in query/mutate args fn
+
 ## 1.4.0
 
 ### Minor Changes
