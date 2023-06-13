@@ -26,6 +26,9 @@ export const logIn = (opts = {}) => currentUser().authenticate(opts)
 export const authz = currentUser().authorization
 
 import * as types from "@onflow/types"
+/**
+ * @type {Types}
+ */
 export const t = types
 
 import * as WalletUtils from "./wallet-utils"
