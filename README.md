@@ -150,6 +150,8 @@ const newUser: CurrentUser = {
 }
 ```
 
+For all type definitions available, see [this file](./packages/typedefs/src/index.js)
+
 ## Next Steps
 
 See the [Flow App Quick Start](https://developers.flow.com/tutorials/flow-app-quickstart).
