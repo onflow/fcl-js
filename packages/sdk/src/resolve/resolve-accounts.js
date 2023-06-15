@@ -25,6 +25,24 @@ const ROLES = {
   AUTHORIZATIONS: "authorizations",
 }
 
+function debug() {
+  const SPACE = " "
+  const SPACE_COUNT_PER_INDENT = 4
+  const DEBUG_MESSAGE = []
+  return [
+    function (msg, indent = 0) {
+      DEBUG_MESSAGE.push(
+        Array(indent * SPACE_COUNT_PER_INDENT)
+          .fill(SPACE)
+          .join("-") + msg
+      )
+    },
+    function () {
+      return DEBUG_MESSAGE.reduce((prev, curr) => prev + "\n" + curr)
+    },
+  ]
+}
+
 function recurseFlatMap(el, depthLimit = 3) {
   if (depthLimit <= 0) return el
   if (!Array.isArray(el)) return el
@@ -81,12 +99,14 @@ function addAccountToIx(ix, newAccount) {
   ) {
     newAccount.tempId = idof(newAccount)
   } else {
-    newAccount.tempId = uuid()
+    newAccount.tempId = newAccount.tempId || uuid()
   }
 
   const existingAccount = ix.accounts[newAccount.tempId] || newAccount
 
-  ix.accounts[newAccount.tempId] = newAccount
+  if (!ix.accounts[newAccount.tempId]) {
+    ix.accounts[newAccount.tempId] = newAccount
+  }
 
   ix.accounts[newAccount.tempId].role.proposer =
     existingAccount.role.proposer || newAccount.role.proposer
@@ -94,10 +114,6 @@ function addAccountToIx(ix, newAccount) {
     existingAccount.role.payer || newAccount.role.payer
   ix.accounts[newAccount.tempId].role.authorizer =
     existingAccount.role.authorizer || newAccount.role.authorizer
-
-  ix.accounts[newAccount.tempId].role.proposer = newAccount.role.proposer
-  ix.accounts[newAccount.tempId].role.payer = newAccount.role.payer
-  ix.accounts[newAccount.tempId].role.authorizer = newAccount.role.authorizer
 
   return ix.accounts[newAccount.tempId]
 }
@@ -126,20 +142,32 @@ function uniqueAccountsFlatMap(accounts) {
 
 async function recurseResolveAccount(
   ix,
-  account,
-  depthLimit = MAX_DEPTH_LIMIT
+  currentAccountTempId,
+  depthLimit = MAX_DEPTH_LIMIT,
+  {debugLogger}
 ) {
   if (depthLimit <= 0) {
     throw new Error(
       `recurseResolveAccount Error: Depth limit (${MAX_DEPTH_LIMIT}) reached. Ensure your authorization functions resolve to an account after ${MAX_DEPTH_LIMIT} resolves.`
     )
   }
+
+  let account = ix.accounts[currentAccountTempId]
+
   if (!account) return null
 
-  account = addAccountToIx(ix, account)
+  debugLogger(
+    `account: ${account.tempId}`,
+    Math.max(MAX_DEPTH_LIMIT - depthLimit, 0)
+  )
 
   if (account?.resolve) {
     if (isFn(account?.resolve)) {
+      debugLogger(
+        `account: ${account.tempId} -- cache MISS`,
+        Math.max(MAX_DEPTH_LIMIT - depthLimit, 0)
+      )
+
       const {resolve, ...accountWithoutResolve} = account
 
       let resolvedAccounts = await resolve(
@@ -151,38 +179,45 @@ async function recurseResolveAccount(
         ? resolvedAccounts
         : [resolvedAccounts]
 
-      const flatResolvedAccounts = recurseFlatMap(resolvedAccounts)
+      let flatResolvedAccounts = recurseFlatMap(resolvedAccounts)
 
-      account.resolve = flatResolvedAccounts
+      flatResolvedAccounts = flatResolvedAccounts.map(flatResolvedAccount =>
+        addAccountToIx(ix, flatResolvedAccount)
+      )
+
+      account.resolve = flatResolvedAccounts.map(
+        flatResolvedAccount => flatResolvedAccount.tempId
+      )
 
       account = addAccountToIx(ix, account)
 
       const recursedAccounts = await Promise.all(
         flatResolvedAccounts.map(async resolvedAccount => {
-          const addedResolvedAccount = addAccountToIx(ix, resolvedAccount)
           return await recurseResolveAccount(
             ix,
-            addedResolvedAccount,
-            depthLimit - 1
+            resolvedAccount.tempId,
+            depthLimit - 1,
+            {debugLogger}
           )
         })
       )
 
-      return recursedAccounts ? recursedAccounts : account
+      return recursedAccounts
+        ? recurseFlatMap(recursedAccounts)
+        : account.tempId
     } else {
-      if (Array.isArray(account.resolve)) {
-        account.resolve = account.resolve.map(acct => addAccountToIx(ix, acct))
-      } else {
-        account.resolve = addAccountToIx(ix, account.resolve)
-      }
+      debugLogger(
+        `account: ${account.tempId} -- cache HIT`,
+        Math.max(MAX_DEPTH_LIMIT - depthLimit, 0)
+      )
 
       return account.resolve
     }
   }
-  return account
+  return account.tempId
 }
 
-async function resolveAccountType(ix, type) {
+async function resolveAccountType(ix, type, {debugLogger}) {
   invariant(
     ix && typeof ix === "object",
     "resolveAccountType Error: ix not defined"
@@ -199,14 +234,24 @@ async function resolveAccountType(ix, type) {
   let allResolvedAccounts = []
   for (let accountId of accountTempIDs) {
     let account = ix.accounts[accountId]
-
     invariant(account, `resolveAccountType Error: account not found`)
 
-    let resolvedAccounts = await recurseResolveAccount(ix, account)
+    let resolvedAccountTempIds = await recurseResolveAccount(
+      ix,
+      accountId,
+      MAX_DEPTH_LIMIT,
+      {
+        debugLogger,
+      }
+    )
 
-    resolvedAccounts = Array.isArray(resolvedAccounts)
-      ? resolvedAccounts
-      : [resolvedAccounts]
+    resolvedAccountTempIds = Array.isArray(resolvedAccountTempIds)
+      ? resolvedAccountTempIds
+      : [resolvedAccountTempIds]
+
+    let resolvedAccounts = resolvedAccountTempIds.map(
+      resolvedAccountTempId => ix.accounts[resolvedAccountTempId]
+    )
 
     let flatResolvedAccounts = uniqueAccountsFlatMap(resolvedAccounts)
 
@@ -253,7 +298,7 @@ async function resolveAccountType(ix, type) {
   }
 }
 
-export async function resolveAccounts(ix) {
+export async function resolveAccounts(ix, opts = {}) {
   if (isTransaction(ix)) {
     if (!Array.isArray(ix.payer)) {
       log.deprecate({
@@ -263,12 +308,17 @@ export async function resolveAccounts(ix) {
         message: "See changelog for more info.",
       })
     }
+    let [debugLogger, getDebugMessage] = debug()
     try {
-      await resolveAccountType(ix, ROLES.PROPOSER)
-      await resolveAccountType(ix, ROLES.AUTHORIZATIONS)
-      await resolveAccountType(ix, ROLES.PAYER)
+      await resolveAccountType(ix, ROLES.PROPOSER, {debugLogger})
+      await resolveAccountType(ix, ROLES.AUTHORIZATIONS, {debugLogger})
+      await resolveAccountType(ix, ROLES.PAYER, {debugLogger})
 
-      await removeUnusedIxAccounts(ix)
+      await removeUnusedIxAccounts(ix, {debugLogger})
+
+      if (opts.enableDebug) {
+        console.debug(getDebugMessage())
+      }
     } catch (error) {
       console.error("=== SAD PANDA ===\n\n", error, "\n\n=== SAD PANDA ===")
       throw error
