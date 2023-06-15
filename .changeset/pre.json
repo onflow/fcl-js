@@ -1,6 +1,6 @@
 {
   "mode": "pre",
-  "tag": "next",
+  "tag": "alpha",
   "initialVersions": {
     "@onflow/config": "1.1.0",
     "@onflow/fcl": "1.4.1",
