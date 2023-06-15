@@ -21,5 +21,7 @@
     "@onflow/util-template": "1.1.0",
     "@onflow/util-uid": "1.1.0"
   },
-  "changesets": []
+  "changesets": [
+    "beige-shrimps-report"
+  ]
 }

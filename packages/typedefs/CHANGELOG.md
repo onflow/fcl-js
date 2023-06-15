@@ -1,5 +1,11 @@
 # @onflow/typedefs
 
+## 1.1.1-alpha.0
+
+### Patch Changes
+
+- [#1666](https://github.com/onflow/fcl-js/pull/1666) [`090963f3`](https://github.com/onflow/fcl-js/commit/090963f3ff6d4557f90a451a1ff5a723656f87dd) Thanks [@nialexsan](https://github.com/nialexsan)! - React Native support
+
 ## 1.1.0
 
 ### Minor Changes
