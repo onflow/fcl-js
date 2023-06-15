@@ -15,6 +15,9 @@
     "ecmaVersion": "latest",
     "sourceType": "module"
   },
+  "globals": {
+    "JSX": "readonly"
+  },
   "ignorePatterns": ["**/dist/"],
 
   "rules": {

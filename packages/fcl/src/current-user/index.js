@@ -11,7 +11,7 @@ import {serviceOfType} from "./service-of-type"
 import {execService} from "./exec-service"
 import {normalizeCompositeSignature} from "../normalizers/service/composite-signature"
 import {getDiscoveryService, makeDiscoveryServices} from "../discovery"
-import {serviceRegistry} from "./exec-service/plugins"
+import {getServiceRegistry} from "./exec-service/plugins"
 import {isMobile} from "../utils"
 
 /**
@@ -138,7 +138,7 @@ const makeConfig = async ({discoveryAuthnInclude}) => {
     client: {
       discoveryAuthnInclude,
       clientServices: await makeDiscoveryServices(),
-      supportedStrategies: serviceRegistry.getStrategies(),
+      supportedStrategies: getServiceRegistry().getStrategies(),
     },
   }
 }
