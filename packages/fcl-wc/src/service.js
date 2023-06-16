@@ -1,4 +1,4 @@
-import { Web3Modal } from "@web3modal/standalone";
+import { WalletConnectModal } from "@walletconnect/modal";
 import {invariant} from "@onflow/util-invariant"
 import {log, LEVELS} from "@onflow/util-logger"
 import {fetchFlowWallets, isMobile, CONFIGURED_NETWORK, isIOS} from "./utils"
@@ -211,7 +211,7 @@ async function connectWc({
 
   const projectId = client.opts.projectId
 
-  const web3Modal = new Web3Modal({
+  const web3Modal = new WalletConnectModal({
     projectId
   });
   try {

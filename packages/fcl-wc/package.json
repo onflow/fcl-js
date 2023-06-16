@@ -33,10 +33,10 @@
     "@onflow/config": "^1.1.0",
     "@onflow/util-invariant": "^1.1.0",
     "@onflow/util-logger": "^1.2.0",
+    "@walletconnect/modal": "^2.4.5",
     "@walletconnect/sign-client": "^2.7.8",
     "@walletconnect/types": "^2.7.8",
-    "@walletconnect/utils": "^2.7.8",
-    "@web3modal/auth-html": "^2.4.3"
+    "@walletconnect/utils": "^2.7.8"
   },
   "peerDependencies": {
     "@onflow/fcl": "^1.4.0"
