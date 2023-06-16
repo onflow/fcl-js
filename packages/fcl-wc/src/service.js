@@ -1,25 +1,25 @@
-import QRCodeModal from "@walletconnect/qrcode-modal"
-import {invariant} from "@onflow/util-invariant"
-import {log, LEVELS} from "@onflow/util-logger"
-import {fetchFlowWallets, isMobile, CONFIGURED_NETWORK, isIOS} from "./utils"
-import {FLOW_METHODS, REQUEST_TYPES} from "./constants"
+import { WalletConnectModal } from "@walletconnect/modal"
+import { invariant } from "@onflow/util-invariant"
+import { log, LEVELS } from "@onflow/util-logger"
+import { fetchFlowWallets, isMobile, CONFIGURED_NETWORK, isIOS } from "./utils"
+import { FLOW_METHODS, REQUEST_TYPES } from "./constants"
 
 export const makeServicePlugin = async (client, opts = {}) => ({
   name: "fcl-plugin-service-walletconnect",
   f_type: "ServicePlugin",
   type: "discovery-service",
   services: await makeWcServices(opts),
-  serviceStrategy: {method: "WC/RPC", exec: makeExec(client, opts)},
+  serviceStrategy: { method: "WC/RPC", exec: makeExec(client, opts) },
 })
 
-const makeExec = (client, {wcRequestHook, pairingModalOverride}) => {
-  return ({service, body, opts}) => {
+const makeExec = (client, { wcRequestHook, pairingModalOverride }) => {
+  return ({ service, body, opts }) => {
     return new Promise(async (resolve, reject) => {
       invariant(client, "WalletConnect is not initialized")
       let session, pairing, windowRef
       const method = service.endpoint
       const appLink = validateAppLink(service)
-      const pairings = client.pairing.getAll({active: true})
+      const pairings = client.pairing.getAll({ active: true })
 
       if (pairings.length > 0) {
         pairing = pairings?.find(p => p.peerMetadata?.url === service.uid)
@@ -68,7 +68,7 @@ const makeExec = (client, {wcRequestHook, pairingModalOverride}) => {
       }
 
       const [chainId, addr, address] = makeSessionData(session)
-      const data = JSON.stringify({...body, addr, address})
+      const data = JSON.stringify({ ...body, addr, address })
 
       try {
         const result = await client.request({
@@ -93,7 +93,7 @@ const makeExec = (client, {wcRequestHook, pairingModalOverride}) => {
         }
       }
 
-      function validateAppLink({uid}) {
+      function validateAppLink({ uid }) {
         if (!(uid && /^(ftp|http|https):\/\/[^ "]+$/.test(uid))) {
           log({
             title: "WalletConnect Service Warning",
@@ -209,8 +209,14 @@ async function connectWc({
     },
   }
 
+  const projectId = client.opts.projectId
+
+  const web3Modal = new WalletConnectModal({
+    projectId
+  });
+
   try {
-    const {uri, approval} = await client.connect({
+    const { uri, approval } = await client.connect({
       pairingTopic: pairing?.topic,
       requiredNamespaces,
     })
@@ -235,14 +241,12 @@ async function connectWc({
     }
 
     if (isMobile()) {
-      const queryString = new URLSearchParams({uri: uri}).toString()
+      const queryString = new URLSearchParams({ uri: uri }).toString()
       let url = pairing == null ? appLink + "?" + queryString : appLink
       windowRef.location.href = url
     } else if (!pairing) {
       if (!pairingModalOverride) {
-        QRCodeModal.open(uri, () => {
-          onClose()
-        })
+        web3Modal.openModal({ uri, onClose })
       } else {
         pairingModalOverride(uri, onClose)
       }
@@ -265,7 +269,7 @@ async function connectWc({
     if (windowRef && !windowRef.closed) {
       windowRef.close()
     }
-    QRCodeModal.close()
+    web3Modal.closeModal()
   }
 }
 
@@ -290,7 +294,7 @@ const makeBaseWalletConnectService = includeBaseWC => {
   }
 }
 
-async function makeWcServices({projectId, includeBaseWC, wallets}) {
+async function makeWcServices({ projectId, includeBaseWC, wallets }) {
   const wcBaseService = makeBaseWalletConnectService(includeBaseWC)
   const flowWcWalletServices = (await fetchFlowWallets(projectId)) ?? []
   const injectedWalletServices = CONFIGURED_NETWORK !== "mainnet" ? wallets : []
