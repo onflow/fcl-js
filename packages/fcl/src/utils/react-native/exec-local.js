@@ -6,7 +6,10 @@ const VIEWS = {
   "VIEW/TAB": renderBrowser,
 }
 
-export async function execLocal(service, opts = {serviceEndpoint: () => {}}) {
+export async function execLocal(
+  service,
+  opts = {serviceEndpoint: () => {}, onClose: () => {}}
+) {
   const {serviceEndpoint} = opts
   try {
     return VIEWS[service.method](serviceEndpoint(service), opts)
