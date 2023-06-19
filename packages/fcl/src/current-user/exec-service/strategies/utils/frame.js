@@ -1,4 +1,4 @@
-import {renderFrame} from "./render-frame"
+import {renderFrame} from "../../../../utils/web"
 import {serviceEndpoint} from "./service-endpoint"
 import {buildMessageHandler} from "./buildMessageHandler"
 

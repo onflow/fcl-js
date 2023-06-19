@@ -2,10 +2,10 @@ import {fetchService} from "./utils/fetch-service"
 import {normalizePollingResponse} from "../../../normalizers/service/polling-response"
 import {normalizeLocalView} from "../../../normalizers/service/local-view"
 import {poll} from "./utils/poll"
-import {execLocal} from "../exec-local"
 import {VERSION} from "../../../VERSION"
+import {serviceEndpoint} from "../strategies/utils/service-endpoint"
 
-export async function execHttpPost({service, body, config, opts}) {
+export const getExecHttpPost = (execLocal) => async({service, body, config, opts}) => {
   const resp = await fetchService(service, {
     data: {
       fclVersion: VERSION,
@@ -27,7 +27,13 @@ export async function execHttpPost({service, body, config, opts}) {
     return resp
   } else if (resp.status === "PENDING") {
     var canContinue = true
-    const [_, unmount] = await execLocal(normalizeLocalView(resp.local))
+    const [_, unmount] = await execLocal(
+      normalizeLocalView(resp.local),
+      {
+        serviceEndpoint,
+        onClose: () => (canContinue = false)
+      }
+    )
 
     const close = () => {
       try {

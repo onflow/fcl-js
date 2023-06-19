@@ -1,5 +1,29 @@
 # @onflow/fcl
 
+## 1.5.0-alpha.2
+
+### Patch Changes
+
+- [#1690](https://github.com/onflow/fcl-js/pull/1690) [`53d1f607`](https://github.com/onflow/fcl-js/commit/53d1f607fd15535a29cbbb1c809f0fc4d7a6be7b) Thanks [@jribbink](https://github.com/jribbink)! - Stop polling in React Native when browser has been closed
+
+## 1.5.0-alpha.1
+
+### Patch Changes
+
+- [#1693](https://github.com/onflow/fcl-js/pull/1693) [`51436ccd`](https://github.com/onflow/fcl-js/commit/51436ccd5ceb774b4846c44474914cad2208fe37) Thanks [@jribbink](https://github.com/jribbink)! - Patch URL trailing slash bug in React Native
+
+## 1.5.0-alpha.0
+
+### Minor Changes
+
+- [#1666](https://github.com/onflow/fcl-js/pull/1666) [`090963f3`](https://github.com/onflow/fcl-js/commit/090963f3ff6d4557f90a451a1ff5a723656f87dd) Thanks [@nialexsan](https://github.com/nialexsan)! - React Native support
+
+## 1.4.1
+
+### Patch Changes
+
+- [#1684](https://github.com/onflow/fcl-js/pull/1684) [`86173c99`](https://github.com/onflow/fcl-js/commit/86173c990ffbb34ef6ee25a9a1aae09866cc3f84) Thanks [@chasefleming](https://github.com/chasefleming)! - Add types to t object in query/mutate args fn
+
 ## 1.4.0
 
 ### Minor Changes

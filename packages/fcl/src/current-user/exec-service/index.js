@@ -1,12 +1,12 @@
 import {invariant} from "@onflow/util-invariant"
 import {log, LEVELS} from "@onflow/util-logger"
-import {serviceRegistry} from "./plugins"
+import {getServiceRegistry} from "./plugins"
 import {getChainId} from "../../utils"
 import {VERSION} from "../../VERSION"
 import {configLens} from "../../default-config"
 
 const execStrategy = async ({service, body, config, opts}) => {
-  const strategy = serviceRegistry.getStrategy(service.method)
+  const strategy = getServiceRegistry().getStrategy(service.method)
   return strategy({service, body, config, opts})
 }
 
