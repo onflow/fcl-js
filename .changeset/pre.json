@@ -22,6 +22,7 @@
     "@onflow/util-uid": "1.1.0"
   },
   "changesets": [
-    "beige-shrimps-report"
+    "beige-shrimps-report",
+    "tasty-shirts-flow"
   ]
 }
