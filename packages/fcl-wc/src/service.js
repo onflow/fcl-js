@@ -1,4 +1,4 @@
-import QRCodeModal from "@walletconnect/qrcode-modal"
+import {WalletConnectModal} from "@walletconnect/modal"
 import {invariant} from "@onflow/util-invariant"
 import {log, LEVELS} from "@onflow/util-logger"
 import {fetchFlowWallets, isMobile, CONFIGURED_NETWORK, isIOS} from "./utils"
@@ -209,6 +209,11 @@ async function connectWc({
     },
   }
 
+  const projectId = client.opts.projectId
+  const web3Modal = new WalletConnectModal({
+    projectId
+  });
+
   try {
     const {uri, approval} = await client.connect({
       pairingTopic: pairing?.topic,
@@ -240,9 +245,7 @@ async function connectWc({
       windowRef.location.href = url
     } else if (!pairing) {
       if (!pairingModalOverride) {
-        QRCodeModal.open(uri, () => {
-          onClose()
-        })
+        web3Modal.openModal({uri, onClose})
       } else {
         pairingModalOverride(uri, onClose)
       }
@@ -265,7 +268,7 @@ async function connectWc({
     if (windowRef && !windowRef.closed) {
       windowRef.close()
     }
-    QRCodeModal.close()
+    web3Modal.closeModal()
   }
 }
 

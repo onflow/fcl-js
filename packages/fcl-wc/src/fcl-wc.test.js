@@ -1,4 +1,9 @@
 import {config} from "@onflow/config"
+import {init} from './fcl-wc'
+
+jest.mock('@walletconnect/modal', () => {})
+jest.mock('@walletconnect/sign-client', () => {})
+jest.mock('@walletconnect/utils', () => {})
 
 describe("Init Client", () => {
   it("should throw without projectId", async () => {
@@ -11,8 +16,7 @@ describe("Init Client", () => {
           "sdk.transport": async ix => ix
         },
         async () => {
-          const fclWC = require("./fcl-wc")
-          await fclWC.init()
+          await init()
         }
       )
     }
