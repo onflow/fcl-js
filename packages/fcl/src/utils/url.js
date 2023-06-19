@@ -14,6 +14,15 @@ export class URL extends _URL {
   constructor(url, base, ...args) {
     super(url, base, ...args)
 
+    // Extra check if in React Native
+    if (
+      typeof navigator === "undefined" ||
+      navigator.product !== "ReactNative"
+    ) {
+      return
+    }
+
+    // Fix trailing slash issue
     if (this._url && !url.endsWith("/") && this._url.endsWith("/")) {
       this._url = this._url.slice(0, -1)
     }
