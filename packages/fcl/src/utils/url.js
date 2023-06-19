@@ -9,16 +9,15 @@
 // See react-native implementation: https://github.com/facebook/react-native/blob/main/packages/react-native/Libraries/Blob/URL.js#L144-L146
 
 // This is not polyfilled globally because it could break other libraries or the user's code
+import {isReactNative} from "./is-react-native"
+
 const _URL = globalThis.URL
 export class URL extends _URL {
   constructor(url, base, ...args) {
     super(url, base, ...args)
 
     // Extra check if in React Native
-    if (
-      typeof navigator === "undefined" ||
-      navigator.product !== "ReactNative"
-    ) {
+    if (!isReactNative()) {
       return
     }
 
