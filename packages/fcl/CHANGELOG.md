@@ -1,5 +1,11 @@
 # @onflow/fcl
 
+## 1.5.0-alpha.1
+
+### Patch Changes
+
+- [#1693](https://github.com/onflow/fcl-js/pull/1693) [`51436ccd`](https://github.com/onflow/fcl-js/commit/51436ccd5ceb774b4846c44474914cad2208fe37) Thanks [@jribbink](https://github.com/jribbink)! - Patch URL trailing slash bug in React Native
+
 ## 1.5.0-alpha.0
 
 ### Minor Changes
