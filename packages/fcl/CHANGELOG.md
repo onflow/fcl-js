@@ -1,5 +1,11 @@
 # @onflow/fcl
 
+## 1.5.0-alpha.2
+
+### Patch Changes
+
+- [#1690](https://github.com/onflow/fcl-js/pull/1690) [`53d1f607`](https://github.com/onflow/fcl-js/commit/53d1f607fd15535a29cbbb1c809f0fc4d7a6be7b) Thanks [@jribbink](https://github.com/jribbink)! - Stop polling in React Native when browser has been closed
+
 ## 1.5.0-alpha.1
 
 ### Patch Changes
