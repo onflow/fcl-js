@@ -1,3 +1,5 @@
+import {URL} from "../../../../utils/url"
+
 export function serviceEndpoint(service) {
   const url = new URL(service.endpoint)
   if (window?.location?.origin) {

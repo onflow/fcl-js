@@ -4,6 +4,7 @@ import {getServiceRegistry} from "../current-user/exec-service/plugins"
 import {getChainId} from "../utils"
 import {VERSION} from "../VERSION"
 import {makeDiscoveryServices} from "./utils"
+import {URL} from "../utils/url"
 
 export async function getServices({types}) {
   const endpoint = await config.get("discovery.authn.endpoint")

@@ -1,3 +1,5 @@
+import {URL} from "../utils/url"
+
 export async function fetchServices(servicesURL, code) {
   if (servicesURL == null || code == null) return []
 
