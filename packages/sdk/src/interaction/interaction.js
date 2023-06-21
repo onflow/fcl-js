@@ -158,7 +158,7 @@ export const prepAccount = (acct, opts = {}) => ix => {
 
   const ACCOUNT = JSON.parse(ACCT)
   const role = opts.role
-  const tempId = uuid()
+  const tempId = acct.tempId || uuid()
 
   if (acct.authorization && isFn(acct.authorization))
     acct = {resolve: acct.authorization}
@@ -179,6 +179,7 @@ export const prepAccount = (acct, opts = {}) => ix => {
     ...acct,
     role: {
       ...ACCOUNT.role,
+      ...(ix.accounts?.[tempId]?.role || {}),
       ...(typeof acct.role === "object" ? acct.role : {}),
       [role]: true,
     },

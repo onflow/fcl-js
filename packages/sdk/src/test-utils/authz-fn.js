@@ -71,19 +71,8 @@ export function authzDeepResolveMany(opts = {}, depth = 1) {
       tempId,
       resolve:
         depth > 0
-          ? () => authzDeepResolveMany(opts, depth - 1)(account)
-          : () =>
-              [
-                opts.proposer &&
-                  authzResolve(opts.proposer)({
-                    role: {...ROLE, proposer: true},
-                  }),
-                ...opts.authorizations
-                  .map(authzResolve)
-                  .map(d => d({role: {...ROLE, authorizer: true}})),
-                opts.payer &&
-                  authzResolve(opts.payer)({role: {...ROLE, payer: true}}),
-              ].filter(Boolean),
+          ? authzDeepResolveMany(opts, depth - 1)(account).resolve
+          : authzResolveMany(opts)(account).resolve
     }
   }
 }

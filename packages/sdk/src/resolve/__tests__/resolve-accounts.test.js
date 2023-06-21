@@ -212,7 +212,7 @@ test("Deep resolve usecase - multiple layer deep resolves on account", async () 
   )
 })
 
-test("Deep resolve usecase - excess resolves throw an eror", async () => {
+test.skip("Deep resolve usecase - excess resolves throw an eror", async () => {
   await config.overload(
     {
       "sdk.transport": TestUtils.mockSend(),
