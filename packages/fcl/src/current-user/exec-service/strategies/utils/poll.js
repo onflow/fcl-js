@@ -24,10 +24,13 @@ const serviceBody = service => {
   return undefined
 }
 
-export async function poll(service, canContinue = () => true) {
+export async function poll(service, canContinue = () => true, willContinue = true) {
   invariant(service, "Missing Polling Service", {service})
-  if (!canContinue()) throw new Error("Externally Halted")
 
+  // willContinue ensures that one last poll is made before the polling is halted
+  if (!willContinue) throw new Error("Externally Halted")
+  willContinue = canContinue()
+  
   let resp
   try {
     if (
