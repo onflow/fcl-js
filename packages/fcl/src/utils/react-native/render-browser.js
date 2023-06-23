@@ -4,7 +4,11 @@ export function renderBrowser(src, opts = {}) {
   const webbrowser = WebBrowser.openAuthSessionAsync(src.toString())
 
   const unmount = () => {
-    WebBrowser.dismissAuthSession()
+    try {
+      WebBrowser.dismissAuthSession()
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   // Call onClose when the webbrowser is closed

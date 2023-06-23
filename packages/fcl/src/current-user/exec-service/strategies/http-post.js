@@ -27,24 +27,32 @@ export const getExecHttpPost = (execLocal) => async({service, body, config, opts
     return resp
   } else if (resp.status === "PENDING") {
     var canContinue = true
+    var shouldContinue = true
     const [_, unmount] = await execLocal(
       normalizeLocalView(resp.local),
       {
         serviceEndpoint,
-        onClose: () => (canContinue = false)
+        onClose: () => (shouldContinue = false)
       }
     )
 
     const close = () => {
       try {
         unmount()
-        canContinue = false
+        shouldContinue = false
       } catch (error) {
         console.error("Frame Close Error", error)
       }
     }
+    
+    const checkCanContinue = () => {
+      const canContinueLastTime = canContinue
+      canContinue = shouldContinue
 
-    return poll(resp.updates, () => canContinue)
+      return canContinueLastTime
+    }
+
+    return poll(resp.updates, checkCanContinue)
       .then(serviceResponse => {
         close()
         return serviceResponse
