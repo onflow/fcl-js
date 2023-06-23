@@ -26,8 +26,11 @@ export const getExecHttpPost = (execLocal) => async({service, body, config, opts
   } else if (resp.status === "REDIRECT") {
     return resp
   } else if (resp.status === "PENDING") {
+
+    // these two flags are required to run polling one more time before it stops
     var canContinue = true
     var shouldContinue = true
+
     const [_, unmount] = await execLocal(
       normalizeLocalView(resp.local),
       {
@@ -44,7 +47,11 @@ export const getExecHttpPost = (execLocal) => async({service, body, config, opts
         console.error("Frame Close Error", error)
       }
     }
-    
+    /**
+     * makes sure that polling is performed one extra time after browser is closed
+     *
+     * @returns {boolean} 
+     */ 
     const checkCanContinue = () => {
       const canContinueLastTime = canContinue
       canContinue = shouldContinue
