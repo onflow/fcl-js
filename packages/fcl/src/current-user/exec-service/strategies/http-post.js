@@ -48,15 +48,19 @@ export const getExecHttpPost = (execLocal) => async({service, body, config, opts
       }
     }
     /**
-     * makes sure that polling is performed one extra time after browser is closed
+     * this function is run once per poll call.
+     * Offsetting canContinue flag to make sure that
+     * the polling is performed one extra time after canContinue flag is set to false
+     * to prevent halting on Android when a browser calls window.close
+     * before FCL receives a successful result from polling
      *
      * @returns {boolean} 
      */ 
     const checkCanContinue = () => {
-      const canContinueLastTime = canContinue
+      const offsetCanContinue = canContinue
       canContinue = shouldContinue
 
-      return canContinueLastTime
+      return offsetCanContinue
     }
 
     return poll(resp.updates, checkCanContinue)
