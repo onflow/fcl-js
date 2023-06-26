@@ -189,7 +189,10 @@ async function load(data) {
       level: isEmulator ? logger.LEVELS.warn : logger.LEVELS.error,
     })
 
-    if (!isEmulator) return
+    invariant(
+      isEmulator,
+      `Private keys should be stored in a separate flow.json file for security. See more here: https://developers.flow.com/tools/flow-cli/security`
+    )
   }
 
   for (const [key, value] of Object.entries(
