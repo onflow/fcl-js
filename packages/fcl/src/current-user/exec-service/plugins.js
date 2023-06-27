@@ -1,28 +1,16 @@
-import {getExecHttpPost} from "./strategies/http-post"
-import {execIframeRPC} from "./strategies/iframe-rpc"
-import {execPopRPC} from "./strategies/pop-rpc"
-import {execTabRPC} from "./strategies/tab-rpc"
-import {execExtRPC} from "./strategies/ext-rpc"
 import {invariant} from "@onflow/util-invariant"
 import {LEVELS, log} from "@onflow/util-logger"
 import {isRequired, isString, isObject, isFunc} from "../../exec/utils/is"
 
-const CORE_STRATEGIES = {
-  "HTTP/RPC": "HTTP/RPC",
-  "HTTP/POST": "HTTP/POST",
-  "IFRAME/RPC": "IFRAME/RPC",
-  "POP/RPC": "POP/RPC",
-  "TAB/RPC": "TAB/RPC",
-  "EXT/RPC": "EXT/RPC",
-}
+const stub = () => {}
 
-const getCoreStrategies = ({execLocal}) => ({
-  [CORE_STRATEGIES["EXT/RPC"]]: getExecHttpPost(execLocal),
-  [CORE_STRATEGIES["HTTP/POST"]]: getExecHttpPost(execLocal),
-  [CORE_STRATEGIES["IFRAME/RPC"]]: execIframeRPC,
-  [CORE_STRATEGIES["POP/RPC"]]: execPopRPC,
-  [CORE_STRATEGIES["TAB/RPC"]]: execTabRPC,
-  [CORE_STRATEGIES["EXT/RPC"]]: execExtRPC,
+const stubCoreStrategies = ({
+  [CORE_STRATEGIES["EXT/RPC"]]: stub,
+  [CORE_STRATEGIES["HTTP/POST"]]: stub,
+  [CORE_STRATEGIES["IFRAME/RPC"]]: stub,
+  [CORE_STRATEGIES["POP/RPC"]]: stub,
+  [CORE_STRATEGIES["TAB/RPC"]]: stub,
+  [CORE_STRATEGIES["EXT/RPC"]]: stub,
 })
 
 const supportedPlugins = ["ServicePlugin"]
@@ -63,9 +51,9 @@ const validateDiscoveryPlugin = servicePlugin => {
   return {discoveryServices: services, serviceStrategy}
 }
 
-const ServiceRegistry = ({execLocal}) => {
+const ServiceRegistry = ({coreStrategies}) => {
   let services = new Set()
-  let strategies = new Map(Object.entries(getCoreStrategies({execLocal})))
+  let strategies = new Map(Object.entries(coreStrategies))
 
   const add = servicePlugin => {
     invariant(
@@ -150,20 +138,20 @@ const PluginRegistry = () => {
 let serviceRegistry
 const getIsServiceRegistryInitialized = () => typeof serviceRegistry !== 'undefined'
 
-export const initServiceRegistry = ({execLocal}) => {
+export const initServiceRegistry = ({coreStrategies}) => {
   if (getIsServiceRegistryInitialized()) {
     return serviceRegistry
   }
-  const _serviceRegistry = ServiceRegistry({execLocal});
+  const _serviceRegistry = ServiceRegistry({coreStrategies});
   serviceRegistry = _serviceRegistry;
 
   return _serviceRegistry
 }
 export const getServiceRegistry = () => {
   if (!getIsServiceRegistryInitialized()) {
-    console.warn("Registry is not initalized, it will be initialized with a stub execLocal")
+    console.warn("Registry is not initalized, it will be initialized with stub core strategies")
 
-    return initServiceRegistry({execLocal: () => {}})
+    return initServiceRegistry({coreStrategies: stubCoreStrategies})
   }
 
   return serviceRegistry
