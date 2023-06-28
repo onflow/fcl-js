@@ -1,4 +1,4 @@
-import {buildMessageHandler} from "./buildMessageHandler"
+import { buildMessageHandler } from "../../../../current-user/exec-service/strategies/utils/buildMessageHandler"
 
 const noop = () => {}
 

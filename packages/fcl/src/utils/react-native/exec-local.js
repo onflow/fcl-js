@@ -1,13 +1,13 @@
 import {renderBrowser} from "./render-browser"
 
-const NOT_IMPLEMENTED = () => {
-  throw new Error("Strategy util has not been implemented on this platform")
+const NOT_IMPLEMENTED = (strategy) => () => {
+  throw new Error(`${strategy} Strategy util has not been implemented on this platform`)
 }
 
 const VIEWS = {
-  "VIEW/IFRAME": NOT_IMPLEMENTED,
-  "VIEW/POP": NOT_IMPLEMENTED,
-  "VIEW/TAB": NOT_IMPLEMENTED,
+  "VIEW/IFRAME": NOT_IMPLEMENTED("VIEW/IFRAME"),
+  "VIEW/POP": NOT_IMPLEMENTED("VIEW/IFRAME"),
+  "VIEW/TAB": NOT_IMPLEMENTED("VIEW/TAB"),
   "VIEW/MOBILE_BROWSER": renderBrowser,
 }
 
