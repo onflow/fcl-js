@@ -1,11 +1,8 @@
 import {URL} from "../../../../utils/url"
 
-export function serviceEndpoint(service, config) {
+export function serviceEndpoint(service, config, body) {
   const url = new URL(service.endpoint)
-
-  if(config) {
-    url.searchParams.append('fclMessageJson', JSON.stringify({config}))
-  }
+  url.searchParams.append('fclMessageJson', JSON.stringify({config, body}))
 
   if (service.params != null) {
     for (let [key, value] of Object.entries(service.params || {})) {

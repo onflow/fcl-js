@@ -6,9 +6,8 @@ import { FCL_RESPONSE_PARAM_NAME } from '../../../constants'
 
 const noop = () => {}
 
-export function browser(service, config, opts = {}) {
-  const send = noop
-  if (service == null) return {send, close: noop}
+export function browser(service, config, body, opts = {}) {
+  if (service == null) return {send: noop, close: noop}
   
   const onClose = opts.onClose || noop
   const onMessage = noop
@@ -17,26 +16,25 @@ export function browser(service, config, opts = {}) {
 
   const handler = buildMessageHandler({
     close,
-    send,
+    send: noop,
     onReady,
     onResponse,
     onMessage,
   })
-  const parseDeeplink = (url) => {
-    const { queryParams } = Linking.parse(url);
+  const parseDeeplink = ({url}) => {
+    const { queryParams } = Linking.parse(url)
     const eventDataRaw = queryParams[FCL_RESPONSE_PARAM_NAME]
     const eventData = JSON.parse(eventDataRaw)
     
-    console.log({eventData})
     handler({data: eventData})
   }
   
-  const [browser, unmount] = renderBrowser(serviceEndpoint(service, config))
+  const [browser, unmount] = renderBrowser(serviceEndpoint(service, config, body))
   // Android deeplink parsing
-  Linking.addEventListener("url", ({url}) => parseDeeplink(url))
+  Linking.addEventListener("url", parseDeeplink)
   // iOS deeplink parsing
-  browser.then(({url}) =>parseDeeplink(url))
-  return {send, close}
+  browser.then(parseDeeplink)
+  return {send: noop, close}
 
   function close() {
     try {
