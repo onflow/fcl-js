@@ -1,3 +1,4 @@
+import {FCL_REDIRECT_URL_PARAM_NAME, FCL_RESPONSE_PARAM_NAME} from "../utils/constants"
 import {onMessageFromFCL} from "./on-message-from-fcl"
 
 /**
@@ -18,7 +19,19 @@ import {onMessageFromFCL} from "./on-message-from-fcl"
  *  })
  */
 export const sendMsgToFCL = (type, msg = {}) => {
-  if (window.location !== window.parent.location) {
+  const data = {...msg, type}
+
+  const urlParams = new URLSearchParams(window.location.search)
+  const redirectUrl = urlParams.get(FCL_REDIRECT_URL_PARAM_NAME)
+  console.log({redirectUrl})
+  if(redirectUrl) {
+    const url = new URL(redirectUrl)
+    url.searchParams.append(
+      FCL_RESPONSE_PARAM_NAME,
+      JSON.stringify(data)
+    )
+    window.location.href = url.href
+  } else if (window.location !== window.parent.location) {
     window.parent.postMessage({...msg, type}, "*")
   } else if (window.opener) {
     window.opener.postMessage({...msg, type}, "*")
