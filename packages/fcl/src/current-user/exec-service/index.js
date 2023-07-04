@@ -4,6 +4,7 @@ import {getServiceRegistry} from "./plugins"
 import {getChainId} from "../../utils"
 import {VERSION} from "../../VERSION"
 import {configLens} from "../../default-config"
+import {config as fclConfig} from "@onflow/config"
 
 const execStrategy = async ({service, body, config, opts}) => {
   const strategy = getServiceRegistry().getStrategy(service.method)
@@ -12,11 +13,13 @@ const execStrategy = async ({service, body, config, opts}) => {
 
 export async function execService({service, msg = {}, config = {}, opts = {}}) {
   msg.data = service.data
+  const platform = await fclConfig.get('client.platform')
   const execConfig = {
     services: await configLens(/^service\./),
     app: await configLens(/^app\.detail\./),
     client: {
       ...config.client,
+      platform,
       fclVersion: VERSION,
       fclLibrary: "https://github.com/onflow/fcl-js",
       hostname: window?.location?.hostname ?? null,

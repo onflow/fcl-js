@@ -17,6 +17,7 @@ export const getDefaultConfig = () => {
   return {
     "discovery.wallet.method.default": "MOBILE_BROWSER/DEEPLINK",
     "fcl.storage.default": getAsyncStorage(),
+    "client.platform": "react-native",
   }
 }
 

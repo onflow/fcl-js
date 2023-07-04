@@ -23,7 +23,6 @@ export const sendMsgToFCL = (type, msg = {}) => {
 
   const urlParams = new URLSearchParams(window.location.search)
   const redirectUrl = urlParams.get(FCL_REDIRECT_URL_PARAM_NAME)
-  console.log({redirectUrl})
   if(redirectUrl) {
     const url = new URL(redirectUrl)
     url.searchParams.append(
