@@ -44,7 +44,7 @@ module.exports = function getInputOptions(package, build) {
       }, false))
 
   // exclude peer dependencies
-  const resolveOnly = [new RegExp(`^(?!${Object.keys(package.peerDependencies).join("|")}).*`)]
+  const resolveOnly = [new RegExp(`^(?!${Object.keys(package.peerDependencies || {}).join("|")}).*`)]
 
   let options = {
     input: build.source,
