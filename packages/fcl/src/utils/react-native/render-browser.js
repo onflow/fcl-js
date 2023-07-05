@@ -21,5 +21,12 @@ export function renderBrowser(src, opts = {}) {
     }
   }
 
+  // Call onClose when the webbrowser is closed	
+  webbrowser.then(() => {
+    if(opts?.onClose) {
+      opts.onClose()	
+    }
+  })
+
   return [webbrowser, unmount]
 }

@@ -51,7 +51,7 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "build": "npm run lint && fcl-bundle",
-    "build:types": "tsc",
+    "build:types": "tsc --project ./tsconfig-web.json && tsc --noResolve --project ./tsconfig-react-native.json",
     "start": "fcl-bundle --watch",
     "lint": "eslint ."
   },

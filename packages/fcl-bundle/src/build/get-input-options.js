@@ -43,6 +43,9 @@ module.exports = function getInputOptions(package, build) {
         )
       }, false))
 
+  // exclude peer dependencies
+  const resolveOnly = [new RegExp(`^(?!${Object.keys(package.peerDependencies).join("|")}).*`)]
+
   let options = {
     input: build.source,
     external: testExternal,
@@ -59,6 +62,7 @@ module.exports = function getInputOptions(package, build) {
       nodeResolve({
         browser: true,
         preferBuiltins: build.type !== "umd",
+        resolveOnly,
       }),
       babel({
         babelHelpers: "runtime",
