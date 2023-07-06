@@ -1,10 +1,10 @@
 import {config} from "@onflow/config"
 import {invariant} from "@onflow/util-invariant"
-import {serviceRegistry} from "../current-user/exec-service/plugins"
+import {getServiceRegistry} from "../current-user/exec-service/plugins"
 
 export const makeDiscoveryServices = async () => {
   const extensionServices = window?.fcl_extensions || []
-  return [...extensionServices, ...serviceRegistry.getServices()]
+  return [...extensionServices, ...getServiceRegistry().getServices()]
 }
 
 export async function getDiscoveryService(service) {

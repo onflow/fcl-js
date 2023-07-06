@@ -1,4 +1,4 @@
-import {renderTab} from "./render-tab"
+import {renderTab} from "../../../../utils/web"
 import {serviceEndpoint} from "./service-endpoint"
 import {buildMessageHandler} from "./buildMessageHandler"
 

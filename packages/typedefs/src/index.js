@@ -72,7 +72,7 @@
  * @property {string} method - Service method
  * @property {string} [uid] - Service uid
  * @property {string} endpoint - Service endpoint
- * @property {object} provider - Service provider object
+ * @property {Provider} provider - Service provider object
  */
 
 /**
@@ -106,6 +106,12 @@
  * @property {number} statusString - The status as as descriptive text (e.g. "FINALIZED").
  * @property {string} errorMessage - The error message of the transaction.
  * @property {Array<Event>} events - The events for this result.
+ */
+
+/**
+ * @typedef {object} Provider
+ * @property {string} name - Provider name.
+ * @todo fill the rest
  */
 
 // Needed for bundler to export this file

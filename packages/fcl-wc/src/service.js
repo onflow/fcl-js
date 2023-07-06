@@ -1,4 +1,4 @@
-import { WalletConnectModal } from "@walletconnect/modal";
+import {WalletConnectModal} from "@walletconnect/modal"
 import {invariant} from "@onflow/util-invariant"
 import {log, LEVELS} from "@onflow/util-logger"
 import {fetchFlowWallets, isMobile, CONFIGURED_NETWORK, isIOS} from "./utils"
@@ -210,10 +210,10 @@ async function connectWc({
   }
 
   const projectId = client.opts.projectId
-
   const web3Modal = new WalletConnectModal({
     projectId
   });
+
   try {
     const {uri, approval} = await client.connect({
       pairingTopic: pairing?.topic,
@@ -245,24 +245,7 @@ async function connectWc({
       windowRef.location.href = url
     } else if (!pairing) {
       if (!pairingModalOverride) {
-        // console.log("here two")
-        // const data = await web3Modal.signIn({
-        //   statement: "connect fcl"
-        // });
-        // console.info(data)
-        web3Modal.openModal({ uri,onClose });
-
-        // QRCodeModal.open(uri, () => {
-        //   onClose()
-        // })
-        // web3Modal.openModal({ uri, onClose });
-        // Await session approval from the wallet.
-        // const session = await approval();
-        // Handle the returned session (e.g. update UI to "connected" state).
-        // * You will need to create this function *
-        // onSessionConnect(session);
-        // Close the QRCode modal in case it was open.
-        // web3Modal.closeModal();
+        web3Modal.openModal({uri, onClose})
       } else {
         pairingModalOverride(uri, onClose)
       }

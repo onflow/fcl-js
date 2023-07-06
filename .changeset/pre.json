@@ -1,0 +1,30 @@
+{
+  "mode": "pre",
+  "tag": "alpha",
+  "initialVersions": {
+    "@onflow/config": "1.1.0",
+    "@onflow/fcl": "1.4.1",
+    "@onflow/fcl-bundle": "1.3.0",
+    "@onflow/fcl-wc": "2.0.0",
+    "@onflow/protobuf": "1.2.0",
+    "@onflow/rlp": "1.1.0",
+    "@onflow/sdk": "1.2.0",
+    "@onflow/transport-grpc": "1.2.0",
+    "@onflow/transport-http": "1.6.0",
+    "@onflow/typedefs": "1.1.0",
+    "@onflow/types": "1.1.0",
+    "@onflow/util-actor": "1.2.0",
+    "@onflow/util-address": "1.1.0",
+    "@onflow/util-encode-key": "1.1.0",
+    "@onflow/util-invariant": "1.1.0",
+    "@onflow/util-logger": "1.2.0",
+    "@onflow/util-template": "1.1.0",
+    "@onflow/util-uid": "1.1.0"
+  },
+  "changesets": [
+    "beige-shrimps-report",
+    "blue-dryers-call",
+    "funny-waves-search",
+    "tasty-shirts-flow"
+  ]
+}

@@ -1,21 +1,4 @@
 import {config} from "@onflow/config"
-import {setChainIdDefault, watchForChainIdChanges} from "./utils"
-
-const isServerSide = () => typeof window === "undefined"
-
-const SESSION_STORAGE = {
-  can: !isServerSide(),
-  get: async key => JSON.parse(sessionStorage.getItem(key)),
-  put: async (key, value) => sessionStorage.setItem(key, JSON.stringify(value)),
-}
-
-config({
-  "discovery.wallet.method.default": "IFRAME/RPC",
-  "fcl.storage.default": SESSION_STORAGE,
-})
-
-// Set chain id default on access node change
-watchForChainIdChanges()
 
 export async function configLens(regex) {
   return Object.fromEntries(

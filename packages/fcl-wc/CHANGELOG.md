@@ -1,5 +1,21 @@
 # @onflow/fcl-wc
 
+## 3.0.0-alpha.1
+
+### Patch Changes
+
+- [#1688](https://github.com/onflow/fcl-js/pull/1688) [`ec80946d`](https://github.com/onflow/fcl-js/commit/ec80946db5b72a258b7307d48fd85697db7935d3) Thanks [@nialexsan](https://github.com/nialexsan)! - Updated WalletConnect integration
+
+- Updated dependencies [[`53d1f607`](https://github.com/onflow/fcl-js/commit/53d1f607fd15535a29cbbb1c809f0fc4d7a6be7b)]:
+  - @onflow/fcl@1.5.0-alpha.2
+
+## 3.0.0-alpha.0
+
+### Patch Changes
+
+- Updated dependencies [[`090963f3`](https://github.com/onflow/fcl-js/commit/090963f3ff6d4557f90a451a1ff5a723656f87dd)]:
+  - @onflow/fcl@1.5.0-alpha.0
+
 ## 2.0.0
 
 ### Minor Changes
