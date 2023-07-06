@@ -1,6 +1,5 @@
 {
   "extends": "./tsconfig.json",
-  // Change this to match your project
   "include": ["src/fcl.js"],
 
   "compilerOptions": {
