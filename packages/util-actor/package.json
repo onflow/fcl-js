@@ -20,7 +20,7 @@
     "@babel/runtime": "^7.18.6",
     "queue-microtask": "1.2.3"
   },
-  "source": "src/index.js",
+  "source": "src/index.ts",
   "main": "dist/actor.js",
   "module": "dist/actor.module.js",
   "unpkg": "dist/actor.umd.js",

@@ -1,5 +1,9 @@
+export interface IMailbox {
+  deliver(msg: any): Promise<void>;
+  receive(): Promise<unknown>;
+}
 export const mailbox = () => {
-  const queue = []
+  const queue: any[] = []
   var next
 
   return {

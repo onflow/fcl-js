@@ -1,4 +1,4 @@
-import {mailbox as createMailbox} from "./mailbox"
+import {mailbox as createMailbox, type IMailbox} from "./mailbox"
 import queueMicrotask from "queue-microtask"
 
 export const INIT = "INIT"
@@ -9,18 +9,35 @@ export const SNAPSHOT = "SNAPSHOT"
 export const EXIT = "EXIT"
 export const TERMINATE = "TERMINATE"
 
-const root =
-  (typeof self === "object" && self.self === self && self) ||
-  (typeof global === "object" && global.global === global && global) ||
-  (typeof window === "object" && window.window === window && window)
+interface IRegistryRecord {
+  addr: string
+  mailbox: IMailbox
+  subs: Set<string>
+  kvs: Record<string, any>
+  error: any
+}
+interface IRoot {
+  FCL_REGISTRY: Record<string, IRegistryRecord> | null
+}
+
+const root: IRoot =
+  (typeof self === "object" && self.self === self && (self as unknown) as IRoot) ||
+  (typeof global === "object" && global.global === global && (global as unknown) as IRoot) ||
+  (typeof window === "object" && window.window === window && (window as unknown) as IRoot) ||
+  {FCL_REGISTRY: null}
 
 root.FCL_REGISTRY = root.FCL_REGISTRY == null ? {} : root.FCL_REGISTRY
+
+const FCL_REGISTRY = root.FCL_REGISTRY
 var pid = 0b0
 
 const DEFAULT_TIMEOUT = 5000
 const DEFAULT_TAG = "---"
-export const send = (addr, tag, data, opts = {}) =>
-  new Promise((reply, reject) => {
+
+type Tag = typeof INIT | typeof SUBSCRIBE | typeof UNSUBSCRIBE | typeof UPDATED | typeof SNAPSHOT | typeof EXIT | typeof TERMINATE | "@EXIT";
+
+export const send = (addr: string, tag: Tag, data?: Record<string, any> | null, opts: Record<string, any> = {}) =>
+  new Promise<boolean>((reply, reject) => {
     const expectReply = opts.expectReply || false
     const timeout = opts.timeout != null ? opts.timeout : DEFAULT_TIMEOUT
 
@@ -43,21 +60,21 @@ export const send = (addr, tag, data, opts = {}) =>
     }
 
     try {
-      root.FCL_REGISTRY[addr] &&
-        root.FCL_REGISTRY[addr].mailbox.deliver(payload)
+      FCL_REGISTRY[addr] &&
+        FCL_REGISTRY[addr].mailbox.deliver(payload)
       if (!expectReply) reply(true)
     } catch (error) {
       console.error(
         "FCL.Actor -- Could Not Deliver Message",
         payload,
-        root.FCL_REGISTRY[addr],
+        FCL_REGISTRY[addr],
         error
       )
     }
   })
 
 export const kill = addr => {
-  delete root.FCL_REGISTRY[addr]
+  delete FCL_REGISTRY[addr]
 }
 
 const fromHandlers =
@@ -82,11 +99,18 @@ const fromHandlers =
     }
   }
 
-export const spawn = (fn, addr = null) => {
-  if (addr == null) addr = ++pid
-  if (root.FCL_REGISTRY[addr] != null) return addr
+const parseAddr = (addr): string => {
+  if (addr == null) {
+    return String(++pid)
+  }
+  return String(addr)
+} 
 
-  root.FCL_REGISTRY[addr] = {
+export const spawn = (fn, rawAddr: number | null = null) => {
+  const addr = parseAddr(rawAddr)
+  if (FCL_REGISTRY[addr] != null) return addr
+
+  FCL_REGISTRY[addr] = {
     addr,
     mailbox: createMailbox(),
     subs: new Set(),
@@ -96,57 +120,57 @@ export const spawn = (fn, addr = null) => {
 
   const ctx = {
     self: () => addr,
-    receive: () => root.FCL_REGISTRY[addr].mailbox.receive(),
-    send: (to, tag, data, opts = {}) => {
+    receive: () => FCL_REGISTRY[addr].mailbox.receive(),
+    send: (to: string, tag: Tag, data: Record<string, any> | null, opts: Record<string, any> = {}) => {
       opts.from = addr
       return send(to, tag, data, opts)
     },
     sendSelf: (tag, data, opts) => {
-      if (root.FCL_REGISTRY[addr]) send(addr, tag, data, opts)
+      if (FCL_REGISTRY[addr]) send(addr, tag, data, opts)
     },
-    broadcast: (tag, data, opts = {}) => {
+    broadcast: (tag, data, opts: Record<string, any> = {}) => {
       opts.from = addr
-      for (let to of root.FCL_REGISTRY[addr].subs) send(to, tag, data, opts)
+      for (let to of FCL_REGISTRY[addr].subs) send(to, tag, data, opts)
     },
-    subscribe: sub => sub != null && root.FCL_REGISTRY[addr].subs.add(sub),
-    unsubscribe: sub => sub != null && root.FCL_REGISTRY[addr].subs.delete(sub),
-    subscriberCount: () => root.FCL_REGISTRY[addr].subs.size,
-    hasSubs: () => !!root.FCL_REGISTRY[addr].subs.size,
+    subscribe: sub => sub != null && FCL_REGISTRY[addr].subs.add(sub),
+    unsubscribe: sub => sub != null && FCL_REGISTRY[addr].subs.delete(sub),
+    subscriberCount: () => FCL_REGISTRY[addr].subs.size,
+    hasSubs: () => !!FCL_REGISTRY[addr].subs.size,
     put: (key, value) => {
-      if (key != null) root.FCL_REGISTRY[addr].kvs[key] = value
+      if (key != null) FCL_REGISTRY[addr].kvs[key] = value
     },
     get: (key, fallback) => {
-      const value = root.FCL_REGISTRY[addr].kvs[key]
+      const value = FCL_REGISTRY[addr].kvs[key]
       return value == null ? fallback : value
     },
     delete: key => {
-      delete root.FCL_REGISTRY[addr].kvs[key]
+      delete FCL_REGISTRY[addr].kvs[key]
     },
     update: (key, fn) => {
       if (key != null)
-        root.FCL_REGISTRY[addr].kvs[key] = fn(root.FCL_REGISTRY[addr].kvs[key])
+        FCL_REGISTRY[addr].kvs[key] = fn(FCL_REGISTRY[addr].kvs[key])
     },
     keys: () => {
-      return Object.keys(root.FCL_REGISTRY[addr].kvs)
+      return Object.keys(FCL_REGISTRY[addr].kvs)
     },
     all: () => {
-      return root.FCL_REGISTRY[addr].kvs
+      return FCL_REGISTRY[addr].kvs
     },
     where: pattern => {
-      return Object.keys(root.FCL_REGISTRY[addr].kvs).reduce((acc, key) => {
+      return Object.keys(FCL_REGISTRY[addr].kvs).reduce((acc, key) => {
         return pattern.test(key)
-          ? {...acc, [key]: root.FCL_REGISTRY[addr].kvs[key]}
+          ? {...acc, [key]: FCL_REGISTRY[addr].kvs[key]}
           : acc
       }, {})
     },
     merge: (data = {}) => {
       Object.keys(data).forEach(
-        key => (root.FCL_REGISTRY[addr].kvs[key] = data[key])
+        key => (FCL_REGISTRY[addr].kvs[key] = data[key])
       )
     },
     fatalError: error => {
-      root.FCL_REGISTRY[addr].error = error
-      for (let to of root.FCL_REGISTRY[addr].subs) send(to, UPDATED)
+      FCL_REGISTRY[addr].error = error
+      for (let to of FCL_REGISTRY[addr].subs) send(to, UPDATED)
     },
   }
 
@@ -175,7 +199,7 @@ export function subscriber(address, spawnFn, callback) {
     ctx.send(address, SUBSCRIBE)
     while (1) {
       const letter = await ctx.receive()
-      const error = root.FCL_REGISTRY[address].error
+      const error = FCL_REGISTRY[address].error
       if (letter.tag === EXIT) {
         ctx.send(address, UNSUBSCRIBE)
         return
