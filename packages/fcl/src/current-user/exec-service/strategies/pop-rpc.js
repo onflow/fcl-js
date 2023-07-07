@@ -1,11 +1,11 @@
-import {uid} from "@onflow/util-uid"
+import {v4 as uuidv4} from 'uuid';
 import {pop} from "./utils/pop"
 import {normalizePollingResponse} from "../../../normalizers/service/polling-response"
 import {VERSION} from "../../../VERSION"
 
 export function execPopRPC({service, body, config, opts}) {
   return new Promise((resolve, reject) => {
-    const id = uid()
+    const id = uuidv4()
     const {redir, includeOlderJsonRpcCall} = opts
 
     pop(service, {
