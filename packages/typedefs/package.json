@@ -21,7 +21,7 @@
     "jest-esm-transformer": "1.0.0",
     "typescript": "^4.9.5"
   },
-  "source": "src/index.js",
+  "source": "src/index.ts",
   "main": "dist/typedefs.js",
   "module": "dist/typedefs.module.js",
   "unpkg": "dist/typedefs.umd.js",
