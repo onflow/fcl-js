@@ -25,7 +25,6 @@ test("Voucher in PreSignable", async () => {
       authorizations([authz]),
       payer({
         addr: "0x02",
-        tempId: "payerAcct",
         signingFunction: () => ({signature: "123"}),
         keyId: 0,
         sequenceNum: 123,
@@ -55,7 +54,6 @@ test("Voucher in PreSignable", async () => {
 test("Voucher in PreSignable multiple payer keys", async () => {
   const authz = {
     addr: "0x01",
-    tempId: "0x01-1",
     signingFunction: () => ({signature: "123"}),
     keyId: 1,
     sequenceNum: 123,
@@ -66,7 +64,6 @@ test("Voucher in PreSignable multiple payer keys", async () => {
     resolve: (account, preSignable) => [
       {
         ...account,
-        tempId: "0x02-0",
         addr: "0x02",
         keyId: 0,
         sequenceNum: 123,
@@ -78,7 +75,6 @@ test("Voucher in PreSignable multiple payer keys", async () => {
       },
       {
         ...account,
-        tempId: "0x02-1",
         addr: "0x02",
         keyId: 1,
         sequenceNum: 123,
@@ -127,7 +123,6 @@ test("Voucher in PreSignable multiple payer keys", async () => {
 test("Voucher in PreSignable multiple payer keys different accounts", async () => {
   const authz = {
     addr: "0x01",
-    tempId: "0x01-1",
     signingFunction: () => ({signature: "123"}),
     keyId: 1,
     sequenceNum: 123,
@@ -139,7 +134,6 @@ test("Voucher in PreSignable multiple payer keys different accounts", async () =
     resolve: (account, preSignable) => [
       {
         ...account,
-        tempId: "0x02-0",
         addr: "0x02",
         keyId: 0,
         sequenceNum: 123,
@@ -151,7 +145,6 @@ test("Voucher in PreSignable multiple payer keys different accounts", async () =
       },
       {
         ...account,
-        tempId: "0x01-1",
         addr: "0x01",
         keyId: 1,
         sequenceNum: 123,
@@ -179,7 +172,6 @@ test("Voucher in PreSignable multiple payer keys different accounts", async () =
 test("mulitple payer scenario (One from dev and one from pre-authz)", async () => {
   const authzPayer = {
     addr: "0x01",
-    tempId: "0x01-1",
     signingFunction: () => ({signature: "123"}),
     keyId: 1,
     sequenceNum: 123,
@@ -187,14 +179,12 @@ test("mulitple payer scenario (One from dev and one from pre-authz)", async () =
 
   const authz = {
     kind: "ACCOUNT",
-    tempId: "CURRENT_USER",
     addr: null,
     keyId: null,
     signature: null,
     signingFunction: null,
     resolve: (account, preSignable) => [
       {
-        tempId: "72f6325947f76d3a|1",
         addr: "72f6325947f76d3a",
         sequenceNum: 12,
         signingFunction: () => ({signature: "1"}),
@@ -202,14 +192,12 @@ test("mulitple payer scenario (One from dev and one from pre-authz)", async () =
         role: {proposer: true, payer: false, authorizer: false},
       },
       {
-        tempId: "f086a545ce3c552d|12",
         addr: "f086a545ce3c552d",
         signingFunction: () => ({signature: "2"}),
         keyId: 12,
         role: {proposer: false, payer: true, authorizer: false},
       },
       {
-        tempId: "72f6325947f76d3a|1",
         addr: "72f6325947f76d3a",
         sequenceNum: 12,
         signingFunction: () => ({signature: "1"}),
@@ -257,14 +245,12 @@ test("mulitple payer scenario (One from dev and one from pre-authz)", async () =
 test("mulitple payer scenario (One from dev and one from pre-authz) as array", async () => {
   const authzPayer1 = {
     addr: "0x01",
-    tempId: "0x01-1",
     signingFunction: () => ({signature: "123"}),
     keyId: 1,
     sequenceNum: 123,
   }
   const authzPayer2 = {
     addr: "0x01",
-    tempId: "0x01-2",
     signingFunction: () => ({signature: "456"}),
     keyId: 2,
     sequenceNum: 456,
@@ -272,14 +258,12 @@ test("mulitple payer scenario (One from dev and one from pre-authz) as array", a
 
   const authz = {
     kind: "ACCOUNT",
-    tempId: "CURRENT_USER",
     addr: null,
     keyId: null,
     signature: null,
     signingFunction: null,
     resolve: (account, preSignable) => [
       {
-        tempId: "72f6325947f76d3a|1",
         addr: "72f6325947f76d3a",
         sequenceNum: 12,
         signingFunction: () => ({signature: "1"}),
@@ -287,14 +271,12 @@ test("mulitple payer scenario (One from dev and one from pre-authz) as array", a
         role: {proposer: true, payer: false, authorizer: false},
       },
       {
-        tempId: "f086a545ce3c552d|12",
         addr: "f086a545ce3c552d",
         signingFunction: () => ({signature: "2"}),
         keyId: 12,
         role: {proposer: false, payer: true, authorizer: false},
       },
       {
-        tempId: "72f6325947f76d3a|1",
         addr: "72f6325947f76d3a",
         sequenceNum: 12,
         signingFunction: () => ({signature: "1"}),
@@ -345,14 +327,12 @@ test("mulitple payer scenario (One from dev and one from pre-authz) as array", a
 test("payer from pre-authz", async () => {
   const authz = {
     kind: "ACCOUNT",
-    tempId: "CURRENT_USER",
     addr: null,
     keyId: null,
     signature: null,
     signingFunction: null,
     resolve: (account, preSignable) => [
       {
-        tempId: "72f6325947f76d3a|1",
         addr: "72f6325947f76d3a",
         sequenceNum: 12,
         signingFunction: () => ({signature: "1"}),
@@ -360,14 +340,12 @@ test("payer from pre-authz", async () => {
         role: {proposer: true, payer: false, authorizer: false},
       },
       {
-        tempId: "f086a545ce3c552d|12",
         addr: "f086a545ce3c552d",
         signingFunction: () => ({signature: "2"}),
         keyId: 12,
         role: {proposer: false, payer: true, authorizer: false},
       },
       {
-        tempId: "72f6325947f76d3a|1",
         addr: "72f6325947f76d3a",
         sequenceNum: 12,
         signingFunction: () => ({signature: "1"}),
