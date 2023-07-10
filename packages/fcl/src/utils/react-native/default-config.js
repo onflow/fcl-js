@@ -15,9 +15,8 @@ const getAsyncStorage = () => {
 
 export const getDefaultConfig = () => {
   return {
-    "discovery.wallet.method.default": "MOBILE_BROWSER/DEEPLINK",
+    "discovery.wallet.method.default": "DEEPLINK/RPC",
     "fcl.storage.default": getAsyncStorage(),
-    "client.platform": "react-native",
   }
 }
 

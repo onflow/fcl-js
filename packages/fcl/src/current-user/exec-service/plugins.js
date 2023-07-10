@@ -3,7 +3,9 @@ import {LEVELS, log} from "@onflow/util-logger"
 import {isRequired, isString, isObject, isFunc} from "../../exec/utils/is"
 import { CORE_STRATEGIES } from "../../utils/constants"
 
-const stub = () => {}
+const stub = () => {
+  throw new Error(`Platform specific Core Strategies are not initialized`)
+}
 
 const stubCoreStrategies = ({
   [CORE_STRATEGIES["EXT/RPC"]]: stub,
