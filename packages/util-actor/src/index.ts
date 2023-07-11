@@ -1,5 +1,5 @@
 import {mailbox as createMailbox, type IMailbox} from "./mailbox"
-import queueMicrotask from "queue-microtask"
+import * as queueMicrotask from "queue-microtask"
 
 export const INIT = "INIT"
 export const SUBSCRIBE = "SUBSCRIBE"
@@ -8,6 +8,9 @@ export const UPDATED = "UPDATED"
 export const SNAPSHOT = "SNAPSHOT"
 export const EXIT = "EXIT"
 export const TERMINATE = "TERMINATE"
+const DUMP = "DUMP"
+const INC = "INC"
+const KEYS = "KEYS"
 
 interface IRegistryRecord {
   addr: string
@@ -34,7 +37,7 @@ var pid = 0b0
 const DEFAULT_TIMEOUT = 5000
 const DEFAULT_TAG = "---"
 
-type Tag = typeof INIT | typeof SUBSCRIBE | typeof UNSUBSCRIBE | typeof UPDATED | typeof SNAPSHOT | typeof EXIT | typeof TERMINATE | "@EXIT";
+type Tag = typeof INIT | typeof SUBSCRIBE | typeof UNSUBSCRIBE | typeof UPDATED | typeof SNAPSHOT | typeof EXIT | typeof TERMINATE | "@EXIT" | typeof DUMP | typeof INC | typeof KEYS;
 
 export const send = (addr: string, tag: Tag, data?: Record<string, any> | null, opts: Record<string, any> = {}) =>
   new Promise<boolean>((reply, reject) => {
