@@ -26,25 +26,44 @@ export const getExecHttpPost = (execLocal) => async({service, body, config, opts
   } else if (resp.status === "REDIRECT") {
     return resp
   } else if (resp.status === "PENDING") {
+
+    // these two flags are required to run polling one more time before it stops
     var canContinue = true
+    var shouldContinue = true
+
     const [_, unmount] = await execLocal(
       normalizeLocalView(resp.local),
       {
         serviceEndpoint,
-        onClose: () => (canContinue = false)
+        onClose: () => (shouldContinue = false)
       }
     )
 
     const close = () => {
       try {
         unmount()
-        canContinue = false
+        shouldContinue = false
       } catch (error) {
         console.error("Frame Close Error", error)
       }
     }
+    /**
+     * this function is run once per poll call.
+     * Offsetting canContinue flag to make sure that
+     * the polling is performed one extra time after canContinue flag is set to false
+     * to prevent halting on Android when a browser calls window.close
+     * before FCL receives a successful result from polling
+     *
+     * @returns {boolean} 
+     */ 
+    const checkCanContinue = () => {
+      const offsetCanContinue = canContinue
+      canContinue = shouldContinue
 
-    return poll(resp.updates, () => canContinue)
+      return offsetCanContinue
+    }
+
+    return poll(resp.updates, checkCanContinue)
       .then(serviceResponse => {
         close()
         return serviceResponse

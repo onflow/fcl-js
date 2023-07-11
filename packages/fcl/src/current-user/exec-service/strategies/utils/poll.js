@@ -24,9 +24,10 @@ const serviceBody = service => {
   return undefined
 }
 
-export async function poll(service, canContinue = () => true) {
+export async function poll(service, checkCanContinue = () => true) {
   invariant(service, "Missing Polling Service", {service})
-  if (!canContinue()) throw new Error("Externally Halted")
+  const canContinue = checkCanContinue()
+  if (!canContinue) throw new Error("Externally Halted")
 
   let resp
   try {
@@ -35,7 +36,7 @@ export async function poll(service, canContinue = () => true) {
       document.visibilityState === "hidden"
     ) {
       await new Promise(r => setTimeout(r, 500))
-      return poll(service, canContinue)
+      return poll(service, checkCanContinue)
     }
 
     resp = await fetchService(service, {
@@ -52,6 +53,6 @@ export async function poll(service, canContinue = () => true) {
       throw new Error(`Declined: ${resp.reason || "No reason supplied."}`)
     default:
       await new Promise(r => setTimeout(r, 500))
-      return poll(resp.updates, canContinue)
+      return poll(resp.updates, checkCanContinue)
   }
 }
