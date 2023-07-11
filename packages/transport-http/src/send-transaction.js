@@ -24,13 +24,19 @@ export async function sendTransaction(ix, context = {}, opts = {}) {
   for (let acct of Object.values(ix.accounts)) {
     try {
       if (!acct.role.payer && acct.signature != null) {
-        payloadSignatures.push({
+        const signature = {
           address: sansPrefix(acct.addr),
           key_index: String(acct.keyId),
           signature: context.Buffer.from(acct.signature, "hex").toString(
             "base64"
           ),
-        })
+        }
+        if (!payloadSignatures.find(existingSignature => existingSignature.address === signature.address
+          && existingSignature.key_index === signature.key_index
+          && existingSignature.signature === signature.signature
+        )) {
+          payloadSignatures.push(signature)
+        }
       }
     } catch (error) {
       console.error("SDK HTTP Send Error: Trouble applying payload signature", {
