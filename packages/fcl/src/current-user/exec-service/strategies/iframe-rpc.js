@@ -1,11 +1,11 @@
-import {v4 as uuidv4} from 'uuid';
+import {uid} from "@onflow/util-uid"
 import {frame} from "./utils/frame"
 import {normalizePollingResponse} from "../../../normalizers/service/polling-response"
 import {VERSION} from "../../../VERSION"
 
 export function execIframeRPC({service, body, config, opts}) {
   return new Promise((resolve, reject) => {
-    const id = uuidv4()
+    const id = uid()
     const includeOlderJsonRpcCall = opts.includeOlderJsonRpcCall
 
     frame(service, {
