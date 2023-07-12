@@ -9,13 +9,8 @@ import {getChainId} from "./get-chain-id"
  *
  */
 export function watchForChainIdChanges() {
-  let prevAccessNode
-  return config.subscribe(config => {
+  return config.subscribe(() => {
     // Call getChainId to update the chainId cache if access node has changed
-    const newAccessNode = config?.["accessNode.api"]
-    if (prevAccessNode !== newAccessNode) {
-      getChainId().catch(() => {})
-    }
-    prevAccessNode = newAccessNode
+    getChainId().catch(() => {})
   })
 }
