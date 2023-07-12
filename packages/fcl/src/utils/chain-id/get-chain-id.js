@@ -75,10 +75,7 @@ export async function getChainId() {
 
   invariant(
     network,
-    "Error getting chainId from access node. Please configure flow.network instead" +
-      (accessNode ? ` for access node ${accessNode}` : "") +
-      "." +
-      (await config.get("flow.network"))
+    "Error getting chainId from access node. Please configure flow.network instead"
   )
 
   return network
