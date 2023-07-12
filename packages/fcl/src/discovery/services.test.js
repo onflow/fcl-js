@@ -1,5 +1,6 @@
 import {getServices} from "./services"
 import {config} from "@onflow/config"
+import * as chainIdModule from "../utils/get-chain-id"
 
 const serviceOne = {
   f_type: "Service",
@@ -58,10 +59,13 @@ const endpoint = "https://fcl-discovery.onflow.org/api/testnet/authn"
 
 describe("getServices", () => {
   let windowSpy
+  let chainIdSpy
   let configRef
 
   beforeEach(() => {
     windowSpy = jest.spyOn(window, "window", "get")
+    chainIdSpy = jest.spyOn(chainIdModule, "getChainId")
+    chainIdSpy.mockImplementation(async () => "testnet")
     configRef = config()
     configRef.put(
       "discovery.authn.endpoint",
@@ -72,6 +76,7 @@ describe("getServices", () => {
 
   afterEach(() => {
     windowSpy.mockRestore()
+    chainIdSpy.mockRestore()
     global.fetch.mockClear()
   })
 
