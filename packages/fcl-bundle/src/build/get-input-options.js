@@ -2,10 +2,9 @@ const _ = require("lodash")
 
 const commonjs = require("@rollup/plugin-commonjs")
 const replace = require("@rollup/plugin-replace")
-const sourcemap = require("rollup-plugin-sourcemaps")
 const {nodeResolve} = require("@rollup/plugin-node-resolve")
 const {babel} = require("@rollup/plugin-babel")
-const {terser} = require("rollup-plugin-terser")
+const terser = require('@rollup/plugin-terser')
 const typescript = require('@rollup/plugin-typescript')
 
 const builtinModules = require("builtin-modules")
@@ -80,7 +79,6 @@ module.exports = function getInputOptions(package, build) {
           ecma: 5,
           toplevel: build.type == "cjs" || build.type == "esm",
         }),
-      sourcemap(),
     ],
   }
 
