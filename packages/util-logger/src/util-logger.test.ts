@@ -1,4 +1,3 @@
-import {config} from "@onflow/config"
 import * as logger from "./util-logger"
 
 describe("logger.LEVELS", () => {
@@ -12,20 +11,18 @@ describe("logger.LEVELS", () => {
 })
 
 describe("logger", () => {
-  let configRef
-  const loggerLevelConfigKey = "logger.level"
   const testArgs = {
     title: "test title",
     message: "test message",
   }
 
   beforeEach(() => {
-    configRef = config()
+    delete process.env.LOGGER_LEVEL
   })
 
   it("should not fire logger if config level is less than log level", async () => {
     const consoleSpy = jest.spyOn(console, "log").mockImplementation()
-    configRef.put(loggerLevelConfigKey, 0)
+    process.env.LOGGER_LEVEL = "0"
 
     await logger.log({...testArgs, level: 1})
     expect(consoleSpy).not.toHaveBeenCalled()
@@ -33,7 +30,7 @@ describe("logger", () => {
 
   it("should fire logger if config level is less than log level and always is true", async () => {
     const consoleSpy = jest.spyOn(console, "warn").mockImplementation()
-    configRef.put(loggerLevelConfigKey, 0)
+    process.env.LOGGER_LEVEL = "0"
 
     await logger.log({...testArgs, level: 2, always: true})
     expect(consoleSpy).toHaveBeenCalled()
@@ -41,7 +38,7 @@ describe("logger", () => {
 
   it("should call correct console method for level log", async () => {
     const consoleSpy = jest.spyOn(console, "log").mockImplementation()
-    configRef.put(loggerLevelConfigKey, 0)
+    process.env.LOGGER_LEVEL = "0"
 
     await logger.log({...testArgs, level: 0})
     expect(consoleSpy).toHaveBeenCalled()
@@ -49,7 +46,7 @@ describe("logger", () => {
 
   it("should call correct console method for level error", async () => {
     const consoleSpy = jest.spyOn(console, "error").mockImplementation()
-    configRef.put(loggerLevelConfigKey, logger.LEVELS.error)
+    process.env.LOGGER_LEVEL = logger.LEVELS.error.toString()
 
     await logger.log({...testArgs, level: logger.LEVELS.error})
     expect(consoleSpy).toHaveBeenCalled()
@@ -57,7 +54,7 @@ describe("logger", () => {
 
   it("should call correct console method for level warn", async () => {
     const consoleSpy = jest.spyOn(console, "warn").mockImplementation()
-    configRef.put(loggerLevelConfigKey, logger.LEVELS.warn)
+    process.env.LOGGER_LEVEL = logger.LEVELS.warn.toString()
 
     await logger.log({...testArgs, level: logger.LEVELS.warn})
     expect(consoleSpy).toHaveBeenCalled()
@@ -65,7 +62,7 @@ describe("logger", () => {
 
   it("should call correct console method for level log", async () => {
     const consoleSpy = jest.spyOn(console, "log").mockImplementation()
-    configRef.put(loggerLevelConfigKey, logger.LEVELS.log)
+    process.env.LOGGER_LEVEL = logger.LEVELS.log.toString()
 
     await logger.log({...testArgs, level: logger.LEVELS.log})
     expect(consoleSpy).toHaveBeenCalled()
@@ -73,7 +70,7 @@ describe("logger", () => {
 
   it("should call correct console method for level info", async () => {
     const consoleSpy = jest.spyOn(console, "info").mockImplementation()
-    configRef.put(loggerLevelConfigKey, logger.LEVELS.info)
+    process.env.LOGGER_LEVEL = logger.LEVELS.info.toString()
 
     await logger.log({...testArgs, level: logger.LEVELS.info})
     expect(consoleSpy).toHaveBeenCalled()
@@ -81,7 +78,7 @@ describe("logger", () => {
 
   it("should call correct console method for level debug", async () => {
     const consoleSpy = jest.spyOn(console, "debug").mockImplementation()
-    configRef.put(loggerLevelConfigKey, logger.LEVELS.debug)
+    process.env.LOGGER_LEVEL = logger.LEVELS.debug.toString()
 
     await logger.log({...testArgs, level: logger.LEVELS.debug})
     expect(consoleSpy).toHaveBeenCalled()

@@ -26,17 +26,6 @@ npm install --save @onflow/util-logger
 | `info`  |   4   |
 | `debug` |   5   |
 
-```javascript
-import * as logger from "@onflow/util-logger"
-
-// This will fire if the config "logger.level" value is set to the error level or above
-logger.log({
-  title: "Title of error", 
-  message: "Message body", 
-  level: logger.LEVELS.error
-})
-```
-
 ## Deprecation
 
 This package also exposes a useful method for logging deprecation warnings via `log.deprecate`.  The function accepts an object with the following keys as its parameters.
