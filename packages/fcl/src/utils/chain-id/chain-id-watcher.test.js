@@ -48,7 +48,7 @@ describe("chain-id-watcher", () => {
       await new Promise(resolve => setTimeout(resolve, 0))
 
       // Expect two calls since we changed the access node and there is an initial call
-      expect(chainIdUtils.getChainId).toHaveBeenCalledTimes(1)
+      expect(chainIdUtils.getChainId).toHaveBeenCalledTimes(2)
     })
   })
 
