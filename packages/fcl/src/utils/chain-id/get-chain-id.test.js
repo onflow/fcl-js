@@ -1,5 +1,5 @@
 import {getChainId, clearChainIdCache} from "./get-chain-id"
-import { config } from "@onflow/config"
+import {config} from "@onflow/config"
 import * as fetchChainIdModule from "./fetch-chain-id"
 
 describe("getChainId", () => {
@@ -16,7 +16,7 @@ describe("getChainId", () => {
       async () => {
         const fetchChainIdSpy = jest.spyOn(fetchChainIdModule, "fetchChainId")
         fetchChainIdSpy.mockImplementation(() => {
-          return new Promise((resolve) => {
+          return new Promise(resolve => {
             setTimeout(() => {
               resolve("testnet")
             }, 0)
@@ -39,7 +39,7 @@ describe("getChainId", () => {
       async () => {
         const fetchChainIdSpy = jest.spyOn(fetchChainIdModule, "fetchChainId")
         fetchChainIdSpy.mockImplementation(() => {
-          return new Promise(async (resolve) => {
+          return new Promise(async resolve => {
             const accessNode = await config.get("accessNode.api")
             setTimeout(() => {
               if (accessNode === "https://example.com") {
@@ -58,6 +58,31 @@ describe("getChainId", () => {
         expect(fetchChainIdSpy).toHaveBeenCalledTimes(2)
         expect(result1).toEqual("testnet")
         expect(result2).toEqual("mainnet")
+      }
+    )
+  })
+
+  it("getChainId uses opts.node if specified", async () => {
+    await config.overload(
+      {"accessNode.api": "https://example.com"},
+      async () => {
+        const fetchChainIdSpy = jest.spyOn(fetchChainIdModule, "fetchChainId")
+        fetchChainIdSpy.mockImplementation((opts = {}) => {
+          return new Promise((resolve, reject) => {
+            if (opts.node === "https://example2.com") {
+              resolve("testnet")
+            } else {
+              reject(new Error("Invalid node"))
+            }
+          })
+        })
+
+        const result = await getChainId({node: "https://example2.com"})
+        await getChainId({node: "https://example2.com"})
+
+        // Should only be called once since we are using opts.node
+        expect(fetchChainIdSpy).toHaveBeenCalledTimes(1)
+        expect(result).toEqual("testnet")
       }
     )
   })

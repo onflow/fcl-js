@@ -1,15 +1,15 @@
 import {config} from "@onflow/config"
-import {invariant} from "@onflow/util-invariant"
 import {fetchChainId} from "./fetch-chain-id"
 
-// Cache chainId promise and access node it was resolved from
-let chainIdAccessNode = null
-let chainIdPromise = null
+// Cache of chainId promises for each access node value
+// key: access node, value: chainId promise
+let chainIdCache = {}
 
 /**
  * @description
  * Gets the chain ID if its set, otherwise gets the chain ID from the access node
  *
+ * @param {object} opts - Optional parameters
  * @returns {Promise<string>} The chain ID of the access node
  * @throws {Error} If the chain ID is not found
  *
@@ -17,14 +17,41 @@ let chainIdPromise = null
  * // returns "testnet"
  * getChainId()
  */
-export async function getChainId() {
-  let network
-  const accessNode = await config.get("accessNode.api")
+export async function getChainId(opts = {}) {
+  let network = await config.get("flow.network")
+  if (network) {
+    log.deprecate({
+      pkg: "FCL",
+      subject:
+        'Using the "flow.network" configuration key for specifying the flow network',
+      message: "Configuring flow.network is no longer required",
+      transition:
+        "https://github.com/onflow/flow-js-sdk/blob/master/packages/fcl/TRANSITIONS.md#0002-deprecate-flow.network-config-key",
+    })
+
+    return network
+  }
+
+  network = await config.get("env")
+  if (network) {
+    log.deprecate({
+      pkg: "FCL",
+      subject:
+        'Using the "env" configuration key for specifying the flow network',
+      message: "Configuring to specify flow network is no longer required",
+      transition:
+        "https://github.com/onflow/flow-js-sdk/blob/master/packages/fcl/TRANSITIONS.md#0001-deprecate-env-config-key",
+    })
+
+    return network
+  }
+
+  const accessNode = opts.node || (await config.get("accessNode.api"))
 
   // Try using cached chainId first if it exists and access node is the same
-  if (chainIdPromise && chainIdAccessNode === accessNode) {
+  if (chainIdCache[accessNode]) {
     try {
-      network = await chainIdPromise
+      return chainIdCache[accessNode]
     } catch {}
   }
 
@@ -32,51 +59,22 @@ export async function getChainId() {
   if (!network) {
     // Check if another getChainId() call has already started a new promise, if not, start a new one
     // There may have been concurrent calls to getChainId() while the first call was waiting for the response
-    if (!chainIdPromise || chainIdAccessNode !== accessNode) {
-      chainIdAccessNode = accessNode
-      chainIdPromise = fetchChainId().catch(error => {
+    if (!chainIdCache[accessNode]) {
+      chainIdCache[accessNode] = fetchChainId(opts).catch(error => {
         // If there was an error, reset the promise so that the next call will try again
-        chainIdPromise = null
+        chainIdCache[accessNode] = null
         throw error
       })
     }
 
     try {
-      network = await chainIdPromise
-    } catch {}
-  }
-
-  // If chain id still not found, try using flow.network
-  if (!network) {
-    network = await config.get("flow.network")
-    if (network) {
-      log.deprecate({
-        pkg: "FCL",
-        subject:
-          'Using the "flow.network" configuration key for specifying the flow network',
-        message: "Configuring flow.network is no longer required",
-        transition:
-          "https://github.com/onflow/flow-js-sdk/blob/master/packages/fcl/TRANSITIONS.md#0002-deprecate-flow.network-config-key",
-      })
-    } else {
-      network = await config.get("env")
-
-      if (network)
-        log.deprecate({
-          pkg: "FCL",
-          subject:
-            'Using the "env" configuration key for specifying the flow network',
-          message: "Configuring to specify flow network is no longer required",
-          transition:
-            "https://github.com/onflow/flow-js-sdk/blob/master/packages/fcl/TRANSITIONS.md#0001-deprecate-env-config-key",
-        })
+      return chainIdCache[accessNode]
+    } catch (e) {
+      throw new Error(
+        `Error getting chainId from access node - are you using the correct access node endpoint.  If running locally, is your emulator up-to-date? ${e.message}`
+      )
     }
   }
-
-  invariant(
-    network,
-    "Error getting chainId from access node. Please configure flow.network instead"
-  )
 
   return network
 }
@@ -86,6 +84,5 @@ export async function getChainId() {
  * Clears the chainId cache, useful for testing
  */
 export function clearChainIdCache() {
-  chainIdAccessNode = null
-  chainIdPromise = null
+  chainIdCache = {}
 }

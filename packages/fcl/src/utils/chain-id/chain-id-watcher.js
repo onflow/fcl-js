@@ -11,6 +11,8 @@ import {getChainId} from "./get-chain-id"
 export function watchForChainIdChanges() {
   return config.subscribe(() => {
     // Call getChainId to update the chainId cache if access node has changed
-    getChainId().catch(() => {})
+    getChainId({
+      enableRequestLogging: false,
+    }).catch(() => {})
   })
 }

@@ -1,6 +1,6 @@
-export async function fetchChainId() {
+export async function fetchChainId(opts = {}) {
   const response = await sdk
-    .send([sdk.getNetworkParameters()], {enableRequestLogging: false})
+    .send([sdk.getNetworkParameters()], opts)
     .then(sdk.decode)
   return response.chainId
 }
