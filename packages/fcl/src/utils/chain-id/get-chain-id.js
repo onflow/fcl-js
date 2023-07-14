@@ -1,9 +1,13 @@
 import {config} from "@onflow/config"
 import {fetchChainId} from "./fetch-chain-id"
+import {log} from "@onflow/util-logger"
 
 // Cache of chainId promises for each access node value
 // key: access node, value: chainId promise
 let chainIdCache = {}
+
+let hasWarnedFlowNetwork = false
+let hasWarnedEnv = false
 
 /**
  * @description
@@ -18,8 +22,10 @@ let chainIdCache = {}
  * getChainId()
  */
 export async function getChainId(opts = {}) {
-  let network = await config.get("flow.network")
-  if (network) {
+  let flowNetworkCfg = await config.get("flow.network")
+  let envCfg = await config.get("env")
+
+  if (flowNetworkCfg && !hasWarnedFlowNetwork) {
     log.deprecate({
       pkg: "FCL",
       subject:
@@ -28,12 +34,10 @@ export async function getChainId(opts = {}) {
       transition:
         "https://github.com/onflow/flow-js-sdk/blob/master/packages/fcl/TRANSITIONS.md#0002-deprecate-flow.network-config-key",
     })
-
-    return network
+    hasWarnedFlowNetwork = true
   }
 
-  network = await config.get("env")
-  if (network) {
+  if (envCfg && !hasWarnedEnv) {
     log.deprecate({
       pkg: "FCL",
       subject:
@@ -42,8 +46,7 @@ export async function getChainId(opts = {}) {
       transition:
         "https://github.com/onflow/flow-js-sdk/blob/master/packages/fcl/TRANSITIONS.md#0001-deprecate-env-config-key",
     })
-
-    return network
+    hasWarnedEnv = true
   }
 
   const accessNode = opts.node || (await config.get("accessNode.api"))
@@ -56,27 +59,30 @@ export async function getChainId(opts = {}) {
   }
 
   // If no cached chainId, value is stale, or last attempt failed, try getting chainId from access node
-  if (!network) {
-    // Check if another getChainId() call has already started a new promise, if not, start a new one
-    // There may have been concurrent calls to getChainId() while the first call was waiting for the response
-    if (!chainIdCache[accessNode]) {
-      chainIdCache[accessNode] = fetchChainId(opts).catch(error => {
-        // If there was an error, reset the promise so that the next call will try again
-        chainIdCache[accessNode] = null
-        throw error
-      })
-    }
-
-    try {
-      return chainIdCache[accessNode]
-    } catch (e) {
-      throw new Error(
-        `Error getting chainId from access node - are you using the correct access node endpoint.  If running locally, is your emulator up-to-date? ${e.message}`
-      )
-    }
+  // Check if another getChainId() call has already started a new promise, if not, start a new one
+  // There may have been concurrent calls to getChainId() while the first call was waiting for the response
+  if (!chainIdCache[accessNode]) {
+    chainIdCache[accessNode] = fetchChainId(opts).catch(error => {
+      // If there was an error, reset the promise so that the next call will try again
+      chainIdCache[accessNode] = null
+      throw error
+    })
   }
 
-  return network
+  try {
+    return chainIdCache[accessNode]
+  } catch (e) {
+    // Fall back to deprecated flow.network and env config keys
+    if (flowNetworkCfg) {
+      return flowNetworkCfg
+    } else if (envCfg) {
+      return envCfg
+    }
+
+    throw new Error(
+      `Error getting chainId from access node - are you using the correct access node endpoint.  If running locally, is your emulator up-to-date? ${e.message}`
+    )
+  }
 }
 
 /**
