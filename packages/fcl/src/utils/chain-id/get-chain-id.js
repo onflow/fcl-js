@@ -50,6 +50,18 @@ export async function getChainId(opts = {}) {
   }
 
   const accessNode = opts.node || (await config.get("accessNode.api"))
+  if (!accessNode) {
+    // Fall back to deprecated flow.network and env config keys
+    if (flowNetworkCfg) {
+      return flowNetworkCfg
+    } else if (envCfg) {
+      return envCfg
+    }
+
+    throw new Error(
+      `Either the "accessNode.api" config key or opts.node must be set`
+    )
+  }
 
   // Try using cached chainId first if it exists and access node is the same
   if (chainIdCache[accessNode]) {
