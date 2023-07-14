@@ -66,7 +66,7 @@ export async function getChainId(opts = {}) {
   // Try using cached chainId first if it exists and access node is the same
   if (chainIdCache[accessNode]) {
     try {
-      return chainIdCache[accessNode]
+      return await chainIdCache[accessNode]
     } catch {}
   }
 
@@ -81,8 +81,9 @@ export async function getChainId(opts = {}) {
     })
   }
 
+  // Use newly created promise
   try {
-    return chainIdCache[accessNode]
+    return await chainIdCache[accessNode]
   } catch (e) {
     // Fall back to deprecated flow.network and env config keys
     if (flowNetworkCfg) {

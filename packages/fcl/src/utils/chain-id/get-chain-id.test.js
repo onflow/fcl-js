@@ -86,4 +86,33 @@ describe("getChainId", () => {
       }
     )
   })
+
+  it("getChainId prefers accessNode.api over flow.network or en v", async () => {
+    await config.overload(
+      {"flow.network": "testnet", env: "testnet", "accessNode.api": "foobar"},
+      async () => {
+        const fetchChainIdSpy = jest.spyOn(fetchChainIdModule, "fetchChainId")
+        fetchChainIdSpy.mockImplementation(() => {
+          return Promise.resolve("mainnet")
+        })
+
+        const result = await getChainId()
+
+        expect(result).toEqual("mainnet")
+      }
+    )
+  })
+
+  it("getChainId falls back to flow.network", async () => {
+    await config.overload({"flow.network": "testnet"}, async () => {
+      const fetchChainIdSpy = jest.spyOn(fetchChainIdModule, "fetchChainId")
+      fetchChainIdSpy.mockImplementation(() => {
+        return Promise.reject(new Error("Invalid node"))
+      })
+
+      const result = await getChainId()
+
+      expect(result).toEqual("testnet")
+    })
+  })
 })
