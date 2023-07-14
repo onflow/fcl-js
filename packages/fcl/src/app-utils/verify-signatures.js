@@ -61,7 +61,7 @@ const getVerifySignaturesScript = async (sig, opts) => {
       ? "verifyAccountProofSignatures"
       : "verifyUserSignatures"
 
-  let network = await getChainId()
+  let network = await getChainId(opts)
 
   let fclCryptoContract
 

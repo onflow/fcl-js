@@ -20,7 +20,7 @@ export async function execService({service, msg = {}, config = {}, opts = {}}) {
       fclVersion: VERSION,
       fclLibrary: "https://github.com/onflow/fcl-js",
       hostname: window?.location?.hostname ?? null,
-      network: await getChainId(),
+      network: await getChainId(opts),
     },
   }
 
