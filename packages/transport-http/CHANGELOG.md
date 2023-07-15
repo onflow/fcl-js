@@ -1,5 +1,16 @@
 # @onflow/transport-http
 
+## 1.7.0-alpha.0
+
+### Minor Changes
+
+- [#1712](https://github.com/onflow/fcl-js/pull/1712) [`6fa3bdc4`](https://github.com/onflow/fcl-js/commit/6fa3bdc46dd077b57f501d802af5544393502285) Thanks [@jribbink](https://github.com/jribbink)! - Add opts.enableRequestLogging flag
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @onflow/util-logger@1.2.1-alpha.0
+
 ## 1.6.0
 
 ### Minor Changes
