@@ -25,7 +25,22 @@ export async function getChainId(opts = {}) {
   let flowNetworkCfg = await config.get("flow.network")
   let envCfg = await config.get("env")
 
-  if (flowNetworkCfg && !hasWarnedFlowNetwork) {
+  /* 
+    TODO: Add deprecation warning for flow.network config key
+    Remove this if statement when deprecation is complete
+
+    config.load() depends on flow.network config key even though this deprecation
+    warning has been available since https://github.com/onflow/fcl-js/pull/1420
+    it has effectively never been shown because of an issue in the implementation
+    of getChainId()
+
+    Showing this warning is the correct and intended behavior, but it would lead to
+    mixed messaging for users since config.load() depends on flow.network config key
+
+    We need to remove the dependency on flow.network config key from config.load()
+    before we can show this warning.
+  */
+  if (false && flowNetworkCfg && !hasWarnedFlowNetwork) {
     log.deprecate({
       pkg: "FCL",
       subject:
@@ -52,6 +67,8 @@ export async function getChainId(opts = {}) {
   const accessNode = opts.node || (await config.get("accessNode.api"))
   if (!accessNode) {
     // Fall back to deprecated flow.network and env config keys
+    // This probably should have been done before trying to fetch the chainId from the access node
+    // However, this was the behaviour with the initial implementation of getChainId()
     if (flowNetworkCfg) {
       return flowNetworkCfg
     } else if (envCfg) {
@@ -86,6 +103,8 @@ export async function getChainId(opts = {}) {
     return await chainIdCache[accessNode]
   } catch (e) {
     // Fall back to deprecated flow.network and env config keys
+    // This probably should have been done before trying to fetch the chainId from the access node
+    // However, this was the behaviour with the initial implementation of getChainId()
     if (flowNetworkCfg) {
       return flowNetworkCfg
     } else if (envCfg) {
