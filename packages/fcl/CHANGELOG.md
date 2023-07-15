@@ -1,5 +1,18 @@
 # @onflow/fcl
 
+## 1.5.0-alpha.3
+
+### Patch Changes
+
+- [#1712](https://github.com/onflow/fcl-js/pull/1712) [`6fa3bdc4`](https://github.com/onflow/fcl-js/commit/6fa3bdc46dd077b57f501d802af5544393502285) Thanks [@jribbink](https://github.com/jribbink)! - Fix getChainId bug with nextjs & no longer set flow.network.default in configuration internally
+
+- [#1699](https://github.com/onflow/fcl-js/pull/1699) [`fefb578a`](https://github.com/onflow/fcl-js/commit/fefb578ae96a112164c561fa3e0a490008d8a5f6) Thanks [@chasefleming](https://github.com/chasefleming)! - Throw error in config if keys detected
+
+- Updated dependencies [[`6193bd42`](https://github.com/onflow/fcl-js/commit/6193bd420371494a975f19fd001af6af012bd72f), [`fefb578a`](https://github.com/onflow/fcl-js/commit/fefb578ae96a112164c561fa3e0a490008d8a5f6)]:
+  - @onflow/config@1.1.1-alpha.0
+  - @onflow/sdk@1.2.1-alpha.0
+  - @onflow/util-logger@1.2.1-alpha.0
+
 ## 1.5.0-alpha.2
 
 ### Patch Changes
