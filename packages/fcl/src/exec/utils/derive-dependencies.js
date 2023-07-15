@@ -2,13 +2,9 @@ import {invariant} from "@onflow/util-invariant"
 import {withPrefix} from "@onflow/util-address"
 import {getChainId} from "../../utils"
 
-export async function deriveDependencies({template}) {
-  const network = await getChainId()
-
-  invariant(
-    network,
-    "FCL configureDependencies Error: Missing configuration value for 'flow.network'"
-  )
+export async function deriveDependencies(opts = {}) {
+  const template = opts.template
+  const network = await getChainId(opts)
 
   const derivedDependencies = {}
 
