@@ -67,7 +67,7 @@ const getVerifySignaturesScript = async (sig, opts) => {
 
   invariant(
     opts.fclCryptoContract || network === "testnet" || network === "mainnet",
-    "${verifyFunction}({ fclCryptoContract }) -- config.flow.network must be specified (testnet || mainnet) or contract address provided via opts.fclCryptoContract"
+    "${verifyFunction}({ fclCryptoContract }) -- fclCrypto contract address must be set for non-mainnet/testnet networks"
   )
 
   if (opts.fclCryptoContract) {

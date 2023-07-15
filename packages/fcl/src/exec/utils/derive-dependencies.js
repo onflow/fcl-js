@@ -6,11 +6,6 @@ export async function deriveDependencies(opts = {}) {
   const template = opts.template
   const network = await getChainId(opts)
 
-  invariant(
-    network,
-    "FCL configureDependencies Error: Missing configuration value for 'flow.network'"
-  )
-
   const derivedDependencies = {}
 
   switch (template["f_version"]) {
