@@ -20,6 +20,7 @@ export async function sendGetNetworkParameters(ix, context = {}, opts = {}) {
     path: `/v1/network/parameters`,
     method: "GET",
     body: null,
+    enableRequestLogging: opts.enableRequestLogging ?? true,
   })
 
   let ret = context.response()

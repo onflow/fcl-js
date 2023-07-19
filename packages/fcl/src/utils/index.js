@@ -1,5 +1,5 @@
-export {getChainId} from "./get-chain-id"
-export {watchForChainIdChanges} from "./chain-id-watcher"
+export {getChainId} from "./chain-id/get-chain-id"
+export {watchForChainIdChanges} from "./chain-id/chain-id-watcher"
 
 export function isAndroid() {
   return (

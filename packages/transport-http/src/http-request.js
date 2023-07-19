@@ -43,6 +43,10 @@ class HTTPRequestError extends Error {
  * @param {String} options.method - HTTP Method
  * @param {object} options.body - HTTP Request Body
  * @param {object} [options.headers] - HTTP Request Headers
+ * @param {boolean} [options.enableRequestLogging=true] - Enable/Disable request logging
+ * @param {number} [options.retryLimit=5] - Number of times to retry request
+ * @param {number} [options.retryIntervalMs=1000] - Time in milliseconds to wait before retrying request
+ * @param {number} [options.timeoutLimit=30000] - Time in milliseconds to wait before timing out request
  *
  * @returns JSON object response from Access API.
  */
@@ -55,6 +59,7 @@ export async function httpRequest({
   retryLimit = 5,
   retryIntervalMs = 1000,
   timeoutLimit = 30000,
+  enableRequestLogging = true,
 }) {
   const bodyJSON = body ? JSON.stringify(body) : null
 
@@ -99,13 +104,15 @@ export async function httpRequest({
         }
 
         // Show AN error for all network errors
-        await logger.log({
-          title: "Access Node Error",
-          message: `The provided access node ${hostname} does not appear to be a valid REST/HTTP access node.
-Please verify that you are not unintentionally using a GRPC access node.
-See more here: https://docs.onflow.org/fcl/reference/sdk-guidelines/#connect`,
-          level: logger.LEVELS.error,
-        })
+        if (enableRequestLogging) {
+          await logger.log({
+            title: "Access Node Error",
+            message: `The provided access node ${hostname} does not appear to be a valid REST/HTTP access node.
+  Please verify that you are not unintentionally using a GRPC access node.
+  See more here: https://docs.onflow.org/fcl/reference/sdk-guidelines/#connect`,
+            level: logger.LEVELS.error,
+          })
+        }
 
         throw new HTTPRequestError({
           error: e?.message,
@@ -133,9 +140,11 @@ See more here: https://docs.onflow.org/fcl/reference/sdk-guidelines/#connect`,
       ) {
         return await new Promise((resolve, reject) => {
           if (retryAttempt < retryLimit) {
-            console.warn(
-              `Access node unavailable, retrying in ${retryIntervalMs} ms...`
-            )
+            if (enableRequestLogging) {
+              console.warn(
+                `Access node unavailable, retrying in ${retryIntervalMs} ms...`
+              )
+            }
             setTimeout(() => {
               resolve(requestLoop(retryAttempt + 1))
             }, retryIntervalMs)
