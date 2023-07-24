@@ -1,5 +1,13 @@
 # @onflow/config
 
+## 1.1.1-alpha.0
+
+### Patch Changes
+
+- [#1680](https://github.com/onflow/fcl-js/pull/1680) [`6193bd42`](https://github.com/onflow/fcl-js/commit/6193bd420371494a975f19fd001af6af012bd72f) Thanks [@nialexsan](https://github.com/nialexsan)! - Updated dependencies
+
+- [#1699](https://github.com/onflow/fcl-js/pull/1699) [`fefb578a`](https://github.com/onflow/fcl-js/commit/fefb578ae96a112164c561fa3e0a490008d8a5f6) Thanks [@chasefleming](https://github.com/chasefleming)! - Throw error in config if keys detected
+
 ## 1.1.0
 
 ### Minor Changes

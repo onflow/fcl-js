@@ -15,8 +15,8 @@ describe("chain-id-watcher", () => {
       {"accessNode.api": "https://example.com"},
       async () => {
         // Mock the setChainIdDefault function
-        const spy = jest.spyOn(chainIdUtils, "setChainIdDefault")
-        spy.mockImplementation(() => {})
+        const spy = jest.spyOn(chainIdUtils, "getChainId")
+        spy.mockImplementation(async () => {})
 
         // Start watching for changes
         unsubscribe = watchForChainIdChanges()
@@ -25,7 +25,7 @@ describe("chain-id-watcher", () => {
         await new Promise(resolve => setTimeout(resolve, 0))
 
         // Expect only one call at initial setup
-        expect(chainIdUtils.setChainIdDefault).toHaveBeenCalledTimes(1)
+        expect(chainIdUtils.getChainId).toHaveBeenCalledTimes(1)
       }
     )
   })
@@ -33,8 +33,8 @@ describe("chain-id-watcher", () => {
   test("flow.network.default is correctly set when changed later", async () => {
     await config.overload({}, async () => {
       // Mock the setChainIdDefault function
-      const spy = jest.spyOn(chainIdUtils, "setChainIdDefault")
-      spy.mockImplementation(() => {})
+      const spy = jest.spyOn(chainIdUtils, "getChainId")
+      spy.mockImplementation(async () => {})
 
       // Start watching for changes
       unsubscribe = watchForChainIdChanges()
@@ -48,7 +48,23 @@ describe("chain-id-watcher", () => {
       await new Promise(resolve => setTimeout(resolve, 0))
 
       // Expect two calls since we changed the access node and there is an initial call
-      expect(chainIdUtils.setChainIdDefault).toHaveBeenCalledTimes(1)
+      expect(chainIdUtils.getChainId).toHaveBeenCalledTimes(2)
+    })
+  })
+
+  test("watcher does not throw error if getChainId throws", async () => {
+    await config.overload({}, async () => {
+      // Mock the setChainIdDefault function
+      const spy = jest.spyOn(chainIdUtils, "getChainId")
+      spy.mockImplementation(async () => {
+        throw new Error("dummy error")
+      })
+
+      // Start watching for changes
+      unsubscribe = watchForChainIdChanges()
+
+      // Wait for microtask queue to flush
+      await new Promise(resolve => setTimeout(resolve, 0))
     })
   })
 })

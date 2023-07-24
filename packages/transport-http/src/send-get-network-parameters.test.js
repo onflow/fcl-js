@@ -40,6 +40,7 @@ describe("Get Network Parameters", () => {
       path: "/v1/network/parameters",
       method: "GET",
       body: null,
+      enableRequestLogging: true,
     })
 
     expect(response.networkParameters).toStrictEqual({

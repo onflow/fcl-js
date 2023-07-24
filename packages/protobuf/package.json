@@ -1,6 +1,6 @@
 {
   "name": "@onflow/protobuf",
-  "version": "1.2.0",
+  "version": "1.2.1-alpha.0",
   "description": "Access Node Protobuf",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
@@ -13,12 +13,15 @@
     "url": "https://github.com/onflow/flow-js-sdk/issues"
   },
   "devDependencies": {
+    "ajv-keywords": "^3.5.2",
+    "colorette": "^2.0.14",
+    "rechoir": "^0.8.0",
     "jest": "^29.5.0",
     "path": "0.12.7",
     "ts-protoc-gen": "0.12.0",
     "typescript": "3.8.3",
-    "webpack": "4.42.1",
-    "webpack-cli": "3.3.11"
+    "webpack": "^5.86.0",
+    "webpack-cli": "^5.1.4"
   },
   "main": "./dist/index.js",
   "scripts": {

@@ -1,5 +1,6 @@
 import {getServices} from "./services"
 import {config} from "@onflow/config"
+import * as chainIdModule from "../utils/chain-id/get-chain-id"
 
 const serviceOne = {
   f_type: "Service",
@@ -58,20 +59,25 @@ const endpoint = "https://fcl-discovery.onflow.org/api/testnet/authn"
 
 describe("getServices", () => {
   let windowSpy
+  let chainIdSpy
   let configRef
 
   beforeEach(() => {
     windowSpy = jest.spyOn(window, "window", "get")
+    chainIdSpy = jest.spyOn(chainIdModule, "getChainId")
+    chainIdSpy.mockImplementation(async () => "testnet")
     configRef = config()
-    configRef.put(
-      "discovery.authn.endpoint",
-      "https://fcl-discovery.onflow.org/api/testnet/authn"
-    )
-    .put("accessNode.api", "https://rest-testnet.onflow.org")
+    configRef
+      .put(
+        "discovery.authn.endpoint",
+        "https://fcl-discovery.onflow.org/api/testnet/authn"
+      )
+      .put("accessNode.api", "https://rest-testnet.onflow.org")
   })
 
   afterEach(() => {
     windowSpy.mockRestore()
+    chainIdSpy.mockRestore()
     global.fetch.mockClear()
   })
 
@@ -88,7 +94,7 @@ describe("getServices", () => {
       })
     )
 
-    const response = await getServices({ type: ["authn"] })
+    const response = await getServices({type: ["authn"]})
     expect(global.fetch).toHaveBeenCalledTimes(1)
   })
 })
