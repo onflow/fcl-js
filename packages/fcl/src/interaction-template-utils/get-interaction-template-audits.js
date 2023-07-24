@@ -7,7 +7,7 @@ import {getChainId} from "../utils"
 
 /**
  * @description Returns whether a set of auditors have audited a given Interaction Template
- * 
+ *
  * @param {object} params
  * @param {object} params.template - Interaction Template
  * @param {Array<string>} params.auditors - Array of auditors
@@ -63,7 +63,7 @@ export async function getInteractionTemplateAudits(
 
       let FlowInteractionAuditContract = opts.flowInteractionAuditContract
       if (!FlowInteractionAuditContract) {
-        const fclNetwork = await getChainId()
+        const fclNetwork = await getChainId(opts)
         invariant(
           fclNetwork === "mainnet" || fclNetwork === "testnet",
           "getInteractionTemplateAudits Error: Unable to determine address for FlowInteractionTemplateAudit contract. Set configuration for 'fcl.network' to 'mainnet' or 'testnet'"
