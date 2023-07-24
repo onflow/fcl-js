@@ -138,7 +138,7 @@ describe("config()", () => {
     beforeEach(() => config({A: A, B: B, C: C, D: D}))
     afterEach(clearConfig)
 
-    const examples = [
+    const examples: [string | number | object, string[]?][] = [
       [FALLBACK],
       [A, ["A"]],
       [FALLBACK, ["B"]],

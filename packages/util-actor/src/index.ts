@@ -8,9 +8,6 @@ export const UPDATED = "UPDATED"
 export const SNAPSHOT = "SNAPSHOT"
 export const EXIT = "EXIT"
 export const TERMINATE = "TERMINATE"
-const DUMP = "DUMP"
-const INC = "INC"
-const KEYS = "KEYS"
 
 interface IRegistryRecord {
   addr: string
@@ -37,10 +34,8 @@ var pid = 0b0
 const DEFAULT_TIMEOUT = 5000
 const DEFAULT_TAG = "---"
 
-type Tag = typeof INIT | typeof SUBSCRIBE | typeof UNSUBSCRIBE | typeof UPDATED | typeof SNAPSHOT | typeof EXIT | typeof TERMINATE | "@EXIT" | typeof DUMP | typeof INC | typeof KEYS;
-
-export const send = (addr: string, tag: Tag, data?: Record<string, any> | null, opts: Record<string, any> = {}) =>
-  new Promise<boolean>((reply, reject) => {
+export const send = <T>(addr: string, tag: string, data?: Record<string, any> | null, opts: Record<string, any> = {}): Promise<T>  =>
+  new Promise((reply, reject) => {
     const expectReply = opts.expectReply || false
     const timeout = opts.timeout != null ? opts.timeout : DEFAULT_TIMEOUT
 
@@ -65,7 +60,7 @@ export const send = (addr: string, tag: Tag, data?: Record<string, any> | null, 
     try {
       FCL_REGISTRY[addr] &&
         FCL_REGISTRY[addr].mailbox.deliver(payload)
-      if (!expectReply) reply(true)
+      if (!expectReply) reply(true as T)
     } catch (error) {
       console.error(
         "FCL.Actor -- Could Not Deliver Message",
@@ -109,7 +104,7 @@ const parseAddr = (addr): string => {
   return String(addr)
 } 
 
-export const spawn = (fn, rawAddr: number | null = null) => {
+export const spawn = (fn, rawAddr: number | string | null = null) => {
   const addr = parseAddr(rawAddr)
   if (FCL_REGISTRY[addr] != null) return addr
 
@@ -124,7 +119,7 @@ export const spawn = (fn, rawAddr: number | null = null) => {
   const ctx = {
     self: () => addr,
     receive: () => FCL_REGISTRY[addr].mailbox.receive(),
-    send: (to: string, tag: Tag, data: Record<string, any> | null, opts: Record<string, any> = {}) => {
+    send: (to: string, tag: string, data: Record<string, any> | null, opts: Record<string, any> = {}) => {
       opts.from = addr
       return send(to, tag, data, opts)
     },

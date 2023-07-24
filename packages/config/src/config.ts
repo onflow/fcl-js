@@ -66,23 +66,18 @@ spawn(HANDLERS, NAME)
 
 /**
  * @description Adds a key-value pair to the config
- * @param {string} key - The key to add
- * @param {*} value - The value to add
- * @returns {Promise<object>} - The current config
  */
-function put(key, value) {
+function put(key: string, value?: any) {
   send(NAME, PUT, {key, value})
   return config()
 }
 
 /**
  * @description Gets a key-value pair with a fallback from the config
- * @param {string} key - The key to add
- * @param {*} [fallback] - The fallback value to return if key is not found
  * @returns {Promise<*>} - The value found at key or fallback
  */
-function get(key, fallback) {
-  return send(NAME, GET, {key, fallback}, {expectReply: true, timeout: 10})
+function get<T>(key: string, fallback?: any) {
+  return send<T>(NAME, GET, {key, fallback}, {expectReply: true, timeout: 10})
 }
 
 /**
@@ -91,7 +86,7 @@ function get(key, fallback) {
  * @param {*} fallback - The fallback value to return if key is not found
  * @returns {Promise<*>} - The value found at key or fallback
  */
-async function first(wants = [], fallback) {
+async function first(wants: string[] = [], fallback?: any) {
   if (!wants.length) return fallback
   const [head, ...rest] = wants
   const ret = await get(head)
@@ -159,8 +154,8 @@ export function clearConfig() {
  * @param {object} oldConfig - The previous config state
  * @returns {Promise<object>} - The current config
  */
-function resetConfig(oldConfig) {
-  return clearConfig().then(config(oldConfig))
+function resetConfig(oldConfig: Record<string, any>) {
+  return clearConfig().then(() => config(oldConfig))
 }
 
 /**
@@ -169,7 +164,7 @@ function resetConfig(oldConfig) {
  * @returns {void}
  */
 async function load(data) {
-  const network = await get("flow.network")
+  const network = await get<string>("flow.network")
   const cleanedNetwork = cleanNetwork(network)
   const {flowJSON} = data
 
@@ -234,7 +229,7 @@ async function load(data) {
  * @description Sets the config
  * @param {object} [values] - The values to set
  */
-function config(values) {
+function config(values?: null | Record<string, any> ) {
   if (values != null && typeof values === "object") {
     Object.keys(values).map(d => put(d, values[d]))
   }
