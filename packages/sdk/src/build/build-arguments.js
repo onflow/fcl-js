@@ -3,7 +3,7 @@ import {pipe, makeArgument} from "../interaction/interaction.js"
 /**
  * @description - A utility builder to be used with other builders to pass in arguments with a value and supported type
  * @param {Array.<*>} ax - An array of arguments
- * @returns {object} - An interaction object
+ * @returns {Function} - An interaction object
  */
 export function args(ax = []) {
   return pipe(ax.map(makeArgument))
