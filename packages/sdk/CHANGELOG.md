@@ -1,5 +1,11 @@
 # @onflow/sdk
 
+## 1.2.1-alpha.1
+
+### Patch Changes
+
+- [#1719](https://github.com/onflow/fcl-js/pull/1719) [`62fd9baf`](https://github.com/onflow/fcl-js/commit/62fd9baf28afbb2742f9e8c5ef6674adc9d030b7) Thanks [@nialexsan](https://github.com/nialexsan)! - Fixed args type for send
+
 ## 1.2.1-alpha.0
 
 ### Patch Changes
