@@ -4,19 +4,19 @@ import {getServiceRegistry} from "./plugins"
 import {getChainId} from "../../utils"
 import {VERSION} from "../../VERSION"
 import {configLens} from "../../default-config"
-
 const execStrategy = async ({service, body, config, opts}) => {
   const strategy = getServiceRegistry().getStrategy(service.method)
   return strategy({service, body, config, opts})
 }
 
-export async function execService({service, msg = {}, config = {}, opts = {}}) {
+export async function execService({service, msg = {}, config = {}, opts = {}, platform}) {
   msg.data = service.data
   const execConfig = {
     services: await configLens(/^service\./),
     app: await configLens(/^app\.detail\./),
     client: {
       ...config.client,
+      platform,
       fclVersion: VERSION,
       fclLibrary: "https://github.com/onflow/fcl-js",
       hostname: window?.location?.hostname ?? null,

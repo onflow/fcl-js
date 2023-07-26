@@ -1,6 +1,6 @@
 import * as sdk from "@onflow/sdk"
 import {normalizeArgs} from "./utils/normalize-args"
-import {currentUser} from "../current-user"
+import {getCurrentUser} from "../current-user"
 import {prepTemplateOpts} from "./utils/prep-template-opts.js"
 import {preMutate} from "./utils/pre.js"
 import {isNumber} from "./utils/is"
@@ -10,6 +10,7 @@ import {isNumber} from "./utils/is"
  * Allows you to submit transactions to the blockchain to potentially mutate the state.
  *
  *  @param {object} opts - Mutation Options and configuration
+ *  @param {string} opts.platform - platform that runs the function
  *  @param {string} opts.cadence - Cadence Transaction used to mutate Flow
  *  @param {import("../fcl").ArgsFn} [opts.args] - Arguments passed to cadence transaction
  *  @param {object} [opts.template] - Interaction Template for a transaction
@@ -48,12 +49,12 @@ import {isNumber} from "./utils/is"
  *      authorizations: [AuthzFn], // an array of authorization functions used as authorizations signatory roles
  *    }
  */
-export async function mutate(opts = {}) {
+export const getMutate = ({platform}) => async (opts = {}) => {
   var txid
   try {
     await preMutate(opts)
     opts = await prepTemplateOpts(opts)
-
+    const currentUser = getCurrentUser({platform})
     // Allow for a config to overwrite the authorization function.
     // prettier-ignore
     const authz = await sdk.config().get("fcl.authz", currentUser().authorization)

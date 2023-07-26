@@ -1,9 +1,14 @@
 import {renderBrowser} from "./render-browser"
 
+const NOT_IMPLEMENTED = (strategy) => () => {
+  throw new Error(`${strategy} Strategy util has not been implemented on this platform`)
+}
+
 const VIEWS = {
-  "VIEW/IFRAME": renderBrowser,
-  "VIEW/POP": renderBrowser,
-  "VIEW/TAB": renderBrowser,
+  "VIEW/IFRAME": NOT_IMPLEMENTED("VIEW/IFRAME"),
+  "VIEW/POP": NOT_IMPLEMENTED("VIEW/IFRAME"),
+  "VIEW/TAB": NOT_IMPLEMENTED("VIEW/TAB"),
+  "VIEW/MOBILE_BROWSER": renderBrowser,
 }
 
 export async function execLocal(

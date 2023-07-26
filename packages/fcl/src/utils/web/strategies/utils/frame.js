@@ -1,8 +1,10 @@
-import {buildMessageHandler} from "./buildMessageHandler"
+import {renderFrame} from "../../render-frame"
+import { serviceEndpoint } from "../../../../current-user/exec-service/strategies/utils/service-endpoint"
+import { buildMessageHandler } from "../../../../current-user/exec-service/strategies/utils/buildMessageHandler"
 
 const noop = () => {}
 
-export function extension(service, opts = {}) {
+export function frame(service, opts = {}) {
   if (service == null) return {send: noop, close: noop}
 
   const onClose = opts.onClose || noop
@@ -19,24 +21,24 @@ export function extension(service, opts = {}) {
   })
   window.addEventListener("message", handler)
 
-  send({service})
-
+  const [$frame, unmount] = renderFrame(serviceEndpoint(service))
   return {send, close}
 
   function close() {
     try {
       window.removeEventListener("message", handler)
+      unmount()
       onClose()
     } catch (error) {
-      console.error("Ext Close Error", error)
+      console.error("Frame Close Error", error)
     }
   }
 
   function send(msg) {
     try {
-      window && window.postMessage(JSON.parse(JSON.stringify(msg || {})), "*")
+      $frame.postMessage(JSON.parse(JSON.stringify(msg || {})), "*")
     } catch (error) {
-      console.error("Ext Send Error", msg, error)
+      console.error("Frame Send Error", msg, error)
     }
   }
 }

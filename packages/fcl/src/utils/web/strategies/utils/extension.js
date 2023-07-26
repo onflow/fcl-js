@@ -1,10 +1,8 @@
-import {renderTab} from "../../../../utils/web"
-import {serviceEndpoint} from "./service-endpoint"
-import {buildMessageHandler} from "./buildMessageHandler"
+import { buildMessageHandler } from "../../../../current-user/exec-service/strategies/utils/buildMessageHandler"
 
 const noop = () => {}
 
-export function tab(service, opts = {}) {
+export function extension(service, opts = {}) {
   if (service == null) return {send: noop, close: noop}
 
   const onClose = opts.onClose || noop
@@ -21,31 +19,24 @@ export function tab(service, opts = {}) {
   })
   window.addEventListener("message", handler)
 
-  const [$tab, unmount] = renderTab(serviceEndpoint(service))
-  const timer = setInterval(function () {
-    if ($tab && $tab.closed) {
-      close()
-    }
-  }, 500)
+  send({service})
 
   return {send, close}
 
   function close() {
     try {
       window.removeEventListener("message", handler)
-      clearInterval(timer)
-      unmount()
       onClose()
     } catch (error) {
-      console.error("Tab Close Error", error)
+      console.error("Ext Close Error", error)
     }
   }
 
   function send(msg) {
     try {
-      $tab.postMessage(JSON.parse(JSON.stringify(msg || {})), "*")
+      window && window.postMessage(JSON.parse(JSON.stringify(msg || {})), "*")
     } catch (error) {
-      console.error("Tab Send Error", msg, error)
+      console.error("Ext Send Error", msg, error)
     }
   }
 }
