@@ -1,5 +1,11 @@
 # @onflow/sdk
 
+## 1.2.1-alpha.2
+
+### Patch Changes
+
+- [#1721](https://github.com/onflow/fcl-js/pull/1721) [`1553967a`](https://github.com/onflow/fcl-js/commit/1553967aff61c242990b2de509e5dc5b8842ab2d) Thanks [@nialexsan](https://github.com/nialexsan)! - Fixed return types
+
 ## 1.2.1-alpha.1
 
 ### Patch Changes
