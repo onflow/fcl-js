@@ -272,7 +272,7 @@ export type TransactionStatus = {
     /**
      * - The status as as descriptive text (e.g. "FINALIZED").
      */
-    statusString: number;
+    statusString: string;
     /**
      * - The error message of the transaction.
      */

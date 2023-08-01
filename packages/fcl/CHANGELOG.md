@@ -1,5 +1,14 @@
 # @onflow/fcl
 
+## 1.5.0-alpha.5
+
+### Patch Changes
+
+- [#1723](https://github.com/onflow/fcl-js/pull/1723) [`1308f522`](https://github.com/onflow/fcl-js/commit/1308f522e56cef517a60be465789815281bab6d8) Thanks [@jribbink](https://github.com/jribbink)! - Fixed types for sdk builder functions (fixes fcl.send/fcl.build type errors)
+
+- Updated dependencies [[`1553967a`](https://github.com/onflow/fcl-js/commit/1553967aff61c242990b2de509e5dc5b8842ab2d)]:
+  - @onflow/sdk@1.2.1-alpha.2
+
 ## 1.5.0-alpha.4
 
 ### Patch Changes
