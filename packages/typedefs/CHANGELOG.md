@@ -1,5 +1,11 @@
 # @onflow/typedefs
 
+## 1.1.1-alpha.1
+
+### Patch Changes
+
+- [#1724](https://github.com/onflow/fcl-js/pull/1724) [`f3f0288a`](https://github.com/onflow/fcl-js/commit/f3f0288a9ba7a363140c2eb92c84483c4719684a) Thanks [@jribbink](https://github.com/jribbink)! - Fix statusString typedef
+
 ## 1.1.1-alpha.0
 
 ### Patch Changes
