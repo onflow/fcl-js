@@ -1,5 +1,13 @@
 # @onflow/fcl-bundle
 
+## 1.3.1
+
+### Patch Changes
+
+- [#1707](https://github.com/onflow/fcl-js/pull/1707) [`f7986d9b`](https://github.com/onflow/fcl-js/commit/f7986d9b4e7bba3abc4acbfb036072336d0651cf) Thanks [@nialexsan](https://github.com/nialexsan)! - Deeplink RPC
+
+- [#1680](https://github.com/onflow/fcl-js/pull/1680) [`6193bd42`](https://github.com/onflow/fcl-js/commit/6193bd420371494a975f19fd001af6af012bd72f) Thanks [@nialexsan](https://github.com/nialexsan)! - Updated dependencies
+
 ## 1.3.1-alpha.1
 
 ### Patch Changes
