@@ -1,5 +1,18 @@
 # @onflow/sdk
 
+## 1.2.1
+
+### Patch Changes
+
+- [#1719](https://github.com/onflow/fcl-js/pull/1719) [`62fd9baf`](https://github.com/onflow/fcl-js/commit/62fd9baf28afbb2742f9e8c5ef6674adc9d030b7) Thanks [@nialexsan](https://github.com/nialexsan)! - Fixed args type for send
+
+- [#1721](https://github.com/onflow/fcl-js/pull/1721) [`1553967a`](https://github.com/onflow/fcl-js/commit/1553967aff61c242990b2de509e5dc5b8842ab2d) Thanks [@nialexsan](https://github.com/nialexsan)! - Fixed return types
+
+- Updated dependencies [[`6193bd42`](https://github.com/onflow/fcl-js/commit/6193bd420371494a975f19fd001af6af012bd72f), [`fefb578a`](https://github.com/onflow/fcl-js/commit/fefb578ae96a112164c561fa3e0a490008d8a5f6), [`6fa3bdc4`](https://github.com/onflow/fcl-js/commit/6fa3bdc46dd077b57f501d802af5544393502285)]:
+  - @onflow/config@1.1.1
+  - @onflow/transport-http@1.7.0
+  - @onflow/util-logger@1.2.1
+
 ## 1.2.1-alpha.2
 
 ### Patch Changes
