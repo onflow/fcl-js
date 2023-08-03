@@ -1,5 +1,12 @@
 # @onflow/transport-grpc
 
+## 1.2.1
+
+### Patch Changes
+
+- Updated dependencies [[`6193bd42`](https://github.com/onflow/fcl-js/commit/6193bd420371494a975f19fd001af6af012bd72f)]:
+  - @onflow/protobuf@1.2.1
+
 ## 1.2.1-alpha.0
 
 ### Patch Changes
