@@ -1,3 +1,5 @@
+import {config} from "@onflow/config"
+
 /**
  * The levels of the logger
  * 
@@ -45,15 +47,6 @@ const buildLoggerMessageArgs = ({title, message}) => {
   ]
 }
 
-const getLoggerLevel = () => {
-  try {
-    const loggerLevel = parseInt(process?.env?.LOGGER_LEVEL)
-    return loggerLevel || LEVELS.warn
-  } catch {
-    return LEVELS.warn
-  }
-}
-
 /**
  * Logs messages based on the level of the message and the level set in the config
  * 
@@ -69,7 +62,7 @@ const getLoggerLevel = () => {
  * 
  */
 export const log = async ({title, message, level, always = false}) => {
-  const configLoggerLevel = getLoggerLevel()
+  const configLoggerLevel = await config.get("logger.level", LEVELS.warn)
 
   // If config level is below message level then don't show it
   if (!always && configLoggerLevel < level) return
