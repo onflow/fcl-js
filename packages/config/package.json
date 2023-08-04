@@ -26,8 +26,7 @@
   "scripts": {
     "prepublishOnly": "npm test && npm run build",
     "test": "jest",
-    "build": "npm run lint && fcl-bundle",
-    "build:types": "tsc",
+    "build": "tsc && npm run lint && fcl-bundle",
     "test:watch": "jest --watch",
     "start": "fcl-bundle --watch",
     "lint": "eslint ."

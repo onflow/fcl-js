@@ -5,6 +5,7 @@ const replace = require("@rollup/plugin-replace")
 const {nodeResolve} = require("@rollup/plugin-node-resolve")
 const {babel} = require("@rollup/plugin-babel")
 const terser = require('@rollup/plugin-terser')
+const typescript = require('@rollup/plugin-typescript')
 
 const builtinModules = require("builtin-modules")
 
@@ -53,6 +54,7 @@ module.exports = function getInputOptions(package, build) {
       console.warn(message.toString())
     },
     plugins: [
+      typescript(),
       replace({
         preventAssignment: true,
         PACKAGE_CURRENT_VERSION: JSON.stringify(package.version),

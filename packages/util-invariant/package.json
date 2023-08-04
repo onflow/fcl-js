@@ -17,10 +17,11 @@
     "@onflow/types": "^1.1.0",
     "jest": "^29.5.0"
   },
-  "source": "src/index.js",
+  "source": "src/index.ts",
   "main": "dist/util-invariant.js",
   "module": "dist/util-invariant.module.js",
   "unpkg": "dist/util-invariant.umd.js",
+  "types": "dist/types/index.d.ts",
   "scripts": {
     "prepublishOnly": "npm test && npm run build",
     "test": "jest",
