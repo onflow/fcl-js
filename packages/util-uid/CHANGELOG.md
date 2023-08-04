@@ -1,5 +1,11 @@
 # @onflow/util-uid
 
+## 1.2.0-alpha.0
+
+### Minor Changes
+
+- TS build
+
 ## 1.1.0
 
 ### Minor Changes

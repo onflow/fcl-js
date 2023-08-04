@@ -1,5 +1,17 @@
 # @onflow/util-encode-key
 
+## 1.2.0-alpha.0
+
+### Minor Changes
+
+- TS build
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @onflow/util-invariant@1.2.0-alpha.0
+  - @onflow/rlp@1.2.0-alpha.0
+
 ## 1.1.0
 
 ### Minor Changes

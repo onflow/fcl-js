@@ -1,5 +1,11 @@
 # @onflow/fcl-bundle
 
+## 1.4.0-alpha.0
+
+### Minor Changes
+
+- TS build
+
 ## 1.3.1
 
 ### Patch Changes

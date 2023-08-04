@@ -8,7 +8,6 @@
 "@onflow/util-logger": minor
 "@onflow/fcl-bundle": minor
 "@onflow/util-actor": minor
-"@onflow/protobuf": minor
 "@onflow/typedefs": minor
 "@onflow/util-uid": minor
 "@onflow/config": minor

@@ -1,5 +1,16 @@
 # @onflow/util-logger
 
+## 1.3.0-alpha.0
+
+### Minor Changes
+
+- TS build
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @onflow/config@1.2.0-alpha.0
+
 ## 1.2.1
 
 ### Patch Changes

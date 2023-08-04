@@ -1,5 +1,19 @@
 # @onflow/transport-grpc
 
+## 1.3.0-alpha.0
+
+### Minor Changes
+
+- TS build
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @onflow/util-invariant@1.2.0-alpha.0
+  - @onflow/util-template@1.2.0-alpha.0
+  - @onflow/util-address@1.2.0-alpha.0
+  - @onflow/rlp@1.2.0-alpha.0
+
 ## 1.2.1
 
 ### Patch Changes

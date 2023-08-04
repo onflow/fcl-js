@@ -1,5 +1,19 @@
 # @onflow/fcl-wc
 
+## 4.0.0-alpha.0
+
+### Minor Changes
+
+- TS build
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @onflow/util-invariant@1.2.0-alpha.0
+  - @onflow/util-logger@1.3.0-alpha.0
+  - @onflow/config@1.2.0-alpha.0
+  - @onflow/fcl@1.6.0-alpha.0
+
 ## 3.0.0
 
 ### Patch Changes
