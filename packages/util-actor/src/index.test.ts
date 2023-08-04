@@ -72,13 +72,13 @@ const idle = async () => new Promise(resolve => setTimeout(resolve, 0))
 describe("golden path", () => {
   describe("init, send, receive", () => {
     test("rpc initial value", async () => {
-      const c = counter()
+      const c = counter("")
       expect(await dump(c)).toBe(0)
       kill(c)
     })
 
     test("send message and rpc value", async () => {
-      const c = counter()
+      const c = counter("value")
       inc(c, 5)
       expect(await dump(c)).toBe(5)
       kill(c)
@@ -152,8 +152,8 @@ describe("golden path", () => {
   test("actors with same name only spawn once", async () => {
     const fn = jest.fn()
 
-    const c1 = spawn(fn, "foo")
-    const c2 = spawn(fn, "foo")
+    const c1 = spawn(fn, 0)
+    const c2 = spawn(fn, 0)
 
     await idle()
     expect(c1).toBe(c2)
