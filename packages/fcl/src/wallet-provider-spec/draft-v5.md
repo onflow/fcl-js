@@ -1,9 +1,9 @@
 ## Status
 
-- **Last Updated:** June 20th 2022
+- **Last Updated:** August 4th 2023
 - **Stable:** Yes
 - **Risk of Breaking Change:** Medium
-- **Compatibility:** `>= @onflow/fcl@1.0.0-alpha.0`
+- **Compatibility:** `>= @onflow/fcl@1.5.0`
 
 ## Definitions
 
@@ -36,15 +36,18 @@ Other services can be a little more complex. For example, they might require a b
 Ultimately we want to do this back and forth via a secure back-channel (https requests to servers), **but in some situations that isn't a viable option, so there is also a front-channel option**.
 Where possible, you should aim to provide a back-channel support for services, and only fall back to a front-channel if absolutely necessary.
 
-Back-channel communications use `method: "HTTP/POST"`, while front-channel communications use `method: "IFRAME/RPC"`, `method: "POP/RPC"`, `method: "TAB/RPC` and `method: "EXT/RPC"`.
+Back-channel communications use `method: "HTTP/POST"`
+Web front-channel communications use `method: "IFRAME/RPC"`, `method: "POP/RPC"`, `method: "TAB/RPC` and `method: "EXT/RPC"`.
+React-native front-channel communications use `method: "DEEPLINK/RPC"`.
 
-| Service Method | Front  |  Back |
-|----------------|--------|-------|
-| HTTP/POST      |   ⛔   |   ✅   |
-| IFRAME/RPC     |   ✅   |   ⛔   |
-| POP/RPC        |   ✅   |   ⛔   |
-| TAB/RPC        |   ✅   |   ⛔   |
-| EXT/RPC        |   ✅   |   ⛔   |
+| Service Method | Front  |  Back  | Platform         |
+|----------------|--------|--------|------------------|
+| HTTP/POST      |   ⛔   |   ✅   | web/react-native |
+| IFRAME/RPC     |   ✅   |   ⛔   | web              |
+| POP/RPC        |   ✅   |   ⛔   | web              |
+| TAB/RPC        |   ✅   |   ⛔   | web              |
+| EXT/RPC        |   ✅   |   ⛔   | web              |
+| DEEPLINK/RPC   |   ✅   |   ⛔   | react-native     |
 
 It's important to note that regardless of the method of communication, the data that is sent back and forth between the parties involved is the same.
 
@@ -219,6 +222,7 @@ type ServiceMethod =
   | 'TAB/RPC'
   | 'EXT/RPC'
   | 'DATA'
+  | 'DEEPLINK/RPC'
 
 interface Service extends ObjectBase {
   f_type: 'Service'
@@ -443,6 +447,12 @@ If it is `APPROVED` FCL will return, otherwise if it is `DECLINED` FCL will erro
 There is an additional optional feature that `HTTP/POST` enables in the first `PollingResponse` that is returned.
 This optional feature is the ability for FCL to render an iframe, popup or new tab, and it can be triggered by supplying a service `type: "VIEW/IFRAME"`, `type: "VIEW/POP"` or `type: "VIEW/TAB"` and the `endpoint` that the wallet wishes to render in the `local` field of the `PollingResponse`. This is a great way for a wallet provider to switch to a webpage if displaying a UI is necessary for the service it is performing.
 
+### VIEW/MOBILE_BROWSER
+
+Specifically for mobile platforms (`config["client"]["platform"] == "react-native"`) we've implemented `type: "VIEW/MOBILE_BROWSER"`. It works almost the same way as `type: "VIEW/IFRAME"` with an exception that it doesn't communicate back to the app as it doesn't have `window.postMessage` method.
+
+*NOTE: You also need to call `window.close()` when you finish processing the request on the page specifically for Android, as it is NOT possible to control the mobile browser window from the app after openning it (you cannot close the mobile browser from the app)* 
+
 ![HTTP/POST Diagram](https://raw.githubusercontent.com/onflow/flow-js-sdk/master/packages/fcl/assets/service-method-diagrams/http-post.png)
 
 ## EXT/RPC (Front Channel)
@@ -492,6 +502,42 @@ Here is a code example for how an extension popup might send its response:
 
 ![EXT/RPC Diagram](https://raw.githubusercontent.com/onflow/flow-js-sdk/master/packages/fcl/assets/service-method-diagrams/ext-rpc.png)
 
+## DEEPLINK/RPC (Front Channel)
+
+`DEEPLINK/RPC` works somewhat similar to `IFRAME/RPC`:
+
+- A mobile browser is opened 
+  - URL comes from the `endpoint` in the service
+  - message `body` and `config` are encoded (`JSON.stringify`) in `fclMessageJson` URL param
+- The browser handler attaches an event listener to the browser object (iOS) or listense to deeplink changes (Android)
+- The wallet sends back an `"APPROVED"` or `"DECLINED"` message. (It should redirect back to the application using a deeplink redirect url passed in `fcl_redirect_url`). This can be simplified using `WalletUtils.approve` and `WalletUtils.decline`
+  - If it's approved, the response's data field will need to be what FCL is expecting.
+  - If it's declined, the response's reason field should say why it was declined.
+
+```javascript
+export const WalletUtils.approve = data => {
+  sendMsgToFCL("FCL:VIEW:RESPONSE", {
+    f_vsn: "1.0.0",
+    status: "APPROVED",
+    reason: null,
+    data: data,
+  })
+}
+
+export const WalletUtils.decline = reason => {
+  sendMsgToFCL("FCL:VIEW:RESPONSE", {
+    f_vsn: "1.0.0",
+    status: "DECLINED",
+    reason: reason,
+    data: null,
+  })
+}
+```
+
+Redirect happen automatically with `sendMsgToFCL` call if you're using standard FCL Wallet Utils, as it checks `fcl_redirect_url` in URL params
+
+Unlike `IFRAME/RPC` this strategy cannot provide non-terminal status updates (`PENDING` and `REDIRECT`) from the wallet back to the application as any `sendMsgToFCL` call will cause a Deeplink redirect back to the application
+
 ## `data` and `params`
 
 `data` and `params` are information that the wallet can provide in the service config that FCL will pass back to the service.
@@ -518,6 +564,9 @@ config({
 ```
 
 If the method specified is `IFRAME/RPC`, `POP/RPC` or `TAB/RPC`, then the URL specified as `discovery.wallet` will be rendered as a webpage. If the configured method is `EXT/RPC`, `discovery.wallet` should be set to the extension's `authn` `endpoint`. Otherwise, if the method specified is `HTTP/POST`, then the authentication process will happen over HTTP requests. (While authentication can be accomplished using any of those service methods, this example will use the `IFRAME/RPC` service method.)
+
+For `DEEPLINK/RPC` method it's required to specify `discovery.authn.endpoint` as an API endpoint, that should return an array of Authn Service with method
+These services could be consumed by `useServiceDiscovery` react hook.
 
 Once the Authentication webpage is rendered, the extension popup is enabled, or the API is ready, you then need to tell FCL that it is ready. You will do this by sending a message to FCL, and FCL will send back a message with some additional information that you can use about the application requesting authentication on behalf of the user.
 
@@ -571,7 +620,10 @@ In the config they can also tell you a variety of things about them, such as the
 
 Your wallet having a visual distinction from the application, but still a seamless and connected experience is our goal here.
 
-Whether your authentication process happens using a webpage with the `IFRAME/RPC`, `POP/RPC` or `TAB/RPC` methods, via an enabled extension using the `EXT/RPC` method, or using a backchannel to an API with the `HTTP/POST` method, the handshake is the same. The same messages are sent in all methods, however the transport mechanism changes. For `IFRAME/RPC`, `POP/RPC`, `TAB/RPC` or `EXT/RPC` methods, the transport is `window.postMessage()`, with the `HTTP/POST` method, the transport is HTTP post messages.
+Whether your authentication process happens using a webpage with the `IFRAME/RPC`, `POP/RPC`, `TAB/RPC`, or `DEEPLINK/RPC` methods, via an enabled extension using the `EXT/RPC` method, or using a backchannel to an API with the `HTTP/POST` method, the handshake is the same. The same messages are sent in all methods, however the transport mechanism changes. 
+- `IFRAME/RPC`, `POP/RPC`, `TAB/RPC` or `EXT/RPC` methods use `window.postMessage()`,
+- `HTTP/POST` method uses HTTP post messages,
+- `DEEPLINK/RPC` method uses a deeplink redirect.
 
 As always, you must never trust anything you receive from an application. Always do your due-diligence and be alert as you are the user's first line of defense against potentially malicious applications.
 
@@ -705,7 +757,7 @@ WalletUtils.sendMsgToFCL("FCL:VIEW:CLOSE")
 
 # Authorization Service
 
-Authorization services are depicted with with a `type: "authz"`, and a `method` of either `HTTP/POST`, `IFRAME/RPC`, `POP/RPC`, `TAB/RPC` or `EXT/RPC`.
+Authorization services are depicted with with a `type: "authz"`, and a `method` of either `HTTP/POST`, `IFRAME/RPC`, `POP/RPC`, `TAB/RPC`, `EXT/RPC`, or `DEEPLINK/RPC`.
 They are expected to eventually return a `f_type: "CompositeSignature"`.
 
 An authorization service is expected to know the Account and the Key that will be used to sign the transaction at the time the service is sent to FCL (during authentication).
@@ -773,7 +825,7 @@ WalletUtils.CompositeSignature(addr: String, keyId: Number, signature: Hex)
 
 # User Signature Service
 
-User Signature services are depicted with a `type: "user-signature"` and a `method` of either `HTTP/POST`, `IFRAME/RPC`, `POP/RPC`, `TAB/RPC` or `EXT/RPC`.
+User Signature services are depicted with a `type: "user-signature"` and a `method` of either `HTTP/POST`, `IFRAME/RPC`, `POP/RPC`, `TAB/RPC`, `EXT/RPC`, or `DEEPLINK/RPC`.
 They are expected to eventually return an array of `f_type: "CompositeSignature"`.
 
 The User Signature service is a stock/standard service.
@@ -838,7 +890,7 @@ The eventual response back from the user signature service should resolve to som
 
 This is a strange one, but extremely powerful. This service should be used when a wallet is responsible for an account that's signing as multiple roles of a transaction, and wants the ability to change the accounts on a per role basis.
 
-Pre Authz Services are depicted with a `type: "pre-authz"` and a `method` of either `HTTP/POST`, `IFRAME/RPC`, `POP/RPC`, `TAB/RPC` or `EXT/RPC`.
+Pre Authz Services are depicted with a `type: "pre-authz"` and a `method` of either `HTTP/POST`, `IFRAME/RPC`, `POP/RPC`, `TAB/RPC`, `EXT/RPC`, or `DEEPLINK/RPC`.
 They are expected to eventually return a `f_type: "PreAuthzResponse"`.
 
 The Pre Authz Service is a stock/standard service.
@@ -902,7 +954,7 @@ The eventual response back from the pre-authz service should resolve to somethin
 
 Since synchronization of a user's session is important to provide a seamless user experience when using an app and transacting with the Flow Blockchain, a way to confirm, extend, and refresh a user session can be provided by the wallet.
 
-Authentication Refresh Services should include a `type: "authn-refresh"`, `endpoint`, and supported `method` (`HTTP/POST`, `IFRAME/RPC`, `POP/RPC`, or `EXT/RPC`).
+Authentication Refresh Services should include a `type: "authn-refresh"`, `endpoint`, and supported `method` (`HTTP/POST`, `IFRAME/RPC`, `POP/RPC`, `EXT/RPC`, or `DEEPLINK/RPC`).
 
 FCL will use the `endpoint` and service `method` provided to request updated authentication data.
 The `authn-refresh` service should refresh the user's session if necessary and return updated authentication configuration and user session data.
