@@ -16,10 +16,11 @@
     "@onflow/fcl-bundle": "^1.4.0-alpha.0",
     "jest": "^29.5.0"
   },
-  "source": "src/util-uid.js",
+  "source": "src/util-uid.ts",
   "main": "dist/util-uid.js",
   "module": "dist/util-uid.module.js",
   "unpkg": "dist/util-uid.umd.js",
+  "types": "dist/types/util-uid.d.ts",
   "scripts": {
     "prepublishOnly": "npm test && npm run build",
     "test": "jest",
