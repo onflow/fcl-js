@@ -56,7 +56,7 @@ const VALID_HASHINGS = new Set([SHA2_256, SHA3_256])
  * import {encodeKey, ECDSA_P256, SHA3_256} from "@onflow/util-encode-key"
  * encodeKey("aabbccdd", ECDSA_P256, SHA3_256, 1000) // => "aabbccdd0201000"
  */
-export function encodeKey(key, curve, hash, weight = 1000) {
+export function encodeKey(key: string, curve: number, hash: number, weight = 1000) {
   invariant(
     typeof key === "string",
     "encodeKey(key, curve, hash, weight) -- invalid key (expecting type of string)"
