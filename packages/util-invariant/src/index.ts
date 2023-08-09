@@ -5,7 +5,7 @@
  * @param {Array} rest
  * @returns {void}
  */
-export function invariant(fact, msg, ...rest) {
+export function invariant(fact: boolean, msg: string, ...rest) {
   if (!fact) {
     const error = new Error(`INVARIANT ${msg}`)
     error.stack = error.stack
