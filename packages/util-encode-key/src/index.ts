@@ -15,6 +15,7 @@ const VALID_HASHINGS = new Set([SHA2_256, SHA3_256])
 
 /**
  * Encodes a key into a hex string
+ * 
  * @param key - The key to encode (DER Hex)
  * @param curve - The curve Flow needs to use with your key [ECDSA_P256|ECDSA_secp256k1]
  * @param hash - The hashing algorythm Flow needs to use with your key [SHA2_256|SHA3_256]
