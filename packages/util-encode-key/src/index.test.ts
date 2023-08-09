@@ -18,10 +18,10 @@ const HASHINGS = [SHA2_256, SHA3_256]
 
 const WEIGHTS = [0, 32, 512, 1000]
 
-for (let [key_index, key] of PUBLIC_KEYS.entries()) {
-  for (let [curve_index, curve] of CURVES.entries()) {
-    for (let [hash_index, hash] of HASHINGS.entries()) {
-      for (let [weight_index, weight] of WEIGHTS.entries()) {
+for (const [key_index, key] of PUBLIC_KEYS.entries()) {
+  for (const [curve_index, curve] of CURVES.entries()) {
+    for (const [hash_index, hash] of HASHINGS.entries()) {
+      for (const [weight_index, weight] of WEIGHTS.entries()) {
         test(`key:${key_index} curve:${curve_index} hash:${hash_index} weight:${weight_index}`, () => {
           expect(encodeKey(key, curve, hash, weight)).toMatchSnapshot()
         })

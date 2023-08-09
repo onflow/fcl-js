@@ -40,11 +40,11 @@ const VALID_HASHINGS = new Set([SHA2_256, SHA3_256])
 /**
  * Encodes a key into a hex string
  * 
- * @param {string} key - The key to encode (DER Hex)
- * @param {number} curve - The curve Flow needs to use with your key [ECDSA_P256|ECDSA_secp256k1]
- * @param {number} hash - The hashing algorythm Flow needs to use with your key [SHA2_256|SHA3_256]
- * @param {number} weight - The weight you want this key to have [Range: 0..1000]
- * @returns {string} - The encoded key
+ * @param key - The key to encode (DER Hex)
+ * @param curve - The curve Flow needs to use with your key [ECDSA_P256|ECDSA_secp256k1]
+ * @param hash - The hashing algorythm Flow needs to use with your key [SHA2_256|SHA3_256]
+ * @param weight - The weight you want this key to have [Range: 0..1000]
+ * @returns The encoded key
  * @throws {Error} - Throws if the key is not a string
  * @throws {Error} - Throws if the key is not in the correct format
  * @throws {Error} - Throws if the curve is not a number
@@ -56,7 +56,7 @@ const VALID_HASHINGS = new Set([SHA2_256, SHA3_256])
  * import {encodeKey, ECDSA_P256, SHA3_256} from "@onflow/util-encode-key"
  * encodeKey("aabbccdd", ECDSA_P256, SHA3_256, 1000) // => "aabbccdd0201000"
  */
-export function encodeKey(key: string, curve: number, hash: number, weight = 1000) {
+export function encodeKey(key: string, curve: number, hash: number, weight: number = 1000) {
   invariant(
     typeof key === "string",
     "encodeKey(key, curve, hash, weight) -- invalid key (expecting type of string)"
