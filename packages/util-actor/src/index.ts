@@ -1,5 +1,5 @@
 import {mailbox as createMailbox, type IMailbox} from "./mailbox"
-const queueMicrotask = require("queue-microtask")
+import * as queueMicrotask from "queue-microtask"
 
 export const INIT = "INIT"
 export const SUBSCRIBE = "SUBSCRIBE"
@@ -23,11 +23,15 @@ interface IRoot {
   FCL_REGISTRY: Record<string, IRegistryRecord> | null
 }
 
-const root: IRoot =
-  (typeof self === "object" && self.self === self && (self as unknown) as IRoot) ||
-  (typeof global === "object" && global.global === global && (global as unknown) as IRoot) ||
-  (typeof window === "object" && window.window === window && (window as unknown) as IRoot) ||
-  {FCL_REGISTRY: null}
+const root: IRoot = (typeof self === "object" &&
+  self.self === self &&
+  (self as unknown as IRoot)) ||
+  (typeof global === "object" &&
+    global.global === global &&
+    (global as unknown as IRoot)) ||
+  (typeof window === "object" &&
+    window.window === window &&
+    (window as unknown as IRoot)) || {FCL_REGISTRY: null}
 
 root.FCL_REGISTRY = root.FCL_REGISTRY == null ? {} : root.FCL_REGISTRY
 
@@ -37,9 +41,25 @@ var pid = 0b0
 const DEFAULT_TIMEOUT = 5000
 const DEFAULT_TAG = "---"
 
-type Tag = typeof INIT | typeof SUBSCRIBE | typeof UNSUBSCRIBE | typeof UPDATED | typeof SNAPSHOT | typeof EXIT | typeof TERMINATE | "@EXIT" | typeof DUMP | typeof INC | typeof KEYS;
+type Tag =
+  | typeof INIT
+  | typeof SUBSCRIBE
+  | typeof UNSUBSCRIBE
+  | typeof UPDATED
+  | typeof SNAPSHOT
+  | typeof EXIT
+  | typeof TERMINATE
+  | "@EXIT"
+  | typeof DUMP
+  | typeof INC
+  | typeof KEYS
 
-export const send = (addr: string, tag: Tag, data?: Record<string, any> | null, opts: Record<string, any> = {}) =>
+export const send = (
+  addr: string,
+  tag: Tag,
+  data?: Record<string, any> | null,
+  opts: Record<string, any> = {}
+) =>
   new Promise<boolean>((reply, reject) => {
     const expectReply = opts.expectReply || false
     const timeout = opts.timeout != null ? opts.timeout : DEFAULT_TIMEOUT
@@ -63,8 +83,7 @@ export const send = (addr: string, tag: Tag, data?: Record<string, any> | null, 
     }
 
     try {
-      FCL_REGISTRY[addr] &&
-        FCL_REGISTRY[addr].mailbox.deliver(payload)
+      FCL_REGISTRY[addr] && FCL_REGISTRY[addr].mailbox.deliver(payload)
       if (!expectReply) reply(true)
     } catch (error) {
       console.error(
@@ -81,7 +100,7 @@ export const kill = addr => {
 }
 
 const fromHandlers =
-  (handlers = {}) =>
+  (handlers: Record<string, Function> = {}) =>
   async ctx => {
     if (typeof handlers[INIT] === "function") await handlers[INIT](ctx)
     __loop: while (1) {
@@ -107,7 +126,7 @@ const parseAddr = (addr): string => {
     return String(++pid)
   }
   return String(addr)
-} 
+}
 
 export const spawn = (fn, rawAddr: number | null = null) => {
   const addr = parseAddr(rawAddr)
@@ -124,7 +143,12 @@ export const spawn = (fn, rawAddr: number | null = null) => {
   const ctx = {
     self: () => addr,
     receive: () => FCL_REGISTRY[addr].mailbox.receive(),
-    send: (to: string, tag: Tag, data: Record<string, any> | null, opts: Record<string, any> = {}) => {
+    send: (
+      to: string,
+      tag: Tag,
+      data: Record<string, any> | null,
+      opts: Record<string, any> = {}
+    ) => {
       opts.from = addr
       return send(to, tag, data, opts)
     },

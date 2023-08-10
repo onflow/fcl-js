@@ -20,6 +20,7 @@
   "main": "dist/util-logger.js",
   "module": "dist/util-logger.module.js",
   "unpkg": "dist/util-logger.umd.js",
+  "types": "dist/types/util-logger.d.ts",
   "scripts": {
     "prepublishOnly": "npm test && npm run build",
     "test": "jest",

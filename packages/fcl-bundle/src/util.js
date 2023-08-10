@@ -10,8 +10,13 @@ function isString(obj) {
   return typeof obj === "string" || obj instanceof String
 }
 
+function getPackageRoot() {
+  return process.cwd()
+}
+
 module.exports = {
   isArray,
   isObject,
   isString,
+  getPackageRoot,
 }

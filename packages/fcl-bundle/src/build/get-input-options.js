@@ -4,10 +4,12 @@ const commonjs = require("@rollup/plugin-commonjs")
 const replace = require("@rollup/plugin-replace")
 const {nodeResolve} = require("@rollup/plugin-node-resolve")
 const {babel} = require("@rollup/plugin-babel")
-const terser = require('@rollup/plugin-terser')
-const typescript = require('@rollup/plugin-typescript')
+const terser = require("@rollup/plugin-terser")
+const typescript = require("rollup-plugin-typescript2")
 
 const builtinModules = require("builtin-modules")
+const path = require("path")
+const {getPackageRoot} = require("../util")
 
 const SUPPRESSED_WARNING_CODES = [
   "MISSING_GLOBAL_NAME",
@@ -44,7 +46,11 @@ module.exports = function getInputOptions(package, build) {
       }, false))
 
   // exclude peer dependencies
-  const resolveOnly = [new RegExp(`^(?!${Object.keys(package.peerDependencies || {}).join("|")}).*`)]
+  const resolveOnly = [
+    new RegExp(
+      `^(?!${Object.keys(package.peerDependencies || {}).join("|")}).*`
+    ),
+  ]
 
   let options = {
     input: build.source,
@@ -54,7 +60,9 @@ module.exports = function getInputOptions(package, build) {
       console.warn(message.toString())
     },
     plugins: [
-      typescript(),
+      typescript({
+        tsconfig: path.resolve(getPackageRoot(), "tsconfig.json"),
+      }),
       replace({
         preventAssignment: true,
         PACKAGE_CURRENT_VERSION: JSON.stringify(package.version),

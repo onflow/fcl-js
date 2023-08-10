@@ -1,6 +1,10 @@
 import {log} from "@onflow/util-logger"
 
-export function interleave(a = [], b = [], c = []) {
+export function interleave(
+  a: unknown[] = [],
+  b: unknown[] = [],
+  c: unknown[] = []
+) {
   if (!a.length && !b.length) return c
   if (!a.length) return c
   if (!b.length) return [...c, a[0]]
@@ -14,7 +18,7 @@ export function interleave(a = [], b = [], c = []) {
   return interleave(aRest, bRest, c)
 }
 
-function recApply(d) {
+function recApply(d: unknown): (x: unknown) => string {
   return function (arg1) {
     if (typeof arg1 === "function") {
       log.deprecate({
@@ -29,12 +33,10 @@ function recApply(d) {
   }
 }
 
-/**
- * @param {(string|Array.<*>)} head
- * @param {Array.<*>} rest
- * @returns {{function(): string}}
- */
-export function template(head, ...rest) {
+export function template(
+  head: string | TemplateStringsArray,
+  ...rest: unknown[]
+): (x: unknown) => string | string {
   if (typeof head === "string") return () => head
   if (Array.isArray(head)) {
     return d =>

@@ -2,35 +2,32 @@ import {config} from "@onflow/config"
 
 /**
  * The levels of the logger
- * 
- * @typedef {Object} LEVELS
- * @property {number} debug - The debug level
- * @property {number} info - The info level
- * @property {number} log - The log level
- * @property {number} warn - The warn level
- * @property {number} error - The error level
- * 
+ * @enum
  */
-export const LEVELS = Object.freeze({
-  debug: 5,
-  info: 4,
-  log: 3,
-  warn: 2,
-  error: 1,
-})
+export enum LEVELS {
+  debug = 5,
+  info = 4,
+  log = 3,
+  warn = 2,
+  error = 1,
+}
 
 /**
  * Builds a message formatted for the logger
- * 
- * @param {Object} options - The options for the log
- * @param {string} options.title - The title of the log
- * @param {string} options.message - The message of the log
- * @returns {Array<string>} - The message formatted for the logger
- * 
+ *
+ * @param options
+ * @param options.title - The title of the log
+ * @param options.message - The message of the log
+ * @returns The message formatted for the logger
+ *
  * @example
  * buildLoggerMessageArgs({ title: "My Title", message: "My Message" })
  */
-const buildLoggerMessageArgs = ({title, message}) => {
+const buildLoggerMessageArgs = (options: {
+  title: string
+  message: string
+}): string[] => {
+  const {title, message} = options
   return [
     `
     %c${title}
@@ -42,26 +39,30 @@ const buildLoggerMessageArgs = ({title, message}) => {
     `
       .replace(/\n[^\S\r\n]+/g, "\n")
       .trim(),
-    ,
     "font-weight:bold;font-family:monospace;",
   ]
 }
 
 /**
  * Logs messages based on the level of the message and the level set in the config
- * 
- * @param {Object} options - The options for the log
- * @param {string} options.title - The title of the log
- * @param {string} options.message - The message of the log
- * @param {number} options.level - The level of the log
- * @param {boolean} options.always - Whether to always show the log
- * @returns {Promise<void>}
- * 
+ *
+ * @param options - The options for the log
+ * @param options.title - The title of the log
+ * @param options.message - The message of the log
+ * @param options.level - The level of the log
+ * @param options.always - Whether to always show the log
+ *
  * @example
  * log({ title: "My Title", message: "My Message", level: LEVELS.warn, always: false })
- * 
+ *
  */
-export const log = async ({title, message, level, always = false}) => {
+export const log = async (options: {
+  title: string
+  message: string
+  level: number
+  always?: boolean
+}) => {
+  const {title, message, level, always} = options
   const configLoggerLevel = await config.get("logger.level", LEVELS.warn)
 
   // If config level is below message level then don't show it
@@ -89,30 +90,38 @@ export const log = async ({title, message, level, always = false}) => {
 
 /**
  * Logs a deprecation notice
- * 
- * @param {Object} options - The options for the log
- * @param {string} options.pkg - The package that is being deprecated
- * @param {string} options.subject - The subject of the deprecation
- * @param {string} options.transition - The transition path for the deprecation
- * @param {number} options.level - The level of the log
- * @param {string} options.message - The message of the log
- * @param {Function} options.callback - A callback to run after the log
- * @returns {Promise<void>}
- * 
+ *
+ * @param options - The options for the log
+ * @param options.pkg - The package that is being deprecated
+ * @param options.subject - The subject of the deprecation
+ * @param options.transition - The transition path for the deprecation
+ * @param options.level - The level of the log
+ * @param options.message - The message of the log
+ * @param options.callback - A callback to run after the log
+ *
  * @example
  * log.deprecate({ pkg: "@onflow/fcl", subject: "Some item", transition: "https://github.com/onflow/flow-js-sdk", message: "Descriptive message", level: LEVELS.warn, callback: () => {} })
- * 
+ *
  */
-log.deprecate = ({
-  pkg,
-  subject,
-  transition,
-  level = LEVELS.warn,
-  message = "",
-  callback = null,
+log.deprecate = <T, U>(options: {
+  pkg?: string
+  subject?: string
+  transition?: string
+  level?: number
+  message?: string
+  callback?: (...args: T[]) => U
 }) => {
-  const capitalizeFirstLetter = string => {
-    return string.charAt(0).toUpperCase() + string.slice(1)
+  const {
+    pkg,
+    subject,
+    transition,
+    level = LEVELS.warn,
+    message = "",
+    callback = null,
+  } = options
+
+  const capitalizeFirstLetter = (str: string) => {
+    return str.charAt(0).toUpperCase() + str.slice(1)
   }
 
   const logMessage = () =>
@@ -137,7 +146,7 @@ log.deprecate = ({
     })
 
   if (typeof callback === "function") {
-    return async (...args) => {
+    return async (...args: T[]) => {
       await logMessage()
       return await callback(...args)
     }
