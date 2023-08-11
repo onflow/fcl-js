@@ -1,3 +1,4 @@
+//@ts-nocheck
 import {template, interleave} from "./template"
 
 describe("interleave", () => {

@@ -1,8 +1,7 @@
 const {existsSync, readFileSync} = require("fs")
 const {resolve} = require("path")
-const {getPackageRoot} = require("./util")
 
-module.exports = function getPackageJSON(cwd = getPackageRoot()) {
+module.exports = function getPackageJSON(cwd = process.cwd()) {
   const pathPackageJSON = resolve(cwd, "package.json")
   if (existsSync(pathPackageJSON)) {
     return JSON.parse(readFileSync(pathPackageJSON))

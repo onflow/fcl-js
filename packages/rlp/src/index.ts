@@ -16,7 +16,9 @@ export {Buffer}
  * @param input - will be converted to buffer
  * @returns returns buffer of encoded data
  **/
-export function encode(input) {
+export function encode(
+  input: Buffer | string | number | Uint8Array | null | undefined
+): Buffer {
   if (Array.isArray(input)) {
     var output = []
     for (var i = 0; i < input.length; i++) {
@@ -37,13 +39,13 @@ export function encode(input) {
  * @param v The value to parse
  * @param base The base to parse the integer into
  */
-function safeParseInt(v, base) {
+function safeParseInt(v: string, base: number): number {
   if (v.slice(0, 2) === "00") {
     throw new Error("invalid RLP: extra zeros")
   }
   return parseInt(v, base)
 }
-function encodeLength(len, offset) {
+function encodeLength(len: number, offset: number): Buffer {
   if (len < 56) {
     return Buffer.from([len + offset])
   } else {
@@ -69,7 +71,7 @@ function encodeLength(len, offset) {
  * @param stream Is the input a stream (false by default)
  * @returns returns buffer of encoded data
  **/
-export function decode(input, stream) {
+export function decode(input: Buffer | Uint8Array, stream?: boolean): Buffer {
   if (stream === void 0) {
     stream = false
   }
@@ -92,11 +94,14 @@ export function decode(input, stream) {
  * @param input
  * @returns The length of the input or an empty Buffer if no input
  */
-export function getLength(input) {
-  if (!input || input.length === 0) {
-    return Buffer.from([])
-  }
+export function getLength(
+  input: Buffer | Uint8Array | null | undefined | string | number
+): number {
   var inputBuffer = toBuffer(input)
+  if (inputBuffer.length === 0) {
+    return 0
+  }
+
   var firstByte = inputBuffer[0]
   if (firstByte <= 0x7f) {
     return inputBuffer.length
@@ -116,7 +121,7 @@ export function getLength(input) {
 }
 
 /** Decode an input with RLP */
-function _decode(input) {
+function _decode(input: Buffer | Uint8Array): any {
   var length, llength, data, innerRemainder, d
   var decoded = []
   var firstByte = input[0]
@@ -191,18 +196,18 @@ function _decode(input) {
   }
 }
 /** Check if a string is prefixed by 0x */
-function isHexPrefixed(str) {
+function isHexPrefixed(str: string) {
   return str.slice(0, 2) === "0x"
 }
 /** Removes 0x from a given String */
-function stripHexPrefix(str) {
+function stripHexPrefix(str: string) {
   if (typeof str !== "string") {
     return str
   }
   return isHexPrefixed(str) ? str.slice(2) : str
 }
 /** Transform an integer into its hexadecimal value */
-function intToHex(integer) {
+function intToHex(integer: number) {
   if (integer < 0) {
     throw new Error("Invalid integer as argument, must be unsigned!")
   }
@@ -210,17 +215,19 @@ function intToHex(integer) {
   return hex.length % 2 ? "0" + hex : hex
 }
 /** Pad a string to be even */
-function padToEven(a) {
+function padToEven(a: string) {
   return a.length % 2 ? "0" + a : a
 }
 /** Transform an integer into a Buffer */
-function intToBuffer(integer) {
+function intToBuffer(integer: number) {
   var hex = intToHex(integer)
   return Buffer.from(hex, "hex")
 }
 
 /** Transform anything into a Buffer */
-export function toBuffer(v) {
+export function toBuffer(
+  v: Buffer | string | number | Uint8Array | null | undefined
+) {
   if (!Buffer.isBuffer(v)) {
     if (typeof v === "string") {
       if (isHexPrefixed(v)) {

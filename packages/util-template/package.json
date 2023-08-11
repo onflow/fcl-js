@@ -26,7 +26,7 @@
   "main": "dist/template.js",
   "module": "dist/template.module.js",
   "unpkg": "dist/template.umd.js",
-  "types": "dist/types/template.d.ts",
+  "types": "dist/template.d.ts",
   "scripts": {
     "prepublishOnly": "npm test && npm run build",
     "test": "jest",

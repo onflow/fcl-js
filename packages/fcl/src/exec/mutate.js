@@ -6,6 +6,8 @@ import {preMutate} from "./utils/pre.js"
 import {isNumber} from "./utils/is"
 
 /**
+ * @typedef {function(*)Promise<string>} MutateFn
+ *
  * @description
  * Allows you to submit transactions to the blockchain to potentially mutate the state.
  *
@@ -49,19 +51,28 @@ import {isNumber} from "./utils/is"
  *      authorizations: [AuthzFn], // an array of authorization functions used as authorizations signatory roles
  *    }
  */
-export const getMutate = ({platform}) => async (opts = {}) => {
-  var txid
-  try {
-    await preMutate(opts)
-    opts = await prepTemplateOpts(opts)
-    const currentUser = getCurrentUser({platform})
-    // Allow for a config to overwrite the authorization function.
-    // prettier-ignore
-    const authz = await sdk.config().get("fcl.authz", currentUser().authorization)
 
-    txid = sdk.config().overload(opts.dependencies || {}, async () =>
+/**
+ * Gets a function that allows you to submit transactions to the blockchain to potentially mutate the state.
+ * @param {object} opts - Mutation Options and configuration
+ * @param {string} opts.platform - platform that runs the function
+ * @returns {MutateFn}
+ */
+export const getMutate =
+  ({platform}) =>
+  async (opts = {}) => {
+    var txid
+    try {
+      await preMutate(opts)
+      opts = await prepTemplateOpts(opts)
+      const currentUser = getCurrentUser({platform})
+      // Allow for a config to overwrite the authorization function.
       // prettier-ignore
-      sdk.send([
+      const authz = await sdk.config().get("fcl.authz", currentUser().authorization)
+
+      txid = sdk.config().overload(opts.dependencies || {}, async () =>
+        // prettier-ignore
+        sdk.send([
         sdk.transaction(opts.cadence),
 
         sdk.args(normalizeArgs(opts.args || [])),
@@ -77,10 +88,10 @@ export const getMutate = ({platform}) => async (opts = {}) => {
         // opts.authorizations > [opts.authz > authz]
         sdk.authorizations(opts.authorizations || [opts.authz || authz]),
       ]).then(sdk.decode)
-    )
+      )
 
-    return txid
-  } catch (error) {
-    throw error
+      return txid
+    } catch (error) {
+      throw error
+    }
   }
-}

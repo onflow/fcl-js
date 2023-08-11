@@ -29,7 +29,7 @@
   "main": "dist/util-address.js",
   "module": "dist/util-address.module.js",
   "unpkg": "dist/util-address.umd.js",
-  "types": "dist/types/index.d.ts",
+  "types": "dist/index.d.ts",
   "scripts": {
     "prepublishOnly": "npm test && npm run build",
     "test": "jest",

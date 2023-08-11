@@ -6,10 +6,9 @@ const {nodeResolve} = require("@rollup/plugin-node-resolve")
 const {babel} = require("@rollup/plugin-babel")
 const terser = require("@rollup/plugin-terser")
 const typescript = require("rollup-plugin-typescript2")
+const {DEFAULT_EXTENSIONS} = require("@babel/core")
 
 const builtinModules = require("builtin-modules")
-const path = require("path")
-const {getPackageRoot} = require("../util")
 
 const SUPPRESSED_WARNING_CODES = [
   "MISSING_GLOBAL_NAME",
@@ -60,9 +59,6 @@ module.exports = function getInputOptions(package, build) {
       console.warn(message.toString())
     },
     plugins: [
-      typescript({
-        tsconfig: path.resolve(getPackageRoot(), "tsconfig.json"),
-      }),
       replace({
         preventAssignment: true,
         PACKAGE_CURRENT_VERSION: JSON.stringify(package.version),
@@ -73,9 +69,12 @@ module.exports = function getInputOptions(package, build) {
         preferBuiltins: build.type !== "umd",
         resolveOnly,
       }),
+      typescript({
+        clean: true,
+      }),
       babel({
         babelHelpers: "runtime",
-        presets: [["@babel/preset-env"]],
+        presets: ["@babel/preset-env", "@babel/preset-typescript"],
         plugins: [
           [
             "@babel/plugin-transform-runtime",
@@ -85,6 +84,7 @@ module.exports = function getInputOptions(package, build) {
           ],
         ],
         sourceMaps: true,
+        extensions: [...DEFAULT_EXTENSIONS, ".ts", ".tsx"],
       }),
       /\.min\.js$/.test(build.entry) &&
         terser({

@@ -21,7 +21,7 @@
   "main": "dist/util-invariant.js",
   "module": "dist/util-invariant.module.js",
   "unpkg": "dist/util-invariant.umd.js",
-  "types": "dist/types/index.d.ts",
+  "types": "dist/index.d.ts",
   "scripts": {
     "prepublishOnly": "npm test && npm run build",
     "test": "jest",
