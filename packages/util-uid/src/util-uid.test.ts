@@ -1,4 +1,4 @@
-import {uid} from "./util-uid.js"
+import {uid} from "./util-uid"
 
 test("it should generate a unique 32 character alphanumeric string", () => {
   const set = new Set()

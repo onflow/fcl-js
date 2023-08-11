@@ -1,5 +1,5 @@
 import {mailbox as createMailbox, type IMailbox} from "./mailbox"
-import * as queueMicrotask from "queue-microtask"
+const queueMicrotask = require("queue-microtask")
 
 export const INIT = "INIT"
 export const SUBSCRIBE = "SUBSCRIBE"
