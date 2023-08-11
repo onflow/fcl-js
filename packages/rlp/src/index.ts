@@ -2,6 +2,15 @@ import {Buffer} from "buffer"
 
 export {Buffer}
 
+type EncodeInput =
+  | Buffer
+  | string
+  | number
+  | Uint8Array
+  | null
+  | undefined
+  | EncodeInput[]
+
 /**
  * Built on top of rlp library, removing the BN dependency for the flow.
  * Package : https://github.com/ethereumjs/rlp
@@ -16,9 +25,7 @@ export {Buffer}
  * @param input - will be converted to buffer
  * @returns returns buffer of encoded data
  **/
-export function encode(
-  input: Buffer | string | number | Uint8Array | null | undefined
-): Buffer {
+export function encode(input: EncodeInput): Buffer {
   if (Array.isArray(input)) {
     var output = []
     for (var i = 0; i < input.length; i++) {

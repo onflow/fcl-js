@@ -20,7 +20,7 @@
   "main": "dist/rlp.js",
   "module": "dist/rlp.module.js",
   "unpkg": "dist/rlp.umd.js",
-  "types": "dist/types/index.d.ts",
+  "types": "dist/index.d.ts",
   "scripts": {
     "prepublishOnly": "npm test && npm run build",
     "test": "jest",
