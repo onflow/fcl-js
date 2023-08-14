@@ -2,4 +2,4 @@
 "@onflow/fcl": patch
 ---
 
-Fix react-native platorm for `fcl.mutate`
+Fix react-native platform for `fcl.mutate`
