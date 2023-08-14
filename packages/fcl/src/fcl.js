@@ -1,10 +1,10 @@
-export * from "./shared-exports"
+export * from './shared-exports';
 
 import {getMutate} from "./exec/mutate"
 export const mutate = getMutate({platform: "web"})
 
 import {getCurrentUser} from "./current-user"
-const currentUser = getCurrentUser({platform: "web"})
+const currentUser = getCurrentUser({platform:"web"})
 
 export {currentUser}
 
