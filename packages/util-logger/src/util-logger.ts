@@ -2,7 +2,6 @@ import {config} from "@onflow/config"
 
 /**
  * The levels of the logger
- * @enum
  */
 export enum LEVELS {
   debug = 5,
@@ -14,12 +13,10 @@ export enum LEVELS {
 
 /**
  * Builds a message formatted for the logger
- *
- * @param options
+ * @param options - The options for the log
  * @param options.title - The title of the log
  * @param options.message - The message of the log
  * @returns The message formatted for the logger
- *
  * @example
  * buildLoggerMessageArgs({ title: "My Title", message: "My Message" })
  */
@@ -45,16 +42,13 @@ const buildLoggerMessageArgs = (options: {
 
 /**
  * Logs messages based on the level of the message and the level set in the config
- *
  * @param options - The options for the log
  * @param options.title - The title of the log
  * @param options.message - The message of the log
  * @param options.level - The level of the log
  * @param options.always - Whether to always show the log
- *
  * @example
  * log({ title: "My Title", message: "My Message", level: LEVELS.warn, always: false })
- *
  */
 export const log = async (options: {
   title: string
@@ -89,8 +83,7 @@ export const log = async (options: {
 }
 
 /**
- * Logs a deprecation notice
- *
+ * Logs a deprecation notice.  If a callback is provided this function returns a function that will call the callback and log the deprecation notice, otherwise it just logs the deprecation notice.
  * @param options - The options for the log
  * @param options.pkg - The package that is being deprecated
  * @param options.subject - The subject of the deprecation
@@ -98,10 +91,14 @@ export const log = async (options: {
  * @param options.level - The level of the log
  * @param options.message - The message of the log
  * @param options.callback - A callback to run after the log
- *
+ * @returns A function that will call the callback and log the deprecation notice if the callback is provided
  * @example
+ * // Logs a deprecation notice
  * log.deprecate({ pkg: "@onflow/fcl", subject: "Some item", transition: "https://github.com/onflow/flow-js-sdk", message: "Descriptive message", level: LEVELS.warn, callback: () => {} })
- *
+ * @example
+ * function someFunction() { ... }
+ * const deprecatedFunction = log.deprecate({ pkg: "@onflow/fcl", subject: "Some item", transition: "https://github.com/foo/bar/TRANSITIONS.md", message: "Descriptive message", level: LEVELS.warn, callback: someFunction })
+ * deprecatedFunction() // Calls someFunction and logs the deprecation notice
  */
 log.deprecate = <T, U>(options: {
   pkg?: string
@@ -110,7 +107,7 @@ log.deprecate = <T, U>(options: {
   level?: number
   message?: string
   callback?: (...args: T[]) => U
-}) => {
+}): ((...args: T[]) => Promise<U>) | Promise<void> => {
   const {
     pkg,
     subject,

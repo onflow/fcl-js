@@ -1,13 +1,23 @@
 import {log} from "@onflow/util-logger"
 
-export function interleave(
-  a: unknown[] = [],
-  b: unknown[] = [],
-  c: unknown[] = []
-): unknown[] {
+/**
+ * Interleaves two arrays
+ * @param a - The first array
+ * @param b - The second array
+ * @param c - The target array
+ * @returns The interleaved array
+ */
+export function interleave<A, B>(
+  a: A[] = [],
+  b: B[] = [],
+  c: (A | B)[] = []
+): (A | B)[] {
   if (!a.length && !b.length) return c
   if (!a.length) return c
-  if (!b.length) return [...c, a[0]]
+  if (!b.length) {
+    c.push(...a)
+    return c
+  }
 
   const [aHead, ...aRest] = a
   const [bHead, ...bRest] = b
@@ -18,7 +28,12 @@ export function interleave(
   return interleave(aRest, bRest, c)
 }
 
-function recApply(d: unknown): (x: unknown) => string {
+/**
+ * Recursively apply a value to a function
+ * @param d - The value to apply
+ * @returns A function that takes a function and applies the value to it
+ */
+function recApply<T, U>(d: T): (x: U) => string {
   return function (arg1) {
     if (typeof arg1 === "function") {
       log.deprecate({
@@ -33,14 +48,20 @@ function recApply(d: unknown): (x: unknown) => string {
   }
 }
 
+/**
+ * Creates a template function
+ * @param head - A string, template string array, or template function
+ * @param rest - The rest of the arguments
+ * @returns A template function
+ */
 export function template(
-  head: string | TemplateStringsArray | ((x: unknown) => string),
+  head: string | TemplateStringsArray | ((x?: unknown) => string),
   ...rest: unknown[]
 ): (x?: unknown) => string {
   if (typeof head === "string") return () => head
   if (typeof head === "function") return head
-  return d =>
-    interleave([...head], rest.map(recApply(d)))
+  return (x: unknown) =>
+    interleave([...head], rest.map(recApply(x)))
       .join("")
       .trim()
 }
