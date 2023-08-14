@@ -15,10 +15,10 @@ export const getMutate = ({platform}) => {
    * @param {import("../shared-exports").ArgsFn} [opts.args] - Arguments passed to cadence transaction
    * @param {object | string} [opts.template] - Interaction Template for a transaction
    * @param {number} [opts.limit] - Compute Limit for transaction
-   * @param {import("../shared-exports").AuthzFn} [opts.authz] - Authorization function for transaction
-   * @param {import("../shared-exports").AuthzFn} [opts.proposer] - Proposer Authorization function for transaction
-   * @param {import("../shared-exports").AuthzFn} [opts.payer] - Payer Authorization function for transaction
-   * @param {Array<import("../shared-exports").AuthzFn>} [opts.authorizations] - Authorizations function for transaction
+   * @param {Function} [opts.authz] - Authorization function for transaction
+   * @param {Function} [opts.proposer] - Proposer Authorization function for transaction
+   * @param {Function} [opts.payer] - Payer Authorization function for transaction
+   * @param {Array<Function>} [opts.authorizations] - Authorizations function for transaction
    * @returns {Promise<string>} Transaction Id
    *
    * @example

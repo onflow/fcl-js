@@ -122,12 +122,6 @@ export {invariant} from "@onflow/sdk"
  * @returns {any}
  */
 
-/**
- * @callback AuthzFn
- * @param {import("@onflow/typedefs").Account} account - the account to authorize
- * @returns {any} - the authorization object
- */
-
 import {watchForChainIdChanges} from "./utils"
 
 // Set chain id default on access node change
