@@ -69,7 +69,6 @@ export {params, param} from "@onflow/sdk"
 export {validator} from "@onflow/sdk"
 export {invariant} from "@onflow/sdk"
 
-
 /**
  * @typedef {object} Types
  * @property {any} Identity - Represents the Identity type.
@@ -121,6 +120,12 @@ export {invariant} from "@onflow/sdk"
  * @param {any} value - the value of the argument
  * @param {any} type - the cadence type of the value
  * @returns {any}
+ */
+
+/**
+ * @callback AuthzFn
+ * @param {import("@onflow/typedefs").Account} account - the account to authorize
+ * @returns {any} - the authorization object
  */
 
 import {watchForChainIdChanges} from "./utils"
