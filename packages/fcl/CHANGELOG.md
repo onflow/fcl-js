@@ -1,5 +1,13 @@
 # @onflow/fcl
 
+## 1.5.1
+
+### Patch Changes
+
+- [#1754](https://github.com/onflow/fcl-js/pull/1754) [`c0ba4d26`](https://github.com/onflow/fcl-js/commit/c0ba4d268ce307ddbd83b812db5136f0f29afdc4) Thanks [@jribbink](https://github.com/jribbink)! - Fix `fcl.mutate` typedef
+
+- [#1755](https://github.com/onflow/fcl-js/pull/1755) [`28d16a13`](https://github.com/onflow/fcl-js/commit/28d16a134f9afea265400b49df81f77ac02a520d) Thanks [@jribbink](https://github.com/jribbink)! - Fix react-native platform for `fcl.mutate`
+
 ## 1.5.0
 
 ### Minor Changes
