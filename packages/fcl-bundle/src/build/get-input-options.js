@@ -4,8 +4,9 @@ const commonjs = require("@rollup/plugin-commonjs")
 const replace = require("@rollup/plugin-replace")
 const {nodeResolve} = require("@rollup/plugin-node-resolve")
 const {babel} = require("@rollup/plugin-babel")
-const terser = require('@rollup/plugin-terser')
-const typescript = require('@rollup/plugin-typescript')
+const terser = require("@rollup/plugin-terser")
+const typescript = require("rollup-plugin-typescript2")
+const {DEFAULT_EXTENSIONS} = require("@babel/core")
 
 const builtinModules = require("builtin-modules")
 
@@ -16,11 +17,16 @@ const SUPPRESSED_WARNING_CODES = [
 ]
 
 module.exports = function getInputOptions(package, build) {
+  // ensure that that package has the required dependencies
   if (!package.dependencies["@babel/runtime"]) {
     throw new Error(
       `${package.name} is missing required @babel/runtime dependency.  Please add this to the package.json and try again.`
     )
   }
+
+  // determine if we are building typescript
+  const source = build.source
+  const isTypeScript = source.endsWith(".ts")
 
   const babelRuntimeVersion = package.dependencies["@babel/runtime"].replace(
     /^[^0-9]*/,
@@ -44,7 +50,11 @@ module.exports = function getInputOptions(package, build) {
       }, false))
 
   // exclude peer dependencies
-  const resolveOnly = [new RegExp(`^(?!${Object.keys(package.peerDependencies || {}).join("|")}).*`)]
+  const resolveOnly = [
+    new RegExp(
+      `^(?!${Object.keys(package.peerDependencies || {}).join("|")}).*`
+    ),
+  ]
 
   let options = {
     input: build.source,
@@ -54,20 +64,23 @@ module.exports = function getInputOptions(package, build) {
       console.warn(message.toString())
     },
     plugins: [
-      typescript(),
-      replace({
-        preventAssignment: true,
-        PACKAGE_CURRENT_VERSION: JSON.stringify(package.version),
-      }),
-      commonjs(),
       nodeResolve({
         browser: true,
         preferBuiltins: build.type !== "umd",
         resolveOnly,
       }),
+      commonjs(),
+      isTypeScript &&
+        typescript({
+          clean: true,
+        }),
+      replace({
+        preventAssignment: true,
+        PACKAGE_CURRENT_VERSION: JSON.stringify(package.version),
+      }),
       babel({
         babelHelpers: "runtime",
-        presets: [["@babel/preset-env"]],
+        presets: ["@babel/preset-env", "@babel/preset-typescript"],
         plugins: [
           [
             "@babel/plugin-transform-runtime",
@@ -77,6 +90,7 @@ module.exports = function getInputOptions(package, build) {
           ],
         ],
         sourceMaps: true,
+        extensions: [...DEFAULT_EXTENSIONS, ".ts", ".tsx"],
       }),
       /\.min\.js$/.test(build.entry) &&
         terser({

@@ -16,8 +16,5 @@
     "ecmaVersion": "latest",
     "sourceType": "module"
   },
-  "ignorePatterns": ["**/dist/"],
-  "rules": {
-    "@typescript-eslint/no-explicit-any": "off"
-  }
+  "ignorePatterns": ["**/dist/"]
 }

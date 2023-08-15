@@ -5,6 +5,7 @@
       {
         "useBuiltIns": false
       }
-    ]
+    ],
+    "@babel/preset-typescript"
   ]
 }
