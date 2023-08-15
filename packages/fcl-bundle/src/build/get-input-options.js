@@ -59,18 +59,18 @@ module.exports = function getInputOptions(package, build) {
       console.warn(message.toString())
     },
     plugins: [
-      replace({
-        preventAssignment: true,
-        PACKAGE_CURRENT_VERSION: JSON.stringify(package.version),
-      }),
-      commonjs(),
       nodeResolve({
         browser: true,
         preferBuiltins: build.type !== "umd",
         resolveOnly,
       }),
+      commonjs(),
       typescript({
         clean: true,
+      }),
+      replace({
+        preventAssignment: true,
+        PACKAGE_CURRENT_VERSION: JSON.stringify(package.version),
       }),
       babel({
         babelHelpers: "runtime",
