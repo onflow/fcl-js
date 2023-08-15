@@ -22,7 +22,7 @@
   "main": "dist/config.js",
   "module": "dist/config.module.js",
   "unpkg": "dist/config.umd.js",
-  "types": "dist/config.d.ts",
+  "types": "types/src/config.d.ts",
   "scripts": {
     "prepublishOnly": "npm test && npm run build",
     "test": "jest",
