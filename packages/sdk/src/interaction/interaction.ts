@@ -25,6 +25,26 @@ export const AUTHORIZER /* */ = "authorizer"
 export const PAYER /*      */ = "payer"
 export const PROPOSER /*   */ = "proposer"
 
+export interface IAcct {
+  "kind": typeof ACCOUNT,
+  "tempId": string | null,
+  "addr": string | null,
+  "keyId": number | string | null,
+  "sequenceNum": number | null,
+  "signature": any | null,
+  "signingFunction": any | null,
+  "resolve": any | null,
+  "role": {
+    "proposer": boolean,
+    "authorizer": boolean,
+    "payer": boolean,
+    "param": boolean,
+  },
+  authorization: any,
+}
+type AcctFn = (IAcct) => IAcct;
+type IAcctFn = AcctFn & Partial<IAcct>;
+
 const ACCT = `{
   "kind":"${ACCOUNT}",
   "tempId":null,
@@ -61,6 +81,49 @@ const ARG = `{
   "resolve": null,
   "resolveArgument": null
 }`
+
+interface IIx {
+  "tag": string,
+  "assigns": Record<string, any>,
+  "status": string,
+  "reason": string | null,
+  "accounts": Record<string, any>,
+  "params": Record<string, any>,
+  "arguments": Record<string, any>,
+  "message": {
+    "cadence": string | null,
+    "refBlock": string | null,
+    "computeLimit": string | null,
+    "proposer": string | null,
+    "payer": string | null,
+    "authorizations": string[],
+    "params": Record<string, any>[],
+    "arguments": Record<string, any>[]
+  },
+  "proposer": string | null,
+  "authorizations": string[],
+  "payer": string[],
+  "events": {
+    "eventType": string | null,
+    "start": string | null,
+    "end": string | null,
+    "blockIds": string[]
+  },
+  "transaction": {
+    "id": string | null
+  },
+  "block": {
+    "id": string | null,
+    "height": string | null,
+    "isSealed": boolean | null
+  },
+  "account": {
+    "addr": string | null
+  },
+  "collection": {
+    "id": string | null
+  }
+}
 
 const IX = `{
   "tag":"${UNKNOWN}",
@@ -105,9 +168,9 @@ const IX = `{
   }
 }`
 
-const KEYS = new Set(Object.keys(JSON.parse(IX)))
+const KEYS = new Set(Object.keys(JSON.parse(IX) as IIx))
 
-export const interaction = () => JSON.parse(IX)
+export const initInteraction = (): IIx => JSON.parse(IX)
 
 export const isNumber = d => typeof d === "number"
 export const isArray = d => Array.isArray(d)
@@ -115,52 +178,59 @@ export const isObj = d => d !== null && typeof d === "object"
 export const isNull = d => d == null
 export const isFn = d => typeof d === "function"
 
-export const isInteraction = ix => {
+export const isInteraction = (ix: IIx) => {
   if (!isObj(ix) || isNull(ix) || isNumber(ix)) return false
   for (let key of KEYS) if (!ix.hasOwnProperty(key)) return false
   return true
 }
 
-export const Ok = ix => {
+export const Ok = (ix: IIx) => {
   ix.status = OK
   return ix
 }
 
-export const Bad = (ix, reason) => {
+export const Bad = (ix: IIx, reason) => {
   ix.status = BAD
   ix.reason = reason
   return ix
 }
 
-const makeIx = wat => ix => {
+const makeIx = (wat: string) => (ix: IIx) => {
   ix.tag = wat
   return Ok(ix)
 }
 
-const prepAccountKeyId = acct => {
+const prepAccountKeyId = (acct: IAcct | IAcctFn): IAcct | IAcctFn => {
   if (acct.keyId == null) return acct
 
-  invariant(!isNaN(parseInt(acct.keyId)), "account.keyId must be an integer")
+  invariant(!isNaN(parseInt(acct.keyId.toString())), "account.keyId must be an integer")
+
   return {
     ...acct,
-    keyId: parseInt(acct.keyId),
-  }
+    keyId: parseInt(acct.keyId.toString()),
+  } as IAcct | IAcctFn
 }
 
-export const prepAccount = (acct, opts = {}) => ix => {
+interface IPrepAccountOpts {
+  role: string | null
+}
+
+export const initAccount = (): IAcct => JSON.parse(ACCT)
+
+export const prepAccount = (acct: IAcct | IAcctFn, opts: IPrepAccountOpts = {role: null}) => (ix: IIx) => {
   invariant(
     typeof acct === "function" || typeof acct === "object",
     "prepAccount must be passed an authorization function or an account object"
   )
   invariant(opts.role != null, "Account must have a role")
 
-  const ACCOUNT = JSON.parse(ACCT)
+  const ACCOUNT = initAccount()
   const role = opts.role
   const tempId = uuidv4()
 
   if (acct.authorization && isFn(acct.authorization))
-    acct = {resolve: acct.authorization}
-  if (!acct.authorization && isFn(acct)) acct = {resolve: acct}
+    acct = {...ACCOUNT, resolve: acct.authorization}
+  if (!acct.authorization && isFn(acct)) acct = {...ACCOUNT, resolve: acct}
 
   const resolve = acct.resolve
   if (resolve)
@@ -223,7 +293,7 @@ export const makeGetBlockHeader /*          */ = makeIx(GET_BLOCK_HEADER)
 export const makeGetCollection /*           */ = makeIx(GET_COLLECTION)
 export const makeGetNetworkParameters /*    */ = makeIx(GET_NETWORK_PARAMETERS)
 
-const is = wat => ix => ix.tag === wat
+const is = wat => (ix: IIx) => ix.tag === wat
 
 export const isUnknown /*                 */ = is(UNKNOWN)
 export const isScript /*                  */ = is(SCRIPT)
@@ -238,15 +308,15 @@ export const isGetBlockHeader /*          */ = is(GET_BLOCK_HEADER)
 export const isGetCollection /*           */ = is(GET_COLLECTION)
 export const isGetNetworkParameters /*    */ = is(GET_NETWORK_PARAMETERS)
 
-export const isOk /*  */ = ix => ix.status === OK
-export const isBad /* */ = ix => ix.status === BAD
-export const why /*   */ = ix => ix.reason
+export const isOk /*  */ = (ix: IIx) => ix.status === OK
+export const isBad /* */ = (ix: IIx) => ix.status === BAD
+export const why /*   */ = (ix: IIx) => ix.reason
 
 export const isAccount /*  */ = account => account.kind === ACCOUNT
 export const isParam /*    */ = param => param.kind === PARAM
 export const isArgument /* */ = argument => argument.kind === ARGUMENT
 
-const hardMode = ix => {
+const hardMode = (ix: IIx) => {
   for (let key of Object.keys(ix)) {
     if (!KEYS.has(key))
       throw new Error(`"${key}" is an invalid root level Interaction property.`)
@@ -254,7 +324,7 @@ const hardMode = ix => {
   return ix
 }
 
-const recPipe = async (ix, fns = []) => {
+const recPipe = async (ix: IIx, fns = []) => {
   try {
     ix = hardMode(await ix)
     if (isBad(ix)) throw new Error(`Interaction Error: ${ix.reason}`)
@@ -276,23 +346,23 @@ export const pipe = (...args) => {
   return recPipe(arg1, arg2)
 }
 
-const identity = v => v
+const identity = (v, ..._) => v
 
-export const get = (ix, key, fallback) => {
+export const get = (ix: IIx, key: string, fallback) => {
   return ix.assigns[key] == null ? fallback : ix.assigns[key]
 }
 
-export const put = (key, value) => ix => {
+export const put = (key: string, value) => (ix: IIx) => {
   ix.assigns[key] = value
   return Ok(ix)
 }
 
-export const update = (key, fn = identity) => ix => {
+export const update = (key: string, fn = identity) => (ix: IIx) => {
   ix.assigns[key] = fn(ix.assigns[key], ix)
   return Ok(ix)
 }
 
-export const destroy = key => ix => {
+export const destroy = (key: string) => (ix: IIx) => {
   delete ix.assigns[key]
   return Ok(ix)
 }

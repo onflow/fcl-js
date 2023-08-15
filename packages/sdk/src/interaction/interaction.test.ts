@@ -1,10 +1,11 @@
 import {resolveAccounts} from "../sdk"
-import {prepAccount} from "./interaction"
+import {IAcct, prepAccount, initAccount, initInteraction} from "./interaction"
 
 describe("prepAccount", () => {
   test("prepAccount converts account object keyId to integer", async () => {
     const keyId = "1"
-    const acct = {
+    const acct: IAcct = {
+      ...initAccount(),
       addr: "f8d6e0586b0a20c7",
       keyId,
       signingFunction: () => ({
@@ -13,13 +14,13 @@ describe("prepAccount", () => {
       }),
     }
 
-    const ix = prepAccount(acct, {role: "proposer"})({accounts: {}})
-    expect(ix.accounts[ix.proposer].keyId).toBe(parseInt(keyId))
+    const ix = prepAccount(acct, {role: "proposer"})({...initInteraction(), accounts: {}})
+    expect(ix.accounts[ix.proposer||""].keyId).toBe(parseInt(keyId))
   })
 
   test("prepAccount converts authorization function keyId to integer", async () => {
     const keyId = "1"
-    const authz = acct => {
+    const authz = (acct: IAcct): IAcct => {
       return {
         ...acct,
         addr: "f8d6e0586b0a20c7",
@@ -33,6 +34,7 @@ describe("prepAccount", () => {
 
     const ix = await resolveAccounts(
       prepAccount(authz, {role: "proposer"})({
+        ...initInteraction(),
         accounts: {},
       })
     )
@@ -41,7 +43,7 @@ describe("prepAccount", () => {
   })
 
   test("prepAccount does not affect keyId if undefined/does not exist", async () => {
-    const authz = acct => {
+    const authz = (acct: IAcct): IAcct => {
       return {
         ...acct,
         addr: "f8d6e0586b0a20c7",
@@ -54,6 +56,7 @@ describe("prepAccount", () => {
 
     const ix = await resolveAccounts(
       prepAccount(authz, {role: "proposer"})({
+        ...initInteraction(),
         accounts: {},
       })
     )

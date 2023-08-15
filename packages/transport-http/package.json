@@ -19,10 +19,11 @@
     "@onflow/types": "^1.2.0-typescript.0",
     "jest": "^29.5.0"
   },
-  "source": "src/sdk-send-http.js",
+  "source": "src/sdk-send-http.ts",
   "main": "dist/sdk-send-http.js",
   "module": "dist/sdk-send-http.module.js",
   "unpkg": "dist/sdk-send-http.umd.js",
+  "types": "dist/types/sdk-send-http.d.ts",
   "scripts": {
     "alpha": "npm publish --tag alpha",
     "prepublishOnly": "npm test && npm run build",
