@@ -1,10 +1,4 @@
-import {
-  encodeKey,
-  ECDSA_P256,
-  ECDSA_secp256k1,
-  SHA2_256,
-  SHA3_256,
-} from "./"
+import {encodeKey, ECDSA_P256, ECDSA_secp256k1, SHA2_256, SHA3_256} from "./"
 
 const PUBLIC_KEYS = [
   "0bfcd8790c3ce88f3fac9d4bd23514f48bf0cdd1f6c3c8bdf87b11489b1bbeca1ef805ec2ee76451e9bdb265284f78febaeacbc8b0827e0a7baafee4e655d0b5",

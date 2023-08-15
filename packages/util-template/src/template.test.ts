@@ -23,14 +23,14 @@ describe("interleave", () => {
   })
 })
 
-const _ = (msg, a, b) => {
+const _ = (msg: string, a: unknown, b?: unknown) => {
   if (b == null) {
     test(msg, () => expect(a).toMatchSnapshot())
   } else {
     test(msg, () => expect(a).toBe(b))
   }
 }
-const t = v => typeof v
+const t = <T>(v: T) => typeof v
 
 describe("template", () => {
   describe("input type vs output type", () => {
@@ -52,10 +52,10 @@ describe("template", () => {
 
   describe("interop function", () => {
     const o = {a: "abc"}
-    _("template`${o=>o.a}`(o) -> 'abc'", template`${o => o.a}`(o))
+    _("template`${o=>o.a}`(o) -> 'abc'", template`${(_o: typeof o) => _o.a}`(o))
     _(
       "template(template`${o=>o.a}`)(o) -> 'abc'",
-      template(template`${o => o.a}`)(o)
+      template(template`${(_o: typeof o) => _o.a}`)(o)
     )
   })
 
@@ -63,20 +63,20 @@ describe("template", () => {
     const o = {a: "abc"}
     _(
       "template`x${template`y${o=>o.a}`}`(o) => 'xyabc'",
-      template`x${template`y${o => o.a}`}`(o)
+      template`x${template`y${(_o: typeof o) => _o.a}`}`(o)
     )
     _(
       "template`x${template`y${template`z${o=>o.a}`}`}`(o) => 'xyabc'",
-      template`x${template`y${template`z${o => o.a}`}`}`(o)
+      template`x${template`y${template`z${(_o: typeof o) => _o.a}`}`}`(o)
     )
     _(
-      "template(template`x${template`y${o => o.a}`}`)(o) -> 'xyabc'",
-      template(template`x${template`y${o => o.a}`}`)(o)
+      "template(template`x${template`y${(_o: typeof o) => _o.a}`}`)(o) -> 'xyabc'",
+      template(template`x${template`y${(_o: typeof o) => _o.a}`}`)(o)
     )
   })
 
   describe("interop nested functions", () => {
-    const fn = a => b => c => d => e => f => f.a
+    const fn = () => () => () => () => () => (f: typeof o) => f.a
     const o = {a: "abc"}
     _("template`${fn}`(o) -> 'abc'", template`${fn}`(o))
   })
@@ -88,8 +88,10 @@ describe("template", () => {
 
   describe("object can have non string values", () => {
     const data = {a: 1, b: NaN, c: undefined, d: null, e: false, f: true}
-    const tx = template`a:${o => o.a}|b:${o => o.b}|c:${o => o.c}|d:${o =>
-      o.d}|e:${o => o.e}|f:${o => o.f}`
+    const tx = template`a:${(o: typeof data) => o.a}|b:${(o: typeof data) =>
+      o.b}|c:${(o: typeof data) => o.c}|d:${(o: typeof data) => o.d}|e:${(
+      o: typeof data
+    ) => o.e}|f:${(o: typeof data) => o.f}`
     _("template(data)", tx(data), "a:1|b:NaN|c:undefined|d:null|e:false|f:true")
   })
 })

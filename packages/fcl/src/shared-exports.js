@@ -69,7 +69,6 @@ export {params, param} from "@onflow/sdk"
 export {validator} from "@onflow/sdk"
 export {invariant} from "@onflow/sdk"
 
-
 /**
  * @typedef {object} Types
  * @property {any} Identity - Represents the Identity type.

@@ -3,43 +3,18 @@ import {encode} from "@onflow/rlp"
 
 // Curves
 
-/**
- * @type {number}
- */
 export const ECDSA_P256 = 2
-
-/**
- * @type {number}
- */
 export const ECDSA_secp256k1 = 3
-
-/**
- * @type {Set<number>}
- * @private
- */
 const VALID_CURVES = new Set([ECDSA_P256, ECDSA_secp256k1])
 
 // Hashing
 
-/**
- * @type {number}
- */
 export const SHA2_256 = 1
-
-/**
- * @type {number}
- */
 export const SHA3_256 = 3
-
-/**
- * @type {Set<number>}
- * @private
- */
 const VALID_HASHINGS = new Set([SHA2_256, SHA3_256])
 
 /**
  * Encodes a key into a hex string
- * 
  * @param key - The key to encode (DER Hex)
  * @param curve - The curve Flow needs to use with your key [ECDSA_P256|ECDSA_secp256k1]
  * @param hash - The hashing algorythm Flow needs to use with your key [SHA2_256|SHA3_256]
@@ -56,7 +31,12 @@ const VALID_HASHINGS = new Set([SHA2_256, SHA3_256])
  * import {encodeKey, ECDSA_P256, SHA3_256} from "@onflow/util-encode-key"
  * encodeKey("aabbccdd", ECDSA_P256, SHA3_256, 1000) // => "aabbccdd0201000"
  */
-export function encodeKey(key: string, curve: number, hash: number, weight: number = 1000) {
+export function encodeKey(
+  key: string,
+  curve: number,
+  hash: number,
+  weight = 1000
+): string {
   invariant(
     typeof key === "string",
     "encodeKey(key, curve, hash, weight) -- invalid key (expecting type of string)"
