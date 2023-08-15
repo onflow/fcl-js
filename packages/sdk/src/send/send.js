@@ -1,6 +1,6 @@
 import {Buffer} from "@onflow/rlp"
 import {send as defaultSend} from "@onflow/transport-http"
-import {interaction, pipe} from "../interaction/interaction.js"
+import {initInteraction, pipe} from "../interaction/interaction.js"
 import * as ixModule from "../interaction/interaction.js"
 import {invariant} from "../build/build-invariant.js"
 import {response} from "../response/response.js"
@@ -31,7 +31,7 @@ export const send = async (args = [], opts = {}) => {
 
   opts.node = opts.node || (await config().get("accessNode.api"))
 
-  if (Array.isArray(args)) args = pipe(interaction(), args)
+  if (Array.isArray(args)) args = pipe(initInteraction(), args)
   return sendFn(
     await resolveFn(args),
     {config, response, ix: ixModule, Buffer},

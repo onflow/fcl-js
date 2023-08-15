@@ -1,4 +1,4 @@
-import {response} from "./response.js"
+import {response} from "./response"
 
 test("Response - Snapshot", async () => {
   const resp = response()

@@ -11,12 +11,44 @@ import {sendGetCollection} from "./send-get-collection.js"
 import {sendPing} from "./send-ping.js"
 import {sendGetNetworkParameters} from "./send-get-network-parameters.js"
 
-export const send = async (ix, context = {}, opts = {}) => {
+interface IIxModule {
+  isTransaction: (any) => boolean;
+  isGetTransactionStatus: (any) => boolean;
+  isGetTransaction: (any) => boolean;
+  isScript: (any) => boolean;
+  isGetAccount: (any) => boolean;
+  isGetEvents: (any) => boolean;
+  isGetBlock: (any) => boolean;
+  isGetBlockHeader: (any) => boolean;
+  isGetCollection: (any) => boolean;
+  isPing: (any) => boolean;
+  isGetNetworkParameters: (any) => boolean;
+}
+interface IContext {
+  ix?: IIxModule;
+}
+
+interface IOpts {
+  node?: string
+  sendTransaction?: (ix, context, opts) => void
+  sendGetTransactionStatus?: (ix, context, opts) => void
+  sendGetTransaction?: (ix, context, opts) => void
+  sendExecuteScript?: (ix, context, opts) => void
+  sendGetAccount?: (ix, context, opts) => void
+  sendGetEvents?: (ix, context, opts) => void
+  sendGetBlockHeader?: (ix, context, opts) => void
+  sendGetCollection?: (ix, context, opts) => void
+  sendPing?: (ix, context, opts) => void
+  sendGetBlock?: (ix, context, opts) => void
+  sendGetNetworkParameters?: (ix, context, opts) => void
+}
+
+export const send = async (ix, context: IContext = {}, opts: IOpts = {}) => {
   invariant(
-    opts.node,
+    Boolean(opts?.node),
     `SDK Send Error: Either opts.node or "accessNode.api" in config must be defined.`
   )
-  invariant(context.ix, `SDK Send Error: context.ix must be defined.`)
+  invariant(Boolean(context.ix), `SDK Send Error: context.ix must be defined.`)
 
   ix = await ix
 

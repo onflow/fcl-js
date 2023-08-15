@@ -1,4 +1,4 @@
-const DEFAULT_RESPONSE = `{
+const DEFAULT_RESPONSE = {
     "tag":null,
     "transaction":null,
     "transactionStatus":null,
@@ -11,6 +11,6 @@ const DEFAULT_RESPONSE = `{
     "latestBlock":null,
     "collection":null,
     "networkParameters":null
-}`
+}
 
-export const response = () => JSON.parse(DEFAULT_RESPONSE)
+export const response = () => ({...DEFAULT_RESPONSE})

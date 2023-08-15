@@ -1,5 +1,5 @@
-import {isTransaction, Ok} from "../interaction/interaction.js"
-import * as ixModule from "../interaction/interaction.js"
+import {isTransaction, Ok} from "../interaction/interaction"
+import * as ixModule from "../interaction/interaction"
 import {response as responseModule} from "../response/response.js"
 import {config} from "@onflow/config"
 import {decodeResponse} from "../decode/decode.js"

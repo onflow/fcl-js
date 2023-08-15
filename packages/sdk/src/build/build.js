@@ -1,5 +1,5 @@
-import {pipe, interaction} from "../interaction/interaction.js"
+import {pipe, initInteraction} from "../interaction/interaction.js"
 
 export function build(fns = []) {
-  return pipe(interaction(), fns)
+  return pipe(initInteraction(), fns)
 }
