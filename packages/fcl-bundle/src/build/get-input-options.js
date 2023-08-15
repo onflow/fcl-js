@@ -17,11 +17,16 @@ const SUPPRESSED_WARNING_CODES = [
 ]
 
 module.exports = function getInputOptions(package, build) {
+  // ensure that that package has the required dependencies
   if (!package.dependencies["@babel/runtime"]) {
     throw new Error(
       `${package.name} is missing required @babel/runtime dependency.  Please add this to the package.json and try again.`
     )
   }
+
+  // determine if we are building typescript
+  const source = build.source
+  const isTypeScript = source.endsWith(".ts")
 
   const babelRuntimeVersion = package.dependencies["@babel/runtime"].replace(
     /^[^0-9]*/,
@@ -65,9 +70,10 @@ module.exports = function getInputOptions(package, build) {
         resolveOnly,
       }),
       commonjs(),
-      typescript({
-        clean: true,
-      }),
+      isTypeScript &&
+        typescript({
+          clean: true,
+        }),
       replace({
         preventAssignment: true,
         PACKAGE_CURRENT_VERSION: JSON.stringify(package.version),
