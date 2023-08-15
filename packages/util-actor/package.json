@@ -24,6 +24,7 @@
   "main": "dist/actor.js",
   "module": "dist/actor.module.js",
   "unpkg": "dist/actor.umd.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "prepublishOnly": "npm test && npm run build",
     "test": "jest",

@@ -10,7 +10,7 @@ exports[`template interop function template(template\`\${o=>o.a}\`)(o) -> 'abc' 
 
 exports[`template interop function template\`\${o=>o.a}\`(o) -> 'abc' 1`] = `"abc"`;
 
-exports[`template interop more template template(template\`x\${template\`y\${o => o.a}\`}\`)(o) -> 'xyabc' 1`] = `"xyabc"`;
+exports[`template interop more template template(template\`x\${template\`y\${(_o: typeof o) => _o.a}\`}\`)(o) -> 'xyabc' 1`] = `"xyabc"`;
 
 exports[`template interop more template template\`x\${template\`y\${o=>o.a}\`}\`(o) => 'xyabc' 1`] = `"xyabc"`;
 

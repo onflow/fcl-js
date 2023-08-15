@@ -150,81 +150,83 @@ const makeConfig = async ({discoveryAuthnInclude, discoveryFeaturesSuggested}) =
  * @param {object} [opts.platform] - platform that runs the function
  * @param {object} [opts.service] - Optional service to use for authentication
  * @param {boolean} [opts.redir=false] - Optional flag to allow window to stay open after authentication
- * @returns {Promise<CurrentUser>} - User object
+ * @returns {function(*)Promise<CurrentUser>} - User object
  */
-const getAuthenticate = ({platform}) => async ({service, redir = false} = {}) => {
-  if (
-    service &&
-    !service?.provider?.is_installed &&
-    service?.provider?.requires_install
-  ) {
-    window.location.href = service?.provider?.install_link
-    return
-  }
+const getAuthenticate =
+  ({platform}) =>
+  async ({service, redir = false} = {}) => {
+    if (
+      service &&
+      !service?.provider?.is_installed &&
+      service?.provider?.requires_install
+    ) {
+      window.location.href = service?.provider?.install_link
+      return
+    }
 
-  return new Promise(async (resolve, reject) => {
-    spawnCurrentUser()
-    const opts = {redir}
-    const user = await snapshot()
-    const discoveryService = await getDiscoveryService(service)
-    const refreshService = serviceOfType(user.services, "authn-refresh")
-    let accountProofData
+    return new Promise(async (resolve, reject) => {
+      spawnCurrentUser()
+      const opts = {redir}
+      const user = await snapshot()
+      const discoveryService = await getDiscoveryService(service)
+      const refreshService = serviceOfType(user.services, "authn-refresh")
+      let accountProofData
 
-    if (user.loggedIn) {
-      if (refreshService) {
-        try {
-          const response = await execService({
-            service: refreshService,
-            msg: accountProofData,
-            opts,
-            platform,
-          })
-          send(NAME, SET_CURRENT_USER, await buildUser(response))
-        } catch (error) {
-          log({
-            title: `${error.name} Could not refresh wallet authentication.`,
-            message: error.message,
-            level: LEVELS.error,
-          })
-        } finally {
-          return resolve(await snapshot())
+      if (user.loggedIn) {
+        if (refreshService) {
+          try {
+            const response = await execService({
+              service: refreshService,
+              msg: accountProofData,
+              opts,
+              platform,
+            })
+            send(NAME, SET_CURRENT_USER, await buildUser(response))
+          } catch (error) {
+            log({
+              title: `${error.name} Could not refresh wallet authentication.`,
+              message: error.message,
+              level: LEVELS.error,
+            })
+          } finally {
+            return resolve(await snapshot())
+          }
+        } else {
+          return resolve(user)
         }
-      } else {
-        return resolve(user)
       }
-    }
 
-    try {
-      accountProofData = await getAccountProofData()
-    } catch (error) {
-      log({
-        title: `${error.name} On Authentication: Could not resolve account proof data.`,
-        message: error.message,
-        level: LEVELS.error,
-      })
-      return reject(error)
-    }
+      try {
+        accountProofData = await getAccountProofData()
+      } catch (error) {
+        log({
+          title: `${error.name} On Authentication: Could not resolve account proof data.`,
+          message: error.message,
+          level: LEVELS.error,
+        })
+        return reject(error)
+      }
 
-    try {
-      const response = await execService({
-        service: discoveryService,
-        msg: accountProofData,
-        config: await makeConfig(discoveryService),
-        opts,
-        platform,
-      })
-      send(NAME, SET_CURRENT_USER, await buildUser(response))
-    } catch (error) {
-      log({
-        title: `${error} On Authentication`,
-        message: error,
-        level: LEVELS.error,
-      })
-    } finally {
-      resolve(await snapshot())
-    }
-  })
-}
+      try {
+        const response = await execService({
+          service: discoveryService,
+          msg: accountProofData,
+          config: await makeConfig(discoveryService),
+          opts,
+          platform,
+        })
+        send(NAME, SET_CURRENT_USER, await buildUser(response))
+      } catch (error) {
+        log({
+          title: `${error} On Authentication`,
+          message: error,
+          level: LEVELS.error,
+        })
+      } finally {
+        resolve(await snapshot())
+      }
+    })
+  }
 
 /**
  * @description - Unauthenticate a user
@@ -243,98 +245,102 @@ const normalizePreAuthzResponse = authz => ({
   authorization: (authz || {}).authorization || [],
 })
 
-const getResolvePreAuthz = ({platform}) => (authz) => {
-  const resp = normalizePreAuthzResponse(authz)
-  const axs = []
+const getResolvePreAuthz =
+  ({platform}) =>
+  authz => {
+    const resp = normalizePreAuthzResponse(authz)
+    const axs = []
 
-  if (resp.proposer != null) axs.push(["PROPOSER", resp.proposer])
-  for (let az of resp.payer || []) axs.push(["PAYER", az])
-  for (let az of resp.authorization || []) axs.push(["AUTHORIZER", az])
+    if (resp.proposer != null) axs.push(["PROPOSER", resp.proposer])
+    for (let az of resp.payer || []) axs.push(["PAYER", az])
+    for (let az of resp.authorization || []) axs.push(["AUTHORIZER", az])
 
-  var result = axs.map(([role, az]) => ({
-    tempId: [az.identity.address, az.identity.keyId].join("|"),
-    addr: az.identity.address,
-    keyId: az.identity.keyId,
-    signingFunction(signable) {
-      return execService({service: az, msg: signable, platform})
-    },
-    role: {
-      proposer: role === "PROPOSER",
-      payer: role === "PAYER",
-      authorizer: role === "AUTHORIZER",
-    },
-  }))
-  return result
-}
+    var result = axs.map(([role, az]) => ({
+      tempId: [az.identity.address, az.identity.keyId].join("|"),
+      addr: az.identity.address,
+      keyId: az.identity.keyId,
+      signingFunction(signable) {
+        return execService({service: az, msg: signable, platform})
+      },
+      role: {
+        proposer: role === "PROPOSER",
+        payer: role === "PAYER",
+        authorizer: role === "AUTHORIZER",
+      },
+    }))
+    return result
+  }
 
 /**
  * @description
  * Produces the needed authorization details for the current user to submit transactions to Flow
  * It defines a signing function that connects to a user's wallet provider to produce signatures to submit transactions.
- * 
+ *
  * @param {object} ops - running options
  * @param {string} ops.platform - platform that runs the function
  * @param {object} account - Account object
  * @returns {Promise<object>} - Account object with signing function
  */
-const getAuthorization = ({platform}) => async (account) => {
-  spawnCurrentUser()
+const getAuthorization =
+  ({platform}) =>
+  async account => {
+    spawnCurrentUser()
 
-  return {
-    ...account,
-    tempId: "CURRENT_USER",
-    async resolve(account, preSignable) {
-      const user = await getAuthenticate({platform})({redir: true})
-      const authz = serviceOfType(user.services, "authz")
-      const preAuthz = serviceOfType(user.services, "pre-authz")
+    return {
+      ...account,
+      tempId: "CURRENT_USER",
+      async resolve(account, preSignable) {
+        const user = await getAuthenticate({platform})({redir: true})
+        const authz = serviceOfType(user.services, "authz")
+        const preAuthz = serviceOfType(user.services, "pre-authz")
 
-      if (preAuthz)
-        return getResolvePreAuthz({platform})(
-          await execService({
-            service: preAuthz,
-            msg: preSignable,
-            platform,
-          })
+        if (preAuthz)
+          return getResolvePreAuthz({platform})(
+            await execService({
+              service: preAuthz,
+              msg: preSignable,
+              platform,
+            })
+          )
+        if (authz) {
+          let windowRef
+          if (isMobile() && authz.method === "WC/RPC") {
+            windowRef = window.open("", "_blank")
+          }
+          return {
+            ...account,
+            tempId: "CURRENT_USER",
+            resolve: null,
+            addr: sansPrefix(authz.identity.address),
+            keyId: authz.identity.keyId,
+            sequenceNum: null,
+            signature: null,
+            async signingFunction(signable) {
+              return normalizeCompositeSignature(
+                await execService({
+                  service: authz,
+                  msg: signable,
+                  opts: {
+                    includeOlderJsonRpcCall: true,
+                    windowRef,
+                  },
+                  platform,
+                })
+              )
+            },
+          }
+        }
+        throw new Error(
+          "No Authz or PreAuthz Service configured for CURRENT_USER"
         )
-      if (authz) {
-        let windowRef
-        if (isMobile() && authz.method === "WC/RPC") {
-          windowRef = window.open("", "_blank")
-        }
-        return {
-          ...account,
-          tempId: "CURRENT_USER",
-          resolve: null,
-          addr: sansPrefix(authz.identity.address),
-          keyId: authz.identity.keyId,
-          sequenceNum: null,
-          signature: null,
-          async signingFunction(signable) {
-            return normalizeCompositeSignature(
-              await execService({
-                service: authz,
-                msg: signable,
-                opts: {
-                  includeOlderJsonRpcCall: true,
-                  windowRef,
-                },
-                platform,
-              })
-            )
-          },
-        }
-      }
-      throw new Error(
-        "No Authz or PreAuthz Service configured for CURRENT_USER"
-      )
-    },
+      },
+    }
   }
-}
 
 /**
  * @description
  * The callback passed to subscribe will be called when the user authenticates and un-authenticates, making it easy to update the UI accordingly.
- * 
+ *
  * @param {Function} callback - Callback function
  * @returns {Function} - Unsubscribe function
  */
@@ -373,15 +379,17 @@ async function info() {
 
 /**
  * @description - Resolves the current user as an argument
- * 
+ *
  * @param {object} ops - running options
  * @param {string} ops.platform - platform that runs the function
  * @returns {Promise<Function>}
  */
-const getResolveArgument = ({platform}) => async () => {
-  const {addr} = await getAuthenticate({platform})()
-  return arg(withPrefix(addr), t.Address)
-}
+const getResolveArgument =
+  ({platform}) =>
+  async () => {
+    const {addr} = await getAuthenticate({platform})()
+    return arg(withPrefix(addr), t.Address)
+  }
 
 const makeSignable = msg => {
   invariant(/^[0-9a-f]+$/i.test(msg), "Message must be a hex string")
@@ -396,33 +404,34 @@ const makeSignable = msg => {
  * @param {string} msg - Message to sign
  * @returns {Promise<CompositeSignature[]>} - Array of CompositeSignatures
  */
-const getSignUserMessage = ({platform}) => async (msg) => {
-  spawnCurrentUser()
-  const user = await getAuthenticate({platform})({redir: true})
+const getSignUserMessage =
+  ({platform}) =>
+  async msg => {
+    spawnCurrentUser()
+    const user = await getAuthenticate({platform})({redir: true})
 
-  const signingService = serviceOfType(user.services, "user-signature")
+    const signingService = serviceOfType(user.services, "user-signature")
 
-  invariant(
-    signingService,
-    "Current user must have authorized a signing service."
-  )
+    invariant(
+      signingService,
+      "Current user must have authorized a signing service."
+    )
 
-  try {
-    const response = await execService({
-      service: signingService,
-      msg: makeSignable(msg),
-      platform,
-    })
-    if (Array.isArray(response)) {
-      return response.map(compSigs => normalizeCompositeSignature(compSigs))
-    } else {
-      return [normalizeCompositeSignature(response)]
+    try {
+      const response = await execService({
+        service: signingService,
+        msg: makeSignable(msg),
+        platform,
+      })
+      if (Array.isArray(response)) {
+        return response.map(compSigs => normalizeCompositeSignature(compSigs))
+      } else {
+        return [normalizeCompositeSignature(response)]
+      }
+    } catch (error) {
+      return error
     }
-  } catch (error) {
-    return error
   }
-}
-
 
 const getCurrentUser = ({platform}) => {
   let currentUser = () => {

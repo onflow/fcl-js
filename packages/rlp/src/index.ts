@@ -2,6 +2,15 @@ import {Buffer} from "buffer"
 
 export {Buffer}
 
+type EncodeInput =
+  | Buffer
+  | string
+  | number
+  | Uint8Array
+  | null
+  | undefined
+  | EncodeInput[]
+
 /**
  * Built on top of rlp library, removing the BN dependency for the flow.
  * Package : https://github.com/ethereumjs/rlp
@@ -10,22 +19,22 @@ export {Buffer}
  * ethereumjs/rlp is licensed under the
  * Mozilla Public License 2.0
  * Permissions of this weak copyleft license are conditioned on making available source code of licensed files and modifications of those files under the same license (or in certain cases, one of the GNU licenses). Copyright and license notices must be preserved. Contributors provide an express grant of patent rights. However, a larger work using the licensed work may be distributed under different terms and without source code for files added in the larger work.
- **/
+ */
 
 /**
  * @param input - will be converted to buffer
  * @returns returns buffer of encoded data
- **/
-export function encode(input) {
+ */
+export function encode(input: EncodeInput): Buffer {
   if (Array.isArray(input)) {
-    var output = []
-    for (var i = 0; i < input.length; i++) {
+    const output = []
+    for (let i = 0; i < input.length; i++) {
       output.push(encode(input[i]))
     }
-    var buf = Buffer.concat(output)
+    const buf = Buffer.concat(output)
     return Buffer.concat([encodeLength(buf.length, 192), buf])
   } else {
-    var inputBuf = toBuffer(input)
+    const inputBuf = toBuffer(input)
     return inputBuf.length === 1 && inputBuf[0] < 128
       ? inputBuf
       : Buffer.concat([encodeLength(inputBuf.length, 128), inputBuf])
@@ -37,19 +46,19 @@ export function encode(input) {
  * @param v The value to parse
  * @param base The base to parse the integer into
  */
-function safeParseInt(v, base) {
+function safeParseInt(v: string, base: number): number {
   if (v.slice(0, 2) === "00") {
     throw new Error("invalid RLP: extra zeros")
   }
   return parseInt(v, base)
 }
-function encodeLength(len, offset) {
+function encodeLength(len: number, offset: number): Buffer {
   if (len < 56) {
     return Buffer.from([len + offset])
   } else {
-    var hexLength = intToHex(len)
-    var lLength = hexLength.length / 2
-    var firstByte = intToHex(offset + 55 + lLength)
+    const hexLength = intToHex(len)
+    const lLength = hexLength.length / 2
+    const firstByte = intToHex(offset + 55 + lLength)
     return Buffer.from(firstByte + hexLength, "hex")
   }
 }
@@ -62,22 +71,22 @@ function encodeLength(len, offset) {
  * ethereumjs/rlp is licensed under the
  * Mozilla Public License 2.0
  * Permissions of this weak copyleft license are conditioned on making available source code of licensed files and modifications of those files under the same license (or in certain cases, one of the GNU licenses). Copyright and license notices must be preserved. Contributors provide an express grant of patent rights. However, a larger work using the licensed work may be distributed under different terms and without source code for files added in the larger work.
- **/
+ */
 
 /**
  * @param input - will be converted to buffer
  * @param stream Is the input a stream (false by default)
  * @returns returns buffer of encoded data
- **/
-export function decode(input, stream) {
+ */
+export function decode(input: Buffer | Uint8Array, stream?: boolean): Buffer {
   if (stream === void 0) {
     stream = false
   }
   if (!input || input.length === 0) {
     return Buffer.from([])
   }
-  var inputBuffer = toBuffer(input)
-  var decoded = _decode(inputBuffer)
+  const inputBuffer = toBuffer(input)
+  const decoded = _decode(inputBuffer)
   if (stream) {
     return decoded
   }
@@ -92,12 +101,15 @@ export function decode(input, stream) {
  * @param input
  * @returns The length of the input or an empty Buffer if no input
  */
-export function getLength(input) {
-  if (!input || input.length === 0) {
-    return Buffer.from([])
+export function getLength(
+  input: Buffer | Uint8Array | null | undefined | string | number
+): number {
+  const inputBuffer = toBuffer(input)
+  if (inputBuffer.length === 0) {
+    return 0
   }
-  var inputBuffer = toBuffer(input)
-  var firstByte = inputBuffer[0]
+
+  const firstByte = inputBuffer[0]
   if (firstByte <= 0x7f) {
     return inputBuffer.length
   } else if (firstByte <= 0xb7) {
@@ -109,17 +121,20 @@ export function getLength(input) {
     return firstByte - 0xbf
   } else {
     // a list  over 55 bytes long
-    var llength = firstByte - 0xf6
-    var length = safeParseInt(inputBuffer.slice(1, llength).toString("hex"), 16)
+    const llength = firstByte - 0xf6
+    const length = safeParseInt(
+      inputBuffer.slice(1, llength).toString("hex"),
+      16
+    )
     return llength + length
   }
 }
 
 /** Decode an input with RLP */
-function _decode(input) {
-  var length, llength, data, innerRemainder, d
-  var decoded = []
-  var firstByte = input[0]
+function _decode(input: Buffer | Uint8Array): any {
+  let length, llength, data, innerRemainder, d
+  const decoded = []
+  const firstByte = input[0]
   if (firstByte <= 0x7f) {
     // a single byte whose value is in the [0x00, 0x7f] range, that byte is its own RLP encoding.
     return {
@@ -171,7 +186,7 @@ function _decode(input) {
     // a list  over 55 bytes long
     llength = firstByte - 0xf6
     length = safeParseInt(input.slice(1, llength).toString("hex"), 16)
-    var totalLength = llength + length
+    const totalLength = llength + length
     if (totalLength > input.length) {
       throw new Error("invalid rlp: total length is larger than the data")
     }
@@ -191,36 +206,38 @@ function _decode(input) {
   }
 }
 /** Check if a string is prefixed by 0x */
-function isHexPrefixed(str) {
+function isHexPrefixed(str: string) {
   return str.slice(0, 2) === "0x"
 }
 /** Removes 0x from a given String */
-function stripHexPrefix(str) {
+function stripHexPrefix(str: string) {
   if (typeof str !== "string") {
     return str
   }
   return isHexPrefixed(str) ? str.slice(2) : str
 }
 /** Transform an integer into its hexadecimal value */
-function intToHex(integer) {
+function intToHex(integer: number) {
   if (integer < 0) {
     throw new Error("Invalid integer as argument, must be unsigned!")
   }
-  var hex = integer.toString(16)
+  const hex = integer.toString(16)
   return hex.length % 2 ? "0" + hex : hex
 }
 /** Pad a string to be even */
-function padToEven(a) {
+function padToEven(a: string) {
   return a.length % 2 ? "0" + a : a
 }
 /** Transform an integer into a Buffer */
-function intToBuffer(integer) {
-  var hex = intToHex(integer)
+function intToBuffer(integer: number) {
+  const hex = intToHex(integer)
   return Buffer.from(hex, "hex")
 }
 
 /** Transform anything into a Buffer */
-export function toBuffer(v) {
+export function toBuffer(
+  v: Buffer | string | number | Uint8Array | null | undefined
+) {
   if (!Buffer.isBuffer(v)) {
     if (typeof v === "string") {
       if (isHexPrefixed(v)) {

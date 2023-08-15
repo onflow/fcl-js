@@ -25,7 +25,7 @@
   "main": "dist/typedefs.js",
   "module": "dist/typedefs.module.js",
   "unpkg": "dist/typedefs.umd.js",
-  "types": "dist/types/index.d.ts",
+  "types": "dist/index.d.ts",
   "scripts": {
     "prepublishOnly": "npm test && npm run build",
     "test": "jest",
