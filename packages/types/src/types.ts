@@ -1,24 +1,37 @@
-import {log, LEVELS} from "@onflow/util-logger"
+import {log} from "@onflow/util-logger"
+import {JsonCdcType, JsonCdcTypeMap, PathType, TypeDescriptor} from "./models"
 
-const type = (label, asArgument, asInjection) => ({
+/**
+ * Creates a type descriptor for a given type
+ * @param label - The label for the type
+ * @param asArgument - A function that converts the type to a JsonCdcType
+ * @param asInjection - A function which returns the argument as is
+ * @returns A type descriptor
+ * @internal
+ */
+const typedef = <A, L extends keyof JsonCdcTypeMap>(
+  label: L,
+  asArgument: (x: A) => JsonCdcTypeMap[L],
+  asInjection: (x: A) => A
+): TypeDescriptor<A, L> => ({
   label,
   asArgument,
   asInjection,
 })
 
-const isArray = d => Array.isArray(d)
-const isObj = d => typeof d === "object"
-const isNull = d => d == null
-const isBoolean = d => typeof d === "boolean"
-const isNumber = d => typeof d === "number"
-const isInteger = d => Number.isInteger(d)
-const isString = d => typeof d === "string"
+const isArray = <T>(d: unknown | T[]): d is T[] => Array.isArray(d)
+const isObj = (d: unknown): d is object => typeof d === "object"
+const isNull = (d: unknown): d is null => d == null
+const isBoolean = (d: unknown): d is boolean => typeof d === "boolean"
+const isNumber = (d: unknown): d is number => typeof d === "number"
+const isInteger = (d: unknown): d is number => Number.isInteger(d)
+const isString = (d: unknown): d is string => typeof d === "string"
 
-const throwTypeError = msg => {
+const throwTypeError = (msg: unknown): never => {
   throw new Error("Type Error: " + msg)
 }
 
-const numberValuesDeprecationNotice = type => {
+const numberValuesDeprecationNotice = (type: string) => {
   log.deprecate({
     pkg: "@onflow/types",
     subject: `Passing in Number as value for ${type}`,
@@ -28,15 +41,18 @@ const numberValuesDeprecationNotice = type => {
   })
 }
 
-export const Identity = type(
+export const Identity = typedef(
   "Identity",
-  v => v,
+  v => ({
+    type: "Identity",
+    value: v,
+  }),
   v => v
 )
 
-export const UInt = type(
+export const UInt = typedef(
   "UInt",
-  v => {
+  (v: number | string) => {
     if (isNumber(v) && isInteger(v)) {
       numberValuesDeprecationNotice("UInt")
       return {
@@ -50,14 +66,14 @@ export const UInt = type(
         value: v,
       }
     }
-    throwTypeError("Expected Positive Integer for type Unsigned Int")
+    return throwTypeError("Expected Positive Integer for type Unsigned Int")
   },
   v => v
 )
 
-export const Int = type(
+export const Int = typedef(
   "Int",
-  v => {
+  (v: number | string) => {
     if (isNumber(v) && isInteger(v)) {
       numberValuesDeprecationNotice("Int")
       return {
@@ -71,14 +87,14 @@ export const Int = type(
         value: v,
       }
     }
-    throwTypeError("Expected Integer for type Int")
+    return throwTypeError("Expected Integer for type Int")
   },
   v => v
 )
 
-export const UInt8 = type(
+export const UInt8 = typedef(
   "UInt8",
-  v => {
+  (v: number | string) => {
     if (isNumber(v) && isInteger(v)) {
       numberValuesDeprecationNotice("UInt8")
       return {
@@ -92,14 +108,14 @@ export const UInt8 = type(
         value: v,
       }
     }
-    throwTypeError("Expected integer for UInt8")
+    return throwTypeError("Expected integer for UInt8")
   },
   v => v
 )
 
-export const Int8 = type(
+export const Int8 = typedef(
   "Int8",
-  v => {
+  (v: number | string) => {
     if (isNumber(v) && isInteger(v)) {
       numberValuesDeprecationNotice("Int8")
       return {
@@ -113,14 +129,14 @@ export const Int8 = type(
         value: v,
       }
     }
-    throwTypeError("Expected positive integer for Int8")
+    return throwTypeError("Expected positive integer for Int8")
   },
   v => v
 )
 
-export const UInt16 = type(
+export const UInt16 = typedef(
   "UInt16",
-  v => {
+  (v: number | string) => {
     if (isNumber(v) && isInteger(v)) {
       numberValuesDeprecationNotice("UInt16")
       return {
@@ -134,14 +150,14 @@ export const UInt16 = type(
         value: v,
       }
     }
-    throwTypeError("Expected integer for UInt16")
+    return throwTypeError("Expected integer for UInt16")
   },
   v => v
 )
 
-export const Int16 = type(
+export const Int16 = typedef(
   "Int16",
-  v => {
+  (v: number | string) => {
     if (isNumber(v) && isInteger(v)) {
       numberValuesDeprecationNotice("Int16")
       return {
@@ -155,14 +171,14 @@ export const Int16 = type(
         value: v,
       }
     }
-    throwTypeError("Expected positive integer for Int16")
+    return throwTypeError("Expected positive integer for Int16")
   },
   v => v
 )
 
-export const UInt32 = type(
+export const UInt32 = typedef(
   "UInt32",
-  v => {
+  (v: number | string) => {
     if (isNumber(v) && isInteger(v)) {
       numberValuesDeprecationNotice("UInt32")
       return {
@@ -176,14 +192,14 @@ export const UInt32 = type(
         value: v,
       }
     }
-    throwTypeError("Expected integer for UInt32")
+    return throwTypeError("Expected integer for UInt32")
   },
   v => v
 )
 
-export const Int32 = type(
+export const Int32 = typedef(
   "Int32",
-  v => {
+  (v: number | string) => {
     if (isNumber(v) && isInteger(v)) {
       numberValuesDeprecationNotice("Int32")
       return {
@@ -197,14 +213,14 @@ export const Int32 = type(
         value: v,
       }
     }
-    throwTypeError("Expected positive integer for Int32")
+    return throwTypeError("Expected positive integer for Int32")
   },
   v => v
 )
 
-export const UInt64 = type(
+export const UInt64 = typedef(
   "UInt64",
-  v => {
+  (v: number | string) => {
     if (isNumber(v) && isInteger(v)) {
       numberValuesDeprecationNotice("UInt64")
       return {
@@ -218,14 +234,14 @@ export const UInt64 = type(
         value: v,
       }
     }
-    throwTypeError("Expected integer for UInt64")
+    return throwTypeError("Expected integer for UInt64")
   },
   v => v
 )
 
-export const Int64 = type(
+export const Int64 = typedef(
   "Int64",
-  v => {
+  (v: number | string) => {
     if (isNumber(v) && isInteger(v)) {
       numberValuesDeprecationNotice("Int64")
       return {
@@ -239,14 +255,14 @@ export const Int64 = type(
         value: v,
       }
     }
-    throwTypeError("Expected positive integer for Int64")
+    return throwTypeError("Expected positive integer for Int64")
   },
   v => v
 )
 
-export const UInt128 = type(
+export const UInt128 = typedef(
   "UInt128",
-  v => {
+  (v: number | string) => {
     if (isNumber(v) && isInteger(v)) {
       numberValuesDeprecationNotice("UInt128")
       return {
@@ -260,14 +276,14 @@ export const UInt128 = type(
         value: v,
       }
     }
-    throwTypeError("Expected integer for UInt128")
+    return throwTypeError("Expected integer for UInt128")
   },
   v => v
 )
 
-export const Int128 = type(
+export const Int128 = typedef(
   "Int128",
-  v => {
+  (v: number | string) => {
     if (isNumber(v) && isInteger(v)) {
       numberValuesDeprecationNotice("Int128")
       return {
@@ -281,14 +297,14 @@ export const Int128 = type(
         value: v,
       }
     }
-    throwTypeError("Expected positive integer for Int128")
+    return throwTypeError("Expected positive integer for Int128")
   },
   v => v
 )
 
-export const UInt256 = type(
+export const UInt256 = typedef(
   "UInt256",
-  v => {
+  (v: number | string) => {
     if (isNumber(v) && isInteger(v)) {
       numberValuesDeprecationNotice("UInt256")
       return {
@@ -302,14 +318,14 @@ export const UInt256 = type(
         value: v,
       }
     }
-    throwTypeError("Expected integer for UInt256")
+    return throwTypeError("Expected integer for UInt256")
   },
   v => v
 )
 
-export const Int256 = type(
+export const Int256 = typedef(
   "Int256",
-  v => {
+  (v: number | string) => {
     if (isNumber(v) && isInteger(v)) {
       numberValuesDeprecationNotice("Int256")
       return {
@@ -323,14 +339,14 @@ export const Int256 = type(
         value: v,
       }
     }
-    throwTypeError("Expected integer for Int256")
+    return throwTypeError("Expected integer for Int256")
   },
   v => v
 )
 
-export const Word8 = type(
+export const Word8 = typedef(
   "Word8",
-  v => {
+  (v: number | string) => {
     if (isNumber(v) && isInteger(v)) {
       numberValuesDeprecationNotice("Word8")
       return {
@@ -344,14 +360,14 @@ export const Word8 = type(
         value: v,
       }
     }
-    throwTypeError("Expected positive number for Word8")
+    return throwTypeError("Expected positive number for Word8")
   },
   v => v
 )
 
-export const Word16 = type(
+export const Word16 = typedef(
   "Word16",
-  v => {
+  (v: number | string) => {
     if (isNumber(v) && isInteger(v)) {
       numberValuesDeprecationNotice("Word16")
       return {
@@ -365,14 +381,14 @@ export const Word16 = type(
         value: v,
       }
     }
-    throwTypeError("Expected positive number for Word16")
+    return throwTypeError("Expected positive number for Word16")
   },
   v => v
 )
 
-export const Word32 = type(
+export const Word32 = typedef(
   "Word32",
-  v => {
+  (v: number | string) => {
     if (isNumber(v) && isInteger(v)) {
       numberValuesDeprecationNotice("Word32")
       return {
@@ -386,14 +402,14 @@ export const Word32 = type(
         value: v,
       }
     }
-    throwTypeError("Expected positive number for Word32")
+    return throwTypeError("Expected positive number for Word32")
   },
   v => v
 )
 
-export const Word64 = type(
+export const Word64 = typedef(
   "Word64",
-  v => {
+  (v: number | string) => {
     if (isNumber(v) && isInteger(v)) {
       numberValuesDeprecationNotice("Word64")
       return {
@@ -407,7 +423,7 @@ export const Word64 = type(
         value: v,
       }
     }
-    throwTypeError("Expected positive number for Word64")
+    return throwTypeError("Expected positive number for Word64")
   },
   v => v
 )
@@ -421,18 +437,18 @@ const UFix64AndFix64NumberDeprecationNotice = () => {
   })
 }
 
-export const UFix64 = type(
+export const UFix64 = typedef(
   "UFix64",
-  v => {
+  (v: number | string) => {
     if (isString(v)) {
       const vParts = v.split(".")
       if (vParts.length !== 2) {
-        throwTypeError(
+        return throwTypeError(
           `Expected one decimal but found ${vParts.length} in the [U]Fix64 value. Find out more about [U]Fix64 types here: https://docs.onflow.org/cadence/json-cadence-spec/#fixed-point-numbers`
         )
       }
       if (vParts[1].length == 0 || vParts[1].length > 8) {
-        throwTypeError(
+        return throwTypeError(
           `Expected at least one digit, and at most 8 digits following the decimal of the [U]Fix64 value but found ${vParts[1].length} digits. Find out more about [U]Fix64 types here: https://docs.onflow.org/cadence/json-cadence-spec/#fixed-point-numbers`
         )
       }
@@ -452,23 +468,23 @@ export const UFix64 = type(
         value: v.toString(),
       }
     }
-    throwTypeError("Expected String for UFix64")
+    return throwTypeError("Expected String for UFix64")
   },
   v => v
 )
 
-export const Fix64 = type(
+export const Fix64 = typedef(
   "Fix64",
-  v => {
+  (v: number | string) => {
     if (isString(v)) {
       const vParts = v.split(".")
       if (vParts.length !== 2) {
-        throwTypeError(
+        return throwTypeError(
           `Expected one decimal but found ${vParts.length} in the [U]Fix64 value. Find out more about [U]Fix64 types here: https://docs.onflow.org/cadence/json-cadence-spec/#fixed-point-numbers`
         )
       }
       if (vParts[1].length == 0 || vParts[1].length > 8) {
-        throwTypeError(
+        return throwTypeError(
           `Expected at least one digit, and at most 8 digits following the decimal of the [U]Fix64 value but found ${vParts[1].length} digits. Find out more about [U]Fix64 types here: https://docs.onflow.org/cadence/json-cadence-spec/#fixed-point-numbers`
         )
       }
@@ -488,102 +504,104 @@ export const Fix64 = type(
         value: v.toString(),
       }
     }
-    throwTypeError("Expected String for Fix64")
+    return throwTypeError("Expected String for Fix64")
   },
   v => v
 )
 
-export const String = type(
+export const String = typedef(
   "String",
-  v => {
+  (v: string) => {
     if (isString(v))
       return {
         type: "String",
         value: v,
       }
-    throwTypeError("Expected String for type String")
+    return throwTypeError("Expected String for type String")
   },
   v => v
 )
 
-export const Character = type(
+export const Character = typedef(
   "Character",
-  v => {
+  (v: string) => {
     if (isString(v))
       return {
         type: "Character",
         value: v,
       }
-    throwTypeError("Expected Character for type Character")
+    return throwTypeError("Expected Character for type Character")
   },
   v => v
 )
 
-export const Bool = type(
+export const Bool = typedef(
   "Bool",
-  v => {
+  (v: boolean) => {
     if (isBoolean(v))
       return {
         type: "Bool",
         value: v,
       }
-    throwTypeError("Expected Boolean for type Bool")
+    return throwTypeError("Expected Boolean for type Bool")
   },
   v => v
 )
 
-export const Address = type(
+export const Address = typedef(
   "Address",
-  v => {
+  (v: string) => {
     if (isString(v))
       return {
         type: "Address",
         value: v,
       }
-    throwTypeError("Expected Address for type Address")
+    return throwTypeError("Expected Address for type Address")
   },
   v => v
 )
 
-export const Void = type(
+export const Void = typedef(
   "Void",
-  v => {
+  (v?: null) => {
     if (!v || isNull(v))
       return {
         type: "Void",
       }
-    throwTypeError("Expected Void for type Void")
+    return throwTypeError("Expected Void for type Void")
   },
   v => v
 )
 
-export const Optional = children =>
-  type(
+export const Optional = (children: ReturnType<typeof typedef>) =>
+  typedef(
     "Optional",
     v => ({
+      //TODO: FIX
       type: "Optional",
       value: isNull(v) ? null : children.asArgument(v),
     }),
     v => v
   )
 
-export const Reference = type(
+export const Reference = typedef(
   "Reference",
-  v => {
+  (v: object) => {
+    //TODO: fix
     if (isObj(v))
       return {
         type: "Reference",
         value: v,
       }
-    throwTypeError("Expected Object for type Reference")
+    return throwTypeError("Expected Object for type Reference")
   },
   v => v
 )
 
-export const _Array = (children = []) =>
-  type(
+export const _Array = (children: ReturnType<typeof typedef>[] = []) =>
+  typedef(
     "Array",
-    v => {
+    (v: ReturnType<typeof typedef>[]) => {
       return {
         type: "Array",
         value: isArray(children)
@@ -596,10 +614,12 @@ export const _Array = (children = []) =>
 
 export {_Array as Array}
 
-export const Dictionary = (children = []) =>
-  type(
+export const Dictionary = (
+  children: {key: string; value: string}[] | {key: string; value: string} = []
+) =>
+  typedef(
     "Dictionary",
-    v => {
+    (v: {fields: {key: string; value: any}[]}) => {
       if (isObj(v))
         return {
           type: "Dictionary",
@@ -620,15 +640,20 @@ export const Dictionary = (children = []) =>
                 },
               ],
         }
-      throwTypeError("Expected Object for type Dictionary")
+      return throwTypeError("Expected Object for type Dictionary")
     },
     v => v
   )
 
-export const Event = (id, fields = []) =>
-  type(
+export const Event = (
+  id: string,
+  fields:
+    | {value: TypeDescriptor<unknown, keyof JsonCdcTypeMap>}[]
+    | {value: TypeDescriptor<unknown, keyof JsonCdcTypeMap>} = []
+) =>
+  typedef(
     "Event",
-    v => {
+    (v: {fields: {name: string; value: any}[]}) => {
       if (isObj(v))
         return {
           type: "Event",
@@ -645,15 +670,20 @@ export const Event = (id, fields = []) =>
                 })),
           },
         }
-      throwTypeError("Expected Object for type Event")
+      return throwTypeError("Expected Object for type Event")
     },
     v => v
   )
 
-export const Resource = (id, fields = []) =>
-  type(
+export const Resource = (
+  id: string,
+  fields:
+    | {value: TypeDescriptor<unknown, keyof JsonCdcTypeMap>}[]
+    | {value: TypeDescriptor<unknown, keyof JsonCdcTypeMap>} = []
+) =>
+  typedef(
     "Resource",
-    v => {
+    (v: {fields: {name: string; value: any}[]}) => {
       if (isObj(v))
         return {
           type: "Resource",
@@ -670,15 +700,20 @@ export const Resource = (id, fields = []) =>
                 })),
           },
         }
-      throwTypeError("Expected Object for type Resource")
+      return throwTypeError("Expected Object for type Resource")
     },
     v => v
   )
 
-export const Struct = (id, fields = []) =>
-  type(
+export const Struct = (
+  id: string,
+  fields:
+    | {value: TypeDescriptor<unknown, keyof JsonCdcTypeMap>}[]
+    | {value: TypeDescriptor<unknown, keyof JsonCdcTypeMap>} = []
+) =>
+  typedef(
     "Struct",
-    v => {
+    (v: {fields: {name: string; value: any}[]}) => {
       if (isObj(v))
         return {
           type: "Struct",
@@ -695,15 +730,20 @@ export const Struct = (id, fields = []) =>
                 })),
           },
         }
-      throwTypeError("Expected Object for type Struct")
+      return throwTypeError("Expected Object for type Struct")
     },
     v => v
   )
 
-export const Enum = (id, fields = []) =>
-  type(
+export const Enum = (
+  id: string,
+  fields:
+    | {value: TypeDescriptor<unknown, keyof JsonCdcTypeMap>}[]
+    | {value: TypeDescriptor<unknown, keyof JsonCdcTypeMap>} = []
+) =>
+  typedef(
     "Enum",
-    v => {
+    (v: {fields: {name: string; value: any}[]}) => {
       if (isObj(v))
         return {
           type: "Enum",
@@ -720,17 +760,17 @@ export const Enum = (id, fields = []) =>
                 })),
           },
         }
-      throwTypeError("Expected Object for type Enum")
+      return throwTypeError("Expected Object for type Enum")
     },
     v => v
   )
 
-export const Path = type(
+export const Path = typedef(
   "Path",
-  v => {
+  (v: PathType) => {
     if (isObj(v)) {
       if (!isString(v.domain)) {
-        throwTypeError(
+        return throwTypeError(
           `Expected a string for the Path domain but found ${v.domain}. Find out more about the Path type here: https://docs.onflow.org/cadence/json-cadence-spec/#path`
         )
       }
@@ -742,13 +782,13 @@ export const Path = type(
           v.domain === "public"
         )
       ) {
-        throwTypeError(
+        return throwTypeError(
           `Expected either "storage", "private" or "public" as the Path domain but found ${v.domain}. Find out more about the Path type here: https://docs.onflow.org/cadence/json-cadence-spec/#path`
         )
       }
 
       if (!isString(v.identifier)) {
-        throwTypeError(
+        return throwTypeError(
           `Expected a string for the Path identifier but found ${v.identifier}. Find out more about the Path type here: https://docs.onflow.org/cadence/json-cadence-spec/#path`
         )
       }
@@ -761,7 +801,7 @@ export const Path = type(
         },
       }
     }
-    throwTypeError("Expected Object for type Path")
+    return throwTypeError("Expected Object for type Path")
   },
   v => v
 )
