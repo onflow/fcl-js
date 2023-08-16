@@ -1,5 +1,5 @@
 import {log} from "@onflow/util-logger"
-import {JsonCdcType, JsonCdcTypeMap, PathType, TypeDescriptor} from "./models"
+import {JsonCdcType, JsonCdc, PathType, TypeDescriptor} from "./models"
 
 /**
  * Creates a type descriptor for a given type
@@ -9,9 +9,9 @@ import {JsonCdcType, JsonCdcTypeMap, PathType, TypeDescriptor} from "./models"
  * @returns A type descriptor
  * @internal
  */
-const typedef = <A, L extends keyof JsonCdcTypeMap>(
+const typedef = <A, L extends keyof JsonCdc>(
   label: L,
-  asArgument: (x: A) => JsonCdcTypeMap[L],
+  asArgument: (x: A) => JsonCdc[L],
   asInjection: (x: A) => A
 ): TypeDescriptor<A, L> => ({
   label,
@@ -573,11 +573,11 @@ export const Void = typedef(
   v => v
 )
 
-export const Optional = (children: ReturnType<typeof typedef>) =>
+export const Optional = <T>(children: TypeDescriptor<T, keyof JsonCdc>) =>
   typedef(
     "Optional",
-    v => ({
-      //TODO: FIX
+    (v: T) => ({
+      //TODO: FIX... need to know what types they take
       type: "Optional",
       value: isNull(v) ? null : children.asArgument(v),
     }),
@@ -598,7 +598,7 @@ export const Reference = typedef(
   v => v
 )
 
-export const _Array = (children: ReturnType<typeof typedef>[] = []) =>
+export const _Array = (children: TypeDescriptor[] = []) =>
   typedef(
     "Array",
     (v: ReturnType<typeof typedef>[]) => {
@@ -615,30 +615,46 @@ export const _Array = (children: ReturnType<typeof typedef>[] = []) =>
 export {_Array as Array}
 
 export const Dictionary = (
-  children: {key: string; value: string}[] | {key: string; value: string} = []
+  children:
+    | {
+        key: TypeDescriptor<unknown, keyof JsonCdc>
+        value: TypeDescriptor<unknown, keyof JsonCdc>
+      }[]
+    | {
+        key: TypeDescriptor<unknown, keyof JsonCdc>
+        value: TypeDescriptor<unknown, keyof JsonCdc>
+      } = []
 ) =>
   typedef(
     "Dictionary",
-    (v: {fields: {key: string; value: any}[]}) => {
+    (v: {key: string; value: any}[] | {key: string; value: any}) => {
+      const vIsArray = isArray(v)
+      const childrenIsArray = isArray(children)
+
       if (isObj(v))
         return {
           type: "Dictionary",
-          value: isArray(children)
-            ? children.map((c, i) => ({
-                key: c.key.asArgument(v[i].key),
-                value: c.value.asArgument(v[i].value),
-              }))
-            : isArray(v)
-            ? v.map(x => ({
-                key: children.key.asArgument(x.key),
-                value: children.value.asArgument(x.value),
-              }))
-            : [
-                {
-                  key: children.key.asArgument(v.key),
-                  value: children.value.asArgument(v.value),
-                },
-              ],
+          value:
+            childrenIsArray && vIsArray
+              ? children.map((c, i) => ({
+                  key: c.key.asArgument(v[i].key),
+                  value: c.value.asArgument(v[i].value),
+                }))
+              : vIsArray && !childrenIsArray
+              ? v.map(x => ({
+                  key: children.key.asArgument(x.key),
+                  value: children.value.asArgument(x.value),
+                }))
+              : !vIsArray && !childrenIsArray
+              ? [
+                  {
+                    key: children.key.asArgument(v.key),
+                    value: children.value.asArgument(v.value),
+                  },
+                ]
+              : throwTypeError(
+                  "Invalid type for Dictionary. Expected an array of objects or an object."
+                ),
         }
       return throwTypeError("Expected Object for type Dictionary")
     },
@@ -648,8 +664,8 @@ export const Dictionary = (
 export const Event = (
   id: string,
   fields:
-    | {value: TypeDescriptor<unknown, keyof JsonCdcTypeMap>}[]
-    | {value: TypeDescriptor<unknown, keyof JsonCdcTypeMap>} = []
+    | {value: TypeDescriptor<unknown, keyof JsonCdc>}[]
+    | {value: TypeDescriptor<unknown, keyof JsonCdc>} = []
 ) =>
   typedef(
     "Event",
@@ -678,8 +694,8 @@ export const Event = (
 export const Resource = (
   id: string,
   fields:
-    | {value: TypeDescriptor<unknown, keyof JsonCdcTypeMap>}[]
-    | {value: TypeDescriptor<unknown, keyof JsonCdcTypeMap>} = []
+    | {value: TypeDescriptor<unknown, keyof JsonCdc>}[]
+    | {value: TypeDescriptor<unknown, keyof JsonCdc>} = []
 ) =>
   typedef(
     "Resource",
@@ -708,8 +724,8 @@ export const Resource = (
 export const Struct = (
   id: string,
   fields:
-    | {value: TypeDescriptor<unknown, keyof JsonCdcTypeMap>}[]
-    | {value: TypeDescriptor<unknown, keyof JsonCdcTypeMap>} = []
+    | {value: TypeDescriptor<unknown, keyof JsonCdc>}[]
+    | {value: TypeDescriptor<unknown, keyof JsonCdc>} = []
 ) =>
   typedef(
     "Struct",
@@ -738,8 +754,8 @@ export const Struct = (
 export const Enum = (
   id: string,
   fields:
-    | {value: TypeDescriptor<unknown, keyof JsonCdcTypeMap>}[]
-    | {value: TypeDescriptor<unknown, keyof JsonCdcTypeMap>} = []
+    | {value: TypeDescriptor<unknown, keyof JsonCdc>}[]
+    | {value: TypeDescriptor<unknown, keyof JsonCdc>} = []
 ) =>
   typedef(
     "Enum",
