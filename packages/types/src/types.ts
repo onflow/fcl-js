@@ -36,7 +36,14 @@ const typedef = <T, L extends string, X>(
 ): TypeDescriptor<T, L, X> => ({
   label,
   asArgument,
-  asInjection,
+  asInjection: (x: T) => {
+    log.deprecate({
+      pkg: "@onflow/types",
+      subject: `Passing in ${label} as value for ${label}`,
+      message: `Going forward, use ${label} as value for ${label}.`,
+    })
+    return asInjection(x)
+  },
 })
 
 const isArray = <T>(d: unknown): d is T[] => Array.isArray(d)
@@ -61,9 +68,23 @@ const numberValuesDeprecationNotice = (type: string) => {
   })
 }
 
+let identityDeprecationShown = false
+/**
+ * @deprecated will be removed in v2.0.0
+ */
 export const Identity = {
   label: "Identity",
-  asArgument: <T>(v: T) => v,
+  asArgument: <T>(v: T) => {
+    if (!identityDeprecationShown) {
+      log.deprecate({
+        pkg: "@onflow/types",
+        subject: "Identity",
+        message:
+          "Identity type is deprecated and will be removed in v2.0.0.  Please remove it from your code.",
+      })
+    }
+    return v
+  },
   asInjection: <T>(v: T) => v,
 }
 

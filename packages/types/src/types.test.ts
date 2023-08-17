@@ -1,8 +1,5 @@
 import * as t from "./types"
 const entries = [
-  [t.Identity, 0, 0, 0],
-  [t.Identity, "a", "a", "a"],
-  [t.Identity, null, null, null],
   [t.Int, "1", {type: "Int", value: "1"}, "1"],
   [t.UInt, "1", {type: "UInt", value: "1"}, "1"],
   [t.Int8, "8", {type: "Int8", value: "8"}, "8"],
