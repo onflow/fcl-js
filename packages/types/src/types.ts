@@ -1,5 +1,11 @@
 import {log} from "@onflow/util-logger"
-import {JsonCdcType, JsonCdc, PathType, TypeDescriptor} from "./models"
+import {
+  JsonCdc,
+  PathValue,
+  TypeDescriptor,
+  TypeDescriptorInputType,
+  ReferenceValue,
+} from "./models"
 
 /**
  * Creates a type descriptor for a given type
@@ -9,19 +15,19 @@ import {JsonCdcType, JsonCdc, PathType, TypeDescriptor} from "./models"
  * @returns A type descriptor
  * @internal
  */
-const typedef = <A, L extends keyof JsonCdc>(
+const typedef = <L extends keyof JsonCdc, A extends TypeDescriptorInputType[L]>(
   label: L,
   asArgument: (x: A) => JsonCdc[L],
   asInjection: (x: A) => A
-): TypeDescriptor<A, L> => ({
+): TypeDescriptor<L, A> => ({
   label,
   asArgument,
   asInjection,
 })
 
-const isArray = <T>(d: unknown | T[]): d is T[] => Array.isArray(d)
+const isArray = <T>(d: unknown): d is T[] => Array.isArray(d)
 const isObj = (d: unknown): d is object => typeof d === "object"
-const isNull = (d: unknown): d is null => d == null
+const isNull = (d: unknown): d is null | undefined => d == null
 const isBoolean = (d: unknown): d is boolean => typeof d === "boolean"
 const isNumber = (d: unknown): d is number => typeof d === "number"
 const isInteger = (d: unknown): d is number => Number.isInteger(d)
@@ -41,14 +47,11 @@ const numberValuesDeprecationNotice = (type: string) => {
   })
 }
 
-export const Identity = typedef(
-  "Identity",
-  v => ({
-    type: "Identity",
-    value: v,
-  }),
-  v => v
-)
+export const Identity = {
+  label: "Identity",
+  asArgument: (v: any) => v,
+  asInjection: (v: any) => v,
+}
 
 export const UInt = typedef(
   "UInt",
@@ -573,11 +576,12 @@ export const Void = typedef(
   v => v
 )
 
-export const Optional = <T>(children: TypeDescriptor<T, keyof JsonCdc>) =>
+export const Optional = <T extends keyof JsonCdc>(
+  children: TypeDescriptor<T>
+) =>
   typedef(
     "Optional",
-    (v: T) => ({
-      //TODO: FIX... need to know what types they take
+    (v?: TypeDescriptorInputType[T] | null) => ({
       type: "Optional",
       value: isNull(v) ? null : children.asArgument(v),
     }),
@@ -586,7 +590,7 @@ export const Optional = <T>(children: TypeDescriptor<T, keyof JsonCdc>) =>
 
 export const Reference = typedef(
   "Reference",
-  (v: object) => {
+  (v: ReferenceValue) => {
     //TODO: fix
     if (isObj(v))
       return {
@@ -598,10 +602,15 @@ export const Reference = typedef(
   v => v
 )
 
-export const _Array = (children: TypeDescriptor[] = []) =>
+export const _Array = <
+  L extends keyof JsonCdc,
+  T extends TypeDescriptorInputType[L]
+>(
+  children: TypeDescriptor<L, T>[] | TypeDescriptor<L, T> = []
+) =>
   typedef(
     "Array",
-    (v: ReturnType<typeof typedef>[]) => {
+    (v: T[]) => {
       return {
         type: "Array",
         value: isArray(children)
@@ -614,20 +623,25 @@ export const _Array = (children: TypeDescriptor[] = []) =>
 
 export {_Array as Array}
 
-export const Dictionary = (
+export const Dictionary = <
+  A extends keyof JsonCdc,
+  B extends TypeDescriptorInputType[A],
+  C extends keyof JsonCdc,
+  D extends TypeDescriptorInputType[C]
+>(
   children:
     | {
-        key: TypeDescriptor<unknown, keyof JsonCdc>
-        value: TypeDescriptor<unknown, keyof JsonCdc>
+        key: TypeDescriptor<A, B>
+        value: TypeDescriptor<C, D>
       }[]
     | {
-        key: TypeDescriptor<unknown, keyof JsonCdc>
-        value: TypeDescriptor<unknown, keyof JsonCdc>
+        key: TypeDescriptor<A, B>
+        value: TypeDescriptor<C, D>
       } = []
 ) =>
   typedef(
     "Dictionary",
-    (v: {key: string; value: any}[] | {key: string; value: any}) => {
+    (v: {key: B; value: D}[] | {key: B; value: D}) => {
       const vIsArray = isArray(v)
       const childrenIsArray = isArray(children)
 
@@ -653,7 +667,7 @@ export const Dictionary = (
                   },
                 ]
               : throwTypeError(
-                  "Invalid type for Dictionary. Expected an array of objects or an object."
+                  "Invalid arguments for Dictionary. Expected an of array of key/value pairs"
                 ),
         }
       return throwTypeError("Expected Object for type Dictionary")
@@ -661,11 +675,12 @@ export const Dictionary = (
     v => v
   )
 
-export const Event = (
+export const Event = <
+  L extends keyof JsonCdc,
+  T extends TypeDescriptorInputType[L]
+>(
   id: string,
-  fields:
-    | {value: TypeDescriptor<unknown, keyof JsonCdc>}[]
-    | {value: TypeDescriptor<unknown, keyof JsonCdc>} = []
+  fields: {value: TypeDescriptor<L, T>}[] | {value: TypeDescriptor<L, T>} = []
 ) =>
   typedef(
     "Event",
@@ -691,11 +706,12 @@ export const Event = (
     v => v
   )
 
-export const Resource = (
+export const Resource = <
+  L extends keyof JsonCdc,
+  T extends TypeDescriptorInputType[L]
+>(
   id: string,
-  fields:
-    | {value: TypeDescriptor<unknown, keyof JsonCdc>}[]
-    | {value: TypeDescriptor<unknown, keyof JsonCdc>} = []
+  fields: {value: TypeDescriptor<L, T>}[] | {value: TypeDescriptor<L, T>} = []
 ) =>
   typedef(
     "Resource",
@@ -721,11 +737,12 @@ export const Resource = (
     v => v
   )
 
-export const Struct = (
+export const Struct = <
+  L extends keyof JsonCdc,
+  T extends TypeDescriptorInputType[L]
+>(
   id: string,
-  fields:
-    | {value: TypeDescriptor<unknown, keyof JsonCdc>}[]
-    | {value: TypeDescriptor<unknown, keyof JsonCdc>} = []
+  fields: {value: TypeDescriptor<L, T>}[] | {value: TypeDescriptor<L, T>} = []
 ) =>
   typedef(
     "Struct",
@@ -751,11 +768,12 @@ export const Struct = (
     v => v
   )
 
-export const Enum = (
+export const Enum = <
+  L extends keyof JsonCdc,
+  T extends TypeDescriptorInputType[L]
+>(
   id: string,
-  fields:
-    | {value: TypeDescriptor<unknown, keyof JsonCdc>}[]
-    | {value: TypeDescriptor<unknown, keyof JsonCdc>} = []
+  fields: {value: TypeDescriptor<L, T>}[] | {value: TypeDescriptor<L, T>} = []
 ) =>
   typedef(
     "Enum",
@@ -783,7 +801,7 @@ export const Enum = (
 
 export const Path = typedef(
   "Path",
-  (v: PathType) => {
+  (v: PathValue) => {
     if (isObj(v)) {
       if (!isString(v.domain)) {
         return throwTypeError(

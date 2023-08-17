@@ -34,27 +34,78 @@ export type JsonCdc = {
   Bool: JsonCdcType<"Bool", boolean>
   Address: JsonCdcType<"Address", string>
   Void: JsonCdcType<"Void", undefined>
-  Optional: JsonCdcType<"Optional", unknown> // Note: Replace 'unknown' with the appropriate type
+  Optional: JsonCdcType<"Optional", unknown>
   Reference: JsonCdcType<"Reference", object> // Note: Replace 'object' with the appropriate type
   Array: JsonCdcArray
-  Dictionary: JsonCdcType<"Dictionary", [unknown, unknown][]>
+  Dictionary: JsonCdcType<"Dictionary", unknown>
   Event: JsonCdcType<"Event", unknown> // Note: Replace 'unknown' with the appropriate type
   Resource: JsonCdcType<"Resource", unknown> // Note: Replace 'unknown' with the appropriate type
   Struct: JsonCdcType<"Struct", unknown> // Note: Replace 'unknown' with the appropriate type
   Enum: JsonCdcType<"Enum", unknown> // Note: Replace 'unknown' with the appropriate type
-  Path: JsonCdcType<"Path", PathType>
+  Path: JsonCdcType<"Path", PathValue>
 }
 
-export interface PathType {
+type ArrayInput<T extends keyof TypeDescriptorInputType> = Array<
+  TypeDescriptorInputType[T]
+>
+
+// Defines the input type for Type.asArgument
+export type TypeDescriptorInputType = {
+  Identity: unknown
+  UInt: number | string
+  Int: number | string
+  UInt8: number | string
+  Int8: number | string
+  UInt16: number | string
+  Int16: number | string
+  UInt32: number | string
+  Int32: number | string
+  UInt64: number | string
+  Int64: number | string
+  UInt128: number | string
+  Int128: number | string
+  UInt256: number | string
+  Int256: number | string
+  Word8: number | string
+  Word16: number | string
+  Word32: number | string
+  Word64: number | string
+  UFix64: number | string
+  Fix64: number | string
+  String: string
+  Character: string
+  Bool: boolean
+  Address: string
+  Void: undefined
+  Optional: TypeDescriptorInputType[Exclude<
+    keyof TypeDescriptorInputType,
+    "Optional"
+  >]
+  Reference: ReferenceValue // Note: Replace 'object' with the appropriate type
+  Array: ArrayInput<keyof TypeDescriptorInputType>
+  Dictionary: unknown
+  Event: unknown // Note: Replace 'unknown' with the appropriate type
+  Resource: unknown // Note: Replace 'unknown' with the appropriate type
+  Struct: unknown // Note: Replace 'unknown' with the appropriate type
+  Enum: unknown // Note: Replace 'unknown' with the appropriate type
+  Path: PathValue
+}
+
+export interface PathValue {
   domain: "storage" | "private" | "public"
   identifier: string
 }
 
-export interface TypeDescriptor<A, L extends keyof JsonCdc> {
-  label: string
-  asArgument: (x: A) => JsonCdc[L]
-  asInjection: (x: A) => A
+export interface ReferenceValue {
+  type: string
+  address: string
 }
 
-// TODO: complete
-export interface CompositeType {}
+export interface TypeDescriptor<
+  L extends keyof JsonCdc,
+  T extends TypeDescriptorInputType[L] = TypeDescriptorInputType[L]
+> {
+  label: string
+  asArgument: (x: T) => JsonCdc[L]
+  asInjection: (x: T) => T
+}
