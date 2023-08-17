@@ -22,10 +22,11 @@
     "eslint-plugin-jsdoc": "^46.4.6",
     "jest": "^29.5.0"
   },
-  "source": "src/types.js",
+  "source": "src/types.ts",
   "main": "dist/types.js",
   "module": "dist/types.module.js",
   "unpkg": "dist/types.umd.js",
+  "types": "dist/types.d.ts",
   "scripts": {
     "prepublishOnly": "npm test && npm run build",
     "test": "jest",
