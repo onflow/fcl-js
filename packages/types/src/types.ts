@@ -63,8 +63,8 @@ const numberValuesDeprecationNotice = (type: string) => {
 
 export const Identity = {
   label: "Identity",
-  asArgument: (v: any) => v,
-  asInjection: (v: any) => v,
+  asArgument: <T>(v: T) => v,
+  asInjection: <T>(v: T) => v,
 }
 
 export const UInt = typedef(
@@ -690,7 +690,7 @@ export const Event = <T, L extends string, X>(
 ) =>
   typedef(
     "Event",
-    (v: {fields: {name: string; value: any}[]}) => {
+    (v: {fields: {name: string; value: T}[]}) => {
       if (isObj(v))
         return {
           type: "Event",
@@ -720,7 +720,7 @@ export const Resource = <T, L extends string, X>(
 ) =>
   typedef(
     "Resource",
-    (v: {fields: {name: string; value: any}[]}) => {
+    (v: {fields: {name: string; value: T}[]}) => {
       if (isObj(v))
         return {
           type: "Resource",
@@ -750,7 +750,7 @@ export const Struct = <T, L extends string, X>(
 ) =>
   typedef(
     "Struct",
-    (v: {fields: {name: string; value: any}[]}) => {
+    (v: {fields: {name: string; value: T}[]}) => {
       if (isObj(v))
         return {
           type: "Struct",
@@ -780,7 +780,7 @@ export const Enum = <T, L extends string, X>(
 ) =>
   typedef(
     "Enum",
-    (v: {fields: {name: string; value: any}[]}) => {
+    (v: {fields: {name: string; value: T}[]}) => {
       if (isObj(v))
         return {
           type: "Enum",
