@@ -188,9 +188,15 @@ createTest([
 ])
 createTest([
   t.Path,
-  {domain: "public", identifier: "flowTokenVault"},
+  {
+    domain: "public" as "storage" | "private" | "public",
+    identifier: "flowTokenVault",
+  },
   {type: "Path", value: {domain: "public", identifier: "flowTokenVault"}},
-  {domain: "public", identifier: "flowTokenVault"},
+  {
+    domain: "public" as "storage" | "private" | "public",
+    identifier: "flowTokenVault",
+  },
 ])
 createTest([
   t.Path,
@@ -212,19 +218,13 @@ createTest([
   true,
 ])
 
-function createTest<A extends t.TypeDescriptor<any, any, any>>([
+function createTest<X, Y extends string, Z>([
   cast,
   input,
   asArgument,
   asInjection,
   shouldError = false,
-]: readonly [
-  A,
-  Parameters<A["asArgument"]>[0],
-  ReturnType<A["asArgument"]>,
-  ReturnType<A["asInjection"]>,
-  boolean?
-]) {
+]: readonly [t.TypeDescriptor<X, Y, Z>, X, t.JsonCdc<Y, Z>, X, boolean?]) {
   describe(cast.label, () => {
     test(`t.${cast.label}.asArgument(${input})`, () => {
       if (shouldError) {
