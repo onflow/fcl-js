@@ -82,6 +82,7 @@ export const Identity = {
         message:
           "Identity type is deprecated and will be removed in v2.0.0.  Please remove it from your code.",
       })
+      identityDeprecationShown = true
     }
     return v
   },
