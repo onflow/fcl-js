@@ -1,83 +1,88 @@
 import * as t from "./types"
 
-createTest([t.Int, "1", {type: "Int", value: "1"}, "1"])
-createTest([t.UInt, "1", {type: "UInt", value: "1"}, "1"])
-createTest([t.Int8, "8", {type: "Int8", value: "8"}, "8"])
-createTest([t.UInt8, "8", {type: "UInt8", value: "8"}, "8"])
-createTest([t.Int16, "16", {type: "Int16", value: "16"}, "16"])
-createTest([t.UInt16, "16", {type: "UInt16", value: "16"}, "16"])
-createTest([t.Int32, "32", {type: "Int32", value: "32"}, "32"])
-createTest([t.UInt32, "32", {type: "UInt32", value: "32"}, "32"])
-createTest([t.Int64, "64", {type: "Int64", value: "64"}, "64"])
-createTest([t.UInt64, "64", {type: "UInt64", value: "64"}, "64"])
-createTest([t.Int128, "128", {type: "Int128", value: "128"}, "128"])
-createTest([t.UInt128, "128", {type: "UInt128", value: "128"}, "128"])
-createTest([t.Int256, "256", {type: "Int256", value: "256"}, "256"])
-createTest([t.UInt256, "256", {type: "UInt256", value: "256"}, "256"])
-createTest([t.Word8, "8", {type: "Word8", value: "8"}, "8"])
-createTest([t.Word16, "16", {type: "Word16", value: "16"}, "16"])
-createTest([t.Word32, "32", {type: "Word32", value: "32"}, "32"])
-createTest([t.Word64, "64", {type: "Word64", value: "64"}, "64"])
-createTest([t.UFix64, "64", {type: "UFix64", value: "64"}, "64", true])
-createTest([t.Fix64, "64", {type: "Fix64", value: "64"}, "64", true])
-createTest([
+registerTest([t.Int, "1", {type: "Int", value: "1"}, "1"])
+registerTest([t.UInt, "1", {type: "UInt", value: "1"}, "1"])
+registerTest([t.Int8, "8", {type: "Int8", value: "8"}, "8"])
+registerTest([t.UInt8, "8", {type: "UInt8", value: "8"}, "8"])
+registerTest([t.Int16, "16", {type: "Int16", value: "16"}, "16"])
+registerTest([t.UInt16, "16", {type: "UInt16", value: "16"}, "16"])
+registerTest([t.Int32, "32", {type: "Int32", value: "32"}, "32"])
+registerTest([t.UInt32, "32", {type: "UInt32", value: "32"}, "32"])
+registerTest([t.Int64, "64", {type: "Int64", value: "64"}, "64"])
+registerTest([t.UInt64, "64", {type: "UInt64", value: "64"}, "64"])
+registerTest([t.Int128, "128", {type: "Int128", value: "128"}, "128"])
+registerTest([t.UInt128, "128", {type: "UInt128", value: "128"}, "128"])
+registerTest([t.Int256, "256", {type: "Int256", value: "256"}, "256"])
+registerTest([t.UInt256, "256", {type: "UInt256", value: "256"}, "256"])
+registerTest([t.Word8, "8", {type: "Word8", value: "8"}, "8"])
+registerTest([t.Word16, "16", {type: "Word16", value: "16"}, "16"])
+registerTest([t.Word32, "32", {type: "Word32", value: "32"}, "32"])
+registerTest([t.Word64, "64", {type: "Word64", value: "64"}, "64"])
+registerTest([t.UFix64, "64", {type: "UFix64", value: "64"}, "64", true])
+registerTest([t.Fix64, "64", {type: "Fix64", value: "64"}, "64", true])
+registerTest([
   t.UFix64,
   "64.000000001",
   {type: "UFix64", value: "64.000000001"},
   "64.000000001",
   true,
 ])
-createTest([
+registerTest([
   t.Fix64,
   "64.000000001",
   {type: "Fix64", value: "64.000000001"},
   "64.000000001",
   true,
 ])
-createTest([
+registerTest([
   t.UFix64,
   "64.0",
   {type: "UFix64", value: "64.00000000"},
   "64.0",
   false,
 ])
-createTest([
+registerTest([
   t.Fix64,
   "64.0",
   {type: "Fix64", value: "64.00000000"},
   "64.0",
   false,
 ])
-createTest([
+registerTest([
   t.String,
   "Go with the Flow",
   {type: "String", value: "Go with the Flow"},
   "Go with the Flow",
 ])
-createTest([t.Character, "c", {type: "Character", value: "c"}, "c"])
-createTest([t.Bool, true, {type: "Bool", value: true}, true])
-createTest([t.Address, "0x1", {type: "Address", value: "0x1"}, "0x1"])
-createTest([t.Void, null, {type: "Void", value: null}, null])
-createTest([t.Optional(t.String), null, {type: "Optional", value: null}, null])
-createTest([
+registerTest([t.Character, "c", {type: "Character", value: "c"}, "c"])
+registerTest([t.Bool, true, {type: "Bool", value: true}, true])
+registerTest([t.Address, "0x1", {type: "Address", value: "0x1"}, "0x1"])
+registerTest([t.Void, null, {type: "Void", value: null}, null])
+registerTest([
+  t.Optional(t.String),
+  null,
+  {type: "Optional", value: null},
+  null,
+])
+registerTest([
   t.Optional(t.String),
   "test",
   {type: "Optional", value: {type: "String", value: "test"}},
   "test",
 ])
-createTest([
+registerTest([
   t.Reference,
   {address: "0x01", type: "0x01.CryptoKitty"},
   {type: "Reference", value: {address: "0x01", type: "0x01.CryptoKitty"}},
   {address: "0x01", type: "0x01.CryptoKitty"},
 ])
-createTest([
+registerTest([
   t.Array(t.String),
   ["test"],
   {type: "Array", value: [{type: "String", value: "test"}]},
   ["test"],
 ])
-createTest([
+registerTest([
   t.Array([t.String, t.String]),
   ["test1", "test2"],
   {
@@ -89,7 +94,7 @@ createTest([
   },
   ["test1", "test2"],
 ])
-createTest([
+registerTest([
   t.Dictionary([
     {key: t.Int, value: t.String},
     {key: t.Int, value: t.String},
@@ -110,7 +115,7 @@ createTest([
     {key: "2", value: "two"},
   ],
 ])
-createTest([
+registerTest([
   t.Dictionary({key: t.Int, value: t.String}),
   {key: "1", value: "one"},
   {
@@ -121,7 +126,7 @@ createTest([
   },
   {key: "1", value: "one"},
 ])
-createTest([
+registerTest([
   t.Struct("0x01.Jeffysaur", [{value: t.String}]),
   {fields: [{name: "Jeffysaur_Name", value: "Mr Jeff The Dinosaur"}]},
   {
@@ -138,7 +143,7 @@ createTest([
   },
   {fields: [{name: "Jeffysaur_Name", value: "Mr Jeff The Dinosaur"}]},
 ])
-createTest([
+registerTest([
   t.Enum("0x01.SuperEnum", [{value: t.String}]),
   {fields: [{name: "SuperKey1", value: "SuperValue1"}]},
   {
@@ -152,7 +157,7 @@ createTest([
   },
   {fields: [{name: "SuperKey1", value: "SuperValue1"}]},
 ])
-createTest([
+registerTest([
   t.Event("0x01.JeffWroteSomeJS", [{value: t.String}]),
   {fields: [{name: "wasTheCodeClean?", value: "absolutely"}]},
   {
@@ -169,7 +174,7 @@ createTest([
   },
   {fields: [{name: "wasTheCodeClean?", value: "absolutely"}]},
 ])
-createTest([
+registerTest([
   t.Resource("0x01.Jeffysaur", [{value: t.String}]),
   {fields: [{name: "Jeffysaur_Name", value: "Mr Jeff The Dinosaur"}]},
   {
@@ -186,7 +191,7 @@ createTest([
   },
   {fields: [{name: "Jeffysaur_Name", value: "Mr Jeff The Dinosaur"}]},
 ])
-createTest([
+registerTest([
   t.Path,
   {
     domain: "public" as "storage" | "private" | "public",
@@ -198,7 +203,7 @@ createTest([
     identifier: "flowTokenVault",
   },
 ])
-createTest([
+registerTest([
   t.Path,
   {
     domain: "notValidDomain" as "storage" | "private" | "public",
@@ -218,7 +223,7 @@ createTest([
   true,
 ])
 
-function createTest<X, Y extends string, Z>([
+function registerTest<X, Y extends string, Z>([
   cast,
   input,
   asArgument,
