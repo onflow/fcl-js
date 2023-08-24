@@ -1,17 +1,21 @@
 import * as WebBrowser from "expo-web-browser"
-import * as Linking from 'expo-linking'
-import { FCL_REDIRECT_URL_PARAM_NAME } from "../constants"
+import * as Linking from "expo-linking"
+import {FCL_REDIRECT_URL_PARAM_NAME} from "../constants"
+import {URL} from "../url"
 
 /**
- * 
- * @param {URL} src 
- * @param {object} opts 
+ *
+ * @param {URL} src
+ * @param {object} opts
  * @returns {[object, () => void]}
  */
 export function renderBrowser(src, opts = {}) {
-  const redirectUrl = Linking.createURL("$$fcl_auth_callback$$", {queryParams: {}})
-  src.searchParams.append(FCL_REDIRECT_URL_PARAM_NAME, redirectUrl)
-  const webbrowser = WebBrowser.openAuthSessionAsync(src.toString())
+  const redirectUrl = Linking.createURL("$$fcl_auth_callback$$", {
+    queryParams: {},
+  })
+  const url = new URL(src.toString())
+  url.searchParams.append(FCL_REDIRECT_URL_PARAM_NAME, redirectUrl)
+  const webbrowser = WebBrowser.openAuthSessionAsync(url.toString())
 
   const unmount = () => {
     try {
@@ -21,10 +25,10 @@ export function renderBrowser(src, opts = {}) {
     }
   }
 
-  // Call onClose when the webbrowser is closed	
+  // Call onClose when the webbrowser is closed
   webbrowser.then(() => {
-    if(opts?.onClose) {
-      opts.onClose()	
+    if (opts?.onClose) {
+      opts.onClose()
     }
   })
 
