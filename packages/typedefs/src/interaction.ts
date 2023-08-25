@@ -36,7 +36,7 @@ export interface IAcct {
     "proposer": boolean,
     "authorizer": boolean,
     "payer": boolean,
-    "param": boolean,
+    "param"?: boolean,
   },
   authorization: any,
 }
