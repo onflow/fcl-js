@@ -1,4 +1,4 @@
-import {pipe, Ok, makeGetBlock} from "../interaction/interaction.js"
+import {pipe, Ok, makeGetBlock} from "../interaction/interaction"
 
 /**
  * @description - A builder function that returns the interaction to get the latest block

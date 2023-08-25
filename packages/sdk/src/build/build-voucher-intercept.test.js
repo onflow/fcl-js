@@ -1,4 +1,4 @@
-import {interaction} from "../interaction/interaction.js"
+import {interaction} from "../interaction/interaction"
 import {voucherIntercept} from "./build-voucher-intercept"
 
 describe("Build voucherIntercept", () => {

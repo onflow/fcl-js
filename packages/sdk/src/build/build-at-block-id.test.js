@@ -1,4 +1,4 @@
-import {interaction} from "../interaction/interaction.js"
+import {interaction} from "../interaction/interaction"
 import {atBlockId} from "./build-at-block-id.js"
 
 describe("Build At Block ID", () => {

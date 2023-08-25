@@ -1,4 +1,4 @@
-import {interaction, isGetBlockHeader} from "../interaction/interaction.js"
+import {interaction, isGetBlockHeader} from "../interaction/interaction"
 import {getBlockHeader} from "./build-get-block-header.js"
 
 describe("Build Get Block Header", () => {

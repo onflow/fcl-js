@@ -1,4 +1,4 @@
-import {pipe, Ok, makeGetTransactionStatus} from "../interaction/interaction.js"
+import {pipe, Ok, makeGetTransactionStatus} from "../interaction/interaction"
 
 /**
  * @description - A builder function that returns the status of transaction

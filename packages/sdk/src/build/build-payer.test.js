@@ -1,4 +1,4 @@
-import {interaction} from "../interaction/interaction.js"
+import {interaction} from "../interaction/interaction"
 import {payer} from "./build-payer.js"
 
 describe("Build Payer", () => {

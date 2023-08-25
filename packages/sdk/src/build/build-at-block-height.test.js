@@ -1,4 +1,4 @@
-import {interaction} from "../interaction/interaction.js"
+import {interaction} from "../interaction/interaction"
 import {atBlockHeight} from "./build-at-block-height.js"
 
 describe("Build At Block ID", () => {

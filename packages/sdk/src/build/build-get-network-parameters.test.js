@@ -1,7 +1,7 @@
 import {
   interaction,
   isGetNetworkParameters,
-} from "../interaction/interaction.js"
+} from "../interaction/interaction"
 import {getNetworkParameters} from "./build-get-network-parameters.js"
 
 describe("Build Get Network Parameters", () => {

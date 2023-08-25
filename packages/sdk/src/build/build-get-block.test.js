@@ -1,4 +1,4 @@
-import {interaction, isGetBlock} from "../interaction/interaction.js"
+import {interaction, isGetBlock} from "../interaction/interaction"
 import {getBlock} from "./build-get-block.js"
 
 describe("Build Get Block", () => {

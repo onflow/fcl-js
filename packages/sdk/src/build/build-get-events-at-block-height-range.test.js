@@ -1,4 +1,4 @@
-import {interaction, isGetEvents} from "../interaction/interaction.js"
+import {interaction, isGetEvents} from "../interaction/interaction"
 import {getEventsAtBlockHeightRange} from "./build-get-events-at-block-height-range.js"
 
 describe("Build Get Events At Block Height Range", () => {
