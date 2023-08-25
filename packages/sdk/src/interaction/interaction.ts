@@ -1,48 +1,9 @@
 import {invariant} from "@onflow/util-invariant"
 import {v4 as uuidv4} from "uuid"
 
-export const UNKNOWN /*                       */ = "UNKNOWN"
-export const SCRIPT /*                        */ = "SCRIPT"
-export const TRANSACTION /*                   */ = "TRANSACTION"
-export const GET_TRANSACTION_STATUS /*        */ = "GET_TRANSACTION_STATUS"
-export const GET_ACCOUNT /*                   */ = "GET_ACCOUNT"
-export const GET_EVENTS /*                    */ = "GET_EVENTS"
-export const PING /*                          */ = "PING"
-export const GET_TRANSACTION /*               */ = "GET_TRANSACTION"
-export const GET_BLOCK /*                     */ = "GET_BLOCK"
-export const GET_BLOCK_HEADER /*              */ = "GET_BLOCK_HEADER"
-export const GET_COLLECTION /*                */ = "GET_COLLECTION"
-export const GET_NETWORK_PARAMETERS /*        */ = "GET_NETWORK_PARAMETERS"
+import { IAcct, ACCOUNT, PARAM, ARGUMENT, UNKNOWN, OK, IIx, AUTHORIZER, PAYER, SCRIPT, TRANSACTION, GET_TRANSACTION_STATUS, GET_TRANSACTION, GET_ACCOUNT, GET_EVENTS, PING, GET_BLOCK, GET_BLOCK_HEADER, GET_COLLECTION, GET_NETWORK_PARAMETERS, BAD, PROPOSER } from "@onflow/typedefs"; 
 
-export const BAD /* */ = "BAD"
-export const OK /*  */ = "OK"
-
-export const ACCOUNT /*  */ = "ACCOUNT"
-export const PARAM /*    */ = "PARAM"
-export const ARGUMENT /* */ = "ARGUMENT"
-
-export const AUTHORIZER /* */ = "authorizer"
-export const PAYER /*      */ = "payer"
-export const PROPOSER /*   */ = "proposer"
-
-export interface IAcct {
-  "kind": typeof ACCOUNT,
-  "tempId": string | null,
-  "addr": string | null,
-  "keyId": number | string | null,
-  "sequenceNum": number | null,
-  "signature": any | null,
-  "signingFunction": any | null,
-  "resolve": any | null,
-  "role": {
-    "proposer": boolean,
-    "authorizer": boolean,
-    "payer": boolean,
-    "param": boolean,
-  },
-  authorization: any,
-}
-type AcctFn = (IAcct) => IAcct;
+type AcctFn = (acct: IAcct) => IAcct;
 type IAcctFn = AcctFn & Partial<IAcct>;
 
 const ACCT = `{
@@ -81,49 +42,6 @@ const ARG = `{
   "resolve": null,
   "resolveArgument": null
 }`
-
-interface IIx {
-  "tag": string,
-  "assigns": Record<string, any>,
-  "status": string,
-  "reason": string | null,
-  "accounts": Record<string, any>,
-  "params": Record<string, any>,
-  "arguments": Record<string, any>,
-  "message": {
-    "cadence": string | null,
-    "refBlock": string | null,
-    "computeLimit": string | null,
-    "proposer": string | null,
-    "payer": string | null,
-    "authorizations": string[],
-    "params": Record<string, any>[],
-    "arguments": Record<string, any>[]
-  },
-  "proposer": string | null,
-  "authorizations": string[],
-  "payer": string[],
-  "events": {
-    "eventType": string | null,
-    "start": string | null,
-    "end": string | null,
-    "blockIds": string[]
-  },
-  "transaction": {
-    "id": string | null
-  },
-  "block": {
-    "id": string | null,
-    "height": string | null,
-    "isSealed": boolean | null
-  },
-  "account": {
-    "addr": string | null
-  },
-  "collection": {
-    "id": string | null
-  }
-}
 
 const IX = `{
   "tag":"${UNKNOWN}",
@@ -189,7 +107,7 @@ export const Ok = (ix: IIx) => {
   return ix
 }
 
-export const Bad = (ix: IIx, reason) => {
+export const Bad = (ix: IIx, reason: string) => {
   ix.status = BAD
   ix.reason = reason
   return ix
@@ -234,7 +152,7 @@ export const prepAccount = (acct: IAcct | IAcctFn, opts: IPrepAccountOpts = {rol
 
   const resolve = acct.resolve
   if (resolve)
-    acct.resolve = (acct, ...rest) =>
+    acct.resolve = (acct: IAcct, ...rest: any[]) =>
       [resolve, prepAccountKeyId].reduce(
         async (d, fn) => fn(await d, ...rest),
         acct
@@ -293,7 +211,7 @@ export const makeGetBlockHeader /*          */ = makeIx(GET_BLOCK_HEADER)
 export const makeGetCollection /*           */ = makeIx(GET_COLLECTION)
 export const makeGetNetworkParameters /*    */ = makeIx(GET_NETWORK_PARAMETERS)
 
-const is = wat => (ix: IIx) => ix.tag === wat
+const is = (wat: string) => (ix: IIx) => ix.tag === wat
 
 export const isUnknown /*                 */ = is(UNKNOWN)
 export const isScript /*                  */ = is(SCRIPT)
@@ -312,9 +230,9 @@ export const isOk /*  */ = (ix: IIx) => ix.status === OK
 export const isBad /* */ = (ix: IIx) => ix.status === BAD
 export const why /*   */ = (ix: IIx) => ix.reason
 
-export const isAccount /*  */ = account => account.kind === ACCOUNT
-export const isParam /*    */ = param => param.kind === PARAM
-export const isArgument /* */ = argument => argument.kind === ARGUMENT
+export const isAccount /*  */ = (account: Record<string, any>) => account.kind === ACCOUNT
+export const isParam /*    */ = (param: Record<string, any>) => param.kind === PARAM
+export const isArgument /* */ = (argument: Record<string, any>) => argument.kind === ARGUMENT
 
 const hardMode = (ix: IIx) => {
   for (let key of Object.keys(ix)) {
@@ -324,7 +242,7 @@ const hardMode = (ix: IIx) => {
   return ix
 }
 
-const recPipe = async (ix: IIx, fns = []) => {
+const recPipe = async (ix: IIx, fns: (Function | IIx)[] = []): Promise<any> => {
   try {
     ix = hardMode(await ix)
     if (isBad(ix)) throw new Error(`Interaction Error: ${ix.reason}`)
@@ -340,19 +258,19 @@ const recPipe = async (ix: IIx, fns = []) => {
   }
 }
 
-export const pipe = (...args) => {
+export const pipe = (...args: any[]) => {
   const [arg1, arg2] = args
-  if (isArray(arg1) && arg2 == null) return d => pipe(d, arg1)
+  if (isArray(arg1) && arg2 == null) return (d: any) => pipe(d, arg1)
   return recPipe(arg1, arg2)
 }
 
-const identity = (v, ..._) => v
+const identity = (v: any, ..._: any[]) => v
 
-export const get = (ix: IIx, key: string, fallback) => {
+export const get = (ix: IIx, key: string, fallback: any) => {
   return ix.assigns[key] == null ? fallback : ix.assigns[key]
 }
 
-export const put = (key: string, value) => (ix: IIx) => {
+export const put = (key: string, value: any) => (ix: IIx) => {
   ix.assigns[key] = value
   return Ok(ix)
 }
