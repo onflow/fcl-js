@@ -1,4 +1,4 @@
-import {pipe, put, Ok, makeTransaction} from "../interaction/interaction.js"
+import {pipe, put, Ok, makeTransaction} from "../interaction/interaction"
 import {template} from "@onflow/util-template"
 
 const DEFAULT_SCRIPT_ACCOUNTS = []

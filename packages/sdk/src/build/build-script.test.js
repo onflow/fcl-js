@@ -1,4 +1,4 @@
-import {interaction, isScript} from "../interaction/interaction.js"
+import {interaction, isScript} from "../interaction/interaction"
 import {script} from "./build-script.js"
 
 describe("Build Script", () => {

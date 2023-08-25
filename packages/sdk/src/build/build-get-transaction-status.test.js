@@ -1,7 +1,7 @@
 import {
   interaction,
   isGetTransactionStatus,
-} from "../interaction/interaction.js"
+} from "../interaction/interaction"
 import {getTransactionStatus} from "./build-get-transaction-status.js"
 
 describe("Build Get Transaction Status", () => {

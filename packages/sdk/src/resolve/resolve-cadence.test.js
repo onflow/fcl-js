@@ -1,4 +1,4 @@
-import {interaction, pipe, put, makeScript} from "../interaction/interaction.js"
+import {interaction, pipe, put, makeScript} from "../interaction/interaction"
 import {resolveCadence} from "./resolve-cadence.js"
 import {config} from "@onflow/config"
 

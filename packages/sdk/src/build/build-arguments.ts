@@ -1,4 +1,4 @@
-import {pipe, makeArgument} from "../interaction/interaction.js"
+import {pipe, makeArgument} from "../interaction/interaction"
 
 /**
  * @description - A utility builder to be used with other builders to pass in arguments with a value and supported type

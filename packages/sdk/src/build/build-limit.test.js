@@ -1,4 +1,4 @@
-import {interaction} from "../interaction/interaction.js"
+import {interaction} from "../interaction/interaction"
 import {limit} from "./build-limit.js"
 
 describe("Build Limit", () => {

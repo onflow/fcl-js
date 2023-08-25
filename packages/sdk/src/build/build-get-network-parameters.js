@@ -1,4 +1,4 @@
-import {pipe, Ok, makeGetNetworkParameters} from "../interaction/interaction.js"
+import {pipe, Ok, makeGetNetworkParameters} from "../interaction/interaction"
 
 export function getNetworkParameters() {
   return pipe([

@@ -1,4 +1,4 @@
-import {interaction, isGetCollection} from "../interaction/interaction.js"
+import {interaction, isGetCollection} from "../interaction/interaction"
 import {getCollection} from "./build-get-collection.js"
 
 describe("Build Get Collection", () => {

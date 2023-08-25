@@ -1,4 +1,4 @@
-import {interaction} from "../interaction/interaction.js"
+import {interaction} from "../interaction/interaction"
 import {authorizations, authorization} from "./build-authorizations.js"
 
 describe("Build Authorizations", () => {

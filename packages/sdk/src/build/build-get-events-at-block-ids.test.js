@@ -1,4 +1,4 @@
-import {interaction, isGetEvents} from "../interaction/interaction.js"
+import {interaction, isGetEvents} from "../interaction/interaction"
 import {getEventsAtBlockIds} from "./build-get-events-at-block-ids.js"
 
 describe("Build Get Events At Block Ids", () => {

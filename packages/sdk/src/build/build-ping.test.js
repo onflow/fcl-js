@@ -1,4 +1,4 @@
-import {interaction, isPing} from "../interaction/interaction.js"
+import {interaction, isPing} from "../interaction/interaction"
 import {ping} from "./build-ping.js"
 
 describe("Build Ping", () => {

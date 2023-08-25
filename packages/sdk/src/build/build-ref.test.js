@@ -1,4 +1,4 @@
-import {interaction} from "../interaction/interaction.js"
+import {interaction} from "../interaction/interaction"
 import {ref} from "./build-ref.js"
 
 describe("Build Ref", () => {

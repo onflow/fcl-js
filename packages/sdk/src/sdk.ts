@@ -33,7 +33,7 @@ export {
   isGetBlockHeader,
   isGetCollection,
   isGetNetworkParameters,
-} from "./interaction/interaction.js"
+} from "./interaction/interaction"
 export {createSignableVoucher, voucherToTxId} from "./resolve/voucher.js"
 export {encodeMessageFromSignable} from "./wallet-utils/encode-signable.js"
 export {template as cadence} from "@onflow/util-template"

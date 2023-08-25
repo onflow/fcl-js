@@ -1,4 +1,4 @@
-import {interaction} from "../interaction/interaction.js"
+import {interaction} from "../interaction/interaction"
 import {sansPrefix, withPrefix} from "@onflow/util-address"
 import {getAccount} from "./build-get-account.js"
 
