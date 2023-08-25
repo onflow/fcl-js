@@ -2,12 +2,11 @@ import {invariant} from "@onflow/util-invariant"
 import {httpRequest as defaultHttpRequest} from "./http-request.js"
 import { IIx } from "@onflow/typedefs"; 
 
-interface IContext {
+export interface IContext {
   response?: Function;
-  ix?: IIx;
 }
 
-interface IOpts {
+export interface IOpts {
   node?: string
   httpRequest?: any,
 
