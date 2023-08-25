@@ -1,9 +1,10 @@
 import {invariant} from "@onflow/util-invariant"
 import {httpRequest as defaultHttpRequest} from "./http-request.js"
+import { IIx } from "@onflow/typedefs"; 
 
 interface IContext {
   response?: Function;
-  ix?: any;
+  ix?: IIx;
 }
 
 interface IOpts {
@@ -12,7 +13,7 @@ interface IOpts {
 
 }
 
-export async function sendPing(ix, context: IContext = {}, opts: IOpts = {}) {
+export async function sendPing(ix: IIx, context: IContext = {}, opts: IOpts = {}) {
   invariant(Boolean(opts.node), `SDK Send Ping Error: opts.node must be defined.`)
   invariant(
     Boolean(context.response),
@@ -28,7 +29,7 @@ export async function sendPing(ix, context: IContext = {}, opts: IOpts = {}) {
     body: null,
   })
 
-  let ret = context.response()
+  let ret = typeof context?.response === 'function' ? context.response() : {}
   ret.tag = ix.tag
 
   return ret
