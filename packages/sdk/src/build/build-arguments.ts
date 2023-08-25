@@ -15,6 +15,6 @@ export function args(ax = []) {
  * @param {Function} xform - A function to transform the value
  * @returns {object} - An argument object
  */
-export function arg(value, xform) {
+export function arg(value: any, xform: any) {
   return {value, xform}
 }
