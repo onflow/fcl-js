@@ -33,7 +33,7 @@
     "build": " npm run lint && fcl-bundle",
     "test:watch": "jest --watch",
     "start": "fcl-bundle --watch",
-    "lint": "eslint src --ext .ts --ext .js"
+    "lint": "eslint src"
   },
   "dependencies": {
     "@babel/runtime": "^7.18.6",

@@ -16,5 +16,16 @@
     "ecmaVersion": "latest",
     "sourceType": "module"
   },
-  "ignorePatterns": ["**/dist/"]
+  "ignorePatterns": ["**/dist/"],
+  "overrides": [
+    {
+      "files": ["**/*.test.ts"],
+      "env": {
+        "jest": true
+      },
+      "rules": {
+        "jsdoc/require-jsdoc": 0
+      }
+    }
+  ]
 }

@@ -16,7 +16,7 @@ export interface ReferenceValue {
 }
 
 export interface TypeDescriptor<T, L extends string, X> {
-  label: string
+  label: L
   asArgument: (x: T) => JsonCdc<L, X>
   asInjection: (x: T) => T
 }
