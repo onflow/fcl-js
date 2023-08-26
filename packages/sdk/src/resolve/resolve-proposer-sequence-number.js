@@ -1,6 +1,6 @@
 import {isTransaction, Ok} from "../interaction/interaction"
 import * as ixModule from "../interaction/interaction"
-import {response as responseModule} from "../response/response.js"
+import {response as responseModule} from "../response/response"
 import {config} from "@onflow/config"
 import {decodeResponse} from "../decode/decode.js"
 import {getAccount} from "../build/build-get-account.js"

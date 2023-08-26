@@ -1,4 +1,4 @@
-import {interaction, pipe, makeTransaction} from "../interaction/interaction"
+import {initInteraction, pipe, makeTransaction} from "../interaction/interaction"
 import {config} from "@onflow/config"
 import {resolveComputeLimit} from "./resolve-compute-limit.js"
 
@@ -21,7 +21,7 @@ describe("resolveComputeLimit", () => {
             },
           }),
           resolveComputeLimit,
-        ])(interaction())
+        ])(initInteraction())
 
         expect(ix.message.computeLimit).toBe(TRANSACTION_COMPUTE_LIMIT)
       }
@@ -36,7 +36,7 @@ describe("resolveComputeLimit", () => {
       },
       async () => {
         const ix = await pipe([makeTransaction, resolveComputeLimit])(
-          interaction()
+          initInteraction()
         )
         expect(ix.message.computeLimit).toBe(CONFIG_COMPUTE_LIMIT)
       }
