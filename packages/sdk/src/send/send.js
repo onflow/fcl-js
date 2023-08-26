@@ -3,7 +3,7 @@ import {send as defaultSend} from "@onflow/transport-http"
 import {initInteraction, pipe} from "../interaction/interaction"
 import * as ixModule from "../interaction/interaction"
 import {invariant} from "../build/build-invariant.js"
-import {response} from "../response/response.js"
+import {response} from "../response/response"
 import {config} from "@onflow/config"
 import {resolve as defaultResolve} from "../resolve/resolve.js"
 
