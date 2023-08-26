@@ -497,7 +497,7 @@ const response = await sdk.send(await sdk.build([
 
 - [Builders](./src/build)
 
-  - [`sdk.args` & `sdk.arg`](./src/build/build-arguments.js)
+  - [`sdk.args` & `sdk.arg`](./src/build/build-arguments)
   - [`sdk.atBlockHeight`](./src/build/build-at-block-height.js)
   - [`sdk.atBlockId`](./src/build/build-at-block-id.js)
   - [`sdk.authorizations` & `authorization`](./src/build/build-authorizations.js)
