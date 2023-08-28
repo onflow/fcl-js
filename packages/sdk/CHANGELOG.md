@@ -1,5 +1,14 @@
 # @onflow/sdk
 
+## 1.2.2
+
+### Patch Changes
+
+- [#1767](https://github.com/onflow/fcl-js/pull/1767) [`f6681cfe`](https://github.com/onflow/fcl-js/commit/f6681cfebc5aab78cbf74f34b5655faa4f06a8c4) Thanks [@jribbink](https://github.com/jribbink)! - Fix responseBody not being included in errors
+
+- Updated dependencies [[`f6681cfe`](https://github.com/onflow/fcl-js/commit/f6681cfebc5aab78cbf74f34b5655faa4f06a8c4)]:
+  - @onflow/transport-http@1.7.1
+
 ## 1.2.1
 
 ### Patch Changes
