@@ -13,16 +13,18 @@ import {URL} from "../url"
 export function renderDeeplink(src, opts = {}) {
   const url = new URL(src.toString())
 
-  // Custom schemes are not supported for security concerns
-  // These are not reserved for the app and can be hijacked
-  // by malicious actors.
-
-  // Wallet developers should register a universal link instead
+  // Custom schemes (i.e mywallet://) are not supported for
+  // security reasons. These schemes can be hijacked by malicious
+  // apps and impersonate the wallet.
+  //
+  // Wallet developers should register a universal link instead.
+  // (i.e https://mywallet.com/ or https://link.mywallet.com/)
+  //
   // Additionally this allows the wallet to redirect to the app
-  // store/show custom web content if the wallet is not installed
+  // store/show custom web content if the wallet is not installed.
   if (url.protocol !== "https:") {
     throw new Error(
-      "Deeplink must be https.  Custom schemes are not supported, please use a universal link/app link instead."
+      "Deeplink must be https scheme.  Custom schemes are not supported, please use a universal link/app link instead."
     )
   }
 
