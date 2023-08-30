@@ -9,6 +9,7 @@ const interfaceContract =
   (label, wat) =>
   ([template]) => {
     const keys = template.replace(/\s+/g, "|").split("|").filter(Boolean)
+    console.log({keys})
 
     describe(label, () => {
       for (let key of keys)
@@ -43,7 +44,7 @@ describe("consume", () => {
   `
 
   interfaceContract("@onflow/interaction", interaction)`
-    interaction
+    initInteraction
     pipe Ok isOk isBad why
     put get update
     makeGetAccount makeGetEvents
