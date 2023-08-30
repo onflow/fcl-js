@@ -1,5 +1,62 @@
 # @onflow/fcl
 
+## 1.5.2
+
+### Patch Changes
+
+- [#1767](https://github.com/onflow/fcl-js/pull/1767) [`f6681cfe`](https://github.com/onflow/fcl-js/commit/f6681cfebc5aab78cbf74f34b5655faa4f06a8c4) Thanks [@jribbink](https://github.com/jribbink)! - Fix responseBody not being included in errors
+
+- Updated dependencies [[`f6681cfe`](https://github.com/onflow/fcl-js/commit/f6681cfebc5aab78cbf74f34b5655faa4f06a8c4)]:
+  - @onflow/sdk@1.2.2
+
+## 1.5.1
+
+### Patch Changes
+
+- [#1754](https://github.com/onflow/fcl-js/pull/1754) [`c0ba4d26`](https://github.com/onflow/fcl-js/commit/c0ba4d268ce307ddbd83b812db5136f0f29afdc4) Thanks [@jribbink](https://github.com/jribbink)! - Fix `fcl.mutate` typedef
+
+- [#1755](https://github.com/onflow/fcl-js/pull/1755) [`28d16a13`](https://github.com/onflow/fcl-js/commit/28d16a134f9afea265400b49df81f77ac02a520d) Thanks [@jribbink](https://github.com/jribbink)! - Fix react-native platform for `fcl.mutate`
+
+## 1.5.0
+
+### Minor Changes
+
+- [#1666](https://github.com/onflow/fcl-js/pull/1666) [`090963f3`](https://github.com/onflow/fcl-js/commit/090963f3ff6d4557f90a451a1ff5a723656f87dd) Thanks [@nialexsan](https://github.com/nialexsan)! - React Native support
+
+### Patch Changes
+
+- [#1723](https://github.com/onflow/fcl-js/pull/1723) [`1308f522`](https://github.com/onflow/fcl-js/commit/1308f522e56cef517a60be465789815281bab6d8) Thanks [@jribbink](https://github.com/jribbink)! - Fixed types for sdk builder functions (fixes fcl.send/fcl.build type errors)
+
+- [#1707](https://github.com/onflow/fcl-js/pull/1707) [`f7986d9b`](https://github.com/onflow/fcl-js/commit/f7986d9b4e7bba3abc4acbfb036072336d0651cf) Thanks [@nialexsan](https://github.com/nialexsan)! - Deeplink RPC
+
+- [#1690](https://github.com/onflow/fcl-js/pull/1690) [`53d1f607`](https://github.com/onflow/fcl-js/commit/53d1f607fd15535a29cbbb1c809f0fc4d7a6be7b) Thanks [@jribbink](https://github.com/jribbink)! - Stop polling in React Native when browser has been closed
+
+- [#1712](https://github.com/onflow/fcl-js/pull/1712) [`6fa3bdc4`](https://github.com/onflow/fcl-js/commit/6fa3bdc46dd077b57f501d802af5544393502285) Thanks [@jribbink](https://github.com/jribbink)! - Fix getChainId bug with nextjs & no longer set flow.network.default in configuration internally
+
+- [#1699](https://github.com/onflow/fcl-js/pull/1699) [`fefb578a`](https://github.com/onflow/fcl-js/commit/fefb578ae96a112164c561fa3e0a490008d8a5f6) Thanks [@chasefleming](https://github.com/chasefleming)! - Throw error in config if keys detected
+
+- [#1693](https://github.com/onflow/fcl-js/pull/1693) [`51436ccd`](https://github.com/onflow/fcl-js/commit/51436ccd5ceb774b4846c44474914cad2208fe37) Thanks [@jribbink](https://github.com/jribbink)! - Patch URL trailing slash bug in React Native
+
+- Updated dependencies [[`6193bd42`](https://github.com/onflow/fcl-js/commit/6193bd420371494a975f19fd001af6af012bd72f), [`fefb578a`](https://github.com/onflow/fcl-js/commit/fefb578ae96a112164c561fa3e0a490008d8a5f6), [`62fd9baf`](https://github.com/onflow/fcl-js/commit/62fd9baf28afbb2742f9e8c5ef6674adc9d030b7), [`1553967a`](https://github.com/onflow/fcl-js/commit/1553967aff61c242990b2de509e5dc5b8842ab2d)]:
+  - @onflow/config@1.1.1
+  - @onflow/sdk@1.2.1
+  - @onflow/util-logger@1.2.1
+
+## 1.5.0-alpha.5
+
+### Patch Changes
+
+- [#1723](https://github.com/onflow/fcl-js/pull/1723) [`1308f522`](https://github.com/onflow/fcl-js/commit/1308f522e56cef517a60be465789815281bab6d8) Thanks [@jribbink](https://github.com/jribbink)! - Fixed types for sdk builder functions (fixes fcl.send/fcl.build type errors)
+
+- Updated dependencies [[`1553967a`](https://github.com/onflow/fcl-js/commit/1553967aff61c242990b2de509e5dc5b8842ab2d)]:
+  - @onflow/sdk@1.2.1-alpha.2
+
+## 1.5.0-alpha.4
+
+### Patch Changes
+
+- [#1707](https://github.com/onflow/fcl-js/pull/1707) [`f7986d9b`](https://github.com/onflow/fcl-js/commit/f7986d9b4e7bba3abc4acbfb036072336d0651cf) Thanks [@nialexsan](https://github.com/nialexsan)! - Deeplink RPC
+
 ## 1.5.0-alpha.3
 
 ### Patch Changes

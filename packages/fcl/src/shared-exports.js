@@ -1,28 +1,13 @@
 export {VERSION} from "./VERSION"
 export {query} from "./exec/query"
-export {mutate} from "./exec/mutate"
 export {verifyUserSignatures} from "./exec/verify"
 export {serialize} from "./serialize"
 export {transaction as tx} from "./transaction"
 export {events} from "./events"
 export {pluginRegistry} from "./current-user/exec-service/plugins"
 
-import {currentUser} from "./current-user"
-export {currentUser}
-
 import {discovery} from "./discovery"
 export {discovery}
-
-export const authenticate = (opts = {}) => currentUser().authenticate(opts)
-export const unauthenticate = () => currentUser().unauthenticate()
-export const reauthenticate = (opts = {}) => {
-  currentUser().unauthenticate()
-  return currentUser().authenticate(opts)
-}
-export const signUp = (opts = {}) => currentUser().authenticate(opts)
-export const logIn = (opts = {}) => currentUser().authenticate(opts)
-
-export const authz = currentUser().authorization
 
 import * as types from "@onflow/types"
 /**
@@ -83,7 +68,6 @@ export {ref} from "@onflow/sdk"
 export {params, param} from "@onflow/sdk"
 export {validator} from "@onflow/sdk"
 export {invariant} from "@onflow/sdk"
-
 
 /**
  * @typedef {object} Types

@@ -1,4 +1,3 @@
-
 /**
  * @typedef {object} Account
  * @property {string} address - The address of the account
@@ -103,7 +102,7 @@
  * @typedef {object} TransactionStatus
  * @property {string} blockId - The ID of the Block the transaction is included in.
  * @property {number} status - The status code of the transaction.
- * @property {number} statusString - The status as as descriptive text (e.g. "FINALIZED").
+ * @property {string} statusString - The status as as descriptive text (e.g. "FINALIZED").
  * @property {string} errorMessage - The error message of the transaction.
  * @property {Array<Event>} events - The events for this result.
  */
@@ -115,4 +114,4 @@
  */
 
 // Needed for bundler to export this file
-exports.unused = {};
+exports.unused = {}
