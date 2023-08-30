@@ -1,5 +1,13 @@
 # @onflow/transport-http
 
+## 1.7.2-accounts.0
+
+### Patch Changes
+
+- [#1708](https://github.com/onflow/fcl-js/pull/1708) [`f5f185b7`](https://github.com/onflow/fcl-js/commit/f5f185b7e18f19b1b2b2abe335050b0ba80b594f) Thanks [@nialexsan](https://github.com/nialexsan)! - Updated packages
+
+- testing refactored accounts resolver
+
 ## 1.7.1
 
 ### Patch Changes

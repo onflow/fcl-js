@@ -1,5 +1,12 @@
 # @onflow/fcl-wc
 
+## 3.0.1-accounts.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @onflow/fcl@1.5.3-accounts.0
+
 ## 3.0.0
 
 ### Patch Changes

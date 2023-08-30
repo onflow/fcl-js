@@ -1,5 +1,14 @@
 # @onflow/fcl
 
+## 1.5.3-accounts.0
+
+### Patch Changes
+
+- testing refactored accounts resolver
+
+- Updated dependencies [[`f5f185b7`](https://github.com/onflow/fcl-js/commit/f5f185b7e18f19b1b2b2abe335050b0ba80b594f), [`6f4a0067`](https://github.com/onflow/fcl-js/commit/6f4a006712e94089c3e0ffbcb1cfbf625ab8d18f)]:
+  - @onflow/sdk@1.2.3-accounts.0
+
 ## 1.5.2
 
 ### Patch Changes
