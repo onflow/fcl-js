@@ -3,4 +3,4 @@
 "@onflow/config": patch
 ---
 
-Fix @onflow/util-logger <-> @onflow/config circualr dependency
+Fix @onflow/util-logger <-> @onflow/config circular dependency
