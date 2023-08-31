@@ -1,14 +1,14 @@
-import * as Linking from 'expo-linking'
+import * as Linking from "expo-linking"
 import {renderBrowser} from "../../render-browser"
-import { serviceEndpoint } from "./service-endpoint"
-import { buildMessageHandler } from "../../../../current-user/exec-service/strategies/utils/buildMessageHandler"
-import { FCL_RESPONSE_PARAM_NAME } from '../../../constants'
+import {serviceEndpoint} from "./service-endpoint"
+import {buildMessageHandler} from "../../../../current-user/exec-service/strategies/utils/buildMessageHandler"
+import {FCL_RESPONSE_PARAM_NAME} from "../../../constants"
 
 const noop = () => {}
 
 export function browser(service, config, body, opts = {}) {
   if (service == null) return {send: noop, close: noop}
-  
+
   const onClose = opts.onClose || noop
   const onMessage = noop
   const onReady = noop
@@ -22,14 +22,16 @@ export function browser(service, config, body, opts = {}) {
     onMessage,
   })
   const parseDeeplink = ({url}) => {
-    const { queryParams } = Linking.parse(url)
+    const {queryParams} = Linking.parse(url)
     const eventDataRaw = queryParams[FCL_RESPONSE_PARAM_NAME]
     const eventData = JSON.parse(eventDataRaw)
-    
+
     handler({data: eventData})
   }
-  
-  const [browser, unmount] = renderBrowser(serviceEndpoint(service, config, body))
+
+  const [browser, unmount] = renderBrowser(
+    serviceEndpoint(service, config, body)
+  )
   // Android deeplink parsing
   Linking.addEventListener("url", parseDeeplink)
   // iOS deeplink parsing

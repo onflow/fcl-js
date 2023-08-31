@@ -14,6 +14,12 @@
   - @onflow/util-address@1.2.0-alpha.0
   - @onflow/util-logger@1.3.0-alpha.0
 
+## 1.7.1
+
+### Patch Changes
+
+- [#1767](https://github.com/onflow/fcl-js/pull/1767) [`f6681cfe`](https://github.com/onflow/fcl-js/commit/f6681cfebc5aab78cbf74f34b5655faa4f06a8c4) Thanks [@jribbink](https://github.com/jribbink)! - Fix responseBody not being included in errors
+
 ## 1.7.0
 
 ### Minor Changes

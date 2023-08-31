@@ -80,7 +80,7 @@ export async function httpRequest({
           return res.json()
         }
 
-        const responseText = res.body ? await res.text() : null
+        const responseText = await res.text().catch(() => null)
         const response = safeParseJSON(responseText)
 
         throw new HTTPRequestError({
