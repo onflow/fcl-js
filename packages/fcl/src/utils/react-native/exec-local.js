@@ -1,7 +1,10 @@
 import {renderBrowser} from "./render-browser"
+import {renderDeeplink} from "./render-deeplink"
 
-const NOT_IMPLEMENTED = (strategy) => () => {
-  throw new Error(`${strategy} Strategy util has not been implemented on this platform`)
+const NOT_IMPLEMENTED = strategy => () => {
+  throw new Error(
+    `${strategy} Strategy util has not been implemented on this platform`
+  )
 }
 
 const VIEWS = {
@@ -9,6 +12,7 @@ const VIEWS = {
   "VIEW/POP": NOT_IMPLEMENTED("VIEW/IFRAME"),
   "VIEW/TAB": NOT_IMPLEMENTED("VIEW/TAB"),
   "VIEW/MOBILE_BROWSER": renderBrowser,
+  "VIEW/DEEPLINK": renderDeeplink,
 }
 
 export async function execLocal(

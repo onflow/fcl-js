@@ -11,10 +11,11 @@ const VIEWS = {
   "VIEW/POP": renderPop,
   "VIEW/TAB": renderTab,
   "VIEW/MOBILE_BROWSER": NOT_IMPLEMENTED,
+  "VIEW/DEEPLINK": NOT_IMPLEMENTED,
 }
 
 export async function execLocal(service, opts = {serviceEndpoint: () => {}}) {
-  const { serviceEndpoint } = opts
+  const {serviceEndpoint} = opts
   try {
     return VIEWS[service.method](serviceEndpoint(service), opts)
   } catch (error) {
