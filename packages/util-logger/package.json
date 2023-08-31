@@ -29,5 +29,13 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.18.6"
+  },
+  "peerDependencies": {
+    "@onflow/util-config": ">1.1.1"
+  },
+  "peerDependenciesMeta": {
+    "@onflow/util-config": {
+      "optional": true
+    }
   }
 }
