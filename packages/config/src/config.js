@@ -195,36 +195,40 @@ async function load(data) {
     )
   }
 
-  for (const [key, value] of Object.entries(
+  for (const [network, networkContracts] of Object.entries(
     getContracts(flowJSON, cleanedNetwork)
   )) {
-    const contractConfigKey = `0x${key}`
-    const existingContractConfigKey = await get(contractConfigKey)
-    if (existingContractConfigKey && existingContractConfigKey !== value) {
-      logger.log({
-        title: "Contract Placeholder Conflict Detected",
-        message: `A generated contract placeholder from config.load conflicts with a placeholder you've set manually in config have the same name.`,
-        level: logger.LEVELS.warn,
-      })
-    } else {
-      put(contractConfigKey, value)
-    }
+    for (const [key, value] of Object.entries(networkContracts)) {
+      if (network === cleanedNetwork) {
+        const contractConfigKey = `0x${key}`
+        const existingContractConfigKey = await get(contractConfigKey)
+        if (existingContractConfigKey && existingContractConfigKey !== value) {
+          logger.log({
+            title: "Contract Placeholder Conflict Detected",
+            message: `A generated contract placeholder from config.load conflicts with a placeholder you've set manually in config have the same name.`,
+            level: logger.LEVELS.warn,
+          })
+        } else {
+          put(contractConfigKey, value)
+        }
+      }
 
-    const systemContractConfigKey = `system.contracts.${key}`
-    const systemExistingContractConfigKeyValue = await get(
-      systemContractConfigKey
-    )
-    if (
-      systemExistingContractConfigKeyValue &&
-      systemExistingContractConfigKeyValue !== value
-    ) {
-      logger.log({
-        title: "Contract Placeholder Conflict Detected",
-        message: `A generated contract placeholder from config.load conflicts with a placeholder you've set manually in config have the same name.`,
-        level: logger.LEVELS.warn,
-      })
-    } else {
-      put(systemContractConfigKey, value)
+      const systemContractConfigKey = `system.contracts.${key}`
+      const systemExistingContractConfigKeyValue = await get(
+        systemContractConfigKey
+      )
+      if (
+        systemExistingContractConfigKeyValue &&
+        systemExistingContractConfigKeyValue !== value
+      ) {
+        logger.log({
+          title: "Contract Placeholder Conflict Detected",
+          message: `A generated contract placeholder from config.load conflicts with a placeholder you've set manually in config have the same name.`,
+          level: logger.LEVELS.warn,
+        })
+      } else {
+        put(systemContractConfigKey, value)
+      }
     }
   }
 }

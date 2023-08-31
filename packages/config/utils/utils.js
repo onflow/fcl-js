@@ -11,11 +11,11 @@ const pipe =
  * @param {...function(*): object} funcs - Functions to merge
  * @return {object} - Merged object
  */
-const mergePipe =
+const mergeDeepPipe =
   (...funcs) =>
   v => {
     return funcs.reduce((res, func) => {
-      return {...res, ...func(v)}
+      return mergeDeep(res, func(v))
     }, {})
   }
 
@@ -78,37 +78,44 @@ const filterContracts = obj => (obj.contracts ? obj.contracts : {})
 
 /**
  * @description Gathers contract addresses by network
- * @param {string} network - Network to gather addresses for
- * @returns {object} - Contract names by addresses mapping e.g { "HelloWorld": "0x123" }
+ * @param {string} contracts - Contracts section of Flow JSON
+ * @returns {{[network: string]: {[contractName: string]: string}}} - Contract addresses by network
  */
-const mapContractAliasesToNetworkAddress = network => contracts => {
+const mapContractAliasesToNetworkAddresses = contracts => {
   return Object.entries(contracts).reduce((c, [key, value]) => {
-    const networkContractAlias = value?.aliases?.[network]
-    if (networkContractAlias) {
-      c[key] = networkContractAlias
-    }
+    Object.entries(value?.aliases ?? []).forEach(([network, address]) => {
+      c[network] = {
+        ...c[network],
+        [key]: address,
+      }
+    })
 
     return c
   }, {})
 }
 
-const mapDeploymentsToNetworkAddress =
-  network =>
-  ({deployments = {}, accounts = {}}) => {
-    const networkDeployment = deployments?.[network]
-    if (!networkDeployment) return {}
+const mapDeploymentsToNetworkAddresses = ({deployments = {}, accounts = {}}) =>
+  Object.entries(deployments).reduce((c, [network, networkDeployment]) => {
+    const networkContracts = Object.entries(networkDeployment).reduce(
+      (c, [key, value]) => {
+        // Resolve account address
+        const accountAddress = accounts[key]?.address
+        if (!accountAddress) return c
 
-    return Object.entries(networkDeployment).reduce((c, [key, value]) => {
-      // Resolve account address
-      const accountAddress = accounts[key]?.address
-      if (!accountAddress) return c
+        // Create an object assigning the address to the contract name.
+        return value.reduce((c, contract) => {
+          return {...c, [contract]: accountAddress}
+        }, {})
+      },
+      {}
+    )
 
-      // Create an object assigning the address to the contract name.
-      return value.reduce((c, contract) => {
-        return {...c, [contract]: accountAddress}
-      }, {})
-    }, {})
-  }
+    // Append network contracts to contracts object
+    return {
+      ...c,
+      [network]: networkContracts,
+    }
+  }, {})
 
 /**
  * @description Take in flow.json files and return contract to address mapping by network
@@ -116,12 +123,12 @@ const mapDeploymentsToNetworkAddress =
  * @param {string} network - Network to gather addresses for
  * @returns {object} - Contract names by addresses mapping e.g { "HelloWorld": "0x123" }
  */
-export const getContracts = (jsons, network) => {
+export const getContracts = jsons => {
   return pipe(
     mergeFlowJSONs,
-    mergePipe(
-      mapDeploymentsToNetworkAddress(network),
-      pipe(filterContracts, mapContractAliasesToNetworkAddress(network))
+    mergeDeepPipe(
+      mapDeploymentsToNetworkAddresses,
+      pipe(filterContracts, mapContractAliasesToNetworkAddresses)
     )
   )(jsons)
 }

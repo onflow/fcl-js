@@ -39,29 +39,24 @@ describe("getContracts", () => {
       },
     }
 
-    const emulatorMappings = {
-      HelloWorld: "0x123",
-      FooBar: "0x223",
+    const expectedMappings = {
+      emulator: {
+        HelloWorld: "0x123",
+        FooBar: "0x223",
+      },
+      testnet: {
+        HelloWorld: "0x124",
+        FooBar: "0x224",
+      },
+      mainnet: {
+        HelloWorld: "0x125",
+        FooBar: "0x225",
+      },
     }
 
-    const testnetMappings = {
-      HelloWorld: "0x124",
-      FooBar: "0x224",
-    }
-
-    const mainnetMappings = {
-      HelloWorld: "0x125",
-      FooBar: "0x225",
-    }
-
-    expect(getContracts(flowJSON, "emulator")).toEqual(emulatorMappings)
-    expect(getContracts(flowJSON, "testnet")).toEqual(testnetMappings)
-    expect(getContracts(flowJSON, "mainnet")).toEqual(mainnetMappings)
-
+    expect(getContracts(flowJSON)).toEqual(expectedMappings)
     // Also takes array
-    expect(getContracts([flowJSON], "emulator")).toEqual(emulatorMappings)
-    expect(getContracts([flowJSON], "testnet")).toEqual(testnetMappings)
-    expect(getContracts([flowJSON], "mainnet")).toEqual(mainnetMappings)
+    expect(getContracts([flowJSON])).toEqual(expectedMappings)
   })
 })
 
@@ -139,8 +134,8 @@ describe("anyHasPrivateKeys", () => {
           address: "f8d6e0586b0a20c7",
           key: {
             type: "file",
-            location: "./emulator.key"
-          }
+            location: "./emulator.key",
+          },
         },
       },
     }
@@ -157,7 +152,7 @@ describe("anyHasPrivateKeys", () => {
       accounts: {
         "emulator-account": {
           address: "f8d6e0586b0a20c7",
-          key: "ba68d45a5acaa52f3cacf4ad3a64d9523e0ce0ae3addb1ee6805385b380b7646"
+          key: "ba68d45a5acaa52f3cacf4ad3a64d9523e0ce0ae3addb1ee6805385b380b7646",
         },
       },
     }
