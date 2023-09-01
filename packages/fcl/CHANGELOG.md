@@ -20,6 +20,18 @@
   - @onflow/rlp@1.2.0-alpha.0
   - @onflow/sdk@1.3.0-alpha.0
 
+## 1.6.0
+
+### Minor Changes
+
+- [#1763](https://github.com/onflow/fcl-js/pull/1763) [`3c99c856`](https://github.com/onflow/fcl-js/commit/3c99c8560f61b5b38238cbd0e93814936aee282e) Thanks [@jribbink](https://github.com/jribbink)! - Add VIEW/DEEPLINK
+
+### Patch Changes
+
+- Updated dependencies [[`5edbd823`](https://github.com/onflow/fcl-js/commit/5edbd823b1a6d25eb7bb52dc55338f95beae73b1)]:
+  - @onflow/util-logger@1.2.2
+  - @onflow/config@1.1.2
+
 ## 1.5.2
 
 ### Patch Changes

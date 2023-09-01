@@ -11,6 +11,12 @@
 - Updated dependencies []:
   - @onflow/config@1.2.0-alpha.0
 
+## 1.2.2
+
+### Patch Changes
+
+- [#1771](https://github.com/onflow/fcl-js/pull/1771) [`5edbd823`](https://github.com/onflow/fcl-js/commit/5edbd823b1a6d25eb7bb52dc55338f95beae73b1) Thanks [@jribbink](https://github.com/jribbink)! - Fix @onflow/util-logger <-> @onflow/config circular dependency
+
 ## 1.2.1
 
 ### Patch Changes
