@@ -4,10 +4,11 @@ import {
   subscriber,
   SUBSCRIBE,
   UNSUBSCRIBE,
+  HandlerFnMap,
 } from "@onflow/util-actor"
 import * as logger from "@onflow/util-logger"
 import {invariant} from "@onflow/util-invariant"
-import {getContracts, cleanNetwork, anyHasPrivateKeys} from "../utils/utils"
+import {getContracts, cleanNetwork, anyHasPrivateKeys} from "./utils/utils"
 
 // Inject config into logger to break circular dependency
 logger.setConfig(config)
@@ -22,9 +23,9 @@ const CLEAR = "CLEAR_CONFIG"
 const WHERE = "WHERE_CONFIG"
 const UPDATED = "CONFIG/UPDATED"
 
-const identity = v => v
+const identity = <T>(v: T) => v
 
-const HANDLERS = {
+const HANDLERS: HandlerFnMap = {
   [PUT]: (ctx, _letter, {key, value}) => {
     if (key == null) throw new Error("Missing 'key' for config/put.")
     ctx.put(key, value)
@@ -47,9 +48,9 @@ const HANDLERS = {
     ctx.delete(key)
     ctx.broadcast(UPDATED, {...ctx.all()})
   },
-  [CLEAR]: (ctx, letter) => {
-    let keys = Object.keys(ctx.all())
-    for (let key of keys) ctx.delete(key)
+  [CLEAR]: ctx => {
+    const keys = Object.keys(ctx.all())
+    for (const key of keys) ctx.delete(key)
     ctx.broadcast(UPDATED, {...ctx.all()})
   },
   [WHERE]: (ctx, letter, {pattern}) => {
@@ -57,11 +58,11 @@ const HANDLERS = {
     letter.reply(ctx.where(pattern))
   },
   [SUBSCRIBE]: (ctx, letter) => {
-    ctx.subscribe(letter.from)
-    ctx.send(letter.from, UPDATED, {...ctx.all()})
+    ctx.subscribe(letter.from!)
+    ctx.send(letter.from!, UPDATED, {...ctx.all()})
   },
   [UNSUBSCRIBE]: (ctx, letter) => {
-    ctx.unsubscribe(letter.from)
+    ctx.unsubscribe(letter.from!)
   },
 }
 
@@ -69,117 +70,123 @@ spawn(HANDLERS, NAME)
 
 /**
  * @description Adds a key-value pair to the config
- * @param {string} key - The key to add
- * @param {*} value - The value to add
- * @returns {Promise<object>} - The current config
+ * @param key - The key to add
+ * @param value - The value to add
+ * @returns The config object
  */
-function put(key, value) {
+function put<T>(key: string, value: T) {
   send(NAME, PUT, {key, value})
   return config()
 }
 
 /**
  * @description Gets a key-value pair with a fallback from the config
- * @param {string} key - The key to add
- * @param {*} [fallback] - The fallback value to return if key is not found
- * @returns {Promise<*>} - The value found at key or fallback
+ * @param key - The key to add
+ * @param fallback - The fallback value to return if key is not found
+ * @returns The value found at key or fallback
  */
-function get(key, fallback) {
+function get<T>(key: string, fallback?: T): Promise<T> {
   return send(NAME, GET, {key, fallback}, {expectReply: true, timeout: 10})
 }
 
 /**
  * @description Returns the first non null config value or the fallback
- * @param {string[]} wants - The keys to search for
- * @param {*} fallback - The fallback value to return if key is not found
- * @returns {Promise<*>} - The value found at key or fallback
+ * @param wants - The keys to search for
+ * @param fallback - The fallback value to return if key is not found
+ * @returns The value found at key or fallback
  */
-async function first(wants = [], fallback) {
+async function first<T>(wants: string[] = [], fallback: T): Promise<T> {
   if (!wants.length) return fallback
   const [head, ...rest] = wants
-  const ret = await get(head)
+  const ret = await get<T>(head)
   if (ret == null) return first(rest, fallback)
   return ret
 }
 
 /**
  * @description Returns the current config
- * @returns {Promise<object>} - The current config
+ * @returns The config object
  */
-function all() {
+function all(): Promise<Record<string, unknown>> {
   return send(NAME, GET_ALL, null, {expectReply: true, timeout: 10})
 }
 
 /**
  * @description Updates a key-value pair in the config
- * @param {string} key - The key to update
- * @param {Function} fn - The function to update the value with
- * @returns {Promise<object>} - The current config
+ * @param key - The key to update
+ * @param fn - The function to update the value with
+ * @returns The config object
  */
-function update(key, fn = identity) {
+function update<T>(key: string, fn: (x: T) => T = identity) {
   send(NAME, UPDATE, {key, fn})
   return config()
 }
 
 /**
  * @description Deletes a key-value pair from the config
- * @param {string} key - The key to delete
- * @returns {Promise<object>} - The current config
+ * @param key - The key to delete
+ * @returns The config object
  */
-function _delete(key) {
+function _delete(key: string) {
   send(NAME, DELETE, {key})
   return config()
 }
 
 /**
  * @description Returns a subset of the config based on a pattern
- * @param {string} pattern - The pattern to match keys against
- * @returns {Promise<object>} - The subset of the config
+ * @param pattern - The pattern to match keys against
+ * @returns The subset of the config
  */
-function where(pattern) {
+function where(pattern: RegExp): Promise<Record<string, unknown>> {
   return send(NAME, WHERE, {pattern}, {expectReply: true, timeout: 10})
 }
 
 /**
  * @description Subscribes to config updates
- * @param {Function} callback - The callback to call when config is updated
- * @returns {Function} - The unsubscribe function
+ * @param callback - The callback to call when config is updated
+ * @returns The unsubscribe function
  */
-function subscribe(callback) {
+function subscribe(
+  callback: (
+    config: Record<string, unknown> | null,
+    error: Error | null
+  ) => void
+): () => void {
   return subscriber(NAME, () => spawn(HANDLERS, NAME), callback)
 }
 
 /**
  * @description Clears the config
- * @returns {void}
  */
-export function clearConfig() {
-  return send(NAME, CLEAR)
+export async function clearConfig(): Promise<void> {
+  await send(NAME, CLEAR)
 }
 
 /**
  * @description Resets the config to a previous state
- * @param {object} oldConfig - The previous config state
- * @returns {Promise<object>} - The current config
+ * @param oldConfig - The previous config state
+ * @returns The config object
  */
-function resetConfig(oldConfig) {
-  return clearConfig().then(config(oldConfig))
+async function resetConfig(oldConfig: Record<string, unknown>) {
+  return clearConfig().then(() => config(oldConfig))
 }
 
 /**
  * @description Takes in flow.json or array of flow.json files and creates contract placeholders
- * @param {object|object[]} data - The flow.json or array of flow.json files
- * @returns {void}
+ * @param data - The data to load
+ * @param data.flowJSON - The flow.json or array of flow.json files
  */
-async function load(data) {
-  const network = await get("flow.network")
+async function load(data: {
+  flowJSON: Record<string, unknown> | Record<string, unknown>[]
+}) {
+  const network: string = await get("flow.network")
   const cleanedNetwork = cleanNetwork(network)
   const {flowJSON} = data
 
   invariant(Boolean(flowJSON), "config.load -- 'flowJSON' must be defined")
 
   invariant(
-    cleanedNetwork,
+    !!cleanedNetwork,
     `Flow Network Required -- In order for FCL to load your contracts please define "flow.network" to "emulator", "local", "testnet", or "mainnet" in your config. See more here: https://developers.flow.com/tools/fcl-js/reference/configure-fcl`
   )
 
@@ -232,12 +239,12 @@ async function load(data) {
   }
 }
 
-// eslint-disable-next-line jsdoc/require-returns
 /**
  * @description Sets the config
- * @param {object} [values] - The values to set
+ * @param values - The values to set
+ * @returns The config object
  */
-function config(values) {
+function config(values?: Record<string, unknown>) {
   if (values != null && typeof values === "object") {
     Object.keys(values).map(d => put(d, values[d]))
   }
@@ -269,18 +276,22 @@ config.load = load
 
 export {config}
 
-const noop = v => v
-function overload(opts = {}, callback = noop) {
-  return new Promise(async (resolve, reject) => {
-    const oldConfig = await all()
-    try {
-      config(opts)
-      var result = await callback(await all())
-      await resetConfig(oldConfig)
-      resolve(result)
-    } catch (error) {
-      await resetConfig(oldConfig)
-      reject(error)
-    }
-  })
+/**
+ * @description Temporarily overloads the config with the given values and calls the callback
+ * @param values - The values to overload the config with
+ * @param callback - The callback to call with the overloaded config
+ * @returns The result of the callback
+ */
+async function overload<T>(
+  values: Record<string, unknown>,
+  callback: (oldConfig: Record<string, unknown>) => T
+) {
+  const oldConfig = await all()
+  try {
+    config(values)
+    const result = await callback(await all())
+    return result
+  } finally {
+    await resetConfig(oldConfig)
+  }
 }
