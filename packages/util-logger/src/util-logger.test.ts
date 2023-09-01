@@ -21,6 +21,7 @@ describe("logger", () => {
 
   beforeEach(() => {
     configRef = config()
+    logger.setConfig(config)
   })
 
   it("should not fire logger if config level is less than log level", async () => {
