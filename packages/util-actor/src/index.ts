@@ -42,7 +42,7 @@ export type HandlerFn = (
   data: any
 ) => Promise<void> | void
 export type SpawnFn = (address?: string) => void
-export interface HandlerFnMap {
+export interface ActorHandlers {
   [INIT]?: (ctx: ActorContext) => Promise<void> | void
   [SUBSCRIBE]?: HandlerFn
   [UNSUBSCRIBE]?: HandlerFn
@@ -73,19 +73,19 @@ let pid = 0b0
 
 const DEFAULT_TIMEOUT = 5000
 
-export function send<Handlers extends HandlerFnMap, T>(
+export function send<Handlers extends ActorHandlers, T>(
   addr: string,
   tag: keyof Handlers & string,
   data?: Record<string, any> | null,
   opts?: {expectReply?: true; timeout?: number; from?: string}
 ): Promise<T>
-export function send<Handlers extends HandlerFnMap>(
+export function send<Handlers extends ActorHandlers>(
   addr: string,
   tag: keyof Handlers & string,
   data?: Record<string, any> | null,
   opts?: {expectReply?: false; timeout?: number; from?: string}
 ): Promise<boolean>
-export function send<Handlers extends HandlerFnMap, T>(
+export function send<Handlers extends ActorHandlers, T>(
   addr: string,
   tag: keyof Handlers & string,
   data?: Record<string, any> | null,
@@ -139,7 +139,7 @@ export const kill = (addr: string) => {
 }
 
 const fromHandlers =
-  <Handlers extends HandlerFnMap>(handlers: Handlers) =>
+  <Handlers extends ActorHandlers>(handlers: Handlers) =>
   async (ctx: ActorContext) => {
     if (typeof handlers[INIT] === "function") await handlers[INIT](ctx)
     __loop: while (1) {
@@ -167,7 +167,7 @@ const parseAddr = (addr: string | number | null): string => {
   return String(addr)
 }
 
-export const spawn = <Handlers extends HandlerFnMap>(
+export const spawn = <Handlers extends ActorHandlers>(
   fnOrHandlers: ((ctx: ActorContext) => Promise<void>) | Handlers,
   rawAddr: string | number | null = null
 ) => {
@@ -300,7 +300,7 @@ export function subscriber<T>(
 //    letter.reply(ctx.all())
 //  }
 //
-export function snapshoter<Handlers extends HandlerFnMap, T>(
+export function snapshoter<Handlers extends ActorHandlers, T>(
   address: string,
   spawnFn: SpawnFn
 ) {
