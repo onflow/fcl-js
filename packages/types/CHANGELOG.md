@@ -1,5 +1,18 @@
 # @onflow/types
 
+## 1.2.0
+
+### Minor Changes
+
+- [#1760](https://github.com/onflow/fcl-js/pull/1760) [`0e4a4b1a`](https://github.com/onflow/fcl-js/commit/0e4a4b1aa4d9d18b9f8c2fa1e9db1b8e6ab9b15a) Thanks [@jribbink](https://github.com/jribbink)! - Convert @onflow/types to TypeScript
+
+- [#1728](https://github.com/onflow/fcl-js/pull/1728) [`a4f8c00c`](https://github.com/onflow/fcl-js/commit/a4f8c00c4cf292d3a4afac610dedbc89ff3affea) Thanks [@nialexsan](https://github.com/nialexsan)! - TS build
+
+### Patch Changes
+
+- Updated dependencies [[`a4f8c00c`](https://github.com/onflow/fcl-js/commit/a4f8c00c4cf292d3a4afac610dedbc89ff3affea), [`845ffa75`](https://github.com/onflow/fcl-js/commit/845ffa756e07188557d150cdb9ff7af59019a477)]:
+  - @onflow/util-logger@1.3.0
+
 ## 1.2.0-alpha.0
 
 ### Minor Changes

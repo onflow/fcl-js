@@ -1,5 +1,25 @@
 # @onflow/fcl
 
+## 1.6.0
+
+### Minor Changes
+
+- [#1728](https://github.com/onflow/fcl-js/pull/1728) [`a4f8c00c`](https://github.com/onflow/fcl-js/commit/a4f8c00c4cf292d3a4afac610dedbc89ff3affea) Thanks [@nialexsan](https://github.com/nialexsan)! - TS build
+
+### Patch Changes
+
+- Updated dependencies [[`0e4a4b1a`](https://github.com/onflow/fcl-js/commit/0e4a4b1aa4d9d18b9f8c2fa1e9db1b8e6ab9b15a), [`a4f8c00c`](https://github.com/onflow/fcl-js/commit/a4f8c00c4cf292d3a4afac610dedbc89ff3affea), [`845ffa75`](https://github.com/onflow/fcl-js/commit/845ffa756e07188557d150cdb9ff7af59019a477), [`92b966d3`](https://github.com/onflow/fcl-js/commit/92b966d39936ba0a90629ee320e62e4fed5d2296)]:
+  - @onflow/types@1.2.0
+  - @onflow/util-invariant@1.2.0
+  - @onflow/util-template@1.2.0
+  - @onflow/util-address@1.2.0
+  - @onflow/util-logger@1.3.0
+  - @onflow/util-actor@1.3.0
+  - @onflow/util-uid@1.2.0
+  - @onflow/config@1.2.0
+  - @onflow/rlp@1.2.0
+  - @onflow/sdk@1.3.0
+
 ## 1.6.0-alpha.0
 
 ### Minor Changes
