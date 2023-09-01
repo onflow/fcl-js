@@ -9,8 +9,8 @@ test("send and receive", async () => {
 test("first in -- first out", async () => {
   const m = genMailbox()
   const msgx = ["A", "B", "C", "D", "E", "F"]
-  for (let msg of msgx) m.deliver(msg)
-  for (let msg of msgx) expect(await m.receive()).toBe(msg)
+  for (const msg of msgx) m.deliver(msg)
+  for (const msg of msgx) expect(await m.receive()).toBe(msg)
 })
 
 test("many mailboxes", async () => {
@@ -24,13 +24,13 @@ test("many mailboxes", async () => {
   const m3x = ["X", "Y", "Z"]
   const m4x = ["7", "8", "9"]
 
-  for (let msg of m1x) m1.deliver(msg)
-  for (let msg of m2x) m2.deliver(msg)
-  for (let msg of m3x) m3.deliver(msg)
-  for (let msg of m4x) m4.deliver(msg)
+  for (const msg of m1x) m1.deliver(msg)
+  for (const msg of m2x) m2.deliver(msg)
+  for (const msg of m3x) m3.deliver(msg)
+  for (const msg of m4x) m4.deliver(msg)
 
-  for (let msg of m1x) expect(await m1.receive()).toBe(msg)
-  for (let msg of m2x) expect(await m2.receive()).toBe(msg)
-  for (let msg of m3x) expect(await m3.receive()).toBe(msg)
-  for (let msg of m4x) expect(await m4.receive()).toBe(msg)
+  for (const msg of m1x) expect(await m1.receive()).toBe(msg)
+  for (const msg of m2x) expect(await m2.receive()).toBe(msg)
+  for (const msg of m3x) expect(await m3.receive()).toBe(msg)
+  for (const msg of m4x) expect(await m4.receive()).toBe(msg)
 })
