@@ -651,8 +651,8 @@ export const Reference = typedef(
   v => v
 )
 
-export const _Array = <T, V extends JsonCdc<string, unknown>>(
-  children: TypeDescriptor<T, V>[] | TypeDescriptor<T, V> = []
+export const _Array = <T extends TypeDescriptor<any, JsonCdc<string, unknown>>>(
+  children: T[] | T = []
 ) =>
   typedef(
     "Array",
