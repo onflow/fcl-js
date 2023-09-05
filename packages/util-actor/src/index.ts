@@ -73,21 +73,21 @@ let pid = 0b0
 
 const DEFAULT_TIMEOUT = 5000
 
-export function send<Handlers extends ActorHandlers, T>(
+export function send<T>(
   addr: string,
-  tag: keyof Handlers & string,
+  tag: string,
   data?: Record<string, any> | null,
   opts?: {expectReply?: true; timeout?: number; from?: string}
 ): Promise<T>
-export function send<Handlers extends ActorHandlers>(
+export function send(
   addr: string,
-  tag: keyof Handlers & string,
+  tag: string,
   data?: Record<string, any> | null,
   opts?: {expectReply?: false; timeout?: number; from?: string}
 ): Promise<boolean>
-export function send<Handlers extends ActorHandlers, T>(
+export function send<T>(
   addr: string,
-  tag: keyof Handlers & string,
+  tag: string,
   data?: Record<string, any> | null,
   opts: {expectReply?: boolean; timeout?: number; from?: string} = {
     expectReply: false,
@@ -300,12 +300,9 @@ export function subscriber<T>(
 //    letter.reply(ctx.all())
 //  }
 //
-export function snapshoter<Handlers extends ActorHandlers, T>(
-  address: string,
-  spawnFn: SpawnFn
-) {
+export function snapshoter<T>(address: string, spawnFn: SpawnFn) {
   spawnFn(address)
-  return send<Handlers, T>(address, SNAPSHOT, null, {
+  return send<T>(address, SNAPSHOT, null, {
     expectReply: true,
     timeout: 0,
   })
