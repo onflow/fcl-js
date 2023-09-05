@@ -4,7 +4,7 @@ import {
   subscriber,
   SUBSCRIBE,
   UNSUBSCRIBE,
-  HandlerFnMap,
+  ActorHandlers,
 } from "@onflow/util-actor"
 import * as logger from "@onflow/util-logger"
 import {invariant} from "@onflow/util-invariant"
@@ -25,7 +25,7 @@ const UPDATED = "CONFIG/UPDATED"
 
 const identity = <T>(v: T) => v
 
-const HANDLERS: HandlerFnMap = {
+const HANDLERS: ActorHandlers = {
   [PUT]: (ctx, _letter, {key, value}) => {
     if (key == null) throw new Error("Missing 'key' for config/put.")
     ctx.put(key, value)
