@@ -58,11 +58,11 @@ const HANDLERS: ActorHandlers = {
     letter.reply(ctx.where(pattern))
   },
   [SUBSCRIBE]: (ctx, letter) => {
-    ctx.subscribe(letter.from!)
-    ctx.send(letter.from!, UPDATED, {...ctx.all()})
+    ctx.subscribe(letter.from)
+    ctx.send(letter.from, UPDATED, {...ctx.all()})
   },
   [UNSUBSCRIBE]: (ctx, letter) => {
-    ctx.unsubscribe(letter.from!)
+    ctx.unsubscribe(letter.from)
   },
 }
 

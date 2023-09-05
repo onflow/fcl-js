@@ -201,11 +201,12 @@ const createCtx = (addr: string) => ({
   self: () => addr,
   receive: () => FCL_REGISTRY[addr].mailbox.receive(),
   send: (
-    to: string,
+    to: string | null | undefined,
     tag: string,
     data?: any,
     opts: Record<string, any> = {}
   ) => {
+    if (to == null) return
     opts.from = addr
     return send(to, tag, data, opts)
   },
