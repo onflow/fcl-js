@@ -1,5 +1,16 @@
 # @onflow/config
 
+## 1.2.0
+
+### Minor Changes
+
+- [#1728](https://github.com/onflow/fcl-js/pull/1728) [`a4f8c00c`](https://github.com/onflow/fcl-js/commit/a4f8c00c4cf292d3a4afac610dedbc89ff3affea) Thanks [@nialexsan](https://github.com/nialexsan)! - TS build
+
+### Patch Changes
+
+- Updated dependencies [[`a4f8c00c`](https://github.com/onflow/fcl-js/commit/a4f8c00c4cf292d3a4afac610dedbc89ff3affea), [`92b966d3`](https://github.com/onflow/fcl-js/commit/92b966d39936ba0a90629ee320e62e4fed5d2296)]:
+  - @onflow/util-actor@1.3.0
+
 ## 1.2.0-alpha.0
 
 ### Minor Changes
@@ -10,6 +21,12 @@
 
 - Updated dependencies []:
   - @onflow/util-actor@1.3.0-alpha.0
+
+## 1.1.2
+
+### Patch Changes
+
+- [#1771](https://github.com/onflow/fcl-js/pull/1771) [`5edbd823`](https://github.com/onflow/fcl-js/commit/5edbd823b1a6d25eb7bb52dc55338f95beae73b1) Thanks [@jribbink](https://github.com/jribbink)! - Fix @onflow/util-logger <-> @onflow/config circular dependency
 
 ## 1.1.1
 
