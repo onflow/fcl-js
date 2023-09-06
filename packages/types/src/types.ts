@@ -656,7 +656,7 @@ export const _Array = <T extends TypeDescriptor<any, JsonCdc<string, unknown>>>(
 ) =>
   typedef(
     "Array",
-    (v: T[]) => {
+    (v: TypeDescriptorInput<T>[]) => {
       return {
         type: "Array",
         value: isArray(children)
