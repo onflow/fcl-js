@@ -229,7 +229,13 @@ function registerTest<X, Y extends string, Z>([
   asArgument,
   asInjection,
   shouldError = false,
-]: readonly [t.TypeDescriptor<X, Y, Z>, X, t.JsonCdc<Y, Z>, X, boolean?]) {
+]: readonly [
+  t.TypeDescriptor<X, t.JsonCdc<Y, Z>>,
+  X,
+  t.JsonCdc<Y, Z>,
+  X,
+  boolean?
+]) {
   describe(cast.label, () => {
     test(`t.${cast.label}.asArgument(${input})`, () => {
       if (shouldError) {

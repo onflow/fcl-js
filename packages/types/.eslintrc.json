@@ -27,5 +27,8 @@
         "jsdoc/require-jsdoc": 0
       }
     }
-  ]
+  ],
+  "rules": {
+    "@typescript-eslint/no-explicit-any": 0
+  }
 }
