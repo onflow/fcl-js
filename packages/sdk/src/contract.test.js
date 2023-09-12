@@ -9,7 +9,6 @@ const interfaceContract =
   (label, wat) =>
   ([template]) => {
     const keys = template.replace(/\s+/g, "|").split("|").filter(Boolean)
-    console.log({keys})
 
     describe(label, () => {
       for (let key of keys)
