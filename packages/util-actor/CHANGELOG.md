@@ -1,5 +1,13 @@
 # @onflow/util-actor
 
+## 1.3.0
+
+### Minor Changes
+
+- [#1728](https://github.com/onflow/fcl-js/pull/1728) [`a4f8c00c`](https://github.com/onflow/fcl-js/commit/a4f8c00c4cf292d3a4afac610dedbc89ff3affea) Thanks [@nialexsan](https://github.com/nialexsan)! - TS build
+
+- [#1761](https://github.com/onflow/fcl-js/pull/1761) [`92b966d3`](https://github.com/onflow/fcl-js/commit/92b966d39936ba0a90629ee320e62e4fed5d2296) Thanks [@jribbink](https://github.com/jribbink)! - Enhance TS support for @onflow/util-actor
+
 ## 1.3.0-alpha.0
 
 ### Minor Changes

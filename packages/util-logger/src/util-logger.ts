@@ -1,4 +1,8 @@
-import {config} from "@onflow/config"
+// Config dependency injected into logger to break circular dependency
+let config: (() => {get: <T>(key: string) => Promise<T>}) | null = null
+export const setConfig = (_config: typeof config) => {
+  config = _config
+}
 
 /**
  * The levels of the logger
@@ -57,7 +61,7 @@ export const log = async (options: {
   always?: boolean
 }) => {
   const {title, message, level, always} = options
-  const configLoggerLevel = await config.get("logger.level", LEVELS.warn)
+  const configLoggerLevel = (await config?.()?.get<number>("logger.level")) ?? LEVELS.warn
 
   // If config level is below message level then don't show it
   if (!always && configLoggerLevel < level) return

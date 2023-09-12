@@ -1,4 +1,4 @@
-import {spawn, send, kill} from "./"
+import {spawn, send, kill, ActorContext} from "./"
 
 const COUNT = "COUNT"
 const DUMP = "DUMP"
@@ -8,7 +8,7 @@ const UPDATED = "UPDATED"
 const SUBSCRIBE = "SUBSCRIBE"
 const UNSUBSCRIBE = "UNSUBSCRIBE"
 
-const counterLogic = async ctx => {
+const counterLogic = async (ctx: ActorContext) => {
   ctx.put(COUNT, 0)
 
   __loop: while (1) {
@@ -18,7 +18,7 @@ const counterLogic = async ctx => {
     switch (letter.tag) {
       case SUBSCRIBE:
         ctx.subscribe(letter.from)
-        ctx.send(letter.from, UPDATED, ctx.get(COUNT, 0))
+        ctx.send(letter.from!, UPDATED, ctx.get(COUNT, 0))
         continue __loop
 
       case UNSUBSCRIBE:
@@ -44,11 +44,12 @@ const counterLogic = async ctx => {
   }
 }
 
-const counter = name => spawn(counterLogic, name)
-const dump = addr => send(addr, DUMP, null, {expectReply: true, timeout: 100})
-const inc = (addr, delta = 1) => send(addr, INC, {delta})
+const counter = (name: string) => spawn(counterLogic, name)
+const dump = (addr: string) =>
+  send(addr, DUMP, null, {expectReply: true, timeout: 100})
+const inc = (addr: string, delta = 1) => send(addr, INC, {delta})
 
-const subscribe = (addr, callback) => {
+const subscribe = (addr: string, callback: (data: any) => void) => {
   const EXIT = "@EXIT"
   const self = spawn(async ctx => {
     ctx.send(addr, SUBSCRIBE)

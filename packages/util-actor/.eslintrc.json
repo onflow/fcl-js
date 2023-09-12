@@ -16,19 +16,8 @@
     "ecmaVersion": "latest",
     "sourceType": "module"
   },
-  "ignorePatterns": ["**/dist/"],
-  "overrides": [
-    {
-      "files": ["**/*.test.ts"],
-      "env": {
-        "jest": true
-      },
-      "rules": {
-        "jsdoc/require-jsdoc": 0
-      }
-    }
-  ],
   "rules": {
-    "@typescript-eslint/no-explicit-any": 0
-  }
+    "@typescript-eslint/no-explicit-any": "off"
+  },
+  "ignorePatterns": ["**/dist/"]
 }

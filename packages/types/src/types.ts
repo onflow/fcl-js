@@ -5,6 +5,23 @@ export type JsonCdc<L extends string, T> = {
   value: T
 }
 
+type JsonCdcLabel<X extends JsonCdc<string, unknown>> = X extends JsonCdc<
+  infer L,
+  unknown
+>
+  ? L
+  : never
+
+export interface TypeDescriptor<T, V extends JsonCdc<string, unknown>> {
+  label: JsonCdcLabel<V>
+  asArgument: (x: T) => V
+  asInjection: (x: T) => T
+}
+
+type TypeDescriptorInput<
+  X extends TypeDescriptor<any, JsonCdc<string, unknown>>
+> = X extends TypeDescriptor<infer T, JsonCdc<string, unknown>> ? T : never
+
 export interface PathValue {
   domain: "storage" | "private" | "public"
   identifier: string
@@ -15,12 +32,6 @@ export interface ReferenceValue {
   address: string
 }
 
-export interface TypeDescriptor<T, L extends string, X> {
-  label: L
-  asArgument: (x: T) => JsonCdc<L, X>
-  asInjection: (x: T) => T
-}
-
 /**
  * Creates a type descriptor for a given type
  * @param label - The label for the type
@@ -29,11 +40,11 @@ export interface TypeDescriptor<T, L extends string, X> {
  * @returns A type descriptor
  * @internal
  */
-const typedef = <T, L extends string, X>(
-  label: L,
-  asArgument: (x: T) => JsonCdc<L, X>,
+const typedef = <T, V extends JsonCdc<string, unknown>>(
+  label: JsonCdcLabel<V>,
+  asArgument: (x: T) => V,
   asInjection: (x: T) => T
-): TypeDescriptor<T, L, X> => ({
+): TypeDescriptor<T, V> => ({
   label,
   asArgument,
   asInjection: (x: T) => {
@@ -606,19 +617,21 @@ export const Void = typedef(
     if (!v || isNull(v))
       return {
         type: "Void",
-        value: null, // so that it confroms to JsonCdcType interface
+        value: null,
       }
     return throwTypeError("Expected Void for type Void")
   },
   v => v
 )
 
-export const Optional = <T, L extends string, X>(
-  children: TypeDescriptor<T, L, X>
+export const Optional = <
+  T extends TypeDescriptor<any, JsonCdc<string, unknown>>
+>(
+  children: T
 ) =>
   typedef(
     "Optional",
-    (v?: T | null) => ({
+    (v?: TypeDescriptorInput<T> | null) => ({
       type: "Optional",
       value: isNull(v) ? null : children.asArgument(v),
     }),
@@ -638,12 +651,12 @@ export const Reference = typedef(
   v => v
 )
 
-export const _Array = <T, L extends string, X>(
-  children: TypeDescriptor<T, L, X>[] | TypeDescriptor<T, L, X> = []
+export const _Array = <T extends TypeDescriptor<any, JsonCdc<string, unknown>>>(
+  children: T[] | T = []
 ) =>
   typedef(
     "Array",
-    (v: T[]) => {
+    (v: TypeDescriptorInput<T>[]) => {
       return {
         type: "Array",
         value: isArray(children)
@@ -656,21 +669,27 @@ export const _Array = <T, L extends string, X>(
 
 export {_Array as Array}
 
-// TODO : Fix types.  Think about cases... dont think children should ever be array... not sure
-export const Dictionary = <A, B extends string, C, D, E extends string, F>(
+export const Dictionary = <
+  K extends TypeDescriptor<any, JsonCdc<string, unknown>>,
+  V extends TypeDescriptor<any, JsonCdc<string, unknown>>
+>(
   children:
     | {
-        key: TypeDescriptor<A, B, C>
-        value: TypeDescriptor<D, E, F>
+        key: K
+        value: V
       }[]
     | {
-        key: TypeDescriptor<A, B, C>
-        value: TypeDescriptor<D, E, F>
+        key: K
+        value: V
       } = []
 ) =>
   typedef(
     "Dictionary",
-    (v: {key: A; value: D}[] | {key: A; value: D}) => {
+    (
+      v:
+        | {key: TypeDescriptorInput<K>; value: TypeDescriptorInput<V>}[]
+        | {key: TypeDescriptorInput<K>; value: TypeDescriptorInput<V>}
+    ) => {
       const vIsArray = isArray(v)
       const childrenIsArray = isArray(children)
 
@@ -695,24 +714,20 @@ export const Dictionary = <A, B extends string, C, D, E extends string, F>(
                     value: children.value.asArgument(v.value),
                   },
                 ]
-              : throwTypeError(
-                  "Invalid arguments for Dictionary. Expected an of array of key/value pairs"
-                ),
+              : throwTypeError("Invalid arguments for Dictionary."),
         }
       return throwTypeError("Expected Object for type Dictionary")
     },
     v => v
   )
 
-export const Event = <T, L extends string, X>(
+export const Event = <V extends TypeDescriptor<any, JsonCdc<string, unknown>>>(
   id: string,
-  fields:
-    | {value: TypeDescriptor<T, L, X>}[]
-    | {value: TypeDescriptor<T, L, X>} = []
+  fields: {value: V}[] | {value: V} = []
 ) =>
   typedef(
     "Event",
-    (v: {fields: {name: string; value: T}[]}) => {
+    (v: {fields: {name: string; value: TypeDescriptorInput<V>}[]}) => {
       if (isObj(v))
         return {
           type: "Event",
@@ -734,15 +749,15 @@ export const Event = <T, L extends string, X>(
     v => v
   )
 
-export const Resource = <T, L extends string, X>(
+export const Resource = <
+  V extends TypeDescriptor<any, JsonCdc<string, unknown>>
+>(
   id: string,
-  fields:
-    | {value: TypeDescriptor<T, L, X>}[]
-    | {value: TypeDescriptor<T, L, X>} = []
+  fields: {value: V}[] | {value: V} = []
 ) =>
   typedef(
     "Resource",
-    (v: {fields: {name: string; value: T}[]}) => {
+    (v: {fields: {name: string; value: TypeDescriptorInput<V>}[]}) => {
       if (isObj(v))
         return {
           type: "Resource",
@@ -764,15 +779,13 @@ export const Resource = <T, L extends string, X>(
     v => v
   )
 
-export const Struct = <T, L extends string, X>(
+export const Struct = <V extends TypeDescriptor<any, JsonCdc<string, unknown>>>(
   id: string,
-  fields:
-    | {value: TypeDescriptor<T, L, X>}[]
-    | {value: TypeDescriptor<T, L, X>} = []
+  fields: {value: V}[] | {value: V} = []
 ) =>
   typedef(
     "Struct",
-    (v: {fields: {name: string; value: T}[]}) => {
+    (v: {fields: {name: string; value: TypeDescriptorInput<V>}[]}) => {
       if (isObj(v))
         return {
           type: "Struct",
@@ -794,15 +807,13 @@ export const Struct = <T, L extends string, X>(
     v => v
   )
 
-export const Enum = <T, L extends string, X>(
+export const Enum = <V extends TypeDescriptor<any, JsonCdc<string, unknown>>>(
   id: string,
-  fields:
-    | {value: TypeDescriptor<T, L, X>}[]
-    | {value: TypeDescriptor<T, L, X>} = []
+  fields: {value: V}[] | {value: V} = []
 ) =>
   typedef(
     "Enum",
-    (v: {fields: {name: string; value: T}[]}) => {
+    (v: {fields: {name: string; value: TypeDescriptorInput<V>}[]}) => {
       if (isObj(v))
         return {
           type: "Enum",

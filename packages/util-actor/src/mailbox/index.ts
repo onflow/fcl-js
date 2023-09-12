@@ -1,22 +1,22 @@
-export interface IMailbox {
-  deliver(msg: any): Promise<void>;
-  receive(): Promise<unknown>;
+export interface IMailbox<T> {
+  deliver(msg: T): Promise<void>
+  receive(): Promise<T>
 }
-export const mailbox = () => {
-  const queue: any[] = []
-  var next
+export const mailbox = <T>(): IMailbox<T> => {
+  const queue: T[] = []
+  let next: ((msg: T) => void) | undefined
 
   return {
-    async deliver(msg) {
+    async deliver(msg: T) {
       queue.push(msg)
       if (next) {
-        next(queue.shift())
+        next(queue.shift() as T)
         next = undefined
       }
     },
 
-    receive() {
-      return new Promise(function innerReceive(resolve) {
+    receive(): Promise<T> {
+      return new Promise<T>(function innerReceive(resolve) {
         const msg = queue.shift()
         if (msg) return resolve(msg)
         next = resolve

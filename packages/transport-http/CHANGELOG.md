@@ -1,5 +1,19 @@
 # @onflow/transport-http
 
+## 1.8.0
+
+### Minor Changes
+
+- [#1728](https://github.com/onflow/fcl-js/pull/1728) [`a4f8c00c`](https://github.com/onflow/fcl-js/commit/a4f8c00c4cf292d3a4afac610dedbc89ff3affea) Thanks [@nialexsan](https://github.com/nialexsan)! - TS build
+
+### Patch Changes
+
+- Updated dependencies [[`a4f8c00c`](https://github.com/onflow/fcl-js/commit/a4f8c00c4cf292d3a4afac610dedbc89ff3affea), [`845ffa75`](https://github.com/onflow/fcl-js/commit/845ffa756e07188557d150cdb9ff7af59019a477)]:
+  - @onflow/util-invariant@1.2.0
+  - @onflow/util-template@1.2.0
+  - @onflow/util-address@1.2.0
+  - @onflow/util-logger@1.3.0
+
 ## 1.8.0-alpha.0
 
 ### Minor Changes
@@ -13,6 +27,12 @@
   - @onflow/util-template@1.2.0-alpha.0
   - @onflow/util-address@1.2.0-alpha.0
   - @onflow/util-logger@1.3.0-alpha.0
+
+## 1.7.1
+
+### Patch Changes
+
+- [#1767](https://github.com/onflow/fcl-js/pull/1767) [`f6681cfe`](https://github.com/onflow/fcl-js/commit/f6681cfebc5aab78cbf74f34b5655faa4f06a8c4) Thanks [@jribbink](https://github.com/jribbink)! - Fix responseBody not being included in errors
 
 ## 1.7.0
 
