@@ -1,8 +1,8 @@
-import {getContracts, anyHasPrivateKeys} from "./utils"
+import {getContracts, anyHasPrivateKeys, FlowJson} from "./utils"
 
 describe("getContracts", () => {
   test("it should gather contract aliases for flow.json", () => {
-    const flowJSON = {
+    const flowJSON: FlowJson = {
       networks: {
         emulator: "127.0.0.1:3569",
         mainnet: "access.mainnet.nodes.onflow.org:9000",
@@ -139,8 +139,8 @@ describe("anyHasPrivateKeys", () => {
           address: "f8d6e0586b0a20c7",
           key: {
             type: "file",
-            location: "./emulator.key"
-          }
+            location: "./emulator.key",
+          },
         },
       },
     }
@@ -157,7 +157,7 @@ describe("anyHasPrivateKeys", () => {
       accounts: {
         "emulator-account": {
           address: "f8d6e0586b0a20c7",
-          key: "ba68d45a5acaa52f3cacf4ad3a64d9523e0ce0ae3addb1ee6805385b380b7646"
+          key: "ba68d45a5acaa52f3cacf4ad3a64d9523e0ce0ae3addb1ee6805385b380b7646",
         },
       },
     }
