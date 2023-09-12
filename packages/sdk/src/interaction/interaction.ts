@@ -118,7 +118,7 @@ const makeIx = (wat: string) => (ix: IIx) => {
   return Ok(ix)
 }
 
-const prepAccountKeyId = (acct: IAcct | IAcctFn): IAcct | IAcctFn => {
+const prepAccountKeyId = (acct: Partial<IAcct> | IAcctFn): Partial<IAcct> | IAcctFn => {
   if (acct.keyId == null) return acct
 
   invariant(!isNaN(parseInt(acct.keyId.toString())), "account.keyId must be an integer")
@@ -130,12 +130,12 @@ const prepAccountKeyId = (acct: IAcct | IAcctFn): IAcct | IAcctFn => {
 }
 
 interface IPrepAccountOpts {
-  role: string | null
+  role?: string | null
 }
 
 export const initAccount = (): IAcct => JSON.parse(ACCT)
 
-export const prepAccount = (acct: IAcct | IAcctFn, opts: IPrepAccountOpts = {role: null}) => (ix: IIx) => {
+export const prepAccount = (acct: IAcct | IAcctFn, opts: IPrepAccountOpts = {}) => (ix: IIx) => {
   invariant(
     typeof acct === "function" || typeof acct === "object",
     "prepAccount must be passed an authorization function or an account object"
@@ -147,22 +147,23 @@ export const prepAccount = (acct: IAcct | IAcctFn, opts: IPrepAccountOpts = {rol
   const tempId = uuidv4()
 
   if (acct.authorization && isFn(acct.authorization))
-    acct = {...ACCOUNT, resolve: acct.authorization}
-  if (!acct.authorization && isFn(acct)) acct = {...ACCOUNT, resolve: acct}
+    account = {resolve: acct.authorization}
+  if (!acct.authorization && isFn(acct)) account = {resolve: acct}
 
-  const resolve = acct.resolve
-  if (resolve)
-    acct.resolve = (acct: IAcct, ...rest: any[]) =>
+  const resolve = account.resolve
+  if (resolve) {
+    account.resolve = (acct: IAcct, ...rest: any[]) =>
       [resolve, prepAccountKeyId].reduce(
         async (d, fn) => fn(await d, ...rest),
         acct
       )
-  acct = prepAccountKeyId(acct)
+  }
+  account = prepAccountKeyId(account)
 
   ix.accounts[tempId] = {
     ...ACCOUNT,
     tempId,
-    ...acct,
+    ...account,
     role: {
       ...ACCOUNT.role,
       ...(typeof acct.role === "object" ? acct.role : {}),
