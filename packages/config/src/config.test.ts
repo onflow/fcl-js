@@ -1,6 +1,6 @@
 import {config, clearConfig} from "./config"
 
-const idle = () => new Promise(resolve => setTimeout(resolve), 0)
+const idle = () => new Promise(resolve => setTimeout(resolve, 0))
 
 describe("config()", () => {
   beforeEach(async () => {
@@ -33,7 +33,7 @@ describe("config()", () => {
     })
 
     test("update", async () => {
-      config().update("config.test.t", v => v + v)
+      config().update("config.test.t", (v: number) => v + v)
       expect(await config().get("config.test.t")).toBe("tt")
     })
 
@@ -60,7 +60,7 @@ describe("config()", () => {
       unsub()
       await idle()
 
-      config().update("config.test.y", v => v + v)
+      config().update("config.test.y", (v: number) => v + v)
 
       await idle()
 
@@ -138,7 +138,7 @@ describe("config()", () => {
     beforeEach(() => config({A: A, B: B, C: C, D: D}))
     afterEach(clearConfig)
 
-    const examples = [
+    const examples: ([any, string[]] | [any])[] = [
       [FALLBACK],
       [A, ["A"]],
       [FALLBACK, ["B"]],
@@ -148,7 +148,7 @@ describe("config()", () => {
       [FALLBACK, ["MISSING", "B"]],
     ]
 
-    for (let [i, [want, from]] of examples.entries()) {
+    for (const [i, [want, from]] of examples.entries()) {
       test(`Example ${i}: ${from} -> ${want}`, async () => {
         expect(await config.first(from, FALLBACK)).toBe(want)
       })
@@ -157,9 +157,9 @@ describe("config()", () => {
 
   describe("load method", () => {
     describe("with a set network", () => {
-      beforeEach(async () => {
+      beforeEach(() => {
         // Just picked a random network. Behavior might differ based on network selection at a future date.
-        await config().put("flow.network", "emulator")
+        config().put("flow.network", "emulator")
       })
 
       describe("flow.json v1", () => {
@@ -225,7 +225,7 @@ describe("config()", () => {
 
           describe("with an array of configs loaded", () => {
             beforeEach(async () => {
-              let secondFlowJSON = {
+              const secondFlowJSON = {
                 accounts: {},
                 contracts: {
                   ThirdContract: {
