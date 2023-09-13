@@ -1,10 +1,13 @@
 import {withPrefix} from "@onflow/util-address"
-import {encodeTxIdFromVoucher} from "../encode/encode.js"
+import {encodeTxIdFromVoucher} from "../encode/encode"
+import { IIx } from "@onflow/typedefs"
 
-export function findInsideSigners(ix) {
+export function findInsideSigners(ix: IIx) {
   // Inside Signers Are: (authorizers + proposer) - payer
   let inside = new Set(ix.authorizations)
-  inside.add(ix.proposer)
+  if (ix.proposer) {
+    inside.add(ix.proposer)
+  }
   if (Array.isArray(ix.payer)) {
     ix.payer.forEach(p => inside.delete(p))
   } else {
@@ -13,20 +16,20 @@ export function findInsideSigners(ix) {
   return Array.from(inside)
 }
 
-export function findOutsideSigners(ix) {
+export function findOutsideSigners(ix: IIx) {
   // Outside Signers Are: (payer)
   let outside = new Set(Array.isArray(ix.payer) ? ix.payer : [ix.payer])
   return Array.from(outside)
 }
 
-export const createSignableVoucher = ix => {
+export const createSignableVoucher = (ix: IIx) => {
   const buildAuthorizers = () => {
     const authorizations = ix.authorizations
       .map(cid => withPrefix(ix.accounts[cid].addr))
-      .reduce((prev, current) => {
+      .reduce((prev: (string | null)[], current) => {
         return prev.find(item => item === current) ? prev : [...prev, current]
       }, [])
-    return authorizations[0] ? authorizations : []
+    return authorizations?.[0] ? authorizations : []
   }
 
   const buildInsideSigners = () =>
@@ -43,16 +46,18 @@ export const createSignableVoucher = ix => {
       sig: ix.accounts[id].signature,
     }))
 
+  const proposalKey = ix.proposer ? {
+    address: withPrefix(ix.accounts[ix.proposer].addr),
+    keyId: ix.accounts[ix.proposer].keyId,
+    sequenceNum: ix.accounts[ix.proposer].sequenceNum,
+  } : {}
+
   return {
     cadence: ix.message.cadence,
     refBlock: ix.message.refBlock || null,
     computeLimit: ix.message.computeLimit,
     arguments: ix.message.arguments.map(id => ix.arguments[id].asArgument),
-    proposalKey: {
-      address: withPrefix(ix.accounts[ix.proposer].addr),
-      keyId: ix.accounts[ix.proposer].keyId,
-      sequenceNum: ix.accounts[ix.proposer].sequenceNum,
-    },
+    proposalKey,
     payer: withPrefix(
       ix.accounts[Array.isArray(ix.payer) ? ix.payer[0] : ix.payer].addr
     ),

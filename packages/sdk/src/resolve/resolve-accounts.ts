@@ -1,13 +1,13 @@
 import {sansPrefix, withPrefix} from "@onflow/util-address"
 import {invariant} from "@onflow/util-invariant"
 import {log} from "@onflow/util-logger"
-import {isTransaction} from "../interaction/interaction"
+import {IAcct, IIx, isTransaction} from "../interaction/interaction"
 import {createSignableVoucher} from "./voucher.js"
 
-const idof = acct => `${withPrefix(acct.addr)}-${acct.keyId}`
-const isFn = v => typeof v === "function"
+const idof = (acct: IAcct) => `${withPrefix(acct.addr)}-${acct.keyId}`
+const isFn = (v: any): v is Function => typeof v === "function"
 
-export function buildPreSignable(acct, ix) {
+export function buildPreSignable(acct: IAcct, ix: IIx) {
   try {
     return {
       f_type: "PreSignable",
@@ -25,10 +25,10 @@ export function buildPreSignable(acct, ix) {
   }
 }
 
-async function collectAccounts(ix, accounts, last, depth = 3) {
-  invariant(depth, "Account Resolve Recursion Limit Exceeded", {ix, accounts})
+async function collectAccounts(ix: IIx, accounts: IAcct[], last?: IAcct, depth = 3) {
+  invariant(Boolean(depth), "Account Resolve Recursion Limit Exceeded", {ix, accounts})
 
-  let authorizations = []
+  let authorizations: string[] = []
   for (let ax of accounts) {
     let resolve = ax.resolve
     ax.resolve = null
@@ -74,8 +74,8 @@ async function collectAccounts(ix, accounts, last, depth = 3) {
         }
         if (ix.payer.length > 1) {
           // remove payer dups based on addr and keyId
-          const dupList = []
-          const payerAccts = []
+          const dupList: string[] = []
+          const payerAccts: string[] = []
           ix.payer = ix.payer.reduce((g, tempId) => {
             const {addr} = ix.accounts[tempId]
             const key = idof(ix.accounts[tempId])
@@ -83,7 +83,7 @@ async function collectAccounts(ix, accounts, last, depth = 3) {
             if (dupList.includes(key)) return g
             dupList.push(key)
             return [...g, tempId]
-          }, [])
+          }, [] as string[])
           const multiAccts = Array.from(new Set(payerAccts))
           if (multiAccts.length > 1) {
             throw new Error("Payer can not be different accounts")
@@ -111,14 +111,14 @@ async function collectAccounts(ix, accounts, last, depth = 3) {
     ix.authorizations = ix.authorizations
       .map(d => (d === last.tempId ? authorizations : d))
       .reduce(
-        (prev, curr) =>
+        (prev: string[], curr) =>
           Array.isArray(curr) ? [...prev, ...curr] : [...prev, curr],
         []
       )
   }
 }
 
-export async function resolveAccounts(ix) {
+export async function resolveAccounts(ix: IIx) {
   if (isTransaction(ix)) {
     if (!Array.isArray(ix.payer)) {
       log.deprecate({

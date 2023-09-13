@@ -3,7 +3,7 @@ import {sansPrefix} from "@onflow/util-address"
 import {
   encodeTransactionPayload as encodeInsideMessage,
   encodeTransactionEnvelope as encodeOutsideMessage,
-} from "../encode/encode.js"
+} from "../encode/encode"
 import {
   createSignableVoucher,
   findInsideSigners,

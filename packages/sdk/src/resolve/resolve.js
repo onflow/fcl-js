@@ -12,7 +12,7 @@ import {decodeResponse as decode} from "../decode/decode.js"
 
 import {resolveCadence} from "./resolve-cadence.js"
 import {resolveArguments} from "./resolve-arguments.js"
-import {resolveAccounts} from "./resolve-accounts.js"
+import {resolveAccounts} from "./resolve-accounts"
 import {resolveSignatures} from "./resolve-signatures.js"
 import {resolveValidators} from "./resolve-validators.js"
 import {resolveFinalNormalization} from "./resolve-final-normalization.js"

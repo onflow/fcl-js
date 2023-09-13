@@ -526,7 +526,7 @@ const response = await sdk.send(await sdk.build([
   - [`sdk.validator`](./src/build/build-validator.js)
 
 - [Resolvers](./src/resolve)
-  - [`sdk.resolveAccounts`](./src/resolve/resolve-accounts.js)
+  - [`sdk.resolveAccounts`](./src/resolve/resolve-accounts)
   - [`sdk.resolveArguments`](./src/resolve/resolve-arguments.js)
   - [`sdk.resolveCadence`](./src/resolve/resolve-cadence.js)
   - [`sdk.resolveFinalNormalization`](./src/resolve/resolve-final-normalization.js)
