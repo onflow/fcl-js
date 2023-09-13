@@ -537,4 +537,4 @@ const response = await sdk.send(await sdk.build([
   - [`sdk.resolveValidators`](./src/resolve/resolve-validators.js)
 
 - [Other Utils](./src/)
-  - [`sdk.voucherToTxId`](./src/resolve/voucher.js)
+  - [`sdk.voucherToTxId`](./src/resolve/voucher.ts)

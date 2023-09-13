@@ -221,7 +221,7 @@ interface ITx {
   envelopeSigs: ITxProposalKey[]
 }
 
-interface IVoucher {
+export interface IVoucher {
   cadence: string;
   refBlock: string;
   computeLimit: number;
