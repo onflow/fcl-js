@@ -2,7 +2,7 @@ import {sansPrefix, withPrefix} from "@onflow/util-address"
 import {invariant} from "@onflow/util-invariant"
 import {log} from "@onflow/util-logger"
 import {IAcct, IIx, isTransaction} from "../interaction/interaction"
-import {createSignableVoucher} from "./voucher.js"
+import {createSignableVoucher} from "./voucher"
 import {v4 as uuidv4} from "uuid"
 
 const MAX_DEPTH_LIMIT = 5

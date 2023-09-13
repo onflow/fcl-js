@@ -8,7 +8,7 @@ import {
   createSignableVoucher,
   findInsideSigners,
   findOutsideSigners,
-} from "./voucher.js"
+} from "./voucher"
 
 export async function resolveSignatures(ix) {
   if (isTransaction(ix)) {

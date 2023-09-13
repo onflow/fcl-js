@@ -1,5 +1,5 @@
 import {withPrefix} from "@onflow/util-address"
-import {encodeTxIdFromVoucher} from "../encode/encode"
+import {IVoucher, encodeTxIdFromVoucher} from "../encode/encode"
 import { IIx } from "@onflow/typedefs"
 
 export function findInsideSigners(ix: IIx) {
@@ -67,6 +67,6 @@ export const createSignableVoucher = (ix: IIx) => {
   }
 }
 
-export const voucherToTxId = voucher => {
+export const voucherToTxId = (voucher: IVoucher) => {
   return encodeTxIdFromVoucher(voucher)
 }

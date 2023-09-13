@@ -34,7 +34,7 @@ export {
   isGetCollection,
   isGetNetworkParameters,
 } from "./interaction/interaction"
-export {createSignableVoucher, voucherToTxId} from "./resolve/voucher.js"
+export {createSignableVoucher, voucherToTxId} from "./resolve/voucher"
 export {encodeMessageFromSignable} from "./wallet-utils/encode-signable.js"
 export {template as cadence} from "@onflow/util-template"
 export {template as cdc} from "@onflow/util-template"
