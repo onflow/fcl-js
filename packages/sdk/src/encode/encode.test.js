@@ -4,8 +4,8 @@ import {
   encodeTransactionPayload,
   encodeTransactionEnvelope,
   encodeTxIdFromVoucher,
-} from "./encode.js"
-import * as root from "./encode.js"
+} from "./encode"
+import * as root from "./encode"
 
 it("export contract interface", () => {
   expect(root).toStrictEqual(

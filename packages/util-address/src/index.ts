@@ -1,3 +1,6 @@
+
+export function sansPrefix(address: null): null;
+export function sansPrefix(address: string): string;
 /**
  * @description Removes 0x from address if present
  * @param address - Flow address
@@ -15,7 +18,7 @@ export function sansPrefix(address: string | null): string | null {
  */
 export function withPrefix(address: string | null): string | null {
   if (address == null) return null
-  return "0x" + sansPrefix(address)
+  return `0x` + sansPrefix(address)
 }
 
 /**

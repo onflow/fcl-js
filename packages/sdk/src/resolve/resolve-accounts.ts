@@ -1,14 +1,14 @@
 import {sansPrefix, withPrefix} from "@onflow/util-address"
 import {invariant} from "@onflow/util-invariant"
 import {log} from "@onflow/util-logger"
-import {isTransaction} from "../interaction/interaction"
+import {IAcct, IIx, isTransaction} from "../interaction/interaction"
 import {createSignableVoucher} from "./voucher.js"
 import {v4 as uuidv4} from "uuid"
 
 const MAX_DEPTH_LIMIT = 5
 
-const idof = acct => `${withPrefix(acct.addr)}-${acct.keyId}`
-const isFn = v =>
+const idof = (acct: IAcct) => `${withPrefix(acct.addr)}-${acct.keyId}`
+const isFn = (v: any): v is Function =>
   v &&
   (Object.prototype.toString.call(v) === "[object Function]" ||
     "function" === typeof v ||
@@ -49,7 +49,7 @@ function recurseFlatMap(el, depthLimit = 3) {
   )
 }
 
-export function buildPreSignable(acct, ix) {
+export function buildPreSignable(acct: IAcct, ix: IIx) {
   try {
     return {
       f_type: "PreSignable",
@@ -67,7 +67,7 @@ export function buildPreSignable(acct, ix) {
   }
 }
 
-async function removeUnusedIxAccounts(ix) {
+async function removeUnusedIxAccounts(ix: IIx) {
   const payerTempIds = Array.isArray(ix.payer) ? ix.payer : [ix.payer]
   const authorizersTempIds = Array.isArray(ix.authorizations)
     ? ix.authorizations
@@ -295,7 +295,7 @@ async function resolveAccountType(ix, type, {debugLogger}) {
   }
 }
 
-export async function resolveAccounts(ix, opts = {}) {
+export async function resolveAccounts(ix: IIx, opts = {}) {
   if (isTransaction(ix)) {
     if (!Array.isArray(ix.payer)) {
       log.deprecate({
