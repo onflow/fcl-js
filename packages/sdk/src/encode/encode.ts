@@ -44,11 +44,11 @@ const preparePayload = (tx: ITx) => {
   validatePayload(tx)
 
   return [
-    scriptBuffer(tx.cadence),
+    scriptBuffer(tx.cadence || ''),
     tx.arguments.map(argumentToString),
-    blockBuffer(tx.refBlock),
+    blockBuffer(tx.refBlock || ''),
     tx.computeLimit,
-    addressBuffer(sansPrefix(tx.proposalKey.address)),
+    addressBuffer(sansPrefix(tx.proposalKey.address || '')),
     tx.proposalKey.keyId,
     tx.proposalKey.sequenceNum,
     addressBuffer(sansPrefix(tx.payer)),
@@ -65,8 +65,7 @@ const prepareEnvelope = (tx: ITx) => {
 const preparePayloadSignatures = (tx: ITx) => {
   const signers = collectSigners(tx)
 
-  return tx.payloadSigs
-    .map(sig => {
+  return tx.payloadSigs?.map((sig: ISig) => {
       return {
         signerIndex: signers.get(sig.address) || '',
         keyId: sig.keyId,
@@ -98,7 +97,9 @@ const collectSigners = (tx: IVoucher | ITx) => {
     }
   }
 
-  addSigner(tx.proposalKey.address)
+  if (tx.proposalKey.address){
+    addSigner(tx.proposalKey.address)
+  }
   addSigner(tx.payer)
   tx.authorizers.forEach(addSigner)
 
@@ -156,7 +157,7 @@ const validatePayload = (tx: ITx) => {
 
 const validateEnvelope = (tx: ITx) => {
   payloadSigsFields.forEach(field => checkField(tx, field))
-  tx.payloadSigs.forEach((sig, index) => {
+  tx.payloadSigs?.forEach((sig, index) => {
     payloadSigFields.forEach(field =>
       checkField(sig, field, "payloadSigs", index)
     )
@@ -204,21 +205,21 @@ interface ISig {
   sig: string,
 }
 
-interface ITxProposalKey {
-  address: string
-  keyId: number
-  sequenceNum: number
+export interface ITxProposalKey {
+  address?: string
+  keyId?: number
+  sequenceNum?: number
 }
-interface ITx {
-  cadence: string;
-  refBlock: string;
-  computeLimit: number;
+export interface ITx {
+  cadence: string | null;
+  refBlock: string | null;
+  computeLimit: string | null;
   arguments: IVoucherArgument[]
   proposalKey: ITxProposalKey
   payer: string
   authorizers: string[]
-  payloadSigs: ISig[]
-  envelopeSigs: ITxProposalKey[]
+  payloadSigs?: ISig[]
+  envelopeSigs?: ITxProposalKey[]
 }
 
 export interface IVoucher {

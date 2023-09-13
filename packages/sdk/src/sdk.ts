@@ -76,7 +76,7 @@ export {resolveProposerSequenceNumber} from "./resolve/resolve-proposer-sequence
 export {resolveArguments} from "./resolve/resolve-arguments.js"
 export {resolveAccounts} from "./resolve/resolve-accounts"
 export {response} from "./response/response"
-export {resolveSignatures} from "./resolve/resolve-signatures.js"
+export {resolveSignatures} from "./resolve/resolve-signatures"
 export {resolveValidators} from "./resolve/resolve-validators.js"
 export {resolveRefBlockId} from "./resolve/resolve-ref-block-id.js"
 export {resolveVoucherIntercept} from "./resolve/resolve-voucher-intercept.js"
