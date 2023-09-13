@@ -79,7 +79,7 @@ async function collectAccounts(ix: IIx, accounts: IAcct[], last?: IAcct, depth =
           ix.payer = ix.payer.reduce((g, tempId) => {
             const {addr} = ix.accounts[tempId]
             const key = idof(ix.accounts[tempId])
-            payerAccts.push(addr)
+            if (addr) payerAccts.push(addr)
             if (dupList.includes(key)) return g
             dupList.push(key)
             return [...g, tempId]

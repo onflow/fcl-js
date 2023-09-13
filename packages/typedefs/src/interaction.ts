@@ -27,9 +27,9 @@ export interface IAcct {
   "kind": typeof ACCOUNT,
   "tempId": string,
   "addr": string | null,
-  "keyId": number | string | null,
+  "keyId": number | null,
   "sequenceNum": number | null,
-  "signature": any | null,
+  "signature": string | null,
   "signingFunction": any | null,
   "resolve": any | null,
   "role": {
@@ -46,7 +46,7 @@ export interface IIx {
   "assigns": Record<string, any>,
   "status": string,
   "reason": string | null,
-  "accounts": Record<string, any>,
+  "accounts": Record<string, IAcct>,
   "params": Record<string, any>,
   "arguments": Record<string, any>,
   "message": {
