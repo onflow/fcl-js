@@ -18,7 +18,7 @@ export function sansPrefix(address: string | null): string | null {
  */
 export function withPrefix(address: string | null): string | null {
   if (address == null) return null
-  return `0x` + sansPrefix(address)
+  return "0x" + sansPrefix(address)
 }
 
 /**
