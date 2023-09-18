@@ -120,7 +120,6 @@ const mapDeploymentsToNetworkAddresses = ({deployments = {}, accounts = {}}) =>
 /**
  * @description Take in flow.json files and return contract to address mapping by network
  * @param {object|object[]} jsons - Flow JSON or array of Flow JSONs
- * @param {string} network - Network to gather addresses for
  * @returns {object} - Contract names by addresses mapping e.g { "HelloWorld": "0x123" }
  */
 export const getContracts = jsons => {

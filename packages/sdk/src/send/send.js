@@ -33,7 +33,7 @@ export const send = async (args = [], opts = {}) => {
 
   if (Array.isArray(args)) args = pipe(interaction(), args)
   return sendFn(
-    await resolveFn(args),
+    await resolveFn(args, opts || {}),
     {config, response, ix: ixModule, Buffer},
     opts
   )
