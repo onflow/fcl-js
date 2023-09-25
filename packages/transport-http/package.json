@@ -23,7 +23,7 @@
   "main": "dist/sdk-send-http.js",
   "module": "dist/sdk-send-http.module.js",
   "unpkg": "dist/sdk-send-http.umd.js",
-  "types": "dist/types/sdk-send-http.d.ts",
+  "types": "dist/sdk-send-http.d.ts",
   "scripts": {
     "alpha": "npm publish --tag alpha",
     "prepublishOnly": "npm test && npm run build",
