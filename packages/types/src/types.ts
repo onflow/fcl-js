@@ -18,7 +18,7 @@ export interface TypeDescriptor<T, V extends JsonCdc<string, unknown>> {
   asInjection: (x: T) => T
 }
 
-type TypeDescriptorInput<
+export type TypeDescriptorInput<
   X extends TypeDescriptor<any, JsonCdc<string, unknown>>
 > = X extends TypeDescriptor<infer T, JsonCdc<string, unknown>> ? T : never
 
