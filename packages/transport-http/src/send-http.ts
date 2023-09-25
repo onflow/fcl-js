@@ -8,7 +8,7 @@ import {sendGetEvents} from "./send-get-events.js"
 import {sendGetBlock} from "./send-get-block.js"
 import {sendGetBlockHeader} from "./send-get-block-header.js"
 import {sendGetCollection} from "./send-get-collection.js"
-import {sendPing, IContext as ISendPingContext} from "./send-ping"
+import {sendPing, ISendPingContext} from "./send-ping"
 import {sendGetNetworkParameters} from "./send-get-network-parameters.js"
 import { IIx } from "@onflow/typedefs"
 

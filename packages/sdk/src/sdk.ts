@@ -11,7 +11,7 @@ export {
 } from "./encode/encode"
 // Utils
 export {
-  initInteraction as interaction, // deprecated
+  interaction, // deprecated
   initInteraction,
   isOk,
   isBad,

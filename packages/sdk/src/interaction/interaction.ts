@@ -1,5 +1,6 @@
 import {invariant} from "@onflow/util-invariant"
 import {v4 as uuidv4} from "uuid"
+import {log, LEVELS} from "@onflow/util-logger"
 
 import { IAcct, ACCOUNT, PARAM, ARGUMENT, UNKNOWN, OK, IIx, AUTHORIZER, PAYER, SCRIPT, TRANSACTION, GET_TRANSACTION_STATUS, GET_TRANSACTION, GET_ACCOUNT, GET_EVENTS, PING, GET_BLOCK, GET_BLOCK_HEADER, GET_COLLECTION, GET_NETWORK_PARAMETERS, BAD, PROPOSER } from "@onflow/typedefs"; 
 
@@ -88,7 +89,21 @@ const IX = `{
 
 const KEYS = new Set(Object.keys(JSON.parse(IX) as IIx))
 
+
 export const initInteraction = (): IIx => JSON.parse(IX)
+/**
+ * @deprecated
+ */
+export const interaction = () => {
+  log.deprecate({
+    pkg: "FCL/SDK",
+    message: `The interaction been deprecated from the Flow JS-SDK/FCL. use initInteraction instead`,
+    transition:
+      "https://github.com/onflow/flow-js-sdk/blob/master/packages/sdk/TRANSITIONS.md#0010-deprecate-interaction",
+    level: LEVELS.warn,
+  })
+  return initInteraction()
+}
 
 export const isNumber = d => typeof d === "number"
 export const isArray = d => Array.isArray(d)
@@ -130,7 +145,7 @@ const prepAccountKeyId = (acct: Partial<IAcct> | IAcctFn): Partial<IAcct> | IAcc
 }
 
 interface IPrepAccountOpts {
-  role?: string | null
+  role?: typeof AUTHORIZER | typeof PAYER | typeof PROPOSER | null
 }
 
 export const initAccount = (): IAcct => JSON.parse(ACCT)
@@ -145,6 +160,7 @@ export const prepAccount = (acct: IAcct | IAcctFn, opts: IPrepAccountOpts = {}) 
   const ACCOUNT = initAccount()
   const role = opts.role
   const tempId = uuidv4()
+  let account: Partial<IAcct> = acct
 
   if (acct.authorization && isFn(acct.authorization))
     account = {resolve: acct.authorization}
@@ -167,7 +183,7 @@ export const prepAccount = (acct: IAcct | IAcctFn, opts: IPrepAccountOpts = {}) 
     role: {
       ...ACCOUNT.role,
       ...(typeof acct.role === "object" ? acct.role : {}),
-      [role]: true,
+      ...(role ? {[role]: true} : {}),
     },
   }
 
@@ -175,7 +191,7 @@ export const prepAccount = (acct: IAcct | IAcctFn, opts: IPrepAccountOpts = {}) 
     ix.authorizations.push(tempId)
   } else if (role === PAYER) {
     ix.payer.push(tempId)
-  } else {
+  } else if (role) {
     ix[role] = tempId
   }
 
@@ -265,7 +281,7 @@ export const pipe = (...args: any[]) => {
   return recPipe(arg1, arg2)
 }
 
-const identity = (v: any, ..._: any[]) => v
+const identity = <T>(v: T, ..._: any[]) => v
 
 export const get = (ix: IIx, key: string, fallback: any) => {
   return ix.assigns[key] == null ? fallback : ix.assigns[key]
