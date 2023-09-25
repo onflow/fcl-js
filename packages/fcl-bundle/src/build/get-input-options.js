@@ -73,6 +73,16 @@ module.exports = function getInputOptions(package, build) {
       isTypeScript &&
         typescript({
           clean: true,
+          include: [
+            "*.ts+(|x)",
+            "**/*.ts+(|x)",
+            "**/*.cts",
+            "**/*.mts",
+            "*.js+(|x)",
+            "**/*.js+(|x)",
+            "**/*.cjs",
+            "**/*.mjs",
+          ],
         }),
       replace({
         preventAssignment: true,
