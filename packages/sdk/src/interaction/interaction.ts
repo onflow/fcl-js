@@ -160,7 +160,7 @@ export const prepAccount = (acct: IAcct | IAcctFn, opts: IPrepAccountOpts = {}) 
   const ACCOUNT = initAccount()
   const role = opts.role
   const tempId = uuidv4()
-  let account: Partial<IAcct> = acct
+  let account: Partial<IAcct> = {...acct}
 
   if (acct.authorization && isFn(acct.authorization))
     account = {resolve: acct.authorization}
