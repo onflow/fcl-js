@@ -196,7 +196,7 @@ async function load(data) {
     getContracts(flowJSON, cleanedNetwork)
   )) {
     for (const [key, value] of Object.entries(networkContracts)) {
-      // @deprecated - Remove next major version
+      // @deprecated - Remove whole if block next major version
       if (network === cleanedNetwork) {
         const contractConfigKey = `0x${key}`
         const existingContractConfigKey = await get(contractConfigKey)
@@ -209,24 +209,28 @@ async function load(data) {
         } else {
           put(contractConfigKey, value)
         }
+
+        const systemContractConfigKey = `system.contracts.${key}`
+        const systemExistingContractConfigKeyValue = await get(
+          systemContractConfigKey
+        )
+        if (
+          systemExistingContractConfigKeyValue &&
+          systemExistingContractConfigKeyValue !== value
+        ) {
+          logger.log({
+            title: "Contract Placeholder Conflict Detected",
+            message: `A generated contract placeholder from config.load conflicts with a placeholder you've set manually in config have the same name.`,
+            level: logger.LEVELS.warn,
+          })
+        } else {
+          put(systemContractConfigKey, value)
+        }
       }
 
-      const systemContractConfigKey = `system.contracts.${key}`
-      const systemExistingContractConfigKeyValue = await get(
-        systemContractConfigKey
-      )
-      if (
-        systemExistingContractConfigKeyValue &&
-        systemExistingContractConfigKeyValue !== value
-      ) {
-        logger.log({
-          title: "Contract Placeholder Conflict Detected",
-          message: `A generated contract placeholder from config.load conflicts with a placeholder you've set manually in config have the same name.`,
-          level: logger.LEVELS.warn,
-        })
-      } else {
-        put(systemContractConfigKey, value)
-      }
+      // New config format
+      const systemNetworkContractConfigKey = `system.contracts.${network}.${key}`
+      put(systemNetworkContractConfigKey, value)
     }
   }
 }
