@@ -10,6 +10,7 @@ import {
   UNSUBSCRIBE,
 } from "@onflow/util-actor"
 import {send as fclSend, decode, getTransactionStatus} from "@onflow/sdk"
+import {getChainId} from "../utils"
 
 /**
  * @typedef {import("@onflow/typedefs").Transaction} Transaction
@@ -84,7 +85,7 @@ const spawnTransaction = transactionId => {
 
 /**
  * Provides methods for interacting with a transaction
- * 
+ *
  * @param {string} transactionId - The transaction ID
  * @returns {{
  *    snapshot: function(): Promise<TransactionStatus>,

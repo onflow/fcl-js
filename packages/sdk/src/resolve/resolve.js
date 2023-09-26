@@ -48,24 +48,25 @@ const debug =
     return ix
   }
 
-export const resolve = pipe([
-  resolveCadence,
-  debug("cadence", (ix, log) => log(ix.message.cadence)),
-  resolveComputeLimit,
-  debug("compute limit", (ix, log) => log(ix.message.computeLimit)),
-  resolveArguments,
-  debug("arguments", (ix, log) => log(ix.message.arguments, ix.message)),
-  resolveAccounts,
-  debug("accounts", (ix, log, accts) => log(...accts(ix))),
-  /* special */ execFetchRef,
-  /* special */ execFetchSequenceNumber,
-  resolveSignatures,
-  debug("signatures", (ix, log, accts) => log(...accts(ix))),
-  resolveFinalNormalization,
-  resolveValidators,
-  resolveVoucherIntercept,
-  debug("resolved", (ix, log) => log(ix)),
-])
+export const resolve = (ix, opts) =>
+  pipe([
+    ix => resolveCadence(ix, opts),
+    debug("cadence", (ix, log) => log(ix.message.cadence)),
+    resolveComputeLimit,
+    debug("compute limit", (ix, log) => log(ix.message.computeLimit)),
+    resolveArguments,
+    debug("arguments", (ix, log) => log(ix.message.arguments, ix.message)),
+    resolveAccounts,
+    debug("accounts", (ix, log, accts) => log(...accts(ix))),
+    /* special */ execFetchRef,
+    /* special */ execFetchSequenceNumber,
+    resolveSignatures,
+    debug("signatures", (ix, log, accts) => log(...accts(ix))),
+    resolveFinalNormalization,
+    resolveValidators,
+    resolveVoucherIntercept,
+    debug("resolved", (ix, log) => log(ix)),
+  ])(ix)
 
 async function execFetchRef(ix) {
   if (isTransaction(ix) && ix.message.refBlock == null) {

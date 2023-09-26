@@ -1,5 +1,62 @@
 # Transitions
 
+## 0010 Resolving Cadence imports without specifying network
+
+- **Date:** Sept 25th 2023
+- **Type:** Deprecation of Cadence import resolution without specifying network
+
+Previously, the SDK was able to relolve Cadence imports without specifying a network.  This meant that the SDK would resolve imports using the network that was configured at the time that the configuration was set.
+
+This is no longer the case.  Now, when resolving Cadence imports, you must specify the network that you wish to resolve the imports for when sending the interaction.
+
+This can be done one of the following ways:
+
+```javascript
+import * as sdk from "@onflow/sdk"
+import * as config from "@onflow/config"
+import flowJSON from "./flow.json"
+
+config.load({ flowJSON })
+
+sdk.send([
+  sdk.script`
+    import Foo from 0x01
+    pub fun main(): Int {
+      return Foo.bar()
+    }
+  `,
+], {
+  network: "testnet"
+})
+```
+
+Or you can specify the network in the configuration:
+
+```javascript
+import * as sdk from "@onflow/sdk"
+import * as config from "@onflow/config"
+import flowJSON from "./flow.json"
+
+config()
+  .put(...)
+  .put("flow.network", "testnet")
+
+config.load({ flowJSON })
+
+sdk.send([
+  sdk.script`
+    import Foo from 0x01
+    pub fun main(): Int {
+      return Foo.bar()
+    }
+  `,
+])
+```
+
+In each of these examples, the specified network (testnet) would be used to resolve the imports in the script.  These imports would be resolved from the testnet alias in the flow.json file.  Passing a network to the `send` method will take precedence over the network specified in the configuration.
+
+**Note**: This does not apply to FCL-JS, as FCL automatically sets the network for you, only to those using the SDK directly.
+
 ## 0009 Deprecate default compute limit
 
 - **Date:** Jun 7th 2022

@@ -21,7 +21,7 @@ function getContractIdentifierSyntaxMatches(cadence) {
   return cadence.matchAll(newIdentifierPatternFn())
 }
 
-export async function resolveCadence(ix) {
+export const resolveCadence = async (ix, opts) => {
   if (!isTransaction(ix) && !isScript(ix)) return ix
 
   var cadence = get(ix, "ix.cadence")
@@ -48,10 +48,30 @@ export async function resolveCadence(ix) {
   }
 
   if (isNewIdentifierSyntax(cadence)) {
+    const network = opts.network || (await config.get("flow.network"))
+
+    if (!network) {
+      logger.deprecate({
+        pkg: "FCL/SDK",
+        subject: "Resolving Cadence imports without specifying network",
+        transition:
+          "https://github.com/onflow/flow-js-sdk/blob/master/packages/sdk/TRANSITIONS.md#0010-resolving-cadence-imports-without-specifying-network",
+      })
+    }
+
     for (const [fullMatch, contractName] of getContractIdentifierSyntaxMatches(
       cadence
     )) {
-      const address = await config().get(`system.contracts.${contractName}`)
+      let address
+      if (network) {
+        address = await config().get(
+          `system.contracts.${network}.${contractName}`
+        )
+      } else {
+        // @deprecated
+        address = await config().get(`system.contracts.${contractName}`)
+      }
+
       if (address) {
         cadence = cadence.replace(
           fullMatch,

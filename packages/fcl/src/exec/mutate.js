@@ -4,6 +4,7 @@ import {getCurrentUser} from "../current-user"
 import {prepTemplateOpts} from "./utils/prep-template-opts.js"
 import {preMutate} from "./utils/pre.js"
 import {isNumber} from "./utils/is"
+import {getChainId} from "../utils"
 
 export const getMutate = ({platform}) => {
   /**
@@ -66,21 +67,24 @@ export const getMutate = ({platform}) => {
       txid = sdk.config().overload(opts.dependencies || {}, async () =>
         // prettier-ignore
         sdk.send([
-        sdk.transaction(opts.cadence),
+          sdk.transaction(opts.cadence),
 
-        sdk.args(normalizeArgs(opts.args || [])),
+          sdk.args(normalizeArgs(opts.args || [])),
 
-        opts.limit && isNumber(opts.limit) && sdk.limit(opts.limit),
+          opts.limit && isNumber(opts.limit) && sdk.limit(opts.limit),
 
-        // opts.proposer > opts.authz > authz
-        sdk.proposer(opts.proposer || opts.authz || authz),
+          // opts.proposer > opts.authz > authz
+          sdk.proposer(opts.proposer || opts.authz || authz),
 
-        // opts.payer > opts.authz > authz
-        sdk.payer(opts.payer || opts.authz || authz),
+          // opts.payer > opts.authz > authz
+          sdk.payer(opts.payer || opts.authz || authz),
 
-        // opts.authorizations > [opts.authz > authz]
-        sdk.authorizations(opts.authorizations || [opts.authz || authz]),
-      ]).then(sdk.decode)
+          // opts.authorizations > [opts.authz > authz]
+          sdk.authorizations(opts.authorizations || [opts.authz || authz]),
+        ], {
+          network: opts.network || await getChainId(),
+          ...opts,
+        }).then(sdk.decode)
       )
 
       return txid

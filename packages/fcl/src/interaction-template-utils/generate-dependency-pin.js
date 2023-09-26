@@ -10,6 +10,7 @@ import {
 import {genHash} from "./utils/hash.js"
 import {findImports} from "./utils/find-imports.js"
 import {generateImport} from "./utils/generate-import.js"
+import {getChainId} from "../utils"
 
 /**
  * @description Produces a dependency pin for a contract at a given block height
@@ -59,7 +60,10 @@ export async function generateDependencyPin(
         ),
         atBlockHeight(blockHeight),
       ],
-      opts
+      {
+        network: opts.network || (await getChainId()),
+        ...opts,
+      }
     ).then(decode)
 
     horizonImport.contract = account.contracts?.[horizonImport.contractName]

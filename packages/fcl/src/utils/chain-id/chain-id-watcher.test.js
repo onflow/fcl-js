@@ -10,7 +10,7 @@ describe("chain-id-watcher", () => {
     unsubscribe && unsubscribe()
   })
 
-  test("flow.network.default is correctly set on first call", async () => {
+  test("chain id is correctly resovled on first call", async () => {
     await config.overload(
       {"accessNode.api": "https://example.com"},
       async () => {
@@ -30,7 +30,7 @@ describe("chain-id-watcher", () => {
     )
   })
 
-  test("flow.network.default is correctly set when changed later", async () => {
+  test("chain id is correctly resolved when changed later", async () => {
     await config.overload({}, async () => {
       // Mock the setChainIdDefault function
       const spy = jest.spyOn(chainIdUtils, "getChainId")
