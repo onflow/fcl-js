@@ -222,5 +222,30 @@ pub fun main(): Address {
 
       expect(ix.message.cadence).toEqual(expected)
     })
+
+    test("should accept network-specific addresses", async () => {
+      const CADENCE = `import "Foo"
+
+      pub fun main(): Address {
+        return "Foo"
+      }`
+
+      const expected = `import Foo from 0x1
+
+      pub fun main(): Address {
+        return "Foo"
+      }`
+
+      await config().put("system.contracts.testnet.Foo", "0x1")
+      await idle()
+
+      const ix = await pipe([
+        makeScript,
+        put("ix.cadence", CADENCE),
+        ix => resolveCadence(ix, {network: "testnet"}),
+      ])(interaction())
+
+      expect(ix.message.cadence).toEqual(expected)
+    })
   })
 })
