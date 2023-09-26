@@ -21,7 +21,7 @@ function getContractIdentifierSyntaxMatches(cadence) {
   return cadence.matchAll(newIdentifierPatternFn())
 }
 
-export const resolveCadence = async (ix, opts) => {
+export const resolveCadence = async (ix, opts = {}) => {
   if (!isTransaction(ix) && !isScript(ix)) return ix
 
   var cadence = get(ix, "ix.cadence")
@@ -51,7 +51,7 @@ export const resolveCadence = async (ix, opts) => {
     const network = opts.network || (await config.get("flow.network"))
 
     if (!network) {
-      logger.deprecate({
+      logger.log.deprecate({
         pkg: "FCL/SDK",
         subject: "Resolving Cadence imports without specifying network",
         transition:
