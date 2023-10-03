@@ -17,6 +17,6 @@ export function normalizeUserSignature(service) {
       return service
 
     default:
-      throw new Error("Invalid user-signature service")
+      return null
   }
 }

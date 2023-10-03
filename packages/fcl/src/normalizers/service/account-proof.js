@@ -20,6 +20,6 @@ export function normalizeAccountProof(service) {
       return service
 
     default:
-      throw new Error(`FCL Normalizer Error: Invalid account-proof service`)
+      return null
   }
 }

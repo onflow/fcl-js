@@ -17,6 +17,6 @@ export function normalizeAuthnRefresh(service) {
       return service
 
     default:
-      throw new Error("Invalid authn-refresh service")
+      return null
   }
 }
