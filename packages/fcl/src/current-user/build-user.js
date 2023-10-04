@@ -4,6 +4,7 @@ import {fetchServices} from "./fetch-services"
 import {mergeServices} from "./merge-services"
 import {USER_PRAGMA} from "../normalizers/service/__vsn"
 import {normalizeService} from "../normalizers/service/service"
+import {serviceOfType} from "./service-of-type"
 
 function deriveCompositeId(authn) {
   return rlp
@@ -20,10 +21,6 @@ function normalizeData(data) {
   return data
 }
 
-function findService(type, services) {
-  return services.find(d => d.type === type)
-}
-
 export async function buildUser(data) {
   data = normalizeData(data)
 
@@ -34,7 +31,7 @@ export async function buildUser(data) {
     .map(service => normalizeService(service, data))
     .filter(Boolean)
 
-  const authn = findService("authn", services)
+  const authn = serviceOfType(services, "authn")
 
   return {
     ...USER_PRAGMA,
