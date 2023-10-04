@@ -15,6 +15,10 @@
 export function normalizeAccountProof(service) {
   if (service == null) return null
 
+  if (!service["f_vsn"]) {
+    throw new Error(`FCL Normalizer Error: Invalid account-proof service`)
+  }
+
   switch (service["f_vsn"]) {
     case "1.0.0":
       return service

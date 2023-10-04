@@ -12,6 +12,10 @@
 export function normalizeUserSignature(service) {
   if (service == null) return null
 
+  if (!service["f_vsn"]) {
+    throw new Error("Invalid user-signature service")
+  }
+
   switch (service["f_vsn"]) {
     case "1.0.0":
       return service

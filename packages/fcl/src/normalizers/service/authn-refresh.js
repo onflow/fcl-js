@@ -12,6 +12,10 @@
 export function normalizeAuthnRefresh(service) {
   if (service == null) return null
 
+  if (!service["f_vsn"]) {
+    throw new Error("Invalid authn-refresh service")
+  }
+
   switch (service["f_vsn"]) {
     case "1.0.0":
       return service
