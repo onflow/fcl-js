@@ -25,6 +25,9 @@ export async function getServices({types}) {
       type: types,
       fclVersion: VERSION,
       include,
+      features: {
+        suggested: await config.get("discovery.features.suggested", [])
+      },
       clientServices: await makeDiscoveryServices(),
       supportedStrategies: getServiceRegistry().getStrategies(),
       userAgent: window?.navigator?.userAgent,
