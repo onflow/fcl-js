@@ -1,5 +1,17 @@
 # @onflow/protobuf
 
+## 1.2.1
+
+### Patch Changes
+
+- [#1680](https://github.com/onflow/fcl-js/pull/1680) [`6193bd42`](https://github.com/onflow/fcl-js/commit/6193bd420371494a975f19fd001af6af012bd72f) Thanks [@nialexsan](https://github.com/nialexsan)! - Updated dependencies
+
+## 1.2.1-alpha.0
+
+### Patch Changes
+
+- [#1680](https://github.com/onflow/fcl-js/pull/1680) [`6193bd42`](https://github.com/onflow/fcl-js/commit/6193bd420371494a975f19fd001af6af012bd72f) Thanks [@nialexsan](https://github.com/nialexsan)! - Updated dependencies
+
 ## 1.2.0
 
 ### Minor Changes

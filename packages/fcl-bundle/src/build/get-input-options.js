@@ -2,10 +2,9 @@ const _ = require("lodash")
 
 const commonjs = require("@rollup/plugin-commonjs")
 const replace = require("@rollup/plugin-replace")
-const sourcemap = require("rollup-plugin-sourcemaps")
 const {nodeResolve} = require("@rollup/plugin-node-resolve")
 const {babel} = require("@rollup/plugin-babel")
-const {terser} = require("rollup-plugin-terser")
+const terser = require('@rollup/plugin-terser')
 
 const builtinModules = require("builtin-modules")
 
@@ -43,6 +42,9 @@ module.exports = function getInputOptions(package, build) {
         )
       }, false))
 
+  // exclude peer dependencies
+  const resolveOnly = [new RegExp(`^(?!${Object.keys(package.peerDependencies || {}).join("|")}).*`)]
+
   let options = {
     input: build.source,
     external: testExternal,
@@ -59,6 +61,7 @@ module.exports = function getInputOptions(package, build) {
       nodeResolve({
         browser: true,
         preferBuiltins: build.type !== "umd",
+        resolveOnly,
       }),
       babel({
         babelHelpers: "runtime",
@@ -78,7 +81,6 @@ module.exports = function getInputOptions(package, build) {
           ecma: 5,
           toplevel: build.type == "cjs" || build.type == "esm",
         }),
-      sourcemap(),
     ],
   }
 

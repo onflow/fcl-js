@@ -1,7 +1,6 @@
 import "../default-config"
 import {
   spawn,
-  send,
   subscriber,
   snapshoter,
   UPDATED,
@@ -9,7 +8,6 @@ import {
   INIT,
   SUBSCRIBE,
   UNSUBSCRIBE,
-  ERROR,
 } from "@onflow/util-actor"
 import {send as fclSend, decode, getTransactionStatus} from "@onflow/sdk"
 

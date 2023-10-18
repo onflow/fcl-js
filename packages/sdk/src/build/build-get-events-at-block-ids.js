@@ -6,7 +6,7 @@ import {pipe, Ok, makeGetEvents} from "../interaction/interaction.js"
  * - The block range provided must be from the current spork.
  * @param {string} eventName - The name of the event to get
  * @param {number[]} blockIds - The ids of the blocks to look for events
- * @returns {object} - An interaction object
+ * @returns {Function} - An interaction object
  */
 export function getEventsAtBlockIds(eventName, blockIds = []) {
   return pipe([

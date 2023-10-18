@@ -1,4 +1,3 @@
-
 /**
  * @typedef {object} Account
  * @property {string} address - The address of the account
@@ -72,7 +71,7 @@
  * @property {string} method - Service method
  * @property {string} [uid] - Service uid
  * @property {string} endpoint - Service endpoint
- * @property {object} provider - Service provider object
+ * @property {Provider} provider - Service provider object
  */
 
 /**
@@ -103,10 +102,16 @@
  * @typedef {object} TransactionStatus
  * @property {string} blockId - The ID of the Block the transaction is included in.
  * @property {number} status - The status code of the transaction.
- * @property {number} statusString - The status as as descriptive text (e.g. "FINALIZED").
+ * @property {string} statusString - The status as as descriptive text (e.g. "FINALIZED").
  * @property {string} errorMessage - The error message of the transaction.
  * @property {Array<Event>} events - The events for this result.
  */
 
+/**
+ * @typedef {object} Provider
+ * @property {string} name - Provider name.
+ * @todo fill the rest
+ */
+
 // Needed for bundler to export this file
-exports.unused = {};
+exports.unused = {}

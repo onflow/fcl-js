@@ -7,7 +7,7 @@ const DEFUALT_REF = null
 /**
  * @description - A template builder to use a Cadence transaction for an interaction
  * @param {...*} args - The arguments to pass
- * @returns {object} - An interaction object
+ * @returns {Function} - An interaction object
  */
 export function transaction(...args) {
   return pipe([

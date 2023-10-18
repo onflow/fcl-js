@@ -11,7 +11,7 @@ import {serviceOfType} from "./service-of-type"
 import {execService} from "./exec-service"
 import {normalizeCompositeSignature} from "../normalizers/service/composite-signature"
 import {getDiscoveryService, makeDiscoveryServices} from "../discovery"
-import {serviceRegistry} from "./exec-service/plugins"
+import {getServiceRegistry} from "./exec-service/plugins"
 import {isMobile} from "../utils"
 
 /**
@@ -133,12 +133,13 @@ async function getAccountProofData() {
   return accountProofData
 }
 
-const makeConfig = async ({discoveryAuthnInclude}) => {
+const makeConfig = async ({discoveryAuthnInclude, discoveryFeaturesSuggested}) => {
   return {
     client: {
       discoveryAuthnInclude,
+      discoveryFeaturesSuggested,
       clientServices: await makeDiscoveryServices(),
-      supportedStrategies: serviceRegistry.getStrategies(),
+      supportedStrategies: getServiceRegistry().getStrategies(),
     },
   }
 }
@@ -146,11 +147,12 @@ const makeConfig = async ({discoveryAuthnInclude}) => {
 /**
  * @description - Authenticate a user
  * @param {object} [opts] - Options
+ * @param {object} [opts.platform] - platform that runs the function
  * @param {object} [opts.service] - Optional service to use for authentication
  * @param {boolean} [opts.redir=false] - Optional flag to allow window to stay open after authentication
  * @returns {Promise<CurrentUser>} - User object
  */
-async function authenticate({service, redir = false} = {}) {
+const getAuthenticate = ({platform}) => async ({service, redir = false} = {}) => {
   if (
     service &&
     !service?.provider?.is_installed &&
@@ -175,6 +177,7 @@ async function authenticate({service, redir = false} = {}) {
             service: refreshService,
             msg: accountProofData,
             opts,
+            platform,
           })
           send(NAME, SET_CURRENT_USER, await buildUser(response))
         } catch (error) {
@@ -208,6 +211,7 @@ async function authenticate({service, redir = false} = {}) {
         msg: accountProofData,
         config: await makeConfig(discoveryService),
         opts,
+        platform,
       })
       send(NAME, SET_CURRENT_USER, await buildUser(response))
     } catch (error) {
@@ -239,7 +243,7 @@ const normalizePreAuthzResponse = authz => ({
   authorization: (authz || {}).authorization || [],
 })
 
-function resolvePreAuthz(authz) {
+const getResolvePreAuthz = ({platform}) => (authz) => {
   const resp = normalizePreAuthzResponse(authz)
   const axs = []
 
@@ -252,7 +256,7 @@ function resolvePreAuthz(authz) {
     addr: az.identity.address,
     keyId: az.identity.keyId,
     signingFunction(signable) {
-      return execService({service: az, msg: signable})
+      return execService({service: az, msg: signable, platform})
     },
     role: {
       proposer: role === "PROPOSER",
@@ -268,25 +272,28 @@ function resolvePreAuthz(authz) {
  * Produces the needed authorization details for the current user to submit transactions to Flow
  * It defines a signing function that connects to a user's wallet provider to produce signatures to submit transactions.
  * 
+ * @param {object} ops - running options
+ * @param {string} ops.platform - platform that runs the function
  * @param {object} account - Account object
  * @returns {Promise<object>} - Account object with signing function
  */
-async function authorization(account) {
+const getAuthorization = ({platform}) => async (account) => {
   spawnCurrentUser()
 
   return {
     ...account,
     tempId: "CURRENT_USER",
     async resolve(account, preSignable) {
-      const user = await authenticate({redir: true})
+      const user = await getAuthenticate({platform})({redir: true})
       const authz = serviceOfType(user.services, "authz")
       const preAuthz = serviceOfType(user.services, "pre-authz")
 
       if (preAuthz)
-        return resolvePreAuthz(
+        return getResolvePreAuthz({platform})(
           await execService({
             service: preAuthz,
             msg: preSignable,
+            platform,
           })
         )
       if (authz) {
@@ -311,6 +318,7 @@ async function authorization(account) {
                   includeOlderJsonRpcCall: true,
                   windowRef,
                 },
+                platform,
               })
             )
           },
@@ -365,10 +373,13 @@ async function info() {
 
 /**
  * @description - Resolves the current user as an argument
+ * 
+ * @param {object} ops - running options
+ * @param {string} ops.platform - platform that runs the function
  * @returns {Promise<Function>}
  */
-async function resolveArgument() {
-  const {addr} = await authenticate()
+const getResolveArgument = ({platform}) => async () => {
+  const {addr} = await getAuthenticate({platform})()
   return arg(withPrefix(addr), t.Address)
 }
 
@@ -385,9 +396,9 @@ const makeSignable = msg => {
  * @param {string} msg - Message to sign
  * @returns {Promise<CompositeSignature[]>} - Array of CompositeSignatures
  */
-async function signUserMessage(msg) {
+const getSignUserMessage = ({platform}) => async (msg) => {
   spawnCurrentUser()
-  const user = await authenticate({redir: true})
+  const user = await getAuthenticate({platform})({redir: true})
 
   const signingService = serviceOfType(user.services, "user-signature")
 
@@ -400,6 +411,7 @@ async function signUserMessage(msg) {
     const response = await execService({
       service: signingService,
       msg: makeSignable(msg),
+      platform,
     })
     if (Array.isArray(response)) {
       return response.map(compSigs => normalizeCompositeSignature(compSigs))
@@ -411,24 +423,29 @@ async function signUserMessage(msg) {
   }
 }
 
-let currentUser = () => {
-  return {
-    authenticate,
-    unauthenticate,
-    authorization,
-    signUserMessage,
-    subscribe,
-    snapshot,
-    resolveArgument,
+
+const getCurrentUser = ({platform}) => {
+  let currentUser = () => {
+    return {
+      authenticate: getAuthenticate({platform}),
+      unauthenticate,
+      authorization: getAuthorization({platform}),
+      signUserMessage: getSignUserMessage({platform}),
+      subscribe,
+      snapshot,
+      resolveArgument: getResolveArgument({platform}),
+    }
   }
+
+  currentUser.authenticate = getAuthenticate({platform})
+  currentUser.unauthenticate = unauthenticate
+  currentUser.authorization = getAuthorization({platform})
+  currentUser.signUserMessage = getSignUserMessage({platform})
+  currentUser.subscribe = subscribe
+  currentUser.snapshot = snapshot
+  currentUser.resolveArgument = getResolveArgument({platform})
+
+  return currentUser
 }
 
-currentUser.authenticate = authenticate
-currentUser.unauthenticate = unauthenticate
-currentUser.authorization = authorization
-currentUser.signUserMessage = signUserMessage
-currentUser.subscribe = subscribe
-currentUser.snapshot = snapshot
-currentUser.resolveArgument = resolveArgument
-
-export {currentUser}
+export {getCurrentUser}

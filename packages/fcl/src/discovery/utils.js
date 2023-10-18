@@ -1,14 +1,15 @@
 import {config} from "@onflow/config"
 import {invariant} from "@onflow/util-invariant"
-import {serviceRegistry} from "../current-user/exec-service/plugins"
+import {getServiceRegistry} from "../current-user/exec-service/plugins"
 
 export const makeDiscoveryServices = async () => {
   const extensionServices = window?.fcl_extensions || []
-  return [...extensionServices, ...serviceRegistry.getServices()]
+  return [...extensionServices, ...getServiceRegistry().getServices()]
 }
 
 export async function getDiscoveryService(service) {
   const discoveryAuthnInclude = await config.get("discovery.authn.include", [])
+  const discoveryFeaturesSuggested = await config.get("discovery.features.suggested", [])
   const discoveryWalletMethod = await config.first([
     "discovery.wallet.method",
     "discovery.wallet.method.default",
@@ -32,5 +33,6 @@ export async function getDiscoveryService(service) {
     endpoint,
     method,
     discoveryAuthnInclude,
+    discoveryFeaturesSuggested,
   }
 }

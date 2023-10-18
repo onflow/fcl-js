@@ -37,6 +37,29 @@ While FCL itself is a concept and standard, FCL JS is the javascript implementat
 npm i
 npm run build
 ```
+
+### Release
+Packages stable versions releases are controlled by [changesets](https://github.com/changesets/changesets) from the `master` branch
+
+#### Prerelease(alpha)
+In order to create an `alpha` (pre-)release 
+- create a branch with `release-<VERSION>` as a branch name
+- run:
+```
+npm run changeset pre enter alpha
+npm run changeset version
+npm run changeset publish
+```
+
+*NOTE: you need to have an npm account and be a member of [OnFlow organization](https://www.npmjs.com/org/onflow)*
+
+`changeset` commands should preferably be run from the `release` branch and not from feature branches in order to avoid merge conflicts with other feature branches
+when the release is ready to be published as stable run from the release branch
+```
+npm run changeset pre exit
+```
+and merge `release-<VERSION>` branch to `master`
+
 ### Installation
 
 To use the FCL JS in your application, install using **yarn** or **npm**
@@ -149,6 +172,8 @@ const newUser: CurrentUser = {
   services: []
 }
 ```
+
+For all type definitions available, see [this file](./packages/typedefs/src/index.js)
 
 ## Next Steps
 

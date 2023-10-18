@@ -2,10 +2,10 @@ import {fetchService} from "./utils/fetch-service"
 import {normalizePollingResponse} from "../../../normalizers/service/polling-response"
 import {normalizeLocalView} from "../../../normalizers/service/local-view"
 import {poll} from "./utils/poll"
-import {execLocal} from "../exec-local"
 import {VERSION} from "../../../VERSION"
+import {serviceEndpoint} from "../strategies/utils/service-endpoint"
 
-export async function execHttpPost({service, body, config, opts}) {
+export const getExecHttpPost = (execLocal) => async({service, body, config, opts}) => {
   const resp = await fetchService(service, {
     data: {
       fclVersion: VERSION,
@@ -26,19 +26,44 @@ export async function execHttpPost({service, body, config, opts}) {
   } else if (resp.status === "REDIRECT") {
     return resp
   } else if (resp.status === "PENDING") {
+
+    // these two flags are required to run polling one more time before it stops
     var canContinue = true
-    const [_, unmount] = await execLocal(normalizeLocalView(resp.local))
+    var shouldContinue = true
+
+    const [_, unmount] = await execLocal(
+      normalizeLocalView(resp.local),
+      {
+        serviceEndpoint,
+        onClose: () => (shouldContinue = false)
+      }
+    )
 
     const close = () => {
       try {
         unmount()
-        canContinue = false
+        shouldContinue = false
       } catch (error) {
         console.error("Frame Close Error", error)
       }
     }
+    /**
+     * this function is run once per poll call.
+     * Offsetting canContinue flag to make sure that
+     * the polling is performed one extra time after canContinue flag is set to false
+     * to prevent halting on Android when a browser calls window.close
+     * before FCL receives a successful result from polling
+     *
+     * @returns {boolean} 
+     */ 
+    const checkCanContinue = () => {
+      const offsetCanContinue = canContinue
+      canContinue = shouldContinue
 
-    return poll(resp.updates, () => canContinue)
+      return offsetCanContinue
+    }
+
+    return poll(resp.updates, checkCanContinue)
       .then(serviceResponse => {
         close()
         return serviceResponse

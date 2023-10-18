@@ -9,6 +9,9 @@ import * as logger from "@onflow/util-logger"
 import {invariant} from "@onflow/util-invariant"
 import {getContracts, cleanNetwork, anyHasPrivateKeys} from "../utils/utils"
 
+// Inject config into logger to break circular dependency
+logger.setConfig(config)
+
 const NAME = "config"
 const PUT = "PUT_CONFIG"
 const GET = "GET_CONFIG"
@@ -189,7 +192,10 @@ async function load(data) {
       level: isEmulator ? logger.LEVELS.warn : logger.LEVELS.error,
     })
 
-    if (!isEmulator) return
+    invariant(
+      isEmulator,
+      `Private keys should be stored in a separate flow.json file for security. See more here: https://developers.flow.com/tools/flow-cli/security`
+    )
   }
 
   for (const [key, value] of Object.entries(
