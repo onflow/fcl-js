@@ -236,7 +236,6 @@ test("mulitple payer scenario (One from dev and one from pre-authz)", async () =
     authorizers: ["0x72f6325947f76d3a"],
     payloadSigs: [
       {address: "0x72f6325947f76d3a", keyId: 1, sig: "1"},
-      {address: "0x72f6325947f76d3a", keyId: 1, sig: "1"},
     ],
     envelopeSigs: [{address: "0x01", keyId: 1, sig: "123"}],
   })
@@ -315,7 +314,6 @@ test("mulitple payer scenario (One from dev and one from pre-authz) as array", a
     authorizers: ["0x72f6325947f76d3a"],
     payloadSigs: [
       {address: "0x72f6325947f76d3a", keyId: 1, sig: "1"},
-      {address: "0x72f6325947f76d3a", keyId: 1, sig: "1"},
     ],
     envelopeSigs: [
       {address: "0x01", keyId: 1, sig: "123"},
@@ -383,7 +381,6 @@ test("payer from pre-authz", async () => {
     payer: "0xf086a545ce3c552d",
     authorizers: ["0x72f6325947f76d3a"],
     payloadSigs: [
-      {address: "0x72f6325947f76d3a", keyId: 1, sig: "1"},
       {address: "0x72f6325947f76d3a", keyId: 1, sig: "1"},
     ],
     envelopeSigs: [{address: "0xf086a545ce3c552d", keyId: 12, sig: "2"}],
