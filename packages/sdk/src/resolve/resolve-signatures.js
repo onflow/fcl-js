@@ -15,7 +15,10 @@ export async function resolveSignatures(ix) {
     try {
       let insideSigners = findInsideSigners(ix)
       const insidePayload = encodeInsideMessage(prepForEncoding(ix))
-      await Promise.all(insideSigners.map(fetchSignature(ix, insidePayload)))
+      for(const insideSigner of insideSigners) {
+        await fetchSignature(ix, insidePayload)(insideSigner);
+      }
+      // await Promise.all(insideSigners.map(fetchSignature(ix, insidePayload)))
 
       let outsideSigners = findOutsideSigners(ix)
       const outsidePayload = encodeOutsideMessage({
@@ -38,7 +41,7 @@ export async function resolveSignatures(ix) {
 function fetchSignature(ix, payload) {
   return async function innerFetchSignature(id) {
     const acct = ix.accounts[id]
-    if (acct.signature != null) return
+    if (acct.signature != null && acct.signature !== undefined) return
     const {signature} = await acct.signingFunction(
       buildSignable(acct, payload, ix)
     )

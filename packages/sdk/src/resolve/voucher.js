@@ -3,14 +3,12 @@ import {encodeTxIdFromVoucher} from "../encode/encode.js"
 
 export function findInsideSigners(ix) {
   // Inside Signers Are: (authorizers + proposer) - payer
-  let inside = [...new Set(ix.authorizations)]
-  inside.push(ix.proposer)
+  let inside = new Set(ix.authorizations)
+  inside.add(ix.proposer)
   if (Array.isArray(ix.payer)) {
-    ix.payer.forEach(p => {
-      inside = inside.filter(i => i !== p)
-    })
+    ix.payer.forEach(p => inside.delete(p))
   } else {
-    inside = inside.filter(i => i !== ix.payer)
+    inside.delete(ix.payer)
   }
   return Array.from(inside)
 }
