@@ -1,5 +1,12 @@
 # @onflow/sdk
 
+## 1.3.1-typescript.0
+
+### Patch Changes
+
+- Updated dependencies [[`fb3bd37e`](https://github.com/onflow/fcl-js/commit/fb3bd37e02bf0de046ea164e6c2f1a0c27e515c1)]:
+  - @onflow/config@1.3.0-typescript.0
+
 ## 1.3.0
 
 ### Minor Changes

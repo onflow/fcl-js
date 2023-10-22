@@ -1,6 +1,6 @@
 {
   "name": "@onflow/fcl-wc",
-  "version": "4.0.0",
+  "version": "5.0.0-typescript.0",
   "description": "WalletConnect adapter for FCL",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
@@ -31,7 +31,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.18.9",
-    "@onflow/config": "^1.2.0",
+    "@onflow/config": "^1.3.0-typescript.0",
     "@onflow/util-invariant": "^1.2.0",
     "@onflow/util-logger": "^1.3.0",
     "@walletconnect/modal": "^2.4.7",
@@ -40,6 +40,6 @@
     "@walletconnect/utils": "^2.8.1"
   },
   "peerDependencies": {
-    "@onflow/fcl": "^1.6.0"
+    "@onflow/fcl": "^1.7.0-typescript.0"
   }
 }

@@ -1,5 +1,19 @@
 # @onflow/fcl
 
+## 1.7.0-typescript.0
+
+### Minor Changes
+
+- [#1775](https://github.com/onflow/fcl-js/pull/1775) [`e0d0d144`](https://github.com/onflow/fcl-js/commit/e0d0d1449524f4c65e3f7a263b5c0a3ab5ac4a89) Thanks [@chasefleming](https://github.com/chasefleming)! - Send suggested features to discovery
+
+- [#1782](https://github.com/onflow/fcl-js/pull/1782) [`3d037e84`](https://github.com/onflow/fcl-js/commit/3d037e8470d56935bbc07ad7177ac40907def660) Thanks [@jribbink](https://github.com/jribbink)! - Use localStorage as default & export LOCAL_STORAGE/SESSION_STORAGE as helpers for fcl.storage.default configuration key
+
+### Patch Changes
+
+- Updated dependencies [[`fb3bd37e`](https://github.com/onflow/fcl-js/commit/fb3bd37e02bf0de046ea164e6c2f1a0c27e515c1)]:
+  - @onflow/config@1.3.0-typescript.0
+  - @onflow/sdk@1.3.1-typescript.0
+
 ## 1.6.0
 
 ### Minor Changes

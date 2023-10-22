@@ -1,5 +1,13 @@
 # @onflow/fcl-wc
 
+## 5.0.0-typescript.0
+
+### Patch Changes
+
+- Updated dependencies [[`e0d0d144`](https://github.com/onflow/fcl-js/commit/e0d0d1449524f4c65e3f7a263b5c0a3ab5ac4a89), [`3d037e84`](https://github.com/onflow/fcl-js/commit/3d037e8470d56935bbc07ad7177ac40907def660), [`fb3bd37e`](https://github.com/onflow/fcl-js/commit/fb3bd37e02bf0de046ea164e6c2f1a0c27e515c1)]:
+  - @onflow/fcl@1.7.0-typescript.0
+  - @onflow/config@1.3.0-typescript.0
+
 ## 4.0.0
 
 ### Minor Changes
