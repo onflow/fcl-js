@@ -1,6 +1,6 @@
 {
   "name": "@onflow/fcl-wc",
-  "version": "3.0.1-accounts.0",
+  "version": "4.0.0-accounts.1",
   "description": "WalletConnect adapter for FCL",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
@@ -40,6 +40,6 @@
     "@walletconnect/utils": "^2.8.1"
   },
   "peerDependencies": {
-    "@onflow/fcl": "^1.5.3-accounts.0"
+    "@onflow/fcl": "^1.6.0-accounts.1"
   }
 }

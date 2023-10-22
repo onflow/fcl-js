@@ -1,5 +1,11 @@
 # @onflow/transport-http
 
+## 1.7.2-accounts.1
+
+### Patch Changes
+
+- [#1532](https://github.com/onflow/fcl-js/pull/1532) [`d736e157`](https://github.com/onflow/fcl-js/commit/d736e157794cf9950dc5dee9a8c21a43dada9789) Thanks [@JeffreyDoyle](https://github.com/JeffreyDoyle)! - fixed sig resolution
+
 ## 1.7.2-accounts.0
 
 ### Patch Changes
