@@ -1,5 +1,5 @@
 {
-  "mode": "pre",
+  "mode": "exit",
   "tag": "accounts",
   "initialVersions": {
     "@onflow/config": "1.1.1",
