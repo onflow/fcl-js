@@ -3,12 +3,9 @@ import {invariant} from "@onflow/util-invariant"
 import {log} from "@onflow/util-logger"
 import {isTransaction} from "../interaction/interaction.js"
 import {createSignableVoucher} from "./voucher.js"
+import {v4 as uuidv4} from "uuid"
 
 const MAX_DEPTH_LIMIT = 5
-
-const CHARS = "abcdefghijklmnopqrstuvwxyz0123456789".split("")
-const randChar = () => CHARS[~~(Math.random() * CHARS.length)]
-const uuid = () => Array.from({length: 10}, randChar).join("")
 
 const idof = acct => `${withPrefix(acct.addr)}-${acct.keyId}`
 const isFn = v =>
@@ -99,7 +96,7 @@ function addAccountToIx(ix, newAccount) {
   ) {
     newAccount.tempId = idof(newAccount)
   } else {
-    newAccount.tempId = newAccount.tempId || uuid()
+    newAccount.tempId = newAccount.tempId || uuidv4()
   }
 
   const existingAccount = ix.accounts[newAccount.tempId] || newAccount
