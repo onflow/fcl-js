@@ -10,6 +10,10 @@ import {
   UNSUBSCRIBE,
 } from "@onflow/util-actor"
 import {send as fclSend, decode, getTransactionStatus} from "@onflow/sdk"
+import {HTTPRequestError} from "@onflow/transport-http"
+import {grpc} from "@improbable-eng/grpc-web"
+
+const TXID_REGEXP = /^[0-9a-fA-F]{64}$/
 
 /**
  * @typedef {import("@onflow/typedefs").Transaction} Transaction
@@ -20,7 +24,9 @@ import {send as fclSend, decode, getTransactionStatus} from "@onflow/sdk"
  */
 
 const RATE = 2500
+const NOT_FOUND_TIMEOUT = 10000
 const POLL = "POLL"
+const TIMEOUT = "TIMEOUT"
 
 const fetchTxStatus = async transactionId => {
   return fclSend([getTransactionStatus(transactionId)]).then(decode)
@@ -39,6 +45,7 @@ const isDiff = (cur, next) => {
 
 const HANDLERS = {
   [INIT]: async ctx => {
+    setTimeout(() => ctx.sendSelf(TIMEOUT), NOT_FOUND_TIMEOUT)
     ctx.sendSelf(POLL)
   },
   [SUBSCRIBE]: (ctx, letter) => {
@@ -51,16 +58,35 @@ const HANDLERS = {
   [SNAPSHOT]: async (ctx, letter) => {
     letter.reply(ctx.all())
   },
+  [TIMEOUT]: async ctx => {
+    // If status is still unknown, send a timeout error
+    if (Object.keys(ctx.all()).length === 0) {
+      ctx.fatalError(new Error("Transaction not found within timeout interval"))
+    }
+  },
   [POLL]: async ctx => {
+    // Helper to queue another poll
+    const poll = () => setTimeout(() => ctx.sendSelf(POLL), RATE)
+
     let tx
+    const prevTx = ctx.all()
     try {
       tx = await fetchTxStatus(ctx.self())
     } catch (e) {
+      const isHttpNotFound =
+        e instanceof HTTPRequestError && e.statusCode === 404
+      const isGrpcNotFound = e.code === grpc.Code.NotFound
+
+      // If TX is not found, suppress error and poll again
+      if (isHttpNotFound || isGrpcNotFound) {
+        return poll()
+      }
+
       return ctx.fatalError(e)
     }
 
-    if (!isSealed(tx)) setTimeout(() => ctx.sendSelf(POLL), RATE)
-    if (isDiff(ctx.all(), tx)) ctx.broadcast(UPDATED, tx)
+    if (!isSealed(tx)) poll()
+    if (isDiff(prevTx, tx)) ctx.broadcast(UPDATED, tx)
     ctx.merge(tx)
   },
 }
@@ -84,7 +110,7 @@ const spawnTransaction = transactionId => {
 
 /**
  * Provides methods for interacting with a transaction
- * 
+ *
  * @param {string} transactionId - The transaction ID
  * @returns {{
  *    snapshot: function(): Promise<TransactionStatus>,
@@ -95,6 +121,10 @@ const spawnTransaction = transactionId => {
  * }}
  */
 export function transaction(transactionId) {
+  // Validate transactionId as 64 byte hash
+  if (!TXID_REGEXP.test(scoped(transactionId)))
+    throw new Error("Invalid transactionId")
+
   function snapshot() {
     return snapshoter(transactionId, spawnTransaction)
   }
