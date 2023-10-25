@@ -21,5 +21,9 @@
     "@onflow/util-template": "1.2.0",
     "@onflow/util-uid": "1.2.0"
   },
-  "changesets": []
+  "changesets": [
+    "six-cherries-clap",
+    "slow-peaches-vanish",
+    "tough-fishes-live"
+  ]
 }

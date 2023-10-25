@@ -133,10 +133,11 @@ async function getAccountProofData() {
   return accountProofData
 }
 
-const makeConfig = async ({discoveryAuthnInclude}) => {
+const makeConfig = async ({discoveryAuthnInclude, discoveryFeaturesSuggested}) => {
   return {
     client: {
       discoveryAuthnInclude,
+      discoveryFeaturesSuggested,
       clientServices: await makeDiscoveryServices(),
       supportedStrategies: getServiceRegistry().getStrategies(),
     },

@@ -1,5 +1,11 @@
 # @onflow/config
 
+## 1.3.0-typescript.0
+
+### Minor Changes
+
+- [#1731](https://github.com/onflow/fcl-js/pull/1731) [`fb3bd37e`](https://github.com/onflow/fcl-js/commit/fb3bd37e02bf0de046ea164e6c2f1a0c27e515c1) Thanks [@jribbink](https://github.com/jribbink)! - Add Typescript to @onflow/config
+
 ## 1.2.0
 
 ### Minor Changes
