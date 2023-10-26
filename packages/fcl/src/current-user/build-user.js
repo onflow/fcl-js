@@ -3,7 +3,10 @@ import * as rlp from "@onflow/rlp"
 import {fetchServices} from "./fetch-services"
 import {mergeServices} from "./merge-services"
 import {USER_PRAGMA} from "../normalizers/service/__vsn"
-import {normalizeService} from "../normalizers/service/service"
+import {
+  normalizeService,
+  normalizeServices,
+} from "../normalizers/service/service"
 import {serviceOfType} from "./service-of-type"
 
 function deriveCompositeId(authn) {
@@ -24,12 +27,9 @@ function normalizeData(data) {
 export async function buildUser(data) {
   data = normalizeData(data)
 
-  var services = mergeServices(
-    data.services || [],
-    await fetchServices(data.hks, data.code)
+  var services = normalizeServices(
+    mergeServices(data.services || [], await fetchServices(data.hks, data.code))
   )
-    .map(service => normalizeService(service, data))
-    .filter(Boolean)
 
   const authn = serviceOfType(services, "authn")
 
