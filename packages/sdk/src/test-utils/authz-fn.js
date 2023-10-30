@@ -11,6 +11,7 @@ export function authzFn(opts = {}) {
     const acct = {
       ...account,
       ...opts,
+      resolve: null,
       signingFunction:
         opts.signingFunction ||
         account.signingFunction ||
@@ -58,6 +59,20 @@ export function authzResolveMany(opts = {}) {
             .map(d => d({role: {...ROLE, authorizer: true}})),
           opts.payer && authzFn(opts.payer)({role: {...ROLE, payer: true}}),
         ].filter(Boolean),
+    }
+  }
+}
+
+export function authzDeepResolveMany(opts = {}, depth = 1) {
+  return function (account) {
+    const tempId = opts.tempId || "AUTHZ_DEEP_RESOLVE_MANY"
+    return {
+      ...account,
+      tempId,
+      resolve:
+        depth > 0
+          ? authzDeepResolveMany(opts, depth - 1)(account).resolve
+          : authzResolveMany(opts)(account).resolve
     }
   }
 }

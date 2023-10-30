@@ -15,6 +15,13 @@ export async function resolveSignatures(ix) {
     try {
       let insideSigners = findInsideSigners(ix)
       const insidePayload = encodeInsideMessage(prepForEncoding(ix))
+      
+      // Promise.all could potentially break the flow if there are multiple inside signers trying to resolve at the same time
+      // causing multiple triggers of authz function that tries to render multiple auth iiframes/tabs/extensions
+      // as an alternative, use this:
+      // for(const insideSigner of insideSigners) {
+      //   await fetchSignature(ix, insidePayload)(insideSigner);
+      // }
       await Promise.all(insideSigners.map(fetchSignature(ix, insidePayload)))
 
       let outsideSigners = findOutsideSigners(ix)
@@ -26,6 +33,13 @@ export async function resolveSignatures(ix) {
           sig: ix.accounts[id].signature,
         })),
       })
+
+      // Promise.all could potentially break the flow if there are multiple outside signers trying to resolve at the same time
+      // causing multiple triggers of authz function that tries to render multiple auth iframes/tabs/extensions
+      // as an alternative, use this:
+      // for(const outsideSigner of outsideSigners) {
+      //   await fetchSignature(ix, outsidePayload)(outsideSigner);
+      // }
       await Promise.all(outsideSigners.map(fetchSignature(ix, outsidePayload)))
     } catch (error) {
       console.error("Signatures", error, {ix})
@@ -38,7 +52,7 @@ export async function resolveSignatures(ix) {
 function fetchSignature(ix, payload) {
   return async function innerFetchSignature(id) {
     const acct = ix.accounts[id]
-    if (acct.signature != null) return
+    if (acct.signature != null && acct.signature !== undefined) return
     const {signature} = await acct.signingFunction(
       buildSignable(acct, payload, ix)
     )
