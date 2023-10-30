@@ -2,7 +2,7 @@ import {invariant} from "@onflow/util-invariant"
 import {withPrefix, sansPrefix} from "@onflow/util-address"
 import {query} from "../exec/query"
 import {encodeAccountProof} from "../wallet-utils"
-import {isString} from "../exec/utils/is"
+import {isString} from "../utils/is"
 import {getChainId} from "../utils"
 
 const ACCOUNT_PROOF = "ACCOUNT_PROOF"
