@@ -1,29 +1,5 @@
 # @onflow/fcl
 
-## 1.6.0-accounts.1
-
-### Minor Changes
-
-- [#1775](https://github.com/onflow/fcl-js/pull/1775) [`e0d0d144`](https://github.com/onflow/fcl-js/commit/e0d0d1449524f4c65e3f7a263b5c0a3ab5ac4a89) Thanks [@chasefleming](https://github.com/chasefleming)! - Send suggested features to discovery
-
-- [#1782](https://github.com/onflow/fcl-js/pull/1782) [`3d037e84`](https://github.com/onflow/fcl-js/commit/3d037e8470d56935bbc07ad7177ac40907def660) Thanks [@jribbink](https://github.com/jribbink)! - Use localStorage as default & export LOCAL_STORAGE/SESSION_STORAGE as helpers for fcl.storage.default configuration key
-
-### Patch Changes
-
-- [#1532](https://github.com/onflow/fcl-js/pull/1532) [`d736e157`](https://github.com/onflow/fcl-js/commit/d736e157794cf9950dc5dee9a8c21a43dada9789) Thanks [@JeffreyDoyle](https://github.com/JeffreyDoyle)! - fixed sig resolution
-
-- Updated dependencies [[`d736e157`](https://github.com/onflow/fcl-js/commit/d736e157794cf9950dc5dee9a8c21a43dada9789)]:
-  - @onflow/sdk@1.2.3-accounts.1
-
-## 1.5.3-accounts.0
-
-### Patch Changes
-
-- testing refactored accounts resolver
-
-- Updated dependencies [[`f5f185b7`](https://github.com/onflow/fcl-js/commit/f5f185b7e18f19b1b2b2abe335050b0ba80b594f), [`6f4a0067`](https://github.com/onflow/fcl-js/commit/6f4a006712e94089c3e0ffbcb1cfbf625ab8d18f)]:
-  - @onflow/sdk@1.2.3-accounts.0
-
 ## 1.5.2
 
 ### Patch Changes
