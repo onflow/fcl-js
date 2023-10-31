@@ -1,19 +1,5 @@
 # @onflow/transport-http
 
-## 1.7.2-accounts.1
-
-### Patch Changes
-
-- [#1532](https://github.com/onflow/fcl-js/pull/1532) [`d736e157`](https://github.com/onflow/fcl-js/commit/d736e157794cf9950dc5dee9a8c21a43dada9789) Thanks [@JeffreyDoyle](https://github.com/JeffreyDoyle)! - fixed sig resolution
-
-## 1.7.2-accounts.0
-
-### Patch Changes
-
-- [#1708](https://github.com/onflow/fcl-js/pull/1708) [`f5f185b7`](https://github.com/onflow/fcl-js/commit/f5f185b7e18f19b1b2b2abe335050b0ba80b594f) Thanks [@nialexsan](https://github.com/nialexsan)! - Updated packages
-
-- testing refactored accounts resolver
-
 ## 1.7.1
 
 ### Patch Changes
