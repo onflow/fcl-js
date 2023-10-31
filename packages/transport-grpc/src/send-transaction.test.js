@@ -117,4 +117,107 @@ describe("Transaction", () => {
 
     expect(response.transactionId).toBe(returnedTransactionId)
   })
+
+  test("SendTransaction with duplicated payer", async () => {
+    const unaryMock = jest.fn()
+
+    const returnedTransactionId = "a1b2c3"
+
+    unaryMock.mockReturnValue({
+      getId_asU8: () => hexStrToUInt8Array("a1b2c3"),
+    })
+
+    const built = await build([
+      transaction`cadence transaction`,
+      proposer({
+        addr: "abc",
+        keyId: 1,
+        sequenceNum: 123,
+        signingFunction: () => ({
+          addr: "abc",
+          keyId: 1,
+          signature: "abc123",
+        }),
+        resolve: null,
+        role: {
+          proposer: true,
+          authorizer: false,
+          payer: false,
+          param: false,
+        },
+      }),
+      payer({
+        addr: "def",
+        keyId: 1,
+        sequenceNum: 123,
+        signingFunction: () => ({
+          addr: "def",
+          keyId: 1,
+          signature: "def456",
+        }),
+        resolve: null,
+        role: {
+          proposer: false,
+          authorizer: false,
+          payer: true,
+          param: false,
+        },
+      }),
+      authorizations([
+        {
+          addr: "abc",
+          keyId: 1,
+          sequenceNum: 123,
+          signingFunction: () => ({
+            addr: "abc",
+            keyId: 1,
+            signature: "abc123",
+          }),
+          resolve: null,
+          role: {
+            proposer: false,
+            authorizer: true,
+            payer: false,
+            param: false,
+          },
+        },
+      ]),
+      ref("aaaa"),
+      voucherIntercept(async voucher => {
+        voucherToTxId(voucher)
+      }),
+    ])
+
+    const resolved = await resolve(built)
+
+    const response = await sendTransaction(
+      resolved,
+      {
+        response: responseADT,
+        Buffer,
+      },
+      {
+        unary: unaryMock,
+        node: "localhost:3000",
+      }
+    )
+
+    expect(unaryMock.mock.calls.length).toEqual(1)
+
+    const unaryMockArgs = unaryMock.mock.calls[0]
+
+    expect(unaryMockArgs.length).toEqual(4)
+
+    const unaryType = unaryMock.mock.calls[0][1]
+
+    expect(unaryType).toEqual(AccessAPI.SendTransaction)
+
+    const unaryMockRequest = unaryMock.mock.calls[0][2]
+
+    expect(unaryMockRequest).not.toBeUndefined()
+
+    expect(response.transactionId).toBe(returnedTransactionId)
+
+    expect(unaryMockRequest.getTransaction().getPayloadSignaturesList()).toHaveLength(1)
+  })
 })

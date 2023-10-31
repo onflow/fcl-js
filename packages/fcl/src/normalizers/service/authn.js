@@ -21,22 +21,26 @@ import {SERVICE_PRAGMA} from "./__vsn"
 export function normalizeAuthn(service) {
   if (service == null) return null
 
+  if (!service["f_vsn"]) {
+    return {
+      ...SERVICE_PRAGMA,
+      type: service.type,
+      uid: service.id,
+      endpoint: service.authn,
+      id: service.pid,
+      provider: {
+        address: withPrefix(service.addr),
+        name: service.name,
+        icon: service.icon,
+      },
+    }
+  }
+
   switch (service["f_vsn"]) {
     case "1.0.0":
       return service
 
     default:
-      return {
-        ...SERVICE_PRAGMA,
-        type: service.type,
-        uid: service.id,
-        endpoint: service.authn,
-        id: service.pid,
-        provider: {
-          address: withPrefix(service.addr),
-          name: service.name,
-          icon: service.icon,
-        },
-      }
+      return null
   }
 }
