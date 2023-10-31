@@ -1,6 +1,6 @@
 import {invariant} from "@onflow/util-invariant"
 import * as sdk from "@onflow/sdk"
-import {isRequired, isObject, isString} from "./is"
+import {isRequired, isObject, isString} from "../../utils/is"
 
 async function pre(type, opts) {
   // prettier-ignore

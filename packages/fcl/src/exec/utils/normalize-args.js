@@ -1,4 +1,4 @@
-import {isFunc} from "./is"
+import {isFunc} from "../../utils/is"
 import * as sdk from "@onflow/sdk"
 import * as t from "@onflow/types"
 

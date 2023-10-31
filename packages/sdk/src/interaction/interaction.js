@@ -1,4 +1,5 @@
 import {invariant} from "@onflow/util-invariant"
+import {v4 as uuidv4} from "uuid"
 
 export const UNKNOWN /*                       */ = "UNKNOWN"
 export const SCRIPT /*                        */ = "SCRIPT"
@@ -108,9 +109,6 @@ const KEYS = new Set(Object.keys(JSON.parse(IX)))
 
 export const interaction = () => JSON.parse(IX)
 
-const CHARS = "abcdefghijklmnopqrstuvwxyz0123456789".split("")
-const randChar = () => CHARS[~~(Math.random() * CHARS.length)]
-export const uuid = () => Array.from({length: 10}, randChar).join("")
 export const isNumber = d => typeof d === "number"
 export const isArray = d => Array.isArray(d)
 export const isObj = d => d !== null && typeof d === "object"
@@ -158,7 +156,7 @@ export const prepAccount = (acct, opts = {}) => ix => {
 
   const ACCOUNT = JSON.parse(ACCT)
   const role = opts.role
-  const tempId = uuid()
+  const tempId = uuidv4()
 
   if (acct.authorization && isFn(acct.authorization))
     acct = {resolve: acct.authorization}
@@ -196,7 +194,7 @@ export const prepAccount = (acct, opts = {}) => ix => {
 }
 
 export const makeArgument = arg => ix => {
-  let tempId = uuid()
+  let tempId = uuidv4()
   ix.message.arguments.push(tempId)
 
   ix.arguments[tempId] = JSON.parse(ARG)

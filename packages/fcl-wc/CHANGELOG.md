@@ -1,13 +1,20 @@
 # @onflow/fcl-wc
 
-## 4.0.0
+## 4.0.0-accounts.1
 
 ### Patch Changes
 
-- Updated dependencies [[`3c99c856`](https://github.com/onflow/fcl-js/commit/3c99c8560f61b5b38238cbd0e93814936aee282e), [`5edbd823`](https://github.com/onflow/fcl-js/commit/5edbd823b1a6d25eb7bb52dc55338f95beae73b1)]:
-  - @onflow/fcl@1.6.0
-  - @onflow/util-logger@1.2.2
-  - @onflow/config@1.1.2
+- [#1532](https://github.com/onflow/fcl-js/pull/1532) [`d736e157`](https://github.com/onflow/fcl-js/commit/d736e157794cf9950dc5dee9a8c21a43dada9789) Thanks [@JeffreyDoyle](https://github.com/JeffreyDoyle)! - fixed sig resolution
+
+- Updated dependencies [[`e0d0d144`](https://github.com/onflow/fcl-js/commit/e0d0d1449524f4c65e3f7a263b5c0a3ab5ac4a89), [`3d037e84`](https://github.com/onflow/fcl-js/commit/3d037e8470d56935bbc07ad7177ac40907def660), [`d736e157`](https://github.com/onflow/fcl-js/commit/d736e157794cf9950dc5dee9a8c21a43dada9789)]:
+  - @onflow/fcl@1.6.0-accounts.1
+
+## 3.0.1-accounts.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @onflow/fcl@1.5.3-accounts.0
 
 ## 3.0.0
 
