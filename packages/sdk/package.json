@@ -1,6 +1,6 @@
 {
   "name": "@onflow/sdk",
-  "version": "1.2.3-accounts.1",
+  "version": "1.2.2",
   "description": "Flow SDK",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
@@ -44,7 +44,7 @@
     "@babel/runtime": "^7.18.6",
     "@onflow/config": "^1.1.1",
     "@onflow/rlp": "^1.1.0",
-    "@onflow/transport-http": "^1.7.2-accounts.1",
+    "@onflow/transport-http": "^1.7.1",
     "@onflow/util-actor": "^1.2.0",
     "@onflow/util-address": "^1.1.0",
     "@onflow/util-invariant": "^1.1.0",

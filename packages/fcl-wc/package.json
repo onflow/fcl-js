@@ -40,6 +40,6 @@
     "@walletconnect/utils": "^2.8.1"
   },
   "peerDependencies": {
-    "@onflow/fcl": "^1.6.0-accounts.1"
+    "@onflow/fcl": "^1.6.0"
   }
 }
