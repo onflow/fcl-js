@@ -14,18 +14,22 @@ import {normalizeFrame} from "./frame"
 export function normalizePollingResponse(resp) {
   if (resp == null) return null
 
+  if (!resp["f_vsn"]) {
+    return {
+      ...POLLING_RESPONSE_PRAGMA,
+      status: resp.status ?? "APPROVED",
+      reason: resp.reason ?? null,
+      data: resp.compositeSignature || resp.data || {...resp} || {},
+      updates: normalizeBackChannelRpc(resp.authorizationUpdates),
+      local: normalizeFrame((resp.local || [])[0]),
+    }
+  }
+
   switch (resp["f_vsn"]) {
     case "1.0.0":
       return resp
 
     default:
-      return {
-        ...POLLING_RESPONSE_PRAGMA,
-        status: resp.status ?? "APPROVED",
-        reason: resp.reason ?? null,
-        data: resp.compositeSignature || resp.data || {...resp} || {},
-        updates: normalizeBackChannelRpc(resp.authorizationUpdates),
-        local: normalizeFrame((resp.local || [])[0]),
-      }
+      return null
   }
 }

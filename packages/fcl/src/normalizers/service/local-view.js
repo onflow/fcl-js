@@ -15,18 +15,22 @@ export function normalizeLocalView(resp) {
     resp = {...resp, type: "local-view", method: "VIEW/IFRAME"}
   }
 
+  if (!resp["f_vsn"]) {
+    return {
+      ...SERVICE_PRAGMA,
+      type: resp.type || "local-view",
+      method: resp.method,
+      endpoint: resp.endpoint,
+      data: resp.data || {},
+      params: resp.params || {},
+    }
+  }
+
   switch (resp["f_vsn"]) {
     case "1.0.0":
       return resp
 
     default:
-      return {
-        ...SERVICE_PRAGMA,
-        type: resp.type || "local-view",
-        method: resp.method,
-        endpoint: resp.endpoint,
-        data: resp.data || {},
-        params: resp.params || {},
-      }
+      return null
   }
 }

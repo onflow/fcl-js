@@ -10,7 +10,9 @@ import {normalizeAccountProof} from "./account-proof"
 import {normalizeAuthnRefresh} from "./authn-refresh"
 
 export function normalizeServices(services, data) {
-  return services.map(service => normalizeService(service, data))
+  return services
+    .map(service => normalizeService(service, data))
+    .filter(Boolean)
 }
 
 const serviceNormalizers = {
