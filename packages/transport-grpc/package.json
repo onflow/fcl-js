@@ -1,6 +1,6 @@
 {
   "name": "@onflow/transport-grpc",
-  "version": "1.2.2-accounts.0",
+  "version": "1.2.1",
   "description": "Flow SDK GRPC Transport Module",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
