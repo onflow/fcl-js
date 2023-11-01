@@ -1,6 +1,6 @@
 // Config dependency injected into logger to break circular dependency
-let config = null
-export const setConfig = _config => {
+let config: any = null
+export const setConfig = (_config: any) => {
   config = _config
 }
 
