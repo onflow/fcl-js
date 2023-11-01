@@ -1,5 +1,24 @@
 # @onflow/fcl
 
+## 1.7.0
+
+### Minor Changes
+
+- [#1775](https://github.com/onflow/fcl-js/pull/1775) [`e0d0d144`](https://github.com/onflow/fcl-js/commit/e0d0d1449524f4c65e3f7a263b5c0a3ab5ac4a89) Thanks [@chasefleming](https://github.com/chasefleming)! - Send suggested features to discovery
+
+### Patch Changes
+
+- [#1785](https://github.com/onflow/fcl-js/pull/1785) [`a3143a80`](https://github.com/onflow/fcl-js/commit/a3143a80d1e5df66c58c837022038d92dd836811) Thanks [@jribbink](https://github.com/jribbink)! - Fix version normalization of services in FCL
+
+- [#1532](https://github.com/onflow/fcl-js/pull/1532) [`06846f8e`](https://github.com/onflow/fcl-js/commit/06846f8e9c1e2cdf10aa8dfdff6e6c5b31af81e5) Thanks [@JeffreyDoyle](https://github.com/JeffreyDoyle)! - Refactor Resolve Accounts to user role based async decomposition for resolving internal accounts
+
+- [#1793](https://github.com/onflow/fcl-js/pull/1793) [`08f4dd6b`](https://github.com/onflow/fcl-js/commit/08f4dd6b0efc2204feb8fae8a480980688a49141) Thanks [@nialexsan](https://github.com/nialexsan)! - Move is-helpers to utils
+
+- [#1532](https://github.com/onflow/fcl-js/pull/1532) [`06846f8e`](https://github.com/onflow/fcl-js/commit/06846f8e9c1e2cdf10aa8dfdff6e6c5b31af81e5) Thanks [@JeffreyDoyle](https://github.com/JeffreyDoyle)! - Fixed duplicate signatures when sending transaction
+
+- Updated dependencies [[`06846f8e`](https://github.com/onflow/fcl-js/commit/06846f8e9c1e2cdf10aa8dfdff6e6c5b31af81e5), [`06846f8e`](https://github.com/onflow/fcl-js/commit/06846f8e9c1e2cdf10aa8dfdff6e6c5b31af81e5)]:
+  - @onflow/sdk@1.2.3
+
 ## 1.6.0
 
 ### Minor Changes

@@ -1,5 +1,16 @@
 # @onflow/sdk
 
+## 1.2.3
+
+### Patch Changes
+
+- [#1532](https://github.com/onflow/fcl-js/pull/1532) [`06846f8e`](https://github.com/onflow/fcl-js/commit/06846f8e9c1e2cdf10aa8dfdff6e6c5b31af81e5) Thanks [@JeffreyDoyle](https://github.com/JeffreyDoyle)! - Refactor Resolve Accounts to user role based async decomposition for resolving internal accounts
+
+- [#1532](https://github.com/onflow/fcl-js/pull/1532) [`06846f8e`](https://github.com/onflow/fcl-js/commit/06846f8e9c1e2cdf10aa8dfdff6e6c5b31af81e5) Thanks [@JeffreyDoyle](https://github.com/JeffreyDoyle)! - Fixed duplicate signatures when sending transaction
+
+- Updated dependencies [[`06846f8e`](https://github.com/onflow/fcl-js/commit/06846f8e9c1e2cdf10aa8dfdff6e6c5b31af81e5)]:
+  - @onflow/transport-http@1.7.2
+
 ## 1.2.2
 
 ### Patch Changes
