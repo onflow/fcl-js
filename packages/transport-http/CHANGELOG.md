@@ -1,5 +1,19 @@
 # @onflow/transport-http
 
+## 1.8.0-typescript.0
+
+### Minor Changes
+
+- [#1801](https://github.com/onflow/fcl-js/pull/1801) [`86ce9f75`](https://github.com/onflow/fcl-js/commit/86ce9f75b5542a6bce76012e36a7a3d4fb6867f2) Thanks [@nialexsan](https://github.com/nialexsan)! - TS build
+
+### Patch Changes
+
+- Updated dependencies [[`9fca84a3`](https://github.com/onflow/fcl-js/commit/9fca84a3151d7f6aeb33870a302e9793f024516b), [`86ce9f75`](https://github.com/onflow/fcl-js/commit/86ce9f75b5542a6bce76012e36a7a3d4fb6867f2)]:
+  - @onflow/util-invariant@1.2.0-typescript.0
+  - @onflow/util-template@1.2.0-typescript.0
+  - @onflow/util-address@1.2.0-typescript.0
+  - @onflow/util-logger@1.3.0-typescript.0
+
 ## 1.7.2
 
 ### Patch Changes
