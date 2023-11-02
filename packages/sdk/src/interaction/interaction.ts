@@ -105,11 +105,11 @@ export const interaction = () => {
   return initInteraction()
 }
 
-export const isNumber = d => typeof d === "number"
-export const isArray = d => Array.isArray(d)
-export const isObj = d => d !== null && typeof d === "object"
-export const isNull = d => d == null
-export const isFn = d => typeof d === "function"
+export const isNumber = (d: any): d is number => typeof d === "number"
+export const isArray = (d: any): d is any[] => Array.isArray(d)
+export const isObj = (d: any): d is Record<string, any> => d !== null && typeof d === "object"
+export const isNull = (d: any): d is null => d == null
+export const isFn = (d: any): d is Function => typeof d === "function"
 
 export const isInteraction = (ix: IIx) => {
   if (!isObj(ix) || isNull(ix) || isNumber(ix)) return false
@@ -198,7 +198,7 @@ export const prepAccount = (acct: IAcct | IAcctFn, opts: IPrepAccountOpts = {}) 
   return ix
 }
 
-export const makeArgument = arg => ix => {
+export const makeArgument = (arg: Record<string, any>) => (ix: IIx)  => {
   let tempId = uuidv4()
   ix.message.arguments.push(tempId)
 
