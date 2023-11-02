@@ -25,9 +25,9 @@ const ROLES = {
 function debug() {
   const SPACE = " "
   const SPACE_COUNT_PER_INDENT = 4
-  const DEBUG_MESSAGE = []
+  const DEBUG_MESSAGE: string[] = []
   return [
-    function (msg, indent = 0) {
+    function (msg = '', indent = 0) {
       DEBUG_MESSAGE.push(
         Array(indent * SPACE_COUNT_PER_INDENT)
           .fill(SPACE)
@@ -40,7 +40,7 @@ function debug() {
   ]
 }
 
-function recurseFlatMap(el, depthLimit = 3) {
+function recurseFlatMap<T>(el: T, depthLimit = 3) {
   if (depthLimit <= 0) return el
   if (!Array.isArray(el)) return el
   return recurseFlatMap(
@@ -67,12 +67,14 @@ export function buildPreSignable(acct: IAcct, ix: IIx) {
   }
 }
 
-async function removeUnusedIxAccounts(ix: IIx) {
+async function removeUnusedIxAccounts(ix: IIx, opts: Record<string, any>) {
   const payerTempIds = Array.isArray(ix.payer) ? ix.payer : [ix.payer]
   const authorizersTempIds = Array.isArray(ix.authorizations)
     ? ix.authorizations
     : [ix.authorizations]
-  const proposerTempIds = Array.isArray(ix.proposer)
+  const proposerTempIds = ix.proposer === null 
+    ? [] 
+    : Array.isArray(ix.proposer)
     ? ix.proposer
     : [ix.proposer]
 
@@ -115,7 +117,7 @@ function addAccountToIx(ix, newAccount) {
   return ix.accounts[newAccount.tempId]
 }
 
-function uniqueAccountsFlatMap(accounts) {
+function uniqueAccountsFlatMap(accounts: IAcct[]) {
   const flatMapped = recurseFlatMap(accounts)
   const seen = new Set()
 
@@ -132,7 +134,7 @@ function uniqueAccountsFlatMap(accounts) {
       seen.add(accountId)
       return account
     })
-    .filter(e => e !== null)
+    .filter(e => e !== null) as IAcct[]
 
   return uniqueAccountsFlatMapped
 }
@@ -214,7 +216,7 @@ async function recurseResolveAccount(
   return account.tempId
 }
 
-async function resolveAccountType(ix, type, {debugLogger}) {
+async function resolveAccountType(ix: IIx, type, {debugLogger}) {
   invariant(
     ix && typeof ix === "object",
     "resolveAccountType Error: ix not defined"
@@ -228,10 +230,10 @@ async function resolveAccountType(ix, type, {debugLogger}) {
 
   let accountTempIDs = Array.isArray(ix[type]) ? ix[type] : [ix[type]]
 
-  let allResolvedAccounts = []
+  let allResolvedAccounts: IAcct[] = []
   for (let accountId of accountTempIDs) {
     let account = ix.accounts[accountId]
-    invariant(account, `resolveAccountType Error: account not found`)
+    invariant(Boolean(account), `resolveAccountType Error: account not found`)
 
     let resolvedAccountTempIds = await recurseResolveAccount(
       ix,
@@ -246,8 +248,8 @@ async function resolveAccountType(ix, type, {debugLogger}) {
       ? resolvedAccountTempIds
       : [resolvedAccountTempIds]
 
-    let resolvedAccounts = resolvedAccountTempIds.map(
-      resolvedAccountTempId => ix.accounts[resolvedAccountTempId]
+    let resolvedAccounts: IAcct[] = resolvedAccountTempIds.map(
+      (resolvedAccountTempId: string) => ix.accounts[resolvedAccountTempId]
     )
 
     let flatResolvedAccounts = uniqueAccountsFlatMap(resolvedAccounts)
@@ -295,7 +297,7 @@ async function resolveAccountType(ix, type, {debugLogger}) {
   }
 }
 
-export async function resolveAccounts(ix: IIx, opts = {}) {
+export async function resolveAccounts(ix: IIx, opts: Record<string, any> = {}) {
   if (isTransaction(ix)) {
     if (!Array.isArray(ix.payer)) {
       log.deprecate({
