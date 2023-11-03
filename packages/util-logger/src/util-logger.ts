@@ -6,7 +6,7 @@ type Config = IConfig & (() => IConfig) | null
 
 // Config dependency injected into logger to break circular dependency
 let config: Config = null
-export const setConfig = (_config: Config) => {
+export const setConfig = (_config: any) => {
   config = _config
 }
 
