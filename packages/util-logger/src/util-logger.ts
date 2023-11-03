@@ -1,6 +1,12 @@
+interface IConfig {
+  get: <T>(key: string) => T;
+}
+
+type Config = IConfig & (() => IConfig) | null
+
 // Config dependency injected into logger to break circular dependency
-let config: any = null
-export const setConfig = (_config: any) => {
+let config: Config = null
+export const setConfig = (_config: Config) => {
   config = _config
 }
 
