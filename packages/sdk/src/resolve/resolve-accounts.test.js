@@ -7,8 +7,8 @@ import {
   payer,
   limit,
   authorizations,
-} from "../sdk.js"
-import {buildPreSignable, resolveAccounts} from "./resolve-accounts"
+} from "../sdk"
+import {buildPreSignable} from "./resolve-accounts"
 
 test("Voucher in PreSignable", async () => {
   const authz = {
