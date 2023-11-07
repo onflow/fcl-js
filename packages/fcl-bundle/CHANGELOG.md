@@ -1,13 +1,5 @@
 # @onflow/fcl-bundle
 
-## 1.4.0-typescript.0
-
-### Minor Changes
-
-- [#1801](https://github.com/onflow/fcl-js/pull/1801) [`9fca84a3`](https://github.com/onflow/fcl-js/commit/9fca84a3151d7f6aeb33870a302e9793f024516b) Thanks [@nialexsan](https://github.com/nialexsan)! - Switched to rollup-plugin-typescript2
-
-- [#1801](https://github.com/onflow/fcl-js/pull/1801) [`86ce9f75`](https://github.com/onflow/fcl-js/commit/86ce9f75b5542a6bce76012e36a7a3d4fb6867f2) Thanks [@nialexsan](https://github.com/nialexsan)! - TS build
-
 ## 1.3.1
 
 ### Patch Changes
