@@ -1,25 +1,5 @@
 # @onflow/fcl
 
-## 1.8.0-typescript.0
-
-### Minor Changes
-
-- [#1801](https://github.com/onflow/fcl-js/pull/1801) [`86ce9f75`](https://github.com/onflow/fcl-js/commit/86ce9f75b5542a6bce76012e36a7a3d4fb6867f2) Thanks [@nialexsan](https://github.com/nialexsan)! - TS build
-
-### Patch Changes
-
-- Updated dependencies [[`81d4b40e`](https://github.com/onflow/fcl-js/commit/81d4b40e5b76ffb85b6185a274ae1cbce5988e7b), [`9fca84a3`](https://github.com/onflow/fcl-js/commit/9fca84a3151d7f6aeb33870a302e9793f024516b), [`86ce9f75`](https://github.com/onflow/fcl-js/commit/86ce9f75b5542a6bce76012e36a7a3d4fb6867f2), [`6b81c1ff`](https://github.com/onflow/fcl-js/commit/6b81c1ffc54ed1c073d0b6581df5fb34d7a33ec5), [`0960cdce`](https://github.com/onflow/fcl-js/commit/0960cdce6808b265ef92791da06a6772e9353537)]:
-  - @onflow/types@1.2.0-typescript.0
-  - @onflow/util-invariant@1.2.0-typescript.0
-  - @onflow/util-template@1.2.0-typescript.0
-  - @onflow/util-address@1.2.0-typescript.0
-  - @onflow/util-logger@1.3.0-typescript.0
-  - @onflow/util-uid@1.2.0-typescript.0
-  - @onflow/rlp@1.2.0-typescript.0
-  - @onflow/util-actor@1.3.0-typescript.0
-  - @onflow/config@1.2.0-typescript.0
-  - @onflow/sdk@1.3.0-typescript.0
-
 ## 1.7.0
 
 ### Minor Changes

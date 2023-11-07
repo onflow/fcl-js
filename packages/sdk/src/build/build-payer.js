@@ -1,4 +1,4 @@
-import {pipe, prepAccount, PAYER} from "../interaction/interaction.js"
+import {pipe, prepAccount, PAYER} from "../interaction/interaction"
 
 export function payer(ax = []) {
   if (!Array.isArray(ax)) ax = [ax]

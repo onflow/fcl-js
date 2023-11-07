@@ -61,7 +61,7 @@ interface IAuthzResolveMany {
 }
 
 export function authzResolveMany(opts: IAuthzResolveMany = {authorizations: []}) {
-  return function (account: IAcct) {
+  return function (account: IAcct): IAcct {
     const tempId = opts.tempId || "AUTHZ_RESOLVE_MANY"
     return {
       ...account,
@@ -79,8 +79,8 @@ export function authzResolveMany(opts: IAuthzResolveMany = {authorizations: []})
   }
 }
 
-export function authzDeepResolveMany(opts = {}, depth = 1) {
-  return function (account) {
+export function authzDeepResolveMany(opts: IAuthzResolveMany = {authorizations: []}, depth = 1) {
+  return function (account: IAcct): IAcct {
     const tempId = opts.tempId || "AUTHZ_DEEP_RESOLVE_MANY"
     return {
       ...account,
