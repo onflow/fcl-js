@@ -14,12 +14,12 @@ const isFn = (v: any): v is Function =>
     "function" === typeof v ||
     v instanceof Function)
 
-const genAccountId = (...ids) => ids.join("-")
+const genAccountId = (...ids: (string | boolean | undefined)[]) => ids.join("-")
 
-const ROLES = {
-  PAYER: "payer",
-  PROPOSER: "proposer",
-  AUTHORIZATIONS: "authorizations",
+enum ROLES {
+  PAYER = "payer",
+  PROPOSER = "proposer",
+  AUTHORIZATIONS = "authorizations",
 }
 
 function debug() {
@@ -49,7 +49,7 @@ function recurseFlatMap<T>(el: T, depthLimit = 3) {
   )
 }
 
-export function buildPreSignable(acct: IAcct, ix: IIx) {
+export function buildPreSignable(acct: Partial<IAcct>, ix: IIx) {
   try {
     return {
       f_type: "PreSignable",
@@ -90,7 +90,7 @@ async function removeUnusedIxAccounts(ix: IIx, opts: Record<string, any>) {
   }
 }
 
-function addAccountToIx(ix, newAccount) {
+function addAccountToIx(ix: IIx, newAccount: IAcct) {
   if (
     typeof newAccount.addr === "string" &&
     (typeof newAccount.keyId === "number" ||
@@ -140,10 +140,10 @@ function uniqueAccountsFlatMap(accounts: IAcct[]) {
 }
 
 async function recurseResolveAccount(
-  ix,
-  currentAccountTempId,
+  ix: IIx,
+  currentAccountTempId: string,
   depthLimit = MAX_DEPTH_LIMIT,
-  {debugLogger}
+  {debugLogger}: {debugLogger: (msg?: string, indent?: number) => void}
 ) {
   if (depthLimit <= 0) {
     throw new Error(
@@ -180,18 +180,18 @@ async function recurseResolveAccount(
 
       let flatResolvedAccounts = recurseFlatMap(resolvedAccounts)
 
-      flatResolvedAccounts = flatResolvedAccounts.map(flatResolvedAccount =>
+      flatResolvedAccounts = flatResolvedAccounts.map((flatResolvedAccount: IAcct) =>
         addAccountToIx(ix, flatResolvedAccount)
       )
 
       account.resolve = flatResolvedAccounts.map(
-        flatResolvedAccount => flatResolvedAccount.tempId
+        (flatResolvedAccount: IAcct) => flatResolvedAccount.tempId
       )
 
       account = addAccountToIx(ix, account)
 
       const recursedAccounts = await Promise.all(
-        flatResolvedAccounts.map(async resolvedAccount => {
+        flatResolvedAccounts.map(async (resolvedAccount: IAcct) => {
           return await recurseResolveAccount(
             ix,
             resolvedAccount.tempId,
@@ -216,7 +216,14 @@ async function recurseResolveAccount(
   return account.tempId
 }
 
-async function resolveAccountType(ix: IIx, type, {debugLogger}) {
+const getAccountTempIDs = (rawTempIds: string | string[] | null) => {
+  if (rawTempIds === null) {
+    return []
+  }
+  return Array.isArray(rawTempIds) ? rawTempIds : [rawTempIds]
+}
+
+async function resolveAccountType(ix: IIx, type: ROLES, {debugLogger}: {debugLogger: (msg?: string, indent?: number) => void}) {
   invariant(
     ix && typeof ix === "object",
     "resolveAccountType Error: ix not defined"
@@ -228,7 +235,7 @@ async function resolveAccountType(ix: IIx, type, {debugLogger}) {
     "resolveAccountType Error: type must be 'payer', 'proposer' or 'authorizations'"
   )
 
-  let accountTempIDs = Array.isArray(ix[type]) ? ix[type] : [ix[type]]
+  let accountTempIDs = getAccountTempIDs(ix[type])
 
   let allResolvedAccounts: IAcct[] = []
   for (let accountId of accountTempIDs) {
@@ -278,9 +285,9 @@ async function resolveAccountType(ix: IIx, type, {debugLogger}) {
     )
   }
 
-  ix[type] = Array.isArray(ix[type])
+  ix[type] = (Array.isArray(ix[type])
     ? [...new Set(allResolvedAccounts.map(acct => acct.tempId))]
-    : allResolvedAccounts[0].tempId
+    : allResolvedAccounts[0].tempId) as string & string[]
 
   // Ensure all payers are of the same account
   if (type === ROLES.PAYER) {
