@@ -1,7 +1,12 @@
 import {mailbox as createMailbox, type IMailbox} from "./mailbox"
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const queueMicrotask = require("queue-microtask")
+let promise: any
+const _queueMicrotask = (cb: any) =>
+  (promise || (promise = Promise.resolve())).then(cb).catch((err: any) =>
+    setTimeout(() => {
+      throw err
+    }, 0)
+  )
 
 export const INIT = "INIT"
 export const SUBSCRIBE = "SUBSCRIBE"
@@ -189,7 +194,7 @@ export const spawn = <Handlers extends ActorHandlers>(
     fn = fromHandlers<Handlers>(fnOrHandlers)
   else fn = fnOrHandlers
 
-  queueMicrotask(async () => {
+  _queueMicrotask(async () => {
     await fn(ctx)
     kill(addr)
   })
