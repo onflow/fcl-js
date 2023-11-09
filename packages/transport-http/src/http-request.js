@@ -1,5 +1,6 @@
 import * as logger from "@onflow/util-logger"
 import fetchTransport from "cross-fetch"
+import {safeParseJSON} from "./utils"
 
 const AbortController =
   globalThis.AbortController || require("abort-controller")
@@ -160,12 +161,4 @@ export async function httpRequest({
 
   // Keep retrying request until server available or max attempts exceeded
   return await requestLoop()
-}
-
-function safeParseJSON(data) {
-  try {
-    return JSON.parse(data)
-  } catch {
-    return null
-  }
 }

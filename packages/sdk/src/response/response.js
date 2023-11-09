@@ -10,7 +10,8 @@ const DEFAULT_RESPONSE = `{
     "blockHeader":null,
     "latestBlock":null,
     "collection":null,
-    "networkParameters":null
+    "networkParameters":null,
+    "unsubscribeCallback":null,
 }`
 
 export const response = () => JSON.parse(DEFAULT_RESPONSE)

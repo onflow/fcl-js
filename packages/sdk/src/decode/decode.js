@@ -223,6 +223,8 @@ export const decodeResponse = async (response, customDecoders = {}) => {
     return {
       chainId: chainIdMap[response.networkParameters.chainId],
     }
+  } else if (response.unsubscribeCallback) {
+    return response.unsubscribeCallback
   }
 
   return null

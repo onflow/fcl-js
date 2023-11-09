@@ -7,6 +7,7 @@ export const TRANSACTION /*                   */ = "TRANSACTION"
 export const GET_TRANSACTION_STATUS /*        */ = "GET_TRANSACTION_STATUS"
 export const GET_ACCOUNT /*                   */ = "GET_ACCOUNT"
 export const GET_EVENTS /*                    */ = "GET_EVENTS"
+export const SUBSCRIBE_EVENTS /*              */ = "SUBSCRIBE_EVENTS"
 export const PING /*                          */ = "PING"
 export const GET_TRANSACTION /*               */ = "GET_TRANSACTION"
 export const GET_BLOCK /*                     */ = "GET_BLOCK"
@@ -89,6 +90,14 @@ const IX = `{
     "end":null,
     "blockIds":[]
   },
+  "subscribeEvents": {
+    "startBlockId":null,
+    "startHeight":null,
+    "eventTypes":null,
+    "addresses":null,
+    "contracts":null,
+    "heartbeatInterval":null
+  },
   "transaction": {
     "id":null
   },
@@ -102,6 +111,11 @@ const IX = `{
   },
   "collection": {
     "id":null
+  },
+  "subscription": {
+    "onData":null,
+    "onError":null,
+    "onComplete":null
   }
 }`
 
@@ -147,51 +161,53 @@ const prepAccountKeyId = acct => {
   }
 }
 
-export const prepAccount = (acct, opts = {}) => ix => {
-  invariant(
-    typeof acct === "function" || typeof acct === "object",
-    "prepAccount must be passed an authorization function or an account object"
-  )
-  invariant(opts.role != null, "Account must have a role")
+export const prepAccount =
+  (acct, opts = {}) =>
+  ix => {
+    invariant(
+      typeof acct === "function" || typeof acct === "object",
+      "prepAccount must be passed an authorization function or an account object"
+    )
+    invariant(opts.role != null, "Account must have a role")
 
-  const ACCOUNT = JSON.parse(ACCT)
-  const role = opts.role
-  const tempId = uuidv4()
+    const ACCOUNT = JSON.parse(ACCT)
+    const role = opts.role
+    const tempId = uuidv4()
 
-  if (acct.authorization && isFn(acct.authorization))
-    acct = {resolve: acct.authorization}
-  if (!acct.authorization && isFn(acct)) acct = {resolve: acct}
+    if (acct.authorization && isFn(acct.authorization))
+      acct = {resolve: acct.authorization}
+    if (!acct.authorization && isFn(acct)) acct = {resolve: acct}
 
-  const resolve = acct.resolve
-  if (resolve)
-    acct.resolve = (acct, ...rest) =>
-      [resolve, prepAccountKeyId].reduce(
-        async (d, fn) => fn(await d, ...rest),
-        acct
-      )
-  acct = prepAccountKeyId(acct)
+    const resolve = acct.resolve
+    if (resolve)
+      acct.resolve = (acct, ...rest) =>
+        [resolve, prepAccountKeyId].reduce(
+          async (d, fn) => fn(await d, ...rest),
+          acct
+        )
+    acct = prepAccountKeyId(acct)
 
-  ix.accounts[tempId] = {
-    ...ACCOUNT,
-    tempId,
-    ...acct,
-    role: {
-      ...ACCOUNT.role,
-      ...(typeof acct.role === "object" ? acct.role : {}),
-      [role]: true,
-    },
+    ix.accounts[tempId] = {
+      ...ACCOUNT,
+      tempId,
+      ...acct,
+      role: {
+        ...ACCOUNT.role,
+        ...(typeof acct.role === "object" ? acct.role : {}),
+        [role]: true,
+      },
+    }
+
+    if (role === AUTHORIZER) {
+      ix.authorizations.push(tempId)
+    } else if (role === PAYER) {
+      ix.payer.push(tempId)
+    } else {
+      ix[role] = tempId
+    }
+
+    return ix
   }
-
-  if (role === AUTHORIZER) {
-    ix.authorizations.push(tempId)
-  } else if (role === PAYER) {
-    ix.payer.push(tempId)
-  } else {
-    ix[role] = tempId
-  }
-
-  return ix
-}
 
 export const makeArgument = arg => ix => {
   let tempId = uuidv4()
@@ -217,6 +233,7 @@ export const makeGetTransactionStatus /*    */ = makeIx(GET_TRANSACTION_STATUS)
 export const makeGetTransaction /*          */ = makeIx(GET_TRANSACTION)
 export const makeGetAccount /*              */ = makeIx(GET_ACCOUNT)
 export const makeGetEvents /*               */ = makeIx(GET_EVENTS)
+export const makeSubscribeEvents /*         */ = makeIx(SUBSCRIBE_EVENTS)
 export const makePing /*                    */ = makeIx(PING)
 export const makeGetBlock /*                */ = makeIx(GET_BLOCK)
 export const makeGetBlockHeader /*          */ = makeIx(GET_BLOCK_HEADER)
@@ -232,6 +249,7 @@ export const isGetTransactionStatus /*    */ = is(GET_TRANSACTION_STATUS)
 export const isGetTransaction /*          */ = is(GET_TRANSACTION)
 export const isGetAccount /*              */ = is(GET_ACCOUNT)
 export const isGetEvents /*               */ = is(GET_EVENTS)
+export const isSubscribeEvents /*         */ = is(SUBSCRIBE_EVENTS)
 export const isPing /*                    */ = is(PING)
 export const isGetBlock /*                */ = is(GET_BLOCK)
 export const isGetBlockHeader /*          */ = is(GET_BLOCK_HEADER)
@@ -287,10 +305,12 @@ export const put = (key, value) => ix => {
   return Ok(ix)
 }
 
-export const update = (key, fn = identity) => ix => {
-  ix.assigns[key] = fn(ix.assigns[key], ix)
-  return Ok(ix)
-}
+export const update =
+  (key, fn = identity) =>
+  ix => {
+    ix.assigns[key] = fn(ix.assigns[key], ix)
+    return Ok(ix)
+  }
 
 export const destroy = key => ix => {
   delete ix.assigns[key]
