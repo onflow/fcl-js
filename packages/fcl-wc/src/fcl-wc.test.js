@@ -1,5 +1,5 @@
 import {init} from './fcl-wc'
-import * as fcl from '@onflow/fcl'
+import * as fcl from '@onflow/fcl-core'
 
 jest.mock('@walletconnect/modal', () => {})
 jest.mock('@walletconnect/sign-client', () => {})

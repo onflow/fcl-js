@@ -23,7 +23,7 @@ Initializtion returns `FclWcServicePlugin` and a Walletconnect `client`. The `cl
 Passing `FclWcServicePlugin` to `fcl.pluginRegistry.add()` will enable use of the `"WC/RPC"` service strategy and add new and existing WalletConnect services to FCL Discovery.
 
 ```javascript
-import * as fcl from '@onflow/fcl'
+import * as fcl from '@onflow/fcl-core'
 import { init } from '@onflow/fcl-wc'
 
 const { FclWcServicePlugin, client } = await init({
