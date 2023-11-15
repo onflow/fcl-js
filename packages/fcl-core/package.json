@@ -29,7 +29,7 @@
     "jest-environment-jsdom": "^29.5.0",
     "typescript": "^4.9.5"
   },
-  "source": "src/fcl-core.js",
+  "source": "src/fcl-core.ts",
   "main": "dist/fcl-core.js",
   "module": "dist/fcl-core.module.js",
   "unpkg": "dist/fcl-core.umd.min.js",
