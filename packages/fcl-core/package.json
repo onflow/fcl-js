@@ -29,22 +29,11 @@
     "jest-environment-jsdom": "^29.5.0",
     "typescript": "^4.9.5"
   },
-  "source": {
-    "src/fcl.js": {
-      "cjs": "./dist/fcl.js",
-      "esm": "./dist/fcl.module.js",
-      "umd": "./dist/fcl.umd.min.js"
-    },
-    "src/fcl-react-native.js": {
-      "cjs": "./dist/fcl-react-native.js",
-      "esm": "./dist/fcl-react-native.module.js",
-      "umd": "./dist/fcl-react-native.umd.min.js"
-    }
-  },
-  "main": "dist/fcl.js",
-  "module": "dist/fcl.module.js",
-  "unpkg": "dist/fcl.umd.min.js",
-  "types": "types/fcl.d.ts",
+  "source": "src/fcl-core.js",
+  "main": "dist/fcl-core.js",
+  "module": "dist/fcl-core.module.js",
+  "unpkg": "dist/fcl-core.umd.min.js",
+  "types": "types/fcl-core.d.ts",
   "scripts": {
     "pain": "npm publish --tag pain",
     "alpha": "npm publish --tag alpha",

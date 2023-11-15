@@ -3,6 +3,7 @@
   "exclude": [
     "src/**/*.test.js",
   ],
+  "include": ["src/fcl-core.js"],
   "compilerOptions": {
     // Tells TypeScript to read JS files, as
     // normally they are ignored as source files
