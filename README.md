@@ -75,11 +75,11 @@ yarn add @onflow/fcl
 
 **ES6**
 ```js
-import * as fcl from "@onflow/fcl";
+import * as fcl from "@onflow/fcl-core";
 ```
 **Node.js**
 ```js
-const fcl = require("@onflow/fcl");
+const fcl = require("@onflow/fcl-core");
 ```
 ---
 ## FCL for Dapps
@@ -89,7 +89,7 @@ const fcl = require("@onflow/fcl");
 Authenticate users with any [FCL compatible wallet](#current-wallet-providers).
 ```js
 // in the browser
-import * as fcl from "@onflow/fcl"
+import * as fcl from "@onflow/fcl-core"
 
 fcl.config({
   "discovery.wallet": "https://fcl-discovery.onflow.org/testnet/authn", // Endpoint set to Testnet
@@ -109,7 +109,7 @@ fcl.authenticate()
 #### Blockchain Interactions
 - *Query the chain*: Send arbitrary Cadence scripts to the chain and receive back decoded values
 ```js
-import * as fcl from "@onflow/fcl";
+import * as fcl from "@onflow/fcl-core";
 
 const result = await fcl.query({
   cadence: `
@@ -128,7 +128,7 @@ console.log(result); // 13
 ```
 - *Mutate the chain*: Send arbitrary transactions with your own signatures or via a user's wallet to perform state changes on chain.
 ```js
-import * as fcl from "@onflow/fcl";
+import * as fcl from "@onflow/fcl-core";
 // in the browser, FCL will automatically connect to the user's wallet to request signatures to run the transaction
 const txId = await fcl.mutate({
   cadence: `

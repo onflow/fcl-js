@@ -26,7 +26,7 @@ By default `@onflow/fcl` defaults to using the HTTP Access Node endpoint via the
 If using the gRPC Access API, the `sdk.transport` configuration key must be populated as this value defaults to the HTTP API transport.  The SDK can be configured to use the gRPC API transport as follows:
 
 ```javascript
-import { config } from "@onflow/fcl"
+import { config } from "@onflow/fcl-core"
 import { send as transportGRPC } from "@onflow/transport-grpc"
 
 config({

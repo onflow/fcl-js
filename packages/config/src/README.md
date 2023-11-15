@@ -80,7 +80,7 @@ Known configuration values in FCL
 - `accessNode.key` _(default: null)_ -- Some Access Nodes require an api key.
 
 ```javascript
-import {config} from "@onflow/fcl"
+import {config} from "@onflow/fcl-core"
 
 if (process.env.NODE_ENV === "production") {
   config()
@@ -96,7 +96,7 @@ if (process.env.NODE_ENV === "production") {
 `decoder.*` -- Custom decoders for parsing JSON-CDC
 
 ```javascript
-import {config, query} from "@onflow/fcl"
+import {config, query} from "@onflow/fcl-core"
 
 function Woot({x, y}) {
   this.x = x
@@ -134,7 +134,7 @@ console.log(data) // [ Woot{x:1, y:2}, Woot{x:3, y:4}, Woot{x:5, y:6} ]
 `wallet.discovery` _(default: FCL wallet discovery service url)_ -- Where FCL will attempt to authenticate
 
 ```javascript
-import {config} from "@onflow/fcl"
+import {config} from "@onflow/fcl-core"
 
 if (process.env.NODE_ENV === "development") {
   // Use dev wallet during development

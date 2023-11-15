@@ -104,10 +104,10 @@ export const log = async (options: {
  * @returns A function that will call the callback and log the deprecation notice if the callback is provided
  * @example
  * // Logs a deprecation notice
- * log.deprecate({ pkg: "@onflow/fcl", subject: "Some item", transition: "https://github.com/onflow/flow-js-sdk", message: "Descriptive message", level: LEVELS.warn, callback: () => {} })
+ * log.deprecate({ pkg: "@onflow/fcl-core", subject: "Some item", transition: "https://github.com/onflow/flow-js-sdk", message: "Descriptive message", level: LEVELS.warn, callback: () => {} })
  * @example
  * function someFunction() { ... }
- * const deprecatedFunction = log.deprecate({ pkg: "@onflow/fcl", subject: "Some item", transition: "https://github.com/foo/bar/TRANSITIONS.md", message: "Descriptive message", level: LEVELS.warn, callback: someFunction })
+ * const deprecatedFunction = log.deprecate({ pkg: "@onflow/fcl-core", subject: "Some item", transition: "https://github.com/foo/bar/TRANSITIONS.md", message: "Descriptive message", level: LEVELS.warn, callback: someFunction })
  * deprecatedFunction() // Calls someFunction and logs the deprecation notice
  */
 log.deprecate = <T, U>(options: {

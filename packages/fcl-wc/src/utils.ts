@@ -7,12 +7,26 @@ export let CONFIGURED_NETWORK = null
 export const setConfiguredNetwork = async () => {
   CONFIGURED_NETWORK = await fcl.getChainId()
   invariant(
-    CONFIGURED_NETWORK,
+    Boolean(CONFIGURED_NETWORK),
     "FCL Configuration value for 'flow.network' is required"
   )
 }
 
-const makeFlowServicesFromWallets = wallets => {
+interface IWallet {
+  app_type: string,
+  name: string,
+  description: string,
+  homepage: string,
+  metadata: Record<string, any>
+  image_url: {
+    sm: string
+  }
+  mobile: {
+    universal: string
+  }
+}
+
+const makeFlowServicesFromWallets = (wallets: IWallet[]) => {
   return Object.values(wallets)
     .filter(w => w.app_type === "wallet")
     .map(wallet => {
@@ -37,7 +51,7 @@ const makeFlowServicesFromWallets = wallets => {
     })
 }
 
-export const fetchFlowWallets = async projectId => {
+export const fetchFlowWallets = async (projectId: string) => {
   try {
     const wcApiWallets = await fetch(
       `https://explorer-api.walletconnect.com/v3/wallets?projectId=${projectId}&chains=flow:${CONFIGURED_NETWORK}&entries=5&page=1`
@@ -48,7 +62,7 @@ export const fetchFlowWallets = async projectId => {
     }
 
     return []
-  } catch (error) {
+  } catch (error: any) {
     log({
       title: `${error.name} Error fetching wallets from WalletConnect API`,
       message: error.message,

@@ -184,7 +184,7 @@ Here are some examples of valid `PollingResponse` objects:
 A `PollingResponse` can alternatively be constructed using `WalletUtils` when sending `"APPROVED"` or `"DECLINED"` responses.
 
 ```javascript
-import {WalletUtils} from "@onflow/fcl"
+import {WalletUtils} from "@onflow/fcl-core"
 
 // Approving a PollingResponse
 // Example using an AuthnResponse as the PollingResponse data
@@ -509,7 +509,7 @@ You will need to make and expose a webpage or API hosted at an authentication en
 ```javascript
 // IN APPLICATION
 // configuring fcl to point at a wallet looks like this
-import {config} from "@onflow/fcl"
+import {config} from "@onflow/fcl-core"
 
 config({
   "discovery.wallet": "url-or-endpoint-fcl-will-use-for-authentication", // FCL Discovery endpoint, wallet provider's authentication URL or extension endpoint
@@ -525,7 +525,7 @@ The following example is using the `IFRAME/RPC` method. Your authentication webp
 
 ```javascript
 // IN WALLET AUTHENTICATION FRAME
-import {WalletUtils} from "@onflow/fcl"
+import {WalletUtils} from "@onflow/fcl-core"
 
 function callback(data) {
   if (typeof data != "object") return
@@ -598,7 +598,7 @@ Here is an example of an authentication response:
 
 ```javascript
 // IN WALLET AUTHENTICATION FRAME
-import {WalletUtils} from "@onflow/fcl"
+import {WalletUtils} from "@onflow/fcl-core"
 
 WalletUtils.approve({
   f_type: "AuthnResponse",
@@ -698,7 +698,7 @@ WalletUtils.approve({
 From any frame, you can send a `FCL:VIEW:CLOSE` post message to FCL, which will halt FCL's current routine and close the frame.
 
 ```javascript
-import {WalletUtils} from "@onflow/fcl"
+import {WalletUtils} from "@onflow/fcl-core"
 
 WalletUtils.sendMsgToFCL("FCL:VIEW:CLOSE")
 ```
@@ -765,7 +765,7 @@ The eventual response back from the authorization service should resolve to some
 A `CompositeSignature` can alternatively be constructed using `WalletUtils`
 
 ```javascript
-import {WalletUtils} from "@onflow/fcl"
+import {WalletUtils} from "@onflow/fcl-core"
 
 WalletUtils.CompositeSignature(addr: String, keyId: Number, signature: Hex)
 
@@ -799,7 +799,7 @@ The signatures need to be sent back to FCL as HEX strings in an array of `Compos
 ```javascript
 // Pseudocode:
 // For every required signature
-import {WalletUtils} from "@onflow/fcl"
+import {WalletUtils} from "@onflow/fcl-core"
 
 const encoded = WalletUtils.encodeMessageFromSignable(signable, signerAddress)
 const taggedMessage = tagMessage(encoded) // Tag the message to sign

@@ -1,4 +1,4 @@
-import * as fcl from "@onflow/fcl"
+import * as fcl from "@onflow/fcl-core"
 import SignClient from "@walletconnect/sign-client"
 import {invariant} from "@onflow/util-invariant"
 import {LEVELS, log} from "@onflow/util-logger"

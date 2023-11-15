@@ -19,7 +19,7 @@ config().put("fcl.limit", DEFAULT_COMPUTE_LIMIT)
 Compute limits may still be applied explicitly in a transaction, with these taking priority above `fcl.limit`, as follows:
 
 ```javascript
-import * as sdk from "@onflow/fcl"
+import * as sdk from "@onflow/fcl-core"
 
 const TX_COMPUTE_LIMIT = ...
 
@@ -253,7 +253,7 @@ As part of our ongoing effort to break the sdk down into smaller and smaller pie
 A common way of getting values from our javascript into our cadence code has been like this:
 
 ```javascript
-import * as fcl from "@onflow/fcl"
+import * as fcl from "@onflow/fcl-core"
 import * as t from "@onflow/types"
 
 const doTheThing = async (a, b, msg) => {
@@ -282,7 +282,7 @@ We have a couple issues with this, which are better listed out (here)[https://gi
 With the addition of `Arguments` in the Cadence code we would prefer the above to be written like this:
 
 ```javascript
-import * as fcl from "@onflow/fcl"
+import * as fcl from "@onflow/fcl-core"
 import * as t from "@onflow/types"
 
 const doTheThing = async (a, b, msg) => {
@@ -357,7 +357,7 @@ const doTheThing = async (m1, m2, m3) => {
 Import addresses have to be done as standard interopolation.
 
 ```javascript
-import * as fcl from "@onflow/fcl"
+import * as fcl from "@onflow/fcl-core"
 import * as t from "@onflow/types"
 
 const CONTRACT_ADDRESS = process.env.CONTRACT_ADDRESS

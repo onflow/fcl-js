@@ -15,7 +15,7 @@ Public identity will be stored on chain as a resource, it will be publicly avail
 In FCL getting a users public identity will be as easy as:
 
 ```javascript
-import {user} from "@onflow/fcl"
+import {user} from "@onflow/fcl-core"
 
 const identity = await user(flowAddress).snapshot()
 //       ^
@@ -36,7 +36,7 @@ We highly recommend Wallet Providers let the user see what scopes are being requ
 Consumers of identities in FCL should always assume all data is optional, and should store as little as possible, FCL will make sure the users always see the latest.
 
 ```javascript
-import {config, currentUser, authenticate} from "@onflow/fcl"
+import {config, currentUser, authenticate} from "@onflow/fcl-core"
 
 config.put("challenge.scope", "email") // request the email scope
 

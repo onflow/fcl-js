@@ -1,5 +1,5 @@
 {
-  "name": "@onflow/fcl",
+  "name": "@onflow/fcl-core",
   "version": "1.8.1",
   "description": "Flow Client Library",
   "license": "Apache-2.0",

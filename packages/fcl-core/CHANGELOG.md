@@ -856,7 +856,7 @@ and the Authentication Refresh process is complete.
 The initial transaction can then be executed with confidence the user session is valid.
 
 ```javascript
-import {WalletUtils} from "@onflow/fcl"
+import {WalletUtils} from "@onflow/fcl-core"
 
 WalletUtils.approve({
   f_type: "AuthnResponse",
@@ -900,7 +900,7 @@ WalletUtils.approve({
 - 2021-11-30 -- Allow apps to add opt-in wallets in Discovery with config.
 
 ```javascript
-import {config} from "@onflow/fcl"
+import {config} from "@onflow/fcl-core"
 
 // Include supports discovery.wallet or discovery.authn.endpoint
 config({
@@ -927,7 +927,7 @@ An app developer will now be able to list services for authentication ("authn") 
 To use this, first set in the config the API endpoint for fetching Flow services.
 
 ```javascript
-import {config} from "@onflow/fcl"
+import {config} from "@onflow/fcl-core"
 
 config({
   "discovery.authn.endpoint":
@@ -940,7 +940,7 @@ config({
 Then in an application you can get services with the following:
 
 ```javascript
-import * as fcl from "@onflow/fcl"
+import * as fcl from "@onflow/fcl-core"
 
 fcl.discovery.authn.subscribe(callback)
 
@@ -960,7 +960,7 @@ An example React component could then wind up looking like this:
 ```javascript
 import "./config"
 import {useState, useEffect} from "react"
-import * as fcl from "@onflow/fcl"
+import * as fcl from "@onflow/fcl-core"
 
 function Component() {
   const [services, setServices] = useState([])
@@ -1030,7 +1030,7 @@ window.fcl_extensions.push(AuthnService)
 ```
 
 ```javascript
-import {WalletUtils} from "@onflow/fcl"
+import {WalletUtils} from "@onflow/fcl-core"
 
 WalletUtils.injectExtService(AuthnService)
 ```
@@ -1040,7 +1040,7 @@ WalletUtils.injectExtService(AuthnService)
 Examples of `currentUser` as a param.
 
 ```javascript
-import {query, currentUser} from "@onflow/fcl"
+import {query, currentUser} from "@onflow/fcl-core"
 
 await query({
   cadence: `
@@ -1075,7 +1075,7 @@ await query({
 Examples of `currentUser` functionality.
 
 ```javascript
-import {currentUser} from "@onflow/fcl"
+import {currentUser} from "@onflow/fcl-core"
 
 currentUser.snapshot()
 currentUser.subscribe(callback)
@@ -1155,7 +1155,7 @@ export const SESSION_STORAGE = {
 Examples of `config` functionality.
 
 ```javascript
-import {config} from "@onflow/fcl"
+import {config} from "@onflow/fcl-core"
 
 expect(await config.all()).toEqual({})
 
@@ -1209,7 +1209,7 @@ New **EXPERIMENTAL** `fcl.mutate` functionality (mirors `fcl.query` but for tran
 
 ```javascript
 // profile contract on testnet
-import * as fcl from "@onflow/fcl"
+import * as fcl from "@onflow/fcl-core"
 
 // address overloading works for fcl.mutate too
 fcl.config().put("0xProfile", "0xba1132bc08f82fe2")
@@ -1348,7 +1348,7 @@ await fcl.mutate({
 New **EXPERIMENTAL** `fcl.query` functionality can be used like this.
 
 ```javascript
-import * as fcl from "@onflow/fcl"
+import * as fcl from "@onflow/fcl-core"
 
 await fcl.query({
   cadence: `
@@ -1379,7 +1379,7 @@ await fcl.query({
 New configuration works like older configuration:
 
 ```javascript
-import * as fcl from "@onflow/fcl"
+import * as fcl from "@onflow/fcl-core"
 
 fcl
   .config()

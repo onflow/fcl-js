@@ -567,7 +567,7 @@ await sdk.block({height: 123}) // get block by height
 - 2021-11-17 -- [@chasefleming](https://github.com/chasefleming): Support passing of current user as authorization. Simply pass `currentUser` instead of `currentUser.authorization` or `currentUser().authorization`.
 
 ```javascript
-import {currentUser} from "@onflow/fcl"
+import {currentUser} from "@onflow/fcl-core"
 
 fcl
   .send([

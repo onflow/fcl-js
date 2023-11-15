@@ -14,7 +14,7 @@ To use an Authorization Function, you specify that Authorization Function as the
 
 Example 1:
 ```javascript
-import * as fcl from "@onflow/fcl"
+import * as fcl from "@onflow/fcl-core"
 
 const myAuthorizationFunction = ... // An Authorization Function
 

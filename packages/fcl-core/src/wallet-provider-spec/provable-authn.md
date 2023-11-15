@@ -47,7 +47,7 @@ with the following values:
 
 ```javascript
 // Using WalletUtils
-import {WalletUtils} from "@onflow/fcl"
+import {WalletUtils} from "@onflow/fcl-core"
 
 const message = WalletUtils.encodeAccountProof(
   appIdentifier, // A human readable string to identify your application during signing

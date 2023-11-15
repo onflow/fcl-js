@@ -26,7 +26,7 @@ Configuration only needs to happen once, but it must happen before mutate is cal
 Below is an example of configuring FCL to talk to Flow (testnet)
 
 ```javascript
-import * as fcl from "@onflow/fcl"
+import * as fcl from "@onflow/fcl-core"
 
 // prettier-ignore
 fcl.config()
@@ -106,7 +106,7 @@ We can then take the above transaction code and bring it into javascript like th
 > Let's transfer `10.0 FUSD` from the current users Flow account to `0xba1132bc08f82fe2`.
 
 ```javascript
-import * as fcl from "@onflow/fcl"
+import * as fcl from "@onflow/fcl-core"
 
 const transactionId = await fcl.mutate({
   cadence: `
@@ -152,7 +152,7 @@ Once you have your custom authorization function you need to configure `mutate` 
 ```javascript
 // Replacing the current user as the default signatory for all three roles
 
-import * as fcl from "@onflow/fcl"
+import * as fcl from "@onflow/fcl-core"
 import {myCustomAuthzFn} from "./my-custom-authz-fn"
 
 const txId = await fcl.mutate({
@@ -175,7 +175,7 @@ Another option is for you to replace only a single signatory role (ie pay the tr
 ```javascript
 // Current user will be proposing and authorizing, but you are paying for the transaction
 
-import * as fcl from "@onflow/fcl"
+import * as fcl from "@onflow/fcl-core"
 import {myCustomAuthzFn} from "./my-custom-authz-fn"
 
 const txId = await fcl.mutate({
@@ -198,7 +198,7 @@ Proposer works in the same way as payer, the option is `proposer` though, you mi
 You can also overload the authorizations. Like `proposer` and `payer` you will need an authorization function, unlike proposer and payer and similar to arguments there can be more than one, so you need to pass your authorizers in as an array of authorization functions.
 
 ```javascript
-import * as fcl from "@onflow/fcl"
+import * as fcl from "@onflow/fcl-core"
 import {myCustomAuthzFn} from "./my-custom-authz-fn"
 
 const txId = await fcl.mutate({
@@ -227,7 +227,7 @@ If you have an Interaction Template, you can use it with `mutate`:
 ### Using Template JSON 
 
 ```javascript
-import * as fcl from "@onflow/fcl"
+import * as fcl from "@onflow/fcl-core"
 import myTransactionTemplate from "transaction-template.json"
 
 const txId = await fcl.mutate({
@@ -240,7 +240,7 @@ const txId = await fcl.mutate({
 In place of a JSON template, you can specify a URL that points to one, and FCL will retrieve it from the remote location:
 
 ```javascript
-import * as fcl from "@onflow/fcl"
+import * as fcl from "@onflow/fcl-core"
 
 const txId = await fcl.mutate({
   template: "https://interactions.my-project.com/buy-nft",
