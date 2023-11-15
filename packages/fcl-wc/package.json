@@ -12,11 +12,13 @@
   "bugs": {
     "url": "https://github.com/onflow/fcl-js/issues"
   },
-  "source": "src/fcl-wc.ts",
   "files": [
     "dist"
   ],
+  "source": "src/fcl-wc.ts",
+  "main": "dist/fcl-wc.js",
   "module": "dist/fcl-wc.module.js",
+  "types": "dist/fcl-wc.d.ts",
   "scripts": {
     "prepublishOnly": "npm test && npm run build",
     "test": "jest",
