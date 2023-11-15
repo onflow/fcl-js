@@ -33,7 +33,7 @@
   "main": "dist/fcl-web.js",
   "module": "dist/fcl-web.module.js",
   "unpkg": "dist/fcl-web.umd.min.js",
-  "types": "types/fcl-web.d.ts",
+  "types": "dist/fcl-web.d.ts",
   "scripts": {
     "pain": "npm publish --tag pain",
     "alpha": "npm publish --tag alpha",

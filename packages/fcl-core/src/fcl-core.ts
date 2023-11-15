@@ -134,7 +134,7 @@ export {getCurrentUser} from "./current-user"
 
 export {initServiceRegistry} from "./current-user/exec-service/plugins"
 
-export { isReactNative } from './utils/is-react-native'
+export { isReactNative, setIsReactNative } from './utils/is-react-native'
 
 export {getExecHttpPost} from "./current-user/exec-service/strategies/http-post"
 
