@@ -15,10 +15,8 @@
   "files": [
     "dist"
   ],
-  "source": "src/fcl-wc.ts",
-  "main": "dist/fcl-wc.js",
+  "source": "src/fcl-wc.js",
   "module": "dist/fcl-wc.module.js",
-  "types": "dist/fcl-wc.d.ts",
   "scripts": {
     "prepublishOnly": "npm test && npm run build",
     "test": "jest",

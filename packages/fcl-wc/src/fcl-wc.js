@@ -5,18 +5,12 @@ import {LEVELS, log} from "@onflow/util-logger"
 export {getSdkError} from "@walletconnect/utils"
 import {makeServicePlugin} from "./service"
 import {setConfiguredNetwork} from "./utils"
-import { CoreTypes } from "@walletconnect/types"
 
 const DEFAULT_RELAY_URL = "wss://relay.walletconnect.com"
 const DEFAULT_LOGGER = "debug"
-let client: SignClient
+let client 
 
-interface IInitClientParams {
-  projectId?: string,
-  metadata?: CoreTypes.Metadata
-}
-
-const initClient = async ({projectId, metadata}: IInitClientParams) => {
+const initClient = async ({projectId, metadata}) => {
   invariant(
     projectId != null,
     "FCL Wallet Connect Error: WalletConnect projectId is required"
@@ -29,7 +23,7 @@ const initClient = async ({projectId, metadata}: IInitClientParams) => {
       metadata: metadata,
     })
     return client
-  } catch (error: any) {
+  } catch (error) {
     log({
       title: `${error.name} fcl-wc Init Client`,
       message: error.message,
@@ -39,15 +33,6 @@ const initClient = async ({projectId, metadata}: IInitClientParams) => {
   }
 }
 
-interface IInitParams {
-  projectId?: string
-  includeBaseWC?: boolean,
-  wallets?: any[],
-  pairingModalOverride?: any
-  metadata?: CoreTypes.Metadata
-  wcRequestHook?: any,
-}
-
 export const init = async ({
   projectId,
   metadata,
@@ -55,7 +40,7 @@ export const init = async ({
   wcRequestHook = null,
   pairingModalOverride = null,
   wallets = [],
-}: IInitParams = {}) => {
+} = {}) => {
   await setConfiguredNetwork()
   const _client = client ?? (await initClient({projectId, metadata}))
   const FclWcServicePlugin = await makeServicePlugin(_client, {

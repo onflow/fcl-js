@@ -12,21 +12,7 @@ export const setConfiguredNetwork = async () => {
   )
 }
 
-interface IWallet {
-  app_type: string,
-  name: string,
-  description: string,
-  homepage: string,
-  metadata: Record<string, any>
-  image_url: {
-    sm: string
-  }
-  mobile: {
-    universal: string
-  }
-}
-
-const makeFlowServicesFromWallets = (wallets: IWallet[]) => {
+const makeFlowServicesFromWallets = (wallets) => {
   return Object.values(wallets)
     .filter(w => w.app_type === "wallet")
     .map(wallet => {
@@ -51,7 +37,7 @@ const makeFlowServicesFromWallets = (wallets: IWallet[]) => {
     })
 }
 
-export const fetchFlowWallets = async (projectId: string) => {
+export const fetchFlowWallets = async (projectId) => {
   try {
     const wcApiWallets = await fetch(
       `https://explorer-api.walletconnect.com/v3/wallets?projectId=${projectId}&chains=flow:${CONFIGURED_NETWORK}&entries=5&page=1`
@@ -62,7 +48,7 @@ export const fetchFlowWallets = async (projectId: string) => {
     }
 
     return []
-  } catch (error: any) {
+  } catch (error) {
     log({
       title: `${error.name} Error fetching wallets from WalletConnect API`,
       message: error.message,
