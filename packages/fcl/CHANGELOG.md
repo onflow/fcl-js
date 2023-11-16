@@ -1,5 +1,15 @@
 # @onflow/fcl
 
+## 1.9.0
+
+### Minor Changes
+
+- [#1811](https://github.com/onflow/fcl-js/pull/1811) [`4554254a`](https://github.com/onflow/fcl-js/commit/4554254a52e6062c04e5842f4ca7701e8b74bc64) Thanks [@bthaile](https://github.com/bthaile)! - Add support for running FLIX v1.1.0 (verified interactions)
+
+### Patch Changes
+
+- [#1792](https://github.com/onflow/fcl-js/pull/1792) [`cb5d38c8`](https://github.com/onflow/fcl-js/commit/cb5d38c8f1a2de47a1932ea8e89e43171b179712) Thanks [@jribbink](https://github.com/jribbink)! - Ignore Not Found errors when polling transaction status (workaround for access node load balancers)
+
 ## 1.8.1
 
 ### Patch Changes

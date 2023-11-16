@@ -1,5 +1,11 @@
 # @onflow/transport-http
 
+## 1.9.0
+
+### Minor Changes
+
+- [#1792](https://github.com/onflow/fcl-js/pull/1792) [`cb5d38c8`](https://github.com/onflow/fcl-js/commit/cb5d38c8f1a2de47a1932ea8e89e43171b179712) Thanks [@jribbink](https://github.com/jribbink)! - Export HTTPRequestError
+
 ## 1.8.1
 
 ### Patch Changes
