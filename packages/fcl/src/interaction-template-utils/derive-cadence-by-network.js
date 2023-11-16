@@ -76,7 +76,6 @@ export function deriveCadenceByNetwork({network, template}) {
       template?.data?.dependencies.forEach(dependency => {
         dependency.contracts.forEach(contract => {
           const contractName = contract.contract
-          const networkAddress = null
           contract.networks.forEach(net => {
             if (net.network === network) {
               networkDeps[contractName] = net.address
@@ -84,8 +83,8 @@ export function deriveCadenceByNetwork({network, template}) {
           })
 
           invariant(
-            networkAddress,
-            `networkAddress -- Could not find contracts Network Address: ${contractName}`
+            networkDeps[contractName],
+            `networkAddress -- Could not find contracts Network Address: ${network} ${contractName}`
           )          
         })
       })
@@ -100,7 +99,6 @@ export function deriveCadenceByNetwork({network, template}) {
         `networkDeps -- Could not find all addresses for network ${network} dependencies:  ${networkDeps}`
       )
 
-      console.log("networkDeps", networkDeps)
       return Object.keys(networkDeps).reduce((cadence, contractName) => {
         const test = new RegExp(`\\bimport\\b\\s*\\\"${contractName}\\\"`, "g")
         return cadence.replace(test, `import ${contractName} from ${networkDeps[contractName]}`)
