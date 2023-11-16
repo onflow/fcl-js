@@ -1,5 +1,24 @@
 # @onflow/fcl
 
+## 1.8.1
+
+### Patch Changes
+
+- [#1807](https://github.com/onflow/fcl-js/pull/1807) [`9430d723`](https://github.com/onflow/fcl-js/commit/9430d7232c272f4acb55f5bcff7be82cef9704d9) Thanks [@jribbink](https://github.com/jribbink)! - Fix versioning & actor bug
+
+- Updated dependencies [[`9430d723`](https://github.com/onflow/fcl-js/commit/9430d7232c272f4acb55f5bcff7be82cef9704d9)]:
+  - @onflow/util-actor@1.3.1
+  - @onflow/config@1.2.1
+  - @onflow/rlp@1.2.1
+  - @onflow/sdk@1.3.1
+  - @onflow/types@1.2.1
+  - @onflow/util-address@1.2.1
+  - @onflow/util-invariant@1.2.1
+  - @onflow/util-logger@1.3.1
+  - @onflow/util-semver@1.0.1
+  - @onflow/util-template@1.2.1
+  - @onflow/util-uid@1.2.1
+
 ## 1.8.0
 
 ### Minor Changes
