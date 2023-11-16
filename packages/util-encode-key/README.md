@@ -6,7 +6,7 @@ You can learn more about keys, curves, hashes, weights and signing here: https:/
 
 ```javascript
 import { template as addNewKey } from "@onflow/six-add-new-key"
-import * as fcl from "@onflow/fcl-core"
+import * as fcl from "@onflow/fcl"
 
 import {encodeKey, ECDSA_P256, SHA3_256} from "@onflow/util-encode-key"
 

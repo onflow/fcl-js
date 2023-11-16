@@ -213,7 +213,7 @@
   ```
 
   ```javascript
-  import * as fcl from "@onflow/fcl-core"
+  import * as fcl from "@onflow/fcl"
   import {initFclWc} from "@onflow/fcl-wc"
 
   const {FclConnectServicePlugin, client} = await initFclWc({
@@ -267,7 +267,7 @@
 * [#1411](https://github.com/onflow/fcl-js/pull/1411) [`3c7a1bd6`](https://github.com/onflow/fcl-js/commit/3c7a1bd6686ff41dcd4953b471c54c1256a599a0) Thanks [@gregsantos](https://github.com/gregsantos)! - Adds additional options to `init` for `pairingModalOverride` and `wcRequestHook`
 
   ```js
-  import * as fcl from "@onflow/fcl-core"
+  import * as fcl from "@onflow/fcl"
   import {init} from "@onflow/fcl-wc"
   // example using pairing data from wcRequestHook and providing a custom pairing modal
   const {FclWcServicePlugin, client} = await init({
@@ -312,7 +312,7 @@
 - [#1411](https://github.com/onflow/fcl-js/pull/1411) [`3c7a1bd6`](https://github.com/onflow/fcl-js/commit/3c7a1bd6686ff41dcd4953b471c54c1256a599a0) Thanks [@gregsantos](https://github.com/gregsantos)! - Adds additional options to `init` for `pairingModalOverride` and `wcRequestHook`
 
   ```js
-  import * as fcl from "@onflow/fcl-core"
+  import * as fcl from "@onflow/fcl"
   import {init} from "@onflow/fcl-wc"
   // example using pairing data from wcRequestHook and providing a custom pairing modal
   const {FclWcServicePlugin, client} = await init({
@@ -407,7 +407,7 @@
   ```
 
   ```javascript
-  import * as fcl from "@onflow/fcl-core"
+  import * as fcl from "@onflow/fcl"
   import {initFclWc} from "@onflow/fcl-wc"
 
   const {FclConnectServicePlugin, client} = await initFclWc({
