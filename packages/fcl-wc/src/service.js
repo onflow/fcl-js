@@ -4,7 +4,7 @@ import {log, LEVELS} from "@onflow/util-logger"
 import {fetchFlowWallets, isMobile, CONFIGURED_NETWORK, isIOS} from "./utils"
 import {FLOW_METHODS, REQUEST_TYPES} from "./constants"
 
-export const makeServicePlugin = async (client, opts) => ({
+export const makeServicePlugin = async (client, opts = {}) => ({
   name: "fcl-plugin-service-walletconnect",
   f_type: "ServicePlugin",
   type: "discovery-service",
@@ -15,7 +15,7 @@ export const makeServicePlugin = async (client, opts) => ({
 const makeExec = (client, {wcRequestHook, pairingModalOverride}) => {
   return ({service, body, opts}) => {
     return new Promise(async (resolve, reject) => {
-      invariant(Boolean(client), "WalletConnect is not initialized")
+      invariant(client, "WalletConnect is not initialized")
       let session, pairing, windowRef
       const method = service.endpoint
       const appLink = validateAppLink(service)
@@ -272,7 +272,7 @@ async function connectWc({
   }
 }
 
-const makeBaseWalletConnectService = (includeBaseWC) => {
+const makeBaseWalletConnectService = includeBaseWC => {
   return {
     f_type: "Service",
     f_vsn: "1.0.0",

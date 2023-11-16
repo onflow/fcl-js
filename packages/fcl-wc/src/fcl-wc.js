@@ -8,7 +8,7 @@ import {setConfiguredNetwork} from "./utils"
 
 const DEFAULT_RELAY_URL = "wss://relay.walletconnect.com"
 const DEFAULT_LOGGER = "debug"
-let client 
+let client = null
 
 const initClient = async ({projectId, metadata}) => {
   invariant(
@@ -34,8 +34,8 @@ const initClient = async ({projectId, metadata}) => {
 }
 
 export const init = async ({
-  projectId,
-  metadata,
+  projectId = null,
+  metadata = {},
   includeBaseWC = false,
   wcRequestHook = null,
   pairingModalOverride = null,
