@@ -1,6 +1,6 @@
 import {log, LEVELS} from "@onflow/util-logger"
 import {invariant} from "@onflow/util-invariant"
-import * as fcl from "@onflow/fcl-core"
+import * as fcl from "@onflow/fcl"
 
 export let CONFIGURED_NETWORK = null
 
@@ -12,7 +12,7 @@ export const setConfiguredNetwork = async () => {
   )
 }
 
-const makeFlowServicesFromWallets = (wallets) => {
+const makeFlowServicesFromWallets = wallets => {
   return Object.values(wallets)
     .filter(w => w.app_type === "wallet")
     .map(wallet => {
@@ -37,7 +37,7 @@ const makeFlowServicesFromWallets = (wallets) => {
     })
 }
 
-export const fetchFlowWallets = async (projectId) => {
+export const fetchFlowWallets = async projectId => {
   try {
     const wcApiWallets = await fetch(
       `https://explorer-api.walletconnect.com/v3/wallets?projectId=${projectId}&chains=flow:${CONFIGURED_NETWORK}&entries=5&page=1`
