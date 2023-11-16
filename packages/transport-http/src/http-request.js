@@ -4,7 +4,7 @@ import fetchTransport from "cross-fetch"
 const AbortController =
   globalThis.AbortController || require("abort-controller")
 
-class HTTPRequestError extends Error {
+export class HTTPRequestError extends Error {
   constructor({
     error,
     hostname,
