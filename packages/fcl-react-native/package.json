@@ -68,22 +68,5 @@
     "expo-web-browser": "^12.0.0",
     "react": "^17.0.0 || ^18.0.0",
     "react-native": "^0.0.0-0 || 0.60 - 0.72 || 1000.0.0"
-  },
-  "peerDependenciesMeta": {
-    "@react-native-async-storage/async-storage": {
-      "optional": true
-    },
-    "expo-web-browser": {
-      "optional": true
-    },
-    "expo-linking": {
-      "optional": true
-    },
-    "react": {
-      "optional": true
-    },
-    "react-native": {
-      "optional": true
-    }
   }
 }
