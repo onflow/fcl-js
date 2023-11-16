@@ -24,7 +24,7 @@ The main things you will need to configure is are:
 Below is an example of configuring FCL to talk to Flow (testnet)
 
 ```javascript
-import * as fcl from "@onflow/fcl-core"
+import * as fcl from "@onflow/fcl"
 
 fcl.config()
   .put("accessNode.api", "https://rest-testnet.onflow.org")
@@ -71,7 +71,7 @@ pub fun main(): Bool {
 We can query Flow using this cadence like so:
 
 ```javascript
-import * as fcl from "@onflow/fcl-core"
+import * as fcl from "@onflow/fcl"
 
 await fcl.query({
   cadence: `
@@ -132,7 +132,7 @@ When we put them all together our args function needs to return:
 To bring all this together our query will look like this:
 
 ```javascript
-import * as fcl from "@onflow/fcl-core"
+import * as fcl from "@onflow/fcl"
 
 await fcl.query({
   cadence: `
@@ -157,7 +157,7 @@ The following example should hopefully highlight a bit better what is possible. 
 The first thing we need to do is to configure FCL, as mentioned above this only needs to happen once before we make our first query. In this case we are wanting two configurations values, the access node api and the profile contract address.
 
 ```javascript
-import * as fcl from "@onflow/fcl-core"
+import * as fcl from "@onflow/fcl"
 
 // prettier-ignore
 fcl.config()
@@ -168,7 +168,7 @@ fcl.config()
 Now that things are configured we can query Flow.
 
 ```javascript
-import * as fcl from "@onflow/fcl-core"
+import * as fcl from "@onflow/fcl"
 
 // prettier-ignore
 await fcl.query({
@@ -218,7 +218,7 @@ If you have an Interaction Template, you can use it with `query`:
 ### Using Template JSON 
 
 ```javascript
-import * as fcl from "@onflow/fcl-core"
+import * as fcl from "@onflow/fcl"
 import myScriptTemplate from "script-template.json"
 
 const scriptResult = await fcl.query({
@@ -231,7 +231,7 @@ const scriptResult = await fcl.query({
 In place of a JSON template, you can specify a URL that points to one, and FCL will retrieve it from the remote location:
 
 ```javascript
-import * as fcl from "@onflow/fcl-core"
+import * as fcl from "@onflow/fcl"
 
 const scriptResult = await fcl.mutate({
   template: "https://interactions.my-project.com/read-nft",
