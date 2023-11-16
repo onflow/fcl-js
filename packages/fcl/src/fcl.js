@@ -1,6 +1,7 @@
 export * from "./shared-exports"
 
 import {getMutate} from "./exec/mutate"
+
 export const mutate = getMutate({platform: "web"})
 
 import {getCurrentUser} from "./current-user"
@@ -18,8 +19,6 @@ export const signUp = (opts = {}) => currentUser().authenticate(opts)
 export const logIn = (opts = {}) => currentUser().authenticate(opts)
 
 export const authz = currentUser().authorization
-
-export {LOCAL_STORAGE, SESSION_STORAGE} from "./utils/web"
 
 import {config} from "@onflow/config"
 import {getDefaultConfig, coreStrategies} from "./utils/web"

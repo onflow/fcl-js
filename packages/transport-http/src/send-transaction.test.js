@@ -22,70 +22,72 @@ describe("Transaction", () => {
 
     httpRequestMock.mockReturnValue({id: returnedTransactionId})
 
+    const built = await build([
+      transaction`cadence transaction`,
+      proposer({
+        addr: "abc",
+        keyId: 1,
+        sequenceNum: 123,
+        signingFunction: () => ({
+          addr: "abc",
+          keyId: 1,
+          signature: "abc123",
+        }),
+        resolve: null,
+        role: {
+          proposer: true,
+          authorizer: false,
+          payer: false,
+          param: false,
+        },
+      }),
+      payer({
+        addr: "def",
+        keyId: 1,
+        sequenceNum: 123,
+        signingFunction: () => ({
+          addr: "def",
+          keyId: 1,
+          signature: "def456",
+        }),
+        resolve: null,
+        role: {
+          proposer: false,
+          authorizer: false,
+          payer: true,
+          param: false,
+        },
+      }),
+      authorizations([
+        {
+          addr: "abc",
+          keyId: 1,
+          sequenceNum: 123,
+          signingFunction: () => ({
+            addr: "abc",
+            keyId: 1,
+            signature: "abc123",
+          }),
+          resolve: null,
+          role: {
+            proposer: false,
+            authorizer: true,
+            payer: false,
+            param: false,
+          },
+        },
+      ]),
+      ref("aaaa"),
+      limit(500),
+      voucherIntercept(async voucher => {
+        voucherToTxId(voucher)
+      }),
+    ])
+
+    const resolved = await resolve(built)
+
     const response = await sendTransaction(
-      await resolve(
-        await build([
-          transaction`cadence transaction`,
-          proposer({
-            addr: "f8d6e0586b0a20c7",
-            keyId: 1,
-            sequenceNum: 123,
-            signingFunction: () => ({
-              addr: "f8d6e0586b0a20c7",
-              keyId: 1,
-              signature: "abc123",
-            }),
-            resolve: null,
-            roles: {
-              proposer: true,
-              authorizer: false,
-              payer: false,
-              param: false,
-            },
-          }),
-          payer({
-            addr: "f8d6e0586b0a20c7",
-            keyId: 1,
-            sequenceNum: 123,
-            signingFunction: () => ({
-              addr: "f8d6e0586b0a20c7",
-              keyId: 1,
-              signature: "abc123",
-            }),
-            resolve: null,
-            roles: {
-              proposer: false,
-              authorizer: false,
-              payer: true,
-              param: false,
-            },
-          }),
-          authorizations([
-            {
-              addr: "f8d6e0586b0a20c7",
-              keyId: 1,
-              sequenceNum: 123,
-              signingFunction: () => ({
-                addr: "f8d6e0586b0a20c7",
-                keyId: 1,
-                signature: "abc123",
-              }),
-              resolve: null,
-              roles: {
-                proposer: false,
-                authorizer: true,
-                payer: false,
-                param: false,
-              },
-            },
-          ]),
-          ref("abc123"),
-          limit(500),
-          voucherIntercept(async voucher => {
-            voucherToTxId(voucher)
-          }),
-        ])
-      ),
+      resolved,
       {
         response: responseADT,
         Buffer,
@@ -111,27 +113,27 @@ describe("Transaction", () => {
       body: {
         script: "Y2FkZW5jZSB0cmFuc2FjdGlvbg==",
         arguments: [],
-        reference_block_id: "abc123",
+        reference_block_id: "aaaa",
         gas_limit: "500",
-        payer: "f8d6e0586b0a20c7",
+        payer: "def",
         proposal_key: {
-          address: "f8d6e0586b0a20c7",
+          address: "abc",
           key_index: "1",
           sequence_number: "123",
         },
-        authorizers: ["f8d6e0586b0a20c7"],
+        authorizers: ["abc"],
         payload_signatures: [
           {
-            address: "f8d6e0586b0a20c7",
+            address: "abc",
             key_index: "1",
             signature: "q8Ej",
           },
         ],
         envelope_signatures: [
           {
-            address: "f8d6e0586b0a20c7",
+            address: "def",
             key_index: "1",
-            signature: "q8Ej",
+            signature: "3vRW",
           },
         ],
       },

@@ -1,5 +1,10 @@
-import {prepAccount, PAYER} from "../interaction/interaction.js"
+import {pipe, prepAccount, PAYER} from "../interaction/interaction.js"
 
-export async function payer(authz) {
-  return prepAccount(authz, {role: PAYER})
+export function payer(ax = []) {
+  if (!Array.isArray(ax)) ax = [ax]
+  return pipe(
+    ax.map(authz => {
+      return prepAccount(authz, {role: PAYER})
+    })
+  )
 }

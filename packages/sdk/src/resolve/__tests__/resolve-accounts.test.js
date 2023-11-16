@@ -170,3 +170,78 @@ test("The PreAuthz Usecase - mixed signatories (wallet covers transaction fees)"
     }
   )
 })
+
+test("Deep resolve usecase - multiple layer deep resolves on account", async () => {
+  await config.overload(
+    {
+      "sdk.transport": TestUtils.mockSend(),
+      "debug.accounts": false,
+    },
+    async c => {
+      const authz = TestUtils.authzDeepResolveMany({
+        tempId: "CURRENT_USER",
+        proposer: S1a,
+        authorizations: [S1a, S1b, S1c],
+        payer: S2a, // wallet covers transaction
+      })
+
+      var ix = await TestUtils.run([
+        sdk.transaction`CODE`,
+        sdk.proposer(authz),
+        sdk.payer(authz),
+        sdk.authorizations([authz]),
+      ])
+
+      // Four Signatories
+      expect(Object.keys(ix.accounts).length).toBe(4)
+      expect(ix.accounts[TestUtils.idof(S1a)]).toBeDefined()
+      expect(ix.accounts[TestUtils.idof(S1b)]).toBeDefined()
+      expect(ix.accounts[TestUtils.idof(S1c)]).toBeDefined()
+      expect(ix.accounts[TestUtils.idof(S2a)]).toBeDefined()
+
+      expect(ix.proposer).toBe(TestUtils.idof(S1a))
+      expect(ix.payer).toEqual([TestUtils.idof(S2a)])
+
+      expect(ix.authorizations.length).toBe(3)
+      expect(ix.authorizations).toEqual([
+        TestUtils.idof(S1a),
+        TestUtils.idof(S1b),
+        TestUtils.idof(S1c),
+      ])
+    }
+  )
+})
+
+test.skip("Deep resolve usecase - excess resolves throw an eror", async () => {
+  await config.overload(
+    {
+      "sdk.transport": TestUtils.mockSend(),
+      "debug.accounts": false,
+    },
+    async c => {
+      const authz = TestUtils.authzDeepResolveMany(
+        {
+          tempId: "CURRENT_USER",
+          proposer: S1a,
+          authorizations: [S1a, S1b, S1c],
+          payer: S2a, // wallet covers transaction
+        },
+        5
+      )
+      // expect(...).toThrow doesn't work in this case
+      let error
+      try{
+        await TestUtils.run([
+          sdk.transaction`CODE`,
+          sdk.proposer(authz),
+          sdk.payer(authz),
+          sdk.authorizations([authz]),
+        ])
+      } catch (e){
+        error = e
+        
+      }
+      expect(error).toMatchInlineSnapshot("[Error: recurseResolveAccount Error: Depth limit (5) reached. Ensure your authorization functions resolve to an account after 5 resolves.]")
+    }
+  )
+})

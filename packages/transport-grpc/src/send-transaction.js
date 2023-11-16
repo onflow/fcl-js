@@ -71,7 +71,15 @@ export async function sendTransaction(ix, context = {}, opts = {}) {
         sig.setAddress(addressBuffer(sansPrefix(acct.addr), context))
         sig.setKeyId(acct.keyId)
         sig.setSignature(hexBuffer(acct.signature, context))
-        tx.addPayloadSignatures(sig)
+
+        const isSignatureExist = tx.getPayloadSignaturesList().some(
+          existingSignature => existingSignature.getAddress().toString() === sig.getAddress().toString()
+            && existingSignature.getKeyId() === sig.getKeyId()
+            && existingSignature.getSignature().toString() === sig.getSignature().toString()
+        )
+        if (!isSignatureExist) {
+          tx.addPayloadSignatures(sig)
+        }
       }
     } catch (error) {
       console.error("Trouble applying payload signature", {acct, ix})

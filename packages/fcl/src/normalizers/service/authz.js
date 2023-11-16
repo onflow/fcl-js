@@ -18,24 +18,28 @@ import {SERVICE_PRAGMA, IDENTITY_PRAGMA} from "./__vsn"
 export function normalizeAuthz(service) {
   if (service == null) return null
 
+  if (!service["f_vsn"]) {
+    return {
+      ...SERVICE_PRAGMA,
+      type: service.type,
+      uid: service.id,
+      endpoint: service.endpoint,
+      method: service.method,
+      identity: {
+        ...IDENTITY_PRAGMA,
+        address: withPrefix(service.addr),
+        keyId: service.keyId,
+      },
+      params: service.params,
+      data: service.data,
+    }
+  }
+
   switch (service["f_vsn"]) {
     case "1.0.0":
       return service
 
     default:
-      return {
-        ...SERVICE_PRAGMA,
-        type: service.type,
-        uid: service.id,
-        endpoint: service.endpoint,
-        method: service.method,
-        identity: {
-          ...IDENTITY_PRAGMA,
-          address: withPrefix(service.addr),
-          keyId: service.keyId,
-        },
-        params: service.params,
-        data: service.data,
-      }
+      return null
   }
 }

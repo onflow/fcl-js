@@ -1,5 +1,63 @@
 # @onflow/fcl
 
+## 1.8.1
+
+### Patch Changes
+
+- [#1807](https://github.com/onflow/fcl-js/pull/1807) [`9430d723`](https://github.com/onflow/fcl-js/commit/9430d7232c272f4acb55f5bcff7be82cef9704d9) Thanks [@jribbink](https://github.com/jribbink)! - Fix versioning & actor bug
+
+- Updated dependencies [[`9430d723`](https://github.com/onflow/fcl-js/commit/9430d7232c272f4acb55f5bcff7be82cef9704d9)]:
+  - @onflow/util-actor@1.3.1
+  - @onflow/config@1.2.1
+  - @onflow/rlp@1.2.1
+  - @onflow/sdk@1.3.1
+  - @onflow/types@1.2.1
+  - @onflow/util-address@1.2.1
+  - @onflow/util-invariant@1.2.1
+  - @onflow/util-logger@1.3.1
+  - @onflow/util-semver@1.0.1
+  - @onflow/util-template@1.2.1
+  - @onflow/util-uid@1.2.1
+
+## 1.8.0
+
+### Minor Changes
+
+- [#1801](https://github.com/onflow/fcl-js/pull/1801) [`8881394b`](https://github.com/onflow/fcl-js/commit/8881394bc11fea507e330a4c507ef304fe456c42) Thanks [@nialexsan](https://github.com/nialexsan)! - TS build
+
+### Patch Changes
+
+- Updated dependencies [[`8881394b`](https://github.com/onflow/fcl-js/commit/8881394bc11fea507e330a4c507ef304fe456c42), [`8881394b`](https://github.com/onflow/fcl-js/commit/8881394bc11fea507e330a4c507ef304fe456c42), [`8881394b`](https://github.com/onflow/fcl-js/commit/8881394bc11fea507e330a4c507ef304fe456c42), [`8881394b`](https://github.com/onflow/fcl-js/commit/8881394bc11fea507e330a4c507ef304fe456c42), [`8881394b`](https://github.com/onflow/fcl-js/commit/8881394bc11fea507e330a4c507ef304fe456c42)]:
+  - @onflow/types@1.2.0
+  - @onflow/util-invariant@1.2.0
+  - @onflow/util-template@1.2.0
+  - @onflow/util-address@1.2.0
+  - @onflow/util-logger@1.3.0
+  - @onflow/util-uid@1.2.0
+  - @onflow/rlp@1.2.0
+  - @onflow/util-actor@1.3.0
+  - @onflow/config@1.2.0
+  - @onflow/sdk@1.3.0
+
+## 1.7.0
+
+### Minor Changes
+
+- [#1775](https://github.com/onflow/fcl-js/pull/1775) [`e0d0d144`](https://github.com/onflow/fcl-js/commit/e0d0d1449524f4c65e3f7a263b5c0a3ab5ac4a89) Thanks [@chasefleming](https://github.com/chasefleming)! - Send suggested features to discovery
+
+### Patch Changes
+
+- [#1785](https://github.com/onflow/fcl-js/pull/1785) [`a3143a80`](https://github.com/onflow/fcl-js/commit/a3143a80d1e5df66c58c837022038d92dd836811) Thanks [@jribbink](https://github.com/jribbink)! - Fix version normalization of services in FCL
+
+- [#1532](https://github.com/onflow/fcl-js/pull/1532) [`06846f8e`](https://github.com/onflow/fcl-js/commit/06846f8e9c1e2cdf10aa8dfdff6e6c5b31af81e5) Thanks [@JeffreyDoyle](https://github.com/JeffreyDoyle)! - Refactor Resolve Accounts to user role based async decomposition for resolving internal accounts
+
+- [#1793](https://github.com/onflow/fcl-js/pull/1793) [`08f4dd6b`](https://github.com/onflow/fcl-js/commit/08f4dd6b0efc2204feb8fae8a480980688a49141) Thanks [@nialexsan](https://github.com/nialexsan)! - Move is-helpers to utils
+
+- [#1532](https://github.com/onflow/fcl-js/pull/1532) [`06846f8e`](https://github.com/onflow/fcl-js/commit/06846f8e9c1e2cdf10aa8dfdff6e6c5b31af81e5) Thanks [@JeffreyDoyle](https://github.com/JeffreyDoyle)! - Fixed duplicate signatures when sending transaction
+
+- Updated dependencies [[`06846f8e`](https://github.com/onflow/fcl-js/commit/06846f8e9c1e2cdf10aa8dfdff6e6c5b31af81e5), [`06846f8e`](https://github.com/onflow/fcl-js/commit/06846f8e9c1e2cdf10aa8dfdff6e6c5b31af81e5)]:
+  - @onflow/sdk@1.2.3
+
 ## 1.6.0
 
 ### Minor Changes
