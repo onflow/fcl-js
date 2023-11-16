@@ -7,7 +7,7 @@ export let CONFIGURED_NETWORK = null
 export const setConfiguredNetwork = async () => {
   CONFIGURED_NETWORK = await fcl.getChainId()
   invariant(
-    Boolean(CONFIGURED_NETWORK),
+    CONFIGURED_NETWORK,
     "FCL Configuration value for 'flow.network' is required"
   )
 }
