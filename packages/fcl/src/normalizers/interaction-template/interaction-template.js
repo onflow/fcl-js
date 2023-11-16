@@ -4,7 +4,8 @@ export function normalizeInteractionTemplate(template) {
   switch (template["f_version"]) {
     case "1.0.0":
       return template
-
+    case "1.1.0":
+      return template
     default:
       throw new Error(
         "normalizeInteractionTemplate Error: Invalid InteractionTemplate"
