@@ -62,12 +62,49 @@ export function deriveCadenceByNetwork({network, template}) {
 
           return [dependencyPlaceholder, dependencyContractForNetwork.address]
         }
-      )
-
+      )     
+      
       return networkDependencies.reduce((cadence, [placeholder, address]) => {
         const regex = new RegExp("(\\b" + placeholder + "\\b)", "g")
         return cadence.replace(regex, address)
       }, template.data.cadence)
+
+    case "1.1.0":
+      // get network dependencies from template dependencies, use new string import format
+      const networkDeps = {}
+
+      template?.data?.dependencies.forEach(dependency => {
+        dependency.contracts.forEach(contract => {
+          const contractName = contract.contract
+          const networkAddress = null
+          contract.networks.forEach(net => {
+            if (net.network === network) {
+              networkDeps[contractName] = net.address
+            }
+          })
+
+          invariant(
+            networkAddress,
+            `networkAddress -- Could not find contracts Network Address: ${contractName}`
+          )          
+        })
+      })
+
+      invariant(
+        Object.keys(networkDeps).length === template?.data?.dependencies.length,
+        `networkDeps -- Could not find contracts for import dependencies: ${networkDeps}`
+      )
+
+      invariant(
+        Object.keys(networkDeps).length === Object.values(networkDeps).length,
+        `networkDeps -- Could not find all addresses for network ${network} dependencies:  ${networkDeps}`
+      )
+
+      console.log("networkDeps", networkDeps)
+      return Object.keys(networkDeps).reduce((cadence, contractName) => {
+        const test = new RegExp(`\\bimport\\b\\s*\\\"${contractName}\\\"`, "g")
+        return cadence.replace(test, `import ${contractName} from ${networkDeps[contractName]}`)
+      }, template.data.cadence.body)
 
     default:
       throw new Error(
