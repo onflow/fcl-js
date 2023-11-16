@@ -45,13 +45,12 @@ export async function deriveDependencies(opts = {}) {
       return derivedDependencies
 
     case "1.1.0":
-      let derivedDependencies = {}
       template?.data?.dependencies?.forEach(dependency => {
         dependency.contracts.forEach(contract => {
           const contractName = contract.contract
           contract.networks.forEach(net => {
             if (net.network === network) {
-              derivedDependencies[contractName] = net.address
+              derivedDependencies[contractName] = withPrefix(net?.address)
             }
           })
 
