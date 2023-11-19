@@ -20,6 +20,8 @@ export const logIn = (opts = {}) => currentUser().authenticate(opts)
 
 export const authz = currentUser().authorization
 
+export {LOCAL_STORAGE, SESSION_STORAGE} from "./utils/web"
+
 import {config} from "@onflow/config"
 import {getDefaultConfig, coreStrategies} from "./utils/web"
 import {initServiceRegistry} from "./current-user/exec-service/plugins"
