@@ -7,6 +7,5 @@
     // Removing this would place the .d.ts files
     // next to the .js files
     "outDir": "types",
-    "baseUrl": "."
   }
 }

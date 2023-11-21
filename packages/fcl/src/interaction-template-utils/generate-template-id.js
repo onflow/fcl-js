@@ -5,7 +5,7 @@ import {normalizeInteractionTemplate} from "../normalizers/interaction-template/
 
 /**
  * @description Generates Interaction Template ID for a given Interaction Template
- *  
+ *
  * @param {object} params
  * @param {object} params.template - Interaction Template
  * @returns {Promise<string>} - Interaction Template ID

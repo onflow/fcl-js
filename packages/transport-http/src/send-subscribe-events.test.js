@@ -11,20 +11,11 @@ import {
 describe("Subscribe Events", () => {
   let subscribeWsMock
 
-  let onData
-  let onError
-  let onComplete
-
   let unsubscribe
   let response
 
   beforeEach(async () => {
     subscribeWsMock = jest.fn()
-
-    onData = jest.fn()
-    onError = jest.fn()
-    onComplete = jest.fn()
-
     unsubscribe = jest.fn()
 
     subscribeWsMock.mockReturnValue({

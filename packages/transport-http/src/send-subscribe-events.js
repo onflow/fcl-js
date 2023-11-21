@@ -23,15 +23,6 @@ function constructData(ix, context, data) {
   return ret
 }
 
-function constructResponse(ix, context, callback) {
-  let ret = context.response()
-  ret.tag = ix.tag
-
-  ret.unsubscribeCallback = callback
-
-  return ret
-}
-
 export async function sendSubscribeEvents(ix, context = {}, opts = {}) {
   invariant(opts.node, `SDK Send Get Events Error: opts.node must be defined.`)
   invariant(
@@ -46,9 +37,8 @@ export async function sendSubscribeEvents(ix, context = {}, opts = {}) {
   ix = await ix
 
   const subscribeWs = opts.subscribeWs || defaultSubscribeWs
-  const {onData, onError, onComplete} = ix.subscription
 
-  const unsubscribe = subscribeWs({
+  const socketStream = subscribeWs({
     hostname: opts.node,
     path: `/v1/subscribe_events`,
     params: {
@@ -59,15 +49,8 @@ export async function sendSubscribeEvents(ix, context = {}, opts = {}) {
       contracts: ix.subscribeEvents.contracts,
       heartbeat_interval: ix.subscribeEvents.heartbeatInterval,
     },
-    onData: handleData,
-    onError,
-    onComplete,
   })
 
-  function handleData(data) {
-    const resp = constructData(ix, context, data)
-    onData(resp)
-  }
-
-  return constructResponse(ix, context, unsubscribe)
+  // Map the data to the response object
+  return socketStream.map(data => constructData(ix, context, data))
 }

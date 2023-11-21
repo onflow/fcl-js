@@ -111,11 +111,6 @@ const IX = `{
   },
   "collection": {
     "id":null
-  },
-  "subscription": {
-    "onData":null,
-    "onError":null,
-    "onComplete":null
   }
 }`
 
