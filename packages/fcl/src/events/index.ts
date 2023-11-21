@@ -1,4 +1,4 @@
-import {config, send, decode, subscribeEvents} from "@onflow/sdk"
+import {send, decode, subscribeEvents} from "@onflow/sdk"
 import {DataStream} from "@onflow/util-pubsub"
 import {Event} from "@onflow/typedefs"
 
@@ -14,26 +14,13 @@ type NormalizedEventTypeFilter = {
   contracts: string[]
 }
 
-const RATE = 10000
-const UPDATED = "UPDATED"
-const TICK = "TICK"
-const HIGH_WATER_MARK = "hwm"
-
-const scheduleTick = async ctx => {
-  return setTimeout(
-    () => ctx.sendSelf(TICK),
-    await config().get("fcl.eventPollRate", RATE)
-  )
-}
-
 function normalizeEventTypeFilter(
   filterOrType?: EventTypeFilter | string
 ): NormalizedEventTypeFilter {
   // Normalize the filter to arrays
-  let filter: NormalizedEventTypeFilter
   if (typeof filterOrType === "string") {
     return {
-      eventTypes: [filterOrType],
+      eventTypes: filterOrType ? [filterOrType] : [],
       addresses: [],
       contracts: [],
     }
@@ -44,23 +31,15 @@ function normalizeEventTypeFilter(
       contracts: [],
     }
   } else {
-    const {eventTypes, addresses, contracts} = filterOrType
+    let {eventTypes, addresses, contracts} = filterOrType
+    eventTypes = eventTypes || []
+    addresses = addresses || []
+    contracts = contracts || []
+
     return {
-      eventTypes: Array.isArray(eventTypes)
-        ? eventTypes
-        : eventTypes
-        ? [eventTypes]
-        : [],
-      addresses: Array.isArray(addresses)
-        ? addresses
-        : addresses
-        ? [addresses]
-        : [],
-      contracts: Array.isArray(contracts)
-        ? contracts
-        : contracts
-        ? [contracts]
-        : [],
+      eventTypes: Array.isArray(eventTypes) ? eventTypes : [eventTypes],
+      addresses: Array.isArray(addresses) ? addresses : [addresses],
+      contracts: Array.isArray(contracts) ? contracts : [contracts],
     }
   }
 }
@@ -100,12 +79,12 @@ export function events(filterOrType?: EventTypeFilter | string) {
 
       // Subscribe to the stream using the callback
       streamPromise.then(stream =>
-        stream.subscribe(
-          event => callback(event, null),
-          error => {
-            callback(null, error)
-          }
-        )
+        stream
+          .map(data => decode(data) as Event)
+          .subscribe(
+            event => callback(event, null),
+            error => callback(null, error)
+          )
       )
 
       return () => {

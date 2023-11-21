@@ -5,7 +5,7 @@ import {sendGetTransaction} from "./send-get-transaction.js"
 import {sendExecuteScript} from "./send-execute-script.js"
 import {sendGetAccount} from "./send-get-account.js"
 import {sendGetEvents} from "./send-get-events.js"
-import {sendSubscribeEvents} from "./send-subscribe-events.js"
+import {connectSubscribeEvents} from "./connect-subscribe-events.js"
 import {sendGetBlock} from "./send-get-block.js"
 import {sendGetBlockHeader} from "./send-get-block-header.js"
 import {sendGetCollection} from "./send-get-collection.js"
@@ -36,7 +36,7 @@ export const send = async (ix, context = {}, opts = {}) => {
     case context.ix.isGetEvents(ix):
       return opts.sendGetEvents ? opts.sendGetEvents(ix, context, opts) : sendGetEvents(ix, context, opts)
     case context.ix.isSubscribeEvents(ix):
-      return opts.sendSubscribeEvents ? opts.sendSubscribeEvents(ix, context, opts) : sendSubscribeEvents(ix, context, opts)
+      return opts.connectSubscribeEvents ? opts.connectSubscribeEvents(ix, context, opts) : connectSubscribeEvents(ix, context, opts)
     case context.ix.isGetBlock(ix):
       return opts.sendGetBlock ? opts.sendGetBlock(ix, context, opts) : sendGetBlock(ix, context, opts)
     case context.ix.isGetBlockHeader(ix):

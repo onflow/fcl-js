@@ -1,5 +1,5 @@
 import {invariant} from "@onflow/util-invariant"
-import {subscribeWs as defaultSubscribeWs} from "./subscribe-ws"
+import {connectWs as defaultConnectWs} from "./connect-ws"
 
 function constructData(ix, context, data) {
   let ret = context.response()
@@ -23,7 +23,7 @@ function constructData(ix, context, data) {
   return ret
 }
 
-export async function sendSubscribeEvents(ix, context = {}, opts = {}) {
+export async function connectSubscribeEvents(ix, context = {}, opts = {}) {
   invariant(opts.node, `SDK Send Get Events Error: opts.node must be defined.`)
   invariant(
     context.response,
@@ -36,9 +36,9 @@ export async function sendSubscribeEvents(ix, context = {}, opts = {}) {
 
   ix = await ix
 
-  const subscribeWs = opts.subscribeWs || defaultSubscribeWs
+  const connectWs = opts.connectWs || defaultConnectWs
 
-  const socketStream = subscribeWs({
+  const socketStream = connectWs({
     hostname: opts.node,
     path: `/v1/subscribe_events`,
     params: {

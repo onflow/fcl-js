@@ -2,7 +2,7 @@ import {safeParseJSON} from "./utils"
 import {PubSub, DataStream} from "@onflow/util-pubsub"
 
 // TODO: Implement retries
-export function subscribeWs<T>({
+export function connectWs<T>({
   hostname,
   path,
   params,
