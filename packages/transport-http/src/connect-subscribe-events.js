@@ -2,16 +2,26 @@ import {invariant} from "@onflow/util-invariant"
 import {connectWs as defaultConnectWs} from "./connect-ws"
 
 function constructData(ix, context, data) {
+  // TODO REMOVE ME
+  // DUMMY PAYLOAD UNTIL ACCESS NODE BUG IS FIXED
+  if (data.Events) {
+    data.Events = data.Events.map(event => ({
+      ...event,
+      Payload:
+        "eyJ2YWx1ZSI6eyJpZCI6IkEuOTEyZDU0NDBmN2UzNzY5ZS5GbG93RmVlcy5GZWVzRGVkdWN0ZWQiLCJmaWVsZHMiOlt7InZhbHVlIjp7InZhbHVlIjoiMC4wMDAwMDExOSIsInR5cGUiOiJVRml4NjQifSwibmFtZSI6ImFtb3VudCJ9LHsidmFsdWUiOnsidmFsdWUiOiIxLjAwMDAwMDAwIiwidHlwZSI6IlVGaXg2NCJ9LCJuYW1lIjoiaW5jbHVzaW9uRWZmb3J0In0seyJ2YWx1ZSI6eyJ2YWx1ZSI6IjAuMDAwMDAwMDQiLCJ0eXBlIjoiVUZpeDY0In0sIm5hbWUiOiJleGVjdXRpb25FZmZvcnQifV19LCJ0eXBlIjoiRXZlbnQifQo=",
+    }))
+  }
+
   let ret = context.response()
   ret.tag = ix.tag
 
-  ret.events = data.events
-    ? data.events.map(event => ({
-        blockId: data.BlockId,
+  ret.events = data.Events
+    ? data.Events.map(event => ({
+        blockId: data.BlockID,
         blockHeight: Number(data.Height),
         blockTimestamp: data.Timestamp,
         type: event.Type,
-        transactionId: event.TransactionId,
+        transactionId: event.TransactionID,
         transactionIndex: Number(event.TransactionIndex),
         eventIndex: Number(event.EventIndex),
         payload: JSON.parse(
@@ -19,6 +29,15 @@ function constructData(ix, context, data) {
         ),
       }))
     : []
+
+  return ret
+}
+
+function constructResponse(ix, context, stream) {
+  let ret = context.response()
+  ret.tag = ix.tag
+
+  ret.dataStream = stream
 
   return ret
 }
@@ -52,5 +71,7 @@ export async function connectSubscribeEvents(ix, context = {}, opts = {}) {
   })
 
   // Map the data to the response object
-  return socketStream.map(data => constructData(ix, context, data))
+  const dataStream = socketStream.map(data => constructData(ix, context, data))
+
+  return constructResponse(ix, context, dataStream)
 }

@@ -9,38 +9,38 @@ type EventTypeFilter = {
 }
 
 type NormalizedEventTypeFilter = {
-  eventTypes: string[]
-  addresses: string[]
-  contracts: string[]
+  eventTypes?: string[]
+  addresses?: string[]
+  contracts?: string[]
 }
 
 function normalizeEventTypeFilter(
   filterOrType?: EventTypeFilter | string
 ): NormalizedEventTypeFilter {
   // Normalize the filter to arrays
-  if (typeof filterOrType === "string") {
+  if (typeof filterOrType === "string" && filterOrType !== "") {
     return {
-      eventTypes: filterOrType ? [filterOrType] : [],
-      addresses: [],
-      contracts: [],
+      eventTypes: [filterOrType],
     }
-  } else if (filterOrType == null) {
-    return {
-      eventTypes: [],
-      addresses: [],
-      contracts: [],
-    }
+  } else if (filterOrType == null || filterOrType === "") {
+    return {}
   } else {
     let {eventTypes, addresses, contracts} = filterOrType
-    eventTypes = eventTypes || []
-    addresses = addresses || []
-    contracts = contracts || []
+    let result: NormalizedEventTypeFilter = {}
 
-    return {
-      eventTypes: Array.isArray(eventTypes) ? eventTypes : [eventTypes],
-      addresses: Array.isArray(addresses) ? addresses : [addresses],
-      contracts: Array.isArray(contracts) ? contracts : [contracts],
+    if (eventTypes != null) {
+      result.eventTypes = Array.isArray(eventTypes) ? eventTypes : [eventTypes]
     }
+
+    if (addresses != null) {
+      result.addresses = Array.isArray(addresses) ? addresses : [addresses]
+    }
+
+    if (contracts != null) {
+      result.contracts = Array.isArray(contracts) ? contracts : [contracts]
+    }
+
+    return result
   }
 }
 
@@ -80,7 +80,7 @@ export function events(filterOrType?: EventTypeFilter | string) {
       // Subscribe to the stream using the callback
       streamPromise.then(stream =>
         stream
-          .map(data => decode(data) as Event)
+          .map(data => decode(data) as Promise<Event>)
           .subscribe(
             event => callback(event, null),
             error => callback(null, error)

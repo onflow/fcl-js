@@ -8,7 +8,9 @@ describe("util-pubsub", () => {
   it("should publish messages asynchronously", async () => {
     const pubsub = new PubSub<string>()
     const messages: string[] = []
-    const subscription = pubsub.subscribe(message => messages.push(message))
+    const subscription = pubsub.subscribe(message => {
+      messages.push(message)
+    })
     pubsub.next("foo")
     pubsub.next("bar")
     subscription.unsubscribe()
@@ -21,7 +23,9 @@ describe("util-pubsub", () => {
   it("should publish messages synchronously", () => {
     const pubsub = new PubSub<string>()
     const messages: string[] = []
-    const subscription = pubsub.subscribe(message => messages.push(message))
+    const subscription = pubsub.subscribe(message => {
+      messages.push(message)
+    })
     pubsub.next("foo", true)
     pubsub.next("bar", true)
     subscription.unsubscribe()
@@ -32,9 +36,9 @@ describe("util-pubsub", () => {
   it("should publish errors", async () => {
     const pubsub = new PubSub<string>()
     const errors: any[] = []
-    const subscription = pubsub.subscribe(undefined, error =>
+    const subscription = pubsub.subscribe(undefined, error => {
       errors.push(error)
-    )
+    })
     pubsub.error("foo")
     pubsub.error("bar")
     subscription.unsubscribe()
@@ -47,9 +51,9 @@ describe("util-pubsub", () => {
   it("should publish errors synchronously", () => {
     const pubsub = new PubSub<string>()
     const errors: any[] = []
-    const subscription = pubsub.subscribe(undefined, error =>
+    const subscription = pubsub.subscribe(undefined, error => {
       errors.push(error)
-    )
+    })
     pubsub.error("foo", true)
     pubsub.error("bar", true)
     subscription.unsubscribe()
@@ -61,9 +65,9 @@ describe("util-pubsub", () => {
   it("should publish completion", async () => {
     const pubsub = new PubSub<string>()
     const completions: any[] = []
-    const subscription = pubsub.subscribe(undefined, undefined, () =>
+    const subscription = pubsub.subscribe(undefined, undefined, () => {
       completions.push(true)
-    )
+    })
     jest.spyOn(subscription, "unsubscribe")
     pubsub.complete(true)
 
@@ -76,9 +80,9 @@ describe("util-pubsub", () => {
   it("should publish completion synchronously", () => {
     const pubsub = new PubSub<string>()
     const completions: any[] = []
-    const subscription = pubsub.subscribe(undefined, undefined, () =>
+    const subscription = pubsub.subscribe(undefined, undefined, () => {
       completions.push(true)
-    )
+    })
     jest.spyOn(subscription, "unsubscribe")
     pubsub.complete(true)
 

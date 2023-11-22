@@ -22,9 +22,8 @@ export function connectWs<T>({
     ws.close()
   }
 
-  // Build a websocket connection
-  const url = new URL(path, hostname)
-  url.search = new URLSearchParams(params).toString()
+  // Build a websocket connection with correct protocol & params
+  const url = buildConnectionUrl(hostname, path, params)
   const ws = new WebSocket(url)
 
   ws.onmessage = function (e) {
@@ -43,4 +42,25 @@ export function connectWs<T>({
   }
 
   return dataStream
+}
+
+function buildConnectionUrl(
+  hostname: string,
+  path: string,
+  params?: Record<string, string>
+) {
+  const url = new URL(path, hostname)
+  if (url.protocol === "https:") {
+    url.protocol = "wss:"
+  } else if (url.protocol === "http:") {
+    url.protocol = "ws:"
+  }
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value) {
+      url.searchParams.append(key, value)
+    }
+  })
+
+  return url.toString()
 }

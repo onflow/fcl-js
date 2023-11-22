@@ -1,10 +1,49 @@
 export type Operator<T, R, S extends Subscribable<R> = Subscribable<R>> = (
   source: Subscribable<T>
 ) => S
-export interface Subscriber<T> {
-  next?: (value: T) => void
-  error?: (err: any) => void
-  complete?: () => void
+export class Subscriber<T> {
+  private nextMutex = Promise.resolve()
+  private errorMutex = Promise.resolve()
+  private completeMutex = Promise.resolve()
+
+  constructor(
+    private readonly _next?: (value: T) => void | Promise<void>,
+    private readonly _error?: (err: any) => void | Promise<void>,
+    private readonly _complete?: () => void | Promise<void>
+  ) {}
+
+  next(value: T) {
+    setTimeout(() => {
+      this.nextMutex = deliverMessage()
+    }, 0)
+
+    const deliverMessage = async () => {
+      await this.nextMutex
+      if (this._next) await this._next(value)
+    }
+  }
+
+  error(err: any) {
+    setTimeout(() => {
+      this.errorMutex = deliverMessage()
+    }, 0)
+
+    const deliverMessage = async () => {
+      await this.errorMutex
+      if (this._error) await this._error(err)
+    }
+  }
+
+  complete() {
+    setTimeout(() => {
+      this.completeMutex = deliverMessage()
+    }, 0)
+
+    const deliverMessage = async () => {
+      await this.completeMutex
+      if (this._complete) await this._complete()
+    }
+  }
 }
 
 export interface Subscription {
@@ -26,11 +65,11 @@ export class PubSub<T> implements Subscribable<T> {
   private observers: Subscriber<T>[] = []
 
   subscribe(
-    next?: (value: T) => void,
-    error?: (err: any) => void,
-    complete?: () => void
+    next?: (value: T) => void | Promise<void>,
+    error?: (err: any) => void | Promise<void>,
+    complete?: () => void | Promise<void>
   ): Subscription {
-    const observer: Subscriber<T> = {next, error, complete}
+    const observer: Subscriber<T> = new Subscriber(next, error, complete)
     this.observers.push(observer)
 
     return {
@@ -44,15 +83,11 @@ export class PubSub<T> implements Subscribable<T> {
   }
 
   next(data: T, sync = false) {
-    this.observers.forEach(observer =>
-      this.publish("next", observer, sync, data)
-    )
+    this.observers.forEach(observer => observer.next(data))
   }
 
   error(err: any, sync = false) {
-    this.observers.forEach(observer =>
-      this.publish("error", observer, sync, err)
-    )
+    this.observers.forEach(observer => observer.error(err))
     this.observers = []
   }
 
@@ -61,7 +96,7 @@ export class PubSub<T> implements Subscribable<T> {
    * @param sync
    */
   complete(sync = false) {
-    this.observers.forEach(observer => this.publish("complete", observer, sync))
+    this.observers.forEach(observer => observer.complete())
     this.observers = []
   }
 
@@ -70,20 +105,5 @@ export class PubSub<T> implements Subscribable<T> {
    */
   get subscriberCount() {
     return this.observers.length
-  }
-
-  private publish<V extends keyof Subscriber<T>>(
-    channel: V,
-    observer: Subscriber<T>,
-    sync: boolean,
-    ...args: Parameters<NonNullable<Subscriber<T>[V]>>
-  ) {
-    const deliverMessage = () => {
-      if (!this.observers.includes(observer)) return
-      observer[channel]?.apply(observer, args as any)
-    }
-
-    if (sync) return deliverMessage()
-    setTimeout(deliverMessage, 0)
   }
 }
