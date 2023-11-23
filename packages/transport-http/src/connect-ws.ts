@@ -57,7 +57,10 @@ export function connectWs<T>({
 function buildConnectionUrl(
   hostname: string,
   path: string,
-  params?: Record<string, string>
+  params?: Record<
+    string,
+    string | number | string[] | number[] | null | undefined
+  >
 ) {
   const url = new URL(path, hostname)
   if (url.protocol === "https:") {
@@ -68,7 +71,13 @@ function buildConnectionUrl(
 
   Object.entries(params || {}).forEach(([key, value]) => {
     if (value) {
-      url.searchParams.append(key, value)
+      let formattedValue: string
+      if (Array.isArray(value)) {
+        formattedValue = value.join(",")
+      } else {
+        formattedValue = value.toString()
+      }
+      url.searchParams.append(key, formattedValue)
     }
   })
 
