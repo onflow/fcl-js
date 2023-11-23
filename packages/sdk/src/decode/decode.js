@@ -1,5 +1,4 @@
 import {log} from "@onflow/util-logger"
-import EventEmitter from "events"
 
 const latestBlockDeprecationNotice = () => {
   log.deprecate({
@@ -166,15 +165,35 @@ export const decode = async (
   return recurseDecode(decodeInstructions, decoders, stack)
 }
 
-export const decodeResponse = async (response, customDecoders = {}) => {
-  if (response.encodedData) {
-    return decode(response.encodedData, customDecoders)
-  } else if (response.transactionStatus) {
-    return {
-      ...response.transactionStatus,
-      events: await Promise.all(
-        response.transactionStatus.events.map(async function decodeEvents(e) {
+export const makeDecodeResponse =
+  (decodeStream, customDecoders = {}) =>
+  async response => {
+    if (response.encodedData) {
+      return decode(response.encodedData, customDecoders)
+    } else if (response.transactionStatus) {
+      return {
+        ...response.transactionStatus,
+        events: await Promise.all(
+          response.transactionStatus.events.map(async function decodeEvents(e) {
+            return {
+              type: e.type,
+              transactionId: e.transactionId,
+              transactionIndex: e.transactionIndex,
+              eventIndex: e.eventIndex,
+              data: await decode(e.payload, customDecoders),
+            }
+          })
+        ),
+      }
+    } else if (response.transaction) {
+      return response.transaction
+    } else if (response.events) {
+      return await Promise.all(
+        response.events.map(async function decodeEvents(e) {
           return {
+            blockId: e.blockId,
+            blockHeight: e.blockHeight,
+            blockTimestamp: e.blockTimestamp,
             type: e.type,
             transactionId: e.transactionId,
             transactionIndex: e.transactionIndex,
@@ -182,103 +201,35 @@ export const decodeResponse = async (response, customDecoders = {}) => {
             data: await decode(e.payload, customDecoders),
           }
         })
-      ),
-    }
-  } else if (response.transaction) {
-    return response.transaction
-  } else if (response.events) {
-    return await Promise.all(
-      response.events.map(async function decodeEvents(e) {
-        return {
-          blockId: e.blockId,
-          blockHeight: e.blockHeight,
-          blockTimestamp: e.blockTimestamp,
-          type: e.type,
-          transactionId: e.transactionId,
-          transactionIndex: e.transactionIndex,
-          eventIndex: e.eventIndex,
-          data: await decode(e.payload, customDecoders),
-        }
-      })
-    )
-  } else if (response.account) {
-    return response.account
-  } else if (response.block) {
-    return response.block
-  } else if (response.blockHeader) {
-    return response.blockHeader
-  } else if (response.latestBlock) {
-    latestBlockDeprecationNotice()
-    return response.latestBlock
-  } else if (response.transactionId) {
-    return response.transactionId
-  } else if (response.collection) {
-    return response.collection
-  } else if (response.networkParameters) {
-    const chainIdMap = {
-      "flow-testnet": "testnet",
-      "flow-mainnet": "mainnet",
-      "flow-emulator": "local",
+      )
+    } else if (response.account) {
+      return response.account
+    } else if (response.block) {
+      return response.block
+    } else if (response.blockHeader) {
+      return response.blockHeader
+    } else if (response.latestBlock) {
+      latestBlockDeprecationNotice()
+      return response.latestBlock
+    } else if (response.transactionId) {
+      return response.transactionId
+    } else if (response.collection) {
+      return response.collection
+    } else if (response.networkParameters) {
+      const chainIdMap = {
+        "flow-testnet": "testnet",
+        "flow-mainnet": "mainnet",
+        "flow-emulator": "local",
+      }
+
+      return {
+        chainId: chainIdMap[response.networkParameters.chainId],
+      }
+    } else if (response.dataStream) {
+      return decodeStream(response.dataStream)
+    } else if (response.heartbeat) {
+      return response.heartbeat
     }
 
-    return {
-      chainId: chainIdMap[response.networkParameters.chainId],
-    }
-  } else if (response.dataStream) {
-    return decodeStream(response.dataStream, customDecoders)
-  } else if (response.heartbeat) {
-    return response.heartbeat
+    return null
   }
-
-  return null
-}
-
-// This function pipes a generic stream of data into a granular stream of decoded data
-export function decodeStream(stream, customDecoders) {
-  const newStream = new EventEmitter()
-  let topicMutex = {}
-
-  // Data is separated by topic & the decoded data is emitted in order by topic
-  // The mutex ensures that the data is emitted in order and avoids race conditions when decoding
-  stream.on("data", async data => {
-    const topics = Object.keys(data).filter(Boolean)
-
-    for (const channel of topics) {
-      const currentMutex = topicMutex[channel] || Promise.resolve()
-      topicMutex[channel] = currentMutex.then(async () => {
-        const partialResponse = {
-          [channel]: data[channel],
-        }
-        const decoded = await decodeResponse(partialResponse, customDecoders)
-        newStream.emit(channel, decoded)
-      })
-    }
-  })
-
-  // Error event is emitted as they are received
-  stream.on("error", error => {
-    newStream.emit("error", error)
-  })
-
-  // Close event is emitted the way it is received
-  stream.on("close", () => {
-    newStream.emit("close")
-  })
-
-  // Open event is emitted the way it is received
-  stream.on("open", () => {
-    newStream.emit("open")
-  })
-
-  return {
-    on: (channel, callback) => {
-      newStream.on(channel, callback)
-    },
-    off: (channel, callback) => {
-      newStream.off(channel, callback)
-    },
-    close: () => {
-      stream.close()
-    },
-  }
-}

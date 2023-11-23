@@ -1,48 +1,5 @@
 import {send, decode, subscribeEvents} from "@onflow/sdk"
-import {DataStream} from "@onflow/util-pubsub"
-import {Event} from "@onflow/typedefs"
-
-type EventTypeFilter = {
-  eventTypes?: string[] | string
-  addresses?: string[] | string
-  contracts?: string[] | string
-}
-
-type NormalizedEventTypeFilter = {
-  eventTypes?: string[]
-  addresses?: string[]
-  contracts?: string[]
-}
-
-function normalizeEventTypeFilter(
-  filterOrType?: EventTypeFilter | string
-): NormalizedEventTypeFilter {
-  // Normalize the filter to arrays
-  if (typeof filterOrType === "string" && filterOrType !== "") {
-    return {
-      eventTypes: [filterOrType],
-    }
-  } else if (filterOrType == null || filterOrType === "") {
-    return {}
-  } else {
-    let {eventTypes, addresses, contracts} = filterOrType
-    let result: NormalizedEventTypeFilter = {}
-
-    if (eventTypes != null) {
-      result.eventTypes = Array.isArray(eventTypes) ? eventTypes : [eventTypes]
-    }
-
-    if (addresses != null) {
-      result.addresses = Array.isArray(addresses) ? addresses : [addresses]
-    }
-
-    if (contracts != null) {
-      result.contracts = Array.isArray(contracts) ? contracts : [contracts]
-    }
-
-    return result
-  }
-}
+import {Event, EventFilter, EventStream} from "@onflow/typedefs"
 
 /**
  * @typedef {import("@onflow/typedefs").Event} Event
@@ -66,20 +23,25 @@ function normalizeEventTypeFilter(
  * import * as fcl from "@onflow/fcl"
  * fcl.events(eventName).subscribe((event) => console.log(event))
  */
-export function events(filterOrType?: EventTypeFilter | string) {
-  const filter = normalizeEventTypeFilter(filterOrType)
+export function events(filterOrType?: EventFilter | string) {
+  let filter: EventFilter
+  if (typeof filterOrType === "string") {
+    filter = {eventTypes: [filterOrType]}
+  } else {
+    filter = filterOrType || {}
+  }
 
   return {
     subscribe: (
-      callback: (event: Event | null, error: Error | null) => void
+      callback: (events: Event | null, error: Error | null) => void
     ) => {
-      const streamPromise: Promise<any> = send([subscribeEvents(filter)]).then(
-        decode
-      )
+      const streamPromise: Promise<EventStream> = send([
+        subscribeEvents(filter),
+      ]).then(decode)
 
       // Subscribe to the stream using the callback
-      function onEvents(data: any) {
-        callback(data, null)
+      function onEvents(data: Event[]) {
+        data.forEach(event => callback(event, null))
       }
       function onError(error: Error) {
         callback(null, error)
@@ -87,7 +49,6 @@ export function events(filterOrType?: EventTypeFilter | string) {
       streamPromise.then(stream =>
         stream.on("events", onEvents).on("error", onError)
       )
-      streamPromise.then(console.log)
 
       return () => {
         streamPromise.then(stream => stream.close())

@@ -22,6 +22,7 @@
     "@onflow/fcl-bundle": "^1.4.0",
     "@onflow/typedefs": "^1.2.0",
     "@types/estree": "^1.0.1",
+    "@types/jest": "^29.5.10",
     "@types/node": "^18.13.0",
     "eslint": "^8.35.0",
     "eslint-plugin-jsdoc": "^40.0.1",

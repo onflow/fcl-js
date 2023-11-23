@@ -1,5 +1,5 @@
 import * as root from "./decode.js"
-import {decode, decodeResponse} from "./decode.js"
+import {decode, makeDecodeResponse} from "./decode.js"
 import {Buffer} from "@onflow/rlp"
 
 it("exported interface contract", () => {
@@ -25,6 +25,7 @@ it("decodeResponse", async () => {
     ),
   }
 
+  const decodeResponse = makeDecodeResponse(() => {})
   const data = await decodeResponse(response)
   expect(data).toBe("7")
 })
@@ -1317,6 +1318,7 @@ describe("custom decoder tests", () => {
 
 describe("decode GetEvents tests", () => {
   it("decodes a GetEvents response correctly", async () => {
+    const decodeResponse = makeDecodeResponse(() => {})
     const timestampISOString = new Date().toISOString()
 
     const getEventsResponse = {
@@ -1351,6 +1353,7 @@ describe("decode GetEvents tests", () => {
 
 describe("decode GetTransactionStatus tests", () => {
   it("decodes a GetEvents response correctly", async () => {
+    const decodeResponse = makeDecodeResponse(() => {})
     const getTransactionStatusResponse = {
       transactionStatus: {
         status: 4,
@@ -1384,6 +1387,36 @@ describe("decode GetTransactionStatus tests", () => {
           data: "Thanks for reviewing these tests!",
         },
       ],
+    })
+  })
+})
+
+describe("decode data stream tests", () => {
+  it("calls decodeStream to decode data streams", async () => {
+    let mockStream = {}
+    const streamResponse = {
+      dataStream: mockStream,
+    }
+    const decodeStream = jest.fn()
+    const decodeResponse = makeDecodeResponse(decodeStream)
+    const decoded = await decodeResponse(streamResponse)
+
+    expect(decoded).toBe(mockStream)
+    expect(decodeStream).toHaveBeenCalledWith(mockStream)
+  })
+})
+
+describe("decode heartbeat tests", () => {
+  it("decodes a heartbeat response correctly", async () => {
+    const decodeResponse = makeDecodeResponse(() => {})
+    const heartbeatResponse = {
+      heartbeat: {
+        timestamp: 123456789,
+      },
+    }
+
+    expect(await decodeResponse(heartbeatResponse)).toStrictEqual({
+      timestamp: 123456789,
     })
   })
 })

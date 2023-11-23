@@ -3,7 +3,7 @@ import {connectWs as defaultConnectWs} from "./connect-ws"
 import {EventEmitter} from "events"
 import {StreamConnection} from "@onflow/typedefs"
 
-type SubscribeEventsStream = StreamConnection<{
+type RawSubscribeEventsStream = StreamConnection<{
   data: {
     events: any[]
     heartbeat: any
@@ -24,20 +24,21 @@ function constructData(ix: any, context: any, data: any) {
   let ret = context.response()
   ret.tag = ix.tag
 
-  ret.events = data.Events
-    ? data.Events.map((event: any) => ({
-        blockId: data.BlockID,
-        blockHeight: Number(data.Height),
-        blockTimestamp: data.Timestamp,
-        type: event.Type,
-        transactionId: event.TransactionID,
-        transactionIndex: Number(event.TransactionIndex),
-        eventIndex: Number(event.EventIndex),
-        payload: JSON.parse(
-          context.Buffer.from(event.Payload, "base64").toString()
-        ),
-      }))
-    : []
+  ret.events =
+    data.Events?.length > 0
+      ? data.Events.map((event: any) => ({
+          blockId: data.BlockID,
+          blockHeight: Number(data.Height),
+          blockTimestamp: data.Timestamp,
+          type: event.Type,
+          transactionId: event.TransactionID,
+          transactionIndex: Number(event.TransactionIndex),
+          eventIndex: Number(event.EventIndex),
+          payload: JSON.parse(
+            context.Buffer.from(event.Payload, "base64").toString()
+          ),
+        }))
+      : null
   ret.heartbeat = {
     blockId: data.BlockID,
     blockHeight: Number(data.Height),
@@ -103,7 +104,7 @@ export async function connectSubscribeEvents(
     formatterEmitter.emit("open")
   })
 
-  const responseStream: SubscribeEventsStream = {
+  const responseStream: RawSubscribeEventsStream = {
     on(event: "data" | "error" | "close" | "open", listener: any) {
       formatterEmitter.on(event, listener)
       return this

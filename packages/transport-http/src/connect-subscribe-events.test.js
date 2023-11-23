@@ -1,13 +1,7 @@
 import {sendSubscribeEvents} from "./connect-subscribe-events"
 import {Buffer} from "@onflow/rlp"
-import {
-  build,
-  subscribeEvents,
-  subscription,
-  resolve,
-  response as responseADT,
-} from "@onflow/sdk"
-import {DataStream} from "@onflow/util-pubsub"
+import {response as responseADT} from "@onflow/sdk"
+import {DataStream} from "../../util-stream/dist"
 
 describe("Subscribe Events", () => {
   let mockStream
