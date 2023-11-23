@@ -1,6 +1,7 @@
 import {EventEmitter} from "events"
 import {safeParseJSON} from "./utils"
 import {StreamConnection} from "@onflow/typedefs"
+import {WebSocket} from "./websocket"
 
 type WebSocketConnection<T> = StreamConnection<{
   data: T
@@ -24,6 +25,12 @@ export function connectWs<T>({
     const data = safeParseJSON(e.data)
     if (data) {
       emitter.emit("data", data)
+    } else {
+      emitter.emit(
+        "error",
+        new Error("connectWs: invalid JSON data: " + e.data)
+      )
+      this.close()
     }
   }
 
@@ -33,6 +40,7 @@ export function connectWs<T>({
 
   ws.onclose = function () {
     emitter.emit("close")
+    emitter.removeAllListeners()
   }
 
   ws.onerror = function (e) {
@@ -54,15 +62,15 @@ export function connectWs<T>({
   }
 }
 
-function buildConnectionUrl(
+export function buildConnectionUrl(
   hostname: string,
-  path: string,
+  path?: string,
   params?: Record<
     string,
     string | number | string[] | number[] | null | undefined
   >
 ) {
-  const url = new URL(path, hostname)
+  const url = new URL(path || "", hostname)
   if (url.protocol === "https:") {
     url.protocol = "wss:"
   } else if (url.protocol === "http:") {
