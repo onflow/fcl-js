@@ -4,13 +4,14 @@ import {StreamConnection} from "@onflow/typedefs"
 
 describe("decode stream", () => {
   let mockDecodeResponse: jest.Mock
-  let decodeStream: ReturnType<typeof makeDecodeStream>
+  let decodeStream: any
   let mockStream: StreamConnection<{data: any}>
   let emitter: EventEmitter
 
   beforeEach(() => {
     mockDecodeResponse = jest.fn()
-    decodeStream = makeDecodeStream(mockDecodeResponse)
+    decodeStream = async (...args) =>
+      makeDecodeStream(mockDecodeResponse)(...args)
     emitter = new EventEmitter()
     mockStream = {
       on: jest.fn((event, callback) => {

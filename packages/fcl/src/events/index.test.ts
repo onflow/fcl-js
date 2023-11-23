@@ -1,53 +1,89 @@
+import {EventStream} from "@onflow/typedefs"
 import {events} from "."
 import * as sdk from "@onflow/sdk"
 
-test("events", () => {
+describe("events", () => {
   let sendSpy
   let decodeSpy
   let subscribeEventsSpy
+  let mockEventsStream: EventStream
 
   beforeEach(() => {
-    const mockSubscribeEventsIx = {}
-    const mockEventsStream: SubscribeEventsStream = {}
+    mockEventsStream = {
+      on: jest.fn(() => mockEventsStream),
+      off: jest.fn(() => mockEventsStream),
+      close: jest.fn(),
+    }
 
     sendSpy = jest.spyOn(sdk, "send")
     decodeSpy = jest.spyOn(sdk, "decode")
     subscribeEventsSpy = jest.spyOn(sdk, "subscribeEvents")
 
-    sendSpy.mockReturnValue()
-    decodeSpy.mockReturnValue()
-    subscribeEventsSpy.mockReturnValue(mockSubscribeEventsIx)
+    sendSpy.mockReturnValue(Promise.resolve(mockEventsStream))
+    decodeSpy.mockImplementation(async x => x)
+    subscribeEventsSpy.mockImplementation(async x => x)
   })
 
   afterEach(() => {
-    sendSpy.mockRestore()
-    decodeSpy.mockRestore()
-    subscribeEventsSpy.mockRestore()
+    jest.clearAllMocks()
   })
 
-  test("should call send with subscribeEvents", () => {
+  test("subscribe should call send with the subscribeEvents ix", () => {
     const filter = {eventTypes: ["A"]}
-    sdk.events(filter)
+    events(filter).subscribe(() => {})
     expect(sendSpy).toHaveBeenCalledWith([sdk.subscribeEvents(filter)])
+  })
+
+  test("should work with a string", () => {
+    events("A").subscribe(() => {})
+    expect(sendSpy).toHaveBeenCalledWith([
+      sdk.subscribeEvents({eventTypes: ["A"]}),
+    ])
+  })
+
+  test("should work with empty args", () => {
+    events().subscribe(() => {})
+    expect(sendSpy).toHaveBeenCalledWith([sdk.subscribeEvents({})])
   })
 
   test("subscribe should pipe the events to the callback", async () => {
     const filter = {eventTypes: ["A"]}
     const callback = jest.fn()
-    const stream = {
-      on: jest.fn(),
-    }
-    const streamPromise = Promise.resolve(stream)
-    sendSpy.mockReturnValueOnce(streamPromise)
-    decodeSpy.mockReturnValueOnce(stream)
+
+    const mockEvents = [{type: "A"}, {type: "B"}]
+
+    mockEventsStream.on.mockImplementation((event, cb) => {
+      if (event === "events") {
+        cb(mockEvents)
+      }
+      return mockEventsStream
+    })
+
     events(filter).subscribe(callback)
-    await streamPromise
-    expect(stream.on).toHaveBeenCalledWith("events", expect.any(Function))
-    const onEvents = stream.on.mock.calls[0][1]
-    const event = {type: "A"}
-    onEvents(event)
-    expect(callback).toHaveBeenCalledWith(event, null)
+    await new Promise(resolve => setTimeout(resolve, 0))
+
+    expect(callback.mock.calls).toEqual([
+      [mockEvents[0], null],
+      [mockEvents[1], null],
+    ])
   })
 
-  test("subscribe should pipe the errors to the callback", async () => {})
+  test("subscribe should pipe the errors to the callback", async () => {
+    const filter = {eventTypes: ["A"]}
+    const callback = jest.fn()
+
+    const mockError = new Error("mock error")
+
+    mockEventsStream.on.mockImplementation((event, cb) => {
+      if (event === "error") {
+        cb(mockError)
+      }
+      return mockEventsStream
+    })
+
+    events(filter).subscribe(callback)
+    await new Promise(resolve => setTimeout(resolve, 0))
+
+    expect(callback.mock.calls).toEqual([[null, mockError]])
+  })
 })

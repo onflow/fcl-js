@@ -6,7 +6,11 @@ import {StreamConnection} from "@onflow/typedefs"
 type RawSubscribeEventsStream = StreamConnection<{
   data: {
     events: any[]
-    heartbeat: any
+    heartbeat: {
+      blockId: string
+      blockHeight: number
+      blockTimestamp: number
+    }
   }
 }>
 
