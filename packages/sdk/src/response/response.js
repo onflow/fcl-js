@@ -11,7 +11,8 @@ const DEFAULT_RESPONSE = `{
     "latestBlock":null,
     "collection":null,
     "networkParameters":null,
-    "dataStream":null
+    "dataStream":null,
+    "heartbeat":null
 }`
 
 export const response = () => JSON.parse(DEFAULT_RESPONSE)

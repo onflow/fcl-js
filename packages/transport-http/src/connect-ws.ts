@@ -1,47 +1,57 @@
+import {EventEmitter} from "events"
 import {safeParseJSON} from "./utils"
-import {PubSub, DataStream} from "@onflow/util-pubsub"
+import {StreamConnection} from "@onflow/typedefs"
 
-// TODO: Implement retries
+type WebSocketConnection<T> = StreamConnection<{
+  data: T
+}>
+
 export function connectWs<T>({
   hostname,
   path,
   params,
-  retryLimit = 5,
-  retryIntervalMs = 1000,
 }: {
   hostname: string
   path: string
   params?: Record<string, string>
-  retryLimit?: number
-  retryIntervalMs?: number
-}): DataStream<T> {
-  // Build a data stream
-  const pubSub = new PubSub<T>()
-  const dataStream = new DataStream(pubSub, closeConnection)
-  function closeConnection() {
-    ws.close()
-  }
-
+}): WebSocketConnection<T> {
   // Build a websocket connection with correct protocol & params
   const url = buildConnectionUrl(hostname, path, params)
   const ws = new WebSocket(url)
+  const emitter = new EventEmitter()
 
   ws.onmessage = function (e) {
     const data = safeParseJSON(e.data)
     if (data) {
-      pubSub.next(data)
+      emitter.emit("data", data)
     }
   }
 
+  ws.onopen = function () {
+    emitter.emit("open")
+  }
+
   ws.onclose = function () {
-    pubSub.complete()
+    emitter.emit("close")
   }
 
   ws.onerror = function (e) {
-    pubSub.error(e)
+    emitter.emit("error", e)
   }
 
-  return dataStream
+  return {
+    on(event: "data" | "close" | "error" | "open", listener: any) {
+      emitter.on(event, listener)
+      return this
+    },
+    off(event: "data" | "close" | "error" | "open", listener: any) {
+      emitter.off(event, listener)
+      return this
+    },
+    close() {
+      ws.close()
+    },
+  }
 }
 
 function buildConnectionUrl(

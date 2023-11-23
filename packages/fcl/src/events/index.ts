@@ -73,19 +73,21 @@ export function events(filterOrType?: EventTypeFilter | string) {
     subscribe: (
       callback: (event: Event | null, error: Error | null) => void
     ) => {
-      const streamPromise: Promise<DataStream<Event>> = send([
-        subscribeEvents(filter),
-      ]).then(decode)
+      const streamPromise: Promise<any> = send([subscribeEvents(filter)]).then(
+        decode
+      )
 
       // Subscribe to the stream using the callback
+      function onEvents(data: any) {
+        callback(data, null)
+      }
+      function onError(error: Error) {
+        callback(null, error)
+      }
       streamPromise.then(stream =>
-        stream
-          .map(data => decode(data) as Promise<Event>)
-          .subscribe(
-            event => callback(event, null),
-            error => callback(null, error)
-          )
+        stream.on("events", onEvents).on("error", onError)
       )
+      streamPromise.then(console.log)
 
       return () => {
         streamPromise.then(stream => stream.close())

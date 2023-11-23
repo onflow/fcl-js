@@ -288,3 +288,15 @@ export type Provider = {
    */
   name: string
 }
+
+export interface StreamConnection<Events extends {[name: string]: any}> {
+  on(event: keyof Events, listener: (data: Events[keyof Events]) => void): this
+  on(event: "close", listener: () => void): this
+  on(event: "error", listener: (err: any) => void): this
+  on(event: "open", listener: () => void): this
+  off(event: keyof Events, listener: (data: Events[keyof Events]) => void): this
+  off(event: "close", listener: () => void): this
+  off(event: "error", listener: (err: any) => void): this
+  off(event: "open", listener: () => void): this
+  close(): void
+}

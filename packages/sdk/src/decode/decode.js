@@ -1,4 +1,5 @@
-import {log, LEVELS} from "@onflow/util-logger"
+import {log} from "@onflow/util-logger"
+import EventEmitter from "events"
 
 const latestBlockDeprecationNotice = () => {
   log.deprecate({
@@ -224,8 +225,60 @@ export const decodeResponse = async (response, customDecoders = {}) => {
       chainId: chainIdMap[response.networkParameters.chainId],
     }
   } else if (response.dataStream) {
-    return response.dataStream
+    return decodeStream(response.dataStream, customDecoders)
+  } else if (response.heartbeat) {
+    return response.heartbeat
   }
 
   return null
+}
+
+// This function pipes a generic stream of data into a granular stream of decoded data
+export function decodeStream(stream, customDecoders) {
+  const newStream = new EventEmitter()
+  let topicMutex = {}
+
+  // Data is separated by topic & the decoded data is emitted in order by topic
+  // The mutex ensures that the data is emitted in order and avoids race conditions when decoding
+  stream.on("data", async data => {
+    const topics = Object.keys(data).filter(Boolean)
+
+    for (const channel of topics) {
+      const currentMutex = topicMutex[channel] || Promise.resolve()
+      topicMutex[channel] = currentMutex.then(async () => {
+        const partialResponse = {
+          [channel]: data[channel],
+        }
+        const decoded = await decodeResponse(partialResponse, customDecoders)
+        newStream.emit(channel, decoded)
+      })
+    }
+  })
+
+  // Error event is emitted as they are received
+  stream.on("error", error => {
+    newStream.emit("error", error)
+  })
+
+  // Close event is emitted the way it is received
+  stream.on("close", () => {
+    newStream.emit("close")
+  })
+
+  // Open event is emitted the way it is received
+  stream.on("open", () => {
+    newStream.emit("open")
+  })
+
+  return {
+    on: (channel, callback) => {
+      newStream.on(channel, callback)
+    },
+    off: (channel, callback) => {
+      newStream.off(channel, callback)
+    },
+    close: () => {
+      stream.close()
+    },
+  }
 }
