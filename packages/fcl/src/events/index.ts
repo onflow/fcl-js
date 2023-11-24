@@ -2,26 +2,13 @@ import {send, decode, subscribeEvents} from "@onflow/sdk"
 import {Event, EventFilter, EventStream} from "@onflow/typedefs"
 
 /**
- * @typedef {import("@onflow/typedefs").Event} Event
- */
-
-/**
- * @typedef {object} SubscribeObject
- * @property {Function} subscribe - The subscribe function.
- */
-
-/**
- * @callback SubscriptionCallback
- * @returns {Event}
- */
-
-/**
  * @description - Subscribe to events
  * @param filterOrType - The filter or type of events to subscribe to
  *
  * @example
  * import * as fcl from "@onflow/fcl"
- * fcl.events(eventName).subscribe((event) => console.log(event))
+ * const unsubscribe = fcl.events(eventName).subscribe((event) => console.log(event))
+ * unsubscribe()
  */
 export function events(filterOrType?: EventFilter | string) {
   let filter: EventFilter
