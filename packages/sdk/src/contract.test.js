@@ -34,7 +34,7 @@ interfaceContract("export", root)`
 describe("consume", () => {
   interfaceContract("@onflow/decode", decode)`
     decode
-    decodeResponse
+    makeDecodeResponse
   `
 
   interfaceContract("@onflow/encode", encode)`

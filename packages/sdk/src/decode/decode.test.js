@@ -1,15 +1,5 @@
-import * as root from "./decode.js"
 import {decode, makeDecodeResponse} from "./decode.js"
 import {Buffer} from "@onflow/rlp"
-
-it("exported interface contract", () => {
-  expect(root).toStrictEqual(
-    expect.objectContaining({
-      decode: expect.any(Function),
-      decodeResponse: expect.any(Function),
-    })
-  )
-})
 
 it("decodeResponse", async () => {
   const response = {
@@ -1397,7 +1387,7 @@ describe("decode data stream tests", () => {
     const streamResponse = {
       dataStream: mockStream,
     }
-    const decodeStream = jest.fn()
+    const decodeStream = jest.fn().mockReturnValue(mockStream)
     const decodeResponse = makeDecodeResponse(decodeStream)
     const decoded = await decodeResponse(streamResponse)
 

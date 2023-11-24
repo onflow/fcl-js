@@ -8,7 +8,7 @@ import {response} from "../response/response.js"
 import {build} from "../build/build.js"
 import {getBlock} from "../build/build-get-block.js"
 import {getAccount} from "../build/build-get-account.js"
-import {decodeResponse as decode} from "../decode/decode.js"
+import {makeDecodeResponse} from "../decode/decode.js"
 
 import {resolveCadence} from "./resolve-cadence.js"
 import {resolveArguments} from "./resolve-arguments.js"
@@ -18,6 +18,11 @@ import {resolveValidators} from "./resolve-validators.js"
 import {resolveFinalNormalization} from "./resolve-final-normalization.js"
 import {resolveVoucherIntercept} from "./resolve-voucher-intercept.js"
 import {resolveComputeLimit} from "./resolve-compute-limit.js"
+
+// Decoder without stream support
+const decode = makeDecodeResponse(() => {
+  throw new Error("Not Implemented")
+})
 
 const noop = v => v
 const debug =

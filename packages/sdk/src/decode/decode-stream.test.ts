@@ -10,8 +10,7 @@ describe("decode stream", () => {
 
   beforeEach(() => {
     mockDecodeResponse = jest.fn()
-    decodeStream = async (...args) =>
-      makeDecodeStream(mockDecodeResponse)(...args)
+    decodeStream = makeDecodeStream(mockDecodeResponse)
     emitter = new EventEmitter()
     mockStream = {
       on: jest.fn((event, callback) => {
