@@ -50,6 +50,7 @@
     "@onflow/util-logger": "^1.3.0",
     "@onflow/util-template": "^1.2.0",
     "deepmerge": "^4.2.2",
+    "events": "^3.3.0",
     "sha3": "^2.1.4",
     "uuid": "^9.0.1"
   }

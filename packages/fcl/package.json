@@ -71,7 +71,8 @@
     "@onflow/util-semver": "^1.0.0",
     "@onflow/util-template": "^1.2.0",
     "@onflow/util-uid": "^1.2.0",
-    "cross-fetch": "^3.1.6"
+    "cross-fetch": "^3.1.6",
+    "events": "^3.3.0"
   },
   "peerDependencies": {
     "@react-native-async-storage/async-storage": "^1.13.0",
