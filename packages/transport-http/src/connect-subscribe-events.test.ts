@@ -62,14 +62,17 @@ describe("Subscribe Events", () => {
     expect(connectWsMock).toHaveBeenCalledWith({
       hostname: "http://localhost",
       path: "/v1/subscribe_events",
-      params: {
-        start_block_id: "abc123",
-        start_height: 1,
-        event_types: ["A.7e60df042a9c0868.FlowToken.TokensWithdrawn"],
-        addresses: ["0x1", "0x2"],
-        contracts: ["A.7e60df042a9c0868.FlowToken"],
-        heartbeat_interval: 1000,
-      },
+      getParams: expect.any(Function),
+    })
+
+    const params = connectWsMock.mock.calls[0][0].getParams()
+    expect(params).toEqual({
+      start_block_id: "abc123",
+      start_height: 1,
+      event_types: ["A.7e60df042a9c0868.FlowToken.TokensWithdrawn"],
+      addresses: ["0x1", "0x2"],
+      contracts: ["A.7e60df042a9c0868.FlowToken"],
+      heartbeat_interval: 1000,
     })
   })
 

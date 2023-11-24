@@ -1,5 +1,5 @@
-import {interaction} from "../interaction/interaction.js"
-import {subscribeEvents} from "./build-subscribe-events.js"
+import {interaction} from "../interaction/interaction"
+import {subscribeEvents} from "./build-subscribe-events"
 
 describe("Subscribe Events", () => {
   test("Subscribe Events", async () => {

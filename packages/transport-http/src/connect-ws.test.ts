@@ -56,71 +56,189 @@ describe("connectWs", () => {
   })
 
   describe("connectWs", () => {
-    let mockWs: any
-    let mockWebSocket: any
-    let connection: ReturnType<typeof connectWs>
+    let mockWs: {[key: number]: any} // get websocket by connection attempt index
+    let mockWebSocket: any // mock implementation of WebSocket (new WebSocket())
+
     beforeEach(() => {
-      mockWs = {
+      const mockWsStub = {
         onmessage: () => {},
         onopen: () => {},
         onclose: () => {},
         onerror: () => {},
-        close: jest.fn(() => {
-          mockWs.onclose()
-        }),
+        close() {
+          return jest
+            .fn(() => {
+              this.onclose()
+              // Prevent handlers from being called after close
+              // This is so that we emulate the behavior of the real WebSocket
+              // And don't accidentally simulate events on a closed connection
+              this.onclose = () => {}
+              this.onmessage = () => {}
+              this.onopen = () => {}
+              this.onerror = () => {}
+            })
+            .bind(this)()
+        },
       }
-      mockWebSocket = jest.fn().mockReturnValue(mockWs)
-      jest.spyOn(WebSocketModule, "WebSocket").mockImplementation(mockWebSocket)
 
-      connection = connectWs({
+      let wsIdx = 0
+      mockWs = new Proxy({} as any, {
+        get(target, name) {
+          let idx = Number(name)
+          if (!isNaN(idx)) {
+            target[idx] = target[idx] || {...mockWsStub}
+            return target[idx]
+          }
+          return null
+        },
+      })
+      mockWebSocket = jest.fn().mockImplementation(() => {
+        return mockWs[wsIdx++]
+      })
+      jest.spyOn(WebSocketModule, "WebSocket").mockImplementation(mockWebSocket)
+    })
+
+    test("should connect to the websocket", () => {
+      const connection = connectWs({
         hostname: "http://example.com",
         path: "/events",
         params: {a: "b"},
       })
-    })
-
-    test("should connect to the websocket", () => {
       expect(mockWebSocket).toHaveBeenCalledWith("ws://example.com/events?a=b")
     })
 
     test("should emit data events", () => {
+      const connection = connectWs({
+        hostname: "http://example.com",
+        path: "/events",
+        params: {a: "b"},
+      })
       const mockListener = jest.fn()
       connection.on("data", mockListener)
-      mockWs.onmessage({data: '{"foo": "bar"}'})
+      mockWs[0].onmessage({data: '{"foo": "bar"}'})
       expect(mockListener).toHaveBeenCalledWith({foo: "bar"})
     })
 
-    test("should emit open events", () => {
-      const mockListener = jest.fn()
-      connection.on("open", mockListener)
-      mockWs.onopen()
-      expect(mockListener).toHaveBeenCalled()
+    test("should retry on close", async () => {
+      const connection = connectWs({
+        hostname: "http://example.com",
+        path: "/events",
+        params: {a: "b"},
+        retryLimit: 1,
+        retryIntervalMs: 0,
+      })
+      const mockCloseListener = jest.fn()
+      connection.on("close", mockCloseListener)
+      mockWs[0].onclose({
+        code: 1006,
+        reason: "connection failed",
+      })
+      await new Promise(resolve => setTimeout(resolve, 0))
+      expect(mockCloseListener).not.toHaveBeenCalled()
+
+      mockWs[1].onopen()
+      await new Promise(resolve => setTimeout(resolve, 0))
+      expect(mockCloseListener).not.toHaveBeenCalled()
+      expect(mockWebSocket.mock.calls.length).toEqual(2)
     })
 
-    test("should emit close events", () => {
-      const mockListener = jest.fn()
-      connection.on("close", mockListener)
-      mockWs.onclose()
-      expect(mockListener).toHaveBeenCalled()
+    test("should emit close & error events on final retry", async () => {
+      const connection = connectWs({
+        hostname: "http://example.com",
+        path: "/events",
+        params: {a: "b"},
+        retryLimit: 1,
+        retryIntervalMs: 0,
+      })
+      const mockCloseListener = jest.fn()
+      const mockErrorListener = jest.fn()
+      connection.on("close", mockCloseListener)
+      connection.on("error", mockErrorListener) // error must be handled so process doesn't exit
+      mockWs[0].onclose({
+        code: 1006,
+        reason: "connection failed",
+      })
+
+      // Wait for retry
+      await new Promise(resolve => setTimeout(resolve, 10))
+      expect(mockCloseListener).not.toHaveBeenCalled()
+      expect(mockErrorListener).not.toHaveBeenCalled()
+
+      mockWs[1].onclose({
+        code: 1006,
+        reason: "connection failed",
+      })
+      await new Promise(resolve => setTimeout(resolve, 0))
+      expect(mockCloseListener).toHaveBeenCalled()
+      expect(mockErrorListener).toHaveBeenCalled()
     })
 
-    test("should emit error events", () => {
-      const mockListener = jest.fn()
-      connection.on("error", mockListener)
-      mockWs.onerror("error")
-      expect(mockListener).toHaveBeenCalledWith("error")
+    test("retry count should reset on successful connection", async () => {
+      const connection = connectWs({
+        hostname: "http://example.com",
+        path: "/events",
+        params: {a: "b"},
+        retryLimit: 1,
+        retryIntervalMs: 0,
+      })
+      const mockCloseListener = jest.fn()
+      const mockErrorListener = jest.fn()
+      connection.on("close", mockCloseListener)
+      connection.on("error", mockErrorListener)
+
+      mockWs[0].onclose({
+        code: 1006,
+        reason: "connection failed",
+      })
+      await new Promise(resolve => setTimeout(resolve, 10))
+      expect(mockCloseListener).not.toHaveBeenCalled()
+      expect(mockErrorListener).not.toHaveBeenCalled()
+
+      mockWs[1].onopen()
+      await new Promise(resolve => setTimeout(resolve, 0))
+
+      mockWs[1].onclose({
+        code: 1006,
+        reason: "connection failed",
+      })
+      await new Promise(resolve => setTimeout(resolve, 0))
+
+      expect(mockCloseListener).not.toHaveBeenCalled()
+      expect(mockErrorListener).not.toHaveBeenCalled()
     })
 
     test("should remove listeners when closed", async () => {
+      const connection = connectWs({
+        hostname: "http://example.com",
+        path: "/events",
+        params: {a: "b"},
+      })
       const mockListener = jest.fn()
       connection.on("data", mockListener)
       connection.close()
 
-      await new Promise(resolve => setTimeout(resolve, 0))
+      await new Promise(resolve => setTimeout(resolve, 10))
 
-      mockWs.onmessage({data: '{"foo": "bar"}'})
+      mockWs[0].onmessage({data: '{"foo": "bar"}'})
 
       expect(mockListener).not.toHaveBeenCalled()
+    })
+
+    test("should not retry when closed by user", async () => {
+      const connection = connectWs({
+        hostname: "http://example.com",
+        path: "/events",
+        params: {a: "b"},
+        retryLimit: 1,
+        retryIntervalMs: 0,
+      })
+      const mockCloseListener = jest.fn()
+      connection.on("close", mockCloseListener)
+      connection.close()
+
+      await new Promise(resolve => setTimeout(resolve, 10))
+      expect(mockCloseListener).toHaveBeenCalled()
+      expect(mockWebSocket.mock.calls.length).toEqual(1)
     })
   })
 })

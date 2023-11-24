@@ -83,47 +83,44 @@ export async function connectSubscribeEvents(
 
   const connectWs: typeof defaultConnectWs = opts.connectWs || defaultConnectWs
   const outputEmitter = new EventEmitter()
-  let close = () => {}
   let lastBlockId: string | null = null
 
-  ;(function connect() {
-    const params: Record<string, any> = {
-      event_types: ix.subscribeEvents.eventTypes,
-      addresses: ix.subscribeEvents.addresses,
-      contracts: ix.subscribeEvents.contracts,
-      heartbeat_interval: ix.subscribeEvents.heartbeatInterval,
-    }
+  // Connect to the websocket & provide reconnection parameters
+  const connection = connectWs<any>({
+    hostname: opts.node,
+    path: `/v1/subscribe_events`,
+    getParams: () => {
+      const params: Record<string, any> = {
+        event_types: ix.subscribeEvents.eventTypes,
+        addresses: ix.subscribeEvents.addresses,
+        contracts: ix.subscribeEvents.contracts,
+        heartbeat_interval: ix.subscribeEvents.heartbeatInterval,
+      }
 
-    // If the lastBlockId is set, use it to resume the stream
-    if (lastBlockId) {
-      params.start_block_id = lastBlockId
-    } else {
-      params.start_block_id = ix.subscribeEvents.startBlockId
-      params.start_height = ix.subscribeEvents.startHeight
-    }
+      // If the lastBlockId is set, use it to resume the stream
+      if (lastBlockId) {
+        params.start_block_id = lastBlockId + 1
+      } else {
+        params.start_block_id = ix.subscribeEvents.startBlockId
+        params.start_height = ix.subscribeEvents.startHeight
+      }
 
-    // Connect to the websocket
-    const connection = connectWs<any>({
-      hostname: opts.node,
-      path: `/v1/subscribe_events`,
-      params,
-    })
+      return params
+    },
+  })
 
-    // Map the connection to a formatted response stream
-    connection.on("data", (data: any) => {
-      const responseData = constructData(ix, context, data)
-      lastBlockId = responseData.heartbeat.blockId
-      outputEmitter.emit("data", responseData)
-    })
-    connection.on("error", (error: Error) => {})
-    connection.on("close", () => {
-      connect()
-    })
-    connection.on("open", () => {
-      outputEmitter.emit("open")
-    })
-    close = () => connection.close()
-  })()
+  // Map the connection to a formatted response stream
+  connection.on("data", (data: any) => {
+    const responseData = constructData(ix, context, data)
+    lastBlockId = responseData.heartbeat.blockId
+    outputEmitter.emit("data", responseData)
+  })
+  connection.on("error", (error: Error) => {
+    outputEmitter.emit("error", error)
+  })
+  connection.on("close", () => {
+    outputEmitter.emit("close")
+  })
 
   const responseStream: RawSubscribeEventsStream = {
     on(event: "data" | "error" | "close" | "open", listener: any) {
@@ -135,7 +132,7 @@ export async function connectSubscribeEvents(
       return this
     },
     close() {
-      close()
+      connection.close()
     },
   }
   return constructResponse(ix, context, responseStream)

@@ -296,14 +296,12 @@ export interface StreamConnection<ChannelMap extends {[name: string]: any}> {
   ): this
   on(event: "close", listener: () => void): this
   on(event: "error", listener: (err: any) => void): this
-  on(event: "open", listener: () => void): this
   off<C extends keyof ChannelMap>(
     event: C,
     listener: (data: ChannelMap[C]) => void
   ): this
   off(event: "close", listener: () => void): this
   off(event: "error", listener: (err: any) => void): this
-  off(event: "open", listener: () => void): this
   close(): void
 }
 

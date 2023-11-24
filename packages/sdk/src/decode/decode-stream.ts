@@ -53,7 +53,6 @@ export const makeDecodeStream =
         newStream.emit(event, message)
       })
     }
-    relayEvent("open")
     relayEvent("close")
     relayEvent("error")
 
