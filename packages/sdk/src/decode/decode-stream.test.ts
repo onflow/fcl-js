@@ -4,9 +4,9 @@ import {StreamConnection} from "@onflow/typedefs"
 import * as decodeResponseModule from "./decode"
 
 describe("decode stream", () => {
-  let mockDecodeResponse: jest.Mock
   let mockStream: StreamConnection<{data: any}>
   let emitter: EventEmitter
+  let mockDecodeResponse
 
   beforeEach(() => {
     mockDecodeResponse = jest.fn()
@@ -45,7 +45,7 @@ describe("decode stream", () => {
       }
     })
 
-    const decodedStream = decodeStream(mockStream)
+    const decodedStream = decodeStream(mockStream, mockDecodeResponse)
     const dummyCallback = jest.fn(data => {
       expect(data).toEqual(decodedData.dummy)
     })
@@ -87,7 +87,7 @@ describe("decode stream", () => {
       }
     })
 
-    const decodedStream = decodeStream(mockStream)
+    const decodedStream = decodeStream(mockStream, mockDecodeResponse)
     const cb = jest.fn()
     decodedStream.on("foo", msg => {
       cb("foo", msg)

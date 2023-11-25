@@ -1,9 +1,11 @@
 import EventEmitter from "events"
 import {StreamConnection} from "@onflow/typedefs"
-import {decodeResponse} from "./decode"
 
 // This function pipes a generic stream of data into a granular stream of decoded data
-export const decodeStream = (stream: StreamConnection<{data: any}>) => {
+export const decodeStream = (
+  stream: StreamConnection<{data: any}>,
+  decodeResponse: (response: any) => Promise<any>
+) => {
   const newStream = new EventEmitter()
   let queue: Promise<any>[] = []
 
