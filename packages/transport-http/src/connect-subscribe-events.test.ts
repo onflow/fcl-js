@@ -243,7 +243,7 @@ describe("Subscribe Events", () => {
     expect(mockStream.close).toHaveBeenCalled()
   })
 
-  test("getParams for next connection should use next block height", async () => {
+  test("getParams for next connection should use next block height if available", async () => {
     const response = await connectSubscribeEvents(
       {
         tag: "SUBSCRIBE_EVENTS",
@@ -265,14 +265,22 @@ describe("Subscribe Events", () => {
       }
     )
 
+    // Expect same params as initial connection since no data has been received
+    expect(connectWsMock.mock.calls[0][0].getParams()).toEqual({
+      start_block_id: "abc123",
+      event_types: ["A.7e60df042a9c0868.FlowToken.TokensWithdrawn"],
+      addresses: ["0x1", "0x2"],
+      contracts: ["A.7e60df042a9c0868.FlowToken"],
+      heartbeat_interval: 1,
+    })
+
+    // Expect next connection to use the next block height as it has seen a heartbeat
     emitter.emit("data", {
       BlockID: "abc123",
       Height: 1,
       Timestamp: "1",
       Events: [],
     })
-
-    await new Promise(resolve => setTimeout(resolve, 10))
 
     expect(connectWsMock.mock.calls[0][0].getParams()).toEqual({
       start_height: 2,
