@@ -1,6 +1,5 @@
 import {config} from "@onflow/config"
-import {makeDecodeResponse} from "./decode"
-import {makeDecodeStream} from "./decode-stream"
+import {decodeResponse} from "./decode"
 
 export async function decode(response) {
   const decodersFromConfig = await config().where(/^decoder\./)
@@ -11,11 +10,5 @@ export async function decode(response) {
     }
   )
 
-  const decodeResponse = makeDecodeResponse(
-    decodeStream,
-    Object.fromEntries(decoders)
-  )
-  const decodeStream = makeDecodeStream(decodeResponse)
-
-  return decodeResponse(response)
+  return decodeResponse(response, Object.fromEntries(decoders))
 }

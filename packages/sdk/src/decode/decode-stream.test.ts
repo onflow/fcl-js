@@ -1,16 +1,18 @@
 import {EventEmitter} from "stream"
-import {makeDecodeStream} from "./decode-stream"
+import {decodeStream} from "./decode-stream"
 import {StreamConnection} from "@onflow/typedefs"
+import * as decodeResponseModule from "./decode"
 
 describe("decode stream", () => {
   let mockDecodeResponse: jest.Mock
-  let decodeStream: any
   let mockStream: StreamConnection<{data: any}>
   let emitter: EventEmitter
 
   beforeEach(() => {
     mockDecodeResponse = jest.fn()
-    decodeStream = makeDecodeStream(mockDecodeResponse)
+    jest
+      .spyOn(decodeResponseModule, "decodeResponse")
+      .mockImplementation(mockDecodeResponse)
     emitter = new EventEmitter()
     mockStream = {
       on: jest.fn((event, callback) => {

@@ -17,11 +17,9 @@ describe("Subscribe Events", () => {
     }
   }>
   let connectWsMock
-  let unsubscribeMock
 
   beforeEach(async () => {
     connectWsMock = jest.fn(() => mockStream)
-    unsubscribeMock = jest.fn()
     emitter = new EventEmitter()
     mockStream = {
       on: jest.fn((event, callback) => {
@@ -243,5 +241,45 @@ describe("Subscribe Events", () => {
     await new Promise(resolve => setTimeout(resolve, 0))
 
     expect(mockStream.close).toHaveBeenCalled()
+  })
+
+  test("getParams for next connection should use next block height", async () => {
+    const response = await connectSubscribeEvents(
+      {
+        tag: "SUBSCRIBE_EVENTS",
+        subscribeEvents: {
+          startBlockId: "abc123",
+          eventTypes: ["A.7e60df042a9c0868.FlowToken.TokensWithdrawn"],
+          addresses: ["0x1", "0x2"],
+          contracts: ["A.7e60df042a9c0868.FlowToken"],
+          heartbeatInterval: 1,
+        },
+      },
+      {
+        response: responseADT,
+        Buffer,
+      },
+      {
+        connectWs: connectWsMock,
+        node: "http://localhost",
+      }
+    )
+
+    emitter.emit("data", {
+      BlockID: "abc123",
+      Height: 1,
+      Timestamp: "1",
+      Events: [],
+    })
+
+    await new Promise(resolve => setTimeout(resolve, 10))
+
+    expect(connectWsMock.mock.calls[0][0].getParams()).toEqual({
+      start_height: 2,
+      event_types: ["A.7e60df042a9c0868.FlowToken.TokensWithdrawn"],
+      addresses: ["0x1", "0x2"],
+      contracts: ["A.7e60df042a9c0868.FlowToken"],
+      heartbeat_interval: 1,
+    })
   })
 })

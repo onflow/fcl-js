@@ -83,7 +83,7 @@ export async function connectSubscribeEvents(
 
   const connectWs: typeof defaultConnectWs = opts.connectWs || defaultConnectWs
   const outputEmitter = new EventEmitter()
-  let lastBlockId: string | null = null
+  let lastBlockHeight: string | null = null
 
   // Connect to the websocket & provide reconnection parameters
   const connection = connectWs<any>({
@@ -98,8 +98,8 @@ export async function connectSubscribeEvents(
       }
 
       // If the lastBlockId is set, use it to resume the stream
-      if (lastBlockId) {
-        params.start_block_id = lastBlockId + 1
+      if (lastBlockHeight) {
+        params.start_height = lastBlockHeight + 1
       } else {
         params.start_block_id = ix.subscribeEvents.startBlockId
         params.start_height = ix.subscribeEvents.startHeight
@@ -112,7 +112,7 @@ export async function connectSubscribeEvents(
   // Map the connection to a formatted response stream
   connection.on("data", (data: any) => {
     const responseData = constructData(ix, context, data)
-    lastBlockId = responseData.heartbeat.blockId
+    lastBlockHeight = responseData.heartbeat.blockHeight
     outputEmitter.emit("data", responseData)
   })
   connection.on("error", (error: Error) => {

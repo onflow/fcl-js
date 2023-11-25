@@ -1,4 +1,5 @@
 import {log} from "@onflow/util-logger"
+import {decodeStream} from "./decode-stream"
 
 const latestBlockDeprecationNotice = () => {
   log.deprecate({
@@ -165,35 +166,15 @@ export const decode = async (
   return recurseDecode(decodeInstructions, decoders, stack)
 }
 
-export const makeDecodeResponse =
-  (decodeStream, customDecoders = {}) =>
-  async response => {
-    if (response.encodedData) {
-      return decode(response.encodedData, customDecoders)
-    } else if (response.transactionStatus) {
-      return {
-        ...response.transactionStatus,
-        events: await Promise.all(
-          response.transactionStatus.events.map(async function decodeEvents(e) {
-            return {
-              type: e.type,
-              transactionId: e.transactionId,
-              transactionIndex: e.transactionIndex,
-              eventIndex: e.eventIndex,
-              data: await decode(e.payload, customDecoders),
-            }
-          })
-        ),
-      }
-    } else if (response.transaction) {
-      return response.transaction
-    } else if (response.events) {
-      return await Promise.all(
-        response.events.map(async function decodeEvents(e) {
+export const decodeResponse = async (response, customDecoders = {}) => {
+  if (response.encodedData) {
+    return decode(response.encodedData, customDecoders)
+  } else if (response.transactionStatus) {
+    return {
+      ...response.transactionStatus,
+      events: await Promise.all(
+        response.transactionStatus.events.map(async function decodeEvents(e) {
           return {
-            blockId: e.blockId,
-            blockHeight: e.blockHeight,
-            blockTimestamp: e.blockTimestamp,
             type: e.type,
             transactionId: e.transactionId,
             transactionIndex: e.transactionIndex,
@@ -201,35 +182,53 @@ export const makeDecodeResponse =
             data: await decode(e.payload, customDecoders),
           }
         })
-      )
-    } else if (response.account) {
-      return response.account
-    } else if (response.block) {
-      return response.block
-    } else if (response.blockHeader) {
-      return response.blockHeader
-    } else if (response.latestBlock) {
-      latestBlockDeprecationNotice()
-      return response.latestBlock
-    } else if (response.transactionId) {
-      return response.transactionId
-    } else if (response.collection) {
-      return response.collection
-    } else if (response.networkParameters) {
-      const chainIdMap = {
-        "flow-testnet": "testnet",
-        "flow-mainnet": "mainnet",
-        "flow-emulator": "local",
-      }
-
-      return {
-        chainId: chainIdMap[response.networkParameters.chainId],
-      }
-    } else if (response.dataStream) {
-      return decodeStream(response.dataStream)
-    } else if (response.heartbeat) {
-      return response.heartbeat
+      ),
+    }
+  } else if (response.transaction) {
+    return response.transaction
+  } else if (response.events) {
+    return await Promise.all(
+      response.events.map(async function decodeEvents(e) {
+        return {
+          blockId: e.blockId,
+          blockHeight: e.blockHeight,
+          blockTimestamp: e.blockTimestamp,
+          type: e.type,
+          transactionId: e.transactionId,
+          transactionIndex: e.transactionIndex,
+          eventIndex: e.eventIndex,
+          data: await decode(e.payload, customDecoders),
+        }
+      })
+    )
+  } else if (response.account) {
+    return response.account
+  } else if (response.block) {
+    return response.block
+  } else if (response.blockHeader) {
+    return response.blockHeader
+  } else if (response.latestBlock) {
+    latestBlockDeprecationNotice()
+    return response.latestBlock
+  } else if (response.transactionId) {
+    return response.transactionId
+  } else if (response.collection) {
+    return response.collection
+  } else if (response.networkParameters) {
+    const chainIdMap = {
+      "flow-testnet": "testnet",
+      "flow-mainnet": "mainnet",
+      "flow-emulator": "local",
     }
 
-    return null
+    return {
+      chainId: chainIdMap[response.networkParameters.chainId],
+    }
+  } else if (response.dataStream) {
+    return decodeStream(response.dataStream)
+  } else if (response.heartbeat) {
+    return response.heartbeat
   }
+
+  return null
+}

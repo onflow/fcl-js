@@ -1,5 +1,6 @@
-import {decode, makeDecodeResponse} from "./decode.js"
+import {decode, decodeResponse, decodeStream} from "./decode.js"
 import {Buffer} from "@onflow/rlp"
+import * as decodeStreamModule from "./decode-stream"
 
 it("decodeResponse", async () => {
   const response = {
@@ -15,7 +16,6 @@ it("decodeResponse", async () => {
     ),
   }
 
-  const decodeResponse = makeDecodeResponse(() => {})
   const data = await decodeResponse(response)
   expect(data).toBe("7")
 })
@@ -1308,7 +1308,6 @@ describe("custom decoder tests", () => {
 
 describe("decode GetEvents tests", () => {
   it("decodes a GetEvents response correctly", async () => {
-    const decodeResponse = makeDecodeResponse(() => {})
     const timestampISOString = new Date().toISOString()
 
     const getEventsResponse = {
@@ -1343,7 +1342,6 @@ describe("decode GetEvents tests", () => {
 
 describe("decode GetTransactionStatus tests", () => {
   it("decodes a GetEvents response correctly", async () => {
-    const decodeResponse = makeDecodeResponse(() => {})
     const getTransactionStatusResponse = {
       transactionStatus: {
         status: 4,
@@ -1387,18 +1385,20 @@ describe("decode data stream tests", () => {
     const streamResponse = {
       dataStream: mockStream,
     }
-    const decodeStream = jest.fn().mockReturnValue(mockStream)
-    const decodeResponse = makeDecodeResponse(decodeStream)
+    const decodeStreamSpy = jest
+      .spyOn(decodeStreamModule, "decodeStream")
+      .mockImplementation(() => {
+        return mockStream
+      })
     const decoded = await decodeResponse(streamResponse)
 
     expect(decoded).toBe(mockStream)
-    expect(decodeStream).toHaveBeenCalledWith(mockStream)
+    expect(decodeStreamSpy).toHaveBeenCalledWith(mockStream)
   })
 })
 
 describe("decode heartbeat tests", () => {
   it("decodes a heartbeat response correctly", async () => {
-    const decodeResponse = makeDecodeResponse(() => {})
     const heartbeatResponse = {
       heartbeat: {
         timestamp: 123456789,
