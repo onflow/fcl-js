@@ -45,7 +45,16 @@ describe("decode stream", () => {
       }
     })
 
-    const decodedStream = decodeStream(mockStream, mockDecodeResponse)
+    const customDecoders = {
+      foo: jest.fn(),
+      bar: jest.fn(),
+    }
+
+    const decodedStream = decodeStream(
+      mockStream,
+      mockDecodeResponse,
+      customDecoders
+    )
     const dummyCallback = jest.fn(data => {
       expect(data).toEqual(decodedData.dummy)
     })
@@ -62,12 +71,20 @@ describe("decode stream", () => {
     // wait for next tick
     await new Promise(resolve => setTimeout(resolve, 0))
 
-    expect(mockDecodeResponse).toHaveBeenCalledWith({
-      dummy: {foo: "bar"},
-    })
-    expect(mockDecodeResponse).toHaveBeenCalledWith({
-      other: {foo: "baz"},
-    })
+    expect(mockDecodeResponse).toHaveBeenNthCalledWith(
+      1,
+      {
+        dummy: {foo: "bar"},
+      },
+      customDecoders
+    )
+    expect(mockDecodeResponse).toHaveBeenNthCalledWith(
+      2,
+      {
+        other: {foo: "baz"},
+      },
+      customDecoders
+    )
 
     expect(dummyCallback).toHaveBeenCalled()
     expect(otherCallback).toHaveBeenCalled()
@@ -104,5 +121,40 @@ describe("decode stream", () => {
 
     expect(cb).toHaveBeenNthCalledWith(1, "foo", "one")
     expect(cb).toHaveBeenNthCalledWith(2, "bar", "two")
+  })
+
+  test("each channel is emitted in order", async () => {
+    const decodedStream = decodeStream(mockStream, mockDecodeResponse)
+    // Data will take time to decode but must arrive before error/close
+    mockDecodeResponse.mockImplementation(async response => {
+      await new Promise(resolve => setTimeout(resolve, 100))
+      return response
+    })
+    const cb = jest.fn()
+    decodedStream.on("foo", msg => {
+      cb("foo", msg)
+    })
+    decodedStream.on("bar", msg => {
+      cb("bar", msg)
+    })
+    decodedStream.on("error", err => {
+      cb("error", err)
+    })
+    decodedStream.on("close", () => {
+      cb("close")
+    })
+
+    emitter.emit("data", {foo: "one"})
+    emitter.emit("error", new Error("error"))
+    emitter.emit("data", {bar: "two"})
+    emitter.emit("close")
+
+    // Wait for data to be processed
+    await new Promise(resolve => setTimeout(resolve, 250))
+
+    expect(cb).toHaveBeenNthCalledWith(1, "foo", {foo: "one"})
+    expect(cb).toHaveBeenNthCalledWith(2, "error", new Error("error"))
+    expect(cb).toHaveBeenNthCalledWith(3, "bar", {bar: "two"})
+    expect(cb).toHaveBeenNthCalledWith(4, "close")
   })
 })

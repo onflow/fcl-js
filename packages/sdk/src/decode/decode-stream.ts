@@ -1,13 +1,18 @@
 import EventEmitter from "events"
 import {StreamConnection} from "@onflow/typedefs"
+import type {decodeResponse as decodeResponseFn} from "./decode"
 
-// This function pipes a generic stream of data into a granular stream of decoded data
+/**
+ * Pipes a generic stream of data into a granular stream of decoded data
+ * The data is decoded per channel and emitted in order
+ */
 export const decodeStream = (
   stream: StreamConnection<{data: any}>,
-  decodeResponse: (response: any) => Promise<any>
+  decodeResponse: typeof decodeResponseFn,
+  customDecoders?: Record<string, any>
 ) => {
   const newStream = new EventEmitter()
-  let queue: Promise<any>[] = []
+  let queue = taskQueue()
 
   // Data is separated by topic & the decoded data is emitted in order
   // All topics for a given message will be emitted synchronously before moving on to the next message
@@ -22,23 +27,20 @@ export const decodeStream = (
         const partialResponse = {
           [channel]: data[channel],
         }
-        const message = await decodeResponse(partialResponse)
+        const message = await decodeResponse(partialResponse, customDecoders)
         return {
           channel,
           message,
         }
       })
     )
-    queue.push(newDataPromise)
 
-    // Wait for the previous data to be emitted before emitting the new data
-    await queue[0]
-    queue.shift()
-
-    // Emit the new data
-    const newData = await newDataPromise
-    newData.forEach(({channel, message}) => {
-      newStream.emit(channel, message)
+    queue.push(async () => {
+      // Emit the new data
+      const newData = await newDataPromise
+      newData.forEach(({channel, message}) => {
+        newStream.emit(channel, message)
+      })
     })
   })
 
@@ -46,9 +48,10 @@ export const decodeStream = (
   // These events are delivered in order as well so that the stream will
   // not emit more data after it has announced a contradictory state
   function relayEvent(event: any) {
-    stream.on(event, async (message: any) => {
-      await queue.at(-1)
-      newStream.emit(event, message)
+    stream.on(event, (message: any) => {
+      queue.push(async () => {
+        newStream.emit(event, message)
+      })
     })
   }
   relayEvent("close")
@@ -63,6 +66,28 @@ export const decodeStream = (
     },
     close: () => {
       stream.close()
+    },
+  }
+}
+
+function taskQueue() {
+  let queue: (() => Promise<any>)[] = [] as any as (() => Promise<any>)[]
+  let running = false
+
+  async function run() {
+    if (running) return
+    running = true
+    while (queue.length > 0) {
+      const task = queue.shift()
+      await task?.()
+    }
+    running = false
+  }
+
+  return {
+    push: (task: () => Promise<any>) => {
+      queue.push(task)
+      run()
     },
   }
 }

@@ -1,6 +1,7 @@
-import {decode, decodeResponse, decodeStream} from "./decode.js"
+import {decode, decodeResponse} from "./decode"
 import {Buffer} from "@onflow/rlp"
 import * as decodeStreamModule from "./decode-stream"
+import * as decodeModule from "./decode"
 
 it("decodeResponse", async () => {
   const response = {
@@ -1390,10 +1391,15 @@ describe("decode data stream tests", () => {
       .mockImplementation(() => {
         return mockStream
       })
-    const decoded = await decodeResponse(streamResponse)
+    const decoders = {foo: () => {}}
+    const decoded = await decodeResponse(streamResponse, decoders)
 
     expect(decoded).toBe(mockStream)
-    expect(decodeStreamSpy).toHaveBeenCalledWith(mockStream)
+    expect(decodeStreamSpy).toHaveBeenCalledWith(
+      mockStream,
+      decodeResponse,
+      decoders
+    )
   })
 })
 
@@ -1409,4 +1415,8 @@ describe("decode heartbeat tests", () => {
       timestamp: 123456789,
     })
   })
+})
+
+afterEach(() => {
+  jest.restoreAllMocks()
 })

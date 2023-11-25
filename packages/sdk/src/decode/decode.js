@@ -225,9 +225,7 @@ export const decodeResponse = async (response, customDecoders = {}) => {
       chainId: chainIdMap[response.networkParameters.chainId],
     }
   } else if (response.dataStream) {
-    return decodeStream(response.dataStream, response =>
-      decodeResponse(response, customDecoders)
-    )
+    return decodeStream(response.dataStream, decodeResponse, customDecoders)
   } else if (response.heartbeat) {
     return response.heartbeat
   }
