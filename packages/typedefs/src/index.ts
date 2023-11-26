@@ -311,7 +311,7 @@ export interface EventFilter {
   contracts?: string[]
 }
 
-export interface EventStreamHeartbeat {
+export interface BlockHeartbeat {
   blockId: string
   blockHeight: number
   timestamp: string
@@ -319,5 +319,5 @@ export interface EventStreamHeartbeat {
 
 export type EventStream = StreamConnection<{
   events: Event[]
-  heartbeat: EventStreamHeartbeat
+  heartbeat: BlockHeartbeat
 }>
