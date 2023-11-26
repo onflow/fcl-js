@@ -31,7 +31,7 @@
   },
   "source": {
     "src/fcl.js": {
-      "cjs": "./dist/fcl.js",
+      "cjs": "./dist/fcl.ts",
       "esm": "./dist/fcl.module.js",
       "umd": "./dist/fcl.umd.min.js"
     },

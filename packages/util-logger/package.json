@@ -26,7 +26,7 @@
   "main": "dist/util-logger.js",
   "module": "dist/util-logger.module.js",
   "unpkg": "dist/util-logger.umd.js",
-  "types": "dist/util-logger.d.ts",
+  "types": "types/util-logger.d.ts",
   "scripts": {
     "prepublishOnly": "npm test && npm run build",
     "test": "jest",

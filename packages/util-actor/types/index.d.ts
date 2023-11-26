@@ -1,0 +1,70 @@
+export declare const INIT = "INIT";
+export declare const SUBSCRIBE = "SUBSCRIBE";
+export declare const UNSUBSCRIBE = "UNSUBSCRIBE";
+export declare const UPDATED = "UPDATED";
+export declare const SNAPSHOT = "SNAPSHOT";
+export declare const EXIT = "EXIT";
+export declare const TERMINATE = "TERMINATE";
+declare const DUMP = "DUMP";
+declare const INC = "INC";
+declare const KEYS = "KEYS";
+export type ActorContext = ReturnType<typeof createCtx>;
+export type Letter = {
+    to: string;
+    from?: string;
+    tag: string;
+    data: any;
+    timeout: number;
+    reply: (data: any) => void;
+    reject: (error: any) => void;
+};
+export type HandlerFn = (ctx: ActorContext, letter: Letter, data: any) => Promise<void> | void;
+export type SpawnFn = (address?: string) => void;
+export interface ActorHandlers {
+    [INIT]?: (ctx: ActorContext) => Promise<void> | void;
+    [SUBSCRIBE]?: HandlerFn;
+    [UNSUBSCRIBE]?: HandlerFn;
+    [UPDATED]?: HandlerFn;
+    [SNAPSHOT]?: HandlerFn;
+    [EXIT]?: HandlerFn;
+    [TERMINATE]?: HandlerFn;
+    [DUMP]?: HandlerFn;
+    [INC]?: HandlerFn;
+    [KEYS]?: HandlerFn;
+    [key: string]: HandlerFn | undefined;
+}
+export declare function send<T>(addr: string, tag: string, data?: Record<string, any> | null, opts?: {
+    expectReply?: true;
+    timeout?: number;
+    from?: string;
+}): Promise<T>;
+export declare function send(addr: string, tag: string, data?: Record<string, any> | null, opts?: {
+    expectReply?: false;
+    timeout?: number;
+    from?: string;
+}): Promise<boolean>;
+export declare const kill: (addr: string) => void;
+export declare const spawn: <Handlers extends ActorHandlers>(fnOrHandlers: Handlers | ((ctx: ActorContext) => Promise<void>), rawAddr?: string | number | null) => string;
+declare const createCtx: (addr: string) => {
+    self: () => string;
+    receive: () => Promise<Letter>;
+    send: (to: string | null | undefined, tag: string, data?: any, opts?: Record<string, any>) => Promise<unknown> | undefined;
+    sendSelf: (tag: string, data?: any, opts?: Record<string, any>) => void;
+    broadcast: (tag: string, data: any, opts?: Record<string, any>) => void;
+    subscribe: (sub?: string | null) => false | Set<string>;
+    unsubscribe: (sub?: string | null) => boolean;
+    subscriberCount: () => number;
+    hasSubs: () => boolean;
+    put: <T>(key: string, value: T) => void;
+    get: <T_1>(key: string, fallback?: T_1 | undefined) => any;
+    delete: (key: string) => void;
+    update: <T_2, U>(key: string, fn: (x: T_2) => U) => void;
+    keys: () => string[];
+    all: () => Record<string, any>;
+    where: (pattern: RegExp) => {};
+    merge: (data?: Record<string, any>) => void;
+    fatalError: (error: Error) => void;
+};
+export declare function subscriber<T>(address: string, spawnFn: SpawnFn, callback: (data: T | null, error: Error | null) => void): () => Promise<unknown>;
+export declare function snapshoter<T>(address: string, spawnFn: SpawnFn): Promise<T>;
+export {};
