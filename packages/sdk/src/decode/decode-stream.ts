@@ -1,6 +1,10 @@
 import EventEmitter from "events"
 import {StreamConnection} from "@onflow/typedefs"
-import type {decodeResponse as decodeResponseFn} from "./decode"
+
+type DecodeResponseFn = (
+  response: Record<string, any>,
+  customDecoders?: Record<string, any>
+) => Promise<any>
 
 /**
  * Pipes a generic stream of data into a granular stream of decoded data
@@ -8,7 +12,7 @@ import type {decodeResponse as decodeResponseFn} from "./decode"
  */
 export const decodeStream = (
   stream: StreamConnection<{data: any}>,
-  decodeResponse: typeof decodeResponseFn,
+  decodeResponse: DecodeResponseFn,
   customDecoders?: Record<string, any>
 ) => {
   const newStream = new EventEmitter()
