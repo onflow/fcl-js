@@ -23,7 +23,7 @@ export const AUTHORIZER /* */ = "authorizer"
 export const PAYER /*      */ = "payer"
 export const PROPOSER /*   */ = "proposer"
 
-export interface IAcct {
+export interface InteractionAccount {
   "kind": typeof ACCOUNT,
   "tempId": string,
   "addr": string | null,
@@ -41,7 +41,7 @@ export interface IAcct {
   authorization: any,
 }
 
-export interface IIx {
+export interface Interaction {
   "tag": string,
   "assigns": Record<string, any>,
   "status": string,

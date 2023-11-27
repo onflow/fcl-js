@@ -1,9 +1,9 @@
-import { IAcct } from "@onflow/typedefs"
+import { InteractionAccount } from "@onflow/typedefs"
 import {withPrefix} from "@onflow/util-address"
 
-export const idof = (acct: IAcct) => `${withPrefix(acct.addr)}-${acct.keyId}`
+export const idof = (acct: InteractionAccount) => `${withPrefix(acct.addr)}-${acct.keyId}`
 
-export function sig(opts: Partial<IAcct>) {
+export function sig(opts: Partial<InteractionAccount>) {
   return ["SIGNATURE", opts.addr, opts.keyId].join(".")
 }
 
@@ -12,8 +12,8 @@ interface IAuthzOpts {
 }
 
 export function authzFn(opts: IAuthzOpts = {}) {
-  return function (account: Partial<IAcct>) {
-    const acct: Partial<IAcct> = {
+  return function (account: Partial<InteractionAccount>) {
+    const acct: Partial<InteractionAccount> = {
       ...account,
       ...opts,
       resolve: null,
@@ -40,7 +40,7 @@ interface IAuthzResolveOpts {
 }
 
 export function authzResolve(opts: IAuthzResolveOpts = {}) {
-  return function (account: IAcct) {
+  return function (account: InteractionAccount) {
     const {tempId, ...rest} = opts
     return {
       ...account,
@@ -61,7 +61,7 @@ interface IAuthzResolveMany {
 }
 
 export function authzResolveMany(opts: IAuthzResolveMany = {authorizations: []}) {
-  return function (account: IAcct): IAcct {
+  return function (account: InteractionAccount): InteractionAccount {
     const tempId = opts.tempId || "AUTHZ_RESOLVE_MANY"
     return {
       ...account,
@@ -80,7 +80,7 @@ export function authzResolveMany(opts: IAuthzResolveMany = {authorizations: []})
 }
 
 export function authzDeepResolveMany(opts: IAuthzResolveMany = {authorizations: []}, depth = 1) {
-  return function (account: IAcct): IAcct {
+  return function (account: InteractionAccount): InteractionAccount {
     const tempId = opts.tempId || "AUTHZ_DEEP_RESOLVE_MANY"
     return {
       ...account,
