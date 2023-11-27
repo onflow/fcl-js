@@ -25,9 +25,9 @@ export const PROPOSER /*   */ = "proposer"
 
 export interface InteractionAccount {
   "kind": typeof ACCOUNT,
-  "tempId": string,
+  "tempId": string | null,
   "addr": string | null,
-  "keyId": number | null,
+  "keyId": number | string | null,
   "sequenceNum": number | null,
   "signature": string | null,
   "signingFunction": any | null,
@@ -46,7 +46,7 @@ export interface Interaction {
   "assigns": Record<string, any>,
   "status": string,
   "reason": string | null,
-  "accounts": Record<string, IAcct>,
+  "accounts": Record<string, InteractionAccount>,
   "params": Record<string, any>,
   "arguments": Record<string, any>,
   "message": {

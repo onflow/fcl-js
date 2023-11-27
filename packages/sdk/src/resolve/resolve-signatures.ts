@@ -1,4 +1,4 @@
-import {IAcct, IIx, isTransaction} from "../interaction/interaction"
+import {InteractionAccount, Interaction, isTransaction} from "../interaction/interaction"
 import {sansPrefix} from "@onflow/util-address"
 import {
   ITx,
@@ -12,7 +12,7 @@ import {
   findOutsideSigners,
 } from "./voucher"
 
-export async function resolveSignatures(ix: IIx) {
+export async function resolveSignatures(ix: Interaction) {
   if (isTransaction(ix)) {
     try {
       let insideSigners = findInsideSigners(ix)
@@ -51,7 +51,7 @@ export async function resolveSignatures(ix: IIx) {
   return ix
 }
 
-function fetchSignature(ix: IIx, payload: string) {
+function fetchSignature(ix: Interaction, payload: string) {
   return async function innerFetchSignature(id: string) {
     const acct = ix.accounts[id]
     if (acct.signature != null && acct.signature !== undefined) return
@@ -62,7 +62,7 @@ function fetchSignature(ix: IIx, payload: string) {
   }
 }
 
-export function buildSignable(acct: IAcct, message: string, ix: IIx) {
+export function buildSignable(acct: InteractionAccount, message: string, ix: Interaction) {
   try {
     return {
       f_type: "Signable",
@@ -83,7 +83,7 @@ export function buildSignable(acct: IAcct, message: string, ix: IIx) {
   }
 }
 
-function prepForEncoding(ix: IIx): ITx {
+function prepForEncoding(ix: Interaction): ITx {
   const payerAddress = sansPrefix(
     (Array.isArray(ix.payer) ? ix.accounts[ix.payer[0]] : ix.accounts[ix.payer])
       .addr || ""

@@ -1,13 +1,13 @@
 import {sansPrefix, withPrefix} from "@onflow/util-address"
 import {invariant} from "@onflow/util-invariant"
 import {log} from "@onflow/util-logger"
-import {IAcct, IIx, isTransaction} from "../interaction/interaction"
+import {InteractionAccount, Interaction, isTransaction} from "../interaction/interaction"
 import {createSignableVoucher} from "./voucher"
 import {v4 as uuidv4} from "uuid"
 
 const MAX_DEPTH_LIMIT = 5
 
-const idof = (acct: IAcct) => `${withPrefix(acct.addr)}-${acct.keyId}`
+const idof = (acct: InteractionAccount) => `${withPrefix(acct.addr)}-${acct.keyId}`
 const isFn = (v: any): v is Function =>
   v &&
   (Object.prototype.toString.call(v) === "[object Function]" ||
@@ -49,7 +49,7 @@ function recurseFlatMap<T>(el: T, depthLimit = 3) {
   )
 }
 
-export function buildPreSignable(acct: Partial<IAcct>, ix: IIx) {
+export function buildPreSignable(acct: Partial<InteractionAccount>, ix: Interaction) {
   try {
     return {
       f_type: "PreSignable",
@@ -67,7 +67,7 @@ export function buildPreSignable(acct: Partial<IAcct>, ix: IIx) {
   }
 }
 
-async function removeUnusedIxAccounts(ix: IIx, opts: Record<string, any>) {
+async function removeUnusedIxAccounts(ix: Interaction, opts: Record<string, any>) {
   const payerTempIds = Array.isArray(ix.payer) ? ix.payer : [ix.payer]
   const authorizersTempIds = Array.isArray(ix.authorizations)
     ? ix.authorizations
@@ -90,7 +90,7 @@ async function removeUnusedIxAccounts(ix: IIx, opts: Record<string, any>) {
   }
 }
 
-function addAccountToIx(ix: IIx, newAccount: IAcct) {
+function addAccountToIx(ix: Interaction, newAccount: InteractionAccount) {
   if (
     typeof newAccount.addr === "string" &&
     (typeof newAccount.keyId === "number" ||
@@ -117,7 +117,7 @@ function addAccountToIx(ix: IIx, newAccount: IAcct) {
   return ix.accounts[newAccount.tempId]
 }
 
-function uniqueAccountsFlatMap(accounts: IAcct[]) {
+function uniqueAccountsFlatMap(accounts: InteractionAccount[]) {
   const flatMapped = recurseFlatMap(accounts)
   const seen = new Set()
 
@@ -134,13 +134,13 @@ function uniqueAccountsFlatMap(accounts: IAcct[]) {
       seen.add(accountId)
       return account
     })
-    .filter(e => e !== null) as IAcct[]
+    .filter(e => e !== null) as InteractionAccount[]
 
   return uniqueAccountsFlatMapped
 }
 
 async function recurseResolveAccount(
-  ix: IIx,
+  ix: Interaction,
   currentAccountTempId: string,
   depthLimit = MAX_DEPTH_LIMIT,
   {debugLogger}: {debugLogger: (msg?: string, indent?: number) => void}
@@ -180,18 +180,18 @@ async function recurseResolveAccount(
 
       let flatResolvedAccounts = recurseFlatMap(resolvedAccounts)
 
-      flatResolvedAccounts = flatResolvedAccounts.map((flatResolvedAccount: IAcct) =>
+      flatResolvedAccounts = flatResolvedAccounts.map((flatResolvedAccount: InteractionAccount) =>
         addAccountToIx(ix, flatResolvedAccount)
       )
 
       account.resolve = flatResolvedAccounts.map(
-        (flatResolvedAccount: IAcct) => flatResolvedAccount.tempId
+        (flatResolvedAccount: InteractionAccount) => flatResolvedAccount.tempId
       )
 
       account = addAccountToIx(ix, account)
 
       const recursedAccounts = await Promise.all(
-        flatResolvedAccounts.map(async (resolvedAccount: IAcct) => {
+        flatResolvedAccounts.map(async (resolvedAccount: InteractionAccount) => {
           return await recurseResolveAccount(
             ix,
             resolvedAccount.tempId,
@@ -223,7 +223,7 @@ const getAccountTempIDs = (rawTempIds: string | string[] | null) => {
   return Array.isArray(rawTempIds) ? rawTempIds : [rawTempIds]
 }
 
-async function resolveAccountType(ix: IIx, type: ROLES, {debugLogger}: {debugLogger: (msg?: string, indent?: number) => void}) {
+async function resolveAccountType(ix: Interaction, type: ROLES, {debugLogger}: {debugLogger: (msg?: string, indent?: number) => void}) {
   invariant(
     ix && typeof ix === "object",
     "resolveAccountType Error: ix not defined"
@@ -237,7 +237,7 @@ async function resolveAccountType(ix: IIx, type: ROLES, {debugLogger}: {debugLog
 
   let accountTempIDs = getAccountTempIDs(ix[type])
 
-  let allResolvedAccounts: IAcct[] = []
+  let allResolvedAccounts: InteractionAccount[] = []
   for (let accountId of accountTempIDs) {
     let account = ix.accounts[accountId]
     invariant(Boolean(account), `resolveAccountType Error: account not found`)
@@ -255,7 +255,7 @@ async function resolveAccountType(ix: IIx, type: ROLES, {debugLogger}: {debugLog
       ? resolvedAccountTempIds
       : [resolvedAccountTempIds]
 
-    let resolvedAccounts: IAcct[] = resolvedAccountTempIds.map(
+    let resolvedAccounts: InteractionAccount[] = resolvedAccountTempIds.map(
       (resolvedAccountTempId: string) => ix.accounts[resolvedAccountTempId]
     )
 
@@ -304,7 +304,7 @@ async function resolveAccountType(ix: IIx, type: ROLES, {debugLogger}: {debugLog
   }
 }
 
-export async function resolveAccounts(ix: IIx, opts: Record<string, any> = {}) {
+export async function resolveAccounts(ix: Interaction, opts: Record<string, any> = {}) {
   if (isTransaction(ix)) {
     if (!Array.isArray(ix.payer)) {
       log.deprecate({
