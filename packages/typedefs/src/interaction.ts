@@ -50,7 +50,7 @@ export interface InteractionAccount {
 export interface Interaction {
   tag: InteractionTag
   assigns: Record<string, any>
-  status: string
+  status: InteractionStatus
   reason: string | null
   accounts: Record<string, any>
   params: Record<string, any>
