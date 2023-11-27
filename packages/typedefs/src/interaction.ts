@@ -18,7 +18,7 @@ export enum InteractionStatus {
   OK = "OK",
 }
 
-export enum AccountRole {
+export enum TransactionRole {
   AUTHORIZER = "authorizer",
   PAYER = "payer",
   PROPOSER = "proposer",

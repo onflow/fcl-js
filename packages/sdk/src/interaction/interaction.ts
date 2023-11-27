@@ -2,7 +2,7 @@ import {invariant} from "@onflow/util-invariant"
 import {v4 as uuidv4} from "uuid"
 import {log, LEVELS} from "@onflow/util-logger"
 
-import { AccountRole, Interaction, InteractionAccount, InteractionResolverKind, InteractionStatus, InteractionTag } from "@onflow/typedefs"; 
+import { TransactionRole, Interaction, InteractionAccount, InteractionResolverKind, InteractionStatus, InteractionTag } from "@onflow/typedefs"; 
 
 type AcctFn = (acct: InteractionAccount) => InteractionAccount;
 type AccountFn = AcctFn & Partial<InteractionAccount>;
@@ -135,7 +135,7 @@ const prepAccountKeyId = (acct: Partial<InteractionAccount> | AccountFn): Partia
 }
 
 interface IPrepAccountOpts {
-  role?: AccountRole | null
+  role?: TransactionRole | null
 }
 
 export const initAccount = (): InteractionAccount => JSON.parse(ACCT)
@@ -177,9 +177,9 @@ export const prepAccount = (acct: InteractionAccount | AccountFn, opts: IPrepAcc
     },
   }
 
-  if (role === AccountRole.AUTHORIZER) {
+  if (role === TransactionRole.AUTHORIZER) {
     ix.authorizations.push(tempId)
-  } else if (role === AccountRole.PAYER) {
+  } else if (role === TransactionRole.PAYER) {
     ix.payer.push(tempId)
   } else if (role) {
     ix[role] = tempId
