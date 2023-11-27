@@ -1,10 +1,10 @@
 import {resolveAccounts} from "../sdk"
-import {IAcct, prepAccount, initAccount, initInteraction} from "./interaction"
+import {InteractionAccount, prepAccount, initAccount, initInteraction} from "./interaction"
 
 describe("prepAccount", () => {
   test("prepAccount converts account object keyId to integer", async () => {
     const keyId = "1"
-    const acct: IAcct = {
+    const acct: InteractionAccount = {
       ...initAccount(),
       addr: "f8d6e0586b0a20c7",
       keyId,
@@ -20,7 +20,7 @@ describe("prepAccount", () => {
 
   test("prepAccount converts authorization function keyId to integer", async () => {
     const keyId = "1"
-    const authz = (acct: IAcct): IAcct => {
+    const authz = (acct: InteractionAccount): InteractionAccount => {
       return {
         ...acct,
         addr: "f8d6e0586b0a20c7",
@@ -43,7 +43,7 @@ describe("prepAccount", () => {
   })
 
   test("prepAccount does not affect keyId if undefined/does not exist", async () => {
-    const authz = (acct: IAcct): IAcct => {
+    const authz = (acct: InteractionAccount): InteractionAccount => {
       return {
         ...acct,
         addr: "f8d6e0586b0a20c7",

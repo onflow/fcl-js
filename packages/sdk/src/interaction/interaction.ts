@@ -2,10 +2,10 @@ import {invariant} from "@onflow/util-invariant"
 import {v4 as uuidv4} from "uuid"
 import {log, LEVELS} from "@onflow/util-logger"
 
-import { IAcct, ACCOUNT, PARAM, ARGUMENT, UNKNOWN, OK, IIx, AUTHORIZER, PAYER, SCRIPT, TRANSACTION, GET_TRANSACTION_STATUS, GET_TRANSACTION, GET_ACCOUNT, GET_EVENTS, PING, GET_BLOCK, GET_BLOCK_HEADER, GET_COLLECTION, GET_NETWORK_PARAMETERS, BAD, PROPOSER } from "@onflow/typedefs"; 
+import { InteractionAccount, ACCOUNT, PARAM, ARGUMENT, UNKNOWN, OK, Interaction, AUTHORIZER, PAYER, SCRIPT, TRANSACTION, GET_TRANSACTION_STATUS, GET_TRANSACTION, GET_ACCOUNT, GET_EVENTS, PING, GET_BLOCK, GET_BLOCK_HEADER, GET_COLLECTION, GET_NETWORK_PARAMETERS, BAD, PROPOSER } from "@onflow/typedefs"; 
 
-type AcctFn = (acct: IAcct) => IAcct;
-type IAcctFn = AcctFn & Partial<IAcct>;
+type AcctFn = (acct: InteractionAccount) => InteractionAccount;
+type AccountFn = AcctFn & Partial<InteractionAccount>;
 
 const ACCT = `{
   "kind":"${ACCOUNT}",
@@ -87,10 +87,10 @@ const IX = `{
   }
 }`
 
-const KEYS = new Set(Object.keys(JSON.parse(IX) as IIx))
+const KEYS = new Set(Object.keys(JSON.parse(IX) as Interaction))
 
 
-export const initInteraction = (): IIx => JSON.parse(IX)
+export const initInteraction = (): Interaction => JSON.parse(IX)
 /**
  * @deprecated
  */
@@ -111,29 +111,29 @@ export const isObj = (d: any): d is Record<string, any> => d !== null && typeof 
 export const isNull = (d: any): d is null => d == null
 export const isFn = (d: any): d is Function => typeof d === "function"
 
-export const isInteraction = (ix: IIx) => {
+export const isInteraction = (ix: Interaction) => {
   if (!isObj(ix) || isNull(ix) || isNumber(ix)) return false
   for (let key of KEYS) if (!ix.hasOwnProperty(key)) return false
   return true
 }
 
-export const Ok = (ix: IIx) => {
+export const Ok = (ix: Interaction) => {
   ix.status = OK
   return ix
 }
 
-export const Bad = (ix: IIx, reason: string) => {
+export const Bad = (ix: Interaction, reason: string) => {
   ix.status = BAD
   ix.reason = reason
   return ix
 }
 
-const makeIx = (wat: string) => (ix: IIx) => {
+const makeIx = (wat: string) => (ix: Interaction) => {
   ix.tag = wat
   return Ok(ix)
 }
 
-const prepAccountKeyId = (acct: Partial<IAcct> | IAcctFn): Partial<IAcct> | IAcctFn => {
+const prepAccountKeyId = (acct: Partial<InteractionAccount> | AccountFn): Partial<InteractionAccount> | AccountFn => {
   if (acct.keyId == null) return acct
 
   invariant(!isNaN(parseInt(acct.keyId.toString())), "account.keyId must be an integer")
@@ -141,16 +141,16 @@ const prepAccountKeyId = (acct: Partial<IAcct> | IAcctFn): Partial<IAcct> | IAcc
   return {
     ...acct,
     keyId: parseInt(acct.keyId.toString()),
-  } as IAcct | IAcctFn
+  } as InteractionAccount | AccountFn
 }
 
 interface IPrepAccountOpts {
   role?: typeof AUTHORIZER | typeof PAYER | typeof PROPOSER | null
 }
 
-export const initAccount = (): IAcct => JSON.parse(ACCT)
+export const initAccount = (): InteractionAccount => JSON.parse(ACCT)
 
-export const prepAccount = (acct: IAcct | IAcctFn, opts: IPrepAccountOpts = {}) => (ix: IIx) => {
+export const prepAccount = (acct: InteractionAccount | AccountFn, opts: IPrepAccountOpts = {}) => (ix: Interaction) => {
   invariant(
     typeof acct === "function" || typeof acct === "object",
     "prepAccount must be passed an authorization function or an account object"
@@ -160,7 +160,7 @@ export const prepAccount = (acct: IAcct | IAcctFn, opts: IPrepAccountOpts = {}) 
   const ACCOUNT = initAccount()
   const role = opts.role
   const tempId = uuidv4()
-  let account: Partial<IAcct> = {...acct}
+  let account: Partial<InteractionAccount> = {...acct}
 
   if (acct.authorization && isFn(acct.authorization))
     account = {resolve: acct.authorization}
@@ -168,7 +168,7 @@ export const prepAccount = (acct: IAcct | IAcctFn, opts: IPrepAccountOpts = {}) 
 
   const resolve = account.resolve
   if (resolve) {
-    account.resolve = (acct: IAcct, ...rest: any[]) =>
+    account.resolve = (acct: InteractionAccount, ...rest: any[]) =>
       [resolve, prepAccountKeyId].reduce(
         async (d, fn) => fn(await d, ...rest),
         acct
@@ -198,7 +198,7 @@ export const prepAccount = (acct: IAcct | IAcctFn, opts: IPrepAccountOpts = {}) 
   return ix
 }
 
-export const makeArgument = (arg: Record<string, any>) => (ix: IIx)  => {
+export const makeArgument = (arg: Record<string, any>) => (ix: Interaction)  => {
   let tempId = uuidv4()
   ix.message.arguments.push(tempId)
 
@@ -228,7 +228,7 @@ export const makeGetBlockHeader /*          */ = makeIx(GET_BLOCK_HEADER)
 export const makeGetCollection /*           */ = makeIx(GET_COLLECTION)
 export const makeGetNetworkParameters /*    */ = makeIx(GET_NETWORK_PARAMETERS)
 
-const is = (wat: string) => (ix: IIx) => ix.tag === wat
+const is = (wat: string) => (ix: Interaction) => ix.tag === wat
 
 export const isUnknown /*                 */ = is(UNKNOWN)
 export const isScript /*                  */ = is(SCRIPT)
@@ -243,15 +243,15 @@ export const isGetBlockHeader /*          */ = is(GET_BLOCK_HEADER)
 export const isGetCollection /*           */ = is(GET_COLLECTION)
 export const isGetNetworkParameters /*    */ = is(GET_NETWORK_PARAMETERS)
 
-export const isOk /*  */ = (ix: IIx) => ix.status === OK
-export const isBad /* */ = (ix: IIx) => ix.status === BAD
-export const why /*   */ = (ix: IIx) => ix.reason
+export const isOk /*  */ = (ix: Interaction) => ix.status === OK
+export const isBad /* */ = (ix: Interaction) => ix.status === BAD
+export const why /*   */ = (ix: Interaction) => ix.reason
 
 export const isAccount /*  */ = (account: Record<string, any>) => account.kind === ACCOUNT
 export const isParam /*    */ = (param: Record<string, any>) => param.kind === PARAM
 export const isArgument /* */ = (argument: Record<string, any>) => argument.kind === ARGUMENT
 
-const hardMode = (ix: IIx) => {
+const hardMode = (ix: Interaction) => {
   for (let key of Object.keys(ix)) {
     if (!KEYS.has(key))
       throw new Error(`"${key}" is an invalid root level Interaction property.`)
@@ -259,7 +259,7 @@ const hardMode = (ix: IIx) => {
   return ix
 }
 
-const recPipe = async (ix: IIx, fns: (Function | IIx)[] = []): Promise<any> => {
+const recPipe = async (ix: Interaction, fns: (Function | Interaction)[] = []): Promise<any> => {
   try {
     ix = hardMode(await ix)
     if (isBad(ix)) throw new Error(`Interaction Error: ${ix.reason}`)
@@ -283,21 +283,21 @@ export const pipe = (...args: any[]) => {
 
 const identity = <T>(v: T, ..._: any[]) => v
 
-export const get = (ix: IIx, key: string, fallback: any) => {
+export const get = (ix: Interaction, key: string, fallback: any) => {
   return ix.assigns[key] == null ? fallback : ix.assigns[key]
 }
 
-export const put = (key: string, value: any) => (ix: IIx) => {
+export const put = (key: string, value: any) => (ix: Interaction) => {
   ix.assigns[key] = value
   return Ok(ix)
 }
 
-export const update = (key: string, fn = identity) => (ix: IIx) => {
+export const update = (key: string, fn = identity) => (ix: Interaction) => {
   ix.assigns[key] = fn(ix.assigns[key], ix)
   return Ok(ix)
 }
 
-export const destroy = (key: string) => (ix: IIx) => {
+export const destroy = (key: string) => (ix: Interaction) => {
   delete ix.assigns[key]
   return Ok(ix)
 }

@@ -10,23 +10,23 @@ import {sendGetBlockHeader} from "./send-get-block-header.js"
 import {sendGetCollection} from "./send-get-collection.js"
 import {sendPing, ISendPingContext} from "./send-ping"
 import {sendGetNetworkParameters} from "./send-get-network-parameters.js"
-import { IIx } from "@onflow/typedefs"
+import { Interaction } from "@onflow/typedefs"
 
-interface IIxModule {
-  isTransaction: (ix: IIx) => boolean;
-  isGetTransactionStatus: (ix: IIx) => boolean;
-  isGetTransaction: (ix: IIx) => boolean;
-  isScript: (ix: IIx) => boolean;
-  isGetAccount: (ix: IIx) => boolean;
-  isGetEvents: (ix: IIx) => boolean;
-  isGetBlock: (ix: IIx) => boolean;
-  isGetBlockHeader: (ix: IIx) => boolean;
-  isGetCollection: (ix: IIx) => boolean;
-  isPing: (ix: IIx) => boolean;
-  isGetNetworkParameters: (ix: IIx) => boolean;
+interface InteractionModule {
+  isTransaction: (ix: Interaction) => boolean;
+  isGetTransactionStatus: (ix: Interaction) => boolean;
+  isGetTransaction: (ix: Interaction) => boolean;
+  isScript: (ix: Interaction) => boolean;
+  isGetAccount: (ix: Interaction) => boolean;
+  isGetEvents: (ix: Interaction) => boolean;
+  isGetBlock: (ix: Interaction) => boolean;
+  isGetBlockHeader: (ix: Interaction) => boolean;
+  isGetCollection: (ix: Interaction) => boolean;
+  isPing: (ix: Interaction) => boolean;
+  isGetNetworkParameters: (ix: Interaction) => boolean;
 }
 interface IContext extends ISendPingContext{
-  ix: IIxModule;
+  ix: InteractionModule;
 }
 
 interface IOptsCommon {
@@ -34,20 +34,20 @@ interface IOptsCommon {
 }
 
 interface IOpts extends IOptsCommon {
-  sendTransaction?: (ix: IIx, context: IContext, opts: IOptsCommon) => void
-  sendGetTransactionStatus?: (ix: IIx, context: IContext, opts: IOptsCommon) => void
-  sendGetTransaction?: (ix: IIx, context: IContext, opts: IOptsCommon) => void
-  sendExecuteScript?: (ix: IIx, context: IContext, opts: IOptsCommon) => void
-  sendGetAccount?: (ix: IIx, context: IContext, opts: IOptsCommon) => void
-  sendGetEvents?: (ix: IIx, context: IContext, opts: IOptsCommon) => void
-  sendGetBlockHeader?: (ix: IIx, context: IContext, opts: IOptsCommon) => void
-  sendGetCollection?: (ix: IIx, context: IContext, opts: IOptsCommon) => void
-  sendPing?: (ix: IIx, context: IContext, opts: IOptsCommon) => void
-  sendGetBlock?: (ix: IIx, context: IContext, opts: IOptsCommon) => void
-  sendGetNetworkParameters?: (ix: IIx, context: IContext, opts: IOptsCommon) => void
+  sendTransaction?: (ix: Interaction, context: IContext, opts: IOptsCommon) => void
+  sendGetTransactionStatus?: (ix: Interaction, context: IContext, opts: IOptsCommon) => void
+  sendGetTransaction?: (ix: Interaction, context: IContext, opts: IOptsCommon) => void
+  sendExecuteScript?: (ix: Interaction, context: IContext, opts: IOptsCommon) => void
+  sendGetAccount?: (ix: Interaction, context: IContext, opts: IOptsCommon) => void
+  sendGetEvents?: (ix: Interaction, context: IContext, opts: IOptsCommon) => void
+  sendGetBlockHeader?: (ix: Interaction, context: IContext, opts: IOptsCommon) => void
+  sendGetCollection?: (ix: Interaction, context: IContext, opts: IOptsCommon) => void
+  sendPing?: (ix: Interaction, context: IContext, opts: IOptsCommon) => void
+  sendGetBlock?: (ix: Interaction, context: IContext, opts: IOptsCommon) => void
+  sendGetNetworkParameters?: (ix: Interaction, context: IContext, opts: IOptsCommon) => void
 }
 
-export const send = async (ix: IIx, context: IContext, opts: IOpts = {}) => {
+export const send = async (ix: Interaction, context: IContext, opts: IOpts = {}) => {
   invariant(
     Boolean(opts?.node),
     `SDK Send Error: Either opts.node or "accessNode.api" in config must be defined.`
