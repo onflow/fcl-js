@@ -30,8 +30,8 @@
     "typescript": "^4.9.5"
   },
   "source": {
-    "src/fcl.js": {
-      "cjs": "./dist/fcl.ts",
+    "src/fcl.ts": {
+      "cjs": "./dist/fcl.js",
       "esm": "./dist/fcl.module.js",
       "umd": "./dist/fcl.umd.min.js"
     },
@@ -70,7 +70,8 @@
     "@onflow/util-semver": "^1.0.1",
     "@onflow/util-template": "^1.2.1",
     "@onflow/util-uid": "^1.2.1",
-    "cross-fetch": "^3.1.6"
+    "cross-fetch": "^3.1.6",
+    "sha3": "^2.1.4"
   },
   "peerDependencies": {
     "@react-native-async-storage/async-storage": "^1.13.0",
