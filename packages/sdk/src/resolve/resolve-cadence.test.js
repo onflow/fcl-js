@@ -1,4 +1,4 @@
-import {interaction, pipe, put, makeScript} from "../interaction/interaction.js"
+import {initInteraction, pipe, put, makeScript} from "../interaction/interaction"
 import {resolveCadence} from "./resolve-cadence.js"
 import {config} from "@onflow/config"
 
@@ -13,7 +13,7 @@ describe("resolveCadence", () => {
         makeScript,
         put("ix.cadence", CADENCE),
         resolveCadence,
-      ])(interaction())
+      ])(initInteraction())
 
       expect(ix.message.cadence).toBe(CADENCE)
     })
@@ -27,7 +27,7 @@ describe("resolveCadence", () => {
         makeScript,
         put("ix.cadence", CADENCE),
         resolveCadence,
-      ])(interaction())
+      ])(initInteraction())
 
       expect(ix.message.cadence).toBe(await CADENCE())
     })
@@ -59,7 +59,7 @@ describe("resolveCadence", () => {
         makeScript,
         put("ix.cadence", CADENCE),
         resolveCadence,
-      ])(interaction())
+      ])(initInteraction())
 
       expect(ix.message.cadence).toEqual(await RESULT())
     })
@@ -111,7 +111,7 @@ describe("resolveCadence", () => {
         makeScript,
         put("ix.cadence", CADENCE),
         resolveCadence,
-      ])(interaction())
+      ])(initInteraction())
 
       expect(ix.message.cadence).toEqual(await RESULT())
     })
@@ -138,7 +138,7 @@ pub fun main(): Address {
         makeScript,
         put("ix.cadence", CADENCE),
         resolveCadence,
-      ])(interaction())
+      ])(initInteraction())
 
       expect(ix.message.cadence).toEqual(expected)
     })
@@ -165,7 +165,7 @@ pub fun main(): Address {
         makeScript,
         put("ix.cadence", CADENCE),
         resolveCadence,
-      ])(interaction())
+      ])(initInteraction())
 
       expect(ix.message.cadence).toEqual(expected)
     })
@@ -193,7 +193,7 @@ pub fun main(): Address {
         makeScript,
         put("ix.cadence", CADENCE),
         resolveCadence,
-      ])(interaction())
+      ])(initInteraction())
 
       expect(ix.message.cadence).toEqual(expected)
     })
@@ -218,7 +218,7 @@ pub fun main(): Address {
         makeScript,
         put("ix.cadence", CADENCE),
         resolveCadence,
-      ])(interaction())
+      ])(initInteraction())
 
       expect(ix.message.cadence).toEqual(expected)
     })

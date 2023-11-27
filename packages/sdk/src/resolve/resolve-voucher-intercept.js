@@ -1,4 +1,4 @@
-import {get, isFn} from "../interaction/interaction.js"
+import {get, isFn} from "../interaction/interaction"
 import {createSignableVoucher} from "./voucher.js"
 
 export async function resolveVoucherIntercept(ix) {
