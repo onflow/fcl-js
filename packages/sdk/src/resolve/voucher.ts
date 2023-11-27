@@ -1,8 +1,8 @@
 import {withPrefix} from "@onflow/util-address"
 import {IVoucher, encodeTxIdFromVoucher} from "../encode/encode"
-import { IIx } from "@onflow/typedefs"
+import { Interaction } from "@onflow/typedefs"
 
-export function findInsideSigners(ix: IIx) {
+export function findInsideSigners(ix: Interaction) {
   // Inside Signers Are: (authorizers + proposer) - payer
   let inside = new Set(ix.authorizations)
   if (ix.proposer) {
@@ -16,13 +16,13 @@ export function findInsideSigners(ix: IIx) {
   return Array.from(inside)
 }
 
-export function findOutsideSigners(ix: IIx) {
+export function findOutsideSigners(ix: Interaction) {
   // Outside Signers Are: (payer)
   let outside = new Set(Array.isArray(ix.payer) ? ix.payer : [ix.payer])
   return Array.from(outside)
 }
 
-export const createSignableVoucher = (ix: IIx) => {
+export const createSignableVoucher = (ix: Interaction) => {
   const buildAuthorizers = () => {
     const authorizations = ix.authorizations
       .map(cid => withPrefix(ix.accounts[cid].addr))

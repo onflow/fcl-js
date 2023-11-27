@@ -2,9 +2,9 @@ import {SHA3} from "sha3"
 import {encode, Buffer, EncodeInput} from "@onflow/rlp"
 import {sansPrefix} from "@onflow/util-address"
 
-export const encodeTransactionPayload = (tx: ITx) =>
+export const encodeTransactionPayload = (tx: Transaction) =>
   prependTransactionDomainTag(rlpEncode(preparePayload(tx)))
-export const encodeTransactionEnvelope = (tx: ITx) =>
+export const encodeTransactionEnvelope = (tx: Transaction) =>
   prependTransactionDomainTag(rlpEncode(prepareEnvelope(tx)))
 export const encodeTxIdFromVoucher = (voucher: IVoucher) =>
   sha3_256(rlpEncode(prepareVoucher(voucher)))
@@ -40,7 +40,7 @@ const sha3_256 = (msg: string) => {
   return sha.digest().toString("hex")
 }
 
-const preparePayload = (tx: ITx) => {
+const preparePayload = (tx: Transaction) => {
   validatePayload(tx)
 
   return [
@@ -56,13 +56,13 @@ const preparePayload = (tx: ITx) => {
   ]
 }
 
-const prepareEnvelope = (tx: ITx) => {
+const prepareEnvelope = (tx: Transaction) => {
   validateEnvelope(tx)
 
   return [preparePayload(tx), preparePayloadSignatures(tx)]
 }
 
-const preparePayloadSignatures = (tx: ITx) => {
+const preparePayloadSignatures = (tx: Transaction) => {
   const signers = collectSigners(tx)
 
   return tx.payloadSigs?.map((sig: ISig) => {
@@ -86,7 +86,7 @@ const preparePayloadSignatures = (tx: ITx) => {
     })
 }
 
-const collectSigners = (tx: IVoucher | ITx) => {
+const collectSigners = (tx: IVoucher | Transaction) => {
   const signers = new Map<string, number>()
   let i = 0
 
@@ -148,14 +148,14 @@ const prepareVoucher = (voucher: IVoucher) => {
   ]
 }
 
-const validatePayload = (tx: ITx) => {
+const validatePayload = (tx: Transaction) => {
   payloadFields.forEach(field => checkField(tx, field))
   proposalKeyFields.forEach(field =>
     checkField(tx.proposalKey, field, "proposalKey")
   )
 }
 
-const validateEnvelope = (tx: ITx) => {
+const validateEnvelope = (tx: Transaction) => {
   payloadSigsFields.forEach(field => checkField(tx, field))
   tx.payloadSigs?.forEach((sig, index) => {
     payloadSigFields.forEach(field =>
@@ -201,25 +201,25 @@ interface IVoucherProposalKey {
 
 interface ISig {
   address: string,
-  keyId: number,
+  keyId: number | string,
   sig: string,
 }
 
-export interface ITxProposalKey {
+export interface TransactionProposalKey {
   address?: string
-  keyId?: number
+  keyId?: number | string
   sequenceNum?: number
 }
-export interface ITx {
+export interface Transaction {
   cadence: string | null;
   refBlock: string | null;
   computeLimit: string | null;
   arguments: IVoucherArgument[]
-  proposalKey: ITxProposalKey
+  proposalKey: TransactionProposalKey
   payer: string
   authorizers: string[]
   payloadSigs?: ISig[]
-  envelopeSigs?: ITxProposalKey[]
+  envelopeSigs?: TransactionProposalKey[]
 }
 
 export interface IVoucher {

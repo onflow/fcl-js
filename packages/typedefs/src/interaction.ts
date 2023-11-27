@@ -25,7 +25,7 @@ export const PROPOSER /*   */ = "proposer"
 
 export interface InteractionAccount {
   "kind": typeof ACCOUNT,
-  "tempId": string | null,
+  "tempId": string,
   "addr": string | null,
   "keyId": number | string | null,
   "sequenceNum": number | null,

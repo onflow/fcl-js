@@ -1,8 +1,8 @@
 import {InteractionAccount, Interaction, isTransaction} from "../interaction/interaction"
 import {sansPrefix} from "@onflow/util-address"
 import {
-  ITx,
-  ITxProposalKey,
+  Transaction,
+  TransactionProposalKey,
   encodeTransactionPayload as encodeInsideMessage,
   encodeTransactionEnvelope as encodeOutsideMessage,
 } from "../encode/encode"
@@ -83,13 +83,13 @@ export function buildSignable(acct: InteractionAccount, message: string, ix: Int
   }
 }
 
-function prepForEncoding(ix: Interaction): ITx {
+function prepForEncoding(ix: Interaction): Transaction {
   const payerAddress = sansPrefix(
     (Array.isArray(ix.payer) ? ix.accounts[ix.payer[0]] : ix.accounts[ix.payer])
       .addr || ""
   )
   
-  const proposalKey: ITxProposalKey = ix.proposer ? {
+  const proposalKey: TransactionProposalKey = ix.proposer ? {
     address: sansPrefix(ix.accounts[ix.proposer].addr) || '',
     keyId: ix.accounts[ix.proposer].keyId || 0,
     sequenceNum: ix.accounts[ix.proposer].sequenceNum || 0,
