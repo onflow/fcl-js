@@ -1,5 +1,5 @@
 import {invariant} from "@onflow/util-invariant"
-import {pipe, Ok, makeSubscribeEvents} from "../interaction/interaction.js"
+import {pipe, Ok, makeSubscribeEvents} from "../interaction/interaction"
 import {EventFilter} from "@onflow/typedefs"
 
 /**
