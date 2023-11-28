@@ -1,4 +1,4 @@
-import {pipe, makeGetAccount, Ok} from "../interaction/interaction.js"
+import {pipe, makeGetAccount, Ok} from "../interaction/interaction"
 import {sansPrefix} from "@onflow/util-address"
 
 /**

@@ -1,4 +1,4 @@
-import {interaction} from "../interaction/interaction.js"
+import {initInteraction} from "../interaction/interaction"
 import {authorizations, authorization} from "./build-authorizations.js"
 
 describe("Build Authorizations", () => {
@@ -7,7 +7,7 @@ describe("Build Authorizations", () => {
       await authorizations([
         authorization("0xabc123", () => ({signature: "123"}), 1, 123),
       ])
-    )(interaction())
+    )(initInteraction())
 
     const authorizerAccount = ix.accounts[ix.authorizations]
 

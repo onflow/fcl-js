@@ -1,4 +1,4 @@
-import {makePing} from "../interaction/interaction.js"
+import {makePing} from "../interaction/interaction"
 
 export function ping() {
   return makePing

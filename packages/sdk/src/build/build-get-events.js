@@ -1,4 +1,4 @@
-import {pipe, Ok, makeGetEvents} from "../interaction/interaction.js"
+import {pipe, Ok, makeGetEvents} from "../interaction/interaction"
 import * as logger from "@onflow/util-logger"
 
 export function getEvents(eventType, start, end) {

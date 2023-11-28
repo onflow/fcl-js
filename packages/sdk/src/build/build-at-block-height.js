@@ -1,4 +1,4 @@
-import {pipe} from "../interaction/interaction.js"
+import {pipe} from "../interaction/interaction"
 import {validator} from "./build-validator.js"
 
 /**

@@ -1,11 +1,11 @@
 import {
   isTransaction,
   Ok,
-  interaction,
+  initInteraction,
   pipe,
-} from "../interaction/interaction.js"
-import * as ixModule from "../interaction/interaction.js"
-import {response} from "../response/response.js"
+} from "../interaction/interaction"
+import * as ixModule from "../interaction/interaction"
+import {response} from "../response/response"
 import {config} from "@onflow/config"
 import {decodeResponse} from "../decode/decode.js"
 import {getBlock} from "../build/build-get-block.js"
@@ -23,7 +23,7 @@ async function getRefId(opts) {
   )
 
   var ix
-  ix = await pipe(interaction(), [getBlock()])
+  ix = await pipe(initInteraction(), [getBlock()])
   ix = await sendFn(ix, {config, response, Buffer, ix: ixModule}, {node})
   ix = await decodeResponse(ix)
   return ix.id

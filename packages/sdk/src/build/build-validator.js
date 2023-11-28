@@ -1,4 +1,4 @@
-import {update} from "../interaction/interaction.js"
+import {update} from "../interaction/interaction"
 
 export function validator(cb) {
   return update("ix.validators", validators =>

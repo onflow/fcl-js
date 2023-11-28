@@ -1,4 +1,5 @@
-import {pipe, makeArgument} from "../interaction/interaction.js"
+import {pipe, makeArgument} from "../interaction/interaction"
+import {TypeDescriptorInput, TypeDescriptor} from "@onflow/types"
 
 /**
  * @description - A utility builder to be used with other builders to pass in arguments with a value and supported type
@@ -15,6 +16,9 @@ export function args(ax = []) {
  * @param {Function} xform - A function to transform the value
  * @returns {object} - An argument object
  */
-export function arg(value, xform) {
+export function arg<T extends TypeDescriptor<any, {
+  type: string;
+  value: string;
+}>>(value: TypeDescriptorInput<T>, xform: T) {
   return {value, xform}
 }

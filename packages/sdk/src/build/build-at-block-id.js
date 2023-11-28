@@ -1,4 +1,4 @@
-import {isGetAccount, pipe, Ok} from "../interaction/interaction.js"
+import {isGetAccount, pipe, Ok} from "../interaction/interaction"
 import {validator} from "./build-validator.js"
 
 export function atBlockId(id) {
