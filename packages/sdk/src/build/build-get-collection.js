@@ -1,4 +1,4 @@
-import {pipe, makeGetCollection} from "../interaction/interaction.js"
+import {pipe, makeGetCollection} from "../interaction/interaction"
 
 /**
  * @description - A builder function that returns all a collection containing a list of transaction ids by its collection id

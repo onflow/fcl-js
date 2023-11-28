@@ -9,15 +9,51 @@ import {connectSubscribeEvents} from "./connect-subscribe-events.js"
 import {sendGetBlock} from "./send-get-block.js"
 import {sendGetBlockHeader} from "./send-get-block-header.js"
 import {sendGetCollection} from "./send-get-collection.js"
-import {sendPing} from "./send-ping.js"
+import {sendPing, ISendPingContext} from "./send-ping"
 import {sendGetNetworkParameters} from "./send-get-network-parameters.js"
+import { Interaction } from "@onflow/typedefs"
 
-export const send = async (ix, context = {}, opts = {}) => {
+interface InteractionModule {
+  isTransaction: (ix: Interaction) => boolean;
+  isGetTransactionStatus: (ix: Interaction) => boolean;
+  isGetTransaction: (ix: Interaction) => boolean;
+  isScript: (ix: Interaction) => boolean;
+  isGetAccount: (ix: Interaction) => boolean;
+  isGetEvents: (ix: Interaction) => boolean;
+  isGetBlock: (ix: Interaction) => boolean;
+  isGetBlockHeader: (ix: Interaction) => boolean;
+  isGetCollection: (ix: Interaction) => boolean;
+  isPing: (ix: Interaction) => boolean;
+  isGetNetworkParameters: (ix: Interaction) => boolean;
+}
+interface IContext extends ISendPingContext{
+  ix: InteractionModule;
+}
+
+interface IOptsCommon {
+  node?: string
+}
+
+interface IOpts extends IOptsCommon {
+  sendTransaction?: (ix: Interaction, context: IContext, opts: IOptsCommon) => void
+  sendGetTransactionStatus?: (ix: Interaction, context: IContext, opts: IOptsCommon) => void
+  sendGetTransaction?: (ix: Interaction, context: IContext, opts: IOptsCommon) => void
+  sendExecuteScript?: (ix: Interaction, context: IContext, opts: IOptsCommon) => void
+  sendGetAccount?: (ix: Interaction, context: IContext, opts: IOptsCommon) => void
+  sendGetEvents?: (ix: Interaction, context: IContext, opts: IOptsCommon) => void
+  sendGetBlockHeader?: (ix: Interaction, context: IContext, opts: IOptsCommon) => void
+  sendGetCollection?: (ix: Interaction, context: IContext, opts: IOptsCommon) => void
+  sendPing?: (ix: Interaction, context: IContext, opts: IOptsCommon) => void
+  sendGetBlock?: (ix: Interaction, context: IContext, opts: IOptsCommon) => void
+  sendGetNetworkParameters?: (ix: Interaction, context: IContext, opts: IOptsCommon) => void
+}
+
+export const send = async (ix: Interaction, context: IContext, opts: IOpts = {}) => {
   invariant(
-    opts.node,
+    Boolean(opts?.node),
     `SDK Send Error: Either opts.node or "accessNode.api" in config must be defined.`
   )
-  invariant(context.ix, `SDK Send Error: context.ix must be defined.`)
+  invariant(Boolean(context.ix), `SDK Send Error: context.ix must be defined.`)
 
   ix = await ix
 

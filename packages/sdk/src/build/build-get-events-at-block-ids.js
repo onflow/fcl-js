@@ -1,4 +1,4 @@
-import {pipe, Ok, makeGetEvents} from "../interaction/interaction.js"
+import {pipe, Ok, makeGetEvents} from "../interaction/interaction"
 
 /**
  * @description - A builder function that returns all instances of a particular event (by name) within a set of blocks, specified by block ids

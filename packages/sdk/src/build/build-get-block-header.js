@@ -1,4 +1,4 @@
-import {pipe, Ok, makeGetBlockHeader} from "../interaction/interaction.js"
+import {pipe, Ok, makeGetBlockHeader} from "../interaction/interaction"
 
 /**
  * @description - A builder function that returns the interaction to get a block header

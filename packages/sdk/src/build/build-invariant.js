@@ -1,4 +1,4 @@
-import {Ok, Bad} from "../interaction/interaction.js"
+import {Ok, Bad} from "../interaction/interaction"
 
 export function invariant(...args) {
   if (args.length > 1) {

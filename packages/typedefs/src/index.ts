@@ -288,7 +288,6 @@ export type Provider = {
    */
   name: string
 }
-
 export interface StreamConnection<ChannelMap extends {[name: string]: any}> {
   on<C extends keyof ChannelMap>(
     channel: C,
@@ -321,3 +320,5 @@ export type EventStream = StreamConnection<{
   events: Event[]
   heartbeat: BlockHeartbeat
 }>
+
+export * from "./interaction"

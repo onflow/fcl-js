@@ -1,14 +1,19 @@
+import { InteractionAccount } from "@onflow/typedefs"
 import {withPrefix} from "@onflow/util-address"
 
-export const idof = acct => `${withPrefix(acct.addr)}-${acct.keyId}`
+export const idof = (acct: InteractionAccount) => `${withPrefix(acct.addr)}-${acct.keyId}`
 
-export function sig(opts) {
+export function sig(opts: Partial<InteractionAccount>) {
   return ["SIGNATURE", opts.addr, opts.keyId].join(".")
 }
 
-export function authzFn(opts = {}) {
-  return function (account) {
-    const acct = {
+interface IAuthzOpts {
+  signingFunction?: (signable: any) => any
+}
+
+export function authzFn(opts: IAuthzOpts = {}) {
+  return function (account: Partial<InteractionAccount>) {
+    const acct: Partial<InteractionAccount> = {
       ...account,
       ...opts,
       resolve: null,
@@ -20,7 +25,7 @@ export function authzFn(opts = {}) {
 
     return acct
 
-    function fallbackSigningFunction(signable) {
+    function fallbackSigningFunction(_signable: any) {
       return {
         addr: acct.addr,
         keyId: acct.keyId,
@@ -30,8 +35,12 @@ export function authzFn(opts = {}) {
   }
 }
 
-export function authzResolve(opts = {}) {
-  return function (account) {
+interface IAuthzResolveOpts {
+  tempId?: string
+}
+
+export function authzResolve(opts: IAuthzResolveOpts = {}) {
+  return function (account: InteractionAccount) {
     const {tempId, ...rest} = opts
     return {
       ...account,
@@ -44,8 +53,15 @@ export function authzResolve(opts = {}) {
 const ROLE = {proposer: false, authorizer: false, payer: false}
 const noop = () => {}
 
-export function authzResolveMany(opts = {}) {
-  return function (account) {
+interface IAuthzResolveMany {
+  tempId?: string
+  authorizations: any[]
+  proposer?: any
+  payer?: any
+}
+
+export function authzResolveMany(opts: IAuthzResolveMany = {authorizations: []}) {
+  return function (account: InteractionAccount): InteractionAccount {
     const tempId = opts.tempId || "AUTHZ_RESOLVE_MANY"
     return {
       ...account,
@@ -63,8 +79,8 @@ export function authzResolveMany(opts = {}) {
   }
 }
 
-export function authzDeepResolveMany(opts = {}, depth = 1) {
-  return function (account) {
+export function authzDeepResolveMany(opts: IAuthzResolveMany = {authorizations: []}, depth = 1) {
+  return function (account: InteractionAccount): InteractionAccount {
     const tempId = opts.tempId || "AUTHZ_DEEP_RESOLVE_MANY"
     return {
       ...account,
