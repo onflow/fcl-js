@@ -83,6 +83,7 @@ module.exports = function getInputOptions(package, build) {
             "**/*.cjs",
             "**/*.mjs",
           ],
+          exclude: [ "**/node_modules/**/*"],
           useTsconfigDeclarationDir: true,
         }),
       replace({
