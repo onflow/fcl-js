@@ -1,13 +1,6 @@
 {
   // Change this to match your project
-  "exclude": [
-    "**/*.test.ts",
-    "**/*.test.js",
-    "**/*.spec.ts",
-    "**/*.spec.js",
-    "**/node_modules/**/*",
-    "**/__snapshots__/**/*"
-  ],
+  "exclude": ["**/*.test.ts", "**/*.test.js"],
   "compilerOptions": {
     "moduleResolution": "NodeNext",
     "target": "ES2015",
