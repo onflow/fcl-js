@@ -16,7 +16,7 @@ export function subscribeEvents({
   startBlockId?: string
   startHeight?: number
   heartbeatInterval?: number
-}) {
+}): Function {
   invariant(
     !(startBlockId && startHeight),
     `SDK Subscribe Events Error: Cannot set both startBlockId and startHeight.`
@@ -33,5 +33,5 @@ export function subscribeEvents({
       ix.subscribeEvents.heartbeatInterval = heartbeatInterval
       return Ok(ix)
     },
-  ])
+  ]) as any
 }

@@ -4,6 +4,7 @@
   "include": ["src/**/*"],
   "compilerOptions": {
     "declarationDir": "types",
-    "rootDir": "./src"
+    "rootDir": "src",
+    "allowJs": true,
   }
 }

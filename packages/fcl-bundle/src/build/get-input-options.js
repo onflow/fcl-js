@@ -56,6 +56,8 @@ module.exports = function getInputOptions(package, build) {
     ),
   ]
 
+  const extensions = DEFAULT_EXTENSIONS.concat([".ts", ".tsx", ".mts", ".cts"])
+
   let options = {
     input: build.source,
     external: testExternal,
@@ -68,6 +70,7 @@ module.exports = function getInputOptions(package, build) {
         browser: true,
         preferBuiltins: build.type !== "umd",
         resolveOnly,
+        extensions,
       }),
       commonjs(),
       isTypeScript &&
@@ -108,7 +111,7 @@ module.exports = function getInputOptions(package, build) {
           ],
         ],
         sourceMaps: true,
-        extensions: [...DEFAULT_EXTENSIONS, ".ts", ".tsx"],
+        extensions,
       }),
       /\.min\.js$/.test(build.entry) &&
         terser({

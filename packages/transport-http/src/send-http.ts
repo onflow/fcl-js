@@ -11,7 +11,7 @@ import {sendGetBlockHeader} from "./send-get-block-header.js"
 import {sendGetCollection} from "./send-get-collection.js"
 import {sendPing, ISendPingContext} from "./send-ping"
 import {sendGetNetworkParameters} from "./send-get-network-parameters.js"
-import { Interaction } from "@onflow/typedefs"
+import {Interaction} from "@onflow/typedefs"
 
 interface InteractionModule {
   isTransaction: (ix: Interaction) => boolean;
@@ -25,6 +25,7 @@ interface InteractionModule {
   isGetCollection: (ix: Interaction) => boolean;
   isPing: (ix: Interaction) => boolean;
   isGetNetworkParameters: (ix: Interaction) => boolean;
+  isSubscribeEvents: (ix: Interaction) => boolean;
 }
 interface IContext extends ISendPingContext{
   ix: InteractionModule;
@@ -46,6 +47,7 @@ interface IOpts extends IOptsCommon {
   sendPing?: (ix: Interaction, context: IContext, opts: IOptsCommon) => void
   sendGetBlock?: (ix: Interaction, context: IContext, opts: IOptsCommon) => void
   sendGetNetworkParameters?: (ix: Interaction, context: IContext, opts: IOptsCommon) => void
+  connectSubscribeEvents?: (ix: Interaction, context: IContext, opts: IOptsCommon) => void
 }
 
 export const send = async (ix: Interaction, context: IContext, opts: IOpts = {}) => {

@@ -36,7 +36,7 @@
       "esm": "./dist/fcl.module.js",
       "umd": "./dist/fcl.umd.min.js"
     },
-    "src/fcl-react-native.js": {
+    "src/fcl-react-native.ts": {
       "cjs": "./dist/fcl-react-native.js",
       "esm": "./dist/fcl-react-native.module.js",
       "umd": "./dist/fcl-react-native.umd.min.js"
