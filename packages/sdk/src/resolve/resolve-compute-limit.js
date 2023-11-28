@@ -1,4 +1,4 @@
-import {isTransaction} from "../interaction/interaction.js"
+import {isTransaction} from "../interaction/interaction"
 import {config} from "@onflow/config"
 import * as logger from "@onflow/util-logger"
 

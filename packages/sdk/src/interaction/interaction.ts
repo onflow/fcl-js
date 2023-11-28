@@ -1,29 +1,11 @@
 import {invariant} from "@onflow/util-invariant"
 import {v4 as uuidv4} from "uuid"
+import {log, LEVELS} from "@onflow/util-logger"
 
-export const UNKNOWN /*                       */ = "UNKNOWN"
-export const SCRIPT /*                        */ = "SCRIPT"
-export const TRANSACTION /*                   */ = "TRANSACTION"
-export const GET_TRANSACTION_STATUS /*        */ = "GET_TRANSACTION_STATUS"
-export const GET_ACCOUNT /*                   */ = "GET_ACCOUNT"
-export const GET_EVENTS /*                    */ = "GET_EVENTS"
-export const PING /*                          */ = "PING"
-export const GET_TRANSACTION /*               */ = "GET_TRANSACTION"
-export const GET_BLOCK /*                     */ = "GET_BLOCK"
-export const GET_BLOCK_HEADER /*              */ = "GET_BLOCK_HEADER"
-export const GET_COLLECTION /*                */ = "GET_COLLECTION"
-export const GET_NETWORK_PARAMETERS /*        */ = "GET_NETWORK_PARAMETERS"
+import { InteractionAccount, ACCOUNT, PARAM, ARGUMENT, UNKNOWN, OK, Interaction, AUTHORIZER, PAYER, SCRIPT, TRANSACTION, GET_TRANSACTION_STATUS, GET_TRANSACTION, GET_ACCOUNT, GET_EVENTS, PING, GET_BLOCK, GET_BLOCK_HEADER, GET_COLLECTION, GET_NETWORK_PARAMETERS, BAD, PROPOSER } from "@onflow/typedefs"; 
 
-export const BAD /* */ = "BAD"
-export const OK /*  */ = "OK"
-
-export const ACCOUNT /*  */ = "ACCOUNT"
-export const PARAM /*    */ = "PARAM"
-export const ARGUMENT /* */ = "ARGUMENT"
-
-export const AUTHORIZER /* */ = "authorizer"
-export const PAYER /*      */ = "payer"
-export const PROPOSER /*   */ = "proposer"
+type AcctFn = (acct: InteractionAccount) => InteractionAccount;
+type AccountFn = AcctFn & Partial<InteractionAccount>;
 
 const ACCT = `{
   "kind":"${ACCOUNT}",
@@ -105,80 +87,103 @@ const IX = `{
   }
 }`
 
-const KEYS = new Set(Object.keys(JSON.parse(IX)))
+const KEYS = new Set(Object.keys(JSON.parse(IX) as Interaction))
 
-export const interaction = () => JSON.parse(IX)
 
-export const isNumber = d => typeof d === "number"
-export const isArray = d => Array.isArray(d)
-export const isObj = d => d !== null && typeof d === "object"
-export const isNull = d => d == null
-export const isFn = d => typeof d === "function"
+export const initInteraction = (): Interaction => JSON.parse(IX)
+/**
+ * @deprecated
+ */
+export const interaction = () => {
+  log.deprecate({
+    pkg: "FCL/SDK",
+    message: `The interaction been deprecated from the Flow JS-SDK/FCL. use initInteraction instead`,
+    transition:
+      "https://github.com/onflow/flow-js-sdk/blob/master/packages/sdk/TRANSITIONS.md#0010-deprecate-interaction",
+    level: LEVELS.warn,
+  })
+  return initInteraction()
+}
 
-export const isInteraction = ix => {
+export const isNumber = (d: any): d is number => typeof d === "number"
+export const isArray = (d: any): d is any[] => Array.isArray(d)
+export const isObj = (d: any): d is Record<string, any> => d !== null && typeof d === "object"
+export const isNull = (d: any): d is null => d == null
+export const isFn = (d: any): d is Function => typeof d === "function"
+
+export const isInteraction = (ix: Interaction) => {
   if (!isObj(ix) || isNull(ix) || isNumber(ix)) return false
   for (let key of KEYS) if (!ix.hasOwnProperty(key)) return false
   return true
 }
 
-export const Ok = ix => {
+export const Ok = (ix: Interaction) => {
   ix.status = OK
   return ix
 }
 
-export const Bad = (ix, reason) => {
+export const Bad = (ix: Interaction, reason: string) => {
   ix.status = BAD
   ix.reason = reason
   return ix
 }
 
-const makeIx = wat => ix => {
+const makeIx = (wat: string) => (ix: Interaction) => {
   ix.tag = wat
   return Ok(ix)
 }
 
-const prepAccountKeyId = acct => {
+const prepAccountKeyId = (acct: Partial<InteractionAccount> | AccountFn): Partial<InteractionAccount> | AccountFn => {
   if (acct.keyId == null) return acct
 
-  invariant(!isNaN(parseInt(acct.keyId)), "account.keyId must be an integer")
+  invariant(!isNaN(parseInt(acct.keyId.toString())), "account.keyId must be an integer")
+
   return {
     ...acct,
-    keyId: parseInt(acct.keyId),
-  }
+    keyId: parseInt(acct.keyId.toString()),
+  } as InteractionAccount | AccountFn
 }
 
-export const prepAccount = (acct, opts = {}) => ix => {
+interface IPrepAccountOpts {
+  role?: typeof AUTHORIZER | typeof PAYER | typeof PROPOSER | null
+}
+
+export const initAccount = (): InteractionAccount => JSON.parse(ACCT)
+
+export const prepAccount = (acct: InteractionAccount | AccountFn, opts: IPrepAccountOpts = {}) => (ix: Interaction) => {
   invariant(
     typeof acct === "function" || typeof acct === "object",
     "prepAccount must be passed an authorization function or an account object"
   )
   invariant(opts.role != null, "Account must have a role")
 
-  const ACCOUNT = JSON.parse(ACCT)
+  const ACCOUNT = initAccount()
   const role = opts.role
   const tempId = uuidv4()
+  let account: Partial<InteractionAccount> = {...acct}
 
   if (acct.authorization && isFn(acct.authorization))
-    acct = {resolve: acct.authorization}
-  if (!acct.authorization && isFn(acct)) acct = {resolve: acct}
+    account = {resolve: acct.authorization}
+  if (!acct.authorization && isFn(acct)) account = {resolve: acct}
 
-  const resolve = acct.resolve
-  if (resolve)
-    acct.resolve = (acct, ...rest) =>
+  const resolve = account.resolve
+  if (resolve) {
+    account.resolve = (acct: InteractionAccount, ...rest: any[]) =>
       [resolve, prepAccountKeyId].reduce(
         async (d, fn) => fn(await d, ...rest),
         acct
       )
-  acct = prepAccountKeyId(acct)
+  }
+  account = prepAccountKeyId(account)
 
   ix.accounts[tempId] = {
     ...ACCOUNT,
     tempId,
-    ...acct,
+    ...account,
     role: {
       ...ACCOUNT.role,
       ...(typeof acct.role === "object" ? acct.role : {}),
-      [role]: true,
+      ...(role ? {[role]: true} : {}),
     },
   }
 
@@ -186,14 +191,14 @@ export const prepAccount = (acct, opts = {}) => ix => {
     ix.authorizations.push(tempId)
   } else if (role === PAYER) {
     ix.payer.push(tempId)
-  } else {
+  } else if (role) {
     ix[role] = tempId
   }
 
   return ix
 }
 
-export const makeArgument = arg => ix => {
+export const makeArgument = (arg: Record<string, any>) => (ix: Interaction)  => {
   let tempId = uuidv4()
   ix.message.arguments.push(tempId)
 
@@ -223,7 +228,7 @@ export const makeGetBlockHeader /*          */ = makeIx(GET_BLOCK_HEADER)
 export const makeGetCollection /*           */ = makeIx(GET_COLLECTION)
 export const makeGetNetworkParameters /*    */ = makeIx(GET_NETWORK_PARAMETERS)
 
-const is = wat => ix => ix.tag === wat
+const is = (wat: string) => (ix: Interaction) => ix.tag === wat
 
 export const isUnknown /*                 */ = is(UNKNOWN)
 export const isScript /*                  */ = is(SCRIPT)
@@ -238,15 +243,15 @@ export const isGetBlockHeader /*          */ = is(GET_BLOCK_HEADER)
 export const isGetCollection /*           */ = is(GET_COLLECTION)
 export const isGetNetworkParameters /*    */ = is(GET_NETWORK_PARAMETERS)
 
-export const isOk /*  */ = ix => ix.status === OK
-export const isBad /* */ = ix => ix.status === BAD
-export const why /*   */ = ix => ix.reason
+export const isOk /*  */ = (ix: Interaction) => ix.status === OK
+export const isBad /* */ = (ix: Interaction) => ix.status === BAD
+export const why /*   */ = (ix: Interaction) => ix.reason
 
-export const isAccount /*  */ = account => account.kind === ACCOUNT
-export const isParam /*    */ = param => param.kind === PARAM
-export const isArgument /* */ = argument => argument.kind === ARGUMENT
+export const isAccount /*  */ = (account: Record<string, any>) => account.kind === ACCOUNT
+export const isParam /*    */ = (param: Record<string, any>) => param.kind === PARAM
+export const isArgument /* */ = (argument: Record<string, any>) => argument.kind === ARGUMENT
 
-const hardMode = ix => {
+const hardMode = (ix: Interaction) => {
   for (let key of Object.keys(ix)) {
     if (!KEYS.has(key))
       throw new Error(`"${key}" is an invalid root level Interaction property.`)
@@ -254,7 +259,7 @@ const hardMode = ix => {
   return ix
 }
 
-const recPipe = async (ix, fns = []) => {
+const recPipe = async (ix: Interaction, fns: (Function | Interaction)[] = []): Promise<any> => {
   try {
     ix = hardMode(await ix)
     if (isBad(ix)) throw new Error(`Interaction Error: ${ix.reason}`)
@@ -270,29 +275,31 @@ const recPipe = async (ix, fns = []) => {
   }
 }
 
-export const pipe = (...args) => {
+export const pipe = (...args: any[]) => {
   const [arg1, arg2] = args
-  if (isArray(arg1) && arg2 == null) return d => pipe(d, arg1)
+  if (isArray(arg1) && arg2 == null) return (d: any) => pipe(d, arg1)
   return recPipe(arg1, arg2)
 }
 
-const identity = v => v
+const identity = <T>(v: T, ..._: any[]) => v
 
-export const get = (ix, key, fallback) => {
+export const get = (ix: Interaction, key: string, fallback: any) => {
   return ix.assigns[key] == null ? fallback : ix.assigns[key]
 }
 
-export const put = (key, value) => ix => {
+export const put = (key: string, value: any) => (ix: Interaction) => {
   ix.assigns[key] = value
   return Ok(ix)
 }
 
-export const update = (key, fn = identity) => ix => {
+export const update = (key: string, fn = identity) => (ix: Interaction) => {
   ix.assigns[key] = fn(ix.assigns[key], ix)
   return Ok(ix)
 }
 
-export const destroy = key => ix => {
+export const destroy = (key: string) => (ix: Interaction) => {
   delete ix.assigns[key]
   return Ok(ix)
 }
+
+export * from "@onflow/typedefs"

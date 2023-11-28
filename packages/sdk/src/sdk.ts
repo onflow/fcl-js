@@ -11,7 +11,8 @@ export {
 } from "./encode/encode"
 // Utils
 export {
-  interaction,
+  interaction, // deprecated
+  initInteraction,
   isOk,
   isBad,
   why,
@@ -32,7 +33,7 @@ export {
   isGetBlockHeader,
   isGetCollection,
   isGetNetworkParameters,
-} from "./interaction/interaction.js"
+} from "./interaction/interaction"
 export {createSignableVoucher, voucherToTxId} from "./resolve/voucher.js"
 export {encodeMessageFromSignable} from "./wallet-utils/encode-signable.js"
 export {template as cadence} from "@onflow/util-template"
@@ -57,7 +58,7 @@ export {getTransactionStatus} from "./build/build-get-transaction-status.js"
 export {getTransaction} from "./build/build-get-transaction.js"
 export {getNetworkParameters} from "./build/build-get-network-parameters.js"
 export {limit} from "./build/build-limit.js"
-export {args, arg} from "./build/build-arguments.js"
+export {args, arg} from "./build/build-arguments"
 export {proposer} from "./build/build-proposer.js"
 export {payer} from "./build/build-payer.js"
 export {ping} from "./build/build-ping.js"
@@ -74,7 +75,7 @@ export {resolveFinalNormalization} from "./resolve/resolve-final-normalization"
 export {resolveProposerSequenceNumber} from "./resolve/resolve-proposer-sequence-number"
 export {resolveArguments} from "./resolve/resolve-arguments.js"
 export {resolveAccounts} from "./resolve/resolve-accounts.js"
-export {response} from "./response/response.js"
+export {response} from "./response/response"
 export {resolveSignatures} from "./resolve/resolve-signatures.js"
 export {resolveValidators} from "./resolve/resolve-validators.js"
 export {resolveRefBlockId} from "./resolve/resolve-ref-block-id.js"

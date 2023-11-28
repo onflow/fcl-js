@@ -1,4 +1,4 @@
-import {sendPing} from "./send-ping.js"
+import {sendPing} from "./send-ping"
 import {Buffer} from "@onflow/rlp"
 import {build, ping, resolve, response as responseADT} from "@onflow/sdk"
 

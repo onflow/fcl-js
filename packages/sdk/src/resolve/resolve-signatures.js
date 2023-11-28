@@ -1,4 +1,4 @@
-import {isTransaction} from "../interaction/interaction.js"
+import {isTransaction} from "../interaction/interaction"
 import {sansPrefix} from "@onflow/util-address"
 import {
   encodeTransactionPayload as encodeInsideMessage,
