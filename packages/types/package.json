@@ -26,7 +26,7 @@
   "main": "dist/types.js",
   "module": "dist/types.module.js",
   "unpkg": "dist/types.umd.js",
-  "types": "dist/types.d.ts",
+  "types": "types/types.d.ts",
   "scripts": {
     "prepublishOnly": "npm test && npm run build",
     "test": "jest",
