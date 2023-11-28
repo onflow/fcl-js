@@ -1,8 +1,0 @@
-{
-  "extends": "./tsconfig.json",
-  "include": ["src/fcl.js"],
-
-  "compilerOptions": {
-    "types" : ["node"]
-  }
-}

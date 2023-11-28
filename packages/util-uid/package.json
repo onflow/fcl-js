@@ -26,7 +26,7 @@
   "main": "dist/util-uid.js",
   "module": "dist/util-uid.module.js",
   "unpkg": "dist/util-uid.umd.js",
-  "types": "dist/util-uid.d.ts",
+  "types": "types/util-uid.d.ts",
   "scripts": {
     "prepublishOnly": "npm test && npm run build",
     "test": "jest",
