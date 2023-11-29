@@ -1384,7 +1384,7 @@ describe("decode data stream tests", () => {
   it("calls decodeStream to decode data streams", async () => {
     let mockStream = {}
     const streamResponse = {
-      dataStream: mockStream,
+      streamConnection: mockStream,
     }
     const decodeStreamSpy = jest
       .spyOn(decodeStreamModule, "decodeStream")

@@ -6,7 +6,7 @@ exports[`Response - Snapshot 1`] = `
   "block": null,
   "blockHeader": null,
   "collection": null,
-  "dataStream": null,
+  "streamConnection": null,
   "encodedData": null,
   "events": null,
   "heartbeat": null,

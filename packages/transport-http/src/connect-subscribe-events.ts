@@ -59,7 +59,7 @@ function constructResponse(ix: any, context: any, stream: any) {
   let ret = context.response()
   ret.tag = ix.tag
 
-  ret.dataStream = stream
+  ret.streamConnection = stream
 
   return ret
 }

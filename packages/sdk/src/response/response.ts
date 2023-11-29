@@ -11,7 +11,7 @@ const DEFAULT_RESPONSE = {
     "latestBlock":null,
     "collection":null,
     "networkParameters":null,
-    "dataStream":null,
+    "streamConnection":null,
     "heartbeat":null
 }
 

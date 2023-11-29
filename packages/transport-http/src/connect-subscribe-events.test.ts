@@ -121,7 +121,7 @@ describe("Subscribe Events", () => {
     ).toString("base64")
 
     let allData: any[] = []
-    response.dataStream.on("data", data => {
+    response.streamConnection.on("data", data => {
       allData.push(data)
     })
 
@@ -206,7 +206,7 @@ describe("Subscribe Events", () => {
       }
     )
 
-    response.dataStream.close()
+    response.streamConnection.close()
 
     await new Promise(resolve => setTimeout(resolve, 0))
 
@@ -236,7 +236,7 @@ describe("Subscribe Events", () => {
       }
     )
 
-    response.dataStream.close()
+    response.streamConnection.close()
 
     await new Promise(resolve => setTimeout(resolve, 0))
 

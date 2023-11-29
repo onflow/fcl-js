@@ -10,10 +10,7 @@ import {discovery} from "./discovery"
 export {discovery}
 
 import * as types from "@onflow/types"
-/**
- * @type {Types}
- */
-export const t = types
+export {types as t}
 
 import * as WalletUtils from "./wallet-utils"
 export {WalletUtils}
@@ -123,6 +120,7 @@ export {invariant} from "@onflow/sdk"
  */
 
 import {watchForChainIdChanges} from "./utils"
+import { t } from "./shared-exports"
 
 // Set chain id default on access node change
 watchForChainIdChanges()
