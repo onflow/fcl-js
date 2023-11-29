@@ -1,30 +1,36 @@
+export enum InteractionTag {
+  UNKNOWN = "UNKNOWN",
+  SCRIPT = "SCRIPT",
+  TRANSACTION = "TRANSACTION",
+  GET_TRANSACTION_STATUS = "GET_TRANSACTION_STATUS",
+  GET_ACCOUNT = "GET_ACCOUNT",
+  GET_EVENTS = "GET_EVENTS",
+  PING = "PING",
+  GET_TRANSACTION = "GET_TRANSACTION",
+  GET_BLOCK = "GET_BLOCK",
+  GET_BLOCK_HEADER = "GET_BLOCK_HEADER",
+  GET_COLLECTION = "GET_COLLECTION",
+  GET_NETWORK_PARAMETERS = "GET_NETWORK_PARAMETERS",
+}
 
-export const UNKNOWN /*                       */ = "UNKNOWN"
-export const SCRIPT /*                        */ = "SCRIPT"
-export const TRANSACTION /*                   */ = "TRANSACTION"
-export const GET_TRANSACTION_STATUS /*        */ = "GET_TRANSACTION_STATUS"
-export const GET_ACCOUNT /*                   */ = "GET_ACCOUNT"
-export const GET_EVENTS /*                    */ = "GET_EVENTS"
-export const PING /*                          */ = "PING"
-export const GET_TRANSACTION /*               */ = "GET_TRANSACTION"
-export const GET_BLOCK /*                     */ = "GET_BLOCK"
-export const GET_BLOCK_HEADER /*              */ = "GET_BLOCK_HEADER"
-export const GET_COLLECTION /*                */ = "GET_COLLECTION"
-export const GET_NETWORK_PARAMETERS /*        */ = "GET_NETWORK_PARAMETERS"
+export enum InteractionStatus {
+  BAD = "BAD",
+  OK = "OK",
+}
 
-export const BAD /* */ = "BAD"
-export const OK /*  */ = "OK"
+export enum TransactionRole {
+  AUTHORIZER = "authorizer",
+  PAYER = "payer",
+  PROPOSER = "proposer",
+}
 
-export const ACCOUNT /*  */ = "ACCOUNT"
-export const PARAM /*    */ = "PARAM"
-export const ARGUMENT /* */ = "ARGUMENT"
-
-export const AUTHORIZER /* */ = "authorizer"
-export const PAYER /*      */ = "payer"
-export const PROPOSER /*   */ = "proposer"
+export enum InteractionResolverKind {
+  ARGUMENT = "ARGUMENT",
+  ACCOUNT = "ACCOUNT",
+}
 
 export interface InteractionAccount {
-  kind: typeof ACCOUNT
+  kind: InteractionResolverKind.ACCOUNT
   tempId: string
   addr: string | null
   keyId: number | string | null
@@ -42,9 +48,9 @@ export interface InteractionAccount {
 }
 
 export interface Interaction {
-  tag: string
+  tag: InteractionTag
   assigns: Record<string, any>
-  status: string
+  status: InteractionStatus
   reason: string | null
   accounts: Record<string, InteractionAccount>
   params: Record<string, any>

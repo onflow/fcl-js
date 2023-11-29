@@ -2,13 +2,13 @@ import {invariant} from "@onflow/util-invariant"
 import {v4 as uuidv4} from "uuid"
 import {log, LEVELS} from "@onflow/util-logger"
 
-import { InteractionAccount, ACCOUNT, PARAM, ARGUMENT, UNKNOWN, OK, Interaction, AUTHORIZER, PAYER, SCRIPT, TRANSACTION, GET_TRANSACTION_STATUS, GET_TRANSACTION, GET_ACCOUNT, GET_EVENTS, PING, GET_BLOCK, GET_BLOCK_HEADER, GET_COLLECTION, GET_NETWORK_PARAMETERS, BAD, PROPOSER } from "@onflow/typedefs"; 
+import { TransactionRole, Interaction, InteractionAccount, InteractionResolverKind, InteractionStatus, InteractionTag } from "@onflow/typedefs"; 
 
 type AcctFn = (acct: InteractionAccount) => InteractionAccount;
 type AccountFn = AcctFn & Partial<InteractionAccount>;
 
 const ACCT = `{
-  "kind":"${ACCOUNT}",
+  "kind":"${InteractionResolverKind.ACCOUNT}",
   "tempId":null,
   "addr":null,
   "keyId":null,
@@ -24,18 +24,8 @@ const ACCT = `{
   }
 }`
 
-const PRM = `{
-  "kind":"${PARAM}",
-  "tempId":null,
-  "key":null,
-  "value":null,
-  "asParam":null,
-  "xform":null,
-  "resolve": null
-}`
-
 const ARG = `{
-  "kind":"${ARGUMENT}",
+  "kind":"${InteractionResolverKind.ARGUMENT}",
   "tempId":null,
   "value":null,
   "asArgument":null,
@@ -45,9 +35,9 @@ const ARG = `{
 }`
 
 const IX = `{
-  "tag":"${UNKNOWN}",
+  "tag":"${InteractionTag.UNKNOWN}",
   "assigns":{},
-  "status":"${OK}",
+  "status":"${InteractionStatus.OK}",
   "reason":null,
   "accounts":{},
   "params":{},
@@ -118,17 +108,17 @@ export const isInteraction = (ix: Interaction) => {
 }
 
 export const Ok = (ix: Interaction) => {
-  ix.status = OK
+  ix.status = InteractionStatus.OK
   return ix
 }
 
 export const Bad = (ix: Interaction, reason: string) => {
-  ix.status = BAD
+  ix.status = InteractionStatus.BAD
   ix.reason = reason
   return ix
 }
 
-const makeIx = (wat: string) => (ix: Interaction) => {
+const makeIx = (wat: InteractionTag) => (ix: Interaction) => {
   ix.tag = wat
   return Ok(ix)
 }
@@ -145,7 +135,7 @@ const prepAccountKeyId = (acct: Partial<InteractionAccount> | AccountFn): Partia
 }
 
 interface IPrepAccountOpts {
-  role?: typeof AUTHORIZER | typeof PAYER | typeof PROPOSER | null
+  role?: TransactionRole | null
 }
 
 export const initAccount = (): InteractionAccount => JSON.parse(ACCT)
@@ -187,9 +177,9 @@ export const prepAccount = (acct: InteractionAccount | AccountFn, opts: IPrepAcc
     },
   }
 
-  if (role === AUTHORIZER) {
+  if (role === TransactionRole.AUTHORIZER) {
     ix.authorizations.push(tempId)
-  } else if (role === PAYER) {
+  } else if (role === TransactionRole.PAYER) {
     ix.payer.push(tempId)
   } else if (role) {
     ix[role] = tempId
@@ -215,41 +205,40 @@ export const makeArgument = (arg: Record<string, any>) => (ix: Interaction)  => 
   return Ok(ix)
 }
 
-export const makeUnknown /*                 */ = makeIx(UNKNOWN)
-export const makeScript /*                  */ = makeIx(SCRIPT)
-export const makeTransaction /*             */ = makeIx(TRANSACTION)
-export const makeGetTransactionStatus /*    */ = makeIx(GET_TRANSACTION_STATUS)
-export const makeGetTransaction /*          */ = makeIx(GET_TRANSACTION)
-export const makeGetAccount /*              */ = makeIx(GET_ACCOUNT)
-export const makeGetEvents /*               */ = makeIx(GET_EVENTS)
-export const makePing /*                    */ = makeIx(PING)
-export const makeGetBlock /*                */ = makeIx(GET_BLOCK)
-export const makeGetBlockHeader /*          */ = makeIx(GET_BLOCK_HEADER)
-export const makeGetCollection /*           */ = makeIx(GET_COLLECTION)
-export const makeGetNetworkParameters /*    */ = makeIx(GET_NETWORK_PARAMETERS)
+export const makeUnknown /*                 */ = makeIx(InteractionTag.UNKNOWN)
+export const makeScript /*                  */ = makeIx(InteractionTag.SCRIPT)
+export const makeTransaction /*             */ = makeIx(InteractionTag.TRANSACTION)
+export const makeGetTransactionStatus /*    */ = makeIx(InteractionTag.GET_TRANSACTION_STATUS)
+export const makeGetTransaction /*          */ = makeIx(InteractionTag.GET_TRANSACTION)
+export const makeGetAccount /*              */ = makeIx(InteractionTag.GET_ACCOUNT)
+export const makeGetEvents /*               */ = makeIx(InteractionTag.GET_EVENTS)
+export const makePing /*                    */ = makeIx(InteractionTag.PING)
+export const makeGetBlock /*                */ = makeIx(InteractionTag.GET_BLOCK)
+export const makeGetBlockHeader /*          */ = makeIx(InteractionTag.GET_BLOCK_HEADER)
+export const makeGetCollection /*           */ = makeIx(InteractionTag.GET_COLLECTION)
+export const makeGetNetworkParameters /*    */ = makeIx(InteractionTag.GET_NETWORK_PARAMETERS)
 
-const is = (wat: string) => (ix: Interaction) => ix.tag === wat
+const is = (wat: InteractionTag) => (ix: Interaction) => ix.tag === wat
 
-export const isUnknown /*                 */ = is(UNKNOWN)
-export const isScript /*                  */ = is(SCRIPT)
-export const isTransaction /*             */ = is(TRANSACTION)
-export const isGetTransactionStatus /*    */ = is(GET_TRANSACTION_STATUS)
-export const isGetTransaction /*          */ = is(GET_TRANSACTION)
-export const isGetAccount /*              */ = is(GET_ACCOUNT)
-export const isGetEvents /*               */ = is(GET_EVENTS)
-export const isPing /*                    */ = is(PING)
-export const isGetBlock /*                */ = is(GET_BLOCK)
-export const isGetBlockHeader /*          */ = is(GET_BLOCK_HEADER)
-export const isGetCollection /*           */ = is(GET_COLLECTION)
-export const isGetNetworkParameters /*    */ = is(GET_NETWORK_PARAMETERS)
+export const isUnknown /*                 */ = is(InteractionTag.UNKNOWN)
+export const isScript /*                  */ = is(InteractionTag.SCRIPT)
+export const isTransaction /*             */ = is(InteractionTag.TRANSACTION)
+export const isGetTransactionStatus /*    */ = is(InteractionTag.GET_TRANSACTION_STATUS)
+export const isGetTransaction /*          */ = is(InteractionTag.GET_TRANSACTION)
+export const isGetAccount /*              */ = is(InteractionTag.GET_ACCOUNT)
+export const isGetEvents /*               */ = is(InteractionTag.GET_EVENTS)
+export const isPing /*                    */ = is(InteractionTag.PING)
+export const isGetBlock /*                */ = is(InteractionTag.GET_BLOCK)
+export const isGetBlockHeader /*          */ = is(InteractionTag.GET_BLOCK_HEADER)
+export const isGetCollection /*           */ = is(InteractionTag.GET_COLLECTION)
+export const isGetNetworkParameters /*    */ = is(InteractionTag.GET_NETWORK_PARAMETERS)
 
-export const isOk /*  */ = (ix: Interaction) => ix.status === OK
-export const isBad /* */ = (ix: Interaction) => ix.status === BAD
+export const isOk /*  */ = (ix: Interaction) => ix.status === InteractionStatus.OK
+export const isBad /* */ = (ix: Interaction) => ix.status === InteractionStatus.BAD
 export const why /*   */ = (ix: Interaction) => ix.reason
 
-export const isAccount /*  */ = (account: Record<string, any>) => account.kind === ACCOUNT
-export const isParam /*    */ = (param: Record<string, any>) => param.kind === PARAM
-export const isArgument /* */ = (argument: Record<string, any>) => argument.kind === ARGUMENT
+export const isAccount /*  */ = (account: Record<string, any>) => account.kind === InteractionResolverKind.ACCOUNT
+export const isArgument /* */ = (argument: Record<string, any>) => argument.kind === InteractionResolverKind.ARGUMENT
 
 const hardMode = (ix: Interaction) => {
   for (let key of Object.keys(ix)) {
@@ -301,5 +290,3 @@ export const destroy = (key: string) => (ix: Interaction) => {
   delete ix.assigns[key]
   return Ok(ix)
 }
-
-export * from "@onflow/typedefs"
