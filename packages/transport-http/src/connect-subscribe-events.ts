@@ -15,19 +15,6 @@ type RawSubscribeEventsStream = StreamConnection<{
 }>
 
 function constructData(ix: any, context: any, data: any) {
-  // TODO REMOVE ME
-  // DUMMY PAYLOAD UNTIL ACCESS NODE BUG IS FIXED
-  if (data.Events) {
-    data.Events = data.Events.map((event: any) => ({
-      ...event,
-      Payload:
-        "eyJ2YWx1ZSI6eyJpZCI6IkEuOTEyZDU0NDBmN2UzNzY5ZS5GbG93RmVlcy5GZWVzRGVkdWN0ZWQiLCJmaWVsZHMiOlt7InZhbHVlIjp7InZhbHVlIjoiMC4wMDAwMDExOSIsInR5cGUiOiJVRml4NjQifSwibmFtZSI6ImFtb3VudCJ9LHsidmFsdWUiOnsidmFsdWUiOiIxLjAwMDAwMDAwIiwidHlwZSI6IlVGaXg2NCJ9LCJuYW1lIjoiaW5jbHVzaW9uRWZmb3J0In0seyJ2YWx1ZSI6eyJ2YWx1ZSI6IjAuMDAwMDAwMDQiLCJ0eXBlIjoiVUZpeDY0In0sIm5hbWUiOiJleGVjdXRpb25FZmZvcnQifV19LCJ0eXBlIjoiRXZlbnQifQo=",
-    }))
-  }
-  // PLEASE REMOVE ME
-  // PLEASE IF YOU ARE REVIEWING THIS AND I FORGOT ABOUT IT
-  // PLEASE REMOVE ME :)
-
   let ret = context.response()
   ret.tag = ix.tag
 
