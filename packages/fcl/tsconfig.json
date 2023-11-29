@@ -1,12 +1,9 @@
 {
   "extends": "../../tsconfig",
   // Change this to match your project
-  "exclude": [
-    "src/**/*.test.js",
-  ],
   "include": ["src/**/*"],
   "compilerOptions": {
     "declarationDir": "types",
-    "rootDir": "./src"
+    "rootDir": "src",
   }
 }
