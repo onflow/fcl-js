@@ -1380,8 +1380,8 @@ describe("decode GetTransactionStatus tests", () => {
   })
 })
 
-describe("decode data stream tests", () => {
-  it("calls decodeStream to decode data streams", async () => {
+describe("decode stream connection tests", () => {
+  it("calls decodeStream to decode stream connection", async () => {
     let mockStream = {}
     const streamResponse = {
       streamConnection: mockStream,
