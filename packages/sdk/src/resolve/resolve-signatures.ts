@@ -1,16 +1,19 @@
 import {isTransaction} from "../interaction/interaction"
+import { Interaction, InteractionAccount } from "@onflow/typedefs"; 
 import {sansPrefix} from "@onflow/util-address"
 import {
+  Transaction,
+  TransactionProposalKey,
   encodeTransactionPayload as encodeInsideMessage,
   encodeTransactionEnvelope as encodeOutsideMessage,
-} from "../encode/encode.js"
+} from "../encode/encode"
 import {
   createSignableVoucher,
   findInsideSigners,
   findOutsideSigners,
-} from "./voucher.js"
+} from "./voucher"
 
-export async function resolveSignatures(ix) {
+export async function resolveSignatures(ix: Interaction) {
   if (isTransaction(ix)) {
     try {
       let insideSigners = findInsideSigners(ix)
@@ -28,9 +31,9 @@ export async function resolveSignatures(ix) {
       const outsidePayload = encodeOutsideMessage({
         ...prepForEncoding(ix),
         payloadSigs: insideSigners.map(id => ({
-          address: ix.accounts[id].addr,
-          keyId: ix.accounts[id].keyId,
-          sig: ix.accounts[id].signature,
+          address: ix.accounts[id].addr || '',
+          keyId: ix.accounts[id].keyId || 0,
+          sig: ix.accounts[id].signature || '',
         })),
       })
 
@@ -49,8 +52,8 @@ export async function resolveSignatures(ix) {
   return ix
 }
 
-function fetchSignature(ix, payload) {
-  return async function innerFetchSignature(id) {
+function fetchSignature(ix: Interaction, payload: string) {
+  return async function innerFetchSignature(id: string) {
     const acct = ix.accounts[id]
     if (acct.signature != null && acct.signature !== undefined) return
     const {signature} = await acct.signingFunction(
@@ -60,7 +63,7 @@ function fetchSignature(ix, payload) {
   }
 }
 
-export function buildSignable(acct, message, ix) {
+export function buildSignable(acct: InteractionAccount, message: string, ix: Interaction) {
   try {
     return {
       f_type: "Signable",
@@ -81,25 +84,28 @@ export function buildSignable(acct, message, ix) {
   }
 }
 
-function prepForEncoding(ix) {
+function prepForEncoding(ix: Interaction): Transaction {
   const payerAddress = sansPrefix(
     (Array.isArray(ix.payer) ? ix.accounts[ix.payer[0]] : ix.accounts[ix.payer])
-      .addr
+      .addr || ""
   )
+  
+  const proposalKey: TransactionProposalKey = ix.proposer ? {
+    address: sansPrefix(ix.accounts[ix.proposer].addr) || '',
+    keyId: ix.accounts[ix.proposer].keyId || 0,
+    sequenceNum: ix.accounts[ix.proposer].sequenceNum || 0,
+  } : {}
+
   return {
     cadence: ix.message.cadence,
-    refBlock: ix.message.refBlock || null,
+    refBlock: ix.message.refBlock,
     computeLimit: ix.message.computeLimit,
     arguments: ix.message.arguments.map(id => ix.arguments[id].asArgument),
-    proposalKey: {
-      address: sansPrefix(ix.accounts[ix.proposer].addr),
-      keyId: ix.accounts[ix.proposer].keyId,
-      sequenceNum: ix.accounts[ix.proposer].sequenceNum,
-    },
+    proposalKey,
     payer: payerAddress,
     authorizers: ix.authorizations
-      .map(cid => sansPrefix(ix.accounts[cid].addr))
-      .reduce((prev, current) => {
+      .map(cid => sansPrefix(ix.accounts[cid].addr) || '')
+      .reduce((prev: string[], current) => {
         return prev.find(item => item === current) ? prev : [...prev, current]
       }, []),
   }

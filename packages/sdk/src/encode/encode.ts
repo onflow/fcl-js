@@ -1,54 +1,54 @@
 import {SHA3} from "sha3"
-import {encode, Buffer} from "@onflow/rlp"
+import {encode, Buffer, EncodeInput} from "@onflow/rlp"
 import {sansPrefix} from "@onflow/util-address"
 
-export const encodeTransactionPayload = tx =>
+export const encodeTransactionPayload = (tx: Transaction) =>
   prependTransactionDomainTag(rlpEncode(preparePayload(tx)))
-export const encodeTransactionEnvelope = tx =>
+export const encodeTransactionEnvelope = (tx: Transaction) =>
   prependTransactionDomainTag(rlpEncode(prepareEnvelope(tx)))
-export const encodeTxIdFromVoucher = voucher =>
+export const encodeTxIdFromVoucher = (voucher: Voucher) =>
   sha3_256(rlpEncode(prepareVoucher(voucher)))
 
-const rightPaddedHexBuffer = (value, pad) =>
-  Buffer.from(value.padEnd(pad * 2, 0), "hex")
+const rightPaddedHexBuffer = (value: string, pad: number) =>
+  Buffer.from(value.padEnd(pad * 2, "0"), "hex")
 
-const leftPaddedHexBuffer = (value, pad) =>
-  Buffer.from(value.padStart(pad * 2, 0), "hex")
+const leftPaddedHexBuffer = (value: string, pad: number) =>
+  Buffer.from(value.padStart(pad * 2, "0"), "hex")
 
 const TRANSACTION_DOMAIN_TAG = rightPaddedHexBuffer(
   Buffer.from("FLOW-V0.0-transaction").toString("hex"),
   32
 ).toString("hex")
-const prependTransactionDomainTag = tx => TRANSACTION_DOMAIN_TAG + tx
+const prependTransactionDomainTag = (tx: string) => TRANSACTION_DOMAIN_TAG + tx
 
-const addressBuffer = addr => leftPaddedHexBuffer(addr, 8)
+const addressBuffer = (addr: string) => leftPaddedHexBuffer(addr, 8)
 
-const blockBuffer = block => leftPaddedHexBuffer(block, 32)
+const blockBuffer = (block: string) => leftPaddedHexBuffer(block, 32)
 
-const argumentToString = arg => Buffer.from(JSON.stringify(arg), "utf8")
+const argumentToString = (arg: Record<string, any>) => Buffer.from(JSON.stringify(arg), "utf8")
 
-const scriptBuffer = script => Buffer.from(script, "utf8")
-const signatureBuffer = signature => Buffer.from(signature, "hex")
+const scriptBuffer = (script: string) => Buffer.from(script, "utf8")
+const signatureBuffer = (signature: string) => Buffer.from(signature, "hex")
 
-const rlpEncode = v => {
+const rlpEncode = (v: EncodeInput) => {
   return encode(v).toString("hex")
 }
 
-const sha3_256 = msg => {
+const sha3_256 = (msg: string) => {
   const sha = new SHA3(256)
   sha.update(Buffer.from(msg, "hex"))
   return sha.digest().toString("hex")
 }
 
-const preparePayload = tx => {
+const preparePayload = (tx: Transaction) => {
   validatePayload(tx)
 
   return [
-    scriptBuffer(tx.cadence),
+    scriptBuffer(tx.cadence || ''),
     tx.arguments.map(argumentToString),
-    blockBuffer(tx.refBlock),
+    blockBuffer(tx.refBlock || ''),
     tx.computeLimit,
-    addressBuffer(sansPrefix(tx.proposalKey.address)),
+    addressBuffer(sansPrefix(tx.proposalKey.address || '')),
     tx.proposalKey.keyId,
     tx.proposalKey.sequenceNum,
     addressBuffer(sansPrefix(tx.payer)),
@@ -56,19 +56,18 @@ const preparePayload = tx => {
   ]
 }
 
-const prepareEnvelope = tx => {
+const prepareEnvelope = (tx: Transaction) => {
   validateEnvelope(tx)
 
   return [preparePayload(tx), preparePayloadSignatures(tx)]
 }
 
-const preparePayloadSignatures = tx => {
+const preparePayloadSignatures = (tx: Transaction) => {
   const signers = collectSigners(tx)
 
-  return tx.payloadSigs
-    .map(sig => {
+  return tx.payloadSigs?.map((sig: Sig) => {
       return {
-        signerIndex: signers.get(sig.address),
+        signerIndex: signers.get(sig.address) || '',
         keyId: sig.keyId,
         sig: sig.sig,
       }
@@ -79,45 +78,51 @@ const preparePayloadSignatures = tx => {
 
       if (a.keyId > b.keyId) return 1
       if (a.keyId < b.keyId) return -1
+
+      return 0
     })
     .map(sig => {
       return [sig.signerIndex, sig.keyId, signatureBuffer(sig.sig)]
     })
 }
 
-const collectSigners = tx => {
-  const signers = new Map()
+const collectSigners = (tx: Voucher | Transaction) => {
+  const signers = new Map<string, number>()
   let i = 0
 
-  const addSigner = addr => {
+  const addSigner = (addr: string) => {
     if (!signers.has(addr)) {
       signers.set(addr, i)
       i++
     }
   }
 
-  addSigner(tx.proposalKey.address)
+  if (tx.proposalKey.address){
+    addSigner(tx.proposalKey.address)
+  }
   addSigner(tx.payer)
   tx.authorizers.forEach(addSigner)
 
   return signers
 }
 
-const prepareVoucher = voucher => {
+const prepareVoucher = (voucher: Voucher) => {
   validateVoucher(voucher)
 
   const signers = collectSigners(voucher)
 
-  const prepareSigs = sigs => {
+  const prepareSigs = (sigs: Sig[]) => {
     return sigs
-      .map(({address, keyId, sig}) => {
-        return {signerIndex: signers.get(address), keyId, sig}
+      .map(({ address, keyId, sig }) => {
+        return { signerIndex: signers.get(address) || '', keyId, sig }
       })
       .sort((a, b) => {
         if (a.signerIndex > b.signerIndex) return 1
         if (a.signerIndex < b.signerIndex) return -1
         if (a.keyId > b.keyId) return 1
         if (a.keyId < b.keyId) return -1
+        
+        return 0
       })
       .map(sig => {
         return [sig.signerIndex, sig.keyId, signatureBuffer(sig.sig)]
@@ -143,23 +148,23 @@ const prepareVoucher = voucher => {
   ]
 }
 
-const validatePayload = tx => {
+const validatePayload = (tx: Transaction) => {
   payloadFields.forEach(field => checkField(tx, field))
   proposalKeyFields.forEach(field =>
     checkField(tx.proposalKey, field, "proposalKey")
   )
 }
 
-const validateEnvelope = tx => {
+const validateEnvelope = (tx: Transaction) => {
   payloadSigsFields.forEach(field => checkField(tx, field))
-  tx.payloadSigs.forEach((sig, index) => {
+  tx.payloadSigs?.forEach((sig, index) => {
     payloadSigFields.forEach(field =>
       checkField(sig, field, "payloadSigs", index)
     )
   })
 }
 
-const validateVoucher = voucher => {
+const validateVoucher = (voucher: Voucher) => {
   payloadFields.forEach(field => checkField(voucher, field))
   proposalKeyFields.forEach(field =>
     checkField(voucher.proposalKey, field, "proposalKey")
@@ -178,12 +183,64 @@ const validateVoucher = voucher => {
   })
 }
 
-const isNumber = v => typeof v === "number"
-const isString = v => typeof v === "string"
-const isObject = v => v !== null && typeof v === "object"
-const isArray = v => isObject(v) && v instanceof Array
+const isNumber = (v: any): v is number => typeof v === "number"
+const isString = (v: any): v is string => typeof v === "string"
+const isObject = (v: any) => v !== null && typeof v === "object"
+const isArray = (v: any) => isObject(v) && v instanceof Array
 
-const payloadFields = [
+interface VoucherArgument {
+  type: string
+  value: string
+}
+
+interface VoucherProposalKey {
+  address: string
+  keyId: number | null
+  sequenceNum: number | null
+}
+
+interface Sig {
+  address: string,
+  keyId: number | string,
+  sig: string,
+}
+
+export interface TransactionProposalKey {
+  address?: string
+  keyId?: number | string
+  sequenceNum?: number
+}
+export interface Transaction {
+  cadence: string | null;
+  refBlock: string | null;
+  computeLimit: string | null;
+  arguments: VoucherArgument[]
+  proposalKey: TransactionProposalKey
+  payer: string
+  authorizers: string[]
+  payloadSigs?: Sig[]
+  envelopeSigs?: TransactionProposalKey[]
+}
+
+export interface Voucher {
+  cadence: string;
+  refBlock: string;
+  computeLimit: number;
+  arguments: VoucherArgument[]
+  proposalKey: VoucherProposalKey
+  payer: string
+  authorizers: string[]
+  payloadSigs: Sig[]
+  envelopeSigs: Sig[]
+}
+
+interface PayloadField {
+  name: string,
+  check: (v: any) => boolean,
+  defaultVal?: string
+}
+
+const payloadFields: PayloadField[] = [
   {name: "cadence", check: isString},
   {name: "arguments", check: isArray},
   {name: "refBlock", check: isString, defaultVal: "0"},
@@ -193,42 +250,47 @@ const payloadFields = [
   {name: "authorizers", check: isArray},
 ]
 
-const proposalKeyFields = [
+const proposalKeyFields: PayloadField[] = [
   {name: "address", check: isString},
   {name: "keyId", check: isNumber},
   {name: "sequenceNum", check: isNumber},
 ]
 
-const payloadSigsFields = [{name: "payloadSigs", check: isArray}]
+const payloadSigsFields: PayloadField[] = [{name: "payloadSigs", check: isArray}]
 
-const payloadSigFields = [
+const payloadSigFields: PayloadField[] = [
   {name: "address", check: isString},
   {name: "keyId", check: isNumber},
   {name: "sig", check: isString},
 ]
 
-const envelopeSigsFields = [{name: "envelopeSigs", check: isArray}]
+const envelopeSigsFields: PayloadField[] = [{ name: "envelopeSigs", check: isArray }]
 
-const envelopeSigFields = [
+const envelopeSigFields: PayloadField[] = [
   {name: "address", check: isString},
   {name: "keyId", check: isNumber},
   {name: "sig", check: isString},
 ]
 
-const checkField = (obj, field, base, index) => {
+const checkField = (
+  obj: Record<string, any>,
+  field: PayloadField,
+  base?: string,
+  index?: number
+) => {
   const {name, check, defaultVal} = field
   if (obj[name] == null && defaultVal != null) obj[name] = defaultVal
   if (obj[name] == null) throw missingFieldError(name, base, index)
   if (!check(obj[name])) throw invalidFieldError(name, base, index)
 }
 
-const printFieldName = (field, base, index) => {
+const printFieldName = (field: string, base?: string, index?: number) => {
   if (!!base)
     return index == null ? `${base}.${field}` : `${base}.${index}.${field}`
   return field
 }
 
-const missingFieldError = (field, base, index) =>
+const missingFieldError = (field: string, base?: string, index?: number) =>
   new Error(`Missing field ${printFieldName(field, base, index)}`)
-const invalidFieldError = (field, base, index) =>
+const invalidFieldError = (field: string, base?: string, index?: number) =>
   new Error(`Invalid field ${printFieldName(field, base, index)}`)

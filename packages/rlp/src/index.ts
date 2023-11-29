@@ -2,7 +2,7 @@ import {Buffer} from "buffer"
 
 export {Buffer}
 
-type EncodeInput =
+export type EncodeInput =
   | Buffer
   | string
   | number
