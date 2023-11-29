@@ -1,5 +1,27 @@
 # @onflow/sdk
 
+## 1.4.0-event-streaming.0
+
+### Minor Changes
+
+- [#1802](https://github.com/onflow/fcl-js/pull/1802) [`699303cf`](https://github.com/onflow/fcl-js/commit/699303cfd5e0545267632c9236f8c91833ce1259) Thanks [@nialexsan](https://github.com/nialexsan)! - TS conversion
+
+- [#1794](https://github.com/onflow/fcl-js/pull/1794) [`59debea5`](https://github.com/onflow/fcl-js/commit/59debea55209adab984d2c0a139aeedf8f09186b) Thanks [@jribbink](https://github.com/jribbink)! - Add support for new event streaming API https://github.com/onflow/flips/blob/4152912f8ec39515eb1c4dddbc6605c6ebe70966/protocol/20230309-accessnode-event-streaming-api.md. Can be accessed through new SDK builder sdk.subscribeEvents(...).
+
+### Patch Changes
+
+- [#1814](https://github.com/onflow/fcl-js/pull/1814) [`0d09d838`](https://github.com/onflow/fcl-js/commit/0d09d8386c2fc472833df7152467d477f36dddc4) Thanks [@jribbink](https://github.com/jribbink)! - Fix type declarations not fully being generated
+
+- Updated dependencies [[`699303cf`](https://github.com/onflow/fcl-js/commit/699303cfd5e0545267632c9236f8c91833ce1259), [`59debea5`](https://github.com/onflow/fcl-js/commit/59debea55209adab984d2c0a139aeedf8f09186b), [`0d09d838`](https://github.com/onflow/fcl-js/commit/0d09d8386c2fc472833df7152467d477f36dddc4)]:
+  - @onflow/transport-http@1.10.0-event-streaming.0
+  - @onflow/util-invariant@1.2.2-event-streaming.0
+  - @onflow/util-template@1.2.2-event-streaming.0
+  - @onflow/util-address@1.2.2-event-streaming.0
+  - @onflow/util-logger@1.3.2-event-streaming.0
+  - @onflow/util-actor@1.3.2-event-streaming.0
+  - @onflow/config@1.2.2-event-streaming.0
+  - @onflow/rlp@1.2.2-event-streaming.0
+
 ## 1.3.1
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @onflow/util-actor
 
+## 1.3.2-event-streaming.0
+
+### Patch Changes
+
+- [#1814](https://github.com/onflow/fcl-js/pull/1814) [`0d09d838`](https://github.com/onflow/fcl-js/commit/0d09d8386c2fc472833df7152467d477f36dddc4) Thanks [@jribbink](https://github.com/jribbink)! - Fix type declarations not fully being generated
+
 ## 1.3.1
 
 ### Patch Changes

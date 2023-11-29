@@ -1,6 +1,6 @@
 {
   "name": "@onflow/rlp",
-  "version": "1.2.1",
+  "version": "1.2.2-event-streaming.0",
   "description": "Port of ethereumjs/rlp",
   "license": "MPL-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
@@ -14,7 +14,7 @@
   },
   "devDependencies": {
     "@babel/preset-typescript": "^7.22.5",
-    "@onflow/fcl-bundle": "^1.4.1",
+    "@onflow/fcl-bundle": "^1.4.2-event-streaming.0",
     "@types/jest": "^29.5.3",
     "@typescript-eslint/eslint-plugin": "^6.4.0",
     "@typescript-eslint/parser": "^6.4.0",
