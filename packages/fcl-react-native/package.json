@@ -33,7 +33,7 @@
   "main": "dist/fcl-react-native.js",
   "module": "dist/fcl-react-native.module.js",
   "unpkg": "dist/fcl-react-native.umd.min.js",
-  "types": "dist/fcl-react-native.d.ts",
+  "types": "types/fcl-react-native.d.ts",
   "scripts": {
     "pain": "npm publish --tag pain",
     "alpha": "npm publish --tag alpha",
