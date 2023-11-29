@@ -1,3 +1,7 @@
+
+export function sansPrefix(address: null): null;
+export function sansPrefix(address: string): string;
+export function sansPrefix(address: string | null): string | null;
 /**
  * @description Removes 0x from address if present
  * @param address - Flow address

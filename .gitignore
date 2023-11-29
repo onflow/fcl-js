@@ -13,3 +13,6 @@ todo.md
 **/debug.log
 *.log
 .vscode/*
+
+# type declarations
+packages/*/types/

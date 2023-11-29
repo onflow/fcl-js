@@ -29,7 +29,7 @@
   "main": "dist/util-encode-key.js",
   "module": "dist/util-encode-key.module.js",
   "unpkg": "dist/util-encode-key.umd.js",
-  "types": "dist/index.d.ts",
+  "types": "types/index.d.ts",
   "scripts": {
     "prepublishOnly": "npm test && npm run build",
     "test": "jest",
