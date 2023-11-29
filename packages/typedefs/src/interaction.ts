@@ -88,5 +88,13 @@ export interface Interaction {
   }
   collection: {
     id: string | null
+  },
+  subscribeEvents: {
+    eventTypes: string | string[] | null
+    addresses: string | string[] | null
+    contracts: string | string[] | null
+    startBlockId: string | null
+    startHeight: number | null
+    heartbeatInterval: number | null
   }
 }

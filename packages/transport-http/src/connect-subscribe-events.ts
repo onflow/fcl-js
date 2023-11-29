@@ -1,24 +1,20 @@
 import {invariant} from "@onflow/util-invariant"
 import {connectWs as defaultConnectWs} from "./connect-ws"
 import {EventEmitter} from "events"
-import {StreamConnection} from "@onflow/typedefs"
+import {BlockHeartbeat, Interaction, StreamConnection} from "@onflow/typedefs"
 
 type RawSubscribeEventsStream = StreamConnection<{
   data: {
     events: any[]
-    heartbeat: {
-      blockId: string
-      blockHeight: number
-      blockTimestamp: number
-    }
+    heartbeat: BlockHeartbeat
   }
 }>
 
 function constructData(ix: any, context: any, data: any) {
-  let ret = context.response()
-  ret.tag = ix.tag
+  const response = context.response()
+  response.tag = ix.tag
 
-  ret.events =
+  response.events =
     data.Events?.length > 0
       ? data.Events.map((event: any) => ({
           blockId: data.BlockID,
@@ -33,26 +29,26 @@ function constructData(ix: any, context: any, data: any) {
           ),
         }))
       : null
-  ret.heartbeat = {
+      response.heartbeat = {
     blockId: data.BlockID,
     blockHeight: Number(data.Height),
     blockTimestamp: data.Timestamp,
   }
 
-  return ret
+  return response
 }
 
 function constructResponse(ix: any, context: any, stream: any) {
-  let ret = context.response()
-  ret.tag = ix.tag
+  const response = context.response()
+  response.tag = ix.tag
 
-  ret.streamConnection = stream
+  response.streamConnection = stream
 
-  return ret
+  return response
 }
 
 export async function connectSubscribeEvents(
-  ix: any,
+  ix: Interaction | Promise<Interaction>,
   context: any = {},
   opts: any = {}
 ) {
@@ -66,7 +62,7 @@ export async function connectSubscribeEvents(
     `SDK Send Get Events Error: context.Buffer must be defined.`
   )
 
-  ix = await ix
+  const resolvedIx = await ix
 
   const connectWs: typeof defaultConnectWs = opts.connectWs || defaultConnectWs
   const outputEmitter = new EventEmitter()
@@ -78,18 +74,18 @@ export async function connectSubscribeEvents(
     path: `/v1/subscribe_events`,
     getParams: () => {
       const params: Record<string, any> = {
-        event_types: ix.subscribeEvents.eventTypes,
-        addresses: ix.subscribeEvents.addresses,
-        contracts: ix.subscribeEvents.contracts,
-        heartbeat_interval: ix.subscribeEvents.heartbeatInterval,
+        event_types: resolvedIx.subscribeEvents?.eventTypes,
+        addresses: resolvedIx.subscribeEvents?.addresses,
+        contracts: resolvedIx.subscribeEvents?.contracts,
+        heartbeat_interval: resolvedIx.subscribeEvents?.heartbeatInterval,
       }
 
       // If the lastBlockId is set, use it to resume the stream
       if (lastBlockHeight) {
         params.start_height = lastBlockHeight + 1
       } else {
-        params.start_block_id = ix.subscribeEvents.startBlockId
-        params.start_height = ix.subscribeEvents.startHeight
+        params.start_block_id = resolvedIx.subscribeEvents?.startBlockId
+        params.start_height = resolvedIx.subscribeEvents?.startHeight
       }
 
       return params

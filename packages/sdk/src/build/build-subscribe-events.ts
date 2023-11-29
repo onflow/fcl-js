@@ -1,6 +1,6 @@
 import {invariant} from "@onflow/util-invariant"
 import {pipe, Ok, makeSubscribeEvents} from "../interaction/interaction"
-import {EventFilter} from "@onflow/typedefs"
+import {EventFilter, Interaction} from "@onflow/typedefs"
 
 /**
  * Subscribe to events with the given filter & parameters
@@ -24,13 +24,13 @@ export function subscribeEvents({
 
   return pipe([
     makeSubscribeEvents,
-    (ix: any) => {
-      ix.subscribeEvents.startBlockId = startBlockId
-      ix.subscribeEvents.startHeight = startHeight
-      ix.subscribeEvents.eventTypes = eventTypes
-      ix.subscribeEvents.addresses = addresses
-      ix.subscribeEvents.contracts = contracts
-      ix.subscribeEvents.heartbeatInterval = heartbeatInterval
+    (ix: Interaction) => {
+      ix.subscribeEvents.startBlockId = startBlockId ?? null
+      ix.subscribeEvents.startHeight = startHeight ?? null
+      ix.subscribeEvents.eventTypes = eventTypes ?? null
+      ix.subscribeEvents.addresses = addresses ?? null
+      ix.subscribeEvents.contracts = contracts ?? null
+      ix.subscribeEvents.heartbeatInterval = heartbeatInterval ?? null
       return Ok(ix)
     },
   ]) as any
