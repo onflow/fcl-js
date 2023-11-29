@@ -23,7 +23,7 @@ async function buildModule(build, package) {
   if (bundle) await bundle.close()
 
   if (buildError) {
-    throw buildError
+    throw new Error(buildError)
   }
 }
 
