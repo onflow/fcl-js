@@ -32,11 +32,11 @@ export enum InteractionResolverKind {
 
 export interface InteractionAccount {
   kind: InteractionResolverKind.ACCOUNT
-  tempId: string | null
+  tempId: string
   addr: string | null
   keyId: number | string | null
   sequenceNum: number | null
-  signature: any | null
+  signature: string | null
   signingFunction: any | null
   resolve: any | null
   role: {
@@ -53,7 +53,7 @@ export interface Interaction {
   assigns: Record<string, any>
   status: InteractionStatus
   reason: string | null
-  accounts: Record<string, any>
+  accounts: Record<string, InteractionAccount>
   params: Record<string, any>
   arguments: Record<string, any>
   message: {

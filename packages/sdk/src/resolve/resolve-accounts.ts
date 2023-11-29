@@ -2,32 +2,33 @@ import {sansPrefix, withPrefix} from "@onflow/util-address"
 import {invariant} from "@onflow/util-invariant"
 import {log} from "@onflow/util-logger"
 import {isTransaction} from "../interaction/interaction"
-import {createSignableVoucher} from "./voucher.js"
+import { Interaction, InteractionAccount } from "@onflow/typedefs"; 
+import {createSignableVoucher} from "./voucher"
 import {v4 as uuidv4} from "uuid"
 
 const MAX_DEPTH_LIMIT = 5
 
-const idof = acct => `${withPrefix(acct.addr)}-${acct.keyId}`
-const isFn = v =>
+const idof = (acct: InteractionAccount) => `${withPrefix(acct.addr)}-${acct.keyId}`
+const isFn = (v: any): v is Function =>
   v &&
   (Object.prototype.toString.call(v) === "[object Function]" ||
     "function" === typeof v ||
     v instanceof Function)
 
-const genAccountId = (...ids) => ids.join("-")
+const genAccountId = (...ids: (string | boolean | undefined)[]) => ids.join("-")
 
-const ROLES = {
-  PAYER: "payer",
-  PROPOSER: "proposer",
-  AUTHORIZATIONS: "authorizations",
+enum ROLES {
+  PAYER = "payer",
+  PROPOSER = "proposer",
+  AUTHORIZATIONS = "authorizations",
 }
 
 function debug() {
   const SPACE = " "
   const SPACE_COUNT_PER_INDENT = 4
-  const DEBUG_MESSAGE = []
+  const DEBUG_MESSAGE: string[] = []
   return [
-    function (msg, indent = 0) {
+    function (msg = '', indent = 0) {
       DEBUG_MESSAGE.push(
         Array(indent * SPACE_COUNT_PER_INDENT)
           .fill(SPACE)
@@ -40,7 +41,7 @@ function debug() {
   ]
 }
 
-function recurseFlatMap(el, depthLimit = 3) {
+function recurseFlatMap<T>(el: T, depthLimit = 3) {
   if (depthLimit <= 0) return el
   if (!Array.isArray(el)) return el
   return recurseFlatMap(
@@ -49,7 +50,7 @@ function recurseFlatMap(el, depthLimit = 3) {
   )
 }
 
-export function buildPreSignable(acct, ix) {
+export function buildPreSignable(acct: Partial<InteractionAccount>, ix: Interaction) {
   try {
     return {
       f_type: "PreSignable",
@@ -67,12 +68,14 @@ export function buildPreSignable(acct, ix) {
   }
 }
 
-async function removeUnusedIxAccounts(ix) {
+async function removeUnusedIxAccounts(ix: Interaction, opts: Record<string, any>) {
   const payerTempIds = Array.isArray(ix.payer) ? ix.payer : [ix.payer]
   const authorizersTempIds = Array.isArray(ix.authorizations)
     ? ix.authorizations
     : [ix.authorizations]
-  const proposerTempIds = Array.isArray(ix.proposer)
+  const proposerTempIds = ix.proposer === null 
+    ? [] 
+    : Array.isArray(ix.proposer)
     ? ix.proposer
     : [ix.proposer]
 
@@ -88,7 +91,7 @@ async function removeUnusedIxAccounts(ix) {
   }
 }
 
-function addAccountToIx(ix, newAccount) {
+function addAccountToIx(ix: Interaction, newAccount: InteractionAccount) {
   if (
     typeof newAccount.addr === "string" &&
     (typeof newAccount.keyId === "number" ||
@@ -115,7 +118,7 @@ function addAccountToIx(ix, newAccount) {
   return ix.accounts[newAccount.tempId]
 }
 
-function uniqueAccountsFlatMap(accounts) {
+function uniqueAccountsFlatMap(accounts: InteractionAccount[]) {
   const flatMapped = recurseFlatMap(accounts)
   const seen = new Set()
 
@@ -132,16 +135,16 @@ function uniqueAccountsFlatMap(accounts) {
       seen.add(accountId)
       return account
     })
-    .filter(e => e !== null)
+    .filter(e => e !== null) as InteractionAccount[]
 
   return uniqueAccountsFlatMapped
 }
 
 async function recurseResolveAccount(
-  ix,
-  currentAccountTempId,
+  ix: Interaction,
+  currentAccountTempId: string,
   depthLimit = MAX_DEPTH_LIMIT,
-  {debugLogger}
+  {debugLogger}: {debugLogger: (msg?: string, indent?: number) => void}
 ) {
   if (depthLimit <= 0) {
     throw new Error(
@@ -178,18 +181,18 @@ async function recurseResolveAccount(
 
       let flatResolvedAccounts = recurseFlatMap(resolvedAccounts)
 
-      flatResolvedAccounts = flatResolvedAccounts.map(flatResolvedAccount =>
+      flatResolvedAccounts = flatResolvedAccounts.map((flatResolvedAccount: InteractionAccount) =>
         addAccountToIx(ix, flatResolvedAccount)
       )
 
       account.resolve = flatResolvedAccounts.map(
-        flatResolvedAccount => flatResolvedAccount.tempId
+        (flatResolvedAccount: InteractionAccount) => flatResolvedAccount.tempId
       )
 
       account = addAccountToIx(ix, account)
 
       const recursedAccounts = await Promise.all(
-        flatResolvedAccounts.map(async resolvedAccount => {
+        flatResolvedAccounts.map(async (resolvedAccount: InteractionAccount) => {
           return await recurseResolveAccount(
             ix,
             resolvedAccount.tempId,
@@ -214,7 +217,14 @@ async function recurseResolveAccount(
   return account.tempId
 }
 
-async function resolveAccountType(ix, type, {debugLogger}) {
+const getAccountTempIDs = (rawTempIds: string | string[] | null) => {
+  if (rawTempIds === null) {
+    return []
+  }
+  return Array.isArray(rawTempIds) ? rawTempIds : [rawTempIds]
+}
+
+async function resolveAccountType(ix: Interaction, type: ROLES, {debugLogger}: {debugLogger: (msg?: string, indent?: number) => void}) {
   invariant(
     ix && typeof ix === "object",
     "resolveAccountType Error: ix not defined"
@@ -226,12 +236,12 @@ async function resolveAccountType(ix, type, {debugLogger}) {
     "resolveAccountType Error: type must be 'payer', 'proposer' or 'authorizations'"
   )
 
-  let accountTempIDs = Array.isArray(ix[type]) ? ix[type] : [ix[type]]
+  let accountTempIDs = getAccountTempIDs(ix[type])
 
-  let allResolvedAccounts = []
+  let allResolvedAccounts: InteractionAccount[] = []
   for (let accountId of accountTempIDs) {
     let account = ix.accounts[accountId]
-    invariant(account, `resolveAccountType Error: account not found`)
+    invariant(Boolean(account), `resolveAccountType Error: account not found`)
 
     let resolvedAccountTempIds = await recurseResolveAccount(
       ix,
@@ -246,8 +256,8 @@ async function resolveAccountType(ix, type, {debugLogger}) {
       ? resolvedAccountTempIds
       : [resolvedAccountTempIds]
 
-    let resolvedAccounts = resolvedAccountTempIds.map(
-      resolvedAccountTempId => ix.accounts[resolvedAccountTempId]
+    let resolvedAccounts: InteractionAccount[] = resolvedAccountTempIds.map(
+      (resolvedAccountTempId: string) => ix.accounts[resolvedAccountTempId]
     )
 
     let flatResolvedAccounts = uniqueAccountsFlatMap(resolvedAccounts)
@@ -276,9 +286,9 @@ async function resolveAccountType(ix, type, {debugLogger}) {
     )
   }
 
-  ix[type] = Array.isArray(ix[type])
+  ix[type] = (Array.isArray(ix[type])
     ? [...new Set(allResolvedAccounts.map(acct => acct.tempId))]
-    : allResolvedAccounts[0].tempId
+    : allResolvedAccounts[0].tempId) as string & string[]
 
   // Ensure all payers are of the same account
   if (type === ROLES.PAYER) {
@@ -295,7 +305,7 @@ async function resolveAccountType(ix, type, {debugLogger}) {
   }
 }
 
-export async function resolveAccounts(ix, opts = {}) {
+export async function resolveAccounts(ix: Interaction, opts: Record<string, any> = {}) {
   if (isTransaction(ix)) {
     if (!Array.isArray(ix.payer)) {
       log.deprecate({
