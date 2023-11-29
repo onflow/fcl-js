@@ -6,7 +6,7 @@ export const encodeTransactionPayload = (tx: Transaction) =>
   prependTransactionDomainTag(rlpEncode(preparePayload(tx)))
 export const encodeTransactionEnvelope = (tx: Transaction) =>
   prependTransactionDomainTag(rlpEncode(prepareEnvelope(tx)))
-export const encodeTxIdFromVoucher = (voucher: IVoucher) =>
+export const encodeTxIdFromVoucher = (voucher: Voucher) =>
   sha3_256(rlpEncode(prepareVoucher(voucher)))
 
 const rightPaddedHexBuffer = (value: string, pad: number) =>
@@ -65,7 +65,7 @@ const prepareEnvelope = (tx: Transaction) => {
 const preparePayloadSignatures = (tx: Transaction) => {
   const signers = collectSigners(tx)
 
-  return tx.payloadSigs?.map((sig: ISig) => {
+  return tx.payloadSigs?.map((sig: Sig) => {
       return {
         signerIndex: signers.get(sig.address) || '',
         keyId: sig.keyId,
@@ -86,7 +86,7 @@ const preparePayloadSignatures = (tx: Transaction) => {
     })
 }
 
-const collectSigners = (tx: IVoucher | Transaction) => {
+const collectSigners = (tx: Voucher | Transaction) => {
   const signers = new Map<string, number>()
   let i = 0
 
@@ -106,12 +106,12 @@ const collectSigners = (tx: IVoucher | Transaction) => {
   return signers
 }
 
-const prepareVoucher = (voucher: IVoucher) => {
+const prepareVoucher = (voucher: Voucher) => {
   validateVoucher(voucher)
 
   const signers = collectSigners(voucher)
 
-  const prepareSigs = (sigs: ISig[]) => {
+  const prepareSigs = (sigs: Sig[]) => {
     return sigs
       .map(({ address, keyId, sig }) => {
         return { signerIndex: signers.get(address) || '', keyId, sig }
@@ -164,7 +164,7 @@ const validateEnvelope = (tx: Transaction) => {
   })
 }
 
-const validateVoucher = (voucher: IVoucher) => {
+const validateVoucher = (voucher: Voucher) => {
   payloadFields.forEach(field => checkField(voucher, field))
   proposalKeyFields.forEach(field =>
     checkField(voucher.proposalKey, field, "proposalKey")
@@ -188,18 +188,18 @@ const isString = (v: any): v is string => typeof v === "string"
 const isObject = (v: any) => v !== null && typeof v === "object"
 const isArray = (v: any) => isObject(v) && v instanceof Array
 
-interface IVoucherArgument {
+interface VoucherArgument {
   type: string
   value: string
 }
 
-interface IVoucherProposalKey {
+interface VoucherProposalKey {
   address: string
   keyId: number | null
   sequenceNum: number | null
 }
 
-interface ISig {
+interface Sig {
   address: string,
   keyId: number | string,
   sig: string,
@@ -214,33 +214,33 @@ export interface Transaction {
   cadence: string | null;
   refBlock: string | null;
   computeLimit: string | null;
-  arguments: IVoucherArgument[]
+  arguments: VoucherArgument[]
   proposalKey: TransactionProposalKey
   payer: string
   authorizers: string[]
-  payloadSigs?: ISig[]
+  payloadSigs?: Sig[]
   envelopeSigs?: TransactionProposalKey[]
 }
 
-export interface IVoucher {
+export interface Voucher {
   cadence: string;
   refBlock: string;
   computeLimit: number;
-  arguments: IVoucherArgument[]
-  proposalKey: IVoucherProposalKey
+  arguments: VoucherArgument[]
+  proposalKey: VoucherProposalKey
   payer: string
   authorizers: string[]
-  payloadSigs: ISig[]
-  envelopeSigs: ISig[]
+  payloadSigs: Sig[]
+  envelopeSigs: Sig[]
 }
 
-interface IPayloadField {
+interface PayloadField {
   name: string,
   check: (v: any) => boolean,
   defaultVal?: string
 }
 
-const payloadFields: IPayloadField[] = [
+const payloadFields: PayloadField[] = [
   {name: "cadence", check: isString},
   {name: "arguments", check: isArray},
   {name: "refBlock", check: isString, defaultVal: "0"},
@@ -250,23 +250,23 @@ const payloadFields: IPayloadField[] = [
   {name: "authorizers", check: isArray},
 ]
 
-const proposalKeyFields: IPayloadField[] = [
+const proposalKeyFields: PayloadField[] = [
   {name: "address", check: isString},
   {name: "keyId", check: isNumber},
   {name: "sequenceNum", check: isNumber},
 ]
 
-const payloadSigsFields: IPayloadField[] = [{name: "payloadSigs", check: isArray}]
+const payloadSigsFields: PayloadField[] = [{name: "payloadSigs", check: isArray}]
 
-const payloadSigFields: IPayloadField[] = [
+const payloadSigFields: PayloadField[] = [
   {name: "address", check: isString},
   {name: "keyId", check: isNumber},
   {name: "sig", check: isString},
 ]
 
-const envelopeSigsFields: IPayloadField[] = [{ name: "envelopeSigs", check: isArray }]
+const envelopeSigsFields: PayloadField[] = [{ name: "envelopeSigs", check: isArray }]
 
-const envelopeSigFields: IPayloadField[] = [
+const envelopeSigFields: PayloadField[] = [
   {name: "address", check: isString},
   {name: "keyId", check: isNumber},
   {name: "sig", check: isString},
@@ -274,7 +274,7 @@ const envelopeSigFields: IPayloadField[] = [
 
 const checkField = (
   obj: Record<string, any>,
-  field: IPayloadField,
+  field: PayloadField,
   base?: string,
   index?: number
 ) => {
