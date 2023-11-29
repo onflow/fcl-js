@@ -14,7 +14,7 @@ export const decodeStream = (
   stream: StreamConnection<{data: any}>,
   decodeResponse: DecodeResponseFn,
   customDecoders?: Record<string, any>
-) => {
+): StreamConnection<any> => {
   const newStream = new EventEmitter()
   let queue = taskQueue()
 
@@ -62,11 +62,13 @@ export const decodeStream = (
   relayEvent("error")
 
   return {
-    on: (channel: string, callback: any) => {
+    on(channel: string, callback: any) {
       newStream.on(channel, callback)
+      return this
     },
-    off: (channel: string, callback: any) => {
+    off(channel: string, callback: any) {
       newStream.off(channel, callback)
+      return this
     },
     close: () => {
       stream.close()
