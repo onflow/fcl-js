@@ -1,5 +1,11 @@
 # @onflow/fcl-bundle
 
+## 1.4.2-event-streaming.1
+
+### Patch Changes
+
+- Add subscribeEvents export to FCL & fix build
+
 ## 1.4.2-event-streaming.0
 
 ### Patch Changes

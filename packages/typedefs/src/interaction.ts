@@ -90,9 +90,9 @@ export interface Interaction {
     id: string | null
   },
   subscribeEvents: {
-    eventTypes: string | string[] | null
-    addresses: string | string[] | null
-    contracts: string | string[] | null
+    eventTypes: string[] | null
+    addresses: string[] | null
+    contracts: string[] | null
     startBlockId: string | null
     startHeight: number | null
     heartbeatInterval: number | null

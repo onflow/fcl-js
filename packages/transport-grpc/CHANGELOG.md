@@ -1,5 +1,17 @@
 # @onflow/transport-grpc
 
+## 1.3.2-event-streaming.1
+
+### Patch Changes
+
+- Add subscribeEvents export to FCL & fix build
+
+- Updated dependencies []:
+  - @onflow/util-invariant@1.2.2-event-streaming.1
+  - @onflow/util-template@1.2.2-event-streaming.1
+  - @onflow/util-address@1.2.2-event-streaming.1
+  - @onflow/rlp@1.2.2-event-streaming.1
+
 ## 1.3.2-event-streaming.0
 
 ### Patch Changes

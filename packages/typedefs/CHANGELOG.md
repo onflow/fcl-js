@@ -1,5 +1,11 @@
 # @onflow/typedefs
 
+## 1.3.0-event-streaming.1
+
+### Patch Changes
+
+- Add subscribeEvents export to FCL & fix build
+
 ## 1.3.0-event-streaming.0
 
 ### Minor Changes

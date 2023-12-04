@@ -1,5 +1,16 @@
 # @onflow/config
 
+## 1.2.2-event-streaming.1
+
+### Patch Changes
+
+- Add subscribeEvents export to FCL & fix build
+
+- Updated dependencies []:
+  - @onflow/util-invariant@1.2.2-event-streaming.1
+  - @onflow/util-logger@1.3.2-event-streaming.1
+  - @onflow/util-actor@1.3.2-event-streaming.1
+
 ## 1.2.2-event-streaming.0
 
 ### Patch Changes
