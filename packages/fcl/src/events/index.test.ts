@@ -40,7 +40,7 @@ describe("events", () => {
       sdk.subscribeEvents({eventTypes: ["A"]}),
     ])
   })
-
+  
   test("should work with empty args", () => {
     events().subscribe(() => {})
     expect(sendSpy).toHaveBeenCalledWith([sdk.subscribeEvents({})])
