@@ -1,5 +1,5 @@
 {
-  "mode": "pre",
+  "mode": "exit",
   "tag": "event-streaming",
   "initialVersions": {
     "@onflow/config": "1.2.1",
@@ -28,7 +28,6 @@
     "mean-bugs-cry",
     "old-plants-nail",
     "serious-seahorses-camp",
-    "sixty-turkeys-destroy",
-    "thirty-donuts-worry"
+    "sixty-turkeys-destroy"
   ]
 }
