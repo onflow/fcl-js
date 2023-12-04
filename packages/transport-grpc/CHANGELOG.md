@@ -1,5 +1,15 @@
 # @onflow/transport-grpc
 
+## 1.3.2-alpha.0
+
+### Patch Changes
+
+- Updated dependencies [[`3af8a434`](https://github.com/onflow/fcl-js/commit/3af8a434b7b1238e44b6aa56f335c6d3d787cd21), [`0d09d838`](https://github.com/onflow/fcl-js/commit/0d09d8386c2fc472833df7152467d477f36dddc4)]:
+  - @onflow/util-invariant@1.2.2-alpha.0
+  - @onflow/util-template@1.2.2-alpha.0
+  - @onflow/util-address@1.2.2-alpha.0
+  - @onflow/rlp@1.2.2-alpha.0
+
 ## 1.3.1
 
 ### Patch Changes
