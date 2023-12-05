@@ -1,5 +1,11 @@
 # @onflow/transport-grpc
 
+## 1.3.2-alpha.1
+
+### Patch Changes
+
+- [#1809](https://github.com/onflow/fcl-js/pull/1809) [`f269dccf`](https://github.com/onflow/fcl-js/commit/f269dccf8806b334efe2d84d3d03ceae7bc110fc) Thanks [@nialexsan](https://github.com/nialexsan)! - restore missing packages
+
 ## 1.3.2-alpha.0
 
 ### Patch Changes
