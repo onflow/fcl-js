@@ -31,8 +31,8 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.18.6",
-    "@improbable-eng/grpc-web": "^0.14.0",
-    "@improbable-eng/grpc-web-node-http-transport": "^0.14.0",
+    "@improbable-eng/grpc-web": "^0.15.0",
+    "@improbable-eng/grpc-web-node-http-transport": "^0.15.0",
     "@onflow/protobuf": "^1.2.2",
     "@onflow/rlp": "^1.2.2-alpha.0",
     "@onflow/util-address": "^1.2.2-alpha.0",
