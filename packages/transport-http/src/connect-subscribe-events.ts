@@ -10,7 +10,7 @@ type RawSubscribeEventsStream = StreamConnection<{
   }
 }>
 
-function constructData(ix: any, context: any, data: any) {
+function constructData(ix: Interaction, context: any, data: any) {
   const response = context.response()
   response.tag = ix.tag
 
@@ -38,7 +38,7 @@ function constructData(ix: any, context: any, data: any) {
   return response
 }
 
-function constructResponse(ix: any, context: any, stream: any) {
+function constructResponse(ix: Interaction, context: any, stream: any) {
   const response = context.response()
   response.tag = ix.tag
 
@@ -94,7 +94,7 @@ export async function connectSubscribeEvents(
 
   // Map the connection to a formatted response stream
   connection.on("data", (data: any) => {
-    const responseData = constructData(ix, context, data)
+    const responseData = constructData(resolvedIx, context, data)
     lastBlockHeight = responseData.heartbeat.blockHeight
     outputEmitter.emit("data", responseData)
   })
@@ -118,5 +118,5 @@ export async function connectSubscribeEvents(
       connection.close()
     },
   }
-  return constructResponse(ix, context, responseStream)
+  return constructResponse(resolvedIx, context, responseStream)
 }
