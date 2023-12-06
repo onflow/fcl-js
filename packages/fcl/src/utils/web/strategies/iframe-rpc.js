@@ -1,6 +1,6 @@
 import {uid} from "@onflow/util-uid"
 import {frame} from "./utils/frame"
-import {normalizePollingResponse} from "../../../normalizers/service/polling-response"
+import {normalizePollingResponse} from "@onflow/fcl-core"
 import {VERSION} from "../../../VERSION"
 
 export function execIframeRPC({service, body, config, opts}) {

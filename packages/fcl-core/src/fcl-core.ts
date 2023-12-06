@@ -121,7 +121,23 @@ export {invariant} from "@onflow/sdk"
  */
 
 import {watchForChainIdChanges} from "./utils"
-import { t } from "./shared-exports"
 
 // Set chain id default on access node change
 watchForChainIdChanges()
+
+
+export {getMutate} from "./exec/mutate"
+
+export {getCurrentUser} from "./current-user"
+
+export {initServiceRegistry} from "./current-user/exec-service/plugins"
+
+export { isReactNative, setIsReactNative } from './utils/is-react-native'
+
+export {getExecHttpPost} from "./current-user/exec-service/strategies/http-post"
+
+export {normalizePollingResponse} from "./normalizers/service/polling-response"
+export {buildMessageHandler} from "./current-user/exec-service/strategies/utils/buildMessageHandler"
+export {serviceEndpoint} from "./current-user/exec-service/strategies/utils/service-endpoint"
+export {URL} from './utils/url'
+export {CORE_STRATEGIES, FCL_REDIRECT_URL_PARAM_NAME, FCL_RESPONSE_PARAM_NAME } from './utils/constants'

@@ -1,6 +1,6 @@
 {
   "name": "@onflow/util-encode-key",
-  "version": "1.2.2-event-streaming.1",
+  "version": "1.2.1",
   "description": "Flow JS SDK Util -- Encode Key",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
@@ -21,7 +21,7 @@
     "@typescript-eslint/eslint-plugin": "^6.4.0",
     "@typescript-eslint/parser": "^6.4.0",
     "eslint": "^8.47.0",
-    "eslint-plugin-jsdoc": "^46.4.6",
+    "eslint-plugin-jsdoc": "^46.9.0",
     "jest": "^29.5.0",
     "typescript": "^4.9.5"
   },

@@ -1,6 +1,6 @@
 import {uid} from "@onflow/util-uid"
 import {tab} from "./utils/tab"
-import {normalizePollingResponse} from "../../../normalizers/service/polling-response"
+import {normalizePollingResponse} from "@onflow/fcl-core"
 import {VERSION} from "../../../VERSION"
 
 export function execTabRPC({service, body, config, opts}) {

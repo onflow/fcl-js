@@ -1,6 +1,6 @@
 {
   "name": "@onflow/util-semver",
-  "version": "1.0.2-event-streaming.0",
+  "version": "1.0.1",
   "description": "A lightweight semver implementation for use in FCL",
   "main": "dist/index.js",
   "module": "dist/index.module.js",
