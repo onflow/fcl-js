@@ -1,6 +1,7 @@
 import * as WebBrowser from "expo-web-browser"
 import * as Linking from "expo-linking"
-import {FCL_REDIRECT_URL_PARAM_NAME, URL} from "@onflow/fcl-core"
+import {FCL_REDIRECT_URL_PARAM_NAME} from "../constants"
+import {URL} from "../url"
 
 /**
  *

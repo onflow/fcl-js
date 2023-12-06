@@ -5,13 +5,6 @@ jest.mock('@walletconnect/modal', () => {})
 jest.mock('@walletconnect/sign-client', () => {})
 jest.mock('@walletconnect/utils', () => {})
 
-jest.mock('@onflow/fcl', () => {
-  return {
-    __esModule: true,
-    ...jest.requireActual('@onflow/fcl')
-  };
-});
-
 describe("Init Client", () => {
   let chainIdSpy
   beforeEach(() => {
