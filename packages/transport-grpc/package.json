@@ -34,9 +34,9 @@
     "@improbable-eng/grpc-web": "^0.14.0",
     "@improbable-eng/grpc-web-node-http-transport": "^0.14.0",
     "@onflow/protobuf": "^1.2.2",
-    "@onflow/rlp": "^1.2.2-event-streaming.1",
-    "@onflow/util-address": "^1.2.2-event-streaming.1",
-    "@onflow/util-invariant": "^1.2.2-event-streaming.1",
-    "@onflow/util-template": "^1.2.2-event-streaming.1"
+    "@onflow/rlp": "^1.2.1",
+    "@onflow/util-address": "^1.2.1",
+    "@onflow/util-invariant": "^1.2.1",
+    "@onflow/util-template": "^1.2.1"
   }
 }
