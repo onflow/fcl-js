@@ -1,6 +1,6 @@
 {
   "name": "@onflow/util-encode-key",
-  "version": "1.2.1",
+  "version": "1.2.2-alpha.0",
   "description": "Flow JS SDK Util -- Encode Key",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",

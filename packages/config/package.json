@@ -1,6 +1,6 @@
 {
   "name": "@onflow/config",
-  "version": "1.2.1",
+  "version": "1.2.2-alpha.0",
   "description": "Config for FCL-JS",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
