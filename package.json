@@ -26,5 +26,11 @@
     "prettier": "^2.6.2",
     "ts-jest": "^29.1.1",
     "typescript": "^5.1.6"
+  },
+  "optionalDependencies": {
+    "@nx/nx-darwin-arm64": "17.0.3",
+    "@nx/nx-darwin-x64": "17.0.3",
+    "@nx/nx-linux-x64-gnu": "17.0.3",
+    "@nx/nx-win32-x64-msvc": "17.0.3"
   }
 }
