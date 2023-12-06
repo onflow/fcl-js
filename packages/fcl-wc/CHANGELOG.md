@@ -1,29 +1,5 @@
 # @onflow/fcl-wc
 
-## 5.0.2-event-streaming.0
-
-### Patch Changes
-
-- Add subscribeEvents export to FCL & fix build
-
-- Updated dependencies []:
-  - @onflow/util-invariant@1.2.2-event-streaming.1
-  - @onflow/util-logger@1.3.2-event-streaming.1
-  - @onflow/config@1.2.2-event-streaming.1
-  - @onflow/fcl@1.10.0-event-streaming.1
-
-## 7.0.0-event-streaming.0
-
-### Patch Changes
-
-- [#1814](https://github.com/onflow/fcl-js/pull/1814) [`0d09d838`](https://github.com/onflow/fcl-js/commit/0d09d8386c2fc472833df7152467d477f36dddc4) Thanks [@jribbink](https://github.com/jribbink)! - Fix type declarations not fully being generated
-
-- Updated dependencies [[`699303cf`](https://github.com/onflow/fcl-js/commit/699303cfd5e0545267632c9236f8c91833ce1259), [`59debea5`](https://github.com/onflow/fcl-js/commit/59debea55209adab984d2c0a139aeedf8f09186b), [`0d09d838`](https://github.com/onflow/fcl-js/commit/0d09d8386c2fc472833df7152467d477f36dddc4)]:
-  - @onflow/fcl@1.10.0-event-streaming.0
-  - @onflow/util-invariant@1.2.2-event-streaming.0
-  - @onflow/util-logger@1.3.2-event-streaming.0
-  - @onflow/config@1.2.2-event-streaming.0
-
 ## 6.0.0
 
 ### Patch Changes

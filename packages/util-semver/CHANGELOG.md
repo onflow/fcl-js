@@ -1,11 +1,5 @@
 # @onflow/util-semver
 
-## 1.0.2-event-streaming.0
-
-### Patch Changes
-
-- Add subscribeEvents export to FCL & fix build
-
 ## 1.0.1
 
 ### Patch Changes
