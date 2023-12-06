@@ -13,7 +13,7 @@
     "url": "https://github.com/onflow/flow-js-sdk/issues"
   },
   "devDependencies": {
-    "@onflow/fcl-bundle": "^1.4.2-event-streaming.1",
+    "@onflow/fcl-bundle": "^1.4.1",
     "@types/node": "^18.13.0",
     "eslint": "^8.33.0",
     "eslint-plugin-jsdoc": "^39.7.5",

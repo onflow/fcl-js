@@ -25,7 +25,7 @@
     "start": "fcl-bundle --watch"
   },
   "devDependencies": {
-    "@onflow/fcl-bundle": "^1.4.2-event-streaming.1",
+    "@onflow/fcl-bundle": "^1.4.1",
     "better-sqlite3": "^7.6.2",
     "jest": "^29.5.0"
   },
@@ -40,6 +40,6 @@
     "@walletconnect/utils": "^2.8.1"
   },
   "peerDependencies": {
-    "@onflow/fcl": "^1.10.0-event-streaming.1"
+    "@onflow/fcl": "^1.9.0"
   }
 }

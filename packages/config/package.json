@@ -14,7 +14,7 @@
   },
   "devDependencies": {
     "@babel/preset-typescript": "^7.22.11",
-    "@onflow/fcl-bundle": "^1.4.2-event-streaming.1",
+    "@onflow/fcl-bundle": "^1.4.1",
     "@types/estree": "^1.0.1",
     "@types/jest": "^29.5.4",
     "@typescript-eslint/eslint-plugin": "^6.5.0",
