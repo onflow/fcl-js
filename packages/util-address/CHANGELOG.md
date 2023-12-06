@@ -1,13 +1,5 @@
 # @onflow/util-address
 
-## 1.2.2-alpha.0
-
-### Patch Changes
-
-- [#1809](https://github.com/onflow/fcl-js/pull/1809) [`3af8a434`](https://github.com/onflow/fcl-js/commit/3af8a434b7b1238e44b6aa56f335c6d3d787cd21) Thanks [@nialexsan](https://github.com/nialexsan)! - split fcl to fcl-core, fcl-react-native, fcl(-web)
-
-- [#1814](https://github.com/onflow/fcl-js/pull/1814) [`0d09d838`](https://github.com/onflow/fcl-js/commit/0d09d8386c2fc472833df7152467d477f36dddc4) Thanks [@jribbink](https://github.com/jribbink)! - Fix type declarations not fully being generated
-
 ## 1.2.1
 
 ### Patch Changes
