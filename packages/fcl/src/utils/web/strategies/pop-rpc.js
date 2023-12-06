@@ -1,6 +1,6 @@
 import {uid} from "@onflow/util-uid"
 import {pop} from "./utils/pop"
-import {normalizePollingResponse} from "../../../normalizers/service/polling-response"
+import {normalizePollingResponse} from "@onflow/fcl-core"
 import {VERSION} from "../../../VERSION"
 
 export function execPopRPC({service, body, config, opts}) {

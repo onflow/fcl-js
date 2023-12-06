@@ -7,7 +7,8 @@
     "start": "npm run build && lerna run start --parallel",
     "test": "jest",
     "release": "npm run build && npm run changeset publish",
-    "changeset": "changeset"
+    "changeset": "changeset",
+    "clear": "find . -name node_modules -type d -prune -exec rm -rf '{}' + && find . -name dist -type d -prune -exec rm -rf '{}' +"
   },
   "name": "fcl-js",
   "devDependencies": {

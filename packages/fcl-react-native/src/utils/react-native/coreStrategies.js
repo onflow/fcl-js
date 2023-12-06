@@ -1,5 +1,4 @@
-import { CORE_STRATEGIES } from "../constants"
-import {getExecHttpPost} from "../../current-user/exec-service/strategies/http-post"
+import {CORE_STRATEGIES, getExecHttpPost} from "@onflow/fcl-core"
 import {execLocal} from "./exec-local"
 import {execDeeplinkRPC} from './strategies/deeplink-rpc'
 

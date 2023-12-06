@@ -1,4 +1,4 @@
-import { buildMessageHandler } from "../../../../current-user/exec-service/strategies/utils/buildMessageHandler"
+import { buildMessageHandler } from "@onflow/fcl-core"
 
 const noop = () => {}
 
