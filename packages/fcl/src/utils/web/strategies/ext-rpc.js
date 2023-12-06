@@ -1,6 +1,6 @@
 import {invariant} from "@onflow/util-invariant"
 import {extension} from "./utils/extension"
-import {normalizePollingResponse} from "../../../normalizers/service/polling-response"
+import {normalizePollingResponse} from "@onflow/fcl-core"
 import {VERSION} from "../../../VERSION"
 
 export function execExtRPC({service, body, config, opts}) {
