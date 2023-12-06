@@ -1,69 +1,10 @@
-export {
-  VERSION,
-  query,
-  verifyUserSignatures,
-  serialize,
-  tx,
-  events,
-  pluginRegistry,
-  discovery,
-  t,
-  WalletUtils,
-  AppUtils,
-  InteractionTemplateUtils,
-  getChainId,
-  TestUtils,
-  config,
-  send,
-  decode,
-  account,
-  block,
-  isOk,
-  isBad,
-  why,
-  pipe,
-  build,
-  withPrefix,
-  sansPrefix,
-  display,
-  cadence,
-  cdc,
-  createSignableVoucher,
-  voucherIntercept,
-  voucherToTxId,
-  transaction,
-  script,
-  ping,
-  atBlockHeight,
-  atBlockId,
-  getAccount,
-  getEvents,
-  getEventsAtBlockHeightRange,
-  getEventsAtBlockIds,
-  getBlock,
-  getBlockHeader,
-  getCollection,
-  getTransactionStatus,
-  getTransaction,
-  getNetworkParameters,
-  authorizations,
-  authorization,
-  args,
-  arg,
-  proposer,
-  payer,
-  limit,
-  ref,
-  params,
-  param,
-  validator,
-  invariant,
-} from "@onflow/fcl-core"
+export * from "./shared-exports"
 
-import {getMutate, getCurrentUser, initServiceRegistry } from "@onflow/fcl-core"
+import {getMutate} from "./exec/mutate"
 
 export const mutate = getMutate({platform: "web"})
 
+import {getCurrentUser} from "./current-user"
 const currentUser = getCurrentUser({platform: "web"})
 
 export {currentUser}
@@ -81,6 +22,7 @@ export const authz = currentUser().authorization
 
 import {config} from "@onflow/config"
 import {getDefaultConfig, coreStrategies} from "./utils/web"
+import {initServiceRegistry} from "./current-user/exec-service/plugins"
 
 config(getDefaultConfig())
 

@@ -1,4 +1,4 @@
-import { normalizePollingResponse } from "@onflow/fcl-core"
+import { normalizePollingResponse } from "../../../normalizers/service/polling-response"
 import {browser} from "./utils/browser"
 
 export function execDeeplinkRPC({service, config, body}) {

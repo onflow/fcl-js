@@ -1,5 +1,6 @@
 import {renderFrame} from "../../render-frame"
-import { buildMessageHandler, serviceEndpoint } from "@onflow/fcl-core"
+import { serviceEndpoint } from "../../../../current-user/exec-service/strategies/utils/service-endpoint"
+import { buildMessageHandler } from "../../../../current-user/exec-service/strategies/utils/buildMessageHandler"
 
 const noop = () => {}
 

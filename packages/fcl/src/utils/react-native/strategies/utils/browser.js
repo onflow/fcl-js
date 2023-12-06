@@ -1,7 +1,8 @@
 import * as Linking from "expo-linking"
 import {renderBrowser} from "../../render-browser"
 import {serviceEndpoint} from "./service-endpoint"
-import {FCL_RESPONSE_PARAM_NAME, buildMessageHandler} from "@onflow/fcl-core"
+import {buildMessageHandler} from "../../../../current-user/exec-service/strategies/utils/buildMessageHandler"
+import {FCL_RESPONSE_PARAM_NAME} from "../../../constants"
 
 const noop = () => {}
 
