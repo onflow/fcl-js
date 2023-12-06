@@ -1,6 +1,6 @@
 import * as Linking from "expo-linking"
 import {AppState} from "react-native"
-import {URL} from "../url"
+import {URL} from "@onflow/fcl-core"
 
 /**
  * Renders a deeplink view (i.e. deep links to a wallet app)

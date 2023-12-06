@@ -1,4 +1,4 @@
-import {URL} from "../../../../utils/url"
+import {URL} from "@onflow/fcl-core"
 
 const isBodyEmpty = (body) => {
   return !body || (body?.data !== undefined && Object.keys(body).filter(key => key !== 'data').length === 0)
