@@ -1,5 +1,6 @@
 import {send, decode, subscribeEvents} from "@onflow/sdk"
 import {Event, EventFilter, EventStream} from "@onflow/typedefs"
+import {events as legacyEvents} from "./legacy-events"
 
 /**
  * @description - Subscribe to events
@@ -26,6 +27,19 @@ export function events(filterOrType?: EventFilter | string) {
         subscribeEvents(filter),
       ]).then(decode)
 
+      // If the subscribe fails, fallback to legacy events
+      const legacySubscriptionPromise = streamPromise.then(() => null).catch((e) => {
+        // Only fallback to legacy events if the error is specifcally about the unsupported feature
+        if(e.message !== "SDK Send Error: subscribeEvents is not supported by this transport.") {
+          throw e
+        }
+
+        if (typeof filterOrType !== "string") {
+          throw new Error("GRPC fcl.events fallback only supports string (type) filters")
+        }
+        return legacyEvents(filterOrType).subscribe(callback)
+      })
+
       // Subscribe to the stream using the callback
       function onEvents(data: Event[]) {
         data.forEach(event => callback(event, null))
@@ -33,12 +47,28 @@ export function events(filterOrType?: EventFilter | string) {
       function onError(error: Error) {
         callback(null, error)
       }
-      streamPromise.then(stream =>
-        stream.on("events", onEvents).on("error", onError)
-      )
 
+      // If using legacy events, don't subscribe to the stream
+      legacySubscriptionPromise.then(legacySubscription => {
+        if (!legacySubscription) {
+          streamPromise.then(stream =>
+            stream.on("events", onEvents).on("error", onError)
+          ).catch((error) => {
+            streamPromise.then(stream => stream.close())
+            onError(error)
+          })
+        }
+      })
+
+      // Unsubscribe will call terminate the legacy subscription or close the stream
       return () => {
-        streamPromise.then(stream => stream.close())
+        legacySubscriptionPromise.then(legacySubscription => {
+          if (legacySubscription) {
+            legacySubscription()
+          } else {
+            streamPromise.then(stream => stream.close())
+          }
+        })
       }
     },
   }
