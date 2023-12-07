@@ -1,5 +1,17 @@
 # @onflow/fcl-wc
 
+## 6.0.0-alpha.0
+
+### Patch Changes
+
+- [#1814](https://github.com/onflow/fcl-js/pull/1814) [`0d09d838`](https://github.com/onflow/fcl-js/commit/0d09d8386c2fc472833df7152467d477f36dddc4) Thanks [@jribbink](https://github.com/jribbink)! - Fix type declarations not fully being generated
+
+- Updated dependencies [[`699303cf`](https://github.com/onflow/fcl-js/commit/699303cfd5e0545267632c9236f8c91833ce1259), [`acf90a78`](https://github.com/onflow/fcl-js/commit/acf90a7841f843227d5d9edb450ef08322c77c4d), [`0d09d838`](https://github.com/onflow/fcl-js/commit/0d09d8386c2fc472833df7152467d477f36dddc4)]:
+  - @onflow/fcl@1.10.0-alpha.2
+  - @onflow/util-invariant@1.2.2-alpha.1
+  - @onflow/util-logger@1.3.2-alpha.1
+  - @onflow/config@1.2.2-alpha.1
+
 ## 6.0.0
 
 ### Patch Changes

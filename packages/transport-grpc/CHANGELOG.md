@@ -1,5 +1,17 @@
 # @onflow/transport-grpc
 
+## 1.3.2-alpha.2
+
+### Patch Changes
+
+- [#1794](https://github.com/onflow/fcl-js/pull/1794) [`acf90a78`](https://github.com/onflow/fcl-js/commit/acf90a7841f843227d5d9edb450ef08322c77c4d) Thanks [@jribbink](https://github.com/jribbink)! - Deprecate @onflow/transport-grpc & add "not implemented" error for subscribeEvents
+
+- Updated dependencies [[`0d09d838`](https://github.com/onflow/fcl-js/commit/0d09d8386c2fc472833df7152467d477f36dddc4)]:
+  - @onflow/util-invariant@1.2.2-alpha.1
+  - @onflow/util-template@1.2.2-alpha.1
+  - @onflow/util-address@1.2.2-alpha.1
+  - @onflow/rlp@1.2.2-alpha.1
+
 ## 1.3.1
 
 ### Patch Changes
