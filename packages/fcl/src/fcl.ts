@@ -58,6 +58,7 @@ export {
   param,
   validator,
   invariant,
+  subscribeEvents
 } from "@onflow/fcl-core"
 
 import {getMutate, getCurrentUser, initServiceRegistry } from "@onflow/fcl-core"

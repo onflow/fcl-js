@@ -288,5 +288,37 @@ export type Provider = {
    */
   name: string
 }
+export interface StreamConnection<ChannelMap extends {[name: string]: any}> {
+  on<C extends keyof ChannelMap>(
+    channel: C,
+    listener: (data: ChannelMap[C]) => void
+  ): this
+  on(event: "close", listener: () => void): this
+  on(event: "error", listener: (err: any) => void): this
+  off<C extends keyof ChannelMap>(
+    event: C,
+    listener: (data: ChannelMap[C]) => void
+  ): this
+  off(event: "close", listener: () => void): this
+  off(event: "error", listener: (err: any) => void): this
+  close(): void
+}
+
+export interface EventFilter {
+  eventTypes?: string[]
+  addresses?: string[]
+  contracts?: string[]
+}
+
+export interface BlockHeartbeat {
+  blockId: string
+  blockHeight: number
+  timestamp: string
+}
+
+export type EventStream = StreamConnection<{
+  events: Event[]
+  heartbeat: BlockHeartbeat
+}>
 
 export * from "./interaction"

@@ -5,12 +5,13 @@ import {sendGetTransaction} from "./send-get-transaction.js"
 import {sendExecuteScript} from "./send-execute-script.js"
 import {sendGetAccount} from "./send-get-account.js"
 import {sendGetEvents} from "./send-get-events.js"
+import {connectSubscribeEvents} from "./connect-subscribe-events.js"
 import {sendGetBlock} from "./send-get-block.js"
 import {sendGetBlockHeader} from "./send-get-block-header.js"
 import {sendGetCollection} from "./send-get-collection.js"
 import {sendPing, ISendPingContext} from "./send-ping"
 import {sendGetNetworkParameters} from "./send-get-network-parameters.js"
-import { Interaction } from "@onflow/typedefs"
+import {Interaction} from "@onflow/typedefs"
 
 interface InteractionModule {
   isTransaction: (ix: Interaction) => boolean;
@@ -24,6 +25,7 @@ interface InteractionModule {
   isGetCollection: (ix: Interaction) => boolean;
   isPing: (ix: Interaction) => boolean;
   isGetNetworkParameters: (ix: Interaction) => boolean;
+  isSubscribeEvents: (ix: Interaction) => boolean;
 }
 interface IContext extends ISendPingContext{
   ix: InteractionModule;
@@ -45,6 +47,7 @@ interface IOpts extends IOptsCommon {
   sendPing?: (ix: Interaction, context: IContext, opts: IOptsCommon) => void
   sendGetBlock?: (ix: Interaction, context: IContext, opts: IOptsCommon) => void
   sendGetNetworkParameters?: (ix: Interaction, context: IContext, opts: IOptsCommon) => void
+  connectSubscribeEvents?: (ix: Interaction, context: IContext, opts: IOptsCommon) => void
 }
 
 export const send = async (ix: Interaction, context: IContext, opts: IOpts = {}) => {
@@ -70,6 +73,8 @@ export const send = async (ix: Interaction, context: IContext, opts: IOpts = {})
       return opts.sendGetAccount ? opts.sendGetAccount(ix, context, opts) : sendGetAccount(ix, context, opts)
     case context.ix.isGetEvents(ix):
       return opts.sendGetEvents ? opts.sendGetEvents(ix, context, opts) : sendGetEvents(ix, context, opts)
+    case context.ix.isSubscribeEvents(ix):
+      return opts.connectSubscribeEvents ? opts.connectSubscribeEvents(ix, context, opts) : connectSubscribeEvents(ix, context, opts)
     case context.ix.isGetBlock(ix):
       return opts.sendGetBlock ? opts.sendGetBlock(ix, context, opts) : sendGetBlock(ix, context, opts)
     case context.ix.isGetBlockHeader(ix):

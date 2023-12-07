@@ -1,4 +1,5 @@
-import {log, LEVELS} from "@onflow/util-logger"
+import {log} from "@onflow/util-logger"
+import {decodeStream} from "./decode-stream"
 
 const latestBlockDeprecationNotice = () => {
   log.deprecate({
@@ -223,6 +224,10 @@ export const decodeResponse = async (response, customDecoders = {}) => {
     return {
       chainId: chainIdMap[response.networkParameters.chainId],
     }
+  } else if (response.streamConnection) {
+    return decodeStream(response.streamConnection, decodeResponse, customDecoders)
+  } else if (response.heartbeat) {
+    return response.heartbeat
   }
 
   return null

@@ -10,10 +10,7 @@ import {discovery} from "./discovery"
 export {discovery}
 
 import * as types from "@onflow/types"
-/**
- * @type {Types}
- */
-export const t = types
+export {types as t}
 
 import * as WalletUtils from "./wallet-utils"
 export {WalletUtils}
@@ -60,6 +57,7 @@ export {getTransactionStatus} from "@onflow/sdk"
 export {getTransaction} from "@onflow/sdk"
 export {getNetworkParameters} from "@onflow/sdk"
 export {authorizations, authorization} from "@onflow/sdk"
+export {subscribeEvents} from "@onflow/sdk"
 export {args, arg} from "@onflow/sdk"
 export {proposer} from "@onflow/sdk"
 export {payer} from "@onflow/sdk"

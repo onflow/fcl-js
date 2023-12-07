@@ -11,6 +11,7 @@ export enum InteractionTag {
   GET_BLOCK_HEADER = "GET_BLOCK_HEADER",
   GET_COLLECTION = "GET_COLLECTION",
   GET_NETWORK_PARAMETERS = "GET_NETWORK_PARAMETERS",
+  SUBSCRIBE_EVENTS = "SUBSCRIBE_EVENTS",
 }
 
 export enum InteractionStatus {
@@ -87,5 +88,13 @@ export interface Interaction {
   }
   collection: {
     id: string | null
+  },
+  subscribeEvents: {
+    eventTypes: string[] | null
+    addresses: string[] | null
+    contracts: string[] | null
+    startBlockId: string | null
+    startHeight: number | null
+    heartbeatInterval: number | null
   }
 }

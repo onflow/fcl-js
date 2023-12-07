@@ -10,7 +10,9 @@ const DEFAULT_RESPONSE = {
     "blockHeader":null,
     "latestBlock":null,
     "collection":null,
-    "networkParameters":null
+    "networkParameters":null,
+    "streamConnection":null,
+    "heartbeat":null
 }
 
 export const response = () => ({...DEFAULT_RESPONSE})

@@ -61,6 +61,14 @@ const IX = `{
     "end":null,
     "blockIds":[]
   },
+  "subscribeEvents": {
+    "startBlockId":null,
+    "startHeight":null,
+    "eventTypes":null,
+    "addresses":null,
+    "contracts":null,
+    "heartbeatInterval":null
+  },
   "transaction": {
     "id":null
   },
@@ -217,6 +225,7 @@ export const makeGetBlock /*                */ = makeIx(InteractionTag.GET_BLOCK
 export const makeGetBlockHeader /*          */ = makeIx(InteractionTag.GET_BLOCK_HEADER)
 export const makeGetCollection /*           */ = makeIx(InteractionTag.GET_COLLECTION)
 export const makeGetNetworkParameters /*    */ = makeIx(InteractionTag.GET_NETWORK_PARAMETERS)
+export const makeSubscribeEvents /*         */ = makeIx(InteractionTag.SUBSCRIBE_EVENTS)
 
 const is = (wat: InteractionTag) => (ix: Interaction) => ix.tag === wat
 
@@ -232,6 +241,7 @@ export const isGetBlock /*                */ = is(InteractionTag.GET_BLOCK)
 export const isGetBlockHeader /*          */ = is(InteractionTag.GET_BLOCK_HEADER)
 export const isGetCollection /*           */ = is(InteractionTag.GET_COLLECTION)
 export const isGetNetworkParameters /*    */ = is(InteractionTag.GET_NETWORK_PARAMETERS)
+export const isSubscribeEvents /*         */ = is(InteractionTag.SUBSCRIBE_EVENTS)
 
 export const isOk /*  */ = (ix: Interaction) => ix.status === InteractionStatus.OK
 export const isBad /* */ = (ix: Interaction) => ix.status === InteractionStatus.BAD
