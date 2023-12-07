@@ -24,5 +24,7 @@
     "@onflow/util-template": "1.2.1",
     "@onflow/util-uid": "1.2.1"
   },
-  "changesets": []
+  "changesets": [
+    "nice-cups-rest"
+  ]
 }
