@@ -1,5 +1,15 @@
 # @onflow/util-encode-key
 
+## 1.2.2-alpha.1
+
+### Patch Changes
+
+- [#1814](https://github.com/onflow/fcl-js/pull/1814) [`0d09d838`](https://github.com/onflow/fcl-js/commit/0d09d8386c2fc472833df7152467d477f36dddc4) Thanks [@jribbink](https://github.com/jribbink)! - Fix type declarations not fully being generated
+
+- Updated dependencies [[`0d09d838`](https://github.com/onflow/fcl-js/commit/0d09d8386c2fc472833df7152467d477f36dddc4)]:
+  - @onflow/util-invariant@1.2.2-alpha.1
+  - @onflow/rlp@1.2.2-alpha.1
+
 ## 1.2.1
 
 ### Patch Changes
