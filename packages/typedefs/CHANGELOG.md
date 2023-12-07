@@ -1,5 +1,11 @@
 # @onflow/typedefs
 
+## 1.3.0-alpha.2
+
+### Patch Changes
+
+- [#1827](https://github.com/onflow/fcl-js/pull/1827) [`e74c4a60`](https://github.com/onflow/fcl-js/commit/e74c4a60f38f366874aa1391ca1c890a7ad3a42a) Thanks [@nialexsan](https://github.com/nialexsan)! - pin versions
+
 ## 1.3.0-alpha.1
 
 ### Minor Changes
