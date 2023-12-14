@@ -1,5 +1,22 @@
 # Transitions
 
+## 0010 Deprecate interaction
+
+- **Date:** Sept 25th 2023
+- **Type:** Deprecation of interaction method
+
+The "interaction" method has been deprecated and will be removed in future versions.
+
+Please update your code to use the "initInteraction" method for improved functionality and compatibility.
+
+```javascript
+  // Deprecated:
+  const result = interaction();
+ 
+  // Recommended:
+  const result = initInteraction();
+```
+
 ## 0009 Deprecate default compute limit
 
 - **Date:** Jun 7th 2022

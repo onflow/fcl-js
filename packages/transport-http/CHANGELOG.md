@@ -1,5 +1,159 @@
 # @onflow/transport-http
 
+## 1.10.0-alpha.2
+
+### Patch Changes
+
+- [#1827](https://github.com/onflow/fcl-js/pull/1827) [`e74c4a60`](https://github.com/onflow/fcl-js/commit/e74c4a60f38f366874aa1391ca1c890a7ad3a42a) Thanks [@nialexsan](https://github.com/nialexsan)! - pin versions
+
+- Updated dependencies [[`e74c4a60`](https://github.com/onflow/fcl-js/commit/e74c4a60f38f366874aa1391ca1c890a7ad3a42a)]:
+  - @onflow/util-invariant@1.2.2-alpha.2
+  - @onflow/util-template@1.2.2-alpha.2
+  - @onflow/util-address@1.2.2-alpha.2
+  - @onflow/util-logger@1.3.2-alpha.2
+
+## 1.10.0-alpha.1
+
+### Minor Changes
+
+- [#1802](https://github.com/onflow/fcl-js/pull/1802) [`699303cf`](https://github.com/onflow/fcl-js/commit/699303cfd5e0545267632c9236f8c91833ce1259) Thanks [@nialexsan](https://github.com/nialexsan)! - TS conversion
+
+- [#1794](https://github.com/onflow/fcl-js/pull/1794) [`acf90a78`](https://github.com/onflow/fcl-js/commit/acf90a7841f843227d5d9edb450ef08322c77c4d) Thanks [@jribbink](https://github.com/jribbink)! - Add support for event streaming API interaction (subscribeEvents)
+
+### Patch Changes
+
+- [#1814](https://github.com/onflow/fcl-js/pull/1814) [`0d09d838`](https://github.com/onflow/fcl-js/commit/0d09d8386c2fc472833df7152467d477f36dddc4) Thanks [@jribbink](https://github.com/jribbink)! - Fix type declarations not fully being generated
+
+- Updated dependencies [[`0d09d838`](https://github.com/onflow/fcl-js/commit/0d09d8386c2fc472833df7152467d477f36dddc4)]:
+  - @onflow/util-invariant@1.2.2-alpha.1
+  - @onflow/util-template@1.2.2-alpha.1
+  - @onflow/util-address@1.2.2-alpha.1
+  - @onflow/util-logger@1.3.2-alpha.1
+
+## 1.9.0
+
+### Minor Changes
+
+- [#1792](https://github.com/onflow/fcl-js/pull/1792) [`cb5d38c8`](https://github.com/onflow/fcl-js/commit/cb5d38c8f1a2de47a1932ea8e89e43171b179712) Thanks [@jribbink](https://github.com/jribbink)! - Export HTTPRequestError
+
+## 1.8.1
+
+### Patch Changes
+
+- [#1807](https://github.com/onflow/fcl-js/pull/1807) [`9430d723`](https://github.com/onflow/fcl-js/commit/9430d7232c272f4acb55f5bcff7be82cef9704d9) Thanks [@jribbink](https://github.com/jribbink)! - Fix versioning & actor bug
+
+- Updated dependencies [[`9430d723`](https://github.com/onflow/fcl-js/commit/9430d7232c272f4acb55f5bcff7be82cef9704d9)]:
+  - @onflow/util-address@1.2.1
+  - @onflow/util-invariant@1.2.1
+  - @onflow/util-logger@1.3.1
+  - @onflow/util-template@1.2.1
+
+## 1.8.0
+
+### Minor Changes
+
+- [#1801](https://github.com/onflow/fcl-js/pull/1801) [`8881394b`](https://github.com/onflow/fcl-js/commit/8881394bc11fea507e330a4c507ef304fe456c42) Thanks [@nialexsan](https://github.com/nialexsan)! - TS build
+
+### Patch Changes
+
+- Updated dependencies [[`8881394b`](https://github.com/onflow/fcl-js/commit/8881394bc11fea507e330a4c507ef304fe456c42), [`8881394b`](https://github.com/onflow/fcl-js/commit/8881394bc11fea507e330a4c507ef304fe456c42)]:
+  - @onflow/util-invariant@1.2.0
+  - @onflow/util-template@1.2.0
+  - @onflow/util-address@1.2.0
+  - @onflow/util-logger@1.3.0
+
+## 1.7.2
+
+### Patch Changes
+
+- [#1532](https://github.com/onflow/fcl-js/pull/1532) [`06846f8e`](https://github.com/onflow/fcl-js/commit/06846f8e9c1e2cdf10aa8dfdff6e6c5b31af81e5) Thanks [@JeffreyDoyle](https://github.com/JeffreyDoyle)! - Fixed duplicate signatures when sending transaction
+
+## 1.7.1
+
+### Patch Changes
+
+- [#1767](https://github.com/onflow/fcl-js/pull/1767) [`f6681cfe`](https://github.com/onflow/fcl-js/commit/f6681cfebc5aab78cbf74f34b5655faa4f06a8c4) Thanks [@jribbink](https://github.com/jribbink)! - Fix responseBody not being included in errors
+
+## 1.7.0
+
+### Minor Changes
+
+- [#1712](https://github.com/onflow/fcl-js/pull/1712) [`6fa3bdc4`](https://github.com/onflow/fcl-js/commit/6fa3bdc46dd077b57f501d802af5544393502285) Thanks [@jribbink](https://github.com/jribbink)! - Add opts.enableRequestLogging flag
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @onflow/util-logger@1.2.1
+
+## 1.7.0-alpha.0
+
+### Minor Changes
+
+- [#1712](https://github.com/onflow/fcl-js/pull/1712) [`6fa3bdc4`](https://github.com/onflow/fcl-js/commit/6fa3bdc46dd077b57f501d802af5544393502285) Thanks [@jribbink](https://github.com/jribbink)! - Add opts.enableRequestLogging flag
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @onflow/util-logger@1.2.1-alpha.0
+
+## 1.6.0
+
+### Minor Changes
+
+- [#1580](https://github.com/onflow/fcl-js/pull/1580) [`82810ef0`](https://github.com/onflow/fcl-js/commit/82810ef000ebdf4dde4dbd7846d31dd335cd9cbb) Thanks [@JeffreyDoyle](https://github.com/JeffreyDoyle)! - - Adds support for retrying requests when an ETIMEDOUT error occurs.
+
+  - Adds a default 30 second timeout to all requests, after which they will be retried.
+
+- [#1420](https://github.com/onflow/fcl-js/pull/1420) [`c20bc344`](https://github.com/onflow/fcl-js/commit/c20bc34448a22966d349b0b1c4c0f742ae93a355) Thanks [@huyndo](https://github.com/huyndo)! - Add GetNetworkParameters interaction and a util to get chain ID
+
+- [#1577](https://github.com/onflow/fcl-js/pull/1577) [`d9a49531`](https://github.com/onflow/fcl-js/commit/d9a495316cd03ed0de99e0f01d1b8850a1f0eec4) Thanks [@chasefleming](https://github.com/chasefleming)! - Add npmignore file for build
+
+### Patch Changes
+
+- [#1663](https://github.com/onflow/fcl-js/pull/1663) [`62dfafa9`](https://github.com/onflow/fcl-js/commit/62dfafa9c7adc3933822b0d3171d6eb025f1719e) Thanks [@nialexsan](https://github.com/nialexsan)! - Upgrade jest to v29.5 and update tests accordingly. Change build to transpile with ESM modules.
+
+- [#1658](https://github.com/onflow/fcl-js/pull/1658) [`2512b5c5`](https://github.com/onflow/fcl-js/commit/2512b5c53dff708fca97cd8afdbb1f4a46b2f106) Thanks [@nialexsan](https://github.com/nialexsan)! - Align jest version
+
+- [#1608](https://github.com/onflow/fcl-js/pull/1608) [`0ec0c5d4`](https://github.com/onflow/fcl-js/commit/0ec0c5d46b780e2b277846f9271ab311aa048b19) Thanks [@nialexsan](https://github.com/nialexsan)! - prep for react-native package
+
+- [#1660](https://github.com/onflow/fcl-js/pull/1660) [`9276f6ea`](https://github.com/onflow/fcl-js/commit/9276f6ea37367dfacce19bbffbad6fda56a1a645) Thanks [@nialexsan](https://github.com/nialexsan)! - Switch to cross-fetch
+
+- Updated dependencies [[`2d143bc7`](https://github.com/onflow/fcl-js/commit/2d143bc7b30f59e9f9289eee020cfaae74b4f4e1), [`62dfafa9`](https://github.com/onflow/fcl-js/commit/62dfafa9c7adc3933822b0d3171d6eb025f1719e), [`bbdeea32`](https://github.com/onflow/fcl-js/commit/bbdeea32f024d6eea4a74c94023e01688a38b6cb), [`2512b5c5`](https://github.com/onflow/fcl-js/commit/2512b5c53dff708fca97cd8afdbb1f4a46b2f106), [`5bec5576`](https://github.com/onflow/fcl-js/commit/5bec5576a79809d0684411736e3f4c02b8051c22), [`d9a49531`](https://github.com/onflow/fcl-js/commit/d9a495316cd03ed0de99e0f01d1b8850a1f0eec4)]:
+  - @onflow/util-address@1.1.0
+  - @onflow/util-invariant@1.1.0
+  - @onflow/util-logger@1.2.0
+  - @onflow/util-template@1.1.0
+
+## 1.6.0-alpha.7
+
+### Patch Changes
+
+- [#1660](https://github.com/onflow/fcl-js/pull/1660) [`9276f6ea`](https://github.com/onflow/fcl-js/commit/9276f6ea37367dfacce19bbffbad6fda56a1a645) Thanks [@nialexsan](https://github.com/nialexsan)! - Switch to cross-fetch
+
+## 1.6.0-alpha.6
+
+### Patch Changes
+
+- [#1663](https://github.com/onflow/fcl-js/pull/1663) [`62dfafa9`](https://github.com/onflow/fcl-js/commit/62dfafa9c7adc3933822b0d3171d6eb025f1719e) Thanks [@nialexsan](https://github.com/nialexsan)! - Upgrade jest to v29.5 and update tests accordingly. Change build to transpile with ESM modules.
+
+- Updated dependencies [[`62dfafa9`](https://github.com/onflow/fcl-js/commit/62dfafa9c7adc3933822b0d3171d6eb025f1719e)]:
+  - @onflow/util-address@1.1.0-alpha.5
+  - @onflow/util-invariant@1.1.0-alpha.2
+  - @onflow/util-logger@1.2.0-alpha.3
+  - @onflow/util-template@1.1.0-alpha.2
+
+## 1.6.0-alpha.5
+
+### Patch Changes
+
+- [#1658](https://github.com/onflow/fcl-js/pull/1658) [`2512b5c5`](https://github.com/onflow/fcl-js/commit/2512b5c53dff708fca97cd8afdbb1f4a46b2f106) Thanks [@nialexsan](https://github.com/nialexsan)! - Align jest version
+
+- Updated dependencies [[`2512b5c5`](https://github.com/onflow/fcl-js/commit/2512b5c53dff708fca97cd8afdbb1f4a46b2f106)]:
+  - @onflow/util-invariant@1.1.0-alpha.1
+  - @onflow/util-template@1.1.0-alpha.1
+  - @onflow/util-address@1.1.0-alpha.4
+  - @onflow/util-logger@1.2.0-alpha.2
+
 ## 1.6.0-alpha.4
 
 ### Patch Changes

@@ -1,15 +1,7 @@
-import * as root from "./decode.js"
-import {decode, decodeResponse} from "./decode.js"
+import {decode, decodeResponse} from "./decode"
 import {Buffer} from "@onflow/rlp"
-
-it("exported interface contract", () => {
-  expect(root).toStrictEqual(
-    expect.objectContaining({
-      decode: expect.any(Function),
-      decodeResponse: expect.any(Function),
-    })
-  )
-})
+import * as decodeStreamModule from "./decode-stream"
+import * as decodeModule from "./decode"
 
 it("decodeResponse", async () => {
   const response = {
@@ -1386,4 +1378,45 @@ describe("decode GetTransactionStatus tests", () => {
       ],
     })
   })
+})
+
+describe("decode stream connection tests", () => {
+  it("calls decodeStream to decode stream connection", async () => {
+    let mockStream = {}
+    const streamResponse = {
+      streamConnection: mockStream,
+    }
+    const decodeStreamSpy = jest
+      .spyOn(decodeStreamModule, "decodeStream")
+      .mockImplementation(() => {
+        return mockStream
+      })
+    const decoders = {foo: () => {}}
+    const decoded = await decodeResponse(streamResponse, decoders)
+
+    expect(decoded).toBe(mockStream)
+    expect(decodeStreamSpy).toHaveBeenCalledWith(
+      mockStream,
+      decodeResponse,
+      decoders
+    )
+  })
+})
+
+describe("decode heartbeat tests", () => {
+  it("decodes a heartbeat response correctly", async () => {
+    const heartbeatResponse = {
+      heartbeat: {
+        timestamp: 123456789,
+      },
+    }
+
+    expect(await decodeResponse(heartbeatResponse)).toStrictEqual({
+      timestamp: 123456789,
+    })
+  })
+})
+
+afterEach(() => {
+  jest.restoreAllMocks()
 })

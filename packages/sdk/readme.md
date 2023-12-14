@@ -497,7 +497,7 @@ const response = await sdk.send(await sdk.build([
 
 - [Builders](./src/build)
 
-  - [`sdk.args` & `sdk.arg`](./src/build/build-arguments.js)
+  - [`sdk.args` & `sdk.arg`](./src/build/build-arguments.ts)
   - [`sdk.atBlockHeight`](./src/build/build-at-block-height.js)
   - [`sdk.atBlockId`](./src/build/build-at-block-id.js)
   - [`sdk.authorizations` & `authorization`](./src/build/build-authorizations.js)
@@ -509,7 +509,7 @@ const response = await sdk.send(await sdk.build([
   - [`sdk.getCollection`](./src/build/build-get-collection)
   - [`sdk.getEvents`](./src/build/build-get-events.js)
   - [`sdk.getEventsAtBlockHeightRange`](./src/build/build-get-events-at-block-height-range.js)
-  - [`sdk.getEventsAtBlockIds`](./src/build/build-get-events-at-block-ids)
+  - [`sdk.getEventsAtBlockIds`](./src/build/build-get-events-at-block-ids.js)
   - [`sdk.getLatestBlock`](./src/build/build-get-latest-block.js)
   - [`sdk.getTransactionStatus`](./src/build/build-get-transaction-status.js)
   - [`sdk.getTransaction`](./src/build/build-get-transaction.js)
@@ -526,15 +526,15 @@ const response = await sdk.send(await sdk.build([
   - [`sdk.validator`](./src/build/build-validator.js)
 
 - [Resolvers](./src/resolve)
-  - [`sdk.resolveAccounts`](./src/resolve/resolve-accounts.js)
+  - [`sdk.resolveAccounts`](./src/resolve/resolve-accounts.ts)
   - [`sdk.resolveArguments`](./src/resolve/resolve-arguments.js)
   - [`sdk.resolveCadence`](./src/resolve/resolve-cadence.js)
   - [`sdk.resolveFinalNormalization`](./src/resolve/resolve-final-normalization.js)
   - [`sdk.resolveVoucherIntercept`](./src/resolve/resolve-voucher-intercept.js)
   - [`sdk.resolveProposerSequenceNumber`](./src/resolve/resolve-proposer-sequence-number.js)
   - [`sdk.resolveRefBlockId`](./src/resolve/resolve-ref-block-id.js)
-  - [`sdk.resolveSignatures`](./src/resolve/resolve-signatures.js)
+  - [`sdk.resolveSignatures`](./src/resolve/resolve-signatures.ts)
   - [`sdk.resolveValidators`](./src/resolve/resolve-validators.js)
 
 - [Other Utils](./src/)
-  - [`sdk.voucherToTxId`](./src/resolve/voucher.js)
+  - [`sdk.voucherToTxId`](./src/resolve/voucher.ts)

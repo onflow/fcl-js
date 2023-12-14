@@ -9,7 +9,7 @@
     <i>Connect your dapp to users, their wallets and Flow.</i>
     <br />
     <br />
-    <a href="https://docs.onflow.org/fcl/tutorials/flow-app-quickstart/">Quickstart</a>
+    <a href="https://developers.flow.com/tutorials/flow-app-quickstart">Quickstart</a>
     ·
     <a href="https://github.com/onflow/fcl-js/issues">Report Bug</a>
     ·
@@ -37,6 +37,29 @@ While FCL itself is a concept and standard, FCL JS is the javascript implementat
 npm i
 npm run build
 ```
+
+### Release
+Packages stable versions releases are controlled by [changesets](https://github.com/changesets/changesets) from the `master` branch
+
+#### Prerelease(alpha)
+In order to create an `alpha` (pre-)release 
+- create a branch with `release-<VERSION>` as a branch name
+- run:
+```
+npm run changeset pre enter alpha
+npm run changeset version
+npm run changeset publish
+```
+
+*NOTE: you need to have an npm account and be a member of [OnFlow organization](https://www.npmjs.com/org/onflow)*
+
+`changeset` commands should preferably be run from the `release` branch and not from feature branches in order to avoid merge conflicts with other feature branches
+when the release is ready to be published as stable run from the release branch
+```
+npm run changeset pre exit
+```
+and merge `release-<VERSION>` branch to `master`
+
 ### Installation
 
 To use the FCL JS in your application, install using **yarn** or **npm**
@@ -81,7 +104,7 @@ fcl.authenticate()
 - *Interact with smart contracts*: Authorize transactions via the user's chosen wallet 
 - *Prove ownership of a wallet address*: Signing and verifying user signed data
 
-[Learn more about wallet interactions >](https://docs.onflow.org/fcl/reference/api/#wallet-interactions)
+[Learn more about wallet interactions >](https://developers.flow.com/tooling/fcl-js/api#wallet-interactions)
 
 #### Blockchain Interactions
 - *Query the chain*: Send arbitrary Cadence scripts to the chain and receive back decoded values
@@ -121,7 +144,7 @@ const txId = await fcl.mutate({
 });
 ```
 
-[Learn more about on-chain interactions >](https://docs.onflow.org/fcl/reference/api/#on-chain-interactions)
+[Learn more about on-chain interactions >](https://developers.flow.com/tooling/fcl-js/api#on-chain-interactions)
 
 #### Utilities
 - Get account details from any Flow address
@@ -130,18 +153,37 @@ const txId = await fcl.mutate({
 - Event polling
 - Custom authorization functions
 
-[Learn more about utilities >](https://docs.onflow.org/fcl/reference/api/#pre-built-interactions)
+[Learn more about utilities >](https://developers.flow.com/tooling/fcl-js/api#pre-built-interactions)
 
+## Typescript Support
+
+FCL JS supports TypeScript. If you need to import specific types, you can do so via the [@onflow/typedefs](./packages/typedefs/README.md) package.
+
+```typescript
+import {CurrentUser} from "@onflow/typedefs"
+
+const newUser: CurrentUser = { 
+  addr: null,
+  cid: null,
+  expiresAt: null,
+  f_type: 'User',
+  f_vsn: '1.0.0',
+  loggedIn: null,
+  services: []
+}
+```
+
+For all type definitions available, see [this file](./packages/typedefs/src/index.js)
 
 ## Next Steps
 
-See the [Flow App Quick Start](https://developers.flow.com/tools/fcl-js/tutorials/flow-app-quickstart).
+See the [Flow App Quick Start](https://developers.flow.com/tutorials/flow-app-quickstart).
 
-See the full [API Reference](https://docs.onflow.org/fcl/reference/api/) for all FCL functionality.
+See the full [API Reference](https://developers.flow.com/tooling/fcl-js/api) for all FCL functionality.
 
-Learn Flow's smart contract language to build any script or transactions: [Cadence](https://docs.onflow.org/cadence/).
+Learn Flow's smart contract language to build any script or transactions: [Cadence](https://developers.flow.com/cadence).
 
-Explore all of Flow [docs and tools](https://docs.onflow.org).
+Explore all of Flow [docs and tools](https://developers.flow.com).
 
 
 ---

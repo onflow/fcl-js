@@ -1,4 +1,4 @@
-import {pipe, Ok, makeGetEvents} from "../interaction/interaction.js"
+import {pipe, Ok, makeGetEvents} from "../interaction/interaction"
 
 /**
  * @description - A builder function that returns all instances of a particular event (by name) within a height range
@@ -8,7 +8,7 @@ import {pipe, Ok, makeGetEvents} from "../interaction/interaction.js"
  * @param {string} eventName - The name of the event to get
  * @param {number} fromBlockHeight - The height of the block to start looking for events (inclusive)
  * @param {number} toBlockHeight - The height of the block to stop looking for events (inclusive)
- * @returns {object} - An interaction object
+ * @returns {Function} - An interaction object
  */
 export function getEventsAtBlockHeightRange(eventName, fromBlockHeight, toBlockHeight) {
   return pipe([

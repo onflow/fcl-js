@@ -1,5 +1,11 @@
-import {prepAccount, PAYER} from "../interaction/interaction.js"
+import { TransactionRole } from "@onflow/typedefs"
+import {pipe, prepAccount} from "../interaction/interaction"
 
-export async function payer(authz) {
-  return prepAccount(authz, {role: PAYER})
+export function payer(ax = []) {
+  if (!Array.isArray(ax)) ax = [ax]
+  return pipe(
+    ax.map(authz => {
+      return prepAccount(authz, {role: TransactionRole.PAYER})
+    })
+  )
 }

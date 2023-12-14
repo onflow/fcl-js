@@ -1,4 +1,4 @@
-import {isTransaction, isScript, get} from "../interaction/interaction.js"
+import {isTransaction, isScript, get} from "../interaction/interaction"
 import {invariant} from "@onflow/util-invariant"
 import {config} from "@onflow/config"
 import * as logger from "@onflow/util-logger"

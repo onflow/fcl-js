@@ -10,7 +10,7 @@ import {
   payer,
   authorization,
   VERSION,
-} from "./sdk.js"
+} from "./sdk"
 
 test("fcl.VERSION needs to match version in package.json", () => {
   expect(VERSION).toBe("TESTVERSION")

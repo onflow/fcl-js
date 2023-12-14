@@ -1,10 +1,10 @@
-import {pipe, makeGetAccount, Ok} from "../interaction/interaction.js"
+import {pipe, makeGetAccount, Ok} from "../interaction/interaction"
 import {sansPrefix} from "@onflow/util-address"
 
 /**
  * @description - A builder function that returns the interaction to get an account by address
  * @param {string} addr - The address of the account to getq
- * @returns {object} - An interaction object
+ * @returns {Function} - An interaction object
  */
 export function getAccount(addr) {
   return pipe([

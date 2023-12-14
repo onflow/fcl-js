@@ -1,7 +1,7 @@
 import * as root from "./sdk"
 import * as decode from "./decode/decode.js"
-import * as encode from "./encode/encode.js"
-import * as interaction from "./interaction/interaction.js"
+import * as encode from "./encode/encode"
+import * as interaction from "./interaction/interaction"
 import * as send from "./send/send.js"
 import * as template from "@onflow/util-template"
 
@@ -43,7 +43,7 @@ describe("consume", () => {
   `
 
   interfaceContract("@onflow/interaction", interaction)`
-    interaction
+    initInteraction
     pipe Ok isOk isBad why
     put get update
     makeGetAccount makeGetEvents

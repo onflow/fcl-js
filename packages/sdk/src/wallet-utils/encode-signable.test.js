@@ -5,7 +5,7 @@ import {
 import {
   encodeTransactionPayload as encodeInsideMessage,
   encodeTransactionEnvelope as encodeOutsideMessage,
-} from "../encode/encode.js"
+} from "../encode/encode"
 
 const MESSAGE = {
   cadence: "transaction()...",

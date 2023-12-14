@@ -1,4 +1,4 @@
-import {interaction, isGetEvents} from "../interaction/interaction.js"
+import {initInteraction, isGetEvents} from "../interaction/interaction"
 import {getEventsAtBlockIds} from "./build-get-events-at-block-ids.js"
 
 describe("Build Get Events At Block Ids", () => {
@@ -6,7 +6,7 @@ describe("Build Get Events At Block Ids", () => {
     const eventName = "MyEvent"
     const blockIds = ["abc", "123"]
 
-    let ix = await getEventsAtBlockIds(eventName, blockIds)(interaction())
+    let ix = await getEventsAtBlockIds(eventName, blockIds)(initInteraction())
 
     expect(isGetEvents(ix)).toBe(true)
     expect(ix.events.eventType).toBe(eventName)

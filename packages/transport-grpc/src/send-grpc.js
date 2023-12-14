@@ -44,6 +44,11 @@ export const send = async (ix, context = {}, opts = {}) => {
       return opts.sendPing ? opts.sendPing(ix, context, opts) : sendPing(ix, context, opts)
     case context.ix.isGetNetworkParameters(ix):
       return opts.sendGetNetworkParameters ? opts.sendGetNetworkParameters(ix, context, opts) : sendGetNetworkParameters(ix, context, opts)
+    case context.ix.isSubscribeEvents?.(ix):
+      if (opts.sendSubscribeEvents)
+        return opts.sendSubscribeEvents(ix, context, opts)
+      else
+        throw new Error(`SDK Send Error: subscribeEvents is not supported by this transport.`)
     default:
       return ix
   }
