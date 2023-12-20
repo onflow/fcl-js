@@ -70,7 +70,7 @@ export async function httpRequest({
       controller.abort()
     }, timeoutLimit)
 
-    return fetchTransport(`${hostname}${path}`, {
+    return fetchTransport(new URL(path, hostname).toString(), {
       method: method,
       body: bodyJSON,
       headers,
