@@ -12,6 +12,7 @@
   "bugs": {
     "url": "https://github.com/onflow/fcl-js/issues"
   },
+  "type": "module",
   "files": [
     "dist"
   ],
