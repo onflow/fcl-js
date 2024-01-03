@@ -17,7 +17,22 @@
     "dist"
   ],
   "source": "src/fcl-wc.js",
-  "module": "dist/fcl-wc.module.js",
+  "main": "dist/fcl-wc.js",
+  "module": "dist/fcl-wc.module.mjs",
+  "exports": {
+    ".": {
+      "import": "./dist/fcl-wc.module.mjs",
+      "require": "./dist/fcl-wc.js"
+    },
+    "./dist/fcl-wc.js": {
+      "import": "./dist/fcl-wc.module.mjs",
+      "require": "./dist/fcl-wc.js"
+    },
+    "./dist/fcl-wc.module.mjs": {
+      "import": "./dist/fcl-wc.module.mjs",
+      "require": "./dist/fcl-wc.js"
+    }
+  },
   "scripts": {
     "prepublishOnly": "npm test && npm run build",
     "test": "jest",
