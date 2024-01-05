@@ -6,7 +6,7 @@ describe("Find imports", () => {
         import ContractA from 0xABC123
         import ContractB from 0xDEF456
 
-        pub fun main(): Int {
+        access(all) fun main(): Int {
             return 12
         }
     `
@@ -16,7 +16,7 @@ describe("Find imports", () => {
         import ContractB from 0xDEF456
         import Crypto
 
-        pub fun main(): Int {
+        access(all) fun main(): Int {
             return 12
         }
     `
@@ -28,7 +28,7 @@ describe("Find imports", () => {
     import ContractC from 0xDEF456
     import Crypto
 
-    pub fun main(): Int {
+    access(all) fun main(): Int {
         return 12
     }
 `

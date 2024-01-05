@@ -80,7 +80,7 @@ const getVerifySignaturesScript = async (sig, opts) => {
   return `
       import FCLCrypto from ${fclCryptoContract}
 
-      pub fun main(
+      access(all) fun main(
           address: Address, 
           message: String, 
           keyIndices: [Int], 

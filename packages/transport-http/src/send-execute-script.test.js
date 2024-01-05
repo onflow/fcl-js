@@ -22,7 +22,7 @@ describe("Send Execute Script", () => {
 
     httpRequestMock.mockReturnValue(returnedJSONCDC)
 
-    const cadence = "pub fun main(a: Int): Int { return a }"
+    const cadence = "access(all) fun main(a: Int): Int { return a }"
 
     let response = await sendExecuteScript(
       await resolve(
@@ -69,7 +69,7 @@ describe("Send Execute Script", () => {
 
     httpRequestMock.mockReturnValue(returnedJSONCDC)
 
-    const cadence = "pub fun main(): Int { return 123 }"
+    const cadence = "access(all) fun main(): Int { return 123 }"
 
     let response = await sendExecuteScript(
       await resolve(await build([script(cadence), atBlockId(123)])),
@@ -114,7 +114,7 @@ describe("Send Execute Script", () => {
 
     httpRequestMock.mockReturnValue(returnedJSONCDC)
 
-    const cadence = "pub fun main(): Int { return 123 }"
+    const cadence = "access(all) fun main(): Int { return 123 }"
 
     let response = await sendExecuteScript(
       await resolve(await build([script(cadence), atBlockHeight(123)])),
