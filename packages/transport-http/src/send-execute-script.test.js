@@ -51,7 +51,8 @@ describe("Send Execute Script", () => {
       path: "/v1/scripts?block_height=sealed",
       method: "POST",
       body: {
-        script: "cHViIGZ1biBtYWluKGE6IEludCk6IEludCB7IHJldHVybiBhIH0=",
+        script:
+          "YWNjZXNzKGFsbCkgZnVuIG1haW4oYTogSW50KTogSW50IHsgcmV0dXJuIGEgfQ==",
         arguments: ["eyJ0eXBlIjoiSW50IiwidmFsdWUiOiIxMjMifQ=="],
       },
     })
@@ -96,7 +97,7 @@ describe("Send Execute Script", () => {
       path: "/v1/scripts?block_id=123",
       method: "POST",
       body: {
-        script: "cHViIGZ1biBtYWluKCk6IEludCB7IHJldHVybiAxMjMgfQ==",
+        script: "YWNjZXNzKGFsbCkgZnVuIG1haW4oKTogSW50IHsgcmV0dXJuIDEyMyB9",
         arguments: [],
       },
     })
@@ -141,7 +142,7 @@ describe("Send Execute Script", () => {
       path: "/v1/scripts?block_height=123",
       method: "POST",
       body: {
-        script: "cHViIGZ1biBtYWluKCk6IEludCB7IHJldHVybiAxMjMgfQ==",
+        script: "YWNjZXNzKGFsbCkgZnVuIG1haW4oKTogSW50IHsgcmV0dXJuIDEyMyB9",
         arguments: [],
       },
     })
