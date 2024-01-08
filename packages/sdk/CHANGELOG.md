@@ -1,5 +1,14 @@
 # @onflow/sdk
 
+## 1.4.0-alpha.4
+
+### Patch Changes
+
+- [#1832](https://github.com/onflow/fcl-js/pull/1832) [`037dc2f9`](https://github.com/onflow/fcl-js/commit/037dc2f9db9c22185e3c048c65e23e0efa70085f) Thanks [@jribbink](https://github.com/jribbink)! - Update access modifiers to support Cadence 1.0
+
+- Updated dependencies [[`72e8f796`](https://github.com/onflow/fcl-js/commit/72e8f796caf8f62a829cba3641e395c20466547a), [`037dc2f9`](https://github.com/onflow/fcl-js/commit/037dc2f9db9c22185e3c048c65e23e0efa70085f)]:
+  - @onflow/transport-http@1.10.0-alpha.3
+
 ## 1.4.0-alpha.3
 
 ### Patch Changes
