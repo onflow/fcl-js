@@ -78,7 +78,7 @@ export async function getInteractionTemplateAudits(
       const audits = await query({
         cadence: `
         import FlowInteractionTemplateAudit from ${FlowInteractionAuditContract}
-        pub fun main(templateId: String, auditors: [Address]): {Address:Bool} {
+        access(all) fun main(templateId: String, auditors: [Address]): {Address:Bool} {
           return FlowInteractionTemplateAudit.getHasTemplateBeenAuditedByAuditors(templateId: templateId, auditors: auditors)
         }
         `,

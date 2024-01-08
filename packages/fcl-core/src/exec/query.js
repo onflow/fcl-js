@@ -17,7 +17,7 @@ import {preQuery} from "./utils/pre.js"
  *  @example
  *    const cadence = `
  *      cadence: `
- *        pub fun main(a: Int, b: Int, c: Address): Int {
+ *        access(all) fun main(a: Int, b: Int, c: Address): Int {
  *          log(c)
  *          return a + b
  *        }
