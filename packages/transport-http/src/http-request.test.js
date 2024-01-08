@@ -62,7 +62,40 @@ describe("httpRequest", () => {
 
     await httpRequest(opts)
 
-    await expect(spy).toHaveBeenCalledWith(`${opts.hostname}${opts.path}`, {
+    await expect(spy).toHaveBeenCalledWith(`https://example.com/foo/bar`, {
+      method: opts.method,
+      body: JSON.stringify(opts.body),
+      headers: opts.headers,
+      signal: expect.anything(),
+    })
+  })
+
+  test("strips trailing slash from hostname", async () => {
+    const spy = jest.spyOn(fetchTransport, "default")
+    spy.mockImplementation(async () => ({
+      ok: true,
+      status: 200,
+      body: JSON.stringify({
+        foo: "bar",
+      }),
+      async json() {
+        return JSON.parse(this.body)
+      },
+    }))
+
+    const opts = {
+      hostname: "https://example.com/",
+      path: "/foo/bar",
+      body: "abc123",
+      method: "POST",
+      headers: {
+        Authorization: "Bearer 1RyXjsFJfU",
+      },
+    }
+
+    await httpRequest(opts)
+
+    await expect(spy).toHaveBeenCalledWith(`https://example.com/foo/bar`, {
       method: opts.method,
       body: JSON.stringify(opts.body),
       headers: opts.headers,
