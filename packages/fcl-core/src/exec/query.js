@@ -10,14 +10,14 @@ import {preQuery} from "./utils/pre.js"
  *  @param {object} opts - Query Options and configuration
  *  @param {string} opts.cadence - Cadence Script used to query Flow
  *  @param {import("../fcl").ArgsFn} [opts.args] - Arguments passed to cadence script
- *  @param {object} [opts.template] - Interaction Template for a script
+ *  @param {object | string} [opts.template] - Interaction Template for a script
  *  @param {number} [opts.limit]   - Compute Limit for Query
  *  @returns {Promise}
  *
  *  @example
  *    const cadence = `
  *      cadence: `
- *        pub fun main(a: Int, b: Int, c: Address): Int {
+ *        access(all) fun main(a: Int, b: Int, c: Address): Int {
  *          log(c)
  *          return a + b
  *        }

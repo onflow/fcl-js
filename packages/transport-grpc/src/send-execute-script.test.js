@@ -30,7 +30,9 @@ describe("Send Execute Script", () => {
     })
 
     let response = await sendExecuteScript(
-      await resolve(await build([script`pub fun main(): Int { return 123 }`])),
+      await resolve(
+        await build([script`access(all) fun main(): Int { return 123 }`])
+      ),
       {
         response: responseADT,
         Buffer,
@@ -71,7 +73,7 @@ describe("Send Execute Script", () => {
     const response = await sendExecuteScript(
       await resolve(
         await build([
-          script`pub fun main(): Int { return 123 }`,
+          script`access(all) fun main(): Int { return 123 }`,
           atBlockId("abc123"),
         ])
       ),
@@ -117,7 +119,7 @@ describe("Send Execute Script", () => {
     const response = await sendExecuteScript(
       await resolve(
         await build([
-          script`pub fun main(): Int { return 123 }`,
+          script`access(all) fun main(): Int { return 123 }`,
           atBlockHeight(123),
         ])
       ),

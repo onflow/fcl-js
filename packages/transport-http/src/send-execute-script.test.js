@@ -22,7 +22,7 @@ describe("Send Execute Script", () => {
 
     httpRequestMock.mockReturnValue(returnedJSONCDC)
 
-    const cadence = "pub fun main(a: Int): Int { return a }"
+    const cadence = "access(all) fun main(a: Int): Int { return a }"
 
     let response = await sendExecuteScript(
       await resolve(
@@ -51,7 +51,8 @@ describe("Send Execute Script", () => {
       path: "/v1/scripts?block_height=sealed",
       method: "POST",
       body: {
-        script: "cHViIGZ1biBtYWluKGE6IEludCk6IEludCB7IHJldHVybiBhIH0=",
+        script:
+          "YWNjZXNzKGFsbCkgZnVuIG1haW4oYTogSW50KTogSW50IHsgcmV0dXJuIGEgfQ==",
         arguments: ["eyJ0eXBlIjoiSW50IiwidmFsdWUiOiIxMjMifQ=="],
       },
     })
@@ -69,7 +70,7 @@ describe("Send Execute Script", () => {
 
     httpRequestMock.mockReturnValue(returnedJSONCDC)
 
-    const cadence = "pub fun main(): Int { return 123 }"
+    const cadence = "access(all) fun main(): Int { return 123 }"
 
     let response = await sendExecuteScript(
       await resolve(await build([script(cadence), atBlockId(123)])),
@@ -96,7 +97,7 @@ describe("Send Execute Script", () => {
       path: "/v1/scripts?block_id=123",
       method: "POST",
       body: {
-        script: "cHViIGZ1biBtYWluKCk6IEludCB7IHJldHVybiAxMjMgfQ==",
+        script: "YWNjZXNzKGFsbCkgZnVuIG1haW4oKTogSW50IHsgcmV0dXJuIDEyMyB9",
         arguments: [],
       },
     })
@@ -114,7 +115,7 @@ describe("Send Execute Script", () => {
 
     httpRequestMock.mockReturnValue(returnedJSONCDC)
 
-    const cadence = "pub fun main(): Int { return 123 }"
+    const cadence = "access(all) fun main(): Int { return 123 }"
 
     let response = await sendExecuteScript(
       await resolve(await build([script(cadence), atBlockHeight(123)])),
@@ -141,7 +142,7 @@ describe("Send Execute Script", () => {
       path: "/v1/scripts?block_height=123",
       method: "POST",
       body: {
-        script: "cHViIGZ1biBtYWluKCk6IEludCB7IHJldHVybiAxMjMgfQ==",
+        script: "YWNjZXNzKGFsbCkgZnVuIG1haW4oKTogSW50IHsgcmV0dXJuIDEyMyB9",
         arguments: [],
       },
     })

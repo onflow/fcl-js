@@ -1,4 +1,9 @@
-import {initInteraction, pipe, put, makeScript} from "../interaction/interaction"
+import {
+  initInteraction,
+  pipe,
+  put,
+  makeScript,
+} from "../interaction/interaction"
 import {resolveCadence} from "./resolve-cadence.js"
 import {config} from "@onflow/config"
 
@@ -37,7 +42,7 @@ describe("resolveCadence", () => {
         return `
         import MyContract from 0xMY_CONTRACT_ADDRESS
   
-        pub fun main(): Address {
+        access(all) fun main(): Address {
           return 0xMY_CONTRACT_ADDRESS
         }
       `
@@ -47,7 +52,7 @@ describe("resolveCadence", () => {
         return `
         import MyContract from 0x123abc
   
-        pub fun main(): Address {
+        access(all) fun main(): Address {
           return 0x123abc
         }
       `
@@ -70,18 +75,18 @@ describe("resolveCadence", () => {
         import FooBar from 0xFoo
         import FooBar from 0xFooBar
 
-        pub fun main(): Address {
+        access(all) fun main(): Address {
           log(0xFoo)
           return 0xFoo
         }
 
-        pub fun other(): Address {
+        access(all) fun other(): Address {
           log(0xFooBar)
           return 0xFooBar
         }
 
-        pub fun otherTwo(): Address {return 0xFoo}
-        pub fun otherThree(): Address {return 0xFooBar}
+        access(all) fun otherTwo(): Address {return 0xFoo}
+        access(all) fun otherThree(): Address {return 0xFooBar}
       `
       }
 
@@ -90,18 +95,18 @@ describe("resolveCadence", () => {
         import FooBar from 0x123
         import FooBar from 0x456
 
-        pub fun main(): Address {
+        access(all) fun main(): Address {
           log(0x123)
           return 0x123
         }
 
-        pub fun other(): Address {
+        access(all) fun other(): Address {
           log(0x456)
           return 0x456
         }
 
-        pub fun otherTwo(): Address {return 0x123}
-        pub fun otherThree(): Address {return 0x456}
+        access(all) fun otherTwo(): Address {return 0x123}
+        access(all) fun otherThree(): Address {return 0x456}
       `
       }
 
@@ -121,13 +126,13 @@ describe("resolveCadence", () => {
     test("single import statement", async () => {
       const CADENCE = `import "Foo"
 
-pub fun main(): Address {
+access(all) fun main(): Address {
   return "Foo"
 }`
 
       const expected = `import Foo from 0x1
 
-pub fun main(): Address {
+access(all) fun main(): Address {
   return "Foo"
 }`
 
@@ -147,14 +152,14 @@ pub fun main(): Address {
       const CADENCE = `import "Foo"
 import "Bar"
 
-pub fun main(): Address {
+access(all) fun main(): Address {
   return "Foo"
 }`
 
       const expected = `import Foo from 0x1
 import "Bar"
 
-pub fun main(): Address {
+access(all) fun main(): Address {
   return "Foo"
 }`
 
@@ -174,14 +179,14 @@ pub fun main(): Address {
       const CADENCE = `import "Foo"
 import "Bar"
 
-pub fun main(): Address {
+access(all) fun main(): Address {
   return "Foo"
 }`
 
       const expected = `import Foo from 0x1
 import Bar from 0x2
 
-pub fun main(): Address {
+access(all) fun main(): Address {
   return "Foo"
 }`
 
@@ -201,13 +206,13 @@ pub fun main(): Address {
     test("should prefix addresses with `0x` if not already present", async () => {
       const CADENCE = `import "Foo"
 
-pub fun main(): Address {
+access(all) fun main(): Address {
   return "Foo"
 }`
 
       const expected = `import Foo from 0x1
 
-pub fun main(): Address {
+access(all) fun main(): Address {
   return "Foo"
 }`
 

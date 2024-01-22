@@ -1,5 +1,13 @@
 # @onflow/transport-http
 
+## 1.10.0-alpha.3
+
+### Patch Changes
+
+- [#1830](https://github.com/onflow/fcl-js/pull/1830) [`72e8f796`](https://github.com/onflow/fcl-js/commit/72e8f796caf8f62a829cba3641e395c20466547a) Thanks [@jribbink](https://github.com/jribbink)! - Use URL to join httpRequest hostname to path instead of string manipulation (allows for trailing slashes/less error prone)
+
+- [#1832](https://github.com/onflow/fcl-js/pull/1832) [`037dc2f9`](https://github.com/onflow/fcl-js/commit/037dc2f9db9c22185e3c048c65e23e0efa70085f) Thanks [@jribbink](https://github.com/jribbink)! - Update access modifiers to support Cadence 1.0
+
 ## 1.10.0-alpha.2
 
 ### Patch Changes

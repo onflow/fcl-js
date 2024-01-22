@@ -1,5 +1,11 @@
 # @onflow/transport-grpc
 
+## 1.3.2-alpha.4
+
+### Patch Changes
+
+- [#1832](https://github.com/onflow/fcl-js/pull/1832) [`037dc2f9`](https://github.com/onflow/fcl-js/commit/037dc2f9db9c22185e3c048c65e23e0efa70085f) Thanks [@jribbink](https://github.com/jribbink)! - Update access modifiers to support Cadence 1.0
+
 ## 1.3.2-alpha.3
 
 ### Patch Changes
