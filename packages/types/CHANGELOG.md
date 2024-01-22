@@ -1,5 +1,11 @@
 # @onflow/types
 
+## 1.3.0-alpha.3
+
+### Patch Changes
+
+- [#1837](https://github.com/onflow/fcl-js/pull/1837) [`45d3c30c`](https://github.com/onflow/fcl-js/commit/45d3c30c8965512dde41f10d1c64c813811c3c0f) Thanks [@bthaile](https://github.com/bthaile)! - Update fcl query template type to allow for object and string
+
 ## 1.3.0-alpha.2
 
 ### Patch Changes
