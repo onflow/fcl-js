@@ -58,11 +58,13 @@ export async function getTemplateArgumentMessage({
 
   switch (template.f_version) {
     case "1.1.0":
-      const arg = template?.data?.arguments?.find(
+      const param = template?.data?.parameters?.find(
         a => a.label === argumentLabel
       )
-      if (!arg) return undefined
-      const lzn = arg?.i18n?.find(a => a.tag === localization)
+      if (!param) return undefined
+      const message = param?.messages?.find(a => a.key === messageKey)
+      if (!message) return undefined
+      const lzn = message?.i18n?.find(a => a.tag === localization)
       if (!lzn) return undefined
       return lzn.translation
     case "1.0.0":
