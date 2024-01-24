@@ -15,10 +15,12 @@ import {TypeDescriptor, TypeDescriptorInput} from "@onflow/types"
 type AcctFn = (acct: InteractionAccount) => InteractionAccount
 type AccountFn = AcctFn & Partial<InteractionAccount>
 
-export type CadenceArgument<T extends TypeDescriptor<any, any>> = {
+type CadenceArgument<T extends TypeDescriptor<any, any>> = {
   value: TypeDescriptorInput<T>
   xform: T
 }
+
+export {CadenceArgument}
 
 const ACCT = `{
   "kind":"${InteractionResolverKind.ACCOUNT}",

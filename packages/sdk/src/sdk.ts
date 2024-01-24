@@ -9,6 +9,7 @@ export {
   encodeTransactionEnvelope,
   encodeTxIdFromVoucher,
 } from "./encode/encode"
+
 // Utils
 export {
   interaction, // deprecated
@@ -33,8 +34,10 @@ export {
   isGetBlockHeader,
   isGetCollection,
   isGetNetworkParameters,
-  CadenceArgument,
 } from "./interaction/interaction"
+import type {CadenceArgument} from "./interaction/interaction"
+export {CadenceArgument} // Workaround for babel https://github.com/babel/babel/issues/8361
+
 export {createSignableVoucher, voucherToTxId} from "./resolve/voucher"
 export {encodeMessageFromSignable} from "./wallet-utils/encode-signable.js"
 export {template as cadence} from "@onflow/util-template"
