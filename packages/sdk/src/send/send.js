@@ -9,7 +9,7 @@ import {resolve as defaultResolve} from "../resolve/resolve.js"
 
 /**
  * @description - Sends arbitrary scripts, transactions, and requests to Flow
- * @param {Array.<Function | Promise<Function>>} args - An array of functions that take interaction and return interaction
+ * @param {Array.<Function>} args - An array of functions that take interaction and return interaction
  * @param {object} opts - Optional parameters
  * @returns {Promise<*>} - A promise that resolves to a response
  */

@@ -124,7 +124,7 @@ export const isObj = (d: any): d is Record<string, any> =>
 export const isNull = (d: any): d is null => d == null
 export const isFn = (d: any): d is Function => typeof d === "function"
 
-export const isInteraction = (ix: Interaction) => {
+export const isInteraction = (ix: unknown) => {
   if (!isObj(ix) || isNull(ix) || isNumber(ix)) return false
   for (let key of KEYS) if (!ix.hasOwnProperty(key)) return false
   return true
@@ -314,10 +314,15 @@ const hardMode = (ix: Interaction) => {
   return ix
 }
 
+type MaybePromise<T> = T | Promise<T>
+
 const recPipe = async (
-  ix: Interaction,
-  fns: (Function | Interaction)[] = []
-): Promise<any> => {
+  ix: MaybePromise<Interaction>,
+  fns: (
+    | ((x: Interaction) => MaybePromise<Interaction>)
+    | MaybePromise<Interaction>
+  )[] = []
+): Promise<Interaction> => {
   try {
     ix = hardMode(await ix)
     if (isBad(ix)) throw new Error(`Interaction Error: ${ix.reason}`)
@@ -333,11 +338,34 @@ const recPipe = async (
   }
 }
 
-export const pipe = (...args: any[]) => {
+/**
+ * @description Async pipe function to compose interactions
+ * @returns An interaction object
+ */
+function pipe(
+  fns: ((x: Interaction) => Interaction)[]
+): (x: Interaction) => Promise<Interaction>
+/**
+ * @description Async pipe function to compose interactions
+ * @returns An interaction object
+ */
+function pipe(
+  ix: MaybePromise<Interaction>,
+  fns: ((x: Interaction) => Interaction)[]
+): Promise<Interaction>
+function pipe(
+  ...args:
+    | [((x: Interaction) => Interaction)[]]
+    | [MaybePromise<Interaction>, ((x: Interaction) => Interaction)[]]
+): Promise<Interaction> | ((x: Interaction) => Promise<Interaction>) {
   const [arg1, arg2] = args
-  if (isArray(arg1) && arg2 == null) return (d: any) => pipe(d, arg1)
-  return recPipe(arg1, arg2)
+  if (isArray(arg1)) return (d: Interaction) => pipe(d, arg1)
+
+  const ix = arg1 as MaybePromise<Interaction>
+  const fns = arg2 as ((x: Interaction) => Interaction)[]
+  return recPipe(ix, fns)
 }
+export {pipe}
 
 const identity = <T>(v: T, ..._: any[]) => v
 
