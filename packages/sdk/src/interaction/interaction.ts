@@ -2,10 +2,23 @@ import {invariant} from "@onflow/util-invariant"
 import {v4 as uuidv4} from "uuid"
 import {log, LEVELS} from "@onflow/util-logger"
 
-import { TransactionRole, Interaction, InteractionAccount, InteractionResolverKind, InteractionStatus, InteractionTag } from "@onflow/typedefs"; 
+import {
+  TransactionRole,
+  Interaction,
+  InteractionAccount,
+  InteractionResolverKind,
+  InteractionStatus,
+  InteractionTag,
+} from "@onflow/typedefs"
+import {TypeDescriptor, TypeDescriptorInput} from "@onflow/types"
 
-type AcctFn = (acct: InteractionAccount) => InteractionAccount;
-type AccountFn = AcctFn & Partial<InteractionAccount>;
+type AcctFn = (acct: InteractionAccount) => InteractionAccount
+type AccountFn = AcctFn & Partial<InteractionAccount>
+
+export type CadenceArgument<T extends TypeDescriptor<any, any>> = {
+  value: TypeDescriptorInput<T>
+  xform: T
+}
 
 const ACCT = `{
   "kind":"${InteractionResolverKind.ACCOUNT}",
@@ -87,7 +100,6 @@ const IX = `{
 
 const KEYS = new Set(Object.keys(JSON.parse(IX) as Interaction))
 
-
 export const initInteraction = (): Interaction => JSON.parse(IX)
 /**
  * @deprecated
@@ -105,7 +117,8 @@ export const interaction = () => {
 
 export const isNumber = (d: any): d is number => typeof d === "number"
 export const isArray = (d: any): d is any[] => Array.isArray(d)
-export const isObj = (d: any): d is Record<string, any> => d !== null && typeof d === "object"
+export const isObj = (d: any): d is Record<string, any> =>
+  d !== null && typeof d === "object"
 export const isNull = (d: any): d is null => d == null
 export const isFn = (d: any): d is Function => typeof d === "function"
 
@@ -131,10 +144,15 @@ const makeIx = (wat: InteractionTag) => (ix: Interaction) => {
   return Ok(ix)
 }
 
-const prepAccountKeyId = (acct: Partial<InteractionAccount> | AccountFn): Partial<InteractionAccount> | AccountFn => {
+const prepAccountKeyId = (
+  acct: Partial<InteractionAccount> | AccountFn
+): Partial<InteractionAccount> | AccountFn => {
   if (acct.keyId == null) return acct
 
-  invariant(!isNaN(parseInt(acct.keyId.toString())), "account.keyId must be an integer")
+  invariant(
+    !isNaN(parseInt(acct.keyId.toString())),
+    "account.keyId must be an integer"
+  )
 
   return {
     ...acct,
@@ -148,55 +166,57 @@ interface IPrepAccountOpts {
 
 export const initAccount = (): InteractionAccount => JSON.parse(ACCT)
 
-export const prepAccount = (acct: InteractionAccount | AccountFn, opts: IPrepAccountOpts = {}) => (ix: Interaction) => {
-  invariant(
-    typeof acct === "function" || typeof acct === "object",
-    "prepAccount must be passed an authorization function or an account object"
-  )
-  invariant(opts.role != null, "Account must have a role")
+export const prepAccount =
+  (acct: InteractionAccount | AccountFn, opts: IPrepAccountOpts = {}) =>
+  (ix: Interaction) => {
+    invariant(
+      typeof acct === "function" || typeof acct === "object",
+      "prepAccount must be passed an authorization function or an account object"
+    )
+    invariant(opts.role != null, "Account must have a role")
 
-  const ACCOUNT = initAccount()
-  const role = opts.role
-  const tempId = uuidv4()
-  let account: Partial<InteractionAccount> = {...acct}
+    const ACCOUNT = initAccount()
+    const role = opts.role
+    const tempId = uuidv4()
+    let account: Partial<InteractionAccount> = {...acct}
 
-  if (acct.authorization && isFn(acct.authorization))
-    account = {resolve: acct.authorization}
-  if (!acct.authorization && isFn(acct)) account = {resolve: acct}
+    if (acct.authorization && isFn(acct.authorization))
+      account = {resolve: acct.authorization}
+    if (!acct.authorization && isFn(acct)) account = {resolve: acct}
 
-  const resolve = account.resolve
-  if (resolve) {
-    account.resolve = (acct: InteractionAccount, ...rest: any[]) =>
-      [resolve, prepAccountKeyId].reduce(
-        async (d, fn) => fn(await d, ...rest),
-        acct
-      )
+    const resolve = account.resolve
+    if (resolve) {
+      account.resolve = (acct: InteractionAccount, ...rest: any[]) =>
+        [resolve, prepAccountKeyId].reduce(
+          async (d, fn) => fn(await d, ...rest),
+          acct
+        )
+    }
+    account = prepAccountKeyId(account)
+
+    ix.accounts[tempId] = {
+      ...ACCOUNT,
+      tempId,
+      ...account,
+      role: {
+        ...ACCOUNT.role,
+        ...(typeof acct.role === "object" ? acct.role : {}),
+        ...(role ? {[role]: true} : {}),
+      },
+    }
+
+    if (role === TransactionRole.AUTHORIZER) {
+      ix.authorizations.push(tempId)
+    } else if (role === TransactionRole.PAYER) {
+      ix.payer.push(tempId)
+    } else if (role) {
+      ix[role] = tempId
+    }
+
+    return ix
   }
-  account = prepAccountKeyId(account)
 
-  ix.accounts[tempId] = {
-    ...ACCOUNT,
-    tempId,
-    ...account,
-    role: {
-      ...ACCOUNT.role,
-      ...(typeof acct.role === "object" ? acct.role : {}),
-      ...(role ? {[role]: true} : {}),
-    },
-  }
-
-  if (role === TransactionRole.AUTHORIZER) {
-    ix.authorizations.push(tempId)
-  } else if (role === TransactionRole.PAYER) {
-    ix.payer.push(tempId)
-  } else if (role) {
-    ix[role] = tempId
-  }
-
-  return ix
-}
-
-export const makeArgument = (arg: Record<string, any>) => (ix: Interaction)  => {
+export const makeArgument = (arg: Record<string, any>) => (ix: Interaction) => {
   let tempId = uuidv4()
   ix.message.arguments.push(tempId)
 
@@ -215,40 +235,74 @@ export const makeArgument = (arg: Record<string, any>) => (ix: Interaction)  => 
 
 export const makeUnknown /*                 */ = makeIx(InteractionTag.UNKNOWN)
 export const makeScript /*                  */ = makeIx(InteractionTag.SCRIPT)
-export const makeTransaction /*             */ = makeIx(InteractionTag.TRANSACTION)
-export const makeGetTransactionStatus /*    */ = makeIx(InteractionTag.GET_TRANSACTION_STATUS)
-export const makeGetTransaction /*          */ = makeIx(InteractionTag.GET_TRANSACTION)
-export const makeGetAccount /*              */ = makeIx(InteractionTag.GET_ACCOUNT)
-export const makeGetEvents /*               */ = makeIx(InteractionTag.GET_EVENTS)
+export const makeTransaction /*             */ = makeIx(
+  InteractionTag.TRANSACTION
+)
+export const makeGetTransactionStatus /*    */ = makeIx(
+  InteractionTag.GET_TRANSACTION_STATUS
+)
+export const makeGetTransaction /*          */ = makeIx(
+  InteractionTag.GET_TRANSACTION
+)
+export const makeGetAccount /*              */ = makeIx(
+  InteractionTag.GET_ACCOUNT
+)
+export const makeGetEvents /*               */ = makeIx(
+  InteractionTag.GET_EVENTS
+)
 export const makePing /*                    */ = makeIx(InteractionTag.PING)
-export const makeGetBlock /*                */ = makeIx(InteractionTag.GET_BLOCK)
-export const makeGetBlockHeader /*          */ = makeIx(InteractionTag.GET_BLOCK_HEADER)
-export const makeGetCollection /*           */ = makeIx(InteractionTag.GET_COLLECTION)
-export const makeGetNetworkParameters /*    */ = makeIx(InteractionTag.GET_NETWORK_PARAMETERS)
-export const makeSubscribeEvents /*         */ = makeIx(InteractionTag.SUBSCRIBE_EVENTS)
+export const makeGetBlock /*                */ = makeIx(
+  InteractionTag.GET_BLOCK
+)
+export const makeGetBlockHeader /*          */ = makeIx(
+  InteractionTag.GET_BLOCK_HEADER
+)
+export const makeGetCollection /*           */ = makeIx(
+  InteractionTag.GET_COLLECTION
+)
+export const makeGetNetworkParameters /*    */ = makeIx(
+  InteractionTag.GET_NETWORK_PARAMETERS
+)
+export const makeSubscribeEvents /*         */ = makeIx(
+  InteractionTag.SUBSCRIBE_EVENTS
+)
 
 const is = (wat: InteractionTag) => (ix: Interaction) => ix.tag === wat
 
 export const isUnknown /*                 */ = is(InteractionTag.UNKNOWN)
 export const isScript /*                  */ = is(InteractionTag.SCRIPT)
 export const isTransaction /*             */ = is(InteractionTag.TRANSACTION)
-export const isGetTransactionStatus /*    */ = is(InteractionTag.GET_TRANSACTION_STATUS)
-export const isGetTransaction /*          */ = is(InteractionTag.GET_TRANSACTION)
+export const isGetTransactionStatus /*    */ = is(
+  InteractionTag.GET_TRANSACTION_STATUS
+)
+export const isGetTransaction /*          */ = is(
+  InteractionTag.GET_TRANSACTION
+)
 export const isGetAccount /*              */ = is(InteractionTag.GET_ACCOUNT)
 export const isGetEvents /*               */ = is(InteractionTag.GET_EVENTS)
 export const isPing /*                    */ = is(InteractionTag.PING)
 export const isGetBlock /*                */ = is(InteractionTag.GET_BLOCK)
-export const isGetBlockHeader /*          */ = is(InteractionTag.GET_BLOCK_HEADER)
+export const isGetBlockHeader /*          */ = is(
+  InteractionTag.GET_BLOCK_HEADER
+)
 export const isGetCollection /*           */ = is(InteractionTag.GET_COLLECTION)
-export const isGetNetworkParameters /*    */ = is(InteractionTag.GET_NETWORK_PARAMETERS)
-export const isSubscribeEvents /*         */ = is(InteractionTag.SUBSCRIBE_EVENTS)
+export const isGetNetworkParameters /*    */ = is(
+  InteractionTag.GET_NETWORK_PARAMETERS
+)
+export const isSubscribeEvents /*         */ = is(
+  InteractionTag.SUBSCRIBE_EVENTS
+)
 
-export const isOk /*  */ = (ix: Interaction) => ix.status === InteractionStatus.OK
-export const isBad /* */ = (ix: Interaction) => ix.status === InteractionStatus.BAD
+export const isOk /*  */ = (ix: Interaction) =>
+  ix.status === InteractionStatus.OK
+export const isBad /* */ = (ix: Interaction) =>
+  ix.status === InteractionStatus.BAD
 export const why /*   */ = (ix: Interaction) => ix.reason
 
-export const isAccount /*  */ = (account: Record<string, any>) => account.kind === InteractionResolverKind.ACCOUNT
-export const isArgument /* */ = (argument: Record<string, any>) => argument.kind === InteractionResolverKind.ARGUMENT
+export const isAccount /*  */ = (account: Record<string, any>) =>
+  account.kind === InteractionResolverKind.ACCOUNT
+export const isArgument /* */ = (argument: Record<string, any>) =>
+  argument.kind === InteractionResolverKind.ARGUMENT
 
 const hardMode = (ix: Interaction) => {
   for (let key of Object.keys(ix)) {
@@ -258,7 +312,10 @@ const hardMode = (ix: Interaction) => {
   return ix
 }
 
-const recPipe = async (ix: Interaction, fns: (Function | Interaction)[] = []): Promise<any> => {
+const recPipe = async (
+  ix: Interaction,
+  fns: (Function | Interaction)[] = []
+): Promise<any> => {
   try {
     ix = hardMode(await ix)
     if (isBad(ix)) throw new Error(`Interaction Error: ${ix.reason}`)
@@ -291,10 +348,12 @@ export const put = (key: string, value: any) => (ix: Interaction) => {
   return Ok(ix)
 }
 
-export const update = (key: string, fn = identity) => (ix: Interaction) => {
-  ix.assigns[key] = fn(ix.assigns[key], ix)
-  return Ok(ix)
-}
+export const update =
+  (key: string, fn = identity) =>
+  (ix: Interaction) => {
+    ix.assigns[key] = fn(ix.assigns[key], ix)
+    return Ok(ix)
+  }
 
 export const destroy = (key: string) => (ix: Interaction) => {
   delete ix.assigns[key]

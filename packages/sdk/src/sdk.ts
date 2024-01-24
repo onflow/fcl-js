@@ -33,6 +33,7 @@ export {
   isGetBlockHeader,
   isGetCollection,
   isGetNetworkParameters,
+  CadenceArgument,
 } from "./interaction/interaction"
 export {createSignableVoucher, voucherToTxId} from "./resolve/voucher"
 export {encodeMessageFromSignable} from "./wallet-utils/encode-signable.js"
