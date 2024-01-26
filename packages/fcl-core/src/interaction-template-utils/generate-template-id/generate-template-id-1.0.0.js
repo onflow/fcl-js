@@ -1,7 +1,6 @@
 import {invariant} from "@onflow/sdk"
 import {encode as rlpEncode} from "@onflow/rlp"
-import {genHash} from "./utils/hash.js"
-import {normalizeInteractionTemplate} from "../normalizers/interaction-template/interaction-template.js"
+import {genHash} from "../utils/hash.js"
 
 /**
  * @description Generates Interaction Template ID for a given Interaction Template
@@ -24,20 +23,24 @@ export async function generateTemplateId({template}) {
     "generateTemplateId({ template }) -- template object must be an InteractionTemplate"
   )
   invariant(
-    template.f_version === "1.1.0",
-    "generateTemplateId({ template }) -- template object must be an version 1.1.0"
+    template.f_version === "1.0.0",
+    "generateTemplateId({ template }) -- template object must be an version 1.0.0"
   )
 
   const templateData = template.data
 
   const messages = await Promise.all(
-    templateData.messages.map(async templateMessage => [
-      await genHash(templateMessage.key),
+    Object.keys(templateData.messages).map(async messageKey => [
+      await genHash(messageKey),
       await Promise.all(
-        templateMessage.i18n.map(async templateMessagei18n => [
-          await genHash(templateMessagei18n.tag),
-          await genHash(templateMessagei18n.translation),
-        ])
+        Object.keys(templateData.messages?.[messageKey]?.i18n).map(
+          async i18nkeylanguage => [
+            await genHash(i18nkeylanguage),
+            await genHash(
+              templateData.messages?.[messageKey]?.i18n?.[i18nkeylanguage]
+            ),
+          ]
+        )
       ),
     ])
   )
@@ -99,19 +102,33 @@ export async function generateTemplateId({template}) {
   )
 
   const _arguments = await Promise.all(
-    templateData?.["arguments"].map(async arg => [
-      await genHash(arg.label),
+    Object.keys(templateData?.["arguments"]).map(async argumentLabel => [
+      await genHash(argumentLabel),
       [
-        await genHash(String(arg.index)),
-        await genHash(arg.type),
-        await genHash(arg.balance || ""),
+        await genHash(
+          String(templateData?.["arguments"]?.[argumentLabel].index)
+        ),
+        await genHash(templateData?.["arguments"]?.[argumentLabel].type),
+        await genHash(
+          templateData?.["arguments"]?.[argumentLabel].balance || ""
+        ),
         await Promise.all(
-          arg.messages.map(async argumentMessage => [
-            await genHash(argumentMessage.key),
+          Object.keys(
+            templateData?.["arguments"]?.[argumentLabel].messages
+          ).map(async argumentMessageKey => [
+            await genHash(argumentMessageKey),
             await Promise.all(
-              argumentMessage.i18n.map(async argumentMessagei18n => [
-                await genHash(argumentMessagei18n.tag),
-                await genHash(argumentMessagei18n.translation),
+              Object.keys(
+                templateData?.["arguments"]?.[argumentLabel].messages?.[
+                  argumentMessageKey
+                ].i18n
+              ).map(async i18nkeylanguage => [
+                await genHash(i18nkeylanguage),
+                await genHash(
+                  templateData?.["arguments"]?.[argumentLabel].messages?.[
+                    argumentMessageKey
+                  ].i18n?.[i18nkeylanguage]
+                ),
               ])
             ),
           ])
@@ -130,8 +147,6 @@ export async function generateTemplateId({template}) {
     dependencies,
     _arguments,
   ]).toString("hex")
-
-  return genHash(encodedHex)
 
   return genHash(encodedHex)
 }

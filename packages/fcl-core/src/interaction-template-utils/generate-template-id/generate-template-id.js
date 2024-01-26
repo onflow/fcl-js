@@ -1,6 +1,6 @@
 import {invariant} from "@onflow/sdk"
 import {generateTemplateId as generateTemplateId100} from "./generate-template-id-1.0.0.js"
-import {generateTemplateId as generateTemplateId110} from "./generate-template-id-1.0.0.js"
+import {generateTemplateId as generateTemplateId110} from "./generate-template-id-1.1.0.js"
 
 /**
  * @description Generates Interaction Template ID for a given Interaction Template
