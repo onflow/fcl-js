@@ -1,4 +1,4 @@
-import {invariant} from "@onflow/sdk"
+import {invariant} from "@onflow/util-invariant"
 import {generateTemplateId as generateTemplateId100} from "./generate-template-id-1.0.0.js"
 import {generateTemplateId as generateTemplateId110} from "./generate-template-id-1.1.0.js"
 
@@ -11,7 +11,7 @@ import {generateTemplateId as generateTemplateId110} from "./generate-template-i
  */
 export async function generateTemplateId({template}) {
   invariant(
-    template != undefined,
+    template,
     "generateTemplateId({ template }) -- template must be defined"
   )
   invariant(
@@ -19,7 +19,7 @@ export async function generateTemplateId({template}) {
     "generateTemplateId({ template }) -- template must be an object"
   )
   invariant(
-    typeof template.f_type === "InteractionTemplate",
+    template.f_type === "InteractionTemplate",
     "generateTemplateId({ template }) -- template object must be an InteractionTemplate"
   )
 

@@ -1,6 +1,6 @@
-import {invariant} from "@onflow/sdk"
-import {deriveCadenceByNetwork as deriveCadenceByNetwork100} from "./derive-cadence-by-network-1.0.0.js"
-import {deriveCadenceByNetwork as deriveCadenceByNetwork110} from "./derive-cadence-by-network-1.1.0.js"
+import {invariant} from "@onflow/util-invariant"
+import {deriveCadenceByNetwork100} from "./derive-cadence-by-network-1.0.0.js"
+import {deriveCadenceByNetwork110} from "./derive-cadence-by-network-1.1.0.js"
 
 /**
  * @description Fills import addresses in Cadence for network
@@ -22,23 +22,21 @@ export async function deriveCadenceByNetwork({network, template}) {
 
   invariant(
     template != undefined,
-    "generateDependencyPin({ template }) -- template must be defined"
+    "deriveCadenceByNetwork({ template }) -- template must be defined"
   )
   invariant(
     typeof template === "object",
-    "generateDependencyPin({ template }) -- template must be an object"
+    "deriveCadenceByNetwork({ template }) -- template must be an object"
   )
   invariant(
     template.f_type === "InteractionTemplate",
-    "generateDependencyPin({ template }) -- template must be an InteractionTemplate"
+    "deriveCadenceByNetwork({ template }) -- template must be an InteractionTemplate"
   )
 
   switch (template.f_version) {
     case "1.1.0":
-      console.log("going 1.1.0")
       return await deriveCadenceByNetwork110({network, template})
     case "1.0.0":
-      console.log("going 1.0.0")
       return await deriveCadenceByNetwork100({network, template})
     default:
       throw new Error(

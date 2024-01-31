@@ -1,51 +1,46 @@
-import {invariant} from "@onflow/sdk"
+import {invariant} from "@onflow/util-invariant"
 import {encode as rlpEncode} from "@onflow/rlp"
 import {genHash} from "../utils/hash.js"
+import {generateDependencyPin110} from "../generate-dependency-pin/generate-dependency-pin-1.1.0.js"
 
-
-
-async function generateSelfPinHash({network, contractName, address}) {
-  const pins = []
-
-
-
-  return genHash(pins)
-}
-
-async function generateNetworkPinHash({network, pin_contract_name, address, imports}) {
-  const hashes = []
-
-  for (const imp in imports) {
-    const {contract, pin, pin_self, pin_block_height, pin_contract_name, pin_contract_address, imports} = imp
-    const hash = await generateSelfPinHash({network, contract, pin, pin_self, pin_block_height, pin_contract_name, pin_contract_address, imports})
-    hashes.push(hash)
+async function generateContractNetworks(contractName, networks) {
+  const values = []
+  for (const net of networks) {
+    const networkHashes = [await genHash(net.network)]
+    const {address, dependency_pin_block_height} = net
+    if (net.dependency_pin) {
+      const hash = await generateDependencyPin110({
+        address,
+        contractName,
+        blockHeight: dependency_pin_block_height,
+      })
+      networkHashes.push(await genHash(hash))
+    }
+    values.push(networkHashes)
   }
-  return hashes;
-}
-
-async function generateContractNetworks(networks) {
-  const hashes = []
-  for (const net in networks) {
-    const {network, address, pin_contract_name, imports} = net
-    const hash = await generateNetworkPinHash({network, pin_contract_name, address, imports})
-    hashes.push(hash)
-  }
-
-  return hashes
+  return values
 }
 
 async function generateContractDependencies(dependencies) {
-  const hashes = []
-  for (var dependency in dependencies) {
+  const values = []
+  for (let i = 0; i < dependencies.length; i++) {
+    const dependency = dependencies[i]
     const contracts = []
-    const contractNameHash = await genHash(dependency?.contract);
-    contracts.push(contractNameHash)
-    contracts.push(...await generateContractNetworks(dependency?.networks))
-    hashes.push(...contracts)
+    for (let j = 0; j < dependency?.contracts.length; j++) {
+      const c = dependency?.contracts[j]
+      const contractName = c?.contract
+      contracts.push(await genHash(contractName))
+      const contractHashes = await generateContractNetworks(
+        contractName,
+        c?.networks
+      )
+      contracts.push(contractHashes)
+    }
+    values.push(contracts)
   }
-
-  return hashes
+  return values
 }
+
 /**
  * @description Generates Interaction Template ID for a given Interaction Template
  *
@@ -55,7 +50,7 @@ async function generateContractDependencies(dependencies) {
  */
 export async function generateTemplateId({template}) {
   invariant(
-    template != undefined,
+    template,
     "generateTemplateId({ template }) -- template must be defined"
   )
   invariant(
@@ -85,102 +80,42 @@ export async function generateTemplateId({template}) {
     ])
   )
 
-    const dependencies = await generateContractDependencies(templateData?.dependencies)
-/*
-    const dependencies = await Promise.all(
-        await Promise.all(
-
-            templateData?.dependencies?.map(async dependencyContract => [
-            await genHash(dependencyContract),
-            await Promise.all(
-              Object.keys(
-                templateData?.dependencies?.[dependencyAddressPlaceholder]?.[
-                  dependencyContract
-                ]
-              ).map(async dependencyContractNetwork => [
-                await genHash(dependencyContractNetwork),
-                [
-                  await genHash(
-                    templateData?.dependencies?.[
-                      dependencyAddressPlaceholder
-                    ]?.[dependencyContract]?.[dependencyContractNetwork].address
-                  ),
-                  await genHash(
-                    templateData?.dependencies?.[
-                      dependencyAddressPlaceholder
-                    ]?.[dependencyContract]?.[dependencyContractNetwork]
-                      .contract
-                  ),
-                  await genHash(
-                    templateData?.dependencies?.[
-                      dependencyAddressPlaceholder
-                    ]?.[dependencyContract]?.[dependencyContractNetwork]
-                      .fq_address
-                  ),
-                  await genHash(
-                    templateData?.dependencies?.[
-                      dependencyAddressPlaceholder
-                    ]?.[dependencyContract]?.[dependencyContractNetwork].pin
-                  ),
-                  await genHash(
-                    String(
-                      templateData?.dependencies?.[
-                        dependencyAddressPlaceholder
-                      ]?.[dependencyContract]?.[dependencyContractNetwork]
-                        .pin_block_height
-                    )
-                  ),
-                ],
-              ])
-            ),
-          ])
-    )
-  )
-*/
-  const _parameters = await Promise.all(
-    templateData?.["parameters"].map(async arg => [
-      await genHash(arg.label),
-      [
-        await genHash(String(arg.index)),
-        await genHash(arg.type),
-        await Promise.all(
-          arg.messages.map(async argumentMessage => [
-            await genHash(argumentMessage.key),
-            await Promise.all(
-              argumentMessage.i18n.map(async argumentMessagei18n => [
-                await genHash(argumentMessagei18n.tag),
-                await genHash(argumentMessagei18n.translation),
-              ])
-            ),
-          ])
-        ),
-      ],
-    ])
+  const params = await Promise.all(
+    templateData?.["parameters"]
+      .sort((a, b) => a.index - b.index)
+      .map(async arg => [
+        await genHash(arg.label),
+        [
+          await genHash(String(arg.index)),
+          await genHash(arg.type),
+          await Promise.all(
+            arg.messages.map(async argumentMessage => [
+              await genHash(argumentMessage.key),
+              await Promise.all(
+                argumentMessage.i18n.map(async argumentMessagei18n => [
+                  await genHash(argumentMessagei18n.tag),
+                  await genHash(argumentMessagei18n.translation),
+                ])
+              ),
+            ])
+          ),
+        ],
+      ])
   )
 
-  const x = rlpEncode([
-    messages
-  ]).toString("hex")
-
-  console.log("hashed:", await genHash(x))
-
-
-  const p = rlpEncode([
-    _parameters
-  ]).toString("hex")
-
-  console.log("params:", await genHash(p))
-
+  const dependencies = [
+    await generateContractDependencies(templateData?.dependencies),
+  ]
 
   const encodedHex = rlpEncode([
-    await genHash("InteractionTemplate"),
-    await genHash("1.1.0"),
+    await genHash(template?.f_type),
+    await genHash(template?.f_version),
     await genHash(templateData?.type),
     await genHash(templateData?.interface),
     messages,
     await genHash(templateData?.cadence?.body),
-//    dependencies,
-    _parameters,
+    [dependencies],
+    params,
   ]).toString("hex")
 
   return genHash(encodedHex)

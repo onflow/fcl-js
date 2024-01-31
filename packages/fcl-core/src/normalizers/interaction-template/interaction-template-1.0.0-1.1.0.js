@@ -1,4 +1,4 @@
-import {invariant} from "@onflow/sdk"
+import {invariant} from "@onflow/utils-invariant"
 
 export async function normalize({template}) {
   invariant(
@@ -32,9 +32,11 @@ export async function normalize({template}) {
   }))
 
   const _args = Object.keys(templateData?.["arguments"]).map(
-    async argumentKey => ({
+    async (argumentKey, i) => ({
       ...templateData?.["arguments"]?.[argumentKey],
-      key: argumentKey,
+      label: argumentKey,
+      index: i,
+      type: templateData?.["arguments"]?.[argumentKey]?.type,
       messages: Object.keys(
         templateData?.["arguments"]?.[argumentKey].messages
       ).map(argumentMessageKey => ({
@@ -60,7 +62,7 @@ export async function normalize({template}) {
     data: {
       ...template.data,
       messages,
-      arguments: _args,
+      parameters: _args,
     },
   }
 

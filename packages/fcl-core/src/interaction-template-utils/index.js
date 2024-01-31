@@ -2,7 +2,7 @@ export {getInteractionTemplateAudits} from "./get-interaction-template-audits.js
 export {
   generateDependencyPin,
   generateDependencyPinAtLatestSealedBlock,
-} from "./generate-dependency-pin.js"
+} from "./generate-dependency-pin/generate-dependency-pin.js"
 export {generateTemplateId} from "./generate-template-id/generate-template-id.js"
 export {generateTemplateInterfaceId} from "./generate-template-interface-id/generate-template-interface-id.js"
 export {

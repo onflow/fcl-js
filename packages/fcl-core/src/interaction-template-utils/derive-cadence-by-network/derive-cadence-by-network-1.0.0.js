@@ -1,4 +1,4 @@
-import {invariant} from "@onflow/sdk"
+import {invariant} from "@onflow/util-invariant"
 
 /**
  * @description Fills import addresses in Cadence for network
@@ -8,31 +8,10 @@ import {invariant} from "@onflow/sdk"
  * @param {object} params.template - Interaction Template to derive Cadence from
  * @returns {string} - Cadence
  */
-export async function deriveCadenceByNetwork({network, template}) {
-  invariant(
-    network != undefined,
-    "deriveCadenceByNetwork({ network }) -- network must be defined"
-  )
-  invariant(
-    typeof network === "string",
-    "deriveCadenceByNetwork({ network }) -- network must be a string"
-  )
-
-  invariant(
-    template != undefined,
-    "deriveCadenceByNetwork({ template }) -- template must be defined"
-  )
-  invariant(
-    typeof template === "object",
-    "deriveCadenceByNetwork({ template }) -- template must be an object"
-  )
-  invariant(
-    template.f_type === "InteractionTemplate",
-    "deriveCadenceByNetwork({ template }) -- template must be an InteractionTemplate"
-  )
+export async function deriveCadenceByNetwork100({network, template}) {
   invariant(
     template.f_version === "1.0.0",
-    "deriveCadenceByNetwork({ template }) -- template must be version 1.0.0"
+    "deriveCadenceByNetwork100({ template }) -- template must be version 1.0.0"
   )
 
   let networkDependencies = Object.keys(template?.data?.dependencies).map(
@@ -42,13 +21,13 @@ export async function deriveCadenceByNetwork({network, template}) {
       )
 
       invariant(
-        dependencyNetworkContracts,
-        `deriveCadenceByNetwork -- Could not find contracts for dependency placeholder: ${dependencyPlaceholder}`
+        dependencyNetworkContracts !== undefined,
+        `deriveCadenceByNetwork100 -- Could not find contracts for dependency placeholder: ${dependencyPlaceholder}`
       )
 
       invariant(
-        dependencyNetworkContracts.length === 0,
-        `deriveCadenceByNetwork -- Could not find contracts for dependency placeholder: ${dependencyPlaceholder}`
+        dependencyNetworkContracts.length > 0,
+        `deriveCadenceByNetwork100 -- Could not find contracts for dependency placeholder: ${dependencyPlaceholder}`
       )
 
       let dependencyContract = dependencyNetworkContracts[0]
@@ -56,10 +35,10 @@ export async function deriveCadenceByNetwork({network, template}) {
 
       invariant(
         dependencyContractForNetwork,
-        `deriveCadenceByNetwork -- Could not find ${network} network information for dependency: ${dependencyPlaceholder}`
+        `deriveCadenceByNetwork100 -- Could not find ${network} network information for dependency: ${dependencyPlaceholder}`
       )
 
-      return [dependencyPlaceholder, dependencyContractForNetwork.address]
+      return [dependencyPlaceholder, dependencyContractForNetwork?.address]
     }
   )
 

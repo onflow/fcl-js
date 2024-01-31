@@ -1,6 +1,5 @@
-import {generateTemplateId} from "./generate-template-id.js"
-import {replaceStringImports} from "../utils/replace-string-imports.js"
-import {genHash} from "../utils/hash.js"
+import {verifyDependencyPinsSame} from "./verify-dependency-pin-same-at-block.js"
+import {config} from "@onflow/config"
 
 const returnedAccount = {
   address: "0xf233dcee88fe0abe",
@@ -253,8 +252,8 @@ pub contract interface FungibleToken {
 jest.mock("@onflow/sdk", () => ({
   send: jest.fn().mockImplementation(({}) => {
     // Adjusted mock implementation
-    const sanitized = returnedAccount.contracts.FungibleToken.replace(/\\/g, "")
-    returnedAccount.contracts.FungibleToken = sanitized
+    const sanitized = returnedAccount.contracts.FungibleToken.replace(/\\/g, '');
+    returnedAccount.contracts.FungibleToken =  sanitized;
     return Promise.resolve(returnedAccount)
   }),
   getAccount: jest.fn().mockImplementation(({}) => {
@@ -276,12 +275,11 @@ jest.mock("@onflow/sdk", () => ({
   }),
   atBlockHeight: jest.fn().mockImplementation(({}) => {
     // Adjusted mock implementation
-    return Promise.resolve({})
-  }),
+    return 
+  })
 }))
 
-describe("Gen template id interaction template messages 1.1.0", () => {
-  let template = {
+let template = {
     f_type: "InteractionTemplate",
     f_version: "1.1.0",
     id: "3accd8c0bf4c7b543a80287d6c158043b4c2e737c2205dba6e009abbbf1328a4",
@@ -420,25 +418,27 @@ describe("Gen template id interaction template messages 1.1.0", () => {
     },
   }
 
-  test("v1.1.0, mainnet network hash is derived correctly", async () => {
-    const networkDependencies = {FungibleToken: "0xf233dcee88fe0abe"}
-
-    const popCadence = await replaceStringImports({
-      cadence: template.data.cadence.body,
-      networkDependencies,
-    })
-
-    const hash = await genHash(popCadence)
-
-    expect(hash).toEqual(template.data.cadence.network_pins[0].pin_self)
+describe("1.1.0, verify dependency pin same", () => {
+  beforeAll(() => {
+    jest.spyOn(console, "warn").mockImplementation(() => {})
   })
 
-  test("Test id generation and compare", async () => {
-    const testId = template.id
-    const id = await generateTemplateId({
-      template,
+  afterAll(() => {
+    console.warn.mockRestore()
+  })
+
+  test("v1.1.0, get dependency pin", async () => {
+
+    config.put("flow.network", "mainnet")
+    config.put("accessNode.api", "https://rest-mainnet.onflow.org")
+
+    let isVerified = await verifyDependencyPinsSame({
+      template: template,
+      blockHeight: 70493190,
+      network: "mainnet",
     })
 
-    expect(id).toEqual(testId)
+    expect(isVerified).toEqual(true)
   })
+
 })

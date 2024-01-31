@@ -7,9 +7,9 @@ import {
   config,
   decode,
 } from "@onflow/sdk"
-import {genHash} from "./utils/hash.js"
-import {findImports} from "./utils/find-imports.js"
-import {generateImport} from "./utils/generate-import.js"
+import {genHash} from "../utils/hash.js"
+import {findImports} from "../utils/find-imports.js"
+import {generateImport} from "../utils/generate-import.js"
 
 /**
  * @description Produces a dependency pin for a contract at a given block height
@@ -20,7 +20,7 @@ import {generateImport} from "./utils/generate-import.js"
  * @param {object} opts - Options to pass to the interaction
  * @returns {Promise<string>} - The dependency pin
  */
-export async function generateDependencyPin(
+export async function generateDependencyPin110(
   {address, contractName, blockHeight},
   opts = {}
 ) {
@@ -74,30 +74,12 @@ export async function generateDependencyPin(
     horizon.push(...contractImports)
   }
 
-  let contractHashes = horizon.map(iport => genHash(iport.contract))
-
-  let contractHashesJoined = contractHashes.join("")
-
-  return genHash(contractHashesJoined)
-}
-
-/**
- * @description Produces a dependency pin for a contract at latest sealed block
- * @param {object} params
- * @param {string} params.address - The address of the account containing the contract
- * @param {string} params.contractName - The name of the contract
- * @param {object} opts - Options to pass to the interaction
- * @returns {Promise<string>} - The dependency pin
- */
-export async function generateDependencyPinAtLatestSealedBlock(
-  {address, contractName},
-  opts = {}
-) {
-  let latestSealedBlock = await block({sealed: true}, opts)
-  let latestSealedBlockHeight = latestSealedBlock?.height
-
-  return generateDependencyPin(
-    {address, contractName, blockHeight: latestSealedBlockHeight},
-    opts
+  let contractPinSelfHashesPromises = horizon.map(iport =>
+    genHash(iport.contract)
   )
+  // genHash returns a promise, so we need to await the results of all the promises
+  let contractPinSelfHashes = await Promise.all(contractPinSelfHashesPromises)
+  let contractPinHashes = contractPinSelfHashes.join("")
+
+  return genHash(contractPinHashes)
 }
