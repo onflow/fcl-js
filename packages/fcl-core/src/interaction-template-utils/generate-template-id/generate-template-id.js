@@ -32,3 +32,15 @@ export async function generateTemplateId({template}) {
       throw new Error("generateTemplateId Error: Unsupported template version")
   }
 }
+
+/**
+ * @description Verifies the given Interaction Template Id has been correctly generated
+ *
+ * @param {object} params
+ * @param {object} params.template - Interaction Template
+ * @returns {Promise<boolean>} - true or false, Interaction Template ID
+ */
+
+export async function verifyGeneratedTemplateId({template}) {
+  return template.id === await generateTemplateId({template})
+}
