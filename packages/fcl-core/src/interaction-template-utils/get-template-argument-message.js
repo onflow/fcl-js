@@ -10,7 +10,7 @@ import {invariant} from "@onflow/sdk"
  * @param {object} opts.template - Interaction Template to get message from
  * @returns {string} - Message
  */
-export async function getTemplateArgumentMessage({
+export function getTemplateArgumentMessage({
   localization = "en-US",
   argumentLabel,
   messageKey,
