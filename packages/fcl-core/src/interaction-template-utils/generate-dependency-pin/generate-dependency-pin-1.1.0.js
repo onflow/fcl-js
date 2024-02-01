@@ -78,8 +78,8 @@ export async function generateDependencyPin110(
     genHash(iport.contract)
   )
   // genHash returns a promise, so we need to await the results of all the promises
-  let contractPinSelfHashes = await Promise.all(contractPinSelfHashesPromises)
-  let contractPinHashes = contractPinSelfHashes.join("")
+  const contractPinSelfHashes = await Promise.all(contractPinSelfHashesPromises)
+  const contractPinHashes = contractPinSelfHashes.join("")
 
   return genHash(contractPinHashes)
 }
