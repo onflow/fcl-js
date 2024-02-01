@@ -14,7 +14,7 @@ export async function deriveCadenceByNetwork100({network, template}) {
     "deriveCadenceByNetwork100({ template }) -- template must be version 1.0.0"
   )
 
-  let networkDependencies = Object.keys(template?.data?.dependencies).map(
+  const networkDependencies = Object.keys(template?.data?.dependencies).map(
     dependencyPlaceholder => {
       let dependencyNetworkContracts = Object.values(
         template?.data?.dependencies?.[dependencyPlaceholder]
