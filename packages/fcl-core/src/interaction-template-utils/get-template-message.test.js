@@ -259,7 +259,7 @@ describe("Get interaction template messages 1.1.0", () => {
 
 
   test("It fails to get message for an unknown message key", async () => {
-    let message = await getTemplateMessage({
+    let message = getTemplateMessage({
       localization: "en-US",
       messageKey: "foo",
       template,
