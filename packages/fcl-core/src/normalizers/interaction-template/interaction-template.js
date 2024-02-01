@@ -5,8 +5,8 @@ export async function normalizeInteractionTemplate(template) {
 
   switch (template["f_version"]) {
     case "1.0.0":
-      return await normalizeInteractionTemplate(
-        await normalize100to110({template})
+      return normalizeInteractionTemplate(
+        normalize100to110({template})
       )
     case "1.1.0":
       return template

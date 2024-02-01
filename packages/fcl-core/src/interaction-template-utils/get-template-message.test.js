@@ -69,7 +69,7 @@ describe("Get interaction template messages 1.0.0", () => {
   }
 
   test("It gets template message for given message key and internationalization", async () => {
-    const title = await getTemplateMessage({
+    const title = getTemplateMessage({
       localization: "en-US",
       messageKey: "title",
       template,
@@ -77,7 +77,7 @@ describe("Get interaction template messages 1.0.0", () => {
 
     expect(title).toEqual("Transfer Tokens")
 
-    const description = await getTemplateMessage({
+    const description = getTemplateMessage({
       localization: "en-US",
       messageKey: "description",
       template,
@@ -87,7 +87,7 @@ describe("Get interaction template messages 1.0.0", () => {
   })
 
   test("It fails to get message for an unknown message key", async () => {
-    let message = await getTemplateMessage({
+    let message = getTemplateMessage({
       localization: "en-US",
       messageKey: "foo",
       template,
@@ -238,7 +238,7 @@ describe("Get interaction template messages 1.1.0", () => {
   }
 
   test("It gets template title message for given message key and internationalization", async () => {
-    const title = await getTemplateMessage({
+    const title = getTemplateMessage({
       localization: "en-US",
       messageKey: "title",
       template,
@@ -248,7 +248,7 @@ describe("Get interaction template messages 1.1.0", () => {
   })
 
   test("It gets template description message for given message key and internationalization", async () => {
-    const description = await getTemplateMessage({
+    const description = getTemplateMessage({
       localization: "en-US",
       messageKey: "description",
       template,

@@ -9,7 +9,7 @@ import {invariant} from "@onflow/sdk"
  * @param {object} params.template - Interaction Template
  * @returns {string} - Message
  */
-export async function getTemplateMessage({
+export function getTemplateMessage({
   localization = "en-US",
   messageKey,
   template,

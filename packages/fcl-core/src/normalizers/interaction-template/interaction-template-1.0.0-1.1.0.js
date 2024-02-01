@@ -1,6 +1,6 @@
-import {invariant} from "@onflow/utils-invariant"
+import {invariant} from "@onflow/sdk"
 
-export async function normalize({template}) {
+export function normalize({template}) {
   invariant(
     template != undefined,
     "generateTemplateId({ template }) -- template must be defined"
