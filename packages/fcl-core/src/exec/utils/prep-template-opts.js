@@ -12,7 +12,7 @@ export async function prepTemplateOpts(opts) {
 
   let dependencies = {}
   if (opts?.template) {
-    opts.template = await normalizeInteractionTemplate(opts?.template)
+    opts.template = normalizeInteractionTemplate(opts?.template)
     dependencies = await deriveDependencies({template: opts.template})
   }
 
