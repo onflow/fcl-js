@@ -1,8 +1,7 @@
 import {config, invariant} from "@onflow/sdk"
 import {log, LEVELS} from "@onflow/util-logger"
 import {query} from "../exec/query.js"
-import {generateTemplateId} from "./generate-template-id.js"
-import {normalizeInteractionTemplate} from "../normalizers/interaction-template/interaction-template.js"
+import {generateTemplateId} from "./generate-template-id/generate-template-id.js"
 import {getChainId} from "../utils"
 
 /**
