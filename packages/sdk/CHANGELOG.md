@@ -1,5 +1,11 @@
 # @onflow/sdk
 
+## 1.4.0-alpha.5
+
+### Patch Changes
+
+- [#1840](https://github.com/onflow/fcl-js/pull/1840) [`151a2290`](https://github.com/onflow/fcl-js/commit/151a2290e92fbcb399052476004c7f20ceda5c2d) Thanks [@jribbink](https://github.com/jribbink)! - Typescript fixes for SDK builders
+
 ## 1.4.0-alpha.4
 
 ### Patch Changes
