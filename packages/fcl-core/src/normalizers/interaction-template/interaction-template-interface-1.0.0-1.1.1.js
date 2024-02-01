@@ -1,6 +1,6 @@
 import {invariant} from "@onflow/sdk"
 
-export async function normalize({templateInterface}) {
+export function normalize({templateInterface}) {
   invariant(
     templateInterface != undefined,
     "generateTemplateId({ iface }) -- iface must be defined"
