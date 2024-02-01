@@ -4,7 +4,6 @@ export {
   generateDependencyPinAtLatestSealedBlock,
 } from "./generate-dependency-pin/generate-dependency-pin.js"
 export {generateTemplateId, verifyGeneratedTemplateId} from "./generate-template-id/generate-template-id.js"
-export {generateTemplateInterfaceId} from "./generate-template-interface-id/generate-template-interface-id.js"
 export {
   verifyDependencyPinsSame,
   verifyDependencyPinsSameAtLatestSealedBlock,
