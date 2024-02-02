@@ -423,12 +423,12 @@ describe("Gen template id interaction template messages 1.1.0", () => {
   test("v1.1.0, mainnet network hash is derived correctly", async () => {
     const networkDependencies = {FungibleToken: "0xf233dcee88fe0abe"}
 
-    const popCadence = await replaceStringImports({
+    const popCadence = replaceStringImports({
       cadence: template.data.cadence.body,
       networkDependencies,
     })
 
-    const hash = await genHash(popCadence)
+    const hash = genHash(popCadence)
 
     expect(hash).toEqual(template.data.cadence.network_pins[0].pin_self)
   })

@@ -6,7 +6,7 @@ import {generateDependencyPin110} from "../generate-dependency-pin/generate-depe
 async function generateContractNetworks(contractName, networks) {
   const values = []
   for (const net of networks) {
-    const networkHashes = [await genHash(net.network)]
+    const networkHashes = [genHash(net.network)]
     const {address, dependency_pin_block_height} = net
     if (net.dependency_pin) {
       const hash = await generateDependencyPin110({
@@ -14,7 +14,7 @@ async function generateContractNetworks(contractName, networks) {
         contractName,
         blockHeight: dependency_pin_block_height,
       })
-      networkHashes.push(await genHash(hash))
+      networkHashes.push(genHash(hash))
     }
     values.push(networkHashes)
   }
@@ -29,7 +29,7 @@ async function generateContractDependencies(dependencies) {
     for (let j = 0; j < dependency?.contracts.length; j++) {
       const c = dependency?.contracts[j]
       const contractName = c?.contract
-      contracts.push(await genHash(contractName))
+      contracts.push(genHash(contractName))
       const contractHashes = await generateContractNetworks(
         contractName,
         c?.networks
@@ -70,11 +70,11 @@ export async function generateTemplateId({template}) {
 
   const messages = await Promise.all(
     templateData.messages.map(async templateMessage => [
-      await genHash(templateMessage.key),
+      genHash(templateMessage.key),
       await Promise.all(
         templateMessage.i18n.map(async templateMessagei18n => [
-          await genHash(templateMessagei18n.tag),
-          await genHash(templateMessagei18n.translation),
+          genHash(templateMessagei18n.tag),
+          genHash(templateMessagei18n.translation),
         ])
       ),
     ])
@@ -84,17 +84,17 @@ export async function generateTemplateId({template}) {
     templateData?.["parameters"]
       .sort((a, b) => a.index - b.index)
       .map(async arg => [
-        await genHash(arg.label),
+        genHash(arg.label),
         [
-          await genHash(String(arg.index)),
-          await genHash(arg.type),
+          genHash(String(arg.index)),
+          genHash(arg.type),
           await Promise.all(
             arg.messages.map(async argumentMessage => [
-              await genHash(argumentMessage.key),
+              genHash(argumentMessage.key),
               await Promise.all(
                 argumentMessage.i18n.map(async argumentMessagei18n => [
-                  await genHash(argumentMessagei18n.tag),
-                  await genHash(argumentMessagei18n.translation),
+                  genHash(argumentMessagei18n.tag),
+                  genHash(argumentMessagei18n.translation),
                 ])
               ),
             ])
@@ -108,12 +108,12 @@ export async function generateTemplateId({template}) {
   ]
 
   const encodedHex = rlpEncode([
-    await genHash(template?.f_type),
-    await genHash(template?.f_version),
-    await genHash(templateData?.type),
-    await genHash(templateData?.interface),
+    genHash(template?.f_type),
+    genHash(template?.f_version),
+    genHash(templateData?.type),
+    genHash(templateData?.interface),
     messages,
-    await genHash(templateData?.cadence?.body),
+    genHash(templateData?.cadence?.body),
     [dependencies],
     params,
   ]).toString("hex")
