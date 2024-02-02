@@ -38,10 +38,10 @@ import {
       "generateDependencyPin({ contractName }) -- contractName must be a string"
     )
  
-    let horizon = [generateImport({contractName, address})]
+    const horizon = [generateImport({contractName, address})]
   
     for (const horizonImport of horizon) {
-      let account = await send(
+      const account = await send(
         [
           getAccount(
             await config().get(horizonImport.address, horizonImport.address)
@@ -57,14 +57,14 @@ import {
         throw new Error("Did not find expected contract")
       }
   
-      let contractImports = findImports(horizonImport.contract)
+      const contractImports = findImports(horizonImport.contract)
   
       horizon.push(...contractImports)
     }
   
-    let contractHashes = horizon.map(iport => genHash(iport.contract))
+    const contractHashes = horizon.map(iport => genHash(iport.contract))
   
-    let contractHashesJoined = contractHashes.join("")
+    const contractHashesJoined = contractHashes.join("")
   
     return genHash(contractHashesJoined)
   }

@@ -34,7 +34,7 @@ describe("Find imports", () => {
 `
 
   test("It parses contracts correctly for cadence A", async () => {
-    let imports = findImports(cadenceA)
+    const imports = findImports(cadenceA)
 
     expect(imports).toEqual([
       generateImport({
@@ -49,7 +49,7 @@ describe("Find imports", () => {
   })
 
   test("It parses contracts correctly for cadence B", async () => {
-    let imports = findImports(cadenceA)
+    const imports = findImports(cadenceA)
 
     expect(imports).toEqual([
       generateImport({
@@ -64,7 +64,7 @@ describe("Find imports", () => {
   })
 
   test("It parses contracts correctly for cadence C", async () => {
-    let imports = findImports(cadenceC)
+    const imports = findImports(cadenceC)
 
     expect(imports).toEqual([
       generateImport({

@@ -1,7 +1,7 @@
 import {getTemplateArgumentMessage} from "./get-template-argument-message.js"
 
 describe("Get interaction template argument messages", () => {
-  let templatev1 = {
+  const templatev1 = {
     f_type: "InteractionTemplate",
     f_version: "1.0.0",
     id: "abc123",
@@ -69,7 +69,7 @@ describe("Get interaction template argument messages", () => {
   }
 
   test("It gets argument message for given argument and internationalization", async () => {
-    let message = getTemplateArgumentMessage({
+    const message = getTemplateArgumentMessage({
       localization: "en-US",
       argumentLabel: "amount",
       messageKey: "title",
@@ -80,7 +80,7 @@ describe("Get interaction template argument messages", () => {
   })
 
   test("It fails to get message for an unknown argument", async () => {
-    let message = getTemplateArgumentMessage({
+    const message = getTemplateArgumentMessage({
       localization: "en-US",
       argumentLabel: "foo",
       messageKey: "title",
@@ -91,7 +91,7 @@ describe("Get interaction template argument messages", () => {
   })
 
   test("It fails to get message for an unknown message key", async () => {
-    let message = getTemplateArgumentMessage({
+    const message = getTemplateArgumentMessage({
       localization: "en-US",
       argumentLabel: "amount",
       messageKey: "baz",
@@ -103,7 +103,7 @@ describe("Get interaction template argument messages", () => {
 })
 
 describe("Get interaction template v1.1.0 parameters messages", () => {
-  let templatev11 = {
+  const templatev11 = {
     f_type: "InteractionTemplate",
     f_version: "1.1.0",
     id: "3a99af243b85f3f6af28304af2ed53a37fb913782b3efc483e6f0162a47720a0",
@@ -243,7 +243,7 @@ describe("Get interaction template v1.1.0 parameters messages", () => {
   }
   
   test("It gets argument message for given argument and internationalization", async () => {
-    let message = getTemplateArgumentMessage({
+    const message = getTemplateArgumentMessage({
       localization: "en-US",
       argumentLabel: "amount",
       messageKey: "title",
@@ -254,7 +254,7 @@ describe("Get interaction template v1.1.0 parameters messages", () => {
   })
 
   test("It fails to get message for an unknown argument", async () => {
-    let message = getTemplateArgumentMessage({
+    const message = getTemplateArgumentMessage({
       localization: "en-US",
       argumentLabel: "foo",
       messageKey: "title",
@@ -265,7 +265,7 @@ describe("Get interaction template v1.1.0 parameters messages", () => {
   })
 
   test("It fails to get message for an unknown message key", async () => {
-    let message = getTemplateArgumentMessage({
+    const message = getTemplateArgumentMessage({
       localization: "en-US",
       argumentLabel: "amount",
       messageKey: "baz",

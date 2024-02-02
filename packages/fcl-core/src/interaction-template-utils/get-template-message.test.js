@@ -1,7 +1,7 @@
 import {getTemplateMessage} from "./get-template-message.js"
 
 describe("Get interaction template messages 1.0.0", () => {
-  let template = {
+  const template = {
     f_type: "InteractionTemplate",
     f_version: "1.0.0",
     id: "abc123",
@@ -87,7 +87,7 @@ describe("Get interaction template messages 1.0.0", () => {
   })
 
   test("It fails to get message for an unknown message key", async () => {
-    let message = getTemplateMessage({
+    const message = getTemplateMessage({
       localization: "en-US",
       messageKey: "foo",
       template,
@@ -98,7 +98,7 @@ describe("Get interaction template messages 1.0.0", () => {
 })
 
 describe("Get interaction template messages 1.1.0", () => {
-  let template = {
+  const template = {
     f_type: "InteractionTemplate",
     f_version: "1.1.0",
     id: "3a99af243b85f3f6af28304af2ed53a37fb913782b3efc483e6f0162a47720a0",
@@ -259,7 +259,7 @@ describe("Get interaction template messages 1.1.0", () => {
 
 
   test("It fails to get message for an unknown message key", async () => {
-    let message = getTemplateMessage({
+    const message = getTemplateMessage({
       localization: "en-US",
       messageKey: "foo",
       template,

@@ -16,7 +16,7 @@ export async function deriveCadenceByNetwork100({network, template}) {
 
   const networkDependencies = Object.keys(template?.data?.dependencies).map(
     dependencyPlaceholder => {
-      let dependencyNetworkContracts = Object.values(
+      const dependencyNetworkContracts = Object.values(
         template?.data?.dependencies?.[dependencyPlaceholder]
       )
 
@@ -30,8 +30,8 @@ export async function deriveCadenceByNetwork100({network, template}) {
         `deriveCadenceByNetwork100 -- Could not find contracts for dependency placeholder: ${dependencyPlaceholder}`
       )
 
-      let dependencyContract = dependencyNetworkContracts[0]
-      let dependencyContractForNetwork = dependencyContract?.[network]
+      const dependencyContract = dependencyNetworkContracts[0]
+      const dependencyContractForNetwork = dependencyContract?.[network]
 
       invariant(
         dependencyContractForNetwork,

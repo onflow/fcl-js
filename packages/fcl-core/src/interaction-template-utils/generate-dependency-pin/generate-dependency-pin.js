@@ -61,8 +61,8 @@ import {generateDependencyPin100} from "./generate-dependency-pin-1.0.0.js"
     {version, address, contractName},
     opts = {}
   ) {
-    let latestSealedBlock = await block({sealed: true}, opts)
-    let latestSealedBlockHeight = latestSealedBlock?.height
+    const latestSealedBlock = await block({sealed: true}, opts)
+    const latestSealedBlockHeight = latestSealedBlock?.height
   
     return generateDependencyPin(
       {version, address, contractName, blockHeight: latestSealedBlockHeight},

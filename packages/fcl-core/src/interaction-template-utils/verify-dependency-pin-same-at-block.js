@@ -44,29 +44,29 @@ export async function verifyDependencyPinsSame(
 
   switch (template.f_version) {
     case "1.0.0":
-      let templateDependenciesPlaceholderKeys = Object.keys(
+      const templateDependenciesPlaceholderKeys = Object.keys(
         template.data.dependencies
       )
 
       for (let templateDependencyPlaceholderKey of templateDependenciesPlaceholderKeys) {
-        let templateDependencyPlaceholder =
+        const templateDependencyPlaceholder =
           template.data.dependencies[templateDependencyPlaceholderKey]
 
-        let templateDependencyPlaceholderContractNames = Object.keys(
+          const templateDependencyPlaceholderContractNames = Object.keys(
           templateDependencyPlaceholder
         )
 
         for (let templateDependencyPlaceholderContractName of templateDependencyPlaceholderContractNames) {
-          let templateDependencyPlaceholderContractNetworks =
+          const templateDependencyPlaceholderContractNetworks =
             template.data.dependencies[templateDependencyPlaceholderKey][
               templateDependencyPlaceholderContractName
             ]
 
-          let templateDependency =
+            const templateDependency =
             templateDependencyPlaceholderContractNetworks[network]
           if (typeof templateDependency === "undefined") continue
 
-          let pin = await generateDependencyPin(
+          const pin = await generateDependencyPin(
             {
               address: templateDependency.address,
               contractName: templateDependency.contract,
@@ -105,7 +105,7 @@ export async function verifyDependencyPinsSame(
             const net = contract?.networks[k]
             // if network matches, generate pin and compare
             if (net.network === network) {
-              let pin = await generateDependencyPin(
+              const pin = await generateDependencyPin(
                 {
                   version: template.f_version,
                   address: net.address,
@@ -155,8 +155,8 @@ export async function verifyDependencyPinsSameAtLatestSealedBlock(
   {template, network},
   opts = {}
 ) {
-  let latestSealedBlock = await block({sealed: true})
-  let latestSealedBlockHeight = latestSealedBlock?.height
+  const latestSealedBlock = await block({sealed: true})
+  const latestSealedBlockHeight = latestSealedBlock?.height
 
   return verifyDependencyPinsSame(
     {template, network, blockHeight: latestSealedBlockHeight},

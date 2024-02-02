@@ -1,7 +1,7 @@
 import {deriveCadenceByNetwork} from "./derive-cadence-by-network.js"
 
 describe("Derive cadence by network 1.0.0", () => {
-  let template = {
+  const template = {
     f_type: "InteractionTemplate",
     f_version: "1.0.0",
     id: "abc123",
@@ -35,7 +35,7 @@ describe("Derive cadence by network 1.0.0", () => {
   }
 
   test("It derives cadence correctly for a given network", async () => {
-    let cadence = await deriveCadenceByNetwork({
+    const cadence = await deriveCadenceByNetwork({
       network: "mainnet",
       template,
     })
@@ -194,7 +194,7 @@ describe("Derive cadence by network 1.1.0", () => {
   }
 
   test("v1.1.0, It derives cadence correctly for a given network", async () => {
-    let cadence = await deriveCadenceByNetwork({
+    const cadence = await deriveCadenceByNetwork({
       network: "mainnet",
       template: template11,
     })

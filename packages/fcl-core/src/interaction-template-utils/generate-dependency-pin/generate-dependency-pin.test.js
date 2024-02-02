@@ -291,7 +291,7 @@ describe("1.1.0, generate dependency pin", () => {
     config.put("flow.network", "mainnet")
     config.put("accessNode.api", "https://rest-mainnet.onflow.org")
 
-    let depPin = await generateDependencyPin110({
+    const depPin = await generateDependencyPin110({
       address: "0xf233dcee88fe0abe",
       contractName: "FungibleToken",
     })

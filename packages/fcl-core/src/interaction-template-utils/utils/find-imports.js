@@ -1,10 +1,10 @@
 import {generateImport} from "./generate-import.js"
 
 export function findImports(cadence) {
-  let imports = []
+  const imports = []
 
-  let importsReg = /import ((\w|,| )+)* from 0x\w+/g
-  let fileImports = cadence.match(importsReg) || []
+  const importsReg = /import ((\w|,| )+)* from 0x\w+/g
+  const fileImports = cadence.match(importsReg) || []
 
   for (const fileImport of fileImports) {
     const importLineReg = /import ((\w+|, |)*) from (0x\w+)/g

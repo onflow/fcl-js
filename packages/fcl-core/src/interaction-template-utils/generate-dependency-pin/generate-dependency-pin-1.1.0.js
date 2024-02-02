@@ -38,10 +38,10 @@ export async function generateDependencyPin110(
     "generateDependencyPin({ contractName }) -- contractName must be a string"
   )
   
-  let horizon = [generateImport({contractName, address})]
+  const horizon = [generateImport({contractName, address})]
 
   for (const horizonImport of horizon) {
-    let account = await send(
+    const account = await send(
       [
         getAccount(
           await config().get(horizonImport.address, horizonImport.address)
@@ -57,12 +57,12 @@ export async function generateDependencyPin110(
       throw new Error("Did not find expected contract")
     }
 
-    let contractImports = findImports(horizonImport.contract)
+    const contractImports = findImports(horizonImport.contract)
 
     horizon.push(...contractImports)
   }
 
-  let contractPinSelfHashesPromises = horizon.map(iport =>
+  const contractPinSelfHashesPromises = horizon.map(iport =>
     genHash(iport.contract)
   )
   // genHash returns a promise, so we need to await the results of all the promises

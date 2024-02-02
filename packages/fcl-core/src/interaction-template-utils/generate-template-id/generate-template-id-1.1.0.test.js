@@ -281,7 +281,7 @@ jest.mock("@onflow/sdk", () => ({
 }))
 
 describe("Gen template id interaction template messages 1.1.0", () => {
-  let template = {
+  const template = {
     f_type: "InteractionTemplate",
     f_version: "1.1.0",
     id: "3accd8c0bf4c7b543a80287d6c158043b4c2e737c2205dba6e009abbbf1328a4",

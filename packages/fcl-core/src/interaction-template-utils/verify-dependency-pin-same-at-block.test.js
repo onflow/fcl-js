@@ -279,7 +279,7 @@ jest.mock("@onflow/sdk", () => ({
   })
 }))
 
-let template = {
+const template = {
     f_type: "InteractionTemplate",
     f_version: "1.1.0",
     id: "3accd8c0bf4c7b543a80287d6c158043b4c2e737c2205dba6e009abbbf1328a4",
@@ -432,7 +432,7 @@ describe("1.1.0, verify dependency pin same", () => {
     config.put("flow.network", "mainnet")
     config.put("accessNode.api", "https://rest-mainnet.onflow.org")
 
-    let isVerified = await verifyDependencyPinsSame({
+    const isVerified = await verifyDependencyPinsSame({
       template: template,
       blockHeight: 70493190,
       network: "mainnet",

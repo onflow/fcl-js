@@ -2,7 +2,7 @@ import {replaceStringImports} from "./replace-string-imports"
 
 describe("Verify replace imports works ", () => {
   test("replace single import", async () => {
-    let cadence = await replaceStringImports({
+    const cadence = await replaceStringImports({
       cadence: 'import "FungibleToken"\n\n',
       networkDependencies: {
         FungibleToken: "0xf233dcee88fe0abe",
@@ -13,7 +13,7 @@ describe("Verify replace imports works ", () => {
 
 
   test("replace multiple import", async () => {
-    let cadence = await replaceStringImports({
+    const cadence = await replaceStringImports({
       cadence: 'import "FungibleToken"\nimport "NonFungibleToken"\n\n',
       networkDependencies: {
         FungibleToken: "0xf233dcee88fe0abe",
