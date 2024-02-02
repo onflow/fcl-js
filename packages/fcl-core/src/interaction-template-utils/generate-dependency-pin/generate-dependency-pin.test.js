@@ -273,10 +273,6 @@ jest.mock("@onflow/sdk", () => ({
       }),
     }
   }),
-  atBlockHeight: jest.fn().mockImplementation(({}) => {
-    // Adjusted mock implementation
-    return 
-  })
 }))
 
 describe("1.1.0, generate dependency pin", () => {
@@ -298,7 +294,6 @@ describe("1.1.0, generate dependency pin", () => {
     let depPin = await generateDependencyPin110({
       address: "0xf233dcee88fe0abe",
       contractName: "FungibleToken",
-      blockHeight: 70493190,
     })
 
     expect(depPin).toEqual(pin)

@@ -6,17 +6,16 @@ import {generateDependencyPin110} from "./generate-dependency-pin-1.1.0.js"
 import {generateDependencyPin100} from "./generate-dependency-pin-1.0.0.js"
   
   /**
-   * @description Produces a dependency pin for a contract at a given block height
+   * @description Produces a dependency pin for a contract at current state of chain
    * @param {object} params
    * @param {string} params.version - The version of the interaction template
    * @param {string} params.address - The address of the account containing the contract
    * @param {string} params.contractName - The name of the contract
-   * @param {number} params.blockHeight - The block height to produce the dependency pin for
    * @param {object} opts - Options to pass to the interaction
    * @returns {Promise<string>} - The dependency pin
    */
   export async function generateDependencyPin(
-    {version, address, contractName, blockHeight},
+    {version, address, contractName },
     opts = {}
   ) {
     invariant(
@@ -28,10 +27,6 @@ import {generateDependencyPin100} from "./generate-dependency-pin-1.0.0.js"
       "generateDependencyPin({ contractName }) -- contractName must be defined"
     )
     invariant(
-      blockHeight != undefined,
-      "generateDependencyPin({ blockHeight }) -- blockHeight must be defined"
-    )
-    invariant(
       typeof address === "string",
       "generateDependencyPin({ address }) -- address must be a string"
     )
@@ -39,16 +34,12 @@ import {generateDependencyPin100} from "./generate-dependency-pin-1.0.0.js"
       typeof contractName === "string",
       "generateDependencyPin({ contractName }) -- contractName must be a string"
     )
-    invariant(
-      typeof blockHeight === "number",
-      "generateDependencyPin({ blockHeight }) -- blockHeight must be a number"
-    )
 
     switch (version) {
       case "1.1.0":
-        return await generateDependencyPin110({address, contractName, blockHeight})
+        return await generateDependencyPin110({address, contractName})
       case "1.0.0":
-        return await generateDependencyPin100({address, contractName, blockHeight})
+        return await generateDependencyPin100({address, contractName })
       default:
         throw new Error(
           "deriveCadenceByNetwork Error: Unsupported template version"

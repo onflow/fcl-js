@@ -2,7 +2,6 @@ import {
     invariant,
     send,
     getAccount,
-    atBlockHeight,
     config,
     decode,
   } from "@onflow/sdk"
@@ -11,16 +10,15 @@ import {
   import {generateImport} from "../utils/generate-import.js"
   
   /**
-   * @description Produces a dependency pin for a contract at a given block height
+   * @description Produces a dependency pin for a contract at current state of chain
    * @param {object} params
    * @param {string} params.address - The address of the account containing the contract
    * @param {string} params.contractName - The name of the contract
-   * @param {number} params.blockHeight - The block height to produce the dependency pin for
    * @param {object} opts - Options to pass to the interaction
    * @returns {Promise<string>} - The dependency pin
    */
   export async function generateDependencyPin100(
-    {address, contractName, blockHeight},
+    {address, contractName},
     opts = {}
   ) {
     invariant(
@@ -32,10 +30,6 @@ import {
       "generateDependencyPin({ contractName }) -- contractName must be defined"
     )
     invariant(
-      blockHeight != undefined,
-      "generateDependencyPin({ blockHeight }) -- blockHeight must be defined"
-    )
-    invariant(
       typeof address === "string",
       "generateDependencyPin({ address }) -- address must be a string"
     )
@@ -43,11 +37,7 @@ import {
       typeof contractName === "string",
       "generateDependencyPin({ contractName }) -- contractName must be a string"
     )
-    invariant(
-      typeof blockHeight === "number",
-      "generateDependencyPin({ blockHeight }) -- blockHeight must be a number"
-    )
-  
+ 
     let horizon = [generateImport({contractName, address})]
   
     for (const horizonImport of horizon) {
@@ -56,7 +46,6 @@ import {
           getAccount(
             await config().get(horizonImport.address, horizonImport.address)
           ),
-          atBlockHeight(blockHeight),
         ],
         opts
       ).then(decode)

@@ -3,7 +3,10 @@ export {
   generateDependencyPin,
   generateDependencyPinAtLatestSealedBlock,
 } from "./generate-dependency-pin/generate-dependency-pin.js"
-export {generateTemplateId, verifyGeneratedTemplateId} from "./generate-template-id/generate-template-id.js"
+export {
+  generateTemplateId,
+  verifyGeneratedTemplateId,
+} from "./generate-template-id/generate-template-id.js"
 export {
   verifyDependencyPinsSame,
   verifyDependencyPinsSameAtLatestSealedBlock,
