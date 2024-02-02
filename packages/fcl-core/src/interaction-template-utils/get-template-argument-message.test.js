@@ -69,7 +69,7 @@ describe("Get interaction template argument messages", () => {
   }
 
   test("It gets argument message for given argument and internationalization", async () => {
-    let message = await getTemplateArgumentMessage({
+    let message = getTemplateArgumentMessage({
       localization: "en-US",
       argumentLabel: "amount",
       messageKey: "title",
