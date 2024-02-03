@@ -1,5 +1,11 @@
 # @onflow/fcl
 
+## 1.9.0-alpha.4
+
+### Minor Changes
+
+- [#1614](https://github.com/onflow/fcl-js/pull/1614) [`8ffd3f50`](https://github.com/onflow/fcl-js/commit/8ffd3f5040db314bc1358f05946780af1c03df1a) Thanks [@JeffreyDoyle](https://github.com/JeffreyDoyle)! - Support v1.1.0 of InteractionTemplate and InteractionTemplateInterface
+
 ## 1.8.2-alpha.3
 
 ### Patch Changes
