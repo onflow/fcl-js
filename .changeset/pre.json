@@ -25,6 +25,7 @@
     "@onflow/util-uid": "1.2.1"
   },
   "changesets": [
+    "blue-rats-leave",
     "brown-dingos-taste",
     "cyan-feet-heal",
     "dull-oranges-tell",
