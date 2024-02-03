@@ -2,7 +2,7 @@ import {invariant} from "@onflow/sdk"
 
 /**
  * @description Gets Interaction Template argument message by message key, argument label, and localization
- * 
+ *
  * @param {object} opts
  * @param {string} opts.localization [localization="en-US"] - Localization to get message for
  * @param {string} opts.argumentLabel - Argument label to get message for
@@ -56,7 +56,23 @@ export function getTemplateArgumentMessage({
     "getTemplateArgumentMessage({ template }) -- template object must be an InteractionTemplate"
   )
 
-  const args = template?.data?.arguments
-
-  return args?.[argumentLabel]?.messages?.[messageKey]?.i18n?.[localization]
+  switch (template.f_version) {
+    case "1.1.0":
+      const param = template?.data?.parameters?.find(
+        a => a.label === argumentLabel
+      )
+      if (!param) return undefined
+      const message = param?.messages?.find(a => a.key === messageKey)
+      if (!message) return undefined
+      const lzn = message?.i18n?.find(a => a.tag === localization)
+      if (!lzn) return undefined
+      return lzn.translation
+    case "1.0.0":
+      return template?.data?.arguments?.[argumentLabel]?.messages?.[messageKey]
+        ?.i18n?.[localization]
+    default:
+      throw new Error(
+        "getTemplateArgumentMessage Error: Unsupported template version"
+      )
+  }
 }

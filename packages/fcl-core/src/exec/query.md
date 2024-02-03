@@ -2,7 +2,7 @@
 
 Programmatically Query Flow. A light, stable and approachable higher level wrapper around the script variant of the FCL/JS-SDK interaction.
 
-> The primary idea here is to make querying the Flow Blockchain more approachable by providing an interface that hides most of the complexity. Eventually this way of querying the chain will be able to pull stored script interactions from on chain repositories of scripts/transactions, this interface provides some inital steps/foundation in that direction.
+> The primary idea here is to make querying the Flow Blockchain more approachable by providing an interface that hides most of the complexity. Eventually this way of querying the chain will be able to pull stored script interactions from on chain repositories of scripts/transactions, this interface provides some initial steps/foundation in that direction.
 
 ## Status
 
@@ -106,7 +106,7 @@ Just like before we would pass this to our query function as the `cadence` value
 The function will be passed two values (`arg` and `t`) for us to construct our return value in a way that FCL understands.
 The first value is a function called `arg`, it is going to take our value and our type and build out the underlying argument.
 The second value is an object that includes a corresponding type constructor for every valid cadence type we can pass in as an argument.
-Writing it out in text makes it so much more complicated than it is, just remember we need to tell the query the order of the arguments (the array) and the type of each argument (`t`), that requires a special datastructure that you shouldn't need to care about so that is hidden in a function (`arg`).
+Writing it out in text makes it so much more complicated than it is, just remember we need to tell the query the order of the arguments (the array) and the type of each argument (`t`), that requires a special data structure that you shouldn't need to care about so that is hidden in a function (`arg`).
 
 As an example lets look at our first argument passed into the public `main` function (`a: Int`), and say we want its value to be `7`.
 Because it is the first argument, it should be the first argument returned in the array.
@@ -151,7 +151,7 @@ await fcl.query({
 
 ## A more real world example
 
-The above examples are a bit contrived. We tried to distil things down to convey the concepts, but in practice those examples are a bit useless because you could just do them in javascript.
+The above examples are a bit contrived. We tried to distill things down to convey the concepts, but in practice those examples are a bit useless because you could just do them in javascript.
 The following example should hopefully highlight a bit better what is possible. In this example we are going to point FCL at testnet, and use a profile contract that is deployed there to query a couple Flow accounts that may or may not have Profile resources.
 
 The first thing we need to do is to configure FCL, as mentioned above this only needs to happen once before we make our first query. In this case we are wanting two configurations values, the access node api and the profile contract address.

@@ -1,8 +1,7 @@
 import {config, invariant} from "@onflow/sdk"
 import {log, LEVELS} from "@onflow/util-logger"
 import {query} from "../exec/query.js"
-import {generateTemplateId} from "./generate-template-id.js"
-import {normalizeInteractionTemplate} from "../normalizers/interaction-template/interaction-template.js"
+import {generateTemplateId} from "./generate-template-id/generate-template-id.js"
 import {getChainId} from "../utils"
 
 /**
@@ -23,9 +22,6 @@ export async function getInteractionTemplateAudits(
     template != undefined,
     "getInteractionTemplateAudits({ template }) -- template must be defined"
   )
-
-  template = normalizeInteractionTemplate(template)
-
   invariant(
     template.f_type === "InteractionTemplate",
     "getInteractionTemplateAudits({ template }) -- template must be an InteractionTemplate"
@@ -49,6 +45,7 @@ export async function getInteractionTemplateAudits(
   }
 
   switch (template.f_version) {
+    case "1.1.0":
     case "1.0.0":
       const _auditors = auditors || (await config().get("flow.auditors"))
 

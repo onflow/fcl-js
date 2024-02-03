@@ -1,11 +1,10 @@
-import {generateDependencyPin} from "./generate-dependency-pin.js"
+import {generateDependencyPin} from "./generate-dependency-pin/generate-dependency-pin.js"
 import {invariant, block} from "@onflow/sdk"
 import {log, LEVELS} from "@onflow/util-logger"
-import {normalizeInteractionTemplate} from "../normalizers/interaction-template/interaction-template.js"
 
 /**
  * @description Checks if an Interaction Template's pins match those generated at a block height
- * 
+ *
  * @param {object} params
  * @param {object} params.template - Interaction Template to check pins for
  * @param {number} params.blockHeight - Block height to check pins at
@@ -30,8 +29,6 @@ export async function verifyDependencyPinsSame(
     "generateDependencyPin({ template }) -- template must be an InteractionTemplate"
   )
 
-  template = normalizeInteractionTemplate(template)
-
   invariant(
     network != undefined,
     "generateDependencyPin({ network }) network must be defined"
@@ -47,29 +44,29 @@ export async function verifyDependencyPinsSame(
 
   switch (template.f_version) {
     case "1.0.0":
-      let templateDependenciesPlaceholderKeys = Object.keys(
+      const templateDependenciesPlaceholderKeys = Object.keys(
         template.data.dependencies
       )
 
       for (let templateDependencyPlaceholderKey of templateDependenciesPlaceholderKeys) {
-        let templateDependencyPlaceholder =
+        const templateDependencyPlaceholder =
           template.data.dependencies[templateDependencyPlaceholderKey]
 
-        let templateDependencyPlaceholderContractNames = Object.keys(
+          const templateDependencyPlaceholderContractNames = Object.keys(
           templateDependencyPlaceholder
         )
 
         for (let templateDependencyPlaceholderContractName of templateDependencyPlaceholderContractNames) {
-          let templateDependencyPlaceholderContractNetworks =
+          const templateDependencyPlaceholderContractNetworks =
             template.data.dependencies[templateDependencyPlaceholderKey][
               templateDependencyPlaceholderContractName
             ]
 
-          let templateDependency =
+            const templateDependency =
             templateDependencyPlaceholderContractNetworks[network]
           if (typeof templateDependency === "undefined") continue
 
-          let pin = await generateDependencyPin(
+          const pin = await generateDependencyPin(
             {
               address: templateDependency.address,
               contractName: templateDependency.contract,
@@ -95,6 +92,49 @@ export async function verifyDependencyPinsSame(
 
       return true
 
+    case "1.1.0":
+      let isVerified = false
+      // iterate over each dependency
+      for (let i = 0; i < template.data?.dependencies.length; i++) {
+        const dependency = template.data?.dependencies[i]
+        // iterate over each contract in dependency
+        for (let j = 0; j < dependency?.contracts.length; j++) {
+          const contract = dependency?.contracts[j]
+          // iterate over each network in contract
+          for (let k = 0; k < contract?.networks.length; k++) {
+            const net = contract?.networks[k]
+            // if network matches, generate pin and compare
+            if (net.network === network) {
+              const pin = await generateDependencyPin(
+                {
+                  version: template.f_version,
+                  address: net.address,
+                  contractName: contract.contract,
+                  blockHeight,
+                },
+                opts
+              )
+
+              if (pin !== net.dependency_pin.pin) {
+                log({
+                  title: "verifyDependencyPinsSame Debug Error",
+                  message: `Could not recompute and match dependency pin.
+                                    address: ${net.address} | contract: ${contract.contract}
+                                    computed: ${pin}
+                                    template: ${net.pin}
+                                `,
+                  level: LEVELS.debug,
+                })
+                return false
+              } else {
+                isVerified = true
+              }
+            }
+          }
+        }
+      }
+      return isVerified
+
     default:
       throw new Error(
         "verifyDependencyPinsSame Error: Unsupported template version"
@@ -104,7 +144,7 @@ export async function verifyDependencyPinsSame(
 
 /**
  * @description Checks if an Interaction Template's pins match those generated at the latest block height
- * 
+ *
  * @param {object} params
  * @param {object} params.template - Interaction Template to check pins for
  * @param {string} params.network - Network to check pins on
@@ -115,8 +155,8 @@ export async function verifyDependencyPinsSameAtLatestSealedBlock(
   {template, network},
   opts = {}
 ) {
-  let latestSealedBlock = await block({sealed: true})
-  let latestSealedBlockHeight = latestSealedBlock?.height
+  const latestSealedBlock = await block({sealed: true})
+  const latestSealedBlockHeight = latestSealedBlock?.height
 
   return verifyDependencyPinsSame(
     {template, network, blockHeight: latestSealedBlockHeight},

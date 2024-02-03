@@ -1,6 +1,6 @@
-import {getTemplateMessage} from "./get-template-message.js"
+import {deriveCadenceByNetwork} from "./derive-cadence-by-network.js"
 
-describe("Get interaction template messages 1.0.0", () => {
+describe("Derive cadence by network 1.0.0", () => {
   const template = {
     f_type: "InteractionTemplate",
     f_version: "1.0.0",
@@ -8,18 +8,7 @@ describe("Get interaction template messages 1.0.0", () => {
     data: {
       type: "transaction",
       interface: "",
-      messages: {
-        title: {
-          i18n: {
-            "en-US": "Transfer Tokens",
-          },
-        },
-        description: {
-          i18n: {
-            "en-US": "Transfer tokens from one account to another",
-          },
-        },
-      },
+      messages: {},
       cadence: "import FungibleToken from 0xFUNGIBLETOKENADDRESS\n",
       dependencies: {
         "0xFUNGIBLETOKENADDRESS": {
@@ -41,64 +30,31 @@ describe("Get interaction template messages 1.0.0", () => {
           },
         },
       },
-      arguments: {
-        amount: {
-          index: 0,
-          type: "UFix64",
-          messages: {
-            title: {
-              i18n: {
-                "en-US": "The amount of FLOW tokens to send",
-              },
-            },
-          },
-        },
-        to: {
-          index: 1,
-          type: "Address",
-          messages: {
-            title: {
-              i18n: {
-                "en-US": "The Flow account the tokens will go to",
-              },
-            },
-          },
-        },
-      },
+      arguments: {},
     },
   }
 
-  test("It gets template message for given message key and internationalization", async () => {
-    const title = getTemplateMessage({
-      localization: "en-US",
-      messageKey: "title",
+  test("It derives cadence correctly for a given network", async () => {
+    const cadence = await deriveCadenceByNetwork({
+      network: "mainnet",
       template,
     })
 
-    expect(title).toEqual("Transfer Tokens")
-
-    const description = getTemplateMessage({
-      localization: "en-US",
-      messageKey: "description",
-      template,
-    })
-
-    expect(description).toEqual("Transfer tokens from one account to another")
+    expect(cadence).toEqual("import FungibleToken from 0xf233dcee88fe0abe\n")
   })
 
-  test("It fails to get message for an unknown message key", async () => {
-    const message = getTemplateMessage({
-      localization: "en-US",
-      messageKey: "foo",
-      template,
-    })
-
-    expect(message).toEqual(undefined)
+  test("It fails to derive cadence for unknown network", async () => {
+    await expect(() =>
+      deriveCadenceByNetwork({
+        network: "randomnet",
+        template,
+      })
+    ).rejects.toThrow(Error)
   })
 })
 
-describe("Get interaction template messages 1.1.0", () => {
-  const template = {
+describe("Derive cadence by network 1.1.0", () => {
+  const template11 = {
     f_type: "InteractionTemplate",
     f_version: "1.1.0",
     id: "3a99af243b85f3f6af28304af2ed53a37fb913782b3efc483e6f0162a47720a0",
@@ -237,34 +193,32 @@ describe("Get interaction template messages 1.1.0", () => {
     },
   }
 
-  test("It gets template title message for given message key and internationalization", async () => {
-    const title = getTemplateMessage({
-      localization: "en-US",
-      messageKey: "title",
-      template,
+  test("v1.1.0, It derives cadence correctly for a given network", async () => {
+    const cadence = await deriveCadenceByNetwork({
+      network: "mainnet",
+      template: template11,
     })
 
-    expect(title).toEqual("Transfer Tokens")
+    const expectedCadence = `import FungibleToken from 0xf233dcee88fe0abe\n\n#interaction(\n    version: "1.1.0",\n    title: "Transfer Flow",\n    description: "Transfer Flow to account",\n    language: "en-US",\n    parameters: [\n        Parameter(\n            name: "amount", \n            title: "Amount", \n            description: "The amount of FLOW tokens to send"\n        ),\n        Parameter(\n            name: "to", \n            title: "To",\n            description: "The Flow account the tokens will go to"\n        )\n    ],\n)\n\ntransaction(amount: UFix64, to: Address) {\n    let vault: @FungibleToken.Vault\n    \n    prepare(signer: AuthAccount) {\n        self.vault \u003c- signer\n            .borrow\u003c\u0026{FungibleToken.Provider}\u003e(from: /storage/flowTokenVault)!\n            .withdraw(amount: amount)\n    }\n\n    execute {\n        getAccount(to)\n            .getCapability(/public/flowTokenReceiver)!\n            .borrow\u003c\u0026{FungibleToken.Receiver}\u003e()!\n            .deposit(from: \u003c-self.vault)\n    }\n}`
+    expect(cadence).toEqual(expectedCadence)
   })
 
-  test("It gets template description message for given message key and internationalization", async () => {
-    const description = getTemplateMessage({
-      localization: "en-US",
-      messageKey: "description",
-      template,
-    })
-
-    expect(description).toEqual("Transfer Flow to account")
+  test("v1.1.0, Incorrect template version", async () => {
+    await expect(() =>
+      deriveCadenceByNetwork({
+        network: "mainnet",
+        template: {f_type: "InteractionTemplate", f_version: "0.0.0"},
+      })
+    ).rejects.toThrow(Error)
   })
 
-
-  test("It fails to get message for an unknown message key", async () => {
-    const message = getTemplateMessage({
-      localization: "en-US",
-      messageKey: "foo",
-      template,
-    })
-
-    expect(message).toEqual(undefined)
+  test("v1.1.0, It fails to derive cadence for unknown network", async () => {
+    await expect(() =>
+      deriveCadenceByNetwork({
+        network: "randomnet",
+        template: template11,
+      })
+    ).rejects.toThrow(Error)
   })
+
 })
