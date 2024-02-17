@@ -324,6 +324,86 @@ describe("config()", () => {
             ).resolves.toBe("0x1")
           })
         })
+
+        describe("with dependencies aliases", () => {
+          beforeEach(async () => {
+            flowJSON = {
+              networks: {
+                emulator: "127.0.0.1:3569",
+              },
+              accounts: {
+                default: {
+                  address: "f8d6e0586b0a20c7",
+                  key: "ba68d45a5acaa52f3cacf4ad3a64d9523e0ce0ae3addb1ee6805385b380b7646",
+                },
+              },
+              dependencies: {
+                FlowToken: {
+                  source: "mainnet://1654653399040a61.FlowToken",
+                  hash: "7e2bb5acf84ddcd8ad4a9ddb1e3595c8148ac0a711551e27aa7231db51b2d7ce",
+                  aliases: {
+                    emulator: "0x1",
+                    mainnet: "1654653399040a61",
+                    testnet: "7e60df042a9c0868",
+                  },
+                },
+              },
+            }
+            await config().load({flowJSON})
+            await idle()
+          })
+
+          test("should return the alias", async () => {
+            await expect(config().get("0xFlowToken")).resolves.toBe("0x1")
+            await expect(
+              config().get("system.contracts.FlowToken")
+            ).resolves.toBe("0x1")
+          })
+        })
+
+        describe("with dependencies aliases and contract aliases", () => {
+          beforeEach(async () => {
+            flowJSON = {
+              networks: {
+                emulator: "127.0.0.1:3569",
+              },
+              accounts: {
+                default: {
+                  address: "f8d6e0586b0a20c7",
+                  key: "ba68d45a5acaa52f3cacf4ad3a64d9523e0ce0ae3addb1ee6805385b380b7646",
+                },
+              },
+              contracts: {
+                FlowToken: {
+                  source: "./cadence/contracts/FlowToken.cdc",
+                  aliases: {
+                    emulator: "0x1",
+                  },
+                },
+              },
+              dependencies: {
+                FlowToken: {
+                  source: "mainnet://1654653399040a61.FlowToken",
+                  hash: "7e2bb5acf84ddcd8ad4a9ddb1e3595c8148ac0a711551e27aa7231db51b2d7ce",
+                  aliases: {
+                    emulator: "0x2",
+                    mainnet: "1654653399040a61",
+                    testnet: "7e60df042a9c0868",
+                  },
+                },
+              },
+            }
+            await config().load({flowJSON})
+            await idle()
+          })
+
+          test("should return the dependencies alias, not the contract alias", async () => {
+            await expect(config().get("0xFlowToken")).resolves.toBe("0x2")
+            await expect(
+              config().get("system.contracts.FlowToken")
+            ).resolves.toBe("0x2")
+          })
+        })
       })
     })
   })

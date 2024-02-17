@@ -26,6 +26,17 @@ describe("getContracts", () => {
           },
         },
       },
+      dependencies: {
+        FungibleToken: {
+          source: "emulator://123.FungibleToken",
+          hash: "123",
+          aliases: {
+            emulator: "0x333",
+            testnet: "0x222",
+            mainnet: "0x111",
+          }
+        },
+      },
       accounts: {
         "emulator-account": {
           address: "f8d6e0586b0a20c7",
@@ -42,16 +53,19 @@ describe("getContracts", () => {
     const emulatorMappings = {
       HelloWorld: "0x123",
       FooBar: "0x223",
+      FungibleToken: "0x333",
     }
 
     const testnetMappings = {
       HelloWorld: "0x124",
       FooBar: "0x224",
+      FungibleToken: "0x222",
     }
 
     const mainnetMappings = {
       HelloWorld: "0x125",
       FooBar: "0x225",
+      FungibleToken: "0x111",
     }
 
     expect(getContracts(flowJSON, "emulator")).toEqual(emulatorMappings)
