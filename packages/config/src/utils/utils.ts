@@ -17,6 +17,15 @@ export interface FlowJson {
       }
     }
   }
+  dependencies?: {
+    [key: string]: {
+      source: string
+      hash: string
+      aliases: {
+        [key in FlowNetwork]?: string
+      }
+    }
+  }
   deployments?: {
     [key in FlowNetwork]?: {
       [contract: string]: string[]
@@ -105,6 +114,14 @@ const mergeFlowJSONs = (value: FlowJson | FlowJson[]) =>
 const filterContracts = (obj: FlowJson) => (obj.contracts ? obj.contracts : {})
 
 /**
+ * @description Filter out dependencies section of flow.json.
+ * @param obj - Flow JSON
+ * @returns Dependencies section of Flow JSON
+ */
+const filterDependencies = (obj: FlowJson) =>
+  obj.dependencies ? obj.dependencies : {}
+
+/**
  * @description Gathers contract addresses by network
  * @param network - Network to gather addresses for
  * @returns Contract names by addresses mapping e.g { "HelloWorld": "0x123" }
@@ -115,6 +132,23 @@ const mapContractAliasesToNetworkAddress =
       const networkContractAlias = value?.aliases?.[network]
       if (networkContractAlias) {
         c[key] = networkContractAlias
+      }
+
+      return c
+    }, {} as Record<string, string>)
+  }
+
+/**
+ * @description Gathers dependency addresses by network
+ * @param network - Network to gather addresses for
+ * @returns Dependency names by addresses mapping e.g { "HelloWorld": "0x123" }
+ */
+const mapDependencyAliasesToNetworkAddress =
+  (network: string) => (dependencies: Record<string, any>) => {
+    return Object.entries(dependencies).reduce((c, [key, value]) => {
+      const networkDependencyAlias = value?.aliases?.[network]
+      if (networkDependencyAlias) {
+        c[key] = networkDependencyAlias
       }
 
       return c
@@ -156,7 +190,8 @@ export const getContracts = (
     mergeFlowJSONs,
     mergePipe(
       mapDeploymentsToNetworkAddress(network),
-      pipe(filterContracts, mapContractAliasesToNetworkAddress(network))
+      pipe(filterContracts, mapContractAliasesToNetworkAddress(network)),
+      pipe(filterDependencies, mapDependencyAliasesToNetworkAddress(network))
     )
   )(jsons)
 }
