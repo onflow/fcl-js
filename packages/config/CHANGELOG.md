@@ -1,5 +1,11 @@
 # @onflow/config
 
+## 1.3.0-alpha.3
+
+### Minor Changes
+
+- [#1848](https://github.com/onflow/fcl-js/pull/1848) [`fdd52c45`](https://github.com/onflow/fcl-js/commit/fdd52c45b3a64210c5f716e13aa4d08d3796370c) Thanks [@jribbink](https://github.com/jribbink)! - Add support for new dependencies field in flow.json
+
 ## 1.2.2-alpha.2
 
 ### Patch Changes

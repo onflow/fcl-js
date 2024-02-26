@@ -1,5 +1,11 @@
 # @onflow/fcl-bundle
 
+## 1.4.2-alpha.2
+
+### Patch Changes
+
+- [#1848](https://github.com/onflow/fcl-js/pull/1848) [`fdd52c45`](https://github.com/onflow/fcl-js/commit/fdd52c45b3a64210c5f716e13aa4d08d3796370c) Thanks [@jribbink](https://github.com/jribbink)! - Patch babel vulnerability
+
 ## 1.4.2-alpha.1
 
 ### Patch Changes

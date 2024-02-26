@@ -13,8 +13,8 @@
     "url": "https://github.com/onflow/flow-js-sdk/issues"
   },
   "devDependencies": {
-    "@onflow/fcl-bundle": "1.4.2-alpha.1",
-    "@onflow/sdk": "1.4.0-alpha.5",
+    "@onflow/fcl-bundle": "1.4.2-alpha.2",
+    "@onflow/sdk": "1.4.0-alpha.6",
     "jest": "^29.5.0"
   },
   "source": "src/sdk-send-grpc.js",
