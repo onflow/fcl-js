@@ -63,19 +63,17 @@ const getVerifySignaturesScript = async (sig, opts) => {
 
   let network = await getChainId(opts)
 
-  let fclCryptoContract
+  const contractAddresses = {
+    testnet: "0x74daa6f9c7ef24b1",
+    mainnet: "0xb4b82a1c9d21d284",
+    previewnet: "0x40b5b8b2ce81ea4a",
+  }
+  const fclCryptoContract = opts.fclCryptoContract || contractAddresses[network]
 
   invariant(
-    opts.fclCryptoContract || network === "testnet" || network === "mainnet",
-    "${verifyFunction}({ fclCryptoContract }) -- fclCrypto contract address must be set for non-mainnet/testnet networks"
+    fclCryptoContract,
+    `${verifyFunction}({ fclCryptoContract }) -- FCLCrypto contract address is unknown for network: ${network}. Please manually specify the FCLCrypto contract address.`
   )
-
-  if (opts.fclCryptoContract) {
-    fclCryptoContract = opts.fclCryptoContract
-  } else {
-    fclCryptoContract =
-      network === "testnet" ? "0x74daa6f9c7ef24b1" : "0xb4b82a1c9d21d284"
-  }
 
   return `
       import FCLCrypto from ${fclCryptoContract}
