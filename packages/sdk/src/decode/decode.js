@@ -215,14 +215,20 @@ export const decodeResponse = async (response, customDecoders = {}) => {
   } else if (response.collection) {
     return response.collection
   } else if (response.networkParameters) {
-    const chainIdMap = {
-      "flow-testnet": "testnet",
-      "flow-mainnet": "mainnet",
-      "flow-emulator": "local",
+    const prefixRegex = /^flow-/
+    const rawChainId = response.networkParameters.chainId
+    let formattedChainId
+
+    if (rawChainId === "flow-emulator") {
+      formattedChainId = "local"
+    } else if (prefixRegex.test(rawChainId)) {
+      formattedChainId = rawChainId.replace(prefixRegex, "")
+    } else {
+      formattedChainId = rawChainId
     }
 
     return {
-      chainId: chainIdMap[response.networkParameters.chainId],
+      chainId: formattedChainId,
     }
   } else if (response.streamConnection) {
     return decodeStream(response.streamConnection, decodeResponse, customDecoders)
