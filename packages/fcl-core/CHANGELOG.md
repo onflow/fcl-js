@@ -1,5 +1,16 @@
 # @onflow/fcl
 
+## 1.9.0-alpha.6
+
+### Minor Changes
+
+- [#1852](https://github.com/onflow/fcl-js/pull/1852) [`b2c73354`](https://github.com/onflow/fcl-js/commit/b2c733545a3904dcff959a2e12b4cf90383bdac0) Thanks [@jribbink](https://github.com/jribbink)! - Add Previewnet FCLCrypto address
+
+### Patch Changes
+
+- Updated dependencies [[`b2c73354`](https://github.com/onflow/fcl-js/commit/b2c733545a3904dcff959a2e12b4cf90383bdac0)]:
+  - @onflow/sdk@1.4.0-alpha.7
+
 ## 1.9.0-alpha.5
 
 ### Patch Changes
