@@ -2,4 +2,4 @@
 "@onflow/fcl-core": minor
 ---
 
-Add previewnet FCLCrypto address
+Add Previewnet FCLCrypto address
