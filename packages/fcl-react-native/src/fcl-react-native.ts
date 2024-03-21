@@ -46,6 +46,7 @@ export {
   getTransactionStatus,
   getTransaction,
   getNetworkParameters,
+  getNodeVersionInfo,
   authorizations,
   authorization,
   args,
@@ -59,6 +60,7 @@ export {
   validator,
   invariant,
   subscribeEvents,
+  nodeVersionInfo,
 } from "@onflow/fcl-core"
 
 import {getMutate, getCurrentUser, initServiceRegistry, setIsReactNative} from "@onflow/fcl-core"

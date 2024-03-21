@@ -12,23 +12,25 @@ import {sendGetCollection} from "./send-get-collection.js"
 import {sendPing, ISendPingContext} from "./send-ping"
 import {sendGetNetworkParameters} from "./send-get-network-parameters.js"
 import {Interaction} from "@onflow/typedefs"
+import {sendGetNodeVersionInfo} from "./send-get-node-version-info.js"
 
 interface InteractionModule {
-  isTransaction: (ix: Interaction) => boolean;
-  isGetTransactionStatus: (ix: Interaction) => boolean;
-  isGetTransaction: (ix: Interaction) => boolean;
-  isScript: (ix: Interaction) => boolean;
-  isGetAccount: (ix: Interaction) => boolean;
-  isGetEvents: (ix: Interaction) => boolean;
-  isGetBlock: (ix: Interaction) => boolean;
-  isGetBlockHeader: (ix: Interaction) => boolean;
-  isGetCollection: (ix: Interaction) => boolean;
-  isPing: (ix: Interaction) => boolean;
-  isGetNetworkParameters: (ix: Interaction) => boolean;
-  isSubscribeEvents: (ix: Interaction) => boolean;
+  isTransaction: (ix: Interaction) => boolean
+  isGetTransactionStatus: (ix: Interaction) => boolean
+  isGetTransaction: (ix: Interaction) => boolean
+  isScript: (ix: Interaction) => boolean
+  isGetAccount: (ix: Interaction) => boolean
+  isGetEvents: (ix: Interaction) => boolean
+  isGetBlock: (ix: Interaction) => boolean
+  isGetBlockHeader: (ix: Interaction) => boolean
+  isGetCollection: (ix: Interaction) => boolean
+  isPing: (ix: Interaction) => boolean
+  isGetNetworkParameters: (ix: Interaction) => boolean
+  isSubscribeEvents?: (ix: Interaction) => boolean
+  isGetNodeVersionInfo?: (ix: Interaction) => boolean
 }
-interface IContext extends ISendPingContext{
-  ix: InteractionModule;
+interface IContext extends ISendPingContext {
+  ix: InteractionModule
 }
 
 interface IOptsCommon {
@@ -36,21 +38,70 @@ interface IOptsCommon {
 }
 
 interface IOpts extends IOptsCommon {
-  sendTransaction?: (ix: Interaction, context: IContext, opts: IOptsCommon) => void
-  sendGetTransactionStatus?: (ix: Interaction, context: IContext, opts: IOptsCommon) => void
-  sendGetTransaction?: (ix: Interaction, context: IContext, opts: IOptsCommon) => void
-  sendExecuteScript?: (ix: Interaction, context: IContext, opts: IOptsCommon) => void
-  sendGetAccount?: (ix: Interaction, context: IContext, opts: IOptsCommon) => void
-  sendGetEvents?: (ix: Interaction, context: IContext, opts: IOptsCommon) => void
-  sendGetBlockHeader?: (ix: Interaction, context: IContext, opts: IOptsCommon) => void
-  sendGetCollection?: (ix: Interaction, context: IContext, opts: IOptsCommon) => void
+  sendTransaction?: (
+    ix: Interaction,
+    context: IContext,
+    opts: IOptsCommon
+  ) => void
+  sendGetTransactionStatus?: (
+    ix: Interaction,
+    context: IContext,
+    opts: IOptsCommon
+  ) => void
+  sendGetTransaction?: (
+    ix: Interaction,
+    context: IContext,
+    opts: IOptsCommon
+  ) => void
+  sendExecuteScript?: (
+    ix: Interaction,
+    context: IContext,
+    opts: IOptsCommon
+  ) => void
+  sendGetAccount?: (
+    ix: Interaction,
+    context: IContext,
+    opts: IOptsCommon
+  ) => void
+  sendGetEvents?: (
+    ix: Interaction,
+    context: IContext,
+    opts: IOptsCommon
+  ) => void
+  sendGetBlockHeader?: (
+    ix: Interaction,
+    context: IContext,
+    opts: IOptsCommon
+  ) => void
+  sendGetCollection?: (
+    ix: Interaction,
+    context: IContext,
+    opts: IOptsCommon
+  ) => void
   sendPing?: (ix: Interaction, context: IContext, opts: IOptsCommon) => void
   sendGetBlock?: (ix: Interaction, context: IContext, opts: IOptsCommon) => void
-  sendGetNetworkParameters?: (ix: Interaction, context: IContext, opts: IOptsCommon) => void
-  connectSubscribeEvents?: (ix: Interaction, context: IContext, opts: IOptsCommon) => void
+  sendGetNetworkParameters?: (
+    ix: Interaction,
+    context: IContext,
+    opts: IOptsCommon
+  ) => void
+  connectSubscribeEvents?: (
+    ix: Interaction,
+    context: IContext,
+    opts: IOptsCommon
+  ) => void
+  sendGetNodeVersionInfo?: (
+    ix: Interaction,
+    context: IContext,
+    opts: IOptsCommon
+  ) => void
 }
 
-export const send = async (ix: Interaction, context: IContext, opts: IOpts = {}) => {
+export const send = async (
+  ix: Interaction,
+  context: IContext,
+  opts: IOpts = {}
+) => {
   invariant(
     Boolean(opts?.node),
     `SDK Send Error: Either opts.node or "accessNode.api" in config must be defined.`
@@ -73,7 +124,7 @@ export const send = async (ix: Interaction, context: IContext, opts: IOpts = {})
       return opts.sendGetAccount ? opts.sendGetAccount(ix, context, opts) : sendGetAccount(ix, context, opts)
     case context.ix.isGetEvents(ix):
       return opts.sendGetEvents ? opts.sendGetEvents(ix, context, opts) : sendGetEvents(ix, context, opts)
-    case context.ix.isSubscribeEvents(ix):
+    case context.ix.isSubscribeEvents?.(ix):
       return opts.connectSubscribeEvents ? opts.connectSubscribeEvents(ix, context, opts) : connectSubscribeEvents(ix, context, opts)
     case context.ix.isGetBlock(ix):
       return opts.sendGetBlock ? opts.sendGetBlock(ix, context, opts) : sendGetBlock(ix, context, opts)
@@ -85,6 +136,8 @@ export const send = async (ix: Interaction, context: IContext, opts: IOpts = {})
       return opts.sendPing ? opts.sendPing(ix, context, opts) : sendPing(ix, context, opts)
     case context.ix.isGetNetworkParameters(ix):
       return opts.sendGetNetworkParameters ? opts.sendGetNetworkParameters(ix, context, opts) : sendGetNetworkParameters(ix, context, opts)
+    case context.ix.isGetNodeVersionInfo?.(ix):
+      return opts.sendGetNodeVersionInfo ? opts.sendGetNodeVersionInfo(ix, context, opts) : sendGetNodeVersionInfo(ix, context, opts)
     default:
       return ix
   }

@@ -1,5 +1,6 @@
+import {InteractionAccount} from "@onflow/typedefs"
 import {resolveAccounts} from "../sdk"
-import {InteractionAccount, prepAccount, initAccount, initInteraction} from "./interaction"
+import {prepAccount, initAccount, initInteraction} from "./interaction"
 
 describe("prepAccount", () => {
   test("prepAccount converts account object keyId to integer", async () => {
@@ -14,8 +15,11 @@ describe("prepAccount", () => {
       }),
     }
 
-    const ix = prepAccount(acct, {role: "proposer"})({...initInteraction(), accounts: {}})
-    expect(ix.accounts[ix.proposer||""].keyId).toBe(parseInt(keyId))
+    const ix = prepAccount(acct, {role: "proposer"})({
+      ...initInteraction(),
+      accounts: {},
+    })
+    expect(ix.accounts[ix.proposer || ""].keyId).toBe(parseInt(keyId))
   })
 
   test("prepAccount converts authorization function keyId to integer", async () => {

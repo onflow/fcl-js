@@ -11,6 +11,7 @@ exports[`Response - Snapshot 1`] = `
   "heartbeat": null,
   "latestBlock": null,
   "networkParameters": null,
+  "nodeVersionInfo": null,
   "streamConnection": null,
   "tag": null,
   "transaction": null,

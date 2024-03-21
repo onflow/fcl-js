@@ -268,6 +268,9 @@ export const makeGetNetworkParameters /*    */ = makeIx(
 export const makeSubscribeEvents /*         */ = makeIx(
   InteractionTag.SUBSCRIBE_EVENTS
 )
+export const makeGetNodeVerionInfo /*       */ = makeIx(
+  InteractionTag.GET_NODE_VERSION_INFO
+)
 
 const is = (wat: InteractionTag) => (ix: Interaction) => ix.tag === wat
 
@@ -290,6 +293,9 @@ export const isGetBlockHeader /*          */ = is(
 export const isGetCollection /*           */ = is(InteractionTag.GET_COLLECTION)
 export const isGetNetworkParameters /*    */ = is(
   InteractionTag.GET_NETWORK_PARAMETERS
+)
+export const isGetNodeVersionInfo /*      */ = is(
+  InteractionTag.GET_NODE_VERSION_INFO
 )
 export const isSubscribeEvents /*         */ = is(
   InteractionTag.SUBSCRIBE_EVENTS

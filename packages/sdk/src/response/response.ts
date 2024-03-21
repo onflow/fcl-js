@@ -12,7 +12,8 @@ const DEFAULT_RESPONSE = {
     "collection":null,
     "networkParameters":null,
     "streamConnection":null,
-    "heartbeat":null
+    "heartbeat":null,
+    "nodeVersionInfo": null,
 }
 
 export const response = () => ({...DEFAULT_RESPONSE})
