@@ -87,6 +87,11 @@ export class Chunk extends jspb.Message {
   getExecutionDataId_asB64(): string;
   setExecutionDataId(value: Uint8Array | string): void;
 
+  getStateDeltaCommitment(): Uint8Array | string;
+  getStateDeltaCommitment_asU8(): Uint8Array;
+  getStateDeltaCommitment_asB64(): string;
+  setStateDeltaCommitment(value: Uint8Array | string): void;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): Chunk.AsObject;
   static toObject(includeInstance: boolean, msg: Chunk): Chunk.AsObject;
@@ -108,6 +113,7 @@ export namespace Chunk {
     index: number,
     endState: Uint8Array | string,
     executionDataId: Uint8Array | string,
+    stateDeltaCommitment: Uint8Array | string,
   }
 }
 

@@ -43,3 +43,10 @@ export namespace Event {
   }
 }
 
+export interface EventEncodingVersionMap {
+  JSON_CDC_V0: 0;
+  CCF_V0: 1;
+}
+
+export const EventEncodingVersion: EventEncodingVersionMap;
+

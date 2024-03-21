@@ -13,13 +13,13 @@
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global = (function() {
-  if (this) { return this; }
-  if (typeof window !== 'undefined') { return window; }
-  if (typeof global !== 'undefined') { return global; }
-  if (typeof self !== 'undefined') { return self; }
-  return Function('return this')();
-}.call(null));
+var global =
+    (typeof globalThis !== 'undefined' && globalThis) ||
+    (typeof window !== 'undefined' && window) ||
+    (typeof global !== 'undefined' && global) ||
+    (typeof self !== 'undefined' && self) ||
+    (function () { return this; }).call(null) ||
+    Function('return this')();
 
 goog.exportSymbol('proto.flow.entities.Account', null, global);
 goog.exportSymbol('proto.flow.entities.AccountKey', null, global);
@@ -393,7 +393,8 @@ proto.flow.entities.Account.prototype.getContractsMap = function(opt_noLazyCreat
  */
 proto.flow.entities.Account.prototype.clearContractsMap = function() {
   this.getContractsMap().clear();
-  return this;};
+  return this;
+};
 
 
 
