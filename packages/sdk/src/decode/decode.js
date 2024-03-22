@@ -231,9 +231,15 @@ export const decodeResponse = async (response, customDecoders = {}) => {
       chainId: formattedChainId,
     }
   } else if (response.streamConnection) {
-    return decodeStream(response.streamConnection, decodeResponse, customDecoders)
+    return decodeStream(
+      response.streamConnection,
+      decodeResponse,
+      customDecoders
+    )
   } else if (response.heartbeat) {
     return response.heartbeat
+  } else if (response.nodeVersionInfo) {
+    return response.nodeVersionInfo
   }
 
   return null

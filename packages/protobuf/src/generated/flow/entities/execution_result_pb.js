@@ -13,13 +13,13 @@
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global = (function() {
-  if (this) { return this; }
-  if (typeof window !== 'undefined') { return window; }
-  if (typeof global !== 'undefined') { return global; }
-  if (typeof self !== 'undefined') { return self; }
-  return Function('return this')();
-}.call(null));
+var global =
+    (typeof globalThis !== 'undefined' && globalThis) ||
+    (typeof window !== 'undefined' && window) ||
+    (typeof global !== 'undefined' && global) ||
+    (typeof self !== 'undefined' && self) ||
+    (function () { return this; }).call(null) ||
+    Function('return this')();
 
 goog.exportSymbol('proto.flow.entities.Chunk', null, global);
 goog.exportSymbol('proto.flow.entities.ExecutionReceiptMeta', null, global);
@@ -524,7 +524,8 @@ proto.flow.entities.Chunk.toObject = function(includeInstance, msg) {
     numberOfTransactions: jspb.Message.getFieldWithDefault(msg, 6, 0),
     index: jspb.Message.getFieldWithDefault(msg, 7, 0),
     endState: msg.getEndState_asB64(),
-    executionDataId: msg.getExecutionDataId_asB64()
+    executionDataId: msg.getExecutionDataId_asB64(),
+    stateDeltaCommitment: msg.getStateDeltaCommitment_asB64()
   };
 
   if (includeInstance) {
@@ -596,6 +597,10 @@ proto.flow.entities.Chunk.deserializeBinaryFromReader = function(msg, reader) {
     case 9:
       var value = /** @type {!Uint8Array} */ (reader.readBytes());
       msg.setExecutionDataId(value);
+      break;
+    case 10:
+      var value = /** @type {!Uint8Array} */ (reader.readBytes());
+      msg.setStateDeltaCommitment(value);
       break;
     default:
       reader.skipField();
@@ -686,6 +691,13 @@ proto.flow.entities.Chunk.serializeBinaryToWriter = function(message, writer) {
   if (f.length > 0) {
     writer.writeBytes(
       9,
+      f
+    );
+  }
+  f = message.getStateDeltaCommitment_asU8();
+  if (f.length > 0) {
+    writer.writeBytes(
+      10,
       f
     );
   }
@@ -971,6 +983,48 @@ proto.flow.entities.Chunk.prototype.getExecutionDataId_asU8 = function() {
  */
 proto.flow.entities.Chunk.prototype.setExecutionDataId = function(value) {
   return jspb.Message.setProto3BytesField(this, 9, value);
+};
+
+
+/**
+ * optional bytes state_delta_commitment = 10;
+ * @return {!(string|Uint8Array)}
+ */
+proto.flow.entities.Chunk.prototype.getStateDeltaCommitment = function() {
+  return /** @type {!(string|Uint8Array)} */ (jspb.Message.getFieldWithDefault(this, 10, ""));
+};
+
+
+/**
+ * optional bytes state_delta_commitment = 10;
+ * This is a type-conversion wrapper around `getStateDeltaCommitment()`
+ * @return {string}
+ */
+proto.flow.entities.Chunk.prototype.getStateDeltaCommitment_asB64 = function() {
+  return /** @type {string} */ (jspb.Message.bytesAsB64(
+      this.getStateDeltaCommitment()));
+};
+
+
+/**
+ * optional bytes state_delta_commitment = 10;
+ * Note that Uint8Array is not supported on all browsers.
+ * @see http://caniuse.com/Uint8Array
+ * This is a type-conversion wrapper around `getStateDeltaCommitment()`
+ * @return {!Uint8Array}
+ */
+proto.flow.entities.Chunk.prototype.getStateDeltaCommitment_asU8 = function() {
+  return /** @type {!Uint8Array} */ (jspb.Message.bytesAsU8(
+      this.getStateDeltaCommitment()));
+};
+
+
+/**
+ * @param {!(string|Uint8Array)} value
+ * @return {!proto.flow.entities.Chunk} returns this
+ */
+proto.flow.entities.Chunk.prototype.setStateDeltaCommitment = function(value) {
+  return jspb.Message.setProto3BytesField(this, 10, value);
 };
 
 

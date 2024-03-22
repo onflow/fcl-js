@@ -11,6 +11,8 @@ import "flow/entities/block.proto";
 import "flow/entities/collection.proto";
 import "flow/entities/event.proto";
 import "flow/entities/execution_result.proto";
+import "flow/entities/metadata.proto";
+import "flow/entities/node_version_info.proto";
 import "flow/entities/transaction.proto";
 import "google/protobuf/timestamp.proto";
 
@@ -18,6 +20,10 @@ import "google/protobuf/timestamp.proto";
 service AccessAPI {
   // Ping is used to check if the access node is alive and healthy.
   rpc Ping(PingRequest) returns (PingResponse);
+
+  // GetNodeVersionInfo return node version information, such as semver,
+  // commit, sporkID and protocol version.
+  rpc GetNodeVersionInfo(GetNodeVersionInfoRequest) returns (GetNodeVersionInfoResponse);
 
   // Block Headers
 
@@ -66,6 +72,12 @@ service AccessAPI {
   // GetTransactionsByBlockID gets all the transactions for a specified block
   rpc GetTransactionsByBlockID(GetTransactionsByBlockIDRequest)
       returns (TransactionsResponse);
+  // GetSystemTransaction gets a system transaction
+  rpc GetSystemTransaction(GetSystemTransactionRequest) returns (TransactionResponse);
+  // GetSystemTransactionResult gets a system transaction result for a
+  // specified block
+  rpc GetSystemTransactionResult(GetSystemTransactionResultRequest) returns (TransactionResultResponse);
+
 
   // Accounts
 
@@ -124,16 +136,137 @@ service AccessAPI {
   rpc GetLatestProtocolStateSnapshot(GetLatestProtocolStateSnapshotRequest)
       returns (ProtocolStateSnapshotResponse);
 
+  // GetProtocolStateSnapshotByBlockID retrieves the latest sealed protocol state
+  // snapshot by block ID. Used by Flow nodes joining the network to bootstrap a
+  // space-efficient local state.
+  rpc GetProtocolStateSnapshotByBlockID(GetProtocolStateSnapshotByBlockIDRequest)
+      returns (ProtocolStateSnapshotResponse);
+
+  // GetProtocolStateSnapshotByHeight retrieves the latest sealed protocol state
+  // snapshot by block height. Used by Flow nodes joining the network to bootstrap a
+  // space-efficient local state.
+  rpc GetProtocolStateSnapshotByHeight(GetProtocolStateSnapshotByHeightRequest)
+      returns (ProtocolStateSnapshotResponse);
+
   // GetExecutionResultForBlockID returns Execution Result for a given block.
   // At present, Access Node might not have execution results for every block
   // and as usual, until sealed, this data can change
   rpc GetExecutionResultForBlockID(GetExecutionResultForBlockIDRequest)
       returns (ExecutionResultForBlockIDResponse);
+
+  // GetExecutionResultByID returns Execution Result by its ID.
+  rpc GetExecutionResultByID(GetExecutionResultByIDRequest)
+      returns (ExecutionResultByIDResponse);
+
+  // Subscriptions
+
+  // Subscribe blocks
+
+  // SubscribeBlocksFromStartBlockID streams finalized or sealed blocks starting at the requested
+  // start block id, up until the latest available block. Once the latest is
+  // reached, the stream will remain open and responses are sent for each new
+  // block as it becomes available.
+  //
+  // Blocks are only returned when they have reached the provided block status. For example,
+  // if the status is "sealed", only sealed blocks will be returned.
+  rpc SubscribeBlocksFromStartBlockID(SubscribeBlocksFromStartBlockIDRequest)
+      returns (stream SubscribeBlocksResponse);
+
+  // SubscribeBlocksFromStartHeight streams finalized or sealed blocks starting at the requested
+  // start block height, up until the latest available block. Once the latest is
+  // reached, the stream will remain open and responses are sent for each new
+  // block as it becomes available.
+  //
+  // Blocks are only returned when they have reached the provided block status. For example,
+  // if the status is "sealed", only sealed blocks will be returned.
+  rpc SubscribeBlocksFromStartHeight(SubscribeBlocksFromStartHeightRequest)
+      returns (stream SubscribeBlocksResponse);
+
+  // SubscribeBlocksFromLatest streams finalized or sealed blocks starting from the latest finalized or sealed
+  // block. The stream will remain open and responses are sent for each new block as it becomes available.
+  //
+  // Blocks are only returned when they have reached the provided block status. For example,
+  // if the status is "sealed", only sealed blocks will be returned.
+  rpc SubscribeBlocksFromLatest(SubscribeBlocksFromLatestRequest)
+      returns (stream SubscribeBlocksResponse);
+  
+  // Subscribe block headers
+
+  // SubscribeBlockHeadersFromStartBlockID streams finalized or sealed block headers starting at the requested
+  // start block id, up until the latest available block. Once the latest is
+  // reached, the stream will remain open and responses are sent for each new
+  // block header as it becomes available.
+  //
+  // Block headers are only returned when they have reached the provided block status. For example,
+  // if the status is "sealed", only sealed block headers will be returned.
+  rpc SubscribeBlockHeadersFromStartBlockID(SubscribeBlockHeadersFromStartBlockIDRequest)
+      returns (stream SubscribeBlockHeadersResponse);
+
+  // SubscribeBlockHeadersFromStartHeight streams finalized or sealed block headers starting at the requested
+  // start block height, up until the latest available block. Once the latest is
+  // reached, the stream will remain open and responses are sent for each new
+  // block header as it becomes available.
+  //
+  // Block headers are only returned when they have reached the provided block status. For example,
+  // if the status is "sealed", only sealed block headers will be returned.
+  rpc SubscribeBlockHeadersFromStartHeight(SubscribeBlockHeadersFromStartHeightRequest)
+      returns (stream SubscribeBlockHeadersResponse);
+
+  // SubscribeBlockHeadersFromLatest streams finalized or sealed block headers starting from the latest finalized or sealed
+  // block. The stream will remain open and responses are sent for each new block header as it becomes available.
+  //
+  // Block headers are only returned when they have reached the provided block status. For example,
+  // if the status is "sealed", only sealed block headers will be returned.
+  rpc SubscribeBlockHeadersFromLatest(SubscribeBlockHeadersFromLatestRequest)
+      returns (stream SubscribeBlockHeadersResponse);
+
+  // Subscribe block digests
+
+  // SubscribeBlockDigestsFromStartBlockID streams finalized or sealed lightweight block starting at the requested
+  // start block id, up until the latest available block. Once the latest is
+  // reached, the stream will remain open and responses are sent for each new
+  // lightweight block as it becomes available.
+  //
+  // Lightweight blocks are only returned when they have reached the provided block status. For example,
+  // if the status is "sealed", only sealed lightweight blocks will be returned.
+  rpc SubscribeBlockDigestsFromStartBlockID(SubscribeBlockDigestsFromStartBlockIDRequest)
+      returns (stream SubscribeBlockDigestsResponse);
+
+  // SubscribeBlockDigestsFromStartHeight streams finalized or sealed lightweight block starting at the requested
+  // start block height, up until the latest available block. Once the latest is
+  // reached, the stream will remain open and responses are sent for each new
+  // lightweight block as it becomes available.
+  //
+  // Lightweight blocks are only returned when they have reached the provided block status. For example,
+  // if the status is "sealed", only sealed lightweight blocks will be returned.
+  rpc SubscribeBlockDigestsFromStartHeight(SubscribeBlockDigestsFromStartHeightRequest)
+      returns (stream SubscribeBlockDigestsResponse);
+
+  // SubscribeBlockDigestsFromLatest streams finalized or sealed lightweight block headers starting of the latest finalized or sealed
+  // block. The stream will remain open and responses are sent for each new lightweight block as it becomes available.
+  //
+  // Lightweight blocks are only returned when they have reached the provided block status. For example,
+  // if the status is "sealed", only sealed lightweight blocks will be returned.
+  rpc SubscribeBlockDigestsFromLatest(SubscribeBlockDigestsFromLatestRequest)
+      returns (stream SubscribeBlockDigestsResponse);
+
+  // Subscribe transaction statuses
+
+  // SendAndSubscribeTransactionStatuses send a transaction and immediately subscribe to its status changes. The status
+  // is streamed back until the block containing the transaction becomes sealed.
+  rpc SendAndSubscribeTransactionStatuses(SendAndSubscribeTransactionStatusesRequest)
+        returns (stream SendAndSubscribeTransactionStatusesResponse);
 }
 
 message PingRequest {}
 
 message PingResponse {}
+
+message GetNodeVersionInfoRequest {}
+
+message GetNodeVersionInfoResponse {
+  entities.NodeVersionInfo info = 1;
+}
 
 // Block Headers
 
@@ -151,6 +284,8 @@ message GetBlockHeaderByHeightRequest {
 
 message BlockHeaderResponse {
   entities.BlockHeader block = 1;
+  entities.BlockStatus block_status = 2;
+  entities.Metadata metadata = 3;
 }
 
 // Blocks
@@ -172,6 +307,8 @@ message GetBlockByHeightRequest {
 
 message BlockResponse {
   entities.Block block = 1;
+  entities.BlockStatus block_status = 2;
+  entities.Metadata metadata = 3;
 }
 
 // Collections
@@ -182,6 +319,7 @@ message GetCollectionByIDRequest {
 
 message CollectionResponse {
   entities.Collection collection = 1;
+  entities.Metadata metadata = 2;
 }
 
 // Transactions
@@ -192,31 +330,49 @@ message SendTransactionRequest {
 
 message SendTransactionResponse {
   bytes id = 1;
+  entities.Metadata metadata = 2;
 }
 
 message GetTransactionRequest {
   bytes id = 1;
+  bytes block_id = 2;
+  bytes collection_id = 3;
+  entities.EventEncodingVersion event_encoding_version = 4;
+}
+
+message GetSystemTransactionRequest {
+  bytes block_id = 1;
+}
+
+message GetSystemTransactionResultRequest {
+  bytes block_id = 1;
+  entities.EventEncodingVersion event_encoding_version = 2;
 }
 
 message GetTransactionByIndexRequest {
   bytes block_id = 1;
   uint32 index = 2;
+  entities.EventEncodingVersion event_encoding_version = 3;
 }
 
 message GetTransactionsByBlockIDRequest {
   bytes block_id = 1;
+  entities.EventEncodingVersion event_encoding_version = 2;
 }
 
 message TransactionResultsResponse {
   repeated TransactionResultResponse transaction_results = 1;
+  entities.Metadata metadata = 2;
 }
 
 message TransactionsResponse {
   repeated entities.Transaction transactions = 1;
+  entities.Metadata metadata = 2;
 }
 
 message TransactionResponse {
   entities.Transaction transaction = 1;
+  entities.Metadata metadata = 2;
 }
 
 message TransactionResultResponse {
@@ -227,6 +383,9 @@ message TransactionResultResponse {
   bytes block_id = 5;
   bytes transaction_id = 6;
   bytes collection_id = 7;
+  uint64 block_height = 8;
+  entities.Metadata metadata = 9;
+  uint64 computation_usage = 10;
 }
 
 // Accounts
@@ -237,6 +396,7 @@ message GetAccountRequest {
 
 message GetAccountResponse {
   entities.Account account = 1;
+  entities.Metadata metadata = 2;
 }
 
 message GetAccountAtLatestBlockRequest {
@@ -245,6 +405,7 @@ message GetAccountAtLatestBlockRequest {
 
 message AccountResponse {
   entities.Account account = 1;
+  entities.Metadata metadata = 2;
 }
 
 message GetAccountAtBlockHeightRequest {
@@ -273,6 +434,8 @@ message ExecuteScriptAtBlockHeightRequest {
 
 message ExecuteScriptResponse {
   bytes value = 1;
+  entities.Metadata metadata = 2;
+  uint64 computation_usage = 3;
 }
 
 // Events
@@ -281,11 +444,13 @@ message GetEventsForHeightRangeRequest {
   string type = 1;
   uint64 start_height = 2;
   uint64 end_height = 3;
+  entities.EventEncodingVersion event_encoding_version = 4;
 }
 
 message GetEventsForBlockIDsRequest {
   string type = 1;
   repeated bytes block_ids = 2;
+  entities.EventEncodingVersion event_encoding_version = 3;
 }
 
 message EventsResponse {
@@ -296,6 +461,7 @@ message EventsResponse {
     google.protobuf.Timestamp block_timestamp = 4;
   }
   repeated Result results = 1;
+  entities.Metadata metadata = 2;
 }
 
 // Network Parameters
@@ -310,8 +476,17 @@ message GetNetworkParametersResponse {
 
 message GetLatestProtocolStateSnapshotRequest {}
 
+message GetProtocolStateSnapshotByBlockIDRequest {
+  bytes block_id = 1;
+}
+
+message GetProtocolStateSnapshotByHeightRequest {
+  uint64 block_height = 1;
+}
+
 message ProtocolStateSnapshotResponse {
   bytes serializedSnapshot = 1;
+  entities.Metadata metadata = 2;
 }
 
 // Execution Results
@@ -322,4 +497,179 @@ message GetExecutionResultForBlockIDRequest {
 
 message ExecutionResultForBlockIDResponse {
   entities.ExecutionResult execution_result = 1;
+  entities.Metadata metadata = 2;
+}
+
+message GetExecutionResultByIDRequest {
+  bytes id = 1;
+}
+
+message ExecutionResultByIDResponse {
+  entities.ExecutionResult execution_result = 1;
+  entities.Metadata metadata = 2;
+}
+
+// Subscriptions
+
+// Subscribe blocks
+
+// The request for SubscribeBlocksFromStartBlockID
+message SubscribeBlocksFromStartBlockIDRequest {
+  // Block ID of the first block to subscribe.
+  bytes start_block_id = 1;
+
+  // Required block status of the block payload.
+  // Possible variants:
+  // 1. BLOCK_FINALIZED
+  // 2. BLOCK_SEALED
+  entities.BlockStatus block_status = 2;
+
+  // Boolean value determining the response: 'full' if `true`, 'light' otherwise.
+  bool full_block_response = 3;
+}
+
+// The request for SubscribeBlocksFromStartHeight
+message SubscribeBlocksFromStartHeightRequest {
+  // Block height of the first block to subscribe.
+  uint64 start_block_height = 1;
+
+  // Required block status of the block payload.
+  // Possible variants:
+  // 1. BLOCK_FINALIZED
+  // 2. BLOCK_SEALED
+  entities.BlockStatus block_status = 2;
+
+  // Boolean value determining the response: 'full' if `true`, 'light' otherwise.
+  bool full_block_response = 3;
+}
+
+// The request for SubscribeBlocksFromLatest
+message SubscribeBlocksFromLatestRequest {
+  // Required block status of the block payload.
+  // Possible variants:
+  // 1. BLOCK_FINALIZED
+  // 2. BLOCK_SEALED
+  entities.BlockStatus block_status = 1;
+
+  // Boolean value determining the response: 'full' if `true`, 'light' otherwise.
+  bool full_block_response = 2;
+}
+
+// The response for SubscribeBlocksFromStartBlockID, SubscribeBlocksFromStartHeight, SubscribeBlocksFromLatest
+message SubscribeBlocksResponse {
+  // The sealed or finalized blocks according to the block status
+  // in the request.
+  entities.Block block = 1;
+}
+
+// Subscribe block headers
+
+// The request for SubscribeBlockHeadersFromStartBlockID
+message SubscribeBlockHeadersFromStartBlockIDRequest {
+  // Block ID of the first block header to subscribe.
+  bytes start_block_id = 1;
+
+  // Required block status of the block payload.
+  // Possible variants:
+  // 1. BLOCK_FINALIZED
+  // 2. BLOCK_SEALED
+  entities.BlockStatus block_status = 2;
+}
+
+// The request for SubscribeBlockHeadersFromStartHeight
+message SubscribeBlockHeadersFromStartHeightRequest {
+  // Block height of the first block header to subscribe.
+  uint64 start_block_height = 1;
+
+  // Required block status of the block payload.
+  // Possible variants:
+  // 1. BLOCK_FINALIZED
+  // 2. BLOCK_SEALED
+  entities.BlockStatus block_status = 2;
+}
+
+// The request for SubscribeBlockHeadersFromLatest
+message SubscribeBlockHeadersFromLatestRequest {
+  // Required block status of the block payload.
+  // Possible variants:
+  // 1. BLOCK_FINALIZED
+  // 2. BLOCK_SEALED
+  entities.BlockStatus block_status = 1;
+}
+
+// The response for SubscribeBlockHeadersFromStartBlockID, SubscribeBlockHeadersFromStartHeight, SubscribeBlockHeadersFromLatest
+message SubscribeBlockHeadersResponse {
+  // The sealed or finalized block headers according to the block status
+  // in the request.
+  entities.BlockHeader header = 1;
+}
+
+// Subscribe block digests
+
+// The request for SubscribeBlockDigestsFromStartBlockID
+message SubscribeBlockDigestsFromStartBlockIDRequest {
+  // Block ID of the first block to subscribe.
+  bytes start_block_id = 1;
+
+  // Required block status of the block payload.
+  // Possible variants:
+  // 1. BLOCK_FINALIZED
+  // 2. BLOCK_SEALED
+  entities.BlockStatus block_status = 2;
+}
+
+// The request for SubscribeBlockDigestsFromStartHeight
+message SubscribeBlockDigestsFromStartHeightRequest {
+  // Block height of the first block to subscribe.
+  uint64 start_block_height = 1;
+
+  // Required block status of the block payload.
+  // Possible variants:
+  // 1. BLOCK_FINALIZED
+  // 2. BLOCK_SEALED
+  entities.BlockStatus block_status = 2;
+}
+
+// The request for SubscribeBlockDigestsFromLatest
+message SubscribeBlockDigestsFromLatestRequest {
+  // Required block status of the block payload.
+  // Possible variants:
+  // 1. BLOCK_FINALIZED
+  // 2. BLOCK_SEALED
+  entities.BlockStatus block_status = 1;
+}
+
+// The response for SubscribeBlockDigestsFromStartBlockID, SubscribeBlockDigestsFromStartHeight, SubscribeBlockDigestsFromLatest
+message SubscribeBlockDigestsResponse {
+  // The block ID of the new sealed or finalized block according to the block status
+  // in the request.
+  bytes block_id = 1;
+  // The block height of the new sealed or finalized block according to the block status
+  // in the request.
+  uint64 block_height = 2;
+  // The timestamp of the new sealed or finalized block according to the block status
+  // in the request.
+  google.protobuf.Timestamp block_timestamp = 3;
+}
+
+// Request message for sending a transaction and subscribing to its status changes.
+message SendAndSubscribeTransactionStatusesRequest {
+    // The transaction to be sent and tracked for status changes.
+    entities.Transaction transaction = 1;
+}
+
+// Response message for transaction status changes.
+message SendAndSubscribeTransactionStatusesResponse {
+    // The ID of the tracked transaction.
+    bytes id = 1;
+    // The status of the tracked transaction
+    // Possible transaction statuses are:
+    // - TransactionStatusPending
+    // - TransactionStatusFinalized
+    // - TransactionStatusExecuted
+    // - TransactionStatusSealed
+    // - `TransactionStatusExpired
+    entities.TransactionStatus status = 2;
+    // The message index of the response message. Used by the client to ensure they received all messages. Starts from "0".
+    uint64 message_index = 3;
 }

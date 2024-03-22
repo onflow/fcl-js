@@ -73,6 +73,33 @@ ExecutionAPI.GetTransactionResultsByBlockID = {
   responseType: flow_execution_execution_pb.GetTransactionResultsResponse
 };
 
+ExecutionAPI.GetTransactionErrorMessage = {
+  methodName: "GetTransactionErrorMessage",
+  service: ExecutionAPI,
+  requestStream: false,
+  responseStream: false,
+  requestType: flow_execution_execution_pb.GetTransactionErrorMessageRequest,
+  responseType: flow_execution_execution_pb.GetTransactionErrorMessageResponse
+};
+
+ExecutionAPI.GetTransactionErrorMessageByIndex = {
+  methodName: "GetTransactionErrorMessageByIndex",
+  service: ExecutionAPI,
+  requestStream: false,
+  responseStream: false,
+  requestType: flow_execution_execution_pb.GetTransactionErrorMessageByIndexRequest,
+  responseType: flow_execution_execution_pb.GetTransactionErrorMessageResponse
+};
+
+ExecutionAPI.GetTransactionErrorMessagesByBlockID = {
+  methodName: "GetTransactionErrorMessagesByBlockID",
+  service: ExecutionAPI,
+  requestStream: false,
+  responseStream: false,
+  requestType: flow_execution_execution_pb.GetTransactionErrorMessagesByBlockIDRequest,
+  responseType: flow_execution_execution_pb.GetTransactionErrorMessagesResponse
+};
+
 ExecutionAPI.GetRegisterAtBlockID = {
   methodName: "GetRegisterAtBlockID",
   service: ExecutionAPI,
@@ -298,6 +325,99 @@ ExecutionAPIClient.prototype.getTransactionResultsByBlockID = function getTransa
     callback = arguments[1];
   }
   var client = grpc.unary(ExecutionAPI.GetTransactionResultsByBlockID, {
+    request: requestMessage,
+    host: this.serviceHost,
+    metadata: metadata,
+    transport: this.options.transport,
+    debug: this.options.debug,
+    onEnd: function (response) {
+      if (callback) {
+        if (response.status !== grpc.Code.OK) {
+          var err = new Error(response.statusMessage);
+          err.code = response.status;
+          err.metadata = response.trailers;
+          callback(err, null);
+        } else {
+          callback(null, response.message);
+        }
+      }
+    }
+  });
+  return {
+    cancel: function () {
+      callback = null;
+      client.close();
+    }
+  };
+};
+
+ExecutionAPIClient.prototype.getTransactionErrorMessage = function getTransactionErrorMessage(requestMessage, metadata, callback) {
+  if (arguments.length === 2) {
+    callback = arguments[1];
+  }
+  var client = grpc.unary(ExecutionAPI.GetTransactionErrorMessage, {
+    request: requestMessage,
+    host: this.serviceHost,
+    metadata: metadata,
+    transport: this.options.transport,
+    debug: this.options.debug,
+    onEnd: function (response) {
+      if (callback) {
+        if (response.status !== grpc.Code.OK) {
+          var err = new Error(response.statusMessage);
+          err.code = response.status;
+          err.metadata = response.trailers;
+          callback(err, null);
+        } else {
+          callback(null, response.message);
+        }
+      }
+    }
+  });
+  return {
+    cancel: function () {
+      callback = null;
+      client.close();
+    }
+  };
+};
+
+ExecutionAPIClient.prototype.getTransactionErrorMessageByIndex = function getTransactionErrorMessageByIndex(requestMessage, metadata, callback) {
+  if (arguments.length === 2) {
+    callback = arguments[1];
+  }
+  var client = grpc.unary(ExecutionAPI.GetTransactionErrorMessageByIndex, {
+    request: requestMessage,
+    host: this.serviceHost,
+    metadata: metadata,
+    transport: this.options.transport,
+    debug: this.options.debug,
+    onEnd: function (response) {
+      if (callback) {
+        if (response.status !== grpc.Code.OK) {
+          var err = new Error(response.statusMessage);
+          err.code = response.status;
+          err.metadata = response.trailers;
+          callback(err, null);
+        } else {
+          callback(null, response.message);
+        }
+      }
+    }
+  });
+  return {
+    cancel: function () {
+      callback = null;
+      client.close();
+    }
+  };
+};
+
+ExecutionAPIClient.prototype.getTransactionErrorMessagesByBlockID = function getTransactionErrorMessagesByBlockID(requestMessage, metadata, callback) {
+  if (arguments.length === 2) {
+    callback = arguments[1];
+  }
+  var client = grpc.unary(ExecutionAPI.GetTransactionErrorMessagesByBlockID, {
     request: requestMessage,
     host: this.serviceHost,
     metadata: metadata,

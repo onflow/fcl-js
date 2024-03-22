@@ -131,6 +131,9 @@ export class ExecuteScriptAtBlockIDResponse extends jspb.Message {
   getValue_asB64(): string;
   setValue(value: Uint8Array | string): void;
 
+  getComputationUsage(): number;
+  setComputationUsage(value: number): void;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): ExecuteScriptAtBlockIDResponse.AsObject;
   static toObject(includeInstance: boolean, msg: ExecuteScriptAtBlockIDResponse): ExecuteScriptAtBlockIDResponse.AsObject;
@@ -144,6 +147,7 @@ export class ExecuteScriptAtBlockIDResponse extends jspb.Message {
 export namespace ExecuteScriptAtBlockIDResponse {
   export type AsObject = {
     value: Uint8Array | string,
+    computationUsage: number,
   }
 }
 
@@ -152,6 +156,9 @@ export class GetEventsForBlockIDsResponse extends jspb.Message {
   getResultsList(): Array<GetEventsForBlockIDsResponse.Result>;
   setResultsList(value: Array<GetEventsForBlockIDsResponse.Result>): void;
   addResults(value?: GetEventsForBlockIDsResponse.Result, index?: number): GetEventsForBlockIDsResponse.Result;
+
+  getEventEncodingVersion(): flow_entities_event_pb.EventEncodingVersionMap[keyof flow_entities_event_pb.EventEncodingVersionMap];
+  setEventEncodingVersion(value: flow_entities_event_pb.EventEncodingVersionMap[keyof flow_entities_event_pb.EventEncodingVersionMap]): void;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): GetEventsForBlockIDsResponse.AsObject;
@@ -166,6 +173,7 @@ export class GetEventsForBlockIDsResponse extends jspb.Message {
 export namespace GetEventsForBlockIDsResponse {
   export type AsObject = {
     resultsList: Array<GetEventsForBlockIDsResponse.Result.AsObject>,
+    eventEncodingVersion: flow_entities_event_pb.EventEncodingVersionMap[keyof flow_entities_event_pb.EventEncodingVersionMap],
   }
 
   export class Result extends jspb.Message {
@@ -295,6 +303,12 @@ export class GetTransactionResultResponse extends jspb.Message {
   setEventsList(value: Array<flow_entities_event_pb.Event>): void;
   addEvents(value?: flow_entities_event_pb.Event, index?: number): flow_entities_event_pb.Event;
 
+  getEventEncodingVersion(): flow_entities_event_pb.EventEncodingVersionMap[keyof flow_entities_event_pb.EventEncodingVersionMap];
+  setEventEncodingVersion(value: flow_entities_event_pb.EventEncodingVersionMap[keyof flow_entities_event_pb.EventEncodingVersionMap]): void;
+
+  getComputationUsage(): number;
+  setComputationUsage(value: number): void;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): GetTransactionResultResponse.AsObject;
   static toObject(includeInstance: boolean, msg: GetTransactionResultResponse): GetTransactionResultResponse.AsObject;
@@ -310,6 +324,8 @@ export namespace GetTransactionResultResponse {
     statusCode: number,
     errorMessage: string,
     eventsList: Array<flow_entities_event_pb.Event.AsObject>,
+    eventEncodingVersion: flow_entities_event_pb.EventEncodingVersionMap[keyof flow_entities_event_pb.EventEncodingVersionMap],
+    computationUsage: number,
   }
 }
 
@@ -341,6 +357,9 @@ export class GetTransactionResultsResponse extends jspb.Message {
   setTransactionResultsList(value: Array<GetTransactionResultResponse>): void;
   addTransactionResults(value?: GetTransactionResultResponse, index?: number): GetTransactionResultResponse;
 
+  getEventEncodingVersion(): flow_entities_event_pb.EventEncodingVersionMap[keyof flow_entities_event_pb.EventEncodingVersionMap];
+  setEventEncodingVersion(value: flow_entities_event_pb.EventEncodingVersionMap[keyof flow_entities_event_pb.EventEncodingVersionMap]): void;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): GetTransactionResultsResponse.AsObject;
   static toObject(includeInstance: boolean, msg: GetTransactionResultsResponse): GetTransactionResultsResponse.AsObject;
@@ -354,6 +373,161 @@ export class GetTransactionResultsResponse extends jspb.Message {
 export namespace GetTransactionResultsResponse {
   export type AsObject = {
     transactionResultsList: Array<GetTransactionResultResponse.AsObject>,
+    eventEncodingVersion: flow_entities_event_pb.EventEncodingVersionMap[keyof flow_entities_event_pb.EventEncodingVersionMap],
+  }
+}
+
+export class GetTransactionErrorMessageRequest extends jspb.Message {
+  getBlockId(): Uint8Array | string;
+  getBlockId_asU8(): Uint8Array;
+  getBlockId_asB64(): string;
+  setBlockId(value: Uint8Array | string): void;
+
+  getTransactionId(): Uint8Array | string;
+  getTransactionId_asU8(): Uint8Array;
+  getTransactionId_asB64(): string;
+  setTransactionId(value: Uint8Array | string): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): GetTransactionErrorMessageRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: GetTransactionErrorMessageRequest): GetTransactionErrorMessageRequest.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: GetTransactionErrorMessageRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): GetTransactionErrorMessageRequest;
+  static deserializeBinaryFromReader(message: GetTransactionErrorMessageRequest, reader: jspb.BinaryReader): GetTransactionErrorMessageRequest;
+}
+
+export namespace GetTransactionErrorMessageRequest {
+  export type AsObject = {
+    blockId: Uint8Array | string,
+    transactionId: Uint8Array | string,
+  }
+}
+
+export class GetTransactionErrorMessageByIndexRequest extends jspb.Message {
+  getBlockId(): Uint8Array | string;
+  getBlockId_asU8(): Uint8Array;
+  getBlockId_asB64(): string;
+  setBlockId(value: Uint8Array | string): void;
+
+  getIndex(): number;
+  setIndex(value: number): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): GetTransactionErrorMessageByIndexRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: GetTransactionErrorMessageByIndexRequest): GetTransactionErrorMessageByIndexRequest.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: GetTransactionErrorMessageByIndexRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): GetTransactionErrorMessageByIndexRequest;
+  static deserializeBinaryFromReader(message: GetTransactionErrorMessageByIndexRequest, reader: jspb.BinaryReader): GetTransactionErrorMessageByIndexRequest;
+}
+
+export namespace GetTransactionErrorMessageByIndexRequest {
+  export type AsObject = {
+    blockId: Uint8Array | string,
+    index: number,
+  }
+}
+
+export class GetTransactionErrorMessageResponse extends jspb.Message {
+  getTransactionId(): Uint8Array | string;
+  getTransactionId_asU8(): Uint8Array;
+  getTransactionId_asB64(): string;
+  setTransactionId(value: Uint8Array | string): void;
+
+  getErrorMessage(): string;
+  setErrorMessage(value: string): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): GetTransactionErrorMessageResponse.AsObject;
+  static toObject(includeInstance: boolean, msg: GetTransactionErrorMessageResponse): GetTransactionErrorMessageResponse.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: GetTransactionErrorMessageResponse, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): GetTransactionErrorMessageResponse;
+  static deserializeBinaryFromReader(message: GetTransactionErrorMessageResponse, reader: jspb.BinaryReader): GetTransactionErrorMessageResponse;
+}
+
+export namespace GetTransactionErrorMessageResponse {
+  export type AsObject = {
+    transactionId: Uint8Array | string,
+    errorMessage: string,
+  }
+}
+
+export class GetTransactionErrorMessagesByBlockIDRequest extends jspb.Message {
+  getBlockId(): Uint8Array | string;
+  getBlockId_asU8(): Uint8Array;
+  getBlockId_asB64(): string;
+  setBlockId(value: Uint8Array | string): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): GetTransactionErrorMessagesByBlockIDRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: GetTransactionErrorMessagesByBlockIDRequest): GetTransactionErrorMessagesByBlockIDRequest.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: GetTransactionErrorMessagesByBlockIDRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): GetTransactionErrorMessagesByBlockIDRequest;
+  static deserializeBinaryFromReader(message: GetTransactionErrorMessagesByBlockIDRequest, reader: jspb.BinaryReader): GetTransactionErrorMessagesByBlockIDRequest;
+}
+
+export namespace GetTransactionErrorMessagesByBlockIDRequest {
+  export type AsObject = {
+    blockId: Uint8Array | string,
+  }
+}
+
+export class GetTransactionErrorMessagesResponse extends jspb.Message {
+  clearResultsList(): void;
+  getResultsList(): Array<GetTransactionErrorMessagesResponse.Result>;
+  setResultsList(value: Array<GetTransactionErrorMessagesResponse.Result>): void;
+  addResults(value?: GetTransactionErrorMessagesResponse.Result, index?: number): GetTransactionErrorMessagesResponse.Result;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): GetTransactionErrorMessagesResponse.AsObject;
+  static toObject(includeInstance: boolean, msg: GetTransactionErrorMessagesResponse): GetTransactionErrorMessagesResponse.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: GetTransactionErrorMessagesResponse, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): GetTransactionErrorMessagesResponse;
+  static deserializeBinaryFromReader(message: GetTransactionErrorMessagesResponse, reader: jspb.BinaryReader): GetTransactionErrorMessagesResponse;
+}
+
+export namespace GetTransactionErrorMessagesResponse {
+  export type AsObject = {
+    resultsList: Array<GetTransactionErrorMessagesResponse.Result.AsObject>,
+  }
+
+  export class Result extends jspb.Message {
+    getTransactionId(): Uint8Array | string;
+    getTransactionId_asU8(): Uint8Array;
+    getTransactionId_asB64(): string;
+    setTransactionId(value: Uint8Array | string): void;
+
+    getIndex(): number;
+    setIndex(value: number): void;
+
+    getErrorMessage(): string;
+    setErrorMessage(value: string): void;
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): Result.AsObject;
+    static toObject(includeInstance: boolean, msg: Result): Result.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+    static serializeBinaryToWriter(message: Result, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): Result;
+    static deserializeBinaryFromReader(message: Result, reader: jspb.BinaryReader): Result;
+  }
+
+  export namespace Result {
+    export type AsObject = {
+      transactionId: Uint8Array | string,
+      index: number,
+      errorMessage: string,
+    }
   }
 }
 
@@ -367,11 +541,6 @@ export class GetRegisterAtBlockIDRequest extends jspb.Message {
   getRegisterOwner_asU8(): Uint8Array;
   getRegisterOwner_asB64(): string;
   setRegisterOwner(value: Uint8Array | string): void;
-
-  getRegisterController(): Uint8Array | string;
-  getRegisterController_asU8(): Uint8Array;
-  getRegisterController_asB64(): string;
-  setRegisterController(value: Uint8Array | string): void;
 
   getRegisterKey(): Uint8Array | string;
   getRegisterKey_asU8(): Uint8Array;
@@ -392,7 +561,6 @@ export namespace GetRegisterAtBlockIDRequest {
   export type AsObject = {
     blockId: Uint8Array | string,
     registerOwner: Uint8Array | string,
-    registerController: Uint8Array | string,
     registerKey: Uint8Array | string,
   }
 }

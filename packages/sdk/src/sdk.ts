@@ -34,6 +34,7 @@ export {
   isGetBlockHeader,
   isGetCollection,
   isGetNetworkParameters,
+  isGetNodeVersionInfo,
 } from "./interaction/interaction"
 import type {CadenceArgument} from "./interaction/interaction"
 export {CadenceArgument} // Workaround for babel https://github.com/babel/babel/issues/8361
@@ -46,6 +47,7 @@ export {template as cdc} from "@onflow/util-template"
 // Helpers
 export {account} from "./account/account.js"
 export {block} from "./block/block.js"
+export {nodeVersionInfo} from "./node-version-info/node-version-info"
 
 // Builders
 export {authorizations, authorization} from "./build/build-authorizations.js"
@@ -61,6 +63,7 @@ export {getCollection} from "./build/build-get-collection"
 export {getTransactionStatus} from "./build/build-get-transaction-status.js"
 export {getTransaction} from "./build/build-get-transaction.js"
 export {getNetworkParameters} from "./build/build-get-network-parameters.js"
+export {getNodeVersionInfo} from "./build/build-get-node-version-info"
 export {limit} from "./build/build-limit.js"
 export {args, arg} from "./build/build-arguments"
 export {proposer} from "./build/build-proposer.js"

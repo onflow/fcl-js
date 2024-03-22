@@ -288,6 +288,32 @@ export type Provider = {
    */
   name: string
 }
+export type NodeVersionInfo = {
+  /**
+   * - The semver version of the node.
+   */
+  semver: string
+  /**
+   * - The commit hash of the node.
+   */
+  commit: string
+  /**
+   * - The spork id of the node.
+   */
+  sporkId: string
+  /**
+   * - The protocol version of the node.
+   */
+  protocolVersion: number
+  /**
+   * - The spork root block height of the node.
+   */
+  sporkRootBlockHeight: number
+  /**
+   * - The node root block height of the node.
+   */
+  nodeRootBlockHeight: number
+}
 export interface StreamConnection<ChannelMap extends {[name: string]: any}> {
   on<C extends keyof ChannelMap>(
     channel: C,

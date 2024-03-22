@@ -10,6 +10,7 @@ import {sendGetBlockHeader} from "./send-get-block-header.js"
 import {sendGetCollection} from "./send-get-collection.js"
 import {sendPing} from "./send-ping.js"
 import {sendGetNetworkParameters} from "./send-get-network-parameters.js"
+import {sendGetNodeVersionInfo} from "./send-get-node-version-info.js"
 
 export const send = async (ix, context = {}, opts = {}) => {
   invariant(
@@ -49,6 +50,8 @@ export const send = async (ix, context = {}, opts = {}) => {
         return opts.sendSubscribeEvents(ix, context, opts)
       else
         throw new Error(`SDK Send Error: subscribeEvents is not supported by this transport.`)
+    case context.ix.isGetNodeVersionInfo?.(ix):
+      return opts.sendGetNodeVersionInfo ? opts.sendGetNodeVersionInfo(ix, context, opts) : sendGetNodeVersionInfo(ix, context, opts)
     default:
       return ix
   }
