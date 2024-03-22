@@ -1,5 +1,17 @@
 # @onflow/sdk
 
+## 1.4.0-alpha.8
+
+### Minor Changes
+
+- [#1855](https://github.com/onflow/fcl-js/pull/1855) [`80db8166`](https://github.com/onflow/fcl-js/commit/80db816620d7643c35a0fca7149c15de92f7bc88) Thanks [@jribbink](https://github.com/jribbink)! - Add GetNodeVersionInfo SDK Interaction
+
+### Patch Changes
+
+- Updated dependencies [[`80db8166`](https://github.com/onflow/fcl-js/commit/80db816620d7643c35a0fca7149c15de92f7bc88)]:
+  - @onflow/transport-http@1.10.0-alpha.4
+  - @onflow/typedefs@1.3.0-alpha.3
+
 ## 1.4.0-alpha.7
 
 ### Minor Changes
