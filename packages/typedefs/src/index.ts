@@ -18,7 +18,7 @@ export type Account = {
   /**
    * - An object with keys as the contract name deployed and the value as the the cadence string
    */
-  keys: Array<any>
+  keys: Array<AccountKey>
 }
 
 export type AccountKey = {
