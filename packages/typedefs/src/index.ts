@@ -109,6 +109,9 @@ export type CollectionGuarantee = {
    * - The id of the block
    */
   collectionId: string
+  /**
+   * - The signer ids of the block
+   */
   signerIds: Array<object>
 }
 export type BlockSeal = {
@@ -116,6 +119,9 @@ export type BlockSeal = {
    * - The id of the block
    */
   blockId: string
+  /**
+   * - The execution receipt id of the block
+   */
   executionReceiptId: string
 }
 export type CompositeSignature = {
