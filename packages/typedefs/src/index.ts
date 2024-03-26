@@ -12,14 +12,68 @@ export type Account = {
    */
   code: number
   /**
-   * - An object with keys as the contract name deployed and the value as the the cadence string
-   */
-  contracts: object
-  /**
    * - Any contracts deployed to this account
    */
-  keys: object
+  contracts: Record<string, string>
+  /**
+   * - The keys associated with the account
+   */
+  keys: Array<AccountKey>
 }
+
+export type AccountKey = {
+  /**
+   * - The index of the key in the account
+   */
+  index: number
+  /**
+   * - The public key of the account key
+   */
+  publicKey: string
+  /**
+   * - The signature algorithm used by the key
+   */
+  signAlgo: SignatureAlgorithm
+  /**
+   * - The signature algorithm used by the key as a string
+   */
+  signAlgoString: string
+  /**
+   * - The hashing algorithm used by the key
+   */
+  hashAlgo: HashAlgorithm
+  /**
+   * - The hashing algorithm used by the key as a string
+   */
+  hashAlgoString: string
+  /**
+   * - The sequence number of the key
+   */
+  sequenceNumber: number
+  /**
+   * - The weight of the key
+   */
+  weight: number
+  /**
+   * - Whether or not the key has been revoked
+   */
+  revoked: boolean
+}
+
+export enum SignatureAlgorithm {
+  ECDSA_P256 = 1,
+  ECDSA_secp256k1 = 2,
+  BLS_BLS12_381 = 3,
+}
+
+export enum HashAlgorithm {
+  SHA2_256 = 1,
+  SHA2_384 = 2,
+  SHA3_256 = 3,
+  SHA3_384 = 4,
+  KMAC128_BLS_BLS12_381 = 5,
+}
+
 export type Block = {
   /**
    * - The id of the block
@@ -36,15 +90,15 @@ export type Block = {
   /**
    * - Time related fields
    */
-  timestamp: object
+  timestamp: string
   /**
    * - Contains the ids of collections included in the block
    */
-  collectionGuarantees: CollectionGuarantee
+  collectionGuarantees: Array<CollectionGuarantee>
   /**
    * - The details of which nodes executed and sealed the blocks
    */
-  blockSeals: object
+  blockSeals: Array<BlockSeal>
   /**
    * - The cryptographic signature of the block
    */
@@ -56,9 +110,19 @@ export type CollectionGuarantee = {
    */
   collectionId: string
   /**
-   * - All signatures
+   * - The signer ids of the block
    */
-  signatures: Array<object>
+  signerIds: Array<object>
+}
+export type BlockSeal = {
+  /**
+   * - The id of the block
+   */
+  blockId: string
+  /**
+   * - The execution receipt id of the block
+   */
+  executionReceiptId: string
 }
 export type CompositeSignature = {
   /**
