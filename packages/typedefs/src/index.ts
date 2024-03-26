@@ -16,7 +16,7 @@ export type Account = {
    */
   contracts: Record<string, string>
   /**
-   * - An object with keys as the contract name deployed and the value as the the cadence string
+   * - The keys associated with the account
    */
   keys: Array<AccountKey>
 }
@@ -94,11 +94,11 @@ export type Block = {
   /**
    * - Contains the ids of collections included in the block
    */
-  collectionGuarantees: CollectionGuarantee[]
+  collectionGuarantees: Array<CollectionGuarantee>
   /**
    * - The details of which nodes executed and sealed the blocks
    */
-  blockSeals: BlockSeal[]
+  blockSeals: Array<BlockSeal>
   /**
    * - The cryptographic signature of the block
    */
