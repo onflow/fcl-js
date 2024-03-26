@@ -1,5 +1,16 @@
 # @onflow/sdk
 
+## 1.4.0-alpha.9
+
+### Patch Changes
+
+- [#1859](https://github.com/onflow/fcl-js/pull/1859) [`7ed491c5`](https://github.com/onflow/fcl-js/commit/7ed491c5d2335fbbff04444d41f1f1580763d8d3) Thanks [@jribbink](https://github.com/jribbink)! - TypeScript Fixes
+
+- Updated dependencies [[`7ed491c5`](https://github.com/onflow/fcl-js/commit/7ed491c5d2335fbbff04444d41f1f1580763d8d3)]:
+  - @onflow/util-address@1.2.2-alpha.3
+  - @onflow/typedefs@1.3.0-alpha.4
+  - @onflow/transport-http@1.10.0-alpha.5
+
 ## 1.4.0-alpha.8
 
 ### Minor Changes
