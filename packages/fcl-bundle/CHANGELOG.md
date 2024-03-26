@@ -1,5 +1,15 @@
 # @onflow/fcl-bundle
 
+## 1.4.2
+
+### Patch Changes
+
+- [#1848](https://github.com/onflow/fcl-js/pull/1848) [`fdd52c45`](https://github.com/onflow/fcl-js/commit/fdd52c45b3a64210c5f716e13aa4d08d3796370c) Thanks [@jribbink](https://github.com/jribbink)! - Patch babel vulnerability
+
+- [#1821](https://github.com/onflow/fcl-js/pull/1821) [`b9c078ce`](https://github.com/onflow/fcl-js/commit/b9c078ce87869c2b41dff07b861cea09a294c6a1) Thanks [@nialexsan](https://github.com/nialexsan)! - Split packages into `@onflow/fcl`, `@onflow/fcl-core`, and `@onflow/fcl-react-native`.
+
+- [#1814](https://github.com/onflow/fcl-js/pull/1814) [`0d09d838`](https://github.com/onflow/fcl-js/commit/0d09d8386c2fc472833df7152467d477f36dddc4) Thanks [@jribbink](https://github.com/jribbink)! - Fix type declarations not fully being generated
+
 ## 1.4.2-alpha.2
 
 ### Patch Changes
