@@ -1,5 +1,12 @@
 # @onflow/transport-http
 
+## 1.10.0-alpha.5
+
+### Patch Changes
+
+- Updated dependencies [[`7ed491c5`](https://github.com/onflow/fcl-js/commit/7ed491c5d2335fbbff04444d41f1f1580763d8d3)]:
+  - @onflow/util-address@1.2.2-alpha.3
+
 ## 1.10.0-alpha.4
 
 ### Minor Changes
