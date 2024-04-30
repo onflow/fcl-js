@@ -27,25 +27,8 @@ const decodeType = async type => {
   return type.staticType
 }
 
-const decodePath = async path => {
-  return {
-    domain: path.domain,
-    identifier: path.identifier,
-  }
-}
-
-const decodeCapability = async cap => {
-  return {
-    path: cap.path,
-    address: cap.address,
-    borrowType: cap.borrowType,
-  }
-}
-
 const decodeOptional = async (optional, decoders, stack) =>
   optional ? await recurseDecode(optional, decoders, stack) : null
-
-const decodeReference = async v => ({address: v.address, type: v.type})
 
 const decodeArray = async (array, decoders, stack) =>
   await Promise.all(
@@ -102,7 +85,7 @@ const defaultDecoders = {
   Address: decodeImplicit,
   Void: decodeVoid,
   Optional: decodeOptional,
-  Reference: decodeReference,
+  Reference: decodeImplicit,
   Array: decodeArray,
   Dictionary: decodeDictionary,
   Event: decodeComposite,
@@ -110,8 +93,9 @@ const defaultDecoders = {
   Struct: decodeComposite,
   Enum: decodeComposite,
   Type: decodeType,
-  Path: decodePath,
-  Capability: decodeCapability,
+  Path: decodeImplicit,
+  Capability: decodeImplicit,
+  InclusiveRange: decodeImplicit,
 }
 
 const decoderLookup = (decoders, lookup) => {

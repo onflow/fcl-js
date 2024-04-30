@@ -638,6 +638,7 @@ export const Optional = <
     v => v
   )
 
+// todo: this doesn't look right
 export const Reference = typedef(
   "Reference",
   (v: ReferenceValue) => {
