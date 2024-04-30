@@ -27,6 +27,9 @@ export interface PathValue {
   identifier: string
 }
 
+/**
+ * @deprecated Reference values cannot be imported into the Cadence interpreter, will be removed in future versions
+ */
 export interface ReferenceValue {
   type: string
   address: string
@@ -638,7 +641,9 @@ export const Optional = <
     v => v
   )
 
-// todo: this doesn't look right
+/**
+ * @deprecated Reference values cannot be imported into the Cadence interpreter, will be removed in future versions
+ */
 export const Reference = typedef(
   "Reference",
   (v: ReferenceValue) => {
