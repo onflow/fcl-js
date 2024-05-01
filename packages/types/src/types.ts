@@ -627,11 +627,7 @@ export const Void = typedef(
   v => v
 )
 
-export const Optional = <
-  T extends TypeDescriptor<any, JsonCdc<string, unknown>>
->(
-  children: T
-) =>
+export const Optional = <T extends TypeDescriptor<any, any>>(children: T) =>
   typedef(
     "Optional",
     (v?: TypeDescriptorInput<T> | null) => ({
@@ -657,7 +653,7 @@ export const Reference = typedef(
   v => v
 )
 
-export const _Array = <T extends TypeDescriptor<any, JsonCdc<string, unknown>>>(
+export const _Array = <T extends TypeDescriptor<any, any>>(
   children: T[] | T = []
 ) =>
   typedef(
@@ -676,8 +672,8 @@ export const _Array = <T extends TypeDescriptor<any, JsonCdc<string, unknown>>>(
 export {_Array as Array}
 
 export const Dictionary = <
-  K extends TypeDescriptor<any, JsonCdc<string, unknown>>,
-  V extends TypeDescriptor<any, JsonCdc<string, unknown>>
+  K extends TypeDescriptor<any, any>,
+  V extends TypeDescriptor<any, any>
 >(
   children:
     | {
@@ -727,7 +723,7 @@ export const Dictionary = <
     v => v
   )
 
-export const Event = <V extends TypeDescriptor<any, JsonCdc<string, unknown>>>(
+export const Event = <V extends TypeDescriptor<any, any>>(
   id: string,
   fields: {value: V}[] | {value: V} = []
 ) =>
@@ -755,9 +751,7 @@ export const Event = <V extends TypeDescriptor<any, JsonCdc<string, unknown>>>(
     v => v
   )
 
-export const Resource = <
-  V extends TypeDescriptor<any, JsonCdc<string, unknown>>
->(
+export const Resource = <V extends TypeDescriptor<any, any>>(
   id: string,
   fields: {value: V}[] | {value: V} = []
 ) =>
@@ -785,7 +779,7 @@ export const Resource = <
     v => v
   )
 
-export const Struct = <V extends TypeDescriptor<any, JsonCdc<string, unknown>>>(
+export const Struct = <V extends TypeDescriptor<any, any>>(
   id: string,
   fields: {value: V}[] | {value: V} = []
 ) =>
@@ -813,7 +807,7 @@ export const Struct = <V extends TypeDescriptor<any, JsonCdc<string, unknown>>>(
     v => v
   )
 
-export const Enum = <V extends TypeDescriptor<any, JsonCdc<string, unknown>>>(
+export const Enum = <V extends TypeDescriptor<any, any>>(
   id: string,
   fields: {value: V}[] | {value: V} = []
 ) =>
@@ -886,7 +880,7 @@ export const Path = typedef(
  * InclusiveRange type, step size defaults to 1
  *
  * @param t - The type of the range, must be a number (UInt32, Int32, etc.)
- * @returns A type descriptor for InclusiveRange
+ * @returns A type descriptor for InclusiveRange<T>
  *
  * @example
  * ```javascript
@@ -900,11 +894,7 @@ export const Path = typedef(
  * const test = fcl.arg([1, 5, 2], InclusiveRange(UInt32))
  * ```
  */
-export const InclusiveRange = <
-  T extends TypeDescriptor<any, JsonCdc<string, unknown>>
->(
-  t: T
-) =>
+export const InclusiveRange = <T extends TypeDescriptor<any, any>>(t: T) =>
   typedef(
     "InclusiveRange",
     (
