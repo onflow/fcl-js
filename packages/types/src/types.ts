@@ -889,38 +889,51 @@ export const Path = typedef(
  * @param v.step - The step of the range (default is 1)
  * @returns A JsonCdcType
  */
-export const InclusiveRange = typedef(
-  "InclusiveRange",
-  (v: {start: number; end: number; step?: number}) => {
-    if (isObj(v)) {
-      if (!isNumber(v.start)) {
-        return throwTypeError(
-          `Expected a number for the InclusiveRange start but found ${v.start}. Find out more about the InclusiveRange type here: https://docs.onflow.org/cadence/json-cadence-spec/#range`
-        )
-      }
+export const InclusiveRange = <
+  T extends TypeDescriptor<any, JsonCdc<string, unknown>>
+>(
+  t: T
+) =>
+  typedef(
+    "InclusiveRange",
+    (
+      v: [
+        start: TypeDescriptorInput<T>,
+        end: TypeDescriptorInput<T>,
+        step?: TypeDescriptorInput<T>
+      ]
+    ) => {
+      if (isArray(v)) {
+        const [start, end, step = "1"] = v
 
-      if (!isNumber(v.end)) {
-        return throwTypeError(
-          `Expected a number for the InclusiveRange end but found ${v.end}. Find out more about the InclusiveRange type here: https://docs.onflow.org/cadence/json-cadence-spec/#range`
-        )
-      }
+        if (!isNumber(start)) {
+          return throwTypeError(
+            `Expected a number for the InclusiveRange start but found ${start}. Find out more about the InclusiveRange type here: https://docs.onflow.org/cadence/json-cadence-spec/#range`
+          )
+        }
 
-      if (v.step != null && !isNumber(v.step)) {
-        return throwTypeError(
-          `Expected a number for the InclusiveRange step but found ${v.step}. Find out more about the InclusiveRange type here: https://docs.onflow.org/cadence/json-cadence-spec/#range`
-        )
-      }
+        if (!isNumber(end)) {
+          return throwTypeError(
+            `Expected a number for the InclusiveRange end but found ${end}. Find out more about the InclusiveRange type here: https://docs.onflow.org/cadence/json-cadence-spec/#range`
+          )
+        }
 
-      return {
-        type: "InclusiveRange",
-        value: {
-          start: v.start,
-          end: v.end,
-          step: v.step ?? 1,
-        },
+        if (!isNumber(step)) {
+          return throwTypeError(
+            `Expected a number for the InclusiveRange step but found ${step}. Find out more about the InclusiveRange type here: https://docs.onflow.org/cadence/json-cadence-spec/#range`
+          )
+        }
+
+        return {
+          type: "InclusiveRange",
+          value: {
+            start: t.asArgument(start),
+            end: t.asArgument(end),
+            step: t.asArgument(step),
+          },
+        }
       }
-    }
-    return throwTypeError("Expected Object for type InclusiveRange")
-  },
-  v => v
-)
+      return throwTypeError("Expected Object for type InclusiveRange")
+    },
+    v => v
+  )
