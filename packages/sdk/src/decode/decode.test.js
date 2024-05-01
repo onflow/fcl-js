@@ -661,6 +661,25 @@ describe("unit tests to cover all types", () => {
       identifier: "123abc",
     })
   })
+
+  it("returns the correct response given a json-cdc payload 47 INCLUSIVERANGE", async () => {
+    const payload = {
+      type: "InclusiveRange",
+      value: {
+        start: {type: "Int", value: "2"},
+        end: {type: "Int", value: "10"},
+        step: {type: "Int", value: "1"},
+      },
+    }
+
+    const decoded = await decode(payload)
+
+    expect(decoded).toStrictEqual({
+      start: "2",
+      end: "10",
+      step: "1",
+    })
+  })
 })
 
 // Boolean
