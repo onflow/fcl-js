@@ -887,7 +887,7 @@ export const Path = typedef(
  * import * as fcl from "@onflow/fcl"
  * import {InclusiveRange, UInt32} from "@onflow/types"
  *
- * const test = fcl.arg({start: 1, end: 5, step: 1}, InclusiveRange(UInt32))
+ * const someArg = fcl.arg({start: 1, end: 5, step: 1}, InclusiveRange(UInt32))
  * ```
  */
 export const InclusiveRange = <T extends TypeDescriptor<any, any>>(t: T) =>
