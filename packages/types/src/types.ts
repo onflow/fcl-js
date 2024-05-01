@@ -906,24 +906,6 @@ export const InclusiveRange = <
       if (isArray(v)) {
         const [start, end, step = "1"] = v
 
-        if (!isNumber(start)) {
-          return throwTypeError(
-            `Expected a number for the InclusiveRange start but found ${start}. Find out more about the InclusiveRange type here: https://docs.onflow.org/cadence/json-cadence-spec/#range`
-          )
-        }
-
-        if (!isNumber(end)) {
-          return throwTypeError(
-            `Expected a number for the InclusiveRange end but found ${end}. Find out more about the InclusiveRange type here: https://docs.onflow.org/cadence/json-cadence-spec/#range`
-          )
-        }
-
-        if (!isNumber(step)) {
-          return throwTypeError(
-            `Expected a number for the InclusiveRange step but found ${step}. Find out more about the InclusiveRange type here: https://docs.onflow.org/cadence/json-cadence-spec/#range`
-          )
-        }
-
         return {
           type: "InclusiveRange",
           value: {
@@ -933,7 +915,7 @@ export const InclusiveRange = <
           },
         }
       }
-      return throwTypeError("Expected Object for type InclusiveRange")
+      return throwTypeError("Expected Array for type InclusiveRange")
     },
     v => v
   )
