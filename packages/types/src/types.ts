@@ -883,11 +883,22 @@ export const Path = typedef(
 )
 
 /**
- * InclusiveRange type
- * @param v.start - The start of the range
- * @param v.end - The end of the range
- * @param v.step - The step of the range (default is 1)
- * @returns A JsonCdcType
+ * InclusiveRange type, step size defaults to 1
+ *
+ * @param t - The type of the range, must be a number (UInt32, Int32, etc.)
+ * @returns A type descriptor for InclusiveRange
+ *
+ * @example
+ * ```javascript
+ * import * as fcl from "@onflow/fcl"
+ * import {InclusiveRange, UInt32} from "@onflow/types"
+ *
+ * // Range of 1, 2, 3
+ * const test = fcl.arg([1, 3], InclusiveRange(UInt32))
+ *
+ * // Range of 1, 3, 5
+ * const test = fcl.arg([1, 5, 2], InclusiveRange(UInt32))
+ * ```
  */
 export const InclusiveRange = <
   T extends TypeDescriptor<any, JsonCdc<string, unknown>>
