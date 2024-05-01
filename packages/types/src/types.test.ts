@@ -227,6 +227,7 @@ registerTest([
   {
     start: 5,
     end: 10,
+    step: 1,
   },
   {
     type: "InclusiveRange",
@@ -239,27 +240,7 @@ registerTest([
   {
     start: 5,
     end: 10,
-  },
-])
-registerTest([
-  t.InclusiveRange(t.Int),
-  {
-    start: 1,
-    end: 10,
-    step: 2,
-  },
-  {
-    type: "InclusiveRange",
-    value: {
-      start: {type: "Int", value: "1"},
-      end: {type: "Int", value: "10"},
-      step: {type: "Int", value: "2"},
-    },
-  },
-  {
-    start: 1,
-    end: 10,
-    step: 2,
+    step: 1,
   },
 ])
 
