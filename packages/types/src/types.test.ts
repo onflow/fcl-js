@@ -230,7 +230,7 @@ registerTest([
     value: {
       start: {type: "Int", value: "5"},
       end: {type: "Int", value: "10"},
-      step: 1,
+      step: {type: "Int", value: "1"},
     },
   },
   [5, 10],
@@ -243,7 +243,7 @@ registerTest([
     value: {
       start: {type: "Int", value: "1"},
       end: {type: "Int", value: "10"},
-      step: 2,
+      step: {type: "Int", value: "2"},
     },
   },
   [1, 10, 2],
