@@ -224,7 +224,10 @@ registerTest([
 ])
 registerTest([
   t.InclusiveRange(t.Int),
-  [5, 10],
+  {
+    start: 5,
+    end: 10,
+  },
   {
     type: "InclusiveRange",
     value: {
@@ -233,11 +236,18 @@ registerTest([
       step: {type: "Int", value: "1"},
     },
   },
-  [5, 10],
+  {
+    start: 5,
+    end: 10,
+  },
 ])
 registerTest([
   t.InclusiveRange(t.Int),
-  [1, 10, 2],
+  {
+    start: 1,
+    end: 10,
+    step: 2,
+  },
   {
     type: "InclusiveRange",
     value: {
@@ -246,7 +256,11 @@ registerTest([
       step: {type: "Int", value: "2"},
     },
   },
-  [1, 10, 2],
+  {
+    start: 1,
+    end: 10,
+    step: 2,
+  },
 ])
 
 function registerTest<X, Y extends string, Z>([

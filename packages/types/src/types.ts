@@ -879,8 +879,8 @@ export const Path = typedef(
 /**
  * InclusiveRange type, step size defaults to 1
  *
- * @param t - The type of the range, must be a number (UInt32, Int32, etc.)
- * @returns A type descriptor for InclusiveRange<T>
+ * @param t - A TypeDescriptor for the type of the range, must be a number (UInt32, Int32, etc.)
+ * @returns A TypeDescriptor for an InclusiveRange of the given type
  *
  * @example
  * ```javascript
@@ -888,24 +888,22 @@ export const Path = typedef(
  * import {InclusiveRange, UInt32} from "@onflow/types"
  *
  * // Range of 1, 2, 3
- * const test = fcl.arg([1, 3], InclusiveRange(UInt32))
+ * const test = fcl.arg({start: 1, end: 3}, InclusiveRange(UInt32))
  *
  * // Range of 1, 3, 5
- * const test = fcl.arg([1, 5, 2], InclusiveRange(UInt32))
+ * const test = fcl.arg({start: 1, end: 5, step: 2}, InclusiveRange(UInt32))
  * ```
  */
 export const InclusiveRange = <T extends TypeDescriptor<any, any>>(t: T) =>
   typedef(
     "InclusiveRange",
-    (
-      v: [
-        start: TypeDescriptorInput<T>,
-        end: TypeDescriptorInput<T>,
-        step?: TypeDescriptorInput<T>
-      ]
-    ) => {
-      if (isArray(v)) {
-        const [start, end, step = "1"] = v
+    (v: {
+      start: TypeDescriptorInput<T>
+      end: TypeDescriptorInput<T>
+      step?: TypeDescriptorInput<T>
+    }) => {
+      if (isObj(v)) {
+        const {start, end, step = "1"} = v
 
         return {
           type: "InclusiveRange",
@@ -916,7 +914,7 @@ export const InclusiveRange = <T extends TypeDescriptor<any, any>>(t: T) =>
           },
         }
       }
-      return throwTypeError("Expected Array for type InclusiveRange")
+      return throwTypeError("Expected Object for type InclusiveRange")
     },
     v => v
   )
