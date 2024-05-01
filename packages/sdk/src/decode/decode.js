@@ -58,6 +58,21 @@ const decodeComposite = async (composite, decoders, stack) => {
   return decoder ? await decoder(decoded) : decoded
 }
 
+const decodeInclusiveRange = async (range, decoders, stack) => {
+  // Recursive decode for start, end, and step
+  // We don't do all fields just in case there are future API changes
+  // where fields added and are not Cadence values
+  const keys = ["start", "end", "step"]
+  const decoded = await Object.keys(range).reduce(async (acc, key) => {
+    acc = await acc
+    if (keys.includes(key)) {
+      acc[key] = await recurseDecode(range[key], decoders, [...stack, key])
+    }
+    return acc
+  }, Promise.resolve({}))
+  return decoded
+}
+
 const defaultDecoders = {
   UInt: decodeImplicit,
   Int: decodeImplicit,
@@ -95,7 +110,7 @@ const defaultDecoders = {
   Type: decodeType,
   Path: decodeImplicit,
   Capability: decodeImplicit,
-  InclusiveRange: decodeImplicit,
+  InclusiveRange: decodeInclusiveRange,
 }
 
 const decoderLookup = (decoders, lookup) => {
