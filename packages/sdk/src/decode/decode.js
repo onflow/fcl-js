@@ -27,25 +27,8 @@ const decodeType = async type => {
   return type.staticType
 }
 
-const decodePath = async path => {
-  return {
-    domain: path.domain,
-    identifier: path.identifier,
-  }
-}
-
-const decodeCapability = async cap => {
-  return {
-    path: cap.path,
-    address: cap.address,
-    borrowType: cap.borrowType,
-  }
-}
-
 const decodeOptional = async (optional, decoders, stack) =>
   optional ? await recurseDecode(optional, decoders, stack) : null
-
-const decodeReference = async v => ({address: v.address, type: v.type})
 
 const decodeArray = async (array, decoders, stack) =>
   await Promise.all(
@@ -75,6 +58,21 @@ const decodeComposite = async (composite, decoders, stack) => {
   return decoder ? await decoder(decoded) : decoded
 }
 
+const decodeInclusiveRange = async (range, decoders, stack) => {
+  // Recursive decode for start, end, and step
+  // We don't do all fields just in case there are future API changes
+  // where fields added and are not Cadence values
+  const keys = ["start", "end", "step"]
+  const decoded = await Object.keys(range).reduce(async (acc, key) => {
+    acc = await acc
+    if (keys.includes(key)) {
+      acc[key] = await recurseDecode(range[key], decoders, [...stack, key])
+    }
+    return acc
+  }, Promise.resolve({}))
+  return decoded
+}
+
 const defaultDecoders = {
   UInt: decodeImplicit,
   Int: decodeImplicit,
@@ -94,6 +92,8 @@ const defaultDecoders = {
   Word16: decodeImplicit,
   Word32: decodeImplicit,
   Word64: decodeImplicit,
+  Word128: decodeImplicit,
+  Word256: decodeImplicit,
   UFix64: decodeImplicit,
   Fix64: decodeImplicit,
   String: decodeImplicit,
@@ -102,7 +102,7 @@ const defaultDecoders = {
   Address: decodeImplicit,
   Void: decodeVoid,
   Optional: decodeOptional,
-  Reference: decodeReference,
+  Reference: decodeImplicit,
   Array: decodeArray,
   Dictionary: decodeDictionary,
   Event: decodeComposite,
@@ -110,8 +110,9 @@ const defaultDecoders = {
   Struct: decodeComposite,
   Enum: decodeComposite,
   Type: decodeType,
-  Path: decodePath,
-  Capability: decodeCapability,
+  Path: decodeImplicit,
+  Capability: decodeImplicit,
+  InclusiveRange: decodeInclusiveRange,
 }
 
 const decoderLookup = (decoders, lookup) => {

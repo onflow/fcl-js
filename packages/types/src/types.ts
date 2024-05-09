@@ -27,6 +27,9 @@ export interface PathValue {
   identifier: string
 }
 
+/**
+ * @deprecated Reference values cannot be imported into the Cadence interpreter, will be removed in future versions
+ */
 export interface ReferenceValue {
   type: string
   address: string
@@ -478,6 +481,48 @@ export const Word64 = typedef(
   v => v
 )
 
+export const Word128 = typedef(
+  "Word128",
+  (v: number | string) => {
+    if (isNumber(v) && isInteger(v)) {
+      numberValuesDeprecationNotice("Word128")
+      return {
+        type: "Word128",
+        value: v.toString(),
+      }
+    }
+    if (isString(v)) {
+      return {
+        type: "Word128",
+        value: v,
+      }
+    }
+    return throwTypeError("Expected positive number for Word128")
+  },
+  v => v
+)
+
+export const Word256 = typedef(
+  "Word256",
+  (v: number | string) => {
+    if (isNumber(v) && isInteger(v)) {
+      numberValuesDeprecationNotice("Word256")
+      return {
+        type: "Word256",
+        value: v.toString(),
+      }
+    }
+    if (isString(v)) {
+      return {
+        type: "Word256",
+        value: v,
+      }
+    }
+    return throwTypeError("Expected positive number for Word256")
+  },
+  v => v
+)
+
 const UFix64AndFix64NumberDeprecationNotice = () => {
   log.deprecate({
     subject: "Passing in Numbers as values for Fix64 and UFix64 types",
@@ -624,11 +669,7 @@ export const Void = typedef(
   v => v
 )
 
-export const Optional = <
-  T extends TypeDescriptor<any, JsonCdc<string, unknown>>
->(
-  children: T
-) =>
+export const Optional = <T extends TypeDescriptor<any, any>>(children: T) =>
   typedef(
     "Optional",
     (v?: TypeDescriptorInput<T> | null) => ({
@@ -638,6 +679,9 @@ export const Optional = <
     v => v
   )
 
+/**
+ * @deprecated Reference values cannot be imported into the Cadence interpreter, will be removed in future versions
+ */
 export const Reference = typedef(
   "Reference",
   (v: ReferenceValue) => {
@@ -651,7 +695,7 @@ export const Reference = typedef(
   v => v
 )
 
-export const _Array = <T extends TypeDescriptor<any, JsonCdc<string, unknown>>>(
+export const _Array = <T extends TypeDescriptor<any, any>>(
   children: T[] | T = []
 ) =>
   typedef(
@@ -670,8 +714,8 @@ export const _Array = <T extends TypeDescriptor<any, JsonCdc<string, unknown>>>(
 export {_Array as Array}
 
 export const Dictionary = <
-  K extends TypeDescriptor<any, JsonCdc<string, unknown>>,
-  V extends TypeDescriptor<any, JsonCdc<string, unknown>>
+  K extends TypeDescriptor<any, any>,
+  V extends TypeDescriptor<any, any>
 >(
   children:
     | {
@@ -721,7 +765,7 @@ export const Dictionary = <
     v => v
   )
 
-export const Event = <V extends TypeDescriptor<any, JsonCdc<string, unknown>>>(
+export const Event = <V extends TypeDescriptor<any, any>>(
   id: string,
   fields: {value: V}[] | {value: V} = []
 ) =>
@@ -749,9 +793,7 @@ export const Event = <V extends TypeDescriptor<any, JsonCdc<string, unknown>>>(
     v => v
   )
 
-export const Resource = <
-  V extends TypeDescriptor<any, JsonCdc<string, unknown>>
->(
+export const Resource = <V extends TypeDescriptor<any, any>>(
   id: string,
   fields: {value: V}[] | {value: V} = []
 ) =>
@@ -779,7 +821,7 @@ export const Resource = <
     v => v
   )
 
-export const Struct = <V extends TypeDescriptor<any, JsonCdc<string, unknown>>>(
+export const Struct = <V extends TypeDescriptor<any, any>>(
   id: string,
   fields: {value: V}[] | {value: V} = []
 ) =>
@@ -807,7 +849,7 @@ export const Struct = <V extends TypeDescriptor<any, JsonCdc<string, unknown>>>(
     v => v
   )
 
-export const Enum = <V extends TypeDescriptor<any, JsonCdc<string, unknown>>>(
+export const Enum = <V extends TypeDescriptor<any, any>>(
   id: string,
   fields: {value: V}[] | {value: V} = []
 ) =>
@@ -875,3 +917,42 @@ export const Path = typedef(
   },
   v => v
 )
+
+/**
+ * InclusiveRange type
+ *
+ * @param t - A TypeDescriptor for the type of the range, must be a number (UInt32, Int32, etc.)
+ * @returns A TypeDescriptor for an InclusiveRange of the given type
+ *
+ * @example
+ * ```javascript
+ * import * as fcl from "@onflow/fcl"
+ * import {InclusiveRange, UInt32} from "@onflow/types"
+ *
+ * const someArg = fcl.arg({start: 1, end: 5, step: 1}, InclusiveRange(UInt32))
+ * ```
+ */
+export const InclusiveRange = <T extends TypeDescriptor<any, any>>(t: T) =>
+  typedef(
+    "InclusiveRange",
+    (v: {
+      start: TypeDescriptorInput<T>
+      end: TypeDescriptorInput<T>
+      step: TypeDescriptorInput<T>
+    }) => {
+      if (isObj(v)) {
+        const {start, end, step} = v
+
+        return {
+          type: "InclusiveRange",
+          value: {
+            start: t.asArgument(start),
+            end: t.asArgument(end),
+            step: t.asArgument(step),
+          },
+        }
+      }
+      return throwTypeError("Expected Object for type InclusiveRange")
+    },
+    v => v
+  )
