@@ -92,6 +92,8 @@ const defaultDecoders = {
   Word16: decodeImplicit,
   Word32: decodeImplicit,
   Word64: decodeImplicit,
+  Word128: decodeImplicit,
+  Word256: decodeImplicit,
   UFix64: decodeImplicit,
   Fix64: decodeImplicit,
   String: decodeImplicit,

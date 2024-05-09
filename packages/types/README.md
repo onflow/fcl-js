@@ -242,6 +242,26 @@ sdk.build([
 ])
 ```
 
+### Word128
+
+```javascript
+import * as t from "@onflow/types"
+
+sdk.build([
+  sdk.args([ sdk.arg(128, t.Word128) ])
+])
+```
+
+### Word256
+
+```javascript
+import * as t from "@onflow/types"
+
+sdk.build([
+  sdk.args([ sdk.arg(256, t.Word256) ])
+])
+```
+
 ### UFix64
 
 ```javascript

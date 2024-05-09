@@ -18,6 +18,8 @@ registerTest([t.Word8, "8", {type: "Word8", value: "8"}, "8"])
 registerTest([t.Word16, "16", {type: "Word16", value: "16"}, "16"])
 registerTest([t.Word32, "32", {type: "Word32", value: "32"}, "32"])
 registerTest([t.Word64, "64", {type: "Word64", value: "64"}, "64"])
+registerTest([t.Word128, "128", {type: "Word128", value: "128"}, "128"])
+registerTest([t.Word256, "256", {type: "Word256", value: "256"}, "256"])
 registerTest([t.UFix64, "64", {type: "UFix64", value: "64"}, "64", true])
 registerTest([t.Fix64, "64", {type: "Fix64", value: "64"}, "64", true])
 registerTest([

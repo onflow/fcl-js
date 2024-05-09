@@ -481,6 +481,48 @@ export const Word64 = typedef(
   v => v
 )
 
+export const Word128 = typedef(
+  "Word128",
+  (v: number | string) => {
+    if (isNumber(v) && isInteger(v)) {
+      numberValuesDeprecationNotice("Word128")
+      return {
+        type: "Word128",
+        value: v.toString(),
+      }
+    }
+    if (isString(v)) {
+      return {
+        type: "Word128",
+        value: v,
+      }
+    }
+    return throwTypeError("Expected positive number for Word128")
+  },
+  v => v
+)
+
+export const Word256 = typedef(
+  "Word256",
+  (v: number | string) => {
+    if (isNumber(v) && isInteger(v)) {
+      numberValuesDeprecationNotice("Word256")
+      return {
+        type: "Word256",
+        value: v.toString(),
+      }
+    }
+    if (isString(v)) {
+      return {
+        type: "Word256",
+        value: v,
+      }
+    }
+    return throwTypeError("Expected positive number for Word256")
+  },
+  v => v
+)
+
 const UFix64AndFix64NumberDeprecationNotice = () => {
   log.deprecate({
     subject: "Passing in Numbers as values for Fix64 and UFix64 types",

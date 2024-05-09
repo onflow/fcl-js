@@ -296,7 +296,23 @@ describe("unit tests to cover all types", () => {
     expect(decoded).toStrictEqual("4294967295")
   })
 
-  it("returns the correct response given a json-cdc payload 30 WORD64", async () => {
+  it("returns the correct response given a json-cdc payload 30 WORD128", async () => {
+    const payload = {type: "Word128", value: "12412531315"}
+
+    const decoded = await decode(payload)
+
+    expect(decoded).toStrictEqual("12412531315")
+  })
+
+  it("returns the correct response given a json-cdc payload 31 WORD256", async () => {
+    const payload = {type: "Word256", value: "555153134124"}
+
+    const decoded = await decode(payload)
+
+    expect(decoded).toStrictEqual("555153134124")
+  })
+
+  it("returns the correct response given a json-cdc payload 32 WORD64", async () => {
     const payload = {type: "Word64", value: "18446744073709551615"}
 
     const decoded = await decode(payload)
@@ -304,7 +320,7 @@ describe("unit tests to cover all types", () => {
     expect(decoded).toStrictEqual("18446744073709551615")
   })
 
-  it("returns the correct response given a json-cdc payload 31 FIX64", async () => {
+  it("returns the correct response given a json-cdc payload 33 FIX64", async () => {
     const payload = {type: "Fix64", value: "789.00123010"}
 
     const decoded = await decode(payload)
@@ -312,7 +328,7 @@ describe("unit tests to cover all types", () => {
     expect(decoded).toStrictEqual("789.00123010")
   })
 
-  it("returns the correct response given a json-cdc payload 32 FIX64", async () => {
+  it("returns the correct response given a json-cdc payload 34 FIX64", async () => {
     const payload = {type: "Fix64", value: "-12345.00678900"}
 
     const decoded = await decode(payload)
@@ -320,7 +336,7 @@ describe("unit tests to cover all types", () => {
     expect(decoded).toStrictEqual("-12345.00678900")
   })
 
-  it("returns the correct response given a json-cdc payload 33 UFIX64", async () => {
+  it("returns the correct response given a json-cdc payload 35 UFIX64", async () => {
     const payload = {type: "UFix64", value: "789.00123010"}
 
     const decoded = await decode(payload)
@@ -328,7 +344,7 @@ describe("unit tests to cover all types", () => {
     expect(decoded).toStrictEqual("789.00123010")
   })
 
-  it("returns the correct response given a json-cdc payload 34 ARRAY", async () => {
+  it("returns the correct response given a json-cdc payload 36 ARRAY", async () => {
     const payload = {
       type: "Array",
       value: [
@@ -343,7 +359,7 @@ describe("unit tests to cover all types", () => {
     expect(decoded).toStrictEqual(["1", "2", "3"])
   })
 
-  it("returns the correct response given a json-cdc payload 35 ARRAY", async () => {
+  it("returns the correct response given a json-cdc payload 37 ARRAY", async () => {
     const payload = {
       type: "Array",
       value: [
@@ -376,7 +392,7 @@ describe("unit tests to cover all types", () => {
     expect(decoded).toStrictEqual([{bar: "1"}, {bar: "2"}, {bar: "3"}])
   })
 
-  it("returns the correct response given a json-cdc payload 36 DICTIONARY", async () => {
+  it("returns the correct response given a json-cdc payload 38 DICTIONARY", async () => {
     const payload = {
       type: "Dictionary",
       value: [
@@ -391,7 +407,7 @@ describe("unit tests to cover all types", () => {
     expect(decoded).toStrictEqual({a: "1", b: "2", c: "3"})
   })
 
-  it("returns the correct response given a json-cdc payload 37 DICTIONARY", async () => {
+  it("returns the correct response given a json-cdc payload 39 DICTIONARY", async () => {
     const payload = {
       type: "Dictionary",
       value: [
@@ -439,7 +455,7 @@ describe("unit tests to cover all types", () => {
     expect(decoded).toStrictEqual({a: {1: "1"}, b: {2: "2"}, c: {3: "3"}})
   })
 
-  it("returns the correct response given a json-cdc payload 38 DICTIONARY", async () => {
+  it("returns the correct response given a json-cdc payload 40 DICTIONARY", async () => {
     const payload = {
       type: "Dictionary",
       value: [
@@ -481,7 +497,7 @@ describe("unit tests to cover all types", () => {
     expect(decoded).toStrictEqual({a: {bar: "1"}, b: {bar: "2"}, c: {bar: "3"}})
   })
 
-  it("returns the correct response given a json-cdc payload 39 RESOURCE", async () => {
+  it("returns the correct response given a json-cdc payload 41 RESOURCE", async () => {
     const payload = {
       type: "Resource",
       value: {
@@ -495,7 +511,7 @@ describe("unit tests to cover all types", () => {
     expect(decoded).toStrictEqual({bar: "42"})
   })
 
-  it("returns the correct response given a json-cdc payload 40 RESOURCE", async () => {
+  it("returns the correct response given a json-cdc payload 42 RESOURCE", async () => {
     const payload = {
       type: "Resource",
       value: {
@@ -520,55 +536,29 @@ describe("unit tests to cover all types", () => {
     expect(decoded).toStrictEqual({bar: {x: "42"}})
   })
 
-  it("returns the correct response given a json-cdc payload 41 STRUCT", async () => {
-    const payload = {
-      type: "Struct",
-      value: {
-        id: "test.FooStruct",
-        fields: [
-          {name: "a", value: {type: "Int", value: "1"}},
-          {name: "b", value: {type: "String", value: "foo"}},
-        ],
-      },
-    }
-
-    const decoded = await decode(payload)
-
-    expect(decoded).toStrictEqual({a: "1", b: "foo"})
-  })
-
-  it("returns the correct response given a json-cdc payload 42 STRUCT", async () => {
-    const payload = {
-      type: "Struct",
-      value: {
-        id: "test.FooStruct",
-        fields: [
-          {name: "a", value: {type: "String", value: "foo"}},
-          {
-            name: "b",
-            value: {
-              type: "Resource",
-              value: {
-                id: "test.Foo",
-                fields: [{name: "bar", value: {type: "Int", value: "42"}}],
-              },
-            },
-          },
-        ],
-      },
-    }
-
-    const decoded = await decode(payload)
-
-    expect(decoded).toStrictEqual({a: "foo", b: {bar: "42"}})
-  })
-
   it("returns the correct response given a json-cdc payload 43 STRUCT", async () => {
     const payload = {
       type: "Struct",
       value: {
         id: "test.FooStruct",
         fields: [
+          {name: "a", value: {type: "Int", value: "1"}},
+          {name: "b", value: {type: "String", value: "foo"}},
+        ],
+      },
+    }
+
+    const decoded = await decode(payload)
+
+    expect(decoded).toStrictEqual({a: "1", b: "foo"})
+  })
+
+  it("returns the correct response given a json-cdc payload 44 STRUCT", async () => {
+    const payload = {
+      type: "Struct",
+      value: {
+        id: "test.FooStruct",
+        fields: [
           {name: "a", value: {type: "String", value: "foo"}},
           {
             name: "b",
@@ -589,7 +579,33 @@ describe("unit tests to cover all types", () => {
     expect(decoded).toStrictEqual({a: "foo", b: {bar: "42"}})
   })
 
-  it("returns the correct response given a json-cdc payload 44 EVENT", async () => {
+  it("returns the correct response given a json-cdc payload 45 STRUCT", async () => {
+    const payload = {
+      type: "Struct",
+      value: {
+        id: "test.FooStruct",
+        fields: [
+          {name: "a", value: {type: "String", value: "foo"}},
+          {
+            name: "b",
+            value: {
+              type: "Resource",
+              value: {
+                id: "test.Foo",
+                fields: [{name: "bar", value: {type: "Int", value: "42"}}],
+              },
+            },
+          },
+        ],
+      },
+    }
+
+    const decoded = await decode(payload)
+
+    expect(decoded).toStrictEqual({a: "foo", b: {bar: "42"}})
+  })
+
+  it("returns the correct response given a json-cdc payload 46 EVENT", async () => {
     const payload = {
       type: "Event",
       value: {
@@ -606,7 +622,7 @@ describe("unit tests to cover all types", () => {
     expect(decoded).toStrictEqual({a: "1", b: "foo"})
   })
 
-  it("returns the correct response given a json-cdc payload 44 EVENT", async () => {
+  it("returns the correct response given a json-cdc payload 47 EVENT", async () => {
     const payload = {
       type: "Event",
       value: {
@@ -632,7 +648,7 @@ describe("unit tests to cover all types", () => {
     expect(decoded).toStrictEqual({a: "foo", b: {bar: "42"}})
   })
 
-  it("returns the correct response given a json-cdc payload 45 TYPE", async () => {
+  it("returns the correct response given a json-cdc payload 48 TYPE", async () => {
     const payload = {
       type: "Type",
       value: {
@@ -645,7 +661,7 @@ describe("unit tests to cover all types", () => {
     expect(decoded).toStrictEqual("FooType")
   })
 
-  it("returns the correct response given a json-cdc payload 46 PATH", async () => {
+  it("returns the correct response given a json-cdc payload 49 PATH", async () => {
     const payload = {
       type: "Path",
       value: {
@@ -662,7 +678,7 @@ describe("unit tests to cover all types", () => {
     })
   })
 
-  it("returns the correct response given a json-cdc payload 47 INCLUSIVERANGE", async () => {
+  it("returns the correct response given a json-cdc payload 50 INCLUSIVERANGE", async () => {
     const payload = {
       type: "InclusiveRange",
       value: {
