@@ -476,3 +476,13 @@ sdk.build([
   ])
 ])
 ```
+
+### InclusiveRange
+
+```javascript
+import * as t from "@onflow/types"
+
+sdk.build([
+  sdk.args([ sdk.arg({start: "1", end: "10", step: "1"}, t.InclusiveRange(t.Int)) ])
+])
+```
