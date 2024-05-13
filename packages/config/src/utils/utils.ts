@@ -1,4 +1,4 @@
-type FlowNetwork = "emulator" | "testnet" | "mainnet"
+type FlowNetwork = "emulator" | "testnet" | "mainnet" | "previewnet"
 export interface FlowJson {
   networks?: {
     [key in FlowNetwork]?: string
@@ -237,9 +237,9 @@ export const anyHasPrivateKeys = (value: FlowJson | FlowJson[]) => {
 }
 
 /**
- * @description Format network to always be 'emulator', 'testnet', or 'mainnet'
+ * @description Format network to always be 'emulator', 'testnet', 'previewnet' or 'mainnet'
  * @param network - Network to format
- * @returns Formatted network name (either 'emulator', 'testnet', or 'mainnet')
+ * @returns Formatted network name (either 'emulator', 'testnet', 'previewnet' or 'mainnet')
  */
 export const cleanNetwork = (network: string): FlowNetwork => {
   const cleanedNetwork =
@@ -247,7 +247,8 @@ export const cleanNetwork = (network: string): FlowNetwork => {
   if (
     cleanedNetwork === "emulator" ||
     cleanedNetwork === "testnet" ||
-    cleanedNetwork === "mainnet"
+    cleanedNetwork === "mainnet" ||
+    cleanedNetwork === "previewnet"
   )
     return cleanedNetwork
 
