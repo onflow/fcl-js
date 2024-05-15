@@ -4,7 +4,11 @@
  * @param msg
  * @param rest
  */
-export function invariant(fact: boolean, msg: string, ...rest: any[]) {
+export function invariant(
+  fact: boolean,
+  msg: string,
+  ...rest: any[]
+): asserts fact {
   if (!fact) {
     const error = new Error(`INVARIANT ${msg}`)
     error.stack = error.stack
