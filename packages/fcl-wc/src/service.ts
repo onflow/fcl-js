@@ -285,7 +285,7 @@ async function connectWc({
 
       if (!pairingModalOverride) {
         if (!isBaseWalletConnectService(service)) {
-          modal.openQr({uri})
+          modal.openQrConnect({uri, service})
           RouterCtrl.push("Qrcode")
         } else {
           modal.openModal({uri, onClose})

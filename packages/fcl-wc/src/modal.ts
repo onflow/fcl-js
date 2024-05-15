@@ -30,6 +30,8 @@ export class FCLWalletConnectModal extends WalletConnectModal {
       //OptionsCtrl.setChains(options?.chains)
       RouterCtrl.reset("MobileQrcodeConnecting")
       RouterCtrl.push("MobileQrcodeConnecting", {
+        Wallet: {
+        }
         uri: options?.uri,
         service: options?.service,
       })
