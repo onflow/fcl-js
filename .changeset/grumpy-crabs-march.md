@@ -1,5 +1,5 @@
 ---
-"@onflow/util-invariant": minor
+"@onflow/util-invariant": patch
 ---
 
-Add TypeScript assertion to invariant
+Add TypeScript assertion signature to invariant function
