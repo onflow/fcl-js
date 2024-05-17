@@ -1,6 +1,7 @@
 import * as logger from "@onflow/util-logger"
 import fetchTransport from "cross-fetch"
 import {safeParseJSON} from "./utils"
+import {combineURLs} from "./combine-urls"
 
 const AbortController =
   globalThis.AbortController || require("abort-controller")
@@ -70,7 +71,7 @@ export async function httpRequest({
       controller.abort()
     }, timeoutLimit)
 
-    return fetchTransport(new URL(path, hostname).toString(), {
+    return fetchTransport(combineURLs(hostname, path).toString(), {
       method: method,
       body: bodyJSON,
       headers,
