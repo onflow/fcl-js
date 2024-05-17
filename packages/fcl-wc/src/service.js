@@ -211,8 +211,8 @@ async function connectWc({
 
   const projectId = client.opts.projectId
   const web3Modal = new WalletConnectModal({
-    projectId
-  });
+    projectId,
+  })
 
   try {
     const {uri, approval} = await client.connect({

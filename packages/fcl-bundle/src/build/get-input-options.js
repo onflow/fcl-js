@@ -90,7 +90,7 @@ module.exports = function getInputOptions(package, build) {
             compilerOptions: {
               // patch for rollup-plugin-typescript2 because rootDirs
               // are used to resolve include/exclude filters
-              rootDirs: [""] 
+              rootDirs: [""],
             },
           },
           useTsconfigDeclarationDir: true,

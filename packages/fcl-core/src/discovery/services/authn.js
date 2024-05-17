@@ -55,7 +55,7 @@ const HANDLERS = {
       '"fcl.discovery" is only available in the browser.'
     )
     // If you call this before the window is loaded extensions will not be set yet
-    if (document.readyState === 'complete') {
+    if (document.readyState === "complete") {
       fetchServicesFromDiscovery()
     } else {
       window.onload = async () => {
@@ -90,7 +90,7 @@ const spawnProviders = () => spawn(HANDLERS, SERVICE_ACTOR_KEYS.AUTHN)
 /**
  * @description
  * Discovery methods for interacting with Authn.
- * 
+ *
  * @typedef {object} Authn
  * @property {Function} subscribe - Subscribe to Discovery authn services
  * @property {Function} snapshot - Get the current Discovery authn services spanshot

@@ -5,12 +5,8 @@
     "jest": true,
     "node": true
   },
-  "extends": [
-    "plugin:jsdoc/recommended"
-  ],
-  "plugins": [
-    "jsdoc"
-  ],
+  "extends": ["plugin:jsdoc/recommended"],
+  "plugins": ["jsdoc"],
   "parserOptions": {
     "ecmaVersion": "latest",
     "sourceType": "module"

@@ -8,7 +8,8 @@
     "test": "jest",
     "release": "npm run build && npm run changeset publish",
     "changeset": "changeset",
-    "clear": "find . -name node_modules -type d -prune -exec rm -rf '{}' + && find . -name dist -type d -prune -exec rm -rf '{}' +"
+    "clear": "find . -name node_modules -type d -prune -exec rm -rf '{}' + && find . -name dist -type d -prune -exec rm -rf '{}' +",
+    "prettier:check": "prettier --check ."
   },
   "name": "fcl-js",
   "devDependencies": {

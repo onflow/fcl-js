@@ -257,7 +257,6 @@ describe("Get interaction template messages 1.1.0", () => {
     expect(description).toEqual("Transfer Flow to account")
   })
 
-
   test("It fails to get message for an unknown message key", async () => {
     const message = getTemplateMessage({
       localization: "en-US",

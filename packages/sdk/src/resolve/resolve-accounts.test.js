@@ -234,9 +234,7 @@ test("mulitple payer scenario (One from dev and one from pre-authz)", async () =
     proposalKey: {address: "0x72f6325947f76d3a", keyId: 1, sequenceNum: 12},
     payer: "0x01",
     authorizers: ["0x72f6325947f76d3a"],
-    payloadSigs: [
-      {address: "0x72f6325947f76d3a", keyId: 1, sig: "1"},
-    ],
+    payloadSigs: [{address: "0x72f6325947f76d3a", keyId: 1, sig: "1"}],
     envelopeSigs: [{address: "0x01", keyId: 1, sig: "123"}],
   })
 })
@@ -312,9 +310,7 @@ test("mulitple payer scenario (One from dev and one from pre-authz) as array", a
     proposalKey: {address: "0x02", keyId: 1, sequenceNum: 12},
     payer: "0x01",
     authorizers: ["0x02"],
-    payloadSigs: [
-      {address: "0x02", keyId: 1, sig: "1"},
-    ],
+    payloadSigs: [{address: "0x02", keyId: 1, sig: "1"}],
     envelopeSigs: [
       {address: "0x01", keyId: 1, sig: "123"},
       {address: "0x01", keyId: 2, sig: "456"},
@@ -380,9 +376,7 @@ test("payer from pre-authz", async () => {
     proposalKey: {address: "0x72f6325947f76d3a", keyId: 1, sequenceNum: 12},
     payer: "0xf086a545ce3c552d",
     authorizers: ["0x72f6325947f76d3a"],
-    payloadSigs: [
-      {address: "0x72f6325947f76d3a", keyId: 1, sig: "1"},
-    ],
+    payloadSigs: [{address: "0x72f6325947f76d3a", keyId: 1, sig: "1"}],
     envelopeSigs: [{address: "0xf086a545ce3c552d", keyId: 12, sig: "2"}],
   })
 })

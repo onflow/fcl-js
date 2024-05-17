@@ -1,4 +1,7 @@
-import {generateDependencyPin110, generateDependencySelfPin} from "./generate-dependency-pin-1.1.0.js"
+import {
+  generateDependencyPin110,
+  generateDependencySelfPin,
+} from "./generate-dependency-pin-1.1.0.js"
 import {config} from "@onflow/config"
 
 const returnedAccount = {
@@ -6,8 +9,7 @@ const returnedAccount = {
   keys: [],
   balance: "10",
   contracts: {
-    FungibleToken: 
-`/**
+    FungibleToken: `/**
 
 # The Flow Fungible Token standard
 
@@ -252,8 +254,8 @@ pub contract interface FungibleToken {
 jest.mock("@onflow/sdk", () => ({
   send: jest.fn().mockImplementation(({}) => {
     // Adjusted mock implementation
-    const sanitized = returnedAccount.contracts.FungibleToken.replace(/\\/g, '');
-    returnedAccount.contracts.FungibleToken =  sanitized;
+    const sanitized = returnedAccount.contracts.FungibleToken.replace(/\\/g, "")
+    returnedAccount.contracts.FungibleToken = sanitized
     return Promise.resolve(returnedAccount)
   }),
   getAccount: jest.fn().mockImplementation(({}) => {
@@ -298,5 +300,4 @@ describe("1.1.0, generate dependency pin", () => {
 
     expect(depPin).toEqual(pin)
   })
-
 })
