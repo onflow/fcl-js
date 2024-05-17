@@ -2,5 +2,5 @@ README.md
 *.md
 *.mdx
 packages/protobuf/src/generated/
-packages/dist/
-packages/types/
+packages/*/dist/
+packages/*/types/
