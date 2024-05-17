@@ -5,12 +5,8 @@ export type JsonCdc<L extends string, T> = {
   value: T
 }
 
-type JsonCdcLabel<X extends JsonCdc<string, unknown>> = X extends JsonCdc<
-  infer L,
-  unknown
->
-  ? L
-  : never
+type JsonCdcLabel<X extends JsonCdc<string, unknown>> =
+  X extends JsonCdc<infer L, unknown> ? L : never
 
 export interface TypeDescriptor<T, V extends JsonCdc<string, unknown>> {
   label: JsonCdcLabel<V>
@@ -19,7 +15,7 @@ export interface TypeDescriptor<T, V extends JsonCdc<string, unknown>> {
 }
 
 export type TypeDescriptorInput<
-  X extends TypeDescriptor<any, JsonCdc<string, unknown>>
+  X extends TypeDescriptor<any, JsonCdc<string, unknown>>,
 > = X extends TypeDescriptor<infer T, JsonCdc<string, unknown>> ? T : never
 
 export interface PathValue {
@@ -715,7 +711,7 @@ export {_Array as Array}
 
 export const Dictionary = <
   K extends TypeDescriptor<any, any>,
-  V extends TypeDescriptor<any, any>
+  V extends TypeDescriptor<any, any>,
 >(
   children:
     | {
@@ -747,18 +743,18 @@ export const Dictionary = <
                   value: c.value.asArgument(v[i].value),
                 }))
               : vIsArray && !childrenIsArray
-              ? v.map(x => ({
-                  key: children.key.asArgument(x.key),
-                  value: children.value.asArgument(x.value),
-                }))
-              : !vIsArray && !childrenIsArray
-              ? [
-                  {
-                    key: children.key.asArgument(v.key),
-                    value: children.value.asArgument(v.value),
-                  },
-                ]
-              : throwTypeError("Invalid arguments for Dictionary."),
+                ? v.map(x => ({
+                    key: children.key.asArgument(x.key),
+                    value: children.value.asArgument(x.value),
+                  }))
+                : !vIsArray && !childrenIsArray
+                  ? [
+                      {
+                        key: children.key.asArgument(v.key),
+                        value: children.value.asArgument(v.value),
+                      },
+                    ]
+                  : throwTypeError("Invalid arguments for Dictionary."),
         }
       return throwTypeError("Expected Object for type Dictionary")
     },
