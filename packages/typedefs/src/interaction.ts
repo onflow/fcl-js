@@ -89,7 +89,7 @@ export interface Interaction {
   }
   collection: {
     id: string | null
-  },
+  }
   subscribeEvents: {
     eventTypes: string[] | null
     addresses: string[] | null

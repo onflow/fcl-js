@@ -58,10 +58,7 @@ function constructResponse(ix, context, res) {
     id: u8ToHex(block.getId_asU8(), context),
     parentId: u8ToHex(block.getParentId_asU8(), context),
     height: block.getHeight(),
-    timestamp: block
-      .getTimestamp()
-      .toDate()
-      .toISOString(),
+    timestamp: block.getTimestamp().toDate().toISOString(),
     collectionGuarantees: collectionGuarantees.map(collectionGuarantee => ({
       collectionId: u8ToHex(
         collectionGuarantee.getCollectionId_asU8(),

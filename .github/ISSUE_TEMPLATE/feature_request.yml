@@ -1,7 +1,7 @@
 name: Requesting a Feature or Improvement
 description: For feature requests. Please search for existing issues first. Also see CONTRIBUTING.
-title: '[FEATURE] <title>'
-labels: [Feature,  Needs Triage]
+title: "[FEATURE] <title>"
+labels: [Feature, Needs Triage]
 body:
   - type: markdown
     attributes:

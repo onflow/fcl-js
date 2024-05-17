@@ -128,14 +128,17 @@ const filterDependencies = (obj: FlowJson) =>
  */
 const mapContractAliasesToNetworkAddress =
   (network: string) => (contracts: Record<string, any>) => {
-    return Object.entries(contracts).reduce((c, [key, value]) => {
-      const networkContractAlias = value?.aliases?.[network]
-      if (networkContractAlias) {
-        c[key] = networkContractAlias
-      }
+    return Object.entries(contracts).reduce(
+      (c, [key, value]) => {
+        const networkContractAlias = value?.aliases?.[network]
+        if (networkContractAlias) {
+          c[key] = networkContractAlias
+        }
 
-      return c
-    }, {} as Record<string, string>)
+        return c
+      },
+      {} as Record<string, string>
+    )
   }
 
 /**
@@ -145,14 +148,17 @@ const mapContractAliasesToNetworkAddress =
  */
 const mapDependencyAliasesToNetworkAddress =
   (network: string) => (dependencies: Record<string, any>) => {
-    return Object.entries(dependencies).reduce((c, [key, value]) => {
-      const networkDependencyAlias = value?.aliases?.[network]
-      if (networkDependencyAlias) {
-        c[key] = networkDependencyAlias
-      }
+    return Object.entries(dependencies).reduce(
+      (c, [key, value]) => {
+        const networkDependencyAlias = value?.aliases?.[network]
+        if (networkDependencyAlias) {
+          c[key] = networkDependencyAlias
+        }
 
-      return c
-    }, {} as Record<string, string>)
+        return c
+      },
+      {} as Record<string, string>
+    )
   }
 
 const mapDeploymentsToNetworkAddress =

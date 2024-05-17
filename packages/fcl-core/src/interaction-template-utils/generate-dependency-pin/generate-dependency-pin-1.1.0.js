@@ -1,10 +1,4 @@
-import {
-  invariant,
-  send,
-  getAccount,
-  config,
-  decode,
-} from "@onflow/sdk"
+import {invariant, send, getAccount, config, decode} from "@onflow/sdk"
 import {genHash} from "../utils/hash.js"
 import {findImports} from "../utils/find-imports.js"
 import {generateImport} from "../utils/generate-import.js"
@@ -37,7 +31,7 @@ export async function generateDependencyPin110(
     typeof contractName === "string",
     "generateDependencyPin({ contractName }) -- contractName must be a string"
   )
-  
+
   const horizon = [generateImport({contractName, address})]
 
   for (const horizonImport of horizon) {

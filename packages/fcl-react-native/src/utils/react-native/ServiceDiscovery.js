@@ -1,5 +1,5 @@
-import { useState, useEffect, createElement } from 'react'
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native'
+import {useState, useEffect, createElement} from "react"
+import {StyleSheet, Text, View, TouchableOpacity} from "react-native"
 
 /**
  * @typedef {import("@onflow/typedefs").Service} Service
@@ -14,9 +14,9 @@ import { StyleSheet, Text, View, TouchableOpacity } from 'react-native'
  */
 const fetcher = (url, opts) => {
   return fetch(url, {
-    method: 'POST',
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
     body: JSON.stringify(opts),
   }).then(d => d.json())
@@ -34,7 +34,8 @@ const DefaultLoadingComponent = () => createElement(Text, null, "Loading...")
  *
  * @returns {JSX.Element} - The empty component.
  */
-const DefaultEmptyComponent = () => createElement(Text, null, "No Wallets Found")
+const DefaultEmptyComponent = () =>
+  createElement(Text, null, "No Wallets Found")
 
 /**
  * Default service card component that renders a TouchableOpacity with the service provider's name as text.
@@ -44,14 +45,11 @@ const DefaultEmptyComponent = () => createElement(Text, null, "No Wallets Found"
  * @param {Function} props.onPress - The onPress event handler.
  * @returns {JSX.Element} - The service card component.
  */
-const DefaultServiceCard = ({
-  service,
-  onPress
-}) => {
+const DefaultServiceCard = ({service, onPress}) => {
   return createElement(
     TouchableOpacity,
-    { onPress },
-    createElement(Text, null, service?.provider?.name),
+    {onPress},
+    createElement(Text, null, service?.provider?.name)
   )
 }
 
@@ -62,7 +60,8 @@ const DefaultServiceCard = ({
  * @param {JSX.Element[]} props.children - The children components.
  * @returns {JSX.Element} - The wrapper component.
  */
-const DefaultWrapper = ({ children }) => createElement(View, { style: styles.container }, ...children)
+const DefaultWrapper = ({children}) =>
+  createElement(View, {style: styles.container}, ...children)
 
 /**
  * Custom hook for service discovery.
@@ -74,7 +73,7 @@ const DefaultWrapper = ({ children }) => createElement(View, { style: styles.con
  * @property {boolean} isLoading - A flag indicating whether the services are being loaded.
  * @property {Function} authenticateService - A function to authenticate a service.
  */
-export const useServiceDiscovery = ({ fcl }) => {
+export const useServiceDiscovery = ({fcl}) => {
   const [services, setServices] = useState([])
   const [isLoading, setIsLoading] = useState(false)
 
@@ -84,8 +83,8 @@ export const useServiceDiscovery = ({ fcl }) => {
     try {
       const response = await fetcher(endpoint, {
         fclVersion: fcl.VERSION,
-        userAgent: 'ReactNative',
-        supportedStrategies: ['HTTP/POST'],
+        userAgent: "ReactNative",
+        supportedStrategies: ["HTTP/POST"],
       })
       setServices(response)
       setIsLoading(false)
@@ -103,9 +102,9 @@ export const useServiceDiscovery = ({ fcl }) => {
    *
    * @param {object} service - The service object to authenticate.
    */
-  const authenticateService = (service) => {
+  const authenticateService = service => {
     if (services.includes(service)) {
-      fcl.authenticate({ service })
+      fcl.authenticate({service})
     }
   }
 
@@ -132,34 +131,33 @@ export const ServiceDiscovery = ({
   Loading = DefaultLoadingComponent,
   Empty = DefaultEmptyComponent,
   ServiceCard = DefaultServiceCard,
-  Wrapper = DefaultWrapper
+  Wrapper = DefaultWrapper,
 }) => {
-  const { services, isLoading, authenticateService } = useServiceDiscovery({ fcl })
+  const {services, isLoading, authenticateService} = useServiceDiscovery({fcl})
 
   return createElement(
     Wrapper,
     null,
     isLoading && createElement(Loading),
     !isLoading && services.length === 0 && createElement(Empty),
-    !isLoading && services.map((service, index) => {
-      return (
-        createElement(ServiceCard, {
+    !isLoading &&
+      services.map((service, index) => {
+        return createElement(ServiceCard, {
           key: service?.provider?.address ?? index,
           service,
           onPress: () => {
             authenticateService(service)
-          }
+          },
         })
-      )
-    })
+      })
   )
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
   },
 })

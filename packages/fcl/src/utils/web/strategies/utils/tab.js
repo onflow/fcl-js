@@ -1,5 +1,5 @@
 import {renderTab} from "../../render-tab"
-import { buildMessageHandler, serviceEndpoint } from "@onflow/fcl-core"
+import {buildMessageHandler, serviceEndpoint} from "@onflow/fcl-core"
 
 const noop = () => {}
 

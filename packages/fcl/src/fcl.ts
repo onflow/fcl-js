@@ -63,7 +63,7 @@ export {
   nodeVersionInfo,
 } from "@onflow/fcl-core"
 
-import {getMutate, getCurrentUser, initServiceRegistry } from "@onflow/fcl-core"
+import {getMutate, getCurrentUser, initServiceRegistry} from "@onflow/fcl-core"
 
 export const mutate = getMutate({platform: "web"})
 

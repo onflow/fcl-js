@@ -1,20 +1,20 @@
 import {invariant} from "@onflow/util-invariant"
 import {LEVELS, log} from "@onflow/util-logger"
 import {isRequired, isString, isObject, isFunc} from "../../utils/is"
-import { CORE_STRATEGIES } from "../../utils/constants"
+import {CORE_STRATEGIES} from "../../utils/constants"
 
 const stub = () => {
   throw new Error(`Platform specific Core Strategies are not initialized`)
 }
 
-const stubCoreStrategies = ({
+const stubCoreStrategies = {
   [CORE_STRATEGIES["EXT/RPC"]]: stub,
   [CORE_STRATEGIES["HTTP/POST"]]: stub,
   [CORE_STRATEGIES["IFRAME/RPC"]]: stub,
   [CORE_STRATEGIES["POP/RPC"]]: stub,
   [CORE_STRATEGIES["TAB/RPC"]]: stub,
   [CORE_STRATEGIES["EXT/RPC"]]: stub,
-})
+}
 
 const supportedPlugins = ["ServicePlugin"]
 const supportedServicePlugins = ["discovery-service"]
@@ -139,20 +139,23 @@ const PluginRegistry = () => {
 }
 
 let serviceRegistry
-const getIsServiceRegistryInitialized = () => typeof serviceRegistry !== 'undefined'
+const getIsServiceRegistryInitialized = () =>
+  typeof serviceRegistry !== "undefined"
 
 export const initServiceRegistry = ({coreStrategies}) => {
   if (getIsServiceRegistryInitialized()) {
     return serviceRegistry
   }
-  const _serviceRegistry = ServiceRegistry({coreStrategies});
-  serviceRegistry = _serviceRegistry;
+  const _serviceRegistry = ServiceRegistry({coreStrategies})
+  serviceRegistry = _serviceRegistry
 
   return _serviceRegistry
 }
 export const getServiceRegistry = () => {
   if (!getIsServiceRegistryInitialized()) {
-    console.warn("Registry is not initalized, it will be initialized with stub core strategies")
+    console.warn(
+      "Registry is not initalized, it will be initialized with stub core strategies"
+    )
 
     return initServiceRegistry({coreStrategies: stubCoreStrategies})
   }

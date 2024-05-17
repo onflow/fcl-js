@@ -11,16 +11,17 @@ describe("Verify replace imports works ", () => {
     expect(cadence).toEqual("import FungibleToken from 0xf233dcee88fe0abe\n\n")
   })
 
-
   test("replace multiple import", async () => {
     const cadence = await replaceStringImports({
       cadence: 'import "FungibleToken"\nimport "NonFungibleToken"\n\n',
       networkDependencies: {
         FungibleToken: "0xf233dcee88fe0abe",
-        NonFungibleToken: "0x1d7e57aa55817448"
+        NonFungibleToken: "0x1d7e57aa55817448",
       },
     })
 
-    expect(cadence).toEqual("import FungibleToken from 0xf233dcee88fe0abe\nimport NonFungibleToken from 0x1d7e57aa55817448\n\n")
+    expect(cadence).toEqual(
+      "import FungibleToken from 0xf233dcee88fe0abe\nimport NonFungibleToken from 0x1d7e57aa55817448\n\n"
+    )
   })
 })

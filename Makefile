@@ -50,3 +50,4 @@ publish:
 ci: clean install build
 	$(info TSK: ci)
 	sh -c 'npm run test -- --ci || exit 255'
+	sh -c 'npm run prettier:check || exit 255'

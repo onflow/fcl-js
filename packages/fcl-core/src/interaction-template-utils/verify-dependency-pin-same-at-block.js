@@ -52,7 +52,7 @@ export async function verifyDependencyPinsSame(
         const templateDependencyPlaceholder =
           template.data.dependencies[templateDependencyPlaceholderKey]
 
-          const templateDependencyPlaceholderContractNames = Object.keys(
+        const templateDependencyPlaceholderContractNames = Object.keys(
           templateDependencyPlaceholder
         )
 
@@ -62,7 +62,7 @@ export async function verifyDependencyPinsSame(
               templateDependencyPlaceholderContractName
             ]
 
-            const templateDependency =
+          const templateDependency =
             templateDependencyPlaceholderContractNetworks[network]
           if (typeof templateDependency === "undefined") continue
 

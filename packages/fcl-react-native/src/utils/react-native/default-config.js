@@ -1,11 +1,12 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from "@react-native-async-storage/async-storage"
 
 const getAsyncStorage = () => {
   try {
     const ASYNC_STORAGE = {
       can: true,
       get: async key => JSON.parse(await AsyncStorage.getItem(key)),
-      put: async (key, value) => await AsyncStorage.setItem(key, JSON.stringify(value)),
+      put: async (key, value) =>
+        await AsyncStorage.setItem(key, JSON.stringify(value)),
     }
     return ASYNC_STORAGE
   } catch (error) {
@@ -19,4 +20,3 @@ export const getDefaultConfig = () => {
     "fcl.storage.default": getAsyncStorage(),
   }
 }
-

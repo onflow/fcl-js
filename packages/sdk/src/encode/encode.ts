@@ -25,7 +25,8 @@ const addressBuffer = (addr: string) => leftPaddedHexBuffer(addr, 8)
 
 const blockBuffer = (block: string) => leftPaddedHexBuffer(block, 32)
 
-const argumentToString = (arg: Record<string, any>) => Buffer.from(JSON.stringify(arg), "utf8")
+const argumentToString = (arg: Record<string, any>) =>
+  Buffer.from(JSON.stringify(arg), "utf8")
 
 const scriptBuffer = (script: string) => Buffer.from(script, "utf8")
 const signatureBuffer = (signature: string) => Buffer.from(signature, "hex")
@@ -44,11 +45,11 @@ const preparePayload = (tx: Transaction) => {
   validatePayload(tx)
 
   return [
-    scriptBuffer(tx.cadence || ''),
+    scriptBuffer(tx.cadence || ""),
     tx.arguments.map(argumentToString),
-    blockBuffer(tx.refBlock || ''),
+    blockBuffer(tx.refBlock || ""),
     tx.computeLimit,
-    addressBuffer(sansPrefix(tx.proposalKey.address || '')),
+    addressBuffer(sansPrefix(tx.proposalKey.address || "")),
     tx.proposalKey.keyId,
     tx.proposalKey.sequenceNum,
     addressBuffer(sansPrefix(tx.payer)),
@@ -65,9 +66,10 @@ const prepareEnvelope = (tx: Transaction) => {
 const preparePayloadSignatures = (tx: Transaction) => {
   const signers = collectSigners(tx)
 
-  return tx.payloadSigs?.map((sig: Sig) => {
+  return tx.payloadSigs
+    ?.map((sig: Sig) => {
       return {
-        signerIndex: signers.get(sig.address) || '',
+        signerIndex: signers.get(sig.address) || "",
         keyId: sig.keyId,
         sig: sig.sig,
       }
@@ -97,7 +99,7 @@ const collectSigners = (tx: Voucher | Transaction) => {
     }
   }
 
-  if (tx.proposalKey.address){
+  if (tx.proposalKey.address) {
     addSigner(tx.proposalKey.address)
   }
   addSigner(tx.payer)
@@ -113,15 +115,15 @@ const prepareVoucher = (voucher: Voucher) => {
 
   const prepareSigs = (sigs: Sig[]) => {
     return sigs
-      .map(({ address, keyId, sig }) => {
-        return { signerIndex: signers.get(address) || '', keyId, sig }
+      .map(({address, keyId, sig}) => {
+        return {signerIndex: signers.get(address) || "", keyId, sig}
       })
       .sort((a, b) => {
         if (a.signerIndex > b.signerIndex) return 1
         if (a.signerIndex < b.signerIndex) return -1
         if (a.keyId > b.keyId) return 1
         if (a.keyId < b.keyId) return -1
-        
+
         return 0
       })
       .map(sig => {
@@ -200,9 +202,9 @@ interface VoucherProposalKey {
 }
 
 interface Sig {
-  address: string,
-  keyId: number | string,
-  sig: string,
+  address: string
+  keyId: number | string
+  sig: string
 }
 
 export interface TransactionProposalKey {
@@ -211,9 +213,9 @@ export interface TransactionProposalKey {
   sequenceNum?: number
 }
 export interface Transaction {
-  cadence: string | null;
-  refBlock: string | null;
-  computeLimit: string | null;
+  cadence: string | null
+  refBlock: string | null
+  computeLimit: string | null
   arguments: VoucherArgument[]
   proposalKey: TransactionProposalKey
   payer: string
@@ -223,9 +225,9 @@ export interface Transaction {
 }
 
 export interface Voucher {
-  cadence: string;
-  refBlock: string;
-  computeLimit: number;
+  cadence: string
+  refBlock: string
+  computeLimit: number
   arguments: VoucherArgument[]
   proposalKey: VoucherProposalKey
   payer: string
@@ -235,8 +237,8 @@ export interface Voucher {
 }
 
 interface PayloadField {
-  name: string,
-  check: (v: any) => boolean,
+  name: string
+  check: (v: any) => boolean
   defaultVal?: string
 }
 
@@ -256,7 +258,9 @@ const proposalKeyFields: PayloadField[] = [
   {name: "sequenceNum", check: isNumber},
 ]
 
-const payloadSigsFields: PayloadField[] = [{name: "payloadSigs", check: isArray}]
+const payloadSigsFields: PayloadField[] = [
+  {name: "payloadSigs", check: isArray},
+]
 
 const payloadSigFields: PayloadField[] = [
   {name: "address", check: isString},
@@ -264,7 +268,9 @@ const payloadSigFields: PayloadField[] = [
   {name: "sig", check: isString},
 ]
 
-const envelopeSigsFields: PayloadField[] = [{ name: "envelopeSigs", check: isArray }]
+const envelopeSigsFields: PayloadField[] = [
+  {name: "envelopeSigs", check: isArray},
+]
 
 const envelopeSigFields: PayloadField[] = [
   {name: "address", check: isString},
