@@ -1,14 +1,13 @@
 import {WalletConnectModal} from "@walletconnect/modal"
 import {invariant} from "@onflow/util-invariant"
 import {log, LEVELS} from "@onflow/util-logger"
-import {fetchFlowWallets, isMobile, CONFIGURED_NETWORK, isIOS} from "./utils"
+import {isMobile, CONFIGURED_NETWORK, isIOS} from "./utils"
 import {FLOW_METHODS, REQUEST_TYPES} from "./constants"
 
 export const makeServicePlugin = async (client, opts = {}) => ({
   name: "fcl-plugin-service-walletconnect",
   f_type: "ServicePlugin",
   type: "discovery-service",
-  services: await makeWcServices(opts),
   serviceStrategy: {method: "WC/RPC", exec: makeExec(client, opts)},
 })
 
@@ -211,8 +210,8 @@ async function connectWc({
 
   const projectId = client.opts.projectId
   const web3Modal = new WalletConnectModal({
-    projectId
-  });
+    projectId,
+  })
 
   try {
     const {uri, approval} = await client.connect({
@@ -270,32 +269,4 @@ async function connectWc({
     }
     web3Modal.closeModal()
   }
-}
-
-const makeBaseWalletConnectService = includeBaseWC => {
-  return {
-    f_type: "Service",
-    f_vsn: "1.0.0",
-    type: "authn",
-    method: "WC/RPC",
-    uid: "https://walletconnect.com",
-    endpoint: "flow_authn",
-    optIn: !includeBaseWC,
-    provider: {
-      address: null,
-      name: "WalletConnect",
-      icon: "https://avatars.githubusercontent.com/u/37784886",
-      description: "WalletConnect Base Service",
-      website: "https://walletconnect.com",
-      color: null,
-      supportEmail: null,
-    },
-  }
-}
-
-async function makeWcServices({projectId, includeBaseWC, wallets}) {
-  const wcBaseService = makeBaseWalletConnectService(includeBaseWC)
-  const flowWcWalletServices = (await fetchFlowWallets(projectId)) ?? []
-  const injectedWalletServices = CONFIGURED_NETWORK !== "mainnet" ? wallets : []
-  return [wcBaseService, ...flowWcWalletServices, ...injectedWalletServices]
 }
