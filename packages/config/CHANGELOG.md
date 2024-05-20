@@ -1,5 +1,16 @@
 # @onflow/config
 
+## 1.4.0
+
+### Minor Changes
+
+- [#1870](https://github.com/onflow/fcl-js/pull/1870) [`ad089fe7`](https://github.com/onflow/fcl-js/commit/ad089fe7556767e1fae96f3f2e98fd76c49bba88) Thanks [@btspoony](https://github.com/btspoony)! - Add previewnet to config.load
+
+### Patch Changes
+
+- Updated dependencies [[`6c635f9f`](https://github.com/onflow/fcl-js/commit/6c635f9ff340284845ffe1196965ced7c748294f)]:
+  - @onflow/util-invariant@1.2.3
+
 ## 1.3.0
 
 ### Minor Changes

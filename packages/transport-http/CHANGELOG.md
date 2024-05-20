@@ -1,5 +1,14 @@
 # @onflow/transport-http
 
+## 1.10.1
+
+### Patch Changes
+
+- [#1882](https://github.com/onflow/fcl-js/pull/1882) [`dfc5472e`](https://github.com/onflow/fcl-js/commit/dfc5472e94c8237b048940ebc44742071f77f59d) Thanks [@jribbink](https://github.com/jribbink)! - Fix accessNode.api URL concatenation with paths in baseURL
+
+- Updated dependencies [[`6c635f9f`](https://github.com/onflow/fcl-js/commit/6c635f9ff340284845ffe1196965ced7c748294f)]:
+  - @onflow/util-invariant@1.2.3
+
 ## 1.10.0
 
 ### Minor Changes
