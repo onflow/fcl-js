@@ -1,5 +1,12 @@
 # @onflow/util-encode-key
 
+## 1.2.3
+
+### Patch Changes
+
+- Updated dependencies [[`6c635f9f`](https://github.com/onflow/fcl-js/commit/6c635f9ff340284845ffe1196965ced7c748294f)]:
+  - @onflow/util-invariant@1.2.3
+
 ## 1.2.2
 
 ### Patch Changes
