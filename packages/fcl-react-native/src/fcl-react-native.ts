@@ -63,7 +63,12 @@ export {
   nodeVersionInfo,
 } from "@onflow/fcl-core"
 
-import {getMutate, getCurrentUser, initServiceRegistry, setIsReactNative} from "@onflow/fcl-core"
+import {
+  getMutate,
+  getCurrentUser,
+  initServiceRegistry,
+  setIsReactNative,
+} from "@onflow/fcl-core"
 export const mutate = getMutate({platform: "react-native"})
 
 const currentUser = getCurrentUser({platform: "react-native"})

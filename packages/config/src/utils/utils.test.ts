@@ -34,7 +34,7 @@ describe("getContracts", () => {
             emulator: "0x333",
             testnet: "0x222",
             mainnet: "0x111",
-          }
+          },
         },
       },
       accounts: {

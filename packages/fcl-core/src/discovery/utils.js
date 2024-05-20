@@ -9,7 +9,10 @@ export const makeDiscoveryServices = async () => {
 
 export async function getDiscoveryService(service) {
   const discoveryAuthnInclude = await config.get("discovery.authn.include", [])
-  const discoveryFeaturesSuggested = await config.get("discovery.features.suggested", [])
+  const discoveryFeaturesSuggested = await config.get(
+    "discovery.features.suggested",
+    []
+  )
   const discoveryWalletMethod = await config.first([
     "discovery.wallet.method",
     "discovery.wallet.method.default",

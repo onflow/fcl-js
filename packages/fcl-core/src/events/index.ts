@@ -28,17 +28,24 @@ export function events(filterOrType?: EventFilter | string) {
       ]).then(decode)
 
       // If the subscribe fails, fallback to legacy events
-      const legacySubscriptionPromise = streamPromise.then(() => null).catch((e) => {
-        // Only fallback to legacy events if the error is specifcally about the unsupported feature
-        if(e.message !== "SDK Send Error: subscribeEvents is not supported by this transport.") {
-          throw e
-        }
+      const legacySubscriptionPromise = streamPromise
+        .then(() => null)
+        .catch(e => {
+          // Only fallback to legacy events if the error is specifcally about the unsupported feature
+          if (
+            e.message !==
+            "SDK Send Error: subscribeEvents is not supported by this transport."
+          ) {
+            throw e
+          }
 
-        if (typeof filterOrType !== "string") {
-          throw new Error("GRPC fcl.events fallback only supports string (type) filters")
-        }
-        return legacyEvents(filterOrType).subscribe(callback)
-      })
+          if (typeof filterOrType !== "string") {
+            throw new Error(
+              "GRPC fcl.events fallback only supports string (type) filters"
+            )
+          }
+          return legacyEvents(filterOrType).subscribe(callback)
+        })
 
       // Subscribe to the stream using the callback
       function onEvents(data: Event[]) {
@@ -51,12 +58,12 @@ export function events(filterOrType?: EventFilter | string) {
       // If using legacy events, don't subscribe to the stream
       legacySubscriptionPromise.then(legacySubscription => {
         if (!legacySubscription) {
-          streamPromise.then(stream =>
-            stream.on("events", onEvents).on("error", onError)
-          ).catch((error) => {
-            streamPromise.then(stream => stream.close())
-            onError(error)
-          })
+          streamPromise
+            .then(stream => stream.on("events", onEvents).on("error", onError))
+            .catch(error => {
+              streamPromise.then(stream => stream.close())
+              onError(error)
+            })
         }
       })
 

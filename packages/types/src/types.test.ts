@@ -257,7 +257,7 @@ function registerTest<X, Y extends string, Z>([
   X,
   t.JsonCdc<Y, Z>,
   X,
-  boolean?
+  boolean?,
 ]) {
   describe(cast.label, () => {
     test(`t.${cast.label}.asArgument(${input})`, () => {

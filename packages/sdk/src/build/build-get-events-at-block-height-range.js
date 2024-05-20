@@ -10,7 +10,11 @@ import {pipe, Ok, makeGetEvents} from "../interaction/interaction"
  * @param {number} toBlockHeight - The height of the block to stop looking for events (inclusive)
  * @returns {Function} - An interaction object
  */
-export function getEventsAtBlockHeightRange(eventName, fromBlockHeight, toBlockHeight) {
+export function getEventsAtBlockHeightRange(
+  eventName,
+  fromBlockHeight,
+  toBlockHeight
+) {
   return pipe([
     makeGetEvents,
     ix => {

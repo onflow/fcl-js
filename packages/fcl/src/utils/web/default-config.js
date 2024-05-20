@@ -5,7 +5,8 @@ const getSessionStorage = () => {
     const SESSION_STORAGE = {
       can: !isServerSide(),
       get: async key => JSON.parse(sessionStorage.getItem(key)),
-      put: async (key, value) => sessionStorage.setItem(key, JSON.stringify(value)),
+      put: async (key, value) =>
+        sessionStorage.setItem(key, JSON.stringify(value)),
     }
     return SESSION_STORAGE
   } catch (error) {

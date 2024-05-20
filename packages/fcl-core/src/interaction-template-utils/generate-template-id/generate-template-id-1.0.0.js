@@ -105,13 +105,9 @@ export async function generateTemplateId({template}) {
     Object.keys(templateData?.["arguments"]).map(async argumentLabel => [
       genHash(argumentLabel),
       [
-        genHash(
-          String(templateData?.["arguments"]?.[argumentLabel].index)
-        ),
+        genHash(String(templateData?.["arguments"]?.[argumentLabel].index)),
         genHash(templateData?.["arguments"]?.[argumentLabel].type),
-        genHash(
-          templateData?.["arguments"]?.[argumentLabel].balance || ""
-        ),
+        genHash(templateData?.["arguments"]?.[argumentLabel].balance || ""),
         await Promise.all(
           Object.keys(
             templateData?.["arguments"]?.[argumentLabel].messages

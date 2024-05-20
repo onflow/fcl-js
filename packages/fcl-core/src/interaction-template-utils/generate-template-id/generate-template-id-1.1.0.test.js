@@ -7,8 +7,7 @@ const returnedAccount = {
   keys: [],
   balance: "10",
   contracts: {
-    FungibleToken: 
-`/**
+    FungibleToken: `/**
 
 # The Flow Fungible Token standard
 

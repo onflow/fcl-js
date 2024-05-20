@@ -220,5 +220,4 @@ describe("Derive cadence by network 1.1.0", () => {
       })
     ).rejects.toThrow(Error)
   })
-
 })

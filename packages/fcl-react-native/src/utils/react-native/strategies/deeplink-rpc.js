@@ -1,9 +1,8 @@
-import { normalizePollingResponse } from "@onflow/fcl-core"
+import {normalizePollingResponse} from "@onflow/fcl-core"
 import {browser} from "./utils/browser"
 
 export function execDeeplinkRPC({service, config, body}) {
   return new Promise((resolve, reject) => {
-
     browser(service, config, body, {
       onResponse: (e, {close}) => {
         try {

@@ -42,5 +42,5 @@ export async function generateTemplateId({template}) {
  */
 
 export async function verifyGeneratedTemplateId({template}) {
-  return template.id === await generateTemplateId({template})
+  return template.id === (await generateTemplateId({template}))
 }
