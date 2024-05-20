@@ -1,5 +1,11 @@
 # @onflow/types
 
+## 1.4.0
+
+### Minor Changes
+
+- [#1863](https://github.com/onflow/fcl-js/pull/1863) [`7ef7edf1`](https://github.com/onflow/fcl-js/commit/7ef7edf1e134041da944f24f49e661caadcc7074) Thanks [@jribbink](https://github.com/jribbink)! - Update SDK encoding/decoding for Cadence 1.0 JSON-CDC changes
+
 ## 1.3.0
 
 ### Minor Changes

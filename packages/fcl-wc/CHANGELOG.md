@@ -1,5 +1,18 @@
 # @onflow/fcl-wc
 
+## 5.1.0
+
+### Minor Changes
+
+- [#1876](https://github.com/onflow/fcl-js/pull/1876) [`96336424`](https://github.com/onflow/fcl-js/commit/96336424033c87b2256981f130700ada2ea9118b) Thanks [@jribbink](https://github.com/jribbink)! - Remove unnecessary client services from FCL-WC plugin
+
+### Patch Changes
+
+- Updated dependencies [[`6c635f9f`](https://github.com/onflow/fcl-js/commit/6c635f9ff340284845ffe1196965ced7c748294f), [`ad089fe7`](https://github.com/onflow/fcl-js/commit/ad089fe7556767e1fae96f3f2e98fd76c49bba88)]:
+  - @onflow/util-invariant@1.2.3
+  - @onflow/config@1.4.0
+  - @onflow/fcl@1.10.1
+
 ## 5.0.2
 
 ### Patch Changes
@@ -296,10 +309,10 @@
   ```
 
   ```javascript
-  import * as fcl from "@onflow/fcl"
-  import {initFclWc} from "@onflow/fcl-wc"
+  import * as fcl from "@onflow/fcl";
+  import { initFclWc } from "@onflow/fcl-wc";
 
-  const {FclConnectServicePlugin, client} = await initFclWc({
+  const { FclConnectServicePlugin, client } = await initFclWc({
     projectId: PROJECT_ID,
     metadata: {
       name: "FCL Connect",
@@ -307,25 +320,25 @@
       url: "https://flow.com/",
       icons: ["https://avatars.githubusercontent.com/u/62387156?s=280&v=4"],
     },
-  })
+  });
 
-  fcl.pluginRegistry.add(FclConnectServicePlugin)
+  fcl.pluginRegistry.add(FclConnectServicePlugin);
   ```
 
   ### Using the client
 
   ```javascript
-  import {getSdkError} from "@onflow/fcl-wc"
+  import { getSdkError } from "@onflow/fcl-wc";
 
-  client.on("session_update", ({topic, params}) => {
-    const session = client.session.get(topic)
-    console.log("EVENT", "session_update", {topic, params, session})
-  })
+  client.on("session_update", ({ topic, params }) => {
+    const session = client.session.get(topic);
+    console.log("EVENT", "session_update", { topic, params, session });
+  });
 
   await client.disconnect({
     topic: session.topic,
     reason: getSdkError("USER_DISCONNECTED"),
-  })
+  });
   ```
 
   -
@@ -377,11 +390,11 @@
 
   ```ts
   interface WcRequestData {
-    type: string // 'session_request' | 'pairing_request'
-    session: SessionTypes.Struct | undefined // https://www.npmjs.com/package/@walletconnect/types
-    pairing: PairingTypes.Struct | undefined // https://www.npmjs.com/package/@walletconnect/types
-    method: string // "flow_authn" | "flow_authz" | "flow_user_sign"
-    uri: string | undefined
+    type: string; // 'session_request' | 'pairing_request'
+    session: SessionTypes.Struct | undefined; // https://www.npmjs.com/package/@walletconnect/types
+    pairing: PairingTypes.Struct | undefined; // https://www.npmjs.com/package/@walletconnect/types
+    method: string; // "flow_authn" | "flow_authz" | "flow_user_sign"
+    uri: string | undefined;
   }
   ```
 
@@ -422,11 +435,11 @@
 
   ```ts
   interface WcRequestData {
-    type: string // 'session_request' | 'pairing_request'
-    session: SessionTypes.Struct | undefined // https://www.npmjs.com/package/@walletconnect/types
-    pairing: PairingTypes.Struct | undefined // https://www.npmjs.com/package/@walletconnect/types
-    method: string // "flow_authn" | "flow_authz" | "flow_user_sign"
-    uri: string | undefined
+    type: string; // 'session_request' | 'pairing_request'
+    session: SessionTypes.Struct | undefined; // https://www.npmjs.com/package/@walletconnect/types
+    pairing: PairingTypes.Struct | undefined; // https://www.npmjs.com/package/@walletconnect/types
+    method: string; // "flow_authn" | "flow_authz" | "flow_user_sign"
+    uri: string | undefined;
   }
   ```
 
@@ -490,10 +503,10 @@
   ```
 
   ```javascript
-  import * as fcl from "@onflow/fcl"
-  import {initFclWc} from "@onflow/fcl-wc"
+  import * as fcl from "@onflow/fcl";
+  import { initFclWc } from "@onflow/fcl-wc";
 
-  const {FclConnectServicePlugin, client} = await initFclWc({
+  const { FclConnectServicePlugin, client } = await initFclWc({
     projectId: PROJECT_ID,
     metadata: {
       name: "FCL Connect",
@@ -501,25 +514,25 @@
       url: "https://flow.com/",
       icons: ["https://avatars.githubusercontent.com/u/62387156?s=280&v=4"],
     },
-  })
+  });
 
-  fcl.pluginRegistry.add(FclConnectServicePlugin)
+  fcl.pluginRegistry.add(FclConnectServicePlugin);
   ```
 
   ### Using the client
 
   ```javascript
-  import {getSdkError} from "@onflow/fcl-wc"
+  import { getSdkError } from "@onflow/fcl-wc";
 
-  client.on("session_update", ({topic, params}) => {
-    const session = client.session.get(topic)
-    console.log("EVENT", "session_update", {topic, params, session})
-  })
+  client.on("session_update", ({ topic, params }) => {
+    const session = client.session.get(topic);
+    console.log("EVENT", "session_update", { topic, params, session });
+  });
 
   await client.disconnect({
     topic: session.topic,
     reason: getSdkError("USER_DISCONNECTED"),
-  })
+  });
   ```
 
   -

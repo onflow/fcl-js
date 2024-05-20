@@ -1,5 +1,11 @@
 # @onflow/util-invariant
 
+## 1.2.3
+
+### Patch Changes
+
+- [#1874](https://github.com/onflow/fcl-js/pull/1874) [`6c635f9f`](https://github.com/onflow/fcl-js/commit/6c635f9ff340284845ffe1196965ced7c748294f) Thanks [@jribbink](https://github.com/jribbink)! - Add TypeScript assertion signature to invariant function
+
 ## 1.2.2
 
 ### Patch Changes
