@@ -1,4 +1,4 @@
-import {sansPrefix, withPrefix} from "@onflow/util-address"
+import {withPrefix} from "@onflow/util-address"
 import {invariant} from "@onflow/util-invariant"
 import {log} from "@onflow/util-logger"
 import {isTransaction} from "../interaction/interaction"
@@ -281,8 +281,8 @@ async function resolveAccountType(
   }
 
   invariant(
-    allResolvedAccounts.length > 0,
-    "resolveAccountType Error: failed to resolve any accounts"
+    allResolvedAccounts.length > 0 || type === ROLES.AUTHORIZATIONS,
+    `resolveAccountType Error: no ${type} accounts were found`
   )
 
   if (type === ROLES.PAYER) {
