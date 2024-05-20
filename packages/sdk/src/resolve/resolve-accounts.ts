@@ -84,8 +84,8 @@ async function removeUnusedIxAccounts(
     ix.proposer === null
       ? []
       : Array.isArray(ix.proposer)
-      ? ix.proposer
-      : [ix.proposer]
+        ? ix.proposer
+        : [ix.proposer]
 
   const ixAccountKeys = Object.keys(ix.accounts)
   const uniqueTempIds = [
