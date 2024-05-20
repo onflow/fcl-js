@@ -1,21 +1,21 @@
-import {init} from './fcl-wc'
-import * as fcl from '@onflow/fcl'
+import {init} from "./fcl-wc"
+import * as fcl from "@onflow/fcl"
 
-jest.mock('@walletconnect/modal', () => {})
-jest.mock('@walletconnect/sign-client', () => {})
-jest.mock('@walletconnect/utils', () => {})
+jest.mock("@walletconnect/modal", () => {})
+jest.mock("@walletconnect/sign-client", () => {})
+jest.mock("@walletconnect/utils", () => {})
 
-jest.mock('@onflow/fcl', () => {
+jest.mock("@onflow/fcl", () => {
   return {
     __esModule: true,
-    ...jest.requireActual('@onflow/fcl')
-  };
-});
+    ...jest.requireActual("@onflow/fcl"),
+  }
+})
 
 describe("Init Client", () => {
   let chainIdSpy
   beforeEach(() => {
-    chainIdSpy = jest.spyOn(fcl, 'getChainId')
+    chainIdSpy = jest.spyOn(fcl, "getChainId")
     chainIdSpy.mockImplementation(async () => "testnet")
   })
 

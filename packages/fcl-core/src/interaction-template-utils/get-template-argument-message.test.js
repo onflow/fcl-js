@@ -241,7 +241,7 @@ describe("Get interaction template v1.1.0 parameters messages", () => {
       ],
     },
   }
-  
+
   test("It gets argument message for given argument and internationalization", async () => {
     const message = getTemplateArgumentMessage({
       localization: "en-US",

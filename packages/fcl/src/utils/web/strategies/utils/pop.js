@@ -1,5 +1,5 @@
 import {renderPop} from "../../render-pop"
-import { buildMessageHandler, serviceEndpoint } from "@onflow/fcl-core"
+import {buildMessageHandler, serviceEndpoint} from "@onflow/fcl-core"
 
 const noop = () => {}
 

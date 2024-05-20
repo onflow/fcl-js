@@ -1,8 +1,8 @@
 interface IConfig {
-  get: <T>(key: string) => T;
+  get: <T>(key: string) => T
 }
 
-type Config = IConfig & (() => IConfig) | null
+type Config = (IConfig & (() => IConfig)) | null
 
 // Config dependency injected into logger to break circular dependency
 let config: Config = null
@@ -67,7 +67,8 @@ export const log = async (options: {
   always?: boolean
 }) => {
   const {title, message, level, always} = options
-  const configLoggerLevel = (await config?.()?.get<number>("logger.level")) ?? LEVELS.warn
+  const configLoggerLevel =
+    (await config?.()?.get<number>("logger.level")) ?? LEVELS.warn
 
   // If config level is below message level then don't show it
   if (!always && configLoggerLevel < level) return

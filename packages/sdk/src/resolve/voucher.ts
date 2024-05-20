@@ -1,6 +1,6 @@
 import {withPrefix} from "@onflow/util-address"
 import {Voucher, encodeTxIdFromVoucher} from "../encode/encode"
-import { Interaction } from "@onflow/typedefs"
+import {Interaction} from "@onflow/typedefs"
 
 export function findInsideSigners(ix: Interaction) {
   // Inside Signers Are: (authorizers + proposer) - payer
@@ -46,11 +46,13 @@ export const createSignableVoucher = (ix: Interaction) => {
       sig: ix.accounts[id].signature,
     }))
 
-  const proposalKey = ix.proposer ? {
-    address: withPrefix(ix.accounts[ix.proposer].addr),
-    keyId: ix.accounts[ix.proposer].keyId,
-    sequenceNum: ix.accounts[ix.proposer].sequenceNum,
-  } : {}
+  const proposalKey = ix.proposer
+    ? {
+        address: withPrefix(ix.accounts[ix.proposer].addr),
+        keyId: ix.accounts[ix.proposer].keyId,
+        sequenceNum: ix.accounts[ix.proposer].sequenceNum,
+      }
+    : {}
 
   return {
     cadence: ix.message.cadence,

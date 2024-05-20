@@ -218,6 +218,8 @@ describe("Transaction", () => {
 
     expect(response.transactionId).toBe(returnedTransactionId)
 
-    expect(unaryMockRequest.getTransaction().getPayloadSignaturesList()).toHaveLength(1)
+    expect(
+      unaryMockRequest.getTransaction().getPayloadSignaturesList()
+    ).toHaveLength(1)
   })
 })

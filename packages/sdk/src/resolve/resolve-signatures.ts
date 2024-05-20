@@ -1,5 +1,5 @@
 import {isTransaction} from "../interaction/interaction"
-import { Interaction, InteractionAccount } from "@onflow/typedefs"; 
+import {Interaction, InteractionAccount} from "@onflow/typedefs"
 import {sansPrefix} from "@onflow/util-address"
 import {
   Transaction,
@@ -18,7 +18,7 @@ export async function resolveSignatures(ix: Interaction) {
     try {
       let insideSigners = findInsideSigners(ix)
       const insidePayload = encodeInsideMessage(prepForEncoding(ix))
-      
+
       // Promise.all could potentially break the flow if there are multiple inside signers trying to resolve at the same time
       // causing multiple triggers of authz function that tries to render multiple auth iiframes/tabs/extensions
       // as an alternative, use this:
@@ -31,9 +31,9 @@ export async function resolveSignatures(ix: Interaction) {
       const outsidePayload = encodeOutsideMessage({
         ...prepForEncoding(ix),
         payloadSigs: insideSigners.map(id => ({
-          address: ix.accounts[id].addr || '',
+          address: ix.accounts[id].addr || "",
           keyId: ix.accounts[id].keyId || 0,
-          sig: ix.accounts[id].signature || '',
+          sig: ix.accounts[id].signature || "",
         })),
       })
 
@@ -63,7 +63,11 @@ function fetchSignature(ix: Interaction, payload: string) {
   }
 }
 
-export function buildSignable(acct: InteractionAccount, message: string, ix: Interaction) {
+export function buildSignable(
+  acct: InteractionAccount,
+  message: string,
+  ix: Interaction
+) {
   try {
     return {
       f_type: "Signable",
@@ -89,12 +93,14 @@ function prepForEncoding(ix: Interaction): Transaction {
     (Array.isArray(ix.payer) ? ix.accounts[ix.payer[0]] : ix.accounts[ix.payer])
       .addr || ""
   )
-  
-  const proposalKey: TransactionProposalKey = ix.proposer ? {
-    address: sansPrefix(ix.accounts[ix.proposer].addr) || '',
-    keyId: ix.accounts[ix.proposer].keyId || 0,
-    sequenceNum: ix.accounts[ix.proposer].sequenceNum || 0,
-  } : {}
+
+  const proposalKey: TransactionProposalKey = ix.proposer
+    ? {
+        address: sansPrefix(ix.accounts[ix.proposer].addr) || "",
+        keyId: ix.accounts[ix.proposer].keyId || 0,
+        sequenceNum: ix.accounts[ix.proposer].sequenceNum || 0,
+      }
+    : {}
 
   return {
     cadence: ix.message.cadence,
@@ -104,7 +110,7 @@ function prepForEncoding(ix: Interaction): Transaction {
     proposalKey,
     payer: payerAddress,
     authorizers: ix.authorizations
-      .map(cid => sansPrefix(ix.accounts[cid].addr) || '')
+      .map(cid => sansPrefix(ix.accounts[cid].addr) || "")
       .reduce((prev: string[], current) => {
         return prev.find(item => item === current) ? prev : [...prev, current]
       }, []),

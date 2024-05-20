@@ -29,7 +29,7 @@ function constructData(ix: Interaction, context: any, data: any) {
           ),
         }))
       : null
-      response.heartbeat = {
+  response.heartbeat = {
     blockId: data.BlockID,
     blockHeight: Number(data.Height),
     blockTimestamp: data.Timestamp,
