@@ -167,7 +167,10 @@ const fromHandlers =
 
 const parseAddr = (addr: string | number | null): string => {
   if (addr == null) {
-    return String(++pid)
+    while (FCL_REGISTRY[String(pid)]) {
+      pid++
+    }
+    return String(pid)
   }
   return String(addr)
 }
