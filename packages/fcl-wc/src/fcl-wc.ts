@@ -7,6 +7,15 @@ import {makeServicePlugin} from "./service"
 import {setConfiguredNetwork} from "./utils"
 import {CoreTypes} from "@walletconnect/types"
 
+export interface FclWalletConnectConfig {
+  projectId: string
+  metadata?: CoreTypes.Metadata
+  includeBaseWC?: boolean
+  wcRequestHook?: any
+  pairingModalOverride?: any
+  wallets?: any[]
+}
+
 const DEFAULT_RELAY_URL = "wss://relay.walletconnect.com"
 const DEFAULT_LOGGER = "debug"
 let client: SignClient | null = null
@@ -16,7 +25,7 @@ const initClient = async ({
   metadata,
 }: {
   projectId: string
-  metadata: CoreTypes.Metadata | undefined
+  metadata?: CoreTypes.Metadata
 }) => {
   invariant(
     projectId != null,
@@ -49,14 +58,7 @@ export const init = async ({
   wcRequestHook = null,
   pairingModalOverride = null,
   wallets = [],
-}: {
-  projectId: string
-  metadata: CoreTypes.Metadata | undefined
-  includeBaseWC: boolean
-  wcRequestHook: any
-  pairingModalOverride: any
-  wallets: any[]
-}) => {
+}: FclWalletConnectConfig) => {
   await setConfiguredNetwork()
   const _client = client ?? (await initClient({projectId, metadata}))
   const FclWcServicePlugin = await makeServicePlugin(_client, {

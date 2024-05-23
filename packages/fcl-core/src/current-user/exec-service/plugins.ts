@@ -19,10 +19,10 @@ const stubCoreStrategies = {
 const supportedPlugins = ["ServicePlugin"]
 const supportedServicePlugins = ["discovery-service"]
 
-const validateDiscoveryPlugin = servicePlugin => {
+const validateDiscoveryPlugin = (servicePlugin: any) => {
   const {services, serviceStrategy} = servicePlugin
   invariant(
-    Array.isArray(services) && services.length,
+    Array.isArray(services) && services.length > 0,
     "Array of Discovery Services is required"
   )
 
@@ -54,11 +54,11 @@ const validateDiscoveryPlugin = servicePlugin => {
   return {discoveryServices: services, serviceStrategy}
 }
 
-const ServiceRegistry = ({coreStrategies}) => {
+const ServiceRegistry = ({coreStrategies}: {coreStrategies: any}) => {
   let services = new Set()
   let strategies = new Map(Object.entries(coreStrategies))
 
-  const add = servicePlugin => {
+  const add = (servicePlugin: any) => {
     invariant(
       supportedServicePlugins.includes(servicePlugin.type),
       `Service Plugin type ${servicePlugin.type} is not supported`
@@ -79,12 +79,12 @@ const ServiceRegistry = ({coreStrategies}) => {
     }
   }
 
-  const setServices = discoveryServices =>
+  const setServices = (discoveryServices: any) =>
     (services = new Set([...discoveryServices]))
 
   const getServices = () => [...services]
 
-  const getStrategy = method => strategies.get(method)
+  const getStrategy = (method: any) => strategies.get(method)
 
   const getStrategies = () => [...strategies.keys()]
 
@@ -96,9 +96,9 @@ const ServiceRegistry = ({coreStrategies}) => {
   })
 }
 
-const validatePlugins = plugins => {
+const validatePlugins = (plugins: any[]) => {
   let pluginsArray
-  invariant(plugins, "No plugins supplied")
+  invariant(!!plugins, "No plugins supplied")
 
   if (!Array.isArray(plugins)) {
     pluginsArray = [plugins]
@@ -122,7 +122,7 @@ const PluginRegistry = () => {
 
   const getPlugins = () => pluginsMap
 
-  const add = plugins => {
+  const add = (plugins: any) => {
     const pluginsArray = validatePlugins(plugins)
     for (const p of pluginsArray) {
       pluginsMap.set(p.name, p)
@@ -138,11 +138,15 @@ const PluginRegistry = () => {
   })
 }
 
-let serviceRegistry
+let serviceRegistry: ReturnType<typeof ServiceRegistry>
 const getIsServiceRegistryInitialized = () =>
   typeof serviceRegistry !== "undefined"
 
-export const initServiceRegistry = ({coreStrategies}) => {
+export const initServiceRegistry = ({
+  coreStrategies,
+}: {
+  coreStrategies: any
+}) => {
   if (getIsServiceRegistryInitialized()) {
     return serviceRegistry
   }
