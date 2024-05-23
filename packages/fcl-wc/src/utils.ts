@@ -1,18 +1,18 @@
 import {log, LEVELS} from "@onflow/util-logger"
 import {invariant} from "@onflow/util-invariant"
-import * as fcl from "@onflow/fcl"
+import * as fclCore from "@onflow/fcl-core"
 
-export let CONFIGURED_NETWORK = null
+export let CONFIGURED_NETWORK: string | null = null
 
 export const setConfiguredNetwork = async () => {
-  CONFIGURED_NETWORK = await fcl.getChainId()
+  CONFIGURED_NETWORK = await fclCore.getChainId()
   invariant(
-    CONFIGURED_NETWORK,
+    !!CONFIGURED_NETWORK,
     "FCL Configuration value for 'flow.network' is required"
   )
 }
 
-const makeFlowServicesFromWallets = wallets => {
+const makeFlowServicesFromWallets = (wallets: any[]) => {
   return Object.values(wallets)
     .filter(w => w.app_type === "wallet")
     .map(wallet => {
@@ -37,7 +37,7 @@ const makeFlowServicesFromWallets = wallets => {
     })
 }
 
-export const fetchFlowWallets = async projectId => {
+export const fetchFlowWallets = async (projectId: string) => {
   try {
     const wcApiWallets = await fetch(
       `https://explorer-api.walletconnect.com/v3/wallets?projectId=${projectId}&chains=flow:${CONFIGURED_NETWORK}&entries=5&page=1`
@@ -49,11 +49,13 @@ export const fetchFlowWallets = async projectId => {
 
     return []
   } catch (error) {
-    log({
-      title: `${error.name} Error fetching wallets from WalletConnect API`,
-      message: error.message,
-      level: LEVELS.error,
-    })
+    if (error instanceof Error) {
+      log({
+        title: `${error.name} Error fetching wallets from WalletConnect API`,
+        message: error.message,
+        level: LEVELS.error,
+      })
+    }
   }
 }
 
