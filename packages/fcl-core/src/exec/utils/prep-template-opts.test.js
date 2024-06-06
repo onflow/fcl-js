@@ -1,4 +1,4 @@
-import { config } from "@onflow/config"
+import {config} from "@onflow/config"
 import {prepTemplateOpts} from "./prep-template-opts.js"
 
 describe("Prepare template options for template version 1.0.0", () => {
@@ -41,11 +41,15 @@ describe("Prepare template options for template version 1.0.0", () => {
     config.put("flow.network", "mainnet")
 
     const resultMainnet = await prepTemplateOpts({
-      template: template10
+      template: template10,
     })
 
-    expect(resultMainnet.cadence).toEqual("import FungibleToken from 0xf233dcee88fe0abe\n")
-    expect(resultMainnet.dependencies).toEqual({"0xFUNGIBLETOKENADDRESS": "0xf233dcee88fe0abe"})
+    expect(resultMainnet.cadence).toEqual(
+      "import FungibleToken from 0xf233dcee88fe0abe\n"
+    )
+    expect(resultMainnet.dependencies).toEqual({
+      "0xFUNGIBLETOKENADDRESS": "0xf233dcee88fe0abe",
+    })
   })
 
   test("It prepares cadence and dependencies from template version 1.0.0 for testnet", async () => {
@@ -53,19 +57,24 @@ describe("Prepare template options for template version 1.0.0", () => {
     config.put("flow.network", "testnet")
 
     const resultTestnet = await prepTemplateOpts({
-      template: template10
+      template: template10,
     })
 
-    expect(resultTestnet.cadence).toEqual("import FungibleToken from 0x9a0766d93b6608b7\n")
-    expect(resultTestnet.dependencies).toEqual({"0xFUNGIBLETOKENADDRESS": "0x9a0766d93b6608b7"})
+    expect(resultTestnet.cadence).toEqual(
+      "import FungibleToken from 0x9a0766d93b6608b7\n"
+    )
+    expect(resultTestnet.dependencies).toEqual({
+      "0xFUNGIBLETOKENADDRESS": "0x9a0766d93b6608b7",
+    })
   })
 
   test("It fails to prepare cadence and dependencies from template version 1.0.0 for unknown network", async () => {
     config.put("flow.network", "randomnet")
 
-    const test = async () => await prepTemplateOpts({
-      template: template10
-    })
+    const test = async () =>
+      await prepTemplateOpts({
+        template: template10,
+      })
 
     await expect(test()).rejects.toThrow(Error)
   })
@@ -79,8 +88,7 @@ describe("Prepare template options for template version 1.1.0", () => {
     data: {
       type: "transaction",
       interface: "",
-      messages: [
-      ],
+      messages: [],
       cadence: {
         body: 'import "FungibleToken"\n',
         network_pins: [
@@ -147,11 +155,15 @@ describe("Prepare template options for template version 1.1.0", () => {
     config.put("flow.network", "mainnet")
 
     const resultMainnet = await prepTemplateOpts({
-      template: template11
+      template: template11,
     })
 
-    expect(resultMainnet.cadence).toEqual("import FungibleToken from 0xf233dcee88fe0abe\n")
-    expect(resultMainnet.dependencies).toEqual({"FungibleToken": "0xf233dcee88fe0abe"})
+    expect(resultMainnet.cadence).toEqual(
+      "import FungibleToken from 0xf233dcee88fe0abe\n"
+    )
+    expect(resultMainnet.dependencies).toEqual({
+      FungibleToken: "0xf233dcee88fe0abe",
+    })
   })
 
   test("It prepares cadence and dependencies from template version 1.1.0 for testnet", async () => {
@@ -159,19 +171,24 @@ describe("Prepare template options for template version 1.1.0", () => {
     config.put("flow.network", "testnet")
 
     const resultTestnet = await prepTemplateOpts({
-      template: template11
+      template: template11,
     })
 
-    expect(resultTestnet.cadence).toEqual("import FungibleToken from 0x9a0766d93b6608b7\n")
-    expect(resultTestnet.dependencies).toEqual({"FungibleToken": "0x9a0766d93b6608b7"})
+    expect(resultTestnet.cadence).toEqual(
+      "import FungibleToken from 0x9a0766d93b6608b7\n"
+    )
+    expect(resultTestnet.dependencies).toEqual({
+      FungibleToken: "0x9a0766d93b6608b7",
+    })
   })
 
   test("It fails to prepare cadence and dependencies from template version 1.1.0 for unknown network", async () => {
     config.put("flow.network", "randomnet")
 
-    const test = async () => await prepTemplateOpts({
-      template: template
-    })
+    const test = async () =>
+      await prepTemplateOpts({
+        template: template,
+      })
 
     await expect(test()).rejects.toThrow(Error)
   })

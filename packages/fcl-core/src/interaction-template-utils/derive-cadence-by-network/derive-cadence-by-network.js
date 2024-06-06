@@ -14,7 +14,7 @@ export function deriveCadenceByNetwork({network, template}) {
   invariant(
     network != undefined,
     "deriveCadenceByNetwork({ network }) -- network must be defined"
-  ) 
+  )
   invariant(
     typeof network === "string",
     "deriveCadenceByNetwork({ network }) -- network must be a string"
