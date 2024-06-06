@@ -155,15 +155,15 @@ export function transaction(
             if (error != null) {
               reject(transactionError)
               unsub()
+              return
             } else if (transactionError != null) {
               reject(transactionError)
               unsub()
+              return
             }
           } else if (predicate(txStatus)) {
             resolve(txStatus)
             unsub()
-          } else {
-            return
           }
         })
       })
