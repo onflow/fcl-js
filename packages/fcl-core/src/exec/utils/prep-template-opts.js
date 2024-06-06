@@ -1,5 +1,4 @@
 import {retrieve} from "../../document/document.js"
-import {normalizeInteractionTemplate} from "../../normalizers/interaction-template/interaction-template.js"
 import {deriveCadenceByNetwork} from "../../interaction-template-utils/derive-cadence-by-network/derive-cadence-by-network.js"
 import {deriveDependencies} from "./derive-dependencies"
 import {isString} from "../../utils/is"
@@ -12,7 +11,6 @@ export async function prepTemplateOpts(opts) {
 
   let dependencies = {}
   if (opts?.template) {
-    opts.template = normalizeInteractionTemplate(opts?.template)
     dependencies = await deriveDependencies({template: opts.template})
   }
 
