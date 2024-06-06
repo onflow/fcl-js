@@ -35,7 +35,7 @@ describe("Derive cadence by network 1.0.0", () => {
   }
 
   test("It derives cadence correctly for a given network", async () => {
-    const cadence = await deriveCadenceByNetwork({
+    const cadence = deriveCadenceByNetwork({
       network: "mainnet",
       template,
     })
@@ -44,12 +44,12 @@ describe("Derive cadence by network 1.0.0", () => {
   })
 
   test("It fails to derive cadence for unknown network", async () => {
-    await expect(() =>
+    expect(() =>
       deriveCadenceByNetwork({
         network: "randomnet",
         template,
       })
-    ).rejects.toThrow(Error)
+    ).toThrow(Error)
   })
 })
 
@@ -194,7 +194,7 @@ describe("Derive cadence by network 1.1.0", () => {
   }
 
   test("v1.1.0, It derives cadence correctly for a given network", async () => {
-    const cadence = await deriveCadenceByNetwork({
+    const cadence = deriveCadenceByNetwork({
       network: "mainnet",
       template: template11,
     })
@@ -204,20 +204,20 @@ describe("Derive cadence by network 1.1.0", () => {
   })
 
   test("v1.1.0, Incorrect template version", async () => {
-    await expect(() =>
+    expect(() =>
       deriveCadenceByNetwork({
         network: "mainnet",
         template: {f_type: "InteractionTemplate", f_version: "0.0.0"},
       })
-    ).rejects.toThrow(Error)
+    ).toThrow(Error)
   })
 
   test("v1.1.0, It fails to derive cadence for unknown network", async () => {
-    await expect(() =>
+    expect(() =>
       deriveCadenceByNetwork({
         network: "randomnet",
         template: template11,
       })
-    ).rejects.toThrow(Error)
+    ).toThrow(Error)
   })
 })
