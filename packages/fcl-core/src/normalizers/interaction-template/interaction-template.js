@@ -1,6 +1,6 @@
 import {normalize as normalize100to110} from "./interaction-template-1.0.0-1.1.0"
 
-export async function normalizeInteractionTemplate(template) {
+export function normalizeInteractionTemplate(template) {
   if (template == null) return null
 
   switch (template["f_version"]) {

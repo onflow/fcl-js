@@ -8,7 +8,7 @@ import {replaceStringImports} from "../utils/replace-string-imports.js"
  * @param {object} params.template - Interaction Template to derive Cadence from
  * @returns {string} - Cadence
  */
-export async function deriveCadenceByNetwork110({network, template}) {
+export function deriveCadenceByNetwork110({network, template}) {
   invariant(
     template.f_version === "1.1.0",
     "deriveCadenceByNetwork110({ template }) -- template must be version 1.0.0"
