@@ -6,9 +6,9 @@ import {invariant} from "@onflow/util-invariant"
  * @param {object} params
  * @param {string} params.network - Network to derive Cadence for
  * @param {object} params.template - Interaction Template to derive Cadence from
- * @returns {string} - Cadence
+ * @returns {Promise<string>} - Promise that resolves with the derived Cadence code
  */
-export function deriveCadenceByNetwork100({network, template}) {
+export async function deriveCadenceByNetwork100({network, template}) {
   invariant(
     template.f_version === "1.0.0",
     "deriveCadenceByNetwork100({ template }) -- template must be version 1.0.0"

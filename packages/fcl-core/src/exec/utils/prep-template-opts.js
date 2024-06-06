@@ -16,7 +16,7 @@ export async function prepTemplateOpts(opts) {
 
   const cadence =
     opts.cadence ||
-    deriveCadenceByNetwork({
+    await deriveCadenceByNetwork({
       template: opts.template,
       network: await getChainId(opts),
     })

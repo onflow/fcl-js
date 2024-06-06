@@ -8,9 +8,9 @@ import {deriveCadenceByNetwork110} from "./derive-cadence-by-network-1.1.0.js"
  * @param {object} params
  * @param {string} params.network - Network to derive Cadence for
  * @param {object} params.template - Interaction Template to derive Cadence from
- * @returns {string} - Cadence
+ * @returns {Promise<string>} - Promise that resolves with the derived Cadence code
  */
-export function deriveCadenceByNetwork({network, template}) {
+export async function deriveCadenceByNetwork({network, template}) {
   invariant(
     network != undefined,
     "deriveCadenceByNetwork({ network }) -- network must be defined"
@@ -35,9 +35,9 @@ export function deriveCadenceByNetwork({network, template}) {
 
   switch (template.f_version) {
     case "1.1.0":
-      return deriveCadenceByNetwork110({network, template})
+      return await deriveCadenceByNetwork110({network, template})
     case "1.0.0":
-      return deriveCadenceByNetwork100({network, template})
+      return await deriveCadenceByNetwork100({network, template})
     default:
       throw new Error(
         "deriveCadenceByNetwork Error: Unsupported template version"
