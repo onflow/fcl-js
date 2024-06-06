@@ -29,7 +29,7 @@ describe("TransactionError", () => {
     const error = TransactionError.from(status)
     expect(error).toBeInstanceOf(TransactionError)
     expect(error!.message).toEqual("[Error Code: 1101] Some Cadence Error")
-    expect(error!.code).toEqual(FvmErrorCode.CadenceRunTimeError)
+    expect(error!.code).toEqual(FvmErrorCode.CADENCE_RUNTIME_ERROR)
   })
 
   test("returns null for successful transaction", () => {

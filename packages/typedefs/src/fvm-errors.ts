@@ -1,77 +1,77 @@
 export enum FvmErrorCode {
   // tx validation errors 1000 - 1049
   // Deprecated: no longer in use
-  TxValidationError = 1000,
+  TX_VALIDATION_ERROR = 1000,
   // Deprecated: No longer used.
-  InvalidTxByteSizeError = 1001,
+  INVALID_TX_BYTE_SIZE_ERROR = 1001,
   // Deprecated: No longer used.
-  InvalidReferenceBlockError = 1002,
+  INVALID_REFERENCE_BLOCK_ERROR = 1002,
   // Deprecated: No longer used.
-  ExpiredTransactionError = 1003,
+  EXPIRED_TRANSACTION_ERROR = 1003,
   // Deprecated: No longer used.
-  InvalidScriptError = 1004,
+  INVALID_SCRIPT_ERROR = 1004,
   // Deprecated: No longer used.
-  InvalidGasLimitError = 1005,
-  InvalidProposalSignatureError = 1006,
-  InvalidProposalSeqNumberError = 1007,
-  InvalidPayloadSignatureError = 1008,
-  InvalidEnvelopeSignatureError = 1009,
+  INVALID_GAS_LIMIT_ERROR = 1005,
+  INVALID_PROPOSAL_SIGNATURE_ERROR = 1006,
+  INVALID_PROPOSAL_SEQ_NUMBER_ERROR = 1007,
+  INVALID_PAYLOAD_SIGNATURE_ERROR = 1008,
+  INVALID_ENVELOPE_SIGNATURE_ERROR = 1009,
 
   // base errors 1050 - 1100
   // Deprecated: No longer used.
-  FVMInternalError = 1050,
-  ValueError = 1051,
-  InvalidArgumentError = 1052,
-  InvalidAddressError = 1053,
-  InvalidLocationError = 1054,
-  AccountAuthorizationError = 1055,
-  OperationAuthorizationError = 1056,
-  OperationNotSupportedError = 1057,
-  BlockHeightOutOfRangeError = 1058,
+  FVM_INTERNAL_ERROR = 1050,
+  VALUE_ERROR = 1051,
+  INVALID_ARGUMENT_ERROR = 1052,
+  INVALID_ADDRESS_ERROR = 1053,
+  INVALID_LOCATION_ERROR = 1054,
+  ACCOUNT_AUTHORIZATION_ERROR = 1055,
+  OPERATION_AUTHORIZATION_ERROR = 1056,
+  OPERATION_NOT_SUPPORTED_ERROR = 1057,
+  BLOCK_HEIGHT_OUT_OF_RANGE_ERROR = 1058,
 
   // execution errors 1100 - 1200
   // Deprecated: No longer used.
-  ExecutionError = 1100,
-  CadenceRunTimeError = 1101,
+  EXECUTION_ERROR = 1100,
+  CADENCE_RUNTIME_ERROR = 1101,
   // Deprecated: No longer used.
-  EncodingUnsupportedValue = 1102,
-  StorageCapacityExceeded = 1103,
+  ENCODING_UNSUPPORTED_VALUE = 1102,
+  STORAGE_CAPACITY_EXCEEDED = 1103,
   // Deprecated: No longer used.
-  GasLimitExceededError = 1104,
-  EventLimitExceededError = 1105,
-  LedgerInteractionLimitExceededError = 1106,
-  StateKeySizeLimitError = 1107,
-  StateValueSizeLimitError = 1108,
-  TransactionFeeDeductionFailedError = 1109,
-  ComputationLimitExceededError = 1110,
-  MemoryLimitExceededError = 1111,
-  CouldNotDecodeExecutionParameterFromState = 1112,
-  ScriptExecutionTimedOutError = 1113,
-  ScriptExecutionCancelledError = 1114,
-  EventEncodingError = 1115,
-  InvalidInternalStateAccessError = 1116,
+  GAS_LIMIT_EXCEEDED_ERROR = 1104,
+  EVENT_LIMIT_EXCEEDED_ERROR = 1105,
+  LEDGER_INTERACTION_LIMIT_EXCEEDED_ERROR = 1106,
+  STATE_KEY_SIZE_LIMIT_ERROR = 1107,
+  STATE_VALUE_SIZE_LIMIT_ERROR = 1108,
+  TRANSACTION_FEE_DEDUCTION_FAILED_ERROR = 1109,
+  COMPUTATION_LIMIT_EXCEEDED_ERROR = 1110,
+  MEMORY_LIMIT_EXCEEDED_ERROR = 1111,
+  COULD_NOT_DECODE_EXECUTION_PARAMETER_FROM_STATE = 1112,
+  SCRIPT_EXECUTION_TIMED_OUT_ERROR = 1113,
+  SCRIPT_EXECUTION_CANCELLED_ERROR = 1114,
+  EVENT_ENCODING_ERROR = 1115,
+  INVALID_INTERNAL_STATE_ACCESS_ERROR = 1116,
   // 1117 was never deployed and is free to use
-  InsufficientPayerBalance = 1118,
+  INSUFFICIENT_PAYER_BALANCE = 1118,
 
   // accounts errors 1200 - 1250
   // Deprecated: No longer used.
-  AccountError = 1200,
-  AccountNotFoundError = 1201,
-  AccountPublicKeyNotFoundError = 1202,
-  AccountAlreadyExistsError = 1203,
+  ACCOUNT_ERROR = 1200,
+  ACCOUNT_NOT_FOUND_ERROR = 1201,
+  ACCOUNT_PUBLIC_KEY_NOT_FOUND_ERROR = 1202,
+  ACCOUNT_ALREADY_EXISTS_ERROR = 1203,
   // Deprecated: No longer used.
-  FrozenAccountError = 1204,
+  FROZEN_ACCOUNT_ERROR = 1204,
   // Deprecated: No longer used.
-  AccountStorageNotInitializedError = 1205,
-  AccountPublicKeyLimitError = 1206,
+  ACCOUNT_STORAGE_NOT_INITIALIZED_ERROR = 1205,
+  ACCOUNT_PUBLIC_KEY_LIMIT_ERROR = 1206,
 
   // contract errors 1250 - 1300
   // Deprecated: No longer used.
-  ContractError = 1250,
-  ContractNotFoundError = 1251,
+  CONTRACT_ERROR = 1250,
+  CONTRACT_NOT_FOUND_ERROR = 1251,
   // Deprecated: No longer used.
-  ContractNamesNotFoundError = 1252,
+  CONTRACT_NAMES_NOT_FOUND_ERROR = 1252,
 
   // fvm std lib errors 1300-1400
-  EVMExecutionError = 1300,
+  EVM_EXECUTION_ERROR = 1300,
 }
