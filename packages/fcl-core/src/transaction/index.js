@@ -12,6 +12,7 @@ import {
 import {send as fclSend, decode, getTransactionStatus} from "@onflow/sdk"
 import {HTTPRequestError} from "@onflow/transport-http"
 import {grpc} from "@improbable-eng/grpc-web"
+import {TransactionError} from "./transaction-error"
 
 const TXID_REGEXP = /^[0-9a-fA-F]{64}$/
 
@@ -149,12 +150,20 @@ export function transaction(
       const suppress = opts.suppress || false
       return new Promise((resolve, reject) => {
         const unsub = subscribe((txStatus, error) => {
-          if ((error || txStatus.statusCode) && !suppress) {
-            reject(error || txStatus.errorMessage)
-            unsub()
+          if (!suppress) {
+            const transactionError = new TransactionError.from(txStatus)
+            if (error != null) {
+              reject(transactionError)
+              unsub()
+            } else if (transactionError != null) {
+              reject(transactionError)
+              unsub()
+            }
           } else if (predicate(txStatus)) {
             resolve(txStatus)
             unsub()
+          } else {
+            return
           }
         })
       })
@@ -176,3 +185,5 @@ transaction.isFinalized = isFinalized
 transaction.isExecuted = isExecuted
 transaction.isSealed = isSealed
 transaction.isExpired = isExpired
+
+export {TransactionError}

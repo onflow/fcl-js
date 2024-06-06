@@ -330,13 +330,17 @@ export type TransactionStatus = {
    */
   blockId: string
   /**
-   * - The status code of the transaction.
+   * - The execution status of the transaction
    */
-  status: number
+  status: TransactionExecutionStatus
   /**
    * - The status as as descriptive text (e.g. "FINALIZED").
    */
   statusString: string
+  /**
+   * - The result of the transaction, if executed (i.e. 0 for success, 1 for failure)
+   */
+  statusCode: 0 | 1
   /**
    * - The error message of the transaction.
    */
@@ -345,6 +349,17 @@ export type TransactionStatus = {
    * - The events for this result.
    */
   events: Array<Event>
+}
+/**
+ * The execution status of the transaction.
+ */
+export enum TransactionExecutionStatus {
+  UNKNOWN = 0,
+  PENDING = 1,
+  FINALIZED = 2,
+  EXECUTED = 3,
+  SEALED = 4,
+  EXPIRED = 5,
 }
 export type Provider = {
   /**
@@ -412,3 +427,4 @@ export type EventStream = StreamConnection<{
 }>
 
 export * from "./interaction"
+export * from "./fvm-errors"
