@@ -1,5 +1,11 @@
 # @onflow/util-actor
 
+## 1.3.3
+
+### Patch Changes
+
+- [#1886](https://github.com/onflow/fcl-js/pull/1886) [`fe5e1b3d`](https://github.com/onflow/fcl-js/commit/fe5e1b3d330b7734740cceb9a873d1b680f28175) Thanks [@jribbink](https://github.com/jribbink)! - Fix broken util-actor when multiple versions are running at once
+
 ## 1.3.2
 
 ### Patch Changes

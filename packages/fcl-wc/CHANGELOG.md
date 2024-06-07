@@ -1,5 +1,13 @@
 # @onflow/fcl-wc
 
+## 5.1.1
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @onflow/config@1.4.1
+  - @onflow/fcl@1.10.2
+
 ## 5.1.0
 
 ### Minor Changes
