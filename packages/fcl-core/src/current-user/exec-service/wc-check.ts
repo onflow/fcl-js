@@ -1,7 +1,7 @@
 import * as logger from "@onflow/util-logger"
 import {getServiceRegistry} from "./plugins"
 
-const FC_WC_SERVICE_METHOD = "EXT/WC"
+const FCL_WC_SERVICE_METHOD = "EXT/WC"
 
 const isServerSide = typeof window === "undefined"
 
@@ -12,7 +12,7 @@ export function checkWalletConnectEnabled() {
   const serviceRegistry = getServiceRegistry()
   const strategies = serviceRegistry.getStrategies()
 
-  if (!strategies.includes(FC_WC_SERVICE_METHOD)) {
+  if (!strategies.includes(FCL_WC_SERVICE_METHOD)) {
     logger.log({
       title: "FCL WalletConnect Service Plugin",
       level: logger.LEVELS.error,
