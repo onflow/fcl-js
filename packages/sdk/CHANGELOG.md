@@ -1,5 +1,13 @@
 # @onflow/sdk
 
+## 1.5.1
+
+### Patch Changes
+
+- Updated dependencies [[`fe5e1b3d`](https://github.com/onflow/fcl-js/commit/fe5e1b3d330b7734740cceb9a873d1b680f28175)]:
+  - @onflow/util-actor@1.3.3
+  - @onflow/config@1.4.1
+
 ## 1.5.0
 
 ### Minor Changes
