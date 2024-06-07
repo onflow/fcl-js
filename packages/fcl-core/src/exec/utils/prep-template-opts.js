@@ -16,10 +16,10 @@ export async function prepTemplateOpts(opts) {
 
   const cadence =
     opts.cadence ||
-    await deriveCadenceByNetwork({
+    (await deriveCadenceByNetwork({
       template: opts.template,
       network: await getChainId(opts),
-    })
+    }))
 
   opts.cadence = cadence
   opts.dependencies = dependencies
