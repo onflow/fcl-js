@@ -4,6 +4,7 @@ import {getServiceRegistry} from "./plugins"
 import {getChainId} from "../../utils"
 import {VERSION} from "../../VERSION"
 import {configLens} from "../../default-config"
+
 const execStrategy = async ({service, body, config, opts}) => {
   const strategy = getServiceRegistry().getStrategy(service.method)
   return strategy({service, body, config, opts})

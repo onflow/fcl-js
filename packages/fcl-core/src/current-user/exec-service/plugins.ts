@@ -1,28 +1,37 @@
 import {invariant} from "@onflow/util-invariant"
 import {LEVELS, log} from "@onflow/util-logger"
-import {isRequired, isString, isObject, isFunc} from "../../utils/is"
+import {isRequired, isString, isFunc} from "../../utils/is"
 import {CORE_STRATEGIES} from "../../utils/constants"
+import {
+  StreamConnector,
+  StreamInfo,
+  streamConnectorManager,
+} from "./streams/stream-connector-manager"
+import {Service, StreamConnection} from "@onflow/typedefs"
 
-const stub = () => {
-  throw new Error(`Platform specific Core Strategies are not initialized`)
+interface ServicePlugin {
+  f_type: string
+  type: string
+  name: string
+  services: Service[]
+  serviceStrategy: ServiceStrategy
+  streamConnectors?: {
+    [key: string]: StreamConnector
+  }
 }
 
-const stubCoreStrategies = {
-  [CORE_STRATEGIES["EXT/RPC"]]: stub,
-  [CORE_STRATEGIES["HTTP/POST"]]: stub,
-  [CORE_STRATEGIES["IFRAME/RPC"]]: stub,
-  [CORE_STRATEGIES["POP/RPC"]]: stub,
-  [CORE_STRATEGIES["TAB/RPC"]]: stub,
-  [CORE_STRATEGIES["EXT/RPC"]]: stub,
+interface ServiceStrategy {
+  method: string
+  exec: Function
 }
 
 const supportedPlugins = ["ServicePlugin"]
 const supportedServicePlugins = ["discovery-service"]
 
-const validateDiscoveryPlugin = servicePlugin => {
-  const {services, serviceStrategy} = servicePlugin
+const validateDiscoveryPlugin = (servicePlugin: ServicePlugin) => {
+  const {services, serviceStrategy, streamConnectors} = servicePlugin
   invariant(
-    Array.isArray(services) && services.length,
+    Array.isArray(services) && services.length > 0,
     "Array of Discovery Services is required"
   )
 
@@ -51,20 +60,48 @@ const validateDiscoveryPlugin = servicePlugin => {
     "Service strategy exec function is required"
   )
 
-  return {discoveryServices: services, serviceStrategy}
+  return {
+    discoveryServices: services,
+    serviceStrategy,
+    streamConnectors: streamConnectors || [],
+  }
 }
 
-const ServiceRegistry = ({coreStrategies}) => {
+const ServiceRegistry = ({
+  coreStrategies,
+  streamConnectors,
+}: {
+  coreStrategies: {
+    [key: string]: Function
+  }
+  streamConnectors: {
+    [key: string]: (stream: StreamInfo) => Promise<StreamConnection<any>>
+  }
+}) => {
   let services = new Set()
   let strategies = new Map(Object.entries(coreStrategies))
 
-  const add = servicePlugin => {
+  // Add all stream connectors
+  for (const [type, connect] of Object.entries(streamConnectors)) {
+    streamConnectorManager.add(type, connect)
+  }
+
+  const setServices = (discoveryServices: Service[]) =>
+    (services = new Set([...discoveryServices]))
+
+  const getServices = () => [...services]
+
+  const getStrategy = (method: string) => strategies.get(method)
+
+  const getStrategies = () => [...strategies.keys()]
+
+  const add = (servicePlugin: ServicePlugin) => {
     invariant(
       supportedServicePlugins.includes(servicePlugin.type),
       `Service Plugin type ${servicePlugin.type} is not supported`
     )
     if (servicePlugin.type === "discovery-service") {
-      const {discoveryServices, serviceStrategy} =
+      const {discoveryServices, serviceStrategy, streamConnectors} =
         validateDiscoveryPlugin(servicePlugin)
       setServices(discoveryServices)
       if (!strategies.has(serviceStrategy.method)) {
@@ -76,29 +113,25 @@ const ServiceRegistry = ({coreStrategies}) => {
           level: LEVELS.warn,
         })
       }
+
+      // Add all stream connectors from the service plugin
+      for (const [type, connect] of Object.entries(streamConnectors)) {
+        streamConnectorManager.add(type, connect)
+      }
     }
   }
 
-  const setServices = discoveryServices =>
-    (services = new Set([...discoveryServices]))
-
-  const getServices = () => [...services]
-
-  const getStrategy = method => strategies.get(method)
-
-  const getStrategies = () => [...strategies.keys()]
-
   return Object.freeze({
-    add,
     getServices,
     getStrategy,
     getStrategies,
+    add,
   })
 }
 
-const validatePlugins = plugins => {
+const validatePlugins = (plugins: ServicePlugin[]) => {
   let pluginsArray
-  invariant(plugins, "No plugins supplied")
+  invariant(!!plugins, "No plugins supplied")
 
   if (!Array.isArray(plugins)) {
     pluginsArray = [plugins]
@@ -122,7 +155,7 @@ const PluginRegistry = () => {
 
   const getPlugins = () => pluginsMap
 
-  const add = plugins => {
+  const add = (plugins: ServicePlugin[]) => {
     const pluginsArray = validatePlugins(plugins)
     for (const p of pluginsArray) {
       pluginsMap.set(p.name, p)
@@ -138,28 +171,43 @@ const PluginRegistry = () => {
   })
 }
 
-let serviceRegistry
+let serviceRegistry: ReturnType<typeof ServiceRegistry>
 const getIsServiceRegistryInitialized = () =>
   typeof serviceRegistry !== "undefined"
 
-export const initServiceRegistry = ({coreStrategies}) => {
+export const initServiceRegistry = ({
+  coreStrategies,
+  streamConnectors,
+}: {
+  coreStrategies: {
+    [key: string]: Function
+  }
+  streamConnectors: {
+    [key: string]: (stream: StreamInfo) => Promise<StreamConnection<any>>
+  }
+}) => {
   if (getIsServiceRegistryInitialized()) {
     return serviceRegistry
   }
-  const _serviceRegistry = ServiceRegistry({coreStrategies})
+  const _serviceRegistry = ServiceRegistry({coreStrategies, streamConnectors})
   serviceRegistry = _serviceRegistry
 
   return _serviceRegistry
 }
+
 export const getServiceRegistry = () => {
   if (!getIsServiceRegistryInitialized()) {
     console.warn(
       "Registry is not initalized, it will be initialized with stub core strategies"
     )
 
-    return initServiceRegistry({coreStrategies: stubCoreStrategies})
+    return initServiceRegistry({
+      coreStrategies: {},
+      streamConnectors: {},
+    })
   }
 
   return serviceRegistry
 }
+
 export const pluginRegistry = PluginRegistry()

@@ -13,6 +13,7 @@ import {normalizeCompositeSignature} from "../normalizers/service/composite-sign
 import {getDiscoveryService, makeDiscoveryServices} from "../discovery"
 import {getServiceRegistry} from "./exec-service/plugins"
 import {isMobile} from "../utils"
+import {EventTypes, getEventsManager, initEventsManager} from "./events-manager"
 
 /**
  * @typedef {import("@onflow/typedefs").CurrentUser} CurrentUser
@@ -22,10 +23,10 @@ import {isMobile} from "../utils"
 export const isFn = d => typeof d === "function"
 
 const NAME = "CURRENT_USER"
-const UPDATED = "CURRENT_USER/UPDATED"
-const SNAPSHOT = "SNAPSHOT"
-const SET_CURRENT_USER = "SET_CURRENT_USER"
-const DEL_CURRENT_USER = "DEL_CURRENT_USER"
+export const UPDATED = "CURRENT_USER/UPDATED"
+export const SNAPSHOT = "SNAPSHOT"
+export const SET_CURRENT_USER = "SET_CURRENT_USER"
+export const DEL_CURRENT_USER = "DEL_CURRENT_USER"
 
 const DATA = `{
   "f_type": "User",
@@ -68,6 +69,11 @@ const HANDLERS = {
       const user = await getStoredUser(storage)
       if (notExpired(user)) ctx.merge(user)
     }
+
+    // Subscribe to AUTHN_REFRESH events
+    getEventsManager().on(EventTypes.AUTHN_REFRESH, async data => {
+      ctx.sendSelf(SET_CURRENT_USER, await buildUser(data))
+    })
   },
   [SUBSCRIBE]: (ctx, letter) => {
     ctx.subscribe(letter.from)
@@ -456,6 +462,9 @@ const getCurrentUser = ({platform}) => {
   currentUser.subscribe = subscribe
   currentUser.snapshot = snapshot
   currentUser.resolveArgument = getResolveArgument({platform})
+
+  // Initialize Events Manager with correct platform and currentUser
+  initEventsManager(platform, subscribe)
 
   return currentUser
 }

@@ -84,7 +84,8 @@ export const authz = currentUser().authorization
 
 import {config} from "@onflow/config"
 import {getDefaultConfig, coreStrategies} from "./utils/web"
+import {streamConnectors} from "./utils/connectors"
 
 config(getDefaultConfig())
 
-initServiceRegistry({coreStrategies})
+initServiceRegistry({coreStrategies, streamConnectors})
