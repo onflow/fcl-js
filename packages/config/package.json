@@ -1,6 +1,6 @@
 {
   "name": "@onflow/config",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "Config for FCL-JS",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
@@ -39,7 +39,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.18.6",
-    "@onflow/util-actor": "1.3.2",
+    "@onflow/util-actor": "1.3.3",
     "@onflow/util-invariant": "1.2.3",
     "@onflow/util-logger": "1.3.2",
     "eslint": "^8.34.0",
