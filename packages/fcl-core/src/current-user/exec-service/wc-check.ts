@@ -1,7 +1,7 @@
 import * as logger from "@onflow/util-logger"
 import {getServiceRegistry} from "./plugins"
 
-const FCL_WC_SERVICE_METHOD = "EXT/WC"
+const FCL_WC_SERVICE_METHOD = "WC/RPC"
 
 const isServerSide = typeof window === "undefined"
 

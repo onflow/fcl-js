@@ -2,10 +2,11 @@ import {invariant} from "@onflow/util-invariant"
 import {log, LEVELS} from "@onflow/util-logger"
 import {isMobile, isIOS} from "./utils"
 import {FLOW_METHODS, REQUEST_TYPES} from "./constants"
-import {SignClient} from "@walletconnect/sign-client/dist/types/client.js"
+import {SignClient} from "@walletconnect/sign-client/dist/types/client"
 import * as fclCore from "@onflow/fcl-core"
 
 export const SERVICE_PLUGIN_NAME = "fcl-plugin-service-walletconnect"
+export const WC_SERVICE_METHOD = "WC/RPC"
 
 export const makeServicePlugin = (
   client: Promise<SignClient | null>,
@@ -27,7 +28,7 @@ export const makeServicePlugin = (
   f_type: "ServicePlugin",
   type: "discovery-service",
   serviceStrategy: {
-    method: "WC/RPC",
+    method: WC_SERVICE_METHOD,
     exec: makeExec(
       client,
       opts,

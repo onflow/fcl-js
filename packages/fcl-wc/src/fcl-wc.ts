@@ -19,22 +19,6 @@ const DEFAULT_RELAY_URL = "wss://relay.walletconnect.com"
 const DEFAULT_LOGGER = "debug"
 let clientPromise: Promise<SignClient | null> = Promise.resolve(null)
 
-const getDefaultMetadata = async (): Promise<CoreTypes.Metadata> => {
-  const appTitle = await fclCore.config().get<string>("app.detail.title")
-  const appIcon = await fclCore.config().get<string>("app.detail.icon")
-  const appDescription = await fclCore
-    .config()
-    .get<string>("app.detail.description")
-  const appUrl = await fclCore.config().get<string>("app.detail.url")
-
-  return {
-    name: appTitle ?? "A Flow dApp",
-    description: appDescription ?? "",
-    url: appUrl ?? window.location.origin,
-    icons: appIcon ? [appIcon] : [],
-  }
-}
-
 const initClient = async ({
   projectId,
   metadata,
@@ -47,15 +31,11 @@ const initClient = async ({
     "FCL Wallet Connect Error: WalletConnect projectId is required"
   )
   try {
-    // Assign default values to any missing metadata fields
-    const resolvedMetadata = await getDefaultMetadata()
-    Object.assign(resolvedMetadata, metadata)
-
     return SignClient.init({
       logger: DEFAULT_LOGGER,
       relayUrl: DEFAULT_RELAY_URL,
       projectId: projectId,
-      metadata: resolvedMetadata,
+      metadata: metadata,
     })
   } catch (error) {
     if (error instanceof Error) {
