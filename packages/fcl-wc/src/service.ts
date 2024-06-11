@@ -1,13 +1,14 @@
 import {invariant} from "@onflow/util-invariant"
 import {log, LEVELS} from "@onflow/util-logger"
-import {isMobile, CONFIGURED_NETWORK, isIOS} from "./utils"
+import {isMobile, isIOS} from "./utils"
 import {FLOW_METHODS, REQUEST_TYPES} from "./constants"
 import {SignClient} from "@walletconnect/sign-client/dist/types/client.js"
+import * as fclCore from "@onflow/fcl-core"
 
 export const SERVICE_PLUGIN_NAME = "fcl-plugin-service-walletconnect"
 
-export const makeServicePlugin = async (
-  client: SignClient,
+export const makeServicePlugin = (
+  client: Promise<SignClient | null>,
   opts: {
     projectId: string
     includeBaseWC: boolean
@@ -37,7 +38,7 @@ export const makeServicePlugin = async (
 })
 
 const makeExec = (
-  client: SignClient,
+  clientPromise: Promise<SignClient | null>,
   {wcRequestHook, pairingModalOverride}: any,
   WalletConnectModal: Promise<
     typeof import("@walletconnect/modal").WalletConnectModal
@@ -45,7 +46,9 @@ const makeExec = (
 ) => {
   return ({service, body, opts}: {service: any; body: any; opts: any}) => {
     return new Promise(async (resolve, reject) => {
+      const client = await clientPromise
       invariant(!!client, "WalletConnect is not initialized")
+
       let session, pairing, windowRef: any
       const method = service.endpoint
       const appLink = validateAppLink(service)
@@ -245,6 +248,8 @@ function connectWc(
     wcRequestHook: any
     pairingModalOverride: any
   }) => {
+    const network = await fclCore.getChainId()
+
     const requiredNamespaces = {
       flow: {
         methods: [
@@ -253,7 +258,7 @@ function connectWc(
           FLOW_METHODS.FLOW_AUTHZ,
           FLOW_METHODS.FLOW_USER_SIGN,
         ],
-        chains: [`flow:${CONFIGURED_NETWORK}`],
+        chains: [`flow:${network}`],
         events: ["chainChanged", "accountsChanged"],
       },
     }

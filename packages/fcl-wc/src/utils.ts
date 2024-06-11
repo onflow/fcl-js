@@ -2,16 +2,6 @@ import {log, LEVELS} from "@onflow/util-logger"
 import {invariant} from "@onflow/util-invariant"
 import * as fclCore from "@onflow/fcl-core"
 
-export let CONFIGURED_NETWORK: string | null = null
-
-export const setConfiguredNetwork = async () => {
-  CONFIGURED_NETWORK = await fclCore.getChainId()
-  invariant(
-    !!CONFIGURED_NETWORK,
-    "FCL Configuration value for 'flow.network' is required"
-  )
-}
-
 const makeFlowServicesFromWallets = (wallets: any[]) => {
   return Object.values(wallets)
     .filter(w => w.app_type === "wallet")
@@ -39,8 +29,9 @@ const makeFlowServicesFromWallets = (wallets: any[]) => {
 
 export const fetchFlowWallets = async (projectId: string) => {
   try {
+    const network = await fclCore.getChainId()
     const wcApiWallets = await fetch(
-      `https://explorer-api.walletconnect.com/v3/wallets?projectId=${projectId}&chains=flow:${CONFIGURED_NETWORK}&entries=5&page=1`
+      `https://explorer-api.walletconnect.com/v3/wallets?projectId=${projectId}&chains=flow:${network}&entries=5&page=1`
     ).then(res => res.json())
 
     if (wcApiWallets?.count > 0) {

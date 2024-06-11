@@ -59,7 +59,10 @@ export function initFclWcLoader() {
     hasLoaded = true
 
     // Load the plugin if not already loaded
-    const {FclWcServicePlugin} = await fclWc.init({
+    // We must lazy load the plugin to avoid race conditions
+    // where the developer attempts to use the plugin before
+    // our loader applies the configuration
+    const {FclWcServicePlugin} = fclWc.initLazy({
       projectId,
       metadata,
     })
