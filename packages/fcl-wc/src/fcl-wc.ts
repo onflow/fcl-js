@@ -22,11 +22,15 @@ let clientPromise: Promise<SignClient | null> = Promise.resolve(null)
 const getDefaultMetadata = async (): Promise<CoreTypes.Metadata> => {
   const appTitle = await fclCore.config().get<string>("app.detail.title")
   const appIcon = await fclCore.config().get<string>("app.detail.icon")
+  const appDescription = await fclCore
+    .config()
+    .get<string>("app.detail.description")
+  const appUrl = await fclCore.config().get<string>("app.detail.url")
 
   return {
     name: appTitle ?? "A Flow dApp",
-    description: "",
-    url: window.location.origin,
+    description: appDescription ?? "",
+    url: appUrl ?? window.location.origin,
     icons: appIcon ? [appIcon] : [],
   }
 }
