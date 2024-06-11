@@ -12,7 +12,6 @@
   "bugs": {
     "url": "https://github.com/onflow/fcl-js/issues"
   },
-  "type": "module",
   "files": [
     "dist"
   ],
@@ -20,20 +19,6 @@
   "main": "dist/fcl-wc.js",
   "module": "dist/fcl-wc.module.mjs",
   "types": "types/fcl-wc.d.ts",
-  "exports": {
-    ".": {
-      "import": "./dist/fcl-wc.module.mjs",
-      "require": "./dist/fcl-wc.js"
-    },
-    "./dist/fcl-wc.js": {
-      "import": "./dist/fcl-wc.module.mjs",
-      "require": "./dist/fcl-wc.js"
-    },
-    "./dist/fcl-wc.module.mjs": {
-      "import": "./dist/fcl-wc.module.mjs",
-      "require": "./dist/fcl-wc.js"
-    }
-  },
   "scripts": {
     "prepublishOnly": "npm test && npm run build",
     "test": "jest",
@@ -57,9 +42,7 @@
     "@walletconnect/modal-core": "^2.6.2",
     "@walletconnect/sign-client": "^2.8.1",
     "@walletconnect/types": "^2.8.1",
-    "@walletconnect/utils": "^2.8.1",
-    "@web3modal/ui": "^4.1.11",
-    "web3modal": "^1.9.12"
+    "@walletconnect/utils": "^2.8.1"
   },
   "peerDependencies": {
     "@onflow/fcl-core": "1.9.1"

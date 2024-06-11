@@ -75,6 +75,12 @@ export const init = async ({
   pairingModalOverride = null,
   wallets = [],
 }: FclWalletConnectConfig) => {
+  if (typeof window === "undefined") {
+    throw new Error(
+      "FCL Wallet Connect Plugin can only be initialized in the browser"
+    )
+  }
+
   await setConfiguredNetwork()
   const _client = client ?? (await initClient({projectId, metadata}))
   const FclWcServicePlugin = await makeServicePlugin(_client, {

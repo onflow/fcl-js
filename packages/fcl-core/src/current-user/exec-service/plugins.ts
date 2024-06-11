@@ -20,11 +20,8 @@ const supportedPlugins = ["ServicePlugin"]
 const supportedServicePlugins = ["discovery-service"]
 
 const validateDiscoveryPlugin = (servicePlugin: any) => {
-  const {services, serviceStrategy} = servicePlugin
-  invariant(
-    Array.isArray(services) && services.length > 0,
-    "Array of Discovery Services is required"
-  )
+  const {services = [], serviceStrategy} = servicePlugin
+  invariant(Array.isArray(services), "Services must be an array")
 
   for (const ds of services) {
     invariant(

@@ -1,9 +1,16 @@
-import * as fclWc from "@onflow/fcl-wc"
 import {config} from "@onflow/config"
 import {pluginRegistry} from "@onflow/fcl-core"
 import {invariant} from "@onflow/util-invariant"
+import * as fclWc from "@onflow/fcl-wc"
+
+const isServer = typeof window === "undefined"
 
 export function initFclWcLoader() {
+  // We cannot load WalletConnect plugin on server side
+  if (isServer) {
+    return
+  }
+
   config.subscribe(async (cfg: any) => {
     const projectId: string | undefined = cfg["walletconnect.projectId"]
     const metadata: any = cfg["walletconnect.metadata"]

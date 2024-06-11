@@ -1,4 +1,3 @@
-import {WalletConnectModal} from "@walletconnect/modal"
 import {invariant} from "@onflow/util-invariant"
 import {log, LEVELS} from "@onflow/util-logger"
 import {isMobile, CONFIGURED_NETWORK, isIOS} from "./utils"
@@ -24,12 +23,23 @@ export const makeServicePlugin = async (
   name: "fcl-plugin-service-walletconnect",
   f_type: "ServicePlugin",
   type: "discovery-service",
-  serviceStrategy: {method: "WC/RPC", exec: makeExec(client, opts)},
+  serviceStrategy: {
+    method: "WC/RPC",
+    exec: makeExec(
+      client,
+      opts,
+      import("@walletconnect/modal").then(m => m.WalletConnectModal)
+    ),
+  },
+  services: [],
 })
 
 const makeExec = (
   client: SignClient,
-  {wcRequestHook, pairingModalOverride}: any
+  {wcRequestHook, pairingModalOverride}: any,
+  WalletConnectModal: Promise<
+    typeof import("@walletconnect/modal").WalletConnectModal
+  >
 ) => {
   return ({service, body, opts}: {service: any; body: any; opts: any}) => {
     return new Promise(async (resolve, reject) => {
@@ -57,7 +67,7 @@ const makeExec = (
       }
 
       if (session == null) {
-        session = await connectWc({
+        session = await connectWc(WalletConnectModal)({
           service,
           onClose,
           appLink,
@@ -207,105 +217,111 @@ const makeExec = (
   }
 }
 
-async function connectWc({
-  service,
-  onClose,
-  appLink,
-  windowRef,
-  client,
-  method,
-  pairing,
-  wcRequestHook,
-  pairingModalOverride,
-}: {
-  service: any
-  onClose: any
-  appLink: string
-  windowRef: any
-  client: SignClient
-  method: string
-  pairing: any
-  wcRequestHook: any
-  pairingModalOverride: any
-}) {
-  const requiredNamespaces = {
-    flow: {
-      methods: [
-        FLOW_METHODS.FLOW_AUTHN,
-        FLOW_METHODS.FLOW_PRE_AUTHZ,
-        FLOW_METHODS.FLOW_AUTHZ,
-        FLOW_METHODS.FLOW_USER_SIGN,
-      ],
-      chains: [`flow:${CONFIGURED_NETWORK}`],
-      events: ["chainChanged", "accountsChanged"],
-    },
-  }
-
-  invariant(
-    !!client.opts?.projectId,
-    "Cannot establish connection, WalletConnect projectId is undefined"
-  )
-
-  const projectId = client.opts?.projectId
-  const walletConnectModal = new WalletConnectModal({
-    projectId,
-    walletConnectVersion: 2,
-  })
-
-  try {
-    const {uri, approval} = await client.connect({
-      pairingTopic: pairing?.topic,
-      requiredNamespaces,
-    })
-    var _uri = uri
-
-    if (wcRequestHook && wcRequestHook instanceof Function) {
-      wcRequestHook({
-        type: REQUEST_TYPES.SESSION_REQUEST,
-        method,
-        service,
-        session: null,
-        pairing: pairing ?? null,
-        uri: uri ?? null,
-      })
+function connectWc(
+  WalletConnectModal: Promise<
+    typeof import("@walletconnect/modal").WalletConnectModal
+  >
+) {
+  return async ({
+    service,
+    onClose,
+    appLink,
+    windowRef,
+    client,
+    method,
+    pairing,
+    wcRequestHook,
+    pairingModalOverride,
+  }: {
+    service: any
+    onClose: any
+    appLink: string
+    windowRef: any
+    client: SignClient
+    method: string
+    pairing: any
+    wcRequestHook: any
+    pairingModalOverride: any
+  }) => {
+    const requiredNamespaces = {
+      flow: {
+        methods: [
+          FLOW_METHODS.FLOW_AUTHN,
+          FLOW_METHODS.FLOW_PRE_AUTHZ,
+          FLOW_METHODS.FLOW_AUTHZ,
+          FLOW_METHODS.FLOW_USER_SIGN,
+        ],
+        chains: [`flow:${CONFIGURED_NETWORK}`],
+        events: ["chainChanged", "accountsChanged"],
+      },
     }
 
     invariant(
-      !!uri,
-      "Cannot establish connection, WalletConnect URI is undefined"
+      !!client.opts?.projectId,
+      "Cannot establish connection, WalletConnect projectId is undefined"
     )
 
-    if (isMobile()) {
-      const queryString = new URLSearchParams({uri: uri}).toString()
-      let url = pairing == null ? appLink + "?" + queryString : appLink
-      windowRef.location.href = url
-    } else if (!pairing) {
-      if (!pairingModalOverride) {
-        walletConnectModal.openModal({uri, onClose})
-      } else {
-        pairingModalOverride(uri, onClose)
-      }
-    }
+    const projectId = client.opts?.projectId
+    const walletConnectModal = new (await WalletConnectModal)({
+      projectId,
+      walletConnectVersion: 2,
+    })
 
-    const session = await approval()
-    return session
-  } catch (error) {
-    if (error instanceof Error) {
-      log({
-        title: `${error.name} Error establishing WalletConnect session`,
-        message: `
+    try {
+      const {uri, approval} = await client.connect({
+        pairingTopic: pairing?.topic,
+        requiredNamespaces,
+      })
+      var _uri = uri
+
+      if (wcRequestHook && wcRequestHook instanceof Function) {
+        wcRequestHook({
+          type: REQUEST_TYPES.SESSION_REQUEST,
+          method,
+          service,
+          session: null,
+          pairing: pairing ?? null,
+          uri: uri ?? null,
+        })
+      }
+
+      invariant(
+        !!uri,
+        "Cannot establish connection, WalletConnect URI is undefined"
+      )
+
+      if (isMobile()) {
+        const queryString = new URLSearchParams({uri: uri}).toString()
+        let url = pairing == null ? appLink + "?" + queryString : appLink
+        windowRef.location.href = url
+      } else if (!pairing) {
+        if (!pairingModalOverride) {
+          walletConnectModal.openModal({uri, onClose})
+        } else {
+          pairingModalOverride(uri, onClose)
+        }
+      }
+
+      const session = await approval()
+      return session
+    } catch (error) {
+      if (error instanceof Error) {
+        log({
+          title: `${error.name} Error establishing WalletConnect session`,
+          message: `
           ${error.message}
           uri: ${_uri}
         `,
-        level: LEVELS.error,
-      })
+          level: LEVELS.error,
+        })
+      }
+      onClose()
+      throw error
+    } finally {
+      if (windowRef && !windowRef.closed) {
+        windowRef.close()
+      }
+      walletConnectModal.closeModal()
     }
-    onClose()
-    throw error
-  } finally {
-    if (windowRef && !windowRef.closed) {
-      windowRef.close()
-    }
-    walletConnectModal.closeModal()
   }
 }
