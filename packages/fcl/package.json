@@ -48,8 +48,9 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.18.6",
-    "@onflow/fcl-core": "1.9.2",
     "@onflow/config": "1.4.1",
+    "@onflow/fcl-core": "1.9.2",
+    "@onflow/fcl-wc": "5.1.1",
     "@onflow/interaction": "0.0.11",
     "@onflow/rlp": "1.2.2",
     "@onflow/sdk": "1.5.1",
@@ -61,8 +62,9 @@
     "@onflow/util-semver": "1.0.2",
     "@onflow/util-template": "1.2.2",
     "@onflow/util-uid": "1.2.2",
-    "events": "^3.3.0",
+    "@walletconnect/types": "^2.13.2",
     "cross-fetch": "^3.1.6",
+    "events": "^3.3.0",
     "sha3": "^2.1.4"
   }
 }

@@ -84,7 +84,12 @@ export const authz = currentUser().authorization
 
 import {config} from "@onflow/config"
 import {getDefaultConfig, coreStrategies} from "./utils/web"
+import {initFclWcLoader} from "./utils/fcl-wc-loader"
 
 config(getDefaultConfig())
 
 initServiceRegistry({coreStrategies})
+
+// Automatically load fcl-wc plugin
+// Based on the user's config
+initFclWcLoader()

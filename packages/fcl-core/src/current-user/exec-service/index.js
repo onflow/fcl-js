@@ -4,6 +4,7 @@ import {getServiceRegistry} from "./plugins"
 import {getChainId} from "../../utils"
 import {VERSION} from "../../VERSION"
 import {configLens} from "../../default-config"
+import {checkWalletConnectEnabled} from "./wc-check"
 const execStrategy = async ({service, body, config, opts}) => {
   const strategy = getServiceRegistry().getStrategy(service.method)
   return strategy({service, body, config, opts})
@@ -16,6 +17,9 @@ export async function execService({
   opts = {},
   platform,
 }) {
+  // Notify the developer if WalletConnect is not enabled
+  checkWalletConnectEnabled()
+
   msg.data = service.data
   const execConfig = {
     services: await configLens(/^service\./),

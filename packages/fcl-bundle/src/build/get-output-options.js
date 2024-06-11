@@ -2,6 +2,7 @@ const _ = require("lodash")
 const {resolve} = require("path")
 const {isObject} = require("../util")
 const banner = require("../plugins/banner")
+const preserveDynamicImports = require("../plugins/preserve-dynamic-imports")
 
 const generateModuleName = pkgName =>
   pkgName
@@ -27,6 +28,7 @@ module.exports = function getOutputOptions(package, build) {
                 raw: true,
               }
         ),
+      preserveDynamicImports(),
     ],
   }
 
