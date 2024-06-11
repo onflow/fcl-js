@@ -6,7 +6,12 @@ import {CoreTypes} from "@walletconnect/types"
 
 const isServer = typeof window === "undefined"
 
-const getDefaultMetadata = (config: any): CoreTypes.Metadata => {
+const getMetadata = (config: {
+  "app.detail.title": string | undefined | null
+  "app.detail.icon": string | undefined | null
+  "app.detail.description": undefined | null
+  "app.detail.url": string | undefined | null
+}): CoreTypes.Metadata => {
   const appTitle = config["app.detail.title"]
   const appIcon = config["app.detail.icon"]
   const appDescription = config["app.detail.description"]
@@ -27,34 +32,50 @@ export function initFclWcLoader() {
   }
 
   // Use previous configuration to check for changes & notify the user that this is not possible
-  let previousConfig: string | null = null
+  let lastConfig: string | null = null
 
   // Only the first configuration will be used
   let hasLoaded = false
 
-  config.subscribe(async (cfg: any) => {
-    const projectId: string | undefined = cfg["walletconnect.projectId"]
-
-    invariant(
-      !!projectId,
-      "FCL Configuration value for 'walletconnect.projectId' is required"
-    )
+  config.subscribe(async (fullConfig: any) => {
+    const wcConfig = {
+      "walletconnect.projectId": fullConfig["walletconnect.projectId"],
+      "app.detail.title": fullConfig["app.detail.title"],
+      "app.detail.icon": fullConfig["app.detail.icon"],
+      "app.detail.description": fullConfig["app.detail.description"],
+      "app.detail.url": fullConfig["app.detail.url"],
+    }
+    const projectId: string | undefined = wcConfig["walletconnect.projectId"]
 
     // Check if the plugin is already loaded by this loader, but with different configuration
-    const currentConfig = JSON.stringify({projectId})
-    if (previousConfig !== currentConfig && hasLoaded) {
-      console.warn(
-        "FCL WalletConnect plugin has been already loaded with different configuration. It is not possible to change the configuration after the plugin has been loaded."
-      )
+    // The plugin can only be loaded once
+    const previousConfig = lastConfig
+    lastConfig = JSON.stringify(wcConfig, null, 2)
+    if (hasLoaded) {
+      if (previousConfig !== lastConfig) {
+        console.warn(
+          `FCL WalletConnect Plugin has been already loaded with different configuration. It is not possible to change the configuration after the plugin has been loaded.
+
+Previous configuration:
+${previousConfig}
+
+Current configuration:
+${lastConfig}`
+        )
+      }
       return
     }
-    previousConfig = currentConfig
 
     // If the configuration is not set, we do not load the plugin
     const isConfigured = !!projectId
     if (!isConfigured) {
       return
     }
+
+    invariant(
+      !!projectId,
+      "FCL Configuration value for 'walletconnect.projectId' is required"
+    )
 
     // Check if the plugin is already loaded manually
     // Usually this won't happen as it is more likely that the plugin will be loaded by this loader
@@ -76,7 +97,7 @@ export function initFclWcLoader() {
     // our loader applies the configuration
     const {FclWcServicePlugin} = fclWc.initLazy({
       projectId,
-      metadata: getDefaultMetadata(cfg),
+      metadata: getMetadata(wcConfig),
     })
     pluginRegistry.add([FclWcServicePlugin])
   })
