@@ -4,6 +4,8 @@ import {isMobile, CONFIGURED_NETWORK, isIOS} from "./utils"
 import {FLOW_METHODS, REQUEST_TYPES} from "./constants"
 import {SignClient} from "@walletconnect/sign-client/dist/types/client.js"
 
+export const SERVICE_PLUGIN_NAME = "fcl-plugin-service-walletconnect"
+
 export const makeServicePlugin = async (
   client: SignClient,
   opts: {
@@ -20,7 +22,7 @@ export const makeServicePlugin = async (
     pairingModalOverride: null,
   }
 ) => ({
-  name: "fcl-plugin-service-walletconnect",
+  name: SERVICE_PLUGIN_NAME,
   f_type: "ServicePlugin",
   type: "discovery-service",
   serviceStrategy: {

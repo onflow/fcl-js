@@ -3,7 +3,7 @@ import SignClient from "@walletconnect/sign-client"
 import {invariant} from "@onflow/util-invariant"
 import {LEVELS, log} from "@onflow/util-logger"
 export {getSdkError} from "@walletconnect/utils"
-import {makeServicePlugin} from "./service"
+import {SERVICE_PLUGIN_NAME, makeServicePlugin} from "./service"
 import {setConfiguredNetwork} from "./utils"
 import {CoreTypes} from "@walletconnect/types"
 
@@ -97,3 +97,5 @@ export const init = async ({
     client,
   }
 }
+
+export {SERVICE_PLUGIN_NAME}
