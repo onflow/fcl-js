@@ -1,5 +1,18 @@
 # @onflow/fcl-wc
 
+## 5.2.0
+
+### Minor Changes
+
+- [#1888](https://github.com/onflow/fcl-js/pull/1888) [`90aa24d2`](https://github.com/onflow/fcl-js/commit/90aa24d237e0003bd62b53dd26fcf29ab743595b) Thanks [@jribbink](https://github.com/jribbink)! - Convert to TypeScript
+
+### Patch Changes
+
+- [#1888](https://github.com/onflow/fcl-js/pull/1888) [`90aa24d2`](https://github.com/onflow/fcl-js/commit/90aa24d237e0003bd62b53dd26fcf29ab743595b) Thanks [@jribbink](https://github.com/jribbink)! - Remove better-sqlite3 dependency
+
+- Updated dependencies [[`90aa24d2`](https://github.com/onflow/fcl-js/commit/90aa24d237e0003bd62b53dd26fcf29ab743595b)]:
+  - @onflow/fcl-core@1.10.0
+
 ## 5.1.1
 
 ### Patch Changes

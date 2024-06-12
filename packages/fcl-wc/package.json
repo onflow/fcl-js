@@ -1,6 +1,6 @@
 {
   "name": "@onflow/fcl-wc",
-  "version": "5.1.1",
+  "version": "5.2.0",
   "description": "WalletConnect adapter for FCL",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
@@ -28,7 +28,7 @@
     "lint": "eslint ."
   },
   "devDependencies": {
-    "@onflow/fcl-bundle": "1.4.2",
+    "@onflow/fcl-bundle": "1.5.0",
     "eslint": "^8.35.0",
     "eslint-plugin-jsdoc": "^46.9.0",
     "jest": "^29.5.0"
@@ -45,6 +45,6 @@
     "@walletconnect/utils": "^2.8.1"
   },
   "peerDependencies": {
-    "@onflow/fcl-core": "1.9.2"
+    "@onflow/fcl-core": "1.10.0"
   }
 }

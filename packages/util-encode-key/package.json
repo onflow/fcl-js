@@ -14,7 +14,7 @@
   },
   "devDependencies": {
     "@babel/preset-typescript": "^7.22.5",
-    "@onflow/fcl-bundle": "1.4.2",
+    "@onflow/fcl-bundle": "1.5.0",
     "@onflow/types": "1.4.0",
     "@types/jest": "^29.5.3",
     "@types/node": "^18.13.0",
