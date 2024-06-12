@@ -1,5 +1,32 @@
 # @onflow/fcl
 
+## 1.11.0
+
+### Minor Changes
+
+- [#1888](https://github.com/onflow/fcl-js/pull/1888) [`90aa24d2`](https://github.com/onflow/fcl-js/commit/90aa24d237e0003bd62b53dd26fcf29ab743595b) Thanks [@jribbink](https://github.com/jribbink)! - Inject FCL WalletConnect Plugin by default. All developers are expected to configure a WalletConnect project ID in their FCL configuration. The relate configuration values are as follows:
+
+  ```typescript
+  {
+      // Required
+      "walletconnect.projectId": "YOUR_PROJECT_ID",
+
+      // Optional
+      "app.detail.icon": "https://example.com/icon.png",
+      "app.detail.name": "Example App",
+      "app.detail.description": "Example App Description",
+      "app.detail.url": "https://example.com",
+  }
+  ```
+
+  These values are used to configure the WalletConnect client. To obtain a project ID, please go to [WalletConnect's official website](https://walletconnect.com/). Metadata is optional, but recommended (FCL will use default values if not provided).
+
+### Patch Changes
+
+- Updated dependencies [[`5428fca4`](https://github.com/onflow/fcl-js/commit/5428fca4cdc1b37526d429cb646a72bea577a29b), [`90aa24d2`](https://github.com/onflow/fcl-js/commit/90aa24d237e0003bd62b53dd26fcf29ab743595b), [`90aa24d2`](https://github.com/onflow/fcl-js/commit/90aa24d237e0003bd62b53dd26fcf29ab743595b)]:
+  - @onflow/fcl-core@1.10.0
+  - @onflow/fcl-wc@6.0.0
+
 ## 1.10.2
 
 ### Patch Changes

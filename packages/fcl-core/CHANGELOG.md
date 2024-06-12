@@ -1,5 +1,11 @@
 # @onflow/fcl
 
+## 1.10.0
+
+### Minor Changes
+
+- [#1904](https://github.com/onflow/fcl-js/pull/1904) [`5428fca4`](https://github.com/onflow/fcl-js/commit/5428fca4cdc1b37526d429cb646a72bea577a29b) Thanks [@github-actions](https://github.com/apps/github-actions)! - Warn users to configure FCL-WC Plugin if not already configured. FCL libraries are expected to manage this plugin (i.e. `@onflow/fcl`).
+
 ## 1.9.2
 
 ### Patch Changes
