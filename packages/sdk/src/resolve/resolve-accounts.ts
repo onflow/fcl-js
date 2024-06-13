@@ -200,21 +200,11 @@ async function recurseResolveAccount(
 
       account = addAccountToIx(ix, account)
 
-      const recursedAccounts = await Promise.all(
-        flatResolvedAccounts.map(
-          async (resolvedAccount: InteractionAccount) => {
-            return await recurseResolveAccount(
-              ix,
-              resolvedAccount.tempId,
-              depthLimit - 1,
-              {debugLogger}
-            )
-          }
-        )
-      )
-
-      return recursedAccounts
-        ? recurseFlatMap(recursedAccounts)
+      return flatResolvedAccounts
+        ? flatResolvedAccounts.map(
+            (flatResolvedAccount: InteractionAccount) =>
+              flatResolvedAccount.tempId
+          )
         : account.tempId
     } else {
       debugLogger(
@@ -238,6 +228,7 @@ const getAccountTempIDs = (rawTempIds: string | string[] | null) => {
 async function resolveAccountType(
   ix: Interaction,
   type: ROLES,
+  depthLimit = MAX_DEPTH_LIMIT,
   {debugLogger}: {debugLogger: (msg?: string, indent?: number) => void}
 ) {
   invariant(
@@ -261,7 +252,7 @@ async function resolveAccountType(
     let resolvedAccountTempIds = await recurseResolveAccount(
       ix,
       accountId,
-      MAX_DEPTH_LIMIT,
+      depthLimit,
       {
         debugLogger,
       }
@@ -337,9 +328,15 @@ export async function resolveAccounts(
     }
     let [debugLogger, getDebugMessage] = debug()
     try {
-      await resolveAccountType(ix, ROLES.PROPOSER, {debugLogger})
-      await resolveAccountType(ix, ROLES.AUTHORIZATIONS, {debugLogger})
-      await resolveAccountType(ix, ROLES.PAYER, {debugLogger})
+      let depthLimit = MAX_DEPTH_LIMIT
+      while (depthLimit > 0) {
+        await resolveAccountType(ix, ROLES.PROPOSER, depthLimit, {debugLogger})
+        await resolveAccountType(ix, ROLES.AUTHORIZATIONS, depthLimit, {
+          debugLogger,
+        })
+        await resolveAccountType(ix, ROLES.PAYER, depthLimit, {debugLogger})
+        depthLimit--
+      }
 
       await removeUnusedIxAccounts(ix, {debugLogger})
 
