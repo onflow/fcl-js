@@ -148,12 +148,12 @@ function uniqueAccountsFlatMap(accounts: InteractionAccount[]) {
   return uniqueAccountsFlatMapped
 }
 
-async function recurseResolveAccount(
+async function resolveSingleAccount(
   ix: Interaction,
   currentAccountTempId: string,
   depthLimit = MAX_DEPTH_LIMIT,
   {debugLogger}: {debugLogger: (msg?: string, indent?: number) => void}
-) {
+): Promise<[ids: string | string[], hasNewAccounts: boolean]> {
   if (depthLimit <= 0) {
     throw new Error(
       `recurseResolveAccount Error: Depth limit (${MAX_DEPTH_LIMIT}) reached. Ensure your authorization functions resolve to an account after ${MAX_DEPTH_LIMIT} resolves.`
@@ -162,7 +162,7 @@ async function recurseResolveAccount(
 
   let account = ix.accounts[currentAccountTempId]
 
-  if (!account) return null
+  if (!account) return [[], false]
 
   debugLogger(
     `account: ${account.tempId}`,
@@ -200,22 +200,25 @@ async function recurseResolveAccount(
 
       account = addAccountToIx(ix, account)
 
-      return flatResolvedAccounts
-        ? flatResolvedAccounts.map(
-            (flatResolvedAccount: InteractionAccount) =>
-              flatResolvedAccount.tempId
-          )
-        : account.tempId
+      return [
+        flatResolvedAccounts
+          ? flatResolvedAccounts.map(
+              (flatResolvedAccount: InteractionAccount) =>
+                flatResolvedAccount.tempId
+            )
+          : account.tempId,
+        true,
+      ]
     } else {
       debugLogger(
         `account: ${account.tempId} -- cache HIT`,
         Math.max(MAX_DEPTH_LIMIT - depthLimit, 0)
       )
 
-      return account.resolve
+      return [account.resolve, false]
     }
   }
-  return account.tempId
+  return [account.tempId, false]
 }
 
 const getAccountTempIDs = (rawTempIds: string | string[] | null) => {
@@ -245,18 +248,16 @@ async function resolveAccountType(
   let accountTempIDs = getAccountTempIDs(ix[type])
 
   let allResolvedAccounts: InteractionAccount[] = []
+  let hasNewAccounts = false
   for (let accountId of accountTempIDs) {
     let account = ix.accounts[accountId]
     invariant(Boolean(account), `resolveAccountType Error: account not found`)
 
-    let resolvedAccountTempIds = await recurseResolveAccount(
-      ix,
-      accountId,
-      depthLimit,
-      {
+    let [resolvedAccountTempIds, acctHasNewAccounts] =
+      await resolveSingleAccount(ix, accountId, depthLimit, {
         debugLogger,
-      }
-    )
+      })
+    hasNewAccounts = acctHasNewAccounts || hasNewAccounts
 
     resolvedAccountTempIds = Array.isArray(resolvedAccountTempIds)
       ? resolvedAccountTempIds
@@ -311,6 +312,8 @@ async function resolveAccountType(
       }
     }
   }
+
+  return hasNewAccounts
 }
 
 export async function resolveAccounts(
@@ -329,12 +332,22 @@ export async function resolveAccounts(
     let [debugLogger, getDebugMessage] = debug()
     try {
       let depthLimit = MAX_DEPTH_LIMIT
-      while (depthLimit > 0) {
-        await resolveAccountType(ix, ROLES.PROPOSER, depthLimit, {debugLogger})
-        await resolveAccountType(ix, ROLES.AUTHORIZATIONS, depthLimit, {
-          debugLogger,
-        })
-        await resolveAccountType(ix, ROLES.PAYER, depthLimit, {debugLogger})
+      let shouldContinue = true
+      while (shouldContinue) {
+        if (depthLimit <= 0) {
+          throw new Error(
+            `resolveAccounts Error: Depth limit (${MAX_DEPTH_LIMIT}) reached. Ensure your authorization functions resolve to an account after ${MAX_DEPTH_LIMIT} resolves.`
+          )
+        }
+
+        shouldContinue =
+          (await resolveAccountType(ix, ROLES.PROPOSER, depthLimit, {
+            debugLogger,
+          })) ||
+          (await resolveAccountType(ix, ROLES.AUTHORIZATIONS, depthLimit, {
+            debugLogger,
+          })) ||
+          (await resolveAccountType(ix, ROLES.PAYER, depthLimit, {debugLogger}))
         depthLimit--
       }
 
