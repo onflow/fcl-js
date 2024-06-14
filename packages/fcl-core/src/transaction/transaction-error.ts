@@ -14,7 +14,7 @@ export class TransactionError extends Error {
     if (status.statusCode === 0) return null
 
     const match = status.errorMessage.match(ERROR_CODE_REGEX)
-    const code = match ? parseInt(match[1]) : undefined
+    const code = match ? parseInt(match[1], 10) : undefined
 
     return new TransactionError(status.errorMessage || "Unknown error", code)
   }
