@@ -47,9 +47,6 @@ describe("Prepare template options for template version 1.0.0", () => {
     expect(resultMainnet.cadence).toEqual(
       "import FungibleToken from 0xf233dcee88fe0abe\n"
     )
-    expect(resultMainnet.dependencies).toEqual({
-      "0xFUNGIBLETOKENADDRESS": "0xf233dcee88fe0abe",
-    })
   })
 
   test("It prepares cadence and dependencies from template version 1.0.0 for testnet", async () => {
@@ -63,9 +60,6 @@ describe("Prepare template options for template version 1.0.0", () => {
     expect(resultTestnet.cadence).toEqual(
       "import FungibleToken from 0x9a0766d93b6608b7\n"
     )
-    expect(resultTestnet.dependencies).toEqual({
-      "0xFUNGIBLETOKENADDRESS": "0x9a0766d93b6608b7",
-    })
   })
 
   test("It fails to prepare cadence and dependencies from template version 1.0.0 for unknown network", async () => {
@@ -161,9 +155,6 @@ describe("Prepare template options for template version 1.1.0", () => {
     expect(resultMainnet.cadence).toEqual(
       "import FungibleToken from 0xf233dcee88fe0abe\n"
     )
-    expect(resultMainnet.dependencies).toEqual({
-      FungibleToken: "0xf233dcee88fe0abe",
-    })
   })
 
   test("It prepares cadence and dependencies from template version 1.1.0 for testnet", async () => {
@@ -177,9 +168,6 @@ describe("Prepare template options for template version 1.1.0", () => {
     expect(resultTestnet.cadence).toEqual(
       "import FungibleToken from 0x9a0766d93b6608b7\n"
     )
-    expect(resultTestnet.dependencies).toEqual({
-      FungibleToken: "0x9a0766d93b6608b7",
-    })
   })
 
   test("It fails to prepare cadence and dependencies from template version 1.1.0 for unknown network", async () => {

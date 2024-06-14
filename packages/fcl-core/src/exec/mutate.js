@@ -63,25 +63,24 @@ export const getMutate = ({platform}) => {
       // prettier-ignore
       const authz = await sdk.config().get("fcl.authz", currentUser().authorization)
 
-      txid = sdk.config().overload(opts.dependencies || {}, async () =>
-        // prettier-ignore
-        sdk.send([
-        sdk.transaction(opts.cadence),
+      txid = sdk
+        .send([
+          sdk.transaction(opts.cadence),
 
-        sdk.args(normalizeArgs(opts.args || [])),
+          sdk.args(normalizeArgs(opts.args || [])),
 
-        opts.limit && isNumber(opts.limit) && sdk.limit(opts.limit),
+          opts.limit && isNumber(opts.limit) && sdk.limit(opts.limit),
 
-        // opts.proposer > opts.authz > authz
-        sdk.proposer(opts.proposer || opts.authz || authz),
+          // opts.proposer > opts.authz > authz
+          sdk.proposer(opts.proposer || opts.authz || authz),
 
-        // opts.payer > opts.authz > authz
-        sdk.payer(opts.payer || opts.authz || authz),
+          // opts.payer > opts.authz > authz
+          sdk.payer(opts.payer || opts.authz || authz),
 
-        // opts.authorizations > [opts.authz > authz]
-        sdk.authorizations(opts.authorizations || [opts.authz || authz]),
-      ]).then(sdk.decode)
-      )
+          // opts.authorizations > [opts.authz > authz]
+          sdk.authorizations(opts.authorizations || [opts.authz || authz]),
+        ])
+        .then(sdk.decode)
 
       return txid
     } catch (error) {

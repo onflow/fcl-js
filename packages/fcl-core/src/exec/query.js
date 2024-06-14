@@ -35,12 +35,11 @@ export async function query(opts = {}) {
   await preQuery(opts)
   opts = await prepTemplateOpts(opts)
 
-  return sdk.config().overload(opts.dependencies || {}, async () =>
-    // prettier-ignore
-    sdk.send([
+  return sdk
+    .send([
       sdk.script(opts.cadence),
       sdk.args(normalizeArgs(opts.args || [])),
-      opts.limit && typeof opts.limit === "number" && sdk.limit(opts.limit)
-    ]).then(sdk.decode)
-  )
+      opts.limit && typeof opts.limit === "number" && sdk.limit(opts.limit),
+    ])
+    .then(sdk.decode)
 }
