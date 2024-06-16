@@ -154,7 +154,7 @@ async function resolveSingleAccount(
   currentAccountTempId: string,
   depthLimit = MAX_DEPTH_LIMIT,
   {debugLogger}: {debugLogger: (msg?: string, indent?: number) => void}
-): Promise<string[]> {
+): Promise<[string[], boolean]> {
   if (depthLimit <= 0) {
     throw new Error(
       `recurseResolveAccount Error: Depth limit (${MAX_DEPTH_LIMIT}) reached. Ensure your authorization functions resolve to an account after ${MAX_DEPTH_LIMIT} resolves.`
@@ -163,7 +163,7 @@ async function resolveSingleAccount(
 
   let account = ix.accounts[currentAccountTempId]
 
-  if (!account) return []
+  if (!account) return [[], false]
 
   debugLogger(
     `account: ${account.tempId}`,
@@ -201,19 +201,23 @@ async function resolveSingleAccount(
 
       account = addAccountToIx(ix, account)
 
-      return flatResolvedAccounts.map(
-        (flatResolvedAccount: InteractionAccount) => flatResolvedAccount.tempId
-      )
+      return [
+        flatResolvedAccounts.map(
+          (flatResolvedAccount: InteractionAccount) =>
+            flatResolvedAccount.tempId
+        ),
+        true,
+      ]
     } else {
       debugLogger(
         `account: ${account.tempId} -- cache HIT`,
         Math.max(MAX_DEPTH_LIMIT - depthLimit, 0)
       )
 
-      return account.resolve
+      return [account.resolve, false]
     }
   }
-  return []
+  return [account.tempId ? [account.tempId] : [], false]
 }
 
 const getAccountTempIDs = (rawTempIds: string | string[] | null) => {
@@ -231,8 +235,8 @@ async function replaceRoles(
   // Replace roles in the interaction with any resolved accounts
   // e.g. payer -> [oldAccountTempId, anotherId] => payer -> [newAccountTempId, anotherId]
   for (let role of Object.values(ROLES)) {
-    if (Array.isArray(ix[role])) {
-      ix[role] = (ix[role] as string[]).reduce((acc, acctTempId) => {
+    if (role === ROLES.AUTHORIZATIONS || role === ROLES.PAYER) {
+      ix[role] = getAccountTempIDs(ix[role]).reduce((acc, acctTempId) => {
         if (acctTempId === oldAccountTempId) {
           return acc.concat(
             ...newAccounts
@@ -247,13 +251,16 @@ async function replaceRoles(
         }
         return acc.concat(acctTempId)
       }, [] as string[]) as any
-    } else if (ix[role] === oldAccountTempId && ix[role] != null) {
-      if (newAccounts.length > 1) {
-        console.warn(
-          `replaceRoles Warning: Multiple accounts resolved for role ${role}. Only the first account will be used.`
+    } else if (role === ROLES.PROPOSER) {
+      const proposerAccts = newAccounts.filter(x => x.role.proposer)
+
+      if (proposerAccts.length > 1) {
+        throw new Error(
+          `replaceRoles Error: Multiple proposer keys were resolved, but only one is allowed`
         )
       }
-      ix[role] = newAccounts[0].tempId as any
+
+      ix[role] = proposerAccts[0]?.tempId ?? ix[role]
     }
   }
 }
@@ -274,26 +281,25 @@ async function resolveAccountsByIds(
     let account = ix.accounts[accountId]
     invariant(Boolean(account), `resolveAccountType Error: account not found`)
 
-    const resolvedAccountTempIds = await resolveSingleAccount(
-      ix,
-      accountId,
-      depthLimit,
-      {
+    const [resolvedAccountTempIds, foundNewAccounts] =
+      await resolveSingleAccount(ix, accountId, depthLimit, {
         debugLogger,
-      }
-    )
+      })
 
-    const resolvedAccounts: InteractionAccount[] = resolvedAccountTempIds.map(
-      (resolvedAccountTempId: string) => ix.accounts[resolvedAccountTempId]
-    )
+    // If new accounts were resolved, add them to the set so they can be explored next iteration
+    if (foundNewAccounts) {
+      const resolvedAccounts: InteractionAccount[] = resolvedAccountTempIds.map(
+        (resolvedAccountTempId: string) => ix.accounts[resolvedAccountTempId]
+      )
 
-    const flatResolvedAccounts = uniqueAccountsFlatMap(resolvedAccounts)
+      const flatResolvedAccounts = uniqueAccountsFlatMap(resolvedAccounts)
 
-    // Add new tempIds to the set so they can be used next iteration
-    flatResolvedAccounts.forEach(x => newTempIds.add(x.tempId))
+      // Add new tempIds to the set so they can be used next iteration
+      flatResolvedAccounts.forEach(x => newTempIds.add(x.tempId))
 
-    // Update any roles in the interaction based on the new accounts
-    replaceRoles(ix, accountId, flatResolvedAccounts)
+      // Update any roles in the interaction based on the new accounts
+      replaceRoles(ix, accountId, flatResolvedAccounts)
+    }
   }
 
   // Ensure all payers are of the same account
