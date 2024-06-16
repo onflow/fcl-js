@@ -332,28 +332,24 @@ export async function resolveAccounts(
     }
     let [debugLogger, getDebugMessage] = debug()
     try {
+      // BFS, resolving one level of accounts at a time
       let depthLimit = MAX_DEPTH_LIMIT
-      let accountTempIds = new Set([
+      let frontier = new Set([
         ...getAccountTempIDs(ix[ROLES.PAYER]),
         ...getAccountTempIDs(ix[ROLES.PROPOSER]),
         ...getAccountTempIDs(ix[ROLES.AUTHORIZATIONS]),
       ])
 
-      while (accountTempIds.size > 0) {
+      while (frontier.size > 0) {
         if (depthLimit <= 0) {
           throw new Error(
             `resolveAccounts Error: Depth limit (${MAX_DEPTH_LIMIT}) reached. Ensure your authorization functions resolve to an account after ${MAX_DEPTH_LIMIT} resolves.`
           )
         }
 
-        accountTempIds = await resolveAccountsByIds(
-          ix,
-          accountTempIds,
-          depthLimit,
-          {
-            debugLogger,
-          }
-        )
+        frontier = await resolveAccountsByIds(ix, frontier, depthLimit, {
+          debugLogger,
+        })
         depthLimit--
       }
 
