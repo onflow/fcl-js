@@ -148,12 +148,13 @@ function uniqueAccountsFlatMap(accounts: InteractionAccount[]) {
   return uniqueAccountsFlatMapped
 }
 
+// Resolve single account, returns new account tempIds (if they exist)
 async function resolveSingleAccount(
   ix: Interaction,
   currentAccountTempId: string,
   depthLimit = MAX_DEPTH_LIMIT,
   {debugLogger}: {debugLogger: (msg?: string, indent?: number) => void}
-): Promise<[ids: string | string[], hasNewAccounts: boolean]> {
+): Promise<string[]> {
   if (depthLimit <= 0) {
     throw new Error(
       `recurseResolveAccount Error: Depth limit (${MAX_DEPTH_LIMIT}) reached. Ensure your authorization functions resolve to an account after ${MAX_DEPTH_LIMIT} resolves.`
@@ -162,7 +163,7 @@ async function resolveSingleAccount(
 
   let account = ix.accounts[currentAccountTempId]
 
-  if (!account) return [[], false]
+  if (!account) return []
 
   debugLogger(
     `account: ${account.tempId}`,
@@ -200,25 +201,19 @@ async function resolveSingleAccount(
 
       account = addAccountToIx(ix, account)
 
-      return [
-        flatResolvedAccounts
-          ? flatResolvedAccounts.map(
-              (flatResolvedAccount: InteractionAccount) =>
-                flatResolvedAccount.tempId
-            )
-          : account.tempId,
-        true,
-      ]
+      return flatResolvedAccounts.map(
+        (flatResolvedAccount: InteractionAccount) => flatResolvedAccount.tempId
+      )
     } else {
       debugLogger(
         `account: ${account.tempId} -- cache HIT`,
         Math.max(MAX_DEPTH_LIMIT - depthLimit, 0)
       )
 
-      return [account.resolve, false]
+      return account.resolve
     }
   }
-  return [account.tempId, false]
+  return []
 }
 
 const getAccountTempIDs = (rawTempIds: string | string[] | null) => {
@@ -228,9 +223,44 @@ const getAccountTempIDs = (rawTempIds: string | string[] | null) => {
   return Array.isArray(rawTempIds) ? rawTempIds : [rawTempIds]
 }
 
-async function resolveAccountType(
+async function replaceRoles(
   ix: Interaction,
-  type: ROLES,
+  oldAccountTempId: string,
+  newAccounts: InteractionAccount[]
+) {
+  // Replace roles in the interaction with any resolved accounts
+  // e.g. payer -> [oldAccountTempId, anotherId] => payer -> [newAccountTempId, anotherId]
+  for (let role of Object.values(ROLES)) {
+    if (Array.isArray(ix[role])) {
+      ix[role] = (ix[role] as string[]).reduce((acc, acctTempId) => {
+        if (acctTempId === oldAccountTempId) {
+          return acc.concat(
+            ...newAccounts
+              .filter(x => {
+                return (
+                  (role === ROLES.PAYER && x.role.payer) ||
+                  (role === ROLES.AUTHORIZATIONS && x.role.authorizer)
+                )
+              })
+              .map(acct => acct.tempId)
+          )
+        }
+        return acc.concat(acctTempId)
+      }, [] as string[]) as any
+    } else if (ix[role] === oldAccountTempId && ix[role] != null) {
+      if (newAccounts.length > 1) {
+        console.warn(
+          `replaceRoles Warning: Multiple accounts resolved for role ${role}. Only the first account will be used.`
+        )
+      }
+      ix[role] = newAccounts[0].tempId as any
+    }
+  }
+}
+
+async function resolveAccountsByIds(
+  ix: Interaction,
+  accountTempIds: Set<string>,
   depthLimit = MAX_DEPTH_LIMIT,
   {debugLogger}: {debugLogger: (msg?: string, indent?: number) => void}
 ) {
@@ -238,82 +268,47 @@ async function resolveAccountType(
     ix && typeof ix === "object",
     "resolveAccountType Error: ix not defined"
   )
-  invariant(
-    type === ROLES.PAYER ||
-      type === ROLES.PROPOSER ||
-      type === ROLES.AUTHORIZATIONS,
-    "resolveAccountType Error: type must be 'payer', 'proposer' or 'authorizations'"
-  )
 
-  let accountTempIDs = getAccountTempIDs(ix[type])
-
-  let allResolvedAccounts: InteractionAccount[] = []
-  let hasNewAccounts = false
-  for (let accountId of accountTempIDs) {
+  let newTempIds = new Set<string>()
+  for (let accountId of accountTempIds) {
     let account = ix.accounts[accountId]
     invariant(Boolean(account), `resolveAccountType Error: account not found`)
 
-    let [resolvedAccountTempIds, acctHasNewAccounts] =
-      await resolveSingleAccount(ix, accountId, depthLimit, {
+    const resolvedAccountTempIds = await resolveSingleAccount(
+      ix,
+      accountId,
+      depthLimit,
+      {
         debugLogger,
-      })
-    hasNewAccounts = acctHasNewAccounts || hasNewAccounts
+      }
+    )
 
-    resolvedAccountTempIds = Array.isArray(resolvedAccountTempIds)
-      ? resolvedAccountTempIds
-      : [resolvedAccountTempIds]
-
-    let resolvedAccounts: InteractionAccount[] = resolvedAccountTempIds.map(
+    const resolvedAccounts: InteractionAccount[] = resolvedAccountTempIds.map(
       (resolvedAccountTempId: string) => ix.accounts[resolvedAccountTempId]
     )
 
-    let flatResolvedAccounts = uniqueAccountsFlatMap(resolvedAccounts)
+    const flatResolvedAccounts = uniqueAccountsFlatMap(resolvedAccounts)
 
-    allResolvedAccounts = allResolvedAccounts.concat(flatResolvedAccounts)
-  }
+    // Add new tempIds to the set so they can be used next iteration
+    flatResolvedAccounts.forEach(x => newTempIds.add(x.tempId))
 
-  invariant(
-    allResolvedAccounts.length > 0 || type === ROLES.AUTHORIZATIONS,
-    `resolveAccountType Error: no ${type} accounts were found`
-  )
-
-  if (type === ROLES.PAYER) {
-    allResolvedAccounts = allResolvedAccounts.filter(
-      acct => acct.role.payer === true
-    )
+    // Update any roles in the interaction based on the new accounts
+    replaceRoles(ix, accountId, flatResolvedAccounts)
   }
-  if (type === ROLES.PROPOSER) {
-    allResolvedAccounts = allResolvedAccounts.filter(
-      acct => acct.role.proposer === true
-    )
-  }
-  if (type === ROLES.AUTHORIZATIONS) {
-    allResolvedAccounts = allResolvedAccounts.filter(
-      acct => acct.role.authorizer === true
-    )
-  }
-
-  ix[type] = (
-    Array.isArray(ix[type])
-      ? [...new Set(allResolvedAccounts.map(acct => acct.tempId))]
-      : allResolvedAccounts[0].tempId
-  ) as string & string[]
 
   // Ensure all payers are of the same account
-  if (type === ROLES.PAYER) {
-    let address
-    for (const payerTempID of ix[ROLES.PAYER]) {
-      let pAcct = ix.accounts[payerTempID]
-      if (!address) address = pAcct.addr
-      else if (address !== pAcct.addr) {
-        throw new Error(
-          "resolveAccountType Error: payers from different accounts detected"
-        )
-      }
+  let payerAddress
+  for (const payerTempID of ix[ROLES.PAYER]) {
+    let pAcct = ix.accounts[payerTempID]
+    if (!payerAddress) payerAddress = pAcct.addr
+    else if (payerAddress !== pAcct.addr) {
+      throw new Error(
+        "resolveAccountType Error: payers from different accounts detected"
+      )
     }
   }
 
-  return hasNewAccounts
+  return newTempIds
 }
 
 export async function resolveAccounts(
@@ -332,26 +327,40 @@ export async function resolveAccounts(
     let [debugLogger, getDebugMessage] = debug()
     try {
       let depthLimit = MAX_DEPTH_LIMIT
-      let shouldContinue = true
-      while (shouldContinue) {
+      let accountTempIds = new Set([
+        ...getAccountTempIDs(ix[ROLES.PAYER]),
+        ...getAccountTempIDs(ix[ROLES.PROPOSER]),
+        ...getAccountTempIDs(ix[ROLES.AUTHORIZATIONS]),
+      ])
+
+      while (accountTempIds.size > 0) {
         if (depthLimit <= 0) {
           throw new Error(
             `resolveAccounts Error: Depth limit (${MAX_DEPTH_LIMIT}) reached. Ensure your authorization functions resolve to an account after ${MAX_DEPTH_LIMIT} resolves.`
           )
         }
 
-        shouldContinue =
-          (await resolveAccountType(ix, ROLES.PROPOSER, depthLimit, {
+        accountTempIds = await resolveAccountsByIds(
+          ix,
+          accountTempIds,
+          depthLimit,
+          {
             debugLogger,
-          })) ||
-          (await resolveAccountType(ix, ROLES.AUTHORIZATIONS, depthLimit, {
-            debugLogger,
-          })) ||
-          (await resolveAccountType(ix, ROLES.PAYER, depthLimit, {debugLogger}))
+          }
+        )
         depthLimit--
       }
 
       await removeUnusedIxAccounts(ix, {debugLogger})
+
+      // Ensure at least one account for each role is resolved (except for authorizations)
+      for (const role of Object.values(ROLES)) {
+        invariant(
+          getAccountTempIDs(ix[role]).length > 0 ||
+            role === ROLES.AUTHORIZATIONS,
+          `resolveAccountType Error: no accounts for role "${role}" found`
+        )
+      }
 
       if (opts.enableDebug) {
         console.debug(getDebugMessage())
