@@ -29,7 +29,7 @@ export const createSignableVoucher = (ix: Interaction) => {
       .reduce((prev: (string | null)[], current) => {
         return prev.find(item => item === current) ? prev : [...prev, current]
       }, [])
-    return authorizations?.[0] ? authorizations : []
+    return authorizations
   }
 
   const buildInsideSigners = () =>
