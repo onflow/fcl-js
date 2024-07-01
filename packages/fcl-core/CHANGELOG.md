@@ -1,5 +1,11 @@
 # @onflow/fcl
 
+## 1.10.1
+
+### Patch Changes
+
+- [#1911](https://github.com/onflow/fcl-js/pull/1911) [`6ca1353e`](https://github.com/onflow/fcl-js/commit/6ca1353e2d0c6ad760b7a03da99c8b2b56b48807) Thanks [@jribbink](https://github.com/jribbink)! - Remove unnecessary config.overload call in query/mutate functions (causes unnecessary WalletConnect errors to show in console)
+
 ## 1.10.0
 
 ### Minor Changes
