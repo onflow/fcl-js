@@ -60,7 +60,7 @@ export interface Interaction {
   message: {
     cadence: string | null
     refBlock: string | null
-    computeLimit: string | null
+    computeLimit: number | null
     proposer: string | null
     payer: string | null
     authorizations: string[]
