@@ -214,7 +214,7 @@ export interface TransactionProposalKey {
 }
 export interface Transaction {
   cadence: string
-  refBlock?: string
+  refBlock: string
   computeLimit: number
   arguments: VoucherArgument[]
   proposalKey: TransactionProposalKey
@@ -226,7 +226,7 @@ export interface Transaction {
 
 export interface Voucher {
   cadence: string
-  refBlock?: string
+  refBlock: string
   computeLimit: number
   arguments: VoucherArgument[]
   proposalKey: VoucherProposalKey
