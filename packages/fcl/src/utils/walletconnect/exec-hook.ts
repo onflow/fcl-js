@@ -9,22 +9,22 @@ const AbortController =
   globalThis.AbortController || require("abort-controller")
 
 // Defines the execStrategy hook for Discovery Service to enable the WalletConnect bypass
-export async function execStrategyHook(cfg: any) {
+export async function execStrategyHook(opts: any) {
   // TODO: Should we check the service type/name here?
-  const {body, abortSignal: baseAbortSignal} = cfg
+  const {body, abortSignal: baseAbortSignal} = opts
 
   // Generate a WC URI for discovery config
-  const {uri: walletConnectUri, approval} = await createSessionProposal({
+  const {uri: wcUri, approval} = await createSessionProposal({
     client: await getSignClient(),
   })
 
   // Add WC URI to discovery config
   const discoveryConfig = {
-    ...cfg,
+    ...opts.config,
     client: {
-      ...cfg.client,
-      walletConnect: {
-        uri: walletConnectUri,
+      ...opts.config.client,
+      walletconnect: {
+        uri: wcUri,
       },
     },
   }
@@ -36,7 +36,7 @@ export async function execStrategyHook(cfg: any) {
   const res = await Promise.race([
     // Execute base discovery request
     _execStrategy({
-      ...cfg,
+      ...opts,
       config: discoveryConfig,
       abortSignal: abortController.signal,
     }),
@@ -49,10 +49,10 @@ export async function execStrategyHook(cfg: any) {
         client: await getSignClient(),
         cleanup: () => {},
       }))(),
-  ])
-
-  // Abort the other request
-  abortController.abort()
+  ]).finally(() => {
+    // Teardown
+    abortController.abort()
+  })
 
   return res
 }

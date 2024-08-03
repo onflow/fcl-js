@@ -1,4 +1,4 @@
-import fclCore from "@onflow/fcl-core"
+import * as fclCore from "@onflow/fcl-core"
 import {FLOW_METHODS} from "./constants"
 import {SignClient} from "@walletconnect/sign-client/dist/types/client"
 import {PairingTypes, SessionTypes} from "@walletconnect/types"
