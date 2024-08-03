@@ -8,6 +8,7 @@ import {getSignClient} from "./loader"
 const AbortController =
   globalThis.AbortController || require("abort-controller")
 
+// Defines the execStrategy hook for Discovery Service to enable the WalletConnect bypass
 export async function execStrategyHook(cfg: any) {
   // TODO: Should we check the service type/name here?
   const {body, abortSignal: baseAbortSignal} = cfg
