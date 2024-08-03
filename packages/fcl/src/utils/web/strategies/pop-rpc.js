@@ -3,12 +3,12 @@ import {pop} from "./utils/pop"
 import {normalizePollingResponse} from "@onflow/fcl-core"
 import {VERSION} from "../../../VERSION"
 
-export function execPopRPC({service, body, config, opts}) {
+export function execPopRPC({service, body, config, opts, abortSignal}) {
   return new Promise((resolve, reject) => {
     const id = uid()
     const {redir, includeOlderJsonRpcCall} = opts
 
-    pop(service, {
+    const {close} = pop(service, {
       async onReady(_, {send}) {
         try {
           send({
@@ -120,5 +120,16 @@ export function execPopRPC({service, body, config, opts}) {
         reject(`Declined: Externally Halted`)
       },
     })
+
+    if (abortSignal) {
+      if (abortSignal.aborted) {
+        reject(`Declined: Aborted`)
+        close()
+      }
+      abortSignal.addEventListener("abort", () => {
+        reject(`Declined: Aborted`)
+        close()
+      })
+    }
   })
 }

@@ -15,10 +15,10 @@
   "files": [
     "dist"
   ],
-  "source": "src/fcl-wc.ts",
-  "main": "dist/fcl-wc.js",
-  "module": "dist/fcl-wc.module.mjs",
-  "types": "types/fcl-wc.d.ts",
+  "source": "src/index.ts",
+  "main": "dist/index.js",
+  "module": "dist/index.module.mjs",
+  "types": "types/index.d.ts",
   "scripts": {
     "prepublishOnly": "npm test && npm run build",
     "test": "jest",

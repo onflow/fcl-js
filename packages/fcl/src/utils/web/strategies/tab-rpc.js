@@ -3,12 +3,12 @@ import {tab} from "./utils/tab"
 import {normalizePollingResponse} from "@onflow/fcl-core"
 import {VERSION} from "../../../VERSION"
 
-export function execTabRPC({service, body, config, opts}) {
+export function execTabRPC({service, body, config, opts, abortSignal}) {
   return new Promise((resolve, reject) => {
     const id = uid()
     const {redir, includeOlderJsonRpcCall} = opts
 
-    tab(service, {
+    const {close} = tab(service, {
       async onReady(_, {send}) {
         try {
           send({
@@ -120,5 +120,16 @@ export function execTabRPC({service, body, config, opts}) {
         reject(`Declined: Externally Halted`)
       },
     })
+
+    if (abortSignal) {
+      if (abortSignal.aborted) {
+        close()
+        reject(`Declined: Aborted`)
+      }
+      abortSignal.addEventListener("abort", () => {
+        close()
+        reject(`Declined: Aborted`)
+      })
+    }
   })
 }

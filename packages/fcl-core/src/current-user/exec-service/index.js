@@ -5,9 +5,21 @@ import {getChainId} from "../../utils"
 import {VERSION} from "../../VERSION"
 import {configLens} from "../../default-config"
 import {checkWalletConnectEnabled} from "./wc-check"
-const execStrategy = async ({service, body, config, opts}) => {
+
+// TODO: make sure installed everywhere, and the require is OK
+const AbortController =
+  globalThis.AbortController || require("abort-controller")
+
+// TODO: service registry would be cool, but tough because how to know when it's discovery?
+export const execStrategy = async ({
+  service,
+  body,
+  config,
+  opts,
+  abortSignal,
+}) => {
   const strategy = getServiceRegistry().getStrategy(service.method)
-  return strategy({service, body, config, opts})
+  return strategy({service, body, config, opts, abortSignal})
 }
 
 export async function execService({
@@ -16,6 +28,8 @@ export async function execService({
   config = {},
   opts = {},
   platform,
+  abortSignal = new AbortController().signal,
+  execStrategy: _execStrategy,
 }) {
   // Notify the developer if WalletConnect is not enabled
   checkWalletConnectEnabled()
@@ -35,12 +49,14 @@ export async function execService({
   }
 
   try {
-    const res = await execStrategy({
+    const res = (_execStrategy || execStrategy)({
       service,
       body: msg,
       config: execConfig,
       opts,
+      abortSignal,
     })
+
     if (res.status === "REDIRECT") {
       invariant(
         service.type === res.data.type,
@@ -51,6 +67,7 @@ export async function execService({
         msg,
         config: execConfig,
         opts,
+        abortSignal,
       })
     } else {
       return res

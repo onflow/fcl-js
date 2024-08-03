@@ -1,11 +1,10 @@
-import {invariant} from "@onflow/util-invariant"
 import {extension} from "./utils/extension"
 import {normalizePollingResponse} from "@onflow/fcl-core"
 import {VERSION} from "../../../VERSION"
 
-export function execExtRPC({service, body, config, opts}) {
+export function execExtRPC({service, body, config, opts, abortSignal}) {
   return new Promise((resolve, reject) => {
-    extension(service, {
+    const {close} = extension(service, {
       async onReady(_, {send}) {
         try {
           send({
@@ -60,5 +59,16 @@ export function execExtRPC({service, body, config, opts}) {
         reject(`Declined: Externally Halted`)
       },
     })
+
+    if (abortSignal) {
+      if (abortSignal.aborted) {
+        close()
+        reject(`Declined: Aborted`)
+      }
+      abortSignal.addEventListener("abort", () => {
+        close()
+        reject(`Declined: Aborted`)
+      })
+    }
   })
 }

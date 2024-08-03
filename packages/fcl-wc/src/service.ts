@@ -3,7 +3,11 @@ import {log, LEVELS} from "@onflow/util-logger"
 import {isMobile, isIOS} from "./utils"
 import {FLOW_METHODS, REQUEST_TYPES} from "./constants"
 import {SignClient} from "@walletconnect/sign-client/dist/types/client"
-import * as fclCore from "@onflow/fcl-core"
+import {createSessionProposal, makeSessionData, request} from "./session"
+
+//TODO: wrong type
+type WalletConnectModalType =
+  typeof import("@walletconnect/modal").WalletConnectModal
 
 export const SERVICE_PLUGIN_NAME = "fcl-plugin-service-walletconnect"
 export const WC_SERVICE_METHOD = "WC/RPC"
@@ -29,7 +33,7 @@ export const makeServicePlugin = (
   type: "discovery-service",
   serviceStrategy: {
     method: WC_SERVICE_METHOD,
-    exec: makeExec(
+    exec: makeDefaultExec(
       client,
       opts,
       import("@walletconnect/modal").then(m => m.WalletConnectModal)
@@ -38,19 +42,28 @@ export const makeServicePlugin = (
   services: [],
 })
 
-const makeExec = (
+const makeDefaultExec = (
   clientPromise: Promise<SignClient | null>,
   {wcRequestHook, pairingModalOverride}: any,
-  WalletConnectModal: Promise<
-    typeof import("@walletconnect/modal").WalletConnectModal
-  >
+  WalletConnectModal: Promise<WalletConnectModalType>
 ) => {
-  return ({service, body, opts}: {service: any; body: any; opts: any}) => {
+  // TODO: add abortSignal
+  return ({
+    service,
+    body,
+    opts,
+    abortSignal,
+  }: {
+    service: any
+    body: any
+    opts: any
+    abortSignal: any
+  }) => {
     return new Promise(async (resolve, reject) => {
       const client = await clientPromise
       invariant(!!client, "WalletConnect is not initialized")
 
-      let session, pairing, windowRef: any
+      let session: any, pairing: any, windowRef: any
       const method = service.endpoint
       const appLink = validateAppLink(service)
       const pairings = client.pairing.getAll({active: true})
@@ -101,33 +114,18 @@ const makeExec = (
         openDeepLink()
       }
 
-      const [chainId, addr, address] = makeSessionData(session)
-      const data = JSON.stringify({...body, addr, address})
-
-      try {
-        const result = await client.request({
-          topic: session.topic,
-          chainId,
-          request: {
-            method,
-            params: [data],
-          },
-        })
-        onResponse(result)
-      } catch (error) {
-        if (error instanceof Error) {
-          log({
-            title: `${error.name} Error on WalletConnect client ${method} request`,
-            message: error.message,
-            level: LEVELS.error,
-          })
-        }
-        reject(`Declined: Externally Halted`)
-      } finally {
-        if (windowRef && !windowRef.closed) {
-          windowRef.close()
-        }
-      }
+      // Make request
+      await request({
+        method,
+        body,
+        session,
+        client,
+        cleanup: () => {
+          if (windowRef && !windowRef.closed) {
+            windowRef.close()
+          }
+        },
+      })
 
       function validateAppLink({uid}: {uid: string}) {
         if (!(uid && /^(ftp|http|https):\/\/[^ "]+$/.test(uid))) {
@@ -169,53 +167,6 @@ const makeExec = (
         }
       }
 
-      function makeSessionData(session: any) {
-        const [namespace, reference, address] = Object.values<any>(
-          session.namespaces
-        )
-          .map(namespace => namespace.accounts)
-          .flat()
-          .filter(account => account.startsWith("flow:"))[0]
-          .split(":")
-
-        const chainId = `${namespace}:${reference}`
-        const addr = address
-        return [chainId, addr, address]
-      }
-
-      function onResponse(resp: any) {
-        try {
-          if (typeof resp !== "object") return
-
-          switch (resp.status) {
-            case "APPROVED":
-              resolve(resp.data)
-              break
-
-            case "DECLINED":
-              reject(`Declined: ${resp.reason || "No reason supplied"}`)
-              break
-
-            case "REDIRECT":
-              resolve(resp)
-              break
-
-            default:
-              reject(`Declined: No reason supplied`)
-              break
-          }
-        } catch (error) {
-          if (error instanceof Error) {
-            log({
-              title: `${error.name} "WC/RPC onResponse error"`,
-              message: error.message,
-              level: LEVELS.error,
-            })
-          }
-          throw error
-        }
-      }
-
       function onClose() {
         reject(`Declined: Externally Halted`)
       }
@@ -223,11 +174,8 @@ const makeExec = (
   }
 }
 
-function connectWc(
-  WalletConnectModal: Promise<
-    typeof import("@walletconnect/modal").WalletConnectModal
-  >
-) {
+// Connect to WalletConnect directly from the browser via deep link or WalletConnectModal
+function connectWc(WalletConnectModal: Promise<WalletConnectModalType>) {
   return async ({
     service,
     onClose,
@@ -249,38 +197,21 @@ function connectWc(
     wcRequestHook: any
     pairingModalOverride: any
   }) => {
-    const network = await fclCore.getChainId()
-
-    const requiredNamespaces = {
-      flow: {
-        methods: [
-          FLOW_METHODS.FLOW_AUTHN,
-          FLOW_METHODS.FLOW_PRE_AUTHZ,
-          FLOW_METHODS.FLOW_AUTHZ,
-          FLOW_METHODS.FLOW_USER_SIGN,
-        ],
-        chains: [`flow:${network}`],
-        events: ["chainChanged", "accountsChanged"],
-      },
-    }
-
+    const projectId = client.opts?.projectId
     invariant(
-      !!client.opts?.projectId,
+      !!projectId,
       "Cannot establish connection, WalletConnect projectId is undefined"
     )
 
-    const projectId = client.opts?.projectId
-    const walletConnectModal = new (await WalletConnectModal)({
-      projectId,
-      walletConnectVersion: 2,
-    })
+    let _uri: string | null = null,
+      walletConnectModal: any
 
     try {
-      const {uri, approval} = await client.connect({
-        pairingTopic: pairing?.topic,
-        requiredNamespaces,
+      const {uri, approval} = await createSessionProposal({
+        client,
+        existingPairing: pairing,
       })
-      var _uri = uri
+      _uri = uri
 
       if (wcRequestHook && wcRequestHook instanceof Function) {
         wcRequestHook({
@@ -293,17 +224,16 @@ function connectWc(
         })
       }
 
-      invariant(
-        !!uri,
-        "Cannot establish connection, WalletConnect URI is undefined"
-      )
-
       if (isMobile()) {
         const queryString = new URLSearchParams({uri: uri}).toString()
         let url = pairing == null ? appLink + "?" + queryString : appLink
         windowRef.location.href = url
       } else if (!pairing) {
         if (!pairingModalOverride) {
+          walletConnectModal = new (await WalletConnectModal)({
+            projectId,
+            walletConnectVersion: 2,
+          })
           walletConnectModal.openModal({uri, onClose})
         } else {
           pairingModalOverride(uri, onClose)
@@ -329,7 +259,7 @@ function connectWc(
       if (windowRef && !windowRef.closed) {
         windowRef.close()
       }
-      walletConnectModal.closeModal()
+      walletConnectModal?.closeModal()
     }
   }
 }

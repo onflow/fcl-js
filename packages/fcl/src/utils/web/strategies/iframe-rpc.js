@@ -3,12 +3,12 @@ import {frame} from "./utils/frame"
 import {normalizePollingResponse} from "@onflow/fcl-core"
 import {VERSION} from "../../../VERSION"
 
-export function execIframeRPC({service, body, config, opts}) {
+export function execIframeRPC({service, body, config, opts, abortSignal}) {
   return new Promise((resolve, reject) => {
     const id = uid()
     const includeOlderJsonRpcCall = opts.includeOlderJsonRpcCall
 
-    frame(service, {
+    const {close} = frame(service, {
       async onReady(_, {send}) {
         try {
           send({
@@ -124,5 +124,16 @@ export function execIframeRPC({service, body, config, opts}) {
         reject(`Declined: Externally Halted`)
       },
     })
+
+    if (abortSignal) {
+      if (abortSignal.aborted) {
+        reject(`Declined: Aborted`)
+        close()
+      }
+      abortSignal.addEventListener("abort", () => {
+        reject(`Declined: Aborted`)
+        close()
+      })
+    }
   })
 }

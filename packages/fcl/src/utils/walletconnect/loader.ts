@@ -3,8 +3,9 @@ import {pluginRegistry} from "@onflow/fcl-core"
 import {invariant} from "@onflow/util-invariant"
 import * as fclWc from "@onflow/fcl-wc"
 import {CoreTypes} from "@walletconnect/types"
+import {isServer} from "./util"
 
-const isServer = typeof window === "undefined"
+let client: Promise<any | null> = Promise.resolve(null)
 
 const getMetadata = (config: {
   "app.detail.title": string | undefined | null
@@ -95,10 +96,17 @@ ${lastConfig}`
     // We must lazy load the plugin to avoid race conditions
     // where the developer attempts to use the plugin before
     // our loader applies the configuration
-    const {FclWcServicePlugin} = fclWc.initLazy({
+    const {clientPromise: _clientPromise, FclWcServicePlugin} = fclWc.initLazy({
       projectId,
       metadata: getMetadata(wcConfig),
     })
     pluginRegistry.add([FclWcServicePlugin])
+
+    // Assign the client to the global variable
+    client = _clientPromise
   })
+}
+
+export function getSignClient() {
+  return client
 }
