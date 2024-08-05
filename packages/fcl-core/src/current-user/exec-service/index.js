@@ -6,20 +6,19 @@ import {VERSION} from "../../VERSION"
 import {configLens} from "../../default-config"
 import {checkWalletConnectEnabled} from "./wc-check"
 
-// TODO: make sure installed everywhere, and the require is OK
 const AbortController =
   globalThis.AbortController || require("abort-controller")
 
-// TODO: service registry would be cool, but tough because how to know when it's discovery?
 export const execStrategy = async ({
   service,
   body,
   config,
-  opts,
   abortSignal,
+  ipcController,
+  opts,
 }) => {
   const strategy = getServiceRegistry().getStrategy(service.method)
-  return strategy({service, body, config, opts, abortSignal})
+  return strategy({service, body, config, abortSignal, ipcController, opts})
 }
 
 export async function execService({

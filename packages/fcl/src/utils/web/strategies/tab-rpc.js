@@ -3,12 +3,20 @@ import {tab} from "./utils/tab"
 import {normalizePollingResponse} from "@onflow/fcl-core"
 import {VERSION} from "../../../VERSION"
 
-export function execTabRPC({service, body, config, abortSignal, opts}) {
+export function execTabRPC({
+  service,
+  body,
+  config,
+  abortSignal,
+  ipcController,
+  opts,
+}) {
   return new Promise((resolve, reject) => {
     const id = uid()
     const {redir, includeOlderJsonRpcCall} = opts
 
     const {close} = tab(service, {
+      ipcController,
       async onReady(_, {send}) {
         try {
           send({

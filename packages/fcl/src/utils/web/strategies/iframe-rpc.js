@@ -3,10 +3,18 @@ import {frame} from "./utils/frame"
 import {normalizePollingResponse} from "@onflow/fcl-core"
 import {VERSION} from "../../../VERSION"
 
-export function execIframeRPC({service, body, config, opts, abortSignal}) {
+export function execIframeRPC({
+  service,
+  body,
+  config,
+  ipcController,
+  abortSignal,
+  opts,
+}) {
   return new Promise((resolve, reject) => {
     const id = uid()
     const includeOlderJsonRpcCall = opts.includeOlderJsonRpcCall
+    let ipc = null
 
     const {close} = frame(service, {
       async onReady(_, {send}) {
@@ -49,6 +57,15 @@ export function execIframeRPC({service, body, config, opts, abortSignal}) {
               },
             })
           }
+
+          ipc = ipcController.connect({
+            onMessage: msg => {
+              send({
+                type: "FCL:VIEW:CUSTOM_IPC",
+                payload: msg,
+              })
+            },
+          })
         } catch (error) {
           throw error
         }
@@ -122,6 +139,10 @@ export function execIframeRPC({service, body, config, opts, abortSignal}) {
 
       onClose() {
         reject(`Declined: Externally Halted`)
+      },
+
+      onCustomIpc(msg) {
+        ipc?.send(msg)
       },
     })
 

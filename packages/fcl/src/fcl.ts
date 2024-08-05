@@ -67,7 +67,7 @@ import {getMutate, getCurrentUser, initServiceRegistry} from "@onflow/fcl-core"
 
 export const mutate = getMutate({platform: "web"})
 
-import {execStrategyHook} from "./utils/walletconnect/exec-hook"
+import {execStrategyHook} from "./discovery/exec-hook"
 const currentUser = getCurrentUser({
   platform: "web",
   discovery: {

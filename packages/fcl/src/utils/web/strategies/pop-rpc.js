@@ -3,12 +3,20 @@ import {pop} from "./utils/pop"
 import {normalizePollingResponse} from "@onflow/fcl-core"
 import {VERSION} from "../../../VERSION"
 
-export function execPopRPC({service, body, config, opts, abortSignal}) {
+export function execPopRPC({
+  service,
+  body,
+  config,
+  abortSignal,
+  ipcController,
+  opts,
+}) {
   return new Promise((resolve, reject) => {
     const id = uid()
     const {redir, includeOlderJsonRpcCall} = opts
 
     const {close} = pop(service, {
+      ipcController,
       async onReady(_, {send}) {
         try {
           send({

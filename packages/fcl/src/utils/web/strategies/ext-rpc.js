@@ -2,7 +2,14 @@ import {extension} from "./utils/extension"
 import {normalizePollingResponse} from "@onflow/fcl-core"
 import {VERSION} from "../../../VERSION"
 
-export function execExtRPC({service, body, config, opts, abortSignal}) {
+export function execExtRPC({
+  service,
+  body,
+  config,
+  abortSignal,
+  ipcController,
+  opts,
+}) {
   return new Promise((resolve, reject) => {
     const {close} = extension(service, {
       async onReady(_, {send}) {

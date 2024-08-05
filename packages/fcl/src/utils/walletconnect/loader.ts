@@ -3,7 +3,7 @@ import {pluginRegistry} from "@onflow/fcl-core"
 import {invariant} from "@onflow/util-invariant"
 import * as fclWc from "@onflow/fcl-wc"
 import {CoreTypes} from "@walletconnect/types"
-import {isServer} from "./util"
+import {isServer} from "../utils"
 
 let client: Promise<any | null> = Promise.resolve(null)
 

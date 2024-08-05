@@ -147,5 +147,10 @@ export {
   FCL_RESPONSE_PARAM_NAME,
 } from "./utils/constants"
 
-// Utils (not exported to the public API)
-export {execService, execStrategy} from "./current-user/exec-service"
+export {execStrategy} from "./current-user/exec-service"
+export {createIpcController} from "./current-user/exec-service/ipc"
+export type {
+  IpcClientHandlers,
+  IpcConnection,
+  IpcHostHandlers,
+} from "./current-user/exec-service/ipc"

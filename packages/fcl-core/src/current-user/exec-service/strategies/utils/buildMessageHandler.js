@@ -1,6 +1,7 @@
 const CLOSE_EVENT = "FCL:VIEW:CLOSE"
 const READY_EVENT = "FCL:VIEW:READY"
 const RESPONSE_EVENT = "FCL:VIEW:RESPONSE"
+const CUSTOM_IPC = "FCL:VIEW:CUSTOM_IPC"
 
 const _ = e => typeof e === "string" && e.toLowerCase()
 
@@ -18,7 +19,7 @@ const deprecate = (was, want) =>
   )
 
 export const buildMessageHandler =
-  ({close, send, onReady, onResponse, onMessage}) =>
+  ({close, send, onReady, onResponse, onMessage, onCustomIpc}) =>
   e => {
     try {
       if (typeof e.data !== "object") return
@@ -26,6 +27,8 @@ export const buildMessageHandler =
       if (_(e.data.type) === _(CLOSE_EVENT)) close()
       if (_(e.data.type) === _(READY_EVENT)) onReady(e, {send, close})
       if (_(e.data.type) === _(RESPONSE_EVENT)) onResponse(e, {send, close})
+      if (_(e.data.type) === _(CUSTOM_IPC))
+        onCustomIpc(e.data.payload, {send, close})
       onMessage(e, {send, close})
 
       // Backwards Compatible
