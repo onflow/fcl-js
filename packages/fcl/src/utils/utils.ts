@@ -3,9 +3,9 @@ export const isServer = typeof window === "undefined"
 // Dynamic implementation of Promise.race that allows adding new promises after creation
 export function dynamicRace(abortController?: AbortController) {
   let resolve: (value: any) => void, reject: (reason: any) => void
-  let result = new Promise((resolve, reject) => {
-    resolve = resolve
-    reject = reject
+  let result = new Promise((_resolve, _reject) => {
+    resolve = _resolve
+    reject = _reject
   }).finally(() => {
     abortController?.abort()
   })
