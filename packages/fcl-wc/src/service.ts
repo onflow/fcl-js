@@ -33,7 +33,7 @@ export const makeServicePlugin = (
   type: "discovery-service",
   serviceStrategy: {
     method: WC_SERVICE_METHOD,
-    exec: makeDefaultExec(
+    exec: makeExec(
       client,
       opts,
       import("@walletconnect/modal").then(m => m.WalletConnectModal)
@@ -42,7 +42,7 @@ export const makeServicePlugin = (
   services: [],
 })
 
-const makeDefaultExec = (
+const makeExec = (
   clientPromise: Promise<SignClient | null>,
   {wcRequestHook, pairingModalOverride}: any,
   WalletConnectModal: Promise<WalletConnectModalType>
