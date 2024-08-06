@@ -1,126 +1,66 @@
-import {createIpcController, IpcConnection} from "@onflow/fcl-core"
 import {Service} from "@onflow/typedefs"
+import {RpcClient, RpcNotification, RpcRequest} from "./rpc-client"
+import {createIpcController, IpcConnection} from "@onflow/fcl-core"
 
-enum PeerRpcMethod {
-  NOTIFY_WC_URI_UPDATE = "notify_wc_uri_update",
+export type DiscoveryRpc = RpcClient<DiscoveryRpcMethods, FclRpcMethods>
+
+export enum DiscoveryRpcMethod {
+  NOTIFY_QR_EXPIRY = "notify_qr_expiry",
+  NOTIFY_QR_ERROR = "notify_qr_error",
   GET_METHODS = "get_methods",
 }
 
-enum LocalRpcMethod {
+export enum FclRpcMethod {
   EXEC_SERVICE = "exec_service",
+  REQUEST_URI = "request_uri",
   GET_METHODS = "get_methods",
 }
 
-type PeerRpcMethodMap = {
-  [PeerRpcMethod.NOTIFY_WC_URI_UPDATE]: {
-    uri: string
-  }
-  [PeerRpcMethod.GET_METHODS]: {}
+export type DiscoveryRpcMethods = {
+  [DiscoveryRpcMethod.NOTIFY_QR_EXPIRY]: RpcNotification<{uri: string}>
+  [DiscoveryRpcMethod.NOTIFY_QR_ERROR]: RpcNotification<{error: string}>
+  [DiscoveryRpcMethod.GET_METHODS]: RpcRequest<{}, {methods: string[]}>
 }
 
-type LocalRpcMethodMap = {
-  [LocalRpcMethod.EXEC_SERVICE]: {
-    service: Service
-  }
-  [LocalRpcMethod.GET_METHODS]: {}
+export type FclRpcMethods = {
+  [FclRpcMethod.EXEC_SERVICE]: RpcRequest<{service: Service}, {}>
+  [FclRpcMethod.REQUEST_URI]: RpcRequest<{service: Service}, {uri: string}>
+  [FclRpcMethod.GET_METHODS]: RpcRequest<{}, {methods: string[]}>
 }
 
-export class DiscoveryRpc {
-  private ctrl: ReturnType<typeof createIpcController>
-  private conn: Promise<IpcConnection>
-  private id = 0
-  private _supportedMethods: Promise<string[]>
-  private messageListeners: ((msg: any) => void)[] = []
+export function initDiscoveryRpcClient(
+  setup: (rpc: RpcClient<DiscoveryRpcMethods, FclRpcMethods>) => void
+) {
+  let onMessage: (msg: any) => void = () => {}
+  let resolveConnection: (conn: IpcConnection) => void = () => {}
+  const ctrl = createIpcController({
+    onConnect: conn => {
+      resolveConnection(conn)
+    },
+    onMessage: msg => {
+      onMessage(msg)
+    },
+    onClose: () => {
+      // TODO: handle close
+    },
+  })
 
-  constructor() {
-    let resolveConn: (conn: IpcConnection) => void
-    this.conn = new Promise<IpcConnection>(resolve => {
-      resolveConn = resolve
-    })
-    this.ctrl = createIpcController({
-      onConnect: conn => {
-        resolveConn(conn)
-      },
-      onClose: () => {
-        // TODO: handle close
-      },
-      onMessage: msg => {
-        this.messageListeners.forEach(listener => listener(msg))
-      },
-    })
-    this._supportedMethods = this.request(PeerRpcMethod.GET_METHODS, {})
-  }
+  const connectionPromise = new Promise<IpcConnection>(resolve => {
+    resolveConnection = resolve
+  })
 
-  private onMessage(listener: (msg: any) => void) {
-    this.messageListeners.push(listener)
-    return () => {
-      this.messageListeners = this.messageListeners.filter(l => l !== listener)
-    }
-  }
+  const rpcPromise = new Promise<DiscoveryRpc>(async resolve => {
+    const connection = await connectionPromise
+    const {rpc, receive} = RpcClient.create<DiscoveryRpcMethods, FclRpcMethods>(
+      connection.send
+    )
+    onMessage = receive
+    setup(rpc)
+    resolve(rpc)
+  })
 
-  get ipcController() {
-    return this.ctrl
-  }
-
-  private async notify<R extends keyof PeerRpcMethodMap>(
-    method: R,
-    params: PeerRpcMethodMap[R]
-  ) {
-    const conn = await this.conn
-    conn.send({
-      jsonrpc: "2.0",
-      method,
-      params,
-    })
-  }
-
-  private async request<R extends keyof PeerRpcMethodMap, T = any>(
-    method: R,
-    params: PeerRpcMethodMap[R]
-  ): Promise<T> {
-    const conn = await this.conn
-    const id = this.id++
-    conn.send({
-      jsonrpc: "2.0",
-      method,
-      params,
-      id,
-    })
-
-    return new Promise<T>((resolve, reject) => {
-      this.onMessage(msg => {
-        if (msg.id === id) {
-          if (msg.error) {
-            reject(msg.error)
-          }
-          resolve(msg.result)
-        }
-      })
-    })
-  }
-
-  private listen<R extends keyof LocalRpcMethodMap>(
-    method: R,
-    handler: (params: LocalRpcMethodMap[R]) => void
-  ) {
-    return this.onMessage(msg => {
-      if (msg.method === method) {
-        handler(msg.params)
-      }
-    })
-  }
-
-  updateWalletConnectUri(uri: string) {
-    this.notify(PeerRpcMethod.NOTIFY_WC_URI_UPDATE, {uri})
-  }
-
-  onExecService(handler: (service: Service) => void) {
-    return this.listen(LocalRpcMethod.EXEC_SERVICE, params => {
-      handler(params.service)
-    })
-  }
-
-  async getSupportedMethods() {
-    return this._supportedMethods
+  return {
+    rpc: rpcPromise,
+    ipcController: ctrl,
   }
 }

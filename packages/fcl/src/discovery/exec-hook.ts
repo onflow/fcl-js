@@ -1,15 +1,25 @@
-import {execStrategy} from "@onflow/fcl-core"
-import {createSessionProposal, FLOW_METHODS, request} from "@onflow/fcl-wc"
+import {execStrategy, normalizePollingResponse} from "@onflow/fcl-core"
+import {
+  createSessionProposal,
+  FLOW_METHODS,
+  request as requestWc,
+} from "@onflow/fcl-wc"
 import {getSignClient} from "../utils/walletconnect/loader"
-import {SessionTypes} from "@walletconnect/types"
 import {PROPOSAL_EXPIRY_MESSAGE} from "@walletconnect/sign-client"
 import {
   createTimeoutPromise,
   dynamicRace,
   wrapAbortSignal,
 } from "../utils/utils"
-import {DiscoveryRpc} from "./discovery-rpc"
+import {
+  DiscoveryRpc,
+  DiscoveryRpcMethod,
+  FclRpcMethod,
+  initDiscoveryRpcClient,
+} from "./discovery-rpc"
+import {Service} from "@onflow/typedefs"
 
+// TODO: necessary?
 const DISCOVERY_TIMEOUT = 3600 * 1000 // 1 hour
 
 const AbortController =
@@ -24,41 +34,39 @@ export async function execStrategyHook(...args: any) {
   // Create an abort controller for this context
   // Either used to terminate WC bypass proposal loop or the base discovery request
   const abortController = wrapAbortSignal(baseAbortSignal)
-  const discovery = new DiscoveryRpc()
 
-  // Create a new session proposal with the WalletConnect client
-  // Wait for the first URI to continue
-  const {uri: wcUri, session} = await new Promise<{
-    uri: string
-    session: Promise<SessionTypes.Struct>
-  }>((resolve, reject) => {
-    let _session = revolvingProposal(uri => {
-      // Capture the first
-      resolve({uri, session: _session})
+  // Execute all authentication requests in parallel
+  const {result, addCandidate: addAuthnCandidate} = dynamicRace(abortController)
 
-      // Notify the URI change
-      discovery.updateWalletConnectUri(uri)
-    }, abortController.signal)
+  // Initialize the discovery RPC client
+  const {ipcController} = initDiscoveryRpcClient(rpc => {
+    // Handle QR URI requests
+    rpc.on(
+      FclRpcMethod.REQUEST_URI,
+      makeRequestUriHandler({addAuthnCandidate, rpc, authnBody: body})
+    )
 
-    // If we reject before getting a URI, we throw
-    _session.catch(reject)
-
-    return _session
+    // Handle service execution requests
+    rpc.on(
+      FclRpcMethod.EXEC_SERVICE,
+      makeExecServiceHandler({
+        addAuthnCandidate,
+        execStrategyOpts: opts,
+        execStrategyArgs: args,
+        abortController,
+        ipcController,
+      })
+    )
   })
 
-  // Add WC URI to discovery config
+  // Update the discovery config to enable RPC support
   const discoveryConfig = {
     ...opts.config,
     client: {
       ...opts.config.client,
-      walletconnect: {
-        uri: wcUri,
-      },
+      discoveryRpcEnabled: true,
     },
   }
-
-  // Execute all authentication requests in parallel
-  const {result, addCandidate: addAuthnCandidate} = dynamicRace(abortController)
 
   // Execute base discovery request
   addAuthnCandidate(
@@ -68,47 +76,12 @@ export async function execStrategyHook(...args: any) {
         config: discoveryConfig,
         // TODO: Combine abort signals?
         abortSignal: abortController.signal,
-        ipcController: discovery.ipcController,
+        ipcController,
       },
       // Pass the rest of the arguments (protect against future changes)
       ...args.slice(1)
     )
   )
-
-  // Execute WC bypass if session is approved
-  // TODO: what is correct decline behaviour?
-  session.then(session => {
-    addAuthnCandidate(
-      (async () =>
-        request({
-          method: FLOW_METHODS.FLOW_AUTHN,
-          body,
-          session,
-          client: await getSignClient(),
-          cleanup: () => {},
-        }))()
-    )
-  })
-
-  // Add a bypass for services Discovery requests to execute in parallel
-  // (e.g. extension services)
-  discovery.onExecService(service => {
-    addAuthnCandidate(
-      (execStrategy as any)(
-        {
-          ...opts,
-          service,
-          // TODO: Ideally we shouldn't be using this config, but maybe not worth the effort to refactor
-          config: opts.config,
-          // TODO: Combine abort signals?
-          abortSignal: abortController.signal,
-          ipcController: discovery.ipcController,
-        },
-        // Pass the rest of the arguments (protect against future changes)
-        ...args.slice(1)
-      )
-    )
-  })
 
   // Timeout
   addAuthnCandidate(createTimeoutPromise(DISCOVERY_TIMEOUT))
@@ -121,36 +94,99 @@ export async function execStrategyHook(...args: any) {
   return result
 }
 
-// Continuously refresh the session proposal until it is approved or rejected
-function revolvingProposal(
-  onUriChange: (uri: string) => void,
-  abortSignal: AbortSignal
-) {
-  return new Promise<SessionTypes.Struct>((resolve, reject) => {
-    // Create a promise to resolve the WC URI
-    const proposalLoop = async (): Promise<void> => {
-      if (abortSignal.aborted) {
-        reject(new Error(abortSignal.reason || "Aborted"))
-        return
-      }
+// RPC handler for handling QR URI requests (e.g WalletConnect)
+const makeRequestUriHandler =
+  ({
+    rpc,
+    addAuthnCandidate,
+    authnBody,
+  }: {
+    rpc: DiscoveryRpc
+    addAuthnCandidate: (candidate: Promise<any>) => void
+    authnBody: any
+  }) =>
+  // Service is not used for now, but de-risks from WalletConnect & allows custom QR implementations
+  async ({service: _}: {service: Service}) => {
+    const client = await getSignClient()
 
-      const {uri, approval: localApproval} = await createSessionProposal({
-        client: await getSignClient(),
+    // Execute WC bypass if session is approved
+    // TODO: what is correct decline behaviour?
+    const {uri, approval} = await createSessionProposal({
+      client,
+    })
+
+    // Add the WC bypass request to the authn candidates if session is approved
+    approval()
+      .then(session => {
+        addAuthnCandidate(
+          requestWc({
+            method: FLOW_METHODS.FLOW_AUTHN,
+            body: authnBody,
+            session,
+            client,
+            cleanup: () => {},
+          })
+        )
       })
-      onUriChange(uri)
-
-      try {
-        const session = await localApproval()
-        resolve(session)
-      } catch (e) {
+      .catch(e => {
         // TODO: should we just catch all errors?
         if ((e as any)?.message === PROPOSAL_EXPIRY_MESSAGE) {
-          // If the proposal has expired, create a new one
-          return proposalLoop()
+          rpc.notify(DiscoveryRpcMethod.NOTIFY_QR_EXPIRY, {uri})
+          return
+        } else {
+          rpc.notify(DiscoveryRpcMethod.NOTIFY_QR_ERROR, {error: e.message})
+          console.error(e)
         }
-        reject(e)
-      }
-    }
-    proposalLoop()
-  })
-}
+      })
+
+    return {uri}
+  }
+
+// RPC handler for handling service execution requests (e.g extension service)
+const makeExecServiceHandler =
+  ({
+    addAuthnCandidate,
+    execStrategyOpts,
+    execStrategyArgs,
+    abortController,
+    ipcController,
+  }: {
+    addAuthnCandidate: (candidate: Promise<any>) => void
+    execStrategyOpts: any
+    execStrategyArgs: any
+    abortController: AbortController
+    ipcController: any
+  }) =>
+  async ({service}: {service: Service}) => {
+    return new Promise(async (resolveRpc, rejectRpc) => {
+      const execPromise: Promise<any> = (execStrategy as any)(
+        {
+          ...execStrategyOpts,
+          service,
+          // TODO: Ideally we shouldn't be using this config, but maybe not worth the effort to refactor
+          config: execStrategyOpts.config,
+          // TODO: Combine abort signals?
+          abortSignal: abortController.signal,
+          ipcController,
+        },
+        // Pass the rest of the arguments (protect against future changes)
+        ...execStrategyArgs.slice(1)
+      )
+
+      addAuthnCandidate(
+        new Promise(async resolveCandidate => {
+          const result = await execPromise
+          const normalizedResult = normalizePollingResponse(result)
+          if (normalizedResult?.status === "APPROVED") {
+            resolveCandidate(result)
+            resolveRpc({})
+          } else {
+            // Notify Discovery that the service was rejected
+            rejectRpc(
+              new Error(normalizedResult?.reason || "Service was declined")
+            )
+          }
+        })
+      )
+    })
+  }

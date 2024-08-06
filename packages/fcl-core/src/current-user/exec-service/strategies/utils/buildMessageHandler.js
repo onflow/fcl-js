@@ -18,14 +18,25 @@ const deprecate = (was, want) =>
     `Received ${was}, please use ${want} for this and future versions of FCL`
   )
 
-export const buildMessageHandler =
-  ({close, send, onReady, onResponse, onMessage, onCustomIpc}) =>
-  e => {
+export const buildMessageHandler = ({
+  close,
+  send,
+  onReady,
+  onResponse,
+  onMessage,
+  onCustomIpc,
+}) => {
+  let origin = null
+  return e => {
     try {
       if (typeof e.data !== "object") return
       if (IGNORE.has(e.data.type)) return
+      if (origin != null && e.origin !== origin) return
       if (_(e.data.type) === _(CLOSE_EVENT)) close()
-      if (_(e.data.type) === _(READY_EVENT)) onReady(e, {send, close})
+      if (_(e.data.type) === _(READY_EVENT)) {
+        onReady(e, {send, close})
+        origin = e.origin
+      }
       if (_(e.data.type) === _(RESPONSE_EVENT)) onResponse(e, {send, close})
       if (_(e.data.type) === _(CUSTOM_IPC))
         onCustomIpc(e.data.payload, {send, close})
@@ -35,6 +46,7 @@ export const buildMessageHandler =
       if (_(e.data.type) === _("FCL:FRAME:READY")) {
         deprecate(e.data.type, READY_EVENT)
         onReady(e, {send, close})
+        origin = e.origin
       }
       if (_(e.data.type) === _("FCL:FRAME:RESPONSE")) {
         deprecate(e.data.type, RESPONSE_EVENT)
@@ -52,6 +64,7 @@ export const buildMessageHandler =
       if (_(e.data.type) === _("FCL::AUTHZ_READY")) {
         deprecate(e.data.type, READY_EVENT)
         onReady(e, {send, close})
+        origin = e.origin
       }
       if (_(e.data.type) === _("FCL::CHALLENGE::CANCEL")) {
         deprecate(e.data.type, CLOSE_EVENT)
@@ -66,3 +79,4 @@ export const buildMessageHandler =
       close()
     }
   }
+}
