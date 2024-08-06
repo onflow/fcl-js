@@ -12,7 +12,7 @@ import {serviceOfType} from "./service-of-type"
 function deriveCompositeId(authn) {
   return rlp
     .encode([
-      authn.provider.address || authn.provider.name || "UNSPECIFIED",
+      authn.provider?.address || authn.provider?.name || "UNSPECIFIED",
       authn.id,
     ])
     .toString("hex")

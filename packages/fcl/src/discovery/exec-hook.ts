@@ -175,16 +175,19 @@ const makeExecServiceHandler =
 
       addAuthnCandidate(
         new Promise(async resolveCandidate => {
-          const result = await execPromise
-          const normalizedResult = normalizePollingResponse(result)
-          if (normalizedResult?.status === "APPROVED") {
-            resolveCandidate(result)
-            resolveRpc({})
-          } else {
-            // Notify Discovery that the service was rejected
-            rejectRpc(
-              new Error(normalizedResult?.reason || "Service was declined")
-            )
+          try {
+            const result = await execPromise
+            const status =
+              normalizePollingResponse(result)?.status || "APPROVED"
+            if (status === "APPROVED") {
+              resolveCandidate(result)
+              resolveRpc({})
+            } else {
+              // Notify Discovery that the service was rejected
+              rejectRpc(new Error(result?.reason || "Service was declined"))
+            }
+          } catch (e: any) {
+            rejectRpc(new Error(e?.message || "Service execution failed"))
           }
         })
       )

@@ -12,6 +12,7 @@ export function tab(service, opts = {}) {
   const onResponse = opts.onResponse || noop
   const onCustomIpc = opts.onCustomIpc || noop
 
+  let $tab, unmount
   const handler = buildMessageHandler({
     close,
     send,
@@ -19,10 +20,10 @@ export function tab(service, opts = {}) {
     onResponse,
     onMessage,
     onCustomIpc,
+    getSource: () => $tab,
   })
   window.addEventListener("message", handler)
-
-  const [$tab, unmount] = renderTab(serviceEndpoint(service))
+  ;[$tab, unmount] = renderTab(serviceEndpoint(service))
   const timer = setInterval(function () {
     if ($tab && $tab.closed) {
       close()

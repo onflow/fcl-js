@@ -12,6 +12,7 @@ export function frame(service, opts = {}) {
   const onResponse = opts.onResponse || noop
   const onCustomIpc = opts.onCustomIpc || noop
 
+  let $frame, unmount
   const handler = buildMessageHandler({
     close,
     send,
@@ -19,10 +20,10 @@ export function frame(service, opts = {}) {
     onResponse,
     onMessage,
     onCustomIpc,
+    getSource: () => $frame,
   })
   window.addEventListener("message", handler)
-
-  const [$frame, unmount] = renderFrame(serviceEndpoint(service))
+  ;[$frame, unmount] = renderFrame(serviceEndpoint(service))
   return {send, close}
 
   function close() {

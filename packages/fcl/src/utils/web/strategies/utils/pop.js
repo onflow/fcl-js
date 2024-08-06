@@ -12,6 +12,7 @@ export function pop(service, opts = {}) {
   const onResponse = opts.onResponse || noop
   const onCustomIpc = opts.onCustomIpc || noop
 
+  let $pop, unmount
   const handler = buildMessageHandler({
     close,
     send,
@@ -19,10 +20,10 @@ export function pop(service, opts = {}) {
     onResponse,
     onMessage,
     onCustomIpc,
+    getSource: () => $pop,
   })
   window.addEventListener("message", handler)
-
-  const [$pop, unmount] = renderPop(serviceEndpoint(service))
+  ;[$pop, unmount] = renderPop(serviceEndpoint(service))
 
   const timer = setInterval(function () {
     if ($pop && $pop.closed) {

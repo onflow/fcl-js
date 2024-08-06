@@ -25,17 +25,27 @@ export const buildMessageHandler = ({
   onResponse,
   onMessage,
   onCustomIpc,
+  getSource,
 }) => {
-  let origin = null
+  let source
   return e => {
+    try {
+      source = getSource?.() || source
+    } catch (_) {
+      // If getSource isn't working correctly, we should reset source
+      // to prevent desync between the source and the actual source
+      source = null
+    }
+
     try {
       if (typeof e.data !== "object") return
       if (IGNORE.has(e.data.type)) return
-      if (origin != null && e.origin !== origin) return
+      if (source != null && e.source !== source) return
       if (_(e.data.type) === _(CLOSE_EVENT)) close()
       if (_(e.data.type) === _(READY_EVENT)) {
         onReady(e, {send, close})
-        origin = e.origin
+        source ||= e.source
+        console.log("e", e)
       }
       if (_(e.data.type) === _(RESPONSE_EVENT)) onResponse(e, {send, close})
       if (_(e.data.type) === _(CUSTOM_IPC))
@@ -46,7 +56,7 @@ export const buildMessageHandler = ({
       if (_(e.data.type) === _("FCL:FRAME:READY")) {
         deprecate(e.data.type, READY_EVENT)
         onReady(e, {send, close})
-        origin = e.origin
+        source ||= e.source
       }
       if (_(e.data.type) === _("FCL:FRAME:RESPONSE")) {
         deprecate(e.data.type, RESPONSE_EVENT)
@@ -64,7 +74,7 @@ export const buildMessageHandler = ({
       if (_(e.data.type) === _("FCL::AUTHZ_READY")) {
         deprecate(e.data.type, READY_EVENT)
         onReady(e, {send, close})
-        origin = e.origin
+        source ||= e.source
       }
       if (_(e.data.type) === _("FCL::CHALLENGE::CANCEL")) {
         deprecate(e.data.type, CLOSE_EVENT)
