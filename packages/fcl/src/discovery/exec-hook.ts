@@ -18,6 +18,7 @@ import {
   initDiscoveryRpcClient,
 } from "./discovery-rpc"
 import {Service} from "@onflow/typedefs"
+import {RpcError, RpcErrorCode} from "./rpc/rpc-error"
 
 // TODO: necessary?
 const DISCOVERY_TIMEOUT = 3600 * 1000 // 1 hour
@@ -42,7 +43,7 @@ export async function execStrategyHook(...args: any) {
   const {ipcController} = initDiscoveryRpcClient(rpc => {
     // Handle QR URI requests
     rpc.on(
-      FclRpcMethod.REQUEST_URI,
+      FclRpcMethod.REQUEST_QRCODE,
       makeRequestUriHandler({addAuthnCandidate, rpc, authnBody: body})
     )
 
@@ -95,6 +96,8 @@ export async function execStrategyHook(...args: any) {
 }
 
 // RPC handler for handling QR URI requests (e.g WalletConnect)
+// Open-ended implementation for future compatibility with other QR methods
+// e.g. `authn-qrcode` Service type in future could be used for custom QR implementations
 const makeRequestUriHandler =
   ({
     rpc,
@@ -106,7 +109,23 @@ const makeRequestUriHandler =
     authnBody: any
   }) =>
   // Service is not used for now, but de-risks from WalletConnect & allows custom QR implementations
-  async ({service: _}: {service: Service}) => {
+  async ({service}: {service: Service}) => {
+    if (service.type !== "authn") {
+      throw new RpcError(RpcErrorCode.INVALID_PARAMS, "Invalid service type", {
+        type: service.type,
+      })
+    }
+
+    if (service.method !== "WC/RPC") {
+      throw new RpcError(
+        RpcErrorCode.INVALID_PARAMS,
+        "Invalid service method",
+        {
+          method: service.method,
+        }
+      )
+    }
+
     const client = await getSignClient()
 
     // Execute WC bypass if session is approved
@@ -131,10 +150,10 @@ const makeRequestUriHandler =
       .catch(e => {
         // TODO: should we just catch all errors?
         if ((e as any)?.message === PROPOSAL_EXPIRY_MESSAGE) {
-          rpc.notify(DiscoveryRpcMethod.NOTIFY_QR_EXPIRY, {uri})
+          rpc.notify(DiscoveryRpcMethod.NOTIFY_QRCODE_EXPIRY, {uri})
           return
         } else {
-          rpc.notify(DiscoveryRpcMethod.NOTIFY_QR_ERROR, {error: e.message})
+          rpc.notify(DiscoveryRpcMethod.NOTIFY_QRCODE_ERROR, {error: e.message})
           console.error(e)
         }
       })

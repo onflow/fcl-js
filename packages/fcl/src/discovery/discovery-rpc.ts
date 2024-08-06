@@ -1,30 +1,30 @@
 import {Service} from "@onflow/typedefs"
-import {RpcClient, RpcNotification, RpcRequest} from "./rpc-client"
+import {RpcClient, RpcNotification, RpcRequest} from "./rpc/rpc-client"
 import {createIpcController, IpcConnection} from "@onflow/fcl-core"
 
 export type DiscoveryRpc = RpcClient<DiscoveryRpcMethods, FclRpcMethods>
 
 export enum DiscoveryRpcMethod {
-  NOTIFY_QR_EXPIRY = "notify_qr_expiry",
-  NOTIFY_QR_ERROR = "notify_qr_error",
+  NOTIFY_QRCODE_EXPIRY = "notify_qrcode_expiry",
+  NOTIFY_QRCODE_ERROR = "notify_qrcode_error",
   GET_METHODS = "get_methods",
 }
 
 export enum FclRpcMethod {
+  REQUEST_QRCODE = "request_qrcode",
   EXEC_SERVICE = "exec_service",
-  REQUEST_URI = "request_uri",
   GET_METHODS = "get_methods",
 }
 
 export type DiscoveryRpcMethods = {
-  [DiscoveryRpcMethod.NOTIFY_QR_EXPIRY]: RpcNotification<{uri: string}>
-  [DiscoveryRpcMethod.NOTIFY_QR_ERROR]: RpcNotification<{error: string}>
+  [DiscoveryRpcMethod.NOTIFY_QRCODE_EXPIRY]: RpcNotification<{uri: string}>
+  [DiscoveryRpcMethod.NOTIFY_QRCODE_ERROR]: RpcNotification<{error: string}>
   [DiscoveryRpcMethod.GET_METHODS]: RpcRequest<{}, {methods: string[]}>
 }
 
 export type FclRpcMethods = {
   [FclRpcMethod.EXEC_SERVICE]: RpcRequest<{service: Service}, {}>
-  [FclRpcMethod.REQUEST_URI]: RpcRequest<{service: Service}, {uri: string}>
+  [FclRpcMethod.REQUEST_QRCODE]: RpcRequest<{service: Service}, {uri: string}>
   [FclRpcMethod.GET_METHODS]: RpcRequest<{}, {methods: string[]}>
 }
 
