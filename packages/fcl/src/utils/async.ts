@@ -1,4 +1,5 @@
-export const isServer = typeof window === "undefined"
+const AbortController =
+  globalThis.AbortController || require("abort-controller")
 
 // Dynamic implementation of Promise.race that allows adding new promises after creation
 export function dynamicRace(abortController?: AbortController) {
@@ -15,15 +16,6 @@ export function dynamicRace(abortController?: AbortController) {
   }
 
   return {addCandidate, result}
-}
-
-// Abortable promise that resolves after a timeout
-export function createTimeoutPromise(timeout: number) {
-  return new Promise((_, reject) => {
-    setTimeout(() => {
-      reject("Timeout")
-    }, timeout)
-  })
 }
 
 export function wrapAbortSignal(signal?: AbortSignal) {

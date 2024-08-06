@@ -6,11 +6,7 @@ import {
 } from "@onflow/fcl-wc"
 import {getSignClient} from "../utils/walletconnect/loader"
 import {PROPOSAL_EXPIRY_MESSAGE} from "@walletconnect/sign-client"
-import {
-  createTimeoutPromise,
-  dynamicRace,
-  wrapAbortSignal,
-} from "../utils/utils"
+import {dynamicRace, wrapAbortSignal} from "../utils/async"
 import {
   DiscoveryNotification,
   DiscoveryNotifications,
@@ -18,19 +14,23 @@ import {
   FclRequest,
 } from "./rpc"
 import {Service} from "@onflow/typedefs"
-import {RpcClient, RpcError, RpcErrorCode} from "@onflow/util-rpc"
+import {RpcClient} from "@onflow/util-rpc"
 
-// TODO: necessary?
-const DISCOVERY_TIMEOUT = 3600 * 1000 // 1 hour
-
-const AbortController =
-  globalThis.AbortController || require("abort-controller")
+const APPROVED = "APPROVED"
+const AUTHN_SERVICE_TYPE = "authn"
 
 // Defines the execStrategy hook for Discovery Service to enable the WalletConnect bypass
 export async function execStrategyHook(...args: any) {
-  // TODO: Should we check the service type/name here?
   const [opts] = args
-  const {body, abortSignal: baseAbortSignal} = opts
+  const {body, abortSignal: baseAbortSignal, service} = opts
+
+  // Ensure the service type is "auth" for the execStrategyHook
+  if (service?.type !== AUTHN_SERVICE_TYPE) {
+    console.error(
+      `ERROR: Invalid service type for FCL Discovery execStrategyHook, expected "${AUTHN_SERVICE_TYPE}" but got "${service?.type}"`
+    )
+    return (execStrategy as any)(...args)
+  }
 
   // Create an abort controller for this context
   // Either used to terminate WC bypass proposal loop or the base discovery request
@@ -44,8 +44,8 @@ export async function execStrategyHook(...args: any) {
     notifications: [],
   })
   rpc.on(
-    FclRequest.REQUEST_QRCODE,
-    makeRequestUriHandler({
+    FclRequest.REQUEST_WALLETCONECT_QRCODE,
+    makeRequestWcQRHandler({
       addAuthnCandidate,
       authnBody: body,
     })
@@ -75,17 +75,17 @@ export async function execStrategyHook(...args: any) {
       {
         ...opts,
         config: discoveryConfig,
-        // TODO: Combine abort signals?
         abortSignal: abortController.signal,
-        customRpc: rpc,
+        // Pass the custom RPC client to the execStrategy
+        // Select only the relevant interface to prevent accidental coupling in the future
+        customRpc: {
+          connect: rpc.connect.bind(rpc),
+        },
       },
       // Pass the rest of the arguments (protect against future changes)
       ...args.slice(1)
     )
   )
-
-  // Timeout
-  addAuthnCandidate(createTimeoutPromise(DISCOVERY_TIMEOUT))
 
   // Ensure the abort signal is propagated to all candidates on completion
   result.finally(() => {
@@ -98,7 +98,7 @@ export async function execStrategyHook(...args: any) {
 // RPC handler for handling QR URI requests (e.g WalletConnect)
 // Open-ended implementation for future compatibility with other QR methods
 // e.g. `authn-qrcode` Service type in future could be used for custom QR implementations
-const makeRequestUriHandler =
+const makeRequestWcQRHandler =
   ({
     addAuthnCandidate,
     authnBody,
@@ -107,27 +107,10 @@ const makeRequestUriHandler =
     authnBody: any
   }) =>
   // Service is not used for now, but de-risks from WalletConnect & allows custom QR implementations
-  async (rpc: DiscoveryRpc, {service}: {service: Service}) => {
-    if (service.type !== "authn") {
-      throw new RpcError(RpcErrorCode.INVALID_PARAMS, "Invalid service type", {
-        type: service.type,
-      })
-    }
-
-    if (service.method !== "WC/RPC") {
-      throw new RpcError(
-        RpcErrorCode.INVALID_PARAMS,
-        "Invalid service method",
-        {
-          method: service.method,
-        }
-      )
-    }
-
+  async (rpc: DiscoveryRpc) => {
     const client = await getSignClient()
 
     // Execute WC bypass if session is approved
-    // TODO: what is correct decline behaviour?
     const {uri, approval} = await createSessionProposal({
       client,
     })
@@ -178,9 +161,7 @@ const makeExecServiceHandler =
         {
           ...execStrategyOpts,
           service,
-          // TODO: Ideally we shouldn't be using this config, but maybe not worth the effort to refactor
           config: execStrategyOpts.config,
-          // TODO: Combine abort signals?
           abortSignal: abortController.signal,
         },
         // Pass the rest of the arguments (protect against future changes)
@@ -191,9 +172,8 @@ const makeExecServiceHandler =
         new Promise(async resolveCandidate => {
           try {
             const result = await execPromise
-            const status =
-              normalizePollingResponse(result)?.status || "APPROVED"
-            if (status === "APPROVED") {
+            const status = normalizePollingResponse(result)?.status || APPROVED
+            if (status === APPROVED) {
               resolveCandidate(result)
               resolveRpc({})
             } else {
