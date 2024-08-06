@@ -148,9 +148,3 @@ export {
 } from "./utils/constants"
 
 export {execStrategy} from "./current-user/exec-service"
-export {createIpcController} from "./current-user/exec-service/ipc"
-export type {
-  IpcClientHandlers,
-  IpcConnection,
-  IpcHostHandlers,
-} from "./current-user/exec-service/ipc"

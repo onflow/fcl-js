@@ -8,15 +8,16 @@ export function execTabRPC({
   body,
   config,
   abortSignal,
-  ipcController,
+  customRpc,
   opts,
 }) {
   return new Promise((resolve, reject) => {
     const id = uid()
     const {redir, includeOlderJsonRpcCall} = opts
+    let rpc = null
 
     const {close} = tab(service, {
-      ipcController,
+      customRpc,
       async onReady(_, {send}) {
         try {
           send({
@@ -53,6 +54,15 @@ export function execTabRPC({
               params: [body, service.params],
             })
           }
+
+          rpc = customRpc?.connect({
+            send: msg => {
+              send({
+                type: "FCL:VIEW:CUSTOM_IPC",
+                payload: msg,
+              })
+            },
+          })
         } catch (error) {
           throw error
         }
@@ -126,6 +136,10 @@ export function execTabRPC({
 
       onClose() {
         reject(`Declined: Externally Halted`)
+      },
+
+      onCustomRpc(msg) {
+        rpc?.receive(msg)
       },
     })
 

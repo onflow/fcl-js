@@ -12,13 +12,13 @@ import {
   wrapAbortSignal,
 } from "../utils/utils"
 import {
+  DiscoveryNotification,
+  DiscoveryNotifications,
   DiscoveryRpc,
-  DiscoveryRpcMethod,
-  FclRpcMethod,
-  initDiscoveryRpcClient,
-} from "./discovery-rpc"
+  FclRequest,
+} from "./rpc"
 import {Service} from "@onflow/typedefs"
-import {RpcError, RpcErrorCode} from "./rpc/rpc-error"
+import {RpcClient, RpcError, RpcErrorCode} from "@onflow/util-rpc"
 
 // TODO: necessary?
 const DISCOVERY_TIMEOUT = 3600 * 1000 // 1 hour
@@ -40,25 +40,25 @@ export async function execStrategyHook(...args: any) {
   const {result, addCandidate: addAuthnCandidate} = dynamicRace(abortController)
 
   // Initialize the discovery RPC client
-  const {ipcController} = initDiscoveryRpcClient(rpc => {
-    // Handle QR URI requests
-    rpc.on(
-      FclRpcMethod.REQUEST_QRCODE,
-      makeRequestUriHandler({addAuthnCandidate, rpc, authnBody: body})
-    )
-
-    // Handle service execution requests
-    rpc.on(
-      FclRpcMethod.EXEC_SERVICE,
-      makeExecServiceHandler({
-        addAuthnCandidate,
-        execStrategyOpts: opts,
-        execStrategyArgs: args,
-        abortController,
-        ipcController,
-      })
-    )
+  const rpc = new RpcClient<{}, DiscoveryNotifications>({
+    notifications: [],
   })
+  rpc.on(
+    FclRequest.REQUEST_QRCODE,
+    makeRequestUriHandler({
+      addAuthnCandidate,
+      authnBody: body,
+    })
+  )
+  rpc.on(
+    FclRequest.EXEC_SERVICE,
+    makeExecServiceHandler({
+      addAuthnCandidate,
+      execStrategyOpts: opts,
+      execStrategyArgs: args,
+      abortController,
+    })
+  )
 
   // Update the discovery config to enable RPC support
   const discoveryConfig = {
@@ -77,7 +77,7 @@ export async function execStrategyHook(...args: any) {
         config: discoveryConfig,
         // TODO: Combine abort signals?
         abortSignal: abortController.signal,
-        ipcController,
+        customRpc: rpc,
       },
       // Pass the rest of the arguments (protect against future changes)
       ...args.slice(1)
@@ -100,16 +100,14 @@ export async function execStrategyHook(...args: any) {
 // e.g. `authn-qrcode` Service type in future could be used for custom QR implementations
 const makeRequestUriHandler =
   ({
-    rpc,
     addAuthnCandidate,
     authnBody,
   }: {
-    rpc: DiscoveryRpc
     addAuthnCandidate: (candidate: Promise<any>) => void
     authnBody: any
   }) =>
   // Service is not used for now, but de-risks from WalletConnect & allows custom QR implementations
-  async ({service}: {service: Service}) => {
+  async (rpc: DiscoveryRpc, {service}: {service: Service}) => {
     if (service.type !== "authn") {
       throw new RpcError(RpcErrorCode.INVALID_PARAMS, "Invalid service type", {
         type: service.type,
@@ -143,17 +141,17 @@ const makeRequestUriHandler =
             body: authnBody,
             session,
             client,
-            cleanup: () => {},
           })
         )
       })
       .catch(e => {
-        // TODO: should we just catch all errors?
         if ((e as any)?.message === PROPOSAL_EXPIRY_MESSAGE) {
-          rpc.notify(DiscoveryRpcMethod.NOTIFY_QRCODE_EXPIRY, {uri})
+          rpc.notify(DiscoveryNotification.NOTIFY_QRCODE_EXPIRY, {uri})
           return
         } else {
-          rpc.notify(DiscoveryRpcMethod.NOTIFY_QRCODE_ERROR, {error: e.message})
+          rpc.notify(DiscoveryNotification.NOTIFY_QRCODE_ERROR, {
+            error: e.message,
+          })
           console.error(e)
         }
       })
@@ -168,15 +166,13 @@ const makeExecServiceHandler =
     execStrategyOpts,
     execStrategyArgs,
     abortController,
-    ipcController,
   }: {
     addAuthnCandidate: (candidate: Promise<any>) => void
     execStrategyOpts: any
     execStrategyArgs: any
     abortController: AbortController
-    ipcController: any
   }) =>
-  async ({service}: {service: Service}) => {
+  async (_: DiscoveryRpc, {service}: {service: Service}) => {
     return new Promise(async (resolveRpc, rejectRpc) => {
       const execPromise: Promise<any> = (execStrategy as any)(
         {
@@ -186,7 +182,6 @@ const makeExecServiceHandler =
           config: execStrategyOpts.config,
           // TODO: Combine abort signals?
           abortSignal: abortController.signal,
-          ipcController,
         },
         // Pass the rest of the arguments (protect against future changes)
         ...execStrategyArgs.slice(1)

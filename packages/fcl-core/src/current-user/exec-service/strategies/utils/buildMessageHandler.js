@@ -24,7 +24,7 @@ export const buildMessageHandler = ({
   onReady,
   onResponse,
   onMessage,
-  onCustomIpc,
+  onCustomRpc,
   getSource,
 }) => {
   let source
@@ -49,7 +49,7 @@ export const buildMessageHandler = ({
       }
       if (_(e.data.type) === _(RESPONSE_EVENT)) onResponse(e, {send, close})
       if (_(e.data.type) === _(CUSTOM_IPC))
-        onCustomIpc(e.data.payload, {send, close})
+        onCustomRpc(e.data.payload, {send, close})
       onMessage(e, {send, close})
 
       // Backwards Compatible

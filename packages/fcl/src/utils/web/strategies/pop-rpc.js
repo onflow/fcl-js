@@ -8,15 +8,16 @@ export function execPopRPC({
   body,
   config,
   abortSignal,
-  ipcController,
+  customRpc,
   opts,
 }) {
   return new Promise((resolve, reject) => {
     const id = uid()
     const {redir, includeOlderJsonRpcCall} = opts
+    let rpc = null
 
     const {close} = pop(service, {
-      ipcController,
+      customRpc,
       async onReady(_, {send}) {
         try {
           send({
@@ -53,6 +54,15 @@ export function execPopRPC({
               params: [body, service.params],
             })
           }
+
+          rpc = customRpc?.connect({
+            send: msg => {
+              send({
+                type: "FCL:VIEW:CUSTOM_IPC",
+                payload: msg,
+              })
+            },
+          })
         } catch (error) {
           throw error
         }
@@ -126,6 +136,10 @@ export function execPopRPC({
 
       onClose() {
         reject(`Declined: Externally Halted`)
+      },
+
+      onCustomRpc(msg) {
+        rpc?.receive(msg)
       },
     })
 

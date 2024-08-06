@@ -10,7 +10,7 @@ export function pop(service, opts = {}) {
   const onMessage = opts.onMessage || noop
   const onReady = opts.onReady || noop
   const onResponse = opts.onResponse || noop
-  const onCustomIpc = opts.onCustomIpc || noop
+  const onCustomRpc = opts.onCustomRpc || noop
 
   let $pop, unmount
   const handler = buildMessageHandler({
@@ -19,7 +19,7 @@ export function pop(service, opts = {}) {
     onReady,
     onResponse,
     onMessage,
-    onCustomIpc,
+    onCustomRpc,
     getSource: () => $pop,
   })
   window.addEventListener("message", handler)

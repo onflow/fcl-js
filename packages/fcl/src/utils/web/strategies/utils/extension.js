@@ -9,7 +9,7 @@ export function extension(service, opts = {}) {
   const onMessage = opts.onMessage || noop
   const onReady = opts.onReady || noop
   const onResponse = opts.onResponse || noop
-  const onCustomIpc = opts.onCustomIpc || noop
+  const onCustomRpc = opts.onCustomRpc || noop
 
   const handler = buildMessageHandler({
     close,
@@ -17,7 +17,7 @@ export function extension(service, opts = {}) {
     onReady,
     onResponse,
     onMessage,
-    onCustomIpc,
+    onCustomRpc,
   })
   window.addEventListener("message", handler)
 

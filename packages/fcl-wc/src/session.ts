@@ -52,7 +52,7 @@ export const request = async ({
   body: any
   session: SessionTypes.Struct
   client: SignClient
-  cleanup: any
+  cleanup?: any
 }) =>
   new Promise(async (resolve, reject) => {
     const [chainId, addr, address] = makeSessionData(session)

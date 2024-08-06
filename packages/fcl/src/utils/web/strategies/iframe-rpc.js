@@ -7,14 +7,14 @@ export function execIframeRPC({
   service,
   body,
   config,
-  ipcController,
+  customRpc,
   abortSignal,
   opts,
 }) {
   return new Promise((resolve, reject) => {
     const id = uid()
     const includeOlderJsonRpcCall = opts.includeOlderJsonRpcCall
-    let ipc = null
+    let rpc = null
 
     const {close} = frame(service, {
       async onReady(_, {send}) {
@@ -58,8 +58,8 @@ export function execIframeRPC({
             })
           }
 
-          ipc = ipcController.connect({
-            onMessage: msg => {
+          rpc = customRpc?.connect({
+            send: msg => {
               send({
                 type: "FCL:VIEW:CUSTOM_IPC",
                 payload: msg,
@@ -141,8 +141,9 @@ export function execIframeRPC({
         reject(`Declined: Externally Halted`)
       },
 
-      onCustomIpc(msg) {
-        ipc?.send(msg)
+      onCustomRpc(msg) {
+        console.log(msg, rpc)
+        rpc?.receive(msg)
       },
     })
 

@@ -7,7 +7,7 @@ export function execExtRPC({
   body,
   config,
   abortSignal,
-  ipcController,
+  customRpc,
   opts,
 }) {
   return new Promise((resolve, reject) => {
@@ -64,6 +64,10 @@ export function execExtRPC({
 
       onClose() {
         reject(`Declined: Externally Halted`)
+      },
+
+      onCustomRpc(e) {
+        rpc?.receive(e)
       },
     })
 

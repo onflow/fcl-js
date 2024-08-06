@@ -10,7 +10,7 @@ export function tab(service, opts = {}) {
   const onMessage = opts.onMessage || noop
   const onReady = opts.onReady || noop
   const onResponse = opts.onResponse || noop
-  const onCustomIpc = opts.onCustomIpc || noop
+  const onCustomRpc = opts.onCustomRpc || noop
 
   let $tab, unmount
   const handler = buildMessageHandler({
@@ -19,7 +19,7 @@ export function tab(service, opts = {}) {
     onReady,
     onResponse,
     onMessage,
-    onCustomIpc,
+    onCustomRpc,
     getSource: () => $tab,
   })
   window.addEventListener("message", handler)
