@@ -8,7 +8,7 @@ export enum DiscoveryNotification {
 }
 
 export enum FclRequest {
-  REQUEST_WALLETCONECT_QRCODE = "requestWalletConnectQRCode",
+  REQUEST_WALLETCONNECT_QRCODE = "requestWalletConnectQRCode",
   EXEC_SERVICE = "execService",
 }
 

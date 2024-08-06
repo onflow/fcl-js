@@ -44,7 +44,7 @@ export async function execStrategyHook(...args: any) {
     notifications: [],
   })
   rpc.on(
-    FclRequest.REQUEST_WALLETCONECT_QRCODE,
+    FclRequest.REQUEST_WALLETCONNECT_QRCODE,
     makeRequestWcQRHandler({
       addAuthnCandidate,
       authnBody: body,
@@ -95,9 +95,8 @@ export async function execStrategyHook(...args: any) {
   return result
 }
 
-// RPC handler for handling QR URI requests (e.g WalletConnect)
-// Open-ended implementation for future compatibility with other QR methods
-// e.g. `authn-qrcode` Service type in future could be used for custom QR implementations
+// RPC handler for handling WalletConnect QR code requests
+// Adds another authentication candidate to the authn race for the WC bypass
 const makeRequestWcQRHandler =
   ({
     addAuthnCandidate,
