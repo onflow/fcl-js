@@ -5,7 +5,6 @@ import {
   request as requestWc,
   getSignClient,
 } from "@onflow/fcl-wc"
-import {PROPOSAL_EXPIRY_MESSAGE} from "@walletconnect/sign-client"
 import {dynamicRace, wrapAbortSignal} from "../utils/async"
 import {
   DiscoveryNotification,
@@ -136,15 +135,10 @@ const makeRequestWcQRHandler =
         if (abortSignal.aborted) {
           return
         }
-        if ((e as any)?.message === PROPOSAL_EXPIRY_MESSAGE) {
-          rpc.notify(DiscoveryNotification.NOTIFY_QRCODE_EXPIRY, {uri})
-          return
-        } else {
-          rpc.notify(DiscoveryNotification.NOTIFY_QRCODE_ERROR, {
-            error: e?.message,
-          })
-          console.error("ERROR: WalletConnect session approval failed", e)
-        }
+        rpc.notify(DiscoveryNotification.NOTIFY_QRCODE_ERROR, {
+          uri,
+          error: e?.message,
+        })
       })
 
     return {uri}
