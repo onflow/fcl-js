@@ -46,6 +46,7 @@ export async function execStrategyHook(...args: any) {
   rpc.on(
     FclRequest.REQUEST_WALLETCONNECT_QRCODE,
     makeRequestWcQRHandler({
+      rpc,
       addAuthnCandidate,
       authnBody: body,
     })
@@ -100,14 +101,16 @@ export async function execStrategyHook(...args: any) {
 // Adds another authentication candidate to the authn race for the WC bypass
 const makeRequestWcQRHandler =
   ({
+    rpc,
     addAuthnCandidate,
     authnBody,
   }: {
+    rpc: DiscoveryRpc
     addAuthnCandidate: (candidate: Promise<any>) => void
     authnBody: any
   }) =>
   // Service is not used for now, but de-risks from WalletConnect & allows custom QR implementations
-  async (rpc: DiscoveryRpc) => {
+  async ({}) => {
     const client = await getSignClient()
 
     // Execute WC bypass if session is approved
@@ -155,7 +158,7 @@ const makeExecServiceHandler =
     execStrategyArgs: any
     abortController: AbortController
   }) =>
-  async (_: DiscoveryRpc, {service}: {service: Service}) => {
+  async ({service}: {service: Service}) => {
     return new Promise(async (resolveRpc, rejectRpc) => {
       const execPromise: Promise<any> = (execStrategy as any)(
         {
