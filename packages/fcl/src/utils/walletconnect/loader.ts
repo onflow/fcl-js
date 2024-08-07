@@ -6,8 +6,6 @@ import {CoreTypes} from "@walletconnect/types"
 
 export const isServer = typeof window === "undefined"
 
-let client: Promise<any | null> = Promise.resolve(null)
-
 const getMetadata = (config: {
   "app.detail.title": string | undefined | null
   "app.detail.icon": string | undefined | null
@@ -102,12 +100,5 @@ ${lastConfig}`
       metadata: getMetadata(wcConfig),
     })
     pluginRegistry.add([FclWcServicePlugin])
-
-    // Assign the client to the global variable
-    client = _clientPromise
   })
-}
-
-export function getSignClient() {
-  return client
 }

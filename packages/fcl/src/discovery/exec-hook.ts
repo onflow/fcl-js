@@ -3,8 +3,8 @@ import {
   createSessionProposal,
   FLOW_METHODS,
   request as requestWc,
+  getSignClient,
 } from "@onflow/fcl-wc"
-import {getSignClient} from "../utils/walletconnect/loader"
 import {PROPOSAL_EXPIRY_MESSAGE} from "@walletconnect/sign-client"
 import {dynamicRace, wrapAbortSignal} from "../utils/async"
 import {
@@ -80,6 +80,7 @@ export async function execStrategyHook(...args: any) {
         // Select only the relevant interface to prevent accidental coupling in the future
         customRpc: {
           connect: rpc.connect.bind(rpc),
+          receive: rpc.receive.bind(rpc),
         },
       },
       // Pass the rest of the arguments (protect against future changes)

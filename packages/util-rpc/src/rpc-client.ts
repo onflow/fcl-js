@@ -13,48 +13,65 @@ export type RpcNotification<P> = {
 }
 
 enum ReservedRpcMethods {
-  GET_REQUESTS = "rpc_getRequests",
-  GET_NOTIFICATIONS = "rpc_getNotifications",
+  HELLO = "rpc_hello",
 }
 
-type RequestHandler<RPC> = (rpc: RPC, params: any) => any
+type RequestHandler<T = any> = (params: T) => any
+type NotificationHandler<T = any> = (params: T) => void
+
+type PeerInfo = {
+  requests: string[]
+  notifications: string[]
+}
 
 export class RpcClient<
   PeerRequests extends Record<string, RpcRequest<any, any>>,
   PeerNotifications extends Record<string, RpcNotification<any>>,
 > {
   private id = 0
-  private peerRequests!: Promise<string[]>
-  private peerNotifications!: Promise<string[]>
   private send!: (msg: RpcMessage) => void
 
-  private requestHandlers: Record<string, (rpc: this, params: any) => any> =
-    {} as any
-  private subscriptions: Record<string, Set<(rpc: this, params: any) => void>> =
-    {} as any
+  private resolvePeerInfo!: (info: PeerInfo) => void
+  private rejectPeerInfo!: (error: Error) => void
+  private peerInfo: Promise<PeerInfo> = new Promise((resolve, reject) => {
+    this.resolvePeerInfo = resolve
+    this.rejectPeerInfo = reject
+  })
+
+  private enabledNotifications: string[] = []
+  private requestHandlers: Record<string, RequestHandler> = {} as any
+  private subscriptions: Record<string, Set<NotificationHandler>> = {} as any
   private messageListeners: ((msg: any) => void)[] = []
 
   constructor({notifications}: {notifications?: string[]}) {
-    this.on(ReservedRpcMethods.GET_REQUESTS, () => {
-      return Object.keys(this.requestHandlers)
-    })
-
-    this.on(ReservedRpcMethods.GET_NOTIFICATIONS, () => {
-      return notifications || []
+    this.enabledNotifications = notifications || []
+    this.on(ReservedRpcMethods.HELLO, (info: PeerInfo) => {
+      this.resolvePeerInfo(info)
+      return this.ownInfo()
     })
   }
 
   connect({send}: {send: (msg: RpcMessage) => void}) {
     this.send = send
-    this.peerRequests = this.request(ReservedRpcMethods.GET_REQUESTS, {})
-    this.peerNotifications = this.request(
-      ReservedRpcMethods.GET_NOTIFICATIONS,
-      {}
-    )
-    return {receive: this.receive.bind(this)}
+    this.request(ReservedRpcMethods.HELLO, this.ownInfo())
+      .then(info => {
+        this.resolvePeerInfo(info)
+      })
+      .catch(this.rejectPeerInfo)
   }
 
-  private receive(msg: RpcMessage) {
+  private ownInfo(): PeerInfo {
+    return {
+      requests: Object.keys(this.requestHandlers),
+      notifications: this.enabledNotifications,
+    }
+  }
+
+  receive(msg: RpcMessage) {
+    if (msg?.jsonrpc !== "2.0") {
+      return
+    }
+
     if ("method" in msg) {
       if ("id" in msg) {
         this.handleRequest(msg)
@@ -70,7 +87,7 @@ export class RpcClient<
     const handler = this.requestHandlers[msg.method]
     if (handler) {
       try {
-        const result = await handler(this, msg.params)
+        const result = await handler(msg.params)
         this.send({
           jsonrpc: "2.0",
           id: msg.id,
@@ -98,14 +115,21 @@ export class RpcClient<
           })
         }
       }
+    } else {
+      this.send({
+        jsonrpc: "2.0",
+        id: msg.id,
+        error: {
+          code: RpcErrorCode.METHOD_NOT_FOUND,
+          message: `Method not found: ${msg.method}`,
+        },
+      })
     }
   }
 
   private handleNotification(msg: RpcNotificationMessage) {
     if (this.subscriptions[msg.method]) {
-      this.subscriptions[msg.method].forEach(handler =>
-        handler(this, msg.params)
-      )
+      this.subscriptions[msg.method].forEach(handler => handler(msg.params))
     }
   }
 
@@ -120,6 +144,8 @@ export class RpcClient<
     method: R,
     params: PeerNotifications[R]["params"]
   ) {
+    await this.onceConnected()
+
     this.send({
       jsonrpc: "2.0",
       method,
@@ -132,17 +158,12 @@ export class RpcClient<
     params: PeerRequests[R]["params"]
   ): Promise<PeerRequests[R]["result"]> {
     const id = this.id++
-    this.send({
-      jsonrpc: "2.0",
-      method,
-      params,
-      id,
-    })
 
     let unsub = () => {}
-    return new Promise<PeerRequests[R]["result"]>((resolve, reject) => {
+    const result = new Promise<PeerRequests[R]["result"]>((resolve, reject) => {
       unsub = this.onMessage(msg => {
-        if (msg.id === id) {
+        console.log("THING", msg)
+        if (msg.id === id && ("result" in msg || "error" in msg)) {
           if (msg.error) {
             const rpcError = new RpcError(
               msg.error.code,
@@ -155,15 +176,24 @@ export class RpcClient<
         }
       })
     }).finally(unsub)
+
+    this.send({
+      jsonrpc: "2.0",
+      method,
+      params,
+      id,
+    })
+
+    return result
   }
 
-  on(method: string, handler: RequestHandler<this>) {
+  on(method: string, handler: RequestHandler) {
     this.requestHandlers[method] = handler
   }
 
   subscribe<R extends keyof PeerNotifications & string>(
     method: R,
-    handler: (rpc: this, params: PeerNotifications[R]["params"]) => void
+    handler: RequestHandler<PeerNotifications[R]["params"]>
   ) {
     this.subscriptions[method] = this.subscriptions[method] || new Set()
     this.subscriptions[method].add(handler)
@@ -171,16 +201,20 @@ export class RpcClient<
 
   unsubscribe<R extends keyof PeerNotifications & string>(
     method: R,
-    handler: (rpc: this, params: PeerNotifications[R]["params"]) => void
+    handler: RequestHandler<PeerNotifications[R]["params"]>
   ) {
     this.subscriptions[method]?.delete(handler)
   }
 
+  async onceConnected() {
+    return this.peerInfo.then(() => {})
+  }
+
   async getAvailableRequests() {
-    return this.peerRequests
+    return this.peerInfo.then(info => info.requests)
   }
 
   async getAvailableNotifications() {
-    return this.peerNotifications
+    return this.peerInfo.then(info => info.notifications)
   }
 }
