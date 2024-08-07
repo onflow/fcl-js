@@ -25,6 +25,15 @@ export function execExtRPC({
             },
             config,
           })
+
+          customRpc?.connect({
+            send: msg => {
+              send({
+                type: "FCL:VIEW:CUSTOM_RPC",
+                body: msg,
+              })
+            },
+          })
         } catch (error) {
           throw error
         }
@@ -66,8 +75,8 @@ export function execExtRPC({
         reject(`Declined: Externally Halted`)
       },
 
-      onCustomRpc(e) {
-        rpc?.receive(e)
+      onCustomRpc(msg) {
+        customRpc?.receive(msg)
       },
     })
 

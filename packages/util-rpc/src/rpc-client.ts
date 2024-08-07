@@ -29,7 +29,11 @@ export class RpcClient<
   PeerNotifications extends Record<string, RpcNotification<any>>,
 > {
   private id = 0
-  private send!: (msg: RpcMessage) => void
+
+  private setSend: (send: (msg: RpcMessage) => void) => void = () => {}
+  private _send: Promise<(msg: RpcMessage) => void> = new Promise(resolve => {
+    this.setSend = resolve
+  })
 
   private resolvePeerInfo!: (info: PeerInfo) => void
   private rejectPeerInfo!: (error: Error) => void
@@ -52,8 +56,8 @@ export class RpcClient<
   }
 
   connect({send}: {send: (msg: RpcMessage) => void}) {
-    this.send = send
-    this.request(ReservedRpcMethods.HELLO, this.ownInfo())
+    this.setSend(send)
+    this.requestWithoutConnection(ReservedRpcMethods.HELLO, this.ownInfo())
       .then(info => {
         this.resolvePeerInfo(info)
       })
@@ -65,6 +69,10 @@ export class RpcClient<
       requests: Object.keys(this.requestHandlers),
       notifications: this.enabledNotifications,
     }
+  }
+
+  private async send(msg: RpcMessage) {
+    return (await this._send)(msg)
   }
 
   receive(msg: RpcMessage) {
@@ -154,6 +162,14 @@ export class RpcClient<
   }
 
   async request<R extends keyof PeerRequests & string>(
+    method: R,
+    params: PeerRequests[R]["params"]
+  ): Promise<PeerRequests[R]["result"]> {
+    await this.onceConnected()
+    return this.requestWithoutConnection(method, params)
+  }
+
+  private async requestWithoutConnection<R extends keyof PeerRequests & string>(
     method: R,
     params: PeerRequests[R]["params"]
   ): Promise<PeerRequests[R]["result"]> {
