@@ -48,7 +48,7 @@ export async function execService({
   }
 
   try {
-    const res = (_execStrategy || execStrategy)({
+    const res = await (_execStrategy || execStrategy)({
       service,
       body: msg,
       config: execConfig,
