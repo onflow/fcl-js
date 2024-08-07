@@ -14,7 +14,6 @@ export function execIframeRPC({
   return new Promise((resolve, reject) => {
     const id = uid()
     const includeOlderJsonRpcCall = opts.includeOlderJsonRpcCall
-    let rpc = null
 
     const {close} = frame(service, {
       async onReady(_, {send}) {
@@ -58,10 +57,10 @@ export function execIframeRPC({
             })
           }
 
-          rpc = customRpc?.connect({
+          customRpc?.connect({
             send: msg => {
               send({
-                type: "FCL:VIEW:CUSTOM_IPC",
+                type: "FCL:VIEW:CUSTOM_RPC",
                 payload: msg,
               })
             },
@@ -142,8 +141,7 @@ export function execIframeRPC({
       },
 
       onCustomRpc(msg) {
-        console.log(msg, rpc)
-        rpc?.receive(msg)
+        customRpc?.receive(msg)
       },
     })
 

@@ -14,7 +14,6 @@ export function execTabRPC({
   return new Promise((resolve, reject) => {
     const id = uid()
     const {redir, includeOlderJsonRpcCall} = opts
-    let rpc = null
 
     const {close} = tab(service, {
       customRpc,
@@ -55,10 +54,10 @@ export function execTabRPC({
             })
           }
 
-          rpc = customRpc?.connect({
+          customRpc?.connect({
             send: msg => {
               send({
-                type: "FCL:VIEW:CUSTOM_IPC",
+                type: "FCL:VIEW:CUSTOM_RPC",
                 payload: msg,
               })
             },
@@ -139,7 +138,7 @@ export function execTabRPC({
       },
 
       onCustomRpc(msg) {
-        rpc?.receive(msg)
+        customRpc?.receive(msg)
       },
     })
 

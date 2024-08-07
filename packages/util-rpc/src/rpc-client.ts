@@ -162,7 +162,6 @@ export class RpcClient<
     let unsub = () => {}
     const result = new Promise<PeerRequests[R]["result"]>((resolve, reject) => {
       unsub = this.onMessage(msg => {
-        console.log("THING", msg)
         if (msg.id === id && ("result" in msg || "error" in msg)) {
           if (msg.error) {
             const rpcError = new RpcError(
@@ -191,18 +190,12 @@ export class RpcClient<
     this.requestHandlers[method] = handler
   }
 
-  subscribe<R extends keyof PeerNotifications & string>(
-    method: R,
-    handler: RequestHandler<PeerNotifications[R]["params"]>
-  ) {
+  subscribe<R extends string>(method: R, handler: RequestHandler<any>) {
     this.subscriptions[method] = this.subscriptions[method] || new Set()
     this.subscriptions[method].add(handler)
   }
 
-  unsubscribe<R extends keyof PeerNotifications & string>(
-    method: R,
-    handler: RequestHandler<PeerNotifications[R]["params"]>
-  ) {
+  unsubscribe<R extends string>(method: R, handler: RequestHandler<any>) {
     this.subscriptions[method]?.delete(handler)
   }
 

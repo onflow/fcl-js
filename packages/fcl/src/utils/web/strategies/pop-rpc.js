@@ -14,7 +14,6 @@ export function execPopRPC({
   return new Promise((resolve, reject) => {
     const id = uid()
     const {redir, includeOlderJsonRpcCall} = opts
-    let rpc = null
 
     const {close} = pop(service, {
       customRpc,
@@ -55,10 +54,10 @@ export function execPopRPC({
             })
           }
 
-          rpc = customRpc?.connect({
+          customRpc?.connect({
             send: msg => {
               send({
-                type: "FCL:VIEW:CUSTOM_IPC",
+                type: "FCL:VIEW:CUSTOM_RPC",
                 payload: msg,
               })
             },
@@ -139,7 +138,7 @@ export function execPopRPC({
       },
 
       onCustomRpc(msg) {
-        rpc?.receive(msg)
+        customRpc?.receive(msg)
       },
     })
 

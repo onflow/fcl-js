@@ -1,7 +1,7 @@
 const CLOSE_EVENT = "FCL:VIEW:CLOSE"
 const READY_EVENT = "FCL:VIEW:READY"
 const RESPONSE_EVENT = "FCL:VIEW:RESPONSE"
-const CUSTOM_IPC = "FCL:VIEW:CUSTOM_IPC"
+const CUSTOM_RPC = "FCL:VIEW:CUSTOM_RPC"
 
 const _ = e => typeof e === "string" && e.toLowerCase()
 
@@ -45,10 +45,9 @@ export const buildMessageHandler = ({
       if (_(e.data.type) === _(READY_EVENT)) {
         onReady(e, {send, close})
         source ||= e.source
-        console.log("e", e)
       }
       if (_(e.data.type) === _(RESPONSE_EVENT)) onResponse(e, {send, close})
-      if (_(e.data.type) === _(CUSTOM_IPC))
+      if (_(e.data.type) === _(CUSTOM_RPC))
         onCustomRpc(e.data.payload, {send, close})
       onMessage(e, {send, close})
 
