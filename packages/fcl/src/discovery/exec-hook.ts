@@ -49,6 +49,7 @@ export async function execStrategyHook(...args: any) {
       rpc,
       addAuthnCandidate,
       authnBody: body,
+      abortSignal: abortController.signal,
     })
   )
   rpc.on(
@@ -57,7 +58,7 @@ export async function execStrategyHook(...args: any) {
       addAuthnCandidate,
       execStrategyOpts: opts,
       execStrategyArgs: args,
-      abortController,
+      abortSignal: abortController.signal,
     })
   )
 
@@ -104,12 +105,13 @@ const makeRequestWcQRHandler =
     rpc,
     addAuthnCandidate,
     authnBody,
+    abortSignal,
   }: {
     rpc: DiscoveryRpc
     addAuthnCandidate: (candidate: Promise<any>) => void
     authnBody: any
+    abortSignal: AbortSignal
   }) =>
-  // Service is not used for now, but de-risks from WalletConnect & allows custom QR implementations
   async ({}) => {
     const client = await getSignClient()
 
@@ -131,14 +133,17 @@ const makeRequestWcQRHandler =
         )
       })
       .catch(e => {
+        if (abortSignal.aborted) {
+          return
+        }
         if ((e as any)?.message === PROPOSAL_EXPIRY_MESSAGE) {
           rpc.notify(DiscoveryNotification.NOTIFY_QRCODE_EXPIRY, {uri})
           return
         } else {
           rpc.notify(DiscoveryNotification.NOTIFY_QRCODE_ERROR, {
-            error: e.message,
+            error: e?.message,
           })
-          console.error(e)
+          console.error("ERROR: WalletConnect session approval failed", e)
         }
       })
 
@@ -151,12 +156,12 @@ const makeExecServiceHandler =
     addAuthnCandidate,
     execStrategyOpts,
     execStrategyArgs,
-    abortController,
+    abortSignal,
   }: {
     addAuthnCandidate: (candidate: Promise<any>) => void
     execStrategyOpts: any
     execStrategyArgs: any
-    abortController: AbortController
+    abortSignal: AbortSignal
   }) =>
   async ({service}: {service: Service}) => {
     return new Promise(async (resolveRpc, rejectRpc) => {
@@ -165,7 +170,7 @@ const makeExecServiceHandler =
           ...execStrategyOpts,
           service,
           config: execStrategyOpts.config,
-          abortSignal: abortController.signal,
+          abortSignal,
         },
         // Pass the rest of the arguments (protect against future changes)
         ...execStrategyArgs.slice(1)
