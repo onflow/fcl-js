@@ -6,12 +6,7 @@ import {
   getSignClient,
 } from "@onflow/fcl-wc"
 import {dynamicRace, wrapAbortSignal} from "../utils/async"
-import {
-  DiscoveryNotification,
-  DiscoveryNotifications,
-  DiscoveryRpc,
-  FclRequest,
-} from "./rpc"
+import {DiscoveryNotification, DiscoveryRpc, FclRequest} from "./rpc"
 import {Service} from "@onflow/typedefs"
 import {RpcClient} from "@onflow/util-rpc"
 
@@ -36,12 +31,13 @@ export async function execStrategyHook(...args: any) {
   const abortController = wrapAbortSignal(baseAbortSignal)
 
   // Execute all authentication requests in parallel
-  const {result, addCandidate: addAuthnCandidate} = dynamicRace(abortController)
+  const {result: _result, addCandidate: addAuthnCandidate} = dynamicRace()
 
   // Initialize the discovery RPC client
-  const rpc = new RpcClient<{}, DiscoveryNotifications>({
+  const rpc: DiscoveryRpc = new RpcClient({
     notifications: [],
   })
+
   rpc.on(
     FclRequest.REQUEST_WALLETCONNECT_QRCODE,
     makeRequestWcQRHandler({
@@ -71,27 +67,37 @@ export async function execStrategyHook(...args: any) {
   }
 
   // Execute base discovery request
-  addAuthnCandidate(
-    (execStrategy as any)(
-      {
-        ...opts,
-        config: discoveryConfig,
-        abortSignal: abortController.signal,
-        // Pass the custom RPC client to the execStrategy
-        // Select only the relevant interface to prevent accidental coupling in the future
-        customRpc: {
-          connect: rpc.connect.bind(rpc),
-          receive: rpc.receive.bind(rpc),
-        },
+  const discoveryPromise = (execStrategy as any)(
+    {
+      ...opts,
+      config: discoveryConfig,
+      abortSignal: abortController.signal,
+      // Pass the custom RPC client to the execStrategy
+      // Select only the relevant interface to prevent accidental coupling in the future
+      customRpc: {
+        connect: rpc.connect.bind(rpc),
+        receive: rpc.receive.bind(rpc),
       },
-      // Pass the rest of the arguments (protect against future changes)
-      ...args.slice(1)
-    )
+    },
+    // Pass the rest of the arguments (protect against future changes)
+    ...args.slice(1)
   )
+  addAuthnCandidate(discoveryPromise)
 
-  // Ensure the abort signal is propagated to all candidates on completion
-  result.finally(() => {
-    abortController.abort()
+  // Wrap the result promise to ensure cleanup on completion
+  const result = new Promise(async (resolve, reject) => {
+    _result.finally(async () => {
+      // Give Discovery a chance to cleanup
+      await Promise.race([
+        new Promise(resolve => setTimeout(resolve, 1000)),
+        discoveryPromise,
+      ]).catch(() => {})
+
+      // Ensure the abort signal is propagated to all candidates on completion
+      abortController.abort()
+
+      _result.then(resolve, reject)
+    })
   })
 
   return result
@@ -130,6 +136,11 @@ const makeRequestWcQRHandler =
             client,
           })
         )
+
+        // Notify Discovery that the QR code was connected
+        rpc.notify(DiscoveryNotification.NOTIFY_QRCODE_CONNECTED, {
+          uri,
+        })
       })
       .catch(e => {
         if (abortSignal.aborted) {

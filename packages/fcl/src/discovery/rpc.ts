@@ -4,6 +4,7 @@ export type DiscoveryRpc = RpcClient<{}, DiscoveryNotifications>
 
 export enum DiscoveryNotification {
   NOTIFY_QRCODE_ERROR = "notifyQRCodeError",
+  NOTIFY_QRCODE_CONNECTED = "notifyQRCodeConnected",
 }
 
 export enum FclRequest {
@@ -15,5 +16,8 @@ export type DiscoveryNotifications = {
   [DiscoveryNotification.NOTIFY_QRCODE_ERROR]: RpcNotification<{
     uri: string
     error: string
+  }>
+  [DiscoveryNotification.NOTIFY_QRCODE_CONNECTED]: RpcNotification<{
+    uri: string
   }>
 }
