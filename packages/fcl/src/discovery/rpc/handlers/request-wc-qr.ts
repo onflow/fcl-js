@@ -11,10 +11,12 @@ export const wcRequestHandlerFactory = ({
   rpc,
   onExecResult,
   authnBody,
+  abortSignal,
 }: {
   rpc: DiscoveryRpc
   onExecResult: (result: any) => void
   authnBody: any
+  abortSignal: AbortSignal
 }) => {
   const watchQr = watchQrFactory({
     rpc,
@@ -22,6 +24,10 @@ export const wcRequestHandlerFactory = ({
   })
 
   return async ({}) => {
+    if (abortSignal.aborted) {
+      throw new Error("Handler has been terminated")
+    }
+
     const client = await getSignClient()
 
     // Execute WC bypass if session is approved

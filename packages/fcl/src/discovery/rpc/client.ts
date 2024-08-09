@@ -27,6 +27,7 @@ export function createDiscoveryRpcClient({
       rpc,
       onExecResult,
       authnBody: body,
+      abortSignal,
     })
   )
   rpc.on(
