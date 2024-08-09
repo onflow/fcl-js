@@ -1,7 +1,7 @@
 import {RpcClient} from "@onflow/util-rpc"
 import {DiscoveryRpc, FclRequest} from "./requests"
-import {makeExecServiceHandler} from "./handlers/exec-service"
-import {makeRequestWcQRHandler} from "./handlers/request-wc-qr"
+import {execServiceHandlerFactory} from "./handlers/exec-service"
+import {wcRequestHandlerFactory} from "./handlers/request-wc-qr"
 
 // Initialize the discovery RPC client
 export function createDiscoveryRpcClient({
@@ -23,7 +23,7 @@ export function createDiscoveryRpcClient({
 
   rpc.on(
     FclRequest.REQUEST_WALLETCONNECT_QRCODE,
-    makeRequestWcQRHandler({
+    wcRequestHandlerFactory({
       rpc,
       onExecResult,
       authnBody: body,
@@ -31,7 +31,7 @@ export function createDiscoveryRpcClient({
   )
   rpc.on(
     FclRequest.EXEC_SERVICE,
-    makeExecServiceHandler({
+    execServiceHandlerFactory({
       onExecResult,
       execStrategyOpts: opts,
       execStrategyArgs: args,

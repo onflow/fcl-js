@@ -4,7 +4,7 @@ import {Service} from "@onflow/typedefs"
 const APPROVED = "APPROVED"
 
 // RPC handler for handling service execution requests (e.g extension service)
-export const makeExecServiceHandler =
+export const execServiceHandlerFactory =
   ({
     onExecResult,
     execStrategyOpts,

@@ -7,7 +7,7 @@ import {
 import {DiscoveryNotification, DiscoveryRpc} from "../requests"
 
 // RPC handler for handling WalletConnect QR code requests
-export const makeRequestWcQRHandler = ({
+export const wcRequestHandlerFactory = ({
   rpc,
   onExecResult,
   authnBody,
@@ -16,7 +16,7 @@ export const makeRequestWcQRHandler = ({
   onExecResult: (result: any) => void
   authnBody: any
 }) => {
-  const watchQrConnection = makeWatchQrConnection({
+  const watchQrConnection = watchQrConnectionFactory({
     rpc,
     authnBody,
   })
@@ -40,7 +40,7 @@ export const makeRequestWcQRHandler = ({
   }
 }
 
-export function makeWatchQrConnection({
+export function watchQrConnectionFactory({
   rpc,
   authnBody,
 }: {
