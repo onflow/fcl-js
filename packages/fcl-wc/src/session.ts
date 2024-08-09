@@ -46,13 +46,11 @@ export const request = async ({
   body,
   session,
   client,
-  cleanup,
 }: {
   method: any
   body: any
   session: SessionTypes.Struct
   client: SignClient
-  cleanup?: any
 }) =>
   new Promise(async (resolve, reject) => {
     const [chainId, addr, address] = makeSessionData(session)
@@ -100,20 +98,16 @@ export const request = async ({
         throw error
       }
     }
+  }).catch(error => {
+    if (error instanceof Error) {
+      log({
+        title: `${error.name} Error on WalletConnect client ${method} request`,
+        message: error.message,
+        level: LEVELS.error,
+      })
+    }
+    throw error
   })
-    .catch(error => {
-      if (error instanceof Error) {
-        log({
-          title: `${error.name} Error on WalletConnect client ${method} request`,
-          message: error.message,
-          level: LEVELS.error,
-        })
-      }
-      throw error
-    })
-    .finally(() => {
-      cleanup?.()
-    })
 
 export function makeSessionData(session: SessionTypes.Struct) {
   const [namespace, reference, address] = Object.values<any>(session.namespaces)

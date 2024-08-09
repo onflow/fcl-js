@@ -120,11 +120,10 @@ const makeExec = (
         body,
         session,
         client,
-        cleanup: () => {
-          if (windowRef && !windowRef.closed) {
-            windowRef.close()
-          }
-        },
+      }).finally(() => {
+        if (windowRef && !windowRef.closed) {
+          windowRef.close()
+        }
       })
 
       // Resolve the result
