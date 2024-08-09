@@ -1,14 +1,6 @@
-import {execStrategy, normalizePollingResponse} from "@onflow/fcl-core"
-import {
-  createSessionProposal,
-  FLOW_METHODS,
-  request as requestWc,
-  getSignClient,
-} from "@onflow/fcl-wc"
+import {execStrategy} from "@onflow/fcl-core"
 import {dynamicRace, wrapAbortSignal} from "../utils/async"
-import {DiscoveryNotification, DiscoveryRpc, FclRequest} from "./rpc"
-import {Service} from "@onflow/typedefs"
-import {RpcClient} from "@onflow/util-rpc"
+import {createDiscoveryRpcClient} from "./rpc/client"
 
 const APPROVED = "APPROVED"
 const AUTHN_SERVICE_TYPE = "authn"
@@ -34,28 +26,13 @@ export async function execStrategyHook(...args: any) {
   const {result: _result, addCandidate: addAuthnCandidate} = dynamicRace()
 
   // Initialize the discovery RPC client
-  const rpc: DiscoveryRpc = new RpcClient({
-    notifications: [],
+  const rpc = createDiscoveryRpcClient({
+    onExecResult: addAuthnCandidate,
+    body,
+    opts,
+    args,
+    abortSignal: abortController.signal,
   })
-
-  rpc.on(
-    FclRequest.REQUEST_WALLETCONNECT_QRCODE,
-    makeRequestWcQRHandler({
-      rpc,
-      addAuthnCandidate,
-      authnBody: body,
-      abortSignal: abortController.signal,
-    })
-  )
-  rpc.on(
-    FclRequest.EXEC_SERVICE,
-    makeExecServiceHandler({
-      addAuthnCandidate,
-      execStrategyOpts: opts,
-      execStrategyArgs: args,
-      abortSignal: abortController.signal,
-    })
-  )
 
   // Update the discovery config to enable RPC support
   const discoveryConfig = {
@@ -102,109 +79,3 @@ export async function execStrategyHook(...args: any) {
 
   return result
 }
-
-// RPC handler for handling WalletConnect QR code requests
-// Adds another authentication candidate to the authn race for the WC bypass
-const makeRequestWcQRHandler =
-  ({
-    rpc,
-    addAuthnCandidate,
-    authnBody,
-    abortSignal,
-  }: {
-    rpc: DiscoveryRpc
-    addAuthnCandidate: (candidate: Promise<any>) => void
-    authnBody: any
-    abortSignal: AbortSignal
-  }) =>
-  async ({}) => {
-    const client = await getSignClient()
-
-    // Execute WC bypass if session is approved
-    const {uri, approval} = await createSessionProposal({
-      client,
-    })
-
-    // Add the WC bypass request to the authn candidates if session is approved
-    approval()
-      .then(session => {
-        addAuthnCandidate(
-          requestWc({
-            method: FLOW_METHODS.FLOW_AUTHN,
-            body: authnBody,
-            session,
-            client,
-          })
-            .then(result => {
-              // Notify Discovery that the QR code was connected
-              rpc.notify(DiscoveryNotification.NOTIFY_QRCODE_CONNECTED, {
-                uri,
-              })
-              return result
-            })
-            .catch(e => {
-              rpc.notify(DiscoveryNotification.NOTIFY_QRCODE_ERROR, {
-                uri,
-                error: e?.message,
-              })
-            })
-        )
-      })
-      .catch(e => {
-        if (abortSignal.aborted) {
-          return
-        }
-        rpc.notify(DiscoveryNotification.NOTIFY_QRCODE_ERROR, {
-          uri,
-          error: e?.message,
-        })
-      })
-
-    return {uri}
-  }
-
-// RPC handler for handling service execution requests (e.g extension service)
-const makeExecServiceHandler =
-  ({
-    addAuthnCandidate,
-    execStrategyOpts,
-    execStrategyArgs,
-    abortSignal,
-  }: {
-    addAuthnCandidate: (candidate: Promise<any>) => void
-    execStrategyOpts: any
-    execStrategyArgs: any
-    abortSignal: AbortSignal
-  }) =>
-  async ({service}: {service: Service}) => {
-    return new Promise(async (resolveRpc, rejectRpc) => {
-      const execPromise: Promise<any> = (execStrategy as any)(
-        {
-          ...execStrategyOpts,
-          service,
-          config: execStrategyOpts.config,
-          abortSignal,
-        },
-        // Pass the rest of the arguments (protect against future changes)
-        ...execStrategyArgs.slice(1)
-      )
-
-      addAuthnCandidate(
-        new Promise(async resolveCandidate => {
-          try {
-            const result = await execPromise
-            const status = normalizePollingResponse(result)?.status || APPROVED
-            if (status === APPROVED) {
-              resolveCandidate(result)
-              resolveRpc({})
-            } else {
-              // Notify Discovery that the service was rejected
-              rejectRpc(new Error(result?.reason || "Service was declined"))
-            }
-          } catch (e: any) {
-            rejectRpc(new Error(e?.message || "Service execution failed"))
-          }
-        })
-      )
-    })
-  }
