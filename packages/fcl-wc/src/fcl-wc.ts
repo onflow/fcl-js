@@ -120,4 +120,15 @@ const initHelper = ({
   }
 }
 
+// Returns the SignClient instance used by this plugin if it has been initialized
+export async function getSignClient() {
+  return clientPromise.then(client => {
+    if (!client) {
+      throw new Error("WalletConnect client not initialized")
+    }
+
+    return client
+  })
+}
+
 export {SERVICE_PLUGIN_NAME}

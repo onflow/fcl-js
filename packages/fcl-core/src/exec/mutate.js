@@ -5,7 +5,15 @@ import {prepTemplateOpts} from "./utils/prep-template-opts.js"
 import {preMutate} from "./utils/pre.js"
 import {isNumber} from "../utils/is"
 
-export const getMutate = ({platform}) => {
+/**
+ * @description
+ * Factory function that returns a mutate function.
+ *
+ * @param {object} opts - Configuration Options
+ * @param {string} opts.platform - Platform
+ * @param {object} [opts.discovery] - Discovery options
+ */
+export const getMutate = ({platform, discovery}) => {
   /**
    * @description
    * Allows you to submit transactions to the blockchain to potentially mutate the state.
@@ -58,7 +66,7 @@ export const getMutate = ({platform}) => {
     try {
       await preMutate(opts)
       opts = await prepTemplateOpts(opts)
-      const currentUser = getCurrentUser({platform})
+      const currentUser = getCurrentUser({platform, discovery})
       // Allow for a config to overwrite the authorization function.
       // prettier-ignore
       const authz = await sdk.config().get("fcl.authz", currentUser().authorization)
