@@ -85,7 +85,7 @@ export async function execStrategyHook(...args: any) {
   addAuthnCandidate(discoveryPromise)
 
   // Wrap the result promise to ensure cleanup on completion
-  const result = new Promise(async (resolve, reject) => {
+  const result = new Promise((resolve, reject) => {
     _result.finally(async () => {
       // Give Discovery a chance to cleanup
       await Promise.race([
