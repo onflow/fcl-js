@@ -48,7 +48,7 @@ const makeExec = (
   WalletConnectModal: Promise<WalletConnectModalType>
 ) => {
   // TODO: add abortSignal
-  return ({
+  return async ({
     service,
     body,
     opts,
@@ -59,34 +59,38 @@ const makeExec = (
     opts: any
     abortSignal: any
   }) => {
-    return new Promise(async (resolve, reject) => {
-      const client = await clientPromise
-      invariant(!!client, "WalletConnect is not initialized")
+    const client = await clientPromise
+    invariant(!!client, "WalletConnect is not initialized")
 
-      let session: any, pairing: any, windowRef: any
-      const method = service.endpoint
-      const appLink = validateAppLink(service)
-      const pairings = client.pairing.getAll({active: true})
+    let session: any, pairing: any, windowRef: any
+    const method = service.endpoint
+    const appLink = validateAppLink(service)
+    const pairings = client.pairing.getAll({active: true})
 
-      if (pairings.length > 0) {
-        pairing = pairings?.find(p => p.peerMetadata?.url === service.uid)
+    if (pairings.length > 0) {
+      pairing = pairings?.find(p => p.peerMetadata?.url === service.uid)
+    }
+
+    if (client.session.length > 0) {
+      const lastKeyIndex = client.session.keys.length - 1
+      session = client.session.get(client.session.keys.at(lastKeyIndex)!)
+    }
+
+    if (isMobile()) {
+      if (opts.windowRef) {
+        windowRef = opts.windowRef
+      } else {
+        windowRef = window.open("", "_blank")
       }
+    }
 
-      if (client.session.length > 0) {
-        const lastKeyIndex = client.session.keys.length - 1
-        session = client.session.get(client.session.keys.at(lastKeyIndex)!)
-      }
-
-      if (isMobile()) {
-        if (opts.windowRef) {
-          windowRef = opts.windowRef
-        } else {
-          windowRef = window.open("", "_blank")
+    if (session == null) {
+      session = await new Promise((resolve, reject) => {
+        function onClose() {
+          reject(`Declined: Externally Halted`)
         }
-      }
 
-      if (session == null) {
-        session = await connectWc(WalletConnectModal)({
+        connectWc(WalletConnectModal)({
           service,
           onClose,
           appLink,
@@ -96,83 +100,76 @@ const makeExec = (
           pairing,
           wcRequestHook,
           pairingModalOverride,
-        })
-      }
-
-      if (wcRequestHook && wcRequestHook instanceof Function) {
-        wcRequestHook({
-          type: REQUEST_TYPES.SIGNING_REQUEST,
-          method,
-          service,
-          session: session ?? null,
-          pairing: pairing ?? null,
-          uri: null,
-        })
-      }
-
-      if (isMobile() && method !== FLOW_METHODS.FLOW_AUTHN) {
-        openDeepLink()
-      }
-
-      // Make request to the WalletConnect client
-      const result = await request({
-        method,
-        body,
-        session,
-        client,
-      }).finally(() => {
-        if (windowRef && !windowRef.closed) {
-          windowRef.close()
-        }
+        }).then(resolve, reject)
       })
+    }
 
-      // Resolve the result
-      resolve(result)
+    if (wcRequestHook && wcRequestHook instanceof Function) {
+      wcRequestHook({
+        type: REQUEST_TYPES.SIGNING_REQUEST,
+        method,
+        service,
+        session: session ?? null,
+        pairing: pairing ?? null,
+        uri: null,
+      })
+    }
 
-      function validateAppLink({uid}: {uid: string}) {
-        if (!(uid && /^(ftp|http|https):\/\/[^ "]+$/.test(uid))) {
-          log({
-            title: "WalletConnect Service Warning",
-            message: `service.uid should be a valid universal link url. Found: ${uid}`,
-            level: LEVELS.warn,
-          })
-        }
-        return uid
-      }
+    if (isMobile() && method !== FLOW_METHODS.FLOW_AUTHN) {
+      openDeepLink()
+    }
 
-      function openDeepLink() {
-        if (windowRef) {
-          if (appLink.startsWith("http") && !isIOS()) {
-            // Workaround for https://github.com/rainbow-me/rainbowkit/issues/524.
-            // Using 'window.open' causes issues on iOS in non-Safari browsers and
-            // WebViews where a blank tab is left behind after connecting.
-            // This is especially bad in some WebView scenarios (e.g. following a
-            // link from Twitter) where the user doesn't have any mechanism for
-            // closing the blank tab.
-            // For whatever reason, links with a target of "_blank" don't suffer
-            // from this problem, and programmatically clicking a detached link
-            // element with the same attributes also avoids the issue.
-            const link = document.createElement("a")
-            link.href = appLink
-            link.target = "_blank"
-            link.rel = "noreferrer noopener"
-            link.click()
-          } else {
-            windowRef.location.href = appLink
-          }
-        } else {
-          log({
-            title: "Problem opening deep link in new window",
-            message: `Window failed to open (was it blocked by the browser?)`,
-            level: LEVELS.warn,
-          })
-        }
-      }
-
-      function onClose() {
-        reject(`Declined: Externally Halted`)
+    // Make request to the WalletConnect client and return the result
+    return await request({
+      method,
+      body,
+      session,
+      client,
+    }).finally(() => {
+      if (windowRef && !windowRef.closed) {
+        windowRef.close()
       }
     })
+
+    function validateAppLink({uid}: {uid: string}) {
+      if (!(uid && /^(ftp|http|https):\/\/[^ "]+$/.test(uid))) {
+        log({
+          title: "WalletConnect Service Warning",
+          message: `service.uid should be a valid universal link url. Found: ${uid}`,
+          level: LEVELS.warn,
+        })
+      }
+      return uid
+    }
+
+    function openDeepLink() {
+      if (windowRef) {
+        if (appLink.startsWith("http") && !isIOS()) {
+          // Workaround for https://github.com/rainbow-me/rainbowkit/issues/524.
+          // Using 'window.open' causes issues on iOS in non-Safari browsers and
+          // WebViews where a blank tab is left behind after connecting.
+          // This is especially bad in some WebView scenarios (e.g. following a
+          // link from Twitter) where the user doesn't have any mechanism for
+          // closing the blank tab.
+          // For whatever reason, links with a target of "_blank" don't suffer
+          // from this problem, and programmatically clicking a detached link
+          // element with the same attributes also avoids the issue.
+          const link = document.createElement("a")
+          link.href = appLink
+          link.target = "_blank"
+          link.rel = "noreferrer noopener"
+          link.click()
+        } else {
+          windowRef.location.href = appLink
+        }
+      } else {
+        log({
+          title: "Problem opening deep link in new window",
+          message: `Window failed to open (was it blocked by the browser?)`,
+          level: LEVELS.warn,
+        })
+      }
+    }
   }
 }
 
