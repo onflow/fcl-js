@@ -114,8 +114,8 @@ const makeExec = (
         openDeepLink()
       }
 
-      // Make request
-      await request({
+      // Make request to the WalletConnect client
+      const result = await request({
         method,
         body,
         session,
@@ -126,6 +126,9 @@ const makeExec = (
           }
         },
       })
+
+      // Resolve the result
+      resolve(result)
 
       function validateAppLink({uid}: {uid: string}) {
         if (!(uid && /^(ftp|http|https):\/\/[^ "]+$/.test(uid))) {
