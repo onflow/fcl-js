@@ -2,7 +2,6 @@ import * as fclCore from "@onflow/fcl-core"
 import {FLOW_METHODS} from "./constants"
 import {SignClient} from "@walletconnect/sign-client/dist/types/client"
 import {PairingTypes, SessionTypes} from "@walletconnect/types"
-import {LEVELS, log} from "@onflow/util-logger"
 
 // Create a new session proposal with the WalletConnect client
 export async function createSessionProposal({
@@ -51,63 +50,35 @@ export const request = async ({
   body: any
   session: SessionTypes.Struct
   client: SignClient
-}) =>
-  new Promise(async (resolve, reject) => {
-    const [chainId, addr, address] = makeSessionData(session)
-    const data = JSON.stringify({...body, addr, address})
+}) => {
+  const [chainId, addr, address] = makeSessionData(session)
+  const data = JSON.stringify({...body, addr, address})
 
-    const result = await client.request({
-      topic: session.topic,
-      chainId,
-      request: {
-        method,
-        params: [data],
-      },
-    })
-    onResponse(result)
-
-    function onResponse(resp: any) {
-      try {
-        if (typeof resp !== "object") return
-
-        switch (resp.status) {
-          case "APPROVED":
-            resolve(resp.data)
-            break
-
-          case "DECLINED":
-            reject(`Declined: ${resp.reason || "No reason supplied"}`)
-            break
-
-          case "REDIRECT":
-            resolve(resp)
-            break
-
-          default:
-            reject(`Declined: No reason supplied`)
-            break
-        }
-      } catch (error) {
-        if (error instanceof Error) {
-          log({
-            title: `${error.name} "WC/RPC onResponse error"`,
-            message: error.message,
-            level: LEVELS.error,
-          })
-        }
-        throw error
-      }
-    }
-  }).catch(error => {
-    if (error instanceof Error) {
-      log({
-        title: `${error.name} Error on WalletConnect client ${method} request`,
-        message: error.message,
-        level: LEVELS.error,
-      })
-    }
-    throw error
+  const result: any = await client.request({
+    topic: session.topic,
+    chainId,
+    request: {
+      method,
+      params: [data],
+    },
   })
+
+  if (typeof result !== "object" || result == null) return
+
+  switch (result.status) {
+    case "APPROVED":
+      return result.data
+
+    case "DECLINED":
+      throw new Error(`Declined: ${result.reason || "No reason supplied"}`)
+
+    case "REDIRECT":
+      return result.data
+
+    default:
+      throw new Error(`Declined: No reason supplied`)
+  }
+}
 
 export function makeSessionData(session: SessionTypes.Struct) {
   const [namespace, reference, address] = Object.values<any>(session.namespaces)
