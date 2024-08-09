@@ -5,7 +5,8 @@ import {execDiscovery} from "./exec-discovery"
 
 const AUTHN_SERVICE_TYPE = "authn"
 
-// Defines the execStrategy hook for Discovery Service to enable the WalletConnect bypass
+// Defines the execStrategy hook for Discovery Service
+// Used to define custom service execution rules for the Discovery Service
 export async function execStrategyHook(...args: any) {
   const [opts] = args
   const {body, abortSignal: baseAbortSignal, service} = opts

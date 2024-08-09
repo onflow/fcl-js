@@ -2,7 +2,7 @@ import {
   createSessionProposal,
   FLOW_METHODS,
   getSignClient,
-  request as requestWc,
+  request as wcRequest,
 } from "@onflow/fcl-wc"
 import {DiscoveryNotification, DiscoveryRpc} from "../requests"
 
@@ -16,7 +16,7 @@ export const wcRequestHandlerFactory = ({
   onExecResult: (result: any) => void
   authnBody: any
 }) => {
-  const watchQrConnection = watchQrConnectionFactory({
+  const watchQr = watchQrFactory({
     rpc,
     authnBody,
   })
@@ -29,8 +29,8 @@ export const wcRequestHandlerFactory = ({
       client,
     })
 
-    // Watch for QR code connection
-    watchQrConnection({
+    // Watch for QR code connection asynchronously
+    watchQr({
       uri,
       approval,
       onExecResult,
@@ -40,7 +40,7 @@ export const wcRequestHandlerFactory = ({
   }
 }
 
-export function watchQrConnectionFactory({
+export function watchQrFactory({
   rpc,
   authnBody,
 }: {
@@ -61,7 +61,11 @@ export function watchQrConnectionFactory({
       try {
         const client = await getSignClient()
         const session = await approval()
-        const result = await requestWc({
+        rpc.notify(DiscoveryNotification.NOTIFY_QRCODE_CONNECTING, {
+          uri,
+        })
+
+        const result = await wcRequest({
           method: FLOW_METHODS.FLOW_AUTHN,
           body: authnBody,
           session,
