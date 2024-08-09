@@ -135,12 +135,20 @@ const makeRequestWcQRHandler =
             session,
             client,
           })
+            .then(result => {
+              // Notify Discovery that the QR code was connected
+              rpc.notify(DiscoveryNotification.NOTIFY_QRCODE_CONNECTED, {
+                uri,
+              })
+              return result
+            })
+            .catch(e => {
+              rpc.notify(DiscoveryNotification.NOTIFY_QRCODE_ERROR, {
+                uri,
+                error: e?.message,
+              })
+            })
         )
-
-        // Notify Discovery that the QR code was connected
-        rpc.notify(DiscoveryNotification.NOTIFY_QRCODE_CONNECTED, {
-          uri,
-        })
       })
       .catch(e => {
         if (abortSignal.aborted) {
