@@ -463,8 +463,8 @@ const getCurrentUser = ({platform, discovery}) => {
     return {
       authenticate: getAuthenticate({platform, discovery}),
       unauthenticate,
-      authorization: getAuthorization({platform}),
-      signUserMessage: getSignUserMessage({platform}),
+      authorization: getAuthorization({platform, discovery}),
+      signUserMessage: getSignUserMessage({platform, discovery}),
       subscribe,
       snapshot,
       resolveArgument: getResolveArgument({platform, discovery}),
