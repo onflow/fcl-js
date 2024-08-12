@@ -288,61 +288,60 @@ const getResolvePreAuthz =
  * @param {object} account - Account object
  * @returns {Promise<object>} - Account object with signing function
  */
-const getAuthorization =
-  ({platform, discovery}) =>
-  async account => {
-    spawnCurrentUser()
+const getAuthorization = {authenticate, resolvePreAuthz}
+async account => {
+  spawnCurrentUser()
 
-    return {
-      ...account,
-      tempId: "CURRENT_USER",
-      async resolve(account, preSignable) {
-        const user = await getAuthenticate({platform, discovery})({redir: true})
-        const authz = serviceOfType(user.services, "authz")
-        const preAuthz = serviceOfType(user.services, "pre-authz")
+  return {
+    ...account,
+    tempId: "CURRENT_USER",
+    async resolve(account, preSignable) {
+      const user = await getAuthenticate({platform, discovery})({redir: true})
+      const authz = serviceOfType(user.services, "authz")
+      const preAuthz = serviceOfType(user.services, "pre-authz")
 
-        if (preAuthz)
-          return getResolvePreAuthz({platform})(
-            await execService({
-              service: preAuthz,
-              msg: preSignable,
-              platform,
-            })
-          )
-        if (authz) {
-          let windowRef
-          if (isMobile() && authz.method === "WC/RPC") {
-            windowRef = window.open("", "_blank")
-          }
-          return {
-            ...account,
-            tempId: "CURRENT_USER",
-            resolve: null,
-            addr: sansPrefix(authz.identity.address),
-            keyId: authz.identity.keyId,
-            sequenceNum: null,
-            signature: null,
-            async signingFunction(signable) {
-              return normalizeCompositeSignature(
-                await execService({
-                  service: authz,
-                  msg: signable,
-                  opts: {
-                    includeOlderJsonRpcCall: true,
-                    windowRef,
-                  },
-                  platform,
-                })
-              )
-            },
-          }
-        }
-        throw new Error(
-          "No Authz or PreAuthz Service configured for CURRENT_USER"
+      if (preAuthz)
+        return getResolvePreAuthz({platform, discovery})(
+          await execService({
+            service: preAuthz,
+            msg: preSignable,
+            platform,
+          })
         )
-      },
-    }
+      if (authz) {
+        let windowRef
+        if (isMobile() && authz.method === "WC/RPC") {
+          windowRef = window.open("", "_blank")
+        }
+        return {
+          ...account,
+          tempId: "CURRENT_USER",
+          resolve: null,
+          addr: sansPrefix(authz.identity.address),
+          keyId: authz.identity.keyId,
+          sequenceNum: null,
+          signature: null,
+          async signingFunction(signable) {
+            return normalizeCompositeSignature(
+              await execService({
+                service: authz,
+                msg: signable,
+                opts: {
+                  includeOlderJsonRpcCall: true,
+                  windowRef,
+                },
+                platform,
+              })
+            )
+          },
+        }
+      }
+      throw new Error(
+        "No Authz or PreAuthz Service configured for CURRENT_USER"
+      )
+    },
   }
+}
 
 /**
  * @description
@@ -486,7 +485,7 @@ const getCurrentUser = ({platform, discovery}) => {
   })
   currentUser.subscribe = subscribe
   currentUser.snapshot = snapshot
-  currentUser.resolveArgument = getResolveArgument({platform})
+  currentUser.resolveArgument = getResolveArgument({platform, discovery})
 
   return currentUser
 }
