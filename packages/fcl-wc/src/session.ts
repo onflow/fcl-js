@@ -45,23 +45,35 @@ export const request = async ({
   body,
   session,
   client,
+  abortSignal,
 }: {
   method: any
   body: any
   session: SessionTypes.Struct
   client: SignClient
+  abortSignal?: AbortSignal
 }) => {
   const [chainId, addr, address] = makeSessionData(session)
   const data = JSON.stringify({...body, addr, address})
 
-  const result: any = await client.request({
-    topic: session.topic,
-    chainId,
-    request: {
-      method,
-      params: [data],
-    },
-  })
+  const result: any = await Promise.race([
+    client.request({
+      topic: session.topic,
+      chainId,
+      request: {
+        method,
+        params: [data],
+      },
+    }),
+    new Promise((_, reject) => {
+      if (abortSignal?.aborted) {
+        reject(new Error("WalletConnect Request aborted"))
+      }
+      abortSignal?.addEventListener("abort", () => {
+        reject(new Error("WalletConnect Request aborted"))
+      })
+    }),
+  ])
 
   if (typeof result !== "object" || result == null) return
 

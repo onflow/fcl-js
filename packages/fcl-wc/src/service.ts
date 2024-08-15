@@ -5,7 +5,6 @@ import {FLOW_METHODS, REQUEST_TYPES} from "./constants"
 import {SignClient} from "@walletconnect/sign-client/dist/types/client"
 import {createSessionProposal, makeSessionData, request} from "./session"
 
-//TODO: wrong type
 type WalletConnectModalType =
   typeof import("@walletconnect/modal").WalletConnectModal
 
@@ -47,7 +46,6 @@ const makeExec = (
   {wcRequestHook, pairingModalOverride}: any,
   WalletConnectModal: Promise<WalletConnectModalType>
 ) => {
-  // TODO: add abortSignal
   return async ({
     service,
     body,
@@ -57,7 +55,7 @@ const makeExec = (
     service: any
     body: any
     opts: any
-    abortSignal: any
+    abortSignal?: AbortSignal
   }) => {
     const client = await clientPromise
     invariant(!!client, "WalletConnect is not initialized")
@@ -100,6 +98,7 @@ const makeExec = (
           pairing,
           wcRequestHook,
           pairingModalOverride,
+          abortSignal,
         }).then(resolve, reject)
       })
     }
@@ -125,6 +124,7 @@ const makeExec = (
       body,
       session,
       client,
+      abortSignal,
     }).finally(() => {
       if (windowRef && !windowRef.closed) {
         windowRef.close()
@@ -185,6 +185,7 @@ function connectWc(WalletConnectModal: Promise<WalletConnectModalType>) {
     pairing,
     wcRequestHook,
     pairingModalOverride,
+    abortSignal,
   }: {
     service: any
     onClose: any
@@ -195,6 +196,7 @@ function connectWc(WalletConnectModal: Promise<WalletConnectModalType>) {
     pairing: any
     wcRequestHook: any
     pairingModalOverride: any
+    abortSignal?: AbortSignal
   }) => {
     const projectId = client.opts?.projectId
     invariant(
@@ -239,7 +241,17 @@ function connectWc(WalletConnectModal: Promise<WalletConnectModalType>) {
         }
       }
 
-      const session = await approval()
+      const session = await Promise.race([
+        approval(),
+        new Promise((_, reject) => {
+          if (abortSignal?.aborted) {
+            reject(new Error("Session request aborted"))
+          }
+          abortSignal?.addEventListener("abort", () => {
+            reject(new Error("Session request aborted"))
+          })
+        }),
+      ])
       return session
     } catch (error) {
       if (error instanceof Error) {
