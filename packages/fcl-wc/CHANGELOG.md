@@ -1,5 +1,18 @@
 # @onflow/fcl-wc
 
+## 6.0.0-alpha.0
+
+### Minor Changes
+
+- [#1922](https://github.com/onflow/fcl-js/pull/1922) [`266fda58`](https://github.com/onflow/fcl-js/commit/266fda5817900a943925f9a4cbfc69dbcdb98d99) Thanks [@jribbink](https://github.com/jribbink)! - Add new functions (`request` and `createSessionProposal`) for custom interaction with WC-compatibile wallets outside of service plugin
+
+### Patch Changes
+
+- [#1922](https://github.com/onflow/fcl-js/pull/1922) [`266fda58`](https://github.com/onflow/fcl-js/commit/266fda5817900a943925f9a4cbfc69dbcdb98d99) Thanks [@jribbink](https://github.com/jribbink)! - Update @walletconnect/sign-client
+
+- Updated dependencies [[`266fda58`](https://github.com/onflow/fcl-js/commit/266fda5817900a943925f9a4cbfc69dbcdb98d99), [`266fda58`](https://github.com/onflow/fcl-js/commit/266fda5817900a943925f9a4cbfc69dbcdb98d99), [`6ca1353e`](https://github.com/onflow/fcl-js/commit/6ca1353e2d0c6ad760b7a03da99c8b2b56b48807)]:
+  - @onflow/fcl-core@1.11.0-alpha.0
+
 ## 5.2.0
 
 ### Minor Changes

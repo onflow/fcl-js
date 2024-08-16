@@ -25,5 +25,14 @@
     "@onflow/util-template": "1.2.2",
     "@onflow/util-uid": "1.2.2"
   },
-  "changesets": []
+  "changesets": [
+    "chatty-trains-tease",
+    "eight-dolls-hear",
+    "five-wombats-hang",
+    "healthy-pillows-accept",
+    "nice-coins-rest",
+    "six-planets-visit",
+    "slow-pets-fold",
+    "spicy-meals-explode"
+  ]
 }

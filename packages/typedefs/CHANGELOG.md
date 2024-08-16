@@ -1,5 +1,11 @@
 # @onflow/typedefs
 
+## 1.3.1-alpha.0
+
+### Patch Changes
+
+- [#1918](https://github.com/onflow/fcl-js/pull/1918) [`bc78da0c`](https://github.com/onflow/fcl-js/commit/bc78da0c283ba0fef2680f040eb69b46e8923fa5) Thanks [@jribbink](https://github.com/jribbink)! - Miscellaneous TypeScript fixes
+
 ## 1.3.0
 
 ### Minor Changes
