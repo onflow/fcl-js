@@ -15,10 +15,10 @@
   "files": [
     "dist"
   ],
-  "source": "src/fcl-wc.ts",
-  "main": "dist/fcl-wc.js",
-  "module": "dist/fcl-wc.module.mjs",
-  "types": "types/fcl-wc.d.ts",
+  "source": "src/index.ts",
+  "main": "dist/index.js",
+  "module": "dist/index.module.mjs",
+  "types": "types/index.d.ts",
   "scripts": {
     "prepublishOnly": "npm test && npm run build",
     "test": "jest",
@@ -40,7 +40,7 @@
     "@onflow/util-logger": "1.3.2",
     "@walletconnect/modal": "^2.4.7",
     "@walletconnect/modal-core": "^2.6.2",
-    "@walletconnect/sign-client": "^2.8.1",
+    "@walletconnect/sign-client": "^2.14.0",
     "@walletconnect/types": "^2.8.1",
     "@walletconnect/utils": "^2.8.1"
   },

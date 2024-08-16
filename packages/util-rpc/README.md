@@ -1,6 +1,6 @@
 # @onflow/util-rpc
 
-Lightweight utility for transport-agnostic, bidirectional RPC communication.
+Lightweight utility for creating transport-agnostic, bidirectional JSON-RPC channels.
 
 # Status
 
@@ -19,5 +19,6 @@ npm install --save @onflow/util-rpc
 ```javascript
 import {RpcClient} from "@onflow/util-rpc"
 
-const uniqueIdentifier = new RpcClient(...)
+const rpc = new RpcClient(...)
+rpc.connect(...)
 ```
