@@ -1,5 +1,11 @@
 # @onflow/sdk
 
+## 1.5.2-alpha.1
+
+### Patch Changes
+
+- [#1910](https://github.com/onflow/fcl-js/pull/1910) [`c0b3becf`](https://github.com/onflow/fcl-js/commit/c0b3becfcfb284e2182d6b4b6d809ff67406fc24) Thanks [@jribbink](https://github.com/jribbink)! - Restore account resolution ordering (fixes issue where FCL currentUser authz would run without knowing custom authz accounts)
+
 ## 1.5.2-alpha.0
 
 ### Patch Changes
