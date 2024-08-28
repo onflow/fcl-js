@@ -1,5 +1,31 @@
 # @onflow/fcl
 
+## 1.11.0-alpha.0
+
+### Minor Changes
+
+- [#1922](https://github.com/onflow/fcl-js/pull/1922) [`266fda58`](https://github.com/onflow/fcl-js/commit/266fda5817900a943925f9a4cbfc69dbcdb98d99) Thanks [@jribbink](https://github.com/jribbink)! - Changes to `execStrategy`:
+  - `execStrategy` now exported from `@onflow/fcl-core`
+  - Allow overriding `execStrategy` for FCL Discovery when initializing `currentUser`.
+  - `execStrategy` now takes additional arguments
+    - `customRpc` - a custom RPC client to communicate with the VIEW, if supported
+    - `abortSignal` - an AbortSignal to cancel the request (and close any open views)
+
+### Patch Changes
+
+- [#1922](https://github.com/onflow/fcl-js/pull/1922) [`266fda58`](https://github.com/onflow/fcl-js/commit/266fda5817900a943925f9a4cbfc69dbcdb98d99) Thanks [@jribbink](https://github.com/jribbink)! - `postMessage` now strictly communicates with the view which it opened to prevent collisions when FCL opens multiple views in parallel
+
+- [#1911](https://github.com/onflow/fcl-js/pull/1911) [`6ca1353e`](https://github.com/onflow/fcl-js/commit/6ca1353e2d0c6ad760b7a03da99c8b2b56b48807) Thanks [@jribbink](https://github.com/jribbink)! - Remove unnecessary config.overload call in query/mutate functions (causes unnecessary WalletConnect errors to show in console)
+
+- Updated dependencies [[`9c787314`](https://github.com/onflow/fcl-js/commit/9c7873140015c9d1e28712aed93c56654f656639), [`bc78da0c`](https://github.com/onflow/fcl-js/commit/bc78da0c283ba0fef2680f040eb69b46e8923fa5)]:
+  - @onflow/sdk@1.5.2-alpha.0
+
+## 1.10.0
+
+### Minor Changes
+
+- [#1888](https://github.com/onflow/fcl-js/pull/1888) [`90aa24d2`](https://github.com/onflow/fcl-js/commit/90aa24d237e0003bd62b53dd26fcf29ab743595b) Thanks [@jribbink](https://github.com/jribbink)! - Warn users to configure FCL-WC Plugin if not already configured. FCL libraries are expected to manage this plugin (i.e. `@onflow/fcl`).
+
 ## 1.9.2
 
 ### Patch Changes

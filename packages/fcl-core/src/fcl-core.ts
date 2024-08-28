@@ -146,3 +146,5 @@ export {
   FCL_REDIRECT_URL_PARAM_NAME,
   FCL_RESPONSE_PARAM_NAME,
 } from "./utils/constants"
+
+export {execStrategy} from "./current-user/exec-service"

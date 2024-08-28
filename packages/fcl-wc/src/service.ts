@@ -3,7 +3,10 @@ import {log, LEVELS} from "@onflow/util-logger"
 import {isMobile, isIOS} from "./utils"
 import {FLOW_METHODS, REQUEST_TYPES} from "./constants"
 import {SignClient} from "@walletconnect/sign-client/dist/types/client"
-import * as fclCore from "@onflow/fcl-core"
+import {createSessionProposal, makeSessionData, request} from "./session"
+
+type WalletConnectModalType =
+  typeof import("@walletconnect/modal").WalletConnectModal
 
 export const SERVICE_PLUGIN_NAME = "fcl-plugin-service-walletconnect"
 export const WC_SERVICE_METHOD = "WC/RPC"
@@ -41,39 +44,51 @@ export const makeServicePlugin = (
 const makeExec = (
   clientPromise: Promise<SignClient | null>,
   {wcRequestHook, pairingModalOverride}: any,
-  WalletConnectModal: Promise<
-    typeof import("@walletconnect/modal").WalletConnectModal
-  >
+  WalletConnectModal: Promise<WalletConnectModalType>
 ) => {
-  return ({service, body, opts}: {service: any; body: any; opts: any}) => {
-    return new Promise(async (resolve, reject) => {
-      const client = await clientPromise
-      invariant(!!client, "WalletConnect is not initialized")
+  return async ({
+    service,
+    body,
+    opts,
+    abortSignal,
+  }: {
+    service: any
+    body: any
+    opts: any
+    abortSignal?: AbortSignal
+  }) => {
+    const client = await clientPromise
+    invariant(!!client, "WalletConnect is not initialized")
 
-      let session, pairing, windowRef: any
-      const method = service.endpoint
-      const appLink = validateAppLink(service)
-      const pairings = client.pairing.getAll({active: true})
+    let session: any, pairing: any, windowRef: any
+    const method = service.endpoint
+    const appLink = validateAppLink(service)
+    const pairings = client.pairing.getAll({active: true})
 
-      if (pairings.length > 0) {
-        pairing = pairings?.find(p => p.peerMetadata?.url === service.uid)
+    if (pairings.length > 0) {
+      pairing = pairings?.find(p => p.peerMetadata?.url === service.uid)
+    }
+
+    if (client.session.length > 0) {
+      const lastKeyIndex = client.session.keys.length - 1
+      session = client.session.get(client.session.keys.at(lastKeyIndex)!)
+    }
+
+    if (isMobile()) {
+      if (opts.windowRef) {
+        windowRef = opts.windowRef
+      } else {
+        windowRef = window.open("", "_blank")
       }
+    }
 
-      if (client.session.length > 0) {
-        const lastKeyIndex = client.session.keys.length - 1
-        session = client.session.get(client.session.keys.at(lastKeyIndex)!)
-      }
-
-      if (isMobile()) {
-        if (opts.windowRef) {
-          windowRef = opts.windowRef
-        } else {
-          windowRef = window.open("", "_blank")
+    if (session == null) {
+      session = await new Promise((resolve, reject) => {
+        function onClose() {
+          reject(`Declined: Externally Halted`)
         }
-      }
 
-      if (session == null) {
-        session = await connectWc(WalletConnectModal)({
+        connectWc(WalletConnectModal)({
           service,
           onClose,
           appLink,
@@ -83,151 +98,83 @@ const makeExec = (
           pairing,
           wcRequestHook,
           pairingModalOverride,
-        })
-      }
+          abortSignal,
+        }).then(resolve, reject)
+      })
+    }
 
-      if (wcRequestHook && wcRequestHook instanceof Function) {
-        wcRequestHook({
-          type: REQUEST_TYPES.SIGNING_REQUEST,
-          method,
-          service,
-          session: session ?? null,
-          pairing: pairing ?? null,
-          uri: null,
-        })
-      }
+    if (wcRequestHook && wcRequestHook instanceof Function) {
+      wcRequestHook({
+        type: REQUEST_TYPES.SIGNING_REQUEST,
+        method,
+        service,
+        session: session ?? null,
+        pairing: pairing ?? null,
+        uri: null,
+      })
+    }
 
-      if (isMobile() && method !== FLOW_METHODS.FLOW_AUTHN) {
-        openDeepLink()
-      }
+    if (isMobile() && method !== FLOW_METHODS.FLOW_AUTHN) {
+      openDeepLink()
+    }
 
-      const [chainId, addr, address] = makeSessionData(session)
-      const data = JSON.stringify({...body, addr, address})
-
-      try {
-        const result = await client.request({
-          topic: session.topic,
-          chainId,
-          request: {
-            method,
-            params: [data],
-          },
-        })
-        onResponse(result)
-      } catch (error) {
-        if (error instanceof Error) {
-          log({
-            title: `${error.name} Error on WalletConnect client ${method} request`,
-            message: error.message,
-            level: LEVELS.error,
-          })
-        }
-        reject(`Declined: Externally Halted`)
-      } finally {
-        if (windowRef && !windowRef.closed) {
-          windowRef.close()
-        }
-      }
-
-      function validateAppLink({uid}: {uid: string}) {
-        if (!(uid && /^(ftp|http|https):\/\/[^ "]+$/.test(uid))) {
-          log({
-            title: "WalletConnect Service Warning",
-            message: `service.uid should be a valid universal link url. Found: ${uid}`,
-            level: LEVELS.warn,
-          })
-        }
-        return uid
-      }
-
-      function openDeepLink() {
-        if (windowRef) {
-          if (appLink.startsWith("http") && !isIOS()) {
-            // Workaround for https://github.com/rainbow-me/rainbowkit/issues/524.
-            // Using 'window.open' causes issues on iOS in non-Safari browsers and
-            // WebViews where a blank tab is left behind after connecting.
-            // This is especially bad in some WebView scenarios (e.g. following a
-            // link from Twitter) where the user doesn't have any mechanism for
-            // closing the blank tab.
-            // For whatever reason, links with a target of "_blank" don't suffer
-            // from this problem, and programmatically clicking a detached link
-            // element with the same attributes also avoids the issue.
-            const link = document.createElement("a")
-            link.href = appLink
-            link.target = "_blank"
-            link.rel = "noreferrer noopener"
-            link.click()
-          } else {
-            windowRef.location.href = appLink
-          }
-        } else {
-          log({
-            title: "Problem opening deep link in new window",
-            message: `Window failed to open (was it blocked by the browser?)`,
-            level: LEVELS.warn,
-          })
-        }
-      }
-
-      function makeSessionData(session: any) {
-        const [namespace, reference, address] = Object.values<any>(
-          session.namespaces
-        )
-          .map(namespace => namespace.accounts)
-          .flat()
-          .filter(account => account.startsWith("flow:"))[0]
-          .split(":")
-
-        const chainId = `${namespace}:${reference}`
-        const addr = address
-        return [chainId, addr, address]
-      }
-
-      function onResponse(resp: any) {
-        try {
-          if (typeof resp !== "object") return
-
-          switch (resp.status) {
-            case "APPROVED":
-              resolve(resp.data)
-              break
-
-            case "DECLINED":
-              reject(`Declined: ${resp.reason || "No reason supplied"}`)
-              break
-
-            case "REDIRECT":
-              resolve(resp)
-              break
-
-            default:
-              reject(`Declined: No reason supplied`)
-              break
-          }
-        } catch (error) {
-          if (error instanceof Error) {
-            log({
-              title: `${error.name} "WC/RPC onResponse error"`,
-              message: error.message,
-              level: LEVELS.error,
-            })
-          }
-          throw error
-        }
-      }
-
-      function onClose() {
-        reject(`Declined: Externally Halted`)
+    // Make request to the WalletConnect client and return the result
+    return await request({
+      method,
+      body,
+      session,
+      client,
+      abortSignal,
+    }).finally(() => {
+      if (windowRef && !windowRef.closed) {
+        windowRef.close()
       }
     })
+
+    function validateAppLink({uid}: {uid: string}) {
+      if (!(uid && /^(ftp|http|https):\/\/[^ "]+$/.test(uid))) {
+        log({
+          title: "WalletConnect Service Warning",
+          message: `service.uid should be a valid universal link url. Found: ${uid}`,
+          level: LEVELS.warn,
+        })
+      }
+      return uid
+    }
+
+    function openDeepLink() {
+      if (windowRef) {
+        if (appLink.startsWith("http") && !isIOS()) {
+          // Workaround for https://github.com/rainbow-me/rainbowkit/issues/524.
+          // Using 'window.open' causes issues on iOS in non-Safari browsers and
+          // WebViews where a blank tab is left behind after connecting.
+          // This is especially bad in some WebView scenarios (e.g. following a
+          // link from Twitter) where the user doesn't have any mechanism for
+          // closing the blank tab.
+          // For whatever reason, links with a target of "_blank" don't suffer
+          // from this problem, and programmatically clicking a detached link
+          // element with the same attributes also avoids the issue.
+          const link = document.createElement("a")
+          link.href = appLink
+          link.target = "_blank"
+          link.rel = "noreferrer noopener"
+          link.click()
+        } else {
+          windowRef.location.href = appLink
+        }
+      } else {
+        log({
+          title: "Problem opening deep link in new window",
+          message: `Window failed to open (was it blocked by the browser?)`,
+          level: LEVELS.warn,
+        })
+      }
+    }
   }
 }
 
-function connectWc(
-  WalletConnectModal: Promise<
-    typeof import("@walletconnect/modal").WalletConnectModal
-  >
-) {
+// Connect to WalletConnect directly from the browser via deep link or WalletConnectModal
+function connectWc(WalletConnectModal: Promise<WalletConnectModalType>) {
   return async ({
     service,
     onClose,
@@ -238,6 +185,7 @@ function connectWc(
     pairing,
     wcRequestHook,
     pairingModalOverride,
+    abortSignal,
   }: {
     service: any
     onClose: any
@@ -248,39 +196,23 @@ function connectWc(
     pairing: any
     wcRequestHook: any
     pairingModalOverride: any
+    abortSignal?: AbortSignal
   }) => {
-    const network = await fclCore.getChainId()
-
-    const requiredNamespaces = {
-      flow: {
-        methods: [
-          FLOW_METHODS.FLOW_AUTHN,
-          FLOW_METHODS.FLOW_PRE_AUTHZ,
-          FLOW_METHODS.FLOW_AUTHZ,
-          FLOW_METHODS.FLOW_USER_SIGN,
-        ],
-        chains: [`flow:${network}`],
-        events: ["chainChanged", "accountsChanged"],
-      },
-    }
-
+    const projectId = client.opts?.projectId
     invariant(
-      !!client.opts?.projectId,
+      !!projectId,
       "Cannot establish connection, WalletConnect projectId is undefined"
     )
 
-    const projectId = client.opts?.projectId
-    const walletConnectModal = new (await WalletConnectModal)({
-      projectId,
-      walletConnectVersion: 2,
-    })
+    let _uri: string | null = null,
+      walletConnectModal: any
 
     try {
-      const {uri, approval} = await client.connect({
-        pairingTopic: pairing?.topic,
-        requiredNamespaces,
+      const {uri, approval} = await createSessionProposal({
+        client,
+        existingPairing: pairing,
       })
-      var _uri = uri
+      _uri = uri
 
       if (wcRequestHook && wcRequestHook instanceof Function) {
         wcRequestHook({
@@ -293,24 +225,33 @@ function connectWc(
         })
       }
 
-      invariant(
-        !!uri,
-        "Cannot establish connection, WalletConnect URI is undefined"
-      )
-
       if (isMobile()) {
         const queryString = new URLSearchParams({uri: uri}).toString()
         let url = pairing == null ? appLink + "?" + queryString : appLink
         windowRef.location.href = url
       } else if (!pairing) {
         if (!pairingModalOverride) {
+          walletConnectModal = new (await WalletConnectModal)({
+            projectId,
+            walletConnectVersion: 2,
+          })
           walletConnectModal.openModal({uri, onClose})
         } else {
           pairingModalOverride(uri, onClose)
         }
       }
 
-      const session = await approval()
+      const session = await Promise.race([
+        approval(),
+        new Promise((_, reject) => {
+          if (abortSignal?.aborted) {
+            reject(new Error("Session request aborted"))
+          }
+          abortSignal?.addEventListener("abort", () => {
+            reject(new Error("Session request aborted"))
+          })
+        }),
+      ])
       return session
     } catch (error) {
       if (error instanceof Error) {
@@ -329,7 +270,7 @@ function connectWc(
       if (windowRef && !windowRef.closed) {
         windowRef.close()
       }
-      walletConnectModal.closeModal()
+      walletConnectModal?.closeModal()
     }
   }
 }

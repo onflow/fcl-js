@@ -1,23 +1,23 @@
-# @onflow/util-uid
+# @onflow/util-rpc
 
-Utility for creating Unique Identifiers.
+Lightweight utility for transport-agnostic, bidirectional RPC communication.
 
 # Status
 
-- **Last Updated:** July 17 2020
-- **Stable:** Yes
-- **Risk of Breaking Change:** No
+- **Last Updated:** Aug 6th, 2024
+- **Stable:** No
+- **Risk of Breaking Change:** Yes
 
 # Install
 
 ```bash
-npm install --save @onflow/util-uid
+npm install --save @onflow/util-rpc
 ```
 
 # Usage
 
 ```javascript
-import {uid} from "@onflow/util-uid"
+import {RpcClient} from "@onflow/util-rpc"
 
-const uniqueIdentifier = uid()
+const uniqueIdentifier = new RpcClient(...)
 ```

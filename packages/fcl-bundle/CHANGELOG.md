@@ -1,5 +1,11 @@
 # @onflow/fcl-bundle
 
+## 1.5.0
+
+### Minor Changes
+
+- [#1888](https://github.com/onflow/fcl-js/pull/1888) [`90aa24d2`](https://github.com/onflow/fcl-js/commit/90aa24d237e0003bd62b53dd26fcf29ab743595b) Thanks [@jribbink](https://github.com/jribbink)! - Preserve dynamic import statements in CJS modules
+
 ## 1.4.2
 
 ### Patch Changes
