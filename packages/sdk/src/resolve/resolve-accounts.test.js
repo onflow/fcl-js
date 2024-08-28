@@ -499,3 +499,59 @@ test("Voucher in PreSignable multiple payer keys and multiple authorizers", asyn
     ],
   })
 })
+
+test("Voucher sent to Current User Pre-Authz includes other authorizer addresses", async () => {
+  const mockResolve = jest.fn().mockImplementation(async acct => [
+    {
+      ...acct,
+      addr: "0x01",
+      keyId: 1,
+      sequenceNum: 123,
+      signingFunction: () => ({signature: "123"}),
+      role: {proposer: true, payer: true, authorizer: true},
+    },
+  ])
+  const currentUser = account => ({
+    ...account,
+    tempId: "CURRENT_USER",
+    resolve: mockResolve,
+  })
+  const customAuthz = async acct => ({
+    ...acct,
+    addr: "0x02",
+    keyId: 2,
+    sequenceNum: 234,
+    signingFunction: () => ({signature: "234"}),
+  })
+
+  const ix = await resolve(
+    await build([
+      transaction``,
+      limit(156),
+      proposer(currentUser),
+      authorizations([customAuthz, currentUser]),
+      payer(currentUser),
+      ref("123"),
+    ])
+  )
+
+  const ps = buildPreSignable(ix.accounts[ix.proposer], ix)
+  expect(ps.voucher).toEqual({
+    cadence: "",
+    refBlock: "123",
+    computeLimit: 156,
+    arguments: [],
+    proposalKey: {address: "0x01", keyId: 1, sequenceNum: 123},
+    payer: "0x01",
+    authorizers: ["0x02", "0x01"],
+    payloadSigs: [{address: "0x02", keyId: 2, sig: "234"}],
+    envelopeSigs: [{address: "0x01", keyId: 1, sig: "123"}],
+  })
+
+  expect(mockResolve).toHaveBeenCalledTimes(1)
+  // Verify pre-signable contains custom authz in the authorizers list
+  expect(mockResolve.mock.calls[0][1].voucher.authorizers).toEqual([
+    "0x02",
+    null,
+  ])
+})
