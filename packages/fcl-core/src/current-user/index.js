@@ -148,16 +148,21 @@ const makeConfig = async ({
 }
 
 /**
- * @description - Authenticate a user
+ * @description - Factory function to get the authenticate method
  * @param {object} [opts] - Options
  * @param {object} [opts.platform] - platform that runs the function
  * @param {object} [opts.service] - Optional service to use for authentication
  * @param {object} [opts.discovery] - Optional discovery options
- * @param {boolean} [opts.redir=false] - Optional flag to allow window to stay open after authentication
- * @returns {function(*)Promise<CurrentUser>} - User object
  */
 const getAuthenticate =
   ({platform, discovery}) =>
+  /**
+   * @description - Authenticate a user
+   * @param {object} [opts] - Options
+   * @param {object} [opts.service] - Optional service to use for authentication
+   * @param {boolean} [opts.redir] - Optional redirect flag
+   * @returns
+   */
   async ({service, redir = false} = {}) => {
     if (
       service &&
