@@ -26,6 +26,7 @@
     "@onflow/util-uid": "1.2.2"
   },
   "changesets": [
+    "afraid-cars-kneel",
     "chatty-trains-tease",
     "eight-dolls-hear",
     "five-wombats-hang",
@@ -34,6 +35,9 @@
     "six-planets-visit",
     "slow-pets-fold",
     "spicy-meals-explode",
-    "tasty-radios-buy"
+    "stupid-experts-jog",
+    "tasty-radios-buy",
+    "twelve-cougars-beam",
+    "violet-pants-lay"
   ]
 }
