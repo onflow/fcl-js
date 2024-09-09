@@ -1,5 +1,11 @@
 # @onflow/sdk
 
+## 1.5.2-alpha.2
+
+### Patch Changes
+
+- [#1943](https://github.com/onflow/fcl-js/pull/1943) [`95c63f26`](https://github.com/onflow/fcl-js/commit/95c63f26c5b21787ba9dddc52c7111183b0983ec) Thanks [@jribbink](https://github.com/jribbink)! - Make `sdk.payer` arguments more permissive (authz can be an object or a function)
+
 ## 1.5.2-alpha.1
 
 ### Patch Changes

@@ -1,5 +1,16 @@
 # @onflow/fcl
 
+## 1.11.0-alpha.2
+
+### Patch Changes
+
+- [#1942](https://github.com/onflow/fcl-js/pull/1942) [`e70a215c`](https://github.com/onflow/fcl-js/commit/e70a215c47d7db6f4e1ddab747be3968abc09c05) Thanks [@jribbink](https://github.com/jribbink)! - Fix `fcl.authenticate` type
+
+- [#1944](https://github.com/onflow/fcl-js/pull/1944) [`3a89c39c`](https://github.com/onflow/fcl-js/commit/3a89c39ca5033af6b0ff4e606095507753e17de7) Thanks [@jribbink](https://github.com/jribbink)! - Fix `verifyUserSignatures` return type
+
+- Updated dependencies [[`95c63f26`](https://github.com/onflow/fcl-js/commit/95c63f26c5b21787ba9dddc52c7111183b0983ec)]:
+  - @onflow/sdk@1.5.2-alpha.2
+
 ## 1.11.0-alpha.1
 
 ### Patch Changes

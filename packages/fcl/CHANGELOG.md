@@ -1,5 +1,16 @@
 # @onflow/fcl
 
+## 1.12.0-alpha.2
+
+### Patch Changes
+
+- [#1947](https://github.com/onflow/fcl-js/pull/1947) [`8f0c710e`](https://github.com/onflow/fcl-js/commit/8f0c710eb4fa7b027d40d3bc15a1cf69a31e6633) Thanks [@jribbink](https://github.com/jribbink)! - Add `clipboard-write` access to FCL IFRAME
+
+- Updated dependencies [[`e70a215c`](https://github.com/onflow/fcl-js/commit/e70a215c47d7db6f4e1ddab747be3968abc09c05), [`3a89c39c`](https://github.com/onflow/fcl-js/commit/3a89c39ca5033af6b0ff4e606095507753e17de7), [`95c63f26`](https://github.com/onflow/fcl-js/commit/95c63f26c5b21787ba9dddc52c7111183b0983ec)]:
+  - @onflow/fcl-core@1.11.0-alpha.2
+  - @onflow/sdk@1.5.2-alpha.2
+  - @onflow/fcl-wc@5.2.0-alpha.2
+
 ## 1.12.0-alpha.1
 
 ### Patch Changes
