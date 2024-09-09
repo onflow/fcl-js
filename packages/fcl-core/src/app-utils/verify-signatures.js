@@ -154,7 +154,7 @@ export async function verifyAccountProof(
  * @param {string} compSigs[].signature - The signature to verify
  * @param {object} [opts={}] - Options object
  * @param {string} opts.fclCryptoContract - An optional override of Flow account address where the FCLCrypto contract is deployed
- * @returns {boolean} - Returns true if the signature is valid, false otherwise
+ * @returns {Promise<boolean>} - Returns true if the signature is valid, false otherwise
  *
  * @example
  *
