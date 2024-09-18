@@ -112,7 +112,13 @@ const authn = {
    * @description - Trigger an update of authn services
    * @returns {void}
    */
-  update: () => fetchServicesFromDiscovery(),
+  update: () => {
+    // Only fetch services if the window is loaded
+    // Otherwise, this will be called by the INIT handler
+    if (document.readyState === "complete") {
+      fetchServicesFromDiscovery()
+    }
+  },
 }
 
 export default authn
