@@ -1,5 +1,11 @@
 # @onflow/fcl
 
+## 1.11.0-alpha.3
+
+### Patch Changes
+
+- [#1949](https://github.com/onflow/fcl-js/pull/1949) [`b8a2a26e`](https://github.com/onflow/fcl-js/commit/b8a2a26e382d543e5058cc1a628b437c3305b13c) Thanks [@jribbink](https://github.com/jribbink)! - Defer `discovery.authn.update` calls to after the window has loaded
+
 ## 1.11.0-alpha.2
 
 ### Patch Changes
