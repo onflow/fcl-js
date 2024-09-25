@@ -24,7 +24,7 @@
     "builtin-modules": "^3.3.0",
     "commander": "^9.3.0",
     "lodash": "^4.17.21",
-    "rollup": "^2.75.5",
+    "rollup": "^3.29.5",
     "rollup-plugin-typescript2": "^0.36.0"
   },
   "bin": {
