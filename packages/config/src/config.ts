@@ -182,7 +182,11 @@ async function load(
   data: {
     flowJSON: Record<string, unknown> | Record<string, unknown>[]
   },
-  {ignoreConflicts = false}
+  {
+    ignoreConflicts = false,
+  }: {
+    ignoreConflicts?: boolean
+  } = {}
 ) {
   const network: string = await get("flow.network")
   const cleanedNetwork = cleanNetwork(network)
@@ -236,7 +240,7 @@ async function load(
     if (
       systemExistingContractConfigKeyValue &&
       systemExistingContractConfigKeyValue !== value &&
-      !isOverride
+      !ignoreConflicts
     ) {
       logger.log({
         title: "Contract Placeholder Conflict Detected",
