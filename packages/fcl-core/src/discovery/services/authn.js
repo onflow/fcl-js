@@ -58,9 +58,9 @@ const HANDLERS = {
     if (document.readyState === "complete") {
       fetchServicesFromDiscovery()
     } else {
-      window.onload = async () => {
+      window.addEventListener("load", () => {
         fetchServicesFromDiscovery()
-      }
+      })
     }
   },
   [SERVICE_ACTOR_KEYS.UPDATE_RESULTS]: (ctx, _letter, data) => {
