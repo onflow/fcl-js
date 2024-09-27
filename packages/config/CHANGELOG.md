@@ -1,5 +1,11 @@
 # @onflow/config
 
+## 1.5.0
+
+### Minor Changes
+
+- [`cd234798`](https://github.com/onflow/fcl-js/commit/cd234798008868df13447ea97654b7e278dd746f) Thanks [@nialexsan](https://github.com/nialexsan)! - Add `ignoreConflicts` flag to `config.load`
+
 ## 1.5.0-alpha.0
 
 ### Minor Changes
