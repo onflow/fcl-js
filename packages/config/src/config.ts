@@ -175,13 +175,14 @@ async function resetConfig(oldConfig: Record<string, unknown>) {
  * @description Takes in flow.json or array of flow.json files and creates contract placeholders
  * @param data - The data to load
  * @param data.flowJSON - The flow.json or array of flow.json files
- * @param isOverride - override flag
+ * @param options - override flag
+ * @param options.ignoreConflicts - ignore conflicts and override config
  */
 async function load(
   data: {
     flowJSON: Record<string, unknown> | Record<string, unknown>[]
   },
-  isOverride = false
+  {ignoreConflicts = false}
 ) {
   const network: string = await get("flow.network")
   const cleanedNetwork = cleanNetwork(network)
@@ -217,7 +218,7 @@ async function load(
     if (
       existingContractConfigKey &&
       existingContractConfigKey !== value &&
-      !isOverride
+      !ignoreConflicts
     ) {
       logger.log({
         title: "Contract Placeholder Conflict Detected",
