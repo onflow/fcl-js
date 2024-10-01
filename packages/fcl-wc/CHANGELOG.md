@@ -1,5 +1,11 @@
 # @onflow/fcl-wc
 
+## 5.3.0
+
+### Minor Changes
+
+- [#1961](https://github.com/onflow/fcl-js/pull/1961) [`77f66e94`](https://github.com/onflow/fcl-js/commit/77f66e94ecce98c681449eeaf74e1b29c4ddc4cb) Thanks [@jribbink](https://github.com/jribbink)! - Bump version to 5.3.0
+
 ## 5.2.0
 
 ### Minor Changes
