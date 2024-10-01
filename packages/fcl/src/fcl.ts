@@ -65,11 +65,16 @@ export {
 
 import {getMutate, getCurrentUser, initServiceRegistry} from "@onflow/fcl-core"
 
-export const mutate = getMutate({platform: "web"})
+import {execStrategyHook} from "./discovery/exec-hook"
+const discoveryOpts = {
+  execStrategy: execStrategyHook,
+}
 
-const currentUser = getCurrentUser({platform: "web"})
-
-export {currentUser}
+export const mutate = getMutate({platform: "web", discovery: discoveryOpts})
+export const currentUser = getCurrentUser({
+  platform: "web",
+  discovery: discoveryOpts,
+})
 
 export const authenticate = (opts = {}) => currentUser().authenticate(opts)
 export const unauthenticate = () => currentUser().unauthenticate()
@@ -84,7 +89,12 @@ export const authz = currentUser().authorization
 
 import {config} from "@onflow/config"
 import {getDefaultConfig, coreStrategies} from "./utils/web"
+import {initFclWcLoader} from "./utils/walletconnect/loader"
 
 config(getDefaultConfig())
 
 initServiceRegistry({coreStrategies})
+
+// Automatically load fcl-wc plugin
+// Based on the user's config
+initFclWcLoader()

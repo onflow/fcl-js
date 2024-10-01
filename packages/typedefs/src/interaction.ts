@@ -58,11 +58,11 @@ export interface Interaction {
   params: Record<string, any>
   arguments: Record<string, any>
   message: {
-    cadence: string | null
-    refBlock: string | null
-    computeLimit: string | null
-    proposer: string | null
-    payer: string | null
+    cadence: string
+    refBlock: string
+    computeLimit: number
+    proposer: string
+    payer: string
     authorizations: string[]
     params: Record<string, any>[]
     arguments: string[]

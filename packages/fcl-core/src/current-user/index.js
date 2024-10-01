@@ -148,15 +148,21 @@ const makeConfig = async ({
 }
 
 /**
- * @description - Authenticate a user
+ * @description - Factory function to get the authenticate method
  * @param {object} [opts] - Options
  * @param {object} [opts.platform] - platform that runs the function
  * @param {object} [opts.service] - Optional service to use for authentication
- * @param {boolean} [opts.redir=false] - Optional flag to allow window to stay open after authentication
- * @returns {function(*)Promise<CurrentUser>} - User object
+ * @param {object} [opts.discovery] - Optional discovery options
  */
 const getAuthenticate =
-  ({platform}) =>
+  ({platform, discovery}) =>
+  /**
+   * @description - Authenticate a user
+   * @param {object} [opts] - Options
+   * @param {object} [opts.service] - Optional service to use for authentication
+   * @param {boolean} [opts.redir] - Optional redirect flag
+   * @returns
+   */
   async ({service, redir = false} = {}) => {
     if (
       service &&
@@ -217,7 +223,9 @@ const getAuthenticate =
           config: await makeConfig(discoveryService),
           opts,
           platform,
+          execStrategy: discovery?.execStrategy,
         })
+
         send(NAME, SET_CURRENT_USER, await buildUser(response))
       } catch (error) {
         log({
@@ -279,13 +287,14 @@ const getResolvePreAuthz =
  * Produces the needed authorization details for the current user to submit transactions to Flow
  * It defines a signing function that connects to a user's wallet provider to produce signatures to submit transactions.
  *
- * @param {object} ops - running options
- * @param {string} ops.platform - platform that runs the function
+ * @param {object} opts - running options
+ * @param {string} opts.platform - platform that runs the function
+ * @param {object} [opts.discovery] - discovery options
  * @param {object} account - Account object
  * @returns {Promise<object>} - Account object with signing function
  */
 const getAuthorization =
-  ({platform}) =>
+  ({platform, discovery}) =>
   async account => {
     spawnCurrentUser()
 
@@ -293,12 +302,12 @@ const getAuthorization =
       ...account,
       tempId: "CURRENT_USER",
       async resolve(account, preSignable) {
-        const user = await getAuthenticate({platform})({redir: true})
+        const user = await getAuthenticate({platform, discovery})({redir: true})
         const authz = serviceOfType(user.services, "authz")
         const preAuthz = serviceOfType(user.services, "pre-authz")
 
         if (preAuthz)
-          return getResolvePreAuthz({platform})(
+          return getResolvePreAuthz({platform, discovery})(
             await execService({
               service: preAuthz,
               msg: preSignable,
@@ -383,14 +392,15 @@ async function info() {
 /**
  * @description - Resolves the current user as an argument
  *
- * @param {object} ops - running options
- * @param {string} ops.platform - platform that runs the function
+ * @param {object} opts - running options
+ * @param {string} opts.platform - platform that runs the function
+ * @param {object} [opts.discovery] - discovery options
  * @returns {Promise<Function>}
  */
 const getResolveArgument =
-  ({platform}) =>
+  ({platform, discovery}) =>
   async () => {
-    const {addr} = await getAuthenticate({platform})()
+    const {addr} = await getAuthenticate({platform, discovery})()
     return arg(withPrefix(addr), t.Address)
   }
 
@@ -403,15 +413,24 @@ const makeSignable = msg => {
 }
 
 /**
- * @description - A method to use allowing the user to personally sign data via FCL Compatible Wallets/Services.
- * @param {string} msg - Message to sign
- * @returns {Promise<CompositeSignature[]>} - Array of CompositeSignatures
+ * @description - Factory function to get the signUserMessage method
+ * @param {object} opts - running options
+ * @param {string} opts.platform - platform that runs the function
+ * @param {object} [opts.discovery] - discovery options
+ * @returns {function(string): Promise<CompositeSignature[]>}
  */
 const getSignUserMessage =
-  ({platform}) =>
+  ({platform, discovery}) =>
+  /**
+   * @description - A method to use allowing the user to personally sign data via FCL Compatible Wallets/Services.
+   * @param {string} msg - Message to sign
+   * @returns {Promise<CompositeSignature[]>} - Array of CompositeSignatures
+   */
   async msg => {
     spawnCurrentUser()
-    const user = await getAuthenticate({platform})({redir: true})
+    const user = await getAuthenticate({platform, discovery})({
+      redir: true,
+    })
 
     const signingService = serviceOfType(user.services, "user-signature")
 
@@ -436,26 +455,43 @@ const getSignUserMessage =
     }
   }
 
-const getCurrentUser = ({platform}) => {
+/**
+ * @description
+ * Creates the Current User object
+ *
+ * @param {object} opts - Configuration Options
+ * @param {string} opts.platform - Platform
+ * @param {object} [opts.discovery] - Discovery Config Resolver for additional configuration
+ */
+const getCurrentUser = ({platform, discovery}) => {
   let currentUser = () => {
     return {
-      authenticate: getAuthenticate({platform}),
+      authenticate: getAuthenticate({platform, discovery}),
       unauthenticate,
-      authorization: getAuthorization({platform}),
-      signUserMessage: getSignUserMessage({platform}),
+      authorization: getAuthorization({platform, discovery}),
+      signUserMessage: getSignUserMessage({platform, discovery}),
       subscribe,
       snapshot,
-      resolveArgument: getResolveArgument({platform}),
+      resolveArgument: getResolveArgument({platform, discovery}),
     }
   }
 
-  currentUser.authenticate = getAuthenticate({platform})
+  currentUser.authenticate = getAuthenticate({
+    platform,
+    discovery,
+  })
   currentUser.unauthenticate = unauthenticate
-  currentUser.authorization = getAuthorization({platform})
-  currentUser.signUserMessage = getSignUserMessage({platform})
+  currentUser.authorization = getAuthorization({
+    platform,
+    discovery,
+  })
+  currentUser.signUserMessage = getSignUserMessage({
+    platform,
+    discovery,
+  })
   currentUser.subscribe = subscribe
   currentUser.snapshot = snapshot
-  currentUser.resolveArgument = getResolveArgument({platform})
+  currentUser.resolveArgument = getResolveArgument({platform, discovery})
 
   return currentUser
 }

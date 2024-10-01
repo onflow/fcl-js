@@ -1,5 +1,24 @@
 # @onflow/config
 
+## 1.5.0
+
+### Minor Changes
+
+- [`cd234798`](https://github.com/onflow/fcl-js/commit/cd234798008868df13447ea97654b7e278dd746f) Thanks [@nialexsan](https://github.com/nialexsan)! - Add `ignoreConflicts` flag to `config.load`
+
+## 1.5.0-alpha.0
+
+### Minor Changes
+
+- [`cd234798`](https://github.com/onflow/fcl-js/commit/cd234798008868df13447ea97654b7e278dd746f) Thanks [@nialexsan](https://github.com/nialexsan)! - Add `ignoreConflicts` flag to `config.load`
+
+## 1.4.1
+
+### Patch Changes
+
+- Updated dependencies [[`fe5e1b3d`](https://github.com/onflow/fcl-js/commit/fe5e1b3d330b7734740cceb9a873d1b680f28175)]:
+  - @onflow/util-actor@1.3.3
+
 ## 1.4.0
 
 ### Minor Changes

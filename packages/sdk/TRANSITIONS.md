@@ -107,7 +107,7 @@ await sdk.latestBlock(isSealed, options)
 The first argument to `latestBlock` must be a boolean specifying if the latest block must be sealed or not, followed by send options
 as the second argument.
 
-We reccomend migrating your code to the new format as soon as you can. In future versions of the JS-SDK, `latestBlock` may
+We recommend migrating your code to the new format as soon as you can. In future versions of the JS-SDK, `latestBlock` may
 cease to accept options as the first argument.
 
 ## 0006 Deprecate Get Latest Block Builder
@@ -135,9 +135,9 @@ await sdk.send(sdk.build([
 ```
 
 You can optionally specify if you require the latest block to be sealed or not by passing in an isSealed boolean as the first
-arguement to the `getBlock` builder.
+argument to the `getBlock` builder.
 
-We reccomend migrating your code to the new format as soon as you can. In future versions of the JS-SDK, the `getLatestBlock` builder
+We recommend migrating your code to the new format as soon as you can. In future versions of the JS-SDK, the `getLatestBlock` builder
 may cease to exist.
 
 ## 0005 Deprecate Start End Get Events Builder
@@ -174,7 +174,7 @@ await sdk.send(sdk.build([
 ]).then(sdk.decode)
 ```
 
-We reccomend migrating your code to the new format as soon as you can. In future versions of the JS-SDK, the `getEvents` builder
+We recommend migrating your code to the new format as soon as you can. In future versions of the JS-SDK, the `getEvents` builder
 may cease to exist.
 
 ## 0004 Deprecate Get Block By Id Builder
@@ -200,7 +200,7 @@ await sdk.send(sdk.build([
 ]).then(sdk.decode)
 ```
 
-We reccomend migrating your code to the new format as soon as you can. In future versions of the JS-SDK, the `getBlockById` builder
+We recommend migrating your code to the new format as soon as you can. In future versions of the JS-SDK, the `getBlockById` builder
 may cease to exist.
 
 ## 0003 Deprecate Get Block By Height Builder
@@ -226,7 +226,7 @@ await sdk.send(sdk.build([
 ]).then(sdk.decode)
 ```
 
-We reccomend migrating your code to the new format as soon as you can. In future versions of the JS-SDK, the `getBlockByHeight` builder
+We recommend migrating your code to the new format as soon as you can. In future versions of the JS-SDK, the `getBlockByHeight` builder
 may cease to exist.
 
 ## 0002 Deprecate Resolve Params Resolver
@@ -246,7 +246,7 @@ sdk.resolve(ix, [
 ```
 
 We are introducing a more generic resolver that covers core cadence concepts: `@onflow/sdk-resolve-cadence`.
-The above code using `sdk.resolveParams` will still work for now as a proxy to `@onflow/sdk-resolve-cadence` (with deprecation notice), but we can't promise it will stay around for ever in the future.
+The above code using `sdk.resolveParams` will still work for now as a proxy to `@onflow/sdk-resolve-cadence` (with deprecation notice), but we can't promise it will stay around forever in the future.
 
 Instead we would recommend that you use the following in its place:
 
@@ -371,7 +371,7 @@ const doTheThing = async (m1, m2, m3) => {
 
 **Some things to be aware of:**
 
-Import addresses have to be done as standard interopolation.
+Import addresses have to be done as standard interpolation.
 
 ```javascript
 import * as fcl from "@onflow/fcl"

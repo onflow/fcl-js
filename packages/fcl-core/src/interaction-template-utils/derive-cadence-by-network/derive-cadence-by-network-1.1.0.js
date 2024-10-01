@@ -6,7 +6,7 @@ import {replaceStringImports} from "../utils/replace-string-imports.js"
  * @param {object} params
  * @param {string} params.network - Network to derive Cadence for
  * @param {object} params.template - Interaction Template to derive Cadence from
- * @returns {string} - Cadence
+ * @returns {Promise<string>} - Promise that resolves with the derived Cadence code
  */
 export async function deriveCadenceByNetwork110({network, template}) {
   invariant(

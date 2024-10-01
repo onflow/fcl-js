@@ -1,5 +1,59 @@
 # @onflow/sdk
 
+## 1.5.2
+
+### Patch Changes
+
+- [#1915](https://github.com/onflow/fcl-js/pull/1915) [`9c787314`](https://github.com/onflow/fcl-js/commit/9c7873140015c9d1e28712aed93c56654f656639) Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump ws from 8.14.2 to 8.17.1
+
+- [#1918](https://github.com/onflow/fcl-js/pull/1918) [`bc78da0c`](https://github.com/onflow/fcl-js/commit/bc78da0c283ba0fef2680f040eb69b46e8923fa5) Thanks [@jribbink](https://github.com/jribbink)! - Miscellaneous TypeScript fixes
+
+- [#1910](https://github.com/onflow/fcl-js/pull/1910) [`c0b3becf`](https://github.com/onflow/fcl-js/commit/c0b3becfcfb284e2182d6b4b6d809ff67406fc24) Thanks [@jribbink](https://github.com/jribbink)! - Restore account resolution ordering (fixes issue where FCL currentUser authz would run without knowing custom authz accounts)
+
+- [#1943](https://github.com/onflow/fcl-js/pull/1943) [`95c63f26`](https://github.com/onflow/fcl-js/commit/95c63f26c5b21787ba9dddc52c7111183b0983ec) Thanks [@jribbink](https://github.com/jribbink)! - Make `sdk.payer` arguments more permissive (authz can be an object or a function)
+
+- Updated dependencies [[`bc78da0c`](https://github.com/onflow/fcl-js/commit/bc78da0c283ba0fef2680f040eb69b46e8923fa5), [`cd234798`](https://github.com/onflow/fcl-js/commit/cd234798008868df13447ea97654b7e278dd746f)]:
+  - @onflow/typedefs@1.3.1
+  - @onflow/config@1.5.0
+
+## 1.5.2-alpha.3
+
+### Patch Changes
+
+- Updated dependencies [[`cd234798`](https://github.com/onflow/fcl-js/commit/cd234798008868df13447ea97654b7e278dd746f)]:
+  - @onflow/config@1.5.0-alpha.0
+
+## 1.5.2-alpha.2
+
+### Patch Changes
+
+- [#1943](https://github.com/onflow/fcl-js/pull/1943) [`95c63f26`](https://github.com/onflow/fcl-js/commit/95c63f26c5b21787ba9dddc52c7111183b0983ec) Thanks [@jribbink](https://github.com/jribbink)! - Make `sdk.payer` arguments more permissive (authz can be an object or a function)
+
+## 1.5.2-alpha.1
+
+### Patch Changes
+
+- [#1910](https://github.com/onflow/fcl-js/pull/1910) [`c0b3becf`](https://github.com/onflow/fcl-js/commit/c0b3becfcfb284e2182d6b4b6d809ff67406fc24) Thanks [@jribbink](https://github.com/jribbink)! - Restore account resolution ordering (fixes issue where FCL currentUser authz would run without knowing custom authz accounts)
+
+## 1.5.2-alpha.0
+
+### Patch Changes
+
+- [#1915](https://github.com/onflow/fcl-js/pull/1915) [`9c787314`](https://github.com/onflow/fcl-js/commit/9c7873140015c9d1e28712aed93c56654f656639) Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump ws from 8.14.2 to 8.17.1
+
+- [#1918](https://github.com/onflow/fcl-js/pull/1918) [`bc78da0c`](https://github.com/onflow/fcl-js/commit/bc78da0c283ba0fef2680f040eb69b46e8923fa5) Thanks [@jribbink](https://github.com/jribbink)! - Miscellaneous TypeScript fixes
+
+- Updated dependencies [[`bc78da0c`](https://github.com/onflow/fcl-js/commit/bc78da0c283ba0fef2680f040eb69b46e8923fa5)]:
+  - @onflow/typedefs@1.3.1-alpha.0
+
+## 1.5.1
+
+### Patch Changes
+
+- Updated dependencies [[`fe5e1b3d`](https://github.com/onflow/fcl-js/commit/fe5e1b3d330b7734740cceb9a873d1b680f28175)]:
+  - @onflow/util-actor@1.3.3
+  - @onflow/config@1.4.1
+
 ## 1.5.0
 
 ### Minor Changes

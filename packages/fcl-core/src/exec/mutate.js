@@ -5,7 +5,15 @@ import {prepTemplateOpts} from "./utils/prep-template-opts.js"
 import {preMutate} from "./utils/pre.js"
 import {isNumber} from "../utils/is"
 
-export const getMutate = ({platform}) => {
+/**
+ * @description
+ * Factory function that returns a mutate function.
+ *
+ * @param {object} opts - Configuration Options
+ * @param {string} opts.platform - Platform
+ * @param {object} [opts.discovery] - Discovery options
+ */
+export const getMutate = ({platform, discovery}) => {
   /**
    * @description
    * Allows you to submit transactions to the blockchain to potentially mutate the state.
@@ -58,30 +66,29 @@ export const getMutate = ({platform}) => {
     try {
       await preMutate(opts)
       opts = await prepTemplateOpts(opts)
-      const currentUser = getCurrentUser({platform})
+      const currentUser = getCurrentUser({platform, discovery})
       // Allow for a config to overwrite the authorization function.
       // prettier-ignore
       const authz = await sdk.config().get("fcl.authz", currentUser().authorization)
 
-      txid = sdk.config().overload(opts.dependencies || {}, async () =>
-        // prettier-ignore
-        sdk.send([
-        sdk.transaction(opts.cadence),
+      txid = sdk
+        .send([
+          sdk.transaction(opts.cadence),
 
-        sdk.args(normalizeArgs(opts.args || [])),
+          sdk.args(normalizeArgs(opts.args || [])),
 
-        opts.limit && isNumber(opts.limit) && sdk.limit(opts.limit),
+          opts.limit && isNumber(opts.limit) && sdk.limit(opts.limit),
 
-        // opts.proposer > opts.authz > authz
-        sdk.proposer(opts.proposer || opts.authz || authz),
+          // opts.proposer > opts.authz > authz
+          sdk.proposer(opts.proposer || opts.authz || authz),
 
-        // opts.payer > opts.authz > authz
-        sdk.payer(opts.payer || opts.authz || authz),
+          // opts.payer > opts.authz > authz
+          sdk.payer(opts.payer || opts.authz || authz),
 
-        // opts.authorizations > [opts.authz > authz]
-        sdk.authorizations(opts.authorizations || [opts.authz || authz]),
-      ]).then(sdk.decode)
-      )
+          // opts.authorizations > [opts.authz > authz]
+          sdk.authorizations(opts.authorizations || [opts.authz || authz]),
+        ])
+        .then(sdk.decode)
 
       return txid
     } catch (error) {

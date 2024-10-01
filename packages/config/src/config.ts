@@ -175,10 +175,19 @@ async function resetConfig(oldConfig: Record<string, unknown>) {
  * @description Takes in flow.json or array of flow.json files and creates contract placeholders
  * @param data - The data to load
  * @param data.flowJSON - The flow.json or array of flow.json files
+ * @param options - override flag
+ * @param options.ignoreConflicts - ignore conflicts and override config
  */
-async function load(data: {
-  flowJSON: Record<string, unknown> | Record<string, unknown>[]
-}) {
+async function load(
+  data: {
+    flowJSON: Record<string, unknown> | Record<string, unknown>[]
+  },
+  {
+    ignoreConflicts = false,
+  }: {
+    ignoreConflicts?: boolean
+  } = {}
+) {
   const network: string = await get("flow.network")
   const cleanedNetwork = cleanNetwork(network)
   const {flowJSON} = data
@@ -210,7 +219,11 @@ async function load(data: {
   )) {
     const contractConfigKey = `0x${key}`
     const existingContractConfigKey = await get(contractConfigKey)
-    if (existingContractConfigKey && existingContractConfigKey !== value) {
+    if (
+      existingContractConfigKey &&
+      existingContractConfigKey !== value &&
+      !ignoreConflicts
+    ) {
       logger.log({
         title: "Contract Placeholder Conflict Detected",
         message: `A generated contract placeholder from config.load conflicts with a placeholder you've set manually in config have the same name.`,
@@ -226,7 +239,8 @@ async function load(data: {
     )
     if (
       systemExistingContractConfigKeyValue &&
-      systemExistingContractConfigKeyValue !== value
+      systemExistingContractConfigKeyValue !== value &&
+      !ignoreConflicts
     ) {
       logger.log({
         title: "Contract Placeholder Conflict Detected",

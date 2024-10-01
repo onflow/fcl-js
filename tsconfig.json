@@ -2,7 +2,8 @@
   // Change this to match your project
   "exclude": ["**/*.test.ts", "**/*.test.js"],
   "compilerOptions": {
-    "moduleResolution": "NodeNext",
+    "moduleResolution": "Bundler",
+    "module": "ESNext",
     "target": "ES2015",
     "types": ["node", "jest"],
     // Tells TypeScript to read JS files, as

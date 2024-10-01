@@ -58,9 +58,9 @@ const HANDLERS = {
     if (document.readyState === "complete") {
       fetchServicesFromDiscovery()
     } else {
-      window.onload = async () => {
+      window.addEventListener("load", () => {
         fetchServicesFromDiscovery()
-      }
+      })
     }
   },
   [SERVICE_ACTOR_KEYS.UPDATE_RESULTS]: (ctx, _letter, data) => {
@@ -112,7 +112,13 @@ const authn = {
    * @description - Trigger an update of authn services
    * @returns {void}
    */
-  update: () => fetchServicesFromDiscovery(),
+  update: () => {
+    // Only fetch services if the window is loaded
+    // Otherwise, this will be called by the INIT handler
+    if (document.readyState === "complete") {
+      fetchServicesFromDiscovery()
+    }
+  },
 }
 
 export default authn

@@ -1,5 +1,103 @@
 # @onflow/fcl
 
+## 1.11.0
+
+### Minor Changes
+
+- [#1922](https://github.com/onflow/fcl-js/pull/1922) [`266fda58`](https://github.com/onflow/fcl-js/commit/266fda5817900a943925f9a4cbfc69dbcdb98d99) Thanks [@jribbink](https://github.com/jribbink)! - Changes to `execStrategy`:
+  - `execStrategy` now exported from `@onflow/fcl-core`
+  - Allow overriding `execStrategy` for FCL Discovery when initializing `currentUser`.
+  - `execStrategy` now takes additional arguments
+    - `customRpc` - a custom RPC client to communicate with the VIEW, if supported
+    - `abortSignal` - an AbortSignal to cancel the request (and close any open views)
+
+### Patch Changes
+
+- [#1942](https://github.com/onflow/fcl-js/pull/1942) [`e70a215c`](https://github.com/onflow/fcl-js/commit/e70a215c47d7db6f4e1ddab747be3968abc09c05) Thanks [@jribbink](https://github.com/jribbink)! - Fix `fcl.authenticate` type
+
+- [#1958](https://github.com/onflow/fcl-js/pull/1958) [`e97e8d2f`](https://github.com/onflow/fcl-js/commit/e97e8d2f5197aecf793f26ba82771fd4f7ebc757) Thanks [@jribbink](https://github.com/jribbink)! - Fix window.onload for discovery API
+
+- [#1922](https://github.com/onflow/fcl-js/pull/1922) [`266fda58`](https://github.com/onflow/fcl-js/commit/266fda5817900a943925f9a4cbfc69dbcdb98d99) Thanks [@jribbink](https://github.com/jribbink)! - `postMessage` now strictly communicates with the view which it opened to prevent collisions when FCL opens multiple views in parallel
+
+- [#1949](https://github.com/onflow/fcl-js/pull/1949) [`b8a2a26e`](https://github.com/onflow/fcl-js/commit/b8a2a26e382d543e5058cc1a628b437c3305b13c) Thanks [@jribbink](https://github.com/jribbink)! - Defer `discovery.authn.update` calls to after the window has loaded
+
+- [#1911](https://github.com/onflow/fcl-js/pull/1911) [`6ca1353e`](https://github.com/onflow/fcl-js/commit/6ca1353e2d0c6ad760b7a03da99c8b2b56b48807) Thanks [@jribbink](https://github.com/jribbink)! - Remove unnecessary config.overload call in query/mutate functions (causes unnecessary WalletConnect errors to show in console)
+
+- [#1944](https://github.com/onflow/fcl-js/pull/1944) [`3a89c39c`](https://github.com/onflow/fcl-js/commit/3a89c39ca5033af6b0ff4e606095507753e17de7) Thanks [@jribbink](https://github.com/jribbink)! - Fix `verifyUserSignatures` return type
+
+- Updated dependencies [[`9c787314`](https://github.com/onflow/fcl-js/commit/9c7873140015c9d1e28712aed93c56654f656639), [`bc78da0c`](https://github.com/onflow/fcl-js/commit/bc78da0c283ba0fef2680f040eb69b46e8923fa5), [`cd234798`](https://github.com/onflow/fcl-js/commit/cd234798008868df13447ea97654b7e278dd746f), [`c0b3becf`](https://github.com/onflow/fcl-js/commit/c0b3becfcfb284e2182d6b4b6d809ff67406fc24), [`95c63f26`](https://github.com/onflow/fcl-js/commit/95c63f26c5b21787ba9dddc52c7111183b0983ec)]:
+  - @onflow/sdk@1.5.2
+  - @onflow/config@1.5.0
+
+## 1.11.0-alpha.4
+
+### Patch Changes
+
+- Updated dependencies [[`cd234798`](https://github.com/onflow/fcl-js/commit/cd234798008868df13447ea97654b7e278dd746f)]:
+  - @onflow/config@1.5.0-alpha.0
+  - @onflow/sdk@1.5.2-alpha.3
+
+## 1.11.0-alpha.3
+
+### Patch Changes
+
+- [#1949](https://github.com/onflow/fcl-js/pull/1949) [`b8a2a26e`](https://github.com/onflow/fcl-js/commit/b8a2a26e382d543e5058cc1a628b437c3305b13c) Thanks [@jribbink](https://github.com/jribbink)! - Defer `discovery.authn.update` calls to after the window has loaded
+
+## 1.11.0-alpha.2
+
+### Patch Changes
+
+- [#1942](https://github.com/onflow/fcl-js/pull/1942) [`e70a215c`](https://github.com/onflow/fcl-js/commit/e70a215c47d7db6f4e1ddab747be3968abc09c05) Thanks [@jribbink](https://github.com/jribbink)! - Fix `fcl.authenticate` type
+
+- [#1944](https://github.com/onflow/fcl-js/pull/1944) [`3a89c39c`](https://github.com/onflow/fcl-js/commit/3a89c39ca5033af6b0ff4e606095507753e17de7) Thanks [@jribbink](https://github.com/jribbink)! - Fix `verifyUserSignatures` return type
+
+- Updated dependencies [[`95c63f26`](https://github.com/onflow/fcl-js/commit/95c63f26c5b21787ba9dddc52c7111183b0983ec)]:
+  - @onflow/sdk@1.5.2-alpha.2
+
+## 1.11.0-alpha.1
+
+### Patch Changes
+
+- Updated dependencies [[`c0b3becf`](https://github.com/onflow/fcl-js/commit/c0b3becfcfb284e2182d6b4b6d809ff67406fc24)]:
+  - @onflow/sdk@1.5.2-alpha.1
+
+## 1.11.0-alpha.0
+
+### Minor Changes
+
+- [#1922](https://github.com/onflow/fcl-js/pull/1922) [`266fda58`](https://github.com/onflow/fcl-js/commit/266fda5817900a943925f9a4cbfc69dbcdb98d99) Thanks [@jribbink](https://github.com/jribbink)! - Changes to `execStrategy`:
+  - `execStrategy` now exported from `@onflow/fcl-core`
+  - Allow overriding `execStrategy` for FCL Discovery when initializing `currentUser`.
+  - `execStrategy` now takes additional arguments
+    - `customRpc` - a custom RPC client to communicate with the VIEW, if supported
+    - `abortSignal` - an AbortSignal to cancel the request (and close any open views)
+
+### Patch Changes
+
+- [#1922](https://github.com/onflow/fcl-js/pull/1922) [`266fda58`](https://github.com/onflow/fcl-js/commit/266fda5817900a943925f9a4cbfc69dbcdb98d99) Thanks [@jribbink](https://github.com/jribbink)! - `postMessage` now strictly communicates with the view which it opened to prevent collisions when FCL opens multiple views in parallel
+
+- [#1911](https://github.com/onflow/fcl-js/pull/1911) [`6ca1353e`](https://github.com/onflow/fcl-js/commit/6ca1353e2d0c6ad760b7a03da99c8b2b56b48807) Thanks [@jribbink](https://github.com/jribbink)! - Remove unnecessary config.overload call in query/mutate functions (causes unnecessary WalletConnect errors to show in console)
+
+- Updated dependencies [[`9c787314`](https://github.com/onflow/fcl-js/commit/9c7873140015c9d1e28712aed93c56654f656639), [`bc78da0c`](https://github.com/onflow/fcl-js/commit/bc78da0c283ba0fef2680f040eb69b46e8923fa5)]:
+  - @onflow/sdk@1.5.2-alpha.0
+
+## 1.10.0
+
+### Minor Changes
+
+- [#1888](https://github.com/onflow/fcl-js/pull/1888) [`90aa24d2`](https://github.com/onflow/fcl-js/commit/90aa24d237e0003bd62b53dd26fcf29ab743595b) Thanks [@jribbink](https://github.com/jribbink)! - Warn users to configure FCL-WC Plugin if not already configured. FCL libraries are expected to manage this plugin (i.e. `@onflow/fcl`).
+
+## 1.9.2
+
+### Patch Changes
+
+- [#1894](https://github.com/onflow/fcl-js/pull/1894) [`38607662`](https://github.com/onflow/fcl-js/commit/38607662dbfc54f268c40488e7a6a89bedd169d8) Thanks [@nichita-rusin](https://github.com/nichita-rusin)! - Fix error when calling `fcl.query` with a template object
+
+- Updated dependencies [[`fe5e1b3d`](https://github.com/onflow/fcl-js/commit/fe5e1b3d330b7734740cceb9a873d1b680f28175)]:
+  - @onflow/util-actor@1.3.3
+  - @onflow/config@1.4.1
+  - @onflow/sdk@1.5.1
+
 ## 1.9.1
 
 ### Patch Changes

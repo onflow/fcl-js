@@ -1,5 +1,120 @@
 # @onflow/fcl
 
+## 1.12.1
+
+### Patch Changes
+
+- Updated dependencies [[`77f66e94`](https://github.com/onflow/fcl-js/commit/77f66e94ecce98c681449eeaf74e1b29c4ddc4cb)]:
+  - @onflow/fcl-wc@5.3.0
+
+## 1.12.0
+
+### Minor Changes
+
+- [#1922](https://github.com/onflow/fcl-js/pull/1922) [`266fda58`](https://github.com/onflow/fcl-js/commit/266fda5817900a943925f9a4cbfc69dbcdb98d99) Thanks [@jribbink](https://github.com/jribbink)! - Improvements to FCL Discovery:
+  - `execStrategy` is overriden and allows for parallel execution of multiple strategies
+  - Can now be resolved by WalletConnect or a custom service during an in-flight Discovery request
+
+### Patch Changes
+
+- [#1947](https://github.com/onflow/fcl-js/pull/1947) [`8f0c710e`](https://github.com/onflow/fcl-js/commit/8f0c710eb4fa7b027d40d3bc15a1cf69a31e6633) Thanks [@jribbink](https://github.com/jribbink)! - Add `clipboard-write` access to FCL IFRAME
+
+- Updated dependencies [[`e70a215c`](https://github.com/onflow/fcl-js/commit/e70a215c47d7db6f4e1ddab747be3968abc09c05), [`9c787314`](https://github.com/onflow/fcl-js/commit/9c7873140015c9d1e28712aed93c56654f656639), [`266fda58`](https://github.com/onflow/fcl-js/commit/266fda5817900a943925f9a4cbfc69dbcdb98d99), [`266fda58`](https://github.com/onflow/fcl-js/commit/266fda5817900a943925f9a4cbfc69dbcdb98d99), [`e97e8d2f`](https://github.com/onflow/fcl-js/commit/e97e8d2f5197aecf793f26ba82771fd4f7ebc757), [`266fda58`](https://github.com/onflow/fcl-js/commit/266fda5817900a943925f9a4cbfc69dbcdb98d99), [`b8a2a26e`](https://github.com/onflow/fcl-js/commit/b8a2a26e382d543e5058cc1a628b437c3305b13c), [`bc78da0c`](https://github.com/onflow/fcl-js/commit/bc78da0c283ba0fef2680f040eb69b46e8923fa5), [`266fda58`](https://github.com/onflow/fcl-js/commit/266fda5817900a943925f9a4cbfc69dbcdb98d99), [`cd234798`](https://github.com/onflow/fcl-js/commit/cd234798008868df13447ea97654b7e278dd746f), [`6ca1353e`](https://github.com/onflow/fcl-js/commit/6ca1353e2d0c6ad760b7a03da99c8b2b56b48807), [`3a89c39c`](https://github.com/onflow/fcl-js/commit/3a89c39ca5033af6b0ff4e606095507753e17de7), [`c0b3becf`](https://github.com/onflow/fcl-js/commit/c0b3becfcfb284e2182d6b4b6d809ff67406fc24), [`95c63f26`](https://github.com/onflow/fcl-js/commit/95c63f26c5b21787ba9dddc52c7111183b0983ec)]:
+  - @onflow/fcl-core@1.11.0
+  - @onflow/sdk@1.5.2
+  - @onflow/fcl-wc@5.2.0
+  - @onflow/config@1.5.0
+
+## 1.12.0-alpha.4
+
+### Patch Changes
+
+- Updated dependencies [[`cd234798`](https://github.com/onflow/fcl-js/commit/cd234798008868df13447ea97654b7e278dd746f)]:
+  - @onflow/config@1.5.0-alpha.0
+  - @onflow/fcl-core@1.11.0-alpha.4
+  - @onflow/fcl-wc@5.2.0-alpha.4
+  - @onflow/sdk@1.5.2-alpha.3
+
+## 1.12.0-alpha.3
+
+### Patch Changes
+
+- Updated dependencies [[`b8a2a26e`](https://github.com/onflow/fcl-js/commit/b8a2a26e382d543e5058cc1a628b437c3305b13c)]:
+  - @onflow/fcl-core@1.11.0-alpha.3
+  - @onflow/fcl-wc@5.2.0-alpha.3
+
+## 1.12.0-alpha.2
+
+### Patch Changes
+
+- [#1947](https://github.com/onflow/fcl-js/pull/1947) [`8f0c710e`](https://github.com/onflow/fcl-js/commit/8f0c710eb4fa7b027d40d3bc15a1cf69a31e6633) Thanks [@jribbink](https://github.com/jribbink)! - Add `clipboard-write` access to FCL IFRAME
+
+- Updated dependencies [[`e70a215c`](https://github.com/onflow/fcl-js/commit/e70a215c47d7db6f4e1ddab747be3968abc09c05), [`3a89c39c`](https://github.com/onflow/fcl-js/commit/3a89c39ca5033af6b0ff4e606095507753e17de7), [`95c63f26`](https://github.com/onflow/fcl-js/commit/95c63f26c5b21787ba9dddc52c7111183b0983ec)]:
+  - @onflow/fcl-core@1.11.0-alpha.2
+  - @onflow/sdk@1.5.2-alpha.2
+  - @onflow/fcl-wc@5.2.0-alpha.2
+
+## 1.12.0-alpha.1
+
+### Patch Changes
+
+- Updated dependencies [[`c0b3becf`](https://github.com/onflow/fcl-js/commit/c0b3becfcfb284e2182d6b4b6d809ff67406fc24)]:
+  - @onflow/sdk@1.5.2-alpha.1
+  - @onflow/fcl-core@1.11.0-alpha.1
+  - @onflow/fcl-wc@5.2.0-alpha.1
+
+## 1.12.0-alpha.0
+
+### Minor Changes
+
+- [#1922](https://github.com/onflow/fcl-js/pull/1922) [`266fda58`](https://github.com/onflow/fcl-js/commit/266fda5817900a943925f9a4cbfc69dbcdb98d99) Thanks [@jribbink](https://github.com/jribbink)! - Improvements to FCL Discovery:
+  - `execStrategy` is overriden and allows for parallel execution of multiple strategies
+  - Can now be resolved by WalletConnect or a custom service during an in-flight Discovery request
+
+### Patch Changes
+
+- Updated dependencies [[`9c787314`](https://github.com/onflow/fcl-js/commit/9c7873140015c9d1e28712aed93c56654f656639), [`266fda58`](https://github.com/onflow/fcl-js/commit/266fda5817900a943925f9a4cbfc69dbcdb98d99), [`266fda58`](https://github.com/onflow/fcl-js/commit/266fda5817900a943925f9a4cbfc69dbcdb98d99), [`266fda58`](https://github.com/onflow/fcl-js/commit/266fda5817900a943925f9a4cbfc69dbcdb98d99), [`bc78da0c`](https://github.com/onflow/fcl-js/commit/bc78da0c283ba0fef2680f040eb69b46e8923fa5), [`266fda58`](https://github.com/onflow/fcl-js/commit/266fda5817900a943925f9a4cbfc69dbcdb98d99), [`6ca1353e`](https://github.com/onflow/fcl-js/commit/6ca1353e2d0c6ad760b7a03da99c8b2b56b48807)]:
+  - @onflow/sdk@1.5.2-alpha.0
+  - @onflow/fcl-wc@5.2.0-alpha.0
+  - @onflow/fcl-core@1.11.0-alpha.0
+
+## 1.11.0
+
+### Minor Changes
+
+- [#1888](https://github.com/onflow/fcl-js/pull/1888) [`90aa24d2`](https://github.com/onflow/fcl-js/commit/90aa24d237e0003bd62b53dd26fcf29ab743595b) Thanks [@jribbink](https://github.com/jribbink)! - Inject FCL WalletConnect Plugin by default. All developers are expected to configure a WalletConnect project ID in their FCL configuration. The relate configuration values are as follows:
+
+  ```typescript
+  {
+      // Required
+      "walletconnect.projectId": "YOUR_PROJECT_ID",
+
+      // Optional
+      "app.detail.icon": "https://example.com/icon.png",
+      "app.detail.name": "Example App",
+      "app.detail.description": "Example App Description",
+      "app.detail.url": "https://example.com",
+  }
+  ```
+
+  These values are used to configure the WalletConnect client. To obtain a project ID, please go to [WalletConnect's official website](https://walletconnect.com/). Metadata is optional, but recommended (FCL will use default values if not provided).
+
+### Patch Changes
+
+- Updated dependencies [[`90aa24d2`](https://github.com/onflow/fcl-js/commit/90aa24d237e0003bd62b53dd26fcf29ab743595b)]:
+  - @onflow/fcl-core@1.10.0
+  - @onflow/fcl-wc@5.2.0
+
+## 1.10.2
+
+### Patch Changes
+
+- Updated dependencies [[`fe5e1b3d`](https://github.com/onflow/fcl-js/commit/fe5e1b3d330b7734740cceb9a873d1b680f28175), [`38607662`](https://github.com/onflow/fcl-js/commit/38607662dbfc54f268c40488e7a6a89bedd169d8)]:
+  - @onflow/util-actor@1.3.3
+  - @onflow/fcl-core@1.9.2
+  - @onflow/config@1.4.1
+  - @onflow/sdk@1.5.1
+
 ## 1.10.1
 
 ### Patch Changes
