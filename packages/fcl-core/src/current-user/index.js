@@ -315,10 +315,6 @@ const getAuthorization =
             })
           )
         if (authz) {
-          let windowRef
-          if (isMobile() && authz.method === "WC/RPC") {
-            windowRef = window.open("", "_blank")
-          }
           return {
             ...account,
             tempId: "CURRENT_USER",
@@ -334,7 +330,6 @@ const getAuthorization =
                   msg: signable,
                   opts: {
                     includeOlderJsonRpcCall: true,
-                    windowRef,
                   },
                   platform,
                 })
