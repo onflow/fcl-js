@@ -9,13 +9,15 @@ export class TransactionError extends Error {
     super(message)
     this.code = code
   }
+}
 
-  static from(status: TransactionStatus): TransactionError | null {
-    if (status.statusCode === 0) return null
+function createTransactionError(
+  status: TransactionStatus
+): TransactionError | null {
+  if (status.statusCode === 0) return null
 
-    const match = status.errorMessage.match(ERROR_CODE_REGEX)
-    const code = match ? parseInt(match[1], 10) : undefined
+  const match = status.errorMessage.match(ERROR_CODE_REGEX)
+  const code = match ? parseInt(match[1], 10) : undefined
 
-    return new TransactionError(status.errorMessage || "Unknown error", code)
-  }
+  return new TransactionError(status.errorMessage || "Unknown error", code)
 }
