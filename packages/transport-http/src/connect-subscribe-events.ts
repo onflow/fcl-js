@@ -19,7 +19,7 @@ function constructData(ix: Interaction, context: any, data: any) {
       ? data.Events.map((event: any) => ({
           blockId: data.BlockID,
           blockHeight: Number(data.Height),
-          blockTimestamp: data.Timestamp,
+          blockTimestamp: data.BlockTimestamp,
           type: event.Type,
           transactionId: event.TransactionID,
           transactionIndex: Number(event.TransactionIndex),
@@ -32,7 +32,7 @@ function constructData(ix: Interaction, context: any, data: any) {
   response.heartbeat = {
     blockId: data.BlockID,
     blockHeight: Number(data.Height),
-    blockTimestamp: data.Timestamp,
+    blockTimestamp: data.BlockTimestamp,
   }
 
   return response
