@@ -105,7 +105,11 @@ const makeExec = (
       })
     }
 
-    if (isMobile() && method !== FLOW_METHODS.FLOW_AUTHN) {
+    if (
+      isMobile() &&
+      method !== FLOW_METHODS.FLOW_AUTHN &&
+      method !== FLOW_METHODS.FLOW_AUTHZ
+    ) {
       openDeeplink(appLink)
     }
 
