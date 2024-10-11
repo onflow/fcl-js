@@ -1,5 +1,11 @@
 # @onflow/transport-http
 
+## 1.10.2
+
+### Patch Changes
+
+- [#1965](https://github.com/onflow/fcl-js/pull/1965) [`91526e65`](https://github.com/onflow/fcl-js/commit/91526e65190d8c8ba67598e5df3b8b1c6c41292a) Thanks [@jribbink](https://github.com/jribbink)! - Fix `subscribeEvents` block timestamp
+
 ## 1.10.1
 
 ### Patch Changes

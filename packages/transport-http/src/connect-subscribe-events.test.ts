@@ -128,7 +128,7 @@ describe("Subscribe Events", () => {
     emitter.emit("data", {
       BlockID: "abc123",
       Height: 1,
-      Timestamp: "1",
+      BlockTimestamp: "1",
       Events: [
         {
           Type: "A.7e60df042a9c0868.FlowToken.TokensWithdrawn",
@@ -143,7 +143,7 @@ describe("Subscribe Events", () => {
     emitter.emit("data", {
       BlockID: "def456",
       Height: 2,
-      Timestamp: "2",
+      BlockTimestamp: "2",
       Events: [],
     })
 
@@ -278,7 +278,7 @@ describe("Subscribe Events", () => {
     emitter.emit("data", {
       BlockID: "abc123",
       Height: 1,
-      Timestamp: "1",
+      BlockTimestamp: "1",
       Events: [],
     })
 
