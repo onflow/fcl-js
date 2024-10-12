@@ -26,6 +26,7 @@
     "@onflow/util-uid": "1.2.2"
   },
   "changesets": [
-    "sharp-coats-add"
+    "sharp-coats-add",
+    "tame-carpets-remain"
   ]
 }
