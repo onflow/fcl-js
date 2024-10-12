@@ -1,5 +1,13 @@
 # @onflow/fcl
 
+## 1.12.3-deeplink.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @onflow/fcl-core@1.12.0-deeplink.0
+  - @onflow/fcl-wc@5.4.0-deeplink.0
+
 ## 1.12.2
 
 ### Patch Changes

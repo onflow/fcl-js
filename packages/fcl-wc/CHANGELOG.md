@@ -1,5 +1,16 @@
 # @onflow/fcl-wc
 
+## 5.4.0-deeplink.0
+
+### Minor Changes
+
+- Refactor deep linking
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @onflow/fcl-core@1.12.0-deeplink.0
+
 ## 5.3.1
 
 ### Patch Changes

@@ -1,0 +1,31 @@
+{
+  "mode": "pre",
+  "tag": "deeplink",
+  "initialVersions": {
+    "@onflow/config": "1.5.0",
+    "@onflow/fcl": "1.12.2",
+    "@onflow/fcl-bundle": "1.5.0",
+    "@onflow/fcl-core": "1.11.1",
+    "@onflow/fcl-react-native": "1.9.5",
+    "@onflow/fcl-wc": "5.3.1",
+    "@onflow/protobuf": "1.3.0",
+    "@onflow/rlp": "1.2.2",
+    "@onflow/sdk": "1.5.3",
+    "@onflow/transport-grpc": "1.4.1",
+    "@onflow/transport-http": "1.10.2",
+    "@onflow/typedefs": "1.3.1",
+    "@onflow/types": "1.4.0",
+    "@onflow/util-actor": "1.3.3",
+    "@onflow/util-address": "1.2.2",
+    "@onflow/util-encode-key": "1.2.3",
+    "@onflow/util-invariant": "1.2.3",
+    "@onflow/util-logger": "1.3.2",
+    "@onflow/util-rpc": "0.0.1",
+    "@onflow/util-semver": "1.0.2",
+    "@onflow/util-template": "1.2.2",
+    "@onflow/util-uid": "1.2.2"
+  },
+  "changesets": [
+    "sharp-coats-add"
+  ]
+}

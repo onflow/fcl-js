@@ -1,5 +1,12 @@
 # @onflow/fcl-react-native
 
+## 1.9.6-deeplink.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @onflow/fcl-core@1.12.0-deeplink.0
+
 ## 1.9.5
 
 ### Patch Changes
