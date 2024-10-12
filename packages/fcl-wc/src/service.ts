@@ -114,13 +114,22 @@ const makeExec = (
     }
 
     // Make request to the WalletConnect client and return the result
-    return await request({
+    const res = await request({
       method,
       body,
       session,
       client,
       abortSignal,
     })
+
+    if (method === FLOW_METHODS.FLOW_AUTHN) {
+      // Patch to rewrite all service uid's to match the authn service uid
+      res?.services?.forEach((srv: any) => {
+        srv.uid = service.uid
+      })
+    }
+
+    return res
 
     function validateAppLink({uid}: {uid: string}) {
       if (!(uid && /^(ftp|http|https):\/\/[^ "]+$/.test(uid))) {
