@@ -1,7 +1,8 @@
 import {css, html, LitElement} from "lit"
-import {customElement, property} from "lit/decorators.js"
+import {property} from "lit/decorators.js"
+import {scopedElement} from "./util/decorators"
 
-@customElement("fcl-wc-confirmation-prompt")
+@scopedElement("fcl-wc-confirmation-prompt")
 export class DeepLinkModal extends LitElement {
   static styles = css`
     :host {
@@ -80,7 +81,9 @@ let deepLinkModal: DeepLinkModal | null = null
 
 export function getConfirmationPrompt() {
   if (deepLinkModal == null) {
-    deepLinkModal = document.createElement("fcl-wc-confirmation-prompt")
+    deepLinkModal = document.createElement(
+      DeepLinkModal.prototype.tagName
+    ) as DeepLinkModal
     document.body.appendChild(deepLinkModal)
   }
   return deepLinkModal

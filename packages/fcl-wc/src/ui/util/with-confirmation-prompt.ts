@@ -1,4 +1,4 @@
-import {getConfirmationPrompt} from "./ConfirmationPrompt"
+import {getConfirmationPrompt} from "../ConfirmationPrompt"
 
 export const withConfirmationPrompt = async <T>(
   callback: (signal: AbortSignal) => Promise<T>
