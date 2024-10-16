@@ -42,7 +42,8 @@
     "@walletconnect/modal-core": "^2.6.2",
     "@walletconnect/sign-client": "^2.14.0",
     "@walletconnect/types": "^2.8.1",
-    "@walletconnect/utils": "^2.8.1"
+    "@walletconnect/utils": "^2.8.1",
+    "lit": "^3.2.1"
   },
   "peerDependencies": {
     "@onflow/fcl-core": "1.12.0-deeplink.0"
