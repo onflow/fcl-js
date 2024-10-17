@@ -144,8 +144,8 @@ const makeExec = (
     }
   }
 
-  return ({service, body, opts, abortSignal}: any) => {
-    return withConfirmationPrompt(signal => {
+  return async ({service, body, opts, abortSignal}: any) => {
+    return await withConfirmationPrompt(async signal => {
       const combinedAbortSignal = new AbortController()
       signal.addEventListener("abort", () => {
         combinedAbortSignal.abort(signal.reason)
@@ -154,7 +154,12 @@ const makeExec = (
         combinedAbortSignal.abort(abortSignal?.reason)
       })
 
-      exec({service, body, opts, abortSignal: combinedAbortSignal.signal})
+      return await exec({
+        service,
+        body,
+        opts,
+        abortSignal: combinedAbortSignal.signal,
+      })
     })
   }
 }

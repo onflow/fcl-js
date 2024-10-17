@@ -1,9 +1,13 @@
 import {css, html, LitElement} from "lit"
 import {property} from "lit/decorators.js"
 import {createElement} from "./util/create-element"
-import {scopedElement} from "./util/scoped-element"
+import {getScopedTagName} from "./util/scoped-element"
 
-@scopedElement
+// DO NOT USE DECORATORS!  THERE IS A BUG IN BABEL THAT WILL BREAK THE BUILD
+// The suggested workarounds do not work.  It's not worth the effort right now.
+// It's a symptom of lit using very new features of decorators that are not
+// supported well in Babel yet.
+
 export class ConfirmationPrompt extends LitElement {
   static styles = css`
     :host {
@@ -34,9 +38,14 @@ export class ConfirmationPrompt extends LitElement {
       background: white;
       padding: 20px;
       border-radius: 8px;
-      max-width: 500px;
+      max-width: 400px;
       width: 100%;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    @media only screen and (max-width: 600px) {
+      .modal-content {
+        width: 90%;
+      }
     }
     .close-btn {
       background: none;
@@ -49,8 +58,11 @@ export class ConfirmationPrompt extends LitElement {
     }
   `
 
-  @property({type: Boolean, reflect: true})
-  open: boolean = false
+  @property()
+  accessor open: boolean = false
+
+  @property()
+  accessor walletName: string = ""
 
   private close() {
     this.open = false
@@ -63,8 +75,10 @@ export class ConfirmationPrompt extends LitElement {
         <div class="modal-content">
           <button class="close-btn" @click="${this.close}">&times;</button>
           <div>
-            <h1>Confirm in Wallet</h1>
-            <p>Please confirm the transaction in your wallet.</p>
+            <h2>Pending Approval</h2>
+            <p>
+              Please confirm the transaction in your ${this.walletName} wallet.
+            </p>
           </div>
         </div>
       </div>

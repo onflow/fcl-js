@@ -7,6 +7,6 @@
     "rootDir": "src",
     "experimentalDecorators": true,
     "useDefineForClassFields": false,
-    "module": "ES2022"
+    "module": "esnext"
   }
 }
