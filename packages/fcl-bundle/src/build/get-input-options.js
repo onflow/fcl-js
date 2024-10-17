@@ -6,6 +6,8 @@ const {nodeResolve} = require("@rollup/plugin-node-resolve")
 const {babel} = require("@rollup/plugin-babel")
 const terser = require("@rollup/plugin-terser")
 const typescript = require("rollup-plugin-typescript2")
+const urlPlugin = require("@rollup/plugin-url")
+const imagePlugin = require("@rollup/plugin-image")
 const {DEFAULT_EXTENSIONS} = require("@babel/core")
 
 const builtinModules = require("builtin-modules")
@@ -38,16 +40,19 @@ module.exports = function getInputOptions(package, build) {
     .concat(Object.keys(package.peerDependencies || {}))
     .concat(Object.keys(package.dependencies || {}))
 
-  let testExternal = id =>
-    build.type !== "umd" &&
-    (/@babel\/runtime/g.test(id) ||
-      external.reduce((state, ext) => {
-        return (
-          state ||
-          (ext instanceof RegExp && ext.test(id)) ||
-          (typeof ext === "string" && id.startsWith(ext))
-        )
-      }, false))
+  let testExternal = id => {
+    return (
+      build.type !== "umd" &&
+      (/@babel\/runtime/g.test(id) ||
+        external.reduce((state, ext) => {
+          return (
+            state ||
+            (ext instanceof RegExp && ext.test(id)) ||
+            (typeof ext === "string" && id.startsWith(ext))
+          )
+        }, false))
+    )
+  }
 
   // exclude peer dependencies
   const resolveOnly = [
@@ -56,7 +61,13 @@ module.exports = function getInputOptions(package, build) {
     ),
   ]
 
-  const extensions = DEFAULT_EXTENSIONS.concat([".ts", ".tsx", ".mts", ".cts"])
+  const extensions = DEFAULT_EXTENSIONS.concat([
+    ".ts",
+    ".tsx",
+    ".mts",
+    ".cts",
+    ".png",
+  ])
 
   let options = {
     input: build.source,
@@ -66,6 +77,7 @@ module.exports = function getInputOptions(package, build) {
       console.warn(message.toString())
     },
     plugins: [
+      imagePlugin(),
       nodeResolve({
         browser: true,
         preferBuiltins: build.type !== "umd",
@@ -86,13 +98,9 @@ module.exports = function getInputOptions(package, build) {
             "**/*.cjs",
             "**/*.mjs",
           ],
-          tsconfigDefaults: {
-            compilerOptions: {
-              // patch for rollup-plugin-typescript2 because rootDirs
-              // are used to resolve include/exclude filters
-              rootDirs: [""],
-            },
-          },
+          exclude: ["**/*.png"],
+
+          //TODO: you removed this
           useTsconfigDeclarationDir: true,
         }),
       replace({

@@ -53,6 +53,7 @@
     "@onflow/interaction": "0.0.11",
     "@onflow/rlp": "1.2.2",
     "@onflow/sdk": "1.5.3",
+    "@onflow/transport-http": "^1.10.2",
     "@onflow/types": "1.4.0",
     "@onflow/util-actor": "1.3.3",
     "@onflow/util-address": "1.2.2",

@@ -4,7 +4,6 @@
   "include": ["src/**/*"],
   "compilerOptions": {
     "declarationDir": "types",
-    "rootDir": "src",
     "experimentalDecorators": true,
     "useDefineForClassFields": false,
     "module": "esnext"
