@@ -6,6 +6,7 @@
     "declarationDir": "types",
     "rootDir": "src",
     "experimentalDecorators": true,
-    "useDefineForClassFields": false
+    "useDefineForClassFields": false,
+    "module": "ES2022"
   }
 }

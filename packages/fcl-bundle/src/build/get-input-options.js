@@ -45,7 +45,7 @@ module.exports = function getInputOptions(package, build) {
         return (
           state ||
           (ext instanceof RegExp && ext.test(id)) ||
-          (typeof ext === "string" && ext === id)
+          (typeof ext === "string" && id.startsWith(ext))
         )
       }, false))
 

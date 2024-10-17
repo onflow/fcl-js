@@ -1,9 +1,10 @@
 import {css, html, LitElement} from "lit"
 import {property} from "lit/decorators.js"
-import {scopedElement} from "./util/decorators"
+import {createElement} from "./util/create-element"
+import {scopedElement} from "./util/scoped-element"
 
-@scopedElement("fcl-wc-confirmation-prompt")
-export class DeepLinkModal extends LitElement {
+@scopedElement
+export class ConfirmationPrompt extends LitElement {
   static styles = css`
     :host {
       display: block;
@@ -48,7 +49,7 @@ export class DeepLinkModal extends LitElement {
     }
   `
 
-  @property({type: Boolean})
+  @property({type: Boolean, reflect: true})
   open: boolean = false
 
   private close() {
@@ -71,19 +72,12 @@ export class DeepLinkModal extends LitElement {
   }
 }
 
-declare global {
-  interface HTMLElementTagNameMap {
-    "fcl-wc-confirmation-prompt": DeepLinkModal
-  }
-}
-
-let deepLinkModal: DeepLinkModal | null = null
+let deepLinkModal: ConfirmationPrompt | null = null
 
 export function getConfirmationPrompt() {
   if (deepLinkModal == null) {
-    deepLinkModal = document.createElement(
-      DeepLinkModal.prototype.tagName
-    ) as DeepLinkModal
+    deepLinkModal = createElement(ConfirmationPrompt, new Map())
+    deepLinkModal.open = false
     document.body.appendChild(deepLinkModal)
   }
   return deepLinkModal

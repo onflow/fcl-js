@@ -4,6 +4,7 @@ import {isMobile, openDeeplink} from "./utils"
 import {FLOW_METHODS, REQUEST_TYPES} from "./constants"
 import {SignClient} from "@walletconnect/sign-client/dist/types/client"
 import {createSessionProposal, makeSessionData, request} from "./session"
+import {withConfirmationPrompt} from "./ui/util/with-confirmation-prompt"
 
 type WalletConnectModalType =
   typeof import("@walletconnect/modal").WalletConnectModal
@@ -46,7 +47,7 @@ const makeExec = (
   {wcRequestHook, pairingModalOverride}: any,
   WalletConnectModal: Promise<WalletConnectModalType>
 ) => {
-  return async ({
+  const exec = async ({
     service,
     body,
     opts,
@@ -141,6 +142,20 @@ const makeExec = (
       }
       return uid
     }
+  }
+
+  return ({service, body, opts, abortSignal}: any) => {
+    return withConfirmationPrompt(signal => {
+      const combinedAbortSignal = new AbortController()
+      signal.addEventListener("abort", () => {
+        combinedAbortSignal.abort(signal.reason)
+      })
+      abortSignal?.addEventListener("abort", () => {
+        combinedAbortSignal.abort(abortSignal?.reason)
+      })
+
+      exec({service, body, opts, abortSignal: combinedAbortSignal.signal})
+    })
   }
 }
 

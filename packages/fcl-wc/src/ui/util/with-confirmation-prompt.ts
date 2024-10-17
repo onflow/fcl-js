@@ -1,7 +1,7 @@
 import {getConfirmationPrompt} from "../ConfirmationPrompt"
 
 export const withConfirmationPrompt = async <T>(
-  callback: (signal: AbortSignal) => Promise<T>
+  callback: (signal: AbortSignal) => Promise<T> | T
 ) => {
   const modal = getConfirmationPrompt()
   modal.open = true
