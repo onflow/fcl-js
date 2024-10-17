@@ -5,7 +5,8 @@ import {LitElement} from "lit"
 const SCOPE_PREFIX = "fcl-wc"
 
 export const getScopedTagName = (cls: new () => LitElement) => {
-  const className = cls.constructor.name.toLocaleLowerCase()
+  console.log(cls)
+  const className = cls.name.toLocaleLowerCase()
   const tag = `${SCOPE_PREFIX}-${className}-${VERSION}`
   return tag
 }

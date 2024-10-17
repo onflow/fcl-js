@@ -15,10 +15,11 @@ export const execStrategy = async ({
   config,
   abortSignal,
   customRpc,
+  user,
   opts,
 }) => {
   const strategy = getServiceRegistry().getStrategy(service.method)
-  return strategy({service, body, config, abortSignal, customRpc, opts})
+  return strategy({service, body, config, abortSignal, customRpc, user, opts})
 }
 
 export async function execService({
