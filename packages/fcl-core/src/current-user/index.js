@@ -160,6 +160,7 @@ const getAuthenticate =
    * @description - Authenticate a user
    * @param {object} [opts] - Options
    * @param {object} [opts.service] - Optional service to use for authentication
+   * @param {object} [opts.user] - Optional user object
    * @param {boolean} [opts.redir] - Optional redirect flag
    * @returns
    */
@@ -189,6 +190,7 @@ const getAuthenticate =
               msg: accountProofData,
               opts,
               platform,
+              user,
             })
             send(NAME, SET_CURRENT_USER, await buildUser(response))
           } catch (error) {
@@ -257,7 +259,7 @@ const normalizePreAuthzResponse = authz => ({
 })
 
 const getResolvePreAuthz =
-  ({platform}) =>
+  ({platform, user}) =>
   authz => {
     const resp = normalizePreAuthzResponse(authz)
     const axs = []
@@ -271,7 +273,7 @@ const getResolvePreAuthz =
       addr: az.identity.address,
       keyId: az.identity.keyId,
       signingFunction(signable) {
-        return execService({service: az, msg: signable, platform})
+        return execService({service: az, msg: signable, platform, user})
       },
       role: {
         proposer: role === "PROPOSER",
@@ -307,10 +309,11 @@ const getAuthorization =
         const preAuthz = serviceOfType(user.services, "pre-authz")
 
         if (preAuthz)
-          return getResolvePreAuthz({platform, discovery})(
+          return getResolvePreAuthz({platform, discovery, user})(
             await execService({
               service: preAuthz,
               msg: preSignable,
+              user,
               platform,
             })
           )
@@ -332,6 +335,7 @@ const getAuthorization =
                     includeOlderJsonRpcCall: true,
                   },
                   platform,
+                  user,
                 })
               )
             },
@@ -439,6 +443,7 @@ const getSignUserMessage =
         service: signingService,
         msg: makeSignable(msg),
         platform,
+        user,
       })
       if (Array.isArray(response)) {
         return response.map(compSigs => normalizeCompositeSignature(compSigs))
