@@ -347,10 +347,14 @@ export type TransactionStatus = {
   events: Array<Event>
 }
 export type Provider = {
-  /**
-   * - Provider name.
-   */
-  name: string
+  address?: string
+  name?: string
+  icon?: string
+  description?: string
+  color?: string
+  supportEmail?: string
+  website?: string
+  is_installed?: boolean
 }
 export type NodeVersionInfo = {
   /**
