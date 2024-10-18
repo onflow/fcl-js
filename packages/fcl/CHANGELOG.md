@@ -1,27 +1,5 @@
 # @onflow/fcl
 
-## 1.12.3-deeplink.2
-
-### Patch Changes
-
-- Updated dependencies [[`c0927115`](https://github.com/onflow/fcl-js/commit/c0927115af38d70d920796d90b7e56f524bd3061)]:
-  - @onflow/fcl-wc@5.4.0-deeplink.2
-
-## 1.12.3-deeplink.1
-
-### Patch Changes
-
-- Updated dependencies [[`6f70006d`](https://github.com/onflow/fcl-js/commit/6f70006d5ae9eadffcc044dcedbc2fc2d0f6b651)]:
-  - @onflow/fcl-wc@5.4.0-deeplink.1
-
-## 1.12.3-deeplink.0
-
-### Patch Changes
-
-- Updated dependencies []:
-  - @onflow/fcl-core@1.12.0-deeplink.0
-  - @onflow/fcl-wc@5.4.0-deeplink.0
-
 ## 1.12.2
 
 ### Patch Changes
