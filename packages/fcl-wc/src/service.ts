@@ -108,7 +108,7 @@ const makeExec = (
     if (
       isMobile() &&
       method !== FLOW_METHODS.FLOW_AUTHN &&
-      method !== FLOW_METHODS.FLOW_AUTHZ
+      !(method === FLOW_METHODS.FLOW_AUTHZ && opts.initiatedByPreAuthz)
     ) {
       openDeeplink(appLink)
     }
