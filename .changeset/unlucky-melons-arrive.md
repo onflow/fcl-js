@@ -3,4 +3,4 @@
 "@onflow/fcl-wc": minor
 ---
 
-Fix deep linking issues to mobile wallets
+Fix deep linking issues with mobile wallets
