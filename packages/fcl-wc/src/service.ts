@@ -1,6 +1,6 @@
 import {invariant} from "@onflow/util-invariant"
 import {log, LEVELS} from "@onflow/util-logger"
-import {isMobile, isIOS} from "./utils"
+import {isMobile, openDeeplink} from "./utils"
 import {FLOW_METHODS, REQUEST_TYPES} from "./constants"
 import {SignClient} from "@walletconnect/sign-client/dist/types/client"
 import {createSessionProposal, makeSessionData, request} from "./session"
@@ -60,7 +60,7 @@ const makeExec = (
     const client = await clientPromise
     invariant(!!client, "WalletConnect is not initialized")
 
-    let session: any, pairing: any, windowRef: any
+    let session: any, pairing: any
     const method = service.endpoint
     const appLink = validateAppLink(service)
     const pairings = client.pairing.getAll({active: true})
@@ -74,14 +74,6 @@ const makeExec = (
       session = client.session.get(client.session.keys.at(lastKeyIndex)!)
     }
 
-    if (isMobile()) {
-      if (opts.windowRef) {
-        windowRef = opts.windowRef
-      } else {
-        windowRef = window.open("", "_blank")
-      }
-    }
-
     if (session == null) {
       session = await new Promise((resolve, reject) => {
         function onClose() {
@@ -92,7 +84,6 @@ const makeExec = (
           service,
           onClose,
           appLink,
-          windowRef,
           client,
           method,
           pairing,
@@ -114,8 +105,12 @@ const makeExec = (
       })
     }
 
-    if (isMobile() && method !== FLOW_METHODS.FLOW_AUTHN) {
-      openDeepLink()
+    if (
+      isMobile() &&
+      method !== FLOW_METHODS.FLOW_AUTHN &&
+      !(method === FLOW_METHODS.FLOW_AUTHZ && opts.initiatedByPreAuthz)
+    ) {
+      openDeeplink(appLink)
     }
 
     // Make request to the WalletConnect client and return the result
@@ -125,10 +120,6 @@ const makeExec = (
       session,
       client,
       abortSignal,
-    }).finally(() => {
-      if (windowRef && !windowRef.closed) {
-        windowRef.close()
-      }
     })
 
     function validateAppLink({uid}: {uid: string}) {
@@ -141,35 +132,6 @@ const makeExec = (
       }
       return uid
     }
-
-    function openDeepLink() {
-      if (windowRef) {
-        if (appLink.startsWith("http") && !isIOS()) {
-          // Workaround for https://github.com/rainbow-me/rainbowkit/issues/524.
-          // Using 'window.open' causes issues on iOS in non-Safari browsers and
-          // WebViews where a blank tab is left behind after connecting.
-          // This is especially bad in some WebView scenarios (e.g. following a
-          // link from Twitter) where the user doesn't have any mechanism for
-          // closing the blank tab.
-          // For whatever reason, links with a target of "_blank" don't suffer
-          // from this problem, and programmatically clicking a detached link
-          // element with the same attributes also avoids the issue.
-          const link = document.createElement("a")
-          link.href = appLink
-          link.target = "_blank"
-          link.rel = "noreferrer noopener"
-          link.click()
-        } else {
-          windowRef.location.href = appLink
-        }
-      } else {
-        log({
-          title: "Problem opening deep link in new window",
-          message: `Window failed to open (was it blocked by the browser?)`,
-          level: LEVELS.warn,
-        })
-      }
-    }
   }
 }
 
@@ -179,7 +141,6 @@ function connectWc(WalletConnectModal: Promise<WalletConnectModalType>) {
     service,
     onClose,
     appLink,
-    windowRef,
     client,
     method,
     pairing,
@@ -190,7 +151,6 @@ function connectWc(WalletConnectModal: Promise<WalletConnectModalType>) {
     service: any
     onClose: any
     appLink: string
-    windowRef: any
     client: SignClient
     method: string
     pairing: any
@@ -228,7 +188,7 @@ function connectWc(WalletConnectModal: Promise<WalletConnectModalType>) {
       if (isMobile()) {
         const queryString = new URLSearchParams({uri: uri}).toString()
         let url = pairing == null ? appLink + "?" + queryString : appLink
-        windowRef.location.href = url
+        openDeeplink(url)
       } else if (!pairing) {
         if (!pairingModalOverride) {
           walletConnectModal = new (await WalletConnectModal)({
@@ -267,9 +227,6 @@ function connectWc(WalletConnectModal: Promise<WalletConnectModalType>) {
       onClose()
       throw error
     } finally {
-      if (windowRef && !windowRef.closed) {
-        windowRef.close()
-      }
       walletConnectModal?.closeModal()
     }
   }

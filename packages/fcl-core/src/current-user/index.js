@@ -271,7 +271,14 @@ const getResolvePreAuthz =
       addr: az.identity.address,
       keyId: az.identity.keyId,
       signingFunction(signable) {
-        return execService({service: az, msg: signable, platform})
+        return execService({
+          service: az,
+          msg: signable,
+          platform,
+          opts: {
+            initiatedByPreAuthz: true,
+          },
+        })
       },
       role: {
         proposer: role === "PROPOSER",
@@ -315,10 +322,6 @@ const getAuthorization =
             })
           )
         if (authz) {
-          let windowRef
-          if (isMobile() && authz.method === "WC/RPC") {
-            windowRef = window.open("", "_blank")
-          }
           return {
             ...account,
             tempId: "CURRENT_USER",
@@ -334,7 +337,6 @@ const getAuthorization =
                   msg: signable,
                   opts: {
                     includeOlderJsonRpcCall: true,
-                    windowRef,
                   },
                   platform,
                 })
