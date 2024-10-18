@@ -6,7 +6,8 @@ const {nodeResolve} = require("@rollup/plugin-node-resolve")
 const {babel} = require("@rollup/plugin-babel")
 const terser = require("@rollup/plugin-terser")
 const typescript = require("rollup-plugin-typescript2")
-const urlPlugin = require("@rollup/plugin-url")
+const postcss = require("rollup-plugin-postcss")
+const postcssLit = require("rollup-plugin-postcss-lit")
 const imagePlugin = require("@rollup/plugin-image")
 const {DEFAULT_EXTENSIONS} = require("@babel/core")
 
@@ -107,6 +108,11 @@ module.exports = function getInputOptions(package, build) {
         preventAssignment: true,
         PACKAGE_CURRENT_VERSION: JSON.stringify(package.version),
       }),
+      postcss({
+        extract: true,
+        minimize: true,
+      }),
+      postcssLit(),
       babel({
         babelHelpers: "runtime",
         presets: ["@babel/preset-env", "@babel/preset-typescript"],

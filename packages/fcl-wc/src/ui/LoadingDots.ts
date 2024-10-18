@@ -3,6 +3,9 @@ import {defineElement} from "./util/create-element"
 
 export class LoadingDots extends LitElement {
   static styles = css`
+    @tailwind base;
+    @tailwind components;
+    @tailwind utilities;
     .dot-pulse {
       position: relative;
       left: -9999px;
