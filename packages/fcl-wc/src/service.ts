@@ -3,8 +3,8 @@ import {log, LEVELS} from "@onflow/util-logger"
 import {isMobile, openDeeplink} from "./utils"
 import {FLOW_METHODS, REQUEST_TYPES} from "./constants"
 import {SignClient} from "@walletconnect/sign-client/dist/types/client"
-import {createSessionProposal, makeSessionData, request} from "./session"
-import {withConfirmationPrompt} from "./ui/util/with-confirmation-prompt"
+import {createSessionProposal, request} from "./session"
+import {withConfirmationPrompt} from "./ui/confirmation-prompt"
 
 type WalletConnectModalType =
   typeof import("@walletconnect/modal").WalletConnectModal
@@ -222,7 +222,6 @@ function connectWc(WalletConnectModal: Promise<WalletConnectModalType>) {
         if (!pairingModalOverride) {
           walletConnectModal = new (await WalletConnectModal)({
             projectId,
-            walletConnectVersion: 2,
           })
           walletConnectModal.openModal({uri, onClose})
         } else {

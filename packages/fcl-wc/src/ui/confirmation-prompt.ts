@@ -1,5 +1,21 @@
 import {config} from "@onflow/config"
-import {getConfirmationPrompt} from "../ConfirmationPrompt"
+import {AdaptiveModal} from "./components/AdaptiveModal"
+import {ConfirmationPrompt} from "./components/ConfirmationPrompt"
+import {LoadingDots} from "./components/LoadingDots"
+import {createElement, defineElement} from "./util/create-element"
+
+let confirmationPrompt: ConfirmationPrompt | null = null
+
+export function getConfirmationPrompt() {
+  defineElement(AdaptiveModal)
+  defineElement(LoadingDots)
+
+  if (confirmationPrompt == null) {
+    confirmationPrompt = createElement(ConfirmationPrompt, new Map())
+    document.body.appendChild(confirmationPrompt)
+  }
+  return confirmationPrompt
+}
 
 export const withConfirmationPrompt = async <T>(
   user: any,

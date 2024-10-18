@@ -2,13 +2,17 @@ import {css, LitElement} from "lit"
 // TODO, lets work around this without static html.  If we can also get type safety in the process, that would be great.
 import {html, unsafeStatic} from "lit/static-html.js"
 import {property} from "lit/decorators.js"
-import {createElement, defineElement} from "./util/create-element"
+import {createElement, defineElement} from "../util/create-element"
 import {Provider} from "@onflow/typedefs"
 import {LoadingDots} from "./LoadingDots"
-import {getScopedTagName} from "./util/scoped-element"
+import {getScopedTagName} from "../util/scoped-element"
 
 import browserImage from "./assets/browser.png"
 import mobileImage from "./assets/mobile.png"
+import {AdaptiveModal} from "./AdaptiveModal"
+
+const LoadingDotsTag = unsafeStatic(getScopedTagName(LoadingDots))
+const AdaptiveModalTag = unsafeStatic(getScopedTagName(AdaptiveModal))
 
 // DO NOT USE DECORATORS!  THERE IS A BUG IN BABEL THAT WILL BREAK THE BUILD
 // The suggested workarounds do not work.  It's not worth the effort right now.
@@ -17,60 +21,6 @@ import mobileImage from "./assets/mobile.png"
 
 export class ConfirmationPrompt extends LitElement {
   static styles = css`
-    :host {
-      display: block;
-      text-align: center;
-    }
-    .modal-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: rgba(0, 0, 0, 0.5);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 1000;
-      visibility: hidden;
-      opacity: 0;
-      transition:
-        visibility 0s,
-        opacity 0.3s ease;
-    }
-    .modal-overlay[open] {
-      visibility: visible;
-      opacity: 1;
-    }
-    .modal-content {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      background: white;
-      gap: 2rem;
-      padding: 2rem;
-      border-radius: 0.5rem;
-      max-width: 24rem;
-      width: 100%;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-      box-sizing: border-box;
-    }
-    @media only screen and (max-width: 600px) {
-      .modal-content {
-        width: 90vw;
-        max-width: 90vw;
-      }
-    }
-    .close-btn {
-      background: none;
-      border: none;
-      font-size: 1.5rem;
-      position: absolute;
-      top: 10px;
-      right: 15px;
-      cursor: pointer;
-    }
-
     .icon {
       width: 4.5rem;
       height: 4.5rem;
@@ -133,17 +83,14 @@ export class ConfirmationPrompt extends LitElement {
   }
 
   render() {
-    const staticTag = getScopedTagName(LoadingDots)
-    console.log(staticTag)
     return html`
-      <div class="modal-overlay" ?open="${this.open}">
-        <div class="modal-content">
+      <${AdaptiveModalTag} ?open="${this.open}">
           <button class="close-btn" @click="${this.close}">&times;</button>
           <h2 class="text-regular">Please Confirm in Wallet</h2>
 
           <div class="icon-container">
             <img src="${this.initiatorIcon || browserImage}" class="icon" alt="Browser" />
-            <${unsafeStatic(staticTag)}></${unsafeStatic(staticTag)}>
+            <${LoadingDotsTag}></${LoadingDotsTag}>
             <img
               src="${this.provider?.icon || mobileImage}"
               class="icon"
@@ -160,19 +107,7 @@ export class ConfirmationPrompt extends LitElement {
             </span>
           </div>
         </div>
-      </div>
+      </${AdaptiveModalTag}>
     `
   }
-}
-
-let deepLinkModal: ConfirmationPrompt | null = null
-
-export function getConfirmationPrompt() {
-  defineElement(LoadingDots)
-
-  if (deepLinkModal == null) {
-    deepLinkModal = createElement(ConfirmationPrompt, new Map())
-    document.body.appendChild(deepLinkModal)
-  }
-  return deepLinkModal
 }

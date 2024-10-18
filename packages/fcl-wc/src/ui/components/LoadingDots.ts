@@ -1,5 +1,4 @@
 import {css, html, LitElement} from "lit"
-import {defineElement} from "./util/create-element"
 
 export class LoadingDots extends LitElement {
   static styles = css`
