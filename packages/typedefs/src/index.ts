@@ -346,11 +346,42 @@ export type TransactionStatus = {
    */
   events: Array<Event>
 }
+/**
+ * The Provider type describes a Wallet Provider associated with a specific Service.
+ */
 export type Provider = {
   /**
-   * - Provider name.
+   * The blockchain address of the Wallet provider.
    */
-  name: string
+  address?: string
+  /**
+   * The name of the Wallet provider.
+   */
+  name?: string
+  /**
+   * The icon of the Wallet provider (may be a URL or a data URI).
+   */
+  icon?: string
+  /**
+   * A brief description of the Wallet provider.
+   */
+  description?: string
+  /**
+   * The preferred color to represent the Wallet provider (e.g., for UI styling).
+   */
+  color?: string
+  /**
+   * The support email address of the Wallet provider.
+   */
+  supportEmail?: string
+  /**
+   * The website URL of the Wallet provider.
+   */
+  website?: string
+  /**
+   * Indicates whether the Wallet provider is installed (if applicable).
+   */
+  is_installed?: boolean
 }
 export type NodeVersionInfo = {
   /**
