@@ -109,28 +109,19 @@ const makeExec = (
     if (
       isMobile() &&
       method !== FLOW_METHODS.FLOW_AUTHN &&
-      method !== FLOW_METHODS.FLOW_AUTHZ
+      !(method === FLOW_METHODS.FLOW_AUTHZ && opts.initiatedByPreAuthz)
     ) {
       openDeeplink(appLink)
     }
 
     // Make request to the WalletConnect client and return the result
-    const res = await request({
+    return await request({
       method,
       body,
       session,
       client,
       abortSignal,
     })
-
-    if (method === FLOW_METHODS.FLOW_AUTHN) {
-      // Patch to rewrite all service uid's to match the authn service uid
-      res?.services?.forEach((srv: any) => {
-        srv.uid = service.uid
-      })
-    }
-
-    return res
 
     function validateAppLink({uid}: {uid: string}) {
       if (!(uid && /^(ftp|http|https):\/\/[^ "]+$/.test(uid))) {

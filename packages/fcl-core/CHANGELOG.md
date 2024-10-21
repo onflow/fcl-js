@@ -1,11 +1,5 @@
 # @onflow/fcl
 
-## 1.12.0-deeplink.0
-
-### Minor Changes
-
-- Refactor deep linking
-
 ## 1.11.1
 
 ### Patch Changes

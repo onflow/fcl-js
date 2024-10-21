@@ -12,7 +12,6 @@ import {execService} from "./exec-service"
 import {normalizeCompositeSignature} from "../normalizers/service/composite-signature"
 import {getDiscoveryService, makeDiscoveryServices} from "../discovery"
 import {getServiceRegistry} from "./exec-service/plugins"
-import {isMobile} from "../utils"
 
 /**
  * @typedef {import("@onflow/typedefs").CurrentUser} CurrentUser
@@ -273,7 +272,15 @@ const getResolvePreAuthz =
       addr: az.identity.address,
       keyId: az.identity.keyId,
       signingFunction(signable) {
-        return execService({service: az, msg: signable, platform, user})
+        return execService({
+          service: az,
+          msg: signable,
+          platform,
+          opts: {
+            initiatedByPreAuthz: true,
+          },
+          user,
+        })
       },
       role: {
         proposer: role === "PROPOSER",

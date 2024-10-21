@@ -1,28 +1,5 @@
 # @onflow/fcl-wc
 
-## 5.4.0-deeplink.2
-
-### Patch Changes
-
-- [#1966](https://github.com/onflow/fcl-js/pull/1966) [`c0927115`](https://github.com/onflow/fcl-js/commit/c0927115af38d70d920796d90b7e56f524bd3061) Thanks [@jribbink](https://github.com/jribbink)! - Patch broken release
-
-## 5.4.0-deeplink.1
-
-### Patch Changes
-
-- [#1966](https://github.com/onflow/fcl-js/pull/1966) [`6f70006d`](https://github.com/onflow/fcl-js/commit/6f70006d5ae9eadffcc044dcedbc2fc2d0f6b651) Thanks [@jribbink](https://github.com/jribbink)! - Interim patch for android UIDs
-
-## 5.4.0-deeplink.0
-
-### Minor Changes
-
-- Refactor deep linking
-
-### Patch Changes
-
-- Updated dependencies []:
-  - @onflow/fcl-core@1.12.0-deeplink.0
-
 ## 5.3.1
 
 ### Patch Changes
