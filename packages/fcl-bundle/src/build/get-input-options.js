@@ -86,13 +86,6 @@ module.exports = function getInputOptions(package, build) {
             "**/*.cjs",
             "**/*.mjs",
           ],
-          tsconfigDefaults: {
-            compilerOptions: {
-              // patch for rollup-plugin-typescript2 because rootDirs
-              // are used to resolve include/exclude filters
-              rootDirs: [""],
-            },
-          },
           useTsconfigDeclarationDir: true,
         }),
       replace({

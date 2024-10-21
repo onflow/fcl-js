@@ -3,8 +3,7 @@
   // Change this to match your project
   "include": ["src/**/*"],
   "compilerOptions": {
-    "declarationDir": "types",
-    "rootDir": "src"
+    "declarationDir": "types"
   },
   "exclude": ["src/__snapshots__"]
 }
