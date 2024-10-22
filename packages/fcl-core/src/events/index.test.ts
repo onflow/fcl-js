@@ -1,6 +1,8 @@
 import {EventStream} from "@onflow/typedefs"
 import {events} from "."
-import * as sdk from "@onflow/sdk"
+import {send, decode, subscribeEvents} from "@onflow/sdk"
+
+jest.mock("@onflow/sdk")
 
 describe("events", () => {
   let sendSpy
@@ -15,9 +17,9 @@ describe("events", () => {
       close: jest.fn(),
     }
 
-    sendSpy = jest.spyOn(sdk, "send")
-    decodeSpy = jest.spyOn(sdk, "decode")
-    subscribeEventsSpy = jest.spyOn(sdk, "subscribeEvents")
+    sendSpy = jest.mocked(send)
+    decodeSpy = jest.mocked(decode)
+    subscribeEventsSpy = jest.mocked(subscribeEvents)
 
     sendSpy.mockReturnValue(Promise.resolve(mockEventsStream))
     decodeSpy.mockImplementation(async x => x)
