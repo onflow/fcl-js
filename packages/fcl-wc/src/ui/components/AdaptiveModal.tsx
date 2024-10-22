@@ -1,26 +1,24 @@
-import {css, LitElement} from "lit"
-import {html} from "lit/static-html.js"
-import {property, state} from "lit/decorators.js"
-import {unsafeStatic} from "lit/static-html.js"
-import {getScopedTagName} from "../util/scoped-element"
+import {ComponentChildren} from "preact"
+import {useState} from "preact/hooks"
 import {Dialog} from "./Dialog"
 import {Drawer} from "./Drawer"
-
-const DialogTag = unsafeStatic(getScopedTagName(Dialog))
-const DrawerTag = unsafeStatic(getScopedTagName(Drawer))
 
 enum ModalType {
   Drawer = "drawer",
   Dialog = "dialog",
 }
 
-// DO NOT USE DECORATORS!  THERE IS A BUG IN BABEL THAT WILL BREAK THE BUILD
-// The suggested workarounds do not work.  It's not worth the effort right now.
-// It's a symptom of lit using very new features of decorators that are not
-// supported well in Babel/Rollup yet.
-
-export class AdaptiveModal extends LitElement {
-  static styles = css`
+export function AdaptiveModal({
+  isOpen,
+  onOpenChange,
+  children,
+}: {
+  isOpen: boolean
+  onOpenChange: (open: boolean) => void
+  children: ComponentChildren
+}) {
+  //temp for migration to tailwind
+  const oldstyles = `
     :host {
       display: block;
     }
@@ -75,29 +73,19 @@ export class AdaptiveModal extends LitElement {
     }
   `
 
-  @property()
-  accessor open: boolean = false
+  const [type, setType] = useState<ModalType>(ModalType.Dialog)
 
-  @state()
-  private accessor modalType: ModalType = ModalType.Dialog
-
-  private close() {
-    this.open = false
-    this.dispatchEvent(new CustomEvent("close"))
+  if (type === ModalType.Dialog) {
+    return (
+      <Dialog isOpen={isOpen} onOpenChange={onOpenChange}>
+        {children}
+      </Dialog>
+    )
   }
 
-  connectedCallback() {
-    super.connectedCallback()
-  }
-
-  disconnectedCallback() {}
-
-  render() {
-    if (this.modalType === "dialog") {
-      return html`
-        <${DialogTag} class="modal-overlay" ?open="${this.open}">
-        </${DialogTag}>
-      `
-    }
-  }
+  return (
+    <Drawer isOpen={isOpen} onOpenChange={onOpenChange}>
+      {children}
+    </Drawer>
+  )
 }

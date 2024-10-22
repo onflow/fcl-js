@@ -4,7 +4,7 @@ import {isMobile, openDeeplink} from "./utils"
 import {FLOW_METHODS, REQUEST_TYPES} from "./constants"
 import {SignClient} from "@walletconnect/sign-client/dist/types/client"
 import {createSessionProposal, request} from "./session"
-import {withConfirmationPrompt} from "./ui/confirmation-prompt"
+import {createConfrmationPrompt} from "./ui/confirmation-prompt"
 
 type WalletConnectModalType =
   typeof import("@walletconnect/modal").WalletConnectModal
@@ -135,23 +135,35 @@ const makeExec = (
     }
   }
 
-  return async ({service, body, opts, abortSignal, user}: any) => {
-    return await withConfirmationPrompt(user, async signal => {
-      const combinedAbortSignal = new AbortController()
-      signal.addEventListener("abort", () => {
-        combinedAbortSignal.abort(signal.reason)
-      })
-      abortSignal?.addEventListener("abort", () => {
-        combinedAbortSignal.abort(abortSignal?.reason)
-      })
-
-      return await exec({
-        service,
-        body,
-        opts,
-        abortSignal: combinedAbortSignal.signal,
-      })
+  return async ({
+    service,
+    body,
+    opts,
+    abortSignal: parentSignal,
+    user,
+  }: any) => {
+    const abortController = new AbortController()
+    parentSignal?.addEventListener("abort", () => {
+      abortController.abort(parentSignal?.reason)
     })
+
+    const {close: closePrompt} = createConfrmationPrompt({
+      provider: service.provider,
+      initiatorIcon: service.provider.icon,
+      onTryAgain: () => {
+        alert("Not implemented")
+      },
+      onClose: () => {
+        abortController.abort("User closed dialog")
+      },
+    })
+
+    return await exec({
+      service,
+      body,
+      opts,
+      abortSignal: abortController.signal,
+    }).finally(closePrompt)
   }
 }
 

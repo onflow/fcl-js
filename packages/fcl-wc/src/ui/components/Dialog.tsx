@@ -1,14 +1,16 @@
-import {css, LitElement} from "lit"
-import {html} from "lit/static-html.js"
-import {property} from "lit/decorators.js"
+import {ComponentChildren} from "preact"
 
-// DO NOT USE DECORATORS!  THERE IS A BUG IN BABEL THAT WILL BREAK THE BUILD
-// The suggested workarounds do not work.  It's not worth the effort right now.
-// It's a symptom of lit using very new features of decorators that are not
-// supported well in Babel/Rollup yet.
-
-export class Drawer extends LitElement {
-  static styles = css`
+export function Dialog({
+  isOpen,
+  onOpenChange,
+  children,
+}: {
+  isOpen: boolean
+  onOpenChange: (open: boolean) => void
+  children: ComponentChildren
+}) {
+  //temp for migration to tailwind
+  const oldstyles = `
     :host {
       display: block;
     }
@@ -63,22 +65,14 @@ export class Drawer extends LitElement {
     }
   `
 
-  @property()
-  accessor open: boolean = false
-
-  private close() {
-    this.open = false
-    this.dispatchEvent(new CustomEvent("close"))
-  }
-
-  render() {
-    return html`
-      <div class="modal-overlay" ?open="${this.open}">
-        <div class="modal-content">
-          <button class="close-btn" @click="${this.close}">&times;</button>
-          <slot></slot>
-        </div>
+  return (
+    <div class="modal-overlay" open={isOpen}>
+      <div class="modal-content">
+        <button class="close-btn" onClick={() => onOpenChange(false)}>
+          &times;
+        </button>
+        {children}
       </div>
-    `
-  }
+    </div>
+  )
 }

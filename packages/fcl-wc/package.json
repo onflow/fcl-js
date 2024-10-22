@@ -47,7 +47,8 @@
     "@walletconnect/sign-client": "^2.17.1",
     "@walletconnect/types": "^2.8.1",
     "@walletconnect/utils": "^2.8.1",
-    "lit": "^3.2.1"
+    "preact": "^10.24.3",
+    "preact-custom-element": "^4.3.0"
   },
   "peerDependencies": {
     "@onflow/fcl-core": "1.12.0"

@@ -1,8 +1,6 @@
-import {css, html, LitElement} from "lit"
-
-export class LoadingDots extends LitElement {
-  static styles = css`
-    .dot-pulse {
+export function LoadingDots() {
+  // temp for tailwind migration
+  const oldstyles = `    .dot-pulse {
       position: relative;
       left: -9999px;
       width: 10px;
@@ -72,10 +70,7 @@ export class LoadingDots extends LitElement {
       100% {
         box-shadow: 10014px 0 0 -5px;
       }
-    }
-  `
+    }`
 
-  render() {
-    return html`<div class="dot-pulse"></div>`
-  }
+  return <div class="dot-pulse"></div>
 }

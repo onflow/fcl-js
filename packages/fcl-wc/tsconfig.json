@@ -6,6 +6,8 @@
     "declarationDir": "types",
     "experimentalDecorators": true,
     "useDefineForClassFields": false,
-    "module": "esnext"
+    "module": "esnext",
+    "jsx": "react-jsx",
+    "jsxImportSource": "preact"
   }
 }
