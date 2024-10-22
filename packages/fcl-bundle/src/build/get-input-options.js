@@ -10,7 +10,7 @@ const urlPlugin = require("@rollup/plugin-url")
 const imagePlugin = require("@rollup/plugin-image")
 const {DEFAULT_EXTENSIONS} = require("@babel/core")
 
-const builtinModules = require("builtin-modules")
+const builtinModules = require("node:module").builtinModules
 
 const SUPPRESSED_WARNING_CODES = [
   "MISSING_GLOBAL_NAME",
@@ -48,7 +48,7 @@ module.exports = function getInputOptions(package, build) {
           return (
             state ||
             (ext instanceof RegExp && ext.test(id)) ||
-            (typeof ext === "string" && id.startsWith(ext))
+            (typeof ext === "string" && ext === id)
           )
         }, false))
     )
@@ -85,7 +85,8 @@ module.exports = function getInputOptions(package, build) {
         extensions,
       }),
       commonjs(),
-      isTypeScript &&
+      build.type !== "umd" &&
+        isTypeScript &&
         typescript({
           clean: true,
           include: [
@@ -98,9 +99,6 @@ module.exports = function getInputOptions(package, build) {
             "**/*.cjs",
             "**/*.mjs",
           ],
-          exclude: ["**/*.png"],
-
-          //TODO: you removed this
           useTsconfigDeclarationDir: true,
         }),
       replace({
