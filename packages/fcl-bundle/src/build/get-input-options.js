@@ -38,16 +38,21 @@ module.exports = function getInputOptions(package, build) {
     .concat(Object.keys(package.peerDependencies || {}))
     .concat(Object.keys(package.dependencies || {}))
 
-  let testExternal = id =>
-    build.type !== "umd" &&
-    (/@babel\/runtime/g.test(id) ||
-      external.reduce((state, ext) => {
-        return (
-          state ||
-          (ext instanceof RegExp && ext.test(id)) ||
-          (typeof ext === "string" && ext === id)
-        )
-      }, false))
+  console.log(package.dependencies)
+
+  let testExternal = id => {
+    return (
+      build.type !== "umd" &&
+      (/@babel\/runtime/g.test(id) ||
+        external.reduce((state, ext) => {
+          return (
+            state ||
+            (ext instanceof RegExp && ext.test(id)) ||
+            (typeof ext === "string" && ext === id)
+          )
+        }, false))
+    )
+  }
 
   // exclude peer dependencies
   const resolveOnly = [
@@ -73,7 +78,8 @@ module.exports = function getInputOptions(package, build) {
         extensions,
       }),
       commonjs(),
-      isTypeScript &&
+      build.type !== "umd" &&
+        isTypeScript &&
         typescript({
           clean: true,
           include: [
