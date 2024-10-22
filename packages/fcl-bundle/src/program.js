@@ -25,7 +25,7 @@ module.exports = packageConfig => package => {
       ? watchModule
       : buildModule
 
-    await buildAction(packageConfig.builds, package)
+    await buildAction(packageConfig.builds, package, process.cwd())
   })
 
   program.parse()

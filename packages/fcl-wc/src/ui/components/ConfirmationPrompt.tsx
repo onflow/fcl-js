@@ -1,8 +1,8 @@
 import {AdaptiveModal} from "./AdaptiveModal"
 import {LoadingDots} from "./LoadingDots"
 
-import browserImage from "./images/browser.png"
-import mobileImage from "./images/mobile.png"
+import browserImage from "../assets/browser.png"
+import mobileImage from "../assets/mobile.png"
 
 export function ConfirmationPrompt({
   open,

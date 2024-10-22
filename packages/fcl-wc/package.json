@@ -16,6 +16,7 @@
     "dist"
   ],
   "source": "src/index.ts",
+  "main": "dist/index.js",
   "module": "dist/index.module.mjs",
   "types": "types/index.d.ts",
   "scripts": {
@@ -47,8 +48,11 @@
     "@walletconnect/sign-client": "^2.17.1",
     "@walletconnect/types": "^2.8.1",
     "@walletconnect/utils": "^2.8.1",
+    "autoprefixer": "^10.4.20",
+    "postcss-cli": "^11.0.0",
     "preact": "^10.24.3",
-    "preact-custom-element": "^4.3.0"
+    "preact-custom-element": "^4.3.0",
+    "tailwindcss": "^3.4.14"
   },
   "peerDependencies": {
     "@onflow/fcl-core": "1.12.0"

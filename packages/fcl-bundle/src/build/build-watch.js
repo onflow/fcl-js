@@ -4,9 +4,9 @@ const {watch} = require("rollup")
 const getInputOptions = require("./get-input-options")
 const getOutputOptions = require("./get-output-options")
 
-module.exports = async function buildModulesWatch(builds, package) {
+module.exports = async function buildModulesWatch(builds, package, cwd) {
   const watcherOptionsList = builds.map(build =>
-    getWatcherOptions(build, package)
+    getWatcherOptions(build, package, cwd)
   )
   const watcherPool = new WatcherPool(watcherOptionsList)
   watcherPool.on("event", handleWatcherEvent)
@@ -27,9 +27,9 @@ module.exports = async function buildModulesWatch(builds, package) {
   }
 }
 
-function getWatcherOptions(build, package) {
+function getWatcherOptions(build, package, cwd) {
   const inputOptions = getInputOptions(package, build)
-  const outputOptions = getOutputOptions(package, build)
+  const outputOptions = getOutputOptions(package, build, cwd)
   const watcherOptions = {
     ...inputOptions,
     output: [outputOptions],

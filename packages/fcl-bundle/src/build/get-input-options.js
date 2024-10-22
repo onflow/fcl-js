@@ -6,9 +6,11 @@ const {nodeResolve} = require("@rollup/plugin-node-resolve")
 const {babel} = require("@rollup/plugin-babel")
 const terser = require("@rollup/plugin-terser")
 const typescript = require("rollup-plugin-typescript2")
-const urlPlugin = require("@rollup/plugin-url")
+const rawPlugin = require("../plugins/raw-plugin")
+const postcss = require("rollup-plugin-postcss")
 const imagePlugin = require("@rollup/plugin-image")
 const {DEFAULT_EXTENSIONS} = require("@babel/core")
+const tailwindcss = require("tailwindcss")
 
 const builtinModules = require("node:module").builtinModules
 
@@ -18,7 +20,7 @@ const SUPPRESSED_WARNING_CODES = [
   "EVAL",
 ]
 
-module.exports = function getInputOptions(package, build) {
+module.exports = function getInputOptions(package, build, cwd) {
   // ensure that that package has the required dependencies
   if (!package.dependencies["@babel/runtime"]) {
     throw new Error(
@@ -69,6 +71,8 @@ module.exports = function getInputOptions(package, build) {
     ".png",
   ])
 
+  const tailwindConfig = require(`${cwd}/tailwind.config.js`)
+
   let options = {
     input: build.source,
     external: testExternal,
@@ -83,6 +87,14 @@ module.exports = function getInputOptions(package, build) {
         preferBuiltins: build.type !== "umd",
         resolveOnly,
         extensions,
+      }),
+      postcss({
+        config: {
+          path: "./postcss.config.js",
+        },
+        extensions: [".css"],
+        minimize: true,
+        plugins: [tailwindcss(tailwindConfig)],
       }),
       commonjs(),
       build.type !== "umd" &&
@@ -113,6 +125,13 @@ module.exports = function getInputOptions(package, build) {
             "@babel/plugin-transform-runtime",
             {
               version: babelRuntimeVersion,
+            },
+          ],
+          [
+            "@babel/plugin-transform-react-jsx",
+            {
+              pragma: "h",
+              pragmaFrag: "Fragment",
             },
           ],
         ],
