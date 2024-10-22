@@ -4,7 +4,8 @@
   "description": "A lightweight semver implementation for use in FCL",
   "main": "dist/index.js",
   "module": "dist/index.module.js",
-  "source": "src/index.js",
+  "source": "src/index.ts",
+  "types": "types/index.d.ts",
   "scripts": {
     "prepublishOnly": "npm test && npm run build",
     "test": "jest",
