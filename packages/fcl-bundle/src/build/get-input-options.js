@@ -8,7 +8,7 @@ const terser = require("@rollup/plugin-terser")
 const typescript = require("rollup-plugin-typescript2")
 const {DEFAULT_EXTENSIONS} = require("@babel/core")
 
-const builtinModules = require("builtin-modules")
+const builtinModules = require("node:module").builtinModules
 
 const SUPPRESSED_WARNING_CODES = [
   "MISSING_GLOBAL_NAME",
