@@ -38,8 +38,6 @@ module.exports = function getInputOptions(package, build) {
     .concat(Object.keys(package.peerDependencies || {}))
     .concat(Object.keys(package.dependencies || {}))
 
-  console.log(package.dependencies)
-
   let testExternal = id => {
     return (
       build.type !== "umd" &&
