@@ -1,6 +1,6 @@
 {
   "name": "@onflow/util-semver",
-  "version": "1.0.2",
+  "version": "1.0.3-alpha.0",
   "description": "A lightweight semver implementation for use in FCL",
   "main": "dist/index.js",
   "module": "dist/index.module.js",
@@ -14,7 +14,7 @@
     "start": "fcl-bundle --watch"
   },
   "devDependencies": {
-    "@onflow/fcl-bundle": "1.5.0",
+    "@onflow/fcl-bundle": "1.5.1-alpha.0",
     "jest": "^29.7.0"
   },
   "dependencies": {
