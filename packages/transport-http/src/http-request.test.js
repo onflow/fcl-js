@@ -1,8 +1,9 @@
 import * as fetchTransport from "cross-fetch"
-import * as logger from "@onflow/util-logger"
+import {log} from "@onflow/util-logger"
 import {httpRequest} from "./http-request"
 import {Readable} from "stream"
 jest.mock("cross-fetch")
+jest.mock("@onflow/util-logger")
 
 const mockHttpResponse = ({
   status = 200,
@@ -241,8 +242,8 @@ describe("httpRequest", () => {
       )
     )
 
-    const loggerSpy = jest.spyOn(logger, "log")
-    loggerSpy.mockImplementation(() => {})
+    const logMock = jest.mocked(log)
+    logMock.mockImplementation(() => {})
 
     const opts = {
       hostname: "https://example.com",
@@ -255,7 +256,7 @@ describe("httpRequest", () => {
     }
 
     await expect(httpRequest(opts)).rejects.toThrow("HTTP Request Error:")
-    expect(loggerSpy.mock.calls[0][0].title).toBe("Access Node Error")
+    expect(logMock.mock.calls[0][0].title).toBe("Access Node Error")
   })
 
   afterEach(() => {
