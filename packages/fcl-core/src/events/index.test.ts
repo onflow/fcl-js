@@ -33,19 +33,17 @@ describe("events", () => {
   test("subscribe should call send with the subscribeEvents ix", () => {
     const filter = {eventTypes: ["A"]}
     events(filter).subscribe(() => {})
-    expect(sendSpy).toHaveBeenCalledWith([sdk.subscribeEvents(filter)])
+    expect(sendSpy).toHaveBeenCalledWith([subscribeEvents(filter)])
   })
 
   test("should work with a string", () => {
     events("A").subscribe(() => {})
-    expect(sendSpy).toHaveBeenCalledWith([
-      sdk.subscribeEvents({eventTypes: ["A"]}),
-    ])
+    expect(sendSpy).toHaveBeenCalledWith([subscribeEvents({eventTypes: ["A"]})])
   })
 
   test("should work with empty args", () => {
     events().subscribe(() => {})
-    expect(sendSpy).toHaveBeenCalledWith([sdk.subscribeEvents({})])
+    expect(sendSpy).toHaveBeenCalledWith([subscribeEvents({})])
   })
 
   test("subscribe should pipe the events to the callback", async () => {
