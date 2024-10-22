@@ -193,7 +193,6 @@ function connectWc(WalletConnectModal: Promise<WalletConnectModalType>) {
         if (!pairingModalOverride) {
           walletConnectModal = new (await WalletConnectModal)({
             projectId,
-            walletConnectVersion: 2,
           })
           walletConnectModal.openModal({uri, onClose})
         } else {
