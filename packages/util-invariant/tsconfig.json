@@ -3,6 +3,7 @@
   // Change this to match your project
   "include": ["src/**/*"],
   "compilerOptions": {
-    "declarationDir": "types"
+    "declarationDir": "types",
+    "rootDir": "src"
   }
 }
