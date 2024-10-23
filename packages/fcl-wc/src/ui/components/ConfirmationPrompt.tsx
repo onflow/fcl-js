@@ -3,6 +3,7 @@ import {LoadingDots} from "./LoadingDots"
 
 import browserImage from "../assets/browser.png"
 import mobileImage from "../assets/mobile.png"
+import {Provider} from "@onflow/typedefs"
 
 export function ConfirmationPrompt({
   open,
@@ -12,41 +13,33 @@ export function ConfirmationPrompt({
   onTryAgain,
 }: {
   open: boolean
-  provider: any
-  initiatorIcon: string
+  provider?: Provider
+  initiatorIcon?: string
   onClose: () => void
   onTryAgain: () => void
 }) {
   return (
     <AdaptiveModal isOpen={open} onOpenChange={onClose}>
-      <button
-        class="close-btn"
-        onClick={() => {
-          onClose
-        }}
-      >
-        &times;
-      </button>
       <h2 class="text-regular">Please Confirm in Wallet</h2>
 
-      <div class="icon-container">
+      <div class="flex items-center justify-center gap-4">
         <img
-          src="${this.initiatorIcon || browserImage}"
-          class="icon"
+          class="w-12 h-12 rounded-md"
+          src={initiatorIcon || browserImage}
           alt="Browser"
         />
         <LoadingDots></LoadingDots>
         <img
+          class="w-12 h-12 rounded-md"
           src={provider?.icon || mobileImage}
-          class="icon"
           alt={provider?.name || "Wallet Icon"}
         />
       </div>
 
-      <div class="lower-content">
+      <div class="flex flex-col gap-2 text-center">
         <span>
           There is a pending request to the{" "}
-          <span class="text-bold">${provider?.name}</span> app on your device.
+          <span class="text-bold">{provider?.name}</span> app on your device.
         </span>
         <span class="text-small">
           No prompt on your device?{" "}

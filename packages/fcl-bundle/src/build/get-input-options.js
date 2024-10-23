@@ -1,5 +1,9 @@
 const _ = require("lodash")
 
+const path = require("path")
+const fs = require("fs")
+const builtinModules = require("node:module").builtinModules
+
 const commonjs = require("@rollup/plugin-commonjs")
 const replace = require("@rollup/plugin-replace")
 const {nodeResolve} = require("@rollup/plugin-node-resolve")
@@ -10,9 +14,10 @@ const rawPlugin = require("../plugins/raw-plugin")
 const postcss = require("rollup-plugin-postcss")
 const imagePlugin = require("@rollup/plugin-image")
 const {DEFAULT_EXTENSIONS} = require("@babel/core")
+
 const tailwindcss = require("tailwindcss")
 
-const builtinModules = require("node:module").builtinModules
+const {getPackageRoot} = require("../util")
 
 const SUPPRESSED_WARNING_CODES = [
   "MISSING_GLOBAL_NAME",
@@ -20,7 +25,7 @@ const SUPPRESSED_WARNING_CODES = [
   "EVAL",
 ]
 
-module.exports = function getInputOptions(package, build, cwd) {
+module.exports = function getInputOptions(package, build) {
   // ensure that that package has the required dependencies
   if (!package.dependencies["@babel/runtime"]) {
     throw new Error(
@@ -71,7 +76,13 @@ module.exports = function getInputOptions(package, build, cwd) {
     ".png",
   ])
 
-  const tailwindConfig = require(`${cwd}/tailwind.config.js`)
+  const tailwindConfigPath = path.resolve(
+    getPackageRoot(),
+    "tailwind.config.js"
+  )
+  const tailwindConfig = fs.existsSync(tailwindConfigPath)
+    ? require(tailwindConfigPath)
+    : null
 
   let options = {
     input: build.source,
@@ -88,14 +99,16 @@ module.exports = function getInputOptions(package, build, cwd) {
         resolveOnly,
         extensions,
       }),
-      postcss({
-        config: {
-          path: "./postcss.config.js",
-        },
-        extensions: [".css"],
-        minimize: true,
-        plugins: [tailwindcss(tailwindConfig)],
-      }),
+      tailwindConfig
+        ? postcss({
+            config: {
+              path: "./postcss.config.js",
+            },
+            extensions: [".css"],
+            minimize: true,
+            plugins: [tailwindcss(tailwindConfig)],
+          })
+        : null,
       commonjs(),
       build.type !== "umd" &&
         isTypeScript &&
@@ -130,8 +143,8 @@ module.exports = function getInputOptions(package, build, cwd) {
           [
             "@babel/plugin-transform-react-jsx",
             {
-              pragma: "h",
-              pragmaFrag: "Fragment",
+              importSource: "preact",
+              runtime: "automatic",
             },
           ],
         ],

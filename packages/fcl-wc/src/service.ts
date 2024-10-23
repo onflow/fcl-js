@@ -5,6 +5,7 @@ import {FLOW_METHODS, REQUEST_TYPES} from "./constants"
 import {SignClient} from "@walletconnect/sign-client/dist/types/client"
 import {createSessionProposal, request} from "./session"
 import {createConfrmationPrompt} from "./ui/confirmation-prompt"
+import {config} from "@onflow/config"
 
 type WalletConnectModalType =
   typeof import("@walletconnect/modal").WalletConnectModal
@@ -147,9 +148,12 @@ const makeExec = (
       abortController.abort(parentSignal?.reason)
     })
 
+    const authnService = user?.services?.find((s: any) => s.type === "authn")
+    const appIcon: string | undefined = await config().get("app.detail.icon")
+
     const {close: closePrompt} = createConfrmationPrompt({
-      provider: service.provider,
-      initiatorIcon: service.provider.icon,
+      provider: authnService?.provider,
+      initiatorIcon: appIcon,
       onTryAgain: () => {
         alert("Not implemented")
       },

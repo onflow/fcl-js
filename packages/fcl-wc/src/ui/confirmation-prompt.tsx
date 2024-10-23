@@ -1,3 +1,4 @@
+import {Provider} from "@onflow/typedefs"
 import {ConfirmationPrompt} from "./components/ConfirmationPrompt"
 import {render} from "preact"
 
@@ -7,31 +8,29 @@ export function createConfrmationPrompt({
   onTryAgain,
   onClose,
 }: {
-  provider: any
-  initiatorIcon: string
+  provider?: Provider
+  initiatorIcon?: string
   onTryAgain: () => void
   onClose: () => void
 }) {
-  let ref: HTMLDivElement | null = null
+  const container = document.createElement("div")
+  document.body.appendChild(container)
 
   function handlePromptClose() {
-    if (ref != null) {
-      ref.parentNode?.removeChild(ref)
-    }
+    render(null, container)
+    container.remove()
     onClose()
   }
 
   render(
-    <div ref={r => (ref = r)}>
-      <ConfirmationPrompt
-        open={true}
-        onClose={handlePromptClose}
-        provider={provider}
-        initiatorIcon={initiatorIcon}
-        onTryAgain={onTryAgain}
-      />
-    </div>,
-    document.body
+    <ConfirmationPrompt
+      open={true}
+      onClose={handlePromptClose}
+      provider={provider}
+      initiatorIcon={initiatorIcon}
+      onTryAgain={onTryAgain}
+    />,
+    container
   )
 
   return {
