@@ -11,13 +11,13 @@ export class TransactionError extends Error {
   }
 }
 
-function createTransactionError(
+export function parseTransactionErrorCode(
   status: TransactionStatus
-): TransactionError | null {
+): FvmErrorCode | undefined {
   if (status.statusCode === 0) return null
 
   const match = status.errorMessage.match(ERROR_CODE_REGEX)
   const code = match ? parseInt(match[1], 10) : undefined
 
-  return new TransactionError(status.errorMessage || "Unknown error", code)
+  return code || FvmErrorCode.Unknown
 }
