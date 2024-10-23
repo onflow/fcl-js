@@ -149,16 +149,25 @@ const makeExec = (
     })
 
     const authnService = user?.services?.find((s: any) => s.type === "authn")
+
+    const appTitle: string | undefined = await config().get("app.detail.title")
     const appIcon: string | undefined = await config().get("app.detail.icon")
 
     const {close: closePrompt} = createConfrmationPrompt({
-      provider: authnService?.provider,
-      initiatorIcon: appIcon,
+      walletProvider: authnService?.provider,
+      appInfo: {
+        name: appTitle,
+        icon: appIcon,
+      },
       onTryAgain: () => {
         alert("Not implemented")
       },
       onClose: () => {
         abortController.abort("User closed dialog")
+      },
+      onDeeplink: () => {
+        // todo: refactor
+        openDeeplink(service.uid)
       },
     })
 

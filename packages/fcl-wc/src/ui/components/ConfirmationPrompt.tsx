@@ -4,49 +4,58 @@ import {LoadingDots} from "./LoadingDots"
 import browserImage from "../assets/browser.png"
 import mobileImage from "../assets/mobile.png"
 import {Provider} from "@onflow/typedefs"
+import {isMobile as checkIsMobile} from "../../utils"
+import {AppInfo} from "../../types/types"
 
 export function ConfirmationPrompt({
   open,
-  provider,
-  initiatorIcon,
+  walletProvider,
+  appInfo,
   onClose,
   onTryAgain,
+  onDeeplink,
 }: {
   open: boolean
-  provider?: Provider
-  initiatorIcon?: string
+  walletProvider?: Provider
+  appInfo?: AppInfo
   onClose: () => void
   onTryAgain: () => void
+  onDeeplink: () => void
 }) {
+  const isMobile = checkIsMobile()
+
   return (
-    <AdaptiveModal isOpen={open} onOpenChange={onClose}>
-      <h2 class="text-regular">Please Confirm in Wallet</h2>
+    <AdaptiveModal
+      isOpen={open}
+      onClose={onClose}
+      title={`Confirm in ${walletProvider?.name}`}
+    >
+      <div class="flex flex-col items-center gap-6">
+        <div class="flex items-center justify-center gap-4">
+          <img
+            class="w-16 h-16 rounded-lg border-1 border-gray-200"
+            src={appInfo?.icon || browserImage}
+            alt="Browser"
+          />
+          <LoadingDots></LoadingDots>
+          <img
+            class="w-16 h-16 rounded-lg border-1 border-gray-200"
+            src={walletProvider?.icon || mobileImage}
+            alt={walletProvider?.name || "Wallet Icon"}
+          />
+        </div>
 
-      <div class="flex items-center justify-center gap-4">
-        <img
-          class="w-12 h-12 rounded-md"
-          src={initiatorIcon || browserImage}
-          alt="Browser"
-        />
-        <LoadingDots></LoadingDots>
-        <img
-          class="w-12 h-12 rounded-md"
-          src={provider?.icon || mobileImage}
-          alt={provider?.name || "Wallet Icon"}
-        />
-      </div>
-
-      <div class="flex flex-col gap-2 text-center">
-        <span>
-          There is a pending request to the{" "}
-          <span class="text-bold">{provider?.name}</span> app on your device.
-        </span>
-        <span class="text-small">
-          No prompt on your device?{" "}
-          <span class="try-again" onClick={onTryAgain}>
-            Try again
-          </span>
-        </span>
+        <div class="flex flex-col gap-3 text-center">
+          <span>{`${appInfo?.name || "The app"} is waiting for you to confirm in ${walletProvider?.name || "your wallet"}`}</span>
+          {isMobile && (
+            <span class="text-sm text-gray-500">
+              App didn't open?{" "}
+              <span class="text-blue-500 cursor-pointer" onClick={onTryAgain}>
+                Try again
+              </span>
+            </span>
+          )}
+        </div>
       </div>
     </AdaptiveModal>
   )

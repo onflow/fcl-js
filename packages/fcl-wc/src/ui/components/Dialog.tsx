@@ -1,12 +1,14 @@
 import {ComponentChildren} from "preact"
 
 export function Dialog({
+  title,
   isOpen,
-  onOpenChange,
+  onClose,
   children,
 }: {
+  title: string
   isOpen: boolean
-  onOpenChange: (open: boolean) => void
+  onClose: () => void
   children: ComponentChildren
 }) {
   return (
@@ -15,9 +17,10 @@ export function Dialog({
       open={isOpen}
     >
       <div class="flex flex-col items-center bg-white gap-8 p-8 rounded-md max-w-md w-full shadow-md">
+        <h2 class="text-2xl">{title}</h2>
         <button
           class="bg-none border-none text-2xl absolute top-0 right-0"
-          onClick={() => onOpenChange(false)}
+          onClose={onClose}
         >
           &times;
         </button>
