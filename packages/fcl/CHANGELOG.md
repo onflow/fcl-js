@@ -1,5 +1,44 @@
 # @onflow/fcl
 
+## 1.12.4-alpha.0
+
+### Patch Changes
+
+- [#1983](https://github.com/onflow/fcl-js/pull/1983) [`18d24c8bad7efa0d8741d74f0cf299f89b3622c7`](https://github.com/onflow/fcl-js/commit/18d24c8bad7efa0d8741d74f0cf299f89b3622c7) Thanks [@jribbink](https://github.com/jribbink)! - Update dependencies
+
+- Updated dependencies [[`18d24c8bad7efa0d8741d74f0cf299f89b3622c7`](https://github.com/onflow/fcl-js/commit/18d24c8bad7efa0d8741d74f0cf299f89b3622c7)]:
+  - @onflow/util-invariant@1.2.4-alpha.0
+  - @onflow/util-template@1.2.3-alpha.0
+  - @onflow/util-address@1.2.3-alpha.0
+  - @onflow/util-logger@1.3.3-alpha.0
+  - @onflow/util-semver@1.0.3-alpha.0
+  - @onflow/util-actor@1.3.4-alpha.0
+  - @onflow/fcl-core@1.12.1-alpha.0
+  - @onflow/util-rpc@0.0.2-alpha.0
+  - @onflow/util-uid@1.2.3-alpha.0
+  - @onflow/config@1.5.1-alpha.0
+  - @onflow/fcl-wc@5.4.1-alpha.0
+  - @onflow/types@1.4.1-alpha.0
+  - @onflow/rlp@1.2.3-alpha.0
+  - @onflow/sdk@1.5.4-alpha.0
+
+## 1.12.3
+
+### Patch Changes
+
+- Updated dependencies [[`f2831107`](https://github.com/onflow/fcl-js/commit/f283110707d5edc166bbe05e5482d38fa29de29e)]:
+  - @onflow/fcl-core@1.12.0
+  - @onflow/fcl-wc@5.4.0
+
+## 1.12.2
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @onflow/sdk@1.5.3
+  - @onflow/fcl-core@1.11.1
+  - @onflow/fcl-wc@5.3.1
+
 ## 1.12.1
 
 ### Patch Changes

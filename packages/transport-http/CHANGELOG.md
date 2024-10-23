@@ -1,5 +1,23 @@
 # @onflow/transport-http
 
+## 1.10.3-alpha.0
+
+### Patch Changes
+
+- [#1983](https://github.com/onflow/fcl-js/pull/1983) [`18d24c8bad7efa0d8741d74f0cf299f89b3622c7`](https://github.com/onflow/fcl-js/commit/18d24c8bad7efa0d8741d74f0cf299f89b3622c7) Thanks [@jribbink](https://github.com/jribbink)! - Update dependencies
+
+- Updated dependencies [[`18d24c8bad7efa0d8741d74f0cf299f89b3622c7`](https://github.com/onflow/fcl-js/commit/18d24c8bad7efa0d8741d74f0cf299f89b3622c7)]:
+  - @onflow/util-invariant@1.2.4-alpha.0
+  - @onflow/util-template@1.2.3-alpha.0
+  - @onflow/util-address@1.2.3-alpha.0
+  - @onflow/util-logger@1.3.3-alpha.0
+
+## 1.10.2
+
+### Patch Changes
+
+- [#1965](https://github.com/onflow/fcl-js/pull/1965) [`91526e65`](https://github.com/onflow/fcl-js/commit/91526e65190d8c8ba67598e5df3b8b1c6c41292a) Thanks [@jribbink](https://github.com/jribbink)! - Fix `subscribeEvents` block timestamp
+
 ## 1.10.1
 
 ### Patch Changes

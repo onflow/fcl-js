@@ -8,7 +8,7 @@ const terser = require("@rollup/plugin-terser")
 const typescript = require("rollup-plugin-typescript2")
 const {DEFAULT_EXTENSIONS} = require("@babel/core")
 
-const builtinModules = require("builtin-modules")
+const builtinModules = require("node:module").builtinModules
 
 const SUPPRESSED_WARNING_CODES = [
   "MISSING_GLOBAL_NAME",
@@ -38,16 +38,19 @@ module.exports = function getInputOptions(package, build) {
     .concat(Object.keys(package.peerDependencies || {}))
     .concat(Object.keys(package.dependencies || {}))
 
-  let testExternal = id =>
-    build.type !== "umd" &&
-    (/@babel\/runtime/g.test(id) ||
-      external.reduce((state, ext) => {
-        return (
-          state ||
-          (ext instanceof RegExp && ext.test(id)) ||
-          (typeof ext === "string" && ext === id)
-        )
-      }, false))
+  let testExternal = id => {
+    return (
+      build.type !== "umd" &&
+      (/@babel\/runtime/g.test(id) ||
+        external.reduce((state, ext) => {
+          return (
+            state ||
+            (ext instanceof RegExp && ext.test(id)) ||
+            (typeof ext === "string" && ext === id)
+          )
+        }, false))
+    )
+  }
 
   // exclude peer dependencies
   const resolveOnly = [
@@ -73,7 +76,8 @@ module.exports = function getInputOptions(package, build) {
         extensions,
       }),
       commonjs(),
-      isTypeScript &&
+      build.type !== "umd" &&
+        isTypeScript &&
         typescript({
           clean: true,
           include: [
@@ -86,13 +90,6 @@ module.exports = function getInputOptions(package, build) {
             "**/*.cjs",
             "**/*.mjs",
           ],
-          tsconfigDefaults: {
-            compilerOptions: {
-              // patch for rollup-plugin-typescript2 because rootDirs
-              // are used to resolve include/exclude filters
-              rootDirs: [""],
-            },
-          },
           useTsconfigDeclarationDir: true,
         }),
       replace({
