@@ -31,15 +31,15 @@ export function ConfirmationPrompt({
       title={`Confirm in ${walletProvider?.name}`}
     >
       <div class="flex flex-col items-center gap-6">
-        <div class="flex items-center justify-center gap-4">
+        <div class="flex items-center justify-space-between max-w-[16rem] gap-8">
           <img
-            class="w-16 h-16 rounded-lg border-1 border-gray-200"
+            class="w-16 h-16 rounded-lg border-1 border-gray-200 shadow-lg"
             src={appInfo?.icon || browserImage}
-            alt="Browser"
+            alt={appInfo?.name || "App Icon"}
           />
           <LoadingDots></LoadingDots>
           <img
-            class="w-16 h-16 rounded-lg border-1 border-gray-200"
+            class="w-16 h-16 rounded-lg border-1 border-gray-200 shadow-lg"
             src={walletProvider?.icon || mobileImage}
             alt={walletProvider?.name || "Wallet Icon"}
           />
