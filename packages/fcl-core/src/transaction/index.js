@@ -163,9 +163,7 @@ export function transaction(
               unsub()
               return
             }
-          }
-
-          if (predicate(txStatus)) {
+          } else if (predicate(txStatus)) {
             resolve(txStatus)
             unsub()
           }
