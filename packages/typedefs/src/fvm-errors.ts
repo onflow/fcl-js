@@ -1,4 +1,7 @@
 export enum FvmErrorCode {
+  // We use -1 for unknown error in FCL because FVM defines error codes as uint16
+  // This means we have no risk of collision with FVM error codes
+  UNKNOWN_ERROR = -1,
   // tx validation errors 1000 - 1049
   // Deprecated: no longer in use
   TX_VALIDATION_ERROR = 1000,

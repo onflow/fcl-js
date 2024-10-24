@@ -156,7 +156,9 @@ export function transaction(
               unsub()
               return
             } else if (txStatus.statusCode === 1) {
-              const transactionError = parseTransactionErrorCode(txStatus)
+              const transactionError = TransactionError.fromErrorMessage(
+                txStatus.errorMessage
+              )
               reject(transactionError)
               unsub()
               return
