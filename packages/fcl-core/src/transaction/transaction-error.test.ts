@@ -1,61 +1,36 @@
-import {FvmErrorCode, TransactionStatus} from "@onflow/typedefs"
-import {TransactionError} from "./transaction-error"
+import {FvmErrorCode} from "@onflow/typedefs"
+import {parseTransactionErrorCode} from "./transaction-error"
 
-describe("TransactionError", () => {
-  test("parses transaction error from status", () => {
-    const status: TransactionStatus = {
-      blockId: "123",
-      status: 1,
-      statusString: "PENDING",
-      statusCode: 1,
-      errorMessage: "Transaction rejected by the network",
-      events: [],
-    }
-    const error = TransactionError.from(status)
-    expect(error).toBeInstanceOf(TransactionError)
-    expect(error!.message).toEqual("Transaction rejected by the network")
-    expect(error!.code).toBeUndefined()
+describe("parseTransactionErrorCode", () => {
+  test("returns unknown error if no code exists", () => {
+    const errorMessage = "Transaction rejected by the network"
+    const errorCode = parseTransactionErrorCode(status)
+    expect(errorCode).toEqual(FvmErrorCode.UNKNOWN_ERROR)
   })
 
   test("parses transaction error with code from status", () => {
-    const status: TransactionStatus = {
-      blockId: "123",
-      status: 1,
-      statusString: "PENDING",
-      statusCode: 1,
-      errorMessage: "[Error Code: 1101] Some Cadence Error",
-      events: [],
-    }
-    const error = TransactionError.from(status)
-    expect(error).toBeInstanceOf(TransactionError)
-    expect(error!.message).toEqual("[Error Code: 1101] Some Cadence Error")
-    expect(error!.code).toEqual(FvmErrorCode.CADENCE_RUNTIME_ERROR)
+    const errorMessage = "[Error Code: 1101] Some Cadence Error"
+    const errorCode = parseTransactionErrorCode(errorMessage)
+    expect(errorCode).toEqual(FvmErrorCode.CADENCE_RUNTIME_ERROR)
   })
 
-  test("returns null for successful transaction", () => {
-    const status: TransactionStatus = {
-      blockId: "123",
-      status: 1,
-      statusString: "PENDING",
-      statusCode: 0,
-      errorMessage: "",
-      events: [],
-    }
-    const error = TransactionError.from(status)
-    expect(error).toBeNull()
+  test("uses first instance of error code in message", () => {
+    const errorMessage =
+      "[Error Code: 1102] Some Cadence Error [Error Code: 1105] Something else to say"
+    const errorCode = parseTransactionErrorCode(errorMessage)
+    expect(errorCode).toEqual(FvmErrorCode.ENCODING_UNSUPPORTED_VALUE)
+  })
+
+  test("allows leading text before error code", () => {
+    const errorMessage =
+      "This is a message [Error Code: 1102] Some Cadence Error"
+    const errorCode = parseTransactionErrorCode(errorMessage)
+    expect(errorCode).toEqual(FvmErrorCode.ENCODING_UNSUPPORTED_VALUE)
   })
 
   test("returns unknown error for missing error message", () => {
-    const status: TransactionStatus = {
-      blockId: "123",
-      status: 1,
-      statusString: "PENDING",
-      statusCode: 1,
-      errorMessage: "",
-      events: [],
-    }
-    const error = TransactionError.from(status)
-    expect(error).toBeInstanceOf(TransactionError)
-    expect(error!.message).toEqual("Unknown error")
+    const errorMessage = ""
+    const errorCode = parseTransactionErrorCode(errorMessage)
+    expect(errorCode).toEqual(FvmErrorCode.UNKNOWN_ERROR)
   })
 })
