@@ -1,5 +1,16 @@
 # @onflow/fcl
 
+## 1.13.0-alpha.1
+
+### Minor Changes
+
+- [#1893](https://github.com/onflow/fcl-js/pull/1893) [`b9f49494d5b3faed1bc24005adc6ba312f653a21`](https://github.com/onflow/fcl-js/commit/b9f49494d5b3faed1bc24005adc6ba312f653a21) Thanks [@jribbink](https://github.com/jribbink)! - Add custom error `TransactionError` type for failing transaction results
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @onflow/sdk@1.5.4-alpha.1
+
 ## 1.12.1-alpha.0
 
 ### Patch Changes
