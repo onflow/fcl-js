@@ -101,9 +101,6 @@ module.exports = function getInputOptions(package, build) {
       }),
       tailwindConfig
         ? postcss({
-            config: {
-              path: "./postcss.config.js",
-            },
             inject: false,
             extensions: [".css"],
             minimize: true,
