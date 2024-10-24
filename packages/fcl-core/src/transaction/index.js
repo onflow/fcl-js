@@ -118,7 +118,7 @@ const spawnTransaction =
  *
  * @param {string} transactionId - The transaction ID
  * @param {object} [opts] - Optional parameters
- * @param {number} [opts.pollRate=2500] - Polling rate in milliseconds
+ * @param {number} [opts.pollRate=1000] - Polling rate in milliseconds
  * @param {number} [opts.txNotFoundTimeout=12500] - Timeout in milliseconds for ignoring transaction not found errors (do not modify unless you know what you are doing)
  * @returns {{
  *    snapshot: function(): Promise<TransactionStatus>,
@@ -131,7 +131,7 @@ const spawnTransaction =
  */
 export function transaction(
   transactionId,
-  opts = {txNotFoundTimeout: 12500, pollRate: 2500}
+  opts = {txNotFoundTimeout: 12500, pollRate: 1000}
 ) {
   // Validate transactionId as 64 byte hash
   if (!TXID_REGEXP.test(scoped(transactionId)))
