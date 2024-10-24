@@ -1,5 +1,12 @@
+/**
+ * DO NOT REMOVE ME UNLESS YOU KNOW WHAT YOU'RE DOING!!
+ */
+
 const {execSync} = require("child_process")
 const fs = require("fs")
+
+// Fetch the latest changes from the main branch
+execSync("git fetch origin master")
 
 const packageJsons = execSync("git ls-files 'packages/*/package.json'")
   .toString()
