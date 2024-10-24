@@ -1,5 +1,13 @@
 # @onflow/typedefs
 
+## 1.4.0-alpha.1
+
+### Minor Changes
+
+- [#1893](https://github.com/onflow/fcl-js/pull/1893) [`b9f49494d5b3faed1bc24005adc6ba312f653a21`](https://github.com/onflow/fcl-js/commit/b9f49494d5b3faed1bc24005adc6ba312f653a21) Thanks [@jribbink](https://github.com/jribbink)! - Add missing field to TransactionStatus type
+
+- [#1893](https://github.com/onflow/fcl-js/pull/1893) [`b9f49494d5b3faed1bc24005adc6ba312f653a21`](https://github.com/onflow/fcl-js/commit/b9f49494d5b3faed1bc24005adc6ba312f653a21) Thanks [@jribbink](https://github.com/jribbink)! - Add FvmErrorCode enum for categorizing transaction/script execution errors
+
 ## 1.4.0-alpha.0
 
 ### Minor Changes

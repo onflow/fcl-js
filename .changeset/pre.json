@@ -25,5 +25,11 @@
     "@onflow/util-template": "1.2.2",
     "@onflow/util-uid": "1.2.2"
   },
-  "changesets": ["slow-lies-fix", "tasty-ducks-mix"]
+  "changesets": [
+    "pink-students-divide",
+    "slow-lies-fix",
+    "soft-tomatoes-brake",
+    "tasty-ducks-mix",
+    "witty-pants-argue"
+  ]
 }
