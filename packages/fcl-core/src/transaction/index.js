@@ -12,7 +12,7 @@ import {
 import {send as fclSend, decode, getTransactionStatus} from "@onflow/sdk"
 import {HTTPRequestError} from "@onflow/transport-http"
 import {grpc} from "@improbable-eng/grpc-web"
-import {TransactionError, parseTransactionErrorCode} from "./transaction-error"
+import {TransactionError} from "./transaction-error"
 
 const TXID_REGEXP = /^[0-9a-fA-F]{64}$/
 
