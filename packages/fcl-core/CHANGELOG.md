@@ -1,5 +1,11 @@
 # @onflow/fcl
 
+## 1.13.0-alpha.2
+
+### Minor Changes
+
+- [#1989](https://github.com/onflow/fcl-js/pull/1989) [`8a5f8e9874980c40c1feb3eac915c6e8570abbf3`](https://github.com/onflow/fcl-js/commit/8a5f8e9874980c40c1feb3eac915c6e8570abbf3) Thanks [@jribbink](https://github.com/jribbink)! - Reduce transaction status polling delay to 1000ms
+
 ## 1.13.0-alpha.1
 
 ### Minor Changes
