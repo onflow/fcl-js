@@ -3,7 +3,9 @@ import {log, LEVELS} from "@onflow/util-logger"
 import {isMobile, openDeeplink} from "./utils"
 import {FLOW_METHODS, REQUEST_TYPES} from "./constants"
 import {SignClient} from "@walletconnect/sign-client/dist/types/client"
-import {createSessionProposal, makeSessionData, request} from "./session"
+import {createSessionProposal, request} from "./session"
+import {createConfrmationPrompt} from "./ui/confirmation-prompt"
+import {config} from "@onflow/config"
 
 type WalletConnectModalType =
   typeof import("@walletconnect/modal").WalletConnectModal
@@ -46,7 +48,7 @@ const makeExec = (
   {wcRequestHook, pairingModalOverride}: any,
   WalletConnectModal: Promise<WalletConnectModalType>
 ) => {
-  return async ({
+  const exec = async ({
     service,
     body,
     opts,
@@ -132,6 +134,49 @@ const makeExec = (
       }
       return uid
     }
+  }
+
+  return async ({
+    service,
+    body,
+    opts,
+    abortSignal: parentSignal,
+    user,
+  }: any) => {
+    const abortController = new AbortController()
+    parentSignal?.addEventListener("abort", () => {
+      abortController.abort(parentSignal?.reason)
+    })
+
+    const authnService = user?.services?.find((s: any) => s.type === "authn")
+
+    const appTitle: string | undefined = await config().get("app.detail.title")
+    const appIcon: string | undefined = await config().get("app.detail.icon")
+
+    const {close: closePrompt} = createConfrmationPrompt({
+      walletProvider: authnService?.provider,
+      appInfo: {
+        name: appTitle,
+        icon: appIcon,
+      },
+      onTryAgain: () => {
+        alert("Not implemented")
+      },
+      onClose: () => {
+        abortController.abort("User closed dialog")
+      },
+      onDeeplink: () => {
+        // todo: refactor
+        openDeeplink(service.uid)
+      },
+    })
+
+    return await exec({
+      service,
+      body,
+      opts,
+      abortSignal: abortController.signal,
+    }).finally(closePrompt)
   }
 }
 

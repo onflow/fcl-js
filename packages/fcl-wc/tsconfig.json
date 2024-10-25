@@ -4,6 +4,10 @@
   "include": ["src/**/*"],
   "compilerOptions": {
     "declarationDir": "types",
-    "rootDir": "src"
+    "experimentalDecorators": true,
+    "useDefineForClassFields": false,
+    "module": "esnext",
+    "jsx": "react-jsx",
+    "jsxImportSource": "preact"
   }
 }

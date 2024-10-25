@@ -2,7 +2,6 @@ import * as fclCore from "@onflow/fcl-core"
 import SignClient from "@walletconnect/sign-client"
 import {invariant} from "@onflow/util-invariant"
 import {LEVELS, log} from "@onflow/util-logger"
-export {getSdkError} from "@walletconnect/utils"
 import {SERVICE_PLUGIN_NAME, makeServicePlugin} from "./service"
 import {CoreTypes} from "@walletconnect/types"
 
