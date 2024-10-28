@@ -209,7 +209,7 @@ function connectWc(
           const unsubscribeModal = walletConnectModal.subscribeModal(
             (state: ModalCtrlState) => {
               if (state.open === false) {
-                onClose()
+                onClose?.()
                 unsubscribeModal()
               }
             }
