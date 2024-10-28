@@ -4,9 +4,11 @@ import {isMobile, openDeeplink} from "./utils"
 import {FLOW_METHODS, REQUEST_TYPES} from "./constants"
 import {SignClient} from "@walletconnect/sign-client/dist/types/client"
 import {createSessionProposal, makeSessionData, request} from "./session"
+import {ModalCtrlState} from "@walletconnect/modal-core/dist/_types/src/types/controllerTypes"
 
-type WalletConnectModalType =
-  typeof import("@walletconnect/modal").WalletConnectModal
+type WalletConnectModalType = import("@walletconnect/modal").WalletConnectModal
+
+type Constructor<T> = new (...args: any[]) => T
 
 export const SERVICE_PLUGIN_NAME = "fcl-plugin-service-walletconnect"
 export const WC_SERVICE_METHOD = "WC/RPC"
@@ -44,7 +46,7 @@ export const makeServicePlugin = (
 const makeExec = (
   clientPromise: Promise<SignClient | null>,
   {wcRequestHook, pairingModalOverride}: any,
-  WalletConnectModal: Promise<WalletConnectModalType>
+  WalletConnectModal: Promise<Constructor<WalletConnectModalType>>
 ) => {
   return async ({
     service,
@@ -136,7 +138,9 @@ const makeExec = (
 }
 
 // Connect to WalletConnect directly from the browser via deep link or WalletConnectModal
-function connectWc(WalletConnectModal: Promise<WalletConnectModalType>) {
+function connectWc(
+  WalletConnectModal: Promise<Constructor<WalletConnectModalType>>
+) {
   return async ({
     service,
     onClose,
@@ -165,7 +169,7 @@ function connectWc(WalletConnectModal: Promise<WalletConnectModalType>) {
     )
 
     let _uri: string | null = null,
-      walletConnectModal: any
+      walletConnectModal: WalletConnectModalType | null = null
 
     try {
       const {uri, approval} = await createSessionProposal({
@@ -194,7 +198,22 @@ function connectWc(WalletConnectModal: Promise<WalletConnectModalType>) {
           walletConnectModal = new (await WalletConnectModal)({
             projectId,
           })
-          walletConnectModal.openModal({uri, onClose})
+
+          // Open WalletConnectModal
+          walletConnectModal.openModal({
+            uri,
+            onClose,
+          })
+
+          // Subscribe to modal state changes
+          const unsubscribeModal = walletConnectModal.subscribeModal(
+            (state: ModalCtrlState) => {
+              if (state.open === false) {
+                onClose?.()
+                unsubscribeModal()
+              }
+            }
+          )
         } else {
           pairingModalOverride(uri, onClose)
         }
