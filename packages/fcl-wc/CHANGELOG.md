@@ -1,5 +1,11 @@
 # @onflow/fcl-wc
 
+## 5.4.1-alpha.2
+
+### Patch Changes
+
+- [#1994](https://github.com/onflow/fcl-js/pull/1994) [`a7df42ff4609aa8a1f381fd447d3f94606f71a17`](https://github.com/onflow/fcl-js/commit/a7df42ff4609aa8a1f381fd447d3f94606f71a17) Thanks [@jribbink](https://github.com/jribbink)! - Fix WalletConnectModal close detection
+
 ## 5.4.1-alpha.1
 
 ### Patch Changes

@@ -26,6 +26,7 @@
     "@onflow/util-uid": "1.2.2"
   },
   "changesets": [
+    "lovely-bikes-applaud",
     "odd-actors-ring",
     "pink-students-divide",
     "slow-lies-fix",
