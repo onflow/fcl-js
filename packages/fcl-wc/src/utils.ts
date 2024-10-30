@@ -1,6 +1,9 @@
 import {log, LEVELS} from "@onflow/util-logger"
 import {invariant} from "@onflow/util-invariant"
 import * as fclCore from "@onflow/fcl-core"
+import {FLOW_METHODS} from "./constants"
+import {WC_SERVICE_METHOD} from "./service"
+import {Service} from "@onflow/typedefs"
 
 const makeFlowServicesFromWallets = (wallets: any[]) => {
   return Object.values(wallets)
@@ -93,4 +96,21 @@ export function openDeeplink(url: string) {
   } else {
     window.open(url, "_blank")
   }
+}
+
+export function shouldDeepLink({service, user}: {service: Service; user: any}) {
+  // Only deeplink on mobile
+  if (!isMobile()) return false
+
+  // If this is an authn request, the user has already been deeplinked by connectWc
+  if (service.method === FLOW_METHODS.FLOW_AUTHN) return false
+
+  // If there was a pre-authz WC request, the user has already been deeplinked
+  if (
+    service.method === FLOW_METHODS.FLOW_AUTHZ &&
+    user?.services?.find((s: Service) => s.method === WC_SERVICE_METHOD)
+  )
+    return false
+
+  return true
 }
