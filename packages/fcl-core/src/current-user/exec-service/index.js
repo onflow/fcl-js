@@ -53,9 +53,8 @@ export async function execService({
       service,
       body: msg,
       config: execConfig,
-      opts,
-      abortSignal,
       user,
+      abortSignal,
     })
 
     if (res.status === "REDIRECT") {

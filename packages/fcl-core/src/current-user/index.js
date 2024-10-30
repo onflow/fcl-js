@@ -12,7 +12,6 @@ import {execService} from "./exec-service"
 import {normalizeCompositeSignature} from "../normalizers/service/composite-signature"
 import {getDiscoveryService, makeDiscoveryServices} from "../discovery"
 import {getServiceRegistry} from "./exec-service/plugins"
-import {isMobile} from "../utils"
 
 /**
  * @typedef {import("@onflow/typedefs").CurrentUser} CurrentUser
@@ -160,6 +159,7 @@ const getAuthenticate =
    * @description - Authenticate a user
    * @param {object} [opts] - Options
    * @param {object} [opts.service] - Optional service to use for authentication
+   * @param {object} [opts.user] - Optional user object
    * @param {boolean} [opts.redir] - Optional redirect flag
    * @returns
    */
@@ -314,10 +314,11 @@ const getAuthorization =
         const preAuthz = serviceOfType(user.services, "pre-authz")
 
         if (preAuthz)
-          return getResolvePreAuthz({platform, discovery})(
+          return getResolvePreAuthz({platform, discovery, user})(
             await execService({
               service: preAuthz,
               msg: preSignable,
+              user,
               platform,
               user,
             }),
