@@ -314,11 +314,10 @@ const getAuthorization =
         const preAuthz = serviceOfType(user.services, "pre-authz")
 
         if (preAuthz)
-          return getResolvePreAuthz({platform, discovery, user})(
+          return getResolvePreAuthz({platform, discovery})(
             await execService({
               service: preAuthz,
               msg: preSignable,
-              user,
               platform,
               user,
             }),
