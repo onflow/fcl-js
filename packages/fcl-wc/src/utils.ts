@@ -1,9 +1,10 @@
 import {log, LEVELS} from "@onflow/util-logger"
-import {invariant} from "@onflow/util-invariant"
 import * as fclCore from "@onflow/fcl-core"
 import {FLOW_METHODS} from "./constants"
 import {WC_SERVICE_METHOD} from "./service"
 import {Service} from "@onflow/typedefs"
+
+const PRE_AUTHZ_SERVICE_TYPE = "pre-authz"
 
 const makeFlowServicesFromWallets = (wallets: any[]) => {
   return Object.values(wallets)
@@ -108,7 +109,10 @@ export function shouldDeepLink({service, user}: {service: Service; user: any}) {
   // If there was a pre-authz WC request, the user has already been deeplinked
   if (
     service.method === FLOW_METHODS.FLOW_AUTHZ &&
-    user?.services?.find((s: Service) => s.method === WC_SERVICE_METHOD)
+    user?.services?.find(
+      (s: Service) =>
+        s.method === WC_SERVICE_METHOD && s.type === PRE_AUTHZ_SERVICE_TYPE
+    )
   )
     return false
 
