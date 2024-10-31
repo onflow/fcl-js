@@ -1,7 +1,6 @@
 import {log, LEVELS} from "@onflow/util-logger"
 import * as fclCore from "@onflow/fcl-core"
-import {FLOW_METHODS} from "./constants"
-import {WC_SERVICE_METHOD} from "./service"
+import {FLOW_METHODS, WC_SERVICE_METHOD} from "./constants"
 import {Service} from "@onflow/typedefs"
 
 const PRE_AUTHZ_SERVICE_TYPE = "pre-authz"
@@ -104,11 +103,11 @@ export function shouldDeepLink({service, user}: {service: Service; user: any}) {
   if (!isMobile()) return false
 
   // If this is an authn request, the user has already been deeplinked by connectWc
-  if (service.method === FLOW_METHODS.FLOW_AUTHN) return false
+  if (service.endpoint === FLOW_METHODS.FLOW_AUTHN) return false
 
   // If there was a pre-authz WC request, the user has already been deeplinked
   if (
-    service.method === FLOW_METHODS.FLOW_AUTHZ &&
+    service.endpoint === FLOW_METHODS.FLOW_AUTHZ &&
     user?.services?.find(
       (s: Service) =>
         s.method === WC_SERVICE_METHOD && s.type === PRE_AUTHZ_SERVICE_TYPE

@@ -1,7 +1,11 @@
 import {invariant} from "@onflow/util-invariant"
 import {log, LEVELS} from "@onflow/util-logger"
 import {isMobile, openDeeplink, shouldDeepLink} from "./utils"
-import {REQUEST_TYPES} from "./constants"
+import {
+  REQUEST_TYPES,
+  SERVICE_PLUGIN_NAME,
+  WC_SERVICE_METHOD,
+} from "./constants"
 import {SignClient} from "@walletconnect/sign-client/dist/types/client"
 import {createSessionProposal, request} from "./session"
 import {ModalCtrlState} from "@walletconnect/modal-core/dist/_types/src/types/controllerTypes"
@@ -9,9 +13,6 @@ import {ModalCtrlState} from "@walletconnect/modal-core/dist/_types/src/types/co
 type WalletConnectModalType = import("@walletconnect/modal").WalletConnectModal
 
 type Constructor<T> = new (...args: any[]) => T
-
-export const SERVICE_PLUGIN_NAME = "fcl-plugin-service-walletconnect"
-export const WC_SERVICE_METHOD = "WC/RPC"
 
 export const makeServicePlugin = (
   client: Promise<SignClient | null>,

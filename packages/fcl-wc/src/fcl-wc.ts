@@ -3,7 +3,7 @@ import SignClient from "@walletconnect/sign-client"
 import {invariant} from "@onflow/util-invariant"
 import {LEVELS, log} from "@onflow/util-logger"
 export {getSdkError} from "@walletconnect/utils"
-import {SERVICE_PLUGIN_NAME, makeServicePlugin} from "./service"
+import {makeServicePlugin} from "./service"
 import {CoreTypes} from "@walletconnect/types"
 
 export interface FclWalletConnectConfig {
@@ -131,4 +131,4 @@ export async function getSignClient() {
   })
 }
 
-export {SERVICE_PLUGIN_NAME}
+export {SERVICE_PLUGIN_NAME} from "./constants"
