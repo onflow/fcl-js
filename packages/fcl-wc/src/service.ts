@@ -1,17 +1,18 @@
 import {invariant} from "@onflow/util-invariant"
 import {log, LEVELS} from "@onflow/util-logger"
-import {isMobile, openDeeplink} from "./utils"
-import {FLOW_METHODS, REQUEST_TYPES} from "./constants"
+import {isMobile, openDeeplink, shouldDeepLink} from "./utils"
+import {
+  REQUEST_TYPES,
+  SERVICE_PLUGIN_NAME,
+  WC_SERVICE_METHOD,
+} from "./constants"
 import {SignClient} from "@walletconnect/sign-client/dist/types/client"
-import {createSessionProposal, makeSessionData, request} from "./session"
+import {createSessionProposal, request} from "./session"
 import {ModalCtrlState} from "@walletconnect/modal-core/dist/_types/src/types/controllerTypes"
 
 type WalletConnectModalType = import("@walletconnect/modal").WalletConnectModal
 
 type Constructor<T> = new (...args: any[]) => T
-
-export const SERVICE_PLUGIN_NAME = "fcl-plugin-service-walletconnect"
-export const WC_SERVICE_METHOD = "WC/RPC"
 
 export const makeServicePlugin = (
   client: Promise<SignClient | null>,
@@ -53,11 +54,13 @@ const makeExec = (
     body,
     opts,
     abortSignal,
+    user,
   }: {
     service: any
     body: any
     opts: any
     abortSignal?: AbortSignal
+    user: any
   }) => {
     const client = await clientPromise
     invariant(!!client, "WalletConnect is not initialized")
@@ -107,11 +110,8 @@ const makeExec = (
       })
     }
 
-    if (
-      isMobile() &&
-      method !== FLOW_METHODS.FLOW_AUTHN &&
-      !(method === FLOW_METHODS.FLOW_AUTHZ && opts.initiatedByPreAuthz)
-    ) {
+    // Deeplink to the wallet app if necessary
+    if (shouldDeepLink({service, user})) {
       openDeeplink(appLink)
     }
 

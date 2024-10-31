@@ -12,7 +12,6 @@ import {execService} from "./exec-service"
 import {normalizeCompositeSignature} from "../normalizers/service/composite-signature"
 import {getDiscoveryService, makeDiscoveryServices} from "../discovery"
 import {getServiceRegistry} from "./exec-service/plugins"
-import {isMobile} from "../utils"
 
 /**
  * @typedef {import("@onflow/typedefs").CurrentUser} CurrentUser
@@ -160,6 +159,7 @@ const getAuthenticate =
    * @description - Authenticate a user
    * @param {object} [opts] - Options
    * @param {object} [opts.service] - Optional service to use for authentication
+   * @param {object} [opts.user] - Optional user object
    * @param {boolean} [opts.redir] - Optional redirect flag
    * @returns
    */
@@ -189,6 +189,7 @@ const getAuthenticate =
               msg: accountProofData,
               opts,
               platform,
+              user,
             })
             send(NAME, SET_CURRENT_USER, await buildUser(response))
           } catch (error) {
@@ -224,6 +225,7 @@ const getAuthenticate =
           opts,
           platform,
           execStrategy: discovery?.execStrategy,
+          user,
         })
 
         send(NAME, SET_CURRENT_USER, await buildUser(response))
@@ -258,7 +260,7 @@ const normalizePreAuthzResponse = authz => ({
 
 const getResolvePreAuthz =
   ({platform}) =>
-  authz => {
+  (authz, {user}) => {
     const resp = normalizePreAuthzResponse(authz)
     const axs = []
 
@@ -275,9 +277,7 @@ const getResolvePreAuthz =
           service: az,
           msg: signable,
           platform,
-          opts: {
-            initiatedByPreAuthz: true,
-          },
+          user,
         })
       },
       role: {
@@ -319,7 +319,11 @@ const getAuthorization =
               service: preAuthz,
               msg: preSignable,
               platform,
-            })
+              user,
+            }),
+            {
+              user,
+            }
           )
         if (authz) {
           return {
@@ -339,6 +343,7 @@ const getAuthorization =
                     includeOlderJsonRpcCall: true,
                   },
                   platform,
+                  user,
                 })
               )
             },
@@ -446,6 +451,7 @@ const getSignUserMessage =
         service: signingService,
         msg: makeSignable(msg),
         platform,
+        user,
       })
       if (Array.isArray(response)) {
         return response.map(compSigs => normalizeCompositeSignature(compSigs))
