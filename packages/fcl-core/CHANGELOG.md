@@ -1,5 +1,11 @@
 # @onflow/fcl
 
+## 1.13.0-alpha.3
+
+### Patch Changes
+
+- [#1999](https://github.com/onflow/fcl-js/pull/1999) [`c14746a9e4dbde10d6204697a68e6f2de6e83dd1`](https://github.com/onflow/fcl-js/commit/c14746a9e4dbde10d6204697a68e6f2de6e83dd1) Thanks [@jribbink](https://github.com/jribbink)! - Improve deeplinking for WC/RPC wallets using non-WC/RPC pre-authz services
+
 ## 1.13.0-alpha.2
 
 ### Minor Changes
