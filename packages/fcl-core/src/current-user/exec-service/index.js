@@ -53,6 +53,7 @@ export async function execService({
       service,
       body: msg,
       config: execConfig,
+      opts,
       user,
       abortSignal,
     })
