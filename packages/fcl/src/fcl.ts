@@ -99,5 +99,4 @@ initServiceRegistry({coreStrategies})
 // Based on the user's config
 initFclWcLoader()
 
-
 export {LOCAL_STORAGE, SESSION_STORAGE} from "./utils/web"
