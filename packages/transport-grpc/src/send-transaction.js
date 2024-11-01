@@ -72,11 +72,16 @@ export async function sendTransaction(ix, context = {}, opts = {}) {
         sig.setKeyId(acct.keyId)
         sig.setSignature(hexBuffer(acct.signature, context))
 
-        const isSignatureExist = tx.getPayloadSignaturesList().some(
-          existingSignature => existingSignature.getAddress().toString() === sig.getAddress().toString()
-            && existingSignature.getKeyId() === sig.getKeyId()
-            && existingSignature.getSignature().toString() === sig.getSignature().toString()
-        )
+        const isSignatureExist = tx
+          .getPayloadSignaturesList()
+          .some(
+            existingSignature =>
+              existingSignature.getAddress().toString() ===
+                sig.getAddress().toString() &&
+              existingSignature.getKeyId() === sig.getKeyId() &&
+              existingSignature.getSignature().toString() ===
+                sig.getSignature().toString()
+          )
         if (!isSignatureExist) {
           tx.addPayloadSignatures(sig)
         }

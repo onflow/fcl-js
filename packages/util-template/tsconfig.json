@@ -1,0 +1,10 @@
+{
+  "extends": "../../tsconfig",
+  // Change this to match your project
+  "include": ["src/**/*"],
+  "compilerOptions": {
+    "declarationDir": "types",
+    "rootDir": "src"
+  },
+  "exclude": ["src/__snapshots__"]
+}

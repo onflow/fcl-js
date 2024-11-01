@@ -8,6 +8,8 @@ import * as flow_entities_block_pb from "../../flow/entities/block_pb";
 import * as flow_entities_collection_pb from "../../flow/entities/collection_pb";
 import * as flow_entities_event_pb from "../../flow/entities/event_pb";
 import * as flow_entities_execution_result_pb from "../../flow/entities/execution_result_pb";
+import * as flow_entities_metadata_pb from "../../flow/entities/metadata_pb";
+import * as flow_entities_node_version_info_pb from "../../flow/entities/node_version_info_pb";
 import * as flow_entities_transaction_pb from "../../flow/entities/transaction_pb";
 import * as google_protobuf_timestamp_pb from "google-protobuf/google/protobuf/timestamp_pb";
 
@@ -40,6 +42,44 @@ export class PingResponse extends jspb.Message {
 
 export namespace PingResponse {
   export type AsObject = {
+  }
+}
+
+export class GetNodeVersionInfoRequest extends jspb.Message {
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): GetNodeVersionInfoRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: GetNodeVersionInfoRequest): GetNodeVersionInfoRequest.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: GetNodeVersionInfoRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): GetNodeVersionInfoRequest;
+  static deserializeBinaryFromReader(message: GetNodeVersionInfoRequest, reader: jspb.BinaryReader): GetNodeVersionInfoRequest;
+}
+
+export namespace GetNodeVersionInfoRequest {
+  export type AsObject = {
+  }
+}
+
+export class GetNodeVersionInfoResponse extends jspb.Message {
+  hasInfo(): boolean;
+  clearInfo(): void;
+  getInfo(): flow_entities_node_version_info_pb.NodeVersionInfo | undefined;
+  setInfo(value?: flow_entities_node_version_info_pb.NodeVersionInfo): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): GetNodeVersionInfoResponse.AsObject;
+  static toObject(includeInstance: boolean, msg: GetNodeVersionInfoResponse): GetNodeVersionInfoResponse.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: GetNodeVersionInfoResponse, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): GetNodeVersionInfoResponse;
+  static deserializeBinaryFromReader(message: GetNodeVersionInfoResponse, reader: jspb.BinaryReader): GetNodeVersionInfoResponse;
+}
+
+export namespace GetNodeVersionInfoResponse {
+  export type AsObject = {
+    info?: flow_entities_node_version_info_pb.NodeVersionInfo.AsObject,
   }
 }
 
@@ -111,6 +151,14 @@ export class BlockHeaderResponse extends jspb.Message {
   getBlock(): flow_entities_block_header_pb.BlockHeader | undefined;
   setBlock(value?: flow_entities_block_header_pb.BlockHeader): void;
 
+  getBlockStatus(): flow_entities_block_pb.BlockStatusMap[keyof flow_entities_block_pb.BlockStatusMap];
+  setBlockStatus(value: flow_entities_block_pb.BlockStatusMap[keyof flow_entities_block_pb.BlockStatusMap]): void;
+
+  hasMetadata(): boolean;
+  clearMetadata(): void;
+  getMetadata(): flow_entities_metadata_pb.Metadata | undefined;
+  setMetadata(value?: flow_entities_metadata_pb.Metadata): void;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): BlockHeaderResponse.AsObject;
   static toObject(includeInstance: boolean, msg: BlockHeaderResponse): BlockHeaderResponse.AsObject;
@@ -124,6 +172,8 @@ export class BlockHeaderResponse extends jspb.Message {
 export namespace BlockHeaderResponse {
   export type AsObject = {
     block?: flow_entities_block_header_pb.BlockHeader.AsObject,
+    blockStatus: flow_entities_block_pb.BlockStatusMap[keyof flow_entities_block_pb.BlockStatusMap],
+    metadata?: flow_entities_metadata_pb.Metadata.AsObject,
   }
 }
 
@@ -207,6 +257,14 @@ export class BlockResponse extends jspb.Message {
   getBlock(): flow_entities_block_pb.Block | undefined;
   setBlock(value?: flow_entities_block_pb.Block): void;
 
+  getBlockStatus(): flow_entities_block_pb.BlockStatusMap[keyof flow_entities_block_pb.BlockStatusMap];
+  setBlockStatus(value: flow_entities_block_pb.BlockStatusMap[keyof flow_entities_block_pb.BlockStatusMap]): void;
+
+  hasMetadata(): boolean;
+  clearMetadata(): void;
+  getMetadata(): flow_entities_metadata_pb.Metadata | undefined;
+  setMetadata(value?: flow_entities_metadata_pb.Metadata): void;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): BlockResponse.AsObject;
   static toObject(includeInstance: boolean, msg: BlockResponse): BlockResponse.AsObject;
@@ -220,6 +278,8 @@ export class BlockResponse extends jspb.Message {
 export namespace BlockResponse {
   export type AsObject = {
     block?: flow_entities_block_pb.Block.AsObject,
+    blockStatus: flow_entities_block_pb.BlockStatusMap[keyof flow_entities_block_pb.BlockStatusMap],
+    metadata?: flow_entities_metadata_pb.Metadata.AsObject,
   }
 }
 
@@ -251,6 +311,11 @@ export class CollectionResponse extends jspb.Message {
   getCollection(): flow_entities_collection_pb.Collection | undefined;
   setCollection(value?: flow_entities_collection_pb.Collection): void;
 
+  hasMetadata(): boolean;
+  clearMetadata(): void;
+  getMetadata(): flow_entities_metadata_pb.Metadata | undefined;
+  setMetadata(value?: flow_entities_metadata_pb.Metadata): void;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): CollectionResponse.AsObject;
   static toObject(includeInstance: boolean, msg: CollectionResponse): CollectionResponse.AsObject;
@@ -264,6 +329,7 @@ export class CollectionResponse extends jspb.Message {
 export namespace CollectionResponse {
   export type AsObject = {
     collection?: flow_entities_collection_pb.Collection.AsObject,
+    metadata?: flow_entities_metadata_pb.Metadata.AsObject,
   }
 }
 
@@ -295,6 +361,11 @@ export class SendTransactionResponse extends jspb.Message {
   getId_asB64(): string;
   setId(value: Uint8Array | string): void;
 
+  hasMetadata(): boolean;
+  clearMetadata(): void;
+  getMetadata(): flow_entities_metadata_pb.Metadata | undefined;
+  setMetadata(value?: flow_entities_metadata_pb.Metadata): void;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): SendTransactionResponse.AsObject;
   static toObject(includeInstance: boolean, msg: SendTransactionResponse): SendTransactionResponse.AsObject;
@@ -308,6 +379,7 @@ export class SendTransactionResponse extends jspb.Message {
 export namespace SendTransactionResponse {
   export type AsObject = {
     id: Uint8Array | string,
+    metadata?: flow_entities_metadata_pb.Metadata.AsObject,
   }
 }
 
@@ -316,6 +388,19 @@ export class GetTransactionRequest extends jspb.Message {
   getId_asU8(): Uint8Array;
   getId_asB64(): string;
   setId(value: Uint8Array | string): void;
+
+  getBlockId(): Uint8Array | string;
+  getBlockId_asU8(): Uint8Array;
+  getBlockId_asB64(): string;
+  setBlockId(value: Uint8Array | string): void;
+
+  getCollectionId(): Uint8Array | string;
+  getCollectionId_asU8(): Uint8Array;
+  getCollectionId_asB64(): string;
+  setCollectionId(value: Uint8Array | string): void;
+
+  getEventEncodingVersion(): flow_entities_event_pb.EventEncodingVersionMap[keyof flow_entities_event_pb.EventEncodingVersionMap];
+  setEventEncodingVersion(value: flow_entities_event_pb.EventEncodingVersionMap[keyof flow_entities_event_pb.EventEncodingVersionMap]): void;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): GetTransactionRequest.AsObject;
@@ -330,6 +415,57 @@ export class GetTransactionRequest extends jspb.Message {
 export namespace GetTransactionRequest {
   export type AsObject = {
     id: Uint8Array | string,
+    blockId: Uint8Array | string,
+    collectionId: Uint8Array | string,
+    eventEncodingVersion: flow_entities_event_pb.EventEncodingVersionMap[keyof flow_entities_event_pb.EventEncodingVersionMap],
+  }
+}
+
+export class GetSystemTransactionRequest extends jspb.Message {
+  getBlockId(): Uint8Array | string;
+  getBlockId_asU8(): Uint8Array;
+  getBlockId_asB64(): string;
+  setBlockId(value: Uint8Array | string): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): GetSystemTransactionRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: GetSystemTransactionRequest): GetSystemTransactionRequest.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: GetSystemTransactionRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): GetSystemTransactionRequest;
+  static deserializeBinaryFromReader(message: GetSystemTransactionRequest, reader: jspb.BinaryReader): GetSystemTransactionRequest;
+}
+
+export namespace GetSystemTransactionRequest {
+  export type AsObject = {
+    blockId: Uint8Array | string,
+  }
+}
+
+export class GetSystemTransactionResultRequest extends jspb.Message {
+  getBlockId(): Uint8Array | string;
+  getBlockId_asU8(): Uint8Array;
+  getBlockId_asB64(): string;
+  setBlockId(value: Uint8Array | string): void;
+
+  getEventEncodingVersion(): flow_entities_event_pb.EventEncodingVersionMap[keyof flow_entities_event_pb.EventEncodingVersionMap];
+  setEventEncodingVersion(value: flow_entities_event_pb.EventEncodingVersionMap[keyof flow_entities_event_pb.EventEncodingVersionMap]): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): GetSystemTransactionResultRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: GetSystemTransactionResultRequest): GetSystemTransactionResultRequest.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: GetSystemTransactionResultRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): GetSystemTransactionResultRequest;
+  static deserializeBinaryFromReader(message: GetSystemTransactionResultRequest, reader: jspb.BinaryReader): GetSystemTransactionResultRequest;
+}
+
+export namespace GetSystemTransactionResultRequest {
+  export type AsObject = {
+    blockId: Uint8Array | string,
+    eventEncodingVersion: flow_entities_event_pb.EventEncodingVersionMap[keyof flow_entities_event_pb.EventEncodingVersionMap],
   }
 }
 
@@ -341,6 +477,9 @@ export class GetTransactionByIndexRequest extends jspb.Message {
 
   getIndex(): number;
   setIndex(value: number): void;
+
+  getEventEncodingVersion(): flow_entities_event_pb.EventEncodingVersionMap[keyof flow_entities_event_pb.EventEncodingVersionMap];
+  setEventEncodingVersion(value: flow_entities_event_pb.EventEncodingVersionMap[keyof flow_entities_event_pb.EventEncodingVersionMap]): void;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): GetTransactionByIndexRequest.AsObject;
@@ -356,6 +495,7 @@ export namespace GetTransactionByIndexRequest {
   export type AsObject = {
     blockId: Uint8Array | string,
     index: number,
+    eventEncodingVersion: flow_entities_event_pb.EventEncodingVersionMap[keyof flow_entities_event_pb.EventEncodingVersionMap],
   }
 }
 
@@ -364,6 +504,9 @@ export class GetTransactionsByBlockIDRequest extends jspb.Message {
   getBlockId_asU8(): Uint8Array;
   getBlockId_asB64(): string;
   setBlockId(value: Uint8Array | string): void;
+
+  getEventEncodingVersion(): flow_entities_event_pb.EventEncodingVersionMap[keyof flow_entities_event_pb.EventEncodingVersionMap];
+  setEventEncodingVersion(value: flow_entities_event_pb.EventEncodingVersionMap[keyof flow_entities_event_pb.EventEncodingVersionMap]): void;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): GetTransactionsByBlockIDRequest.AsObject;
@@ -378,6 +521,7 @@ export class GetTransactionsByBlockIDRequest extends jspb.Message {
 export namespace GetTransactionsByBlockIDRequest {
   export type AsObject = {
     blockId: Uint8Array | string,
+    eventEncodingVersion: flow_entities_event_pb.EventEncodingVersionMap[keyof flow_entities_event_pb.EventEncodingVersionMap],
   }
 }
 
@@ -386,6 +530,11 @@ export class TransactionResultsResponse extends jspb.Message {
   getTransactionResultsList(): Array<TransactionResultResponse>;
   setTransactionResultsList(value: Array<TransactionResultResponse>): void;
   addTransactionResults(value?: TransactionResultResponse, index?: number): TransactionResultResponse;
+
+  hasMetadata(): boolean;
+  clearMetadata(): void;
+  getMetadata(): flow_entities_metadata_pb.Metadata | undefined;
+  setMetadata(value?: flow_entities_metadata_pb.Metadata): void;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): TransactionResultsResponse.AsObject;
@@ -400,6 +549,7 @@ export class TransactionResultsResponse extends jspb.Message {
 export namespace TransactionResultsResponse {
   export type AsObject = {
     transactionResultsList: Array<TransactionResultResponse.AsObject>,
+    metadata?: flow_entities_metadata_pb.Metadata.AsObject,
   }
 }
 
@@ -408,6 +558,11 @@ export class TransactionsResponse extends jspb.Message {
   getTransactionsList(): Array<flow_entities_transaction_pb.Transaction>;
   setTransactionsList(value: Array<flow_entities_transaction_pb.Transaction>): void;
   addTransactions(value?: flow_entities_transaction_pb.Transaction, index?: number): flow_entities_transaction_pb.Transaction;
+
+  hasMetadata(): boolean;
+  clearMetadata(): void;
+  getMetadata(): flow_entities_metadata_pb.Metadata | undefined;
+  setMetadata(value?: flow_entities_metadata_pb.Metadata): void;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): TransactionsResponse.AsObject;
@@ -422,6 +577,7 @@ export class TransactionsResponse extends jspb.Message {
 export namespace TransactionsResponse {
   export type AsObject = {
     transactionsList: Array<flow_entities_transaction_pb.Transaction.AsObject>,
+    metadata?: flow_entities_metadata_pb.Metadata.AsObject,
   }
 }
 
@@ -430,6 +586,11 @@ export class TransactionResponse extends jspb.Message {
   clearTransaction(): void;
   getTransaction(): flow_entities_transaction_pb.Transaction | undefined;
   setTransaction(value?: flow_entities_transaction_pb.Transaction): void;
+
+  hasMetadata(): boolean;
+  clearMetadata(): void;
+  getMetadata(): flow_entities_metadata_pb.Metadata | undefined;
+  setMetadata(value?: flow_entities_metadata_pb.Metadata): void;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): TransactionResponse.AsObject;
@@ -444,6 +605,7 @@ export class TransactionResponse extends jspb.Message {
 export namespace TransactionResponse {
   export type AsObject = {
     transaction?: flow_entities_transaction_pb.Transaction.AsObject,
+    metadata?: flow_entities_metadata_pb.Metadata.AsObject,
   }
 }
 
@@ -477,6 +639,17 @@ export class TransactionResultResponse extends jspb.Message {
   getCollectionId_asB64(): string;
   setCollectionId(value: Uint8Array | string): void;
 
+  getBlockHeight(): number;
+  setBlockHeight(value: number): void;
+
+  hasMetadata(): boolean;
+  clearMetadata(): void;
+  getMetadata(): flow_entities_metadata_pb.Metadata | undefined;
+  setMetadata(value?: flow_entities_metadata_pb.Metadata): void;
+
+  getComputationUsage(): number;
+  setComputationUsage(value: number): void;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): TransactionResultResponse.AsObject;
   static toObject(includeInstance: boolean, msg: TransactionResultResponse): TransactionResultResponse.AsObject;
@@ -496,6 +669,9 @@ export namespace TransactionResultResponse {
     blockId: Uint8Array | string,
     transactionId: Uint8Array | string,
     collectionId: Uint8Array | string,
+    blockHeight: number,
+    metadata?: flow_entities_metadata_pb.Metadata.AsObject,
+    computationUsage: number,
   }
 }
 
@@ -527,6 +703,11 @@ export class GetAccountResponse extends jspb.Message {
   getAccount(): flow_entities_account_pb.Account | undefined;
   setAccount(value?: flow_entities_account_pb.Account): void;
 
+  hasMetadata(): boolean;
+  clearMetadata(): void;
+  getMetadata(): flow_entities_metadata_pb.Metadata | undefined;
+  setMetadata(value?: flow_entities_metadata_pb.Metadata): void;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): GetAccountResponse.AsObject;
   static toObject(includeInstance: boolean, msg: GetAccountResponse): GetAccountResponse.AsObject;
@@ -540,6 +721,7 @@ export class GetAccountResponse extends jspb.Message {
 export namespace GetAccountResponse {
   export type AsObject = {
     account?: flow_entities_account_pb.Account.AsObject,
+    metadata?: flow_entities_metadata_pb.Metadata.AsObject,
   }
 }
 
@@ -571,6 +753,11 @@ export class AccountResponse extends jspb.Message {
   getAccount(): flow_entities_account_pb.Account | undefined;
   setAccount(value?: flow_entities_account_pb.Account): void;
 
+  hasMetadata(): boolean;
+  clearMetadata(): void;
+  getMetadata(): flow_entities_metadata_pb.Metadata | undefined;
+  setMetadata(value?: flow_entities_metadata_pb.Metadata): void;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): AccountResponse.AsObject;
   static toObject(includeInstance: boolean, msg: AccountResponse): AccountResponse.AsObject;
@@ -584,6 +771,7 @@ export class AccountResponse extends jspb.Message {
 export namespace AccountResponse {
   export type AsObject = {
     account?: flow_entities_account_pb.Account.AsObject,
+    metadata?: flow_entities_metadata_pb.Metadata.AsObject,
   }
 }
 
@@ -719,6 +907,14 @@ export class ExecuteScriptResponse extends jspb.Message {
   getValue_asB64(): string;
   setValue(value: Uint8Array | string): void;
 
+  hasMetadata(): boolean;
+  clearMetadata(): void;
+  getMetadata(): flow_entities_metadata_pb.Metadata | undefined;
+  setMetadata(value?: flow_entities_metadata_pb.Metadata): void;
+
+  getComputationUsage(): number;
+  setComputationUsage(value: number): void;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): ExecuteScriptResponse.AsObject;
   static toObject(includeInstance: boolean, msg: ExecuteScriptResponse): ExecuteScriptResponse.AsObject;
@@ -732,6 +928,8 @@ export class ExecuteScriptResponse extends jspb.Message {
 export namespace ExecuteScriptResponse {
   export type AsObject = {
     value: Uint8Array | string,
+    metadata?: flow_entities_metadata_pb.Metadata.AsObject,
+    computationUsage: number,
   }
 }
 
@@ -744,6 +942,9 @@ export class GetEventsForHeightRangeRequest extends jspb.Message {
 
   getEndHeight(): number;
   setEndHeight(value: number): void;
+
+  getEventEncodingVersion(): flow_entities_event_pb.EventEncodingVersionMap[keyof flow_entities_event_pb.EventEncodingVersionMap];
+  setEventEncodingVersion(value: flow_entities_event_pb.EventEncodingVersionMap[keyof flow_entities_event_pb.EventEncodingVersionMap]): void;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): GetEventsForHeightRangeRequest.AsObject;
@@ -760,6 +961,7 @@ export namespace GetEventsForHeightRangeRequest {
     type: string,
     startHeight: number,
     endHeight: number,
+    eventEncodingVersion: flow_entities_event_pb.EventEncodingVersionMap[keyof flow_entities_event_pb.EventEncodingVersionMap],
   }
 }
 
@@ -773,6 +975,9 @@ export class GetEventsForBlockIDsRequest extends jspb.Message {
   getBlockIdsList_asB64(): Array<string>;
   setBlockIdsList(value: Array<Uint8Array | string>): void;
   addBlockIds(value: Uint8Array | string, index?: number): Uint8Array | string;
+
+  getEventEncodingVersion(): flow_entities_event_pb.EventEncodingVersionMap[keyof flow_entities_event_pb.EventEncodingVersionMap];
+  setEventEncodingVersion(value: flow_entities_event_pb.EventEncodingVersionMap[keyof flow_entities_event_pb.EventEncodingVersionMap]): void;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): GetEventsForBlockIDsRequest.AsObject;
@@ -788,6 +993,7 @@ export namespace GetEventsForBlockIDsRequest {
   export type AsObject = {
     type: string,
     blockIdsList: Array<Uint8Array | string>,
+    eventEncodingVersion: flow_entities_event_pb.EventEncodingVersionMap[keyof flow_entities_event_pb.EventEncodingVersionMap],
   }
 }
 
@@ -796,6 +1002,11 @@ export class EventsResponse extends jspb.Message {
   getResultsList(): Array<EventsResponse.Result>;
   setResultsList(value: Array<EventsResponse.Result>): void;
   addResults(value?: EventsResponse.Result, index?: number): EventsResponse.Result;
+
+  hasMetadata(): boolean;
+  clearMetadata(): void;
+  getMetadata(): flow_entities_metadata_pb.Metadata | undefined;
+  setMetadata(value?: flow_entities_metadata_pb.Metadata): void;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): EventsResponse.AsObject;
@@ -810,6 +1021,7 @@ export class EventsResponse extends jspb.Message {
 export namespace EventsResponse {
   export type AsObject = {
     resultsList: Array<EventsResponse.Result.AsObject>,
+    metadata?: flow_entities_metadata_pb.Metadata.AsObject,
   }
 
   export class Result extends jspb.Message {
@@ -903,11 +1115,58 @@ export namespace GetLatestProtocolStateSnapshotRequest {
   }
 }
 
+export class GetProtocolStateSnapshotByBlockIDRequest extends jspb.Message {
+  getBlockId(): Uint8Array | string;
+  getBlockId_asU8(): Uint8Array;
+  getBlockId_asB64(): string;
+  setBlockId(value: Uint8Array | string): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): GetProtocolStateSnapshotByBlockIDRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: GetProtocolStateSnapshotByBlockIDRequest): GetProtocolStateSnapshotByBlockIDRequest.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: GetProtocolStateSnapshotByBlockIDRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): GetProtocolStateSnapshotByBlockIDRequest;
+  static deserializeBinaryFromReader(message: GetProtocolStateSnapshotByBlockIDRequest, reader: jspb.BinaryReader): GetProtocolStateSnapshotByBlockIDRequest;
+}
+
+export namespace GetProtocolStateSnapshotByBlockIDRequest {
+  export type AsObject = {
+    blockId: Uint8Array | string,
+  }
+}
+
+export class GetProtocolStateSnapshotByHeightRequest extends jspb.Message {
+  getBlockHeight(): number;
+  setBlockHeight(value: number): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): GetProtocolStateSnapshotByHeightRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: GetProtocolStateSnapshotByHeightRequest): GetProtocolStateSnapshotByHeightRequest.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: GetProtocolStateSnapshotByHeightRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): GetProtocolStateSnapshotByHeightRequest;
+  static deserializeBinaryFromReader(message: GetProtocolStateSnapshotByHeightRequest, reader: jspb.BinaryReader): GetProtocolStateSnapshotByHeightRequest;
+}
+
+export namespace GetProtocolStateSnapshotByHeightRequest {
+  export type AsObject = {
+    blockHeight: number,
+  }
+}
+
 export class ProtocolStateSnapshotResponse extends jspb.Message {
   getSerializedsnapshot(): Uint8Array | string;
   getSerializedsnapshot_asU8(): Uint8Array;
   getSerializedsnapshot_asB64(): string;
   setSerializedsnapshot(value: Uint8Array | string): void;
+
+  hasMetadata(): boolean;
+  clearMetadata(): void;
+  getMetadata(): flow_entities_metadata_pb.Metadata | undefined;
+  setMetadata(value?: flow_entities_metadata_pb.Metadata): void;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): ProtocolStateSnapshotResponse.AsObject;
@@ -922,6 +1181,7 @@ export class ProtocolStateSnapshotResponse extends jspb.Message {
 export namespace ProtocolStateSnapshotResponse {
   export type AsObject = {
     serializedsnapshot: Uint8Array | string,
+    metadata?: flow_entities_metadata_pb.Metadata.AsObject,
   }
 }
 
@@ -953,6 +1213,11 @@ export class ExecutionResultForBlockIDResponse extends jspb.Message {
   getExecutionResult(): flow_entities_execution_result_pb.ExecutionResult | undefined;
   setExecutionResult(value?: flow_entities_execution_result_pb.ExecutionResult): void;
 
+  hasMetadata(): boolean;
+  clearMetadata(): void;
+  getMetadata(): flow_entities_metadata_pb.Metadata | undefined;
+  setMetadata(value?: flow_entities_metadata_pb.Metadata): void;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): ExecutionResultForBlockIDResponse.AsObject;
   static toObject(includeInstance: boolean, msg: ExecutionResultForBlockIDResponse): ExecutionResultForBlockIDResponse.AsObject;
@@ -966,6 +1231,407 @@ export class ExecutionResultForBlockIDResponse extends jspb.Message {
 export namespace ExecutionResultForBlockIDResponse {
   export type AsObject = {
     executionResult?: flow_entities_execution_result_pb.ExecutionResult.AsObject,
+    metadata?: flow_entities_metadata_pb.Metadata.AsObject,
+  }
+}
+
+export class GetExecutionResultByIDRequest extends jspb.Message {
+  getId(): Uint8Array | string;
+  getId_asU8(): Uint8Array;
+  getId_asB64(): string;
+  setId(value: Uint8Array | string): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): GetExecutionResultByIDRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: GetExecutionResultByIDRequest): GetExecutionResultByIDRequest.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: GetExecutionResultByIDRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): GetExecutionResultByIDRequest;
+  static deserializeBinaryFromReader(message: GetExecutionResultByIDRequest, reader: jspb.BinaryReader): GetExecutionResultByIDRequest;
+}
+
+export namespace GetExecutionResultByIDRequest {
+  export type AsObject = {
+    id: Uint8Array | string,
+  }
+}
+
+export class ExecutionResultByIDResponse extends jspb.Message {
+  hasExecutionResult(): boolean;
+  clearExecutionResult(): void;
+  getExecutionResult(): flow_entities_execution_result_pb.ExecutionResult | undefined;
+  setExecutionResult(value?: flow_entities_execution_result_pb.ExecutionResult): void;
+
+  hasMetadata(): boolean;
+  clearMetadata(): void;
+  getMetadata(): flow_entities_metadata_pb.Metadata | undefined;
+  setMetadata(value?: flow_entities_metadata_pb.Metadata): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): ExecutionResultByIDResponse.AsObject;
+  static toObject(includeInstance: boolean, msg: ExecutionResultByIDResponse): ExecutionResultByIDResponse.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: ExecutionResultByIDResponse, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): ExecutionResultByIDResponse;
+  static deserializeBinaryFromReader(message: ExecutionResultByIDResponse, reader: jspb.BinaryReader): ExecutionResultByIDResponse;
+}
+
+export namespace ExecutionResultByIDResponse {
+  export type AsObject = {
+    executionResult?: flow_entities_execution_result_pb.ExecutionResult.AsObject,
+    metadata?: flow_entities_metadata_pb.Metadata.AsObject,
+  }
+}
+
+export class SubscribeBlocksFromStartBlockIDRequest extends jspb.Message {
+  getStartBlockId(): Uint8Array | string;
+  getStartBlockId_asU8(): Uint8Array;
+  getStartBlockId_asB64(): string;
+  setStartBlockId(value: Uint8Array | string): void;
+
+  getBlockStatus(): flow_entities_block_pb.BlockStatusMap[keyof flow_entities_block_pb.BlockStatusMap];
+  setBlockStatus(value: flow_entities_block_pb.BlockStatusMap[keyof flow_entities_block_pb.BlockStatusMap]): void;
+
+  getFullBlockResponse(): boolean;
+  setFullBlockResponse(value: boolean): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): SubscribeBlocksFromStartBlockIDRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: SubscribeBlocksFromStartBlockIDRequest): SubscribeBlocksFromStartBlockIDRequest.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: SubscribeBlocksFromStartBlockIDRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): SubscribeBlocksFromStartBlockIDRequest;
+  static deserializeBinaryFromReader(message: SubscribeBlocksFromStartBlockIDRequest, reader: jspb.BinaryReader): SubscribeBlocksFromStartBlockIDRequest;
+}
+
+export namespace SubscribeBlocksFromStartBlockIDRequest {
+  export type AsObject = {
+    startBlockId: Uint8Array | string,
+    blockStatus: flow_entities_block_pb.BlockStatusMap[keyof flow_entities_block_pb.BlockStatusMap],
+    fullBlockResponse: boolean,
+  }
+}
+
+export class SubscribeBlocksFromStartHeightRequest extends jspb.Message {
+  getStartBlockHeight(): number;
+  setStartBlockHeight(value: number): void;
+
+  getBlockStatus(): flow_entities_block_pb.BlockStatusMap[keyof flow_entities_block_pb.BlockStatusMap];
+  setBlockStatus(value: flow_entities_block_pb.BlockStatusMap[keyof flow_entities_block_pb.BlockStatusMap]): void;
+
+  getFullBlockResponse(): boolean;
+  setFullBlockResponse(value: boolean): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): SubscribeBlocksFromStartHeightRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: SubscribeBlocksFromStartHeightRequest): SubscribeBlocksFromStartHeightRequest.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: SubscribeBlocksFromStartHeightRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): SubscribeBlocksFromStartHeightRequest;
+  static deserializeBinaryFromReader(message: SubscribeBlocksFromStartHeightRequest, reader: jspb.BinaryReader): SubscribeBlocksFromStartHeightRequest;
+}
+
+export namespace SubscribeBlocksFromStartHeightRequest {
+  export type AsObject = {
+    startBlockHeight: number,
+    blockStatus: flow_entities_block_pb.BlockStatusMap[keyof flow_entities_block_pb.BlockStatusMap],
+    fullBlockResponse: boolean,
+  }
+}
+
+export class SubscribeBlocksFromLatestRequest extends jspb.Message {
+  getBlockStatus(): flow_entities_block_pb.BlockStatusMap[keyof flow_entities_block_pb.BlockStatusMap];
+  setBlockStatus(value: flow_entities_block_pb.BlockStatusMap[keyof flow_entities_block_pb.BlockStatusMap]): void;
+
+  getFullBlockResponse(): boolean;
+  setFullBlockResponse(value: boolean): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): SubscribeBlocksFromLatestRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: SubscribeBlocksFromLatestRequest): SubscribeBlocksFromLatestRequest.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: SubscribeBlocksFromLatestRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): SubscribeBlocksFromLatestRequest;
+  static deserializeBinaryFromReader(message: SubscribeBlocksFromLatestRequest, reader: jspb.BinaryReader): SubscribeBlocksFromLatestRequest;
+}
+
+export namespace SubscribeBlocksFromLatestRequest {
+  export type AsObject = {
+    blockStatus: flow_entities_block_pb.BlockStatusMap[keyof flow_entities_block_pb.BlockStatusMap],
+    fullBlockResponse: boolean,
+  }
+}
+
+export class SubscribeBlocksResponse extends jspb.Message {
+  hasBlock(): boolean;
+  clearBlock(): void;
+  getBlock(): flow_entities_block_pb.Block | undefined;
+  setBlock(value?: flow_entities_block_pb.Block): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): SubscribeBlocksResponse.AsObject;
+  static toObject(includeInstance: boolean, msg: SubscribeBlocksResponse): SubscribeBlocksResponse.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: SubscribeBlocksResponse, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): SubscribeBlocksResponse;
+  static deserializeBinaryFromReader(message: SubscribeBlocksResponse, reader: jspb.BinaryReader): SubscribeBlocksResponse;
+}
+
+export namespace SubscribeBlocksResponse {
+  export type AsObject = {
+    block?: flow_entities_block_pb.Block.AsObject,
+  }
+}
+
+export class SubscribeBlockHeadersFromStartBlockIDRequest extends jspb.Message {
+  getStartBlockId(): Uint8Array | string;
+  getStartBlockId_asU8(): Uint8Array;
+  getStartBlockId_asB64(): string;
+  setStartBlockId(value: Uint8Array | string): void;
+
+  getBlockStatus(): flow_entities_block_pb.BlockStatusMap[keyof flow_entities_block_pb.BlockStatusMap];
+  setBlockStatus(value: flow_entities_block_pb.BlockStatusMap[keyof flow_entities_block_pb.BlockStatusMap]): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): SubscribeBlockHeadersFromStartBlockIDRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: SubscribeBlockHeadersFromStartBlockIDRequest): SubscribeBlockHeadersFromStartBlockIDRequest.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: SubscribeBlockHeadersFromStartBlockIDRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): SubscribeBlockHeadersFromStartBlockIDRequest;
+  static deserializeBinaryFromReader(message: SubscribeBlockHeadersFromStartBlockIDRequest, reader: jspb.BinaryReader): SubscribeBlockHeadersFromStartBlockIDRequest;
+}
+
+export namespace SubscribeBlockHeadersFromStartBlockIDRequest {
+  export type AsObject = {
+    startBlockId: Uint8Array | string,
+    blockStatus: flow_entities_block_pb.BlockStatusMap[keyof flow_entities_block_pb.BlockStatusMap],
+  }
+}
+
+export class SubscribeBlockHeadersFromStartHeightRequest extends jspb.Message {
+  getStartBlockHeight(): number;
+  setStartBlockHeight(value: number): void;
+
+  getBlockStatus(): flow_entities_block_pb.BlockStatusMap[keyof flow_entities_block_pb.BlockStatusMap];
+  setBlockStatus(value: flow_entities_block_pb.BlockStatusMap[keyof flow_entities_block_pb.BlockStatusMap]): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): SubscribeBlockHeadersFromStartHeightRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: SubscribeBlockHeadersFromStartHeightRequest): SubscribeBlockHeadersFromStartHeightRequest.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: SubscribeBlockHeadersFromStartHeightRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): SubscribeBlockHeadersFromStartHeightRequest;
+  static deserializeBinaryFromReader(message: SubscribeBlockHeadersFromStartHeightRequest, reader: jspb.BinaryReader): SubscribeBlockHeadersFromStartHeightRequest;
+}
+
+export namespace SubscribeBlockHeadersFromStartHeightRequest {
+  export type AsObject = {
+    startBlockHeight: number,
+    blockStatus: flow_entities_block_pb.BlockStatusMap[keyof flow_entities_block_pb.BlockStatusMap],
+  }
+}
+
+export class SubscribeBlockHeadersFromLatestRequest extends jspb.Message {
+  getBlockStatus(): flow_entities_block_pb.BlockStatusMap[keyof flow_entities_block_pb.BlockStatusMap];
+  setBlockStatus(value: flow_entities_block_pb.BlockStatusMap[keyof flow_entities_block_pb.BlockStatusMap]): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): SubscribeBlockHeadersFromLatestRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: SubscribeBlockHeadersFromLatestRequest): SubscribeBlockHeadersFromLatestRequest.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: SubscribeBlockHeadersFromLatestRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): SubscribeBlockHeadersFromLatestRequest;
+  static deserializeBinaryFromReader(message: SubscribeBlockHeadersFromLatestRequest, reader: jspb.BinaryReader): SubscribeBlockHeadersFromLatestRequest;
+}
+
+export namespace SubscribeBlockHeadersFromLatestRequest {
+  export type AsObject = {
+    blockStatus: flow_entities_block_pb.BlockStatusMap[keyof flow_entities_block_pb.BlockStatusMap],
+  }
+}
+
+export class SubscribeBlockHeadersResponse extends jspb.Message {
+  hasHeader(): boolean;
+  clearHeader(): void;
+  getHeader(): flow_entities_block_header_pb.BlockHeader | undefined;
+  setHeader(value?: flow_entities_block_header_pb.BlockHeader): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): SubscribeBlockHeadersResponse.AsObject;
+  static toObject(includeInstance: boolean, msg: SubscribeBlockHeadersResponse): SubscribeBlockHeadersResponse.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: SubscribeBlockHeadersResponse, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): SubscribeBlockHeadersResponse;
+  static deserializeBinaryFromReader(message: SubscribeBlockHeadersResponse, reader: jspb.BinaryReader): SubscribeBlockHeadersResponse;
+}
+
+export namespace SubscribeBlockHeadersResponse {
+  export type AsObject = {
+    header?: flow_entities_block_header_pb.BlockHeader.AsObject,
+  }
+}
+
+export class SubscribeBlockDigestsFromStartBlockIDRequest extends jspb.Message {
+  getStartBlockId(): Uint8Array | string;
+  getStartBlockId_asU8(): Uint8Array;
+  getStartBlockId_asB64(): string;
+  setStartBlockId(value: Uint8Array | string): void;
+
+  getBlockStatus(): flow_entities_block_pb.BlockStatusMap[keyof flow_entities_block_pb.BlockStatusMap];
+  setBlockStatus(value: flow_entities_block_pb.BlockStatusMap[keyof flow_entities_block_pb.BlockStatusMap]): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): SubscribeBlockDigestsFromStartBlockIDRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: SubscribeBlockDigestsFromStartBlockIDRequest): SubscribeBlockDigestsFromStartBlockIDRequest.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: SubscribeBlockDigestsFromStartBlockIDRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): SubscribeBlockDigestsFromStartBlockIDRequest;
+  static deserializeBinaryFromReader(message: SubscribeBlockDigestsFromStartBlockIDRequest, reader: jspb.BinaryReader): SubscribeBlockDigestsFromStartBlockIDRequest;
+}
+
+export namespace SubscribeBlockDigestsFromStartBlockIDRequest {
+  export type AsObject = {
+    startBlockId: Uint8Array | string,
+    blockStatus: flow_entities_block_pb.BlockStatusMap[keyof flow_entities_block_pb.BlockStatusMap],
+  }
+}
+
+export class SubscribeBlockDigestsFromStartHeightRequest extends jspb.Message {
+  getStartBlockHeight(): number;
+  setStartBlockHeight(value: number): void;
+
+  getBlockStatus(): flow_entities_block_pb.BlockStatusMap[keyof flow_entities_block_pb.BlockStatusMap];
+  setBlockStatus(value: flow_entities_block_pb.BlockStatusMap[keyof flow_entities_block_pb.BlockStatusMap]): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): SubscribeBlockDigestsFromStartHeightRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: SubscribeBlockDigestsFromStartHeightRequest): SubscribeBlockDigestsFromStartHeightRequest.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: SubscribeBlockDigestsFromStartHeightRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): SubscribeBlockDigestsFromStartHeightRequest;
+  static deserializeBinaryFromReader(message: SubscribeBlockDigestsFromStartHeightRequest, reader: jspb.BinaryReader): SubscribeBlockDigestsFromStartHeightRequest;
+}
+
+export namespace SubscribeBlockDigestsFromStartHeightRequest {
+  export type AsObject = {
+    startBlockHeight: number,
+    blockStatus: flow_entities_block_pb.BlockStatusMap[keyof flow_entities_block_pb.BlockStatusMap],
+  }
+}
+
+export class SubscribeBlockDigestsFromLatestRequest extends jspb.Message {
+  getBlockStatus(): flow_entities_block_pb.BlockStatusMap[keyof flow_entities_block_pb.BlockStatusMap];
+  setBlockStatus(value: flow_entities_block_pb.BlockStatusMap[keyof flow_entities_block_pb.BlockStatusMap]): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): SubscribeBlockDigestsFromLatestRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: SubscribeBlockDigestsFromLatestRequest): SubscribeBlockDigestsFromLatestRequest.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: SubscribeBlockDigestsFromLatestRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): SubscribeBlockDigestsFromLatestRequest;
+  static deserializeBinaryFromReader(message: SubscribeBlockDigestsFromLatestRequest, reader: jspb.BinaryReader): SubscribeBlockDigestsFromLatestRequest;
+}
+
+export namespace SubscribeBlockDigestsFromLatestRequest {
+  export type AsObject = {
+    blockStatus: flow_entities_block_pb.BlockStatusMap[keyof flow_entities_block_pb.BlockStatusMap],
+  }
+}
+
+export class SubscribeBlockDigestsResponse extends jspb.Message {
+  getBlockId(): Uint8Array | string;
+  getBlockId_asU8(): Uint8Array;
+  getBlockId_asB64(): string;
+  setBlockId(value: Uint8Array | string): void;
+
+  getBlockHeight(): number;
+  setBlockHeight(value: number): void;
+
+  hasBlockTimestamp(): boolean;
+  clearBlockTimestamp(): void;
+  getBlockTimestamp(): google_protobuf_timestamp_pb.Timestamp | undefined;
+  setBlockTimestamp(value?: google_protobuf_timestamp_pb.Timestamp): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): SubscribeBlockDigestsResponse.AsObject;
+  static toObject(includeInstance: boolean, msg: SubscribeBlockDigestsResponse): SubscribeBlockDigestsResponse.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: SubscribeBlockDigestsResponse, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): SubscribeBlockDigestsResponse;
+  static deserializeBinaryFromReader(message: SubscribeBlockDigestsResponse, reader: jspb.BinaryReader): SubscribeBlockDigestsResponse;
+}
+
+export namespace SubscribeBlockDigestsResponse {
+  export type AsObject = {
+    blockId: Uint8Array | string,
+    blockHeight: number,
+    blockTimestamp?: google_protobuf_timestamp_pb.Timestamp.AsObject,
+  }
+}
+
+export class SendAndSubscribeTransactionStatusesRequest extends jspb.Message {
+  hasTransaction(): boolean;
+  clearTransaction(): void;
+  getTransaction(): flow_entities_transaction_pb.Transaction | undefined;
+  setTransaction(value?: flow_entities_transaction_pb.Transaction): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): SendAndSubscribeTransactionStatusesRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: SendAndSubscribeTransactionStatusesRequest): SendAndSubscribeTransactionStatusesRequest.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: SendAndSubscribeTransactionStatusesRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): SendAndSubscribeTransactionStatusesRequest;
+  static deserializeBinaryFromReader(message: SendAndSubscribeTransactionStatusesRequest, reader: jspb.BinaryReader): SendAndSubscribeTransactionStatusesRequest;
+}
+
+export namespace SendAndSubscribeTransactionStatusesRequest {
+  export type AsObject = {
+    transaction?: flow_entities_transaction_pb.Transaction.AsObject,
+  }
+}
+
+export class SendAndSubscribeTransactionStatusesResponse extends jspb.Message {
+  getId(): Uint8Array | string;
+  getId_asU8(): Uint8Array;
+  getId_asB64(): string;
+  setId(value: Uint8Array | string): void;
+
+  getStatus(): flow_entities_transaction_pb.TransactionStatusMap[keyof flow_entities_transaction_pb.TransactionStatusMap];
+  setStatus(value: flow_entities_transaction_pb.TransactionStatusMap[keyof flow_entities_transaction_pb.TransactionStatusMap]): void;
+
+  getMessageIndex(): number;
+  setMessageIndex(value: number): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): SendAndSubscribeTransactionStatusesResponse.AsObject;
+  static toObject(includeInstance: boolean, msg: SendAndSubscribeTransactionStatusesResponse): SendAndSubscribeTransactionStatusesResponse.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: SendAndSubscribeTransactionStatusesResponse, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): SendAndSubscribeTransactionStatusesResponse;
+  static deserializeBinaryFromReader(message: SendAndSubscribeTransactionStatusesResponse, reader: jspb.BinaryReader): SendAndSubscribeTransactionStatusesResponse;
+}
+
+export namespace SendAndSubscribeTransactionStatusesResponse {
+  export type AsObject = {
+    id: Uint8Array | string,
+    status: flow_entities_transaction_pb.TransactionStatusMap[keyof flow_entities_transaction_pb.TransactionStatusMap],
+    messageIndex: number,
   }
 }
 

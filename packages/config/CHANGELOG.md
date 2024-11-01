@@ -1,5 +1,119 @@
 # @onflow/config
 
+## 1.5.1-alpha.0
+
+### Patch Changes
+
+- [#1983](https://github.com/onflow/fcl-js/pull/1983) [`18d24c8bad7efa0d8741d74f0cf299f89b3622c7`](https://github.com/onflow/fcl-js/commit/18d24c8bad7efa0d8741d74f0cf299f89b3622c7) Thanks [@jribbink](https://github.com/jribbink)! - Update dependencies
+
+- Updated dependencies [[`18d24c8bad7efa0d8741d74f0cf299f89b3622c7`](https://github.com/onflow/fcl-js/commit/18d24c8bad7efa0d8741d74f0cf299f89b3622c7)]:
+  - @onflow/util-invariant@1.2.4-alpha.0
+  - @onflow/util-logger@1.3.3-alpha.0
+  - @onflow/util-actor@1.3.4-alpha.0
+
+## 1.5.0
+
+### Minor Changes
+
+- [`cd234798`](https://github.com/onflow/fcl-js/commit/cd234798008868df13447ea97654b7e278dd746f) Thanks [@nialexsan](https://github.com/nialexsan)! - Add `ignoreConflicts` flag to `config.load`
+
+## 1.5.0-alpha.0
+
+### Minor Changes
+
+- [`cd234798`](https://github.com/onflow/fcl-js/commit/cd234798008868df13447ea97654b7e278dd746f) Thanks [@nialexsan](https://github.com/nialexsan)! - Add `ignoreConflicts` flag to `config.load`
+
+## 1.4.1
+
+### Patch Changes
+
+- Updated dependencies [[`fe5e1b3d`](https://github.com/onflow/fcl-js/commit/fe5e1b3d330b7734740cceb9a873d1b680f28175)]:
+  - @onflow/util-actor@1.3.3
+
+## 1.4.0
+
+### Minor Changes
+
+- [#1870](https://github.com/onflow/fcl-js/pull/1870) [`ad089fe7`](https://github.com/onflow/fcl-js/commit/ad089fe7556767e1fae96f3f2e98fd76c49bba88) Thanks [@btspoony](https://github.com/btspoony)! - Add previewnet to config.load
+
+### Patch Changes
+
+- Updated dependencies [[`6c635f9f`](https://github.com/onflow/fcl-js/commit/6c635f9ff340284845ffe1196965ced7c748294f)]:
+  - @onflow/util-invariant@1.2.3
+
+## 1.3.0
+
+### Minor Changes
+
+- [#1848](https://github.com/onflow/fcl-js/pull/1848) [`fdd52c45`](https://github.com/onflow/fcl-js/commit/fdd52c45b3a64210c5f716e13aa4d08d3796370c) Thanks [@jribbink](https://github.com/jribbink)! - Add support for new dependencies field in flow.json
+
+### Patch Changes
+
+- [#1821](https://github.com/onflow/fcl-js/pull/1821) [`b9c078ce`](https://github.com/onflow/fcl-js/commit/b9c078ce87869c2b41dff07b861cea09a294c6a1) Thanks [@nialexsan](https://github.com/nialexsan)! - Split packages into `@onflow/fcl`, `@onflow/fcl-core`, and `@onflow/fcl-react-native`.
+
+- [#1827](https://github.com/onflow/fcl-js/pull/1827) [`e74c4a60`](https://github.com/onflow/fcl-js/commit/e74c4a60f38f366874aa1391ca1c890a7ad3a42a) Thanks [@nialexsan](https://github.com/nialexsan)! - Pin internal dependencies to exact versions
+
+- [#1814](https://github.com/onflow/fcl-js/pull/1814) [`0d09d838`](https://github.com/onflow/fcl-js/commit/0d09d8386c2fc472833df7152467d477f36dddc4) Thanks [@jribbink](https://github.com/jribbink)! - Fix type declarations not fully being generated
+
+- Updated dependencies [[`b9c078ce`](https://github.com/onflow/fcl-js/commit/b9c078ce87869c2b41dff07b861cea09a294c6a1), [`e74c4a60`](https://github.com/onflow/fcl-js/commit/e74c4a60f38f366874aa1391ca1c890a7ad3a42a), [`0d09d838`](https://github.com/onflow/fcl-js/commit/0d09d8386c2fc472833df7152467d477f36dddc4)]:
+  - @onflow/util-invariant@1.2.2
+  - @onflow/util-logger@1.3.2
+  - @onflow/util-actor@1.3.2
+
+## 1.3.0-alpha.3
+
+### Minor Changes
+
+- [#1848](https://github.com/onflow/fcl-js/pull/1848) [`fdd52c45`](https://github.com/onflow/fcl-js/commit/fdd52c45b3a64210c5f716e13aa4d08d3796370c) Thanks [@jribbink](https://github.com/jribbink)! - Add support for new dependencies field in flow.json
+
+## 1.2.2-alpha.2
+
+### Patch Changes
+
+- [#1827](https://github.com/onflow/fcl-js/pull/1827) [`e74c4a60`](https://github.com/onflow/fcl-js/commit/e74c4a60f38f366874aa1391ca1c890a7ad3a42a) Thanks [@nialexsan](https://github.com/nialexsan)! - pin versions
+
+- Updated dependencies [[`e74c4a60`](https://github.com/onflow/fcl-js/commit/e74c4a60f38f366874aa1391ca1c890a7ad3a42a)]:
+  - @onflow/util-invariant@1.2.2-alpha.2
+  - @onflow/util-logger@1.3.2-alpha.2
+  - @onflow/util-actor@1.3.2-alpha.2
+
+## 1.2.2-alpha.1
+
+### Patch Changes
+
+- [#1814](https://github.com/onflow/fcl-js/pull/1814) [`0d09d838`](https://github.com/onflow/fcl-js/commit/0d09d8386c2fc472833df7152467d477f36dddc4) Thanks [@jribbink](https://github.com/jribbink)! - Fix type declarations not fully being generated
+
+- Updated dependencies [[`0d09d838`](https://github.com/onflow/fcl-js/commit/0d09d8386c2fc472833df7152467d477f36dddc4)]:
+  - @onflow/util-invariant@1.2.2-alpha.1
+  - @onflow/util-logger@1.3.2-alpha.1
+  - @onflow/util-actor@1.3.2-alpha.1
+
+## 1.2.1
+
+### Patch Changes
+
+- [#1807](https://github.com/onflow/fcl-js/pull/1807) [`9430d723`](https://github.com/onflow/fcl-js/commit/9430d7232c272f4acb55f5bcff7be82cef9704d9) Thanks [@jribbink](https://github.com/jribbink)! - Fix versioning & actor bug
+
+- Updated dependencies [[`9430d723`](https://github.com/onflow/fcl-js/commit/9430d7232c272f4acb55f5bcff7be82cef9704d9)]:
+  - @onflow/util-actor@1.3.1
+  - @onflow/util-invariant@1.2.1
+  - @onflow/util-logger@1.3.1
+
+## 1.2.0
+
+### Minor Changes
+
+- [#1801](https://github.com/onflow/fcl-js/pull/1801) [`8881394b`](https://github.com/onflow/fcl-js/commit/8881394bc11fea507e330a4c507ef304fe456c42) Thanks [@nialexsan](https://github.com/nialexsan)! - TS build
+
+- [#1801](https://github.com/onflow/fcl-js/pull/1801) [`8881394b`](https://github.com/onflow/fcl-js/commit/8881394bc11fea507e330a4c507ef304fe456c42) Thanks [@nialexsan](https://github.com/nialexsan)! - Add Typescript to @onflow/config
+
+### Patch Changes
+
+- Updated dependencies [[`8881394b`](https://github.com/onflow/fcl-js/commit/8881394bc11fea507e330a4c507ef304fe456c42), [`8881394b`](https://github.com/onflow/fcl-js/commit/8881394bc11fea507e330a4c507ef304fe456c42), [`8881394b`](https://github.com/onflow/fcl-js/commit/8881394bc11fea507e330a4c507ef304fe456c42)]:
+  - @onflow/util-invariant@1.2.0
+  - @onflow/util-logger@1.3.0
+  - @onflow/util-actor@1.3.0
+
 ## 1.1.2
 
 ### Patch Changes

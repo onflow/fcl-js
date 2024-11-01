@@ -1,8 +1,9 @@
 import * as fetchTransport from "cross-fetch"
-import * as logger from "@onflow/util-logger"
+import {log} from "@onflow/util-logger"
 import {httpRequest} from "./http-request"
 import {Readable} from "stream"
 jest.mock("cross-fetch")
+jest.mock("@onflow/util-logger")
 
 const mockHttpResponse = ({
   status = 200,
@@ -62,7 +63,40 @@ describe("httpRequest", () => {
 
     await httpRequest(opts)
 
-    await expect(spy).toHaveBeenCalledWith(`${opts.hostname}${opts.path}`, {
+    await expect(spy).toHaveBeenCalledWith(`https://example.com/foo/bar`, {
+      method: opts.method,
+      body: JSON.stringify(opts.body),
+      headers: opts.headers,
+      signal: expect.anything(),
+    })
+  })
+
+  test("strips trailing slash from hostname", async () => {
+    const spy = jest.spyOn(fetchTransport, "default")
+    spy.mockImplementation(async () => ({
+      ok: true,
+      status: 200,
+      body: JSON.stringify({
+        foo: "bar",
+      }),
+      async json() {
+        return JSON.parse(this.body)
+      },
+    }))
+
+    const opts = {
+      hostname: "https://example.com/",
+      path: "/foo/bar",
+      body: "abc123",
+      method: "POST",
+      headers: {
+        Authorization: "Bearer 1RyXjsFJfU",
+      },
+    }
+
+    await httpRequest(opts)
+
+    await expect(spy).toHaveBeenCalledWith(`https://example.com/foo/bar`, {
       method: opts.method,
       body: JSON.stringify(opts.body),
       headers: opts.headers,
@@ -208,8 +242,8 @@ describe("httpRequest", () => {
       )
     )
 
-    const loggerSpy = jest.spyOn(logger, "log")
-    loggerSpy.mockImplementation(() => {})
+    const logMock = jest.mocked(log)
+    logMock.mockImplementation(() => {})
 
     const opts = {
       hostname: "https://example.com",
@@ -222,7 +256,7 @@ describe("httpRequest", () => {
     }
 
     await expect(httpRequest(opts)).rejects.toThrow("HTTP Request Error:")
-    expect(loggerSpy.mock.calls[0][0].title).toBe("Access Node Error")
+    expect(logMock.mock.calls[0][0].title).toBe("Access Node Error")
   })
 
   afterEach(() => {

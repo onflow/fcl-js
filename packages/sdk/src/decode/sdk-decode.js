@@ -1,5 +1,5 @@
-import {decodeResponse} from "./decode.js"
 import {config} from "@onflow/config"
+import {decodeResponse} from "./decode"
 
 export async function decode(response) {
   const decodersFromConfig = await config().where(/^decoder\./)

@@ -67,6 +67,33 @@ type ExecutionAPIGetTransactionResultsByBlockID = {
   readonly responseType: typeof flow_execution_execution_pb.GetTransactionResultsResponse;
 };
 
+type ExecutionAPIGetTransactionErrorMessage = {
+  readonly methodName: string;
+  readonly service: typeof ExecutionAPI;
+  readonly requestStream: false;
+  readonly responseStream: false;
+  readonly requestType: typeof flow_execution_execution_pb.GetTransactionErrorMessageRequest;
+  readonly responseType: typeof flow_execution_execution_pb.GetTransactionErrorMessageResponse;
+};
+
+type ExecutionAPIGetTransactionErrorMessageByIndex = {
+  readonly methodName: string;
+  readonly service: typeof ExecutionAPI;
+  readonly requestStream: false;
+  readonly responseStream: false;
+  readonly requestType: typeof flow_execution_execution_pb.GetTransactionErrorMessageByIndexRequest;
+  readonly responseType: typeof flow_execution_execution_pb.GetTransactionErrorMessageResponse;
+};
+
+type ExecutionAPIGetTransactionErrorMessagesByBlockID = {
+  readonly methodName: string;
+  readonly service: typeof ExecutionAPI;
+  readonly requestStream: false;
+  readonly responseStream: false;
+  readonly requestType: typeof flow_execution_execution_pb.GetTransactionErrorMessagesByBlockIDRequest;
+  readonly responseType: typeof flow_execution_execution_pb.GetTransactionErrorMessagesResponse;
+};
+
 type ExecutionAPIGetRegisterAtBlockID = {
   readonly methodName: string;
   readonly service: typeof ExecutionAPI;
@@ -103,6 +130,9 @@ export class ExecutionAPI {
   static readonly GetTransactionResult: ExecutionAPIGetTransactionResult;
   static readonly GetTransactionResultByIndex: ExecutionAPIGetTransactionResultByIndex;
   static readonly GetTransactionResultsByBlockID: ExecutionAPIGetTransactionResultsByBlockID;
+  static readonly GetTransactionErrorMessage: ExecutionAPIGetTransactionErrorMessage;
+  static readonly GetTransactionErrorMessageByIndex: ExecutionAPIGetTransactionErrorMessageByIndex;
+  static readonly GetTransactionErrorMessagesByBlockID: ExecutionAPIGetTransactionErrorMessagesByBlockID;
   static readonly GetRegisterAtBlockID: ExecutionAPIGetRegisterAtBlockID;
   static readonly GetLatestBlockHeader: ExecutionAPIGetLatestBlockHeader;
   static readonly GetBlockHeaderByID: ExecutionAPIGetBlockHeaderByID;
@@ -202,6 +232,33 @@ export class ExecutionAPIClient {
   getTransactionResultsByBlockID(
     requestMessage: flow_execution_execution_pb.GetTransactionsByBlockIDRequest,
     callback: (error: ServiceError|null, responseMessage: flow_execution_execution_pb.GetTransactionResultsResponse|null) => void
+  ): UnaryResponse;
+  getTransactionErrorMessage(
+    requestMessage: flow_execution_execution_pb.GetTransactionErrorMessageRequest,
+    metadata: grpc.Metadata,
+    callback: (error: ServiceError|null, responseMessage: flow_execution_execution_pb.GetTransactionErrorMessageResponse|null) => void
+  ): UnaryResponse;
+  getTransactionErrorMessage(
+    requestMessage: flow_execution_execution_pb.GetTransactionErrorMessageRequest,
+    callback: (error: ServiceError|null, responseMessage: flow_execution_execution_pb.GetTransactionErrorMessageResponse|null) => void
+  ): UnaryResponse;
+  getTransactionErrorMessageByIndex(
+    requestMessage: flow_execution_execution_pb.GetTransactionErrorMessageByIndexRequest,
+    metadata: grpc.Metadata,
+    callback: (error: ServiceError|null, responseMessage: flow_execution_execution_pb.GetTransactionErrorMessageResponse|null) => void
+  ): UnaryResponse;
+  getTransactionErrorMessageByIndex(
+    requestMessage: flow_execution_execution_pb.GetTransactionErrorMessageByIndexRequest,
+    callback: (error: ServiceError|null, responseMessage: flow_execution_execution_pb.GetTransactionErrorMessageResponse|null) => void
+  ): UnaryResponse;
+  getTransactionErrorMessagesByBlockID(
+    requestMessage: flow_execution_execution_pb.GetTransactionErrorMessagesByBlockIDRequest,
+    metadata: grpc.Metadata,
+    callback: (error: ServiceError|null, responseMessage: flow_execution_execution_pb.GetTransactionErrorMessagesResponse|null) => void
+  ): UnaryResponse;
+  getTransactionErrorMessagesByBlockID(
+    requestMessage: flow_execution_execution_pb.GetTransactionErrorMessagesByBlockIDRequest,
+    callback: (error: ServiceError|null, responseMessage: flow_execution_execution_pb.GetTransactionErrorMessagesResponse|null) => void
   ): UnaryResponse;
   getRegisterAtBlockID(
     requestMessage: flow_execution_execution_pb.GetRegisterAtBlockIDRequest,

@@ -3,13 +3,11 @@ title: Transport GRPC
 description: Sends an interaction to an access node via the GRPC Rest API and returns a response.
 ---
 
-## Status
+# Deprecated - DO NOT USE
 
-- **Last Updated:** Jan 13th 2022
-- **Stable:** Yes
-- **Risk of Breaking Change:** Medium
+This package is deprecated and will will no receive updates for new features.  Please migrate your projects to use the [HTTP Transport] package (`@onflow/transport-http`) instead.
 
-This package is working and in active development, breaking changes may happen.
+Latest versions of FCL/JS-SDK will automatically use the HTTP Transport as long as the `sdk.transport` configuration key is not set.
 
 ## Usage
 

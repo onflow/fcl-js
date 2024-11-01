@@ -4,8 +4,8 @@ import {
   encodeTransactionPayload,
   encodeTransactionEnvelope,
   encodeTxIdFromVoucher,
-} from "./encode.js"
-import * as root from "./encode.js"
+} from "./encode"
+import * as root from "./encode"
 
 it("export contract interface", () => {
   expect(root).toStrictEqual(
@@ -376,8 +376,7 @@ describe("encode txId from voucher", () => {
           {
             address: "01",
             keyId: 4,
-            sig:
-              "f7225388c1d69d57e6251c9fda50cbbf9e05131e5adb81e5aa0422402f048162",
+            sig: "f7225388c1d69d57e6251c9fda50cbbf9e05131e5adb81e5aa0422402f048162",
           },
         ],
       }),
@@ -426,20 +425,17 @@ describe("encode txId from voucher", () => {
           {
             address: "03",
             keyId: 0,
-            sig:
-              "f7225388c1d69d57e6251c9fda50cbbf9e05131e5adb81e5aa0422402f048162",
+            sig: "f7225388c1d69d57e6251c9fda50cbbf9e05131e5adb81e5aa0422402f048162",
           },
           {
             address: "01",
             keyId: 0,
-            sig:
-              "f7225388c1d69d57e6251c9fda50cbbf9e05131e5adb81e5aa0422402f048162",
+            sig: "f7225388c1d69d57e6251c9fda50cbbf9e05131e5adb81e5aa0422402f048162",
           },
           {
             address: "02",
             keyId: 0,
-            sig:
-              "f7225388c1d69d57e6251c9fda50cbbf9e05131e5adb81e5aa0422402f048162",
+            sig: "f7225388c1d69d57e6251c9fda50cbbf9e05131e5adb81e5aa0422402f048162",
           },
         ],
       }),
@@ -453,20 +449,17 @@ describe("encode txId from voucher", () => {
           {
             address: "01",
             keyId: 2,
-            sig:
-              "f7225388c1d69d57e6251c9fda50cbbf9e05131e5adb81e5aa0422402f048162",
+            sig: "f7225388c1d69d57e6251c9fda50cbbf9e05131e5adb81e5aa0422402f048162",
           },
           {
             address: "01",
             keyId: 0,
-            sig:
-              "f7225388c1d69d57e6251c9fda50cbbf9e05131e5adb81e5aa0422402f048162",
+            sig: "f7225388c1d69d57e6251c9fda50cbbf9e05131e5adb81e5aa0422402f048162",
           },
           {
             address: "01",
             keyId: 1,
-            sig:
-              "f7225388c1d69d57e6251c9fda50cbbf9e05131e5adb81e5aa0422402f048162",
+            sig: "f7225388c1d69d57e6251c9fda50cbbf9e05131e5adb81e5aa0422402f048162",
           },
         ],
       }),

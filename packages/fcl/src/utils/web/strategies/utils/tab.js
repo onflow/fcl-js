@@ -1,6 +1,5 @@
 import {renderTab} from "../../render-tab"
-import { serviceEndpoint } from "../../../../current-user/exec-service/strategies/utils/service-endpoint"
-import { buildMessageHandler } from "../../../../current-user/exec-service/strategies/utils/buildMessageHandler"
+import {buildMessageHandler, serviceEndpoint} from "@onflow/fcl-core"
 
 const noop = () => {}
 
@@ -11,17 +10,20 @@ export function tab(service, opts = {}) {
   const onMessage = opts.onMessage || noop
   const onReady = opts.onReady || noop
   const onResponse = opts.onResponse || noop
+  const onCustomRpc = opts.onCustomRpc || noop
 
+  let $tab, unmount
   const handler = buildMessageHandler({
     close,
     send,
     onReady,
     onResponse,
     onMessage,
+    onCustomRpc,
+    getSource: () => $tab,
   })
   window.addEventListener("message", handler)
-
-  const [$tab, unmount] = renderTab(serviceEndpoint(service))
+  ;[$tab, unmount] = renderTab(serviceEndpoint(service))
   const timer = setInterval(function () {
     if ($tab && $tab.closed) {
       close()

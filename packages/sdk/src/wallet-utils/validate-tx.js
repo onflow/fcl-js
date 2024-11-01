@@ -1,7 +1,7 @@
 import {
   encodeTransactionPayload as encodeInsideMessage,
   encodeTransactionEnvelope as encodeOutsideMessage,
-} from "../encode/encode.js"
+} from "../encode/encode"
 import {invariant} from "@onflow/util-invariant"
 
 const isPayer = signable => {

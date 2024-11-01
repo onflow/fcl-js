@@ -1,11 +1,17 @@
-import {invariant} from "@onflow/util-invariant"
 import {extension} from "./utils/extension"
-import {normalizePollingResponse} from "../../../normalizers/service/polling-response"
+import {normalizePollingResponse} from "@onflow/fcl-core"
 import {VERSION} from "../../../VERSION"
 
-export function execExtRPC({service, body, config, opts}) {
+export function execExtRPC({
+  service,
+  body,
+  config,
+  abortSignal,
+  customRpc,
+  opts,
+}) {
   return new Promise((resolve, reject) => {
-    extension(service, {
+    const {close} = extension(service, {
       async onReady(_, {send}) {
         try {
           send({
@@ -18,6 +24,15 @@ export function execExtRPC({service, body, config, opts}) {
               type: service.type,
             },
             config,
+          })
+
+          customRpc?.connect({
+            send: msg => {
+              send({
+                type: "FCL:VIEW:CUSTOM_RPC",
+                body: msg,
+              })
+            },
           })
         } catch (error) {
           throw error
@@ -59,6 +74,21 @@ export function execExtRPC({service, body, config, opts}) {
       onClose() {
         reject(`Declined: Externally Halted`)
       },
+
+      onCustomRpc(msg) {
+        customRpc?.receive(msg)
+      },
     })
+
+    if (abortSignal) {
+      if (abortSignal.aborted) {
+        close()
+        reject(`Declined: Aborted`)
+      }
+      abortSignal.addEventListener("abort", () => {
+        close()
+        reject(`Declined: Aborted`)
+      })
+    }
   })
 }

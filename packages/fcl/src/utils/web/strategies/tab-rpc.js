@@ -1,14 +1,22 @@
 import {uid} from "@onflow/util-uid"
 import {tab} from "./utils/tab"
-import {normalizePollingResponse} from "../../../normalizers/service/polling-response"
+import {normalizePollingResponse} from "@onflow/fcl-core"
 import {VERSION} from "../../../VERSION"
 
-export function execTabRPC({service, body, config, opts}) {
+export function execTabRPC({
+  service,
+  body,
+  config,
+  abortSignal,
+  customRpc,
+  opts,
+}) {
   return new Promise((resolve, reject) => {
     const id = uid()
     const {redir, includeOlderJsonRpcCall} = opts
 
-    tab(service, {
+    const {close} = tab(service, {
+      customRpc,
       async onReady(_, {send}) {
         try {
           send({
@@ -45,6 +53,15 @@ export function execTabRPC({service, body, config, opts}) {
               params: [body, service.params],
             })
           }
+
+          customRpc?.connect({
+            send: msg => {
+              send({
+                type: "FCL:VIEW:CUSTOM_RPC",
+                payload: msg,
+              })
+            },
+          })
         } catch (error) {
           throw error
         }
@@ -119,6 +136,21 @@ export function execTabRPC({service, body, config, opts}) {
       onClose() {
         reject(`Declined: Externally Halted`)
       },
+
+      onCustomRpc(msg) {
+        customRpc?.receive(msg)
+      },
     })
+
+    if (abortSignal) {
+      if (abortSignal.aborted) {
+        close()
+        reject(`Declined: Aborted`)
+      }
+      abortSignal.addEventListener("abort", () => {
+        close()
+        reject(`Declined: Aborted`)
+      })
+    }
   })
 }

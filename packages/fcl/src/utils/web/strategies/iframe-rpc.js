@@ -1,14 +1,21 @@
 import {uid} from "@onflow/util-uid"
 import {frame} from "./utils/frame"
-import {normalizePollingResponse} from "../../../normalizers/service/polling-response"
+import {normalizePollingResponse} from "@onflow/fcl-core"
 import {VERSION} from "../../../VERSION"
 
-export function execIframeRPC({service, body, config, opts}) {
+export function execIframeRPC({
+  service,
+  body,
+  config,
+  customRpc,
+  abortSignal,
+  opts,
+}) {
   return new Promise((resolve, reject) => {
     const id = uid()
     const includeOlderJsonRpcCall = opts.includeOlderJsonRpcCall
 
-    frame(service, {
+    const {close} = frame(service, {
       async onReady(_, {send}) {
         try {
           send({
@@ -49,6 +56,15 @@ export function execIframeRPC({service, body, config, opts}) {
               },
             })
           }
+
+          customRpc?.connect({
+            send: msg => {
+              send({
+                type: "FCL:VIEW:CUSTOM_RPC",
+                payload: msg,
+              })
+            },
+          })
         } catch (error) {
           throw error
         }
@@ -123,6 +139,21 @@ export function execIframeRPC({service, body, config, opts}) {
       onClose() {
         reject(`Declined: Externally Halted`)
       },
+
+      onCustomRpc(msg) {
+        customRpc?.receive(msg)
+      },
     })
+
+    if (abortSignal) {
+      if (abortSignal.aborted) {
+        reject(`Declined: Aborted`)
+        close()
+      }
+      abortSignal.addEventListener("abort", () => {
+        reject(`Declined: Aborted`)
+        close()
+      })
+    }
   })
 }

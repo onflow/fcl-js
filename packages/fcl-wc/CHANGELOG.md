@@ -1,5 +1,271 @@
 # @onflow/fcl-wc
 
+## 5.4.1-alpha.3
+
+### Patch Changes
+
+- [#1999](https://github.com/onflow/fcl-js/pull/1999) [`c14746a9e4dbde10d6204697a68e6f2de6e83dd1`](https://github.com/onflow/fcl-js/commit/c14746a9e4dbde10d6204697a68e6f2de6e83dd1) Thanks [@jribbink](https://github.com/jribbink)! - Improve deeplinking for WC/RPC wallets using non-WC/RPC pre-authz services
+
+- Updated dependencies [[`c14746a9e4dbde10d6204697a68e6f2de6e83dd1`](https://github.com/onflow/fcl-js/commit/c14746a9e4dbde10d6204697a68e6f2de6e83dd1)]:
+  - @onflow/fcl-core@1.13.0-alpha.3
+
+## 5.4.1-alpha.2
+
+### Patch Changes
+
+- [#1994](https://github.com/onflow/fcl-js/pull/1994) [`a7df42ff4609aa8a1f381fd447d3f94606f71a17`](https://github.com/onflow/fcl-js/commit/a7df42ff4609aa8a1f381fd447d3f94606f71a17) Thanks [@jribbink](https://github.com/jribbink)! - Fix WalletConnectModal close detection
+
+## 5.4.1-alpha.1
+
+### Patch Changes
+
+- Updated dependencies [[`8a5f8e9874980c40c1feb3eac915c6e8570abbf3`](https://github.com/onflow/fcl-js/commit/8a5f8e9874980c40c1feb3eac915c6e8570abbf3)]:
+  - @onflow/fcl-core@1.13.0-alpha.2
+
+## 5.4.1-alpha.0
+
+### Patch Changes
+
+- [#1983](https://github.com/onflow/fcl-js/pull/1983) [`18d24c8bad7efa0d8741d74f0cf299f89b3622c7`](https://github.com/onflow/fcl-js/commit/18d24c8bad7efa0d8741d74f0cf299f89b3622c7) Thanks [@jribbink](https://github.com/jribbink)! - Update dependencies
+
+- Updated dependencies [[`18d24c8bad7efa0d8741d74f0cf299f89b3622c7`](https://github.com/onflow/fcl-js/commit/18d24c8bad7efa0d8741d74f0cf299f89b3622c7)]:
+  - @onflow/util-invariant@1.2.4-alpha.0
+  - @onflow/util-logger@1.3.3-alpha.0
+  - @onflow/fcl-core@1.12.1-alpha.0
+  - @onflow/config@1.5.1-alpha.0
+
+## 5.4.0
+
+### Minor Changes
+
+- [#1966](https://github.com/onflow/fcl-js/pull/1966) [`f2831107`](https://github.com/onflow/fcl-js/commit/f283110707d5edc166bbe05e5482d38fa29de29e) Thanks [@jribbink](https://github.com/jribbink)! - Fix deep linking issues with mobile wallets
+
+### Patch Changes
+
+- Updated dependencies [[`f2831107`](https://github.com/onflow/fcl-js/commit/f283110707d5edc166bbe05e5482d38fa29de29e)]:
+  - @onflow/fcl-core@1.12.0
+
+## 5.3.1
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @onflow/fcl-core@1.11.1
+
+## 5.3.0
+
+### Minor Changes
+
+- [#1961](https://github.com/onflow/fcl-js/pull/1961) [`77f66e94`](https://github.com/onflow/fcl-js/commit/77f66e94ecce98c681449eeaf74e1b29c4ddc4cb) Thanks [@jribbink](https://github.com/jribbink)! - Bump version to 5.3.0
+
+## 5.2.0
+
+### Minor Changes
+
+- [#1922](https://github.com/onflow/fcl-js/pull/1922) [`266fda58`](https://github.com/onflow/fcl-js/commit/266fda5817900a943925f9a4cbfc69dbcdb98d99) Thanks [@jribbink](https://github.com/jribbink)! - Add new functions (`request` and `createSessionProposal`) for custom interaction with WC-compatibile wallets outside of service plugin
+
+### Patch Changes
+
+- [#1922](https://github.com/onflow/fcl-js/pull/1922) [`266fda58`](https://github.com/onflow/fcl-js/commit/266fda5817900a943925f9a4cbfc69dbcdb98d99) Thanks [@jribbink](https://github.com/jribbink)! - Update @walletconnect/sign-client
+
+- Updated dependencies [[`e70a215c`](https://github.com/onflow/fcl-js/commit/e70a215c47d7db6f4e1ddab747be3968abc09c05), [`266fda58`](https://github.com/onflow/fcl-js/commit/266fda5817900a943925f9a4cbfc69dbcdb98d99), [`e97e8d2f`](https://github.com/onflow/fcl-js/commit/e97e8d2f5197aecf793f26ba82771fd4f7ebc757), [`266fda58`](https://github.com/onflow/fcl-js/commit/266fda5817900a943925f9a4cbfc69dbcdb98d99), [`b8a2a26e`](https://github.com/onflow/fcl-js/commit/b8a2a26e382d543e5058cc1a628b437c3305b13c), [`cd234798`](https://github.com/onflow/fcl-js/commit/cd234798008868df13447ea97654b7e278dd746f), [`6ca1353e`](https://github.com/onflow/fcl-js/commit/6ca1353e2d0c6ad760b7a03da99c8b2b56b48807), [`3a89c39c`](https://github.com/onflow/fcl-js/commit/3a89c39ca5033af6b0ff4e606095507753e17de7)]:
+  - @onflow/fcl-core@1.11.0
+  - @onflow/config@1.5.0
+
+## 5.2.0-alpha.4
+
+### Patch Changes
+
+- Updated dependencies [[`cd234798`](https://github.com/onflow/fcl-js/commit/cd234798008868df13447ea97654b7e278dd746f)]:
+  - @onflow/config@1.5.0-alpha.0
+  - @onflow/fcl-core@1.11.0-alpha.4
+
+## 5.2.0-alpha.3
+
+### Patch Changes
+
+- Updated dependencies [[`b8a2a26e`](https://github.com/onflow/fcl-js/commit/b8a2a26e382d543e5058cc1a628b437c3305b13c)]:
+  - @onflow/fcl-core@1.11.0-alpha.3
+
+## 5.2.0-alpha.2
+
+### Patch Changes
+
+- Updated dependencies [[`e70a215c`](https://github.com/onflow/fcl-js/commit/e70a215c47d7db6f4e1ddab747be3968abc09c05), [`3a89c39c`](https://github.com/onflow/fcl-js/commit/3a89c39ca5033af6b0ff4e606095507753e17de7)]:
+  - @onflow/fcl-core@1.11.0-alpha.2
+
+## 5.2.0-alpha.1
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @onflow/fcl-core@1.11.0-alpha.1
+
+## 5.2.0-alpha.0
+
+### Minor Changes
+
+- [#1922](https://github.com/onflow/fcl-js/pull/1922) [`266fda58`](https://github.com/onflow/fcl-js/commit/266fda5817900a943925f9a4cbfc69dbcdb98d99) Thanks [@jribbink](https://github.com/jribbink)! - Add new functions (`request` and `createSessionProposal`) for custom interaction with WC-compatibile wallets outside of service plugin
+
+### Patch Changes
+
+- [#1922](https://github.com/onflow/fcl-js/pull/1922) [`266fda58`](https://github.com/onflow/fcl-js/commit/266fda5817900a943925f9a4cbfc69dbcdb98d99) Thanks [@jribbink](https://github.com/jribbink)! - Update @walletconnect/sign-client
+
+- Updated dependencies [[`266fda58`](https://github.com/onflow/fcl-js/commit/266fda5817900a943925f9a4cbfc69dbcdb98d99), [`266fda58`](https://github.com/onflow/fcl-js/commit/266fda5817900a943925f9a4cbfc69dbcdb98d99), [`6ca1353e`](https://github.com/onflow/fcl-js/commit/6ca1353e2d0c6ad760b7a03da99c8b2b56b48807)]:
+  - @onflow/fcl-core@1.11.0-alpha.0
+
+## 5.2.0
+
+### Minor Changes
+
+- [#1888](https://github.com/onflow/fcl-js/pull/1888) [`90aa24d2`](https://github.com/onflow/fcl-js/commit/90aa24d237e0003bd62b53dd26fcf29ab743595b) Thanks [@jribbink](https://github.com/jribbink)! - Convert to TypeScript
+
+### Patch Changes
+
+- [#1888](https://github.com/onflow/fcl-js/pull/1888) [`90aa24d2`](https://github.com/onflow/fcl-js/commit/90aa24d237e0003bd62b53dd26fcf29ab743595b) Thanks [@jribbink](https://github.com/jribbink)! - Remove better-sqlite3 dependency
+
+- Updated dependencies [[`90aa24d2`](https://github.com/onflow/fcl-js/commit/90aa24d237e0003bd62b53dd26fcf29ab743595b)]:
+  - @onflow/fcl-core@1.10.0
+
+## 5.1.1
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @onflow/config@1.4.1
+  - @onflow/fcl@1.10.2
+
+## 5.1.0
+
+### Minor Changes
+
+- [#1876](https://github.com/onflow/fcl-js/pull/1876) [`96336424`](https://github.com/onflow/fcl-js/commit/96336424033c87b2256981f130700ada2ea9118b) Thanks [@jribbink](https://github.com/jribbink)! - Remove unnecessary client services from FCL-WC plugin
+
+### Patch Changes
+
+- Updated dependencies [[`6c635f9f`](https://github.com/onflow/fcl-js/commit/6c635f9ff340284845ffe1196965ced7c748294f), [`ad089fe7`](https://github.com/onflow/fcl-js/commit/ad089fe7556767e1fae96f3f2e98fd76c49bba88)]:
+  - @onflow/util-invariant@1.2.3
+  - @onflow/config@1.4.0
+  - @onflow/fcl@1.10.1
+
+## 5.0.2
+
+### Patch Changes
+
+- [#1821](https://github.com/onflow/fcl-js/pull/1821) [`b9c078ce`](https://github.com/onflow/fcl-js/commit/b9c078ce87869c2b41dff07b861cea09a294c6a1) Thanks [@nialexsan](https://github.com/nialexsan)! - Split packages into `@onflow/fcl`, `@onflow/fcl-core`, and `@onflow/fcl-react-native`.
+
+- [#1827](https://github.com/onflow/fcl-js/pull/1827) [`e74c4a60`](https://github.com/onflow/fcl-js/commit/e74c4a60f38f366874aa1391ca1c890a7ad3a42a) Thanks [@nialexsan](https://github.com/nialexsan)! - Pin internal dependencies to exact versions
+
+- [#1814](https://github.com/onflow/fcl-js/pull/1814) [`0d09d838`](https://github.com/onflow/fcl-js/commit/0d09d8386c2fc472833df7152467d477f36dddc4) Thanks [@jribbink](https://github.com/jribbink)! - Fix type declarations not fully being generated
+
+- Updated dependencies [[`699303cf`](https://github.com/onflow/fcl-js/commit/699303cfd5e0545267632c9236f8c91833ce1259), [`acf90a78`](https://github.com/onflow/fcl-js/commit/acf90a7841f843227d5d9edb450ef08322c77c4d), [`b9c078ce`](https://github.com/onflow/fcl-js/commit/b9c078ce87869c2b41dff07b861cea09a294c6a1), [`e74c4a60`](https://github.com/onflow/fcl-js/commit/e74c4a60f38f366874aa1391ca1c890a7ad3a42a), [`80db8166`](https://github.com/onflow/fcl-js/commit/80db816620d7643c35a0fca7149c15de92f7bc88), [`0d09d838`](https://github.com/onflow/fcl-js/commit/0d09d8386c2fc472833df7152467d477f36dddc4), [`fdd52c45`](https://github.com/onflow/fcl-js/commit/fdd52c45b3a64210c5f716e13aa4d08d3796370c)]:
+  - @onflow/fcl@1.10.0
+  - @onflow/util-invariant@1.2.2
+  - @onflow/util-logger@1.3.2
+  - @onflow/config@1.3.0
+
+## 5.0.2-alpha.7
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @onflow/fcl@1.10.0-alpha.9
+
+## 5.0.2-alpha.6
+
+### Patch Changes
+
+- Updated dependencies [[`fdd52c45`](https://github.com/onflow/fcl-js/commit/fdd52c45b3a64210c5f716e13aa4d08d3796370c)]:
+  - @onflow/config@1.3.0-alpha.3
+  - @onflow/fcl@1.10.0-alpha.8
+
+## 5.0.2-alpha.5
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @onflow/fcl@1.10.0-alpha.7
+
+## 5.0.2-alpha.4
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @onflow/fcl@1.10.0-alpha.6
+
+## 5.0.2-alpha.3
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @onflow/fcl@1.10.0-alpha.5
+
+## 5.0.2-alpha.2
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @onflow/fcl@1.10.0-alpha.4
+
+## 5.0.2-alpha.1
+
+### Patch Changes
+
+- [#1827](https://github.com/onflow/fcl-js/pull/1827) [`e74c4a60`](https://github.com/onflow/fcl-js/commit/e74c4a60f38f366874aa1391ca1c890a7ad3a42a) Thanks [@nialexsan](https://github.com/nialexsan)! - pin versions
+
+- Updated dependencies [[`e74c4a60`](https://github.com/onflow/fcl-js/commit/e74c4a60f38f366874aa1391ca1c890a7ad3a42a)]:
+  - @onflow/util-invariant@1.2.2-alpha.2
+  - @onflow/util-logger@1.3.2-alpha.2
+  - @onflow/config@1.2.2-alpha.2
+  - @onflow/fcl@1.10.0-alpha.3
+
+## 5.0.2-alpha.0
+
+### Patch Changes
+
+- [#1814](https://github.com/onflow/fcl-js/pull/1814) [`0d09d838`](https://github.com/onflow/fcl-js/commit/0d09d8386c2fc472833df7152467d477f36dddc4) Thanks [@jribbink](https://github.com/jribbink)! - Fix type declarations not fully being generated
+
+- Updated dependencies [[`699303cf`](https://github.com/onflow/fcl-js/commit/699303cfd5e0545267632c9236f8c91833ce1259), [`acf90a78`](https://github.com/onflow/fcl-js/commit/acf90a7841f843227d5d9edb450ef08322c77c4d), [`0d09d838`](https://github.com/onflow/fcl-js/commit/0d09d8386c2fc472833df7152467d477f36dddc4)]:
+  - @onflow/fcl@1.10.0-alpha.2
+  - @onflow/util-invariant@1.2.2-alpha.1
+  - @onflow/util-logger@1.3.2-alpha.1
+  - @onflow/config@1.2.2-alpha.1
+
+## 5.0.1
+
+### Patch Changes
+
+- [#1807](https://github.com/onflow/fcl-js/pull/1807) [`9430d723`](https://github.com/onflow/fcl-js/commit/9430d7232c272f4acb55f5bcff7be82cef9704d9) Thanks [@jribbink](https://github.com/jribbink)! - Fix versioning & actor bug
+
+- Updated dependencies [[`9430d723`](https://github.com/onflow/fcl-js/commit/9430d7232c272f4acb55f5bcff7be82cef9704d9)]:
+  - @onflow/config@1.2.1
+  - @onflow/fcl@1.8.1
+  - @onflow/util-invariant@1.2.1
+  - @onflow/util-logger@1.3.1
+
+## 5.0.0
+
+### Minor Changes
+
+- [#1801](https://github.com/onflow/fcl-js/pull/1801) [`8881394b`](https://github.com/onflow/fcl-js/commit/8881394bc11fea507e330a4c507ef304fe456c42) Thanks [@nialexsan](https://github.com/nialexsan)! - TS build
+
+### Patch Changes
+
+- Updated dependencies [[`8881394b`](https://github.com/onflow/fcl-js/commit/8881394bc11fea507e330a4c507ef304fe456c42), [`8881394b`](https://github.com/onflow/fcl-js/commit/8881394bc11fea507e330a4c507ef304fe456c42), [`8881394b`](https://github.com/onflow/fcl-js/commit/8881394bc11fea507e330a4c507ef304fe456c42)]:
+  - @onflow/util-invariant@1.2.0
+  - @onflow/util-logger@1.3.0
+  - @onflow/config@1.2.0
+  - @onflow/fcl@1.8.0
+
+## 4.0.0
+
+### Patch Changes
+
+- Updated dependencies [[`3c99c856`](https://github.com/onflow/fcl-js/commit/3c99c8560f61b5b38238cbd0e93814936aee282e), [`5edbd823`](https://github.com/onflow/fcl-js/commit/5edbd823b1a6d25eb7bb52dc55338f95beae73b1)]:
+  - @onflow/fcl@1.6.0
+  - @onflow/util-logger@1.2.2
+  - @onflow/config@1.1.2
+
 ## 3.0.0
 
 ### Patch Changes

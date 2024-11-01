@@ -31,10 +31,14 @@ export async function sendTransaction(ix, context = {}, opts = {}) {
             "base64"
           ),
         }
-        if (!payloadSignatures.find(existingSignature => existingSignature.address === signature.address
-          && existingSignature.key_index === signature.key_index
-          && existingSignature.signature === signature.signature
-        )) {
+        if (
+          !payloadSignatures.find(
+            existingSignature =>
+              existingSignature.address === signature.address &&
+              existingSignature.key_index === signature.key_index &&
+              existingSignature.signature === signature.signature
+          )
+        ) {
           payloadSignatures.push(signature)
         }
       }

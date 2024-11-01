@@ -1,4 +1,4 @@
-import { buildMessageHandler } from "../../../../current-user/exec-service/strategies/utils/buildMessageHandler"
+import {buildMessageHandler} from "@onflow/fcl-core"
 
 const noop = () => {}
 
@@ -9,6 +9,7 @@ export function extension(service, opts = {}) {
   const onMessage = opts.onMessage || noop
   const onReady = opts.onReady || noop
   const onResponse = opts.onResponse || noop
+  const onCustomRpc = opts.onCustomRpc || noop
 
   const handler = buildMessageHandler({
     close,
@@ -16,6 +17,7 @@ export function extension(service, opts = {}) {
     onReady,
     onResponse,
     onMessage,
+    onCustomRpc,
   })
   window.addEventListener("message", handler)
 

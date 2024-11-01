@@ -1,5 +1,6 @@
-import {prepAccount, PROPOSER} from "../interaction/interaction.js"
+import {TransactionRole} from "@onflow/typedefs"
+import {prepAccount} from "../interaction/interaction"
 
-export async function proposer(authz) {
-  return prepAccount(authz, {role: PROPOSER})
+export function proposer(authz) {
+  return prepAccount(authz, {role: TransactionRole.PROPOSER})
 }

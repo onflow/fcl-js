@@ -194,7 +194,7 @@ Wallet providers on Flow have the flexibility to build their user interactions a
 
 FCL is agnostic to the communication channel and be configured to create both custodial and non-custodial wallets. This enables users to interact with wallet providers without needing to download an app or extension.
 
-The communication channels involve responding to a set of pre-defined FCL messages to deliver the requested information to the dapp.  Implementing a FCL compatible wallet on Flow is as simple as filling in the responses with the appropriate data when FCL requests them. If using any of the front-channel communication methods, FCL also provides a set of [wallet utilities](https://github.com/onflow/fcl-js/blob/master/packages/fcl/src/wallet-utils/index.js) to simplify this process.
+The communication channels involve responding to a set of pre-defined FCL messages to deliver the requested information to the dapp.  Implementing a FCL compatible wallet on Flow is as simple as filling in the responses with the appropriate data when FCL requests them. If using any of the front-channel communication methods, FCL also provides a set of [wallet utilities](https://github.com/onflow/fcl-js/blob/master/packages/fcl-core/src/wallet-utils/index.js) to simplify this process.
 
 
 ### Current Wallet Providers
@@ -214,7 +214,7 @@ The discovery feature can be used via API allowing you to customize your own UI 
 
 ### Building a FCL compatible wallet
 
-- Read the [wallet guide](https://github.com/onflow/fcl-js/blob/master/packages/fcl/src/wallet-provider-spec/draft-v3.md) to understand the implementation details.
+- Read the [wallet guide](https://github.com/onflow/fcl-js/blob/master/packages/fcl-core/src/wallet-provider-spec/draft-v3.md) to understand the implementation details.
 - Review the architecture of the [FCL dev wallet](https://github.com/onflow/fcl-dev-wallet) for an overview.
 - If building a non-custodial wallet, see the [Account API](https://github.com/onflow/flow-account-api) and the [FLIP](https://github.com/onflow/flow/pull/727) on derivation paths and key generation.
 
@@ -222,7 +222,7 @@ The discovery feature can be used via API allowing you to customize your own UI 
 
 ## Support
 
-Notice an problem or want to request a feature? [Add an issue](https://github.com/onflow/flow-js-sdk/issues).
+Notice a problem or want to request a feature? [Add an issue](https://github.com/onflow/flow-js-sdk/issues).
 
 Discuss FCL with the community on the [forum](https://forum.onflow.org/c/developer-tools/flow-fcl/22).
 

@@ -1,10 +1,12 @@
 import * as logger from "@onflow/util-logger"
 import fetchTransport from "cross-fetch"
+import {safeParseJSON} from "./utils"
+import {combineURLs} from "./combine-urls"
 
 const AbortController =
   globalThis.AbortController || require("abort-controller")
 
-class HTTPRequestError extends Error {
+export class HTTPRequestError extends Error {
   constructor({
     error,
     hostname,
@@ -69,7 +71,7 @@ export async function httpRequest({
       controller.abort()
     }, timeoutLimit)
 
-    return fetchTransport(`${hostname}${path}`, {
+    return fetchTransport(combineURLs(hostname, path).toString(), {
       method: method,
       body: bodyJSON,
       headers,
@@ -160,12 +162,4 @@ export async function httpRequest({
 
   // Keep retrying request until server available or max attempts exceeded
   return await requestLoop()
-}
-
-function safeParseJSON(data) {
-  try {
-    return JSON.parse(data)
-  } catch {
-    return null
-  }
 }

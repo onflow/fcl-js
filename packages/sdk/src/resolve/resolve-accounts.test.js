@@ -7,8 +7,8 @@ import {
   payer,
   limit,
   authorizations,
-} from "../sdk.js"
-import {buildPreSignable, resolveAccounts} from "./resolve-accounts"
+} from "../sdk"
+import {buildPreSignable} from "./resolve-accounts"
 
 test("Voucher in PreSignable", async () => {
   const authz = {
@@ -47,6 +47,43 @@ test("Voucher in PreSignable", async () => {
       {address: "0x01", keyId: 1, sig: "123"},
       {address: "0x01", keyId: 1, sig: "123"},
     ],
+    envelopeSigs: [{address: "0x02", keyId: 0, sig: "123"}],
+  })
+})
+
+test("Voucher in PreSignable no authorizers", async () => {
+  const authz = {
+    addr: "0x01",
+    signingFunction: () => ({signature: "123"}),
+    keyId: 1,
+    sequenceNum: 123,
+  }
+  const ix = await resolve(
+    await build([
+      transaction``,
+      limit(156),
+      proposer(authz),
+      payer({
+        addr: "0x02",
+        signingFunction: () => ({signature: "123"}),
+        keyId: 0,
+        sequenceNum: 123,
+      }),
+      ref("123"),
+    ])
+  )
+
+  const ps = buildPreSignable(ix.accounts[ix.proposer], ix)
+
+  expect(ps.voucher).toEqual({
+    cadence: "",
+    refBlock: "123",
+    computeLimit: 156,
+    arguments: [],
+    proposalKey: {address: "0x01", keyId: 1, sequenceNum: 123},
+    payer: "0x02",
+    authorizers: [],
+    payloadSigs: [{address: "0x01", keyId: 1, sig: "123"}],
     envelopeSigs: [{address: "0x02", keyId: 0, sig: "123"}],
   })
 })
@@ -234,9 +271,7 @@ test("mulitple payer scenario (One from dev and one from pre-authz)", async () =
     proposalKey: {address: "0x72f6325947f76d3a", keyId: 1, sequenceNum: 12},
     payer: "0x01",
     authorizers: ["0x72f6325947f76d3a"],
-    payloadSigs: [
-      {address: "0x72f6325947f76d3a", keyId: 1, sig: "1"},
-    ],
+    payloadSigs: [{address: "0x72f6325947f76d3a", keyId: 1, sig: "1"}],
     envelopeSigs: [{address: "0x01", keyId: 1, sig: "123"}],
   })
 })
@@ -312,9 +347,7 @@ test("mulitple payer scenario (One from dev and one from pre-authz) as array", a
     proposalKey: {address: "0x02", keyId: 1, sequenceNum: 12},
     payer: "0x01",
     authorizers: ["0x02"],
-    payloadSigs: [
-      {address: "0x02", keyId: 1, sig: "1"},
-    ],
+    payloadSigs: [{address: "0x02", keyId: 1, sig: "1"}],
     envelopeSigs: [
       {address: "0x01", keyId: 1, sig: "123"},
       {address: "0x01", keyId: 2, sig: "456"},
@@ -380,9 +413,7 @@ test("payer from pre-authz", async () => {
     proposalKey: {address: "0x72f6325947f76d3a", keyId: 1, sequenceNum: 12},
     payer: "0xf086a545ce3c552d",
     authorizers: ["0x72f6325947f76d3a"],
-    payloadSigs: [
-      {address: "0x72f6325947f76d3a", keyId: 1, sig: "1"},
-    ],
+    payloadSigs: [{address: "0x72f6325947f76d3a", keyId: 1, sig: "1"}],
     envelopeSigs: [{address: "0xf086a545ce3c552d", keyId: 12, sig: "2"}],
   })
 })
@@ -467,4 +498,60 @@ test("Voucher in PreSignable multiple payer keys and multiple authorizers", asyn
       {address: "0x02", keyId: 1, sig: "333"},
     ],
   })
+})
+
+test("Voucher sent to Current User Pre-Authz includes other authorizer addresses", async () => {
+  const mockResolve = jest.fn().mockImplementation(async acct => [
+    {
+      ...acct,
+      addr: "0x01",
+      keyId: 1,
+      sequenceNum: 123,
+      signingFunction: () => ({signature: "123"}),
+      role: {proposer: true, payer: true, authorizer: true},
+    },
+  ])
+  const currentUser = account => ({
+    ...account,
+    tempId: "CURRENT_USER",
+    resolve: mockResolve,
+  })
+  const customAuthz = async acct => ({
+    ...acct,
+    addr: "0x02",
+    keyId: 2,
+    sequenceNum: 234,
+    signingFunction: () => ({signature: "234"}),
+  })
+
+  const ix = await resolve(
+    await build([
+      transaction``,
+      limit(156),
+      proposer(currentUser),
+      authorizations([customAuthz, currentUser]),
+      payer(currentUser),
+      ref("123"),
+    ])
+  )
+
+  const ps = buildPreSignable(ix.accounts[ix.proposer], ix)
+  expect(ps.voucher).toEqual({
+    cadence: "",
+    refBlock: "123",
+    computeLimit: 156,
+    arguments: [],
+    proposalKey: {address: "0x01", keyId: 1, sequenceNum: 123},
+    payer: "0x01",
+    authorizers: ["0x02", "0x01"],
+    payloadSigs: [{address: "0x02", keyId: 2, sig: "234"}],
+    envelopeSigs: [{address: "0x01", keyId: 1, sig: "123"}],
+  })
+
+  expect(mockResolve).toHaveBeenCalledTimes(1)
+  // Verify pre-signable contains custom authz in the authorizers list
+  expect(mockResolve.mock.calls[0][1].voucher.authorizers).toEqual([
+    "0x02",
+    null,
+  ])
 })
