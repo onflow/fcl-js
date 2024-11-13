@@ -71,7 +71,12 @@ import {
 } from "@onflow/fcl-core"
 export const mutate = getMutate({platform: "react-native"})
 
-const currentUser = getCurrentUser({platform: "react-native"})
+const currentUser = getCurrentUser({
+  platform: "react-native",
+  getStorageProvider: async () => {
+    return (await config().get("fcl.storage")) || getAsyncStorage()
+  },
+})
 
 export {currentUser}
 
@@ -93,6 +98,7 @@ import {
   useServiceDiscovery,
   ServiceDiscovery,
 } from "./utils/react-native"
+import {getAsyncStorage} from "./utils/react-native/storage"
 
 config(getDefaultConfig())
 
