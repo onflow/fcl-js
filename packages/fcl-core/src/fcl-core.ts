@@ -148,3 +148,5 @@ export {
 } from "./utils/constants"
 
 export {execStrategy} from "./current-user/exec-service"
+
+export type {StorageProvider} from "./utils/storage"
