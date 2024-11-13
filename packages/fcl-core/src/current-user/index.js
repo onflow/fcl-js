@@ -69,7 +69,6 @@ const makeHandlers = cfg => {
       }
 
       ctx.merge(JSON.parse(DATA))
-      console.log("Storage Provider", await getStorageProvider())
       const storage = await getStorageProvider()
       if (storage.can) {
         const user = await getStoredUser(storage)
