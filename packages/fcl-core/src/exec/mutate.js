@@ -7,13 +7,11 @@ import {isNumber} from "../utils/is"
 
 /**
  * @description
- * Factory function that returns a mutate function.
+ * Factory function that returns a mutate function for a given currentUser.
  *
- * @param {object} opts - Configuration Options
- * @param {string} opts.platform - Platform
- * @param {object} [opts.discovery] - Discovery options
+ * @param {ReturnType<typeof import("../current-user").getCurrentUser> | import("../current-user").CurrentUserConfig} currentUserOrConfig - CurrentUser actor or configuration
  */
-export const getMutate = ({platform, discovery}) => {
+export const getMutate = currentUserOrConfig => {
   /**
    * @description
    * Allows you to submit transactions to the blockchain to potentially mutate the state.
@@ -66,10 +64,12 @@ export const getMutate = ({platform, discovery}) => {
     try {
       await preMutate(opts)
       opts = await prepTemplateOpts(opts)
-      const currentUser = getCurrentUser({platform, discovery})
       // Allow for a config to overwrite the authorization function.
       // prettier-ignore
-      const authz = await sdk.config().get("fcl.authz", currentUser().authorization)
+      const currentUser = typeof currentUserOrConfig === "function" ? currentUserOrConfig : getCurrentUser(currentUserOrConfig)
+      const authz = await sdk
+        .config()
+        .get("fcl.authz", currentUser().authorization)
 
       txid = sdk
         .send([

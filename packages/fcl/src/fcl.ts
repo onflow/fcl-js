@@ -75,7 +75,6 @@ const discoveryOpts = {
   execStrategy: execStrategyHook,
 }
 
-export const mutate = getMutate({platform: "web", discovery: discoveryOpts})
 export const currentUser = getCurrentUser({
   platform: "web",
   discovery: discoveryOpts,
@@ -85,6 +84,7 @@ export const currentUser = getCurrentUser({
     )
   },
 })
+export const mutate = getMutate(currentUser)
 
 export const authenticate = (opts = {}) => currentUser().authenticate(opts)
 export const unauthenticate = () => currentUser().unauthenticate()
