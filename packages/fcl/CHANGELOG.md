@@ -10,7 +10,7 @@
 
 - Updated dependencies [[`bac8c54db1b6821a2158923544aa537885d5a0e7`](https://github.com/onflow/fcl-js/commit/bac8c54db1b6821a2158923544aa537885d5a0e7)]:
   - @onflow/fcl-core@1.13.0-alpha.4
-  - @onflow/fcl-wc@6.0.0-alpha.4
+  - @onflow/fcl-wc@5.4.1-alpha.4
 
 ## 1.12.4-alpha.5
 
