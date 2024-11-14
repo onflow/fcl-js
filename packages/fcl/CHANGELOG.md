@@ -1,5 +1,17 @@
 # @onflow/fcl
 
+## 1.13.0-alpha.6
+
+### Minor Changes
+
+- [#2001](https://github.com/onflow/fcl-js/pull/2001) [`bac8c54db1b6821a2158923544aa537885d5a0e7`](https://github.com/onflow/fcl-js/commit/bac8c54db1b6821a2158923544aa537885d5a0e7) Thanks [@jribbink](https://github.com/jribbink)! - Use localStorage as default & export LOCAL_STORAGE/SESSION_STORAGE as helpers for fcl.storage.default configuration key
+
+### Patch Changes
+
+- Updated dependencies [[`bac8c54db1b6821a2158923544aa537885d5a0e7`](https://github.com/onflow/fcl-js/commit/bac8c54db1b6821a2158923544aa537885d5a0e7)]:
+  - @onflow/fcl-core@1.13.0-alpha.4
+  - @onflow/fcl-wc@6.0.0-alpha.4
+
 ## 1.12.4-alpha.5
 
 ### Patch Changes
