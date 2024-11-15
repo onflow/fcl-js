@@ -13,6 +13,7 @@ export interface FclWalletConnectConfig {
   wcRequestHook?: any
   pairingModalOverride?: any
   wallets?: any[]
+  showNotifications?: boolean
 }
 
 const DEFAULT_RELAY_URL = "wss://relay.walletconnect.com"
@@ -70,14 +71,7 @@ export const init = async (config: FclWalletConnectConfig) => {
   }
 }
 
-const initHelper = ({
-  projectId,
-  metadata,
-  includeBaseWC = false,
-  wcRequestHook = null,
-  pairingModalOverride = null,
-  wallets = [],
-}: FclWalletConnectConfig) => {
+const initHelper = (config: FclWalletConnectConfig) => {
   if (typeof window === "undefined") {
     throw new Error(
       "FCL Wallet Connect Plugin can only be initialized in the browser"
@@ -94,7 +88,10 @@ const initHelper = ({
       if (_client) {
         return _client
       } else {
-        return initClient({projectId, metadata})
+        return initClient({
+          projectId: config.projectId,
+          metadata: config.metadata,
+        })
       }
     })
     .catch(e => {
@@ -106,13 +103,7 @@ const initHelper = ({
       throw e
     })
 
-  const FclWcServicePlugin = makeServicePlugin(clientPromise, {
-    projectId,
-    includeBaseWC,
-    wcRequestHook,
-    pairingModalOverride,
-    wallets,
-  })
+  const FclWcServicePlugin = makeServicePlugin(clientPromise, config)
 
   return {
     FclWcServicePlugin,

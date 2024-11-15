@@ -98,3 +98,7 @@ A source configuration can be provided in one of three ways:
  - Replace `PACKAGE_CURRENT_VERSION` in bundled code with the current `version` of the package being bundled from `package.json`
  - Bundles dependencies with UMD builds for use in browser
  - Transpiles output bundles using `@babel/preset-env` and [babel rollup plugin](https://www.npmjs.com/package/@rollup/plugin-babel)
+ - PostCSS support for CSS bundling, must include a `postcss.config.js` in the root of the package
+ - Images are bundled with the `@rollup/plugin-image` plugin as base64 strings
+ - Minification of bundles with `terser` if output paths end in ".min.js"
+ - TypeScript support if entry point is a `.ts` file

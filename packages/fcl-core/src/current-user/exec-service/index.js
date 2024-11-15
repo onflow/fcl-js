@@ -15,8 +15,8 @@ export const execStrategy = async ({
   config,
   abortSignal,
   customRpc,
-  opts,
   user,
+  opts,
 }) => {
   const strategy = getServiceRegistry().getStrategy(service.method)
   return strategy({service, body, config, abortSignal, customRpc, opts, user})
@@ -70,6 +70,8 @@ export async function execService({
         config: execConfig,
         opts,
         abortSignal,
+        platform,
+        user,
       })
     } else {
       return res

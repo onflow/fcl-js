@@ -4,6 +4,7 @@
   "include": ["src/**/*"],
   "compilerOptions": {
     "declarationDir": "types",
-    "rootDir": "src"
+    "jsx": "react-jsx",
+    "jsxImportSource": "preact"
   }
 }

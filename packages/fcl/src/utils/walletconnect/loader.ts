@@ -40,12 +40,16 @@ export function initFclWcLoader() {
   config.subscribe(async (fullConfig: any) => {
     const wcConfig = {
       "walletconnect.projectId": fullConfig["walletconnect.projectId"],
+      "walletconnect.showNotifications":
+        fullConfig["walletconnect.showNotifications"],
       "app.detail.title": fullConfig["app.detail.title"],
       "app.detail.icon": fullConfig["app.detail.icon"],
       "app.detail.description": fullConfig["app.detail.description"],
       "app.detail.url": fullConfig["app.detail.url"],
     }
     const projectId: string | undefined = wcConfig["walletconnect.projectId"]
+    const showNotifications: boolean | undefined =
+      wcConfig["walletconnect.showNotifications"]
 
     // Check if the plugin is already loaded by this loader, but with different configuration
     // The plugin can only be loaded once
@@ -98,6 +102,7 @@ ${lastConfig}`
     const {clientPromise: _clientPromise, FclWcServicePlugin} = fclWc.initLazy({
       projectId,
       metadata: getMetadata(wcConfig),
+      showNotifications: showNotifications,
     })
     pluginRegistry.add([FclWcServicePlugin])
   })

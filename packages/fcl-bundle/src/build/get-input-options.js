@@ -1,14 +1,19 @@
 const _ = require("lodash")
 
+const path = require("path")
+const fs = require("fs")
+const builtinModules = require("node:module").builtinModules
+
 const commonjs = require("@rollup/plugin-commonjs")
 const replace = require("@rollup/plugin-replace")
 const {nodeResolve} = require("@rollup/plugin-node-resolve")
 const {babel} = require("@rollup/plugin-babel")
 const terser = require("@rollup/plugin-terser")
 const typescript = require("rollup-plugin-typescript2")
+const postcss = require("rollup-plugin-postcss")
+const imagePlugin = require("@rollup/plugin-image")
 const {DEFAULT_EXTENSIONS} = require("@babel/core")
-
-const builtinModules = require("node:module").builtinModules
+const {getPackageRoot} = require("../util")
 
 const SUPPRESSED_WARNING_CODES = [
   "MISSING_GLOBAL_NAME",
@@ -59,7 +64,15 @@ module.exports = function getInputOptions(package, build) {
     ),
   ]
 
-  const extensions = DEFAULT_EXTENSIONS.concat([".ts", ".tsx", ".mts", ".cts"])
+  const extensions = DEFAULT_EXTENSIONS.concat([
+    ".ts",
+    ".tsx",
+    ".mts",
+    ".cts",
+    ".png",
+  ])
+
+  const postcssConfigPath = path.resolve(getPackageRoot(), "postcss.config.js")
 
   let options = {
     input: build.source,
@@ -69,12 +82,23 @@ module.exports = function getInputOptions(package, build) {
       console.warn(message.toString())
     },
     plugins: [
+      imagePlugin(),
       nodeResolve({
         browser: true,
         preferBuiltins: build.type !== "umd",
         resolveOnly,
         extensions,
       }),
+      fs.existsSync(postcssConfigPath)
+        ? postcss({
+            inject: false,
+            extensions: [".css"],
+            minimize: true,
+            config: {
+              path: postcssConfigPath,
+            },
+          })
+        : null,
       commonjs(),
       build.type !== "umd" &&
         isTypeScript &&
