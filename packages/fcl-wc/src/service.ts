@@ -118,7 +118,7 @@ const makeExec = (
     }
 
     // Show notification to the user if enabled
-    const walletDisabledNotifications = session?.sessionProperties?.["fclWc.disableUiNotifications"] === "true"
+    const walletDisabledNotifications = session?.sessionProperties?.["fclWc.disableNotificationsOnMobile"] === "true"
     const notification = showNotifications && !walletDisabledNotifications
       ? showWcRequestNotification({
           user,
