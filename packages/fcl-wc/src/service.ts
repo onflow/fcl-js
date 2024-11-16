@@ -13,7 +13,7 @@ import {showNotification} from "./ui/notifications"
 import type {FclWalletConnectConfig} from "./fcl-wc"
 import mobileIcon from "./ui/assets/mobile.png"
 import {CurrentUser, Service} from "@onflow/typedefs"
-import { SessionTypes } from "@walletconnect/types"
+import {SessionTypes} from "@walletconnect/types"
 
 type WalletConnectModalType = import("@walletconnect/modal").WalletConnectModal
 
@@ -67,7 +67,8 @@ const makeExec = (
     const client = await clientPromise
     invariant(!!client, "WalletConnect is not initialized")
 
-    let session: SessionTypes.Struct | null = null, pairing: any
+    let session: SessionTypes.Struct | null = null,
+      pairing: any
     const method = service.endpoint
     const appLink = validateAppLink(service)
     const pairings = client.pairing.getAll({active: true})
@@ -118,13 +119,16 @@ const makeExec = (
     }
 
     // Show notification to the user if enabled
-    const walletDisabledNotifications = session?.sessionProperties?.["fclWc.disableNotificationsOnMobile"] === "true"
-    const notification = showNotifications && !walletDisabledNotifications
-      ? showWcRequestNotification({
-          user,
-          service,
-        })
-      : null
+    const walletDisabledNotifications =
+      session?.sessionProperties?.["fclWc.disableNotificationsOnMobile"] ===
+      "true"
+    const notification =
+      showNotifications && !walletDisabledNotifications
+        ? showWcRequestNotification({
+            user,
+            service,
+          })
+        : null
 
     // Make request to the WalletConnect client and return the result
     return await request({
