@@ -2,4 +2,4 @@
 "@onflow/fcl": minor
 ---
 
-Add `walletconnect.showNotifications` config option to disable WC notification UI
+Add `walletconnect.disableNotifications` config option to disable WC notification UI

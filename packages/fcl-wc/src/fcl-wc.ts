@@ -13,7 +13,7 @@ export interface FclWalletConnectConfig {
   wcRequestHook?: any
   pairingModalOverride?: any
   wallets?: any[]
-  showNotifications?: boolean
+  disableNotifications?: boolean
 }
 
 const DEFAULT_RELAY_URL = "wss://relay.walletconnect.com"

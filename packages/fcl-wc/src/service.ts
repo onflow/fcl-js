@@ -27,7 +27,7 @@ export const makeServicePlugin = (
     wallets: [],
     wcRequestHook: null,
     pairingModalOverride: null,
-    showNotifications: true,
+    disableNotifications: false,
   }
 ) => ({
   name: SERVICE_PLUGIN_NAME,
@@ -62,7 +62,7 @@ const makeExec = (
     abortSignal?: AbortSignal
     user: any
   }) => {
-    const {wcRequestHook, pairingModalOverride, showNotifications} = config
+    const {wcRequestHook, pairingModalOverride, disableNotifications: appDisabledNotifications} = config
 
     const client = await clientPromise
     invariant(!!client, "WalletConnect is not initialized")
@@ -118,12 +118,13 @@ const makeExec = (
       openDeeplink(appLink)
     }
 
-    // Show notification to the user if enabled
+    // Show notification to the user if not disabled by app developer or wallet
     const walletDisabledNotifications =
       session?.sessionProperties?.["fclWc.disableNotificationsOnMobile"] ===
       "true"
+    
     const notification =
-      showNotifications && !walletDisabledNotifications
+      !appDisabledNotifications && !walletDisabledNotifications
         ? showWcRequestNotification({
             user,
             service,
