@@ -62,7 +62,11 @@ const makeExec = (
     abortSignal?: AbortSignal
     user: any
   }) => {
-    const {wcRequestHook, pairingModalOverride, disableNotifications: appDisabledNotifications} = config
+    const {
+      wcRequestHook,
+      pairingModalOverride,
+      disableNotifications: appDisabledNotifications,
+    } = config
 
     const client = await clientPromise
     invariant(!!client, "WalletConnect is not initialized")
@@ -122,7 +126,7 @@ const makeExec = (
     const walletDisabledNotifications =
       session?.sessionProperties?.["fclWc.disableNotificationsOnMobile"] ===
       "true"
-    
+
     const notification =
       !appDisabledNotifications && !walletDisabledNotifications
         ? showWcRequestNotification({
