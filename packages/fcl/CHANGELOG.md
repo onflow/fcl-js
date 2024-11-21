@@ -1,5 +1,18 @@
 # @onflow/fcl
 
+## 1.13.0-alpha.7
+
+### Minor Changes
+
+- [#1970](https://github.com/onflow/fcl-js/pull/1970) [`3b31f1c02b78bf178502627e5ca1de81bdfe8f26`](https://github.com/onflow/fcl-js/commit/3b31f1c02b78bf178502627e5ca1de81bdfe8f26) Thanks [@jribbink](https://github.com/jribbink)! - Add `walletconnect.disableNotifications` config option to disable WC notification UI
+
+### Patch Changes
+
+- Updated dependencies [[`3b31f1c02b78bf178502627e5ca1de81bdfe8f26`](https://github.com/onflow/fcl-js/commit/3b31f1c02b78bf178502627e5ca1de81bdfe8f26), [`3b31f1c02b78bf178502627e5ca1de81bdfe8f26`](https://github.com/onflow/fcl-js/commit/3b31f1c02b78bf178502627e5ca1de81bdfe8f26)]:
+  - @onflow/fcl-wc@5.5.0-alpha.5
+  - @onflow/fcl-core@1.13.0-alpha.5
+  - @onflow/sdk@1.5.4-alpha.2
+
 ## 1.13.0-alpha.6
 
 ### Minor Changes
