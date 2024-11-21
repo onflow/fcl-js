@@ -287,7 +287,7 @@ export function showWcRequestNotification({
   user: CurrentUser
 }) {
   const authnService = user?.services?.find((s: any) => s.type === "authn")
-  const walletProvider = authnService?.provider
+  const walletProvider = authnService?.provider || service.provider
 
   return showNotification({
     title: walletProvider?.name || "Mobile Wallet",
