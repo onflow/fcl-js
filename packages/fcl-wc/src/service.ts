@@ -295,7 +295,8 @@ export function showWcRequestNotification({
       ? "Tap to view request in app"
       : "Pending request on your mobile device",
     icon: walletProvider?.icon || mobileIcon,
-    onClick: isMobile() && service.uid ? () => openDeeplink(service.uid!) : undefined,
+    onClick:
+      isMobile() && service.uid ? () => openDeeplink(service.uid!) : undefined,
     debounceDelay: service.type === "pre-authz" ? 500 : 0,
   })
 }

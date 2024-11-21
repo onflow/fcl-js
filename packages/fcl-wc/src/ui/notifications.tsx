@@ -60,7 +60,7 @@ export function showNotification({
       icon={icon}
       onClick={onClick}
       onDismiss={() => {
-        onDismiss?.() 
+        onDismiss?.()
         dismissUi()
       }}
       animate={animate}
@@ -83,6 +83,6 @@ export function showNotification({
         dismissTimeout = null
         dismissUi()
       }, debounceDelay)
-    }
+    },
   }
 }
