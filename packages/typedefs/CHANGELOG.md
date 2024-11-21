@@ -1,5 +1,11 @@
 # @onflow/typedefs
 
+## 1.4.0-alpha.2
+
+### Patch Changes
+
+- [#1970](https://github.com/onflow/fcl-js/pull/1970) [`3b31f1c02b78bf178502627e5ca1de81bdfe8f26`](https://github.com/onflow/fcl-js/commit/3b31f1c02b78bf178502627e5ca1de81bdfe8f26) Thanks [@jribbink](https://github.com/jribbink)! - Fix CurrentUser services type
+
 ## 1.4.0-alpha.1
 
 ### Minor Changes

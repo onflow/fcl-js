@@ -1,5 +1,11 @@
 # @onflow/fcl-bundle
 
+## 1.6.0-alpha.1
+
+### Minor Changes
+
+- [#1970](https://github.com/onflow/fcl-js/pull/1970) [`3b31f1c02b78bf178502627e5ca1de81bdfe8f26`](https://github.com/onflow/fcl-js/commit/3b31f1c02b78bf178502627e5ca1de81bdfe8f26) Thanks [@jribbink](https://github.com/jribbink)! - Add `rollup-plugin-postcss` & `@rollup/plugin-image`
+
 ## 1.5.1-alpha.0
 
 ### Patch Changes

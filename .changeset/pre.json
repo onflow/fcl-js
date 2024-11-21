@@ -26,10 +26,15 @@
     "@onflow/util-uid": "1.2.2"
   },
   "changesets": [
+    "brown-bobcats-remain",
     "fresh-cows-repair",
+    "little-spies-glow",
     "lovely-bikes-applaud",
     "odd-actors-ring",
     "pink-students-divide",
+    "poor-carrots-wink",
+    "rare-apes-argue",
+    "rotten-paws-retire",
     "shaggy-snakes-vanish",
     "slow-lies-fix",
     "slow-peaches-vanish",
