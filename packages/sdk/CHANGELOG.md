@@ -1,5 +1,12 @@
 # @onflow/sdk
 
+## 1.5.4-alpha.2
+
+### Patch Changes
+
+- Updated dependencies [[`3b31f1c02b78bf178502627e5ca1de81bdfe8f26`](https://github.com/onflow/fcl-js/commit/3b31f1c02b78bf178502627e5ca1de81bdfe8f26)]:
+  - @onflow/typedefs@1.4.0-alpha.2
+
 ## 1.5.4-alpha.1
 
 ### Patch Changes
