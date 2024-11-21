@@ -76,7 +76,6 @@ export function showNotification({
 
   return {
     dismiss: () => {
-      console.log("dismiss", debounceDelay, dismissTimeout)
       // We need to delay the dismiss to debounce any subsequent notifications
       // This is important when there is both a FCL/WC authz and pre-authz service
       dismissTimeout = setTimeout(() => {
