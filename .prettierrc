@@ -2,5 +2,6 @@
   "semi": false,
   "trailingComma": "es5",
   "bracketSpacing": false,
-  "arrowParens": "avoid"
+  "arrowParens": "avoid",
+  "plugins": ["prettier-plugin-tailwindcss", "prettier-plugin-classnames"]
 }

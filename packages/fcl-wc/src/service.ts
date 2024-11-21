@@ -1,6 +1,6 @@
 import {invariant} from "@onflow/util-invariant"
 import {log, LEVELS} from "@onflow/util-logger"
-import {isMobile, openDeeplink, shouldDeepLink} from "./utils"
+import {isMobile, openDeeplink, preloadImage, shouldDeepLink} from "./utils"
 import {
   REQUEST_TYPES,
   SERVICE_PLUGIN_NAME,
@@ -9,6 +9,11 @@ import {
 import {SignClient} from "@walletconnect/sign-client/dist/types/client"
 import {createSessionProposal, request} from "./session"
 import {ModalCtrlState} from "@walletconnect/modal-core/dist/_types/src/types/controllerTypes"
+import {showNotification} from "./ui/notifications"
+import type {FclWalletConnectConfig} from "./fcl-wc"
+import mobileIcon from "./ui/assets/mobile.svg"
+import {CurrentUser, Service} from "@onflow/typedefs"
+import {SessionTypes} from "@walletconnect/types"
 
 type WalletConnectModalType = import("@walletconnect/modal").WalletConnectModal
 
@@ -16,18 +21,13 @@ type Constructor<T> = new (...args: any[]) => T
 
 export const makeServicePlugin = (
   client: Promise<SignClient | null>,
-  opts: {
-    projectId: string
-    includeBaseWC: boolean
-    wallets: any[]
-    wcRequestHook: any
-    pairingModalOverride: any
-  } = {
+  config: FclWalletConnectConfig = {
     projectId: "",
     includeBaseWC: false,
     wallets: [],
     wcRequestHook: null,
     pairingModalOverride: null,
+    disableNotifications: false,
   }
 ) => ({
   name: SERVICE_PLUGIN_NAME,
@@ -37,7 +37,7 @@ export const makeServicePlugin = (
     method: WC_SERVICE_METHOD,
     exec: makeExec(
       client,
-      opts,
+      config,
       import("@walletconnect/modal").then(m => m.WalletConnectModal)
     ),
   },
@@ -46,7 +46,7 @@ export const makeServicePlugin = (
 
 const makeExec = (
   clientPromise: Promise<SignClient | null>,
-  {wcRequestHook, pairingModalOverride}: any,
+  config: FclWalletConnectConfig,
   WalletConnectModal: Promise<Constructor<WalletConnectModalType>>
 ) => {
   return async ({
@@ -62,10 +62,20 @@ const makeExec = (
     abortSignal?: AbortSignal
     user: any
   }) => {
+    // Preload provider image
+    preloadImage(service.provider?.icon)
+
+    const {
+      wcRequestHook,
+      pairingModalOverride,
+      disableNotifications: appDisabledNotifications,
+    } = config
+
     const client = await clientPromise
     invariant(!!client, "WalletConnect is not initialized")
 
-    let session: any, pairing: any
+    let session: SessionTypes.Struct | null = null,
+      pairing: any
     const method = service.endpoint
     const appLink = validateAppLink(service)
     const pairings = client.pairing.getAll({active: true})
@@ -80,7 +90,7 @@ const makeExec = (
     }
 
     if (session == null) {
-      session = await new Promise((resolve, reject) => {
+      session = await new Promise<SessionTypes.Struct>((resolve, reject) => {
         function onClose() {
           reject(`Declined: Externally Halted`)
         }
@@ -115,6 +125,19 @@ const makeExec = (
       openDeeplink(appLink)
     }
 
+    // Show notification to the user if not disabled by app developer or wallet
+    const walletDisabledNotifications =
+      session?.sessionProperties?.["fclWc.disableNotificationsOnMobile"] ===
+      "true"
+
+    const notification =
+      !appDisabledNotifications && !walletDisabledNotifications
+        ? showWcRequestNotification({
+            user,
+            service,
+          })
+        : null
+
     // Make request to the WalletConnect client and return the result
     return await request({
       method,
@@ -122,7 +145,7 @@ const makeExec = (
       session,
       client,
       abortSignal,
-    })
+    }).finally(() => notification?.dismiss())
 
     function validateAppLink({uid}: {uid: string}) {
       if (!(uid && /^(ftp|http|https):\/\/[^ "]+$/.test(uid))) {
@@ -161,7 +184,7 @@ function connectWc(
     wcRequestHook: any
     pairingModalOverride: any
     abortSignal?: AbortSignal
-  }) => {
+  }): Promise<SessionTypes.Struct> => {
     const projectId = client.opts?.projectId
     invariant(
       !!projectId,
@@ -221,7 +244,7 @@ function connectWc(
 
       const session = await Promise.race([
         approval(),
-        new Promise((_, reject) => {
+        new Promise<never>((_, reject) => {
           if (abortSignal?.aborted) {
             reject(new Error("Session request aborted"))
           }
@@ -248,4 +271,32 @@ function connectWc(
       walletConnectModal?.closeModal()
     }
   }
+}
+
+/**
+ * Show a notification for a WalletConnect request.
+ * @param service - The service that is requesting the user's attention.
+ * @param user - The user that is being requested to sign a transaction.
+ * @returns A close function to dismiss the notification.
+ */
+export function showWcRequestNotification({
+  service,
+  user,
+}: {
+  service: Service
+  user: CurrentUser
+}) {
+  const authnService = user?.services?.find((s: any) => s.type === "authn")
+  const walletProvider = authnService?.provider || service.provider
+
+  return showNotification({
+    title: walletProvider?.name || "Mobile Wallet",
+    message: isMobile()
+      ? "Tap to view request in app"
+      : "Pending request on your mobile device",
+    icon: walletProvider?.icon || mobileIcon,
+    onClick:
+      isMobile() && service.uid ? () => openDeeplink(service.uid!) : undefined,
+    debounceDelay: service.type === "pre-authz" ? 500 : 0,
+  })
 }

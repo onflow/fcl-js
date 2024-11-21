@@ -1,6 +1,6 @@
 const assert = require("assert")
 const {resolve, dirname, basename, join} = require("path")
-const {isArray, isObject, isString} = require("./util")
+const {isArray, isObject, isString, getPackageRoot} = require("./util")
 const {existsSync, mkdirSync} = require("fs")
 
 function determineBuildPaths(package, outputs, entryName) {
@@ -53,7 +53,7 @@ function determineBuildPaths(package, outputs, entryName) {
 
   return Object.keys(outputs).map(type => ({
     type,
-    dir: resolve(join(process.cwd(), dirname(outputs[type]))),
+    dir: resolve(join(getPackageRoot(), dirname(outputs[type]))),
     entry: basename(outputs[type]),
   }))
 }

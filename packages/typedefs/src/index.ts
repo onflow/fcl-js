@@ -174,7 +174,7 @@ export type CurrentUser = {
   /**
    * - A list of trusted services that express ways of interacting with the current user's identity
    */
-  services: Array<object>
+  services: Array<Service>
 }
 export type Event = {
   /**
