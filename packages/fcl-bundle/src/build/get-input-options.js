@@ -69,7 +69,7 @@ module.exports = function getInputOptions(package, build) {
     ".tsx",
     ".mts",
     ".cts",
-    ".png",
+    ".svg",
   ])
 
   const postcssConfigPath = path.resolve(getPackageRoot(), "postcss.config.js")

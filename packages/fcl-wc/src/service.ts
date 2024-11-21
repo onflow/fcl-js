@@ -11,7 +11,7 @@ import {createSessionProposal, request} from "./session"
 import {ModalCtrlState} from "@walletconnect/modal-core/dist/_types/src/types/controllerTypes"
 import {showNotification} from "./ui/notifications"
 import type {FclWalletConnectConfig} from "./fcl-wc"
-import mobileIcon from "./ui/assets/mobile.png"
+import mobileIcon from "./ui/assets/mobile.svg"
 import {CurrentUser, Service} from "@onflow/typedefs"
 import {SessionTypes} from "@walletconnect/types"
 
@@ -287,7 +287,7 @@ export function showWcRequestNotification({
   user: CurrentUser
 }) {
   const authnService = user?.services?.find((s: any) => s.type === "authn")
-  const walletProvider = authnService?.provider || service.provider
+  const walletProvider = authnService?.provider
 
   return showNotification({
     title: walletProvider?.name || "Mobile Wallet",
