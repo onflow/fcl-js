@@ -1,6 +1,6 @@
 import {invariant} from "@onflow/util-invariant"
 import {log, LEVELS} from "@onflow/util-logger"
-import {isMobile, openDeeplink, shouldDeepLink} from "./utils"
+import {isMobile, openDeeplink, preloadImage, shouldDeepLink} from "./utils"
 import {
   REQUEST_TYPES,
   SERVICE_PLUGIN_NAME,
@@ -62,6 +62,9 @@ const makeExec = (
     abortSignal?: AbortSignal
     user: any
   }) => {
+    // Preload provider image
+    preloadImage(service.provider?.icon)
+
     const {
       wcRequestHook,
       pairingModalOverride,
@@ -292,6 +295,7 @@ export function showWcRequestNotification({
       ? "Tap to view request in app"
       : "Pending request on your mobile device",
     icon: walletProvider?.icon || mobileIcon,
-    onClick: service.uid ? () => openDeeplink(service.uid!) : undefined,
+    onClick: isMobile() && service.uid ? () => openDeeplink(service.uid!) : undefined,
+    debounceDelay: service.type === "pre-authz" ? 500 : 0,
   })
 }

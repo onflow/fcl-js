@@ -5,6 +5,7 @@ import {NotificationInfo} from "../types/types"
 
 let renderRoot: HTMLElement | null = null
 let id = 0
+let dismissTimeout: NodeJS.Timeout | null = null
 
 function createRenderRoot() {
   const shadowHost = document.createElement("div")
@@ -38,9 +39,17 @@ export function showNotification({
   icon,
   onClick,
   onDismiss,
-}: NotificationInfo) {
+  debounceDelay = 0,
+}: NotificationInfo & {debounceDelay?: number}): {dismiss: () => void} {
   if (!renderRoot) {
     renderRoot = createRenderRoot()
+  }
+
+  // Don't animate if we are replacing an existing notification
+  const animate = !dismissTimeout
+  if (dismissTimeout) {
+    clearTimeout(dismissTimeout)
+    dismissTimeout = null
   }
 
   render(
@@ -51,19 +60,29 @@ export function showNotification({
       icon={icon}
       onClick={onClick}
       onDismiss={() => {
-        dismiss()
+        onDismiss?.() 
+        dismissUi()
       }}
+      animate={animate}
     />,
     renderRoot
   )
 
-  function dismiss() {
-    if (!renderRoot) return
-    render(null, renderRoot)
-    onDismiss?.()
+  function dismissUi() {
+    if (renderRoot) {
+      render(null, renderRoot)
+    }
   }
 
   return {
-    dismiss,
+    dismiss: () => {
+      console.log("dismiss", debounceDelay, dismissTimeout)
+      // We need to delay the dismiss to debounce any subsequent notifications
+      // This is important when there is both a FCL/WC authz and pre-authz service
+      dismissTimeout = setTimeout(() => {
+        dismissTimeout = null
+        dismissUi()
+      }, debounceDelay)
+    }
   }
 }

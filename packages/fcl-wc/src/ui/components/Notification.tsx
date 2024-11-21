@@ -7,13 +7,14 @@ export function Notification({
   icon,
   onClick,
   onDismiss,
-}: NotificationInfo) {
+  animate
+}: NotificationInfo & {animate?: boolean}) {
   return (
     <div
-      className="animate-slideUp fixed bottom-3 left-3 right-3 mx-auto z-[2147483647] flex
+      className={`fixed bottom-3 left-3 right-3 mx-auto z-[2147483647] flex
         max-w-sm overflow-hidden rounded-lg border border-gray-200 bg-white p-4
         shadow-lg md:bottom-4 md:left-auto md:right-4 dark:bg-gray-700
-        dark:border-gray-600"
+        dark:border-gray-600 ${animate ? "animate-slideUp" : ""}`}
       role="alert"
       onClick={e => {
         if (onClick) {

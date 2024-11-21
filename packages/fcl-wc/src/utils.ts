@@ -117,3 +117,9 @@ export function shouldDeepLink({service, user}: {service: Service; user: any}) {
 
   return true
 }
+
+export function preloadImage(url?: string | null) {
+  if (!url) return
+  const img = new Image()
+  img.src = url
+}
