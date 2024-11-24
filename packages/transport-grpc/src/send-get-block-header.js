@@ -1,5 +1,10 @@
 import {invariant} from "@onflow/util-invariant"
-import {GetLatestBlockHeaderRequest, GetBlockHeaderByIDRequest, GetBlockHeaderByHeightRequest, AccessAPI} from "@onflow/protobuf"
+import {
+  GetLatestBlockHeaderRequest,
+  GetBlockHeaderByIDRequest,
+  GetBlockHeaderByHeightRequest,
+  AccessAPI,
+} from "@onflow/protobuf"
 import {unary as defaultUnary} from "./unary"
 
 const u8ToHex = (u8, context) => context.Buffer.from(u8).toString("hex")
@@ -22,7 +27,12 @@ async function sendGetBlockHeaderByHeightRequest(ix, context, opts) {
   const req = new GetBlockHeaderByHeightRequest()
   req.setHeight(Number(ix.block.height))
 
-  const res = await unary(opts.node, AccessAPI.GetBlockHeaderByHeight, req, context)
+  const res = await unary(
+    opts.node,
+    AccessAPI.GetBlockHeaderByHeight,
+    req,
+    context
+  )
 
   return constructResponse(ix, context, res)
 }
@@ -36,7 +46,12 @@ async function sendGetLatestBlockHeaderRequest(ix, context, opts) {
     req.setIsSealed(ix.block.isSealed)
   }
 
-  const res = await unary(opts.node, AccessAPI.GetLatestBlockHeader, req, context)
+  const res = await unary(
+    opts.node,
+    AccessAPI.GetLatestBlockHeader,
+    req,
+    context
+  )
 
   return constructResponse(ix, context, res)
 }
@@ -57,9 +72,18 @@ function constructResponse(ix, context, res) {
 }
 
 export async function sendGetBlockHeader(ix, context = {}, opts = {}) {
-  invariant(opts.node, `SDK Send Get Block Header Error: opts.node must be defined.`)
-  invariant(context.response, `SDK Send Get Block Header Error: context.response must be defined.`)
-  invariant(context.Buffer, `SDK Send Get Block Header Error: context.Buffer must be defined.`)
+  invariant(
+    opts.node,
+    `SDK Send Get Block Header Error: opts.node must be defined.`
+  )
+  invariant(
+    context.response,
+    `SDK Send Get Block Header Error: context.response must be defined.`
+  )
+  invariant(
+    context.Buffer,
+    `SDK Send Get Block Header Error: context.Buffer must be defined.`
+  )
 
   ix = await ix
 

@@ -22,6 +22,8 @@ clean:
 	$(EXEC) sh -c 'rm -rf $$0/node_modules'
 	$(info delete packages/*/dist)
 	$(EXEC) sh -c 'rm -rf $$0/dist'
+	$(info delete packages/*/types)
+	$(EXEC) sh -c 'rm -rf $$0/types'
 
 .PHONY: install
 install:
@@ -31,12 +33,12 @@ install:
 .PHONY: build
 build:
 	$(info TSK: build)
-	sh -c 'npm run build -ws || exit 255'
+	sh -c 'npm run build || exit 255'
 
 .PHONY: test
 test:
 	$(info TSK: test)
-	sh -c 'npm run test exit 255'
+	sh -c 'npm run test || exit 255'
 
 .PHONY: publish
 publish:
@@ -47,4 +49,5 @@ publish:
 .PHONY: ci
 ci: clean install build
 	$(info TSK: ci)
-	sh -c 'npm run test --ws -- --ci || exit 255'
+	sh -c 'npm run test -- --ci || exit 255'
+	sh -c 'npm run prettier:check || exit 255'

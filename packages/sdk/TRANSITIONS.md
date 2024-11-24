@@ -1,5 +1,56 @@
 # Transitions
 
+## 0010 Deprecate interaction
+
+- **Date:** Sept 25th 2023
+- **Type:** Deprecation of interaction method
+
+The "interaction" method has been deprecated and will be removed in future versions.
+
+Please update your code to use the "initInteraction" method for improved functionality and compatibility.
+
+```javascript
+  // Deprecated:
+  const result = interaction();
+ 
+  // Recommended:
+  const result = initInteraction();
+```
+
+## 0009 Deprecate default compute limit
+
+- **Date:** Jun 7th 2022
+- **Type:** Deprecation of default compute limit (DEFAULT_COMPUTE_LIMIT=10)
+
+Previously, providing a compute limit for transactions was optional and a fallback existed (DEFAULT_COMPUTE_LIMIT=10).  This will be removed in a future version of the JS-SDK.
+
+In lieu of this feature, a configuration option has been added `fcl.limit` which allows developers to specify their desired fallback compute limit.  This configuration option can be used as such:
+
+```javascript
+import {config} from "@onflow/config"
+
+const DEFAULT_COMPUTE_LIMIT = ...
+config().put("fcl.limit", DEFAULT_COMPUTE_LIMIT)
+```
+
+Compute limits may still be applied explicitly in a transaction, with these taking priority above `fcl.limit`, as follows:
+
+```javascript
+import * as sdk from "@onflow/fcl"
+
+const TX_COMPUTE_LIMIT = ...
+
+sdk.send([
+  sdk.transaction`MY CADENCE CODE...`,
+  sdk.limit(TX_COMPUTE_LIMIT),
+  sdk.proposer(...),
+  sdk.authorizations([...]),
+  sdk.payer([...]),
+  ...
+])
+```
+
+
 ## 0008 Deprecate Latest Block Method
 
 - **Date:** Jan 14th 2022
@@ -56,7 +107,7 @@ await sdk.latestBlock(isSealed, options)
 The first argument to `latestBlock` must be a boolean specifying if the latest block must be sealed or not, followed by send options
 as the second argument.
 
-We reccomend migrating your code to the new format as soon as you can. In future versions of the JS-SDK, `latestBlock` may
+We recommend migrating your code to the new format as soon as you can. In future versions of the JS-SDK, `latestBlock` may
 cease to accept options as the first argument.
 
 ## 0006 Deprecate Get Latest Block Builder
@@ -84,9 +135,9 @@ await sdk.send(sdk.build([
 ```
 
 You can optionally specify if you require the latest block to be sealed or not by passing in an isSealed boolean as the first
-arguement to the `getBlock` builder.
+argument to the `getBlock` builder.
 
-We reccomend migrating your code to the new format as soon as you can. In future versions of the JS-SDK, the `getLatestBlock` builder
+We recommend migrating your code to the new format as soon as you can. In future versions of the JS-SDK, the `getLatestBlock` builder
 may cease to exist.
 
 ## 0005 Deprecate Start End Get Events Builder
@@ -123,7 +174,7 @@ await sdk.send(sdk.build([
 ]).then(sdk.decode)
 ```
 
-We reccomend migrating your code to the new format as soon as you can. In future versions of the JS-SDK, the `getEvents` builder
+We recommend migrating your code to the new format as soon as you can. In future versions of the JS-SDK, the `getEvents` builder
 may cease to exist.
 
 ## 0004 Deprecate Get Block By Id Builder
@@ -149,7 +200,7 @@ await sdk.send(sdk.build([
 ]).then(sdk.decode)
 ```
 
-We reccomend migrating your code to the new format as soon as you can. In future versions of the JS-SDK, the `getBlockById` builder
+We recommend migrating your code to the new format as soon as you can. In future versions of the JS-SDK, the `getBlockById` builder
 may cease to exist.
 
 ## 0003 Deprecate Get Block By Height Builder
@@ -175,7 +226,7 @@ await sdk.send(sdk.build([
 ]).then(sdk.decode)
 ```
 
-We reccomend migrating your code to the new format as soon as you can. In future versions of the JS-SDK, the `getBlockByHeight` builder
+We recommend migrating your code to the new format as soon as you can. In future versions of the JS-SDK, the `getBlockByHeight` builder
 may cease to exist.
 
 ## 0002 Deprecate Resolve Params Resolver
@@ -195,7 +246,7 @@ sdk.resolve(ix, [
 ```
 
 We are introducing a more generic resolver that covers core cadence concepts: `@onflow/sdk-resolve-cadence`.
-The above code using `sdk.resolveParams` will still work for now as a proxy to `@onflow/sdk-resolve-cadence` (with deprecation notice), but we can't promise it will stay around for ever in the future.
+The above code using `sdk.resolveParams` will still work for now as a proxy to `@onflow/sdk-resolve-cadence` (with deprecation notice), but we can't promise it will stay around forever in the future.
 
 Instead we would recommend that you use the following in its place:
 
@@ -320,7 +371,7 @@ const doTheThing = async (m1, m2, m3) => {
 
 **Some things to be aware of:**
 
-Import addresses have to be done as standard interopolation.
+Import addresses have to be done as standard interpolation.
 
 ```javascript
 import * as fcl from "@onflow/fcl"

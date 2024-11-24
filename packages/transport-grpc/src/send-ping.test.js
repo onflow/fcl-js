@@ -1,40 +1,24 @@
 import {AccessAPI} from "@onflow/protobuf"
 import {sendPing} from "./send-ping.js"
-import {build} from "../../sdk/src/build/build.js"
-import {ping} from "../../sdk/src/build/build-ping.js"
-import {resolve} from "../../sdk/src/resolve/resolve.js"
-import {response as responseADT} from "../../sdk/src/response/response.js"
 import {Buffer} from "@onflow/rlp"
-
-const jsonToUInt8Array = (json) => {
-    var str = JSON.stringify(json, null, 0);
-    var ret = new Uint8Array(str.length);
-    for (var i = 0; i < str.length; i++) {
-        ret[i] = str.charCodeAt(i);
-    }
-    return ret
-};
+import {build, ping, resolve, response as responseADT} from "@onflow/sdk"
 
 describe("Ping", () => {
   test("Ping", async () => {
-    const unaryMock = jest.fn();
+    const unaryMock = jest.fn()
 
-    unaryMock.mockReturnValue({});
+    unaryMock.mockReturnValue({})
 
     await sendPing(
-        await resolve(
-            await build([
-                ping(),
-            ])
-        ),
-        {
-            response: responseADT,
-            Buffer,
-        },
-        {
-            unary: unaryMock,
-            node: "localhost:3000"
-        }
+      await resolve(await build([ping()])),
+      {
+        response: responseADT,
+        Buffer,
+      },
+      {
+        unary: unaryMock,
+        node: "localhost:3000",
+      }
     )
 
     expect(unaryMock.mock.calls.length).toEqual(1)
@@ -51,5 +35,4 @@ describe("Ping", () => {
 
     expect(unaryMockRequest).not.toBeUndefined()
   })
-
 })

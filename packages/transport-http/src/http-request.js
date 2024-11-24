@@ -1,178 +1,165 @@
-import {invariant} from "@onflow/util-invariant"
-import {getNodeHttpModules} from "@onflow/util-node-http-modules"
+import * as logger from "@onflow/util-logger"
+import fetchTransport from "cross-fetch"
+import {safeParseJSON} from "./utils"
+import {combineURLs} from "./combine-urls"
 
-class HTTPRequestError extends Error {
-  constructor({transport, error, hostname, path, port, method, requestBody, responseBody, responseStatusText, reqOn}) {
+const AbortController =
+  globalThis.AbortController || require("abort-controller")
+
+export class HTTPRequestError extends Error {
+  constructor({
+    error,
+    hostname,
+    path,
+    method,
+    requestBody,
+    responseBody,
+    responseStatusText,
+    statusCode,
+  }) {
     const msg = `
       HTTP Request Error: An error occurred when interacting with the Access API.
-      ${transport ? `transport=${transport}` : ""}
       ${error ? `error=${error}` : ""}
       ${hostname ? `hostname=${hostname}` : ""}
       ${path ? `path=${path}` : ""}
       ${method ? `method=${method}` : ""}
-      ${requestBody ? `requestBody=${JSON.stringify(requestBody)}` : ""}
+      ${requestBody ? `requestBody=${requestBody}` : ""}
       ${responseBody ? `responseBody=${responseBody}` : ""}
       ${responseStatusText ? `responseStatusText=${responseStatusText}` : ""}
-      ${reqOn ? `reqOn=${reqOn}` : ""}
+      ${statusCode ? `statusCode=${statusCode}` : ""}
     `
     super(msg)
+
     this.name = "HTTP Request Error"
+    this.statusCode = statusCode
+    this.errorMessage = error
   }
 }
 
 /**
- * Creates an HTTP Request to be sent to a REST Access API.
- * 
- * Supports the Fetch API on Web Browsers and Deno.
- * Uses the Node HTTP(S) standard libraries for Node.
- * 
- * @param {String} hostname - Access API Hostname
- * @param {String} path - Path to the resource on the Access API
- * @param {String} method - HTTP Method
- * @param {Object} body - HTTP Request Body
- * 
- * @returns JSON object response from Access API. 
+ * Creates an HTTP Request to be sent to a REST Access API via Fetch API.
+ *
+ * @param {object} options - Options for the HTTP Request
+ * @param {String} options.hostname - Access API Hostname
+ * @param {String} options.path - Path to the resource on the Access API
+ * @param {String} options.method - HTTP Method
+ * @param {object} options.body - HTTP Request Body
+ * @param {object} [options.headers] - HTTP Request Headers
+ * @param {boolean} [options.enableRequestLogging=true] - Enable/Disable request logging
+ * @param {number} [options.retryLimit=5] - Number of times to retry request
+ * @param {number} [options.retryIntervalMs=1000] - Time in milliseconds to wait before retrying request
+ * @param {number} [options.timeoutLimit=30000] - Time in milliseconds to wait before timing out request
+ *
+ * @returns JSON object response from Access API.
  */
 export async function httpRequest({
   hostname,
   path,
   method,
   body,
+  headers,
+  retryLimit = 5,
+  retryIntervalMs = 1000,
+  timeoutLimit = 30000,
+  enableRequestLogging = true,
 }) {
-  const isHTTPs = hostname.substring(0, 5) === "https"
+  const bodyJSON = body ? JSON.stringify(body) : null
 
-  let fetchTransport
-  try {
-    fetchTransport = fetch || window?.fetch
-  } catch (e) {}
+  function makeRequest() {
+    const controller = new AbortController()
+    const fetchTimeout = setTimeout(() => {
+      controller.abort()
+    }, timeoutLimit)
 
-  const {
-    nodeHttpsTransport,
-    nodeHttpTransport
-  } = await getNodeHttpModules()
-
-  invariant((fetchTransport || nodeHttpsTransport || nodeHttpTransport), "HTTP Request error: Could not find a supported HTTP module.")
-
-  if (fetchTransport) {
-    return fetchTransport(
-      `${hostname}${path}`,
-      {
-        method: method,
-        body: body ? JSON.stringify(body) : undefined,
-      }
-    ).then(async res => {
-      if (res.ok) {
-        return res.json()
-      }
-      const responseJSON = JSON.stringify(await res.json())
-      throw new HTTPRequestError({
-        transport: "FetchTransport",
-        error: responseJSON?.message,
-        hostname,
-        path,
-        method,
-        requestBody: body,
-        responseBody: responseJSON,
-        responseStatusText: res.statusText
-      })
-    }).catch(e => {
-      if (e instanceof HTTPRequestError) {
-        throw e
-      }
-      throw new HTTPRequestError({
-        transport: "FetchTransport",
-        error: e?.message,
-        hostname,
-        path,
-        method,
-        requestBody: body
-      })
+    return fetchTransport(combineURLs(hostname, path).toString(), {
+      method: method,
+      body: bodyJSON,
+      headers,
+      signal: controller.signal,
     })
+      .then(async res => {
+        if (res.ok) {
+          return res.json()
+        }
 
-  } else if (nodeHttpsTransport && nodeHttpTransport) {
+        const responseText = await res.text().catch(() => null)
+        const response = safeParseJSON(responseText)
 
-    return new Promise((resolve, reject) => {
-
-      const hostnameParts = hostname.split(":")
-      const port = hostnameParts.length == 3 ? hostnameParts[2] : undefined
-
-      let parsedHostname = hostnameParts.length > 1 ? hostnameParts[1].substring(2) : hostnameParts[0]
-
-      const transport = isHTTPs ? nodeHttpsTransport : nodeHttpTransport
-      const bodyString = body ? JSON.stringify(body) : null
-
-      const options = {
-        hostname: parsedHostname,
-        path,
-        port,
-        method,
-        headers: body ? {
-          "Content-Type": "application/json",
-          "Content-Length": bodyString.length
-        } : undefined
-      }
-
-      var responseBody = []
-      const req = transport.request(options, (res) => {
-        res.setEncoding('utf8');
-        
-        res.on("data", dataChunk => {
-          responseBody.push(dataChunk)
-        })
-
-        res.on("end", () => {
-          try {
-            responseBody = JSON.parse(responseBody.join(""))
-            if (res?.statusCode
-              && (Number(res?.statusCode) < 200 || Number(res?.statusCode) >= 300)
-            ) {
-              throw new HTTPRequestError({
-                transport: isHTTPs ? "NodeHTTPsTransport" : "NodeHTTPTransport",
-                error: JSON.stringify(responseBody),
-                hostname: parsedHostname,
-                path,
-                port,
-                method,
-                requestBody: body ? JSON.stringify(body) : null,
-                responseBody: JSON.stringify(responseBody),
-                reqOn: "end",
-              })
-            }
-          } catch(e) {
-            if (e instanceof HTTPRequestError) {
-              throw e
-            }
-            throw new HTTPRequestError({
-              transport: isHTTPs ? "NodeHTTPsTransport" : "NodeHTTPTransport",
-              error: e,
-              hostname: parsedHostname,
-              path,
-              port,
-              method,
-              reqOn: "end",
-            })
-          }
-          resolve(responseBody)
-        })
-      })
-
-      req.on("error", e => {
         throw new HTTPRequestError({
-          transport: isHTTPs ? "NodeHTTPsTransport" : "NodeHTTPTransport",
-          error: e,
-          hostname: parsedHostname,
+          error: response?.message,
+          hostname,
           path,
-          port,
           method,
-          requestBody: body,
-          responseBody,
-          reqOn: "error",
+          requestBody: bodyJSON,
+          responseBody: responseText,
+          responseStatusText: res.statusText,
+          statusCode: res.status,
         })
       })
-      
-      if (body) req.write(bodyString)
-      req.end()
+      .catch(async e => {
+        if (e instanceof HTTPRequestError) {
+          throw e
+        }
 
-    })
+        if (e.name === "AbortError") {
+          throw e
+        }
+
+        // Show AN error for all network errors
+        if (enableRequestLogging) {
+          await logger.log({
+            title: "Access Node Error",
+            message: `The provided access node ${hostname} does not appear to be a valid REST/HTTP access node.
+  Please verify that you are not unintentionally using a GRPC access node.
+  See more here: https://docs.onflow.org/fcl/reference/sdk-guidelines/#connect`,
+            level: logger.LEVELS.error,
+          })
+        }
+
+        throw new HTTPRequestError({
+          error: e?.message,
+          hostname,
+          path,
+          method,
+          requestBody: bodyJSON,
+        })
+      })
+      .finally(() => {
+        clearTimeout(fetchTimeout)
+      })
   }
+
+  async function requestLoop(retryAttempt = 0) {
+    try {
+      const resp = await makeRequest()
+      return resp
+    } catch (error) {
+      const retryStatusCodes = [408, 429, 500, 502, 503, 504]
+
+      if (
+        error.name === "AbortError" ||
+        retryStatusCodes.includes(error.statusCode)
+      ) {
+        return await new Promise((resolve, reject) => {
+          if (retryAttempt < retryLimit) {
+            if (enableRequestLogging) {
+              console.warn(
+                `Access node unavailable, retrying in ${retryIntervalMs} ms...`
+              )
+            }
+            setTimeout(() => {
+              resolve(requestLoop(retryAttempt + 1))
+            }, retryIntervalMs)
+          } else {
+            reject(error)
+          }
+        })
+      } else {
+        throw error
+      }
+    }
+  }
+
+  // Keep retrying request until server available or max attempts exceeded
+  return await requestLoop()
 }

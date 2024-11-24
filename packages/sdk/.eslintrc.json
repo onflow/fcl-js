@@ -1,0 +1,19 @@
+{
+  "env": {
+    "browser": true,
+    "es2021": true,
+    "jest": true,
+    "node": true
+  },
+  "extends": ["plugin:jsdoc/recommended"],
+  "plugins": ["jsdoc"],
+  "parserOptions": {
+    "ecmaVersion": "latest",
+    "sourceType": "module"
+  },
+  "ignorePatterns": ["**/dist/"],
+  "rules": {
+    "jsdoc/require-jsdoc": 0,
+    "jsdoc/valid-types": 0
+  }
+}

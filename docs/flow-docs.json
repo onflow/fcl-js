@@ -1,0 +1,102 @@
+{
+  "$schema": "https://developers.flow.com/schemas/flow-docs.json",
+  "displayName": "Flow Client Library (JS)",
+  "headers": {
+    "": {
+      "icon": "fcl-js",
+      "title": "Flow Client Library",
+      "description": "The Flow Client Library (FCL) JS is a package used to interact with user wallets and the Flow blockchain enabling dapps to support all FCL-compatible wallets and users without any custom integrations to the dapp code",
+      "headerCards": [
+        {
+          "title": "Installation",
+          "tags": ["setup", "guide"],
+          "description": "Set up your local environment and install the necessary dependencies to start using FCL",
+          "href": "/tools/fcl-js#getting-started"
+        },
+        {
+          "title": "Flow App Quickstart",
+          "tags": ["tutorial", "dapp"],
+          "description": "A tutorial that will allow you to start building with web3 on the Flow blockchain and FCL",
+          "href": "/tools/fcl-js/tutorials/flow-app-quickstart"
+        },
+        {
+          "title": "Wallet Discovery",
+          "tags": ["wallets", "reference"],
+          "description": "Learn more about integrating Flow compatible wallets with your dapp",
+          "href": "/tools/fcl-js/reference/discovery"
+        }
+      ]
+    }
+  },
+  "sidebars": {
+    "": [
+      {
+        "title": "Flow Client Library JS",
+        "items": [
+          {
+            "title": "Introduction",
+            "href": ""
+          }
+        ]
+      },
+      {
+        "title": "Tutorials",
+        "items": [
+          {
+            "title": "Flow App Quickstart",
+            "href": "tutorials/flow-app-quickstart"
+          }
+        ]
+      },
+      {
+        "title": "Reference",
+        "items": [
+          {
+            "title": "API",
+            "href": "reference/api"
+          },
+          {
+            "title": "Authentication",
+            "href": "reference/authentication"
+          },
+          {
+            "title": "Configuring FCL",
+            "href": "reference/configure-fcl"
+          },
+          {
+            "title": "Discovery",
+            "href": "reference/discovery"
+          },
+          {
+            "title": "Interaction Templates",
+            "href": "reference/interaction-templates"
+          },
+          {
+            "title": "Proving Authentication",
+            "href": "reference/proving-authentication"
+          },
+          {
+            "title": "Scripts",
+            "href": "reference/scripts"
+          },
+          {
+            "title": "SDK Guidelines",
+            "href": "reference/sdk-guidelines"
+          },
+          {
+            "title": "Transactions",
+            "href": "reference/transactions"
+          },
+          {
+            "title": "User Signatures",
+            "href": "reference/user-signatures"
+          },
+          {
+            "title": "Add FCL Support for WalletConnect 2.0",
+            "href": "reference/wallet-connect"
+          }
+        ]
+      }
+    ]
+  }
+}

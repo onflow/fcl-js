@@ -5,7 +5,10 @@ import {NodeHttpTransport} from "@improbable-eng/grpc-web-node-http-transport"
 grpc.setDefaultTransport(NodeHttpTransport())
 
 export async function unary(host, method, request, context) {
-  invariant(context.config, `SDK GRPC Unary Error: context.config must be defined.`)
+  invariant(
+    context.config,
+    `SDK GRPC Unary Error: context.config must be defined.`
+  )
   const metadataFromConfig = await context.config().get("grpc.metadata", {})
   return new Promise((resolve, reject) => {
     grpc.unary(method, {

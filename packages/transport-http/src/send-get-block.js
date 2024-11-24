@@ -8,7 +8,7 @@ async function sendGetBlockByIDRequest(ix, context, opts) {
     hostname: opts.node,
     path: `/v1/blocks/${ix.block.id}?expand=payload`,
     method: "GET",
-    body: null
+    body: null,
   })
 
   return constructResponse(ix, context, res)
@@ -21,7 +21,7 @@ async function sendGetBlockByHeightRequest(ix, context, opts) {
     hostname: opts.node,
     path: `/v1/blocks?height=${ix.block.height}&expand=payload`,
     method: "GET",
-    body: null
+    body: null,
   })
 
   return constructResponse(ix, context, res)
@@ -30,15 +30,13 @@ async function sendGetBlockByHeightRequest(ix, context, opts) {
 async function sendGetBlockRequest(ix, context, opts) {
   const httpRequest = opts.httpRequest || defaultHttpRequest
 
-  const height = ix.block?.isSealed
-    ? "sealed"
-    : "final"
+  const height = ix.block?.isSealed ? "sealed" : "final"
 
   const res = await httpRequest({
     hostname: opts.node,
     path: `/v1/blocks?height=${height}&expand=payload`,
     method: "GET",
-    body: null
+    body: null,
   })
 
   return constructResponse(ix, context, res)
@@ -54,14 +52,16 @@ function constructResponse(ix, context, res) {
     parentId: block.header.parent_id,
     height: Number(block.header.height),
     timestamp: block.header.timestamp,
-    collectionGuarantees: block.payload.collection_guarantees.map(collectionGuarantee => ({
-      collectionId: collectionGuarantee.collection_id,
-      signerIds: collectionGuarantee.signer_ids,
-    })),
-    blockSeals:  block.payload.block_seals.map(blockSeal => ({
+    collectionGuarantees: block.payload.collection_guarantees.map(
+      collectionGuarantee => ({
+        collectionId: collectionGuarantee.collection_id,
+        signerIds: collectionGuarantee.signer_ids,
+      })
+    ),
+    blockSeals: block.payload.block_seals.map(blockSeal => ({
       blockId: blockSeal.block_id,
       executionReceiptId: blockSeal.result_id,
-    }))
+    })),
   }
 
   return ret
@@ -69,7 +69,10 @@ function constructResponse(ix, context, res) {
 
 export async function sendGetBlock(ix, context = {}, opts = {}) {
   invariant(opts.node, `SDK Send Get Block Error: opts.node must be defined.`)
-  invariant(context.response, `SDK Send Get Block Error: context.response must be defined.`)
+  invariant(
+    context.response,
+    `SDK Send Get Block Error: context.response must be defined.`
+  )
 
   ix = await ix
 

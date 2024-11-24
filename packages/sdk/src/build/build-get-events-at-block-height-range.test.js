@@ -1,4 +1,4 @@
-import {interaction, isGetEvents} from "../interaction/interaction.js"
+import {initInteraction, isGetEvents} from "../interaction/interaction"
 import {getEventsAtBlockHeightRange} from "./build-get-events-at-block-height-range.js"
 
 describe("Build Get Events At Block Height Range", () => {
@@ -7,7 +7,11 @@ describe("Build Get Events At Block Height Range", () => {
     const start = 123
     const end = 456
 
-    let ix = await getEventsAtBlockHeightRange(eventName, start, end)(interaction())
+    let ix = await getEventsAtBlockHeightRange(
+      eventName,
+      start,
+      end
+    )(initInteraction())
 
     expect(isGetEvents(ix)).toBe(true)
     expect(ix.events.eventType).toBe(eventName)

@@ -242,6 +242,26 @@ sdk.build([
 ])
 ```
 
+### Word128
+
+```javascript
+import * as t from "@onflow/types"
+
+sdk.build([
+  sdk.args([ sdk.arg(128, t.Word128) ])
+])
+```
+
+### Word256
+
+```javascript
+import * as t from "@onflow/types"
+
+sdk.build([
+  sdk.args([ sdk.arg(256, t.Word256) ])
+])
+```
+
 ### UFix64
 
 ```javascript
@@ -454,5 +474,15 @@ sdk.build([
       t.Resource("0x01.Jeffysaur", [{value: t.String}]),
     )
   ])
+])
+```
+
+### InclusiveRange
+
+```javascript
+import * as t from "@onflow/types"
+
+sdk.build([
+  sdk.args([ sdk.arg({start: "1", end: "10", step: "1"}, t.InclusiveRange(t.Int)) ])
 ])
 ```

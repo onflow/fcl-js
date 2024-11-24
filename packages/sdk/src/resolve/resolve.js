@@ -1,23 +1,23 @@
-import {pipe, isTransaction} from "../interaction/interaction.js"
+import {pipe, isTransaction} from "../interaction/interaction"
 import {config} from "@onflow/config"
 import {invariant} from "@onflow/util-invariant"
 import {Buffer} from "@onflow/rlp"
 import {send as defaultSend} from "@onflow/transport-http"
-import * as ixModule from "../interaction/interaction.js"
-import {response} from "../response/response.js"
+import * as ixModule from "../interaction/interaction"
+import {response} from "../response/response"
 import {build} from "../build/build.js"
 import {getBlock} from "../build/build-get-block.js"
 import {getAccount} from "../build/build-get-account.js"
 import {decodeResponse as decode} from "../decode/decode.js"
 
-import {resolveRefBlockId} from "./resolve-ref-block-id.js"
 import {resolveCadence} from "./resolve-cadence.js"
 import {resolveArguments} from "./resolve-arguments.js"
-import {resolveAccounts} from "./resolve-accounts.js"
-import {resolveSignatures} from "./resolve-signatures.js"
+import {resolveAccounts} from "./resolve-accounts"
+import {resolveSignatures} from "./resolve-signatures"
 import {resolveValidators} from "./resolve-validators.js"
 import {resolveFinalNormalization} from "./resolve-final-normalization.js"
 import {resolveVoucherIntercept} from "./resolve-voucher-intercept.js"
+import {resolveComputeLimit} from "./resolve-compute-limit.js"
 
 const noop = v => v
 const debug =
@@ -51,6 +51,8 @@ const debug =
 export const resolve = pipe([
   resolveCadence,
   debug("cadence", (ix, log) => log(ix.message.cadence)),
+  resolveComputeLimit,
+  debug("compute limit", (ix, log) => log(ix.message.computeLimit)),
   resolveArguments,
   debug("arguments", (ix, log) => log(ix.message.arguments, ix.message)),
   resolveAccounts,
@@ -68,7 +70,10 @@ export const resolve = pipe([
 async function execFetchRef(ix) {
   if (isTransaction(ix) && ix.message.refBlock == null) {
     const node = await config().get("accessNode.api")
-    const sendFn = await config.first(["sdk.transport", "sdk.send"], defaultSend)
+    const sendFn = await config.first(
+      ["sdk.transport", "sdk.send"],
+      defaultSend
+    )
 
     invariant(
       sendFn,
@@ -92,7 +97,10 @@ async function execFetchSequenceNumber(ix) {
     invariant(acct, `Transactions require a proposer`)
     if (acct.sequenceNum == null) {
       const node = await config().get("accessNode.api")
-      const sendFn = await config.first(["sdk.transport", "sdk.send"], defaultSend)
+      const sendFn = await config.first(
+        ["sdk.transport", "sdk.send"],
+        defaultSend
+      )
 
       invariant(
         sendFn,

@@ -46,6 +46,28 @@ export class CollectionGuarantee extends jspb.Message {
   setSignaturesList(value: Array<Uint8Array | string>): void;
   addSignatures(value: Uint8Array | string, index?: number): Uint8Array | string;
 
+  getReferenceBlockId(): Uint8Array | string;
+  getReferenceBlockId_asU8(): Uint8Array;
+  getReferenceBlockId_asB64(): string;
+  setReferenceBlockId(value: Uint8Array | string): void;
+
+  getSignature(): Uint8Array | string;
+  getSignature_asU8(): Uint8Array;
+  getSignature_asB64(): string;
+  setSignature(value: Uint8Array | string): void;
+
+  clearSignerIdsList(): void;
+  getSignerIdsList(): Array<Uint8Array | string>;
+  getSignerIdsList_asU8(): Array<Uint8Array>;
+  getSignerIdsList_asB64(): Array<string>;
+  setSignerIdsList(value: Array<Uint8Array | string>): void;
+  addSignerIds(value: Uint8Array | string, index?: number): Uint8Array | string;
+
+  getSignerIndices(): Uint8Array | string;
+  getSignerIndices_asU8(): Uint8Array;
+  getSignerIndices_asB64(): string;
+  setSignerIndices(value: Uint8Array | string): void;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): CollectionGuarantee.AsObject;
   static toObject(includeInstance: boolean, msg: CollectionGuarantee): CollectionGuarantee.AsObject;
@@ -60,6 +82,10 @@ export namespace CollectionGuarantee {
   export type AsObject = {
     collectionId: Uint8Array | string,
     signaturesList: Array<Uint8Array | string>,
+    referenceBlockId: Uint8Array | string,
+    signature: Uint8Array | string,
+    signerIdsList: Array<Uint8Array | string>,
+    signerIndices: Uint8Array | string,
   }
 }
 

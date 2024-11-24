@@ -1,5 +1,9 @@
 import {invariant} from "@onflow/util-invariant"
-import {GetAccountAtLatestBlockRequest, GetAccountAtBlockHeightRequest, AccessAPI} from "@onflow/protobuf"
+import {
+  GetAccountAtLatestBlockRequest,
+  GetAccountAtBlockHeightRequest,
+  AccessAPI,
+} from "@onflow/protobuf"
 import {sansPrefix, withPrefix} from "@onflow/util-address"
 import {unary as defaultUnary} from "./unary"
 
@@ -30,7 +34,12 @@ async function sendGetAccountAtBlockHeightRequest(ix, context, opts) {
   req.setBlockHeight(Number(ix.block.height))
   req.setAddress(addressBuffer(sansPrefix(ix.account.addr), context))
 
-  const res = await unary(opts.node, AccessAPI.GetAccountAtBlockHeight, req, context)
+  const res = await unary(
+    opts.node,
+    AccessAPI.GetAccountAtBlockHeight,
+    req,
+    context
+  )
 
   return constructResponse(ix, context, res)
 }
@@ -41,7 +50,12 @@ async function sendGetAccountAtLatestBlockRequest(ix, context, opts) {
   const req = new GetAccountAtLatestBlockRequest()
   req.setAddress(addressBuffer(sansPrefix(ix.account.addr), context))
 
-  const res = await unary(opts.node, AccessAPI.GetAccountAtLatestBlock, req, context)
+  const res = await unary(
+    opts.node,
+    AccessAPI.GetAccountAtLatestBlock,
+    req,
+    context
+  )
 
   return constructResponse(ix, context, res)
 }
@@ -52,16 +66,25 @@ function constructResponse(ix, context, res) {
 
   const account = res.getAccount()
 
-  let contractsMap;
-  const contracts = (contractsMap = account.getContractsMap()) ? contractsMap.getEntryList().reduce((acc, contract) => ({
-    ...acc,
-    [contract[0]]: context.Buffer.from(contract[1] || new UInt8Array()).toString("utf8")
-  }), {}) : {}
+  let contractsMap
+  const contracts = (contractsMap = account.getContractsMap())
+    ? contractsMap.getEntryList().reduce(
+        (acc, contract) => ({
+          ...acc,
+          [contract[0]]: context.Buffer.from(
+            contract[1] || new UInt8Array()
+          ).toString("utf8"),
+        }),
+        {}
+      )
+    : {}
 
   ret.account = {
     address: withPrefix(u8ToHex(account.getAddress_asU8(), context)),
     balance: account.getBalance(),
-    code: context.Buffer.from(account.getCode_asU8() || new UInt8Array()).toString("utf8"),
+    code: context.Buffer.from(
+      account.getCode_asU8() || new UInt8Array()
+    ).toString("utf8"),
     contracts,
     keys: account.getKeysList().map(publicKey => ({
       index: publicKey.getIndex(),
@@ -79,11 +102,16 @@ function constructResponse(ix, context, res) {
   return ret
 }
 
-
 export async function sendGetAccount(ix, context = {}, opts = {}) {
   invariant(opts.node, `SDK Send Get Account Error: opts.node must be defined.`)
-  invariant(context.response, `SDK Get Account Error: context.response must be defined.`)
-  invariant(context.Buffer, `SDK Get Account Error: context.Buffer must be defined.`)
+  invariant(
+    context.response,
+    `SDK Get Account Error: context.response must be defined.`
+  )
+  invariant(
+    context.Buffer,
+    `SDK Get Account Error: context.Buffer must be defined.`
+  )
 
   ix = await ix
 

@@ -1,41 +1,41 @@
 import {sendExecuteScript} from "./send-execute-script.js"
-import {build} from "../../sdk/src/build/build.js"
-import {script} from "../../sdk/src/build/build-script.js"
-import { args, arg } from "../../sdk/src/build/build-arguments.js"
-import {atBlockId} from "../../sdk/src/build/build-at-block-id.js"
-import {atBlockHeight} from "../../sdk/src/build/build-at-block-height.js"
-import {resolve} from "../../sdk/src/resolve/resolve.js"
-import {response as responseADT} from "../../sdk/src/response/response.js"
 import * as types from "@onflow/types"
 import {Buffer} from "@onflow/rlp"
+import {
+  arg,
+  args,
+  atBlockHeight,
+  atBlockId,
+  build,
+  resolve,
+  response as responseADT,
+  script,
+} from "@onflow/sdk"
 
 describe("Send Execute Script", () => {
   test("ExecuteScriptAtLatestBlock", async () => {
-    const httpRequestMock = jest.fn();
+    const httpRequestMock = jest.fn()
 
-    const returnedJSONCDC = Buffer.from(JSON.stringify({type: "Int", value: 123})).toString("base64")
+    const returnedJSONCDC = Buffer.from(
+      JSON.stringify({type: "Int", value: 123})
+    ).toString("base64")
 
-    httpRequestMock.mockReturnValue(
-        returnedJSONCDC
-    )
+    httpRequestMock.mockReturnValue(returnedJSONCDC)
 
-    const cadence = "pub fun main(a: Int): Int { return a }"
+    const cadence = "access(all) fun main(a: Int): Int { return a }"
 
     let response = await sendExecuteScript(
-        await resolve(
-            await build([
-                script(cadence),
-                args([ arg( 123, types.Int ) ])
-            ])
-        ),
-        {
-            response: responseADT,
-            Buffer,
-        },
-        {
-            httpRequest: httpRequestMock,
-            node: "localhost"
-        }
+      await resolve(
+        await build([script(cadence), args([arg(123, types.Int)])])
+      ),
+      {
+        response: responseADT,
+        Buffer,
+      },
+      {
+        httpRequest: httpRequestMock,
+        node: "localhost",
+      }
     )
 
     expect(httpRequestMock.mock.calls.length).toEqual(1)
@@ -47,40 +47,41 @@ describe("Send Execute Script", () => {
     const valueSent = httpRequestMock.mock.calls[0][0]
 
     expect(valueSent).toEqual({
-        hostname: "localhost",
-        path: "/v1/scripts?block_height=sealed",
-        method: "POST",
-        body: { script: "cHViIGZ1biBtYWluKGE6IEludCk6IEludCB7IHJldHVybiBhIH0=", arguments: ["eyJ0eXBlIjoiSW50IiwidmFsdWUiOiIxMjMifQ=="] }
+      hostname: "localhost",
+      path: "/v1/scripts?block_height=sealed",
+      method: "POST",
+      body: {
+        script:
+          "YWNjZXNzKGFsbCkgZnVuIG1haW4oYTogSW50KTogSW50IHsgcmV0dXJuIGEgfQ==",
+        arguments: ["eyJ0eXBlIjoiSW50IiwidmFsdWUiOiIxMjMifQ=="],
+      },
     })
-    expect(response.encodedData).toEqual(JSON.parse(Buffer.from(returnedJSONCDC, "base64").toString()))
+    expect(response.encodedData).toEqual(
+      JSON.parse(Buffer.from(returnedJSONCDC, "base64").toString())
+    )
   })
 
   test("ExecuteScriptAtBlockID", async () => {
-    const httpRequestMock = jest.fn();
+    const httpRequestMock = jest.fn()
 
-    const returnedJSONCDC = Buffer.from(JSON.stringify({type: "Int", value: 123})).toString("base64")
+    const returnedJSONCDC = Buffer.from(
+      JSON.stringify({type: "Int", value: 123})
+    ).toString("base64")
 
-    httpRequestMock.mockReturnValue(
-        returnedJSONCDC
-    )
+    httpRequestMock.mockReturnValue(returnedJSONCDC)
 
-    const cadence = "pub fun main(): Int { return 123 }"
+    const cadence = "access(all) fun main(): Int { return 123 }"
 
     let response = await sendExecuteScript(
-        await resolve(
-            await build([
-                script(cadence),
-                atBlockId(123)
-            ])
-        ),
-        {
-            response: responseADT,
-            Buffer,
-        },
-        {
-            httpRequest: httpRequestMock,
-            node: "localhost"
-        }
+      await resolve(await build([script(cadence), atBlockId(123)])),
+      {
+        response: responseADT,
+        Buffer,
+      },
+      {
+        httpRequest: httpRequestMock,
+        node: "localhost",
+      }
     )
 
     expect(httpRequestMock.mock.calls.length).toEqual(1)
@@ -92,40 +93,40 @@ describe("Send Execute Script", () => {
     const valueSent = httpRequestMock.mock.calls[0][0]
 
     expect(valueSent).toEqual({
-        hostname: "localhost",
-        path: "/v1/scripts?block_id=123",
-        method: "POST",
-        body: { script: "cHViIGZ1biBtYWluKCk6IEludCB7IHJldHVybiAxMjMgfQ==", arguments: [] }
+      hostname: "localhost",
+      path: "/v1/scripts?block_id=123",
+      method: "POST",
+      body: {
+        script: "YWNjZXNzKGFsbCkgZnVuIG1haW4oKTogSW50IHsgcmV0dXJuIDEyMyB9",
+        arguments: [],
+      },
     })
-    expect(response.encodedData).toEqual(JSON.parse(Buffer.from(returnedJSONCDC, "base64").toString()))
+    expect(response.encodedData).toEqual(
+      JSON.parse(Buffer.from(returnedJSONCDC, "base64").toString())
+    )
   })
 
   test("ExecuteScriptAtBlockHeight", async () => {
-    const httpRequestMock = jest.fn();
+    const httpRequestMock = jest.fn()
 
-    const returnedJSONCDC = Buffer.from(JSON.stringify({type: "Int", value: 123})).toString("base64")
+    const returnedJSONCDC = Buffer.from(
+      JSON.stringify({type: "Int", value: 123})
+    ).toString("base64")
 
-    httpRequestMock.mockReturnValue(
-        returnedJSONCDC
-    )
+    httpRequestMock.mockReturnValue(returnedJSONCDC)
 
-    const cadence = "pub fun main(): Int { return 123 }"
+    const cadence = "access(all) fun main(): Int { return 123 }"
 
     let response = await sendExecuteScript(
-        await resolve(
-            await build([
-                script(cadence),
-                atBlockHeight(123)
-            ])
-        ),
-        {
-            response: responseADT,
-            Buffer,
-        },
-        {
-            httpRequest: httpRequestMock,
-            node: "localhost"
-        }
+      await resolve(await build([script(cadence), atBlockHeight(123)])),
+      {
+        response: responseADT,
+        Buffer,
+      },
+      {
+        httpRequest: httpRequestMock,
+        node: "localhost",
+      }
     )
 
     expect(httpRequestMock.mock.calls.length).toEqual(1)
@@ -137,12 +138,16 @@ describe("Send Execute Script", () => {
     const valueSent = httpRequestMock.mock.calls[0][0]
 
     expect(valueSent).toEqual({
-        hostname: "localhost",
-        path: "/v1/scripts?block_height=123",
-        method: "POST",
-        body: { script: "cHViIGZ1biBtYWluKCk6IEludCB7IHJldHVybiAxMjMgfQ==", arguments: [] }
+      hostname: "localhost",
+      path: "/v1/scripts?block_height=123",
+      method: "POST",
+      body: {
+        script: "YWNjZXNzKGFsbCkgZnVuIG1haW4oKTogSW50IHsgcmV0dXJuIDEyMyB9",
+        arguments: [],
+      },
     })
-    expect(response.encodedData).toEqual(JSON.parse(Buffer.from(returnedJSONCDC, "base64").toString()))
+    expect(response.encodedData).toEqual(
+      JSON.parse(Buffer.from(returnedJSONCDC, "base64").toString())
+    )
   })
-
 })

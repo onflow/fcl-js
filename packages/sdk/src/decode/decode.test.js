@@ -1,24 +1,20 @@
-import * as root from "./decode.js"
-import {decode, decodeResponse} from "./decode.js"
+import {decode, decodeResponse} from "./decode"
 import {Buffer} from "@onflow/rlp"
-
-it("exported interface contract", () => {
-  expect(root).toStrictEqual(
-    expect.objectContaining({
-      decode: expect.any(Function),
-      decodeResponse: expect.any(Function),
-    })
-  )
-})
+import * as decodeStreamModule from "./decode-stream"
+import * as decodeModule from "./decode"
 
 it("decodeResponse", async () => {
   const response = {
-    encodedData: JSON.parse(Buffer.from(Uint8Array.from(
+    encodedData: JSON.parse(
       Buffer.from(
-        "7b2274797065223a22496e74222c2276616c7565223a2237227d0a",
-        "hex"
-      )
-    )).toString("utf8")),
+        Uint8Array.from(
+          Buffer.from(
+            "7b2274797065223a22496e74222c2276616c7565223a2237227d0a",
+            "hex"
+          )
+        )
+      ).toString("utf8")
+    ),
   }
 
   const data = await decodeResponse(response)
@@ -300,7 +296,23 @@ describe("unit tests to cover all types", () => {
     expect(decoded).toStrictEqual("4294967295")
   })
 
-  it("returns the correct response given a json-cdc payload 30 WORD64", async () => {
+  it("returns the correct response given a json-cdc payload 30 WORD128", async () => {
+    const payload = {type: "Word128", value: "12412531315"}
+
+    const decoded = await decode(payload)
+
+    expect(decoded).toStrictEqual("12412531315")
+  })
+
+  it("returns the correct response given a json-cdc payload 31 WORD256", async () => {
+    const payload = {type: "Word256", value: "555153134124"}
+
+    const decoded = await decode(payload)
+
+    expect(decoded).toStrictEqual("555153134124")
+  })
+
+  it("returns the correct response given a json-cdc payload 32 WORD64", async () => {
     const payload = {type: "Word64", value: "18446744073709551615"}
 
     const decoded = await decode(payload)
@@ -308,7 +320,7 @@ describe("unit tests to cover all types", () => {
     expect(decoded).toStrictEqual("18446744073709551615")
   })
 
-  it("returns the correct response given a json-cdc payload 31 FIX64", async () => {
+  it("returns the correct response given a json-cdc payload 33 FIX64", async () => {
     const payload = {type: "Fix64", value: "789.00123010"}
 
     const decoded = await decode(payload)
@@ -316,7 +328,7 @@ describe("unit tests to cover all types", () => {
     expect(decoded).toStrictEqual("789.00123010")
   })
 
-  it("returns the correct response given a json-cdc payload 32 FIX64", async () => {
+  it("returns the correct response given a json-cdc payload 34 FIX64", async () => {
     const payload = {type: "Fix64", value: "-12345.00678900"}
 
     const decoded = await decode(payload)
@@ -324,7 +336,7 @@ describe("unit tests to cover all types", () => {
     expect(decoded).toStrictEqual("-12345.00678900")
   })
 
-  it("returns the correct response given a json-cdc payload 33 UFIX64", async () => {
+  it("returns the correct response given a json-cdc payload 35 UFIX64", async () => {
     const payload = {type: "UFix64", value: "789.00123010"}
 
     const decoded = await decode(payload)
@@ -332,7 +344,7 @@ describe("unit tests to cover all types", () => {
     expect(decoded).toStrictEqual("789.00123010")
   })
 
-  it("returns the correct response given a json-cdc payload 34 ARRAY", async () => {
+  it("returns the correct response given a json-cdc payload 36 ARRAY", async () => {
     const payload = {
       type: "Array",
       value: [
@@ -347,7 +359,7 @@ describe("unit tests to cover all types", () => {
     expect(decoded).toStrictEqual(["1", "2", "3"])
   })
 
-  it("returns the correct response given a json-cdc payload 35 ARRAY", async () => {
+  it("returns the correct response given a json-cdc payload 37 ARRAY", async () => {
     const payload = {
       type: "Array",
       value: [
@@ -380,7 +392,7 @@ describe("unit tests to cover all types", () => {
     expect(decoded).toStrictEqual([{bar: "1"}, {bar: "2"}, {bar: "3"}])
   })
 
-  it("returns the correct response given a json-cdc payload 36 DICTIONARY", async () => {
+  it("returns the correct response given a json-cdc payload 38 DICTIONARY", async () => {
     const payload = {
       type: "Dictionary",
       value: [
@@ -395,7 +407,7 @@ describe("unit tests to cover all types", () => {
     expect(decoded).toStrictEqual({a: "1", b: "2", c: "3"})
   })
 
-  it("returns the correct response given a json-cdc payload 37 DICTIONARY", async () => {
+  it("returns the correct response given a json-cdc payload 39 DICTIONARY", async () => {
     const payload = {
       type: "Dictionary",
       value: [
@@ -443,7 +455,7 @@ describe("unit tests to cover all types", () => {
     expect(decoded).toStrictEqual({a: {1: "1"}, b: {2: "2"}, c: {3: "3"}})
   })
 
-  it("returns the correct response given a json-cdc payload 38 DICTIONARY", async () => {
+  it("returns the correct response given a json-cdc payload 40 DICTIONARY", async () => {
     const payload = {
       type: "Dictionary",
       value: [
@@ -485,7 +497,7 @@ describe("unit tests to cover all types", () => {
     expect(decoded).toStrictEqual({a: {bar: "1"}, b: {bar: "2"}, c: {bar: "3"}})
   })
 
-  it("returns the correct response given a json-cdc payload 39 RESOURCE", async () => {
+  it("returns the correct response given a json-cdc payload 41 RESOURCE", async () => {
     const payload = {
       type: "Resource",
       value: {
@@ -499,7 +511,7 @@ describe("unit tests to cover all types", () => {
     expect(decoded).toStrictEqual({bar: "42"})
   })
 
-  it("returns the correct response given a json-cdc payload 40 RESOURCE", async () => {
+  it("returns the correct response given a json-cdc payload 42 RESOURCE", async () => {
     const payload = {
       type: "Resource",
       value: {
@@ -524,55 +536,29 @@ describe("unit tests to cover all types", () => {
     expect(decoded).toStrictEqual({bar: {x: "42"}})
   })
 
-  it("returns the correct response given a json-cdc payload 41 STRUCT", async () => {
-    const payload = {
-      type: "Struct",
-      value: {
-        id: "test.FooStruct",
-        fields: [
-          {name: "a", value: {type: "Int", value: "1"}},
-          {name: "b", value: {type: "String", value: "foo"}},
-        ],
-      },
-    }
-
-    const decoded = await decode(payload)
-
-    expect(decoded).toStrictEqual({a: "1", b: "foo"})
-  })
-
-  it("returns the correct response given a json-cdc payload 42 STRUCT", async () => {
-    const payload = {
-      type: "Struct",
-      value: {
-        id: "test.FooStruct",
-        fields: [
-          {name: "a", value: {type: "String", value: "foo"}},
-          {
-            name: "b",
-            value: {
-              type: "Resource",
-              value: {
-                id: "test.Foo",
-                fields: [{name: "bar", value: {type: "Int", value: "42"}}],
-              },
-            },
-          },
-        ],
-      },
-    }
-
-    const decoded = await decode(payload)
-
-    expect(decoded).toStrictEqual({a: "foo", b: {bar: "42"}})
-  })
-
   it("returns the correct response given a json-cdc payload 43 STRUCT", async () => {
     const payload = {
       type: "Struct",
       value: {
         id: "test.FooStruct",
         fields: [
+          {name: "a", value: {type: "Int", value: "1"}},
+          {name: "b", value: {type: "String", value: "foo"}},
+        ],
+      },
+    }
+
+    const decoded = await decode(payload)
+
+    expect(decoded).toStrictEqual({a: "1", b: "foo"})
+  })
+
+  it("returns the correct response given a json-cdc payload 44 STRUCT", async () => {
+    const payload = {
+      type: "Struct",
+      value: {
+        id: "test.FooStruct",
+        fields: [
           {name: "a", value: {type: "String", value: "foo"}},
           {
             name: "b",
@@ -593,7 +579,33 @@ describe("unit tests to cover all types", () => {
     expect(decoded).toStrictEqual({a: "foo", b: {bar: "42"}})
   })
 
-  it("returns the correct response given a json-cdc payload 44 EVENT", async () => {
+  it("returns the correct response given a json-cdc payload 45 STRUCT", async () => {
+    const payload = {
+      type: "Struct",
+      value: {
+        id: "test.FooStruct",
+        fields: [
+          {name: "a", value: {type: "String", value: "foo"}},
+          {
+            name: "b",
+            value: {
+              type: "Resource",
+              value: {
+                id: "test.Foo",
+                fields: [{name: "bar", value: {type: "Int", value: "42"}}],
+              },
+            },
+          },
+        ],
+      },
+    }
+
+    const decoded = await decode(payload)
+
+    expect(decoded).toStrictEqual({a: "foo", b: {bar: "42"}})
+  })
+
+  it("returns the correct response given a json-cdc payload 46 EVENT", async () => {
     const payload = {
       type: "Event",
       value: {
@@ -610,7 +622,7 @@ describe("unit tests to cover all types", () => {
     expect(decoded).toStrictEqual({a: "1", b: "foo"})
   })
 
-  it("returns the correct response given a json-cdc payload 44 EVENT", async () => {
+  it("returns the correct response given a json-cdc payload 47 EVENT", async () => {
     const payload = {
       type: "Event",
       value: {
@@ -636,11 +648,11 @@ describe("unit tests to cover all types", () => {
     expect(decoded).toStrictEqual({a: "foo", b: {bar: "42"}})
   })
 
-  it("returns the correct response given a json-cdc payload 45 TYPE", async () => {
+  it("returns the correct response given a json-cdc payload 48 TYPE", async () => {
     const payload = {
       type: "Type",
       value: {
-        staticType: "FooType"
+        staticType: "FooType",
       },
     }
 
@@ -649,12 +661,12 @@ describe("unit tests to cover all types", () => {
     expect(decoded).toStrictEqual("FooType")
   })
 
-  it("returns the correct response given a json-cdc payload 46 PATH", async () => {
+  it("returns the correct response given a json-cdc payload 49 PATH", async () => {
     const payload = {
       type: "Path",
       value: {
         domain: "storage",
-        identifier: "123abc"
+        identifier: "123abc",
       },
     }
 
@@ -662,7 +674,26 @@ describe("unit tests to cover all types", () => {
 
     expect(decoded).toStrictEqual({
       domain: "storage",
-      identifier: "123abc"
+      identifier: "123abc",
+    })
+  })
+
+  it("returns the correct response given a json-cdc payload 50 INCLUSIVERANGE", async () => {
+    const payload = {
+      type: "InclusiveRange",
+      value: {
+        start: {type: "Int", value: "2"},
+        end: {type: "Int", value: "10"},
+        step: {type: "Int", value: "1"},
+      },
+    }
+
+    const decoded = await decode(payload)
+
+    expect(decoded).toStrictEqual({
+      start: "2",
+      end: "10",
+      step: "1",
     })
   })
 })
@@ -700,7 +731,8 @@ const genVoidSpec = () => {
 
 // Int
 const genInt = () => {
-  const minInt256 = -57896044618658097711785492504343953926634992332820282019728792003956564819978
+  const minInt256 =
+    -57896044618658097711785492504343953926634992332820282019728792003956564819978
   const maxUInt256 = 115792089237316195423570985008687907853269984665640564039457584007913129639945
   const ranInt = ~~(Math.random() * (maxUInt256 - minInt256) + minInt256)
   return {
@@ -762,9 +794,8 @@ const genDictionary = (depth = 0) => {
   const dictionaryLength = ~~(Math.random() * 10)
   const arr = Array.from({length: dictionaryLength}).reduce(
     acc => {
-      const {payload: valPayload, decoded: val} = OPTIONS[
-        ~~(Math.random() * OPTIONS.length)
-      ]()
+      const {payload: valPayload, decoded: val} =
+        OPTIONS[~~(Math.random() * OPTIONS.length)]()
       const {payload: keyPayload, decoded: ranStringKey} = genString()
       acc.dict.push({
         key: keyPayload,
@@ -815,9 +846,8 @@ const genResource = (depth = 0) => {
   const fieldsLength = ~~(Math.random() * 10)
   const res = Array.from({length: fieldsLength}).reduce(
     acc => {
-      const {payload: valPayload, decoded: val} = OPTIONS[
-        ~~(Math.random() * OPTIONS.length)
-      ]()
+      const {payload: valPayload, decoded: val} =
+        OPTIONS[~~(Math.random() * OPTIONS.length)]()
       const {decoded: ranStringName} = genString()
       acc.fields.push({
         name: ranStringName,
@@ -868,9 +898,8 @@ const genStruct = (depth = 0) => {
   const fieldsLength = ~~(Math.random() * 10)
   const res = Array.from({length: fieldsLength}).reduce(
     acc => {
-      const {payload: valPayload, decoded: val} = OPTIONS[
-        ~~(Math.random() * OPTIONS.length)
-      ]()
+      const {payload: valPayload, decoded: val} =
+        OPTIONS[~~(Math.random() * OPTIONS.length)]()
       const {decoded: ranStringName} = genString()
       acc.fields.push({
         name: ranStringName,
@@ -921,9 +950,8 @@ const genEvent = (depth = 0) => {
   const fieldsLength = ~~(Math.random() * 10)
   const res = Array.from({length: fieldsLength}).reduce(
     acc => {
-      const {payload: valPayload, decoded: val} = OPTIONS[
-        ~~(Math.random() * OPTIONS.length)
-      ]()
+      const {payload: valPayload, decoded: val} =
+        OPTIONS[~~(Math.random() * OPTIONS.length)]()
       const {decoded: ranStringName} = genString()
       acc.fields.push({
         name: ranStringName,
@@ -974,9 +1002,8 @@ const genEnum = (depth = 0) => {
   const fieldsLength = ~~(Math.random() * 10)
   const res = Array.from({length: fieldsLength}).reduce(
     acc => {
-      const {payload: valPayload, decoded: val} = OPTIONS[
-        ~~(Math.random() * OPTIONS.length)
-      ]()
+      const {payload: valPayload, decoded: val} =
+        OPTIONS[~~(Math.random() * OPTIONS.length)]()
       const {decoded: ranStringName} = genString()
       acc.fields.push({
         name: ranStringName,
@@ -1051,7 +1078,7 @@ const genArraySpec = () => {
 const genType = () => {
   const {payload, decoded} = genString()
   return {
-    payload: {type: "Type", value: { staticType: payload.value }},
+    payload: {type: "Type", value: {staticType: payload.value}},
     decoded: decoded,
   }
 }
@@ -1069,10 +1096,13 @@ const genPath = () => {
   const randDomain = domains[~~Math.random() * domains.length]
   const {payload, decoded} = genString()
   return {
-    payload: {type: "Path", value: { domain: randDomain, identifier: payload.value }},
+    payload: {
+      type: "Path",
+      value: {domain: randDomain, identifier: payload.value},
+    },
     decoded: {
       domain: randDomain,
-      identifier: decoded
+      identifier: decoded,
     },
   }
 }
@@ -1090,7 +1120,14 @@ const genCapability = () => {
   const {payload: payload2, decoded: decoded2} = genString()
   const {payload: payload3, decoded: decoded3} = genString()
   return {
-    payload: {type: "Capability", value: { path: payload1.value, address: payload2.value, borrowType: payload3.value }},
+    payload: {
+      type: "Capability",
+      value: {
+        path: payload1.value,
+        address: payload2.value,
+        borrowType: payload3.value,
+      },
+    },
     decoded: {
       path: decoded1,
       address: decoded2,
@@ -1167,6 +1204,19 @@ describe("custom decoder tests", () => {
     })
   })
 
+  it("custom regex decoder overrides default decoder correctly", async () => {
+    const resource = {
+      type: "String",
+      value: "original value",
+    }
+
+    const stringDecoder = _ => "replaced value"
+
+    const decoded = await decode(resource, {"/String/": stringDecoder})
+
+    expect(decoded).toStrictEqual("replaced value")
+  })
+
   it("decodes using a custom nested decoder correctly", async () => {
     const resource = {
       type: "Resource",
@@ -1179,7 +1229,7 @@ describe("custom decoder tests", () => {
       },
     }
 
-    const Jeff = function(resource) {
+    const Jeff = function (resource) {
       if (!(this instanceof Jeff)) return new Jeff(resource)
       this.firstName = resource.firstName
       this.lastName = resource.lastName
@@ -1294,10 +1344,11 @@ describe("custom decoder tests", () => {
 
 describe("decode GetEvents tests", () => {
   it("decodes a GetEvents response correctly", async () => {
-      const timestampISOString =new Date().toISOString()
+    const timestampISOString = new Date().toISOString()
 
-      const getEventsResponse = {
-        events: [{
+    const getEventsResponse = {
+      events: [
+        {
           blockHeight: 123,
           blockId: "abc123",
           blockTimestamp: timestampISOString,
@@ -1305,55 +1356,102 @@ describe("decode GetEvents tests", () => {
           transactionId: "abc-123",
           transactionIndex: 123,
           type: "MyFunAndCoolEvent",
-          payload: {type: "String", value: "foo"}
-        }]
-      }
+          payload: {type: "String", value: "foo"},
+        },
+      ],
+    }
 
-      expect(await decodeResponse(getEventsResponse)).toStrictEqual(
-        [{
-          blockHeight: 123,
-          blockId: "abc123",
-          blockTimestamp: timestampISOString,
-          eventIndex: 123,
-          transactionId: "abc-123",
-          transactionIndex: 123,
-          type: "MyFunAndCoolEvent",
-          data: "foo"
-        }]
-      )
+    expect(await decodeResponse(getEventsResponse)).toStrictEqual([
+      {
+        blockHeight: 123,
+        blockId: "abc123",
+        blockTimestamp: timestampISOString,
+        eventIndex: 123,
+        transactionId: "abc-123",
+        transactionIndex: 123,
+        type: "MyFunAndCoolEvent",
+        data: "foo",
+      },
+    ])
   })
 })
 
 describe("decode GetTransactionStatus tests", () => {
   it("decodes a GetEvents response correctly", async () => {
-      const getTransactionStatusResponse = {
-        transactionStatus: {
-          status: 4,
-          statusCode: 1,
-          errorMessage: null,
-          events: [{
+    const getTransactionStatusResponse = {
+      transactionStatus: {
+        status: 4,
+        statusCode: 1,
+        errorMessage: null,
+        events: [
+          {
             type: "LilBUBTheMagicalSpaceCat.LandedOnMars",
             transactionId: "my-fun-and-very-special-txn-id",
             transactionIndex: 123456,
             eventIndex: 7891011,
-            payload: {type: "String", value: "Thanks for reviewing these tests!"}
-          }]
-        }
-      }
+            payload: {
+              type: "String",
+              value: "Thanks for reviewing these tests!",
+            },
+          },
+        ],
+      },
+    }
 
-      expect(await decodeResponse(getTransactionStatusResponse)).toStrictEqual(
-        { 
-          status: 4,
-          statusCode: 1,
-          errorMessage: null,
-          events: [{
-            type: "LilBUBTheMagicalSpaceCat.LandedOnMars",
-            transactionId: "my-fun-and-very-special-txn-id",
-            transactionIndex: 123456,
-            eventIndex: 7891011,
-            data: "Thanks for reviewing these tests!"
-          }]
-        }
-      )
+    expect(await decodeResponse(getTransactionStatusResponse)).toStrictEqual({
+      status: 4,
+      statusCode: 1,
+      errorMessage: null,
+      events: [
+        {
+          type: "LilBUBTheMagicalSpaceCat.LandedOnMars",
+          transactionId: "my-fun-and-very-special-txn-id",
+          transactionIndex: 123456,
+          eventIndex: 7891011,
+          data: "Thanks for reviewing these tests!",
+        },
+      ],
+    })
   })
+})
+
+describe("decode stream connection tests", () => {
+  it("calls decodeStream to decode stream connection", async () => {
+    let mockStream = {}
+    const streamResponse = {
+      streamConnection: mockStream,
+    }
+    const decodeStreamSpy = jest
+      .spyOn(decodeStreamModule, "decodeStream")
+      .mockImplementation(() => {
+        return mockStream
+      })
+    const decoders = {foo: () => {}}
+    const decoded = await decodeResponse(streamResponse, decoders)
+
+    expect(decoded).toBe(mockStream)
+    expect(decodeStreamSpy).toHaveBeenCalledWith(
+      mockStream,
+      decodeResponse,
+      decoders
+    )
+  })
+})
+
+describe("decode heartbeat tests", () => {
+  it("decodes a heartbeat response correctly", async () => {
+    const heartbeatResponse = {
+      heartbeat: {
+        timestamp: 123456789,
+      },
+    }
+
+    expect(await decodeResponse(heartbeatResponse)).toStrictEqual({
+      timestamp: 123456789,
+    })
+  })
+})
+
+afterEach(() => {
+  jest.restoreAllMocks()
 })

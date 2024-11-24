@@ -1,18 +1,14 @@
+import {log} from "@onflow/util-logger"
+import {decodeStream} from "./decode-stream"
+
 const latestBlockDeprecationNotice = () => {
-  console.error(
-    `
-          %c@onflow/decode Deprecation Notice
-          ========================
-
-          Operating upon data of the latestBlock field of the response object is deprecated and will no longer be recognized in future releases of @onflow/decode.
-          Find out more here: https://github.com/onflow/flow-js-sdk/blob/master/packages/decode/WARNINGS.md#0001-Deprecating-latestBlock-field
-
-          =======================
-        `
-      .replace(/\n\s+/g, "\n")
-      .trim(),
-    "font-weight:bold;font-family:monospace;"
-  )
+  log.deprecate({
+    pkg: "@onflow/decode",
+    subject:
+      "Operating upon data of the latestBlock field of the response object",
+    transition:
+      "https://github.com/onflow/flow-js-sdk/blob/master/packages/decode/WARNINGS.md#0001-Deprecating-latestBlock-field",
+  })
 }
 
 const decodeNumber = async (num, _, stack) => {
@@ -23,39 +19,22 @@ const decodeNumber = async (num, _, stack) => {
   }
 }
 
-const decodeImplicit = async (i) => i
+const decodeImplicit = async i => i
 
 const decodeVoid = async () => null
 
-const decodeType = async (type) => {
+const decodeType = async type => {
   return type.staticType
-}
-
-const decodePath = async (path) => {
-  return {
-    domain: path.domain,
-    identifier: path.identifier
-  }
-}
-
-const decodeCapability = async (cap) => {
-  return {
-    path: cap.path,
-    address: cap.address,
-    borrowType: cap.borrowType
-  }
 }
 
 const decodeOptional = async (optional, decoders, stack) =>
   optional ? await recurseDecode(optional, decoders, stack) : null
 
-const decodeReference = async (v) => ({address: v.address, type: v.type})
-
 const decodeArray = async (array, decoders, stack) =>
   await Promise.all(
     array.map(
-      (v) =>
-        new Promise(async (res) =>
+      v =>
+        new Promise(async res =>
           res(await recurseDecode(v, decoders, [...stack, v.type]))
         )
     )
@@ -64,9 +43,8 @@ const decodeArray = async (array, decoders, stack) =>
 const decodeDictionary = async (dictionary, decoders, stack) =>
   await dictionary.reduce(async (acc, v) => {
     acc = await acc
-    acc[
-      await recurseDecode(v.key, decoders, [...stack, v.key])
-    ] = await recurseDecode(v.value, decoders, [...stack, v.key])
+    acc[await recurseDecode(v.key, decoders, [...stack, v.key])] =
+      await recurseDecode(v.value, decoders, [...stack, v.key])
     return acc
   }, Promise.resolve({}))
 
@@ -78,6 +56,21 @@ const decodeComposite = async (composite, decoders, stack) => {
   }, Promise.resolve({}))
   const decoder = composite.id && decoderLookup(decoders, composite.id)
   return decoder ? await decoder(decoded) : decoded
+}
+
+const decodeInclusiveRange = async (range, decoders, stack) => {
+  // Recursive decode for start, end, and step
+  // We don't do all fields just in case there are future API changes
+  // where fields added and are not Cadence values
+  const keys = ["start", "end", "step"]
+  const decoded = await Object.keys(range).reduce(async (acc, key) => {
+    acc = await acc
+    if (keys.includes(key)) {
+      acc[key] = await recurseDecode(range[key], decoders, [...stack, key])
+    }
+    return acc
+  }, Promise.resolve({}))
+  return decoded
 }
 
 const defaultDecoders = {
@@ -99,6 +92,8 @@ const defaultDecoders = {
   Word16: decodeImplicit,
   Word32: decodeImplicit,
   Word64: decodeImplicit,
+  Word128: decodeImplicit,
+  Word256: decodeImplicit,
   UFix64: decodeImplicit,
   Fix64: decodeImplicit,
   String: decodeImplicit,
@@ -107,7 +102,7 @@ const defaultDecoders = {
   Address: decodeImplicit,
   Void: decodeVoid,
   Optional: decodeOptional,
-  Reference: decodeReference,
+  Reference: decodeImplicit,
   Array: decodeArray,
   Dictionary: decodeDictionary,
   Event: decodeComposite,
@@ -115,12 +110,13 @@ const defaultDecoders = {
   Struct: decodeComposite,
   Enum: decodeComposite,
   Type: decodeType,
-  Path: decodePath,
-  Capability: decodeCapability,
+  Path: decodeImplicit,
+  Capability: decodeImplicit,
+  InclusiveRange: decodeInclusiveRange,
 }
 
 const decoderLookup = (decoders, lookup) => {
-  const found = Object.keys(decoders).find((decoder) => {
+  const found = Object.keys(decoders).find(decoder => {
     if (/^\/.*\/$/.test(decoder)) {
       const reg = new RegExp(decoder.substring(1, decoder.length - 1))
       return reg.test(lookup)
@@ -139,20 +135,41 @@ const recurseDecode = async (decodeInstructions, decoders, stack) => {
   return await decoder(decodeInstructions.value, decoders, stack)
 }
 
+/**
+ * @description - Decodes a response from Flow into JSON
+ * @param {*} decodeInstructions - The response object from Flow
+ * @param {object} customDecoders - An object of custom decoders
+ * @param {Array<*>} stack - The stack of the current decoding
+ * @returns {Promise<*>} - The decoded response
+ */
 export const decode = async (
   decodeInstructions,
   customDecoders = {},
   stack = []
 ) => {
-  let decoders = {...defaultDecoders, ...customDecoders}
-  return await recurseDecode(decodeInstructions, decoders, stack)
+  // Filter out all default decoders which are overridden by a custom decoder regex
+  const filteredDecoders = Object.keys(defaultDecoders)
+    .filter(
+      decoder =>
+        !Object.keys(customDecoders).find(customDecoder =>
+          new RegExp(customDecoder).test(decoder)
+        )
+    )
+    .reduce((decoders, decoderKey) => {
+      decoders[decoderKey] = defaultDecoders[decoderKey]
+      return decoders
+    }, customDecoders)
+
+  const decoders = {
+    ...filteredDecoders,
+    ...customDecoders,
+  }
+  return recurseDecode(decodeInstructions, decoders, stack)
 }
 
 export const decodeResponse = async (response, customDecoders = {}) => {
-  let decoders = {...defaultDecoders, ...customDecoders}
-
   if (response.encodedData) {
-    return await decode(response.encodedData, decoders)
+    return decode(response.encodedData, customDecoders)
   } else if (response.transactionStatus) {
     return {
       ...response.transactionStatus,
@@ -163,7 +180,7 @@ export const decodeResponse = async (response, customDecoders = {}) => {
             transactionId: e.transactionId,
             transactionIndex: e.transactionIndex,
             eventIndex: e.eventIndex,
-            data: await decode(e.payload, decoders),
+            data: await decode(e.payload, customDecoders),
           }
         })
       ),
@@ -181,7 +198,7 @@ export const decodeResponse = async (response, customDecoders = {}) => {
           transactionId: e.transactionId,
           transactionIndex: e.transactionIndex,
           eventIndex: e.eventIndex,
-          data: await decode(e.payload, decoders),
+          data: await decode(e.payload, customDecoders),
         }
       })
     )
@@ -198,6 +215,32 @@ export const decodeResponse = async (response, customDecoders = {}) => {
     return response.transactionId
   } else if (response.collection) {
     return response.collection
+  } else if (response.networkParameters) {
+    const prefixRegex = /^flow-/
+    const rawChainId = response.networkParameters.chainId
+    let formattedChainId
+
+    if (rawChainId === "flow-emulator") {
+      formattedChainId = "local"
+    } else if (prefixRegex.test(rawChainId)) {
+      formattedChainId = rawChainId.replace(prefixRegex, "")
+    } else {
+      formattedChainId = rawChainId
+    }
+
+    return {
+      chainId: formattedChainId,
+    }
+  } else if (response.streamConnection) {
+    return decodeStream(
+      response.streamConnection,
+      decodeResponse,
+      customDecoders
+    )
+  } else if (response.heartbeat) {
+    return response.heartbeat
+  } else if (response.nodeVersionInfo) {
+    return response.nodeVersionInfo
   }
 
   return null

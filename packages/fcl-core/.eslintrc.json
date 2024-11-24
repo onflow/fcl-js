@@ -1,0 +1,27 @@
+{
+  "env": {
+    "browser": true,
+    "es2021": true,
+    "jest": true,
+    "node": true
+  },
+  "extends": ["plugin:jsdoc/recommended"],
+  "plugins": ["jsdoc"],
+  "parserOptions": {
+    "ecmaVersion": "latest",
+    "sourceType": "module"
+  },
+  "globals": {
+    "JSX": "readonly"
+  },
+  "ignorePatterns": ["**/dist/"],
+
+  "rules": {
+    "jsdoc/require-jsdoc": 0,
+    "jsdoc/tag-lines": 0,
+    "jsdoc/require-param-description": 0,
+    "jsdoc/valid-types": 0,
+    "jsdoc/require-returns-description": 0,
+    "no-undef": 1
+  }
+}

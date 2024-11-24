@@ -1,4 +1,4 @@
-import {resolveSignatures, buildSignable} from "./resolve-signatures.js"
+import {resolveSignatures, buildSignable} from "./resolve-signatures"
 import {
   build,
   resolve,
@@ -8,7 +8,7 @@ import {
   payer,
   limit,
   authorizations,
-} from "../sdk.js"
+} from "../sdk"
 
 const signingFunction = jest.fn(() => ({
   addr: "foo",

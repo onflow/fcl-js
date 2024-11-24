@@ -1,5 +1,5 @@
 import {invariant} from "@onflow/util-invariant"
-import {isTransaction, isScript} from "../interaction/interaction.js"
+import {isTransaction, isScript} from "../interaction/interaction"
 
 const isFn = v => typeof v === "function"
 
@@ -15,7 +15,10 @@ function cast(arg) {
 }
 
 async function handleArgResolution(arg, depth = 3) {
-  invariant(depth > 0, `Argument Resolve Recursion Limit Exceeded for Arg: ${arg.tempId}`)
+  invariant(
+    depth > 0,
+    `Argument Resolve Recursion Limit Exceeded for Arg: ${arg.tempId}`
+  )
 
   if (isFn(arg.resolveArgument)) {
     const resolvedArg = await arg.resolveArgument()
