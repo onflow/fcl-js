@@ -4,29 +4,14 @@ type SchemaItem<TArgs, TData> = {
 }
 
 export enum SubscriptionTopic {
-  EVENTS = "events",
-  BLOCKS = "blocks",
+  PLACEHOLDER = "PLACEHOLDER",
 }
 
 export type SubscriptionSchema = {
-  [SubscriptionTopic.EVENTS]: SchemaItem<
+  [SubscriptionTopic.PLACEHOLDER]: SchemaItem<
+    {},
     {
-      startBlock: number
-      endBlock: number
-    },
-    {
-      type: string
-      data: any
-    }
-  >
-  [SubscriptionTopic.BLOCKS]: SchemaItem<
-    {
-      startBlock: number
-      endBlock: number
-    },
-    {
-      type: string
-      data: any
+      placeholder: string
     }
   >
 }
