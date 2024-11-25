@@ -3,6 +3,7 @@ type SchemaItem<TArgs, TData> = {
   data: TData
 }
 
+// TODO: PLACEHOLDER - Replace with actual subscription topics
 export enum SubscriptionTopic {
   PLACEHOLDER = "PLACEHOLDER",
 }
