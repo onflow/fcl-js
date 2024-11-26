@@ -1,5 +1,11 @@
 # @onflow/sdk
 
+## 1.5.4-alpha.3
+
+### Patch Changes
+
+- [#2027](https://github.com/onflow/fcl-js/pull/2025) [`169974cbd76495f29fac9d950916e3e9fd7f3fd4`](https://github.com/onflow/fcl-js/commit/169974cbd76495f29fac9d950916e3e9fd7f3fd4) Thanks [@caosbad](https://github.com/caosbad)! - Fixed an issue where the signer could not get the correct singerIndex when preparing a payload due to prefixed addresses in the sdk
+
 ## 1.5.4-alpha.2
 
 ### Patch Changes
