@@ -15,6 +15,10 @@ import * as logger from "@onflow/util-logger"
 
 const WS_OPEN = 1
 
+type DeepRequired<T> = Required<{
+  [K in keyof T]: DeepRequired<T[K]>
+}>
+
 interface SubscriptionInfo<T extends SdkTransport.SubscriptionTopic> {
   // Internal ID for the subscription
   id: number
@@ -36,29 +40,43 @@ interface WsTransportConfig {
    */
   node: string
   /**
-   * Starting interval for reconnection attempts in milliseconds, exponential backoff is applied
-   * @default 500
+   * Options for reconnecting to the server
    */
-  reconnectInterval?: number
-  /**
-   * The number of reconnection attempts before giving up
-   * @default 5
-   */
-  reconnectAttempts?: number
+  reconnectOptions?: {
+    /**
+     * The initial delay in milliseconds before reconnecting
+     * @default 500
+     */
+    initialReconnectDelay?: number
+    /**
+     * The maximum number of reconnection attempts
+     * @default 5
+     */
+    reconnectAttempts?: number
+    /**
+     * The maximum delay in milliseconds between reconnection attempts
+     * @default 5000
+     */
+    maxReconnectDelay?: number
+  }
 }
 
 export class SubscriptionManager {
   private counter = 0
   private subscriptions: SubscriptionInfo<SdkTransport.SubscriptionTopic>[] = []
   private socket: WebSocket | null = null
-  private config: Required<WsTransportConfig>
+  private config: DeepRequired<WsTransportConfig>
   private reconnectAttempts = 0
 
   constructor(config: WsTransportConfig) {
     this.config = {
-      reconnectInterval: 500,
-      reconnectAttempts: 5,
       ...config,
+      reconnectOptions: {
+        initialReconnectDelay: 500,
+        reconnectAttempts: 5,
+        maxReconnectDelay: 5000,
+        ...config.reconnectOptions,
+      },
     }
   }
 
@@ -129,7 +147,9 @@ export class SubscriptionManager {
     })
 
     // Validate the number of reconnection attempts
-    if (this.reconnectAttempts >= this.config.reconnectAttempts) {
+    if (
+      this.reconnectAttempts >= this.config.reconnectOptions.reconnectAttempts
+    ) {
       logger.log({
         level: logger.LEVELS.error,
         title: "WebSocket Error",
@@ -288,6 +308,10 @@ export class SubscriptionManager {
    * @returns The backoff interval in milliseconds
    */
   private get backoffInterval() {
-    return this.config.reconnectInterval * (this.reconnectAttempts ^ 2)
+    return Math.min(
+      this.config.reconnectOptions.maxReconnectDelay,
+      this.config.reconnectOptions.initialReconnectDelay *
+        2 ** this.reconnectAttempts
+    )
   }
 }
