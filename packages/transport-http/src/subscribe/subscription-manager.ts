@@ -64,7 +64,7 @@ export class SubscriptionManager {
 
   // Lazy connect to the socket when the first subscription is made
   private async connect() {
-    return new Promise<void>(resolve => {
+    return new Promise<void>((resolve, reject) => {
       // If the socket is already open, do nothing
       if (this.socket?.readyState === WS_OPEN) {
         return
@@ -103,9 +103,13 @@ export class SubscriptionManager {
             const response = await this.sendSubscribe(sub)
             sub.remoteId = response.id
           })
-        ).then(() => {
-          resolve()
-        })
+        )
+          .then(() => {
+            resolve()
+          })
+          .catch(e => {
+            reject(new Error(`Failed to restore subscriptions: ${e}`))
+          })
       }
     })
   }
