@@ -6,11 +6,5 @@ export type Transport = {
   subscribe: SubscribeFn
 }
 
-export type TransportConfig = {
-  node: string
-}
-
-export type TransportFactory = (config: TransportConfig) => Transport
-
 export * from "./subscriptions"
 export * from "./requests"
