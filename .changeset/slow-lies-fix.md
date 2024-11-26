@@ -1,7 +1,6 @@
 ---
 "@onflow/fcl-react-native": patch
 "@onflow/util-encode-key": patch
-"@onflow/transport-grpc": patch
 "@onflow/transport-http": patch
 "@onflow/util-invariant": patch
 "@onflow/util-template": patch
