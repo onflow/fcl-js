@@ -34,7 +34,7 @@ interface SubscriptionInfo<T extends SdkTransport.SubscriptionTopic> {
   onError: (error: Error) => void
 }
 
-interface WsTransportConfig {
+export interface SubscriptionManagerConfig {
   /**
    * The URL of the node to connect to
    */
@@ -65,10 +65,10 @@ export class SubscriptionManager {
   private counter = 0
   private subscriptions: SubscriptionInfo<SdkTransport.SubscriptionTopic>[] = []
   private socket: WebSocket | null = null
-  private config: DeepRequired<WsTransportConfig>
+  private config: DeepRequired<SubscriptionManagerConfig>
   private reconnectAttempts = 0
 
-  constructor(config: WsTransportConfig) {
+  constructor(config: SubscriptionManagerConfig) {
     this.config = {
       ...config,
       reconnectOptions: {

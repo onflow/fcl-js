@@ -7,7 +7,10 @@ import {
   SubscriptionDataMessage,
   UnsubscribeMessageRequest,
 } from "./models"
-import {SubscriptionManager} from "./subscription-manager"
+import {
+  SubscriptionManager,
+  SubscriptionManagerConfig,
+} from "./subscription-manager"
 import {SdkTransport} from "@onflow/typedefs"
 
 jest.mock("./websocket", () => ({
@@ -25,10 +28,8 @@ describe("WsSubscriptionTransport", () => {
   })
 
   test("does not connect to the socket when no subscriptions are made", async () => {
-    const config = {
+    const config: SubscriptionManagerConfig = {
       node: "wss://localhost:8080",
-      reconnectInterval: 1000,
-      reconnectAttempts: 10,
     }
 
     new SubscriptionManager(config)
@@ -38,10 +39,8 @@ describe("WsSubscriptionTransport", () => {
   })
 
   test("disconnects from the socket when the last subscription is removed", async () => {
-    const config = {
+    const config: SubscriptionManagerConfig = {
       node: "wss://localhost:8080",
-      reconnectInterval: 1000,
-      reconnectAttempts: 10,
     }
     const streamController = new SubscriptionManager(config)
     const topic = "topic" as SdkTransport.SubscriptionTopic
@@ -90,10 +89,8 @@ describe("WsSubscriptionTransport", () => {
   })
 
   test("subscribes, receives data, and unsubscribes", async () => {
-    const config = {
+    const config: SubscriptionManagerConfig = {
       node: "wss://localhost:8080",
-      reconnectInterval: 1000,
-      reconnectAttempts: 10,
     }
     const streamController = new SubscriptionManager(config)
     const topic = "topic" as SdkTransport.SubscriptionTopic
@@ -162,10 +159,8 @@ describe("WsSubscriptionTransport", () => {
   })
 
   test("reconnects to stream on close", async () => {
-    const config = {
+    const config: SubscriptionManagerConfig = {
       node: "wss://localhost:8080",
-      reconnectInterval: 1000,
-      reconnectAttempts: 1,
     }
     const streamController = new SubscriptionManager(config)
     const topic = "topic" as SdkTransport.SubscriptionTopic
