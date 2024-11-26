@@ -11,6 +11,7 @@ import {
 } from "./models"
 import type {SdkTransport} from "@onflow/typedefs"
 import {WebSocket} from "./websocket"
+import * as logger from "@onflow/util-logger"
 
 const WS_OPEN = 1
 
@@ -35,13 +36,13 @@ interface WsTransportConfig {
    */
   node: string
   /**
-   * The interval in milliseconds to wait before reconnecting
-   * @default 1000
+   * Starting interval for reconnection attempts in milliseconds, exponential backoff is applied
+   * @default 500
    */
   reconnectInterval?: number
   /**
    * The number of reconnection attempts before giving up
-   * @default 10
+   * @default 5
    */
   reconnectAttempts?: number
 }
@@ -55,8 +56,8 @@ export class SubscriptionManager {
 
   constructor(config: WsTransportConfig) {
     this.config = {
-      reconnectInterval: 1000,
-      reconnectAttempts: 10,
+      reconnectInterval: 500,
+      reconnectAttempts: 5,
       ...config,
     }
   }
@@ -92,8 +93,7 @@ export class SubscriptionManager {
         void this.reconnect()
       }
       this.socket.onerror = e => {
-        console.error(`WebSocket error: ${e}`)
-        this.reconnect()
+        this.reconnect(e)
       }
 
       this.socket.onopen = () => {
@@ -110,7 +110,7 @@ export class SubscriptionManager {
     })
   }
 
-  private async reconnect() {
+  private async reconnect(error?: any) {
     // Clear the socket
     this.socket = null
 
@@ -126,27 +126,36 @@ export class SubscriptionManager {
 
     // Validate the number of reconnection attempts
     if (this.reconnectAttempts >= this.config.reconnectAttempts) {
+      logger.log({
+        level: logger.LEVELS.error,
+        title: "WebSocket Error",
+        message: `Failed to reconnect to the server after ${this.reconnectAttempts + 1} attempts: ${error}`,
+      })
+
       this.subscriptions.forEach(sub => {
         sub.onError(
           new Error(
-            `Failed to reconnect to the server after ${this.reconnectAttempts} attempts`
+            `Failed to reconnect to the server after ${this.reconnectAttempts + 1} attempts: ${error}`
           )
         )
       })
       this.subscriptions = []
       this.reconnectAttempts = 0
-      return
+    } else {
+      logger.log({
+        level: logger.LEVELS.warn,
+        title: "WebSocket Error",
+        message: `WebSocket error, reconnecting in ${this.backoffInterval}ms: ${error}`,
+      })
+
+      // Delay the reconnection
+      await new Promise(resolve => setTimeout(resolve, this.backoffInterval))
+
+      // Try to reconnect
+      this.reconnectAttempts++
+      await this.connect()
+      this.reconnectAttempts = 0
     }
-
-    // Delay the reconnection
-    await new Promise(resolve =>
-      setTimeout(resolve, this.config.reconnectInterval)
-    )
-
-    // Try to reconnect
-    this.reconnectAttempts++
-    await this.connect()
-    this.reconnectAttempts = 0
   }
 
   async subscribe<T extends SdkTransport.SubscriptionTopic>(opts: {
@@ -268,5 +277,13 @@ export class SubscriptionManager {
     T extends SdkTransport.SubscriptionTopic = SdkTransport.SubscriptionTopic,
   >(sub: SubscriptionInfo<T>, message: SubscriptionDataMessage) {
     // TODO: Will be implemented with each subscription topic
+  }
+
+  /**
+   * Calculate the backoff interval for reconnection attempts
+   * @returns The backoff interval in milliseconds
+   */
+  private get backoffInterval() {
+    return this.config.reconnectInterval * (this.reconnectAttempts ^ 2)
   }
 }
