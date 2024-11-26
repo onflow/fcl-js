@@ -2,7 +2,7 @@ import * as logger from "@onflow/util-logger"
 // Base
 export {build} from "./build/build.js"
 export {resolve} from "./resolve/resolve.js"
-export {send} from "./send/send.js"
+export {send} from "./transport/send"
 export {decode} from "./decode/sdk-decode.js"
 export {
   encodeTransactionPayload,
@@ -113,3 +113,5 @@ import * as TestUtils from "./test-utils"
 export {TestUtils}
 
 export {VERSION} from "./VERSION"
+
+export {subscribe} from "./transport/subscribe"
