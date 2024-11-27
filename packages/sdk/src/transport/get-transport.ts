@@ -5,8 +5,8 @@ import {invariant} from "@onflow/util-invariant"
 
 /**
  * Get the SDK transport object, either from the provided override or from the global config.
- * @param overrides
- * @returns
+ * @param overrides - Override default configuration with custom transport or send function.
+ * @returns The SDK transport object.
  */
 export async function getTransport(override: {
   send?: SdkTransport.SendFn
@@ -24,11 +24,8 @@ export async function getTransport(override: {
     override.transport || override.send || defaultTransport
   )
 
-  if (isTransportObject(transportOrSend)) {
-    // This is a transport object, return it directly
-    return transportOrSend
-  } else {
-    // This is a legacy send function, wrap it in a transport object
+  // Backwards compatibility with legacy send function
+  if (!isTransportObject(transportOrSend)) {
     return {
       send: transportOrSend,
       subscribe: () => {
@@ -38,6 +35,8 @@ export async function getTransport(override: {
       },
     }
   }
+
+  return transportOrSend
 }
 
 function isTransportObject(
