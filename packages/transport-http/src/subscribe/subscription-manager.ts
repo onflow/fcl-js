@@ -9,8 +9,9 @@ import {
   SubscribeMessageResponse,
   UnsubscribeMessageRequest,
 } from "./models"
-import type {SdkTransport} from "@onflow/typedefs"
+import {SdkTransport} from "@onflow/typedefs"
 import {WebSocket} from "./websocket"
+import {DataProvider} from "./data-providers/data-provider"
 import * as logger from "@onflow/util-logger"
 
 const WS_OPEN = 1
@@ -63,8 +64,8 @@ export interface SubscriptionManagerConfig {
 
 export class SubscriptionManager {
   private counter = 0
-  private subscriptions: SubscriptionInfo<SdkTransport.SubscriptionTopic>[] = []
   private socket: WebSocket | null = null
+  private subscriptions: SubscriptionInfo<SdkTransport.SubscriptionTopic>[] = []
   private config: DeepRequired<SubscriptionManagerConfig>
   private reconnectAttempts = 0
 
@@ -104,7 +105,8 @@ export class SubscriptionManager {
           this.updateSubscriptionCheckpoint(sub, data)
 
           // Call the subscription callback
-          sub.onData(data.data)
+          if (sub.topic === SdkTransport.SubscriptionTopic.BLOCKS) {
+          }
         }
       }
       this.socket.onclose = () => {

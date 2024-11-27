@@ -5,12 +5,14 @@ type SchemaItem<TArgs, TData> = {
 
 // TODO: PLACEHOLDER - Replace with actual subscription topics
 export enum SubscriptionTopic {
-  PLACEHOLDER = "PLACEHOLDER",
+  BLOCKS = "blocks",
 }
 
 export type SubscriptionSchema = {
-  [SubscriptionTopic.PLACEHOLDER]: SchemaItem<
-    {},
+  [SubscriptionTopic.BLOCKS]: SchemaItem<
+    {
+      start: number
+    },
     {
       placeholder: string
     }
