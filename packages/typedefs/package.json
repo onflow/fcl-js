@@ -1,6 +1,6 @@
 {
   "name": "@onflow/typedefs",
-  "version": "1.4.0-alpha.2",
+  "version": "1.4.0",
   "description": "Flow JS Type Defs",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
@@ -13,7 +13,7 @@
     "url": "https://github.com/onflow/flow-js-sdk/issues"
   },
   "devDependencies": {
-    "@onflow/fcl-bundle": "1.6.0-alpha.1",
+    "@onflow/fcl-bundle": "1.6.0",
     "@types/node": "^18.19.57",
     "eslint": "^8.57.1",
     "eslint-plugin-jsdoc": "^46.10.1",
