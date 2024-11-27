@@ -8,10 +8,12 @@ import {invariant} from "@onflow/util-invariant"
  * @param overrides - Override default configuration with custom transport or send function.
  * @returns The SDK transport object.
  */
-export async function getTransport(override: {
-  send?: SdkTransport.SendFn
-  transport?: SdkTransport.Transport
-}): Promise<SdkTransport.Transport> {
+export async function getTransport(
+  override: {
+    send?: SdkTransport.SendFn
+    transport?: SdkTransport.Transport
+  } = {}
+): Promise<SdkTransport.Transport> {
   invariant(
     override.send == null || override.transport == null,
     `SDK Transport Error: Cannot provide both "transport" and legacy "send" options.`
