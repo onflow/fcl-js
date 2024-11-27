@@ -3,7 +3,7 @@ import {atBlockId} from "../build/build-at-block-id.js"
 import {getAccount} from "../build/build-get-account.js"
 import {invariant} from "@onflow/util-invariant"
 import {decodeResponse as decode} from "../decode/decode.js"
-import {send} from "../transport/send"
+import {send} from "../transport"
 
 /**
  * @typedef {import("@onflow/typedefs").Account} Account

@@ -1,10 +1,10 @@
 import {config} from "@onflow/config"
 import {SdkTransport} from "@onflow/typedefs"
-import {getTransport} from "./transport"
+import {getTransport} from "../get-transport"
 import {invariant} from "@onflow/util-invariant"
 
 // TODO: OPTS FUNCTION
-export async function subscribe<T extends SdkTransport.SubscriptionTopic>(
+export async function rawSubscribe<T extends SdkTransport.SubscriptionTopic>(
   {
     topic,
     args,
@@ -18,7 +18,6 @@ export async function subscribe<T extends SdkTransport.SubscriptionTopic>(
   },
   opts: {
     node?: string
-    send?: SdkTransport.SendFn
     transport?: SdkTransport.Transport
   } = {}
 ) {
@@ -36,10 +35,7 @@ export async function subscribe<T extends SdkTransport.SubscriptionTopic>(
     {
       topic,
       args,
-      onData: data => {
-        // TODO: decode function
-        onData(decode(topic, data))
-      },
+      onData,
       onError,
     },
     {

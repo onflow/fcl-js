@@ -1,4 +1,4 @@
-import {send} from "../transport/send"
+import {send} from "../transport/send/send"
 import {decodeResponse as decode} from "../decode/decode.js"
 import {getNodeVersionInfo} from "../build/build-get-node-version-info"
 import {NodeVersionInfo} from "@onflow/typedefs"

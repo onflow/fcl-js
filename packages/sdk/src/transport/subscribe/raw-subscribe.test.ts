@@ -1,26 +1,27 @@
 import {config} from "@onflow/config"
-import {subscribe} from "./subscribe"
+import {rawSubscribe} from "./raw-subscribe"
 import {SdkTransport} from "@onflow/typedefs"
-import {getTransport} from "./transport"
+import {getTransport} from "../get-transport"
 
-jest.mock("./transport")
+jest.mock("../get-transport")
 
 describe("subscribe", () => {
   let mockTransport: jest.Mocked<SdkTransport.Transport>
+  let mockSub: jest.Mocked<SdkTransport.Subscription> = {
+    unsubscribe: jest.fn(),
+  }
 
   beforeEach(() => {
     jest.resetAllMocks()
 
     mockTransport = {
-      subscribe: jest.fn().mockReturnValue({
-        unsubscribe: jest.fn(),
-      }),
+      subscribe: jest.fn().mockReturnValue(mockSub),
       send: jest.fn(),
     }
     jest.mocked(getTransport).mockResolvedValue(mockTransport)
   })
 
-  test("subscribes to a topic and returns a subscription", async () => {
+  test("subscribes to a topic and returns subscription from transport", async () => {
     const topic = "topic" as SdkTransport.SubscriptionTopic
     const args = {foo: "bar"} as SdkTransport.SubscriptionArguments<any>
     const onData = jest.fn()
@@ -31,18 +32,16 @@ describe("subscribe", () => {
         "accessNode.api": "http://localhost:8080",
       },
       async () => {
-        return await subscribe({topic, args, onData, onError})
+        return await rawSubscribe({topic, args, onData, onError})
       }
     )
 
     expect(mockTransport.subscribe).toHaveBeenCalledTimes(1)
     expect(mockTransport.subscribe).toHaveBeenCalledWith(
-      {topic, args, onData: expect.any(Function), onError},
+      {topic, args, onData: onData, onError},
       {node: "http://localhost:8080"}
     )
 
-    expect(sub).toStrictEqual({
-      unsubscribe: expect.any(Function),
-    })
+    expect(sub).toBe(mockSub)
   })
 })

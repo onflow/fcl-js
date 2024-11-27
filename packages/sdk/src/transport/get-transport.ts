@@ -3,14 +3,17 @@ import {httpTransport as defaultTransport} from "@onflow/transport-http"
 import {SdkTransport} from "@onflow/typedefs"
 import {invariant} from "@onflow/util-invariant"
 
-export async function getTransport(
-  opts: {
-    send?: SdkTransport.SendFn
-    transport?: SdkTransport.Transport
-  } = {}
-): Promise<SdkTransport.Transport> {
+/**
+ * Get the SDK transport object, either from the provided override or from the global config.
+ * @param overrides
+ * @returns
+ */
+export async function getTransport(override: {
+  send?: SdkTransport.SendFn
+  transport?: SdkTransport.Transport
+}): Promise<SdkTransport.Transport> {
   invariant(
-    opts.send == null || opts.transport == null,
+    override.send == null || override.transport == null,
     `SDK Transport Error: Cannot provide both "transport" and legacy "send" options.`
   )
 
@@ -18,7 +21,7 @@ export async function getTransport(
     SdkTransport.Transport | SdkTransport.SendFn
   >(
     ["sdk.transport", "sdk.send"],
-    opts.transport || opts.send || defaultTransport
+    override.transport || override.send || defaultTransport
   )
 
   if (isTransportObject(transportOrSend)) {

@@ -1,11 +1,11 @@
 import {Buffer} from "@onflow/rlp"
-import {initInteraction, pipe} from "../interaction/interaction"
-import * as ixModule from "../interaction/interaction"
-import {invariant} from "../build/build-invariant"
-import {response} from "../response/response"
+import {initInteraction, pipe} from "../../interaction/interaction"
+import * as ixModule from "../../interaction/interaction"
+import {invariant} from "../../build/build-invariant"
+import {response} from "../../response/response"
 import {config} from "@onflow/config"
-import {resolve as defaultResolve} from "../resolve/resolve"
-import {getTransport} from "./transport"
+import {resolve as defaultResolve} from "../../resolve/resolve"
+import {getTransport} from "../get-transport"
 
 /**
  * @description - Sends arbitrary scripts, transactions, and requests to Flow
@@ -17,7 +17,8 @@ export const send = async (
   args: Function | Function[] = [],
   opts: any = {}
 ): Promise<any> => {
-  const {send: sendFn} = await getTransport(opts)
+  const transport = await getTransport(opts)
+  const sendFn = transport.send.bind(transport)
 
   invariant(
     sendFn,
