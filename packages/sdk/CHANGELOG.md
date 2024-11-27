@@ -1,5 +1,24 @@
 # @onflow/sdk
 
+## 1.5.4
+
+### Patch Changes
+
+- [#2027](https://github.com/onflow/fcl-js/pull/2025) [`169974cbd76495f29fac9d950916e3e9fd7f3fd4`](https://github.com/onflow/fcl-js/commit/169974cbd76495f29fac9d950916e3e9fd7f3fd4) Thanks [@caosbad](https://github.com/jribbink)! - Fixed an issue where the signer could not get the correct singerIndex when preparing a payload due to prefixed addresses in the sdk
+
+- [#1983](https://github.com/onflow/fcl-js/pull/1983) [`18d24c8bad7efa0d8741d74f0cf299f89b3622c7`](https://github.com/onflow/fcl-js/commit/18d24c8bad7efa0d8741d74f0cf299f89b3622c7) Thanks [@jribbink](https://github.com/jribbink)! - Update dependencies
+
+- Updated dependencies [[`b9f49494d5b3faed1bc24005adc6ba312f653a21`](https://github.com/onflow/fcl-js/commit/b9f49494d5b3faed1bc24005adc6ba312f653a21), [`3b31f1c02b78bf178502627e5ca1de81bdfe8f26`](https://github.com/onflow/fcl-js/commit/3b31f1c02b78bf178502627e5ca1de81bdfe8f26), [`18d24c8bad7efa0d8741d74f0cf299f89b3622c7`](https://github.com/onflow/fcl-js/commit/18d24c8bad7efa0d8741d74f0cf299f89b3622c7), [`b9f49494d5b3faed1bc24005adc6ba312f653a21`](https://github.com/onflow/fcl-js/commit/b9f49494d5b3faed1bc24005adc6ba312f653a21), [`dda32df052801ee5e70b703a19c246f36bbd31c2`](https://github.com/onflow/fcl-js/commit/dda32df052801ee5e70b703a19c246f36bbd31c2)]:
+  - @onflow/typedefs@1.4.0
+  - @onflow/transport-http@1.10.3
+  - @onflow/util-invariant@1.2.4
+  - @onflow/util-template@1.2.3
+  - @onflow/util-address@1.2.3
+  - @onflow/util-logger@1.3.3
+  - @onflow/util-actor@1.3.4
+  - @onflow/config@1.5.1
+  - @onflow/rlp@1.2.3
+
 ## 1.5.4-alpha.3
 
 ### Patch Changes
