@@ -1,1 +1,1 @@
-export const blocksProvider = {}
+export const blocksProvider: DataProvider<Block> = {}

@@ -12,7 +12,7 @@ export interface DataProvider<
    * The function to get the checkpoint to resume the subscription from if a reconnection is needed
    * @param data The data to derive the reconnection checkpoint from
    */
-  getReconnectionArgs: (data: Data) => Args
+  getReconnectArgs: (data: Data) => Args
   /**
    * The callback to call when a data is received
    */

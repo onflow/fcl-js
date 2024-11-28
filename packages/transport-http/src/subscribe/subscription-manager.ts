@@ -27,8 +27,8 @@ interface SubscriptionInfo<T extends SdkTransport.SubscriptionTopic> {
   remoteId?: string
   // The topic of the subscription
   topic: T
-  // The checkpoint to resume the subscription from
-  checkpoint: SdkTransport.SubscriptionArguments<T>
+  // The reconection arguments to resume the subscription from
+  reconnectArgs: SdkTransport.SubscriptionArguments<T>
   // The callback to call when a data is received
   onData: (data: any) => void
   // The callback to call when an error occurs
@@ -68,8 +68,12 @@ export class SubscriptionManager {
   private subscriptions: SubscriptionInfo<SdkTransport.SubscriptionTopic>[] = []
   private config: DeepRequired<SubscriptionManagerConfig>
   private reconnectAttempts = 0
+  private dataProviders: Record<string, DataProvider>
 
-  constructor(config: SubscriptionManagerConfig) {
+  constructor(
+    config: SubscriptionManagerConfig,
+    dataProviders: DataProvider[]
+  ) {
     this.config = {
       ...config,
       reconnectOptions: {
@@ -79,6 +83,15 @@ export class SubscriptionManager {
         ...config.reconnectOptions,
       },
     }
+
+    // Map data providers by topic
+    this.dataProviders = dataProviders.reduce(
+      (acc, provider) => {
+        acc[provider.topic] = provider
+        return acc
+      },
+      {} as Record<string, DataProvider>
+    )
   }
 
   // Lazy connect to the socket when the first subscription is made
@@ -91,22 +104,15 @@ export class SubscriptionManager {
 
       this.socket = new WebSocket(this.config.node)
       this.socket.onmessage = event => {
-        const data = JSON.parse(event.data) as
+        const message = JSON.parse(event.data) as
           | MessageResponse
           | SubscriptionDataMessage
 
-        if ("action" in data) {
+        if ("action" in message) {
           // TODO, waiting for AN team to decide what to do here
         } else {
-          const sub = this.subscriptions.find(sub => sub.remoteId === data.id)
-          if (!sub) return
-
           // Update the block height to checkpoint for disconnects
-          this.updateSubscriptionCheckpoint(sub, data)
-
-          // Call the subscription callback
-          if (sub.topic === SdkTransport.SubscriptionTopic.BLOCKS) {
-          }
+          this.handleSubscriptionData(message)
         }
       }
       this.socket.onclose = () => {
@@ -197,7 +203,7 @@ export class SubscriptionManager {
     const sub: SubscriptionInfo<T> = {
       id: this.counter++,
       topic: opts.topic,
-      checkpoint: opts.args,
+      reconnectArgs: opts.args,
       onData: opts.onData,
       onError: opts.onError,
     }
@@ -248,7 +254,7 @@ export class SubscriptionManager {
     const request: SubscribeMessageRequest = {
       action: Action.SUBSCRIBE,
       topic: sub.topic,
-      arguments: sub.checkpoint,
+      arguments: sub.reconnectArgs,
     }
     this.socket?.send(JSON.stringify(request))
 
@@ -299,10 +305,26 @@ export class SubscriptionManager {
 
   // Update the subscription checkpoint when a message is received
   // These checkpoints are used to resume subscriptions after disconnects
-  private updateSubscriptionCheckpoint<
+  private handleSubscriptionData<
     T extends SdkTransport.SubscriptionTopic = SdkTransport.SubscriptionTopic,
-  >(sub: SubscriptionInfo<T>, message: SubscriptionDataMessage) {
-    // TODO: Will be implemented with each subscription topic
+  >(message: SubscriptionDataMessage) {
+    // Get the subscription
+    const sub = this.subscriptions.find(sub => sub.remoteId === message.id)
+    if (!sub) {
+      throw new Error(`No subscription found for id ${message.id}`)
+    }
+
+    // Get the data provider for the subscription
+    const provider = this.dataProviders[sub.topic]
+    if (!provider) {
+      throw new Error(`No data provider for topic ${sub.topic}`)
+    }
+
+    // Update the checkpoint
+    sub.reconnectArgs = provider.getReconnectArgs(message)
+
+    // Call the subscription callback
+    sub.onData(provider.parseData(message))
   }
 
   /**
