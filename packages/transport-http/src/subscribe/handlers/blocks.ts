@@ -1,5 +1,5 @@
 import {SdkTransport} from "@onflow/typedefs"
-import {createSubscriptionHandler} from "./types"
+import {createSubscriptionHandler, BlockArgsModel} from "./types"
 
 type BlockDataModel = {
   block: {
@@ -17,16 +17,6 @@ type BlockDataModel = {
     }[]
   }
 }
-
-type BlockArgsModel =
-  | {
-      block_status?: number
-      start_block_id?: string
-    }
-  | {
-      block_status?: number
-      start_block_height?: number
-    }
 
 export const blocksHandler = createSubscriptionHandler<{
   Topic: SdkTransport.SubscriptionTopic.BLOCKS
