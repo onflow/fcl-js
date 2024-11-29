@@ -11,7 +11,7 @@ import {
 } from "./models"
 import {SdkTransport} from "@onflow/typedefs"
 import {WebSocket} from "./websocket"
-import {DataProvider} from "./data-providers/data-provider"
+import {DataSubscriber, SubscriptionHandler} from "./handlers/types"
 import * as logger from "@onflow/util-logger"
 
 const WS_OPEN = 1
@@ -20,19 +20,17 @@ type DeepRequired<T> = Required<{
   [K in keyof T]: DeepRequired<T[K]>
 }>
 
-interface SubscriptionInfo<T extends SdkTransport.SubscriptionTopic> {
+type InferHandler<T> = T extends SubscriptionHandler<infer H> ? H : never
+
+interface SubscriptionInfo<T extends DataSubscriber<any, any>> {
   // Internal ID for the subscription
   id: number
   // Remote ID assigned by the server used for message routing and unsubscribing
   remoteId?: string
   // The topic of the subscription
-  topic: T
-  // The reconection arguments to resume the subscription from
-  reconnectArgs: SdkTransport.SubscriptionArguments<T>
-  // The callback to call when a data is received
-  onData: (data: any) => void
-  // The callback to call when an error occurs
-  onError: (error: Error) => void
+  topic: string
+  // Data provider for the subscription
+  subscriber: DataSubscriber<any, any>
 }
 
 export interface SubscriptionManagerConfig {
@@ -62,18 +60,17 @@ export interface SubscriptionManagerConfig {
   }
 }
 
-export class SubscriptionManager {
+export class SubscriptionManager<
+  Handlers extends [...SubscriptionHandler<any>[]],
+> {
   private counter = 0
   private socket: WebSocket | null = null
-  private subscriptions: SubscriptionInfo<SdkTransport.SubscriptionTopic>[] = []
+  private subscriptions: SubscriptionInfo<DataSubscriber<any, any>>[] = []
   private config: DeepRequired<SubscriptionManagerConfig>
   private reconnectAttempts = 0
-  private dataProviders: Record<string, DataProvider>
+  private handlers: Record<string, SubscriptionHandler<any>>
 
-  constructor(
-    config: SubscriptionManagerConfig,
-    dataProviders: DataProvider[]
-  ) {
+  constructor(handlers: Handlers, config: SubscriptionManagerConfig) {
     this.config = {
       ...config,
       reconnectOptions: {
@@ -85,12 +82,12 @@ export class SubscriptionManager {
     }
 
     // Map data providers by topic
-    this.dataProviders = dataProviders.reduce(
-      (acc, provider) => {
-        acc[provider.topic] = provider
+    this.handlers = handlers.reduce(
+      (acc, handler) => {
+        acc[handler.topic] = handler
         return acc
       },
-      {} as Record<string, DataProvider>
+      {} as Record<string, SubscriptionHandler<any>>
     )
   }
 
@@ -165,7 +162,7 @@ export class SubscriptionManager {
       })
 
       this.subscriptions.forEach(sub => {
-        sub.onError(
+        sub.subscriber.sendError(
           new Error(
             `Failed to reconnect to the server after ${this.reconnectAttempts + 1} attempts: ${error}`
           )
@@ -190,22 +187,28 @@ export class SubscriptionManager {
     }
   }
 
-  async subscribe<T extends SdkTransport.SubscriptionTopic>(opts: {
-    topic: T
-    args: SdkTransport.SubscriptionArguments<T>
-    onData: (data: SdkTransport.SubscriptionData<T>) => void
+  async subscribe<T extends Handlers[number]>(opts: {
+    topic: InferHandler<T>["Topic"]
+    args: InferHandler<T>["Args"]
+    onData: (data: InferHandler<T>["Data"]) => void
     onError: (error: Error) => void
   }): Promise<SdkTransport.Subscription> {
     // Connect the socket if it's not already open
     await this.connect()
 
+    // Get the data provider for the topic
+    const topicHandler = this.getHandler(opts.topic)
+    const subscriber = topicHandler.createSubscriber(
+      opts.args,
+      opts.onData,
+      opts.onError
+    )
+
     // Track the subscription locally
-    const sub: SubscriptionInfo<T> = {
+    const sub: SubscriptionInfo<DataSubscriber<any, any>> = {
       id: this.counter++,
       topic: opts.topic,
-      reconnectArgs: opts.args,
-      onData: opts.onData,
-      onError: opts.onError,
+      subscriber: subscriber,
     }
     this.subscriptions.push(sub)
 
@@ -247,14 +250,12 @@ export class SubscriptionManager {
     }
   }
 
-  private async sendSubscribe(
-    sub: SubscriptionInfo<SdkTransport.SubscriptionTopic>
-  ) {
+  private async sendSubscribe(sub: SubscriptionInfo<DataSubscriber<any, any>>) {
     // Send the subscription message
     const request: SubscribeMessageRequest = {
       action: Action.SUBSCRIBE,
       topic: sub.topic,
-      arguments: sub.reconnectArgs,
+      arguments: sub.subscriber.connectionArgs,
     }
     this.socket?.send(JSON.stringify(request))
 
@@ -270,7 +271,7 @@ export class SubscriptionManager {
   }
 
   private async sendUnsubscribe(
-    sub: SubscriptionInfo<SdkTransport.SubscriptionTopic>
+    sub: SubscriptionInfo<DataSubscriber<any, any>>
   ) {
     // Send the unsubscribe message if the subscription has a remote id
     const {remoteId} = sub
@@ -314,17 +315,16 @@ export class SubscriptionManager {
       throw new Error(`No subscription found for id ${message.id}`)
     }
 
-    // Get the data provider for the subscription
-    const provider = this.dataProviders[sub.topic]
-    if (!provider) {
-      throw new Error(`No data provider for topic ${sub.topic}`)
+    // Send data to the subscriber
+    sub.subscriber.sendData(message.data)
+  }
+
+  private getHandler(topic: string) {
+    const handler = this.handlers[topic]
+    if (!handler) {
+      throw new Error(`No handler found for topic ${topic}`)
     }
-
-    // Update the checkpoint
-    sub.reconnectArgs = provider.getReconnectArgs(message)
-
-    // Call the subscription callback
-    sub.onData(provider.parseData(message))
+    return handler
   }
 
   /**

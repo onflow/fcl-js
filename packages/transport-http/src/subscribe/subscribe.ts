@@ -1,8 +1,14 @@
 import {SdkTransport} from "@onflow/typedefs"
 import {SubscriptionManager} from "./subscription-manager"
+import {blocksHandler} from "./handlers/blocks"
+
+const SUBSCRIPTION_HANDLERS = [blocksHandler]
 
 // Map of SubscriptionManager instances by access node URL
-let subscriptionManagerMap: Map<string, SubscriptionManager> = new Map()
+let subscriptionManagerMap: Map<
+  string,
+  SubscriptionManager<typeof SUBSCRIPTION_HANDLERS>
+> = new Map()
 
 export async function subscribe<T extends SdkTransport.SubscriptionTopic>(
   {
@@ -18,12 +24,12 @@ export async function subscribe<T extends SdkTransport.SubscriptionTopic>(
   },
   opts: {node: string}
 ): Promise<SdkTransport.Subscription> {
+  // Get the SubscriptionManager instance for the access node, or create a new one
+  const node = opts.node
   const manager =
-    subscriptionManagerMap.get(opts.node) ||
-    new SubscriptionManager({
-      node: opts.node,
-    })
-  subscriptionManagerMap.set(opts.node, manager)
+    subscriptionManagerMap.get(node) ||
+    new SubscriptionManager(SUBSCRIPTION_HANDLERS, {node})
+  subscriptionManagerMap.set(node, manager)
 
   return manager.subscribe({
     topic,
