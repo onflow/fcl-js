@@ -20,7 +20,7 @@ jest.mock("./websocket", () => ({
 
 describe("WebSocket Manager", () => {
   let mockWs: WS
-  let mockSubscriber: jest.Mocked<DataSubscriber<any, any>>
+  let mockSubscriber: jest.Mocked<DataSubscriber<any, any, any>>
   let mockHandler: jest.Mocked<SubscriptionHandler<any>>
   const mockConnectionArgs = {mock: "connection args"}
 
@@ -31,6 +31,7 @@ describe("WebSocket Manager", () => {
     mockSubscriber = {
       sendData: jest.fn(),
       sendError: jest.fn(),
+      encodeArgs: jest.fn().mockReturnValue(mockConnectionArgs),
       get connectionArgs() {
         return mockConnectionArgs
       },

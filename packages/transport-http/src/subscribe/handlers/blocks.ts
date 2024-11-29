@@ -18,11 +18,22 @@ type BlockDataModel = {
   }
 }
 
+type BlockArgsModel =
+  | {
+      block_status?: number
+      start_block_id?: string
+    }
+  | {
+      block_status?: number
+      start_block_height?: number
+    }
+
 export const blocksHandler = createSubscriptionHandler<{
   Topic: SdkTransport.SubscriptionTopic.BLOCKS
   Args: SdkTransport.SubscriptionArguments<SdkTransport.SubscriptionTopic.BLOCKS>
   Data: SdkTransport.SubscriptionData<SdkTransport.SubscriptionTopic.BLOCKS>
-  RawData: BlockDataModel
+  ArgsModel: BlockArgsModel
+  DataModel: BlockDataModel
 }>({
   topic: SdkTransport.SubscriptionTopic.BLOCKS,
   createSubscriber: (initialArgs, onData, onError) => {
@@ -56,14 +67,37 @@ export const blocksHandler = createSubscriptionHandler<{
 
         // Update the resume args
         resumeArgs = {
-          block_status: resumeArgs.block_status,
-          start_block_id: data.block.id,
+          blockStatus: resumeArgs.blockStatus,
+          startBlockHeight: data.block.height + 1,
         }
 
         onData(parsedData)
       },
       sendError(error: Error) {
         onError(error)
+      },
+      encodeArgs(
+        args: SdkTransport.SubscriptionArguments<SdkTransport.SubscriptionTopic.BLOCKS>
+      ) {
+        let encodedArgs: BlockArgsModel = {
+          block_status: args.blockStatus,
+        }
+
+        if ("startBlockHeight" in args) {
+          return {
+            ...encodedArgs,
+            start_block_height: args.startBlockHeight,
+          }
+        }
+
+        if ("startBlockId" in args) {
+          return {
+            ...encodedArgs,
+            start_block_id: args.startBlockId,
+          }
+        }
+
+        return encodedArgs
       },
       get connectionArgs() {
         return resumeArgs

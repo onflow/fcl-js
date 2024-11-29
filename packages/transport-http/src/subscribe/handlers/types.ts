@@ -8,7 +8,8 @@ export interface SubscriptionHandler<
     Topic: string
     Args: any
     Data: any
-    RawData: any
+    DataModel: any
+    ArgsModel: any
   },
 > {
   readonly topic: T["Topic"]
@@ -16,19 +17,24 @@ export interface SubscriptionHandler<
     initialArgs: T["Args"],
     onData: (data: T["Data"]) => void,
     onError: (error: Error) => void
-  ): DataSubscriber<T["Args"], T["RawData"]>
+  ): DataSubscriber<T["Args"], T["ArgsModel"], T["DataModel"]>
 }
 
-export interface DataSubscriber<Args, RawData> {
+export interface DataSubscriber<Args, ArgsModel, Data> {
   /**
    * The callback to call when a data is received
    */
-  sendData(data: RawData): void
+  sendData(data: Data): void
 
   /**
    * The callback to call when an error is received
    */
   sendError(error: Error): void
+
+  /**
+   * The arguments to connect or reconnect to the subscription
+   */
+  encodeArgs(args: Args): ArgsModel
 
   /**
    * Get the arguments to connect or reconnect to the subscription
@@ -41,7 +47,8 @@ export function createSubscriptionHandler<
     Topic: string
     Args: any
     Data: any
-    RawData: any
+    DataModel: any
+    ArgsModel: any
   },
 >(handler: SubscriptionHandler<T>): SubscriptionHandler<T> {
   return handler

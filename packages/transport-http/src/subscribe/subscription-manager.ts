@@ -22,7 +22,7 @@ type DeepRequired<T> = Required<{
 
 type InferHandler<T> = T extends SubscriptionHandler<infer H> ? H : never
 
-interface SubscriptionInfo<T extends DataSubscriber<any, any>> {
+interface SubscriptionInfo<T extends DataSubscriber<any, any, any>> {
   // Internal ID for the subscription
   id: number
   // Remote ID assigned by the server used for message routing and unsubscribing
@@ -30,7 +30,7 @@ interface SubscriptionInfo<T extends DataSubscriber<any, any>> {
   // The topic of the subscription
   topic: string
   // Data provider for the subscription
-  subscriber: DataSubscriber<any, any>
+  subscriber: DataSubscriber<any, any, any>
 }
 
 export interface SubscriptionManagerConfig {
@@ -65,7 +65,7 @@ export class SubscriptionManager<
 > {
   private counter = 0
   private socket: WebSocket | null = null
-  private subscriptions: SubscriptionInfo<DataSubscriber<any, any>>[] = []
+  private subscriptions: SubscriptionInfo<DataSubscriber<any, any, any>>[] = []
   private config: DeepRequired<SubscriptionManagerConfig>
   private reconnectAttempts = 0
   private handlers: Record<string, SubscriptionHandler<any>>
@@ -205,7 +205,7 @@ export class SubscriptionManager<
     )
 
     // Track the subscription locally
-    const sub: SubscriptionInfo<DataSubscriber<any, any>> = {
+    const sub: SubscriptionInfo<DataSubscriber<any, any, any>> = {
       id: this.counter++,
       topic: opts.topic,
       subscriber: subscriber,
@@ -250,7 +250,9 @@ export class SubscriptionManager<
     }
   }
 
-  private async sendSubscribe(sub: SubscriptionInfo<DataSubscriber<any, any>>) {
+  private async sendSubscribe(
+    sub: SubscriptionInfo<DataSubscriber<any, any, any>>
+  ) {
     // Send the subscription message
     const request: SubscribeMessageRequest = {
       action: Action.SUBSCRIBE,
@@ -271,7 +273,7 @@ export class SubscriptionManager<
   }
 
   private async sendUnsubscribe(
-    sub: SubscriptionInfo<DataSubscriber<any, any>>
+    sub: SubscriptionInfo<DataSubscriber<any, any, any>>
   ) {
     // Send the unsubscribe message if the subscription has a remote id
     const {remoteId} = sub
