@@ -193,9 +193,6 @@ export class SubscriptionManager<
     onData: (data: InferHandler<T>["Data"]) => void
     onError: (error: Error) => void
   }): Promise<SdkTransport.Subscription> {
-    // Connect the socket if it's not already open
-    await this.connect()
-
     // Get the data provider for the topic
     const topicHandler = this.getHandler(opts.topic)
     const subscriber = topicHandler.createSubscriber(
@@ -212,17 +209,37 @@ export class SubscriptionManager<
     }
     this.subscriptions.push(sub)
 
-    // Send the subscribe message
-    const response = await this.sendSubscribe(sub)
+    // Subscribe to the topic asynchronously, if error occurs, unsubscribe and call onError
+    ;(async () => {
+      // Connect the socket if it's not already open
+      await this.connect()
 
-    if (!response.success) {
-      throw new Error(
-        `Failed to subscribe to topic ${sub.topic}, error message: ${response.error_message}`
-      )
-    }
+      // If the subscription has already been removed, do nothing
+      if (!this.subscriptions.find(({id}) => id === sub.id)) {
+        return
+      }
 
-    // Update the subscription with the remote id
-    sub.remoteId = response.id
+      // Send the subscribe message
+      const response = await this.sendSubscribe(sub)
+
+      // If the subscription has already been removed, se
+      if (!this.subscriptions.find(({id}) => id === sub.id)) {
+        this.sendUnsubscribe()
+        return
+      }
+
+      if (!response.success) {
+        throw new Error(
+          `Failed to subscribe to topic ${sub.topic}, error message: ${response.error_message}`
+        )
+      }
+
+      // Update the subscription with the remote id
+      this.subscriptions.find(({id}) => id === sub.id)!.remoteId = response.id
+    })().catch(e => {
+      this.unsubscribe(sub.id)
+      subscriber.onError(e)
+    })
 
     return {
       unsubscribe: () => this.unsubscribe(sub.id),
