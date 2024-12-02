@@ -18,7 +18,7 @@ jest.mock("./websocket", () => ({
   WebSocket: mockSocket,
 }))
 
-describe("WebSocket Manager", () => {
+describe("SubscriptionManager", () => {
   let mockWs: WS
   let mockSubscriber: jest.Mocked<DataSubscriber<any, any, any>>
   let mockHandler: jest.Mocked<SubscriptionHandler<any>>
