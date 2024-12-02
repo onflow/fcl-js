@@ -8,8 +8,8 @@ export interface SubscriptionHandler<
     Topic: string
     Args: any
     Data: any
-    DataModel: any
-    ArgsModel: any
+    ArgsDto: any
+    DataDto: any
   },
 > {
   readonly topic: T["Topic"]
@@ -17,7 +17,7 @@ export interface SubscriptionHandler<
     initialArgs: T["Args"],
     onData: (data: T["Data"]) => void,
     onError: (error: Error) => void
-  ): DataSubscriber<T["Args"], T["ArgsModel"], T["DataModel"]>
+  ): DataSubscriber<T["Args"], T["ArgsDto"], T["DataDto"]>
 }
 
 export interface DataSubscriber<Args, ArgsModel, Data> {
@@ -47,8 +47,8 @@ export function createSubscriptionHandler<
     Topic: string
     Args: any
     Data: any
-    DataModel: any
-    ArgsModel: any
+    ArgsDto: any
+    DataDto: any
   },
 >(handler: SubscriptionHandler<T>): SubscriptionHandler<T> {
   return handler
