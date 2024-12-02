@@ -1,5 +1,15 @@
 # @onflow/fcl
 
+## 1.13.1
+
+### Patch Changes
+
+- [#2039](https://github.com/onflow/fcl-js/pull/2039) [`bc47345ddfc44f0108672f91d8c948eb8e357e3d`](https://github.com/onflow/fcl-js/commit/bc47345ddfc44f0108672f91d8c948eb8e357e3d) Thanks [@jribbink](https://github.com/jribbink)! - Update cross-fetch to v4
+
+- Updated dependencies [[`bc47345ddfc44f0108672f91d8c948eb8e357e3d`](https://github.com/onflow/fcl-js/commit/bc47345ddfc44f0108672f91d8c948eb8e357e3d)]:
+  - @onflow/transport-http@1.10.4
+  - @onflow/sdk@1.5.5
+
 ## 1.13.0
 
 ### Minor Changes
