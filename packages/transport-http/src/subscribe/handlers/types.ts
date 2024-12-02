@@ -1,8 +1,3 @@
-export interface DataConsumer<Data> {
-  onData(data: Data): void
-  onError(error: Error): void
-}
-
 export interface SubscriptionHandler<
   T extends {
     Topic: string
