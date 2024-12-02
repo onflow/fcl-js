@@ -44,5 +44,10 @@ export async function getTransport(
 function isTransportObject(
   transport: any
 ): transport is SdkTransport.Transport {
-  return transport.send !== undefined && transport.subscribe !== undefined
+  return (
+    transport.send !== undefined &&
+    transport.subscribe !== undefined &&
+    typeof transport.send === "function" &&
+    typeof transport.subscribe === "function"
+  )
 }
