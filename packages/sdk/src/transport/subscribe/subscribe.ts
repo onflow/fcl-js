@@ -27,7 +27,7 @@ export async function subscribe<T extends SdkTransport.SubscriptionTopic>(
         decodeResponse(data)
           .then(onData)
           .catch(e => {
-            onError(new Error(`Failed to subscription data: ${e}`))
+            onError(new Error(`Failed to decode response: ${e.message}`))
             sub.unsubscribe()
           })
       },
