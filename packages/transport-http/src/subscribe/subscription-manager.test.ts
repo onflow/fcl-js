@@ -12,15 +12,34 @@ import {
   SubscriptionManagerConfig,
 } from "./subscription-manager"
 import {SdkTransport} from "@onflow/typedefs"
+import {DataSubscriber, SubscriptionHandler} from "./handlers/types"
 
 jest.mock("./websocket", () => ({
   WebSocket: mockSocket,
 }))
 
-describe("WsSubscriptionTransport", () => {
+describe("WebSocket Manager", () => {
   let mockWs: WS
+  let mockSubscriber: jest.Mocked<DataSubscriber<any, any, any>>
+  let mockHandler: jest.Mocked<SubscriptionHandler<any>>
+  const mockConnectionArgs = {mock: "connection args"}
+
   beforeEach(() => {
+    jest.resetAllMocks()
+
     mockWs = new WS("wss://localhost:8080")
+    mockSubscriber = {
+      sendData: jest.fn(),
+      sendError: jest.fn(),
+      encodeArgs: jest.fn().mockReturnValue(mockConnectionArgs),
+      get connectionArgs() {
+        return mockConnectionArgs
+      },
+    }
+    mockHandler = {
+      topic: "topic",
+      createSubscriber: jest.fn().mockReturnValue(mockSubscriber),
+    }
   })
 
   afterEach(() => {
@@ -28,11 +47,7 @@ describe("WsSubscriptionTransport", () => {
   })
 
   test("does not connect to the socket when no subscriptions are made", async () => {
-    const config: SubscriptionManagerConfig = {
-      node: "wss://localhost:8080",
-    }
-
-    new SubscriptionManager(config)
+    new SubscriptionManager([mockHandler], {node: "wss://localhost:8080"})
 
     await new Promise(resolve => setTimeout(resolve, 0))
     expect(mockWs.server.clients).toHaveLength(0)
@@ -42,7 +57,7 @@ describe("WsSubscriptionTransport", () => {
     const config: SubscriptionManagerConfig = {
       node: "wss://localhost:8080",
     }
-    const streamController = new SubscriptionManager(config)
+    const subscriptionManager = new SubscriptionManager([mockHandler], config)
     const topic = "topic" as SdkTransport.SubscriptionTopic
     const args = {key: "value"} as any
     const onData = jest.fn()
@@ -56,7 +71,7 @@ describe("WsSubscriptionTransport", () => {
       expect(data).toEqual({
         action: "subscribe",
         topic,
-        arguments: args,
+        arguments: mockConnectionArgs,
       })
 
       const response: SubscribeMessageResponse = {
@@ -69,7 +84,7 @@ describe("WsSubscriptionTransport", () => {
     })()
 
     const [subscription] = await Promise.all([
-      streamController.subscribe({
+      subscriptionManager.subscribe({
         topic,
         args,
         onData,
@@ -92,7 +107,7 @@ describe("WsSubscriptionTransport", () => {
     const config: SubscriptionManagerConfig = {
       node: "wss://localhost:8080",
     }
-    const streamController = new SubscriptionManager(config)
+    const subscriptionManager = new SubscriptionManager([mockHandler], config)
     const topic = "topic" as SdkTransport.SubscriptionTopic
     const args = {key: "value"} as any
     const onData = jest.fn()
@@ -106,7 +121,7 @@ describe("WsSubscriptionTransport", () => {
       expect(data).toEqual({
         action: "subscribe",
         topic,
-        arguments: args,
+        arguments: mockConnectionArgs,
       })
 
       const response: SubscribeMessageResponse = {
@@ -119,7 +134,7 @@ describe("WsSubscriptionTransport", () => {
     })()
 
     const [subscription] = await Promise.all([
-      streamController.subscribe({
+      subscriptionManager.subscribe({
         topic,
         args,
         onData,
@@ -141,9 +156,9 @@ describe("WsSubscriptionTransport", () => {
 
     await serverPromise
 
-    expect(onData).toHaveBeenCalledTimes(1)
-    expect(onData).toHaveBeenCalledWith({key: "value"})
-    expect(onError).toHaveBeenCalledTimes(0)
+    expect(mockSubscriber.sendData).toHaveBeenCalledTimes(1)
+    expect(mockSubscriber.sendData).toHaveBeenCalledWith({key: "value"})
+    expect(mockSubscriber.sendError).toHaveBeenCalledTimes(0)
 
     serverPromise = (async () => {
       const msg = (await mockWs.nextMessage) as string
@@ -162,7 +177,7 @@ describe("WsSubscriptionTransport", () => {
     const config: SubscriptionManagerConfig = {
       node: "wss://localhost:8080",
     }
-    const streamController = new SubscriptionManager(config)
+    const subscriptionManager = new SubscriptionManager([mockHandler], config)
     const topic = "topic" as SdkTransport.SubscriptionTopic
     const args = {key: "value"} as any
     const onData = jest.fn()
@@ -176,7 +191,7 @@ describe("WsSubscriptionTransport", () => {
       expect(data).toEqual({
         action: "subscribe",
         topic,
-        arguments: args,
+        arguments: mockConnectionArgs,
       })
 
       const response: SubscribeMessageResponse = {
@@ -189,7 +204,7 @@ describe("WsSubscriptionTransport", () => {
     })()
 
     const [subscription] = await Promise.all([
-      streamController.subscribe({
+      subscriptionManager.subscribe({
         topic,
         args,
         onData,
@@ -200,6 +215,12 @@ describe("WsSubscriptionTransport", () => {
 
     expect(subscription).toBeDefined()
     expect(subscription.unsubscribe).toBeInstanceOf(Function)
+    expect(mockHandler.createSubscriber).toHaveBeenCalledTimes(1)
+    expect(mockHandler.createSubscriber).toHaveBeenCalledWith(
+      args,
+      onData,
+      onError
+    )
 
     serverPromise = (async () => {
       const data = {
@@ -211,9 +232,9 @@ describe("WsSubscriptionTransport", () => {
 
     await serverPromise
 
-    expect(onData).toHaveBeenCalledTimes(1)
-    expect(onData).toHaveBeenCalledWith({key: "value"})
-    expect(onError).toHaveBeenCalledTimes(0)
+    expect(mockSubscriber.sendData).toHaveBeenCalledTimes(1)
+    expect(mockSubscriber.sendData).toHaveBeenCalledWith({key: "value"})
+    expect(mockSubscriber.sendError).toHaveBeenCalledTimes(0)
 
     // Close the connection and create a new one
     mockWs.close()
@@ -227,7 +248,7 @@ describe("WsSubscriptionTransport", () => {
       expect(data).toEqual({
         action: "subscribe",
         topic,
-        arguments: args,
+        arguments: mockConnectionArgs,
       })
 
       const response: SubscribeMessageResponse = {
@@ -254,7 +275,7 @@ describe("WsSubscriptionTransport", () => {
 
     await serverPromise
 
-    expect(onData).toHaveBeenCalledTimes(2)
-    expect(onData.mock.calls[1]).toEqual([{key: "value2"}])
+    expect(mockSubscriber.sendData).toHaveBeenCalledTimes(2)
+    expect(mockSubscriber.sendData.mock.calls[1]).toEqual([{key: "value2"}])
   })
 })
