@@ -48,7 +48,7 @@ export const blocksHandler = createSubscriptionHandler<{
     }
 
     return {
-      sendData(data: BlocksDataDto) {
+      onData(data: BlocksDataDto) {
         // Parse the raw data
         const parsedData: BlocksData = {
           block: {
@@ -77,10 +77,10 @@ export const blocksHandler = createSubscriptionHandler<{
 
         onData(parsedData)
       },
-      sendError(error: Error) {
+      onError(error: Error) {
         onError(error)
       },
-      encodeArgs(args: BlocksArgs) {
+      argsToDto(args: BlocksArgs) {
         let encodedArgs: BlocksArgsDto = {
           block_status: args.blockStatus,
         }
