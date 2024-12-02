@@ -15,21 +15,21 @@ export interface SubscriptionHandler<
   ): DataSubscriber<T["Args"], T["ArgsDto"], T["DataDto"]>
 }
 
-export interface DataSubscriber<Args, ArgsModel, Data> {
+export interface DataSubscriber<Args, ArgsDto, DataDto> {
   /**
    * The callback to call when a data is received
    */
-  sendData(data: Data): void
+  onData(data: DataDto): void
 
   /**
    * The callback to call when an error is received
    */
-  sendError(error: Error): void
+  onError(error: Error): void
 
   /**
    * The arguments to connect or reconnect to the subscription
    */
-  encodeArgs(args: Args): ArgsModel
+  argsToDto(args: Args): ArgsDto
 
   /**
    * Get the arguments to connect or reconnect to the subscription
