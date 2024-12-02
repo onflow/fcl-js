@@ -16,7 +16,7 @@ type TransactionStatusesArgs =
 type TransactionStatusesData =
   SdkTransport.SubscriptionData<SdkTransport.SubscriptionTopic.TRANSACTION_STATUSES>
 
-type TransactionStatusesArgsModel = {
+type TransactionStatusesArgsDto = {
   envelope_signatures: string[]
   payload_signatures: string[]
   authorizers: string[]
@@ -32,7 +32,7 @@ type TransactionStatusesArgsModel = {
   reference_block_id: string
 }
 
-type TransactionStatusesDataModel = {
+type TransactionStatusesDataDto = {
   transaction_status: {
     block_id: string
     block_height: number
@@ -53,8 +53,8 @@ export const blockDigestsHandler = createSubscriptionHandler<{
   Topic: SdkTransport.SubscriptionTopic.TRANSACTION_STATUSES
   Args: SdkTransport.SubscriptionArguments<SdkTransport.SubscriptionTopic.TRANSACTION_STATUSES>
   Data: SdkTransport.SubscriptionData<SdkTransport.SubscriptionTopic.TRANSACTION_STATUSES>
-  ArgsModel: TransactionStatusesArgsModel
-  DataModel: TransactionStatusesDataModel
+  ArgsDto: TransactionStatusesArgsDto
+  DataDto: TransactionStatusesDataDto
 }>({
   topic: SdkTransport.SubscriptionTopic.TRANSACTION_STATUSES,
   createSubscriber: (initialArgs, onData, onError) => {
@@ -63,7 +63,7 @@ export const blockDigestsHandler = createSubscriptionHandler<{
     }
 
     return {
-      sendData(data: TransactionStatusesDataModel) {
+      onData(data: TransactionStatusesDataModel) {
         // Parse the raw data
         const parsedData: TransactionStatusesData = {
           transactionStatus: {
@@ -87,10 +87,10 @@ export const blockDigestsHandler = createSubscriptionHandler<{
 
         onData(parsedData)
       },
-      sendError(error: Error) {
+      onError(error: Error) {
         onError(error)
       },
-      encodeArgs(args: TransactionStatusesArgs) {
+      argsToDto(args: TransactionStatusesArgs) {
         return {
           envelope_signatures: args.envelopeSignatures,
           payload_signatures: args.payloadSignatures,
