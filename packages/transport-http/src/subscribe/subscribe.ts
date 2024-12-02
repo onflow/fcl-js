@@ -5,8 +5,6 @@ import {blockDigestsHandler} from "./handlers/block-digests"
 
 const SUBSCRIPTION_HANDLERS = [blocksHandler, blockDigestsHandler]
 
-const SUBSCRIPTION_HANDLERS: any[] = []
-
 // Map of SubscriptionManager instances by access node URL
 let subscriptionManagerMap: Map<
   string,
