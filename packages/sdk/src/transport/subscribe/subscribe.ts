@@ -2,6 +2,12 @@ import {SdkTransport} from "@onflow/typedefs"
 import {rawSubscribe} from "./raw-subscribe"
 import {decodeResponse} from "../../decode/decode"
 
+/**
+ * Subscribe to a topic and decode the data.
+ * @param params - The parameters for the subscription.
+ * @param opts - The options for the subscription.
+ * @returns A promise that resolves when the subscription is complete.
+ */
 export async function subscribe<T extends SdkTransport.SubscriptionTopic>(
   {
     topic,
