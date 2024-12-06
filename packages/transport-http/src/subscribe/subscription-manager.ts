@@ -9,8 +9,9 @@ import {
   SubscribeMessageResponse,
   UnsubscribeMessageRequest,
 } from "./models"
-import type {SdkTransport} from "@onflow/typedefs"
+import {SdkTransport} from "@onflow/typedefs"
 import {WebSocket} from "./websocket"
+import {DataSubscriber, SubscriptionHandler} from "./handlers/types"
 import * as logger from "@onflow/util-logger"
 
 const WS_OPEN = 1
@@ -19,19 +20,17 @@ type DeepRequired<T> = Required<{
   [K in keyof T]: DeepRequired<T[K]>
 }>
 
-interface SubscriptionInfo<T extends SdkTransport.SubscriptionTopic> {
+type InferHandler<T> = T extends SubscriptionHandler<infer H> ? H : never
+
+interface SubscriptionInfo {
   // Internal ID for the subscription
   id: number
   // Remote ID assigned by the server used for message routing and unsubscribing
   remoteId?: string
   // The topic of the subscription
-  topic: T
-  // The checkpoint to resume the subscription from
-  checkpoint: SdkTransport.SubscriptionArguments<T>
-  // The callback to call when a data is received
-  onData: (data: any) => void
-  // The callback to call when an error occurs
-  onError: (error: Error) => void
+  topic: string
+  // Data provider for the subscription
+  subscriber: DataSubscriber<any, any, any>
 }
 
 export interface SubscriptionManagerConfig {
@@ -61,14 +60,15 @@ export interface SubscriptionManagerConfig {
   }
 }
 
-export class SubscriptionManager {
+export class SubscriptionManager<Handlers extends SubscriptionHandler<any>[]> {
   private counter = 0
-  private subscriptions: SubscriptionInfo<SdkTransport.SubscriptionTopic>[] = []
   private socket: WebSocket | null = null
+  private subscriptions: SubscriptionInfo[] = []
   private config: DeepRequired<SubscriptionManagerConfig>
   private reconnectAttempts = 0
+  private handlers: Record<string, SubscriptionHandler<any>>
 
-  constructor(config: SubscriptionManagerConfig) {
+  constructor(handlers: Handlers, config: SubscriptionManagerConfig) {
     this.config = {
       ...config,
       reconnectOptions: {
@@ -78,6 +78,15 @@ export class SubscriptionManager {
         ...config.reconnectOptions,
       },
     }
+
+    // Map data providers by topic
+    this.handlers = handlers.reduce(
+      (acc, handler) => {
+        acc[handler.topic] = handler
+        return acc
+      },
+      {} as Record<string, SubscriptionHandler<any>>
+    )
   }
 
   // Lazy connect to the socket when the first subscription is made
@@ -90,21 +99,15 @@ export class SubscriptionManager {
 
       this.socket = new WebSocket(this.config.node)
       this.socket.onmessage = event => {
-        const data = JSON.parse(event.data) as
+        const message = JSON.parse(event.data) as
           | MessageResponse
           | SubscriptionDataMessage
 
-        if ("action" in data) {
+        if ("action" in message) {
           // TODO, waiting for AN team to decide what to do here
         } else {
-          const sub = this.subscriptions.find(sub => sub.remoteId === data.id)
-          if (!sub) return
-
           // Update the block height to checkpoint for disconnects
-          this.updateSubscriptionCheckpoint(sub, data)
-
-          // Call the subscription callback
-          sub.onData(data.data)
+          this.handleSubscriptionData(message)
         }
       }
       this.socket.onclose = () => {
@@ -157,7 +160,7 @@ export class SubscriptionManager {
       })
 
       this.subscriptions.forEach(sub => {
-        sub.onError(
+        sub.subscriber.onError(
           new Error(
             `Failed to reconnect to the server after ${this.reconnectAttempts + 1} attempts: ${error}`
           )
@@ -182,22 +185,28 @@ export class SubscriptionManager {
     }
   }
 
-  async subscribe<T extends SdkTransport.SubscriptionTopic>(opts: {
-    topic: T
-    args: SdkTransport.SubscriptionArguments<T>
-    onData: (data: SdkTransport.SubscriptionData<T>) => void
+  async subscribe<T extends Handlers[number]>(opts: {
+    topic: InferHandler<T>["Topic"]
+    args: InferHandler<T>["Args"]
+    onData: (data: InferHandler<T>["Data"]) => void
     onError: (error: Error) => void
   }): Promise<SdkTransport.Subscription> {
     // Connect the socket if it's not already open
     await this.connect()
 
+    // Get the data provider for the topic
+    const topicHandler = this.getHandler(opts.topic)
+    const subscriber = topicHandler.createSubscriber(
+      opts.args,
+      opts.onData,
+      opts.onError
+    )
+
     // Track the subscription locally
-    const sub: SubscriptionInfo<T> = {
+    const sub: SubscriptionInfo = {
       id: this.counter++,
       topic: opts.topic,
-      checkpoint: opts.args,
-      onData: opts.onData,
-      onError: opts.onError,
+      subscriber: subscriber,
     }
     this.subscriptions.push(sub)
 
@@ -239,14 +248,12 @@ export class SubscriptionManager {
     }
   }
 
-  private async sendSubscribe(
-    sub: SubscriptionInfo<SdkTransport.SubscriptionTopic>
-  ) {
+  private async sendSubscribe(sub: SubscriptionInfo) {
     // Send the subscription message
     const request: SubscribeMessageRequest = {
       action: Action.SUBSCRIBE,
       topic: sub.topic,
-      arguments: sub.checkpoint,
+      arguments: sub.subscriber.connectionArgs,
     }
     this.socket?.send(JSON.stringify(request))
 
@@ -261,9 +268,7 @@ export class SubscriptionManager {
     return response
   }
 
-  private async sendUnsubscribe(
-    sub: SubscriptionInfo<SdkTransport.SubscriptionTopic>
-  ) {
+  private async sendUnsubscribe(sub: SubscriptionInfo) {
     // Send the unsubscribe message if the subscription has a remote id
     const {remoteId} = sub
     if (remoteId) {
@@ -297,10 +302,25 @@ export class SubscriptionManager {
 
   // Update the subscription checkpoint when a message is received
   // These checkpoints are used to resume subscriptions after disconnects
-  private updateSubscriptionCheckpoint<
+  private handleSubscriptionData<
     T extends SdkTransport.SubscriptionTopic = SdkTransport.SubscriptionTopic,
-  >(sub: SubscriptionInfo<T>, message: SubscriptionDataMessage) {
-    // TODO: Will be implemented with each subscription topic
+  >(message: SubscriptionDataMessage) {
+    // Get the subscription
+    const sub = this.subscriptions.find(sub => sub.remoteId === message.id)
+    if (!sub) {
+      throw new Error(`No subscription found for id ${message.id}`)
+    }
+
+    // Send data to the subscriber
+    sub.subscriber.onData(message.data)
+  }
+
+  private getHandler(topic: string) {
+    const handler = this.handlers[topic]
+    if (!handler) {
+      throw new Error(`No handler found for topic ${topic}`)
+    }
+    return handler
   }
 
   /**
