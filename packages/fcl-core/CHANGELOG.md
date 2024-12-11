@@ -1,5 +1,11 @@
 # @onflow/fcl
 
+## 1.13.2
+
+### Patch Changes
+
+- [#2043](https://github.com/onflow/fcl-js/pull/2043) [`c0fceb12e3108265e4442ad81817a4cb12f79b0f`](https://github.com/onflow/fcl-js/commit/c0fceb12e3108265e4442ad81817a4cb12f79b0f) Thanks [@jribbink](https://github.com/jribbink)! - Export `TransactionError`
+
 ## 1.13.1
 
 ### Patch Changes
