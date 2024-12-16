@@ -1,5 +1,11 @@
 # @onflow/fcl
 
+## 1.13.3
+
+### Patch Changes
+
+- [#2046](https://github.com/onflow/fcl-js/pull/2046) [`c88f170ab2342f5382dead9a2270e72ce9c6d68a`](https://github.com/onflow/fcl-js/commit/c88f170ab2342f5382dead9a2270e72ce9c6d68a) Thanks [@jribbink](https://github.com/jribbink)! - Fix bug affecting `fcl.tx(...).onceSealed()`
+
 ## 1.13.2
 
 ### Patch Changes
