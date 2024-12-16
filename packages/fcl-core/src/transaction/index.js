@@ -161,6 +161,7 @@ export function transaction(
               reject(transactionError)
               unsub()
             }
+            return
           }
 
           if (predicate(txStatus)) {
