@@ -1,5 +1,13 @@
 # @onflow/fcl
 
+## 1.13.4
+
+### Patch Changes
+
+- Updated dependencies [[`4e907764cbbe688ea8fd1508968c2b095f00d79e`](https://github.com/onflow/fcl-js/commit/4e907764cbbe688ea8fd1508968c2b095f00d79e)]:
+  - @onflow/transport-http@1.10.5
+  - @onflow/sdk@1.5.6
+
 ## 1.13.3
 
 ### Patch Changes
