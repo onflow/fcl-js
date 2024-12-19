@@ -1,5 +1,11 @@
 # @onflow/transport-http
 
+## 1.10.5
+
+### Patch Changes
+
+- [#2049](https://github.com/onflow/fcl-js/pull/2049) [`4e907764cbbe688ea8fd1508968c2b095f00d79e`](https://github.com/onflow/fcl-js/commit/4e907764cbbe688ea8fd1508968c2b095f00d79e) Thanks [@jribbink](https://github.com/jribbink)! - Fix keyId for HTTP get transaction request
+
 ## 1.10.4
 
 ### Patch Changes
