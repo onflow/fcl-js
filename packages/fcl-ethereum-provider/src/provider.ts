@@ -7,7 +7,7 @@ import {
   RpcRequest,
   RpcResponse,
 } from "./types/provider"
-import {RpcService} from "./services/rpc"
+import {RpcController} from "./rpc/rpc-controller"
 import * as fcl from "@onflow/fcl"
 import {CurrentUser, Service} from "@onflow/typedefs"
 
@@ -18,7 +18,7 @@ export class Provider implements Eip1193Provider {
   constructor(
     private user: typeof fcl.currentUser,
     private service: Service | undefined,
-    private rpcService: RpcService
+    private rpcController: RpcController
   ) {
     this.setupEvents()
   }
@@ -67,7 +67,7 @@ export class Provider implements Eip1193Provider {
       if (!method) {
         throw new Error("Method is required")
       }
-      const result = await this.rpcService.handleRequest({method, params})
+      const result = await this.rpcController.handleRequest({method, params})
       return result
     } catch (error) {
       throw new Error(`Request failed: ${(error as Error).message}`)
