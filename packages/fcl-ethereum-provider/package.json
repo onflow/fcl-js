@@ -1,0 +1,41 @@
+{
+  "name": "@onflow/fcl-ethereum-provider",
+  "version": "0.0.0",
+  "description": "Ethereum provider for FCL-compatible wallets",
+  "license": "Apache-2.0",
+  "author": "Dapper Labs <dev@dapperlabs.com>",
+  "homepage": "https://onflow.org",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/onflow/flow-js-sdk.git"
+  },
+  "bugs": {
+    "url": "https://github.com/onflow/flow-js-sdk/issues"
+  },
+  "devDependencies": {
+    "@babel/preset-typescript": "^7.25.7",
+    "@onflow/fcl-bundle": "1.6.0",
+    "@types/jest": "^29.5.13",
+    "@typescript-eslint/eslint-plugin": "^6.21.0",
+    "@typescript-eslint/parser": "^6.21.0",
+    "eslint": "^8.57.1",
+    "eslint-plugin-jsdoc": "^46.10.1",
+    "jest": "^29.7.0"
+  },
+  "source": "src/util-uid.ts",
+  "main": "dist/util-uid.js",
+  "module": "dist/util-uid.module.js",
+  "unpkg": "dist/util-uid.umd.js",
+  "types": "types/util-uid.d.ts",
+  "scripts": {
+    "prepublishOnly": "npm test && npm run build",
+    "test": "jest",
+    "build": "fcl-bundle",
+    "test:watch": "jest --watch",
+    "start": "fcl-bundle --watch"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.25.7",
+    "@onflow/fcl": "1.13.4"
+  }
+}
