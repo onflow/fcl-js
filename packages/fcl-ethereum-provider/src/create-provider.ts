@@ -1,4 +1,4 @@
-import * as fcl from "@onflow/fcl"
+import {currentUser} from "@onflow/fcl"
 import {Eip1193Provider} from "./types/provider"
 import {FclEthereumProvider} from "./provider"
 import {RpcProcessor} from "./rpc/rpc-processor"
@@ -26,7 +26,7 @@ import {AccountManager} from "./accounts/account-manager"
  * ```
  */
 export function createProvider(config: {
-  user: typeof fcl.currentUser
+  user: typeof currentUser
   service?: Service
   gateway?: string
 }): Eip1193Provider {

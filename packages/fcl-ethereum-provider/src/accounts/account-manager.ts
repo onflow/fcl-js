@@ -1,7 +1,7 @@
-import * as fcl from "@onflow/fcl"
+import {currentUser} from "@onflow/fcl"
 
 export class AccountManager {
-  constructor(private user: typeof fcl.currentUser) {}
+  constructor(private user: typeof currentUser) {}
 
   getAccounts(): string[] {
     // ... get coa address
