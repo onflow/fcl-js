@@ -31,7 +31,7 @@ export function createProvider(config: {
   gateway?: string
 }): Eip1193Provider {
   const accountManager = new AccountManager(config.user)
-  const rpcProcessor = new RpcProcessor()
+  const rpcProcessor = new RpcProcessor(accountManager)
   const eventProcessor = new EventDispatcher()
   const provider = new FclEthereumProvider(rpcProcessor, eventProcessor)
   return provider
