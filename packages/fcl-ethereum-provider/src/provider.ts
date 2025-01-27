@@ -10,53 +10,13 @@ import {
 import {RpcController} from "./rpc/rpc-controller"
 import * as fcl from "@onflow/fcl"
 import {CurrentUser, Service} from "@onflow/typedefs"
+import {EventService} from "./events/event-service"
 
-export class Provider implements Eip1193Provider {
-  private eventEmitter = new EventEmitter()
-  private currentUser: CurrentUser | null = null
-
+export class FclEthereumProvider implements Eip1193Provider {
   constructor(
-    private user: typeof fcl.currentUser,
-    private service: Service | undefined,
-    private rpcController: RpcController
-  ) {
-    this.setupEvents()
-  }
-
-  // Setup event listeners for user changes
-  private setupEvents() {
-    this.user.subscribe((currentUser: CurrentUser) => {
-      const addrChanged = currentUser.addr !== this.currentUser?.addr
-      const loggedInChanged =
-        currentUser?.loggedIn !== this.currentUser?.loggedIn
-      const isConnected = currentUser?.loggedIn && currentUser?.addr
-      const wasConnected = this.currentUser?.loggedIn && this.currentUser?.addr
-
-      // Emit accounts changed event if user changes
-      if (addrChanged || loggedInChanged) {
-        this.emit("accountsChanged", isConnected ? [currentUser.addr!] : [])
-
-        // Emit connect event if user connects
-        if (isConnected && !wasConnected) {
-          this.emit("connect", {chainId: FLOW_CHAIN_ID.TESTNET.toString()})
-        }
-
-        // Emit disconnect event if user changes
-        if (!isConnected && wasConnected) {
-          this.emit("disconnect", {reason: "User changed"})
-        }
-      }
-
-      // Update current user
-      this.currentUser = currentUser
-
-      // Emit chain changed event if chain id changes
-      /* TODO
-      if (currentUser?.chainId !== this.currentUser?.chainId) {
-        this.emit("chainChanged", currentUser.chainId)
-      }*/
-    })
-  }
+    private rpcController: RpcController,
+    private eventService: EventService
+  ) {}
 
   // Handle requests
   async request<T = unknown>({
@@ -79,7 +39,7 @@ export class Provider implements Eip1193Provider {
     event: E,
     listener: EventCallback<ProviderEvents[E]>
   ): void {
-    this.eventEmitter.on(event, listener)
+    this.eventService.on(event, listener)
   }
 
   // Remove event listeners
@@ -87,14 +47,6 @@ export class Provider implements Eip1193Provider {
     event: E,
     listener: EventCallback<ProviderEvents[E]>
   ): void {
-    this.eventEmitter.off(event, listener)
-  }
-
-  // Emit events (to be called internally)
-  protected emit<E extends keyof ProviderEvents>(
-    event: E,
-    data: ProviderEvents[E]
-  ) {
-    this.eventEmitter.emit(event, data)
+    this.eventService.off(event, listener)
   }
 }
