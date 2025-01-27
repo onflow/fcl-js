@@ -11,7 +11,7 @@ import {EventDispatcher} from "./events/event-dispatcher"
 export class FclEthereumProvider implements Eip1193Provider {
   constructor(
     private rpcProcessor: RpcProcessor,
-    private eventService: EventDispatcher
+    private eventDispatcher: EventDispatcher
   ) {}
 
   // Handle requests
@@ -35,7 +35,7 @@ export class FclEthereumProvider implements Eip1193Provider {
     event: E,
     listener: EventCallback<ProviderEvents[E]>
   ): void {
-    this.eventService.on(event, listener)
+    this.eventDispatcher.on(event, listener)
   }
 
   // Remove event listeners
@@ -43,6 +43,6 @@ export class FclEthereumProvider implements Eip1193Provider {
     event: E,
     listener: EventCallback<ProviderEvents[E]>
   ): void {
-    this.eventService.off(event, listener)
+    this.eventDispatcher.off(event, listener)
   }
 }
