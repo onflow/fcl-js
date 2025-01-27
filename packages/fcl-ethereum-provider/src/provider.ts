@@ -1,15 +1,11 @@
-import EventEmitter from "events"
 import {
   Eip1193Provider,
   EventCallback,
-  FLOW_CHAIN_ID,
   ProviderEvents,
   ProviderRequest,
   ProviderResponse,
 } from "./types/provider"
 import {RpcService} from "./services/rpc/rpc-service"
-import * as fcl from "@onflow/fcl"
-import {CurrentUser, Service} from "@onflow/typedefs"
 import {EventService} from "./services/events/event-service"
 
 export class FclEthereumProvider implements Eip1193Provider {

@@ -24,7 +24,7 @@ import {EventService} from "./services/events/event-service"
  * })
  * ```
  */
-function createProvider(config: {
+export function createProvider(config: {
   user: typeof fcl.currentUser
   service?: Service
   gateway?: string
