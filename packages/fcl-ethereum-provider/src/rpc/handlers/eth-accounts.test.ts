@@ -9,7 +9,7 @@ describe("ethAccounts handler", () => {
       getAccounts: jest.fn(),
       subscribe: jest.fn(),
     } as unknown as jest.Mocked<AccountManager>
-  });
+  })
 
   it("should return accounts from the AccountManager", () => {
     accountManagerMock.getAccounts.mockReturnValue(["0x1234...", "0x5678..."])
@@ -18,7 +18,7 @@ describe("ethAccounts handler", () => {
 
     expect(accounts).toEqual(["0x1234...", "0x5678..."])
     expect(accountManagerMock.getAccounts).toHaveBeenCalled()
-  });
+  })
 
   it("should return an empty array if no accounts are available", () => {
     accountManagerMock.getAccounts.mockReturnValue([])
@@ -27,5 +27,5 @@ describe("ethAccounts handler", () => {
 
     expect(accounts).toEqual([])
     expect(accountManagerMock.getAccounts).toHaveBeenCalled()
-  });
-});
+  })
+})
