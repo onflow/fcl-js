@@ -6,12 +6,12 @@ import {
   ProviderResponse,
 } from "./types/provider"
 import {RpcProcessor} from "./rpc/rpc-processor"
-import {EventManager} from "./events/event-manager"
+import {EventDispatcher} from "./events/event-dispatcher"
 
 export class FclEthereumProvider implements Eip1193Provider {
   constructor(
     private rpcProcessor: RpcProcessor,
-    private eventService: EventManager
+    private eventService: EventDispatcher
   ) {}
 
   // Handle requests

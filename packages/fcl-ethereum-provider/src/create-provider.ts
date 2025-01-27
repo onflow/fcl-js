@@ -3,7 +3,7 @@ import {Eip1193Provider} from "./types/provider"
 import {FclEthereumProvider} from "./provider"
 import {RpcProcessor} from "./rpc/rpc-processor"
 import {Service} from "@onflow/typedefs"
-import {EventManager} from "./events/event-manager"
+import {EventDispatcher} from "./events/event-dispatcher"
 import {AccountManager} from "./accounts/account-manager"
 
 /**
@@ -32,7 +32,7 @@ export function createProvider(config: {
 }): Eip1193Provider {
   const accountManager = new AccountManager(config.user)
   const rpcService = new RpcProcessor()
-  const eventService = new EventManager()
+  const eventService = new EventDispatcher()
   const provider = new FclEthereumProvider(rpcService, eventService)
   return provider
 }
