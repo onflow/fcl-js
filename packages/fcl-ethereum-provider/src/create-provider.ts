@@ -4,6 +4,7 @@ import {FclEthereumProvider} from "./provider"
 import {RpcProcessor} from "./rpc/rpc-processor"
 import {Service} from "@onflow/typedefs"
 import {EventManager} from "./events/event-manager"
+import {AccountManager} from "./accounts/account-manager"
 
 /**
  * Create a new FCL Ethereum provider
@@ -29,6 +30,7 @@ export function createProvider(config: {
   service?: Service
   gateway?: string
 }): Eip1193Provider {
+  const accountManager = new AccountManager(config.user)
   const rpcService = new RpcProcessor()
   const eventService = new EventManager()
   const provider = new FclEthereumProvider(rpcService, eventService)
