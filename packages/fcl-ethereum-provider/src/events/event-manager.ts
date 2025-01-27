@@ -1,7 +1,7 @@
-import {EventCallback, ProviderEvents} from "../../types/provider"
+import {EventCallback, ProviderEvents} from "../types/provider"
 import EventEmitter from "events"
 
-export class EventService {
+export class EventManager {
   private eventEmitter = new EventEmitter()
 
   constructor() {}

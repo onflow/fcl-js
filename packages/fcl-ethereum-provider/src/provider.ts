@@ -5,13 +5,13 @@ import {
   ProviderRequest,
   ProviderResponse,
 } from "./types/provider"
-import {RpcService} from "./services/rpc/rpc-service"
-import {EventService} from "./services/events/event-service"
+import {RpcProcessor} from "./rpc/rpc-processor"
+import {EventManager} from "./events/event-manager"
 
 export class FclEthereumProvider implements Eip1193Provider {
   constructor(
-    private rpcService: RpcService,
-    private eventService: EventService
+    private rpcProcessor: RpcProcessor,
+    private eventService: EventManager
   ) {}
 
   // Handle requests
@@ -23,7 +23,7 @@ export class FclEthereumProvider implements Eip1193Provider {
       if (!method) {
         throw new Error("Method is required")
       }
-      const result = await this.rpcService.request({method, params})
+      const result = await this.rpcProcessor.handleRequest({method, params})
       return result
     } catch (error) {
       throw new Error(`Request failed: ${(error as Error).message}`)
