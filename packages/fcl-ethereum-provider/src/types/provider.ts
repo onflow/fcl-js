@@ -1,10 +1,10 @@
 // Types for RPC request and events
-export type RpcRequest = {
+export type ProviderRequest = {
   method: string
   params?: unknown[] | Record<string, unknown>
 }
 
-export type RpcResponse<T = unknown> = T
+export type ProviderResponse<T = unknown> = T
 
 // Event types for the provider
 export type ProviderEvents = {
@@ -19,7 +19,7 @@ export type EventCallback<T> = (event: T) => void
 
 // Base EIP-1193 Provider Interface
 export interface Eip1193Provider {
-  request<T = unknown>(args: RpcRequest): Promise<RpcResponse<T>>
+  request<T = unknown>(args: ProviderRequest): Promise<ProviderResponse<T>>
   on<E extends keyof ProviderEvents>(
     event: E,
     listener: EventCallback<ProviderEvents[E]>

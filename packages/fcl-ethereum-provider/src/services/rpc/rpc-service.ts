@@ -1,4 +1,4 @@
-import {RpcRequest} from "../../types/provider"
+import {ProviderRequest} from "../../types/provider"
 import {eth_accounts} from "./handlers/eth-accounts"
 
 const handlers = {
@@ -8,7 +8,7 @@ const handlers = {
 export class RpcService {
   constructor() {}
 
-  async request({method, params}: RpcRequest): Promise<any> {
+  async request({method, params}: ProviderRequest): Promise<any> {
     switch (method) {
       case "eth_requestAccounts":
         throw new Error("Not implemented")

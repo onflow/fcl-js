@@ -4,8 +4,8 @@ import {
   EventCallback,
   FLOW_CHAIN_ID,
   ProviderEvents,
-  RpcRequest,
-  RpcResponse,
+  ProviderRequest,
+  ProviderResponse,
 } from "./types/provider"
 import {RpcService} from "./services/rpc/rpc-service"
 import * as fcl from "@onflow/fcl"
@@ -22,7 +22,7 @@ export class FclEthereumProvider implements Eip1193Provider {
   async request<T = unknown>({
     method,
     params,
-  }: RpcRequest): Promise<RpcResponse<T>> {
+  }: ProviderRequest): Promise<ProviderResponse<T>> {
     try {
       if (!method) {
         throw new Error("Method is required")
