@@ -207,4 +207,8 @@ describe("AccountManager", () => {
 
     expect(callback).toHaveBeenCalledWith(["0x123"])
   })
+
+  it("should return an empty array when COA address is null", () => {
+    expect(accountManager.getAccounts()).toEqual([])
+  })
 })
