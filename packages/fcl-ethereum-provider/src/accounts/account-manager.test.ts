@@ -211,4 +211,12 @@ describe("AccountManager", () => {
   it("should return an empty array when COA address is null", () => {
     expect(accountManager.getAccounts()).toEqual([])
   })
+
+  it("should return COA address array when available", async () => {
+    user.snapshot.mockResolvedValueOnce({ addr: "0x1" } as CurrentUser)
+    mockQuery.mockResolvedValueOnce("0x123")
+
+    await accountManager.updateCOAAddress()
+    expect(accountManager.getAccounts()).toEqual(["0x123"])
+  })
 })
