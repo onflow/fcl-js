@@ -45,7 +45,7 @@ describe("AccountManager", () => {
 
     await accountManager.updateCOAAddress()
 
-    expect(accountManager.getCOAAddress()).toBeUndefined()
+    expect(accountManager.getCOAAddress()).toBeNull()
     expect(accountManager.getAccounts()).toEqual([])
   })
 
