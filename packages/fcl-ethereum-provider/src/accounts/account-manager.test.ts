@@ -131,4 +131,29 @@ describe("AccountManager", () => {
     // The second fetch (for address 0x2) is the latest, so "0x456"
     expect(accountManager.getCOAAddress()).toBe("0x456")
   })
+
+  it("should clear COA address if fetch fails and is the latest", async () => {
+    user.snapshot.mockResolvedValueOnce({ addr: "0x1" } as CurrentUser)
+    mockQuery.mockRejectedValueOnce(new Error("Fetch failed"))
+
+    await expect(accountManager.updateCOAAddress()).rejects.toThrow("Fetch failed")
+
+    expect(accountManager.getCOAAddress()).toBeNull()
+  })
+
+  it("should handle user changes correctly", async () => {
+    user.snapshot
+      .mockResolvedValueOnce({ addr: "0x1" } as CurrentUser)
+      .mockResolvedValueOnce({ addr: "0x2" } as CurrentUser)
+
+    mockQuery
+      .mockResolvedValueOnce("0x123") // for user 0x1
+      .mockResolvedValueOnce("0x456") // for user 0x2
+
+    await accountManager.updateCOAAddress()
+    expect(accountManager.getCOAAddress()).toBe("0x123")
+
+    await accountManager.updateCOAAddress()
+    expect(accountManager.getCOAAddress()).toBe("0x456")
+  })
 })
