@@ -5,6 +5,9 @@ export class AccountManager {
   private lastFlowAddr: string | null = null
   private coaAddress: string | null = null
 
+  // Keep track of which fetch is the latest to prevent race conditions
+  private currentFetchId = 0
+
   constructor(user: typeof fcl.currentUser) {
     this.user = user
   }
@@ -46,34 +49,38 @@ export class AccountManager {
     return this.coaAddress ? [this.coaAddress] : []
   }
 
-  public async updateCOAAddress(): Promise<void> {
-    const snapshot = await this.user.snapshot()
-    if (!snapshot.addr) {
-      // user is not logged in
-      this.setCOAAddress(null)
-      return
-    }
-    const fetched = await this.fetchCOAFromFlowAddress(snapshot.addr)
-    this.setCOAAddress(fetched)
-  }
-
   public subscribe(callback: (accounts: string[]) => void) {
     this.user.subscribe(async () => {
       const snapshot = await this.user.snapshot()
       const currentFlowAddr = snapshot.addr
 
-      if (!snapshot.addr) {
-        // user not authenticated
+      if (!currentFlowAddr) {
+        // user not authenticated => clear
         this.lastFlowAddr = null
         this.setCOAAddress(null)
         callback(this.getAccounts())
         return
       }
 
+      // If the user changed address, we fetch.
+      // But we also set a "fetchId" so we know
+      // which fetch call is the "latest."
       if (this.lastFlowAddr !== currentFlowAddr) {
-        const address = await this.fetchCOAFromFlowAddress(snapshot.addr)
-        this.setCOAAddress(address)
         this.lastFlowAddr = currentFlowAddr
+
+        const fetchId = ++this.currentFetchId
+
+        try {
+          const address = await this.fetchCOAFromFlowAddress(currentFlowAddr)
+
+          if (fetchId === this.currentFetchId) {
+            this.setCOAAddress(address)
+          }
+        } catch (error) {
+          if (fetchId === this.currentFetchId) {
+            this.setCOAAddress(null)
+          }
+        }
       }
 
       callback(this.getAccounts())
