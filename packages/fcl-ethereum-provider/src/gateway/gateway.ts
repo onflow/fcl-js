@@ -7,7 +7,7 @@ export class Gateway {
 
   constructor(private rpcUrls: {[chainId: number]: string}) {}
 
-  async request({
+  public async request({
     method,
     params,
     chainId,

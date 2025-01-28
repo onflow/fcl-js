@@ -4,6 +4,7 @@ import {Gateway} from "../gateway/gateway"
 import {AccountManager} from "../accounts/account-manager"
 import * as fcl from "@onflow/fcl"
 import {FLOW_CHAINS, FlowNetwork} from "../constants"
+import {ethSendTransaction} from "./handlers/eth-send-transaction"
 
 export class RpcProcessor {
   constructor(
@@ -23,6 +24,8 @@ export class RpcProcessor {
         return ethAccounts(this.accountManager)
       case "eth_requestAccounts":
         throw new Error("Not implemented")
+      case "eth_sendTransaction":
+        return await ethSendTransaction(this.accountManager, params)
       default:
         return await this.gateway.request({
           chainId: eip155ChainId,
