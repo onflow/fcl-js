@@ -1,7 +1,7 @@
 import * as fcl from "@onflow/fcl";
 import {AccountManager} from "../../accounts/account-manager"
 
-async function getCOAAddress(): Promise<string> {
+export async function getCOAAddress(accountManager: AccountManager): Promise<string> {
   const cadenceScript = `
     import EVM
 
@@ -13,7 +13,7 @@ async function getCOAAddress(): Promise<string> {
     ///
     access(all)
     fun main(address: Address): String? {
-        if let coa = getAuthAccount<auth(BorrowValue) &Account>(address).storage.borrow<&EVM.CadenceOwnedAccount>(
+        if let coa = getAuthAccount(address).storage.borrow<&EVM.CadenceOwnedAccount>(
             from: /storage/evm
         ) {
             return coa.address().toString()
@@ -22,17 +22,16 @@ async function getCOAAddress(): Promise<string> {
     }
   `;
 
-  const user = await fcl.currentUser().snapshot();
-  if (!user.addr) {
+  const snapshot = await accountManager.getUserSnapshot()
+  if (!snapshot.addr) {
     throw new Error("User is not authenticated");
   }
 
   const response = await fcl.query({
     cadence: cadenceScript,
-    args: (arg, t) => [arg(user.addr, t.Address)],
+    args: (arg, t) => [arg(snapshot.addr, t.Address)],
   });
 
-  // If the response is null, the COA does not exist
   if (!response) {
     throw new Error("COA account not found for the authenticated user");
   }
@@ -47,7 +46,7 @@ export function ethAccounts(accountManager: AccountManager): string[] {
 export async function ethRequestAccounts(accountManager: AccountManager) {
   await fcl.currentUser().authenticate()
 
-  const coaAddress = await getCOAAddress();
+  const coaAddress = await getCOAAddress(accountManager);
 
   accountManager.setAccounts([coaAddress]);
 

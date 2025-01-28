@@ -1,9 +1,16 @@
 import * as fcl from "@onflow/fcl"
 
 export class AccountManager {
+  private user: typeof fcl.currentUser
   private accounts: string[] = [];
 
-  constructor(private user: typeof fcl.currentUser) {}
+  constructor(user: typeof fcl.currentUser) {
+    this.user = user
+  }
+
+  public async getUserSnapshot() {
+    return this.user.snapshot()
+  }
 
   getAccounts(): string[] {
     return this.accounts;
