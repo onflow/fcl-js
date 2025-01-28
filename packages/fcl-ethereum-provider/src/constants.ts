@@ -14,6 +14,10 @@ export const FLOW_CHAINS = {
   },
 }
 
+export enum ContractType {
+  EVM = "EVM",
+}
+
 export enum EventType {
   TRANSACTION_EXECUTED = "TRANSACTION_EXECUTED",
 }
@@ -22,6 +26,13 @@ export const EVENT_IDENTIFIERS = {
   [EventType.TRANSACTION_EXECUTED]: {
     [FlowNetwork.TESTNET]: "A.8c5303eaa26202d6.EVM.TransactionExecuted",
     [FlowNetwork.MAINNET]: "A.e467b9dd11fa00df.EVM.TransactionExecuted",
+  },
+}
+
+export const FLOW_CONTRACTS = {
+  [ContractType.EVM]: {
+    [FlowNetwork.TESTNET]: "0x8c5303eaa26202d6",
+    [FlowNetwork.MAINNET]: "0xe467b9dd11fa00df",
   },
 }
 

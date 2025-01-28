@@ -1,6 +1,13 @@
 import * as fcl from "@onflow/fcl"
-import {CurrentUser, Event as FlowEvent} from "@onflow/typedefs"
-import {EVENT_IDENTIFIERS, EventType, FlowNetwork} from "../constants"
+import {CurrentUser} from "@onflow/typedefs"
+import {
+  ContractType,
+  EVENT_IDENTIFIERS,
+  EventType,
+  FLOW_CHAINS,
+  FLOW_CONTRACTS,
+  FlowNetwork,
+} from "../constants"
 import {TransactionExecutedEvent} from "../types/events"
 
 export class AccountManager {
@@ -39,8 +46,17 @@ export class AccountManager {
     gasLimit: string
     chainId: string
   }) {
+    // Find the Flow network based on the chain ID
+    const flowNetwork = Object.entries(FLOW_CHAINS).find(
+      ([, chain]) => chain.eip155ChainId === parseInt(chainId)
+    )?.[0] as FlowNetwork
+
+    const evmContractAddress = fcl.withPrefix(
+      FLOW_CONTRACTS[ContractType.EVM][flowNetwork]
+    )
+
     const txId = await fcl.mutate({
-      cadence: `import EVM from <<CONTRACT_ADDRESS>>
+      cadence: `import EVM from ${evmContractAddress}
         
         /// Executes the calldata from the signer's COA
         ///
@@ -74,6 +90,7 @@ export class AccountManager {
         arg(gasLimit, t.UInt64),
         arg(value, t.UInt256),
       ],
+      authz: this.user,
     })
 
     const result = await fcl.tx(txId).onceExecuted()
@@ -82,10 +99,10 @@ export class AccountManager {
     const evmTxExecutedEvent = events.find(
       event =>
         event.type ===
-        EVENT_IDENTIFIERS[EventType.TRANSACTION_EXECUTED][FlowNetwork.MAINNET]
+        EVENT_IDENTIFIERS[EventType.TRANSACTION_EXECUTED][flowNetwork]
     )
     if (!evmTxExecutedEvent) {
-      throw new Error("Transaction failed")
+      throw new Error("EVM transaction hash not found")
     }
 
     const eventData: TransactionExecutedEvent = evmTxExecutedEvent.data
