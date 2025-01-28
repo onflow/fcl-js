@@ -163,7 +163,7 @@ describe("AccountManager", () => {
 
     const callback = jest.fn()
     user.subscribe.mockImplementation(fn => {
-      fn({ addr: "0x1" } as CurrentUser)
+      fn({ addr: "0x1" })
     })
 
     mockQuery.mockResolvedValueOnce("0x123")
@@ -173,5 +173,20 @@ describe("AccountManager", () => {
     await new Promise(setImmediate)
 
     expect(callback).toHaveBeenCalledWith(["0x123"])
+  })
+
+  it("should reset accounts in subscribe if user is not authenticated", () => {
+    mockQuery.mockResolvedValue("0x123")
+    user.snapshot.mockResolvedValue({ addr: undefined } as CurrentUser)
+
+    const callback = jest.fn()
+
+    user.subscribe.mockImplementation(fn => {
+      fn({ addr: null })
+    })
+
+    accountManager.subscribe(callback)
+
+    expect(callback).toHaveBeenCalledWith([])
   })
 })
