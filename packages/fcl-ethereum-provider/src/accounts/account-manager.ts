@@ -1,12 +1,17 @@
 import * as fcl from "@onflow/fcl"
+import { CurrentUser } from "@onflow/typedefs"
 
 export class AccountManager {
   private user: typeof fcl.currentUser
-  private lastFlowAddr: string | null = null
-  private coaAddress: string | null = null
 
-  // Keep track of which fetch is the latest to prevent race conditions
+  // For race-condition checks:
   private currentFetchId = 0
+
+  // Track the last Flow address we fetched for
+  private lastFlowAddr: string | null = null
+
+  // The COA address (or null if none/not fetched)
+  private coaAddress: string | null = null
 
   constructor(user: typeof fcl.currentUser) {
     this.user = user
@@ -28,7 +33,7 @@ export class AccountManager {
     `
     const response = await fcl.query({
       cadence: cadenceScript,
-      args: (arg, t) => [arg(flowAddr, t.Address)],
+      args: (arg: typeof fcl.arg, t: typeof fcl.t) => [arg(flowAddr, t.Address)],
     })
 
     if (!response) {
@@ -37,12 +42,40 @@ export class AccountManager {
     return response as string
   }
 
-  public getCOAAddress(): string | null {
-    return this.coaAddress
+  public async updateCOAAddress(force = false): Promise<void> {
+    const snapshot = await this.user.snapshot()
+    const currentFlowAddr = snapshot.addr
+
+    // If user not logged in, reset everything
+    if (!currentFlowAddr) {
+      this.lastFlowAddr = null
+      this.coaAddress = null
+      return
+    }
+
+    const userChanged = this.lastFlowAddr !== currentFlowAddr
+    if (force || userChanged) {
+      this.lastFlowAddr = currentFlowAddr
+      const fetchId = ++this.currentFetchId
+
+      try {
+        const address = await this.fetchCOAFromFlowAddress(currentFlowAddr)
+        // Only update if this fetch is still the latest
+        if (fetchId === this.currentFetchId) {
+          this.coaAddress = address
+        }
+      } catch (error) {
+        // If this fetch is the latest, clear
+        if (fetchId === this.currentFetchId) {
+          this.coaAddress = null
+        }
+        throw error
+      }
+    }
   }
 
-  public setCOAAddress(addr: string | null): void {
-    this.coaAddress = addr
+  public getCOAAddress(): string | null {
+    return this.coaAddress
   }
 
   public getAccounts(): string[] {
@@ -50,39 +83,16 @@ export class AccountManager {
   }
 
   public subscribe(callback: (accounts: string[]) => void) {
-    this.user.subscribe(async () => {
-      const snapshot = await this.user.snapshot()
-      const currentFlowAddr = snapshot.addr
-
-      if (!currentFlowAddr) {
-        // user not authenticated => clear
+    this.user.subscribe(async (snapshot: CurrentUser) => {
+      if (!snapshot.addr) {
+        // user not authenticated => clear out
         this.lastFlowAddr = null
-        this.setCOAAddress(null)
+        this.coaAddress = null
         callback(this.getAccounts())
         return
       }
 
-      // If the user changed address, we fetch.
-      // But we also set a "fetchId" so we know
-      // which fetch call is the "latest."
-      if (this.lastFlowAddr !== currentFlowAddr) {
-        this.lastFlowAddr = currentFlowAddr
-
-        const fetchId = ++this.currentFetchId
-
-        try {
-          const address = await this.fetchCOAFromFlowAddress(currentFlowAddr)
-
-          if (fetchId === this.currentFetchId) {
-            this.setCOAAddress(address)
-          }
-        } catch (error) {
-          if (fetchId === this.currentFetchId) {
-            this.setCOAAddress(null)
-          }
-        }
-      }
-
+      await this.updateCOAAddress()
       callback(this.getAccounts())
     })
   }
