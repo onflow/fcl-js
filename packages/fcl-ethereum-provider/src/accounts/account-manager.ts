@@ -66,7 +66,6 @@ export class AccountManager {
         return
       }
 
-      // Fetch + set COA
       const address = await this.fetchCOAFromFlowAddress(snapshot.addr)
       this.setCOAAddress(address)
 
