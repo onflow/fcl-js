@@ -2,6 +2,7 @@ import * as fcl from "@onflow/fcl"
 
 export class AccountManager {
   private user: typeof fcl.currentUser
+  private lastFlowAddr: string | null = null
   private coaAddress: string | null = null
 
   constructor(user: typeof fcl.currentUser) {
@@ -59,15 +60,21 @@ export class AccountManager {
   public subscribe(callback: (accounts: string[]) => void) {
     this.user.subscribe(async () => {
       const snapshot = await this.user.snapshot()
+      const currentFlowAddr = snapshot.addr
+
       if (!snapshot.addr) {
         // user not authenticated
+        this.lastFlowAddr = null
         this.setCOAAddress(null)
         callback(this.getAccounts())
         return
       }
 
-      const address = await this.fetchCOAFromFlowAddress(snapshot.addr)
-      this.setCOAAddress(address)
+      if (this.lastFlowAddr !== currentFlowAddr) {
+        const address = await this.fetchCOAFromFlowAddress(snapshot.addr)
+        this.setCOAAddress(address)
+        this.lastFlowAddr = currentFlowAddr
+      }
 
       callback(this.getAccounts())
     })
