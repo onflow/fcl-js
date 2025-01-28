@@ -156,4 +156,22 @@ describe("AccountManager", () => {
     await accountManager.updateCOAAddress()
     expect(accountManager.getCOAAddress()).toBe("0x456")
   })
+
+  it("should call the callback with updated accounts in subscribe", async () => {
+    user.snapshot.mockResolvedValue({ addr: "0x1" } as CurrentUser)
+    mockQuery.mockResolvedValue("0x123")
+
+    const callback = jest.fn()
+    user.subscribe.mockImplementation(fn => {
+      fn({ addr: "0x1" } as CurrentUser)
+    })
+
+    mockQuery.mockResolvedValueOnce("0x123")
+
+    accountManager.subscribe(callback)
+
+    await new Promise(setImmediate)
+
+    expect(callback).toHaveBeenCalledWith(["0x123"])
+  })
 })
