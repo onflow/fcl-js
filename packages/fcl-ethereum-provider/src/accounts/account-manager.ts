@@ -44,7 +44,7 @@ export class AccountManager {
 
   public async updateCOAAddress(force = false): Promise<void> {
     const snapshot = await this.user.snapshot()
-    const currentFlowAddr = snapshot.addr
+    const currentFlowAddr = snapshot?.addr
 
     // If user not logged in, reset everything
     if (!currentFlowAddr) {

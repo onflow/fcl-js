@@ -1,5 +1,6 @@
 import { AccountManager } from "./account-manager"
 import * as fcl from "@onflow/fcl"
+import {CurrentUser} from "@onflow/typedefs"
 
 jest.mock("@onflow/fcl", () => ({
   currentUser: {
@@ -13,26 +14,40 @@ jest.mock("@onflow/fcl", () => ({
   },
 }))
 
+export function mockUser(): jest.Mocked<typeof fcl.currentUser> {
+  const currentUser = {
+    authenticate: jest.fn(),
+    unauthenticate: jest.fn(),
+    authorization: jest.fn(),
+    signUserMessage: jest.fn(),
+    subscribe: jest.fn(),
+    snapshot: jest.fn(),
+    resolveArgument: jest.fn(),
+  };
+
+  return Object.assign(
+    jest.fn(() => currentUser),
+    currentUser
+  );
+}
+
 describe("AccountManager", () => {
   let accountManager: AccountManager
-  let mockSnapshot: jest.Mock
-  let mockSubscribe: jest.Mock
   let mockQuery: jest.Mock
+  let user: jest.Mocked<typeof fcl.currentUser>
 
   beforeEach(() => {
-    mockSnapshot = jest.fn().mockResolvedValue({ addr: undefined })
-    mockSubscribe = jest.fn()
     mockQuery = jest.fn()
 
-    jest.spyOn(fcl, "query").mockImplementation(mockQuery)
-    jest.spyOn(fcl.currentUser, "snapshot").mockImplementation(mockSnapshot)
-    jest.spyOn(fcl.currentUser, "subscribe").mockImplementation(mockSubscribe)
+    user = mockUser()
 
-    accountManager = new AccountManager(fcl.currentUser)
+    jest.spyOn(fcl, "query").mockImplementation(mockQuery)
+
+    accountManager = new AccountManager(user)
   })
 
   afterEach(() => {
-    jest.restoreAllMocks()
+    jest.clearAllMocks()
   })
 
   it("should initialize with null COA address", () => {
@@ -41,7 +56,7 @@ describe("AccountManager", () => {
   })
 
   it("should reset state when the user is not logged in", async () => {
-    mockSnapshot.mockResolvedValueOnce({ addr: undefined })
+    user.snapshot.mockResolvedValueOnce({ addr: undefined } as CurrentUser)
 
     await accountManager.updateCOAAddress()
 
@@ -50,8 +65,8 @@ describe("AccountManager", () => {
   })
 
   it("should fetch and update COA address when user logs in", async () => {
-    mockSnapshot.mockResolvedValueOnce({ addr: "0x1" })
-    mockQuery.mockResolvedValueOnce("0x123")
+    user.snapshot.mockResolvedValue({ addr: "0x1" } as CurrentUser)
+    mockQuery.mockResolvedValue("0x123")
 
     await accountManager.updateCOAAddress()
 
@@ -61,5 +76,37 @@ describe("AccountManager", () => {
       cadence: expect.any(String),
       args: expect.any(Function),
     })
+  })
+
+  it("should not update COA address if user has not changed and force is false", async () => {
+    user.snapshot.mockResolvedValue({ addr: "0x1" } as CurrentUser)
+    mockQuery.mockResolvedValue("0x123")
+    user.subscribe.mockImplementation(fn => {
+      fn({ addr: "0x1"})
+    })
+
+    await accountManager.updateCOAAddress()
+    expect(accountManager.getCOAAddress()).toBe("0x123")
+    expect(fcl.query).toHaveBeenCalledTimes(1)
+
+    // Re-run without changing the address
+    await accountManager.updateCOAAddress()
+    expect(accountManager.getCOAAddress()).toBe("0x123")
+    expect(fcl.query).toHaveBeenCalledTimes(1) // Should not have fetched again
+  })
+
+  it("should force update COA address even if user has not changed", async () => {
+    user.snapshot.mockResolvedValue({ addr: "0x1" } as CurrentUser)
+    mockQuery.mockResolvedValue("0x123")
+    user.subscribe.mockImplementation(fn => {
+      fn({ addr: "0x1"})
+    })
+
+    await accountManager.updateCOAAddress()
+    expect(fcl.query).toHaveBeenCalledTimes(1)
+
+    // Force update
+    await accountManager.updateCOAAddress(true)
+    expect(fcl.query).toHaveBeenCalledTimes(2)
   })
 })
