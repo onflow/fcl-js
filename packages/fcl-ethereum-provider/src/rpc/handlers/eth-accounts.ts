@@ -48,7 +48,7 @@ export async function ethRequestAccounts(accountManager: AccountManager) {
 
   const coaAddress = await getCOAAddress(accountManager);
 
-  accountManager.setAccounts([coaAddress]);
+  accountManager.setCOAAddress(coaAddress)
 
   return accountManager.getAccounts()
 }

@@ -1,8 +1,9 @@
 import * as fcl from "@onflow/fcl"
+import {getCOAAddress} from "../rpc/handlers/eth-accounts"
 
 export class AccountManager {
   private user: typeof fcl.currentUser
-  private accounts: string[] = [];
+  private coaAddress: string | undefined
 
   constructor(user: typeof fcl.currentUser) {
     this.user = user
@@ -12,20 +13,30 @@ export class AccountManager {
     return this.user.snapshot()
   }
 
-  getAccounts(): string[] {
-    return this.accounts;
+  public getCOAAddress(): string | undefined {
+    return this.coaAddress
   }
 
-  setAccounts(accounts: string[]): void {
-    this.accounts = accounts;
+  public getAccounts(): string[] {
+    return this.coaAddress ? [this.coaAddress] : []
+  }
+
+  public setCOAAddress(addr: string): void {
+    this.coaAddress = addr
   }
 
   subscribe(callback: (accounts: string[]) => void) {
     this.user.subscribe(async () => {
-      const snapshot = await fcl.currentUser().snapshot();
+      const snapshot = await this.user.snapshot()
 
-      const updatedAccounts = snapshot.addr ? [snapshot.addr] : [];
-      this.setAccounts(updatedAccounts);
+      if (!snapshot.addr) {
+        // user not authenticated
+        this.coaAddress = undefined
+        callback(this.getAccounts())
+        return
+      }
+
+      // const address = await getCOAAddress()
 
       callback(this.getAccounts());
     });
