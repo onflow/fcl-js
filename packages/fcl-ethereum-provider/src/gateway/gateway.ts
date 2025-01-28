@@ -1,7 +1,6 @@
 import HTTPConnection from "@walletconnect/jsonrpc-http-connection"
-import * as fcl from "@onflow/fcl"
 import {JsonRpcProvider} from "@walletconnect/jsonrpc-provider"
-import {FLOW_CHAINS, FlowNetwork} from "../constants"
+import {FLOW_CHAINS} from "../constants"
 
 export class Gateway {
   private providers: {[chainId: number]: JsonRpcProvider} = {}

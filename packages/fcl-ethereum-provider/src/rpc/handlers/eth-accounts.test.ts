@@ -6,26 +6,26 @@ describe("ethAccounts handler", () => {
 
   beforeEach(() => {
     accountManagerMock = {
-      getAccounts: jest.fn(),
+      getAddress: jest.fn(),
       subscribe: jest.fn(),
     } as unknown as jest.Mocked<AccountManager>
   })
 
-  it("should return accounts from the AccountManager", () => {
-    accountManagerMock.getAccounts.mockReturnValue(["0x1234...", "0x5678..."])
+  it("should return accounts from the AccountManager", async () => {
+    accountManagerMock.getAddress.mockResolvedValue("0x1234")
 
-    const accounts = ethAccounts(accountManagerMock)
+    const accounts = await ethAccounts(accountManagerMock)
 
-    expect(accounts).toEqual(["0x1234...", "0x5678..."])
-    expect(accountManagerMock.getAccounts).toHaveBeenCalled()
+    expect(accounts).toEqual(["0x1234"])
+    expect(accountManagerMock.getAddress).toHaveBeenCalled()
   })
 
-  it("should return an empty array if no accounts are available", () => {
-    accountManagerMock.getAccounts.mockReturnValue([])
+  it("should return an empty array if no accounts are available", async () => {
+    accountManagerMock.getAddress.mockResolvedValue(null)
 
-    const accounts = ethAccounts(accountManagerMock)
+    const accounts = await ethAccounts(accountManagerMock)
 
     expect(accounts).toEqual([])
-    expect(accountManagerMock.getAccounts).toHaveBeenCalled()
+    expect(accountManagerMock.getAddress).toHaveBeenCalled()
   })
 })
