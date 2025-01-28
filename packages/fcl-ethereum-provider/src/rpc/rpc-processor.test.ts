@@ -1,12 +1,16 @@
+import {AccountManager} from "../accounts/account-manager"
 import {Gateway} from "../gateway/gateway"
 import {RpcProcessor} from "./rpc-processor"
 
 jest.mock("../gateway/gateway")
+jest.mock("../accounts/account-manager")
 
 describe("rpc processor", () => {
   test("fallback to gateway", async () => {
     const gateway: jest.Mocked<Gateway> = new (Gateway as any)()
-    const rpcProcessor = new RpcProcessor(gateway)
+    const accountManager: jest.Mocked<AccountManager> =
+      new (AccountManager as any)()
+    const rpcProcessor = new RpcProcessor(gateway, accountManager)
 
     jest.mocked(gateway).request.mockResolvedValue("0x0")
 

@@ -45,7 +45,7 @@ export function createProvider(config: {
     ...defaultRpcUrls,
     ...(config.rpcUrls || {}),
   })
-  const rpcProcessor = new RpcProcessor(gateway)
+  const rpcProcessor = new RpcProcessor(gateway, accountManager)
   const eventProcessor = new EventDispatcher()
   const provider = new FclEthereumProvider(rpcProcessor, eventProcessor)
   return provider
