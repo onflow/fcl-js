@@ -1,4 +1,4 @@
-import { AccountManager } from "../../accounts/account-manager";
+import {AccountManager} from "../../accounts/account-manager";
 
 async function getCOAAddress(accountManager: AccountManager): Promise<string> {
   const accounts = accountManager.getAccounts();
