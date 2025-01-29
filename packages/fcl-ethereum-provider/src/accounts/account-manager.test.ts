@@ -235,17 +235,16 @@ describe("send transaction", () => {
 
     const tx = {
       to: "0x1234",
-      from: "0x1234",
       value: "0",
       data: "0x1234",
       nonce: "0",
-      gas: "0",
+      gasLimit: "0",
       chainId: "747",
     }
 
     const result = await accountManager.sendTransaction(tx)
 
-    expect(result).toEqual("1852")
+    expect(result).toEqual("1234")
     expect(fcl.mutate).toHaveBeenCalled()
     expect(mockFcl.mutate.mock.calls[0][0]).toMatchObject({
       cadence: expect.any(String),
@@ -281,17 +280,16 @@ describe("send transaction", () => {
 
     const tx = {
       to: "0x1234",
-      from: "0x1234",
       value: "0",
       data: "0x1234",
       nonce: "0",
-      gas: "0",
+      gasLimit: "0",
       chainId: "646",
     }
 
     const result = await accountManager.sendTransaction(tx)
 
-    expect(result).toEqual("1852")
+    expect(result).toEqual("1234")
     expect(fcl.mutate).toHaveBeenCalled()
     expect(mockFcl.mutate.mock.calls[0][0]).toMatchObject({
       cadence: expect.any(String),
@@ -320,11 +318,10 @@ describe("send transaction", () => {
 
     const tx = {
       to: "0x1234",
-      from: "0x1234",
       value: "0",
       data: "0x1234",
       nonce: "0",
-      gas: "0",
+      gasLimit: "0",
       chainId: "646",
     }
 

@@ -1,13 +1,18 @@
-import {AccountManager} from "../accounts/account-manager"
 import {EventCallback, ProviderEvents} from "../types/provider"
 import EventEmitter from "events"
+import * as fcl from "@onflow/fcl"
+import {CurrentUser} from "@onflow/typedefs"
 
 export class EventDispatcher {
   private eventEmitter = new EventEmitter()
 
-  constructor(accountManager: AccountManager) {
-    accountManager.subscribe(accounts => {
-      this.emit("accountsChanged", accounts)
+  constructor(config: typeof fcl.config) {
+    config.subscribe(async cfg => {
+      const accessNode = cfg?.["accessNode.api"]
+      const flowNetwork = await fcl.getChainId({
+        node: accessNode,
+      })
+      this.emit("chainChanged", flowNetwork)
     })
   }
 
@@ -28,7 +33,7 @@ export class EventDispatcher {
   }
 
   // Emit events (to be called internally)
-  private emit<E extends keyof ProviderEvents>(
+  protected emit<E extends keyof ProviderEvents>(
     event: E,
     data: ProviderEvents[E]
   ) {
