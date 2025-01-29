@@ -141,16 +141,13 @@ describe("send transaction", () => {
 
 describe("AccountManager", () => {
   let accountManager: AccountManager
-  let mockQuery: jest.Mock
   let user: jest.Mocked<typeof fcl.currentUser>
+  let mockQuery: jest.MockedFn<typeof fcl.query>
 
   beforeEach(() => {
-    mockQuery = jest.fn()
+    mockQuery = jest.mocked(fcl.query)
 
     user = mockUser()
-
-    jest.spyOn(fcl, "query").mockImplementation(mockQuery)
-
     accountManager = new AccountManager(user)
   })
 
@@ -250,7 +247,7 @@ describe("AccountManager", () => {
       "Fetch failed"
     )
 
-    expect(accountManager.getCOAAddress()).toBeNull()
+    expect(await accountManager.getCOAAddress()).toBeNull()
   })
 
   it("should handle user changes correctly", async () => {
