@@ -5,6 +5,8 @@ import {RpcProcessor} from "./rpc/rpc-processor"
 import {Service} from "@onflow/typedefs"
 import {EventDispatcher} from "./events/event-dispatcher"
 import {AccountManager} from "./accounts/account-manager"
+import {FLOW_CHAINS} from "./constants"
+import {Gateway} from "./gateway/gateway"
 
 /**
  * Create a new FCL Ethereum provider
@@ -28,10 +30,22 @@ import {AccountManager} from "./accounts/account-manager"
 export function createProvider(config: {
   user: typeof fcl.currentUser
   service?: Service
-  gateway?: string
+  rpcUrls?: {[chainId: string]: number}
 }): Eip1193Provider {
+  const defaultRpcUrls = Object.values(FLOW_CHAINS).reduce(
+    (acc, chain) => {
+      acc[chain.eip155ChainId] = chain.publicRpcUrl
+      return acc
+    },
+    {} as {[chainId: number]: string}
+  )
+
   const accountManager = new AccountManager(config.user)
-  const rpcProcessor = new RpcProcessor(accountManager)
+  const gateway = new Gateway({
+    ...defaultRpcUrls,
+    ...(config.rpcUrls || {}),
+  })
+  const rpcProcessor = new RpcProcessor(gateway, accountManager)
   const eventProcessor = new EventDispatcher()
   const provider = new FclEthereumProvider(rpcProcessor, eventProcessor)
   return provider

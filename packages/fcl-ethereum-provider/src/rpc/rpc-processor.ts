@@ -1,9 +1,14 @@
 import {ProviderRequest} from "../types/provider"
-import {ethAccounts, ethRequestAccounts} from "./handlers/eth-accounts"
+import {ethAccounts} from "./handlers/eth-accounts"
+import {JsonRpcProvider} from "@walletconnect/jsonrpc-provider"
+import {Gateway} from "../gateway/gateway"
 import {AccountManager} from "../accounts/account-manager"
 
 export class RpcProcessor {
-  constructor(private accountManager: AccountManager) {}
+  constructor(
+    private gateway: Gateway,
+    private accountManager: AccountManager
+  ) {}
 
   async handleRequest({method, params}: ProviderRequest): Promise<any> {
     switch (method) {
@@ -12,7 +17,7 @@ export class RpcProcessor {
       case "eth_requestAccounts":
         return ethRequestAccounts(this.accountManager)
       default:
-        throw new Error(`Method ${method} not supported`)
+        return await this.gateway.request({method, params})
     }
   }
 }

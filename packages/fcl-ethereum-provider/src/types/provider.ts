@@ -29,8 +29,3 @@ export interface Eip1193Provider {
     listener: EventCallback<ProviderEvents[E]>
   ): void
 }
-
-export enum FLOW_CHAIN_ID {
-  MAINNET = 747,
-  TESTNET = 646,
-}
