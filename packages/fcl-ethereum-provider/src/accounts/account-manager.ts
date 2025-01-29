@@ -11,25 +11,101 @@ import {
 import {TransactionExecutedEvent} from "../types/events"
 
 export class AccountManager {
-  private addressPromise: Promise<string | null> | null = null
-  private subscribers = new Set<(coaAddress: string | null) => void>()
+  private user: typeof fcl.currentUser
 
-  constructor(private user: typeof fcl.currentUser) {
-    let lastAddress: string | null = null
-    this.user.subscribe((currentUser: CurrentUser) => {
-      if (lastAddress !== currentUser.addr) {
-        lastAddress = currentUser.addr || null
-        this.updateAddress(currentUser.addr)
-      }
-    })
+  // For race-condition checks:
+  private currentFetchId = 0
+
+  // Track the last Flow address we fetched for
+  private lastFlowAddr: string | null = null
+
+  // The COA address (or null if none/not fetched)
+  private coaAddress: string | null = null
+
+  constructor(user: typeof fcl.currentUser) {
+    this.user = user
   }
 
-  subscribe(callback: (coaAddress: string | null) => void) {
-    this.subscribers.add(callback)
+  private async fetchCOAFromFlowAddress(flowAddr: string): Promise<string> {
+    const cadenceScript = `
+      import EVM
 
-    return () => {
-      this.subscribers.delete(callback)
+      access(all)
+      fun main(address: Address): String? {
+          if let coa = getAuthAccount(address)
+              .storage
+              .borrow<&EVM.CadenceOwnedAccount>(from: /storage/evm) {
+              return coa.address().toString()
+          }
+          return nil
+      }
+    `
+    const response = await fcl.query({
+      cadence: cadenceScript,
+      args: (arg: typeof fcl.arg, t: typeof fcl.t) => [
+        arg(flowAddr, t.Address),
+      ],
+    })
+
+    if (!response) {
+      throw new Error("COA account not found for the authenticated user")
     }
+    return response as string
+  }
+
+  public async updateCOAAddress(force = false): Promise<void> {
+    const snapshot = await this.user.snapshot()
+    const currentFlowAddr = snapshot?.addr
+
+    // If user not logged in, reset everything
+    if (!currentFlowAddr) {
+      this.lastFlowAddr = null
+      this.coaAddress = null
+      return
+    }
+
+    const userChanged = this.lastFlowAddr !== currentFlowAddr
+    if (force || userChanged) {
+      this.lastFlowAddr = currentFlowAddr
+      const fetchId = ++this.currentFetchId
+
+      try {
+        const address = await this.fetchCOAFromFlowAddress(currentFlowAddr)
+        // Only update if this fetch is still the latest
+        if (fetchId === this.currentFetchId) {
+          this.coaAddress = address
+        }
+      } catch (error) {
+        // If this fetch is the latest, clear
+        if (fetchId === this.currentFetchId) {
+          this.coaAddress = null
+        }
+        throw error
+      }
+    }
+  }
+
+  public getCOAAddress(): string | null {
+    return this.coaAddress
+  }
+
+  public getAccounts(): string[] {
+    return this.coaAddress ? [this.coaAddress] : []
+  }
+
+  public subscribe(callback: (accounts: string[]) => void) {
+    this.user.subscribe(async (snapshot: CurrentUser) => {
+      if (!snapshot.addr) {
+        // user not authenticated => clear out
+        this.lastFlowAddr = null
+        this.coaAddress = null
+        callback(this.getAccounts())
+        return
+      }
+
+      await this.updateCOAAddress()
+      callback(this.getAccounts())
+    })
   }
 
   async sendTransaction({
@@ -112,31 +188,5 @@ export class AccountManager {
     )
 
     return evmTxHash
-  }
-
-  private async updateAddress(addr?: string) {
-    this.addressPromise = (async () => {
-      const coaAddress = addr ? await this.getCoaAddress(addr) : null
-      this.subscribers.forEach(subscriber => subscriber(coaAddress))
-      return coaAddress
-    }).call(this)
-
-    return await this.addressPromise
-  }
-
-  private async getCoaAddress(flowAddress: string) {
-    return flowAddress
-  }
-
-  /**
-   * Get the COA address
-   * @returns The COA address
-   */
-  async getAddress() {
-    if (this.addressPromise === null) {
-      this.addressPromise = this.updateAddress()
-    }
-
-    return await this.addressPromise
   }
 }
