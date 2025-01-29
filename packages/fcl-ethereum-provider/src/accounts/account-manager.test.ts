@@ -14,7 +14,7 @@ jest.mock("@onflow/fcl", () => ({
   },
 }))
 
-export function mockUser(): jest.Mocked<typeof fcl.currentUser> {
+function mockUser(): jest.Mocked<typeof fcl.currentUser> {
   const currentUser = {
     authenticate: jest.fn(),
     unauthenticate: jest.fn(),
