@@ -18,3 +18,25 @@ export function mockUser(): jest.Mocked<typeof fcl.currentUser> {
     {...currentUser}
   )
 }
+
+export function mockConfig(): jest.Mocked<typeof fcl.config> {
+  const config = {
+    put: jest.fn(),
+    get: jest.fn(),
+    all: jest.fn(),
+    first: jest.fn(),
+    update: jest.fn(),
+    delete: jest.fn(),
+    where: jest.fn(),
+    subscribe: jest.fn(),
+    overload: jest.fn(),
+    load: jest.fn(),
+  }
+
+  return Object.assign(
+    () => {
+      return {...config}
+    },
+    {...config}
+  )
+}
