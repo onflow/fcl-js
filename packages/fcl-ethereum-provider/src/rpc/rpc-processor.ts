@@ -1,5 +1,5 @@
 import {ProviderRequest} from "../types/provider"
-import {ethAccounts} from "./handlers/eth-accounts"
+import {ethAccounts, ethRequestAccounts} from "./handlers/eth-accounts"
 import {JsonRpcProvider} from "@walletconnect/jsonrpc-provider"
 import {Gateway} from "../gateway/gateway"
 import {AccountManager} from "../accounts/account-manager"
