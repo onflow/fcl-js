@@ -1,5 +1,5 @@
 import * as fcl from "@onflow/fcl"
-import { CurrentUser } from "@onflow/typedefs"
+import {CurrentUser} from "@onflow/typedefs"
 
 export class AccountManager {
   private user: typeof fcl.currentUser
@@ -33,7 +33,9 @@ export class AccountManager {
     `
     const response = await fcl.query({
       cadence: cadenceScript,
-      args: (arg: typeof fcl.arg, t: typeof fcl.t) => [arg(flowAddr, t.Address)],
+      args: (arg: typeof fcl.arg, t: typeof fcl.t) => [
+        arg(flowAddr, t.Address),
+      ],
     })
 
     if (!response) {
