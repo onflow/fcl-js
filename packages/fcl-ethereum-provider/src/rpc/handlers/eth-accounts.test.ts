@@ -48,8 +48,9 @@ describe("ethRequestAccounts handler", () => {
   let userMock: jest.Mocked<typeof fcl.currentUser>
 
   beforeEach(() => {
-    userMock = mockUser()
-    userMock.snapshot.mockResolvedValue({addr: undefined} as CurrentUser)
+    userMock = fcl.currentUser() as jest.Mocked<typeof fcl.currentUser>
+
+    userMock.snapshot.mockResolvedValue({addr: null} as unknown as CurrentUser)
 
     accountManagerMock = {
       getAccounts: jest.fn(),
@@ -61,7 +62,7 @@ describe("ethRequestAccounts handler", () => {
   it("should call authenticate, updateCOAAddress, and return the manager's accounts", async () => {
     accountManagerMock.getAccounts.mockReturnValue(["0x1234..."])
 
-    const accounts = await ethRequestAccounts(userMock, accountManagerMock)
+    const accounts = await ethRequestAccounts(accountManagerMock)
 
     expect(userMock.authenticate).toHaveBeenCalled()
     expect(accountManagerMock.updateCOAAddress).toHaveBeenCalled()
@@ -72,7 +73,7 @@ describe("ethRequestAccounts handler", () => {
   it("should handle empty accounts scenario", async () => {
     accountManagerMock.getAccounts.mockReturnValue([])
 
-    const accounts = await ethRequestAccounts(userMock, accountManagerMock)
+    const accounts = await ethRequestAccounts(accountManagerMock)
 
     expect(userMock.authenticate).toHaveBeenCalled()
     expect(accountManagerMock.updateCOAAddress).toHaveBeenCalled()

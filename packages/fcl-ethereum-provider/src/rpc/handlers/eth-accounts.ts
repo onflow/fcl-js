@@ -7,11 +7,8 @@ export async function ethAccounts(
   return accountManager.getAccounts()
 }
 
-export async function ethRequestAccounts(
-  user: typeof fcl.currentUser,
-  accountManager: AccountManager
-) {
-  await user.authenticate()
+export async function ethRequestAccounts(accountManager: AccountManager) {
+  await fcl.currentUser().authenticate()
 
   await accountManager.updateCOAAddress()
 
