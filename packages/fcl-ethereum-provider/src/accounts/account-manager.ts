@@ -126,7 +126,11 @@ export class AccountManager {
     // Find the Flow network based on the chain ID
     const flowNetwork = Object.entries(FLOW_CHAINS).find(
       ([, chain]) => chain.eip155ChainId === parseInt(chainId)
-    )?.[0] as FlowNetwork
+    )?.[0] as FlowNetwork | undefined
+
+    if (!flowNetwork) {
+      throw new Error("Flow network not found for chain ID")
+    }
 
     const evmContractAddress = fcl.withPrefix(
       FLOW_CONTRACTS[ContractType.EVM][flowNetwork]
