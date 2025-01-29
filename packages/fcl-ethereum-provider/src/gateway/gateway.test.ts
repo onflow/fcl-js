@@ -1,13 +1,9 @@
 import HttpConnection from "@walletconnect/jsonrpc-http-connection"
 import {Gateway} from "./gateway"
-import * as fcl from "@onflow/fcl"
 import {JsonRpcProvider} from "@walletconnect/jsonrpc-provider"
 
 jest.mock("@walletconnect/jsonrpc-http-connection")
 jest.mock("@walletconnect/jsonrpc-provider")
-jest.mock("@onflow/fcl", () => ({
-  getChainId: jest.fn(),
-}))
 
 describe("gateway", () => {
   beforeEach(() => {
@@ -20,7 +16,6 @@ describe("gateway", () => {
       646: "https://example.com/testnet",
     })
 
-    jest.mocked(fcl.getChainId).mockResolvedValue("mainnet")
     jest.mocked(JsonRpcProvider).mockImplementation(
       jest.fn(
         () =>
@@ -33,6 +28,7 @@ describe("gateway", () => {
     const returnValue = await gateway.request({
       method: "eth_accounts",
       params: [],
+      chainId: 747,
     })
 
     // Check that the arguments are correct
@@ -58,7 +54,6 @@ describe("gateway", () => {
       646: "https://example.com/testnet",
     })
 
-    jest.mocked(fcl.getChainId).mockResolvedValue("testnet")
     jest.mocked(JsonRpcProvider).mockImplementation(
       jest.fn(
         () =>
@@ -71,6 +66,7 @@ describe("gateway", () => {
     const returnValue = await gateway.request({
       method: "eth_accounts",
       params: [],
+      chainId: 646,
     })
 
     // Check that the arguments are correct
@@ -96,7 +92,6 @@ describe("gateway", () => {
       646: "https://example.com/testnet",
     })
 
-    jest.mocked(fcl.getChainId).mockResolvedValue("testnet")
     jest.mocked(JsonRpcProvider).mockImplementation(
       jest.fn(
         () =>
@@ -109,11 +104,13 @@ describe("gateway", () => {
     await gateway.request({
       method: "eth_accounts",
       params: [],
+      chainId: 646,
     })
 
     await gateway.request({
       method: "eth_accounts",
       params: [],
+      chainId: 646,
     })
 
     // Verify that the testnet provider was used
@@ -131,20 +128,18 @@ describe("gateway", () => {
       646: "https://example.com/testnet",
     })
 
-    jest.mocked(fcl.getChainId).mockResolvedValue("unknown")
-
     await expect(
       gateway.request({
         method: "eth_accounts",
         params: [],
+        chainId: 123,
       })
-    ).rejects.toThrow("Unsupported chainId unknown")
+    ).rejects.toThrow("RPC URL not found for chainId 123")
   })
 
   test("should default to public gateway mainnet", async () => {
     const gateway = new Gateway({})
 
-    jest.mocked(fcl.getChainId).mockResolvedValue("mainnet")
     jest.mocked(JsonRpcProvider).mockImplementation(
       jest.fn(
         () =>
@@ -157,6 +152,7 @@ describe("gateway", () => {
     await gateway.request({
       method: "eth_accounts",
       params: [],
+      chainId: 747,
     })
 
     // Verify that the mainnet provider was used
@@ -173,7 +169,6 @@ describe("gateway", () => {
   test("should default to public gateway testnet", async () => {
     const gateway = new Gateway({})
 
-    jest.mocked(fcl.getChainId).mockResolvedValue("testnet")
     jest.mocked(JsonRpcProvider).mockImplementation(
       jest.fn(
         () =>
@@ -186,6 +181,7 @@ describe("gateway", () => {
     await gateway.request({
       method: "eth_accounts",
       params: [],
+      chainId: 646,
     })
 
     // Verify that the testnet provider was used

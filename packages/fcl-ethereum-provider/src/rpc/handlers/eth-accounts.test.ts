@@ -3,6 +3,7 @@ import {ethAccounts, ethRequestAccounts} from "./eth-accounts"
 import {AccountManager} from "../../accounts/account-manager"
 import * as fcl from "@onflow/fcl"
 import {CurrentUser} from "@onflow/typedefs"
+import {mockUser} from "../../__mocks__/fcl"
 
 // Mock FCL at the top-level
 jest.mock("@onflow/fcl", () => ({
@@ -23,7 +24,7 @@ describe("ethAccounts handler", () => {
     } as unknown as jest.Mocked<AccountManager>
   })
 
-  it("should return accounts from the AccountManager", () => {
+  it("should return accounts from the AccountManager", async () => {
     accountManagerMock.getAccounts.mockReturnValue(["0x1234...", "0x5678..."])
 
     const accounts = ethAccounts(accountManagerMock)
@@ -32,7 +33,7 @@ describe("ethAccounts handler", () => {
     expect(accountManagerMock.getAccounts).toHaveBeenCalled()
   })
 
-  it("should return an empty array if no accounts are available", () => {
+  it("should return an empty array if no accounts are available", async () => {
     accountManagerMock.getAccounts.mockReturnValue([])
 
     const accounts = ethAccounts(accountManagerMock)
@@ -44,12 +45,12 @@ describe("ethAccounts handler", () => {
 
 describe("ethRequestAccounts handler", () => {
   let accountManagerMock: jest.Mocked<AccountManager>
-  let userMock: ReturnType<typeof fcl.currentUser>
+  let userMock: jest.Mocked<typeof fcl.currentUser>
 
   beforeEach(() => {
-    userMock = fcl.currentUser()
+    userMock = fcl.currentUser() as jest.Mocked<typeof fcl.currentUser>
 
-    userMock.snapshot.mockResolvedValue({addr: null})
+    userMock.snapshot.mockResolvedValue({addr: null} as unknown as CurrentUser)
 
     accountManagerMock = {
       getAccounts: jest.fn(),
