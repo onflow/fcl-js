@@ -93,10 +93,9 @@ export class AccountManager {
     return this.coaAddress ? [this.coaAddress] : []
   }
 
-  public subscribe(callback: (accounts: string[]) => void) {
-    this.user.subscribe(async (snapshot: CurrentUser) => {
+  public subscribe(callback: (accounts: string[]) => void): () => void {
+    const unsubscribe = this.user.subscribe(async (snapshot: CurrentUser) => {
       if (!snapshot.addr) {
-        // user not authenticated => clear out
         this.lastFlowAddr = null
         this.coaAddress = null
         callback(this.getAccounts())
@@ -105,7 +104,9 @@ export class AccountManager {
 
       await this.updateCOAAddress()
       callback(this.getAccounts())
-    })
+    }) as () => void
+
+    return unsubscribe
   }
 
   async sendTransaction({
