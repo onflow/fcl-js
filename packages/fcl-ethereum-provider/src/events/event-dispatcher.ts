@@ -1,10 +1,15 @@
+import {AccountManager} from "../accounts/account-manager"
 import {EventCallback, ProviderEvents} from "../types/provider"
 import EventEmitter from "events"
 
 export class EventDispatcher {
   private eventEmitter = new EventEmitter()
 
-  constructor() {}
+  constructor(accountManager: AccountManager) {
+    accountManager.subscribe(accounts => {
+      this.emit("accountsChanged", accounts)
+    })
+  }
 
   // Listen to events
   on<E extends keyof ProviderEvents>(
@@ -23,7 +28,7 @@ export class EventDispatcher {
   }
 
   // Emit events (to be called internally)
-  protected emit<E extends keyof ProviderEvents>(
+  private emit<E extends keyof ProviderEvents>(
     event: E,
     data: ProviderEvents[E]
   ) {
