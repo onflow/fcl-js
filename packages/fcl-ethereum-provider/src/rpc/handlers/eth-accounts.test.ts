@@ -1,8 +1,8 @@
 // eth-accounts.spec.ts
-import { ethAccounts, ethRequestAccounts } from "./eth-accounts"
-import { AccountManager } from "../../accounts/account-manager"
+import {ethAccounts, ethRequestAccounts} from "./eth-accounts"
+import {AccountManager} from "../../accounts/account-manager"
 import * as fcl from "@onflow/fcl"
-import { CurrentUser } from "@onflow/typedefs"
+import {CurrentUser} from "@onflow/typedefs"
 
 // Mock FCL at the top-level
 jest.mock("@onflow/fcl", () => ({
@@ -49,7 +49,7 @@ describe("ethRequestAccounts handler", () => {
   beforeEach(() => {
     userMock = fcl.currentUser()
 
-    userMock.snapshot.mockResolvedValue({ addr: null })
+    userMock.snapshot.mockResolvedValue({addr: null})
 
     accountManagerMock = {
       getAccounts: jest.fn(),

@@ -1,4 +1,4 @@
-import * as fcl from "@onflow/fcl";
+import * as fcl from "@onflow/fcl"
 import {AccountManager} from "../../accounts/account-manager"
 
 export function ethAccounts(accountManager: AccountManager): string[] {
