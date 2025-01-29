@@ -25,7 +25,7 @@ describe("ethAccounts handler", () => {
   })
 
   it("should return accounts from the AccountManager", async () => {
-    accountManagerMock.getAccounts.mockResolvedValue(["0x1234...", "0x5678..."])
+    accountManagerMock.getAccounts.mockReturnValue(["0x1234...", "0x5678..."])
 
     const accounts = await ethAccounts(accountManagerMock)
 
@@ -34,7 +34,7 @@ describe("ethAccounts handler", () => {
   })
 
   it("should return an empty array if no accounts are available", async () => {
-    accountManagerMock.getAccounts.mockResolvedValue([])
+    accountManagerMock.getAccounts.mockReturnValue([])
 
     const accounts = await ethAccounts(accountManagerMock)
 
@@ -45,7 +45,7 @@ describe("ethAccounts handler", () => {
 
 describe("ethRequestAccounts handler", () => {
   let accountManagerMock: jest.Mocked<AccountManager>
-  let userMock: jest.Mocked<ReturnType<typeof fcl.currentUser>>
+  let userMock: jest.Mocked<typeof fcl.currentUser>
 
   beforeEach(() => {
     userMock = mockUser()
@@ -61,7 +61,7 @@ describe("ethRequestAccounts handler", () => {
   it("should call authenticate, updateCOAAddress, and return the manager's accounts", async () => {
     accountManagerMock.getAccounts.mockReturnValue(["0x1234..."])
 
-    const accounts = await ethRequestAccounts(accountManagerMock)
+    const accounts = await ethRequestAccounts(userMock, accountManagerMock)
 
     expect(userMock.authenticate).toHaveBeenCalled()
     expect(accountManagerMock.updateCOAAddress).toHaveBeenCalled()
@@ -72,7 +72,7 @@ describe("ethRequestAccounts handler", () => {
   it("should handle empty accounts scenario", async () => {
     accountManagerMock.getAccounts.mockReturnValue([])
 
-    const accounts = await ethRequestAccounts(accountManagerMock)
+    const accounts = await ethRequestAccounts(userMock, accountManagerMock)
 
     expect(userMock.authenticate).toHaveBeenCalled()
     expect(accountManagerMock.updateCOAAddress).toHaveBeenCalled()
