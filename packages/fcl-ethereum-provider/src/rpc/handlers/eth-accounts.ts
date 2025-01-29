@@ -1,9 +1,7 @@
 import * as fcl from "@onflow/fcl"
 import {AccountManager} from "../../accounts/account-manager"
 
-export async function ethAccounts(
-  accountManager: AccountManager
-): Promise<string[]> {
+export function ethAccounts(accountManager: AccountManager): string[] {
   return accountManager.getAccounts()
 }
 

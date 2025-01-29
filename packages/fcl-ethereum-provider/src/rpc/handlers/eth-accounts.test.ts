@@ -27,7 +27,7 @@ describe("ethAccounts handler", () => {
   it("should return accounts from the AccountManager", async () => {
     accountManagerMock.getAccounts.mockReturnValue(["0x1234...", "0x5678..."])
 
-    const accounts = await ethAccounts(accountManagerMock)
+    const accounts = ethAccounts(accountManagerMock)
 
     expect(accounts).toEqual(["0x1234...", "0x5678..."])
     expect(accountManagerMock.getAccounts).toHaveBeenCalled()
@@ -36,7 +36,7 @@ describe("ethAccounts handler", () => {
   it("should return an empty array if no accounts are available", async () => {
     accountManagerMock.getAccounts.mockReturnValue([])
 
-    const accounts = await ethAccounts(accountManagerMock)
+    const accounts = ethAccounts(accountManagerMock)
 
     expect(accounts).toEqual([])
     expect(accountManagerMock.getAccounts).toHaveBeenCalled()
