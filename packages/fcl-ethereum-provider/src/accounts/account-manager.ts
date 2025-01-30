@@ -1,5 +1,5 @@
 import * as fcl from "@onflow/fcl"
-import {CurrentUser} from "@onflow/typedefs"
+import {CompositeSignature, CurrentUser} from "@onflow/typedefs"
 import {
   ContractType,
   EVENT_IDENTIFIERS,
@@ -9,6 +9,7 @@ import {
   FlowNetwork,
 } from "../constants"
 import {TransactionExecutedEvent} from "../types/events"
+import {EthSignatureResponse} from "../types/eth"
 
 export class AccountManager {
   private user: typeof fcl.currentUser
@@ -193,5 +194,34 @@ export class AccountManager {
       .join("")
 
     return evmTxHash
+  }
+
+  public async signMessage(message: string, expectedAddress: string): Promise<EthSignatureResponse> {
+    const snapshot = await this.user.snapshot()
+    const authenticatedAddress = snapshot?.addr
+
+    if (!authenticatedAddress) {
+      throw new Error("User is not authenticated")
+    }
+
+    if (expectedAddress.toLowerCase() !== authenticatedAddress.toLowerCase()) {
+      throw new Error("Signer address does not match authenticated user")
+    }
+
+    // Convert message to hex format (Ethereum expects hex)
+    const hexMessage = Buffer.from(message, "utf8").toString("hex")
+
+    try {
+      const response: CompositeSignature[] = await fcl.currentUser.signUserMessage(hexMessage)
+
+      if (!response || response.length === 0) {
+        throw new Error("Failed to sign message")
+      }
+
+      return response[0].signature
+    } catch (error) {
+      console.error("Error signing message:", error)
+      throw error
+    }
   }
 }
