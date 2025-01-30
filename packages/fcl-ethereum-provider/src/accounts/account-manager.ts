@@ -208,7 +208,6 @@ export class AccountManager {
       throw new Error("Signer address does not match authenticated user")
     }
 
-    // Convert message to hex format (Ethereum expects hex)
     const hexMessage = Buffer.from(message, "utf8").toString("hex")
 
     try {
