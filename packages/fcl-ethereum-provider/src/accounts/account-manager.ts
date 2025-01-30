@@ -197,17 +197,15 @@ export class AccountManager {
   }
 
   public async signMessage(message: string, from: string): Promise<EthSignatureResponse> {
-    const snapshot = await this.user.snapshot()
-    const authenticatedAddress = snapshot?.addr
-
-    if (!authenticatedAddress) {
-      throw new Error("User is not authenticated")
+    if (!this.coaAddress) {
+      throw new Error("COA address is not available. User might not be authenticated.")
     }
 
-    if (expectedAddress.toLowerCase() !== authenticatedAddress.toLowerCase()) {
-      throw new Error("Signer address does not match authenticated user")
+    if (from.toLowerCase() !== this.coaAddress.toLowerCase()) {
+      throw new Error("Signer address does not match authenticated COA address")
     }
 
+    // Convert message to hex format (Ethereum expects hex)
     const hexMessage = Buffer.from(message, "utf8").toString("hex")
 
     try {
@@ -217,7 +215,7 @@ export class AccountManager {
         throw new Error("Failed to sign message")
       }
 
-      return response[0].signature
+      return response[0].signature // Return only the signature
     } catch (error) {
       console.error("Error signing message:", error)
       throw error
