@@ -333,3 +333,68 @@ describe("send transaction", () => {
     )
   })
 })
+
+describe("signMessage", () => {
+  let accountManager: AccountManager
+  let user: jest.Mocked<typeof fcl.currentUser>
+
+  beforeEach(() => {
+    user = mockUser()
+    accountManager = new AccountManager(user)
+  })
+
+  afterEach(() => {
+    jest.clearAllMocks()
+  })
+
+
+  it("should throw an error if the COA address is not available", async () => {
+    accountManager["coaAddress"] = null
+
+    await expect(accountManager.signMessage("Test message", "0x1234")).rejects.toThrow(
+      "COA address is not available. User might not be authenticated."
+    )
+  })
+
+  it("should throw an error if the signer address does not match the COA address", async () => {
+    accountManager["coaAddress"] = "0xCOA1"
+
+    await expect(accountManager.signMessage("Test message", "0xDIFFERENT")).rejects.toThrow(
+      "Signer address does not match authenticated COA address"
+    )
+  })
+
+  it("should successfully sign a message when the COA address matches", async () => {
+    accountManager["coaAddress"] = "0xCOA1"
+    const mockSignature = "0xabcdef1234567890"
+
+    user.signUserMessage = jest.fn().mockResolvedValue([
+      { addr: "0xCOA1", keyId: 0, signature: mockSignature }
+    ])
+
+    const signature = await accountManager.signMessage("Test message", "0xCOA1")
+
+    expect(signature).toBe(mockSignature)
+    expect(user.signUserMessage).toHaveBeenCalledWith(expect.any(String))
+  })
+
+  it("should throw an error if signUserMessage returns an empty array", async () => {
+    accountManager["coaAddress"] = "0xCOA1"
+
+    user.signUserMessage = jest.fn().mockResolvedValue([])
+
+    await expect(accountManager.signMessage("Test message", "0xCOA1")).rejects.toThrow(
+      "Failed to sign message"
+    )
+  })
+
+  it("should throw an error if signUserMessage fails", async () => {
+    accountManager["coaAddress"] = "0xCOA1"
+
+    user.signUserMessage = jest.fn().mockRejectedValue(new Error("Signing failed"))
+
+    await expect(accountManager.signMessage("Test message", "0xCOA1")).rejects.toThrow(
+      "Signing failed"
+    )
+  })
+})
