@@ -212,7 +212,7 @@ export class AccountManager {
     const hexMessage = Buffer.from(message, "utf8").toString("hex")
 
     try {
-      const response: CompositeSignature[] = await user.signUserMessage(hexMessage)
+      const response: CompositeSignature[] = await this.user.signUserMessage(hexMessage)
 
       if (!response || response.length === 0) {
         throw new Error("Failed to sign message")
