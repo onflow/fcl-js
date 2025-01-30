@@ -110,22 +110,27 @@ export class AccountManager {
 
   async sendTransaction({
     to,
+    from,
     value,
     data,
-    gasLimit,
+    gas,
     chainId,
   }: {
     to: string
+    from: string
     value: string
     data: string
-    nonce: string
-    gasLimit: string
+    gas: string
     chainId: string
   }) {
     // Find the Flow network based on the chain ID
     const flowNetwork = Object.entries(FLOW_CHAINS).find(
       ([, chain]) => chain.eip155ChainId === parseInt(chainId)
-    )?.[0] as FlowNetwork
+    )?.[0] as FlowNetwork | undefined
+
+    if (!flowNetwork) {
+      throw new Error("Flow network not found for chain ID")
+    }
 
     const evmContractAddress = fcl.withPrefix(
       FLOW_CONTRACTS[ContractType.EVM][flowNetwork]
@@ -163,7 +168,7 @@ export class AccountManager {
       args: (arg: typeof fcl.arg, t: typeof fcl.t) => [
         arg(to, t.String),
         arg(data, t.String),
-        arg(gasLimit, t.UInt64),
+        arg(gas, t.UInt64),
         arg(value, t.UInt256),
       ],
       authz: this.user,
@@ -182,10 +187,9 @@ export class AccountManager {
     }
 
     const eventData: TransactionExecutedEvent = evmTxExecutedEvent.data
-    const evmTxHash = eventData.hash.reduce(
-      (acc, val) => acc + parseInt(val, 16).toString(16).padStart(2, "0"),
-      ""
-    )
+    const evmTxHash = eventData.hash
+      .map(h => parseInt(h, 16).toString().padStart(2, "0"))
+      .join("")
 
     return evmTxHash
   }
