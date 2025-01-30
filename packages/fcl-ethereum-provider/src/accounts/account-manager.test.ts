@@ -378,7 +378,7 @@ describe("signMessage", () => {
 
     user.signUserMessage = jest
       .fn()
-      .mockResolvedValue([{ addr: "0xCOA1", keyId: 0, signature: mockSignature }])
+      .mockResolvedValue([{addr: "0xCOA1", keyId: 0, signature: mockSignature}])
 
     jest.mocked(rlp.encode).mockReturnValue(Buffer.from(mockRlpEncoded, "hex"))
 
@@ -392,7 +392,7 @@ describe("signMessage", () => {
       [0],
       expect.any(Buffer),
       "/public/evm",
-      [mockSignature]
+      [mockSignature],
     ])
   })
 

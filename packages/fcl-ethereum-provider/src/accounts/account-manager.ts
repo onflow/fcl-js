@@ -202,7 +202,9 @@ export class AccountManager {
     from: string
   ): Promise<EthSignatureResponse> {
     if (!this.coaAddress) {
-      throw new Error("COA address is not available. User might not be authenticated.")
+      throw new Error(
+        "COA address is not available. User might not be authenticated."
+      )
     }
 
     if (from.toLowerCase() !== this.coaAddress.toLowerCase()) {
@@ -210,22 +212,27 @@ export class AccountManager {
     }
 
     try {
-      const response: CompositeSignature[] = await this.user.signUserMessage(message)
+      const response: CompositeSignature[] =
+        await this.user.signUserMessage(message)
 
       if (!response || response.length === 0) {
         throw new Error("Failed to sign message")
       }
 
-      const keyIndices = response.map((sig) => sig.keyId)
-      const signatures = response.map((sig) => sig.signature)
+      const keyIndices = response.map(sig => sig.keyId)
+      const signatures = response.map(sig => sig.signature)
 
       const addressHexArray = Buffer.from(from.replace(/^0x/, ""), "hex")
 
       const capabilityPath = "/public/evm"
 
-      const rlpEncodedProof = rlp.encode([keyIndices, addressHexArray, capabilityPath, signatures]).toString("hex")
+      const rlpEncodedProof = rlp
+        .encode([keyIndices, addressHexArray, capabilityPath, signatures])
+        .toString("hex")
 
-      return rlpEncodedProof.startsWith("0x") ? rlpEncodedProof : `0x${rlpEncodedProof}` // Return 0x-prefix for Ethereum compatibility
+      return rlpEncodedProof.startsWith("0x")
+        ? rlpEncodedProof
+        : `0x${rlpEncodedProof}` // Return 0x-prefix for Ethereum compatibility
     } catch (error) {
       throw error
     }
