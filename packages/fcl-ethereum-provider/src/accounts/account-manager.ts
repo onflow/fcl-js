@@ -221,7 +221,7 @@ export class AccountManager {
 
       const address = fcl.withPrefix(from)
 
-      const capabilityPath = "/storage/evm"
+      const capabilityPath = "/public/evm"
 
       const rlpEncodedProof = rlp.encode([keyIndices, address, capabilityPath, signatures]).toString("hex")
 
