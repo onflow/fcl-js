@@ -1,6 +1,7 @@
 import {AccountManager} from "./account-manager"
 import {mockUser} from "../__mocks__/fcl"
 import * as fcl from "@onflow/fcl"
+import * as rlp from "@onflow/rlp"
 import {CurrentUser} from "@onflow/typedefs"
 
 jest.mock("@onflow/fcl", () => {
@@ -13,6 +14,11 @@ jest.mock("@onflow/fcl", () => {
     query: jest.fn(),
   }
 })
+
+jest.mock("@onflow/rlp", () => ({
+  encode: jest.fn(),
+  Buffer: jest.requireActual("@onflow/rlp").Buffer,
+}))
 
 const mockFcl = jest.mocked(fcl)
 const mockQuery = jest.mocked(fcl.query)
@@ -331,5 +337,84 @@ describe("send transaction", () => {
     await expect(accountManager.sendTransaction(tx)).rejects.toThrow(
       "EVM transaction hash not found"
     )
+  })
+})
+
+describe("signMessage", () => {
+  let accountManager: AccountManager
+  let user: jest.Mocked<typeof fcl.currentUser>
+
+  beforeEach(() => {
+    user = mockUser()
+    accountManager = new AccountManager(user)
+  })
+
+  afterEach(() => {
+    jest.clearAllMocks()
+  })
+
+  it("should throw an error if the COA address is not available", async () => {
+    accountManager["coaAddress"] = null
+
+    await expect(
+      accountManager.signMessage("Test message", "0x1234")
+    ).rejects.toThrow(
+      "COA address is not available. User might not be authenticated."
+    )
+  })
+
+  it("should throw an error if the signer address does not match the COA address", async () => {
+    accountManager["coaAddress"] = "0xCOA1"
+
+    await expect(
+      accountManager.signMessage("Test message", "0xDIFFERENT")
+    ).rejects.toThrow("Signer address does not match authenticated COA address")
+  })
+
+  it("should successfully sign a message and return an RLP-encoded proof", async () => {
+    accountManager["coaAddress"] = "0xCOA1"
+    const mockSignature = "0xabcdef1234567890"
+    const mockRlpEncoded = "f86a808683abcdef682f73746f726167652f65766d"
+
+    user.signUserMessage = jest
+      .fn()
+      .mockResolvedValue([{addr: "0xCOA1", keyId: 0, signature: mockSignature}])
+
+    jest.mocked(rlp.encode).mockReturnValue(Buffer.from(mockRlpEncoded, "hex"))
+
+    const proof = await accountManager.signMessage("Test message", "0xCOA1")
+
+    expect(proof).toBe(`0x${mockRlpEncoded}`)
+
+    expect(user.signUserMessage).toHaveBeenCalledWith("Test message")
+
+    expect(rlp.encode).toHaveBeenCalledWith([
+      [0],
+      expect.any(Buffer),
+      "/public/evm",
+      [mockSignature],
+    ])
+  })
+
+  it("should throw an error if signUserMessage returns an empty array", async () => {
+    accountManager["coaAddress"] = "0xCOA1"
+
+    user.signUserMessage = jest.fn().mockResolvedValue([])
+
+    await expect(
+      accountManager.signMessage("Test message", "0xCOA1")
+    ).rejects.toThrow("Failed to sign message")
+  })
+
+  it("should throw an error if signUserMessage fails", async () => {
+    accountManager["coaAddress"] = "0xCOA1"
+
+    user.signUserMessage = jest
+      .fn()
+      .mockRejectedValue(new Error("Signing failed"))
+
+    await expect(
+      accountManager.signMessage("Test message", "0xCOA1")
+    ).rejects.toThrow("Signing failed")
   })
 })
