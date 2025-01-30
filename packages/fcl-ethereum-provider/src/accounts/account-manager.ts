@@ -219,11 +219,11 @@ export class AccountManager {
       const keyIndices = response.map((sig) => sig.keyId)
       const signatures = response.map((sig) => sig.signature)
 
-      const address = fcl.withPrefix(from)
+      const addressHexArray = Buffer.from(from.replace(/^0x/, ""), "hex")
 
       const capabilityPath = "/public/evm"
 
-      const rlpEncodedProof = rlp.encode([keyIndices, address, capabilityPath, signatures]).toString("hex")
+      const rlpEncodedProof = rlp.encode([keyIndices, addressHexArray, capabilityPath, signatures]).toString("hex")
 
       return rlpEncodedProof.startsWith("0x") ? rlpEncodedProof : `0x${rlpEncodedProof}` // Return 0x-prefix for Ethereum compatibility
     } catch (error) {
