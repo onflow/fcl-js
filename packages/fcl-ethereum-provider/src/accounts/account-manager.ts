@@ -9,25 +9,64 @@ import {
   FlowNetwork,
 } from "../constants"
 import {TransactionExecutedEvent} from "../types/events"
-import {BehaviorSubject, Subscribable, Subscription} from "../util/observable"
+import {
+  BehaviorSubject,
+  distinctUntilChanged,
+  fromPromise,
+  map,
+  Observable,
+  skip,
+  Subscribable,
+  Subscription,
+  switchMap,
+  tap,
+} from "../util/observable"
 
 export class AccountManager implements Subscribable<string[]> {
   private user: typeof fcl.currentUser
 
-  // Track the last Flow address we fetched for
-  private lastFlowAddr: string | null = null
-
-  // The COA address (or null if none/not fetched)
-  private coaAddress: string | null = null
-
-  private $accounts: BehaviorSubject<string[]> = new BehaviorSubject<string[]>(
-    []
-  )
+  private $address: BehaviorSubject<string | null> = new BehaviorSubject<
+    string | null
+  >(null)
 
   private isLoading: boolean = true
 
   constructor(user: typeof fcl.currentUser) {
     this.user = user
+
+    const $user = new Observable<CurrentUser>(subscriber => {
+      return this.user.subscribe(subscriber) as Subscription
+    })
+
+    console.log("user", $user)
+
+    // Bind $accounts to COA address
+    $user
+      .pipe(
+        map(snapshot => {
+          console.log("snapshot", snapshot)
+          return snapshot.addr || null
+        }),
+        distinctUntilChanged,
+        tap(() => (this.isLoading = true)),
+        switchMap(addr =>
+          fromPromise(
+            (async () => {
+              console.log("fetching COA from flow address", addr)
+              if (!addr) {
+                return null
+              }
+              console.log("fetching COA from flow address", addr)
+              return this.fetchCOAFromFlowAddress(addr)
+            })()
+          )
+        ),
+        tap(() => (this.isLoading = false))
+      )
+      .subscribe(coaAddress => {
+        console.log("setting COA address", coaAddress)
+        this.$address.next(coaAddress)
+      })
   }
 
   private async fetchCOAFromFlowAddress(flowAddr: string): Promise<string> {
@@ -57,53 +96,30 @@ export class AccountManager implements Subscribable<string[]> {
     return response as string
   }
 
-  public async updateCOAAddress(force = false): Promise<void> {
-    const snapshot = await this.user.snapshot()
-    const currentFlowAddr = snapshot?.addr
-
-    // If user not logged in, reset everything
-    if (!currentFlowAddr) {
-      this.lastFlowAddr = null
-      this.coaAddress = null
-      return
+  public async getCOAAddress(): Promise<string | null> {
+    if (!this.isLoading) {
+      return this.$address.getValue()
     }
 
-    const userChanged = this.lastFlowAddr !== currentFlowAddr
-    if (force || userChanged) {
-      this.lastFlowAddr = currentFlowAddr
-
-      try {
-        const address = await this.fetchCOAFromFlowAddress(currentFlowAddr)
-      } catch (error) {
-        // If this fetch is the latest, clear
-        if (fetchId === this.currentFetchId) {
-          this.coaAddress = null
+    return new Promise<string | null>(resolve => {
+      const sub = this.$address.pipe(skip(1)).subscribe(coaAddress => {
+        if (coaAddress !== null) {
+          sub()
+          resolve(coaAddress)
         }
-        throw error
-      }
-    }
+      })
+    })
   }
 
-  public getCOAAddress(): string | null {
-    return this.coaAddress
-  }
-
-  public getAccounts(): string[] {
-    return this.coaAddress ? [this.coaAddress] : []
+  public async getAccounts(): Promise<string[]> {
+    const coaAddress = await this.getCOAAddress()
+    return coaAddress ? [coaAddress] : []
   }
 
   public subscribe(callback: (accounts: string[]) => void): Subscription {
-    this.user.subscribe(async (snapshot: CurrentUser) => {
-      if (!snapshot.addr) {
-        // user not authenticated => clear out
-        this.lastFlowAddr = null
-        this.coaAddress = null
-        callback(this.getAccounts())
-        return
-      }
-
-      await this.updateCOAAddress()
-      callback(this.getAccounts())
+    console.log("subscribing to COA address")
+    return this.$address.subscribe((addr: string | null) => {
+      callback(addr ? [addr] : [])
     })
   }
 

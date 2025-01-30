@@ -25,8 +25,8 @@ export class NetworkManager implements Subscribable<number | null> {
 
     // Bind $network to chainId
     $config
-      .pipe(tap(() => (this.isLoading = true)))
       .pipe(
+        tap(() => (this.isLoading = true)),
         switchMap(cfg =>
           fromPromise(
             (async () => {
@@ -38,10 +38,10 @@ export class NetworkManager implements Subscribable<number | null> {
               return chainId
             })()
           )
-        )
+        ),
+        tap(() => (this.isLoading = false))
       )
       .subscribe(chainId => {
-        this.isLoading = false
         this.$network.next(chainId)
       })
   }

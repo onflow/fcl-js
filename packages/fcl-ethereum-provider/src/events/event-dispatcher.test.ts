@@ -17,6 +17,7 @@ describe("event dispatcher", () => {
     let mockMgrSubCb: (accounts: string[]) => void
     accountManager.subscribe.mockImplementation(cb => {
       mockMgrSubCb = cb
+      return () => {}
     })
     const listener = jest.fn()
 
@@ -59,6 +60,7 @@ describe("event dispatcher", () => {
     let mockMgrSubCb: (accounts: string[]) => void
     accountManager.subscribe.mockImplementation(cb => {
       mockMgrSubCb = cb
+      return () => {}
     })
     const listener = jest.fn()
 
@@ -94,6 +96,7 @@ describe("event dispatcher", () => {
     let mockMgrSubCb: (accounts: string[]) => void
     accountManager.subscribe.mockImplementation(cb => {
       mockMgrSubCb = cb
+      return () => {}
     })
     const listener = jest.fn()
 

@@ -12,8 +12,36 @@ export class Observable<T> implements Subscribable<T> {
     return this._subscribe(subscriber)
   }
 
-  pipe<R>(operator: (source: Observable<T>) => Observable<R>) {
-    return operator(this)
+  pipe<A>(op1: (source: Observable<T>) => Observable<A>): Observable<A>
+  pipe<A, B>(
+    op1: (source: Observable<T>) => Observable<A>,
+    op2: (source: Observable<A>) => Observable<B>
+  ): Observable<B>
+  pipe<A, B, C>(
+    op1: (source: Observable<T>) => Observable<A>,
+    op2: (source: Observable<A>) => Observable<B>,
+    op3: (source: Observable<B>) => Observable<C>
+  ): Observable<C>
+  pipe<A, B, C, D>(
+    op1: (source: Observable<T>) => Observable<A>,
+    op2: (source: Observable<A>) => Observable<B>,
+    op3: (source: Observable<B>) => Observable<C>,
+    op4: (source: Observable<C>) => Observable<D>
+  ): Observable<D>
+  pipe<A, B, C, D, E>(
+    op1: (source: Observable<T>) => Observable<A>,
+    op2: (source: Observable<A>) => Observable<B>,
+    op3: (source: Observable<B>) => Observable<C>,
+    op4: (source: Observable<C>) => Observable<D>,
+    op5: (source: Observable<D>) => Observable<E>
+  ): Observable<E>
+  pipe(
+    ...operators: ((input: Observable<any>) => Observable<any>)[]
+  ): Observable<any> {
+    return operators.reduce(
+      (prev, operator) => operator(prev),
+      this as Observable<any>
+    )
   }
 }
 
@@ -124,4 +152,31 @@ export function fromPromise<T>(promise: Promise<T>) {
       isCancelled = true
     }
   })
+}
+
+export function distinctUntilChanged<T>(source: Observable<T>) {
+  return new Observable<T>(subscriber => {
+    let lastValue: T | undefined
+    return source.subscribe(value => {
+      if (value !== lastValue) {
+        lastValue = value
+        subscriber(value)
+      }
+    })
+  })
+}
+
+export function skip<T>(count: number) {
+  return (source: Observable<T>): Observable<T> => {
+    return new Observable<T>(subscriber => {
+      let skipped = 0
+      return source.subscribe(value => {
+        if (skipped < count) {
+          skipped++
+          return
+        }
+        subscriber(value)
+      })
+    })
+  }
 }
