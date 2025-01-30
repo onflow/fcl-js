@@ -1,4 +1,5 @@
 import * as fcl from "@onflow/fcl"
+import * as rlp from "@onflow/rlp"
 import {CompositeSignature, CurrentUser} from "@onflow/typedefs"
 import {
   ContractType,
@@ -201,27 +202,30 @@ export class AccountManager {
     from: string
   ): Promise<EthSignatureResponse> {
     if (!this.coaAddress) {
-      throw new Error(
-        "COA address is not available. User might not be authenticated."
-      )
+      throw new Error("COA address is not available. User might not be authenticated.")
     }
 
     if (from.toLowerCase() !== this.coaAddress.toLowerCase()) {
       throw new Error("Signer address does not match authenticated COA address")
     }
 
-    // Convert message to hex format (Ethereum expects hex)
-    const hexMessage = Buffer.from(message, "utf8").toString("hex")
-
     try {
-      const response: CompositeSignature[] =
-        await this.user.signUserMessage(hexMessage)
+      const response: CompositeSignature[] = await this.user.signUserMessage(message)
 
       if (!response || response.length === 0) {
         throw new Error("Failed to sign message")
       }
 
-      return response[0].signature // Return only the signature
+      const keyIndices = response.map((sig) => sig.keyId)
+      const signatures = response.map((sig) => sig.signature)
+
+      const address = fcl.withPrefix(from)
+
+      const capabilityPath = "/storage/evm"
+
+      const rlpEncodedProof = rlp.encode([keyIndices, address, capabilityPath, signatures]).toString("hex")
+
+      return rlpEncodedProof.startsWith("0x") ? rlpEncodedProof : `0x${rlpEncodedProof}` // Return 0x-prefix for Ethereum compatibility
     } catch (error) {
       console.error("Error signing message:", error)
       throw error
