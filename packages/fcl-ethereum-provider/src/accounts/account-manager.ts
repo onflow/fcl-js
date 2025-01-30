@@ -196,7 +196,7 @@ export class AccountManager {
     return evmTxHash
   }
 
-  public async signMessage(message: string, expectedAddress: string): Promise<EthSignatureResponse> {
+  public async signMessage(message: string, from: string): Promise<EthSignatureResponse> {
     const snapshot = await this.user.snapshot()
     const authenticatedAddress = snapshot?.addr
 
