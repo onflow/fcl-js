@@ -7,5 +7,5 @@ export async function personalSign(
 ) {
   const [message, from] = params
 
-  return await accountManager.signMessage(message, expectedAddress)
+  return await accountManager.signMessage(message, from)
 }
