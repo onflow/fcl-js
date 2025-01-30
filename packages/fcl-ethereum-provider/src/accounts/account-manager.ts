@@ -196,9 +196,14 @@ export class AccountManager {
     return evmTxHash
   }
 
-  public async signMessage(message: string, from: string): Promise<EthSignatureResponse> {
+  public async signMessage(
+    message: string,
+    from: string
+  ): Promise<EthSignatureResponse> {
     if (!this.coaAddress) {
-      throw new Error("COA address is not available. User might not be authenticated.")
+      throw new Error(
+        "COA address is not available. User might not be authenticated."
+      )
     }
 
     if (from.toLowerCase() !== this.coaAddress.toLowerCase()) {
@@ -209,7 +214,8 @@ export class AccountManager {
     const hexMessage = Buffer.from(message, "utf8").toString("hex")
 
     try {
-      const response: CompositeSignature[] = await this.user.signUserMessage(hexMessage)
+      const response: CompositeSignature[] =
+        await this.user.signUserMessage(hexMessage)
 
       if (!response || response.length === 0) {
         throw new Error("Failed to sign message")
