@@ -1,37 +1,67 @@
 import {FLOW_CHAINS, FlowNetwork} from "../constants"
 import {
   BehaviorSubject,
+  fromPromise,
   Subscribable,
   Subscriber,
   Subscription,
+  switchMap,
+  tap,
 } from "../util/observable"
 import * as fcl from "@onflow/fcl"
 
-// TODO RACE CONDITIONS IN INITIAL VALUE
-export class NetworkManager implements Subscribable<string> {
-  private subject: BehaviorSubject<number | null> = new BehaviorSubject<
+export class NetworkManager implements Subscribable<number | null> {
+  private $network: BehaviorSubject<number | null> = new BehaviorSubject<
     number | null
-  >(0)
+  >(null)
+  private isLoading: boolean = true
 
   constructor(config: typeof fcl.config) {
-    config.subscribe(async cfg => {
-      const accessNode = cfg?.["accessNode.api"]
-      const flowNetwork = (await fcl.getChainId({
-        node: accessNode,
-      })) as FlowNetwork
-      const {eip155ChainId: chainId} = FLOW_CHAINS[flowNetwork]
-      this.subject.next(chainId)
+    // Map FCL config to behavior subject
+    const $config = new BehaviorSubject<Record<string, unknown> | null>(null)
+    config.subscribe(cfg => {
+      $config.next(cfg)
     })
+
+    // Bind $network to chainId
+    $config
+      .pipe(tap(() => (this.isLoading = true)))
+      .pipe(
+        switchMap(cfg =>
+          fromPromise(
+            (async () => {
+              const accessNode = cfg?.["accessNode.api"]
+              const flowNetwork = (await fcl.getChainId({
+                node: accessNode,
+              })) as FlowNetwork
+              const {eip155ChainId: chainId} = FLOW_CHAINS[flowNetwork]
+              return chainId
+            })()
+          )
+        )
+      )
+      .subscribe(chainId => {
+        this.isLoading = false
+        this.$network.next(chainId)
+      })
   }
 
-  get chainId(): string {
-    return this._chainId
+  subscribe(observer: Subscriber<number | null>): Subscription {
+    return this.$network.subscribe(observer)
   }
 
-  subscribe(observer: Subscriber<string>): Subscription {
-    return this.subject.subscribe(chainId => {
-        this._chainId = chainId.toString()
-        observer(this._chainId)
+  async getChainId(): Promise<number | null> {
+    if (!this.isLoading) {
+      return this.$network.getValue()
+    }
+
+    return new Promise<number | null>(resolve => {
+      const sub = this.$network.subscribe(chainId => {
+        if (chainId !== null) {
+          sub()
+          resolve(chainId)
         }
+      })
+    })
   }
 }
