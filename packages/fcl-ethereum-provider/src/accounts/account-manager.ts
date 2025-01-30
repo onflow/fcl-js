@@ -227,7 +227,6 @@ export class AccountManager {
 
       return rlpEncodedProof.startsWith("0x") ? rlpEncodedProof : `0x${rlpEncodedProof}` // Return 0x-prefix for Ethereum compatibility
     } catch (error) {
-      console.error("Error signing message:", error)
       throw error
     }
   }
