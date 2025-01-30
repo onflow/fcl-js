@@ -9,18 +9,22 @@ import {
   FlowNetwork,
 } from "../constants"
 import {TransactionExecutedEvent} from "../types/events"
+import {BehaviorSubject, Subscribable, Subscription} from "../util/observable"
 
-export class AccountManager {
+export class AccountManager implements Subscribable<string[]> {
   private user: typeof fcl.currentUser
-
-  // For race-condition checks:
-  private currentFetchId = 0
 
   // Track the last Flow address we fetched for
   private lastFlowAddr: string | null = null
 
   // The COA address (or null if none/not fetched)
   private coaAddress: string | null = null
+
+  private $accounts: BehaviorSubject<string[]> = new BehaviorSubject<string[]>(
+    []
+  )
+
+  private isLoading: boolean = true
 
   constructor(user: typeof fcl.currentUser) {
     this.user = user
@@ -67,14 +71,9 @@ export class AccountManager {
     const userChanged = this.lastFlowAddr !== currentFlowAddr
     if (force || userChanged) {
       this.lastFlowAddr = currentFlowAddr
-      const fetchId = ++this.currentFetchId
 
       try {
         const address = await this.fetchCOAFromFlowAddress(currentFlowAddr)
-        // Only update if this fetch is still the latest
-        if (fetchId === this.currentFetchId) {
-          this.coaAddress = address
-        }
       } catch (error) {
         // If this fetch is the latest, clear
         if (fetchId === this.currentFetchId) {
@@ -93,7 +92,7 @@ export class AccountManager {
     return this.coaAddress ? [this.coaAddress] : []
   }
 
-  public subscribe(callback: (accounts: string[]) => void) {
+  public subscribe(callback: (accounts: string[]) => void): Subscription {
     this.user.subscribe(async (snapshot: CurrentUser) => {
       if (!snapshot.addr) {
         // user not authenticated => clear out
