@@ -115,7 +115,6 @@ export class AccountManager {
           resolve(coaAddress)
         },
         error => {
-          console.error("Error in COA address observable", error)
           sub()
           reject(error)
         }
