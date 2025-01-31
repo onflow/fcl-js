@@ -4,6 +4,8 @@ import {Gateway} from "../gateway/gateway"
 import {AccountManager} from "../accounts/account-manager"
 import {ethSendTransaction} from "./handlers/eth-send-transaction"
 import {NetworkManager} from "../network/network"
+import {personalSign} from "./handlers/personal-sign"
+import {PersonalSignParams} from "../types/eth"
 
 export class RpcProcessor {
   constructor(
@@ -25,6 +27,11 @@ export class RpcProcessor {
         return ethRequestAccounts(this.accountManager)
       case "eth_sendTransaction":
         return await ethSendTransaction(this.accountManager, params)
+      case "personal_sign":
+        return await personalSign(
+          this.accountManager,
+          params as PersonalSignParams
+        )
       default:
         return await this.gateway.request({
           chainId,
