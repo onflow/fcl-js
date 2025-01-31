@@ -1,5 +1,5 @@
 import {sha3_256} from "@noble/hashes/sha3"
-import {hexToBytes, bytesToHex} from "@noble/hashes/utils"
+import {bytesToHex} from "@noble/hashes/utils"
 import {encode, Buffer, EncodeInput} from "@onflow/rlp"
 import {sansPrefix} from "@onflow/util-address"
 
