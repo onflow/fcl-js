@@ -4,7 +4,9 @@ import {NetworkManager} from "../network/network"
 import {Observable, Subscription} from "../util/observable"
 
 export class EventDispatcher {
-  private $events: {[E in keyof ProviderEvents]: Observable<ProviderEvents[E]>}
+  private $emitters: {
+    [E in keyof ProviderEvents]: Observable<ProviderEvents[E]>
+  }
   private subscriptions: {
     [E in keyof ProviderEvents]: Map<
       EventCallback<ProviderEvents[E]>,
@@ -13,7 +15,7 @@ export class EventDispatcher {
   }
 
   constructor(accountManager: AccountManager, networkManager: NetworkManager) {
-    this.$events = {
+    this.$emitters = {
       accountsChanged: new Observable(subscriber => {
         return accountManager.subscribe(accounts => {
           subscriber.next(accounts)
@@ -48,7 +50,7 @@ export class EventDispatcher {
     event: E,
     listener: EventCallback<ProviderEvents[E]>
   ): void {
-    const unsub = this.$events[event].subscribe(listener)
+    const unsub = this.$emitters[event].subscribe(listener)
     this.subscriptions[event].set(listener, unsub)
   }
 
