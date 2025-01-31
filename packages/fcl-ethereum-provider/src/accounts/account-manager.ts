@@ -32,11 +32,15 @@ import {
 import {EthSignatureResponse} from "../types/eth"
 
 export class AccountManager {
-  private $addressStore: Observable<{
+  private $addressStore = new BehaviorSubject<{
     isLoading: boolean
     address: string | null
     error: Error | null
-  }>
+  }>({
+    isLoading: true,
+    address: null,
+    error: null,
+  })
 
   constructor(private user: typeof fcl.currentUser) {
     // Create an observable from the user
@@ -50,16 +54,7 @@ export class AccountManager {
       }) as Subscription
     })
 
-    const $addressState = new BehaviorSubject<{
-      isLoading: boolean
-      address: string | null
-      error: Error | null
-    }>({
-      isLoading: true,
-      address: null,
-      error: null,
-    })
-
+    // Bind the address store to the user observable
     $user
       .pipe(
         map(snapshot => snapshot.addr || null),
@@ -90,16 +85,7 @@ export class AccountManager {
           )
         )
       )
-      .subscribe($addressState)
-
-    this.$addressStore = $addressState.pipe(filter(({isLoading}) => !isLoading))
-
-    this.$addressStore.subscribe({
-      error: error => {
-        console.error("Error fetching COA address", error)
-      },
-      next: () => {},
-    })
+      .subscribe(this.$addressStore)
   }
 
   private async fetchCOAFromFlowAddress(flowAddr: string): Promise<string> {
