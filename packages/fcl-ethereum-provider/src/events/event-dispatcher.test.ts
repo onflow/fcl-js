@@ -8,9 +8,12 @@ describe("event dispatcher", () => {
     const accountManager: jest.Mocked<AccountManager> =
       new (AccountManager as any)()
 
-    let mockSubscribeCallback: (accounts: string[]) => void
+    let subs: ((accounts: string[]) => void)[] = []
     accountManager.subscribe.mockImplementation(cb => {
-      mockSubscribeCallback = cb
+      subs.push(cb)
+      return () => {
+        subs = subs.filter(sub => sub !== cb)
+      }
     })
     const listener = jest.fn()
 
@@ -22,7 +25,7 @@ describe("event dispatcher", () => {
     expect(accountManager.subscribe).toHaveBeenCalledWith(expect.any(Function))
 
     // Simulate account change from account manager
-    mockSubscribeCallback!(["0x1234"])
+    subs.forEach(sub => sub(["0x1234"]))
 
     expect(listener).toHaveBeenCalled()
     expect(listener).toHaveBeenCalledTimes(1)
@@ -31,7 +34,7 @@ describe("event dispatcher", () => {
     eventDispatcher.off("accountsChanged", listener)
 
     // Simulate account change from account manager
-    mockSubscribeCallback!(["0x5678"])
+    subs.forEach(sub => sub(["0x5678"]))
 
     expect(listener).toHaveBeenCalledTimes(1)
   })
@@ -40,9 +43,10 @@ describe("event dispatcher", () => {
     const accountManager: jest.Mocked<AccountManager> =
       new (AccountManager as any)()
 
-    let mockSubscribeCallback: (accounts: string[]) => void
+    let mockMgrSubCb: (accounts: string[]) => void
     accountManager.subscribe.mockImplementation(cb => {
-      mockSubscribeCallback = cb
+      mockMgrSubCb = cb
+      return () => {}
     })
     const listener = jest.fn()
 
@@ -54,7 +58,7 @@ describe("event dispatcher", () => {
     expect(accountManager.subscribe).toHaveBeenCalledWith(expect.any(Function))
 
     // Simulate account change from account manager
-    mockSubscribeCallback!(["0x1234"])
+    mockMgrSubCb!(["0x1234"])
 
     expect(listener).toHaveBeenCalled()
     expect(listener).toHaveBeenCalledTimes(1)
@@ -65,9 +69,10 @@ describe("event dispatcher", () => {
     const accountManager: jest.Mocked<AccountManager> =
       new (AccountManager as any)()
 
-    let mockSubscribeCallback: (accounts: string[]) => void
+    let mockMgrSubCb: (accounts: string[]) => void
     accountManager.subscribe.mockImplementation(cb => {
-      mockSubscribeCallback = cb
+      mockMgrSubCb = cb
+      return () => {}
     })
     const listener = jest.fn()
 
@@ -79,8 +84,8 @@ describe("event dispatcher", () => {
     expect(accountManager.subscribe).toHaveBeenCalledWith(expect.any(Function))
 
     // Simulate account change from account manager
-    mockSubscribeCallback!(["0x1234"])
-    mockSubscribeCallback!(["0x5678"])
+    mockMgrSubCb!(["0x1234"])
+    mockMgrSubCb!(["0x5678"])
 
     expect(listener).toHaveBeenCalled()
     expect(listener).toHaveBeenCalledTimes(2)

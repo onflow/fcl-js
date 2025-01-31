@@ -29,6 +29,7 @@ import {Gateway} from "./gateway/gateway"
  */
 export function createProvider(config: {
   user: typeof fcl.currentUser
+  config: typeof fcl.config
   service?: Service
   rpcUrls?: {[chainId: string]: number}
 }): Eip1193Provider {
@@ -48,5 +49,6 @@ export function createProvider(config: {
   const rpcProcessor = new RpcProcessor(gateway, accountManager)
   const eventProcessor = new EventDispatcher(accountManager)
   const provider = new FclEthereumProvider(rpcProcessor, eventProcessor)
+
   return provider
 }

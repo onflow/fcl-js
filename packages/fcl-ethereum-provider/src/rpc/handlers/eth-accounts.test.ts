@@ -25,18 +25,18 @@ describe("ethAccounts handler", () => {
   })
 
   it("should return accounts from the AccountManager", async () => {
-    accountManagerMock.getAccounts.mockReturnValue(["0x1234...", "0x5678..."])
+    accountManagerMock.getAccounts.mockResolvedValue(["0x1234...", "0x5678..."])
 
-    const accounts = ethAccounts(accountManagerMock)
+    const accounts = await ethAccounts(accountManagerMock)
 
     expect(accounts).toEqual(["0x1234...", "0x5678..."])
     expect(accountManagerMock.getAccounts).toHaveBeenCalled()
   })
 
   it("should return an empty array if no accounts are available", async () => {
-    accountManagerMock.getAccounts.mockReturnValue([])
+    accountManagerMock.getAccounts.mockResolvedValue([])
 
-    const accounts = ethAccounts(accountManagerMock)
+    const accounts = await ethAccounts(accountManagerMock)
 
     expect(accounts).toEqual([])
     expect(accountManagerMock.getAccounts).toHaveBeenCalled()
@@ -60,23 +60,21 @@ describe("ethRequestAccounts handler", () => {
   })
 
   it("should call authenticate, updateCOAAddress, and return the manager's accounts", async () => {
-    accountManagerMock.getAccounts.mockReturnValue(["0x1234..."])
+    accountManagerMock.getAccounts.mockResolvedValue(["0x1234..."])
 
     const accounts = await ethRequestAccounts(accountManagerMock)
 
     expect(userMock.authenticate).toHaveBeenCalled()
-    expect(accountManagerMock.updateCOAAddress).toHaveBeenCalled()
     expect(accountManagerMock.getAccounts).toHaveBeenCalled()
     expect(accounts).toEqual(["0x1234..."])
   })
 
   it("should handle empty accounts scenario", async () => {
-    accountManagerMock.getAccounts.mockReturnValue([])
+    accountManagerMock.getAccounts.mockResolvedValue([])
 
     const accounts = await ethRequestAccounts(accountManagerMock)
 
     expect(userMock.authenticate).toHaveBeenCalled()
-    expect(accountManagerMock.updateCOAAddress).toHaveBeenCalled()
     expect(accountManagerMock.getAccounts).toHaveBeenCalled()
     expect(accounts).toEqual([])
   })

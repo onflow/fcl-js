@@ -10,22 +10,76 @@ import {
   FlowNetwork,
 } from "../constants"
 import {TransactionExecutedEvent} from "../types/events"
+import {
+  BehaviorSubject,
+  concat,
+  distinctUntilChanged,
+  filter,
+  firstValueFrom,
+  from,
+  map,
+  Observable,
+  of,
+  Subscription,
+  switchMap,
+} from "../util/observable"
 import {EthSignatureResponse} from "../types/eth"
 
 export class AccountManager {
-  private user: typeof fcl.currentUser
+  private $addressStore = new BehaviorSubject<{
+    isLoading: boolean
+    address: string | null
+    error: Error | null
+  }>({
+    isLoading: true,
+    address: null,
+    error: null,
+  })
 
-  // For race-condition checks:
-  private currentFetchId = 0
+  constructor(private user: typeof fcl.currentUser) {
+    // Create an observable from the user
+    const $user = new Observable<CurrentUser>(subscriber => {
+      return this.user.subscribe((currentUser: CurrentUser, error?: Error) => {
+        if (error) {
+          subscriber.error?.(error)
+        } else {
+          subscriber.next(currentUser)
+        }
+      }) as Subscription
+    })
 
-  // Track the last Flow address we fetched for
-  private lastFlowAddr: string | null = null
-
-  // The COA address (or null if none/not fetched)
-  private coaAddress: string | null = null
-
-  constructor(user: typeof fcl.currentUser) {
-    this.user = user
+    // Bind the address store to the user observable
+    $user
+      .pipe(
+        map(snapshot => snapshot.addr || null),
+        distinctUntilChanged(),
+        switchMap(addr =>
+          concat(
+            of({isLoading: true} as {
+              isLoading: boolean
+              address: string | null
+              error: Error | null
+            }),
+            from(
+              (async () => {
+                try {
+                  if (!addr) {
+                    return {isLoading: false, address: null, error: null}
+                  }
+                  return {
+                    isLoading: false,
+                    address: await this.fetchCOAFromFlowAddress(addr),
+                    error: null,
+                  }
+                } catch (error: any) {
+                  return {isLoading: false, address: null, error}
+                }
+              })()
+            )
+          )
+        )
+      )
+      .subscribe(this.$addressStore)
   }
 
   private async fetchCOAFromFlowAddress(flowAddr: string): Promise<string> {
@@ -55,60 +109,27 @@ export class AccountManager {
     return response as string
   }
 
-  public async updateCOAAddress(force = false): Promise<void> {
-    const snapshot = await this.user.snapshot()
-    const currentFlowAddr = snapshot?.addr
-
-    // If user not logged in, reset everything
-    if (!currentFlowAddr) {
-      this.lastFlowAddr = null
-      this.coaAddress = null
-      return
+  public async getCOAAddress(): Promise<string | null> {
+    const {address, error} = await firstValueFrom(
+      this.$addressStore.pipe(filter(x => !x.isLoading))
+    )
+    if (error) {
+      throw error
     }
-
-    const userChanged = this.lastFlowAddr !== currentFlowAddr
-    if (force || userChanged) {
-      this.lastFlowAddr = currentFlowAddr
-      const fetchId = ++this.currentFetchId
-
-      try {
-        const address = await this.fetchCOAFromFlowAddress(currentFlowAddr)
-        // Only update if this fetch is still the latest
-        if (fetchId === this.currentFetchId) {
-          this.coaAddress = address
-        }
-      } catch (error) {
-        // If this fetch is the latest, clear
-        if (fetchId === this.currentFetchId) {
-          this.coaAddress = null
-        }
-        throw error
-      }
-    }
+    return address
   }
 
-  public getCOAAddress(): string | null {
-    return this.coaAddress
+  public async getAccounts(): Promise<string[]> {
+    const coaAddress = await this.getCOAAddress()
+    return coaAddress ? [coaAddress] : []
   }
 
-  public getAccounts(): string[] {
-    return this.coaAddress ? [this.coaAddress] : []
-  }
-
-  public subscribe(callback: (accounts: string[]) => void): () => void {
-    const unsubscribe = this.user.subscribe(async (snapshot: CurrentUser) => {
-      if (!snapshot.addr) {
-        this.lastFlowAddr = null
-        this.coaAddress = null
-        callback(this.getAccounts())
-        return
-      }
-
-      await this.updateCOAAddress()
-      callback(this.getAccounts())
-    }) as () => void
-
-    return unsubscribe
+  public subscribe(callback: (accounts: string[]) => void): Subscription {
+    return this.$addressStore
+      .pipe(filter(x => !x.isLoading && !x.error))
+      .subscribe(({address}) => {
+        callback(address ? [address] : [])
+      })
   }
 
   async sendTransaction({
@@ -201,13 +222,14 @@ export class AccountManager {
     message: string,
     from: string
   ): Promise<EthSignatureResponse> {
-    if (!this.coaAddress) {
+    const coaAddress = await this.getCOAAddress()
+    if (!coaAddress) {
       throw new Error(
         "COA address is not available. User might not be authenticated."
       )
     }
 
-    if (from.toLowerCase() !== this.coaAddress.toLowerCase()) {
+    if (from.toLowerCase() !== coaAddress.toLowerCase()) {
       throw new Error("Signer address does not match authenticated COA address")
     }
 
