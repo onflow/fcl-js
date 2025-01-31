@@ -5,7 +5,7 @@ import {AccountManager} from "../accounts/account-manager"
 import * as fcl from "@onflow/fcl"
 import {FLOW_CHAINS, FlowNetwork} from "../constants"
 import {ethSendTransaction} from "./handlers/eth-send-transaction"
-import {personalSign} from "./handlers/personal-sign"
+import {personalSign, signTypedData} from "./handlers/personal-sign"
 import {PersonalSignParams} from "../types/eth"
 
 export class RpcProcessor {
@@ -28,6 +28,10 @@ export class RpcProcessor {
         return ethRequestAccounts(this.accountManager)
       case "eth_sendTransaction":
         return await ethSendTransaction(this.accountManager, params)
+      case "eth_signTypedData":
+      case "eth_signTypedData_v3":
+      case "eth_signTypedData_v4":
+        return await signTypedData(this.accountManager, params)
       case "personal_sign":
         return await personalSign(
           this.accountManager,
