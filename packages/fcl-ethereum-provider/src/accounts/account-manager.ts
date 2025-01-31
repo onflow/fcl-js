@@ -56,11 +56,9 @@ export class AccountManager {
         switchMap(addr =>
           fromPromise(
             (async () => {
-              console.log("fetching COA from flow address", addr)
               if (!addr) {
                 return null
               }
-              console.log("fetching COA from flow address", addr)
               return await this.fetchCOAFromFlowAddress(addr)
             })()
           )
@@ -131,7 +129,6 @@ export class AccountManager {
   }
 
   public subscribe(callback: (accounts: string[]) => void): Subscription {
-    console.log("subscribing to COA address")
     return this.$address.subscribe((addr: string | null) => {
       callback(addr ? [addr] : [])
     })

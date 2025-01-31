@@ -36,8 +36,7 @@ describe("AccountManager", () => {
 
   it("should reset state when the user is not logged in", async () => {
     user.subscribe.mockImplementation(fn => {
-      console.log("subscribing")
-      fn({addr: null})
+      fn({addr: undefined})
       return () => {}
     })
 
@@ -198,7 +197,6 @@ describe("AccountManager", () => {
     user.snapshot.mockResolvedValueOnce({addr: "0x1"} as CurrentUser)
 
     user.subscribe.mockImplementation(fn => {
-      console.log("subscribing")
       fn({addr: "0x1"} as CurrentUser)
       return () => {}
     })

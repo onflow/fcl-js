@@ -75,8 +75,6 @@ export type Observer<T, R = Error> = {
   error?: (error: R) => void
 }
 
-export type ObserverOrNext<T, R = Error> = Observer<T, R> | ((value: T) => void)
-
 export class Subject<T, R = Error> extends Observable<T, R> {
   private subscribers: Observer<T, R>[] = []
 
@@ -280,14 +278,4 @@ export function skip<T, R>(count: number) {
       )
     })
   }
-}
-
-// Util functions
-
-function normalizeObserver<T, R>(
-  observerOrNext: ObserverOrNext<T, R>
-): Observer<T, R> {
-  return typeof observerOrNext === "function"
-    ? {next: observerOrNext}
-    : observerOrNext
 }
