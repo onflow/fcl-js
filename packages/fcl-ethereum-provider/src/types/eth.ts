@@ -8,7 +8,7 @@ export interface SignTypedDataParams {
 }
 
 export interface TypedData {
-  types: Record<string, Array<{ name: string; type: string }>>
+  types: Record<string, Array<{name: string; type: string}>>
   domain: {
     name?: string
     version?: string

@@ -14,7 +14,7 @@ function hashTypedDataV3(data: any): string {
     Buffer.concat([
       Buffer.from("\x19\x01"), // EIP-712 prefix
       domainHash,
-      messageHash
+      messageHash,
     ])
   )
 
@@ -30,7 +30,7 @@ export async function signTypedData(
   params: SignTypedDataParams,
   version: "eth_signTypedData" | "eth_signTypedData_v3" | "eth_signTypedData_v4"
 ) {
-  const { address, data } = params
+  const {address, data} = params
 
   if (!address || !data) {
     throw new Error("Missing signer address or typed data")
