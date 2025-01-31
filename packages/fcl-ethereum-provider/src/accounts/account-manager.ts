@@ -71,7 +71,7 @@ export class AccountManager {
       )
       .subscribe(
         this.$address.next.bind(this.$address),
-        this.$address.error.bind(this.$address)
+        this.$address.error.bind(this.$address),
         this.$address.complete.bind(this.$address)
       )
   }
