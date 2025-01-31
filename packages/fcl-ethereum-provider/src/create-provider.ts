@@ -7,7 +7,6 @@ import {EventDispatcher} from "./events/event-dispatcher"
 import {AccountManager} from "./accounts/account-manager"
 import {FLOW_CHAINS} from "./constants"
 import {Gateway} from "./gateway/gateway"
-import {NetworkManager} from "./network/network"
 
 /**
  * Create a new FCL Ethereum provider
@@ -42,14 +41,13 @@ export function createProvider(config: {
     {} as {[chainId: number]: string}
   )
 
-  const networkManager = new NetworkManager(config.config)
   const accountManager = new AccountManager(config.user)
   const gateway = new Gateway({
     ...defaultRpcUrls,
     ...(config.rpcUrls || {}),
   })
-  const rpcProcessor = new RpcProcessor(gateway, accountManager, networkManager)
-  const eventProcessor = new EventDispatcher(accountManager, networkManager)
+  const rpcProcessor = new RpcProcessor(gateway, accountManager)
+  const eventProcessor = new EventDispatcher(accountManager)
   const provider = new FclEthereumProvider(rpcProcessor, eventProcessor)
 
   return provider
