@@ -51,7 +51,7 @@ describe("Hash Utils", () => {
     expect(keccak_256).toHaveBeenCalledWith(
       Buffer.from(JSON.stringify(mockTypedData.message), "utf8")
     )
-    expect(keccak_256).toHaveBeenCalledWith(expect.any(Buffer)) // Final concatenated hash
+    expect(keccak_256).toHaveBeenCalledWith(expect.any(Buffer))
     expect(result).toBe("0xabcdef1234567890")
   })
 
