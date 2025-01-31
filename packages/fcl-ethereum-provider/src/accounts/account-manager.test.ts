@@ -24,46 +24,35 @@ const mockFcl = jest.mocked(fcl)
 const mockQuery = jest.mocked(fcl.query)
 
 describe("AccountManager", () => {
-  let user: jest.Mocked<typeof fcl.currentUser>
-
   beforeEach(() => {
-    user = mockUser()
-  })
-
-  afterEach(() => {
     jest.clearAllMocks()
   })
 
   it("should initialize with null COA address", async () => {
-    const accountManager = new AccountManager(user)
+    const user = mockUser()
+    const accountManager = new AccountManager(user.mock)
     expect(await accountManager.getCOAAddress()).toBeNull()
     expect(await accountManager.getAccounts()).toEqual([])
   })
 
   it("should reset state when the user is not logged in", async () => {
-    user.subscribe.mockImplementation(fn => {
-      fn({addr: undefined})
-      return () => {}
-    })
+    const user = mockUser()
 
-    const accountManager = new AccountManager(user)
+    const accountManager = new AccountManager(user.mock)
 
     expect(await accountManager.getCOAAddress()).toBeNull()
     expect(await accountManager.getAccounts()).toEqual([])
   })
 
   it("should fetch and update COA address when user logs in", async () => {
-    let triggerUserEvent: (user: CurrentUser) => void
-    user.subscribe.mockImplementation(fn => {
-      fn({addr: undefined} as CurrentUser)
-      triggerUserEvent = fn as any
-      return () => {}
-    })
+    const user = mockUser()
     mockQuery.mockResolvedValue("0x123")
 
-    const accountManager = new AccountManager(user)
+    const accountManager = new AccountManager(user.mock)
 
-    triggerUserEvent!({addr: "0x1"} as CurrentUser)
+    expect(await accountManager.getCOAAddress()).toBe(null)
+
+    user.set!({addr: "0x1"} as CurrentUser)
 
     expect(await accountManager.getCOAAddress()).toBe("0x123")
     expect(await accountManager.getAccounts()).toEqual(["0x123"])
@@ -74,34 +63,26 @@ describe("AccountManager", () => {
   })
 
   it("should not update COA address if user has not changed", async () => {
-    let triggerUserEvent: (user: CurrentUser) => void
-    user.subscribe.mockImplementation(fn => {
-      triggerUserEvent = fn as any
-      fn({addr: undefined} as CurrentUser)
-      return () => {}
-    })
+    const user = mockUser()
     mockQuery.mockResolvedValue("0x123")
 
-    const accountManager = new AccountManager(user)
+    const accountManager = new AccountManager(user.mock)
 
-    triggerUserEvent!({addr: "0x1"} as CurrentUser)
+    user.set!({addr: "0x1"} as CurrentUser)
+
+    await new Promise(setImmediate)
 
     expect(await accountManager.getCOAAddress()).toBe("0x123")
     expect(fcl.query).toHaveBeenCalledTimes(1)
 
-    triggerUserEvent!({addr: "0x1"} as CurrentUser)
+    user.set!({addr: "0x1"} as CurrentUser)
 
     expect(await accountManager.getCOAAddress()).toBe("0x123")
     expect(fcl.query).toHaveBeenCalledTimes(1) // Should not have fetched again
   })
 
   it("should not update COA address if fetch is outdated when user changes", async () => {
-    let triggerUserEvent: (user: CurrentUser) => void
-    user.subscribe.mockImplementation(fn => {
-      triggerUserEvent = fn as any
-      fn({addr: "0x1"} as CurrentUser)
-      return () => {}
-    })
+    const user = mockUser()
     mockQuery.mockResolvedValue("0x123")
 
     mockQuery
@@ -112,87 +93,72 @@ describe("AccountManager", () => {
       // 2nd fetch: immediate
       .mockResolvedValueOnce("0x456")
 
-    const accountManager = new AccountManager(user)
+    const accountManager = new AccountManager(user.mock)
 
-    triggerUserEvent!({addr: "0x1"} as CurrentUser)
-    triggerUserEvent!({addr: "0x2"} as CurrentUser)
+    await user.set!({addr: "0x1"} as CurrentUser)
+    await user.set!({addr: "0x2"} as CurrentUser)
 
     // The second fetch (for address 0x2) is the latest, so "0x456"
     expect(await accountManager.getCOAAddress()).toBe("0x456")
   })
 
   it("should throw if COA address fetch fails", async () => {
-    let triggerUserEvent: (user: CurrentUser) => void
-    user.subscribe.mockImplementation(fn => {
-      triggerUserEvent = fn as any
-      fn({addr: undefined} as CurrentUser)
-      return () => {}
-    })
+    const user = mockUser()
     mockQuery.mockRejectedValueOnce(new Error("Fetch failed"))
 
-    const accountManager = new AccountManager(user)
+    const accountManager = new AccountManager(user.mock)
 
-    triggerUserEvent!({addr: "0x1"} as CurrentUser)
+    await user.set!({addr: "0x1"} as CurrentUser)
 
-    expect(accountManager.getCOAAddress()).rejects.toThrow("Fetch failed")
+    await expect(accountManager.getCOAAddress()).rejects.toThrow("Fetch failed")
   })
 
   it("should handle user changes correctly", async () => {
-    let triggerUserEvent: (user: CurrentUser) => void
-    user.subscribe.mockImplementation(fn => {
-      triggerUserEvent = fn as any
-      fn({addr: undefined} as CurrentUser)
-      return () => {}
-    })
+    const user = mockUser()
 
     mockQuery
       .mockResolvedValueOnce("0x123") // for user 0x1
       .mockResolvedValueOnce("0x456") // for user 0x2
 
-    const accountManager = new AccountManager(user)
+    const accountManager = new AccountManager(user.mock)
 
-    triggerUserEvent!({addr: "0x1"} as CurrentUser)
+    await user.set({addr: "0x1"} as CurrentUser)
     expect(await accountManager.getCOAAddress()).toBe("0x123")
 
-    triggerUserEvent!({addr: "0x2"} as CurrentUser)
+    await user.set({addr: "0x2"} as CurrentUser)
+
+    await new Promise(setImmediate)
     expect(await accountManager.getCOAAddress()).toBe("0x456")
   })
 
   it("should call the callback with updated accounts in subscribe", async () => {
     mockQuery.mockResolvedValue("0x123")
 
-    let triggerUserEvent: (user: CurrentUser) => void
-    user.subscribe.mockImplementation(fn => {
-      triggerUserEvent = fn as any
-      return () => {}
-    })
+    const user = mockUser()
 
-    const accountManager = new AccountManager(user)
+    const accountManager = new AccountManager(user.mock)
 
     const callback = jest.fn()
     accountManager.subscribe(callback)
 
-    triggerUserEvent!({addr: "0x1"} as CurrentUser)
+    user.set({addr: "0x1"} as CurrentUser)
 
     await new Promise(setImmediate)
 
     expect(callback).toHaveBeenCalledWith(["0x123"])
   })
 
-  it("should reset accounts in subscribe if user is not authenticated", () => {
+  it("should reset accounts in subscribe if user is not authenticated", async () => {
     mockQuery.mockResolvedValue("0x123")
-    user.snapshot.mockResolvedValue({addr: undefined} as CurrentUser)
+    const user = mockUser()
 
     const callback = jest.fn()
 
-    user.subscribe.mockImplementation(fn => {
-      fn({addr: null})
-      return () => {}
-    })
-
-    const accountManager = new AccountManager(user)
+    const accountManager = new AccountManager(user.mock)
 
     accountManager.subscribe(callback)
+
+    await new Promise(setImmediate)
 
     expect(callback).toHaveBeenCalledWith([])
   })
@@ -200,16 +166,11 @@ describe("AccountManager", () => {
   it("should call the callback when COA address is updated", async () => {
     const callback = jest.fn()
 
-    user.snapshot.mockResolvedValueOnce({addr: "0x1"} as CurrentUser)
-
-    user.subscribe.mockImplementation(fn => {
-      fn({addr: "0x1"} as CurrentUser)
-      return () => {}
-    })
+    const user = mockUser({addr: "0x1"} as CurrentUser)
 
     mockQuery.mockResolvedValueOnce("0x123")
 
-    const accountManager = new AccountManager(user)
+    const accountManager = new AccountManager(user.mock)
 
     accountManager.subscribe(callback)
 
@@ -219,16 +180,14 @@ describe("AccountManager", () => {
   })
 
   it("should return an empty array when COA address is null", async () => {
+    const {mock: user} = mockUser()
     const accountManager = new AccountManager(user)
     expect(await accountManager.getAccounts()).toEqual([])
   })
 
   it("should return COA address array when available", async () => {
-    user.subscribe.mockImplementation(fn => {
-      fn({addr: "0x1"} as CurrentUser)
-      return () => {}
-    })
     mockQuery.mockResolvedValueOnce("0x123")
+    const {mock: user} = mockUser({addr: "0x1"} as CurrentUser)
 
     const accountManager = new AccountManager(user)
 
@@ -242,7 +201,7 @@ describe("send transaction", () => {
   })
 
   test("send transaction mainnet", async () => {
-    const user = mockUser()
+    const user = mockUser().mock
     const accountManager = new AccountManager(user)
 
     const mockTxResult = {
@@ -289,7 +248,7 @@ describe("send transaction", () => {
 
   test("send transaction testnet", async () => {
     const user = mockUser()
-    const accountManager = new AccountManager(user)
+    const accountManager = new AccountManager(user.mock)
 
     const mockTxResult = {
       onceExecuted: jest.fn().mockResolvedValue({
@@ -324,7 +283,7 @@ describe("send transaction", () => {
     expect(mockFcl.mutate.mock.calls[0][0]).toMatchObject({
       cadence: expect.any(String),
       args: expect.any(Function),
-      authz: user,
+      authz: user.mock,
       limit: 9999,
     })
 
@@ -335,7 +294,7 @@ describe("send transaction", () => {
 
   test("throws error if no executed event not found", async () => {
     const user = mockUser()
-    const accountManager = new AccountManager(user)
+    const accountManager = new AccountManager(user.mock)
 
     const mockTxResult = {
       onceExecuted: jest.fn().mockResolvedValue({
@@ -364,18 +323,18 @@ describe("send transaction", () => {
 
 describe("signMessage", () => {
   let accountManager: AccountManager
-  let user: jest.Mocked<typeof fcl.currentUser>
+  let user: ReturnType<typeof mockUser>["mock"]
+  let updateUser: ReturnType<typeof mockUser>["set"]
 
   beforeEach(() => {
-    user = mockUser()
+    jest.clearAllMocks()
+    ;({mock: user, set: updateUser} = mockUser({addr: "0x123"} as CurrentUser))
+    jest.mocked(fcl.query).mockResolvedValue("0xCOA1")
     accountManager = new AccountManager(user)
   })
 
-  afterEach(() => {
-    jest.clearAllMocks()
-  })
-
   it("should throw an error if the COA address is not available", async () => {
+    await updateUser({addr: undefined} as CurrentUser)
     accountManager["coaAddress"] = null
 
     await expect(
@@ -386,21 +345,18 @@ describe("signMessage", () => {
   })
 
   it("should throw an error if the signer address does not match the COA address", async () => {
-    accountManager["coaAddress"] = "0xCOA1"
-
     await expect(
       accountManager.signMessage("Test message", "0xDIFFERENT")
     ).rejects.toThrow("Signer address does not match authenticated COA address")
   })
 
   it("should successfully sign a message and return an RLP-encoded proof", async () => {
-    accountManager["coaAddress"] = "0xCOA1"
     const mockSignature = "0xabcdef1234567890"
     const mockRlpEncoded = "f86a808683abcdef682f73746f726167652f65766d"
 
-    user.signUserMessage = jest
-      .fn()
-      .mockResolvedValue([{addr: "0xCOA1", keyId: 0, signature: mockSignature}])
+    user.signUserMessage.mockResolvedValue([
+      {addr: "0xCOA1", keyId: 0, signature: mockSignature} as any,
+    ])
 
     jest.mocked(rlp.encode).mockReturnValue(Buffer.from(mockRlpEncoded, "hex"))
 
@@ -429,8 +385,6 @@ describe("signMessage", () => {
   })
 
   it("should throw an error if signUserMessage fails", async () => {
-    accountManager["coaAddress"] = "0xCOA1"
-
     user.signUserMessage = jest
       .fn()
       .mockRejectedValue(new Error("Signing failed"))

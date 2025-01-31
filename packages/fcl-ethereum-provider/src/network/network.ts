@@ -2,6 +2,7 @@ import {FLOW_CHAINS, FlowNetwork} from "../constants"
 import {
   BehaviorSubject,
   fromPromise,
+  shareReplay,
   Subscription,
   switchMap,
   tap,
@@ -35,7 +36,7 @@ export class NetworkManager {
               const {eip155ChainId: chainId} = FLOW_CHAINS[flowNetwork]
               return chainId
             })()
-          )
+          ).pipe(shareReplay(1))
         ),
         tap(() => (this.isLoading = false))
       )

@@ -14,19 +14,14 @@ describe("event dispatcher", () => {
     const networkManager: jest.Mocked<NetworkManager> =
       new (NetworkManager as any)()
 
-    let mockMgrSubCb: (accounts: string[]) => void
+    let subs: ((accounts: string[]) => void)[] = []
     accountManager.subscribe.mockImplementation(cb => {
-      mockMgrSubCb = cb
-      return () => {}
+      subs.push(cb)
+      return () => {
+        subs = subs.filter(sub => sub !== cb)
+      }
     })
     const listener = jest.fn()
-
-    const config = mockConfig()
-    let mockConfigSubCb: (cfg: Record<string, any>, err: Error | null) => void
-    config.subscribe.mockImplementation(cb => {
-      mockConfigSubCb = cb
-      return () => {}
-    })
 
     const eventDispatcher = new EventDispatcher(accountManager, networkManager)
     eventDispatcher.on("accountsChanged", listener)
@@ -36,7 +31,7 @@ describe("event dispatcher", () => {
     expect(accountManager.subscribe).toHaveBeenCalledWith(expect.any(Function))
 
     // Simulate account change from account manager
-    mockMgrSubCb!(["0x1234"])
+    subs.forEach(sub => sub(["0x1234"]))
 
     expect(listener).toHaveBeenCalled()
     expect(listener).toHaveBeenCalledTimes(1)
@@ -45,7 +40,7 @@ describe("event dispatcher", () => {
     eventDispatcher.off("accountsChanged", listener)
 
     // Simulate account change from account manager
-    mockMgrSubCb!(["0x5678"])
+    subs.forEach(sub => sub(["0x5678"]))
 
     expect(listener).toHaveBeenCalledTimes(1)
   })
@@ -63,13 +58,6 @@ describe("event dispatcher", () => {
       return () => {}
     })
     const listener = jest.fn()
-
-    const config = mockConfig()
-    let mockConfigSubCb: (cfg: Record<string, any>, err: Error | null) => void
-    config.subscribe.mockImplementation(cb => {
-      mockConfigSubCb = cb
-      return () => {}
-    })
 
     const eventDispatcher = new EventDispatcher(accountManager, networkManager)
     eventDispatcher.on("accountsChanged", listener)
@@ -99,13 +87,6 @@ describe("event dispatcher", () => {
       return () => {}
     })
     const listener = jest.fn()
-
-    const config = mockConfig()
-    let mockConfigSubCb: (cfg: Record<string, any>, err: Error | null) => void
-    config.subscribe.mockImplementation(cb => {
-      mockConfigSubCb = cb
-      return () => {}
-    })
 
     const eventDispatcher = new EventDispatcher(accountManager, networkManager)
     eventDispatcher.on("accountsChanged", listener)
@@ -137,13 +118,6 @@ describe("event dispatcher", () => {
       return () => {}
     })
     const listener = jest.fn()
-
-    const config = mockConfig()
-    let mockConfigSubCb: (cfg: Record<string, any>, err: Error | null) => void
-    config.subscribe.mockImplementation(cb => {
-      mockConfigSubCb = cb
-      return () => {}
-    })
 
     const eventDispatcher = new EventDispatcher(accountManager, networkManager)
     eventDispatcher.on("chainChanged", listener)

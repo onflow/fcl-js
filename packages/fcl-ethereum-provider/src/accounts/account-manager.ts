@@ -13,10 +13,16 @@ import {TransactionExecutedEvent} from "../types/events"
 import {
   BehaviorSubject,
   catchError,
+  concat,
+  concatMap,
   distinctUntilChanged,
+  filter,
+  firstValueFrom,
   fromPromise,
   map,
   Observable,
+  of,
+  shareReplay,
   skip,
   Subscription,
   switchMap,
@@ -26,18 +32,13 @@ import {
 import {EthSignatureResponse} from "../types/eth"
 
 export class AccountManager {
-  private user: typeof fcl.currentUser
+  private $addressStore: Observable<{
+    isLoading: boolean
+    address: string | null
+    error: Error | null
+  }>
 
-  private $address: BehaviorSubject<string | null> = new BehaviorSubject<
-    string | null,
-    Error
-  >(null)
-
-  private isLoading: boolean = false
-
-  constructor(user: typeof fcl.currentUser) {
-    this.user = user
-
+  constructor(private user: typeof fcl.currentUser) {
     // Create an observable from the user
     const $user = new Observable<CurrentUser>(subscriber => {
       return this.user.subscribe((currentUser: CurrentUser, error?: Error) => {
@@ -49,33 +50,59 @@ export class AccountManager {
       }) as Subscription
     })
 
-    // Bind $accounts to COA address
+    const $addressState = new BehaviorSubject<{
+      isLoading: boolean
+      address: string | null
+      error: Error | null
+    }>({
+      isLoading: true,
+      address: null,
+      error: null,
+    })
+
     $user
       .pipe(
         map(snapshot => snapshot.addr || null),
         distinctUntilChanged,
-        tap(() => (this.isLoading = true)),
         switchMap(addr =>
-          fromPromise(
-            (async () => {
-              if (!addr) {
-                return null
-              }
-              return await this.fetchCOAFromFlowAddress(addr)
-            })()
+          concat(
+            of({isLoading: true} as {
+              isLoading: boolean
+              address: string | null
+              error: Error | null
+            }),
+            fromPromise(
+              (async () => {
+                try {
+                  if (!addr) {
+                    return {isLoading: false, address: null, error: null}
+                  }
+                  return {
+                    isLoading: false,
+                    address: await this.fetchCOAFromFlowAddress(addr),
+                    error: null,
+                  }
+                } catch (error: any) {
+                  return {isLoading: false, address: null, error}
+                }
+              })()
+            )
           )
-        ),
-        tap(() => (this.isLoading = false)),
-        catchError(error => {
-          this.isLoading = false
-          return throwError(error)
-        })
+        )
       )
-      .subscribe({
-        next: addr => this.$address.next(addr),
-        error: error => this.$address.error(error),
-        complete: () => this.$address.complete(),
-      })
+      .subscribe($addressState)
+
+    this.$addressStore = $addressState.pipe(
+      filter(({isLoading}) => !isLoading),
+      tap(x => console.log("COA address", x))
+    )
+
+    this.$addressStore.subscribe({
+      error: error => {
+        console.error("Error fetching COA address", error)
+      },
+      next: () => {},
+    })
   }
 
   private async fetchCOAFromFlowAddress(flowAddr: string): Promise<string> {
@@ -106,24 +133,13 @@ export class AccountManager {
   }
 
   public async getCOAAddress(): Promise<string | null> {
-    if (!this.isLoading) {
-      return this.$address.getValue()
+    const {address, error} = await firstValueFrom(
+      this.$addressStore.pipe(filter(x => !x.isLoading))
+    )
+    if (error) {
+      throw error
     }
-
-    return new Promise<string | null>((resolve, reject) => {
-      const sub = this.$address.pipe(skip(1)).subscribe({
-        next: addr => {
-          if (addr !== null) {
-            sub()
-            resolve(addr)
-          }
-        },
-        error: error => {
-          sub()
-          reject(error)
-        },
-      })
-    })
+    return address
   }
 
   public async getAccounts(): Promise<string[]> {
@@ -132,9 +148,11 @@ export class AccountManager {
   }
 
   public subscribe(callback: (accounts: string[]) => void): Subscription {
-    return this.$address.subscribe((addr: string | null) => {
-      callback(addr ? [addr] : [])
-    })
+    return this.$addressStore
+      .pipe(filter(x => !x.isLoading && !x.error))
+      .subscribe(({address}) => {
+        callback(address ? [address] : [])
+      })
   }
 
   async sendTransaction({
@@ -228,6 +246,7 @@ export class AccountManager {
     from: string
   ): Promise<EthSignatureResponse> {
     const coaAddress = await this.getCOAAddress()
+    console.log("coaAddress", coaAddress)
     if (!coaAddress) {
       throw new Error(
         "COA address is not available. User might not be authenticated."
