@@ -37,7 +37,7 @@ const rlpEncode = (v: EncodeInput) => {
 }
 
 const sha3_256_hash = (msg: string) => {
-  return bytesToHex(sha3_256(hexToBytes(msg)))
+  return bytesToHex(sha3_256(Buffer.from(msg, "utf8")))
 }
 
 const preparePayload = (tx: Transaction) => {
