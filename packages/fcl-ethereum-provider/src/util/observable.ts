@@ -235,7 +235,6 @@ export function fromPromise<T, R>(promise: Promise<T>) {
       })
       .catch(error => {
         if (isCancelled) return
-        console.error("Error in promise", error, subscriber)
         subscriber.error?.(error)
       })
 
