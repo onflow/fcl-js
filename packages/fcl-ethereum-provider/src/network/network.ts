@@ -2,7 +2,6 @@ import {FLOW_CHAINS, FlowNetwork} from "../constants"
 import {
   BehaviorSubject,
   fromPromise,
-  Observer,
   Subscription,
   switchMap,
   tap,
