@@ -12,9 +12,7 @@ import {
 import {TransactionExecutedEvent} from "../types/events"
 import {
   BehaviorSubject,
-  catchError,
   concat,
-  concatMap,
   distinctUntilChanged,
   filter,
   firstValueFrom,
@@ -22,12 +20,8 @@ import {
   map,
   Observable,
   of,
-  shareReplay,
-  skip,
   Subscription,
   switchMap,
-  tap,
-  throwError,
 } from "../util/observable"
 import {EthSignatureResponse} from "../types/eth"
 
