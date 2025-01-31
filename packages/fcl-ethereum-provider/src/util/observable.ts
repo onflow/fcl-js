@@ -4,24 +4,9 @@ export class Observable<T, R = Error> {
     this._subscribe = subscribe
   }
 
-  subscribe(next: Observer<T, R>["next"]): Subscription
-  subscribe(
-    next: Observer<T, R>["next"],
-    error: Observer<T, R>["error"]
-  ): Subscription
-  subscribe(
-    next: Observer<T, R>["next"],
-    error: Observer<T, R>["error"],
-    complete: Observer<T, R>["complete"]
-  ): Subscription
-  subscribe(subscriber: Observer<T, R>): Subscription
-  subscribe(...args: any[]): Subscription {
-    const subscriber =
-      typeof args[0] === "function"
-        ? {next: args[0], error: args[1], complete: args[2]}
-        : args[0]
-
-    return this._subscribe(subscriber)
+  subscribe(observerOrNext: ObserverOrNext<T, R>): Subscription {
+    const observer = normalizeObserver(observerOrNext)
+    return this._subscribe(observer)
   }
 
   pipe<T1, R1>(
@@ -75,14 +60,17 @@ export type Observer<T, R = Error> = {
   error?: (error: R) => void
 }
 
+export type ObserverOrNext<T, R = Error> = Observer<T, R> | ((value: T) => void)
+
 export class Subject<T, R = Error> extends Observable<T, R> {
   private subscribers: Observer<T, R>[] = []
 
   constructor() {
-    super(subscriber => {
-      this.subscribers.push(subscriber)
+    super(observers => {
+      this.subscribers.push(observers)
       return () => {
-        this.subscribers = this.subscribers.filter(s => s !== subscriber)
+        this.subscribers = this.subscribers.filter(s => s !== observers)
+        console.log(this.subscribers)
       }
     })
   }
@@ -117,22 +105,8 @@ export class BehaviorSubject<T, R = Error> extends Subject<T, R> {
     return this.value
   }
 
-  subscribe(next: Observer<T, R>["next"]): Subscription
-  subscribe(
-    next: Observer<T, R>["next"],
-    error: Observer<T, R>["error"]
-  ): Subscription
-  subscribe(
-    next: Observer<T, R>["next"],
-    error: Observer<T, R>["error"],
-    complete: Observer<T, R>["complete"]
-  ): Subscription
-  subscribe(observer: Observer<T, R>): Subscription
-  subscribe(...args: any[]): Subscription {
-    const observer =
-      typeof args[0] === "function"
-        ? {next: args[0], error: args[1], complete: args[2]}
-        : args[0]
+  subscribe(observerOrNext: ObserverOrNext<T, R>): Subscription {
+    const observer = normalizeObserver(observerOrNext)
     observer.next(this.value)
     return super.subscribe(observer)
   }
@@ -146,8 +120,8 @@ export function switchMap<T1, T2, R>(
       let activeSubscription: Subscription | null = null
 
       // Define the logic to handle each new value emitted
-      const subscription = source.subscribe(
-        value => {
+      const subscription = source.subscribe({
+        next: value => {
           // Unsubscribe from previous observable (if any)
           if (activeSubscription) {
             activeSubscription()
@@ -159,12 +133,13 @@ export function switchMap<T1, T2, R>(
           // Subscribe to the new observable
           activeSubscription = innerObservable.subscribe(subscriber)
         },
-        subscriber.error,
-        subscriber.complete
-      )
+        error: subscriber.error?.bind(subscriber),
+        complete: subscriber.complete?.bind(subscriber),
+      })
 
       // Return a cleanup function to cancel the subscription
       return () => {
+        console.log("Unsubscribing from source observable")
         if (activeSubscription) {
           activeSubscription()
         }
@@ -177,11 +152,11 @@ export function switchMap<T1, T2, R>(
 export function map<T1, T2, R>(project: (value: T1) => T2) {
   return (source: Observable<T1, R>): Observable<T2, R> => {
     return new Observable<T2, R>(subscriber => {
-      return source.subscribe(
-        value => subscriber.next(project(value)),
-        subscriber.error,
-        subscriber.complete
-      )
+      return source.subscribe({
+        next: value => subscriber.next(project(value)),
+        error: subscriber.error?.bind(subscriber),
+        complete: subscriber.complete?.bind(subscriber),
+      })
     })
   }
 }
@@ -191,14 +166,14 @@ export function catchError<T, R>(
 ) {
   return (source: Observable<T, R>): Observable<T, R> => {
     return new Observable<T, R>(subscriber => {
-      return source.subscribe(
-        subscriber.next,
-        error => {
+      return source.subscribe({
+        next: subscriber.next,
+        error: error => {
           const result = handler(error, source)
           result.subscribe(subscriber)
         },
-        subscriber.complete
-      )
+        complete: subscriber.complete?.bind(subscriber),
+      })
     })
   }
 }
@@ -213,14 +188,14 @@ export function throwError<T, R>(error: R) {
 export function tap<T, R>(next: (value: T) => void) {
   return (source: Observable<T, R>): Observable<T, R> => {
     return new Observable<T, R>(subscriber => {
-      return source.subscribe(
-        value => {
+      return source.subscribe({
+        next: value => {
           next(value)
           subscriber.next(value)
         },
-        subscriber.error,
-        subscriber.complete
-      )
+        error: subscriber.error,
+        complete: subscriber.complete?.bind(subscriber),
+      })
     })
   }
 }
@@ -247,16 +222,16 @@ export function fromPromise<T, R>(promise: Promise<T>) {
 export function distinctUntilChanged<T, R>(source: Observable<T, R>) {
   return new Observable<T, R>(subscriber => {
     let lastValue: T | undefined
-    return source.subscribe(
-      value => {
+    return source.subscribe({
+      next: value => {
         if (value !== lastValue) {
           lastValue = value
           subscriber.next(value)
         }
       },
-      subscriber.error,
-      subscriber.complete
-    )
+      error: subscriber.error?.bind(subscriber),
+      complete: subscriber.complete?.bind(subscriber),
+    })
   })
 }
 
@@ -264,17 +239,23 @@ export function skip<T, R>(count: number) {
   return (source: Observable<T, R>): Observable<T, R> => {
     return new Observable<T, R>(subscriber => {
       let skipped = 0
-      return source.subscribe(
-        value => {
+      return source.subscribe({
+        next: value => {
           if (skipped < count) {
             skipped++
             return
           }
           subscriber.next(value)
         },
-        subscriber.error,
-        subscriber.complete
-      )
+        error: subscriber.error?.bind(subscriber),
+        complete: subscriber.complete?.bind(subscriber),
+      })
     })
   }
+}
+
+function normalizeObserver<T, R>(
+  observer: ObserverOrNext<T, R>
+): Observer<T, R> {
+  return typeof observer === "function" ? {next: observer} : observer
 }

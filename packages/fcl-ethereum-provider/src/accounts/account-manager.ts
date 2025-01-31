@@ -71,11 +71,11 @@ export class AccountManager {
           return throwError(error)
         })
       )
-      .subscribe(
-        this.$address.next.bind(this.$address),
-        this.$address.error.bind(this.$address),
-        this.$address.complete.bind(this.$address)
-      )
+      .subscribe({
+        next: addr => this.$address.next(addr),
+        error: error => this.$address.error(error),
+        complete: () => this.$address.complete(),
+      })
   }
 
   private async fetchCOAFromFlowAddress(flowAddr: string): Promise<string> {
@@ -111,16 +111,18 @@ export class AccountManager {
     }
 
     return new Promise<string | null>((resolve, reject) => {
-      const sub = this.$address.pipe(skip(1)).subscribe(
-        coaAddress => {
-          sub()
-          resolve(coaAddress)
+      const sub = this.$address.pipe(skip(1)).subscribe({
+        next: addr => {
+          if (addr !== null) {
+            sub()
+            resolve(addr)
+          }
         },
-        error => {
+        error: error => {
           sub()
           reject(error)
-        }
-      )
+        },
+      })
     })
   }
 
