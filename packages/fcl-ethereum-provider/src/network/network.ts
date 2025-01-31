@@ -2,15 +2,14 @@ import {FLOW_CHAINS, FlowNetwork} from "../constants"
 import {
   BehaviorSubject,
   fromPromise,
-  Subscribable,
-  Subscriber,
+  Observer,
   Subscription,
   switchMap,
   tap,
 } from "../util/observable"
 import * as fcl from "@onflow/fcl"
 
-export class NetworkManager implements Subscribable<number | null> {
+export class NetworkManager {
   private $network: BehaviorSubject<number | null> = new BehaviorSubject<
     number | null
   >(null)
@@ -46,8 +45,8 @@ export class NetworkManager implements Subscribable<number | null> {
       })
   }
 
-  subscribe(observer: Subscriber<number | null>): Subscription {
-    return this.$network.subscribe(observer)
+  subscribe(callback: (chainId: number | null) => void): Subscription {
+    return this.$network.subscribe(callback)
   }
 
   async getChainId(): Promise<number | null> {

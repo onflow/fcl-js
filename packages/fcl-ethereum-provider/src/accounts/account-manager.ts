@@ -11,42 +11,45 @@ import {
 import {TransactionExecutedEvent} from "../types/events"
 import {
   BehaviorSubject,
+  catchError,
   distinctUntilChanged,
   fromPromise,
   map,
   Observable,
   skip,
-  Subscribable,
   Subscription,
   switchMap,
   tap,
 } from "../util/observable"
 
-export class AccountManager implements Subscribable<string[]> {
+export class AccountManager {
   private user: typeof fcl.currentUser
 
   private $address: BehaviorSubject<string | null> = new BehaviorSubject<
-    string | null
+    string | null,
+    Error
   >(null)
 
-  private isLoading: boolean = true
+  private isLoading: boolean = false
 
   constructor(user: typeof fcl.currentUser) {
     this.user = user
 
+    // Create an observable from the user
     const $user = new Observable<CurrentUser>(subscriber => {
-      return this.user.subscribe(subscriber) as Subscription
+      return this.user.subscribe((currentUser: CurrentUser, error?: Error) => {
+        if (error) {
+          subscriber.error?.(error)
+        } else {
+          subscriber.next(currentUser)
+        }
+      }) as Subscription
     })
-
-    console.log("user", $user)
 
     // Bind $accounts to COA address
     $user
       .pipe(
-        map(snapshot => {
-          console.log("snapshot", snapshot)
-          return snapshot.addr || null
-        }),
+        map(snapshot => snapshot.addr || null),
         distinctUntilChanged,
         tap(() => (this.isLoading = true)),
         switchMap(addr =>
@@ -61,10 +64,16 @@ export class AccountManager implements Subscribable<string[]> {
             })()
           )
         ),
-        tap(() => (this.isLoading = false))
+        tap({
+          next: () => {
+            this.isLoading = false
+          },
+          error: error => {
+            this.isLoading = false
+          },
+        })
       )
       .subscribe(coaAddress => {
-        console.log("setting COA address", coaAddress)
         this.$address.next(coaAddress)
       })
   }
@@ -101,13 +110,18 @@ export class AccountManager implements Subscribable<string[]> {
       return this.$address.getValue()
     }
 
-    return new Promise<string | null>(resolve => {
-      const sub = this.$address.pipe(skip(1)).subscribe(coaAddress => {
-        if (coaAddress !== null) {
+    return new Promise<string | null>((resolve, reject) => {
+      const sub = this.$address.pipe(skip(1)).subscribe(
+        coaAddress => {
           sub()
           resolve(coaAddress)
+        },
+        error => {
+          console.error("Error in COA address observable", error)
+          sub()
+          reject(error)
         }
-      })
+      )
     })
   }
 

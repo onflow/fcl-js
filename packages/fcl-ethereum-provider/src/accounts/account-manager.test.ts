@@ -28,82 +28,76 @@ describe("AccountManager", () => {
     jest.clearAllMocks()
   })
 
-  it("should initialize with null COA address", () => {
+  it("should initialize with null COA address", async () => {
     const accountManager = new AccountManager(user)
-    expect(accountManager.getCOAAddress()).toBeNull()
-    expect(accountManager.getAccounts()).toEqual([])
+    expect(await accountManager.getCOAAddress()).toBeNull()
+    expect(await accountManager.getAccounts()).toEqual([])
   })
 
   it("should reset state when the user is not logged in", async () => {
-    user.snapshot.mockResolvedValueOnce({addr: undefined} as CurrentUser)
+    user.subscribe.mockImplementation(fn => {
+      console.log("subscribing")
+      fn({addr: null})
+      return () => {}
+    })
 
     const accountManager = new AccountManager(user)
 
-    await accountManager.updateCOAAddress()
-
-    expect(accountManager.getCOAAddress()).toBeNull()
-    expect(accountManager.getAccounts()).toEqual([])
+    expect(await accountManager.getCOAAddress()).toBeNull()
+    expect(await accountManager.getAccounts()).toEqual([])
   })
 
   it("should fetch and update COA address when user logs in", async () => {
-    user.snapshot.mockResolvedValue({addr: "0x1"} as CurrentUser)
+    let triggerUserEvent: (user: CurrentUser) => void
+    user.subscribe.mockImplementation(fn => {
+      fn({addr: undefined} as CurrentUser)
+      triggerUserEvent = fn as any
+      return () => {}
+    })
     mockQuery.mockResolvedValue("0x123")
 
     const accountManager = new AccountManager(user)
 
-    await accountManager.updateCOAAddress()
+    triggerUserEvent!({addr: "0x1"} as CurrentUser)
 
-    expect(accountManager.getCOAAddress()).toBe("0x123")
-    expect(accountManager.getAccounts()).toEqual(["0x123"])
+    expect(await accountManager.getCOAAddress()).toBe("0x123")
+    expect(await accountManager.getAccounts()).toEqual(["0x123"])
     expect(fcl.query).toHaveBeenCalledWith({
       cadence: expect.any(String),
       args: expect.any(Function),
     })
   })
 
-  it("should not update COA address if user has not changed and force is false", async () => {
-    user.snapshot.mockResolvedValue({addr: "0x1"} as CurrentUser)
-    mockQuery.mockResolvedValue("0x123")
+  it("should not update COA address if user has not changed", async () => {
+    let triggerUserEvent: (user: CurrentUser) => void
     user.subscribe.mockImplementation(fn => {
-      fn({addr: "0x1"})
+      triggerUserEvent = fn as any
+      fn({addr: undefined} as CurrentUser)
       return () => {}
     })
+    mockQuery.mockResolvedValue("0x123")
 
     const accountManager = new AccountManager(user)
 
-    await accountManager.updateCOAAddress()
-    expect(accountManager.getCOAAddress()).toBe("0x123")
+    triggerUserEvent!({addr: "0x1"} as CurrentUser)
+
+    expect(await accountManager.getCOAAddress()).toBe("0x123")
     expect(fcl.query).toHaveBeenCalledTimes(1)
 
-    // Re-run without changing the address
-    await accountManager.updateCOAAddress()
-    expect(accountManager.getCOAAddress()).toBe("0x123")
+    triggerUserEvent!({addr: "0x1"} as CurrentUser)
+
+    expect(await accountManager.getCOAAddress()).toBe("0x123")
     expect(fcl.query).toHaveBeenCalledTimes(1) // Should not have fetched again
   })
 
-  it("should force update COA address even if user has not changed", async () => {
-    user.snapshot.mockResolvedValue({addr: "0x1"} as CurrentUser)
-    mockQuery.mockResolvedValue("0x123")
+  it("should not update COA address if fetch is outdated when user changes", async () => {
+    let triggerUserEvent: (user: CurrentUser) => void
     user.subscribe.mockImplementation(fn => {
-      fn({addr: "0x1"})
+      triggerUserEvent = fn as any
+      fn({addr: "0x1"} as CurrentUser)
       return () => {}
     })
-
-    const accountManager = new AccountManager(user)
-
-    await accountManager.updateCOAAddress()
-    expect(fcl.query).toHaveBeenCalledTimes(1)
-
-    // Force update
-    await accountManager.updateCOAAddress(true)
-    expect(fcl.query).toHaveBeenCalledTimes(2)
-  })
-
-  it("should not update COA address if fetch is outdated when user changes", async () => {
-    // Simulates the user address changing from 0x1 to 0x2
-    user.snapshot
-      .mockResolvedValueOnce({addr: "0x1"} as CurrentUser) // for 1st call
-      .mockResolvedValueOnce({addr: "0x2"} as CurrentUser) // for 2nd call
+    mockQuery.mockResolvedValue("0x123")
 
     mockQuery
       // 1st fetch: delayed
@@ -115,31 +109,36 @@ describe("AccountManager", () => {
 
     const accountManager = new AccountManager(user)
 
-    const updatePromise1 = accountManager.updateCOAAddress()
-    const updatePromise2 = accountManager.updateCOAAddress()
-    await Promise.all([updatePromise1, updatePromise2])
+    triggerUserEvent!({addr: "0x1"} as CurrentUser)
+    triggerUserEvent!({addr: "0x2"} as CurrentUser)
 
     // The second fetch (for address 0x2) is the latest, so "0x456"
-    expect(accountManager.getCOAAddress()).toBe("0x456")
+    expect(await accountManager.getCOAAddress()).toBe("0x456")
   })
 
   it("should clear COA address if fetch fails and is the latest", async () => {
-    user.snapshot.mockResolvedValueOnce({addr: "0x1"} as CurrentUser)
+    let triggerUserEvent: (user: CurrentUser) => void
+    user.subscribe.mockImplementation(fn => {
+      triggerUserEvent = fn as any
+      fn({addr: undefined} as CurrentUser)
+      return () => {}
+    })
     mockQuery.mockRejectedValueOnce(new Error("Fetch failed"))
 
     const accountManager = new AccountManager(user)
 
-    await expect(accountManager.updateCOAAddress()).rejects.toThrow(
-      "Fetch failed"
-    )
+    triggerUserEvent!({addr: "0x1"} as CurrentUser)
 
     expect(await accountManager.getCOAAddress()).toBeNull()
   })
 
   it("should handle user changes correctly", async () => {
-    user.snapshot
-      .mockResolvedValueOnce({addr: "0x1"} as CurrentUser)
-      .mockResolvedValueOnce({addr: "0x2"} as CurrentUser)
+    let triggerUserEvent: (user: CurrentUser) => void
+    user.subscribe.mockImplementation(fn => {
+      triggerUserEvent = fn as any
+      fn({addr: undefined} as CurrentUser)
+      return () => {}
+    })
 
     mockQuery
       .mockResolvedValueOnce("0x123") // for user 0x1
@@ -147,31 +146,30 @@ describe("AccountManager", () => {
 
     const accountManager = new AccountManager(user)
 
-    await accountManager.updateCOAAddress()
-    expect(accountManager.getCOAAddress()).toBe("0x123")
+    triggerUserEvent!({addr: "0x1"} as CurrentUser)
+    expect(await accountManager.getCOAAddress()).toBe("0x123")
 
-    await accountManager.updateCOAAddress()
-    expect(accountManager.getCOAAddress()).toBe("0x456")
+    triggerUserEvent!({addr: "0x2"} as CurrentUser)
+    expect(await accountManager.getCOAAddress()).toBe("0x456")
   })
 
   it("should call the callback with updated accounts in subscribe", async () => {
-    user.snapshot.mockResolvedValue({addr: "0x1"} as CurrentUser)
     mockQuery.mockResolvedValue("0x123")
 
-    const callback = jest.fn()
+    let triggerUserEvent: (user: CurrentUser) => void
     user.subscribe.mockImplementation(fn => {
-      console.log("subscribing")
-      fn({addr: "0x1"})
+      triggerUserEvent = fn as any
       return () => {}
     })
 
     const accountManager = new AccountManager(user)
 
-    mockQuery.mockResolvedValueOnce("0x123")
-
+    const callback = jest.fn()
     accountManager.subscribe(callback)
 
-    await new Promise(resolve => setTimeout(resolve, 100))
+    triggerUserEvent!({addr: "0x1"} as CurrentUser)
+
+    await new Promise(setImmediate)
 
     expect(callback).toHaveBeenCalledWith(["0x123"])
   })
@@ -216,16 +214,21 @@ describe("AccountManager", () => {
     expect(callback).toHaveBeenCalledWith(["0x123"])
   })
 
-  it("should return an empty array when COA address is null", () => {
-    expect(accountManager.getAccounts()).toEqual([])
+  it("should return an empty array when COA address is null", async () => {
+    const accountManager = new AccountManager(user)
+    expect(await accountManager.getAccounts()).toEqual([])
   })
 
   it("should return COA address array when available", async () => {
-    user.snapshot.mockResolvedValueOnce({addr: "0x1"} as CurrentUser)
+    user.subscribe.mockImplementation(fn => {
+      fn({addr: "0x1"} as CurrentUser)
+      return () => {}
+    })
     mockQuery.mockResolvedValueOnce("0x123")
 
-    await accountManager.updateCOAAddress()
-    expect(accountManager.getAccounts()).toEqual(["0x123"])
+    const accountManager = new AccountManager(user)
+
+    expect(await accountManager.getAccounts()).toEqual(["0x123"])
   })
 })
 
