@@ -180,149 +180,6 @@ export function map<T, R>(
   }
 }
 
-/** concatMap */
-export function concatMap<T, R>(
-  project: (value: T) => Observable<R>
-): (source: Observable<T>) => Observable<R> {
-  return (source: Observable<T>) => {
-    return new Observable<R>(subscriber => {
-      let activeSubscription: Subscription | null = null
-
-      return source.subscribe({
-        next: value => {
-          if (activeSubscription) {
-            // if there's an active subscription, wait for it to complete
-            return
-          }
-          const innerObservable = project(value)
-          activeSubscription = innerObservable.subscribe({
-            next: subscriber.next.bind(subscriber),
-            error: subscriber.error?.bind(subscriber),
-            complete: () => {
-              activeSubscription = null
-            },
-          })
-        },
-        error: subscriber.error?.bind(subscriber),
-        complete: subscriber.complete?.bind(subscriber),
-      })
-    })
-  }
-}
-
-/** catchError */
-export function catchError<T>(
-  handler: (error: any, source: Observable<T>) => Observable<T>
-): (source: Observable<T>) => Observable<T> {
-  return source => {
-    return new Observable<T>(subscriber => {
-      return source.subscribe({
-        next: subscriber.next,
-        error: error => {
-          const result = handler(error, source)
-          result.subscribe(subscriber)
-        },
-        complete: subscriber.complete?.bind(subscriber),
-      })
-    })
-  }
-}
-
-/** shareReplay */
-export function shareReplay<T>(
-  bufferSize = 1
-): (source: Observable<T>) => Observable<T> {
-  return source => {
-    let cache: T[] = []
-    let hasCompleted = false
-    let hasErrored = false
-    let cachedError: any = null
-
-    let subscribers: Observer<T>[] = []
-    let sourceSubscription: Subscription | null = null
-
-    function subscribeToSource() {
-      sourceSubscription = source.subscribe({
-        next: (value: T) => {
-          cache.push(value)
-          if (cache.length > bufferSize) {
-            cache.shift()
-          }
-          subscribers.forEach(sub => sub.next(value))
-        },
-        error: (err: any) => {
-          hasErrored = true
-          cachedError = err
-          subscribers.forEach(sub => sub.error?.(err))
-        },
-        complete: () => {
-          hasCompleted = true
-          subscribers.forEach(sub => sub.complete?.())
-        },
-      })
-    }
-
-    return new Observable<T>(subscriber => {
-      // If no source subscription, subscribe now
-      if (!sourceSubscription) {
-        subscribeToSource()
-      }
-
-      // If we've already errored, immediately error this subscriber
-      if (hasErrored && cachedError !== null) {
-        subscriber.error?.(cachedError)
-        return () => {}
-      }
-
-      // If the source completed, replay then complete
-      if (hasCompleted) {
-        // Replay any cached values
-        for (const c of cache) {
-          subscriber.next(c)
-        }
-        subscriber.complete?.()
-        return () => {}
-      }
-
-      subscribers.push(subscriber)
-      // Replay the cache
-      for (const c of cache) {
-        subscriber.next(c)
-      }
-
-      return () => {
-        subscribers = subscribers.filter(s => s !== subscriber)
-      }
-    })
-  }
-}
-
-/** throwError */
-export function throwError<T>(error: any): Observable<T> {
-  return new Observable<T>(subscriber => {
-    subscriber.error?.(error)
-    return () => {}
-  })
-}
-
-/** tap */
-export function tap<T>(
-  next: (value: T) => void
-): (source: Observable<T>) => Observable<T> {
-  return source => {
-    return new Observable<T>(subscriber => {
-      return source.subscribe({
-        next: value => {
-          next(value)
-          subscriber.next(value)
-        },
-        error: subscriber.error,
-        complete: subscriber.complete?.bind(subscriber),
-      })
-    })
-  }
-}
-
 /** from (promise) */
 export function from<T>(promise: Promise<T>): Observable<T> {
   return new Observable<T>(subscriber => {
@@ -353,7 +210,7 @@ export async function firstValueFrom<T>(source: Observable<T>): Promise<T> {
     const unsub = source.subscribe({
       next: value => {
         resolve(value)
-        // unsub after the first value
+        // wait until the next tick for unsub to be defined
         setTimeout(() => unsub(), 0)
       },
       error: reject,
@@ -377,28 +234,6 @@ export function distinctUntilChanged<T>(): (
             lastValue = value
             subscriber.next(value)
           }
-        },
-        error: subscriber.error?.bind(subscriber),
-        complete: subscriber.complete?.bind(subscriber),
-      })
-    })
-  }
-}
-
-/** skip */
-export function skip<T>(
-  count: number
-): (source: Observable<T>) => Observable<T> {
-  return source => {
-    return new Observable<T>(subscriber => {
-      let skipped = 0
-      return source.subscribe({
-        next: value => {
-          if (skipped < count) {
-            skipped++
-            return
-          }
-          subscriber.next(value)
         },
         error: subscriber.error?.bind(subscriber),
         complete: subscriber.complete?.bind(subscriber),
