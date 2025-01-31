@@ -92,10 +92,7 @@ export class AccountManager {
       )
       .subscribe($addressState)
 
-    this.$addressStore = $addressState.pipe(
-      filter(({isLoading}) => !isLoading),
-      tap(x => console.log("COA address", x))
-    )
+    this.$addressStore = $addressState.pipe(filter(({isLoading}) => !isLoading))
 
     this.$addressStore.subscribe({
       error: error => {
@@ -246,7 +243,6 @@ export class AccountManager {
     from: string
   ): Promise<EthSignatureResponse> {
     const coaAddress = await this.getCOAAddress()
-    console.log("coaAddress", coaAddress)
     if (!coaAddress) {
       throw new Error(
         "COA address is not available. User might not be authenticated."

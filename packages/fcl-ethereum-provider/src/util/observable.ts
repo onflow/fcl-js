@@ -138,7 +138,6 @@ export function switchMap<T1, T2, R>(
 
       // Return a cleanup function to cancel the subscription
       return () => {
-        console.log("Unsubscribing from source observable")
         if (activeSubscription) {
           activeSubscription()
         }
@@ -344,7 +343,6 @@ export async function firstValueFrom<T, R = Error>(
         setTimeout(() => {
           sub()
         }, 0)
-        console.log("RESOLVING", {value})
       },
       error: reject,
       complete: () => {

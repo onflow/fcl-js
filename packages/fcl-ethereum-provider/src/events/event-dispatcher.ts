@@ -57,7 +57,6 @@ export class EventDispatcher {
     event: E,
     listener: EventCallback<ProviderEvents[E]>
   ): void {
-    console.log(this.subscriptions[event])
     this.subscriptions[event].get(listener)?.()
     this.subscriptions[event].delete(listener)
   }
