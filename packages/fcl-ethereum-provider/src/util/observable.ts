@@ -49,6 +49,14 @@ export class Observable<T, R = Error> {
     op4: (source: Observable<T3, R3>) => Observable<T4, R4>,
     op5: (source: Observable<T4, R4>) => Observable<T5, R5>
   ): Observable<T5, R5>
+  pipe<T1, R1, T2, R2, T3, R3, T4, R4, T5, R5, T6, R6>(
+    op1: (source: Observable<T, R>) => Observable<T1, R1>,
+    op2: (source: Observable<T1, R1>) => Observable<T2, R2>,
+    op3: (source: Observable<T2, R2>) => Observable<T3, R3>,
+    op4: (source: Observable<T3, R3>) => Observable<T4, R4>,
+    op5: (source: Observable<T4, R4>) => Observable<T5, R5>,
+    op6: (source: Observable<T5, R5>) => Observable<T6, R6>
+  ): Observable<T6, R6>
   pipe(
     ...operators: ((input: Observable<any, any>) => Observable<any, any>)[]
   ): Observable<any, any> {
@@ -180,14 +188,16 @@ export function map<T1, T2, R>(project: (value: T1) => T2) {
   }
 }
 
-export function catchError<T, R>(handler: (error: R) => Observable<T, R>) {
+export function catchError<T, R>(
+  handler: (error: R, source: Observable<T, R>) => Observable<T, R>
+) {
   return (source: Observable<T, R>): Observable<T, R> => {
     return new Observable<T, R>(subscriber => {
       return source.subscribe(
         subscriber.next,
         error => {
-          const observable = handler(error)
-          observable.subscribe(subscriber)
+          const result = handler(error, source)
+          result.subscribe(subscriber)
         },
         subscriber.complete
       )
@@ -195,8 +205,14 @@ export function catchError<T, R>(handler: (error: R) => Observable<T, R>) {
   }
 }
 
-export function tap<T, R>(observerOrNext: ObserverOrNext<T, R>) {
-  const {next, error, complete} = normalizeObserver(observerOrNext)
+export function throwError<T, R>(error: R) {
+  return new Observable<T, R>(subscriber => {
+    subscriber.error?.(error)
+    return () => {}
+  })
+}
+
+export function tap<T, R>(next: (value: T) => void) {
   return (source: Observable<T, R>): Observable<T, R> => {
     return new Observable<T, R>(subscriber => {
       return source.subscribe(
@@ -204,14 +220,8 @@ export function tap<T, R>(observerOrNext: ObserverOrNext<T, R>) {
           next(value)
           subscriber.next(value)
         },
-        err => {
-          error?.(err)
-          subscriber.error?.(err)
-        },
-        () => {
-          complete?.()
-          subscriber.complete?.()
-        }
+        subscriber.error,
+        subscriber.complete
       )
     })
   }

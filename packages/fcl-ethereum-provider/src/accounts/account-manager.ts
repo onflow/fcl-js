@@ -20,6 +20,7 @@ import {
   Subscription,
   switchMap,
   tap,
+  throwError,
 } from "../util/observable"
 
 export class AccountManager {
@@ -60,22 +61,21 @@ export class AccountManager {
                 return null
               }
               console.log("fetching COA from flow address", addr)
-              return this.fetchCOAFromFlowAddress(addr)
+              return await this.fetchCOAFromFlowAddress(addr)
             })()
           )
         ),
-        tap({
-          next: () => {
-            this.isLoading = false
-          },
-          error: error => {
-            this.isLoading = false
-          },
+        tap(() => (this.isLoading = false)),
+        catchError(error => {
+          this.isLoading = false
+          return throwError(error)
         })
       )
-      .subscribe(coaAddress => {
-        this.$address.next(coaAddress)
-      })
+      .subscribe(
+        this.$address.next.bind(this.$address),
+        this.$address.error.bind(this.$address)
+        this.$address.complete.bind(this.$address)
+      )
   }
 
   private async fetchCOAFromFlowAddress(flowAddr: string): Promise<string> {

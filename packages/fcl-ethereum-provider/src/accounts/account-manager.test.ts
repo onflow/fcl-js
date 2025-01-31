@@ -116,7 +116,7 @@ describe("AccountManager", () => {
     expect(await accountManager.getCOAAddress()).toBe("0x456")
   })
 
-  it("should clear COA address if fetch fails and is the latest", async () => {
+  it("should throw if COA address fetch fails", async () => {
     let triggerUserEvent: (user: CurrentUser) => void
     user.subscribe.mockImplementation(fn => {
       triggerUserEvent = fn as any
@@ -129,7 +129,7 @@ describe("AccountManager", () => {
 
     triggerUserEvent!({addr: "0x1"} as CurrentUser)
 
-    expect(await accountManager.getCOAAddress()).toBeNull()
+    expect(accountManager.getCOAAddress()).rejects.toThrow("Fetch failed")
   })
 
   it("should handle user changes correctly", async () => {
