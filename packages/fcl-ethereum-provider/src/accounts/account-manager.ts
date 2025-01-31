@@ -16,7 +16,7 @@ import {
   distinctUntilChanged,
   filter,
   firstValueFrom,
-  fromPromise,
+  from,
   map,
   Observable,
   of,
@@ -52,7 +52,7 @@ export class AccountManager {
     $user
       .pipe(
         map(snapshot => snapshot.addr || null),
-        distinctUntilChanged,
+        distinctUntilChanged(),
         switchMap(addr =>
           concat(
             of({isLoading: true} as {
@@ -60,7 +60,7 @@ export class AccountManager {
               address: string | null
               error: Error | null
             }),
-            fromPromise(
+            from(
               (async () => {
                 try {
                   if (!addr) {

@@ -1,75 +1,87 @@
-export class Observable<T, R = Error> {
-  private _subscribe: (subscriber: Observer<T, R>) => Subscription
-  constructor(subscribe: (subscriber: Observer<T, R>) => Subscription) {
+/*******************************
+ * Core Observable/Types
+ *******************************/
+
+export class Observable<T> {
+  private _subscribe: (subscriber: Observer<T>) => Subscription
+
+  constructor(subscribe: (subscriber: Observer<T>) => Subscription) {
     this._subscribe = subscribe
   }
 
-  subscribe(observerOrNext: ObserverOrNext<T, R>): Subscription {
+  subscribe(observerOrNext: ObserverOrNext<T>): Subscription {
     const observer = normalizeObserver(observerOrNext)
     return this._subscribe(observer)
   }
 
-  pipe<T1, R1>(
-    op1: (source: Observable<T, R>) => Observable<T1, R1>
-  ): Observable<T1, R1>
-  pipe<T1, R1, T2, R2>(
-    op1: (source: Observable<T, R>) => Observable<T1, R1>,
-    op2: (source: Observable<T1, R1>) => Observable<T2, R2>
-  ): Observable<T2, R2>
-  pipe<T1, R1, T2, R2, T3, R3>(
-    op1: (source: Observable<T, R>) => Observable<T1, R1>,
-    op2: (source: Observable<T1, R1>) => Observable<T2, R2>,
-    op3: (source: Observable<T2, R2>) => Observable<T3, R3>
-  ): Observable<T3, R3>
-  pipe<T1, R1, T2, R2, T3, R3, T4, R4>(
-    op1: (source: Observable<T, R>) => Observable<T1, R1>,
-    op2: (source: Observable<T1, R1>) => Observable<T2, R2>,
-    op3: (source: Observable<T2, R2>) => Observable<T3, R3>,
-    op4: (source: Observable<T3, R3>) => Observable<T4, R4>
-  ): Observable<T4, R4>
-  pipe<T1, R1, T2, R2, T3, R3, T4, R4, T5, R5>(
-    op1: (source: Observable<T, R>) => Observable<T1, R1>,
-    op2: (source: Observable<T1, R1>) => Observable<T2, R2>,
-    op3: (source: Observable<T2, R2>) => Observable<T3, R3>,
-    op4: (source: Observable<T3, R3>) => Observable<T4, R4>,
-    op5: (source: Observable<T4, R4>) => Observable<T5, R5>
-  ): Observable<T5, R5>
-  pipe<T1, R1, T2, R2, T3, R3, T4, R4, T5, R5, T6, R6>(
-    op1: (source: Observable<T, R>) => Observable<T1, R1>,
-    op2: (source: Observable<T1, R1>) => Observable<T2, R2>,
-    op3: (source: Observable<T2, R2>) => Observable<T3, R3>,
-    op4: (source: Observable<T3, R3>) => Observable<T4, R4>,
-    op5: (source: Observable<T4, R4>) => Observable<T5, R5>,
-    op6: (source: Observable<T5, R5>) => Observable<T6, R6>
-  ): Observable<T6, R6>
+  /**
+   * Pipe overloads — remove error type parameter
+   */
+  pipe<T1>(op1: (source: Observable<T>) => Observable<T1>): Observable<T1>
+  pipe<T1, T2>(
+    op1: (source: Observable<T>) => Observable<T1>,
+    op2: (source: Observable<T1>) => Observable<T2>
+  ): Observable<T2>
+  pipe<T1, T2, T3>(
+    op1: (source: Observable<T>) => Observable<T1>,
+    op2: (source: Observable<T1>) => Observable<T2>,
+    op3: (source: Observable<T2>) => Observable<T3>
+  ): Observable<T3>
+  pipe<T1, T2, T3, T4>(
+    op1: (source: Observable<T>) => Observable<T1>,
+    op2: (source: Observable<T1>) => Observable<T2>,
+    op3: (source: Observable<T2>) => Observable<T3>,
+    op4: (source: Observable<T3>) => Observable<T4>
+  ): Observable<T4>
+  pipe<T1, T2, T3, T4, T5>(
+    op1: (source: Observable<T>) => Observable<T1>,
+    op2: (source: Observable<T1>) => Observable<T2>,
+    op3: (source: Observable<T2>) => Observable<T3>,
+    op4: (source: Observable<T3>) => Observable<T4>,
+    op5: (source: Observable<T4>) => Observable<T5>
+  ): Observable<T5>
+  pipe<T1, T2, T3, T4, T5, T6>(
+    op1: (source: Observable<T>) => Observable<T1>,
+    op2: (source: Observable<T1>) => Observable<T2>,
+    op3: (source: Observable<T2>) => Observable<T3>,
+    op4: (source: Observable<T3>) => Observable<T4>,
+    op5: (source: Observable<T4>) => Observable<T5>,
+    op6: (source: Observable<T5>) => Observable<T6>
+  ): Observable<T6>
+
   pipe(
-    ...operators: ((input: Observable<any, any>) => Observable<any, any>)[]
-  ): Observable<any, any> {
+    ...operators: Array<(input: Observable<any>) => Observable<any>>
+  ): Observable<any> {
     return operators.reduce(
       (prev, operator) => operator(prev),
-      this as Observable<any, any>
+      this as Observable<any>
     )
   }
 }
 
 export type Subscription = () => void
 
-export type Observer<T, R = Error> = {
+export type Observer<T> = {
   next: (value: T) => void
   complete?: () => void
-  error?: (error: R) => void
+  error?: (error: any) => void // In RxJS, `error` is usually typed as `any`
 }
 
-export type ObserverOrNext<T, R = Error> = Observer<T, R> | ((value: T) => void)
+// A type for either an Observer<T> or a next callback
+export type ObserverOrNext<T> = Observer<T> | ((value: T) => void)
 
-export class Subject<T, R = Error> extends Observable<T, R> {
-  private subscribers: Observer<T, R>[] = []
+/*******************************
+ * Subjects
+ *******************************/
+
+export class Subject<T> extends Observable<T> {
+  private subscribers: Observer<T>[] = []
 
   constructor() {
-    super(observers => {
-      this.subscribers.push(observers)
+    super(subscriber => {
+      this.subscribers.push(subscriber)
       return () => {
-        this.subscribers = this.subscribers.filter(s => s !== observers)
+        this.subscribers = this.subscribers.filter(s => s !== subscriber)
       }
     })
   }
@@ -83,11 +95,12 @@ export class Subject<T, R = Error> extends Observable<T, R> {
   }
 
   complete() {
+    this.subscribers.forEach(subscriber => subscriber.complete?.())
     this.subscribers = []
   }
 }
 
-export class BehaviorSubject<T, R = Error> extends Subject<T, R> {
+export class BehaviorSubject<T> extends Subject<T> {
   private value: T
 
   constructor(initialValue: T) {
@@ -104,52 +117,60 @@ export class BehaviorSubject<T, R = Error> extends Subject<T, R> {
     return this.value
   }
 
-  subscribe(observerOrNext: ObserverOrNext<T, R>): Subscription {
+  subscribe(observerOrNext: ObserverOrNext<T>): Subscription {
     const observer = normalizeObserver(observerOrNext)
+    // Emit the current value immediately
     observer.next(this.value)
     return super.subscribe(observer)
   }
 }
 
-export function switchMap<T1, T2, R>(
-  project: (value: T1) => Observable<T2, R>
-) {
-  return (source: Observable<T1, R>): Observable<T2, R> => {
-    return new Observable<T2, R>(subscriber => {
+/*******************************
+ * Operators
+ *******************************/
+
+/** switchMap */
+export function switchMap<T, R>(
+  project: (value: T) => Observable<R>
+): (source: Observable<T>) => Observable<R> {
+  return (source: Observable<T>) => {
+    return new Observable<R>(subscriber => {
       let activeSubscription: Subscription | null = null
 
-      // Define the logic to handle each new value emitted
       const subscription = source.subscribe({
         next: value => {
-          // Unsubscribe from previous observable (if any)
           if (activeSubscription) {
             activeSubscription()
           }
-
-          // Create a new observable from the current value
           const innerObservable = project(value)
-
-          // Subscribe to the new observable
-          activeSubscription = innerObservable.subscribe(subscriber)
+          activeSubscription = innerObservable.subscribe({
+            next: subscriber.next.bind(subscriber),
+            error: subscriber.error?.bind(subscriber),
+            complete: () => {
+              activeSubscription = null
+            },
+          })
         },
         error: subscriber.error?.bind(subscriber),
         complete: subscriber.complete?.bind(subscriber),
       })
 
-      // Return a cleanup function to cancel the subscription
       return () => {
         if (activeSubscription) {
           activeSubscription()
         }
-        subscription() // Unsubscribe from the source observable
+        subscription()
       }
     })
   }
 }
 
-export function map<T1, T2, R>(project: (value: T1) => T2) {
-  return (source: Observable<T1, R>): Observable<T2, R> => {
-    return new Observable<T2, R>(subscriber => {
+/** map */
+export function map<T, R>(
+  project: (value: T) => R
+): (source: Observable<T>) => Observable<R> {
+  return (source: Observable<T>) => {
+    return new Observable<R>(subscriber => {
       return source.subscribe({
         next: value => subscriber.next(project(value)),
         error: subscriber.error?.bind(subscriber),
@@ -159,17 +180,165 @@ export function map<T1, T2, R>(project: (value: T1) => T2) {
   }
 }
 
-export function fromPromise<T, R = Error>(promise: Promise<T>) {
-  return new Observable<T, R>(subscriber => {
+/** concatMap */
+export function concatMap<T, R>(
+  project: (value: T) => Observable<R>
+): (source: Observable<T>) => Observable<R> {
+  return (source: Observable<T>) => {
+    return new Observable<R>(subscriber => {
+      let activeSubscription: Subscription | null = null
+
+      return source.subscribe({
+        next: value => {
+          if (activeSubscription) {
+            // if there's an active subscription, wait for it to complete
+            return
+          }
+          const innerObservable = project(value)
+          activeSubscription = innerObservable.subscribe({
+            next: subscriber.next.bind(subscriber),
+            error: subscriber.error?.bind(subscriber),
+            complete: () => {
+              activeSubscription = null
+            },
+          })
+        },
+        error: subscriber.error?.bind(subscriber),
+        complete: subscriber.complete?.bind(subscriber),
+      })
+    })
+  }
+}
+
+/** catchError */
+export function catchError<T>(
+  handler: (error: any, source: Observable<T>) => Observable<T>
+): (source: Observable<T>) => Observable<T> {
+  return source => {
+    return new Observable<T>(subscriber => {
+      return source.subscribe({
+        next: subscriber.next,
+        error: error => {
+          const result = handler(error, source)
+          result.subscribe(subscriber)
+        },
+        complete: subscriber.complete?.bind(subscriber),
+      })
+    })
+  }
+}
+
+/** shareReplay */
+export function shareReplay<T>(
+  bufferSize = 1
+): (source: Observable<T>) => Observable<T> {
+  return source => {
+    let cache: T[] = []
+    let hasCompleted = false
+    let hasErrored = false
+    let cachedError: any = null
+
+    let subscribers: Observer<T>[] = []
+    let sourceSubscription: Subscription | null = null
+
+    function subscribeToSource() {
+      sourceSubscription = source.subscribe({
+        next: (value: T) => {
+          cache.push(value)
+          if (cache.length > bufferSize) {
+            cache.shift()
+          }
+          subscribers.forEach(sub => sub.next(value))
+        },
+        error: (err: any) => {
+          hasErrored = true
+          cachedError = err
+          subscribers.forEach(sub => sub.error?.(err))
+        },
+        complete: () => {
+          hasCompleted = true
+          subscribers.forEach(sub => sub.complete?.())
+        },
+      })
+    }
+
+    return new Observable<T>(subscriber => {
+      // If no source subscription, subscribe now
+      if (!sourceSubscription) {
+        subscribeToSource()
+      }
+
+      // If we've already errored, immediately error this subscriber
+      if (hasErrored && cachedError !== null) {
+        subscriber.error?.(cachedError)
+        return () => {}
+      }
+
+      // If the source completed, replay then complete
+      if (hasCompleted) {
+        // Replay any cached values
+        for (const c of cache) {
+          subscriber.next(c)
+        }
+        subscriber.complete?.()
+        return () => {}
+      }
+
+      subscribers.push(subscriber)
+      // Replay the cache
+      for (const c of cache) {
+        subscriber.next(c)
+      }
+
+      return () => {
+        subscribers = subscribers.filter(s => s !== subscriber)
+      }
+    })
+  }
+}
+
+/** throwError */
+export function throwError<T>(error: any): Observable<T> {
+  return new Observable<T>(subscriber => {
+    subscriber.error?.(error)
+    return () => {}
+  })
+}
+
+/** tap */
+export function tap<T>(
+  next: (value: T) => void
+): (source: Observable<T>) => Observable<T> {
+  return source => {
+    return new Observable<T>(subscriber => {
+      return source.subscribe({
+        next: value => {
+          next(value)
+          subscriber.next(value)
+        },
+        error: subscriber.error,
+        complete: subscriber.complete?.bind(subscriber),
+      })
+    })
+  }
+}
+
+/** from (promise) */
+export function from<T>(promise: Promise<T>): Observable<T> {
+  return new Observable<T>(subscriber => {
     let isCancelled = false
+
     promise
       .then(value => {
-        if (isCancelled) return
-        subscriber.next(value)
+        if (!isCancelled) {
+          subscriber.next(value)
+          subscriber.complete?.()
+        }
       })
       .catch(error => {
-        if (isCancelled) return
-        subscriber.error?.(error)
+        if (!isCancelled) {
+          subscriber.error?.(error)
+        }
       })
 
     return () => {
@@ -178,16 +347,14 @@ export function fromPromise<T, R = Error>(promise: Promise<T>) {
   })
 }
 
-export async function firstValueFrom<T, R = Error>(
-  source: Observable<T, R>
-): Promise<T> {
-  return await new Promise((resolve, reject) => {
-    const sub = source.subscribe({
+/** firstValueFrom */
+export async function firstValueFrom<T>(source: Observable<T>): Promise<T> {
+  return await new Promise<T>((resolve, reject) => {
+    const unsub = source.subscribe({
       next: value => {
         resolve(value)
-        setTimeout(() => {
-          sub()
-        }, 0)
+        // unsub after the first value
+        setTimeout(() => unsub(), 0)
       },
       error: reject,
       complete: () => {
@@ -197,24 +364,52 @@ export async function firstValueFrom<T, R = Error>(
   })
 }
 
-export function distinctUntilChanged<T, R>(source: Observable<T, R>) {
-  return new Observable<T, R>(subscriber => {
-    let lastValue: T | undefined
-    return source.subscribe({
-      next: value => {
-        if (value !== lastValue) {
-          lastValue = value
-          subscriber.next(value)
-        }
-      },
-      error: subscriber.error?.bind(subscriber),
-      complete: subscriber.complete?.bind(subscriber),
+/** distinctUntilChanged */
+export function distinctUntilChanged<T>(): (
+  source: Observable<T>
+) => Observable<T> {
+  return source => {
+    return new Observable<T>(subscriber => {
+      let lastValue: T | undefined
+      return source.subscribe({
+        next: value => {
+          if (value !== lastValue) {
+            lastValue = value
+            subscriber.next(value)
+          }
+        },
+        error: subscriber.error?.bind(subscriber),
+        complete: subscriber.complete?.bind(subscriber),
+      })
     })
-  })
+  }
 }
 
-export function concat<T, R>(...sources: Observable<T, R>[]) {
-  return new Observable<T, R>(subscriber => {
+/** skip */
+export function skip<T>(
+  count: number
+): (source: Observable<T>) => Observable<T> {
+  return source => {
+    return new Observable<T>(subscriber => {
+      let skipped = 0
+      return source.subscribe({
+        next: value => {
+          if (skipped < count) {
+            skipped++
+            return
+          }
+          subscriber.next(value)
+        },
+        error: subscriber.error?.bind(subscriber),
+        complete: subscriber.complete?.bind(subscriber),
+      })
+    })
+  }
+}
+
+/** concat */
+export function concat<T>(...sources: Observable<T>[]): Observable<T> {
+  return new Observable<T>(subscriber => {
     let activeSubscription: Subscription | null = null
 
     function subscribeNext() {
@@ -227,7 +422,7 @@ export function concat<T, R>(...sources: Observable<T, R>[]) {
       activeSubscription = source.subscribe({
         next: subscriber.next.bind(subscriber),
         error: subscriber.error?.bind(subscriber),
-        complete() {
+        complete: () => {
           activeSubscription = null
           subscribeNext()
         },
@@ -242,9 +437,12 @@ export function concat<T, R>(...sources: Observable<T, R>[]) {
   })
 }
 
-export function filter<T, R>(predicate: (value: T) => boolean) {
-  return (source: Observable<T, R>): Observable<T, R> => {
-    return new Observable<T, R>(subscriber => {
+/** filter */
+export function filter<T>(
+  predicate: (value: T) => boolean
+): (source: Observable<T>) => Observable<T> {
+  return source => {
+    return new Observable<T>(subscriber => {
       return source.subscribe({
         next: value => {
           if (predicate(value)) {
@@ -258,7 +456,8 @@ export function filter<T, R>(predicate: (value: T) => boolean) {
   }
 }
 
-export function of<T>(value: T) {
+/** of */
+export function of<T>(value: T): Observable<T> {
   return new Observable<T>(subscriber => {
     subscriber.next(value)
     subscriber.complete?.()
@@ -266,8 +465,10 @@ export function of<T>(value: T) {
   })
 }
 
-function normalizeObserver<T, R>(
-  observer: ObserverOrNext<T, R>
-): Observer<T, R> {
+/*******************************
+ * Internal utility
+ *******************************/
+
+function normalizeObserver<T>(observer: ObserverOrNext<T>): Observer<T> {
   return typeof observer === "function" ? {next: observer} : observer
 }
