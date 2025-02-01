@@ -39,14 +39,14 @@ export class NetworkManager {
     // Bind $network to chainId
     $config
       .pipe(
+        map(cfg => cfg?.[ACCESS_NODE_API_KEY]),
         distinctUntilChanged(),
-        switchMap(cfg =>
+        switchMap(accessNode =>
           concat(
             of({isLoading: true} as ChainIdStore),
             from(
               (async () => {
                 try {
-                  const accessNode = cfg?.[ACCESS_NODE_API_KEY]
                   const flowNetwork = (await fcl.getChainId({
                     node: accessNode,
                   })) as FlowNetwork

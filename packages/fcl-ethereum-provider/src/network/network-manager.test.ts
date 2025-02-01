@@ -113,6 +113,23 @@ describe("network manager", () => {
     unsub()
 
     expect(chainIds).toEqual([747, 747, 747])
+    expect(fcl.getChainId).toHaveBeenCalledTimes(3)
+  })
+
+  test("should not query chain id multiple times for same access node", async () => {
+    jest.mocked(fcl.getChainId).mockResolvedValue("mainnet")
+
+    const config = mockConfig()
+    await config.set({
+      "accessNode.api": "https://example.com",
+    })
+
+    const manager = new NetworkManager(config.mock)
+
+    await manager.getChainId()
+    await manager.getChainId()
+    await manager.getChainId()
+
     expect(fcl.getChainId).toHaveBeenCalledTimes(1)
   })
 })
