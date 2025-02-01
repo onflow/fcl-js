@@ -1,5 +1,6 @@
 import {AccountManager} from "../accounts/account-manager"
 import {NetworkManager} from "../network/network-manager"
+import {BehaviorSubject, Subject} from "../util/observable"
 import {EventDispatcher} from "./event-dispatcher"
 
 jest.mock("../accounts/account-manager")
@@ -111,10 +112,9 @@ describe("event dispatcher", () => {
     const networkManager: jest.Mocked<NetworkManager> =
       new (NetworkManager as any)()
 
-    let mockNetMgrSubCb: (chainId: number) => void
+    let mockSubject = new Subject<number | null>()
     networkManager.subscribe.mockImplementation(cb => {
-      mockNetMgrSubCb = cb
-      return () => {}
+      return mockSubject.subscribe(cb)
     })
     const listener = jest.fn()
 
@@ -126,7 +126,7 @@ describe("event dispatcher", () => {
     expect(networkManager.subscribe).toHaveBeenCalledWith(expect.any(Function))
 
     // Simulate network change from network manager
-    mockNetMgrSubCb!(747)
+    mockSubject.next(0x2eb)
 
     expect(listener).toHaveBeenCalled()
     expect(listener).toHaveBeenCalledTimes(1)
