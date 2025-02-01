@@ -1,5 +1,6 @@
 import {EventCallback, ProviderEvents} from "../types/provider"
 import {AccountManager} from "../accounts/account-manager"
+import {NetworkManager} from "../network/network-manager"
 import {Observable, Subscription} from "../util/observable"
 
 export class EventDispatcher {
@@ -13,7 +14,7 @@ export class EventDispatcher {
     >
   }
 
-  constructor(accountManager: AccountManager) {
+  constructor(accountManager: AccountManager, networkManager: NetworkManager) {
     this.$emitters = {
       accountsChanged: new Observable(subscriber => {
         return accountManager.subscribe(accounts => {
@@ -21,8 +22,10 @@ export class EventDispatcher {
         })
       }),
       chainChanged: new Observable(subscriber => {
-        subscriber.complete?.()
-        return () => {}
+        return networkManager.subscribe(chainId => {
+          if (!chainId) return
+          subscriber.next(`0x${chainId.toString(16)}`)
+        })
       }),
       connect: new Observable(subscriber => {
         subscriber.complete?.()
