@@ -160,6 +160,14 @@ export class AccountManager {
       FLOW_CONTRACTS[ContractType.EVM][flowNetwork]
     )
 
+    // Check if the signer address matches the authenticated COA address
+    const expectedCOAAddress = await this.getCOAAddress()
+    if (from.toLowerCase() !== expectedCOAAddress?.toLowerCase()) {
+      throw new Error(
+        `Signer address does not match authenticated COA address. Expected: ${expectedCOAAddress}, got: ${from}`
+      )
+    }
+
     const txId = await fcl.mutate({
       cadence: `import EVM from ${evmContractAddress}
         

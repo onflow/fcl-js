@@ -201,7 +201,7 @@ describe("send transaction", () => {
   })
 
   test("send transaction mainnet", async () => {
-    const user = mockUser().mock
+    const user = mockUser({addr: "0x4444"} as CurrentUser).mock
     const accountManager = new AccountManager(user)
 
     const mockTxResult = {
@@ -219,6 +219,7 @@ describe("send transaction", () => {
 
     jest.mocked(fcl.tx).mockReturnValue(mockTxResult)
     jest.mocked(fcl.mutate).mockResolvedValue("1111")
+    jest.mocked(fcl.query).mockResolvedValue("0x1234")
 
     const tx = {
       to: "0x1234",
