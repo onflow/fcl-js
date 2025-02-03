@@ -1,7 +1,5 @@
-// hash-utils.test.ts
-
 import {keccak_256} from "@noble/hashes/sha3"
-import {utf8ToBytes, bytesToHex} from "@noble/hashes/utils"
+import {bytesToHex} from "@noble/hashes/utils"
 import {concat, arrayify} from "@ethersproject/bytes"
 import {_TypedDataEncoder as TypedDataEncoder} from "@ethersproject/hash"
 import {TypedData} from "./types/eth"
@@ -58,20 +56,10 @@ describe("Hash Utils", () => {
   })
 
   describe("hashTypedDataLegacy", () => {
-    it("should hash data correctly for legacy", () => {
-      const result = hashTypedDataLegacy(mockTypedData)
-
-      const expectedInput = utf8ToBytes(JSON.stringify(mockTypedData))
-      expect(keccak_256).toHaveBeenCalledWith(expectedInput)
-
-      // Our mock returns Uint8Array.from([0xab, 0xcd, 0xef, 0x12, 0x34, 0x56, 0x78, 0x90]),
-      // so the expected legacy hash is:
-      const expectedHash =
-        "0x" +
-        bytesToHex(
-          Uint8Array.from([0xab, 0xcd, 0xef, 0x12, 0x34, 0x56, 0x78, 0x90])
-        )
-      expect(result).toBe(expectedHash)
+    it("should throw an error for legacy (legacy support is not provided)", () => {
+      expect(() => hashTypedDataLegacy(mockTypedData)).toThrowError(
+        "Legacy signTypedData is not supported. Please use eth_signTypedData_v3 or eth_signTypedData_v4 instead."
+      )
     })
   })
 

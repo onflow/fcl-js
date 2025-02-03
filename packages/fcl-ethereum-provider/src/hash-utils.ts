@@ -1,16 +1,13 @@
 import {keccak_256} from "@noble/hashes/sha3"
-import {utf8ToBytes, bytesToHex} from "@noble/hashes/utils"
+import {bytesToHex} from "@noble/hashes/utils"
 import {arrayify, concat} from "@ethersproject/bytes"
 import {_TypedDataEncoder as TypedDataEncoder} from "@ethersproject/hash"
 import {TypedData} from "./types/eth"
 
-/**
- * Hash for legacy `eth_signTypedData`
- * (Non‑EIP‑712 compliant; uses a simple JSON‑stringify)
- */
 export function hashTypedDataLegacy(data: TypedData): string {
-  const hash = keccak_256(utf8ToBytes(JSON.stringify(data)))
-  return "0x" + bytesToHex(hash)
+  throw new Error(
+    "Legacy signTypedData is not supported. Please use eth_signTypedData_v3 or eth_signTypedData_v4 instead."
+  )
 }
 
 /**
