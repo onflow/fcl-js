@@ -43,7 +43,7 @@ export function createProvider(config: {
   )
 
   const networkManager = new NetworkManager(config.config)
-  const accountManager = new AccountManager(config.user)
+  const accountManager = new AccountManager(config.user, networkManager)
   const gateway = new Gateway({
     ...defaultRpcUrls,
     ...(config.rpcUrls || {}),

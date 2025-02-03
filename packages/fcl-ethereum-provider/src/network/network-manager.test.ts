@@ -73,9 +73,9 @@ describe("network manager", () => {
 
     const manager = new NetworkManager(config.mock)
     const chainId = await new Promise<number>(resolve => {
-      const unsub = manager.$chainId.subscribe(({chainId}) => {
-        if (chainId) {
-          resolve(chainId)
+      const unsub = manager.subscribe(id => {
+        if (id) {
+          resolve(id)
           unsub()
         }
       })
@@ -96,9 +96,9 @@ describe("network manager", () => {
 
     const chainIds: number[] = []
 
-    const unsub = manager.$chainId.subscribe(({chainId}) => {
-      if (chainId) {
-        chainIds.push(chainId)
+    const unsub = manager.subscribe(id => {
+      if (id) {
+        chainIds.push(id)
       }
     })
 

@@ -57,12 +57,6 @@ export class Observable<T> {
       this as Observable<any>
     )
   }
-
-  asObservable(): Observable<T> {
-    return new Observable(subscriber => {
-      return this.subscribe(subscriber)
-    })
-  }
 }
 
 export type Subscription = () => void
@@ -306,42 +300,47 @@ export function of<T>(value: T): Observable<T> {
   })
 }
 
-/** skip */
-export function skip<T>(
-  count: number
-): (source: Observable<T>) => Observable<T> {
-  return source => {
-    return new Observable<T>(subscriber => {
-      let skipped = 0
-      return source.subscribe({
+/** combineLatest */
+export function combineLatest<T1, T2>(
+  sources: [Observable<T1>, Observable<T2>]
+): Observable<[T1, T2]>
+export function combineLatest<T1, T2, T3>(
+  sources: [Observable<T1>, Observable<T2>, Observable<T3>]
+): Observable<[T1, T2, T3]>
+export function combineLatest<T1, T2, T3, T4>(
+  sources: [Observable<T1>, Observable<T2>, Observable<T3>, Observable<T4>]
+): Observable<[T1, T2, T3, T4]>
+export function combineLatest<T>(sources: Observable<T>[]): Observable<T[]> {
+  return new Observable<T[]>(subscriber => {
+    const latestValues = new Array(sources.length)
+    const hasValue = new Array(sources.length).fill(false)
+    const completed = new Array(sources.length).fill(false)
+
+    const subscriptions = sources.map((source, index) =>
+      source.subscribe({
         next: value => {
-          if (skipped >= count) {
-            subscriber.next(value)
-          } else {
-            skipped++
+          latestValues[index] = value
+          hasValue[index] = true
+
+          if (hasValue.every(Boolean)) {
+            subscriber.next(latestValues.slice())
           }
         },
         error: subscriber.error?.bind(subscriber),
-        complete: subscriber.complete?.bind(subscriber),
-      })
-    })
-  }
-}
+        complete: () => {
+          completed[index] = true
 
-/** takeFirst */
-export function takeFirst<T>(): (source: Observable<T>) => Observable<T> {
-  return source => {
-    return new Observable<T>(subscriber => {
-      return source.subscribe({
-        next: value => {
-          subscriber.next(value)
-          subscriber.complete?.()
+          if (completed.every(Boolean)) {
+            subscriber.complete?.()
+          }
         },
-        error: subscriber.error?.bind(subscriber),
-        complete: subscriber.complete?.bind(subscriber),
       })
-    })
-  }
+    )
+
+    return () => {
+      subscriptions.forEach(unsub => unsub())
+    }
+  })
 }
 
 /*******************************

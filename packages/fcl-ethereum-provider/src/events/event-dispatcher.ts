@@ -1,14 +1,7 @@
 import {EventCallback, ProviderEvents} from "../types/provider"
 import {AccountManager} from "../accounts/account-manager"
 import {NetworkManager} from "../network/network-manager"
-import {
-  filter,
-  map,
-  Observable,
-  skip,
-  Subscription,
-  takeFirst,
-} from "../util/observable"
+import {Observable, Subscription} from "../util/observable"
 
 export class EventDispatcher {
   private $emitters: {
@@ -23,29 +16,23 @@ export class EventDispatcher {
 
   constructor(accountManager: AccountManager, networkManager: NetworkManager) {
     this.$emitters = {
-      // Emit changes to the accounts as an accountsChanged event
       accountsChanged: new Observable(subscriber => {
         return accountManager.subscribe(accounts => {
           subscriber.next(accounts)
         })
       }),
-      // Emit changes to the chainId as a chainChanged event
-      chainChanged: networkManager.$chainId.pipe(
-        filter(({isLoading, error}) => !isLoading && !error),
-        map(({chainId}) => {
-          return `0x${chainId!.toString(16)}`
-        }),
-        skip(1)
-      ) as Observable<string>,
-      // Emit the first chainId as a connect event
-      connect: networkManager.$chainId.pipe(
-        filter(({isLoading, error}) => !isLoading && !error),
-        map(({chainId}) => {
-          return {chainId: `0x${chainId!.toString(16)}`}
-        }),
-        takeFirst()
-      ),
-      disconnect: new Observable<{reason: string}>(() => {
+      chainChanged: new Observable(subscriber => {
+        return networkManager.subscribe(chainId => {
+          if (!chainId) return
+          subscriber.next(`0x${chainId.toString(16)}`)
+        })
+      }),
+      connect: new Observable(subscriber => {
+        subscriber.complete?.()
+        return () => {}
+      }),
+      disconnect: new Observable(subscriber => {
+        subscriber.complete?.()
         return () => {}
       }),
     }

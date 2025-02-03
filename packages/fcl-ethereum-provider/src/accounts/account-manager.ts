@@ -12,6 +12,7 @@ import {
 import {TransactionExecutedEvent} from "../types/events"
 import {
   BehaviorSubject,
+  combineLatest,
   concat,
   distinctUntilChanged,
   filter,
@@ -24,6 +25,7 @@ import {
   switchMap,
 } from "../util/observable"
 import {EthSignatureResponse} from "../types/eth"
+import {NetworkManager} from "../network/network-manager"
 
 export class AccountManager {
   private $addressStore = new BehaviorSubject<{
@@ -36,9 +38,12 @@ export class AccountManager {
     error: null,
   })
 
-  constructor(private user: typeof fcl.currentUser) {
-    // Create an observable from the user
-    const $user = new Observable<CurrentUser>(subscriber => {
+  constructor(
+    private user: typeof fcl.currentUser,
+    private networkManager: NetworkManager
+  ) {
+    // Create an observable from the Flow address
+    const $flowAddress = new Observable<CurrentUser>(subscriber => {
       return this.user.subscribe((currentUser: CurrentUser, error?: Error) => {
         if (error) {
           subscriber.error?.(error)
@@ -46,14 +51,15 @@ export class AccountManager {
           subscriber.next(currentUser)
         }
       }) as Subscription
-    })
+    }).pipe(
+      map(user => user.addr),
+      distinctUntilChanged()
+    )
 
     // Bind the address store to the user observable
-    $user
+    combineLatest([$flowAddress, this.networkManager.$chainId])
       .pipe(
-        map(snapshot => snapshot.addr || null),
-        distinctUntilChanged(),
-        switchMap(addr =>
+        switchMap(([addr, chainId]) =>
           concat(
             of({isLoading: true} as {
               isLoading: boolean
@@ -63,12 +69,22 @@ export class AccountManager {
             from(
               (async () => {
                 try {
+                  if (chainId.isLoading) {
+                    return {isLoading: true, address: null, error: null}
+                  }
+                  if (chainId.error) {
+                    throw chainId.error
+                  }
+
                   if (!addr) {
                     return {isLoading: false, address: null, error: null}
                   }
                   return {
                     isLoading: false,
-                    address: await this.fetchCOAFromFlowAddress(addr),
+                    address: await this.fetchCOAFromFlowAddress(
+                      addr,
+                      chainId.chainId!
+                    ),
                     error: null,
                   }
                 } catch (error: any) {
@@ -82,9 +98,25 @@ export class AccountManager {
       .subscribe(this.$addressStore)
   }
 
-  private async fetchCOAFromFlowAddress(flowAddr: string): Promise<string> {
+  private async fetchCOAFromFlowAddress(
+    flowAddr: string,
+    chainId: number
+  ): Promise<string> {
+    // Find the Flow network based on the chain ID
+    const flowNetwork = Object.entries(FLOW_CHAINS).find(
+      ([, chain]) => chain.eip155ChainId === chainId
+    )?.[0] as FlowNetwork | undefined
+
+    if (!flowNetwork) {
+      throw new Error("Flow network not found for chain ID")
+    }
+
+    const evmContractAddress = fcl.withPrefix(
+      FLOW_CONTRACTS[ContractType.EVM][flowNetwork]
+    )
+
     const cadenceScript = `
-      import EVM
+      import EVM from ${evmContractAddress}
 
       access(all)
       fun main(address: Address): String? {
