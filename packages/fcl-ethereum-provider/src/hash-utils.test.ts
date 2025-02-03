@@ -58,7 +58,7 @@ describe("Hash Utils", () => {
   describe("hashTypedDataLegacy", () => {
     it("should throw an error for legacy (legacy support is not provided)", () => {
       expect(() => hashTypedDataLegacy(mockTypedData)).toThrowError(
-        "Legacy signTypedData is not supported. Please use eth_signTypedData_v3 or eth_signTypedData_v4 instead."
+        "Legacy eth_signTypedData is not supported. Please use eth_signTypedData_v3 or eth_signTypedData_v4 instead."
       )
     })
   })
