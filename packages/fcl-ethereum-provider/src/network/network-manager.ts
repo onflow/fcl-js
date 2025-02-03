@@ -86,6 +86,6 @@ export class NetworkManager {
    * Since FCL does support dynamic chain additions.
    */
   public async wallet_addEthereumChain(): Promise<null> {
-    return null;
+    return null
   }
 }
