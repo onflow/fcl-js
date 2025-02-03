@@ -80,4 +80,12 @@ export class NetworkManager {
     }
     return chainId
   }
+
+  /**
+   * No-op implementation for wallet_addEthereumChain.
+   * Since FCL does support dynamic chain additions.
+   */
+  public async wallet_addEthereumChain(): Promise<null> {
+    return null;
+  }
 }
