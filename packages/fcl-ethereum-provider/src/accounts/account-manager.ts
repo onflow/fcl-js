@@ -160,11 +160,11 @@ export class AccountManager {
       FLOW_CONTRACTS[ContractType.EVM][flowNetwork]
     )
 
-    // Check if the signer address matches the authenticated COA address
+    // Check if the from address matches the authenticated COA address
     const expectedCOAAddress = await this.getCOAAddress()
     if (from.toLowerCase() !== expectedCOAAddress?.toLowerCase()) {
       throw new Error(
-        `Signer address does not match authenticated COA address. Expected: ${expectedCOAAddress}, got: ${from}`
+        `From address does not match authenticated user address.\nUser: ${expectedCOAAddress}\nFrom: ${from}`
       )
     }
 
