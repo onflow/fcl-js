@@ -6,7 +6,7 @@ import {TypedData} from "./types/eth"
 
 export function hashTypedDataLegacy(data: TypedData): string {
   throw new Error(
-    "Legacy signTypedData is not supported. Please use eth_signTypedData_v3 or eth_signTypedData_v4 instead."
+    "Legacy eth_signTypedData is not supported. Please use eth_signTypedData_v3 or eth_signTypedData_v4 instead."
   )
 }
 
