@@ -8,16 +8,16 @@ import {
   from,
   map,
   of,
-  Subscription,
   switchMap,
 } from "../util/observable"
 import * as fcl from "@onflow/fcl"
 
-type ChainIdStore = {
+export type ChainIdStore = {
   isLoading: boolean
   chainId: number | null
   error: unknown | null
 }
+
 export class NetworkManager {
   private $chainIdStore = new BehaviorSubject<ChainIdStore>({
     isLoading: true,
@@ -66,13 +66,8 @@ export class NetworkManager {
       .subscribe(this.$chainIdStore)
   }
 
-  public subscribe(callback: (chainId: number | null) => void): Subscription {
-    return this.$chainIdStore
-      .pipe(
-        filter(x => !x.isLoading && !x.error),
-        map(x => x.chainId)
-      )
-      .subscribe(callback)
+  get $chainId() {
+    return this.$chainIdStore.asObservable()
   }
 
   public async getChainId(): Promise<number | null> {
