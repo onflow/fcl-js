@@ -201,9 +201,6 @@ describe("send transaction", () => {
   })
 
   test("send transaction mainnet", async () => {
-    const user = mockUser().mock
-    const accountManager = new AccountManager(user)
-
     const mockTxResult = {
       onceExecuted: jest.fn().mockResolvedValue({
         events: [
@@ -219,6 +216,10 @@ describe("send transaction", () => {
 
     jest.mocked(fcl.tx).mockReturnValue(mockTxResult)
     jest.mocked(fcl.mutate).mockResolvedValue("1111")
+    jest.mocked(fcl.query).mockResolvedValue("0x1234")
+
+    const user = mockUser({addr: "0x4444"} as CurrentUser).mock
+    const accountManager = new AccountManager(user)
 
     const tx = {
       to: "0x1234",
@@ -247,9 +248,6 @@ describe("send transaction", () => {
   })
 
   test("send transaction testnet", async () => {
-    const user = mockUser()
-    const accountManager = new AccountManager(user.mock)
-
     const mockTxResult = {
       onceExecuted: jest.fn().mockResolvedValue({
         events: [
@@ -265,6 +263,10 @@ describe("send transaction", () => {
 
     jest.mocked(fcl.tx).mockReturnValue(mockTxResult)
     jest.mocked(fcl.mutate).mockResolvedValue("1111")
+    jest.mocked(fcl.query).mockResolvedValue("0x1234")
+
+    const user = mockUser({addr: "0x4444"} as CurrentUser)
+    const accountManager = new AccountManager(user.mock)
 
     const tx = {
       to: "0x1234",
@@ -293,9 +295,6 @@ describe("send transaction", () => {
   })
 
   test("throws error if no executed event not found", async () => {
-    const user = mockUser()
-    const accountManager = new AccountManager(user.mock)
-
     const mockTxResult = {
       onceExecuted: jest.fn().mockResolvedValue({
         events: [],
@@ -304,6 +303,10 @@ describe("send transaction", () => {
 
     jest.mocked(fcl.tx).mockReturnValue(mockTxResult)
     jest.mocked(fcl.mutate).mockResolvedValue("1111")
+    jest.mocked(fcl.query).mockResolvedValue("0x1234")
+
+    const user = mockUser({addr: "0x4444"} as CurrentUser)
+    const accountManager = new AccountManager(user.mock)
 
     const tx = {
       to: "0x1234",
@@ -318,6 +321,28 @@ describe("send transaction", () => {
     await expect(accountManager.sendTransaction(tx)).rejects.toThrow(
       "EVM transaction hash not found"
     )
+  })
+
+  test("throws error if from address does not match user address", async () => {
+    jest.mocked(fcl.query).mockResolvedValue("0x1234")
+    const user = mockUser({addr: "0x4444"} as CurrentUser)
+    const accountManager = new AccountManager(user.mock)
+
+    const tx = {
+      to: "0x1234",
+      from: "0x4567",
+      value: "0",
+      data: "0x1234",
+      nonce: "0",
+      gas: "0",
+      chainId: "646",
+    }
+
+    await expect(accountManager.sendTransaction(tx)).rejects.toThrow(
+      `From address does not match authenticated user address.\nUser: 0x1234\nFrom: 0x4567`
+    )
+
+    expect(fcl.mutate).not.toHaveBeenCalled()
   })
 })
 
