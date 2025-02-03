@@ -57,6 +57,12 @@ export class Observable<T> {
       this as Observable<any>
     )
   }
+
+  asObservable(): Observable<T> {
+    return new Observable(subscriber => {
+      return this.subscribe(subscriber)
+    })
+  }
 }
 
 export type Subscription = () => void
@@ -298,6 +304,44 @@ export function of<T>(value: T): Observable<T> {
     subscriber.complete?.()
     return () => {}
   })
+}
+
+/** skip */
+export function skip<T>(
+  count: number
+): (source: Observable<T>) => Observable<T> {
+  return source => {
+    return new Observable<T>(subscriber => {
+      let skipped = 0
+      return source.subscribe({
+        next: value => {
+          if (skipped >= count) {
+            subscriber.next(value)
+          } else {
+            skipped++
+          }
+        },
+        error: subscriber.error?.bind(subscriber),
+        complete: subscriber.complete?.bind(subscriber),
+      })
+    })
+  }
+}
+
+/** takeFirst */
+export function takeFirst<T>(): (source: Observable<T>) => Observable<T> {
+  return source => {
+    return new Observable<T>(subscriber => {
+      return source.subscribe({
+        next: value => {
+          subscriber.next(value)
+          subscriber.complete?.()
+        },
+        error: subscriber.error?.bind(subscriber),
+        complete: subscriber.complete?.bind(subscriber),
+      })
+    })
+  }
 }
 
 /*******************************

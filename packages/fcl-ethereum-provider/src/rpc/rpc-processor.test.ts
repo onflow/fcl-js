@@ -1,23 +1,27 @@
 import {AccountManager} from "../accounts/account-manager"
 import {Gateway} from "../gateway/gateway"
+import {NetworkManager} from "../network/network-manager"
 import {RpcProcessor} from "./rpc-processor"
-import * as fcl from "@onflow/fcl"
 
 jest.mock("../gateway/gateway")
 jest.mock("../accounts/account-manager")
-jest.mock("@onflow/fcl", () => ({
-  getChainId: jest.fn(),
-}))
+jest.mock("../network/network-manager")
 
 describe("rpc processor", () => {
   test("fallback to gateway mainnet", async () => {
     const gateway: jest.Mocked<Gateway> = new (Gateway as any)()
     const accountManager: jest.Mocked<AccountManager> =
       new (AccountManager as any)()
-    const rpcProcessor = new RpcProcessor(gateway, accountManager)
+    const networkManager: jest.Mocked<NetworkManager> =
+      new (NetworkManager as any)()
+    const rpcProcessor = new RpcProcessor(
+      gateway,
+      accountManager,
+      networkManager
+    )
 
     jest.mocked(gateway).request.mockResolvedValue("0x0")
-    jest.mocked(fcl.getChainId).mockResolvedValue("mainnet")
+    networkManager.getChainId.mockResolvedValue(747)
 
     const response = await rpcProcessor.handleRequest({
       method: "eth_blockNumber",
@@ -38,10 +42,16 @@ describe("rpc processor", () => {
     const gateway: jest.Mocked<Gateway> = new (Gateway as any)()
     const accountManager: jest.Mocked<AccountManager> =
       new (AccountManager as any)()
-    const rpcProcessor = new RpcProcessor(gateway, accountManager)
+    const networkManager: jest.Mocked<NetworkManager> =
+      new (NetworkManager as any)()
+    const rpcProcessor = new RpcProcessor(
+      gateway,
+      accountManager,
+      networkManager
+    )
 
     jest.mocked(gateway).request.mockResolvedValue("0x0")
-    jest.mocked(fcl.getChainId).mockResolvedValue("testnet")
+    networkManager.getChainId.mockResolvedValue(646)
 
     const response = await rpcProcessor.handleRequest({
       method: "eth_blockNumber",

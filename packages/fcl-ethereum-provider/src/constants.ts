@@ -51,3 +51,5 @@ export interface TransactionExecutedEvent {
   precompiledCalls: string[]
   stateUpdateChecksum: string
 }
+
+export const ACCESS_NODE_API_KEY = "accessNode.api"

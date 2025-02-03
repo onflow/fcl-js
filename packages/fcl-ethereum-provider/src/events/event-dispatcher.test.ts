@@ -1,13 +1,26 @@
 import {AccountManager} from "../accounts/account-manager"
+import {ChainIdStore, NetworkManager} from "../network/network-manager"
+import {BehaviorSubject, Subject} from "../util/observable"
 import {EventDispatcher} from "./event-dispatcher"
 
 jest.mock("../accounts/account-manager")
+jest.mock("../network/network-manager")
 
 describe("event dispatcher", () => {
-  test("unsubscribe should remove listener", () => {
-    const accountManager: jest.Mocked<AccountManager> =
-      new (AccountManager as any)()
+  let networkManager: jest.Mocked<NetworkManager>
+  let accountManager: jest.Mocked<AccountManager>
+  let $mockChainId: Subject<ChainIdStore>
 
+  beforeEach(() => {
+    jest.clearAllMocks()
+    $mockChainId = new Subject<ChainIdStore>()
+    networkManager = {
+      $chainId: $mockChainId,
+      getChainId: jest.fn(),
+    } as any
+    accountManager = new (AccountManager as any)()
+  })
+  test("unsubscribe should remove listener", () => {
     let subs: ((accounts: string[]) => void)[] = []
     accountManager.subscribe.mockImplementation(cb => {
       subs.push(cb)
@@ -17,7 +30,7 @@ describe("event dispatcher", () => {
     })
     const listener = jest.fn()
 
-    const eventDispatcher = new EventDispatcher(accountManager)
+    const eventDispatcher = new EventDispatcher(accountManager, networkManager)
     eventDispatcher.on("accountsChanged", listener)
 
     expect(accountManager.subscribe).toHaveBeenCalled()
@@ -40,9 +53,6 @@ describe("event dispatcher", () => {
   })
 
   test("should emit accountsChanged", () => {
-    const accountManager: jest.Mocked<AccountManager> =
-      new (AccountManager as any)()
-
     let mockMgrSubCb: (accounts: string[]) => void
     accountManager.subscribe.mockImplementation(cb => {
       mockMgrSubCb = cb
@@ -50,7 +60,7 @@ describe("event dispatcher", () => {
     })
     const listener = jest.fn()
 
-    const eventDispatcher = new EventDispatcher(accountManager)
+    const eventDispatcher = new EventDispatcher(accountManager, networkManager)
     eventDispatcher.on("accountsChanged", listener)
 
     expect(accountManager.subscribe).toHaveBeenCalled()
@@ -66,9 +76,6 @@ describe("event dispatcher", () => {
   })
 
   test("should emit accountsChanged multiple times", () => {
-    const accountManager: jest.Mocked<AccountManager> =
-      new (AccountManager as any)()
-
     let mockMgrSubCb: (accounts: string[]) => void
     accountManager.subscribe.mockImplementation(cb => {
       mockMgrSubCb = cb
@@ -76,7 +83,7 @@ describe("event dispatcher", () => {
     })
     const listener = jest.fn()
 
-    const eventDispatcher = new EventDispatcher(accountManager)
+    const eventDispatcher = new EventDispatcher(accountManager, networkManager)
     eventDispatcher.on("accountsChanged", listener)
 
     expect(accountManager.subscribe).toHaveBeenCalled()
@@ -91,5 +98,23 @@ describe("event dispatcher", () => {
     expect(listener).toHaveBeenCalledTimes(2)
     expect(listener).toHaveBeenNthCalledWith(1, ["0x1234"])
     expect(listener).toHaveBeenNthCalledWith(2, ["0x5678"])
+  })
+
+  test("should emit chainChanged", async () => {
+    const listener = jest.fn()
+
+    const eventDispatcher = new EventDispatcher(accountManager, networkManager)
+    eventDispatcher.on("chainChanged", listener)
+
+    // Initial chain id, should not emit as a change
+    $mockChainId.next({isLoading: false, error: null, chainId: 0x286})
+
+    // Change chain id
+    $mockChainId.next({isLoading: false, error: null, chainId: 0x2eb})
+
+    await new Promise(resolve => setTimeout(resolve, 100))
+
+    expect(listener).toHaveBeenCalledTimes(1)
+    expect(listener).toHaveBeenCalledWith("0x2eb")
   })
 })
