@@ -1,16 +1,16 @@
-import { keccak_256 } from "@noble/hashes/sha3";
-import { utf8ToBytes, bytesToHex } from "@noble/hashes/utils";
-import { arrayify, concat } from "@ethersproject/bytes";
-import { _TypedDataEncoder as TypedDataEncoder } from "@ethersproject/hash";
-import { TypedData } from "./types/eth";
+import {keccak_256} from "@noble/hashes/sha3"
+import {utf8ToBytes, bytesToHex} from "@noble/hashes/utils"
+import {arrayify, concat} from "@ethersproject/bytes"
+import {_TypedDataEncoder as TypedDataEncoder} from "@ethersproject/hash"
+import {TypedData} from "./types/eth"
 
 /**
  * Hash for legacy `eth_signTypedData`
  * (Non‑EIP‑712 compliant; uses a simple JSON‑stringify)
  */
 export function hashTypedDataLegacy(data: TypedData): string {
-  const hash = keccak_256(utf8ToBytes(JSON.stringify(data)));
-  return "0x" + bytesToHex(hash);
+  const hash = keccak_256(utf8ToBytes(JSON.stringify(data)))
+  return "0x" + bytesToHex(hash)
 }
 
 /**
@@ -20,22 +20,18 @@ export function hashTypedDataLegacy(data: TypedData): string {
  *   digest = keccak_256( "\x19\x01" || domainSeparator || messageHash )
  */
 export function hashTypedDataV3(data: TypedData): string {
-  const domainSeparator = TypedDataEncoder.hashDomain(data.domain);
+  const domainSeparator = TypedDataEncoder.hashDomain(data.domain)
   const messageHash = TypedDataEncoder.hash(
     data.domain,
     data.types,
     data.message
-  );
+  )
   // The EIP‑191 prefix is "0x1901".
-  const prefix = "0x1901";
+  const prefix = "0x1901"
   const digest = keccak_256(
-    concat([
-      arrayify(prefix),
-      arrayify(domainSeparator),
-      arrayify(messageHash),
-    ])
-  );
-  return "0x" + bytesToHex(digest);
+    concat([arrayify(prefix), arrayify(domainSeparator), arrayify(messageHash)])
+  )
+  return "0x" + bytesToHex(digest)
 }
 
 /**
@@ -44,5 +40,5 @@ export function hashTypedDataV3(data: TypedData): string {
  * For many cases, v3 and v4 yield the same result (if you’re not using arrays or nested dynamic types).
  */
 export function hashTypedDataV4(data: TypedData): string {
-  return hashTypedDataV3(data);
+  return hashTypedDataV3(data)
 }

@@ -8,16 +8,16 @@ export interface SignTypedDataParams {
 }
 
 export interface TypedDataField {
-  name: string;
-  type: string;
+  name: string
+  type: string
 }
 
 export interface TypedDataDomain {
-  name?: string;
-  version?: string;
-  chainId?: number;
-  verifyingContract?: string;
-  salt?: string;
+  name?: string
+  version?: string
+  chainId?: number
+  verifyingContract?: string
+  salt?: string
 }
 
 export interface TypedData {
