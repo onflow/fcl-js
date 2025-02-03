@@ -1,15 +1,16 @@
 import { keccak_256 } from "@noble/hashes/sha3";
+import { utf8ToBytes, bytesToHex } from "@noble/hashes/utils";
 import { arrayify, concat } from "@ethersproject/bytes";
 import { _TypedDataEncoder as TypedDataEncoder } from "@ethersproject/hash";
-import {TypedData} from "./types/eth"
+import { TypedData } from "./types/eth";
 
 /**
  * Hash for legacy `eth_signTypedData`
  * (Non‑EIP‑712 compliant; uses a simple JSON‑stringify)
  */
 export function hashTypedDataLegacy(data: TypedData): string {
-  const hash = keccak_256(Buffer.from(JSON.stringify(data), "utf8"));
-  return "0x" + Buffer.from(hash).toString("hex");
+  const hash = keccak_256(utf8ToBytes(JSON.stringify(data)));
+  return "0x" + bytesToHex(hash);
 }
 
 /**
@@ -20,7 +21,6 @@ export function hashTypedDataLegacy(data: TypedData): string {
  */
 export function hashTypedDataV3(data: TypedData): string {
   const domainSeparator = TypedDataEncoder.hashDomain(data.domain);
-
   const messageHash = TypedDataEncoder.hash(
     data.domain,
     data.types,
@@ -28,7 +28,6 @@ export function hashTypedDataV3(data: TypedData): string {
   );
   // The EIP‑191 prefix is "0x1901".
   const prefix = "0x1901";
-
   const digest = keccak_256(
     concat([
       arrayify(prefix),
@@ -36,7 +35,7 @@ export function hashTypedDataV3(data: TypedData): string {
       arrayify(messageHash),
     ])
   );
-  return "0x" + Buffer.from(digest).toString("hex");
+  return "0x" + bytesToHex(digest);
 }
 
 /**
