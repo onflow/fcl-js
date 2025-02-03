@@ -7,14 +7,22 @@ export interface SignTypedDataParams {
   data: TypedData // This represents the EIP-712 structured data
 }
 
+export interface TypedDataField {
+  name: string;
+  type: string;
+}
+
+export interface TypedDataDomain {
+  name?: string;
+  version?: string;
+  chainId?: number;
+  verifyingContract?: string;
+  salt?: string;
+}
+
 export interface TypedData {
-  types: Record<string, Array<{name: string; type: string}>>
-  domain: {
-    name?: string
-    version?: string
-    chainId?: number
-    verifyingContract?: string
-  }
+  types: Record<string, TypedDataField[]>
+  domain: TypedDataDomain
   primaryType: string
   message: Record<string, any>
 }
