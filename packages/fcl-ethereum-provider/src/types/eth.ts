@@ -28,14 +28,14 @@ export interface TypedData {
 }
 
 export interface AddEthereumChainParams {
-  chainId: string; // Hex string, e.g. "0x1"
-  chainName: string;
+  chainId: string // Hex string, e.g. "0x1"
+  chainName: string
   nativeCurrency: {
-    name: string;
-    symbol: string;
-    decimals: number;
-  };
-  rpcUrls: string[];
-  blockExplorerUrls?: string[];
-  iconUrls?: string[];
+    name: string
+    symbol: string
+    decimals: number
+  }
+  rpcUrls: string[]
+  blockExplorerUrls?: string[]
+  iconUrls?: string[]
 }
