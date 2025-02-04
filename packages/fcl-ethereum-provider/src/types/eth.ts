@@ -41,5 +41,5 @@ export interface AddEthereumChainParams {
 }
 
 export interface SwitchEthereumChainParams {
-  chainId: string; // Hex string, e.g., "0x64"
+  chainId: string // Hex string, e.g., "0x64"
 }
