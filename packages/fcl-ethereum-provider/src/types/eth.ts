@@ -39,3 +39,7 @@ export interface AddEthereumChainParams {
   blockExplorerUrls?: string[]
   iconUrls?: string[]
 }
+
+export interface SwitchEthereumChainParams {
+  chainId: string; // Hex string, e.g., "0x64"
+}

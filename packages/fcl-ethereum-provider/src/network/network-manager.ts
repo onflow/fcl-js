@@ -11,7 +11,7 @@ import {
   switchMap,
 } from "../util/observable"
 import * as fcl from "@onflow/fcl"
-import {AddEthereumChainParams} from "../types/eth"
+import {AddEthereumChainParams, SwitchEthereumChainParams} from "../types/eth"
 
 export type ChainIdStore = {
   isLoading: boolean
@@ -86,9 +86,28 @@ export class NetworkManager {
    * No-op implementation for wallet_addEthereumChain.
    * Since FCL does support dynamic chain additions.
    */
-  public async wallet_addEthereumChain(
+  public async addChain(
     _chainConfig: AddEthereumChainParams
   ): Promise<null> {
     return null
+  }
+
+  public async switchChain(
+    params: SwitchEthereumChainParams
+  ): Promise<null> {
+    const activeChainId = await this.getChainId();
+    if (activeChainId === null) {
+      throw new Error("No active chain configured.");
+    }
+
+    // Convert the chainId from hex (e.g., "0x64") to a number.
+    const requestedChainId = parseInt(params.chainId, 16);
+
+    if (requestedChainId !== activeChainId) {
+      throw new Error(
+        "Network switch error: The requested chain ID does not match the currently configured network."
+      );
+    }
+    return null;
   }
 }
