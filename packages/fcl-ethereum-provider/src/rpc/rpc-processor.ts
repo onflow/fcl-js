@@ -9,6 +9,7 @@ import {
   AddEthereumChainParams,
   PersonalSignParams,
   SignTypedDataParams,
+  SwitchEthereumChainParams,
   TypedData,
 } from "../types/eth"
 import {signTypedData} from "./handlers/eth-signtypeddata"
@@ -73,7 +74,16 @@ export class RpcProcessor {
         }
         const chainConfig = params[0] as AddEthereumChainParams
 
-        return await this.networkManager.wallet_addEthereumChain(chainConfig)
+        return await this.networkManager.addChain(chainConfig)
+      case "wallet_switchEthereumChain":
+        // Expect params to be an array with one object.
+        if (!params || !Array.isArray(params) || !params[0]) {
+          throw new Error(
+            "wallet_switchEthereumChain requires an array with a chain configuration object."
+          )
+        }
+        const switchParams = params[0] as SwitchEthereumChainParams
+        return await this.networkManager.switchChain(switchParams)
       default:
         return await this.gateway.request({
           chainId,
