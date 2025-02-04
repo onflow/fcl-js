@@ -26,3 +26,16 @@ export interface TypedData {
   primaryType: string
   message: Record<string, any>
 }
+
+export interface AddEthereumChainParams {
+  chainId: string // Hex string, e.g. "0x1"
+  chainName: string
+  nativeCurrency: {
+    name: string
+    symbol: string
+    decimals: number
+  }
+  rpcUrls: string[]
+  blockExplorerUrls?: string[]
+  iconUrls?: string[]
+}

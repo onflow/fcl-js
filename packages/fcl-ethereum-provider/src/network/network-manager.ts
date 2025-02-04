@@ -11,6 +11,7 @@ import {
   switchMap,
 } from "../util/observable"
 import * as fcl from "@onflow/fcl"
+import {AddEthereumChainParams} from "../types/eth"
 
 export type ChainIdStore = {
   isLoading: boolean
@@ -85,7 +86,9 @@ export class NetworkManager {
    * No-op implementation for wallet_addEthereumChain.
    * Since FCL does support dynamic chain additions.
    */
-  public async wallet_addEthereumChain(): Promise<null> {
+  public async wallet_addEthereumChain(
+    _chainConfig: AddEthereumChainParams
+  ): Promise<null> {
     return null
   }
 }
