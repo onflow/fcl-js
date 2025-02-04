@@ -59,6 +59,8 @@ export class RpcProcessor {
           this.accountManager,
           params as PersonalSignParams
         )
+      case "wallet_addEthereumChain":
+        return await this.networkManager.wallet_addEthereumChain()
       default:
         return await this.gateway.request({
           chainId,
