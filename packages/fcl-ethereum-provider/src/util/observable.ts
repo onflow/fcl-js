@@ -57,6 +57,12 @@ export class Observable<T> {
       this as Observable<any>
     )
   }
+
+  asObservable(): Observable<T> {
+    return new Observable(subscriber => {
+      return this.subscribe(subscriber)
+    })
+  }
 }
 
 export type Subscription = () => void
