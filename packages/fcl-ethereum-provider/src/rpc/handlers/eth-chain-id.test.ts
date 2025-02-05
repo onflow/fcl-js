@@ -1,8 +1,9 @@
+import {formatChainId} from "../../util/eth"
 import {ethChainId} from "./eth-chain-id"
 
 jest.mock("../../util/eth", () => ({
   ...jest.requireActual("../../util/eth"),
-  formatChainId: jest.fn().mockReturnValue("0x4444"),
+  formatChainId: jest.fn().mockReturnValue("0x747"),
 }))
 
 describe("eth_chainId handler", () => {
@@ -14,7 +15,7 @@ describe("eth_chainId handler", () => {
 
     const chainId = await ethChainId(networkManagerMock as any)()
 
-    expect(chainId).toEqual("0x4444")
+    expect(chainId).toEqual("0x747")
     expect(networkManagerMock.getChainId).toHaveBeenCalled()
   })
 
