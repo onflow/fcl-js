@@ -98,6 +98,14 @@ export class AccountManager {
       .subscribe(this.$addressStore)
   }
 
+  public async authenticate(): Promise<void> {
+    return await this.user.authenticate()
+  }
+
+  public async unauthenticate(): Promise<void> {
+    await this.user.unauthenticate()
+  }
+
   private async fetchCOAFromFlowAddress(
     flowAddr: string,
     chainId: number
