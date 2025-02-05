@@ -351,6 +351,46 @@ export function combineLatest<T>(sources: Observable<T>[]): Observable<T[]> {
   })
 }
 
+export function skip<T>(
+  count: number
+): (source: Observable<T>) => Observable<T> {
+  return source => {
+    return new Observable<T>(subscriber => {
+      let skipped = 0
+      return source.subscribe({
+        next: value => {
+          if (skipped >= count) {
+            subscriber.next(value)
+          } else {
+            skipped++
+          }
+        },
+        error: subscriber.error?.bind(subscriber),
+        complete: subscriber.complete?.bind(subscriber),
+      })
+    })
+  }
+}
+
+export function takeFirst<T>(): (source: Observable<T>) => Observable<T> {
+  return source => {
+    return new Observable<T>(subscriber => {
+      let hasEmitted = false
+      return source.subscribe({
+        next: value => {
+          if (!hasEmitted) {
+            hasEmitted = true
+            subscriber.next(value)
+            subscriber.complete?.()
+          }
+        },
+        error: subscriber.error?.bind(subscriber),
+        complete: subscriber.complete?.bind(subscriber),
+      })
+    })
+  }
+}
+
 /*******************************
  * Internal utility
  *******************************/

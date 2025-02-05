@@ -1,26 +1,39 @@
 import {AccountManager} from "../accounts/account-manager"
-import {NetworkManager} from "../network/network-manager"
-import {BehaviorSubject, Subject} from "../util/observable"
+import {ChainIdStore, NetworkManager} from "../network/network-manager"
+import {BehaviorSubject} from "../util/observable"
 import {EventDispatcher} from "./event-dispatcher"
 
 jest.mock("../accounts/account-manager")
 jest.mock("../network/network-manager")
 
 describe("event dispatcher", () => {
-  test("unsubscribe should remove listener", () => {
-    const accountManager: jest.Mocked<AccountManager> =
-      new (AccountManager as any)()
+  let $chainIdMock: BehaviorSubject<ChainIdStore>
+  let networkManager: jest.Mocked<NetworkManager>
+  let $accountsMock: BehaviorSubject<string[]>
+  let accountManager: jest.Mocked<AccountManager>
 
-    const networkManager: jest.Mocked<NetworkManager> =
-      new (NetworkManager as any)()
+  beforeEach(() => {
+    jest.clearAllMocks()
 
-    let subs: ((accounts: string[]) => void)[] = []
-    accountManager.subscribe.mockImplementation(cb => {
-      subs.push(cb)
-      return () => {
-        subs = subs.filter(sub => sub !== cb)
-      }
+    $chainIdMock = new BehaviorSubject<ChainIdStore>({
+      isLoading: false,
+      chainId: 0x1,
+      error: null,
     })
+    networkManager = {
+      subscribe: jest.fn(),
+      $chainId: $chainIdMock,
+    } as unknown as jest.Mocked<NetworkManager>
+
+    $accountsMock = new BehaviorSubject<string[]>([])
+    accountManager = {
+      subscribe: jest.fn().mockImplementation(cb => {
+        return $accountsMock.subscribe(cb)
+      }),
+    } as unknown as jest.Mocked<AccountManager>
+  })
+
+  test("unsubscribe should remove listener", () => {
     const listener = jest.fn()
 
     const eventDispatcher = new EventDispatcher(accountManager, networkManager)
@@ -31,7 +44,7 @@ describe("event dispatcher", () => {
     expect(accountManager.subscribe).toHaveBeenCalledWith(expect.any(Function))
 
     // Simulate account change from account manager
-    subs.forEach(sub => sub(["0x1234"]))
+    $accountsMock.next(["0x1234"])
 
     expect(listener).toHaveBeenCalled()
     expect(listener).toHaveBeenCalledTimes(1)
@@ -40,23 +53,12 @@ describe("event dispatcher", () => {
     eventDispatcher.off("accountsChanged", listener)
 
     // Simulate account change from account manager
-    subs.forEach(sub => sub(["0x5678"]))
+    $accountsMock.next(["0x5678"])
 
     expect(listener).toHaveBeenCalledTimes(1)
   })
 
   test("should emit accountsChanged", () => {
-    const accountManager: jest.Mocked<AccountManager> =
-      new (AccountManager as any)()
-
-    const networkManager: jest.Mocked<NetworkManager> =
-      new (NetworkManager as any)()
-
-    let mockMgrSubCb: (accounts: string[]) => void
-    accountManager.subscribe.mockImplementation(cb => {
-      mockMgrSubCb = cb
-      return () => {}
-    })
     const listener = jest.fn()
 
     const eventDispatcher = new EventDispatcher(accountManager, networkManager)
@@ -67,7 +69,7 @@ describe("event dispatcher", () => {
     expect(accountManager.subscribe).toHaveBeenCalledWith(expect.any(Function))
 
     // Simulate account change from account manager
-    mockMgrSubCb!(["0x1234"])
+    $accountsMock.next(["0x1234"])
 
     expect(listener).toHaveBeenCalled()
     expect(listener).toHaveBeenCalledTimes(1)
@@ -75,17 +77,6 @@ describe("event dispatcher", () => {
   })
 
   test("should emit accountsChanged multiple times", () => {
-    const accountManager: jest.Mocked<AccountManager> =
-      new (AccountManager as any)()
-
-    const networkManager: jest.Mocked<NetworkManager> =
-      new (NetworkManager as any)()
-
-    let mockMgrSubCb: (accounts: string[]) => void
-    accountManager.subscribe.mockImplementation(cb => {
-      mockMgrSubCb = cb
-      return () => {}
-    })
     const listener = jest.fn()
 
     const eventDispatcher = new EventDispatcher(accountManager, networkManager)
@@ -96,8 +87,8 @@ describe("event dispatcher", () => {
     expect(accountManager.subscribe).toHaveBeenCalledWith(expect.any(Function))
 
     // Simulate account change from account manager
-    mockMgrSubCb!(["0x1234"])
-    mockMgrSubCb!(["0x5678"])
+    $accountsMock.next(["0x1234"])
+    $accountsMock.next(["0x5678"])
 
     expect(listener).toHaveBeenCalled()
     expect(listener).toHaveBeenCalledTimes(2)
@@ -106,30 +97,31 @@ describe("event dispatcher", () => {
   })
 
   test("should emit chainChanged", () => {
-    const accountManager: jest.Mocked<AccountManager> =
-      new (AccountManager as any)()
-
-    const networkManager: jest.Mocked<NetworkManager> =
-      new (NetworkManager as any)()
-
-    let mockSubject = new Subject<number | null>()
-    networkManager.subscribe.mockImplementation(cb => {
-      return mockSubject.subscribe(cb)
-    })
     const listener = jest.fn()
 
     const eventDispatcher = new EventDispatcher(accountManager, networkManager)
     eventDispatcher.on("chainChanged", listener)
 
-    expect(networkManager.subscribe).toHaveBeenCalled()
-    expect(networkManager.subscribe).toHaveBeenCalledTimes(1)
-    expect(networkManager.subscribe).toHaveBeenCalledWith(expect.any(Function))
-
     // Simulate network change from network manager
-    mockSubject.next(0x2eb)
+    $chainIdMock.next({isLoading: false, chainId: 0x2eb, error: null})
 
     expect(listener).toHaveBeenCalled()
     expect(listener).toHaveBeenCalledTimes(1)
     expect(listener).toHaveBeenCalledWith("0x2eb")
+  })
+
+  test("should emit connect", () => {
+    const listener = jest.fn()
+
+    const eventDispatcher = new EventDispatcher(accountManager, networkManager)
+    eventDispatcher.on("connect", listener)
+
+    // Simulate network change from network manager
+    // Should be ignored because connect only emits the first chainId
+    $chainIdMock.next({isLoading: false, chainId: 0x2eb, error: null})
+
+    expect(listener).toHaveBeenCalled()
+    expect(listener).toHaveBeenCalledTimes(1)
+    expect(listener).toHaveBeenCalledWith({chainId: "0x1"})
   })
 })

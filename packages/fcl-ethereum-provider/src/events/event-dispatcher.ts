@@ -24,11 +24,11 @@ export class EventDispatcher {
   constructor(accountManager: AccountManager, networkManager: NetworkManager) {
     this.$emitters = {
       // Emit changes to the accounts as an accountsChanged event
-      accountsChanged: new Observable(subscriber => {
+      accountsChanged: new Observable<string[]>(subscriber => {
         return accountManager.subscribe(accounts => {
           subscriber.next(accounts)
         })
-      }),
+      }).pipe(skip(1)),
       // Emit changes to the chainId as a chainChanged event
       chainChanged: networkManager.$chainId.pipe(
         filter(({isLoading, error}) => !isLoading && !error),
