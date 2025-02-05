@@ -24,6 +24,8 @@ import {
   switchMap,
 } from "../util/observable"
 import {EthSignatureResponse} from "../types/eth"
+import {NetworkManager} from "../network/network-manager"
+import {formatChainId, getContractAddress} from "../util/eth"
 
 export class AccountManager {
   private $addressStore = new BehaviorSubject<{
@@ -36,7 +38,10 @@ export class AccountManager {
     error: null,
   })
 
-  constructor(private user: typeof fcl.currentUser) {
+  constructor(
+    private user: typeof fcl.currentUser,
+    private networkManager: NetworkManager
+  ) {
     // Create an observable from the user
     const $user = new Observable<CurrentUser>(subscriber => {
       return this.user.subscribe((currentUser: CurrentUser, error?: Error) => {
@@ -91,8 +96,13 @@ export class AccountManager {
   }
 
   private async fetchCOAFromFlowAddress(flowAddr: string): Promise<string> {
+    const chainId = await this.networkManager.getChainId()
+    if (!chainId) {
+      throw new Error("No active chain")
+    }
+
     const cadenceScript = `
-      import EVM
+      import EVM from ${getContractAddress(ContractType.EVM, chainId)}
 
       access(all)
       fun main(address: Address): String? {
@@ -156,17 +166,22 @@ export class AccountManager {
     chainId: string
   }) {
     // Find the Flow network based on the chain ID
+    const parsedChainId = parseInt(chainId)
     const flowNetwork = Object.entries(FLOW_CHAINS).find(
-      ([, chain]) => chain.eip155ChainId === parseInt(chainId)
+      ([, chain]) => chain.eip155ChainId === parsedChainId
     )?.[0] as FlowNetwork | undefined
 
     if (!flowNetwork) {
       throw new Error("Flow network not found for chain ID")
     }
 
-    const evmContractAddress = fcl.withPrefix(
-      FLOW_CONTRACTS[ContractType.EVM][flowNetwork]
-    )
+    // Validate the chain ID
+    const currentChainId = await this.networkManager.getChainId()
+    if (parsedChainId !== currentChainId) {
+      throw new Error(
+        `Chain ID does not match the current network. Expected: ${currentChainId}, Received: ${parsedChainId}`
+      )
+    }
 
     // Check if the from address matches the authenticated COA address
     const expectedCOAAddress = await this.getCOAAddress()
@@ -177,7 +192,7 @@ export class AccountManager {
     }
 
     const txId = await fcl.mutate({
-      cadence: `import EVM from ${evmContractAddress}
+      cadence: `import EVM from ${getContractAddress(ContractType.EVM, parsedChainId)}
         
         /// Executes the calldata from the signer's COA
         ///
