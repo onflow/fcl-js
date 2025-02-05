@@ -8,7 +8,7 @@ export async function ethAccounts(
 }
 
 export async function ethRequestAccounts(accountManager: AccountManager) {
-  await fcl.currentUser().authenticate()
+  await accountManager.authenticate()
 
   return await accountManager.getAccounts()
 }
