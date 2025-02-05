@@ -63,7 +63,7 @@ describe("network manager", () => {
     await expect(manager.getChainId()).rejects.toThrow("error")
   })
 
-  test("subscribe should return correct chain id", async () => {
+  test("observable should return correct chain id", async () => {
     jest.mocked(fcl.getChainId).mockResolvedValue("mainnet")
 
     const config = mockConfig()
@@ -73,12 +73,15 @@ describe("network manager", () => {
 
     const manager = new NetworkManager(config.mock)
     const chainId = await new Promise<number>(resolve => {
-      const unsub = manager.subscribe(id => {
-        if (id) {
-          resolve(id)
-          unsub()
+      const unsub = manager.$chainId.subscribe(
+        ({isLoading, chainId, error}) => {
+          expect(error).toBeUndefined()
+          if (!isLoading && chainId) {
+            resolve(chainId)
+            unsub()
+          }
         }
-      })
+      )
     })
 
     expect(chainId).toBe(747)
@@ -96,9 +99,11 @@ describe("network manager", () => {
 
     const chainIds: number[] = []
 
-    const unsub = manager.subscribe(id => {
-      if (id) {
-        chainIds.push(id)
+    const unsub = manager.$chainId.subscribe(({isLoading, chainId, error}) => {
+      expect(error).toBeUndefined()
+      if (!isLoading && chainId) {
+        chainIds.push(chainId)
+        unsub()
       }
     })
 

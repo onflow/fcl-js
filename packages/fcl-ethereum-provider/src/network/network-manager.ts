@@ -27,6 +27,8 @@ export class NetworkManager {
     error: null,
   })
 
+  public readonly $chainId = this.$chainIdStore.asObservable()
+
   constructor(config: typeof fcl.config) {
     // Map FCL config to behavior subject
     const $config = new BehaviorSubject<Record<string, unknown> | null>(null)
@@ -66,19 +68,6 @@ export class NetworkManager {
         )
       )
       .subscribe(this.$chainIdStore)
-  }
-
-  public get $chainId() {
-    return this.$chainIdStore as Observable<ChainIdStore>
-  }
-
-  public subscribe(callback: (chainId: number | null) => void): Subscription {
-    return this.$chainIdStore
-      .pipe(
-        filter(x => !x.isLoading && !x.error),
-        map(x => x.chainId)
-      )
-      .subscribe(callback)
   }
 
   public async getChainId(): Promise<number | null> {
