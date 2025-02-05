@@ -17,4 +17,16 @@ describe("eth_chainId handler", () => {
     expect(chainId).toEqual("0x4444")
     expect(networkManagerMock.getChainId).toHaveBeenCalled()
   })
+
+  test("should throw an error if no chain id is available", async () => {
+    const networkManagerMock = {
+      getChainId: jest.fn(),
+    }
+    networkManagerMock.getChainId.mockResolvedValue(null)
+
+    await expect(ethChainId(networkManagerMock as any)()).rejects.toThrow(
+      "No active chain"
+    )
+    expect(networkManagerMock.getChainId).toHaveBeenCalled()
+  })
 })
