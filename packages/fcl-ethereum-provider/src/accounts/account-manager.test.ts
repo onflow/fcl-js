@@ -364,7 +364,6 @@ describe("send transaction", () => {
 })
 
 describe("signMessage", () => {
-  let $mockChainId: Subject<ChainIdStore>
   let networkManager: jest.Mocked<NetworkManager>
   let accountManager: AccountManager
   let user: ReturnType<typeof mockUser>["mock"]
@@ -374,9 +373,14 @@ describe("signMessage", () => {
     jest.clearAllMocks()
     ;({mock: user, set: updateUser} = mockUser({addr: "0x123"} as CurrentUser))
     jest.mocked(fcl.query).mockResolvedValue("0xCOA1")
-    $mockChainId = new Subject<ChainIdStore>()
+    const $mockChainId = new BehaviorSubject<ChainIdStore>({
+      chainId: 747,
+      error: null,
+      isLoading: false,
+    })
     networkManager = {
       $chainId: $mockChainId,
+      getChainId: $mockChainId.getValue(),
     } as any as jest.Mocked<NetworkManager>
     accountManager = new AccountManager(user, networkManager)
   })
@@ -423,10 +427,7 @@ describe("signMessage", () => {
   })
 
   it("should throw an error if signUserMessage returns an empty array", async () => {
-    accountManager["coaAddress"] = "0xCOA1"
-
-    user.signUserMessage = jest.fn().mockResolvedValue([])
-
+    user.signUserMessage.mockResolvedValue([])
     await expect(
       accountManager.signMessage("Test message", "0xCOA1")
     ).rejects.toThrow("Failed to sign message")
