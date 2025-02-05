@@ -86,7 +86,7 @@ export class AccountManager {
     return await this.user.authenticate()
   }
 
-  public async unauthenticate(): void {
+  public async unauthenticate(): Promise<void> {
     await this.user.unauthenticate()
   }
 
