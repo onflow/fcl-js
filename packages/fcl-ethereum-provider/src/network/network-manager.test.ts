@@ -72,10 +72,12 @@ describe("network manager", () => {
     })
 
     const manager = new NetworkManager(config.mock)
-    const chainId = await new Promise<number>(resolve => {
+    const chainId = await new Promise<number>((resolve, reject) => {
       const unsub = manager.$chainId.subscribe(
         ({isLoading, chainId, error}) => {
-          expect(error).toBeUndefined()
+          if (error) {
+            reject(error)
+          }
           if (!isLoading && chainId) {
             resolve(chainId)
             unsub()
@@ -100,7 +102,7 @@ describe("network manager", () => {
     const chainIds: number[] = []
 
     const unsub = manager.$chainId.subscribe(({isLoading, chainId, error}) => {
-      expect(error).toBeUndefined()
+      expect(error).toBeFalsy()
       if (!isLoading && chainId) {
         chainIds.push(chainId)
         unsub()
