@@ -7,6 +7,7 @@ import {
 } from "./types/provider"
 import {RpcProcessor} from "./rpc/rpc-processor"
 import {EventDispatcher} from "./events/event-dispatcher"
+import {RpcError, RpcErrorCode} from "./util/errors"
 
 export class FclEthereumProvider implements Eip1193Provider {
   constructor(
@@ -26,7 +27,14 @@ export class FclEthereumProvider implements Eip1193Provider {
       const result = await this.rpcProcessor.handleRequest({method, params})
       return result
     } catch (error) {
-      throw new Error(`Request failed: ${(error as Error).message}`)
+      if (error instanceof RpcError) {
+        throw error
+      } else {
+        throw new RpcError({
+          code: RpcErrorCode.InternalError,
+          cause: error,
+        })
+      }
     }
   }
 
