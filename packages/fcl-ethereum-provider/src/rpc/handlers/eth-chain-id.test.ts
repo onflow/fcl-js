@@ -1,0 +1,20 @@
+import {ethChainId} from "./eth-chain-id"
+
+jest.mock("../../util/eth", () => ({
+  ...jest.requireActual("../../util/eth"),
+  formatChainId: jest.fn().mockReturnValue("0x4444"),
+}))
+
+describe("eth_chainId handler", () => {
+  test("should return the formatted chain id", async () => {
+    const networkManagerMock = {
+      getChainId: jest.fn(),
+    }
+    networkManagerMock.getChainId.mockResolvedValue(747)
+
+    const chainId = await ethChainId(networkManagerMock as any)()
+
+    expect(chainId).toEqual("0x4444")
+    expect(networkManagerMock.getChainId).toHaveBeenCalled()
+  })
+})
