@@ -25,6 +25,23 @@ import {
 } from "../util/observable"
 import {EthSignatureResponse} from "../types/eth"
 
+const CREATE_COA_TX = `
+import "EVM"
+
+transaction() {
+    prepare(signer: auth(SaveValue, IssueStorageCapabilityController, PublishCapability) &Account) {
+        let storagePath = /storage/evm
+        let publicPath = /public/evm
+
+        let coa: @EVM.CadenceOwnedAccount <- EVM.createCadenceOwnedAccount()
+        signer.storage.save(<-coa, to: storagePath)
+
+        let cap = signer.capabilities.storage.issue<&EVM.CadenceOwnedAccount>(storagePath)
+        signer.capabilities.publish(cap, at: publicPath)
+    }
+}
+`;
+
 export class AccountManager {
   private $addressStore = new BehaviorSubject<{
     isLoading: boolean
@@ -130,6 +147,40 @@ export class AccountManager {
   public async getAccounts(): Promise<string[]> {
     const coaAddress = await this.getCOAAddress()
     return coaAddress ? [coaAddress] : []
+  }
+
+  /**
+   * Get the COA address and create it if it doesn't exist
+   */
+  public async getAndCreateAccounts(): Promise<string[]> {
+    let coaAddress = await this.getCOAAddress()
+
+    if (!coaAddress) {
+      await this.createCOA()
+      coaAddress = await this.getCOAAddress()
+    }
+
+    if (!coaAddress) {
+      throw new Error("COA address is still missing after creation.")
+    }
+
+    return [coaAddress]
+  }
+
+  public async createCOA(): Promise<string> {
+    const txId = await fcl.mutate({
+      cadence: CREATE_COA_TX,
+      limit: 9999,
+      authz: this.user,
+    })
+
+    await fcl.tx(txId).onceSealed()
+
+    const coaAddress = await this.getCOAAddress()
+    if (!coaAddress) {
+      throw new Error("Failed to retrieve COA address after creation.")
+    }
+    return coaAddress
   }
 
   public subscribe(callback: (accounts: string[]) => void): Subscription {

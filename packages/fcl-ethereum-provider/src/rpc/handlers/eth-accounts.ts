@@ -9,5 +9,5 @@ export async function ethAccounts(
 export async function ethRequestAccounts(accountManager: AccountManager) {
   await accountManager.authenticate()
 
-  return await accountManager.getAccounts()
+  return await accountManager.getAndCreateAccounts()
 }
