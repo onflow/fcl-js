@@ -1,17 +1,7 @@
-// eth-accounts.spec.ts
 import {ethAccounts, ethRequestAccounts} from "./eth-accounts"
 import {AccountManager} from "../../accounts/account-manager"
 import * as fcl from "@onflow/fcl"
 import {CurrentUser} from "@onflow/typedefs"
-import {mockUser} from "../../__mocks__/fcl"
-
-// Mock FCL at the top-level
-jest.mock("@onflow/fcl", () => ({
-  currentUser: jest.fn().mockReturnValue({
-    authenticate: jest.fn(),
-    snapshot: jest.fn(),
-  }),
-}))
 
 describe("ethAccounts handler", () => {
   let accountManagerMock: jest.Mocked<AccountManager>
@@ -64,7 +54,7 @@ describe("ethRequestAccounts handler", () => {
 
     const accounts = await ethRequestAccounts(accountManagerMock)
 
-    expect(userMock.authenticate).toHaveBeenCalled()
+    expect(accountManagerMock.authenticate).toHaveBeenCalled()
     expect(accountManagerMock.getAccounts).toHaveBeenCalled()
     expect(accounts).toEqual(["0x1234..."])
   })
@@ -74,7 +64,7 @@ describe("ethRequestAccounts handler", () => {
 
     const accounts = await ethRequestAccounts(accountManagerMock)
 
-    expect(userMock.authenticate).toHaveBeenCalled()
+    expect(accountManagerMock.authenticate).toHaveBeenCalled()
     expect(accountManagerMock.getAccounts).toHaveBeenCalled()
     expect(accounts).toEqual([])
   })
