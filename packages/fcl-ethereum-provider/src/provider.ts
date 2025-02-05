@@ -7,9 +7,11 @@ import {
 } from "./types/provider"
 import {RpcProcessor} from "./rpc/rpc-processor"
 import {EventDispatcher} from "./events/event-dispatcher"
+import {AccountManager} from "./accounts/account-manager"
 
 export class FclEthereumProvider implements Eip1193Provider {
   constructor(
+    private acountManager: AccountManager,
     private rpcProcessor: RpcProcessor,
     private eventDispatcher: EventDispatcher
   ) {}
@@ -28,6 +30,10 @@ export class FclEthereumProvider implements Eip1193Provider {
     } catch (error) {
       throw new Error(`Request failed: ${(error as Error).message}`)
     }
+  }
+
+  disconnect(): void {
+    this.acountManager.unauthenticate()
   }
 
   // Listen to events
