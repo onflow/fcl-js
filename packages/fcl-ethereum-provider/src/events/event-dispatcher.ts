@@ -9,6 +9,7 @@ import {
   Subscription,
   takeFirst,
 } from "../util/observable"
+import {formatChainId} from "../util/eth"
 
 export class EventDispatcher {
   private $emitters: {
@@ -33,7 +34,7 @@ export class EventDispatcher {
       chainChanged: networkManager.$chainId.pipe(
         filter(({isLoading, error}) => !isLoading && !error),
         map(({chainId}) => {
-          return `0x${chainId!.toString(16)}`
+          return formatChainId(chainId!)
         }),
         skip(1)
       ) as Observable<string>,
@@ -41,7 +42,7 @@ export class EventDispatcher {
       connect: networkManager.$chainId.pipe(
         filter(({isLoading, error}) => !isLoading && !error),
         map(({chainId}) => {
-          return {chainId: `0x${chainId!.toString(16)}`}
+          return {chainId: formatChainId(chainId!)}
         }),
         takeFirst()
       ),
