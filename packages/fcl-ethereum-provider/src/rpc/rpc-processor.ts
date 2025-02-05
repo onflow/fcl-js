@@ -92,4 +92,8 @@ export class RpcProcessor {
         })
     }
   }
+
+  public async destroy(): Promise<void> {
+    this.accountManager.destroy()
+  }
 }

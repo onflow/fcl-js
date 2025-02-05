@@ -36,6 +36,8 @@ export class AccountManager {
     error: null,
   })
 
+  private ethereumDisconnectHandler?: (...args: any[]) => void
+
   constructor(private user: typeof fcl.currentUser) {
     // Create an observable from the user
     const $user = new Observable<CurrentUser>(subscriber => {
@@ -80,6 +82,40 @@ export class AccountManager {
         )
       )
       .subscribe(this.$addressStore)
+
+    this.setupEthereumListeners()
+  }
+
+  private setupEthereumListeners() {
+    if (typeof window !== "undefined" && window.ethereum) {
+      const ethereum = window.ethereum;
+
+      if (typeof ethereum.on === "function") {
+        this.ethereumDisconnectHandler = () => {
+          console.log("Ethereum provider disconnected");
+          this.destroy(); // Fully clean up when disconnected
+        };
+
+        ethereum.on("disconnect", this.ethereumDisconnectHandler);
+      }
+    }
+  }
+
+  public destroy() {
+    console.log("Destroying AccountManager and cleaning up...");
+
+    // Remove event listeners
+    if (typeof window !== "undefined" && window.ethereum && this.ethereumDisconnectHandler) {
+      window.ethereum.removeListener("disconnect", this.ethereumDisconnectHandler);
+      this.ethereumDisconnectHandler = undefined;
+    }
+
+    // Reset account state
+    this.$addressStore.next({
+      isLoading: false,
+      address: null,
+      error: new Error("Ethereum provider disconnected"),
+    });
   }
 
   private async fetchCOAFromFlowAddress(flowAddr: string): Promise<string> {

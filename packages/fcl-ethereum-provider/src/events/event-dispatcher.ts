@@ -75,4 +75,13 @@ export class EventDispatcher {
     this.subscriptions[event].get(listener)?.()
     this.subscriptions[event].delete(listener)
   }
+
+  public removeAllListeners() {
+    for (const event in this.subscriptions) {
+      this.subscriptions[event as keyof ProviderEvents].forEach(unsub => {
+        unsub()
+      })
+      this.subscriptions[event as keyof ProviderEvents].clear()
+    }
+  }
 }

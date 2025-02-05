@@ -45,4 +45,10 @@ export class FclEthereumProvider implements Eip1193Provider {
   ): void {
     this.eventDispatcher.off(event, listener)
   }
+
+  public destroy() {
+    this.rpcProcessor.destroy()
+
+    this.eventDispatcher.removeAllListeners()
+  }
 }
