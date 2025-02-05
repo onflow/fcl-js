@@ -13,6 +13,7 @@ import {
   TypedData,
 } from "../types/eth"
 import {signTypedData} from "./handlers/eth-signtypeddata"
+import {formatChainId} from "../util/eth"
 
 export class RpcProcessor {
   constructor(
@@ -84,6 +85,8 @@ export class RpcProcessor {
         }
         const switchParams = params[0] as SwitchEthereumChainParams
         return await this.networkManager.switchChain(switchParams)
+      case "eth_chainId":
+        return formatChainId(chainId)
       default:
         return await this.gateway.request({
           chainId,
