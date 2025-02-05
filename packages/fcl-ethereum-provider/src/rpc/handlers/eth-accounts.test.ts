@@ -1,7 +1,5 @@
 import {ethAccounts, ethRequestAccounts} from "./eth-accounts"
 import {AccountManager} from "../../accounts/account-manager"
-import * as fcl from "@onflow/fcl"
-import {CurrentUser} from "@onflow/typedefs"
 
 describe("ethAccounts handler", () => {
   let accountManagerMock: jest.Mocked<AccountManager>
@@ -35,13 +33,8 @@ describe("ethAccounts handler", () => {
 
 describe("ethRequestAccounts handler", () => {
   let accountManagerMock: jest.Mocked<AccountManager>
-  let userMock: jest.Mocked<typeof fcl.currentUser>
 
   beforeEach(() => {
-    userMock = fcl.currentUser() as jest.Mocked<typeof fcl.currentUser>
-
-    userMock.snapshot.mockResolvedValue({addr: null} as unknown as CurrentUser)
-
     accountManagerMock = {
       getAccounts: jest.fn(),
       updateCOAAddress: jest.fn(),
