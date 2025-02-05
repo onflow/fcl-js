@@ -8,8 +8,11 @@ import {personalSign} from "./handlers/personal-sign"
 import {
   AddEthereumChainParams,
   PersonalSignParams,
+  SignTypedDataParams,
   SwitchEthereumChainParams,
+  TypedData,
 } from "../types/eth"
+import {signTypedData} from "./handlers/eth-signtypeddata"
 
 export class RpcProcessor {
   constructor(
@@ -31,6 +34,32 @@ export class RpcProcessor {
         return ethRequestAccounts(this.accountManager)
       case "eth_sendTransaction":
         return await ethSendTransaction(this.accountManager, params)
+      case "eth_signTypedData":
+      case "eth_signTypedData_v3":
+      case "eth_signTypedData_v4": {
+        if (!params || typeof params !== "object") {
+          throw new Error(`${method} requires valid parameters.`)
+        }
+
+        const {address, data} = params as {address?: unknown; data?: unknown}
+
+        if (
+          typeof address !== "string" ||
+          typeof data !== "object" ||
+          data === null
+        ) {
+          throw new Error(
+            `${method} requires 'address' (string) and a valid 'data' object.`
+          )
+        }
+
+        const validParams: SignTypedDataParams = {
+          address,
+          data: data as TypedData,
+        }
+
+        return await signTypedData(this.accountManager, validParams, method)
+      }
       case "personal_sign":
         return await personalSign(
           this.accountManager,
