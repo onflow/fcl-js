@@ -62,6 +62,25 @@ describe("AccountManager", () => {
     })
   })
 
+  it("should get or create COA address", async () => {
+    const user = mockUser()
+    const accountManager = new AccountManager(user.mock)
+
+    // First call to `getAccounts` returns an empty array
+    jest.spyOn(accountManager, "getAccounts").mockResolvedValueOnce([])
+
+    jest.spyOn(accountManager, "createCOA").mockImplementation(async () => {
+      jest.spyOn(accountManager, "getAccounts").mockResolvedValueOnce(["0x123"])
+      return "0x123"
+    })
+
+    await expect(accountManager.getAndCreateAccounts()).resolves.toEqual([
+      "0x123",
+    ])
+
+    expect(accountManager.createCOA).toHaveBeenCalledTimes(1)
+  })
+
   it("should not update COA address if user has not changed", async () => {
     const user = mockUser()
     mockQuery.mockResolvedValue("0x123")

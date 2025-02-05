@@ -40,7 +40,7 @@ transaction() {
         signer.capabilities.publish(cap, at: publicPath)
     }
 }
-`;
+`
 
 export class AccountManager {
   private $addressStore = new BehaviorSubject<{
@@ -153,18 +153,18 @@ export class AccountManager {
    * Get the COA address and create it if it doesn't exist
    */
   public async getAndCreateAccounts(): Promise<string[]> {
-    let coaAddress = await this.getCOAAddress()
+    let accounts = await this.getAccounts()
 
-    if (!coaAddress) {
+    if (accounts.length === 0) {
       await this.createCOA()
-      coaAddress = await this.getCOAAddress()
+      accounts = await this.getAccounts()
     }
 
-    if (!coaAddress) {
+    if (accounts.length === 0) {
       throw new Error("COA address is still missing after creation.")
     }
 
-    return [coaAddress]
+    return accounts
   }
 
   public async createCOA(): Promise<string> {
