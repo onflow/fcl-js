@@ -36,6 +36,7 @@ describe("ethRequestAccounts handler", () => {
 
   beforeEach(() => {
     accountManagerMock = {
+      authenticate: jest.fn(),
       getAccounts: jest.fn(),
       updateCOAAddress: jest.fn(),
       subscribe: jest.fn(),
