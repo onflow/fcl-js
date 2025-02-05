@@ -105,21 +105,24 @@ describe("network manager", () => {
       expect(error).toBeFalsy()
       if (!isLoading && chainId) {
         chainIds.push(chainId)
-        unsub()
       }
     })
 
+    jest.mocked(fcl.getChainId).mockResolvedValue("testnet")
     await config.set({
       "accessNode.api": "https://example2.com",
     })
 
+    jest.mocked(fcl.getChainId).mockResolvedValue("mainnet")
     await config.set({
       "accessNode.api": "https://example3.com",
     })
 
+    await new Promise(resolve => setTimeout(resolve, 100))
     unsub()
 
-    expect(chainIds).toEqual([747, 747, 747])
+    expect(fcl.getChainId).toHaveBeenCalledTimes(3)
+    expect(chainIds).toEqual([747, 646, 747])
     expect(fcl.getChainId).toHaveBeenCalledTimes(3)
   })
 
