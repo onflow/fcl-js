@@ -1,4 +1,3 @@
-import * as fcl from "@onflow/fcl"
 import {AccountManager} from "../../accounts/account-manager"
 
 export async function ethAccounts(
