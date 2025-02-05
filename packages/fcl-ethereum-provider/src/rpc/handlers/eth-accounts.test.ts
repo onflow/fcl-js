@@ -38,28 +38,29 @@ describe("ethRequestAccounts handler", () => {
     accountManagerMock = {
       authenticate: jest.fn(),
       getAccounts: jest.fn(),
+      getAndCreateAccounts: jest.fn(),
       updateCOAAddress: jest.fn(),
       subscribe: jest.fn(),
     } as unknown as jest.Mocked<AccountManager>
   })
 
   it("should call authenticate, updateCOAAddress, and return the manager's accounts", async () => {
-    accountManagerMock.getAccounts.mockResolvedValue(["0x1234..."])
+    accountManagerMock.getAndCreateAccounts.mockResolvedValue(["0x1234..."])
 
     const accounts = await ethRequestAccounts(accountManagerMock)
 
     expect(accountManagerMock.authenticate).toHaveBeenCalled()
-    expect(accountManagerMock.getAccounts).toHaveBeenCalled()
+    expect(accountManagerMock.getAndCreateAccounts).toHaveBeenCalled()
     expect(accounts).toEqual(["0x1234..."])
   })
 
   it("should handle empty accounts scenario", async () => {
-    accountManagerMock.getAccounts.mockResolvedValue([])
+    accountManagerMock.getAndCreateAccounts.mockResolvedValue([])
 
     const accounts = await ethRequestAccounts(accountManagerMock)
 
     expect(accountManagerMock.authenticate).toHaveBeenCalled()
-    expect(accountManagerMock.getAccounts).toHaveBeenCalled()
+    expect(accountManagerMock.getAndCreateAccounts).toHaveBeenCalled()
     expect(accounts).toEqual([])
   })
 })
