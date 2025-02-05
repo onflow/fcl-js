@@ -5,7 +5,11 @@ import {AccountManager} from "../accounts/account-manager"
 import {ethSendTransaction} from "./handlers/eth-send-transaction"
 import {NetworkManager} from "../network/network-manager"
 import {personalSign} from "./handlers/personal-sign"
-import {PersonalSignParams} from "../types/eth"
+import {
+  AddEthereumChainParams,
+  PersonalSignParams,
+  SwitchEthereumChainParams,
+} from "../types/eth"
 
 export class RpcProcessor {
   constructor(
@@ -32,6 +36,25 @@ export class RpcProcessor {
           this.accountManager,
           params as PersonalSignParams
         )
+      case "wallet_addEthereumChain":
+        // Expect params to be an array with one chain configuration object.
+        if (!params || !Array.isArray(params) || !params[0]) {
+          throw new Error(
+            "wallet_addEthereumChain requires an array with a chain configuration object."
+          )
+        }
+        const chainConfig = params[0] as AddEthereumChainParams
+
+        return await this.networkManager.addChain(chainConfig)
+      case "wallet_switchEthereumChain":
+        // Expect params to be an array with one object.
+        if (!params || !Array.isArray(params) || !params[0]) {
+          throw new Error(
+            "wallet_switchEthereumChain requires an array with a chain configuration object."
+          )
+        }
+        const switchParams = params[0] as SwitchEthereumChainParams
+        return await this.networkManager.switchChain(switchParams)
       default:
         return await this.gateway.request({
           chainId,

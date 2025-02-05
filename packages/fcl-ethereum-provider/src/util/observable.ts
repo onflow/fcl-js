@@ -227,10 +227,12 @@ export function distinctUntilChanged<T>(): (
 ) => Observable<T> {
   return source => {
     return new Observable<T>(subscriber => {
-      let lastValue: T | undefined
+      let hasValue = false
+      let lastValue: T
       return source.subscribe({
         next: value => {
-          if (value !== lastValue) {
+          if (!hasValue || value !== lastValue) {
+            hasValue = true
             lastValue = value
             subscriber.next(value)
           }
