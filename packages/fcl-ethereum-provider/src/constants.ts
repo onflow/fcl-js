@@ -19,6 +19,7 @@ export enum ContractType {
 }
 
 export enum EventType {
+  CADENCE_OWNED_ACCOUNT_CREATED = "CADENCE_OWNED_ACCOUNT_CREATED",
   TRANSACTION_EXECUTED = "TRANSACTION_EXECUTED",
 }
 
@@ -27,6 +28,10 @@ export const EVENT_IDENTIFIERS = {
     [FlowNetwork.TESTNET]: "A.8c5303eaa26202d6.EVM.TransactionExecuted",
     [FlowNetwork.MAINNET]: "A.e467b9dd11fa00df.EVM.TransactionExecuted",
   },
+  [EventType.CADENCE_OWNED_ACCOUNT_CREATED]: {
+    [FlowNetwork.TESTNET]: "A.8c5303eaa26202d6.EVM.CadenceOwnedAccountCreated",
+    [FlowNetwork.MAINNET]: "A.e467b9dd11fa00df.EVM.CadenceOwnedAccountCreated",
+  }
 }
 
 export const FLOW_CONTRACTS = {
