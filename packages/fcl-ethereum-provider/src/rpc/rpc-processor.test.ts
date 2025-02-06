@@ -51,7 +51,7 @@ describe("rpc processor", () => {
     )
 
     jest.mocked(gateway).request.mockResolvedValue("0x0")
-    networkManager.getChainId.mockResolvedValue(646)
+    networkManager.getChainId.mockResolvedValue(545)
 
     const response = await rpcProcessor.handleRequest({
       method: "eth_blockNumber",
@@ -64,7 +64,7 @@ describe("rpc processor", () => {
     expect(gateway.request).toHaveBeenCalledWith({
       method: "eth_blockNumber",
       params: [],
-      chainId: 646,
+      chainId: 545,
     })
   })
 

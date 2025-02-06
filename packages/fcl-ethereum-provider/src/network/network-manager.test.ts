@@ -36,7 +36,7 @@ describe("network manager", () => {
     const manager = new NetworkManager(config.mock)
     const chainId = await manager.getChainId()
 
-    expect(chainId).toBe(646)
+    expect(chainId).toBe(545)
   })
 
   test("getChainId should throw error on unknown network", async () => {

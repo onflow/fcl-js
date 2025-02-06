@@ -127,7 +127,7 @@ describe("AccountManager", () => {
     await userMock.set!({addr: "0x1"} as CurrentUser)
 
     // Call getAndCreateAccounts. Since the COA already exists, it should just return it.
-    const accounts = await accountManager.getAndCreateAccounts(646)
+    const accounts = await accountManager.getAndCreateAccounts(545)
 
     expect(accounts).toEqual(["0x123"])
     // Should not have created a new COA
@@ -299,7 +299,7 @@ describe("send transaction", () => {
 
   test("send transaction testnet", async () => {
     // Set chainId to testnet
-    $mockChainId.next(646)
+    $mockChainId.next(545)
 
     const mockTxResult = {
       onceExecuted: jest.fn().mockResolvedValue({
@@ -328,7 +328,7 @@ describe("send transaction", () => {
       data: "0x1234",
       nonce: "0",
       gas: "0",
-      chainId: "646",
+      chainId: "545",
     }
 
     const result = await accountManager.sendTransaction(tx)
@@ -388,11 +388,11 @@ describe("send transaction", () => {
       data: "0x1234",
       nonce: "0",
       gas: "0",
-      chainId: "646",
+      chainId: "545",
     }
 
     await expect(accountManager.sendTransaction(tx)).rejects.toThrow(
-      `Chain ID does not match the current network. Expected: 747, Received: 646`
+      `Chain ID does not match the current network. Expected: 747, Received: 545`
     )
 
     expect(fcl.mutate).not.toHaveBeenCalled()
