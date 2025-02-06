@@ -70,25 +70,6 @@ describe("AccountManager", () => {
     })
   })
 
-  it("should get or create COA address", async () => {
-    const user = mockUser()
-    const accountManager = new AccountManager(user.mock)
-
-    // First call to `getAccounts` returns an empty array
-    jest.spyOn(accountManager, "getAccounts").mockResolvedValueOnce([])
-
-    jest.spyOn(accountManager, "createCOA").mockImplementation(async () => {
-      jest.spyOn(accountManager, "getAccounts").mockResolvedValueOnce(["0x123"])
-      return "0x123"
-    })
-
-    await expect(accountManager.getAndCreateAccounts()).resolves.toEqual([
-      "0x123",
-    ])
-
-    expect(accountManager.createCOA).toHaveBeenCalledTimes(1)
-  })
-
   it("should not update COA address if user has not changed", async () => {
     mockQuery.mockResolvedValue("0x123")
 
@@ -135,6 +116,23 @@ describe("AccountManager", () => {
     await userMock.set!({addr: "0x1"} as CurrentUser)
 
     await expect(accountManager.getCOAAddress()).rejects.toThrow("Fetch failed")
+  })
+
+  it("getAndCreateAccounts should get a COA address if it already exists", async () => {
+    mockQuery.mockResolvedValue("0x123")
+
+    const accountManager = new AccountManager(userMock.mock, networkManager)
+
+    // Trigger the state update
+    userMock.set!({ addr: "0x1" } as CurrentUser)
+
+    await new Promise(setImmediate)
+    // Call getAndCreateAccounts. Since the COA already exists, it should just return it.
+    const accounts = await accountManager.getAndCreateAccounts()
+
+    expect(accounts).toEqual(["0x123"])
+    // Should not have created a new COA
+    expect(fcl.mutate).not.toHaveBeenCalled()
   })
 
   it("should handle user changes correctly", async () => {
