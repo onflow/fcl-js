@@ -10,6 +10,7 @@ import {
   takeFirst,
 } from "../util/observable"
 import {formatChainId} from "../util/eth"
+import {withPrefix} from "@onflow/fcl"
 
 export class EventDispatcher {
   private $emitters: {
@@ -22,12 +23,16 @@ export class EventDispatcher {
     >
   }
 
-  constructor(accountManager: AccountManager, networkManager: NetworkManager) {
+  constructor(
+    accountManager: AccountManager,
+    networkManager: NetworkManager,
+    displayUri$: Observable<string>
+  ) {
     this.$emitters = {
       // Emit changes to the accounts as an accountsChanged event
       accountsChanged: new Observable(subscriber => {
         return accountManager.subscribe(accounts => {
-          subscriber.next(accounts)
+          subscriber.next(accounts.map(x => withPrefix(x)))
         })
       }),
       // Emit changes to the chainId as a chainChanged event
@@ -49,6 +54,7 @@ export class EventDispatcher {
       disconnect: new Observable<{reason: string}>(() => {
         return () => {}
       }),
+      display_uri: displayUri$,
     }
 
     this.subscriptions = {
@@ -56,6 +62,7 @@ export class EventDispatcher {
       chainChanged: new Map(),
       connect: new Map(),
       disconnect: new Map(),
+      display_uri: new Map(),
     }
   }
 

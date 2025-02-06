@@ -44,7 +44,7 @@ module.exports = function getInputOptions(package, build) {
     .concat(Object.keys(package.dependencies || {}))
 
   let testExternal = id => {
-    return (
+    let res =
       build.type !== "umd" &&
       (/@babel\/runtime/g.test(id) ||
         external.reduce((state, ext) => {
@@ -54,7 +54,18 @@ module.exports = function getInputOptions(package, build) {
             (typeof ext === "string" && ext === id)
           )
         }, false))
-    )
+
+    // TODO: REMOVE HACK
+    if (
+      id.startsWith("@ethersproject") ||
+      id.startsWith("@noble") ||
+      id.startsWith("@wagmi") ||
+      id.startsWith("viem")
+    ) {
+      res = true
+    }
+
+    return res
   }
 
   // exclude peer dependencies

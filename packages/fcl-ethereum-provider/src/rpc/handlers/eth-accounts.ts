@@ -1,9 +1,11 @@
+import {withPrefix} from "@onflow/fcl"
 import {AccountManager} from "../../accounts/account-manager"
 
 export async function ethAccounts(
   accountManager: AccountManager
 ): Promise<string[]> {
-  return await accountManager.getAccounts()
+  const accounts = await accountManager.getAccounts()
+  return accounts.map(x => withPrefix(x))
 }
 
 export async function ethRequestAccounts(
@@ -11,6 +13,6 @@ export async function ethRequestAccounts(
   chainId: number
 ): Promise<string[]> {
   await accountManager.authenticate()
-
-  return await accountManager.getAndCreateAccounts(chainId)
+  const accounts = await accountManager.getAndCreateAccounts(chainId)
+  return accounts.map(x => withPrefix(x))
 }

@@ -6,11 +6,11 @@ export enum FlowNetwork {
 export const FLOW_CHAINS = {
   [FlowNetwork.MAINNET]: {
     eip155ChainId: 747,
-    publicRpcUrl: "https://access.mainnet.nodes.onflow.org",
+    publicRpcUrl: "https://mainnet.evm.nodes.onflow.org",
   },
   [FlowNetwork.TESTNET]: {
     eip155ChainId: 545,
-    publicRpcUrl: "https://access.testnet.nodes.onflow.org",
+    publicRpcUrl: "https://testnet.evm.nodes.onflow.org",
   },
 }
 

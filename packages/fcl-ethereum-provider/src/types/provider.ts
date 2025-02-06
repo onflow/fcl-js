@@ -12,6 +12,7 @@ export type ProviderEvents = {
   disconnect: {reason: string}
   chainChanged: string
   accountsChanged: string[]
+  display_uri: string
 }
 
 // Event callback
@@ -28,4 +29,5 @@ export interface Eip1193Provider {
     event: E,
     listener: EventCallback<ProviderEvents[E]>
   ): void
+  disconnect(): void
 }

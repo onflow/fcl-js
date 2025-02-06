@@ -162,7 +162,7 @@ describe("gateway", () => {
       jest.mocked(HttpConnection).mock.instances[0]
     )
     expect(HttpConnection).toHaveBeenCalledWith(
-      "https://access.mainnet.nodes.onflow.org"
+      "https://mainnet.evm.nodes.onflow.org"
     )
   })
 
@@ -191,7 +191,7 @@ describe("gateway", () => {
       jest.mocked(HttpConnection).mock.instances[0]
     )
     expect(HttpConnection).toHaveBeenCalledWith(
-      "https://access.testnet.nodes.onflow.org"
+      "https://testnet.evm.nodes.onflow.org"
     )
   })
 })
