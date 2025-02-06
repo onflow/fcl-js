@@ -7,7 +7,7 @@ import {
 } from "./types/provider"
 import {RpcProcessor} from "./rpc/rpc-processor"
 import {EventDispatcher} from "./events/event-dispatcher"
-import {RpcError, RpcErrorCode} from "./util/errors"
+import {ProviderError, ProviderErrorCode} from "./util/errors"
 import {AccountManager} from "./accounts/account-manager"
 
 export class FclEthereumProvider implements Eip1193Provider {
@@ -22,22 +22,11 @@ export class FclEthereumProvider implements Eip1193Provider {
     method,
     params,
   }: ProviderRequest): Promise<ProviderResponse<T>> {
-    try {
-      if (!method) {
-        throw new Error("Method is required")
-      }
-      const result = await this.rpcProcessor.handleRequest({method, params})
-      return result
-    } catch (error) {
-      if (error instanceof RpcError) {
-        throw error
-      } else {
-        throw new RpcError({
-          code: RpcErrorCode.InternalError,
-          cause: error,
-        })
-      }
+    if (!method) {
+      throw new Error("Method is required")
     }
+    const result = await this.rpcProcessor.handleRequest({method, params})
+    return result
   }
 
   disconnect(): void {
