@@ -9,7 +9,7 @@ export const FLOW_CHAINS = {
     publicRpcUrl: "https://access.mainnet.nodes.onflow.org",
   },
   [FlowNetwork.TESTNET]: {
-    eip155ChainId: 646,
+    eip155ChainId: 545,
     publicRpcUrl: "https://access.testnet.nodes.onflow.org",
   },
 }

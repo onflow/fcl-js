@@ -13,7 +13,7 @@ describe("gateway", () => {
   test("request should work for mainnet", async () => {
     const gateway = new Gateway({
       747: "https://example.com",
-      646: "https://example.com/testnet",
+      545: "https://example.com/testnet",
     })
 
     jest.mocked(JsonRpcProvider).mockImplementation(
@@ -51,7 +51,7 @@ describe("gateway", () => {
   test("request should work for testnet", async () => {
     const gateway = new Gateway({
       747: "https://example.com",
-      646: "https://example.com/testnet",
+      545: "https://example.com/testnet",
     })
 
     jest.mocked(JsonRpcProvider).mockImplementation(
@@ -66,7 +66,7 @@ describe("gateway", () => {
     const returnValue = await gateway.request({
       method: "eth_accounts",
       params: [],
-      chainId: 646,
+      chainId: 545,
     })
 
     // Check that the arguments are correct
@@ -89,7 +89,7 @@ describe("gateway", () => {
   test("subsequent requests should use the same provider", async () => {
     const gateway = new Gateway({
       747: "https://example.com",
-      646: "https://example.com/testnet",
+      545: "https://example.com/testnet",
     })
 
     jest.mocked(JsonRpcProvider).mockImplementation(
@@ -104,13 +104,13 @@ describe("gateway", () => {
     await gateway.request({
       method: "eth_accounts",
       params: [],
-      chainId: 646,
+      chainId: 545,
     })
 
     await gateway.request({
       method: "eth_accounts",
       params: [],
-      chainId: 646,
+      chainId: 545,
     })
 
     // Verify that the testnet provider was used
@@ -125,7 +125,7 @@ describe("gateway", () => {
   test("request should throw if chainId is not found", async () => {
     const gateway = new Gateway({
       747: "https://example.com",
-      646: "https://example.com/testnet",
+      545: "https://example.com/testnet",
     })
 
     await expect(
@@ -181,7 +181,7 @@ describe("gateway", () => {
     await gateway.request({
       method: "eth_accounts",
       params: [],
-      chainId: 646,
+      chainId: 545,
     })
 
     // Verify that the testnet provider was used
