@@ -6,8 +6,11 @@ export async function ethAccounts(
   return await accountManager.getAccounts()
 }
 
-export async function ethRequestAccounts(accountManager: AccountManager) {
+export async function ethRequestAccounts(
+  accountManager: AccountManager,
+  chainId: number
+): Promise<string[]> {
   await accountManager.authenticate()
 
-  return await accountManager.getAccounts()
+  return await accountManager.getAndCreateAccounts(chainId)
 }
