@@ -26,23 +26,7 @@ import {
 import {EthSignatureResponse} from "../types/eth"
 import {NetworkManager} from "../network/network-manager"
 import {formatChainId, getContractAddress} from "../util/eth"
-
-const CREATE_COA_TX = `
-import "EVM"
-
-transaction() {
-    prepare(signer: auth(SaveValue, IssueStorageCapabilityController, PublishCapability) &Account) {
-        let storagePath = /storage/evm
-        let publicPath = /public/evm
-
-        let coa: @EVM.CadenceOwnedAccount <- EVM.createCadenceOwnedAccount()
-        signer.storage.save(<-coa, to: storagePath)
-
-        let cap = signer.capabilities.storage.issue<&EVM.CadenceOwnedAccount>(storagePath)
-        signer.capabilities.publish(cap, at: publicPath)
-    }
-}
-`
+import {createCOATx} from "../cadence"
 
 export class AccountManager {
   private $addressStore = new BehaviorSubject<{
@@ -205,7 +189,7 @@ export class AccountManager {
     }
 
     const txId = await fcl.mutate({
-      cadence: CREATE_COA_TX,
+      cadence: createCOATx(chainId),
       limit: 9999,
       authz: this.user,
     })
