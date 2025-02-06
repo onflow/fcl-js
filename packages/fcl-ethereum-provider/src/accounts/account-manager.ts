@@ -85,6 +85,7 @@ export class AccountManager {
             from(
               (async () => {
                 try {
+                  console.log("Address", addr)
                   if (!addr) {
                     return {isLoading: false, address: null, error: null}
                   }
@@ -145,17 +146,12 @@ export class AccountManager {
           return nil
       }
     `
-    const response = await fcl.query({
+    return await fcl.query({
       cadence: cadenceScript,
       args: (arg: typeof fcl.arg, t: typeof fcl.t) => [
         arg(flowAddr, t.Address),
       ],
     })
-
-    if (!response) {
-      throw new Error("COA account not found for the authenticated user")
-    }
-    return response as string
   }
 
   public async getCOAAddress(): Promise<string | null> {
@@ -176,12 +172,12 @@ export class AccountManager {
   /**
    * Get the COA address and create it if it doesn't exist
    */
-  public async getAndCreateAccounts(): Promise<string[]> {
-    let accounts = await this.getAccounts()
+  public async getAndCreateAccounts(chainId: number): Promise<string[]> {
+    const accounts = await this.getAccounts()
 
     if (accounts.length === 0) {
-      await this.createCOA()
-      accounts = await this.getAccounts()
+      const coaAddress = await this.createCOA(chainId)
+      return [coaAddress];
     }
 
     if (accounts.length === 0) {
@@ -191,21 +187,46 @@ export class AccountManager {
     return accounts
   }
 
-  public async createCOA(): Promise<string> {
+  public async createCOA(chainId: number): Promise<string> {
+    // Find the Flow network based on the chain ID
+    const flowNetwork = Object.entries(FLOW_CHAINS).find(
+      ([, chain]) => chain.eip155ChainId === chainId
+    )?.[0] as FlowNetwork | undefined
+
+    if (!flowNetwork) {
+      throw new Error("Flow network not found for chain ID")
+    }
+
+    // Validate the chain ID
+    const currentChainId = await this.networkManager.getChainId()
+    if (chainId !== currentChainId) {
+      throw new Error(
+        `Chain ID does not match the current network. Expected: ${currentChainId}, Received: ${chainId}`
+      )
+    }
+
     const txId = await fcl.mutate({
       cadence: CREATE_COA_TX,
       limit: 9999,
       authz: this.user,
-    })
+    });
 
-    await fcl.tx(txId).onceSealed()
+    const event = await this.waitForTxResult(
+      txId,
+      EVENT_IDENTIFIERS[EventType.CADENCE_OWNED_ACCOUNT_CREATED][flowNetwork],
+      "Failed to create COA: COACreated event not found"
+    );
 
-    const coaAddress = await this.getCOAAddress()
+    const coaAddress = event.data.address;
     if (!coaAddress) {
-      throw new Error("Failed to retrieve COA address after creation.")
+      throw new Error("COA created event did not include an address");
     }
-    return coaAddress
+
+    this.$addressStore.next({ isLoading: false, address: coaAddress, error: null });
+
+    return coaAddress;
   }
+
 
   public subscribe(callback: (accounts: string[]) => void): Subscription {
     return this.$addressStore

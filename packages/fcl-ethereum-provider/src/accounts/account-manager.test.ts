@@ -30,7 +30,7 @@ describe("AccountManager", () => {
   let userMock: ReturnType<typeof mockUser>
 
   beforeEach(() => {
-    jest.clearAllMocks()
+    jest.resetAllMocks()
 
     const chainId$ = new BehaviorSubject<number | null>(747)
     networkManager = {
@@ -124,16 +124,44 @@ describe("AccountManager", () => {
     const accountManager = new AccountManager(userMock.mock, networkManager)
 
     // Trigger the state update
-    userMock.set!({ addr: "0x1" } as CurrentUser)
+    await userMock.set!({ addr: "0x1" } as CurrentUser)
 
-    await new Promise(setImmediate)
     // Call getAndCreateAccounts. Since the COA already exists, it should just return it.
-    const accounts = await accountManager.getAndCreateAccounts()
+    const accounts = await accountManager.getAndCreateAccounts(646)
 
     expect(accounts).toEqual(["0x123"])
     // Should not have created a new COA
     expect(fcl.mutate).not.toHaveBeenCalled()
   })
+
+  it("getAndCreateAccounts should create a COA if it does not exist", async () => {
+    const mockTxResult = {
+      onceExecuted: jest.fn().mockResolvedValue({
+        events: [
+          {
+            type: "A.e467b9dd11fa00df.EVM.CadenceOwnedAccountCreated",
+            data: {
+              address: "0x123",
+            },
+          },
+        ],
+      }),
+    } as any as jest.Mocked<ReturnType<typeof fcl.tx>>;
+
+    jest.mocked(fcl.tx).mockReturnValue(mockTxResult);
+    jest.mocked(fcl.mutate).mockResolvedValue("1111");
+
+    // For the subscription, simulate that initially no COA is found, then after creation the query returns "0x123"
+    mockQuery.mockResolvedValueOnce(null).mockResolvedValueOnce("0x123");
+
+    const accountManager = new AccountManager(userMock.mock, networkManager);
+
+    await userMock.set!({ addr: "0x1" } as CurrentUser);
+
+    const accounts = await accountManager.getAndCreateAccounts(747);
+    expect(accounts).toEqual(["0x123"]);
+    expect(fcl.mutate).toHaveBeenCalled();
+  });
 
   it("should handle user changes correctly", async () => {
     mockQuery
@@ -147,7 +175,6 @@ describe("AccountManager", () => {
 
     await userMock.set({addr: "0x2"} as CurrentUser)
 
-    await new Promise(setImmediate)
     expect(await accountManager.getCOAAddress()).toBe("0x456")
   })
 
@@ -159,9 +186,7 @@ describe("AccountManager", () => {
     const callback = jest.fn()
     accountManager.subscribe(callback)
 
-    userMock.set({addr: "0x1"} as CurrentUser)
-
-    await new Promise(setImmediate)
+    await userMock.set({addr: "0x1"} as CurrentUser)
 
     expect(callback).toHaveBeenCalledWith(["0x123"])
   })
@@ -222,7 +247,7 @@ describe("send transaction", () => {
       getChainId: () => $mockChainId.getValue(),
     } as any as jest.Mocked<NetworkManager>
 
-    jest.clearAllMocks()
+    jest.resetAllMocks()
   })
 
   test("send transaction mainnet", async () => {
@@ -381,7 +406,7 @@ describe("signMessage", () => {
   let updateUser: ReturnType<typeof mockUser>["set"]
 
   beforeEach(() => {
-    jest.clearAllMocks()
+    jest.resetAllMocks()
     ;({mock: user, set: updateUser} = mockUser({addr: "0x123"} as CurrentUser))
     jest.mocked(fcl.query).mockResolvedValue("0xCOA1")
     const $mockChainId = new BehaviorSubject<number | null>(747)
