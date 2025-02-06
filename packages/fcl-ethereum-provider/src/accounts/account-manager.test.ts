@@ -124,7 +124,7 @@ describe("AccountManager", () => {
     const accountManager = new AccountManager(userMock.mock, networkManager)
 
     // Trigger the state update
-    await userMock.set!({ addr: "0x1" } as CurrentUser)
+    await userMock.set!({addr: "0x1"} as CurrentUser)
 
     // Call getAndCreateAccounts. Since the COA already exists, it should just return it.
     const accounts = await accountManager.getAndCreateAccounts(646)
@@ -146,22 +146,22 @@ describe("AccountManager", () => {
           },
         ],
       }),
-    } as any as jest.Mocked<ReturnType<typeof fcl.tx>>;
+    } as any as jest.Mocked<ReturnType<typeof fcl.tx>>
 
-    jest.mocked(fcl.tx).mockReturnValue(mockTxResult);
-    jest.mocked(fcl.mutate).mockResolvedValue("1111");
+    jest.mocked(fcl.tx).mockReturnValue(mockTxResult)
+    jest.mocked(fcl.mutate).mockResolvedValue("1111")
 
     // For the subscription, simulate that initially no COA is found, then after creation the query returns "0x123"
-    mockQuery.mockResolvedValueOnce(null).mockResolvedValueOnce("0x123");
+    mockQuery.mockResolvedValueOnce(null).mockResolvedValueOnce("0x123")
 
-    const accountManager = new AccountManager(userMock.mock, networkManager);
+    const accountManager = new AccountManager(userMock.mock, networkManager)
 
-    await userMock.set!({ addr: "0x1" } as CurrentUser);
+    await userMock.set!({addr: "0x1"} as CurrentUser)
 
-    const accounts = await accountManager.getAndCreateAccounts(747);
-    expect(accounts).toEqual(["0x123"]);
-    expect(fcl.mutate).toHaveBeenCalled();
-  });
+    const accounts = await accountManager.getAndCreateAccounts(747)
+    expect(accounts).toEqual(["0x123"])
+    expect(fcl.mutate).toHaveBeenCalled()
+  })
 
   it("should handle user changes correctly", async () => {
     mockQuery

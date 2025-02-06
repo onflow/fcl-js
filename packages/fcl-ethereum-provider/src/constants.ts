@@ -31,7 +31,7 @@ export const EVENT_IDENTIFIERS = {
   [EventType.CADENCE_OWNED_ACCOUNT_CREATED]: {
     [FlowNetwork.TESTNET]: "A.8c5303eaa26202d6.EVM.CadenceOwnedAccountCreated",
     [FlowNetwork.MAINNET]: "A.e467b9dd11fa00df.EVM.CadenceOwnedAccountCreated",
-  }
+  },
 }
 
 export const FLOW_CONTRACTS = {

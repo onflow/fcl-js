@@ -85,7 +85,6 @@ export class AccountManager {
             from(
               (async () => {
                 try {
-                  console.log("Address", addr)
                   if (!addr) {
                     return {isLoading: false, address: null, error: null}
                   }
@@ -118,13 +117,13 @@ export class AccountManager {
     eventType: string,
     errorMsg: string = `${eventType} event not found`
   ): Promise<any> {
-    const txResult = await fcl.tx(txId).onceExecuted();
+    const txResult = await fcl.tx(txId).onceExecuted()
 
-    const event = txResult.events.find(e => e.type === eventType);
+    const event = txResult.events.find(e => e.type === eventType)
     if (!event) {
-      throw new Error(errorMsg);
+      throw new Error(errorMsg)
     }
-    return event;
+    return event
   }
 
   private async fetchCOAFromFlowAddress(flowAddr: string): Promise<string> {
@@ -177,7 +176,7 @@ export class AccountManager {
 
     if (accounts.length === 0) {
       const coaAddress = await this.createCOA(chainId)
-      return [coaAddress];
+      return [coaAddress]
     }
 
     if (accounts.length === 0) {
@@ -209,24 +208,27 @@ export class AccountManager {
       cadence: CREATE_COA_TX,
       limit: 9999,
       authz: this.user,
-    });
+    })
 
     const event = await this.waitForTxResult(
       txId,
       EVENT_IDENTIFIERS[EventType.CADENCE_OWNED_ACCOUNT_CREATED][flowNetwork],
       "Failed to create COA: COACreated event not found"
-    );
+    )
 
-    const coaAddress = event.data.address;
+    const coaAddress = event.data.address
     if (!coaAddress) {
-      throw new Error("COA created event did not include an address");
+      throw new Error("COA created event did not include an address")
     }
 
-    this.$addressStore.next({ isLoading: false, address: coaAddress, error: null });
+    this.$addressStore.next({
+      isLoading: false,
+      address: coaAddress,
+      error: null,
+    })
 
-    return coaAddress;
+    return coaAddress
   }
-
 
   public subscribe(callback: (accounts: string[]) => void): Subscription {
     return this.$addressStore
@@ -319,14 +321,14 @@ export class AccountManager {
       txId,
       EVENT_IDENTIFIERS[EventType.TRANSACTION_EXECUTED][flowNetwork],
       "EVM transaction hash not found"
-    );
+    )
 
-    const eventData: TransactionExecutedEvent = event.data;
+    const eventData: TransactionExecutedEvent = event.data
     const evmTxHash = eventData.hash
       .map(h => parseInt(h, 16).toString().padStart(2, "0"))
-      .join("");
+      .join("")
 
-    return evmTxHash;
+    return evmTxHash
   }
 
   public async signMessage(
