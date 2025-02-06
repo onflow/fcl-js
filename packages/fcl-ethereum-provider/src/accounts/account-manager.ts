@@ -26,6 +26,7 @@ import {
 import {EthSignatureResponse} from "../types/eth"
 import {NetworkManager} from "../network/network-manager"
 import {formatChainId, getContractAddress} from "../util/eth"
+import {createCOATx, getCOAScript, sendTransactionTx} from "../cadence"
 
 export class AccountManager {
   private $addressStore = new BehaviorSubject<{
@@ -95,36 +96,32 @@ export class AccountManager {
     await this.user.unauthenticate()
   }
 
+  private async waitForTxResult(
+    txId: string,
+    eventType: string,
+    errorMsg: string = `${eventType} event not found`
+  ): Promise<any> {
+    const txResult = await fcl.tx(txId).onceExecuted()
+
+    const event = txResult.events.find(e => e.type === eventType)
+    if (!event) {
+      throw new Error(errorMsg)
+    }
+    return event
+  }
+
   private async fetchCOAFromFlowAddress(flowAddr: string): Promise<string> {
     const chainId = await this.networkManager.getChainId()
     if (!chainId) {
       throw new Error("No active chain")
     }
 
-    const cadenceScript = `
-      import EVM from ${getContractAddress(ContractType.EVM, chainId)}
-
-      access(all)
-      fun main(address: Address): String? {
-          if let coa = getAuthAccount(address)
-              .storage
-              .borrow<&EVM.CadenceOwnedAccount>(from: /storage/evm) {
-              return coa.address().toString()
-          }
-          return nil
-      }
-    `
-    const response = await fcl.query({
-      cadence: cadenceScript,
+    return await fcl.query({
+      cadence: getCOAScript(chainId),
       args: (arg: typeof fcl.arg, t: typeof fcl.t) => [
         arg(flowAddr, t.Address),
       ],
     })
-
-    if (!response) {
-      throw new Error("COA account not found for the authenticated user")
-    }
-    return response as string
   }
 
   public async getCOAAddress(): Promise<string | null> {
@@ -140,6 +137,68 @@ export class AccountManager {
   public async getAccounts(): Promise<string[]> {
     const coaAddress = await this.getCOAAddress()
     return coaAddress ? [coaAddress] : []
+  }
+
+  /**
+   * Get the COA address and create it if it doesn't exist
+   */
+  public async getAndCreateAccounts(chainId: number): Promise<string[]> {
+    const accounts = await this.getAccounts()
+
+    if (accounts.length === 0) {
+      const coaAddress = await this.createCOA(chainId)
+      return [coaAddress]
+    }
+
+    if (accounts.length === 0) {
+      throw new Error("COA address is still missing after creation.")
+    }
+
+    return accounts
+  }
+
+  public async createCOA(chainId: number): Promise<string> {
+    // Find the Flow network based on the chain ID
+    const flowNetwork = Object.entries(FLOW_CHAINS).find(
+      ([, chain]) => chain.eip155ChainId === chainId
+    )?.[0] as FlowNetwork | undefined
+
+    if (!flowNetwork) {
+      throw new Error("Flow network not found for chain ID")
+    }
+
+    // Validate the chain ID
+    const currentChainId = await this.networkManager.getChainId()
+    if (chainId !== currentChainId) {
+      throw new Error(
+        `Chain ID does not match the current network. Expected: ${currentChainId}, Received: ${chainId}`
+      )
+    }
+
+    const txId = await fcl.mutate({
+      cadence: createCOATx(chainId),
+      limit: 9999,
+      authz: this.user,
+    })
+
+    const event = await this.waitForTxResult(
+      txId,
+      EVENT_IDENTIFIERS[EventType.CADENCE_OWNED_ACCOUNT_CREATED][flowNetwork],
+      "Failed to create COA: COACreated event not found"
+    )
+
+    const coaAddress = event.data.address
+    if (!coaAddress) {
+      throw new Error("COA created event did not include an address")
+    }
+
+    this.$addressStore.next({
+      isLoading: false,
+      address: coaAddress,
+      error: null,
+    })
+
+    return coaAddress
   }
 
   public subscribe(callback: (accounts: string[]) => void): Subscription {
@@ -192,33 +251,7 @@ export class AccountManager {
     }
 
     const txId = await fcl.mutate({
-      cadence: `import EVM from ${getContractAddress(ContractType.EVM, parsedChainId)}
-        
-        /// Executes the calldata from the signer's COA
-        ///
-        transaction(evmContractAddressHex: String, calldata: String, gasLimit: UInt64, value: UInt256) {
-        
-            let evmAddress: EVM.EVMAddress
-            let coa: auth(EVM.Call) &EVM.CadenceOwnedAccount
-        
-            prepare(signer: auth(BorrowValue) &Account) {
-                self.evmAddress = EVM.addressFromString(evmContractAddressHex)
-        
-                self.coa = signer.storage.borrow<auth(EVM.Call) &EVM.CadenceOwnedAccount>(from: /storage/evm)
-                    ?? panic("Could not borrow COA from provided gateway address")
-            }
-        
-            execute {
-                let valueBalance = EVM.Balance(attoflow: value)
-                let callResult = self.coa.call(
-                    to: self.evmAddress,
-                    data: calldata.decodeHex(),
-                    gasLimit: gasLimit,
-                    value: valueBalance
-                )
-                assert(callResult.status == EVM.Status.successful, message: "Call failed")
-            }
-        }`,
+      cadence: sendTransactionTx(parsedChainId),
       limit: 9999,
       args: (arg: typeof fcl.arg, t: typeof fcl.t) => [
         arg(to, t.String),
@@ -229,19 +262,13 @@ export class AccountManager {
       authz: this.user,
     })
 
-    const result = await fcl.tx(txId).onceExecuted()
-    const {events} = result
-
-    const evmTxExecutedEvent = events.find(
-      event =>
-        event.type ===
-        EVENT_IDENTIFIERS[EventType.TRANSACTION_EXECUTED][flowNetwork]
+    const event = await this.waitForTxResult(
+      txId,
+      EVENT_IDENTIFIERS[EventType.TRANSACTION_EXECUTED][flowNetwork],
+      "EVM transaction hash not found"
     )
-    if (!evmTxExecutedEvent) {
-      throw new Error("EVM transaction hash not found")
-    }
 
-    const eventData: TransactionExecutedEvent = evmTxExecutedEvent.data
+    const eventData: TransactionExecutedEvent = event.data
     const evmTxHash = eventData.hash
       .map(h => parseInt(h, 16).toString().padStart(2, "0"))
       .join("")
