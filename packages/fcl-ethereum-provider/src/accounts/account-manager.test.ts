@@ -3,8 +3,8 @@ import {mockUser} from "../__mocks__/fcl"
 import * as fcl from "@onflow/fcl"
 import * as rlp from "@onflow/rlp"
 import {CurrentUser} from "@onflow/typedefs"
-import {ChainIdStore, NetworkManager} from "../network/network-manager"
-import {BehaviorSubject, Subject} from "../util/observable"
+import {NetworkManager} from "../network/network-manager"
+import {BehaviorSubject} from "../util/observable"
 
 jest.mock("@onflow/fcl", () => {
   const fcl = jest.requireActual("@onflow/fcl")
