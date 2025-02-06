@@ -26,7 +26,7 @@ import {
 import {EthSignatureResponse} from "../types/eth"
 import {NetworkManager} from "../network/network-manager"
 import {formatChainId, getContractAddress} from "../util/eth"
-import {createCOATx} from "../cadence"
+import {createCOATx, getCOAScript, sendTransactionTx} from "../cadence"
 
 export class AccountManager {
   private $addressStore = new BehaviorSubject<{
@@ -116,21 +116,8 @@ export class AccountManager {
       throw new Error("No active chain")
     }
 
-    const cadenceScript = `
-      import EVM from ${getContractAddress(ContractType.EVM, chainId)}
-
-      access(all)
-      fun main(address: Address): String? {
-          if let coa = getAuthAccount(address)
-              .storage
-              .borrow<&EVM.CadenceOwnedAccount>(from: /storage/evm) {
-              return coa.address().toString()
-          }
-          return nil
-      }
-    `
     return await fcl.query({
-      cadence: cadenceScript,
+      cadence: getCOAScript(chainId),
       args: (arg: typeof fcl.arg, t: typeof fcl.t) => [
         arg(flowAddr, t.Address),
       ],
@@ -264,33 +251,7 @@ export class AccountManager {
     }
 
     const txId = await fcl.mutate({
-      cadence: `import EVM from ${getContractAddress(ContractType.EVM, parsedChainId)}
-        
-        /// Executes the calldata from the signer's COA
-        ///
-        transaction(evmContractAddressHex: String, calldata: String, gasLimit: UInt64, value: UInt256) {
-        
-            let evmAddress: EVM.EVMAddress
-            let coa: auth(EVM.Call) &EVM.CadenceOwnedAccount
-        
-            prepare(signer: auth(BorrowValue) &Account) {
-                self.evmAddress = EVM.addressFromString(evmContractAddressHex)
-        
-                self.coa = signer.storage.borrow<auth(EVM.Call) &EVM.CadenceOwnedAccount>(from: /storage/evm)
-                    ?? panic("Could not borrow COA from provided gateway address")
-            }
-        
-            execute {
-                let valueBalance = EVM.Balance(attoflow: value)
-                let callResult = self.coa.call(
-                    to: self.evmAddress,
-                    data: calldata.decodeHex(),
-                    gasLimit: gasLimit,
-                    value: valueBalance
-                )
-                assert(callResult.status == EVM.Status.successful, message: "Call failed")
-            }
-        }`,
+      cadence: sendTransactionTx(parsedChainId),
       limit: 9999,
       args: (arg: typeof fcl.arg, t: typeof fcl.t) => [
         arg(to, t.String),
