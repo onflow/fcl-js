@@ -112,6 +112,20 @@ export class AccountManager {
     await this.user.unauthenticate()
   }
 
+  private async waitForTxResult(
+    txId: string,
+    eventType: string,
+    errorMsg: string = `${eventType} event not found`
+  ): Promise<any> {
+    const txResult = await fcl.tx(txId).onceExecuted();
+
+    const event = txResult.events.find(e => e.type === eventType);
+    if (!event) {
+      throw new Error(errorMsg);
+    }
+    return event;
+  }
+
   private async fetchCOAFromFlowAddress(flowAddr: string): Promise<string> {
     const chainId = await this.networkManager.getChainId()
     if (!chainId) {
@@ -280,24 +294,18 @@ export class AccountManager {
       authz: this.user,
     })
 
-    const result = await fcl.tx(txId).onceExecuted()
-    const {events} = result
+    const event = await this.waitForTxResult(
+      txId,
+      EVENT_IDENTIFIERS[EventType.TRANSACTION_EXECUTED][flowNetwork],
+      "EVM transaction hash not found"
+    );
 
-    const evmTxExecutedEvent = events.find(
-      event =>
-        event.type ===
-        EVENT_IDENTIFIERS[EventType.TRANSACTION_EXECUTED][flowNetwork]
-    )
-    if (!evmTxExecutedEvent) {
-      throw new Error("EVM transaction hash not found")
-    }
-
-    const eventData: TransactionExecutedEvent = evmTxExecutedEvent.data
+    const eventData: TransactionExecutedEvent = event.data;
     const evmTxHash = eventData.hash
       .map(h => parseInt(h, 16).toString().padStart(2, "0"))
-      .join("")
+      .join("");
 
-    return evmTxHash
+    return evmTxHash;
   }
 
   public async signMessage(
