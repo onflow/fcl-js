@@ -28,14 +28,11 @@ export const ProviderErrorMessage: Record<ProviderErrorCode, string> = {
 
 export class ProviderError extends Error {
   public code: ProviderErrorCode
-  public data?: any
+  public cause?: any
 
   constructor({code, cause}: {code: ProviderErrorCode; cause?: any}) {
     super(ProviderErrorMessage[code])
     this.code = code
-    if (cause) {
-      this.stack = `${this.stack}\nCaused by: ${cause?.stack || cause}`
-    }
-    this.data = {cause}
+    this.cause = cause
   }
 }

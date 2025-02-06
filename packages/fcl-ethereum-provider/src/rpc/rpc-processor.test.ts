@@ -119,9 +119,7 @@ describe("rpc processor", () => {
     await expect(promise).rejects.toMatchObject({
       code: -32603,
       message: "Internal error",
-      data: {
-        cause: new Error("test error"),
-      },
+      cause: new Error("test error"),
     })
   })
 })
