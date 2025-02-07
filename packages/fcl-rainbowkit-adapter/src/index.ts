@@ -15,13 +15,12 @@ export const createFclConnector = (options: FclConnectorOptions) => {
   const uid = options.service?.uid
   const name = options.service?.provider?.name
   const iconUrl = options.service?.provider?.icon!
-  const iconBackground = options.service?.provider?.color
 
   return ({projectId}: DefaultWalletOptions): Wallet => ({
     id: uid ? `fcl-${uid}` : "fcl",
     name: name || "Cadence Wallet",
     iconUrl: iconUrl || FALLBACK_ICON,
-    iconBackground: iconBackground || "#FFFFFF",
+    iconBackground: "#FFFFFF",
     createConnector: walletDetails => {
       const connector = fclWagmiAdapter(options)
       return createConnector(config => ({

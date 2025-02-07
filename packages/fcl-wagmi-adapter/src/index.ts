@@ -32,10 +32,14 @@ export function fclWagmiAdapter(params: FclWagmiAdapterParams) {
   const id = params.service?.uid || "fcl"
   const name = params.service?.provider?.name || "Cadence Wallet"
 
+  // TODO: we need to surface this through FCL service configuration
+  const rdns = (params.service?.provider as any)?.rdns
+
   return createConnector<Provider, Properties>(config => ({
     id: id,
     name: name,
     type: "fcl-wagmi-adapter",
+    rdns: rdns,
     async setup() {
       const provider = await this.getProvider()
 
