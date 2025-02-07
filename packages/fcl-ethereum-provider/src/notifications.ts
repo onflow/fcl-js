@@ -6,63 +6,75 @@ export function displayErrorNotification(title: string, message: string) {
 
   const container = document.createElement("div")
   container.id = "flow-error-notification"
+  document.body.appendChild(container)
+
+  const shadow = container.attachShadow({mode: "closed"})
 
   const isDarkMode =
     window.matchMedia &&
     window.matchMedia("(prefers-color-scheme: dark)").matches
-
   const backgroundColor = isDarkMode ? "#2c2c2c" : "#ffffff"
   const textColor = isDarkMode ? "#f0f0f0" : "#333333"
   const borderColor = isDarkMode ? "#444444" : "#e0e0e0"
 
-  Object.assign(container.style, {
-    position: "fixed",
-    bottom: "20px",
-    right: "20px",
-    backgroundColor: backgroundColor,
-    color: textColor,
-    padding: "16px 24px",
-    borderRadius: "8px",
-    boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
-    fontFamily: "Arial, sans-serif",
-    zIndex: 1000,
-    maxWidth: "320px",
-    overflow: "hidden",
-    border: `1px solid ${borderColor}`,
-    opacity: "0",
-    transform: "translateY(20px)",
-    transition: "opacity 0.3s ease, transform 0.3s ease",
-  })
+  const style = document.createElement("style")
+  style.textContent = `
+    :host {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 1000;
+      max-width: 320px;
+      overflow: hidden;
+    }
+    .notification {
+      background-color: ${backgroundColor};
+      color: ${textColor};
+      padding: 16px 24px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      font-family: Arial, sans-serif;
+      border: 1px solid ${borderColor};
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+    .title {
+      font-weight: bold;
+      margin-bottom: 8px;
+      font-size: 16px;
+    }
+    .message {
+      font-size: 14px;
+      line-height: 1.4;
+    }
+  `
+  shadow.appendChild(style)
+
+  const notification = document.createElement("div")
+  notification.classList.add("notification")
 
   const titleElem = document.createElement("div")
+  titleElem.classList.add("title")
   titleElem.innerText = title
-  Object.assign(titleElem.style, {
-    fontWeight: "bold",
-    marginBottom: "8px",
-    fontSize: "16px",
-  })
+  notification.appendChild(titleElem)
 
   const messageElem = document.createElement("div")
+  messageElem.classList.add("message")
   messageElem.innerText = message
-  Object.assign(messageElem.style, {
-    fontSize: "14px",
-    lineHeight: "1.4",
-  })
+  notification.appendChild(messageElem)
 
-  container.appendChild(titleElem)
-  container.appendChild(messageElem)
+  shadow.appendChild(notification)
 
-  document.body.appendChild(container)
-
-  // Trigger the fade-in effect
+  // Trigger the fade-in animation
   requestAnimationFrame(() => {
-    container.style.opacity = "1"
-    container.style.transform = "translateY(0)"
+    notification.style.opacity = "1"
+    notification.style.transform = "translateY(0)"
   })
 
   setTimeout(() => {
-    container.style.opacity = "0"
-    container.style.transform = "translateY(20px)"
-    container.addEventListener("transitionend", () => container.remove())
+    notification.style.opacity = "0"
+    notification.style.transform = "translateY(20px)"
+    notification.addEventListener("transitionend", () => container.remove())
   }, 5000)
 }
