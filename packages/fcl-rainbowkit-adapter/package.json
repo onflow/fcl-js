@@ -1,7 +1,7 @@
 {
   "name": "@onflow/fcl-rainbowkit-adapter",
   "version": "0.0.0",
-  "description": "Wagmi adapter for FCL-compatible wallets",
+  "description": "Rainbowkit adapter for FCL-compatible wallets",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
   "homepage": "https://onflow.org",
