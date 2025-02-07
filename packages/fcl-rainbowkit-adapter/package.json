@@ -48,7 +48,7 @@
     "viem": "^2.22.21"
   },
   "peerDependencies": {
-    "@onflow/fcl": "1.13.4",
+    "@onflow/fcl": "^1.13.4",
     "@rainbow-me/rainbowkit": "^2.2.3"
   }
 }

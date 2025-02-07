@@ -45,6 +45,6 @@
     "@walletconnect/jsonrpc-provider": "^1.0.14"
   },
   "peerDependencies": {
-    "@onflow/fcl": "1.13.4"
+    "@onflow/fcl": "^1.13.4"
   }
 }
