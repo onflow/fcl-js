@@ -26,7 +26,6 @@ export function fclWagmiAdapter(params: FclWagmiAdapterParams) {
   let accountsChanged: Connector["onAccountsChanged"] | undefined
   let chainChanged: Connector["onChainChanged"] | undefined
   let connect: Connector["onConnect"] | undefined
-  let displayUri: ((uri: string) => void) | undefined
   let disconnect: (({reason}: {reason: string}) => void) | undefined
 
   // Parse and validate service parameters
@@ -53,15 +52,6 @@ export function fclWagmiAdapter(params: FclWagmiAdapterParams) {
     },
     async connect({isReconnecting}: any = {}) {
       const provider = await this.getProvider()
-      /*
-      TODO: This will be solved as part of the WalletConnect integration.
-
-      if (!displayUri) {
-        displayUri = this.onDisplayUri
-        provider.on("display_uri", displayUri)
-      }
-
-      */
 
       let accounts: readonly Address[]
       if (isReconnecting) {
@@ -95,26 +85,21 @@ export function fclWagmiAdapter(params: FclWagmiAdapterParams) {
       }) as ({reason}: {reason: string}) => void
       provider.on("disconnect", disconnect)
 
-      console.log("EH CURRENT FUUU", await this.getChainId())
-
       return {accounts, chainId: await this.getChainId()}
     },
     async disconnect() {
       const provider = await this.getProvider()
 
       // Manage EIP-1193 event listeners
-      if (chainChanged) {
-        provider.removeListener("chainChanged", chainChanged)
-        chainChanged = undefined
-      }
-      if (disconnect) {
-        provider.removeListener("disconnect", disconnect)
-        disconnect = undefined
-      }
-      if (!connect) {
-        connect = this.onConnect.bind(this)
-        provider.on("connect", connect)
-      }
+      if (chainChanged) provider.removeListener("chainChanged", chainChanged)
+      chainChanged = undefined
+
+      if (disconnect) provider.removeListener("disconnect", disconnect)
+      disconnect = undefined
+
+      if (connect) provider.removeListener("connect", connect)
+      connect = this.onConnect.bind(this)
+      provider.on("connect", connect)
 
       await provider.disconnect()
     },
@@ -138,7 +123,6 @@ export function fclWagmiAdapter(params: FclWagmiAdapterParams) {
       // TODO: There may be an issue here if a user without a COA refreshes the page
       // We should instead be checking whether FCL itself is authorized
       const accounts = await this.getAccounts()
-      console.log("RETURNING", accounts.length > 0)
       return accounts.length > 0
     },
     async switchChain({addEthereumChainParameter, chainId}: any) {
@@ -172,16 +156,12 @@ export function fclWagmiAdapter(params: FclWagmiAdapterParams) {
       config.emitter.emit("change", {chainId})
     },
     async onConnect(connectInfo) {
-      console.log("HEY")
       const accounts = await this.getAccounts()
 
       // TODO: What to do if accounts is empty? not sure this is accurate
       if (accounts.length === 0) return
 
-      console.log({accounts, chainId: Number(connectInfo.chainId)})
-
       const chainId = Number(connectInfo.chainId)
-      console.log("onConnect", {accounts, chainId})
       config.emitter.emit("connect", {accounts, chainId})
 
       const provider = await this.getProvider()
