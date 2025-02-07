@@ -88,7 +88,7 @@ export class RpcProcessor {
           const switchParams = params[0] as SwitchEthereumChainParams
           return await this.networkManager.switchChain(switchParams)
         case "eth_chainId":
-          return ethChainId(this.networkManager)
+          return await ethChainId(this.networkManager)
         default:
           return await this.gateway.request({
             chainId,
