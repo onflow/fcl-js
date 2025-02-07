@@ -12,7 +12,6 @@ export type ProviderEvents = {
   disconnect: {reason: string}
   chainChanged: string
   accountsChanged: string[]
-  display_uri: string
 }
 
 // Event callback

@@ -10,7 +10,6 @@ describe("event dispatcher", () => {
   let networkManager: jest.Mocked<NetworkManager>
   let $mockChainId: Subject<ChainIdStore>
   let accountManager: jest.Mocked<AccountManager>
-  let mockDisplayUri$: Subject<string>
 
   beforeEach(() => {
     jest.clearAllMocks()
@@ -20,7 +19,6 @@ describe("event dispatcher", () => {
       getChainId: jest.fn(),
     } as any
     accountManager = new (AccountManager as any)()
-    mockDisplayUri$ = new Subject<string>()
   })
   test("unsubscribe should remove listener", () => {
     let subs: ((accounts: string[]) => void)[] = []
@@ -32,11 +30,7 @@ describe("event dispatcher", () => {
     })
     const listener = jest.fn()
 
-    const eventDispatcher = new EventDispatcher(
-      accountManager,
-      networkManager,
-      mockDisplayUri$
-    )
+    const eventDispatcher = new EventDispatcher(accountManager, networkManager)
     eventDispatcher.on("accountsChanged", listener)
 
     expect(accountManager.subscribe).toHaveBeenCalled()
@@ -66,11 +60,7 @@ describe("event dispatcher", () => {
     })
     const listener = jest.fn()
 
-    const eventDispatcher = new EventDispatcher(
-      accountManager,
-      networkManager,
-      mockDisplayUri$
-    )
+    const eventDispatcher = new EventDispatcher(accountManager, networkManager)
     eventDispatcher.on("accountsChanged", listener)
 
     expect(accountManager.subscribe).toHaveBeenCalled()
@@ -93,11 +83,7 @@ describe("event dispatcher", () => {
     })
     const listener = jest.fn()
 
-    const eventDispatcher = new EventDispatcher(
-      accountManager,
-      networkManager,
-      mockDisplayUri$
-    )
+    const eventDispatcher = new EventDispatcher(accountManager, networkManager)
     eventDispatcher.on("accountsChanged", listener)
 
     expect(accountManager.subscribe).toHaveBeenCalled()
@@ -117,11 +103,7 @@ describe("event dispatcher", () => {
   test("should emit chainChanged", async () => {
     const listener = jest.fn()
 
-    const eventDispatcher = new EventDispatcher(
-      accountManager,
-      networkManager,
-      mockDisplayUri$
-    )
+    const eventDispatcher = new EventDispatcher(accountManager, networkManager)
     eventDispatcher.on("chainChanged", listener)
 
     // Initial chain id, should not emit as a change

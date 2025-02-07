@@ -63,10 +63,15 @@ export function fclWagmiAdapter(params: FclWagmiAdapterParams) {
     },
     async connect({chainId, isReconnecting}: any = {}) {
       const provider = await this.getProvider()
+      /*
+      TODO: This will be solved as part of the WalletConnect integration.
+
       if (!displayUri) {
         displayUri = this.onDisplayUri
         provider.on("display_uri", displayUri)
       }
+
+      */
 
       let accounts: readonly Address[] = await provider.request({
         method: "eth_requestAccounts",

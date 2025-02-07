@@ -23,11 +23,7 @@ export class EventDispatcher {
     >
   }
 
-  constructor(
-    accountManager: AccountManager,
-    networkManager: NetworkManager,
-    displayUri$: Observable<string>
-  ) {
+  constructor(accountManager: AccountManager, networkManager: NetworkManager) {
     this.$emitters = {
       // Emit changes to the accounts as an accountsChanged event
       accountsChanged: new Observable(subscriber => {
@@ -54,7 +50,6 @@ export class EventDispatcher {
       disconnect: new Observable<{reason: string}>(() => {
         return () => {}
       }),
-      display_uri: displayUri$,
     }
 
     this.subscriptions = {
@@ -62,7 +57,6 @@ export class EventDispatcher {
       chainChanged: new Map(),
       connect: new Map(),
       disconnect: new Map(),
-      display_uri: new Map(),
     }
   }
 
