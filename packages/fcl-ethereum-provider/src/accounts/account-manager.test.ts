@@ -2,9 +2,11 @@ import {AccountManager} from "./account-manager"
 import {mockUser} from "../__mocks__/fcl"
 import * as fcl from "@onflow/fcl"
 import * as rlp from "@onflow/rlp"
-import {CurrentUser} from "@onflow/typedefs"
+import {CurrentUser, FvmErrorCode} from "@onflow/typedefs"
 import {NetworkManager} from "../network/network-manager"
 import {BehaviorSubject} from "../util/observable"
+import {TransactionError} from "@onflow/fcl"
+import * as notifications from "../notifications"
 
 jest.mock("@onflow/fcl", () => {
   const fcl = jest.requireActual("@onflow/fcl")
@@ -14,12 +16,20 @@ jest.mock("@onflow/fcl", () => {
     tx: jest.fn(),
     mutate: jest.fn(),
     query: jest.fn(),
+    TransactionError: {
+      fromErrorMessage: jest.fn(),
+    },
   }
 })
 
 jest.mock("@onflow/rlp", () => ({
   encode: jest.fn(),
   Buffer: jest.requireActual("@onflow/rlp").Buffer,
+}))
+
+jest.mock("../notifications", () => ({
+  // ...jest.requireActual("../notifications"),
+  displayErrorNotification: jest.fn(),
 }))
 
 const mockFcl = jest.mocked(fcl)
@@ -161,6 +171,40 @@ describe("AccountManager", () => {
     const accounts = await accountManager.getAndCreateAccounts(747)
     expect(accounts).toEqual(["0x123"])
     expect(fcl.mutate).toHaveBeenCalled()
+  })
+
+  it("should display error notification and throw if STORAGE_CAPACITY_EXCEEDED error occurs", async () => {
+    const txResultError = {
+      onceExecuted: jest.fn().mockResolvedValue({
+        statusCode: 0,
+        errorMessage: "Simulated error",
+        events: [],
+      }),
+    } as any as jest.Mocked<ReturnType<typeof fcl.tx>>
+
+    jest.mocked(fcl.tx).mockReturnValue(txResultError)
+    jest.mocked(fcl.mutate).mockResolvedValue("1111")
+
+    const storageError = {
+      code: FvmErrorCode.STORAGE_CAPACITY_EXCEEDED,
+      message: "Simulated storage capacity exceeded",
+      type: "TRANSACTION_ERROR",
+      name: "TransactionError",
+    } as TransactionError
+
+    jest.mocked(TransactionError.fromErrorMessage).mockReturnValue(storageError)
+
+    const accountManager = new AccountManager(userMock.mock, networkManager)
+
+    await userMock.set!({addr: "0x1"} as CurrentUser)
+
+    await expect(accountManager.createCOA(747)).rejects.toThrow(
+      "Insufficient funds to cover storage costs."
+    )
+    expect(notifications.displayErrorNotification).toHaveBeenCalledWith(
+      "Storage Error",
+      "Your wallet does not have enough funds to cover storage costs. Please add more funds."
+    )
   })
 
   it("should handle user changes correctly", async () => {
