@@ -1,12 +1,10 @@
 import * as fcl from "@onflow/fcl"
 import * as rlp from "@onflow/rlp"
-import {CompositeSignature, CurrentUser} from "@onflow/typedefs"
+import {CompositeSignature, CurrentUser, FvmErrorCode} from "@onflow/typedefs"
 import {
-  ContractType,
   EVENT_IDENTIFIERS,
   EventType,
   FLOW_CHAINS,
-  FLOW_CONTRACTS,
   FlowNetwork,
 } from "../constants"
 import {TransactionExecutedEvent} from "../types/events"
@@ -25,8 +23,9 @@ import {
 } from "../util/observable"
 import {EthSignatureResponse} from "../types/eth"
 import {NetworkManager} from "../network/network-manager"
-import {formatChainId, getContractAddress} from "../util/eth"
 import {createCOATx, getCOAScript, sendTransactionTx} from "../cadence"
+import {TransactionError} from "@onflow/fcl"
+import {displayErrorNotification} from "../notifications"
 
 export class AccountManager {
   private $addressStore = new BehaviorSubject<{
@@ -180,6 +179,23 @@ export class AccountManager {
       limit: 9999,
       authz: this.user,
     })
+
+    const txResult = await fcl.tx(txId).onceExecuted()
+
+    if (txResult.statusCode == 0) {
+      const txErr = TransactionError.fromErrorMessage(txResult.errorMessage)
+
+      if (txErr && txErr.code === FvmErrorCode.STORAGE_CAPACITY_EXCEEDED) {
+        displayErrorNotification(
+          "Storage Error",
+          "Your wallet does not have enough funds to cover storage costs. Please add more funds."
+        )
+
+        throw new Error("Insufficient funds to cover storage costs.")
+      }
+
+      throw new Error(`Transaction failed: ${txErr.message}`)
+    }
 
     const event = await this.waitForTxResult(
       txId,
