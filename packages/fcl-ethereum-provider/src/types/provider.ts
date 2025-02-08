@@ -28,4 +28,5 @@ export interface Eip1193Provider {
     event: E,
     listener: EventCallback<ProviderEvents[E]>
   ): void
+  disconnect(): Promise<void>
 }

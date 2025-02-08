@@ -8,8 +8,8 @@ jest.mock("../network/network-manager")
 
 describe("event dispatcher", () => {
   let networkManager: jest.Mocked<NetworkManager>
-  let accountManager: jest.Mocked<AccountManager>
   let $mockChainId: Subject<ChainIdStore>
+  let accountManager: jest.Mocked<AccountManager>
 
   beforeEach(() => {
     jest.clearAllMocks()
@@ -38,7 +38,7 @@ describe("event dispatcher", () => {
     expect(accountManager.subscribe).toHaveBeenCalledWith(expect.any(Function))
 
     // Simulate account change from account manager
-    subs.forEach(sub => sub(["0x1234"]))
+    subs.forEach(sub => sub(["1234"]))
 
     expect(listener).toHaveBeenCalled()
     expect(listener).toHaveBeenCalledTimes(1)
@@ -47,7 +47,7 @@ describe("event dispatcher", () => {
     eventDispatcher.off("accountsChanged", listener)
 
     // Simulate account change from account manager
-    subs.forEach(sub => sub(["0x5678"]))
+    subs.forEach(sub => sub(["5678"]))
 
     expect(listener).toHaveBeenCalledTimes(1)
   })
@@ -68,7 +68,7 @@ describe("event dispatcher", () => {
     expect(accountManager.subscribe).toHaveBeenCalledWith(expect.any(Function))
 
     // Simulate account change from account manager
-    mockMgrSubCb!(["0x1234"])
+    mockMgrSubCb!(["1234"])
 
     expect(listener).toHaveBeenCalled()
     expect(listener).toHaveBeenCalledTimes(1)
@@ -91,8 +91,8 @@ describe("event dispatcher", () => {
     expect(accountManager.subscribe).toHaveBeenCalledWith(expect.any(Function))
 
     // Simulate account change from account manager
-    mockMgrSubCb!(["0x1234"])
-    mockMgrSubCb!(["0x5678"])
+    mockMgrSubCb!(["1234"])
+    mockMgrSubCb!(["5678"])
 
     expect(listener).toHaveBeenCalled()
     expect(listener).toHaveBeenCalledTimes(2)

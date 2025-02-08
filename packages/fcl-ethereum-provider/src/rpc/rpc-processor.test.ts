@@ -122,4 +122,114 @@ describe("rpc processor", () => {
       cause: new Error("test error"),
     })
   })
+
+  test("caught RpcError should be rethrown", async () => {
+    const gateway: jest.Mocked<Gateway> = new (Gateway as any)()
+    const accountManager: jest.Mocked<AccountManager> =
+      new (AccountManager as any)()
+    const networkManager: jest.Mocked<NetworkManager> =
+      new (NetworkManager as any)()
+    const rpcProcessor = new RpcProcessor(
+      gateway,
+      accountManager,
+      networkManager
+    )
+
+    const error = new Error("test error")
+    ;(error as any).code = -32000
+    jest.mocked(gateway).request.mockRejectedValue(error)
+    networkManager.getChainId.mockResolvedValue(747)
+
+    await expect(
+      rpcProcessor.handleRequest({
+        method: "eth_blockNumber",
+        params: [],
+      })
+    ).rejects.toMatchObject({
+      code: -32000,
+      message: "test error",
+    })
+  })
+
+  test("caught generic error should be rethrown as an internal error", async () => {
+    const gateway: jest.Mocked<Gateway> = new (Gateway as any)()
+    const accountManager: jest.Mocked<AccountManager> =
+      new (AccountManager as any)()
+    const networkManager: jest.Mocked<NetworkManager> =
+      new (NetworkManager as any)()
+    const rpcProcessor = new RpcProcessor(
+      gateway,
+      accountManager,
+      networkManager
+    )
+
+    jest.mocked(gateway).request.mockRejectedValue(new Error("test error"))
+    networkManager.getChainId.mockResolvedValue(747)
+
+    const promise = rpcProcessor.handleRequest({
+      method: "eth_blockNumber",
+      params: [],
+    })
+
+    await expect(promise).rejects.toMatchObject({
+      code: -32603,
+      message: "Internal error",
+      cause: new Error("test error"),
+    })
+  })
+
+  test("caught RpcError should be rethrown", async () => {
+    const gateway: jest.Mocked<Gateway> = new (Gateway as any)()
+    const accountManager: jest.Mocked<AccountManager> =
+      new (AccountManager as any)()
+    const networkManager: jest.Mocked<NetworkManager> =
+      new (NetworkManager as any)()
+    const rpcProcessor = new RpcProcessor(
+      gateway,
+      accountManager,
+      networkManager
+    )
+
+    const error = new Error("test error")
+    ;(error as any).code = -32000
+    jest.mocked(gateway).request.mockRejectedValue(error)
+    networkManager.getChainId.mockResolvedValue(747)
+
+    await expect(
+      rpcProcessor.handleRequest({
+        method: "eth_blockNumber",
+        params: [],
+      })
+    ).rejects.toMatchObject({
+      code: -32000,
+      message: "test error",
+    })
+  })
+
+  test("caught generic error should be rethrown as an internal error", async () => {
+    const gateway: jest.Mocked<Gateway> = new (Gateway as any)()
+    const accountManager: jest.Mocked<AccountManager> =
+      new (AccountManager as any)()
+    const networkManager: jest.Mocked<NetworkManager> =
+      new (NetworkManager as any)()
+    const rpcProcessor = new RpcProcessor(
+      gateway,
+      accountManager,
+      networkManager
+    )
+
+    jest.mocked(gateway).request.mockRejectedValue(new Error("test error"))
+    networkManager.getChainId.mockResolvedValue(747)
+
+    const promise = rpcProcessor.handleRequest({
+      method: "eth_blockNumber",
+      params: [],
+    })
+
+    await expect(promise).rejects.toMatchObject({
+      code: -32603,
+      message: "Internal error",
+      cause: new Error("test error"),
+    })
+  })
 })

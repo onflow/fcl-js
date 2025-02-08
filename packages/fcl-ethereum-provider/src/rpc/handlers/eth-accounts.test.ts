@@ -47,20 +47,21 @@ describe("ethRequestAccounts handler", () => {
   it("should call authenticate, updateCOAAddress, and return the manager's accounts", async () => {
     accountManagerMock.getAndCreateAccounts.mockResolvedValue(["0x1234..."])
 
-    const accounts = await ethRequestAccounts(accountManagerMock)
+    const accounts = await ethRequestAccounts(accountManagerMock, 747)
+
+    expect(accounts).toEqual(["0x1234..."])
 
     expect(accountManagerMock.authenticate).toHaveBeenCalled()
-    expect(accountManagerMock.getAndCreateAccounts).toHaveBeenCalled()
-    expect(accounts).toEqual(["0x1234..."])
+    expect(accountManagerMock.getAndCreateAccounts).toHaveBeenCalledWith(747)
   })
 
   it("should handle empty accounts scenario", async () => {
     accountManagerMock.getAndCreateAccounts.mockResolvedValue([])
 
-    const accounts = await ethRequestAccounts(accountManagerMock)
+    const accounts = await ethRequestAccounts(accountManagerMock, 747)
 
     expect(accountManagerMock.authenticate).toHaveBeenCalled()
-    expect(accountManagerMock.getAndCreateAccounts).toHaveBeenCalled()
+    expect(accountManagerMock.getAndCreateAccounts).toHaveBeenCalledWith(747)
     expect(accounts).toEqual([])
   })
 })

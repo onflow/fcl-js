@@ -29,8 +29,8 @@ export class FclEthereumProvider implements Eip1193Provider {
     return result
   }
 
-  disconnect(): void {
-    this.acountManager.unauthenticate()
+  async disconnect(): Promise<void> {
+    await this.acountManager.unauthenticate()
   }
 
   // Listen to events

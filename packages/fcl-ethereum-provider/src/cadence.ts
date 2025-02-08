@@ -1,22 +1,23 @@
 import {getContractAddress} from "./util/eth"
 import {ContractType} from "./constants"
 
-export const getCOAScript = (chainId: number) => `
-import EVM from ${getContractAddress(ContractType.EVM, chainId)}
+export const getCOAScript = (
+  chainId: number
+) => `import EVM from ${getContractAddress(ContractType.EVM, chainId)}
 
-access(all)
-fun main(address: Address): String? {
-    if let coa = getAuthAccount(address)
-        .storage
-        .borrow<&EVM.CadenceOwnedAccount>(from: /storage/evm) {
-        return coa.address().toString()
-    }
-    return nil
-}
-`
+/// Returns the hex encoded address of the COA in the given Flow address
+///
+access(all) fun main(flowAddress: Address): String? {
+    return getAuthAccount<auth(BorrowValue) &Account>(flowAddress)
+        .storage.borrow<&EVM.CadenceOwnedAccount>(from: /storage/evm)
+        ?.address()
+        ?.toString()
+        ?? nil
+}`
 
-export const createCOATx = (chainId: number) => `
-import EVM from ${getContractAddress(ContractType.EVM, chainId)}
+export const createCOATx = (
+  chainId: number
+) => `import EVM from ${getContractAddress(ContractType.EVM, chainId)}
 
 transaction() {
     prepare(signer: auth(SaveValue, IssueStorageCapabilityController, PublishCapability) &Account) {
@@ -29,11 +30,11 @@ transaction() {
         let cap = signer.capabilities.storage.issue<&EVM.CadenceOwnedAccount>(storagePath)
         signer.capabilities.publish(cap, at: publicPath)
     }
-}
-`
+}`
 
-export const sendTransactionTx = (chainId: number) => `
-import EVM from ${getContractAddress(ContractType.EVM, chainId)}
+export const sendTransactionTx = (
+  chainId: number
+) => `import EVM from ${getContractAddress(ContractType.EVM, chainId)}
 
 /// Executes the calldata from the signer's COA
 transaction(evmContractAddressHex: String, calldata: String, gasLimit: UInt64, value: UInt256) {
@@ -58,5 +59,4 @@ transaction(evmContractAddressHex: String, calldata: String, gasLimit: UInt64, v
         )
         assert(callResult.status == EVM.Status.successful, message: "Call failed")
     }
-}
-`
+}`

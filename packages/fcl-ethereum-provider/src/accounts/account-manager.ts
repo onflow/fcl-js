@@ -1,6 +1,11 @@
 import * as fcl from "@onflow/fcl"
 import * as rlp from "@onflow/rlp"
-import {CompositeSignature, CurrentUser, FvmErrorCode} from "@onflow/typedefs"
+import {
+  CompositeSignature,
+  CurrentUser,
+  Service,
+  FvmErrorCode,
+} from "@onflow/typedefs"
 import {
   EVENT_IDENTIFIERS,
   EventType,
@@ -40,7 +45,8 @@ export class AccountManager {
 
   constructor(
     private user: typeof fcl.currentUser,
-    private networkManager: NetworkManager
+    private networkManager: NetworkManager,
+    private service?: Service
   ) {
     // Create an observable from the user
     const $user = new Observable<CurrentUser>(subscriber => {
@@ -87,12 +93,16 @@ export class AccountManager {
       .subscribe(this.$addressStore)
   }
 
-  public async authenticate(): Promise<void> {
-    return await this.user.authenticate()
+  public async authenticate(): Promise<string[]> {
+    await this.user.authenticate({service: this.service})
+    return this.getAccounts().then(accounts => {
+      return accounts
+    })
   }
 
   public async unauthenticate(): Promise<void> {
     await this.user.unauthenticate()
+    await new Promise(resolve => setTimeout(resolve, 0))
   }
 
   private async waitForTxResult(
@@ -130,7 +140,7 @@ export class AccountManager {
     if (error) {
       throw error
     }
-    return address
+    return address || null
   }
 
   public async getAccounts(): Promise<string[]> {
