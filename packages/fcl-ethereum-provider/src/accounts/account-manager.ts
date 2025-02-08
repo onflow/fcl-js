@@ -1,6 +1,11 @@
 import * as fcl from "@onflow/fcl"
 import * as rlp from "@onflow/rlp"
-import {CompositeSignature, CurrentUser, Service, FvmErrorCode} from "@onflow/typedefs"
+import {
+  CompositeSignature,
+  CurrentUser,
+  Service,
+  FvmErrorCode,
+} from "@onflow/typedefs"
 import {
   EVENT_IDENTIFIERS,
   EventType,
