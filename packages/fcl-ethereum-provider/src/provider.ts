@@ -5,7 +5,7 @@ import {
   ProviderRequest,
   ProviderResponse,
 } from "./types/provider"
-import {RpcProcessor} from "./rpc/rpc-processor"
+import {RpcProcessor} from "./rpc/processor/rpc-processor"
 import {EventDispatcher} from "./events/event-dispatcher"
 import {ProviderError, ProviderErrorCode} from "./util/errors"
 import {AccountManager} from "./accounts/account-manager"

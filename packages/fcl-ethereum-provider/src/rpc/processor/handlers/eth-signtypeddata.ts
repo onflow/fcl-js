@@ -1,10 +1,10 @@
-import {AccountManager} from "../../accounts/account-manager"
-import {SignTypedDataParams} from "../../types/eth"
+import {AccountManager} from "../../../accounts/account-manager"
+import {SignTypedDataParams} from "../../../types/eth"
 import {
   hashTypedDataLegacy,
   hashTypedDataV3,
   hashTypedDataV4,
-} from "../../hash-utils"
+} from "../../../util/hash"
 
 export async function signTypedData(
   accountManager: AccountManager,

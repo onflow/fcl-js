@@ -1,11 +1,11 @@
-import {AccountManager} from "../accounts/account-manager"
+import {AccountManager} from "../../accounts/account-manager"
 import {Gateway} from "../gateway/gateway"
-import {NetworkManager} from "../network/network-manager"
+import {NetworkManager} from "../../network/network-manager"
 import {RpcProcessor} from "./rpc-processor"
 
 jest.mock("../gateway/gateway")
-jest.mock("../accounts/account-manager")
-jest.mock("../network/network-manager")
+jest.mock("../../accounts/account-manager")
+jest.mock("../../network/network-manager")
 
 describe("rpc processor", () => {
   test("fallback to gateway mainnet", async () => {

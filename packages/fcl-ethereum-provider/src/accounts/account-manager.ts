@@ -30,7 +30,7 @@ import {EthSignatureResponse} from "../types/eth"
 import {NetworkManager} from "../network/network-manager"
 import {createCOATx, getCOAScript, sendTransactionTx} from "../cadence"
 import {TransactionError} from "@onflow/fcl"
-import {displayErrorNotification} from "../notifications"
+import {displayErrorNotification} from "../util/notifications"
 
 export class AccountManager {
   private $addressStore = new BehaviorSubject<{

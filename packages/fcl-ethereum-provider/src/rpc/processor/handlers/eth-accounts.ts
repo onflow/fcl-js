@@ -1,5 +1,5 @@
 import {withPrefix} from "@onflow/fcl"
-import {AccountManager} from "../../accounts/account-manager"
+import {AccountManager} from "../../../accounts/account-manager"
 
 export async function ethAccounts(
   accountManager: AccountManager

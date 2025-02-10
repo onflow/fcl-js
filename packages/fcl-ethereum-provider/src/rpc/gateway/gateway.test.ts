@@ -1,5 +1,5 @@
 import HttpConnection from "@walletconnect/jsonrpc-http-connection"
-import {Gateway} from "./gateway"
+import {Gateway} from "../gateway/gateway"
 import {JsonRpcProvider} from "@walletconnect/jsonrpc-provider"
 
 jest.mock("@walletconnect/jsonrpc-http-connection")

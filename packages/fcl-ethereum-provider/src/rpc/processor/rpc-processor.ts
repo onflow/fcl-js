@@ -1,9 +1,9 @@
-import {ProviderRequest} from "../types/provider"
+import {ProviderRequest} from "../../types/provider"
 import {ethAccounts, ethRequestAccounts} from "./handlers/eth-accounts"
 import {Gateway} from "../gateway/gateway"
-import {AccountManager} from "../accounts/account-manager"
+import {AccountManager} from "../../accounts/account-manager"
 import {ethSendTransaction} from "./handlers/eth-send-transaction"
-import {NetworkManager} from "../network/network-manager"
+import {NetworkManager} from "../../network/network-manager"
 import {personalSign} from "./handlers/personal-sign"
 import {
   AddEthereumChainParams,
@@ -11,10 +11,10 @@ import {
   SignTypedDataParams,
   SwitchEthereumChainParams,
   TypedData,
-} from "../types/eth"
+} from "../../types/eth"
 import {signTypedData} from "./handlers/eth-signtypeddata"
 import {ethChainId} from "./handlers/eth-chain-id"
-import {ProviderError, ProviderErrorCode} from "../util/errors"
+import {ProviderError, ProviderErrorCode} from "../../util/errors"
 
 export class RpcProcessor {
   constructor(

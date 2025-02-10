@@ -2,7 +2,7 @@ import {keccak_256} from "@noble/hashes/sha3"
 import {bytesToHex} from "@noble/hashes/utils"
 import {arrayify, concat} from "@ethersproject/bytes"
 import {_TypedDataEncoder as TypedDataEncoder} from "@ethersproject/hash"
-import {TypedData} from "./types/eth"
+import {TypedData} from "../types/eth"
 
 export function hashTypedDataLegacy(data: TypedData): string {
   throw new Error(

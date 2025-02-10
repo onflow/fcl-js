@@ -1,5 +1,5 @@
-import {AccountManager} from "../../accounts/account-manager"
-import {PersonalSignParams} from "../../types/eth"
+import {AccountManager} from "../../../accounts/account-manager"
+import {PersonalSignParams} from "../../../types/eth"
 
 export async function personalSign(
   accountManager: AccountManager,

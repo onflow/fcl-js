@@ -1,4 +1,4 @@
-import {AccountManager} from "../../accounts/account-manager"
+import {AccountManager} from "../../../accounts/account-manager"
 
 export async function ethSendTransaction(
   accountManager: AccountManager,
