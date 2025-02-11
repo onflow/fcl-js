@@ -348,7 +348,7 @@ export class AccountManager {
     const preCalculatedTxHash = "0x" + bytesToHex(digest)
     // ----- End pre-calculation -----
 
-    fcl.mutate({
+    await fcl.mutate({
       cadence: sendTransactionTx(parsedChainId),
       limit: 9999,
       args: (arg: typeof fcl.arg, t: typeof fcl.t) => [

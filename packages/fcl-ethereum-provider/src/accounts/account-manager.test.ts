@@ -294,6 +294,44 @@ describe("send transaction", () => {
     jest.resetAllMocks()
   })
 
+  test("sendTransaction returns a pre-calculated hash (mainnet)", async () => {
+    const mockTxResult = {
+      onceExecuted: jest.fn().mockResolvedValue({
+        events: [
+          {
+            type: "A.e467b9dd11fa00df.EVM.TransactionExecuted",
+            data: { hash: ["12", "34"] },
+          },
+        ],
+      }),
+    } as any as jest.Mocked<ReturnType<typeof fcl.tx>>
+
+    const mockRlpEncoded = "f86a808683abcdef682f73746f726167652f65766d"
+
+    jest.mocked(fcl.tx).mockReturnValue(mockTxResult)
+    jest.mocked(fcl.mutate).mockResolvedValue("1111")
+    jest.mocked(fcl.query).mockResolvedValueOnce("0x1234").mockResolvedValueOnce("0x0")
+    jest.mocked(rlp.encode).mockReturnValue(Buffer.from(mockRlpEncoded, "hex"))
+
+    const user = mockUser({ addr: "0x1234" } as CurrentUser).mock
+    const accountManager = new AccountManager(user, networkManager)
+
+    // Numbers maxed out to test edge cases
+    const txInput = {
+      to: "0xffffffffffffffffffffffffffffffffffffffff",
+      from: "0x1234",
+      value: "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      data: "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      gas: "0xffffffffffffffff",
+      chainId: "747"
+    };
+
+    const result = await accountManager.sendTransaction(txInput)
+
+    expect(result).toEqual("0xf32393da7593cb91d91bf960501ca5d70ee115ad1e3ce219c8693f63f61e3232")
+    expect(fcl.mutate).toHaveBeenCalled()
+  })
+
   test("send transaction mainnet", async () => {
     const mockTxResult = {
       onceExecuted: jest.fn().mockResolvedValue({
@@ -389,35 +427,6 @@ describe("send transaction", () => {
     expect(mockFcl.tx).toHaveBeenCalledWith("1111")
     expect(mockFcl.tx).toHaveBeenCalledTimes(1)
     expect(mockTxResult.onceExecuted).toHaveBeenCalledTimes(1)
-  })
-
-  test("throws error if no executed event not found", async () => {
-    const mockTxResult = {
-      onceExecuted: jest.fn().mockResolvedValue({
-        events: [],
-      }),
-    } as any as jest.Mocked<ReturnType<typeof fcl.tx>>
-
-    jest.mocked(fcl.tx).mockReturnValue(mockTxResult)
-    jest.mocked(fcl.mutate).mockResolvedValue("1111")
-    jest.mocked(fcl.query).mockResolvedValue("0x1234")
-
-    const user = mockUser({addr: "0x4444"} as CurrentUser)
-    const accountManager = new AccountManager(user.mock, networkManager)
-
-    const tx = {
-      to: "0x1234",
-      from: "0x1234",
-      value: "0",
-      data: "0x1234",
-      nonce: "0",
-      gas: "0",
-      chainId: "747",
-    }
-
-    await expect(accountManager.sendTransaction(tx)).rejects.toThrow(
-      "EVM transaction hash not found"
-    )
   })
 
   test("throws error if from address does not match user address", async () => {
