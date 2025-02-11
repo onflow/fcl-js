@@ -3,7 +3,7 @@
   "version": "1.3.4",
   "description": "A mechanism for forcing order/transitions of scoped async state",
   "license": "Apache-2.0",
-  "author": "Dapper Labs <dev@dapperlabs.com>",
+  "author": "Flow Foundation",
   "homepage": "https://flow.com",
   "repository": {
     "type": "git",

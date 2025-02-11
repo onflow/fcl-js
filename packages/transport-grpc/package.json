@@ -3,7 +3,7 @@
   "version": "1.4.2-alpha.0",
   "description": "Flow SDK GRPC Transport Module",
   "license": "Apache-2.0",
-  "author": "Dapper Labs <dev@dapperlabs.com>",
+  "author": "Flow Foundation",
   "homepage": "https://flow.com",
   "repository": {
     "type": "git",
