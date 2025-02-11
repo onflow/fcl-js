@@ -28,7 +28,6 @@ jest.mock("@onflow/rlp", () => ({
 }))
 
 jest.mock("../notifications", () => ({
-  // ...jest.requireActual("../notifications"),
   displayErrorNotification: jest.fn(),
 }))
 
@@ -347,7 +346,6 @@ describe("send transaction", () => {
     } as any as jest.Mocked<ReturnType<typeof fcl.tx>>
 
     jest.mocked(fcl.tx).mockReturnValue(mockTxResult)
-    jest.mocked(fcl.mutate).mockResolvedValue("1111")
     jest.mocked(fcl.query).mockResolvedValue("0x1234")
 
     const user = mockUser({addr: "0x4444"} as CurrentUser).mock
