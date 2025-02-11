@@ -41,7 +41,6 @@ describe("signMessage", () => {
 
   it("should throw an error if the COA address is not available", async () => {
     await updateUser({addr: undefined} as CurrentUser)
-    accountManager["coaAddress"] = null
 
     await expect(
       accountManager.signMessage("Test message", "0x1234")
