@@ -294,7 +294,7 @@ describe("send transaction", () => {
         events: [
           {
             type: "A.e467b9dd11fa00df.EVM.TransactionExecuted",
-            data: { hash: ["12", "34"] },
+            data: {hash: ["12", "34"]},
           },
         ],
       }),
@@ -302,24 +302,30 @@ describe("send transaction", () => {
 
     jest.mocked(fcl.tx).mockReturnValue(mockTxResult)
     jest.mocked(fcl.mutate).mockResolvedValue("1111")
-    jest.mocked(fcl.query).mockResolvedValueOnce("0x1234").mockResolvedValueOnce("0x0")
+    jest
+      .mocked(fcl.query)
+      .mockResolvedValueOnce("0x1234")
+      .mockResolvedValueOnce("0x0")
 
-    const user = mockUser({ addr: "0x1234" } as CurrentUser).mock
+    const user = mockUser({addr: "0x1234"} as CurrentUser).mock
     const accountManager = new AccountManager(user, networkManager)
 
     // Numbers maxed out to test edge cases
     const txInput = {
       to: "0xffffffffffffffffffffffffffffffffffffffff",
       from: "0x1234",
-      value: "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      value:
+        "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
       data: "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
       gas: "0xffffffffffffffff",
-      chainId: "747"
-    };
+      chainId: "747",
+    }
 
     const result = await accountManager.sendTransaction(txInput)
 
-    expect(result).toEqual("0xc4a532f9ed47b2092206a768b3ad3d32dfd80ed1f3b10690b81fdedc24685de7")
+    expect(result).toEqual(
+      "0xc4a532f9ed47b2092206a768b3ad3d32dfd80ed1f3b10690b81fdedc24685de7"
+    )
     expect(fcl.mutate).toHaveBeenCalled()
   })
 
@@ -355,7 +361,9 @@ describe("send transaction", () => {
 
     const result = await accountManager.sendTransaction(tx)
 
-    expect(result).toEqual("0xb7f94fa964193ab940ed6e24bdc72b4a59eb4e69546d8f423b8e52835dbf1d18")
+    expect(result).toEqual(
+      "0xb7f94fa964193ab940ed6e24bdc72b4a59eb4e69546d8f423b8e52835dbf1d18"
+    )
     expect(fcl.mutate).toHaveBeenCalled()
     expect(mockFcl.mutate.mock.calls[0][0]).toMatchObject({
       cadence: expect.any(String),

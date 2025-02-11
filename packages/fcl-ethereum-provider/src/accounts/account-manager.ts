@@ -317,9 +317,7 @@ export class AccountManager {
     const nonceStr = await this.getNonce(evmAddress)
     const nonce = parseInt(nonceStr, 10)
 
-    const gasLimit = gas.startsWith("0x")
-      ? BigInt(gas)
-      : BigInt(gas)
+    const gasLimit = gas.startsWith("0x") ? BigInt(gas) : BigInt(gas)
 
     const valueHex = value.replace(/^0x/, "")
     const txValue = BigInt("0x" + valueHex)
