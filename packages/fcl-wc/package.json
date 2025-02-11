@@ -3,8 +3,8 @@
   "version": "5.5.4",
   "description": "WalletConnect adapter for FCL",
   "license": "Apache-2.0",
-  "author": "Dapper Labs <dev@dapperlabs.com>",
-  "homepage": "https://onflow.org",
+  "author": "Flow Foundation",
+  "homepage": "https://flow.com",
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/onflow/fcl-js.git"
