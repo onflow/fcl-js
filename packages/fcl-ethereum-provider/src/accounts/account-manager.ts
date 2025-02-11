@@ -28,7 +28,12 @@ import {
 } from "../util/observable"
 import {EthSignatureResponse} from "../types/eth"
 import {NetworkManager} from "../network/network-manager"
-import {createCOATx, getCOAScript, getNonceScript, sendTransactionTx} from "../cadence"
+import {
+  createCOATx,
+  getCOAScript,
+  getNonceScript,
+  sendTransactionTx,
+} from "../cadence"
 import {TransactionError} from "@onflow/fcl"
 import {displayErrorNotification} from "../notifications"
 import {keccak_256} from "@noble/hashes/sha3"
@@ -36,13 +41,13 @@ import {bytesToHex, hexToBytes} from "@noble/hashes/utils"
 
 // Helper function to convert a number or bigint to a Uint8Array (minimal byte representation)
 function numberToUint8Array(value: number | bigint): Uint8Array {
-  const big = typeof value === "bigint" ? value : BigInt(value);
-  if (big === BigInt(0)) return new Uint8Array([]);
-  let hex = big.toString(16);
+  const big = typeof value === "bigint" ? value : BigInt(value)
+  if (big === BigInt(0)) return new Uint8Array([])
+  let hex = big.toString(16)
   if (hex.length % 2 !== 0) {
-    hex = "0" + hex;
+    hex = "0" + hex
   }
-  return hexToBytes(hex);
+  return hexToBytes(hex)
 }
 
 export class AccountManager {
@@ -312,7 +317,9 @@ export class AccountManager {
     const nonceStr = await this.getNonce(evmAddress)
     const nonce = parseInt(nonceStr, 10)
     // Parse gas (as hex if it starts with "0x", else as decimal)
-    const gasLimit = gas.startsWith("0x") ? parseInt(gas, 16) : parseInt(gas, 10)
+    const gasLimit = gas.startsWith("0x")
+      ? parseInt(gas, 16)
+      : parseInt(gas, 10)
     // Remove the "0x" prefix for value and convert to BigInt
     const valueHex = value.replace(/^0x/, "")
     const txValue = BigInt("0x" + valueHex)
@@ -353,7 +360,7 @@ export class AccountManager {
       authz: this.user,
     })
 
-    return preCalculatedTxHash;
+    return preCalculatedTxHash
   }
 
   public async signMessage(
