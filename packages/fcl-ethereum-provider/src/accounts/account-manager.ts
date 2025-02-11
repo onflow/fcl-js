@@ -28,7 +28,7 @@ import {
 } from "../util/observable"
 import {EthSignatureResponse} from "../types/eth"
 import {NetworkManager} from "../network/network-manager"
-import {createCOATx, getCOAScript, sendTransactionTx} from "../cadence"
+import {createCOATx, getCOAScript, getNonceScript, sendTransactionTx} from "../cadence"
 import {TransactionError} from "@onflow/fcl"
 import {displayErrorNotification} from "../notifications"
 import {keccak_256} from "@noble/hashes/sha3"
@@ -246,6 +246,24 @@ export class AccountManager {
       .subscribe(({address}) => {
         callback(address ? [address] : [])
       })
+  }
+
+  /**
+   * Fetch the current nonce from the EVM contract via a Cadence script.
+   */
+  private async getNonce(evmAddress: string): Promise<string> {
+    const chainId = await this.networkManager.getChainId()
+
+    if (!chainId) {
+      throw new Error("No active chain")
+    }
+
+    const nonce = await fcl.query({
+      cadence: getNonceScript(chainId),
+      args: (arg, t) => [arg(evmAddress, t.String)],
+    })
+
+    return nonce.toString()
   }
 
   async sendTransaction({
