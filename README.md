@@ -222,7 +222,7 @@ The discovery feature can be used via API allowing you to customize your own UI 
 
 ## Support
 
-Notice a problem or want to request a feature? [Add an issue](https://github.com/onflow/flow-js-sdk/issues).
+Notice a problem or want to request a feature? [Add an issue](https://github.com/onflow/fcl-js/issues).
 
 Discuss FCL with the community on the [forum](https://forum.onflow.org/c/developer-tools/flow-fcl/22).
 
