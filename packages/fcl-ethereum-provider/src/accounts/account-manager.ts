@@ -31,6 +31,19 @@ import {NetworkManager} from "../network/network-manager"
 import {createCOATx, getCOAScript, sendTransactionTx} from "../cadence"
 import {TransactionError} from "@onflow/fcl"
 import {displayErrorNotification} from "../notifications"
+import {keccak_256} from "@noble/hashes/sha3"
+import {bytesToHex, hexToBytes} from "@noble/hashes/utils"
+
+// Helper function to convert a number or bigint to a Uint8Array (minimal byte representation)
+function numberToUint8Array(value: number | bigint): Uint8Array {
+  // Convert to bigint and then to a hex string without the "0x" prefix.
+  let hex = (typeof value === "bigint" ? value : BigInt(value)).toString(16)
+  if (hex.length % 2) {
+    hex = "0" + hex
+  }
+  return hexToBytes(hex)
+}
+
 
 export class AccountManager {
   private $addressStore = new BehaviorSubject<{
@@ -276,7 +289,55 @@ export class AccountManager {
       )
     }
 
-    const txId = await fcl.mutate({
+    // ----- Pre-calculate the transaction hash -----
+    const evmAddress = expectedCOAAddress!.toLowerCase().replace(/^0x/, "")
+    // Retrieve nonce (dummy implementation; replace with your actual logic)
+    const nonceStr = await this.getNonce(evmAddress)
+    const nonce = parseInt(nonceStr, 10)
+    // Parse gas (as hex if it starts with "0x", else as decimal)
+    const gasLimit = gas.startsWith("0x") ? parseInt(gas, 16) : parseInt(gas, 10)
+    // Remove the "0x" prefix for value and convert to BigInt
+    const valueHex = value.replace(/^0x/, "")
+    const txValue = BigInt("0x" + valueHex)
+    // Remove "0x" prefix from data and convert using hexToBytes
+    const dataHex = data.replace(/^0x/, "")
+
+    // Fixed constants (as per Flow wallet example)
+    const gasPrice = 0
+    const directCallTxType = 255
+    const contractCallSubType = 5
+
+    // Build the transaction fields array, converting numbers/bigints using numberToUint8Array
+    const txArray = [
+      numberToUint8Array(nonce),
+      numberToUint8Array(gasPrice),
+      numberToUint8Array(gasLimit),
+      hexToBytes(to.replace(/^0x/, "")),
+      numberToUint8Array(txValue),
+      hexToBytes(dataHex),
+      numberToUint8Array(directCallTxType),
+      numberToUint8Array(BigInt("0x" + evmAddress)),
+      numberToUint8Array(contractCallSubType),
+    ]
+
+    const encodedTx = rlp.encode(txArray)
+    const digest = keccak_256(encodedTx)
+    const preCalculatedTxHash = "0x" + bytesToHex(digest)
+    // ----- End pre-calculation -----
+
+    // const txId = await fcl.mutate({
+    //   cadence: sendTransactionTx(parsedChainId),
+    //   limit: 9999,
+    //   args: (arg: typeof fcl.arg, t: typeof fcl.t) => [
+    //     arg(to, t.String),
+    //     arg(data, t.String),
+    //     arg(gas, t.UInt64),
+    //     arg(value, t.UInt256),
+    //   ],
+    //   authz: this.user,
+    // })
+
+    fcl.mutate({
       cadence: sendTransactionTx(parsedChainId),
       limit: 9999,
       args: (arg: typeof fcl.arg, t: typeof fcl.t) => [
@@ -288,18 +349,20 @@ export class AccountManager {
       authz: this.user,
     })
 
-    const event = await this.waitForTxResult(
-      txId,
-      EVENT_IDENTIFIERS[EventType.TRANSACTION_EXECUTED][flowNetwork],
-      "EVM transaction hash not found"
-    )
+    // const event = await this.waitForTxResult(
+    //   txId,
+    //   EVENT_IDENTIFIERS[EventType.TRANSACTION_EXECUTED][flowNetwork],
+    //   "EVM transaction hash not found"
+    // )
+    //
+    // const eventData: TransactionExecutedEvent = event.data
+    // const evmTxHash = eventData.hash
+    //   .map(h => parseInt(h, 16).toString().padStart(2, "0"))
+    //   .join("")
+    //
+    // return evmTxHash
 
-    const eventData: TransactionExecutedEvent = event.data
-    const evmTxHash = eventData.hash
-      .map(h => parseInt(h, 16).toString().padStart(2, "0"))
-      .join("")
-
-    return evmTxHash
+    return preCalculatedTxHash;
   }
 
   public async signMessage(
