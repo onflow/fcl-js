@@ -36,12 +36,13 @@ import {bytesToHex, hexToBytes} from "@noble/hashes/utils"
 
 // Helper function to convert a number or bigint to a Uint8Array (minimal byte representation)
 function numberToUint8Array(value: number | bigint): Uint8Array {
-  // Convert to bigint and then to a hex string without the "0x" prefix.
-  let hex = (typeof value === "bigint" ? value : BigInt(value)).toString(16)
-  if (hex.length % 2) {
-    hex = "0" + hex
+  const big = typeof value === "bigint" ? value : BigInt(value);
+  if (big === BigInt(0)) return new Uint8Array([]);
+  let hex = big.toString(16);
+  if (hex.length % 2 !== 0) {
+    hex = "0" + hex;
   }
-  return hexToBytes(hex)
+  return hexToBytes(hex);
 }
 
 export class AccountManager {
