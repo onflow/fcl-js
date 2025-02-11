@@ -22,11 +22,6 @@ jest.mock("@onflow/fcl", () => {
   }
 })
 
-jest.mock("@onflow/rlp", () => ({
-  encode: jest.fn(),
-  Buffer: jest.requireActual("@onflow/rlp").Buffer,
-}))
-
 jest.mock("../notifications", () => ({
   displayErrorNotification: jest.fn(),
 }))
@@ -305,12 +300,9 @@ describe("send transaction", () => {
       }),
     } as any as jest.Mocked<ReturnType<typeof fcl.tx>>
 
-    const mockRlpEncoded = "f86a808683abcdef682f73746f726167652f65766d"
-
     jest.mocked(fcl.tx).mockReturnValue(mockTxResult)
     jest.mocked(fcl.mutate).mockResolvedValue("1111")
     jest.mocked(fcl.query).mockResolvedValueOnce("0x1234").mockResolvedValueOnce("0x0")
-    jest.mocked(rlp.encode).mockReturnValue(Buffer.from(mockRlpEncoded, "hex"))
 
     const user = mockUser({ addr: "0x1234" } as CurrentUser).mock
     const accountManager = new AccountManager(user, networkManager)
@@ -327,7 +319,7 @@ describe("send transaction", () => {
 
     const result = await accountManager.sendTransaction(txInput)
 
-    expect(result).toEqual("0xf32393da7593cb91d91bf960501ca5d70ee115ad1e3ce219c8693f63f61e3232")
+    expect(result).toEqual("0xc4a532f9ed47b2092206a768b3ad3d32dfd80ed1f3b10690b81fdedc24685de7")
     expect(fcl.mutate).toHaveBeenCalled()
   })
 
@@ -363,7 +355,7 @@ describe("send transaction", () => {
 
     const result = await accountManager.sendTransaction(tx)
 
-    expect(result).toEqual("1852")
+    expect(result).toEqual("0xb7f94fa964193ab940ed6e24bdc72b4a59eb4e69546d8f423b8e52835dbf1d18")
     expect(fcl.mutate).toHaveBeenCalled()
     expect(mockFcl.mutate.mock.calls[0][0]).toMatchObject({
       cadence: expect.any(String),
@@ -371,10 +363,6 @@ describe("send transaction", () => {
       authz: user,
       limit: 9999,
     })
-
-    expect(mockFcl.tx).toHaveBeenCalledWith("1111")
-    expect(mockFcl.tx).toHaveBeenCalledTimes(1)
-    expect(mockTxResult.onceExecuted).toHaveBeenCalledTimes(1)
   })
 
   test("send transaction testnet", async () => {
