@@ -316,19 +316,19 @@ export class AccountManager {
     const evmAddress = expectedCOAAddress!.toLowerCase().replace(/^0x/, "")
     const nonceStr = await this.getNonce(evmAddress)
     const nonce = parseInt(nonceStr, 10)
-    // Parse gas (as hex if it starts with "0x", else as decimal)
+
     const gasLimit = gas.startsWith("0x")
-      ? parseInt(gas, 16)
-      : parseInt(gas, 10)
-    // Remove the "0x" prefix for value and convert to BigInt
+      ? BigInt(gas)
+      : BigInt(gas)
+
     const valueHex = value.replace(/^0x/, "")
     const txValue = BigInt("0x" + valueHex)
-    // Remove "0x" prefix from data and convert using hexToBytes
+
     const dataHex = data.replace(/^0x/, "")
 
-    const gasPrice = 0
-    const directCallTxType = 255
-    const contractCallSubType = 5
+    const gasPrice = BigInt(0)
+    const directCallTxType = BigInt(255)
+    const contractCallSubType = BigInt(5)
 
     // Build the transaction fields array, converting numbers/bigints using numberToUint8Array
     const txArray = [
