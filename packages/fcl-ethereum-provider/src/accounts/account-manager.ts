@@ -9,8 +9,6 @@ import {
 import {
   EVENT_IDENTIFIERS,
   EventType,
-  FLOW_CHAINS,
-  FlowNetwork,
 } from "../constants"
 import {
   BehaviorSubject,
