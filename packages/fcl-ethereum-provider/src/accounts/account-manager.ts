@@ -305,24 +305,24 @@ export class AccountManager {
     }
 
     // Check if the from address matches the authenticated COA address
-    const expectedCOAAddress = await this.getCOAAddress()
-    if (from.toLowerCase() !== expectedCOAAddress?.toLowerCase()) {
+    const expectedCOAAddress = await this.getCOAAddress();
+    if (fcl.sansPrefix(from).toLowerCase() !== fcl.sansPrefix(expectedCOAAddress)?.toLowerCase()) {
       throw new Error(
         `From address does not match authenticated user address.\nUser: ${expectedCOAAddress}\nFrom: ${from}`
-      )
+      );
     }
 
     // ----- Pre-calculate the transaction hash -----
-    const evmAddress = expectedCOAAddress!.toLowerCase().replace(/^0x/, "")
+    const evmAddress = fcl.sansPrefix(expectedCOAAddress!).toLowerCase()
     const nonceStr = await this.getNonce(evmAddress)
     const nonce = parseInt(nonceStr, 10)
 
-    const gasLimit = gas.startsWith("0x") ? BigInt(gas) : BigInt(gas)
+    const gasLimit = BigInt(gas)
 
-    const valueHex = value.replace(/^0x/, "")
+    const valueHex = fcl.sansPrefix(value)
     const txValue = BigInt("0x" + valueHex)
 
-    const dataHex = data.replace(/^0x/, "")
+    const dataHex = fcl.sansPrefix(data)
 
     const gasPrice = BigInt(0)
     const directCallTxType = BigInt(255)
@@ -333,17 +333,17 @@ export class AccountManager {
       numberToUint8Array(nonce),
       numberToUint8Array(gasPrice),
       numberToUint8Array(gasLimit),
-      hexToBytes(to.replace(/^0x/, "")),
+      hexToBytes(fcl.sansPrefix(to)),
       numberToUint8Array(txValue),
       hexToBytes(dataHex),
       numberToUint8Array(directCallTxType),
-      numberToUint8Array(BigInt("0x" + evmAddress)),
+      numberToUint8Array(BigInt(fcl.withPrefix(evmAddress))),
       numberToUint8Array(contractCallSubType),
     ]
 
     const encodedTx = rlp.encode(txArray)
     const digest = keccak_256(encodedTx)
-    const preCalculatedTxHash = "0x" + bytesToHex(digest)
+    const preCalculatedTxHash = fcl.withPrefix(bytesToHex(digest))
     // ----- End pre-calculation -----
 
     await fcl.mutate({
@@ -372,8 +372,8 @@ export class AccountManager {
       )
     }
 
-    if (from.toLowerCase() !== coaAddress.toLowerCase()) {
-      throw new Error("Signer address does not match authenticated COA address")
+    if (fcl.sansPrefix(from).toLowerCase() !== fcl.sansPrefix(coaAddress).toLowerCase()) {
+      throw new Error("Signer address does not match authenticated COA address");
     }
 
     try {
@@ -387,7 +387,7 @@ export class AccountManager {
       const keyIndices = response.map(sig => sig.keyId)
       const signatures = response.map(sig => sig.signature)
 
-      const addressHexArray = Buffer.from(from.replace(/^0x/, ""), "hex")
+      const addressHexArray = Buffer.from(fcl.sansPrefix(from), "hex")
 
       const capabilityPath = "/public/evm"
 
@@ -395,9 +395,7 @@ export class AccountManager {
         .encode([keyIndices, addressHexArray, capabilityPath, signatures])
         .toString("hex")
 
-      return rlpEncodedProof.startsWith("0x")
-        ? rlpEncodedProof
-        : `0x${rlpEncodedProof}` // Return 0x-prefix for Ethereum compatibility
+      return fcl.withPrefix(rlpEncodedProof)
     } catch (error) {
       throw error
     }
