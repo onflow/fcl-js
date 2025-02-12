@@ -6,7 +6,12 @@ import {
   Service,
   FvmErrorCode,
 } from "@onflow/typedefs"
-import {DEFAULT_EVM_GAS_LIMIT, EVENT_IDENTIFIERS, EventType} from "../constants"
+import {
+  DEFAULT_EVM_GAS_LIMIT,
+  EVENT_IDENTIFIERS,
+  EventType,
+  FlowNetwork,
+} from "../constants"
 import {
   BehaviorSubject,
   concat,
@@ -58,7 +63,13 @@ export class AccountManager {
     private networkManager: NetworkManager,
     private service?: Service
   ) {
-    // Create an observable from the user
+    this.initializeUserSubscription()
+  }
+
+  /**
+   * Subscribes to the current user observable and updates the address store.
+   */
+  private initializeUserSubscription() {
     const $user = new Observable<CurrentUser>(subscriber => {
       return this.user.subscribe((currentUser: CurrentUser, error?: Error) => {
         if (error) {
@@ -69,7 +80,6 @@ export class AccountManager {
       }) as Subscription
     })
 
-    // Bind the address store to the user observable
     $user
       .pipe(
         map(snapshot => snapshot.addr || null),
@@ -171,20 +181,8 @@ export class AccountManager {
   }
 
   public async createCOA(chainId: number): Promise<string> {
-    // Find the Flow network based on the chain ID
-    const flowNetwork = getFlowNetwork(chainId)
-
-    if (!flowNetwork) {
-      throw new Error("Flow network not found for chain ID")
-    }
-
-    // Validate the chain ID
-    const currentChainId = await this.networkManager.getChainId()
-    if (chainId !== currentChainId) {
-      throw new Error(
-        `Chain ID does not match the current network. Expected: ${currentChainId}, Received: ${chainId}`
-      )
-    }
+    const flowNetwork = this.getFlowNetworkOrThrow(chainId)
+    await this.validateChainId(chainId)
 
     const txId = await fcl.mutate({
       cadence: createCOATx(chainId),
@@ -270,21 +268,9 @@ export class AccountManager {
     gas: string
     chainId: string
   }) {
-    // Find the Flow network based on the chain ID
     const parsedChainId = parseInt(chainId)
-    const flowNetwork = getFlowNetwork(parsedChainId)
-
-    if (!flowNetwork) {
-      throw new Error("Flow network not found for chain ID")
-    }
-
-    // Validate the chain ID
-    const currentChainId = await this.networkManager.getChainId()
-    if (parsedChainId !== currentChainId) {
-      throw new Error(
-        `Chain ID does not match the current network. Expected: ${currentChainId}, Received: ${parsedChainId}`
-      )
-    }
+    this.getFlowNetworkOrThrow(parsedChainId)
+    await this.validateChainId(parsedChainId)
 
     // Check if the from address matches the authenticated COA address
     const expectedCOAAddress = await this.getCOAAddress()
@@ -388,5 +374,28 @@ export class AccountManager {
     } catch (error) {
       throw error
     }
+  }
+
+  /**
+   * Validates that the provided chain ID matches the current network.
+   */
+  private async validateChainId(chainId: number): Promise<void> {
+    const currentChainId = await this.networkManager.getChainId()
+    if (chainId !== currentChainId) {
+      throw new Error(
+        `Chain ID does not match the current network. Expected: ${currentChainId}, Received: ${chainId}`
+      )
+    }
+  }
+
+  /**
+   * Gets the Flow network based on the chain ID or throws an error.
+   */
+  private getFlowNetworkOrThrow(chainId: number): FlowNetwork {
+    const flowNetwork = getFlowNetwork(chainId)
+    if (!flowNetwork) {
+      throw new Error("Flow network not found for chain ID")
+    }
+    return flowNetwork
   }
 }
