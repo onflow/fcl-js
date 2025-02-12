@@ -7,6 +7,7 @@ import {
   FvmErrorCode,
 } from "@onflow/typedefs"
 import {
+  DEFAULT_EVM_GAS_LIMIT,
   EVENT_IDENTIFIERS,
   EventType,
   FLOW_CHAINS,
@@ -113,9 +114,7 @@ export class AccountManager {
 
   public async authenticate(): Promise<string[]> {
     await this.user.authenticate({service: this.service})
-    return this.getAccounts().then(accounts => {
-      return accounts
-    })
+    return this.getAccounts()
   }
 
   public async unauthenticate(): Promise<void> {
@@ -307,8 +306,9 @@ export class AccountManager {
     // Check if the from address matches the authenticated COA address
     const expectedCOAAddress = await this.getCOAAddress()
     if (
-      fcl.sansPrefix(from).toLowerCase() !==
-      fcl.sansPrefix(expectedCOAAddress)?.toLowerCase()
+      fcl.sansPrefix(from.toLowerCase()) !==
+        fcl.sansPrefix(expectedCOAAddress?.toLowerCase() || null) &&
+      !!expectedCOAAddress
     ) {
       throw new Error(
         `From address does not match authenticated user address.\nUser: ${expectedCOAAddress}\nFrom: ${from}`
@@ -353,10 +353,10 @@ export class AccountManager {
       cadence: sendTransactionTx(parsedChainId),
       limit: 9999,
       args: (arg: typeof fcl.arg, t: typeof fcl.t) => [
-        arg(to, t.String),
-        arg(data, t.String),
-        arg(gas, t.UInt64),
-        arg(value, t.UInt256),
+        arg(fcl.sansPrefix(to), t.String),
+        arg(fcl.sansPrefix(data ?? ""), t.String),
+        arg(BigInt(gas ?? DEFAULT_EVM_GAS_LIMIT).toString(), t.UInt64),
+        arg(BigInt(value ?? 0).toString(), t.UInt),
       ],
       authz: this.user,
     })
