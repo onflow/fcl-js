@@ -28,9 +28,27 @@ import {
 } from "../util/observable"
 import {EthSignatureResponse} from "../types/eth"
 import {NetworkManager} from "../network/network-manager"
-import {createCOATx, getCOAScript, sendTransactionTx} from "../cadence"
+import {
+  createCOATx,
+  getCOAScript,
+  getNonceScript,
+  sendTransactionTx,
+} from "../cadence"
 import {TransactionError} from "@onflow/fcl"
 import {displayErrorNotification} from "../notifications"
+import {keccak_256} from "@noble/hashes/sha3"
+import {bytesToHex, hexToBytes} from "@noble/hashes/utils"
+
+// Helper function to convert a number or bigint to a Uint8Array (minimal byte representation)
+function numberToUint8Array(value: number | bigint): Uint8Array {
+  const big = typeof value === "bigint" ? value : BigInt(value)
+  if (big === BigInt(0)) return new Uint8Array([])
+  let hex = big.toString(16)
+  if (hex.length % 2 !== 0) {
+    hex = "0" + hex
+  }
+  return hexToBytes(hex)
+}
 
 export class AccountManager {
   private $addressStore = new BehaviorSubject<{
@@ -235,6 +253,24 @@ export class AccountManager {
       })
   }
 
+  /**
+   * Fetch the current nonce from the EVM contract via a Cadence script.
+   */
+  private async getNonce(evmAddress: string): Promise<string> {
+    const chainId = await this.networkManager.getChainId()
+
+    if (!chainId) {
+      throw new Error("No active chain")
+    }
+
+    const nonce = await fcl.query({
+      cadence: getNonceScript(chainId),
+      args: (arg, t) => [arg(evmAddress, t.String)],
+    })
+
+    return nonce.toString()
+  }
+
   async sendTransaction({
     to,
     from,
@@ -276,7 +312,41 @@ export class AccountManager {
       )
     }
 
-    const txId = await fcl.mutate({
+    // ----- Pre-calculate the transaction hash -----
+    const evmAddress = expectedCOAAddress!.toLowerCase().replace(/^0x/, "")
+    const nonceStr = await this.getNonce(evmAddress)
+    const nonce = parseInt(nonceStr, 10)
+
+    const gasLimit = gas.startsWith("0x") ? BigInt(gas) : BigInt(gas)
+
+    const valueHex = value.replace(/^0x/, "")
+    const txValue = BigInt("0x" + valueHex)
+
+    const dataHex = data.replace(/^0x/, "")
+
+    const gasPrice = BigInt(0)
+    const directCallTxType = BigInt(255)
+    const contractCallSubType = BigInt(5)
+
+    // Build the transaction fields array, converting numbers/bigints using numberToUint8Array
+    const txArray = [
+      numberToUint8Array(nonce),
+      numberToUint8Array(gasPrice),
+      numberToUint8Array(gasLimit),
+      hexToBytes(to.replace(/^0x/, "")),
+      numberToUint8Array(txValue),
+      hexToBytes(dataHex),
+      numberToUint8Array(directCallTxType),
+      numberToUint8Array(BigInt("0x" + evmAddress)),
+      numberToUint8Array(contractCallSubType),
+    ]
+
+    const encodedTx = rlp.encode(txArray)
+    const digest = keccak_256(encodedTx)
+    const preCalculatedTxHash = "0x" + bytesToHex(digest)
+    // ----- End pre-calculation -----
+
+    await fcl.mutate({
       cadence: sendTransactionTx(parsedChainId),
       limit: 9999,
       args: (arg: typeof fcl.arg, t: typeof fcl.t) => [
@@ -288,18 +358,7 @@ export class AccountManager {
       authz: this.user,
     })
 
-    const event = await this.waitForTxResult(
-      txId,
-      EVENT_IDENTIFIERS[EventType.TRANSACTION_EXECUTED][flowNetwork],
-      "EVM transaction hash not found"
-    )
-
-    const eventData: TransactionExecutedEvent = event.data
-    const evmTxHash = eventData.hash
-      .map(h => parseInt(h, 16).toString().padStart(2, "0"))
-      .join("")
-
-    return evmTxHash
+    return preCalculatedTxHash
   }
 
   public async signMessage(

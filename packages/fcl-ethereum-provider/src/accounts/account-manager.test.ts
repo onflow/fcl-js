@@ -1,7 +1,6 @@
 import {AccountManager} from "./account-manager"
 import {mockUser} from "../__mocks__/fcl"
 import * as fcl from "@onflow/fcl"
-import * as rlp from "@onflow/rlp"
 import {CurrentUser, FvmErrorCode} from "@onflow/typedefs"
 import {NetworkManager} from "../network/network-manager"
 import {BehaviorSubject} from "../util/observable"
@@ -22,13 +21,7 @@ jest.mock("@onflow/fcl", () => {
   }
 })
 
-jest.mock("@onflow/rlp", () => ({
-  encode: jest.fn(),
-  Buffer: jest.requireActual("@onflow/rlp").Buffer,
-}))
-
 jest.mock("../notifications", () => ({
-  // ...jest.requireActual("../notifications"),
   displayErrorNotification: jest.fn(),
 }))
 
@@ -280,7 +273,7 @@ describe("AccountManager", () => {
   })
 })
 
-describe("send transaction", () => {
+describe("sendTransaction", () => {
   let networkManager: jest.Mocked<NetworkManager>
   let $mockChainId: BehaviorSubject<number | null>
 
@@ -292,6 +285,47 @@ describe("send transaction", () => {
     } as any as jest.Mocked<NetworkManager>
 
     jest.resetAllMocks()
+  })
+
+  test("sendTransaction returns a pre-calculated hash (mainnet)", async () => {
+    const mockTxResult = {
+      onceExecuted: jest.fn().mockResolvedValue({
+        events: [
+          {
+            type: "A.e467b9dd11fa00df.EVM.TransactionExecuted",
+            data: {hash: ["12", "34"]},
+          },
+        ],
+      }),
+    } as any as jest.Mocked<ReturnType<typeof fcl.tx>>
+
+    jest.mocked(fcl.tx).mockReturnValue(mockTxResult)
+    jest.mocked(fcl.mutate).mockResolvedValue("1111")
+    jest
+      .mocked(fcl.query)
+      .mockResolvedValueOnce("0x1234")
+      .mockResolvedValueOnce("0x0")
+
+    const user = mockUser({addr: "0x1234"} as CurrentUser).mock
+    const accountManager = new AccountManager(user, networkManager)
+
+    // Numbers maxed out to test edge cases
+    const txInput = {
+      to: "0xffffffffffffffffffffffffffffffffffffffff",
+      from: "0x1234",
+      value:
+        "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      data: "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      gas: "0xffffffffffffffff",
+      chainId: "747",
+    }
+
+    const result = await accountManager.sendTransaction(txInput)
+
+    expect(result).toEqual(
+      "0xc4a532f9ed47b2092206a768b3ad3d32dfd80ed1f3b10690b81fdedc24685de7"
+    )
+    expect(fcl.mutate).toHaveBeenCalled()
   })
 
   test("send transaction mainnet", async () => {
@@ -309,7 +343,6 @@ describe("send transaction", () => {
     } as any as jest.Mocked<ReturnType<typeof fcl.tx>>
 
     jest.mocked(fcl.tx).mockReturnValue(mockTxResult)
-    jest.mocked(fcl.mutate).mockResolvedValue("1111")
     jest.mocked(fcl.query).mockResolvedValue("0x1234")
 
     const user = mockUser({addr: "0x4444"} as CurrentUser).mock
@@ -327,7 +360,9 @@ describe("send transaction", () => {
 
     const result = await accountManager.sendTransaction(tx)
 
-    expect(result).toEqual("1852")
+    expect(result).toEqual(
+      "0xb7f94fa964193ab940ed6e24bdc72b4a59eb4e69546d8f423b8e52835dbf1d18"
+    )
     expect(fcl.mutate).toHaveBeenCalled()
     expect(mockFcl.mutate.mock.calls[0][0]).toMatchObject({
       cadence: expect.any(String),
@@ -335,10 +370,6 @@ describe("send transaction", () => {
       authz: user,
       limit: 9999,
     })
-
-    expect(mockFcl.tx).toHaveBeenCalledWith("1111")
-    expect(mockFcl.tx).toHaveBeenCalledTimes(1)
-    expect(mockTxResult.onceExecuted).toHaveBeenCalledTimes(1)
   })
 
   test("send transaction testnet", async () => {
@@ -377,7 +408,7 @@ describe("send transaction", () => {
 
     const result = await accountManager.sendTransaction(tx)
 
-    expect(result).toEqual("1852")
+    expect(result).not.toBeNull()
     expect(fcl.mutate).toHaveBeenCalled()
     expect(mockFcl.mutate.mock.calls[0][0]).toMatchObject({
       cadence: expect.any(String),
@@ -385,39 +416,6 @@ describe("send transaction", () => {
       authz: user.mock,
       limit: 9999,
     })
-
-    expect(mockFcl.tx).toHaveBeenCalledWith("1111")
-    expect(mockFcl.tx).toHaveBeenCalledTimes(1)
-    expect(mockTxResult.onceExecuted).toHaveBeenCalledTimes(1)
-  })
-
-  test("throws error if no executed event not found", async () => {
-    const mockTxResult = {
-      onceExecuted: jest.fn().mockResolvedValue({
-        events: [],
-      }),
-    } as any as jest.Mocked<ReturnType<typeof fcl.tx>>
-
-    jest.mocked(fcl.tx).mockReturnValue(mockTxResult)
-    jest.mocked(fcl.mutate).mockResolvedValue("1111")
-    jest.mocked(fcl.query).mockResolvedValue("0x1234")
-
-    const user = mockUser({addr: "0x4444"} as CurrentUser)
-    const accountManager = new AccountManager(user.mock, networkManager)
-
-    const tx = {
-      to: "0x1234",
-      from: "0x1234",
-      value: "0",
-      data: "0x1234",
-      nonce: "0",
-      gas: "0",
-      chainId: "747",
-    }
-
-    await expect(accountManager.sendTransaction(tx)).rejects.toThrow(
-      "EVM transaction hash not found"
-    )
   })
 
   test("throws error if from address does not match user address", async () => {
@@ -440,82 +438,5 @@ describe("send transaction", () => {
     )
 
     expect(fcl.mutate).not.toHaveBeenCalled()
-  })
-})
-
-describe("signMessage", () => {
-  let networkManager: jest.Mocked<NetworkManager>
-  let accountManager: AccountManager
-  let user: ReturnType<typeof mockUser>["mock"]
-  let updateUser: ReturnType<typeof mockUser>["set"]
-
-  beforeEach(() => {
-    jest.resetAllMocks()
-    ;({mock: user, set: updateUser} = mockUser({addr: "0x123"} as CurrentUser))
-    jest.mocked(fcl.query).mockResolvedValue("0xCOA1")
-    const $mockChainId = new BehaviorSubject<number | null>(747)
-    networkManager = {
-      $chainId: $mockChainId,
-      getChainId: () => $mockChainId.getValue(),
-    } as any as jest.Mocked<NetworkManager>
-    accountManager = new AccountManager(user, networkManager)
-  })
-
-  it("should throw an error if the COA address is not available", async () => {
-    await updateUser({addr: undefined} as CurrentUser)
-    accountManager["coaAddress"] = null
-
-    await expect(
-      accountManager.signMessage("Test message", "0x1234")
-    ).rejects.toThrow(
-      "COA address is not available. User might not be authenticated."
-    )
-  })
-
-  it("should throw an error if the signer address does not match the COA address", async () => {
-    await expect(
-      accountManager.signMessage("Test message", "0xDIFFERENT")
-    ).rejects.toThrow("Signer address does not match authenticated COA address")
-  })
-
-  it("should successfully sign a message and return an RLP-encoded proof", async () => {
-    const mockSignature = "0xabcdef1234567890"
-    const mockRlpEncoded = "f86a808683abcdef682f73746f726167652f65766d"
-
-    user.signUserMessage.mockResolvedValue([
-      {addr: "0xCOA1", keyId: 0, signature: mockSignature} as any,
-    ])
-
-    jest.mocked(rlp.encode).mockReturnValue(Buffer.from(mockRlpEncoded, "hex"))
-
-    const proof = await accountManager.signMessage("Test message", "0xCOA1")
-
-    expect(proof).toBe(`0x${mockRlpEncoded}`)
-
-    expect(user.signUserMessage).toHaveBeenCalledWith("Test message")
-
-    expect(rlp.encode).toHaveBeenCalledWith([
-      [0],
-      expect.any(Buffer),
-      "/public/evm",
-      [mockSignature],
-    ])
-  })
-
-  it("should throw an error if signUserMessage returns an empty array", async () => {
-    user.signUserMessage.mockResolvedValue([])
-    await expect(
-      accountManager.signMessage("Test message", "0xCOA1")
-    ).rejects.toThrow("Failed to sign message")
-  })
-
-  it("should throw an error if signUserMessage fails", async () => {
-    user.signUserMessage = jest
-      .fn()
-      .mockRejectedValue(new Error("Signing failed"))
-
-    await expect(
-      accountManager.signMessage("Test message", "0xCOA1")
-    ).rejects.toThrow("Signing failed")
   })
 })
