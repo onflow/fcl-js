@@ -30,3 +30,5 @@ export const createFclConnector = (options: FclConnectorOptions) => {
     },
   })
 }
+
+export * from "./wc"

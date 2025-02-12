@@ -14,13 +14,14 @@ import type {FclWalletConnectConfig} from "./fcl-wc"
 import mobileIcon from "./ui/assets/mobile.svg"
 import {CurrentUser, Service} from "@onflow/typedefs"
 import {SessionTypes} from "@walletconnect/types"
+import {UniversalProvider} from "@walletconnect/universal-provider"
 
 type WalletConnectModalType = import("@walletconnect/modal").WalletConnectModal
 
 type Constructor<T> = new (...args: any[]) => T
 
 export const makeServicePlugin = (
-  client: Promise<SignClient | null>,
+  signer: Promise<InstanceType<typeof UniversalProvider> | null>,
   config: FclWalletConnectConfig = {
     projectId: "",
     includeBaseWC: false,
@@ -36,7 +37,7 @@ export const makeServicePlugin = (
   serviceStrategy: {
     method: WC_SERVICE_METHOD,
     exec: makeExec(
-      client,
+      signer,
       config,
       import("@walletconnect/modal").then(m => m.WalletConnectModal)
     ),
@@ -45,7 +46,7 @@ export const makeServicePlugin = (
 })
 
 const makeExec = (
-  clientPromise: Promise<SignClient | null>,
+  signerPromise: Promise<InstanceType<typeof UniversalProvider> | null>,
   config: FclWalletConnectConfig,
   WalletConnectModal: Promise<Constructor<WalletConnectModalType>>
 ) => {
@@ -71,23 +72,13 @@ const makeExec = (
       disableNotifications: appDisabledNotifications,
     } = config
 
-    const client = await clientPromise
-    invariant(!!client, "WalletConnect is not initialized")
+    const signer = await signerPromise
+    invariant(!!signer, "WalletConnect is not initialized")
 
-    let session: SessionTypes.Struct | null = null,
+    let session: SessionTypes.Struct | null = signer.session ?? null,
       pairing: any
     const method = service.endpoint
     const appLink = validateAppLink(service)
-    const pairings = client.pairing.getAll({active: true})
-
-    if (pairings.length > 0) {
-      pairing = pairings?.find(p => p.peerMetadata?.url === service.uid)
-    }
-
-    if (client.session.length > 0) {
-      const lastKeyIndex = client.session.keys.length - 1
-      session = client.session.get(client.session.keys.at(lastKeyIndex)!)
-    }
 
     if (session == null) {
       session = await new Promise<SessionTypes.Struct>((resolve, reject) => {
@@ -99,7 +90,7 @@ const makeExec = (
           service,
           onClose,
           appLink,
-          client,
+          signer,
           method,
           pairing,
           wcRequestHook,
@@ -143,7 +134,7 @@ const makeExec = (
       method,
       body,
       session,
-      client,
+      signer,
       abortSignal,
     }).finally(() => notification?.dismiss())
 
@@ -168,7 +159,7 @@ function connectWc(
     service,
     onClose,
     appLink,
-    client,
+    signer,
     method,
     pairing,
     wcRequestHook,
@@ -178,14 +169,14 @@ function connectWc(
     service: any
     onClose: any
     appLink: string
-    client: SignClient
+    signer: InstanceType<typeof UniversalProvider>
     method: string
     pairing: any
     wcRequestHook: any
     pairingModalOverride: any
     abortSignal?: AbortSignal
   }): Promise<SessionTypes.Struct> => {
-    const projectId = client.opts?.projectId
+    const projectId = signer.providerOpts.projectId
     invariant(
       !!projectId,
       "Cannot establish connection, WalletConnect projectId is undefined"
@@ -195,13 +186,12 @@ function connectWc(
       walletConnectModal: WalletConnectModalType | null = null
 
     try {
-      const {uri, approval} = await createSessionProposal({
-        client,
+      const {uri: _, approval} = await createSessionProposal({
+        signer,
         existingPairing: pairing,
       })
-      _uri = uri
 
-      if (wcRequestHook && wcRequestHook instanceof Function) {
+      /*if (wcRequestHook && wcRequestHook instanceof Function) {
         wcRequestHook({
           type: REQUEST_TYPES.SESSION_REQUEST,
           method,
@@ -210,9 +200,9 @@ function connectWc(
           pairing: pairing ?? null,
           uri: uri ?? null,
         })
-      }
+      }*/
 
-      if (isMobile()) {
+      /*if (isMobile()) {
         const queryString = new URLSearchParams({uri: uri}).toString()
         let url = pairing == null ? appLink + "?" + queryString : appLink
         openDeeplink(url)
@@ -240,7 +230,7 @@ function connectWc(
         } else {
           pairingModalOverride(uri, onClose)
         }
-      }
+      }*/
 
       const session = await Promise.race([
         approval(),
@@ -253,6 +243,11 @@ function connectWc(
           })
         }),
       ])
+
+      if (session == null) {
+        throw new Error("Session request failed")
+      }
+
       return session
     } catch (error) {
       if (error instanceof Error) {
@@ -268,7 +263,7 @@ function connectWc(
       onClose()
       throw error
     } finally {
-      walletConnectModal?.closeModal()
+      // walletConnectModal?.closeModal()
     }
   }
 }

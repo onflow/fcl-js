@@ -213,3 +213,5 @@ export function fclWagmiAdapter(params: FclWagmiAdapterParams) {
     },
   }))
 }
+
+export * from "./wc"
