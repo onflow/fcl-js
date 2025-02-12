@@ -4,8 +4,7 @@ import {ContractType} from "./constants"
 const evmImport = (chainId: number) =>
   `import EVM from ${getContractAddress(ContractType.EVM, chainId)}`
 
-export const getCOAScript = (chainId: number) => `
-${evmImport(chainId)}
+export const getCOAScript = (chainId: number) => `${evmImport(chainId)}
 
 /// Returns the hex encoded address of the COA in the given Flow address
 access(all) fun main(flowAddress: Address): String? {
@@ -14,11 +13,9 @@ access(all) fun main(flowAddress: Address): String? {
         ?.address()
         ?.toString()
         ?? nil
-}
-`
+}`
 
-export const createCOATx = (chainId: number) => `
-${evmImport(chainId)}
+export const createCOATx = (chainId: number) => `${evmImport(chainId)}
 
 transaction() {
     prepare(signer: auth(SaveValue, IssueStorageCapabilityController, PublishCapability) &Account) {
@@ -31,11 +28,9 @@ transaction() {
         let cap = signer.capabilities.storage.issue<&EVM.CadenceOwnedAccount>(storagePath)
         signer.capabilities.publish(cap, at: publicPath)
     }
-}
-`
+}`
 
-export const sendTransactionTx = (chainId: number) => `
-${evmImport(chainId)}
+export const sendTransactionTx = (chainId: number) => `${evmImport(chainId)}
 
 /// Executes the calldata from the signer's COA
 transaction(evmContractAddressHex: String, calldata: String, gasLimit: UInt64, value: UInt256) {
@@ -59,16 +54,13 @@ transaction(evmContractAddressHex: String, calldata: String, gasLimit: UInt64, v
         )
         assert(callResult.status == EVM.Status.successful, message: "Call failed")
     }
-}
-`
+}`
 
-export const getNonceScript = (chainId: number) => `
-${evmImport(chainId)}
+export const getNonceScript = (chainId: number) => `${evmImport(chainId)}
 
 access(all)
 fun main(evmAddress: String): UInt64 {
     let addr = EVM.EVMAddress(bytes: evmAddress.decodeHex().toConstantSized<[UInt8; 20]>())
     let nonce = addr.nonce()
     return nonce
-}
-`
+}`
