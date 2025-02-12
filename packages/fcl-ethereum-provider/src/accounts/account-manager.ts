@@ -305,11 +305,14 @@ export class AccountManager {
     }
 
     // Check if the from address matches the authenticated COA address
-    const expectedCOAAddress = await this.getCOAAddress();
-    if (fcl.sansPrefix(from).toLowerCase() !== fcl.sansPrefix(expectedCOAAddress)?.toLowerCase()) {
+    const expectedCOAAddress = await this.getCOAAddress()
+    if (
+      fcl.sansPrefix(from).toLowerCase() !==
+      fcl.sansPrefix(expectedCOAAddress)?.toLowerCase()
+    ) {
       throw new Error(
         `From address does not match authenticated user address.\nUser: ${expectedCOAAddress}\nFrom: ${from}`
-      );
+      )
     }
 
     // ----- Pre-calculate the transaction hash -----
@@ -372,8 +375,11 @@ export class AccountManager {
       )
     }
 
-    if (fcl.sansPrefix(from).toLowerCase() !== fcl.sansPrefix(coaAddress).toLowerCase()) {
-      throw new Error("Signer address does not match authenticated COA address");
+    if (
+      fcl.sansPrefix(from).toLowerCase() !==
+      fcl.sansPrefix(coaAddress).toLowerCase()
+    ) {
+      throw new Error("Signer address does not match authenticated COA address")
     }
 
     try {
