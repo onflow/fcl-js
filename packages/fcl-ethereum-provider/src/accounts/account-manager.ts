@@ -81,11 +81,7 @@ export class AccountManager {
         distinctUntilChanged(),
         switchMap(addr =>
           concat(
-            of({isLoading: true} as {
-              isLoading: boolean
-              address: string | null
-              error: Error | null
-            }),
+            of({isLoading: true} as AddressStoreState),
             from(
               (async () => {
                 try {
