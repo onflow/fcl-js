@@ -6,14 +6,7 @@ import {
   Service,
   FvmErrorCode,
 } from "@onflow/typedefs"
-import {
-  DEFAULT_EVM_GAS_LIMIT,
-  EVENT_IDENTIFIERS,
-  EventType,
-  FLOW_CHAINS,
-  FlowNetwork,
-} from "../constants"
-import {TransactionExecutedEvent} from "../types/events"
+import {DEFAULT_EVM_GAS_LIMIT, EVENT_IDENTIFIERS, EventType} from "../constants"
 import {
   BehaviorSubject,
   concat,
@@ -39,6 +32,8 @@ import {TransactionError} from "@onflow/fcl"
 import {displayErrorNotification} from "../notifications"
 import {keccak_256} from "@noble/hashes/sha3"
 import {bytesToHex, hexToBytes} from "@noble/hashes/utils"
+import {AddressStoreState} from "../types/account"
+import {getFlowNetwork} from "../util/chain"
 
 // Helper function to convert a number or bigint to a Uint8Array (minimal byte representation)
 function numberToUint8Array(value: number | bigint): Uint8Array {
@@ -52,11 +47,7 @@ function numberToUint8Array(value: number | bigint): Uint8Array {
 }
 
 export class AccountManager {
-  private $addressStore = new BehaviorSubject<{
-    isLoading: boolean
-    address: string | null
-    error: Error | null
-  }>({
+  private $addressStore = new BehaviorSubject<AddressStoreState>({
     isLoading: true,
     address: null,
     error: null,
@@ -85,11 +76,7 @@ export class AccountManager {
         distinctUntilChanged(),
         switchMap(addr =>
           concat(
-            of({isLoading: true} as {
-              isLoading: boolean
-              address: string | null
-              error: Error | null
-            }),
+            of({isLoading: true} as AddressStoreState),
             from(
               (async () => {
                 try {
@@ -185,9 +172,7 @@ export class AccountManager {
 
   public async createCOA(chainId: number): Promise<string> {
     // Find the Flow network based on the chain ID
-    const flowNetwork = Object.entries(FLOW_CHAINS).find(
-      ([, chain]) => chain.eip155ChainId === chainId
-    )?.[0] as FlowNetwork | undefined
+    const flowNetwork = getFlowNetwork(chainId)
 
     if (!flowNetwork) {
       throw new Error("Flow network not found for chain ID")
@@ -287,9 +272,7 @@ export class AccountManager {
   }) {
     // Find the Flow network based on the chain ID
     const parsedChainId = parseInt(chainId)
-    const flowNetwork = Object.entries(FLOW_CHAINS).find(
-      ([, chain]) => chain.eip155ChainId === parsedChainId
-    )?.[0] as FlowNetwork | undefined
+    const flowNetwork = getFlowNetwork(parsedChainId)
 
     if (!flowNetwork) {
       throw new Error("Flow network not found for chain ID")

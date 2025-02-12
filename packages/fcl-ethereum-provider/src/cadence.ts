@@ -1,12 +1,12 @@
 import {getContractAddress} from "./util/eth"
 import {ContractType} from "./constants"
 
-export const getCOAScript = (
-  chainId: number
-) => `import EVM from ${getContractAddress(ContractType.EVM, chainId)}
+const evmImport = (chainId: number) =>
+  `import EVM from ${getContractAddress(ContractType.EVM, chainId)}`
+
+export const getCOAScript = (chainId: number) => `${evmImport(chainId)}
 
 /// Returns the hex encoded address of the COA in the given Flow address
-///
 access(all) fun main(flowAddress: Address): String? {
     return getAuthAccount<auth(BorrowValue) &Account>(flowAddress)
         .storage.borrow<&EVM.CadenceOwnedAccount>(from: /storage/evm)
@@ -15,9 +15,7 @@ access(all) fun main(flowAddress: Address): String? {
         ?? nil
 }`
 
-export const createCOATx = (
-  chainId: number
-) => `import EVM from ${getContractAddress(ContractType.EVM, chainId)}
+export const createCOATx = (chainId: number) => `${evmImport(chainId)}
 
 transaction() {
     prepare(signer: auth(SaveValue, IssueStorageCapabilityController, PublishCapability) &Account) {
@@ -32,9 +30,7 @@ transaction() {
     }
 }`
 
-export const sendTransactionTx = (
-  chainId: number
-) => `import EVM from ${getContractAddress(ContractType.EVM, chainId)}
+export const sendTransactionTx = (chainId: number) => `${evmImport(chainId)}
 
 /// Executes the calldata from the signer's COA
 transaction(evmContractAddressHex: String, calldata: String, gasLimit: UInt64, value: UInt) {
@@ -44,7 +40,6 @@ transaction(evmContractAddressHex: String, calldata: String, gasLimit: UInt64, v
 
     prepare(signer: auth(BorrowValue) &Account) {
         self.evmAddress = EVM.addressFromString(evmContractAddressHex)
-
         self.coa = signer.storage.borrow<auth(EVM.Call) &EVM.CadenceOwnedAccount>(from: /storage/evm)
             ?? panic("Could not borrow COA from provided gateway address")
     }
@@ -61,14 +56,11 @@ transaction(evmContractAddressHex: String, calldata: String, gasLimit: UInt64, v
     }
 }`
 
-export const getNonceScript = (
-  chainId: number
-) => `import EVM from ${getContractAddress(ContractType.EVM, chainId)}
+export const getNonceScript = (chainId: number) => `${evmImport(chainId)}
 
 access(all)
 fun main(evmAddress: String): UInt64 {
     let addr = EVM.EVMAddress(bytes: evmAddress.decodeHex().toConstantSized<[UInt8; 20]>())
     let nonce = addr.nonce()
     return nonce
-}
-`
+}`
