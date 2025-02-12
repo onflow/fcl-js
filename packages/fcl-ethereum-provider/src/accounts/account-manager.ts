@@ -38,6 +38,7 @@ import {displayErrorNotification} from "../notifications"
 import {keccak_256} from "@noble/hashes/sha3"
 import {bytesToHex, hexToBytes} from "@noble/hashes/utils"
 import {AddressStoreState} from "../types/account"
+import {getFlowNetwork} from "../util/chain"
 
 // Helper function to convert a number or bigint to a Uint8Array (minimal byte representation)
 function numberToUint8Array(value: number | bigint): Uint8Array {
@@ -182,9 +183,7 @@ export class AccountManager {
 
   public async createCOA(chainId: number): Promise<string> {
     // Find the Flow network based on the chain ID
-    const flowNetwork = Object.entries(FLOW_CHAINS).find(
-      ([, chain]) => chain.eip155ChainId === chainId
-    )?.[0] as FlowNetwork | undefined
+    const flowNetwork = getFlowNetwork(chainId)
 
     if (!flowNetwork) {
       throw new Error("Flow network not found for chain ID")
@@ -284,9 +283,7 @@ export class AccountManager {
   }) {
     // Find the Flow network based on the chain ID
     const parsedChainId = parseInt(chainId)
-    const flowNetwork = Object.entries(FLOW_CHAINS).find(
-      ([, chain]) => chain.eip155ChainId === parsedChainId
-    )?.[0] as FlowNetwork | undefined
+    const flowNetwork = getFlowNetwork(parsedChainId)
 
     if (!flowNetwork) {
       throw new Error("Flow network not found for chain ID")
