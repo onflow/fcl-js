@@ -6,10 +6,7 @@ import {
   Service,
   FvmErrorCode,
 } from "@onflow/typedefs"
-import {
-  EVENT_IDENTIFIERS,
-  EventType,
-} from "../constants"
+import {EVENT_IDENTIFIERS, EventType} from "../constants"
 import {
   BehaviorSubject,
   concat,
