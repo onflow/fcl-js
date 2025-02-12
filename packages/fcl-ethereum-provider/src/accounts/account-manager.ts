@@ -12,7 +12,6 @@ import {
   FLOW_CHAINS,
   FlowNetwork,
 } from "../constants"
-import {TransactionExecutedEvent} from "../types/events"
 import {
   BehaviorSubject,
   concat,
@@ -38,6 +37,7 @@ import {TransactionError} from "@onflow/fcl"
 import {displayErrorNotification} from "../notifications"
 import {keccak_256} from "@noble/hashes/sha3"
 import {bytesToHex, hexToBytes} from "@noble/hashes/utils"
+import {AddressStoreState} from "../types/account"
 
 // Helper function to convert a number or bigint to a Uint8Array (minimal byte representation)
 function numberToUint8Array(value: number | bigint): Uint8Array {
@@ -51,11 +51,7 @@ function numberToUint8Array(value: number | bigint): Uint8Array {
 }
 
 export class AccountManager {
-  private $addressStore = new BehaviorSubject<{
-    isLoading: boolean
-    address: string | null
-    error: Error | null
-  }>({
+  private $addressStore = new BehaviorSubject<AddressStoreState>({
     isLoading: true,
     address: null,
     error: null,
