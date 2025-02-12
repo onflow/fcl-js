@@ -6,7 +6,7 @@ import {
   Service,
   FvmErrorCode,
 } from "@onflow/typedefs"
-import {DEFAULT_EVM_GAS_LIMIT,EVENT_IDENTIFIERS, EventType} from "../constants"
+import {DEFAULT_EVM_GAS_LIMIT, EVENT_IDENTIFIERS, EventType} from "../constants"
 import {
   BehaviorSubject,
   concat,
