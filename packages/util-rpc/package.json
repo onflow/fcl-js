@@ -4,7 +4,7 @@
   "description": "Lightweight utility for creating transport-agnostic, bidirectional JSON-RPC channels.",
   "license": "Apache-2.0",
   "author": "Flow Foundation <support@flowfoundation.org>",
-  "homepage": "https://onflow.org",
+  "homepage": "https://flow.com",
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/onflow/fcl-js.git"

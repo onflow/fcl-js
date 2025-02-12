@@ -3,14 +3,14 @@
   "version": "1.13.4",
   "description": "Flow Client Library",
   "license": "Apache-2.0",
-  "author": "Dapper Labs <dev@dapperlabs.com>",
-  "homepage": "https://onflow.org",
+  "author": "Flow Foundation",
+  "homepage": "https://flow.com",
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/onflow/flow-js-sdk.git"
+    "url": "git+ssh://git@github.com/onflow/fcl-js.git"
   },
   "bugs": {
-    "url": "https://github.com/onflow/flow-js-sdk/issues"
+    "url": "https://github.com/onflow/fcl-js/issues"
   },
   "jest": {
     "testEnvironment": "jsdom",
