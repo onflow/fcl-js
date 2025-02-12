@@ -36,7 +36,11 @@ export class RpcProcessor {
         case "eth_requestAccounts":
           return ethRequestAccounts(this.accountManager, chainId)
         case "eth_sendTransaction":
-          return await ethSendTransaction(this.accountManager, params)
+          return await ethSendTransaction(
+            this.accountManager,
+            this.networkManager,
+            params
+          )
         case "eth_signTypedData":
         case "eth_signTypedData_v3":
         case "eth_signTypedData_v4": {

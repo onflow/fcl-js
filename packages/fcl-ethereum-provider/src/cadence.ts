@@ -33,7 +33,7 @@ transaction() {
 export const sendTransactionTx = (chainId: number) => `${evmImport(chainId)}
 
 /// Executes the calldata from the signer's COA
-transaction(evmContractAddressHex: String, calldata: String, gasLimit: UInt64, value: UInt256) {
+transaction(evmContractAddressHex: String, calldata: String, gasLimit: UInt64, value: UInt) {
     
     let evmAddress: EVM.EVMAddress
     let coa: auth(EVM.Call) &EVM.CadenceOwnedAccount
