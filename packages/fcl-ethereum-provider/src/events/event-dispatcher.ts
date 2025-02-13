@@ -11,6 +11,7 @@ import {
 } from "../util/observable"
 import {formatChainId} from "../util/eth"
 import {withPrefix} from "@onflow/fcl"
+import {ProviderError, ProviderErrorCode} from "../util/errors"
 
 export class EventDispatcher {
   private $emitters: {
@@ -47,7 +48,12 @@ export class EventDispatcher {
         }),
         takeFirst()
       ),
-      disconnect: new Observable<{reason: string}>(() => {
+      disconnect: new Observable<ProviderError>(subscriber => {
+        subscriber.next(
+          new ProviderError({code: ProviderErrorCode.Disconnected})
+        )
+        subscriber.complete?.()
+
         return () => {}
       }),
     }
