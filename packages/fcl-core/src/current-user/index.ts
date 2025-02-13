@@ -12,6 +12,8 @@ import {execService} from "./exec-service"
 import {normalizeCompositeSignature} from "../normalizers/service/composite-signature"
 import {getDiscoveryService, makeDiscoveryServices} from "../discovery"
 import {getServiceRegistry} from "./exec-service/plugins"
+import {CurrentUser} from "@onflow/typedefs"
+import {StorageProvider} from "../utils/storage"
 
 /**
  * @typedef {import("@onflow/typedefs").CurrentUser} CurrentUser
@@ -167,7 +169,7 @@ const getAuthenticate =
    * @param {boolean} [opts.redir] - Optional redirect flag
    * @returns
    */
-  async ({service, redir = false} = {}) => {
+  async ({service, redir = false}: {service?: any; redir?: boolean} = {}) => {
     if (
       service &&
       !service?.provider?.is_installed &&
@@ -323,7 +325,7 @@ const getAuthorization =
       ...account,
       tempId: "CURRENT_USER",
       async resolve(account, preSignable) {
-        const user = await getAuthenticate(config)({redir: true})
+        const user = await getAuthenticate(config)()
         const authz = serviceOfType(user.services, "authz")
         const preAuthz = serviceOfType(user.services, "pre-authz")
 
@@ -474,12 +476,29 @@ const getSignUserMessage =
     }
   }
 
-/**
- * @typedef {object} CurrentUserConfig - Current User Configuration
- * @property {string} platform - Platform
- * @property {object} [discovery] - FCL Discovery Configuration
- * @property {() => Promise<import("../utils/storage").StorageProvider>} [getStorageProvider] - Storage Provider Getter
- */
+export type FclUser = {
+  getAddresses: () => Promise<string[]>
+  authenticate: () => Promise<void>
+  unauthenticate: ReturnType<typeof getUnauthenticate>
+  authorization: ReturnType<typeof getAuthorization>
+  signUserMessage: ReturnType<typeof getSignUserMessage>
+  subscribe: ReturnType<typeof getSubscribe>
+}
+
+export type ProtocolUser = FclUser & {
+  connect: ReturnType<typeof getAuthenticate>
+  resolveArgument: ReturnType<typeof getResolveArgument>
+  snapshot: ReturnType<typeof getSnapshot>
+  subscribe: ReturnType<typeof getSubscribe>
+}
+
+type ProtocolUserConfig = {
+  platform: string
+  discovery: {
+    execStrategy: any
+  }
+  getStorageProvider: () => Promise<StorageProvider>
+}
 
 /**
  * @description
@@ -487,15 +506,92 @@ const getSignUserMessage =
  *
  * @param {CurrentUserConfig} config - Current User Configuration
  *  */
-const getCurrentUser = config => {
-  const currentUser = {
-    authenticate: getAuthenticate(config),
+export const createProtocolUser = (config: ProtocolUserConfig) => {
+  const legacyUser: ProtocolUser = {
+    connect: getAuthenticate(config),
+    authenticate: async () => {
+      await legacyUser.connect()
+    },
     unauthenticate: getUnauthenticate(config),
     authorization: getAuthorization(config),
     signUserMessage: getSignUserMessage(config),
     subscribe: getSubscribe(config),
     snapshot: getSnapshot(config),
     resolveArgument: getResolveArgument(config),
+    getAddresses: async () => {
+      const user = (await legacyUser.snapshot()) as CurrentUser
+      return user?.addr ? [user.addr] : []
+    },
+  }
+
+  return legacyUser
+}
+
+/**
+ * @description - Create the global current user object.  It defaults to using the FCL protocol user, but
+ * @param config - Current User Configuration
+ */
+const getCurrentUser = (config: ProtocolUserConfig) => {
+  let _user: FclUser | null = null
+  let _defaultUser: ReturnType<typeof createProtocolUser> | null = null
+  let unsubscribeUser: Function | null = null
+  let subscribers: Function[] = []
+
+  function getUser() {
+    return _user ?? getDefaultUser()
+  }
+
+  function setUser(newUser: FclUser) {
+    _user = newUser
+    unsubscribeUser = newUser.subscribe((u: any) => {
+      subscribers.forEach(s => s(u))
+    })
+  }
+
+  function getDefaultUser() {
+    return (_defaultUser ??= createProtocolUser(config))
+  }
+
+  const currentUser = {
+    authenticate: (({service, redir} = {}) => {
+      if (getUser() === getDefaultUser()) {
+        return getDefaultUser().connect({service, redir})
+      }
+      return getUser().authenticate()
+    }) as ReturnType<typeof getAuthenticate>,
+    unauthenticate: (() => {
+      return getUser().unauthenticate()
+    }) as ReturnType<typeof getUnauthenticate>,
+    authorization: ((account: any) => {
+      return getUser().authorization(account)
+    }) as ReturnType<typeof getAuthorization>,
+    signUserMessage: ((msg: any) => {
+      return getUser().signUserMessage(msg)
+    }) as ReturnType<typeof getSignUserMessage>,
+    subscribe: (cb: Function) => {
+      const subFn = (...args: any) => {
+        cb(...args)
+      }
+      subscribers.push(subFn)
+      return () => {
+        subscribers = subscribers.filter(s => s !== subFn)
+      }
+    },
+    snapshot: () => {
+      // Legacy API support
+      if (getUser() === getDefaultUser()) {
+        return getDefaultUser().snapshot()
+      }
+      throw new Error("Not supported by current user")
+    },
+    resolveArgument: () => {
+      // Legacy API support
+      if (getUser() === getDefaultUser()) {
+        return getDefaultUser().resolveArgument()
+      }
+      throw new Error("Not supported by current user")
+    },
+    setUser,
   }
 
   return Object.assign(
