@@ -2,9 +2,11 @@ import {EventCallback, ProviderEvents} from "../types/provider"
 import {AccountManager} from "../accounts/account-manager"
 import {NetworkManager} from "../network/network-manager"
 import {
+  distinctUntilChanged,
   filter,
   map,
   Observable,
+  pairwise,
   skip,
   Subscription,
   takeFirst,
@@ -48,14 +50,16 @@ export class EventDispatcher {
         }),
         takeFirst()
       ),
-      disconnect: new Observable<ProviderError>(subscriber => {
-        subscriber.next(
-          new ProviderError({code: ProviderErrorCode.Disconnected})
-        )
-        subscriber.complete?.()
-
-        return () => {}
-      }),
+      disconnect: networkManager.$chainId.pipe(
+        filter(({isLoading, error}) => !isLoading && !error),
+        pairwise(),
+        filter(
+          ([prev, curr]) => prev.chainId !== null && curr.chainId === null
+        ),
+        map(() => {
+          return new ProviderError({code: ProviderErrorCode.Disconnected})
+        })
+      ),
     }
 
     this.subscriptions = {

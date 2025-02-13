@@ -344,6 +344,24 @@ export function takeFirst<T>(): (source: Observable<T>) => Observable<T> {
   }
 }
 
+export function pairwise<T>(): (source: Observable<T>) => Observable<[T, T]> {
+  return source => {
+    return new Observable<[T, T]>(subscriber => {
+      let previous: T | undefined
+      return source.subscribe({
+        next: value => {
+          if (previous !== undefined) {
+            subscriber.next([previous, value])
+          }
+          previous = value
+        },
+        error: subscriber.error?.bind(subscriber),
+        complete: subscriber.complete?.bind(subscriber),
+      })
+    })
+  }
+}
+
 /*******************************
  * Internal utility
  *******************************/
