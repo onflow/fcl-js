@@ -1,6 +1,7 @@
 import {
   EthereumProvider,
   EthereumProviderOptions,
+  OPTIONAL_EVENTS,
   OPTIONAL_METHODS,
   REQUIRED_EVENTS,
   REQUIRED_METHODS,
@@ -137,7 +138,7 @@ function buildNamespaces(network: FlowNetwork): {
       eip155: {
         methods: OPTIONAL_METHODS,
         chains: [`eip155:${eip155ChainId}`],
-        events: REQUIRED_EVENTS,
+        events: OPTIONAL_EVENTS,
       },
       flow: {
         methods: Object.values(FLOW_METHODS),
