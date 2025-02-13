@@ -35,21 +35,9 @@ import {
 } from "../cadence"
 import {TransactionError} from "@onflow/fcl"
 import {displayErrorNotification} from "../notifications"
-import {keccak_256} from "@noble/hashes/sha3"
-import {bytesToHex, hexToBytes} from "@noble/hashes/utils"
 import {AddressStoreState} from "../types/account"
 import {getFlowNetwork} from "../util/chain"
-
-// Helper function to convert a number or bigint to a Uint8Array (minimal byte representation)
-function numberToUint8Array(value: number | bigint): Uint8Array {
-  const big = typeof value === "bigint" ? value : BigInt(value)
-  if (big === BigInt(0)) return new Uint8Array([])
-  let hex = big.toString(16)
-  if (hex.length % 2 !== 0) {
-    hex = "0" + hex
-  }
-  return hexToBytes(hex)
-}
+import {precalculateTxHash} from "../util/transaction"
 
 export class AccountManager {
   private $addressStore = new BehaviorSubject<AddressStoreState>({
@@ -288,34 +276,14 @@ export class AccountManager {
     const evmAddress = fcl.sansPrefix(expectedCOAAddress!).toLowerCase()
     const nonceStr = await this.getNonce(evmAddress)
     const nonce = parseInt(nonceStr, 10)
-
-    const gasLimit = BigInt(gas)
-
-    const valueHex = fcl.sansPrefix(value)
-    const txValue = BigInt("0x" + valueHex)
-
-    const dataHex = fcl.sansPrefix(data)
-
-    const gasPrice = BigInt(0)
-    const directCallTxType = BigInt(255)
-    const contractCallSubType = BigInt(5)
-
-    // Build the transaction fields array, converting numbers/bigints using numberToUint8Array
-    const txArray = [
-      numberToUint8Array(nonce),
-      numberToUint8Array(gasPrice),
-      numberToUint8Array(gasLimit),
-      hexToBytes(fcl.sansPrefix(to)),
-      numberToUint8Array(txValue),
-      hexToBytes(dataHex),
-      numberToUint8Array(directCallTxType),
-      numberToUint8Array(BigInt(fcl.withPrefix(evmAddress))),
-      numberToUint8Array(contractCallSubType),
-    ]
-
-    const encodedTx = rlp.encode(txArray)
-    const digest = keccak_256(encodedTx)
-    const preCalculatedTxHash = fcl.withPrefix(bytesToHex(digest))
+    const preCalculatedTxHash = precalculateTxHash(
+      nonce,
+      gas,
+      value,
+      to,
+      data,
+      evmAddress
+    )
     // ----- End pre-calculation -----
 
     await fcl.mutate({
