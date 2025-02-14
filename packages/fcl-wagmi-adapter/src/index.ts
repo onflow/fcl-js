@@ -90,7 +90,7 @@ export function fclWagmiAdapter(params: FclWagmiAdapterParams) {
 
       if (disconnect) provider.removeListener("disconnect", disconnect)
       disconnect = (error: ProviderError) => {
-        throw new ProviderDisconnectedError(new Error(error.code.toString()))
+        throw new ProviderDisconnectedError(error)
       }
       provider.on("disconnect", disconnect)
 
