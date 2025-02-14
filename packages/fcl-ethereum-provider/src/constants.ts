@@ -61,4 +61,4 @@ export const ACCESS_NODE_API_KEY = "accessNode.api"
 
 // TODO: This is a fixed value matching what is used by Flow Wallet right now.
 // We should investigate whether eth_estimateGas can be used (& should be used) to get a more accurate value.
-export const DEFAULT_EVM_GAS_LIMIT = BigInt("0x76c0")
+export const DEFAULT_EVM_GAS_LIMIT = "0x76c0"
