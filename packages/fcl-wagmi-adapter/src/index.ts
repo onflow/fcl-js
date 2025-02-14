@@ -188,9 +188,9 @@ export function fclWagmiAdapter(params: FclWagmiAdapterParams) {
       provider.on("chainChanged", chainChanged)
 
       if (disconnect) provider.removeListener("disconnect", disconnect)
-      disconnect = (({reason}) => {
-        throw new ProviderDisconnectedError(new Error(reason))
-      }) as ({reason}: {reason: string}) => void
+      disconnect = (error: ProviderError) => {
+        throw new ProviderDisconnectedError(new Error(error.code.toString()))
+      }
       provider.on("disconnect", disconnect)
     },
     // TODO: waht to do with error?
