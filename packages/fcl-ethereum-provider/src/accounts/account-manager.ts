@@ -294,8 +294,8 @@ export class AccountManager {
       args: (arg: typeof fcl.arg, t: typeof fcl.t) => [
         arg(fcl.sansPrefix(to), t.String),
         arg(fcl.sansPrefix(data), t.String),
-        arg(BigInt(gas ?? DEFAULT_EVM_GAS_LIMIT).toString(), t.UInt64),
-        arg(BigInt(value ?? 0).toString(), t.UInt),
+        arg(BigInt(gas).toString(), t.UInt64),
+        arg(BigInt(value).toString(), t.UInt),
       ],
       authz: this.user,
     })
