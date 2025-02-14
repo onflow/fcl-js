@@ -241,21 +241,23 @@ export class AccountManager {
     return nonce.toString()
   }
 
-  async sendTransaction({
-    to,
-    from,
-    value,
-    data,
-    gas,
-    chainId,
-  }: {
+  async sendTransaction(params: {
     to: string
     from: string
-    value: string
-    data: string
-    gas: string
     chainId: string
+    value?: string
+    gas?: string
+    data?: string
   }) {
+    const {
+      to,
+      from,
+      value = "0",
+      data = "",
+      gas = DEFAULT_EVM_GAS_LIMIT,
+      chainId,
+    } = params
+
     const parsedChainId = parseInt(chainId)
     this.getFlowNetworkOrThrow(parsedChainId)
     await this.validateChainId(parsedChainId)
@@ -291,9 +293,9 @@ export class AccountManager {
       limit: 9999,
       args: (arg: typeof fcl.arg, t: typeof fcl.t) => [
         arg(fcl.sansPrefix(to), t.String),
-        arg(fcl.sansPrefix(data ?? ""), t.String),
-        arg(BigInt(gas ?? DEFAULT_EVM_GAS_LIMIT).toString(), t.UInt64),
-        arg(BigInt(value ?? 0).toString(), t.UInt),
+        arg(fcl.sansPrefix(data), t.String),
+        arg(BigInt(gas).toString(), t.UInt64),
+        arg(BigInt(value).toString(), t.UInt),
       ],
       authz: this.user,
     })
