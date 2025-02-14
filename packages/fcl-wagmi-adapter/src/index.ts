@@ -26,7 +26,7 @@ export function fclWagmiAdapter(params: FclWagmiAdapterParams) {
   let accountsChanged: Connector["onAccountsChanged"] | undefined
   let chainChanged: Connector["onChainChanged"] | undefined
   let connect: Connector["onConnect"] | undefined
-  let disconnect: (({reason}: {reason: string}) => void) | undefined
+  let disconnect: ((error: Error) => void) | undefined
 
   // Parse and validate service parameters
   const id = params.service?.uid || "fcl"
@@ -84,9 +84,9 @@ export function fclWagmiAdapter(params: FclWagmiAdapterParams) {
       provider.on("chainChanged", chainChanged)
 
       if (disconnect) provider.removeListener("disconnect", disconnect)
-      disconnect = (({reason}) => {
-        throw new ProviderDisconnectedError(new Error(reason))
-      }) as ({reason}: {reason: string}) => void
+      disconnect = (error: Error) => {
+        throw new ProviderDisconnectedError(error)
+      }
       provider.on("disconnect", disconnect)
 
       return {accounts, chainId: await this.getChainId()}
@@ -183,9 +183,9 @@ export function fclWagmiAdapter(params: FclWagmiAdapterParams) {
       provider.on("chainChanged", chainChanged)
 
       if (disconnect) provider.removeListener("disconnect", disconnect)
-      disconnect = (({reason}) => {
-        throw new ProviderDisconnectedError(new Error(reason))
-      }) as ({reason}: {reason: string}) => void
+      disconnect = (error: Error) => {
+        throw new ProviderDisconnectedError(error)
+      }
       provider.on("disconnect", disconnect)
     },
     // TODO: waht to do with error?

@@ -1,4 +1,6 @@
 // Types for RPC request and events
+import {ProviderError} from "../util/errors"
+
 export type ProviderRequest = {
   method: string
   params?: unknown[] | Record<string, unknown>
@@ -9,7 +11,7 @@ export type ProviderResponse<T = unknown> = T
 // Event types for the provider
 export type ProviderEvents = {
   connect: {chainId: string}
-  disconnect: {reason: string}
+  disconnect: ProviderError
   chainChanged: string
   accountsChanged: string[]
 }
