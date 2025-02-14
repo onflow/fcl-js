@@ -15,6 +15,11 @@ import {createProvider} from "@onflow/fcl-ethereum-provider"
 
 type FclWagmiAdapterParams = Parameters<typeof createProvider>[0]
 
+type ProviderError = {
+  code: number
+  message: string
+}
+
 export function fclWagmiAdapter(params: FclWagmiAdapterParams) {
   type Provider = ReturnType<typeof createProvider>
   type Properties = {
@@ -26,7 +31,7 @@ export function fclWagmiAdapter(params: FclWagmiAdapterParams) {
   let accountsChanged: Connector["onAccountsChanged"] | undefined
   let chainChanged: Connector["onChainChanged"] | undefined
   let connect: Connector["onConnect"] | undefined
-  let disconnect: (({reason}: {reason: string}) => void) | undefined
+  let disconnect: ((error: ProviderError) => void) | undefined
 
   // Parse and validate service parameters
   const id = params.service?.uid || "fcl"
@@ -84,9 +89,9 @@ export function fclWagmiAdapter(params: FclWagmiAdapterParams) {
       provider.on("chainChanged", chainChanged)
 
       if (disconnect) provider.removeListener("disconnect", disconnect)
-      disconnect = (({reason}) => {
-        throw new ProviderDisconnectedError(new Error(reason))
-      }) as ({reason}: {reason: string}) => void
+      disconnect = (error: ProviderError) => {
+        throw new ProviderDisconnectedError(new Error(error.code.toString()))
+      }
       provider.on("disconnect", disconnect)
 
       return {accounts, chainId: await this.getChainId()}
