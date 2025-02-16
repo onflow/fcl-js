@@ -23,7 +23,7 @@ export const createFclConnector = (options: FclConnectorOptions) => {
     iconBackground: "#FFFFFF",
     createConnector: walletDetails => {
       const connector = fclWagmiAdapter(options)
-      return createConnector(config => ({
+      return createConnector((config: any) => ({
         ...connector(config),
         ...walletDetails,
       }))
