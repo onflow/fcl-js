@@ -15,10 +15,15 @@ import mobileIcon from "./ui/assets/mobile.svg"
 import {CurrentUser, Service} from "@onflow/typedefs"
 import {SessionTypes} from "@walletconnect/types"
 import {UniversalProvider} from "@walletconnect/universal-provider"
+import {createStore} from "./store"
 
 type WalletConnectModalType = import("@walletconnect/modal").WalletConnectModal
 
 type Constructor<T> = new (...args: any[]) => T
+
+let providerStore = createStore<{
+  [key: string]: InstanceType<typeof UniversalProvider>
+}>({})
 
 export const makeServicePlugin = (
   signer: Promise<InstanceType<typeof UniversalProvider> | null>,
@@ -72,8 +77,15 @@ const makeExec = (
       disableNotifications: appDisabledNotifications,
     } = config
 
-    const signer = await signerPromise
-    invariant(!!signer, "WalletConnect is not initialized")
+    const externalProvider = service.params?.externalProvider
+
+    const resolvedProvider = await resolveProvider({
+      signer: signerPromise,
+      externalSignerOrTopic: externalProvider,
+    })
+    invariant(!!resolvedProvider, "WalletConnect is not initialized")
+
+    const {provider: signer, isExternal} = resolvedProvider
 
     let session: SessionTypes.Struct | null = signer.session ?? null,
       pairing: any
@@ -136,6 +148,7 @@ const makeExec = (
       session,
       signer,
       abortSignal,
+      isExternal: externalProvider,
     }).finally(() => notification?.dismiss())
 
     function validateAppLink({uid}: {uid: string}) {
@@ -294,4 +307,70 @@ export function showWcRequestNotification({
       isMobile() && service.uid ? () => openDeeplink(service.uid!) : undefined,
     debounceDelay: service.type === "pre-authz" ? 500 : 0,
   })
+}
+
+async function resolveProvider({
+  signer,
+  externalSignerOrTopic,
+}: {
+  signer: Promise<InstanceType<typeof UniversalProvider> | null>
+  externalSignerOrTopic?: string | InstanceType<typeof UniversalProvider>
+}): Promise<{
+  provider: InstanceType<typeof UniversalProvider>
+  isExternal: boolean
+} | null> {
+  if (!externalSignerOrTopic) {
+    const resolved = await signer
+    return resolved ? {provider: resolved, isExternal: false} : null
+  }
+
+  if (typeof externalSignerOrTopic !== "string") {
+    const topic = externalSignerOrTopic.session?.topic
+    if (!topic) {
+      throw new Error(
+        "Cannot resolve provider: UniversalProvider is not initialized"
+      )
+    }
+    providerStore.setState({
+      [topic]: externalSignerOrTopic,
+    })
+    return {provider: externalSignerOrTopic, isExternal: false}
+  }
+
+  const externalTopic = externalSignerOrTopic
+  if (externalTopic) {
+    // Check if an external provider was passed in the options.
+    let storedProvider = providerStore.getState()[externalTopic]
+    if (!storedProvider) {
+      // No provider from opts and nothing in store yet—wait for it.
+      let unsubStore: () => void
+      let timeout: NodeJS.Timeout
+
+      storedProvider = await new Promise<any>((resolve, reject) => {
+        unsubStore = providerStore.subscribe(() => {
+          const provider = providerStore.getState()[externalTopic]
+          if (provider) {
+            resolve(provider)
+          }
+        })
+
+        // If the provider is not defined after 5 seconds, reject the promise.
+        timeout = setTimeout(() => {
+          reject(
+            new Error(
+              `Provider for external topic ${externalTopic} not found after 5 seconds`
+            )
+          )
+        }, 5000)
+      }).finally(() => {
+        clearTimeout(timeout)
+        unsubStore()
+      })
+    }
+
+    return {provider: storedProvider, isExternal: true}
+  }
+
+  const provider = await signer
+  return provider ? {provider, isExternal: false} : null
 }

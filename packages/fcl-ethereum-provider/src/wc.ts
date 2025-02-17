@@ -18,24 +18,30 @@ import {FLOW_METHODS} from "@onflow/fcl-wc"
 import * as fcl from "@onflow/fcl"
 import {Service} from "@onflow/typedefs"
 
-const BASE_WC_SERVICE = {
-  f_type: "Service",
-  f_vsn: "1.0.0",
-  type: "authn",
-  method: "WC/RPC",
-  uid: "https://walletconnect.com",
-  endpoint: "flow_authn",
-  optIn: true,
-  provider: {
-    address: null,
-    name: "WalletConnect",
-    icon: "https://avatars.githubusercontent.com/u/37784886",
-    description: "WalletConnect Base Service",
-    website: "https://walletconnect.com",
-    color: null,
-    supportEmail: null,
-  },
-} as unknown as Service
+const BASE_WC_SERVICE = (
+  externalProvider: InstanceType<typeof UniversalProvider>
+) =>
+  ({
+    f_type: "Service",
+    f_vsn: "1.0.0",
+    type: "authn",
+    method: "WC/RPC",
+    uid: "https://walletconnect.com",
+    endpoint: "flow_authn",
+    optIn: true,
+    provider: {
+      address: null,
+      name: "WalletConnect",
+      icon: "https://avatars.githubusercontent.com/u/37784886",
+      description: "WalletConnect Base Service",
+      website: "https://walletconnect.com",
+      color: null,
+      supportEmail: null,
+    },
+    params: {
+      externalProvider,
+    },
+  }) as unknown as Service
 
 export class ExtendedEthereumProvider extends EthereumProvider {
   static async init(
@@ -58,7 +64,9 @@ export class ExtendedEthereumProvider extends EthereumProvider {
 
     await provider.initialize(opts)
 
-    fclUser.authenticate({service: BASE_WC_SERVICE})
+    fclUser.authenticate({
+      service: BASE_WC_SERVICE(provider.signer),
+    })
     return provider
   }
   // TODO: remove

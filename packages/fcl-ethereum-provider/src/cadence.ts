@@ -67,7 +67,7 @@ export const getNonceScript = (
 
 access(all)
 fun main(evmAddress: String): UInt64 {
-    let addr = EVM.EVMAddress(bytes: evmAddress.decodeHex().toConstantSized<[UInt8; 20]>())
+    let addr = EVM.EVMAddress(bytes: evmAddress.decodeHex().toConstantSized<[UInt8; 20]!>())
     let nonce = addr.nonce()
     return nonce
 }

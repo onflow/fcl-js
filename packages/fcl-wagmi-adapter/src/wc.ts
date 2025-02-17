@@ -261,7 +261,8 @@ export function walletConnect(parameters: WalletConnectParameters) {
             })
           ),
           showQrModal: parameters.showQrModal ?? true,
-        } as any)
+          customStoragePrefix: "cross-vm-walletconnect",
+        })
       }
 
       if (!provider_) {

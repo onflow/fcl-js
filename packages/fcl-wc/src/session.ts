@@ -2,6 +2,7 @@ import * as fclCore from "@onflow/fcl-core"
 import {FLOW_METHODS} from "./constants"
 import {PairingTypes, SessionTypes} from "@walletconnect/types"
 import {UniversalProvider} from "@walletconnect/universal-provider"
+import {Service} from "@onflow/typedefs"
 
 // Create a new session proposal with the WalletConnect client
 export async function createSessionProposal({
@@ -59,12 +60,14 @@ export const request = async ({
   body,
   session,
   signer,
+  isExternal,
   abortSignal,
 }: {
   method: any
   body: any
   session: SessionTypes.Struct
   signer: InstanceType<typeof UniversalProvider>
+  isExternal?: boolean
   abortSignal?: AbortSignal
 }) => {
   const [chainId, addr, address] = makeSessionData(session)
@@ -93,7 +96,25 @@ export const request = async ({
 
   switch (result.status) {
     case "APPROVED":
-      return result.data
+      // TODO, should only be for authn
+      const services = (result?.data?.services ?? []).map(
+        (service: Service) => {
+          if (service.method === "WC/RPC") {
+            return {
+              ...service,
+              params: {
+                ...service.params,
+                ...(isExternal ? {externalTopic: session.topic} : {}),
+              },
+            }
+          }
+          return service
+        }
+      )
+      return {
+        ...(result.data ? result.data : {}),
+        services,
+      }
 
     case "DECLINED":
       throw new Error(`Declined: ${result.reason || "No reason supplied"}`)
