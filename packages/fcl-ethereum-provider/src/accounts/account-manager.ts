@@ -10,10 +10,8 @@ import {
   DEFAULT_EVM_GAS_LIMIT,
   EVENT_IDENTIFIERS,
   EventType,
-  FLOW_CHAINS,
   FlowNetwork,
 } from "../constants"
-import {TransactionExecutedEvent} from "../types/events"
 import {
   BehaviorSubject,
   concat,
@@ -37,26 +35,12 @@ import {
 } from "../cadence"
 import {TransactionError} from "@onflow/fcl"
 import {displayErrorNotification} from "../notifications"
-import {keccak_256} from "@noble/hashes/sha3"
-import {bytesToHex, hexToBytes} from "@noble/hashes/utils"
-
-// Helper function to convert a number or bigint to a Uint8Array (minimal byte representation)
-function numberToUint8Array(value: number | bigint): Uint8Array {
-  const big = typeof value === "bigint" ? value : BigInt(value)
-  if (big === BigInt(0)) return new Uint8Array([])
-  let hex = big.toString(16)
-  if (hex.length % 2 !== 0) {
-    hex = "0" + hex
-  }
-  return hexToBytes(hex)
-}
+import {AddressStoreState} from "../types/account"
+import {getFlowNetwork} from "../util/chain"
+import {precalculateTxHash} from "../util/transaction"
 
 export class AccountManager {
-  private $addressStore = new BehaviorSubject<{
-    isLoading: boolean
-    address: string | null
-    error: Error | null
-  }>({
+  private $addressStore = new BehaviorSubject<AddressStoreState>({
     isLoading: true,
     address: null,
     error: null,
@@ -67,7 +51,13 @@ export class AccountManager {
     private networkManager: NetworkManager,
     private service?: Service
   ) {
-    // Create an observable from the user
+    this.initializeUserSubscription()
+  }
+
+  /**
+   * Subscribes to the current user observable and updates the address store.
+   */
+  private initializeUserSubscription() {
     const $user = new Observable<CurrentUser>(subscriber => {
       return this.user.subscribe((currentUser: CurrentUser, error?: Error) => {
         if (error) {
@@ -78,18 +68,13 @@ export class AccountManager {
       }) as Subscription
     })
 
-    // Bind the address store to the user observable
     $user
       .pipe(
         map(snapshot => snapshot.addr || null),
         distinctUntilChanged(),
         switchMap(addr =>
           concat(
-            of({isLoading: true} as {
-              isLoading: boolean
-              address: string | null
-              error: Error | null
-            }),
+            of({isLoading: true} as AddressStoreState),
             from(
               (async () => {
                 try {
@@ -184,22 +169,8 @@ export class AccountManager {
   }
 
   public async createCOA(chainId: number): Promise<string> {
-    // Find the Flow network based on the chain ID
-    const flowNetwork = Object.entries(FLOW_CHAINS).find(
-      ([, chain]) => chain.eip155ChainId === chainId
-    )?.[0] as FlowNetwork | undefined
-
-    if (!flowNetwork) {
-      throw new Error("Flow network not found for chain ID")
-    }
-
-    // Validate the chain ID
-    const currentChainId = await this.networkManager.getChainId()
-    if (chainId !== currentChainId) {
-      throw new Error(
-        `Chain ID does not match the current network. Expected: ${currentChainId}, Received: ${chainId}`
-      )
-    }
+    const flowNetwork = this.getFlowNetworkOrThrow(chainId)
+    await this.validateChainId(chainId)
 
     const txId = await fcl.mutate({
       cadence: createCOATx(chainId),
@@ -270,38 +241,26 @@ export class AccountManager {
     return nonce.toString()
   }
 
-  async sendTransaction({
-    to,
-    from,
-    value,
-    data,
-    gas,
-    chainId,
-  }: {
+  async sendTransaction(params: {
     to: string
     from: string
-    value: string
-    data: string
-    gas: string
     chainId: string
+    value?: string
+    gas?: string
+    data?: string
   }) {
-    // Find the Flow network based on the chain ID
+    const {
+      to,
+      from,
+      value = "0",
+      data = "",
+      gas = DEFAULT_EVM_GAS_LIMIT,
+      chainId,
+    } = params
+
     const parsedChainId = parseInt(chainId)
-    const flowNetwork = Object.entries(FLOW_CHAINS).find(
-      ([, chain]) => chain.eip155ChainId === parsedChainId
-    )?.[0] as FlowNetwork | undefined
-
-    if (!flowNetwork) {
-      throw new Error("Flow network not found for chain ID")
-    }
-
-    // Validate the chain ID
-    const currentChainId = await this.networkManager.getChainId()
-    if (parsedChainId !== currentChainId) {
-      throw new Error(
-        `Chain ID does not match the current network. Expected: ${currentChainId}, Received: ${parsedChainId}`
-      )
-    }
+    this.getFlowNetworkOrThrow(parsedChainId)
+    await this.validateChainId(parsedChainId)
 
     // Check if the from address matches the authenticated COA address
     const expectedCOAAddress = await this.getCOAAddress()
@@ -319,34 +278,14 @@ export class AccountManager {
     const evmAddress = fcl.sansPrefix(expectedCOAAddress!).toLowerCase()
     const nonceStr = await this.getNonce(evmAddress)
     const nonce = parseInt(nonceStr, 10)
-
-    const gasLimit = BigInt(gas)
-
-    const valueHex = fcl.sansPrefix(value)
-    const txValue = BigInt("0x" + valueHex)
-
-    const dataHex = fcl.sansPrefix(data)
-
-    const gasPrice = BigInt(0)
-    const directCallTxType = BigInt(255)
-    const contractCallSubType = BigInt(5)
-
-    // Build the transaction fields array, converting numbers/bigints using numberToUint8Array
-    const txArray = [
-      numberToUint8Array(nonce),
-      numberToUint8Array(gasPrice),
-      numberToUint8Array(gasLimit),
-      hexToBytes(fcl.sansPrefix(to)),
-      numberToUint8Array(txValue),
-      hexToBytes(dataHex),
-      numberToUint8Array(directCallTxType),
-      numberToUint8Array(BigInt(fcl.withPrefix(evmAddress))),
-      numberToUint8Array(contractCallSubType),
-    ]
-
-    const encodedTx = rlp.encode(txArray)
-    const digest = keccak_256(encodedTx)
-    const preCalculatedTxHash = fcl.withPrefix(bytesToHex(digest))
+    const preCalculatedTxHash = precalculateTxHash(
+      nonce,
+      gas,
+      value,
+      to,
+      data,
+      evmAddress
+    )
     // ----- End pre-calculation -----
 
     await fcl.mutate({
@@ -354,9 +293,9 @@ export class AccountManager {
       limit: 9999,
       args: (arg: typeof fcl.arg, t: typeof fcl.t) => [
         arg(fcl.sansPrefix(to), t.String),
-        arg(fcl.sansPrefix(data ?? ""), t.String),
-        arg(BigInt(gas ?? DEFAULT_EVM_GAS_LIMIT).toString(), t.UInt64),
-        arg(BigInt(value ?? 0).toString(), t.UInt),
+        arg(fcl.sansPrefix(data), t.String),
+        arg(BigInt(gas).toString(), t.UInt64),
+        arg(BigInt(value).toString(), t.UInt),
       ],
       authz: this.user,
     })
@@ -405,5 +344,28 @@ export class AccountManager {
     } catch (error) {
       throw error
     }
+  }
+
+  /**
+   * Validates that the provided chain ID matches the current network.
+   */
+  private async validateChainId(chainId: number): Promise<void> {
+    const currentChainId = await this.networkManager.getChainId()
+    if (chainId !== currentChainId) {
+      throw new Error(
+        `Chain ID does not match the current network. Expected: ${currentChainId}, Received: ${chainId}`
+      )
+    }
+  }
+
+  /**
+   * Gets the Flow network based on the chain ID or throws an error.
+   */
+  private getFlowNetworkOrThrow(chainId: number): FlowNetwork {
+    const flowNetwork = getFlowNetwork(chainId)
+    if (!flowNetwork) {
+      throw new Error("Flow network not found for chain ID")
+    }
+    return flowNetwork
   }
 }

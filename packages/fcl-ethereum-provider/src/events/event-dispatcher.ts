@@ -2,15 +2,18 @@ import {EventCallback, ProviderEvents} from "../types/provider"
 import {AccountManager} from "../accounts/account-manager"
 import {NetworkManager} from "../network/network-manager"
 import {
+  distinctUntilChanged,
   filter,
   map,
   Observable,
+  pairwise,
   skip,
   Subscription,
   takeFirst,
 } from "../util/observable"
 import {formatChainId} from "../util/eth"
 import {withPrefix} from "@onflow/fcl"
+import {ProviderError, ProviderErrorCode} from "../util/errors"
 
 export class EventDispatcher {
   private $emitters: {
@@ -47,9 +50,16 @@ export class EventDispatcher {
         }),
         takeFirst()
       ),
-      disconnect: new Observable<{reason: string}>(() => {
-        return () => {}
-      }),
+      disconnect: networkManager.$chainId.pipe(
+        filter(({isLoading, error}) => !isLoading && !error),
+        pairwise(),
+        filter(
+          ([prev, curr]) => prev.chainId !== null && curr.chainId === null
+        ),
+        map(() => {
+          return new ProviderError({code: ProviderErrorCode.Disconnected})
+        })
+      ),
     }
 
     this.subscriptions = {
