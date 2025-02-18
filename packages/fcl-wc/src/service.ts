@@ -2,6 +2,7 @@ import {invariant} from "@onflow/util-invariant"
 import {log, LEVELS} from "@onflow/util-logger"
 import {isMobile, openDeeplink, preloadImage, shouldDeepLink} from "./utils"
 import {
+  FLOW_METHODS,
   REQUEST_TYPES,
   SERVICE_PLUGIN_NAME,
   WC_SERVICE_METHOD,
@@ -68,6 +69,7 @@ const makeExec = (
     abortSignal?: AbortSignal
     user: any
   }) => {
+    console.log("service", service)
     // Preload provider image
     preloadImage(service.provider?.icon)
 
@@ -77,11 +79,9 @@ const makeExec = (
       disableNotifications: appDisabledNotifications,
     } = config
 
-    const externalProvider = service.params?.externalProvider
-
     const resolvedProvider = await resolveProvider({
       signer: signerPromise,
-      externalSignerOrTopic: externalProvider,
+      externalSignerOrTopic: service.params?.externalProvider,
     })
     invariant(!!resolvedProvider, "WalletConnect is not initialized")
 
@@ -91,6 +91,16 @@ const makeExec = (
       pairing: any
     const method = service.endpoint
     const appLink = validateAppLink(service)
+
+    // If the user is already connected to this session, use it
+    debugger
+    if (
+      session?.topic === service.params?.externalProvider &&
+      method === FLOW_METHODS.FLOW_AUTHN
+    ) {
+      debugger
+      return user
+    }
 
     if (session == null) {
       session = await new Promise<SessionTypes.Struct>((resolve, reject) => {
@@ -148,7 +158,7 @@ const makeExec = (
       session,
       signer,
       abortSignal,
-      isExternal: externalProvider,
+      isExternal,
     }).finally(() => notification?.dismiss())
 
     function validateAppLink({uid}: {uid: string}) {
@@ -324,6 +334,7 @@ async function resolveProvider({
     return resolved ? {provider: resolved, isExternal: false} : null
   }
 
+  // If it's a UniversalProvider instance, use it directly and store it.
   if (typeof externalSignerOrTopic !== "string") {
     const topic = externalSignerOrTopic.session?.topic
     if (!topic) {
@@ -334,7 +345,7 @@ async function resolveProvider({
     providerStore.setState({
       [topic]: externalSignerOrTopic,
     })
-    return {provider: externalSignerOrTopic, isExternal: false}
+    return {provider: externalSignerOrTopic, isExternal: true}
   }
 
   const externalTopic = externalSignerOrTopic

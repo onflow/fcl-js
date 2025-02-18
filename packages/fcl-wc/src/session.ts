@@ -96,25 +96,40 @@ export const request = async ({
 
   switch (result.status) {
     case "APPROVED":
-      // TODO, should only be for authn
-      const services = (result?.data?.services ?? []).map(
-        (service: Service) => {
-          if (service.method === "WC/RPC") {
-            return {
-              ...service,
-              params: {
-                ...service.params,
-                ...(isExternal ? {externalTopic: session.topic} : {}),
-              },
-            }
+      function normalizeService(service: Service) {
+        if (service.method === "WC/RPC") {
+          return {
+            ...service,
+            params: {
+              ...service.params,
+              ...(isExternal ? {externalProvider: session.topic} : {}),
+            },
           }
-          return service
         }
-      )
-      return {
-        ...(result.data ? result.data : {}),
-        services,
+        return service
       }
+
+      if (method === FLOW_METHODS.FLOW_AUTHN) {
+        const services = (result?.data?.services ?? []).map(normalizeService)
+
+        return {
+          ...(result.data ? result.data : {}),
+          services,
+        }
+      }
+
+      if (method === FLOW_METHODS.FLOW_PRE_AUTHZ) {
+        return {
+          ...result.data,
+          ...(result.data?.proposer
+            ? {proposer: normalizeService(result.data.proposer)}
+            : {}),
+          payer: [...result.data?.payer?.map(normalizeService)],
+          authorization: [...result.data?.authorization?.map(normalizeService)],
+        }
+      }
+
+      return result.data
 
     case "DECLINED":
       throw new Error(`Declined: ${result.reason || "No reason supplied"}`)

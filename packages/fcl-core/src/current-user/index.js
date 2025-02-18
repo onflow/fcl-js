@@ -185,7 +185,8 @@ const getAuthenticate =
       const refreshService = serviceOfType(user.services, "authn-refresh")
       let accountProofData
 
-      if (user.loggedIn) {
+      // TODO: Temp fix?  Should we change?
+      if (user.loggedIn && !service) {
         if (refreshService) {
           try {
             const response = await execService({

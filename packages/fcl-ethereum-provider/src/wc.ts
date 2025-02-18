@@ -51,22 +51,26 @@ export class ExtendedEthereumProvider extends EthereumProvider {
 
     // Bind FCL user authentication to the UniversalProvider
     const fclUser = fcl.currentUser()
-    // TODO: FIX
-    /*provider.on("connect", async () => {
-      await fclUser
-        .authenticate({service: BASE_WC_SERVICE})
-        .catch(console.error)
-    })
-    // TODO: FIX
-    provider.on("disconnect", () => {
-      fclUser.unauthenticate()
-    })*/
-
     await provider.initialize(opts)
 
-    fclUser.authenticate({
-      service: BASE_WC_SERVICE(provider.signer),
+    if (provider.signer.session) {
+      await fclUser.authenticate({
+        service: BASE_WC_SERVICE(provider.signer),
+      })
+    } else {
+      await fclUser.unauthenticate()
+    }
+
+    provider.on("connect", async () => {
+      await fclUser
+        .authenticate({service: BASE_WC_SERVICE(provider.signer)})
+        .catch(console.error)
     })
+
+    provider.on("disconnect", async () => {
+      await fclUser.unauthenticate()
+    })
+
     return provider
   }
   // TODO: remove
@@ -125,6 +129,12 @@ export class ExtendedEthereumProvider extends EthereumProvider {
     } finally {
       if (this.modal) this.modal.closeModal()
     }
+  }
+
+  async disconnect() {
+    const fclUser = fcl.currentUser()
+    fclUser.unauthenticate()
+    return await super.disconnect()
   }
 }
 
