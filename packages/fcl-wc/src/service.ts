@@ -93,12 +93,10 @@ const makeExec = (
     const appLink = validateAppLink(service)
 
     // If the user is already connected to this session, use it
-    debugger
     if (
       session?.topic === service.params?.externalProvider &&
       method === FLOW_METHODS.FLOW_AUTHN
     ) {
-      debugger
       return user
     }
 
