@@ -51,9 +51,21 @@ export class ExtendedEthereumProvider extends EthereumProvider {
 
     // Bind FCL user authentication to the UniversalProvider
     const fclUser = fcl.currentUser()
-    await provider.initialize(opts)
 
-    if (provider.signer.session) {
+    await provider.initialize(opts)
+    const snapshot = await fclUser.snapshot()
+    const authnService = snapshot?.services.find(
+      service => service.type === "authn"
+    )
+    const externalProvider = authnService?.params?.externalProvider as any
+    const externalProviderTopic =
+      typeof externalProvider === "string"
+        ? externalProvider
+        : externalProvider?.session?.topic
+    if (
+      provider.signer.session &&
+      (!authnService || externalProviderTopic === provider.signer.session.topic)
+    ) {
       await fclUser.authenticate({
         service: BASE_WC_SERVICE(provider.signer),
       })
