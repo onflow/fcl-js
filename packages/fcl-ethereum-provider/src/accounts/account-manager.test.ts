@@ -271,6 +271,60 @@ describe("AccountManager", () => {
 
     expect(await accountManager.getAccounts()).toEqual(["0x123"])
   })
+
+  test("should update accounts if user is connected to the same authz service", async () => {
+    userMock.set({
+      addr: "0x1",
+      services: [
+        {
+          f_type: "Service",
+          f_vsn: "1.0.0",
+          endpoint: "flow_authn",
+          method: "EXT/RPC",
+          type: "authz",
+          uid: "123",
+        },
+      ],
+    } as CurrentUser)
+
+    const accountManager = new AccountManager(userMock.mock, networkManager, {
+      uid: "123",
+    } as any)
+
+    const callback = jest.fn()
+    accountManager.subscribe(callback)
+
+    await new Promise(setImmediate)
+
+    expect(callback).toHaveBeenCalledWith([])
+  })
+
+  it("should not update accounts if user is connected to different authz service", async () => {
+    userMock.set({
+      addr: "0x1",
+      services: [
+        {
+          f_type: "Service",
+          f_vsn: "1.0.0",
+          endpoint: "flow_authn",
+          method: "EXT/RPC",
+          type: "authz",
+          uid: "123",
+        },
+      ],
+    } as CurrentUser)
+
+    const accountManager = new AccountManager(userMock.mock, networkManager, {
+      uid: "abc",
+    } as any)
+
+    const callback = jest.fn()
+    accountManager.subscribe(callback)
+
+    await new Promise(setImmediate)
+
+    expect(callback).toHaveBeenCalledWith([])
+  })
 })
 
 describe("sendTransaction", () => {
