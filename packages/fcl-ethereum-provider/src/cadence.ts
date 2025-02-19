@@ -52,7 +52,6 @@ transaction(evmContractAddressHex: String, calldata: String, gasLimit: UInt64, v
             gasLimit: gasLimit,
             value: valueBalance
         )
-        assert(callResult.status == EVM.Status.successful, message: "Call failed")
     }
 }`
 
