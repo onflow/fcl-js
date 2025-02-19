@@ -70,7 +70,19 @@ export class AccountManager {
 
     $user
       .pipe(
-        map(snapshot => snapshot.addr || null),
+        // Only listen bind to users matching the current authz service
+        map(snapshot => {
+          const addr = snapshot?.addr || null
+          if (!addr) {
+            return null
+          }
+
+          const authzService = snapshot?.services?.find(
+            service => service.type === "authz"
+          )
+          const matchingAuthzService = authzService?.uid === this.service?.uid
+          return matchingAuthzService ? addr : null
+        }),
         distinctUntilChanged(),
         switchMap(addr =>
           concat(
