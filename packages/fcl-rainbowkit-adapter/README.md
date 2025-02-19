@@ -3,7 +3,7 @@
 ## Usage
 
 ```typescript
-import { createFclConnector } from '@onflow/fcl-rainbowkit-adapter';
+import { createFclConnector, flowWallet } from '@onflow/fcl-rainbowkit-adapter';
 import { connectorsForWallets } from '@rainbow-me/rainbowkit';
 import {
   flowTestnet,
