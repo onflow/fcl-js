@@ -76,12 +76,12 @@ export class WalletConnectEthereumProvider extends EthereumProvider {
         const externalProviderTopic =
           typeof externalProvider === "string"
             ? externalProvider
-            : externalProvider?.session?.topic
+            : (externalProvider?.session?.topic ?? null)
 
         // If the provider is already connected with a matching session, re-authenticate the user
         if (
           provider.signer.session &&
-          (!externalProviderTopic ||
+          (externalProviderTopic == null ||
             externalProviderTopic === provider.signer.session.topic)
         ) {
           await fclUser.authenticate({service: wcService})
