@@ -16,7 +16,7 @@ import {formatChainId} from "./util/eth"
 import {getAccountsFromNamespaces} from "@walletconnect/utils"
 import {FLOW_METHODS} from "@onflow/fcl-wc"
 import * as fcl from "@onflow/fcl"
-import {CurrentUser, Service} from "@onflow/typedefs"
+import {Service} from "@onflow/typedefs"
 
 const BASE_WC_SERVICE = (
   externalProvider: InstanceType<typeof UniversalProvider>
@@ -43,11 +43,11 @@ const BASE_WC_SERVICE = (
     },
   }) as unknown as Service
 
-export class ExtendedEthereumProvider extends EthereumProvider {
+export class WalletConnectEthereumProvider extends EthereumProvider {
   static async init(
     opts: EthereumProviderOptions
-  ): Promise<ExtendedEthereumProvider> {
-    const provider = new ExtendedEthereumProvider()
+  ): Promise<WalletConnectEthereumProvider> {
+    const provider = new WalletConnectEthereumProvider()
     await provider.initialize(opts)
 
     // Refresh the FCL user to align with the WalletConnect session
@@ -63,7 +63,10 @@ export class ExtendedEthereumProvider extends EthereumProvider {
 
       // If there’s no auth service or the auth service
       if (authnService && authnService.uid !== wcService.uid) {
-        // TODO: need to handle... maybe wait for condition to reauthenticate
+        // Another FCL user is already authenticated, we need to unauthenticate it
+        if (provider.signer.session) {
+          await fclUser.authenticate({service: wcService})
+        }
       } else {
         // Determine the external provider's topic from the auth service params
         const externalProvider = authnService?.params?.externalProvider as
@@ -108,10 +111,7 @@ export class ExtendedEthereumProvider extends EthereumProvider {
 
     return provider
   }
-  // TODO: remove
-  protected async initialize(opts: EthereumProviderOptions): Promise<void> {
-    await super.initialize(opts)
-  }
+
   async connect(
     opts?: Parameters<InstanceType<typeof EthereumProvider>["connect"]>[0]
   ) {
