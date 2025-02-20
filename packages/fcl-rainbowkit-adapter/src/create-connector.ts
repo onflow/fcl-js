@@ -39,6 +39,9 @@ export const createFclConnector = (options: FclConnectorOptions) => {
         "https://chrome.google.com/webstore/detail/flow-wallet/hpclkefagolihohboafpheddmmgdffjm",
       mobile: "https://core.flow.com",
     },
+    // Do not list RDNS here since Rainbowkit will discard the wallet
+    // when conflicting with an injected wallet
+    rdns: undefined,
     qrCode: {getUri},
     mobile: {getUri},
     createConnector: walletDetails => {
