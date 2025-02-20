@@ -65,7 +65,7 @@ export class WalletConnectEthereumProvider extends EthereumProvider {
       if (authnService && authnService.uid !== wcService.uid) {
         // Another FCL user is already authenticated, we need to unauthenticate it
         if (provider.signer.session) {
-          await fclUser.authenticate({service: wcService})
+          await fclUser.authenticate({service: wcService, forceReauth: true})
         }
       } else {
         // Determine the external provider's topic from the auth service params
@@ -84,7 +84,7 @@ export class WalletConnectEthereumProvider extends EthereumProvider {
           (externalProviderTopic == null ||
             externalProviderTopic === provider.signer.session.topic)
         ) {
-          await fclUser.authenticate({service: wcService})
+          await fclUser.authenticate({service: wcService, forceReauth: true})
         } else if (!provider.signer.session) {
           // If no session is set but FCL is still authenticated, unauthenticate the user
           await fclUser.unauthenticate()
