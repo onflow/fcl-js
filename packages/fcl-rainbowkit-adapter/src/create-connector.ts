@@ -34,18 +34,14 @@ export const createFclConnector = (options: FclConnectorOptions) => {
     iconUrl: iconUrl || FALLBACK_ICON,
     iconBackground: "#FFFFFF",
     installed: true,
-    rdns: (options.service?.provider as any)?.rdns,
     downloadUrls: {
       browserExtension:
         "https://chrome.google.com/webstore/detail/flow-wallet/hpclkefagolihohboafpheddmmgdffjm",
       mobile: "https://core.flow.com",
     },
     qrCode: {getUri},
-    extension: {},
     mobile: {getUri},
     createConnector: walletDetails => {
-      const debug = store.getProviders()
-      console.log("debug", debug)
       const isFlowWalletInjected = rdns
         ? !!store.findProvider({rdns: rdns!})
         : false
@@ -68,7 +64,6 @@ export const createFclConnector = (options: FclConnectorOptions) => {
           {}),
       }
 
-      debugger
       if (isMobile()) {
         return getWalletConnectConnector({
           projectId,
