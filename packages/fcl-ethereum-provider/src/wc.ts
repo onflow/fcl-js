@@ -164,12 +164,6 @@ export class ExtendedEthereumProvider extends EthereumProvider {
       if (this.modal) this.modal.closeModal()
     }
   }
-
-  async disconnect() {
-    const fclUser = fcl.currentUser
-    fclUser.unauthenticate()
-    return await super.disconnect()
-  }
 }
 
 function buildNamespaces(network: FlowNetwork): {
