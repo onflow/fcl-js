@@ -1,8 +1,15 @@
 import {fclWagmiAdapter} from "@onflow/fcl-wagmi-adapter"
-import {Wallet} from "@rainbow-me/rainbowkit"
+import {RainbowKitWalletConnectParameters, Wallet} from "@rainbow-me/rainbowkit"
 import {createConnector} from "@wagmi/core"
+import {getWalletConnectConnector} from "./get-wc-connector"
+import {createStore} from "mipd"
 
-type FclConnectorOptions = Parameters<typeof fclWagmiAdapter>[0]
+const store = createStore()
+
+type FclConnectorOptions = Parameters<typeof fclWagmiAdapter>[0] & {
+  supportsWc?: boolean
+  walletConnectParams?: RainbowKitWalletConnectParameters
+}
 
 type DefaultWalletOptions = {
   projectId: string
@@ -15,18 +22,78 @@ export const createFclConnector = (options: FclConnectorOptions) => {
   const uid = options.service?.uid
   const name = options.service?.provider?.name
   const iconUrl = options.service?.provider?.icon!
+  const rdns = (options.service?.provider as any)?.rdns as string | undefined
+
+  const getUri = (uri: string) => {
+    console.log("uri", uri)
+    return uri
+  }
 
   return ({projectId}: DefaultWalletOptions): Wallet => ({
     id: uid ? `fcl-${uid}` : "fcl",
     name: name || "Cadence Wallet",
     iconUrl: iconUrl || FALLBACK_ICON,
     iconBackground: "#FFFFFF",
+    //installed: undefined,
+    rdns: (options.service?.provider as any)?.rdns,
+    downloadUrls: {
+      browserExtension:
+        "https://chrome.google.com/webstore/detail/flow-wallet/hpclkefagolihohboafpheddmmgdffjm",
+      mobile: "https://core.flow.com",
+    },
+    qrCode: {getUri},
+    mobile: {getUri},
     createConnector: walletDetails => {
-      const connector = fclWagmiAdapter(options)
-      return createConnector(config => ({
-        ...connector(config),
+      const isFlowWalletInjected = rdns
+        ? !!store.findProvider({rdns: rdns!})
+        : false
+
+      const newDetails = {
         ...walletDetails,
-      }))
+        ...((isFlowWalletInjected && {
+          // This is a workaround due to an internal bug in RainbowKit where
+          // wallets do not appear in the installed group.
+          //
+          // Only wallets that are derived from EIP-6963 injected providers will
+          // formall appear in this group, however, this is not possible in our case
+          // because we need a custom injected connector implementation.
+          rkDetails: {
+            ...walletDetails.rkDetails,
+            groupIndex: -1,
+            groupName: "Installed",
+          },
+        }) ??
+          {}),
+      }
+
+      debugger
+      if (isMobile()) {
+        return getWalletConnectConnector({
+          projectId,
+          walletConnectParameters: options.walletConnectParams,
+        })(newDetails)
+      } else {
+        if (isFlowWalletInjected) {
+          const connector = fclWagmiAdapter(options)
+          return createConnector(config => {
+            return {
+              ...connector(config),
+              ...newDetails,
+            }
+          })
+        } else {
+          return getWalletConnectConnector({
+            projectId,
+            walletConnectParameters: options.walletConnectParams,
+          })(newDetails)
+        }
+      }
     },
   })
+}
+
+function isMobile() {
+  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+    navigator.userAgent
+  )
 }
