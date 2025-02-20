@@ -77,11 +77,12 @@ export class AccountManager {
             return null
           }
 
-          const authzService = snapshot?.services?.find(
-            service => service.type === "authz"
+          const authnService = snapshot?.services?.find(
+            service => service.type === "authn"
           )
-          const matchingAuthzService = authzService?.uid === this.service?.uid
-          return matchingAuthzService ? addr : null
+          debugger
+          const matchingAuthnService = authnService?.uid === this.service?.uid
+          return matchingAuthnService ? addr : null
         }),
         distinctUntilChanged(),
         switchMap(addr =>
