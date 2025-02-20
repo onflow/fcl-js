@@ -16,7 +16,7 @@ import {formatChainId} from "./util/eth"
 import {getAccountsFromNamespaces} from "@walletconnect/utils"
 import {FLOW_METHODS} from "@onflow/fcl-wc"
 import * as fcl from "@onflow/fcl"
-import {Service} from "@onflow/typedefs"
+import {CurrentUser, Service} from "@onflow/typedefs"
 
 const BASE_WC_SERVICE = (
   externalProvider: InstanceType<typeof UniversalProvider>
@@ -26,7 +26,7 @@ const BASE_WC_SERVICE = (
     f_vsn: "1.0.0",
     type: "authn",
     method: "WC/RPC",
-    uid: "https://walletconnect.com",
+    uid: "cross-vm-walletconnect#authn",
     endpoint: "flow_authn",
     optIn: true,
     provider: {
@@ -48,39 +48,62 @@ export class ExtendedEthereumProvider extends EthereumProvider {
     opts: EthereumProviderOptions
   ): Promise<ExtendedEthereumProvider> {
     const provider = new ExtendedEthereumProvider()
-
-    // Bind FCL user authentication to the UniversalProvider
-    const fclUser = fcl.currentUser()
-
     await provider.initialize(opts)
-    const snapshot = await fclUser.snapshot()
-    const authnService = snapshot?.services.find(
-      service => service.type === "authn"
-    )
-    const externalProvider = authnService?.params?.externalProvider as any
-    const externalProviderTopic =
-      typeof externalProvider === "string"
-        ? externalProvider
-        : externalProvider?.session?.topic
-    if (
-      provider.signer.session &&
-      (!authnService || externalProviderTopic === provider.signer.session.topic)
-    ) {
-      await fclUser.authenticate({
-        service: BASE_WC_SERVICE(provider.signer),
-      })
-    } else {
-      await fclUser.unauthenticate()
+
+    // Refresh the FCL user to align with the WalletConnect session
+    async function refreshFclUser() {
+      const fclUser = fcl.currentUser()
+      const wcService = BASE_WC_SERVICE(provider.signer)
+      const snapshot = await fclUser.snapshot()
+
+      // Find the authentication service from the current FCL user snapshot
+      const authnService = snapshot?.services.find(
+        service => service.type === "authn"
+      )
+
+      // If there’s no auth service or the auth service
+      if (authnService && authnService.uid !== wcService.uid) {
+        // TODO: need to handle... maybe wait for condition to reauthenticate
+      } else {
+        // Determine the external provider's topic from the auth service params
+        const externalProvider = authnService?.params?.externalProvider as
+          | string
+          | InstanceType<typeof UniversalProvider>
+          | undefined
+        const externalProviderTopic =
+          typeof externalProvider === "string"
+            ? externalProvider
+            : externalProvider?.session?.topic
+
+        // If the provider is already connected with a matching session, re-authenticate the user
+        if (
+          provider.signer.session &&
+          (!externalProviderTopic ||
+            externalProviderTopic === provider.signer.session.topic)
+        ) {
+          await fclUser.authenticate({service: wcService})
+        } else if (!provider.signer.session) {
+          // If no session is set but FCL is still authenticated, unauthenticate the user
+          await fclUser.unauthenticate()
+        }
+      }
     }
 
+    // Set up event listeners regardless of the current authentication state
     provider.on("connect", async () => {
-      await fclUser
-        .authenticate({service: BASE_WC_SERVICE(provider.signer)})
-        .catch(console.error)
+      try {
+        await refreshFclUser()
+      } catch (error) {
+        console.error("Error during authentication on connect:", error)
+      }
     })
 
     provider.on("disconnect", async () => {
-      await fclUser.unauthenticate()
+      try {
+        await refreshFclUser()
+      } catch (error) {
+        console.error("Error during unauthentication on disconnect:", error)
+      }
     })
 
     return provider
@@ -92,7 +115,6 @@ export class ExtendedEthereumProvider extends EthereumProvider {
   async connect(
     opts?: Parameters<InstanceType<typeof EthereumProvider>["connect"]>[0]
   ) {
-    console.log("HEY")
     if (!this.signer.client) {
       throw new Error("Provider not initialized. Call init() first")
     }
@@ -144,7 +166,7 @@ export class ExtendedEthereumProvider extends EthereumProvider {
   }
 
   async disconnect() {
-    const fclUser = fcl.currentUser()
+    const fclUser = fcl.currentUser
     fclUser.unauthenticate()
     return await super.disconnect()
   }
