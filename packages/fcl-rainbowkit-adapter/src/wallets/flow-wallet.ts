@@ -1,5 +1,5 @@
 import {Service} from "@onflow/typedefs"
-import {createFclConnector} from "./create-connector"
+import {createFclConnector} from "../create-connector"
 import * as fcl from "@onflow/fcl"
 
 /**

@@ -1,3 +1,34 @@
+/*
+ * This file is mostly a copy of Rainbowkit's internal get wc connector utility,
+ * meant to cache and reuse walletConnect connector instances.
+ *
+ * The caveat is that we are substituting the original connector with a multi-scoped
+ * version that is able to be used in a cross-VM context.
+ *
+ * See: https://github.com/rainbow-me/rainbowkit/blob/0c9679812123e17b45e1330d5e3b665b48c82864/packages/rainbowkit/src/wallets/getWalletConnectConnector.ts
+ */
+
+/*!
+ * MIT License
+ *
+ * Copyright (c) 2024 Rainbow
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
+ * and associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+ * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import {createConnector} from "wagmi"
 import type {CreateConnectorFn} from "wagmi"
 import {walletConnect, WalletConnectParameters} from "@onflow/fcl-wagmi-adapter"

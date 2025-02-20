@@ -31,5 +31,5 @@ export const createFclConnector = (options: FclConnectorOptions) => {
   })
 }
 
-export * from "./wc"
-export {flowWallet} from "./flow-wallet"
+export * from "./wallets/wc-wallet"
+export {flowWallet} from "./wallets/flow-wallet"
