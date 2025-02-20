@@ -34,7 +34,7 @@ export const createFclConnector = (options: FclConnectorOptions) => {
     name: name || "Cadence Wallet",
     iconUrl: iconUrl || FALLBACK_ICON,
     iconBackground: "#FFFFFF",
-    //installed: undefined,
+    installed: true,
     rdns: (options.service?.provider as any)?.rdns,
     downloadUrls: {
       browserExtension:
