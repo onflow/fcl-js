@@ -7,9 +7,7 @@ import {
   SERVICE_PLUGIN_NAME,
   WC_SERVICE_METHOD,
 } from "./constants"
-import {SignClient} from "@walletconnect/sign-client/dist/types/client"
 import {createSessionProposal, request} from "./session"
-import {ModalCtrlState} from "@walletconnect/modal-core/dist/_types/src/types/controllerTypes"
 import {showNotification} from "./ui/notifications"
 import type {FclWalletConnectConfig} from "./fcl-wc"
 import mobileIcon from "./ui/assets/mobile.svg"
@@ -69,7 +67,6 @@ const makeExec = (
     abortSignal?: AbortSignal
     user: any
   }) => {
-    console.log("service", service)
     // Preload provider image
     preloadImage(service.provider?.icon)
 

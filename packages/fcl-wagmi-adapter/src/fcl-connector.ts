@@ -117,7 +117,6 @@ export function fclWagmiAdapter(params: FclWagmiAdapterParams) {
     async getChainId() {
       const provider = await this.getProvider()
       const chainId = await provider.request({method: "eth_chainId"})
-      console.log("CHAIN ID", chainId)
       return Number(chainId)
     },
     async getProvider() {
@@ -130,7 +129,6 @@ export function fclWagmiAdapter(params: FclWagmiAdapterParams) {
       return accounts.length > 0
     },
     async switchChain({addEthereumChainParameter, chainId}: any) {
-      console.log("HEY")
       const provider = await this.getProvider()
 
       const chain = config.chains.find(x => x.id === chainId)

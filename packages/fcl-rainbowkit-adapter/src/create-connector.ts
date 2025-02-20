@@ -25,7 +25,6 @@ export const createFclConnector = (options: FclConnectorOptions) => {
   const rdns = (options.service?.provider as any)?.rdns as string | undefined
 
   const getUri = (uri: string) => {
-    console.log("uri", uri)
     return uri
   }
 
@@ -42,8 +41,11 @@ export const createFclConnector = (options: FclConnectorOptions) => {
       mobile: "https://core.flow.com",
     },
     qrCode: {getUri},
+    extension: {},
     mobile: {getUri},
     createConnector: walletDetails => {
+      const debug = store.getProviders()
+      console.log("debug", debug)
       const isFlowWalletInjected = rdns
         ? !!store.findProvider({rdns: rdns!})
         : false
