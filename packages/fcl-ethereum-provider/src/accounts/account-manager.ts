@@ -80,7 +80,6 @@ export class AccountManager {
           const authnService = snapshot?.services?.find(
             service => service.type === "authn"
           )
-          debugger
           const matchingAuthnService = authnService?.uid === this.service?.uid
           return matchingAuthnService ? addr : null
         }),
