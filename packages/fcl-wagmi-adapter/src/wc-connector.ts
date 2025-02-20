@@ -38,7 +38,7 @@ import {
   extractRpcUrls,
 } from "@wagmi/core"
 import type {Compute, ExactPartial, Omit} from "@wagmi/core/internal"
-import {ExtendedEthereumProvider as EthereumProvider} from "@onflow/fcl-ethereum-provider"
+import {WalletConnectEthereumProvider as EthereumProvider} from "@onflow/fcl-ethereum-provider"
 import {
   type AddEthereumChainParameter,
   type Address,

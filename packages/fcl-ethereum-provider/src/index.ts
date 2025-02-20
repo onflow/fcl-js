@@ -1,2 +1,2 @@
 export {createProvider} from "./create-provider"
-export {ExtendedEthereumProvider} from "./wc"
+export {WalletConnectEthereumProvider} from "./wc-provider"
