@@ -14,7 +14,6 @@ export async function createSessionProposal({
 }) {
   const network = await fclCore.getChainId()
 
-  // TODO: update
   const requiredNamespaces = {
     flow: {
       methods: [
