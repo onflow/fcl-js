@@ -38,8 +38,6 @@ export const createFclConnector = (options: FclConnectorOptions) => {
     // Do not list RDNS here since Rainbowkit will discard the wallet
     // when conflicting with an injected wallet
     rdns: undefined,
-    qrCode: {getUri},
-    mobile: {getUri},
     createConnector: walletDetails => {
       // TODO, we need to check whether the wallet is installed
       // and use the WalletConnect connector if it is not installed
