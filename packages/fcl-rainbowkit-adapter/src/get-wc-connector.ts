@@ -81,7 +81,14 @@ const getOrCreateWalletConnectInstance = ({
     config = {...config, showQrModal: true}
   }
 
-  const serializedConfig = JSON.stringify(config)
+  const serializedConfig = JSON.stringify(
+    Object.keys(config)
+      .sort()
+      .reduce((obj: any, key) => {
+        obj[key] = config[key as keyof WalletConnectParameters]
+        return obj
+      }, {} as WalletConnectParameters)
+  )
 
   const sharedWalletConnector = walletConnectInstances.get(serializedConfig)
 
