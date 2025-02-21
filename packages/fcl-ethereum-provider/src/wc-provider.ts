@@ -163,7 +163,6 @@ export class WalletConnectEthereumProvider extends EthereumProvider {
               pairingTopic: opts?.pairingTopic,
             })
             .then((session?: SessionTypes.Struct) => {
-              console.log("session", session)
               resolve(session)
             })
             .catch((error: Error) => {

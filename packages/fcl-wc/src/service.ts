@@ -26,7 +26,7 @@ let providerStore = createStore<{
 }>({})
 
 export const makeServicePlugin = (
-  signer: Promise<InstanceType<typeof UniversalProvider> | null>,
+  provider: Promise<InstanceType<typeof UniversalProvider> | null>,
   config: FclWalletConnectConfig = {
     projectId: "",
     includeBaseWC: false,
@@ -42,7 +42,7 @@ export const makeServicePlugin = (
   serviceStrategy: {
     method: WC_SERVICE_METHOD,
     exec: makeExec(
-      signer,
+      provider,
       config,
       import("@walletconnect/modal").then(m => m.WalletConnectModal)
     ),
@@ -78,14 +78,14 @@ const makeExec = (
     } = config
 
     const resolvedProvider = await resolveProvider({
-      signer: signerPromise,
-      externalSignerOrTopic: service.params?.externalProvider,
+      provider: signerPromise,
+      externalProviderOrTopic: service.params?.externalProvider,
     })
     invariant(!!resolvedProvider, "WalletConnect is not initialized")
 
-    const {provider: signer, isExternal} = resolvedProvider
+    const {provider: provider, isExternal} = resolvedProvider
 
-    let session: SessionTypes.Struct | null = signer.session ?? null,
+    let session: SessionTypes.Struct | null = provider.session ?? null,
       pairing: any
     const method = service.endpoint
     const appLink = validateAppLink(service)
@@ -108,7 +108,7 @@ const makeExec = (
           service,
           onClose,
           appLink,
-          signer,
+          provider,
           method,
           pairing,
           wcRequestHook,
@@ -152,7 +152,7 @@ const makeExec = (
       method,
       body,
       session,
-      signer,
+      provider,
       abortSignal,
       isExternal,
     }).finally(() => notification?.dismiss())
@@ -178,7 +178,7 @@ function connectWc(
     service,
     onClose,
     appLink,
-    signer,
+    provider,
     method,
     pairing,
     wcRequestHook,
@@ -188,14 +188,14 @@ function connectWc(
     service: any
     onClose: any
     appLink: string
-    signer: InstanceType<typeof UniversalProvider>
+    provider: InstanceType<typeof UniversalProvider>
     method: string
     pairing: any
     wcRequestHook: any
     pairingModalOverride: any
     abortSignal?: AbortSignal
   }): Promise<SessionTypes.Struct> => {
-    const projectId = signer.providerOpts.projectId
+    const projectId = provider.providerOpts.projectId
     invariant(
       !!projectId,
       "Cannot establish connection, WalletConnect projectId is undefined"
@@ -206,7 +206,7 @@ function connectWc(
 
     try {
       const {uri, approval} = await createSessionProposal({
-        signer,
+        provider,
         existingPairing: pairing,
       })
 
@@ -316,35 +316,35 @@ export function showWcRequestNotification({
 }
 
 async function resolveProvider({
-  signer,
-  externalSignerOrTopic,
+  provider,
+  externalProviderOrTopic,
 }: {
-  signer: Promise<InstanceType<typeof UniversalProvider> | null>
-  externalSignerOrTopic?: string | InstanceType<typeof UniversalProvider>
+  provider: Promise<InstanceType<typeof UniversalProvider> | null>
+  externalProviderOrTopic?: string | InstanceType<typeof UniversalProvider>
 }): Promise<{
   provider: InstanceType<typeof UniversalProvider>
   isExternal: boolean
 } | null> {
-  if (!externalSignerOrTopic) {
-    const resolved = await signer
+  if (!externalProviderOrTopic) {
+    const resolved = await provider
     return resolved ? {provider: resolved, isExternal: false} : null
   }
 
   // If it's a UniversalProvider instance, use it directly and store it.
-  if (typeof externalSignerOrTopic !== "string") {
-    const topic = externalSignerOrTopic.session?.topic
+  if (typeof externalProviderOrTopic !== "string") {
+    const topic = externalProviderOrTopic.session?.topic
     if (!topic) {
       throw new Error(
         "Cannot resolve provider: UniversalProvider is not initialized"
       )
     }
     providerStore.setState({
-      [topic]: externalSignerOrTopic,
+      [topic]: externalProviderOrTopic,
     })
-    return {provider: externalSignerOrTopic, isExternal: true}
+    return {provider: externalProviderOrTopic, isExternal: true}
   }
 
-  const externalTopic = externalSignerOrTopic
+  const externalTopic = externalProviderOrTopic
   if (externalTopic) {
     // Check if an external provider was passed in the options.
     let storedProvider = providerStore.getState()[externalTopic]
@@ -378,6 +378,6 @@ async function resolveProvider({
     return {provider: storedProvider, isExternal: true}
   }
 
-  const provider = await signer
-  return provider ? {provider, isExternal: false} : null
+  const resolved = await provider
+  return resolved ? {provider: resolved, isExternal: false} : null
 }

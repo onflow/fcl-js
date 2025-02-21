@@ -121,12 +121,12 @@ const initHelper = (config: FclWalletConnectConfig) => {
 
 // Returns the SignClient instance used by this plugin if it has been initialized
 export async function getProvider() {
-  return providerPromise.then(signer => {
-    if (!signer) {
+  return providerPromise.then(provider => {
+    if (!provider) {
       throw new Error("WalletConnect client not initialized")
     }
 
-    return signer
+    return provider
   })
 }
 

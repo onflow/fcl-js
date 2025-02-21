@@ -6,10 +6,10 @@ import {Service} from "@onflow/typedefs"
 
 // Create a new session proposal with the WalletConnect client
 export async function createSessionProposal({
-  signer,
+  provider,
   existingPairing,
 }: {
-  signer: InstanceType<typeof UniversalProvider>
+  provider: InstanceType<typeof UniversalProvider>
   existingPairing?: PairingTypes.Struct
 }) {
   const network = await fclCore.getChainId()
@@ -32,14 +32,14 @@ export async function createSessionProposal({
     const onDisplayUri = (uri: string) => {
       resolve(uri)
     }
-    signer.on("display_uri", onDisplayUri)
+    provider.on("display_uri", onDisplayUri)
     cleanup = () => {
-      signer.removeListener("display_uri", onDisplayUri)
+      provider.removeListener("display_uri", onDisplayUri)
       reject(new Error("WalletConnect Session Request aborted"))
     }
   })
 
-  const session = await signer
+  const session = await provider
     .connect({
       pairingTopic: existingPairing?.topic,
       namespaces: requiredNamespaces,
@@ -58,14 +58,14 @@ export const request = async ({
   method,
   body,
   session,
-  signer,
+  provider,
   isExternal,
   abortSignal,
 }: {
   method: any
   body: any
   session: SessionTypes.Struct
-  signer: InstanceType<typeof UniversalProvider>
+  provider: InstanceType<typeof UniversalProvider>
   isExternal?: boolean
   abortSignal?: AbortSignal
 }) => {
@@ -73,13 +73,13 @@ export const request = async ({
   const data = JSON.stringify({...body, addr, address})
 
   const result: any = await Promise.race([
-    signer.client.request({
+    provider.client.request({
       request: {
         method,
         params: [data],
       },
       chainId,
-      topic: signer.session?.topic!,
+      topic: provider.session?.topic!,
     }),
     new Promise((_, reject) => {
       if (abortSignal?.aborted) {
