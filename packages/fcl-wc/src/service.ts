@@ -15,6 +15,7 @@ import {CurrentUser, Service} from "@onflow/typedefs"
 import {SessionTypes} from "@walletconnect/types"
 import {UniversalProvider} from "@walletconnect/universal-provider"
 import {createStore} from "./store"
+import {ModalCtrlState} from "@walletconnect/modal-core/dist/_types/src/types/controllerTypes"
 
 type WalletConnectModalType = import("@walletconnect/modal").WalletConnectModal
 
@@ -204,12 +205,12 @@ function connectWc(
       walletConnectModal: WalletConnectModalType | null = null
 
     try {
-      const {uri: _, approval} = await createSessionProposal({
+      const {uri, approval} = await createSessionProposal({
         signer,
         existingPairing: pairing,
       })
 
-      /*if (wcRequestHook && wcRequestHook instanceof Function) {
+      if (wcRequestHook && wcRequestHook instanceof Function) {
         wcRequestHook({
           type: REQUEST_TYPES.SESSION_REQUEST,
           method,
@@ -218,9 +219,9 @@ function connectWc(
           pairing: pairing ?? null,
           uri: uri ?? null,
         })
-      }*/
+      }
 
-      /*if (isMobile()) {
+      if (isMobile()) {
         const queryString = new URLSearchParams({uri: uri}).toString()
         let url = pairing == null ? appLink + "?" + queryString : appLink
         openDeeplink(url)
@@ -248,7 +249,7 @@ function connectWc(
         } else {
           pairingModalOverride(uri, onClose)
         }
-      }*/
+      }
 
       const session = await Promise.race([
         approval(),
