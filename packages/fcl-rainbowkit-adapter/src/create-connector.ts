@@ -1,10 +1,6 @@
 import {fclWagmiAdapter} from "@onflow/fcl-wagmi-adapter"
 import {RainbowKitWalletConnectParameters, Wallet} from "@rainbow-me/rainbowkit"
 import {createConnector} from "@wagmi/core"
-import {getWalletConnectConnector} from "./get-wc-connector"
-import {createStore} from "mipd"
-
-const store = createStore()
 
 type FclConnectorOptions = Parameters<typeof fclWagmiAdapter>[0] & {
   supportsWc?: boolean
@@ -45,55 +41,24 @@ export const createFclConnector = (options: FclConnectorOptions) => {
     qrCode: {getUri},
     mobile: {getUri},
     createConnector: walletDetails => {
-      const isFlowWalletInjected = rdns
-        ? !!store.findProvider({rdns: rdns!})
-        : false
-
+      // TODO, we need to check whether the wallet is installed
+      // and use the WalletConnect connector if it is not installed
       const newDetails = {
         ...walletDetails,
-        ...((isFlowWalletInjected && {
-          // This is a workaround due to an internal bug in RainbowKit where
-          // wallets do not appear in the installed group.
-          //
-          // Only wallets that are derived from EIP-6963 injected providers will
-          // formall appear in this group, however, this is not possible in our case
-          // because we need a custom injected connector implementation.
-          rkDetails: {
-            ...walletDetails.rkDetails,
-            groupIndex: -1,
-            groupName: "Installed",
-          },
-        }) ??
-          {}),
+        rkDetails: {
+          ...walletDetails.rkDetails,
+          groupIndex: -1,
+          groupName: "Installed",
+        },
       }
 
-      if (isMobile()) {
-        return getWalletConnectConnector({
-          projectId,
-          walletConnectParameters: options.walletConnectParams,
-        })(newDetails)
-      } else {
-        if (isFlowWalletInjected) {
-          const connector = fclWagmiAdapter(options)
-          return createConnector(config => {
-            return {
-              ...connector(config),
-              ...newDetails,
-            }
-          })
-        } else {
-          return getWalletConnectConnector({
-            projectId,
-            walletConnectParameters: options.walletConnectParams,
-          })(newDetails)
+      const connector = fclWagmiAdapter(options)
+      return createConnector(config => {
+        return {
+          ...connector(config),
+          ...newDetails,
         }
-      }
+      })
     },
   })
-}
-
-function isMobile() {
-  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-    navigator.userAgent
-  )
 }
