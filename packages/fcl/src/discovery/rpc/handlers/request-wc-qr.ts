@@ -75,7 +75,7 @@ export function watchQrFactory({
           method: FLOW_METHODS.FLOW_AUTHN,
           body: authnBody,
           session,
-          provdier,
+          provider,
         })
 
         rpc.notify(DiscoveryNotification.NOTIFY_QRCODE_CONNECTED, {
