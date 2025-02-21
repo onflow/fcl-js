@@ -1,6 +1,6 @@
 {
   "name": "@onflow/fcl-ethereum-provider",
-  "version": "1.0.0-cross-vm.0",
+  "version": "0.0.1-cross-vm.0",
   "description": "Ethereum provider for FCL-compatible wallets",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
