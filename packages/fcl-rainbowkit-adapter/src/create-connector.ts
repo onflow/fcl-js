@@ -21,7 +21,7 @@ const FALLBACK_ICON =
 export const createFclConnector = (options: FclConnectorOptions) => {
   const uid = options.service?.uid
   const name = options.service?.provider?.name
-  const iconUrl = options.service?.provider?.icon!
+  const iconUrl = options.service?.provider?.icon ?? ""
   const rdns = (options.service?.provider as any)?.rdns as string | undefined
 
   const getUri = (uri: string) => {
