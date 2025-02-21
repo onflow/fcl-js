@@ -110,7 +110,7 @@ export class AccountManager {
   }
 
   public async authenticate(): Promise<string[]> {
-    await this.user.authenticate({service: this.service})
+    await this.user.authenticate({service: this.service, forceReauth: true})
     return this.getAccounts()
   }
 
