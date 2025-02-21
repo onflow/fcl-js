@@ -165,8 +165,11 @@ export class WalletConnectEthereumProvider extends EthereumProvider {
             .then((session?: SessionTypes.Struct) => {
               resolve(session)
             })
-            .catch((error: Error) => {
-              reject(new Error(error.message))
+            .catch((error: unknown) => {
+              var newErr = new Error("Failed to connect")
+              if (error instanceof Error)
+                newErr.stack += "\nCaused by: " + error.stack
+              throw newErr
             })
         }
       )
