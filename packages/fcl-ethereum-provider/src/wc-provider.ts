@@ -120,7 +120,30 @@ export class WalletConnectEthereumProvider extends EthereumProvider {
     }
 
     this.loadConnectOpts(opts)
-    const {required, optional} = buildNamespaces(FlowNetwork.TESTNET)
+
+    const chains = new Set(opts?.chains ?? [])
+    const optionalChains = new Set(opts?.optionalChains ?? [])
+    const chainIds = Array.from(chains).concat(Array.from(optionalChains))
+
+    const flowNetwork = Object.entries(FLOW_CHAINS).find(
+      ([, {eip155ChainId}]) => {
+        if (chainIds.includes(eip155ChainId)) {
+          return true
+        }
+        return false
+      }
+    )?.[0]
+    if (!flowNetwork) {
+      throw new Error(
+        `Unsupported chainId: ${chainIds.join(", ")}, expected one of ${Object.values(
+          FLOW_CHAINS
+        )
+          .map(({eip155ChainId}) => eip155ChainId)
+          .join(", ")}`
+      )
+    }
+
+    const {required, optional} = buildNamespaces(flowNetwork as FlowNetwork)
     try {
       const session = await new Promise<SessionTypes.Struct | undefined>(
         async (resolve, reject) => {
