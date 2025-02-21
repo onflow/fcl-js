@@ -28,8 +28,5 @@
     "@onflow/util-template": "1.2.3",
     "@onflow/util-uid": "1.2.3"
   },
-  "changesets": [
-    "chilled-wombats-reply",
-    "shaggy-carpets-eat"
-  ]
+  "changesets": ["chilled-wombats-reply", "shaggy-carpets-eat"]
 }
