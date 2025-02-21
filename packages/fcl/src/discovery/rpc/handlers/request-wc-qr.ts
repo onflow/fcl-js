@@ -32,7 +32,7 @@ export const wcRequestHandlerFactory = ({
 
     // Execute WC bypass if session is approved
     const {uri, approval} = await createSessionProposal({
-      signer: provider,
+      provider,
     })
 
     // Watch for QR code connection asynchronously
