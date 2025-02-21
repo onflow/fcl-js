@@ -1,5 +1,5 @@
 import {Service} from "@onflow/typedefs"
-import {createFclConnector} from "./create-connector"
+import {createFclConnector} from "../create-connector"
 import * as fcl from "@onflow/fcl"
 
 /**
@@ -18,7 +18,7 @@ export const flowWallet = (params: {
       f_type: "Service",
       f_vsn: "1.0.0",
       type: "authn",
-      uid: "Flow Wallet",
+      uid: "fcw#authn",
       endpoint:
         "chrome-extension://hpclkefagolihohboafpheddmmgdffjm/popup.html",
       method: "EXT/RPC",

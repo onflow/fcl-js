@@ -8,7 +8,14 @@ import {AccountManager} from "./accounts/account-manager"
 import {FLOW_CHAINS} from "./constants"
 import {Gateway} from "./gateway/gateway"
 import {NetworkManager} from "./network/network-manager"
-import {Subject} from "./util/observable"
+
+export type FclProviderConfig = {
+  user: typeof fcl.currentUser
+  config: typeof fcl.config
+  service?: Service
+  gateway?: string
+  rpcUrls?: {[chainId: string]: number}
+}
 
 /**
  * Create a new FCL Ethereum provider
@@ -29,12 +36,7 @@ import {Subject} from "./util/observable"
  * })
  * ```
  */
-export function createProvider(config: {
-  user: typeof fcl.currentUser
-  config: typeof fcl.config
-  service?: Service
-  rpcUrls?: {[chainId: string]: number}
-}): Eip1193Provider {
+export function createProvider(config: FclProviderConfig): Eip1193Provider {
   const defaultRpcUrls = Object.values(FLOW_CHAINS).reduce(
     (acc, chain) => {
       acc[chain.eip155ChainId] = chain.publicRpcUrl

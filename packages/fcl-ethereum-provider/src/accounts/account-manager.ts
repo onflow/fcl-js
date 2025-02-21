@@ -70,18 +70,18 @@ export class AccountManager {
 
     $user
       .pipe(
-        // Only listen bind to users matching the current authz service
+        // Only listen bind to users matching the current authn service
         map(snapshot => {
           const addr = snapshot?.addr || null
           if (!addr) {
             return null
           }
 
-          const authzService = snapshot?.services?.find(
-            service => service.type === "authz"
+          const authnService = snapshot?.services?.find(
+            service => service.type === "authn"
           )
-          const matchingAuthzService = authzService?.uid === this.service?.uid
-          return matchingAuthzService ? addr : null
+          const matchingAuthnService = authnService?.uid === this.service?.uid
+          return matchingAuthnService ? addr : null
         }),
         distinctUntilChanged(),
         switchMap(addr =>
@@ -110,7 +110,7 @@ export class AccountManager {
   }
 
   public async authenticate(): Promise<string[]> {
-    await this.user.authenticate({service: this.service})
+    await this.user.authenticate({service: this.service, forceReauth: true})
     return this.getAccounts()
   }
 
