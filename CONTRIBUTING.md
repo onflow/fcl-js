@@ -115,6 +115,15 @@ npm run build
 
 Packages stable versions releases are controlled by [changesets](https://github.com/changesets/changesets) from the `master` branch
 
+#### Creating a changeset
+
+Changesets are used to track changes to the packages in the repository. They are used to generate changelogs and determine the next version of the package.
+
+To create a changeset, run:
+```
+npx changesets
+```
+
 #### Prerelease(alpha)
 In order to create an `alpha` (pre-)release
 - create a branch with `release-<VERSION>` as a branch name
