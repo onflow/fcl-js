@@ -156,9 +156,9 @@ For all type definitions available, see [this file](./packages/typedefs/src/inde
 
 ## Next Steps
 
-See the [Flow App Quick Start](https://developers.flow.com/tutorials/flow-app-quickstart).
+See the [Flow App Quick Start](https://developers.flow.com/build/getting-started/fcl-quickstart).
 
-See the full [API Reference](https://developers.flow.com/tooling/fcl-js/api) for all FCL functionality.
+See the full [API Reference]https://developers.flow.com/tools/clients/fcl-js/api) for all FCL functionality.
 
 Learn Flow's smart contract language to build any script or transactions: [Cadence](https://cadence-lang.org).
 
