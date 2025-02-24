@@ -121,7 +121,7 @@ Changesets are used to track changes to the packages in the repository. They are
 
 To create a changeset, run:
 ```
-npx changesets
+npx changeset
 ```
 
 #### Prerelease(alpha)
