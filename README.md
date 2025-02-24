@@ -32,34 +32,6 @@ While FCL itself is a concept and standard, FCL JS is the javascript implementat
 ### Requirements
 -  Node version `v12.0.0 or higher`.
 
-### Build
-```shell
-npm i
-npm run build
-```
-
-### Release
-Packages stable versions releases are controlled by [changesets](https://github.com/changesets/changesets) from the `master` branch
-
-#### Prerelease(alpha)
-In order to create an `alpha` (pre-)release 
-- create a branch with `release-<VERSION>` as a branch name
-- run:
-```
-npm run changeset pre enter alpha
-npm run changeset version
-npm run changeset publish
-```
-
-*NOTE: you need to have an npm account and be a member of [OnFlow organization](https://www.npmjs.com/org/onflow)*
-
-`changeset` commands should preferably be run from the `release` branch and not from feature branches in order to avoid merge conflicts with other feature branches
-when the release is ready to be published as stable run from the release branch
-```
-npm run changeset pre exit
-```
-and merge `release-<VERSION>` branch to `master`
-
 ### Installation
 
 To use the FCL JS in your application, install using **yarn** or **npm**
@@ -222,8 +194,7 @@ The discovery feature can be used via API allowing you to customize your own UI 
 
 ## Support
 
-Notice a problem or want to request a feature? [Add an issue](https://github.com/onflow/fcl-js/issues).
-
-Discuss FCL with the community on the [forum](https://forum.onflow.org/c/developer-tools/flow-fcl/22).
-
-Join the Flow community on [Discord](https://discord.gg/k6cZ7QC) to keep up to date and to talk to the team.
+- Notice a problem or want to request a feature? [Add an issue](https://github.com/onflow/fcl-js/issues).
+- Discuss FCL with the community on the [forum](https://forum.onflow.org/c/developer-tools/flow-fcl/22).
+- Join the Flow community on [Discord](https://discord.gg/k6cZ7QC) to keep up to date and to talk to the team.
+- Read the [Contributing Guide](./CONTRIBUTING.md) to learn how to contribute to the project.

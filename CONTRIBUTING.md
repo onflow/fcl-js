@@ -14,6 +14,8 @@ Use your best judgment, and feel free to propose changes to this document in a p
 - [Suggesting Enhancements](#suggesting-enhancements)
 - [Your First Code Contribution](#your-first-code-contribution)
 - [Pull Requests](#pull-requests)
+- [Building the Repo](#building-the-repo)
+- [Release Process](#release-process)
 
 [Styleguides](#styleguides)
 
@@ -101,6 +103,36 @@ The process described here has several goals:
 Please follow the [styleguides](#styleguides) to have your contribution considered by the maintainers.
 Reviewer(s) may ask you to complete additional design work, tests,
 or other changes before your pull request can be ultimately accepted.
+
+### Building the Repo
+
+```shell
+npm i
+npm run build
+```
+
+### Release Process
+
+Packages stable versions releases are controlled by [changesets](https://github.com/changesets/changesets) from the `master` branch
+
+#### Prerelease(alpha)
+In order to create an `alpha` (pre-)release
+- create a branch with `release-<VERSION>` as a branch name
+- run:
+```
+npm run changeset pre enter alpha
+npm run changeset version
+npm run changeset publish
+```
+
+*NOTE: you need to have an npm account and be a member of [OnFlow organization](https://www.npmjs.com/org/onflow)*
+
+`changeset` commands should preferably be run from the `release` branch and not from feature branches in order to avoid merge conflicts with other feature branches
+when the release is ready to be published as stable run from the release branch
+```
+npm run changeset pre exit
+```
+and merge `release-<VERSION>` branch to `master`
 
 ## Styleguides
 
