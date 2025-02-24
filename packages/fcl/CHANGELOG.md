@@ -1,5 +1,15 @@
 # @onflow/fcl
 
+## 1.13.5
+
+### Patch Changes
+
+- [#2162](https://github.com/onflow/fcl-js/pull/2162) [`98c1015532d5ad9e066bf8107a2da8a39a54fb3d`](https://github.com/onflow/fcl-js/commit/98c1015532d5ad9e066bf8107a2da8a39a54fb3d) Thanks [@chasefleming](https://github.com/chasefleming)! - Updated FCL README and contributing guide
+
+- Updated dependencies [[`3fccbef7bbf985f19d9a9bae2638e538f126f754`](https://github.com/onflow/fcl-js/commit/3fccbef7bbf985f19d9a9bae2638e538f126f754)]:
+  - @onflow/fcl-core@1.13.5
+  - @onflow/fcl-wc@5.5.5
+
 ## 1.13.4
 
 ### Patch Changes
