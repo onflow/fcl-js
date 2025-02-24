@@ -202,6 +202,5 @@ The discovery feature can be used via API allowing you to customize your own UI 
 ## Support
 
 - Notice a problem or want to request a feature? [Add an issue](https://github.com/onflow/fcl-js/issues).
-- Discuss FCL with the community on the [forum](https://forum.onflow.org/c/developer-tools/flow-fcl/22).
-- Join the Flow community on [Discord](https://discord.gg/k6cZ7QC) to keep up to date and to talk to the team.
+- Join the Flow community on [Discord](https://discord.gg/flow) to keep up to date and to talk to the team.
 - Read the [Contributing Guide](./CONTRIBUTING.md) to learn how to contribute to the project.
