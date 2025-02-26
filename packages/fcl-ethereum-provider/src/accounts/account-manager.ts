@@ -281,7 +281,7 @@ export class AccountManager {
       })
 
       // Add a 20% buffer to the estimate
-      gas = ((BigInt(gasLimit) * BigInt(12)) / BigInt(10)).toString()
+      gas = ((BigInt(gasLimit) * BigInt(12)) / BigInt(10)).toString(16)
     }
 
     // Check if the from address matches the authenticated COA address
