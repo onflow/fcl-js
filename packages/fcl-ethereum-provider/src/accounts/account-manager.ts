@@ -272,18 +272,20 @@ export class AccountManager {
     // Determine gas limit
     let gas =
       _gas ||
-      (await this.gateway.request({
-        chainId: parsedChainId,
-        method: "eth_estimateGas",
-        params: [
-          {
-            from,
-            to,
-            value,
-            data,
-          },
-        ],
-      }))
+      BigInt(
+        await this.gateway.request({
+          chainId: parsedChainId,
+          method: "eth_estimateGas",
+          params: [
+            {
+              from,
+              to,
+              value,
+              data,
+            },
+          ],
+        })
+      )
 
     // Check if the from address matches the authenticated COA address
     const expectedCOAAddress = await this.getCOAAddress()
