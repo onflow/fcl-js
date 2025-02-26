@@ -607,6 +607,20 @@ describe("sendTransaction", () => {
 
     await accountManager.sendTransaction(txInput)
 
+    expect(gatewayMock.request).toHaveBeenCalledWith({
+      chainId: 747,
+      method: "eth_estimateGas",
+      params: [
+        {
+          from: "0x1234",
+          to: "0xffffffffffffffffffffffffffffffffffffffff",
+          value:
+            "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+          data: "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        },
+      ],
+    })
+
     expect(fcl.mutate).toHaveBeenCalledWith(
       expect.objectContaining({
         cadence: expect.any(String),

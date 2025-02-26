@@ -271,17 +271,17 @@ export class AccountManager {
         method: "eth_estimateGas",
         params: [
           {
-            from,
-            to,
-            value,
-            data,
+            from: fcl.withPrefix(from),
+            to: fcl.withPrefix(to),
+            value: fcl.withPrefix(value),
+            data: fcl.withPrefix(data),
           },
         ],
         chainId: parsedChainId,
       })
 
       // Add a 20% buffer to the estimate
-      gas = ((BigInt(gasLimit) * BigInt(12)) / BigInt(10)).toString()
+      gas = ((BigInt(gasLimit) * BigInt(6)) / BigInt(5)).toString()
     }
 
     // Check if the from address matches the authenticated COA address
