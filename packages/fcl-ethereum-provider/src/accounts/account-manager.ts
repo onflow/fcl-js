@@ -38,6 +38,7 @@ import {displayErrorNotification} from "../notifications"
 import {AddressStoreState} from "../types/account"
 import {getFlowNetwork} from "../util/chain"
 import {precalculateTxHash} from "../util/transaction"
+import {Gateway} from "../gateway/gateway"
 
 export class AccountManager {
   private $addressStore = new BehaviorSubject<AddressStoreState>({
@@ -49,6 +50,7 @@ export class AccountManager {
   constructor(
     private user: typeof fcl.currentUser,
     private networkManager: NetworkManager,
+    private gateway: Gateway,
     private service?: Service
   ) {
     this.initializeUserSubscription()
@@ -261,18 +263,27 @@ export class AccountManager {
     gas?: string
     data?: string
   }) {
-    const {
-      to,
-      from,
-      value = "0",
-      data = "",
-      gas = DEFAULT_EVM_GAS_LIMIT,
-      chainId,
-    } = params
+    const {to, from, value = "0", data = "", gas: _gas, chainId} = params
 
     const parsedChainId = parseInt(chainId)
     this.getFlowNetworkOrThrow(parsedChainId)
     await this.validateChainId(parsedChainId)
+
+    // Determine gas limit
+    let gas =
+      _gas ||
+      (await this.gateway.request({
+        chainId: parsedChainId,
+        method: "eth_estimateGas",
+        params: [
+          {
+            from,
+            to,
+            value,
+            data,
+          },
+        ],
+      }))
 
     // Check if the from address matches the authenticated COA address
     const expectedCOAAddress = await this.getCOAAddress()
