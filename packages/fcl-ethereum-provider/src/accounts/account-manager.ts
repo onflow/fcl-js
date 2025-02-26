@@ -6,12 +6,7 @@ import {
   Service,
   FvmErrorCode,
 } from "@onflow/typedefs"
-import {
-  DEFAULT_EVM_GAS_LIMIT,
-  EVENT_IDENTIFIERS,
-  EventType,
-  FlowNetwork,
-} from "../constants"
+import {EVENT_IDENTIFIERS, EventType, FlowNetwork} from "../constants"
 import {
   BehaviorSubject,
   concat,
@@ -272,20 +267,18 @@ export class AccountManager {
     // Determine gas limit
     let gas =
       _gas ||
-      BigInt(
-        await this.gateway.request({
-          chainId: parsedChainId,
-          method: "eth_estimateGas",
-          params: [
-            {
-              from,
-              to,
-              value,
-              data,
-            },
-          ],
-        })
-      )
+      ((await this.gateway.request({
+        chainId: parsedChainId,
+        method: "eth_estimateGas",
+        params: [
+          {
+            from,
+            to,
+            value,
+            data,
+          },
+        ],
+      })) as string)
 
     // Check if the from address matches the authenticated COA address
     const expectedCOAAddress = await this.getCOAAddress()
