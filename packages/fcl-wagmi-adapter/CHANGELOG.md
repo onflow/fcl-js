@@ -1,5 +1,14 @@
 # @onflow/fcl-ethereum-provider
 
+## 0.0.1-cross-vm.1
+
+### Patch Changes
+
+- [#2076](https://github.com/onflow/fcl-js/pull/2076) [`24a39f39354f819cb7e59193c44f825a7dd18f32`](https://github.com/onflow/fcl-js/commit/24a39f39354f819cb7e59193c44f825a7dd18f32) Thanks [@jribbink](https://github.com/jribbink)! - Pin package versions
+
+- Updated dependencies [[`24a39f39354f819cb7e59193c44f825a7dd18f32`](https://github.com/onflow/fcl-js/commit/24a39f39354f819cb7e59193c44f825a7dd18f32)]:
+  - @onflow/fcl-ethereum-provider@0.0.1-cross-vm.2
+
 ## 0.0.1-cross-vm.0
 
 ### Patch Changes
