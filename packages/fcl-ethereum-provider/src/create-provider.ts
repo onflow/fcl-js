@@ -46,15 +46,16 @@ export function createProvider(config: FclProviderConfig): Eip1193Provider {
   )
 
   const networkManager = new NetworkManager(config.config)
-  const accountManager = new AccountManager(
-    config.user,
-    networkManager,
-    config.service
-  )
   const gateway = new Gateway({
     ...defaultRpcUrls,
     ...(config.rpcUrls || {}),
   })
+  const accountManager = new AccountManager(
+    config.user,
+    networkManager,
+    gateway,
+    config.service
+  )
   const rpcProcessor = new RpcProcessor(gateway, accountManager, networkManager)
   const eventProcessor = new EventDispatcher(accountManager, networkManager)
   const provider = new FclEthereumProvider(

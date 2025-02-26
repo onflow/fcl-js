@@ -6,12 +6,7 @@ import {
   Service,
   FvmErrorCode,
 } from "@onflow/typedefs"
-import {
-  DEFAULT_EVM_GAS_LIMIT,
-  EVENT_IDENTIFIERS,
-  EventType,
-  FlowNetwork,
-} from "../constants"
+import {EVENT_IDENTIFIERS, EventType, FlowNetwork} from "../constants"
 import {
   BehaviorSubject,
   concat,
@@ -38,6 +33,7 @@ import {displayErrorNotification} from "../notifications"
 import {AddressStoreState} from "../types/account"
 import {getFlowNetwork} from "../util/chain"
 import {precalculateTxHash} from "../util/transaction"
+import {Gateway} from "../gateway/gateway"
 
 export class AccountManager {
   private $addressStore = new BehaviorSubject<AddressStoreState>({
@@ -49,6 +45,7 @@ export class AccountManager {
   constructor(
     private user: typeof fcl.currentUser,
     private networkManager: NetworkManager,
+    private gateway: Gateway,
     private service?: Service
   ) {
     this.initializeUserSubscription()
@@ -261,18 +258,31 @@ export class AccountManager {
     gas?: string
     data?: string
   }) {
-    const {
-      to,
-      from,
-      value = "0",
-      data = "",
-      gas = DEFAULT_EVM_GAS_LIMIT,
-      chainId,
-    } = params
+    const {to, from, value = "0", data = "", chainId} = params
 
     const parsedChainId = parseInt(chainId)
     this.getFlowNetworkOrThrow(parsedChainId)
     await this.validateChainId(parsedChainId)
+
+    // Determine gas limit
+    let gas = params.gas
+    if (!gas) {
+      const gasLimit = await this.gateway.request({
+        method: "eth_estimateGas",
+        params: [
+          {
+            from,
+            to,
+            value,
+            data,
+          },
+        ],
+        chainId: parsedChainId,
+      })
+
+      // Add a 20% buffer to the estimate
+      gas = ((BigInt(gasLimit) * BigInt(12)) / BigInt(10)).toString()
+    }
 
     // Check if the from address matches the authenticated COA address
     const expectedCOAAddress = await this.getCOAAddress()
