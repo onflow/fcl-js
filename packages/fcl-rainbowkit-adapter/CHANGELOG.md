@@ -1,5 +1,13 @@
 # @onflow/fcl-ethereum-provider
 
+## 0.0.1-cross-vm.2
+
+### Patch Changes
+
+- Updated dependencies [[`aa36c67b51394024f0be54b3e46917cfadc9cde8`](https://github.com/onflow/fcl-js/commit/aa36c67b51394024f0be54b3e46917cfadc9cde8)]:
+  - @onflow/fcl-ethereum-provider@0.0.1-cross-vm.3
+  - @onflow/fcl-wagmi-adapter@0.0.1-cross-vm.2
+
 ## 0.0.1-cross-vm.1
 
 ### Patch Changes
