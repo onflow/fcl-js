@@ -12,6 +12,33 @@
   "bugs": {
     "url": "https://github.com/onflow/fcl-js/issues"
   },
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "import": "./dist/index.module.js",
+      "require": "./dist/index.js"
+    },
+    "./hooks": {
+      "import": "./dist/hooks/index.module.js",
+      "require": "./dist/hooks/index.js"
+    },
+    "./components": {
+      "import": "./dist/components/index.module.js",
+      "require": "./dist/components/index.js"
+    }
+  },
+  "main": "dist/index.js",
+  "module": "dist/index.module.js",
+  "types": "types/index.d.ts",
+  "source": "src/index.ts",
+  "unpkg": "dist/index.umd.js",
+  "scripts": {
+    "prepublishOnly": "npm test && npm run build",
+    "test": "jest",
+    "build": "fcl-bundle",
+    "test:watch": "jest --watch",
+    "start": "fcl-bundle --watch"
+  },
   "devDependencies": {
     "@babel/preset-typescript": "^7.25.7",
     "@onflow/fcl-bundle": "1.7.0-cross-vm.0",
@@ -22,18 +49,6 @@
     "eslint": "^8.57.1",
     "eslint-plugin-jsdoc": "^46.10.1",
     "jest": "^29.7.0"
-  },
-  "source": "src/index.ts",
-  "main": "dist/index.js",
-  "module": "dist/index.module.js",
-  "unpkg": "dist/index.umd.js",
-  "types": "types/index.d.ts",
-  "scripts": {
-    "prepublishOnly": "npm test && npm run build",
-    "test": "jest",
-    "build": "fcl-bundle",
-    "test:watch": "jest --watch",
-    "start": "fcl-bundle --watch"
   },
   "dependencies": {
     "@babel/runtime": "^7.25.7"
