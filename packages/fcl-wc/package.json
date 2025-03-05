@@ -50,6 +50,7 @@
     "@walletconnect/utils": "^2.8.1",
     "postcss-cli": "^11.0.0",
     "preact": "^10.26.4",
+    "preact-render-to-string": "^6.5.13",
     "tailwindcss": "^3.4.14"
   },
   "peerDependencies": {
