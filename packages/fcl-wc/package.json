@@ -49,7 +49,7 @@
     "@walletconnect/types": "^2.8.1",
     "@walletconnect/utils": "^2.8.1",
     "postcss-cli": "^11.0.0",
-    "preact": "^10.24.3",
+    "preact": "^10.26.4",
     "tailwindcss": "^3.4.14"
   },
   "peerDependencies": {
