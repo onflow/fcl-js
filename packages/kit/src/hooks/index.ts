@@ -2,4 +2,4 @@
  * @onflow/kit — hooks
  */
 
-export {}
+export {useConfig} from "./useConfig"
