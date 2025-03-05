@@ -14,7 +14,7 @@ import {
 } from "../types/eth"
 import {signTypedData} from "./handlers/eth-signtypeddata"
 import {ethChainId} from "./handlers/eth-chain-id"
-import {ProviderError, ProviderErrorCode} from "../util/errors"
+import {ProviderError, ProviderErrorCode} from "../utils/errors"
 
 export class RpcProcessor {
   constructor(

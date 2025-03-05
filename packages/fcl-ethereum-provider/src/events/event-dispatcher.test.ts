@@ -1,6 +1,6 @@
 import {AccountManager} from "../accounts/account-manager"
 import {ChainIdStore, NetworkManager} from "../network/network-manager"
-import {BehaviorSubject, Subject} from "../util/observable"
+import {BehaviorSubject, Subject} from "../utils/observable"
 import {EventDispatcher} from "./event-dispatcher"
 
 jest.mock("../accounts/account-manager")

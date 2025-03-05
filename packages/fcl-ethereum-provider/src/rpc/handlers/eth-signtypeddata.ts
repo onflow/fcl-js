@@ -4,7 +4,7 @@ import {
   hashTypedDataLegacy,
   hashTypedDataV3,
   hashTypedDataV4,
-} from "../../hash-utils"
+} from "../../utils/hash"
 
 export async function signTypedData(
   accountManager: AccountManager,

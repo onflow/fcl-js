@@ -1,8 +1,8 @@
 import {NetworkManager} from "../../network/network-manager"
 import {ethChainId} from "./eth-chain-id"
 
-jest.mock("../../util/eth", () => ({
-  ...jest.requireActual("../../util/eth"),
+jest.mock("../../utils/eth", () => ({
+  ...jest.requireActual("../../utils/eth"),
   formatChainId: jest.fn().mockReturnValue("0x747"),
 }))
 

@@ -19,7 +19,7 @@ import {
   of,
   Subscription,
   switchMap,
-} from "../util/observable"
+} from "../utils/observable"
 import {EthSignatureResponse} from "../types/eth"
 import {NetworkManager} from "../network/network-manager"
 import {
@@ -31,8 +31,8 @@ import {
 import {TransactionError} from "@onflow/fcl"
 import {displayErrorNotification} from "../notifications"
 import {AddressStoreState} from "../types/account"
-import {getFlowNetwork} from "../util/chain"
-import {precalculateTxHash} from "../util/transaction"
+import {getFlowNetwork} from "../utils/chain"
+import {precalculateTxHash} from "../utils/transaction"
 import {Gateway} from "../gateway/gateway"
 
 export class AccountManager {

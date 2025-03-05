@@ -1,5 +1,5 @@
 import {NetworkManager} from "../../network/network-manager"
-import {formatChainId} from "../../util/eth"
+import {formatChainId} from "../../utils/eth"
 
 export async function ethChainId(networkManager: NetworkManager) {
   const chainId = await networkManager.getChainId()

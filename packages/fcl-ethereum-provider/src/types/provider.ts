@@ -1,5 +1,5 @@
 // Types for RPC request and events
-import {ProviderError} from "../util/errors"
+import {ProviderError} from "../utils/errors"
 
 export type ProviderRequest = {
   method: string

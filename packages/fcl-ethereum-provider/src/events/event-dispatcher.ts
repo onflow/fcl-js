@@ -10,10 +10,10 @@ import {
   skip,
   Subscription,
   takeFirst,
-} from "../util/observable"
-import {formatChainId} from "../util/eth"
+} from "../utils/observable"
+import {formatChainId} from "../utils/eth"
 import {withPrefix} from "@onflow/fcl"
-import {ProviderError, ProviderErrorCode} from "../util/errors"
+import {ProviderError, ProviderErrorCode} from "../utils/errors"
 
 export class EventDispatcher {
   private $emitters: {

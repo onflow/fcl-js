@@ -1,4 +1,4 @@
-import {getContractAddress} from "./util/eth"
+import {getContractAddress} from "./utils/eth"
 import {ContractType} from "./constants"
 
 const evmImport = (chainId: number) =>

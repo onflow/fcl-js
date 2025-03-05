@@ -9,7 +9,7 @@ import {
   map,
   of,
   switchMap,
-} from "../util/observable"
+} from "../utils/observable"
 import * as fcl from "@onflow/fcl"
 import {AddEthereumChainParams, SwitchEthereumChainParams} from "../types/eth"
 

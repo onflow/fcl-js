@@ -3,7 +3,7 @@ import {AccountManager} from "./account-manager"
 import {mockUser} from "../__mocks__/fcl"
 import {CurrentUser} from "@onflow/typedefs"
 import * as fcl from "@onflow/fcl"
-import {BehaviorSubject} from "../util/observable"
+import {BehaviorSubject} from "../utils/observable"
 import * as rlp from "@onflow/rlp"
 
 jest.mock("@onflow/fcl", () => {

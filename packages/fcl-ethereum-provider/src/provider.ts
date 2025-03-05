@@ -7,7 +7,7 @@ import {
 } from "./types/provider"
 import {RpcProcessor} from "./rpc/rpc-processor"
 import {EventDispatcher} from "./events/event-dispatcher"
-import {ProviderError, ProviderErrorCode} from "./util/errors"
+import {ProviderError, ProviderErrorCode} from "./utils/errors"
 import {AccountManager} from "./accounts/account-manager"
 
 export class FclEthereumProvider implements Eip1193Provider {

@@ -12,7 +12,7 @@ import {
 } from "@walletconnect/universal-provider"
 import {SessionTypes} from "@walletconnect/types"
 import {FLOW_CHAINS, FlowNetwork} from "./constants"
-import {formatChainId} from "./util/eth"
+import {formatChainId} from "./utils/eth"
 import {getAccountsFromNamespaces} from "@walletconnect/utils"
 import {FLOW_METHODS} from "@onflow/fcl-wc"
 import * as fcl from "@onflow/fcl"
