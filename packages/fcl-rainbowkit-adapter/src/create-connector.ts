@@ -60,45 +60,45 @@ export const createFclConnector = (options: FclConnectorOptions) => {
             rkDetails: currentDetails,
           })(config)
 
+          /**
+           * This is a workaround for Flow Wallet which has a race condition where the MIPD
+           * provider is not immediately available.  We instead proxy the Wagmi connector
+           * such that we can dynmaically switch between the installed and WalletConnect
+           * connectors.
+           *
+           * It's pretty brittle and should be removed ASAP once Flow Wallet is fixed.
+           * (e.g. there's no teardown logic when switching between connectors)
+           */
+          let connector = {
+            // Used for metadata/connector info
+            ...installedConnector,
+            // Noop since handled manually
+            async setup() {},
+            ...walletDetails,
+          }
+
           updateConnectors()
           store.subscribe(updateConnectors)
 
-          function getCurrent() {
-            return isInstalled ? installedConnector : walletConnectConnector
+          function getCurrentHandlers() {
+            const currentConnector = isInstalled
+              ? installedConnector
+              : walletConnectConnector
+
+            return {
+              getProvider: currentConnector.getProvider.bind(currentConnector),
+              connect: currentConnector.connect.bind(currentConnector),
+              disconnect: currentConnector.disconnect.bind(currentConnector),
+              getAccounts: currentConnector.getAccounts.bind(currentConnector),
+              getChainId: currentConnector.getChainId.bind(currentConnector),
+              isAuthorized:
+                currentConnector.isAuthorized.bind(currentConnector),
+              switchChain: currentConnector.switchChain?.bind(currentConnector),
+              getClient: currentConnector.getClient?.bind(currentConnector),
+            }
           }
 
-          // TODO: THIS IS A HACK
-          return {
-            ...installedConnector,
-            async getProvider() {
-              return getCurrent().getProvider()
-            },
-            async connect(params) {
-              return getCurrent().connect(params)
-            },
-            async disconnect() {
-              return getCurrent().disconnect()
-            },
-            async getAccounts() {
-              return getCurrent().getAccounts()
-            },
-            async getChainId() {
-              return getCurrent().getChainId()
-            },
-            async isAuthorized() {
-              return getCurrent().isAuthorized()
-            },
-            /*async switchChain(params) {
-              return getCurrent().switchChain?.(params)
-            },
-            async getClient(params) {
-              return getCurrent().getClient?.(params)
-            },*/
-            async setup() {
-              return getCurrent().setup!()
-            },
-            ...walletDetails,
-          }
+          return connector
 
           // Flow Wallet currently has a race condition where MIPD
           function updateConnectors() {
@@ -138,6 +138,9 @@ export const createFclConnector = (options: FclConnectorOptions) => {
 
             // Copy properties from source to target
             Object.assign(currentDetails, rkDetails)
+
+            // Update the connector
+            Object.assign(connector, getCurrentHandlers())
           }
         })
       },
