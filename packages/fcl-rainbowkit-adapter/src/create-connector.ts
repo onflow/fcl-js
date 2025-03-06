@@ -1,6 +1,14 @@
 import {fclWagmiAdapter} from "@onflow/fcl-wagmi-adapter"
-import {RainbowKitWalletConnectParameters, Wallet} from "@rainbow-me/rainbowkit"
-import {createConnector} from "@wagmi/core"
+import {
+  RainbowKitWalletConnectParameters,
+  Wallet,
+  WalletDetailsParams,
+} from "@rainbow-me/rainbowkit"
+import {createConnector, CreateConnectorFn} from "@wagmi/core"
+import * as mipd from "mipd"
+import {getWalletConnectConnector} from "./get-wc-connector"
+
+const store = mipd.createStore()
 
 type FclConnectorOptions = Parameters<typeof fclWagmiAdapter>[0] & {
   supportsWc?: boolean
@@ -20,43 +28,147 @@ export const createFclConnector = (options: FclConnectorOptions) => {
   const iconUrl = options.service?.provider?.icon ?? ""
   const rdns = (options.service?.provider as any)?.rdns as string | undefined
 
-  const getUri = (uri: string) => {
-    return uri
+  return ({projectId}: DefaultWalletOptions): Wallet => {
+    const obj: Wallet = {
+      id: uid ? `fcl-${uid}` : "fcl",
+      name: name || "Cadence Wallet",
+      iconUrl: iconUrl || FALLBACK_ICON,
+      iconBackground: "#FFFFFF",
+      downloadUrls: {
+        browserExtension:
+          "https://chrome.google.com/webstore/detail/flow-wallet/hpclkefagolihohboafpheddmmgdffjm",
+        mobile: "https://core.flow.com",
+      },
+      // Do not list RDNS here since Rainbowkit will discard the wallet
+      // when conflicting with an injected wallet
+      rdns: undefined,
+      createConnector: walletDetails => {
+        return createConnector(config => {
+          const originalDetails = {...walletDetails.rkDetails}
+          let currentHandler: any
+          let currentDetails = walletDetails.rkDetails
+          let isInstalled = false
+
+          // Initialize the installed connector
+          let installedConnector = {
+            ...fclWagmiAdapter(options)(config),
+            ...walletDetails,
+          }
+          installedConnector.setup?.().catch(e => {
+            console.error("Failed to setup installed connector", e)
+          })
+
+          // Initialize the WalletConnect connector
+          let walletConnectConnector = getWalletConnectConnector({
+            projectId,
+            walletConnectParameters: options.walletConnectParams,
+          })({
+            ...walletDetails,
+          })(config)
+          walletConnectConnector.setup?.().catch(e => {
+            console.error("Failed to setup installed connector", e)
+          })
+
+          // Update connectors and subscribe to changes (used for dynamic switching)
+          updateConnectors()
+          store.subscribe(() => {
+            updateConnectors()
+          })
+
+          /**
+           * This is a workaround for Flow Wallet which has a race condition where the MIPD
+           * provider is not immediately available.  We instead proxy the Wagmi connector
+           * such that we can dynmaically switch between the installed and WalletConnect
+           * connectors.
+           *
+           * It's pretty brittle and should be removed ASAP once Flow Wallet is fixed.
+           * (e.g. there's no teardown logic when switching between connectors)
+           */
+          return {
+            ...installedConnector,
+            ...walletDetails,
+            async getProvider(params) {
+              return currentHandler.getProvider(params)
+            },
+            async connect(params) {
+              return currentHandler.connect(params)
+            },
+            async disconnect() {
+              return currentHandler.disconnect()
+            },
+            async getAccounts() {
+              return currentHandler.getAccounts()
+            },
+            async getChainId() {
+              return currentHandler.getChainId()
+            },
+            async isAuthorized() {
+              return currentHandler.isAuthorized()
+            },
+            async switchChain(params) {
+              return currentHandler.switchChain?.(params)
+            },
+            async getClient() {
+              return currentHandler.getClient?.()
+            },
+            rkDetails: currentDetails,
+          } as ReturnType<CreateConnectorFn>
+
+          // Update the connectors based on the current state
+          function updateConnectors() {
+            isInstalled =
+              (rdns &&
+                !!store.findProvider({
+                  rdns: rdns,
+                })) ||
+              false
+
+            let rkDetails: WalletDetailsParams["rkDetails"]
+            if (isInstalled) {
+              rkDetails = {
+                ...originalDetails,
+                groupIndex: -1,
+                groupName: "Installed",
+                installed: true,
+              }
+            } else {
+              const getUri = (uri: string) => {
+                return uri
+              }
+
+              rkDetails = {
+                ...originalDetails,
+                qrCode: {getUri},
+                mobile: {getUri},
+                installed: undefined,
+              }
+            }
+
+            // Reset the rainbowkit details (used for UI config specific to connector)
+            Object.keys(currentDetails).forEach(
+              key => delete (currentDetails as any)[key]
+            )
+            Object.assign(currentDetails, rkDetails)
+
+            // Update the current handler (i.e. the proxied connector which is actually active)
+            const _currentHandler = isInstalled
+              ? installedConnector
+              : walletConnectConnector
+            currentHandler = {
+              getProvider: _currentHandler.getProvider.bind(_currentHandler),
+              connect: _currentHandler.connect.bind(_currentHandler),
+              disconnect: _currentHandler.disconnect.bind(_currentHandler),
+              getAccounts: _currentHandler.getAccounts.bind(_currentHandler),
+              getChainId: _currentHandler.getChainId.bind(_currentHandler),
+              isAuthorized: _currentHandler.isAuthorized.bind(_currentHandler),
+              switchChain: _currentHandler.switchChain?.bind(_currentHandler),
+              getClient: _currentHandler.getClient?.bind(_currentHandler),
+            }
+          }
+        })
+      },
+    }
+
+    return obj
   }
-
-  return ({projectId}: DefaultWalletOptions): Wallet => ({
-    id: uid ? `fcl-${uid}` : "fcl",
-    name: name || "Cadence Wallet",
-    iconUrl: iconUrl || FALLBACK_ICON,
-    iconBackground: "#FFFFFF",
-    installed: true,
-    downloadUrls: {
-      browserExtension:
-        "https://chrome.google.com/webstore/detail/flow-wallet/hpclkefagolihohboafpheddmmgdffjm",
-      mobile: "https://core.flow.com",
-    },
-    // Do not list RDNS here since Rainbowkit will discard the wallet
-    // when conflicting with an injected wallet
-    rdns: undefined,
-    createConnector: walletDetails => {
-      // TODO, we need to check whether the wallet is installed
-      // and use the WalletConnect connector if it is not installed
-      const newDetails = {
-        ...walletDetails,
-        rkDetails: {
-          ...walletDetails.rkDetails,
-          groupIndex: -1,
-          groupName: "Installed",
-        },
-      }
-
-      const connector = fclWagmiAdapter(options)
-      return createConnector(config => {
-        return {
-          ...connector(config),
-          ...newDetails,
-        }
-      })
-    },
-  })
 }
