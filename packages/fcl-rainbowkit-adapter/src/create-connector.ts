@@ -45,10 +45,11 @@ export const createFclConnector = (options: FclConnectorOptions) => {
       createConnector: walletDetails => {
         return createConnector(config => {
           const originalDetails = {...walletDetails.rkDetails}
-          let currentHandlers
+          let currentHandler: any
           let currentDetails = walletDetails.rkDetails
           let isInstalled = false
 
+          // Initialize the installed connector
           let installedConnector = {
             ...fclWagmiAdapter(options)(config),
             ...walletDetails,
@@ -57,6 +58,7 @@ export const createFclConnector = (options: FclConnectorOptions) => {
             console.error("Failed to setup installed connector", e)
           })
 
+          // Initialize the WalletConnect connector
           let walletConnectConnector = getWalletConnectConnector({
             projectId,
             walletConnectParameters: options.walletConnectParams,
@@ -66,10 +68,6 @@ export const createFclConnector = (options: FclConnectorOptions) => {
           walletConnectConnector.setup?.().catch(e => {
             console.error("Failed to setup installed connector", e)
           })
-
-          function getCurrentConnector() {
-            return isInstalled ? installedConnector : walletConnectConnector
-          }
 
           // Update connectors and subscribe to changes (used for dynamic switching)
           updateConnectors()
@@ -90,68 +88,40 @@ export const createFclConnector = (options: FclConnectorOptions) => {
             ...installedConnector,
             ...walletDetails,
             async getProvider(params) {
-              return getCurrentConnector().getProvider(params)
+              return currentHandler.getProvider(params)
             },
             async connect(params) {
-              return getCurrentConnector().connect(params)
+              return currentHandler.connect(params)
             },
             async disconnect() {
-              return getCurrentConnector().disconnect()
+              return currentHandler.disconnect()
             },
             async getAccounts() {
-              return getCurrentConnector().getAccounts()
+              return currentHandler.getAccounts()
             },
             async getChainId() {
-              return getCurrentConnector().getChainId()
+              return currentHandler.getChainId()
             },
             async isAuthorized() {
-              return getCurrentConnector().isAuthorized()
+              return currentHandler.isAuthorized()
             },
             async switchChain(params) {
-              return getCurrentConnector().switchChain?.(params)
+              return currentHandler.switchChain?.(params)
             },
             async getClient() {
-              return getCurrentConnector().getClient?.()
+              return currentHandler.getClient?.()
             },
             rkDetails: currentDetails,
           } as ReturnType<CreateConnectorFn>
 
-          function getCurrentHandlers(test?: boolean) {
-            const currentConnector =
-              isInstalled && !test ? installedConnector : walletConnectConnector
-
-            return {
-              // Do not include setup() since we call it manually
-              getProvider: currentConnector.getProvider.bind(currentConnector),
-              connect: currentConnector.connect.bind(currentConnector),
-              disconnect: currentConnector.disconnect.bind(currentConnector),
-              getAccounts: currentConnector.getAccounts.bind(currentConnector),
-              getChainId: currentConnector.getChainId.bind(currentConnector),
-              isAuthorized:
-                currentConnector.isAuthorized.bind(currentConnector),
-              switchChain: currentConnector.switchChain?.bind(currentConnector),
-              getClient: currentConnector.getClient?.bind(currentConnector),
-            } as Pick<
-              ReturnType<CreateConnectorFn>,
-              | "getProvider"
-              | "connect"
-              | "disconnect"
-              | "getAccounts"
-              | "getChainId"
-              | "isAuthorized"
-              | "switchChain"
-              | "getClient"
-            >
-          }
-
-          // Flow Wallet currently has a race condition where MIPD
+          // Update the connectors based on the current state
           function updateConnectors() {
-            // TODO: logic when rdns is undefined
-            isInstalled = rdns
-              ? !!store.findProvider({
+            isInstalled =
+              (rdns &&
+                !!store.findProvider({
                   rdns: rdns,
-                })
-              : true
+                })) ||
+              false
 
             let rkDetails: WalletDetailsParams["rkDetails"]
             if (isInstalled) {
@@ -180,8 +150,20 @@ export const createFclConnector = (options: FclConnectorOptions) => {
             )
             Object.assign(currentDetails, rkDetails)
 
-            // Update the connector
-            currentHandlers = getCurrentHandlers()
+            // Update the current handler (i.e. the proxied connector which is actually active)
+            const _currentHandler = isInstalled
+              ? installedConnector
+              : walletConnectConnector
+            currentHandler = {
+              getProvider: _currentHandler.getProvider.bind(_currentHandler),
+              connect: _currentHandler.connect.bind(_currentHandler),
+              disconnect: _currentHandler.disconnect.bind(_currentHandler),
+              getAccounts: _currentHandler.getAccounts.bind(_currentHandler),
+              getChainId: _currentHandler.getChainId.bind(_currentHandler),
+              isAuthorized: _currentHandler.isAuthorized.bind(_currentHandler),
+              switchChain: _currentHandler.switchChain?.bind(_currentHandler),
+              getClient: _currentHandler.getClient?.bind(_currentHandler),
+            }
           }
         })
       },
