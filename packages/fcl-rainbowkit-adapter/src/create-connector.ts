@@ -4,7 +4,7 @@ import {
   Wallet,
   WalletDetailsParams,
 } from "@rainbow-me/rainbowkit"
-import {createConnector} from "@wagmi/core"
+import {createConnector, CreateConnectorFn} from "@wagmi/core"
 import * as mipd from "mipd"
 import {getWalletConnectConnector} from "./get-wc-connector"
 
@@ -44,21 +44,38 @@ export const createFclConnector = (options: FclConnectorOptions) => {
       rdns: undefined,
       createConnector: walletDetails => {
         return createConnector(config => {
+          const originalDetails = {...walletDetails.rkDetails}
+          let currentHandlers
           let currentDetails = walletDetails.rkDetails
           let isInstalled = false
 
           let installedConnector = {
             ...fclWagmiAdapter(options)(config),
             ...walletDetails,
-            rkDetails: currentDetails,
           }
+          installedConnector.setup?.().catch(e => {
+            console.error("Failed to setup installed connector", e)
+          })
+
           let walletConnectConnector = getWalletConnectConnector({
             projectId,
             walletConnectParameters: options.walletConnectParams,
           })({
             ...walletDetails,
-            rkDetails: currentDetails,
           })(config)
+          walletConnectConnector.setup?.().catch(e => {
+            console.error("Failed to setup installed connector", e)
+          })
+
+          function getCurrentConnector() {
+            return isInstalled ? installedConnector : walletConnectConnector
+          }
+
+          // Update connectors and subscribe to changes (used for dynamic switching)
+          updateConnectors()
+          store.subscribe(() => {
+            updateConnectors()
+          })
 
           /**
            * This is a workaround for Flow Wallet which has a race condition where the MIPD
@@ -69,23 +86,42 @@ export const createFclConnector = (options: FclConnectorOptions) => {
            * It's pretty brittle and should be removed ASAP once Flow Wallet is fixed.
            * (e.g. there's no teardown logic when switching between connectors)
            */
-          let connector = {
-            // Used for metadata/connector info
+          return {
             ...installedConnector,
-            // Noop since handled manually
-            async setup() {},
             ...walletDetails,
-          }
+            async getProvider(params) {
+              return getCurrentConnector().getProvider(params)
+            },
+            async connect(params) {
+              return getCurrentConnector().connect(params)
+            },
+            async disconnect() {
+              return getCurrentConnector().disconnect()
+            },
+            async getAccounts() {
+              return getCurrentConnector().getAccounts()
+            },
+            async getChainId() {
+              return getCurrentConnector().getChainId()
+            },
+            async isAuthorized() {
+              return getCurrentConnector().isAuthorized()
+            },
+            async switchChain(params) {
+              return getCurrentConnector().switchChain?.(params)
+            },
+            async getClient() {
+              return getCurrentConnector().getClient?.()
+            },
+            rkDetails: currentDetails,
+          } as ReturnType<CreateConnectorFn>
 
-          updateConnectors()
-          store.subscribe(updateConnectors)
-
-          function getCurrentHandlers() {
-            const currentConnector = isInstalled
-              ? installedConnector
-              : walletConnectConnector
+          function getCurrentHandlers(test?: boolean) {
+            const currentConnector =
+              isInstalled && !test ? installedConnector : walletConnectConnector
 
             return {
+              // Do not include setup() since we call it manually
               getProvider: currentConnector.getProvider.bind(currentConnector),
               connect: currentConnector.connect.bind(currentConnector),
               disconnect: currentConnector.disconnect.bind(currentConnector),
@@ -95,10 +131,18 @@ export const createFclConnector = (options: FclConnectorOptions) => {
                 currentConnector.isAuthorized.bind(currentConnector),
               switchChain: currentConnector.switchChain?.bind(currentConnector),
               getClient: currentConnector.getClient?.bind(currentConnector),
-            }
+            } as Pick<
+              ReturnType<CreateConnectorFn>,
+              | "getProvider"
+              | "connect"
+              | "disconnect"
+              | "getAccounts"
+              | "getChainId"
+              | "isAuthorized"
+              | "switchChain"
+              | "getClient"
+            >
           }
-
-          return connector
 
           // Flow Wallet currently has a race condition where MIPD
           function updateConnectors() {
@@ -109,11 +153,10 @@ export const createFclConnector = (options: FclConnectorOptions) => {
                 })
               : true
 
-            // TODO? seems weird currying
             let rkDetails: WalletDetailsParams["rkDetails"]
             if (isInstalled) {
               rkDetails = {
-                ...walletDetails.rkDetails,
+                ...originalDetails,
                 groupIndex: -1,
                 groupName: "Installed",
                 installed: true,
@@ -124,23 +167,21 @@ export const createFclConnector = (options: FclConnectorOptions) => {
               }
 
               rkDetails = {
-                ...walletDetails.rkDetails,
+                ...originalDetails,
                 qrCode: {getUri},
                 mobile: {getUri},
                 installed: undefined,
               }
             }
 
-            // Remove all properties from target
+            // Reset the rainbowkit details (used for UI config specific to connector)
             Object.keys(currentDetails).forEach(
               key => delete (currentDetails as any)[key]
             )
-
-            // Copy properties from source to target
             Object.assign(currentDetails, rkDetails)
 
             // Update the connector
-            Object.assign(connector, getCurrentHandlers())
+            currentHandlers = getCurrentHandlers()
           }
         })
       },
