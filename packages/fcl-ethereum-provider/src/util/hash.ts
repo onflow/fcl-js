@@ -19,11 +19,11 @@ export function hashTypedDataLegacy(data: TypedData): string {
 export function hashTypedDataV3(data: TypedData): string {
   const domainSeparator = TypedDataEncoder.hashDomain(data.domain)
 
-  // Clone the types and remove the EIP712Domain entry if it exists.
-  const types = {...data.types}
-  delete types.EIP712Domain
-
-  const messageHash = TypedDataEncoder.hash(data.domain, types, data.message)
+  const messageHash = TypedDataEncoder.hash(
+    data.domain,
+    data.types,
+    data.message
+  )
   // The EIP‑191 prefix is "0x1901".
   const prefix = "0x1901"
   const digest = keccak_256(
@@ -38,5 +38,9 @@ export function hashTypedDataV3(data: TypedData): string {
  * For many cases, v3 and v4 yield the same result (if you’re not using arrays or nested dynamic types).
  */
 export function hashTypedDataV4(data: TypedData): string {
-  return hashTypedDataV3(data)
+  // Clone the types and remove the EIP712Domain entry if it exists.
+  const types = {...data.types}
+  delete types.EIP712Domain
+
+  return hashTypedDataV3({...data, types})
 }
