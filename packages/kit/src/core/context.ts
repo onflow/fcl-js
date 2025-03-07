@@ -12,7 +12,7 @@ export type FlowConfig = {
   env?: "local" | "testnet" | "mainnet"
   fclLimit?: number
   flowNetwork?: "local" | "testnet" | "mainnet"
-  serviceOpenIdScopes?: string[] // or string, depending on your usage
+  serviceOpenIdScopes?: string[]
   walletconnectProjectId?: string
   walletconnectDisableNotifications?: boolean
 }
