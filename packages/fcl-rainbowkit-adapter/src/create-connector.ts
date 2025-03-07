@@ -15,6 +15,7 @@ const store = mipd.createStore()
 type FclConnectorOptions = {
   user?: typeof fcl.currentUser
   config?: typeof fcl.config
+  rpcUrls?: {[chainId: number]: string}
   walletConnectParams?: RainbowKitWalletConnectParameters
   walletDetails: Omit<Wallet, "createConnector">
   services?: Service[]
@@ -52,6 +53,8 @@ export const createFclConnector = (options: FclConnectorOptions) => {
               user: options.user || fcl.currentUser,
               config: options.config || fcl.config,
               service: primaryService,
+              rdns: rdns,
+              rpcUrls: options.rpcUrls,
             })(config),
             ...walletDetails,
           }
