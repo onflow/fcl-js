@@ -8,7 +8,7 @@ interface FlowProviderProps {
 }
 
 const keyMapping: Record<string, keyof FlowConfig> = {
-  "accessNode.api": "accessNodeUrl",
+  "accessNode.api": "accesNodeApi",
   "app.detail.title": "appDetailTitle",
   "app.detail.icon": "appDetailIcon",
   "app.detail.description": "appDetailDescription",
