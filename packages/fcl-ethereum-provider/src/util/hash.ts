@@ -2,7 +2,7 @@ import {keccak_256} from "@noble/hashes/sha3"
 import {bytesToHex} from "@noble/hashes/utils"
 import {arrayify, concat} from "@ethersproject/bytes"
 import {_TypedDataEncoder as TypedDataEncoder} from "@ethersproject/hash"
-import {TypedData} from "./types/eth"
+import {TypedData} from "../types/eth"
 
 export function hashTypedDataLegacy(data: TypedData): string {
   throw new Error(
@@ -18,6 +18,7 @@ export function hashTypedDataLegacy(data: TypedData): string {
  */
 export function hashTypedDataV3(data: TypedData): string {
   const domainSeparator = TypedDataEncoder.hashDomain(data.domain)
+
   const messageHash = TypedDataEncoder.hash(
     data.domain,
     data.types,
@@ -37,5 +38,9 @@ export function hashTypedDataV3(data: TypedData): string {
  * For many cases, v3 and v4 yield the same result (if you’re not using arrays or nested dynamic types).
  */
 export function hashTypedDataV4(data: TypedData): string {
-  return hashTypedDataV3(data)
+  // Clone the types and remove the EIP712Domain entry if it exists.
+  const types = {...data.types}
+  delete types.EIP712Domain
+
+  return hashTypedDataV3({...data, types})
 }
