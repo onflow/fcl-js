@@ -18,6 +18,10 @@
       "import": "./dist/index.module.js",
       "require": "./dist/index.js"
     },
+    "./provider": {
+      "import": "./dist/provider/index.module.js",
+      "require": "./dist/provider/index.js"
+    },
     "./hooks": {
       "import": "./dist/hooks/index.module.js",
       "require": "./dist/hooks/index.js"
