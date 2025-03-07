@@ -138,17 +138,13 @@ export const createFclConnector = (options: FclConnectorOptions) => {
                 ...originalDetails,
                 groupIndex: -1,
                 groupName: "Installed",
+                qrCode: undefined,
+                mobile: undefined,
                 installed: true,
               }
             } else {
-              const getUri = (uri: string) => {
-                return uri
-              }
-
               rkDetails = {
                 ...originalDetails,
-                qrCode: {getUri},
-                mobile: {getUri},
                 installed: undefined,
               }
             }

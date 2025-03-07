@@ -51,7 +51,7 @@ export const flowWallet = (params: {
         qrCode: "https://link.lilico.app",
       },
       mobile: {
-        getUri: (uri: string) => uri,
+        getUri: (uri: string) => `fcw://${uri}`,
       },
       qrCode: {
         getUri: (uri: string) => uri,
