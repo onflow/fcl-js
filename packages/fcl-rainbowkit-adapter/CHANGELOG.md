@@ -1,5 +1,16 @@
 # @onflow/fcl-ethereum-provider
 
+## 0.1.0-cross-vm.4
+
+### Minor Changes
+
+- [#2191](https://github.com/onflow/fcl-js/pull/2191) [`5a768715f27f2eaaf66b56e2071aec8ed77ab201`](https://github.com/onflow/fcl-js/commit/5a768715f27f2eaaf66b56e2071aec8ed77ab201) Thanks [@jribbink](https://github.com/jribbink)! - **BREAKING** Change configuration fields for `createFclConnector`
+
+### Patch Changes
+
+- Updated dependencies [[`5a768715f27f2eaaf66b56e2071aec8ed77ab201`](https://github.com/onflow/fcl-js/commit/5a768715f27f2eaaf66b56e2071aec8ed77ab201)]:
+  - @onflow/fcl-wagmi-adapter@0.1.0-cross-vm.3
+
 ## 0.0.1-cross-vm.3
 
 ### Patch Changes
