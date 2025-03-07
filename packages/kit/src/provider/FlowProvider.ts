@@ -16,7 +16,6 @@ const mappings: Array<{ fcl: string; typed: keyof FlowConfig }> = [
   { fcl: "challenge.handshake", typed: "challengeHandshake" },
   { fcl: "discovery.wallet", typed: "discoveryWallet" },
   { fcl: "discovery.wallet.method", typed: "discoveryWalletMethod" },
-  { fcl: "env", typed: "env" },
   { fcl: "fcl.limit", typed: "fclLimit" },
   { fcl: "flow.network", typed: "flowNetwork" },
   { fcl: "service.OpenID.scopes", typed: "serviceOpenIdScopes" },

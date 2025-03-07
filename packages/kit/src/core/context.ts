@@ -9,7 +9,6 @@ export type FlowConfig = {
   challengeHandshake?: string
   discoveryWallet?: string
   discoveryWalletMethod?: string
-  env?: "local" | "testnet" | "mainnet"
   fclLimit?: number
   flowNetwork?: "local" | "testnet" | "mainnet"
   serviceOpenIdScopes?: string[]
