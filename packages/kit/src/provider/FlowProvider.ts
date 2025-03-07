@@ -7,6 +7,33 @@ interface FlowProviderProps {
   flowJson?: Record<string, any>
 }
 
+const keyMapping: Record<string, keyof FlowConfig> = {
+  "accessNode.api": "accessNodeUrl",
+  "app.detail.title": "appDetailTitle",
+  "app.detail.icon": "appDetailIcon",
+  "app.detail.description": "appDetailDescription",
+  "app.detail.url": "appDetailUrl",
+  "challenge.handshake": "challengeHandshake",
+  "discovery.wallet": "discoveryWallet",
+  "discovery.wallet.method": "discoveryWalletMethod",
+  "env": "env",
+  "fcl.limit": "fclLimit",
+  "flow.network": "flowNetwork",
+  "service.OpenID.scopes": "serviceOpenIdScopes",
+  "walletconnect.projectId": "walletconnectProjectId",
+  "walletconnect.disableNotifications": "walletconnectDisableNotifications",
+}
+
+function mapConfig(original: Record<string, any>): FlowConfig {
+  const mapped: FlowConfig = {}
+  for (const [key, value] of Object.entries(original)) {
+    if (keyMapping[key]) {
+      mapped[keyMapping[key]] = value
+    }
+  }
+  return mapped
+}
+
 export function FlowProvider({
   config: initialConfig = {},
   flowJson,
@@ -25,7 +52,7 @@ export function FlowProvider({
     }
     // Subscribe to changes
     const unsubscribe = fcl.config().subscribe(latest => {
-      setFlowConfig(latest)
+      setFlowConfig(mapConfig(latest))
     })
     return () => unsubscribe()
   }, [initialConfig, flowJson])
