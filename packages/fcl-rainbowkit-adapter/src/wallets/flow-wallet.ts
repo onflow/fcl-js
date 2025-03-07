@@ -66,7 +66,7 @@ export const flowWallet = (params: {
             },
             {
               description:
-                "You can find the scan button on home page, a connection prompt will appear for you to connect your wallet.",
+                "You can find the scan button on the home page. A connection prompt will appear, allowing you to connect your wallet.",
               step: "scan",
               title: "Tap the scan button",
             },
