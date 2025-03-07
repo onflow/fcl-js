@@ -1,5 +1,11 @@
 # @onflow/fcl-ethereum-provider
 
+## 0.0.1-cross-vm.3
+
+### Patch Changes
+
+- [#2076](https://github.com/onflow/fcl-js/pull/2076) [`43e614b62979ed32d2e5dad4417dcfa81a36e1cc`](https://github.com/onflow/fcl-js/commit/43e614b62979ed32d2e5dad4417dcfa81a36e1cc) Thanks [@jribbink](https://github.com/jribbink)! - Add workaround for Flow Wallet injected provider race condition
+
 ## 0.0.1-cross-vm.2
 
 ### Patch Changes
