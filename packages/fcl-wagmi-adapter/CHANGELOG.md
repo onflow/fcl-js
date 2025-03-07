@@ -1,6 +1,6 @@
 # @onflow/fcl-ethereum-provider
 
-## 0.1.0-cross-vm.3
+## 0.0.1-cross-vm.3
 
 ### Minor Changes
 
