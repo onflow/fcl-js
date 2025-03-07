@@ -6,7 +6,6 @@ export type FlowConfig = {
   appDetailIcon?: string
   appDetailDescription?: string
   appDetailUrl?: string
-  challengeHandshake?: string
   discoveryWallet?: string
   discoveryWalletMethod?: string
   fclLimit?: number

@@ -13,7 +13,6 @@ const mappings: Array<{ fcl: string; typed: keyof FlowConfig }> = [
   { fcl: "app.detail.icon", typed: "appDetailIcon" },
   { fcl: "app.detail.description", typed: "appDetailDescription" },
   { fcl: "app.detail.url", typed: "appDetailUrl" },
-  { fcl: "challenge.handshake", typed: "challengeHandshake" },
   { fcl: "discovery.wallet", typed: "discoveryWallet" },
   { fcl: "discovery.wallet.method", typed: "discoveryWalletMethod" },
   { fcl: "fcl.limit", typed: "fclLimit" },
