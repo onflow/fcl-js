@@ -7,12 +7,18 @@ import {
 import {createConnector, CreateConnectorFn} from "@wagmi/core"
 import * as mipd from "mipd"
 import {getWalletConnectConnector} from "./get-wc-connector"
+import {Service} from "@onflow/typedefs"
+import * as fcl from "@onflow/fcl"
 
 const store = mipd.createStore()
 
-type FclConnectorOptions = Parameters<typeof fclWagmiAdapter>[0] & {
-  supportsWc?: boolean
+type FclConnectorOptions = {
+  user?: typeof fcl.currentUser
+  config?: typeof fcl.config
+  rpcUrls?: {[chainId: number]: string}
   walletConnectParams?: RainbowKitWalletConnectParameters
+  walletDetails: Omit<Wallet, "createConnector">
+  services?: Service[]
 }
 
 type DefaultWalletOptions = {
@@ -23,22 +29,11 @@ const FALLBACK_ICON =
   "https://assets.website-files.com/5f6294c0c7a8cdd643b1c820/5f6294c0c7a8cda55cb1c936_Flow_Wordmark.svg"
 
 export const createFclConnector = (options: FclConnectorOptions) => {
-  const uid = options.service?.uid
-  const name = options.service?.provider?.name
-  const iconUrl = options.service?.provider?.icon ?? ""
-  const rdns = (options.service?.provider as any)?.rdns as string | undefined
-
   return ({projectId}: DefaultWalletOptions): Wallet => {
+    const rdns = options.walletDetails.rdns
+
     const obj: Wallet = {
-      id: uid ? `fcl-${uid}` : "fcl",
-      name: name || "Cadence Wallet",
-      iconUrl: iconUrl || FALLBACK_ICON,
-      iconBackground: "#FFFFFF",
-      downloadUrls: {
-        browserExtension:
-          "https://chrome.google.com/webstore/detail/flow-wallet/hpclkefagolihohboafpheddmmgdffjm",
-        mobile: "https://core.flow.com",
-      },
+      ...options.walletDetails,
       // Do not list RDNS here since Rainbowkit will discard the wallet
       // when conflicting with an injected wallet
       rdns: undefined,
@@ -49,23 +44,37 @@ export const createFclConnector = (options: FclConnectorOptions) => {
           let currentDetails = walletDetails.rkDetails
           let isInstalled = false
 
-          // Initialize the installed connector
-          let installedConnector = {
-            ...fclWagmiAdapter(options)(config),
+          // Initialize the primary connector (e.g. anything other than WalletConnect)
+          const primaryService = options.services?.find(
+            service => service.method !== "WC/RPC"
+          )
+          let primaryConnector = {
+            ...fclWagmiAdapter({
+              user: options.user || fcl.currentUser,
+              config: options.config || fcl.config,
+              service: primaryService,
+              rdns: rdns,
+              rpcUrls: options.rpcUrls,
+            })(config),
             ...walletDetails,
           }
-          installedConnector.setup?.().catch(e => {
+          primaryConnector.setup?.().catch(e => {
             console.error("Failed to setup installed connector", e)
           })
 
           // Initialize the WalletConnect connector
-          let walletConnectConnector = getWalletConnectConnector({
-            projectId,
-            walletConnectParameters: options.walletConnectParams,
-          })({
-            ...walletDetails,
-          })(config)
-          walletConnectConnector.setup?.().catch(e => {
+          let supportsWc = options.services?.some(
+            service => service.method === "WC/RPC"
+          )
+          let walletConnectConnector = supportsWc
+            ? getWalletConnectConnector({
+                projectId,
+                walletConnectParameters: options.walletConnectParams,
+              })({
+                ...walletDetails,
+              })(config)
+            : null
+          walletConnectConnector?.setup?.().catch(e => {
             console.error("Failed to setup installed connector", e)
           })
 
@@ -85,7 +94,7 @@ export const createFclConnector = (options: FclConnectorOptions) => {
            * (e.g. there's no teardown logic when switching between connectors)
            */
           return {
-            ...installedConnector,
+            ...primaryConnector,
             ...walletDetails,
             async getProvider(params) {
               return currentHandler.getProvider(params)
@@ -124,22 +133,18 @@ export const createFclConnector = (options: FclConnectorOptions) => {
               false
 
             let rkDetails: WalletDetailsParams["rkDetails"]
-            if (isInstalled) {
+            if (isInstalled || !walletConnectConnector) {
               rkDetails = {
                 ...originalDetails,
                 groupIndex: -1,
                 groupName: "Installed",
+                qrCode: undefined,
+                mobile: undefined,
                 installed: true,
               }
             } else {
-              const getUri = (uri: string) => {
-                return uri
-              }
-
               rkDetails = {
                 ...originalDetails,
-                qrCode: {getUri},
-                mobile: {getUri},
                 installed: undefined,
               }
             }
@@ -152,8 +157,13 @@ export const createFclConnector = (options: FclConnectorOptions) => {
 
             // Update the current handler (i.e. the proxied connector which is actually active)
             const _currentHandler = isInstalled
-              ? installedConnector
+              ? primaryConnector
               : walletConnectConnector
+
+            if (!_currentHandler) {
+              throw new Error("No handler found")
+            }
+
             currentHandler = {
               getProvider: _currentHandler.getProvider.bind(_currentHandler),
               connect: _currentHandler.connect.bind(_currentHandler),

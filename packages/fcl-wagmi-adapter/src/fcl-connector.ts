@@ -13,7 +13,9 @@ import {
 } from "viem"
 import {createProvider} from "@onflow/fcl-ethereum-provider"
 
-type FclWagmiAdapterParams = Parameters<typeof createProvider>[0]
+type FclWagmiAdapterParams = Parameters<typeof createProvider>[0] & {
+  rdns?: string
+}
 
 export function fclWagmiAdapter(params: FclWagmiAdapterParams) {
   type Provider = ReturnType<typeof createProvider>
@@ -32,14 +34,11 @@ export function fclWagmiAdapter(params: FclWagmiAdapterParams) {
   const id = params.service?.uid || "fcl"
   const name = params.service?.provider?.name || "Cadence Wallet"
 
-  // TODO: we need to surface this through FCL service configuration
-  const rdns = (params.service?.provider as any)?.rdns
-
   return createConnector<Provider, Properties>(config => ({
     id: id,
     name: name,
     type: "fcl-wagmi-adapter",
-    rdns: rdns,
+    rdns: params.rdns,
     async setup() {
       const provider = await this.getProvider()
 

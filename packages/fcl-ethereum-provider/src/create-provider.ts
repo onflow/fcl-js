@@ -13,16 +13,16 @@ export type FclProviderConfig = {
   user: typeof fcl.currentUser
   config: typeof fcl.config
   service?: Service
-  gateway?: string
-  rpcUrls?: {[chainId: string]: number}
+  rpcUrls?: {[chainId: number]: string}
 }
 
 /**
  * Create a new FCL Ethereum provider
  * @param config - Configuration object
  * @param config.user - The current user
+ * @param config.config - The FCL config
  * @param config.service - The service
- * @param config.gateway - The gateway
+ * @param config.rpcUrls - The RPC URLs
  * @returns The provider
  * @public
  * @example
