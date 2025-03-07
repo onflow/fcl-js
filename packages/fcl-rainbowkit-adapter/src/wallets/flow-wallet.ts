@@ -14,30 +14,39 @@ export const flowWallet = (params: {
   createFclConnector({
     user: params.user || fcl.currentUser,
     config: params.config || fcl.config,
-    service: {
-      f_type: "Service",
-      f_vsn: "1.0.0",
-      type: "authn",
-      uid: "fcw#authn",
-      endpoint:
-        "chrome-extension://hpclkefagolihohboafpheddmmgdffjm/popup.html",
-      method: "EXT/RPC",
-      id: "hpclkefagolihohboafpheddmmgdffjm",
-      identity: {
-        address: "0x33f75ff0b830dcec",
+    services: [
+      {
+        f_type: "Service",
+        f_vsn: "1.0.0",
+        type: "authn",
+        uid: "fcw#authn",
+        endpoint:
+          "chrome-extension://hpclkefagolihohboafpheddmmgdffjm/popup.html",
+        method: "EXT/RPC",
+        provider: {},
+        params: {},
       },
-      provider: {
-        name: "Flow Wallet",
-        address: "0x33f75ff0b830dcec",
-        description: "A wallet created for everyone",
-        icon: "https://lilico.app/frw-logo.png",
-        color: "#41CC5D",
-        website: "https://core.flow.com",
-        requires_install: true,
-        is_installed: true,
-        install_link:
-          "https://chromewebstore.google.com/detail/flow-wallet/hpclkefagolihohboafpheddmmgdffjm",
-        rdns: "com.flowfoundation.wallet",
+      {
+        f_type: "Service",
+        f_vsn: "1.0.0",
+        type: "authn",
+        method: "WC/RPC",
+        uid: "https://fcw-link.lilico.app/wc",
+        endpoint: "flow_authn",
+        provider: {},
+        params: {},
       },
-    } as unknown as Service,
+    ],
+    walletDetails: {
+      id: "flow-wallet",
+      name: "Flow Wallet",
+      iconUrl:
+        "https://assets.website-files.com/5f6294c0c7a8cdd643b1c820/5f6294c0c7a8cda55cb1c936_Flow_Wordmark.svg",
+      iconBackground: "#FFFFFF",
+      downloadUrls: {
+        browserExtension:
+          "https://chrome.google.com/webstore/detail/flow-wallet/hpclkefagolihohboafpheddmmgdffjm",
+        mobile: "https://core.flow.com",
+      },
+    },
   })
