@@ -32,9 +32,9 @@ export class RpcProcessor {
 
       switch (method) {
         case "eth_accounts":
-          return ethAccounts(this.accountManager)
+          return await ethAccounts(this.accountManager)
         case "eth_requestAccounts":
-          return ethRequestAccounts(this.accountManager, chainId)
+          return await ethRequestAccounts(this.accountManager, chainId)
         case "eth_sendTransaction":
           return await ethSendTransaction(
             this.accountManager,
