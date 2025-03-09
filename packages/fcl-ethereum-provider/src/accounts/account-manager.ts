@@ -112,7 +112,6 @@ export class AccountManager {
       forceReauth: true,
     })
     if (!user?.addr || !user?.loggedIn) {
-      debugger
       throw new Error("Failed to authenticate user")
     }
 
@@ -172,8 +171,6 @@ export class AccountManager {
    */
   public async getAndCreateAccounts(chainId: number): Promise<string[]> {
     const accounts = await this.getAccounts()
-
-    debugger
 
     if (accounts.length === 0) {
       const coaAddress = await this.createCOA(chainId)
