@@ -61,6 +61,7 @@ export const request = async ({
   provider,
   isExternal,
   abortSignal,
+  disableNotifications,
 }: {
   method: any
   body: any
@@ -68,6 +69,7 @@ export const request = async ({
   provider: InstanceType<typeof UniversalProvider>
   isExternal?: boolean
   abortSignal?: AbortSignal
+  disableNotifications?: boolean
 }) => {
   const [chainId, addr, address] = makeSessionData(session)
   const data = JSON.stringify({...body, addr, address})
@@ -95,13 +97,14 @@ export const request = async ({
 
   switch (result.status) {
     case "APPROVED":
-      function normalizeService(service: Service) {
+      function addSessionInfo(service: Service) {
         if (service.method === "WC/RPC") {
           return {
             ...service,
             params: {
               ...service.params,
               ...(isExternal ? {externalProvider: session.topic} : {}),
+              ...(disableNotifications ? {disableNotifications} : {}),
             },
           }
         }
@@ -109,7 +112,7 @@ export const request = async ({
       }
 
       if (method === FLOW_METHODS.FLOW_AUTHN) {
-        const services = (result?.data?.services ?? []).map(normalizeService)
+        const services = (result?.data?.services ?? []).map(addSessionInfo)
 
         return {
           ...(result.data ? result.data : {}),
@@ -121,10 +124,10 @@ export const request = async ({
         return {
           ...result.data,
           ...(result.data?.proposer
-            ? {proposer: normalizeService(result.data.proposer)}
+            ? {proposer: addSessionInfo(result.data.proposer)}
             : {}),
-          payer: [...result.data?.payer?.map(normalizeService)],
-          authorization: [...result.data?.authorization?.map(normalizeService)],
+          payer: [...result.data?.payer?.map(addSessionInfo)],
+          authorization: [...result.data?.authorization?.map(addSessionInfo)],
         }
       }
 
