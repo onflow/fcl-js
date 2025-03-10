@@ -1,38 +1,47 @@
-import React, { useEffect, useState, PropsWithChildren } from "react"
+import React, {useEffect, useState, PropsWithChildren} from "react"
 import * as fcl from "@onflow/fcl"
-import { FlowConfig, FlowConfigContext } from "../core/context"
+import {FlowConfig, FlowConfigContext} from "../core/context"
 
 interface FlowProviderProps {
   config?: FlowConfig
   flowJson?: Record<string, any>
 }
 
-const mappings: Array<{ fcl: string; typed: keyof FlowConfig }> = [
-  { fcl: "accessNode.api", typed: "accessNodeUrl" },
-  { fcl: "app.detail.title", typed: "appDetailTitle" },
-  { fcl: "app.detail.icon", typed: "appDetailIcon" },
-  { fcl: "app.detail.description", typed: "appDetailDescription" },
-  { fcl: "app.detail.url", typed: "appDetailUrl" },
-  { fcl: "discovery.wallet", typed: "discoveryWallet" },
-  { fcl: "discovery.wallet.method", typed: "discoveryWalletMethod" },
-  { fcl: "fcl.limit", typed: "fclLimit" },
-  { fcl: "flow.network", typed: "flowNetwork" },
-  { fcl: "service.OpenID.scopes", typed: "serviceOpenIdScopes" },
-  { fcl: "walletconnect.projectId", typed: "walletconnectProjectId" },
-  { fcl: "walletconnect.disableNotifications", typed: "walletconnectDisableNotifications" },
+const mappings: Array<{fcl: string; typed: keyof FlowConfig}> = [
+  {fcl: "accessNode.api", typed: "accessNodeUrl"},
+  {fcl: "app.detail.title", typed: "appDetailTitle"},
+  {fcl: "app.detail.icon", typed: "appDetailIcon"},
+  {fcl: "app.detail.description", typed: "appDetailDescription"},
+  {fcl: "app.detail.url", typed: "appDetailUrl"},
+  {fcl: "discovery.wallet", typed: "discoveryWallet"},
+  {fcl: "discovery.wallet.method", typed: "discoveryWalletMethod"},
+  {fcl: "fcl.limit", typed: "fclLimit"},
+  {fcl: "flow.network", typed: "flowNetwork"},
+  {fcl: "service.OpenID.scopes", typed: "serviceOpenIdScopes"},
+  {fcl: "walletconnect.projectId", typed: "walletconnectProjectId"},
+  {
+    fcl: "walletconnect.disableNotifications",
+    typed: "walletconnectDisableNotifications",
+  },
 ]
 
 // Generate mapping from typed keys to FCL keys.
-const typedToFcl = mappings.reduce((acc, mapping) => {
-  acc[mapping.typed] = mapping.fcl
-  return acc
-}, {} as Record<keyof FlowConfig, string>)
+const typedToFcl = mappings.reduce(
+  (acc, mapping) => {
+    acc[mapping.typed] = mapping.fcl
+    return acc
+  },
+  {} as Record<keyof FlowConfig, string>
+)
 
 // Generate mapping from FCL keys to typed keys.
-const fclToTyped = mappings.reduce((acc, mapping) => {
-  acc[mapping.fcl] = mapping.typed
-  return acc
-}, {} as Record<string, keyof FlowConfig>)
+const fclToTyped = mappings.reduce(
+  (acc, mapping) => {
+    acc[mapping.fcl] = mapping.typed
+    return acc
+  },
+  {} as Record<string, keyof FlowConfig>
+)
 
 /**
  * Converts the strictly typed config to FCL config keys.
@@ -79,11 +88,11 @@ export function FlowProvider({
     }
     // Load flow.json if provided.
     if (flowJson) {
-      fcl.config().load({ flowJSON: flowJson })
+      fcl.config().load({flowJSON: flowJson})
     }
     // Subscribe to FCL config changes and map them to our typed keys.
     const unsubscribe = fcl.config().subscribe(latest => {
-      setFlowConfig(mapConfig(latest))
+      setFlowConfig(mapConfig(latest || {}))
     })
     return () => unsubscribe()
   }, [initialConfig, flowJson])

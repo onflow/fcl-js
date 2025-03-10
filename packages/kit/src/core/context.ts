@@ -1,7 +1,7 @@
 import {createContext} from "react"
 
 export type FlowConfig = {
-  accesNodeApi?: string
+  accessNodeUrl?: string
   appDetailTitle?: string
   appDetailIcon?: string
   appDetailDescription?: string
