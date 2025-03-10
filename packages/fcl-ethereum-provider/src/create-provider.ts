@@ -31,8 +31,11 @@ export type FclProviderConfig = {
  *
  * const provider = createProvider({
  *  user: fcl.currentUser,
+ *  config: fcl.config,
  *  service: fcl.service,
- *  gateway: "http://localhost:8080",
+ *  rpcUrls: {
+ *   747: "https://mainnet.evm.nodes.onflow.org",
+ *  }
  * })
  * ```
  */
