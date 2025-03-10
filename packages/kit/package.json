@@ -16,15 +16,23 @@
   "exports": {
     ".": {
       "import": "./dist/index.module.js",
-      "require": "./dist/index.js"
+      "require": "./dist/index.js",
+      "types": "./types/index.d.ts"
+    },
+    "./provider": {
+      "import": "./dist/provider/index.module.js",
+      "require": "./dist/provider/index.js",
+      "types": "./types/provider/index.d.ts"
     },
     "./hooks": {
       "import": "./dist/hooks/index.module.js",
-      "require": "./dist/hooks/index.js"
+      "require": "./dist/hooks/index.js",
+      "types": "./types/hooks/index.d.ts"
     },
     "./components": {
       "import": "./dist/components/index.module.js",
-      "require": "./dist/components/index.js"
+      "require": "./dist/components/index.js",
+      "types": "./types/components/index.d.ts"
     }
   },
   "main": "dist/index.js",

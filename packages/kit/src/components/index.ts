@@ -1,5 +1,1 @@
-/**
- * @onflow/kit — components
- */
-
 export {}
