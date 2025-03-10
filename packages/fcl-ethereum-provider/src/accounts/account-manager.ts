@@ -107,7 +107,14 @@ export class AccountManager {
   }
 
   public async authenticate(): Promise<string[]> {
-    await this.user.authenticate({service: this.service, forceReauth: true})
+    const user = await this.user.authenticate({
+      service: this.service,
+      forceReauth: true,
+    })
+    if (!user?.addr || !user?.loggedIn) {
+      throw new Error("Failed to authenticate user")
+    }
+
     return this.getAccounts()
   }
 
