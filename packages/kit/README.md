@@ -62,6 +62,25 @@ import { ConnectButton } from '@onflow/kit/components'
 
 ### Hooks
 
+#### `useAccount`
+
+```jsx
+const { account, loading, error, refetch } = useAccount("0x1cf0e2f2f715450")
+
+  if (loading) return <p>Loading account...</p>
+  if (error) return <p>Error fetching account: {error.message}</p>
+  if (!account) return <p>No account data</p>
+
+  return (
+    <div>
+      <h2>Account: {account.address}</h2>
+      <p>Balance: {account.balance}</p>
+      <pre>{account.code}</pre>
+      <button onClick={refetch}>Refetch</button>
+    </div>
+  )
+```
+
 #### `useConfig`
 
 ```jsx
