@@ -1,2 +1,6 @@
+export {flowWallet} from "./wallets/flow-wallet"
 export {createFclConnector} from "./create-connector"
-export {flowWallet} from "./flow-wallet"
+export {
+  type WalletConnectWalletOptions,
+  walletConnectWallet,
+} from "./wallets/wc-wallet"

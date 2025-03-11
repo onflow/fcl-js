@@ -6,12 +6,7 @@ import {
   Service,
   FvmErrorCode,
 } from "@onflow/typedefs"
-import {
-  DEFAULT_EVM_GAS_LIMIT,
-  EVENT_IDENTIFIERS,
-  EventType,
-  FlowNetwork,
-} from "../constants"
+import {EVENT_IDENTIFIERS, EventType, FlowNetwork} from "../constants"
 import {
   BehaviorSubject,
   concat,
@@ -38,6 +33,7 @@ import {displayErrorNotification} from "../notifications"
 import {AddressStoreState} from "../types/account"
 import {getFlowNetwork} from "../util/chain"
 import {precalculateTxHash} from "../util/transaction"
+import {Gateway} from "../gateway/gateway"
 
 export class AccountManager {
   private $addressStore = new BehaviorSubject<AddressStoreState>({
@@ -49,6 +45,7 @@ export class AccountManager {
   constructor(
     private user: typeof fcl.currentUser,
     private networkManager: NetworkManager,
+    private gateway: Gateway,
     private service?: Service
   ) {
     this.initializeUserSubscription()
@@ -70,18 +67,18 @@ export class AccountManager {
 
     $user
       .pipe(
-        // Only listen bind to users matching the current authz service
+        // Only listen bind to users matching the current authn service
         map(snapshot => {
           const addr = snapshot?.addr || null
           if (!addr) {
             return null
           }
 
-          const authzService = snapshot?.services?.find(
-            service => service.type === "authz"
+          const authnService = snapshot?.services?.find(
+            service => service.type === "authn"
           )
-          const matchingAuthzService = authzService?.uid === this.service?.uid
-          return matchingAuthzService ? addr : null
+          const matchingAuthnService = authnService?.uid === this.service?.uid
+          return matchingAuthnService ? addr : null
         }),
         distinctUntilChanged(),
         switchMap(addr =>
@@ -110,7 +107,14 @@ export class AccountManager {
   }
 
   public async authenticate(): Promise<string[]> {
-    await this.user.authenticate({service: this.service})
+    const user = await this.user.authenticate({
+      service: this.service,
+      forceReauth: true,
+    })
+    if (!user?.addr || !user?.loggedIn) {
+      throw new Error("Failed to authenticate user")
+    }
+
     return this.getAccounts()
   }
 
@@ -261,18 +265,31 @@ export class AccountManager {
     gas?: string
     data?: string
   }) {
-    const {
-      to,
-      from,
-      value = "0",
-      data = "",
-      gas = DEFAULT_EVM_GAS_LIMIT,
-      chainId,
-    } = params
+    const {to, from, value = "0", data = "", chainId} = params
 
     const parsedChainId = parseInt(chainId)
     this.getFlowNetworkOrThrow(parsedChainId)
     await this.validateChainId(parsedChainId)
+
+    // Determine gas limit
+    let gas = params.gas
+    if (!gas) {
+      const gasLimit = await this.gateway.request({
+        method: "eth_estimateGas",
+        params: [
+          {
+            from: fcl.withPrefix(from),
+            to: fcl.withPrefix(to),
+            value: fcl.withPrefix(value),
+            data: fcl.withPrefix(data),
+          },
+        ],
+        chainId: parsedChainId,
+      })
+
+      // Add a 20% buffer to the estimate
+      gas = ((BigInt(gasLimit) * BigInt(6)) / BigInt(5)).toString()
+    }
 
     // Check if the from address matches the authenticated COA address
     const expectedCOAAddress = await this.getCOAAddress()
