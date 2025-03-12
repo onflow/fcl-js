@@ -2,6 +2,20 @@
   "presets": [
     "@babel/preset-env",
     ["@babel/preset-react", {"runtime": "automatic"}],
-    "@babel/preset-typescript"
+    [
+      "@babel/preset-typescript",
+      {
+        "allowDeclareFields": true
+      }
+    ]
+  ],
+  "plugins": [
+    [
+      "@babel/plugin-transform-react-jsx",
+      {
+        "importSource": "preact",
+        "runtime": "automatic"
+      }
+    ]
   ]
 }
