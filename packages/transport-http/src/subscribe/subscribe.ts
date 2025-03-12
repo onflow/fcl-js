@@ -4,8 +4,6 @@ import {blocksHandler} from "./handlers/blocks"
 
 const SUBSCRIPTION_HANDLERS = [blocksHandler]
 
-const SUBSCRIPTION_HANDLERS: any[] = []
-
 // Map of SubscriptionManager instances by access node URL
 let subscriptionManagerMap: Map<
   string,
