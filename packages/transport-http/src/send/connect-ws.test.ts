@@ -1,5 +1,5 @@
 import {buildConnectionUrl, connectWs} from "./connect-ws"
-import * as WebSocketModule from "./websocket"
+import * as WebSocketModule from "../subscribe/websocket"
 
 describe("connectWs", () => {
   describe("buildConnectionUrl", () => {

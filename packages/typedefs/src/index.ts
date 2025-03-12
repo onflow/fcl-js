@@ -459,3 +459,4 @@ export type EventStream = StreamConnection<{
 
 export * from "./interaction"
 export * from "./fvm-errors"
+export * as SdkTransport from "./sdk-transport"
