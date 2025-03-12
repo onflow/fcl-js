@@ -241,6 +241,8 @@ describe("SubscriptionManager", () => {
 
     // Close the connection and create a new one
     mockWs.close()
+    WS.clean()
+    await new Promise(resolve => setTimeout(resolve, 0))
     mockWs = new WS("wss://localhost:8080")
 
     serverPromise = (async () => {
@@ -249,14 +251,14 @@ describe("SubscriptionManager", () => {
       const msg = (await mockWs.nextMessage) as string
       const data = JSON.parse(msg) as SubscribeMessageRequest
       expect(data).toEqual({
-        subscription_id: "1",
+        subscription_id: "0",
         action: "subscribe",
         topic,
         arguments: mockConnectionArgs,
       })
 
       const response: SubscribeMessageResponse = {
-        subscription_id: "1",
+        subscription_id: "0",
         action: Action.SUBSCRIBE,
         success: true,
         topic,
