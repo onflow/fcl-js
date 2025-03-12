@@ -1,6 +1,6 @@
 # Encode
 
-Encoding utilities for [Flow](https://onflow.org) entities. Produces the values that need to be signed for successful transactions.
+Encoding utilities for [Flow](https://flow.com) entities. Produces the values that need to be signed for successful transactions.
 
 # Status
 

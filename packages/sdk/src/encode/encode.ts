@@ -69,7 +69,7 @@ const preparePayloadSignatures = (tx: Transaction) => {
   return tx.payloadSigs
     ?.map((sig: Sig) => {
       return {
-        signerIndex: signers.get(sig.address) || "",
+        signerIndex: signers.get(sansPrefix(sig.address)) || "",
         keyId: sig.keyId,
         sig: sig.sig,
       }
@@ -116,7 +116,7 @@ const prepareVoucher = (voucher: Voucher) => {
   const prepareSigs = (sigs: Sig[]) => {
     return sigs
       .map(({address, keyId, sig}) => {
-        return {signerIndex: signers.get(address) || "", keyId, sig}
+        return {signerIndex: signers.get(sansPrefix(address)) || "", keyId, sig}
       })
       .sort((a, b) => {
         if (a.signerIndex > b.signerIndex) return 1
