@@ -14,6 +14,7 @@ const postcss = require("rollup-plugin-postcss")
 const imagePlugin = require("@rollup/plugin-image")
 const {DEFAULT_EXTENSIONS} = require("@babel/core")
 const {getPackageRoot} = require("../util")
+const {preserveDirective} = require("rollup-preserve-directives")
 
 const SUPPRESSED_WARNING_CODES = [
   "MISSING_GLOBAL_NAME",
@@ -82,6 +83,7 @@ module.exports = function getInputOptions(package, build) {
       console.warn(message.toString())
     },
     plugins: [
+      preserveDirective(),
       imagePlugin(),
       nodeResolve({
         browser: true,
