@@ -4,14 +4,6 @@ import {FlowProvider} from "../provider"
 import {useAccount} from "./useAccount"
 import {Account} from "@onflow/typedefs"
 
-jest.mock("@onflow/fcl", () => {
-  const actualFcl = jest.requireActual("@onflow/fcl")
-  return {
-    ...actualFcl,
-    account: jest.fn(),
-  }
-})
-
 describe("useAccount", () => {
   afterEach(() => {
     jest.clearAllMocks()
