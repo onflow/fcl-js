@@ -1,14 +1,14 @@
 import React, {useEffect, useState, PropsWithChildren} from "react"
 import * as fcl from "@onflow/fcl"
 import {FlowConfig, FlowConfigContext} from "../core/context"
-import {QueryClient, QueryClientProvider} from "@tanstack/react-query"
+import {QueryClient} from "@tanstack/react-query"
+import {FlowQueryClientProvider} from "./FlowQueryClient"
 
 interface FlowProviderProps {
   config?: FlowConfig
+  queryClient?: QueryClient
   flowJson?: Record<string, any>
 }
-
-const globalQueryClient = new QueryClient()
 
 const mappings: Array<{fcl: string; typed: keyof FlowConfig}> = [
   {fcl: "accessNode.api", typed: "accessNodeUrl"},
@@ -78,9 +78,13 @@ function mapConfig(original: Record<string, any>): FlowConfig {
 
 export function FlowProvider({
   config: initialConfig = {},
+  queryClient: _queryClient,
   flowJson,
   children,
 }: PropsWithChildren<FlowProviderProps>) {
+  const [queryClient, setQueryClient] = useState(
+    _queryClient || new QueryClient()
+  )
   const [flowConfig, setFlowConfig] = useState<FlowConfig>({})
 
   useEffect(() => {
@@ -100,11 +104,15 @@ export function FlowProvider({
     return () => unsubscribe()
   }, [initialConfig, flowJson])
 
+  useEffect(() => {
+    setQueryClient(_queryClient || new QueryClient())
+  }, [_queryClient])
+
   return (
-    <QueryClientProvider client={globalQueryClient}>
+    <FlowQueryClientProvider queryClient={queryClient}>
       <FlowConfigContext.Provider value={flowConfig}>
         {children}
       </FlowConfigContext.Provider>
-    </QueryClientProvider>
+    </FlowQueryClientProvider>
   )
 }
