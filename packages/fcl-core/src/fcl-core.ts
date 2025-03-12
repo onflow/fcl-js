@@ -2,7 +2,7 @@ export {VERSION} from "./VERSION"
 export {query} from "./exec/query"
 export {verifyUserSignatures} from "./exec/verify"
 export {serialize} from "./serialize"
-export {transaction as tx} from "./transaction"
+export {transaction as tx, TransactionError} from "./transaction"
 export {events} from "./events"
 export {pluginRegistry} from "./current-user/exec-service/plugins"
 
@@ -69,59 +69,6 @@ export {params, param} from "@onflow/sdk"
 export {validator} from "@onflow/sdk"
 export {invariant} from "@onflow/sdk"
 
-/**
- * @typedef {object} Types
- * @property {any} Identity - Represents the Identity type.
- * @property {any} UInt - Represents the UInt type.
- * @property {any} Int - Represents the Int type.
- * @property {any} UInt8 - Represents the UInt8 type.
- * @property {any} Int8 - Represents the Int8 type.
- * @property {any} UInt16 - Represents the UInt16 type.
- * @property {any} Int16 - Represents the Int16 type.
- * @property {any} UInt32 - Represents the UInt32 type.
- * @property {any} Int32 - Represents the Int32 type.
- * @property {any} UInt64 - Represents the UInt64 type.
- * @property {any} Int64 - Represents the Int64 type.
- * @property {any} UInt128 - Represents the UInt128 type.
- * @property {any} Int128 - Represents the Int128 type.
- * @property {any} UInt256 - Represents the UInt256 type.
- * @property {any} Int256 - Represents the Int256 type.
- * @property {any} Word8 - Represents the Word8 type.
- * @property {any} Word16 - Represents the Word16 type.
- * @property {any} Word32 - Represents the Word32 type.
- * @property {any} Word64 - Represents the Word64 type.
- * @property {any} UFix64 - Represents the UFix64 type.
- * @property {any} Fix64 - Represents the Fix64 type.
- * @property {any} String - Represents the String type.
- * @property {any} Character - Represents the Character type.
- * @property {any} Bool - Represents the Bool type.
- * @property {any} Address - Represents the Address type.
- * @property {any} Void - Represents the Void type.
- * @property {any} Optional - Represents the Optional type.
- * @property {any} Reference - Represents the Reference type.
- * @property {any} Array - Represents the Array type.
- * @property {any} Dictionary - Represents the Dictionary type.
- * @property {any} Event - Represents the Event type.
- * @property {any} Resource - Represents the Resource type.
- * @property {any} Struct - Represents the Struct type.
- * @property {any} Enum - Represents the Enum type.
- * @property {any} Path - Represents the Path type.
- */
-
-/**
- * @callback ArgsFn
- * @param {ArgFn} arg - Argument function to define a single argument
- * @param {Types} t - Cadence Types object used to define the type
- * @returns {any[]}
- */
-
-/**
- * @callback ArgFn
- * @param {any} value - the value of the argument
- * @param {any} type - the cadence type of the value
- * @returns {any}
- */
-
 import {watchForChainIdChanges} from "./utils"
 
 // Set chain id default on access node change
@@ -148,3 +95,5 @@ export {
 } from "./utils/constants"
 
 export {execStrategy} from "./current-user/exec-service"
+
+export type {StorageProvider} from "./utils/storage"

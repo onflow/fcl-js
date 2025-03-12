@@ -1,5 +1,212 @@
 # @onflow/fcl
 
+## 1.13.5
+
+### Patch Changes
+
+- [#2065](https://github.com/onflow/fcl-js/pull/2065) [`3fccbef7bbf985f19d9a9bae2638e538f126f754`](https://github.com/onflow/fcl-js/commit/3fccbef7bbf985f19d9a9bae2638e538f126f754) Thanks [@jribbink](https://github.com/jribbink)! - Fix args type for `fcl.query` & `fcl.mutate`
+
+## 1.13.4
+
+### Patch Changes
+
+- Updated dependencies [[`4e907764cbbe688ea8fd1508968c2b095f00d79e`](https://github.com/onflow/fcl-js/commit/4e907764cbbe688ea8fd1508968c2b095f00d79e)]:
+  - @onflow/transport-http@1.10.5
+  - @onflow/sdk@1.5.6
+
+## 1.13.3
+
+### Patch Changes
+
+- [#2046](https://github.com/onflow/fcl-js/pull/2046) [`c88f170ab2342f5382dead9a2270e72ce9c6d68a`](https://github.com/onflow/fcl-js/commit/c88f170ab2342f5382dead9a2270e72ce9c6d68a) Thanks [@jribbink](https://github.com/jribbink)! - Fix bug affecting `fcl.tx(...).onceSealed()`
+
+## 1.13.2
+
+### Patch Changes
+
+- [#2043](https://github.com/onflow/fcl-js/pull/2043) [`c0fceb12e3108265e4442ad81817a4cb12f79b0f`](https://github.com/onflow/fcl-js/commit/c0fceb12e3108265e4442ad81817a4cb12f79b0f) Thanks [@jribbink](https://github.com/jribbink)! - Export `TransactionError`
+
+## 1.13.1
+
+### Patch Changes
+
+- [#2039](https://github.com/onflow/fcl-js/pull/2039) [`bc47345ddfc44f0108672f91d8c948eb8e357e3d`](https://github.com/onflow/fcl-js/commit/bc47345ddfc44f0108672f91d8c948eb8e357e3d) Thanks [@jribbink](https://github.com/jribbink)! - Update cross-fetch to v4
+
+- Updated dependencies [[`bc47345ddfc44f0108672f91d8c948eb8e357e3d`](https://github.com/onflow/fcl-js/commit/bc47345ddfc44f0108672f91d8c948eb8e357e3d)]:
+  - @onflow/transport-http@1.10.4
+  - @onflow/sdk@1.5.5
+
+## 1.13.0
+
+### Minor Changes
+
+- [#2001](https://github.com/onflow/fcl-js/pull/2001) [`bac8c54db1b6821a2158923544aa537885d5a0e7`](https://github.com/onflow/fcl-js/commit/bac8c54db1b6821a2158923544aa537885d5a0e7) Thanks [@jribbink](https://github.com/jribbink)! - Add getStorageProvider to currentUser configuration
+
+- [#1989](https://github.com/onflow/fcl-js/pull/1989) [`8a5f8e9874980c40c1feb3eac915c6e8570abbf3`](https://github.com/onflow/fcl-js/commit/8a5f8e9874980c40c1feb3eac915c6e8570abbf3) Thanks [@jribbink](https://github.com/jribbink)! - Reduce transaction status polling delay to 1000ms
+
+- [#1893](https://github.com/onflow/fcl-js/pull/1893) [`b9f49494d5b3faed1bc24005adc6ba312f653a21`](https://github.com/onflow/fcl-js/commit/b9f49494d5b3faed1bc24005adc6ba312f653a21) Thanks [@jribbink](https://github.com/jribbink)! - Add custom error `TransactionError` type for failing transaction results
+
+### Patch Changes
+
+- [#1970](https://github.com/onflow/fcl-js/pull/1970) [`3b31f1c02b78bf178502627e5ca1de81bdfe8f26`](https://github.com/onflow/fcl-js/commit/3b31f1c02b78bf178502627e5ca1de81bdfe8f26) Thanks [@jribbink](https://github.com/jribbink)! - Pass missing fields to service redirects in execService
+
+- [#1999](https://github.com/onflow/fcl-js/pull/1999) [`c14746a9e4dbde10d6204697a68e6f2de6e83dd1`](https://github.com/onflow/fcl-js/commit/c14746a9e4dbde10d6204697a68e6f2de6e83dd1) Thanks [@jribbink](https://github.com/jribbink)! - Improve deeplinking for WC/RPC wallets using non-WC/RPC pre-authz services
+
+- [#1983](https://github.com/onflow/fcl-js/pull/1983) [`18d24c8bad7efa0d8741d74f0cf299f89b3622c7`](https://github.com/onflow/fcl-js/commit/18d24c8bad7efa0d8741d74f0cf299f89b3622c7) Thanks [@jribbink](https://github.com/jribbink)! - Update dependencies
+
+- Updated dependencies [[`b7860a388960f3d2220c5f85a820a33e41915f35`](https://github.com/onflow/fcl-js/commit/b7860a388960f3d2220c5f85a820a33e41915f35), [`18d24c8bad7efa0d8741d74f0cf299f89b3622c7`](https://github.com/onflow/fcl-js/commit/18d24c8bad7efa0d8741d74f0cf299f89b3622c7)]:
+  - @onflow/sdk@1.5.4
+  - @onflow/transport-http@1.10.3
+  - @onflow/util-invariant@1.2.4
+  - @onflow/util-template@1.2.3
+  - @onflow/util-address@1.2.3
+  - @onflow/util-logger@1.3.3
+  - @onflow/util-semver@1.0.3
+  - @onflow/util-actor@1.3.4
+  - @onflow/util-uid@1.2.3
+  - @onflow/config@1.5.1
+  - @onflow/types@1.4.1
+  - @onflow/rlp@1.2.3
+
+## 1.13.0-alpha.6
+
+### Patch Changes
+
+- Updated dependencies [[`b7860a388960f3d2220c5f85a820a33e41915f35`](https://github.com/onflow/fcl-js/commit/b7860a388960f3d2220c5f85a820a33e41915f35)]:
+  - @onflow/sdk@1.5.4-alpha.3
+
+## 1.13.0-alpha.5
+
+### Patch Changes
+
+- [#1970](https://github.com/onflow/fcl-js/pull/1970) [`3b31f1c02b78bf178502627e5ca1de81bdfe8f26`](https://github.com/onflow/fcl-js/commit/3b31f1c02b78bf178502627e5ca1de81bdfe8f26) Thanks [@jribbink](https://github.com/jribbink)! - Pass missing fields to service redirects in execService
+
+- Updated dependencies []:
+  - @onflow/sdk@1.5.4-alpha.2
+
+## 1.13.0-alpha.4
+
+### Minor Changes
+
+- [#2001](https://github.com/onflow/fcl-js/pull/2001) [`bac8c54db1b6821a2158923544aa537885d5a0e7`](https://github.com/onflow/fcl-js/commit/bac8c54db1b6821a2158923544aa537885d5a0e7) Thanks [@jribbink](https://github.com/jribbink)! - Add getStorageProvider to currentUser configuration
+
+## 1.13.0-alpha.3
+
+### Patch Changes
+
+- [#1999](https://github.com/onflow/fcl-js/pull/1999) [`c14746a9e4dbde10d6204697a68e6f2de6e83dd1`](https://github.com/onflow/fcl-js/commit/c14746a9e4dbde10d6204697a68e6f2de6e83dd1) Thanks [@jribbink](https://github.com/jribbink)! - Improve deeplinking for WC/RPC wallets using non-WC/RPC pre-authz services
+
+## 1.13.0-alpha.2
+
+### Minor Changes
+
+- [#1989](https://github.com/onflow/fcl-js/pull/1989) [`8a5f8e9874980c40c1feb3eac915c6e8570abbf3`](https://github.com/onflow/fcl-js/commit/8a5f8e9874980c40c1feb3eac915c6e8570abbf3) Thanks [@jribbink](https://github.com/jribbink)! - Reduce transaction status polling delay to 1000ms
+
+## 1.13.0-alpha.1
+
+### Minor Changes
+
+- [#1893](https://github.com/onflow/fcl-js/pull/1893) [`b9f49494d5b3faed1bc24005adc6ba312f653a21`](https://github.com/onflow/fcl-js/commit/b9f49494d5b3faed1bc24005adc6ba312f653a21) Thanks [@jribbink](https://github.com/jribbink)! - Add custom error `TransactionError` type for failing transaction results
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @onflow/sdk@1.5.4-alpha.1
+
+## 1.12.1-alpha.0
+
+### Patch Changes
+
+- [#1983](https://github.com/onflow/fcl-js/pull/1983) [`18d24c8bad7efa0d8741d74f0cf299f89b3622c7`](https://github.com/onflow/fcl-js/commit/18d24c8bad7efa0d8741d74f0cf299f89b3622c7) Thanks [@jribbink](https://github.com/jribbink)! - Update dependencies
+
+- Updated dependencies [[`18d24c8bad7efa0d8741d74f0cf299f89b3622c7`](https://github.com/onflow/fcl-js/commit/18d24c8bad7efa0d8741d74f0cf299f89b3622c7)]:
+  - @onflow/transport-http@1.10.3-alpha.0
+  - @onflow/util-invariant@1.2.4-alpha.0
+  - @onflow/util-template@1.2.3-alpha.0
+  - @onflow/util-address@1.2.3-alpha.0
+  - @onflow/util-logger@1.3.3-alpha.0
+  - @onflow/util-semver@1.0.3-alpha.0
+  - @onflow/util-actor@1.3.4-alpha.0
+  - @onflow/util-uid@1.2.3-alpha.0
+  - @onflow/config@1.5.1-alpha.0
+  - @onflow/types@1.4.1-alpha.0
+  - @onflow/rlp@1.2.3-alpha.0
+  - @onflow/sdk@1.5.4-alpha.0
+
+## 1.12.0
+
+### Minor Changes
+
+- [#1966](https://github.com/onflow/fcl-js/pull/1966) [`f2831107`](https://github.com/onflow/fcl-js/commit/f283110707d5edc166bbe05e5482d38fa29de29e) Thanks [@jribbink](https://github.com/jribbink)! - Fix deep linking issues with mobile wallets
+
+## 1.11.1
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @onflow/sdk@1.5.3
+
+## 1.11.0
+
+### Minor Changes
+
+- [#1922](https://github.com/onflow/fcl-js/pull/1922) [`266fda58`](https://github.com/onflow/fcl-js/commit/266fda5817900a943925f9a4cbfc69dbcdb98d99) Thanks [@jribbink](https://github.com/jribbink)! - Changes to `execStrategy`:
+  - `execStrategy` now exported from `@onflow/fcl-core`
+  - Allow overriding `execStrategy` for FCL Discovery when initializing `currentUser`.
+  - `execStrategy` now takes additional arguments
+    - `customRpc` - a custom RPC client to communicate with the VIEW, if supported
+    - `abortSignal` - an AbortSignal to cancel the request (and close any open views)
+
+### Patch Changes
+
+- [#1942](https://github.com/onflow/fcl-js/pull/1942) [`e70a215c`](https://github.com/onflow/fcl-js/commit/e70a215c47d7db6f4e1ddab747be3968abc09c05) Thanks [@jribbink](https://github.com/jribbink)! - Fix `fcl.authenticate` type
+
+- [#1958](https://github.com/onflow/fcl-js/pull/1958) [`e97e8d2f`](https://github.com/onflow/fcl-js/commit/e97e8d2f5197aecf793f26ba82771fd4f7ebc757) Thanks [@jribbink](https://github.com/jribbink)! - Fix window.onload for discovery API
+
+- [#1922](https://github.com/onflow/fcl-js/pull/1922) [`266fda58`](https://github.com/onflow/fcl-js/commit/266fda5817900a943925f9a4cbfc69dbcdb98d99) Thanks [@jribbink](https://github.com/jribbink)! - `postMessage` now strictly communicates with the view which it opened to prevent collisions when FCL opens multiple views in parallel
+
+- [#1949](https://github.com/onflow/fcl-js/pull/1949) [`b8a2a26e`](https://github.com/onflow/fcl-js/commit/b8a2a26e382d543e5058cc1a628b437c3305b13c) Thanks [@jribbink](https://github.com/jribbink)! - Defer `discovery.authn.update` calls to after the window has loaded
+
+- [#1911](https://github.com/onflow/fcl-js/pull/1911) [`6ca1353e`](https://github.com/onflow/fcl-js/commit/6ca1353e2d0c6ad760b7a03da99c8b2b56b48807) Thanks [@jribbink](https://github.com/jribbink)! - Remove unnecessary config.overload call in query/mutate functions (causes unnecessary WalletConnect errors to show in console)
+
+- [#1944](https://github.com/onflow/fcl-js/pull/1944) [`3a89c39c`](https://github.com/onflow/fcl-js/commit/3a89c39ca5033af6b0ff4e606095507753e17de7) Thanks [@jribbink](https://github.com/jribbink)! - Fix `verifyUserSignatures` return type
+
+- Updated dependencies [[`9c787314`](https://github.com/onflow/fcl-js/commit/9c7873140015c9d1e28712aed93c56654f656639), [`bc78da0c`](https://github.com/onflow/fcl-js/commit/bc78da0c283ba0fef2680f040eb69b46e8923fa5), [`cd234798`](https://github.com/onflow/fcl-js/commit/cd234798008868df13447ea97654b7e278dd746f), [`c0b3becf`](https://github.com/onflow/fcl-js/commit/c0b3becfcfb284e2182d6b4b6d809ff67406fc24), [`95c63f26`](https://github.com/onflow/fcl-js/commit/95c63f26c5b21787ba9dddc52c7111183b0983ec)]:
+  - @onflow/sdk@1.5.2
+  - @onflow/config@1.5.0
+
+## 1.11.0-alpha.4
+
+### Patch Changes
+
+- Updated dependencies [[`cd234798`](https://github.com/onflow/fcl-js/commit/cd234798008868df13447ea97654b7e278dd746f)]:
+  - @onflow/config@1.5.0-alpha.0
+  - @onflow/sdk@1.5.2-alpha.3
+
+## 1.11.0-alpha.3
+
+### Patch Changes
+
+- [#1949](https://github.com/onflow/fcl-js/pull/1949) [`b8a2a26e`](https://github.com/onflow/fcl-js/commit/b8a2a26e382d543e5058cc1a628b437c3305b13c) Thanks [@jribbink](https://github.com/jribbink)! - Defer `discovery.authn.update` calls to after the window has loaded
+
+## 1.11.0-alpha.2
+
+### Patch Changes
+
+- [#1942](https://github.com/onflow/fcl-js/pull/1942) [`e70a215c`](https://github.com/onflow/fcl-js/commit/e70a215c47d7db6f4e1ddab747be3968abc09c05) Thanks [@jribbink](https://github.com/jribbink)! - Fix `fcl.authenticate` type
+
+- [#1944](https://github.com/onflow/fcl-js/pull/1944) [`3a89c39c`](https://github.com/onflow/fcl-js/commit/3a89c39ca5033af6b0ff4e606095507753e17de7) Thanks [@jribbink](https://github.com/jribbink)! - Fix `verifyUserSignatures` return type
+
+- Updated dependencies [[`95c63f26`](https://github.com/onflow/fcl-js/commit/95c63f26c5b21787ba9dddc52c7111183b0983ec)]:
+  - @onflow/sdk@1.5.2-alpha.2
+
+## 1.11.0-alpha.1
+
+### Patch Changes
+
+- Updated dependencies [[`c0b3becf`](https://github.com/onflow/fcl-js/commit/c0b3becfcfb284e2182d6b4b6d809ff67406fc24)]:
+  - @onflow/sdk@1.5.2-alpha.1
+
 ## 1.11.0-alpha.0
 
 ### Minor Changes
@@ -984,9 +1191,9 @@ MESSAGE = HEX(
   RLP(
     APP_DOMAIN_TAG, // [Optional] Buffer, right padded to 32 bytes long
     ADDRESS, // Buffer, left padded to 8 bytes long
-    TIMESTAMP, // Number
-  ),
-);
+    TIMESTAMP // Number
+  )
+)
 ```
 
 - 2022-02-14 -- [chasefleming](https://github.com/chasefleming): Remove experimental redir warning from previous alpha build.
@@ -1074,7 +1281,7 @@ WalletUtils.approve({
 - 2021-11-30 -- Allow apps to add opt-in wallets in Discovery with config.
 
 ```javascript
-import { config } from "@onflow/fcl";
+import {config} from "@onflow/fcl"
 
 // Include supports discovery.wallet or discovery.authn.endpoint
 config({
@@ -1082,7 +1289,7 @@ config({
   "discovery.authn.endpoint":
     "https://fcl-discovery.onflow.org/api/testnet/authn",
   "discovery.authn.include": ["0x123"], // Service account address
-});
+})
 ```
 
 - 2021-11-22 -- Updates to use account key `HashAlgorithm` in `verifyUSerSignatures` instead of default `SHA3_256`
@@ -1101,12 +1308,12 @@ An app developer will now be able to list services for authentication ("authn") 
 To use this, first set in the config the API endpoint for fetching Flow services.
 
 ```javascript
-import { config } from "@onflow/fcl";
+import {config} from "@onflow/fcl"
 
 config({
   "discovery.authn.endpoint":
     "https://fcl-discovery.onflow.org/api/testnet/authn",
-});
+})
 
 // On mainnet, you can use https://fcl-discovery.onflow.org/api/authn
 ```
@@ -1114,47 +1321,47 @@ config({
 Then in an application you can get services with the following:
 
 ```javascript
-import * as fcl from "@onflow/fcl";
+import * as fcl from "@onflow/fcl"
 
-fcl.discovery.authn.subscribe(callback);
+fcl.discovery.authn.subscribe(callback)
 
 // OR
 
-fcl.discovery.authn.snapshot();
+fcl.discovery.authn.snapshot()
 ```
 
 This will return a list a services which you can then authenticate with the following:
 
 ```javascript
-fcl.authenticate({ service });
+fcl.authenticate({service})
 ```
 
 An example React component could then wind up looking like this:
 
 ```javascript
-import "./config";
-import { useState, useEffect } from "react";
-import * as fcl from "@onflow/fcl";
+import "./config"
+import {useState, useEffect} from "react"
+import * as fcl from "@onflow/fcl"
 
 function Component() {
-  const [services, setServices] = useState([]);
+  const [services, setServices] = useState([])
   useEffect(
-    () => fcl.discovery.authn.subscribe((res) => setServices(res.results)),
-    [],
-  );
+    () => fcl.discovery.authn.subscribe(res => setServices(res.results)),
+    []
+  )
 
   return (
     <div>
-      {services.map((service) => (
+      {services.map(service => (
         <button
           key={service.provider.address}
-          onClick={() => fcl.authenticate({ service })}
+          onClick={() => fcl.authenticate({service})}
         >
           Login with {service.provider.name}
         </button>
       ))}
     </div>
-  );
+  )
 }
 ```
 
@@ -1195,18 +1402,18 @@ let AuthnService = {
     icon: null,
     description: "Awesome Wallet Extension for Chrome",
   },
-};
+}
 
 if (!Array.isArray(window.fcl_extensions)) {
-  window.fcl_extensions = [];
+  window.fcl_extensions = []
 }
-window.fcl_extensions.push(AuthnService);
+window.fcl_extensions.push(AuthnService)
 ```
 
 ```javascript
-import { WalletUtils } from "@onflow/fcl";
+import {WalletUtils} from "@onflow/fcl"
 
-WalletUtils.injectExtService(AuthnService);
+WalletUtils.injectExtService(AuthnService)
 ```
 
 - 2021-10-01 -- Simplify passing `currentUser` data into args with the ability to pass `currentUser` as param instead of a creating a user snapshot before.
@@ -1214,7 +1421,7 @@ WalletUtils.injectExtService(AuthnService);
 Examples of `currentUser` as a param.
 
 ```javascript
-import { query, currentUser } from "@onflow/fcl";
+import {query, currentUser} from "@onflow/fcl"
 
 await query({
   cadence: `
@@ -1223,7 +1430,7 @@ await query({
     }
   `,
   args: (arg, t) => [currentUser],
-});
+})
 ```
 
 ## 0.0.78-alpha.3 - 2021-10-01
@@ -1249,10 +1456,10 @@ await query({
 Examples of `currentUser` functionality.
 
 ```javascript
-import { currentUser } from "@onflow/fcl";
+import {currentUser} from "@onflow/fcl"
 
-currentUser.snapshot();
-currentUser.subscribe(callback);
+currentUser.snapshot()
+currentUser.subscribe(callback)
 ```
 
 - 2021-09-14 -- Adds `WalletUtils.CompositeSignature` constructor.
@@ -1261,9 +1468,9 @@ currentUser.subscribe(callback);
 ```javascript
 export const SESSION_STORAGE = {
   can: true,
-  get: async (key) => JSON.parse(sessionStorage.getItem(key)),
+  get: async key => JSON.parse(sessionStorage.getItem(key)),
   put: async (key, value) => sessionStorage.setItem(key, JSON.stringify(value)),
-};
+}
 ```
 
 ## 0.0.77-alpha.4 - 2021-08-27
@@ -1329,37 +1536,37 @@ export const SESSION_STORAGE = {
 Examples of `config` functionality.
 
 ```javascript
-import { config } from "@onflow/fcl";
+import {config} from "@onflow/fcl"
 
-expect(await config.all()).toEqual({});
+expect(await config.all()).toEqual({})
 
 config({
   "foo.bar": "baz",
-});
-config.put("bob", "pat");
+})
+config.put("bob", "pat")
 
 expect(await config.all()).toEqual({
   "foo.bar": "baz",
   bob: "pat",
-});
+})
 
-var ret = await config.overload({ bob: "bill" }, async () => {
+var ret = await config.overload({bob: "bill"}, async () => {
   expect(await config.all()).toEqual({
     "foo.bar": "baz",
     bob: "bill",
-  });
-  return "woot";
-});
+  })
+  return "woot"
+})
 
-expect(ret).toBe("woot");
+expect(ret).toBe("woot")
 
 expect(await config.all()).toEqual({
   "foo.bar": "baz",
   bob: "pat",
-});
+})
 
-expect(await config.first(["bax", "foo.bar"], "FALLBACK")).toBe("baz");
-expect(await config.first(["nope", "oh-no"], "FALLBACK")).toBe("FALLBACK");
+expect(await config.first(["bax", "foo.bar"], "FALLBACK")).toBe("baz")
+expect(await config.first(["nope", "oh-no"], "FALLBACK")).toBe("FALLBACK")
 ```
 
 ## 0.0.73 - 2021-06-21
@@ -1383,10 +1590,10 @@ New **EXPERIMENTAL** `fcl.mutate` functionality (mirors `fcl.query` but for tran
 
 ```javascript
 // profile contract on testnet
-import * as fcl from "@onflow/fcl";
+import * as fcl from "@onflow/fcl"
 
 // address overloading works for fcl.mutate too
-fcl.config().put("0xProfile", "0xba1132bc08f82fe2");
+fcl.config().put("0xProfile", "0xba1132bc08f82fe2")
 
 // defaults to current user for all signatory roles
 await fcl.mutate({
@@ -1405,10 +1612,10 @@ await fcl.mutate({
   args: (arg, t) => [arg("qvvg", t.String)],
 
   limit: 65,
-});
+})
 
 // you can use a custom authorization function for all three signatory roles
-import { myAuthzFn } from "./my-authz-fn";
+import {myAuthzFn} from "./my-authz-fn"
 
 const INIT_PROFILE_CONTRACT = `
   import Profile from 0xProfile
@@ -1421,12 +1628,12 @@ const INIT_PROFILE_CONTRACT = `
       }
     }
   }
-`;
+`
 
 await fcl.mutate({
   cadence: INIT_PROFILE_CONTRACT,
   authz: myAuthzFn,
-});
+})
 
 // individual roles can be overloaded
 // mutate will prefer specific roles over authz over current user
@@ -1437,14 +1644,14 @@ await fcl.mutate({
   proposer: myAuthzFn,
   payer: myAuthzFn,
   authorizations: [myAuthzFn],
-});
+})
 
 // the following would use myAuthzFn to pay for the transaction but the current user for everything else
 
 await fcl.mutate({
   cadence: INIT_PROFILE_CONTRACT,
   payer: myAuthzFn,
-});
+})
 
 // the following would use myAuthzFn for the payer and the second authorization but current user for everything else
 
@@ -1458,7 +1665,7 @@ await fcl.mutate({
   `,
   payer: myAuthzFn,
   authorizations: [fcl.authz, myAuthzFn],
-});
+})
 
 // the following would use myAuthzFn for everything, but the current user will be the authorizer
 
@@ -1466,7 +1673,7 @@ await fcl.mutate({
   cadence: INIT_PROFILE_CONTRACT,
   authz: myAuthzFn,
   authorizations: [fcl.authz],
-});
+})
 ```
 
 ## 0.0.72 - 2021-06-16
@@ -1522,7 +1729,7 @@ await fcl.mutate({
 New **EXPERIMENTAL** `fcl.query` functionality can be used like this.
 
 ```javascript
-import * as fcl from "@onflow/fcl";
+import * as fcl from "@onflow/fcl"
 
 await fcl.query({
   cadence: `
@@ -1536,7 +1743,7 @@ await fcl.query({
     arg(6, t.Int), // b: Int
     arg("0xba1132bc08f82fe2", t.Address), // addr: Address
   ],
-});
+})
 ```
 
 ## 0.0.68-alpha.18 - 2021-04-09
@@ -1553,13 +1760,13 @@ await fcl.query({
 New configuration works like older configuration:
 
 ```javascript
-import * as fcl from "@onflow/fcl";
+import * as fcl from "@onflow/fcl"
 
 fcl
   .config()
   .put("app.detail.title", "My Great Application")
   .put("app.detail.icon", "https://avatars.onflow.org/avatar/dapp")
-  .put("service.OpenID.scopes", "email email_verified name");
+  .put("service.OpenID.scopes", "email email_verified name")
 ```
 
 All OpenID data returned should be considered optional. For the time being it will be visable as a service in the current user, but in the future we will provide additional ways to subscribe and access this data.
@@ -1756,11 +1963,11 @@ await fcl.send([
 
 ```javascript
 // fcl.account - A convenience function for fetching an account
-/* old */ await fcl.send([fcl.getAccount("0x1d007d755706c469")]);
-/* new */ await fcl.account("0x1d007d755706c469");
+/* old */ await fcl.send([fcl.getAccount("0x1d007d755706c469")])
+/* new */ await fcl.account("0x1d007d755706c469")
 
 // fcl.reauthenticate - Logs the current user out before attempting to authenticate again
-await fcl.reauthenticate();
+await fcl.reauthenticate()
 
 // fcl.authz - alias for fcl.currentUser().authorization
 await fcl.send([
@@ -1768,11 +1975,11 @@ await fcl.send([
   fcl.proposer(fcl.authz),
   fcl.payer(fcl.authz),
   fcl.authorizations([fcl.authz]),
-]);
+])
 
 // fcl.signUp and fcl.logIn - Currently these alias fcl.authenticate, eventually they will pass additional context to the wallets
-await fcl.signUp();
-await fcl.logIn();
+await fcl.signUp()
+await fcl.logIn()
 ```
 
 ## 0.0.67-alpha.0 - 2020-11-17

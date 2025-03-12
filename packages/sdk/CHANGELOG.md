@@ -1,5 +1,117 @@
 # @onflow/sdk
 
+## 1.5.6
+
+### Patch Changes
+
+- Updated dependencies [[`4e907764cbbe688ea8fd1508968c2b095f00d79e`](https://github.com/onflow/fcl-js/commit/4e907764cbbe688ea8fd1508968c2b095f00d79e)]:
+  - @onflow/transport-http@1.10.5
+
+## 1.5.5
+
+### Patch Changes
+
+- Updated dependencies [[`bc47345ddfc44f0108672f91d8c948eb8e357e3d`](https://github.com/onflow/fcl-js/commit/bc47345ddfc44f0108672f91d8c948eb8e357e3d)]:
+  - @onflow/transport-http@1.10.4
+
+## 1.5.4
+
+### Patch Changes
+
+- [#2027](https://github.com/onflow/fcl-js/pull/2025) [`169974cbd76495f29fac9d950916e3e9fd7f3fd4`](https://github.com/onflow/fcl-js/commit/169974cbd76495f29fac9d950916e3e9fd7f3fd4) Thanks [@caosbad](https://github.com/jribbink)! - Fixed an issue where the signer could not get the correct singerIndex when preparing a payload due to prefixed addresses in the sdk
+
+- [#1983](https://github.com/onflow/fcl-js/pull/1983) [`18d24c8bad7efa0d8741d74f0cf299f89b3622c7`](https://github.com/onflow/fcl-js/commit/18d24c8bad7efa0d8741d74f0cf299f89b3622c7) Thanks [@jribbink](https://github.com/jribbink)! - Update dependencies
+
+- Updated dependencies [[`b9f49494d5b3faed1bc24005adc6ba312f653a21`](https://github.com/onflow/fcl-js/commit/b9f49494d5b3faed1bc24005adc6ba312f653a21), [`3b31f1c02b78bf178502627e5ca1de81bdfe8f26`](https://github.com/onflow/fcl-js/commit/3b31f1c02b78bf178502627e5ca1de81bdfe8f26), [`18d24c8bad7efa0d8741d74f0cf299f89b3622c7`](https://github.com/onflow/fcl-js/commit/18d24c8bad7efa0d8741d74f0cf299f89b3622c7), [`b9f49494d5b3faed1bc24005adc6ba312f653a21`](https://github.com/onflow/fcl-js/commit/b9f49494d5b3faed1bc24005adc6ba312f653a21), [`dda32df052801ee5e70b703a19c246f36bbd31c2`](https://github.com/onflow/fcl-js/commit/dda32df052801ee5e70b703a19c246f36bbd31c2)]:
+  - @onflow/typedefs@1.4.0
+  - @onflow/transport-http@1.10.3
+  - @onflow/util-invariant@1.2.4
+  - @onflow/util-template@1.2.3
+  - @onflow/util-address@1.2.3
+  - @onflow/util-logger@1.3.3
+  - @onflow/util-actor@1.3.4
+  - @onflow/config@1.5.1
+  - @onflow/rlp@1.2.3
+
+## 1.5.4-alpha.3
+
+### Patch Changes
+
+- [#2027](https://github.com/onflow/fcl-js/pull/2025) [`169974cbd76495f29fac9d950916e3e9fd7f3fd4`](https://github.com/onflow/fcl-js/commit/169974cbd76495f29fac9d950916e3e9fd7f3fd4) Thanks [@caosbad](https://github.com/caosbad)! - Fixed an issue where the signer could not get the correct singerIndex when preparing a payload due to prefixed addresses in the sdk
+
+## 1.5.4-alpha.2
+
+### Patch Changes
+
+- Updated dependencies [[`3b31f1c02b78bf178502627e5ca1de81bdfe8f26`](https://github.com/onflow/fcl-js/commit/3b31f1c02b78bf178502627e5ca1de81bdfe8f26)]:
+  - @onflow/typedefs@1.4.0-alpha.2
+
+## 1.5.4-alpha.1
+
+### Patch Changes
+
+- Updated dependencies [[`b9f49494d5b3faed1bc24005adc6ba312f653a21`](https://github.com/onflow/fcl-js/commit/b9f49494d5b3faed1bc24005adc6ba312f653a21), [`b9f49494d5b3faed1bc24005adc6ba312f653a21`](https://github.com/onflow/fcl-js/commit/b9f49494d5b3faed1bc24005adc6ba312f653a21)]:
+  - @onflow/typedefs@1.4.0-alpha.1
+
+## 1.5.4-alpha.0
+
+### Patch Changes
+
+- [#1983](https://github.com/onflow/fcl-js/pull/1983) [`18d24c8bad7efa0d8741d74f0cf299f89b3622c7`](https://github.com/onflow/fcl-js/commit/18d24c8bad7efa0d8741d74f0cf299f89b3622c7) Thanks [@jribbink](https://github.com/jribbink)! - Update dependencies
+
+- Updated dependencies [[`18d24c8bad7efa0d8741d74f0cf299f89b3622c7`](https://github.com/onflow/fcl-js/commit/18d24c8bad7efa0d8741d74f0cf299f89b3622c7), [`dda32df052801ee5e70b703a19c246f36bbd31c2`](https://github.com/onflow/fcl-js/commit/dda32df052801ee5e70b703a19c246f36bbd31c2)]:
+  - @onflow/transport-http@1.10.3-alpha.0
+  - @onflow/util-invariant@1.2.4-alpha.0
+  - @onflow/util-template@1.2.3-alpha.0
+  - @onflow/util-address@1.2.3-alpha.0
+  - @onflow/util-logger@1.3.3-alpha.0
+  - @onflow/util-actor@1.3.4-alpha.0
+  - @onflow/typedefs@1.4.0-alpha.0
+  - @onflow/config@1.5.1-alpha.0
+  - @onflow/rlp@1.2.3-alpha.0
+
+## 1.5.3
+
+### Patch Changes
+
+- Updated dependencies [[`91526e65`](https://github.com/onflow/fcl-js/commit/91526e65190d8c8ba67598e5df3b8b1c6c41292a)]:
+  - @onflow/transport-http@1.10.2
+
+## 1.5.2
+
+### Patch Changes
+
+- [#1915](https://github.com/onflow/fcl-js/pull/1915) [`9c787314`](https://github.com/onflow/fcl-js/commit/9c7873140015c9d1e28712aed93c56654f656639) Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump ws from 8.14.2 to 8.17.1
+
+- [#1918](https://github.com/onflow/fcl-js/pull/1918) [`bc78da0c`](https://github.com/onflow/fcl-js/commit/bc78da0c283ba0fef2680f040eb69b46e8923fa5) Thanks [@jribbink](https://github.com/jribbink)! - Miscellaneous TypeScript fixes
+
+- [#1910](https://github.com/onflow/fcl-js/pull/1910) [`c0b3becf`](https://github.com/onflow/fcl-js/commit/c0b3becfcfb284e2182d6b4b6d809ff67406fc24) Thanks [@jribbink](https://github.com/jribbink)! - Restore account resolution ordering (fixes issue where FCL currentUser authz would run without knowing custom authz accounts)
+
+- [#1943](https://github.com/onflow/fcl-js/pull/1943) [`95c63f26`](https://github.com/onflow/fcl-js/commit/95c63f26c5b21787ba9dddc52c7111183b0983ec) Thanks [@jribbink](https://github.com/jribbink)! - Make `sdk.payer` arguments more permissive (authz can be an object or a function)
+
+- Updated dependencies [[`bc78da0c`](https://github.com/onflow/fcl-js/commit/bc78da0c283ba0fef2680f040eb69b46e8923fa5), [`cd234798`](https://github.com/onflow/fcl-js/commit/cd234798008868df13447ea97654b7e278dd746f)]:
+  - @onflow/typedefs@1.3.1
+  - @onflow/config@1.5.0
+
+## 1.5.2-alpha.3
+
+### Patch Changes
+
+- Updated dependencies [[`cd234798`](https://github.com/onflow/fcl-js/commit/cd234798008868df13447ea97654b7e278dd746f)]:
+  - @onflow/config@1.5.0-alpha.0
+
+## 1.5.2-alpha.2
+
+### Patch Changes
+
+- [#1943](https://github.com/onflow/fcl-js/pull/1943) [`95c63f26`](https://github.com/onflow/fcl-js/commit/95c63f26c5b21787ba9dddc52c7111183b0983ec) Thanks [@jribbink](https://github.com/jribbink)! - Make `sdk.payer` arguments more permissive (authz can be an object or a function)
+
+## 1.5.2-alpha.1
+
+### Patch Changes
+
+- [#1910](https://github.com/onflow/fcl-js/pull/1910) [`c0b3becf`](https://github.com/onflow/fcl-js/commit/c0b3becfcfb284e2182d6b4b6d809ff67406fc24) Thanks [@jribbink](https://github.com/jribbink)! - Restore account resolution ordering (fixes issue where FCL currentUser authz would run without knowing custom authz accounts)
+
 ## 1.5.2-alpha.0
 
 ### Patch Changes
@@ -671,7 +783,7 @@
 - 2022-03-16 -- [@chasefleming](https://github.com/chasefleming): Warn about field renamings/deprecations. To turn on warnings, set config `log.level` to `2`.
 
 ```js
-sdk.config("logger.level", 2);
+sdk.config("logger.level", 2)
 ```
 
 - 2022-03-07 -- **BREAKING** [@JeffreyDoyle](https://github.com/JeffreyDoyle): Decode number types implicitly. Number types, `[U]Int*` and `Word*`, will now be decoded into String. This is done to protect against decoding such types into JavaScript Number when the value they represent exceeds the largest supported value for Number. Developers should adjust their use of the JS-SDK accordingly to this new return type when decoding number `[U]Int*` and `Word*` types.
@@ -680,8 +792,8 @@ sdk.config("logger.level", 2);
 - 2022-02-04 -- [@chasefleming](https://github.com/chasefleming): Add options for for getting account by block height.
 
 ```javascript
-await sdk.account("0x123"); // Existing: get account at the latest block
-await sdk.account("0x123", { height: 123 }); // New: get account at the block with the provided height
+await sdk.account("0x123") // Existing: get account at the latest block
+await sdk.account("0x123", {height: 123}) // New: get account at the block with the provided height
 ```
 
 ## 0.0.57-alpha.3 -- 2022-02-02
@@ -694,20 +806,20 @@ await sdk.account("0x123", { height: 123 }); // New: get account at the block wi
 - 2022-01-21 -- [@JeffreyDoyle](https://github.com/JeffreyDoyle): Abstracts away the SDK transport modules into their own packages. The JS-SDK now makes use of transport modules for sending an interaction to an access api and receiving a response. A transport module can be defined in config:
 
 ```javascript
-import { send as grpcSend } from "@onflow/transport-grpc";
-import { send as httpSend } from "@onflow/transport-http";
+import {send as grpcSend} from "@onflow/transport-grpc"
+import {send as httpSend} from "@onflow/transport-http"
 
 // Configure SDK to use GRPC
 sdk
   .config()
   .put("accessNode.api", "https://access-testnet.onflow.org")
-  .put("sdk.transport", grpcSend);
+  .put("sdk.transport", grpcSend)
 
 // Configure SDK to use HTTP
 sdk
   .config()
   .put("accessNode.api", "https://rest-testnet.onflow.org")
-  .put("sdk.transport", httpSend);
+  .put("sdk.transport", httpSend)
 ```
 
 ## 0.0.56-alpha.3 -- 2022-01-19
@@ -715,10 +827,10 @@ sdk
 - 2022-01-07 -- [@chasefleming](https://github.com/chasefleming): Create methods for more easily getting a block by height or by id.
 
 ```javascript
-await sdk.block(); // get latest finalized block
-await sdk.block({ sealed: true }); // get latest sealed block
-await sdk.block({ id: "abc" }); // get block by id
-await sdk.block({ height: 123 }); // get block by height
+await sdk.block() // get latest finalized block
+await sdk.block({sealed: true}) // get latest sealed block
+await sdk.block({id: "abc"}) // get block by id
+await sdk.block({height: 123}) // get block by height
 ```
 
 ## 0.0.56-alpha.2 -- 2022-01-05
@@ -729,7 +841,7 @@ await sdk.block({ height: 123 }); // get block by height
 - 2021-11-17 -- [@chasefleming](https://github.com/chasefleming): Support passing of current user as authorization. Simply pass `currentUser` instead of `currentUser.authorization` or `currentUser().authorization`.
 
 ```javascript
-import { currentUser } from "@onflow/fcl";
+import {currentUser} from "@onflow/fcl"
 
 fcl
   .send([
@@ -738,7 +850,7 @@ fcl
     fcl.payer(currentUser),
     fcl.authorizations([currentUser]),
   ])
-  .then(fcl.decode);
+  .then(fcl.decode)
 ```
 
 ## 0.0.56-alpha.1 -- 2021-10-21
@@ -750,13 +862,13 @@ fcl
 Example of `statusString`:
 
 ```javascript
-import * as sdk from "@onflow/sdk";
+import * as sdk from "@onflow/sdk"
 const response = await sdk.send(
   await sdk.build([sdk.getTransactionStatus(txId)]),
-  { node: "http://localhost:8080" },
-);
+  {node: "http://localhost:8080"}
+)
 
-console.log(response.statusString);
+console.log(response.statusString)
 ```
 
 ## 0.0.55 -- 2021-10-01
@@ -771,11 +883,11 @@ const argument = {
     return {
       value: "0x12341324",
       xform: t.Address,
-    };
+    }
   },
-};
+}
 
-sdk.args([argument]);
+sdk.args([argument])
 ```
 
 - 2021-09-20 -- [@chasefleming](https://github.com/chasefleming): Support asynchronous resolve methods in `resolveArguments`
@@ -817,44 +929,44 @@ sdk.args([argument]);
 Example Updates to config.
 
 ```javascript
-import { config } from "@onflow/config";
+import {config} from "@onflow/config"
 
-expect(await config.all()).toEqual({});
+expect(await config.all()).toEqual({})
 
 config({
   "foo.bar": "baz",
-});
-config.put("bob", "pat");
+})
+config.put("bob", "pat")
 
 expect(await config.all()).toEqual({
   "foo.bar": "baz",
   bob: "pat",
-});
+})
 
-var ret = await config.overload({ bob: "bill" }, async () => {
+var ret = await config.overload({bob: "bill"}, async () => {
   expect(await config.all()).toEqual({
     "foo.bar": "baz",
     bob: "bill",
-  });
-  return "woot";
-});
+  })
+  return "woot"
+})
 
-expect(ret).toBe("woot");
+expect(ret).toBe("woot")
 
 expect(await config.all()).toEqual({
   "foo.bar": "baz",
   bob: "pat",
-});
+})
 
-expect(await config.first(["bax", "foo.bar"], "FALLBACK")).toBe("baz");
-expect(await config.first(["nope", "oh-no"], "FALLBACK")).toBe("FALLBACK");
+expect(await config.first(["bax", "foo.bar"], "FALLBACK")).toBe("baz")
+expect(await config.first(["nope", "oh-no"], "FALLBACK")).toBe("FALLBACK")
 ```
 
 Example of TestUtils.
 
 ```javascript
-import { config, TestUtils } from "@onflow/sdk";
-import * as sdk from "@onflow/sdk";
+import {config, TestUtils} from "@onflow/sdk"
+import * as sdk from "@onflow/sdk"
 
 test("single account/key pair for all three signatory roles", async () => {
   await config.overload(
@@ -864,11 +976,11 @@ test("single account/key pair for all three signatory roles", async () => {
       "sdk.transport": TestUtils.mockSend(),
     },
     async () => {
-      const SIGNATORY = { addr: "0x1111222233334444", keyId: 1 };
-      const idof = (acct) => `${acct.addr}-${acct.keyId}`;
+      const SIGNATORY = {addr: "0x1111222233334444", keyId: 1}
+      const idof = acct => `${acct.addr}-${acct.keyId}`
 
       // authzFn -- stubs out an authorization function from a signatory
-      const authz = TestUtils.authzFn(SIGNATORY);
+      const authz = TestUtils.authzFn(SIGNATORY)
 
       // run -- builds and resolves the transaction // sets a reference block
       var ix = await run([
@@ -876,17 +988,17 @@ test("single account/key pair for all three signatory roles", async () => {
         sdk.proposer(authz),
         sdk.payer(authz),
         sdk.authorizations([authz]),
-      ]);
+      ])
 
-      expect(Object.keys(ix.accounts).length).toBe(1);
-      expect(ix.accounts[TestUtils.idof(SIGNATORY)]).toBeDefined();
+      expect(Object.keys(ix.accounts).length).toBe(1)
+      expect(ix.accounts[TestUtils.idof(SIGNATORY)]).toBeDefined()
 
-      expect(ix.proposer).toBe(TestUtils.idof(SIGNATORY));
-      expect(ix.payer).toBe(TestUtils.idof(SIGNATORY));
-      expect(ix.authorizations).toEqual([TestUtils.idof(SIGNATORY)]);
-    },
-  );
-});
+      expect(ix.proposer).toBe(TestUtils.idof(SIGNATORY))
+      expect(ix.payer).toBe(TestUtils.idof(SIGNATORY))
+      expect(ix.authorizations).toEqual([TestUtils.idof(SIGNATORY)])
+    }
+  )
+})
 ```
 
 ## 0.0.50 - 2021-06-17
@@ -899,20 +1011,20 @@ test("single account/key pair for all three signatory roles", async () => {
 - 2021-06-16 -- [@orodio](https://github.com/orodio): Added the ability to set configuration values in `sdk.config` from initializer.
 
 ```javascript
-import { config } from "@onflow/config";
+import {config} from "@onflow/config"
 
 config({
   "accessNode.api": "https://access-testnet.onflow.org",
   "discovery.wallet": "https://fcl-discovery.onflow.org/testnet/authn",
   "0xFUSD": "0xe223d8a629e49c68",
-});
+})
 
 // -- is equivalent to --
 
 config()
   .put("accessNode.api", "https://access-testnet.onflow.org")
   .put("discovery.wallet", "https://fcl-discovery.onflow.org/testnet/authn")
-  .put("0xFUSD", "0xe223d8a629e49c68");
+  .put("0xFUSD", "0xe223d8a629e49c68")
 ```
 
 ## 0.0.48 - 2021-06-16
@@ -920,9 +1032,9 @@ config()
 - 2021-06-16 -- [@JeffreyDoyle](https://github.com/JeffreyDoyle): Adds ability to specify optional grpc metadata to requests sent to an Access API. To specity grpc metadata, use config like such:
 
 ```javascript
-import { config } from "@onflow/config";
+import {config} from "@onflow/config"
 
-fcl.config().put("grpc.metadata", { headerkey1: "headervalue1" });
+fcl.config().put("grpc.metadata", {headerkey1: "headervalue1"})
 ```
 
 - 2021-06-16 -- [@JeffreyDoyle](https://github.com/JeffreyDoyle): Adds encode signable wallet utility function.

@@ -61,6 +61,7 @@ export {
   invariant,
   subscribeEvents,
   nodeVersionInfo,
+  TransactionError,
 } from "@onflow/fcl-core"
 
 import {
@@ -69,11 +70,14 @@ import {
   initServiceRegistry,
   setIsReactNative,
 } from "@onflow/fcl-core"
-export const mutate = getMutate({platform: "react-native"})
 
-const currentUser = getCurrentUser({platform: "react-native"})
-
-export {currentUser}
+export const currentUser = getCurrentUser({
+  platform: "react-native",
+  getStorageProvider: async () => {
+    return (await config().get("fcl.storage")) || getAsyncStorage()
+  },
+})
+export const mutate = getMutate(currentUser)
 
 export const authenticate = (opts = {}) => currentUser().authenticate(opts)
 export const unauthenticate = () => currentUser().unauthenticate()
@@ -93,6 +97,7 @@ import {
   useServiceDiscovery,
   ServiceDiscovery,
 } from "./utils/react-native"
+import {getAsyncStorage} from "./utils/react-native/storage"
 
 config(getDefaultConfig())
 

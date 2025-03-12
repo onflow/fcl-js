@@ -174,7 +174,7 @@ export type CurrentUser = {
   /**
    * - A list of trusted services that express ways of interacting with the current user's identity
    */
-  services: Array<object>
+  services: Array<Service>
 }
 export type Event = {
   /**
@@ -330,13 +330,17 @@ export type TransactionStatus = {
    */
   blockId: string
   /**
-   * - The status code of the transaction.
+   * - The execution status of the transaction
    */
-  status: number
+  status: TransactionExecutionStatus
   /**
    * - The status as as descriptive text (e.g. "FINALIZED").
    */
   statusString: string
+  /**
+   * - The result of the transaction, if executed (i.e. 0 for success, 1 for failure)
+   */
+  statusCode: 0 | 1
   /**
    * - The error message of the transaction.
    */
@@ -346,11 +350,53 @@ export type TransactionStatus = {
    */
   events: Array<Event>
 }
+/**
+ * The execution status of the transaction.
+ */
+export enum TransactionExecutionStatus {
+  UNKNOWN = 0,
+  PENDING = 1,
+  FINALIZED = 2,
+  EXECUTED = 3,
+  SEALED = 4,
+  EXPIRED = 5,
+}
+/*
+ * The Provider type describes a Wallet Provider associated with a specific Service.
+ */
 export type Provider = {
   /**
-   * - Provider name.
+   * The blockchain address of the Wallet provider.
    */
-  name: string
+  address?: string
+  /**
+   * The name of the Wallet provider.
+   */
+  name?: string
+  /**
+   * The icon of the Wallet provider (may be a URL or a data URI).
+   */
+  icon?: string
+  /**
+   * A brief description of the Wallet provider.
+   */
+  description?: string
+  /**
+   * The preferred color to represent the Wallet provider (e.g., for UI styling).
+   */
+  color?: string
+  /**
+   * The support email address of the Wallet provider.
+   */
+  supportEmail?: string
+  /**
+   * The website URL of the Wallet provider.
+   */
+  website?: string
+  /**
+   * Indicates whether the Wallet provider is installed (if applicable).
+   */
+  is_installed?: boolean
 }
 export type NodeVersionInfo = {
   /**
@@ -412,3 +458,4 @@ export type EventStream = StreamConnection<{
 }>
 
 export * from "./interaction"
+export * from "./fvm-errors"

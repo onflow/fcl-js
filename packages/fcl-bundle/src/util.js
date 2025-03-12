@@ -10,8 +10,14 @@ function isString(obj) {
   return typeof obj === "string" || obj instanceof String
 }
 
+// Get the root path of the package that the bundle is being built for
+function getPackageRoot() {
+  return process.cwd()
+}
+
 module.exports = {
   isArray,
   isObject,
   isString,
+  getPackageRoot,
 }

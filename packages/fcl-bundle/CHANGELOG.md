@@ -1,5 +1,27 @@
 # @onflow/fcl-bundle
 
+## 1.6.0
+
+### Minor Changes
+
+- [#1970](https://github.com/onflow/fcl-js/pull/1970) [`3b31f1c02b78bf178502627e5ca1de81bdfe8f26`](https://github.com/onflow/fcl-js/commit/3b31f1c02b78bf178502627e5ca1de81bdfe8f26) Thanks [@jribbink](https://github.com/jribbink)! - Add `rollup-plugin-postcss` & `@rollup/plugin-image`
+
+### Patch Changes
+
+- [#1983](https://github.com/onflow/fcl-js/pull/1983) [`18d24c8bad7efa0d8741d74f0cf299f89b3622c7`](https://github.com/onflow/fcl-js/commit/18d24c8bad7efa0d8741d74f0cf299f89b3622c7) Thanks [@jribbink](https://github.com/jribbink)! - Update dependencies
+
+## 1.6.0-alpha.1
+
+### Minor Changes
+
+- [#1970](https://github.com/onflow/fcl-js/pull/1970) [`3b31f1c02b78bf178502627e5ca1de81bdfe8f26`](https://github.com/onflow/fcl-js/commit/3b31f1c02b78bf178502627e5ca1de81bdfe8f26) Thanks [@jribbink](https://github.com/jribbink)! - Add `rollup-plugin-postcss` & `@rollup/plugin-image`
+
+## 1.5.1-alpha.0
+
+### Patch Changes
+
+- [#1983](https://github.com/onflow/fcl-js/pull/1983) [`18d24c8bad7efa0d8741d74f0cf299f89b3622c7`](https://github.com/onflow/fcl-js/commit/18d24c8bad7efa0d8741d74f0cf299f89b3622c7) Thanks [@jribbink](https://github.com/jribbink)! - Update dependencies
+
 ## 1.5.0
 
 ### Minor Changes

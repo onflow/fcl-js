@@ -15,10 +15,11 @@ export const execStrategy = async ({
   config,
   abortSignal,
   customRpc,
+  user,
   opts,
 }) => {
   const strategy = getServiceRegistry().getStrategy(service.method)
-  return strategy({service, body, config, abortSignal, customRpc, opts})
+  return strategy({service, body, config, abortSignal, customRpc, opts, user})
 }
 
 export async function execService({
@@ -29,6 +30,7 @@ export async function execService({
   platform,
   abortSignal = new AbortController().signal,
   execStrategy: _execStrategy,
+  user,
 }) {
   // Notify the developer if WalletConnect is not enabled
   checkWalletConnectEnabled()
@@ -53,6 +55,7 @@ export async function execService({
       body: msg,
       config: execConfig,
       opts,
+      user,
       abortSignal,
     })
 
@@ -67,6 +70,8 @@ export async function execService({
         config: execConfig,
         opts,
         abortSignal,
+        platform,
+        user,
       })
     } else {
       return res

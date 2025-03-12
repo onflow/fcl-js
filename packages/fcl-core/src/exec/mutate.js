@@ -7,20 +7,18 @@ import {isNumber} from "../utils/is"
 
 /**
  * @description
- * Factory function that returns a mutate function.
+ * Factory function that returns a mutate function for a given currentUser.
  *
- * @param {object} opts - Configuration Options
- * @param {string} opts.platform - Platform
- * @param {object} [opts.discovery] - Discovery options
+ * @param {ReturnType<typeof import("../current-user").getCurrentUser> | import("../current-user").CurrentUserConfig} currentUserOrConfig - CurrentUser actor or configuration
  */
-export const getMutate = ({platform, discovery}) => {
+export const getMutate = currentUserOrConfig => {
   /**
    * @description
    * Allows you to submit transactions to the blockchain to potentially mutate the state.
    *
    * @param {object} [opts] - Mutation Options and configuration
    * @param {string} [opts.cadence] - Cadence Transaction used to mutate Flow
-   * @param {import("../shared-exports").ArgsFn} [opts.args] - Arguments passed to cadence transaction
+   * @param {import("./args").ArgsFn} [opts.args] - Arguments passed to cadence transaction
    * @param {object | string} [opts.template] - Interaction Template for a transaction
    * @param {number} [opts.limit] - Compute Limit for transaction
    * @param {Function} [opts.authz] - Authorization function for transaction
@@ -66,10 +64,12 @@ export const getMutate = ({platform, discovery}) => {
     try {
       await preMutate(opts)
       opts = await prepTemplateOpts(opts)
-      const currentUser = getCurrentUser({platform, discovery})
       // Allow for a config to overwrite the authorization function.
       // prettier-ignore
-      const authz = await sdk.config().get("fcl.authz", currentUser().authorization)
+      const currentUser = typeof currentUserOrConfig === "function" ? currentUserOrConfig : getCurrentUser(currentUserOrConfig)
+      const authz = await sdk
+        .config()
+        .get("fcl.authz", currentUser().authorization)
 
       txid = sdk
         .send([

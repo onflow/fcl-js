@@ -1,5 +1,39 @@
 # @onflow/config
 
+## 1.5.1
+
+### Patch Changes
+
+- [#1983](https://github.com/onflow/fcl-js/pull/1983) [`18d24c8bad7efa0d8741d74f0cf299f89b3622c7`](https://github.com/onflow/fcl-js/commit/18d24c8bad7efa0d8741d74f0cf299f89b3622c7) Thanks [@jribbink](https://github.com/jribbink)! - Update dependencies
+
+- Updated dependencies [[`18d24c8bad7efa0d8741d74f0cf299f89b3622c7`](https://github.com/onflow/fcl-js/commit/18d24c8bad7efa0d8741d74f0cf299f89b3622c7)]:
+  - @onflow/util-invariant@1.2.4
+  - @onflow/util-logger@1.3.3
+  - @onflow/util-actor@1.3.4
+
+## 1.5.1-alpha.0
+
+### Patch Changes
+
+- [#1983](https://github.com/onflow/fcl-js/pull/1983) [`18d24c8bad7efa0d8741d74f0cf299f89b3622c7`](https://github.com/onflow/fcl-js/commit/18d24c8bad7efa0d8741d74f0cf299f89b3622c7) Thanks [@jribbink](https://github.com/jribbink)! - Update dependencies
+
+- Updated dependencies [[`18d24c8bad7efa0d8741d74f0cf299f89b3622c7`](https://github.com/onflow/fcl-js/commit/18d24c8bad7efa0d8741d74f0cf299f89b3622c7)]:
+  - @onflow/util-invariant@1.2.4-alpha.0
+  - @onflow/util-logger@1.3.3-alpha.0
+  - @onflow/util-actor@1.3.4-alpha.0
+
+## 1.5.0
+
+### Minor Changes
+
+- [`cd234798`](https://github.com/onflow/fcl-js/commit/cd234798008868df13447ea97654b7e278dd746f) Thanks [@nialexsan](https://github.com/nialexsan)! - Add `ignoreConflicts` flag to `config.load`
+
+## 1.5.0-alpha.0
+
+### Minor Changes
+
+- [`cd234798`](https://github.com/onflow/fcl-js/commit/cd234798008868df13447ea97654b7e278dd746f) Thanks [@nialexsan](https://github.com/nialexsan)! - Add `ignoreConflicts` flag to `config.load`
+
 ## 1.4.1
 
 ### Patch Changes

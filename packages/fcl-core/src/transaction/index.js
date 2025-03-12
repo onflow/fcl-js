@@ -12,6 +12,7 @@ import {
 import {send as fclSend, decode, getTransactionStatus} from "@onflow/sdk"
 import {HTTPRequestError} from "@onflow/transport-http"
 import {grpc} from "@improbable-eng/grpc-web"
+import {TransactionError} from "./transaction-error"
 
 const TXID_REGEXP = /^[0-9a-fA-F]{64}$/
 
@@ -117,7 +118,7 @@ const spawnTransaction =
  *
  * @param {string} transactionId - The transaction ID
  * @param {object} [opts] - Optional parameters
- * @param {number} [opts.pollRate=2500] - Polling rate in milliseconds
+ * @param {number} [opts.pollRate=1000] - Polling rate in milliseconds
  * @param {number} [opts.txNotFoundTimeout=12500] - Timeout in milliseconds for ignoring transaction not found errors (do not modify unless you know what you are doing)
  * @returns {{
  *    snapshot: function(): Promise<TransactionStatus>,
@@ -130,7 +131,7 @@ const spawnTransaction =
  */
 export function transaction(
   transactionId,
-  opts = {txNotFoundTimeout: 12500, pollRate: 2500}
+  opts = {txNotFoundTimeout: 12500, pollRate: 1000}
 ) {
   // Validate transactionId as 64 byte hash
   if (!TXID_REGEXP.test(scoped(transactionId)))
@@ -150,9 +151,20 @@ export function transaction(
       return new Promise((resolve, reject) => {
         const unsub = subscribe((txStatus, error) => {
           if ((error || txStatus.statusCode) && !suppress) {
-            reject(error || txStatus.errorMessage)
-            unsub()
-          } else if (predicate(txStatus)) {
+            if (error != null) {
+              reject(error)
+              unsub()
+            } else if (txStatus.statusCode === 1) {
+              const transactionError = TransactionError.fromErrorMessage(
+                txStatus.errorMessage
+              )
+              reject(transactionError)
+              unsub()
+            }
+            return
+          }
+
+          if (predicate(txStatus)) {
             resolve(txStatus)
             unsub()
           }
@@ -176,3 +188,5 @@ transaction.isFinalized = isFinalized
 transaction.isExecuted = isExecuted
 transaction.isSealed = isSealed
 transaction.isExpired = isExpired
+
+export {TransactionError}
