@@ -52,8 +52,6 @@ describe("useAccount", () => {
       hookResult = result
     })
 
-    // The query starts running but since we're in an act() block,
-    // we need to wait for it to complete
     expect(hookResult.current.data).toBeNull()
 
     // Wait for the hook to finish loading
@@ -79,51 +77,57 @@ describe("useAccount", () => {
       hookResult = result
     })
 
-    // Wait until an error appears.
-    await waitFor(() => {
-      expect(hookResult.current.error).not.toBeNull()
-    })
-
+    expect(hookResult.current.error).toBeNull()
     expect(hookResult.current.data).toBeNull()
+
+    // Wait for the loading to finish and error to appear
+    await waitFor(() => expect(hookResult.current.isLoading).toBe(false))
+
+    // After loading is complete, we should have an error
+    expect(hookResult.current.data).toBeNull()
+    expect(hookResult.current.error).not.toBeNull()
     expect(hookResult.current.error?.message).toEqual("Failed to fetch account")
     expect(accountMock).toHaveBeenCalledWith("0x5678")
   })
 
-  // test("refetch function works correctly", async () => {
-  //   const mockAccount: Account = {
-  //     address: "0x1234",
-  //     balance: 100,
-  //     code: 0,
-  //     contracts: {},
-  //     keys: [],
-  //   }
+  test("refetch function works correctly", async () => {
+    const mockAccount: Account = {
+      address: "0x1234",
+      balance: 100,
+      code: 0,
+      contracts: {},
+      keys: [],
+    }
 
-  //   const accountMock = jest.mocked(fcl.account)
-  //   accountMock.mockResolvedValueOnce(mockAccount)
+    const accountMock = jest.mocked(fcl.account)
+    accountMock.mockResolvedValueOnce(mockAccount)
 
-  //   const {result} = renderHook(() => useAccount("0x1234"))
+    let hookResult: any
+    await act(async () => {
+      const {result} = renderHook(() => useAccount("0x1234"), {
+        wrapper: FlowProvider,
+      })
+      hookResult = result
+    })
 
-  //   await waitFor(() => {
-  //     expect(result.current.loading).toBe(false)
-  //   })
+    await waitFor(() => {
+      expect(hookResult.current.isLoading).toBe(false)
+    })
 
-  //   const updatedAccount = {...mockAccount, balance: 200}
-  //   accountMock.mockResolvedValueOnce(updatedAccount)
+    expect(hookResult.current.data).toEqual(mockAccount)
 
-  //   act(() => {
-  //     result.current.refetch()
-  //   })
+    const updatedAccount = {...mockAccount, balance: 200}
+    accountMock.mockResolvedValueOnce(updatedAccount)
 
-  //   // Should be loading again
-  //   expect(result.current.loading).toBe(true)
+    act(() => {
+      hookResult.current.refetch()
+    })
 
-  //   // Wait for refetch to complete
-  //   await waitFor(() => {
-  //     expect(result.current.loading).toBe(false)
-  //   })
+    await waitFor(() => {
+      expect(hookResult.current.data?.balance).toBe(200)
+    })
 
-  //   // After refetching, it should have the updated account data
-  //   expect(result.current.account).toEqual(updatedAccount)
-  //   expect(accountMock).toHaveBeenCalledTimes(2)
-  // })
+    expect(hookResult.current.data).toEqual(updatedAccount)
+    expect(accountMock).toHaveBeenCalledTimes(2)
+  })
 })
