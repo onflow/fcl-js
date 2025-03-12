@@ -3,11 +3,14 @@
 import React, {useEffect, useState, PropsWithChildren} from "react"
 import * as fcl from "@onflow/fcl"
 import {FlowConfig, FlowConfigContext} from "../core/context"
+import {QueryClient, QueryClientProvider} from "@tanstack/react-query"
 
 interface FlowProviderProps {
   config?: FlowConfig
   flowJson?: Record<string, any>
 }
+
+const globalQueryClient = new QueryClient()
 
 const mappings: Array<{fcl: string; typed: keyof FlowConfig}> = [
   {fcl: "accessNode.api", typed: "accessNodeUrl"},
@@ -100,8 +103,10 @@ export function FlowProvider({
   }, [initialConfig, flowJson])
 
   return (
-    <FlowConfigContext.Provider value={flowConfig}>
-      {children}
-    </FlowConfigContext.Provider>
+    <QueryClientProvider client={globalQueryClient}>
+      <FlowConfigContext.Provider value={flowConfig}>
+        {children}
+      </FlowConfigContext.Provider>
+    </QueryClientProvider>
   )
 }
