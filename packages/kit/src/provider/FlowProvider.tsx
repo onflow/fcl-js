@@ -1,5 +1,3 @@
-"use client"
-
 import React, {useEffect, useState, PropsWithChildren} from "react"
 import * as fcl from "@onflow/fcl"
 import {FlowConfig, FlowConfigContext} from "../core/context"
