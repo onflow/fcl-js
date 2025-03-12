@@ -18,7 +18,7 @@ describe("Get Transaction", () => {
       gas_limit: "123",
       proposal_key: {
         address: "1654653399040a61",
-        key_id: "1",
+        key_index: "1",
         signer_index: "0",
         sequence_number: "1",
       },
