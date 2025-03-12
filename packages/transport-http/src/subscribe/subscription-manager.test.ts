@@ -70,12 +70,13 @@ describe("SubscriptionManager", () => {
       const data = JSON.parse(msg) as SubscribeMessageRequest
       expect(data).toEqual({
         action: "subscribe",
+        subscription_id: "0",
         topic,
         arguments: mockConnectionArgs,
       })
 
       const response: SubscribeMessageResponse = {
-        id: "id",
+        subscription_id: "0",
         action: Action.SUBSCRIBE,
         success: true,
         topic,
@@ -120,12 +121,13 @@ describe("SubscriptionManager", () => {
       const data = JSON.parse(msg) as SubscribeMessageRequest
       expect(data).toEqual({
         action: "subscribe",
+        subscription_id: "0",
         topic,
         arguments: mockConnectionArgs,
       })
 
       const response: SubscribeMessageResponse = {
-        id: "id",
+        subscription_id: "0",
         action: Action.SUBSCRIBE,
         success: true,
         topic,
@@ -148,7 +150,7 @@ describe("SubscriptionManager", () => {
 
     serverPromise = (async () => {
       const data = {
-        id: "id",
+        subscription_id: "0",
         data: {key: "value"},
       } as SubscriptionDataMessage
       mockWs.send(JSON.stringify(data))
@@ -157,20 +159,17 @@ describe("SubscriptionManager", () => {
     await serverPromise
 
     expect(mockSubscriber.onData).toHaveBeenCalledTimes(1)
-    expect(mockSubscriber.onData).toHaveBeenCalledWith({key: "value"})
+    expect(mockSubscriber.onData).toHaveBeenCalledWith({
+      subscription_id: "0",
+      data: {key: "value"},
+    })
     expect(mockSubscriber.onError).toHaveBeenCalledTimes(0)
 
-    serverPromise = (async () => {
-      const msg = (await mockWs.nextMessage) as string
-      const data = JSON.parse(msg) as UnsubscribeMessageRequest
-      expect(data).toEqual({
-        action: "unsubscribe",
-        id: "id",
-      })
-    })()
-
+    // Unsubscribe from the only subscription
     subscription.unsubscribe()
-    await serverPromise
+
+    // Connection should be closed as there are no more subscriptions
+    await mockWs.closed
   })
 
   test("reconnects to stream on close", async () => {
@@ -190,12 +189,13 @@ describe("SubscriptionManager", () => {
       const data = JSON.parse(msg) as SubscribeMessageRequest
       expect(data).toEqual({
         action: "subscribe",
+        subscription_id: "0",
         topic,
         arguments: mockConnectionArgs,
       })
 
       const response: SubscribeMessageResponse = {
-        id: "id1",
+        subscription_id: "0",
         action: Action.SUBSCRIBE,
         success: true,
         topic,
@@ -224,7 +224,7 @@ describe("SubscriptionManager", () => {
 
     serverPromise = (async () => {
       const data = {
-        id: "id1",
+        subscription_id: "0",
         data: {key: "value"},
       } as SubscriptionDataMessage
       mockWs.send(JSON.stringify(data))
@@ -233,7 +233,10 @@ describe("SubscriptionManager", () => {
     await serverPromise
 
     expect(mockSubscriber.onData).toHaveBeenCalledTimes(1)
-    expect(mockSubscriber.onData).toHaveBeenCalledWith({key: "value"})
+    expect(mockSubscriber.onData).toHaveBeenCalledWith({
+      subscription_id: "0",
+      data: {key: "value"},
+    })
     expect(mockSubscriber.onError).toHaveBeenCalledTimes(0)
 
     // Close the connection and create a new one
@@ -246,13 +249,14 @@ describe("SubscriptionManager", () => {
       const msg = (await mockWs.nextMessage) as string
       const data = JSON.parse(msg) as SubscribeMessageRequest
       expect(data).toEqual({
+        subscription_id: "1",
         action: "subscribe",
         topic,
         arguments: mockConnectionArgs,
       })
 
       const response: SubscribeMessageResponse = {
-        id: "id2",
+        subscription_id: "1",
         action: Action.SUBSCRIBE,
         success: true,
         topic,
@@ -267,7 +271,7 @@ describe("SubscriptionManager", () => {
 
     serverPromise = (async () => {
       const data = {
-        id: "id2",
+        subscription_id: "0",
         data: {key: "value2"},
       } as SubscriptionDataMessage
       mockWs.send(JSON.stringify(data))
