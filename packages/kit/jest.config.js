@@ -1,7 +1,6 @@
 module.exports = {
   testEnvironment: "jsdom",
-  transformIgnorePatterns: [
-    "<rootDir>/bower_components/",
-    "<rootDir>/node_modules/",
-  ],
+  moduleNameMapper: {
+    "walletconnect/relay-auth": "<rootDir>/src/__mocks__/relay-mock.ts",
+  },
 }
