@@ -60,7 +60,7 @@ export class SubscriptionManager<Handlers extends SubscriptionHandler<any>[]> {
   private subscriptions: SubscriptionInfo[] = []
   private config: DeepRequired<SubscriptionManagerConfig>
   private reconnectAttempts = 0
-  private handlers: Record<string, SubscriptionHandler<any>>
+  private handlers: SubscriptionHandler<any>[]
 
   constructor(handlers: Handlers, config: SubscriptionManagerConfig) {
     this.config = {
@@ -72,15 +72,7 @@ export class SubscriptionManager<Handlers extends SubscriptionHandler<any>[]> {
         ...config.reconnectOptions,
       },
     }
-
-    // Map data providers by topic
-    this.handlers = handlers.reduce(
-      (acc, handler) => {
-        acc[handler.topic] = handler
-        return acc
-      },
-      {} as Record<string, SubscriptionHandler<any>>
-    )
+    this.handlers = handlers
   }
 
   // Lazy connect to the socket when the first subscription is made
@@ -203,7 +195,7 @@ export class SubscriptionManager<Handlers extends SubscriptionHandler<any>[]> {
     // Send the subscribe message
     try {
       const response = await this.sendSubscribe(sub)
-      if (!response.success) {
+      if (response.error_message) {
         throw new Error(
           `Failed to subscribe to topic ${sub.topic}, error message: ${response.error_message}`
         )
@@ -255,7 +247,7 @@ export class SubscriptionManager<Handlers extends SubscriptionHandler<any>[]> {
     }
 
     const response = await this.request(request)
-    if (!response.success) {
+    if (response.error_message) {
       throw new Error(
         `Failed to subscribe to topic ${sub.topic}, error message: ${response.error_message}`
       )
@@ -274,7 +266,7 @@ export class SubscriptionManager<Handlers extends SubscriptionHandler<any>[]> {
     const response: UnsubscribeMessageResponse = (await this.request(
       request
     )) as UnsubscribeMessageResponse
-    if (!response.success) {
+    if (response.error_message) {
       throw new Error(
         `Failed to unsubscribe from topic ${sub.topic}, error message: ${response.error_message}`
       )
@@ -316,7 +308,7 @@ export class SubscriptionManager<Handlers extends SubscriptionHandler<any>[]> {
   }
 
   private getHandler(topic: string) {
-    const handler = this.handlers[topic]
+    const handler = this.handlers.find(handler => handler.topic === topic)
     if (!handler) {
       throw new Error(`No handler found for topic ${topic}`)
     }

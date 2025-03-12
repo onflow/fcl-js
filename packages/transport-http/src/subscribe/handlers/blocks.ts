@@ -8,31 +8,34 @@ type BlocksData =
   SdkTransport.SubscriptionData<SdkTransport.SubscriptionTopic.BLOCKS>
 
 type BlocksDataDto = {
-  block: {
-    id: string
-    parent_id: string
-    height: number
-    timestamp: string
-    collection_guarantees: {
-      collection_id: string
-      signer_ids: string[]
-    }[]
-    block_seals: {
-      block_id: string
-      result_id: string
-    }[]
+  payload: {
+    header: {
+      id: string
+      parent_id: string
+      height: number
+      timestamp: string
+    }
+    payload: {
+      collection_guarantees: {
+        collection_id: string
+        signer_indices: string[]
+      }[]
+      block_seals: {
+        block_id: string
+        result_id: string
+      }[]
+    }
   }
 }
 
-type BlocksArgsDto =
+type BlocksArgsDto = {block_status: "finalized" | "sealed"} & (
   | {
-      block_status?: number
       start_block_id?: string
     }
   | {
-      block_status?: number
-      start_block_height?: number
+      start_block_height?: string
     }
+)
 
 export const blocksHandler = createSubscriptionHandler<{
   Topic: SdkTransport.SubscriptionTopic.BLOCKS
@@ -52,17 +55,16 @@ export const blocksHandler = createSubscriptionHandler<{
         // Parse the raw data
         const parsedData: BlocksData = {
           block: {
-            id: data.block.id,
-            parentId: data.block.parent_id,
-            height: data.block.height,
-            timestamp: data.block.timestamp,
-            collectionGuarantees: data.block.collection_guarantees.map(
-              guarantee => ({
+            id: data.payload.header.id,
+            parentId: data.payload.header.parent_id,
+            height: data.payload.header.height,
+            timestamp: data.payload.header.timestamp,
+            collectionGuarantees:
+              data.payload.payload.collection_guarantees.map(guarantee => ({
                 collectionId: guarantee.collection_id,
-                signerIds: guarantee.signer_ids,
-              })
-            ),
-            blockSeals: data.block.block_seals.map(seal => ({
+                signerIds: guarantee.signer_indices,
+              })),
+            blockSeals: data.payload.payload.block_seals.map(seal => ({
               blockId: seal.block_id,
               executionReceiptId: seal.result_id,
             })),
@@ -72,7 +74,7 @@ export const blocksHandler = createSubscriptionHandler<{
         // Update the resume args
         resumeArgs = {
           blockStatus: resumeArgs.blockStatus,
-          startBlockHeight: data.block.height + 1,
+          startBlockHeight: data.payload.header.height + 1,
         }
 
         onData(parsedData)
@@ -88,7 +90,7 @@ export const blocksHandler = createSubscriptionHandler<{
         if ("startBlockHeight" in args) {
           return {
             ...encodedArgs,
-            start_block_height: args.startBlockHeight,
+            start_block_height: String(args.startBlockHeight),
           }
         }
 
@@ -102,7 +104,8 @@ export const blocksHandler = createSubscriptionHandler<{
         return encodedArgs
       },
       get connectionArgs() {
-        return resumeArgs
+        // TODO: FIX
+        return this.argsToDto(resumeArgs) as any
       },
     }
   },

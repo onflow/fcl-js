@@ -12,11 +12,11 @@ export enum SubscriptionTopic {
 export type SubscriptionSchema = {
   [SubscriptionTopic.BLOCKS]: SchemaItem<
     | {
-        blockStatus?: number
+        blockStatus: "finalized" | "sealed"
         startBlockId?: string
       }
     | {
-        blockStatus?: number
+        blockStatus: "finalized" | "sealed"
         startBlockHeight?: number
       },
     {

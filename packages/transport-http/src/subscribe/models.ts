@@ -10,7 +10,6 @@ export interface BaseMessageRequest {
 
 export interface BaseMessageResponse {
   action?: Action
-  success: boolean
   error_message?: string
   subscription_id: string
 }
