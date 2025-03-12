@@ -9,6 +9,10 @@ jest.mock("@onflow/fcl", () => {
   return {
     ...actualFcl,
     account: jest.fn(),
+    config: () => ({
+      subscribe: jest.fn(() => () => {}), // Mock subscription to avoid act warning
+      load: jest.fn(),
+    }),
   }
 })
 
@@ -27,34 +31,39 @@ describe("useAccount", () => {
     expect(result.current.error).toBeNull()
   })
 
-  // test("fetches account when address is provided", async () => {
-  //   const mockAccount: Account = {
-  //     address: "0x1234",
-  //     balance: 100,
-  //     code: 0,
-  //     contracts: {},
-  //     keys: [],
-  //   }
+  test("fetches account when address is provided", async () => {
+    const mockAccount: Account = {
+      address: "0x1234",
+      balance: 100,
+      code: 0,
+      contracts: {},
+      keys: [],
+    }
 
-  //   const accountMock = jest.mocked(fcl.account)
-  //   accountMock.mockResolvedValueOnce(mockAccount)
+    const accountMock = jest.mocked(fcl.account)
+    accountMock.mockResolvedValueOnce(mockAccount)
 
-  //   const {result} = renderHook(() => useAccount("0x1234"))
+    let hookResult: any
 
-  //   // Initially it should be in loading state
-  //   expect(result.current.loading).toBe(true)
-  //   expect(result.current.account).toBeNull()
+    await act(async () => {
+      const {result} = renderHook(() => useAccount("0x1234"), {
+        wrapper: FlowProvider,
+      })
+      hookResult = result
+    })
 
-  //   // Wait for the async operation to complete
-  //   await waitFor(() => {
-  //     expect(result.current.loading).toBe(false)
-  //   })
+    // The query starts running but since we're in an act() block, 
+    // we need to wait for it to complete
+    expect(hookResult.current.data).toBeNull()
 
-  //   // After loading, it should have the account data
-  //   expect(result.current.account).toEqual(mockAccount)
-  //   expect(result.current.error).toBeNull()
-  //   expect(accountMock).toHaveBeenCalledWith("0x1234")
-  // })
+    // Wait for the hook to finish loading
+    await waitFor(() => expect(hookResult.current.isLoading).toBe(false))
+
+    // After update, the data should be available
+    expect(hookResult.current.data).toEqual(mockAccount)
+    expect(hookResult.current.error).toBeNull()
+    expect(accountMock).toHaveBeenCalledWith("0x1234")
+  })
 
   // test("handles error when fetching account fails", async () => {
   //   const testError = new Error("Failed to fetch account")
