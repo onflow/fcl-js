@@ -26,5 +26,6 @@ export function useAccount(
     queryFn: fetchAccount,
     enabled: Boolean(address),
     initialData: null,
+    retry: false,
   })
 }

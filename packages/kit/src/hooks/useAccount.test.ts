@@ -52,7 +52,7 @@ describe("useAccount", () => {
       hookResult = result
     })
 
-    // The query starts running but since we're in an act() block, 
+    // The query starts running but since we're in an act() block,
     // we need to wait for it to complete
     expect(hookResult.current.data).toBeNull()
 
@@ -65,23 +65,29 @@ describe("useAccount", () => {
     expect(accountMock).toHaveBeenCalledWith("0x1234")
   })
 
-  // test("handles error when fetching account fails", async () => {
-  //   const testError = new Error("Failed to fetch account")
-  //   const accountMock = jest.mocked(fcl.account)
-  //   accountMock.mockRejectedValueOnce(testError)
+  test("handles error when fetching account fails", async () => {
+    const testError = new Error("Failed to fetch account")
+    const accountMock = jest.mocked(fcl.account)
+    accountMock.mockRejectedValueOnce(testError)
 
-  //   const {result} = renderHook(() => useAccount("0x5678"))
+    let hookResult: any
 
-  //   expect(result.current.loading).toBe(true)
+    await act(async () => {
+      const {result} = renderHook(() => useAccount("0x5678"), {
+        wrapper: FlowProvider,
+      })
+      hookResult = result
+    })
 
-  //   await waitFor(() => {
-  //     expect(result.current.loading).toBe(false)
-  //   })
+    // Wait until an error appears.
+    await waitFor(() => {
+      expect(hookResult.current.error).not.toBeNull()
+    })
 
-  //   expect(result.current.account).toBeNull()
-  //   expect(result.current.error).toEqual(testError)
-  //   expect(accountMock).toHaveBeenCalledWith("0x5678")
-  // })
+    expect(hookResult.current.data).toBeNull()
+    expect(hookResult.current.error?.message).toEqual("Failed to fetch account")
+    expect(accountMock).toHaveBeenCalledWith("0x5678")
+  })
 
   // test("refetch function works correctly", async () => {
   //   const mockAccount: Account = {
