@@ -241,8 +241,6 @@ describe("SubscriptionManager", () => {
 
     // Close the connection and create a new one
     mockWs.close()
-    WS.clean()
-    await new Promise(resolve => setTimeout(resolve, 0))
     mockWs = new WS("wss://localhost:8080")
 
     serverPromise = (async () => {
@@ -282,6 +280,11 @@ describe("SubscriptionManager", () => {
     await serverPromise
 
     expect(mockSubscriber.onData).toHaveBeenCalledTimes(2)
-    expect(mockSubscriber.onData.mock.calls[1]).toEqual([{key: "value2"}])
+    expect(mockSubscriber.onData.mock.calls[1]).toEqual([
+      {
+        subscription_id: "0",
+        data: {key: "value2"},
+      },
+    ])
   })
 })

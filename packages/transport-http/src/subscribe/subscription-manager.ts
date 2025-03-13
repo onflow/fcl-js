@@ -94,6 +94,21 @@ export class SubscriptionManager<Handlers extends SubscriptionHandler<any>[]> {
 
       let hasOpened = false
       this.socket = new WebSocket(this.config.node)
+      this.socket.addEventListener("message", event => {
+        const message = JSON.parse(event.data) as
+          | MessageResponse
+          | SubscriptionDataMessage
+
+        const sub = this.subscriptions.find(
+          sub => sub.id === message.subscription_id
+        )
+        if (sub) {
+          if (!("action" in message) && message.subscription_id === sub.id) {
+            // TODO: STRONG TYPES
+            sub.subscriber.onData(message)
+          }
+        }
+      })
       this.socket.addEventListener("close", () => {
         void this.reconnect(new Error("WebSocket closed"))
       })
@@ -187,19 +202,6 @@ export class SubscriptionManager<Handlers extends SubscriptionHandler<any>[]> {
     }
     this.subscriptions.push(sub)
 
-    // Bind a new observer to the socket
-    const mgr = this
-    function observer(event: MessageEvent) {
-      const message = JSON.parse(event.data) as
-        | MessageResponse
-        | SubscriptionDataMessage
-      if (!("action" in message) && message.subscription_id === sub.id) {
-        // TODO: STRONG TYPES
-        subscriber.onData(message)
-      }
-    }
-    this.socket?.addEventListener("message", observer)
-
     // Send the subscribe message
     try {
       const response = await this.sendSubscribe(sub)
@@ -210,18 +212,14 @@ export class SubscriptionManager<Handlers extends SubscriptionHandler<any>[]> {
       }
     } catch (e) {
       // Unsubscribe if there was an error
-      unsubscribe()
+      this.unsubscribe(sub.id)
       throw e
     }
 
-    // Return the unsubscribe function
-    function unsubscribe() {
-      mgr.socket?.removeEventListener("message", observer)
-      mgr.unsubscribe(sub.id)
-    }
-
     return {
-      unsubscribe,
+      unsubscribe: () => {
+        this.unsubscribe(sub.id)
+      },
     }
   }
 
