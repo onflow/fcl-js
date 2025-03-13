@@ -1,13 +1,8 @@
 import * as fcl from "@onflow/fcl"
 import {Account} from "@onflow/typedefs"
-import {useCallback, useEffect, useState} from "react"
-
-interface UseAccountReturn {
-  account: Account | null
-  loading: boolean
-  error: Error | null
-  refetch: () => void
-}
+import {useQuery, UseQueryResult} from "@tanstack/react-query"
+import {useCallback} from "react"
+import {useFlowQueryClient} from "../provider/FlowQueryClient"
 
 /**
  * useAccount hook
@@ -15,40 +10,28 @@ interface UseAccountReturn {
  * Fetches the account data from a given address.
  *
  * @param address - The Flow address to fetch the account for (with or without `0x`).
- * @returns An object containing:
- *  - account: the fetched account (or `null` if not loaded)
- *  - loading: whether the fetch is in progress
- *  - error: any error that occurred
- *  - refetch: a function to re-fetch the account data
+ * @returns {UseQueryResult<Account | null, Error>} The entire useQuery result
+ *  (data, isLoading, error, refetch, etc.)
  */
-export function useAccount(address?: string): UseAccountReturn {
-  const [account, setAccount] = useState<Account | null>(null)
-  const [loading, setLoading] = useState<boolean>(false)
-  const [error, setError] = useState<Error | null>(null)
-
+export function useAccount(
+  address?: string
+): UseQueryResult<Account | null, Error> {
   const fetchAccount = useCallback(async () => {
-    if (!address) return
-    setLoading(true)
-    setError(null)
-    try {
-      const acctData = await fcl.account(address)
-      setAccount(acctData as Account)
-    } catch (err) {
-      setError(err as Error)
-      setAccount(null)
-    } finally {
-      setLoading(false)
-    }
+    if (!address) return null
+    const acctData = await fcl.account(address)
+    return acctData as Account
   }, [address])
 
-  useEffect(() => {
-    fetchAccount()
-  }, [fetchAccount])
+  const queryClient = useFlowQueryClient()
 
-  return {
-    account,
-    loading,
-    error,
-    refetch: fetchAccount,
-  }
+  return useQuery<Account | null, Error>(
+    {
+      queryKey: ["flowAccount", address],
+      queryFn: fetchAccount,
+      enabled: Boolean(address),
+      initialData: null,
+      retry: false,
+    },
+    queryClient
+  )
 }
