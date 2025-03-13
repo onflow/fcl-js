@@ -1,5 +1,15 @@
 # @onflow/fcl-ethereum-provider
 
+## 0.0.1-cross-vm.4
+
+### Patch Changes
+
+- [#2198](https://github.com/onflow/fcl-js/pull/2198) [`8e94a2b3e461ef3b23e1a14d4c49320c84ca035b`](https://github.com/onflow/fcl-js/commit/8e94a2b3e461ef3b23e1a14d4c49320c84ca035b) Thanks [@jribbink](https://github.com/jribbink)! - Update README files
+
+- Updated dependencies [[`1d3351e79826278db880685799bb285758df04ce`](https://github.com/onflow/fcl-js/commit/1d3351e79826278db880685799bb285758df04ce), [`8e94a2b3e461ef3b23e1a14d4c49320c84ca035b`](https://github.com/onflow/fcl-js/commit/8e94a2b3e461ef3b23e1a14d4c49320c84ca035b), [`ef3e1583d945f490d71de0ca483a380d51beaad7`](https://github.com/onflow/fcl-js/commit/ef3e1583d945f490d71de0ca483a380d51beaad7)]:
+  - @onflow/fcl-ethereum-provider@0.0.1-cross-vm.4
+  - @onflow/fcl@1.14.0-cross-vm.1
+
 ## 0.0.1-cross-vm.3
 
 ### Minor Changes

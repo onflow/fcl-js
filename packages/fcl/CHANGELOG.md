@@ -1,5 +1,12 @@
 # @onflow/fcl
 
+## 1.14.0-cross-vm.1
+
+### Patch Changes
+
+- Updated dependencies [[`1d3351e79826278db880685799bb285758df04ce`](https://github.com/onflow/fcl-js/commit/1d3351e79826278db880685799bb285758df04ce)]:
+  - @onflow/fcl-wc@6.0.0-cross-vm.1
+
 ## 1.14.0-cross-vm.0
 
 ### Minor Changes
