@@ -3,7 +3,9 @@ import * as fcl from "@onflow/fcl"
 
 /**
  * Create a connector for the Flow Wallet (currently only supports the extension)
- * @param params
+ * @param params - Optional parameters
+ * @param params.user - The current user
+ * @param params.config - The current config
  * @returns
  */
 export const flowWallet = (params?: {
