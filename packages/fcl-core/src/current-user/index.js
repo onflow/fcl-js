@@ -182,7 +182,6 @@ const getAuthenticate =
       spawnCurrentUser(config)
       const opts = {redir}
       const user = await getSnapshot(config)()
-      const discoveryService = await getDiscoveryService(service)
       const refreshService = serviceOfType(user.services, "authn-refresh")
       let accountProofData
 
@@ -223,6 +222,7 @@ const getAuthenticate =
       }
 
       try {
+        const discoveryService = await getDiscoveryService(service)
         const response = await execService({
           service: discoveryService,
           msg: accountProofData,
