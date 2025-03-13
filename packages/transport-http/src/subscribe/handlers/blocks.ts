@@ -8,23 +8,21 @@ type BlocksData =
   SdkTransport.SubscriptionData<SdkTransport.SubscriptionTopic.BLOCKS>
 
 type BlocksDataDto = {
+  header: {
+    id: string
+    parent_id: string
+    height: string
+    timestamp: string
+  }
   payload: {
-    header: {
-      id: string
-      parent_id: string
-      height: string
-      timestamp: string
-    }
-    payload: {
-      collection_guarantees: {
-        collection_id: string
-        signer_indices: string[]
-      }[]
-      block_seals: {
-        block_id: string
-        result_id: string
-      }[]
-    }
+    collection_guarantees: {
+      collection_id: string
+      signer_indices: string[]
+    }[]
+    block_seals: {
+      block_id: string
+      result_id: string
+    }[]
   }
 }
 
@@ -46,16 +44,17 @@ export const blocksHandler = createSubscriptionHandler<{
         // Parse the raw data
         const parsedData: BlocksData = {
           block: {
-            id: data.payload.header.id,
-            parentId: data.payload.header.parent_id,
-            height: Number(data.payload.header.height),
-            timestamp: data.payload.header.timestamp,
-            collectionGuarantees:
-              data.payload.payload.collection_guarantees.map(guarantee => ({
+            id: data.header.id,
+            parentId: data.header.parent_id,
+            height: Number(data.header.height),
+            timestamp: data.header.timestamp,
+            collectionGuarantees: data.payload.collection_guarantees.map(
+              guarantee => ({
                 collectionId: guarantee.collection_id,
                 signerIds: guarantee.signer_indices,
-              })),
-            blockSeals: data.payload.payload.block_seals.map(seal => ({
+              })
+            ),
+            blockSeals: data.payload.block_seals.map(seal => ({
               blockId: seal.block_id,
               executionReceiptId: seal.result_id,
             })),
@@ -65,9 +64,7 @@ export const blocksHandler = createSubscriptionHandler<{
         // Update the resume args
         resumeArgs = {
           blockStatus: resumeArgs.blockStatus,
-          startBlockHeight: Number(
-            BigInt(data.payload.header.height) + BigInt(1)
-          ),
+          startBlockHeight: Number(BigInt(data.header.height) + BigInt(1)),
         }
 
         onData(parsedData)

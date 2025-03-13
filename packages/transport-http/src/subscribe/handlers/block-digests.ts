@@ -9,7 +9,7 @@ type BlockDigestsData =
 
 type BlockDigestsDataDto = {
   block_id: string
-  height: number
+  height: string
   timestamp: string
 }
 
@@ -34,7 +34,7 @@ export const blockDigestsHandler = createSubscriptionHandler<{
         const parsedData: BlockDigestsData = {
           blockDigest: {
             id: data.block_id,
-            height: data.height,
+            height: Number(data.height),
             timestamp: data.timestamp,
           },
         }
@@ -42,7 +42,7 @@ export const blockDigestsHandler = createSubscriptionHandler<{
         // Update the resume args
         resumeArgs = {
           blockStatus: resumeArgs.blockStatus,
-          startBlockId: String(BigInt(data.block_id) + BigInt(1)),
+          startBlockId: String(BigInt(data.height) + BigInt(1)),
         }
 
         onData(parsedData)
@@ -72,7 +72,8 @@ export const blockDigestsHandler = createSubscriptionHandler<{
         return encodedArgs
       },
       get connectionArgs() {
-        return resumeArgs
+        // TODO: this is not good
+        return this.argsToDto(resumeArgs) as any
       },
     }
   },
