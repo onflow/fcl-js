@@ -22,11 +22,11 @@ export enum SubscriptionTopic {
 
 type BlockArgs =
   | {
-      blockStatus?: number
+      blockStatus: "finalized" | "sealed"
       startBlockId?: string
     }
   | {
-      blockStatus?: number
+      blockStatus: "finalized" | "sealed"
       startBlockHeight?: number
     }
 

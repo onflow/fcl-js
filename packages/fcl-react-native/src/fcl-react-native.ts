@@ -61,6 +61,7 @@ export {
   invariant,
   subscribeEvents,
   nodeVersionInfo,
+  TransactionError,
 } from "@onflow/fcl-core"
 
 import {

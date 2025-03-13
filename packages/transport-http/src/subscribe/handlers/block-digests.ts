@@ -1,5 +1,5 @@
 import {SdkTransport} from "@onflow/typedefs"
-import {BlockArgsModel, createSubscriptionHandler} from "./types"
+import {BlockArgsDto, createSubscriptionHandler} from "./types"
 
 type BlockDigestsArgs =
   SdkTransport.SubscriptionArguments<SdkTransport.SubscriptionTopic.BLOCK_DIGESTS>
@@ -8,15 +8,12 @@ type BlockDigestsData =
   SdkTransport.SubscriptionData<SdkTransport.SubscriptionTopic.BLOCK_DIGESTS>
 
 type BlockDigestsDataDto = {
-  // TODO: We do not know the data model types yet
-  block_digest: {
-    id: string
-    height: number
-    timestamp: string
-  }
+  block_id: string
+  height: number
+  timestamp: string
 }
 
-type BlockDigestsArgsDto = BlockArgsModel
+type BlockDigestsArgsDto = BlockArgsDto
 
 export const blockDigestsHandler = createSubscriptionHandler<{
   Topic: SdkTransport.SubscriptionTopic.BLOCK_DIGESTS
@@ -36,16 +33,16 @@ export const blockDigestsHandler = createSubscriptionHandler<{
         // Parse the raw data
         const parsedData: BlockDigestsData = {
           blockDigest: {
-            id: data.block_digest.id,
-            height: data.block_digest.height,
-            timestamp: data.block_digest.timestamp,
+            id: data.block_id,
+            height: data.height,
+            timestamp: data.timestamp,
           },
         }
 
         // Update the resume args
         resumeArgs = {
           blockStatus: resumeArgs.blockStatus,
-          startBlockId: data.block_digest.id + 1,
+          startBlockId: String(BigInt(data.block_id) + BigInt(1)),
         }
 
         onData(parsedData)
