@@ -1,5 +1,11 @@
 # @onflow/fcl-wc
 
+## 6.0.0-cross-vm.1
+
+### Minor Changes
+
+- [#2197](https://github.com/onflow/fcl-js/pull/2197) [`1d3351e79826278db880685799bb285758df04ce`](https://github.com/onflow/fcl-js/commit/1d3351e79826278db880685799bb285758df04ce) Thanks [@jribbink](https://github.com/jribbink)! - Add `disableNotifications` param for FCL-WC service
+
 ## 6.0.0-cross-vm.0
 
 ### Major Changes
