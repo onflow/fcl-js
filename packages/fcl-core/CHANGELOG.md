@@ -1,5 +1,11 @@
 # @onflow/fcl
 
+## 1.14.0-cross-vm.1
+
+### Patch Changes
+
+- [#2212](https://github.com/onflow/fcl-js/pull/2212) [`eefac024fe6afef401c19629ff29bf7fe644cdf1`](https://github.com/onflow/fcl-js/commit/eefac024fe6afef401c19629ff29bf7fe644cdf1) Thanks [@jribbink](https://github.com/jribbink)! - Do not check that discovery service is provider in `fcl.authenticate` if user is already logged in
+
 ## 1.14.0-cross-vm.0
 
 ### Minor Changes
