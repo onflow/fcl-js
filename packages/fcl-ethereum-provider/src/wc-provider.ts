@@ -40,6 +40,7 @@ const BASE_WC_SERVICE = (
     },
     params: {
       externalProvider,
+      disableNotifications: true,
     },
   }) as unknown as Service
 
@@ -84,7 +85,10 @@ export class WalletConnectEthereumProvider extends EthereumProvider {
           (externalProviderTopic == null ||
             externalProviderTopic === provider.signer.session.topic)
         ) {
-          await fclUser.authenticate({service: wcService, forceReauth: true})
+          await fclUser.authenticate({
+            service: wcService,
+            forceReauth: true,
+          })
         } else if (!provider.signer.session) {
           // If no session is set but FCL is still authenticated, unauthenticate the user
           await fclUser.unauthenticate()
