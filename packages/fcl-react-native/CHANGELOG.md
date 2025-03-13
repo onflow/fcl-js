@@ -1,5 +1,12 @@
 # @onflow/fcl-react-native
 
+## 1.9.12-cross-vm.1
+
+### Patch Changes
+
+- Updated dependencies [[`eefac024fe6afef401c19629ff29bf7fe644cdf1`](https://github.com/onflow/fcl-js/commit/eefac024fe6afef401c19629ff29bf7fe644cdf1)]:
+  - @onflow/fcl-core@1.14.0-cross-vm.1
+
 ## 1.9.12-cross-vm.0
 
 ### Patch Changes

@@ -1,5 +1,13 @@
 # @onflow/fcl-ethereum-provider
 
+## 0.0.1-cross-vm.5
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @onflow/fcl@1.14.0-cross-vm.2
+  - @onflow/fcl-wc@6.0.0-cross-vm.2
+
 ## 0.0.1-cross-vm.4
 
 ### Patch Changes
