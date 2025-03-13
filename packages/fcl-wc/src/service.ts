@@ -74,8 +74,11 @@ const makeExec = (
     const {
       wcRequestHook,
       pairingModalOverride,
-      disableNotifications: appDisabledNotifications,
+      disableNotifications: _appDisabledNotifications,
     } = config
+
+    const appDisabledNotifications =
+      service.params?.disableNotifications ?? _appDisabledNotifications
 
     const resolvedProvider = await resolveProvider({
       provider: signerPromise,
@@ -155,6 +158,7 @@ const makeExec = (
       provider,
       abortSignal,
       isExternal,
+      disableNotifications: service.params?.disableNotifications,
     }).finally(() => notification?.dismiss())
 
     function validateAppLink({uid}: {uid: string}) {
@@ -282,7 +286,7 @@ function connectWc(
       onClose()
       throw error
     } finally {
-      // walletConnectModal?.closeModal()
+      walletConnectModal?.closeModal()
     }
   }
 }
