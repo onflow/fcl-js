@@ -2,6 +2,7 @@ import * as fcl from "@onflow/fcl"
 import {Account} from "@onflow/typedefs"
 import {useQuery, UseQueryResult} from "@tanstack/react-query"
 import {useCallback} from "react"
+import {useFlowQueryClient} from "../provider/FlowQueryClient"
 
 /**
  * useAccount hook
@@ -21,11 +22,16 @@ export function useAccount(
     return acctData as Account
   }, [address])
 
-  return useQuery<Account | null, Error>({
-    queryKey: ["flowAccount", address],
-    queryFn: fetchAccount,
-    enabled: Boolean(address),
-    initialData: null,
-    retry: false,
-  })
+  const queryClient = useFlowQueryClient()
+
+  return useQuery<Account | null, Error>(
+    {
+      queryKey: ["flowAccount", address],
+      queryFn: fetchAccount,
+      enabled: Boolean(address),
+      initialData: null,
+      retry: false,
+    },
+    queryClient
+  )
 }
