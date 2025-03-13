@@ -1,19 +1,20 @@
-import {Service} from "@onflow/typedefs"
 import {createFclConnector} from "../create-connector"
 import * as fcl from "@onflow/fcl"
 
 /**
  * Create a connector for the Flow Wallet (currently only supports the extension)
- * @param params
+ * @param params - Optional parameters
+ * @param params.user - The current user
+ * @param params.config - The current config
  * @returns
  */
-export const flowWallet = (params: {
-  user: typeof fcl.currentUser
-  config: typeof fcl.config
+export const flowWallet = (params?: {
+  user?: typeof fcl.currentUser
+  config?: typeof fcl.config
 }) =>
   createFclConnector({
-    user: params.user || fcl.currentUser,
-    config: params.config || fcl.config,
+    user: params?.user || fcl.currentUser,
+    config: params?.config || fcl.config,
     services: [
       {
         f_type: "Service",
