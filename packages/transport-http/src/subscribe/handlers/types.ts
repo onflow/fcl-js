@@ -12,10 +12,10 @@ export interface SubscriptionHandler<
     initialArgs: T["Args"],
     onData: (data: T["Data"]) => void,
     onError: (error: Error) => void
-  ): DataSubscriber<T["Args"], T["ArgsDto"], T["DataDto"]>
+  ): DataSubscriber<T["ArgsDto"], T["DataDto"]>
 }
 
-export interface DataSubscriber<Args, ArgsDto, DataDto> {
+export interface DataSubscriber<ArgsDto, DataDto> {
   /**
    * The callback to call when a data is received
    */
@@ -29,12 +29,7 @@ export interface DataSubscriber<Args, ArgsDto, DataDto> {
   /**
    * The arguments to connect or reconnect to the subscription
    */
-  argsToDto(args: Args): ArgsDto
-
-  /**
-   * Get the arguments to connect or reconnect to the subscription
-   */
-  get connectionArgs(): Args
+  getConnectionArgs(): ArgsDto
 }
 
 export function createSubscriptionHandler<
@@ -48,3 +43,13 @@ export function createSubscriptionHandler<
 >(handler: SubscriptionHandler<T>): SubscriptionHandler<T> {
   return handler
 }
+
+export type BlockArgsDto =
+  | {
+      block_status?: "finalized" | "sealed"
+      start_block_id?: string
+    }
+  | {
+      block_status?: "finalized" | "sealed"
+      start_block_height?: number
+    }

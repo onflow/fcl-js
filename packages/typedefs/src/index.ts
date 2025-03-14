@@ -99,10 +99,6 @@ export type Block = {
    * - The details of which nodes executed and sealed the blocks
    */
   blockSeals: Array<BlockSeal>
-  /**
-   * - The cryptographic signature of the block
-   */
-  signatures: Array<number>
 }
 export type CollectionGuarantee = {
   /**
@@ -112,7 +108,7 @@ export type CollectionGuarantee = {
   /**
    * - The signer ids of the block
    */
-  signerIds: Array<object>
+  signerIds: Array<string>
 }
 export type BlockSeal = {
   /**
@@ -123,6 +119,23 @@ export type BlockSeal = {
    * - The execution receipt id of the block
    */
   executionReceiptId: string
+}
+/**
+ * BlockDigest holds lightweight block information which includes only block id, block height and block timestamp.
+ */
+export type BlockDigest = {
+  /**
+   * - The id of the block
+   */
+  id: string
+  /**
+   * - The height of the block
+   */
+  height: number
+  /**
+   * - Timestamp of the block
+   */
+  timestamp: string
 }
 export type CompositeSignature = {
   /**

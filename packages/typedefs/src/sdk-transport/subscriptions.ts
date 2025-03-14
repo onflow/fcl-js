@@ -1,20 +1,38 @@
+import {Block, BlockDigest} from ".."
+
+export type SubscriptionSchema = {
+  [SubscriptionTopic.BLOCKS]: SchemaItem<
+    BlockArgs,
+    {
+      block: Block
+    }
+  >
+  [SubscriptionTopic.BLOCK_DIGESTS]: SchemaItem<
+    BlockArgs,
+    {
+      blockDigest: BlockDigest
+    }
+  >
+}
+
+export enum SubscriptionTopic {
+  BLOCKS = "blocks",
+  BLOCK_DIGESTS = "block_digests",
+}
+
+type BlockArgs =
+  | {
+      blockStatus: "finalized" | "sealed"
+      startBlockId?: string
+    }
+  | {
+      blockStatus: "finalized" | "sealed"
+      startBlockHeight?: number
+    }
+
 type SchemaItem<TArgs, TData> = {
   args: TArgs
   data: TData
-}
-
-// TODO: PLACEHOLDER - Replace with actual subscription topics
-export enum SubscriptionTopic {
-  PLACEHOLDER = "PLACEHOLDER",
-}
-
-export type SubscriptionSchema = {
-  [SubscriptionTopic.PLACEHOLDER]: SchemaItem<
-    {},
-    {
-      placeholder: string
-    }
-  >
 }
 
 export type SubscriptionArguments<T extends SubscriptionTopic> =
