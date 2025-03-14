@@ -5,6 +5,8 @@
     "moduleResolution": "Bundler",
     "module": "ESNext",
     "target": "ES2015",
+    // Useful for error cause
+    "lib": ["ES2015", "WebWorker", "DOM", "ES2022.Error"],
     "types": ["node", "jest"],
     // Tells TypeScript to read JS files, as
     // normally they are ignored as source files
