@@ -50,30 +50,26 @@ export const blockDigestsHandler = createSubscriptionHandler<{
       onError(error: Error) {
         onError(error)
       },
-      argsToDto(args: BlockDigestsArgs) {
+      connectionArgs() {
         let encodedArgs: BlockDigestsArgsDto = {
-          block_status: args.blockStatus,
+          block_status: resumeArgs.blockStatus,
         }
 
-        if ("startBlockHeight" in args) {
+        if ("startBlockHeight" in resumeArgs) {
           return {
             ...encodedArgs,
-            start_block_height: args.startBlockHeight,
+            start_block_height: resumeArgs.startBlockHeight,
           }
         }
 
-        if ("startBlockId" in args) {
+        if ("startBlockId" in resumeArgs) {
           return {
             ...encodedArgs,
-            start_block_id: args.startBlockId,
+            start_block_id: resumeArgs.startBlockId,
           }
         }
 
         return encodedArgs
-      },
-      get connectionArgs() {
-        // TODO: this is not good
-        return this.argsToDto(resumeArgs) as any
       },
     }
   },
