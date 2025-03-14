@@ -25,7 +25,7 @@ interface SubscriptionInfo {
   // The topic of the subscription
   topic: string
   // Data provider for the subscription
-  subscriber: DataSubscriber<any, any, any>
+  subscriber: DataSubscriber<any, any>
 }
 
 export interface SubscriptionManagerConfig {
@@ -247,7 +247,7 @@ export class SubscriptionManager<Handlers extends SubscriptionHandler<any>[]> {
     const request: MessageRequest = {
       action: Action.SUBSCRIBE,
       topic: sub.topic,
-      arguments: sub.subscriber.connectionArgs,
+      arguments: sub.subscriber.getConnectionArgs(),
       subscription_id: String(sub.id),
     }
 
