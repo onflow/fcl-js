@@ -1,18 +1,26 @@
+import {Block} from ".."
+
 type SchemaItem<TArgs, TData> = {
   args: TArgs
   data: TData
 }
 
-// TODO: PLACEHOLDER - Replace with actual subscription topics
 export enum SubscriptionTopic {
-  PLACEHOLDER = "PLACEHOLDER",
+  BLOCKS = "blocks",
 }
 
 export type SubscriptionSchema = {
-  [SubscriptionTopic.PLACEHOLDER]: SchemaItem<
-    {},
+  [SubscriptionTopic.BLOCKS]: SchemaItem<
+    | {
+        blockStatus: "finalized" | "sealed"
+        startBlockId?: string
+      }
+    | {
+        blockStatus: "finalized" | "sealed"
+        startBlockHeight?: number
+      },
     {
-      placeholder: string
+      block: Block
     }
   >
 }
