@@ -1,5 +1,5 @@
 import {SdkTransport} from "@onflow/typedefs"
-import {BlockArgsModel, createSubscriptionHandler} from "./types"
+import {BlockArgsDto, createSubscriptionHandler} from "./types"
 
 type BlockHeadersArgs =
   SdkTransport.SubscriptionArguments<SdkTransport.SubscriptionTopic.BLOCK_HEADERS>
@@ -7,25 +7,14 @@ type BlockHeadersArgs =
 type BlockHeadersData =
   SdkTransport.SubscriptionData<SdkTransport.SubscriptionTopic.BLOCK_HEADERS>
 
-type BlockHeadersArgsDto = BlockArgsModel
+type BlockHeadersArgsDto = BlockArgsDto
 
 type BlockHeadersDataDto = {
-  // TODO: We do not know the data model types yet
-  header: {
-    id: string
-    height: number
-    timestamp: string
-    chain_id: string
-    parent_id: string
-    collection_guarantees: {
-      collection_id: string
-      signer_ids: string[]
-    }[]
-    block_seals: {
-      block_id: string
-      result_id: string
-    }[]
-  }
+  id: string
+  parent_id: string
+  height: string
+  timestamp: string
+  parent_voter_signature: string // TODO: Unused
 }
 
 export const blockHeadersHandler = createSubscriptionHandler<{
@@ -47,17 +36,18 @@ export const blockHeadersHandler = createSubscriptionHandler<{
         const parsedData: BlockHeadersData = {
           // TODO: We do not know the data model types yet
           blockHeader: {
-            id: data.header.id,
-            height: data.header.height,
-            timestamp: data.header.timestamp,
-            chainId: data.header.chain_id,
+            id: data.id,
+            parentId: data.parent_id,
+            height: Number(data.height),
+            timestamp: data.timestamp,
+            parentVoterSignature: data.parent_voter_signature,
           } as any,
         }
 
         // Update the resume args
         resumeArgs = {
           blockStatus: resumeArgs.blockStatus,
-          startBlockHeight: data.header.height + 1,
+          startBlockHeight: Number(BigInt(data.height) + BigInt(1)),
         }
 
         onData(parsedData)
