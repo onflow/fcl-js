@@ -232,7 +232,7 @@ may cease to exist.
 ## 0002 Deprecate Resolve Params Resolver
 
 - **Date:** Sept 29th 2020
-- **Issue:** [#177](https://github.com/onflow/flow-js-sdk/issues/177)
+- **Issue:** [#177](https://github.com/onflow/fcl-js/issues/177)
 - **Type:** Deprecation of resolveParams Resolver
 
 At the time of writing this if you are writing script and transaction interactions and building up your resolvers yourself you will likely have a piece of code that looks something like this.
@@ -264,7 +264,7 @@ As part of our ongoing effort to break the sdk down into smaller and smaller pie
 ## 0001 Deprecate Params
 
 - **Date:** July 22nd 2020
-- **Issue:** [#177](https://github.com/onflow/flow-js-sdk/issues/177)
+- **Issue:** [#177](https://github.com/onflow/fcl-js/issues/177)
 - **Type:** Deprecation of Certain Functionality
 
 A common way of getting values from our javascript into our cadence code has been like this:
@@ -294,7 +294,7 @@ const doTheThing = async (a, b, msg) => {
 
 Where `a` and `b` are integers in the users control, and `msg` is a string in the applications control.
 
-We have a couple issues with this, which are better listed out (here)[https://github.com/onflow/flow-js-sdk/issues/177], which is leading us to modify a couple parts of this functionality.
+We have a couple issues with this, which are better listed out (here)[https://github.com/onflow/fcl-js/issues/177], which is leading us to modify a couple parts of this functionality.
 
 With the addition of `Arguments` in the Cadence code we would prefer the above to be written like this:
 

@@ -28,7 +28,7 @@ export async function sendGetTransaction(ix, context = {}, opts = {}) {
 
   const unwrapKey = key => ({
     address: key.address,
-    keyId: Number(key.key_id),
+    keyId: Number(key.key_index),
     sequenceNumber: Number(key.sequence_number),
   })
 
