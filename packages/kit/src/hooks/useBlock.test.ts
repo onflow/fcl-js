@@ -84,4 +84,142 @@ describe("useBlock", () => {
     expect(hookResult.current.error).toBeNull()
     expect(hookResult.current.data).toEqual(mockLatestBlock)
   })
+
+  test("fetches the latest sealed block when sealed is true", async () => {
+    const blockMock = jest.mocked(fcl.block)
+    blockMock.mockResolvedValueOnce(mockSealedBlock)
+
+    let hookResult: any
+
+    await act(async () => {
+      const {result} = renderHook(() => useBlock({sealed: true}), {
+        wrapper: FlowProvider,
+      })
+      hookResult = result
+    })
+
+    await waitFor(() => expect(hookResult.current.isLoading).toBe(false))
+
+    expect(hookResult.current.data).toEqual(mockSealedBlock)
+    expect(blockMock).toHaveBeenCalledWith({sealed: true})
+  })
+
+  test("fetches a block by ID", async () => {
+    const blockId = "specific-block-id"
+    const blockMock = jest.mocked(fcl.block)
+    blockMock.mockResolvedValueOnce(mockBlockById)
+
+    let hookResult: any
+
+    await act(async () => {
+      const {result} = renderHook(() => useBlock({id: blockId}), {
+        wrapper: FlowProvider,
+      })
+      hookResult = result
+    })
+
+    await waitFor(() => expect(hookResult.current.isLoading).toBe(false))
+
+    expect(hookResult.current.data).toEqual(mockBlockById)
+    expect(blockMock).toHaveBeenCalledWith({id: blockId})
+  })
+
+  test("fetches a block by height", async () => {
+    const height = 75
+    const blockMock = jest.mocked(fcl.block)
+    blockMock.mockResolvedValueOnce(mockBlockByHeight)
+
+    let hookResult: any
+
+    await act(async () => {
+      const {result} = renderHook(() => useBlock({height}), {
+        wrapper: FlowProvider,
+      })
+      hookResult = result
+    })
+
+    await waitFor(() => expect(hookResult.current.isLoading).toBe(false))
+
+    expect(hookResult.current.data).toEqual(mockBlockByHeight)
+    expect(blockMock).toHaveBeenCalledWith({height})
+  })
+
+  test("handles error when fetching block fails", async () => {
+    const testError = new Error("Failed to fetch block")
+
+    const blockMock = jest.mocked(fcl.block)
+    blockMock.mockRejectedValueOnce(testError)
+
+    let hookResult: any
+
+    await act(async () => {
+      const {result} = renderHook(() => useBlock({id: "invalid-id"}), {
+        wrapper: FlowProvider,
+      })
+      hookResult = result
+    })
+
+    await waitFor(() => expect(hookResult.current.isLoading).toBe(false))
+
+    expect(hookResult.current.data).toBeNull()
+    expect(hookResult.current.error).toEqual(testError)
+  })
+
+  test("refetch function works correctly", async () => {
+    const blockMock = jest.mocked(fcl.block)
+    blockMock.mockResolvedValueOnce(mockLatestBlock)
+
+    let hookResult: any
+
+    await act(async () => {
+      const {result} = renderHook(() => useBlock(), {
+        wrapper: FlowProvider,
+      })
+      hookResult = result
+    })
+
+    await waitFor(() =>
+      expect(hookResult.current.data).toEqual(mockLatestBlock)
+    )
+
+    const newLatestBlock = {...mockLatestBlock, height: 101}
+    blockMock.mockResolvedValueOnce(newLatestBlock)
+
+    act(() => {
+      hookResult.current.refetch()
+    })
+
+    await waitFor(() => expect(hookResult.current.data).toEqual(newLatestBlock))
+
+    expect(fcl.block).toHaveBeenCalledTimes(2)
+  })
+
+  test("updates when parameters change", async () => {
+    const blockMock = jest.mocked(fcl.block)
+    blockMock.mockResolvedValueOnce(mockLatestBlock)
+
+    let hookResult: any
+
+    await act(async () => {
+      const {result} = renderHook(() => useBlock(), {
+        wrapper: FlowProvider,
+      })
+      hookResult = result
+    })
+
+    await waitFor(() =>
+      expect(hookResult.current.data).toEqual(mockLatestBlock)
+    )
+
+    const newLatestBlock = {...mockLatestBlock, height: 101}
+    blockMock.mockResolvedValueOnce(newLatestBlock)
+
+    act(() => {
+      hookResult.current.refetch()
+    })
+
+    await waitFor(() => expect(hookResult.current.data).toEqual(newLatestBlock))
+
+    expect(fcl.block).toHaveBeenCalledTimes(2)
+  })
 })
