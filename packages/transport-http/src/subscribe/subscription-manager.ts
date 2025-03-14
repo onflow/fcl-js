@@ -19,13 +19,13 @@ type DeepRequired<T> = Required<{
 
 type InferHandler<T> = T extends SubscriptionHandler<infer H> ? H : never
 
-interface SubscriptionInfo {
+interface SubscriptionInfo<ArgsDto = any, DataDto = any> {
   // ID for the subscription
   id: string
   // The topic of the subscription
   topic: string
   // Data provider for the subscription
-  subscriber: DataSubscriber<any, any>
+  subscriber: DataSubscriber<ArgsDto, DataDto>
 }
 
 export interface SubscriptionManagerConfig {
@@ -85,7 +85,6 @@ export class SubscriptionManager<Handlers extends SubscriptionHandler<any>[]> {
         return
       }
 
-      let hasOpened = false
       this.socket = new WebSocket(this.config.node)
       this.socket.addEventListener("message", event => {
         const message = JSON.parse(event.data) as
@@ -103,7 +102,6 @@ export class SubscriptionManager<Handlers extends SubscriptionHandler<any>[]> {
         )
         if (sub) {
           if (!("action" in message) && message.subscription_id === sub.id) {
-            // TODO: STRONG TYPES
             sub.subscriber.onData(message.payload)
           }
         }
@@ -112,8 +110,6 @@ export class SubscriptionManager<Handlers extends SubscriptionHandler<any>[]> {
         void this.handleSocketError(new Error("WebSocket closed"))
       })
       this.socket.addEventListener("open", () => {
-        hasOpened = true
-
         // Restore subscriptions
         Promise.all(
           this.subscriptions.map(async sub => {
