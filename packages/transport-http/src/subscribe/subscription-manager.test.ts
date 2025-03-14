@@ -5,7 +5,6 @@ import {
   SubscribeMessageRequest,
   SubscribeMessageResponse,
   SubscriptionDataMessage,
-  UnsubscribeMessageRequest,
 } from "./models"
 import {
   SubscriptionManager,
@@ -78,7 +77,6 @@ describe("SubscriptionManager", () => {
       const response: SubscribeMessageResponse = {
         subscription_id: "0",
         action: Action.SUBSCRIBE,
-        success: true,
         topic,
       }
       mockWs.send(JSON.stringify(response))
@@ -129,7 +127,6 @@ describe("SubscriptionManager", () => {
       const response: SubscribeMessageResponse = {
         subscription_id: "0",
         action: Action.SUBSCRIBE,
-        success: true,
         topic,
       }
       mockWs.send(JSON.stringify(response))
@@ -151,7 +148,7 @@ describe("SubscriptionManager", () => {
     serverPromise = (async () => {
       const data = {
         subscription_id: "0",
-        data: {key: "value"},
+        payload: {key: "value"},
       } as SubscriptionDataMessage
       mockWs.send(JSON.stringify(data))
     })()
@@ -160,8 +157,7 @@ describe("SubscriptionManager", () => {
 
     expect(mockSubscriber.onData).toHaveBeenCalledTimes(1)
     expect(mockSubscriber.onData).toHaveBeenCalledWith({
-      subscription_id: "0",
-      data: {key: "value"},
+      key: "value",
     })
     expect(mockSubscriber.onError).toHaveBeenCalledTimes(0)
 
@@ -197,7 +193,6 @@ describe("SubscriptionManager", () => {
       const response: SubscribeMessageResponse = {
         subscription_id: "0",
         action: Action.SUBSCRIBE,
-        success: true,
         topic,
       }
       mockWs.send(JSON.stringify(response))
@@ -225,7 +220,7 @@ describe("SubscriptionManager", () => {
     serverPromise = (async () => {
       const data = {
         subscription_id: "0",
-        data: {key: "value"},
+        payload: {key: "value"},
       } as SubscriptionDataMessage
       mockWs.send(JSON.stringify(data))
     })()
@@ -234,8 +229,7 @@ describe("SubscriptionManager", () => {
 
     expect(mockSubscriber.onData).toHaveBeenCalledTimes(1)
     expect(mockSubscriber.onData).toHaveBeenCalledWith({
-      subscription_id: "0",
-      data: {key: "value"},
+      key: "value",
     })
     expect(mockSubscriber.onError).toHaveBeenCalledTimes(0)
 
@@ -258,7 +252,6 @@ describe("SubscriptionManager", () => {
       const response: SubscribeMessageResponse = {
         subscription_id: "0",
         action: Action.SUBSCRIBE,
-        success: true,
         topic,
       }
       mockWs.send(JSON.stringify(response))
@@ -272,7 +265,7 @@ describe("SubscriptionManager", () => {
     serverPromise = (async () => {
       const data = {
         subscription_id: "0",
-        data: {key: "value2"},
+        payload: {key: "value2"},
       } as SubscriptionDataMessage
       mockWs.send(JSON.stringify(data))
     })()
@@ -282,8 +275,7 @@ describe("SubscriptionManager", () => {
     expect(mockSubscriber.onData).toHaveBeenCalledTimes(2)
     expect(mockSubscriber.onData.mock.calls[1]).toEqual([
       {
-        subscription_id: "0",
-        data: {key: "value2"},
+        key: "value2",
       },
     ])
   })

@@ -2,6 +2,7 @@ import {
   Action,
   MessageRequest,
   MessageResponse,
+  SocketError,
   SubscriptionDataMessage,
   UnsubscribeMessageResponse,
 } from "./models"
@@ -91,18 +92,24 @@ export class SubscriptionManager<Handlers extends SubscriptionHandler<any>[]> {
           | MessageResponse
           | SubscriptionDataMessage
 
+        // Error message
+        if ("action" in message && message.error) {
+          this.handleSocketError(SocketError.fromMessage(message.error))
+          return
+        }
+
         const sub = this.subscriptions.find(
           sub => sub.id === message.subscription_id
         )
         if (sub) {
           if (!("action" in message) && message.subscription_id === sub.id) {
             // TODO: STRONG TYPES
-            sub.subscriber.onData(message)
+            sub.subscriber.onData(message.payload)
           }
         }
       })
       this.socket.addEventListener("close", () => {
-        void this.reconnect(new Error("WebSocket closed"))
+        void this.handleSocketError(new Error("WebSocket closed"))
       })
       this.socket.addEventListener("open", () => {
         hasOpened = true
@@ -124,7 +131,7 @@ export class SubscriptionManager<Handlers extends SubscriptionHandler<any>[]> {
     })
   }
 
-  private async reconnect(error: any) {
+  private async handleSocketError(error: any) {
     // Clear the socket
     this.socket = null
 
@@ -197,10 +204,10 @@ export class SubscriptionManager<Handlers extends SubscriptionHandler<any>[]> {
     // Send the subscribe message
     try {
       const response = await this.sendSubscribe(sub)
-      if (response.error_message) {
-        throw new Error(
-          `Failed to subscribe to topic ${sub.topic}, error message: ${response.error_message}`
-        )
+      if (response.error) {
+        throw new Error(`Failed to subscribe to topic ${sub.topic}`, {
+          cause: SocketError.fromMessage(response.error),
+        })
       }
     } catch (e) {
       // Unsubscribe if there was an error
@@ -245,10 +252,10 @@ export class SubscriptionManager<Handlers extends SubscriptionHandler<any>[]> {
     }
 
     const response = await this.request(request)
-    if (response.error_message) {
-      throw new Error(
-        `Failed to subscribe to topic ${sub.topic}, error message: ${response.error_message}`
-      )
+    if (response.error) {
+      throw new Error(`Failed to subscribe to topic ${sub.topic}`, {
+        cause: SocketError.fromMessage(response.error),
+      })
     }
     return response
   }
@@ -264,10 +271,10 @@ export class SubscriptionManager<Handlers extends SubscriptionHandler<any>[]> {
     const response: UnsubscribeMessageResponse = (await this.request(
       request
     )) as UnsubscribeMessageResponse
-    if (response.error_message) {
-      throw new Error(
-        `Failed to unsubscribe from topic ${sub.topic}, error message: ${response.error_message}`
-      )
+    if (response.error) {
+      throw new Error(`Failed to unsubscribe from topic ${sub.topic}`, {
+        cause: SocketError.fromMessage(response.error),
+      })
     }
 
     return response
