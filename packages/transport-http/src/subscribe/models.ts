@@ -10,8 +10,10 @@ export interface BaseMessageRequest {
 
 export interface BaseMessageResponse {
   action?: Action
-  success: boolean
-  error_message?: string
+  error?: {
+    code: number
+    message: string
+  }
   subscription_id: string
 }
 
@@ -86,5 +88,18 @@ type Unsubscribe = Message<
 
 export type SubscriptionDataMessage = {
   subscription_id: string
-  data: any
+  payload: any
+}
+export class SocketError extends Error {
+  code: number
+
+  private constructor(code: number, message: string) {
+    super(message)
+    this.name = "SocketError"
+    this.code = code
+  }
+
+  static fromMessage(error: {code: number; message: string}) {
+    return new SocketError(error.code, error.message)
+  }
 }
