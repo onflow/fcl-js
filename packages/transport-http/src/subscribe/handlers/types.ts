@@ -49,12 +49,12 @@ export function createSubscriptionHandler<
   return handler
 }
 
-export type BlockArgsModel =
+export type BlockArgsDto =
   | {
-      block_status?: number
+      block_status?: "finalized" | "sealed"
       start_block_id?: string
     }
   | {
-      block_status?: number
+      block_status?: "finalized" | "sealed"
       start_block_height?: number
     }
