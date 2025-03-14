@@ -43,3 +43,13 @@ export function createSubscriptionHandler<
 >(handler: SubscriptionHandler<T>): SubscriptionHandler<T> {
   return handler
 }
+
+export type BlockArgsDto =
+  | {
+      block_status?: "finalized" | "sealed"
+      start_block_id?: string
+    }
+  | {
+      block_status?: "finalized" | "sealed"
+      start_block_height?: number
+    }

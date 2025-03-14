@@ -1,5 +1,5 @@
 import {SdkTransport} from "@onflow/typedefs"
-import {createSubscriptionHandler} from "./types"
+import {createSubscriptionHandler, BlockArgsDto} from "./types"
 
 type BlocksArgs =
   SdkTransport.SubscriptionArguments<SdkTransport.SubscriptionTopic.BLOCKS>
@@ -26,20 +26,11 @@ type BlocksDataDto = {
   }
 }
 
-type BlocksArgsDto = {block_status: "finalized" | "sealed"} & (
-  | {
-      start_block_id?: string
-    }
-  | {
-      start_block_height?: string
-    }
-)
-
 export const blocksHandler = createSubscriptionHandler<{
   Topic: SdkTransport.SubscriptionTopic.BLOCKS
   Args: BlocksArgs
   Data: BlocksData
-  ArgsDto: BlocksArgsDto
+  ArgsDto: BlockArgsDto
   DataDto: BlocksDataDto
 }>({
   topic: SdkTransport.SubscriptionTopic.BLOCKS,
@@ -82,7 +73,7 @@ export const blocksHandler = createSubscriptionHandler<{
         onError(error)
       },
       getConnectionArgs() {
-        let encodedArgs: BlocksArgsDto = {
+        let encodedArgs: BlockArgsDto = {
           block_status: resumeArgs.blockStatus,
         }
 
