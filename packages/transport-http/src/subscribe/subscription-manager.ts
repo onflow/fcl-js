@@ -113,7 +113,6 @@ export class SubscriptionManager<Handlers extends SubscriptionHandler<any>[]> {
         // Restore subscriptions
         Promise.all(
           this.subscriptions.map(async sub => {
-            // TODO: This sucks
             await this.sendSubscribe(sub)
           })
         )
