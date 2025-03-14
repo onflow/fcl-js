@@ -12,7 +12,7 @@ export interface SubscriptionHandler<
     initialArgs: T["Args"],
     onData: (data: T["Data"]) => void,
     onError: (error: Error) => void
-  ): DataSubscriber<T["Args"], T["DataDto"]>
+  ): DataSubscriber<T["ArgsDto"], T["DataDto"]>
 }
 
 export interface DataSubscriber<ArgsDto, DataDto> {
