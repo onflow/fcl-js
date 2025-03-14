@@ -62,6 +62,30 @@ export type MessageResponse =
   | SubscribeMessageResponse
   | UnsubscribeMessageResponse
 
+// TODO: START
+
+type Message<
+  Request extends BaseMessageRequest,
+  Response extends BaseMessageResponse,
+> = {
+  Request: Request
+  Response: Response
+}
+
+type ListSubscriptions = Message<
+  ListSubscriptionsMessageRequest,
+  ListSubscriptionsMessageResponse
+>
+
+type Subscribe = Message<SubscribeMessageRequest, SubscribeMessageResponse>
+
+type Unsubscribe = Message<
+  UnsubscribeMessageRequest,
+  UnsubscribeMessageResponse
+>
+
+// TODO: END
+
 export type SubscriptionDataMessage = {
   subscription_id: string
   payload: any
