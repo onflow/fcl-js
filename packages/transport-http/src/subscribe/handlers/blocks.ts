@@ -13,6 +13,7 @@ type BlocksDataDto = {
     parent_id: string
     height: string
     timestamp: string
+    parent_voter_signature: string // TODO: Unused
   }
   payload: {
     collection_guarantees: {
