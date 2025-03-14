@@ -27,12 +27,9 @@ export type SubscriptionSchema = {
     },
     {
       // TODO: We do not know the data model types yet
-      accountStatus: {
-        blockId: string
-        height: number
-        accountEvents: (Omit<Event, "data"> & {
-          payload: string
-        })[]
+      accountStatus: Omit<Event, "data"> & {
+        payload: string
+        accountAddress: string
       }
     }
   >

@@ -11,21 +11,19 @@ type AccountStatusesData =
 type AccountStatusesArgsDto = EventsArgsDto
 
 type AccountStatusesDataDto = {
-  // TODO: We do not know the data model types yet
-  account_status: {
-    block_id: string
-    height: number
-    account_events: {
-      block_id: string
-      block_height: number
-      block_timestamp: string
+  block_id: string
+  block_height: string
+  // block_timestamp: string
+  account_events: {
+    [address: string]: {
       type: string
       transaction_id: string
-      transaction_index: number
-      event_index: number
+      transaction_index: string
+      event_index: string
       payload: string
     }[]
   }
+  message_index: string
 }
 
 export const accountStatusesHandler = createSubscriptionHandler<{
@@ -43,32 +41,33 @@ export const accountStatusesHandler = createSubscriptionHandler<{
 
     return {
       onData(data: AccountStatusesDataDto) {
-        // Parse the raw data
-        const parsedData: AccountStatusesData = {
-          accountStatus: {
-            blockId: data.account_status.block_id,
-            height: data.account_status.height,
-            accountEvents: data.account_status.account_events.map(event => ({
-              blockId: event.block_id,
-              blockHeight: event.block_height,
-              blockTimestamp: event.block_timestamp,
-              type: event.type,
-              transactionId: event.transaction_id,
-              transactionIndex: event.transaction_index,
-              eventIndex: event.event_index,
-              payload: event.payload,
-            })),
-          },
-        }
+        for (const [address, events] of Object.entries(data.account_events)) {
+          for (const event of events) {
+            // Parse the raw data
+            const parsedData: AccountStatusesData = {
+              accountStatus: {
+                accountAddress: address,
+                blockId: data.block_id,
+                blockHeight: Number(data.block_height),
+                blockTimestamp: "", // TODO
+                type: event.type,
+                transactionId: event.transaction_id,
+                transactionIndex: Number(event.transaction_index),
+                eventIndex: Number(event.event_index),
+                payload: event.payload,
+              },
+            }
 
-        // Update the resume args
-        resumeArgs = {
-          ...resumeArgs,
-          startBlockHeight: data.account_status.height + 1,
-          startBlockId: undefined,
-        }
+            // Update the resume args
+            resumeArgs = {
+              ...resumeArgs,
+              startBlockHeight: Number(BigInt(data.block_height) + BigInt(1)),
+              startBlockId: undefined,
+            }
 
-        onData(parsedData)
+            onData(parsedData)
+          }
+        }
       },
       onError(error: Error) {
         onError(error)
