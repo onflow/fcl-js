@@ -29,6 +29,7 @@
     "@onflow/util-uid": "1.2.3"
   },
   "changesets": [
+    "big-files-promise",
     "big-ravens-smell",
     "chilled-wombats-reply",
     "clean-experts-rush",

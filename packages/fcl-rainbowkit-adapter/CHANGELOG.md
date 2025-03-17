@@ -1,5 +1,14 @@
 # @onflow/fcl-ethereum-provider
 
+## 0.0.1-cross-vm.6
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @onflow/fcl@1.14.0-cross-vm.2
+  - @onflow/fcl-ethereum-provider@0.0.1-cross-vm.5
+  - @onflow/fcl-wagmi-adapter@0.0.1-cross-vm.5
+
 ## 0.1.0-cross-vm.5
 
 ### Minor Changes
