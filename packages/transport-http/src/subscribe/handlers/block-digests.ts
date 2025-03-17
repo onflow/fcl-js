@@ -50,7 +50,7 @@ export const blockDigestsHandler = createSubscriptionHandler<{
       onError(error: Error) {
         onError(error)
       },
-      connectionArgs() {
+      getConnectionArgs() {
         let encodedArgs: BlockDigestsArgsDto = {
           block_status: resumeArgs.blockStatus,
         }
