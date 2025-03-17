@@ -52,6 +52,7 @@ function constructResponse(ix, context, res) {
     parentId: block.header.parent_id,
     height: Number(block.header.height),
     timestamp: block.header.timestamp,
+    parentVoterSignature: block.header.parent_voter_signature,
     collectionGuarantees: block.payload.collection_guarantees.map(
       collectionGuarantee => ({
         collectionId: collectionGuarantee.collection_id,

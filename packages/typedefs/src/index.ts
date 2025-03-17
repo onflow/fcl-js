@@ -92,6 +92,10 @@ export type Block = {
    */
   timestamp: string
   /**
+   * - The parent voter signature of the block
+   */
+  parentVoterSignature: string
+  /**
    * - Contains the ids of collections included in the block
    */
   collectionGuarantees: Array<CollectionGuarantee>
@@ -159,6 +163,10 @@ export type BlockHeader = {
    * - The timestamp of the block
    */
   timestamp: string
+  /**
+   * - The parent voter signature of the block
+   */
+  parentVoterSignature: string
 }
 export type CompositeSignature = {
   /**

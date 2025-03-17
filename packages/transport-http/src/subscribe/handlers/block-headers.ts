@@ -14,7 +14,7 @@ type BlockHeadersDataDto = {
   parent_id: string
   height: string
   timestamp: string
-  parent_voter_signature: string // TODO: Unused
+  parent_voter_signature: string
 }
 
 export const blockHeadersHandler = createSubscriptionHandler<{
@@ -34,14 +34,13 @@ export const blockHeadersHandler = createSubscriptionHandler<{
       onData(data: BlockHeadersDataDto) {
         // Parse the raw data
         const parsedData: BlockHeadersData = {
-          // TODO: We do not know the data model types yet
           blockHeader: {
             id: data.id,
             parentId: data.parent_id,
             height: Number(data.height),
             timestamp: data.timestamp,
             parentVoterSignature: data.parent_voter_signature,
-          } as any,
+          },
         }
 
         // Update the resume args
