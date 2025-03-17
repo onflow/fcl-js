@@ -13,6 +13,7 @@ type BlocksDataDto = {
     parent_id: string
     height: string
     timestamp: string
+    parent_voter_signature: string
   }
   payload: {
     collection_guarantees: {
@@ -48,6 +49,7 @@ export const blocksHandler = createSubscriptionHandler<{
             parentId: data.header.parent_id,
             height: Number(data.header.height),
             timestamp: data.header.timestamp,
+            parentVoterSignature: data.header.parent_voter_signature,
             collectionGuarantees: data.payload.collection_guarantees.map(
               guarantee => ({
                 collectionId: guarantee.collection_id,

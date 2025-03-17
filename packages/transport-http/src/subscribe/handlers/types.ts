@@ -27,7 +27,7 @@ export interface DataSubscriber<ArgsDto, DataDto> {
   onError(error: Error): void
 
   /**
-   * The arguments to connect or reconnect to the subscription
+   * Get the arguments to connect or reconnect to the subscription
    */
   getConnectionArgs(): ArgsDto
 }
