@@ -1,5 +1,29 @@
 # @onflow/fcl
 
+## 1.14.1
+
+### Patch Changes
+
+- Updated dependencies [[`ae0ddb755a4c099df1558900192d395543ffccec`](https://github.com/onflow/fcl-js/commit/ae0ddb755a4c099df1558900192d395543ffccec)]:
+  - @onflow/sdk@1.5.7
+
+## 1.14.0
+
+### Minor Changes
+
+- [#1937](https://github.com/onflow/fcl-js/pull/1937) [`68cf725a4d618cc963f31a758998ad14a7a43716`](https://github.com/onflow/fcl-js/commit/68cf725a4d618cc963f31a758998ad14a7a43716) Thanks [@jribbink](https://github.com/jribbink)! - Allow apps to exclude certain wallets from FCL Discovery.
+
+  ```javascript
+  import {config} from "@onflow/fcl"
+  
+  config({
+    "discovery.wallet": "https://fcl-discovery.onflow.org/testnet/authn",
+    "discovery.authn.endpoint":
+      "https://fcl-discovery.onflow.org/api/testnet/authn",
+    "discovery.authn.exclude": ["0x123"],
+  })
+  ```
+
 ## 1.13.5
 
 ### Patch Changes
