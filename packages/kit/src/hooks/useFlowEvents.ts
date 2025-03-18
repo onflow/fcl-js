@@ -16,7 +16,6 @@ interface EventFilter {
 interface UseFlowEventsOptions {
   onEvent: (event: Event) => void
   onError?: (error: Error) => void
-  onLoading?: (isLoading: boolean) => void
 }
 
 /**
@@ -29,19 +28,15 @@ interface UseFlowEventsOptions {
  * @param options - Object containing callback functions:
  *    - onEvent: Called for each new event received
  *    - onError: Optional callback for error handling
- *    - onLoading: Optional callback for loading state changes
  */
 export function useFlowEvents(
   eventNameOrFilter: string | EventFilter,
-  {onEvent, onError, onLoading}: UseFlowEventsOptions
+  {onEvent, onError}: UseFlowEventsOptions
 ) {
   useEffect(() => {
     let unsubscribe: (() => void) | undefined
 
     try {
-      onLoading?.(true)
-
-      // Normalize input to EventFilter object
       const filter: EventFilter =
         typeof eventNameOrFilter === "string"
           ? {eventTypes: [eventNameOrFilter]}
@@ -50,12 +45,10 @@ export function useFlowEvents(
       unsubscribe = fcl.events(filter).subscribe((newEvent: Event | null) => {
         if (!newEvent) return
         onEvent(newEvent)
-        onLoading?.(false)
       })
     } catch (err) {
       const error = err instanceof Error ? err : new Error(String(err))
       onError?.(error)
-      onLoading?.(false)
     }
 
     return () => {
@@ -63,5 +56,5 @@ export function useFlowEvents(
         unsubscribe()
       }
     }
-  }, [eventNameOrFilter, onEvent, onError, onLoading])
+  }, [eventNameOrFilter, onEvent, onError])
 }
