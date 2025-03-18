@@ -1,5 +1,12 @@
 # @onflow/fcl
 
+## 1.14.1
+
+### Patch Changes
+
+- Updated dependencies [[`ae0ddb755a4c099df1558900192d395543ffccec`](https://github.com/onflow/fcl-js/commit/ae0ddb755a4c099df1558900192d395543ffccec)]:
+  - @onflow/sdk@1.5.7
+
 ## 1.14.0
 
 ### Minor Changes
