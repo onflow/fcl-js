@@ -1,21 +1,28 @@
 import * as fcl from "@onflow/fcl"
 import {Event} from "@onflow/typedefs"
-import {useEffect} from "react"
-import {useQuery, useQueryClient, UseQueryResult} from "@tanstack/react-query"
+import {useEffect, useState} from "react"
 
-const queryKey = (eventName: string) => ["flowEvents", eventName]
+interface UseEventResult {
+  events: Event[]
+  error: Error | null
+  isLoading: boolean
+}
 
-export function useEvent(eventName: string): UseQueryResult<Event[], Error> {
-  const queryClient = useQueryClient()
-
-  const queryResult = useQuery<Event[], Error>({
-    queryKey: queryKey(eventName),
-    queryFn: async () => {
-      return []
-    },
-    initialData: [],
-    staleTime: Infinity,
-  })
+/**
+ * useEvent hook
+ *
+ * Subscribes to a Flow event stream and accumulates all events received.
+ *
+ * @param eventName - The fully qualified event name (e.g. "A.0xDeaDBeef.SomeContract.SomeEvent").
+ * @returns {UseEventResult} An object with:
+ *    - events: an array of all received events
+ *    - error: any error encountered during subscription
+ *    - isLoading: true until the first event arrives or an error occurs
+ */
+export function useEvent(eventName: string): UseEventResult {
+  const [events, setEvents] = useState<Event[]>([])
+  const [error, setError] = useState<Error | null>(null)
+  const [isLoading, setIsLoading] = useState<boolean>(true)
 
   useEffect(() => {
     let unsubscribe: (() => void) | undefined
@@ -25,28 +32,25 @@ export function useEvent(eventName: string): UseQueryResult<Event[], Error> {
         .events(eventName)
         .subscribe((newEvent: Event | null) => {
           if (!newEvent) return
-
-          queryClient.setQueryData<Event[]>(
-            queryKey(eventName),
-            (oldEvents = []) => [...oldEvents, newEvent]
-          )
+          setEvents(prevEvents => [...prevEvents, newEvent])
+          setIsLoading(false)
         })
-    } catch (err: unknown) {
+      setIsLoading(false)
+    } catch (err) {
       if (err instanceof Error) {
-        queryClient.setQueryData<Event[]>(queryKey(eventName), () => {
-          throw err
-        })
+        setError(err)
       } else {
-        queryClient.setQueryData<Event[]>(queryKey(eventName), () => {
-          throw new Error(String(err))
-        })
+        setError(new Error(String(err)))
       }
+      setIsLoading(false)
     }
 
     return () => {
-      if (unsubscribe) unsubscribe()
+      if (unsubscribe) {
+        unsubscribe()
+      }
     }
-  }, [eventName, queryClient])
+  }, [eventName])
 
-  return queryResult
+  return {events, error, isLoading}
 }
