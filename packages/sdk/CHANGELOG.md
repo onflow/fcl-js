@@ -1,5 +1,14 @@
 # @onflow/sdk
 
+## 1.5.7
+
+### Patch Changes
+
+- [#2216](https://github.com/onflow/fcl-js/pull/2216) [`ae0ddb755a4c099df1558900192d395543ffccec`](https://github.com/onflow/fcl-js/commit/ae0ddb755a4c099df1558900192d395543ffccec) Thanks [@jribbink](https://github.com/jribbink)! - Expose all available arguments to `EventFilter` type (`startBlockId`, `startBlockHeight`, `heartbeatInterval`)
+
+- Updated dependencies [[`ae0ddb755a4c099df1558900192d395543ffccec`](https://github.com/onflow/fcl-js/commit/ae0ddb755a4c099df1558900192d395543ffccec)]:
+  - @onflow/typedefs@1.4.1
+
 ## 1.5.6
 
 ### Patch Changes

@@ -12,11 +12,7 @@ export function subscribeEvents({
   addresses,
   contracts,
   heartbeatInterval,
-}: EventFilter & {
-  startBlockId?: string
-  startHeight?: number
-  heartbeatInterval?: number
-}): Function {
+}: EventFilter): Function {
   invariant(
     !(startBlockId && startHeight),
     `SDK Subscribe Events Error: Cannot set both startBlockId and startHeight.`
