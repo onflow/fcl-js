@@ -1,5 +1,5 @@
-import {initInteraction} from "../interaction/interaction.js"
-import {atLatestBlock} from "./build-at-latest-block.js"
+import {initInteraction} from "../interaction/interaction"
+import {atLatestBlock} from "./build-at-latest-block"
 
 describe("Build At Latest Block", () => {
   test("At Latest Sealed Block", async () => {
