@@ -2,14 +2,13 @@ import {pipe} from "../interaction/interaction"
 import {validator} from "./build-validator"
 
 /**
- * @description - A builder function that returns a partial interaction to a block at a specific finality
- * @param {boolean} isSealed - A boolean value indicating whether the block is sealed ("hard-finality")
+ * @description - A builder function that returns a partial interaction to query the latest sealed block ("hard-finality").  Otherwise, the query will be executed against the latest executed block ("soft-finality").
  * @returns {Function} - A partial interaction object
  */
-export function atBlockFinality(isSealed) {
+export function atBlockSealed() {
   return pipe([
     ix => {
-      ix.block.isSealed = isSealed
+      ix.block.isSealed = true
       return ix
     },
     validator(ix => {

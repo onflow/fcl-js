@@ -2,4 +2,4 @@
 "@onflow/sdk": minor
 ---
 
-Add `atBlockFinality` SDK builder
+Add `atBlockSealed` SDK builder
