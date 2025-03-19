@@ -48,7 +48,7 @@ describe("Send Execute Script", () => {
 
     expect(valueSent).toEqual({
       hostname: "localhost",
-      path: "/v1/scripts?block_height=sealed",
+      path: "/v1/scripts?block_height=executed",
       method: "POST",
       body: {
         script:
