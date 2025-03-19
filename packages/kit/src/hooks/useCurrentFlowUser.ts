@@ -23,7 +23,7 @@ export function useCurrentFlowUser(): UseCurrentFlowUserResult {
 
   const authenticate = async (): Promise<CurrentUser> => {
     try {
-      return fcl.authenticate()
+      return await fcl.authenticate()
     } catch (error) {
       throw error
     }
