@@ -174,7 +174,6 @@ describe("useFlowEvents", () => {
       }
     )
 
-    // Simulate multiple event emissions
     act(() => {
       eventCallback(mockEvent1)
     })
@@ -182,7 +181,6 @@ describe("useFlowEvents", () => {
       eventCallback(mockEvent2)
     })
 
-    // Verify that onEvent was called for each event
     expect(onEvent).toHaveBeenCalledTimes(2)
     expect(onEvent).toHaveBeenCalledWith(mockEvent1)
     expect(onEvent).toHaveBeenCalledWith(mockEvent2)
