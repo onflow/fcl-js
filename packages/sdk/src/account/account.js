@@ -1,6 +1,6 @@
 import {atBlockHeight} from "../build/build-at-block-height.js"
 import {atBlockId} from "../build/build-at-block-id.js"
-import {atBlockSealed} from "../build/build-at-block-sealed.js"
+import {atLatestBlock} from "../build/build-at-latest-block.js"
 import {getAccount} from "../build/build-get-account.js"
 import {invariant} from "@onflow/util-invariant"
 import {decodeResponse as decode} from "../decode/decode.js"
@@ -33,9 +33,5 @@ export function account(address, {height, id, isSealed} = {}, opts) {
   if (height)
     return send([getAccount(address), atBlockHeight(height)], opts).then(decode)
 
-  // Get account at latest block based on finality
-  if (isSealed)
-    return send([getAccount(address), atBlockSealed()], opts).then(decode)
-
-  return send([getAccount(address)], opts).then(decode)
+  return send([getAccount(address), atLatestBlock(isSealed)], opts).then(decode)
 }

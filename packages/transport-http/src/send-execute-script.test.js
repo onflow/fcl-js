@@ -10,7 +10,7 @@ import {
   resolve,
   response as responseADT,
   script,
-  atBlockSealed,
+  atLatestBlock,
 } from "@onflow/sdk"
 
 describe("Send Execute Script", () => {
@@ -62,6 +62,58 @@ describe("Send Execute Script", () => {
     )
   })
 
+  test("ExecuteScriptAtLatestBlock (sealed)", async () => {
+    const httpRequestMock = jest.fn()
+
+    const returnedJSONCDC = Buffer.from(
+      JSON.stringify({type: "Int", value: 123})
+    ).toString("base64")
+
+    httpRequestMock.mockReturnValue(returnedJSONCDC)
+
+    const cadence = "access(all) fun main(a: Int): Int { return a }"
+
+    let response = await sendExecuteScript(
+      await resolve(
+        await build([
+          script(cadence),
+          args([arg(123, types.Int)]),
+          atLatestBlock(true),
+        ])
+      ),
+      {
+        response: responseADT,
+        Buffer,
+      },
+      {
+        httpRequest: httpRequestMock,
+        node: "localhost",
+      }
+    )
+
+    expect(httpRequestMock.mock.calls.length).toEqual(1)
+
+    const httpRequestMockArgs = httpRequestMock.mock.calls[0]
+
+    expect(httpRequestMockArgs.length).toEqual(1)
+
+    const valueSent = httpRequestMock.mock.calls[0][0]
+
+    expect(valueSent).toEqual({
+      hostname: "localhost",
+      path: "/v1/scripts?block_height=sealed",
+      method: "POST",
+      body: {
+        script:
+          "YWNjZXNzKGFsbCkgZnVuIG1haW4oYTogSW50KTogSW50IHsgcmV0dXJuIGEgfQ==",
+        arguments: ["eyJ0eXBlIjoiSW50IiwidmFsdWUiOiIxMjMifQ=="],
+      },
+    })
+    expect(response.encodedData).toEqual(
+      JSON.parse(Buffer.from(returnedJSONCDC, "base64").toString())
+    )
+  })
+
   test("ExecuteScriptAtBlockID", async () => {
     const httpRequestMock = jest.fn()
 
@@ -101,45 +153,6 @@ describe("Send Execute Script", () => {
         script: "YWNjZXNzKGFsbCkgZnVuIG1haW4oKTogSW50IHsgcmV0dXJuIDEyMyB9",
         arguments: [],
       },
-    })
-    expect(response.encodedData).toEqual(
-      JSON.parse(Buffer.from(returnedJSONCDC, "base64").toString())
-    )
-  })
-
-  test("ExecuteScriptAtLatestBlock (sealed)", async () => {
-    const httpRequestMock = jest.fn()
-
-    const returnedJSONCDC = Buffer.from(
-      JSON.stringify({type: "Int", value: 123})
-    ).toString("base64")
-
-    httpRequestMock.mockReturnValue(returnedJSONCDC)
-
-    const cadence = "access(all) fun main(): Int { return 123 }"
-
-    let response = await sendExecuteScript(
-      await resolve(await build([script(cadence), atBlockSealed()])),
-      {
-        response: responseADT,
-        Buffer,
-      },
-      {
-        httpRequest: httpRequestMock,
-        node: "localhost",
-      }
-    )
-
-    expect(httpRequestMock.mock.calls.length).toEqual(1)
-
-    const httpRequestMockArgs = httpRequestMock.mock.calls[0]
-
-    expect(httpRequestMockArgs.length).toEqual(1)
-
-    const valueSent = httpRequestMock.mock.calls[0][0]
-
-    expect(valueSent).toEqual({
-      hostname: "localhost",
     })
     expect(response.encodedData).toEqual(
       JSON.parse(Buffer.from(returnedJSONCDC, "base64").toString())
