@@ -11,6 +11,7 @@ import {preQuery} from "./utils/pre.js"
  *  @param {string} opts.cadence - Cadence Script used to query Flow
  *  @param {import("./args").ArgsFn} [opts.args] - Arguments passed to cadence script
  *  @param {object | string} [opts.template] - Interaction Template for a script
+ *  @param {boolean} [opts.isSealed] - Block Finality
  *  @param {number} [opts.limit]   - Compute Limit for Query
  *  @returns {Promise}
  *
@@ -39,7 +40,10 @@ export async function query(opts = {}) {
     .send([
       sdk.script(opts.cadence),
       sdk.args(normalizeArgs(opts.args || [])),
-      opts.limit && typeof opts.limit === "number" && sdk.limit(opts.limit),
+      opts.isSealed && sdk.atBlockFinality(true),
+      opts.opts.limit &&
+        typeof opts.limit === "number" &&
+        sdk.limit(opts.limit),
     ])
     .then(sdk.decode)
 }
