@@ -74,4 +74,53 @@ describe("useCurrentFlowUser", () => {
 
     expect(result.current.user).toEqual(authenticatedUser)
   })
+
+  test("authenticate calls fcl.authenticate and returns the authenticated user", async () => {
+    const authenticateMock = jest.mocked(fcl.authenticate)
+    authenticateMock.mockResolvedValueOnce(authenticatedUser)
+
+    const {result} = renderHook(() => useCurrentFlowUser(), {
+      wrapper: FlowProvider,
+    })
+
+    let returnedUser: CurrentUser | undefined
+    await act(async () => {
+      returnedUser = await result.current.authenticate()
+    })
+
+    expect(fcl.authenticate).toHaveBeenCalledTimes(1)
+
+    expect(returnedUser).toEqual(authenticatedUser)
+  })
+
+  test("unauthenticate calls fcl.unauthenticate and updates user state", async () => {
+    const {result} = renderHook(() => useCurrentFlowUser(), {
+      wrapper: FlowProvider,
+    })
+
+    await act(async () => {
+      result.current.unauthenticate()
+    })
+
+    expect(fcl.unauthenticate).toHaveBeenCalledTimes(1)
+
+    expect(result.current.user).toEqual(defaultUser)
+  })
+
+  test("unsubscribes from user changes on unmount", () => {
+    const unsubscribeMock = jest.fn()
+
+    const subscribeMock = jest.mocked(fcl.currentUser.subscribe)
+    subscribeMock.mockImplementation((callback: any) => {
+      return unsubscribeMock
+    })
+
+    const {unmount} = renderHook(() => useCurrentFlowUser(), {
+      wrapper: FlowProvider,
+    })
+
+    unmount()
+
+    expect(unsubscribeMock).toHaveBeenCalledTimes(1)
+  })
 })
