@@ -1,5 +1,6 @@
 import {atBlockHeight} from "../build/build-at-block-height.js"
 import {atBlockId} from "../build/build-at-block-id.js"
+import {atBlockFinality} from "../build/build-at-block-finality.js"
 import {getAccount} from "../build/build-get-account.js"
 import {invariant} from "@onflow/util-invariant"
 import {decodeResponse as decode} from "../decode/decode.js"
@@ -15,13 +16,14 @@ import {send} from "../send/send.js"
  * @param {object} [queryOptions] - Query parameters
  * @param {number} [queryOptions.height] - Block height to query
  * @param {string} [queryOptions.id] - Block ID to query
+ * @param {boolean} [queryOptions.isSealed] - Block finality
  * @param {object} [opts] - Optional parameters
  * @returns {Promise<Account>} - A promise that resolves to an account response
  */
-export function account(address, {height, id} = {}, opts) {
+export function account(address, {height, id, isSealed} = {}, opts) {
   invariant(
-    !(id && height),
-    `Method: account -- Cannot pass "id" and "height" simultaneously`
+    !((id && height) || (id && isSealed) || (height && isSealed)),
+    `Method: account -- Only one of the following parameters can be provided: id, height, isSealed`
   )
 
   // Get account by ID
@@ -30,6 +32,10 @@ export function account(address, {height, id} = {}, opts) {
   // Get account by height
   if (height)
     return send([getAccount(address), atBlockHeight(height)], opts).then(decode)
+
+  // Get account at latest block based on finality
+  if (isSealed)
+    return send([getAccount(address), atBlockFinality(true)], opts).then(decode)
 
   return send([getAccount(address)], opts).then(decode)
 }
