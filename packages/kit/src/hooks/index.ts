@@ -1,4 +1,4 @@
 export {useAccount} from "./useAccount"
-export {useBlock} from "./useBlock"
+export {useFlowBlock} from "./useFlowBlock"
 export {useConfig} from "./useConfig"
 export {useFlowEvents} from "./useFlowEvents"

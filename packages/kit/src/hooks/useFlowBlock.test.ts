@@ -1,7 +1,7 @@
 import {renderHook, act, waitFor} from "@testing-library/react"
 import * as fcl from "@onflow/fcl"
 import {FlowProvider} from "../provider"
-import {useBlock} from "./useBlock"
+import {useFlowBlock} from "./useFlowBlock"
 import {Block} from "@onflow/typedefs"
 
 jest.mock("@onflow/fcl", () => {
@@ -16,7 +16,7 @@ jest.mock("@onflow/fcl", () => {
   }
 })
 
-describe("useBlock", () => {
+describe("useFlowBlock", () => {
   const mockLatestBlock: Block = {
     id: "latest-block-id",
     parentId: "parent-id",
@@ -68,7 +68,7 @@ describe("useBlock", () => {
     let hookResult: any
 
     await act(async () => {
-      const {result} = renderHook(() => useBlock(), {
+      const {result} = renderHook(() => useFlowBlock(), {
         wrapper: FlowProvider,
       })
       hookResult = result
@@ -92,7 +92,7 @@ describe("useBlock", () => {
     let hookResult: any
 
     await act(async () => {
-      const {result} = renderHook(() => useBlock({sealed: true}), {
+      const {result} = renderHook(() => useFlowBlock({sealed: true}), {
         wrapper: FlowProvider,
       })
       hookResult = result
@@ -112,7 +112,7 @@ describe("useBlock", () => {
     let hookResult: any
 
     await act(async () => {
-      const {result} = renderHook(() => useBlock({id: blockId}), {
+      const {result} = renderHook(() => useFlowBlock({id: blockId}), {
         wrapper: FlowProvider,
       })
       hookResult = result
@@ -132,7 +132,7 @@ describe("useBlock", () => {
     let hookResult: any
 
     await act(async () => {
-      const {result} = renderHook(() => useBlock({height}), {
+      const {result} = renderHook(() => useFlowBlock({height}), {
         wrapper: FlowProvider,
       })
       hookResult = result
@@ -153,7 +153,7 @@ describe("useBlock", () => {
     let hookResult: any
 
     await act(async () => {
-      const {result} = renderHook(() => useBlock({id: "invalid-id"}), {
+      const {result} = renderHook(() => useFlowBlock({id: "invalid-id"}), {
         wrapper: FlowProvider,
       })
       hookResult = result
@@ -172,7 +172,7 @@ describe("useBlock", () => {
     let hookResult: any
 
     await act(async () => {
-      const {result} = renderHook(() => useBlock(), {
+      const {result} = renderHook(() => useFlowBlock(), {
         wrapper: FlowProvider,
       })
       hookResult = result
@@ -201,7 +201,7 @@ describe("useBlock", () => {
     let hookResult: any
 
     await act(async () => {
-      const {result} = renderHook(() => useBlock(), {
+      const {result} = renderHook(() => useFlowBlock(), {
         wrapper: FlowProvider,
       })
       hookResult = result

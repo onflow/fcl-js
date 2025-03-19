@@ -34,7 +34,7 @@ type UseBlockParams =
   | BlockById
   | BlockByHeight
 
-export function useBlock(
+export function useFlowBlock(
   params: UseBlockParams = {}
 ): UseQueryResult<Block | null, Error> {
   const queryClient = useFlowQueryClient()
