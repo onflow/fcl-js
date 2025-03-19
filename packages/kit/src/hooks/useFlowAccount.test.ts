@@ -1,7 +1,7 @@
 import {renderHook, act, waitFor} from "@testing-library/react"
 import * as fcl from "@onflow/fcl"
 import {FlowProvider} from "../provider"
-import {useAccount} from "./useAccount"
+import {useFlowAccount} from "./useFlowAccount"
 import {Account} from "@onflow/typedefs"
 
 jest.mock("@onflow/fcl", () => {
@@ -16,13 +16,13 @@ jest.mock("@onflow/fcl", () => {
   }
 })
 
-describe("useAccount", () => {
+describe("useFlowAccount", () => {
   afterEach(() => {
     jest.clearAllMocks()
   })
 
   test("does nothing when no address is provided", () => {
-    const {result} = renderHook(() => useAccount(), {
+    const {result} = renderHook(() => useFlowAccount(), {
       wrapper: FlowProvider,
     })
 
@@ -46,7 +46,7 @@ describe("useAccount", () => {
     let hookResult: any
 
     await act(async () => {
-      const {result} = renderHook(() => useAccount("0x1234"), {
+      const {result} = renderHook(() => useFlowAccount("0x1234"), {
         wrapper: FlowProvider,
       })
       hookResult = result
@@ -71,7 +71,7 @@ describe("useAccount", () => {
     let hookResult: any
 
     await act(async () => {
-      const {result} = renderHook(() => useAccount("0x5678"), {
+      const {result} = renderHook(() => useFlowAccount("0x5678"), {
         wrapper: FlowProvider,
       })
       hookResult = result
@@ -104,7 +104,7 @@ describe("useAccount", () => {
 
     let hookResult: any
     await act(async () => {
-      const {result} = renderHook(() => useAccount("0x1234"), {
+      const {result} = renderHook(() => useFlowAccount("0x1234"), {
         wrapper: FlowProvider,
       })
       hookResult = result

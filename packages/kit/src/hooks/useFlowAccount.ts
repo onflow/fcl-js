@@ -5,7 +5,7 @@ import {useCallback} from "react"
 import {useFlowQueryClient} from "../provider/FlowQueryClient"
 
 /**
- * useAccount hook
+ * useFlowAccount hook
  *
  * Fetches the account data from a given address.
  *
@@ -13,7 +13,7 @@ import {useFlowQueryClient} from "../provider/FlowQueryClient"
  * @returns {UseQueryResult<Account | null, Error>} The entire useQuery result
  *  (data, isLoading, error, refetch, etc.)
  */
-export function useAccount(
+export function useFlowAccount(
   address?: string
 ): UseQueryResult<Account | null, Error> {
   const fetchAccount = useCallback(async () => {
