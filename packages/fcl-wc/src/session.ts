@@ -39,7 +39,7 @@ export async function createSessionProposal({
     }
   })
 
-  const session = await provider
+  const sessionPromise = provider
     .connect({
       pairingTopic: existingPairing?.topic,
       namespaces: requiredNamespaces,
@@ -50,7 +50,7 @@ export async function createSessionProposal({
 
   return {
     uri: await uri,
-    approval: () => session,
+    approval: () => sessionPromise,
   }
 }
 
