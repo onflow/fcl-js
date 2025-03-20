@@ -51,7 +51,7 @@ import { useBlock, ConnectButton } from '@onflow/kit'
 ### Install Hooks Only
 
 ```jsx
-import { useConfig } from '@onflow/kit/hooks'
+import { useFlowConfig } from '@onflow/kit/hooks'
 ```
 
 ### Install Components Only
@@ -65,7 +65,7 @@ import { ConnectButton } from '@onflow/kit/components'
 #### `useFlowAccount`
 
 ```jsx
-const { account, loading, error, refetch } = useAccount("0x1cf0e2f2f715450")
+const { account, loading, error, refetch } = useFlowAccount("0x1cf0e2f2f715450")
 
   if (loading) return <p>Loading account...</p>
   if (error) return <p>Error fetching account: {error.message}</p>
@@ -104,13 +104,13 @@ function AuthComponent() {
 }
 ```
 
-#### `useConfig`
+#### `useFlowConfig`
 
 ```jsx
-import { useConfig } from '@onflow/kit/hooks'
+import { useFlowConfig } from '@onflow/kit/hooks'
 
 function MyComponent() {
-  const config = useConfig()
+  const config = useFlowConfig()
 
   return (
     <div>

@@ -1,4 +1,4 @@
-export {useConfig} from "./useConfig"
+export {useFlowConfig} from "./useFlowConfig"
 export {useCurrentFlowUser} from "./useCurrentFlowUser"
 export {useFlowAccount} from "./useFlowAccount"
 export {useFlowBlock} from "./useFlowBlock"

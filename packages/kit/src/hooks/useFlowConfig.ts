@@ -1,6 +1,6 @@
 import {useContext} from "react"
 import {FlowConfigContext, FlowConfig} from "../core/context"
 
-export function useConfig(): FlowConfig {
+export function useFlowConfig(): FlowConfig {
   return useContext(FlowConfigContext)
 }
