@@ -1,4 +1,5 @@
 import * as sdk from "@onflow/sdk"
+import * as config from "@onflow/config"
 import {normalizeArgs} from "./utils/normalize-args"
 import {prepTemplateOpts} from "./utils/prep-template-opts.js"
 import {preQuery} from "./utils/pre.js"
@@ -40,7 +41,9 @@ export async function query(opts = {}) {
     .send([
       sdk.script(opts.cadence),
       sdk.args(normalizeArgs(opts.args || [])),
-      sdk.atLatestBlock(opts.isSealed),
+      sdk.atLatestBlock(
+        opts.isSealed ?? (await config().get("fcl.isSealed", true))
+      ),
       opts.limit && typeof opts.limit === "number" && sdk.limit(opts.limit),
     ])
     .then(sdk.decode)

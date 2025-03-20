@@ -20,18 +20,25 @@ import {send} from "../send/send.js"
  * @param {object} [opts] - Optional parameters
  * @returns {Promise<Account>} - A promise that resolves to an account response
  */
-export function account(address, {height, id, isSealed} = {}, opts) {
+export async function account(address, {height, id, isSealed} = {}, opts) {
   invariant(
     !((id && height) || (id && isSealed) || (height && isSealed)),
     `Method: account -- Only one of the following parameters can be provided: id, height, isSealed`
   )
 
   // Get account by ID
-  if (id) return send([getAccount(address), atBlockId(id)], opts).then(decode)
+  if (id)
+    return await send([getAccount(address), atBlockId(id)], opts).then(decode)
 
   // Get account by height
   if (height)
-    return send([getAccount(address), atBlockHeight(height)], opts).then(decode)
+    return await send([getAccount(address), atBlockHeight(height)], opts).then(
+      decode
+    )
 
-  return send([getAccount(address), atLatestBlock(isSealed)], opts).then(decode)
+  // Get account by latest block
+  const isSealed = opts.isSealed ?? (await config().get("fcl.isSealed", true))
+  return await send([getAccount(address), atLatestBlock(isSealed)], opts).then(
+    decode
+  )
 }
