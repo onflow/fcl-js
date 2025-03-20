@@ -95,6 +95,7 @@ const makeExec = (
 
     // If the user is already connected to this session, use it
     if (
+      !!session?.topic &&
       session?.topic === service.params?.externalProvider &&
       method === FLOW_METHODS.FLOW_AUTHN
     ) {
