@@ -62,25 +62,6 @@ import { ConnectButton } from '@onflow/kit/components'
 
 ### Hooks
 
-#### `useFlowAccount`
-
-```jsx
-const { account, loading, error, refetch } = useFlowAccount("0x1cf0e2f2f715450")
-
-  if (loading) return <p>Loading account...</p>
-  if (error) return <p>Error fetching account: {error.message}</p>
-  if (!account) return <p>No account data</p>
-
-  return (
-    <div>
-      <h2>Account: {account.address}</h2>
-      <p>Balance: {account.balance}</p>
-      <pre>{account.code}</pre>
-      <button onClick={refetch}>Refetch</button>
-    </div>
-  )
-```
-
 #### `useCurrentFlowUser`
 
 ```jsx
@@ -104,6 +85,51 @@ function AuthComponent() {
 }
 ```
 
+#### `useFlowAccount`
+
+```jsx
+const { account, loading, error, refetch } = useFlowAccount("0x1cf0e2f2f715450")
+
+  if (loading) return <p>Loading account...</p>
+  if (error) return <p>Error fetching account: {error.message}</p>
+  if (!account) return <p>No account data</p>
+
+  return (
+    <div>
+      <h2>Account: {account.address}</h2>
+      <p>Balance: {account.balance}</p>
+      <pre>{account.code}</pre>
+      <button onClick={refetch}>Refetch</button>
+    </div>
+  )
+```
+
+### `useFlowBlock`
+
+#### Parameters
+
+- **Latest block:** `{}` (default)
+- **Latest sealed block:** `{ sealed: true }`
+- **By ID:** `{ id: "block-id" }`
+- **By height:** `{ height: 123 }`
+
+```jsx
+import { useFlowBlock } from '@onflow/kit/hooks';
+
+function LatestBlock() {
+  const { data: block, isLoading, error } = useFlowBlock();
+  if (isLoading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error.message}</p>;
+  if (!block) return <p>No block data.</p>;
+  return (
+    <div>
+      <h2>Block {block.height}</h2>
+      <p>ID: {block.id}</p>
+    </div>
+  );
+}
+```
+
 #### `useFlowConfig`
 
 ```jsx
@@ -118,5 +144,27 @@ function MyComponent() {
       <p>Current access node: {config.accesNodeApi}</p>
     </div>
   )
+}
+```
+
+### `useFlowEvents`
+
+#### Parameters
+
+- **eventNameOrFilter:** A fully qualified event name (string) or an EventFilter object (e.g. `{ eventTypes: ["A.0x...SomeEvent"] }`).
+- **options:** An object with:
+  - `onEvent`: Callback invoked with each new event.
+  - `onError` (optional): Callback for handling errors.
+
+```jsx
+import { useFlowEvents } from '@onflow/kit/hooks';
+
+function EventListener() {
+  useFlowEvents("A.0xDeaDBeef.SomeContract.SomeEvent", {
+    onEvent: (event) => console.log("New event:", event),
+    onError: (error) => console.error("Error:", error),
+  });
+
+  return <div>Listening for events...</div>;
 }
 ```
