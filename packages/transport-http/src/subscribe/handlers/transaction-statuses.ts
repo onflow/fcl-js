@@ -49,7 +49,7 @@ type TransactionStatusesDataDto = {
   }
 }
 
-export const blockDigestsHandler = createSubscriptionHandler<{
+export const transactionStatusesHandler = createSubscriptionHandler<{
   Topic: SdkTransport.SubscriptionTopic.TRANSACTION_STATUSES
   Args: SdkTransport.SubscriptionArguments<SdkTransport.SubscriptionTopic.TRANSACTION_STATUSES>
   Data: SdkTransport.SubscriptionData<SdkTransport.SubscriptionTopic.TRANSACTION_STATUSES>

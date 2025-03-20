@@ -81,7 +81,7 @@ export type SubscribeFn = <T extends SubscriptionTopic>(
   opts: {node: string}
 ) => Promise<Subscription>
 
-export type RawEvent = {
+type RawEvent = {
   type: string
   transactionId: string
   transactionIndex: number
