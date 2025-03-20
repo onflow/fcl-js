@@ -62,7 +62,7 @@ import { ConnectButton } from '@onflow/kit/components'
 
 ### Hooks
 
-#### `useAccount`
+#### `useFlowAccount`
 
 ```jsx
 const { account, loading, error, refetch } = useAccount("0x1cf0e2f2f715450")
@@ -79,6 +79,29 @@ const { account, loading, error, refetch } = useAccount("0x1cf0e2f2f715450")
       <button onClick={refetch}>Refetch</button>
     </div>
   )
+```
+
+#### `useCurrentFlowUser`
+
+```jsx
+import { useCurrentFlowUser } from "@onflow/kit/hooks"
+
+function AuthComponent() {
+  const { user, authenticate, unauthenticate } = useCurrentFlowUser()
+
+  return (
+    <div>
+      {user.loggedIn ? (
+        <>
+          <p>Logged in as {user.addr}</p>
+          <button onClick={unauthenticate}>Logout</button>
+        </>
+      ) : (
+        <button onClick={authenticate}>Login</button>
+      )}
+    </div>
+  )
+}
 ```
 
 #### `useConfig`
