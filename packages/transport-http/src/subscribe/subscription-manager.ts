@@ -1,13 +1,10 @@
 import {
   Action,
+  MessageRequest,
   MessageResponse,
+  SocketError,
   SubscriptionDataMessage,
   UnsubscribeMessageResponse,
-} from "./models"
-import {
-  SubscribeMessageRequest,
-  SubscribeMessageResponse,
-  UnsubscribeMessageRequest,
 } from "./models"
 import {SdkTransport} from "@onflow/typedefs"
 import {WebSocket} from "./websocket"
@@ -22,15 +19,13 @@ type DeepRequired<T> = Required<{
 
 type InferHandler<T> = T extends SubscriptionHandler<infer H> ? H : never
 
-interface SubscriptionInfo<T extends DataSubscriber<any, any, any>> {
-  // Internal ID for the subscription
-  id: number
-  // Remote ID assigned by the server used for message routing and unsubscribing
-  remoteId?: string
+interface SubscriptionInfo<ArgsDto = any, DataDto = any> {
+  // ID for the subscription
+  id: string
   // The topic of the subscription
   topic: string
   // Data provider for the subscription
-  subscriber: DataSubscriber<any, any, any>
+  subscriber: DataSubscriber<ArgsDto, DataDto>
 }
 
 export interface SubscriptionManagerConfig {
@@ -60,15 +55,13 @@ export interface SubscriptionManagerConfig {
   }
 }
 
-export class SubscriptionManager<
-  Handlers extends [...SubscriptionHandler<any>[]],
-> {
+export class SubscriptionManager<Handlers extends SubscriptionHandler<any>[]> {
   private counter = 0
   private socket: WebSocket | null = null
-  private subscriptions: SubscriptionInfo<DataSubscriber<any, any, any>>[] = []
+  private subscriptions: SubscriptionInfo[] = []
   private config: DeepRequired<SubscriptionManagerConfig>
   private reconnectAttempts = 0
-  private handlers: Record<string, SubscriptionHandler<any>>
+  private handlers: SubscriptionHandler<any>[]
 
   constructor(handlers: Handlers, config: SubscriptionManagerConfig) {
     this.config = {
@@ -80,51 +73,47 @@ export class SubscriptionManager<
         ...config.reconnectOptions,
       },
     }
-
-    // Map data providers by topic
-    this.handlers = handlers.reduce(
-      (acc, handler) => {
-        acc[handler.topic] = handler
-        return acc
-      },
-      {} as Record<string, SubscriptionHandler<any>>
-    )
+    this.handlers = handlers
   }
 
   // Lazy connect to the socket when the first subscription is made
   private async connect() {
     return new Promise<void>((resolve, reject) => {
       // If the socket is already open, do nothing
-      if (this.socket?.readyState === WS_OPEN) {
+      if (this.socket?.readyState === WS_OPEN || this.socket) {
+        resolve()
         return
       }
 
       this.socket = new WebSocket(this.config.node)
-      this.socket.onmessage = event => {
+      this.socket.addEventListener("message", event => {
         const message = JSON.parse(event.data) as
           | MessageResponse
           | SubscriptionDataMessage
 
-        if ("action" in message) {
-          // TODO, waiting for AN team to decide what to do here
-        } else {
-          // Update the block height to checkpoint for disconnects
-          this.handleSubscriptionData(message)
+        // Error message
+        if ("action" in message && message.error) {
+          this.handleSocketError(SocketError.fromMessage(message.error))
+          return
         }
-      }
-      this.socket.onclose = () => {
-        void this.reconnect()
-      }
-      this.socket.onerror = e => {
-        this.reconnect(e)
-      }
 
-      this.socket.onopen = () => {
+        const sub = this.subscriptions.find(
+          sub => sub.id === message.subscription_id
+        )
+        if (sub) {
+          if (!("action" in message) && message.subscription_id === sub.id) {
+            sub.subscriber.onData(message.payload)
+          }
+        }
+      })
+      this.socket.addEventListener("close", () => {
+        void this.handleSocketError(new Error("WebSocket closed"))
+      })
+      this.socket.addEventListener("open", () => {
         // Restore subscriptions
         Promise.all(
           this.subscriptions.map(async sub => {
-            const response = await this.sendSubscribe(sub)
-            sub.remoteId = response.id
+            await this.sendSubscribe(sub)
           })
         )
           .then(() => {
@@ -133,11 +122,11 @@ export class SubscriptionManager<
           .catch(e => {
             reject(new Error(`Failed to restore subscriptions: ${e}`))
           })
-      }
+      })
     })
   }
 
-  private async reconnect(error?: any) {
+  private async handleSocketError(error: any) {
     // Clear the socket
     this.socket = null
 
@@ -145,11 +134,6 @@ export class SubscriptionManager<
     if (this.subscriptions.length === 0) {
       return
     }
-
-    // Clear all remote ids
-    this.subscriptions.forEach(sub => {
-      delete sub.remoteId
-    })
 
     // Validate the number of reconnection attempts
     if (
@@ -205,41 +189,38 @@ export class SubscriptionManager<
     )
 
     // Track the subscription locally
-    const sub: SubscriptionInfo<DataSubscriber<any, any, any>> = {
-      id: this.counter++,
+    const sub: SubscriptionInfo = {
+      id: String(this.counter++),
       topic: opts.topic,
       subscriber: subscriber,
     }
     this.subscriptions.push(sub)
 
     // Send the subscribe message
-    const response = await this.sendSubscribe(sub)
-
-    if (!response.success) {
-      throw new Error(
-        `Failed to subscribe to topic ${sub.topic}, error message: ${response.error_message}`
-      )
+    try {
+      const response = await this.sendSubscribe(sub)
+      if (response.error) {
+        throw new Error(`Failed to subscribe to topic ${sub.topic}`, {
+          cause: SocketError.fromMessage(response.error),
+        })
+      }
+    } catch (e) {
+      // Unsubscribe if there was an error
+      this.unsubscribe(sub.id)
+      throw e
     }
 
-    // Update the subscription with the remote id
-    sub.remoteId = response.id
-
     return {
-      unsubscribe: () => this.unsubscribe(sub.id),
+      unsubscribe: () => {
+        this.unsubscribe(sub.id)
+      },
     }
   }
 
-  private unsubscribe(id: number): void {
+  private unsubscribe(id: string): void {
     // Get the subscription
     const sub = this.subscriptions.find(sub => sub.id === id)
     if (!sub) return
-
-    // Send the unsubscribe message
-    this.sendUnsubscribe(sub).catch(e => {
-      console.error(
-        `Failed to unsubscribe from topic ${sub.topic}, error: ${e}`
-      )
-    })
 
     // Remove the subscription
     this.subscriptions = this.subscriptions.filter(sub => sub.id !== id)
@@ -247,82 +228,87 @@ export class SubscriptionManager<
     // Close the socket if there are no more subscriptions
     if (this.subscriptions.length === 0) {
       this.socket?.close()
+      return
     }
+
+    // Otherwise, the unsubscribe message
+    this.sendUnsubscribe(sub).catch(e => {
+      console.error(`Error while unsubscribing from topic: ${e}`)
+    })
   }
 
-  private async sendSubscribe(
-    sub: SubscriptionInfo<DataSubscriber<any, any, any>>
-  ) {
+  private async sendSubscribe(sub: SubscriptionInfo) {
     // Send the subscription message
-    const request: SubscribeMessageRequest = {
+    const request: MessageRequest = {
       action: Action.SUBSCRIBE,
       topic: sub.topic,
-      arguments: sub.subscriber.connectionArgs,
+      arguments: sub.subscriber.getConnectionArgs(),
+      subscription_id: String(sub.id),
+    }
+
+    const response = await this.request(request)
+    if (response.error) {
+      throw new Error(`Failed to subscribe to topic ${sub.topic}`, {
+        cause: SocketError.fromMessage(response.error),
+      })
+    }
+    return response
+  }
+
+  private async sendUnsubscribe(sub: SubscriptionInfo) {
+    // Send the unsubscribe message if the subscription has a remote id
+    const request: MessageRequest = {
+      action: Action.UNSUBSCRIBE,
+      subscription_id: sub.id,
     }
     this.socket?.send(JSON.stringify(request))
 
-    const response: SubscribeMessageResponse = await this.waitForResponse()
-
-    if (!response.success) {
-      throw new Error(
-        `Failed to subscribe to topic ${sub.topic}, error message: ${response.error_message}`
-      )
+    const response: UnsubscribeMessageResponse = (await this.request(
+      request
+    )) as UnsubscribeMessageResponse
+    if (response.error) {
+      throw new Error(`Failed to unsubscribe from topic ${sub.topic}`, {
+        cause: SocketError.fromMessage(response.error),
+      })
     }
 
     return response
   }
 
-  private async sendUnsubscribe(
-    sub: SubscriptionInfo<DataSubscriber<any, any, any>>
-  ) {
-    // Send the unsubscribe message if the subscription has a remote id
-    const {remoteId} = sub
-    if (remoteId) {
-      const request: UnsubscribeMessageRequest = {
-        action: Action.UNSUBSCRIBE,
-        id: remoteId,
+  private async request(request: MessageRequest): Promise<MessageResponse> {
+    return new Promise<MessageResponse>((resolve, reject) => {
+      if (!this.socket) {
+        reject(new Error("WebSocket is not connected"))
+        return
       }
-      this.socket?.send(JSON.stringify(request))
 
-      const response: UnsubscribeMessageResponse = await this.waitForResponse()
+      // Bind event listeners
+      this.socket.addEventListener("error", onError)
+      this.socket.addEventListener("message", onMessage)
+      this.socket.addEventListener("close", onClose)
 
-      if (!response.success) {
-        throw new Error(
-          `Failed to unsubscribe from topic ${sub.topic}, error message: ${response.error_message}`
-        )
+      // Send the request
+      this.socket.send(JSON.stringify(request))
+
+      function onError(e: WebSocketEventMap["error"]) {
+        reject(new Error(`WebSocket error: ${e}`))
       }
-    }
-  }
 
-  private async waitForResponse<T extends MessageResponse>(): Promise<T> {
-    // TODO: NOOP, waiting for AN team to decide what to do here, this is a placeholder
-    return new Promise(resolve => {
-      this.socket?.addEventListener("message", event => {
-        const data = JSON.parse(event.data) as T
-        if (data.action) {
+      function onClose() {
+        reject(new Error("WebSocket closed"))
+      }
+
+      function onMessage(event: MessageEvent) {
+        const data = JSON.parse(event.data) as MessageResponse
+        if (data.subscription_id === request.subscription_id) {
           resolve(data)
         }
-      })
+      }
     })
   }
 
-  // Update the subscription checkpoint when a message is received
-  // These checkpoints are used to resume subscriptions after disconnects
-  private handleSubscriptionData<
-    T extends SdkTransport.SubscriptionTopic = SdkTransport.SubscriptionTopic,
-  >(message: SubscriptionDataMessage) {
-    // Get the subscription
-    const sub = this.subscriptions.find(sub => sub.remoteId === message.id)
-    if (!sub) {
-      throw new Error(`No subscription found for id ${message.id}`)
-    }
-
-    // Send data to the subscriber
-    sub.subscriber.onData(message.data)
-  }
-
   private getHandler(topic: string) {
-    const handler = this.handlers[topic]
+    const handler = this.handlers.find(handler => handler.topic === topic)
     if (!handler) {
       throw new Error(`No handler found for topic ${topic}`)
     }

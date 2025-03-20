@@ -1,48 +1,52 @@
 import {SdkTransport} from "@onflow/typedefs"
 import {BlockArgsDto, createSubscriptionHandler} from "./types"
 
-type BlockDigestsArgs =
-  SdkTransport.SubscriptionArguments<SdkTransport.SubscriptionTopic.BLOCK_DIGESTS>
+type BlockHeadersArgs =
+  SdkTransport.SubscriptionArguments<SdkTransport.SubscriptionTopic.BLOCK_HEADERS>
 
-type BlockDigestsData =
-  SdkTransport.SubscriptionData<SdkTransport.SubscriptionTopic.BLOCK_DIGESTS>
+type BlockHeadersData =
+  SdkTransport.SubscriptionData<SdkTransport.SubscriptionTopic.BLOCK_HEADERS>
 
-type BlockDigestsDataDto = {
-  block_id: string
+type BlockHeadersArgsDto = BlockArgsDto
+
+type BlockHeadersDataDto = {
+  id: string
+  parent_id: string
   height: string
   timestamp: string
+  parent_voter_signature: string
 }
 
-type BlockDigestsArgsDto = BlockArgsDto
-
-export const blockDigestsHandler = createSubscriptionHandler<{
-  Topic: SdkTransport.SubscriptionTopic.BLOCK_DIGESTS
-  Args: BlockDigestsArgs
-  Data: BlockDigestsData
-  ArgsDto: BlockDigestsArgsDto
-  DataDto: BlockDigestsDataDto
+export const blockHeadersHandler = createSubscriptionHandler<{
+  Topic: SdkTransport.SubscriptionTopic.BLOCK_HEADERS
+  Args: BlockHeadersArgs
+  Data: BlockHeadersData
+  ArgsDto: BlockHeadersArgsDto
+  DataDto: BlockHeadersDataDto
 }>({
-  topic: SdkTransport.SubscriptionTopic.BLOCK_DIGESTS,
+  topic: SdkTransport.SubscriptionTopic.BLOCK_HEADERS,
   createSubscriber: (initialArgs, onData, onError) => {
-    let resumeArgs: BlockDigestsArgs = {
+    let resumeArgs: BlockHeadersArgs = {
       ...initialArgs,
     }
 
     return {
-      onData(data: BlockDigestsDataDto) {
+      onData(data: BlockHeadersDataDto) {
         // Parse the raw data
-        const parsedData: BlockDigestsData = {
-          blockDigest: {
-            id: data.block_id,
+        const parsedData: BlockHeadersData = {
+          blockHeader: {
+            id: data.id,
+            parentId: data.parent_id,
             height: Number(data.height),
             timestamp: data.timestamp,
+            parentVoterSignature: data.parent_voter_signature,
           },
         }
 
         // Update the resume args
         resumeArgs = {
           blockStatus: resumeArgs.blockStatus,
-          startBlockId: String(BigInt(data.height) + BigInt(1)),
+          startBlockHeight: Number(BigInt(data.height) + BigInt(1)),
         }
 
         onData(parsedData)
@@ -51,7 +55,7 @@ export const blockDigestsHandler = createSubscriptionHandler<{
         onError(error)
       },
       getConnectionArgs() {
-        let encodedArgs: BlockDigestsArgsDto = {
+        let encodedArgs: BlockHeadersArgsDto = {
           block_status: resumeArgs.blockStatus,
         }
 

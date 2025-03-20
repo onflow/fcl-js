@@ -1,5 +1,5 @@
 import {SdkTransport} from "@onflow/typedefs"
-import {createSubscriptionHandler, BlockArgsModel} from "./types"
+import {createSubscriptionHandler, BlockArgsDto} from "./types"
 
 type BlocksArgs =
   SdkTransport.SubscriptionArguments<SdkTransport.SubscriptionTopic.BLOCKS>
@@ -8,14 +8,17 @@ type BlocksData =
   SdkTransport.SubscriptionData<SdkTransport.SubscriptionTopic.BLOCKS>
 
 type BlocksDataDto = {
-  block: {
+  header: {
     id: string
     parent_id: string
-    height: number
+    height: string
     timestamp: string
+    parent_voter_signature: string
+  }
+  payload: {
     collection_guarantees: {
       collection_id: string
-      signer_ids: string[]
+      signer_indices: string[]
     }[]
     block_seals: {
       block_id: string
@@ -24,21 +27,11 @@ type BlocksDataDto = {
   }
 }
 
-type BlocksArgsDto =
-  | {
-      block_status?: number
-      start_block_id?: string
-    }
-  | {
-      block_status?: number
-      start_block_height?: number
-    }
-
 export const blocksHandler = createSubscriptionHandler<{
   Topic: SdkTransport.SubscriptionTopic.BLOCKS
   Args: BlocksArgs
   Data: BlocksData
-  ArgsDto: BlocksArgsDto
+  ArgsDto: BlockArgsDto
   DataDto: BlocksDataDto
 }>({
   topic: SdkTransport.SubscriptionTopic.BLOCKS,
@@ -52,17 +45,18 @@ export const blocksHandler = createSubscriptionHandler<{
         // Parse the raw data
         const parsedData: BlocksData = {
           block: {
-            id: data.block.id,
-            parentId: data.block.parent_id,
-            height: data.block.height,
-            timestamp: data.block.timestamp,
-            collectionGuarantees: data.block.collection_guarantees.map(
+            id: data.header.id,
+            parentId: data.header.parent_id,
+            height: Number(data.header.height),
+            timestamp: data.header.timestamp,
+            parentVoterSignature: data.header.parent_voter_signature,
+            collectionGuarantees: data.payload.collection_guarantees.map(
               guarantee => ({
                 collectionId: guarantee.collection_id,
-                signerIds: guarantee.signer_ids,
+                signerIds: guarantee.signer_indices,
               })
             ),
-            blockSeals: data.block.block_seals.map(seal => ({
+            blockSeals: data.payload.block_seals.map(seal => ({
               blockId: seal.block_id,
               executionReceiptId: seal.result_id,
             })),
@@ -72,7 +66,7 @@ export const blocksHandler = createSubscriptionHandler<{
         // Update the resume args
         resumeArgs = {
           blockStatus: resumeArgs.blockStatus,
-          startBlockHeight: data.block.height + 1,
+          startBlockHeight: Number(BigInt(data.header.height) + BigInt(1)),
         }
 
         onData(parsedData)
@@ -80,29 +74,26 @@ export const blocksHandler = createSubscriptionHandler<{
       onError(error: Error) {
         onError(error)
       },
-      argsToDto(args: BlocksArgs) {
-        let encodedArgs: BlocksArgsDto = {
-          block_status: args.blockStatus,
+      getConnectionArgs() {
+        let encodedArgs: BlockArgsDto = {
+          block_status: resumeArgs.blockStatus,
         }
 
-        if ("startBlockHeight" in args) {
+        if ("startBlockHeight" in resumeArgs) {
           return {
             ...encodedArgs,
-            start_block_height: args.startBlockHeight,
+            start_block_height: String(resumeArgs.startBlockHeight),
           }
         }
 
-        if ("startBlockId" in args) {
+        if ("startBlockId" in resumeArgs) {
           return {
             ...encodedArgs,
-            start_block_id: args.startBlockId,
+            start_block_id: resumeArgs.startBlockId,
           }
         }
 
         return encodedArgs
-      },
-      get connectionArgs() {
-        return resumeArgs
       },
     }
   },

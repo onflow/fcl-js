@@ -92,6 +92,10 @@ export type Block = {
    */
   timestamp: string
   /**
+   * - The parent voter signature of the block
+   */
+  parentVoterSignature: string
+  /**
    * - Contains the ids of collections included in the block
    */
   collectionGuarantees: Array<CollectionGuarantee>
@@ -136,6 +140,33 @@ export type BlockDigest = {
    * - Timestamp of the block
    */
   timestamp: string
+}
+/**
+ * Header contains all meta-data for a block, as well as a hash representing
+ * the combined payload of the entire block. It is what consensus nodes agree
+ * on after validating the contents against the payload hash.
+ */
+export type BlockHeader = {
+  /**
+   * - The id of the block
+   */
+  id: string
+  /**
+   * - The id of the parent block
+   */
+  parentId: string
+  /**
+   * - The height of the block
+   */
+  height: number
+  /**
+   * - The timestamp of the block
+   */
+  timestamp: string
+  /**
+   * - The parent voter signature of the block
+   */
+  parentVoterSignature: string
 }
 export type CompositeSignature = {
   /**

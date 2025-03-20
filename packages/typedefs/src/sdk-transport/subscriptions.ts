@@ -1,4 +1,10 @@
-import {Block, BlockDigest, Transaction, TransactionExecutionStatus} from ".."
+import {
+  Block,
+  BlockDigest,
+  BlockHeader,
+  Transaction,
+  TransactionExecutionStatus,
+} from ".."
 
 export type SubscriptionSchema = {
   [SubscriptionTopic.BLOCKS]: SchemaItem<
@@ -26,21 +32,28 @@ export type SubscriptionSchema = {
       }
     }
   >
+  [SubscriptionTopic.BLOCK_HEADERS]: SchemaItem<
+    BlockArgs,
+    {
+      blockHeader: BlockHeader
+    }
+  >
 }
 
 export enum SubscriptionTopic {
   BLOCKS = "blocks",
   BLOCK_DIGESTS = "block_digests",
   TRANSACTION_STATUSES = "transaction_statuses",
+  BLOCK_HEADERS = "block_headers",
 }
 
 type BlockArgs =
   | {
-      blockStatus?: number
+      blockStatus: "finalized" | "sealed"
       startBlockId?: string
     }
   | {
-      blockStatus?: number
+      blockStatus: "finalized" | "sealed"
       startBlockHeight?: number
     }
 
