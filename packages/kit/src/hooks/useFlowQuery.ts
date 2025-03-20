@@ -3,57 +3,30 @@ import {useQuery, UseQueryResult} from "@tanstack/react-query"
 import {useCallback} from "react"
 import {useFlowQueryClient} from "../provider/FlowQueryClient"
 
-/** Basic argument types for simple usage */
-type BasicArgType = "Int" | "UInt64" | "Address" | "String" | "Bool"
-
-interface FlowArg {
-  value: unknown
-  type: BasicArgType
-}
-
-/**
- * Arguments can be either:
- *  - A function returning a list of FCL arguments
- *  - An array of { value, type }
- */
-type FlowArgs =
-  | FlowArg[]
-  | ((arg: typeof fcl.arg, t: typeof fcl.t) => unknown[])
-
-interface FlowQueryOptions {
+interface FlowQueryArgs {
   cadence: string
-  args?: FlowArgs
-}
-
-/** Build FCL arguments from either a function or an array of {value, type} */
-function buildFclArgs(args: FlowArgs = []) {
-  if (typeof args === "function") {
-    // For more complex usage
-    return args
-  }
-  // For simple usage
-  return (arg: typeof fcl.arg, t: typeof fcl.t) =>
-    args.map(item => arg(item.value, t[item.type]))
+  args?: (arg: typeof fcl.arg, t: typeof fcl.t) => unknown[]
 }
 
 /**
  * useFlowQuery
  *
- * Executes a Cadence script and returns a result.
- * Supports both simple and more complex argument definitions.
+ * Executes a Cadence script and returns the query result.
+ *
+ * @param {FlowQueryArgs} options - An object containing:
+ *   - cadence: The Cadence script to run
+ *   - args: (optional) A function returning script arguments
+ * @returns {UseQueryResult<unknown, Error>} React Query result (data, isLoading, error, etc.)
  */
 export function useFlowQuery({
   cadence,
-  args = [],
-}: FlowQueryOptions): UseQueryResult<unknown, Error> {
+  args,
+}: FlowQueryArgs): UseQueryResult<unknown, Error> {
   const queryClient = useFlowQueryClient()
 
   const fetchQuery = useCallback(async () => {
     if (!cadence) return null
-    return fcl.query({
-      cadence,
-      args: buildFclArgs(args),
-    })
+    return fcl.query({cadence, args})
   }, [cadence, args])
 
   return useQuery<unknown, Error>(
