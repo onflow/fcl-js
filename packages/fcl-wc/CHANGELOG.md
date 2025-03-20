@@ -1,5 +1,11 @@
 # @onflow/fcl-wc
 
+## 6.0.0-cross-vm.3
+
+### Patch Changes
+
+- [#2222](https://github.com/onflow/fcl-js/pull/2222) [`94eb73df9f41306eb142b8590b41ec72e78c8f5c`](https://github.com/onflow/fcl-js/commit/94eb73df9f41306eb142b8590b41ec72e78c8f5c) Thanks [@jribbink](https://github.com/jribbink)! - Fix bug creating session proposal
+
 ## 6.0.0-cross-vm.2
 
 ### Patch Changes
