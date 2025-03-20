@@ -1,5 +1,6 @@
-import {SdkTransport, Transaction} from "@onflow/typedefs"
+import {SdkTransport} from "@onflow/typedefs"
 import {createSubscriptionHandler} from "./types"
+import {Buffer} from "buffer"
 
 const STATUS_MAP = {
   UNKNOWN: 0,
@@ -17,28 +18,18 @@ type TransactionStatusesData =
   SdkTransport.SubscriptionData<SdkTransport.SubscriptionTopic.TRANSACTION_STATUSES>
 
 type TransactionStatusesArgsDto = {
-  envelope_signatures: string[]
-  payload_signatures: string[]
-  authorizers: string[]
-  payer: string
-  proposer: string
-  key_id: number
-  gas_limit: number
-  proposal_key: {
-    key_id: number
-    sequence_number: number
-  }
-  cadence: string
-  reference_block_id: string
+  tx_id: string
 }
 
 type TransactionStatusesDataDto = {
-  transaction_status: {
+  transaction_result: {
     block_id: string
-    block_height: number
-    transaction_id: string
+    collection_id: string
+    execution: string
     status: string
-    timestamp: string
+    status_code: 0 | 1
+    error_message: string
+    computation_used: string
     events: {
       type: string
       transaction_id: string
@@ -51,8 +42,8 @@ type TransactionStatusesDataDto = {
 
 export const transactionStatusesHandler = createSubscriptionHandler<{
   Topic: SdkTransport.SubscriptionTopic.TRANSACTION_STATUSES
-  Args: SdkTransport.SubscriptionArguments<SdkTransport.SubscriptionTopic.TRANSACTION_STATUSES>
-  Data: SdkTransport.SubscriptionData<SdkTransport.SubscriptionTopic.TRANSACTION_STATUSES>
+  Args: TransactionStatusesArgs
+  Data: TransactionStatusesData
   ArgsDto: TransactionStatusesArgsDto
   DataDto: TransactionStatusesDataDto
 }>({
@@ -63,23 +54,25 @@ export const transactionStatusesHandler = createSubscriptionHandler<{
     }
 
     return {
-      onData(data: TransactionStatusesDataModel) {
+      onData(data: TransactionStatusesDataDto) {
         // Parse the raw data
         const parsedData: TransactionStatusesData = {
           transactionStatus: {
-            blockId: data.transaction_status.block_id,
+            blockId: data.transaction_result.block_id,
             status:
-              STATUS_MAP[data.transaction_status.status.toUpperCase()] || "",
-            statusString: data.transaction_status.status.toUpperCase(),
-            statusCode: data.transaction_status.status_code,
-            errorMessage: data.transaction_status.error_message,
-            events: data.transaction_status.events.map(event => ({
+              STATUS_MAP[
+                data.transaction_result.status.toUpperCase() as keyof typeof STATUS_MAP
+              ],
+            statusString: data.transaction_result.status.toUpperCase(),
+            statusCode: data.transaction_result.status_code,
+            errorMessage: data.transaction_result.error_message,
+            events: data.transaction_result.events.map(event => ({
               type: event.type,
               transactionId: event.transaction_id,
               transactionIndex: Number(event.transaction_index),
               eventIndex: Number(event.event_index),
               payload: JSON.parse(
-                context.Buffer.from(event.payload, "base64").toString()
+                Buffer.from(event.payload, "base64").toString()
               ),
             })),
           },
@@ -90,25 +83,10 @@ export const transactionStatusesHandler = createSubscriptionHandler<{
       onError(error: Error) {
         onError(error)
       },
-      argsToDto(args: TransactionStatusesArgs) {
+      getConnectionArgs() {
         return {
-          envelope_signatures: args.envelopeSignatures,
-          payload_signatures: args.payloadSignatures,
-          authorizers: args.authorizers,
-          payer: args.payer,
-          proposer: args.proposer,
-          key_id: args.keyId,
-          gas_limit: args.gasLimit,
-          proposal_key: {
-            key_id: args.proposalKey.keyId,
-            sequence_number: args.proposalKey.sequenceNumber,
-          },
-          cadence: args.script,
-          reference_block_id: args.referenceBlockId,
+          tx_id: resumeArgs.transactionId,
         }
-      },
-      get connectionArgs() {
-        return resumeArgs
       },
     }
   },

@@ -20,7 +20,9 @@ export type SubscriptionSchema = {
     }
   >
   [SubscriptionTopic.TRANSACTION_STATUSES]: SchemaItem<
-    Transaction,
+    {
+      transactionId: string
+    },
     {
       transactionStatus: {
         blockId: string
