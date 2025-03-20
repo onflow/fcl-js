@@ -41,9 +41,7 @@ export async function query(opts = {}) {
     .send([
       sdk.script(opts.cadence),
       sdk.args(normalizeArgs(opts.args || [])),
-      sdk.atLatestBlock(
-        opts.isSealed ?? (await config().get("fcl.isSealed", true))
-      ),
+      opts.isSealed != null && sdk.atLatestBlock(opts.isSealed),
       opts.limit && typeof opts.limit === "number" && sdk.limit(opts.limit),
     ])
     .then(sdk.decode)

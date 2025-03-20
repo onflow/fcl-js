@@ -37,8 +37,8 @@ export async function account(address, {height, id, isSealed} = {}, opts) {
     )
 
   // Get account by latest block
-  const isSealed = opts.isSealed ?? (await config().get("fcl.isSealed", true))
-  return await send([getAccount(address), atLatestBlock(isSealed)], opts).then(
-    decode
-  )
+  return await send(
+    [getAccount(address), opts.isSealed != null && atLatestBlock(isSealed)],
+    opts
+  ).then(decode)
 }
