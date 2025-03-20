@@ -14,7 +14,7 @@ import {
 } from "@onflow/sdk"
 
 describe("Send Execute Script", () => {
-  test("ExecuteScriptAtLatestBlock (final)", async () => {
+  test("ExecuteScriptAtLatestBlock - sealed", async () => {
     const httpRequestMock = jest.fn()
 
     const returnedJSONCDC = Buffer.from(
@@ -49,7 +49,7 @@ describe("Send Execute Script", () => {
 
     expect(valueSent).toEqual({
       hostname: "localhost",
-      path: "/v1/scripts?block_height=final",
+      path: "/v1/scripts?block_height=sealed",
       method: "POST",
       body: {
         script:
@@ -62,7 +62,7 @@ describe("Send Execute Script", () => {
     )
   })
 
-  test("ExecuteScriptAtLatestBlock (sealed)", async () => {
+  test("ExecuteScriptAtLatestBlock - final", async () => {
     const httpRequestMock = jest.fn()
 
     const returnedJSONCDC = Buffer.from(
@@ -78,7 +78,7 @@ describe("Send Execute Script", () => {
         await build([
           script(cadence),
           args([arg(123, types.Int)]),
-          atLatestBlock(true),
+          atLatestBlock(false),
         ])
       ),
       {
@@ -101,7 +101,7 @@ describe("Send Execute Script", () => {
 
     expect(valueSent).toEqual({
       hostname: "localhost",
-      path: "/v1/scripts?block_height=sealed",
+      path: "/v1/scripts?block_height=final",
       method: "POST",
       body: {
         script:

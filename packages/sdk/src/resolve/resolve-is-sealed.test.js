@@ -2,6 +2,9 @@ import {
   initInteraction,
   pipe,
   makeTransaction,
+  makeGetAccount,
+  makeScript,
+  makeGetBlock,
 } from "../interaction/interaction"
 import {config} from "@onflow/config"
 import {resolveIsSealed} from "./resolve-is-sealed"
@@ -14,7 +17,7 @@ describe("resolveIsSealed", () => {
       },
       async () => {
         const ix = await pipe([
-          makeTransaction,
+          makeGetAccount,
           ix => ({
             ...ix,
             block: {
@@ -36,7 +39,7 @@ describe("resolveIsSealed", () => {
         "fcl.isSealed": false,
       },
       async () => {
-        const ix = await pipe([makeTransaction, resolveIsSealed])(
+        const ix = await pipe([makeGetAccount, resolveIsSealed])(
           initInteraction()
         )
 
@@ -45,9 +48,27 @@ describe("resolveIsSealed", () => {
     )
   })
 
-  test("fallback to isSealed=true (hard finality)", async () => {
-    const ix = await pipe([makeTransaction, resolveIsSealed])(initInteraction())
+  test("fallback to isSealed=true for getAccount (hard finality)", async () => {
+    const ix = await pipe([makeGetAccount, resolveIsSealed])(initInteraction())
 
     expect(ix.block.isSealed).toBe(true)
+  })
+
+  test("fallback to isSealed=true for script (hard finality)", async () => {
+    const ix = await pipe([makeScript, resolveIsSealed])(initInteraction())
+
+    expect(ix.block.isSealed).toBe(true)
+  })
+
+  test("do not override for getBlock", async () => {
+    const ix = await pipe([makeGetBlock, resolveIsSealed])(initInteraction())
+
+    expect(ix.block.isSealed).toBe(null)
+  })
+
+  test("do not override for getBlockHeader", async () => {
+    const ix = await pipe([makeTransaction, resolveIsSealed])(initInteraction())
+
+    expect(ix.block.isSealed).toBe(null)
   })
 })
