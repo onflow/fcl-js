@@ -168,3 +168,38 @@ function EventListener() {
   return <div>Listening for events...</div>;
 }
 ```
+
+### `useFlowQuery`
+
+#### Parameters
+
+- **cadence:** The Cadence script as a string.
+- **args (optional):** A function that returns an array of FCL arguments. For example, `(arg, t) => [arg(1, t.Int), arg(2, t.Int)]`.
+
+```jsx
+import React from "react"
+import { useFlowQuery } from "@onflow/kit/hooks"
+
+function QueryExample() {
+  const { data, isLoading, error, refetch } = useFlowQuery({
+    cadence: `
+      pub fun main(a: Int, b: Int): Int {
+        return a + b
+      }
+    `,
+    args: (arg, t) => [arg(1, t.Int), arg(2, t.Int)],
+  })
+
+  if (isLoading) return <p>Loading query...</p>
+  if (error) return <p>Error: {error.message}</p>
+
+  return (
+    <div>
+      <p>Result: {data}</p>
+      <button onClick={refetch}>Refetch Query</button>
+    </div>
+  )
+}
+
+export default QueryExample
+```
