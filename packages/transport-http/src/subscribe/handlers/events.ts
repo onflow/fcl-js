@@ -67,7 +67,7 @@ export const eventsHandler = createSubscriptionHandler<{
           // Update the resume args
           resumeArgs = {
             ...resumeArgs,
-            startBlockHeight: result.event.blockHeight + 1,
+            startHeight: result.event.blockHeight + 1,
             startBlockId: undefined,
           }
 
@@ -77,31 +77,28 @@ export const eventsHandler = createSubscriptionHandler<{
       onError(error: Error) {
         onError(error)
       },
-      argsToDto(args: EventsArgs) {
+      getConnectionArgs() {
         let encodedArgs: EventsArgsDto = {
-          event_types: args.filter?.eventTypes,
-          addresses: args.filter?.addresses,
-          contracts: args.filter?.contracts,
+          event_types: resumeArgs.eventTypes,
+          addresses: resumeArgs.addresses,
+          contracts: resumeArgs.contracts,
         }
 
-        if ("startBlockHeight" in args) {
+        if ("startBlockHeight" in resumeArgs) {
           return {
             ...encodedArgs,
-            start_block_height: args.startBlockHeight,
+            start_block_height: resumeArgs.startBlockHeight,
           }
         }
 
-        if ("startBlockId" in args) {
+        if ("startBlockId" in resumeArgs) {
           return {
             ...encodedArgs,
-            start_block_id: args.startBlockId,
+            start_block_id: resumeArgs.startBlockId,
           }
         }
 
         return encodedArgs
-      },
-      get connectionArgs() {
-        return resumeArgs
       },
     }
   },
