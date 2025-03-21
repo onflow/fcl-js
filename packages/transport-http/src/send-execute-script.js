@@ -47,7 +47,7 @@ async function sendExecuteScriptAtLatestBlockRequest(ix, context, opts) {
 
   const res = await httpRequest({
     hostname: opts.node,
-    path: `/v1/scripts?block_height=sealed`,
+    path: `/v1/scripts?block_height=${ix.block.isSealed ? "sealed" : "final"}`,
     method: "POST",
     body: {
       script: context.Buffer.from(ix.message.cadence).toString("base64"),
