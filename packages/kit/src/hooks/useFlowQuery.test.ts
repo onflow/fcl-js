@@ -56,4 +56,27 @@ describe("useFlowQuery", () => {
       args: undefined,
     })
   })
+
+  test("handles error from fcl.query", async () => {
+    const cadenceScript = "access(all) fun main(): Int { return 42 }"
+    const testError = new Error("Query failed")
+    const queryMock = jest.mocked(fcl.query)
+    queryMock.mockRejectedValueOnce(testError)
+
+    let hookResult: any
+
+    await act(async () => {
+      const {result} = renderHook(
+        () => useFlowQuery({cadence: cadenceScript}),
+        {
+          wrapper: FlowProvider,
+        }
+      )
+      hookResult = result
+    })
+
+    await waitFor(() => expect(hookResult.current.isLoading).toBe(false))
+    expect(hookResult.current.data).toBeNull()
+    expect(hookResult.current.error).toEqual(testError)
+  })
 })
