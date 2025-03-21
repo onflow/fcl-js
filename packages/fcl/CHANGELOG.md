@@ -1,5 +1,18 @@
 # @onflow/fcl
 
+## 1.14.0
+
+### Minor Changes
+
+- [#2218](https://github.com/onflow/fcl-js/pull/2218) [`5b76b111ddb16ed607dc218714fdc51c21fdcdc8`](https://github.com/onflow/fcl-js/commit/5b76b111ddb16ed607dc218714fdc51c21fdcdc8) Thanks [@jribbink](https://github.com/jribbink)! - Add `fcl.experimental.softFinality` config option to run all state queries (e.g. execute script, get account) against the latest soft-finality state by default
+
+### Patch Changes
+
+- Updated dependencies [[`5b76b111ddb16ed607dc218714fdc51c21fdcdc8`](https://github.com/onflow/fcl-js/commit/5b76b111ddb16ed607dc218714fdc51c21fdcdc8), [`5b76b111ddb16ed607dc218714fdc51c21fdcdc8`](https://github.com/onflow/fcl-js/commit/5b76b111ddb16ed607dc218714fdc51c21fdcdc8), [`5b76b111ddb16ed607dc218714fdc51c21fdcdc8`](https://github.com/onflow/fcl-js/commit/5b76b111ddb16ed607dc218714fdc51c21fdcdc8)]:
+  - @onflow/fcl-core@1.15.0
+  - @onflow/sdk@1.6.0
+  - @onflow/fcl-wc@5.6.2
+
 ## 1.13.7
 
 ### Patch Changes

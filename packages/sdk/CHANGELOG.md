@@ -1,5 +1,18 @@
 # @onflow/sdk
 
+## 1.6.0
+
+### Minor Changes
+
+- [#2218](https://github.com/onflow/fcl-js/pull/2218) [`5b76b111ddb16ed607dc218714fdc51c21fdcdc8`](https://github.com/onflow/fcl-js/commit/5b76b111ddb16ed607dc218714fdc51c21fdcdc8) Thanks [@jribbink](https://github.com/jribbink)! - Add `fcl.experimental.softFinality` config option to run all state queries (e.g. execute script, get account) against the latest soft-finality state by default
+
+- [#2218](https://github.com/onflow/fcl-js/pull/2218) [`5b76b111ddb16ed607dc218714fdc51c21fdcdc8`](https://github.com/onflow/fcl-js/commit/5b76b111ddb16ed607dc218714fdc51c21fdcdc8) Thanks [@jribbink](https://github.com/jribbink)! - Add `atLatestBlock` SDK builder method to query the latest block with the given finality state
+
+### Patch Changes
+
+- Updated dependencies [[`5b76b111ddb16ed607dc218714fdc51c21fdcdc8`](https://github.com/onflow/fcl-js/commit/5b76b111ddb16ed607dc218714fdc51c21fdcdc8)]:
+  - @onflow/transport-http@1.11.0
+
 ## 1.5.7
 
 ### Patch Changes

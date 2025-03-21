@@ -1,6 +1,6 @@
 {
   "name": "@onflow/transport-http",
-  "version": "1.10.5",
+  "version": "1.11.0",
   "description": "Flow SDK HTTP Transport Module",
   "license": "Apache-2.0",
   "author": "Flow Foundation",
@@ -15,7 +15,7 @@
   "devDependencies": {
     "@onflow/fcl-bundle": "1.6.0",
     "@onflow/rlp": "1.2.3",
-    "@onflow/sdk": "1.5.7",
+    "@onflow/sdk": "1.6.0",
     "@onflow/types": "1.4.1",
     "jest": "^29.7.0"
   },
