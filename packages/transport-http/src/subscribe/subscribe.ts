@@ -4,12 +4,14 @@ import {blocksHandler} from "./handlers/blocks"
 import {blockHeadersHandler} from "./handlers/block-headers"
 import {blockDigestsHandler} from "./handlers/block-digests"
 import {eventsHandler} from "./handlers/events"
+import {transactionStatusesHandler} from "./handlers/transaction-statuses"
 
 const SUBSCRIPTION_HANDLERS = [
   blocksHandler,
   blockHeadersHandler,
   blockDigestsHandler,
   eventsHandler,
+  transactionStatusesHandler,
 ]
 
 // Map of SubscriptionManager instances by access node URL
