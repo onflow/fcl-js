@@ -79,4 +79,34 @@ describe("useFlowQuery", () => {
     expect(hookResult.current.data).toBeNull()
     expect(hookResult.current.error).toEqual(testError)
   })
+
+  test("refetch function works correctly", async () => {
+    const cadenceScript = "access(all) fun main(): Int { return 42 }"
+    const initialResult = 42
+    const updatedResult = 100
+    const queryMock = jest.mocked(fcl.query)
+    queryMock.mockResolvedValueOnce(initialResult)
+
+    let hookResult: any
+
+    await act(async () => {
+      const {result} = renderHook(
+        () => useFlowQuery({cadence: cadenceScript}),
+        {
+          wrapper: FlowProvider,
+        }
+      )
+      hookResult = result
+    })
+
+    await waitFor(() => expect(hookResult.current.data).toEqual(initialResult))
+
+    queryMock.mockResolvedValueOnce(updatedResult)
+    act(() => {
+      hookResult.current.refetch()
+    })
+
+    await waitFor(() => expect(hookResult.current.data).toEqual(updatedResult))
+    expect(queryMock).toHaveBeenCalledTimes(2)
+  })
 })
