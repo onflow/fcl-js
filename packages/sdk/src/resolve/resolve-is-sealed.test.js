@@ -13,7 +13,7 @@ describe("resolveIsSealed", () => {
   test("interaction isSealed has priority", async () => {
     await config.overload(
       {
-        "fcl.isSealed": false,
+        "fcl.experimentalSoftFinality": true,
       },
       async () => {
         const ix = await pipe([
@@ -33,10 +33,10 @@ describe("resolveIsSealed", () => {
     )
   })
 
-  test("config isSealed is used if exists", async () => {
+  test("config expirimental soft finality is used if exists", async () => {
     await config.overload(
       {
-        "fcl.isSealed": false,
+        "fcl.experimentalSoftFinality": true,
       },
       async () => {
         const ix = await pipe([makeGetAccount, resolveIsSealed])(
