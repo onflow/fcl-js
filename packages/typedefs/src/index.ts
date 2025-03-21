@@ -464,6 +464,7 @@ export type NodeVersionInfo = {
    */
   nodeRootBlockHeight: number
 }
+
 export interface StreamConnection<ChannelMap extends {[name: string]: any}> {
   on<C extends keyof ChannelMap>(
     channel: C,
