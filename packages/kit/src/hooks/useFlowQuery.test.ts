@@ -109,4 +109,34 @@ describe("useFlowQuery", () => {
     await waitFor(() => expect(hookResult.current.data).toEqual(updatedResult))
     expect(queryMock).toHaveBeenCalledTimes(2)
   })
+
+  test("supports args function parameter", async () => {
+    const cadenceScript = "access(all) fun main(a: Int): Int { return a }"
+    const expectedResult = 7
+    const queryMock = jest.mocked(fcl.query)
+    queryMock.mockResolvedValueOnce(expectedResult)
+
+    const argsFunction = (arg: typeof fcl.arg, t: typeof fcl.t) => [
+      arg(7, t.Int),
+    ]
+
+    let hookResult: any
+
+    await act(async () => {
+      const {result} = renderHook(
+        () => useFlowQuery({cadence: cadenceScript, args: argsFunction}),
+        {
+          wrapper: FlowProvider,
+        }
+      )
+      hookResult = result
+    })
+
+    await waitFor(() => expect(hookResult.current.isLoading).toBe(false))
+    expect(hookResult.current.data).toEqual(expectedResult)
+    expect(queryMock).toHaveBeenCalledWith({
+      cadence: cadenceScript,
+      args: argsFunction,
+    })
+  })
 })
