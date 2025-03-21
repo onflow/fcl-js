@@ -3,12 +3,14 @@ import {SubscriptionManager} from "./subscription-manager"
 import {blocksHandler} from "./handlers/blocks"
 import {blockHeadersHandler} from "./handlers/block-headers"
 import {blockDigestsHandler} from "./handlers/block-digests"
+import {eventsHandler} from "./handlers/events"
 import {transactionStatusesHandler} from "./handlers/transaction-statuses"
 
 const SUBSCRIPTION_HANDLERS = [
   blocksHandler,
-  blockDigestsHandler,
   blockHeadersHandler,
+  blockDigestsHandler,
+  eventsHandler,
   transactionStatusesHandler,
 ]
 

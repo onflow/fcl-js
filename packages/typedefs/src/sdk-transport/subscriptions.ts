@@ -2,7 +2,8 @@ import {
   Block,
   BlockDigest,
   BlockHeader,
-  Transaction,
+  Event,
+  EventFilter,
   TransactionExecutionStatus,
 } from ".."
 
@@ -11,6 +12,12 @@ export type SubscriptionSchema = {
     BlockArgs,
     {
       block: Block
+    }
+  >
+  [SubscriptionTopic.BLOCK_HEADERS]: SchemaItem<
+    BlockArgs,
+    {
+      blockHeader: BlockHeader
     }
   >
   [SubscriptionTopic.BLOCK_DIGESTS]: SchemaItem<
@@ -34,19 +41,22 @@ export type SubscriptionSchema = {
       }
     }
   >
-  [SubscriptionTopic.BLOCK_HEADERS]: SchemaItem<
-    BlockArgs,
+  [SubscriptionTopic.EVENTS]: SchemaItem<
+    EventFilter,
     {
-      blockHeader: BlockHeader
+      event: Omit<Event, "data"> & {
+        payload: string
+      }
     }
   >
 }
 
 export enum SubscriptionTopic {
   BLOCKS = "blocks",
+  BLOCK_HEADERS = "block_headers",
   BLOCK_DIGESTS = "block_digests",
   TRANSACTION_STATUSES = "transaction_statuses",
-  BLOCK_HEADERS = "block_headers",
+  EVENTS = "events",
 }
 
 type BlockArgs =
