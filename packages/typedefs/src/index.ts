@@ -484,6 +484,9 @@ export interface EventFilter {
   eventTypes?: string[]
   addresses?: string[]
   contracts?: string[]
+  startBlockId?: string
+  startHeight?: number
+  heartbeatInterval?: number
 }
 
 export interface BlockHeartbeat {
