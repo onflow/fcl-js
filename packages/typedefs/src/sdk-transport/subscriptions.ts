@@ -1,4 +1,10 @@
-import {Block, BlockDigest, BlockHeader} from ".."
+import {
+  Block,
+  BlockDigest,
+  BlockHeader,
+  Transaction,
+  TransactionExecutionStatus,
+} from ".."
 
 export type SubscriptionSchema = {
   [SubscriptionTopic.BLOCKS]: SchemaItem<
@@ -13,6 +19,21 @@ export type SubscriptionSchema = {
       blockDigest: BlockDigest
     }
   >
+  [SubscriptionTopic.TRANSACTION_STATUSES]: SchemaItem<
+    {
+      transactionId: string
+    },
+    {
+      transactionStatus: {
+        blockId: string
+        status: TransactionExecutionStatus
+        statusString: string
+        statusCode: 0 | 1
+        errorMessage: string
+        events: Array<RawEvent>
+      }
+    }
+  >
   [SubscriptionTopic.BLOCK_HEADERS]: SchemaItem<
     BlockArgs,
     {
@@ -24,6 +45,7 @@ export type SubscriptionSchema = {
 export enum SubscriptionTopic {
   BLOCKS = "blocks",
   BLOCK_DIGESTS = "block_digests",
+  TRANSACTION_STATUSES = "transaction_statuses",
   BLOCK_HEADERS = "block_headers",
 }
 
@@ -60,3 +82,11 @@ export type SubscribeFn = <T extends SubscriptionTopic>(
   },
   opts: {node: string}
 ) => Promise<Subscription>
+
+type RawEvent = {
+  type: string
+  transactionId: string
+  transactionIndex: number
+  eventIndex: number
+  payload: any
+}
