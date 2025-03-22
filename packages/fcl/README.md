@@ -76,7 +76,7 @@ fcl.config({
 
 fcl.authenticate()
 ```
-![FCL Default Discovery UI](docs/images/discovery.png)
+![FCL Default Discovery UI](/docs/images/discovery.png)
 
 > **Note**: A [Dapper Wallet](https://meetdapper.com/developers) developer account is required. To enable Dapper Wallet inside FCL, you need to [follow this guide](https://docs.meetdapper.com/get-started).
 
@@ -136,7 +136,7 @@ const txId = await fcl.mutate({
 
 ## Typescript Support
 
-FCL JS supports TypeScript. If you need to import specific types, you can do so via the [@onflow/typedefs](./packages/typedefs/README.md) package.
+FCL JS supports TypeScript. If you need to import specific types, you can do so via the [@onflow/typedefs](/packages/typedefs/README.md) package.
 
 ```typescript
 import {CurrentUser} from "@onflow/typedefs"
@@ -152,7 +152,7 @@ const newUser: CurrentUser = {
 }
 ```
 
-For all type definitions available, see [this file](./packages/typedefs/src/index.js)
+For all type definitions available, see [this file](/packages/typedefs/src/index.ts)
 
 ## Next Steps
 
@@ -197,7 +197,7 @@ The discovery feature can be used via API allowing you to customize your own UI 
 
 ## 🛠 Want to Use the Flow SDK Directly?
 
-If you prefer to interact with Flow at a **lower level** without using FCL, you can use the [Flow JavaScript SDK](packages/sdk/readme.md) directly. The SDK provides raw access to Flow's API for sending transactions, executing scripts, and managing accounts.
+If you prefer to interact with Flow at a **lower level** without using FCL, you can use the [Flow JavaScript SDK](/packages/sdk/readme.md) directly. The SDK provides raw access to Flow's API for sending transactions, executing scripts, and managing accounts.
 
 FCL is built **on top of the Flow SDK**, making it easier to handle authentication, wallet interactions, and dapp connectivity. Choose the approach that best fits your use case.
 
