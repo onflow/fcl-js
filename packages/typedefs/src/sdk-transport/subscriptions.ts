@@ -29,7 +29,6 @@ export type SubscriptionSchema = {
   [SubscriptionTopic.ACCOUNT_STATUSES]: SchemaItem<
     EventFilter,
     {
-      // TODO: We do not know the data model types yet
       accountStatus: Omit<Event, "data"> & {
         payload: string
         accountAddress: string

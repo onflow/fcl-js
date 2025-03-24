@@ -46,7 +46,6 @@ export async function subscribe<T extends SdkTransport.SubscriptionTopic>(
   return manager.subscribe({
     topic,
     args,
-    // @ts-ignore - TODO: This is temporary until we start implementing the handlers
     onData,
     onError,
   })

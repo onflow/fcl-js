@@ -13,7 +13,7 @@ type AccountStatusesArgsDto = EventsArgsDto
 type AccountStatusesDataDto = {
   block_id: string
   block_height: string
-  // block_timestamp: string
+  block_timestamp: string
   account_events: {
     [address: string]: {
       type: string
@@ -49,7 +49,7 @@ export const accountStatusesHandler = createSubscriptionHandler<{
                 accountAddress: address,
                 blockId: data.block_id,
                 blockHeight: Number(data.block_height),
-                blockTimestamp: "", // TODO
+                blockTimestamp: data.block_timestamp,
                 type: event.type,
                 transactionId: event.transaction_id,
                 transactionIndex: Number(event.transaction_index),
