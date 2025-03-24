@@ -1,6 +1,5 @@
 import {SdkTransport} from "@onflow/typedefs"
 import {createSubscriptionHandler} from "./types"
-import {EventsArgsDto} from "./events"
 
 type AccountStatusesArgs =
   SdkTransport.SubscriptionArguments<SdkTransport.SubscriptionTopic.ACCOUNT_STATUSES>
@@ -8,7 +7,13 @@ type AccountStatusesArgs =
 type AccountStatusesData =
   SdkTransport.SubscriptionData<SdkTransport.SubscriptionTopic.ACCOUNT_STATUSES>
 
-type AccountStatusesArgsDto = EventsArgsDto
+type AccountStatusesArgsDto = {
+  start_block_id?: string
+  start_block_height?: number
+  event_types?: string[]
+  addresses?: string[]
+  account_addresses?: string[]
+}
 
 type AccountStatusesDataDto = {
   block_id: string
@@ -61,7 +66,7 @@ export const accountStatusesHandler = createSubscriptionHandler<{
             // Update the resume args
             resumeArgs = {
               ...resumeArgs,
-              startHeight: Number(BigInt(data.block_height) + BigInt(1)),
+              startBlockHeight: Number(BigInt(data.block_height) + BigInt(1)),
               startBlockId: undefined,
             }
 
@@ -76,7 +81,7 @@ export const accountStatusesHandler = createSubscriptionHandler<{
         let encodedArgs: AccountStatusesArgsDto = {
           event_types: resumeArgs.eventTypes,
           addresses: resumeArgs.addresses,
-          contracts: resumeArgs.contracts,
+          account_addresses: resumeArgs.accountAddresses,
         }
 
         if ("startBlockHeight" in resumeArgs) {

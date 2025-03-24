@@ -27,7 +27,7 @@ export type SubscriptionSchema = {
     }
   >
   [SubscriptionTopic.ACCOUNT_STATUSES]: SchemaItem<
-    EventFilter,
+    AccountStatusesArgs,
     {
       accountStatus: Omit<Event, "data"> & {
         payload: string
@@ -78,6 +78,14 @@ type BlockArgs =
       blockStatus: "finalized" | "sealed"
       startBlockHeight?: number
     }
+
+type AccountStatusesArgs = {
+  startBlockId?: string
+  startBlockHeight?: number
+  eventTypes?: string[]
+  addresses?: string[]
+  accountAddresses?: string[]
+}
 
 type SchemaItem<TArgs, TData> = {
   args: TArgs
