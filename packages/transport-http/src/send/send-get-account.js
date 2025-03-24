@@ -33,7 +33,7 @@ async function sendGetAccountAtLatestBlockRequest(ix, context, opts) {
 
   const res = await httpRequest({
     hostname: opts.node,
-    path: `/v1/accounts/${ix.account.addr}?block_height=sealed&expand=contracts,keys`,
+    path: `/v1/accounts/${ix.account.addr}?block_height=${ix.block.isSealed ? "sealed" : "final"}&expand=contracts,keys`,
     method: "GET",
     body: null,
   })
