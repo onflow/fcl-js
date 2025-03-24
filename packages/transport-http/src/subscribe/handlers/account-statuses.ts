@@ -45,16 +45,19 @@ export const accountStatusesHandler = createSubscriptionHandler<{
     }
 
     return {
-      onData(data: AccountStatusesDataDto) {
-        for (const [address, events] of Object.entries(data.account_events)) {
+      onData(rawData: AccountStatusesDataDto) {
+        const data: AccountStatusesData[] = []
+        for (const [address, events] of Object.entries(
+          rawData.account_events
+        )) {
           for (const event of events) {
             // Parse the raw data
             const parsedData: AccountStatusesData = {
               accountStatus: {
                 accountAddress: address,
-                blockId: data.block_id,
-                blockHeight: Number(data.block_height),
-                blockTimestamp: data.block_timestamp,
+                blockId: rawData.block_id,
+                blockHeight: Number(rawData.block_height),
+                blockTimestamp: rawData.block_timestamp,
                 type: event.type,
                 transactionId: event.transaction_id,
                 transactionIndex: Number(event.transaction_index),
@@ -66,11 +69,26 @@ export const accountStatusesHandler = createSubscriptionHandler<{
             // Update the resume args
             resumeArgs = {
               ...resumeArgs,
-              startBlockHeight: Number(BigInt(data.block_height) + BigInt(1)),
+              startBlockHeight: Number(
+                BigInt(rawData.block_height) + BigInt(1)
+              ),
               startBlockId: undefined,
             }
 
-            onData(parsedData)
+            data.push(parsedData)
+          }
+
+          // Sort the messages by increasing message index
+          data.sort((a, b) => {
+            return (
+              Number(a.accountStatus.transactionIndex) -
+              Number(b.accountStatus.transactionIndex)
+            )
+          })
+
+          // Emit the messages
+          for (const message of data) {
+            onData(message)
           }
         }
       },
