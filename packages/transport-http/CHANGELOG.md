@@ -1,5 +1,11 @@
 # @onflow/transport-http
 
+## 1.11.0
+
+### Minor Changes
+
+- [#2218](https://github.com/onflow/fcl-js/pull/2218) [`5b76b111ddb16ed607dc218714fdc51c21fdcdc8`](https://github.com/onflow/fcl-js/commit/5b76b111ddb16ed607dc218714fdc51c21fdcdc8) Thanks [@jribbink](https://github.com/jribbink)! - Default to executing scripts and querying accounts at latest finalized block
+
 ## 1.10.5
 
 ### Patch Changes
