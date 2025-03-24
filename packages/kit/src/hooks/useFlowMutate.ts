@@ -59,13 +59,11 @@ export function useFlowMutate({
 }: FlowMutateArgs): UseMutationResult<string, Error> {
   const queryClient = useFlowQueryClient()
 
-  // Define the mutation function
   const mutationFn = useCallback(async () => {
     if (!cadence) {
       throw new Error("Cadence transaction code is required.")
     }
 
-    // fcl.mutate returns a Transaction ID (string)
     const txId = await fcl.mutate({
       cadence,
       args,
