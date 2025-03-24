@@ -112,5 +112,5 @@ initFclWcLoader()
 
 export {LOCAL_STORAGE, SESSION_STORAGE} from "./utils/web"
 
-// subscriptions
+// Subscriptions
 export {subscribe, rawSubscribe} from "@onflow/fcl-core"
