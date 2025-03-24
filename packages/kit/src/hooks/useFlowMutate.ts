@@ -57,6 +57,8 @@ export function useFlowMutate({
   authorizations,
   limit = 9999,
 }: FlowMutateArgs): UseMutationResult<string, Error> {
+  const queryClient = useFlowQueryClient()
+
   const mutationFn = useCallback(async () => {
     if (!cadence) {
       throw new Error("Cadence transaction code is required.")
@@ -74,8 +76,11 @@ export function useFlowMutate({
     return txId
   }, [cadence, args, payer, proposer, authorizations, limit])
 
-  return useMutation({
-    mutationFn,
-    retry: false,
-  })
+  return useMutation(
+    {
+      mutationFn,
+      retry: false,
+    },
+    queryClient
+  )
 }
