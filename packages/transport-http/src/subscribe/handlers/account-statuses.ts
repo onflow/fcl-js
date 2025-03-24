@@ -81,8 +81,8 @@ export const accountStatusesHandler = createSubscriptionHandler<{
           // Sort the messages by increasing message index
           data.sort((a, b) => {
             return (
-              Number(a.accountStatus.transactionIndex) -
-              Number(b.accountStatus.transactionIndex)
+              a.accountStatus.transactionIndex -
+              b.accountStatus.transactionIndex
             )
           })
 
