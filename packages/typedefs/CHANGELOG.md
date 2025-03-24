@@ -1,5 +1,27 @@
 # @onflow/typedefs
 
+## 1.4.1
+
+### Patch Changes
+
+- [#2216](https://github.com/onflow/fcl-js/pull/2216) [`ae0ddb755a4c099df1558900192d395543ffccec`](https://github.com/onflow/fcl-js/commit/ae0ddb755a4c099df1558900192d395543ffccec) Thanks [@jribbink](https://github.com/jribbink)! - Expose all available arguments to `EventFilter` type (`startBlockId`, `startBlockHeight`, `heartbeatInterval`)
+
+## 1.4.0
+
+### Minor Changes
+
+- [#1893](https://github.com/onflow/fcl-js/pull/1893) [`b9f49494d5b3faed1bc24005adc6ba312f653a21`](https://github.com/onflow/fcl-js/commit/b9f49494d5b3faed1bc24005adc6ba312f653a21) Thanks [@jribbink](https://github.com/jribbink)! - Add missing field to TransactionStatus type
+
+- [#1893](https://github.com/onflow/fcl-js/pull/1893) [`b9f49494d5b3faed1bc24005adc6ba312f653a21`](https://github.com/onflow/fcl-js/commit/b9f49494d5b3faed1bc24005adc6ba312f653a21) Thanks [@jribbink](https://github.com/jribbink)! - Add FvmErrorCode enum for categorizing transaction/script execution errors
+
+- [#1981](https://github.com/onflow/fcl-js/pull/1981) [`dda32df052801ee5e70b703a19c246f36bbd31c2`](https://github.com/onflow/fcl-js/commit/dda32df052801ee5e70b703a19c246f36bbd31c2) Thanks [@jribbink](https://github.com/jribbink)! - Add missing fields to Provider type
+
+### Patch Changes
+
+- [#1970](https://github.com/onflow/fcl-js/pull/1970) [`3b31f1c02b78bf178502627e5ca1de81bdfe8f26`](https://github.com/onflow/fcl-js/commit/3b31f1c02b78bf178502627e5ca1de81bdfe8f26) Thanks [@jribbink](https://github.com/jribbink)! - Fix CurrentUser services type
+
+- [#1983](https://github.com/onflow/fcl-js/pull/1983) [`18d24c8bad7efa0d8741d74f0cf299f89b3622c7`](https://github.com/onflow/fcl-js/commit/18d24c8bad7efa0d8741d74f0cf299f89b3622c7) Thanks [@jribbink](https://github.com/jribbink)! - Update dependencies
+
 ## 1.4.0-alpha.2
 
 ### Patch Changes

@@ -2,7 +2,7 @@ export {VERSION} from "./VERSION"
 export {query} from "./exec/query"
 export {verifyUserSignatures} from "./exec/verify"
 export {serialize} from "./serialize"
-export {transaction as tx} from "./transaction"
+export {transaction as tx, TransactionError} from "./transaction"
 export {events} from "./events"
 export {pluginRegistry} from "./current-user/exec-service/plugins"
 

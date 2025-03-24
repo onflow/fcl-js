@@ -1,10 +1,10 @@
 {
   "name": "@onflow/util-rpc",
-  "version": "0.0.2-alpha.0",
+  "version": "0.0.2",
   "description": "Lightweight utility for creating transport-agnostic, bidirectional JSON-RPC channels.",
   "license": "Apache-2.0",
   "author": "Flow Foundation <support@flowfoundation.org>",
-  "homepage": "https://onflow.org",
+  "homepage": "https://flow.com",
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/onflow/fcl-js.git"
@@ -14,7 +14,7 @@
   },
   "devDependencies": {
     "@babel/preset-typescript": "^7.25.7",
-    "@onflow/fcl-bundle": "1.6.0-alpha.1",
+    "@onflow/fcl-bundle": "1.6.0",
     "@types/jest": "^29.5.13",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",

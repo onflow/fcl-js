@@ -18,7 +18,7 @@ export const getMutate = currentUserOrConfig => {
    *
    * @param {object} [opts] - Mutation Options and configuration
    * @param {string} [opts.cadence] - Cadence Transaction used to mutate Flow
-   * @param {import("../shared-exports").ArgsFn} [opts.args] - Arguments passed to cadence transaction
+   * @param {import("./args").ArgsFn} [opts.args] - Arguments passed to cadence transaction
    * @param {object | string} [opts.template] - Interaction Template for a transaction
    * @param {number} [opts.limit] - Compute Limit for transaction
    * @param {Function} [opts.authz] - Authorization function for transaction

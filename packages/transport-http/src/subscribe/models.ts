@@ -5,12 +5,16 @@ export enum Action {
 }
 export interface BaseMessageRequest {
   action: Action
+  subscription_id: string
 }
 
 export interface BaseMessageResponse {
   action?: Action
-  success: boolean
-  error_message?: string
+  error?: {
+    code: number
+    message: string
+  }
+  subscription_id: string
 }
 
 export interface ListSubscriptionsMessageRequest extends BaseMessageRequest {
@@ -31,12 +35,10 @@ export interface SubscribeMessageRequest extends BaseMessageRequest {
 export interface SubscribeMessageResponse extends BaseMessageResponse {
   action: Action.SUBSCRIBE
   topic: string
-  id: string
 }
 
 export interface UnsubscribeMessageRequest extends BaseMessageRequest {
   action: Action.UNSUBSCRIBE
-  id: string
 }
 
 export type UnsubscribeMessageResponse = BaseMessageResponse & {
@@ -61,6 +63,19 @@ export type MessageResponse =
   | UnsubscribeMessageResponse
 
 export type SubscriptionDataMessage = {
-  id: string
-  data: any
+  subscription_id: string
+  payload: any
+}
+export class SocketError extends Error {
+  code: number
+
+  private constructor(code: number, message: string) {
+    super(message)
+    this.name = "SocketError"
+    this.code = code
+  }
+
+  static fromMessage(error: {code: number; message: string}) {
+    return new SocketError(error.code, error.message)
+  }
 }

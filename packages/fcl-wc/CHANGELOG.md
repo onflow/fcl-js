@@ -1,5 +1,81 @@
 # @onflow/fcl-wc
 
+## 5.6.1
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @onflow/fcl-core@1.14.1
+
+## 5.6.0
+
+### Patch Changes
+
+- Updated dependencies [[`68cf725a4d618cc963f31a758998ad14a7a43716`](https://github.com/onflow/fcl-js/commit/68cf725a4d618cc963f31a758998ad14a7a43716)]:
+  - @onflow/fcl-core@1.14.0
+
+## 5.5.5
+
+### Patch Changes
+
+- Updated dependencies [[`3fccbef7bbf985f19d9a9bae2638e538f126f754`](https://github.com/onflow/fcl-js/commit/3fccbef7bbf985f19d9a9bae2638e538f126f754)]:
+  - @onflow/fcl-core@1.13.5
+
+## 5.5.4
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @onflow/fcl-core@1.13.4
+
+## 5.5.3
+
+### Patch Changes
+
+- Updated dependencies [[`c88f170ab2342f5382dead9a2270e72ce9c6d68a`](https://github.com/onflow/fcl-js/commit/c88f170ab2342f5382dead9a2270e72ce9c6d68a)]:
+  - @onflow/fcl-core@1.13.3
+
+## 5.5.2
+
+### Patch Changes
+
+- Updated dependencies [[`c0fceb12e3108265e4442ad81817a4cb12f79b0f`](https://github.com/onflow/fcl-js/commit/c0fceb12e3108265e4442ad81817a4cb12f79b0f)]:
+  - @onflow/fcl-core@1.13.2
+
+## 5.5.1
+
+### Patch Changes
+
+- Updated dependencies [[`bc47345ddfc44f0108672f91d8c948eb8e357e3d`](https://github.com/onflow/fcl-js/commit/bc47345ddfc44f0108672f91d8c948eb8e357e3d)]:
+  - @onflow/fcl-core@1.13.1
+
+## 5.5.0
+
+### Minor Changes
+
+- [#1970](https://github.com/onflow/fcl-js/pull/1970) [`3b31f1c02b78bf178502627e5ca1de81bdfe8f26`](https://github.com/onflow/fcl-js/commit/3b31f1c02b78bf178502627e5ca1de81bdfe8f26) Thanks [@jribbink](https://github.com/jribbink)! - Add UI notifications for pending requests
+
+### Patch Changes
+
+- [#1994](https://github.com/onflow/fcl-js/pull/1994) [`a7df42ff4609aa8a1f381fd447d3f94606f71a17`](https://github.com/onflow/fcl-js/commit/a7df42ff4609aa8a1f381fd447d3f94606f71a17) Thanks [@jribbink](https://github.com/jribbink)! - Fix WalletConnectModal close detection
+
+- [#1999](https://github.com/onflow/fcl-js/pull/1999) [`c14746a9e4dbde10d6204697a68e6f2de6e83dd1`](https://github.com/onflow/fcl-js/commit/c14746a9e4dbde10d6204697a68e6f2de6e83dd1) Thanks [@jribbink](https://github.com/jribbink)! - Improve deeplinking for WC/RPC wallets using non-WC/RPC pre-authz services
+
+- [#1983](https://github.com/onflow/fcl-js/pull/1983) [`18d24c8bad7efa0d8741d74f0cf299f89b3622c7`](https://github.com/onflow/fcl-js/commit/18d24c8bad7efa0d8741d74f0cf299f89b3622c7) Thanks [@jribbink](https://github.com/jribbink)! - Update dependencies
+
+- Updated dependencies [[`bac8c54db1b6821a2158923544aa537885d5a0e7`](https://github.com/onflow/fcl-js/commit/bac8c54db1b6821a2158923544aa537885d5a0e7), [`8a5f8e9874980c40c1feb3eac915c6e8570abbf3`](https://github.com/onflow/fcl-js/commit/8a5f8e9874980c40c1feb3eac915c6e8570abbf3), [`3b31f1c02b78bf178502627e5ca1de81bdfe8f26`](https://github.com/onflow/fcl-js/commit/3b31f1c02b78bf178502627e5ca1de81bdfe8f26), [`c14746a9e4dbde10d6204697a68e6f2de6e83dd1`](https://github.com/onflow/fcl-js/commit/c14746a9e4dbde10d6204697a68e6f2de6e83dd1), [`18d24c8bad7efa0d8741d74f0cf299f89b3622c7`](https://github.com/onflow/fcl-js/commit/18d24c8bad7efa0d8741d74f0cf299f89b3622c7), [`b9f49494d5b3faed1bc24005adc6ba312f653a21`](https://github.com/onflow/fcl-js/commit/b9f49494d5b3faed1bc24005adc6ba312f653a21)]:
+  - @onflow/fcl-core@1.13.0
+  - @onflow/util-invariant@1.2.4
+  - @onflow/util-logger@1.3.3
+  - @onflow/config@1.5.1
+
+## 5.5.0-alpha.6
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @onflow/fcl-core@1.13.0-alpha.6
+
 ## 5.5.0-alpha.5
 
 ### Minor Changes
