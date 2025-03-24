@@ -3,7 +3,7 @@ import {useMutation, UseMutationResult} from "@tanstack/react-query"
 import {useCallback} from "react"
 import {useFlowQueryClient} from "../provider/FlowQueryClient"
 
-interface FlowMutateArgs {
+export interface FlowMutateVariables {
   /**
    * Required Cadence transaction string.
    */
@@ -16,7 +16,6 @@ interface FlowMutateArgs {
 
   /**
    * (Optional) Authorization function for the payer.
-   * By default, FCL will use fcl.authz if not provided.
    */
   payer?: () => Promise<unknown>
 
@@ -39,27 +38,30 @@ interface FlowMutateArgs {
 /**
  * useFlowMutate
  *
- * Executes a Cadence transaction using fcl.mutate.
+ * Returns a React Query mutation that, when called, runs `fcl.mutate` using
+ * the parameters provided to `mutate(variables)`.
  *
- * @param {FlowMutateArgs} options - An object containing:
- *   - cadence: The Cadence transaction to run
- *   - args: (optional) A function returning transaction arguments
- *   - payer, proposer, authorizations: (optional) Custom authz functions
- *   - limit: (optional) Compute limit for the transaction
- * @returns {UseMutationResult<string, Error>} React Query mutation result,
- *   where `data` is the transaction ID on success.
+ * @returns {UseMutationResult<string, Error, FlowMutateVariables>} The mutation result.
+ *   - `data` is the transaction ID (string) on success.
+ *   - `mutate(variables)` is how you invoke the transaction.
  */
-export function useFlowMutate({
-  cadence,
-  args,
-  payer,
-  proposer,
-  authorizations,
-  limit = 9999,
-}: FlowMutateArgs): UseMutationResult<string, Error> {
+export function useFlowMutate(): UseMutationResult<
+  string,
+  Error,
+  FlowMutateVariables
+> {
   const queryClient = useFlowQueryClient()
 
-  const mutationFn = useCallback(async () => {
+  const mutationFn = useCallback(async (variables: FlowMutateVariables) => {
+    const {
+      cadence,
+      args,
+      payer,
+      proposer,
+      authorizations,
+      limit = 9999,
+    } = variables
+
     if (!cadence) {
       throw new Error("Cadence transaction code is required.")
     }
@@ -74,9 +76,9 @@ export function useFlowMutate({
     })
 
     return txId
-  }, [cadence, args, payer, proposer, authorizations, limit])
+  }, [])
 
-  return useMutation(
+  return useMutation<string, Error, FlowMutateVariables>(
     {
       mutationFn,
       retry: false,
