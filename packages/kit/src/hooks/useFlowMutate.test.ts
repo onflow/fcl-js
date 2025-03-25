@@ -56,4 +56,20 @@ describe("useFlowMutate", () => {
     expect(returnedTxId).toBe(txId)
     expect(fcl.mutate).toHaveBeenCalledWith(variables)
   })
+
+  test("handles error when fcl.mutate rejects", async () => {
+    const error = new Error("Mutation failed")
+    jest.spyOn(fcl, "mutate").mockRejectedValue(error)
+
+    const variables = {
+      cadence: "transaction {}",
+      args: (arg: any) => [],
+    }
+    const {result} = renderHook(() => useFlowMutate(), {
+      wrapper: FlowProvider,
+    })
+
+    await expect(result.current.mutateAsync(variables)).rejects.toThrow(error)
+    expect(fcl.mutate).toHaveBeenCalledWith(variables)
+  })
 })
