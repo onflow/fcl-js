@@ -3,6 +3,18 @@ import * as fcl from "@onflow/fcl"
 import {FlowProvider} from "../provider"
 import {useFlowMutate} from "./useFlowMutate"
 
+jest.mock("@onflow/fcl", () => {
+  const actualFcl = jest.requireActual("@onflow/fcl")
+  return {
+    ...actualFcl,
+    mutate: jest.fn(),
+    config: () => ({
+      subscribe: jest.fn(() => () => {}),
+      load: jest.fn(),
+    }),
+  }
+})
+
 describe("useFlowMutate", () => {
   afterEach(() => {
     jest.clearAllMocks()
