@@ -6,22 +6,20 @@ import {getTransport} from "../get-transport"
 jest.mock("../get-transport")
 
 describe("subscribe", () => {
-  let mockTransport: jest.Mocked<SdkTransport.Transport>
-  let mockSub: jest.Mocked<SdkTransport.Subscription> = {
-    unsubscribe: jest.fn(),
-  }
-
   beforeEach(() => {
     jest.resetAllMocks()
+  })
 
-    mockTransport = {
+  test("subscribes to a topic and returns subscription from transport", async () => {
+    const mockSub: jest.Mocked<SdkTransport.Subscription> = {
+      unsubscribe: jest.fn(),
+    }
+    const mockTransport = {
       subscribe: jest.fn().mockReturnValue(mockSub),
       send: jest.fn(),
     }
     jest.mocked(getTransport).mockResolvedValue(mockTransport)
-  })
 
-  test("subscribes to a topic and returns subscription from transport", async () => {
     const topic = "topic" as SdkTransport.SubscriptionTopic
     const args = {foo: "bar"} as SdkTransport.SubscriptionArguments<any>
     const onData = jest.fn()
@@ -31,8 +29,8 @@ describe("subscribe", () => {
       {
         "accessNode.api": "http://localhost:8080",
       },
-      async () => {
-        return await rawSubscribe({topic, args, onData, onError})
+      () => {
+        return rawSubscribe({topic, args, onData, onError})
       }
     )
 
@@ -42,6 +40,48 @@ describe("subscribe", () => {
       {node: "http://localhost:8080"}
     )
 
-    expect(sub).toBe(mockSub)
+    // Ensure that unsubscribe calls the transport's unsubscribe method
+    sub.unsubscribe()
+    await new Promise(setImmediate)
+    expect(mockSub.unsubscribe).toHaveBeenCalledTimes(1)
+  })
+
+  test("reports error from getTransport", async () => {
+    jest.mocked(getTransport).mockRejectedValue(new Error("Test Error"))
+
+    const topic = "topic" as SdkTransport.SubscriptionTopic
+    const args = {foo: "bar"} as SdkTransport.SubscriptionArguments<any>
+    const onData = jest.fn()
+    const onError = jest.fn()
+
+    await config().overload(
+      {
+        "accessNode.api": "http://localhost:8080",
+      },
+      () => {
+        return rawSubscribe({topic, args, onData, onError})
+      }
+    )
+
+    expect(onError).toHaveBeenCalledTimes(1)
+    expect(onError).toHaveBeenCalledWith(new Error("Test Error"))
+  })
+
+  test("reports error if accessNode.api is not defined", async () => {
+    const topic = "topic" as SdkTransport.SubscriptionTopic
+    const args = {foo: "bar"} as SdkTransport.SubscriptionArguments<any>
+    const onData = jest.fn()
+    const onError = jest.fn()
+
+    await config().overload({}, () => {
+      return rawSubscribe({topic, args, onData, onError})
+    })
+
+    expect(onError).toHaveBeenCalledTimes(1)
+    expect(onError).toHaveBeenCalledWith(
+      new Error(
+        `INVARIANT SDK Send Error: Either opts.node or "accessNode.api" in config must be defined.`
+      )
+    )
   })
 })

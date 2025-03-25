@@ -79,15 +79,14 @@ describe("SubscriptionManager", () => {
       mockWs.send(JSON.stringify(response))
     })()
 
-    const [subscription] = await Promise.all([
-      subscriptionManager.subscribe({
-        topic,
-        args,
-        onData,
-        onError,
-      }),
-      serverPromise,
-    ])
+    const subscription = subscriptionManager.subscribe({
+      topic,
+      args,
+      onData,
+      onError,
+    })
+
+    await serverPromise
 
     expect(subscription).toBeDefined()
     expect(subscription.unsubscribe).toBeInstanceOf(Function)
@@ -129,15 +128,14 @@ describe("SubscriptionManager", () => {
       mockWs.send(JSON.stringify(response))
     })()
 
-    const [subscription] = await Promise.all([
-      subscriptionManager.subscribe({
-        topic,
-        args,
-        onData,
-        onError,
-      }),
-      serverPromise,
-    ])
+    const subscription = subscriptionManager.subscribe({
+      topic,
+      args,
+      onData,
+      onError,
+    })
+
+    await serverPromise
 
     expect(subscription).toBeDefined()
     expect(subscription.unsubscribe).toBeInstanceOf(Function)
@@ -195,15 +193,14 @@ describe("SubscriptionManager", () => {
       mockWs.send(JSON.stringify(response))
     })()
 
-    const [subscription] = await Promise.all([
-      subscriptionManager.subscribe({
-        topic,
-        args,
-        onData,
-        onError,
-      }),
-      serverPromise,
-    ])
+    const subscription = subscriptionManager.subscribe({
+      topic,
+      args,
+      onData,
+      onError,
+    })
+
+    await serverPromise
 
     expect(subscription).toBeDefined()
     expect(subscription.unsubscribe).toBeInstanceOf(Function)

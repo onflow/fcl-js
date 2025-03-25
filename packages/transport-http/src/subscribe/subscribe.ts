@@ -22,7 +22,7 @@ let subscriptionManagerMap: Map<
   SubscriptionManager<typeof SUBSCRIPTION_HANDLERS>
 > = new Map()
 
-export async function subscribe<T extends SdkTransport.SubscriptionTopic>(
+export function subscribe<T extends SdkTransport.SubscriptionTopic>(
   {
     topic,
     args,
@@ -35,7 +35,7 @@ export async function subscribe<T extends SdkTransport.SubscriptionTopic>(
     onError: (error: Error) => void
   },
   opts: {node: string}
-): Promise<SdkTransport.Subscription> {
+): SdkTransport.Subscription {
   // Get the SubscriptionManager instance for the access node, or create a new one
   const node = opts.node
   const manager =

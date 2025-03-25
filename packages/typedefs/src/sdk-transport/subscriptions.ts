@@ -109,7 +109,7 @@ export type SubscribeFn = <T extends SubscriptionTopic>(
     onError: (error: Error) => void
   },
   opts: {node: string}
-) => Promise<Subscription>
+) => Subscription
 
 type RawEvent = {
   type: string
