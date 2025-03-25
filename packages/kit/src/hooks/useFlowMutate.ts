@@ -12,14 +12,6 @@ export function useFlowMutate(): UseMutationResult<
 
   const mutationFn = useCallback(
     async (variables: Parameters<typeof fcl.mutate>[0]) => {
-      if (!variables) {
-        throw new Error("Variables are required.")
-      }
-
-      if (!variables.cadence) {
-        throw new Error("Cadence transaction code is required.")
-      }
-
       const txId = await fcl.mutate(variables)
       return txId
     },
