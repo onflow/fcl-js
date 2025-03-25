@@ -80,6 +80,11 @@ export const accountStatusesHandler = createSubscriptionHandler<{
 
           // Sort the messages by increasing message index
           data.sort((a, b) => {
+            const txIndexDiff =
+              a.accountStatus.transactionIndex -
+              b.accountStatus.transactionIndex
+            if (txIndexDiff !== 0) return txIndexDiff
+
             return a.accountStatus.eventIndex - b.accountStatus.eventIndex
           })
 
