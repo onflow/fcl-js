@@ -39,4 +39,21 @@ describe("useFlowMutate", () => {
       "Cadence transaction code is required."
     )
   })
+
+  test("calls fcl.mutate and returns transaction id", async () => {
+    const txId = "transaction-id-123"
+    jest.spyOn(fcl, "mutate").mockResolvedValue(txId)
+
+    const variables = {
+      cadence: "transaction {}",
+      args: (arg: any) => [],
+    }
+    const {result} = renderHook(() => useFlowMutate(), {
+      wrapper: FlowProvider,
+    })
+
+    const returnedTxId = await result.current.mutateAsync(variables)
+    expect(returnedTxId).toBe(txId)
+    expect(fcl.mutate).toHaveBeenCalledWith(variables)
+  })
 })
