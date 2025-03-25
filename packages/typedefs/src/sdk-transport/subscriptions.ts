@@ -26,6 +26,15 @@ export type SubscriptionSchema = {
       blockDigest: BlockDigest
     }
   >
+  [SubscriptionTopic.ACCOUNT_STATUSES]: SchemaItem<
+    AccountStatusesArgs,
+    {
+      accountStatus: Omit<Event, "data"> & {
+        payload: string
+        accountAddress: string
+      }
+    }
+  >
   [SubscriptionTopic.TRANSACTION_STATUSES]: SchemaItem<
     {
       transactionId: string
@@ -55,6 +64,7 @@ export enum SubscriptionTopic {
   BLOCKS = "blocks",
   BLOCK_HEADERS = "block_headers",
   BLOCK_DIGESTS = "block_digests",
+  ACCOUNT_STATUSES = "account_statuses",
   TRANSACTION_STATUSES = "transaction_statuses",
   EVENTS = "events",
 }
@@ -68,6 +78,14 @@ type BlockArgs =
       blockStatus: "finalized" | "sealed"
       startBlockHeight?: number
     }
+
+type AccountStatusesArgs = {
+  startBlockId?: string
+  startBlockHeight?: number
+  eventTypes?: string[]
+  addresses?: string[]
+  accountAddresses?: string[]
+}
 
 type SchemaItem<TArgs, TData> = {
   args: TArgs
