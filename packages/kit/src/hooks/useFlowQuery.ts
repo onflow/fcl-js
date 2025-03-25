@@ -1,6 +1,6 @@
 import * as fcl from "@onflow/fcl"
 import {useQuery, UseQueryResult} from "@tanstack/react-query"
-import {useCallback, useState, useEffect} from "react"
+import {useCallback} from "react"
 import {useFlowQueryClient} from "../provider/FlowQueryClient"
 
 interface FlowQueryArgs {
@@ -23,30 +23,17 @@ export function useFlowQuery({
   args,
 }: FlowQueryArgs): UseQueryResult<unknown, Error> {
   const queryClient = useFlowQueryClient()
-  const [isFclReady, setIsFclReady] = useState(false)
-
-  // ✅ Wait for FCL to be fully configured before running queries
-  useEffect(() => {
-    const unsubscribe = fcl.config().subscribe(config => {
-      if (config && config["accessNode.api"]) {
-        // ✅ Ensure `config` is not null
-        setIsFclReady(true)
-      }
-    })
-
-    return () => unsubscribe()
-  }, [])
 
   const fetchQuery = useCallback(async () => {
-    if (!cadence || !isFclReady) return null // ✅ Prevent early execution
+    if (!cadence) return null
     return fcl.query({cadence, args})
-  }, [cadence, args, isFclReady])
+  }, [cadence, args])
 
   return useQuery<unknown, Error>(
     {
       queryKey: ["flowQuery", cadence, args],
       queryFn: fetchQuery,
-      enabled: Boolean(cadence) && isFclReady, // ✅ Only execute when FCL is ready
+      enabled: Boolean(cadence),
       retry: false,
       initialData: null,
     },
