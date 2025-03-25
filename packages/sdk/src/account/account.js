@@ -4,7 +4,7 @@ import {atLatestBlock} from "../build/build-at-latest-block.js"
 import {getAccount} from "../build/build-get-account.js"
 import {invariant} from "@onflow/util-invariant"
 import {decodeResponse as decode} from "../decode/decode.js"
-import {send} from "../send/send.js"
+import {send} from "../transport"
 
 /**
  * @typedef {import("@onflow/typedefs").Account} Account

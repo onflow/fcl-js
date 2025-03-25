@@ -69,6 +69,10 @@ export {params, param} from "@onflow/sdk"
 export {validator} from "@onflow/sdk"
 export {invariant} from "@onflow/sdk"
 
+// Subscriptions
+export {subscribe} from "@onflow/sdk"
+export {rawSubscribe} from "@onflow/sdk"
+
 import {watchForChainIdChanges} from "./utils"
 
 // Set chain id default on access node change

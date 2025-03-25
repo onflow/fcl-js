@@ -1,4 +1,4 @@
-import {send} from "../send/send.js"
+import {send} from "../transport/send/send"
 import {getBlock} from "../build/build-get-block"
 import {atBlockHeight} from "../build/build-at-block-height.js"
 import {atBlockId} from "../build/build-at-block-id.js"
