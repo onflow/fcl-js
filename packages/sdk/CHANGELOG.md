@@ -1,5 +1,11 @@
 # @onflow/sdk
 
+## 1.6.1
+
+### Patch Changes
+
+- [#2245](https://github.com/onflow/fcl-js/pull/2245) [`b361069e8b42a4752c2614b1c6908af9749729ac`](https://github.com/onflow/fcl-js/commit/b361069e8b42a4752c2614b1c6908af9749729ac) Thanks [@jribbink](https://github.com/jribbink)! - Fix regression in `account` query at latest block
+
 ## 1.6.0
 
 ### Minor Changes
