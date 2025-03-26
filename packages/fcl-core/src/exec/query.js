@@ -41,7 +41,7 @@ export async function query(opts = {}) {
     .send([
       sdk.script(opts.cadence),
       sdk.args(normalizeArgs(opts.args || [])),
-      opts.isSealed != null && sdk.atLatestBlock(opts.isSealed),
+      sdk.atLatestBlock(opts.isSealed ?? false),
       opts.limit && typeof opts.limit === "number" && sdk.limit(opts.limit),
     ])
     .then(sdk.decode)

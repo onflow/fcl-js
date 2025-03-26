@@ -43,7 +43,7 @@ export async function account(
 
   // Get account by latest block
   return await send(
-    [getAccount(address), isSealed != null && atLatestBlock(isSealed)],
+    [getAccount(address), atLatestBlock(isSealed ?? false)],
     opts
   ).then(decode)
 }
