@@ -129,9 +129,7 @@ export class SubscriptionManager<Handlers extends SubscriptionHandler<any>[]> {
     } catch (e) {
       // Unsubscribe if there was an error
       subscriber.onError(e instanceof Error ? e : new Error(String(e)))
-      if (sub) {
-        this.unsubscribe(sub.id)
-      }
+      if (sub) this.unsubscribe(sub.id)
       return null
     }
 
@@ -189,7 +187,13 @@ export class SubscriptionManager<Handlers extends SubscriptionHandler<any>[]> {
         }
       })
       this.socket.addEventListener("close", () => {
-        void this.handleSocketError(new Error("WebSocket closed"))
+        this.handleSocketError(new Error("WebSocket closed"))
+          .then(() => {
+            resolve()
+          })
+          .catch(e => {
+            reject(e)
+          })
       })
       this.socket.addEventListener("open", () => {
         // Restore subscriptions
@@ -212,11 +216,6 @@ export class SubscriptionManager<Handlers extends SubscriptionHandler<any>[]> {
     // Clear the socket
     this.socket = null
 
-    // If there are no subscriptions, do nothing
-    if (this.subscriptions.length === 0) {
-      return
-    }
-
     // Validate the number of reconnection attempts
     if (
       this.reconnectAttempts >= this.config.reconnectOptions.reconnectAttempts
@@ -236,6 +235,8 @@ export class SubscriptionManager<Handlers extends SubscriptionHandler<any>[]> {
       })
       this.subscriptions = []
       this.reconnectAttempts = 0
+
+      throw error
     } else {
       logger.log({
         level: logger.LEVELS.warn,

@@ -274,9 +274,14 @@ describe("SubscriptionManager", () => {
     ])
   })
 
-  test("propogates failed socket connection", async () => {
+  test("reports error connecting to socket", async () => {
     const config: SubscriptionManagerConfig = {
       node: "wss://localhost:8080",
+      reconnectOptions: {
+        reconnectAttempts: 1,
+        initialReconnectDelay: 1,
+        maxReconnectDelay: 1,
+      },
     }
     const subscriptionManager = new SubscriptionManager([mockHandler], config)
     const topic = "topic" as SdkTransport.SubscriptionTopic
@@ -290,19 +295,18 @@ describe("SubscriptionManager", () => {
       wasClean: false,
     })
 
-    const subscription = subscriptionManager.subscribe({
+    subscriptionManager.subscribe({
       topic,
       args,
       onData,
       onError,
     })
 
-    await new Promise(resolve => setTimeout(resolve, 0))
+    await new Promise(resolve => setTimeout(resolve, 1000))
 
-    expect(onError).toHaveBeenCalledTimes(1)
-    expect(onError).toHaveBeenCalledWith(
-      new Error("WebSocket connection failed: 1006 Connection failed")
+    expect(mockSubscriber.onError).toHaveBeenCalledTimes(1)
+    expect(mockSubscriber.onError).toHaveBeenCalledWith(
+      new Error("WebSocket closed")
     )
-    expect(subscription).toBeUndefined()
   })
 })
