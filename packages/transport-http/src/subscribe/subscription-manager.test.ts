@@ -79,15 +79,14 @@ describe("SubscriptionManager", () => {
       mockWs.send(JSON.stringify(response))
     })()
 
-    const [subscription] = await Promise.all([
-      subscriptionManager.subscribe({
-        topic,
-        args,
-        onData,
-        onError,
-      }),
-      serverPromise,
-    ])
+    const subscription = subscriptionManager.subscribe({
+      topic,
+      args,
+      onData,
+      onError,
+    })
+
+    await serverPromise
 
     expect(subscription).toBeDefined()
     expect(subscription.unsubscribe).toBeInstanceOf(Function)
@@ -129,15 +128,14 @@ describe("SubscriptionManager", () => {
       mockWs.send(JSON.stringify(response))
     })()
 
-    const [subscription] = await Promise.all([
-      subscriptionManager.subscribe({
-        topic,
-        args,
-        onData,
-        onError,
-      }),
-      serverPromise,
-    ])
+    const subscription = subscriptionManager.subscribe({
+      topic,
+      args,
+      onData,
+      onError,
+    })
+
+    await serverPromise
 
     expect(subscription).toBeDefined()
     expect(subscription.unsubscribe).toBeInstanceOf(Function)
@@ -195,15 +193,14 @@ describe("SubscriptionManager", () => {
       mockWs.send(JSON.stringify(response))
     })()
 
-    const [subscription] = await Promise.all([
-      subscriptionManager.subscribe({
-        topic,
-        args,
-        onData,
-        onError,
-      }),
-      serverPromise,
-    ])
+    const subscription = subscriptionManager.subscribe({
+      topic,
+      args,
+      onData,
+      onError,
+    })
+
+    await serverPromise
 
     expect(subscription).toBeDefined()
     expect(subscription.unsubscribe).toBeInstanceOf(Function)
@@ -275,5 +272,41 @@ describe("SubscriptionManager", () => {
         key: "value2",
       },
     ])
+  })
+
+  test("reports error connecting to socket", async () => {
+    const config: SubscriptionManagerConfig = {
+      node: "wss://localhost:8080",
+      reconnectOptions: {
+        reconnectAttempts: 1,
+        initialReconnectDelay: 1,
+        maxReconnectDelay: 1,
+      },
+    }
+    const subscriptionManager = new SubscriptionManager([mockHandler], config)
+    const topic = "topic" as SdkTransport.SubscriptionTopic
+    const args = {key: "value"} as any
+    const onData = jest.fn()
+    const onError = jest.fn()
+
+    mockWs.error({
+      code: 1006,
+      reason: "Connection failed",
+      wasClean: false,
+    })
+
+    subscriptionManager.subscribe({
+      topic,
+      args,
+      onData,
+      onError,
+    })
+
+    await new Promise(resolve => setTimeout(resolve, 1000))
+
+    expect(mockSubscriber.onError).toHaveBeenCalledTimes(1)
+    expect(mockSubscriber.onError).toHaveBeenCalledWith(
+      new Error("WebSocket closed")
+    )
   })
 })

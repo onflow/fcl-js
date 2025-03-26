@@ -76,11 +76,91 @@ export class SubscriptionManager<Handlers extends SubscriptionHandler<any>[]> {
     this.handlers = handlers
   }
 
+  subscribe<T extends Handlers[number]>(opts: {
+    topic: InferHandler<T>["Topic"]
+    args: InferHandler<T>["Args"]
+    onData: (data: InferHandler<T>["Data"]) => void
+    onError: (error: Error) => void
+  }): SdkTransport.Subscription {
+    const idPromise = this._subscribe(opts)
+
+    return {
+      unsubscribe: () => {
+        // Unsubscribe when the ID is available
+        idPromise.then(id => id && this.unsubscribe(id))
+      },
+    }
+  }
+
+  private async _subscribe<T extends Handlers[number]>(opts: {
+    topic: InferHandler<T>["Topic"]
+    args: InferHandler<T>["Args"]
+    onData: (data: InferHandler<T>["Data"]) => void
+    onError: (error: Error) => void
+  }): Promise<string | null> {
+    // Get the data provider for the topic
+    const topicHandler = this.getHandler(opts.topic)
+    const subscriber = topicHandler.createSubscriber(
+      opts.args,
+      opts.onData,
+      opts.onError
+    )
+
+    let sub: SubscriptionInfo | null = null
+    try {
+      // Connect the socket if it's not already open
+      await this.connect()
+
+      // Track the subscription locally
+      sub = {
+        id: String(this.counter++),
+        topic: opts.topic,
+        subscriber: subscriber,
+      }
+      this.subscriptions.push(sub)
+
+      // Send the subscribe message
+      const response = await this.sendSubscribe(sub)
+      if (response.error) {
+        throw new Error(`Failed to subscribe to topic ${sub.topic}`, {
+          cause: SocketError.fromMessage(response.error),
+        })
+      }
+    } catch (e) {
+      // Unsubscribe if there was an error
+      subscriber.onError(e instanceof Error ? e : new Error(String(e)))
+      if (sub) this.unsubscribe(sub.id)
+      return null
+    }
+
+    return sub.id
+  }
+
+  private unsubscribe(id: string): void {
+    // Get the subscription
+    const sub = this.subscriptions.find(sub => sub.id === id)
+    if (!sub) return
+
+    // Remove the subscription
+    this.subscriptions = this.subscriptions.filter(sub => sub.id !== id)
+
+    // Close the socket if there are no more subscriptions
+    if (this.subscriptions.length === 0) {
+      this.socket?.close()
+      return
+    }
+
+    // Otherwise, the unsubscribe message
+    this.sendUnsubscribe(sub).catch(e => {
+      console.error(`Error while unsubscribing from topic: ${e}`)
+    })
+  }
+
   // Lazy connect to the socket when the first subscription is made
   private async connect() {
     return new Promise<void>((resolve, reject) => {
       // If the socket is already open, do nothing
-      if (this.socket?.readyState === WS_OPEN || this.socket) {
+      if (this.socket?.readyState === WS_OPEN) {
         resolve()
         return
       }
@@ -107,7 +187,13 @@ export class SubscriptionManager<Handlers extends SubscriptionHandler<any>[]> {
         }
       })
       this.socket.addEventListener("close", () => {
-        void this.handleSocketError(new Error("WebSocket closed"))
+        this.handleSocketError(new Error("WebSocket closed"))
+          .then(() => {
+            resolve()
+          })
+          .catch(e => {
+            reject(e)
+          })
       })
       this.socket.addEventListener("open", () => {
         // Restore subscriptions
@@ -130,11 +216,6 @@ export class SubscriptionManager<Handlers extends SubscriptionHandler<any>[]> {
     // Clear the socket
     this.socket = null
 
-    // If there are no subscriptions, do nothing
-    if (this.subscriptions.length === 0) {
-      return
-    }
-
     // Validate the number of reconnection attempts
     if (
       this.reconnectAttempts >= this.config.reconnectOptions.reconnectAttempts
@@ -154,6 +235,8 @@ export class SubscriptionManager<Handlers extends SubscriptionHandler<any>[]> {
       })
       this.subscriptions = []
       this.reconnectAttempts = 0
+
+      throw error
     } else {
       logger.log({
         level: logger.LEVELS.warn,
@@ -169,72 +252,6 @@ export class SubscriptionManager<Handlers extends SubscriptionHandler<any>[]> {
       await this.connect()
       this.reconnectAttempts = 0
     }
-  }
-
-  async subscribe<T extends Handlers[number]>(opts: {
-    topic: InferHandler<T>["Topic"]
-    args: InferHandler<T>["Args"]
-    onData: (data: InferHandler<T>["Data"]) => void
-    onError: (error: Error) => void
-  }): Promise<SdkTransport.Subscription> {
-    // Connect the socket if it's not already open
-    await this.connect()
-
-    // Get the data provider for the topic
-    const topicHandler = this.getHandler(opts.topic)
-    const subscriber = topicHandler.createSubscriber(
-      opts.args,
-      opts.onData,
-      opts.onError
-    )
-
-    // Track the subscription locally
-    const sub: SubscriptionInfo = {
-      id: String(this.counter++),
-      topic: opts.topic,
-      subscriber: subscriber,
-    }
-    this.subscriptions.push(sub)
-
-    // Send the subscribe message
-    try {
-      const response = await this.sendSubscribe(sub)
-      if (response.error) {
-        throw new Error(`Failed to subscribe to topic ${sub.topic}`, {
-          cause: SocketError.fromMessage(response.error),
-        })
-      }
-    } catch (e) {
-      // Unsubscribe if there was an error
-      this.unsubscribe(sub.id)
-      throw e
-    }
-
-    return {
-      unsubscribe: () => {
-        this.unsubscribe(sub.id)
-      },
-    }
-  }
-
-  private unsubscribe(id: string): void {
-    // Get the subscription
-    const sub = this.subscriptions.find(sub => sub.id === id)
-    if (!sub) return
-
-    // Remove the subscription
-    this.subscriptions = this.subscriptions.filter(sub => sub.id !== id)
-
-    // Close the socket if there are no more subscriptions
-    if (this.subscriptions.length === 0) {
-      this.socket?.close()
-      return
-    }
-
-    // Otherwise, the unsubscribe message
-    this.sendUnsubscribe(sub).catch(e => {
-      console.error(`Error while unsubscribing from topic: ${e}`)
-    })
   }
 
   private async sendSubscribe(sub: SubscriptionInfo) {
