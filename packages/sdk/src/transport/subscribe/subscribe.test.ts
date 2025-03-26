@@ -12,7 +12,7 @@ describe("subscribe", () => {
 
   beforeEach(() => {
     jest.resetAllMocks()
-    mockRawSubscribe.mockResolvedValue(mockSub)
+    mockRawSubscribe.mockReturnValue(mockSub)
   })
 
   test("subscribes to a topic and returns a subscription", async () => {

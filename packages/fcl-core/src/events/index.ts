@@ -1,5 +1,5 @@
-import {send, decode, subscribeEvents} from "@onflow/sdk"
-import {Event, EventFilter, EventStream} from "@onflow/typedefs"
+import {subscribe} from "@onflow/sdk"
+import {Event, EventFilter, SdkTransport} from "@onflow/typedefs"
 import {events as legacyEvents} from "./legacy-events"
 
 /**
@@ -21,61 +21,45 @@ export function events(filterOrType?: EventFilter | string) {
 
   return {
     subscribe: (
+      // TODO: Fix this typing (async)
       callback: (events: Event | null, error: Error | null) => void
     ) => {
-      const streamPromise: Promise<EventStream> = send([
-        subscribeEvents(filter),
-      ]).then(decode)
+      const {unsubscribe: unsubscribeFn} = subscribe({
+        topic: SdkTransport.SubscriptionTopic.EVENTS,
+        args: filter,
+        onData: ((data: Event) => {
+          callback(data, null)
+        }) as any, // TODO: Fix this typing
+        onError: (error: Error) => {
+          callback(null, error)
 
-      // If the subscribe fails, fallback to legacy events
-      const legacySubscriptionPromise = streamPromise
-        .then(() => null)
-        .catch(e => {
-          // Only fallback to legacy events if the error is specifcally about the unsupported feature
-          if (
-            e.message !==
-            "SDK Send Error: subscribeEvents is not supported by this transport."
-          ) {
-            throw e
-          }
+          // TODO: Handle acceptable fallback errors (e.g. unsupported feature)
+          // this would be an HTTP error, not a subscription error
 
-          if (typeof filterOrType !== "string") {
-            throw new Error(
-              "GRPC fcl.events fallback only supports string (type) filters"
-            )
-          }
-          return legacyEvents(filterOrType).subscribe(callback)
-        })
-
-      // Subscribe to the stream using the callback
-      function onEvents(data: Event[]) {
-        data.forEach(event => callback(event, null))
-      }
-      function onError(error: Error) {
-        callback(null, error)
-      }
-
-      // If using legacy events, don't subscribe to the stream
-      legacySubscriptionPromise.then(legacySubscription => {
-        if (!legacySubscription) {
-          streamPromise
-            .then(stream => stream.on("events", onEvents).on("error", onError))
-            .catch(error => {
-              streamPromise.then(stream => stream.close())
-              onError(error)
-            })
-        }
+          // Fallback to legacy polling
+          fallbackLegacyPolling()
+        },
       })
 
-      // Unsubscribe will call terminate the legacy subscription or close the stream
+      let unsubscribeLegacy = () => {}
+      function fallbackLegacyPolling() {
+        console.warn(
+          "Failed to subscribe to events using real-time streaming (are you using the deprecated GRPC transport?), falling back to legacy polling."
+        )
+
+        if (typeof filterOrType !== "string") {
+          throw new Error(
+            "Legacy fcl.events fallback only supports string (type) filters"
+          )
+        }
+        const unsubscribe = legacyEvents(filterOrType).subscribe(callback)
+        unsubscribeLegacy = unsubscribe
+      }
+
+      // Return an unsubscribe function
       return () => {
-        legacySubscriptionPromise.then(legacySubscription => {
-          if (legacySubscription) {
-            legacySubscription()
-          } else {
-            streamPromise.then(stream => stream.close())
-          }
-        })
+        unsubscribeFn()
+        unsubscribeLegacy()
       }
     },
   }
