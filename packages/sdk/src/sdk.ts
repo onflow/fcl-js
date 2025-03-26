@@ -2,7 +2,12 @@ import * as logger from "@onflow/util-logger"
 // Base
 export {build} from "./build/build.js"
 export {resolve} from "./resolve/resolve.js"
-export {send, subscribe, rawSubscribe} from "./transport"
+export {
+  send,
+  subscribe,
+  rawSubscribe,
+  SubscriptionsNotSupportedError,
+} from "./transport"
 export {decode} from "./decode/sdk-decode.js"
 export {
   encodeTransactionPayload,

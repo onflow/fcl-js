@@ -1,6 +1,7 @@
 import {subscribe} from "@onflow/sdk"
 import {Event, EventFilter, SdkTransport} from "@onflow/typedefs"
 import {events as legacyEvents} from "./legacy-events"
+import {SubscriptionsNotSupportedError} from "@onflow/sdk"
 
 /**
  * @description - Subscribe to events
@@ -21,27 +22,25 @@ export function events(filterOrType?: EventFilter | string) {
 
   return {
     subscribe: (
-      // TODO: Fix this typing (async)
       callback: (events: Event | null, error: Error | null) => void
     ) => {
+      let unsubscribeFnLegacy = () => {}
       const {unsubscribe: unsubscribeFn} = subscribe({
         topic: SdkTransport.SubscriptionTopic.EVENTS,
         args: filter,
-        onData: ((data: Event) => {
+        onData: (data: any) => {
           callback(data, null)
-        }) as any, // TODO: Fix this typing
+        },
         onError: (error: Error) => {
-          callback(null, error)
-
-          // TODO: Handle acceptable fallback errors (e.g. unsupported feature)
-          // this would be an HTTP error, not a subscription error
-
-          // Fallback to legacy polling
-          fallbackLegacyPolling()
+          // If subscriptions are not supported, fallback to legacy polling, otherwise return the error
+          if (error instanceof SubscriptionsNotSupportedError) {
+            fallbackLegacyPolling()
+          } else {
+            callback(null, error)
+          }
         },
       })
 
-      let unsubscribeLegacy = () => {}
       function fallbackLegacyPolling() {
         console.warn(
           "Failed to subscribe to events using real-time streaming (are you using the deprecated GRPC transport?), falling back to legacy polling."
@@ -49,17 +48,17 @@ export function events(filterOrType?: EventFilter | string) {
 
         if (typeof filterOrType !== "string") {
           throw new Error(
-            "Legacy fcl.events fallback only supports string (type) filters"
+            "Legacy fcl.events fallback only supports string filters (single event type)"
           )
         }
         const unsubscribe = legacyEvents(filterOrType).subscribe(callback)
-        unsubscribeLegacy = unsubscribe
+        unsubscribeFnLegacy = unsubscribe
       }
 
       // Return an unsubscribe function
       return () => {
         unsubscribeFn()
-        unsubscribeLegacy()
+        unsubscribeFnLegacy()
       }
     },
   }

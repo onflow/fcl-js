@@ -1,18 +1,27 @@
 import {SdkTransport} from "@onflow/typedefs"
 import {events} from "."
-import {subscribe} from "@onflow/sdk"
+import {subscribe, SubscriptionsNotSupportedError} from "@onflow/sdk"
+import {events as legacyEvents} from "./legacy-events"
 
 jest.mock("@onflow/sdk")
+jest.mock("./legacy-events")
 
 describe("events", () => {
   let mockSubscription: jest.Mocked<SdkTransport.Subscription>
+  let mockLegacySubscribeObject: jest.Mocked<{subscribe: () => void}>
+  let mockLegacyUnsubscribe: jest.MockedFunction<() => void>
 
   beforeEach(() => {
     mockSubscription = {
       unsubscribe: jest.fn(),
     }
+    mockLegacyUnsubscribe = jest.fn()
+    mockLegacySubscribeObject = {
+      subscribe: jest.fn().mockReturnValue(mockLegacyUnsubscribe),
+    }
 
     jest.mocked(subscribe).mockReturnValue(mockSubscription)
+    jest.mocked(legacyEvents).mockReturnValue(mockLegacySubscribeObject)
   })
 
   afterEach(() => {
@@ -72,7 +81,7 @@ describe("events", () => {
     ])
   })
 
-  /*test("subscribe should pipe the errors to the callback", async () => {
+  test("subscribe should pipe the errors to the callback", async () => {
     const filter = {eventTypes: ["A"]}
     const callback = jest.fn()
 
@@ -87,5 +96,33 @@ describe("events", () => {
     await new Promise(resolve => setTimeout(resolve, 0))
 
     expect(callback.mock.calls).toEqual([[null, mockError]])
-  })*/
+  })
+
+  test("fallback to legacy polling if subscriptions are not supported", async () => {
+    const filter = "A"
+    const callback = jest.fn()
+
+    const mockError = new SubscriptionsNotSupportedError()
+
+    jest.mocked(subscribe).mockImplementation(({onError}) => {
+      onError(mockError)
+      return mockSubscription
+    })
+
+    const unsubscribe = events(filter).subscribe(callback)
+    await new Promise(resolve => setTimeout(resolve, 0))
+
+    // Check that the callback was called
+    expect(callback).toHaveBeenCalledTimes(0)
+    expect(subscribe).toHaveBeenCalledTimes(1)
+
+    // Check that legacy polling was called
+    expect(legacyEvents).toHaveBeenCalledWith(filter)
+    expect(mockLegacySubscribeObject.subscribe).toHaveBeenCalledWith(callback)
+
+    // Unsubscribe
+    unsubscribe()
+    expect(mockSubscription.unsubscribe).toHaveBeenCalledTimes(1)
+    expect(mockLegacyUnsubscribe).toHaveBeenCalledTimes(1)
+  })
 })

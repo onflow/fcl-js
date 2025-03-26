@@ -2,6 +2,7 @@ import {config} from "@onflow/config"
 import {httpTransport as defaultTransport} from "@onflow/transport-http"
 import {SdkTransport} from "@onflow/typedefs"
 import {invariant} from "@onflow/util-invariant"
+import {SubscriptionsNotSupportedError} from "./subscribe/errors"
 
 /**
  * Get the SDK transport object, either from the provided override or from the global config.
@@ -32,9 +33,7 @@ export async function getTransport(
     return {
       send: transportOrSend,
       subscribe: () => {
-        throw new Error(
-          "Subscribe not supported with legacy send function transport, please provide a transport object."
-        )
+        throw new SubscriptionsNotSupportedError()
       },
     }
   }
