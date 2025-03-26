@@ -66,15 +66,6 @@ export const accountStatusesHandler = createSubscriptionHandler<{
               },
             }
 
-            // Update the resume args
-            resumeArgs = {
-              ...resumeArgs,
-              startBlockHeight: Number(
-                BigInt(rawData.block_height) + BigInt(1)
-              ),
-              startBlockId: undefined,
-            }
-
             data.push(parsedData)
           }
 
@@ -91,6 +82,13 @@ export const accountStatusesHandler = createSubscriptionHandler<{
           // Emit the messages
           for (const message of data) {
             onData(message)
+          }
+
+          // Update the resume args
+          resumeArgs = {
+            ...resumeArgs,
+            startBlockHeight: Number(BigInt(rawData.block_height) + BigInt(1)),
+            startBlockId: undefined,
           }
         }
       },
