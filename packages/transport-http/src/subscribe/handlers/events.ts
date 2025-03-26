@@ -70,7 +70,7 @@ export const eventsHandler = createSubscriptionHandler<{
         // Update the resume args
         resumeArgs = {
           ...resumeArgs,
-          startHeight: Number(rawData.block_height) + 1,
+          startHeight: Number(BigInt(rawData.block_height) + BigInt(1)),
           startBlockId: undefined,
         }
       },
