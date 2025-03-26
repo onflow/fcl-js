@@ -162,7 +162,7 @@ export class SubscriptionManager<Handlers extends SubscriptionHandler<any>[]> {
   private async connect() {
     return new Promise<void>((resolve, reject) => {
       // If the socket is already open, do nothing
-      if (this.socket?.readyState === WS_OPEN || this.socket) {
+      if (this.socket?.readyState === WS_OPEN) {
         resolve()
         return
       }

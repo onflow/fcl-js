@@ -273,4 +273,36 @@ describe("SubscriptionManager", () => {
       },
     ])
   })
+
+  test("propogates failed socket connection", async () => {
+    const config: SubscriptionManagerConfig = {
+      node: "wss://localhost:8080",
+    }
+    const subscriptionManager = new SubscriptionManager([mockHandler], config)
+    const topic = "topic" as SdkTransport.SubscriptionTopic
+    const args = {key: "value"} as any
+    const onData = jest.fn()
+    const onError = jest.fn()
+
+    mockWs.error({
+      code: 1006,
+      reason: "Connection failed",
+      wasClean: false,
+    })
+
+    const subscription = subscriptionManager.subscribe({
+      topic,
+      args,
+      onData,
+      onError,
+    })
+
+    await new Promise(resolve => setTimeout(resolve, 0))
+
+    expect(onError).toHaveBeenCalledTimes(1)
+    expect(onError).toHaveBeenCalledWith(
+      new Error("WebSocket connection failed: 1006 Connection failed")
+    )
+    expect(subscription).toBeUndefined()
+  })
 })
