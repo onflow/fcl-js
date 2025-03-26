@@ -64,14 +64,14 @@ export const eventsHandler = createSubscriptionHandler<{
             },
           }
 
-          // Update the resume args
-          resumeArgs = {
-            ...resumeArgs,
-            startHeight: result.event.blockHeight + 1,
-            startBlockId: undefined,
-          }
-
           onData(result)
+        }
+
+        // Update the resume args
+        resumeArgs = {
+          ...resumeArgs,
+          startHeight: Number(rawData.block_height) + 1,
+          startBlockId: undefined,
         }
       },
       onError(error: Error) {
