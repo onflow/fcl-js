@@ -16,7 +16,7 @@ interface UseFlowTransactionResult {
  * @param txId - The Flow transaction ID to monitor.
  * @returns {UseFlowTransactionResult}
  */
-export function useFlowTransaction(txId?: string): UseFlowTransactionResult {
+export function useFlowTransaction(txId: string): UseFlowTransactionResult {
   const [transactionStatus, setTransactionStatus] =
     useState<TransactionStatus | null>(null)
   const [error, setError] = useState<Error | null>(null)
