@@ -60,7 +60,7 @@ describe("Send Get Account", () => {
     })
   })
 
-  test("GetAccountAtLatestBlockRequest - sealed", async () => {
+  test("GetAccountAtLatestBlockRequest - final", async () => {
     const httpRequestMock = jest.fn()
 
     const returnedAccount = {
@@ -95,7 +95,7 @@ describe("Send Get Account", () => {
 
     expect(valueSent).toEqual({
       hostname: "localhost",
-      path: "/v1/accounts/1654653399040a61?block_height=sealed&expand=contracts,keys",
+      path: "/v1/accounts/1654653399040a61?block_height=final&expand=contracts,keys",
       method: "GET",
       body: null,
     })
@@ -108,7 +108,7 @@ describe("Send Get Account", () => {
     })
   })
 
-  test("GetAccountAtLatestBlockRequest - final", async () => {
+  test("GetAccountAtLatestBlockRequest - sealed", async () => {
     const httpRequestMock = jest.fn()
 
     const returnedAccount = {
@@ -123,7 +123,7 @@ describe("Send Get Account", () => {
 
     const response = await sendGetAccount(
       await resolve(
-        await build([getAccount("0x1654653399040a61"), atLatestBlock(false)])
+        await build([getAccount("0x1654653399040a61"), atLatestBlock(true)])
       ),
       {
         response: responseADT,
@@ -145,7 +145,7 @@ describe("Send Get Account", () => {
 
     expect(valueSent).toEqual({
       hostname: "localhost",
-      path: "/v1/accounts/1654653399040a61?block_height=final&expand=contracts,keys",
+      path: "/v1/accounts/1654653399040a61?block_height=sealed&expand=contracts,keys",
       method: "GET",
       body: null,
     })

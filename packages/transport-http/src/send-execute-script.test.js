@@ -27,7 +27,11 @@ describe("Send Execute Script", () => {
 
     let response = await sendExecuteScript(
       await resolve(
-        await build([script(cadence), args([arg(123, types.Int)])])
+        await build([
+          script(cadence),
+          args([arg(123, types.Int)]),
+          atLatestBlock(true),
+        ])
       ),
       {
         response: responseADT,
@@ -75,11 +79,7 @@ describe("Send Execute Script", () => {
 
     let response = await sendExecuteScript(
       await resolve(
-        await build([
-          script(cadence),
-          args([arg(123, types.Int)]),
-          atLatestBlock(false),
-        ])
+        await build([script(cadence), args([arg(123, types.Int)])])
       ),
       {
         response: responseADT,
