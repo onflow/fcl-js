@@ -10,7 +10,7 @@ import {
   SubscriptionManager,
   SubscriptionManagerConfig,
 } from "./subscription-manager"
-import {SdkTransport} from "@onflow/typedefs"
+import {SubscriptionTopic} from "@onflow/typedefs"
 import {DataSubscriber, SubscriptionHandler} from "./handlers/types"
 
 jest.mock("./websocket", () => ({
@@ -54,7 +54,7 @@ describe("SubscriptionManager", () => {
       node: "wss://localhost:8080",
     }
     const subscriptionManager = new SubscriptionManager([mockHandler], config)
-    const topic = "topic" as SdkTransport.SubscriptionTopic
+    const topic = "topic" as SubscriptionTopic
     const args = {key: "value"} as any
     const onData = jest.fn()
     const onError = jest.fn()
@@ -103,7 +103,7 @@ describe("SubscriptionManager", () => {
       node: "wss://localhost:8080",
     }
     const subscriptionManager = new SubscriptionManager([mockHandler], config)
-    const topic = "topic" as SdkTransport.SubscriptionTopic
+    const topic = "topic" as SubscriptionTopic
     const args = {key: "value"} as any
     const onData = jest.fn()
     const onError = jest.fn()
@@ -168,7 +168,7 @@ describe("SubscriptionManager", () => {
       node: "wss://localhost:8080",
     }
     const subscriptionManager = new SubscriptionManager([mockHandler], config)
-    const topic = "topic" as SdkTransport.SubscriptionTopic
+    const topic = "topic" as SubscriptionTopic
     const args = {key: "value"} as any
     const onData = jest.fn()
     const onError = jest.fn()
@@ -284,7 +284,7 @@ describe("SubscriptionManager", () => {
       },
     }
     const subscriptionManager = new SubscriptionManager([mockHandler], config)
-    const topic = "topic" as SdkTransport.SubscriptionTopic
+    const topic = "topic" as SubscriptionTopic
     const args = {key: "value"} as any
     const onData = jest.fn()
     const onError = jest.fn()

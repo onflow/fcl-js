@@ -1,5 +1,5 @@
 import {subscribe} from "@onflow/sdk"
-import {Event, EventFilter, SdkTransport} from "@onflow/typedefs"
+import {Event, EventFilter, SubscriptionTopic} from "@onflow/typedefs"
 import {events as legacyEvents} from "./legacy-events"
 import {SubscriptionsNotSupportedError} from "@onflow/sdk"
 
@@ -26,9 +26,9 @@ export function events(filterOrType?: EventFilter | string) {
     ) => {
       let unsubscribeFnLegacy = () => {}
       const {unsubscribe: unsubscribeFn} = subscribe({
-        topic: SdkTransport.SubscriptionTopic.EVENTS,
+        topic: SubscriptionTopic.EVENTS,
         args: filter,
-        onData: (data: any) => {
+        onData: data => {
           callback(data, null)
         },
         onError: (error: Error) => {

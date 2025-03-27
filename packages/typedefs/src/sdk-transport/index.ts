@@ -1,10 +1,10 @@
-import {SendFn} from "./requests"
-import {SubscribeFn} from "./subscriptions"
+import {SendFn} from "./send"
+import {SubscribeFn} from "./subscribe"
 
 export type Transport = {
   send: SendFn
   subscribe: SubscribeFn
 }
 
-export * from "./subscriptions"
-export * from "./requests"
+export * from "./subscribe"
+export * from "./send"

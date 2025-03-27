@@ -1,11 +1,13 @@
-import {SdkTransport} from "@onflow/typedefs"
+import {
+  SubscriptionTopic,
+  SubscriptionArgs,
+  RawSubscriptionData,
+} from "@onflow/typedefs"
 import {createSubscriptionHandler} from "./types"
 
-type EventsArgs =
-  SdkTransport.SubscriptionArguments<SdkTransport.SubscriptionTopic.EVENTS>
+type EventsArgs = SubscriptionArgs<SubscriptionTopic.EVENTS>
 
-type EventsData =
-  SdkTransport.SubscriptionData<SdkTransport.SubscriptionTopic.EVENTS>
+type EventsData = RawSubscriptionData<SubscriptionTopic.EVENTS>
 
 export type EventsArgsDto = (
   | {
@@ -35,13 +37,13 @@ type EventsDataDto = {
 }
 
 export const eventsHandler = createSubscriptionHandler<{
-  Topic: SdkTransport.SubscriptionTopic.EVENTS
+  Topic: SubscriptionTopic.EVENTS
   Args: EventsArgs
   Data: EventsData
   ArgsDto: EventsArgsDto
   DataDto: EventsDataDto
 }>({
-  topic: SdkTransport.SubscriptionTopic.EVENTS,
+  topic: SubscriptionTopic.EVENTS,
   createSubscriber: (initialArgs, onData, onError) => {
     let resumeArgs: EventsArgs = {
       ...initialArgs,

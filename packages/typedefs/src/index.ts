@@ -504,3 +504,10 @@ export type EventStream = StreamConnection<{
 export * from "./interaction"
 export * from "./fvm-errors"
 export * as SdkTransport from "./sdk-transport"
+export {
+  type SubscriptionArgs,
+  type SubscriptionData,
+  type RawSubscriptionData,
+  type Subscription,
+  SubscriptionTopic,
+} from "./subscriptions"
