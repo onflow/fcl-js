@@ -3,6 +3,7 @@
 "@onflow/fcl-core": minor
 "@onflow/fcl": minor
 "@onflow/sdk": minor
+"@onflow/transport-http": minor
 ---
 
 Default to soft-finality for all queries (get account, get block, get block header, execute script).  Developers can manually override this setting on a per-query basis if required.
