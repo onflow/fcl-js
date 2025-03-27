@@ -6,7 +6,7 @@ import {
   EventFilter,
   TransactionExecutionStatus,
   TransactionStatus,
-} from ".."
+} from "."
 
 export enum SubscriptionTopic {
   BLOCKS = "blocks",
@@ -26,6 +26,10 @@ export type RawSubscriptionData<T extends SubscriptionTopic> =
 export type SubscriptionArgs<T extends SubscriptionTopic> =
   SubscriptionArgsMap[T]
 
+export type Subscription = {
+  unsubscribe: () => void
+}
+
 type SubscriptionArgsMap = {
   [SubscriptionTopic.BLOCKS]: BlockArgs
   [SubscriptionTopic.BLOCK_HEADERS]: BlockArgs
@@ -42,7 +46,7 @@ type SubscriptionDataMap = {
   [SubscriptionTopic.BLOCKS]: Block
   [SubscriptionTopic.BLOCK_HEADERS]: BlockHeader
   [SubscriptionTopic.BLOCK_DIGESTS]: BlockHeader
-  [SubscriptionTopic.ACCOUNT_STATUSES]: Event & {
+  [SubscriptionTopic.ACCOUNT_STATUSES]: Omit<Event, "data"> & {
     accountAddress: string
   }
   [SubscriptionTopic.TRANSACTION_STATUSES]: TransactionStatus
@@ -97,10 +101,6 @@ type AccountStatusesArgs = {
   eventTypes?: string[]
   addresses?: string[]
   accountAddresses?: string[]
-}
-
-export type Subscription = {
-  unsubscribe: () => void
 }
 
 type RawEvent = {

@@ -505,8 +505,9 @@ export * from "./interaction"
 export * from "./fvm-errors"
 export * as SdkTransport from "./sdk-transport"
 export {
-  SubscriptionArgs,
-  SubscriptionData,
-  RawSubscriptionData,
+  type SubscriptionArgs,
+  type SubscriptionData,
+  type RawSubscriptionData,
+  type Subscription,
   SubscriptionTopic,
 } from "./subscriptions"

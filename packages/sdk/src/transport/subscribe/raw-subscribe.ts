@@ -1,5 +1,5 @@
 import {config} from "@onflow/config"
-import {SdkTransport} from "@onflow/typedefs"
+import {SdkTransport, SubscriptionTopic} from "@onflow/typedefs"
 import {getTransport} from "../get-transport"
 import {invariant} from "@onflow/util-invariant"
 import {RawSubscribeParams} from "./types"
@@ -10,7 +10,7 @@ import {RawSubscribeParams} from "./types"
  * @param opts - Additional options for the subscription.
  * @returns A promise that resolves once the subscription is active.
  */
-export function rawSubscribe<T extends SdkTransport.SubscriptionTopic>(
+export function rawSubscribe<T extends SubscriptionTopic>(
   {topic, args, onData, onError}: RawSubscribeParams<T>,
   opts: {
     node?: string

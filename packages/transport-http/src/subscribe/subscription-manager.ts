@@ -6,7 +6,7 @@ import {
   SubscriptionDataMessage,
   UnsubscribeMessageResponse,
 } from "./models"
-import {SdkTransport} from "@onflow/typedefs"
+import {Subscription} from "@onflow/typedefs"
 import {WebSocket} from "./websocket"
 import {DataSubscriber, SubscriptionHandler} from "./handlers/types"
 import * as logger from "@onflow/util-logger"
@@ -81,7 +81,7 @@ export class SubscriptionManager<Handlers extends SubscriptionHandler<any>[]> {
     args: InferHandler<T>["Args"]
     onData: (data: InferHandler<T>["Data"]) => void
     onError: (error: Error) => void
-  }): SdkTransport.Subscription {
+  }): Subscription {
     const idPromise = this._subscribe(opts)
 
     return {

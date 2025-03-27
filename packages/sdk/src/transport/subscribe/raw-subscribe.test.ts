@@ -1,6 +1,10 @@
 import {config} from "@onflow/config"
 import {rawSubscribe} from "./raw-subscribe"
-import {SdkTransport} from "@onflow/typedefs"
+import {
+  Subscription,
+  SubscriptionArgs,
+  SubscriptionTopic,
+} from "@onflow/typedefs"
 import {getTransport} from "../get-transport"
 
 jest.mock("../get-transport")
@@ -11,7 +15,7 @@ describe("subscribe", () => {
   })
 
   test("subscribes to a topic and returns subscription from transport", async () => {
-    const mockSub: jest.Mocked<SdkTransport.Subscription> = {
+    const mockSub: jest.Mocked<Subscription> = {
       unsubscribe: jest.fn(),
     }
     const mockTransport = {
@@ -20,8 +24,8 @@ describe("subscribe", () => {
     }
     jest.mocked(getTransport).mockResolvedValue(mockTransport)
 
-    const topic = "topic" as SdkTransport.SubscriptionTopic
-    const args = {foo: "bar"} as SdkTransport.SubscriptionArguments<any>
+    const topic = "topic" as SubscriptionTopic
+    const args = {foo: "bar"} as SubscriptionArgs<any>
     const onData = jest.fn()
     const onError = jest.fn()
 
@@ -49,8 +53,8 @@ describe("subscribe", () => {
   test("reports error from getTransport", async () => {
     jest.mocked(getTransport).mockRejectedValue(new Error("Test Error"))
 
-    const topic = "topic" as SdkTransport.SubscriptionTopic
-    const args = {foo: "bar"} as SdkTransport.SubscriptionArguments<any>
+    const topic = "topic" as SubscriptionTopic
+    const args = {foo: "bar"} as SubscriptionArgs<any>
     const onData = jest.fn()
     const onError = jest.fn()
 
@@ -68,8 +72,8 @@ describe("subscribe", () => {
   })
 
   test("reports error if accessNode.api is not defined", async () => {
-    const topic = "topic" as SdkTransport.SubscriptionTopic
-    const args = {foo: "bar"} as SdkTransport.SubscriptionArguments<any>
+    const topic = "topic" as SubscriptionTopic
+    const args = {foo: "bar"} as SubscriptionArgs<any>
     const onData = jest.fn()
     const onError = jest.fn()
 

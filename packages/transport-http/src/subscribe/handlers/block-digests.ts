@@ -1,11 +1,13 @@
-import {SdkTransport} from "@onflow/typedefs"
+import {
+  SubscriptionTopic,
+  SubscriptionArgs,
+  RawSubscriptionData,
+} from "@onflow/typedefs"
 import {BlockArgsDto, createSubscriptionHandler} from "./types"
 
-type BlockDigestsArgs =
-  SdkTransport.SubscriptionArguments<SdkTransport.SubscriptionTopic.BLOCK_DIGESTS>
+type BlockDigestsArgs = SubscriptionArgs<SubscriptionTopic.BLOCK_DIGESTS>
 
-type BlockDigestsData =
-  SdkTransport.SubscriptionData<SdkTransport.SubscriptionTopic.BLOCK_DIGESTS>
+type BlockDigestsData = RawSubscriptionData<SubscriptionTopic.BLOCK_DIGESTS>
 
 type BlockDigestsDataDto = {
   block_id: string
@@ -16,13 +18,13 @@ type BlockDigestsDataDto = {
 type BlockDigestsArgsDto = BlockArgsDto
 
 export const blockDigestsHandler = createSubscriptionHandler<{
-  Topic: SdkTransport.SubscriptionTopic.BLOCK_DIGESTS
+  Topic: SubscriptionTopic.BLOCK_DIGESTS
   Args: BlockDigestsArgs
   Data: BlockDigestsData
   ArgsDto: BlockDigestsArgsDto
   DataDto: BlockDigestsDataDto
 }>({
-  topic: SdkTransport.SubscriptionTopic.BLOCK_DIGESTS,
+  topic: SubscriptionTopic.BLOCK_DIGESTS,
   createSubscriber: (initialArgs, onData, onError) => {
     let resumeArgs: BlockDigestsArgs = {
       ...initialArgs,

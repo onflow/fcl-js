@@ -1,4 +1,9 @@
-import {SdkTransport} from "@onflow/typedefs"
+import {
+  SubscriptionTopic,
+  SubscriptionArgs,
+  Subscription,
+  RawSubscriptionData,
+} from "@onflow/typedefs"
 import {SubscriptionManager} from "./subscription-manager"
 import {blocksHandler} from "./handlers/blocks"
 import {blockHeadersHandler} from "./handlers/block-headers"
@@ -22,7 +27,7 @@ let subscriptionManagerMap: Map<
   SubscriptionManager<typeof SUBSCRIPTION_HANDLERS>
 > = new Map()
 
-export function subscribe<T extends SdkTransport.SubscriptionTopic>(
+export function subscribe<T extends SubscriptionTopic>(
   {
     topic,
     args,
@@ -30,12 +35,12 @@ export function subscribe<T extends SdkTransport.SubscriptionTopic>(
     onError,
   }: {
     topic: T
-    args: SdkTransport.SubscriptionArguments<T>
-    onData: (data: SdkTransport.SubscriptionData<T>) => void
+    args: SubscriptionArgs<T>
+    onData: (data: RawSubscriptionData<T>) => void
     onError: (error: Error) => void
   },
   opts: {node: string}
-): SdkTransport.Subscription {
+): Subscription {
   // Get the SubscriptionManager instance for the access node, or create a new one
   const node = opts.node
   const manager =
@@ -46,7 +51,7 @@ export function subscribe<T extends SdkTransport.SubscriptionTopic>(
   return manager.subscribe({
     topic,
     args,
-    onData,
+    onData: onData as any, // TODO: Fix this type issue
     onError,
   })
 }

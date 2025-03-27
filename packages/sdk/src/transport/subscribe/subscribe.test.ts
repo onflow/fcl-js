@@ -1,4 +1,9 @@
-import {SdkTransport} from "@onflow/typedefs"
+import {
+  Subscription,
+  SubscriptionArgs,
+  SubscriptionTopic,
+  SdkTransport,
+} from "@onflow/typedefs"
 import {subscribe} from "./subscribe"
 import {rawSubscribe} from "./raw-subscribe"
 
@@ -6,7 +11,7 @@ jest.mock("./raw-subscribe")
 const mockRawSubscribe = jest.mocked(rawSubscribe)
 
 describe("subscribe", () => {
-  let mockSub: jest.Mocked<SdkTransport.Subscription> = {
+  let mockSub: jest.Mocked<Subscription> = {
     unsubscribe: jest.fn(),
   }
 
@@ -16,8 +21,8 @@ describe("subscribe", () => {
   })
 
   test("subscribes to a topic and returns a subscription", async () => {
-    const topic = "topic" as SdkTransport.SubscriptionTopic
-    const args = {foo: "bar"} as SdkTransport.SubscriptionArguments<any>
+    const topic = "topic" as SubscriptionTopic
+    const args = {foo: "bar"} as SubscriptionArgs<any>
     const onData = jest.fn()
     const onError = jest.fn()
 
@@ -37,8 +42,8 @@ describe("subscribe", () => {
   })
 
   test("unsubscribes from a subscription", async () => {
-    const topic = "topic" as SdkTransport.SubscriptionTopic
-    const args = {foo: "bar"} as SdkTransport.SubscriptionArguments<any>
+    const topic = "topic" as SubscriptionTopic
+    const args = {foo: "bar"} as SubscriptionArgs<any>
     const onData = jest.fn()
     const onError = jest.fn()
 
@@ -55,8 +60,8 @@ describe("subscribe", () => {
   })
 
   test("subscribes to a topic with a node", async () => {
-    const topic = "topic" as SdkTransport.SubscriptionTopic
-    const args = {foo: "bar"} as SdkTransport.SubscriptionArguments<any>
+    const topic = "topic" as SubscriptionTopic
+    const args = {foo: "bar"} as SubscriptionArgs<any>
     const onData = jest.fn()
     const onError = jest.fn()
 
@@ -81,8 +86,8 @@ describe("subscribe", () => {
   })
 
   test("subscribes to a topic with custom node and transport", async () => {
-    const topic = "topic" as SdkTransport.SubscriptionTopic
-    const args = {foo: "bar"} as SdkTransport.SubscriptionArguments<any>
+    const topic = "topic" as SubscriptionTopic
+    const args = {foo: "bar"} as SubscriptionArgs<any>
     const onData = jest.fn()
     const onError = jest.fn()
 

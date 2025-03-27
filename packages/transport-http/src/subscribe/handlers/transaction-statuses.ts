@@ -1,4 +1,8 @@
-import {SdkTransport} from "@onflow/typedefs"
+import {
+  RawSubscriptionData,
+  SubscriptionArgs,
+  SubscriptionTopic,
+} from "@onflow/typedefs"
 import {createSubscriptionHandler} from "./types"
 import {Buffer} from "buffer"
 
@@ -12,10 +16,10 @@ const STATUS_MAP = {
 }
 
 type TransactionStatusesArgs =
-  SdkTransport.SubscriptionArguments<SdkTransport.SubscriptionTopic.TRANSACTION_STATUSES>
+  SubscriptionArgs<SubscriptionTopic.TRANSACTION_STATUSES>
 
 type TransactionStatusesData =
-  SdkTransport.SubscriptionData<SdkTransport.SubscriptionTopic.TRANSACTION_STATUSES>
+  RawSubscriptionData<SubscriptionTopic.TRANSACTION_STATUSES>
 
 type TransactionStatusesArgsDto = {
   tx_id: string
@@ -41,13 +45,13 @@ type TransactionStatusesDataDto = {
 }
 
 export const transactionStatusesHandler = createSubscriptionHandler<{
-  Topic: SdkTransport.SubscriptionTopic.TRANSACTION_STATUSES
+  Topic: SubscriptionTopic.TRANSACTION_STATUSES
   Args: TransactionStatusesArgs
   Data: TransactionStatusesData
   ArgsDto: TransactionStatusesArgsDto
   DataDto: TransactionStatusesDataDto
 }>({
-  topic: SdkTransport.SubscriptionTopic.TRANSACTION_STATUSES,
+  topic: SubscriptionTopic.TRANSACTION_STATUSES,
   createSubscriber: (initialArgs, onData, onError) => {
     let resumeArgs: TransactionStatusesArgs = {
       ...initialArgs,

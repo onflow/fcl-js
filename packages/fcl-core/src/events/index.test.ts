@@ -1,4 +1,4 @@
-import {SdkTransport} from "@onflow/typedefs"
+import {Subscription} from "@onflow/typedefs"
 import {events} from "."
 import {subscribe, SubscriptionsNotSupportedError} from "@onflow/sdk"
 import {events as legacyEvents} from "./legacy-events"
@@ -7,7 +7,7 @@ jest.mock("@onflow/sdk")
 jest.mock("./legacy-events")
 
 describe("events", () => {
-  let mockSubscription: jest.Mocked<SdkTransport.Subscription>
+  let mockSubscription: jest.Mocked<Subscription>
   let mockLegacySubscribeObject: jest.Mocked<{subscribe: () => void}>
   let mockLegacyUnsubscribe: jest.MockedFunction<() => void>
 
