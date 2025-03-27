@@ -2,7 +2,7 @@ import {config} from "@onflow/config"
 import {SdkTransport} from "@onflow/typedefs"
 import {getTransport} from "../get-transport"
 import {invariant} from "@onflow/util-invariant"
-import {SubscribeParams} from "./types"
+import {RawSubscribeParams} from "./types"
 
 /**
  * Subscribe to a topic without decoding the data.
@@ -11,7 +11,7 @@ import {SubscribeParams} from "./types"
  * @returns A promise that resolves once the subscription is active.
  */
 export function rawSubscribe<T extends SdkTransport.SubscriptionTopic>(
-  {topic, args, onData, onError}: SubscribeParams<T>,
+  {topic, args, onData, onError}: RawSubscribeParams<T>,
   opts: {
     node?: string
     transport?: SdkTransport.Transport
