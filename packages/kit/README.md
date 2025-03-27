@@ -203,3 +203,24 @@ function QueryExample() {
 
 export default QueryExample
 ```
+
+### `useFlowTransaction`
+
+```jsx
+import {useFlowTransaction} from "./useFlowTransaction"
+
+function TransactionComponent() {
+  const txId = "your-transaction-id-here"
+  const {transactionStatus, error} = useFlowTransaction(txId)
+
+  if (error) {
+    return <div>Error: {error.message}</div>
+  }
+
+  return (
+    <div>
+      Status: {transactionStatus?.statusString}
+    </div>
+  )
+}
+```
