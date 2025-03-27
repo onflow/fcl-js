@@ -51,7 +51,7 @@ export function subscribe<T extends SubscriptionTopic>(
   return manager.subscribe({
     topic,
     args,
-    onData: onData as any, // TODO: Fix this type issue
+    onData: onData as any,
     onError,
   })
 }
