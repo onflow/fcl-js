@@ -1,5 +1,22 @@
 # @onflow/fcl
 
+## 1.15.0
+
+### Minor Changes
+
+- [#2252](https://github.com/onflow/fcl-js/pull/2252) [`329ef42ddafde4c624f71dedf639e38c6ba31714`](https://github.com/onflow/fcl-js/commit/329ef42ddafde4c624f71dedf639e38c6ba31714) Thanks [@jribbink](https://github.com/jribbink)! - Default to soft-finality for all queries (get account, get block, get block header, execute script). Developers can manually override this setting on a per-query basis if required.
+
+  Because developers can now query against un-sealed blocks, it is now recommended to switch to waiting for soft-finality ("executed" status) when awaiting for transaction results whenever possible for significant latency improvements (~2.5x faster).
+
+  This can be done by switching from `fcl.tx(...).onceSealed()` to `fcl.tx(...).onceExecuted()` or updating listeners passed to `fcl.tx(...).subscribe()`.
+
+### Patch Changes
+
+- Updated dependencies [[`329ef42ddafde4c624f71dedf639e38c6ba31714`](https://github.com/onflow/fcl-js/commit/329ef42ddafde4c624f71dedf639e38c6ba31714)]:
+  - @onflow/fcl-core@1.16.0
+  - @onflow/sdk@1.7.0
+  - @onflow/fcl-wc@6.0.0
+
 ## 1.14.1
 
 ### Patch Changes
