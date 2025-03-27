@@ -33,7 +33,7 @@ export function useFlowTransaction(txId: string): UseFlowTransactionResult {
       setTransactionStatus(updatedStatus)
 
       if (updatedStatus.errorMessage) {
-        setError(new Error(updatedStatus.errorMessage))
+        setError(TransactionError.fromErrorMessage(updatedStatus.errorMessage))
       }
     })
 
