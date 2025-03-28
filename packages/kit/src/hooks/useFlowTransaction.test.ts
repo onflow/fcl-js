@@ -3,36 +3,9 @@ import * as fcl from "@onflow/fcl"
 import {useFlowTransaction} from "./useFlowTransaction"
 import {TransactionStatus} from "@onflow/typedefs"
 import {FlowProvider} from "../provider"
+import {defaultTxStatus, errorTxStatus} from "../__mocks__/tx"
 
-const defaultTxStatus: TransactionStatus = {
-  blockId: "",
-  status: 0,
-  statusString: "UNKNOWN",
-  statusCode: 0,
-  errorMessage: "",
-  events: [],
-}
-
-const errorTxStatus: TransactionStatus = {
-  blockId: "block123",
-  status: 2,
-  statusString: "ERROR",
-  statusCode: 1,
-  errorMessage: "Test error occurred",
-  events: [],
-}
-
-jest.mock("@onflow/fcl", () => {
-  const actualFcl = jest.requireActual("@onflow/fcl")
-  return {
-    ...actualFcl,
-    tx: jest.fn(),
-    config: () => ({
-      subscribe: jest.fn(() => () => {}),
-      load: jest.fn(),
-    }),
-  }
-})
+jest.mock("@onflow/fcl", () => require("../__mocks__/fcl").default)
 
 describe("useFlowTransaction", () => {
   afterEach(() => {

@@ -3,6 +3,7 @@ import * as fcl from "@onflow/fcl"
 import {FlowConfig, FlowConfigContext} from "../core/context"
 import {QueryClient} from "@tanstack/react-query"
 import {FlowQueryClientProvider} from "./FlowQueryClient"
+import {deepEqual} from "../utils/deepEqual"
 
 interface FlowProviderProps {
   config?: FlowConfig
@@ -85,7 +86,7 @@ export function FlowProvider({
   const [queryClient, setQueryClient] = useState(
     _queryClient || new QueryClient()
   )
-  const [flowConfig, setFlowConfig] = useState<FlowConfig>({})
+  const [flowConfig, setFlowConfig] = useState<FlowConfig | null>(null)
 
   useEffect(() => {
     // If a typed config is provided, convert it to FCL config keys and initialize FCL config.
@@ -99,7 +100,13 @@ export function FlowProvider({
     }
     // Subscribe to FCL config changes and map them to our typed keys.
     const unsubscribe = fcl.config().subscribe(latest => {
-      setFlowConfig(mapConfig(latest || {}))
+      const newConfig = mapConfig(latest || {})
+      setFlowConfig(prev => {
+        if (prev && deepEqual(prev, newConfig)) {
+          return prev
+        }
+        return newConfig
+      })
     })
     return () => unsubscribe()
   }, [initialConfig, flowJson])
@@ -107,6 +114,10 @@ export function FlowProvider({
   useEffect(() => {
     setQueryClient(_queryClient || new QueryClient())
   }, [_queryClient])
+
+  if (!flowConfig) {
+    return null
+  }
 
   return (
     <FlowQueryClientProvider queryClient={queryClient}>

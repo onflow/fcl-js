@@ -3,46 +3,9 @@ import * as fcl from "@onflow/fcl"
 import {useCurrentFlowUser} from "./useCurrentFlowUser"
 import {FlowProvider} from "../provider"
 import {CurrentUser} from "@onflow/typedefs"
+import {defaultUser, authenticatedUser} from "../__mocks__/user"
 
-const defaultUser: CurrentUser = {
-  f_type: "USER",
-  f_vsn: "1.0.0",
-  loggedIn: false,
-  services: [],
-}
-
-const authenticatedUser: CurrentUser = {
-  f_type: "USER",
-  f_vsn: "1.0.0",
-  loggedIn: true,
-  addr: "0x1234",
-  services: [],
-}
-
-jest.mock("@onflow/fcl", () => {
-  let currentUserState = defaultUser
-
-  return {
-    config: () => ({
-      subscribe: jest.fn(() => () => {}),
-      load: jest.fn(),
-    }),
-    currentUser: {
-      subscribe: jest.fn().mockImplementation((callback: any) => {
-        callback(currentUserState)
-        return () => {}
-      }),
-      snapshot: () => currentUserState,
-    },
-    authenticate: jest.fn().mockImplementation(() => {
-      currentUserState = authenticatedUser
-      return Promise.resolve(authenticatedUser)
-    }),
-    unauthenticate: jest.fn().mockImplementation(() => {
-      currentUserState = defaultUser
-    }),
-  }
-})
+jest.mock("@onflow/fcl", () => require("../__mocks__/fcl").default)
 
 describe("useCurrentFlowUser", () => {
   test("initializes with the correct default user state", () => {
