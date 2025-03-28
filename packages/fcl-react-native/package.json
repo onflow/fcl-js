@@ -19,7 +19,7 @@
     }
   },
   "devDependencies": {
-    "@onflow/fcl-bundle": "1.6.0",
+    "@onflow/fcl-bundle": "1.7.0-cross-vm.0",
     "@onflow/typedefs": "1.4.1",
     "@types/estree": "^1.0.6",
     "@types/node": "^18.19.57",

@@ -1,5 +1,16 @@
 # @onflow/fcl-wc
 
+## 6.0.0-cross-vm.0
+
+### Major Changes
+
+- Switch from @walletconnect/sign-client to @walletconnect/universal-provider
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @onflow/fcl-core@1.16.0
+
 ## 5.6.4
 
 ### Patch Changes
