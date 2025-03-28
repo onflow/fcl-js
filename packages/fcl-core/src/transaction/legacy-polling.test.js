@@ -1,5 +1,5 @@
 import {HTTPRequestError} from "@onflow/transport-http"
-import {transaction} from "./index.js"
+import {transaction} from "./legacy-polling"
 import {config} from "@onflow/config"
 
 describe("transaction", () => {
