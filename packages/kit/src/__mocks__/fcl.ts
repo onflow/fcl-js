@@ -20,4 +20,10 @@ export default {
     subscribe: sharedSubscribe,
     load: jest.fn(),
   }),
+
+  TransactionError: {
+    fromErrorMessage: (errorMessage: string) => {
+      return new Error(errorMessage)
+    },
+  },
 }
