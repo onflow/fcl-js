@@ -4,17 +4,7 @@ import {FlowProvider} from "../provider"
 import {useFlowEvents} from "./useFlowEvents"
 import {Event} from "@onflow/typedefs"
 
-jest.mock("@onflow/fcl", () => {
-  const actualFcl = jest.requireActual("@onflow/fcl")
-  return {
-    ...actualFcl,
-    events: jest.fn(),
-    config: () => ({
-      subscribe: jest.fn(() => () => {}),
-      load: jest.fn(),
-    }),
-  }
-})
+jest.mock("@onflow/fcl", () => require("../__mocks__/fcl").default)
 
 describe("useFlowEvents", () => {
   afterEach(() => {

@@ -4,23 +4,7 @@ import {FlowProvider} from "../provider"
 import {useFlowAccount} from "./useFlowAccount"
 import {Account} from "@onflow/typedefs"
 
-jest.mock("@onflow/fcl", () => {
-  const actualFcl = jest.requireActual("@onflow/fcl")
-  return {
-    ...actualFcl,
-    account: jest.fn(),
-    config: () => ({
-      subscribe: jest.fn(callback => {
-        callback({
-          "accessNode.api": "http://localhost:8080",
-          "app.detail.title": "Test App",
-        })
-        return () => {}
-      }),
-      load: jest.fn(),
-    }),
-  }
-})
+jest.mock("@onflow/fcl", () => require("../__mocks__/fcl").default)
 
 describe("useFlowAccount", () => {
   afterEach(() => {
