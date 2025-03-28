@@ -1,34 +1,46 @@
 # @onflow/fcl-wc
 
-## 6.0.0-cross-vm.3
+## 5.6.4
 
 ### Patch Changes
 
-- [#2222](https://github.com/onflow/fcl-js/pull/2222) [`94eb73df9f41306eb142b8590b41ec72e78c8f5c`](https://github.com/onflow/fcl-js/commit/94eb73df9f41306eb142b8590b41ec72e78c8f5c) Thanks [@jribbink](https://github.com/jribbink)! - Fix bug creating session proposal
+- Updated dependencies [[`329ef42ddafde4c624f71dedf639e38c6ba31714`](https://github.com/onflow/fcl-js/commit/329ef42ddafde4c624f71dedf639e38c6ba31714)]:
+  - @onflow/fcl-core@1.16.0
 
-## 6.0.0-cross-vm.2
-
-### Patch Changes
-
-- Updated dependencies [[`eefac024fe6afef401c19629ff29bf7fe644cdf1`](https://github.com/onflow/fcl-js/commit/eefac024fe6afef401c19629ff29bf7fe644cdf1)]:
-  - @onflow/fcl-core@1.14.0-cross-vm.1
-
-## 6.0.0-cross-vm.1
-
-### Minor Changes
-
-- [#2197](https://github.com/onflow/fcl-js/pull/2197) [`1d3351e79826278db880685799bb285758df04ce`](https://github.com/onflow/fcl-js/commit/1d3351e79826278db880685799bb285758df04ce) Thanks [@jribbink](https://github.com/jribbink)! - Add `disableNotifications` param for FCL-WC service
-
-## 6.0.0-cross-vm.0
-
-### Major Changes
-
-- [#2154](https://github.com/onflow/fcl-js/pull/2154) [`e8f5585cd029716940c55e72fc53dc9563fec724`](https://github.com/onflow/fcl-js/commit/e8f5585cd029716940c55e72fc53dc9563fec724) Thanks [@jribbink](https://github.com/jribbink)! - FCL Ethereum Provider & Cross VM Support Alpha Release
+## 5.6.3
 
 ### Patch Changes
 
-- Updated dependencies [[`3fccbef7bbf985f19d9a9bae2638e538f126f754`](https://github.com/onflow/fcl-js/commit/3fccbef7bbf985f19d9a9bae2638e538f126f754), [`e8f5585cd029716940c55e72fc53dc9563fec724`](https://github.com/onflow/fcl-js/commit/e8f5585cd029716940c55e72fc53dc9563fec724)]:
-  - @onflow/fcl-core@1.14.0-cross-vm.0
+- Updated dependencies [[`b361069e8b42a4752c2614b1c6908af9749729ac`](https://github.com/onflow/fcl-js/commit/b361069e8b42a4752c2614b1c6908af9749729ac)]:
+  - @onflow/fcl-core@1.15.1
+
+## 5.6.2
+
+### Patch Changes
+
+- Updated dependencies [[`5b76b111ddb16ed607dc218714fdc51c21fdcdc8`](https://github.com/onflow/fcl-js/commit/5b76b111ddb16ed607dc218714fdc51c21fdcdc8), [`5b76b111ddb16ed607dc218714fdc51c21fdcdc8`](https://github.com/onflow/fcl-js/commit/5b76b111ddb16ed607dc218714fdc51c21fdcdc8)]:
+  - @onflow/fcl-core@1.15.0
+
+## 5.6.1
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @onflow/fcl-core@1.14.1
+
+## 5.6.0
+
+### Patch Changes
+
+- Updated dependencies [[`68cf725a4d618cc963f31a758998ad14a7a43716`](https://github.com/onflow/fcl-js/commit/68cf725a4d618cc963f31a758998ad14a7a43716)]:
+  - @onflow/fcl-core@1.14.0
+
+## 5.5.5
+
+### Patch Changes
+
+- Updated dependencies [[`3fccbef7bbf985f19d9a9bae2638e538f126f754`](https://github.com/onflow/fcl-js/commit/3fccbef7bbf985f19d9a9bae2638e538f126f754)]:
+  - @onflow/fcl-core@1.13.5
 
 ## 5.5.4
 

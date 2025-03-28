@@ -1,16 +1,69 @@
 # @onflow/fcl
 
-## 1.14.0-cross-vm.1
-
-### Patch Changes
-
-- [#2212](https://github.com/onflow/fcl-js/pull/2212) [`eefac024fe6afef401c19629ff29bf7fe644cdf1`](https://github.com/onflow/fcl-js/commit/eefac024fe6afef401c19629ff29bf7fe644cdf1) Thanks [@jribbink](https://github.com/jribbink)! - Do not check that discovery service is provider in `fcl.authenticate` if user is already logged in
-
-## 1.14.0-cross-vm.0
+## 1.16.0
 
 ### Minor Changes
 
-- [#2154](https://github.com/onflow/fcl-js/pull/2154) [`e8f5585cd029716940c55e72fc53dc9563fec724`](https://github.com/onflow/fcl-js/commit/e8f5585cd029716940c55e72fc53dc9563fec724) Thanks [@jribbink](https://github.com/jribbink)! - FCL Ethereum Provider & Cross VM Support Alpha Release
+- [#2252](https://github.com/onflow/fcl-js/pull/2252) [`329ef42ddafde4c624f71dedf639e38c6ba31714`](https://github.com/onflow/fcl-js/commit/329ef42ddafde4c624f71dedf639e38c6ba31714) Thanks [@jribbink](https://github.com/jribbink)! - Default to soft-finality for all queries (get account, get block, get block header, execute script). Developers can manually override this setting on a per-query basis if required.
+
+  Because developers can now query against un-sealed blocks, it is now recommended to switch to waiting for soft-finality ("executed" status) when awaiting for transaction results whenever possible for significant latency improvements (~2.5x faster).
+
+  This can be done by switching from `fcl.tx(...).onceSealed()` to `fcl.tx(...).onceExecuted()` or updating listeners passed to `fcl.tx(...).subscribe()`.
+
+### Patch Changes
+
+- Updated dependencies [[`329ef42ddafde4c624f71dedf639e38c6ba31714`](https://github.com/onflow/fcl-js/commit/329ef42ddafde4c624f71dedf639e38c6ba31714)]:
+  - @onflow/sdk@1.7.0
+  - @onflow/transport-http@1.12.0
+
+## 1.15.1
+
+### Patch Changes
+
+- [#2245](https://github.com/onflow/fcl-js/pull/2245) [`b361069e8b42a4752c2614b1c6908af9749729ac`](https://github.com/onflow/fcl-js/commit/b361069e8b42a4752c2614b1c6908af9749729ac) Thanks [@jribbink](https://github.com/jribbink)! - Fix regression in `account` query at latest block
+
+- Updated dependencies [[`b361069e8b42a4752c2614b1c6908af9749729ac`](https://github.com/onflow/fcl-js/commit/b361069e8b42a4752c2614b1c6908af9749729ac)]:
+  - @onflow/sdk@1.6.1
+
+## 1.15.0
+
+### Minor Changes
+
+- [#2218](https://github.com/onflow/fcl-js/pull/2218) [`5b76b111ddb16ed607dc218714fdc51c21fdcdc8`](https://github.com/onflow/fcl-js/commit/5b76b111ddb16ed607dc218714fdc51c21fdcdc8) Thanks [@jribbink](https://github.com/jribbink)! - Add `fcl.experimental.softFinality` config option to run all state queries (e.g. execute script, get account) against the latest soft-finality state by default
+
+- [#2218](https://github.com/onflow/fcl-js/pull/2218) [`5b76b111ddb16ed607dc218714fdc51c21fdcdc8`](https://github.com/onflow/fcl-js/commit/5b76b111ddb16ed607dc218714fdc51c21fdcdc8) Thanks [@jribbink](https://github.com/jribbink)! - Add `isSealed` flag to `account` function to configure block finality state
+
+### Patch Changes
+
+- Updated dependencies [[`5b76b111ddb16ed607dc218714fdc51c21fdcdc8`](https://github.com/onflow/fcl-js/commit/5b76b111ddb16ed607dc218714fdc51c21fdcdc8), [`5b76b111ddb16ed607dc218714fdc51c21fdcdc8`](https://github.com/onflow/fcl-js/commit/5b76b111ddb16ed607dc218714fdc51c21fdcdc8), [`5b76b111ddb16ed607dc218714fdc51c21fdcdc8`](https://github.com/onflow/fcl-js/commit/5b76b111ddb16ed607dc218714fdc51c21fdcdc8)]:
+  - @onflow/sdk@1.6.0
+  - @onflow/transport-http@1.11.0
+
+## 1.14.1
+
+### Patch Changes
+
+- Updated dependencies [[`ae0ddb755a4c099df1558900192d395543ffccec`](https://github.com/onflow/fcl-js/commit/ae0ddb755a4c099df1558900192d395543ffccec)]:
+  - @onflow/sdk@1.5.7
+
+## 1.14.0
+
+### Minor Changes
+
+- [#1937](https://github.com/onflow/fcl-js/pull/1937) [`68cf725a4d618cc963f31a758998ad14a7a43716`](https://github.com/onflow/fcl-js/commit/68cf725a4d618cc963f31a758998ad14a7a43716) Thanks [@jribbink](https://github.com/jribbink)! - Allow apps to exclude certain wallets from FCL Discovery.
+
+  ```javascript
+  import {config} from "@onflow/fcl"
+  
+  config({
+    "discovery.wallet": "https://fcl-discovery.onflow.org/testnet/authn",
+    "discovery.authn.endpoint":
+      "https://fcl-discovery.onflow.org/api/testnet/authn",
+    "discovery.authn.exclude": ["0x123"],
+  })
+  ```
+
+## 1.13.5
 
 ### Patch Changes
 

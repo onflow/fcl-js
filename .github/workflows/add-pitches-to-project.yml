@@ -12,5 +12,5 @@ jobs:
     steps:
       - uses: actions/add-to-project@v0.4.1
         with:
-          project-url: https://github.com/orgs/onflow/projects/13
+          project-url: https://github.com/orgs/onflow/projects/85
           github-token: ${{ secrets.GH_ACTION_FOR_PROJECTS }}
