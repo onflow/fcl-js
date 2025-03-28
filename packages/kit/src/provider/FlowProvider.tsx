@@ -3,6 +3,7 @@ import * as fcl from "@onflow/fcl"
 import {FlowConfig, FlowConfigContext} from "../core/context"
 import {QueryClient} from "@tanstack/react-query"
 import {FlowQueryClientProvider} from "./FlowQueryClient"
+import {deepEqual} from "../utils/deepEqual"
 
 interface FlowProviderProps {
   config?: FlowConfig
@@ -101,7 +102,7 @@ export function FlowProvider({
     const unsubscribe = fcl.config().subscribe(latest => {
       const newConfig = mapConfig(latest || {})
       setFlowConfig(prev => {
-        if (prev && JSON.stringify(prev) === JSON.stringify(newConfig)) {
+        if (prev && deepEqual(prev, newConfig)) {
           return prev
         }
         return newConfig
