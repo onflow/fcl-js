@@ -1,4 +1,5 @@
 import * as actualFcl from "@onflow/fcl"
+import {authenticatedUser, defaultUser} from "./user"
 
 const sharedSubscribe = jest.fn(callback => {
   callback({
@@ -7,6 +8,8 @@ const sharedSubscribe = jest.fn(callback => {
   })
   return () => {}
 })
+
+let currentUserState = defaultUser
 
 export default {
   ...actualFcl,
@@ -19,6 +22,21 @@ export default {
   config: () => ({
     subscribe: sharedSubscribe,
     load: jest.fn(),
+  }),
+
+  currentUser: {
+    subscribe: jest.fn().mockImplementation((callback: any) => {
+      callback(currentUserState)
+      return () => {}
+    }),
+    snapshot: () => currentUserState,
+  },
+  authenticate: jest.fn().mockImplementation(() => {
+    currentUserState = authenticatedUser
+    return Promise.resolve(authenticatedUser)
+  }),
+  unauthenticate: jest.fn().mockImplementation(() => {
+    currentUserState = defaultUser
   }),
 
   TransactionError: {
