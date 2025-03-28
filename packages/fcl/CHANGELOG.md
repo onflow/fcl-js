@@ -1,5 +1,12 @@
 # @onflow/fcl
 
+## 1.15.1-cross-vm.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @onflow/fcl-wc@6.0.0-cross-vm.0
+
 ## 1.15.0
 
 ### Minor Changes

@@ -1,5 +1,11 @@
 # @onflow/fcl-bundle
 
+## 1.7.0-cross-vm.0
+
+### Minor Changes
+
+- Allow usage of subpath imports
+
 ## 1.6.0
 
 ### Minor Changes
