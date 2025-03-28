@@ -99,7 +99,13 @@ export function FlowProvider({
     }
     // Subscribe to FCL config changes and map them to our typed keys.
     const unsubscribe = fcl.config().subscribe(latest => {
-      setFlowConfig(mapConfig(latest || {}))
+      const newConfig = mapConfig(latest || {})
+      setFlowConfig(prev => {
+        if (prev && JSON.stringify(prev) === JSON.stringify(newConfig)) {
+          return prev
+        }
+        return newConfig
+      })
     })
     return () => unsubscribe()
   }, [initialConfig, flowJson])

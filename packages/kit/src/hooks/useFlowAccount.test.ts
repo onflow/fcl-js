@@ -10,7 +10,13 @@ jest.mock("@onflow/fcl", () => {
     ...actualFcl,
     account: jest.fn(),
     config: () => ({
-      subscribe: jest.fn(() => () => {}), // Mock subscription to avoid act warning
+      subscribe: jest.fn(callback => {
+        callback({
+          "accessNode.api": "http://localhost:8080",
+          "app.detail.title": "Test App",
+        })
+        return () => {}
+      }),
       load: jest.fn(),
     }),
   }
