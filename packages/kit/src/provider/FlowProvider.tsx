@@ -85,7 +85,7 @@ export function FlowProvider({
   const [queryClient, setQueryClient] = useState(
     _queryClient || new QueryClient()
   )
-  const [flowConfig, setFlowConfig] = useState<FlowConfig>({})
+  const [flowConfig, setFlowConfig] = useState<FlowConfig | null>(null)
 
   useEffect(() => {
     // If a typed config is provided, convert it to FCL config keys and initialize FCL config.
@@ -107,6 +107,10 @@ export function FlowProvider({
   useEffect(() => {
     setQueryClient(_queryClient || new QueryClient())
   }, [_queryClient])
+
+  if (!flowConfig) {
+    return null
+  }
 
   return (
     <FlowQueryClientProvider queryClient={queryClient}>
