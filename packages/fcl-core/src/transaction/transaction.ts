@@ -4,7 +4,6 @@ import {
   TransactionExecutionStatus,
   TransactionStatus,
 } from "@onflow/typedefs"
-import {SubscriptionCallback} from "./types"
 import {
   isDiff,
   isExecuted,
@@ -23,6 +22,8 @@ import {
 import {TransactionError} from "./transaction-error"
 import {transaction as legacyTransaction} from "./legacy-polling"
 
+// Map of transaction observables
+// Used for shared global singleton to prevent duplicate subscriptions
 const registry = new Map<string, ReturnType<typeof createObservable>>()
 
 /**
@@ -42,7 +43,10 @@ export function transaction(
   } = {txNotFoundTimeout: 12500, pollRate: 1000}
 ): {
   snapshot: () => Promise<TransactionStatus>
-  subscribe: (callback: SubscriptionCallback) => () => void
+  subscribe: (
+    onData: (txStatus: TransactionStatus) => void,
+    onError?: (err: Error) => void
+  ) => () => void
   onceFinalized: () => Promise<TransactionStatus>
   onceExecuted: () => Promise<TransactionStatus>
   onceSealed: () => Promise<TransactionStatus>
@@ -64,9 +68,13 @@ export function transaction(
     return Promise.resolve(getObservable().value)
   }
 
-  function subscribe(callback: SubscriptionCallback) {
+  function subscribe(
+    onData: (txStatus: TransactionStatus) => void,
+    onError?: (err: Error) => void
+  ) {
     const observable = getObservable()
-    return observable.subscribe(callback).unsubscribe
+    const {unsubscribe} = observable.subscribe(onData, onError)
+    return () => unsubscribe()
   }
 
   function once(predicate: (txStatus: TransactionStatus) => boolean) {
@@ -116,18 +124,24 @@ transaction.isExecuted = isExecuted
 transaction.isSealed = isSealed
 transaction.isExpired = isExpired
 
+/**
+ * Creates an observable for a transaction
+ */
 function createObservable(
   txId: string,
   opts: {pollRate?: number; txNotFoundTimeout?: number}
 ) {
-  const observers = new Set<SubscriptionCallback>()
+  const observers = new Set<{
+    onData: (txStatus: TransactionStatus) => void
+    onError: (err: Error) => void
+  }>()
   let value: TransactionStatus = {
     blockId: "",
-    status: TransactionExecutionStatus.PENDING,
+    status: TransactionExecutionStatus.UNKNOWN,
     statusCode: 0,
     errorMessage: "",
     events: [],
-    statusString: "PENDING",
+    statusString: "",
   }
 
   // Subscribe to transaction status updates
@@ -155,22 +169,22 @@ function createObservable(
     )
 
     // Poll for transaction status updates
-    legacyTransaction(txId, {
-      pollRate: opts.pollRate,
-    }).subscribe((txStatus?: TransactionStatus, err?: Error) => {
-      if (err) {
-        error(err)
-      } else if (txStatus) {
-        value = txStatus
-        next(txStatus)
+    legacyTransaction(txId, opts).subscribe(
+      (txStatus?: TransactionStatus, err?: Error) => {
+        if (err) {
+          error(err)
+        } else if (txStatus) {
+          value = txStatus
+          next(txStatus)
+        }
       }
-    })
+    )
   }
 
   function next(txStatus: TransactionStatus) {
     for (const observer of observers) {
       try {
-        observer(txStatus)
+        observer.onData(txStatus)
       } catch (error) {
         console.error("Error in transaction observer", error)
       }
@@ -180,7 +194,7 @@ function createObservable(
   function error(err: Error) {
     for (const observer of observers) {
       try {
-        observer(undefined, err)
+        observer.onError(err)
       } catch (error) {
         console.error("Error in transaction observer", error)
       }
@@ -188,8 +202,17 @@ function createObservable(
   }
 
   return {
-    subscribe(observer: SubscriptionCallback) {
+    subscribe(
+      onData: (status: TransactionStatus) => void,
+      onError?: (error: Error) => void
+    ) {
+      const observer = {
+        onData,
+        onError: onError || (() => {}),
+      }
       observers.add(observer)
+      onData(value)
+
       return {
         unsubscribe: () => observers.delete(observer),
       }
