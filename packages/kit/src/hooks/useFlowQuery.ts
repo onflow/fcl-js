@@ -6,6 +6,7 @@ import {useFlowQueryClient} from "../provider/FlowQueryClient"
 interface FlowQueryArgs {
   cadence: string
   args?: (arg: typeof fcl.arg, t: typeof fcl.t) => unknown[]
+  enabled?: boolean
 }
 
 /**
@@ -21,6 +22,7 @@ interface FlowQueryArgs {
 export function useFlowQuery({
   cadence,
   args,
+  enabled = true,
 }: FlowQueryArgs): UseQueryResult<unknown, Error> {
   const queryClient = useFlowQueryClient()
 
@@ -33,7 +35,7 @@ export function useFlowQuery({
     {
       queryKey: ["flowQuery", cadence, args],
       queryFn: fetchQuery,
-      enabled: Boolean(cadence),
+      enabled: enabled,
       retry: false,
       initialData: null,
     },
