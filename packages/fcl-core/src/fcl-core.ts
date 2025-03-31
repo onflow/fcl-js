@@ -25,8 +25,8 @@ export {getChainId} from "./utils"
 
 export {TestUtils} from "@onflow/sdk"
 
-import {config} from "@onflow/config"
-export {config}
+import {config, flowMainnet, flowTestnet, flowLocal} from "@onflow/config"
+export {config, flowMainnet, flowTestnet, flowLocal}
 
 export {send} from "@onflow/sdk"
 export {decode} from "@onflow/sdk"
