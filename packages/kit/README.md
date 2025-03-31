@@ -175,6 +175,7 @@ function EventListener() {
 
 - **cadence:** The Cadence script as a string.
 - **args (optional):** A function that returns an array of FCL arguments. For example, `(arg, t) => [arg(1, t.Int), arg(2, t.Int)]`.
+- **enabled (optional):** A boolean indicating whether the query should be enabled. Defaults to `true`.
 
 ```jsx
 import React from "react"
@@ -188,6 +189,7 @@ function QueryExample() {
       }
     `,
     args: (arg, t) => [arg(1, t.Int), arg(2, t.Int)],
+    enabled: true,
   })
 
   if (isLoading) return <p>Loading query...</p>
