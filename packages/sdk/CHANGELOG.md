@@ -1,5 +1,39 @@
 # @onflow/sdk
 
+## 1.7.0
+
+### Minor Changes
+
+- [#2252](https://github.com/onflow/fcl-js/pull/2252) [`329ef42ddafde4c624f71dedf639e38c6ba31714`](https://github.com/onflow/fcl-js/commit/329ef42ddafde4c624f71dedf639e38c6ba31714) Thanks [@jribbink](https://github.com/jribbink)! - Default to soft-finality for all queries (get account, get block, get block header, execute script). Developers can manually override this setting on a per-query basis if required.
+
+  Because developers can now query against un-sealed blocks, it is now recommended to switch to waiting for soft-finality ("executed" status) when awaiting for transaction results whenever possible for significant latency improvements (~2.5x faster).
+
+  This can be done by switching from `fcl.tx(...).onceSealed()` to `fcl.tx(...).onceExecuted()` or updating listeners passed to `fcl.tx(...).subscribe()`.
+
+### Patch Changes
+
+- Updated dependencies [[`329ef42ddafde4c624f71dedf639e38c6ba31714`](https://github.com/onflow/fcl-js/commit/329ef42ddafde4c624f71dedf639e38c6ba31714)]:
+  - @onflow/transport-http@1.12.0
+
+## 1.6.1
+
+### Patch Changes
+
+- [#2245](https://github.com/onflow/fcl-js/pull/2245) [`b361069e8b42a4752c2614b1c6908af9749729ac`](https://github.com/onflow/fcl-js/commit/b361069e8b42a4752c2614b1c6908af9749729ac) Thanks [@jribbink](https://github.com/jribbink)! - Fix regression in `account` query at latest block
+
+## 1.6.0
+
+### Minor Changes
+
+- [#2218](https://github.com/onflow/fcl-js/pull/2218) [`5b76b111ddb16ed607dc218714fdc51c21fdcdc8`](https://github.com/onflow/fcl-js/commit/5b76b111ddb16ed607dc218714fdc51c21fdcdc8) Thanks [@jribbink](https://github.com/jribbink)! - Add `fcl.experimental.softFinality` config option to run all state queries (e.g. execute script, get account) against the latest soft-finality state by default
+
+- [#2218](https://github.com/onflow/fcl-js/pull/2218) [`5b76b111ddb16ed607dc218714fdc51c21fdcdc8`](https://github.com/onflow/fcl-js/commit/5b76b111ddb16ed607dc218714fdc51c21fdcdc8) Thanks [@jribbink](https://github.com/jribbink)! - Add `atLatestBlock` SDK builder method to query the latest block with the given finality state
+
+### Patch Changes
+
+- Updated dependencies [[`5b76b111ddb16ed607dc218714fdc51c21fdcdc8`](https://github.com/onflow/fcl-js/commit/5b76b111ddb16ed607dc218714fdc51c21fdcdc8)]:
+  - @onflow/transport-http@1.11.0
+
 ## 1.5.7
 
 ### Patch Changes
