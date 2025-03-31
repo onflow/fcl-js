@@ -2,7 +2,7 @@
 
 > This library is currently in alpha and is subject to change.
 
-A React library with hooks and components for interacting with the Flow blockchain.
+A React library with hooks and components (coming soon) for interacting with the Flow blockchain.
 
 ## Installation
 
@@ -14,7 +14,7 @@ npm install @onflow/kit
 
 ### Wrapping Your App With `FlowProvider`
 
-Before using any hooks or components, wrap your application with the `FlowProvider` to initialize FCL configuration. This sets up FCL and maps its configuration keys to a strictly typed format for your hooks.
+Before using any hooks or components (coming soon), wrap your application with the `FlowProvider` to initialize FCL configuration. This sets up FCL and maps its configuration keys to a strictly typed format for your hooks.
 
 ```jsx
 import React from "react"
@@ -56,9 +56,7 @@ import { useFlowConfig } from '@onflow/kit/hooks'
 
 ### Install Components Only
 
-```jsx
-import { ConnectButton } from '@onflow/kit/components'
-```
+Coming soon...
 
 ### Hooks
 
