@@ -53,8 +53,6 @@ describe("useFlowQuery", () => {
     const queryMock = jest.mocked(fcl.query)
     queryMock.mockResolvedValueOnce(expectedResult)
 
-    let hookResult: any
-
     await act(async () => {
       const {result} = renderHook(
         () => useFlowQuery({cadence: cadenceScript, enabled: false}),
