@@ -49,21 +49,16 @@ describe("useFlowQuery", () => {
 
   test("does not fetch data when enabled is false", async () => {
     const cadenceScript = "access(all) fun main(): Int { return 42 }"
-    const expectedResult = 42
     const queryMock = jest.mocked(fcl.query)
-    queryMock.mockResolvedValueOnce(expectedResult)
 
-    await act(async () => {
-      const {result} = renderHook(
-        () => useFlowQuery({cadence: cadenceScript, enabled: false}),
-        {
-          wrapper: FlowProvider,
-        }
-      )
-      hookResult = result
+    renderHook(() => useFlowQuery({cadence: cadenceScript, enabled: false}), {
+      wrapper: FlowProvider,
     })
 
-    expect(queryMock).not.toHaveBeenCalled()
+    // wait a little to ensure fcl.query isn't called
+    await waitFor(() => {
+      expect(queryMock).not.toHaveBeenCalled()
+    })
   })
 
   test("handles error from fcl.query", async () => {
