@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - master
-      - feature/cross-vm
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
