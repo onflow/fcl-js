@@ -29,5 +29,7 @@
     "@onflow/util-template": "1.2.3",
     "@onflow/util-uid": "1.2.3"
   },
-  "changesets": []
+  "changesets": [
+    "twelve-bears-eat"
+  ]
 }
