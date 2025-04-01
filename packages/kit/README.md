@@ -204,6 +204,43 @@ function QueryExample() {
 export default QueryExample
 ```
 
+### `useFlowMutate`
+
+```tsx
+import * as fcl from "@onflow/fcl";
+import { useFlowMutate } from "@onflow/kit";
+
+const CreatePage: React.FC = () => {
+  const { mutate, isPending, error, data: txId } = useFlowMutate();
+
+  const sendTransaction = () => {
+    mutate({
+      cadence: `transaction() {
+        prepare(acct: &Account) {
+          log(acct.address)
+        }
+      }`,
+      args: (arg, t) => [],
+      proposer: fcl.currentUser,
+      payer: fcl.currentUser,
+      authorizations: [],
+      limit: 100,
+    });
+  };
+
+  return (
+    <div>
+      <button onClick={sendTransaction} disabled={isPending}>
+        Send Transaction
+      </button>
+      {isPending && <p>Sending transaction...</p>}
+      {error && <p>Error: {error.message}</p>}
+      {txId && <p>Transaction ID: {txId}</p>}
+    </div>
+  );
+};
+```
+
 ### `useFlowTransaction`
 
 ```jsx
