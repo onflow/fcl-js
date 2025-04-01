@@ -90,7 +90,7 @@ export {resolveValidators} from "./resolve/resolve-validators.js"
 export {resolveRefBlockId} from "./resolve/resolve-ref-block-id.js"
 export {resolveVoucherIntercept} from "./resolve/resolve-voucher-intercept.js"
 
-export {config, flowMainnet, flowTestnet, flowEmulator} from "@onflow/config"
+export {config} from "@onflow/config"
 
 // Deprecated
 export const params = (params: never) =>
@@ -114,3 +114,5 @@ import * as TestUtils from "./test-utils"
 export {TestUtils}
 
 export {VERSION} from "./VERSION"
+
+export {flowMainnet, flowTestnet, flowEmulator} from "./constants"

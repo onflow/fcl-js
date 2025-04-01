@@ -1,6 +1,5 @@
 ---
 "@onflow/fcl-core": minor
-"@onflow/config": minor
 "@onflow/fcl": minor
 "@onflow/sdk": minor
 ---
