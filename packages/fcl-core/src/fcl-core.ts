@@ -25,8 +25,8 @@ export {getChainId} from "./utils"
 
 export {TestUtils} from "@onflow/sdk"
 
-import {config, flowMainnet, flowTestnet, flowLocal} from "@onflow/config"
-export {config, flowMainnet, flowTestnet, flowLocal}
+import {config} from "@onflow/config"
+export {config}
 
 export {send} from "@onflow/sdk"
 export {decode} from "@onflow/sdk"
@@ -40,6 +40,7 @@ export {template as cdc} from "@onflow/util-template"
 export {createSignableVoucher} from "@onflow/sdk"
 export {voucherIntercept} from "@onflow/sdk"
 export {voucherToTxId} from "@onflow/sdk"
+export {flowMainnet, flowTestnet, flowEmulator} from "@onflow/sdk"
 
 // builders
 export {transaction} from "@onflow/sdk"

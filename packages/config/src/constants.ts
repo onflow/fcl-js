@@ -10,7 +10,7 @@ export const flowTestnet: Record<string, unknown> = {
   "discovery.wallet": "https://fcl-discovery.onflow.org/testnet/authn",
 }
 
-export const flowLocal: Record<string, unknown> = {
+export const flowEmulator: Record<string, unknown> = {
   "flow.network": "local",
   "accessNode.api": "http://127.0.0.1:8888",
   "discovery.wallet": "http://localhost:8701/fcl/authn",

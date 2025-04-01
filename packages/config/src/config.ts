@@ -289,7 +289,7 @@ config.overload = overload
 config.load = load
 
 export {config}
-export {flowMainnet, flowTestnet, flowLocal} from "./constants"
+export {flowMainnet, flowTestnet, flowEmulator} from "./constants"
 
 /**
  * @description Temporarily overloads the config with the given values and calls the callback

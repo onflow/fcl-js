@@ -90,7 +90,7 @@ export {resolveValidators} from "./resolve/resolve-validators.js"
 export {resolveRefBlockId} from "./resolve/resolve-ref-block-id.js"
 export {resolveVoucherIntercept} from "./resolve/resolve-voucher-intercept.js"
 
-export {config, flowMainnet, flowTestnet, flowLocal} from "@onflow/config"
+export {config, flowMainnet, flowTestnet, flowEmulator} from "@onflow/config"
 
 // Deprecated
 export const params = (params: never) =>

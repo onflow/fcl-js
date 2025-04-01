@@ -16,7 +16,7 @@ export {
   config,
   flowMainnet,
   flowTestnet,
-  flowLocal,
+  flowEmulator,
   send,
   decode,
   account,
