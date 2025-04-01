@@ -45,7 +45,7 @@ export {template as cadence} from "@onflow/util-template"
 export {template as cdc} from "@onflow/util-template"
 
 // Helpers
-export {account} from "./account/account.js"
+export {account} from "./account/account"
 export {block} from "./block/block.js"
 export {nodeVersionInfo} from "./node-version-info/node-version-info"
 
@@ -53,6 +53,7 @@ export {nodeVersionInfo} from "./node-version-info/node-version-info"
 export {authorizations, authorization} from "./build/build-authorizations.js"
 export {atBlockHeight} from "./build/build-at-block-height.js"
 export {atBlockId} from "./build/build-at-block-id.js"
+export {atLatestBlock} from "./build/build-at-latest-block.js"
 export {getAccount} from "./build/build-get-account.js"
 export {getEvents} from "./build/build-get-events.js"
 export {getEventsAtBlockHeightRange} from "./build/build-get-events-at-block-height-range.js"

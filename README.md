@@ -152,7 +152,7 @@ const newUser: CurrentUser = {
 }
 ```
 
-For all type definitions available, see [this file](./packages/typedefs/src/index.js)
+For all type definitions available, see [this file](./packages/typedefs/src/index.ts)
 
 ## Next Steps
 
