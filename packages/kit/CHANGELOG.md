@@ -1,6 +1,6 @@
 # @onflow/kit
 
-## 0.0.1-kit.1
+## 0.0.1-kit.0
 
 ### Patch Changes
 
