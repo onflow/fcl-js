@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - feature/kit
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
