@@ -60,8 +60,7 @@ export function events(filterOrType?: EventFilter | string) {
             "Legacy fcl.events fallback only supports string filters (single event type)"
           )
         }
-        const unsubscribe = legacyEvents(filterOrType).subscribe(callback)
-        unsubscribeFnLegacy = unsubscribe
+        unsubscribeFnLegacy = legacyEvents(filterOrType).subscribe(callback)
       }
 
       async function subscribeToEvents() {

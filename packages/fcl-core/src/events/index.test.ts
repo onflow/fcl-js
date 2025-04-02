@@ -2,9 +2,11 @@ import {Subscription} from "@onflow/typedefs"
 import {events} from "."
 import {subscribe, SubscriptionsNotSupportedError} from "@onflow/sdk"
 import {events as legacyEvents} from "./legacy-events"
+import {getChainId} from "../utils"
 
 jest.mock("@onflow/sdk")
 jest.mock("./legacy-events")
+jest.mock("../utils")
 
 describe("events", () => {
   let mockSubscription: jest.Mocked<Subscription>
@@ -22,16 +24,20 @@ describe("events", () => {
 
     jest.mocked(subscribe).mockReturnValue(mockSubscription)
     jest.mocked(legacyEvents).mockReturnValue(mockLegacySubscribeObject)
+    jest.mocked(getChainId).mockResolvedValue("mainnet")
   })
 
   afterEach(() => {
     jest.clearAllMocks()
   })
 
-  test("subscribe should call subscribe with the correct arguments", () => {
+  test("subscribe should call subscribe with the correct arguments", async () => {
     const filter = {eventTypes: ["A"]}
 
     events(filter).subscribe(() => {})
+
+    // Flush the event loop
+    await new Promise(process.nextTick)
 
     expect(subscribe).toHaveBeenCalledWith({
       topic: "events",
@@ -41,8 +47,12 @@ describe("events", () => {
     })
   })
 
-  test("should work with a string", () => {
+  test("should work with a string", async () => {
     events("A").subscribe(() => {})
+
+    // Flush the event loop
+    await new Promise(process.nextTick)
+
     expect(subscribe).toHaveBeenCalledWith({
       topic: "events",
       args: {eventTypes: ["A"]},
@@ -51,8 +61,12 @@ describe("events", () => {
     })
   })
 
-  test("should work with empty args", () => {
+  test("should work with empty args", async () => {
     events().subscribe(() => {})
+
+    // Flush the event loop
+    await new Promise(process.nextTick)
+
     expect(subscribe).toHaveBeenCalledWith({
       topic: "events",
       args: {},
@@ -73,7 +87,9 @@ describe("events", () => {
     })
 
     events(filter).subscribe(callback)
-    await new Promise(resolve => setTimeout(resolve, 0))
+
+    // Flush the event loop
+    await new Promise(process.nextTick)
 
     expect(callback.mock.calls).toEqual([
       [mockEvents[0], null],
@@ -93,7 +109,9 @@ describe("events", () => {
     })
 
     events(filter).subscribe(callback)
-    await new Promise(resolve => setTimeout(resolve, 0))
+
+    // Flush the event loop
+    await new Promise(process.nextTick)
 
     expect(callback.mock.calls).toEqual([[null, mockError]])
   })
@@ -110,7 +128,9 @@ describe("events", () => {
     })
 
     const unsubscribe = events(filter).subscribe(callback)
-    await new Promise(resolve => setTimeout(resolve, 0))
+
+    // Flush the event loop
+    await new Promise(process.nextTick)
 
     // Check that the callback was called
     expect(callback).toHaveBeenCalledTimes(0)
@@ -122,6 +142,10 @@ describe("events", () => {
 
     // Unsubscribe
     unsubscribe()
+
+    // Flush the event loop
+    await new Promise(process.nextTick)
+
     expect(mockSubscription.unsubscribe).toHaveBeenCalledTimes(1)
     expect(mockLegacyUnsubscribe).toHaveBeenCalledTimes(1)
   })
