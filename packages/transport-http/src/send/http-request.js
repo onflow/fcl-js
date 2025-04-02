@@ -1,7 +1,7 @@
 import * as logger from "@onflow/util-logger"
 import fetchTransport from "cross-fetch"
 import {safeParseJSON} from "./utils"
-import {combineURLs} from "./combine-urls"
+import {combineURLs} from "../utils/combine-urls"
 
 const AbortController =
   globalThis.AbortController || require("abort-controller")
