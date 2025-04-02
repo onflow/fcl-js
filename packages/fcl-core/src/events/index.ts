@@ -4,7 +4,7 @@ import {events as legacyEvents} from "./legacy-events"
 import {SubscriptionsNotSupportedError} from "@onflow/sdk"
 import {getChainId} from "../utils"
 
-const FLOW_EMULATOR = "emulator"
+const FLOW_EMULATOR = "local"
 
 /**
  * @description - Subscribe to events

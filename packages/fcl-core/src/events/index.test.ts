@@ -24,7 +24,6 @@ describe("events", () => {
 
     jest.mocked(subscribe).mockReturnValue(mockSubscription)
     jest.mocked(legacyEvents).mockReturnValue(mockLegacySubscribeObject)
-    jest.mocked(getChainId).mockResolvedValue("mainnet")
   })
 
   afterEach(() => {
@@ -37,7 +36,7 @@ describe("events", () => {
     events(filter).subscribe(() => {})
 
     // Flush the event loop
-    await new Promise(process.nextTick)
+    await new Promise(resolve => setTimeout(resolve, 0))
 
     expect(subscribe).toHaveBeenCalledWith({
       topic: "events",
@@ -51,7 +50,7 @@ describe("events", () => {
     events("A").subscribe(() => {})
 
     // Flush the event loop
-    await new Promise(process.nextTick)
+    await new Promise(resolve => setTimeout(resolve, 0))
 
     expect(subscribe).toHaveBeenCalledWith({
       topic: "events",
@@ -65,7 +64,7 @@ describe("events", () => {
     events().subscribe(() => {})
 
     // Flush the event loop
-    await new Promise(process.nextTick)
+    await new Promise(resolve => setTimeout(resolve, 0))
 
     expect(subscribe).toHaveBeenCalledWith({
       topic: "events",
@@ -89,7 +88,7 @@ describe("events", () => {
     events(filter).subscribe(callback)
 
     // Flush the event loop
-    await new Promise(process.nextTick)
+    await new Promise(resolve => setTimeout(resolve, 0))
 
     expect(callback.mock.calls).toEqual([
       [mockEvents[0], null],
@@ -111,7 +110,7 @@ describe("events", () => {
     events(filter).subscribe(callback)
 
     // Flush the event loop
-    await new Promise(process.nextTick)
+    await new Promise(resolve => setTimeout(resolve, 0))
 
     expect(callback.mock.calls).toEqual([[null, mockError]])
   })
@@ -130,7 +129,7 @@ describe("events", () => {
     const unsubscribe = events(filter).subscribe(callback)
 
     // Flush the event loop
-    await new Promise(process.nextTick)
+    await new Promise(resolve => setTimeout(resolve, 0))
 
     // Check that the callback was called
     expect(callback).toHaveBeenCalledTimes(0)
@@ -144,9 +143,24 @@ describe("events", () => {
     unsubscribe()
 
     // Flush the event loop
-    await new Promise(process.nextTick)
+    await new Promise(resolve => setTimeout(resolve, 0))
 
     expect(mockSubscription.unsubscribe).toHaveBeenCalledTimes(1)
     expect(mockLegacyUnsubscribe).toHaveBeenCalledTimes(1)
+  })
+
+  test("emulator should fallback to legacy polling", async () => {
+    const filter = "A"
+    const callback = jest.fn()
+
+    jest.mocked(getChainId).mockResolvedValue("local")
+
+    events(filter).subscribe(callback)
+
+    // Flush the event loop
+    await new Promise(resolve => setTimeout(resolve, 10))
+
+    expect(legacyEvents).toHaveBeenCalledWith(filter)
+    expect(mockLegacySubscribeObject.subscribe).toHaveBeenCalledWith(callback)
   })
 })
