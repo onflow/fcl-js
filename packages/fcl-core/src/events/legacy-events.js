@@ -33,7 +33,7 @@ const HANDLERS = {
         const data = await send([
           getEventsAtBlockHeightRange(ctx.self(), hwm.height + 1, next.height),
         ]).then(decode)
-        for (let d of data) ctx.broadcast(UPDATED, d.data)
+        for (let d of data) ctx.broadcast(UPDATED, d)
       }
       ctx.put(TICK, await scheduleTick(ctx))
     }
