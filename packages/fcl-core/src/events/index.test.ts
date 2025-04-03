@@ -2,9 +2,11 @@ import {Subscription} from "@onflow/typedefs"
 import {events} from "."
 import {subscribe, SubscriptionsNotSupportedError} from "@onflow/sdk"
 import {events as legacyEvents} from "./legacy-events"
+import {getChainId} from "../utils"
 
 jest.mock("@onflow/sdk")
 jest.mock("./legacy-events")
+jest.mock("../utils")
 
 describe("events", () => {
   let mockSubscription: jest.Mocked<Subscription>
@@ -28,10 +30,13 @@ describe("events", () => {
     jest.clearAllMocks()
   })
 
-  test("subscribe should call subscribe with the correct arguments", () => {
+  test("subscribe should call subscribe with the correct arguments", async () => {
     const filter = {eventTypes: ["A"]}
 
     events(filter).subscribe(() => {})
+
+    // Flush the event loop
+    await new Promise(resolve => setTimeout(resolve, 0))
 
     expect(subscribe).toHaveBeenCalledWith({
       topic: "events",
@@ -41,8 +46,12 @@ describe("events", () => {
     })
   })
 
-  test("should work with a string", () => {
+  test("should work with a string", async () => {
     events("A").subscribe(() => {})
+
+    // Flush the event loop
+    await new Promise(resolve => setTimeout(resolve, 0))
+
     expect(subscribe).toHaveBeenCalledWith({
       topic: "events",
       args: {eventTypes: ["A"]},
@@ -51,8 +60,12 @@ describe("events", () => {
     })
   })
 
-  test("should work with empty args", () => {
+  test("should work with empty args", async () => {
     events().subscribe(() => {})
+
+    // Flush the event loop
+    await new Promise(resolve => setTimeout(resolve, 0))
+
     expect(subscribe).toHaveBeenCalledWith({
       topic: "events",
       args: {},
@@ -63,7 +76,8 @@ describe("events", () => {
 
   test("subscribe should pipe the events to the callback", async () => {
     const filter = {eventTypes: ["A"]}
-    const callback = jest.fn()
+    const onData = jest.fn()
+    const onError = jest.fn()
 
     const mockEvents = [{type: "A"}, {type: "B"}] as any[]
 
@@ -72,57 +86,108 @@ describe("events", () => {
       return mockSubscription
     })
 
-    events(filter).subscribe(callback)
+    events(filter).subscribe(onData, onError)
+
+    // Flush the event loop
     await new Promise(resolve => setTimeout(resolve, 0))
 
-    expect(callback.mock.calls).toEqual([
-      [mockEvents[0], null],
-      [mockEvents[1], null],
-    ])
+    expect(onData.mock.calls).toEqual([[{type: "A"}], [{type: "B"}]])
+    expect(onError).not.toHaveBeenCalled()
   })
 
   test("subscribe should pipe the errors to the callback", async () => {
     const filter = {eventTypes: ["A"]}
-    const callback = jest.fn()
+    const onData = jest.fn()
+    const onError = jest.fn()
 
     const mockError = new Error("mock error")
 
-    jest.mocked(subscribe).mockImplementation(({onError}) => {
-      onError(mockError)
+    jest.mocked(subscribe).mockImplementation(({onError: _onError}) => {
+      _onError(mockError)
       return mockSubscription
     })
 
-    events(filter).subscribe(callback)
+    events(filter).subscribe(onData, onError)
+
+    // Flush the event loop
     await new Promise(resolve => setTimeout(resolve, 0))
 
-    expect(callback.mock.calls).toEqual([[null, mockError]])
+    expect(onData).not.toHaveBeenCalled()
+    expect(onError).toHaveBeenCalledTimes(1)
+    expect(onError).toHaveBeenCalledWith(mockError)
   })
 
   test("fallback to legacy polling if subscriptions are not supported", async () => {
     const filter = "A"
-    const callback = jest.fn()
+    const onData = jest.fn()
+    const onError = jest.fn()
 
-    const mockError = new SubscriptionsNotSupportedError()
+    const mockNotSupportedError = new SubscriptionsNotSupportedError()
 
-    jest.mocked(subscribe).mockImplementation(({onError}) => {
-      onError(mockError)
+    jest.mocked(subscribe).mockImplementation(({onError: _onError}) => {
+      _onError(mockNotSupportedError)
       return mockSubscription
     })
 
-    const unsubscribe = events(filter).subscribe(callback)
+    const unsubscribe = events(filter).subscribe(onData, onError)
+
+    // Flush the event loop
     await new Promise(resolve => setTimeout(resolve, 0))
 
-    // Check that the callback was called
-    expect(callback).toHaveBeenCalledTimes(0)
-    expect(subscribe).toHaveBeenCalledTimes(1)
+    // Check that the error did not propagate to the onError callback
+    expect(onData).not.toHaveBeenCalled()
+    expect(onError).not.toHaveBeenCalled()
 
-    // Check that legacy polling was called
+    // Check that the legacy subscribe was called
+    expect(mockLegacySubscribeObject.subscribe).toHaveBeenCalledTimes(1)
+    expect(mockLegacyUnsubscribe).not.toHaveBeenCalled()
+
+    // Check that the legacy events were called with the correct filter
     expect(legacyEvents).toHaveBeenCalledWith(filter)
-    expect(mockLegacySubscribeObject.subscribe).toHaveBeenCalledWith(callback)
+    expect(mockLegacySubscribeObject.subscribe).toHaveBeenCalledWith(
+      expect.any(Function)
+    )
+
+    // Mock the legacy subscribe to call the onData callback
+    const legacyOnData = (
+      mockLegacySubscribeObject.subscribe.mock.calls as any
+    )[0][0] as jest.Mock
+    const mockLegacyEvents = [{type: "A"}, {type: "B"}] as any[]
+    mockLegacyEvents.forEach(event => legacyOnData(event))
+
+    // Flush the event loop
+    await new Promise(resolve => setTimeout(resolve, 0))
+
+    // Check that the onData callback was called with the legacy events
+    expect(onData.mock.calls).toEqual([[{type: "A"}], [{type: "B"}]])
+    expect(onError).not.toHaveBeenCalled()
+    expect(mockLegacyUnsubscribe).not.toHaveBeenCalled()
 
     // Unsubscribe
     unsubscribe()
+
+    // Flush the event loop
+    await new Promise(resolve => setTimeout(resolve, 0))
+
     expect(mockSubscription.unsubscribe).toHaveBeenCalledTimes(1)
     expect(mockLegacyUnsubscribe).toHaveBeenCalledTimes(1)
+  })
+
+  test("emulator should fallback to legacy polling", async () => {
+    const filter = "A"
+    const onData = jest.fn()
+    const onError = jest.fn()
+
+    jest.mocked(getChainId).mockResolvedValue("local")
+
+    events(filter).subscribe(onData, onError)
+
+    // Flush the event loop
+    await new Promise(resolve => setTimeout(resolve, 10))
+
+    expect(legacyEvents).toHaveBeenCalledWith(filter)
+    expect(mockLegacySubscribeObject.subscribe).toHaveBeenCalledWith(
+      expect.any(Function)
+    )
   })
 })
