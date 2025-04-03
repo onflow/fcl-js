@@ -25,8 +25,11 @@ export function events(filterOrType?: EventFilter | string) {
 
   return {
     subscribe: (
-      callback: (events: Event | null, error: Error | null) => void
-    ) => {
+      onData: (event: Event) => void,
+      onError: (error: Error) => void = (error: Error) => {
+        console.error("Unhandled error in event subscription:", error)
+      }
+    ): (() => void) => {
       let unsubscribeFn = () => {}
       let unsubscribeFnLegacy = () => {}
 
@@ -35,8 +38,9 @@ export function events(filterOrType?: EventFilter | string) {
         const {unsubscribe} = subscribe({
           topic: SubscriptionTopic.EVENTS,
           args: filter,
-          onData: data => {
-            callback(data, null)
+          onData: event => {
+            // Emit the event
+            onData(event)
           },
           onError: (error: Error) => {
             // If subscriptions are not supported, fallback to legacy polling, otherwise return the error
@@ -46,7 +50,7 @@ export function events(filterOrType?: EventFilter | string) {
               )
               fallbackLegacyPolling()
             } else {
-              callback(null, error)
+              onError?.(error)
             }
           },
         })
@@ -60,7 +64,15 @@ export function events(filterOrType?: EventFilter | string) {
             "Legacy fcl.events fallback only supports string filters (single event type)"
           )
         }
-        unsubscribeFnLegacy = legacyEvents(filterOrType).subscribe(callback)
+        unsubscribeFnLegacy = legacyEvents(filterOrType).subscribe(
+          (event: Event, error?: Error) => {
+            if (error) {
+              onError?.(error)
+            } else {
+              onData(event)
+            }
+          }
+        )
       }
 
       async function subscribeToEvents() {
@@ -80,7 +92,7 @@ export function events(filterOrType?: EventFilter | string) {
 
       // Subscribe to events
       const initPromise = subscribeToEvents().catch(error => {
-        callback(null, error)
+        onError?.(error)
       })
 
       // Return an unsubscribe function
