@@ -62,6 +62,8 @@ export class SubscriptionManager<Handlers extends SubscriptionHandler<any>[]> {
   private config: DeepRequired<SubscriptionManagerConfig>
   private reconnectAttempts = 0
   private handlers: SubscriptionHandler<any>[]
+  private closing = false
+  private connectPromise: Promise<void> | null = null
 
   constructor(handlers: Handlers, config: SubscriptionManagerConfig) {
     this.config = {
@@ -146,7 +148,9 @@ export class SubscriptionManager<Handlers extends SubscriptionHandler<any>[]> {
 
     // Close the socket if there are no more subscriptions
     if (this.subscriptions.length === 0) {
+      this.closing = true
       this.socket?.close()
+      this.socket = null
       return
     }
 
@@ -158,9 +162,12 @@ export class SubscriptionManager<Handlers extends SubscriptionHandler<any>[]> {
 
   // Lazy connect to the socket when the first subscription is made
   private async connect() {
-    return new Promise<void>((resolve, reject) => {
+    if (this.connectPromise) {
+      return this.connectPromise
+    }
+    this.connectPromise = new Promise<void>((resolve, reject) => {
       // If the socket is already open, do nothing
-      if (this.socket?.readyState === WS_OPEN) {
+      if (this.socket?.readyState === WS_OPEN && !this.closing) {
         resolve()
         return
       }
@@ -173,7 +180,20 @@ export class SubscriptionManager<Handlers extends SubscriptionHandler<any>[]> {
 
         // Error message
         if ("action" in message && message.error) {
-          this.handleSocketError(SocketError.fromMessage(message.error))
+          const sub = this.subscriptions.find(
+            sub => sub.id === message.subscription_id
+          )
+          if (sub) {
+            sub.subscriber.onError(
+              new Error(
+                `Failed to subscribe to topic ${sub.topic}: ${message.error.message}`
+              )
+            )
+            // Remove the subscription
+            this.subscriptions = this.subscriptions.filter(
+              sub => sub.id !== message.subscription_id
+            )
+          }
           return
         }
 
@@ -187,6 +207,12 @@ export class SubscriptionManager<Handlers extends SubscriptionHandler<any>[]> {
         }
       })
       this.socket.addEventListener("close", () => {
+        if (this.closing) {
+          this.closing = false
+          reject(new Error("WebSocket closed"))
+          return
+        }
+
         this.handleSocketError(new Error("WebSocket closed"))
           .then(() => {
             resolve()
@@ -196,20 +222,11 @@ export class SubscriptionManager<Handlers extends SubscriptionHandler<any>[]> {
           })
       })
       this.socket.addEventListener("open", () => {
-        // Restore subscriptions
-        Promise.all(
-          this.subscriptions.map(async sub => {
-            await this.sendSubscribe(sub)
-          })
-        )
-          .then(() => {
-            resolve()
-          })
-          .catch(e => {
-            reject(new Error(`Failed to restore subscriptions: ${e}`))
-          })
+        resolve()
       })
     })
+
+    return this.connectPromise
   }
 
   private async handleSocketError(error: any) {
@@ -250,6 +267,20 @@ export class SubscriptionManager<Handlers extends SubscriptionHandler<any>[]> {
       // Try to reconnect
       this.reconnectAttempts++
       await this.connect()
+
+      // Restore subscriptions
+      await Promise.all(
+        this.subscriptions.map(async sub => {
+          await this.sendSubscribe(sub).catch(e => {
+            sub.subscriber.onError(
+              new Error(`Failed to restore subscription: ${e}`)
+            )
+            // Remove the subscription
+            this.subscriptions = this.subscriptions.filter(s => s.id !== sub.id)
+          })
+        })
+      )
+
       this.reconnectAttempts = 0
     }
   }
