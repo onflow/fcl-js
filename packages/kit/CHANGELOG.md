@@ -1,5 +1,11 @@
 # @onflow/kit
 
+## 0.0.1-kit.2
+
+### Patch Changes
+
+- [#2297](https://github.com/onflow/fcl-js/pull/2297) [`b2a75250acd5cbbae988271373aaa1104086e4d4`](https://github.com/onflow/fcl-js/commit/b2a75250acd5cbbae988271373aaa1104086e4d4) Thanks [@chasefleming](https://github.com/chasefleming)! - Update Kit readme with import fixes
+
 ## 0.0.1-kit.0
 
 ### Patch Changes
