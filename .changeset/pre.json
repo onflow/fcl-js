@@ -29,5 +29,9 @@
     "@onflow/util-template": "1.2.3",
     "@onflow/util-uid": "1.2.3"
   },
-  "changesets": ["orange-boxes-switch", "twelve-bears-eat"]
+  "changesets": [
+    "orange-boxes-switch",
+    "shaggy-parents-build",
+    "twelve-bears-eat"
+  ]
 }
