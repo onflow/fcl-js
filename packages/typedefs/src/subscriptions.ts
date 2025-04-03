@@ -51,9 +51,9 @@ type SubscriptionDataMap = {
 
 type RawSubscriptionDataMap = {
   [SubscriptionTopic.EVENTS]: {
-    event: (Omit<Event, "data"> & {
+    event: Omit<Event, "data"> & {
       payload: string
-    })[]
+    }
   }
   [SubscriptionTopic.BLOCKS]: {
     block: Block
