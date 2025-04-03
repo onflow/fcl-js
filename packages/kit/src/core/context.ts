@@ -1,4 +1,5 @@
 import {createContext} from "react"
+import {FlowNetwork} from "./types"
 
 export type FlowConfig = {
   accessNodeUrl?: string
@@ -9,7 +10,7 @@ export type FlowConfig = {
   discoveryWallet?: string
   discoveryWalletMethod?: string
   fclLimit?: number
-  flowNetwork?: "local" | "testnet" | "mainnet"
+  flowNetwork?: FlowNetwork
   serviceOpenIdScopes?: string[]
   walletconnectProjectId?: string
   walletconnectDisableNotifications?: boolean
