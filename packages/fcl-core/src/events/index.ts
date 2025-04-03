@@ -50,7 +50,7 @@ export function events(filterOrType?: EventFilter | string) {
               )
               fallbackLegacyPolling()
             } else {
-              onError?.(error)
+              onError(error)
             }
           },
         })
@@ -67,7 +67,7 @@ export function events(filterOrType?: EventFilter | string) {
         unsubscribeFnLegacy = legacyEvents(filterOrType).subscribe(
           (event: Event, error?: Error) => {
             if (error) {
-              onError?.(error)
+              onError(error)
             } else {
               onData(event)
             }
@@ -92,7 +92,7 @@ export function events(filterOrType?: EventFilter | string) {
 
       // Subscribe to events
       const initPromise = subscribeToEvents().catch(error => {
-        onError?.(error)
+        onError(error)
       })
 
       // Return an unsubscribe function
