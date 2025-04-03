@@ -1,1 +1,1 @@
-export type FlowNetwork = "local" | "testnet" | "mainnet"
+export type FlowNetwork = "emulator" | "testnet" | "mainnet"
