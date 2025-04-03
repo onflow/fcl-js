@@ -67,11 +67,11 @@ const fcl = require("@onflow/fcl");
 
 - *Setting up FCL*: Quickly configure FCL with built-in defaults. Just select the configuration that matches your target network, and you're ready to go. Available default configurations are: `flowMainnet`, `flowTestnet` and `flowEmulator`.
 
-```typescript
-import {flowTestnet} from "@onflow/fcl"
+```javascript
+import * as fcl from "@onflow/fcl";
 
 fcl.config({
-  ...flowTestnet
+  ...fcl.flowTestnet
 })
 ```
 
@@ -79,11 +79,11 @@ You can view the full definitions in [this file](./packages/sdk/src/constants.ts
 
 - *Additional keys*: You can customize or extend the default configuration by adding additional keys. This is useful for setting app metadata, customizing wallet behavior, or integrating with additional services. Here's how to provide custom app metadata, for example.
 
-```typescript
-import {flowTestnet} from "@onflow/fcl"
+```javascript
+import * as fcl from "@onflow/fcl";
 
 fcl.config({
-  ...flowTestnet,
+  ...fcl.flowTestnet,
   "app.detail.title": "Cryptokitties",
   "app.detail.description": "Cryptokitties is a blockchain game",
   "app.detail.url": "https://cryptokitties.co",
