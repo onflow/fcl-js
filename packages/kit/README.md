@@ -42,28 +42,18 @@ function Root() {
 export default Root
 ```
 
-### Install Everything
+### Importing
 
 ```jsx
-import { useBlock, ConnectButton } from '@onflow/kit'
+import { useFlowConfig } from '@onflow/kit'
 ```
-
-### Install Hooks Only
-
-```jsx
-import { useFlowConfig } from '@onflow/kit/hooks'
-```
-
-### Install Components Only
-
-Coming soon...
 
 ### Hooks
 
 #### `useCurrentFlowUser`
 
 ```jsx
-import { useCurrentFlowUser } from "@onflow/kit/hooks"
+import { useCurrentFlowUser } from "@onflow/kit"
 
 function AuthComponent() {
   const { user, authenticate, unauthenticate } = useCurrentFlowUser()
@@ -112,7 +102,7 @@ const { account, loading, error, refetch } = useFlowAccount("0x1cf0e2f2f715450")
 - **By height:** `{ height: 123 }`
 
 ```jsx
-import { useFlowBlock } from '@onflow/kit/hooks';
+import { useFlowBlock } from '@onflow/kit';
 
 function LatestBlock() {
   const { data: block, isLoading, error } = useFlowBlock();
@@ -131,7 +121,7 @@ function LatestBlock() {
 #### `useFlowConfig`
 
 ```jsx
-import { useFlowConfig } from '@onflow/kit/hooks'
+import { useFlowConfig } from '@onflow/kit'
 
 function MyComponent() {
   const config = useFlowConfig()
@@ -155,7 +145,7 @@ function MyComponent() {
   - `onError` (optional): Callback for handling errors.
 
 ```jsx
-import { useFlowEvents } from '@onflow/kit/hooks';
+import { useFlowEvents } from '@onflow/kit';
 
 function EventListener() {
   useFlowEvents("A.0xDeaDBeef.SomeContract.SomeEvent", {
@@ -177,7 +167,7 @@ function EventListener() {
 
 ```jsx
 import React from "react"
-import { useFlowQuery } from "@onflow/kit/hooks"
+import { useFlowQuery } from "@onflow/kit"
 
 function QueryExample() {
   const { data, isLoading, error, refetch } = useFlowQuery({
