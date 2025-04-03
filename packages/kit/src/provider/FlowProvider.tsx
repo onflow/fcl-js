@@ -87,6 +87,7 @@ export function FlowProvider({
     _queryClient || new QueryClient()
   )
   const [flowConfig, setFlowConfig] = useState<FlowConfig | null>(null)
+  const [isFlowJsonLoaded, setIsFlowJsonLoaded] = useState(false)
 
   useEffect(() => {
     // If a typed config is provided, convert it to FCL config keys and initialize FCL config.
@@ -94,10 +95,19 @@ export function FlowProvider({
       const fclConfig = convertTypedConfig(initialConfig)
       fcl.config(fclConfig)
     }
+
     // Load flow.json if provided.
     if (flowJson) {
-      fcl.config().load({flowJSON: flowJson})
+      fcl
+        .config()
+        .load({flowJSON: flowJson})
+        .then(() => {
+          setIsFlowJsonLoaded(true)
+        })
+    } else {
+      setIsFlowJsonLoaded(true)
     }
+
     // Subscribe to FCL config changes and map them to our typed keys.
     const unsubscribe = fcl.config().subscribe(latest => {
       const newConfig = mapConfig(latest || {})
@@ -115,7 +125,7 @@ export function FlowProvider({
     setQueryClient(_queryClient || new QueryClient())
   }, [_queryClient])
 
-  if (!flowConfig) {
+  if (!flowConfig || !isFlowJsonLoaded) {
     return null
   }
 
