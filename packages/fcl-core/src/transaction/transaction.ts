@@ -21,6 +21,9 @@ import {
 } from "@onflow/sdk"
 import {TransactionError} from "./transaction-error"
 import {transaction as legacyTransaction} from "./legacy-polling"
+import {getChainId} from "../utils"
+
+const FLOW_EMULATOR = "local"
 
 // Map of transaction observables
 // Used for shared global singleton to prevent duplicate subscriptions
@@ -144,30 +147,50 @@ function createObservable(
     statusString: "",
   }
 
+  // Initialize the subscription
+  init().catch(error)
+
+  async function init() {
+    const flowNetwork = await getChainId()
+
+    // As of Flow CLI v2.2.8, WebSocket subscriptions are not supported on the Flow emulator
+    // This conditional will be removed when WebSocket subscriptions are supported in this environment
+    if (flowNetwork === FLOW_EMULATOR) {
+      console.warn(
+        "Events are not supported on the Flow emulator, falling back to legacy polling."
+      )
+      fallbackLegacyPolling()
+    } else {
+      subscribeTransactionStatuses()
+    }
+  }
+
   // Subscribe to transaction status updates
-  sdkSubscribe({
-    topic: SubscriptionTopic.TRANSACTION_STATUSES,
-    args: {transactionId: txId},
-    onData: txStatus => {
-      if (isDiff(value, txStatus)) {
-        value = txStatus
-        next(txStatus)
-      }
-    },
-    onError: (err: Error) => {
-      if (err instanceof SubscriptionsNotSupportedError) {
-        fallbackLegacyPolling()
-      } else {
-        error(err)
-      }
-    },
-  })
+  function subscribeTransactionStatuses() {
+    // Subscribe to transaction status updates
+    sdkSubscribe({
+      topic: SubscriptionTopic.TRANSACTION_STATUSES,
+      args: {transactionId: txId},
+      onData: txStatus => {
+        if (isDiff(value, txStatus)) {
+          value = txStatus
+          next(txStatus)
+        }
+      },
+      onError: (err: Error) => {
+        if (err instanceof SubscriptionsNotSupportedError) {
+          console.warn(
+            "Failed to subscribe to transaction status updates using real-time streaming (are you using the deprecated GRPC transport?), falling back to polling."
+          )
+          fallbackLegacyPolling()
+        } else {
+          error(err)
+        }
+      },
+    })
+  }
 
   function fallbackLegacyPolling() {
-    console.warn(
-      "Failed to subscribe to transaction status updates using real-time streaming (are you using the deprecated GRPC transport?), falling back to polling."
-    )
-
     // Poll for transaction status updates
     legacyTransaction(txId, opts).subscribe(
       (txStatus?: TransactionStatus, err?: Error) => {
