@@ -1,5 +1,11 @@
 # @onflow/kit
 
+## 0.0.1-kit.3
+
+### Patch Changes
+
+- [#2300](https://github.com/onflow/fcl-js/pull/2300) [`d5e97d954f5b15153de437093289797bfc8d6287`](https://github.com/onflow/fcl-js/commit/d5e97d954f5b15153de437093289797bfc8d6287) Thanks [@chasefleming](https://github.com/chasefleming)! - Change local to emulator and add flow.json example to readme
+
 ## 0.0.1-kit.2
 
 ### Patch Changes
