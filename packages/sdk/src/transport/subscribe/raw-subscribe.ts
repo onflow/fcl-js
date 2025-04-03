@@ -14,11 +14,11 @@ export function rawSubscribe<T extends SubscriptionTopic>(
   {topic, args, onData, onError}: RawSubscribeParams<T>,
   opts: {
     node?: string
-    transport?: SdkTransport.Transport
+    transport?: SdkTransport
   } = {}
 ) {
   async function subscribe() {
-    let transport: SdkTransport.Transport
+    let transport: SdkTransport
     let node: string
 
     try {

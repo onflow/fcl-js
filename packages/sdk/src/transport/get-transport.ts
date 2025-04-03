@@ -11,10 +11,10 @@ import {SubscriptionsNotSupportedError} from "./subscribe/errors"
  */
 export async function getTransport(
   override: {
-    send?: SdkTransport.SendFn
-    transport?: SdkTransport.Transport
+    send?: SdkTransport["send"]
+    transport?: SdkTransport
   } = {}
-): Promise<SdkTransport.Transport> {
+): Promise<SdkTransport> {
   invariant(
     override.send == null || override.transport == null,
     `SDK Transport Error: Cannot provide both "transport" and legacy "send" options.`
@@ -23,7 +23,7 @@ export async function getTransport(
   const transportOrSend =
     override.transport ||
     override.send ||
-    (await config().first<SdkTransport.Transport | SdkTransport.SendFn>(
+    (await config().first<SdkTransport | SdkTransport["send"]>(
       ["sdk.transport", "sdk.send"],
       defaultTransport
     ))
@@ -41,9 +41,7 @@ export async function getTransport(
   return transportOrSend
 }
 
-function isTransportObject(
-  transport: any
-): transport is SdkTransport.Transport {
+function isTransportObject(transport: any): transport is SdkTransport {
   return (
     transport.send !== undefined &&
     transport.subscribe !== undefined &&

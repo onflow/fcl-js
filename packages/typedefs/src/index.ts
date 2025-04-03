@@ -254,6 +254,12 @@ export type Event = {
    */
   data: any
 }
+export type AccountStatusEvent = Event & {
+  /**
+   * - The address of the account which the event is associated with.
+   */
+  accountAddress: string
+}
 export type Key = {
   /**
    * - Sequence number of key used by the proposer of this transaction
@@ -503,7 +509,7 @@ export type EventStream = StreamConnection<{
 
 export * from "./interaction"
 export * from "./fvm-errors"
-export * as SdkTransport from "./sdk-transport"
+export {type SdkTransport} from "./transport"
 export {
   type SubscriptionArgs,
   type SubscriptionData,
