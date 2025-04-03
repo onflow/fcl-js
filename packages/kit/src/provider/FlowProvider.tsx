@@ -90,23 +90,25 @@ export function FlowProvider({
   const [isFlowJsonLoaded, setIsFlowJsonLoaded] = useState(false)
 
   useEffect(() => {
-    // If a typed config is provided, convert it to FCL config keys and initialize FCL config.
-    if (Object.keys(initialConfig).length > 0) {
-      const fclConfig = convertTypedConfig(initialConfig)
-      fcl.config(fclConfig)
+    const initializeFCL = async () => {
+      try {
+        if (Object.keys(initialConfig).length > 0) {
+          const fclConfig = convertTypedConfig(initialConfig)
+          if (flowJson) {
+            await fcl.config(fclConfig).load({flowJSON: flowJson})
+          } else {
+            fcl.config(fclConfig)
+          }
+        } else if (flowJson) {
+          await fcl.config().load({flowJSON: flowJson})
+        }
+        setIsFlowJsonLoaded(true)
+      } catch (error) {
+        setIsFlowJsonLoaded(true)
+      }
     }
 
-    // Load flow.json if provided.
-    if (flowJson) {
-      fcl
-        .config()
-        .load({flowJSON: flowJson})
-        .then(() => {
-          setIsFlowJsonLoaded(true)
-        })
-    } else {
-      setIsFlowJsonLoaded(true)
-    }
+    initializeFCL()
 
     // Subscribe to FCL config changes and map them to our typed keys.
     const unsubscribe = fcl.config().subscribe(latest => {
@@ -118,6 +120,7 @@ export function FlowProvider({
         return newConfig
       })
     })
+
     return () => unsubscribe()
   }, [initialConfig, flowJson])
 
