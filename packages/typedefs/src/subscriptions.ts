@@ -1,4 +1,5 @@
 import {
+  AccountStatusEvent,
   Block,
   BlockDigest,
   BlockHeader,
@@ -31,14 +32,12 @@ export type Subscription = {
 }
 
 type SubscriptionArgsMap = {
-  [SubscriptionTopic.BLOCKS]: BlockArgs
-  [SubscriptionTopic.BLOCK_HEADERS]: BlockArgs
-  [SubscriptionTopic.BLOCK_DIGESTS]: BlockArgs
-  [SubscriptionTopic.ACCOUNT_STATUSES]: AccountStatusesArgs
-  [SubscriptionTopic.TRANSACTION_STATUSES]: {
-    transactionId: string
-  }
-  [SubscriptionTopic.EVENTS]: EventFilter
+  [SubscriptionTopic.BLOCKS]: BlockSubscriptionArgs
+  [SubscriptionTopic.BLOCK_HEADERS]: BlockSubscriptionArgs
+  [SubscriptionTopic.BLOCK_DIGESTS]: BlockSubscriptionArgs
+  [SubscriptionTopic.ACCOUNT_STATUSES]: AccountStatusSubscriptionArgs
+  [SubscriptionTopic.TRANSACTION_STATUSES]: TransactionStatusSubscriptionArgs
+  [SubscriptionTopic.EVENTS]: EventSubscriptionArgs
 }
 
 type SubscriptionDataMap = {
@@ -46,9 +45,7 @@ type SubscriptionDataMap = {
   [SubscriptionTopic.BLOCKS]: Block
   [SubscriptionTopic.BLOCK_HEADERS]: BlockHeader
   [SubscriptionTopic.BLOCK_DIGESTS]: BlockHeader
-  [SubscriptionTopic.ACCOUNT_STATUSES]: Omit<Event, "data"> & {
-    accountAddress: string
-  }
+  [SubscriptionTopic.ACCOUNT_STATUSES]: AccountStatusEvent
   [SubscriptionTopic.TRANSACTION_STATUSES]: TransactionStatus
 }
 
@@ -80,12 +77,18 @@ type RawSubscriptionDataMap = {
       statusString: string
       statusCode: 0 | 1
       errorMessage: string
-      events: Array<RawEvent>
+      events: {
+        type: string
+        transactionId: string
+        transactionIndex: number
+        eventIndex: number
+        payload: string
+      }[]
     }
   }
 }
 
-type BlockArgs =
+type BlockSubscriptionArgs =
   | {
       blockStatus: "finalized" | "sealed"
       startBlockId?: string
@@ -95,7 +98,7 @@ type BlockArgs =
       startBlockHeight?: number
     }
 
-type AccountStatusesArgs = {
+type AccountStatusSubscriptionArgs = {
   startBlockId?: string
   startBlockHeight?: number
   eventTypes?: string[]
@@ -103,10 +106,8 @@ type AccountStatusesArgs = {
   accountAddresses?: string[]
 }
 
-type RawEvent = {
-  type: string
+type TransactionStatusSubscriptionArgs = {
   transactionId: string
-  transactionIndex: number
-  eventIndex: number
-  payload: any
 }
+
+type EventSubscriptionArgs = EventFilter

@@ -95,7 +95,7 @@ describe("subscribe", () => {
     const transport = {
       send: jest.fn(),
       subscribe: jest.fn().mockResolvedValue(mockSub),
-    } as jest.Mocked<SdkTransport.Transport>
+    } as jest.Mocked<SdkTransport>
 
     const sub = await subscribe(
       {
