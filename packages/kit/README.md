@@ -18,8 +18,9 @@ Before using any hooks or components (coming soon), wrap your application with t
 
 ```jsx
 import React from "react"
-import { FlowProvider } from "@onflow/kit"
 import App from "./App"
+import { FlowProvider } from "@onflow/kit"
+import flowJSON from "../flow.json"
 
 function Root() {
   return (
@@ -33,6 +34,7 @@ function Root() {
         appDetailUrl: "https://myonchainapp.com",
         // include other typed configuration keys as needed...
       }}
+      flowJson={flowJSON}
     >
       <App />
     </FlowProvider>

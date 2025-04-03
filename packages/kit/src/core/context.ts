@@ -9,7 +9,7 @@ export type FlowConfig = {
   discoveryWallet?: string
   discoveryWalletMethod?: string
   fclLimit?: number
-  flowNetwork?: "local" | "testnet" | "mainnet"
+  flowNetwork?: "emulator" | "testnet" | "mainnet"
   serviceOpenIdScopes?: string[]
   walletconnectProjectId?: string
   walletconnectDisableNotifications?: boolean
