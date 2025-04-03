@@ -78,9 +78,6 @@ export const transactionStatusesHandler = createSubscriptionHandler<{
               payload: JSON.parse(
                 Buffer.from(event.payload, "base64").toString()
               ),
-              blockId: data.transaction_result.block_id,
-              blockHeight: Number(data.transaction_result.block_id),
-              blockTimestamp: "",
             })),
           },
         }

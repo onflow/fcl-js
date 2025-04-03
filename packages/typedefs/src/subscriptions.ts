@@ -77,9 +77,13 @@ type RawSubscriptionDataMap = {
       statusString: string
       statusCode: 0 | 1
       errorMessage: string
-      events: (Omit<Event, "data"> & {
+      events: {
+        type: string
+        transactionId: string
+        transactionIndex: number
+        eventIndex: number
         payload: string
-      })[]
+      }[]
     }
   }
 }
