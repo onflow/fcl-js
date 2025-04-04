@@ -1,5 +1,11 @@
 # @onflow/fcl-ethereum-provider
 
+## 0.0.1-cross-vm.8
+
+### Patch Changes
+
+- [`95f5763cd93c65503bdaa97d65c925fd5ff885f9`](https://github.com/onflow/fcl-js/commit/95f5763cd93c65503bdaa97d65c925fd5ff885f9) Thanks [@jribbink](https://github.com/jribbink)! - Fix deeplinking bug on mobile devices
+
 ## 0.0.1-cross-vm.7
 
 ### Patch Changes
