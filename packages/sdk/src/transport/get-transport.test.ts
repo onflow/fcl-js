@@ -7,7 +7,7 @@ jest.mock("@onflow/transport-http", () => ({
   httpTransport: {
     send: jest.fn(),
     subscribe: jest.fn(),
-  } as jest.Mocked<SdkTransport.Transport>,
+  } as jest.Mocked<SdkTransport>,
 }))
 
 describe("getTransport", () => {
@@ -24,7 +24,7 @@ describe("getTransport", () => {
     const customTransport = {
       send: jest.fn(),
       subscribe: jest.fn(),
-    } as jest.Mocked<SdkTransport.Transport>
+    } as jest.Mocked<SdkTransport>
 
     const transport = await getTransport({transport: customTransport})
     expect(transport).toBe(customTransport)
@@ -58,7 +58,7 @@ describe("getTransport", () => {
     const customTransport = {
       send: jest.fn(),
       subscribe: jest.fn(),
-    } as jest.Mocked<SdkTransport.Transport>
+    } as jest.Mocked<SdkTransport>
 
     const tranpsort = await config().overload(
       {
@@ -111,7 +111,7 @@ describe("getTransport", () => {
     const customTransport = {
       send: jest.fn(),
       subscribe: jest.fn(),
-    } as jest.Mocked<SdkTransport.Transport>
+    } as jest.Mocked<SdkTransport>
 
     const transport = await config().overload(
       {

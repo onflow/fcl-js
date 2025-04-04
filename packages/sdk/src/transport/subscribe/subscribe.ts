@@ -13,7 +13,7 @@ export function subscribe<T extends SubscriptionTopic>(
   {topic, args, onData, onError}: SubscribeParams<T>,
   opts: {
     node?: string
-    transport?: SdkTransport.Transport
+    transport?: SdkTransport
   } = {}
 ): Subscription {
   const sub = rawSubscribe(

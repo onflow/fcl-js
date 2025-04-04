@@ -3,9 +3,11 @@ import {SubscriptionsNotSupportedError} from "@onflow/sdk"
 import {SubscriptionTopic, TransactionExecutionStatus} from "@onflow/typedefs"
 import {transaction} from "./transaction"
 import {transaction as legacyTransaction} from "./legacy-polling"
+import {getChainId} from "../utils"
 
 jest.mock("@onflow/sdk")
 jest.mock("./legacy-polling")
+jest.mock("../utils")
 
 describe("transaction", () => {
   beforeEach(() => {
@@ -22,6 +24,8 @@ describe("transaction", () => {
       onceFinalized: jest.fn(),
       snapshot: jest.fn(),
     })
+
+    jest.mocked(getChainId).mockResolvedValue("mainnet")
   })
 
   test("should throw an error if transactionId is not a 64 byte hash string", () => {
@@ -36,6 +40,9 @@ describe("transaction", () => {
       "1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef"
     const callback = jest.fn()
     const unsubscribe = transaction(txId).subscribe(callback)
+
+    // Flush the event loop
+    await new Promise(resolve => setTimeout(resolve, 0))
 
     // Expect the subscribe method to be called with the correct parameters
     const subscribeParams = jest.mocked(subscribe).mock
@@ -120,6 +127,9 @@ describe("transaction", () => {
     const onError = jest.fn()
     const unsubscribe = transaction(txId).subscribe(onData, onError)
 
+    // Flush the event loop
+    await new Promise(resolve => setTimeout(resolve, 0))
+
     // Expect the subscribe method to be called with the correct parameters
     const subscribeParams = jest.mocked(subscribe).mock
       .calls[0][0] as Parameters<
@@ -143,6 +153,80 @@ describe("transaction", () => {
           blockId: "",
           status: TransactionExecutionStatus.UNKNOWN,
           statusString: "",
+          statusCode: 0,
+          errorMessage: "",
+          events: [],
+        },
+      ],
+    ])
+    expect(onError).not.toHaveBeenCalled()
+
+    expect(legacyTransaction).toHaveBeenCalledWith(txId, {
+      pollRate: 1000,
+      txNotFoundTimeout: 12500,
+    })
+
+    unsubscribe()
+  })
+
+  test("should fall back to legacy polling if the Flow emulator is detected", async () => {
+    jest.mocked(getChainId).mockResolvedValue("local")
+
+    const txId =
+      "3234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef"
+    const onData = jest.fn()
+    const onError = jest.fn()
+    const unsubscribe = transaction(txId).subscribe(onData, onError)
+
+    // Flush the event loop
+    await new Promise(resolve => setTimeout(resolve, 0))
+
+    // Expect legacy polling to be called
+    expect(subscribe).not.toHaveBeenCalled()
+    expect(legacyTransaction).toHaveBeenCalledWith(txId, {
+      pollRate: 1000,
+      txNotFoundTimeout: 12500,
+    })
+
+    // Expect the legacy subscribe method to be called with the correct parameters
+    const legacySubscribe =
+      jest.mocked(legacyTransaction).mock.results[0].value.subscribe
+    expect(legacySubscribe).toHaveBeenCalledTimes(1)
+    expect(legacySubscribe).toHaveBeenCalledWith(expect.any(Function))
+
+    // Get the callback function
+    const legacyCallback = legacySubscribe.mock.calls[0][0]
+
+    // Mock the observable to emit a PENDING status
+    legacyCallback(
+      {
+        blockId: "",
+        status: TransactionExecutionStatus.PENDING,
+        statusString: "PENDING",
+        statusCode: 0,
+        errorMessage: "",
+        events: [],
+      },
+      null
+    )
+
+    // Expect the error to be reported
+    expect(onData.mock.calls).toStrictEqual([
+      [
+        {
+          blockId: "",
+          status: TransactionExecutionStatus.UNKNOWN,
+          statusString: "",
+          statusCode: 0,
+          errorMessage: "",
+          events: [],
+        },
+      ],
+      [
+        {
+          blockId: "",
+          status: TransactionExecutionStatus.PENDING,
+          statusString: "PENDING",
           statusCode: 0,
           errorMessage: "",
           events: [],

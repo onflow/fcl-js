@@ -1,4 +1,10 @@
-import {Interaction} from "../interaction"
+import {Interaction} from "./interaction"
+import {
+  RawSubscriptionData,
+  Subscription,
+  SubscriptionArgs,
+  SubscriptionTopic,
+} from "./subscriptions"
 
 interface InteractionModule {
   isTransaction: (ix: Interaction) => boolean
@@ -82,4 +88,19 @@ interface IOpts extends IOptsCommon {
   ) => void
 }
 
-export type SendFn = (ix: Interaction, context: IContext, opts: IOpts) => void
+type SubscribeFn = <T extends SubscriptionTopic>(
+  params: {
+    topic: T
+    args: SubscriptionArgs<T>
+    onData: (data: RawSubscriptionData<T>) => void
+    onError: (error: Error) => void
+  },
+  opts: {node: string}
+) => Subscription
+
+type SendFn = (ix: Interaction, context: IContext, opts: IOpts) => void
+
+export type SdkTransport = {
+  send: SendFn
+  subscribe: SubscribeFn
+}
