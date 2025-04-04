@@ -77,30 +77,6 @@ function mapConfig(original: Record<string, any>): FlowConfig {
   return mapped
 }
 
-/**
- * Resolves once any `system.contracts.*` key exists in FCL config.
- * This is because flow.json needs to be set before any hooks are usable if addresses are required.
- */
-function waitForSystemContractsViaSubscribe(timeoutMs = 5000): Promise<void> {
-  return new Promise((resolve, reject) => {
-    const timeout = setTimeout(() => {
-      unsubscribe()
-      reject(new Error("Timed out waiting for system.contracts in config"))
-    }, timeoutMs)
-
-    const unsubscribe = fcl.config().subscribe(latest => {
-      if (
-        latest &&
-        Object.keys(latest).some(k => k.startsWith("system.contracts."))
-      ) {
-        clearTimeout(timeout)
-        unsubscribe()
-        resolve()
-      }
-    })
-  })
-}
-
 export function FlowProvider({
   config: initialConfig = {},
   queryClient: _queryClient,
@@ -120,13 +96,11 @@ export function FlowProvider({
           const fclConfig = convertTypedConfig(initialConfig)
           if (flowJson) {
             await fcl.config(fclConfig).load({flowJSON: flowJson})
-            await waitForSystemContractsViaSubscribe()
           } else {
             fcl.config(fclConfig)
           }
         } else if (flowJson) {
           await fcl.config().load({flowJSON: flowJson})
-          await waitForSystemContractsViaSubscribe()
         }
 
         setIsFlowJsonLoaded(true)
