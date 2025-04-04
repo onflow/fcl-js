@@ -79,6 +79,7 @@ function mapConfig(original: Record<string, any>): FlowConfig {
 
 /**
  * Resolves once any `system.contracts.*` key exists in FCL config.
+ * This is because flow.json needs to be set before any hooks are usable if addresses are required.
  */
 function waitForSystemContractsViaSubscribe(timeoutMs = 5000): Promise<void> {
   return new Promise((resolve, reject) => {
