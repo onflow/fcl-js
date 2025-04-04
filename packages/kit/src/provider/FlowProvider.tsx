@@ -29,7 +29,7 @@ const mappings: Array<{fcl: string; typed: keyof FlowConfig}> = [
   },
 ]
 
-// Generate mapping from typed keys to FCL keys.
+// Map typed keys to FCL config keys
 const typedToFcl = mappings.reduce(
   (acc, mapping) => {
     acc[mapping.typed] = mapping.fcl
@@ -38,7 +38,7 @@ const typedToFcl = mappings.reduce(
   {} as Record<keyof FlowConfig, string>
 )
 
-// Generate mapping from FCL keys to typed keys.
+// Map FCL config keys to typed keys
 const fclToTyped = mappings.reduce(
   (acc, mapping) => {
     acc[mapping.fcl] = mapping.typed
@@ -48,7 +48,7 @@ const fclToTyped = mappings.reduce(
 )
 
 /**
- * Converts the strictly typed config to FCL config keys.
+ * Converts typed config into FCL-style config.
  */
 function convertTypedConfig(typedConfig: FlowConfig): Record<string, any> {
   const fclConfig: Record<string, any> = {}
@@ -65,7 +65,7 @@ function convertTypedConfig(typedConfig: FlowConfig): Record<string, any> {
 }
 
 /**
- * Converts the FCL configuration back to our strictly typed config.
+ * Converts FCL-style config into typed config.
  */
 function mapConfig(original: Record<string, any>): FlowConfig {
   const mapped: FlowConfig = {}
@@ -75,6 +75,29 @@ function mapConfig(original: Record<string, any>): FlowConfig {
     }
   }
   return mapped
+}
+
+/**
+ * Resolves once any `system.contracts.*` key exists in FCL config.
+ */
+function waitForSystemContractsViaSubscribe(timeoutMs = 5000): Promise<void> {
+  return new Promise((resolve, reject) => {
+    const timeout = setTimeout(() => {
+      unsubscribe()
+      reject(new Error("Timed out waiting for system.contracts in config"))
+    }, timeoutMs)
+
+    const unsubscribe = fcl.config().subscribe(latest => {
+      if (
+        latest &&
+        Object.keys(latest).some(k => k.startsWith("system.contracts."))
+      ) {
+        clearTimeout(timeout)
+        unsubscribe()
+        resolve()
+      }
+    })
+  })
 }
 
 export function FlowProvider({
@@ -96,12 +119,15 @@ export function FlowProvider({
           const fclConfig = convertTypedConfig(initialConfig)
           if (flowJson) {
             await fcl.config(fclConfig).load({flowJSON: flowJson})
+            await waitForSystemContractsViaSubscribe()
           } else {
             fcl.config(fclConfig)
           }
         } else if (flowJson) {
           await fcl.config().load({flowJSON: flowJson})
+          await waitForSystemContractsViaSubscribe()
         }
+
         setIsFlowJsonLoaded(true)
       } catch (error) {
         setIsFlowJsonLoaded(true)
@@ -110,7 +136,6 @@ export function FlowProvider({
 
     initializeFCL()
 
-    // Subscribe to FCL config changes and map them to our typed keys.
     const unsubscribe = fcl.config().subscribe(latest => {
       const newConfig = mapConfig(latest || {})
       setFlowConfig(prev => {
