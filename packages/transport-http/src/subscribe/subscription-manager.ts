@@ -62,8 +62,8 @@ export class SubscriptionManager<Handlers extends SubscriptionHandler<any>[]> {
   private config: DeepRequired<SubscriptionManagerConfig>
   private reconnectAttempts = 0
   private handlers: SubscriptionHandler<any>[]
-  private closing = false
   private connectPromise: Promise<void> | null = null
+  private closeConnection: (() => void) | null = null
 
   constructor(handlers: Handlers, config: SubscriptionManagerConfig) {
     this.config = {
@@ -148,9 +148,7 @@ export class SubscriptionManager<Handlers extends SubscriptionHandler<any>[]> {
 
     // Close the socket if there are no more subscriptions
     if (this.subscriptions.length === 0) {
-      this.closing = true
-      this.socket?.close()
-      this.socket = null
+      this.closeConnection?.()
       return
     }
 
@@ -167,13 +165,13 @@ export class SubscriptionManager<Handlers extends SubscriptionHandler<any>[]> {
     }
     this.connectPromise = new Promise<void>((resolve, reject) => {
       // If the socket is already open, do nothing
-      if (this.socket?.readyState === WS_OPEN && !this.closing) {
+      if (this.socket?.readyState === WS_OPEN) {
         resolve()
         return
       }
 
       this.socket = new WebSocket(this.config.node)
-      this.socket.addEventListener("message", event => {
+      const onMessage = (event: MessageEvent) => {
         const message = JSON.parse(event.data) as
           | MessageResponse
           | SubscriptionDataMessage
@@ -205,14 +203,8 @@ export class SubscriptionManager<Handlers extends SubscriptionHandler<any>[]> {
             sub.subscriber.onData(message.payload)
           }
         }
-      })
-      this.socket.addEventListener("close", () => {
-        if (this.closing) {
-          this.closing = false
-          reject(new Error("WebSocket closed"))
-          return
-        }
-
+      }
+      const onClose = () => {
         this.handleSocketError(new Error("WebSocket closed"))
           .then(() => {
             resolve()
@@ -220,18 +212,34 @@ export class SubscriptionManager<Handlers extends SubscriptionHandler<any>[]> {
           .catch(e => {
             reject(e)
           })
-      })
-      this.socket.addEventListener("open", () => {
+      }
+      const onOpen = () => {
         resolve()
-      })
+      }
+
+      this.socket.addEventListener("message", onMessage)
+      this.socket.addEventListener("close", onClose)
+      this.socket.addEventListener("open", onOpen)
+
+      this.closeConnection = () => {
+        this.socket?.removeEventListener("message", onMessage)
+        this.socket?.removeEventListener("close", onClose)
+        this.socket?.removeEventListener("open", onOpen)
+
+        this.socket?.close()
+        this.socket = null
+        this.closeConnection = null
+        this.connectPromise = null
+        this.reconnectAttempts = 0
+      }
     })
 
     return this.connectPromise
   }
 
   private async handleSocketError(error: any) {
-    // Clear the socket
-    this.socket = null
+    // Cleanup the connection
+    this.closeConnection?.()
 
     // Validate the number of reconnection attempts
     if (
@@ -324,10 +332,19 @@ export class SubscriptionManager<Handlers extends SubscriptionHandler<any>[]> {
   }
 
   private async request(request: MessageRequest): Promise<MessageResponse> {
-    return new Promise<MessageResponse>((resolve, reject) => {
+    let cleanup = () => {}
+
+    return await new Promise<MessageResponse>((resolve, reject) => {
       if (!this.socket) {
         reject(new Error("WebSocket is not connected"))
         return
+      }
+
+      // Set the cleanup function to remove the event listeners
+      cleanup = () => {
+        this.socket?.removeEventListener("error", onError)
+        this.socket?.removeEventListener("message", onMessage)
+        this.socket?.removeEventListener("close", onClose)
       }
 
       // Bind event listeners
@@ -352,6 +369,8 @@ export class SubscriptionManager<Handlers extends SubscriptionHandler<any>[]> {
           resolve(data)
         }
       }
+    }).finally(() => {
+      cleanup()
     })
   }
 
