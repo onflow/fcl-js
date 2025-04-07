@@ -101,3 +101,5 @@ export {
 export {execStrategy} from "./current-user/exec-service"
 
 export type {StorageProvider} from "./utils/storage"
+
+export {legacyTx} from "./transaction"
