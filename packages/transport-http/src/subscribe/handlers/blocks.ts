@@ -81,14 +81,14 @@ export const blocksHandler = createSubscriptionHandler<{
           block_status: resumeArgs.blockStatus,
         }
 
-        if ("startBlockHeight" in resumeArgs) {
+        if ("startBlockHeight" in resumeArgs && resumeArgs.startBlockHeight) {
           return {
             ...encodedArgs,
             start_block_height: String(resumeArgs.startBlockHeight),
           }
         }
 
-        if ("startBlockId" in resumeArgs) {
+        if ("startBlockId" in resumeArgs && resumeArgs.startBlockId) {
           return {
             ...encodedArgs,
             start_block_id: resumeArgs.startBlockId,
