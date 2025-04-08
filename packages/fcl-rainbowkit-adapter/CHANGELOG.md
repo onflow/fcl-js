@@ -1,5 +1,11 @@
 # @onflow/fcl-ethereum-provider
 
+## 0.0.1-cross-vm.9
+
+### Patch Changes
+
+- [#2315](https://github.com/onflow/fcl-js/pull/2315) [`85c46bb34654df383f31ab15272f133a02627458`](https://github.com/onflow/fcl-js/commit/85c46bb34654df383f31ab15272f133a02627458) Thanks [@jribbink](https://github.com/jribbink)! - Fix bug where `connector.getClient` returned undefined
+
 ## 0.0.1-cross-vm.8
 
 ### Patch Changes
