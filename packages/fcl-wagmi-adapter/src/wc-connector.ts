@@ -50,7 +50,6 @@ import {
   UserRejectedRequestError,
   getAddress,
   numberToHex,
-  // @ts-ignore
 } from "viem"
 
 type WalletConnectConnector = Connector & {

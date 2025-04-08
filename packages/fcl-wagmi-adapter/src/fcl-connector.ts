@@ -10,7 +10,6 @@ import {
   SwitchChainError,
   getAddress,
   numberToHex,
-  // @ts-ignore
 } from "viem"
 import {createProvider} from "@onflow/fcl-ethereum-provider"
 
