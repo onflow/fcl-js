@@ -39,7 +39,6 @@ import {
 } from "@wagmi/core"
 import type {Compute, ExactPartial, Omit} from "@wagmi/core/internal"
 import {WalletConnectEthereumProvider as EthereumProvider} from "@onflow/fcl-ethereum-provider"
-// @ts-ignore
 import {
   type AddEthereumChainParameter,
   type Address,
