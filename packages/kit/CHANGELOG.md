@@ -1,5 +1,11 @@
 # @onflow/kit
 
+## 0.0.1-kit.4
+
+### Patch Changes
+
+- [#2310](https://github.com/onflow/fcl-js/pull/2310) [`d9d395cfe43ad6d8e1b2ee9762218b06f6efa2d2`](https://github.com/onflow/fcl-js/commit/d9d395cfe43ad6d8e1b2ee9762218b06f6efa2d2) Thanks [@chasefleming](https://github.com/chasefleming)! - Fix race condition when flowJson is setting in provider
+
 ## 0.0.1-kit.3
 
 ### Patch Changes
