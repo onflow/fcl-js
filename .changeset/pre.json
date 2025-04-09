@@ -30,6 +30,7 @@
     "@onflow/util-uid": "1.2.3"
   },
   "changesets": [
+    "big-icons-fly",
     "orange-boxes-switch",
     "shaggy-parents-build",
     "three-experts-mate",
