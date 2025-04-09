@@ -1,5 +1,11 @@
 # @onflow/kit
 
+## 0.0.1-kit.5
+
+### Patch Changes
+
+- [#2322](https://github.com/onflow/fcl-js/pull/2322) [`4eb84b65ff9d9cd0e1bf81c4fcadee99ceb1091d`](https://github.com/onflow/fcl-js/commit/4eb84b65ff9d9cd0e1bf81c4fcadee99ceb1091d) Thanks [@chasefleming](https://github.com/chasefleming)! - Simplify readme and link to docs
+
 ## 0.0.1-kit.4
 
 ### Patch Changes
