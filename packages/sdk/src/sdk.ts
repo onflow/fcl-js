@@ -114,3 +114,5 @@ import * as TestUtils from "./test-utils"
 export {TestUtils}
 
 export {VERSION} from "./VERSION"
+
+export {flowMainnet, flowTestnet, flowEmulator} from "./constants"
