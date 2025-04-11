@@ -86,14 +86,14 @@ export const eventsHandler = createSubscriptionHandler<{
           contracts: resumeArgs.contracts,
         }
 
-        if ("startBlockHeight" in resumeArgs) {
+        if ("startBlockHeight" in resumeArgs && resumeArgs.startBlockHeight) {
           return {
             ...encodedArgs,
             start_block_height: resumeArgs.startBlockHeight,
           }
         }
 
-        if ("startBlockId" in resumeArgs) {
+        if ("startBlockId" in resumeArgs && resumeArgs.startBlockId) {
           return {
             ...encodedArgs,
             start_block_id: resumeArgs.startBlockId,
