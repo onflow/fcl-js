@@ -202,6 +202,18 @@ export const decodeResponse = async (response, customDecoders = {}) => {
         }
       })
     )
+  } else if (response.event) {
+    const {payload, ...rest} = response.event
+    return {
+      ...rest,
+      data: await decode(payload, customDecoders),
+    }
+  } else if (response.accountStatusEvent) {
+    const {payload, ...rest} = response.accountStatusEvent
+    return {
+      ...rest,
+      data: await decode(payload, customDecoders),
+    }
   } else if (response.account) {
     return response.account
   } else if (response.block) {
