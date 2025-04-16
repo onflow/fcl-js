@@ -1376,41 +1376,78 @@ describe("decode GetEvents tests", () => {
   })
 })
 
-describe("decode GetTransactionStatus tests", () => {
-  it("decodes a GetEvents response correctly", async () => {
-    const getTransactionStatusResponse = {
-      transactionStatus: {
-        status: 4,
-        statusCode: 1,
-        errorMessage: null,
-        events: [
-          {
-            type: "LilBUBTheMagicalSpaceCat.LandedOnMars",
-            transactionId: "my-fun-and-very-special-txn-id",
-            transactionIndex: 123456,
-            eventIndex: 7891011,
-            payload: {
-              type: "String",
-              value: "Thanks for reviewing these tests!",
-            },
-          },
-        ],
+describe("decode single event tests", () => {
+  it("decodes a single event response correctly", async () => {
+    const eventResponse = {
+      event: {
+        blockHeight: 123,
+        blockId: "abc123",
+        blockTimestamp: new Date(123).toISOString(),
+        eventIndex: 123,
+        transactionId: "abc-123",
+        transactionIndex: 123,
+        type: "MyFunAndCoolEvent",
+        payload: {type: "String", value: "foo"},
       },
     }
 
-    expect(await decodeResponse(getTransactionStatusResponse)).toStrictEqual({
-      status: 4,
-      statusCode: 1,
-      errorMessage: null,
-      events: [
-        {
-          type: "LilBUBTheMagicalSpaceCat.LandedOnMars",
-          transactionId: "my-fun-and-very-special-txn-id",
-          transactionIndex: 123456,
-          eventIndex: 7891011,
-          data: "Thanks for reviewing these tests!",
-        },
-      ],
+    expect(await decodeResponse(eventResponse)).toStrictEqual({
+      blockHeight: 123,
+      blockId: "abc123",
+      blockTimestamp: new Date(123).toISOString(),
+      eventIndex: 123,
+      transactionId: "abc-123",
+      transactionIndex: 123,
+      type: "MyFunAndCoolEvent",
+      data: "foo",
+    })
+  })
+})
+
+describe("decode account status event tests", () => {
+  it("decodes an account status response correctly", async () => {
+    const accountStatusResponse = {
+      accountStatusEvent: {
+        accountAddress: "0x123",
+        blockHeight: 123,
+        blockId: "abc123",
+        blockTimestamp: new Date(123).toISOString(),
+        eventIndex: 123,
+        transactionId: "abc-123",
+        transactionIndex: 123,
+        type: "flow.AccountKeyAdded",
+        payload: {type: "String", value: "foo"},
+      },
+    }
+
+    expect(await decodeResponse(accountStatusResponse)).toStrictEqual({
+      accountAddress: "0x123",
+      blockHeight: 123,
+      blockId: "abc123",
+      blockTimestamp: new Date(123).toISOString(),
+      eventIndex: 123,
+      transactionId: "abc-123",
+      transactionIndex: 123,
+      type: "flow.AccountKeyAdded",
+      data: "foo",
+    })
+  })
+})
+
+describe("decode block digest tests", () => {
+  it("decodes a block digest response correctly", async () => {
+    const blockDigestResponse = {
+      blockDigest: {
+        id: "abc123",
+        height: 123,
+        timestamp: new Date(123).toISOString(),
+      },
+    }
+
+    expect(await decodeResponse(blockDigestResponse)).toStrictEqual({
+      id: "abc123",
+      height: 123,
+      timestamp: new Date(123).toISOString(),
     })
   })
 })
