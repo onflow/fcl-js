@@ -1,9 +1,35 @@
 import * as fcl from "@onflow/fcl"
-import {useMutation, UseMutationResult} from "@tanstack/react-query"
+import {
+  useMutation,
+  UseMutationResult,
+  UseMutationOptions,
+} from "@tanstack/react-query"
 import {useCallback} from "react"
 import {useFlowQueryClient} from "../provider/FlowQueryClient"
 
-export function useFlowMutate(): UseMutationResult<
+/**
+ * Arguments for the useFlowMutate hook.
+ *
+ * - `mutation`: Optional React Query mutation settings
+ *   (e.g. `onSuccess`, `onError`, `retry`, `retryDelay`, etc.).
+ */
+export interface UseFlowMutateArgs {
+  mutation?: Omit<
+    UseMutationOptions<string, Error, Parameters<typeof fcl.mutate>[0]>,
+    "mutationFn"
+  >
+}
+
+/**
+ * useFlowMutate
+ *
+ * Sends a Flow transaction via FCL and returns a React Query mutation.
+ *
+ * @param args.mutation – Optional React Query mutation options
+ */
+export function useFlowMutate({
+  mutation: mutationOptions = {},
+}: UseFlowMutateArgs = {}): UseMutationResult<
   string,
   Error,
   Parameters<typeof fcl.mutate>[0]
@@ -22,6 +48,7 @@ export function useFlowMutate(): UseMutationResult<
     {
       mutationFn,
       retry: false,
+      ...mutationOptions,
     },
     queryClient
   )
