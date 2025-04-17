@@ -1,36 +1,30 @@
 import * as fcl from "@onflow/fcl"
-import {useQuery, UseQueryOptions, UseQueryResult} from "@tanstack/react-query"
+import {useQuery, UseQueryResult, UseQueryOptions} from "@tanstack/react-query"
 import {useCallback} from "react"
 import {useFlowQueryClient} from "../provider/FlowQueryClient"
 
-interface FlowQueryArgs {
+export interface UseFlowQueryArgs {
   cadence: string
   args?: (arg: typeof fcl.arg, t: typeof fcl.t) => unknown[]
-  enabled?: boolean
+  query?: Omit<UseQueryOptions<unknown, Error>, "queryKey" | "queryFn">
 }
-
-export type UseFlowQueryOptions = Omit<
-  UseQueryOptions<unknown, Error>,
-  "queryKey" | "queryFn"
->
 
 /**
  * useFlowQuery
  *
  * Executes a Cadence script and returns the query result.
  *
- * @param {FlowQueryArgs} params
+ * @param params
  *   - cadence: The Cadence script to run
  *   - args: (optional) A function returning script arguments
- *   - enabled: (optional) whether to run the query
- * @param {UseFlowQueryOptions} options
- *   Optional React Query settings (e.g. `staleTime`, `retry`, `select`, etc.)
+ *   - query: (optional) React Query settings (staleTime, retry, enabled, select, etc.)
  * @returns {UseQueryResult<unknown, Error>}
  */
-export function useFlowQuery(
-  {cadence, args, enabled = true}: FlowQueryArgs,
-  options?: UseFlowQueryOptions
-): UseQueryResult<unknown, Error> {
+export function useFlowQuery({
+  cadence,
+  args,
+  query: queryOptions = {},
+}: UseFlowQueryArgs): UseQueryResult<unknown, Error> {
   const queryClient = useFlowQueryClient()
 
   const fetchQuery = useCallback(async () => {
@@ -42,9 +36,9 @@ export function useFlowQuery(
     {
       queryKey: ["flowQuery", cadence, args],
       queryFn: fetchQuery,
-      enabled: enabled,
+      enabled: queryOptions.enabled ?? true,
       initialData: null,
-      ...options,
+      ...queryOptions,
     },
     queryClient
   )
