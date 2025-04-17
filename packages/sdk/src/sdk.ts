@@ -116,3 +116,5 @@ export {TestUtils}
 export {VERSION} from "./VERSION"
 
 export {flowMainnet, flowTestnet, flowEmulator} from "./constants"
+
+export * from "./types"

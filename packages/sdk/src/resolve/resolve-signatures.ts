@@ -1,5 +1,5 @@
 import {isTransaction} from "../interaction/interaction"
-import {Interaction, InteractionAccount} from "@onflow/typedefs"
+import {Interaction, InteractionAccount} from "../types"
 import {sansPrefix} from "@onflow/util-address"
 import {
   Transaction,

@@ -1,5 +1,5 @@
 import {pipe, makeArgument, CadenceArgument} from "../interaction/interaction"
-import {TypeDescriptorInput, TypeDescriptor} from "@onflow/types"
+import {CadenceType} from "../types"
 
 /**
  * @description A utility builder to be used with other builders to pass in arguments with a value and supported type
@@ -16,8 +16,8 @@ export function args(ax: CadenceArgument<any>[]) {
  * @param xform A function to transform the value
  * @returns An argument object
  */
-export function arg<T extends TypeDescriptor<any, any>>(
-  value: TypeDescriptorInput<T>,
+export function arg<T extends CadenceType.TypeDescriptor<any, any>>(
+  value: CadenceType.TypeDescriptorInput<T>,
   xform: T
 ) {
   return {value, xform} as CadenceArgument<T>

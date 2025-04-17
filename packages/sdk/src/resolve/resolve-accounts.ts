@@ -2,7 +2,7 @@ import {withPrefix} from "@onflow/util-address"
 import {invariant} from "@onflow/util-invariant"
 import {log} from "@onflow/util-logger"
 import {isTransaction} from "../interaction/interaction"
-import {Interaction, InteractionAccount} from "@onflow/typedefs"
+import {Interaction, InteractionAccount} from "../types"
 import {createSignableVoucher} from "./voucher"
 import {v4 as uuidv4} from "uuid"
 

@@ -1,4 +1,4 @@
-import {TransactionRole} from "@onflow/typedefs"
+import {TransactionRole} from "../types"
 import {pipe, prepAccount} from "../interaction/interaction"
 
 /**

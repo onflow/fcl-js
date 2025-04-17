@@ -44,7 +44,6 @@
     "@onflow/config": "1.5.1",
     "@onflow/rlp": "1.2.3",
     "@onflow/transport-http": "1.12.0",
-    "@onflow/typedefs": "1.4.1",
     "@onflow/util-actor": "1.3.4",
     "@onflow/util-address": "1.2.3",
     "@onflow/util-invariant": "1.2.4",
