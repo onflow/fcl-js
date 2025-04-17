@@ -1,6 +1,6 @@
 import * as fcl from "@onflow/fcl"
 import {Block} from "@onflow/typedefs"
-import {useQuery, UseQueryResult} from "@tanstack/react-query"
+import {useQuery, UseQueryOptions, UseQueryResult} from "@tanstack/react-query"
 import {useFlowQueryClient} from "../provider/FlowQueryClient"
 import {useCallback} from "react"
 
@@ -34,8 +34,24 @@ type UseBlockParams =
   | BlockById
   | BlockByHeight
 
+export type UseFlowBlockOptions = Omit<
+  UseQueryOptions<Block | null, Error>,
+  "queryKey" | "queryFn"
+>
+
+/**
+ * Fetches a Flow block according to the given params.
+ *
+ * @param params – one of:
+ *   • {}                   – latest block
+ *   • { sealed: true }     – latest sealed block
+ *   • { id: string }       – block by ID
+ *   • { height: number }   – block by height
+ * @param options – optional React Query settings (staleTime, retry, select, etc.)
+ */
 export function useFlowBlock(
-  params: UseBlockParams = {}
+  params: UseBlockParams = {},
+  options?: UseFlowBlockOptions
 ): UseQueryResult<Block | null, Error> {
   const queryClient = useFlowQueryClient()
 
@@ -50,7 +66,7 @@ export function useFlowBlock(
       queryFn: fetchBlock,
       enabled: true,
       initialData: null,
-      retry: false,
+      ...options,
     },
     queryClient
   )
