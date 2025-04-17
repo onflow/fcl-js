@@ -1,7 +1,7 @@
 import React, {useEffect, useState, PropsWithChildren} from "react"
 import * as fcl from "@onflow/fcl"
 import {FlowConfig, FlowConfigContext} from "../core/context"
-import {QueryClient} from "@tanstack/react-query"
+import {DefaultOptions, QueryClient} from "@tanstack/react-query"
 import {FlowQueryClientProvider} from "./FlowQueryClient"
 import {deepEqual} from "../utils/deepEqual"
 
@@ -77,14 +77,24 @@ function mapConfig(original: Record<string, any>): FlowConfig {
   return mapped
 }
 
+const defaultQueryOptions: DefaultOptions = {
+  queries: {
+    retry: false,
+    staleTime: 0,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    refetchIntervalInBackground: false,
+  },
+}
+
 export function FlowProvider({
   config: initialConfig = {},
   queryClient: _queryClient,
   flowJson,
   children,
 }: PropsWithChildren<FlowProviderProps>) {
-  const [queryClient, setQueryClient] = useState(
-    _queryClient || new QueryClient()
+  const [queryClient] = useState<QueryClient>(
+    () => _queryClient ?? new QueryClient({defaultOptions: defaultQueryOptions})
   )
   const [flowConfig, setFlowConfig] = useState<FlowConfig | null>(null)
   const [isFlowJsonLoaded, setIsFlowJsonLoaded] = useState(false)
@@ -123,10 +133,6 @@ export function FlowProvider({
 
     return () => unsubscribe()
   }, [initialConfig, flowJson])
-
-  useEffect(() => {
-    setQueryClient(_queryClient || new QueryClient())
-  }, [_queryClient])
 
   if (!flowConfig || !isFlowJsonLoaded) {
     return null
