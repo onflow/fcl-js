@@ -385,7 +385,7 @@ export const put = (key: string, value: any) => (ix: Interaction) => {
 }
 
 export const update =
-  (key: string, fn = identity) =>
+  <T>(key: string, fn: (v: T | T[], ...args: any[]) => T | T[] = identity) =>
   (ix: Interaction) => {
     ix.assigns[key] = fn(ix.assigns[key], ix)
     return Ok(ix)
