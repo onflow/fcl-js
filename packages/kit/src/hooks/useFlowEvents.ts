@@ -13,15 +13,11 @@ export interface EventFilter {
   }
 }
 
-export interface UseFlowEventsArgs {
-  /** Fully‑qualified event name (e.g. "A.0xDeaDBeef.SomeContract.SomeEvent") or an EventFilter object */
-  event: string | EventFilter
+export interface UseFlowEventsArgs extends EventFilter {
   /** Called for each new event received */
   onEvent: (event: Event) => void
   /** Optional error callback */
   onError?: (error: Error) => void
-  /** Whether to subscribe (default: true) */
-  enabled?: boolean
 }
 
 /**
@@ -30,19 +26,27 @@ export interface UseFlowEventsArgs {
  * Subscribes to a Flow event stream and calls the provided callbacks.
  */
 export function useFlowEvents({
-  event,
+  startBlockId,
+  startHeight,
+  eventTypes,
+  addresses,
+  contracts,
+  opts,
   onEvent,
   onError,
-  enabled = true,
 }: UseFlowEventsArgs) {
   useEffect(() => {
-    if (!enabled) return
-
     let unsubscribe: (() => void) | undefined
 
     try {
-      const filter: EventFilter =
-        typeof event === "string" ? {eventTypes: [event]} : event
+      const filter: EventFilter = {
+        startBlockId,
+        startHeight,
+        eventTypes,
+        addresses,
+        contracts,
+        opts,
+      }
 
       unsubscribe = fcl.events(filter).subscribe((newEvent: Event | null) => {
         if (newEvent) {
@@ -57,5 +61,14 @@ export function useFlowEvents({
     return () => {
       unsubscribe?.()
     }
-  }, [event, onEvent, onError, enabled])
+  }, [
+    startBlockId,
+    startHeight,
+    JSON.stringify(eventTypes),
+    JSON.stringify(addresses),
+    JSON.stringify(contracts),
+    JSON.stringify(opts),
+    onEvent,
+    onError,
+  ])
 }

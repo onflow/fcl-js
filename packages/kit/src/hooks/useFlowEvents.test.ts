@@ -1,7 +1,7 @@
 import {renderHook, act} from "@testing-library/react"
 import * as fcl from "@onflow/fcl"
 import {FlowProvider} from "../provider"
-import {useFlowEvents, UseFlowEventsArgs} from "./useFlowEvents"
+import {useFlowEvents} from "./useFlowEvents"
 import {Event} from "@onflow/typedefs"
 
 jest.mock("@onflow/fcl", () => require("../__mocks__/fcl").default)
@@ -11,7 +11,7 @@ describe("useFlowEvents", () => {
     jest.clearAllMocks()
   })
 
-  test("subscribes to events with event name string and calls onEvent", () => {
+  test("subscribes to events with eventTypes array and calls onEvent", () => {
     const mockEvent: Event = {
       type: "A.0xDeaDBeef.SomeContract.SomeEvent",
       transactionId: "tx-id",
@@ -35,10 +35,10 @@ describe("useFlowEvents", () => {
 
     const onEvent = jest.fn()
 
-    const {unmount} = renderHook<UseFlowEventsArgs>(
+    const {unmount} = renderHook(
       () =>
         useFlowEvents({
-          event: "A.0xDeaDBeef.SomeContract.SomeEvent",
+          eventTypes: ["A.0xDeaDBeef.SomeContract.SomeEvent"],
           onEvent,
         }),
       {wrapper: FlowProvider}
@@ -58,7 +58,7 @@ describe("useFlowEvents", () => {
     expect(mockUnsubscribe).toHaveBeenCalled()
   })
 
-  test("subscribes to events with EventFilter object and calls onEvent", () => {
+  test("subscribes to events with full filter object and calls onEvent", () => {
     const mockEvent: Event = {
       type: "A.0xDeaDBeef.SomeContract.SomeEvent",
       transactionId: "tx-id",
@@ -87,10 +87,10 @@ describe("useFlowEvents", () => {
     }
 
     const onEvent = jest.fn()
-    const {unmount} = renderHook<UseFlowEventsArgs>(
+    const {unmount} = renderHook(
       () =>
         useFlowEvents({
-          event: filter,
+          ...filter,
           onEvent,
         }),
       {wrapper: FlowProvider}
@@ -119,10 +119,10 @@ describe("useFlowEvents", () => {
     const onEvent = jest.fn()
     const onError = jest.fn()
 
-    renderHook<UseFlowEventsArgs>(
+    renderHook(
       () =>
         useFlowEvents({
-          event: "A.0xDeaDBeef.SomeContract.SomeEvent",
+          eventTypes: ["A.0xDeaDBeef.SomeContract.SomeEvent"],
           onEvent,
           onError,
         }),
@@ -166,10 +166,10 @@ describe("useFlowEvents", () => {
     eventsMock.mockReturnValueOnce({subscribe: mockSubscribe} as any)
 
     const onEvent = jest.fn()
-    renderHook<UseFlowEventsArgs>(
+    renderHook(
       () =>
         useFlowEvents({
-          event: "A.0xDeaDBeef.SomeContract.SomeEvent",
+          eventTypes: ["A.0xDeaDBeef.SomeContract.SomeEvent"],
           onEvent,
         }),
       {wrapper: FlowProvider}
