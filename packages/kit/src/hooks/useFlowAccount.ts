@@ -1,36 +1,39 @@
 import * as fcl from "@onflow/fcl"
-import {Account} from "@onflow/typedefs"
-import {useQuery, UseQueryResult} from "@tanstack/react-query"
+import type {Account} from "@onflow/typedefs"
+import {useQuery, UseQueryResult, UseQueryOptions} from "@tanstack/react-query"
 import {useCallback} from "react"
 import {useFlowQueryClient} from "../provider/FlowQueryClient"
 
-/**
- * useFlowAccount hook
- *
- * Fetches the account data from a given address.
- *
- * @param address - The Flow address to fetch the account for (with or without `0x`).
- * @returns {UseQueryResult<Account | null, Error>} The entire useQuery result
- *  (data, isLoading, error, refetch, etc.)
- */
-export function useFlowAccount(
+export interface UseFlowAccountArgs {
+  /** Flow address (with or without `0x`) */
   address?: string
-): UseQueryResult<Account | null, Error> {
+  /** React Query settings (staleTime, retry, enabled, select, etc.) */
+  query?: Omit<UseQueryOptions<Account | null, Error>, "queryKey" | "queryFn">
+}
+
+/**
+ * Fetches Flow account data for a given address.
+ *
+ * @param args.address – Flow address
+ * @param args.query – Optional React Query options
+ */
+export function useFlowAccount({
+  address,
+  query: queryOptions = {},
+}: UseFlowAccountArgs): UseQueryResult<Account | null, Error> {
+  const queryClient = useFlowQueryClient()
+
   const fetchAccount = useCallback(async () => {
     if (!address) return null
-    const acctData = await fcl.account(address)
-    return acctData as Account
+    return (await fcl.account(address)) as Account
   }, [address])
-
-  const queryClient = useFlowQueryClient()
 
   return useQuery<Account | null, Error>(
     {
       queryKey: ["flowAccount", address],
       queryFn: fetchAccount,
-      enabled: Boolean(address),
       initialData: null,
-      retry: false,
+      ...queryOptions,
     },
     queryClient
   )

@@ -1,8 +1,8 @@
 import * as fcl from "@onflow/fcl"
 import {Block} from "@onflow/typedefs"
-import {useQuery, UseQueryResult} from "@tanstack/react-query"
+import {useQuery, UseQueryResult, UseQueryOptions} from "@tanstack/react-query"
 import {useFlowQueryClient} from "../provider/FlowQueryClient"
-import {useCallback} from "react"
+import {useCallback, useMemo} from "react"
 
 interface BlockByLatest {
   sealed?: never
@@ -34,23 +34,43 @@ type UseBlockParams =
   | BlockById
   | BlockByHeight
 
+export interface UseFlowBlockArgs {
+  sealed?: boolean
+  id?: string
+  height?: number
+  query?: Omit<UseQueryOptions<Block | null, Error>, "queryKey" | "queryFn">
+}
+
+/**
+ * Fetches a Flow block according to the given params.
+ *
+ * @param params
+ *   - sealed: boolean (optional) – latest sealed block
+ *   - id: string (optional)     – block by ID
+ *   - height: number (optional) – block by height
+ *   - query: (optional)         – React Query flags (enabled, staleTime, retry, etc.)
+ */
 export function useFlowBlock(
-  params: UseBlockParams = {}
+  params: UseFlowBlockArgs = {}
 ): UseQueryResult<Block | null, Error> {
+  const {sealed, id, height, query: queryOptions = {}} = params
   const queryClient = useFlowQueryClient()
 
+  const domainParams = useMemo<UseBlockParams>(
+    () => ({sealed, id, height}) as UseBlockParams,
+    [sealed, id, height]
+  )
+
   const fetchBlock = useCallback(async () => {
-    const block = await fcl.block(params)
-    return block as Block
-  }, [params])
+    return (await fcl.block(domainParams)) as Block
+  }, [domainParams])
 
   return useQuery<Block | null, Error>(
     {
-      queryKey: ["flowBlock", params],
+      queryKey: ["flowBlock", domainParams],
       queryFn: fetchBlock,
-      enabled: true,
       initialData: null,
-      retry: false,
+      ...queryOptions,
     },
     queryClient
   )

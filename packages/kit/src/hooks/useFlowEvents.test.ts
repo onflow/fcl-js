@@ -11,7 +11,7 @@ describe("useFlowEvents", () => {
     jest.clearAllMocks()
   })
 
-  test("subscribes to events with event name string and calls onEvent", () => {
+  test("subscribes to events with eventTypes array and calls onEvent", () => {
     const mockEvent: Event = {
       type: "A.0xDeaDBeef.SomeContract.SomeEvent",
       transactionId: "tx-id",
@@ -31,11 +31,16 @@ describe("useFlowEvents", () => {
     })
 
     const eventsMock = jest.mocked(fcl.events)
-    eventsMock.mockReturnValueOnce({subscribe: mockSubscribe})
+    eventsMock.mockReturnValueOnce({subscribe: mockSubscribe} as any)
 
     const onEvent = jest.fn()
+
     const {unmount} = renderHook(
-      () => useFlowEvents("A.0xDeaDBeef.SomeContract.SomeEvent", {onEvent}),
+      () =>
+        useFlowEvents({
+          eventTypes: ["A.0xDeaDBeef.SomeContract.SomeEvent"],
+          onEvent,
+        }),
       {wrapper: FlowProvider}
     )
 
@@ -47,14 +52,13 @@ describe("useFlowEvents", () => {
     act(() => {
       eventCallback(mockEvent)
     })
-
     expect(onEvent).toHaveBeenCalledWith(mockEvent)
 
     unmount()
     expect(mockUnsubscribe).toHaveBeenCalled()
   })
 
-  test("subscribes to events with EventFilter object and calls onEvent", () => {
+  test("subscribes to events with full filter object and calls onEvent", () => {
     const mockEvent: Event = {
       type: "A.0xDeaDBeef.SomeContract.SomeEvent",
       transactionId: "tx-id",
@@ -74,7 +78,7 @@ describe("useFlowEvents", () => {
     })
 
     const eventsMock = jest.mocked(fcl.events)
-    eventsMock.mockReturnValueOnce({subscribe: mockSubscribe})
+    eventsMock.mockReturnValueOnce({subscribe: mockSubscribe} as any)
 
     const filter = {
       startHeight: 100,
@@ -83,9 +87,14 @@ describe("useFlowEvents", () => {
     }
 
     const onEvent = jest.fn()
-    const {unmount} = renderHook(() => useFlowEvents(filter, {onEvent}), {
-      wrapper: FlowProvider,
-    })
+    const {unmount} = renderHook(
+      () =>
+        useFlowEvents({
+          ...filter,
+          onEvent,
+        }),
+      {wrapper: FlowProvider}
+    )
 
     expect(fcl.events).toHaveBeenCalledWith(filter)
     expect(mockSubscribe).toHaveBeenCalled()
@@ -93,7 +102,6 @@ describe("useFlowEvents", () => {
     act(() => {
       eventCallback(mockEvent)
     })
-
     expect(onEvent).toHaveBeenCalledWith(mockEvent)
 
     unmount()
@@ -113,7 +121,8 @@ describe("useFlowEvents", () => {
 
     renderHook(
       () =>
-        useFlowEvents("A.0xDeaDBeef.SomeContract.SomeEvent", {
+        useFlowEvents({
+          eventTypes: ["A.0xDeaDBeef.SomeContract.SomeEvent"],
           onEvent,
           onError,
         }),
@@ -154,14 +163,16 @@ describe("useFlowEvents", () => {
     })
 
     const eventsMock = jest.mocked(fcl.events)
-    eventsMock.mockReturnValueOnce({subscribe: mockSubscribe})
+    eventsMock.mockReturnValueOnce({subscribe: mockSubscribe} as any)
 
     const onEvent = jest.fn()
     renderHook(
-      () => useFlowEvents("A.0xDeaDBeef.SomeContract.SomeEvent", {onEvent}),
-      {
-        wrapper: FlowProvider,
-      }
+      () =>
+        useFlowEvents({
+          eventTypes: ["A.0xDeaDBeef.SomeContract.SomeEvent"],
+          onEvent,
+        }),
+      {wrapper: FlowProvider}
     )
 
     act(() => {

@@ -12,7 +12,7 @@ describe("useFlowAccount", () => {
   })
 
   test("does nothing when no address is provided", () => {
-    const {result} = renderHook(() => useFlowAccount(), {
+    const {result} = renderHook(() => useFlowAccount({}), {
       wrapper: FlowProvider,
     })
 
@@ -36,7 +36,7 @@ describe("useFlowAccount", () => {
     let hookResult: any
 
     await act(async () => {
-      const {result} = renderHook(() => useFlowAccount("0x1234"), {
+      const {result} = renderHook(() => useFlowAccount({address: "0x1234"}), {
         wrapper: FlowProvider,
       })
       hookResult = result
@@ -61,7 +61,7 @@ describe("useFlowAccount", () => {
     let hookResult: any
 
     await act(async () => {
-      const {result} = renderHook(() => useFlowAccount("0x5678"), {
+      const {result} = renderHook(() => useFlowAccount({address: "0x5678"}), {
         wrapper: FlowProvider,
       })
       hookResult = result
@@ -94,7 +94,7 @@ describe("useFlowAccount", () => {
 
     let hookResult: any
     await act(async () => {
-      const {result} = renderHook(() => useFlowAccount("0x1234"), {
+      const {result} = renderHook(() => useFlowAccount({address: "0x1234"}), {
         wrapper: FlowProvider,
       })
       hookResult = result

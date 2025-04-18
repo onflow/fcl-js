@@ -26,7 +26,7 @@ describe("useFlowTransaction", () => {
       subscribe: subscribeMock,
     } as unknown as ReturnType<typeof fcl.tx>)
 
-    const {result} = renderHook(() => useFlowTransaction("mockTxId"), {
+    const {result} = renderHook(() => useFlowTransaction({id: "mockTxId"}), {
       wrapper: FlowProvider,
     })
 
@@ -52,7 +52,7 @@ describe("useFlowTransaction", () => {
       subscribe: subscribeMock,
     } as unknown as ReturnType<typeof fcl.tx>)
 
-    const {result} = renderHook(() => useFlowTransaction("mockTxId"), {
+    const {result} = renderHook(() => useFlowTransaction({id: "mockTxId"}), {
       wrapper: FlowProvider,
     })
 

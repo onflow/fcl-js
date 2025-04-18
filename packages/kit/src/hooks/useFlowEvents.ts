@@ -2,7 +2,7 @@ import * as fcl from "@onflow/fcl"
 import {Event} from "@onflow/typedefs"
 import {useEffect} from "react"
 
-interface EventFilter {
+export interface EventFilter {
   startBlockId?: string
   startHeight?: number
   eventTypes?: string[]
@@ -13,38 +13,45 @@ interface EventFilter {
   }
 }
 
-interface UseFlowEventsOptions {
+export interface UseFlowEventsArgs extends EventFilter {
+  /** Called for each new event received */
   onEvent: (event: Event) => void
+  /** Optional error callback */
   onError?: (error: Error) => void
 }
 
 /**
  * useFlowEvents hook
  *
- * Subscribes to a Flow event stream and calls the provided callback for each event received.
- *
- * @param eventNameOrFilter - The fully qualified event name (e.g. "A.0xDeaDBeef.SomeContract.SomeEvent")
- *                           or an EventFilter object to filter events.
- * @param options - Object containing callback functions:
- *    - onEvent: Called for each new event received
- *    - onError: Optional callback for error handling
+ * Subscribes to a Flow event stream and calls the provided callbacks.
  */
-export function useFlowEvents(
-  eventNameOrFilter: string | EventFilter,
-  {onEvent, onError}: UseFlowEventsOptions
-) {
+export function useFlowEvents({
+  startBlockId,
+  startHeight,
+  eventTypes,
+  addresses,
+  contracts,
+  opts,
+  onEvent,
+  onError,
+}: UseFlowEventsArgs) {
   useEffect(() => {
     let unsubscribe: (() => void) | undefined
 
     try {
-      const filter: EventFilter =
-        typeof eventNameOrFilter === "string"
-          ? {eventTypes: [eventNameOrFilter]}
-          : eventNameOrFilter
+      const filter: EventFilter = {
+        startBlockId,
+        startHeight,
+        eventTypes,
+        addresses,
+        contracts,
+        opts,
+      }
 
       unsubscribe = fcl.events(filter).subscribe((newEvent: Event | null) => {
-        if (!newEvent) return
-        onEvent(newEvent)
+        if (newEvent) {
+          onEvent(newEvent)
+        }
       })
     } catch (err) {
       const error = err instanceof Error ? err : new Error(String(err))
@@ -52,9 +59,16 @@ export function useFlowEvents(
     }
 
     return () => {
-      if (unsubscribe) {
-        unsubscribe()
-      }
+      unsubscribe?.()
     }
-  }, [eventNameOrFilter, onEvent, onError])
+  }, [
+    startBlockId,
+    startHeight,
+    JSON.stringify(eventTypes),
+    JSON.stringify(addresses),
+    JSON.stringify(contracts),
+    JSON.stringify(opts),
+    onEvent,
+    onError,
+  ])
 }

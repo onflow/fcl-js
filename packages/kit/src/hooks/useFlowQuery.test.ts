@@ -51,9 +51,12 @@ describe("useFlowQuery", () => {
     const cadenceScript = "access(all) fun main(): Int { return 42 }"
     const queryMock = jest.mocked(fcl.query)
 
-    renderHook(() => useFlowQuery({cadence: cadenceScript, enabled: false}), {
-      wrapper: FlowProvider,
-    })
+    renderHook(
+      () => useFlowQuery({cadence: cadenceScript, query: {enabled: false}}),
+      {
+        wrapper: FlowProvider,
+      }
+    )
 
     // wait a little to ensure fcl.query isn't called
     await waitFor(() => {
