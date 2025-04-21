@@ -4,7 +4,7 @@ import {
   makeTransaction,
 } from "../interaction/interaction"
 import {config} from "@onflow/config"
-import {resolveComputeLimit} from "./resolve-compute-limit.js"
+import {resolveComputeLimit} from "./resolve-compute-limit"
 
 describe("resolveComputeLimit", () => {
   test("transaction compute limit has priority", async () => {

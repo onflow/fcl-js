@@ -4,10 +4,10 @@ import {
   put,
   makeScript,
 } from "../interaction/interaction"
-import {resolveCadence} from "./resolve-cadence.js"
+import {resolveCadence} from "./resolve-cadence"
 import {config} from "@onflow/config"
 
-const idle = () => new Promise(resolve => setTimeout(resolve), 0)
+const idle = () => new Promise(resolve => setTimeout(resolve, 0))
 
 describe("resolveCadence", () => {
   describe("0xHelloWorld-style account identifier syntax", () => {

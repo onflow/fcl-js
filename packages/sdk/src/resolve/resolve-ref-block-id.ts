@@ -7,15 +7,18 @@ import {
 import * as ixModule from "../interaction/interaction"
 import {response} from "../response/response"
 import {config} from "@onflow/config"
-import {decodeResponse} from "../decode/decode.js"
-import {getBlock} from "../build/build-get-block.js"
+import {decodeResponse} from "../decode/decode"
+import {getBlock} from "../build/build-get-block"
 import {invariant} from "@onflow/util-invariant"
 import {Buffer} from "@onflow/rlp"
 import {send as defaultSend} from "@onflow/transport-http"
 
-async function getRefId(opts) {
+async function getRefId(opts?: {[key: string]: any}): Promise<string> {
   const node = await config().get("accessNode.api")
-  const sendFn = await config.first(["sdk.transport", "sdk.send"], defaultSend)
+  const sendFn: any = await config.first(
+    ["sdk.transport", "sdk.send"],
+    defaultSend
+  )
 
   invariant(
     sendFn,
@@ -29,8 +32,8 @@ async function getRefId(opts) {
   return ix.id
 }
 
-export function resolveRefBlockId(opts) {
-  return async ix => {
+export function resolveRefBlockId(opts?: {[key: string]: any}) {
+  return async (ix: any) => {
     if (!isTransaction(ix)) return Ok(ix)
     if (ix.message.refBlock) return Ok(ix)
 

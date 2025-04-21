@@ -349,7 +349,7 @@ const recPipe = async (
  * @returns An interaction object
  */
 function pipe(
-  fns: ((x: Interaction) => Interaction)[]
+  fns: ((x: Interaction) => MaybePromise<Interaction>)[]
 ): (x: Interaction) => Promise<Interaction>
 /**
  * @description Async pipe function to compose interactions
@@ -357,12 +357,15 @@ function pipe(
  */
 function pipe(
   ix: MaybePromise<Interaction>,
-  fns: ((x: Interaction) => Interaction)[]
+  fns: ((x: Interaction) => MaybePromise<Interaction>)[]
 ): Promise<Interaction>
 function pipe(
   ...args:
-    | [((x: Interaction) => Interaction)[]]
-    | [MaybePromise<Interaction>, ((x: Interaction) => Interaction)[]]
+    | [((x: Interaction) => MaybePromise<Interaction>)[]]
+    | [
+        MaybePromise<Interaction>,
+        ((x: Interaction) => MaybePromise<Interaction>)[],
+      ]
 ): Promise<Interaction> | ((x: Interaction) => Promise<Interaction>) {
   const [arg1, arg2] = args
   if (isArray(arg1)) return (d: Interaction) => pipe(d, arg1)

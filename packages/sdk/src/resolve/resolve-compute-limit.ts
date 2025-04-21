@@ -1,10 +1,13 @@
 import {isTransaction} from "../interaction/interaction"
 import {config} from "@onflow/config"
 import * as logger from "@onflow/util-logger"
+import {Interaction} from "../types"
 
 const DEFAULT_COMPUTE_LIMIT = 100
 
-export async function resolveComputeLimit(ix) {
+export async function resolveComputeLimit(
+  ix: Interaction
+): Promise<Interaction> {
   if (isTransaction(ix)) {
     ix.message.computeLimit =
       ix.message.computeLimit || (await config.get("fcl.limit"))

@@ -1,6 +1,9 @@
 import {sansPrefix} from "@onflow/util-address"
+import {Interaction} from "../types"
 
-export async function resolveFinalNormalization(ix) {
+export async function resolveFinalNormalization(
+  ix: Interaction
+): Promise<Interaction> {
   for (let key of Object.keys(ix.accounts)) {
     ix.accounts[key].addr = sansPrefix(ix.accounts[key].addr)
   }

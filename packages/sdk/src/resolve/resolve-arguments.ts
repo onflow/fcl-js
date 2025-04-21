@@ -1,9 +1,18 @@
 import {invariant} from "@onflow/util-invariant"
 import {isTransaction, isScript} from "../interaction/interaction"
+import {Interaction} from "../types"
 
-const isFn = v => typeof v === "function"
+interface Argument {
+  tempId: string
+  value: any
+  xform: any
+  resolveArgument?: () => Promise<Argument>
+  asArgument?: any
+}
 
-function cast(arg) {
+const isFn = (v: any): v is Function => typeof v === "function"
+
+function cast(arg: Argument): any {
   // prettier-ignore
   invariant(typeof arg.xform != null, `No type specified for argument: ${arg.value}`)
 
@@ -14,7 +23,10 @@ function cast(arg) {
   invariant(false, `Invalid Argument`, arg)
 }
 
-async function handleArgResolution(arg, depth = 3) {
+async function handleArgResolution(
+  arg: Argument,
+  depth = 3
+): Promise<Argument> {
   invariant(
     depth > 0,
     `Argument Resolve Recursion Limit Exceeded for Arg: ${arg.tempId}`
@@ -28,10 +40,10 @@ async function handleArgResolution(arg, depth = 3) {
   }
 }
 
-export async function resolveArguments(ix) {
+export async function resolveArguments(ix: Interaction): Promise<Interaction> {
   if (isTransaction(ix) || isScript(ix)) {
     for (let [id, arg] of Object.entries(ix.arguments)) {
-      const res = await handleArgResolution(arg)
+      const res = await handleArgResolution(arg as Argument)
       ix.arguments[id].asArgument = cast(res)
     }
   }

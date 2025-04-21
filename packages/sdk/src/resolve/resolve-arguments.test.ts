@@ -29,7 +29,7 @@ describe("resolveArguments", () => {
       },
     }
 
-    const res = await resolveArguments(ix)
+    const res = await resolveArguments(ix as any)
     expect(res.arguments[argID].asArgument).toEqual(argObj)
   })
 
@@ -56,7 +56,7 @@ describe("resolveArguments", () => {
       },
     }
 
-    const res = await resolveArguments(ix)
+    const res = await resolveArguments(ix as any)
     expect(res.arguments[argID].resolve).not.toHaveBeenCalled()
     expect(res.arguments[argID].resolveArgument).toHaveBeenCalled()
     expect(res.arguments[argID].asArgument).toEqual(argObj)
@@ -92,7 +92,7 @@ describe("resolveArguments", () => {
       },
     }
 
-    const res = await resolveArguments(ix)
+    const res = await resolveArguments(ix as any)
     expect(res.arguments[argID].resolveArgument).toHaveBeenCalled()
     expect(resolveTwo).toHaveBeenCalled()
     expect(res.arguments[argID].asArgument).toEqual(argObj)
@@ -134,6 +134,6 @@ describe("resolveArguments", () => {
       },
     }
 
-    await expect(resolveArguments(ix)).rejects.toThrow()
+    await expect(resolveArguments(ix as any)).rejects.toThrow()
   })
 })
