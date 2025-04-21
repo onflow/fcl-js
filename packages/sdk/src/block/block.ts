@@ -1,10 +1,10 @@
-import {send} from "../send/send.js"
+import {send} from "../send/send"
 import {getBlock} from "../build/build-get-block"
-import {atBlockHeight} from "../build/build-at-block-height.js"
-import {atBlockId} from "../build/build-at-block-id.js"
-import {decodeResponse as decode} from "../decode/decode.js"
+import {atBlockHeight} from "../build/build-at-block-height"
+import {atBlockId} from "../build/build-at-block-id"
+import {decodeResponse as decode} from "../decode/decode"
 import {invariant} from "@onflow/util-invariant"
-import type {Block} from "../types"
+import type {Block, Interaction} from "../types"
 
 /**
  * @description Returns the latest block (optionally sealed or not), by id, or by height
@@ -15,7 +15,7 @@ import type {Block} from "../types"
  * @param opts - Optional parameters
  * @returns A promise that resolves to a block response
  */
-export function block(
+export async function block(
   {
     sealed = false,
     id,
@@ -34,12 +34,33 @@ export function block(
   )
 
   // Get block by ID
-  if (id) return send([getBlock(), atBlockId(id)], opts).then(decode)
+  if (id) {
+    const ix = await send(
+      [
+        getBlock() as unknown as (ix: Interaction) => Interaction,
+        atBlockId(id) as unknown as (ix: Interaction) => Interaction,
+      ],
+      opts
+    )
+    return decode(ix)
+  }
 
   // Get block by height
-  if (height)
-    return send([getBlock(), atBlockHeight(height)], opts).then(decode)
+  if (height) {
+    const ix = await send(
+      [
+        getBlock() as unknown as (ix: Interaction) => Interaction,
+        atBlockHeight(height) as unknown as (ix: Interaction) => Interaction,
+      ],
+      opts
+    )
+    return decode(ix)
+  }
 
   // Get latest block
-  return send([getBlock(sealed)], opts).then(decode)
+  const ix = await send(
+    [getBlock(sealed) as unknown as (ix: Interaction) => Interaction],
+    opts
+  )
+  return decode(ix)
 }

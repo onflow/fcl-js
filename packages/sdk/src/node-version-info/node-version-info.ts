@@ -1,7 +1,7 @@
 import {send} from "../send/send.js"
 import {decodeResponse as decode} from "../decode/decode.js"
 import {getNodeVersionInfo} from "../build/build-get-node-version-info"
-import {NodeVersionInfo} from "../types"
+import {NodeVersionInfo, Interaction} from "../types"
 
 /**
  * @description Returns the version information from to connected node
@@ -10,5 +10,9 @@ import {NodeVersionInfo} from "../types"
 export async function nodeVersionInfo(
   opts: any = {}
 ): Promise<NodeVersionInfo> {
-  return send([getNodeVersionInfo()], opts).then(decode)
+  const ix = await send(
+    [getNodeVersionInfo() as unknown as (ix: Interaction) => Interaction],
+    opts
+  )
+  return decode(ix)
 }

@@ -1,11 +1,11 @@
-import {atBlockHeight} from "../build/build-at-block-height.js"
-import {atBlockId} from "../build/build-at-block-id.js"
-import {atLatestBlock} from "../build/build-at-latest-block.js"
-import {getAccount} from "../build/build-get-account.js"
+import {atBlockHeight} from "../build/build-at-block-height"
+import {atBlockId} from "../build/build-at-block-id"
+import {atLatestBlock} from "../build/build-at-latest-block"
+import {getAccount} from "../build/build-get-account"
 import {invariant} from "@onflow/util-invariant"
-import {decodeResponse as decode} from "../decode/decode.js"
-import {send} from "../send/send.js"
-import type {Account} from "../types"
+import {decodeResponse as decode} from "../decode/decode"
+import {send} from "../send/send"
+import type {Account, Interaction} from "../types"
 
 /**
  * @description Returns the details of an account from their public address
@@ -32,18 +32,38 @@ export async function account(
   )
 
   // Get account by ID
-  if (id)
-    return await send([getAccount(address), atBlockId(id)], opts).then(decode)
+  if (id) {
+    const ix = await send(
+      [
+        getAccount(address) as unknown as (ix: Interaction) => Interaction,
+        atBlockId(id) as unknown as (ix: Interaction) => Interaction,
+      ],
+      opts
+    )
+    return decode(ix)
+  }
 
   // Get account by height
-  if (height)
-    return await send([getAccount(address), atBlockHeight(height)], opts).then(
-      decode
+  if (height) {
+    const ix = await send(
+      [
+        getAccount(address) as unknown as (ix: Interaction) => Interaction,
+        atBlockHeight(height) as unknown as (ix: Interaction) => Interaction,
+      ],
+      opts
     )
+    return decode(ix)
+  }
 
   // Get account by latest block
-  return await send(
-    [getAccount(address), atLatestBlock(isSealed ?? false)],
+  const ix = await send(
+    [
+      getAccount(address) as unknown as (ix: Interaction) => Interaction,
+      atLatestBlock(isSealed ?? false) as unknown as (
+        ix: Interaction
+      ) => Interaction,
+    ],
     opts
-  ).then(decode)
+  )
+  return decode(ix)
 }
