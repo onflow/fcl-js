@@ -1,5 +1,5 @@
 import {initInteraction} from "../interaction/interaction"
-import {proposer} from "./build-proposer.js"
+import {proposer} from "./build-proposer"
 
 describe("Build Proposer", () => {
   test("Build Proposer", async () => {
@@ -7,7 +7,7 @@ describe("Build Proposer", () => {
 
     let ix = await (await proposer(authz))(initInteraction())
 
-    const proposerAccount = ix.accounts[ix.proposer]
+    const proposerAccount = ix.accounts[ix.proposer!]
 
     expect(proposerAccount.addr).toEqual(authz.addr)
     expect(proposerAccount.role).toEqual({

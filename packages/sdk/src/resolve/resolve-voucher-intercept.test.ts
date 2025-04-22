@@ -1,4 +1,5 @@
-import {resolveVoucherIntercept} from "./resolve-voucher-intercept.js"
+import {InteractionResolverKind, InteractionTag} from "@onflow/typedefs"
+import {resolveVoucherIntercept} from "./resolve-voucher-intercept"
 
 test("exports function", () => {
   expect(typeof resolveVoucherIntercept).toBe("function")
@@ -7,13 +8,13 @@ test("exports function", () => {
 test("voucherIntercept is executed", async () => {
   let executed = false
 
-  const checkFunc = async voucher => {
+  const checkFunc = async (voucher: any) => {
     executed = true
     expect(typeof voucher).toBe("object")
   }
 
   const ix = {
-    tag: "TRANSACTION",
+    tag: InteractionTag.TRANSACTION,
     assigns: {
       "ix.voucher-intercept": checkFunc,
     },
@@ -21,15 +22,15 @@ test("voucherIntercept is executed", async () => {
       cadence: "",
       refBlock: "123",
       computeLimit: 156,
-      proposer: null,
-      payer: null,
+      proposer: "",
+      payer: "",
       authorizations: [],
       params: [],
       arguments: [],
     },
     accounts: {
       foo: {
-        kind: "ACCOUNT",
+        kind: InteractionResolverKind.ACCOUNT,
         tempId: "foo",
         addr: "foo",
         keyId: 1,
@@ -38,12 +39,13 @@ test("voucherIntercept is executed", async () => {
         signingFunction: () => ({signature: "123"}),
         resolve: null,
         role: {proposer: false, authorizer: false, payer: true, param: false},
+        authorization: () => {},
       },
     },
     proposer: "foo",
     authorizations: ["foo"],
-    payer: "foo",
-  }
+    payer: ["foo"],
+  } as any
 
   await resolveVoucherIntercept(ix)
 
@@ -53,13 +55,13 @@ test("voucherIntercept is executed", async () => {
 test("voucherIntercept throws error", async () => {
   let executed = false
 
-  const checkFuncThrowError = async voucher => {
+  const checkFuncThrowError = async (voucher: any) => {
     executed = true
     throw new Error("test error")
   }
 
   const ix = {
-    tag: "TRANSACTION",
+    tag: InteractionTag.TRANSACTION,
     assigns: {
       "ix.voucher-intercept": checkFuncThrowError,
     },
@@ -67,15 +69,15 @@ test("voucherIntercept throws error", async () => {
       cadence: "",
       refBlock: "123",
       computeLimit: 156,
-      proposer: null,
-      payer: null,
+      proposer: "",
+      payer: "",
       authorizations: [],
       params: [],
       arguments: [],
     },
     accounts: {
       foo: {
-        kind: "ACCOUNT",
+        kind: InteractionResolverKind.ACCOUNT,
         tempId: "foo",
         addr: "foo",
         keyId: 1,
@@ -84,12 +86,13 @@ test("voucherIntercept throws error", async () => {
         signingFunction: () => ({signature: "123"}),
         resolve: null,
         role: {proposer: false, authorizer: false, payer: true, param: false},
+        authorization: () => {},
       },
     },
     proposer: "foo",
     authorizations: ["foo"],
-    payer: "foo",
-  }
+    payer: ["foo"],
+  } as any
 
   await expect(resolveVoucherIntercept(ix)).rejects.toThrow()
 

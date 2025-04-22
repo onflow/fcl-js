@@ -1,13 +1,13 @@
 import * as root from "./sdk"
-import * as decode from "./decode/decode.js"
+import * as decode from "./decode/decode"
 import * as encode from "./encode/encode"
 import * as interaction from "./interaction/interaction"
-import * as send from "./send/send.js"
+import * as send from "./send/send"
 import * as template from "@onflow/util-template"
 
 const interfaceContract =
-  (label, wat) =>
-  ([template]) => {
+  (label: string, wat: any) =>
+  ([template]: TemplateStringsArray): void => {
     const keys = template.replace(/\s+/g, "|").split("|").filter(Boolean)
 
     describe(label, () => {

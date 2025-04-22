@@ -1,4 +1,4 @@
-import {initInteraction} from "../interaction/interaction"
+import {initInteraction} from "../interaction/interaction.js"
 import {authorizations, authorization} from "./build-authorizations.js"
 
 describe("Build Authorizations", () => {
@@ -9,7 +9,7 @@ describe("Build Authorizations", () => {
       ])
     )(initInteraction())
 
-    const authorizerAccount = ix.accounts[ix.authorizations]
+    const authorizerAccount = ix.accounts[ix.authorizations[0]]
 
     expect(authorizerAccount.addr).toEqual("0xabc123")
     expect(authorizerAccount.role).toEqual({

@@ -1,14 +1,15 @@
-import {resolveSignatures, buildSignable} from "./resolve-signatures"
+import {InteractionResolverKind, InteractionTag} from "@onflow/typedefs"
 import {
-  build,
-  resolve,
-  ref,
-  transaction,
-  proposer,
-  payer,
-  limit,
   authorizations,
+  build,
+  limit,
+  payer,
+  proposer,
+  ref,
+  resolve,
+  transaction as transactionFn,
 } from "../sdk"
+import {buildSignable, resolveSignatures} from "./resolve-signatures"
 
 const signingFunction = jest.fn(() => ({
   addr: "foo",
@@ -17,20 +18,20 @@ const signingFunction = jest.fn(() => ({
 }))
 
 const TRANSACTION = {
-  tag: "TRANSACTION",
+  tag: InteractionTag.TRANSACTION,
   message: {
     cadence: "",
     refBlock: "123",
     computeLimit: 156,
-    proposer: null,
-    payer: null,
+    proposer: "",
+    payer: "",
     authorizations: [],
     params: [],
     arguments: [],
   },
   accounts: {
     foo: {
-      kind: "ACCOUNT",
+      kind: InteractionResolverKind.ACCOUNT,
       tempId: "foo",
       addr: "foo",
       keyId: 1,
@@ -39,12 +40,13 @@ const TRANSACTION = {
       signingFunction: signingFunction,
       resolve: null,
       role: {proposer: false, authorizer: false, payer: true, param: false},
+      authorization: () => {},
     },
   },
   proposer: "foo",
   authorizations: ["foo"],
-  payer: "foo",
-}
+  payer: ["foo"],
+} as any
 
 test("exports function", () => {
   expect(typeof resolveSignatures).toBe("function")
@@ -59,7 +61,7 @@ test("voucher in signable", async () => {
   }
   const ix = await resolve(
     await build([
-      transaction``,
+      transactionFn(""),
       limit(156),
       proposer(authz),
       authorizations([authz]),
@@ -73,7 +75,7 @@ test("voucher in signable", async () => {
     ])
   )
 
-  const signable = buildSignable(ix.accounts[ix.proposer], {}, ix)
+  const signable = buildSignable(ix.accounts[ix.proposer!], {} as any, ix)
 
   expect(signable.voucher).toEqual({
     cadence: "",

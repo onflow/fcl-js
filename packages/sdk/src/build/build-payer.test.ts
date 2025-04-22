@@ -1,5 +1,5 @@
 import {initInteraction} from "../interaction/interaction"
-import {payer} from "./build-payer.js"
+import {payer} from "./build-payer"
 
 describe("Build Payer", () => {
   test("Build Payer", async () => {
@@ -7,7 +7,7 @@ describe("Build Payer", () => {
 
     let ix = await (await payer(authz))(initInteraction())
 
-    const payerAccount = ix.accounts[ix.payer]
+    const payerAccount = ix.accounts[ix.payer[0]]
 
     expect(payerAccount.addr).toEqual(authz.addr)
     expect(payerAccount.role).toEqual({
