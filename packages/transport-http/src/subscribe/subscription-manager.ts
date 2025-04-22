@@ -230,7 +230,6 @@ export class SubscriptionManager<Handlers extends SubscriptionHandler<any>[]> {
         this.socket = null
         this.closeConnection = null
         this.connectPromise = null
-        this.reconnectAttempts = 0
       }
     })
 
@@ -243,7 +242,7 @@ export class SubscriptionManager<Handlers extends SubscriptionHandler<any>[]> {
 
     // Validate the number of reconnection attempts
     if (
-      this.reconnectAttempts >= this.config.reconnectOptions.reconnectAttempts
+      ++this.reconnectAttempts >= this.config.reconnectOptions.reconnectAttempts
     ) {
       logger.log({
         level: logger.LEVELS.error,
@@ -273,7 +272,6 @@ export class SubscriptionManager<Handlers extends SubscriptionHandler<any>[]> {
       await new Promise(resolve => setTimeout(resolve, this.backoffInterval))
 
       // Try to reconnect
-      this.reconnectAttempts++
       await this.connect()
 
       // Restore subscriptions
