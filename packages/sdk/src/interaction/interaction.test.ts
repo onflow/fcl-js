@@ -1,4 +1,4 @@
-import {InteractionAccount, TransactionRole} from "../types"
+import {InteractionAccount, TransactionRole} from "@onflow/typedefs"
 import {resolveAccounts} from "../sdk"
 import {prepAccount, initAccount, initInteraction} from "./interaction"
 

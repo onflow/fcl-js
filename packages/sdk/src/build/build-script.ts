@@ -1,4 +1,4 @@
-import {Interaction} from "../types"
+import {Interaction} from "@onflow/typedefs"
 import {pipe, put, makeScript} from "../interaction/interaction"
 import {template} from "@onflow/util-template"
 

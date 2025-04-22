@@ -1,5 +1,5 @@
 import {get, isFn} from "../interaction/interaction"
-import {Interaction} from "../types"
+import {Interaction} from "@onflow/typedefs"
 import {createSignableVoucher} from "./voucher"
 
 export async function resolveVoucherIntercept(

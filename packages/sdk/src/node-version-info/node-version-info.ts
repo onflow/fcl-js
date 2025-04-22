@@ -1,7 +1,7 @@
 import {send} from "../send/send.js"
 import {decodeResponse as decode} from "../decode/decode.js"
 import {getNodeVersionInfo} from "../build/build-get-node-version-info"
-import {NodeVersionInfo, Interaction} from "../types"
+import {NodeVersionInfo, Interaction} from "@onflow/typedefs"
 
 /**
  * @description Returns the version information from to connected node

@@ -1,5 +1,5 @@
 import {pipe, Ok, makeGetTransactionStatus} from "../interaction/interaction"
-import {Interaction} from "../types"
+import {Interaction} from "@onflow/typedefs"
 
 /**
  * @description - A builder function that returns the status of transaction

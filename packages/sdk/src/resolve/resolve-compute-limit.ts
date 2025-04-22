@@ -1,7 +1,7 @@
 import {isTransaction} from "../interaction/interaction"
 import {config} from "@onflow/config"
 import * as logger from "@onflow/util-logger"
-import {Interaction} from "../types"
+import {Interaction} from "@onflow/typedefs"
 
 const DEFAULT_COMPUTE_LIMIT = 100
 

@@ -1,5 +1,5 @@
 import {sansPrefix} from "@onflow/util-address"
-import {Interaction} from "../types"
+import {Interaction} from "@onflow/typedefs"
 
 export async function resolveFinalNormalization(
   ix: Interaction

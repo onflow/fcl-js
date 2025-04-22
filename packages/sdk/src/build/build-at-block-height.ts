@@ -1,5 +1,5 @@
 import {pipe} from "../interaction/interaction"
-import {Interaction} from "../types"
+import {Interaction} from "@onflow/typedefs"
 import {validator} from "./build-validator"
 
 /**

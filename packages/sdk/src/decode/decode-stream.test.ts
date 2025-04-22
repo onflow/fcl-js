@@ -1,6 +1,6 @@
 import {EventEmitter} from "stream"
 import {decodeStream} from "./decode-stream"
-import {StreamConnection} from "../types"
+import {StreamConnection} from "@onflow/typedefs"
 import * as decodeResponseModule from "./decode"
 
 describe("decode stream", () => {

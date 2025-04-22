@@ -1,4 +1,4 @@
-import {Interaction} from "../types"
+import {Interaction} from "@onflow/typedefs"
 import {pipe, makeGetAccount, Ok} from "../interaction/interaction"
 import {sansPrefix} from "@onflow/util-address"
 

@@ -1,4 +1,4 @@
-import {Interaction} from "../types"
+import {Interaction} from "@onflow/typedefs"
 
 /**
  * @description - A builder function that sets the compute limit for a transaction

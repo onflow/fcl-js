@@ -1,5 +1,5 @@
 import {get, pipe, Ok, Bad} from "../interaction/interaction"
-import {Interaction} from "../types"
+import {Interaction} from "@onflow/typedefs"
 
 export async function resolveValidators(ix: Interaction): Promise<Interaction> {
   const validators = get(ix, "ix.validators", [])

@@ -9,7 +9,7 @@ import {build} from "../build/build"
 import {getBlock} from "../build/build-get-block"
 import {getAccount} from "../build/build-get-account"
 import {decodeResponse as decode} from "../decode/decode"
-import {Interaction} from "../types"
+import {Interaction} from "@onflow/typedefs"
 
 import {resolveCadence} from "./resolve-cadence"
 import {resolveArguments} from "./resolve-arguments"

@@ -5,7 +5,7 @@ import {getAccount} from "../build/build-get-account"
 import {invariant} from "@onflow/util-invariant"
 import {decodeResponse as decode} from "../decode/decode"
 import {send} from "../send/send"
-import type {Account, Interaction} from "../types"
+import type {Account, Interaction} from "@onflow/typedefs"
 
 /**
  * @description Returns the details of an account from their public address

@@ -8,7 +8,7 @@ import {build} from "../build/build"
 import {invariant} from "@onflow/util-invariant"
 import {Buffer} from "@onflow/rlp"
 import {send as defaultSend} from "@onflow/transport-http"
-import {Interaction} from "../types"
+import {Interaction} from "@onflow/typedefs"
 
 interface NodeConfig {
   node: string

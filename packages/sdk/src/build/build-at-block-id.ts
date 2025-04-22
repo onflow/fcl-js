@@ -1,6 +1,6 @@
 import {isGetAccount, pipe, Ok} from "../interaction/interaction"
 import {validator} from "./build-validator"
-import {Interaction} from "../types"
+import {Interaction} from "@onflow/typedefs"
 
 export function atBlockId(
   id: string

@@ -1,5 +1,5 @@
 import {pipe, initInteraction} from "../interaction/interaction"
-import {Interaction} from "../types"
+import {Interaction} from "@onflow/typedefs"
 
 export function build(
   fns: ((x: Interaction) => Interaction | Promise<Interaction>)[] = []

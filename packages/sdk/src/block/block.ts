@@ -4,7 +4,7 @@ import {atBlockHeight} from "../build/build-at-block-height"
 import {atBlockId} from "../build/build-at-block-id"
 import {decodeResponse as decode} from "../decode/decode"
 import {invariant} from "@onflow/util-invariant"
-import type {Block, Interaction} from "../types"
+import type {Block, Interaction} from "@onflow/typedefs"
 
 /**
  * @description Returns the latest block (optionally sealed or not), by id, or by height

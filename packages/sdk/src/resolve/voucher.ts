@@ -1,6 +1,6 @@
 import {withPrefix} from "@onflow/util-address"
 import {Voucher, encodeTxIdFromVoucher} from "../encode/encode"
-import {Interaction} from "../types"
+import {Interaction} from "@onflow/typedefs"
 
 export function findInsideSigners(ix: Interaction) {
   // Inside Signers Are: (authorizers + proposer) - payer

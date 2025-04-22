@@ -1,5 +1,5 @@
 import {makePing} from "../interaction/interaction"
-import {Interaction} from "../types"
+import {Interaction} from "@onflow/typedefs"
 
 /**
  * @description - A builder function that creates a ping interaction

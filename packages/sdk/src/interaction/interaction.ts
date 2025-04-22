@@ -9,14 +9,13 @@ import {
   InteractionResolverKind,
   InteractionStatus,
   InteractionTag,
-  CadenceType,
-} from "../types"
-
+} from "@onflow/typedefs"
+import {TypeDescriptorInput, TypeDescriptor} from "@onflow/types"
 type AcctFn = (acct: InteractionAccount) => InteractionAccount
 type AccountFn = AcctFn & Partial<InteractionAccount>
 
-type CadenceArgument<T extends CadenceType.TypeDescriptor<any, any>> = {
-  value: CadenceType.TypeDescriptorInput<T>
+type CadenceArgument<T extends TypeDescriptor<any, any>> = {
+  value: TypeDescriptorInput<T>
   xform: T
 }
 

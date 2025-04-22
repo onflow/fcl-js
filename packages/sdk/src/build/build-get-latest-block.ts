@@ -1,4 +1,4 @@
-import {Interaction} from "../types"
+import {Interaction} from "@onflow/typedefs"
 import {log} from "@onflow/util-logger"
 import {pipe, Ok, makeGetBlock} from "../interaction/interaction"
 

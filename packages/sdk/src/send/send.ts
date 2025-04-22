@@ -6,7 +6,7 @@ import * as ixModule from "../interaction/interaction"
 import {initInteraction, pipe} from "../interaction/interaction"
 import {resolve as defaultResolve} from "../resolve/resolve.js"
 import {response} from "../response/response"
-import {Interaction} from "../types"
+import {Interaction} from "@onflow/typedefs"
 
 interface SendOptions {
   send?: typeof defaultSend

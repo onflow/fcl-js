@@ -1,4 +1,4 @@
-import {TransactionRole} from "../types"
+import {TransactionRole} from "@onflow/typedefs"
 import {pipe, prepAccount} from "../interaction/interaction"
 
 export function authorizations(ax = []) {

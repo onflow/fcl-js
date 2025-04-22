@@ -1,6 +1,6 @@
 import {invariant} from "@onflow/util-invariant"
 import {isTransaction, isScript} from "../interaction/interaction"
-import {Interaction} from "../types"
+import {Interaction} from "@onflow/typedefs"
 
 interface Argument {
   tempId: string

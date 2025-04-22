@@ -1,4 +1,4 @@
-import {Interaction} from "../types"
+import {Interaction} from "@onflow/typedefs"
 import {pipe, makeGetNetworkParameters, Ok} from "../interaction/interaction"
 
 /**

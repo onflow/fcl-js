@@ -1,5 +1,5 @@
 import EventEmitter from "events"
-import {StreamConnection} from "../types"
+import {StreamConnection} from "@onflow/typedefs"
 
 type DecodeResponseFn = (
   response: Record<string, any>,

@@ -1,6 +1,6 @@
 import {invariant} from "@onflow/util-invariant"
 import {pipe, Ok, makeSubscribeEvents} from "../interaction/interaction"
-import {EventFilter, Interaction} from "../types"
+import {EventFilter, Interaction} from "@onflow/typedefs"
 
 /**
  * Subscribe to events with the given filter & parameters

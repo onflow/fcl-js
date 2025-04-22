@@ -1,4 +1,4 @@
-import {InteractionAccount} from "../types"
+import {InteractionAccount} from "@onflow/typedefs"
 import {withPrefix} from "@onflow/util-address"
 
 export const idof = (acct: InteractionAccount) =>

@@ -1,5 +1,5 @@
 import {Ok, makeGetNodeVerionInfo, pipe} from "../interaction/interaction"
-import {Interaction} from "../types"
+import {Interaction} from "@onflow/typedefs"
 
 /**
  * A builder function for the Get Node Version Info interaction
