@@ -1,10 +1,10 @@
 import {config} from "@onflow/config"
 import {Buffer} from "@onflow/rlp"
 import {send as defaultSend} from "@onflow/transport-http"
-import {invariant} from "../build/build-invariant.js"
+import {invariant} from "../build/build-invariant"
 import * as ixModule from "../interaction/interaction"
 import {initInteraction, pipe} from "../interaction/interaction"
-import {resolve as defaultResolve} from "../resolve/resolve.js"
+import {resolve as defaultResolve} from "../resolve/resolve"
 import {response} from "../response/response"
 import {Interaction} from "@onflow/typedefs"
 

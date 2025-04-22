@@ -1,5 +1,5 @@
-import {send} from "../send/send.js"
-import {decodeResponse as decode} from "../decode/decode.js"
+import {send} from "../send/send"
+import {decodeResponse as decode} from "../decode/decode"
 import {getNodeVersionInfo} from "../build/build-get-node-version-info"
 import {NodeVersionInfo, Interaction} from "@onflow/typedefs"
 

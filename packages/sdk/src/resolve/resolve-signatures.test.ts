@@ -1,15 +1,15 @@
-import {InteractionResolverKind, InteractionTag} from "@onflow/typedefs"
+import {resolveSignatures, buildSignable} from "./resolve-signatures"
 import {
-  authorizations,
   build,
-  limit,
-  payer,
-  proposer,
-  ref,
   resolve,
+  ref,
   transaction as transactionFn,
+  proposer,
+  payer,
+  limit,
+  authorizations,
 } from "../sdk"
-import {buildSignable, resolveSignatures} from "./resolve-signatures"
+import {InteractionResolverKind, InteractionTag} from "@onflow/typedefs"
 
 const signingFunction = jest.fn(() => ({
   addr: "foo",
