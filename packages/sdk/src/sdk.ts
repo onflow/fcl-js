@@ -118,3 +118,6 @@ export {VERSION} from "./VERSION"
 export {flowMainnet, flowTestnet, flowEmulator} from "./constants"
 
 export * from "@onflow/typedefs"
+
+import * as types from "@onflow/types"
+export {types as t}
