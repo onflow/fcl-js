@@ -22,9 +22,10 @@ interface SendOptions {
  */
 export const send = async (
   args:
-    | (((x: Interaction) => Interaction) | false)[]
+    | (((x: Interaction) => Interaction) | false | Function)[]
     | ((x: Interaction) => Interaction)
-    | false,
+    | false
+    | Function,
   opts: SendOptions = {}
 ): Promise<any> => {
   const sendFn = await config.first(
