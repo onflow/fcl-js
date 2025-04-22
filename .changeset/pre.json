@@ -30,10 +30,17 @@
     "@onflow/util-uid": "1.2.3"
   },
   "changesets": [
+    "big-files-promise",
     "big-icons-fly",
+    "chilly-deers-invent",
+    "cuddly-kings-heal",
+    "dull-seahorses-teach",
+    "fluffy-olives-double",
+    "great-sloths-poke",
     "orange-boxes-switch",
     "shaggy-parents-build",
     "three-experts-mate",
-    "twelve-bears-eat"
+    "twelve-bears-eat",
+    "two-brooms-hug"
   ]
 }

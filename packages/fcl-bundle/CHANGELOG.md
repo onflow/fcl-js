@@ -1,5 +1,11 @@
 # @onflow/fcl-bundle
 
+## 1.7.0-kit.0
+
+### Minor Changes
+
+- [#2324](https://github.com/onflow/fcl-js/pull/2324) [`f685bf26624ca8422d01aafaea04a05d5d52e9e7`](https://github.com/onflow/fcl-js/commit/f685bf26624ca8422d01aafaea04a05d5d52e9e7) Thanks [@chasefleming](https://github.com/chasefleming)! - Allow usage of subpath imports
+
 ## 1.6.0
 
 ### Minor Changes
