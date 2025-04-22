@@ -4,22 +4,55 @@ import {
   encodeTransactionEnvelope,
 } from "../encode/encode"
 
-const findPayloadSigners = voucher => {
-  // Payload Signers Are: (authorizers + proposer) - payer
-  let payload = new Set(voucher.authorizers)
-  payload.add(voucher.proposalKey.address)
-  payload.delete(voucher.payer)
-  return Array.from(payload).map(withPrefix)
+interface Sig {
+  address: string
+  keyId: number | string
+  sig: string
 }
 
-const findEnvelopeSigners = voucher => {
+interface PayloadSig {
+  address: string
+  keyId: number | string
+  sig: string
+  [key: string]: any
+}
+
+interface Voucher {
+  authorizers: string[]
+  proposalKey: {
+    address: string
+    keyId?: number | string
+    sequenceNum?: number
+    [key: string]: any
+  }
+  payer: string
+  cadence: string
+  refBlock: string
+  computeLimit: number
+  arguments: any[]
+  payloadSigs: PayloadSig[]
+}
+
+interface Signable {
+  voucher: Voucher
+}
+
+const findPayloadSigners = (voucher: Voucher): string[] => {
+  // Payload Signers Are: (authorizers + proposer) - payer
+  const payload: Set<string> = new Set(voucher.authorizers)
+  payload.add(voucher.proposalKey.address)
+  payload.delete(voucher.payer)
+  return Array.from(payload).map(addr => withPrefix(addr))
+}
+
+const findEnvelopeSigners = (voucher: Voucher): string[] => {
   // Envelope Signers Are: (payer)
-  let envelope = new Set([voucher.payer])
-  return Array.from(envelope).map(withPrefix)
+  const envelope: Set<string> = new Set([voucher.payer])
+  return Array.from(envelope).map(addr => withPrefix(addr))
 }
 
 export class UnableToDetermineMessageEncodingTypeForSignerAddress extends Error {
-  constructor(signerAddress) {
+  constructor(signerAddress: string) {
     const msg = `
         Encode Message From Signable Error: Unable to determine message encoding for signer addresss: ${signerAddress}. 
         Please ensure the address: ${signerAddress} is intended to sign the given transaction as specified by the transaction signable.
@@ -29,7 +62,10 @@ export class UnableToDetermineMessageEncodingTypeForSignerAddress extends Error 
   }
 }
 
-export const encodeMessageFromSignable = (signable, signerAddress) => {
+export const encodeMessageFromSignable = (
+  signable: Signable,
+  signerAddress: string
+): string => {
   let payloadSigners = findPayloadSigners(signable.voucher)
   let envelopeSigners = findEnvelopeSigners(signable.voucher)
 
@@ -42,7 +78,7 @@ export const encodeMessageFromSignable = (signable, signerAddress) => {
     )
   }
 
-  const message = {
+  const message: any = {
     cadence: signable.voucher.cadence,
     refBlock: signable.voucher.refBlock,
     computeLimit: signable.voucher.computeLimit,

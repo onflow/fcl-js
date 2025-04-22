@@ -1,4 +1,4 @@
-import {validateSignableTransaction} from "./"
+import {validateSignableTransaction} from "."
 import {
   encodeTransactionPayload as encodeInsideMessage,
   encodeTransactionEnvelope as encodeOutsideMessage,
