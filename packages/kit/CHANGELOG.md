@@ -1,16 +1,5 @@
 # @onflow/kit
 
-## 1.0.0-kit.6
-
-### Patch Changes
-
-- [#2334](https://github.com/onflow/fcl-js/pull/2334) [`6674e8fa0f7bbdebc678d7556775c697467b3318`](https://github.com/onflow/fcl-js/commit/6674e8fa0f7bbdebc678d7556775c697467b3318) Thanks [@chasefleming](https://github.com/chasefleming)! - Expose query layer options to hooks
-
-- [#2324](https://github.com/onflow/fcl-js/pull/2324) [`f685bf26624ca8422d01aafaea04a05d5d52e9e7`](https://github.com/onflow/fcl-js/commit/f685bf26624ca8422d01aafaea04a05d5d52e9e7) Thanks [@chasefleming](https://github.com/chasefleming)! - Update kit with master branch
-
-- Updated dependencies [[`f685bf26624ca8422d01aafaea04a05d5d52e9e7`](https://github.com/onflow/fcl-js/commit/f685bf26624ca8422d01aafaea04a05d5d52e9e7)]:
-  - @onflow/fcl@1.16.0-kit.0
-
 ## 0.0.1-kit.5
 
 ### Patch Changes
