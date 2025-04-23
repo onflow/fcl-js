@@ -80,7 +80,6 @@ export function useFlowRandom({
 
   return {
     ...result,
-    /** The block height used to generate this random value */
     blockHeight: height,
   }
 }
