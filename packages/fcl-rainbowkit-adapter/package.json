@@ -14,7 +14,7 @@
   },
   "devDependencies": {
     "@babel/preset-typescript": "^7.25.7",
-    "@onflow/fcl-bundle": "1.6.0",
+    "@onflow/fcl-bundle": "1.7.0-kit.0",
     "@onflow/typedefs": "^1.4.0",
     "@types/jest": "^29.5.13",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
@@ -50,7 +50,7 @@
     "wagmi": "^2.14.11"
   },
   "peerDependencies": {
-    "@onflow/fcl": "1.15.0",
+    "@onflow/fcl": "1.16.0-kit.0",
     "@rainbow-me/rainbowkit": "^2.2.3"
   }
 }
