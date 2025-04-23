@@ -14,7 +14,7 @@
   },
   "devDependencies": {
     "@babel/preset-typescript": "^7.25.7",
-    "@onflow/fcl-bundle": "1.7.0-kit.0",
+    "@onflow/fcl-bundle": "1.6.0",
     "@types/estree": "^1.0.6",
     "@types/jest": "^29.5.13",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
@@ -41,8 +41,6 @@
     "@babel/runtime": "^7.25.7",
     "@onflow/util-actor": "1.3.4",
     "@onflow/util-invariant": "1.2.4",
-    "@onflow/util-logger": "1.3.3",
-    "eslint": "^8.57.1",
-    "eslint-plugin-jsdoc": "^46.10.1"
+    "@onflow/util-logger": "1.3.3"
   }
 }

@@ -1,6 +1,6 @@
 {
   "name": "@onflow/sdk",
-  "version": "1.8.0-kit.0",
+  "version": "1.7.0",
   "description": "Flow SDK",
   "license": "Apache-2.0",
   "author": "Flow Foundation",
@@ -18,7 +18,7 @@
     }
   },
   "devDependencies": {
-    "@onflow/fcl-bundle": "1.7.0-kit.0",
+    "@onflow/fcl-bundle": "1.6.0",
     "@types/uuid": "^9.0.8",
     "eslint": "^8.57.1",
     "eslint-plugin-jsdoc": "^46.10.1",
