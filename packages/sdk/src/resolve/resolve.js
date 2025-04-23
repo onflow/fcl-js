@@ -18,7 +18,6 @@ import {resolveValidators} from "./resolve-validators.js"
 import {resolveFinalNormalization} from "./resolve-final-normalization.js"
 import {resolveVoucherIntercept} from "./resolve-voucher-intercept.js"
 import {resolveComputeLimit} from "./resolve-compute-limit.js"
-import {resolveIsSealed} from "./resolve-is-sealed"
 
 const noop = v => v
 const debug =
@@ -50,7 +49,6 @@ const debug =
   }
 
 export const resolve = pipe([
-  resolveIsSealed,
   resolveCadence,
   debug("cadence", (ix, log) => log(ix.message.cadence)),
   resolveComputeLimit,

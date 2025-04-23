@@ -50,7 +50,7 @@ export {template as cadence} from "@onflow/util-template"
 export {template as cdc} from "@onflow/util-template"
 
 // Helpers
-export {account} from "./account/account.js"
+export {account} from "./account/account"
 export {block} from "./block/block.js"
 export {nodeVersionInfo} from "./node-version-info/node-version-info"
 
@@ -119,3 +119,5 @@ import * as TestUtils from "./test-utils"
 export {TestUtils}
 
 export {VERSION} from "./VERSION"
+
+export {flowMainnet, flowTestnet, flowEmulator} from "./constants"

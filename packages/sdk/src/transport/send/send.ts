@@ -14,7 +14,7 @@ import {getTransport} from "../get-transport"
  * @returns - A promise that resolves to a response
  */
 export const send = async (
-  args: Function | Function[] = [],
+  args: (Function | false) | (Function | false)[] = [],
   opts: any = {}
 ): Promise<any> => {
   const transport = await getTransport(opts)

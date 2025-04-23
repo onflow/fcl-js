@@ -40,6 +40,7 @@ export {template as cdc} from "@onflow/util-template"
 export {createSignableVoucher} from "@onflow/sdk"
 export {voucherIntercept} from "@onflow/sdk"
 export {voucherToTxId} from "@onflow/sdk"
+export {flowMainnet, flowTestnet, flowEmulator} from "@onflow/sdk"
 
 // builders
 export {transaction} from "@onflow/sdk"

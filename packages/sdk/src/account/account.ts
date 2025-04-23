@@ -5,22 +5,27 @@ import {getAccount} from "../build/build-get-account.js"
 import {invariant} from "@onflow/util-invariant"
 import {decodeResponse as decode} from "../decode/decode.js"
 import {send} from "../transport"
+import type {Account} from "@onflow/typedefs"
 
 /**
- * @typedef {import("@onflow/typedefs").Account} Account
+ * @description Returns the details of an account from their public address
+ * @param address - Address of the account
+ * @param queryOptions - Query parameters
+ * @param queryOptions.height - Block height to query
+ * @param queryOptions.id - Block ID to query
+ * @param queryOptions.isSealed - Block finality
+ * @param opts - Optional parameters
+ * @returns A promise that resolves to an account response
  */
-
-/**
- * @description  Returns the details of an account from their public address
- * @param {string} address - Address of the account
- * @param {object} [queryOptions] - Query parameters
- * @param {number} [queryOptions.height] - Block height to query
- * @param {string} [queryOptions.id] - Block ID to query
- * @param {boolean} [queryOptions.isSealed] - Block finality
- * @param {object} [opts] - Optional parameters
- * @returns {Promise<Account>} - A promise that resolves to an account response
- */
-export async function account(address, {height, id, isSealed} = {}, opts) {
+export async function account(
+  address: string,
+  {
+    height,
+    id,
+    isSealed,
+  }: {height?: number; id?: string; isSealed?: boolean} = {},
+  opts?: object
+): Promise<Account> {
   invariant(
     !((id && height) || (id && isSealed) || (height && isSealed)),
     `Method: account -- Only one of the following parameters can be provided: id, height, isSealed`
@@ -38,7 +43,7 @@ export async function account(address, {height, id, isSealed} = {}, opts) {
 
   // Get account by latest block
   return await send(
-    [getAccount(address), opts.isSealed != null && atLatestBlock(isSealed)],
+    [getAccount(address), atLatestBlock(isSealed ?? false)],
     opts
   ).then(decode)
 }
