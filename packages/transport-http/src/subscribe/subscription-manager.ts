@@ -62,6 +62,8 @@ export class SubscriptionManager<Handlers extends SubscriptionHandler<any>[]> {
   private config: DeepRequired<SubscriptionManagerConfig>
   private reconnectAttempts = 0
   private handlers: SubscriptionHandler<any>[]
+  private connectPromise: Promise<void> | null = null
+  private closeConnection: (() => void) | null = null
 
   constructor(handlers: Handlers, config: SubscriptionManagerConfig) {
     this.config = {
@@ -146,7 +148,7 @@ export class SubscriptionManager<Handlers extends SubscriptionHandler<any>[]> {
 
     // Close the socket if there are no more subscriptions
     if (this.subscriptions.length === 0) {
-      this.socket?.close()
+      this.closeConnection?.()
       return
     }
 
@@ -158,7 +160,10 @@ export class SubscriptionManager<Handlers extends SubscriptionHandler<any>[]> {
 
   // Lazy connect to the socket when the first subscription is made
   private async connect() {
-    return new Promise<void>((resolve, reject) => {
+    if (this.connectPromise) {
+      return this.connectPromise
+    }
+    this.connectPromise = new Promise<void>((resolve, reject) => {
       // If the socket is already open, do nothing
       if (this.socket?.readyState === WS_OPEN) {
         resolve()
@@ -166,14 +171,27 @@ export class SubscriptionManager<Handlers extends SubscriptionHandler<any>[]> {
       }
 
       this.socket = new WebSocket(this.config.node)
-      this.socket.addEventListener("message", event => {
+      const onMessage = (event: MessageEvent) => {
         const message = JSON.parse(event.data) as
           | MessageResponse
           | SubscriptionDataMessage
 
         // Error message
         if ("action" in message && message.error) {
-          this.handleSocketError(SocketError.fromMessage(message.error))
+          const sub = this.subscriptions.find(
+            sub => sub.id === message.subscription_id
+          )
+          if (sub) {
+            sub.subscriber.onError(
+              new Error(
+                `Failed to subscribe to topic ${sub.topic}: ${message.error.message}`
+              )
+            )
+            // Remove the subscription
+            this.subscriptions = this.subscriptions.filter(
+              sub => sub.id !== message.subscription_id
+            )
+          }
           return
         }
 
@@ -185,8 +203,8 @@ export class SubscriptionManager<Handlers extends SubscriptionHandler<any>[]> {
             sub.subscriber.onData(message.payload)
           }
         }
-      })
-      this.socket.addEventListener("close", () => {
+      }
+      const onClose = () => {
         this.handleSocketError(new Error("WebSocket closed"))
           .then(() => {
             resolve()
@@ -194,31 +212,37 @@ export class SubscriptionManager<Handlers extends SubscriptionHandler<any>[]> {
           .catch(e => {
             reject(e)
           })
-      })
-      this.socket.addEventListener("open", () => {
-        // Restore subscriptions
-        Promise.all(
-          this.subscriptions.map(async sub => {
-            await this.sendSubscribe(sub)
-          })
-        )
-          .then(() => {
-            resolve()
-          })
-          .catch(e => {
-            reject(new Error(`Failed to restore subscriptions: ${e}`))
-          })
-      })
+      }
+      const onOpen = () => {
+        resolve()
+      }
+
+      this.socket.addEventListener("message", onMessage)
+      this.socket.addEventListener("close", onClose)
+      this.socket.addEventListener("open", onOpen)
+
+      this.closeConnection = () => {
+        this.socket?.removeEventListener("message", onMessage)
+        this.socket?.removeEventListener("close", onClose)
+        this.socket?.removeEventListener("open", onOpen)
+
+        this.socket?.close()
+        this.socket = null
+        this.closeConnection = null
+        this.connectPromise = null
+      }
     })
+
+    return this.connectPromise
   }
 
   private async handleSocketError(error: any) {
-    // Clear the socket
-    this.socket = null
+    // Cleanup the connection
+    this.closeConnection?.()
 
     // Validate the number of reconnection attempts
     if (
-      this.reconnectAttempts >= this.config.reconnectOptions.reconnectAttempts
+      ++this.reconnectAttempts >= this.config.reconnectOptions.reconnectAttempts
     ) {
       logger.log({
         level: logger.LEVELS.error,
@@ -248,8 +272,21 @@ export class SubscriptionManager<Handlers extends SubscriptionHandler<any>[]> {
       await new Promise(resolve => setTimeout(resolve, this.backoffInterval))
 
       // Try to reconnect
-      this.reconnectAttempts++
       await this.connect()
+
+      // Restore subscriptions
+      await Promise.all(
+        this.subscriptions.map(async sub => {
+          await this.sendSubscribe(sub).catch(e => {
+            sub.subscriber.onError(
+              new Error(`Failed to restore subscription: ${e}`)
+            )
+            // Remove the subscription
+            this.subscriptions = this.subscriptions.filter(s => s.id !== sub.id)
+          })
+        })
+      )
+
       this.reconnectAttempts = 0
     }
   }
@@ -293,10 +330,19 @@ export class SubscriptionManager<Handlers extends SubscriptionHandler<any>[]> {
   }
 
   private async request(request: MessageRequest): Promise<MessageResponse> {
-    return new Promise<MessageResponse>((resolve, reject) => {
+    let cleanup = () => {}
+
+    return await new Promise<MessageResponse>((resolve, reject) => {
       if (!this.socket) {
         reject(new Error("WebSocket is not connected"))
         return
+      }
+
+      // Set the cleanup function to remove the event listeners
+      cleanup = () => {
+        this.socket?.removeEventListener("error", onError)
+        this.socket?.removeEventListener("message", onMessage)
+        this.socket?.removeEventListener("close", onClose)
       }
 
       // Bind event listeners
@@ -321,6 +367,8 @@ export class SubscriptionManager<Handlers extends SubscriptionHandler<any>[]> {
           resolve(data)
         }
       }
+    }).finally(() => {
+      cleanup()
     })
   }
 
