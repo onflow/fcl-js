@@ -75,7 +75,10 @@ export function useFlowRandom({
       arg(max, t.UInt64),
       arg(height!.toString(), t.UInt64),
     ],
-    query: mergedQuery,
+    query: mergedQuery as Omit<
+      UseQueryOptions<unknown, Error>,
+      "queryKey" | "queryFn"
+    >,
   })
 
   return {
