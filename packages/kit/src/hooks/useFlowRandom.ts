@@ -1,4 +1,3 @@
-import * as fcl from "@onflow/fcl"
 import {UseQueryOptions} from "@tanstack/react-query"
 import {useFlowBlock} from "@onflow/kit"
 import {useFlowQuery} from "./useFlowQuery"
