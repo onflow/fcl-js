@@ -12,7 +12,7 @@ const sharedSubscribe = jest.fn(callback => {
 let currentUserState = defaultUser
 
 export default {
-  ...actualFcl,
+  ...(actualFcl as any),
   account: jest.fn(),
   block: jest.fn(),
   events: jest.fn(),
