@@ -6,8 +6,8 @@ import {useFlowQuery} from "./useFlowQuery"
 /**
  * Arguments for the `useFlowRandom` hook.
  *
- * @property min - The lower bound (inclusive) for the random UInt64. Defaults to "0".
- * @property max - The upper bound (inclusive) for the random UInt64. Defaults to UInt64 max ("18446744073709551615").
+ * @property min - The lower bound (inclusive) for the random UInt256. Defaults to "0".
+ * @property max - The upper bound (inclusive) for the random UInt256. Defaults to UInt256 max.
  * @property blockHeight - Optional: Pin randomness to a specific block height. If omitted, the hook will fetch the latest sealed block once.
  * @property query - React Query options (e.g., retry, onSuccess, staleTime).
  *   By default, `staleTime` is `Infinity` and `refetchOnWindowFocus` is `false` to prevent unintended refetches.
@@ -22,24 +22,24 @@ export interface UseFlowRandomArgs {
 /**
  * useFlowRandom
  *
- * Fetches a pseudorandom UInt64 within [min, max] from a Cadence script.
+ * Fetches a pseudorandom UInt256 within [min, max] from a Cadence script.
  *
  * - By default, pins to the first sealed block fetched (using `sealed: true`),
  *   so that you get one random value per block.
  * - Override `blockHeight` to deterministically fetch randomness for a given block.
  *
- * @param args.min - Lower bound (inclusive) as string UInt64; default: "0".
- * @param args.max - Upper bound (inclusive) as string UInt64; default: "18446744073709551615".
+ * @param args.min - Lower bound (inclusive) as string UInt256; default: "0".
+ * @param args.max - Upper bound (inclusive) as string UInt256.
  * @param args.blockHeight - Optional block height to pin; if undefined, fetched once (sealed block).
  * @param args.query - React Query options; default `staleTime: Infinity`, `refetchOnWindowFocus: false`.
  * @returns An object containing:
- *   - `data`: the random UInt64 as a string, or `null` before fetch.
+ *   - `data`: the random UInt256 as a string, or `null` before fetch.
  *   - `isLoading`, `error`, `refetch`, etc. from React Query.
  *   - `blockHeight`: the block height used for randomness.
  */
 export function useFlowRandom({
   min = "0",
-  max = "18446744073709551615",
+  max = "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff", // max UInt256
   blockHeight: explicitHeight,
   query: queryOptions = {},
 }: UseFlowRandomArgs) {
@@ -64,15 +64,15 @@ export function useFlowRandom({
   }
 
   const result = useFlowQuery({
-    cadence: `access(all) fun main(min: UInt64, max: UInt64): UInt64 {
+    cadence: `access(all) fun main(min: UInt256, max: UInt256): UInt256 {
         pre {
             min < max: "Max \(max) must be greater than min \(min)"
         }
-        return revertibleRandom<UInt64>(modulo: max - min + 1)
+        return revertibleRandom<UInt256>(modulo: max - min + 1)
     }`,
     args: (arg, t) => [
-      arg(min, t.UInt64),
-      arg(max, t.UInt64),
+      arg(min, t.UInt256),
+      arg(max, t.UInt256),
       arg(height!.toString(), t.UInt64),
     ],
     query: mergedQuery as Omit<
