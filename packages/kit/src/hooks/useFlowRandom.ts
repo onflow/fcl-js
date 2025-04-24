@@ -39,7 +39,7 @@ export interface UseFlowRandomArgs {
  */
 export function useFlowRandom({
   min = "0",
-  max = "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff", // max UInt256
+  max = "115792089237316195423570985008687907853269984665640564039457584007913129639935", // Max UInt256 in decimal
   blockHeight: explicitHeight,
   query: queryOptions = {},
 }: UseFlowRandomArgs) {
