@@ -1,5 +1,5 @@
 import {UseQueryOptions} from "@tanstack/react-query"
-import {useFlowBlock} from "@onflow/kit"
+import {useFlowBlock} from "./useFlowBlock"
 import {useFlowQuery} from "./useFlowQuery"
 
 /**
