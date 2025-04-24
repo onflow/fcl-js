@@ -6,14 +6,14 @@ import {useFlowQuery} from "./useFlowQuery"
  * Arguments for the `useFlowRandom` hook.
  *
  * @property min - The lower bound (inclusive) for the random UInt256. Defaults to "0".
- * @property max - The upper bound (inclusive) for the random UInt256. Defaults to UInt256 max.
+ * @property max - The upper bound (inclusive) for the random UInt256. Required.
  * @property blockHeight - Optional: Pin randomness to a specific block height. If omitted, the hook will fetch the latest sealed block once.
  * @property query - React Query options (e.g., retry, onSuccess, staleTime).
  *   By default, `staleTime` is `Infinity` and `refetchOnWindowFocus` is `false` to prevent unintended refetches.
  */
 export interface UseFlowRandomArgs {
   min?: string
-  max?: string
+  max: string
   blockHeight?: number
   query?: Omit<UseQueryOptions<string, Error>, "queryKey" | "queryFn">
 }
@@ -28,7 +28,7 @@ export interface UseFlowRandomArgs {
  * - Override `blockHeight` to deterministically fetch randomness for a given block.
  *
  * @param args.min - Lower bound (inclusive) as string UInt256; default: "0".
- * @param args.max - Upper bound (inclusive) as string UInt256.
+ * @param args.max - Upper bound (inclusive) as string UInt256. Required.
  * @param args.blockHeight - Optional block height to pin; if undefined, fetched once (sealed block).
  * @param args.query - React Query options; default `staleTime: Infinity`, `refetchOnWindowFocus: false`.
  * @returns An object containing:
@@ -38,7 +38,7 @@ export interface UseFlowRandomArgs {
  */
 export function useFlowRandom({
   min = "0",
-  max = "115792089237316195423570985008687907853269984665640564039457584007913129639935", // Max UInt256 in decimal
+  max,
   blockHeight: explicitHeight,
   query: queryOptions = {},
 }: UseFlowRandomArgs) {
