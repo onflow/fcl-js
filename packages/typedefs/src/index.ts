@@ -254,7 +254,7 @@ export type Event = {
    */
   data: any
 }
-export type AccountStatusEvent = Event & {
+export type AccountStatusEvent = Omit<Event, "blockTimestamp"> & {
   /**
    * - The address of the account which the event is associated with.
    */

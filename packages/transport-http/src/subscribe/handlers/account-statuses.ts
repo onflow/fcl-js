@@ -21,8 +21,7 @@ type AccountStatusesArgsDto = {
 
 type AccountStatusesDataDto = {
   block_id: string
-  block_height: string
-  block_timestamp: string
+  height: string
   account_events: {
     [address: string]: {
       type: string
@@ -57,11 +56,10 @@ export const accountStatusesHandler = createSubscriptionHandler<{
           for (const event of events) {
             // Parse the raw data
             const parsedData: AccountStatusesData = {
-              accountStatus: {
+              accountStatusEvent: {
                 accountAddress: address,
                 blockId: rawData.block_id,
-                blockHeight: Number(rawData.block_height),
-                blockTimestamp: rawData.block_timestamp,
+                blockHeight: Number(rawData.height),
                 type: event.type,
                 transactionId: event.transaction_id,
                 transactionIndex: Number(event.transaction_index),
@@ -76,11 +74,13 @@ export const accountStatusesHandler = createSubscriptionHandler<{
           // Sort the messages by increasing message index
           data.sort((a, b) => {
             const txIndexDiff =
-              a.accountStatus.transactionIndex -
-              b.accountStatus.transactionIndex
+              a.accountStatusEvent.transactionIndex -
+              b.accountStatusEvent.transactionIndex
             if (txIndexDiff !== 0) return txIndexDiff
 
-            return a.accountStatus.eventIndex - b.accountStatus.eventIndex
+            return (
+              a.accountStatusEvent.eventIndex - b.accountStatusEvent.eventIndex
+            )
           })
 
           // Emit the messages
@@ -91,7 +91,7 @@ export const accountStatusesHandler = createSubscriptionHandler<{
           // Update the resume args
           resumeArgs = {
             ...resumeArgs,
-            startBlockHeight: Number(BigInt(rawData.block_height) + BigInt(1)),
+            startBlockHeight: Number(BigInt(rawData.height) + BigInt(1)),
             startBlockId: undefined,
           }
         }

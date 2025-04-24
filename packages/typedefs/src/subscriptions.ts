@@ -65,7 +65,7 @@ type RawSubscriptionDataMap = {
     blockDigest: BlockDigest
   }
   [SubscriptionTopic.ACCOUNT_STATUSES]: {
-    accountStatus: Omit<Event, "data"> & {
+    accountStatusEvent: Omit<Event, "data" | "blockTimestamp"> & {
       payload: string
       accountAddress: string
     }
