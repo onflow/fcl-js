@@ -1,5 +1,11 @@
 # @onflow/fcl-rainbowkit-adapter
 
+## 0.1.0
+
+### Minor Changes
+
+- [#2361](https://github.com/onflow/fcl-js/pull/2361) [`ac665aa4c2c3e03b52f5b94fa0dd88f2a233d144`](https://github.com/onflow/fcl-js/commit/ac665aa4c2c3e03b52f5b94fa0dd88f2a233d144) Thanks [@jribbink](https://github.com/jribbink)! - Change mobile deeplink to a universal link for Flow Wallet connector
+
 ## 0.0.3
 
 ### Patch Changes
