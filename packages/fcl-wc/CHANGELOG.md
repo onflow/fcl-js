@@ -1,5 +1,11 @@
 # @onflow/fcl-wc
 
+## 6.0.1
+
+### Patch Changes
+
+- [#2356](https://github.com/onflow/fcl-js/pull/2356) [`f4d8bc53c9902f74c1751206ddbece497017683d`](https://github.com/onflow/fcl-js/commit/f4d8bc53c9902f74c1751206ddbece497017683d) Thanks [@jribbink](https://github.com/jribbink)! - Fix npm publish bug for v6.0.0
+
 ## 6.0.0
 
 ### Major Changes
