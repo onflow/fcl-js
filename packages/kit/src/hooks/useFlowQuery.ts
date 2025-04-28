@@ -37,7 +37,6 @@ export function useFlowQuery({
       queryKey: ["flowQuery", cadence, args],
       queryFn: fetchQuery,
       enabled: queryOptions.enabled ?? true,
-      initialData: null,
       ...queryOptions,
     },
     queryClient

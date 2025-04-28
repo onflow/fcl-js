@@ -10,12 +10,12 @@ describe("useFlowQuery", () => {
     jest.clearAllMocks()
   })
 
-  test("returns null when no cadence is provided", async () => {
+  test("returns undefined when no cadence is provided", async () => {
     const {result} = renderHook(() => useFlowQuery({cadence: ""}), {
       wrapper: FlowProvider,
     })
 
-    expect(result.current.data).toBeNull()
+    expect(result.current.data).toBeUndefined()
     await waitFor(() => expect(result.current.isLoading).toBe(false))
   })
 
@@ -37,7 +37,7 @@ describe("useFlowQuery", () => {
       hookResult = result
     })
 
-    expect(hookResult.current.data).toBeNull()
+    expect(hookResult.current.data).toBeUndefined()
 
     await waitFor(() => expect(hookResult.current.isLoading).toBe(false))
     expect(hookResult.current.data).toEqual(expectedResult)
@@ -83,7 +83,7 @@ describe("useFlowQuery", () => {
     })
 
     await waitFor(() => expect(hookResult.current.isLoading).toBe(false))
-    expect(hookResult.current.data).toBeNull()
+    expect(hookResult.current.data).toBeUndefined()
     expect(hookResult.current.error).toEqual(testError)
   })
 
