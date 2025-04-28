@@ -1,10 +1,12 @@
 # @onflow/fcl-bundle
 
-## 1.7.0-kit.0
+## 1.7.0
 
 ### Minor Changes
 
-- [#2324](https://github.com/onflow/fcl-js/pull/2324) [`f685bf26624ca8422d01aafaea04a05d5d52e9e7`](https://github.com/onflow/fcl-js/commit/f685bf26624ca8422d01aafaea04a05d5d52e9e7) Thanks [@chasefleming](https://github.com/chasefleming)! - Allow usage of subpath imports
+- [#2076](https://github.com/onflow/fcl-js/pull/2076) [`ade292589a0355891f8d684103849c52305b2a8b`](https://github.com/onflow/fcl-js/commit/ade292589a0355891f8d684103849c52305b2a8b) Thanks [@jribbink](https://github.com/jribbink)! - Allow usage of subpath imports
+
+- [#2347](https://github.com/onflow/fcl-js/pull/2347) [`eb2bbcb97fb0b92008780422fc7199b0af68fc90`](https://github.com/onflow/fcl-js/commit/eb2bbcb97fb0b92008780422fc7199b0af68fc90) Thanks [@jribbink](https://github.com/jribbink)! - Add rollup-preserve-directive plugin
 
 ## 1.6.0
 

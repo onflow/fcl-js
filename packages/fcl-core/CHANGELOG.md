@@ -1,17 +1,18 @@
 # @onflow/fcl
 
-## 1.17.0-kit.0
+## 1.17.0
 
 ### Minor Changes
 
-- [#2324](https://github.com/onflow/fcl-js/pull/2324) [`f685bf26624ca8422d01aafaea04a05d5d52e9e7`](https://github.com/onflow/fcl-js/commit/f685bf26624ca8422d01aafaea04a05d5d52e9e7) Thanks [@chasefleming](https://github.com/chasefleming)! - Added default Flow network config exports: `flowMainnet`, `flowTestnet`, and `flowEmulator`. These can be used with `fcl.config()` to simplify setup.
+- [#2270](https://github.com/onflow/fcl-js/pull/2270) [`6c4d6c3df669883e34951bc1d26edb95441f124d`](https://github.com/onflow/fcl-js/commit/6c4d6c3df669883e34951bc1d26edb95441f124d) Thanks [@mfbz](https://github.com/mfbz)! - Added default Flow network config exports: `flowMainnet`, `flowTestnet`, and `flowEmulator`. These can be used with `fcl.config()` to simplify setup.
 
 ### Patch Changes
 
-- [#2324](https://github.com/onflow/fcl-js/pull/2324) [`f685bf26624ca8422d01aafaea04a05d5d52e9e7`](https://github.com/onflow/fcl-js/commit/f685bf26624ca8422d01aafaea04a05d5d52e9e7) Thanks [@chasefleming](https://github.com/chasefleming)! - Do not check that discovery service is provider in `fcl.authenticate` if user is already logged in
+- [#2076](https://github.com/onflow/fcl-js/pull/2076) [`ade292589a0355891f8d684103849c52305b2a8b`](https://github.com/onflow/fcl-js/commit/ade292589a0355891f8d684103849c52305b2a8b) Thanks [@jribbink](https://github.com/jribbink)! - Do not check that discovery service is provider in `fcl.authenticate` if user is already logged in
 
-- Updated dependencies [[`f685bf26624ca8422d01aafaea04a05d5d52e9e7`](https://github.com/onflow/fcl-js/commit/f685bf26624ca8422d01aafaea04a05d5d52e9e7)]:
-  - @onflow/sdk@1.8.0-kit.0
+- Updated dependencies [[`6c4d6c3df669883e34951bc1d26edb95441f124d`](https://github.com/onflow/fcl-js/commit/6c4d6c3df669883e34951bc1d26edb95441f124d), [`f2721d7fffec1f5b8e0f9faac6b633c6d9b86c01`](https://github.com/onflow/fcl-js/commit/f2721d7fffec1f5b8e0f9faac6b633c6d9b86c01)]:
+  - @onflow/sdk@1.8.0
+  - @onflow/config@1.5.2
 
 ## 1.16.0
 

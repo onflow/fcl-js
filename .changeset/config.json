@@ -7,10 +7,5 @@
   "access": "public",
   "baseBranch": "master",
   "updateInternalDependencies": "patch",
-  "ignore": [
-    "@onflow/transport-grpc",
-    "@onflow/fcl-ethereum-provider",
-    "@onflow/fcl-wagmi-adapter",
-    "@onflow/fcl-rainbowkit-adapter"
-  ]
+  "ignore": ["@onflow/transport-grpc"]
 }

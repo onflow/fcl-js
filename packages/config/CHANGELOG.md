@@ -1,5 +1,11 @@
 # @onflow/config
 
+## 1.5.2
+
+### Patch Changes
+
+- [#2327](https://github.com/onflow/fcl-js/pull/2327) [`f2721d7fffec1f5b8e0f9faac6b633c6d9b86c01`](https://github.com/onflow/fcl-js/commit/f2721d7fffec1f5b8e0f9faac6b633c6d9b86c01) Thanks [@jribbink](https://github.com/jribbink)! - Fix deprecated `punycode` dependency warning
+
 ## 1.5.1
 
 ### Patch Changes

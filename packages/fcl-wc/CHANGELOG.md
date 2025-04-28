@@ -1,19 +1,28 @@
 # @onflow/fcl-wc
 
-## 6.0.0-kit.0
-
-### Major Changes
-
-- [#2324](https://github.com/onflow/fcl-js/pull/2324) [`f685bf26624ca8422d01aafaea04a05d5d52e9e7`](https://github.com/onflow/fcl-js/commit/f685bf26624ca8422d01aafaea04a05d5d52e9e7) Thanks [@chasefleming](https://github.com/chasefleming)! - Switch from @walletconnect/sign-client to @walletconnect/universal-provider
-
-### Minor Changes
-
-- [#2324](https://github.com/onflow/fcl-js/pull/2324) [`f685bf26624ca8422d01aafaea04a05d5d52e9e7`](https://github.com/onflow/fcl-js/commit/f685bf26624ca8422d01aafaea04a05d5d52e9e7) Thanks [@chasefleming](https://github.com/chasefleming)! - Add `disableNotifications` param for FCL-WC service
+## 6.0.1
 
 ### Patch Changes
 
-- Updated dependencies [[`f685bf26624ca8422d01aafaea04a05d5d52e9e7`](https://github.com/onflow/fcl-js/commit/f685bf26624ca8422d01aafaea04a05d5d52e9e7), [`f685bf26624ca8422d01aafaea04a05d5d52e9e7`](https://github.com/onflow/fcl-js/commit/f685bf26624ca8422d01aafaea04a05d5d52e9e7)]:
-  - @onflow/fcl-core@1.17.0-kit.0
+- [#2356](https://github.com/onflow/fcl-js/pull/2356) [`f4d8bc53c9902f74c1751206ddbece497017683d`](https://github.com/onflow/fcl-js/commit/f4d8bc53c9902f74c1751206ddbece497017683d) Thanks [@jribbink](https://github.com/jribbink)! - Fix npm publish bug for v6.0.0
+
+## 6.0.0
+
+### Major Changes
+
+- [#2076](https://github.com/onflow/fcl-js/pull/2076) [`ade292589a0355891f8d684103849c52305b2a8b`](https://github.com/onflow/fcl-js/commit/ade292589a0355891f8d684103849c52305b2a8b) Thanks [@jribbink](https://github.com/jribbink)! - Switch from @walletconnect/sign-client to @walletconnect/universal-provider
+
+### Minor Changes
+
+- [#2076](https://github.com/onflow/fcl-js/pull/2076) [`ade292589a0355891f8d684103849c52305b2a8b`](https://github.com/onflow/fcl-js/commit/ade292589a0355891f8d684103849c52305b2a8b) Thanks [@jribbink](https://github.com/jribbink)! - Add `disableNotifications` param for FCL-WC service
+
+### Patch Changes
+
+- [#2228](https://github.com/onflow/fcl-js/pull/2228) [`837fdf7f019c3f154ff007c50959b90b9b603297`](https://github.com/onflow/fcl-js/commit/837fdf7f019c3f154ff007c50959b90b9b603297) Thanks [@jribbink](https://github.com/jribbink)! - Update react
+
+- Updated dependencies [[`ade292589a0355891f8d684103849c52305b2a8b`](https://github.com/onflow/fcl-js/commit/ade292589a0355891f8d684103849c52305b2a8b), [`6c4d6c3df669883e34951bc1d26edb95441f124d`](https://github.com/onflow/fcl-js/commit/6c4d6c3df669883e34951bc1d26edb95441f124d), [`f2721d7fffec1f5b8e0f9faac6b633c6d9b86c01`](https://github.com/onflow/fcl-js/commit/f2721d7fffec1f5b8e0f9faac6b633c6d9b86c01)]:
+  - @onflow/fcl-core@1.17.0
+  - @onflow/config@1.5.2
 
 ## 5.6.4
 
