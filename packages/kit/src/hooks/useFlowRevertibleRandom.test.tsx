@@ -1,9 +1,8 @@
 import React from "react"
 import {renderHook, waitFor} from "@testing-library/react"
-import * as fcl from "@onflow/fcl"
 import {FlowProvider} from "../provider/FlowProvider"
 import {useFlowBlock} from "./useFlowBlock"
-import {useFlowRandom} from "./useFlowRandom"
+import {useFlowRevertibleRandom} from "./useFlowRevertibleRandom"
 import {useFlowQuery} from "./useFlowQuery"
 
 jest.mock("@onflow/fcl", () => require("../__mocks__/fcl").default)
@@ -44,7 +43,7 @@ describe("useFlowRandom", () => {
 
     const {result, rerender} = renderHook(
       () =>
-        useFlowRandom({
+        useFlowRevertibleRandom({
           min,
           max,
         }),

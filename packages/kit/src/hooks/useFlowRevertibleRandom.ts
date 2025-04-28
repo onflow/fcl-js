@@ -6,17 +6,17 @@ export interface RevertibleRandomResult {
   value: string
 }
 
-export interface UseFlowRandomArgs {
+export interface UseFlowRevertibleRandomArgs {
   min?: string
   max: string
   query?: Omit<UseQueryOptions<unknown, Error>, "queryKey" | "queryFn">
 }
 
-export function useFlowRandom({
+export function useFlowRevertibleRandom({
   min = "0",
   max,
   query: queryOptions = {},
-}: UseFlowRandomArgs): UseQueryResult<RevertibleRandomResult, Error> {
+}: UseFlowRevertibleRandomArgs): UseQueryResult<RevertibleRandomResult, Error> {
   const mergedQuery = {
     staleTime: Infinity,
     refetchOnWindowFocus: false,
