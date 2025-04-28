@@ -1,6 +1,73 @@
 const path = require("path")
 const {generatePage} = require("./utils")
 
+function extractTypeName(fullType) {
+  // Simple type just return as is
+  if (!fullType.includes("import(") && !fullType.includes("Promise<")) {
+    // For complex objects with multiple properties, return 'object'
+    if (fullType.startsWith("{") && fullType.includes(":")) {
+      return "object"
+    }
+    return fullType
+  }
+
+  // Handle Promise types
+  if (fullType.startsWith("Promise<")) {
+    const innerType = fullType.match(/Promise<(.+)>/)
+    if (innerType && innerType[1]) {
+      return `Promise<${extractTypeName(innerType[1])}>`
+    }
+  }
+
+  // Handle function types
+  if (fullType.includes("=>")) {
+    // For function types, simplify but keep the basic structure
+    return fullType
+      .replace(/import\([^)]+\)\.[^.\s]+/g, match => {
+        const typeMatch = match.match(/\.([^.\s]+)$/)
+        return typeMatch ? typeMatch[1] : "any"
+      })
+      .replace(/Promise<import\([^)]+\)\.[^.\s]+>/g, match => {
+        const typeMatch = match.match(/\.([^.\s]+)>$/)
+        return typeMatch ? `Promise<${typeMatch[1]}>` : "Promise<any>"
+      })
+  }
+
+  // If it's an import, extract just the type name
+  if (fullType.includes("import(")) {
+    // Extract the type name after the last dot or closing quote
+    const matches = fullType.match(/import\([^)]+\)\.([^.\s<>,]+)/)
+    if (matches && matches[1]) {
+      return matches[1]
+    }
+
+    // If we can't extract using the above pattern, try a more general one
+    const lastDotMatch = fullType.match(/\.([^.\s<>,]+)(>|\s|$|,|\|)/)
+    if (lastDotMatch && lastDotMatch[1]) {
+      return lastDotMatch[1]
+    }
+  }
+
+  // For complex objects, just return 'object'
+  if (fullType.includes("{") && fullType.includes("}")) {
+    return "object"
+  }
+
+  // For array types, extract the inner type
+  if (fullType.endsWith("[]")) {
+    const innerType = fullType.slice(0, -2)
+    return `${extractTypeName(innerType)}[]`
+  }
+
+  // For very complex function types, simplify to "function"
+  if (fullType.length > 100 && fullType.includes("=>")) {
+    return "function"
+  }
+
+  // Otherwise return the original type
+  return fullType
+}
+
 function generateUsageExample(functionName, parameters) {
   const paramAssignments = parameters
     .map(param => {
@@ -11,6 +78,8 @@ function generateUsageExample(functionName, parameters) {
       if (type.includes("object") || type.includes("{}"))
         return `const ${name} = {}`
       if (type.includes("[]")) return `const ${name} = []`
+      if (type.includes("=>") || type.includes("function"))
+        return `const ${name} = () => {}`
       return `const ${name} = null // Replace with appropriate value`
     })
     .join("\n")
@@ -26,6 +95,15 @@ function generateFunctionPage(templates, outputDir, packageName, func) {
   if (!func.customExample) {
     func.usageExample = generateUsageExample(func.name, func.parameters)
   }
+
+  // Clean up parameter types
+  func.parameters = func.parameters.map(param => ({
+    ...param,
+    type: extractTypeName(param.type),
+  }))
+
+  // Clean up return type
+  func.returnType = extractTypeName(func.returnType)
 
   const context = {
     ...func,

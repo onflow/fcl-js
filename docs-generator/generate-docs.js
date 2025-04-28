@@ -173,7 +173,10 @@ async function main(packageName, sourceDir, outputDir, templatesDir) {
   console.log(`Generating docs for ${packageName}...`)
 
   try {
-    // Create output directories
+    // Clean existing output directory
+    await fs.promises.rm(outputDir, {recursive: true, force: true})
+
+    // Create output directories if they don't exist
     await fs.promises.mkdir(outputDir, {recursive: true})
     await fs.promises.mkdir(path.join(outputDir, "installation"), {
       recursive: true,
