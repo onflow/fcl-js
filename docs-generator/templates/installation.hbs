@@ -1,0 +1,47 @@
+---
+sidebar_position: 1
+---
+
+# Installation
+
+You can install the @onflow/{{packageName}} package using npm or yarn:
+
+```bash
+npm install @onflow/{{packageName}}
+```
+
+Or using yarn:
+
+```bash
+yarn add @onflow/{{packageName}}
+```
+
+## Requirements
+
+{{#if customRequirements}}
+{{{customRequirements}}}
+{{else}}
+- Node.js 14.x or later
+{{/if}}
+
+## Importing
+
+{{#if customImporting}}
+{{{customImporting}}}
+{{else}}
+You can import the entire package:
+
+```typescript
+import * as {{packageName}} from "@onflow/{{packageName}}"
+```
+
+Or import specific functions:
+
+```typescript
+import { functionName } from "@onflow/{{packageName}}"
+```
+{{/if}}
+
+{{#if customExtra}}
+{{{customExtra}}}
+{{/if}} 

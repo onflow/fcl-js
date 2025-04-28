@@ -1,0 +1,45 @@
+---
+sidebar_position: 1
+---
+
+# {{name}}
+
+{{#if description}}
+{{{description}}}
+{{/if}}
+
+## Import
+
+```typescript
+import { {{name}} } from "@onflow/{{packageName}}"
+```
+
+## Usage
+
+```typescript
+{{#if customExample}}
+{{{customExample}}}
+{{else}}
+import { {{name}} } from "@onflow/{{packageName}}"
+
+// Example usage
+{{{usageExample}}}
+{{/if}}
+```
+
+{{#if parameters.length}}
+## Parameters
+
+{{#each parameters}}
+### `{{name}}` {{#unless required}}(optional){{/unless}}
+- Type: `{{{type}}}`
+{{#if description}}
+- Description: {{{description}}}
+{{/if}}
+
+{{/each}}
+{{/if}}
+
+## Returns
+
+`{{{returnType}}}` 
