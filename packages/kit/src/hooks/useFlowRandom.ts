@@ -1,87 +1,53 @@
-import {UseQueryOptions} from "@tanstack/react-query"
-import {useFlowBlock} from "./useFlowBlock"
+import {UseQueryOptions, UseQueryResult} from "@tanstack/react-query"
 import {useFlowQuery} from "./useFlowQuery"
 
-/**
- * Arguments for the `useFlowRandom` hook.
- *
- * @property min - The lower bound (inclusive) for the random UInt256. Defaults to "0".
- * @property max - The upper bound (inclusive) for the random UInt256. Required.
- * @property blockHeight - Optional: Pin randomness to a specific block height. If omitted, the hook will fetch the latest sealed block once.
- * @property query - React Query options (e.g., retry, onSuccess, staleTime).
- *   By default, `staleTime` is `Infinity` and `refetchOnWindowFocus` is `false` to prevent unintended refetches.
- */
+export interface RevertibleRandomResult {
+  blockHeight: string
+  value: string
+}
+
 export interface UseFlowRandomArgs {
   min?: string
   max: string
-  blockHeight?: number
-  query?: Omit<UseQueryOptions<string, Error>, "queryKey" | "queryFn">
+  query?: Omit<UseQueryOptions<unknown, Error>, "queryKey" | "queryFn">
 }
 
-/**
- * useFlowRandom
- *
- * Fetches a pseudorandom UInt256 within [min, max] from a Cadence script.
- *
- * - By default, pins to the first sealed block fetched (using `sealed: true`),
- *   so that you get one random value per block.
- * - Override `blockHeight` to deterministically fetch randomness for a given block.
- *
- * @param args.min - Lower bound (inclusive) as string UInt256; default: "0".
- * @param args.max - Upper bound (inclusive) as string UInt256. Required.
- * @param args.blockHeight - Optional block height to pin; if undefined, fetched once (sealed block).
- * @param args.query - React Query options; default `staleTime: Infinity`, `refetchOnWindowFocus: false`.
- * @returns An object containing:
- *   - `data`: the random UInt256 as a string, or `null` before fetch.
- *   - `isLoading`, `error`, `refetch`, etc. from React Query.
- *   - `blockHeight`: the block height used for randomness.
- */
 export function useFlowRandom({
   min = "0",
   max,
-  blockHeight: explicitHeight,
   query: queryOptions = {},
-}: UseFlowRandomArgs) {
-  const {data: latestBlock, isLoading: blockLoading} = explicitHeight
-    ? {data: null, isLoading: false}
-    : useFlowBlock({
-        sealed: true,
-        query: {staleTime: Infinity, refetchOnWindowFocus: false},
-      })
-
-  const height = explicitHeight ?? latestBlock?.height
-
+}: UseFlowRandomArgs): UseQueryResult<RevertibleRandomResult, Error> {
   const mergedQuery = {
-    enabled:
-      (explicitHeight !== undefined
-        ? true
-        : !blockLoading && height !== undefined) &&
-      (queryOptions.enabled ?? true),
-    staleTime: queryOptions.staleTime ?? Infinity,
-    refetchOnWindowFocus: queryOptions.refetchOnWindowFocus ?? false,
+    staleTime: Infinity,
+    refetchOnWindowFocus: false,
     ...queryOptions,
   }
 
   const result = useFlowQuery({
-    cadence: `access(all) fun main(min: UInt256, max: UInt256): UInt256 {
-        pre {
-            min < max: "Max \(max) must be greater than min \(min)"
+    cadence: `
+      access(all) struct RevertibleRandomResult {
+        access(all) let blockHeight: UInt64
+        access(all) let value: UInt256
+
+        init(blockHeight: UInt64, value: UInt256) {
+          self.blockHeight = blockHeight
+          self.value = value
         }
-        return revertibleRandom<UInt256>(modulo: max - min + 1)
-    }`,
-    args: (arg, t) => [
-      arg(min, t.UInt256),
-      arg(max, t.UInt256),
-      arg(height!.toString(), t.UInt64),
-    ],
-    query: mergedQuery as Omit<
-      UseQueryOptions<unknown, Error>,
-      "queryKey" | "queryFn"
-    >,
+      }
+
+      access(all) fun main(min: UInt256, max: UInt256): RevertibleRandomResult {
+        pre {
+          min < max: "Invalid random range - max must be greater than min"
+        }
+        return RevertibleRandomResult(
+          blockHeight: getCurrentBlock().height,
+          value: revertibleRandom<UInt256>(modulo: max - min + 1)
+        )
+      }
+    `,
+    args: (arg, t) => [arg(min, t.UInt256), arg(max, t.UInt256)],
+    query: mergedQuery,
   })
 
-  return {
-    ...result,
-    blockHeight: height,
-  }
+  return result as UseQueryResult<RevertibleRandomResult, Error>
 }
