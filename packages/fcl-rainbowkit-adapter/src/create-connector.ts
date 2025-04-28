@@ -117,9 +117,6 @@ export const createFclConnector = (options: FclConnectorOptions) => {
             async switchChain(params) {
               return currentHandler.switchChain?.(params)
             },
-            async getClient() {
-              return currentHandler.getClient?.()
-            },
             rkDetails: currentDetails,
           } as ReturnType<CreateConnectorFn>
 
@@ -172,7 +169,6 @@ export const createFclConnector = (options: FclConnectorOptions) => {
               getChainId: _currentHandler.getChainId.bind(_currentHandler),
               isAuthorized: _currentHandler.isAuthorized.bind(_currentHandler),
               switchChain: _currentHandler.switchChain?.bind(_currentHandler),
-              getClient: _currentHandler.getClient?.bind(_currentHandler),
             }
           }
         })

@@ -1,5 +1,23 @@
 # @onflow/fcl-ethereum-provider
 
-Initial release of the FCL Etheruem Provider.  This adapter allows you to use FCL wallets within EVM tooling in a shared session with FCL-JS.
+## 0.0.3
+
+### Patch Changes
+
+- Updated dependencies [[`f4d8bc53c9902f74c1751206ddbece497017683d`](https://github.com/onflow/fcl-js/commit/f4d8bc53c9902f74c1751206ddbece497017683d)]:
+  - @onflow/fcl-wc@6.0.1
+  - @onflow/fcl@1.16.1
+
+## 0.0.2
+
+### Patch Changes
+
+- Updated dependencies [[`ade292589a0355891f8d684103849c52305b2a8b`](https://github.com/onflow/fcl-js/commit/ade292589a0355891f8d684103849c52305b2a8b), [`6c4d6c3df669883e34951bc1d26edb95441f124d`](https://github.com/onflow/fcl-js/commit/6c4d6c3df669883e34951bc1d26edb95441f124d), [`ade292589a0355891f8d684103849c52305b2a8b`](https://github.com/onflow/fcl-js/commit/ade292589a0355891f8d684103849c52305b2a8b), [`837fdf7f019c3f154ff007c50959b90b9b603297`](https://github.com/onflow/fcl-js/commit/837fdf7f019c3f154ff007c50959b90b9b603297)]:
+  - @onflow/fcl-wc@6.0.0
+  - @onflow/fcl@1.16.0
+
+## 0.0.1
+
+Initial release of the FCL Etheruem Provider. This adapter allows you to use FCL wallets within EVM tooling in a shared session with FCL-JS.
 
 Read more about this package in [FLIP-316](https://github.com/onflow/flips/pull/317) and the official [Flow Developer Documentation](https://developers.flow.com/tools/clients/fcl-js/cross-vm/rainbowkit-adapter).
