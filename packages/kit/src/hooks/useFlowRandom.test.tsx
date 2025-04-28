@@ -31,15 +31,16 @@ describe("useFlowRandom", () => {
       error: null,
     } as any)
 
+    const min = "0"
+    const max = "100"
+    const expectedBlockHeight = 123
+    const expectedRandomValue = "40"
+
     jest.mocked(useFlowBlock).mockReturnValue({
-      data: {height: 123},
+      data: {blockHeight: expectedBlockHeight, value: expectedRandomValue},
       isLoading: false,
       error: null,
     } as any)
-
-    const expectedRandomValue = "123456789"
-    const min = "100000000"
-    const max = "200000000"
 
     const {result, rerender} = renderHook(
       () =>
@@ -56,7 +57,7 @@ describe("useFlowRandom", () => {
     expect(result.current.data).toBeNull()
 
     jest.mocked(useFlowQuery).mockReturnValue({
-      data: expectedRandomValue,
+      data: {blockHeight: expectedBlockHeight, value: expectedRandomValue},
       isLoading: false,
       error: null,
     } as any)
@@ -64,6 +65,7 @@ describe("useFlowRandom", () => {
     rerender()
 
     await waitFor(() => expect(result.current.isLoading).toBe(false))
-    expect(result.current.data).toEqual(expectedRandomValue)
+    expect(result.current.data?.blockHeight).toEqual(expectedBlockHeight)
+    expect(result.current.data?.value).toEqual(expectedRandomValue)
   })
 })
