@@ -24,39 +24,31 @@ describe("useFlowRandom", () => {
   })
 
   test("fetches random UInt256 within given bounds", async () => {
+    const min = "0"
+    const max = "100"
+    const count = 3
+    const expectedBlockHeight = 123
+    const expectedRandomValue = "40"
+
     jest.mocked(useFlowQuery).mockReturnValue({
       data: null,
       isLoading: true,
       error: null,
     } as any)
 
-    const min = "0"
-    const max = "100"
-    const expectedBlockHeight = 123
-    const expectedRandomValue = "40"
-
-    jest.mocked(useFlowBlock).mockReturnValue({
-      data: {blockHeight: expectedBlockHeight, value: expectedRandomValue},
-      isLoading: false,
-      error: null,
-    } as any)
-
     const {result, rerender} = renderHook(
-      () =>
-        useFlowRevertibleRandom({
-          min,
-          max,
-        }),
-      {
-        wrapper,
-      }
+      () => useFlowRevertibleRandom({min, max, count}),
+      {wrapper}
     )
 
     await waitFor(() => expect(result.current.isLoading).toBe(true))
     expect(result.current.data).toBeNull()
 
     jest.mocked(useFlowQuery).mockReturnValue({
-      data: {blockHeight: expectedBlockHeight, value: expectedRandomValue},
+      data: Array(count).fill({
+        blockHeight: expectedBlockHeight,
+        value: expectedRandomValue,
+      }),
       isLoading: false,
       error: null,
     } as any)
@@ -64,7 +56,8 @@ describe("useFlowRandom", () => {
     rerender()
 
     await waitFor(() => expect(result.current.isLoading).toBe(false))
-    expect(result.current.data?.blockHeight).toEqual(expectedBlockHeight)
-    expect(result.current.data?.value).toEqual(expectedRandomValue)
+    expect(result.current.data).toHaveLength(count)
+    expect(result.current.data?.[0].blockHeight).toEqual(expectedBlockHeight)
+    expect(result.current.data?.[0].value).toEqual(expectedRandomValue)
   })
 })
