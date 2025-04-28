@@ -68,6 +68,15 @@ function extractTypeName(fullType) {
   return fullType
 }
 
+// Function to escape curly braces in parameter names for Docusaurus MDX compatibility
+function escapeParameterName(name) {
+  // If the parameter name contains curly braces (object pattern), replace with a simpler name
+  if (name.includes("{") || name.includes("}")) {
+    return "options"
+  }
+  return name
+}
+
 function generateUsageExample(functionName, parameters) {
   const paramAssignments = parameters
     .map(param => {
@@ -99,6 +108,7 @@ function generateFunctionPage(templates, outputDir, packageName, func) {
   // Clean up parameter types
   func.parameters = func.parameters.map(param => ({
     ...param,
+    name: escapeParameterName(param.name),
     type: extractTypeName(param.type),
   }))
 
