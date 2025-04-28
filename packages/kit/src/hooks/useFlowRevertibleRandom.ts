@@ -25,25 +25,31 @@ export function useFlowRevertibleRandom({
 
   const result = useFlowQuery({
     cadence: `
-      access(all) struct RevertibleRandomResult {
-        access(all) let blockHeight: UInt64
-        access(all) let value: UInt256
+access(all) struct RevertibleRandomResult {
+    access(all) let blockHeight: UInt64
+    access(all) let value: UInt256
 
-        init(blockHeight: UInt64, value: UInt256) {
-          self.blockHeight = blockHeight
-          self.value = value
-        }
-      }
+    init(blockHeight: UInt64, value: UInt256) {
+        self.blockHeight = blockHeight
+        self.value = value
+    }
+}
 
-      access(all) fun main(min: UInt256, max: UInt256): RevertibleRandomResult {
-        pre {
-          min < max: "Invalid random range - max must be greater than min"
-        }
-        return RevertibleRandomResult(
-          blockHeight: getCurrentBlock().height,
-          value: revertibleRandom<UInt256>(modulo: max - min + 1)
-        )
-      }
+access(all) fun main(min: UInt256, max: UInt256, count: Int): [RevertibleRandomResult] {
+    pre {
+        min < max: "Invalid random range - max must be greater than min"
+        0 < count: "Invalid count - must request at least one random value at a time"
+    }
+    let currentHeight = getCurrentBlock().height
+    let results: [RevertibleRandomResult] = []
+    for i in InclusiveRange(1, count) {
+        results.append(RevertibleRandomResult(
+            blockHeight: currentHeight,
+            value: revertibleRandom<UInt256>(modulo: max - min + 1)
+        ))
+    }
+    return results
+}
     `,
     args: (arg, t) => [arg(min, t.UInt256), arg(max, t.UInt256)],
     query: mergedQuery,
