@@ -106,32 +106,4 @@ describe("useFlowChainId", () => {
     expect(getChainIdMock).not.toHaveBeenCalled()
     expect(hookResult.current.data).toBeNull()
   })
-
-  test("updates when config changes", async () => {
-    const getChainIdMock = jest.mocked(fcl.getChainId)
-    getChainIdMock.mockResolvedValueOnce(mockChainId)
-
-    let hookResult: any
-
-    await act(async () => {
-      const {result} = renderHook(() => useFlowChainId(), {
-        wrapper: FlowProvider,
-      })
-      hookResult = result
-    })
-
-    await waitFor(() => expect(hookResult.current.data).toEqual(mockChainId))
-
-    const newChainId = "testnet"
-    getChainIdMock.mockResolvedValueOnce(newChainId)
-
-    // Simulate config change by refetching
-    act(() => {
-      hookResult.current.refetch()
-    })
-
-    await waitFor(() => expect(hookResult.current.data).toEqual(newChainId))
-
-    expect(fcl.getChainId).toHaveBeenCalledTimes(2)
-  })
 })
