@@ -4,6 +4,7 @@ import {config} from "@onflow/config"
 import * as logger from "@onflow/util-logger"
 import {withPrefix} from "@onflow/util-address"
 import {Interaction} from "@onflow/typedefs"
+
 const isFn = (v: any): v is Function => typeof v === "function"
 const isString = (v: any): v is string => typeof v === "string"
 
