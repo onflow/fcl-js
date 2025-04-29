@@ -1,14 +1,16 @@
-import {Interaction} from "@onflow/typedefs"
-import {pipe, Ok, makeGetTransaction} from "../interaction/interaction"
+import {
+  InteractionCallback,
+  Ok,
+  makeGetTransaction,
+  pipe,
+} from "../interaction/interaction"
 
 /**
- * @description - A builder function that returns the interaction to get a transaction by ID
- * @param id - The ID of the transaction to get
+ * @description A builder function that returns the interaction to get a transaction by ID
+ * @param id The ID of the transaction to get
  * @returns A function that processes an interaction object
  */
-export function getTransaction(
-  id: string
-): (ix: Interaction) => Promise<Interaction> {
+export function getTransaction(id: string): InteractionCallback {
   return pipe([
     makeGetTransaction,
     ix => {

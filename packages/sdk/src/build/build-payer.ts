@@ -4,9 +4,9 @@ import {pipe, prepAccount} from "../interaction/interaction"
 type AccountFn = (acct: InteractionAccount) => InteractionAccount
 
 /**
- * @description - A builder function that adds payer account(s) to a transaction
- * @param - An account address or array of account addresses
- * @returns - A function that takes an interaction and returns a new interaction with the payer(s) added
+ * @description A builder function that adds payer account(s) to a transaction
+ * @param ax An account address or array of account addresses
+ * @returns A function that takes an interaction and returns a new interaction with the payer(s) added
  */
 export function payer(
   ax:

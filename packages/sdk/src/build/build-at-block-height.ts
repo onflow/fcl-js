@@ -1,15 +1,13 @@
-import {pipe} from "../interaction/interaction"
+import {pipe, InteractionCallback} from "../interaction/interaction"
 import {Interaction} from "@onflow/typedefs"
 import {validator} from "./build-validator"
 
 /**
- * @description - A builder function that returns a partial interaction to a block at a specific height
- * @param height - The height of the block to get
+ * @description A builder function that returns a partial interaction to a block at a specific height
+ * @param height The height of the block to get
  * @returns A function that processes a partial interaction object
  */
-export function atBlockHeight(
-  height: number
-): (ix: Interaction) => Promise<Interaction> {
+export function atBlockHeight(height: number): InteractionCallback {
   return pipe([
     (ix: Interaction) => {
       ix.block.height = height

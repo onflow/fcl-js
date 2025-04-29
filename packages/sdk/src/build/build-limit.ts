@@ -1,11 +1,11 @@
-import {Interaction} from "@onflow/typedefs"
+import {InteractionCallback} from "../interaction/interaction"
 
 /**
- * @description - A builder function that sets the compute limit for a transaction
- * @param limit - The compute limit to set
+ * @description A builder function that sets the compute limit for a transaction
+ * @param limit The compute limit to set
  * @returns A function that processes an interaction object
  */
-export function limit(limit: number): (ix: Interaction) => Interaction {
+export function limit(limit: number): InteractionCallback {
   return ix => {
     ix.message.computeLimit = limit
     return ix

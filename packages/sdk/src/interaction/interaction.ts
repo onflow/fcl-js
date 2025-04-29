@@ -11,6 +11,7 @@ import {
   InteractionTag,
 } from "@onflow/typedefs"
 import {TypeDescriptorInput, TypeDescriptor} from "@onflow/types"
+
 type AcctFn = (acct: InteractionAccount) => InteractionAccount
 type AccountFn = AcctFn & Partial<InteractionAccount>
 
@@ -20,6 +21,10 @@ type CadenceArgument<T extends TypeDescriptor<any, any>> = {
 }
 
 export {CadenceArgument}
+
+export type InteractionCallback = (
+  ix: Interaction
+) => Interaction | Promise<Interaction>
 
 const ACCT = `{
   "kind":"${InteractionResolverKind.ACCOUNT}",
