@@ -1,18 +1,21 @@
-import {Interaction} from "@onflow/typedefs"
-import {pipe, put, Ok, makeTransaction} from "../interaction/interaction"
+import {
+  pipe,
+  put,
+  Ok,
+  makeTransaction,
+  InteractionCallback,
+} from "../interaction/interaction"
 import {template} from "@onflow/util-template"
 
 const DEFAULT_SCRIPT_ACCOUNTS: string[] = []
 const DEFAULT_REF = ""
 
 /**
- * @description - A template builder to use a Cadence transaction for an interaction
- * @param args - The arguments to pass
+ * @description A template builder to use a Cadence transaction for an interaction
+ * @param args The arguments to pass
  * @returns A function that processes an interaction object
  */
-export function transaction(
-  ...args: [string, ...any[]]
-): (ix: Interaction) => Promise<Interaction> {
+export function transaction(...args: [string, ...any[]]): InteractionCallback {
   return pipe([
     makeTransaction,
     put("ix.cadence", template(...args)),

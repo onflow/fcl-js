@@ -1,13 +1,15 @@
-import {Interaction} from "@onflow/typedefs"
-import {pipe, makeGetNetworkParameters, Ok} from "../interaction/interaction"
+import {
+  pipe,
+  makeGetNetworkParameters,
+  Ok,
+  InteractionCallback,
+} from "../interaction/interaction"
 
 /**
- * @description - A builder function that returns the interaction to get network parameters
+ * @description A builder function that returns the interaction to get network parameters
  * @returns A function that processes an interaction object
  */
-export function getNetworkParameters(): (
-  ix: Interaction
-) => Promise<Interaction> {
+export function getNetworkParameters(): InteractionCallback {
   return pipe([
     makeGetNetworkParameters,
     ix => {

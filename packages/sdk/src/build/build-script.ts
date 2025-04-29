@@ -1,9 +1,13 @@
-import {Interaction} from "@onflow/typedefs"
-import {pipe, put, makeScript} from "../interaction/interaction"
+import {
+  pipe,
+  put,
+  makeScript,
+  InteractionCallback,
+} from "../interaction/interaction"
 import {template} from "@onflow/util-template"
 
 /**
- * @description - A builder function that creates a script interaction
+ * @description A builder function that creates a script interaction
  * @returns A function that processes an interaction object
  */
 export function script(
@@ -11,6 +15,6 @@ export function script(
     string | TemplateStringsArray | ((x?: unknown) => string),
     ...unknown[],
   ]
-): (ix: Interaction) => Promise<Interaction> {
+): InteractionCallback {
   return pipe([makeScript, put("ix.cadence", template(...args))])
 }

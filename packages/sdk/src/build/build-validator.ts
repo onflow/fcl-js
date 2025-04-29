@@ -1,7 +1,11 @@
-import {update} from "../interaction/interaction"
-import {Interaction} from "@onflow/typedefs"
+import {update, InteractionCallback} from "../interaction/interaction"
 
-export function validator(cb: Function): (ix: Interaction) => Interaction {
+/**
+ * @description A builder function that adds a validator to a transaction
+ * @param cb The validator function
+ * @returns A function that processes an interaction object
+ */
+export function validator(cb: Function): InteractionCallback {
   return update("ix.validators", (validators: Function | Function[]) =>
     Array.isArray(validators) ? [...validators, cb] : [cb]
   )

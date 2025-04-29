@@ -1,8 +1,15 @@
-import {pipe, initInteraction} from "../interaction/interaction"
+import {
+  pipe,
+  initInteraction,
+  InteractionCallback,
+} from "../interaction/interaction"
 import {Interaction} from "@onflow/typedefs"
 
-export function build(
-  fns: ((x: Interaction) => Interaction | Promise<Interaction>)[] = []
-): Promise<Interaction> {
+/**
+ * @description A builder function that creates an interaction
+ * @param fns The functions to apply to the interaction
+ * @returns A promise of an interaction
+ */
+export function build(fns: InteractionCallback[] = []): Promise<Interaction> {
   return pipe(initInteraction(), fns)
 }

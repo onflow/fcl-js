@@ -15,10 +15,10 @@ interface SendOptions {
 }
 
 /**
- * @description - Sends arbitrary scripts, transactions, and requests to Flow
- * @param args - An array of functions that take interaction and return interaction
- * @param opts - Optional parameters
- * @returns - A promise that resolves to a response
+ * @description Sends arbitrary scripts, transactions, and requests to Flow
+ * @param args An array of functions that take interaction and return interaction
+ * @param opts Optional parameters
+ * @returns A promise that resolves to a response
  */
 export const send = async (
   args:

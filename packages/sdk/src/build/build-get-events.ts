@@ -1,18 +1,22 @@
-import {Interaction} from "@onflow/typedefs"
-import {pipe, Ok, makeGetEvents} from "../interaction/interaction"
+import {
+  pipe,
+  Ok,
+  makeGetEvents,
+  InteractionCallback,
+} from "../interaction/interaction"
 
 /**
- * @description - A builder function that returns the interaction to get events
- * @param eventType - The type of event to get
- * @param start - The start block ID or height
- * @param end - The end block ID or height
+ * @description A builder function that returns the interaction to get events
+ * @param eventType The type of event to get
+ * @param start The start block ID or height
+ * @param end The end block ID or height
  * @returns A function that processes an interaction object
  */
 export function getEvents(
   eventType: string,
   start: number,
   end: number
-): (ix: Interaction) => Promise<Interaction> {
+): InteractionCallback {
   return pipe([
     makeGetEvents,
     ix => {

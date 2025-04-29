@@ -1,12 +1,15 @@
-import {Ok, makeGetNodeVerionInfo, pipe} from "../interaction/interaction"
-import {Interaction} from "@onflow/typedefs"
+import {
+  Ok,
+  makeGetNodeVerionInfo,
+  pipe,
+  InteractionCallback,
+} from "../interaction/interaction"
 
 /**
- * A builder function for the Get Node Version Info interaction
+ * @description A builder function for the Get Node Version Info interaction
+ * @returns An interaction object
  */
-export function getNodeVersionInfo(): (
-  ix: Interaction
-) => Promise<Interaction> {
+export function getNodeVersionInfo(): InteractionCallback {
   return pipe([
     makeGetNodeVerionInfo,
     ix => {
