@@ -1,8 +1,8 @@
 import * as fcl from "@onflow/fcl"
 import {Abi, bytesToHex, encodeFunctionData} from "viem"
-import {useAccount} from "wagmi"
 import {useMutation} from "@tanstack/react-query"
 import {useFlowChainId} from "./useFlowChainId"
+import {useFlowQueryClient} from "../provider/FlowQueryClient"
 
 // Define the interface for each EVM call.
 export interface EvmBatchCall {
@@ -124,85 +124,89 @@ export function useEvmBatchTransaction() {
     ? getCadenceBatchTransaction(chainId.data)
     : null
 
-  const mutation = useMutation({
-    mutationFn: async ({
-      calls,
-      mustPass = true,
-    }: {
-      calls: EvmBatchCall[]
-      mustPass?: boolean
-    }) => {
-      if (!cadenceTx) {
-        throw new Error("No current chain found")
-      }
-
-      const encodedCalls = encodeCalls(calls)
-
-      const txId = await fcl.mutate({
-        cadence: cadenceTx,
-        args: (arg, t) => [
-          arg(
-            encodedCalls,
-            t.Array(
-              t.Dictionary([
-                {key: t.String, value: t.String},
-                {key: t.String, value: t.String},
-                {key: t.String, value: t.UInt64},
-                {key: t.String, value: t.UInt},
-              ] as any)
-            )
-          ),
-          arg(mustPass, t.Bool),
-        ],
-        limit: 9999,
-      })
-
-      let txResult
-      try {
-        txResult = await fcl.tx(txId).onceExecuted()
-      } catch (txError) {
-        // If we land here, the transaction likely reverted.
-        // We can return partial or "failed" outcomes for all calls.
-        return {
-          txId,
-          results: calls.map(() => ({
-            status: "failed" as const,
-            hash: undefined,
-            errorMessage: "Transaction reverted",
-          })),
+  const queryClient = useFlowQueryClient()
+  const mutation = useMutation(
+    {
+      mutationFn: async ({
+        calls,
+        mustPass = true,
+      }: {
+        calls: EvmBatchCall[]
+        mustPass?: boolean
+      }) => {
+        if (!cadenceTx) {
+          throw new Error("No current chain found")
         }
-      }
 
-      // Filter for TransactionExecuted events
-      const executedEvents = txResult.events.filter((e: any) =>
-        e.type.includes("TransactionExecuted")
-      )
+        const encodedCalls = encodeCalls(calls)
 
-      // Build a full outcomes array for every call.
-      // For any call index where no event exists, mark it as "skipped".
-      const results: CallOutcome[] = calls.map((_, index) => {
-        const eventData = executedEvents[index]
-          ?.data as EvmTransactionExecutedData
-        if (eventData) {
-          return {
-            hash: bytesToHex(
-              Uint8Array.from(
-                eventData.hash.map((x: string) => parseInt(x, 10))
+        const txId = await fcl.mutate({
+          cadence: cadenceTx,
+          args: (arg, t) => [
+            arg(
+              encodedCalls,
+              t.Array(
+                t.Dictionary([
+                  {key: t.String, value: t.String},
+                  {key: t.String, value: t.String},
+                  {key: t.String, value: t.UInt64},
+                  {key: t.String, value: t.UInt},
+                ] as any)
               )
             ),
-            status: eventData.errorCode === "0" ? "passed" : "failed",
-            errorMessage: eventData.errorMessage,
-          }
-        } else {
+            arg(mustPass, t.Bool),
+          ],
+          limit: 9999,
+        })
+
+        let txResult
+        try {
+          txResult = await fcl.tx(txId).onceExecuted()
+        } catch (txError) {
+          // If we land here, the transaction likely reverted.
+          // We can return partial or "failed" outcomes for all calls.
           return {
-            status: "skipped",
+            txId,
+            results: calls.map(() => ({
+              status: "failed" as const,
+              hash: undefined,
+              errorMessage: "Transaction reverted",
+            })),
           }
         }
-      })
 
-      return {txId, results}
+        // Filter for TransactionExecuted events
+        const executedEvents = txResult.events.filter((e: any) =>
+          e.type.includes("TransactionExecuted")
+        )
+
+        // Build a full outcomes array for every call.
+        // For any call index where no event exists, mark it as "skipped".
+        const results: CallOutcome[] = calls.map((_, index) => {
+          const eventData = executedEvents[index]
+            ?.data as EvmTransactionExecutedData
+          if (eventData) {
+            return {
+              hash: bytesToHex(
+                Uint8Array.from(
+                  eventData.hash.map((x: string) => parseInt(x, 10))
+                )
+              ),
+              status: eventData.errorCode === "0" ? "passed" : "failed",
+              errorMessage: eventData.errorMessage,
+            }
+          } else {
+            return {
+              status: "skipped",
+            }
+          }
+        })
+
+        return {txId, results}
+      },
     },
-  })
+    queryClient
+  )
 
   const {mutate: sendBatchTransaction, ...rest} = mutation
 
