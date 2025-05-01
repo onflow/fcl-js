@@ -12,8 +12,8 @@ import {
 } from "@onflow/typedefs"
 import {TypeDescriptorInput, TypeDescriptor} from "@onflow/types"
 
-type AcctFn = (acct: InteractionAccount) => InteractionAccount
-type AccountFn = AcctFn & Partial<InteractionAccount>
+export type AcctFn = (acct: InteractionAccount) => InteractionAccount
+export type AccountFn = AcctFn & Partial<InteractionAccount>
 
 type CadenceArgument<T extends TypeDescriptor<any, any>> = {
   value: TypeDescriptorInput<T>
