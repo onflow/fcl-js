@@ -3,7 +3,7 @@ import {
   build,
   resolve,
   ref,
-  transaction as transactionFn,
+  transaction,
   proposer,
   payer,
   limit,
@@ -61,7 +61,7 @@ test("voucher in signable", async () => {
   }
   const ix = await resolve(
     await build([
-      transactionFn(""),
+      transaction``,
       limit(156),
       proposer(authz),
       authorizations([authz]),
