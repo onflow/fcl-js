@@ -2,12 +2,12 @@ import {
   isGetAccount,
   pipe,
   Ok,
-  InteractionCallback,
+  InteractionBuilderFn,
 } from "../interaction/interaction"
 import {validator} from "./build-validator"
 import {Interaction} from "@onflow/typedefs"
 
-export function atBlockId(id: string): InteractionCallback {
+export function atBlockId(id: string): InteractionBuilderFn {
   return pipe([
     (ix: Interaction) => {
       ix.block.id = id

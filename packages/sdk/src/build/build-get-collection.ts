@@ -2,7 +2,7 @@ import {
   pipe,
   Ok,
   makeGetCollection,
-  InteractionCallback,
+  InteractionBuilderFn,
 } from "../interaction/interaction"
 
 /**
@@ -10,7 +10,7 @@ import {
  * @param id The ID of the collection to get
  * @returns A function that processes an interaction object
  */
-export function getCollection(id: string | null = null): InteractionCallback {
+export function getCollection(id: string | null = null): InteractionBuilderFn {
   return pipe([
     makeGetCollection,
     ix => {

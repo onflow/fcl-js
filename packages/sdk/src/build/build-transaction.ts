@@ -3,7 +3,7 @@ import {
   put,
   Ok,
   makeTransaction,
-  InteractionCallback,
+  InteractionBuilderFn,
 } from "../interaction/interaction"
 import {template} from "@onflow/util-template"
 
@@ -17,7 +17,7 @@ const DEFAULT_REF = ""
  */
 export function transaction(
   ...args: [string | TemplateStringsArray, ...any[]]
-): InteractionCallback {
+): InteractionBuilderFn {
   return pipe([
     makeTransaction,
     put("ix.cadence", template(...args)),

@@ -2,7 +2,7 @@ import {
   pipe,
   put,
   makeScript,
-  InteractionCallback,
+  InteractionBuilderFn,
 } from "../interaction/interaction"
 import {template} from "@onflow/util-template"
 
@@ -15,6 +15,6 @@ export function script(
     string | TemplateStringsArray | ((x?: unknown) => string),
     ...unknown[],
   ]
-): InteractionCallback {
+): InteractionBuilderFn {
   return pipe([makeScript, put("ix.cadence", template(...args))])
 }

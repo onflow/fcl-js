@@ -2,7 +2,7 @@ import {
   pipe,
   Ok,
   makeGetBlockHeader,
-  InteractionCallback,
+  InteractionBuilderFn,
 } from "../interaction/interaction"
 
 /**
@@ -12,7 +12,7 @@ import {
  */
 export function getBlockHeader(
   isSealed: boolean | null = null
-): InteractionCallback {
+): InteractionBuilderFn {
   return pipe([
     makeGetBlockHeader,
     ix => {

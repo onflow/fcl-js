@@ -1,5 +1,5 @@
 import {
-  InteractionCallback,
+  InteractionBuilderFn,
   Ok,
   makeGetTransaction,
   pipe,
@@ -10,7 +10,7 @@ import {
  * @param id The ID of the transaction to get
  * @returns A function that processes an interaction object
  */
-export function getTransaction(id: string): InteractionCallback {
+export function getTransaction(id: string): InteractionBuilderFn {
   return pipe([
     makeGetTransaction,
     ix => {

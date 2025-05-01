@@ -3,7 +3,7 @@ import {
   pipe,
   Ok,
   makeGetBlock,
-  InteractionCallback,
+  InteractionBuilderFn,
 } from "../interaction/interaction"
 
 /**
@@ -11,7 +11,9 @@ import {
  * @param isSealed Whether or not the block should be sealed
  * @returns A function that processes an interaction object
  */
-export function getLatestBlock(isSealed: boolean = false): InteractionCallback {
+export function getLatestBlock(
+  isSealed: boolean = false
+): InteractionBuilderFn {
   log.deprecate({
     pkg: "FCL/SDK",
     subject: "The getLatestBlock builder",

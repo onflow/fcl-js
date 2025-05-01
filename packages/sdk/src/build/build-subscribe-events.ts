@@ -3,7 +3,7 @@ import {
   pipe,
   Ok,
   makeSubscribeEvents,
-  InteractionCallback,
+  InteractionBuilderFn,
 } from "../interaction/interaction"
 import {EventFilter, Interaction} from "@onflow/typedefs"
 
@@ -19,7 +19,7 @@ export function subscribeEvents({
   addresses,
   contracts,
   heartbeatInterval,
-}: EventFilter): InteractionCallback {
+}: EventFilter): InteractionBuilderFn {
   invariant(
     !(startBlockId && startHeight),
     `SDK Subscribe Events Error: Cannot set both startBlockId and startHeight.`

@@ -1,4 +1,4 @@
-import {pipe, InteractionCallback} from "../interaction/interaction"
+import {pipe, InteractionBuilderFn} from "../interaction/interaction"
 import {Interaction} from "@onflow/typedefs"
 import {validator} from "./build-validator"
 
@@ -7,7 +7,7 @@ import {validator} from "./build-validator"
  * @param height The height of the block to get
  * @returns A function that processes a partial interaction object
  */
-export function atBlockHeight(height: number): InteractionCallback {
+export function atBlockHeight(height: number): InteractionBuilderFn {
   return pipe([
     (ix: Interaction) => {
       ix.block.height = height

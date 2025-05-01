@@ -5,7 +5,7 @@ import {invariant} from "../build/build-invariant"
 import * as ixModule from "../interaction/interaction"
 import {
   initInteraction,
-  InteractionCallback,
+  InteractionBuilderFn,
   pipe,
 } from "../interaction/interaction"
 import {resolve as defaultResolve} from "../resolve/resolve"
@@ -24,7 +24,7 @@ interface SendOptions {
  * @returns A promise that resolves to a response
  */
 export const send = async (
-  args: (InteractionCallback | false)[] | InteractionCallback | false,
+  args: (InteractionBuilderFn | false)[] | InteractionBuilderFn | false,
   opts: SendOptions = {}
 ): Promise<any> => {
   const sendFn = await config.first(
