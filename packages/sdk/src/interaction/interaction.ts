@@ -328,10 +328,7 @@ type MaybePromise<T> = T | Promise<T>
 
 const recPipe = async (
   ix: MaybePromise<Interaction>,
-  fns: (
-    | ((x: Interaction) => MaybePromise<Interaction>)
-    | MaybePromise<Interaction>
-  )[] = []
+  fns: (InteractionCallback | false | MaybePromise<Interaction>)[] = []
 ): Promise<Interaction> => {
   try {
     ix = hardMode(await ix)
@@ -352,25 +349,16 @@ const recPipe = async (
  * @description Async pipe function to compose interactions
  * @returns An interaction object
  */
-function pipe(
-  fns: ((x: Interaction) => MaybePromise<Interaction>)[]
-): (x: Interaction) => Promise<Interaction>
-/**
- * @description Async pipe function to compose interactions
- * @returns An interaction object
- */
+function pipe(fns: (InteractionCallback | false)[]): InteractionCallback
 function pipe(
   ix: MaybePromise<Interaction>,
-  fns: ((x: Interaction) => MaybePromise<Interaction>)[]
+  fns: (InteractionCallback | false)[]
 ): Promise<Interaction>
 function pipe(
   ...args:
-    | [((x: Interaction) => MaybePromise<Interaction>)[]]
-    | [
-        MaybePromise<Interaction>,
-        ((x: Interaction) => MaybePromise<Interaction>)[],
-      ]
-): Promise<Interaction> | ((x: Interaction) => Promise<Interaction>) {
+    | [(InteractionCallback | false)[]]
+    | [MaybePromise<Interaction>, (InteractionCallback | false)[]]
+): Promise<Interaction> | InteractionCallback {
   const [arg1, arg2] = args
   if (isArray(arg1)) return (d: Interaction) => pipe(d, arg1)
 
