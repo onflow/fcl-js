@@ -3,10 +3,13 @@ import {Buffer} from "@onflow/rlp"
 import {send as defaultSend} from "@onflow/transport-http"
 import {invariant} from "../build/build-invariant"
 import * as ixModule from "../interaction/interaction"
-import {initInteraction, pipe} from "../interaction/interaction"
+import {
+  initInteraction,
+  InteractionCallback,
+  pipe,
+} from "../interaction/interaction"
 import {resolve as defaultResolve} from "../resolve/resolve"
 import {response} from "../response/response"
-import {Interaction} from "@onflow/typedefs"
 
 interface SendOptions {
   send?: typeof defaultSend
@@ -21,11 +24,7 @@ interface SendOptions {
  * @returns A promise that resolves to a response
  */
 export const send = async (
-  args:
-    | (((x: Interaction) => Interaction) | false | Function)[]
-    | ((x: Interaction) => Interaction)
-    | false
-    | Function,
+  args: (InteractionCallback | false)[] | InteractionCallback | false,
   opts: SendOptions = {}
 ): Promise<any> => {
   const sendFn = await config.first(
