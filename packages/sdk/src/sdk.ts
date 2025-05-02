@@ -38,13 +38,16 @@ export {
 } from "./interaction/interaction"
 import type {CadenceArgument} from "./interaction/interaction"
 export {CadenceArgument} // Workaround for babel https://github.com/babel/babel/issues/8361
-import type {InteractionCallback} from "./interaction/interaction"
-export {InteractionCallback}
+import type {InteractionBuilderFn} from "./interaction/interaction"
+export {InteractionBuilderFn}
 
 export {createSignableVoucher, voucherToTxId} from "./resolve/voucher"
 export {encodeMessageFromSignable} from "./wallet-utils/encode-signable"
 export {template as cadence} from "@onflow/util-template"
 export {template as cdc} from "@onflow/util-template"
+
+import type {Voucher} from "./wallet-utils/encode-signable"
+export {Voucher}
 
 // Helpers
 export {account} from "./account/account"

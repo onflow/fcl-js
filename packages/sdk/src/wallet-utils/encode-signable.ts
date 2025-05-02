@@ -17,7 +17,7 @@ interface PayloadSig {
   [key: string]: any
 }
 
-interface Voucher {
+export interface Voucher {
   authorizers: string[]
   proposalKey: {
     address: string

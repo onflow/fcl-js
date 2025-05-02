@@ -1,19 +1,12 @@
-import {
-  TransactionRole,
-  InteractionAccount,
-  Interaction,
-} from "@onflow/typedefs"
-import {pipe, prepAccount} from "../interaction/interaction"
+import {InteractionAccount, TransactionRole} from "@onflow/typedefs"
+import {AccountFn, pipe, prepAccount} from "../interaction/interaction"
 
-type AccountFn = (acct: InteractionAccount) => InteractionAccount
 type AuthorizationFunction = () => {signature: string}
 
-export function authorizations(
-  ax: Array<InteractionAccount | AccountFn | Partial<InteractionAccount>> = []
-) {
+export function authorizations(ax: Array<InteractionAccount | AccountFn> = []) {
   return pipe(
     ax.map(authz => {
-      return prepAccount(authz as InteractionAccount | AccountFn, {
+      return prepAccount(authz, {
         role: TransactionRole.AUTHORIZER,
       })
     })

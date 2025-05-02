@@ -3,7 +3,7 @@ import {
   put,
   Ok,
   makeTransaction,
-  InteractionCallback,
+  InteractionBuilderFn,
 } from "../interaction/interaction"
 import {template} from "@onflow/util-template"
 
@@ -15,7 +15,9 @@ const DEFAULT_REF = ""
  * @param args The arguments to pass
  * @returns A function that processes an interaction object
  */
-export function transaction(...args: [string, ...any[]]): InteractionCallback {
+export function transaction(
+  ...args: [string | TemplateStringsArray, ...any[]]
+): InteractionBuilderFn {
   return pipe([
     makeTransaction,
     put("ix.cadence", template(...args)),

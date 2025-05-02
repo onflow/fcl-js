@@ -1,4 +1,4 @@
-import {pipe, InteractionCallback} from "../interaction/interaction"
+import {pipe, InteractionBuilderFn} from "../interaction/interaction"
 import {Interaction} from "@onflow/typedefs"
 import {validator} from "./build-validator"
 
@@ -7,7 +7,7 @@ import {validator} from "./build-validator"
  * @param isSealed Block finality state, defaults to latest executed block ("soft-finality"), set to true for sealed blocks ("hard-finality")
  * @returns A function that processes a partial interaction object
  */
-export function atLatestBlock(isSealed = false): InteractionCallback {
+export function atLatestBlock(isSealed = false): InteractionBuilderFn {
   return pipe([
     (ix: Interaction) => {
       ix.block.isSealed = isSealed

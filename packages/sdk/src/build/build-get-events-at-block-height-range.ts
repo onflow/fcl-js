@@ -2,7 +2,7 @@ import {
   pipe,
   Ok,
   makeGetEvents,
-  InteractionCallback,
+  InteractionBuilderFn,
 } from "../interaction/interaction"
 
 /**
@@ -16,7 +16,7 @@ export function getEventsAtBlockHeightRange(
   eventType: string,
   startHeight: number,
   endHeight: number
-): InteractionCallback {
+): InteractionBuilderFn {
   return pipe([
     makeGetEvents,
     ix => {

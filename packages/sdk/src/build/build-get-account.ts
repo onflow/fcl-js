@@ -1,6 +1,6 @@
 import {sansPrefix} from "@onflow/util-address"
 import {
-  InteractionCallback,
+  InteractionBuilderFn,
   makeGetAccount,
   Ok,
   pipe,
@@ -11,7 +11,7 @@ import {
  * @param addr The address of the account to get
  * @returns A function that processes an interaction object
  */
-export function getAccount(addr: string): InteractionCallback {
+export function getAccount(addr: string): InteractionBuilderFn {
   return pipe([
     makeGetAccount,
     ix => {

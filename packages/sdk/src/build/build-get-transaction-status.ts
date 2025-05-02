@@ -2,7 +2,7 @@ import {
   pipe,
   Ok,
   makeGetTransactionStatus,
-  InteractionCallback,
+  InteractionBuilderFn,
 } from "../interaction/interaction"
 
 /**
@@ -13,7 +13,7 @@ import {
  */
 export function getTransactionStatus(
   transactionId: string
-): InteractionCallback {
+): InteractionBuilderFn {
   return pipe([
     makeGetTransactionStatus,
     ix => {

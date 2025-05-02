@@ -2,7 +2,7 @@ import {
   pipe,
   Ok,
   makeGetBlock,
-  InteractionCallback,
+  InteractionBuilderFn,
 } from "../interaction/interaction"
 
 /**
@@ -10,7 +10,9 @@ import {
  * @param isSealed Whether or not the block should be sealed
  * @returns A function that processes an interaction object
  */
-export function getBlock(isSealed: boolean | null = null): InteractionCallback {
+export function getBlock(
+  isSealed: boolean | null = null
+): InteractionBuilderFn {
   return pipe([
     makeGetBlock,
     ix => {

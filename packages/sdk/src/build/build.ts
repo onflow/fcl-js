@@ -1,7 +1,7 @@
 import {
   pipe,
   initInteraction,
-  InteractionCallback,
+  InteractionBuilderFn,
 } from "../interaction/interaction"
 import {Interaction} from "@onflow/typedefs"
 
@@ -11,7 +11,7 @@ import {Interaction} from "@onflow/typedefs"
  * @returns A promise of an interaction
  */
 export function build(
-  fns: (InteractionCallback | false)[] = []
+  fns: (InteractionBuilderFn | false)[] = []
 ): Promise<Interaction> {
   return pipe(initInteraction(), fns)
 }

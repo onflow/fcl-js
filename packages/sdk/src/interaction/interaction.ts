@@ -12,8 +12,8 @@ import {
 } from "@onflow/typedefs"
 import {TypeDescriptorInput, TypeDescriptor} from "@onflow/types"
 
-type AcctFn = (acct: InteractionAccount) => InteractionAccount
-type AccountFn = AcctFn & Partial<InteractionAccount>
+export type AcctFn = (acct: InteractionAccount) => InteractionAccount
+export type AccountFn = AcctFn & Partial<InteractionAccount>
 
 type CadenceArgument<T extends TypeDescriptor<any, any>> = {
   value: TypeDescriptorInput<T>
@@ -22,7 +22,7 @@ type CadenceArgument<T extends TypeDescriptor<any, any>> = {
 
 export {CadenceArgument}
 
-export type InteractionCallback = (
+export type InteractionBuilderFn = (
   ix: Interaction
 ) => Interaction | Promise<Interaction>
 
@@ -328,7 +328,7 @@ type MaybePromise<T> = T | Promise<T>
 
 const recPipe = async (
   ix: MaybePromise<Interaction>,
-  fns: (InteractionCallback | false | MaybePromise<Interaction>)[] = []
+  fns: (InteractionBuilderFn | false | MaybePromise<Interaction>)[] = []
 ): Promise<Interaction> => {
   try {
     ix = hardMode(await ix)
@@ -349,16 +349,16 @@ const recPipe = async (
  * @description Async pipe function to compose interactions
  * @returns An interaction object
  */
-function pipe(fns: (InteractionCallback | false)[]): InteractionCallback
+function pipe(fns: (InteractionBuilderFn | false)[]): InteractionBuilderFn
 function pipe(
   ix: MaybePromise<Interaction>,
-  fns: (InteractionCallback | false)[]
+  fns: (InteractionBuilderFn | false)[]
 ): Promise<Interaction>
 function pipe(
   ...args:
-    | [(InteractionCallback | false)[]]
-    | [MaybePromise<Interaction>, (InteractionCallback | false)[]]
-): Promise<Interaction> | InteractionCallback {
+    | [(InteractionBuilderFn | false)[]]
+    | [MaybePromise<Interaction>, (InteractionBuilderFn | false)[]]
+): Promise<Interaction> | InteractionBuilderFn {
   const [arg1, arg2] = args
   if (isArray(arg1)) return (d: Interaction) => pipe(d, arg1)
 

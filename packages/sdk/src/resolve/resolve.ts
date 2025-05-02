@@ -66,8 +66,8 @@ export const resolve = pipe([
   debug("accounts", (ix: Interaction, log: any, accts: any) =>
     log(...accts(ix))
   ),
-  execFetchRef,
-  execFetchSequenceNumber,
+  /* special */ execFetchRef,
+  /* special */ execFetchSequenceNumber,
   resolveSignatures,
   debug("signatures", (ix: Interaction, log: any, accts: any) =>
     log(...accts(ix))

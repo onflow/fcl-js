@@ -2,7 +2,7 @@ import {
   pipe,
   Ok,
   makeGetEvents,
-  InteractionCallback,
+  InteractionBuilderFn,
 } from "../interaction/interaction"
 
 /**
@@ -16,7 +16,7 @@ export function getEvents(
   eventType: string,
   start: number,
   end: number
-): InteractionCallback {
+): InteractionBuilderFn {
   return pipe([
     makeGetEvents,
     ix => {
