@@ -120,10 +120,13 @@ function generateFunctionPage(templates, outputDir, packageName, func) {
     packageName,
   }
 
+  // Create a filename with lowercase first letter
+  const filename = func.name.charAt(0).toLowerCase() + func.name.slice(1)
+
   generatePage(
     templates,
     "function",
-    path.join(outputDir, "reference", `${func.name}.md`),
+    path.join(outputDir, "reference", `${filename}.md`),
     context
   )
 }

@@ -18,6 +18,16 @@ function generateReferenceIndexPage(
     }
   })
 
+  // Sort functions alphabetically, case insensitively
+  uniqueFunctions.sort((a, b) =>
+    a.name.toLowerCase().localeCompare(b.name.toLowerCase())
+  )
+
+  // Add lowercase_name property for use in templates
+  uniqueFunctions.forEach(func => {
+    func.lowercase_name = func.name.charAt(0).toLowerCase() + func.name.slice(1)
+  })
+
   generatePage(
     templates,
     "referenceIndex",
