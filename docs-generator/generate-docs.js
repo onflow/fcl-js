@@ -82,6 +82,9 @@ function parseJsDoc(node) {
 
 function extractFunctions(sourceFile) {
   const functions = []
+  const filePath = sourceFile.getFilePath()
+  // Convert absolute path to relative path from workspace root
+  const relativeFilePath = path.relative(process.cwd(), filePath)
 
   try {
     // Get all exported functions from source file with relevant info
@@ -114,6 +117,7 @@ function extractFunctions(sourceFile) {
               parameters,
               description: jsDocInfo.description || "",
               customExample: jsDocInfo.example || "",
+              sourceFilePath: relativeFilePath,
             }
           }
           // Handle variable declarations with function values
@@ -148,6 +152,7 @@ function extractFunctions(sourceFile) {
                 parameters,
                 description: jsDocInfo.description || "",
                 customExample: jsDocInfo.example || "",
+                sourceFilePath: relativeFilePath,
               }
             }
           }
