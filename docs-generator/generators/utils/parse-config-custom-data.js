@@ -1,28 +1,18 @@
 const fs = require("fs")
 
 function parseConfigCustomData(configPath) {
+  // Parse config custom data if present and return custom one or null for default
   const config = fs.existsSync(configPath) ? require(configPath) : null
-  const content = {
+  return {
     packageIndex: {
-      overview: null,
+      overview: config?.customData?.packageIndex?.overview || null,
     },
     installation: {
-      requirements: null,
-      importing: null,
-      extra: null,
+      requirements: config?.customData?.installation?.requirements || null,
+      importing: config?.customData?.installation?.importing || null,
+      extra: config?.customData?.installation?.extra || null,
     },
   }
-
-  if (config && config.customData) {
-    content.packageIndex.overview =
-      config.customData.packageIndex.overview || null
-    content.installation.requirements =
-      config.customData.installation.requirements || null
-    content.installation.importing =
-      config.customData.installation.importing || null
-    content.installation.extra = config.customData.installation.extra || null
-  }
-  return content
 }
 
 module.exports = {parseConfigCustomData}
