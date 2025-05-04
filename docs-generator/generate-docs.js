@@ -174,35 +174,50 @@ function extractFunctions(sourceFile) {
   return functions
 }
 
-async function main(packageName, sourceDir, outputDir, templatesDir) {
-  console.log(`Generating docs for ${packageName}...`)
-
+async function main() {
   try {
+    // Extract package name from the name field of the package where the command is run (@onflow/fcl -> fcl)
+    const packageJson = JSON.parse(
+      fs.readFileSync(path.resolve(process.cwd(), "package.json"), "utf8")
+    )
+    const packageName = packageJson.name.split("/").pop()
+    if (!packageName) {
+      throw new Error(
+        `Could not determine package name from ${packageJson.name}`
+      )
+    }
+    console.log(`Generating docs for ${packageName}...`)
+
+    // Configuration
+    const SOURCE_DIR = path.resolve(process.cwd(), "src")
+    const OUTPUT_DIR = path.resolve(__dirname, "./output", packageName)
+    const TEMPLATES_DIR = path.resolve(__dirname, "./templates")
+
     // Clean existing output directory
-    await fs.promises.rm(outputDir, {recursive: true, force: true})
+    await fs.promises.rm(OUTPUT_DIR, {recursive: true, force: true})
 
     // Create output directories if they don't exist
-    await fs.promises.mkdir(outputDir, {recursive: true})
-    await fs.promises.mkdir(path.join(outputDir, "installation"), {
+    await fs.promises.mkdir(OUTPUT_DIR, {recursive: true})
+    await fs.promises.mkdir(path.join(OUTPUT_DIR, "installation"), {
       recursive: true,
     })
-    await fs.promises.mkdir(path.join(outputDir, "reference"), {
+    await fs.promises.mkdir(path.join(OUTPUT_DIR, "reference"), {
       recursive: true,
     })
 
     // Handlebars templates to be used for generating the docs
     const templates = {
       packageIndex: Handlebars.compile(
-        fs.readFileSync(path.join(templatesDir, "package-index.hbs"), "utf8")
+        fs.readFileSync(path.join(TEMPLATES_DIR, "package-index.hbs"), "utf8")
       ),
       installation: Handlebars.compile(
-        fs.readFileSync(path.join(templatesDir, "installation.hbs"), "utf8")
+        fs.readFileSync(path.join(TEMPLATES_DIR, "installation.hbs"), "utf8")
       ),
       referenceIndex: Handlebars.compile(
-        fs.readFileSync(path.join(templatesDir, "reference-index.hbs"), "utf8")
+        fs.readFileSync(path.join(TEMPLATES_DIR, "reference-index.hbs"), "utf8")
       ),
       function: Handlebars.compile(
-        fs.readFileSync(path.join(templatesDir, "function.hbs"), "utf8")
+        fs.readFileSync(path.join(TEMPLATES_DIR, "function.hbs"), "utf8")
       ),
     }
 
@@ -210,7 +225,7 @@ async function main(packageName, sourceDir, outputDir, templatesDir) {
     const project = new Project({
       skipAddingFilesFromTsConfig: true,
     })
-    project.addSourceFilesAtPaths(`${sourceDir}/**/*.ts`)
+    project.addSourceFilesAtPaths(`${SOURCE_DIR}/**/*.ts`)
     // Collect exported functions from all files
     const functions = []
     project.getSourceFiles().forEach(sourceFile => {
@@ -226,14 +241,14 @@ async function main(packageName, sourceDir, outputDir, templatesDir) {
     })
 
     // Generate single page documentation
-    generateInstallationPage(templates, outputDir, packageName)
-    generatePackageIndexPage(templates, outputDir, packageName)
-    generateReferenceIndexPage(templates, outputDir, packageName, functions)
+    generateInstallationPage(templates, OUTPUT_DIR, packageName)
+    generatePackageIndexPage(templates, OUTPUT_DIR, packageName)
+    generateReferenceIndexPage(templates, OUTPUT_DIR, packageName, functions)
     functions.forEach(func => {
-      generateFunctionPage(templates, outputDir, packageName, func)
+      generateFunctionPage(templates, OUTPUT_DIR, packageName, func)
     })
 
-    console.log(`Docs generated in the ${outputDir} directory.`)
+    console.log(`Docs generated in the ${OUTPUT_DIR} directory.`)
     return true
   } catch (error) {
     console.error("Error generating docs:")
@@ -243,21 +258,7 @@ async function main(packageName, sourceDir, outputDir, templatesDir) {
   }
 }
 
-// Get package name from arguments
-const args = process.argv.slice(2)
-if (args.length < 1) {
-  console.error("Error: Package name is required.")
-  console.error("Usage: node generate-docs.js <packageName>")
-  process.exit(1)
-}
-
-// Configuration
-const PACKAGE_NAME = args[0]
-const SOURCE_DIR = path.resolve(process.cwd(), "src")
-const OUTPUT_DIR = path.resolve(__dirname, "./output", PACKAGE_NAME)
-const TEMPLATES_DIR = path.resolve(__dirname, "./templates")
-
-main(PACKAGE_NAME, SOURCE_DIR, OUTPUT_DIR, TEMPLATES_DIR).catch(error => {
+main().catch(error => {
   console.error("Unhandled error:")
   console.error(error.message || error)
   process.exit(1)

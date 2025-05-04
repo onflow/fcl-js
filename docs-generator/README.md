@@ -49,12 +49,10 @@ Each package that needs documentation should include a `generate-docs` script in
 ```json
 {
   "scripts": {
-    "generate-docs": "node ../../docs-generator/generate-docs.js <packageName>"
+    "generate-docs": "node ../../docs-generator/generate-docs.js"
   }
 }
 ```
-
-Where `<packageName>` is the name of the package (e.g., "sdk")
 
 To generate documentation for a single package, run:
 
@@ -126,7 +124,7 @@ To add documentation generation to a new package:
 ```json
 {
   "scripts": {
-    "generate-docs": "node ../../docs-generator/generate-docs.js your-package-name"
+    "generate-docs": "node ../../docs-generator/generate-docs.js"
   }
 }
 ```
