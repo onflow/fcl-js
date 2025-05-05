@@ -1,75 +1,39 @@
-# Flow Client Library (FCL) Generated Documentation
+# FCL Documentation Output
 
-This directory contains auto-generated documentation for FCL packages in a format compatible with Docusaurus v2.
+This directory contains the automatically generated documentation for FCL packages.
 
-> **Note:** All generated files in this directory (except this README.md) are git-ignored. This is intentional to avoid committing auto-generated files to the repository.
-
-## Structure
-
-Each package has its own directory with the following structure:
+## Directory Structure
 
 ```
-/docs-generator/output/[package-name]/
-  ├── index.md                  # Main package page
-  ├── installation/             # Installation instructions
-  │   └── index.md
-  └── reference/                # API reference documentation
-      ├── index.md              # List of all functions
-      ├── functionName1.md      # Individual function documentation
-      ├── functionName2.md
-      └── ...
+fcl-docs/                 # Main documentation directory for Docusaurus
+    └── packages/         # All packages documentation
+        ├── index.md      # Packages index page
+        ├── package-a/    # Documentation for package-a
+        │   ├── index.md  # Main package page
+        │   ├── installation/
+        │   │   └── index.md
+        │   └── reference/
+        │       ├── index.md
+        │       ├── functionName1.md
+        │       └── ...
+        ├── package-b/
+        └── ...
 ```
 
-## Using with Docusaurus
+## Using the Generated Documentation
 
-To use these documentation files with your Docusaurus v2 website:
+1. The documentation is structured to be directly usable in a Docusaurus v2 project
+2. Copy the entire `fcl-docs` directory to your Docusaurus project's `docs` directory
+3. The documentation will be available under the `/fcl-docs/packages` path in your Docusaurus site
 
-1. Copy the package directories to your Docusaurus project's `docs` directory:
+## Auto-generation
 
-   ```bash
-   cp -r ./docs-generator/output/* /path/to/your-docusaurus-site/docs/
-   ```
+This documentation is automatically generated from the source code of FCL packages.
+Do not modify these files directly as they will be overwritten when documentation is regenerated.
 
-2. Update your Docusaurus `sidebars.js` file to include the new documentation sections:
+Instead:
+- Update the JSDoc comments in the source code
+- Customize the templates in `docs-generator/templates/`
+- Create a `docs-generator.config.js` file in the package root for custom content
 
-   ```javascript
-   module.exports = {
-     docs: [
-       {
-         type: 'category',
-         label: 'SDK',
-         items: [
-           'sdk/index',
-           {
-             type: 'category',
-             label: 'Installation',
-             items: ['sdk/installation/index'],
-           },
-           {
-             type: 'category',
-             label: 'Reference',
-             items: ['sdk/reference/index', ...], // Add all function references here
-           },
-         ],
-       },
-       // Add other packages here
-     ],
-   };
-   ```
-
-## Regenerating Documentation
-
-To generate documentation for all packages with the generate-docs script:
-
-```bash
-npm run generate-docs-all
-```
-
-To generate documentation for a specific package:
-
-```bash
-cd packages/[package-name]
-npm run generate-docs
-```
-
-The documentation will be generated in the `docs-generator/output/[package-name]` directory.
+For more details on how the documentation is generated, see the [docs-generator README](../README.md).

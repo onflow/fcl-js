@@ -4,18 +4,27 @@ const {execSync} = require("child_process")
 
 async function main() {
   try {
-    // Ensure the output directory exists
+    // Ensure the base output directories exist
     const outputDir = path.resolve(__dirname, "./output")
+    const fclDocsDir = path.join(outputDir, "fcl-docs")
+    const outputPackagesDir = path.join(fclDocsDir, "packages")
+
     await fs.promises.mkdir(outputDir, {recursive: true})
+    await fs.promises.mkdir(fclDocsDir, {recursive: true})
+    await fs.promises.mkdir(outputPackagesDir, {recursive: true})
 
     // Get packages directory
-    const packagesDir = path.resolve(__dirname, "../packages")
+    const sourcePackagesDir = path.resolve(__dirname, "../packages")
     // Find packages with generate-docs script
-    console.log(`Scanning for packages in ${packagesDir}`)
+    console.log(`Scanning for packages in ${sourcePackagesDir}`)
     const packages =
-      fs.readdirSync(packagesDir).filter(name => {
+      fs.readdirSync(sourcePackagesDir).filter(name => {
         try {
-          const packageJsonPath = path.join(packagesDir, name, "package.json")
+          const packageJsonPath = path.join(
+            sourcePackagesDir,
+            name,
+            "package.json"
+          )
           const packageJson = JSON.parse(
             fs.readFileSync(packageJsonPath, "utf8")
           )
@@ -34,7 +43,7 @@ async function main() {
 
     // Navigate to the package directory and run the generate-docs script
     for (const pkg of packages) {
-      const pkgDir = path.join(packagesDir, pkg)
+      const pkgDir = path.join(sourcePackagesDir, pkg)
       execSync(`cd ${pkgDir} && npm run generate-docs`, {
         stdio: "inherit",
         env: {...process.env},

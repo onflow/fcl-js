@@ -7,6 +7,7 @@ const {
   generateInstallationPage,
   generateReferenceIndexPage,
   generateFunctionPage,
+  generatePackageListIndexPage,
 } = require("./generators")
 
 function parseJsDoc(node) {
@@ -188,20 +189,25 @@ async function main() {
     }
     console.log(`Generating docs for ${packageName}...`)
 
-    // Configuration
+    // Configuration with updated directory structure
     const SOURCE_DIR = path.resolve(process.cwd(), "src")
-    const OUTPUT_DIR = path.resolve(__dirname, "./output", packageName)
+    const ROOT_OUTPUT_DIR = path.resolve(__dirname, "./output")
+    const FCL_DOCS_DIR = path.join(ROOT_OUTPUT_DIR, "fcl-docs")
+    const PACKAGES_DIR = path.join(FCL_DOCS_DIR, "packages")
+    const PACKAGE_OUTPUT_DIR = path.join(PACKAGES_DIR, packageName)
     const TEMPLATES_DIR = path.resolve(__dirname, "./templates")
 
-    // Clean existing output directory
-    await fs.promises.rm(OUTPUT_DIR, {recursive: true, force: true})
-
+    // Ensure the base directories exist
+    await fs.promises.mkdir(FCL_DOCS_DIR, {recursive: true})
+    await fs.promises.mkdir(PACKAGES_DIR, {recursive: true})
+    // Clean existing package output directory
+    await fs.promises.rm(PACKAGE_OUTPUT_DIR, {recursive: true, force: true})
     // Create output directories if they don't exist
-    await fs.promises.mkdir(OUTPUT_DIR, {recursive: true})
-    await fs.promises.mkdir(path.join(OUTPUT_DIR, "installation"), {
+    await fs.promises.mkdir(PACKAGE_OUTPUT_DIR, {recursive: true})
+    await fs.promises.mkdir(path.join(PACKAGE_OUTPUT_DIR, "installation"), {
       recursive: true,
     })
-    await fs.promises.mkdir(path.join(OUTPUT_DIR, "reference"), {
+    await fs.promises.mkdir(path.join(PACKAGE_OUTPUT_DIR, "reference"), {
       recursive: true,
     })
 
@@ -218,6 +224,12 @@ async function main() {
       ),
       function: Handlebars.compile(
         fs.readFileSync(path.join(TEMPLATES_DIR, "function.hbs"), "utf8")
+      ),
+      packageListIndex: Handlebars.compile(
+        fs.readFileSync(
+          path.join(TEMPLATES_DIR, "package-list-index.hbs"),
+          "utf8"
+        )
       ),
     }
 
@@ -241,14 +253,21 @@ async function main() {
     })
 
     // Generate single page documentation
-    generateInstallationPage(templates, OUTPUT_DIR, packageName)
-    generatePackageIndexPage(templates, OUTPUT_DIR, packageName)
-    generateReferenceIndexPage(templates, OUTPUT_DIR, packageName, functions)
+    generateInstallationPage(templates, PACKAGE_OUTPUT_DIR, packageName)
+    generatePackageIndexPage(templates, PACKAGE_OUTPUT_DIR, packageName)
+    generateReferenceIndexPage(
+      templates,
+      PACKAGE_OUTPUT_DIR,
+      packageName,
+      functions
+    )
     functions.forEach(func => {
-      generateFunctionPage(templates, OUTPUT_DIR, packageName, func)
+      generateFunctionPage(templates, PACKAGE_OUTPUT_DIR, packageName, func)
     })
+    // Generate the packages index page
+    generatePackageListIndexPage(templates, PACKAGES_DIR, packageName)
 
-    console.log(`Docs generated in the ${OUTPUT_DIR} directory.`)
+    console.log(`Docs generated in the ${PACKAGE_OUTPUT_DIR} directory.`)
     return true
   } catch (error) {
     console.error("Error generating docs:")

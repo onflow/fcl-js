@@ -20,6 +20,7 @@ The documentation generator creates Markdown files for Docusaurus v2 websites. I
 - Support for JSDoc comments including function descriptions, parameter info, and usage examples
 - Handlebars templates for easy customization of output format
 - Consistent documentation structure across all packages
+- Package index page listing all available packages
 
 ### JSDoc Support
 
@@ -72,23 +73,31 @@ npm run generate-docs-all
 This will:
 1. Find all packages with a `generate-docs` script
 2. Run the script for each package
-3. Generate documentation in the `/docs-generator/output/<package-name>` directory
+3. Generate documentation in the `/docs-generator/output/fcl-docs/packages/<package-name>` directory
+4. Create a packages index page at `/docs-generator/output/fcl-docs/packages/index.md`
 
 ## Output Structure
 
-The generated documentation follows this structure for each package:
+The generated documentation follows this structure:
 
 ```
-/docs-generator/output/<package-name>/
-  ├── index.md                  # Main package page
-  ├── installation/             # Installation instructions
-  │   └── index.md
-  └── reference/                # API reference documentation
-      ├── index.md              # List of all functions
-      ├── functionName1.md      # Individual function documentation
-      ├── functionName2.md
-      └── ...
+/docs-generator/output/
+  └── fcl-docs/                 # Main documentation directory for Docusaurus
+      └── packages/             # All packages documentation
+          ├── index.md          # Packages index page
+          ├── package-a/        # Documentation for package-a
+          │   ├── index.md      # Main package page
+          │   ├── installation/ # Installation instructions
+          │   │   └── index.md
+          │   └── reference/    # API reference documentation
+          │       ├── index.md  # List of all functions
+          │       ├── functionName1.md
+          │       └── ...
+          ├── package-b/
+          └── ...
 ```
+
+This structure makes it easy to copy the entire `fcl-docs` directory into your Docusaurus project.
 
 All generated files (except README.md) are ignored by git.
 
@@ -115,6 +124,8 @@ module.exports = {
 };
 ```
 
+All properties in the configuration are optional. If a property is not specified, default values will be used.
+
 ## Adding Documentation to a New Package
 
 To add documentation generation to a new package:
@@ -134,3 +145,7 @@ To add documentation generation to a new package:
 3. Run the generate-docs script to test it.
 
 This package will now be included when running the `generate-docs-all` command. 
+
+## Integration with Docusaurus
+
+After generating documentation, you can copy the entire `fcl-docs` directory to your Docusaurus project's `docs` directory. This will maintain the folder structure and allow Docusaurus to build the complete documentation site. 
