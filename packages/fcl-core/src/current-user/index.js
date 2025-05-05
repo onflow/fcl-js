@@ -128,10 +128,21 @@ async function getAccountProofData() {
   const accountProofData = await accountProofDataResolver()
   if (accountProofData == null) return
 
-  invariant(
-    typeof accountProofData.appIdentifier === "string",
-    "appIdentifier must be a string"
-  )
+  if (accountProofData.appIdentifier != null) {
+    log.deprecate({
+      title: "appIdentifier is deprecated",
+      message: `Manually set appIdentifiers are now deprecated and have been replaced by the application origin URL.  Please remove the appIdentifier from your account proof data.`,
+      level: LEVELS.warn,
+    })
+
+    invariant(
+      typeof accountProofData.appIdentifier === "string",
+      "appIdentifier must be a string"
+    )
+  } else {
+    accountProofData.appIdentifier = window.location.origin
+  }
+
   invariant(
     /^[0-9a-f]+$/i.test(accountProofData.nonce),
     "Nonce must be a hex string"
