@@ -8,6 +8,7 @@ const {
   generateReferenceIndexPage,
   generateFunctionPage,
   generatePackageListIndexPage,
+  generateTypesIndexPage,
 } = require("./generators")
 
 function parseJsDoc(node) {
@@ -195,15 +196,18 @@ async function main() {
     const FCL_DOCS_DIR = path.join(ROOT_OUTPUT_DIR, "fcl-docs")
     const PACKAGES_DIR = path.join(FCL_DOCS_DIR, "packages")
     const PACKAGE_OUTPUT_DIR = path.join(PACKAGES_DIR, packageName)
+    const TYPES_OUTPUT_DIR = path.join(FCL_DOCS_DIR, "types")
     const TEMPLATES_DIR = path.resolve(__dirname, "./templates")
 
     // Ensure the base directories exist
     await fs.promises.mkdir(FCL_DOCS_DIR, {recursive: true})
     await fs.promises.mkdir(PACKAGES_DIR, {recursive: true})
-    // Clean existing package output directory
+    // Clean existing output directory
     await fs.promises.rm(PACKAGE_OUTPUT_DIR, {recursive: true, force: true})
+    await fs.promises.rm(TYPES_OUTPUT_DIR, {recursive: true, force: true})
     // Create output directories if they don't exist
     await fs.promises.mkdir(PACKAGE_OUTPUT_DIR, {recursive: true})
+    await fs.promises.mkdir(TYPES_OUTPUT_DIR, {recursive: true})
     await fs.promises.mkdir(path.join(PACKAGE_OUTPUT_DIR, "installation"), {
       recursive: true,
     })
@@ -231,6 +235,9 @@ async function main() {
           "utf8"
         )
       ),
+      typesIndex: Handlebars.compile(
+        fs.readFileSync(path.join(TEMPLATES_DIR, "types-index.hbs"), "utf8")
+      ),
     }
 
     // Initialize ts-morph project and add source files
@@ -252,6 +259,8 @@ async function main() {
       functions.push(...fileFunctions)
     })
 
+    // Generate the packages index page
+    generatePackageListIndexPage(templates, PACKAGES_DIR, packageName)
     // Generate single page documentation
     generateInstallationPage(templates, PACKAGE_OUTPUT_DIR, packageName)
     generatePackageIndexPage(templates, PACKAGE_OUTPUT_DIR, packageName)
@@ -264,10 +273,10 @@ async function main() {
     functions.forEach(func => {
       generateFunctionPage(templates, PACKAGE_OUTPUT_DIR, packageName, func)
     })
-    // Generate the packages index page
-    generatePackageListIndexPage(templates, PACKAGES_DIR, packageName)
+    // Generate the types documentation
+    generateTypesIndexPage(templates, TYPES_OUTPUT_DIR)
 
-    console.log(`Docs generated in the ${PACKAGE_OUTPUT_DIR} directory.`)
+    console.log(`Docs generated correctly for ${packageName}.`)
     return true
   } catch (error) {
     console.error("Error generating docs:")

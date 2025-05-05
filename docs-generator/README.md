@@ -21,6 +21,7 @@ The documentation generator creates Markdown files for Docusaurus v2 websites. I
 - Handlebars templates for easy customization of output format
 - Consistent documentation structure across all packages
 - Package index page listing all available packages
+- Core types documentation from the @onflow/typedefs package
 
 ### JSDoc Support
 
@@ -75,6 +76,7 @@ This will:
 2. Run the script for each package
 3. Generate documentation in the `/docs-generator/output/fcl-docs/packages/<package-name>` directory
 4. Create a packages index page at `/docs-generator/output/fcl-docs/packages/index.md`
+5. Generate core types documentation in `/docs-generator/output/fcl-docs/types/index.md`
 
 ## Output Structure
 
@@ -83,18 +85,20 @@ The generated documentation follows this structure:
 ```
 /docs-generator/output/
   └── fcl-docs/                 # Main documentation directory for Docusaurus
-      └── packages/             # All packages documentation
-          ├── index.md          # Packages index page
-          ├── package-a/        # Documentation for package-a
-          │   ├── index.md      # Main package page
-          │   ├── installation/ # Installation instructions
-          │   │   └── index.md
-          │   └── reference/    # API reference documentation
-          │       ├── index.md  # List of all functions
-          │       ├── functionName1.md
-          │       └── ...
-          ├── package-b/
-          └── ...
+      ├── packages/             # All packages documentation
+      │   ├── index.md          # Packages index page
+      │   ├── package-a/        # Documentation for package-a
+      │   │   ├── index.md      # Main package page
+      │   │   ├── installation/ # Installation instructions
+      │   │   │   └── index.md
+      │   │   └── reference/    # API reference documentation
+      │   │       ├── index.md  # List of all functions
+      │   │       ├── functionName1.md
+      │   │       └── ...
+      │   ├── package-b/
+      │   └── ...
+      └── types/                # Core types documentation
+          └── index.md          # Types reference page with interfaces, type aliases, and enums
 ```
 
 This structure makes it easy to copy the entire `fcl-docs` directory into your Docusaurus project.
@@ -145,6 +149,18 @@ To add documentation generation to a new package:
 3. Run the generate-docs script to test it.
 
 This package will now be included when running the `generate-docs-all` command. 
+
+## Core Types Documentation
+
+The generator also creates documentation for all types, interfaces, and enums exported from the `@onflow/typedefs` package. This documentation is generated every time you run the generate-docs script for any package, ensuring that the types documentation is always up-to-date.
+
+The types documentation includes:
+
+- Interfaces with their properties and methods
+- Type aliases with their underlying types
+- Enums with all their members and values
+
+All type documentation includes JSDoc descriptions when available.
 
 ## Integration with Docusaurus
 

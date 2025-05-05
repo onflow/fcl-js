@@ -5,6 +5,7 @@ const {generateFunctionPage} = require("./generate-function-page")
 const {
   generatePackageListIndexPage,
 } = require("./generate-package-list-index-page")
+const {generateTypesIndexPage} = require("./generate-types-index-page")
 
 module.exports = {
   generatePackageIndexPage,
@@ -12,4 +13,5 @@ module.exports = {
   generateReferenceIndexPage,
   generateFunctionPage,
   generatePackageListIndexPage,
+  generateTypesIndexPage,
 }
