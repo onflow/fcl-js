@@ -1,6 +1,6 @@
 import React from "react"
 import {useCurrentFlowUser} from "../hooks"
-import {Button} from "@headlessui/react"
+import {Button} from "./internal/Button"
 
 export const Connect: React.FC = () => {
   const {user, authenticate, unauthenticate} = useCurrentFlowUser()
