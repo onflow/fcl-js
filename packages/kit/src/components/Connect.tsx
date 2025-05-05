@@ -7,6 +7,7 @@ export const Connect: React.FC = () => {
 
   return (
     <Button
+      variant="primary"
       onClick={user.loggedIn ? () => unauthenticate() : () => authenticate()}
     >
       {user.loggedIn ? "Disconnect" : "Connect"}

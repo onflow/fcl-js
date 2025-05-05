@@ -4,6 +4,7 @@ import {FlowConfig, FlowConfigContext} from "../core/context"
 import {DefaultOptions, QueryClient} from "@tanstack/react-query"
 import {FlowQueryClientProvider} from "./FlowQueryClient"
 import {deepEqual} from "../utils/deepEqual"
+import {ThemeProvider} from "../core/theme"
 
 interface FlowProviderProps {
   config?: FlowConfig
@@ -141,7 +142,9 @@ export function FlowProvider({
   return (
     <FlowQueryClientProvider queryClient={queryClient}>
       <FlowConfigContext.Provider value={flowConfig}>
-        {children}
+        <ThemeProvider>
+          {children}
+        </ThemeProvider>
       </FlowConfigContext.Provider>
     </FlowQueryClientProvider>
   )
