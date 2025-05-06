@@ -57,6 +57,24 @@ function extractCoreTypes() {
 function extractTypeName(fullType) {
   if (!fullType) return fullType
 
+  // For arrays with union types, preserve the original type structure
+  if (
+    fullType.includes("|") &&
+    fullType.includes("[") &&
+    fullType.includes("]")
+  ) {
+    // Clean up import references but maintain the union structure
+    return fullType
+      .replace(/import\([^)]+\)\./g, "")
+      .replace(/\/\*[\s\S]*?\*\//g, "")
+  }
+  // For union types, preserve the structure but clean up imports
+  if (fullType.includes("|")) {
+    return fullType
+      .replace(/import\([^)]+\)\./g, "")
+      .replace(/\/\*[\s\S]*?\*\//g, "")
+  }
+
   // For simple types
   if (!fullType.includes("import(") && !fullType.includes("Promise<")) {
     return fullType.startsWith("{") && fullType.includes(":")
