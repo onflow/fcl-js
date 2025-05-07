@@ -165,3 +165,28 @@ All type documentation includes JSDoc descriptions when available.
 ## Integration with Docusaurus
 
 After generating documentation, you can copy the entire `fcl-docs` directory to your Docusaurus project's `docs` directory. This will maintain the folder structure and allow Docusaurus to build the complete documentation site. 
+
+## Automated Documentation Generation
+
+The repository includes a GitHub Actions workflow that automatically generates and publishes documentation when changes are merged to the master branch. This ensures that the documentation is always up-to-date with the latest code.
+
+### Workflow Overview
+
+The workflow (`/.github/workflows/generate-docs.yml`) performs the following steps:
+
+1. Checks out the FCL JS repository
+2. Sets up Node.js and installs dependencies
+3. Runs the documentation generation script
+4. Checks out the onflow/docs repository
+5. Creates a new branch in the docs repository
+6. Copies the generated documentation to the appropriate location
+7. Commits and pushes the changes
+8. Creates a pull request in the onflow/docs repository
+
+The generated branch name and PR will include the commit hash from the FCL JS master branch for easy tracking.
+
+### Required Setup
+
+For the documentation workflow to function correctly, you need to set up the following GitHub repository secret:
+
+- **DOCS_REPO_TOKEN**: A GitHub personal access token with permissions to create branches and pull requests in the `onflow/docs` repository.
