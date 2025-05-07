@@ -125,22 +125,33 @@ async function getAccountProofData() {
     return
   }
 
-  const accountProofData = await accountProofDataResolver()
-  if (accountProofData == null) return
+  const accountProofData = {...(await accountProofDataResolver())}
 
-  if (accountProofData.appIdentifier != null) {
-    log.deprecate({
-      title: "appIdentifier is deprecated",
-      message: `Manually set appIdentifiers are now deprecated and have been replaced by the application origin URL.  Please remove the appIdentifier from your account proof data.`,
-      level: LEVELS.warn,
-    })
+  const origin = window?.location?.origin
 
-    invariant(
-      typeof accountProofData.appIdentifier === "string",
-      "appIdentifier must be a string"
-    )
+  if (accountProofData.appIdentifier) {
+    if (origin) {
+      log.deprecate({
+        pkg: "FCL",
+        subject: "appIdentifier in fcl.accountProof.resolver",
+        message:
+          "Manually set app identifiers in the account proof resolver function are now deprecated.  These are now automatically set to the application origin URL by FCL",
+        transition:
+          "https://github.com/onflow/flow-js-sdk/blob/master/packages/fcl/TRANSITIONS.md#0002-deprecate-appIdentifier-field-in-account-proof-resolver",
+      })
+
+      invariant(
+        typeof accountProofData.appIdentifier === "string",
+        "appIdentifier must be a string"
+      )
+    }
   } else {
-    accountProofData.appIdentifier = window.location.origin
+    invariant(
+      origin,
+      "The appIdentifier (origin) could not be inferred from the window.location.origin.  Please set the appIdentifier manually in the fcl.accountProof.resolver function."
+    )
+
+    accountProofData.appIdentifier = origin
   }
 
   invariant(
