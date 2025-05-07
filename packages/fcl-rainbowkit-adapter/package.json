@@ -44,8 +44,6 @@
     "@onflow/fcl-wagmi-adapter": "0.0.3",
     "@onflow/rlp": "^1.2.3",
     "@wagmi/core": "^2.16.3",
-    "@walletconnect/jsonrpc-http-connection": "^1.0.8",
-    "@walletconnect/jsonrpc-provider": "^1.0.14",
     "mipd": "^0.0.7",
     "react": "17.x || 18.x || 19.x",
     "viem": "^2.22.21",
