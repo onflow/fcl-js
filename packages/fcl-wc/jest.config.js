@@ -5,6 +5,7 @@ const config = {
       "<rootDir>/src/mocks/file-mock.ts",
     "\\.(css|less)$": "<rootDir>/src/mocks/file-mock.ts",
   },
+  setupFilesAfterEnv: ["<rootDir>/jest.setup.ts"],
 }
 
 module.exports = config

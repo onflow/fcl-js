@@ -41,12 +41,6 @@
     "@ethersproject/hash": "^5.7.0",
     "@onflow/fcl-ethereum-provider": "0.0.3",
     "@onflow/rlp": "^1.2.3",
-    "@walletconnect/jsonrpc-http-connection": "^1.0.8",
-    "@walletconnect/jsonrpc-provider": "^1.0.14",
-    "@walletconnect/modal": "^2.7.0",
-    "@walletconnect/types": "^2.18.0",
-    "@walletconnect/universal-provider": "^2.18.0",
-    "@walletconnect/utils": "^2.18.0",
     "viem": "^2.22.21"
   },
   "peerDependencies": {
