@@ -1,15 +1,20 @@
 import React from "react"
 import {useCurrentFlowUser} from "../hooks"
-import {Button} from "@headlessui/react"
+import {Button, ButtonProps} from "./internal/Button"
 
-export const Connect: React.FC = () => {
+interface ConnectProps {
+  variant?: ButtonProps["variant"]
+}
+
+export const Connect: React.FC<ConnectProps> = ({variant = "primary"}) => {
   const {user, authenticate, unauthenticate} = useCurrentFlowUser()
 
   return (
     <Button
-      onClick={user.loggedIn ? () => unauthenticate() : () => authenticate()}
+      variant={variant}
+      onClick={user.loggedIn ? unauthenticate : authenticate}
     >
-      {user.loggedIn ? "Disconnect" : "Connect"}
+      {user.loggedIn ? "Disconnect Wallet" : "Connect Wallet"}
     </Button>
   )
 }
