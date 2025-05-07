@@ -16,12 +16,12 @@ export const onMessageFromFCL = (messageType, cb = () => {}) => {
   }
 
   const internal = e => {
-    const {data} = e
+    const {data, origin} = e
     if (typeof data !== "object") return
     if (typeof data == null) return
     if (data.type !== messageType) return
 
-    cb(buildData(data))
+    cb(buildData(data), {origin})
   }
 
   window.addEventListener("message", internal)
