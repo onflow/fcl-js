@@ -3,10 +3,13 @@
 exports[`Response - Snapshot 1`] = `
 {
   "account": null,
+  "accountStatusEvent": null,
   "block": null,
+  "blockDigest": null,
   "blockHeader": null,
   "collection": null,
   "encodedData": null,
+  "event": null,
   "events": null,
   "heartbeat": null,
   "latestBlock": null,

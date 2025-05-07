@@ -1,89 +1,193 @@
-import {EventStream} from "@onflow/typedefs"
+import {Subscription} from "@onflow/typedefs"
 import {events} from "."
-import {send, decode, subscribeEvents} from "@onflow/sdk"
+import {subscribe, SubscriptionsNotSupportedError} from "@onflow/sdk"
+import {events as legacyEvents} from "./legacy-events"
+import {getChainId} from "../utils"
 
 jest.mock("@onflow/sdk")
+jest.mock("./legacy-events")
+jest.mock("../utils")
 
 describe("events", () => {
-  let sendSpy
-  let decodeSpy
-  let subscribeEventsSpy
-  let mockEventsStream: EventStream
+  let mockSubscription: jest.Mocked<Subscription>
+  let mockLegacySubscribeObject: jest.Mocked<{subscribe: () => void}>
+  let mockLegacyUnsubscribe: jest.MockedFunction<() => void>
 
   beforeEach(() => {
-    mockEventsStream = {
-      on: jest.fn(() => mockEventsStream),
-      off: jest.fn(() => mockEventsStream),
-      close: jest.fn(),
+    mockSubscription = {
+      unsubscribe: jest.fn(),
+    }
+    mockLegacyUnsubscribe = jest.fn()
+    mockLegacySubscribeObject = {
+      subscribe: jest.fn().mockReturnValue(mockLegacyUnsubscribe),
     }
 
-    sendSpy = jest.mocked(send)
-    decodeSpy = jest.mocked(decode)
-    subscribeEventsSpy = jest.mocked(subscribeEvents)
-
-    sendSpy.mockReturnValue(Promise.resolve(mockEventsStream))
-    decodeSpy.mockImplementation(async x => x)
-    subscribeEventsSpy.mockImplementation(async x => x)
+    jest.mocked(subscribe).mockReturnValue(mockSubscription)
+    jest.mocked(legacyEvents).mockReturnValue(mockLegacySubscribeObject)
   })
 
   afterEach(() => {
     jest.clearAllMocks()
   })
 
-  test("subscribe should call send with the subscribeEvents ix", () => {
+  test("subscribe should call subscribe with the correct arguments", async () => {
     const filter = {eventTypes: ["A"]}
+
     events(filter).subscribe(() => {})
-    expect(sendSpy).toHaveBeenCalledWith([subscribeEvents(filter)])
+
+    // Flush the event loop
+    await new Promise(resolve => setTimeout(resolve, 0))
+
+    expect(subscribe).toHaveBeenCalledWith({
+      topic: "events",
+      args: filter,
+      onData: expect.any(Function),
+      onError: expect.any(Function),
+    })
   })
 
-  test("should work with a string", () => {
+  test("should work with a string", async () => {
     events("A").subscribe(() => {})
-    expect(sendSpy).toHaveBeenCalledWith([subscribeEvents({eventTypes: ["A"]})])
+
+    // Flush the event loop
+    await new Promise(resolve => setTimeout(resolve, 0))
+
+    expect(subscribe).toHaveBeenCalledWith({
+      topic: "events",
+      args: {eventTypes: ["A"]},
+      onData: expect.any(Function),
+      onError: expect.any(Function),
+    })
   })
 
-  test("should work with empty args", () => {
+  test("should work with empty args", async () => {
     events().subscribe(() => {})
-    expect(sendSpy).toHaveBeenCalledWith([subscribeEvents({})])
+
+    // Flush the event loop
+    await new Promise(resolve => setTimeout(resolve, 0))
+
+    expect(subscribe).toHaveBeenCalledWith({
+      topic: "events",
+      args: {},
+      onData: expect.any(Function),
+      onError: expect.any(Function),
+    })
   })
 
   test("subscribe should pipe the events to the callback", async () => {
     const filter = {eventTypes: ["A"]}
-    const callback = jest.fn()
+    const onData = jest.fn()
+    const onError = jest.fn()
 
-    const mockEvents = [{type: "A"}, {type: "B"}]
+    const mockEvents = [{type: "A"}, {type: "B"}] as any[]
 
-    mockEventsStream.on.mockImplementation((event, cb) => {
-      if (event === "events") {
-        cb(mockEvents)
-      }
-      return mockEventsStream
+    jest.mocked(subscribe).mockImplementation(({onData}) => {
+      mockEvents.forEach(event => onData(event))
+      return mockSubscription
     })
 
-    events(filter).subscribe(callback)
+    events(filter).subscribe(onData, onError)
+
+    // Flush the event loop
     await new Promise(resolve => setTimeout(resolve, 0))
 
-    expect(callback.mock.calls).toEqual([
-      [mockEvents[0], null],
-      [mockEvents[1], null],
-    ])
+    expect(onData.mock.calls).toEqual([[{type: "A"}], [{type: "B"}]])
+    expect(onError).not.toHaveBeenCalled()
   })
 
   test("subscribe should pipe the errors to the callback", async () => {
     const filter = {eventTypes: ["A"]}
-    const callback = jest.fn()
+    const onData = jest.fn()
+    const onError = jest.fn()
 
     const mockError = new Error("mock error")
 
-    mockEventsStream.on.mockImplementation((event, cb) => {
-      if (event === "error") {
-        cb(mockError)
-      }
-      return mockEventsStream
+    jest.mocked(subscribe).mockImplementation(({onError: _onError}) => {
+      _onError(mockError)
+      return mockSubscription
     })
 
-    events(filter).subscribe(callback)
+    events(filter).subscribe(onData, onError)
+
+    // Flush the event loop
     await new Promise(resolve => setTimeout(resolve, 0))
 
-    expect(callback.mock.calls).toEqual([[null, mockError]])
+    expect(onData).not.toHaveBeenCalled()
+    expect(onError).toHaveBeenCalledTimes(1)
+    expect(onError).toHaveBeenCalledWith(mockError)
+  })
+
+  test("fallback to legacy polling if subscriptions are not supported", async () => {
+    const filter = "A"
+    const onData = jest.fn()
+    const onError = jest.fn()
+
+    const mockNotSupportedError = new SubscriptionsNotSupportedError()
+
+    jest.mocked(subscribe).mockImplementation(({onError: _onError}) => {
+      _onError(mockNotSupportedError)
+      return mockSubscription
+    })
+
+    const unsubscribe = events(filter).subscribe(onData, onError)
+
+    // Flush the event loop
+    await new Promise(resolve => setTimeout(resolve, 0))
+
+    // Check that the error did not propagate to the onError callback
+    expect(onData).not.toHaveBeenCalled()
+    expect(onError).not.toHaveBeenCalled()
+
+    // Check that the legacy subscribe was called
+    expect(mockLegacySubscribeObject.subscribe).toHaveBeenCalledTimes(1)
+    expect(mockLegacyUnsubscribe).not.toHaveBeenCalled()
+
+    // Check that the legacy events were called with the correct filter
+    expect(legacyEvents).toHaveBeenCalledWith(filter)
+    expect(mockLegacySubscribeObject.subscribe).toHaveBeenCalledWith(
+      expect.any(Function)
+    )
+
+    // Mock the legacy subscribe to call the onData callback
+    const legacyOnData = (
+      mockLegacySubscribeObject.subscribe.mock.calls as any
+    )[0][0] as jest.Mock
+    const mockLegacyEvents = [{type: "A"}, {type: "B"}] as any[]
+    mockLegacyEvents.forEach(event => legacyOnData(event))
+
+    // Flush the event loop
+    await new Promise(resolve => setTimeout(resolve, 0))
+
+    // Check that the onData callback was called with the legacy events
+    expect(onData.mock.calls).toEqual([[{type: "A"}], [{type: "B"}]])
+    expect(onError).not.toHaveBeenCalled()
+    expect(mockLegacyUnsubscribe).not.toHaveBeenCalled()
+
+    // Unsubscribe
+    unsubscribe()
+
+    // Flush the event loop
+    await new Promise(resolve => setTimeout(resolve, 0))
+
+    expect(mockSubscription.unsubscribe).toHaveBeenCalledTimes(1)
+    expect(mockLegacyUnsubscribe).toHaveBeenCalledTimes(1)
+  })
+
+  test("emulator should fallback to legacy polling", async () => {
+    const filter = "A"
+    const onData = jest.fn()
+    const onError = jest.fn()
+
+    jest.mocked(getChainId).mockResolvedValue("local")
+
+    events(filter).subscribe(onData, onError)
+
+    // Flush the event loop
+    await new Promise(resolve => setTimeout(resolve, 10))
+
+    expect(legacyEvents).toHaveBeenCalledWith(filter)
+    expect(mockLegacySubscribeObject.subscribe).toHaveBeenCalledWith(
+      expect.any(Function)
+    )
   })
 })

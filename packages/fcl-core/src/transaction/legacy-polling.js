@@ -13,8 +13,20 @@ import {send as fclSend, decode, getTransactionStatus} from "@onflow/sdk"
 import {HTTPRequestError} from "@onflow/transport-http"
 import {grpc} from "@improbable-eng/grpc-web"
 import {TransactionError} from "./transaction-error"
+import {
+  scoped,
+  isDiff,
+  isUnknown,
+  isPending,
+  isFinalized,
+  isExecuted,
+  isSealed,
+  isExpired,
+} from "./utils"
+import {TXID_REGEXP} from "./constants"
 
-const TXID_REGEXP = /^[0-9a-fA-F]{64}$/
+const POLL = "POLL"
+const TIMEOUT = "TIMEOUT"
 
 /**
  * @typedef {import("@onflow/typedefs").Transaction} Transaction
@@ -24,22 +36,8 @@ const TXID_REGEXP = /^[0-9a-fA-F]{64}$/
  * @typedef {import("@onflow/typedefs").TransactionStatus} TransactionStatus
  */
 
-const POLL = "POLL"
-const TIMEOUT = "TIMEOUT"
-
 const fetchTxStatus = async transactionId => {
   return fclSend([getTransactionStatus(transactionId)]).then(decode)
-}
-
-const isExpired = tx => tx.status === 5
-const isSealed = tx => tx.status >= 4
-const isExecuted = tx => tx.status >= 3
-const isFinalized = tx => tx.status >= 2
-const isPending = tx => tx.status >= 1
-const isUnknown = tx => tx.status >= 0
-
-const isDiff = (cur, next) => {
-  return JSON.stringify(cur) !== JSON.stringify(next)
 }
 
 const makeHandlers = (opts = {}) => ({
@@ -94,24 +92,11 @@ const makeHandlers = (opts = {}) => ({
   },
 })
 
-const scoped = transactionId => {
-  if (typeof transactionId === "object")
-    transactionId = transactionId.transactionId
-  if (transactionId == null) throw new Error("transactionId required")
-  return transactionId
-}
-
 const spawnTransaction =
   (opts = {}) =>
   transactionId => {
     return spawn(makeHandlers(opts), scoped(transactionId))
   }
-
-/**
- * @callback SubscriptionCallback
- * @param {TransactionStatus} txStatus
- * @returns {void}
- */
 
 /**
  * Provides methods for interacting with a transaction
