@@ -5,28 +5,25 @@ This directory contains the automatically generated documentation for FCL packag
 ## Directory Structure
 
 ```
-fcl-docs/                 # Main documentation directory for Docusaurus
-    ├── packages/         # All packages documentation
-    │   ├── index.md      # Packages index page
-    │   ├── package-a/    # Documentation for package-a
-    │   │   ├── index.md  # Main package page
-    │   │   ├── installation/
-    │   │   │   └── index.md
-    │   │   └── reference/
-    │   │       ├── index.md
-    │   │       ├── functionName1.md
-    │   │       └── ...
-    │   ├── package-b/
-    │   └── ...
-    └── types/            # Core types documentation
-        └── index.md      # Types reference page
+output/                  # Main documentation directory
+    ├── package-a/       # Documentation for package-a
+    │   ├── index.md     # Main package page
+    │   ├── installation/
+    │   │   └── index.md
+    │   └── reference/
+    │       ├── index.md
+    │       ├── functionName1.md
+    │       └── ...
+    ├── package-b/
+    └── types/           # Core types documentation
+        └── index.md     # Types reference page
 ```
 
 ## Using the Generated Documentation
 
-1. The documentation is structured to be directly usable in a Docusaurus v2 project
-2. Copy the entire `fcl-docs` directory to your Docusaurus project's `docs` directory
-3. The documentation will be available under the `/fcl-docs/packages` and `/fcl-docs/types` paths in your Docusaurus site
+1. The documentation is structured to be directly usable in your documentation project
+2. Copy the files from this directory to your documentation project
+3. The documentation will be immediately available in your site
 
 ## Auto-generation
 

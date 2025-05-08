@@ -74,9 +74,8 @@ npm run generate-docs-all
 This will:
 1. Find all packages with a `generate-docs` script
 2. Run the script for each package
-3. Generate documentation in the `/docs-generator/output/fcl-docs/packages/<package-name>` directory
-4. Create a packages index page at `/docs-generator/output/fcl-docs/packages/index.md`
-5. Generate core types documentation in `/docs-generator/output/fcl-docs/types/index.md`
+3. Generate documentation in the `/docs-generator/output/<package-name>` directory
+4. Generate core types documentation in `/docs-generator/output/types/index.md`
 
 ## Output Structure
 
@@ -84,24 +83,20 @@ The generated documentation follows this structure:
 
 ```
 /docs-generator/output/
-  └── fcl-docs/                 # Main documentation directory for Docusaurus
-      ├── packages/             # All packages documentation
-      │   ├── index.md          # Packages index page
-      │   ├── package-a/        # Documentation for package-a
-      │   │   ├── index.md      # Main package page
-      │   │   ├── installation/ # Installation instructions
-      │   │   │   └── index.md
-      │   │   └── reference/    # API reference documentation
-      │   │       ├── index.md  # List of all functions
-      │   │       ├── functionName1.md
-      │   │       └── ...
-      │   ├── package-b/
-      │   └── ...
-      └── types/                # Core types documentation
-          └── index.md          # Types reference page with interfaces, type aliases, and enums
+  ├── package-a/         # Documentation for package-a
+  │   ├── index.md       # Main package page
+  │   ├── installation/  # Installation instructions
+  │   │   └── index.md
+  │   └── reference/     # API reference documentation
+  │       ├── index.md   # List of all functions
+  │       ├── functionName1.md
+  │       └── ...
+  ├── package-b/
+  └── types/             # Core types documentation
+      └── index.md       # Types reference page with interfaces, type aliases, and enums
 ```
 
-This structure makes it easy to copy the entire `fcl-docs` directory into your Docusaurus project.
+This structure makes it easy to copy the entire output directory into the documentation project.
 
 All generated files (except README.md) are ignored by git.
 
@@ -162,6 +157,6 @@ The types documentation includes:
 
 All type documentation includes JSDoc descriptions when available.
 
-## Integration with Docusaurus
+## Integration with Documentation Projects
 
-After generating documentation, you can copy the entire `fcl-docs` directory to your Docusaurus project's `docs` directory. This will maintain the folder structure and allow Docusaurus to build the complete documentation site. 
+After generating documentation, you can copy the contents of the `output` directory to your documentation project. This will maintain the folder structure and allow your documentation build system to process the files. 

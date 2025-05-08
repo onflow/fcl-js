@@ -205,7 +205,7 @@ function extractEnums(sourceFiles) {
 
 function generateTypesIndexPage(templates, outputDir) {
   // Path to the typedefs package
-  const typedefsDir = path.resolve(__dirname, "../../packages/typedefs")
+  const typedefsDir = path.resolve(process.cwd(), "../typedefs")
   const typedefsSrcDir = path.join(typedefsDir, "src")
 
   // Initialize ts-morph project

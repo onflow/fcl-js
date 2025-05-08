@@ -7,7 +7,6 @@ const {
   generateInstallationPage,
   generateReferenceIndexPage,
   generateFunctionPage,
-  generatePackageListIndexPage,
   generateTypesIndexPage,
 } = require("./generators")
 
@@ -183,25 +182,17 @@ async function main() {
       fs.readFileSync(path.resolve(process.cwd(), "package.json"), "utf8")
     )
     const packageName = packageJson.name.split("/").pop()
-    if (!packageName) {
-      throw new Error(
-        `Could not determine package name from ${packageJson.name}`
-      )
-    }
     console.log(`Generating docs for ${packageName}...`)
 
     // Configuration with updated directory structure
     const SOURCE_DIR = path.resolve(process.cwd(), "src")
     const ROOT_OUTPUT_DIR = path.resolve(__dirname, "./output")
-    const FCL_DOCS_DIR = path.join(ROOT_OUTPUT_DIR, "fcl-docs")
-    const PACKAGES_DIR = path.join(FCL_DOCS_DIR, "packages")
-    const PACKAGE_OUTPUT_DIR = path.join(PACKAGES_DIR, packageName)
-    const TYPES_OUTPUT_DIR = path.join(FCL_DOCS_DIR, "types")
+    const PACKAGE_OUTPUT_DIR = path.join(ROOT_OUTPUT_DIR, packageName)
+    const TYPES_OUTPUT_DIR = path.join(ROOT_OUTPUT_DIR, "types")
     const TEMPLATES_DIR = path.resolve(__dirname, "./templates")
 
     // Ensure the base directories exist
-    await fs.promises.mkdir(FCL_DOCS_DIR, {recursive: true})
-    await fs.promises.mkdir(PACKAGES_DIR, {recursive: true})
+    await fs.promises.mkdir(ROOT_OUTPUT_DIR, {recursive: true})
     // Clean existing output directory
     await fs.promises.rm(PACKAGE_OUTPUT_DIR, {recursive: true, force: true})
     await fs.promises.rm(TYPES_OUTPUT_DIR, {recursive: true, force: true})
@@ -229,12 +220,6 @@ async function main() {
       function: Handlebars.compile(
         fs.readFileSync(path.join(TEMPLATES_DIR, "function.hbs"), "utf8")
       ),
-      packageListIndex: Handlebars.compile(
-        fs.readFileSync(
-          path.join(TEMPLATES_DIR, "package-list-index.hbs"),
-          "utf8"
-        )
-      ),
       typesIndex: Handlebars.compile(
         fs.readFileSync(path.join(TEMPLATES_DIR, "types-index.hbs"), "utf8")
       ),
@@ -258,9 +243,6 @@ async function main() {
       const fileFunctions = extractFunctions(sourceFile)
       functions.push(...fileFunctions)
     })
-
-    // Generate the packages index page
-    generatePackageListIndexPage(templates, PACKAGES_DIR, packageName)
     // Generate single page documentation
     generateInstallationPage(templates, PACKAGE_OUTPUT_DIR, packageName)
     generatePackageIndexPage(templates, PACKAGE_OUTPUT_DIR, packageName)
