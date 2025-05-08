@@ -203,7 +203,7 @@ function extractEnums(sourceFiles) {
   return enums.sort((a, b) => a.name.localeCompare(b.name))
 }
 
-function generateTypesIndexPage(templates, outputDir) {
+function generateTypesPage(templates, outputDir) {
   // Path to the typedefs package
   const typedefsDir = path.resolve(process.cwd(), "../typedefs")
   const typedefsSrcDir = path.join(typedefsDir, "src")
@@ -229,4 +229,4 @@ function generateTypesIndexPage(templates, outputDir) {
   })
 }
 
-module.exports = {generateTypesIndexPage}
+module.exports = {generateTypesPage}

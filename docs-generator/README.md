@@ -84,17 +84,20 @@ The generated documentation follows this structure:
 ```
 /docs-generator/output/
   ├── package-a/         # Documentation for package-a
-  │   ├── index.md       # Main package page
-  │   ├── installation/  # Installation instructions
-  │   │   └── index.md
-  │   └── reference/     # API reference documentation
-  │       ├── index.md   # List of all functions
+  │   ├── index.md       # Main package page with installation instructions and API 
+  │   └── reference/     # Function documentation
   │       ├── functionName1.md
+  │       ├── functionName2.md
   │       └── ...
   ├── package-b/
   └── types/             # Core types documentation
       └── index.md       # Types reference page with interfaces, type aliases, and enums
 ```
+
+Each package has a main page that includes:
+- Installation instructions
+- Package overview 
+- API reference with links to individual function documentation
 
 ### Using the Generated Documentation
 
@@ -123,15 +126,13 @@ Packages can provide custom documentation content by creating a `docs-generator.
 ```js
 module.exports = {
   customData: {
-    displayName: `Custom Package Reference`,
-    packageIndex: {
-      overview: ``,
+    displayName: `Custom Package Reference`,   // Used for Docusaurus sidebar title
+    sections: {
+      overview: ``,                            // Custom overview section
+      requirements: ``,                        // Custom requirements section
+      importing: ``,                           // Custom importing section
     },
-    installation: {
-      requirements: ``,
-      importing: ``,
-      extra: ``,
-    },
+    extra: ``,                                 // Additional content
   },
 };
 ```

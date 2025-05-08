@@ -5,14 +5,12 @@ function parseConfigCustomData(configPath) {
   const config = fs.existsSync(configPath) ? require(configPath) : null
   return {
     displayName: config?.customData?.displayName || null,
-    packageIndex: {
-      overview: config?.customData?.packageIndex?.overview || null,
+    sections: {
+      overview: config?.customData?.sections?.overview || null,
+      requirements: config?.customData?.sections?.requirements || null,
+      importing: config?.customData?.sections?.importing || null,
     },
-    installation: {
-      requirements: config?.customData?.installation?.requirements || null,
-      importing: config?.customData?.installation?.importing || null,
-      extra: config?.customData?.installation?.extra || null,
-    },
+    extra: config?.customData?.extra || null,
   }
 }
 

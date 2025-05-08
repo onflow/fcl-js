@@ -1,13 +1,11 @@
 module.exports = {
   customData: {
     displayName: `SDK Reference`,
-    packageIndex: {
+    sections: {
       overview: ``,
-    },
-    installation: {
       requirements: ``,
       importing: ``,
-      extra: ``,
     },
+    extra: ``,
   },
 }

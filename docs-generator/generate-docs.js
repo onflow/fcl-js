@@ -3,11 +3,9 @@ const path = require("path")
 const {Project, Node} = require("ts-morph")
 const Handlebars = require("handlebars")
 const {
-  generatePackageIndexPage,
-  generateInstallationPage,
-  generateReferenceIndexPage,
+  generatePackagePage,
   generateFunctionPage,
-  generateTypesIndexPage,
+  generateTypesPage,
 } = require("./generators")
 
 function parseJsDoc(node) {
@@ -199,9 +197,6 @@ async function main() {
     // Create output directories
     await fs.promises.mkdir(PACKAGE_OUTPUT_DIR, {recursive: true})
     await fs.promises.mkdir(TYPES_OUTPUT_DIR, {recursive: true})
-    await fs.promises.mkdir(path.join(PACKAGE_OUTPUT_DIR, "installation"), {
-      recursive: true,
-    })
     await fs.promises.mkdir(path.join(PACKAGE_OUTPUT_DIR, "reference"), {
       recursive: true,
     })
@@ -209,19 +204,13 @@ async function main() {
     // Handlebars templates to be used for generating the docs
     const templates = {
       packageIndex: Handlebars.compile(
-        fs.readFileSync(path.join(TEMPLATES_DIR, "package-index.hbs"), "utf8")
-      ),
-      installation: Handlebars.compile(
-        fs.readFileSync(path.join(TEMPLATES_DIR, "installation.hbs"), "utf8")
-      ),
-      referenceIndex: Handlebars.compile(
-        fs.readFileSync(path.join(TEMPLATES_DIR, "reference-index.hbs"), "utf8")
+        fs.readFileSync(path.join(TEMPLATES_DIR, "package.hbs"), "utf8")
       ),
       function: Handlebars.compile(
         fs.readFileSync(path.join(TEMPLATES_DIR, "function.hbs"), "utf8")
       ),
       typesIndex: Handlebars.compile(
-        fs.readFileSync(path.join(TEMPLATES_DIR, "types-index.hbs"), "utf8")
+        fs.readFileSync(path.join(TEMPLATES_DIR, "types.hbs"), "utf8")
       ),
     }
 
@@ -244,20 +233,13 @@ async function main() {
       functions.push(...fileFunctions)
     })
 
-    // Generate single page documentation
-    generateInstallationPage(templates, PACKAGE_OUTPUT_DIR, packageName)
-    generatePackageIndexPage(templates, PACKAGE_OUTPUT_DIR, packageName)
-    generateReferenceIndexPage(
-      templates,
-      PACKAGE_OUTPUT_DIR,
-      packageName,
-      functions
-    )
+    // Generate documentation
+    generatePackagePage(templates, PACKAGE_OUTPUT_DIR, packageName, functions)
     functions.forEach(func => {
       generateFunctionPage(templates, PACKAGE_OUTPUT_DIR, packageName, func)
     })
     // Generate the types documentation
-    generateTypesIndexPage(templates, TYPES_OUTPUT_DIR)
+    generateTypesPage(templates, TYPES_OUTPUT_DIR)
 
     console.log(`Docs generated correctly for ${packageName}.`)
     return true
