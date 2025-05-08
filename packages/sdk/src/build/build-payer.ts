@@ -1,4 +1,4 @@
-import {TransactionRole, InteractionAccount} from "@onflow/typedefs"
+import {TransactionRole} from "@onflow/typedefs"
 import {AccountFn, pipe, prepAccount} from "../interaction/interaction"
 
 /**
@@ -6,9 +6,7 @@ import {AccountFn, pipe, prepAccount} from "../interaction/interaction"
  * @param ax An account address or array of account addresses
  * @returns A function that takes an interaction and returns a new interaction with the payer(s) added
  */
-export function payer(
-  ax: InteractionAccount | AccountFn | (InteractionAccount | AccountFn)[] = []
-) {
+export function payer(ax: AccountFn[] = []) {
   if (!Array.isArray(ax)) ax = [ax]
   return pipe(
     ax.map(authz => {

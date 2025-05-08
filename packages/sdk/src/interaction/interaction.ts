@@ -13,7 +13,9 @@ import {
 import {TypeDescriptorInput, TypeDescriptor} from "@onflow/types"
 
 export type AcctFn = (acct: InteractionAccount) => InteractionAccount
-export type AccountFn = AcctFn & Partial<InteractionAccount>
+export type AccountFn =
+  | (AcctFn & Partial<InteractionAccount>)
+  | Partial<InteractionAccount>
 
 type CadenceArgument<T extends TypeDescriptor<any, any>> = {
   value: TypeDescriptorInput<T>
@@ -150,9 +152,7 @@ const makeIx = (wat: InteractionTag) => (ix: Interaction) => {
   return Ok(ix)
 }
 
-const prepAccountKeyId = (
-  acct: Partial<InteractionAccount> | AccountFn
-): Partial<InteractionAccount> | AccountFn => {
+const prepAccountKeyId = (acct: AccountFn): AccountFn => {
   if (acct.keyId == null) return acct
 
   invariant(
@@ -163,7 +163,7 @@ const prepAccountKeyId = (
   return {
     ...acct,
     keyId: parseInt(acct.keyId.toString()),
-  } as InteractionAccount | AccountFn
+  } as AccountFn
 }
 
 interface IPrepAccountOpts {
@@ -173,7 +173,7 @@ interface IPrepAccountOpts {
 export const initAccount = (): InteractionAccount => JSON.parse(ACCT)
 
 export const prepAccount =
-  (acct: InteractionAccount | AccountFn, opts: IPrepAccountOpts = {}) =>
+  (acct: AccountFn, opts: IPrepAccountOpts = {}) =>
   (ix: Interaction) => {
     invariant(
       typeof acct === "function" || typeof acct === "object",
