@@ -1,9 +1,30 @@
 import {InteractionAccount, TransactionRole} from "@onflow/typedefs"
 import {AccountFn, pipe, prepAccount} from "../interaction/interaction"
+import {Voucher} from "../encode/encode"
 
-type AuthorizationFunction = () => {signature: string}
+interface SignableMessage {
+  message: string
+  addr: string
+  keyId: number | string
+  roles: {
+    proposer: boolean
+    authorizer: boolean
+    payer: boolean
+  }
+  voucher: Voucher
+}
 
-export function authorizations(ax: Array<InteractionAccount | AccountFn> = []) {
+interface SigningResult {
+  addr?: string
+  keyId?: number | string
+  signature: string
+}
+
+type SigningFn = (
+  signable?: SignableMessage
+) => SigningResult | Promise<SigningResult>
+
+export function authorizations(ax: Array<AccountFn> = []) {
   return pipe(
     ax.map(authz => {
       return prepAccount(authz, {
@@ -15,7 +36,7 @@ export function authorizations(ax: Array<InteractionAccount | AccountFn> = []) {
 
 export function authorization(
   addr: string,
-  signingFunction: AuthorizationFunction,
+  signingFunction: SigningFn,
   keyId?: number | string,
   sequenceNum?: number
 ): Partial<InteractionAccount> {
