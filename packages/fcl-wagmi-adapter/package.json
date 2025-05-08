@@ -1,6 +1,6 @@
 {
   "name": "@onflow/fcl-wagmi-adapter",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Wagmi adapter for FCL-compatible wallets",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
@@ -15,7 +15,7 @@
   "devDependencies": {
     "@babel/preset-typescript": "^7.25.7",
     "@onflow/fcl-bundle": "1.7.0",
-    "@onflow/typedefs": "^1.4.0",
+    "@onflow/typedefs": "^1.5.0",
     "@types/jest": "^29.5.13",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
@@ -39,12 +39,12 @@
     "@babel/runtime": "^7.25.7",
     "@ethersproject/bytes": "^5.7.0",
     "@ethersproject/hash": "^5.7.0",
-    "@onflow/fcl-ethereum-provider": "0.0.3",
+    "@onflow/fcl-ethereum-provider": "0.0.4",
     "@onflow/rlp": "^1.2.3",
     "viem": "^2.22.21"
   },
   "peerDependencies": {
-    "@onflow/fcl": "1.16.1",
+    "@onflow/fcl": "1.17.0",
     "@wagmi/core": "^2.16.3"
   }
 }
