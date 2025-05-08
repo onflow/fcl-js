@@ -1,5 +1,18 @@
 # @onflow/fcl
 
+## 1.18.0
+
+### Minor Changes
+
+- [#2384](https://github.com/onflow/fcl-js/pull/2384) [`f86b71357696826a5ad7b8e578de76ecebcd2e29`](https://github.com/onflow/fcl-js/commit/f86b71357696826a5ad7b8e578de76ecebcd2e29) Thanks [@jribbink](https://github.com/jribbink)! - Include origin information in `onMessageFromFcl` function
+
+- [#2378](https://github.com/onflow/fcl-js/pull/2378) [`094ed6dd38cae9ae39183f5ead8d59f9276f8f5d`](https://github.com/onflow/fcl-js/commit/094ed6dd38cae9ae39183f5ead8d59f9276f8f5d) Thanks [@jribbink](https://github.com/jribbink)! - Deprecate manual appIdentifier in favour of window origin
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @onflow/sdk@1.8.1
+
 ## 1.17.0
 
 ### Minor Changes
