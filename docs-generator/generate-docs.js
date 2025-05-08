@@ -191,12 +191,12 @@ async function main() {
     const TYPES_OUTPUT_DIR = path.join(ROOT_OUTPUT_DIR, "types")
     const TEMPLATES_DIR = path.resolve(__dirname, "./templates")
 
-    // Ensure the base directories exist
+    // Ensure the output directories exist
     await fs.promises.mkdir(ROOT_OUTPUT_DIR, {recursive: true})
-    // Clean existing output directory
+
+    // Clean existing output directory content for this package
     await fs.promises.rm(PACKAGE_OUTPUT_DIR, {recursive: true, force: true})
-    await fs.promises.rm(TYPES_OUTPUT_DIR, {recursive: true, force: true})
-    // Create output directories if they don't exist
+    // Create output directories
     await fs.promises.mkdir(PACKAGE_OUTPUT_DIR, {recursive: true})
     await fs.promises.mkdir(TYPES_OUTPUT_DIR, {recursive: true})
     await fs.promises.mkdir(path.join(PACKAGE_OUTPUT_DIR, "installation"), {
@@ -243,6 +243,7 @@ async function main() {
       const fileFunctions = extractFunctions(sourceFile)
       functions.push(...fileFunctions)
     })
+
     // Generate single page documentation
     generateInstallationPage(templates, PACKAGE_OUTPUT_DIR, packageName)
     generatePackageIndexPage(templates, PACKAGE_OUTPUT_DIR, packageName)

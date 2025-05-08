@@ -4,12 +4,7 @@ const {execSync} = require("child_process")
 
 async function main() {
   try {
-    // Ensure correct output directories exist
-    const outputDir = path.resolve(__dirname, "./output")
-    await fs.promises.mkdir(outputDir, {recursive: true})
-    await fs.promises.mkdir(path.join(outputDir, "types"), {recursive: true})
-
-    // Get packages directory
+    // Get packages source directory
     const sourcePackagesDir = path.resolve(__dirname, "../packages")
     // Find packages with generate-docs script
     console.log(`Scanning for packages in ${sourcePackagesDir}`)

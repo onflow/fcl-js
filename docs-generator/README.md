@@ -96,9 +96,21 @@ The generated documentation follows this structure:
       └── index.md       # Types reference page with interfaces, type aliases, and enums
 ```
 
-This structure makes it easy to copy the entire output directory into the documentation project.
+### Using the Generated Documentation
 
-All generated files (except README.md) are ignored by git.
+1. The documentation is structured to be directly usable in your documentation project
+2. Copy the files from the output directory to your documentation project
+3. The documentation will be immediately available in your site
+
+### Auto-generation Notes
+
+All generated files are automatically generated from the source code of FCL packages and are ignored by git (except this README).
+Do not modify these files directly as they will be overwritten when documentation is regenerated.
+
+Instead:
+- Update the JSDoc comments in the source code
+- Customize the templates in `docs-generator/templates/`
+- Create a `docs-generator.config.js` file in the package root for custom content
 
 ## Customizing Templates
 
@@ -149,11 +161,11 @@ This package will now be included when running the `generate-docs-all` command.
 
 The generator also creates documentation for all types, interfaces, and enums exported from the `@onflow/typedefs` package. This documentation is generated every time you run the generate-docs script for any package, ensuring that the types documentation is always up-to-date.
 
-The types documentation includes:
+The types documentation in the `types` directory includes:
 
-- Interfaces with their properties and methods
-- Type aliases with their underlying types
-- Enums with all their members and values
+- **Interfaces** - Documented with their properties and methods
+- **Type Aliases** - Documented with their underlying types
+- **Enums** - Documented with all their members and values
 
 All type documentation includes JSDoc descriptions when available.
 
