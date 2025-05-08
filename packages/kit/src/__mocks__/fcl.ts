@@ -38,6 +38,7 @@ export default {
   unauthenticate: jest.fn().mockImplementation(() => {
     currentUserState = defaultUser
   }),
+  getChainId: jest.fn().mockResolvedValue("mainnet"),
 
   TransactionError: {
     fromErrorMessage: (errorMessage: string) => {
