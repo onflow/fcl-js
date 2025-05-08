@@ -1,7 +1,8 @@
 name: Generate and Publish Documentation
 
 on:
-  push:
+  release:
+    types: [published]
     branches:
       - master
 
