@@ -1,5 +1,12 @@
 # @onflow/sdk
 
+## 1.8.1
+
+### Patch Changes
+
+- Updated dependencies [[`e10f1db63a8a9cc86a56e312d7d7e3a2089d4a3a`](https://github.com/onflow/fcl-js/commit/e10f1db63a8a9cc86a56e312d7d7e3a2089d4a3a)]:
+  - @onflow/typedefs@1.5.0
+
 ## 1.8.0
 
 ### Minor Changes
