@@ -123,6 +123,7 @@ Packages can provide custom documentation content by creating a `docs-generator.
 ```js
 module.exports = {
   customData: {
+    displayName: `Custom Package Reference`,
     packageIndex: {
       overview: ``,
     },

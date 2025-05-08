@@ -4,6 +4,7 @@ function parseConfigCustomData(configPath) {
   // Parse config custom data if present and return custom one or null for default
   const config = fs.existsSync(configPath) ? require(configPath) : null
   return {
+    displayName: config?.customData?.displayName || null,
     packageIndex: {
       overview: config?.customData?.packageIndex?.overview || null,
     },
