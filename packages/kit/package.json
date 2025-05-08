@@ -1,6 +1,6 @@
 {
   "name": "@onflow/kit",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "React library for interacting with the Flow blockchain",
   "license": "Apache-2.0",
   "author": "Flow Foundation",

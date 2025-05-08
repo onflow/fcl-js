@@ -9,8 +9,8 @@
 ### Patch Changes
 
 - Updated dependencies [[`0feeae00d1ef089df36b381109802bb0b14bf89b`](https://github.com/onflow/fcl-js/commit/0feeae00d1ef089df36b381109802bb0b14bf89b), [`0feeae00d1ef089df36b381109802bb0b14bf89b`](https://github.com/onflow/fcl-js/commit/0feeae00d1ef089df36b381109802bb0b14bf89b), [`f86b71357696826a5ad7b8e578de76ecebcd2e29`](https://github.com/onflow/fcl-js/commit/f86b71357696826a5ad7b8e578de76ecebcd2e29)]:
-  - @onflow/fcl-wagmi-adapter@1.0.0
-  - @onflow/fcl-ethereum-provider@1.0.0
+  - @onflow/fcl-wagmi-adapter@0.0.4
+  - @onflow/fcl-ethereum-provider@0.0.4
   - @onflow/fcl@1.17.0
 
 ## 0.1.0
