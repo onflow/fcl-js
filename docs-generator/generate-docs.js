@@ -197,9 +197,6 @@ async function main() {
     // Create output directories
     await fs.promises.mkdir(PACKAGE_OUTPUT_DIR, {recursive: true})
     await fs.promises.mkdir(TYPES_OUTPUT_DIR, {recursive: true})
-    await fs.promises.mkdir(path.join(PACKAGE_OUTPUT_DIR, "reference"), {
-      recursive: true,
-    })
 
     // Handlebars templates to be used for generating the docs
     const templates = {

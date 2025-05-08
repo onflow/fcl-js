@@ -85,18 +85,17 @@ The generated documentation follows this structure:
 /docs-generator/output/
   ├── package-a/         # Documentation for package-a
   │   ├── index.md       # Main package page with installation instructions and API 
-  │   └── reference/     # Function documentation
-  │       ├── functionName1.md
-  │       ├── functionName2.md
-  │       └── ...
+  │   ├── functionName1.md
+  │   ├── functionName2.md
+  │   └── ...
   ├── package-b/
   └── types/             # Core types documentation
       └── index.md       # Types reference page with interfaces, type aliases, and enums
 ```
 
 Each package has a main page that includes:
-- Installation instructions
 - Package overview 
+- Installation instructions
 - API reference with links to individual function documentation
 
 ### Using the Generated Documentation

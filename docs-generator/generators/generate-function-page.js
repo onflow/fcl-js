@@ -234,14 +234,14 @@ function generateFunctionPage(templates, outputDir, packageName, func) {
         const innerType = match[1]
         if (coreTypes.has(innerType)) {
           hasLink = true
-          linkedType = `[\`${baseType}\`](../../types#${innerType.toLowerCase()})`
+          linkedType = `[\`${baseType}\`](../types#${innerType.toLowerCase()})`
         }
       }
     }
     // Handle regular core type
     else if (coreTypes.has(baseType)) {
       hasLink = true
-      linkedType = `[\`${baseType}\`](../../types#${baseType.toLowerCase()})`
+      linkedType = `[\`${baseType}\`](../types#${baseType.toLowerCase()})`
     }
 
     // Get type definition if not a core type or Promise<CoreType>
@@ -271,14 +271,14 @@ function generateFunctionPage(templates, outputDir, packageName, func) {
       const innerType = match[1]
       if (coreTypes.has(innerType)) {
         returnHasLink = true
-        linkedType = `[\`${extractedReturnType}\`](../../types#${innerType.toLowerCase()})`
+        linkedType = `[\`${extractedReturnType}\`](../types#${innerType.toLowerCase()})`
       }
     }
   }
   // Handle regular core type in return type
   else if (coreTypes.has(extractedReturnType)) {
     returnHasLink = true
-    linkedType = `[\`${extractedReturnType}\`](../../types#${extractedReturnType.toLowerCase()})`
+    linkedType = `[\`${extractedReturnType}\`](../types#${extractedReturnType.toLowerCase()})`
   }
 
   func.returnType = extractedReturnType
@@ -296,14 +296,12 @@ function generateFunctionPage(templates, outputDir, packageName, func) {
     func.returnTypeDefinition = null
   }
 
-  // Generate the page
+  // Generate the page directly in the package folder instead of in a reference subfolder
   const filename = func.name.charAt(0).toLowerCase() + func.name.slice(1)
-  generatePage(
-    templates,
-    "function",
-    path.join(outputDir, "reference", `${filename}.md`),
-    {...func, packageName}
-  )
+  generatePage(templates, "function", path.join(outputDir, `${filename}.md`), {
+    ...func,
+    packageName,
+  })
 }
 
 module.exports = {generateFunctionPage}
