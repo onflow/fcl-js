@@ -5,7 +5,7 @@ import {
   encodeCalls,
   getCadenceBatchTransaction,
   useEvmBatchTransaction,
-} from "./useBatchEvmTransaction"
+} from "./useEvmBatchTransaction"
 import {useFlowChainId} from "./useFlowChainId"
 
 jest.mock("@onflow/fcl", () => require("../__mocks__/fcl").default)
