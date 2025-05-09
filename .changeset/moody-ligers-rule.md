@@ -2,4 +2,4 @@
 "@onflow/kit": minor
 ---
 
-Rename `useFlowTransaction` as `useFlowTransactionStatus`
+BREAKING: Rename `useFlowTransaction` as `useFlowTransactionStatus`
