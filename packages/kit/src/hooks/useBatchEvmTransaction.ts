@@ -38,7 +38,7 @@ export type EvmTransactionExecutedData = {
 
 // Helper to encode our ca lls using viem.
 // Returns an array of objects with keys "address" and "data" (hex-encoded string without the "0x" prefix).
-function encodeCalls(
+export function encodeCalls(
   calls: EvmBatchCall[]
 ): Array<Array<{key: string; value: string}>> {
   return calls.map(call => {
@@ -63,7 +63,7 @@ const EVM_CONTRACT_ADDRESSES = {
 }
 
 // Takes a chain id and returns the cadence tx with addresses set
-const getCadenceBatchTransaction = (chainId: string) => {
+export const getCadenceBatchTransaction = (chainId: string) => {
   let evmAddress
   switch (chainId) {
     case "mainnet":
@@ -137,7 +137,6 @@ export function useEvmBatchTransaction() {
         if (!cadenceTx) {
           throw new Error("No current chain found")
         }
-
         const encodedCalls = encodeCalls(calls)
 
         const txId = await fcl.mutate({
