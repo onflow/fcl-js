@@ -111,22 +111,17 @@ export function encodeCalls(
 }
 
 const EVM_CONTRACT_ADDRESSES = {
+  local: "0xf8d6e0586b0a20c0",
   testnet: "0x8c5303eaa26202d6",
   mainnet: "0xe467b9dd11fa00df",
 }
 
 // Takes a chain id and returns the cadence tx with addresses set
 export const getCadenceBatchTransaction = (chainId: string) => {
-  let evmAddress
-  switch (chainId) {
-    case "mainnet":
-      evmAddress = EVM_CONTRACT_ADDRESSES.mainnet
-      break
-    case "testnet":
-      evmAddress = EVM_CONTRACT_ADDRESSES.testnet
-      break
-    default:
-      throw new Error("Unsupported chain ID for EVM batch transaction")
+  const evmAddress =
+    EVM_CONTRACT_ADDRESSES[chainId as keyof typeof EVM_CONTRACT_ADDRESSES]
+  if (!evmAddress) {
+    throw new Error(`Unsupported chain: ${chainId}`)
   }
 
   return `
