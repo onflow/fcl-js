@@ -1,4 +1,4 @@
-# Documentation Generator
+# Docs Generator
 
 This directory contains scripts to generate documentation for Flow Client Library (FCL) packages.
 
@@ -25,7 +25,7 @@ The documentation generator creates Markdown files for Docusaurus v2 websites. I
 
 ### JSDoc Support
 
-The documentation generator extracts information from JSDoc comments in your code. You can add JSDoc comments to improve the generated documentation:
+The documentation generator extracts information from JSDoc comments in code. JSDoc comments can be added to improve the generated documentation:
 
 ```javascript
 /**
@@ -74,8 +74,8 @@ npm run generate-docs-all
 This will:
 1. Find all packages with a `generate-docs` script
 2. Run the script for each package
-3. Generate documentation in the `/docs-generator/output/<package-name>` directory
-4. Generate core types documentation in `/docs-generator/output/types/index.md`
+3. Generate documentation in the `/docs-generator/output/packages-docs/<package-name>` directory
+4. Generate core types documentation in `/docs-generator/output/packages-docs/types/index.md`
 
 ## Output Structure
 
@@ -83,26 +83,22 @@ The generated documentation follows this structure:
 
 ```
 /docs-generator/output/
-  ├── package-a/         # Documentation for package-a
-  │   ├── index.md       # Main package page with installation instructions and API 
-  │   ├── functionName1.md
-  │   ├── functionName2.md
-  │   └── ...
-  ├── package-b/
-  └── types/             # Core types documentation
-      └── index.md       # Types reference page with interfaces, type aliases, and enums
+  └── packages-docs/         # Main folder containing
+      ├── package-a/         # Documentation for package-a
+      │   ├── index.md       # Main package page with installation instructions and API 
+      │   ├── functionName1.md
+      │   ├── functionName2.md
+      │   └── ...
+      ├── package-b/
+      ├── types/
+      │   └── index.md       # Type definitions page with interfaces, type aliases, and enums
+      └── index.md           # List contents of the folder
 ```
 
 Each package has a main page that includes:
 - Package overview 
 - Installation instructions
 - API reference with links to individual function documentation
-
-### Using the Generated Documentation
-
-1. The documentation is structured to be directly usable in your documentation project
-2. Copy the files from the output directory to your documentation project
-3. The documentation will be immediately available in your site
 
 ### Auto-generation Notes
 
@@ -152,7 +148,7 @@ To add documentation generation to a new package:
 }
 ```
 
-2. Ensure your code has proper JSDoc comments for better documentation.
+2. Ensure the code has proper JSDoc comments for better documentation.
 
 3. Run the generate-docs script to test it.
 
@@ -165,11 +161,11 @@ The generator also creates documentation for all types, interfaces, and enums ex
 The types documentation in the `types` directory includes:
 
 - **Interfaces** - Documented with their properties and methods
-- **Type Aliases** - Documented with their underlying types
+- **Types** - Documented with their underlying types
 - **Enums** - Documented with all their members and values
 
 All type documentation includes JSDoc descriptions when available.
 
 ## Integration with Documentation Projects
 
-After generating documentation, you can copy the contents of the `output` directory to your documentation project. This will maintain the folder structure and allow your documentation build system to process the files. 
+After generating documentation, copy the `output/packages-docs` directory to the documentation project. This will maintain the folder structure and allow the documentation build system to process the files.

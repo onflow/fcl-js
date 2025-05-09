@@ -222,7 +222,7 @@ function generateTypesPage(templates, outputDir) {
   const enums = extractEnums(sourceFiles)
 
   // Generate the types index page
-  generatePage(templates, "typesIndex", path.join(outputDir, "index.md"), {
+  generatePage(templates, "types", path.join(outputDir, "index.md"), {
     interfaces,
     types,
     enums,

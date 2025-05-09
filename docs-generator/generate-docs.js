@@ -3,6 +3,7 @@ const path = require("path")
 const {Project, Node} = require("ts-morph")
 const Handlebars = require("handlebars")
 const {
+  generateRootPage,
   generatePackagePage,
   generateFunctionPage,
   generateTypesPage,
@@ -184,29 +185,33 @@ async function main() {
 
     // Configuration with updated directory structure
     const SOURCE_DIR = path.resolve(process.cwd(), "src")
-    const ROOT_OUTPUT_DIR = path.resolve(__dirname, "./output")
-    const PACKAGE_OUTPUT_DIR = path.join(ROOT_OUTPUT_DIR, packageName)
-    const TYPES_OUTPUT_DIR = path.join(ROOT_OUTPUT_DIR, "types")
     const TEMPLATES_DIR = path.resolve(__dirname, "./templates")
+    const OUTPUT_DIR = path.resolve(__dirname, "./output")
 
-    // Ensure the output directories exist
-    await fs.promises.mkdir(ROOT_OUTPUT_DIR, {recursive: true})
+    const ROOT_DIR = path.join(OUTPUT_DIR, "packages-docs")
+    const PACKAGE_DIR = path.join(ROOT_DIR, packageName)
+    const TYPES_DIR = path.join(ROOT_DIR, "types")
 
-    // Clean existing output directory content for this package
-    await fs.promises.rm(PACKAGE_OUTPUT_DIR, {recursive: true, force: true})
-    // Create output directories
-    await fs.promises.mkdir(PACKAGE_OUTPUT_DIR, {recursive: true})
-    await fs.promises.mkdir(TYPES_OUTPUT_DIR, {recursive: true})
+    // Ensure output directories exist
+    await fs.promises.mkdir(OUTPUT_DIR, {recursive: true})
+    await fs.promises.mkdir(ROOT_DIR, {recursive: true})
+    // Clean existing output directory content for the package before creating its folder
+    await fs.promises.rm(PACKAGE_DIR, {recursive: true, force: true})
+    await fs.promises.mkdir(PACKAGE_DIR, {recursive: true})
+    await fs.promises.mkdir(TYPES_DIR, {recursive: true})
 
     // Handlebars templates to be used for generating the docs
     const templates = {
-      packageIndex: Handlebars.compile(
+      root: Handlebars.compile(
+        fs.readFileSync(path.join(TEMPLATES_DIR, "root.hbs"), "utf8")
+      ),
+      package: Handlebars.compile(
         fs.readFileSync(path.join(TEMPLATES_DIR, "package.hbs"), "utf8")
       ),
       function: Handlebars.compile(
         fs.readFileSync(path.join(TEMPLATES_DIR, "function.hbs"), "utf8")
       ),
-      typesIndex: Handlebars.compile(
+      types: Handlebars.compile(
         fs.readFileSync(path.join(TEMPLATES_DIR, "types.hbs"), "utf8")
       ),
     }
@@ -231,12 +236,13 @@ async function main() {
     })
 
     // Generate documentation
-    generatePackagePage(templates, PACKAGE_OUTPUT_DIR, packageName, functions)
+    generateRootPage(templates, ROOT_DIR, packageName)
+    generatePackagePage(templates, PACKAGE_DIR, packageName, functions)
     functions.forEach(func => {
-      generateFunctionPage(templates, PACKAGE_OUTPUT_DIR, packageName, func)
+      generateFunctionPage(templates, PACKAGE_DIR, packageName, func)
     })
     // Generate the types documentation
-    generateTypesPage(templates, TYPES_OUTPUT_DIR)
+    generateTypesPage(templates, TYPES_DIR)
 
     console.log(`Docs generated correctly for ${packageName}.`)
     return true

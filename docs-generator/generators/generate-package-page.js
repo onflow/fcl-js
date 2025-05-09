@@ -23,9 +23,9 @@ function generatePackagePage(templates, outputDir, packageName, functions) {
     func.lowercase_name = func.name.charAt(0).toLowerCase() + func.name.slice(1)
   })
 
-  generatePage(templates, "packageIndex", path.join(outputDir, "index.md"), {
+  generatePage(templates, "package", path.join(outputDir, "index.md"), {
     packageName,
-    displayName: displayName || `${packageName} Reference`,
+    displayName: displayName || `@onflow/${packageName}`,
     customOverview: sections.overview,
     customRequirements: sections.requirements,
     customImporting: sections.importing,
