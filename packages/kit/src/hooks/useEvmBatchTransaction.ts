@@ -1,8 +1,61 @@
 import * as fcl from "@onflow/fcl"
 import {Abi, bytesToHex, encodeFunctionData} from "viem"
-import {useMutation} from "@tanstack/react-query"
+import {
+  UseMutateFunction,
+  useMutation,
+  UseMutationOptions,
+  UseMutationResult,
+} from "@tanstack/react-query"
 import {useFlowChainId} from "./useFlowChainId"
 import {useFlowQueryClient} from "../provider/FlowQueryClient"
+
+interface UseEvmBatchTransactionArgs {
+  mutation?: Omit<
+    UseMutationOptions<
+      {
+        txId: string
+        results: CallOutcome[]
+      },
+      Error,
+      {
+        calls: EvmBatchCall[]
+        mustPass?: boolean
+      }
+    >,
+    "mutationFn"
+  >
+}
+
+interface UseEvmBatchTransactionResult
+  extends Omit<
+    UseMutationResult<
+      {
+        txId: string
+        results: CallOutcome[]
+      },
+      Error
+    >,
+    "mutate" | "mutateAsync"
+  > {
+  sendBatchTransaction: UseMutateFunction<
+    {
+      txId: string
+      results: CallOutcome[]
+    },
+    Error,
+    {
+      calls: EvmBatchCall[]
+      mustPass?: boolean
+    }
+  >
+  sendBatchTransactionAsync: (args: {
+    calls: EvmBatchCall[]
+    mustPass?: boolean
+  }) => Promise<{
+    txId: string
+    results: CallOutcome[]
+  }>
+}
 
 // Define the interface for each EVM call.
 export interface EvmBatchCall {
@@ -117,8 +170,16 @@ transaction(calls: [{String: AnyStruct}], mustPass: Bool) {
 `
 }
 
-// Custom hook that returns a function to send a batch transaction
-export function useEvmBatchTransaction() {
+/**
+ * Hook to send an EVM batch transaction using a Cadence-compatible wallet.  This function will
+ * bundle multiple EVM calls into one atomic Cadence transaction and return both the Cadence
+ * transaction ID as well as the result of each EVM call.
+ *
+ * @returns The query mutation object used to send the transaction and get the result.
+ */
+export function useEvmBatchTransaction({
+  mutation: mutationOptions = {},
+}: UseEvmBatchTransactionArgs = {}): UseEvmBatchTransactionResult {
   const chainId = useFlowChainId()
   const cadenceTx = chainId.data
     ? getCadenceBatchTransaction(chainId.data)
@@ -207,10 +268,15 @@ export function useEvmBatchTransaction() {
     queryClient
   )
 
-  const {mutate: sendBatchTransaction, ...rest} = mutation
+  const {
+    mutate: sendBatchTransaction,
+    mutateAsync: sendBatchTransactionAsync,
+    ...rest
+  } = mutation
 
   return {
     sendBatchTransaction,
+    sendBatchTransactionAsync,
     ...rest,
   }
 }
