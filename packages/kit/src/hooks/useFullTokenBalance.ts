@@ -3,19 +3,10 @@ import {useFlowQuery} from "./useFlowQuery"
 import {CONTRACT_ADDRESSES} from "../constants"
 import {useFlowChainId} from "./useFlowChainId"
 
-export type UseFullTokenBalanceArgs =
-  | UseFullTokenBalanceCadenceVaultArgs
-  | UseFullTokenBalanceERC20AddressArgs
-
-interface UseFullTokenBalanceERC20AddressArgs {
-  owner: string
-  erc20AddressHexArg: string
-  query?: Omit<UseQueryOptions<unknown, Error>, "queryKey" | "queryFn">
-}
-
-interface UseFullTokenBalanceCadenceVaultArgs {
-  owner: string
-  contractIdentifier: `A.${string}.${string}`
+export interface UseFullTokenBalanceArgs {
+  owner?: string
+  erc20AddressHexArg?: string
+  contractIdentifier?: `A.${string}.${string}`
   query?: Omit<UseQueryOptions<unknown, Error>, "queryKey" | "queryFn">
 }
 interface UseFullTokenBalanceData {
@@ -162,9 +153,11 @@ access(all) fun main(
 export function useFullTokenBalance(params: UseFullTokenBalanceArgs) {
   const chainIdResult = useFlowChainId()
   const queryResult = useFlowQuery({
-    cadence: getFullTokenBalance(chainIdResult.data as "testnet" | "mainnet"),
+    cadence: chainIdResult.data
+      ? getFullTokenBalance(chainIdResult.data as "testnet" | "mainnet")
+      : "",
     args: (arg, t) => [
-      arg(params.owner, t.Address),
+      params.owner ? arg(params.owner, t.Address) : null,
       arg(
         "contractIdentifier" in params && `${params.contractIdentifier}.Vault`
           ? params.contractIdentifier
@@ -180,7 +173,11 @@ export function useFullTokenBalance(params: UseFullTokenBalanceArgs) {
     ],
     query: {
       ...params.query,
-      enabled: (params.query?.enabled ?? true) && chainIdResult.isSuccess,
+      enabled:
+        (params.query?.enabled ?? true) &&
+        !!chainIdResult.data &&
+        !!params.owner &&
+        (!!params.contractIdentifier || !!params.erc20AddressHexArg),
     },
   })
 
