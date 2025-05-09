@@ -38,7 +38,7 @@ export type EvmTransactionExecutedData = {
 
 // Helper to encode our ca lls using viem.
 // Returns an array of objects with keys "address" and "data" (hex-encoded string without the "0x" prefix).
-export function encodeCalls(
+function encodeCalls(
   calls: EvmBatchCall[]
 ): Array<Array<{key: string; value: string}>> {
   return calls.map(call => {
