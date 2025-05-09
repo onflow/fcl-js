@@ -4,13 +4,14 @@ import {FlowConfig, FlowConfigContext} from "../core/context"
 import {DefaultOptions, QueryClient} from "@tanstack/react-query"
 import {FlowQueryClientProvider} from "./FlowQueryClient"
 import {deepEqual} from "../utils/deepEqual"
-import {ThemeProvider} from "../core/theme"
+import {ThemeProvider, Theme} from "../core/theme"
 import tailwindStyles from "../styles/tailwind.css"
 
 interface FlowProviderProps {
   config?: FlowConfig
   queryClient?: QueryClient
   flowJson?: Record<string, any>
+  theme?: Partial<Theme>
 }
 
 const mappings: Array<{fcl: string; typed: keyof FlowConfig}> = [
@@ -93,6 +94,7 @@ export function FlowProvider({
   config: initialConfig = {},
   queryClient: _queryClient,
   flowJson,
+  theme: customTheme,
   children,
 }: PropsWithChildren<FlowProviderProps>) {
   const [queryClient] = useState<QueryClient>(
@@ -144,7 +146,7 @@ export function FlowProvider({
     <FlowQueryClientProvider queryClient={queryClient}>
       <FlowConfigContext.Provider value={flowConfig}>
         <style>{tailwindStyles}</style>
-        <ThemeProvider>{children}</ThemeProvider>
+        <ThemeProvider theme={customTheme}>{children}</ThemeProvider>
       </FlowConfigContext.Provider>
     </FlowQueryClientProvider>
   )

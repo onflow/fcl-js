@@ -14,17 +14,19 @@ export const Button: React.FC<ButtonProps> = ({
   ...props
 }) => {
   const {colors} = useTheme()
+  const buttonVariant = colors[variant]
 
   const baseStyles = "px-4 py-2 rounded-md font-medium transition-colors"
-  const variantStyles = {
-    primary: colors.primary,
-    secondary: colors.secondary,
-    outline: colors.outline,
-  }
+  const variantClasses = twMerge(
+    buttonVariant.background,
+    buttonVariant.text,
+    buttonVariant.hover,
+    buttonVariant.border
+  )
 
   return (
     <HeadlessButton
-      className={twMerge(baseStyles, variantStyles[variant], className)}
+      className={twMerge(baseStyles, variantClasses, className)}
       {...props}
     />
   )
