@@ -1,4 +1,4 @@
-# Documentation Generator
+# Docs Generator
 
 This directory contains scripts to generate documentation for Flow Client Library (FCL) packages.
 
@@ -25,7 +25,7 @@ The documentation generator creates Markdown files for Docusaurus v2 websites. I
 
 ### JSDoc Support
 
-The documentation generator extracts information from JSDoc comments in your code. You can add JSDoc comments to improve the generated documentation:
+The documentation generator extracts information from JSDoc comments in code. JSDoc comments can be added to improve the generated documentation:
 
 ```javascript
 /**
@@ -74,9 +74,8 @@ npm run generate-docs-all
 This will:
 1. Find all packages with a `generate-docs` script
 2. Run the script for each package
-3. Generate documentation in the `/docs-generator/output/fcl-docs/packages/<package-name>` directory
-4. Create a packages index page at `/docs-generator/output/fcl-docs/packages/index.md`
-5. Generate core types documentation in `/docs-generator/output/fcl-docs/types/index.md`
+3. Generate documentation in the `/docs-generator/output/packages-docs/<package-name>` directory
+4. Generate core types documentation in `/docs-generator/output/packages-docs/types/index.md`
 
 ## Output Structure
 
@@ -84,26 +83,32 @@ The generated documentation follows this structure:
 
 ```
 /docs-generator/output/
-  └── fcl-docs/                 # Main documentation directory for Docusaurus
-      ├── packages/             # All packages documentation
-      │   ├── index.md          # Packages index page
-      │   ├── package-a/        # Documentation for package-a
-      │   │   ├── index.md      # Main package page
-      │   │   ├── installation/ # Installation instructions
-      │   │   │   └── index.md
-      │   │   └── reference/    # API reference documentation
-      │   │       ├── index.md  # List of all functions
-      │   │       ├── functionName1.md
-      │   │       └── ...
-      │   ├── package-b/
+  └── packages-docs/         # Main folder containing
+      ├── package-a/         # Documentation for package-a
+      │   ├── index.md       # Main package page with installation instructions and API 
+      │   ├── functionName1.md
+      │   ├── functionName2.md
       │   └── ...
-      └── types/                # Core types documentation
-          └── index.md          # Types reference page with interfaces, type aliases, and enums
+      ├── package-b/
+      ├── types/
+      │   └── index.md       # Type definitions page with interfaces, type aliases, and enums
+      └── index.md           # List contents of the folder
 ```
 
-This structure makes it easy to copy the entire `fcl-docs` directory into your Docusaurus project.
+Each package has a main page that includes:
+- Package overview 
+- Installation instructions
+- API reference with links to individual function documentation
 
-All generated files (except README.md) are ignored by git.
+### Auto-generation Notes
+
+All generated files are automatically generated from the source code of FCL packages and are ignored by git (except this README).
+Do not modify these files directly as they will be overwritten when documentation is regenerated.
+
+Instead:
+- Update the JSDoc comments in the source code
+- Customize the templates in `docs-generator/templates/`
+- Create a `docs-generator.config.js` file in the package root for custom content
 
 ## Customizing Templates
 
@@ -116,14 +121,13 @@ Packages can provide custom documentation content by creating a `docs-generator.
 ```js
 module.exports = {
   customData: {
-    packageIndex: {
-      overview: ``,
+    displayName: `Custom Package Reference`,   // Used for Docusaurus sidebar title
+    sections: {
+      overview: ``,                            // Custom overview section
+      requirements: ``,                        // Custom requirements section
+      importing: ``,                           // Custom importing section
     },
-    installation: {
-      requirements: ``,
-      importing: ``,
-      extra: ``,
-    },
+    extra: ``,                                 // Additional content
   },
 };
 ```
@@ -144,7 +148,7 @@ To add documentation generation to a new package:
 }
 ```
 
-2. Ensure your code has proper JSDoc comments for better documentation.
+2. Ensure the code has proper JSDoc comments for better documentation.
 
 3. Run the generate-docs script to test it.
 
@@ -154,39 +158,14 @@ This package will now be included when running the `generate-docs-all` command.
 
 The generator also creates documentation for all types, interfaces, and enums exported from the `@onflow/typedefs` package. This documentation is generated every time you run the generate-docs script for any package, ensuring that the types documentation is always up-to-date.
 
-The types documentation includes:
+The types documentation in the `types` directory includes:
 
-- Interfaces with their properties and methods
-- Type aliases with their underlying types
-- Enums with all their members and values
+- **Interfaces** - Documented with their properties and methods
+- **Types** - Documented with their underlying types
+- **Enums** - Documented with all their members and values
 
 All type documentation includes JSDoc descriptions when available.
 
-## Integration with Docusaurus
+## Integration with Documentation Projects
 
-After generating documentation, you can copy the entire `fcl-docs` directory to your Docusaurus project's `docs` directory. This will maintain the folder structure and allow Docusaurus to build the complete documentation site. 
-
-## Automated Documentation Generation
-
-The repository includes a GitHub Actions workflow that automatically generates and publishes documentation when changes are merged to the master branch. This ensures that the documentation is always up-to-date with the latest code.
-
-### Workflow Overview
-
-The workflow (`/.github/workflows/generate-docs.yml`) performs the following steps:
-
-1. Checks out the FCL JS repository
-2. Sets up Node.js and installs dependencies
-3. Runs the documentation generation script
-4. Checks out the onflow/docs repository
-5. Creates a new branch in the docs repository
-6. Copies the generated documentation to the appropriate location
-7. Commits and pushes the changes
-8. Creates a pull request in the onflow/docs repository
-
-The generated branch name and PR will include the commit hash from the FCL JS master branch for easy tracking.
-
-### Required Setup
-
-For the documentation workflow to function correctly, you need to set up the following GitHub repository secret:
-
-- **DOCS_REPO_TOKEN**: A GitHub personal access token with permissions to create branches and pull requests in the `onflow/docs` repository.
+After generating documentation, copy the `output/packages-docs` directory to the documentation project. This will maintain the folder structure and allow the documentation build system to process the files.

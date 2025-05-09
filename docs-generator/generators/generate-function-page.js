@@ -28,7 +28,7 @@ function extractCoreTypes() {
 
   try {
     const typedefsSrcDir = path.join(
-      path.resolve(__dirname, "../../packages/typedefs"),
+      path.resolve(process.cwd(), "../typedefs"),
       "src"
     )
     const project = new Project({skipAddingFilesFromTsConfig: true})
@@ -174,10 +174,7 @@ function getTypeDefinition(typeName, packageName, sourceFilePath) {
   try {
     // First check source file if provided
     if (sourceFilePath) {
-      const fullSourcePath = path.resolve(
-        __dirname,
-        `../../packages/${packageName}/${sourceFilePath}`
-      )
+      const fullSourcePath = path.resolve(process.cwd(), "../", sourceFilePath)
       if (fs.existsSync(fullSourcePath)) {
         const project = new Project({skipAddingFilesFromTsConfig: true})
         const sourceFile = project.addSourceFileAtPath(fullSourcePath)
@@ -188,8 +185,10 @@ function getTypeDefinition(typeName, packageName, sourceFilePath) {
     // If not found, search package src directory
     if (!definition) {
       const packageSrcDir = path.resolve(
-        __dirname,
-        `../../packages/${packageName}/src`
+        process.cwd(),
+        "../",
+        packageName,
+        "src"
       )
       if (fs.existsSync(packageSrcDir)) {
         const project = new Project({skipAddingFilesFromTsConfig: true})
@@ -235,14 +234,14 @@ function generateFunctionPage(templates, outputDir, packageName, func) {
         const innerType = match[1]
         if (coreTypes.has(innerType)) {
           hasLink = true
-          linkedType = `[\`${baseType}\`](../../../types#${innerType.toLowerCase()})`
+          linkedType = `[\`${baseType}\`](../types#${innerType.toLowerCase()})`
         }
       }
     }
     // Handle regular core type
     else if (coreTypes.has(baseType)) {
       hasLink = true
-      linkedType = `[\`${baseType}\`](../../../types#${baseType.toLowerCase()})`
+      linkedType = `[\`${baseType}\`](../types#${baseType.toLowerCase()})`
     }
 
     // Get type definition if not a core type or Promise<CoreType>
@@ -272,14 +271,14 @@ function generateFunctionPage(templates, outputDir, packageName, func) {
       const innerType = match[1]
       if (coreTypes.has(innerType)) {
         returnHasLink = true
-        linkedType = `[\`${extractedReturnType}\`](../../../types#${innerType.toLowerCase()})`
+        linkedType = `[\`${extractedReturnType}\`](../types#${innerType.toLowerCase()})`
       }
     }
   }
   // Handle regular core type in return type
   else if (coreTypes.has(extractedReturnType)) {
     returnHasLink = true
-    linkedType = `[\`${extractedReturnType}\`](../../../types#${extractedReturnType.toLowerCase()})`
+    linkedType = `[\`${extractedReturnType}\`](../types#${extractedReturnType.toLowerCase()})`
   }
 
   func.returnType = extractedReturnType
@@ -297,14 +296,12 @@ function generateFunctionPage(templates, outputDir, packageName, func) {
     func.returnTypeDefinition = null
   }
 
-  // Generate the page
+  // Generate the page directly in the package folder instead of in a reference subfolder
   const filename = func.name.charAt(0).toLowerCase() + func.name.slice(1)
-  generatePage(
-    templates,
-    "function",
-    path.join(outputDir, "reference", `${filename}.md`),
-    {...func, packageName}
-  )
+  generatePage(templates, "function", path.join(outputDir, `${filename}.md`), {
+    ...func,
+    packageName,
+  })
 }
 
 module.exports = {generateFunctionPage}

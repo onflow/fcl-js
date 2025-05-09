@@ -203,9 +203,9 @@ function extractEnums(sourceFiles) {
   return enums.sort((a, b) => a.name.localeCompare(b.name))
 }
 
-function generateTypesIndexPage(templates, outputDir) {
+function generateTypesPage(templates, outputDir) {
   // Path to the typedefs package
-  const typedefsDir = path.resolve(__dirname, "../../packages/typedefs")
+  const typedefsDir = path.resolve(process.cwd(), "../typedefs")
   const typedefsSrcDir = path.join(typedefsDir, "src")
 
   // Initialize ts-morph project
@@ -222,11 +222,11 @@ function generateTypesIndexPage(templates, outputDir) {
   const enums = extractEnums(sourceFiles)
 
   // Generate the types index page
-  generatePage(templates, "typesIndex", path.join(outputDir, "index.md"), {
+  generatePage(templates, "types", path.join(outputDir, "index.md"), {
     interfaces,
     types,
     enums,
   })
 }
 
-module.exports = {generateTypesIndexPage}
+module.exports = {generateTypesPage}

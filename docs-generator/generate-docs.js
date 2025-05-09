@@ -3,12 +3,10 @@ const path = require("path")
 const {Project, Node} = require("ts-morph")
 const Handlebars = require("handlebars")
 const {
-  generatePackageIndexPage,
-  generateInstallationPage,
-  generateReferenceIndexPage,
+  generateRootPage,
+  generatePackagePage,
   generateFunctionPage,
-  generatePackageListIndexPage,
-  generateTypesIndexPage,
+  generateTypesPage,
 } = require("./generators")
 
 function parseJsDoc(node) {
@@ -183,60 +181,38 @@ async function main() {
       fs.readFileSync(path.resolve(process.cwd(), "package.json"), "utf8")
     )
     const packageName = packageJson.name.split("/").pop()
-    if (!packageName) {
-      throw new Error(
-        `Could not determine package name from ${packageJson.name}`
-      )
-    }
     console.log(`Generating docs for ${packageName}...`)
 
     // Configuration with updated directory structure
     const SOURCE_DIR = path.resolve(process.cwd(), "src")
-    const ROOT_OUTPUT_DIR = path.resolve(__dirname, "./output")
-    const FCL_DOCS_DIR = path.join(ROOT_OUTPUT_DIR, "fcl-docs")
-    const PACKAGES_DIR = path.join(FCL_DOCS_DIR, "packages")
-    const PACKAGE_OUTPUT_DIR = path.join(PACKAGES_DIR, packageName)
-    const TYPES_OUTPUT_DIR = path.join(FCL_DOCS_DIR, "types")
     const TEMPLATES_DIR = path.resolve(__dirname, "./templates")
+    const OUTPUT_DIR = path.resolve(__dirname, "./output")
 
-    // Ensure the base directories exist
-    await fs.promises.mkdir(FCL_DOCS_DIR, {recursive: true})
-    await fs.promises.mkdir(PACKAGES_DIR, {recursive: true})
-    // Clean existing output directory
-    await fs.promises.rm(PACKAGE_OUTPUT_DIR, {recursive: true, force: true})
-    await fs.promises.rm(TYPES_OUTPUT_DIR, {recursive: true, force: true})
-    // Create output directories if they don't exist
-    await fs.promises.mkdir(PACKAGE_OUTPUT_DIR, {recursive: true})
-    await fs.promises.mkdir(TYPES_OUTPUT_DIR, {recursive: true})
-    await fs.promises.mkdir(path.join(PACKAGE_OUTPUT_DIR, "installation"), {
-      recursive: true,
-    })
-    await fs.promises.mkdir(path.join(PACKAGE_OUTPUT_DIR, "reference"), {
-      recursive: true,
-    })
+    const ROOT_DIR = path.join(OUTPUT_DIR, "packages-docs")
+    const PACKAGE_DIR = path.join(ROOT_DIR, packageName)
+    const TYPES_DIR = path.join(ROOT_DIR, "types")
+
+    // Ensure output directories exist
+    await fs.promises.mkdir(OUTPUT_DIR, {recursive: true})
+    await fs.promises.mkdir(ROOT_DIR, {recursive: true})
+    // Clean existing output directory content for the package before creating its folder
+    await fs.promises.rm(PACKAGE_DIR, {recursive: true, force: true})
+    await fs.promises.mkdir(PACKAGE_DIR, {recursive: true})
+    await fs.promises.mkdir(TYPES_DIR, {recursive: true})
 
     // Handlebars templates to be used for generating the docs
     const templates = {
-      packageIndex: Handlebars.compile(
-        fs.readFileSync(path.join(TEMPLATES_DIR, "package-index.hbs"), "utf8")
+      root: Handlebars.compile(
+        fs.readFileSync(path.join(TEMPLATES_DIR, "root.hbs"), "utf8")
       ),
-      installation: Handlebars.compile(
-        fs.readFileSync(path.join(TEMPLATES_DIR, "installation.hbs"), "utf8")
-      ),
-      referenceIndex: Handlebars.compile(
-        fs.readFileSync(path.join(TEMPLATES_DIR, "reference-index.hbs"), "utf8")
+      package: Handlebars.compile(
+        fs.readFileSync(path.join(TEMPLATES_DIR, "package.hbs"), "utf8")
       ),
       function: Handlebars.compile(
         fs.readFileSync(path.join(TEMPLATES_DIR, "function.hbs"), "utf8")
       ),
-      packageListIndex: Handlebars.compile(
-        fs.readFileSync(
-          path.join(TEMPLATES_DIR, "package-list-index.hbs"),
-          "utf8"
-        )
-      ),
-      typesIndex: Handlebars.compile(
-        fs.readFileSync(path.join(TEMPLATES_DIR, "types-index.hbs"), "utf8")
+      types: Handlebars.compile(
+        fs.readFileSync(path.join(TEMPLATES_DIR, "types.hbs"), "utf8")
       ),
     }
 
@@ -259,22 +235,14 @@ async function main() {
       functions.push(...fileFunctions)
     })
 
-    // Generate the packages index page
-    generatePackageListIndexPage(templates, PACKAGES_DIR, packageName)
-    // Generate single page documentation
-    generateInstallationPage(templates, PACKAGE_OUTPUT_DIR, packageName)
-    generatePackageIndexPage(templates, PACKAGE_OUTPUT_DIR, packageName)
-    generateReferenceIndexPage(
-      templates,
-      PACKAGE_OUTPUT_DIR,
-      packageName,
-      functions
-    )
+    // Generate documentation
+    generateRootPage(templates, ROOT_DIR, packageName)
+    generatePackagePage(templates, PACKAGE_DIR, packageName, functions)
     functions.forEach(func => {
-      generateFunctionPage(templates, PACKAGE_OUTPUT_DIR, packageName, func)
+      generateFunctionPage(templates, PACKAGE_DIR, packageName, func)
     })
     // Generate the types documentation
-    generateTypesIndexPage(templates, TYPES_OUTPUT_DIR)
+    generateTypesPage(templates, TYPES_DIR)
 
     console.log(`Docs generated correctly for ${packageName}.`)
     return true

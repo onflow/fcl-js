@@ -4,16 +4,7 @@ const {execSync} = require("child_process")
 
 async function main() {
   try {
-    // Ensure the base output directories exist
-    const outputDir = path.resolve(__dirname, "./output")
-    const fclDocsDir = path.join(outputDir, "fcl-docs")
-    const outputPackagesDir = path.join(fclDocsDir, "packages")
-
-    await fs.promises.mkdir(outputDir, {recursive: true})
-    await fs.promises.mkdir(fclDocsDir, {recursive: true})
-    await fs.promises.mkdir(outputPackagesDir, {recursive: true})
-
-    // Get packages directory
+    // Get packages source directory
     const sourcePackagesDir = path.resolve(__dirname, "../packages")
     // Find packages with generate-docs script
     console.log(`Scanning for packages in ${sourcePackagesDir}`)
