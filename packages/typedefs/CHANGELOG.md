@@ -1,5 +1,11 @@
 # @onflow/typedefs
 
+## 1.5.0
+
+### Minor Changes
+
+- [#2393](https://github.com/onflow/fcl-js/pull/2393) [`e10f1db63a8a9cc86a56e312d7d7e3a2089d4a3a`](https://github.com/onflow/fcl-js/commit/e10f1db63a8a9cc86a56e312d7d7e3a2089d4a3a) Thanks [@mfbz](https://github.com/mfbz)! - Changed typedefs types to interfaces for code standardization
+
 ## 1.4.1
 
 ### Patch Changes
