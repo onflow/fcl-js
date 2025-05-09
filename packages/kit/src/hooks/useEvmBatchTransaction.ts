@@ -57,23 +57,27 @@ interface UseEvmBatchTransactionResult
   }>
 }
 
-// Define the interface for each EVM call.
-export interface EvmBatchCall {
-  address: string // The target EVM contract address (as a string)
-  abi: Abi // The contract ABI fragment (as JSON)
-  functionName: string // The name of the function to call
-  args?: readonly unknown[] // The function arguments
-  gasLimit?: bigint // The gas limit for the call
-  value?: bigint // The value to send with the call
+interface EvmBatchCall {
+  // The target EVM contract address (as a string)
+  address: string
+  // The contract ABI fragment
+  abi: Abi
+  // The name of the function to call
+  functionName: string
+  // The function arguments
+  args?: readonly unknown[]
+  // The gas limit for the call
+  gasLimit?: bigint
+  // The value to send with the call
+  value?: bigint
 }
-
-export interface CallOutcome {
+interface CallOutcome {
   status: "passed" | "failed" | "skipped"
   hash?: string
   errorMessage?: string
 }
 
-export type EvmTransactionExecutedData = {
+type EvmTransactionExecutedData = {
   hash: string[]
   index: string
   type: string
