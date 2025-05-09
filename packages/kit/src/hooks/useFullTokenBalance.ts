@@ -1,13 +1,41 @@
 import {UseQueryOptions, UseQueryResult} from "@tanstack/react-query"
 import {useFlowQuery} from "./useFlowQuery"
 import {CONTRACT_ADDRESSES} from "../constants"
+import {useFlowChainId} from "./useFlowChainId"
 
-const getFullTokenBalance = `
-import EVM from ${CONTRACT_ADDRESSES.EVM}
-import FungibleToken from ${CONTRACT_ADDRESSES.FungibleToken}
-import FlowEVMBridgeUtils from ${CONTRACT_ADDRESSES.FlowEVMBridgeUtils}
-import FlowEVMBridgeConfig from ${CONTRACT_ADDRESSES.FlowEVMBridgeConfig}
-import FungibleTokenMetadataViews from ${CONTRACT_ADDRESSES.FungibleTokenMetadataViews}
+export type UseFullTokenBalanceArgs =
+  | UseFullTokenBalanceCadenceVaultArgs
+  | UseFullTokenBalanceERC20AddressArgs
+
+interface UseFullTokenBalanceERC20AddressArgs {
+  owner: string
+  erc20AddressHexArg: string
+  query?: Omit<UseQueryOptions<unknown, Error>, "queryKey" | "queryFn">
+}
+
+interface UseFullTokenBalanceCadenceVaultArgs {
+  owner: string
+  contractIdentifier: `A.${string}.${string}`
+  query?: Omit<UseQueryOptions<unknown, Error>, "queryKey" | "queryFn">
+}
+interface UseFullTokenBalanceData {
+  cadenceBalance: string
+  evmBalance: {
+    value: BigInt
+    decimals: number
+  }
+  totalBalance: {
+    value: BigInt
+    decimals: number
+  }
+}
+
+const getFullTokenBalance = (network: "testnet" | "mainnet") => `
+import EVM from ${CONTRACT_ADDRESSES[network].EVM}
+import FungibleToken from ${CONTRACT_ADDRESSES[network].FungibleToken}
+import FlowEVMBridgeUtils from ${CONTRACT_ADDRESSES[network].FlowEVMBridgeUtils}
+import FlowEVMBridgeConfig from ${CONTRACT_ADDRESSES[network].FlowEVMBridgeConfig}
+import FungibleTokenMetadataViews from ${CONTRACT_ADDRESSES[network].FungibleTokenMetadataViews}
 
 /// Returns the balance of the owner of a given Fungible Token
 /// from their Cadence account and their COA
@@ -126,46 +154,20 @@ access(all) fun main(
 }
 `
 
-export type UseFullTokenBalanceArgs =
-  | UseFullTokenBalanceCadenceVaultArgs
-  | UseFullTokenBalanceERC20AddressArgs
-
-interface UseFullTokenBalanceERC20AddressArgs {
-  owner: string
-  erc20AddressHexArg: string
-  query?: Omit<UseQueryOptions<unknown, Error>, "queryKey" | "queryFn">
-}
-
-interface UseFullTokenBalanceCadenceVaultArgs {
-  owner: string
-  vaultIdentifier: string
-  query?: Omit<UseQueryOptions<unknown, Error>, "queryKey" | "queryFn">
-}
-interface UseFullTokenBalanceData {
-  cadenceBalance: string
-  evmBalance: {
-    value: BigInt
-    decimals: number
-  }
-  totalBalance: {
-    value: BigInt
-    decimals: number
-  }
-}
-
 /**
  * Returns the balance of the owner of a given Fungible Token across both Cadence and EVM accounts.
  * @param param0
  * @returns
  */
 export function useFullTokenBalance(params: UseFullTokenBalanceArgs) {
+  const chainIdResult = useFlowChainId()
   const queryResult = useFlowQuery({
-    cadence: getFullTokenBalance,
+    cadence: getFullTokenBalance(chainIdResult.data as "testnet" | "mainnet"),
     args: (arg, t) => [
       arg(params.owner, t.Address),
       arg(
-        "vaultIdentifier" in params && params.vaultIdentifier
-          ? params.vaultIdentifier
+        "contractIdentifier" in params && `${params.contractIdentifier}.Vault`
+          ? params.contractIdentifier
           : null,
         t.Optional(t.String)
       ),
@@ -176,8 +178,15 @@ export function useFullTokenBalance(params: UseFullTokenBalanceArgs) {
         t.Optional(t.String)
       ),
     ],
-    query: params.query,
+    query: {
+      ...params.query,
+      enabled: (params.query?.enabled ?? true) && chainIdResult.isSuccess,
+    },
   })
+
+  if (chainIdResult.isError) {
+    return chainIdResult
+  }
 
   const data = queryResult.data as [string, string, string, string] | undefined
   if (!data) {
@@ -192,21 +201,24 @@ export function useFullTokenBalance(params: UseFullTokenBalanceArgs) {
     ...queryResult,
     data: data
       ? {
-          cadenceBalance: BigInt(cadenceBalance ?? 0).toString(),
-          evmBalance: formatBalance(
+          cadenceBalance: cadenceBalance,
+          evmBalance: formatUIntBalance(
             BigInt(evmBalance ?? 0),
             Number(decimals ?? 0)
           ),
-          totalBalance: formatBalance(
-            BigInt(totalBalance ?? 0),
-            Number(decimals ?? 0)
-          ),
+          totalBalance:
+            BigInt(evmBalance) > 0
+              ? formatUIntBalance(
+                  BigInt(totalBalance ?? 0),
+                  Number(decimals ?? 0)
+                )
+              : cadenceBalance,
         }
       : null,
   } as UseQueryResult<UseFullTokenBalanceData | null, Error>
 }
 
-function formatBalance(value: bigint, decimals: number): string {
+function formatUIntBalance(value: bigint, decimals: number): string {
   const decimalValue = value / BigInt(10 ** decimals)
   const fractionalValue = value % BigInt(10 ** decimals)
   return `${decimalValue}.${fractionalValue.toString().padStart(decimals, "0")}`
