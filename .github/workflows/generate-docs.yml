@@ -43,14 +43,14 @@ jobs:
       - name: Create branch in docs repo
         run: |
           cd flow-docs
-          git config user.name "FCL Docs Generator"
-          git config user.email "fcl-docs-generator@users.noreply.github.com"
-          git checkout -b "docs-generator/fcl-js-${{ env.FCL_JS_COMMIT }}"
+          git config user.name "FCL JS Docs Generator"
+          git config user.email "fcl-js-docs-generator@users.noreply.github.com"
+          git checkout -b "fcl-js-docs-generator/fcl-js-${{ env.FCL_JS_COMMIT }}"
 
       - name: Copy documentation to docs repo
         run: |
           # Define the source and destination directories
-          SRC_DIR="fcl-js/docs-generator/output/fcl-docs"
+          SRC_DIR="fcl-js/docs-generator/output"
           DEST_DIR="flow-docs/docs/fcl-js"
 
           # Create destination directory if it doesn't exist
@@ -64,7 +64,7 @@ jobs:
           cd flow-docs
           git add .
           git commit -m "Update FCL JS documentation from fcl-js@${{ env.FCL_JS_COMMIT }}"
-          git push --set-upstream origin "docs-generator/fcl-js-${{ env.FCL_JS_COMMIT }}"
+          git push --set-upstream origin "fcl-js-docs-generator/fcl-js-${{ env.FCL_JS_COMMIT }}"
 
       - name: Create Pull Request in docs repo
         uses: peter-evans/create-pull-request@v5
@@ -72,7 +72,7 @@ jobs:
           token: ${{ secrets.DOCS_REPO_TOKEN }}
           path: flow-docs
           commit-message: "Update FCL JS documentation from fcl-js@${{ env.FCL_JS_COMMIT }}"
-          branch: "docs-generator/fcl-js-${{ env.FCL_JS_COMMIT }}"
+          branch: "fcl-js-docs-generator/fcl-js-${{ env.FCL_JS_COMMIT }}"
           base: main
           title: "Update FCL JS documentation from fcl-js@${{ env.FCL_JS_COMMIT }}"
           body: |
