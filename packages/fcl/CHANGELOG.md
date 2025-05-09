@@ -1,5 +1,18 @@
 # @onflow/fcl
 
+## 1.17.0
+
+### Minor Changes
+
+- [#2384](https://github.com/onflow/fcl-js/pull/2384) [`f86b71357696826a5ad7b8e578de76ecebcd2e29`](https://github.com/onflow/fcl-js/commit/f86b71357696826a5ad7b8e578de76ecebcd2e29) Thanks [@jribbink](https://github.com/jribbink)! - Include origin information in `onMessageFromFcl` function
+
+### Patch Changes
+
+- Updated dependencies [[`0feeae00d1ef089df36b381109802bb0b14bf89b`](https://github.com/onflow/fcl-js/commit/0feeae00d1ef089df36b381109802bb0b14bf89b), [`0feeae00d1ef089df36b381109802bb0b14bf89b`](https://github.com/onflow/fcl-js/commit/0feeae00d1ef089df36b381109802bb0b14bf89b), [`f86b71357696826a5ad7b8e578de76ecebcd2e29`](https://github.com/onflow/fcl-js/commit/f86b71357696826a5ad7b8e578de76ecebcd2e29), [`094ed6dd38cae9ae39183f5ead8d59f9276f8f5d`](https://github.com/onflow/fcl-js/commit/094ed6dd38cae9ae39183f5ead8d59f9276f8f5d)]:
+  - @onflow/fcl-wc@6.0.2
+  - @onflow/fcl-core@1.18.0
+  - @onflow/sdk@1.8.1
+
 ## 1.16.1
 
 ### Patch Changes
