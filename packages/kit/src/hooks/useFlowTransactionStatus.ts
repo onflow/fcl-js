@@ -17,6 +17,9 @@ export interface UseFlowTransactionStatusResult {
 /**
  * Subscribes to status updates for a given Flow transaction ID.
  *
+ * @remarks
+ * This hook was previously named `useFlowTransaction`.
+ *
  * @param args.id - The Flow transaction ID to watch
  * @returns {UseFlowTransactionStatusResult}
  */
