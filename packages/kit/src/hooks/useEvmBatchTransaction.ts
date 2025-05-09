@@ -263,6 +263,8 @@ export function useEvmBatchTransaction({
 
         return {txId, results}
       },
+      retry: false,
+      ...mutationOptions,
     },
     queryClient
   )
