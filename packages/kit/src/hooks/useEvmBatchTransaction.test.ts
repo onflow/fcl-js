@@ -77,6 +77,11 @@ describe("useBatchEvmTransaction", () => {
       expect(result).toContain("import EVM from 0x8c5303eaa26202d6")
     })
 
+    it("should return correct cadence for local", () => {
+      const result = getCadenceBatchTransaction("local")
+      expect(result).toContain("import EVM from 0xf8d6e0586b0a20c0")
+    })
+
     it("should throw error for unsupported chain", () => {
       expect(() => getCadenceBatchTransaction("unsupported")).toThrow(
         "Unsupported chain: unsupported"
