@@ -79,7 +79,7 @@ describe("useBatchEvmTransaction", () => {
 
     it("should throw error for unsupported chain", () => {
       expect(() => getCadenceBatchTransaction("unsupported")).toThrow(
-        "Unsupported chain ID for EVM batch transaction"
+        "Unsupported chain: unsupported"
       )
     })
   })
