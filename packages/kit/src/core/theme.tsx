@@ -23,21 +23,21 @@ const defaultTheme: Theme = {
       background: "bg-slate-900",
       text: "text-white",
       hover: "hover:bg-slate-800",
-      border: undefined
+      border: undefined,
     },
     secondary: {
       background: "bg-slate-100",
       text: "text-slate-900",
       hover: "hover:bg-slate-200",
-      border: undefined
+      border: undefined,
     },
     outline: {
       background: "bg-transparent",
       text: "text-slate-900",
       hover: "hover:bg-slate-100",
-      border: "border border-slate-200"
-    }
-  }
+      border: "border border-slate-200",
+    },
+  },
 }
 
 const ThemeContext = createContext<Theme>(defaultTheme)
@@ -54,18 +54,26 @@ type ThemeProviderProps = React.PropsWithChildren<{
 const deepMerge = <T extends object>(target: T, source?: DeepPartial<T>): T => {
   if (!source) return target
   const result = {...target}
-  
+
   Object.keys(source).forEach(key => {
     const targetValue = target[key as keyof T]
     const sourceValue = source[key as keyof DeepPartial<T>]
-    
-    if (sourceValue && typeof sourceValue === 'object' && targetValue && typeof targetValue === 'object') {
-      result[key as keyof T] = deepMerge(targetValue as object, sourceValue as object) as T[keyof T]
+
+    if (
+      sourceValue &&
+      typeof sourceValue === "object" &&
+      targetValue &&
+      typeof targetValue === "object"
+    ) {
+      result[key as keyof T] = deepMerge(
+        targetValue as object,
+        sourceValue as object
+      ) as T[keyof T]
     } else if (sourceValue !== undefined) {
       result[key as keyof T] = sourceValue as T[keyof T]
     }
   })
-  
+
   return result
 }
 
