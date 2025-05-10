@@ -2,12 +2,12 @@ import {useState, useEffect} from "react"
 import * as fcl from "@onflow/fcl"
 import {TransactionStatus} from "@onflow/typedefs"
 
-export interface UseFlowTransactionArgs {
+export interface UseFlowTransactionStatusArgs {
   /** The Flow transaction ID to monitor */
   id: string
 }
 
-export interface UseFlowTransactionResult {
+export interface UseFlowTransactionStatusResult {
   /** Latest transaction status, or null before any update */
   transactionStatus: TransactionStatus | null
   /** Any error encountered during status updates */
@@ -17,12 +17,15 @@ export interface UseFlowTransactionResult {
 /**
  * Subscribes to status updates for a given Flow transaction ID.
  *
+ * @remarks
+ * This hook was previously named `useFlowTransaction`.
+ *
  * @param args.id - The Flow transaction ID to watch
- * @returns {UseFlowTransactionResult}
+ * @returns {UseFlowTransactionStatusResult}
  */
-export function useFlowTransaction({
+export function useFlowTransactionStatus({
   id,
-}: UseFlowTransactionArgs): UseFlowTransactionResult {
+}: UseFlowTransactionStatusArgs): UseFlowTransactionStatusResult {
   const [transactionStatus, setTransactionStatus] =
     useState<TransactionStatus | null>(null)
   const [error, setError] = useState<Error | null>(null)

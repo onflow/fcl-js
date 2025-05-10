@@ -1,5 +1,16 @@
 # @onflow/fcl-wc
 
+## 6.0.2
+
+### Patch Changes
+
+- [#2382](https://github.com/onflow/fcl-js/pull/2382) [`0feeae00d1ef089df36b381109802bb0b14bf89b`](https://github.com/onflow/fcl-js/commit/0feeae00d1ef089df36b381109802bb0b14bf89b) Thanks [@jribbink](https://github.com/jribbink)! - Remove unused WalletConnect dependencies
+
+- [#2382](https://github.com/onflow/fcl-js/pull/2382) [`0feeae00d1ef089df36b381109802bb0b14bf89b`](https://github.com/onflow/fcl-js/commit/0feeae00d1ef089df36b381109802bb0b14bf89b) Thanks [@jribbink](https://github.com/jribbink)! - Update WalletConnect packages
+
+- Updated dependencies [[`f86b71357696826a5ad7b8e578de76ecebcd2e29`](https://github.com/onflow/fcl-js/commit/f86b71357696826a5ad7b8e578de76ecebcd2e29), [`094ed6dd38cae9ae39183f5ead8d59f9276f8f5d`](https://github.com/onflow/fcl-js/commit/094ed6dd38cae9ae39183f5ead8d59f9276f8f5d)]:
+  - @onflow/fcl-core@1.18.0
+
 ## 6.0.1
 
 ### Patch Changes
