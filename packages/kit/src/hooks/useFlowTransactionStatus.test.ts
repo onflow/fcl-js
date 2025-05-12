@@ -1,13 +1,13 @@
 import {renderHook, act} from "@testing-library/react"
 import * as fcl from "@onflow/fcl"
-import {useFlowTransaction} from "./useFlowTransaction"
+import {useFlowTransactionStatus} from "./useFlowTransactionStatus"
 import {TransactionStatus} from "@onflow/typedefs"
 import {FlowProvider} from "../provider"
 import {defaultTxStatus, errorTxStatus} from "../__mocks__/tx"
 
 jest.mock("@onflow/fcl", () => require("../__mocks__/fcl").default)
 
-describe("useFlowTransaction", () => {
+describe("useFlowTransactionStatus", () => {
   afterEach(() => {
     jest.clearAllMocks()
   })
@@ -26,9 +26,12 @@ describe("useFlowTransaction", () => {
       subscribe: subscribeMock,
     } as unknown as ReturnType<typeof fcl.tx>)
 
-    const {result} = renderHook(() => useFlowTransaction({id: "mockTxId"}), {
-      wrapper: FlowProvider,
-    })
+    const {result} = renderHook(
+      () => useFlowTransactionStatus({id: "mockTxId"}),
+      {
+        wrapper: FlowProvider,
+      }
+    )
 
     act(() => {
       subscribeCallback(defaultTxStatus)
@@ -52,9 +55,12 @@ describe("useFlowTransaction", () => {
       subscribe: subscribeMock,
     } as unknown as ReturnType<typeof fcl.tx>)
 
-    const {result} = renderHook(() => useFlowTransaction({id: "mockTxId"}), {
-      wrapper: FlowProvider,
-    })
+    const {result} = renderHook(
+      () => useFlowTransactionStatus({id: "mockTxId"}),
+      {
+        wrapper: FlowProvider,
+      }
+    )
 
     act(() => {
       subscribeCallback(errorTxStatus)
