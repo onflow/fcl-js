@@ -4,8 +4,8 @@ import {FlowProvider} from "../provider"
 import {
   encodeCalls,
   getCadenceBatchTransaction,
-  useEvmBatchTransaction,
-} from "./useEvmBatchTransaction"
+  useCrossVmBatchTransaction,
+} from "./useCrossVmBatchTransaction"
 import {useFlowChainId} from "./useFlowChainId"
 
 jest.mock("@onflow/fcl", () => require("../__mocks__/fcl").default)
@@ -89,7 +89,7 @@ describe("useBatchEvmTransaction", () => {
     })
   })
 
-  describe("useEvmBatchTransaction", () => {
+  describe("useCrossVmBatchTransaction", () => {
     test("should handle successful transaction", async () => {
       jest.mocked(fcl.mutate).mockResolvedValue(mockTxId)
       jest.mocked(fcl.tx).mockReturnValue({
@@ -99,7 +99,7 @@ describe("useBatchEvmTransaction", () => {
       let result: any
       let rerender: any
       await act(async () => {
-        ;({result, rerender} = renderHook(useEvmBatchTransaction, {
+        ;({result, rerender} = renderHook(useCrossVmBatchTransaction, {
           wrapper: FlowProvider,
         }))
       })
@@ -128,7 +128,7 @@ describe("useBatchEvmTransaction", () => {
       let hookResult: any
 
       await act(async () => {
-        const {result} = renderHook(useEvmBatchTransaction, {
+        const {result} = renderHook(useCrossVmBatchTransaction, {
           wrapper: FlowProvider,
         })
         hookResult = result
@@ -156,7 +156,7 @@ describe("useBatchEvmTransaction", () => {
       let hookResult: any
 
       await act(async () => {
-        const {result} = renderHook(() => useEvmBatchTransaction(), {
+        const {result} = renderHook(() => useCrossVmBatchTransaction(), {
           wrapper: FlowProvider,
         })
         hookResult = result
@@ -180,7 +180,7 @@ describe("useBatchEvmTransaction", () => {
       let hookResult: any
 
       await act(async () => {
-        const {result} = renderHook(() => useEvmBatchTransaction(), {
+        const {result} = renderHook(() => useCrossVmBatchTransaction(), {
           wrapper: FlowProvider,
         })
         hookResult = result
@@ -203,7 +203,7 @@ describe("useBatchEvmTransaction", () => {
       let hookResult: any
 
       await act(async () => {
-        const {result} = renderHook(() => useEvmBatchTransaction(), {
+        const {result} = renderHook(() => useCrossVmBatchTransaction(), {
           wrapper: FlowProvider,
         })
         hookResult = result
@@ -223,7 +223,7 @@ describe("useBatchEvmTransaction", () => {
       let hookResult: any
 
       await act(async () => {
-        const {result} = renderHook(() => useEvmBatchTransaction(), {
+        const {result} = renderHook(() => useCrossVmBatchTransaction(), {
           wrapper: FlowProvider,
         })
         hookResult = result

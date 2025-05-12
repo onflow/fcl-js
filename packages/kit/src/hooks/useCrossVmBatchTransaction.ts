@@ -9,7 +9,7 @@ import {
 import {useFlowChainId} from "./useFlowChainId"
 import {useFlowQueryClient} from "../provider/FlowQueryClient"
 
-interface UseEvmBatchTransactionArgs {
+interface useCrossVmBatchTransactionArgs {
   mutation?: Omit<
     UseMutationOptions<
       {
@@ -26,7 +26,7 @@ interface UseEvmBatchTransactionArgs {
   >
 }
 
-interface UseEvmBatchTransactionResult
+interface useCrossVmBatchTransactionResult
   extends Omit<
     UseMutationResult<
       {
@@ -176,9 +176,9 @@ transaction(calls: [{String: AnyStruct}], mustPass: Bool) {
  *
  * @returns The query mutation object used to send the transaction and get the result.
  */
-export function useEvmBatchTransaction({
+export function useCrossVmBatchTransaction({
   mutation: mutationOptions = {},
-}: UseEvmBatchTransactionArgs = {}): UseEvmBatchTransactionResult {
+}: useCrossVmBatchTransactionArgs = {}): useCrossVmBatchTransactionResult {
   const chainId = useFlowChainId()
   const cadenceTx = chainId.data
     ? getCadenceBatchTransaction(chainId.data)

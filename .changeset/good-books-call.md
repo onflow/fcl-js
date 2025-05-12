@@ -2,4 +2,4 @@
 "@onflow/kit": minor
 ---
 
-Add `useEvmBatchTransaction` function
+Add `useCrossVmBatchTransaction` function
