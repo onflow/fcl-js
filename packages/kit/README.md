@@ -41,6 +41,7 @@ import flowJson from "../flow.json"
 - `useFlowQuery`
 - `useFlowMutate`
 - `useFlowTransaction`
+- `useFullTokenBalance`
 
 ## 📚 Full Documentation
 
