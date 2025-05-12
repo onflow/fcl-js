@@ -13,7 +13,7 @@ import {
 import {TypeDescriptorInput, TypeDescriptor} from "@onflow/types"
 
 export type AuthorizationFn = (acct: InteractionAccount) => InteractionAccount
-export type AccountFn =
+export type AccountAuthorization =
   | (AuthorizationFn & Partial<InteractionAccount>)
   | Partial<InteractionAccount>
 
@@ -152,7 +152,7 @@ const makeIx = (wat: InteractionTag) => (ix: Interaction) => {
   return Ok(ix)
 }
 
-const prepAccountKeyId = (acct: AccountFn): AccountFn => {
+const prepAccountKeyId = (acct: AccountAuthorization): AccountAuthorization => {
   if (acct.keyId == null) return acct
 
   invariant(
@@ -163,7 +163,7 @@ const prepAccountKeyId = (acct: AccountFn): AccountFn => {
   return {
     ...acct,
     keyId: parseInt(acct.keyId.toString()),
-  } as AccountFn
+  } as AccountAuthorization
 }
 
 interface IPrepAccountOpts {
@@ -173,7 +173,7 @@ interface IPrepAccountOpts {
 export const initAccount = (): InteractionAccount => JSON.parse(ACCT)
 
 export const prepAccount =
-  (acct: AccountFn, opts: IPrepAccountOpts = {}) =>
+  (acct: AccountAuthorization, opts: IPrepAccountOpts = {}) =>
   (ix: Interaction) => {
     invariant(
       typeof acct === "function" || typeof acct === "object",
