@@ -1,7 +1,5 @@
 # @onflow/kit
 
-> **Alpha** – This library is currently in alpha and subject to change.
-
 A React library that provides hooks for interacting with the Flow blockchain. It helps you authenticate users, run Cadence scripts and transactions, listen to events, and manage network configuration directly from your components.
 
 ## 🔧 Installation
@@ -41,6 +39,7 @@ import flowJson from "../flow.json"
 - `useFlowConfig`
 - `useFlowEvents`
 - `useFlowQuery`
+- `useFlowRevertibleRandom`
 - `useFlowMutate`
 - `useFlowTransaction`
 

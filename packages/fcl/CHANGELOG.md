@@ -1,5 +1,39 @@
 # @onflow/fcl
 
+## 1.17.0
+
+### Minor Changes
+
+- [#2384](https://github.com/onflow/fcl-js/pull/2384) [`f86b71357696826a5ad7b8e578de76ecebcd2e29`](https://github.com/onflow/fcl-js/commit/f86b71357696826a5ad7b8e578de76ecebcd2e29) Thanks [@jribbink](https://github.com/jribbink)! - Include origin information in `onMessageFromFcl` function
+
+### Patch Changes
+
+- Updated dependencies [[`0feeae00d1ef089df36b381109802bb0b14bf89b`](https://github.com/onflow/fcl-js/commit/0feeae00d1ef089df36b381109802bb0b14bf89b), [`0feeae00d1ef089df36b381109802bb0b14bf89b`](https://github.com/onflow/fcl-js/commit/0feeae00d1ef089df36b381109802bb0b14bf89b), [`f86b71357696826a5ad7b8e578de76ecebcd2e29`](https://github.com/onflow/fcl-js/commit/f86b71357696826a5ad7b8e578de76ecebcd2e29), [`094ed6dd38cae9ae39183f5ead8d59f9276f8f5d`](https://github.com/onflow/fcl-js/commit/094ed6dd38cae9ae39183f5ead8d59f9276f8f5d)]:
+  - @onflow/fcl-wc@6.0.2
+  - @onflow/fcl-core@1.18.0
+  - @onflow/sdk@1.8.1
+
+## 1.16.1
+
+### Patch Changes
+
+- Updated dependencies [[`f4d8bc53c9902f74c1751206ddbece497017683d`](https://github.com/onflow/fcl-js/commit/f4d8bc53c9902f74c1751206ddbece497017683d)]:
+  - @onflow/fcl-wc@6.0.1
+
+## 1.16.0
+
+### Minor Changes
+
+- [#2270](https://github.com/onflow/fcl-js/pull/2270) [`6c4d6c3df669883e34951bc1d26edb95441f124d`](https://github.com/onflow/fcl-js/commit/6c4d6c3df669883e34951bc1d26edb95441f124d) Thanks [@mfbz](https://github.com/mfbz)! - Added default Flow network config exports: `flowMainnet`, `flowTestnet`, and `flowEmulator`. These can be used with `fcl.config()` to simplify setup.
+
+### Patch Changes
+
+- Updated dependencies [[`ade292589a0355891f8d684103849c52305b2a8b`](https://github.com/onflow/fcl-js/commit/ade292589a0355891f8d684103849c52305b2a8b), [`ade292589a0355891f8d684103849c52305b2a8b`](https://github.com/onflow/fcl-js/commit/ade292589a0355891f8d684103849c52305b2a8b), [`6c4d6c3df669883e34951bc1d26edb95441f124d`](https://github.com/onflow/fcl-js/commit/6c4d6c3df669883e34951bc1d26edb95441f124d), [`f2721d7fffec1f5b8e0f9faac6b633c6d9b86c01`](https://github.com/onflow/fcl-js/commit/f2721d7fffec1f5b8e0f9faac6b633c6d9b86c01), [`ade292589a0355891f8d684103849c52305b2a8b`](https://github.com/onflow/fcl-js/commit/ade292589a0355891f8d684103849c52305b2a8b), [`837fdf7f019c3f154ff007c50959b90b9b603297`](https://github.com/onflow/fcl-js/commit/837fdf7f019c3f154ff007c50959b90b9b603297)]:
+  - @onflow/fcl-core@1.17.0
+  - @onflow/fcl-wc@6.0.0
+  - @onflow/sdk@1.8.0
+  - @onflow/config@1.5.2
+
 ## 1.15.0
 
 ### Minor Changes

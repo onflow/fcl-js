@@ -1,5 +1,23 @@
 # @onflow/sdk
 
+## 1.8.1
+
+### Patch Changes
+
+- Updated dependencies [[`e10f1db63a8a9cc86a56e312d7d7e3a2089d4a3a`](https://github.com/onflow/fcl-js/commit/e10f1db63a8a9cc86a56e312d7d7e3a2089d4a3a)]:
+  - @onflow/typedefs@1.5.0
+
+## 1.8.0
+
+### Minor Changes
+
+- [#2270](https://github.com/onflow/fcl-js/pull/2270) [`6c4d6c3df669883e34951bc1d26edb95441f124d`](https://github.com/onflow/fcl-js/commit/6c4d6c3df669883e34951bc1d26edb95441f124d) Thanks [@mfbz](https://github.com/mfbz)! - Added default Flow network config exports: `flowMainnet`, `flowTestnet`, and `flowEmulator`. These can be used with `fcl.config()` to simplify setup.
+
+### Patch Changes
+
+- Updated dependencies [[`f2721d7fffec1f5b8e0f9faac6b633c6d9b86c01`](https://github.com/onflow/fcl-js/commit/f2721d7fffec1f5b8e0f9faac6b633c6d9b86c01)]:
+  - @onflow/config@1.5.2
+
 ## 1.7.0
 
 ### Minor Changes

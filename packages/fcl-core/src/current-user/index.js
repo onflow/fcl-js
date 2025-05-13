@@ -125,13 +125,35 @@ async function getAccountProofData() {
     return
   }
 
-  const accountProofData = await accountProofDataResolver()
-  if (accountProofData == null) return
+  const accountProofData = {...(await accountProofDataResolver())}
 
-  invariant(
-    typeof accountProofData.appIdentifier === "string",
-    "appIdentifier must be a string"
-  )
+  const origin = window?.location?.origin
+
+  if (accountProofData.appIdentifier) {
+    if (origin) {
+      log.deprecate({
+        pkg: "FCL",
+        subject: "appIdentifier in fcl.accountProof.resolver",
+        message:
+          "Manually set app identifiers in the account proof resolver function are now deprecated.  These are now automatically set to the application origin URL by FCL",
+        transition:
+          "https://github.com/onflow/flow-js-sdk/blob/master/packages/fcl/TRANSITIONS.md#0002-deprecate-appIdentifier-field-in-account-proof-resolver",
+      })
+
+      invariant(
+        typeof accountProofData.appIdentifier === "string",
+        "appIdentifier must be a string"
+      )
+    }
+  } else {
+    invariant(
+      origin,
+      "The appIdentifier (origin) could not be inferred from the window.location.origin.  Please set the appIdentifier manually in the fcl.accountProof.resolver function."
+    )
+
+    accountProofData.appIdentifier = origin
+  }
+
   invariant(
     /^[0-9a-f]+$/i.test(accountProofData.nonce),
     "Nonce must be a hex string"

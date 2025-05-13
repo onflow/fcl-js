@@ -1,61 +1,61 @@
-export type Account = {
+export interface Account {
   /**
-   * - The address of the account
+   * The address of the account
    */
   address: string
   /**
-   * - The FLOW balance of the account in 10^8
+   * The FLOW balance of the account in 10^8
    */
   balance: number
   /**
-   * - The code of any Cadence contracts stored in the account
+   * The code of any Cadence contracts stored in the account
    */
   code: number
   /**
-   * - Any contracts deployed to this account
+   * Any contracts deployed to this account
    */
   contracts: Record<string, string>
   /**
-   * - The keys associated with the account
+   * The keys associated with the account
    */
   keys: Array<AccountKey>
 }
 
-export type AccountKey = {
+export interface AccountKey {
   /**
-   * - The index of the key in the account
+   * The index of the key in the account
    */
   index: number
   /**
-   * - The public key of the account key
+   * The public key of the account key
    */
   publicKey: string
   /**
-   * - The signature algorithm used by the key
+   * The signature algorithm used by the key
    */
   signAlgo: SignatureAlgorithm
   /**
-   * - The signature algorithm used by the key as a string
+   * The signature algorithm used by the key as a string
    */
   signAlgoString: string
   /**
-   * - The hashing algorithm used by the key
+   * The hashing algorithm used by the key
    */
   hashAlgo: HashAlgorithm
   /**
-   * - The hashing algorithm used by the key as a string
+   * The hashing algorithm used by the key as a string
    */
   hashAlgoString: string
   /**
-   * - The sequence number of the key
+   * The sequence number of the key
    */
   sequenceNumber: number
   /**
-   * - The weight of the key
+   * The weight of the key
    */
   weight: number
   /**
-   * - Whether or not the key has been revoked
+   * Whether or not the key has been revoked
    */
   revoked: boolean
 }
@@ -74,70 +74,70 @@ export enum HashAlgorithm {
   KMAC128_BLS_BLS12_381 = 5,
 }
 
-export type Block = {
+export interface Block {
   /**
-   * - The id of the block
+   * The id of the block
    */
   id: string
   /**
-   * - The id of the parent block
+   * The id of the parent block
    */
   parentId: string
   /**
-   * - The height of the block
+   * The height of the block
    */
   height: number
   /**
-   * - Time related fields
+   * Time related fields
    */
   timestamp: string
   /**
-   * - The parent voter signature of the block
+   * The parent voter signature of the block
    */
   parentVoterSignature: string
   /**
-   * - Contains the ids of collections included in the block
+   * Contains the ids of collections included in the block
    */
   collectionGuarantees: Array<CollectionGuarantee>
   /**
-   * - The details of which nodes executed and sealed the blocks
+   * The details of which nodes executed and sealed the blocks
    */
   blockSeals: Array<BlockSeal>
 }
-export type CollectionGuarantee = {
+export interface CollectionGuarantee {
   /**
-   * - The id of the block
+   * The id of the block
    */
   collectionId: string
   /**
-   * - The signer ids of the block
+   * The signer ids of the block
    */
   signerIds: Array<string>
 }
-export type BlockSeal = {
+export interface BlockSeal {
   /**
-   * - The id of the block
+   * The id of the block
    */
   blockId: string
   /**
-   * - The execution receipt id of the block
+   * The execution receipt id of the block
    */
   executionReceiptId: string
 }
 /**
  * BlockDigest holds lightweight block information which includes only block id, block height and block timestamp.
  */
-export type BlockDigest = {
+export interface BlockDigest {
   /**
-   * - The id of the block
+   * The id of the block
    */
   id: string
   /**
-   * - The height of the block
+   * The height of the block
    */
   height: number
   /**
-   * - Timestamp of the block
+   * Timestamp of the block
    */
   timestamp: string
 }
@@ -146,253 +146,257 @@ export type BlockDigest = {
  * the combined payload of the entire block. It is what consensus nodes agree
  * on after validating the contents against the payload hash.
  */
-export type BlockHeader = {
+export interface BlockHeader {
   /**
-   * - The id of the block
+   * The id of the block
    */
   id: string
   /**
-   * - The id of the parent block
+   * The id of the parent block
    */
   parentId: string
   /**
-   * - The height of the block
+   * The height of the block
    */
   height: number
   /**
-   * - The timestamp of the block
+   * The timestamp of the block
    */
   timestamp: string
   /**
-   * - The parent voter signature of the block
+   * The parent voter signature of the block
    */
   parentVoterSignature: string
 }
-export type CompositeSignature = {
+export interface CompositeSignature {
   /**
-   * - A type identifier used internally by FCL
+   * A type identifier used internally by FCL
    */
   f_type: string
   /**
-   * - FCL protocol version
+   * FCL protocol version
    */
   f_vsn: string
   /**
-   * - Flow Address (sans prefix)
+   * Flow Address (sans prefix)
    */
   addr: string
   /**
-   * - Key ID
+   * Key ID
    */
   keyId: number
   /**
-   * - Signature as a hex string
+   * Signature as a hex string
    */
   signature: string
 }
-export type CurrentUser = {
+export interface CurrentUser {
   /**
-   * - The public address of the current user
+   * The public address of the current user
    */
   addr?: string
   /**
-   * - A wallet specified content identifier for user metadata
+   * A wallet specified content identifier for user metadata
    */
   cid?: string
   /**
-   * - A wallet specified time-frame for a valid session
+   * A wallet specified time-frame for a valid session
    */
   expiresAt?: number
   /**
-   * - A type identifier used internally by FCL
+   * A type identifier used internally by FCL
    */
   f_type: string
   /**
-   * - FCL protocol version
+   * FCL protocol version
    */
   f_vsn: string
   /**
-   * - Whether or not the current user is logged in
+   * Whether or not the current user is logged in
    */
   loggedIn?: boolean
   /**
-   * - A list of trusted services that express ways of interacting with the current user's identity
+   * A list of trusted services that express ways of interacting with the current user's identity
    */
   services: Array<Service>
 }
-export type Event = {
+export interface Event {
   /**
-   * - ID of the block that contains the event.
+   * ID of the block that contains the event.
    */
   blockId: string
   /**
-   * - Height of the block that contains the event.
+   * Height of the block that contains the event.
    */
   blockHeight: number
   /**
-   * - The timestamp of when the block was sealed in a DateString format. eg. '2021-06-25T13:42:04.227Z'
+   * The timestamp of when the block was sealed in a DateString format. eg. '2021-06-25T13:42:04.227Z'
    */
   blockTimestamp: string
   /**
-   * - A string containing the event name.
+   * A string containing the event name.
    */
   type: string
   /**
-   * - Can be used to query transaction information, eg. via a Flow block explorer.
+   * Can be used to query transaction information, eg. via a Flow block explorer.
    */
   transactionId: string
   /**
-   * - Used to prevent replay attacks.
+   * Used to prevent replay attacks.
    */
   transactionIndex: number
   /**
-   * - Used to prevent replay attacks.
+   * Used to prevent replay attacks.
    */
   eventIndex: number
   /**
-   * - The data emitted from the event.
+   * The data emitted from the event.
    */
   data: any
 }
-export type AccountStatusEvent = Omit<Event, "blockTimestamp"> & {
+export interface AccountStatusEvent extends Omit<Event, "blockTimestamp"> {
   /**
-   * - The address of the account which the event is associated with.
+   * The address of the account which the event is associated with.
    */
   accountAddress: string
 }
-export type Key = {
+export interface Key {
   /**
-   * - Sequence number of key used by the proposer of this transaction
+   * Sequence number of key used by the proposer of this transaction
    */
   sequenceNumber: number
   /**
-   * - The ID of the key in the account used by the proposer of this transaction
+   * The ID of the key in the account used by the proposer of this transaction
    */
   keyId: number
   /**
-   * - The address of the proposer of this transaction
+   * The address of the proposer of this transaction
    */
   address: string
 }
-export type Service = {
+export interface Service {
   /**
-   * - A type identifier used internally by FCL
+   * A type identifier used internally by FCL
    */
   f_type: string
   /**
-   * - FCL protocol version
+   * FCL protocol version
    */
   f_vsn: string
   /**
-   * - Service type
+   * Service type
    */
   type: string
   /**
-   * - Service method
+   * Service method
    */
   method: string
   /**
-   * - Service uid
+   * Service uid
    */
   uid?: string
   /**
-   * - Service endpoint
+   * Service endpoint
    */
   endpoint: string
   /**
-   * - Service provider object
+   * Service provider object
    */
   provider: Provider
 
   params: Record<string, string>
 }
-export type Signature = {
+export interface Signature {
   /**
-   * - Sequence number of the key used to perform this signature.
+   * Sequence number of the key used to perform this signature.
    */
   sequenceNumber: string
   /**
-   * - ID of the key in the account used to perform this signature.
+   * ID of the key in the account used to perform this signature.
    */
   keyId: number
   /**
-   * - The signature represented as a hex string.
+   * The signature represented as a hex string.
    */
   signature: string
 }
-export type Transaction = {
+export interface Transaction {
   /**
-   * - The Cadence code used to execute this transaction.
+   * The Cadence code used to execute this transaction.
    */
   script: string
   /**
-   * - The JSON-CDC encoded arguments passed in to the transaction.
+   * The JSON-CDC encoded arguments passed in to the transaction.
    */
   args: Array<string>
   /**
-   * - The reference block id for this transaction.
+   * The reference block id for this transaction.
    */
   referenceBlockId: string
   /**
-   * - The gas limit for the transaction.
+   * The gas limit for the transaction.
    */
   gasLimit: number
   /**
-   * - The key used by the proposer of this transaction.
+   * The key used by the proposer of this transaction.
    */
   proposalKey: Key
   /**
-   * - Sequence number of the key used by the proposer of this transaction.
+   * Sequence number of the key used by the proposer of this transaction.
    */
   sequenceNumber: string
   /**
-   * - The ID of the key in the account used by the proposer of this transaction.
+   * The ID of the key in the account used by the proposer of this transaction.
    */
   keyId: number
   /**
-   * - Address of the payer of the transaction.
+   * The address of the proposer of this transaction.
+   */
+  address: string
+  /**
+   * Address of the payer of the transaction.
    */
   payer: string
   /**
-   * - Address of the proposer of this transaction.
+   * Address of the proposer of this transaction.
    */
   proposer: string
   /**
-   * - Array of addresses of authorizers of this transaction.
+   * Array of addresses of authorizers of this transaction.
    */
   authorizers: Array<string>
   /**
-   * - The payload signatures for the transaction.
+   * The payload signatures for the transaction.
    */
   payloadSignatures: Array<Signature>
   /**
-   * - The envelope signatures for the transaction.
+   * The envelope signatures for the transaction.
    */
   envelopeSignatures: Array<Signature>
 }
-export type TransactionStatus = {
+export interface TransactionStatus {
   /**
-   * - The ID of the Block the transaction is included in.
+   * The ID of the Block the transaction is included in.
    */
   blockId: string
   /**
-   * - The execution status of the transaction
+   * The execution status of the transaction
    */
   status: TransactionExecutionStatus
   /**
-   * - The status as as descriptive text (e.g. "FINALIZED").
+   * The status as as descriptive text (e.g. "FINALIZED").
    */
   statusString: string
   /**
-   * - The result of the transaction, if executed (i.e. 0 for success, 1 for failure)
+   * The result of the transaction, if executed (i.e. 0 for success, 1 for failure)
    */
   statusCode: 0 | 1
   /**
-   * - The error message of the transaction.
+   * The error message of the transaction.
    */
   errorMessage: string
   /**
-   * - The events for this result.
+   * The events for this result.
    */
   events: Array<Event>
 }
@@ -410,7 +414,7 @@ export enum TransactionExecutionStatus {
 /*
  * The Provider type describes a Wallet Provider associated with a specific Service.
  */
-export type Provider = {
+export interface Provider {
   /**
    * The blockchain address of the Wallet provider.
    */
@@ -444,29 +448,29 @@ export type Provider = {
    */
   is_installed?: boolean
 }
-export type NodeVersionInfo = {
+export interface NodeVersionInfo {
   /**
-   * - The semver version of the node.
+   * The semver version of the node.
    */
   semver: string
   /**
-   * - The commit hash of the node.
+   * The commit hash of the node.
    */
   commit: string
   /**
-   * - The spork id of the node.
+   * The spork id of the node.
    */
   sporkId: string
   /**
-   * - The protocol version of the node.
+   * The protocol version of the node.
    */
   protocolVersion: number
   /**
-   * - The spork root block height of the node.
+   * The spork root block height of the node.
    */
   sporkRootBlockHeight: number
   /**
-   * - The node root block height of the node.
+   * The node root block height of the node.
    */
   nodeRootBlockHeight: number
 }

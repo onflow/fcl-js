@@ -1,5 +1,26 @@
 # @onflow/fcl-react-native
 
+## 1.11.0
+
+### Minor Changes
+
+- [#2384](https://github.com/onflow/fcl-js/pull/2384) [`f86b71357696826a5ad7b8e578de76ecebcd2e29`](https://github.com/onflow/fcl-js/commit/f86b71357696826a5ad7b8e578de76ecebcd2e29) Thanks [@jribbink](https://github.com/jribbink)! - Include origin information in `onMessageFromFcl` function
+
+### Patch Changes
+
+- Updated dependencies [[`f86b71357696826a5ad7b8e578de76ecebcd2e29`](https://github.com/onflow/fcl-js/commit/f86b71357696826a5ad7b8e578de76ecebcd2e29), [`094ed6dd38cae9ae39183f5ead8d59f9276f8f5d`](https://github.com/onflow/fcl-js/commit/094ed6dd38cae9ae39183f5ead8d59f9276f8f5d)]:
+  - @onflow/fcl-core@1.18.0
+  - @onflow/sdk@1.8.1
+
+## 1.10.1
+
+### Patch Changes
+
+- Updated dependencies [[`ade292589a0355891f8d684103849c52305b2a8b`](https://github.com/onflow/fcl-js/commit/ade292589a0355891f8d684103849c52305b2a8b), [`6c4d6c3df669883e34951bc1d26edb95441f124d`](https://github.com/onflow/fcl-js/commit/6c4d6c3df669883e34951bc1d26edb95441f124d), [`f2721d7fffec1f5b8e0f9faac6b633c6d9b86c01`](https://github.com/onflow/fcl-js/commit/f2721d7fffec1f5b8e0f9faac6b633c6d9b86c01)]:
+  - @onflow/fcl-core@1.17.0
+  - @onflow/sdk@1.8.0
+  - @onflow/config@1.5.2
+
 ## 1.10.0
 
 ### Minor Changes
