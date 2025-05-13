@@ -10,10 +10,12 @@ import {
   InteractionStatus,
   InteractionTag,
 } from "@onflow/typedefs"
-import {TypeDescriptor, TypeDescriptorInput} from "@onflow/types"
+import {TypeDescriptorInput, TypeDescriptor} from "@onflow/types"
 
-type AcctFn = (acct: InteractionAccount) => InteractionAccount
-type AccountFn = AcctFn & Partial<InteractionAccount>
+export type AuthorizationFn = (acct: InteractionAccount) => InteractionAccount
+export type AccountAuthorization =
+  | (AuthorizationFn & Partial<InteractionAccount>)
+  | Partial<InteractionAccount>
 
 type CadenceArgument<T extends TypeDescriptor<any, any>> = {
   value: TypeDescriptorInput<T>
@@ -21,6 +23,10 @@ type CadenceArgument<T extends TypeDescriptor<any, any>> = {
 }
 
 export {CadenceArgument}
+
+export type InteractionBuilderFn = (
+  ix: Interaction
+) => Interaction | Promise<Interaction>
 
 const ACCT = `{
   "kind":"${InteractionResolverKind.ACCOUNT}",
@@ -146,9 +152,7 @@ const makeIx = (wat: InteractionTag) => (ix: Interaction) => {
   return Ok(ix)
 }
 
-const prepAccountKeyId = (
-  acct: Partial<InteractionAccount> | AccountFn
-): Partial<InteractionAccount> | AccountFn => {
+const prepAccountKeyId = (acct: AccountAuthorization): AccountAuthorization => {
   if (acct.keyId == null) return acct
 
   invariant(
@@ -159,7 +163,7 @@ const prepAccountKeyId = (
   return {
     ...acct,
     keyId: parseInt(acct.keyId.toString()),
-  } as InteractionAccount | AccountFn
+  } as AccountAuthorization
 }
 
 interface IPrepAccountOpts {
@@ -169,7 +173,7 @@ interface IPrepAccountOpts {
 export const initAccount = (): InteractionAccount => JSON.parse(ACCT)
 
 export const prepAccount =
-  (acct: InteractionAccount | AccountFn, opts: IPrepAccountOpts = {}) =>
+  (acct: AccountAuthorization, opts: IPrepAccountOpts = {}) =>
   (ix: Interaction) => {
     invariant(
       typeof acct === "function" || typeof acct === "object",
@@ -324,10 +328,7 @@ type MaybePromise<T> = T | Promise<T>
 
 const recPipe = async (
   ix: MaybePromise<Interaction>,
-  fns: (
-    | ((x: Interaction) => MaybePromise<Interaction>)
-    | MaybePromise<Interaction>
-  )[] = []
+  fns: (InteractionBuilderFn | false | MaybePromise<Interaction>)[] = []
 ): Promise<Interaction> => {
   try {
     ix = hardMode(await ix)
@@ -348,22 +349,16 @@ const recPipe = async (
  * @description Async pipe function to compose interactions
  * @returns An interaction object
  */
-function pipe(
-  fns: ((x: Interaction) => Interaction)[]
-): (x: Interaction) => Promise<Interaction>
-/**
- * @description Async pipe function to compose interactions
- * @returns An interaction object
- */
+function pipe(fns: (InteractionBuilderFn | false)[]): InteractionBuilderFn
 function pipe(
   ix: MaybePromise<Interaction>,
-  fns: ((x: Interaction) => Interaction)[]
+  fns: (InteractionBuilderFn | false)[]
 ): Promise<Interaction>
 function pipe(
   ...args:
-    | [((x: Interaction) => Interaction)[]]
-    | [MaybePromise<Interaction>, ((x: Interaction) => Interaction)[]]
-): Promise<Interaction> | ((x: Interaction) => Promise<Interaction>) {
+    | [(InteractionBuilderFn | false)[]]
+    | [MaybePromise<Interaction>, (InteractionBuilderFn | false)[]]
+): Promise<Interaction> | InteractionBuilderFn {
   const [arg1, arg2] = args
   if (isArray(arg1)) return (d: Interaction) => pipe(d, arg1)
 
@@ -385,7 +380,7 @@ export const put = (key: string, value: any) => (ix: Interaction) => {
 }
 
 export const update =
-  (key: string, fn = identity) =>
+  <T>(key: string, fn: (v: T | T[], ...args: any[]) => T | T[] = identity) =>
   (ix: Interaction) => {
     ix.assigns[key] = fn(ix.assigns[key], ix)
     return Ok(ix)
