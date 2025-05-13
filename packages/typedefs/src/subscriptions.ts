@@ -52,7 +52,10 @@ type SubscriptionDataMap = {
 type RawSubscriptionDataMap = {
   [SubscriptionTopic.EVENTS]: {
     event: Omit<Event, "data"> & {
-      payload: string
+      payload: {
+        type: string
+        value: any
+      }
     }
   }
   [SubscriptionTopic.BLOCKS]: {
@@ -66,7 +69,10 @@ type RawSubscriptionDataMap = {
   }
   [SubscriptionTopic.ACCOUNT_STATUSES]: {
     accountStatusEvent: Omit<Event, "data" | "blockTimestamp"> & {
-      payload: string
+      payload: {
+        type: string
+        value: any
+      }
       accountAddress: string
     }
   }
@@ -82,7 +88,10 @@ type RawSubscriptionDataMap = {
         transactionId: string
         transactionIndex: number
         eventIndex: number
-        payload: string
+        payload: {
+          type: string
+          value: any
+        }
       }[]
     }
   }

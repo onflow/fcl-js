@@ -68,6 +68,9 @@ interface FlowResponse {
   account?: any
   block?: any
   blockHeader?: any
+  blockDigest?: any
+  event?: any
+  accountStatusEvent?: any
   latestBlock?: any
   transactionId?: string
   collection?: any
