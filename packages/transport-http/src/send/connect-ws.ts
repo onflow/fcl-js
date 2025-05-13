@@ -1,7 +1,7 @@
 import {EventEmitter} from "events"
 import {safeParseJSON} from "./utils"
 import {StreamConnection} from "@onflow/typedefs"
-import {WebSocket} from "./websocket"
+import {WebSocket} from "../subscribe/websocket"
 
 export class WebsocketError extends Error {
   code?: number

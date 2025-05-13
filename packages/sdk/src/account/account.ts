@@ -5,7 +5,7 @@ import {atBlockId} from "../build/build-at-block-id"
 import {atLatestBlock} from "../build/build-at-latest-block"
 import {getAccount} from "../build/build-get-account"
 import {decodeResponse as decode} from "../decode/decode"
-import {send} from "../send/send"
+import {send} from "../transport"
 
 interface AccountQueryOptions {
   height?: number
