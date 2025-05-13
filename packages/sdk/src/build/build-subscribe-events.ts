@@ -1,9 +1,16 @@
 import {invariant} from "@onflow/util-invariant"
-import {pipe, Ok, makeSubscribeEvents} from "../interaction/interaction"
+import {
+  pipe,
+  Ok,
+  makeSubscribeEvents,
+  InteractionBuilderFn,
+} from "../interaction/interaction"
 import {EventFilter, Interaction} from "@onflow/typedefs"
 
 /**
- * Subscribe to events with the given filter & parameters
+ * @description Subscribe to events with the given filter & parameters
+ * @param filter The filter to subscribe to events with
+ * @returns A function that processes an interaction object
  */
 export function subscribeEvents({
   startBlockId,
@@ -12,7 +19,7 @@ export function subscribeEvents({
   addresses,
   contracts,
   heartbeatInterval,
-}: EventFilter): Function {
+}: EventFilter): InteractionBuilderFn {
   invariant(
     !(startBlockId && startHeight),
     `SDK Subscribe Events Error: Cannot set both startBlockId and startHeight.`
@@ -29,5 +36,5 @@ export function subscribeEvents({
       ix.subscribeEvents.heartbeatInterval = heartbeatInterval ?? null
       return Ok(ix)
     },
-  ]) as any
+  ])
 }
