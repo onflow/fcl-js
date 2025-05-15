@@ -29,5 +29,18 @@
     "@onflow/util-template": "1.2.3",
     "@onflow/util-uid": "1.2.3"
   },
-  "changesets": []
+  "changesets": [
+    "breezy-gifts-sit",
+    "fast-lobsters-train",
+    "forty-trees-report",
+    "good-books-call",
+    "mean-walls-hear",
+    "moody-ligers-rule",
+    "odd-seals-glow",
+    "sharp-suns-refuse",
+    "shy-cars-beam",
+    "sixty-pandas-retire",
+    "spicy-fishes-drum",
+    "tame-pianos-doubt"
+  ]
 }
