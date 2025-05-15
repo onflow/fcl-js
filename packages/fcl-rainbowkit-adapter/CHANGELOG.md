@@ -1,6 +1,6 @@
 # @onflow/fcl-rainbowkit-adapter
 
-## 1.0.0-alpha.0
+## 0.2.1-alpha.0
 
 ### Patch Changes
 
