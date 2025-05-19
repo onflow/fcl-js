@@ -1,5 +1,27 @@
 # @onflow/fcl-rainbowkit-adapter
 
+## 0.2.1-alpha.0
+
+### Patch Changes
+
+- Updated dependencies [[`b9c4ed3b95c2dc73698e45f353a6ef9a48f23cab`](https://github.com/onflow/fcl-js/commit/b9c4ed3b95c2dc73698e45f353a6ef9a48f23cab)]:
+  - @onflow/fcl@1.18.0-alpha.0
+  - @onflow/fcl-ethereum-provider@1.0.0-alpha.0
+  - @onflow/fcl-wagmi-adapter@1.0.0-alpha.0
+
+## 0.2.0
+
+### Minor Changes
+
+- [#2326](https://github.com/onflow/fcl-js/pull/2326) [`2446dbee70b25780e31cf8d0b45db7acac6281d6`](https://github.com/onflow/fcl-js/commit/2446dbee70b25780e31cf8d0b45db7acac6281d6) Thanks [@jribbink](https://github.com/jribbink)! - Add `useIsCadenceWalletConnected` hook
+
+### Patch Changes
+
+- Updated dependencies [[`0feeae00d1ef089df36b381109802bb0b14bf89b`](https://github.com/onflow/fcl-js/commit/0feeae00d1ef089df36b381109802bb0b14bf89b), [`0feeae00d1ef089df36b381109802bb0b14bf89b`](https://github.com/onflow/fcl-js/commit/0feeae00d1ef089df36b381109802bb0b14bf89b), [`f86b71357696826a5ad7b8e578de76ecebcd2e29`](https://github.com/onflow/fcl-js/commit/f86b71357696826a5ad7b8e578de76ecebcd2e29)]:
+  - @onflow/fcl-wagmi-adapter@0.0.4
+  - @onflow/fcl-ethereum-provider@0.0.4
+  - @onflow/fcl@1.17.0
+
 ## 0.1.0
 
 ### Minor Changes

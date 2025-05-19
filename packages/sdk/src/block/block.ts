@@ -4,7 +4,7 @@ import {atBlockHeight} from "../build/build-at-block-height"
 import {atBlockId} from "../build/build-at-block-id"
 import {getBlock} from "../build/build-get-block"
 import {decodeResponse as decode} from "../decode/decode"
-import {send} from "../send/send"
+import {send} from "../transport"
 
 interface BlockQueryOptions {
   sealed?: boolean

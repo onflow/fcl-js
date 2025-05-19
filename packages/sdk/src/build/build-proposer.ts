@@ -1,7 +1,7 @@
 import {TransactionRole} from "@onflow/typedefs"
-import {AccountFn, prepAccount} from "../interaction/interaction"
+import {AccountAuthorization, prepAccount} from "../interaction/interaction"
 
-export function proposer(authz: AccountFn) {
+export function proposer(authz: AccountAuthorization) {
   return prepAccount(authz, {
     role: TransactionRole.PROPOSER,
   })

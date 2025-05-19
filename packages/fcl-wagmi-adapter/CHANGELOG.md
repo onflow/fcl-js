@@ -1,5 +1,23 @@
 # @onflow/fcl-wagmi-adapter
 
+## 0.0.5-alpha.0
+
+### Patch Changes
+
+- Updated dependencies [[`b9c4ed3b95c2dc73698e45f353a6ef9a48f23cab`](https://github.com/onflow/fcl-js/commit/b9c4ed3b95c2dc73698e45f353a6ef9a48f23cab)]:
+  - @onflow/fcl@1.18.0-alpha.0
+  - @onflow/fcl-ethereum-provider@0.0.5-alpha.0
+
+## 0.0.4
+
+### Patch Changes
+
+- [#2382](https://github.com/onflow/fcl-js/pull/2382) [`0feeae00d1ef089df36b381109802bb0b14bf89b`](https://github.com/onflow/fcl-js/commit/0feeae00d1ef089df36b381109802bb0b14bf89b) Thanks [@jribbink](https://github.com/jribbink)! - Remove unused WalletConnect dependencies
+
+- Updated dependencies [[`0feeae00d1ef089df36b381109802bb0b14bf89b`](https://github.com/onflow/fcl-js/commit/0feeae00d1ef089df36b381109802bb0b14bf89b), [`f86b71357696826a5ad7b8e578de76ecebcd2e29`](https://github.com/onflow/fcl-js/commit/f86b71357696826a5ad7b8e578de76ecebcd2e29)]:
+  - @onflow/fcl-ethereum-provider@0.0.4
+  - @onflow/fcl@1.17.0
+
 ## 0.0.3
 
 ### Patch Changes

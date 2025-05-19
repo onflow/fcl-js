@@ -1,5 +1,9 @@
 import {InteractionAccount, TransactionRole} from "@onflow/typedefs"
-import {AccountFn, pipe, prepAccount} from "../interaction/interaction"
+import {
+  AccountAuthorization,
+  pipe,
+  prepAccount,
+} from "../interaction/interaction"
 import {Voucher} from "../encode/encode"
 
 interface SignableMessage {
@@ -24,7 +28,7 @@ type SigningFn = (
   signable?: SignableMessage
 ) => SigningResult | Promise<SigningResult>
 
-export function authorizations(ax: Array<AccountFn> = []) {
+export function authorizations(ax: Array<AccountAuthorization> = []) {
   return pipe(
     ax.map(authz => {
       return prepAccount(authz, {

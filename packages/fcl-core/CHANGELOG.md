@@ -1,5 +1,45 @@
 # @onflow/fcl
 
+## 1.19.0-alpha.0
+
+### Minor Changes
+
+- [#2201](https://github.com/onflow/fcl-js/pull/2201) [`b9c4ed3b95c2dc73698e45f353a6ef9a48f23cab`](https://github.com/onflow/fcl-js/commit/b9c4ed3b95c2dc73698e45f353a6ef9a48f23cab) Thanks [@jribbink](https://github.com/jribbink)! - Add real-time streaming methods `subscribe` and `rawSubscribe`.
+
+  These are only available when using a REST API endpoint and not supported by the deprecated GRPC trasnport.
+
+  The following topics are now available:
+
+  - `blocks`
+  - `block_headers`
+  - `block_digests`
+  - `transaction_statues`
+  - `events`
+  - `account_statuses`
+
+  Developers using `fcl.tx` and `fcl.events` will not need to make any changes to their existing app to realize the latency improvements of this change and will automatically benefit by upgrading to this version.
+
+  Please see the [Flow Developer Documentation](https://developers.flow.com/clients/fcl-js/) for more details on how to use these new methods.
+
+### Patch Changes
+
+- Updated dependencies [[`b9c4ed3b95c2dc73698e45f353a6ef9a48f23cab`](https://github.com/onflow/fcl-js/commit/b9c4ed3b95c2dc73698e45f353a6ef9a48f23cab), [`b9c4ed3b95c2dc73698e45f353a6ef9a48f23cab`](https://github.com/onflow/fcl-js/commit/b9c4ed3b95c2dc73698e45f353a6ef9a48f23cab), [`b9c4ed3b95c2dc73698e45f353a6ef9a48f23cab`](https://github.com/onflow/fcl-js/commit/b9c4ed3b95c2dc73698e45f353a6ef9a48f23cab), [`694cd76807b7ca4441d1f8425ac4f8426cbc18fa`](https://github.com/onflow/fcl-js/commit/694cd76807b7ca4441d1f8425ac4f8426cbc18fa), [`4d3bb084c1442552d6a1de1f53435d1aa3f600b0`](https://github.com/onflow/fcl-js/commit/4d3bb084c1442552d6a1de1f53435d1aa3f600b0)]:
+  - @onflow/transport-http@1.13.0-alpha.0
+  - @onflow/sdk@1.9.0-alpha.0
+
+## 1.18.0
+
+### Minor Changes
+
+- [#2384](https://github.com/onflow/fcl-js/pull/2384) [`f86b71357696826a5ad7b8e578de76ecebcd2e29`](https://github.com/onflow/fcl-js/commit/f86b71357696826a5ad7b8e578de76ecebcd2e29) Thanks [@jribbink](https://github.com/jribbink)! - Include origin information in `onMessageFromFcl` function
+
+- [#2378](https://github.com/onflow/fcl-js/pull/2378) [`094ed6dd38cae9ae39183f5ead8d59f9276f8f5d`](https://github.com/onflow/fcl-js/commit/094ed6dd38cae9ae39183f5ead8d59f9276f8f5d) Thanks [@jribbink](https://github.com/jribbink)! - Deprecate manual appIdentifier in favour of window origin
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @onflow/sdk@1.8.1
+
 ## 1.17.0
 
 ### Minor Changes
