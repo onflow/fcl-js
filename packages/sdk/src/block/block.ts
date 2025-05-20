@@ -43,5 +43,5 @@ export async function block(
     return send([getBlock(), atBlockHeight(height)], opts).then(decode)
 
   // Get latest block
-  return send([getBlock(sealed)], opts).then(decode)
+  return await send([getBlock(sealed)], opts).then(decode)
 }
