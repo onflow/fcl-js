@@ -87,7 +87,7 @@ async function execFetchRef(ix: Interaction): Promise<Interaction> {
     )
 
     invariant(
-      sendFn !== undefined,
+      sendFn,
       `Required value for sdk.transport is not defined in config. See: ${"https://github.com/onflow/fcl-js/blob/master/packages/sdk/CHANGELOG.md#0057-alpha1----2022-01-21"}`
     )
 
@@ -114,22 +114,18 @@ async function execFetchSequenceNumber(ix: Interaction): Promise<Interaction> {
       )
 
       invariant(
-        sendFn !== undefined,
+        sendFn,
         `Required value for sdk.transport is not defined in config. See: ${"https://github.com/onflow/fcl-js/blob/master/packages/sdk/CHANGELOG.md#0057-alpha1----2022-01-21"}`
       )
 
-      const keyId = acct.keyId
-      const tempId = acct.tempId
-      const addr = acct.addr || ""
-
-      ix.accounts[tempId].sequenceNum = await sendFn(
-        await build([getAccount(addr)]),
+      ix.accounts[acct.tempId].sequenceNum = await sendFn(
+        await build([getAccount(acct.addr!)]),
         {config, response, Buffer, ix: ixModule},
         {node}
       )
         .then(decode)
-        .then((acctResponse: any) => acctResponse.keys)
-        .then((keys: any[]) => keys.find((key: any) => key.index === keyId))
+        .then((acct: any) => acct.keys)
+        .then((keys: any) => keys.find((key: any) => key.index === acct!.keyId))
         .then((key: any) => key.sequenceNumber)
     }
   }

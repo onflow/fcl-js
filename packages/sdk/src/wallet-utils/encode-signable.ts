@@ -4,12 +4,6 @@ import {
   encodeTransactionEnvelope,
 } from "../encode/encode"
 
-interface Sig {
-  address: string
-  keyId: number | string
-  sig: string
-}
-
 interface PayloadSig {
   address: string
   keyId: number | string

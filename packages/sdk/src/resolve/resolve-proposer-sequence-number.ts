@@ -26,7 +26,7 @@ export const resolveProposerSequenceNumber =
     )
 
     invariant(
-      sendFn != null,
+      sendFn,
       `Required value for sdk.transport is not defined in config. See: ${"https://github.com/onflow/fcl-js/blob/master/packages/sdk/CHANGELOG.md#0057-alpha1----2022-01-21"}`
     )
 
