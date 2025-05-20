@@ -36,7 +36,7 @@ export async function block(
   )
 
   // Get block by ID
-  if (id) return send([getBlock(), atBlockId(id)], opts).then(decode)
+  if (id) return await send([getBlock(), atBlockId(id)], opts).then(decode)
 
   // Get block by height
   if (height)
