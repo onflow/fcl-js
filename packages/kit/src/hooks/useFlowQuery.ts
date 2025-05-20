@@ -34,7 +34,11 @@ export function useFlowQuery({
 
   return useQuery<unknown, Error>(
     {
-      queryKey: ["flowQuery", cadence, args],
+      queryKey: [
+        "flowQuery",
+        cadence,
+        args?.(fcl.arg, fcl.t)?.map((x: any) => x.xform.asArgument(x.value)),
+      ],
       queryFn: fetchQuery,
       enabled: queryOptions.enabled ?? true,
       ...queryOptions,
