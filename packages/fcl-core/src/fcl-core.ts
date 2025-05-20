@@ -11,6 +11,7 @@ export {discovery}
 
 import * as types from "@onflow/types"
 export {types as t}
+export * from "@onflow/typedefs"
 
 import * as WalletUtils from "./wallet-utils"
 export {WalletUtils}
