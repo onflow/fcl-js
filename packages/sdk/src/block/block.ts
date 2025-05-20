@@ -40,7 +40,7 @@ export async function block(
 
   // Get block by height
   if (height)
-    return send([getBlock(), atBlockHeight(height)], opts).then(decode)
+    return await send([getBlock(), atBlockHeight(height)], opts).then(decode)
 
   // Get latest block
   return await send([getBlock(sealed)], opts).then(decode)
