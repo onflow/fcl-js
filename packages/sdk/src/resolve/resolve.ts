@@ -124,7 +124,7 @@ async function execFetchSequenceNumber(ix: Interaction): Promise<Interaction> {
         {node}
       )
         .then(decode)
-        .then((acct: any) => acct.keys)
+        .then((acctResponse: any) => acctResponse.keys)
         .then((keys: any) => keys.find((key: any) => key.index === acct!.keyId))
         .then((key: any) => key.sequenceNumber)
     }
