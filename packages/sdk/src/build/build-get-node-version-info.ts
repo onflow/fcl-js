@@ -1,9 +1,15 @@
-import {Ok, makeGetNodeVerionInfo, pipe} from "../interaction/interaction"
+import {
+  Ok,
+  makeGetNodeVerionInfo,
+  pipe,
+  InteractionBuilderFn,
+} from "../interaction/interaction"
 
 /**
- * A builder function for the Get Node Version Info interaction
+ * @description A builder function for the Get Node Version Info interaction
+ * @returns An interaction object
  */
-export function getNodeVersionInfo(): Function {
+export function getNodeVersionInfo(): InteractionBuilderFn {
   return pipe([
     makeGetNodeVerionInfo,
     ix => {

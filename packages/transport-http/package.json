@@ -1,6 +1,6 @@
 {
   "name": "@onflow/transport-http",
-  "version": "1.12.0",
+  "version": "1.13.0-alpha.0",
   "description": "Flow SDK HTTP Transport Module",
   "license": "Apache-2.0",
   "author": "Flow Foundation",
@@ -15,15 +15,17 @@
   "devDependencies": {
     "@onflow/fcl-bundle": "1.7.0",
     "@onflow/rlp": "1.2.3",
-    "@onflow/sdk": "1.8.0",
+    "@onflow/sdk": "1.9.0-alpha.1",
     "@onflow/types": "1.4.1",
-    "jest": "^29.7.0"
+    "jest": "^29.7.0",
+    "jest-websocket-mock": "^2.5.0",
+    "mock-socket": "^9.3.1"
   },
-  "source": "src/sdk-send-http.ts",
-  "main": "dist/sdk-send-http.js",
-  "module": "dist/sdk-send-http.module.js",
-  "unpkg": "dist/sdk-send-http.umd.js",
-  "types": "types/sdk-send-http.d.ts",
+  "source": "src/index.ts",
+  "main": "dist/index.js",
+  "module": "dist/index.module.js",
+  "unpkg": "dist/index.umd.js",
+  "types": "types/index.d.ts",
   "scripts": {
     "alpha": "npm publish --tag alpha",
     "prepublishOnly": "npm test && npm run build",
@@ -39,6 +41,7 @@
     "@onflow/util-logger": "1.3.3",
     "@onflow/util-template": "1.2.3",
     "abort-controller": "^3.0.0",
+    "buffer": "^6.0.3",
     "cross-fetch": "^4.0.0",
     "events": "^3.3.0",
     "isomorphic-ws": "^5.0.0",

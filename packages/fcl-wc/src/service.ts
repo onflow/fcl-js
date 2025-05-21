@@ -15,7 +15,6 @@ import {CurrentUser, Service} from "@onflow/typedefs"
 import {SessionTypes} from "@walletconnect/types"
 import {UniversalProvider} from "@walletconnect/universal-provider"
 import {createStore} from "./store"
-import {ModalCtrlState} from "@walletconnect/modal-core/dist/_types/src/types/controllerTypes"
 
 type WalletConnectModalType = import("@walletconnect/modal").WalletConnectModal
 
@@ -244,7 +243,7 @@ function connectWc(
 
           // Subscribe to modal state changes
           const unsubscribeModal = walletConnectModal.subscribeModal(
-            (state: ModalCtrlState) => {
+            (state: {open: boolean}) => {
               if (state.open === false) {
                 onClose?.()
                 unsubscribeModal()
