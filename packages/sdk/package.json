@@ -1,6 +1,6 @@
 {
   "name": "@onflow/sdk",
-  "version": "1.9.0-alpha.0",
+  "version": "1.9.0-alpha.1",
   "description": "Flow SDK",
   "license": "Apache-2.0",
   "author": "Flow Foundation",
