@@ -103,3 +103,9 @@ export {
 export {execStrategy} from "./current-user/exec-service"
 
 export type {StorageProvider} from "./utils/storage"
+
+export type {
+  AccountProofData,
+  ValidateArgsInput,
+  VerifySignaturesScriptOptions,
+} from "./app-utils/verify-signatures"
