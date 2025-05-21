@@ -1,6 +1,5 @@
 import {
   pipe,
-  Ok,
   makeGetCollection,
   InteractionBuilderFn,
 } from "../interaction/interaction"
@@ -15,7 +14,7 @@ export function getCollection(id: string | null = null): InteractionBuilderFn {
     makeGetCollection,
     ix => {
       ix.collection.id = id
-      return Ok(ix)
+      return ix
     },
   ])
 }
