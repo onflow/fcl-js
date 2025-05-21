@@ -28,9 +28,9 @@ export const Connect: React.FC<ConnectProps> = ({
   return (
     <Button
       variant={variant}
-      onClick={user.loggedIn ? handleDisconnect : handleConnect}
+      onClick={user?.loggedIn ? handleDisconnect : handleConnect}
     >
-      {user.loggedIn ? "Disconnect Wallet" : "Connect Wallet"}
+      {user?.loggedIn ? "Disconnect Wallet" : "Connect Wallet"}
     </Button>
   )
 }
