@@ -6,7 +6,7 @@ import {update, InteractionBuilderFn} from "../interaction/interaction"
  * @returns A function that processes an interaction object
  */
 export function validator(cb: Function): InteractionBuilderFn {
-  return update("ix.validators", validators =>
-    Array.isArray(validators) ? validators.push(cb) : [cb]
+  return update("ix.validators", (validators: Function | Function[]) =>
+    Array.isArray(validators) ? [...validators, cb] : [cb]
   )
 }
