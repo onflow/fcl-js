@@ -25,7 +25,7 @@ export function mockUser(initialValue?: CurrentUser | null) {
     resolveArgument: jest.fn(),
   }
 
-  const mock: jest.Mocked<typeof fcl.currentUser> = Object.assign(
+  const mock: jest.Mocked<typeof currentUser> = Object.assign(
     () => {
       return {...currentUser}
     },
