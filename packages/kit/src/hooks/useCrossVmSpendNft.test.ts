@@ -2,10 +2,9 @@ import {renderHook, act, waitFor} from "@testing-library/react"
 import * as fcl from "@onflow/fcl"
 import {FlowProvider} from "../provider"
 import {
-  encodeCalls,
-  getCadenceBatchTransaction,
-  useCrossVmBatchTransaction,
-} from "./useCrossVmBatchTransaction"
+  getCrossVmSpendNftransaction,
+  useCrossVmSpendNft,
+} from "./useCrossVmSpendNft"
 import {useFlowChainId} from "./useFlowChainId"
 
 jest.mock("@onflow/fcl", () => require("../__mocks__/fcl").default)
@@ -51,39 +50,24 @@ describe("useBatchEvmTransaction", () => {
     } as any)
   })
 
-  describe("encodeCalls", () => {
-    it("should encode calls correctly", () => {
-      const result = encodeCalls(mockCalls as any)
-
-      expect(result).toEqual([
-        {
-          to: "0x123",
-          data: "",
-          gasLimit: "100000",
-          value: "0",
-        },
-      ])
-    })
-  })
-
-  describe("getCadenceBatchTransaction", () => {
+  describe("getCrossVmSpendNftTransaction", () => {
     it("should return correct cadence for mainnet", () => {
-      const result = getCadenceBatchTransaction("mainnet")
+      const result = getCrossVmSpendNftransaction("mainnet")
       expect(result).toContain("import EVM from 0xe467b9dd11fa00df")
     })
 
     it("should return correct cadence for testnet", () => {
-      const result = getCadenceBatchTransaction("testnet")
+      const result = getCrossVmSpendNftransaction("testnet")
       expect(result).toContain("import EVM from 0x8c5303eaa26202d6")
     })
 
     it("should return correct cadence for local", () => {
-      const result = getCadenceBatchTransaction("local")
+      const result = getCrossVmSpendNftransaction("local")
       expect(result).toContain("import EVM from 0xf8d6e0586b0a20c0")
     })
 
     it("should throw error for unsupported chain", () => {
-      expect(() => getCadenceBatchTransaction("unsupported")).toThrow(
+      expect(() => getCrossVmSpendNftransaction("unsupported")).toThrow(
         "Unsupported chain: unsupported"
       )
     })
@@ -99,7 +83,7 @@ describe("useBatchEvmTransaction", () => {
       let result: any
       let rerender: any
       await act(async () => {
-        ;({result, rerender} = renderHook(useCrossVmBatchTransaction, {
+        ;({result, rerender} = renderHook(useCrossVmSpendNft, {
           wrapper: FlowProvider,
         }))
       })
@@ -128,7 +112,7 @@ describe("useBatchEvmTransaction", () => {
       let hookResult: any
 
       await act(async () => {
-        const {result} = renderHook(useCrossVmBatchTransaction, {
+        const {result} = renderHook(useCrossVmSpendNft, {
           wrapper: FlowProvider,
         })
         hookResult = result
@@ -180,7 +164,7 @@ describe("useBatchEvmTransaction", () => {
       let hookResult: any
 
       await act(async () => {
-        const {result} = renderHook(() => useCrossVmBatchTransaction(), {
+        const {result} = renderHook(() => useCrossVmSpendNft(), {
           wrapper: FlowProvider,
         })
         hookResult = result
@@ -203,7 +187,7 @@ describe("useBatchEvmTransaction", () => {
       let hookResult: any
 
       await act(async () => {
-        const {result} = renderHook(() => useCrossVmBatchTransaction(), {
+        const {result} = renderHook(() => useCrossVmSpendNft(), {
           wrapper: FlowProvider,
         })
         hookResult = result
@@ -223,7 +207,7 @@ describe("useBatchEvmTransaction", () => {
       let hookResult: any
 
       await act(async () => {
-        const {result} = renderHook(() => useCrossVmBatchTransaction(), {
+        const {result} = renderHook(() => useCrossVmSpendNft(), {
           wrapper: FlowProvider,
         })
         hookResult = result
