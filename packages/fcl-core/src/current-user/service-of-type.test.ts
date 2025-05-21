@@ -13,7 +13,7 @@ describe("service-of-type", () => {
       },
     ]
 
-    const service = serviceOfType(services, "authn")
+    const service = serviceOfType(services as any, "authn")
 
     expect(service).toEqual({
       type: "authn",
@@ -33,7 +33,7 @@ describe("service-of-type", () => {
       },
     ]
 
-    const service = serviceOfType(services, "non-existent")
+    const service = serviceOfType(services as any, "non-existent")
 
     expect(service).toBe(null)
   })

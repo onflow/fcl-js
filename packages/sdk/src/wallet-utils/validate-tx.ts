@@ -3,15 +3,7 @@ import {
   encodeTransactionEnvelope as encodeOutsideMessage,
 } from "../encode/encode"
 import {invariant} from "@onflow/util-invariant"
-
-interface Signable {
-  roles: {
-    payer: boolean
-  }
-  voucher: any
-  message: string
-}
-
+import {Signable} from "./encode-signable"
 const isPayer = (signable: Signable): boolean => {
   return signable.roles.payer
 }

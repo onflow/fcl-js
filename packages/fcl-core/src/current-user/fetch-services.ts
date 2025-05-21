@@ -1,12 +1,16 @@
 import {URL} from "../utils/url"
+import {Service} from "@onflow/typedefs"
 
-export async function fetchServices(servicesURL, code) {
+export async function fetchServices(
+  servicesURL: string | null,
+  code: string | null
+): Promise<Service[]> {
   if (servicesURL == null || code == null) return []
 
   const url = new URL(servicesURL)
   url.searchParams.append("code", code)
 
-  const resp = await fetch(url, {
+  const resp: any = await fetch(url, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -16,7 +20,7 @@ export async function fetchServices(servicesURL, code) {
   if (Array.isArray(resp)) return resp
 
   // Backwards compatibility for First-Gen Wallet Providers
-  const services = []
+  const services: Service[] = []
 
   // Convert authorizations into authz services
   if (Array.isArray(resp.authorizations)) {

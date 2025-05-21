@@ -4,13 +4,7 @@ import {
   encodeTransactionEnvelope,
 } from "../encode/encode"
 
-interface Sig {
-  address: string
-  keyId: number | string
-  sig: string
-}
-
-interface PayloadSig {
+export interface PayloadSig {
   address: string
   keyId: number | string
   sig: string
@@ -33,8 +27,14 @@ export interface Voucher {
   payloadSigs: PayloadSig[]
 }
 
-interface Signable {
+export interface Signable {
+  message: string
+  addr?: string
+  keyId?: number
+  signature?: string
+  roles: Record<string, boolean>
   voucher: Voucher
+  [key: string]: any
 }
 
 const findPayloadSigners = (voucher: Voucher): string[] => {

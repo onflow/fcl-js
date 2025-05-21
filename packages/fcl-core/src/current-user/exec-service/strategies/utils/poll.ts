@@ -1,30 +1,39 @@
 import {normalizePollingResponse} from "../../../../normalizers/service/polling-response"
 import {invariant} from "@onflow/util-invariant"
 import {fetchService} from "./fetch-service"
+import {Service} from "@onflow/typedefs"
 
-const OPTIONS = {
+export interface ServiceMethodOptions {
+  "HTTP/GET": "GET"
+  "HTTP/POST": "POST"
+}
+
+const OPTIONS: ServiceMethodOptions = {
   "HTTP/GET": "GET",
   "HTTP/POST": "POST",
 }
 
-const serviceMethod = service => {
+const serviceMethod = (service: Service): "GET" | "POST" => {
   invariant(
-    OPTIONS[service.method],
+    OPTIONS[service.method as keyof ServiceMethodOptions] as any,
     "Invalid Service Method for type back-channel-rpc",
     {service}
   )
-  return OPTIONS[service.method]
+  return OPTIONS[service.method as keyof ServiceMethodOptions]
 }
 
-const serviceBody = service => {
+const serviceBody = (service: Service): string | undefined => {
   if (service.method === "HTTP/GET") return undefined
-  if (service.method === "HTTP/POST" && service.data != null)
-    return JSON.stringify(service.data)
+  if (service.method === "HTTP/POST" && (service as any).data != null)
+    return JSON.stringify((service as any).data)
   return undefined
 }
 
-export async function poll(service, checkCanContinue = () => true) {
-  invariant(service, "Missing Polling Service", {service})
+export async function poll(
+  service: Service,
+  checkCanContinue: () => boolean = () => true
+): Promise<any> {
+  invariant(service as any, "Missing Polling Service", {service})
   const canContinue = checkCanContinue()
   if (!canContinue) throw new Error("Externally Halted")
 

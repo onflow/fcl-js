@@ -51,8 +51,12 @@ export {encodeMessageFromSignable} from "./wallet-utils/encode-signable"
 export {template as cadence} from "@onflow/util-template"
 export {template as cdc} from "@onflow/util-template"
 
-import type {Voucher} from "./wallet-utils/encode-signable"
-export {Voucher}
+import type {
+  Voucher,
+  Signable,
+  PayloadSig,
+} from "./wallet-utils/encode-signable"
+export {Voucher, Signable, PayloadSig}
 
 // Helpers
 export {account} from "./account/account"
