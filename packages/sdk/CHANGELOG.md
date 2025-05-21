@@ -1,5 +1,11 @@
 # @onflow/sdk
 
+## 1.9.0-alpha.1
+
+### Patch Changes
+
+- [#2434](https://github.com/onflow/fcl-js/pull/2434) [`3ac616d64c9abcda32f0c450119f22fa479d5e89`](https://github.com/onflow/fcl-js/commit/3ac616d64c9abcda32f0c450119f22fa479d5e89) Thanks [@mfbz](https://github.com/mfbz)! - Fixed fcl.mutate hanging
+
 ## 1.9.0-alpha.0
 
 ### Minor Changes
