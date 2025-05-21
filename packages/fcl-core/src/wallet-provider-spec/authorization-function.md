@@ -2,7 +2,7 @@
 
 ## Overview
 
-An Authorization Function is a function which enables the JS-SDK and FCL to know which Flow account fulfills which signatory role in a transaction and how to recieve a signature on behalf of the supplied account.
+An Authorization Function is a function which enables the JS-SDK and FCL to know which Flow account fulfills which signatory role in a transaction and how to receive a signature on behalf of the supplied account.
 
 ## How to Use an Authorization Function
 

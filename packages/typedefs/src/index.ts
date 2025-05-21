@@ -92,6 +92,10 @@ export interface Block {
    */
   timestamp: string
   /**
+   * The parent voter signature of the block
+   */
+  parentVoterSignature: string
+  /**
    * Contains the ids of collections included in the block
    */
   collectionGuarantees: Array<CollectionGuarantee>
@@ -99,10 +103,6 @@ export interface Block {
    * The details of which nodes executed and sealed the blocks
    */
   blockSeals: Array<BlockSeal>
-  /**
-   * The cryptographic signature of the block
-   */
-  signatures: Array<number>
 }
 export interface CollectionGuarantee {
   /**
@@ -112,7 +112,7 @@ export interface CollectionGuarantee {
   /**
    * The signer ids of the block
    */
-  signerIds: Array<object>
+  signerIds: Array<string>
 }
 export interface BlockSeal {
   /**
@@ -123,6 +123,50 @@ export interface BlockSeal {
    * The execution receipt id of the block
    */
   executionReceiptId: string
+}
+/**
+ * BlockDigest holds lightweight block information which includes only block id, block height and block timestamp.
+ */
+export interface BlockDigest {
+  /**
+   * The id of the block
+   */
+  id: string
+  /**
+   * The height of the block
+   */
+  height: number
+  /**
+   * Timestamp of the block
+   */
+  timestamp: string
+}
+/**
+ * Header contains all meta-data for a block, as well as a hash representing
+ * the combined payload of the entire block. It is what consensus nodes agree
+ * on after validating the contents against the payload hash.
+ */
+export interface BlockHeader {
+  /**
+   * The id of the block
+   */
+  id: string
+  /**
+   * The id of the parent block
+   */
+  parentId: string
+  /**
+   * The height of the block
+   */
+  height: number
+  /**
+   * The timestamp of the block
+   */
+  timestamp: string
+  /**
+   * The parent voter signature of the block
+   */
+  parentVoterSignature: string
 }
 export interface CompositeSignature {
   /**
@@ -209,6 +253,12 @@ export interface Event {
    * The data emitted from the event.
    */
   data: any
+}
+export interface AccountStatusEvent extends Omit<Event, "blockTimestamp"> {
+  /**
+   * The address of the account which the event is associated with.
+   */
+  accountAddress: string
 }
 export interface Key {
   /**
@@ -424,6 +474,7 @@ export interface NodeVersionInfo {
    */
   nodeRootBlockHeight: number
 }
+
 export interface StreamConnection<ChannelMap extends {[name: string]: any}> {
   on<C extends keyof ChannelMap>(
     channel: C,
@@ -462,3 +513,11 @@ export type EventStream = StreamConnection<{
 
 export * from "./interaction"
 export * from "./fvm-errors"
+export {type SdkTransport} from "./transport"
+export {
+  type SubscriptionArgs,
+  type SubscriptionData,
+  type RawSubscriptionData,
+  type Subscription,
+  SubscriptionTopic,
+} from "./subscriptions"

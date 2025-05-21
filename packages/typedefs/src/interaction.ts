@@ -72,8 +72,8 @@ export interface Interaction {
   payer: string[]
   events: {
     eventType: string | null
-    start: string | null
-    end: string | null
+    start: string | number | null
+    end: string | number | null
     blockIds: string[]
   }
   transaction: {
@@ -81,7 +81,7 @@ export interface Interaction {
   }
   block: {
     id: string | null
-    height: string | null
+    height: string | number | null
     isSealed: boolean | null
   }
   account: {
