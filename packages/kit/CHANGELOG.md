@@ -1,5 +1,16 @@
 # @onflow/kit
 
+## 0.2.0-alpha.1
+
+### Minor Changes
+
+- [#2439](https://github.com/onflow/fcl-js/pull/2439) [`a36d78ee5283ceb9a2f411e6da9ddf0373777c24`](https://github.com/onflow/fcl-js/commit/a36d78ee5283ceb9a2f411e6da9ddf0373777c24) Thanks [@jribbink](https://github.com/jribbink)! - Make `txId` optional for `useFlowTransactionStatus`
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @onflow/fcl@1.18.0-alpha.1
+
 ## 0.2.0-alpha.0
 
 ### Minor Changes

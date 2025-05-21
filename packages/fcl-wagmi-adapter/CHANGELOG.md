@@ -1,5 +1,13 @@
 # @onflow/fcl-wagmi-adapter
 
+## 0.0.5-alpha.1
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @onflow/fcl@1.18.0-alpha.1
+  - @onflow/fcl-ethereum-provider@0.0.5-alpha.1
+
 ## 0.0.5-alpha.0
 
 ### Patch Changes
