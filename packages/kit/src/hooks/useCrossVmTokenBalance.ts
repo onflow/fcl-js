@@ -4,7 +4,7 @@ import {CADENCE_UFIX64_PRECISION, CONTRACT_ADDRESSES} from "../constants"
 import {useFlowChainId} from "./useFlowChainId"
 import {parseUnits, formatUnits} from "viem/utils"
 
-interface UseFullTokenBalanceArgs {
+interface UseCrossVmTokenBalanceArgs {
   owner?: string
   erc20AddressHexArg?: string
   contractIdentifier?: `A.${string}.${string}`
@@ -17,13 +17,13 @@ interface TokenBalance {
   precision: number
 }
 
-interface UseFullTokenBalanceData {
+interface UseCrossVmTokenBalanceData {
   cadence: TokenBalance
   evm: TokenBalance
   combined: TokenBalance
 }
 
-const getFullTokenBalance = (network: "testnet" | "mainnet") => `
+const getCrossVmTokenBalance = (network: "testnet" | "mainnet") => `
 import EVM from ${CONTRACT_ADDRESSES[network].EVM}
 import FungibleToken from ${CONTRACT_ADDRESSES[network].FungibleToken}
 import FlowEVMBridgeUtils from ${CONTRACT_ADDRESSES[network].FlowEVMBridgeUtils}
@@ -143,11 +143,11 @@ access(all) fun main(
  * @param param0
  * @returns
  */
-export function useFullTokenBalance(params: UseFullTokenBalanceArgs) {
+export function useCrossVmTokenBalance(params: UseCrossVmTokenBalanceArgs) {
   const chainIdResult = useFlowChainId()
   const queryResult = useFlowQuery({
     cadence: chainIdResult.data
-      ? getFullTokenBalance(chainIdResult.data as "testnet" | "mainnet")
+      ? getCrossVmTokenBalance(chainIdResult.data as "testnet" | "mainnet")
       : "",
     args: (arg, t) => [
       params.owner ? arg(params.owner, t.Address) : null,
@@ -183,7 +183,7 @@ export function useFullTokenBalance(params: UseFullTokenBalanceArgs) {
     return {
       ...queryResult,
       data: null,
-    } as UseQueryResult<UseFullTokenBalanceData | null, Error>
+    } as UseQueryResult<UseCrossVmTokenBalanceData | null, Error>
   }
 
   const [evmDecimals, cadenceBalance, evmBalance] = data
@@ -227,5 +227,5 @@ export function useFullTokenBalance(params: UseFullTokenBalanceArgs) {
           },
         }
       : null,
-  } as UseQueryResult<UseFullTokenBalanceData | null, Error>
+  } as UseQueryResult<UseCrossVmTokenBalanceData | null, Error>
 }

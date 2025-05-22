@@ -1,14 +1,14 @@
 import {FlowProvider} from "../provider/FlowProvider"
 import {useFlowChainId} from "./useFlowChainId"
 import {useFlowQuery} from "./useFlowQuery"
-import {useFullTokenBalance} from "./useFullTokenBalance"
+import {useCrossVmTokenBalance} from "./useCrossVmTokenBalance"
 import {act, renderHook, waitFor} from "@testing-library/react"
 
 jest.mock("@onflow/fcl", () => require("../__mocks__/fcl").default)
 jest.mock("./useFlowQuery")
 jest.mock("./useFlowChainId")
 
-describe("useFullTokenBalance", () => {
+describe("useCrossVmTokenBalance", () => {
   beforeEach(() => {
     jest.clearAllMocks()
   })
@@ -32,7 +32,7 @@ describe("useFullTokenBalance", () => {
 
     let result: ReturnType<typeof renderHook<any, any>>
     act(() => {
-      result = renderHook(useFullTokenBalance, {
+      result = renderHook(useCrossVmTokenBalance, {
         wrapper: FlowProvider,
         initialProps: {
           contractIdentifier: "A.1234.Token",
@@ -78,7 +78,7 @@ describe("useFullTokenBalance", () => {
 
     let result: ReturnType<typeof renderHook<any, any>>
     act(() => {
-      result = renderHook(useFullTokenBalance, {
+      result = renderHook(useCrossVmTokenBalance, {
         wrapper: FlowProvider,
         initialProps: {
           contractIdentifier: "A.1234.Token",
