@@ -403,7 +403,7 @@ sdk.build([
 
 # Exist but not supported
 
-The following, while technically possible, are impracticle. We strongly recommend not using them as arguments for transactions or scripts.
+The following, while technically possible, are impractical. We strongly recommend not using them as arguments for transactions or scripts.
 
 ### Void
 

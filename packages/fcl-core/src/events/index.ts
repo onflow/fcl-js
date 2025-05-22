@@ -1,6 +1,10 @@
-import {send, decode, subscribeEvents} from "@onflow/sdk"
-import {Event, EventFilter, EventStream} from "@onflow/typedefs"
+import {subscribe} from "@onflow/sdk"
+import {Event, EventFilter, SubscriptionTopic} from "@onflow/typedefs"
 import {events as legacyEvents} from "./legacy-events"
+import {SubscriptionsNotSupportedError} from "@onflow/sdk"
+import {getChainId} from "../utils"
+
+const FLOW_EMULATOR = "local"
 
 /**
  * @description - Subscribe to events
@@ -21,60 +25,81 @@ export function events(filterOrType?: EventFilter | string) {
 
   return {
     subscribe: (
-      callback: (events: Event | null, error: Error | null) => void
-    ) => {
-      const streamPromise: Promise<EventStream> = send([
-        subscribeEvents(filter),
-      ]).then(decode)
-
-      // If the subscribe fails, fallback to legacy events
-      const legacySubscriptionPromise = streamPromise
-        .then(() => null)
-        .catch(e => {
-          // Only fallback to legacy events if the error is specifcally about the unsupported feature
-          if (
-            e.message !==
-            "SDK Send Error: subscribeEvents is not supported by this transport."
-          ) {
-            throw e
-          }
-
-          if (typeof filterOrType !== "string") {
-            throw new Error(
-              "GRPC fcl.events fallback only supports string (type) filters"
-            )
-          }
-          return legacyEvents(filterOrType).subscribe(callback)
-        })
-
-      // Subscribe to the stream using the callback
-      function onEvents(data: Event[]) {
-        data.forEach(event => callback(event, null))
+      onData: (event: Event) => void,
+      onError: (error: Error) => void = (error: Error) => {
+        console.error("Unhandled error in event subscription:", error)
       }
-      function onError(error: Error) {
-        callback(null, error)
-      }
+    ): (() => void) => {
+      let unsubscribeFn = () => {}
+      let unsubscribeFnLegacy = () => {}
 
-      // If using legacy events, don't subscribe to the stream
-      legacySubscriptionPromise.then(legacySubscription => {
-        if (!legacySubscription) {
-          streamPromise
-            .then(stream => stream.on("events", onEvents).on("error", onError))
-            .catch(error => {
-              streamPromise.then(stream => stream.close())
+      // Subscribe to the event stream
+      function subscribeEventStream() {
+        const {unsubscribe} = subscribe({
+          topic: SubscriptionTopic.EVENTS,
+          args: filter,
+          onData: event => {
+            // Emit the event
+            onData(event)
+          },
+          onError: (error: Error) => {
+            // If subscriptions are not supported, fallback to legacy polling, otherwise return the error
+            if (error instanceof SubscriptionsNotSupportedError) {
+              console.warn(
+                "Failed to subscribe to events using real-time streaming (are you using the deprecated GRPC transport?), falling back to legacy polling."
+              )
+              fallbackLegacyPolling()
+            } else {
               onError(error)
-            })
+            }
+          },
+        })
+        unsubscribeFn = unsubscribe
+      }
+
+      // Fallback to legacy polling if real-time streaming is not supported
+      function fallbackLegacyPolling() {
+        if (typeof filterOrType !== "string") {
+          throw new Error(
+            "Legacy fcl.events fallback only supports string filters (single event type)"
+          )
         }
+        unsubscribeFnLegacy = legacyEvents(filterOrType).subscribe(
+          (event: Event, error?: Error) => {
+            if (error) {
+              onError(error)
+            } else {
+              onData(event)
+            }
+          }
+        )
+      }
+
+      async function subscribeToEvents() {
+        const network = await getChainId()
+
+        // As of Flow CLI v2.2.8, WebSocket subscriptions are not supported on the Flow emulator
+        // This conditional will be removed when WebSocket subscriptions are supported in this environment
+        if (network === FLOW_EMULATOR) {
+          console.warn(
+            "Events are not supported on the Flow emulator, falling back to legacy polling."
+          )
+          fallbackLegacyPolling()
+        } else {
+          subscribeEventStream()
+        }
+      }
+
+      // Subscribe to events
+      const initPromise = subscribeToEvents().catch(error => {
+        onError(error)
       })
 
-      // Unsubscribe will call terminate the legacy subscription or close the stream
+      // Return an unsubscribe function
       return () => {
-        legacySubscriptionPromise.then(legacySubscription => {
-          if (legacySubscription) {
-            legacySubscription()
-          } else {
-            streamPromise.then(stream => stream.close())
-          }
+        initPromise.finally(() => {
+          unsubscribeFn()
+          unsubscribeFnLegacy()
         })
       }
     },

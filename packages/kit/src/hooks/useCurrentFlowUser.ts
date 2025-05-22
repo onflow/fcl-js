@@ -3,18 +3,13 @@ import * as fcl from "@onflow/fcl"
 import {CurrentUser} from "@onflow/typedefs"
 
 interface UseCurrentFlowUserResult {
-  user: CurrentUser
+  user: CurrentUser | null
   authenticate: () => Promise<CurrentUser>
   unauthenticate: () => void
 }
 
 export function useCurrentFlowUser(): UseCurrentFlowUserResult {
-  const [user, setUser] = useState<CurrentUser>({
-    f_type: "USER",
-    f_vsn: "1.0.0",
-    loggedIn: false,
-    services: [],
-  })
+  const [user, setUser] = useState<CurrentUser | null>(null)
 
   useEffect(() => {
     const unsubscribe = fcl.currentUser.subscribe(setUser)
