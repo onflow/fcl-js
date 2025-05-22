@@ -5,9 +5,9 @@ import {
   SdkTransport,
 } from "@onflow/typedefs"
 import {subscribe} from "./subscribe"
-import {subscribeRaw} from "./raw-subscribe"
+import {subscribeRaw} from "./subscribe-raw"
 
-jest.mock("./raw-subscribe")
+jest.mock("./subscribe-raw")
 const mocksubscribeRaw = jest.mocked(subscribeRaw)
 
 describe("subscribe", () => {

@@ -1,5 +1,5 @@
 import {config} from "@onflow/config"
-import {subscribeRaw} from "./raw-subscribe"
+import {subscribeRaw} from "./subscribe-raw"
 import {
   Subscription,
   SubscriptionArgs,
