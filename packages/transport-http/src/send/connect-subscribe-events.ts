@@ -3,7 +3,7 @@ import {connectWs as defaultConnectWs} from "./connect-ws"
 import {EventEmitter} from "events"
 import {BlockHeartbeat, Interaction, StreamConnection} from "@onflow/typedefs"
 
-type subscribeRawEventsStream = StreamConnection<{
+type RawSubscribeEventsStream = StreamConnection<{
   data: {
     events: any[]
     heartbeat: BlockHeartbeat
@@ -105,7 +105,7 @@ export async function connectSubscribeEvents(
     outputEmitter.emit("close")
   })
 
-  const responseStream: subscribeRawEventsStream = {
+  const responseStream: RawSubscribeEventsStream = {
     on(event: "data" | "error" | "close" | "open", listener: any) {
       outputEmitter.on(event, listener)
       return this
