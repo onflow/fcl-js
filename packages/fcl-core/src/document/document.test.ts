@@ -1,4 +1,4 @@
-import {retrieve} from "./document.js"
+import {retrieve} from "./document"
 import {config} from "@onflow/config"
 
 describe("resolveArguments", () => {
