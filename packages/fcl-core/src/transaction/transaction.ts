@@ -93,7 +93,7 @@ export function transaction(
               reject(transactionError)
               unsub()
             } else if (predicate(txStatus)) {
-              resolve(txStatus!)
+              resolve(txStatus)
               unsub()
             }
           },
