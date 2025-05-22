@@ -1,5 +1,5 @@
 import {config} from "@onflow/config"
-import {rawSubscribe} from "./raw-subscribe"
+import {subscribeRaw} from "./raw-subscribe"
 import {
   Subscription,
   SubscriptionArgs,
@@ -34,7 +34,7 @@ describe("subscribe", () => {
         "accessNode.api": "http://localhost:8080",
       },
       () => {
-        return rawSubscribe({topic, args, onData, onError})
+        return subscribeRaw({topic, args, onData, onError})
       }
     )
 
@@ -63,7 +63,7 @@ describe("subscribe", () => {
         "accessNode.api": "http://localhost:8080",
       },
       () => {
-        return rawSubscribe({topic, args, onData, onError})
+        return subscribeRaw({topic, args, onData, onError})
       }
     )
 
@@ -78,7 +78,7 @@ describe("subscribe", () => {
     const onError = jest.fn()
 
     await config().overload({}, () => {
-      return rawSubscribe({topic, args, onData, onError})
+      return subscribeRaw({topic, args, onData, onError})
     })
 
     expect(onError).toHaveBeenCalledTimes(1)
