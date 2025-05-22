@@ -17,7 +17,7 @@ const BLOCK_EXPLORER_URL: Record<ExplorerNetwork, string> = {
 
 export const TransactionLink: React.FC<TransactionLinkProps> = ({
   txId,
-  variant = "primary",
+  variant = "link",
 }) => {
   const {data: flowNetwork} = useFlowChainId()
 
