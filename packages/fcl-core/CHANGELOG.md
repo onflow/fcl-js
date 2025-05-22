@@ -1,5 +1,11 @@
 # @onflow/fcl
 
+## 1.19.0-alpha.2
+
+### Patch Changes
+
+- [#2461](https://github.com/onflow/fcl-js/pull/2461) [`2637889fdb47a2294ad2db9d06a16fac1d805a12`](https://github.com/onflow/fcl-js/commit/2637889fdb47a2294ad2db9d06a16fac1d805a12) Thanks [@jribbink](https://github.com/jribbink)! - Unsubscribe from transaction statuses when sealed
+
 ## 1.19.0-alpha.1
 
 ### Patch Changes
