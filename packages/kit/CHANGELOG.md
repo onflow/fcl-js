@@ -1,5 +1,11 @@
 # @onflow/kit
 
+## 0.2.1
+
+### Patch Changes
+
+- [#2433](https://github.com/onflow/fcl-js/pull/2433) [`9f9e18b5381d455ef4546b6521ea37c5eef3063c`](https://github.com/onflow/fcl-js/commit/9f9e18b5381d455ef4546b6521ea37c5eef3063c) Thanks [@jribbink](https://github.com/jribbink)! - Fix script args query key
+
 ## 0.2.0
 
 ### Minor Changes
