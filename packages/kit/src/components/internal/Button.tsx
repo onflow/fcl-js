@@ -5,7 +5,7 @@ import {twMerge} from "tailwind-merge"
 
 export interface ButtonProps
   extends React.ComponentProps<typeof HeadlessButton> {
-  variant?: "primary" | "secondary" | "outline"
+  variant?: "primary" | "secondary" | "outline" | "link"
 }
 
 export const Button: React.FC<ButtonProps> = ({
@@ -20,6 +20,7 @@ export const Button: React.FC<ButtonProps> = ({
     primary: colors.primary,
     secondary: colors.secondary,
     outline: colors.outline,
+    link: colors.link,
   }
 
   return (

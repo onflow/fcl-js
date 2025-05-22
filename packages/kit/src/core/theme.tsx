@@ -4,6 +4,7 @@ export type ThemeColors = {
   primary: string
   secondary: string
   outline: string
+  link: string
 }
 
 export type Theme = {
@@ -16,6 +17,7 @@ const defaultTheme: Theme = {
     secondary: "bg-slate-100 text-slate-900 hover:bg-slate-200",
     outline:
       "bg-transparent border border-slate-200 text-slate-900 hover:bg-slate-100",
+    link: "bg-transparent text-black hover:underline hover:text-black",
   },
 }
 
