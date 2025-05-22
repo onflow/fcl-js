@@ -78,7 +78,6 @@ describe("getServices", () => {
   afterEach(() => {
     windowSpy.mockRestore()
     chainIdSpy.mockRestore()
-    global.fetch.mockClear()
   })
 
   it("it should get only services of type authn", async () => {
@@ -92,9 +91,9 @@ describe("getServices", () => {
       Promise.resolve({
         json: () => Promise.resolve(mockData),
       })
-    )
+    ) as jest.Mock
 
-    const response = await getServices({type: ["authn"]})
+    const response = await getServices({types: ["authn"]})
     expect(global.fetch).toHaveBeenCalledTimes(1)
   })
 })
