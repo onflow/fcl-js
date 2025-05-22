@@ -1,4 +1,4 @@
-import {InteractionAccount} from "@onflow/typedefs"
+import {InteractionAccount, TransactionRole} from "@onflow/typedefs"
 import {resolveAccounts} from "../sdk"
 import {prepAccount, initAccount, initInteraction} from "./interaction"
 
@@ -15,7 +15,7 @@ describe("prepAccount", () => {
       }),
     }
 
-    const ix = prepAccount(acct, {role: "proposer"})({
+    const ix = prepAccount(acct, {role: TransactionRole.PROPOSER})({
       ...initInteraction(),
       accounts: {},
     })
@@ -37,13 +37,14 @@ describe("prepAccount", () => {
     }
 
     const ix = await resolveAccounts(
-      prepAccount(authz, {role: "proposer"})({
+      prepAccount(authz, {role: TransactionRole.PROPOSER})({
         ...initInteraction(),
         accounts: {},
       })
     )
-    ix.accounts[ix.proposer] = await ix.accounts[ix.proposer].resolve()
-    expect(ix.accounts[ix.proposer].keyId).toBe(parseInt(keyId))
+    ix.accounts[ix.proposer || ""] =
+      await ix.accounts[ix.proposer || ""].resolve()
+    expect(ix.accounts[ix.proposer || ""].keyId).toBe(parseInt(keyId))
   })
 
   test("prepAccount does not affect keyId if undefined/does not exist", async () => {
@@ -59,12 +60,13 @@ describe("prepAccount", () => {
     }
 
     const ix = await resolveAccounts(
-      prepAccount(authz, {role: "proposer"})({
+      prepAccount(authz, {role: TransactionRole.PROPOSER})({
         ...initInteraction(),
         accounts: {},
       })
     )
-    ix.accounts[ix.proposer] = await ix.accounts[ix.proposer].resolve()
-    expect(ix.accounts[ix.proposer].keyId).toBeUndefined()
+    ix.accounts[ix.proposer || ""] =
+      await ix.accounts[ix.proposer || ""].resolve()
+    expect(ix.accounts[ix.proposer || ""].keyId).toBeUndefined()
   })
 })

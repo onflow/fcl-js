@@ -1,5 +1,24 @@
 # @onflow/transport-http
 
+## 1.13.0-alpha.0
+
+### Minor Changes
+
+- [#2201](https://github.com/onflow/fcl-js/pull/2201) [`b9c4ed3b95c2dc73698e45f353a6ef9a48f23cab`](https://github.com/onflow/fcl-js/commit/b9c4ed3b95c2dc73698e45f353a6ef9a48f23cab) Thanks [@jribbink](https://github.com/jribbink)! - Add support for new WebSocket streaming methods. The following topics are now available:
+
+  - `blocks`
+  - `block_headers`
+  - `block_digests`
+  - `transaction_statues`
+  - `events`
+  - `account_statuses`
+
+- [#2201](https://github.com/onflow/fcl-js/pull/2201) [`b9c4ed3b95c2dc73698e45f353a6ef9a48f23cab`](https://github.com/onflow/fcl-js/commit/b9c4ed3b95c2dc73698e45f353a6ef9a48f23cab) Thanks [@jribbink](https://github.com/jribbink)! - Expose the `httpTransport` as a named export from `@onflow/transport-http` package. This follows the new object-style export for SDK transports and adds streaming support.
+
+### Patch Changes
+
+- [#2035](https://github.com/onflow/fcl-js/pull/2035) [`694cd76807b7ca4441d1f8425ac4f8426cbc18fa`](https://github.com/onflow/fcl-js/commit/694cd76807b7ca4441d1f8425ac4f8426cbc18fa) Thanks [@jribbink](https://github.com/jribbink)! - Add `parentVoterSignature` field to GetBlock request
+
 ## 1.12.0
 
 ### Minor Changes
