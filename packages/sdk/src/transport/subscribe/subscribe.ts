@@ -1,5 +1,5 @@
 import {SdkTransport, Subscription, SubscriptionTopic} from "@onflow/typedefs"
-import {subscribeRaw} from "./raw-subscribe"
+import {subscribeRaw} from "./subscribe-raw"
 import {decodeResponse} from "../../decode/decode"
 import {SubscribeParams} from "./types"
 
