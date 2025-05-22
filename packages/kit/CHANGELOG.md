@@ -1,5 +1,26 @@
 # @onflow/kit
 
+## 1.0.0
+
+### Minor Changes
+
+- [#2439](https://github.com/onflow/fcl-js/pull/2439) [`a36d78ee5283ceb9a2f411e6da9ddf0373777c24`](https://github.com/onflow/fcl-js/commit/a36d78ee5283ceb9a2f411e6da9ddf0373777c24) Thanks [@jribbink](https://github.com/jribbink)! - Make `txId` optional for `useFlowTransactionStatus`
+
+- [#2368](https://github.com/onflow/fcl-js/pull/2368) [`eca4617c2d4d10d85bad0324f6c6064489c3d1c3`](https://github.com/onflow/fcl-js/commit/eca4617c2d4d10d85bad0324f6c6064489c3d1c3) Thanks [@jribbink](https://github.com/jribbink)! - Add `useCrossVmBatchTransaction` function
+
+- [#2414](https://github.com/onflow/fcl-js/pull/2414) [`605f66c7a78f9ff1474a18b70298956b92f90bc1`](https://github.com/onflow/fcl-js/commit/605f66c7a78f9ff1474a18b70298956b92f90bc1) Thanks [@chasefleming](https://github.com/chasefleming)! - **BREAKING**: Rename `useFlowTransaction` as `useFlowTransactionStatus`
+
+- [#2367](https://github.com/onflow/fcl-js/pull/2367) [`9595af75eeffb0c91f9bb94b70fb0adf4db40eec`](https://github.com/onflow/fcl-js/commit/9595af75eeffb0c91f9bb94b70fb0adf4db40eec) Thanks [@jribbink](https://github.com/jribbink)! - Add `useFlowChainId` hook to the `@onflow/kit` package.
+
+### Patch Changes
+
+- [#2419](https://github.com/onflow/fcl-js/pull/2419) [`f498aa9fdb0739aef8905593bdbd05af9db3267a`](https://github.com/onflow/fcl-js/commit/f498aa9fdb0739aef8905593bdbd05af9db3267a) Thanks [@chasefleming](https://github.com/chasefleming)! - Update readme with `useFlowRevertibleRandom` hook
+
+- [#2417](https://github.com/onflow/fcl-js/pull/2417) [`8608416f4d26e40d3bfa464da7e988c8beb35336`](https://github.com/onflow/fcl-js/commit/8608416f4d26e40d3bfa464da7e988c8beb35336) Thanks [@jribbink](https://github.com/jribbink)! - Fix `useFlowRevertibleRandom` range
+
+- Updated dependencies [[`0b83658f62a428a70074d33875f264fbd48aff1e`](https://github.com/onflow/fcl-js/commit/0b83658f62a428a70074d33875f264fbd48aff1e), [`b9c4ed3b95c2dc73698e45f353a6ef9a48f23cab`](https://github.com/onflow/fcl-js/commit/b9c4ed3b95c2dc73698e45f353a6ef9a48f23cab)]:
+  - @onflow/fcl@1.18.0
+
 ## 0.2.0-alpha.1
 
 ### Minor Changes
