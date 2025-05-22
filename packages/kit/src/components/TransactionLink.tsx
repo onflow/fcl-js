@@ -1,13 +1,16 @@
 import React from "react"
 import {Button, ButtonProps} from "./internal/Button"
 import {FlowNetwork} from "@onflow/kit"
+import {useFlowChainId} from "../hooks/useFlowChainId"
 
 interface TransactionLinkProps {
   txId: string
   variant?: ButtonProps["variant"]
 }
 
-const BLOCK_EXPLORER_URL = {
+type ExplorerNetwork = Extract<FlowNetwork, "mainnet" | "testnet">
+
+const BLOCK_EXPLORER_URL: Record<ExplorerNetwork, string> = {
   mainnet: "https://www.flowscan.io",
   testnet: "https://testnet.flowscan.org",
 }
@@ -16,8 +19,8 @@ export const TransactionLink: React.FC<TransactionLinkProps> = ({
   txId,
   variant = "primary",
 }) => {
-  const flowNetwork = process.env.NEXT_PUBLIC_FLOW_NETWORK as FlowNetwork
-  
+  const {data: flowNetwork} = useFlowChainId()
+
   const handleClick = (e: React.MouseEvent) => {
     if (flowNetwork === "emulator") {
       e.preventDefault()
@@ -25,9 +28,10 @@ export const TransactionLink: React.FC<TransactionLinkProps> = ({
     }
   }
 
-  const explorerUrl = flowNetwork === "emulator" 
-    ? "#" 
-    : `${BLOCK_EXPLORER_URL[flowNetwork]}/tx/${txId}`
+  const explorerUrl =
+    flowNetwork === "mainnet" || flowNetwork === "testnet"
+      ? `${BLOCK_EXPLORER_URL[flowNetwork]}/tx/${txId}`
+      : "#"
 
   return (
     <a
