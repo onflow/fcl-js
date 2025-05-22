@@ -4,8 +4,6 @@
 
 ### Minor Changes
 
-- [#2463](https://github.com/onflow/fcl-js/pull/2463) [`0b83658f62a428a70074d33875f264fbd48aff1e`](https://github.com/onflow/fcl-js/commit/0b83658f62a428a70074d33875f264fbd48aff1e) Thanks [@jribbink](https://github.com/jribbink)! - Rename `rawSubscribe` to `subscribeRaw`
-
 - [#2201](https://github.com/onflow/fcl-js/pull/2201) [`b9c4ed3b95c2dc73698e45f353a6ef9a48f23cab`](https://github.com/onflow/fcl-js/commit/b9c4ed3b95c2dc73698e45f353a6ef9a48f23cab) Thanks [@jribbink](https://github.com/jribbink)! - Add support for new WebSocket streaming methods. The following topics are now available:
 
   - `blocks`
