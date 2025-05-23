@@ -106,6 +106,5 @@ export type {StorageProvider} from "./utils/storage"
 
 export type {
   AccountProofData,
-  ValidateArgsInput,
   VerifySignaturesScriptOptions,
 } from "./app-utils/verify-signatures"
