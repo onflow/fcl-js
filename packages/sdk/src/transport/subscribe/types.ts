@@ -24,7 +24,7 @@ export type SubscribeParams<T extends SubscriptionTopic> = {
   onError: (error: Error) => void
 }
 
-export type RawSubscribeParams<T extends SubscriptionTopic> = {
+export type SubscribeRawParams<T extends SubscriptionTopic> = {
   /**
    * The topic to subscribe to.
    */

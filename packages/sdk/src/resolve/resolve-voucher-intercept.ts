@@ -5,7 +5,7 @@ import {createSignableVoucher} from "./voucher"
 export async function resolveVoucherIntercept(
   ix: Interaction
 ): Promise<Interaction> {
-  const fn = get(ix, "ix.voucher-intercept", null)
+  const fn = get(ix, "ix.voucher-intercept")
   if (isFn(fn)) {
     await fn(createSignableVoucher(ix))
   }

@@ -10,6 +10,5 @@ import {send} from "../transport"
 export async function nodeVersionInfo(
   opts: any = {}
 ): Promise<NodeVersionInfo> {
-  const ix = await send([getNodeVersionInfo()], opts)
-  return decode(ix)
+  return await send([getNodeVersionInfo()], opts).then(decode)
 }
