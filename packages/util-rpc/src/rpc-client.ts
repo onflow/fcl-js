@@ -12,9 +12,12 @@ export type RpcNotification<P> = {
   params: P
 }
 
-enum ReservedRpcMethods {
-  HELLO = "rpc_hello",
-}
+const ReservedRpcMethods = {
+  HELLO: "rpc_hello",
+} as const
+
+export type RpcRequestMethods =
+  (typeof ReservedRpcMethods)[keyof typeof ReservedRpcMethods]
 
 type RequestHandler<T = any> = (params: T) => any
 type NotificationHandler<T = any> = (params: T) => void

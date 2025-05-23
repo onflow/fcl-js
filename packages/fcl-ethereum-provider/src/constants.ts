@@ -1,7 +1,9 @@
-export enum FlowNetwork {
-  MAINNET = "mainnet",
-  TESTNET = "testnet",
-}
+export const FlowNetwork = {
+  MAINNET: "mainnet",
+  TESTNET: "testnet",
+} as const
+
+export type FlowNetwork = (typeof FlowNetwork)[keyof typeof FlowNetwork]
 
 export const FLOW_CHAINS = {
   [FlowNetwork.MAINNET]: {
@@ -12,11 +14,13 @@ export const FLOW_CHAINS = {
     eip155ChainId: 545,
     publicRpcUrl: "https://testnet.evm.nodes.onflow.org",
   },
-}
+} as const
 
-export enum ContractType {
-  EVM = "EVM",
-}
+export const ContractType = {
+  EVM: "EVM",
+} as const
+
+export type ContractType = (typeof ContractType)[keyof typeof ContractType]
 
 export enum EventType {
   CADENCE_OWNED_ACCOUNT_CREATED = "CADENCE_OWNED_ACCOUNT_CREATED",
@@ -32,14 +36,14 @@ export const EVENT_IDENTIFIERS = {
     [FlowNetwork.TESTNET]: "A.8c5303eaa26202d6.EVM.CadenceOwnedAccountCreated",
     [FlowNetwork.MAINNET]: "A.e467b9dd11fa00df.EVM.CadenceOwnedAccountCreated",
   },
-}
+} as const
 
 export const FLOW_CONTRACTS = {
   [ContractType.EVM]: {
     [FlowNetwork.TESTNET]: "0x8c5303eaa26202d6",
     [FlowNetwork.MAINNET]: "0xe467b9dd11fa00df",
   },
-}
+} as const
 
 export interface TransactionExecutedEvent {
   hash: string[]
