@@ -1,5 +1,11 @@
 # @onflow/kit
 
+## 0.3.0
+
+### Minor Changes
+
+- [#2398](https://github.com/onflow/fcl-js/pull/2398) [`99510059485ffb2d741407a573f3be076c77e044`](https://github.com/onflow/fcl-js/commit/99510059485ffb2d741407a573f3be076c77e044) Thanks [@jribbink](https://github.com/jribbink)! - Add `useCrossVmTokenBalance` hook to get full token balance across both Cadence and EVM accounts
+
 ## 0.2.1
 
 ### Patch Changes
