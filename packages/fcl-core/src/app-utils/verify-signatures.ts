@@ -205,7 +205,7 @@ export async function verifyUserSignatures(
 
   return query({
     cadence: await getVerifySignaturesScript(USER_SIGNATURE, opts),
-    args: (arg: any, t: any) => [
+    args: (arg, t) => [
       arg(address, t.Address),
       arg(message, t.String),
       arg(keyIndices, t.Array(t.Int)),
