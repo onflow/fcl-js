@@ -2,7 +2,7 @@ import {invariant} from "@onflow/util-invariant"
 import fetchTransport from "cross-fetch"
 import {config} from "@onflow/config"
 
-export interface DocumentResolverParams {
+interface DocumentResolverParams {
   url: string
 }
 
