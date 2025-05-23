@@ -43,7 +43,7 @@ describe("verifyUserSignatures", () => {
 
   it("should reject if missing array of composite signatures", async () => {
     expect.assertions(1)
-    await expect(verifyUserSignatures(message, null)).rejects.toThrow(Error)
+    await expect(verifyUserSignatures(message, [])).rejects.toThrow(Error)
   })
 
   it("should reject if compSigs are from different account addresses", async () => {
