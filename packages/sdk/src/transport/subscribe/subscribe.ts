@@ -1,5 +1,5 @@
 import {SdkTransport, Subscription, SubscriptionTopic} from "@onflow/typedefs"
-import {rawSubscribe} from "./raw-subscribe"
+import {subscribeRaw} from "./subscribe-raw"
 import {decodeResponse} from "../../decode/decode"
 import {SubscribeParams} from "./types"
 
@@ -16,7 +16,7 @@ export function subscribe<T extends SubscriptionTopic>(
     transport?: SdkTransport
   } = {}
 ): Subscription {
-  const sub = rawSubscribe(
+  const sub = subscribeRaw(
     {
       topic,
       args,
