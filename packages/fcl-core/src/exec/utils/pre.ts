@@ -2,7 +2,13 @@ import {invariant} from "@onflow/util-invariant"
 import * as sdk from "@onflow/sdk"
 import {isRequired, isObject, isString} from "../../utils/is"
 
-async function pre(type, opts) {
+export interface PreOptions {
+  cadence?: string
+  template?: any
+  [key: string]: any
+}
+
+async function pre(type: string, opts: PreOptions): Promise<void> {
   // prettier-ignore
   invariant(isRequired(opts), `${type}(opts) -- opts is required`)
   // prettier-ignore
@@ -23,10 +29,10 @@ async function pre(type, opts) {
   )
 }
 
-export async function preMutate(opts) {
+export async function preMutate(opts: PreOptions): Promise<void> {
   return pre("mutate", opts)
 }
 
-export async function preQuery(opts) {
+export async function preQuery(opts: PreOptions): Promise<void> {
   return pre("query", opts)
 }
