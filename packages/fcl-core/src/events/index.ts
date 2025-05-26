@@ -65,11 +65,13 @@ export function events(filterOrType?: EventFilter | string) {
           )
         }
         unsubscribeFnLegacy = legacyEvents(filterOrType).subscribe(
-          (event: Event, error?: Error) => {
+          (event: Event | null, error: Error | null) => {
             if (error) {
               onError(error)
             } else {
-              onData(event)
+              if (event) {
+                onData(event)
+              }
             }
           }
         )
