@@ -12,7 +12,7 @@ interface UseCrossVmTokenBalanceArgs {
 }
 
 interface TokenBalance {
-  value: string
+  value: bigint
   formatted: string
   precision: number
 }
