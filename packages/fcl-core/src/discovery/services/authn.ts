@@ -7,6 +7,7 @@ import {
   UNSUBSCRIBE,
   send,
   Letter as ActorLetter,
+  ActorContext,
 } from "@onflow/util-actor"
 import {getServices} from "../services"
 import {LEVELS, log} from "@onflow/util-logger"
@@ -19,23 +20,6 @@ export const SERVICE_ACTOR_KEYS = {
   UPDATED: "UPDATED",
   UPDATE_RESULTS: "UPDATE_RESULTS",
 } as const
-
-export interface ActorContext {
-  self: () => string
-  receive: () => Promise<ActorLetter>
-  send: (
-    to: string | null | undefined,
-    tag: string,
-    data?: any,
-    opts?: Record<string, any>
-  ) => Promise<any> | undefined
-  merge: (data: Record<string, any>) => void
-  broadcast: (tag: string, data: Record<string, any>) => void
-  subscribe: (from: string) => void
-  unsubscribe: (from: string) => void
-  all: () => Record<string, any>
-  fatalError: (error: Error) => void
-}
 
 export interface ServiceData {
   results: Service[]
@@ -117,7 +101,7 @@ const HANDLERS = {
   ) => letter.reply({...ctx.all()}),
 }
 
-const spawnProviders = () => spawn(HANDLERS, SERVICE_ACTOR_KEYS.AUTHN)
+const spawnProviders = () => spawn(HANDLERS as any, SERVICE_ACTOR_KEYS.AUTHN)
 
 /**
  * @description Discovery methods for interacting with Authn.
