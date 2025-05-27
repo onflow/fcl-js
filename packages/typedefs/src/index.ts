@@ -303,8 +303,14 @@ export interface Service {
    * Service provider object
    */
   provider: Provider
-
+  /**
+   * Service parameters
+   */
   params: Record<string, string>
+  /**
+   * Service data
+   */
+  data?: any
 }
 export interface Signature {
   /**
