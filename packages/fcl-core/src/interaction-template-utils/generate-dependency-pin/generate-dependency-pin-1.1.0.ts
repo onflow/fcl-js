@@ -1,20 +1,27 @@
 import {invariant, send, getAccount, config, decode} from "@onflow/sdk"
-import {genHash} from "../utils/hash.js"
-import {findImports} from "../utils/find-imports.js"
-import {generateImport} from "../utils/generate-import.js"
+import {genHash} from "../utils/hash"
+import {findImports} from "../utils/find-imports"
+import {generateImport} from "../utils/generate-import"
+
+export interface GenerateDependencyPin110Params {
+  address: string
+  contractName: string
+  blockHeight?: number
+}
 
 /**
  * @description Produces a dependency pin for a contract at current state of chain
- * @param {object} params
- * @param {string} params.address - The address of the account containing the contract
- * @param {string} params.contractName - The name of the contract
- * @param {object} opts - Options to pass to the interaction
- * @returns {Promise<string>} - The dependency pin
+ * @param {GenerateDependencyPin110Params} params
+ * @param {string} params.address The address of the account containing the contract
+ * @param {string} params.contractName The name of the contract
+ * @param {number} params.blockHeight The block height to generate the dependency pin at
+ * @param {object} opts Options to pass to the interaction
+ * @returns {Promise<string>} The dependency pin
  */
 export async function generateDependencyPin110(
-  {address, contractName},
-  opts = {}
-) {
+  {address, contractName}: GenerateDependencyPin110Params,
+  opts: any = {}
+): Promise<string> {
   invariant(
     address != undefined,
     "generateDependencyPin({ address }) -- address must be defined"
@@ -32,7 +39,7 @@ export async function generateDependencyPin110(
     "generateDependencyPin({ contractName }) -- contractName must be a string"
   )
 
-  const horizon = [generateImport({contractName, address})]
+  const horizon: any = [generateImport({contractName, address})]
 
   for (const horizonImport of horizon) {
     const account = await send(
@@ -56,7 +63,7 @@ export async function generateDependencyPin110(
     horizon.push(...contractImports)
   }
 
-  const contractPinSelfHashesPromises = horizon.map(iport =>
+  const contractPinSelfHashesPromises = horizon.map((iport: any) =>
     genHash(iport.contract)
   )
   // genHash returns a promise, so we need to await the results of all the promises

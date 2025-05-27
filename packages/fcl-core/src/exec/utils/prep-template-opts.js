@@ -1,5 +1,5 @@
 import {retrieve} from "../../document/document.js"
-import {deriveCadenceByNetwork} from "../../interaction-template-utils/derive-cadence-by-network/derive-cadence-by-network.js"
+import {deriveCadenceByNetwork} from "../../interaction-template-utils/derive-cadence-by-network/derive-cadence-by-network"
 import {isString} from "../../utils/is"
 import {getChainId} from "../../utils"
 

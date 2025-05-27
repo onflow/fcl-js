@@ -1,21 +1,37 @@
-import {generateDependencyPin} from "./generate-dependency-pin/generate-dependency-pin.js"
+import {generateDependencyPin} from "./generate-dependency-pin/generate-dependency-pin"
 import {invariant, block} from "@onflow/sdk"
 import {log, LEVELS} from "@onflow/util-logger"
+import {InteractionTemplate} from "./interaction-template"
+
+export interface VerifyDependencyPinsSameParams {
+  template: InteractionTemplate
+  blockHeight?: number
+  network: string
+}
+
+export interface VerifyDependencyPinsSameOpts {
+  [key: string]: any
+}
+
+export interface VerifyDependencyPinsSameAtLatestSealedBlockParams {
+  template: InteractionTemplate
+  network: string
+}
 
 /**
  * @description Checks if an Interaction Template's pins match those generated at a block height
  *
- * @param {object} params
- * @param {object} params.template - Interaction Template to check pins for
- * @param {number} params.blockHeight - Block height to check pins at
- * @param {string} params.network - Network to check pins on
- * @param {object} opts
- * @returns {Promise<boolean>} - Whether or not the pins match
+ * @param {VerifyDependencyPinsSameParams} params
+ * @param {InteractionTemplate} params.template Interaction Template to check pins for
+ * @param {number} params.blockHeight Block height to check pins at
+ * @param {string} params.network Network to check pins on
+ * @param {VerifyDependencyPinsSameOpts} opts
+ * @returns {Promise<boolean>} Whether or not the pins match
  */
 export async function verifyDependencyPinsSame(
-  {template, blockHeight, network},
-  opts = {}
-) {
+  {template, blockHeight, network}: VerifyDependencyPinsSameParams,
+  opts: VerifyDependencyPinsSameOpts = {}
+): Promise<boolean> {
   invariant(
     template != undefined,
     "generateDependencyPin({ template }) -- template must be defined"
@@ -115,13 +131,13 @@ export async function verifyDependencyPinsSame(
                 opts
               )
 
-              if (pin !== net.dependency_pin.pin) {
+              if (pin !== (net as any).dependency_pin.pin) {
                 log({
                   title: "verifyDependencyPinsSame Debug Error",
                   message: `Could not recompute and match dependency pin.
                                     address: ${net.address} | contract: ${contract.contract}
                                     computed: ${pin}
-                                    template: ${net.pin}
+                                    template: ${(net as any).pin}
                                 `,
                   level: LEVELS.debug,
                 })
@@ -145,16 +161,16 @@ export async function verifyDependencyPinsSame(
 /**
  * @description Checks if an Interaction Template's pins match those generated at the latest block height
  *
- * @param {object} params
- * @param {object} params.template - Interaction Template to check pins for
- * @param {string} params.network - Network to check pins on
- * @param {object} opts
- * @returns {Promise<boolean>} - Whether or not the pins match
+ * @param {VerifyDependencyPinsSameAtLatestSealedBlockParams} params
+ * @param {InteractionTemplate} params.template Interaction Template to check pins for
+ * @param {string} params.network Network to check pins on
+ * @param {VerifyDependencyPinsSameOpts} opts
+ * @returns {Promise<boolean>} Whether or not the pins match
  */
 export async function verifyDependencyPinsSameAtLatestSealedBlock(
-  {template, network},
-  opts = {}
-) {
+  {template, network}: VerifyDependencyPinsSameAtLatestSealedBlockParams,
+  opts: VerifyDependencyPinsSameOpts = {}
+): Promise<boolean> {
   const latestSealedBlock = await block({sealed: true})
   const latestSealedBlockHeight = latestSealedBlock?.height
 
