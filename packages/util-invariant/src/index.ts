@@ -10,7 +10,6 @@ import * as logger from "@onflow/util-logger"
 export function invariant(
   fact: boolean,
   msg: string,
-  loggerLevel: number = logger.LEVELS.error,
   ...rest: any[]
 ): asserts fact {
   if (!fact) {
