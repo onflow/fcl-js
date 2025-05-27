@@ -72,7 +72,7 @@ export {invariant} from "@onflow/sdk"
 
 // Subscriptions
 export {subscribe} from "@onflow/sdk"
-export {rawSubscribe} from "@onflow/sdk"
+export {subscribeRaw} from "@onflow/sdk"
 
 import {watchForChainIdChanges} from "./utils"
 
