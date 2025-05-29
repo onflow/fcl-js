@@ -2,30 +2,36 @@ import {sansPrefix} from "@onflow/util-address"
 import {invariant} from "@onflow/util-invariant"
 import {Buffer, encode as rlpEncode} from "@onflow/rlp"
 
-const rightPaddedHexBuffer = (value, pad) =>
+export interface AccountProofData {
+  address: string
+  nonce: string
+  appIdentifier: string
+}
+
+const rightPaddedHexBuffer = (value: string, pad: number): Buffer =>
   Buffer.from(value.padEnd(pad * 2, "0"), "hex")
 
-const leftPaddedHexBuffer = (value, pad) =>
+const leftPaddedHexBuffer = (value: string, pad: number): Buffer =>
   Buffer.from(value.padStart(pad * 2, "0"), "hex")
 
-const addressBuffer = addr => leftPaddedHexBuffer(addr, 8)
+const addressBuffer = (addr: string): Buffer => leftPaddedHexBuffer(addr, 8)
 
-const nonceBuffer = nonce => Buffer.from(nonce, "hex")
+const nonceBuffer = (nonce: string): Buffer => Buffer.from(nonce, "hex")
 
 export const encodeAccountProof = (
-  {address, nonce, appIdentifier},
-  includeDomainTag = true
-) => {
+  {address, nonce, appIdentifier}: AccountProofData,
+  includeDomainTag: boolean = true
+): string => {
   invariant(
-    address,
+    address as any,
     "Encode Message For Provable Authn Error: address must be defined"
   )
   invariant(
-    nonce,
+    nonce as any,
     "Encode Message For Provable Authn Error: nonce must be defined"
   )
   invariant(
-    appIdentifier,
+    appIdentifier as any,
     "Encode Message For Provable Authn Error: appIdentifier must be defined"
   )
 

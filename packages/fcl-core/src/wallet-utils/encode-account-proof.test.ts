@@ -1,4 +1,4 @@
-import {encodeAccountProof} from "./encode-account-proof.js"
+import {encodeAccountProof} from "./encode-account-proof"
 
 const address = "0xABC123DEF456"
 const appIdentifier = "AWESOME-APP-ID"
@@ -22,14 +22,14 @@ describe("encode account proof", () => {
   test("encode account proof with missing address", () => {
     expect.assertions(1)
     expect(() => {
-      encodeAccountProof({nonce, appIdentifier})
+      encodeAccountProof({nonce, appIdentifier} as any)
     }).toThrow(Error)
   })
 
   test("encode account proof with missing appIdentifier", () => {
     expect.assertions(1)
     expect(() => {
-      encodeAccountProof({address, nonce})
+      encodeAccountProof({address, nonce} as any)
     }).toThrow(Error)
   })
 

@@ -3,14 +3,20 @@ import {
   FCL_RESPONSE_PARAM_NAME,
 } from "../utils/constants"
 import {onMessageFromFCL} from "./on-message-from-fcl"
-import {URL} from "../utils/url"
+
+export interface PollingResponse {
+  f_type: "PollingResponse"
+  f_vsn: "1.0.0"
+  status: "APPROVED" | "DECLINED" | "REDIRECT"
+  reason: string | null
+  data: any
+}
 
 /**
- * @description
- * Sends message to FCL window
+ * @description Sends message to FCL window
  *
- * @param {string} type - Message type
- * @param {object} msg - Message object
+ * @param {string} type Message type
+ * @param {PollingResponse} msg Message object
  * @returns {void}
  *
  * @example
@@ -22,7 +28,10 @@ import {URL} from "../utils/url"
  *    data: data,
  *  })
  */
-export const sendMsgToFCL = (type, msg = {}) => {
+export const sendMsgToFCL = (
+  type: string,
+  msg: PollingResponse = {} as PollingResponse
+): void => {
   const data = {...msg, type}
 
   const urlParams = new URLSearchParams(window.location.search)
@@ -41,75 +50,73 @@ export const sendMsgToFCL = (type, msg = {}) => {
 }
 
 /**
- * @description
- * Listens for "FCL:VIEW:READY:RESPONSE" and sends "FCL:VIEW:READY"
+ * @description Listens for "FCL:VIEW:READY:RESPONSE" and sends "FCL:VIEW:READY"
  *
- * @param {Function} cb - Callback function
- * @param {object} msg - Message object
+ * @param {Function} cb Callback function
+ * @param {PollingResponse} msg Message object
  * @returns {void}
  */
-export const ready = (cb, msg = {}) => {
+export const ready = (
+  cb: (data: any, context: {origin: string}) => void,
+  msg: PollingResponse = {} as PollingResponse
+): void => {
   onMessageFromFCL("FCL:VIEW:READY:RESPONSE", cb)
   sendMsgToFCL("FCL:VIEW:READY")
 }
 
 /**
- * @description
- * Sends "FCL:VIEW:CLOSE"
+ * @description Sends "FCL:VIEW:CLOSE"
  *
  * @returns {void}
  */
-export const close = () => {
+export const close = (): void => {
   sendMsgToFCL("FCL:VIEW:CLOSE")
 }
 
 /**
- * @description
- * Sends "FCL:VIEW:RESPONSE" with status "APPROVED"
+ * @description Sends "FCL:VIEW:RESPONSE" with status "APPROVED"
  *
- * @param {object} data - Data object
+ * @param {object} data Data object
  * @returns {void}
  */
-export const approve = data => {
+export const approve = (data: any): void => {
   sendMsgToFCL("FCL:VIEW:RESPONSE", {
     f_type: "PollingResponse",
     f_vsn: "1.0.0",
     status: "APPROVED",
     reason: null,
     data: data,
-  })
+  } as PollingResponse)
 }
 
 /**
- * @description
- * Sends "FCL:VIEW:RESPONSE" with status "DECLINED"
+ * @description Sends "FCL:VIEW:RESPONSE" with status "DECLINED"
  *
- * @param {string} reason - Reason for declining
+ * @param {string} reason Reason for declining
  * @returns {void}
  */
-export const decline = reason => {
+export const decline = (reason: string): void => {
   sendMsgToFCL("FCL:VIEW:RESPONSE", {
     f_type: "PollingResponse",
     f_vsn: "1.0.0",
     status: "DECLINED",
     reason: reason,
     data: null,
-  })
+  } as PollingResponse)
 }
 
 /**
- * @description
- * Sends "FCL:VIEW:RESPONSE" with status "REDIRECT"
+ * @description Sends "FCL:VIEW:RESPONSE" with status "REDIRECT"
  *
- * @param {object} data - Data object
+ * @param {object} data Data object
  * @returns {void}
  */
-export const redirect = data => {
+export const redirect = (data: any): void => {
   sendMsgToFCL("FCL:VIEW:RESPONSE", {
     f_type: "PollingResponse",
     f_vsn: "1.0.0",
     status: "REDIRECT",
     reason: null,
     data: data,
-  })
+  } as PollingResponse)
 }
