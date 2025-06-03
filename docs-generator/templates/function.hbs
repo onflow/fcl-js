@@ -29,6 +29,7 @@ import { {{name}} } from "@onflow/{{packageName}}"
 
 {{#each parameters}}
 ### `{{name}}` {{#unless required}}(optional){{/unless}}
+
 - Type: {{#if hasLink}}{{{linkedType}}}{{else}}`{{{type}}}`{{/if}}
 {{#if description}}
 - Description: {{{description}}}
