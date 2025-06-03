@@ -114,3 +114,6 @@ initServiceRegistry({coreStrategies})
 initFclWcLoader()
 
 export {LOCAL_STORAGE, SESSION_STORAGE} from "./utils/web"
+
+// Subscriptions
+export {subscribe, subscribeRaw} from "@onflow/fcl-core"

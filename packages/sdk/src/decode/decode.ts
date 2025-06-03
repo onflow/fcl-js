@@ -68,6 +68,9 @@ interface FlowResponse {
   account?: any
   block?: any
   blockHeader?: any
+  blockDigest?: any
+  event?: any
+  accountStatusEvent?: any
   latestBlock?: any
   transactionId?: string
   collection?: any
@@ -320,12 +323,26 @@ export const decodeResponse = async (
         }
       })
     )
+  } else if (response.event) {
+    const {payload, ...rest} = response.event
+    return {
+      ...rest,
+      data: await decode(payload, customDecoders),
+    }
+  } else if (response.accountStatusEvent) {
+    const {payload, ...rest} = response.accountStatusEvent
+    return {
+      ...rest,
+      data: await decode(payload, customDecoders),
+    }
   } else if (response.account) {
     return response.account
   } else if (response.block) {
     return response.block
   } else if (response.blockHeader) {
     return response.blockHeader
+  } else if (response.blockDigest) {
+    return response.blockDigest
   } else if (response.latestBlock) {
     latestBlockDeprecationNotice()
     return response.latestBlock

@@ -83,7 +83,7 @@ export function useFlowRevertibleRandom({
           for i in InclusiveRange(0, count - 1) {
               results.append(RevertibleRandomResult(
                   blockHeight: currentHeight,
-                  value: revertibleRandom<UInt256>(modulo: max - min + 1)
+                  value: min + revertibleRandom<UInt256>(modulo: max - min + 1)
               ))
           }
           return results

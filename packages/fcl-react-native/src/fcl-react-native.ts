@@ -108,3 +108,7 @@ initServiceRegistry({coreStrategies})
 setIsReactNative(true)
 
 export {useServiceDiscovery, ServiceDiscovery}
+
+// Subscriptions
+export {subscribe} from "@onflow/fcl-core"
+export {subscribeRaw} from "@onflow/fcl-core"

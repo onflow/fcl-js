@@ -4,7 +4,7 @@ import {atBlockHeight} from "../build/build-at-block-height"
 import {atBlockId} from "../build/build-at-block-id"
 import {getBlock} from "../build/build-get-block"
 import {decodeResponse as decode} from "../decode/decode"
-import {send} from "../send/send"
+import {send} from "../transport"
 
 interface BlockQueryOptions {
   sealed?: boolean
@@ -36,18 +36,12 @@ export async function block(
   )
 
   // Get block by ID
-  if (id) {
-    const ix = await send([getBlock(), atBlockId(id)], opts)
-    return decode(ix)
-  }
+  if (id) return await send([getBlock(), atBlockId(id)], opts).then(decode)
 
   // Get block by height
-  if (height) {
-    const ix = await send([getBlock(), atBlockHeight(height)], opts)
-    return decode(ix)
-  }
+  if (height)
+    return await send([getBlock(), atBlockHeight(height)], opts).then(decode)
 
   // Get latest block
-  const ix = await send([getBlock(sealed)], opts)
-  return decode(ix)
+  return await send([getBlock(sealed)], opts).then(decode)
 }

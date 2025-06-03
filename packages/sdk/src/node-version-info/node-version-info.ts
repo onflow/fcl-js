@@ -1,7 +1,7 @@
 import {NodeVersionInfo} from "@onflow/typedefs"
 import {getNodeVersionInfo} from "../build/build-get-node-version-info"
 import {decodeResponse as decode} from "../decode/decode"
-import {send} from "../send/send"
+import {send} from "../transport"
 
 /**
  * @description Returns the version information from to connected node
@@ -10,6 +10,5 @@ import {send} from "../send/send"
 export async function nodeVersionInfo(
   opts: any = {}
 ): Promise<NodeVersionInfo> {
-  const ix = await send([getNodeVersionInfo()], opts)
-  return decode(ix)
+  return await send([getNodeVersionInfo()], opts).then(decode)
 }

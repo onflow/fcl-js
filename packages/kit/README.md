@@ -39,8 +39,10 @@ import flowJson from "../flow.json"
 - `useFlowConfig`
 - `useFlowEvents`
 - `useFlowQuery`
+- `useFlowRevertibleRandom`
 - `useFlowMutate`
 - `useFlowTransaction`
+- `useCrossVmTokenBalance`
 
 ## 📚 Full Documentation
 
