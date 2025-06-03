@@ -3,9 +3,9 @@ import {invariant} from "@onflow/util-invariant"
 import {Buffer, encode as rlpEncode} from "@onflow/rlp"
 
 export interface AccountProofData {
-  address: string
-  nonce: string
-  appIdentifier: string
+  address?: string
+  nonce?: string
+  appIdentifier?: string
 }
 
 const rightPaddedHexBuffer = (value: string, pad: number): Buffer =>
@@ -36,7 +36,7 @@ export const encodeAccountProof = (
   )
 
   invariant(
-    nonce.length >= 64,
+    nonce!.length >= 64,
     "Encode Message For Provable Authn Error: nonce must be minimum of 32 bytes"
   )
 
@@ -50,15 +50,15 @@ export const encodeAccountProof = (
       ACCOUNT_PROOF_DOMAIN_TAG,
       rlpEncode([
         appIdentifier,
-        addressBuffer(sansPrefix(address)),
-        nonceBuffer(nonce),
+        addressBuffer(sansPrefix(address!)),
+        nonceBuffer(nonce!),
       ]),
     ]).toString("hex")
   }
 
   return rlpEncode([
     appIdentifier,
-    addressBuffer(sansPrefix(address)),
-    nonceBuffer(nonce),
+    addressBuffer(sansPrefix(address!)),
+    nonceBuffer(nonce!),
   ]).toString("hex")
 }

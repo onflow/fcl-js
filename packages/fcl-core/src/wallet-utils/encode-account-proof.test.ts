@@ -22,14 +22,14 @@ describe("encode account proof", () => {
   test("encode account proof with missing address", () => {
     expect.assertions(1)
     expect(() => {
-      encodeAccountProof({nonce, appIdentifier} as any)
+      encodeAccountProof({nonce, appIdentifier})
     }).toThrow(Error)
   })
 
   test("encode account proof with missing appIdentifier", () => {
     expect.assertions(1)
     expect(() => {
-      encodeAccountProof({address, nonce} as any)
+      encodeAccountProof({address, nonce})
     }).toThrow(Error)
   })
 
