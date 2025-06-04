@@ -12,7 +12,7 @@ type ExplorerNetwork = Extract<FlowNetwork, "mainnet" | "testnet">
 
 const BLOCK_EXPLORER_URL: Record<ExplorerNetwork, string> = {
   mainnet: "https://www.flowscan.io",
-  testnet: "https://testnet.flowscan.org",
+  testnet: "https://testnet.flowscan.io",
 }
 
 export const TransactionLink: React.FC<TransactionLinkProps> = ({
