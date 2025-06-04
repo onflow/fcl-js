@@ -1,6 +1,8 @@
 import React from "react"
 
-export const ExternalLinkIcon: React.FC<{className?: string}> = ({className}) => (
+export const ExternalLinkIcon: React.FC<{className?: string}> = ({
+  className,
+}) => (
   <svg
     width="16"
     height="16"
@@ -31,4 +33,4 @@ export const ExternalLinkIcon: React.FC<{className?: string}> = ({className}) =>
       strokeLinejoin="round"
     />
   </svg>
-) 
+)
