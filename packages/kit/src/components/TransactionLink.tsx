@@ -2,6 +2,7 @@ import React from "react"
 import {Button, ButtonProps} from "./internal/Button"
 import {useFlowChainId} from "../hooks/useFlowChainId"
 import {FlowNetwork} from "../core/types"
+import {ExternalLinkIcon} from "../icons/ExternalLink"
 
 interface TransactionLinkProps {
   txId: string
@@ -48,36 +49,7 @@ export const TransactionLink: React.FC<TransactionLinkProps> = ({
         disabled={flowNetwork === "emulator"}
       >
         View on Block Explorer
-        <svg
-          width="16"
-          height="16"
-          viewBox="0 0 24 24"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          className="w-4 h-4"
-        >
-          <path
-            d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-          <path
-            d="M15 3h6v6"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-          <path
-            d="M10 14L21 3"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
+        <ExternalLinkIcon className="w-4 h-4" />
       </Button>
     </a>
   )
