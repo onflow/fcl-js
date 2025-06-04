@@ -1,5 +1,15 @@
 # @onflow/kit
 
+## 0.3.0
+
+### Minor Changes
+
+- [#2398](https://github.com/onflow/fcl-js/pull/2398) [`99510059485ffb2d741407a573f3be076c77e044`](https://github.com/onflow/fcl-js/commit/99510059485ffb2d741407a573f3be076c77e044) Thanks [@jribbink](https://github.com/jribbink)! - Add `useCrossVmTokenBalance` hook to get full token balance across both Cadence and EVM accounts
+
+### Patch Changes
+
+- [#2486](https://github.com/onflow/fcl-js/pull/2486) [`3f5d5037882d2da03713ece0ff4f6b7e9d3693b2`](https://github.com/onflow/fcl-js/commit/3f5d5037882d2da03713ece0ff4f6b7e9d3693b2) Thanks [@jribbink](https://github.com/jribbink)! - Switch `contractIdentifier` to `vaultIdentifier` in `useCrossVmTokenBalance` hook
+
 ## 0.2.1
 
 ### Patch Changes
