@@ -117,3 +117,5 @@ export {LOCAL_STORAGE, SESSION_STORAGE} from "./utils/web"
 
 // Subscriptions
 export {subscribe, subscribeRaw} from "@onflow/fcl-core"
+
+export * from "@onflow/typedefs"
