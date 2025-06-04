@@ -1,7 +1,7 @@
 import React from "react"
 import {Button, ButtonProps} from "./internal/Button"
-import {FlowNetwork} from "@onflow/kit"
 import {useFlowChainId} from "../hooks/useFlowChainId"
+import {FlowNetwork} from "../core/types"
 
 interface TransactionLinkProps {
   txId: string
@@ -19,7 +19,8 @@ export const TransactionLink: React.FC<TransactionLinkProps> = ({
   txId,
   variant = "link",
 }) => {
-  const {data: flowNetwork} = useFlowChainId()
+  const {data: chainId} = useFlowChainId()
+  const flowNetwork = chainId as FlowNetwork | undefined
 
   const handleClick = (e: React.MouseEvent) => {
     if (flowNetwork === "emulator") {
