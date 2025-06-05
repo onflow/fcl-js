@@ -150,7 +150,9 @@ export function useCrossVmTokenBalance(params: UseCrossVmTokenBalanceArgs) {
       ? getCrossVmTokenBalance(chainIdResult.data as "testnet" | "mainnet")
       : "",
     args: (arg, t) => [
-      params.owner ? arg(params.owner, t.Address) : null,
+      params.owner
+        ? arg(params.owner, t.Address)
+        : arg(null, t.Optional(t.Address)),
       arg(
         "vaultIdentifier" in params && params.vaultIdentifier
           ? params.vaultIdentifier
