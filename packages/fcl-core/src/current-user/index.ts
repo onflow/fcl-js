@@ -33,8 +33,7 @@ export interface CurrentUserConfig {
   getStorageProvider?: () => Promise<StorageProvider>
 }
 
-export interface CurrentUserService extends CurrentUser {
-  (): CurrentUserService
+export interface CurrentUserServiceApi {
   authenticate: ({
     service,
     redir,
@@ -46,6 +45,10 @@ export interface CurrentUserService extends CurrentUser {
   subscribe: (callback: (user: CurrentUser) => void) => () => void
   snapshot: () => Promise<CurrentUser>
   resolveArgument: () => Promise<string>
+}
+
+export interface CurrentUserService extends CurrentUserServiceApi {
+  (): CurrentUserServiceApi
 }
 
 export interface AccountProofData {
