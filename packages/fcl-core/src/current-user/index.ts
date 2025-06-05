@@ -33,8 +33,8 @@ export interface CurrentUserConfig {
   getStorageProvider?: () => Promise<StorageProvider>
 }
 
-export interface CurrentUserFull extends CurrentUser {
-  (): CurrentUserFull
+export interface CurrentUserService extends CurrentUser {
+  (): CurrentUserService
   authenticate: ({
     service,
     redir,
@@ -563,7 +563,7 @@ const getSignUserMessage =
  * @description Creates the Current User object
  * @param {CurrentUserConfig} config Current User Configuration
  *  */
-const getCurrentUser = (config: CurrentUserConfig): CurrentUserFull => {
+const getCurrentUser = (config: CurrentUserConfig): CurrentUserService => {
   const currentUser = {
     authenticate: getAuthenticate(config),
     unauthenticate: getUnauthenticate(config),
