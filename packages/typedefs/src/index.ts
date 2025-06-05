@@ -303,8 +303,18 @@ export interface Service {
    * Service provider object
    */
   provider: Provider
-
+  /**
+   * Service parameters
+   */
   params: Record<string, string>
+  /**
+   * Service data
+   */
+  data?: Record<string, any>
+  /**
+   * Service headers
+   */
+  headers?: Record<string, string>
 }
 export interface Signature {
   /**
@@ -447,6 +457,14 @@ export interface Provider {
    * Indicates whether the Wallet provider is installed (if applicable).
    */
   is_installed?: boolean
+  /**
+   * Indicates whether the Wallet provider requires installation (if applicable).
+   */
+  requires_install?: boolean
+  /**
+   * The install link for the Wallet provider.
+   */
+  install_link?: string
 }
 export interface NodeVersionInfo {
   /**
