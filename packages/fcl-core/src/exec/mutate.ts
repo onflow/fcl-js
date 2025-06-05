@@ -1,48 +1,11 @@
+import type {AccountAuthorization} from "@onflow/sdk"
 import * as sdk from "@onflow/sdk"
-import {normalizeArgs} from "./utils/normalize-args"
-import {getCurrentUser} from "../current-user"
-import {prepTemplateOpts} from "./utils/prep-template-opts"
-import {preMutate} from "./utils/pre"
+import {CurrentUserService, getCurrentUser} from "../current-user"
 import {isNumber} from "../utils/is"
 import type {ArgsFn} from "./args"
-import type {
-  Account,
-  CompositeSignature,
-  CurrentUser,
-  Service,
-} from "@onflow/typedefs"
-import type {AccountAuthorization} from "@onflow/sdk"
-import {StorageProvider} from "../utils/storage"
-
-// TODO: Substitute with CurrentUser interface from current-user refactoring once merged
-export interface CurrentUserConfig {
-  platform: string
-  discovery?: object | undefined
-  getStorageProvider?: () => Promise<StorageProvider>
-}
-
-// TODO: Substitute with CurrentUser interface from current-user refactoring once merged
-export interface AuthenticationOptions {
-  service?: Service
-  redir?: boolean
-  forceReauth?: boolean
-}
-
-// TODO: Substitute with CurrentUser interface from current-user refactoring once merged
-export interface CurrentUserFull extends CurrentUser {
-  (): CurrentUserFull
-  authenticate: ({
-    service,
-    redir,
-    forceReauth,
-  }?: AuthenticationOptions) => Promise<CurrentUser>
-  unauthenticate: () => void
-  authorization: (account: Account) => Promise<Account>
-  signUserMessage: (msg: string) => Promise<CompositeSignature[]>
-  subscribe: (callback: (user: CurrentUser) => void) => () => void
-  snapshot: () => Promise<CurrentUser>
-  resolveArgument: () => Promise<string>
-}
+import {normalizeArgs} from "./utils/normalize-args"
+import {preMutate} from "./utils/pre"
+import {prepTemplateOpts} from "./utils/prep-template-opts"
 
 export interface MutateOptions {
   cadence?: string
@@ -61,9 +24,7 @@ export interface MutateOptions {
  *
  * @param currentUserOrConfig CurrentUser actor or configuration
  */
-export const getMutate = (
-  currentUserOrConfig: CurrentUserFull | CurrentUserConfig
-) => {
+export const getMutate = (currentUserOrConfig: CurrentUserService) => {
   /**
    * @description Allows you to submit transactions to the blockchain to potentially mutate the state.
    *

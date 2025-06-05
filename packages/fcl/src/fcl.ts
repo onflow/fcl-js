@@ -88,8 +88,7 @@ export const currentUser = getCurrentUser({
     )
   },
 })
-// TODO: Remove any once current-user refactoring is merged
-export const mutate = getMutate(currentUser as any)
+export const mutate = getMutate(currentUser)
 
 export const authenticate = (opts = {}) => currentUser().authenticate(opts)
 export const unauthenticate = () => currentUser().unauthenticate()
