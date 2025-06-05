@@ -7,12 +7,12 @@ import {parseUnits, formatUnits} from "viem/utils"
 interface UseCrossVmTokenBalanceArgs {
   owner?: string
   erc20AddressHexArg?: string
-  contractIdentifier?: `A.${string}.${string}`
+  vaultIdentifier?: string
   query?: Omit<UseQueryOptions<unknown, Error>, "queryKey" | "queryFn">
 }
 
 interface TokenBalance {
-  value: string
+  value: bigint
   formatted: string
   precision: number
 }
@@ -152,8 +152,8 @@ export function useCrossVmTokenBalance(params: UseCrossVmTokenBalanceArgs) {
     args: (arg, t) => [
       params.owner ? arg(params.owner, t.Address) : null,
       arg(
-        "contractIdentifier" in params && `${params.contractIdentifier}.Vault`
-          ? params.contractIdentifier
+        "vaultIdentifier" in params && params.vaultIdentifier
+          ? params.vaultIdentifier
           : null,
         t.Optional(t.String)
       ),
@@ -170,7 +170,7 @@ export function useCrossVmTokenBalance(params: UseCrossVmTokenBalanceArgs) {
         (params.query?.enabled ?? true) &&
         !!chainIdResult.data &&
         !!params.owner &&
-        (!!params.contractIdentifier || !!params.erc20AddressHexArg),
+        (!!params.vaultIdentifier || !!params.erc20AddressHexArg),
     },
   })
 
