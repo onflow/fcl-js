@@ -1,5 +1,4 @@
 import * as fcl from "@onflow/fcl"
-import {bytesToHex} from "viem"
 import {
   UseMutateAsyncFunction,
   UseMutateFunction,
@@ -9,56 +8,29 @@ import {
 } from "@tanstack/react-query"
 import {useFlowChainId} from "./useFlowChainId"
 import {useFlowQueryClient} from "../provider/FlowQueryClient"
-import {
-  CallOutcome,
-  encodeCalls,
-  EvmBatchCall,
-  EvmTransactionExecutedData,
-} from "./useCrossVmBatchTransaction"
+import {encodeCalls, EvmBatchCall} from "./useCrossVmBatchTransaction"
 import {CONTRACT_ADDRESSES} from "../constants"
 
-export interface UseCrossVmSpendNftArgs {
+export interface UseCrossVmSpendNftTxArgs {
   mutation?: Omit<
-    UseMutationOptions<
-      {
-        txId: string
-        results: CallOutcome[]
-      },
-      Error,
-      {
-        nftIdentifier: string
-        calls: EvmBatchCall[]
-      }
-    >,
+    UseMutationOptions<string, Error, UseCrossVmSpendNftTxMutateArgs>,
     "mutationFn"
   >
 }
 
-export interface UseCrossVmSpendNftMutateArgs {
+export interface UseCrossVmSpendNftTxMutateArgs {
   nftIdentifier: string
   nftIds: string[]
   calls: EvmBatchCall[]
 }
 
-export interface UseCrossVmSpendNftMutateResult {
-  txId: string
-  results: CallOutcome[]
-}
-
-export interface UseCrossVmSpendNftResult
-  extends Omit<
-    UseMutationResult<UseCrossVmSpendNftMutateResult, Error>,
-    "mutate" | "mutateAsync"
-  > {
-  sendCrossVmSpendNft: UseMutateFunction<
-    UseCrossVmSpendNftMutateResult,
+export interface UseCrossVmSpendNftTxResult
+  extends Omit<UseMutationResult<string, Error>, "mutate" | "mutateAsync"> {
+  spendNft: UseMutateFunction<string, Error, UseCrossVmSpendNftTxMutateArgs>
+  spendNftAsync: UseMutateAsyncFunction<
+    string,
     Error,
-    UseCrossVmSpendNftMutateArgs
-  >
-  sendCrossVmSpendNftAsync: UseMutateAsyncFunction<
-    UseCrossVmSpendNftMutateResult,
-    Error,
-    UseCrossVmSpendNftMutateArgs
+    UseCrossVmSpendNftTxMutateArgs
   >
 }
 
@@ -106,7 +78,6 @@ transaction(
     gasLimits: [UInt64],
     values: [UInt]
 ) {
-
     let nftType: Type
     let collection: auth(NonFungibleToken.Withdraw) &{NonFungibleToken.Collection}
     let coa: auth(EVM.Bridge, EVM.Call) &EVM.CadenceOwnedAccount
@@ -190,7 +161,6 @@ transaction(
     }
 
     execute {
-
         if self.requiresOnboarding {
             // Onboard the NFT to the bridge
             FlowEVMBridge.onboardByType(
@@ -240,15 +210,16 @@ transaction(
 }
 
 /**
- * Hook to send an EVM batch transaction using a Cadence-compatible wallet.  This function will
- * bundle multiple EVM calls into one atomic Cadence transaction and return both the Cadence
- * transaction ID as well as the result of each EVM call.
+ * Hook to send a cross-VM NFT spend transaction. This function will
+ * bundle multiple EVM calls into one atomic Cadence transaction and return the transaction ID.
  *
- * @returns The query mutation object used to send the transaction and get the result.
+ * Use `useCrossVmSpendNftStatus` to watch the status of the transaction and get the transaction id + result of each EVM call.
+ *
+ * @returns The mutation object used to send the transaction.
  */
 export function useCrossVmSpendNft({
   mutation: mutationOptions = {},
-}: UseCrossVmSpendNftArgs = {}): UseCrossVmSpendNftResult {
+}: UseCrossVmSpendNftTxArgs = {}): UseCrossVmSpendNftTxResult {
   const chainId = useFlowChainId()
   const cadenceTx = chainId.data
     ? getCrossVmSpendNftransaction(chainId.data)
@@ -261,7 +232,7 @@ export function useCrossVmSpendNft({
         nftIdentifier,
         nftIds,
         calls,
-      }: UseCrossVmSpendNftMutateArgs) => {
+      }: UseCrossVmSpendNftTxMutateArgs) => {
         if (!cadenceTx) {
           throw new Error("No current chain found")
         }
@@ -292,50 +263,7 @@ export function useCrossVmSpendNft({
           limit: 9999,
         })
 
-        let txResult
-        try {
-          txResult = await fcl.tx(txId).onceExecuted()
-        } catch (txError) {
-          // If we land here, the transaction likely reverted.
-          // We can return partial or "failed" outcomes for all calls.
-          return {
-            txId,
-            results: calls.map(() => ({
-              status: "failed" as const,
-              hash: undefined,
-              errorMessage: "Transaction reverted",
-            })),
-          }
-        }
-
-        // Filter for TransactionExecuted events
-        const executedEvents = txResult.events.filter((e: any) =>
-          e.type.includes("TransactionExecuted")
-        )
-
-        // Build a full outcomes array for every call.
-        // For any call index where no event exists, mark it as "skipped".
-        const results: CallOutcome[] = calls.map((_, index) => {
-          const eventData = executedEvents[index]
-            ?.data as EvmTransactionExecutedData
-          if (eventData) {
-            return {
-              hash: bytesToHex(
-                Uint8Array.from(
-                  eventData.hash.map((x: string) => parseInt(x, 10))
-                )
-              ),
-              status: eventData.errorCode === "0" ? "passed" : "failed",
-              errorMessage: eventData.errorMessage,
-            }
-          } else {
-            return {
-              status: "skipped",
-            }
-          }
-        })
-
-        return {txId, results}
+        return txId
       },
       retry: false,
       ...mutationOptions,
@@ -343,15 +271,11 @@ export function useCrossVmSpendNft({
     queryClient
   )
 
-  const {
-    mutate: sendCrossVmSpendNft,
-    mutateAsync: sendCrossVmSpendNftAsync,
-    ...rest
-  } = mutation
+  const {mutate: spendNft, mutateAsync: spendNftAsync, ...rest} = mutation
 
   return {
-    sendCrossVmSpendNft,
-    sendCrossVmSpendNftAsync,
+    spendNft,
+    spendNftAsync,
     ...rest,
   }
 }
