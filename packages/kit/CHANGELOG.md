@@ -1,5 +1,11 @@
 # @onflow/kit
 
+## 0.3.1
+
+### Patch Changes
+
+- [#2491](https://github.com/onflow/fcl-js/pull/2491) [`ff07e0ea38845f188f0bbbcb9a365cad96cfb8b7`](https://github.com/onflow/fcl-js/commit/ff07e0ea38845f188f0bbbcb9a365cad96cfb8b7) Thanks [@jribbink](https://github.com/jribbink)! - Export `useCrossVmTokenBalance` hook
+
 ## 0.3.0
 
 ### Minor Changes
