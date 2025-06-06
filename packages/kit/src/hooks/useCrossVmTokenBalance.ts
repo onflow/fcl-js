@@ -6,7 +6,7 @@ import {parseUnits, formatUnits} from "viem/utils"
 
 interface UseCrossVmTokenBalanceArgs {
   owner?: string
-  erc20AddressHexArg?: string
+  erc20Address?: string
   vaultIdentifier?: string
   query?: Omit<UseQueryOptions<unknown, Error>, "queryKey" | "queryFn">
 }
@@ -25,6 +25,7 @@ interface UseCrossVmTokenBalanceData {
 
 const getCrossVmTokenBalance = (network: "testnet" | "mainnet") => `
 import EVM from ${CONTRACT_ADDRESSES[network].EVM}
+import FlowToken from ${CONTRACT_ADDRESSES[network].FlowToken}
 import FungibleToken from ${CONTRACT_ADDRESSES[network].FungibleToken}
 import FlowEVMBridgeUtils from ${CONTRACT_ADDRESSES[network].FlowEVMBridgeUtils}
 import FlowEVMBridgeConfig from ${CONTRACT_ADDRESSES[network].FlowEVMBridgeConfig}
@@ -130,6 +131,10 @@ access(all) fun main(
                 evmContractAddress: EVM.addressFromString(erc20Address)
             )
         }
+        
+        if compType == Type<@FlowToken.Vault>() {
+            coaBalance = coaBalance! + UInt256(coa.address().balance().inAttoFLOW())
+        }
     }
 
     let balances = [decimals, cadenceBalance, coaBalance]
@@ -160,8 +165,8 @@ export function useCrossVmTokenBalance(params: UseCrossVmTokenBalanceArgs) {
         t.Optional(t.String)
       ),
       arg(
-        "erc20AddressHexArg" in params && params.erc20AddressHexArg
-          ? params.erc20AddressHexArg
+        "erc20Address" in params && params.erc20Address
+          ? params.erc20Address
           : null,
         t.Optional(t.String)
       ),
@@ -172,7 +177,7 @@ export function useCrossVmTokenBalance(params: UseCrossVmTokenBalanceArgs) {
         (params.query?.enabled ?? true) &&
         !!chainIdResult.data &&
         !!params.owner &&
-        (!!params.vaultIdentifier || !!params.erc20AddressHexArg),
+        (!!params.vaultIdentifier || !!params.erc20Address),
     },
   })
 
