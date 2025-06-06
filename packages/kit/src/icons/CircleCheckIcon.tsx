@@ -1,6 +1,8 @@
 import React from "react"
 
-export const CircleCheckIcon: React.FC<{className?: string}> = ({className}) => (
+export const CircleCheckIcon: React.FC<{className?: string}> = ({
+  className,
+}) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="24"
@@ -16,4 +18,4 @@ export const CircleCheckIcon: React.FC<{className?: string}> = ({className}) => 
     <circle cx="12" cy="12" r="10" />
     <path d="m9 12 2 2 4-4" />
   </svg>
-) 
+)
