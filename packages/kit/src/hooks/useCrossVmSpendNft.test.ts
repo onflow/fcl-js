@@ -2,10 +2,9 @@ import {renderHook, act, waitFor} from "@testing-library/react"
 import * as fcl from "@onflow/fcl"
 import {FlowProvider} from "../provider"
 import {
-  encodeCalls,
-  getCadenceBatchTransaction,
-  useCrossVmBatchTransaction,
-} from "./useCrossVmBatchTransaction"
+  getCrossVmSpendNftransaction,
+  useCrossVmSpendNft,
+} from "./useCrossVmSpendNft"
 import {useFlowChainId} from "./useFlowChainId"
 
 jest.mock("@onflow/fcl", () => require("../__mocks__/fcl").default)
@@ -51,39 +50,19 @@ describe("useBatchEvmTransaction", () => {
     } as any)
   })
 
-  describe("encodeCalls", () => {
-    it("should encode calls correctly", () => {
-      const result = encodeCalls(mockCalls as any)
-
-      expect(result).toEqual([
-        {
-          to: "0x123",
-          data: "",
-          gasLimit: "100000",
-          value: "0",
-        },
-      ])
-    })
-  })
-
-  describe("getCadenceBatchTransaction", () => {
+  describe("getCrossVmSpendNftTransaction", () => {
     it("should return correct cadence for mainnet", () => {
-      const result = getCadenceBatchTransaction("mainnet")
+      const result = getCrossVmSpendNftransaction("mainnet")
       expect(result).toContain("import EVM from 0xe467b9dd11fa00df")
     })
 
     it("should return correct cadence for testnet", () => {
-      const result = getCadenceBatchTransaction("testnet")
+      const result = getCrossVmSpendNftransaction("testnet")
       expect(result).toContain("import EVM from 0x8c5303eaa26202d6")
     })
 
-    it("should return correct cadence for local", () => {
-      const result = getCadenceBatchTransaction("local")
-      expect(result).toContain("import EVM from 0xf8d6e0586b0a20c0")
-    })
-
     it("should throw error for unsupported chain", () => {
-      expect(() => getCadenceBatchTransaction("unsupported")).toThrow(
+      expect(() => getCrossVmSpendNftransaction("unsupported")).toThrow(
         "Unsupported chain: unsupported"
       )
     })
@@ -99,76 +78,24 @@ describe("useBatchEvmTransaction", () => {
       let result: any
       let rerender: any
       await act(async () => {
-        ;({result, rerender} = renderHook(useCrossVmBatchTransaction, {
+        ;({result, rerender} = renderHook(useCrossVmSpendNft, {
           wrapper: FlowProvider,
         }))
       })
 
       await act(async () => {
-        await result.current.sendBatchTransaction({calls: mockCalls})
+        await result.current.spendNft({
+          calls: mockCalls,
+          nftIdentifier: "nft123",
+          nftIds: ["1", "2"],
+        })
         rerender()
       })
 
       await waitFor(() => result.current.isPending === false)
 
       expect(result.current.isError).toBe(false)
-      expect(result.current.data?.txId).toBe(mockTxId)
-      expect(result.current.data?.results).toHaveLength(1)
-      expect(result.current.data?.results[0].status).toBe("passed")
-    })
-
-    test("should handle failed transaction", async () => {
-      jest.mocked(fcl.mutate).mockResolvedValue(mockTxId)
-      jest.mocked(fcl.tx).mockReturnValue({
-        onceExecuted: jest
-          .fn()
-          .mockRejectedValue(new Error("Transaction failed")),
-      } as any)
-
-      let hookResult: any
-
-      await act(async () => {
-        const {result} = renderHook(useCrossVmBatchTransaction, {
-          wrapper: FlowProvider,
-        })
-        hookResult = result
-      })
-
-      await act(async () => {
-        await hookResult.current.sendBatchTransaction({calls: mockCalls})
-      })
-
-      await waitFor(() => expect(hookResult.current.isPending).toBe(false))
-
-      expect(hookResult.current.isError).toBe(false)
-      expect(hookResult.current.data?.results[0].status).toBe("failed")
-      expect(hookResult.current.data?.results[0].errorMessage).toBe(
-        "Transaction reverted"
-      )
-    })
-
-    test("should handle skipped calls", async () => {
-      jest.mocked(fcl.mutate).mockResolvedValue(mockTxId)
-      jest.mocked(fcl.tx).mockReturnValue({
-        onceExecuted: jest.fn().mockResolvedValue({events: []}),
-      } as any)
-
-      let hookResult: any
-
-      await act(async () => {
-        const {result} = renderHook(() => useCrossVmBatchTransaction(), {
-          wrapper: FlowProvider,
-        })
-        hookResult = result
-      })
-
-      await act(async () => {
-        await hookResult.current.sendBatchTransaction({calls: mockCalls})
-      })
-
-      await waitFor(() => expect(hookResult.current.isPending).toBe(false))
-
-      expect(hookResult.current.data?.results[0].status).toBe("skipped")
+      expect(result.current.data).toBe(mockTxId)
     })
 
     it("should handle missing chain ID", async () => {
@@ -180,14 +107,14 @@ describe("useBatchEvmTransaction", () => {
       let hookResult: any
 
       await act(async () => {
-        const {result} = renderHook(() => useCrossVmBatchTransaction(), {
+        const {result} = renderHook(() => useCrossVmSpendNft(), {
           wrapper: FlowProvider,
         })
         hookResult = result
       })
 
       await act(async () => {
-        await hookResult.current.sendBatchTransaction({calls: mockCalls})
+        await hookResult.current.spendNft({calls: mockCalls})
       })
 
       await waitFor(() => expect(hookResult.current.isError).toBe(true))
@@ -203,14 +130,14 @@ describe("useBatchEvmTransaction", () => {
       let hookResult: any
 
       await act(async () => {
-        const {result} = renderHook(() => useCrossVmBatchTransaction(), {
+        const {result} = renderHook(() => useCrossVmSpendNft(), {
           wrapper: FlowProvider,
         })
         hookResult = result
       })
 
       await act(async () => {
-        await hookResult.current.sendBatchTransaction(mockCalls)
+        await hookResult.current.spendNft(mockCalls)
       })
 
       await waitFor(() => expect(hookResult.current.isError).toBe(true))
@@ -223,14 +150,18 @@ describe("useBatchEvmTransaction", () => {
       let hookResult: any
 
       await act(async () => {
-        const {result} = renderHook(() => useCrossVmBatchTransaction(), {
+        const {result} = renderHook(() => useCrossVmSpendNft(), {
           wrapper: FlowProvider,
         })
         hookResult = result
       })
 
       await act(async () => {
-        await hookResult.current.sendBatchTransaction({calls: mockCalls})
+        await hookResult.current.spendNft({
+          calls: mockCalls,
+          nftIdentifier: "nft123",
+          nftIds: ["1", "2"],
+        })
       })
 
       await waitFor(() => expect(hookResult.current.isError).toBe(true))
