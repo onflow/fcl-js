@@ -35,7 +35,7 @@ describe("useCrossVmTokenBalance", () => {
       result = renderHook(useCrossVmTokenBalance, {
         wrapper: FlowProvider,
         initialProps: {
-          contractIdentifier: "A.1234.Token",
+          vaultIdentifier: "A.1234.Token.Vault",
           owner: "0x5678",
         },
       })
@@ -81,7 +81,7 @@ describe("useCrossVmTokenBalance", () => {
       result = renderHook(useCrossVmTokenBalance, {
         wrapper: FlowProvider,
         initialProps: {
-          contractIdentifier: "A.1234.Token",
+          vaultIdentifier: "A.1234.Token.Vault",
           owner: "0x5678",
         },
       })
