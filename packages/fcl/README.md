@@ -136,7 +136,7 @@ const txId = await fcl.mutate({
 
 ## Typescript Support
 
-FCL JS supports TypeScript. If you need to import specific types, you can do so by importing them from this package.
+FCL JS comes with TypeScript support. If you need to use specific types, you can import them directly from the @onflow/fcl package.
 
 ```typescript
 import {CurrentUser} from "@onflow/fcl"
