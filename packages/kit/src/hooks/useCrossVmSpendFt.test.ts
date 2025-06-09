@@ -12,7 +12,7 @@ jest.mock("./useFlowChainId", () => ({
   useFlowChainId: jest.fn(),
 }))
 
-describe("useBatchEvmTransaction", () => {
+describe("useCrossVmSpendFt", () => {
   const mockCalls = [
     {
       address: "0x123",
