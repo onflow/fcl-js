@@ -8,10 +8,6 @@ import {
 import {useFlowChainId} from "./useFlowChainId"
 
 jest.mock("@onflow/fcl", () => require("../__mocks__/fcl").default)
-jest.mock("viem", () => ({
-  encodeFunctionData: jest.fn(),
-  bytesToHex: jest.fn(x => `0x${x}`),
-}))
 jest.mock("./useFlowChainId", () => ({
   useFlowChainId: jest.fn(),
 }))

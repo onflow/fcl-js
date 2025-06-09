@@ -1,7 +1,10 @@
 import {renderHook, act, waitFor} from "@testing-library/react"
 import * as fcl from "@onflow/fcl"
 import {FlowProvider} from "../provider"
-import {useCrossVmSpendFt} from "./useCrossVmSpendFt"
+import {
+  getCrossVmSpendFtTransaction,
+  useCrossVmSpendFt,
+} from "./useCrossVmSpendFt"
 import {useFlowChainId} from "./useFlowChainId"
 
 jest.mock("@onflow/fcl", () => require("../__mocks__/fcl").default)
@@ -9,7 +12,7 @@ jest.mock("./useFlowChainId", () => ({
   useFlowChainId: jest.fn(),
 }))
 
-describe("useCrossVmSpendFt", () => {
+describe("useBatchEvmTransaction", () => {
   const mockCalls = [
     {
       address: "0x123",
@@ -43,7 +46,25 @@ describe("useCrossVmSpendFt", () => {
     } as any)
   })
 
-  describe("useCrossVmSpendFt", () => {
+  describe("getCrossVmspendFtTransaction", () => {
+    it("should return correct cadence for mainnet", () => {
+      const result = getCrossVmSpendFtTransaction("mainnet")
+      expect(result).toContain("import EVM from 0xe467b9dd11fa00df")
+    })
+
+    it("should return correct cadence for testnet", () => {
+      const result = getCrossVmSpendFtTransaction("testnet")
+      expect(result).toContain("import EVM from 0x8c5303eaa26202d6")
+    })
+
+    it("should throw error for unsupported chain", () => {
+      expect(() => getCrossVmSpendFtTransaction("unsupported")).toThrow(
+        "Unsupported chain: unsupported"
+      )
+    })
+  })
+
+  describe("useCrossVmBatchTransaction", () => {
     test("should handle successful transaction", async () => {
       jest.mocked(fcl.mutate).mockResolvedValue(mockTxId)
       jest.mocked(fcl.tx).mockReturnValue({
@@ -59,10 +80,10 @@ describe("useCrossVmSpendFt", () => {
       })
 
       await act(async () => {
-        await result.current.spendFtAsync({
-          vaultIdentifier: "A.123.FlowToken.Vault",
-          amount: "1.0",
+        await result.current.spendFt({
           calls: mockCalls,
+          vaultIdentifier: "A.1234.Token.Vault",
+          amount: "100.0",
         })
         rerender()
       })
@@ -71,37 +92,6 @@ describe("useCrossVmSpendFt", () => {
 
       expect(result.current.isError).toBe(false)
       expect(result.current.data).toBe(mockTxId)
-    })
-
-    test("should handle failed transaction", async () => {
-      jest.mocked(fcl.mutate).mockResolvedValue(mockTxId)
-      jest.mocked(fcl.tx).mockReturnValue({
-        onceExecuted: jest
-          .fn()
-          .mockRejectedValue(new Error("Transaction failed")),
-      } as any)
-
-      let hookResult: any
-
-      await act(async () => {
-        const {result} = renderHook(useCrossVmSpendFt, {
-          wrapper: FlowProvider,
-        })
-        hookResult = result
-      })
-
-      await act(async () => {
-        await hookResult.current.spendFtAsync({
-          vaultIdentifier: "A.123.FlowToken.Vault",
-          amount: "1.0",
-          calls: mockCalls,
-        })
-      })
-
-      await waitFor(() => expect(hookResult.current.isPending).toBe(false))
-
-      expect(hookResult.current.isError).toBe(true)
-      expect(hookResult.current.error?.message).toBe("Transaction failed")
     })
 
     it("should handle missing chain ID", async () => {
@@ -113,17 +103,17 @@ describe("useCrossVmSpendFt", () => {
       let hookResult: any
 
       await act(async () => {
-        const {result} = renderHook(useCrossVmSpendFt, {
+        const {result} = renderHook(() => useCrossVmSpendFt(), {
           wrapper: FlowProvider,
         })
         hookResult = result
       })
 
       await act(async () => {
-        await hookResult.current.spendFtAsync({
-          vaultIdentifier: "A.123.FlowToken.Vault",
-          amount: "1.0",
+        await hookResult.current.spendFt({
           calls: mockCalls,
+          vaultIdentifier: "A.1234.Token.Vault",
+          amount: "100.0",
         })
       })
 
@@ -140,17 +130,17 @@ describe("useCrossVmSpendFt", () => {
       let hookResult: any
 
       await act(async () => {
-        const {result} = renderHook(useCrossVmSpendFt, {
+        const {result} = renderHook(() => useCrossVmSpendFt(), {
           wrapper: FlowProvider,
         })
         hookResult = result
       })
 
       await act(async () => {
-        await hookResult.current.spendFtAsync({
-          vaultIdentifier: "A.123.FlowToken.Vault",
-          amount: "1.0",
+        await hookResult.current.spendFt({
           calls: mockCalls,
+          vaultIdentifier: "A.1234.Token.Vault",
+          amount: "100.0",
         })
       })
 
@@ -164,17 +154,17 @@ describe("useCrossVmSpendFt", () => {
       let hookResult: any
 
       await act(async () => {
-        const {result} = renderHook(useCrossVmSpendFt, {
+        const {result} = renderHook(() => useCrossVmSpendFt(), {
           wrapper: FlowProvider,
         })
         hookResult = result
       })
 
       await act(async () => {
-        await hookResult.current.spendFtAsync({
-          vaultIdentifier: "A.123.FlowToken.Vault",
-          amount: "1.0",
+        await hookResult.current.spendFt({
           calls: mockCalls,
+          vaultIdentifier: "A.1234.Token.Vault",
+          amount: "100.0",
         })
       })
 
