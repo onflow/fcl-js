@@ -1,5 +1,4 @@
 import * as fcl from "@onflow/fcl"
-import {bytesToHex} from "viem"
 import {
   UseMutateAsyncFunction,
   UseMutateFunction,
@@ -9,12 +8,7 @@ import {
 } from "@tanstack/react-query"
 import {useFlowChainId} from "./useFlowChainId"
 import {useFlowQueryClient} from "../provider/FlowQueryClient"
-import {
-  CallOutcome,
-  encodeCalls,
-  EvmBatchCall,
-  EvmTransactionExecutedData,
-} from "./useCrossVmBatchTransaction"
+import {encodeCalls, EvmBatchCall} from "./useCrossVmBatchTransaction"
 import {CONTRACT_ADDRESSES} from "../constants"
 
 export interface UseCrossVmSpendFtArgs {
