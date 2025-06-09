@@ -9,9 +9,10 @@ export class TransactionError extends Error {
   private constructor(message: string, code: FvmErrorCode) {
     super(message)
     this.code = code
-    this.type = String(
-      FvmErrorCode[code as unknown as keyof typeof FvmErrorCode]
-    )
+    this.type =
+      Object.keys(FvmErrorCode).find(
+        key => FvmErrorCode[key as keyof typeof FvmErrorCode] === code
+      ) || "UNKNOWN_ERROR"
   }
 
   static fromErrorMessage(errorMessage: string): TransactionError {
