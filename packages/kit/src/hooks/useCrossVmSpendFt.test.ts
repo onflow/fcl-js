@@ -2,9 +2,9 @@ import {renderHook, act, waitFor} from "@testing-library/react"
 import * as fcl from "@onflow/fcl"
 import {FlowProvider} from "../provider"
 import {
-  getCrossVmSpendNftransaction,
-  useCrossVmSpendNft,
-} from "./useCrossVmSpendNft"
+  getCrossVmSpendFtTransaction,
+  useCrossVmSpendFt,
+} from "./useCrossVmSpendFt"
 import {useFlowChainId} from "./useFlowChainId"
 
 jest.mock("@onflow/fcl", () => require("../__mocks__/fcl").default)
@@ -12,7 +12,7 @@ jest.mock("./useFlowChainId", () => ({
   useFlowChainId: jest.fn(),
 }))
 
-describe("useBatchEvmTransaction", () => {
+describe("useCrossVmSpendFt", () => {
   const mockCalls = [
     {
       address: "0x123",
@@ -46,19 +46,19 @@ describe("useBatchEvmTransaction", () => {
     } as any)
   })
 
-  describe("getCrossVmSpendNftTransaction", () => {
+  describe("getCrossVmspendFtTransaction", () => {
     it("should return correct cadence for mainnet", () => {
-      const result = getCrossVmSpendNftransaction("mainnet")
+      const result = getCrossVmSpendFtTransaction("mainnet")
       expect(result).toContain("import EVM from 0xe467b9dd11fa00df")
     })
 
     it("should return correct cadence for testnet", () => {
-      const result = getCrossVmSpendNftransaction("testnet")
+      const result = getCrossVmSpendFtTransaction("testnet")
       expect(result).toContain("import EVM from 0x8c5303eaa26202d6")
     })
 
     it("should throw error for unsupported chain", () => {
-      expect(() => getCrossVmSpendNftransaction("unsupported")).toThrow(
+      expect(() => getCrossVmSpendFtTransaction("unsupported")).toThrow(
         "Unsupported chain: unsupported"
       )
     })
@@ -74,16 +74,16 @@ describe("useBatchEvmTransaction", () => {
       let result: any
       let rerender: any
       await act(async () => {
-        ;({result, rerender} = renderHook(useCrossVmSpendNft, {
+        ;({result, rerender} = renderHook(useCrossVmSpendFt, {
           wrapper: FlowProvider,
         }))
       })
 
       await act(async () => {
-        await result.current.spendNft({
+        await result.current.spendFt({
           calls: mockCalls,
-          nftIdentifier: "nft123",
-          nftIds: ["1", "2"],
+          vaultIdentifier: "A.1234.Token.Vault",
+          amount: "100.0",
         })
         rerender()
       })
@@ -103,14 +103,18 @@ describe("useBatchEvmTransaction", () => {
       let hookResult: any
 
       await act(async () => {
-        const {result} = renderHook(() => useCrossVmSpendNft(), {
+        const {result} = renderHook(() => useCrossVmSpendFt(), {
           wrapper: FlowProvider,
         })
         hookResult = result
       })
 
       await act(async () => {
-        await hookResult.current.spendNft({calls: mockCalls})
+        await hookResult.current.spendFt({
+          calls: mockCalls,
+          vaultIdentifier: "A.1234.Token.Vault",
+          amount: "100.0",
+        })
       })
 
       await waitFor(() => expect(hookResult.current.isError).toBe(true))
@@ -126,14 +130,18 @@ describe("useBatchEvmTransaction", () => {
       let hookResult: any
 
       await act(async () => {
-        const {result} = renderHook(() => useCrossVmSpendNft(), {
+        const {result} = renderHook(() => useCrossVmSpendFt(), {
           wrapper: FlowProvider,
         })
         hookResult = result
       })
 
       await act(async () => {
-        await hookResult.current.spendNft(mockCalls)
+        await hookResult.current.spendFt({
+          calls: mockCalls,
+          vaultIdentifier: "A.1234.Token.Vault",
+          amount: "100.0",
+        })
       })
 
       await waitFor(() => expect(hookResult.current.isError).toBe(true))
@@ -146,17 +154,17 @@ describe("useBatchEvmTransaction", () => {
       let hookResult: any
 
       await act(async () => {
-        const {result} = renderHook(() => useCrossVmSpendNft(), {
+        const {result} = renderHook(() => useCrossVmSpendFt(), {
           wrapper: FlowProvider,
         })
         hookResult = result
       })
 
       await act(async () => {
-        await hookResult.current.spendNft({
+        await hookResult.current.spendFt({
           calls: mockCalls,
-          nftIdentifier: "nft123",
-          nftIds: ["1", "2"],
+          vaultIdentifier: "A.1234.Token.Vault",
+          amount: "100.0",
         })
       })
 
