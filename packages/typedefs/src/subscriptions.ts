@@ -9,14 +9,17 @@ import {
   TransactionStatus,
 } from "."
 
-export enum SubscriptionTopic {
-  BLOCKS = "blocks",
-  BLOCK_HEADERS = "block_headers",
-  BLOCK_DIGESTS = "block_digests",
-  ACCOUNT_STATUSES = "account_statuses",
-  TRANSACTION_STATUSES = "transaction_statuses",
-  EVENTS = "events",
-}
+export const SubscriptionTopic = {
+  BLOCKS: "blocks",
+  BLOCK_HEADERS: "block_headers",
+  BLOCK_DIGESTS: "block_digests",
+  ACCOUNT_STATUSES: "account_statuses",
+  TRANSACTION_STATUSES: "transaction_statuses",
+  EVENTS: "events",
+} as const
+
+export type SubscriptionTopic =
+  (typeof SubscriptionTopic)[keyof typeof SubscriptionTopic]
 
 export type SubscriptionData<T extends SubscriptionTopic> =
   SubscriptionDataMap[T]

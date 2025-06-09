@@ -5,9 +5,9 @@ import {
 } from "@onflow/typedefs"
 import {createSubscriptionHandler} from "./types"
 
-type EventsArgs = SubscriptionArgs<SubscriptionTopic.EVENTS>
+type EventsArgs = SubscriptionArgs<typeof SubscriptionTopic.EVENTS>
 
-type EventsData = RawSubscriptionData<SubscriptionTopic.EVENTS>
+type EventsData = RawSubscriptionData<typeof SubscriptionTopic.EVENTS>
 
 export type EventsArgsDto = (
   | {
@@ -37,7 +37,7 @@ type EventsDataDto = {
 }
 
 export const eventsHandler = createSubscriptionHandler<{
-  Topic: SubscriptionTopic.EVENTS
+  Topic: typeof SubscriptionTopic.EVENTS
   Args: EventsArgs
   Data: EventsData
   ArgsDto: EventsArgsDto

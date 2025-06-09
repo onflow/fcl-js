@@ -60,19 +60,24 @@ export interface AccountKey {
   revoked: boolean
 }
 
-export enum SignatureAlgorithm {
-  ECDSA_P256 = 1,
-  ECDSA_secp256k1 = 2,
-  BLS_BLS12_381 = 3,
-}
+export const SignatureAlgorithm = {
+  ECDSA_P256: 1,
+  ECDSA_secp256k1: 2,
+  BLS_BLS12_381: 3,
+} as const
 
-export enum HashAlgorithm {
-  SHA2_256 = 1,
-  SHA2_384 = 2,
-  SHA3_256 = 3,
-  SHA3_384 = 4,
-  KMAC128_BLS_BLS12_381 = 5,
-}
+export type SignatureAlgorithm =
+  (typeof SignatureAlgorithm)[keyof typeof SignatureAlgorithm]
+
+export const HashAlgorithm = {
+  SHA2_256: 1,
+  SHA2_384: 2,
+  SHA3_256: 3,
+  SHA3_384: 4,
+  KMAC128_BLS_BLS12_381: 5,
+} as const
+
+export type HashAlgorithm = (typeof HashAlgorithm)[keyof typeof HashAlgorithm]
 
 export interface Block {
   /**
@@ -403,14 +408,18 @@ export interface TransactionStatus {
 /**
  * The execution status of the transaction.
  */
-export enum TransactionExecutionStatus {
-  UNKNOWN = 0,
-  PENDING = 1,
-  FINALIZED = 2,
-  EXECUTED = 3,
-  SEALED = 4,
-  EXPIRED = 5,
-}
+export const TransactionExecutionStatus = {
+  UNKNOWN: 0,
+  PENDING: 1,
+  FINALIZED: 2,
+  EXECUTED: 3,
+  SEALED: 4,
+  EXPIRED: 5,
+} as const
+
+export type TransactionExecutionStatus =
+  (typeof TransactionExecutionStatus)[keyof typeof TransactionExecutionStatus]
+
 /*
  * The Provider type describes a Wallet Provider associated with a specific Service.
  */
