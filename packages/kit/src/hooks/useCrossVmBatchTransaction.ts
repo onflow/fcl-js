@@ -1,5 +1,5 @@
 import * as fcl from "@onflow/fcl"
-import {Abi, bytesToHex, encodeFunctionData} from "viem"
+import {Abi, encodeFunctionData} from "viem"
 import {
   UseMutateAsyncFunction,
   UseMutateFunction,
@@ -53,28 +53,6 @@ export interface EvmBatchCall {
   gasLimit?: bigint
   // The value to send with the call
   value?: bigint
-}
-
-export interface CallOutcome {
-  status: "passed" | "failed" | "skipped"
-  hash?: string
-  errorMessage?: string
-}
-
-export interface EvmTransactionExecutedData {
-  hash: string[]
-  index: string
-  type: string
-  payload: string[]
-  errorCode: string
-  errorMessage: string
-  gasConsumed: string
-  contractAddress: string
-  logs: string[]
-  blockHeight: string
-  returnedData: string[]
-  precompiledCalls: string[]
-  stateUpdateChecksum: string
 }
 
 export function encodeCalls(
