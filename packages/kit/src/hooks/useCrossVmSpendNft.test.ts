@@ -61,11 +61,6 @@ describe("useBatchEvmTransaction", () => {
       expect(result).toContain("import EVM from 0x8c5303eaa26202d6")
     })
 
-    it("should return correct cadence for local", () => {
-      const result = getCrossVmSpendNftransaction("local")
-      expect(result).toContain("import EVM from 0xf8d6e0586b0a20c0")
-    })
-
     it("should throw error for unsupported chain", () => {
       expect(() => getCrossVmSpendNftransaction("unsupported")).toThrow(
         "Unsupported chain: unsupported"
@@ -89,70 +84,18 @@ describe("useBatchEvmTransaction", () => {
       })
 
       await act(async () => {
-        await result.current.sendBatchTransaction({calls: mockCalls})
+        await result.current.spendNft({
+          calls: mockCalls,
+          nftIdentifier: "nft123",
+          nftIds: ["1", "2"],
+        })
         rerender()
       })
 
       await waitFor(() => result.current.isPending === false)
 
       expect(result.current.isError).toBe(false)
-      expect(result.current.data?.txId).toBe(mockTxId)
-      expect(result.current.data?.results).toHaveLength(1)
-      expect(result.current.data?.results[0].status).toBe("passed")
-    })
-
-    test("should handle failed transaction", async () => {
-      jest.mocked(fcl.mutate).mockResolvedValue(mockTxId)
-      jest.mocked(fcl.tx).mockReturnValue({
-        onceExecuted: jest
-          .fn()
-          .mockRejectedValue(new Error("Transaction failed")),
-      } as any)
-
-      let hookResult: any
-
-      await act(async () => {
-        const {result} = renderHook(useCrossVmSpendNft, {
-          wrapper: FlowProvider,
-        })
-        hookResult = result
-      })
-
-      await act(async () => {
-        await hookResult.current.sendBatchTransaction({calls: mockCalls})
-      })
-
-      await waitFor(() => expect(hookResult.current.isPending).toBe(false))
-
-      expect(hookResult.current.isError).toBe(false)
-      expect(hookResult.current.data?.results[0].status).toBe("failed")
-      expect(hookResult.current.data?.results[0].errorMessage).toBe(
-        "Transaction reverted"
-      )
-    })
-
-    test("should handle skipped calls", async () => {
-      jest.mocked(fcl.mutate).mockResolvedValue(mockTxId)
-      jest.mocked(fcl.tx).mockReturnValue({
-        onceExecuted: jest.fn().mockResolvedValue({events: []}),
-      } as any)
-
-      let hookResult: any
-
-      await act(async () => {
-        const {result} = renderHook(() => useCrossVmBatchTransaction(), {
-          wrapper: FlowProvider,
-        })
-        hookResult = result
-      })
-
-      await act(async () => {
-        await hookResult.current.sendBatchTransaction({calls: mockCalls})
-      })
-
-      await waitFor(() => expect(hookResult.current.isPending).toBe(false))
-
-      expect(hookResult.current.data?.results[0].status).toBe("skipped")
+      expect(result.current.data).toBe(mockTxId)
     })
 
     it("should handle missing chain ID", async () => {
@@ -171,7 +114,7 @@ describe("useBatchEvmTransaction", () => {
       })
 
       await act(async () => {
-        await hookResult.current.sendBatchTransaction({calls: mockCalls})
+        await hookResult.current.spendNft({calls: mockCalls})
       })
 
       await waitFor(() => expect(hookResult.current.isError).toBe(true))
@@ -194,7 +137,7 @@ describe("useBatchEvmTransaction", () => {
       })
 
       await act(async () => {
-        await hookResult.current.sendBatchTransaction(mockCalls)
+        await hookResult.current.spendNft(mockCalls)
       })
 
       await waitFor(() => expect(hookResult.current.isError).toBe(true))
@@ -214,7 +157,11 @@ describe("useBatchEvmTransaction", () => {
       })
 
       await act(async () => {
-        await hookResult.current.sendBatchTransaction({calls: mockCalls})
+        await hookResult.current.spendNft({
+          calls: mockCalls,
+          nftIdentifier: "nft123",
+          nftIds: ["1", "2"],
+        })
       })
 
       await waitFor(() => expect(hookResult.current.isError).toBe(true))
