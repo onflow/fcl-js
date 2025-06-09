@@ -19,11 +19,7 @@ import {CONTRACT_ADDRESSES} from "../constants"
 
 export interface UseCrossVmSpendFtArgs {
   mutation?: Omit<
-    UseMutationOptions<
-      UseCrossVmSpendFtMutateResult,
-      Error,
-      UseCrossVmSpendFtMutateArgs
-    >,
+    UseMutationOptions<string, Error, UseCrossVmSpendFtMutateArgs>,
     "mutationFn"
   >
 }
@@ -34,23 +30,11 @@ export interface UseCrossVmSpendFtMutateArgs {
   calls: EvmBatchCall[]
 }
 
-export interface UseCrossVmSpendFtMutateResult {
-  txId: string
-  results: CallOutcome[]
-}
-
 export interface UseCrossVmSpendFtResult
-  extends Omit<
-    UseMutationResult<UseCrossVmSpendFtMutateResult, Error>,
-    "mutate" | "mutateAsync"
-  > {
-  sendCrossVmSpendFt: UseMutateFunction<
-    UseCrossVmSpendFtMutateResult,
-    Error,
-    UseCrossVmSpendFtMutateArgs
-  >
-  sendCrossVmSpendFtAsync: UseMutateAsyncFunction<
-    UseCrossVmSpendFtMutateResult,
+  extends Omit<UseMutationResult<string, Error>, "mutate" | "mutateAsync"> {
+  spendFt: UseMutateFunction<string, Error, UseCrossVmSpendFtMutateArgs>
+  spendFtAsync: UseMutateAsyncFunction<
+    string,
     Error,
     UseCrossVmSpendFtMutateArgs
   >
@@ -225,11 +209,10 @@ transaction(
 }
 
 /**
- * Hook to send an EVM batch transaction using a Cadence-compatible wallet.  This function will
- * bundle multiple EVM calls into one atomic Cadence transaction and return both the Cadence
- * transaction ID as well as the result of each EVM call.
+ * Hook to send a cross-VM FT spend transaction. This function will
+ * bundle multiple EVM calls into one atomic Cadence transaction and return the transaction ID.
  *
- * @returns The query mutation object used to send the transaction and get the result.
+ * @returns The mutation object used to send the transaction.
  */
 export function useCrossVmSpendFt({
   mutation: mutationOptions = {},
@@ -277,50 +260,7 @@ export function useCrossVmSpendFt({
           limit: 9999,
         })
 
-        let txResult
-        try {
-          txResult = await fcl.tx(txId).onceExecuted()
-        } catch (txError) {
-          // If we land here, the transaction likely reverted.
-          // We can return partial or "failed" outcomes for all calls.
-          return {
-            txId,
-            results: calls.map(() => ({
-              status: "failed" as const,
-              hash: undefined,
-              errorMessage: "Transaction reverted",
-            })),
-          }
-        }
-
-        // Filter for TransactionExecuted events
-        const executedEvents = txResult.events.filter((e: any) =>
-          e.type.includes("TransactionExecuted")
-        )
-
-        // Build a full outcomes array for every call.
-        // For any call index where no event exists, mark it as "skipped".
-        const results: CallOutcome[] = calls.map((_, index) => {
-          const eventData = executedEvents[index]
-            ?.data as EvmTransactionExecutedData
-          if (eventData) {
-            return {
-              hash: bytesToHex(
-                Uint8Array.from(
-                  eventData.hash.map((x: string) => parseInt(x, 10))
-                )
-              ),
-              status: eventData.errorCode === "0" ? "passed" : "failed",
-              errorMessage: eventData.errorMessage,
-            }
-          } else {
-            return {
-              status: "skipped",
-            }
-          }
-        })
-
-        return {txId, results}
+        return txId
       },
       retry: false,
       ...mutationOptions,
@@ -328,15 +268,11 @@ export function useCrossVmSpendFt({
     queryClient
   )
 
-  const {
-    mutate: sendCrossVmSpendFt,
-    mutateAsync: sendCrossVmSpendFtAsync,
-    ...rest
-  } = mutation
+  const {mutate: spendFt, mutateAsync: spendFtAsync, ...rest} = mutation
 
   return {
-    sendCrossVmSpendFt,
-    sendCrossVmSpendFtAsync,
+    spendFt,
+    spendFtAsync,
     ...rest,
   }
 }
