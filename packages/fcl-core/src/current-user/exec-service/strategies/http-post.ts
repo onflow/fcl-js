@@ -4,10 +4,29 @@ import {normalizeLocalView} from "../../../normalizers/service/local-view"
 import {poll} from "./utils/poll"
 import {VERSION} from "../../../VERSION"
 import {serviceEndpoint} from "../strategies/utils/service-endpoint"
+import {Service} from "@onflow/typedefs"
+
+export interface ExecHttpPostParams {
+  service: Service & {
+    data?: Record<string, any>
+    type: string
+  }
+  body: Record<string, any>
+  config: Record<string, any>
+  opts: Record<string, any>
+}
+
+export type ExecLocalFunction = (
+  view: any,
+  options: {
+    serviceEndpoint: typeof serviceEndpoint
+    onClose: () => void
+  }
+) => Promise<[any, () => void]>
 
 export const getExecHttpPost =
-  execLocal =>
-  async ({service, body, config, opts}) => {
+  (execLocal: ExecLocalFunction) =>
+  async ({service, body, config, opts}: ExecHttpPostParams): Promise<any> => {
     const resp = await fetchService(service, {
       data: {
         fclVersion: VERSION,
@@ -29,8 +48,8 @@ export const getExecHttpPost =
       return resp
     } else if (resp.status === "PENDING") {
       // these two flags are required to run polling one more time before it stops
-      var canContinue = true
-      var shouldContinue = true
+      let canContinue = true
+      let shouldContinue = true
 
       const [_, unmount] = await execLocal(normalizeLocalView(resp.local), {
         serviceEndpoint,
@@ -45,6 +64,7 @@ export const getExecHttpPost =
           console.error("Frame Close Error", error)
         }
       }
+
       /**
        * this function is run once per poll call.
        * Offsetting canContinue flag to make sure that
@@ -57,7 +77,6 @@ export const getExecHttpPost =
       const checkCanContinue = () => {
         const offsetCanContinue = canContinue
         canContinue = shouldContinue
-
         return offsetCanContinue
       }
 

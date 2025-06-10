@@ -1,6 +1,10 @@
 import * as semver from "@onflow/util-semver"
+import {Service} from "@onflow/typedefs"
 
-export function serviceOfType(services = [], type) {
+export function serviceOfType(
+  services: Service[] = [],
+  type: string
+): Service | null {
   // Find the greatest version of the service type
   return services.reduce(
     (mostRecent, service) =>
@@ -9,6 +13,6 @@ export function serviceOfType(services = [], type) {
           ? service
           : mostRecent
         : mostRecent,
-    null
+    null as Service | null
   )
 }
