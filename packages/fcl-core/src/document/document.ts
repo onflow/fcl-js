@@ -2,13 +2,23 @@ import {invariant} from "@onflow/util-invariant"
 import fetchTransport from "cross-fetch"
 import {config} from "@onflow/config"
 
-async function httpDocumentResolver({url}) {
+interface DocumentResolverParams {
+  url: string
+}
+
+export interface RetrieveParams {
+  url: string
+}
+
+async function httpDocumentResolver({
+  url,
+}: DocumentResolverParams): Promise<any> {
   invariant(
     typeof url !== "undefined",
     "retrieve({ url }) -- url must be defined"
   )
 
-  let res
+  let res: Response
   try {
     res = await fetchTransport(url)
   } catch (e) {
@@ -20,12 +30,12 @@ async function httpDocumentResolver({url}) {
   return document
 }
 
-const DOCUMENT_RESOLVERS = new Map([
+const DOCUMENT_RESOLVERS: Map<string, typeof httpDocumentResolver> = new Map([
   ["http", httpDocumentResolver],
   ["https", httpDocumentResolver],
 ])
 
-export async function retrieve({url}) {
+export async function retrieve({url}: RetrieveParams): Promise<any> {
   invariant(
     typeof url !== "undefined",
     "retrieve({ url }) -- url must be defined"
@@ -41,15 +51,18 @@ export async function retrieve({url}) {
   Object.keys(documentResolversFromConfig).map(key => {
     const resolverFromConfig = documentResolversFromConfig[key]
     const resolverProtocol = key.replace(/^document\.resolver\./, "")
-    DOCUMENT_RESOLVERS.set(resolverProtocol, resolverFromConfig)
+    DOCUMENT_RESOLVERS.set(
+      resolverProtocol,
+      resolverFromConfig as typeof httpDocumentResolver
+    )
   })
 
-  const urlParts = /^(.*):\/\/([A-Za-z0-9\-\.]+)(:[0-9]+)?(.*)$/.exec(url)
+  const urlParts: any = /^(.*):\/\/([A-Za-z0-9\-\.]+)(:[0-9]+)?(.*)$/.exec(url)
   invariant(urlParts, "Failed to parse URL")
   const protocol = urlParts[1]
   invariant(urlParts, "Failed to parse URL protocol")
 
-  const resolver = DOCUMENT_RESOLVERS.get(protocol)
+  const resolver: any = DOCUMENT_RESOLVERS.get(protocol)
   invariant(resolver, `No resolver found for protcol=${protocol}`)
 
   let document = await resolver({url})
