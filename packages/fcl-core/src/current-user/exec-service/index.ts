@@ -5,9 +5,56 @@ import {getChainId} from "../../utils"
 import {VERSION} from "../../VERSION"
 import {configLens} from "../../default-config"
 import {checkWalletConnectEnabled} from "./wc-check"
+import {Service, CurrentUser} from "@onflow/typedefs"
 
 const AbortController =
   globalThis.AbortController || require("abort-controller")
+
+export interface ExecStrategyParams {
+  service: Service
+  body: Record<string, any>
+  config: ExecConfig
+  abortSignal: AbortSignal
+  customRpc?: string
+  user?: CurrentUser
+  opts?: Record<string, any>
+}
+
+export interface ExecServiceParams {
+  service: Service
+  msg?: Record<string, any>
+  config?: Record<string, any>
+  opts?: Record<string, any>
+  platform?: string
+  abortSignal?: AbortSignal
+  execStrategy?: (params: ExecStrategyParams) => Promise<StrategyResponse>
+  user?: CurrentUser
+}
+
+export interface StrategyResponse {
+  status: string
+  data?: any
+  updates?: Record<string, any>
+  local?: boolean
+  authorizationUpdates?: Record<string, any>
+}
+
+export interface ExecConfig {
+  services: Record<string, any>
+  app: Record<string, any>
+  client: {
+    platform?: string
+    fclVersion: string
+    fclLibrary: string
+    hostname: string | null
+    network: string
+    [key: string]: any
+  }
+}
+
+export type StrategyFunction = (
+  params: ExecStrategyParams
+) => Promise<StrategyResponse>
 
 export const execStrategy = async ({
   service,
@@ -17,8 +64,10 @@ export const execStrategy = async ({
   customRpc,
   user,
   opts,
-}) => {
-  const strategy = getServiceRegistry().getStrategy(service.method)
+}: ExecStrategyParams): Promise<StrategyResponse> => {
+  const strategy = getServiceRegistry().getStrategy(
+    service.method
+  ) as StrategyFunction
   return strategy({service, body, config, abortSignal, customRpc, opts, user})
 }
 
@@ -31,12 +80,12 @@ export async function execService({
   abortSignal = new AbortController().signal,
   execStrategy: _execStrategy,
   user,
-}) {
+}: ExecServiceParams): Promise<StrategyResponse> {
   // Notify the developer if WalletConnect is not enabled
   checkWalletConnectEnabled()
 
   msg.data = service.data
-  const execConfig = {
+  const execConfig: ExecConfig = {
     services: await configLens(/^service\./),
     app: await configLens(/^app\.detail\./),
     client: {
@@ -76,7 +125,7 @@ export async function execService({
     } else {
       return res
     }
-  } catch (error) {
+  } catch (error: any) {
     log({
       title: `Error on execService ${service?.type}`,
       message: error,

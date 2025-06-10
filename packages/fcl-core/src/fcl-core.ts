@@ -83,6 +83,8 @@ watchForChainIdChanges()
 export {getMutate} from "./exec/mutate"
 
 export {getCurrentUser} from "./current-user"
+import type {CurrentUserConfig, CurrentUserService} from "./current-user"
+export type {CurrentUserConfig, CurrentUserService}
 
 export {initServiceRegistry} from "./current-user/exec-service/plugins"
 
