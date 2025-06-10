@@ -16,7 +16,6 @@ export interface MutateOptions {
   proposer?: AccountAuthorization
   payer?: AccountAuthorization
   authorizations?: AccountAuthorization[]
-  [key: string]: any
 }
 
 /**
