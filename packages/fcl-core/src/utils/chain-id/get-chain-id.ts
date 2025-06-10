@@ -4,16 +4,22 @@ import {log} from "@onflow/util-logger"
 
 // Cache of chainId promises for each access node value
 // key: access node, value: chainId promise
-let chainIdCache = {}
+let chainIdCache: Record<string, Promise<string> | null> = {}
 
-let hasWarnedFlowNetwork = false
-let hasWarnedEnv = false
+let hasWarnedFlowNetwork: boolean = false
+let hasWarnedEnv: boolean = false
+
+export interface GetChainIdOptions {
+  node?: unknown
+  enableRequestLogging?: boolean
+  [key: string]: any
+}
 
 /**
  * @description
  * Gets the chain ID if its set, otherwise gets the chain ID from the access node
  *
- * @param {object} opts - Optional parameters
+ * @param {GetChainIdOptions} opts Optional parameters
  * @returns {Promise<string>} The chain ID of the access node
  * @throws {Error} If the chain ID is not found
  *
@@ -21,9 +27,11 @@ let hasWarnedEnv = false
  * // returns "testnet"
  * getChainId()
  */
-export async function getChainId(opts = {}) {
-  let flowNetworkCfg = await config.get("flow.network")
-  let envCfg = await config.get("env")
+export async function getChainId(
+  opts: GetChainIdOptions = {}
+): Promise<string> {
+  let flowNetworkCfg: string | null = await config.get("flow.network")
+  let envCfg: string | null = await config.get("env")
 
   /* 
     TODO: Add deprecation warning for flow.network config key
@@ -81,27 +89,29 @@ export async function getChainId(opts = {}) {
   }
 
   // Try using cached chainId first if it exists and access node is the same
-  if (chainIdCache[accessNode]) {
+  if (chainIdCache[accessNode as string]) {
     try {
-      return await chainIdCache[accessNode]
+      return await chainIdCache[accessNode as string]!
     } catch {}
   }
 
   // If no cached chainId, value is stale, or last attempt failed, try getting chainId from access node
   // Check if another getChainId() call has already started a new promise, if not, start a new one
   // There may have been concurrent calls to getChainId() while the first call was waiting for the response
-  if (!chainIdCache[accessNode]) {
-    chainIdCache[accessNode] = fetchChainId(opts).catch(error => {
-      // If there was an error, reset the promise so that the next call will try again
-      chainIdCache[accessNode] = null
-      throw error
-    })
+  if (!chainIdCache[accessNode as string]) {
+    chainIdCache[accessNode as string] = fetchChainId(opts).catch(
+      (error: Error) => {
+        // If there was an error, reset the promise so that the next call will try again
+        chainIdCache[accessNode as string] = null
+        throw error
+      }
+    )
   }
 
   // Use newly created promise
   try {
-    return await chainIdCache[accessNode]
-  } catch (e) {
+    return await chainIdCache[accessNode as string]!
+  } catch (e: any) {
     // Fall back to deprecated flow.network and env config keys
     // This probably should have been done before trying to fetch the chainId from the access node
     // However, this was the behaviour with the initial implementation of getChainId()
@@ -121,6 +131,6 @@ export async function getChainId(opts = {}) {
  * @description
  * Clears the chainId cache, useful for testing
  */
-export function clearChainIdCache() {
+export function clearChainIdCache(): void {
   chainIdCache = {}
 }
