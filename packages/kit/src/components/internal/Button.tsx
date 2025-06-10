@@ -5,7 +5,7 @@ import {twMerge} from "tailwind-merge"
 
 export interface ButtonProps
   extends React.ComponentProps<typeof HeadlessButton> {
-  variant?: "primary" | "secondary" | "outline"
+  variant?: "primary" | "secondary" | "outline" | "link"
 }
 
 export const Button: React.FC<ButtonProps> = ({
@@ -17,6 +17,7 @@ export const Button: React.FC<ButtonProps> = ({
   const buttonVariant = colors[variant]
 
   const baseStyles = "px-4 py-2 rounded-md font-medium transition-colors"
+
   const variantClasses = twMerge(
     buttonVariant.background,
     buttonVariant.text,

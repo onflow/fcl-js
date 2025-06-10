@@ -1,5 +1,19 @@
 # @onflow/typedefs
 
+## 1.6.0-alpha.0
+
+### Minor Changes
+
+- [#2201](https://github.com/onflow/fcl-js/pull/2201) [`b9c4ed3b95c2dc73698e45f353a6ef9a48f23cab`](https://github.com/onflow/fcl-js/commit/b9c4ed3b95c2dc73698e45f353a6ef9a48f23cab) Thanks [@jribbink](https://github.com/jribbink)! - Add typedefs for streaming API
+
+- [#2352](https://github.com/onflow/fcl-js/pull/2352) [`4d3bb084c1442552d6a1de1f53435d1aa3f600b0`](https://github.com/onflow/fcl-js/commit/4d3bb084c1442552d6a1de1f53435d1aa3f600b0) Thanks [@mfbz](https://github.com/mfbz)! - Refactored onflow/sdk package to improve TypeScript support
+
+## 1.5.0
+
+### Minor Changes
+
+- [#2393](https://github.com/onflow/fcl-js/pull/2393) [`e10f1db63a8a9cc86a56e312d7d7e3a2089d4a3a`](https://github.com/onflow/fcl-js/commit/e10f1db63a8a9cc86a56e312d7d7e3a2089d4a3a) Thanks [@mfbz](https://github.com/mfbz)! - Changed typedefs types to interfaces for code standardization
+
 ## 1.4.1
 
 ### Patch Changes

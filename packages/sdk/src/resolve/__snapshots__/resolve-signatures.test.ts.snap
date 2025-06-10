@@ -1,0 +1,98 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Golden Path 1`] = `
+{
+  "accounts": {
+    "foo": {
+      "addr": "foo",
+      "authorization": [Function],
+      "keyId": 1,
+      "kind": "ACCOUNT",
+      "resolve": null,
+      "role": {
+        "authorizer": false,
+        "param": false,
+        "payer": true,
+        "proposer": false,
+      },
+      "sequenceNum": 123,
+      "signature": "SIGNATURE",
+      "signingFunction": [MockFunction] {
+        "calls": [
+          [
+            {
+              "addr": "foo",
+              "args": [],
+              "cadence": "",
+              "data": {},
+              "f_type": "Signable",
+              "f_vsn": "1.0.1",
+              "interaction": [Circular],
+              "keyId": 1,
+              "message": "464c4f572d56302e302d7472616e73616374696f6e0000000000000000000000f843f84080c0a00000000000000000000000000000000000000000000000000000000000000123819c870000000000000f017b870000000000000fc8870000000000000fc0",
+              "roles": {
+                "authorizer": false,
+                "param": false,
+                "payer": true,
+                "proposer": false,
+              },
+              "voucher": {
+                "arguments": [],
+                "authorizers": [
+                  "0xfoo",
+                ],
+                "cadence": "",
+                "computeLimit": 156,
+                "envelopeSigs": [
+                  {
+                    "address": "0xfoo",
+                    "keyId": 1,
+                    "sig": null,
+                  },
+                ],
+                "payer": "0xfoo",
+                "payloadSigs": [],
+                "proposalKey": {
+                  "address": "0xfoo",
+                  "keyId": 1,
+                  "sequenceNum": 123,
+                },
+                "refBlock": "123",
+              },
+            },
+          ],
+        ],
+        "results": [
+          {
+            "type": "return",
+            "value": {
+              "addr": "foo",
+              "keyId": 0,
+              "signature": "SIGNATURE",
+            },
+          },
+        ],
+      },
+      "tempId": "foo",
+    },
+  },
+  "authorizations": [
+    "foo",
+  ],
+  "message": {
+    "arguments": [],
+    "authorizations": [],
+    "cadence": "",
+    "computeLimit": 156,
+    "params": [],
+    "payer": "",
+    "proposer": "",
+    "refBlock": "123",
+  },
+  "payer": [
+    "foo",
+  ],
+  "proposer": "foo",
+  "tag": "TRANSACTION",
+}
+`;
