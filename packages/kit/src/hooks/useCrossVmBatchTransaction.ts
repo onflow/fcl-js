@@ -1,6 +1,7 @@
 import * as fcl from "@onflow/fcl"
-import {Abi, bytesToHex, encodeFunctionData} from "viem"
+import {Abi, encodeFunctionData} from "viem"
 import {
+  UseMutateAsyncFunction,
   UseMutateFunction,
   useMutation,
   UseMutationOptions,
@@ -10,52 +11,33 @@ import {useFlowChainId} from "./useFlowChainId"
 import {useFlowQueryClient} from "../provider/FlowQueryClient"
 import {DEFAULT_EVM_GAS_LIMIT} from "../constants"
 
+interface UseCrossVmBatchTransactionMutateArgs {
+  calls: EvmBatchCall[]
+  mustPass?: boolean
+}
+
 export interface UseCrossVmBatchTransactionArgs {
   mutation?: Omit<
-    UseMutationOptions<
-      {
-        txId: string
-        results: CallOutcome[]
-      },
-      Error,
-      {
-        calls: EvmBatchCall[]
-        mustPass?: boolean
-      }
-    >,
+    UseMutationOptions<string, Error, UseCrossVmBatchTransactionMutateArgs>,
     "mutationFn"
   >
 }
 
 export interface UseCrossVmBatchTransactionResult
   extends Omit<
-    UseMutationResult<
-      {
-        txId: string
-        results: CallOutcome[]
-      },
-      Error
-    >,
+    UseMutationResult<string, Error, UseCrossVmBatchTransactionMutateArgs>,
     "mutate" | "mutateAsync"
   > {
   sendBatchTransaction: UseMutateFunction<
-    {
-      txId: string
-      results: CallOutcome[]
-    },
+    string,
     Error,
-    {
-      calls: EvmBatchCall[]
-      mustPass?: boolean
-    }
+    UseCrossVmBatchTransactionMutateArgs
   >
-  sendBatchTransactionAsync: (args: {
-    calls: EvmBatchCall[]
-    mustPass?: boolean
-  }) => Promise<{
-    txId: string
-    results: CallOutcome[]
-  }>
+  sendBatchTransactionAsync: UseMutateAsyncFunction<
+    string,
+    Error,
+    UseCrossVmBatchTransactionMutateArgs
+  >
 }
 
 export interface EvmBatchCall {
@@ -71,28 +53,6 @@ export interface EvmBatchCall {
   gasLimit?: bigint
   // The value to send with the call
   value?: bigint
-}
-
-export interface CallOutcome {
-  status: "passed" | "failed" | "skipped"
-  hash?: string
-  errorMessage?: string
-}
-
-export interface EvmTransactionExecutedData {
-  hash: string[]
-  index: string
-  type: string
-  payload: string[]
-  errorCode: string
-  errorMessage: string
-  gasConsumed: string
-  contractAddress: string
-  logs: string[]
-  blockHeight: string
-  returnedData: string[]
-  precompiledCalls: string[]
-  stateUpdateChecksum: string
 }
 
 export function encodeCalls(
@@ -226,50 +186,7 @@ export function useCrossVmBatchTransaction({
           limit: 9999,
         })
 
-        let txResult
-        try {
-          txResult = await fcl.tx(txId).onceExecuted()
-        } catch (txError) {
-          // If we land here, the transaction likely reverted.
-          // We can return partial or "failed" outcomes for all calls.
-          return {
-            txId,
-            results: calls.map(() => ({
-              status: "failed" as const,
-              hash: undefined,
-              errorMessage: "Transaction reverted",
-            })),
-          }
-        }
-
-        // Filter for TransactionExecuted events
-        const executedEvents = txResult.events.filter((e: any) =>
-          e.type.includes("TransactionExecuted")
-        )
-
-        // Build a full outcomes array for every call.
-        // For any call index where no event exists, mark it as "skipped".
-        const results: CallOutcome[] = calls.map((_, index) => {
-          const eventData = executedEvents[index]
-            ?.data as EvmTransactionExecutedData
-          if (eventData) {
-            return {
-              hash: bytesToHex(
-                Uint8Array.from(
-                  eventData.hash.map((x: string) => parseInt(x, 10))
-                )
-              ),
-              status: eventData.errorCode === "0" ? "passed" : "failed",
-              errorMessage: eventData.errorMessage,
-            }
-          } else {
-            return {
-              status: "skipped",
-            }
-          }
-        })
-
-        return {txId, results}
+        return txId
       },
       retry: false,
       ...mutationOptions,
