@@ -1,6 +1,16 @@
+import {Service} from "@onflow/typedefs"
 import {serviceEndpoint} from "./service-endpoint"
 
-export function fetchService(service, opts = {}) {
+export interface FetchServiceOptions {
+  method?: "GET" | "POST"
+  data?: Record<string, any>
+  headers?: Record<string, string>
+}
+
+export function fetchService(
+  service: Service,
+  opts: FetchServiceOptions = {}
+): Promise<any> {
   const method = opts.method || "POST"
   const body =
     method === "GET"
