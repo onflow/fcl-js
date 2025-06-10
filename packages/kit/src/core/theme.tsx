@@ -11,6 +11,7 @@ export type ThemeColors = {
   primary: ButtonVariant
   secondary: ButtonVariant
   outline: ButtonVariant
+  link: ButtonVariant
 }
 
 export type Theme = {
@@ -36,6 +37,12 @@ const defaultTheme: Theme = {
       text: "text-slate-900",
       hover: "hover:bg-slate-100",
       border: "border border-slate-200",
+    },
+    link: {
+      background: "bg-transparent",
+      text: "text-slate-900",
+      hover: "hover:underline",
+      border: undefined,
     },
   },
 }
