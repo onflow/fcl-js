@@ -7,7 +7,7 @@ import {getChainId} from "./get-chain-id"
  *
  * @returns A function that unsubscribes the listener
  */
-export function watchForChainIdChanges(): (): void {
+export function watchForChainIdChanges(): () => void {
   return config.subscribe(() => {
     // Call getChainId to update the chainId cache if access node has changed
     getChainId({
