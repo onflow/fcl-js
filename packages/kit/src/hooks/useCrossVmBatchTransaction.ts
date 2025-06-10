@@ -1,6 +1,7 @@
 import * as fcl from "@onflow/fcl"
-import {Abi, bytesToHex, encodeFunctionData} from "viem"
+import {Abi, encodeFunctionData} from "viem"
 import {
+  UseMutateAsyncFunction,
   UseMutateFunction,
   useMutation,
   UseMutationOptions,
@@ -8,56 +9,38 @@ import {
 } from "@tanstack/react-query"
 import {useFlowChainId} from "./useFlowChainId"
 import {useFlowQueryClient} from "../provider/FlowQueryClient"
+import {DEFAULT_EVM_GAS_LIMIT} from "../constants"
 
-interface useCrossVmBatchTransactionArgs {
+interface UseCrossVmBatchTransactionMutateArgs {
+  calls: EvmBatchCall[]
+  mustPass?: boolean
+}
+
+export interface UseCrossVmBatchTransactionArgs {
   mutation?: Omit<
-    UseMutationOptions<
-      {
-        txId: string
-        results: CallOutcome[]
-      },
-      Error,
-      {
-        calls: EvmBatchCall[]
-        mustPass?: boolean
-      }
-    >,
+    UseMutationOptions<string, Error, UseCrossVmBatchTransactionMutateArgs>,
     "mutationFn"
   >
 }
 
-interface useCrossVmBatchTransactionResult
+export interface UseCrossVmBatchTransactionResult
   extends Omit<
-    UseMutationResult<
-      {
-        txId: string
-        results: CallOutcome[]
-      },
-      Error
-    >,
+    UseMutationResult<string, Error, UseCrossVmBatchTransactionMutateArgs>,
     "mutate" | "mutateAsync"
   > {
   sendBatchTransaction: UseMutateFunction<
-    {
-      txId: string
-      results: CallOutcome[]
-    },
+    string,
     Error,
-    {
-      calls: EvmBatchCall[]
-      mustPass?: boolean
-    }
+    UseCrossVmBatchTransactionMutateArgs
   >
-  sendBatchTransactionAsync: (args: {
-    calls: EvmBatchCall[]
-    mustPass?: boolean
-  }) => Promise<{
-    txId: string
-    results: CallOutcome[]
-  }>
+  sendBatchTransactionAsync: UseMutateAsyncFunction<
+    string,
+    Error,
+    UseCrossVmBatchTransactionMutateArgs
+  >
 }
 
-interface EvmBatchCall {
+export interface EvmBatchCall {
   // The target EVM contract address (as a string)
   address: string
   // The contract ABI fragment
@@ -71,33 +54,10 @@ interface EvmBatchCall {
   // The value to send with the call
   value?: bigint
 }
-interface CallOutcome {
-  status: "passed" | "failed" | "skipped"
-  hash?: string
-  errorMessage?: string
-}
 
-type EvmTransactionExecutedData = {
-  hash: string[]
-  index: string
-  type: string
-  payload: string[]
-  errorCode: string
-  errorMessage: string
-  gasConsumed: string
-  contractAddress: string
-  logs: string[]
-  blockHeight: string
-  returnedData: string[]
-  precompiledCalls: string[]
-  stateUpdateChecksum: string
-}
-
-// Helper to encode our ca lls using viem.
-// Returns an array of objects with keys "address" and "data" (hex-encoded string without the "0x" prefix).
 export function encodeCalls(
   calls: EvmBatchCall[]
-): Array<Array<{key: string; value: string}>> {
+): Array<{to: string; data: string; gasLimit: string; value: string}> {
   return calls.map(call => {
     const encodedData = encodeFunctionData({
       abi: call.abi,
@@ -105,13 +65,13 @@ export function encodeCalls(
       args: call.args,
     })
 
-    return [
-      {key: "to", value: call.address},
-      {key: "data", value: fcl.sansPrefix(encodedData) ?? ""},
-      {key: "gasLimit", value: call.gasLimit?.toString() ?? "15000000"},
-      {key: "value", value: call.value?.toString() ?? "0"},
-    ]
-  }) as any
+    return {
+      to: call.address,
+      data: fcl.sansPrefix(encodedData) ?? "",
+      gasLimit: call.gasLimit?.toString() ?? DEFAULT_EVM_GAS_LIMIT,
+      value: call.value?.toString() ?? "0",
+    }
+  })
 }
 
 const EVM_CONTRACT_ADDRESSES = {
@@ -178,7 +138,7 @@ transaction(calls: [{String: AnyStruct}], mustPass: Bool) {
  */
 export function useCrossVmBatchTransaction({
   mutation: mutationOptions = {},
-}: useCrossVmBatchTransactionArgs = {}): useCrossVmBatchTransactionResult {
+}: UseCrossVmBatchTransactionArgs = {}): UseCrossVmBatchTransactionResult {
   const chainId = useFlowChainId()
   const cadenceTx = chainId.data
     ? getCadenceBatchTransaction(chainId.data)
@@ -203,7 +163,15 @@ export function useCrossVmBatchTransaction({
           cadence: cadenceTx,
           args: (arg, t) => [
             arg(
-              encodedCalls,
+              encodedCalls.map(call => [
+                {key: "to", value: call.to},
+                {key: "data", value: call.data},
+                {
+                  key: "gasLimit",
+                  value: call.gasLimit,
+                },
+                {key: "value", value: call.value},
+              ]),
               t.Array(
                 t.Dictionary([
                   {key: t.String, value: t.String},
@@ -218,50 +186,7 @@ export function useCrossVmBatchTransaction({
           limit: 9999,
         })
 
-        let txResult
-        try {
-          txResult = await fcl.tx(txId).onceExecuted()
-        } catch (txError) {
-          // If we land here, the transaction likely reverted.
-          // We can return partial or "failed" outcomes for all calls.
-          return {
-            txId,
-            results: calls.map(() => ({
-              status: "failed" as const,
-              hash: undefined,
-              errorMessage: "Transaction reverted",
-            })),
-          }
-        }
-
-        // Filter for TransactionExecuted events
-        const executedEvents = txResult.events.filter((e: any) =>
-          e.type.includes("TransactionExecuted")
-        )
-
-        // Build a full outcomes array for every call.
-        // For any call index where no event exists, mark it as "skipped".
-        const results: CallOutcome[] = calls.map((_, index) => {
-          const eventData = executedEvents[index]
-            ?.data as EvmTransactionExecutedData
-          if (eventData) {
-            return {
-              hash: bytesToHex(
-                Uint8Array.from(
-                  eventData.hash.map((x: string) => parseInt(x, 10))
-                )
-              ),
-              status: eventData.errorCode === "0" ? "passed" : "failed",
-              errorMessage: eventData.errorMessage,
-            }
-          } else {
-            return {
-              status: "skipped",
-            }
-          }
-        })
-
-        return {txId, results}
+        return txId
       },
       retry: false,
       ...mutationOptions,
