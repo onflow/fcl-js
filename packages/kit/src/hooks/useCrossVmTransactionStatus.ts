@@ -71,7 +71,7 @@ export function useCrossVmTransactionStatus({
   }
 
   const evmEvents = transactionStatus?.events
-    ?.filter(event => eventType && event.type === eventType)
+    ?.filter(event => event.type === eventType)
     ?.map(event => event.data) as EvmTransactionExecutedData[]
 
   const evmResults: CallOutcome[] = evmEvents?.map(event => {
