@@ -5,7 +5,6 @@ import {isRequired, isObject, isString} from "../../utils/is"
 export interface PreOptions {
   cadence?: string
   template?: any
-  [key: string]: any
 }
 
 async function pre(type: string, opts: PreOptions): Promise<void> {

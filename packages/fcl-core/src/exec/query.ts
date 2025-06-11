@@ -6,11 +6,10 @@ import {prepTemplateOpts} from "./utils/prep-template-opts"
 
 export interface QueryOptions {
   cadence?: string
-  args?: ArgsFn | any[]
-  template?: string | any
+  args?: ArgsFn
+  template?: any
   isSealed?: boolean
   limit?: number
-  [key: string]: any
 }
 
 /**

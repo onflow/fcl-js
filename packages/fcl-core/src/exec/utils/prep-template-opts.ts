@@ -4,9 +4,8 @@ import {isString} from "../../utils/is"
 import {getChainId} from "../../utils"
 
 export interface TemplateOptions {
-  template?: string | any
   cadence?: string
-  [key: string]: any
+  template?: any
 }
 
 export async function prepTemplateOpts(
