@@ -1,5 +1,4 @@
 import * as fcl from "@onflow/fcl"
-import {useState, useEffect} from "react"
 import {TransactionStatus} from "@onflow/typedefs"
 import {CONTRACT_ADDRESSES} from "../constants"
 import {useFlowChainId} from "./useFlowChainId"
