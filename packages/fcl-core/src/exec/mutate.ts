@@ -9,8 +9,8 @@ import {prepTemplateOpts} from "./utils/prep-template-opts"
 
 export interface MutateOptions {
   cadence?: string
-  args?: ArgsFn | any[]
-  template?: string | any
+  args?: ArgsFn
+  template?: string
   limit?: number
   authz?: AccountAuthorization
   proposer?: AccountAuthorization
