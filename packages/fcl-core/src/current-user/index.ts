@@ -1,24 +1,75 @@
-import "../default-config"
-import * as t from "@onflow/types"
-import {arg} from "@onflow/sdk"
 import {config} from "@onflow/config"
-import {spawn, send, INIT, SUBSCRIBE, UNSUBSCRIBE} from "@onflow/util-actor"
-import {withPrefix, sansPrefix} from "@onflow/util-address"
+import {arg, Signable, t} from "@onflow/sdk"
+import {
+  Account,
+  CompositeSignature,
+  CurrentUser,
+  Service,
+} from "@onflow/typedefs"
+import {
+  ActorContext,
+  INIT,
+  Letter,
+  send,
+  spawn,
+  SUBSCRIBE,
+  UNSUBSCRIBE,
+} from "@onflow/util-actor"
+import {sansPrefix, withPrefix} from "@onflow/util-address"
 import {invariant} from "@onflow/util-invariant"
-import {log, LEVELS} from "@onflow/util-logger"
-import {buildUser} from "./build-user"
-import {serviceOfType} from "./service-of-type"
-import {execService} from "./exec-service"
-import {normalizeCompositeSignature} from "../normalizers/service/composite-signature"
+import {LEVELS, log} from "@onflow/util-logger"
+import "../default-config"
 import {getDiscoveryService, makeDiscoveryServices} from "../discovery"
+import {normalizeCompositeSignature} from "../normalizers/service/composite-signature"
+import {StorageProvider} from "../utils/storage"
+import {buildUser} from "./build-user"
+import {execService} from "./exec-service"
 import {getServiceRegistry} from "./exec-service/plugins"
+import {serviceOfType} from "./service-of-type"
 
-/**
- * @typedef {import("@onflow/typedefs").CurrentUser} CurrentUser
- * @typedef {import("@onflow/typedefs").CompositeSignature} CompositeSignature
- */
+export interface CurrentUserConfig {
+  platform: string
+  discovery?: object | undefined
+  getStorageProvider?: () => Promise<StorageProvider>
+}
 
-export const isFn = d => typeof d === "function"
+export interface CurrentUserServiceApi {
+  authenticate: ({
+    service,
+    redir,
+    forceReauth,
+  }?: AuthenticationOptions) => Promise<CurrentUser>
+  unauthenticate: () => void
+  authorization: (account: Account) => Promise<Account>
+  signUserMessage: (msg: string) => Promise<CompositeSignature[]>
+  subscribe: (callback: (user: CurrentUser) => void) => () => void
+  snapshot: () => Promise<CurrentUser>
+  resolveArgument: () => Promise<string>
+}
+
+export interface CurrentUserService extends CurrentUserServiceApi {
+  (): CurrentUserServiceApi
+}
+
+export interface AccountProofData {
+  appIdentifier: string
+  nonce: string
+  [key: string]: any
+}
+
+export interface AuthenticationOptions {
+  service?: Service
+  redir?: boolean
+  forceReauth?: boolean
+}
+
+export interface MakeConfigOptions {
+  discoveryAuthnInclude?: string[]
+  discoveryAuthnExclude?: string[]
+  discoveryFeaturesSuggested?: string[]
+}
+
+export const isFn = (d: any): boolean => typeof d === "function"
 
 const NAME = "CURRENT_USER"
 const UPDATED = "CURRENT_USER/UPDATED"
@@ -36,7 +87,7 @@ const DATA = `{
   "services":[]
 }`
 
-const getStoredUser = async storage => {
+const getStoredUser = async (storage: StorageProvider): Promise<any> => {
   const fallback = JSON.parse(DATA)
   const stored = await storage.get(NAME)
   if (stored != null && fallback["f_vsn"] !== stored["f_vsn"]) {
@@ -46,15 +97,18 @@ const getStoredUser = async storage => {
   return stored || fallback
 }
 
-const makeHandlers = cfg => {
+const makeHandlers = (cfg: CurrentUserConfig) => {
   // Wrapper for backwards compatibility
-  const getStorageProvider = async () => {
+  const getStorageProvider = async (): Promise<StorageProvider> => {
     if (cfg.getStorageProvider) return await cfg.getStorageProvider()
-    return await config.first(["fcl.storage", "fcl.storage.default"])
+    return (await config.first(
+      ["fcl.storage", "fcl.storage.default"],
+      undefined
+    )) as any
   }
 
   return {
-    [INIT]: async ctx => {
+    [INIT]: async (ctx: ActorContext) => {
       if (typeof window === "undefined") {
         console.warn(
           `
@@ -75,23 +129,27 @@ const makeHandlers = cfg => {
         if (notExpired(user)) ctx.merge(user)
       }
     },
-    [SUBSCRIBE]: (ctx, letter) => {
+    [SUBSCRIBE]: (ctx: ActorContext, letter: Letter) => {
       ctx.subscribe(letter.from)
       ctx.send(letter.from, UPDATED, {...ctx.all()})
     },
-    [UNSUBSCRIBE]: (ctx, letter) => {
+    [UNSUBSCRIBE]: (ctx: ActorContext, letter: Letter) => {
       ctx.unsubscribe(letter.from)
     },
-    [SNAPSHOT]: async (ctx, letter) => {
+    [SNAPSHOT]: async (ctx: ActorContext, letter: Letter) => {
       letter.reply({...ctx.all()})
     },
-    [SET_CURRENT_USER]: async (ctx, letter, data) => {
+    [SET_CURRENT_USER]: async (
+      ctx: ActorContext,
+      letter: Letter,
+      data: any
+    ) => {
       ctx.merge(data)
       const storage = await getStorageProvider()
       if (storage.can) storage.put(NAME, ctx.all())
       ctx.broadcast(UPDATED, {...ctx.all()})
     },
-    [DEL_CURRENT_USER]: async (ctx, letter) => {
+    [DEL_CURRENT_USER]: async (ctx: ActorContext, letter: Letter) => {
       ctx.merge(JSON.parse(DATA))
       const storage = await getStorageProvider()
       if (storage.can) storage.put(NAME, ctx.all())
@@ -100,9 +158,10 @@ const makeHandlers = cfg => {
   }
 }
 
-const spawnCurrentUser = cfg => spawn(makeHandlers(cfg), NAME)
+const spawnCurrentUser = (cfg: CurrentUserConfig) =>
+  spawn(makeHandlers(cfg), NAME)
 
-function notExpired(user) {
+function notExpired(user: any): boolean {
   return (
     user.expiresAt == null ||
     user.expiresAt === 0 ||
@@ -110,8 +169,10 @@ function notExpired(user) {
   )
 }
 
-async function getAccountProofData() {
-  let accountProofDataResolver = await config.get("fcl.accountProof.resolver")
+async function getAccountProofData(): Promise<AccountProofData | undefined> {
+  let accountProofDataResolver: any = await config.get(
+    "fcl.accountProof.resolver"
+  )
   if (accountProofDataResolver == null) return
   if (!isFn(accountProofDataResolver)) {
     log({
@@ -127,7 +188,7 @@ async function getAccountProofData() {
 
   const accountProofData = {...(await accountProofDataResolver())}
 
-  const origin = window?.location?.origin
+  const origin: any = window?.location?.origin
 
   if (accountProofData.appIdentifier) {
     if (origin) {
@@ -166,7 +227,7 @@ const makeConfig = async ({
   discoveryAuthnInclude,
   discoveryAuthnExclude,
   discoveryFeaturesSuggested,
-}) => {
+}: MakeConfigOptions): Promise<Record<string, any>> => {
   return {
     client: {
       discoveryAuthnInclude,
@@ -179,26 +240,30 @@ const makeConfig = async ({
 }
 
 /**
- * @description - Factory function to get the authenticate method
- * @param {CurrentUserConfig} config - Current User Configuration
+ * @description Factory function to get the authenticate method
+ * @param {CurrentUserConfig} config Current User Configuration
  */
 const getAuthenticate =
-  config =>
+  (config: CurrentUserConfig) =>
   /**
-   * @description - Authenticate a user
-   * @param {object} [opts] - Options
-   * @param {object} [opts.service] - Optional service to use for authentication
-   * @param {boolean} [opts.redir] - Optional redirect flag
-   * @param {boolean} [opts.forceReauth] - Optional force re-authentication flag
+   * @description Authenticate a user
+   * @param {AuthenticationOptions} [opts] Options
+   * @param {Service} [opts.service] Optional service to use for authentication
+   * @param {boolean} [opts.redir] Optional redirect flag
+   * @param {boolean} [opts.forceReauth] Optional force re-authentication flag
    * @returns
    */
-  async ({service, redir = false, forceReauth = false} = {}) => {
+  async ({
+    service,
+    redir = false,
+    forceReauth = false,
+  }: AuthenticationOptions = {}): Promise<CurrentUser | undefined> => {
     if (
       service &&
       !service?.provider?.is_installed &&
       service?.provider?.requires_install
     ) {
-      window.location.href = service?.provider?.install_link
+      window.location.href = service?.provider?.install_link!
       return
     }
 
@@ -212,7 +277,7 @@ const getAuthenticate =
       if (user.loggedIn && !forceReauth) {
         if (refreshService) {
           try {
-            const response = await execService({
+            const response: any = await execService({
               service: refreshService,
               msg: accountProofData,
               opts,
@@ -220,7 +285,7 @@ const getAuthenticate =
               user,
             })
             send(NAME, SET_CURRENT_USER, await buildUser(response))
-          } catch (error) {
+          } catch (error: any) {
             log({
               title: `${error.name} Could not refresh wallet authentication.`,
               message: error.message,
@@ -236,7 +301,7 @@ const getAuthenticate =
 
       try {
         accountProofData = await getAccountProofData()
-      } catch (error) {
+      } catch (error: any) {
         log({
           title: `${error.name} On Authentication: Could not resolve account proof data.`,
           message: error.message,
@@ -247,18 +312,18 @@ const getAuthenticate =
 
       try {
         const discoveryService = await getDiscoveryService(service)
-        const response = await execService({
+        const response: any = await execService({
           service: discoveryService,
           msg: accountProofData,
           config: await makeConfig(discoveryService),
           opts,
           platform: config.platform,
-          execStrategy: config.discovery?.execStrategy,
+          execStrategy: (config.discovery as any)?.execStrategy,
           user,
         })
 
         send(NAME, SET_CURRENT_USER, await buildUser(response))
-      } catch (error) {
+      } catch (error: any) {
         log({
           title: `${error} On Authentication`,
           message: error,
@@ -271,12 +336,12 @@ const getAuthenticate =
   }
 
 /**
- * @description - Factory function to get the unauthenticate method
- * @param {CurrentUserConfig} config - Current User Configuration
+ * @description Factory function to get the unauthenticate method
+ * @param {CurrentUserConfig} config Current User Configuration
  */
-function getUnauthenticate(config) {
+function getUnauthenticate(config: CurrentUserConfig) {
   /**
-   * @description - Unauthenticate a user
+   * @description Unauthenticate a user
    */
   return function unauthenticate() {
     spawnCurrentUser(config)
@@ -284,7 +349,7 @@ function getUnauthenticate(config) {
   }
 }
 
-const normalizePreAuthzResponse = authz => ({
+const normalizePreAuthzResponse = (authz: any) => ({
   f_type: "PreAuthzResponse",
   f_vsn: "1.0.0",
   proposer: (authz || {}).proposer,
@@ -293,12 +358,12 @@ const normalizePreAuthzResponse = authz => ({
 })
 
 /**
- * @description - Factory function to get the resolvePreAuthz method
- * @param {CurrentUserConfig} config - Current User Configuration
+ * @description Factory function to get the resolvePreAuthz method
+ * @param {CurrentUserConfig} config Current User Configuration
  */
 const getResolvePreAuthz =
-  config =>
-  (authz, {user}) => {
+  (config: CurrentUserConfig) =>
+  (authz: any, {user}: {user: CurrentUser}) => {
     const resp = normalizePreAuthzResponse(authz)
     const axs = []
 
@@ -310,7 +375,7 @@ const getResolvePreAuthz =
       tempId: [az.identity.address, az.identity.keyId].join("|"),
       addr: az.identity.address,
       keyId: az.identity.keyId,
-      signingFunction(signable) {
+      signingFunction(signable: Signable) {
         return execService({
           service: az,
           msg: signable,
@@ -328,29 +393,28 @@ const getResolvePreAuthz =
   }
 
 /**
- * @description - Factory function to get the authorization method
- *
- * @param {CurrentUserConfig} config - Current User Configuration
+ * @description Factory function to get the authorization method
+ * @param {CurrentUserConfig} config Current User Configuration
  */
 const getAuthorization =
-  config =>
+  (config: CurrentUserConfig) =>
   /**
-   * @description - Produces the needed authorization details for the current user to submit transactions to Flow
+   * @description Produces the needed authorization details for the current user to submit transactions to Flow
    * It defines a signing function that connects to a user's wallet provider to produce signatures to submit transactions.
    *
-   * @param {object} account - Account object
-   * @returns {Promise<object>} - Account object with signing function
+   * @param {Account} account Account object
+   * @returns {Promise<Account>} Account object with signing function
    * */
-  async account => {
+  async (account: Account) => {
     spawnCurrentUser(config)
 
     return {
       ...account,
       tempId: "CURRENT_USER",
-      async resolve(account, preSignable) {
+      async resolve(account: Account, preSignable: Signable) {
         const user = await getAuthenticate(config)({redir: true})
-        const authz = serviceOfType(user.services, "authz")
-        const preAuthz = serviceOfType(user.services, "pre-authz")
+        const authz = serviceOfType(user!.services, "authz")
+        const preAuthz = serviceOfType(user!.services, "pre-authz")
 
         if (preAuthz)
           return getResolvePreAuthz(config)(
@@ -361,7 +425,7 @@ const getAuthorization =
               user,
             }),
             {
-              user,
+              user: user!,
             }
           )
         if (authz) {
@@ -369,11 +433,11 @@ const getAuthorization =
             ...account,
             tempId: "CURRENT_USER",
             resolve: null,
-            addr: sansPrefix(authz.identity.address),
-            keyId: authz.identity.keyId,
+            addr: sansPrefix((authz as any).identity.address),
+            keyId: (authz as any).identity.keyId,
             sequenceNum: null,
             signature: null,
-            async signingFunction(signable) {
+            async signingFunction(signable: Signable) {
               return normalizeCompositeSignature(
                 await execService({
                   service: authz,
@@ -396,18 +460,18 @@ const getAuthorization =
   }
 
 /**
- * @description - Factory function to get the subscribe method
- * @param {CurrentUserConfig} config - Current User Configuration
+ * @description Factory function to get the subscribe method
+ * @param {CurrentUserConfig} config Current User Configuration
  */
-function getSubscribe(config) {
+function getSubscribe(config: CurrentUserConfig) {
   /**
    * @description
    * The callback passed to subscribe will be called when the user authenticates and un-authenticates, making it easy to update the UI accordingly.
    *
-   * @param {Function} callback - Callback function
-   * @returns {Function} - Unsubscribe function
+   * @param {Function} callback Callback function
+   * @returns {Function} Unsubscribe function
    */
-  return function subscribe(callback) {
+  return function subscribe(callback: (user: CurrentUser) => void) {
     spawnCurrentUser(config)
     const EXIT = "@EXIT"
     const self = spawn(async ctx => {
@@ -426,13 +490,13 @@ function getSubscribe(config) {
 }
 
 /**
- * @description - Factory function to get the snapshot method
- * @param {CurrentUserConfig} config - Current User Configuration
+ * @description Factory function to get the snapshot method
+ * @param {CurrentUserConfig} config Current User Configuration
  */
-function getSnapshot(config) {
+function getSnapshot(config: CurrentUserConfig): () => Promise<CurrentUser> {
   /**
-   * @description - Gets the current user
-   * @returns {Promise<CurrentUser>} - User object
+   * @description Gets the current user
+   * @returns {Promise<CurrentUser>} User object
    */
   return function snapshot() {
     spawnCurrentUser(config)
@@ -442,15 +506,14 @@ function getSnapshot(config) {
 
 /**
  * Resolves the current user as an argument
- * @param {CurrentUserConfig} config - Current User Configuration
- *
+ * @param {CurrentUserConfig} config Current User Configuration
  */
-const getResolveArgument = config => async () => {
-  const {addr} = await getAuthenticate(config)()
-  return arg(withPrefix(addr), t.Address)
+const getResolveArgument = (config: CurrentUserConfig) => async () => {
+  const {addr} = (await getAuthenticate(config)()) as any
+  return arg(withPrefix(addr) as any, t.Address)
 }
 
-const makeSignable = msg => {
+const makeSignable = (msg: string) => {
   invariant(/^[0-9a-f]+$/i.test(msg), "Message must be a hex string")
 
   return {
@@ -459,32 +522,32 @@ const makeSignable = msg => {
 }
 
 /**
- * @description - Factory function to get the signUserMessage method
- * @param {CurrentUserConfig} config - Current User Configuration
+ * @description Factory function to get the signUserMessage method
+ * @param {CurrentUserConfig} config Current User Configuration
  */
 const getSignUserMessage =
-  config =>
+  (config: CurrentUserConfig) =>
   /**
-   * @description - A method to use allowing the user to personally sign data via FCL Compatible Wallets/Services.
-   * @param {string} msg - Message to sign
-   * @returns {Promise<CompositeSignature[]>} - Array of CompositeSignatures
+   * @description A method to use allowing the user to personally sign data via FCL Compatible Wallets/Services.
+   * @param {string} msg Message to sign
+   * @returns {Promise<CompositeSignature[]>} Array of CompositeSignatures
    */
-  async msg => {
+  async (msg: string) => {
     spawnCurrentUser(config)
-    const user = await getAuthenticate(config)({
+    const user: any = await getAuthenticate(config)({
       redir: true,
     })
 
     const signingService = serviceOfType(user.services, "user-signature")
 
     invariant(
-      signingService,
+      signingService as any,
       "Current user must have authorized a signing service."
     )
 
     try {
       const response = await execService({
-        service: signingService,
+        service: signingService as any,
         msg: makeSignable(msg),
         platform: config.platform,
         user,
@@ -500,19 +563,10 @@ const getSignUserMessage =
   }
 
 /**
- * @typedef {object} CurrentUserConfig - Current User Configuration
- * @property {string} platform - Platform
- * @property {object} [discovery] - FCL Discovery Configuration
- * @property {() => Promise<import("../utils/storage").StorageProvider>} [getStorageProvider] - Storage Provider Getter
- */
-
-/**
- * @description
- * Creates the Current User object
- *
- * @param {CurrentUserConfig} config - Current User Configuration
+ * @description Creates the Current User object
+ * @param {CurrentUserConfig} config Current User Configuration
  *  */
-const getCurrentUser = config => {
+const getCurrentUser = (config: CurrentUserConfig): CurrentUserService => {
   const currentUser = {
     authenticate: getAuthenticate(config),
     unauthenticate: getUnauthenticate(config),
@@ -528,7 +582,7 @@ const getCurrentUser = config => {
       return {...currentUser}
     },
     {...currentUser}
-  )
+  ) as any
 }
 
 export {getCurrentUser}
