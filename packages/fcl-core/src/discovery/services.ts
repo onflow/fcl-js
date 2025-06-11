@@ -36,7 +36,7 @@ export async function getServices({
 
   const include = await config.get("discovery.authn.include", [])
   const exclude = await config.get("discovery.authn.exclude", [])
-  const url = new URL(endpoint)
+  const url = new URL(endpoint as string)
 
   return fetch(url, {
     method: "POST",
