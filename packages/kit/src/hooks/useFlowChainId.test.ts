@@ -96,9 +96,12 @@ describe("useFlowChainId", () => {
     let hookResult: any
 
     await act(async () => {
-      const {result} = renderHook(() => useFlowChainId(customOptions), {
-        wrapper: FlowProvider,
-      })
+      const {result} = renderHook(
+        () => useFlowChainId({query: customOptions}),
+        {
+          wrapper: FlowProvider,
+        }
+      )
       hookResult = result
     })
 
