@@ -1,5 +1,5 @@
 import {config} from "@onflow/config"
-import {prepTemplateOpts} from "./prep-template-opts.js"
+import {prepTemplateOpts} from "./prep-template-opts"
 
 describe("Prepare template options for template version 1.0.0", () => {
   // NOTE: template10 and template11 copied from packages\fcl-core\src\interaction-template-utils\derive-cadence-by-network\derive-cadence-by-network.test.js
@@ -175,7 +175,7 @@ describe("Prepare template options for template version 1.1.0", () => {
 
     const test = async () =>
       await prepTemplateOpts({
-        template: template,
+        template: template11,
       })
 
     await expect(test()).rejects.toThrow(Error)

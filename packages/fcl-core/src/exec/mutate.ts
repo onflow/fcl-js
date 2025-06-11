@@ -1,31 +1,42 @@
+import type {AccountAuthorization} from "@onflow/sdk"
 import * as sdk from "@onflow/sdk"
-import {normalizeArgs} from "./utils/normalize-args"
-import {getCurrentUser} from "../current-user"
-import {prepTemplateOpts} from "./utils/prep-template-opts.js"
-import {preMutate} from "./utils/pre.js"
+import {CurrentUserService, getCurrentUser} from "../current-user"
 import {isNumber} from "../utils/is"
+import type {ArgsFn} from "./args"
+import {normalizeArgs} from "./utils/normalize-args"
+import {preMutate} from "./utils/pre"
+import {prepTemplateOpts} from "./utils/prep-template-opts"
+
+export interface MutateOptions {
+  cadence?: string
+  args?: ArgsFn
+  template?: any
+  limit?: number
+  authz?: AccountAuthorization
+  proposer?: AccountAuthorization
+  payer?: AccountAuthorization
+  authorizations?: AccountAuthorization[]
+}
 
 /**
- * @description
- * Factory function that returns a mutate function for a given currentUser.
+ * @description Factory function that returns a mutate function for a given currentUser.
  *
- * @param {ReturnType<typeof import("../current-user").getCurrentUser> | import("../current-user").CurrentUserConfig} currentUserOrConfig - CurrentUser actor or configuration
+ * @param currentUserOrConfig CurrentUser actor or configuration
  */
-export const getMutate = currentUserOrConfig => {
+export const getMutate = (currentUserOrConfig: CurrentUserService) => {
   /**
-   * @description
-   * Allows you to submit transactions to the blockchain to potentially mutate the state.
+   * @description Allows you to submit transactions to the blockchain to potentially mutate the state.
    *
-   * @param {object} [opts] - Mutation Options and configuration
-   * @param {string} [opts.cadence] - Cadence Transaction used to mutate Flow
-   * @param {import("./args").ArgsFn} [opts.args] - Arguments passed to cadence transaction
-   * @param {object | string} [opts.template] - Interaction Template for a transaction
-   * @param {number} [opts.limit] - Compute Limit for transaction
-   * @param {Function} [opts.authz] - Authorization function for transaction
-   * @param {Function} [opts.proposer] - Proposer Authorization function for transaction
-   * @param {Function} [opts.payer] - Payer Authorization function for transaction
-   * @param {Array<Function>} [opts.authorizations] - Authorizations function for transaction
-   * @returns {Promise<string>} Transaction Id
+   * @param opts Mutation Options and configuration
+   * @param opts.cadence Cadence Transaction used to mutate Flow
+   * @param opts.args Arguments passed to cadence transaction
+   * @param opts.template Interaction Template for a transaction
+   * @param opts.limit Compute Limit for transaction
+   * @param opts.authz Authorization function for transaction
+   * @param opts.proposer Proposer Authorization function for transaction
+   * @param opts.payer Payer Authorization function for transaction
+   * @param opts.authorizations Authorizations function for transaction
+   * @returns Transaction Id
    *
    * @example
    * fcl.mutate({
@@ -59,7 +70,7 @@ export const getMutate = currentUserOrConfig => {
    *   authorizations: [AuthzFn], // an array of authorization functions used as authorizations signatory roles
    * }
    */
-  const mutate = async (opts = {}) => {
+  const mutate = async (opts: MutateOptions = {}): Promise<string> => {
     var txid
     try {
       await preMutate(opts)
@@ -67,17 +78,17 @@ export const getMutate = currentUserOrConfig => {
       // Allow for a config to overwrite the authorization function.
       // prettier-ignore
       const currentUser = typeof currentUserOrConfig === "function" ? currentUserOrConfig : getCurrentUser(currentUserOrConfig)
-      const authz = await sdk
+      const authz: any = await sdk
         .config()
         .get("fcl.authz", currentUser().authorization)
 
       txid = sdk
         .send([
-          sdk.transaction(opts.cadence),
+          sdk.transaction(opts.cadence!),
 
           sdk.args(normalizeArgs(opts.args || [])),
 
-          opts.limit && isNumber(opts.limit) && sdk.limit(opts.limit),
+          opts.limit && isNumber(opts.limit) && (sdk.limit(opts.limit!) as any),
 
           // opts.proposer > opts.authz > authz
           sdk.proposer(opts.proposer || opts.authz || authz),

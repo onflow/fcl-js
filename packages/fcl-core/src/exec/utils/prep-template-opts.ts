@@ -1,9 +1,16 @@
 import {retrieve} from "../../document/document"
-import {deriveCadenceByNetwork} from "../../interaction-template-utils/derive-cadence-by-network/derive-cadence-by-network.js"
+import {deriveCadenceByNetwork} from "../../interaction-template-utils/derive-cadence-by-network/derive-cadence-by-network"
 import {isString} from "../../utils/is"
 import {getChainId} from "../../utils"
 
-export async function prepTemplateOpts(opts) {
+export interface TemplateOptions {
+  cadence?: string
+  template?: any
+}
+
+export async function prepTemplateOpts(
+  opts: TemplateOptions
+): Promise<TemplateOptions> {
   if (isString(opts?.template)) {
     opts.template = await retrieve({url: opts?.template})
   }
