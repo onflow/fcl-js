@@ -38,7 +38,7 @@ export const TransactionButton: React.FC<TransactionButtonProps> = ({
   transaction,
   mutation,
 }) => {
-  const {mutate: sendTransaction} = useFlowMutate({
+  const {mutate: sendTransaction, isPending} = useFlowMutate({
     mutation,
   })
 
@@ -48,7 +48,8 @@ export const TransactionButton: React.FC<TransactionButtonProps> = ({
 
   return (
     <Button onClick={handleButtonClick} variant={variant} className="px-2">
-      {label || "Send Transaction"}
+      {!isPending && <span>{label || "Execute Transaction"}</span>}
+      {isPending && <span className="ml-2">...</span>}
     </Button>
   )
 }
