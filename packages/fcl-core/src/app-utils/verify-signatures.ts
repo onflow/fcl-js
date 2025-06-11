@@ -4,11 +4,31 @@ import {query} from "../exec/query"
 import {encodeAccountProof} from "../wallet-utils"
 import {isString} from "../utils/is"
 import {getChainId} from "../utils"
+import {CompositeSignature} from "@onflow/typedefs"
+
+export interface AccountProofData {
+  address: string
+  nonce: string
+  signatures: CompositeSignature[]
+}
+
+export interface VerifySignaturesScriptOptions {
+  fclCryptoContract?: string
+}
+
+export interface ValidateArgsInput {
+  appIdentifier?: string
+  address?: string
+  nonce?: string
+  signatures?: CompositeSignature[]
+  message?: string
+  compSigs?: CompositeSignature[]
+}
 
 const ACCOUNT_PROOF = "ACCOUNT_PROOF"
 const USER_SIGNATURE = "USER_SIGNATURE"
 
-export const validateArgs = args => {
+export const validateArgs = (args: ValidateArgsInput): boolean => {
   if (args.appIdentifier) {
     const {appIdentifier, address, nonce, signatures} = args
     invariant(
@@ -16,10 +36,10 @@ export const validateArgs = args => {
       "verifyAccountProof({ appIdentifier }) -- appIdentifier must be a string"
     )
     invariant(
-      isString(address) && sansPrefix(address).length === 16,
+      isString(address) && sansPrefix(address!).length === 16,
       "verifyAccountProof({ address }) -- address must be a valid address"
     )
-    invariant(/^[0-9a-f]+$/i.test(nonce), "nonce must be a hex string")
+    invariant(/^[0-9a-f]+$/i.test(nonce!), "nonce must be a hex string")
     invariant(
       Array.isArray(signatures) &&
         signatures.every((sig, i, arr) => sig.f_type === "CompositeSignature"),
@@ -33,11 +53,11 @@ export const validateArgs = args => {
   } else {
     const {message, address, compSigs} = args
     invariant(
-      /^[0-9a-f]+$/i.test(message),
+      /^[0-9a-f]+$/i.test(message!),
       "Signed message must be a hex string"
     )
     invariant(
-      isString(address) && sansPrefix(address).length === 16,
+      isString(address) && sansPrefix(address!).length === 16,
       "verifyUserSignatures({ address }) -- address must be a valid address"
     )
     invariant(
@@ -55,15 +75,18 @@ export const validateArgs = args => {
 
 // TODO: pass in option for contract but we're connected to testnet
 // log address + network -> in sync?
-const getVerifySignaturesScript = async (sig, opts) => {
+const getVerifySignaturesScript = async (
+  sig: string,
+  opts: VerifySignaturesScriptOptions
+): Promise<string> => {
   const verifyFunction =
     sig === "ACCOUNT_PROOF"
       ? "verifyAccountProofSignatures"
       : "verifyUserSignatures"
 
-  let network = await getChainId(opts)
+  const network = await getChainId(opts)
 
-  const contractAddresses = {
+  const contractAddresses: any = {
     testnet: "0x74daa6f9c7ef24b1",
     mainnet: "0xb4b82a1c9d21d284",
     previewnet: "0x40b5b8b2ce81ea4a",
@@ -71,7 +94,7 @@ const getVerifySignaturesScript = async (sig, opts) => {
   const fclCryptoContract = opts.fclCryptoContract || contractAddresses[network]
 
   invariant(
-    fclCryptoContract,
+    fclCryptoContract as any,
     `${verifyFunction}({ fclCryptoContract }) -- FCLCrypto contract address is unknown for network: ${network}. Please manually specify the FCLCrypto contract address.`
   )
 
@@ -117,15 +140,15 @@ const getVerifySignaturesScript = async (sig, opts) => {
  *  )
  */
 export async function verifyAccountProof(
-  appIdentifier,
-  {address, nonce, signatures},
-  opts = {}
-) {
+  appIdentifier: string,
+  {address, nonce, signatures}: AccountProofData,
+  opts: VerifySignaturesScriptOptions = {}
+): Promise<boolean> {
   validateArgs({appIdentifier, address, nonce, signatures})
   const message = encodeAccountProof({address, nonce, appIdentifier}, false)
 
-  let signaturesArr = []
-  let keyIndices = []
+  const signaturesArr: string[] = []
+  const keyIndices: string[] = []
 
   for (const el of signatures) {
     signaturesArr.push(el.signature)
@@ -134,7 +157,7 @@ export async function verifyAccountProof(
 
   return query({
     cadence: await getVerifySignaturesScript(ACCOUNT_PROOF, opts),
-    args: (arg, t) => [
+    args: (arg: any, t: any) => [
       arg(withPrefix(address), t.Address),
       arg(message, t.String),
       arg(keyIndices, t.Array(t.Int)),
@@ -164,12 +187,16 @@ export async function verifyAccountProof(
  *    {fclCryptoContract}
  *  )
  */
-export async function verifyUserSignatures(message, compSigs, opts = {}) {
+export async function verifyUserSignatures(
+  message: string,
+  compSigs: CompositeSignature[],
+  opts: VerifySignaturesScriptOptions = {}
+): Promise<boolean> {
   const address = withPrefix(compSigs[0].addr)
   validateArgs({message, address, compSigs})
 
-  let signaturesArr = []
-  let keyIndices = []
+  const signaturesArr: string[] = []
+  const keyIndices: string[] = []
 
   for (const el of compSigs) {
     signaturesArr.push(el.signature)
