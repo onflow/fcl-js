@@ -5,8 +5,29 @@ import {getChainId} from "../utils"
 import {VERSION} from "../VERSION"
 import {makeDiscoveryServices} from "./utils"
 import {URL} from "../utils/url"
+import {Service} from "@onflow/typedefs"
 
-export async function getServices({types}) {
+export interface GetServicesParams {
+  types: string[]
+}
+
+export interface DiscoveryRequestBody {
+  type: string[]
+  fclVersion: string
+  include: string[]
+  exclude: string[]
+  features: {
+    suggested: string[]
+  }
+  clientServices: Service[]
+  supportedStrategies: string[]
+  userAgent?: string
+  network: string
+}
+
+export async function getServices({
+  types,
+}: GetServicesParams): Promise<Service[]> {
   const endpoint = await config.get("discovery.authn.endpoint")
   invariant(
     Boolean(endpoint),
@@ -15,7 +36,7 @@ export async function getServices({types}) {
 
   const include = await config.get("discovery.authn.include", [])
   const exclude = await config.get("discovery.authn.exclude", [])
-  const url = new URL(endpoint)
+  const url = new URL(endpoint as string)
 
   return fetch(url, {
     method: "POST",
@@ -34,6 +55,6 @@ export async function getServices({types}) {
       supportedStrategies: getServiceRegistry().getStrategies(),
       userAgent: window?.navigator?.userAgent,
       network: await getChainId(),
-    }),
+    } as DiscoveryRequestBody),
   }).then(d => d.json())
 }
