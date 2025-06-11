@@ -1,4 +1,4 @@
-import {retrieve} from "../../document/document.js"
+import {retrieve} from "../../document/document"
 import {deriveCadenceByNetwork} from "../../interaction-template-utils/derive-cadence-by-network/derive-cadence-by-network.js"
 import {isString} from "../../utils/is"
 import {getChainId} from "../../utils"

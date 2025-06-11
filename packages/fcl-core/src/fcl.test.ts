@@ -25,7 +25,7 @@ test("serialize returns voucher", async () => {
       limit(156),
       proposer(authz),
       authorizations([authz]),
-      payer(authz),
+      payer(authz as any),
       ref("123"),
     ])
   )
@@ -38,7 +38,7 @@ test("serialize returns voucher", async () => {
       limit(156),
       proposer(authz),
       authorizations([authz]),
-      payer(authz),
+      payer(authz as any),
       ref("123"),
     ],
     {resolve}

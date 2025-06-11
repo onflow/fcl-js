@@ -13,8 +13,10 @@ import {isReactNative} from "./is-react-native"
 
 const _URL = globalThis.URL
 export class URL extends _URL {
-  constructor(url, base, ...args) {
-    super(url, base, ...args)
+  private _url?: string
+
+  constructor(url: string | URL, base?: string | URL, ...args: any[]) {
+    super(url, base, ...(args as []))
 
     // Extra check if in React Native
     if (!isReactNative()) {
@@ -22,7 +24,7 @@ export class URL extends _URL {
     }
 
     // Fix trailing slash issue
-    if (this._url && !url.endsWith("/") && this._url.endsWith("/")) {
+    if (this._url && !url.toString().endsWith("/") && this._url.endsWith("/")) {
       this._url = this._url.slice(0, -1)
     }
   }
