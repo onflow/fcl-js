@@ -13,8 +13,20 @@ title: "{{name}}"
 
 ## Import
 
+You can import the entire package and access the function:
+
+```typescript
+import * as {{packageName}} from "@onflow/{{packageName}}"
+
+{{packageName}}.{{name}}({{#each parameters}}{{#unless @first}}, {{/unless}}{{name}}{{/each}})
+```
+
+Or import directly the specific function:
+
 ```typescript
 import { {{name}} } from "@onflow/{{packageName}}"
+
+{{name}}({{#each parameters}}{{#unless @first}}, {{/unless}}{{name}}{{/each}})
 ```
 
 {{#if customExample}}
