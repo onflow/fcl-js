@@ -6,8 +6,6 @@ import {decodeResponse} from "./decode"
  *
  * The response from Flow contains encoded values that need to be decoded into JavaScript types. This function handles that conversion, including complex types like structs, arrays, and dictionaries.
  *
- * **To define your own decoder, see the tutorial in the decode package.**
- *
  * @param response Should be the response returned from 'fcl.send([...])'
  * @returns A JSON representation of the raw string response depending on the cadence code executed. The return value can be a single value and type or an object with multiple types.
  *
