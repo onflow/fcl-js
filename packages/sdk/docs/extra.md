@@ -1,7 +1,5 @@
 ## Connect
 
-[<img src="https://raw.githubusercontent.com/onflow/sdks/main/templates/documentation/ref.svg" width="130" />](./configure-fcl.md)
-
 By default, the library uses HTTP to communicate with the access nodes and it must be configured with the correct access node API URL. An error will be returned if the host is unreachable.
 
 Example:
@@ -40,7 +38,7 @@ transaction(greeting: string) {
 
 **Arguments**. A transaction can accept zero or more arguments that are passed into the Cadence script. The arguments on the transaction must match the number and order declared in the Cadence script. Sample script from above accepts a single `String` argument.
 
-**[Proposal key](../../../build/basics/transactions.md#proposal-key)** must be provided to act as a sequence number and prevent replay and other potential attacks.
+**Proposal key** must be provided to act as a sequence number and prevent replay and other potential attacks.
 
 Each account key maintains a separate transaction sequence counter; the key that lends its sequence number to a transaction is called the proposal key.
 
@@ -52,9 +50,9 @@ A proposal key contains three fields:
 
 A transaction is only valid if its declared sequence number matches the current on-chain sequence number for that key. The sequence number increments by one after the transaction is executed.
 
-**[Payer](../../../build/basics/transactions.md#signer-roles)** is the account that pays the fees for the transaction. A transaction must specify exactly one payer. The payer is only responsible for paying the network and gas fees; the transaction is not authorized to access resources or code stored in the payer account.
+**Payer** is the account that pays the fees for the transaction. A transaction must specify exactly one payer. The payer is only responsible for paying the network and gas fees; the transaction is not authorized to access resources or code stored in the payer account.
 
-**[Authorizers](../../../build/basics/transactions.md#signer-roles)** are accounts that authorize a transaction to read and mutate their resources. A transaction can specify zero or more authorizers, depending on how many accounts the transaction needs to access.
+**Authorizers** are accounts that authorize a transaction to read and mutate their resources. A transaction can specify zero or more authorizers, depending on how many accounts the transaction needs to access.
 
 The number of authorizers on the transaction must match the number of `&Account` parameters declared in the prepare statement of the Cadence script.
 

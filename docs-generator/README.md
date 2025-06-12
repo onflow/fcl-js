@@ -169,3 +169,8 @@ All type documentation includes JSDoc descriptions when available.
 ## Integration with Documentation Projects
 
 After generating documentation, copy the `output/packages-docs` directory to the documentation project. This will maintain the folder structure and allow the documentation build system to process the files.
+
+## Notes
+
+- Avoid relative path linking outside of packages-docs folder to avoid docusaurus linking problems. Use only packages-docs relative links or absolute paths.
+- If needed to add '{}' curly braces in jsdoc description be sure to properly escape them with a backslash to avoid docusaurus problems.

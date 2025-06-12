@@ -9,7 +9,7 @@ import {template} from "@onflow/util-template"
 /**
  * A builder function that creates a script interaction. Scripts allow you to write arbitrary non-mutating Cadence code on the Flow blockchain and return data.
  *
- * You can learn more about [Cadence here](https://cadence-lang.org/docs/language) and [scripts here](./scripts.md), but we are now only interested in executing the script code and getting back the data.
+ * You can learn more about [Cadence here](https://cadence-lang.org/docs/language), but we are now only interested in executing the script code and getting back the data.
  *
  * We can execute a script using the latest state of the Flow blockchain or we can choose to execute the script at a specific time in history defined by a block height or block ID.
  *

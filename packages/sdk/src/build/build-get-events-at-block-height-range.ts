@@ -13,7 +13,10 @@ import {
  * The block range provided must be 250 blocks or lower per request.
  *
  * Event type is a string that follow a standard format:
- * 'A.{AccountAddress}.{ContractName}.{EventName}'
+ *
+ * ```
+ * A.\{AccountAddress\}.\{ContractName\}.\{EventName\}
+ * ```
  *
  * Please read more about [events in the documentation](https://docs.onflow.org/cadence/language/events/).
  *
