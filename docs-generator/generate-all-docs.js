@@ -11,6 +11,12 @@ async function main() {
     const packages =
       fs.readdirSync(sourcePackagesDir).filter(name => {
         try {
+          const itemPath = path.join(sourcePackagesDir, name)
+          // Check if it's a directory first
+          if (!fs.statSync(itemPath).isDirectory()) {
+            return false
+          }
+
           const packageJsonPath = path.join(
             sourcePackagesDir,
             name,
