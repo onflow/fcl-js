@@ -21,7 +21,6 @@ import {template} from "@onflow/util-template"
  * @returns A function that processes an interaction object
  *
  * @example
- * ```typescript
  * import * as fcl from "@onflow/fcl";
  *
  * const result = await fcl.query({
@@ -39,7 +38,6 @@ import {template} from "@onflow/util-template"
  * });
  *
  * console.log(result); // 13
- * ```
  */
 export function script(
   ...args: [

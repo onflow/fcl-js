@@ -15,7 +15,6 @@ import {AccountAuthorization, prepAccount} from "../interaction/interaction"
  * @returns A function that takes an interaction object and returns a new interaction object with the proposer added
  *
  * @example
- * ```typescript
  * import * as fcl from "@onflow/fcl";
  *
  * // Using the current user as proposer
@@ -44,7 +43,6 @@ import {AccountAuthorization, prepAccount} from "../interaction/interaction"
  *   fcl.authorizations([authorizerAuthz]),
  *   fcl.limit(100)
  * ]);
- * ```
  */
 export function proposer(authz: AccountAuthorization) {
   return prepAccount(authz, {

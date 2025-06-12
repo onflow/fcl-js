@@ -12,7 +12,6 @@ import {InteractionBuilderFn} from "../interaction/interaction"
  * @returns A function that processes an interaction object
  *
  * @example
- * ```typescript
  * import * as fcl from "@onflow/fcl";
  *
  * await fcl.mutate({
@@ -37,7 +36,6 @@ import {InteractionBuilderFn} from "../interaction/interaction"
  *   `,
  *   fcl.limit(9999) // Set higher limit for complex operations
  * ]);
- * ```
  */
 export function limit(limit: number): InteractionBuilderFn {
   return ix => {

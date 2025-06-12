@@ -33,7 +33,6 @@ interface AccountQueryOptions {
  * @returns A promise that resolves to an Account object
  *
  * @example
- * ```typescript
  * import * as fcl from "@onflow/fcl";
  *
  * // Get account from latest block height
@@ -63,7 +62,6 @@ interface AccountQueryOptions {
  *   fcl.getAccount("0x1d007d755706c469"),
  *   fcl.atBlockHeight(123)
  * ]).then(fcl.decode);
- * ```
  */
 export async function account(
   address: string,

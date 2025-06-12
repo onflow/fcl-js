@@ -17,7 +17,6 @@ import {
  * @returns A function that processes an interaction object
  *
  * @example
- * ```typescript
  * import * as fcl from "@onflow/fcl";
  *
  * // somewhere in an async function
@@ -26,7 +25,6 @@ import {
  *   const account = await fcl.send([fcl.getAccount(address)]).then(fcl.decode);
  *   return account;
  * };
- * ```
  */
 export function getAccount(addr: string): InteractionBuilderFn {
   return pipe([

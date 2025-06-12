@@ -19,7 +19,6 @@ import {Interaction} from "@onflow/typedefs"
  * @returns A partial interaction to be paired with another interaction such as 'fcl.getBlock()' or 'fcl.getAccount()'
  *
  * @example
- * ```typescript
  * import * as fcl from "@onflow/fcl";
  *
  * // Get block by ID
@@ -40,7 +39,6 @@ import {Interaction} from "@onflow/typedefs"
  *   `,
  *   fcl.atBlockId("a1b2c3d4e5f6")
  * ]).then(fcl.decode);
- * ```
  */
 export function atBlockId(id: string): InteractionBuilderFn {
   return pipe([

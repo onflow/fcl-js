@@ -40,7 +40,6 @@ type SigningFn = (
  * @returns A function that processes an interaction object
  *
  * @example
- * ```typescript
  * import * as fcl from "@onflow/fcl";
  *
  * // Single authorizer (most common case)
@@ -81,7 +80,6 @@ type SigningFn = (
  *   fcl.payer(fcl.authz),
  *   fcl.limit(100)
  * ]);
- * ```
  */
 export function authorizations(ax: Array<AccountAuthorization> = []) {
   return pipe(
@@ -107,7 +105,6 @@ export function authorizations(ax: Array<AccountAuthorization> = []) {
  * @returns A partial interaction account object
  *
  * @example
- * ```typescript
  * import * as fcl from "@onflow/fcl";
  * import { ec as EC } from "elliptic";
  *
@@ -136,7 +133,6 @@ export function authorizations(ax: Array<AccountAuthorization> = []) {
  *   payer: authz,
  *   authorizations: [authz]
  * });
- * ```
  */
 export function authorization(
   addr: string,

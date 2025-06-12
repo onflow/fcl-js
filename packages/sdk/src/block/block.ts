@@ -27,7 +27,6 @@ interface BlockQueryOptions {
  * @returns A promise that resolves to a Block object
  *
  * @example
- * ```typescript
  * import * as fcl from "@onflow/fcl";
  *
  * // Get latest block
@@ -39,7 +38,6 @@ interface BlockQueryOptions {
  *
  * // Get block at height (uses builder function)
  * await fcl.send([fcl.getBlock(), fcl.atBlockHeight(123)]).then(fcl.decode)
- * ```
  */
 export async function block(
   {sealed = false, id, height}: BlockQueryOptions = {},

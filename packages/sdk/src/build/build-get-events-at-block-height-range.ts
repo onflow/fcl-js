@@ -12,11 +12,7 @@ import {
  *
  * The block range provided must be 250 blocks or lower per request.
  *
- * Event type is a string that follow a standard format:
- *
- * ```
- * A.\{AccountAddress\}.\{ContractName\}.\{EventName\}
- * ```
+ * Event type is a string that follow a standard format: A.\{AccountAddress\}.\{ContractName\}.\{EventName\}
  *
  * Please read more about [events in the documentation](https://docs.onflow.org/cadence/language/events/).
  *
@@ -28,7 +24,6 @@ import {
  * @returns A function that processes an interaction object
  *
  * @example
- * ```typescript
  * import * as fcl from "@onflow/fcl";
  *
  * // Get events at block height range
@@ -41,7 +36,6 @@ import {
  *     ),
  *   ])
  *   .then(fcl.decode);
- * ```
  */
 export function getEventsAtBlockHeightRange(
   eventType: string,

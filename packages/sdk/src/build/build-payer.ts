@@ -19,7 +19,6 @@ import {
  * @returns A function that takes an interaction object and returns a new interaction object with the payer(s) added
  *
  * @example
- * ```typescript
  * import * as fcl from "@onflow/fcl";
  *
  * // Using current user as payer (most common case)
@@ -59,7 +58,6 @@ import {
  *   `,
  *   fcl.payer([payerAuthz1, payerAuthz2]) // Multiple payers split fees
  * ]);
- * ```
  */
 export function payer(ax: AccountAuthorization[] = []) {
   if (!Array.isArray(ax)) ax = [ax]

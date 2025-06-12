@@ -8,7 +8,6 @@ import {makePing, InteractionBuilderFn} from "../interaction/interaction"
  * @returns A function that processes an interaction object
  *
  * @example
- * ```typescript
  * import * as fcl from "@onflow/fcl";
  *
  * // Simple ping to test connectivity
@@ -31,7 +30,6 @@ import {makePing, InteractionBuilderFn} from "../interaction/interaction"
  *
  * const health = await healthCheck();
  * console.log("Health status:", health);
- * ```
  */
 export function ping(): InteractionBuilderFn {
   return makePing

@@ -19,7 +19,6 @@ const DEFAULT_REF: any = null
  * @returns A function that processes an interaction object
  *
  * @example
- * ```typescript
  * import * as fcl from "@onflow/fcl"
  *
  * // Basic transaction usage
@@ -63,7 +62,6 @@ const DEFAULT_REF: any = null
  *   authorizations: [authzFn],
  *   limit: 50,
  * })
- * ```
  */
 export function transaction(
   ...args: [string | TemplateStringsArray, ...any[]]

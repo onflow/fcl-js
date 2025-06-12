@@ -13,7 +13,6 @@ import {validator} from "./build-validator"
  * @returns A partial interaction to be paired with another interaction such as 'fcl.getBlock()' or 'fcl.getAccount()'
  *
  * @example
- * ```typescript
  * import * as fcl from "@onflow/fcl";
  *
  * // Get block at specific height
@@ -34,7 +33,6 @@ import {validator} from "./build-validator"
  *   `,
  *   fcl.atBlockHeight(100)
  * ]).then(fcl.decode);
- * ```
  */
 export function atBlockHeight(height: number): InteractionBuilderFn {
   return pipe([

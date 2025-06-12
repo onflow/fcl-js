@@ -15,13 +15,11 @@ import {
  * @returns A function that processes an interaction object
  *
  * @example
- * ```typescript
  * import * as fcl from "@onflow/fcl";
  *
  * const collection = await fcl.send([
  *   fcl.getCollection("cccdb0c67d015dc7f6444e8f62a3244ed650215ed66b90603006c70c5ef1f6e5")
  * ]).then(fcl.decode);
- * ```
  */
 export function getCollection(id: string | null = null): InteractionBuilderFn {
   return pipe([

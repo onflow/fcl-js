@@ -19,7 +19,6 @@ import {getTransport} from "../get-transport"
  * @returns A promise that resolves to a response
  *
  * @example
- * ```typescript
  * import * as fcl from "@onflow/fcl";
  *
  * // a script only needs to resolve the arguments to the script
@@ -38,7 +37,6 @@ import {getTransport} from "../get-transport"
  *   fcl.limit(9999)
  * ]);
  * // note: response contains several values
- * ```
  */
 export const send = async (
   args: (Function | false) | (Function | false)[] = [],

@@ -20,13 +20,11 @@ import {
  * @returns A function that processes an interaction object
  *
  * @example
- * ```typescript
  * import * as fcl from "@onflow/fcl";
  *
  * const latestSealedBlock = await fcl.send([
  *   fcl.getBlock(true) // isSealed = true
  * ]).then(fcl.decode);
- * ```
  */
 export function getBlock(
   isSealed: boolean | null = null

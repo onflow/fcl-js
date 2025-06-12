@@ -12,7 +12,6 @@ import {send} from "../transport"
  * @returns A promise that resolves to a block response
  *
  * @example
- * ```typescript
  * import * as fcl from "@onflow/fcl";
  *
  * // Get node version information
@@ -32,7 +31,6 @@ import {send} from "../transport"
  * if (info.protocol_version.startsWith("2.13")) {
  *   console.log("Compatible with current protocol version");
  * }
- * ```
  */
 export async function nodeVersionInfo(
   opts: any = {}

@@ -10,7 +10,6 @@ import {decodeResponse} from "./decode"
  * @returns A JSON representation of the raw string response depending on the cadence code executed. The return value can be a single value and type or an object with multiple types.
  *
  * @example
- * ```typescript
  * import * as fcl from "@onflow/fcl";
  *
  * // Simple script to add 2 numbers
@@ -38,7 +37,6 @@ import {decodeResponse} from "./decode"
  *
  * const complexDecoded = await fcl.decode(complexResponse);
  * console.log(complexDecoded); // {foo: 1, bar: 2}
- * ```
  */
 export async function decode(response: any): Promise<any> {
   const decodersFromConfig = await config().where(/^decoder\./)

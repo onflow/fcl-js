@@ -16,13 +16,11 @@ import {
  * @returns A function that processes an interaction object
  *
  * @example
- * ```typescript
  * import * as fcl from "@onflow/fcl";
  *
  * const status = await fcl.send([
  *   fcl.getTransactionStatus("9dda5f281897389b99f103a1c6b180eec9dac870de846449a302103ce38453f3")
  * ]).then(fcl.decode);
- * ```
  */
 export function getTransactionStatus(
   transactionId: string

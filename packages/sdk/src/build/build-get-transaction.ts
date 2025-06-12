@@ -19,13 +19,11 @@ import {
  * @returns A function that processes an interaction object
  *
  * @example
- * ```typescript
  * import * as fcl from "@onflow/fcl";
  *
  * const tx = await fcl.send([
  *   fcl.getTransaction("9dda5f281897389b99f103a1c6b180eec9dac870de846449a302103ce38453f3")
  * ]).then(fcl.decode);
- * ```
  */
 export function getTransaction(id: string): InteractionBuilderFn {
   return pipe([

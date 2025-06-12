@@ -16,7 +16,6 @@ import {Interaction} from "@onflow/typedefs"
  * @returns A promise of an interaction
  *
  * @example
- * ```typescript
  * import * as fcl from "@onflow/fcl";
  *
  * // Build a script interaction
@@ -47,7 +46,6 @@ import {Interaction} from "@onflow/typedefs"
  *   fcl.authorizations([authorizerAuthz]),
  *   fcl.limit(100)
  * ]);
- * ```
  */
 export function build(
   fns: (InteractionBuilderFn | false)[] = []

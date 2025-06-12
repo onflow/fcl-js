@@ -10,7 +10,6 @@ import {TypeDescriptorInput, TypeDescriptor} from "@onflow/types"
  * @returns An interaction object
  *
  * @example
- * ```typescript
  * import * as fcl from "@onflow/fcl"
  *
  * await fcl.mutate({
@@ -26,7 +25,6 @@ import {TypeDescriptorInput, TypeDescriptor} from "@onflow/types"
  *     arg("0xba1132bc08f82fe2", t.Address), // Will be the second argument `to: Address`
  *   ],
  * })
- * ```
  */
 export function args(ax: CadenceArgument<any>[]) {
   return pipe(ax.map(makeArgument))
@@ -42,7 +40,6 @@ export function args(ax: CadenceArgument<any>[]) {
  * @returns An argument object
  *
  * @example
- * ```typescript
  * import * as fcl from "@onflow/fcl"
  *
  * const result = await fcl.query({
@@ -58,7 +55,6 @@ export function args(ax: CadenceArgument<any>[]) {
  *     arg("0xba1132bc08f82fe2", t.Address), // addr: Address
  *   ],
  * });
- * ```
  */
 export function arg<T extends TypeDescriptor<any, any>>(
   value: TypeDescriptorInput<T>,

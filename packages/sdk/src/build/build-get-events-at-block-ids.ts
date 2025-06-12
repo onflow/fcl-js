@@ -10,11 +10,7 @@ import {
  *
  * The block range provided must be from the current spork.
  *
- * Event type is a string that follow a standard format:
- *
- * ```
- * A.\{AccountAddress\}.\{ContractName\}.\{EventName\}
- * ```
+ * Event type is a string that follow a standard format: A.\{AccountAddress\}.\{ContractName\}.\{EventName\}
  *
  * Please read more about [events in the documentation](https://docs.onflow.org/cadence/language/events/).
  *
@@ -23,7 +19,6 @@ import {
  * @returns A function that processes an interaction object
  *
  * @example
- * ```typescript
  * import * as fcl from "@onflow/fcl";
  *
  * const events = await fcl.send([
@@ -32,7 +27,6 @@ import {
  *     "5dbaa85922eb194a3dc463c946cc01c866f2ff2b88f3e59e21c0d8d00113273f"
  *   ])
  * ]).then(fcl.decode);
- * ```
  */
 export function getEventsAtBlockIds(
   eventType: string,

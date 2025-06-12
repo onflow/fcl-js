@@ -21,7 +21,6 @@ import {SubscribeParams} from "./types"
  * @returns A subscription object that allows you to manage the subscription (e.g., to unsubscribe later)
  *
  * @example
- * ```typescript
  * import * as fcl from "@onflow/fcl";
  * import { SubscriptionTopic } from "@onflow/sdk";
  *
@@ -56,7 +55,6 @@ import {SubscribeParams} from "./types"
  * // Later, to unsubscribe:
  * subscription.unsubscribe();
  * blockSubscription.unsubscribe();
- * ```
  */
 export function subscribe<T extends SubscriptionTopic>(
   {topic, args, onData, onError}: SubscribeParams<T>,

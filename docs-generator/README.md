@@ -174,3 +174,4 @@ After generating documentation, copy the `output/packages-docs` directory to the
 
 - Avoid relative path linking outside of packages-docs folder to avoid docusaurus linking problems. Use only packages-docs relative links or absolute paths.
 - If needed to add '{}' curly braces in jsdoc description be sure to properly escape them with a backslash to avoid docusaurus problems.
+- If adding an example to a jsdoc, avoid adding backticks, it will be directly embedded into typescript backticks on pages generation.
