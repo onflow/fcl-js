@@ -30,6 +30,12 @@ const isExpectedMessage = (signable: Signable): boolean => {
     : encodeInsideMessage(getVoucher(signable)) === getMessage(signable)
 }
 
+/**
+ * Validates that a signable transaction is properly formed and contains the expected message.
+ *
+ * @param signable The signable object to validate
+ * @returns True if the signable is valid, throws an error if invalid
+ */
 export const validateSignableTransaction = (signable: Signable): boolean => {
   invariant(isExpectedMessage(signable), "Signable payload must be transaction")
 

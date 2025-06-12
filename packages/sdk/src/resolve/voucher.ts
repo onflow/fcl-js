@@ -2,6 +2,12 @@ import {withPrefix} from "@onflow/util-address"
 import {Voucher, encodeTxIdFromVoucher} from "../encode/encode"
 import {Interaction} from "@onflow/typedefs"
 
+/**
+ * Identifies signers for the transaction payload (authorizers + proposer, excluding payer).
+ *
+ * @param ix The interaction object
+ * @returns Array of account tempIds that need to sign the payload
+ */
 export function findInsideSigners(ix: Interaction) {
   // Inside Signers Are: (authorizers + proposer) - payer
   let inside = new Set(ix.authorizations)
@@ -16,12 +22,24 @@ export function findInsideSigners(ix: Interaction) {
   return Array.from(inside)
 }
 
+/**
+ * Identifies signers for the transaction envelope (payer accounts only).
+ *
+ * @param ix The interaction object
+ * @returns Array of account tempIds that need to sign the envelope
+ */
 export function findOutsideSigners(ix: Interaction) {
   // Outside Signers Are: (payer)
   let outside = new Set(Array.isArray(ix.payer) ? ix.payer : [ix.payer])
   return Array.from(outside)
 }
 
+/**
+ * Creates a signable voucher object from an interaction for signing purposes.
+ *
+ * @param ix The interaction object containing transaction details
+ * @returns A voucher object containing all transaction data and signatures
+ */
 export const createSignableVoucher = (ix: Interaction) => {
   const buildAuthorizers = () => {
     const authorizations = ix.authorizations
@@ -69,6 +87,12 @@ export const createSignableVoucher = (ix: Interaction) => {
   }
 }
 
+/**
+ * Converts a voucher object to a transaction ID.
+ *
+ * @param voucher The voucher object to convert
+ * @returns A transaction ID string
+ */
 export const voucherToTxId = (voucher: Voucher) => {
   return encodeTxIdFromVoucher(voucher)
 }

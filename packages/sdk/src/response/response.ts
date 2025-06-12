@@ -19,4 +19,9 @@ const DEFAULT_RESPONSE = {
   nodeVersionInfo: null,
 }
 
+/**
+ * Creates a default response object
+ *
+ * @returns A default response object
+ */
 export const response = () => ({...DEFAULT_RESPONSE})

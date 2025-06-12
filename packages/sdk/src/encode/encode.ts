@@ -2,10 +2,30 @@ import {SHA3} from "sha3"
 import {encode, Buffer, EncodeInput} from "@onflow/rlp"
 import {sansPrefix} from "@onflow/util-address"
 
+/**
+ * Encodes a transaction payload for signing.
+ *
+ * @param tx The transaction object to encode
+ * @returns A hex-encoded string representing the transaction payload
+ */
 export const encodeTransactionPayload = (tx: Transaction) =>
   prependTransactionDomainTag(rlpEncode(preparePayload(tx)))
+
+/**
+ * Encodes a complete transaction envelope including payload and signatures.
+ *
+ * @param tx The transaction object to encode
+ * @returns A hex-encoded string representing the full transaction envelope
+ */
 export const encodeTransactionEnvelope = (tx: Transaction) =>
   prependTransactionDomainTag(rlpEncode(prepareEnvelope(tx)))
+
+/**
+ * Encodes a transaction ID from a voucher by computing its hash.
+ *
+ * @param voucher The voucher object to encode
+ * @returns A hex-encoded string representing the transaction ID
+ */
 export const encodeTxIdFromVoucher = (voucher: Voucher) =>
   sha3_256(rlpEncode(prepareVoucher(voucher)))
 

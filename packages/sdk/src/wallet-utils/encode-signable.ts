@@ -56,6 +56,13 @@ export class UnableToDetermineMessageEncodingTypeForSignerAddress extends Error 
   }
 }
 
+/**
+ * Encodes a message from a signable object for a specific signer address.
+ *
+ * @param signable The signable object containing transaction data
+ * @param signerAddress The address of the signer to encode the message for
+ * @returns An encoded message string suitable for signing
+ */
 export const encodeMessageFromSignable = (
   signable: Signable,
   signerAddress: string

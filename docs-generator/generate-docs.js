@@ -57,6 +57,55 @@ function parseJsDoc(node) {
       }
     }
 
+    // For variable declarations, check the parent VariableStatement for JSDoc
+    if (typeof node.getParent === "function") {
+      const parent = node.getParent()
+      if (parent && typeof parent.getJsDocs === "function") {
+        const parentJsDocs = parent.getJsDocs()
+        if (parentJsDocs && parentJsDocs.length > 0) {
+          const jsDoc = parentJsDocs[0]
+          const description = jsDoc.getDescription() || ""
+
+          // Parse tags if available
+          let parsedTags = {}
+          if (typeof jsDoc.getTags === "function") {
+            const tags = jsDoc.getTags()
+
+            tags.forEach(tag => {
+              const tagName = tag.getTagName()
+              const comment = tag.getComment() || ""
+
+              // Parse param tags
+              if (tagName === "param") {
+                if (!parsedTags.params) parsedTags.params = {}
+                const paramName = tag.getName()
+                if (paramName) {
+                  parsedTags.params[paramName] = comment
+                }
+              }
+              // Parse return tag
+              else if (tagName === "returns" || tagName === "return") {
+                parsedTags.returns = comment
+              }
+              // Parse example tag
+              else if (tagName === "example") {
+                parsedTags.example = comment
+              }
+              // Store any other tags
+              else {
+                parsedTags[tagName] = comment
+              }
+            })
+          }
+
+          return {
+            description: description.trim(),
+            ...parsedTags,
+          }
+        }
+      }
+    }
+
     // Fallback: try to parse JSDoc from the node leading comments
     if (typeof node.getLeadingCommentRanges === "function") {
       const commentRanges = node.getLeadingCommentRanges()
@@ -69,6 +118,25 @@ function parseJsDoc(node) {
         if (match && match[1]) {
           const description = match[1].replace(/^\s*\*\s?/gm, "").trim()
           return {description}
+        }
+      }
+    }
+
+    // Also try to get comments from parent node if current node doesn't have any
+    if (typeof node.getParent === "function") {
+      const parent = node.getParent()
+      if (parent && typeof parent.getLeadingCommentRanges === "function") {
+        const commentRanges = parent.getLeadingCommentRanges()
+        if (commentRanges && commentRanges.length > 0) {
+          const commentText = commentRanges
+            .map(range => range.getText())
+            .join("\n")
+          // Simple regex to extract JSDoc description
+          const match = /\/\*\*\s*([\s\S]*?)\s*\*\//.exec(commentText)
+          if (match && match[1]) {
+            const description = match[1].replace(/^\s*\*\s?/gm, "").trim()
+            return {description}
+          }
         }
       }
     }
@@ -122,7 +190,28 @@ function extractFunctions(sourceFile) {
           }
           // Handle variable declarations with function values
           else if (Node.isVariableDeclaration(declaration)) {
-            const jsDocInfo = parseJsDoc(declaration)
+            // For const declarations, we need to check multiple places for JSDoc
+            let jsDocInfo = parseJsDoc(declaration)
+
+            // If no JSDoc found on the declaration, try the parent VariableDeclarationList
+            if (!jsDocInfo.description) {
+              const parentList = declaration.getParent()
+              if (parentList) {
+                jsDocInfo = parseJsDoc(parentList)
+              }
+            }
+
+            // If still no JSDoc found, try the parent VariableStatement
+            if (!jsDocInfo.description) {
+              const parentList = declaration.getParent()
+              if (parentList) {
+                const parentStatement = parentList.getParent()
+                if (parentStatement) {
+                  jsDocInfo = parseJsDoc(parentStatement)
+                }
+              }
+            }
+
             const initializer = declaration.getInitializer()
 
             if (

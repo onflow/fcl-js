@@ -108,9 +108,19 @@ const IX = `{
 
 const KEYS = new Set(Object.keys(JSON.parse(IX) as Interaction))
 
-export const initInteraction = (): Interaction => JSON.parse(IX)
 /**
- * @deprecated
+ * Creates a new interaction object with default values.
+ *
+ * @returns A new interaction object initialized with default values
+ */
+export const initInteraction = (): Interaction => JSON.parse(IX)
+
+/**
+ * Creates a new interaction object with default values.
+ *
+ * @deprecated Use initInteraction() instead. This function will be removed in a future version.
+ *
+ * @returns A new interaction object initialized with default values
  */
 export const interaction = () => {
   log.deprecate({
@@ -123,24 +133,77 @@ export const interaction = () => {
   return initInteraction()
 }
 
+/**
+ * Checks if a value is a number.
+ *
+ * @param d The value to check
+ * @returns True if the value is a number, false otherwise
+ */
 export const isNumber = (d: any): d is number => typeof d === "number"
+
+/**
+ * Checks if a value is an array.
+ *
+ * @param d The value to check
+ * @returns True if the value is an array, false otherwise
+ */
 export const isArray = (d: any): d is any[] => Array.isArray(d)
+
+/**
+ * Checks if a value is an object (but not null).
+ *
+ * @param d The value to check
+ * @returns True if the value is an object and not null, false otherwise
+ */
 export const isObj = (d: any): d is Record<string, any> =>
   d !== null && typeof d === "object"
+
+/**
+ * Checks if a value is null or undefined.
+ *
+ * @param d The value to check
+ * @returns True if the value is null or undefined, false otherwise
+ */
 export const isNull = (d: any): d is null => d == null
+
+/**
+ * Checks if a value is a function.
+ *
+ * @param d The value to check
+ * @returns True if the value is a function, false otherwise
+ */
 export const isFn = (d: any): d is Function => typeof d === "function"
 
+/**
+ * Checks if an object is a valid interaction.
+ *
+ * @param ix The object to check
+ * @returns True if the object is a valid interaction, false otherwise
+ */
 export const isInteraction = (ix: unknown) => {
   if (!isObj(ix) || isNull(ix) || isNumber(ix)) return false
   for (let key of KEYS) if (!ix.hasOwnProperty(key)) return false
   return true
 }
 
+/**
+ * Marks an interaction as successful and returns the interaction object.
+ *
+ * @param ix The interaction to mark as successful
+ * @returns The interaction object with status set to OK
+ */
 export const Ok = (ix: Interaction) => {
   ix.status = InteractionStatus.OK
   return ix
 }
 
+/**
+ * Marks an interaction as failed with a specific reason and returns the interaction object.
+ *
+ * @param ix The interaction to mark as failed
+ * @param reason The reason for the failure
+ * @returns The interaction object with status set to BAD and reason set
+ */
 export const Bad = (ix: Interaction, reason: string) => {
   ix.status = InteractionStatus.BAD
   ix.reason = reason
@@ -170,8 +233,20 @@ interface IPrepAccountOpts {
   role?: TransactionRole | null
 }
 
+/**
+ * Creates a new account object with default values.
+ *
+ * @returns A new account object initialized with default values
+ */
 export const initAccount = (): InteractionAccount => JSON.parse(ACCT)
 
+/**
+ * Prepares and configures an account for use in an interaction with a specific role.
+ *
+ * @param acct The account authorization function or account object
+ * @param opts Configuration options including the role for the account
+ * @returns A function that adds the prepared account to an interaction
+ */
 export const prepAccount =
   (acct: AccountAuthorization, opts: IPrepAccountOpts = {}) =>
   (ix: Interaction) => {
@@ -222,6 +297,12 @@ export const prepAccount =
     return ix
   }
 
+/**
+ * Creates an argument resolver and adds it to an interaction.
+ *
+ * @param arg The argument configuration object
+ * @returns A function that adds the argument to an interaction
+ */
 export const makeArgument = (arg: Record<string, any>) => (ix: Interaction) => {
   let tempId = uuidv4()
   ix.message.arguments.push(tempId)
@@ -305,14 +386,47 @@ export const isSubscribeEvents /*         */ = is(
   InteractionTag.SUBSCRIBE_EVENTS
 )
 
+/**
+ * Checks if an interaction has a successful status.
+ *
+ * @param ix The interaction to check
+ * @returns True if the interaction status is OK, false otherwise
+ */
 export const isOk /*  */ = (ix: Interaction) =>
   ix.status === InteractionStatus.OK
+
+/**
+ * Checks if an interaction has a failed status.
+ *
+ * @param ix The interaction to check
+ * @returns True if the interaction status is BAD, false otherwise
+ */
 export const isBad /* */ = (ix: Interaction) =>
   ix.status === InteractionStatus.BAD
+
+/**
+ * Returns the reason for an interaction failure.
+ *
+ * @param ix The interaction to get the failure reason from
+ * @returns The reason string or undefined if no reason is set
+ */
 export const why /*   */ = (ix: Interaction) => ix.reason
 
+/**
+ * Checks if an object is an account resolver.
+ *
+ * @param account The object to check
+ * @returns True if the object is an account resolver, false otherwise
+ */
 export const isAccount /*  */ = (account: Record<string, any>) =>
   account.kind === InteractionResolverKind.ACCOUNT
+
+/**
+ * Checks if an object is an argument resolver.
+ *
+ * @param argument The object to check
+ * @returns True if the object is an argument resolver, false otherwise
+ */
 export const isArgument /* */ = (argument: Record<string, any>) =>
   argument.kind === InteractionResolverKind.ARGUMENT
 
@@ -370,6 +484,14 @@ export {pipe}
 
 const identity = <T>(v: T, ..._: any[]) => v
 
+/**
+ * Gets a value from an interaction object using a dot-notation key path.
+ *
+ * @param ix The interaction object
+ * @param key The dot-notation key path (e.g., "message.arguments")
+ * @param fallback The fallback value if the key is not found
+ * @returns The value at the key path or the fallback value
+ */
 export const get = (
   ix: Interaction,
   key: string,
@@ -378,11 +500,25 @@ export const get = (
   return ix.assigns[key] == null ? fallback : ix.assigns[key]
 }
 
+/**
+ * Sets a value in an interaction object using a dot-notation key path.
+ *
+ * @param key The dot-notation key path (e.g., "message.arguments")
+ * @param value The value to set
+ * @returns A function that takes an interaction and sets the value
+ */
 export const put = (key: string, value: any) => (ix: Interaction) => {
   ix.assigns[key] = value
   return Ok(ix)
 }
 
+/**
+ * Updates a value in an interaction object using a transformation function.
+ *
+ * @param key The dot-notation key path to update
+ * @param fn The transformation function to apply to the existing value
+ * @returns A function that takes an interaction and updates the value
+ */
 export const update =
   <T>(key: string, fn: (v: T | T[], ...args: any[]) => T | T[] = identity) =>
   (ix: Interaction) => {
@@ -390,6 +526,12 @@ export const update =
     return Ok(ix)
   }
 
+/**
+ * Removes a property from an interaction object using a dot-notation key path.
+ *
+ * @param key The dot-notation key path to remove
+ * @returns A function that takes an interaction and removes the property
+ */
 export const destroy = (key: string) => (ix: Interaction) => {
   delete ix.assigns[key]
   return Ok(ix)

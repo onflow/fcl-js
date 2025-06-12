@@ -40,6 +40,12 @@ async function handleArgResolution(
   }
 }
 
+/**
+ * Resolves transaction arguments by evaluating argument functions and converting them to appropriate types.
+ *
+ * @param ix The interaction object containing arguments to resolve
+ * @returns The interaction with resolved arguments
+ */
 export async function resolveArguments(ix: Interaction): Promise<Interaction> {
   if (isTransaction(ix) || isScript(ix)) {
     for (let [id, arg] of Object.entries(ix.arguments)) {
