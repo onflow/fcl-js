@@ -28,10 +28,7 @@ export interface PollingResponse {
  *    data: data,
  *  })
  */
-export const sendMsgToFCL = (
-  type: string,
-  msg: PollingResponse = {} as PollingResponse
-): void => {
+export const sendMsgToFCL = (type: string, msg?: PollingResponse): void => {
   const data = {...msg, type}
 
   const urlParams = new URLSearchParams(window.location.search)
