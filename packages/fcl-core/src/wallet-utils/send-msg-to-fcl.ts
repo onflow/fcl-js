@@ -62,8 +62,6 @@ export const ready = (
 
 /**
  * @description Sends "FCL:VIEW:CLOSE"
- *
- * @returns {void}
  */
 export const close = (): void => {
   sendMsgToFCL("FCL:VIEW:CLOSE")
