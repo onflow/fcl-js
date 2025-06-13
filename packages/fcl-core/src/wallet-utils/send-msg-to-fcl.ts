@@ -99,8 +99,7 @@ export const decline = (reason: string): void => {
 /**
  * @description Sends "FCL:VIEW:RESPONSE" with status "REDIRECT"
  *
- * @param {object} data Data object
- * @returns {void}
+ * @param data Data object
  */
 export const redirect = (data: any): void => {
   sendMsgToFCL("FCL:VIEW:RESPONSE", {
