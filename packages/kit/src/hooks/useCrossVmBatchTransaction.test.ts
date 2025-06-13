@@ -1,12 +1,12 @@
-import { renderHook, act, waitFor } from "@testing-library/react"
+import {renderHook, act, waitFor} from "@testing-library/react"
 import * as fcl from "@onflow/fcl"
-import { FlowProvider } from "../provider"
+import {FlowProvider} from "../provider"
 import {
   encodeCalls,
   getCadenceBatchTransaction,
   useCrossVmBatchTransaction,
 } from "./useCrossVmBatchTransaction"
-import { useFlowChainId } from "./useFlowChainId"
+import {useFlowChainId} from "./useFlowChainId"
 
 jest.mock("@onflow/fcl", () => require("../__mocks__/fcl").default)
 jest.mock("viem", () => ({
@@ -21,7 +21,7 @@ describe("useBatchEvmTransaction", () => {
   const mockCalls = [
     {
       address: "0x123",
-      abi: [{ type: "function", name: "test" } as any],
+      abi: [{type: "function", name: "test"} as any],
       functionName: "test",
       args: [1, 2],
       gasLimit: BigInt(100000),
@@ -84,13 +84,13 @@ describe("useBatchEvmTransaction", () => {
       let result: any
       let rerender: any
       await act(async () => {
-        ; ({ result, rerender } = renderHook(useCrossVmBatchTransaction, {
+        ;({result, rerender} = renderHook(useCrossVmBatchTransaction, {
           wrapper: FlowProvider,
         }))
       })
 
       await act(async () => {
-        await result.current.sendBatchTransaction({ calls: mockCalls })
+        await result.current.sendBatchTransaction({calls: mockCalls})
         rerender()
       })
 
@@ -106,14 +106,14 @@ describe("useBatchEvmTransaction", () => {
       let hookResult: any
 
       await act(async () => {
-        const { result } = renderHook(useCrossVmBatchTransaction, {
+        const {result} = renderHook(useCrossVmBatchTransaction, {
           wrapper: FlowProvider,
         })
         hookResult = result
       })
 
       await act(async () => {
-        await hookResult.current.sendBatchTransaction({ calls: mockCalls })
+        await hookResult.current.sendBatchTransaction({calls: mockCalls})
       })
 
       await waitFor(() => expect(hookResult.current.isPending).toBe(false))
@@ -123,7 +123,7 @@ describe("useBatchEvmTransaction", () => {
     })
 
     it("should handle missing chain ID", async () => {
-      ; (useFlowChainId as jest.Mock).mockReturnValue({
+      ;(useFlowChainId as jest.Mock).mockReturnValue({
         data: null,
         isLoading: false,
       })
@@ -131,14 +131,14 @@ describe("useBatchEvmTransaction", () => {
       let hookResult: any
 
       await act(async () => {
-        const { result } = renderHook(() => useCrossVmBatchTransaction(), {
+        const {result} = renderHook(() => useCrossVmBatchTransaction(), {
           wrapper: FlowProvider,
         })
         hookResult = result
       })
 
       await act(async () => {
-        await hookResult.current.sendBatchTransaction({ calls: mockCalls })
+        await hookResult.current.sendBatchTransaction({calls: mockCalls})
       })
 
       await waitFor(() => expect(hookResult.current.isError).toBe(true))
@@ -146,7 +146,7 @@ describe("useBatchEvmTransaction", () => {
     })
 
     it("should handle loading chain ID", async () => {
-      ; (useFlowChainId as jest.Mock).mockReturnValue({
+      ;(useFlowChainId as jest.Mock).mockReturnValue({
         data: null,
         isLoading: true,
       })
@@ -154,7 +154,7 @@ describe("useBatchEvmTransaction", () => {
       let hookResult: any
 
       await act(async () => {
-        const { result } = renderHook(() => useCrossVmBatchTransaction(), {
+        const {result} = renderHook(() => useCrossVmBatchTransaction(), {
           wrapper: FlowProvider,
         })
         hookResult = result
@@ -169,19 +169,19 @@ describe("useBatchEvmTransaction", () => {
     })
 
     it("should handle mutation error", async () => {
-      ; (fcl.mutate as jest.Mock).mockRejectedValue(new Error("Mutation failed"))
+      ;(fcl.mutate as jest.Mock).mockRejectedValue(new Error("Mutation failed"))
 
       let hookResult: any
 
       await act(async () => {
-        const { result } = renderHook(() => useCrossVmBatchTransaction(), {
+        const {result} = renderHook(() => useCrossVmBatchTransaction(), {
           wrapper: FlowProvider,
         })
         hookResult = result
       })
 
       await act(async () => {
-        await hookResult.current.sendBatchTransaction({ calls: mockCalls })
+        await hookResult.current.sendBatchTransaction({calls: mockCalls})
       })
 
       await waitFor(() => expect(hookResult.current.isError).toBe(true))

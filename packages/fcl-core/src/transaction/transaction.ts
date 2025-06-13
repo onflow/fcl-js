@@ -13,15 +13,15 @@ import {
   isSealed,
   scoped,
 } from "./utils"
-import { TXID_REGEXP } from "./constants"
+import {TXID_REGEXP} from "./constants"
 import {
   isUnknown,
   subscribe as sdkSubscribe,
   SubscriptionsNotSupportedError,
 } from "@onflow/sdk"
-import { TransactionError } from "./transaction-error"
-import { transaction as legacyTransaction } from "./legacy-polling"
-import { getChainId } from "../utils"
+import {TransactionError} from "./transaction-error"
+import {transaction as legacyTransaction} from "./legacy-polling"
+import {getChainId} from "../utils"
 
 const FLOW_EMULATOR = "local"
 
@@ -43,7 +43,7 @@ export function transaction(
   opts: {
     pollRate?: number
     txNotFoundTimeout?: number
-  } = { txNotFoundTimeout: 12500, pollRate: 1000 }
+  } = {txNotFoundTimeout: 12500, pollRate: 1000}
 ): {
   snapshot: () => Promise<TransactionStatus>
   subscribe: (
@@ -76,12 +76,12 @@ export function transaction(
     onError?: (err: Error) => void
   ) {
     const observable = getObservable()
-    const { unsubscribe } = observable.subscribe(onData, onError)
+    const {unsubscribe} = observable.subscribe(onData, onError)
     return () => unsubscribe()
   }
 
   function once(predicate: (txStatus: TransactionStatus) => boolean) {
-    return function innerOnce(opts = { suppress: false }) {
+    return function innerOnce(opts = {suppress: false}) {
       const suppress = opts.suppress || false
       return new Promise((resolve, reject) => {
         const unsub = subscribe(
@@ -129,7 +129,7 @@ transaction.isExpired = isExpired
  */
 function createObservable(
   txId: string,
-  opts: { pollRate?: number; txNotFoundTimeout?: number }
+  opts: {pollRate?: number; txNotFoundTimeout?: number}
 ) {
   const observers = new Set<{
     onData: (txStatus: TransactionStatus) => void
@@ -167,7 +167,7 @@ function createObservable(
     // Subscribe to transaction status updates
     const subscription = sdkSubscribe({
       topic: SubscriptionTopic.TRANSACTION_STATUSES,
-      args: { transactionId: txId },
+      args: {transactionId: txId},
       onData: txStatus => {
         if (isDiff(value, txStatus)) {
           value = txStatus
@@ -246,7 +246,7 @@ function createObservable(
     ) {
       const observer = {
         onData,
-        onError: onError || (() => { }),
+        onError: onError || (() => {}),
       }
       observers.add(observer)
       onData(value)

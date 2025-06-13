@@ -1,5 +1,5 @@
 import * as fcl from "@onflow/fcl"
-import { Abi, encodeFunctionData } from "viem"
+import {Abi, encodeFunctionData} from "viem"
 import {
   UseMutateAsyncFunction,
   UseMutateFunction,
@@ -7,9 +7,9 @@ import {
   UseMutationOptions,
   UseMutationResult,
 } from "@tanstack/react-query"
-import { useFlowChainId } from "./useFlowChainId"
-import { useFlowQueryClient } from "../provider/FlowQueryClient"
-import { DEFAULT_EVM_GAS_LIMIT } from "../constants"
+import {useFlowChainId} from "./useFlowChainId"
+import {useFlowQueryClient} from "../provider/FlowQueryClient"
+import {DEFAULT_EVM_GAS_LIMIT} from "../constants"
 
 interface UseCrossVmBatchTransactionMutateArgs {
   calls: EvmBatchCall[]
@@ -57,7 +57,7 @@ export interface EvmBatchCall {
 
 export function encodeCalls(
   calls: EvmBatchCall[]
-): Array<{ to: string; data: string; gasLimit: string; value: string }> {
+): Array<{to: string; data: string; gasLimit: string; value: string}> {
   return calls.map(call => {
     const encodedData = encodeFunctionData({
       abi: call.abi,
@@ -164,20 +164,20 @@ export function useCrossVmBatchTransaction({
           args: (arg, t) => [
             arg(
               encodedCalls.map(call => [
-                { key: "to", value: call.to },
-                { key: "data", value: call.data },
+                {key: "to", value: call.to},
+                {key: "data", value: call.data},
                 {
                   key: "gasLimit",
                   value: call.gasLimit,
                 },
-                { key: "value", value: call.value },
+                {key: "value", value: call.value},
               ]),
               t.Array(
                 t.Dictionary([
-                  { key: t.String, value: t.String },
-                  { key: t.String, value: t.String },
-                  { key: t.String, value: t.UInt64 },
-                  { key: t.String, value: t.UInt },
+                  {key: t.String, value: t.String},
+                  {key: t.String, value: t.String},
+                  {key: t.String, value: t.UInt64},
+                  {key: t.String, value: t.UInt},
                 ] as any)
               )
             ),

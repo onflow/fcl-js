@@ -1,7 +1,7 @@
-import { SdkTransport, Subscription, SubscriptionTopic } from "@onflow/typedefs"
-import { subscribeRaw } from "./subscribe-raw"
-import { decodeResponse } from "../../decode/decode"
-import { SubscribeParams } from "./types"
+import {SdkTransport, Subscription, SubscriptionTopic} from "@onflow/typedefs"
+import {subscribeRaw} from "./subscribe-raw"
+import {decodeResponse} from "../../decode/decode"
+import {SubscribeParams} from "./types"
 
 /**
  * Subscribe to a topic and decode the data.
@@ -10,7 +10,7 @@ import { SubscribeParams } from "./types"
  * @returns A promise that resolves when the subscription is active.
  */
 export function subscribe<T extends SubscriptionTopic>(
-  { topic, args, onData, onError }: SubscribeParams<T>,
+  {topic, args, onData, onError}: SubscribeParams<T>,
   opts: {
     node?: string
     transport?: SdkTransport

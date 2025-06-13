@@ -1,9 +1,9 @@
-import { subscribe } from "@onflow/sdk"
-import { SubscriptionsNotSupportedError } from "@onflow/sdk"
-import { SubscriptionTopic, TransactionExecutionStatus } from "@onflow/typedefs"
-import { transaction } from "./transaction"
-import { transaction as legacyTransaction } from "./legacy-polling"
-import { getChainId } from "../utils"
+import {subscribe} from "@onflow/sdk"
+import {SubscriptionsNotSupportedError} from "@onflow/sdk"
+import {SubscriptionTopic, TransactionExecutionStatus} from "@onflow/typedefs"
+import {transaction} from "./transaction"
+import {transaction as legacyTransaction} from "./legacy-polling"
+import {getChainId} from "../utils"
 
 jest.mock("@onflow/sdk")
 jest.mock("./legacy-polling")
@@ -29,7 +29,7 @@ describe("transaction", () => {
   })
 
   test("should throw an error if transactionId is not a 64 byte hash string", () => {
-    const { transaction } = require("./transaction")
+    const {transaction} = require("./transaction")
 
     const actual = () => transaction("invalid-transaction-id")
     expect(actual).toThrow("Invalid transactionId")
@@ -47,12 +47,12 @@ describe("transaction", () => {
     // Expect the subscribe method to be called with the correct parameters
     const subscribeParams = jest.mocked(subscribe).mock
       .calls[0][0] as Parameters<
-        typeof subscribe<SubscriptionTopic.TRANSACTION_STATUSES>
-      >[0]
+      typeof subscribe<SubscriptionTopic.TRANSACTION_STATUSES>
+    >[0]
 
     expect(subscribeParams).toStrictEqual({
       topic: SubscriptionTopic.TRANSACTION_STATUSES,
-      args: { transactionId: txId },
+      args: {transactionId: txId},
       onData: expect.any(Function),
       onError: expect.any(Function),
     })
@@ -133,8 +133,8 @@ describe("transaction", () => {
     // Mock the observable to emit a SEALED status
     const subscribeParams = jest.mocked(subscribe).mock
       .calls[0][0] as Parameters<
-        typeof subscribe<SubscriptionTopic.TRANSACTION_STATUSES>
-      >[0]
+      typeof subscribe<SubscriptionTopic.TRANSACTION_STATUSES>
+    >[0]
 
     subscribeParams.onData({
       status: TransactionExecutionStatus.PENDING,
@@ -173,12 +173,12 @@ describe("transaction", () => {
     // Expect the subscribe method to be called with the correct parameters
     const subscribeParams = jest.mocked(subscribe).mock
       .calls[0][0] as Parameters<
-        typeof subscribe<SubscriptionTopic.TRANSACTION_STATUSES>
-      >[0]
+      typeof subscribe<SubscriptionTopic.TRANSACTION_STATUSES>
+    >[0]
 
     expect(subscribeParams).toStrictEqual({
       topic: SubscriptionTopic.TRANSACTION_STATUSES,
-      args: { transactionId: txId },
+      args: {transactionId: txId},
       onData: expect.any(Function),
       onError: expect.any(Function),
     })
