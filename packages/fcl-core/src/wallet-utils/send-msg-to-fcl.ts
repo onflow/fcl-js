@@ -49,9 +49,8 @@ export const sendMsgToFCL = (type: string, msg?: PollingResponse): void => {
 /**
  * @description Listens for "FCL:VIEW:READY:RESPONSE" and sends "FCL:VIEW:READY"
  *
- * @param {Function} cb Callback function
- * @param {PollingResponse} msg Message object
- * @returns {void}
+ * @param cb Callback function
+ * @param msg Message object
  */
 export const ready = (
   cb: (data: any, context: {origin: string}) => void,
