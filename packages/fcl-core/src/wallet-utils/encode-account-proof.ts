@@ -23,7 +23,7 @@ export const encodeAccountProof = (
   includeDomainTag: boolean = true
 ): string => {
   invariant(
-    address as any,
+    !!address,
     "Encode Message For Provable Authn Error: address must be defined"
   )
   invariant(
