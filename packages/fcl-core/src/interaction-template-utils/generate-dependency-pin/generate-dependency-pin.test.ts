@@ -275,12 +275,14 @@ jest.mock("@onflow/sdk", () => ({
 }))
 
 describe("1.1.0, generate dependency pin", () => {
+  let warnSpy: jest.SpyInstance
+
   beforeAll(() => {
-    jest.spyOn(console, "warn").mockImplementation(() => {})
+    warnSpy = jest.spyOn(console, "warn").mockImplementation(() => {})
   })
 
   afterAll(() => {
-    //console.warn.mockRestore()
+    warnSpy.mockRestore()
   })
 
   test("v1.1.0, get dependency pin", async () => {
