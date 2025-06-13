@@ -85,8 +85,7 @@ export const approve = (data: any): void => {
 /**
  * @description Sends "FCL:VIEW:RESPONSE" with status "DECLINED"
  *
- * @param {string} reason Reason for declining
- * @returns {void}
+ * @param reason Reason for declining
  */
 export const decline = (reason: string): void => {
   sendMsgToFCL("FCL:VIEW:RESPONSE", {
