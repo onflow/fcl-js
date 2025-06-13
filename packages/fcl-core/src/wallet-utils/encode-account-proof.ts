@@ -31,7 +31,7 @@ export const encodeAccountProof = (
     "Encode Message For Provable Authn Error: nonce must be defined"
   )
   invariant(
-    appIdentifier as any,
+    !!appIdentifier,
     "Encode Message For Provable Authn Error: appIdentifier must be defined"
   )
 
