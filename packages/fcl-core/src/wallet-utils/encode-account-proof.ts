@@ -27,7 +27,7 @@ export const encodeAccountProof = (
     "Encode Message For Provable Authn Error: address must be defined"
   )
   invariant(
-    nonce as any,
+    !!nonce,
     "Encode Message For Provable Authn Error: nonce must be defined"
   )
   invariant(
