@@ -4,9 +4,9 @@ import {COMPOSITE_SIGNATURE_PRAGMA} from "../normalizers/service/__vsn"
 /**
  * @description Constructs a new CompositeSignature instance.
  *
- * @param {string} addr Flow Address
- * @param {number} keyId Key ID
- * @param {string} signature Signature as a hex string
+ * @param addr Flow Address
+ * @param keyId Key ID
+ * @param signature Signature as a hex string
  */
 export class CompositeSignature {
   f_type: string
