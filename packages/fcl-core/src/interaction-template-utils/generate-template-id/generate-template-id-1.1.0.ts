@@ -67,7 +67,7 @@ export async function generateTemplateId({
   template: InteractionTemplate110
 }): Promise<string> {
   invariant(
-    template as any,
+    !!template,
     "generateTemplateId({ template }) -- template must be defined"
   )
   invariant(
