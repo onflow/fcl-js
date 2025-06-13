@@ -74,7 +74,7 @@ import {
   StorageProvider,
 } from "@onflow/fcl-core"
 
-import {execStrategyHook} from "./discovery/exec-hook"
+import { execStrategyHook } from "./discovery/exec-hook"
 const discoveryOpts = {
   execStrategy: execStrategyHook,
 }
@@ -101,19 +101,19 @@ export const logIn = (opts = {}) => currentUser().authenticate(opts)
 
 export const authz = currentUser().authorization
 
-import {config} from "@onflow/config"
-import {getDefaultConfig, coreStrategies, LOCAL_STORAGE} from "./utils/web"
-import {initFclWcLoader} from "./utils/walletconnect/loader"
+import { config } from "@onflow/config"
+import { getDefaultConfig, coreStrategies, LOCAL_STORAGE } from "./utils/web"
+import { initFclWcLoader } from "./utils/walletconnect/loader"
 
 config(getDefaultConfig())
 
-initServiceRegistry({coreStrategies})
+initServiceRegistry({ coreStrategies })
 
 // Automatically load fcl-wc plugin
 // Based on the user's config
 initFclWcLoader()
 
-export {LOCAL_STORAGE, SESSION_STORAGE} from "./utils/web"
+export { LOCAL_STORAGE, SESSION_STORAGE } from "./utils/web"
 
 // Subscriptions
-export {subscribe, rawSubscribe} from "@onflow/fcl-core"
+export { subscribe, subscribeRaw } from "@onflow/fcl-core"

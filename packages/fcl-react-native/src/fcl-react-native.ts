@@ -90,25 +90,25 @@ export const logIn = (opts = {}) => currentUser().authenticate(opts)
 
 export const authz = currentUser().authorization
 
-import {config} from "@onflow/config"
+import { config } from "@onflow/config"
 import {
   coreStrategies,
   getDefaultConfig,
   useServiceDiscovery,
   ServiceDiscovery,
 } from "./utils/react-native"
-import {getAsyncStorage} from "./utils/react-native/storage"
+import { getAsyncStorage } from "./utils/react-native/storage"
 
 config(getDefaultConfig())
 
 // Set chain id default on access node change
-initServiceRegistry({coreStrategies})
+initServiceRegistry({ coreStrategies })
 
 // Set isReactNative flag
 setIsReactNative(true)
 
-export {useServiceDiscovery, ServiceDiscovery}
+export { useServiceDiscovery, ServiceDiscovery }
 
 // Subscriptions
-export {subscribe} from "@onflow/fcl-core"
-export {rawSubscribe} from "@onflow/fcl-core"
+export { subscribe } from "@onflow/fcl-core"
+export { subscribeRaw } from "@onflow/fcl-core"

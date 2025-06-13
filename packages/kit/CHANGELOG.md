@@ -1,5 +1,62 @@
 # @onflow/kit
 
+## 0.4.0
+
+### Minor Changes
+
+- [#2503](https://github.com/onflow/fcl-js/pull/2503) [`29a2c99b08d6f5a427bef5362e5d4e7ada9d51e7`](https://github.com/onflow/fcl-js/commit/29a2c99b08d6f5a427bef5362e5d4e7ada9d51e7) Thanks [@jribbink](https://github.com/jribbink)! - **BREAKING** Update `useCrossVmBatchTransaction` result data to the Cadence transaction ID instead of waiting for the EVM transaction hash.
+
+  This change ensures consistency with the existing `useFlowMutate` response format and latencies, as waiting for the transaction execution for EVM results adds unnecessary delays and harms user experience.
+
+  Developers should instead manually subscribe to the Cadence transaction status to track execution status and determine the EVM transaction results.
+
+- [#2460](https://github.com/onflow/fcl-js/pull/2460) [`d7b673e2ea97f6ab5ec2b81d2186b3e9799460cf`](https://github.com/onflow/fcl-js/commit/d7b673e2ea97f6ab5ec2b81d2186b3e9799460cf) Thanks [@jribbink](https://github.com/jribbink)! - Add `useCrossVmSpendNft` hook
+
+- [#2503](https://github.com/onflow/fcl-js/pull/2503) [`f1a7eeab04a46e78b34a7a19aa4d8d93f3add452`](https://github.com/onflow/fcl-js/commit/f1a7eeab04a46e78b34a7a19aa4d8d93f3add452) Thanks [@jribbink](https://github.com/jribbink)! - Add `useCrossVmSpendToken` hook
+
+## 0.3.1
+
+### Patch Changes
+
+- [#2491](https://github.com/onflow/fcl-js/pull/2491) [`ff07e0ea38845f188f0bbbcb9a365cad96cfb8b7`](https://github.com/onflow/fcl-js/commit/ff07e0ea38845f188f0bbbcb9a365cad96cfb8b7) Thanks [@jribbink](https://github.com/jribbink)! - Export `useCrossVmTokenBalance` hook
+
+## 0.3.0
+
+### Minor Changes
+
+- [#2398](https://github.com/onflow/fcl-js/pull/2398) [`99510059485ffb2d741407a573f3be076c77e044`](https://github.com/onflow/fcl-js/commit/99510059485ffb2d741407a573f3be076c77e044) Thanks [@jribbink](https://github.com/jribbink)! - Add `useCrossVmTokenBalance` hook to get full token balance across both Cadence and EVM accounts
+
+### Patch Changes
+
+- [#2486](https://github.com/onflow/fcl-js/pull/2486) [`3f5d5037882d2da03713ece0ff4f6b7e9d3693b2`](https://github.com/onflow/fcl-js/commit/3f5d5037882d2da03713ece0ff4f6b7e9d3693b2) Thanks [@jribbink](https://github.com/jribbink)! - Switch `contractIdentifier` to `vaultIdentifier` in `useCrossVmTokenBalance` hook
+
+## 0.2.1
+
+### Patch Changes
+
+- [#2433](https://github.com/onflow/fcl-js/pull/2433) [`9f9e18b5381d455ef4546b6521ea37c5eef3063c`](https://github.com/onflow/fcl-js/commit/9f9e18b5381d455ef4546b6521ea37c5eef3063c) Thanks [@jribbink](https://github.com/jribbink)! - Fix script args query key
+
+## 0.2.0
+
+### Minor Changes
+
+- [#2439](https://github.com/onflow/fcl-js/pull/2439) [`a36d78ee5283ceb9a2f411e6da9ddf0373777c24`](https://github.com/onflow/fcl-js/commit/a36d78ee5283ceb9a2f411e6da9ddf0373777c24) Thanks [@jribbink](https://github.com/jribbink)! - Make `txId` optional for `useFlowTransactionStatus`
+
+- [#2368](https://github.com/onflow/fcl-js/pull/2368) [`eca4617c2d4d10d85bad0324f6c6064489c3d1c3`](https://github.com/onflow/fcl-js/commit/eca4617c2d4d10d85bad0324f6c6064489c3d1c3) Thanks [@jribbink](https://github.com/jribbink)! - Add `useCrossVmBatchTransaction` function
+
+- [#2414](https://github.com/onflow/fcl-js/pull/2414) [`605f66c7a78f9ff1474a18b70298956b92f90bc1`](https://github.com/onflow/fcl-js/commit/605f66c7a78f9ff1474a18b70298956b92f90bc1) Thanks [@chasefleming](https://github.com/chasefleming)! - **BREAKING**: Rename `useFlowTransaction` as `useFlowTransactionStatus`
+
+- [#2367](https://github.com/onflow/fcl-js/pull/2367) [`9595af75eeffb0c91f9bb94b70fb0adf4db40eec`](https://github.com/onflow/fcl-js/commit/9595af75eeffb0c91f9bb94b70fb0adf4db40eec) Thanks [@jribbink](https://github.com/jribbink)! - Add `useFlowChainId` hook to the `@onflow/kit` package.
+
+### Patch Changes
+
+- [#2419](https://github.com/onflow/fcl-js/pull/2419) [`f498aa9fdb0739aef8905593bdbd05af9db3267a`](https://github.com/onflow/fcl-js/commit/f498aa9fdb0739aef8905593bdbd05af9db3267a) Thanks [@chasefleming](https://github.com/chasefleming)! - Update readme with `useFlowRevertibleRandom` hook
+
+- [#2417](https://github.com/onflow/fcl-js/pull/2417) [`8608416f4d26e40d3bfa464da7e988c8beb35336`](https://github.com/onflow/fcl-js/commit/8608416f4d26e40d3bfa464da7e988c8beb35336) Thanks [@jribbink](https://github.com/jribbink)! - Fix `useFlowRevertibleRandom` range
+
+- Updated dependencies [[`0b83658f62a428a70074d33875f264fbd48aff1e`](https://github.com/onflow/fcl-js/commit/0b83658f62a428a70074d33875f264fbd48aff1e), [`b9c4ed3b95c2dc73698e45f353a6ef9a48f23cab`](https://github.com/onflow/fcl-js/commit/b9c4ed3b95c2dc73698e45f353a6ef9a48f23cab)]:
+  - @onflow/fcl@1.18.0
+
 ## 0.2.0-alpha.1
 
 ### Minor Changes

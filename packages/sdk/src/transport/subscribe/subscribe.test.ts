@@ -4,11 +4,11 @@ import {
   SubscriptionTopic,
   SdkTransport,
 } from "@onflow/typedefs"
-import {subscribe} from "./subscribe"
-import {rawSubscribe} from "./raw-subscribe"
+import { subscribe } from "./subscribe"
+import { subscribeRaw } from "./subscribe-raw"
 
-jest.mock("./raw-subscribe")
-const mockRawSubscribe = jest.mocked(rawSubscribe)
+jest.mock("./subscribe-raw")
+const mocksubscribeRaw = jest.mocked(subscribeRaw)
 
 describe("subscribe", () => {
   let mockSub: jest.Mocked<Subscription> = {
@@ -17,12 +17,12 @@ describe("subscribe", () => {
 
   beforeEach(() => {
     jest.resetAllMocks()
-    mockRawSubscribe.mockReturnValue(mockSub)
+    mocksubscribeRaw.mockReturnValue(mockSub)
   })
 
   test("subscribes to a topic and returns a subscription", async () => {
     const topic = "topic" as SubscriptionTopic
-    const args = {foo: "bar"} as SubscriptionArgs<any>
+    const args = { foo: "bar" } as SubscriptionArgs<any>
     const onData = jest.fn()
     const onError = jest.fn()
 
@@ -34,16 +34,16 @@ describe("subscribe", () => {
     })
 
     expect(sub).toBe(mockSub)
-    expect(mockRawSubscribe).toHaveBeenCalledTimes(1)
-    expect(mockRawSubscribe).toHaveBeenCalledWith(
-      {topic, args, onData: expect.any(Function), onError},
+    expect(mocksubscribeRaw).toHaveBeenCalledTimes(1)
+    expect(mocksubscribeRaw).toHaveBeenCalledWith(
+      { topic, args, onData: expect.any(Function), onError },
       {}
     )
   })
 
   test("unsubscribes from a subscription", async () => {
     const topic = "topic" as SubscriptionTopic
-    const args = {foo: "bar"} as SubscriptionArgs<any>
+    const args = { foo: "bar" } as SubscriptionArgs<any>
     const onData = jest.fn()
     const onError = jest.fn()
 
@@ -61,7 +61,7 @@ describe("subscribe", () => {
 
   test("subscribes to a topic with a node", async () => {
     const topic = "topic" as SubscriptionTopic
-    const args = {foo: "bar"} as SubscriptionArgs<any>
+    const args = { foo: "bar" } as SubscriptionArgs<any>
     const onData = jest.fn()
     const onError = jest.fn()
 
@@ -74,20 +74,20 @@ describe("subscribe", () => {
         onData,
         onError,
       },
-      {node}
+      { node }
     )
 
     expect(sub).toBe(mockSub)
-    expect(mockRawSubscribe).toHaveBeenCalledTimes(1)
-    expect(mockRawSubscribe).toHaveBeenCalledWith(
-      {topic, args, onData: expect.any(Function), onError},
-      {node}
+    expect(mocksubscribeRaw).toHaveBeenCalledTimes(1)
+    expect(mocksubscribeRaw).toHaveBeenCalledWith(
+      { topic, args, onData: expect.any(Function), onError },
+      { node }
     )
   })
 
   test("subscribes to a topic with custom node and transport", async () => {
     const topic = "topic" as SubscriptionTopic
-    const args = {foo: "bar"} as SubscriptionArgs<any>
+    const args = { foo: "bar" } as SubscriptionArgs<any>
     const onData = jest.fn()
     const onError = jest.fn()
 
@@ -104,14 +104,14 @@ describe("subscribe", () => {
         onData,
         onError,
       },
-      {node, transport}
+      { node, transport }
     )
 
     expect(sub).toBe(mockSub)
-    expect(mockRawSubscribe).toHaveBeenCalledTimes(1)
-    expect(mockRawSubscribe).toHaveBeenCalledWith(
-      {topic, args, onData: expect.any(Function), onError},
-      {node, transport}
+    expect(mocksubscribeRaw).toHaveBeenCalledTimes(1)
+    expect(mocksubscribeRaw).toHaveBeenCalledWith(
+      { topic, args, onData: expect.any(Function), onError },
+      { node, transport }
     )
   })
 })

@@ -1,9 +1,9 @@
-import {subscribe} from "@onflow/sdk"
-import {SubscriptionsNotSupportedError} from "@onflow/sdk"
-import {SubscriptionTopic, TransactionExecutionStatus} from "@onflow/typedefs"
-import {transaction} from "./transaction"
-import {transaction as legacyTransaction} from "./legacy-polling"
-import {getChainId} from "../utils"
+import { subscribe } from "@onflow/sdk"
+import { SubscriptionsNotSupportedError } from "@onflow/sdk"
+import { SubscriptionTopic, TransactionExecutionStatus } from "@onflow/typedefs"
+import { transaction } from "./transaction"
+import { transaction as legacyTransaction } from "./legacy-polling"
+import { getChainId } from "../utils"
 
 jest.mock("@onflow/sdk")
 jest.mock("./legacy-polling")
@@ -29,7 +29,7 @@ describe("transaction", () => {
   })
 
   test("should throw an error if transactionId is not a 64 byte hash string", () => {
-    const {transaction} = require("./transaction")
+    const { transaction } = require("./transaction")
 
     const actual = () => transaction("invalid-transaction-id")
     expect(actual).toThrow("Invalid transactionId")
@@ -47,12 +47,12 @@ describe("transaction", () => {
     // Expect the subscribe method to be called with the correct parameters
     const subscribeParams = jest.mocked(subscribe).mock
       .calls[0][0] as Parameters<
-      typeof subscribe<SubscriptionTopic.TRANSACTION_STATUSES>
-    >[0]
+        typeof subscribe<SubscriptionTopic.TRANSACTION_STATUSES>
+      >[0]
 
     expect(subscribeParams).toStrictEqual({
       topic: SubscriptionTopic.TRANSACTION_STATUSES,
-      args: {transactionId: txId},
+      args: { transactionId: txId },
       onData: expect.any(Function),
       onError: expect.any(Function),
     })
@@ -120,6 +120,46 @@ describe("transaction", () => {
     expect(() => transaction(txId)).toThrow("Invalid transactionId")
   })
 
+  test("should unsubscribe once the transaction has sealed", async () => {
+    jest.resetModules()
+    const txId =
+      "4234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef"
+    const callback = jest.fn()
+    transaction(txId).subscribe(callback)
+
+    // Flush the event loop
+    await new Promise(resolve => setTimeout(resolve, 0))
+
+    // Mock the observable to emit a SEALED status
+    const subscribeParams = jest.mocked(subscribe).mock
+      .calls[0][0] as Parameters<
+        typeof subscribe<SubscriptionTopic.TRANSACTION_STATUSES>
+      >[0]
+
+    subscribeParams.onData({
+      status: TransactionExecutionStatus.PENDING,
+      blockId: "",
+      statusCode: 0,
+      errorMessage: "",
+      events: [],
+      statusString: "PENDING",
+    })
+
+    subscribeParams.onData({
+      status: TransactionExecutionStatus.SEALED,
+      blockId: "",
+      statusCode: 0,
+      errorMessage: "",
+      events: [],
+      statusString: "SEALED",
+    })
+
+    await new Promise(resolve => setTimeout(resolve, 100))
+
+    const unsubMock = jest.mocked(subscribe).mock.results[0].value
+    expect(unsubMock.unsubscribe).toHaveBeenCalledTimes(1)
+  })
+
   test("subscribe should fallback to polling if real-time streaming is not supported", async () => {
     const txId =
       "2234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef"
@@ -133,12 +173,12 @@ describe("transaction", () => {
     // Expect the subscribe method to be called with the correct parameters
     const subscribeParams = jest.mocked(subscribe).mock
       .calls[0][0] as Parameters<
-      typeof subscribe<SubscriptionTopic.TRANSACTION_STATUSES>
-    >[0]
+        typeof subscribe<SubscriptionTopic.TRANSACTION_STATUSES>
+      >[0]
 
     expect(subscribeParams).toStrictEqual({
       topic: SubscriptionTopic.TRANSACTION_STATUSES,
-      args: {transactionId: txId},
+      args: { transactionId: txId },
       onData: expect.any(Function),
       onError: expect.any(Function),
     })
