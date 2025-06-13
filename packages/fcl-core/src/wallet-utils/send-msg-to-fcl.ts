@@ -17,7 +17,6 @@ export interface PollingResponse {
  *
  * @param type Message type
  * @param msg Message object
- * @returns {void}
  *
  * @example
  * sendMsgToFCL("FCL:VIEW:RESPONSE", {
