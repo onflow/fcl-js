@@ -15,8 +15,8 @@ export interface PollingResponse {
 /**
  * @description Sends message to FCL window
  *
- * @param {string} type Message type
- * @param {PollingResponse} msg Message object
+ * @param type Message type
+ * @param msg Message object
  * @returns {void}
  *
  * @example
