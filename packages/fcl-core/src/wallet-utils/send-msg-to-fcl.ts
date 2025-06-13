@@ -70,8 +70,7 @@ export const close = (): void => {
 /**
  * @description Sends "FCL:VIEW:RESPONSE" with status "APPROVED"
  *
- * @param {object} data Data object
- * @returns {void}
+ * @param data Data object
  */
 export const approve = (data: any): void => {
   sendMsgToFCL("FCL:VIEW:RESPONSE", {
