@@ -16,7 +16,7 @@ describe("chain-id-watcher", () => {
       async () => {
         // Mock the setChainIdDefault function
         const spy = jest.spyOn(chainIdUtils, "getChainId")
-        spy.mockImplementation(async () => {})
+        spy.mockImplementation((async () => {}) as any)
 
         // Start watching for changes
         unsubscribe = watchForChainIdChanges()
@@ -34,7 +34,7 @@ describe("chain-id-watcher", () => {
     await config.overload({}, async () => {
       // Mock the setChainIdDefault function
       const spy = jest.spyOn(chainIdUtils, "getChainId")
-      spy.mockImplementation(async () => {})
+      spy.mockImplementation((async () => {}) as any)
 
       // Start watching for changes
       unsubscribe = watchForChainIdChanges()
