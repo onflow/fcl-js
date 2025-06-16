@@ -4,6 +4,7 @@ import {
   useCrossVmTokenBalance,
   UseCrossVmTokenBalanceData,
 } from "../hooks/useCrossVmTokenBalance"
+import {useFlowChainId} from "../hooks/useFlowChainId"
 import {Button, ButtonProps} from "./internal/Button"
 import {Dialog} from "./internal/Dialog"
 import {CircleUserRoundIcon} from "../icons/CircleUserRoundIcon"
@@ -28,12 +29,13 @@ export const Connect: React.FC<ConnectProps> = ({
   const {user, authenticate, unauthenticate} = useCurrentFlowUser()
   const [open, setOpen] = useState(false)
   const [copied, setCopied] = useState(false)
+  const {data: chainId} = useFlowChainId()
 
   const {data: balanceData} = useCrossVmTokenBalance({
     owner: user?.addr,
-    vaultIdentifier: user?.addr ? `${user.addr}.FlowToken.Vault` : undefined,
+    vaultIdentifier: `A.${chainId === "testnet" ? "7e60df042a9c0868" : "1654653399040a61"}.FlowToken.Vault`,
     query: {
-      enabled: !!user?.addr,
+      enabled: !!user?.addr && !!chainId,
     },
   })
 
