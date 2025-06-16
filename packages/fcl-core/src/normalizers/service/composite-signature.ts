@@ -1,15 +1,10 @@
 import {CompositeSignature} from "@onflow/typedefs"
-import {COMPOSITE_SIGNATURE_PRAGMA} from "./__vsn"
 import {sansPrefix} from "@onflow/util-address"
-
-export interface LegacyCompositeSignature extends CompositeSignature {
-  address?: string
-  sig?: string
-}
+import {COMPOSITE_SIGNATURE_PRAGMA} from "./__vsn"
 
 /**
- * @param {LegacyCompositeSignature | null} resp
- * @returns {CompositeSignature | null}
+ * @param resp Data to be normalized to a CompositeSignature
+ * @returns CompositeSignature or null
  *
  * @example
  * const resp = normalizeCompositeSignature({
@@ -21,7 +16,7 @@ export interface LegacyCompositeSignature extends CompositeSignature {
  * })
  */
 export function normalizeCompositeSignature(
-  resp: LegacyCompositeSignature | null
+  resp: any
 ): CompositeSignature | null {
   if (resp == null) return null
 
@@ -36,7 +31,7 @@ export function normalizeCompositeSignature(
 
   switch (resp["f_vsn"]) {
     case "1.0.0":
-      return resp
+      return resp as unknown as CompositeSignature
 
     default:
       return null
