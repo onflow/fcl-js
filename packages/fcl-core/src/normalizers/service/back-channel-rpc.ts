@@ -2,8 +2,8 @@ import {SERVICE_PRAGMA} from "./__vsn"
 import {Service} from "@onflow/typedefs"
 
 /**
- * @param {Service | null} service
- * @returns {Service | null}
+ * @param service The back-channel-rpc service to normalize
+ * @returns The normalized back-channel-rpc service or null
  *
  * @example
  * const service = normalizeBackChannelRpc({

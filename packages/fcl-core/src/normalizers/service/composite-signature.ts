@@ -3,8 +3,8 @@ import {sansPrefix} from "@onflow/util-address"
 import {COMPOSITE_SIGNATURE_PRAGMA} from "./__vsn"
 
 /**
- * @param resp Data to be normalized to a CompositeSignature
- * @returns CompositeSignature or null
+ * @param resp The composite signature to normalize
+ * @returns The normalized composite signature or null
  *
  * @example
  * const resp = normalizeCompositeSignature({

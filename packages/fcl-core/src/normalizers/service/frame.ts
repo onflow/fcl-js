@@ -6,8 +6,8 @@ export interface FrameService extends Service {
 }
 
 /**
- * @param {Service | null} service
- * @returns {FrameService | null}
+ * @param service The frame service to normalize
+ * @returns The normalized frame service or null
  *
  * @example
  * const service = normalizeFrame({

@@ -1,8 +1,8 @@
 import {Service} from "@onflow/typedefs"
 
 /**
- * @param {Service | null} service
- * @returns {Service | null}
+ * @param service The open-id service to normalize
+ * @returns The normalized open-id service or null
  *
  * @example
  * const service = normalizeOpenId({

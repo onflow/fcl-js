@@ -10,8 +10,8 @@ export interface AuthzService extends Service {
 }
 
 /**
- * @param {AuthzService | null} service
- * @returns {AuthzService | null}
+ * @param service The authz service to normalize
+ * @returns The normalized authz service or null
  *
  * @example
  * const service = normalizeAuthz({

@@ -12,8 +12,8 @@ export interface AuthnService extends Service {
 }
 
 /**
- * @param {AuthnService | null} service
- * @returns {AuthnService | null}
+ * @param service The authn service to normalize
+ * @returns The normalized authn service or null
  *
  * @example
  * const service = normalizeAuthn({

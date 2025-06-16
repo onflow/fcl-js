@@ -3,8 +3,8 @@ import {IDENTITY_PRAGMA, SERVICE_PRAGMA} from "./__vsn"
 import {AuthzService} from "./authz"
 
 /**
- * @param {AuthzService | null} service
- * @returns {AuthzService | null}
+ * @param service The pre-authz service to normalize
+ * @returns The normalized pre-authz service or null
  *
  * @example
  * const service = normalizePreAuthz({

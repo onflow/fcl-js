@@ -2,8 +2,8 @@ import {Service} from "@onflow/typedefs"
 import {SERVICE_PRAGMA} from "./__vsn"
 
 /**
- * @param {Service | null} resp
- * @returns {Service | null}
+ * @param resp The local-view to normalize
+ * @returns The normalized local-view or null
  *
  * @example
  * const service = normalizeLocalView({

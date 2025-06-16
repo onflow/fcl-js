@@ -16,8 +16,8 @@ export interface PollingResponse {
 }
 
 /**
- * @param {PollingResponse | null} resp
- * @returns {PollingResponse | null}
+ * @param resp The polling response to normalize
+ * @returns The normalized polling response or null
  *
  * @example
  * const resp = normalizePollingResponse({

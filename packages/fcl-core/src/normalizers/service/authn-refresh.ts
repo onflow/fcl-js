@@ -10,8 +10,8 @@ export interface AuthnRefreshService extends Service {
 }
 
 /**
- * @param {AuthnRefreshService | null} service
- * @returns {AuthnRefreshService | null}
+ * @param service The authn-refresh service to normalize
+ * @returns The normalized authn-refresh service or null
  *
  * @example
  * const service = normalizeAuthnRefresh({

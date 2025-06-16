@@ -1,8 +1,8 @@
 import {Service} from "@onflow/typedefs"
 
 /**
- * @param {Service | null} service
- * @returns {Service | null}
+ * @param service The account-proof service to normalize
+ * @returns The normalized account-proof service or null
  *
  * @example
  * {

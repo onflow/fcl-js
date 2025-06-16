@@ -1,8 +1,8 @@
 import type {Service} from "@onflow/typedefs"
 
 /**
- * @param {Service | null} service
- * @returns {Service | null}
+ * @param service The user-signature service to normalize
+ * @returns The normalized user-signature service or null
  *
  * @example
  * const service = {
