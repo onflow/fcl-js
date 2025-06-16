@@ -32,9 +32,15 @@ export function useFlowQuery({
     return fcl.query({cadence, args})
   }, [cadence, args])
 
+  // Encode the arguments to a JSON-CDC object so they can be deterministically
+  // serialized and used as the query key.
+  const encodedArgs = args?.(fcl.arg, fcl.t)?.map((x: any) =>
+    x.xform.asArgument(x.value)
+  )
+
   return useQuery<unknown, Error>(
     {
-      queryKey: ["flowQuery", cadence, args],
+      queryKey: ["flowQuery", cadence, encodedArgs],
       queryFn: fetchQuery,
       enabled: queryOptions.enabled ?? true,
       ...queryOptions,

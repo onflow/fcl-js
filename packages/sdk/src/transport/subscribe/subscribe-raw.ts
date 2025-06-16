@@ -10,7 +10,7 @@ import {SubscribeRawParams} from "./types"
  * @param opts - Additional options for the subscription.
  * @returns A promise that resolves once the subscription is active.
  */
-export function rawSubscribe<T extends SubscriptionTopic>(
+export function subscribeRaw<T extends SubscriptionTopic>(
   {topic, args, onData, onError}: SubscribeRawParams<T>,
   opts: {
     node?: string
