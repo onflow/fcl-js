@@ -1,5 +1,6 @@
 export {VERSION} from "./VERSION"
 export {query} from "./exec/query"
+export {rawQuery} from "./exec/raw-query"
 export {verifyUserSignatures} from "./exec/verify"
 export {serialize} from "./serialize"
 export {transaction as tx, TransactionError} from "./transaction"
