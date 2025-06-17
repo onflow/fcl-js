@@ -1,30 +1,53 @@
 import React, {useState} from "react"
 import {useCurrentFlowUser} from "../hooks"
+import {
+  useCrossVmTokenBalance,
+  UseCrossVmTokenBalanceData,
+} from "../hooks/useCrossVmTokenBalance"
+import {useFlowChainId} from "../hooks/useFlowChainId"
 import {Button, ButtonProps} from "./internal/Button"
 import {Dialog} from "./internal/Dialog"
 import {CircleUserRoundIcon} from "../icons/CircleUserRoundIcon"
 import {CopyIcon} from "../icons/CopyIcon"
 import {LogOutIcon} from "../icons/LogOutIcon"
 
+type BalanceType = keyof UseCrossVmTokenBalanceData
+
 interface ConnectProps {
   variant?: ButtonProps["variant"]
   onConnect?: () => void
   onDisconnect?: () => void
+  balanceType?: BalanceType
 }
 
 export const Connect: React.FC<ConnectProps> = ({
   variant = "primary",
   onConnect,
   onDisconnect,
+  balanceType = "cadence",
 }) => {
   const {user, authenticate, unauthenticate} = useCurrentFlowUser()
   const [open, setOpen] = useState(false)
   const [copied, setCopied] = useState(false)
+  const {data: chainId} = useFlowChainId()
+
+  const {data: balanceData} = useCrossVmTokenBalance({
+    owner: user?.addr,
+    vaultIdentifier: `A.${chainId === "testnet" ? "7e60df042a9c0868" : "1654653399040a61"}.FlowToken.Vault`,
+    query: {
+      enabled: !!user?.addr && !!chainId,
+    },
+  })
 
   const displayAddress =
     user?.loggedIn && user.addr
       ? `${user.addr.slice(0, 6)}...${user.addr.slice(-4)}`
       : ""
+
+  const displayBalance =
+    balanceData && typeof balanceData !== "string"
+      ? `${balanceData[balanceType].formatted} FLOW`
+      : "0.00 FLOW"
 
   const handleButtonClick = async () => {
     if (user?.loggedIn) {
@@ -73,7 +96,7 @@ export const Connect: React.FC<ConnectProps> = ({
                 {displayAddress}
               </div>
               <div className="text-center text-sm text-gray-500 -mt-1">
-                1,416.00 FLOW
+                {displayBalance}
               </div>
             </div>
             <div className="flex gap-2 w-full">

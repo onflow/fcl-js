@@ -111,4 +111,4 @@ export {useServiceDiscovery, ServiceDiscovery}
 
 // Subscriptions
 export {subscribe} from "@onflow/fcl-core"
-export {rawSubscribe} from "@onflow/fcl-core"
+export {subscribeRaw} from "@onflow/fcl-core"
