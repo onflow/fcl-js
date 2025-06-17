@@ -1,38 +1,50 @@
-export enum InteractionTag {
-  UNKNOWN = "UNKNOWN",
-  SCRIPT = "SCRIPT",
-  TRANSACTION = "TRANSACTION",
-  GET_TRANSACTION_STATUS = "GET_TRANSACTION_STATUS",
-  GET_ACCOUNT = "GET_ACCOUNT",
-  GET_EVENTS = "GET_EVENTS",
-  PING = "PING",
-  GET_TRANSACTION = "GET_TRANSACTION",
-  GET_BLOCK = "GET_BLOCK",
-  GET_BLOCK_HEADER = "GET_BLOCK_HEADER",
-  GET_COLLECTION = "GET_COLLECTION",
-  GET_NETWORK_PARAMETERS = "GET_NETWORK_PARAMETERS",
-  SUBSCRIBE_EVENTS = "SUBSCRIBE_EVENTS",
-  GET_NODE_VERSION_INFO = "GET_NODE_VERSION_INFO",
-}
+export const InteractionTag = {
+  UNKNOWN: "UNKNOWN",
+  SCRIPT: "SCRIPT",
+  TRANSACTION: "TRANSACTION",
+  GET_TRANSACTION_STATUS: "GET_TRANSACTION_STATUS",
+  GET_ACCOUNT: "GET_ACCOUNT",
+  GET_EVENTS: "GET_EVENTS",
+  PING: "PING",
+  GET_TRANSACTION: "GET_TRANSACTION",
+  GET_BLOCK: "GET_BLOCK",
+  GET_BLOCK_HEADER: "GET_BLOCK_HEADER",
+  GET_COLLECTION: "GET_COLLECTION",
+  GET_NETWORK_PARAMETERS: "GET_NETWORK_PARAMETERS",
+  SUBSCRIBE_EVENTS: "SUBSCRIBE_EVENTS",
+  GET_NODE_VERSION_INFO: "GET_NODE_VERSION_INFO",
+} as const
 
-export enum InteractionStatus {
-  BAD = "BAD",
-  OK = "OK",
-}
+export type InteractionTag =
+  (typeof InteractionTag)[keyof typeof InteractionTag]
 
-export enum TransactionRole {
-  AUTHORIZER = "authorizer",
-  PAYER = "payer",
-  PROPOSER = "proposer",
-}
+export const InteractionStatus = {
+  BAD: "BAD",
+  OK: "OK",
+} as const
 
-export enum InteractionResolverKind {
-  ARGUMENT = "ARGUMENT",
-  ACCOUNT = "ACCOUNT",
-}
+export type InteractionStatus =
+  (typeof InteractionStatus)[keyof typeof InteractionStatus]
+
+export const TransactionRole = {
+  AUTHORIZER: "authorizer",
+  PAYER: "payer",
+  PROPOSER: "proposer",
+} as const
+
+export type TransactionRole =
+  (typeof TransactionRole)[keyof typeof TransactionRole]
+
+export const InteractionResolverKind = {
+  ARGUMENT: "ARGUMENT",
+  ACCOUNT: "ACCOUNT",
+} as const
+
+export type InteractionResolverKind =
+  (typeof InteractionResolverKind)[keyof typeof InteractionResolverKind]
 
 export interface InteractionAccount {
-  kind: InteractionResolverKind.ACCOUNT
+  kind: typeof InteractionResolverKind.ACCOUNT
   tempId: string
   addr: string | null
   keyId: number | string | null

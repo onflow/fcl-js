@@ -2,24 +2,18 @@ import {
   RawSubscriptionData,
   SubscriptionArgs,
   SubscriptionTopic,
+  TransactionExecutionStatus,
 } from "@onflow/typedefs"
 import {createSubscriptionHandler} from "./types"
 import {Buffer} from "buffer"
 
-const STATUS_MAP = {
-  UNKNOWN: 0,
-  PENDING: 1,
-  FINALIZED: 2,
-  EXECUTED: 3,
-  SEALED: 4,
-  EXPIRED: 5,
-}
+type TransactionStatusesArgs = SubscriptionArgs<
+  typeof SubscriptionTopic.TRANSACTION_STATUSES
+>
 
-type TransactionStatusesArgs =
-  SubscriptionArgs<SubscriptionTopic.TRANSACTION_STATUSES>
-
-type TransactionStatusesData =
-  RawSubscriptionData<SubscriptionTopic.TRANSACTION_STATUSES>
+type TransactionStatusesData = RawSubscriptionData<
+  typeof SubscriptionTopic.TRANSACTION_STATUSES
+>
 
 type TransactionStatusesArgsDto = {
   tx_id: string
@@ -45,7 +39,7 @@ type TransactionStatusesDataDto = {
 }
 
 export const transactionStatusesHandler = createSubscriptionHandler<{
-  Topic: SubscriptionTopic.TRANSACTION_STATUSES
+  Topic: typeof SubscriptionTopic.TRANSACTION_STATUSES
   Args: TransactionStatusesArgs
   Data: TransactionStatusesData
   ArgsDto: TransactionStatusesArgsDto
@@ -64,8 +58,8 @@ export const transactionStatusesHandler = createSubscriptionHandler<{
           transactionStatus: {
             blockId: data.transaction_result.block_id,
             status:
-              STATUS_MAP[
-                data.transaction_result.status.toUpperCase() as keyof typeof STATUS_MAP
+              TransactionExecutionStatus[
+                data.transaction_result.status.toUpperCase() as keyof typeof TransactionExecutionStatus
               ],
             statusString: data.transaction_result.status.toUpperCase(),
             statusCode: data.transaction_result.status_code,

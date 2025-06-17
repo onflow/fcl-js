@@ -9,16 +9,19 @@ export class TransactionError extends Error {
   private constructor(message: string, code: FvmErrorCode) {
     super(message)
     this.code = code
-    this.type = FvmErrorCode[code]
+    this.type =
+      Object.keys(FvmErrorCode).find(
+        key => FvmErrorCode[key as keyof typeof FvmErrorCode] === code
+      ) || "UNKNOWN_ERROR"
   }
 
   static fromErrorMessage(errorMessage: string): TransactionError {
     const match = errorMessage.match(ERROR_CODE_REGEX)
-    const code = match ? parseInt(match[1], 10) : undefined
+    const code = match ? (parseInt(match[1], 10) as FvmErrorCode) : undefined
 
     return new TransactionError(
       errorMessage,
-      code || FvmErrorCode.UNKNOWN_ERROR
+      code || (FvmErrorCode.UNKNOWN_ERROR as FvmErrorCode)
     )
   }
 }
