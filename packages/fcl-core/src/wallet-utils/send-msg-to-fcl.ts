@@ -78,7 +78,7 @@ export const approve = (data: any): void => {
     status: "APPROVED",
     reason: null,
     data: data,
-  } as PollingResponse)
+  })
 }
 
 /**
@@ -93,7 +93,7 @@ export const decline = (reason: string): void => {
     status: "DECLINED",
     reason: reason,
     data: null,
-  } as PollingResponse)
+  })
 }
 
 /**
@@ -108,5 +108,5 @@ export const redirect = (data: any): void => {
     status: "REDIRECT",
     reason: null,
     data: data,
-  } as PollingResponse)
+  })
 }
