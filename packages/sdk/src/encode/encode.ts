@@ -5,8 +5,36 @@ import {sansPrefix} from "@onflow/util-address"
 /**
  * Encodes a transaction payload for signing.
  *
+ * This function takes a transaction object and encodes it into a format suitable for signing.
+ * The encoded payload contains all the transaction details except for the signatures.
+ *
  * @param tx The transaction object to encode
  * @returns A hex-encoded string representing the transaction payload
+ *
+ * @example
+ * import * as fcl from "@onflow/fcl";
+ * import { encodeTransactionPayload } from "@onflow/sdk"
+ *
+ * // Build a transaction
+ * const transaction = await fcl.build([
+ *   fcl.transaction`
+ *     transaction(amount: UFix64) {
+ *       prepare(account: AuthAccount) {
+ *         log("Transferring: ".concat(amount.toString()))
+ *       }
+ *     }
+ *   `,
+ *   fcl.args([fcl.arg("10.0", fcl.t.UFix64)]),
+ *   fcl.proposer(proposerAuthz),
+ *   fcl.payer(payerAuthz),
+ *   fcl.authorizations([authorizerAuthz]),
+ *   fcl.limit(100)
+ * ]);
+ *
+ * // Encode the transaction payload for signing
+ * const encodedPayload = encodeTransactionPayload(transaction);
+ * console.log("Encoded payload:", encodedPayload);
+ * // Returns a hex string like "f90145b90140..."
  */
 export const encodeTransactionPayload = (tx: Transaction) =>
   prependTransactionDomainTag(rlpEncode(preparePayload(tx)))
@@ -14,8 +42,39 @@ export const encodeTransactionPayload = (tx: Transaction) =>
 /**
  * Encodes a complete transaction envelope including payload and signatures.
  *
+ * This function encodes the full transaction including both the payload and all signatures.
+ * This is the final step before submitting a transaction to the Flow network.
+ *
  * @param tx The transaction object to encode
- * @returns A hex-encoded string representing the full transaction envelope
+ * @returns A hex-encoded string representing the complete transaction envelope
+ *
+ * @example
+ * import * as fcl from "@onflow/fcl";
+ * import { encodeTransactionEnvelope } from "@onflow/sdk"
+ *
+ * // Assuming you have a fully built and signed transaction
+ * const signedTransaction = await fcl.build([
+ *   fcl.transaction`
+ *     transaction {
+ *       prepare(account: AuthAccount) {
+ *         log("Hello, Flow!")
+ *       }
+ *     }
+ *   `,
+ *   fcl.proposer(authz),
+ *   fcl.payer(authz),
+ *   fcl.authorizations([authz]),
+ *   fcl.limit(100)
+ * ]);
+ *
+ * // Add signatures to the transaction (this is usually done automatically)
+ * // signedTransaction.payloadSigs = [...];
+ * // signedTransaction.envelopeSigs = [...];
+ *
+ * // Encode the complete transaction envelope
+ * const encodedEnvelope = encodeTransactionEnvelope(signedTransaction);
+ * console.log("Encoded envelope:", encodedEnvelope);
+ * // Returns a hex string ready for network submission
  */
 export const encodeTransactionEnvelope = (tx: Transaction) =>
   prependTransactionDomainTag(rlpEncode(prepareEnvelope(tx)))
@@ -23,8 +82,43 @@ export const encodeTransactionEnvelope = (tx: Transaction) =>
 /**
  * Encodes a transaction ID from a voucher by computing its hash.
  *
- * @param voucher The voucher object to encode
+ * A voucher is an intermediary object that contains transaction details before final encoding.
+ * This function computes the transaction ID that would result from submitting the transaction.
+ *
+ * @param voucher The voucher object containing transaction details
  * @returns A hex-encoded string representing the transaction ID
+ *
+ * @example
+ * import * as fcl from "@onflow/fcl";
+ * import { encodeTxIdFromVoucher } from "@onflow/sdk"
+ *
+ * // Create a voucher (usually done internally by FCL)
+ * const voucher = {
+ *   cadence: `
+ *     transaction {
+ *       prepare(account: AuthAccount) {
+ *         log("Hello")
+ *       }
+ *     }
+ *   `,
+ *   arguments: [],
+ *   refBlock: "abc123...",
+ *   computeLimit: 100,
+ *   proposalKey: {
+ *     address: "0x123456789abcdef0",
+ *     keyId: 0,
+ *     sequenceNum: 42
+ *   },
+ *   payer: "0x123456789abcdef0",
+ *   authorizers: ["0x123456789abcdef0"],
+ *   payloadSigs: [],
+ *   envelopeSigs: []
+ * };
+ *
+ * // Calculate the transaction ID
+ * const txId = encodeTxIdFromVoucher(voucher);
+ * console.log("Transaction ID:", txId);
+ * // Returns a transaction ID that can be used to track the transaction
  */
 export const encodeTxIdFromVoucher = (voucher: Voucher) =>
   sha3_256(rlpEncode(prepareVoucher(voucher)))
