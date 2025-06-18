@@ -40,13 +40,13 @@ export const getExecHttpPost =
       },
     }).then(normalizePollingResponse)
 
-    if (resp.status === "APPROVED") {
+    if (resp?.status === "APPROVED") {
       return resp.data
-    } else if (resp.status === "DECLINED") {
+    } else if (resp?.status === "DECLINED") {
       throw new Error(`Declined: ${resp.reason || "No reason supplied."}`)
-    } else if (resp.status === "REDIRECT") {
+    } else if (resp?.status === "REDIRECT") {
       return resp
-    } else if (resp.status === "PENDING") {
+    } else if (resp?.status === "PENDING") {
       // these two flags are required to run polling one more time before it stops
       let canContinue = true
       let shouldContinue = true

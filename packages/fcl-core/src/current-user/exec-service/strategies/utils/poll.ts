@@ -54,13 +54,13 @@ export async function poll(
     throw error
   }
 
-  switch (resp.status) {
+  switch (resp?.status) {
     case "APPROVED":
       return resp.data
     case "DECLINED":
       throw new Error(`Declined: ${resp.reason || "No reason supplied."}`)
     default:
       await new Promise(r => setTimeout(r, 500))
-      return poll(resp.updates, checkCanContinue)
+      return poll(resp?.updates, checkCanContinue)
   }
 }
