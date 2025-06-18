@@ -1,4 +1,4 @@
-import {encodeAccountProof} from "./encode-account-proof.js"
+import {encodeAccountProof} from "./encode-account-proof"
 
 const address = "0xABC123DEF456"
 const appIdentifier = "AWESOME-APP-ID"
