@@ -2,6 +2,7 @@ import * as fcl from "@onflow/fcl"
 import {useQuery, UseQueryResult, UseQueryOptions} from "@tanstack/react-query"
 import {useCallback} from "react"
 import {useFlowQueryClient} from "../provider/FlowQueryClient"
+import {encodeQueryArgs} from "./useFlowQuery"
 
 export interface UseFlowQueryRawArgs {
   cadence: string
@@ -32,12 +33,7 @@ export function useFlowQueryRaw({
     return fcl.rawQuery({cadence, args})
   }, [cadence, args])
 
-  // Encode the arguments to a JSON-CDC object so they can be deterministically
-  // serialized and used as the query key.
-  const encodedArgs = args?.(fcl.arg, fcl.t)?.map((x: any) =>
-    x.xform.asArgument(x.value)
-  )
-
+  const encodedArgs = encodeQueryArgs(args)
   return useQuery<unknown, Error>(
     {
       queryKey: ["flowQueryRaw", cadence, encodedArgs],
