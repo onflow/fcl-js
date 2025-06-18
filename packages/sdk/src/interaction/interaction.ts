@@ -200,9 +200,20 @@ export const Ok = (ix: Interaction) => {
 /**
  * Marks an interaction as failed with a specific reason and returns the interaction object.
  *
+ * This function sets the interaction status to BAD and records the reason for failure.
+ * This is typically used when an error occurs during transaction preparation or validation.
+ *
  * @param ix The interaction to mark as failed
- * @param reason The reason for the failure
- * @returns The interaction object with status set to BAD and reason set
+ * @param reason A descriptive message explaining why the interaction failed
+ * @returns The interaction object with status set to BAD and reason recorded
+ *
+ * @example
+ * import * as fcl from "@onflow/fcl";
+ *
+ * // Mark an interaction as failed during validation
+ * const failedInteraction = fcl.Bad(interaction, "Invalid Cadence syntax");
+ * console.log(fcl.why(failedInteraction)); // "Invalid Cadence syntax"
+ * console.log(fcl.isBad(failedInteraction)); // true
  */
 export const Bad = (ix: Interaction, reason: string) => {
   ix.status = InteractionStatus.BAD
@@ -460,8 +471,45 @@ const recPipe = async (
 }
 
 /**
- * @description Async pipe function to compose interactions
- * @returns An interaction object
+ * Async pipe function to compose interactions.
+ *
+ * The pipe function is the foundation for composing multiple interaction builder functions together.
+ * It sequentially applies builder functions to an interaction, allowing for complex interaction construction.
+ * Each function in the pipe receives the result of the previous function and can modify or validate the interaction.
+ *
+ * Pipe has two main forms:
+ * 1. `pipe(builderFunctions)`: Returns a builder function
+ * 2. `pipe(interaction, builderFunctions)`: Directly executes the pipe on an interaction
+ *
+ * @param fns Array of builder functions to apply
+ * @returns An interaction builder function when called with just functions, or a Promise<Interaction> when called with an interaction and functions
+ *
+ * @example
+ * import * as fcl from "@onflow/fcl";
+ *
+ * // Using pipe to create a reusable builder
+ * const myTransactionBuilder = fcl.pipe([
+ *   fcl.transaction`
+ *     transaction(amount: UFix64) {
+ *       prepare(account: AuthAccount) {
+ *         log(amount)
+ *       }
+ *     }
+ *   `,
+ *   fcl.args([fcl.arg("10.0", fcl.t.UFix64)]),
+ *   fcl.proposer(fcl.authz),
+ *   fcl.payer(fcl.authz),
+ *   fcl.authorizations([fcl.authz]),
+ *   fcl.limit(100)
+ * ]);
+ *
+ * // Use the builder
+ * const interaction = await fcl.build([myTransactionBuilder]);
+ *
+ * // Pipe is used internally by build() and send()
+ * await fcl.send([
+ *   fcl.script`access(all) fun main(): Int { return 42 }`
+ * ]); // This uses pipe internally
  */
 function pipe(fns: (InteractionBuilderFn | false)[]): InteractionBuilderFn
 function pipe(
