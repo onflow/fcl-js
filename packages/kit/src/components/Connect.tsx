@@ -7,7 +7,7 @@ import {
 import {useFlowChainId} from "../hooks/useFlowChainId"
 import {Button, ButtonProps} from "./internal/Button"
 import {Dialog} from "./internal/Dialog"
-import {CircleUserRoundIcon} from "../icons/CircleUserRoundIcon"
+import {UserIcon} from "../icons/UserIcon"
 import {CopyIcon} from "../icons/CopyIcon"
 import {LogOutIcon} from "../icons/LogOutIcon"
 
@@ -90,7 +90,7 @@ export const Connect: React.FC<ConnectProps> = ({
           <div className="flex flex-col items-center gap-4 min-w-[320px]">
             <div className="flex flex-col items-center">
               <div className="w-16 h-16 rounded-full bg-slate-100 flex items-center justify-center mb-2">
-                <CircleUserRoundIcon className="w-8 h-8 text-slate-400" />
+                <UserIcon className="w-8 h-8 text-black" />
               </div>
               <div className="text-center text-lg font-semibold mb-0">
                 {displayAddress}
