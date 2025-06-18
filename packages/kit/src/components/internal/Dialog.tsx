@@ -38,7 +38,8 @@ export const Dialog: React.FC<DialogProps> = ({
           <button
             onClick={onClose}
             className={twMerge(
-              `absolute top-4 right-4 p-1 rounded-full hover:bg-slate-100 transition-colors text-slate-500 hover:text-slate-700`
+              `absolute top-4 right-4 p-1 rounded-full hover:bg-slate-100 transition-colors
+              text-slate-500 hover:text-slate-700`
             )}
             aria-label="Close"
           >
