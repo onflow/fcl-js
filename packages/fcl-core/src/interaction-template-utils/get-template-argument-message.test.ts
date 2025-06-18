@@ -1,7 +1,7 @@
-import {getTemplateMessage} from "./get-template-message.js"
+import {getTemplateArgumentMessage} from "./get-template-argument-message"
 
-describe("Get interaction template messages 1.0.0", () => {
-  const template = {
+describe("Get interaction template argument messages", () => {
+  const templatev1: any = {
     f_type: "InteractionTemplate",
     f_version: "1.0.0",
     id: "abc123",
@@ -68,37 +68,42 @@ describe("Get interaction template messages 1.0.0", () => {
     },
   }
 
-  test("It gets template message for given message key and internationalization", async () => {
-    const title = getTemplateMessage({
+  test("It gets argument message for given argument and internationalization", async () => {
+    const message = getTemplateArgumentMessage({
       localization: "en-US",
+      argumentLabel: "amount",
       messageKey: "title",
-      template,
+      template: templatev1 as any,
     })
 
-    expect(title).toEqual("Transfer Tokens")
+    expect(message).toEqual("The amount of FLOW tokens to send")
+  })
 
-    const description = getTemplateMessage({
+  test("It fails to get message for an unknown argument", async () => {
+    const message = getTemplateArgumentMessage({
       localization: "en-US",
-      messageKey: "description",
-      template,
+      argumentLabel: "foo",
+      messageKey: "title",
+      template: templatev1 as any,
     })
 
-    expect(description).toEqual("Transfer tokens from one account to another")
+    expect(message).toEqual(undefined)
   })
 
   test("It fails to get message for an unknown message key", async () => {
-    const message = getTemplateMessage({
+    const message = getTemplateArgumentMessage({
       localization: "en-US",
-      messageKey: "foo",
-      template,
+      argumentLabel: "amount",
+      messageKey: "baz",
+      template: templatev1 as any,
     })
 
     expect(message).toEqual(undefined)
   })
 })
 
-describe("Get interaction template messages 1.1.0", () => {
-  const template = {
+describe("Get interaction template v1.1.0 parameters messages", () => {
+  const templatev11: any = {
     f_type: "InteractionTemplate",
     f_version: "1.1.0",
     id: "3a99af243b85f3f6af28304af2ed53a37fb913782b3efc483e6f0162a47720a0",
@@ -111,7 +116,7 @@ describe("Get interaction template messages 1.1.0", () => {
           i18n: [
             {
               tag: "en-US",
-              translation: "Transfer Tokens",
+              translation: "Transfer Flow",
             },
           ],
         },
@@ -237,31 +242,34 @@ describe("Get interaction template messages 1.1.0", () => {
     },
   }
 
-  test("It gets template title message for given message key and internationalization", async () => {
-    const title = getTemplateMessage({
+  test("It gets argument message for given argument and internationalization", async () => {
+    const message = getTemplateArgumentMessage({
       localization: "en-US",
+      argumentLabel: "amount",
       messageKey: "title",
-      template,
+      template: templatev11,
     })
 
-    expect(title).toEqual("Transfer Tokens")
+    expect(message).toEqual("Amount")
   })
 
-  test("It gets template description message for given message key and internationalization", async () => {
-    const description = getTemplateMessage({
+  test("It fails to get message for an unknown argument", async () => {
+    const message = getTemplateArgumentMessage({
       localization: "en-US",
-      messageKey: "description",
-      template,
+      argumentLabel: "foo",
+      messageKey: "title",
+      template: templatev11,
     })
 
-    expect(description).toEqual("Transfer Flow to account")
+    expect(message).toEqual(undefined)
   })
 
   test("It fails to get message for an unknown message key", async () => {
-    const message = getTemplateMessage({
+    const message = getTemplateArgumentMessage({
       localization: "en-US",
-      messageKey: "foo",
-      template,
+      argumentLabel: "amount",
+      messageKey: "baz",
+      template: templatev11,
     })
 
     expect(message).toEqual(undefined)

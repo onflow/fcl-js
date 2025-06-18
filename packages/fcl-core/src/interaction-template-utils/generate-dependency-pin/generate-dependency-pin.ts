@@ -1,20 +1,27 @@
 import {block, invariant} from "@onflow/sdk"
-import {generateDependencyPin110} from "./generate-dependency-pin-1.1.0.js"
-import {generateDependencyPin100} from "./generate-dependency-pin-1.0.0.js"
+import {generateDependencyPin110} from "./generate-dependency-pin-1.1.0"
+import {generateDependencyPin100} from "./generate-dependency-pin-1.0.0"
+
+export interface GenerateDependencyPinParams {
+  version?: string
+  address: string
+  contractName: string
+  blockHeight?: number
+}
 
 /**
  * @description Produces a dependency pin for a contract at current state of chain
- * @param {object} params
- * @param {string} params.version - The version of the interaction template
- * @param {string} params.address - The address of the account containing the contract
- * @param {string} params.contractName - The name of the contract
- * @param {object} opts - Options to pass to the interaction
- * @returns {Promise<string>} - The dependency pin
+ * @param {GenerateDependencyPinParams} params
+ * @param {string} params.version The version of the interaction template
+ * @param {string} params.address The address of the account containing the contract
+ * @param {string} params.contractName The name of the contract
+ * @param {object} opts Options to pass to the interaction
+ * @returns {Promise<string>} The dependency pin
  */
 export async function generateDependencyPin(
-  {version, address, contractName},
-  opts = {}
-) {
+  {version, address, contractName}: GenerateDependencyPinParams,
+  opts: any = {}
+): Promise<string> {
   invariant(
     address != undefined,
     "generateDependencyPin({ address }) -- address must be defined"
@@ -46,17 +53,17 @@ export async function generateDependencyPin(
 
 /**
  * @description Produces a dependency pin for a contract at latest sealed block
- * @param {object} params
- * @param {string} params.version - The version of the interaction template
- * @param {string} params.address - The address of the account containing the contract
- * @param {string} params.contractName - The name of the contract
- * @param {object} opts - Options to pass to the interaction
- * @returns {Promise<string>} - The dependency pin
+ * @param {GenerateDependencyPinParams} params
+ * @param {string} params.version The version of the interaction template
+ * @param {string} params.address The address of the account containing the contract
+ * @param {string} params.contractName The name of the contract
+ * @param {object} opts Options to pass to the interaction
+ * @returns {Promise<string>} The dependency pin
  */
 export async function generateDependencyPinAtLatestSealedBlock(
-  {version, address, contractName},
-  opts = {}
-) {
+  {version, address, contractName}: GenerateDependencyPinParams,
+  opts: any = {}
+): Promise<string> {
   const latestSealedBlock = await block({sealed: true}, opts)
   const latestSealedBlockHeight = latestSealedBlock?.height
 

@@ -1,7 +1,7 @@
-import {getTemplateArgumentMessage} from "./get-template-argument-message.js"
+import {getTemplateMessage} from "./get-template-message"
 
-describe("Get interaction template argument messages", () => {
-  const templatev1 = {
+describe("Get interaction template messages 1.0.0", () => {
+  const template: any = {
     f_type: "InteractionTemplate",
     f_version: "1.0.0",
     id: "abc123",
@@ -68,42 +68,37 @@ describe("Get interaction template argument messages", () => {
     },
   }
 
-  test("It gets argument message for given argument and internationalization", async () => {
-    const message = getTemplateArgumentMessage({
+  test("It gets template message for given message key and internationalization", async () => {
+    const title = getTemplateMessage({
       localization: "en-US",
-      argumentLabel: "amount",
       messageKey: "title",
-      template: templatev1,
+      template,
     })
 
-    expect(message).toEqual("The amount of FLOW tokens to send")
-  })
+    expect(title).toEqual("Transfer Tokens")
 
-  test("It fails to get message for an unknown argument", async () => {
-    const message = getTemplateArgumentMessage({
+    const description = getTemplateMessage({
       localization: "en-US",
-      argumentLabel: "foo",
-      messageKey: "title",
-      template: templatev1,
+      messageKey: "description",
+      template,
     })
 
-    expect(message).toEqual(undefined)
+    expect(description).toEqual("Transfer tokens from one account to another")
   })
 
   test("It fails to get message for an unknown message key", async () => {
-    const message = getTemplateArgumentMessage({
+    const message = getTemplateMessage({
       localization: "en-US",
-      argumentLabel: "amount",
-      messageKey: "baz",
-      template: templatev1,
+      messageKey: "foo",
+      template,
     })
 
     expect(message).toEqual(undefined)
   })
 })
 
-describe("Get interaction template v1.1.0 parameters messages", () => {
-  const templatev11 = {
+describe("Get interaction template messages 1.1.0", () => {
+  const template: any = {
     f_type: "InteractionTemplate",
     f_version: "1.1.0",
     id: "3a99af243b85f3f6af28304af2ed53a37fb913782b3efc483e6f0162a47720a0",
@@ -116,7 +111,7 @@ describe("Get interaction template v1.1.0 parameters messages", () => {
           i18n: [
             {
               tag: "en-US",
-              translation: "Transfer Flow",
+              translation: "Transfer Tokens",
             },
           ],
         },
@@ -242,34 +237,31 @@ describe("Get interaction template v1.1.0 parameters messages", () => {
     },
   }
 
-  test("It gets argument message for given argument and internationalization", async () => {
-    const message = getTemplateArgumentMessage({
+  test("It gets template title message for given message key and internationalization", async () => {
+    const title = getTemplateMessage({
       localization: "en-US",
-      argumentLabel: "amount",
       messageKey: "title",
-      template: templatev11,
+      template,
     })
 
-    expect(message).toEqual("Amount")
+    expect(title).toEqual("Transfer Tokens")
   })
 
-  test("It fails to get message for an unknown argument", async () => {
-    const message = getTemplateArgumentMessage({
+  test("It gets template description message for given message key and internationalization", async () => {
+    const description = getTemplateMessage({
       localization: "en-US",
-      argumentLabel: "foo",
-      messageKey: "title",
-      template: templatev11,
+      messageKey: "description",
+      template,
     })
 
-    expect(message).toEqual(undefined)
+    expect(description).toEqual("Transfer Flow to account")
   })
 
   test("It fails to get message for an unknown message key", async () => {
-    const message = getTemplateArgumentMessage({
+    const message = getTemplateMessage({
       localization: "en-US",
-      argumentLabel: "amount",
-      messageKey: "baz",
-      template: templatev11,
+      messageKey: "foo",
+      template,
     })
 
     expect(message).toEqual(undefined)

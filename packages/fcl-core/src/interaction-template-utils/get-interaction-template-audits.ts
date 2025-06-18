@@ -1,23 +1,32 @@
 import {config, invariant} from "@onflow/sdk"
 import {log, LEVELS} from "@onflow/util-logger"
 import {query} from "../exec/query"
-import {generateTemplateId} from "./generate-template-id/generate-template-id.js"
+import {generateTemplateId} from "./generate-template-id/generate-template-id"
 import {getChainId} from "../utils"
+import type {InteractionTemplate} from "./interaction-template"
+
+export interface GetInteractionTemplateAuditsParams {
+  template: InteractionTemplate
+  auditors?: string[]
+}
+
+export interface GetInteractionTemplateAuditsOpts {
+  flowInteractionAuditContract?: string
+}
 
 /**
  * @description Returns whether a set of auditors have audited a given Interaction Template
  *
- * @param {object} params
- * @param {object} params.template - Interaction Template
- * @param {Array<string>} params.auditors - Array of auditors
- * @param {object} opts
- * @param {string} opts.flowInteractionAuditContract - Flow Interaction Template Audit contract address
- * @returns {Promise<object>} - Object of auditor addresses and audit status
+ * @param {GetInteractionTemplateAuditsParams} opts
+ * @param {InteractionTemplate} opts.template Interaction Template to check audits for
+ * @param {string[]} opts.auditors [auditors=undefined] Auditors to check
+ * @param {GetInteractionTemplateAuditsOpts} opts
+ * @returns {Promise<Record<string, boolean>>} Whether the template has been audited by the auditors
  */
 export async function getInteractionTemplateAudits(
-  {template, auditors},
-  opts = {}
-) {
+  {template, auditors}: GetInteractionTemplateAuditsParams,
+  opts: GetInteractionTemplateAuditsOpts = {}
+): Promise<Record<string, boolean>> {
   invariant(
     template != undefined,
     "getInteractionTemplateAudits({ template }) -- template must be defined"
@@ -79,7 +88,7 @@ export async function getInteractionTemplateAudits(
           return FlowInteractionTemplateAudit.getHasTemplateBeenAuditedByAuditors(templateId: templateId, auditors: auditors)
         }
         `,
-        args: (arg, t) => [
+        args: (arg: any, t: any) => [
           arg(recomputedTemplateID, t.String),
           arg(_auditors, t.Array(t.Address)),
         ],

@@ -1,10 +1,21 @@
-import {invariant} from "@onflow/util-invariant"
 import {encode as rlpEncode} from "@onflow/rlp"
-import {genHash} from "../utils/hash.js"
-import {generateDependencyPin110} from "../generate-dependency-pin/generate-dependency-pin-1.1.0.js"
+import {invariant} from "@onflow/util-invariant"
+import type {
+  InteractionTemplate110,
+  InteractionTemplateDependency,
+  InteractionTemplateI18n,
+  InteractionTemplateMessage,
+  InteractionTemplateNetwork,
+  InteractionTemplateParameter,
+} from "../interaction-template"
+import {generateDependencyPin110} from "../generate-dependency-pin/generate-dependency-pin-1.1.0"
+import {genHash} from "../utils/hash"
 
-async function generateContractNetworks(contractName, networks) {
-  const values = []
+async function generateContractNetworks(
+  contractName: string,
+  networks: InteractionTemplateNetwork[]
+): Promise<string[][]> {
+  const values: string[][] = []
   for (const net of networks) {
     const networkHashes = [genHash(net.network)]
     const {address, dependency_pin_block_height} = net
@@ -21,8 +32,10 @@ async function generateContractNetworks(contractName, networks) {
   return values
 }
 
-async function generateContractDependencies(dependencies) {
-  const values = []
+async function generateContractDependencies(
+  dependencies: InteractionTemplateDependency[]
+): Promise<any[]> {
+  const values: any[] = []
   for (let i = 0; i < dependencies.length; i++) {
     const dependency = dependencies[i]
     const contracts = []
@@ -45,12 +58,16 @@ async function generateContractDependencies(dependencies) {
  * @description Generates Interaction Template ID for a given Interaction Template
  *
  * @param {object} params
- * @param {object} params.template - Interaction Template
- * @returns {Promise<string>} - Interaction Template ID
+ * @param {InteractionTemplate110} params.template Interaction Template
+ * @returns {Promise<string>} Interaction Template ID
  */
-export async function generateTemplateId({template}) {
+export async function generateTemplateId({
+  template,
+}: {
+  template: InteractionTemplate110
+}): Promise<string> {
   invariant(
-    template,
+    !!template,
     "generateTemplateId({ template }) -- template must be defined"
   )
   invariant(
@@ -69,35 +86,46 @@ export async function generateTemplateId({template}) {
   const templateData = template.data
 
   const messages = await Promise.all(
-    templateData.messages.map(async templateMessage => [
-      genHash(templateMessage.key),
-      await Promise.all(
-        templateMessage.i18n.map(async templateMessagei18n => [
-          genHash(templateMessagei18n.tag),
-          genHash(templateMessagei18n.translation),
-        ])
-      ),
-    ])
+    templateData.messages.map(
+      async (templateMessage: InteractionTemplateMessage) => [
+        genHash(templateMessage.key),
+        await Promise.all(
+          templateMessage.i18n.map(
+            async (templateMessagei18n: InteractionTemplateI18n) => [
+              genHash(templateMessagei18n.tag),
+              genHash(templateMessagei18n.translation),
+            ]
+          )
+        ),
+      ]
+    )
   )
 
   const params = await Promise.all(
     templateData?.["parameters"]
-      .sort((a, b) => a.index - b.index)
-      .map(async arg => [
+      .sort(
+        (a: InteractionTemplateParameter, b: InteractionTemplateParameter) =>
+          a.index - b.index
+      )
+      .map(async (arg: InteractionTemplateParameter) => [
         genHash(arg.label),
         [
           genHash(String(arg.index)),
           genHash(arg.type),
           await Promise.all(
-            arg.messages.map(async argumentMessage => [
-              genHash(argumentMessage.key),
-              await Promise.all(
-                argumentMessage.i18n.map(async argumentMessagei18n => [
-                  genHash(argumentMessagei18n.tag),
-                  genHash(argumentMessagei18n.translation),
-                ])
-              ),
-            ])
+            arg.messages.map(
+              async (argumentMessage: InteractionTemplateMessage) => [
+                genHash(argumentMessage.key),
+                await Promise.all(
+                  argumentMessage.i18n.map(
+                    async (argumentMessagei18n: InteractionTemplateI18n) => [
+                      genHash(argumentMessagei18n.tag),
+                      genHash(argumentMessagei18n.translation),
+                    ]
+                  )
+                ),
+              ]
+            )
           ),
         ],
       ])
