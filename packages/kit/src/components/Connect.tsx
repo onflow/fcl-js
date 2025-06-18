@@ -46,7 +46,7 @@ export const Connect: React.FC<ConnectProps> = ({
 
   const displayBalance =
     balanceData && typeof balanceData !== "string"
-      ? `${balanceData[balanceType].formatted} FLOW`
+      ? `${Number(balanceData[balanceType].formatted).toLocaleString()} FLOW`
       : "0.00 FLOW"
 
   const handleButtonClick = async () => {
