@@ -30,31 +30,33 @@ export const Dialog: React.FC<DialogProps> = ({
       <div className="fixed inset-0 flex items-center justify-center p-4">
         <HeadlessDialog.Panel
           className={twMerge(
-            "w-full max-w-md rounded-lg bg-white p-6 shadow-xl",
+            "w-full max-w-md rounded-lg bg-white p-6 shadow-xl relative",
             className
           )}
         >
-          {/* Header */}
-          <div className="flex items-center justify-between mb-4">
-            {title && (
+          {/* Close button absolutely positioned */}
+          <button
+            onClick={onClose}
+            className={twMerge(
+              `absolute top-4 right-4 p-1 rounded-full hover:bg-slate-100 transition-colors text-slate-500 hover:text-slate-700`
+            )}
+            aria-label="Close"
+          >
+            <XIcon className="w-5 h-5" />
+          </button>
+
+          {/* Header only if title is present */}
+          {title && (
+            <div className="mb-4">
               <HeadlessDialog.Title
                 className={twMerge("text-lg font-semibold text-slate-900")}
               >
                 {title}
               </HeadlessDialog.Title>
-            )}
-            <button
-              onClick={onClose}
-              className={twMerge(
-                `p-1 rounded-full hover:bg-slate-100 transition-colors text-slate-500
-                hover:text-slate-700`
-              )}
-            >
-              <XIcon className="w-5 h-5" />
-            </button>
-          </div>
+            </div>
+          )}
 
-          {/* Content */}
+          {/* Content starts at the top */}
           <div className="mt-2 text-slate-700">{children}</div>
         </HeadlessDialog.Panel>
       </div>
