@@ -81,7 +81,7 @@ export const Connect: React.FC<ConnectProps> = ({
       <Button
         onClick={handleButtonClick}
         variant={user?.loggedIn ? "outline" : variant}
-        className="px-2"
+        className="px-2 text-sm"
       >
         {user?.loggedIn ? displayAddress : "Connect Wallet"}
       </Button>
