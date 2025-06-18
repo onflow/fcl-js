@@ -56,7 +56,7 @@ export const TransactionDialog: React.FC<TransactionDialogProps> = ({
               : successTitle || "Transaction Successful"}
           </div>
         </div>
-        <div className="text-center text-gray-500 mt-2">
+        <div className="text-center text-gray-500 text-sm">
           {!isSuccess
             ? pendingDescription ||
               "Your transaction is being processed. Please wait..."
