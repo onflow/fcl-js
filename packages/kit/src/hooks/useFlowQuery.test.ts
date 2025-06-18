@@ -1,7 +1,7 @@
 import {renderHook, act, waitFor} from "@testing-library/react"
 import * as fcl from "@onflow/fcl"
 import {FlowProvider} from "../provider"
-import {useFlowQuery} from "./useFlowQuery"
+import {useFlowQuery, encodeQueryArgs} from "./useFlowQuery"
 
 jest.mock("@onflow/fcl", () => require("../__mocks__/fcl").default)
 
@@ -182,5 +182,56 @@ describe("useFlowQuery", () => {
     })
 
     await waitFor(() => expect(hookResult.current.data).toEqual(updatedResult))
+  })
+
+  describe("encodeQueryArgs", () => {
+    beforeEach(() => {
+      // Clear mocks
+      jest.clearAllMocks()
+    })
+
+    test("returns undefined when args is undefined", () => {
+      const result = encodeQueryArgs(undefined)
+      expect(result).toBeUndefined()
+    })
+
+    test("returns undefined when args is null", () => {
+      const result = encodeQueryArgs(null as any)
+      expect(result).toBeUndefined()
+    })
+
+    test("encodes single argument correctly", () => {
+      const argsFunction = (arg: typeof fcl.arg, t: typeof fcl.t) => [
+        arg("42", t.Int),
+      ]
+
+      const result = encodeQueryArgs(argsFunction)
+
+      expect(result).toEqual([{type: "Int", value: "42"}])
+    })
+
+    test("encodes multiple arguments correctly", () => {
+      const argsFunction = (arg: typeof fcl.arg, t: typeof fcl.t) => [
+        arg("42", t.Int),
+        arg("hello", t.String),
+        arg("0x1234567890abcdef", t.Address),
+      ]
+
+      const result = encodeQueryArgs(argsFunction)
+
+      expect(result).toEqual([
+        {type: "Int", value: "42"},
+        {type: "String", value: "hello"},
+        {type: "Address", value: "0x1234567890abcdef"},
+      ])
+    })
+
+    test("handles empty args array", () => {
+      const argsFunction = (arg: typeof fcl.arg, t: typeof fcl.t) => []
+
+      const result = encodeQueryArgs(argsFunction)
+
+      expect(result).toEqual([])
+    })
   })
 })
