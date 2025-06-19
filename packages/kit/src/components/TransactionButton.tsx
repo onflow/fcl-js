@@ -41,7 +41,7 @@ interface TransactionButtonProps {
 export const TransactionButton: React.FC<TransactionButtonProps> = ({
   variant = "primary",
   label,
-  transaction: propTransaction,
+  transaction,
   mutation,
   disabled = false,
   className,
@@ -50,11 +50,7 @@ export const TransactionButton: React.FC<TransactionButtonProps> = ({
   const {setGlobalTxId, globalTxId} = useGlobalTransaction()
 
   // Standalone mutation for when not in transaction context
-  const {
-    mutate: sendTransaction,
-    isPending,
-    data: txId,
-  } = useFlowMutate({
+  const {mutate: sendTransaction, isPending} = useFlowMutate({
     mutation: {
       ...mutation,
       onSuccess: (data, variables, context) => {
@@ -68,7 +64,7 @@ export const TransactionButton: React.FC<TransactionButtonProps> = ({
   })
 
   const handleButtonClick = async () => {
-    sendTransaction(propTransaction)
+    sendTransaction(transaction)
   }
 
   // Determine loading state
