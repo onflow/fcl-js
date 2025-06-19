@@ -13,13 +13,9 @@ const DarkModeContext = createContext<DarkModeContextType | undefined>(
 
 export function DarkModeProvider({
   children,
-  enabled,
-}: PropsWithChildren<{enabled: boolean}>) {
+  enabled = false,
+}: PropsWithChildren<{enabled?: boolean}>) {
   const darkModeState = useDarkModeState(enabled)
-
-  if (!enabled) {
-    return <>{children}</>
-  }
 
   return (
     <DarkModeContext.Provider value={darkModeState}>
@@ -32,7 +28,7 @@ export function useDarkMode() {
   const context = useContext(DarkModeContext)
   if (!context) {
     throw new Error(
-      "useDarkMode must be used within a FlowProvider with enableDarkMode={true}"
+      "useDarkMode must be used within a DarkModeProvider"
     )
   }
   return context
