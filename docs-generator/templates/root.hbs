@@ -7,10 +7,12 @@ description: Packages documentation.
 
 # Packages Docs
 
-A list of all packages available inside FCL library with functions and types documentation.
+A list of all packages available inside Flow Client Library (FCL) with functions and type definitions.
 
 {{#each packages}}
-- [{{this.displayName}}](./{{this.packageName}}/index.md)
+- [{{this.displayName}}](./{{this.packageName}}/index.md) - {{this.displayDescription}}
 {{/each}}
+
+- [Type Definitions](./types/index.md) - Type definitions for the Flow Client Library (FCL) packages.
 
 ---

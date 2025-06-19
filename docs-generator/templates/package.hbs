@@ -1,12 +1,16 @@
 ---
 sidebar_position: 1
 title: "{{displayName}}"
-description: "{{displayName}} package documentation."
+description: "{{#if displayDescription}}{{displayDescription}}{{else}}{{displayName}} package documentation.{{/if}}"
 ---
 
 <!-- THIS DOCUMENT IS AUTO-GENERATED FROM [onflow/{{packageName}}](https://github.com/onflow/fcl-js/tree/master/packages/{{packageName}}). DO NOT EDIT MANUALLY -->
 
 # {{displayName}}
+
+{{#if displayDescription}}
+{{{displayDescription}}}
+{{/if}}
 
 ## Overview
 

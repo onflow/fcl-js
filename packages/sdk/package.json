@@ -1,7 +1,7 @@
 {
   "name": "@onflow/sdk",
   "version": "1.9.0",
-  "description": "Flow SDK",
+  "description": "Low-level JavaScript/TypeScript SDK for interacting with the Flow blockchain.",
   "license": "Apache-2.0",
   "author": "Flow Foundation",
   "homepage": "https://flow.com",

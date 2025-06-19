@@ -1,5 +1,6 @@
 const path = require("path")
 const {generatePage, parseConfigCustomData} = require("./utils")
+const fs = require("fs")
 
 function truncateDescription(description, maxLength = 80) {
   if (!description || description.length <= maxLength) {
@@ -21,9 +22,25 @@ function truncateDescription(description, maxLength = 80) {
   return normalizedDescription.substring(0, truncateAt).trim() + "..."
 }
 
+function getPackageDescription(packageName) {
+  try {
+    const packageJsonPath = path.resolve(process.cwd(), "package.json")
+    if (fs.existsSync(packageJsonPath)) {
+      const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, "utf8"))
+      return packageJson.description || ""
+    }
+  } catch (error) {
+    console.warn(
+      `Error reading package.json for ${packageName}: ${error.message}`
+    )
+  }
+  return ""
+}
+
 function generatePackagePage(templates, outputDir, packageName, functions) {
   const configPath = path.resolve(process.cwd(), "docs-generator.config.js")
   const {displayName, sections, extra} = parseConfigCustomData(configPath)
+  const packageDescription = getPackageDescription(packageName)
 
   // Deduplicate functions with the same name
   const uniqueFunctions = []
@@ -47,6 +64,8 @@ function generatePackagePage(templates, outputDir, packageName, functions) {
   generatePage(templates, "package", path.join(outputDir, "index.md"), {
     packageName,
     displayName: displayName || `@onflow/${packageName}`,
+    displayDescription:
+      packageDescription || `${packageName} package documentation.`,
     customOverview: sections.overview,
     customRequirements: sections.requirements,
     customImporting: sections.importing,

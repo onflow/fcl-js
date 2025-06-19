@@ -2,11 +2,34 @@ const path = require("path")
 const fs = require("fs")
 const {generatePage, parseConfigCustomData} = require("./utils")
 
+function getPackageDescription(packageName) {
+  try {
+    const packageJsonPath = path.resolve(
+      process.cwd(),
+      "..",
+      packageName,
+      "package.json"
+    )
+    if (fs.existsSync(packageJsonPath)) {
+      const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, "utf8"))
+      return packageJson.description || ""
+    }
+  } catch (error) {
+    console.warn(
+      `Error reading package.json for ${packageName}: ${error.message}`
+    )
+  }
+  return ""
+}
+
 function generateRootPage(templates, packagesDir, currentPackageName) {
   const configPath = path.resolve(process.cwd(), "docs-generator.config.js")
   const {displayName} = parseConfigCustomData(configPath)
 
   const currentDisplayName = displayName || `@onflow/${currentPackageName}`
+  const currentPackageDescription =
+    getPackageDescription(currentPackageName) ||
+    `${currentPackageName} package documentation.`
   const rootPagePath = path.join(packagesDir, "index.md")
   const packages = []
 
@@ -21,6 +44,7 @@ function generateRootPage(templates, packagesDir, currentPackageName) {
           packages.push({
             displayName: match[1],
             packageName: match[2],
+            displayDescription: getPackageDescription(match[2]),
           })
         }
       }
@@ -38,6 +62,7 @@ function generateRootPage(templates, packagesDir, currentPackageName) {
     packages.push({
       displayName: currentDisplayName,
       packageName: currentPackageName,
+      displayDescription: currentPackageDescription,
     })
   }
   // Sort packages by display name
