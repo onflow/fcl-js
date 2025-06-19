@@ -71,7 +71,7 @@ export const TransactionButton: React.FC<TransactionButtonProps> = ({
   const isLoading = isPending
 
   // Button is disabled if: explicitly disabled, currently loading, or any global transaction is running
-  const isDisabled = disabled || isLoading || globalTxId
+  const isDisabled = disabled || isLoading || !!globalTxId
 
   return (
     <Button
