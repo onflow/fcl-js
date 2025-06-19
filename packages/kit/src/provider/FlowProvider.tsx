@@ -7,12 +7,14 @@ import {deepEqual} from "../utils/deepEqual"
 import {ThemeProvider, Theme} from "../core/theme"
 import {GlobalTransactionProvider} from "./GlobalTransactionProvider"
 import tailwindStyles from "../styles/tailwind.css"
+import {DarkModeProvider} from "./DarkModeProvider"
 
 interface FlowProviderProps {
   config?: FlowConfig
   queryClient?: QueryClient
   flowJson?: Record<string, any>
   theme?: Partial<Theme>
+  enableDarkMode?: boolean
 }
 
 const mappings: Array<{fcl: string; typed: keyof FlowConfig}> = [
@@ -91,16 +93,11 @@ const defaultQueryOptions: DefaultOptions = {
   },
 }
 
-export function FlowProvider({
-  config: initialConfig = {},
-  queryClient: _queryClient,
-  flowJson,
-  theme: customTheme,
-  children,
-}: PropsWithChildren<FlowProviderProps>) {
-  const [queryClient] = useState<QueryClient>(
-    () => _queryClient ?? new QueryClient({defaultOptions: defaultQueryOptions})
-  )
+// Custom hook for FCL configuration
+const useFCLConfig = (
+  initialConfig: FlowConfig,
+  flowJson?: Record<string, any>
+) => {
   const [flowConfig, setFlowConfig] = useState<FlowConfig | null>(null)
   const [isFlowJsonLoaded, setIsFlowJsonLoaded] = useState(false)
 
@@ -139,6 +136,22 @@ export function FlowProvider({
     return () => unsubscribe()
   }, [initialConfig, flowJson])
 
+  return {flowConfig, isFlowJsonLoaded}
+}
+
+export function FlowProvider({
+  config: initialConfig = {},
+  queryClient: _queryClient,
+  flowJson,
+  theme: customTheme,
+  children,
+  enableDarkMode,
+}: PropsWithChildren<FlowProviderProps>) {
+  const [queryClient] = useState<QueryClient>(
+    () => _queryClient ?? new QueryClient({defaultOptions: defaultQueryOptions})
+  )
+  const {flowConfig, isFlowJsonLoaded} = useFCLConfig(initialConfig, flowJson)
+
   if (!flowConfig || !isFlowJsonLoaded) {
     return null
   }
@@ -148,7 +161,11 @@ export function FlowProvider({
       <FlowConfigContext.Provider value={flowConfig}>
         <GlobalTransactionProvider>
           <style>{tailwindStyles}</style>
-          <ThemeProvider theme={customTheme}>{children}</ThemeProvider>
+          <ThemeProvider theme={customTheme}>
+            <DarkModeProvider enabled={enableDarkMode ?? false}>
+              {children}
+            </DarkModeProvider>
+          </ThemeProvider>
         </GlobalTransactionProvider>
       </FlowConfigContext.Provider>
     </FlowQueryClientProvider>
