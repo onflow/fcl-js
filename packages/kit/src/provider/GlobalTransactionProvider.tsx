@@ -4,7 +4,7 @@ import React, {createContext, useContext, useState, useEffect} from "react"
 
 interface GlobalTransactionContextValue {
   /** Check if a global transaction is currently running */
-  globalTxId: boolean
+  globalTxId: string | null
   /** Set the global transaction running state */
   setGlobalTxId: (txId: string | null) => void
 }
@@ -49,7 +49,7 @@ export const GlobalTransactionProvider: React.FC<
   }, [txId])
 
   const globalTransactionValue: GlobalTransactionContextValue = {
-    globalTxId: !!txId,
+    globalTxId: txId,
     setGlobalTxId: (newTxId: string | null) => {
       if (newTxId !== txId) {
         setTxId(newTxId)
