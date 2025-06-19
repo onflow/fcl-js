@@ -7,7 +7,7 @@ import {
 import {useFlowChainId} from "../hooks/useFlowChainId"
 import {Button, ButtonProps} from "./internal/Button"
 import {Dialog} from "./internal/Dialog"
-import {CircleUserRoundIcon} from "../icons/CircleUserRoundIcon"
+import {UserIcon} from "../icons/UserIcon"
 import {CopyIcon} from "../icons/CopyIcon"
 import {LogOutIcon} from "../icons/LogOutIcon"
 
@@ -46,7 +46,7 @@ export const Connect: React.FC<ConnectProps> = ({
 
   const displayBalance =
     balanceData && typeof balanceData !== "string"
-      ? `${balanceData[balanceType].formatted} FLOW`
+      ? `${Number(balanceData[balanceType].formatted).toLocaleString()} FLOW`
       : "0.00 FLOW"
 
   const handleButtonClick = async () => {
@@ -81,7 +81,7 @@ export const Connect: React.FC<ConnectProps> = ({
       <Button
         onClick={handleButtonClick}
         variant={user?.loggedIn ? "outline" : variant}
-        className="px-2"
+        className="px-2 text-sm"
       >
         {user?.loggedIn ? displayAddress : "Connect Wallet"}
       </Button>
@@ -90,19 +90,19 @@ export const Connect: React.FC<ConnectProps> = ({
           <div className="flex flex-col items-center gap-4 min-w-[320px]">
             <div className="flex flex-col items-center">
               <div className="w-16 h-16 rounded-full bg-slate-100 flex items-center justify-center mb-2">
-                <CircleUserRoundIcon className="w-8 h-8 text-slate-400" />
+                <UserIcon className="w-8 h-8 text-black" />
               </div>
               <div className="text-center text-lg font-semibold mb-0">
                 {displayAddress}
               </div>
-              <div className="text-center text-sm text-gray-500 -mt-1">
+              <div className="text-center text-sm text-gray-500 mt-2">
                 {displayBalance}
               </div>
             </div>
             <div className="flex gap-2 w-full">
               <Button
                 variant="outline"
-                className="flex-1 flex items-center justify-center"
+                className="flex-1 flex items-center justify-center text-sm"
                 onClick={handleCopy}
                 disabled={copied}
               >
@@ -120,7 +120,7 @@ export const Connect: React.FC<ConnectProps> = ({
               </Button>
               <Button
                 variant="outline"
-                className="flex-1 flex items-center justify-center"
+                className="flex-1 flex items-center justify-center text-sm"
                 onClick={handleDisconnect}
               >
                 <LogOutIcon className="mr-2 h-4 w-4" />
