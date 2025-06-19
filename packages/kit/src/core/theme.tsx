@@ -21,26 +21,26 @@ export type Theme = {
 const defaultTheme: Theme = {
   colors: {
     primary: {
-      background: "bg-slate-900",
-      text: "text-white",
-      hover: "hover:bg-slate-800",
+      background: "bg-slate-900 dark:bg-slate-100",
+      text: "text-white dark:text-slate-900",
+      hover: "hover:bg-slate-800 dark:hover:bg-slate-200",
       border: undefined,
     },
     secondary: {
-      background: "bg-slate-100",
-      text: "text-slate-900",
-      hover: "hover:bg-slate-200",
+      background: "bg-slate-100 dark:bg-slate-800",
+      text: "text-slate-900 dark:text-slate-100",
+      hover: "hover:bg-slate-200 dark:hover:bg-slate-700",
       border: undefined,
     },
     outline: {
       background: "bg-transparent",
-      text: "text-slate-900",
-      hover: "hover:bg-slate-100",
-      border: "border border-slate-200",
+      text: "text-slate-900 dark:text-slate-100",
+      hover: "hover:bg-slate-100 dark:hover:bg-slate-800",
+      border: "border border-slate-200 dark:border-slate-700",
     },
     link: {
       background: "bg-transparent",
-      text: "text-slate-900",
+      text: "text-slate-900 dark:text-slate-100",
       hover: "hover:underline",
       border: undefined,
     },
