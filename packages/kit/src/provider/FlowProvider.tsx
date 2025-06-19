@@ -1,8 +1,4 @@
-import React, {
-  useEffect,
-  useState,
-  PropsWithChildren,
-} from "react"
+import React, {useEffect, useState, PropsWithChildren} from "react"
 import * as fcl from "@onflow/fcl"
 import {FlowConfig, FlowConfigContext} from "../core/context"
 import {DefaultOptions, QueryClient} from "@tanstack/react-query"

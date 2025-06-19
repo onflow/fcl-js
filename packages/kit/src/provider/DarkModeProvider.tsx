@@ -7,7 +7,9 @@ type DarkModeContextType = {
   setDark: (dark: boolean) => void
 }
 
-const DarkModeContext = createContext<DarkModeContextType | undefined>(undefined)
+const DarkModeContext = createContext<DarkModeContextType | undefined>(
+  undefined
+)
 
 export function DarkModeProvider({
   children,
@@ -34,4 +36,4 @@ export function useDarkMode() {
     )
   }
   return context
-} 
+}
