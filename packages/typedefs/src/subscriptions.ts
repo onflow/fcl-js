@@ -9,6 +9,9 @@ import {
   TransactionStatus,
 } from "."
 
+/**
+ * Represents different topics that can be subscribed to for real-time data from the Flow blockchain
+ */
 export enum SubscriptionTopic {
   BLOCKS = "blocks",
   BLOCK_HEADERS = "block_headers",
@@ -18,16 +21,31 @@ export enum SubscriptionTopic {
   EVENTS = "events",
 }
 
+/**
+ * The data returned by a subscription, which will vary depending on the topic
+ */
 export type SubscriptionData<T extends SubscriptionTopic> =
   SubscriptionDataMap[T]
 
+/**
+ * Raw data returned by a subscription, which will vary depending on the topic and is not decoded
+ */
 export type RawSubscriptionData<T extends SubscriptionTopic> =
   RawSubscriptionDataMap[T]
 
+/**
+ * Arguments for a subscription, which will vary depending on the topic
+ */
 export type SubscriptionArgs<T extends SubscriptionTopic> =
   SubscriptionArgsMap[T]
 
+/**
+ * A subscription object that allows managing the subscription lifecycle
+ */
 export type Subscription = {
+  /**
+   * Function to unsubscribe from the subscription
+   */
   unsubscribe: () => void
 }
 

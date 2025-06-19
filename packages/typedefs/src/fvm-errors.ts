@@ -1,3 +1,6 @@
+/**
+ * Error codes defined by the Flow Virtual Machine (FVM) for various types of errors that can occur during transaction execution
+ */
 export enum FvmErrorCode {
   // We use -1 for unknown error in FCL because FVM defines error codes as uint16
   // This means we have no risk of collision with FVM error codes

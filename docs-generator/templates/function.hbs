@@ -1,0 +1,71 @@
+---
+sidebar_position: 1
+title: "{{name}}"
+description: "{{name}} function documentation."
+---
+
+<!-- THIS DOCUMENT IS AUTO-GENERATED FROM [onflow/{{packageName}}/{{sourceFilePath}}](https://github.com/onflow/fcl-js/tree/master/packages/{{packageName}}/{{sourceFilePath}}). DO NOT EDIT MANUALLY -->
+
+# {{name}}
+
+{{#if description}}
+{{{description}}}
+{{/if}}
+
+## Import
+
+You can import the entire package and access the function:
+
+```typescript
+import * as {{packageName}} from "@onflow/{{packageName}}"
+
+{{packageName}}.{{name}}({{#each parameters}}{{#unless @first}}, {{/unless}}{{name}}{{/each}})
+```
+
+Or import directly the specific function:
+
+```typescript
+import { {{name}} } from "@onflow/{{packageName}}"
+
+{{name}}({{#each parameters}}{{#unless @first}}, {{/unless}}{{name}}{{/each}})
+```
+
+{{#if customExample}}
+## Usage
+
+```typescript
+{{{customExample}}}
+```
+{{/if}}
+
+{{#if parameters.length}}
+## Parameters
+
+{{#each parameters}}
+### `{{name}}` {{#unless required}}(optional){{/unless}}
+
+- Type: {{#if hasLink}}{{{linkedType}}}{{else}}`{{{type}}}`{{/if}}
+{{#if description}}
+- Description: {{{description}}}
+{{/if}}
+
+{{#if typeDefinition}}
+```typescript
+{{{typeDefinition}}}
+```
+{{/if}}
+
+{{/each}}
+{{/if}}
+
+## Returns
+
+{{#if returnHasLink}}{{{linkedType}}}{{else}}`{{{returnType}}}`{{/if}}
+
+{{#if returnTypeDefinition}}
+```typescript
+{{{returnTypeDefinition}}}
+```
+{{/if}}
+
+---
