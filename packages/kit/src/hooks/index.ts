@@ -1,6 +1,7 @@
 export {useCurrentFlowUser} from "./useCurrentFlowUser"
 export {useFlowAccount} from "./useFlowAccount"
 export {useFlowBlock} from "./useFlowBlock"
+export {useFlowChainId} from "./useFlowChainId"
 export {useFlowConfig} from "./useFlowConfig"
 export {useFlowEvents} from "./useFlowEvents"
 export {useFlowMutate} from "./useFlowMutate"
