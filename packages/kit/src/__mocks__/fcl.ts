@@ -17,7 +17,7 @@ export default {
   events: jest.fn(),
   mutate: jest.fn(),
   query: jest.fn(),
-  rawQuery: jest.fn(),
+  queryRaw: jest.fn(),
   tx: jest.fn(),
   config: () => ({
     subscribe: sharedSubscribe,

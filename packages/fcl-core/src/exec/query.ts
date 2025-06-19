@@ -1,5 +1,5 @@
 import * as sdk from "@onflow/sdk"
-import {QueryOptions, rawQuery} from "./raw-query"
+import {QueryOptions, queryRaw} from "./query-raw"
 
 /**
  * @description Allows you to submit scripts to query the blockchain.
@@ -30,5 +30,5 @@ import {QueryOptions, rawQuery} from "./raw-query"
  *    await query({ cadence, args })
  */
 export async function query(opts: QueryOptions = {}): Promise<any> {
-  return rawQuery(opts).then(sdk.decode)
+  return queryRaw(opts).then(sdk.decode)
 }

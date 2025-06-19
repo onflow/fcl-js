@@ -38,9 +38,9 @@ export interface QueryOptions {
  *      arg("0xb2db43ad6bc345fec9", t.Address),
  *    ]
  *
- *    await rawQuery({ cadence, args })
+ *    await queryRaw({ cadence, args })
  */
-export async function rawQuery(opts: QueryOptions = {}): Promise<any> {
+export async function queryRaw(opts: QueryOptions = {}): Promise<any> {
   await preQuery(opts)
   opts = await prepTemplateOpts(opts)
 

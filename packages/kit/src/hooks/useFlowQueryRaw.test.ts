@@ -22,7 +22,7 @@ describe("useFlowQueryRaw", () => {
   test("fetches data successfully", async () => {
     const cadenceScript = "access(all) fun main(): Int { return 42 }"
     const expectedResult = 42
-    const queryMock = jest.mocked(fcl.rawQuery)
+    const queryMock = jest.mocked(fcl.queryRaw)
     queryMock.mockResolvedValueOnce(expectedResult)
 
     let hookResult: any
@@ -49,7 +49,7 @@ describe("useFlowQueryRaw", () => {
 
   test("does not fetch data when enabled is false", async () => {
     const cadenceScript = "access(all) fun main(): Int { return 42 }"
-    const queryMock = jest.mocked(fcl.rawQuery)
+    const queryMock = jest.mocked(fcl.queryRaw)
 
     renderHook(
       () => useFlowQueryRaw({cadence: cadenceScript, query: {enabled: false}}),
@@ -58,16 +58,16 @@ describe("useFlowQueryRaw", () => {
       }
     )
 
-    // wait a little to ensure fcl.rawQuery isn't called
+    // wait a little to ensure fcl.queryRaw isn't called
     await waitFor(() => {
       expect(queryMock).not.toHaveBeenCalled()
     })
   })
 
-  test("handles error from fcl.rawQuery", async () => {
+  test("handles error from fcl.queryRaw", async () => {
     const cadenceScript = "access(all) fun main(): Int { return 42 }"
     const testError = new Error("Query failed")
-    const queryMock = jest.mocked(fcl.rawQuery)
+    const queryMock = jest.mocked(fcl.queryRaw)
     queryMock.mockRejectedValueOnce(testError)
 
     let hookResult: any
@@ -91,7 +91,7 @@ describe("useFlowQueryRaw", () => {
     const cadenceScript = "access(all) fun main(): Int { return 42 }"
     const initialResult = 42
     const updatedResult = 100
-    const queryMock = jest.mocked(fcl.rawQuery)
+    const queryMock = jest.mocked(fcl.queryRaw)
     queryMock.mockResolvedValueOnce(initialResult)
 
     let hookResult: any
@@ -120,7 +120,7 @@ describe("useFlowQueryRaw", () => {
   test("supports args function parameter", async () => {
     const cadenceScript = "access(all) fun main(a: Int): Int { return a }"
     const expectedResult = 7
-    const queryMock = jest.mocked(fcl.rawQuery)
+    const queryMock = jest.mocked(fcl.queryRaw)
     queryMock.mockResolvedValueOnce(expectedResult)
 
     const argsFunction = (arg: typeof fcl.arg, t: typeof fcl.t) => [
@@ -151,7 +151,7 @@ describe("useFlowQueryRaw", () => {
     const cadenceScript = "access(all) fun main(a: Int): Int { return a }"
     const initialResult = 7
     const updatedResult = 42
-    const queryMock = jest.mocked(fcl.rawQuery)
+    const queryMock = jest.mocked(fcl.queryRaw)
     queryMock.mockResolvedValueOnce(initialResult)
 
     const argsFunction = (arg: typeof fcl.arg, t: typeof fcl.t) => [

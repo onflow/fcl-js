@@ -30,7 +30,7 @@ export function useFlowQueryRaw({
 
   const fetchQueryRaw = useCallback(async () => {
     if (!cadence) return null
-    return fcl.rawQuery({cadence, args})
+    return fcl.queryRaw({cadence, args})
   }, [cadence, args])
 
   const encodedArgs = encodeQueryArgs(args)
