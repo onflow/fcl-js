@@ -4,9 +4,14 @@ import {Button, ButtonProps} from "./internal/Button"
 import {UseMutationOptions} from "@tanstack/react-query"
 import {mutate} from "@onflow/fcl"
 import {useGlobalTransaction} from "../provider/GlobalTransactionProvider"
-import {twMerge} from "tailwind-merge"
 
 interface TransactionButtonProps {
+  /**
+   * Transaction to execute when the button is clicked.
+   * This should be a valid Flow transaction object that can be passed to `fcl.mutate`.
+   * It can include Cadence code, arguments, and other transaction parameters.
+   */
+  transaction: Parameters<typeof mutate>[0]
   /**
    * Variant of the button, defaults to "primary".
    * Can be set to "outline" or other variants supported by the Button component.
@@ -17,12 +22,6 @@ interface TransactionButtonProps {
    * If not provided, the button will display a default label based on the transaction type.
    */
   label?: string
-  /**
-   * Transaction to execute when the button is clicked.
-   * This should be a valid Flow transaction object that can be passed to `fcl.mutate`.
-   * It can include Cadence code, arguments, and other transaction parameters.
-   */
-  transaction: Parameters<typeof mutate>[0]
   /**
    * Optional TanStack React Query mutation options.
    * This allows you to customize the mutation behavior, such as retry logic,
@@ -82,7 +81,7 @@ export const TransactionButton: React.FC<TransactionButtonProps> = ({
     <Button
       onClick={handleButtonClick}
       variant={variant}
-      className={twMerge("px-2", className)}
+      className={className}
       disabled={isDisabled}
     >
       <span>
