@@ -418,12 +418,14 @@ const template = {
 }
 
 describe("1.1.0, verify dependency pin same", () => {
+  let consoleWarnSpy
+
   beforeAll(() => {
-    jest.spyOn(console, "warn").mockImplementation(() => {})
+    consoleWarnSpy = jest.spyOn(console, "warn").mockImplementation(() => {})
   })
 
   afterAll(() => {
-    //console.warn.mockRestore()
+    consoleWarnSpy.mockRestore()
   })
 
   test("v1.1.0, get dependency pin", async () => {
