@@ -70,4 +70,13 @@ describe("useFlowTransactionStatus", () => {
     expect(result.current.error).not.toBeNull()
     expect(result.current.error?.message).toBe("Test error occurred")
   })
+
+  test("returns null when no transaction ID is provided", () => {
+    const {result} = renderHook(() => useFlowTransactionStatus({}), {
+      wrapper: FlowProvider,
+    })
+
+    expect(result.current.transactionStatus).toBe(null)
+    expect(result.current.error).toBe(null)
+  })
 })

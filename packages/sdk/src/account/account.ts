@@ -34,21 +34,18 @@ export async function account(
   )
 
   // Get account by ID
-  if (id) {
-    const ix = await send([getAccount(address), atBlockId(id)], opts)
-    return decode(ix)
-  }
+  if (id)
+    return await send([getAccount(address), atBlockId(id)], opts).then(decode)
 
   // Get account by height
-  if (height) {
-    const ix = await send([getAccount(address), atBlockHeight(height)], opts)
-    return decode(ix)
-  }
+  if (height)
+    return await send([getAccount(address), atBlockHeight(height)], opts).then(
+      decode
+    )
 
   // Get account by latest block
-  const ix = await send(
+  return await send(
     [getAccount(address), atLatestBlock(isSealed ?? false)],
     opts
-  )
-  return decode(ix)
+  ).then(decode)
 }
