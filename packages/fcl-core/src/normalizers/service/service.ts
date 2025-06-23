@@ -10,13 +10,16 @@ import {normalizeAccountProof} from "./account-proof"
 import {normalizeAuthnRefresh} from "./authn-refresh"
 import type {Service} from "@onflow/typedefs"
 
-export function normalizeServices(services: Service[], data?: any): any[] {
+export function normalizeServices(services: Service[], data?: any): Service[] {
   return services
     .map(service => normalizeService(service, data))
     .filter(Boolean)
 }
 
-const serviceNormalizers: Record<string, (service: any, data?: any) => any> = {
+const serviceNormalizers: Record<
+  string,
+  (service: Service, data?: any) => any
+> = {
   "back-channel-rpc": normalizeBackChannelRpc,
   "pre-authz": normalizePreAuthz,
   authz: normalizeAuthz,
@@ -29,7 +32,7 @@ const serviceNormalizers: Record<string, (service: any, data?: any) => any> = {
   "authn-refresh": normalizeAuthnRefresh,
 }
 
-export function normalizeService(service: Service, data?: any): any {
+export function normalizeService(service: Service, data?: any): Service {
   try {
     const normalized = serviceNormalizers[service.type](service, data)
     return normalized
