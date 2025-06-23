@@ -1,15 +1,22 @@
+import {Service} from "@onflow/typedefs"
 import {SERVICE_PRAGMA} from "./__vsn"
 
-// {
-//    "f_type": "Service",
-//    "f_vsn": "1.0.0",
-//    type: "local-view",
-//    method: "VIEW/IFRAME",
-//    endpoint: "https://woot.org/authz/local",
-//    data: {},
-//    params: {},
-// }
-export function normalizeLocalView(resp) {
+/**
+ * @param resp The local-view to normalize
+ * @returns The normalized local-view or null
+ *
+ * @example
+ * const service = normalizeLocalView({
+ *   f_type: "Service",
+ *   f_vsn: "1.0.0",
+ *   type: "local-view",
+ *   method: "VIEW/IFRAME",
+ *   endpoint: "https://woot.org/authz/local",
+ *   data: {},
+ *   params: {},
+ * })
+ */
+export function normalizeLocalView(resp: Service | null): Service | null {
   if (resp == null) return null
   if (resp.method == null) {
     resp = {...resp, type: "local-view", method: "VIEW/IFRAME"}
@@ -23,7 +30,7 @@ export function normalizeLocalView(resp) {
       endpoint: resp.endpoint,
       data: resp.data || {},
       params: resp.params || {},
-    }
+    } as Service
   }
 
   switch (resp["f_vsn"]) {
