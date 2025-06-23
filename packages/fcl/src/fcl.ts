@@ -1,6 +1,7 @@
 export {
   VERSION,
   query,
+  queryRaw,
   verifyUserSignatures,
   serialize,
   tx,
@@ -116,4 +117,4 @@ initFclWcLoader()
 export {LOCAL_STORAGE, SESSION_STORAGE} from "./utils/web"
 
 // Subscriptions
-export {subscribe, rawSubscribe} from "@onflow/fcl-core"
+export {subscribe, subscribeRaw} from "@onflow/fcl-core"

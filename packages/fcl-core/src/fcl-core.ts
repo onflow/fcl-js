@@ -1,5 +1,6 @@
 export {VERSION} from "./VERSION"
 export {query} from "./exec/query"
+export {queryRaw} from "./exec/query-raw"
 export {verifyUserSignatures} from "./exec/verify"
 export {serialize} from "./serialize"
 export {transaction as tx, TransactionError} from "./transaction"
@@ -73,7 +74,7 @@ export {invariant} from "@onflow/sdk"
 
 // Subscriptions
 export {subscribe} from "@onflow/sdk"
-export {rawSubscribe} from "@onflow/sdk"
+export {subscribeRaw} from "@onflow/sdk"
 
 import {watchForChainIdChanges} from "./utils"
 

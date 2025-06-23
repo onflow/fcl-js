@@ -370,7 +370,11 @@ export {pipe}
 
 const identity = <T>(v: T, ..._: any[]) => v
 
-export const get = (ix: Interaction, key: string, fallback: any) => {
+export const get = (
+  ix: Interaction,
+  key: string,
+  fallback: any = undefined
+) => {
   return ix.assigns[key] == null ? fallback : ix.assigns[key]
 }
 

@@ -8,7 +8,7 @@ import {
 import {template} from "@onflow/util-template"
 
 const DEFAULT_SCRIPT_ACCOUNTS: string[] = []
-const DEFAULT_REF = ""
+const DEFAULT_REF: any = null
 
 /**
  * @description A template builder to use a Cadence transaction for an interaction

@@ -27,7 +27,7 @@ function getContractIdentifierSyntaxMatches(
 export async function resolveCadence(ix: Interaction): Promise<Interaction> {
   if (!isTransaction(ix) && !isScript(ix)) return ix
 
-  var cadence = get(ix, "ix.cadence", null)
+  var cadence = get(ix, "ix.cadence")
 
   invariant(
     isFn(cadence) || isString(cadence),

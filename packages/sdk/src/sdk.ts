@@ -5,7 +5,7 @@ export {resolve} from "./resolve/resolve"
 export {
   send,
   subscribe,
-  rawSubscribe,
+  subscribeRaw,
   SubscriptionsNotSupportedError,
 } from "./transport"
 export {decode} from "./decode/sdk-decode"
