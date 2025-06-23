@@ -18,7 +18,7 @@ export async function generateTemplateId({
   template,
 }: GenerateTemplateId100Params): Promise<string> {
   invariant(
-    template as any,
+    !!template,
     "generateTemplateId({ template }) -- template must be defined"
   )
   invariant(
