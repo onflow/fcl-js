@@ -1,5 +1,5 @@
-import {findImports} from "./find-imports.js"
-import {generateImport} from "./generate-import.js"
+import {findImports} from "./find-imports"
+import {generateImport} from "./generate-import"
 
 describe("Find imports", () => {
   const cadenceA = `

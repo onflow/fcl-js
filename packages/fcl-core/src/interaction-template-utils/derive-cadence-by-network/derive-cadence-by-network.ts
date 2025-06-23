@@ -1,16 +1,25 @@
 import {invariant} from "@onflow/util-invariant"
-import {deriveCadenceByNetwork100} from "./derive-cadence-by-network-1.0.0.js"
-import {deriveCadenceByNetwork110} from "./derive-cadence-by-network-1.1.0.js"
+import {deriveCadenceByNetwork100} from "./derive-cadence-by-network-1.0.0"
+import {deriveCadenceByNetwork110} from "./derive-cadence-by-network-1.1.0"
+import type {InteractionTemplate} from "../interaction-template"
+
+export interface DeriveCadenceByNetworkParams {
+  network: string
+  template: InteractionTemplate
+}
 
 /**
  * @description Fills import addresses in Cadence for network
  *
- * @param {object} params
- * @param {string} params.network - Network to derive Cadence for
- * @param {object} params.template - Interaction Template to derive Cadence from
- * @returns {Promise<string>} - Promise that resolves with the derived Cadence code
+ * @param {DeriveCadenceByNetworkParams} params
+ * @param {string} params.network Network to derive Cadence for
+ * @param {InteractionTemplate} params.template Interaction Template to derive Cadence from
+ * @returns {Promise<string>} Promise that resolves with the derived Cadence code
  */
-export async function deriveCadenceByNetwork({network, template}) {
+export async function deriveCadenceByNetwork({
+  network,
+  template,
+}: DeriveCadenceByNetworkParams): Promise<string> {
   invariant(
     network != undefined,
     "deriveCadenceByNetwork({ network }) -- network must be defined"

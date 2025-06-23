@@ -1,21 +1,28 @@
-import {invariant} from "@onflow/sdk"
+import {invariant} from "@onflow/util-invariant"
+import type {InteractionTemplate} from "./interaction-template"
+
+export interface GetTemplateMessageParams {
+  localization?: string
+  messageKey: string
+  template: InteractionTemplate
+}
 
 /**
  * @description Get Interaction Template argument message
  *
- * @param {object} params
- * @param {string} params.localization [localization="en-US"] - Localization code
- * @param {string} params.messageKey - Message key
- * @param {object} params.template - Interaction Template
- * @returns {string} - Message
+ * @param {GetTemplateMessageParams} params
+ * @param {string} params.localization [localization="en-US"] Localization code
+ * @param {string} params.messageKey Message key
+ * @param {InteractionTemplate} params.template Interaction Template
+ * @returns {string} Message
  */
 export function getTemplateMessage({
   localization = "en-US",
   messageKey,
   template,
-}) {
+}: GetTemplateMessageParams): string | undefined {
   invariant(
-    messageKey,
+    messageKey as any,
     "getTemplateMessage({ messageKey }) -- messageKey must be defined"
   )
   invariant(
@@ -24,7 +31,7 @@ export function getTemplateMessage({
   )
 
   invariant(
-    localization,
+    localization as any,
     "getTemplateMessage({ localization }) -- localization must be defined"
   )
   invariant(
@@ -41,15 +48,17 @@ export function getTemplateMessage({
     "getTemplateMessage({ template }) -- template must be an object"
   )
   invariant(
-    typeof template.f_type === "InteractionTemplate",
+    template.f_type === "InteractionTemplate",
     "getTemplateMessage({ template }) -- template object must be an InteractionTemplate"
   )
 
   switch (template.f_version) {
     case "1.1.0":
-      const msg = template?.data?.messages?.find(a => a.key === messageKey)
+      const msg = template?.data?.messages?.find(
+        (a: any) => a.key === messageKey
+      )
       if (!msg) return undefined
-      const lzn = msg?.i18n?.find(a => a.tag === localization)
+      const lzn = msg?.i18n?.find((a: any) => a.tag === localization)
       if (!lzn) return undefined
       return lzn.translation
     case "1.0.0":

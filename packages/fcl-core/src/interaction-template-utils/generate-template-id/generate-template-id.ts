@@ -1,17 +1,22 @@
 import {invariant} from "@onflow/util-invariant"
-import {generateTemplateId as generateTemplateId100} from "./generate-template-id-1.0.0.js"
-import {generateTemplateId as generateTemplateId110} from "./generate-template-id-1.1.0.js"
+import {generateTemplateId as generateTemplateId100} from "./generate-template-id-1.0.0"
+import {generateTemplateId as generateTemplateId110} from "./generate-template-id-1.1.0"
+import type {InteractionTemplate} from "../interaction-template"
 
 /**
  * @description Generates Interaction Template ID for a given Interaction Template
  *
  * @param {object} params
- * @param {object} params.template - Interaction Template
- * @returns {Promise<string>} - Interaction Template ID
+ * @param {object} params.template Interaction Template
+ * @returns {Promise<string>} Interaction Template ID
  */
-export async function generateTemplateId({template}) {
+export async function generateTemplateId({
+  template,
+}: {
+  template: InteractionTemplate
+}): Promise<string> {
   invariant(
-    template,
+    !!template,
     "generateTemplateId({ template }) -- template must be defined"
   )
   invariant(
@@ -37,10 +42,13 @@ export async function generateTemplateId({template}) {
  * @description Verifies the given Interaction Template Id has been correctly generated
  *
  * @param {object} params
- * @param {object} params.template - Interaction Template
- * @returns {Promise<boolean>} - true or false, Interaction Template ID
+ * @param {object} params.template Interaction Template
+ * @returns {Promise<boolean>} true or false, Interaction Template ID
  */
-
-export async function verifyGeneratedTemplateId({template}) {
+export async function verifyGeneratedTemplateId({
+  template,
+}: {
+  template: InteractionTemplate
+}): Promise<boolean> {
   return template.id === (await generateTemplateId({template}))
 }

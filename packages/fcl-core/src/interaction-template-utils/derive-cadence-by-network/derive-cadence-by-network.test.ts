@@ -1,7 +1,7 @@
-import {deriveCadenceByNetwork} from "./derive-cadence-by-network.js"
+import {deriveCadenceByNetwork} from "./derive-cadence-by-network"
 
 describe("Derive cadence by network 1.0.0", () => {
-  const template = {
+  const template: any = {
     f_type: "InteractionTemplate",
     f_version: "1.0.0",
     id: "abc123",
@@ -54,7 +54,7 @@ describe("Derive cadence by network 1.0.0", () => {
 })
 
 describe("Derive cadence by network 1.1.0", () => {
-  const template11 = {
+  const template11: any = {
     f_type: "InteractionTemplate",
     f_version: "1.1.0",
     id: "3a99af243b85f3f6af28304af2ed53a37fb913782b3efc483e6f0162a47720a0",
@@ -207,7 +207,7 @@ describe("Derive cadence by network 1.1.0", () => {
     await expect(() =>
       deriveCadenceByNetwork({
         network: "mainnet",
-        template: {f_type: "InteractionTemplate", f_version: "0.0.0"},
+        template: {f_type: "InteractionTemplate", f_version: "0.0.0"} as any,
       })
     ).rejects.toThrow(Error)
   })

@@ -1,17 +1,24 @@
-import {invariant} from "@onflow/sdk"
+import {invariant} from "@onflow/util-invariant"
 import {encode as rlpEncode} from "@onflow/rlp"
-import {genHash} from "../utils/hash.js"
+import {genHash} from "../utils/hash"
+import type {InteractionTemplate100} from "../interaction-template"
+
+export interface GenerateTemplateId100Params {
+  template: InteractionTemplate100
+}
 
 /**
  * @description Generates Interaction Template ID for a given Interaction Template
  *
  * @param {object} params
- * @param {object} params.template - Interaction Template
- * @returns {Promise<string>} - Interaction Template ID
+ * @param {InteractionTemplate100} params.template Interaction Template
+ * @returns {Promise<string>} Interaction Template ID
  */
-export async function generateTemplateId({template}) {
+export async function generateTemplateId({
+  template,
+}: GenerateTemplateId100Params): Promise<string> {
   invariant(
-    template != undefined,
+    !!template,
     "generateTemplateId({ template }) -- template must be defined"
   )
   invariant(

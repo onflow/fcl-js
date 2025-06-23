@@ -1,6 +1,5 @@
-import {generateTemplateId} from "./generate-template-id.js"
-import {replaceStringImports} from "../utils/replace-string-imports.js"
-import {genHash} from "../utils/hash.js"
+import {verifyDependencyPinsSame} from "./verify-dependency-pin-same-at-block"
+import {config} from "@onflow/config"
 
 const returnedAccount = {
   address: "0xf233dcee88fe0abe",
@@ -275,169 +274,170 @@ jest.mock("@onflow/sdk", () => ({
   }),
   atBlockHeight: jest.fn().mockImplementation(({}) => {
     // Adjusted mock implementation
-    return Promise.resolve({})
+    return
   }),
 }))
 
-describe("Gen template id interaction template messages 1.1.0", () => {
-  const template = {
-    f_type: "InteractionTemplate",
-    f_version: "1.1.0",
-    id: "3accd8c0bf4c7b543a80287d6c158043b4c2e737c2205dba6e009abbbf1328a4",
-    data: {
-      type: "transaction",
-      interface: "",
-      messages: [
-        {
-          key: "title",
-          i18n: [
-            {
-              tag: "en-US",
-              translation: "Transfer Tokens",
-            },
-          ],
-        },
-        {
-          key: "description",
-          i18n: [
-            {
-              tag: "en-US",
-              translation: "Transfer Flow to account",
-            },
-          ],
-        },
-      ],
-      cadence: {
-        body: 'import "FungibleToken"\n\n#interaction(\n    version: "1.1.0",\n    title: "Transfer Flow",\n    description: "Transfer Flow to account",\n    language: "en-US",\n    parameters: [\n        Parameter(\n            name: "amount", \n            title: "Amount", \n            description: "The amount of FLOW tokens to send"\n        ),\n        Parameter(\n            name: "to", \n            title: "To",\n            description: "The Flow account the tokens will go to"\n        )\n    ],\n)\n\ntransaction(amount: UFix64, to: Address) {\n    let vault: @FungibleToken.Vault\n    \n    prepare(signer: AuthAccount) {\n        self.vault \u003c- signer\n            .borrow\u003c\u0026{FungibleToken.Provider}\u003e(from: /storage/flowTokenVault)!\n            .withdraw(amount: amount)\n    }\n\n    execute {\n        getAccount(to)\n            .getCapability(/public/flowTokenReceiver)!\n            .borrow\u003c\u0026{FungibleToken.Receiver}\u003e()!\n            .deposit(from: \u003c-self.vault)\n    }\n}',
-        network_pins: [
+const template = {
+  f_type: "InteractionTemplate",
+  f_version: "1.1.0",
+  id: "3accd8c0bf4c7b543a80287d6c158043b4c2e737c2205dba6e009abbbf1328a4",
+  data: {
+    type: "transaction",
+    interface: "",
+    messages: [
+      {
+        key: "title",
+        i18n: [
           {
-            network: "mainnet",
-            pin_self:
-              "dd046de8ef442e4d708124d5710cb78962eb884a4387df1f0b1daf374bd28278",
-          },
-          {
-            network: "testnet",
-            pin_self:
-              "4089786f5e19fe66b39e347634ca28229851f4de1fd469bd8f327d79510e771f",
+            tag: "en-US",
+            translation: "Transfer Tokens",
           },
         ],
       },
-      dependencies: [
+      {
+        key: "description",
+        i18n: [
+          {
+            tag: "en-US",
+            translation: "Transfer Flow to account",
+          },
+        ],
+      },
+    ],
+    cadence: {
+      body: 'import "FungibleToken"\n\n#interaction(\n    version: "1.1.0",\n    title: "Transfer Flow",\n    description: "Transfer Flow to account",\n    language: "en-US",\n    parameters: [\n        Parameter(\n            name: "amount", \n            title: "Amount", \n            description: "The amount of FLOW tokens to send"\n        ),\n        Parameter(\n            name: "to", \n            title: "To",\n            description: "The Flow account the tokens will go to"\n        )\n    ],\n)\n\ntransaction(amount: UFix64, to: Address) {\n    let vault: @FungibleToken.Vault\n    \n    prepare(signer: AuthAccount) {\n        self.vault \u003c- signer\n            .borrow\u003c\u0026{FungibleToken.Provider}\u003e(from: /storage/flowTokenVault)!\n            .withdraw(amount: amount)\n    }\n\n    execute {\n        getAccount(to)\n            .getCapability(/public/flowTokenReceiver)!\n            .borrow\u003c\u0026{FungibleToken.Receiver}\u003e()!\n            .deposit(from: \u003c-self.vault)\n    }\n}',
+      network_pins: [
         {
-          contracts: [
-            {
-              contract: "FungibleToken",
-              networks: [
-                {
-                  network: "mainnet",
-                  address: "0xf233dcee88fe0abe",
-                  dependency_pin_block_height: 70493190,
-                  dependency_pin: {
-                    pin: "ac0208f93d07829ec96584d618ddbec6af3cf4e2866bd5071249e8ec93c7e0dc",
-                    pin_self:
-                      "cdadd5b5897f2dfe35d8b25f4e41fea9f8fca8f40f8a8b506b33701ef5033076",
-                    pin_contract_name: "FungibleToken",
-                    pin_contract_address: "0xf233dcee88fe0abe",
-                    imports: [],
-                  },
-                },
-                {
-                  network: "testnet",
-                  address: "0x9a0766d93b6608b7",
-                  dependency_pin_block_height: 149595558,
-                  dependency_pin: {
-                    pin: "ac0208f93d07829ec96584d618ddbec6af3cf4e2866bd5071249e8ec93c7e0dc",
-                    pin_self:
-                      "cdadd5b5897f2dfe35d8b25f4e41fea9f8fca8f40f8a8b506b33701ef5033076",
-                    pin_contract_name: "FungibleToken",
-                    pin_contract_address: "0x9a0766d93b6608b7",
-                    imports: [],
-                  },
-                },
-                {
-                  network: "emulator",
-                  address: "0xee82856bf20e2aa6",
-                  dependency_pin_block_height: 0,
-                },
-              ],
-            },
-          ],
-        },
-      ],
-      parameters: [
-        {
-          label: "amount",
-          index: 0,
-          type: "UFix64",
-          messages: [
-            {
-              key: "title",
-              i18n: [
-                {
-                  tag: "en-US",
-                  translation: "Amount",
-                },
-              ],
-            },
-            {
-              key: "description",
-              i18n: [
-                {
-                  tag: "en-US",
-                  translation: "The amount of FLOW tokens to send",
-                },
-              ],
-            },
-          ],
+          network: "mainnet",
+          pin_self:
+            "dd046de8ef442e4d708124d5710cb78962eb884a4387df1f0b1daf374bd28278",
         },
         {
-          label: "to",
-          index: 1,
-          type: "Address",
-          messages: [
-            {
-              key: "title",
-              i18n: [
-                {
-                  tag: "en-US",
-                  translation: "To",
-                },
-              ],
-            },
-            {
-              key: "description",
-              i18n: [
-                {
-                  tag: "en-US",
-                  translation: "The Flow account the tokens will go to",
-                },
-              ],
-            },
-          ],
+          network: "testnet",
+          pin_self:
+            "4089786f5e19fe66b39e347634ca28229851f4de1fd469bd8f327d79510e771f",
         },
       ],
     },
-  }
+    dependencies: [
+      {
+        contracts: [
+          {
+            contract: "FungibleToken",
+            networks: [
+              {
+                network: "mainnet",
+                address: "0xf233dcee88fe0abe",
+                dependency_pin_block_height: 70493190,
+                dependency_pin: {
+                  pin: "ac0208f93d07829ec96584d618ddbec6af3cf4e2866bd5071249e8ec93c7e0dc",
+                  pin_self:
+                    "cdadd5b5897f2dfe35d8b25f4e41fea9f8fca8f40f8a8b506b33701ef5033076",
+                  pin_contract_name: "FungibleToken",
+                  pin_contract_address: "0xf233dcee88fe0abe",
+                  imports: [],
+                },
+              },
+              {
+                network: "testnet",
+                address: "0x9a0766d93b6608b7",
+                dependency_pin_block_height: 149595558,
+                dependency_pin: {
+                  pin: "ac0208f93d07829ec96584d618ddbec6af3cf4e2866bd5071249e8ec93c7e0dc",
+                  pin_self:
+                    "cdadd5b5897f2dfe35d8b25f4e41fea9f8fca8f40f8a8b506b33701ef5033076",
+                  pin_contract_name: "FungibleToken",
+                  pin_contract_address: "0x9a0766d93b6608b7",
+                  imports: [],
+                },
+              },
+              {
+                network: "emulator",
+                address: "0xee82856bf20e2aa6",
+                dependency_pin_block_height: 0,
+              },
+            ],
+          },
+        ],
+      },
+    ],
+    parameters: [
+      {
+        label: "amount",
+        index: 0,
+        type: "UFix64",
+        messages: [
+          {
+            key: "title",
+            i18n: [
+              {
+                tag: "en-US",
+                translation: "Amount",
+              },
+            ],
+          },
+          {
+            key: "description",
+            i18n: [
+              {
+                tag: "en-US",
+                translation: "The amount of FLOW tokens to send",
+              },
+            ],
+          },
+        ],
+      },
+      {
+        label: "to",
+        index: 1,
+        type: "Address",
+        messages: [
+          {
+            key: "title",
+            i18n: [
+              {
+                tag: "en-US",
+                translation: "To",
+              },
+            ],
+          },
+          {
+            key: "description",
+            i18n: [
+              {
+                tag: "en-US",
+                translation: "The Flow account the tokens will go to",
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  },
+}
 
-  test("v1.1.0, mainnet network hash is derived correctly", async () => {
-    const networkDependencies = {FungibleToken: "0xf233dcee88fe0abe"}
+describe("1.1.0, verify dependency pin same", () => {
+  let consoleWarnSpy
 
-    const popCadence = replaceStringImports({
-      cadence: template.data.cadence.body,
-      networkDependencies,
-    })
-
-    const hash = genHash(popCadence)
-
-    expect(hash).toEqual(template.data.cadence.network_pins[0].pin_self)
+  beforeAll(() => {
+    consoleWarnSpy = jest.spyOn(console, "warn").mockImplementation(() => {})
   })
 
-  test("Test id generation and compare", async () => {
-    const testId = template.id
-    const id = await generateTemplateId({
-      template,
+  afterAll(() => {
+    consoleWarnSpy.mockRestore()
+  })
+
+  test("v1.1.0, get dependency pin", async () => {
+    config.put("flow.network", "mainnet")
+    config.put("accessNode.api", "https://rest-mainnet.onflow.org")
+
+    const isVerified = await verifyDependencyPinsSame({
+      template: template as any,
+      blockHeight: 70493190,
+      network: "mainnet",
     })
 
-    expect(id).toEqual(testId)
+    expect(isVerified).toEqual(true)
   })
 })
