@@ -1,16 +1,5 @@
 import * as sdk from "@onflow/sdk"
-import type {ArgsFn} from "./args"
-import {normalizeArgs} from "./utils/normalize-args"
-import {preQuery} from "./utils/pre"
-import {prepTemplateOpts} from "./utils/prep-template-opts"
-
-export interface QueryOptions {
-  cadence?: string
-  args?: ArgsFn
-  template?: any
-  isSealed?: boolean
-  limit?: number
-}
+import {QueryOptions, queryRaw} from "./query-raw"
 
 /**
  * @description Allows you to submit scripts to query the blockchain.
@@ -41,17 +30,5 @@ export interface QueryOptions {
  *    await query({ cadence, args })
  */
 export async function query(opts: QueryOptions = {}): Promise<any> {
-  await preQuery(opts)
-  opts = await prepTemplateOpts(opts)
-
-  return sdk
-    .send([
-      sdk.script(opts.cadence!),
-      sdk.args(normalizeArgs(opts.args || [])),
-      sdk.atLatestBlock(opts.isSealed ?? false),
-      opts.limit &&
-        typeof opts.limit === "number" &&
-        (sdk.limit(opts.limit!) as any),
-    ])
-    .then(sdk.decode)
+  return queryRaw(opts).then(sdk.decode)
 }
