@@ -18,7 +18,7 @@ import {Service} from "@onflow/typedefs"
  *        given_name: "Robert",
  *        middle_name: "the",
  *        nickname: "Bob the Builder",
- *        perferred_username: "bob",
+ *        preferred_username: "bob",
  *        profile: "https://www.bobthebuilder.com/",
  *        picture: "https://avatars.onflow.org/avatar/bob",
  *        gender: "...",
