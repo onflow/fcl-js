@@ -53,19 +53,7 @@ flow emulator
 
 **Keep this running in a separate terminal** - the emulator needs to stay active for contract deployment and testing.
 
-### 2. Deploy Contracts
-
-With the emulator running, deploy the HelloWorld contract:
-
-```bash
-# From the demo directory (/packages/demo)
-cd packages/demo
-
-# Deploy all contracts defined in flow.json
-flow project deploy
-```
-
-### 3. Start Dev Wallet
+### 2. Start Dev Wallet
 
 The dev wallet provides a simple wallet interface for testing on the emulator:
 
@@ -76,7 +64,7 @@ flow dev-wallet
 
 **Keep this running in another terminal** - you'll need it for authentication and transaction signing.
 
-### 4. Start the Demo App
+### 3. Start the Demo App
 
 ```bash
 # From the demo directory
@@ -96,9 +84,8 @@ flow emulator
 # Terminal 2: Start dev wallet  
 flow dev-wallet
 
-# Terminal 3: Deploy contracts and start app
+# Terminal 3: Start app
 cd packages/demo
-flow project deploy
 npm run dev
 ```
 
@@ -122,7 +109,7 @@ npm run dev:testnet
 - Authentication
 - CDC file loader
 - Custom hooks
-- Contract deployment and interaction examples
+- Interaction examples
 
 ## What You Can Test
 
@@ -134,10 +121,8 @@ npm run dev:testnet
 
 ### Contract Interaction
 
-- **Deploy contracts** to the emulator
 - **Execute scripts** to read contract state
 - **Send transactions** to modify contract state
-- **Test contract upgrades** and state persistence
 
 ### Queries
 
@@ -151,17 +136,6 @@ npm run dev:testnet
 - Monitor transaction status
 - Test error handling
 - Sign transactions with dev wallet
-
-## Development Workflow
-
-1. **Start infrastructure**: Emulator + Dev Wallet
-2. **Deploy contracts**: `flow project deploy`
-3. **Make changes** to this package, FCL or Kit packages
-4. **Rebuild packages**: `npm run build` (from root)
-5. **Test changes** in the demo interface
-6. **Iterate** on contract logic and frontend integration
-
-The demo automatically reloads with your changes thanks to workspace symlinks!
 
 ## Package Dependencies
 
