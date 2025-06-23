@@ -25,7 +25,7 @@ const READY_EVENT = "FCL:VIEW:READY"
 const RESPONSE_EVENT = "FCL:VIEW:RESPONSE"
 const CUSTOM_RPC = "FCL:VIEW:CUSTOM_RPC"
 
-const _ = (e: string): string => e.toLowerCase()
+const _ = (e: any) => typeof e === "string" && e.toLowerCase()
 
 const IGNORE = new Set([
   "monetizationstart",
