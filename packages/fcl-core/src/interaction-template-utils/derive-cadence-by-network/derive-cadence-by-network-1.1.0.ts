@@ -56,7 +56,7 @@ export async function deriveCadenceByNetwork110({
   )
 
   invariant(
-    template?.data?.cadence?.body as any,
+    !!template?.data?.cadence?.body,
     `no cadence found -- Could not replace import dependencies: ${networkDependencies}`
   )
 
