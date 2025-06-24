@@ -16,6 +16,8 @@ export interface PollingResponse {
 }
 
 /**
+ * @description Normalizes a polling response to ensure compatibility with FCL format
+ *
  * @param resp The polling response to normalize
  * @returns The normalized polling response or null
  *

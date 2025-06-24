@@ -12,6 +12,8 @@ export interface AuthnService extends Service {
 }
 
 /**
+ * @description Normalizes an authn service to ensure compatibility with FCL service format
+ *
  * @param service The authn service to normalize
  * @returns The normalized authn service or null
  *

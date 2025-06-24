@@ -1,6 +1,8 @@
 import {Service} from "@onflow/typedefs"
 
 /**
+ * @description Normalizes an open-id service to ensure compatibility with FCL service format
+ *
  * @param service The open-id service to normalize
  * @returns The normalized open-id service or null
  *

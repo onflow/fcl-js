@@ -3,6 +3,8 @@ import {sansPrefix} from "@onflow/util-address"
 import {COMPOSITE_SIGNATURE_PRAGMA} from "./__vsn"
 
 /**
+ * @description Normalizes a composite signature to ensure compatibility with FCL format
+ *
  * @param resp The composite signature to normalize
  * @returns The normalized composite signature or null
  *

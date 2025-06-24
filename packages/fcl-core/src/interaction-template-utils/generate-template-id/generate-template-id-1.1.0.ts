@@ -57,9 +57,9 @@ async function generateContractDependencies(
 /**
  * @description Generates Interaction Template ID for a given Interaction Template
  *
- * @param {object} params
- * @param {InteractionTemplate110} params.template Interaction Template
- * @returns {Promise<string>} Interaction Template ID
+ * @param params
+ * @param params.template Interaction Template
+ * @returns Interaction Template ID
  */
 export async function generateTemplateId({
   template,

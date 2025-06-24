@@ -10,6 +10,8 @@ export interface AuthnRefreshService extends Service {
 }
 
 /**
+ * @description Normalizes an authn-refresh service to ensure compatibility with FCL service format
+ *
  * @param service The authn-refresh service to normalize
  * @returns The normalized authn-refresh service or null
  *

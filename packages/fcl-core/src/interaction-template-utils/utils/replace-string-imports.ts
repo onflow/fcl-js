@@ -6,10 +6,10 @@ export interface ReplaceStringImportsParams {
 /**
  * @description Replaces string imports with the actual contract address
  *
- * @param {ReplaceStringImportsParams} param
- * @param {string} param.cadence The Cadence code
- * @param {object} param.networkDependencies Network dependencies mapping
- * @returns {string} Cadence code with replaced imports
+ * @param params
+ * @param params.cadence The Cadence code
+ * @param params.networkDependencies Network dependencies mapping
+ * @returns Cadence code with replaced imports
  */
 export function replaceStringImports({
   cadence,

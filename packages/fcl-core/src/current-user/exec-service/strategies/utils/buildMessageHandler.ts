@@ -40,6 +40,26 @@ const deprecate = (was: string, want: string): void =>
     `Received ${was}, please use ${want} for this and future versions of FCL`
   )
 
+/**
+ * @description Creates a message handler for processing window messages from wallet service
+ * frames or popups. This handler manages the communication protocol between FCL and wallet
+ * services, including ready states, responses, and cleanup operations.
+ *
+ * @param params Configuration object containing callback functions and utilities
+ * @returns Message event handler function that can be attached to window message listeners
+ *
+ * @example
+ * // Create a message handler for wallet communication
+ * const handler = buildMessageHandler({
+ *   close: () => cleanup(),
+ *   send: (msg) => postMessage(msg),
+ *   onReady: (e, utils) => initializeWallet(utils),
+ *   onResponse: (e, utils) => handleResponse(e.data),
+ *   onMessage: (e, utils) => processMessage(e),
+ *   onCustomRpc: (payload, utils) => handleRpc(payload)
+ * })
+ * window.addEventListener("message", handler)
+ */
 export const buildMessageHandler = ({
   close,
   send,

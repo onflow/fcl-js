@@ -6,9 +6,9 @@ import type {InteractionTemplate} from "../interaction-template"
 /**
  * @description Generates Interaction Template ID for a given Interaction Template
  *
- * @param {object} params
- * @param {object} params.template Interaction Template
- * @returns {Promise<string>} Interaction Template ID
+ * @param params
+ * @param params.template Interaction Template
+ * @returns Interaction Template ID
  */
 export async function generateTemplateId({
   template,
@@ -41,9 +41,9 @@ export async function generateTemplateId({
 /**
  * @description Verifies the given Interaction Template Id has been correctly generated
  *
- * @param {object} params
- * @param {object} params.template Interaction Template
- * @returns {Promise<boolean>} true or false, Interaction Template ID
+ * @param params
+ * @param params.template Interaction Template
+ * @returns true or false, Interaction Template ID
  */
 export async function verifyGeneratedTemplateId({
   template,

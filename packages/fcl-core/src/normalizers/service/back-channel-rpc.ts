@@ -2,6 +2,8 @@ import {SERVICE_PRAGMA} from "./__vsn"
 import {Service} from "@onflow/typedefs"
 
 /**
+ * @description Normalizes a back-channel-rpc service to ensure compatibility with FCL service format
+ *
  * @param service The back-channel-rpc service to normalize
  * @returns The normalized back-channel-rpc service or null
  *

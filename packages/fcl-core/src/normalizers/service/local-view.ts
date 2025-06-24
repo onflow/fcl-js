@@ -2,6 +2,8 @@ import {Service} from "@onflow/typedefs"
 import {SERVICE_PRAGMA} from "./__vsn"
 
 /**
+ * @description Normalizes a local-view service to ensure compatibility with FCL format
+ *
  * @param resp The local-view to normalize
  * @returns The normalized local-view or null
  *

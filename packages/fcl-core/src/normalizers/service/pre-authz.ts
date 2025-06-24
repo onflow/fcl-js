@@ -3,6 +3,8 @@ import {IDENTITY_PRAGMA, SERVICE_PRAGMA} from "./__vsn"
 import {AuthzService} from "./authz"
 
 /**
+ * @description Normalizes a pre-authz service to ensure compatibility with FCL service format
+ *
  * @param service The pre-authz service to normalize
  * @returns The normalized pre-authz service or null
  *

@@ -6,6 +6,8 @@ export interface FrameService extends Service {
 }
 
 /**
+ * @description Normalizes a frame service to ensure compatibility with FCL service format
+ *
  * @param service The frame service to normalize
  * @returns The normalized frame service or null
  *

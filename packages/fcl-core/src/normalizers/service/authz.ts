@@ -10,6 +10,8 @@ export interface AuthzService extends Service {
 }
 
 /**
+ * @description Normalizes an authz service to ensure compatibility with FCL service format
+ *
  * @param service The authz service to normalize
  * @returns The normalized authz service or null
  *

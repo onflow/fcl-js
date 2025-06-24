@@ -1,6 +1,8 @@
 import {Service} from "@onflow/typedefs"
 
 /**
+ * @description Normalizes an account-proof service to ensure compatibility with FCL service format
+ *
  * @param service The account-proof service to normalize
  * @returns The normalized account-proof service or null
  *

@@ -139,6 +139,25 @@ let serviceRegistry: ReturnType<typeof ServiceRegistry>
 const getIsServiceRegistryInitialized = () =>
   typeof serviceRegistry !== "undefined"
 
+/**
+ * @description Initializes the service registry with core strategies for different communication methods.
+ * This function sets up the registry that manages wallet service strategies and should be called once
+ * during FCL initialization with platform-specific core strategies.
+ *
+ * @param params Configuration object containing core strategies
+ * @param params.coreStrategies Object mapping strategy names to their implementation functions
+ * @returns The initialized service registry instance
+ *
+ * @example
+ * // Initialize service registry with core strategies
+ * const registry = initServiceRegistry({
+ *   coreStrategies: {
+ *     "HTTP/POST": httpPostStrategy,
+ *     "IFRAME/RPC": iframeRpcStrategy,
+ *     "POP/RPC": popupRpcStrategy
+ *   }
+ * })
+ */
 export const initServiceRegistry = ({
   coreStrategies,
 }: {
@@ -152,6 +171,20 @@ export const initServiceRegistry = ({
 
   return _serviceRegistry
 }
+
+/**
+ * @description Gets the singleton service registry instance. If the registry hasn't been initialized,
+ * it will be initialized with stub core strategies and a warning will be logged. This function
+ * provides access to the registry for service and strategy management.
+ *
+ * @returns The service registry instance
+ *
+ * @example
+ * // Get the service registry
+ * const registry = getServiceRegistry()
+ * const services = registry.getServices()
+ * const strategy = registry.getStrategy("HTTP/POST")
+ */
 export const getServiceRegistry = () => {
   if (!getIsServiceRegistryInitialized()) {
     console.warn(
@@ -163,4 +196,20 @@ export const getServiceRegistry = () => {
 
   return serviceRegistry
 }
+
+/**
+ * @description Global plugin registry instance for managing FCL plugins. This registry handles
+ * the registration and management of various FCL plugins including service plugins that add
+ * new wallet services and strategies.
+ *
+ * @example
+ * // Add a plugin to the registry
+ * pluginRegistry.add({
+ *   name: "MyWalletPlugin",
+ *   f_type: "ServicePlugin",
+ *   type: "discovery-service",
+ *   services: [...],
+ *   serviceStrategy: { method: "CUSTOM/RPC", exec: customExecFunction }
+ * })
+ */
 export const pluginRegistry = PluginRegistry()
