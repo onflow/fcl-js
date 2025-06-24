@@ -1,10 +1,7 @@
 import React, {createContext, useContext, PropsWithChildren} from "react"
-import {useDarkModeState} from "../hooks/internal/useDarkModeState"
 
 type DarkModeContextType = {
   isDark: boolean
-  toggleDark: () => void
-  setDark: (dark: boolean) => void
 }
 
 const DarkModeContext = createContext<DarkModeContextType | undefined>(
@@ -13,12 +10,10 @@ const DarkModeContext = createContext<DarkModeContextType | undefined>(
 
 export function DarkModeProvider({
   children,
-  enabled = false,
-}: PropsWithChildren<{enabled?: boolean}>) {
-  const darkModeState = useDarkModeState(enabled)
-
+  darkMode = false,
+}: PropsWithChildren<{darkMode?: boolean}>) {
   return (
-    <DarkModeContext.Provider value={darkModeState}>
+    <DarkModeContext.Provider value={{isDark: darkMode}}>
       {children}
     </DarkModeContext.Provider>
   )
