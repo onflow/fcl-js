@@ -25,6 +25,19 @@ export const CONTRACT_ADDRESSES = {
     FlowEVMBridgeConfig: "0x1e4aa0b87d10b141",
     FungibleTokenMetadataViews: "0xf233dcee88fe0abe",
   },
+  local: {
+    EVM: "0xf8d6e0586b0a20c7",
+    FungibleToken: "0xee82856bf20e2aa6",
+    NonFungibleToken: "0xf8d6e0586b0a20c7",
+    ViewResolver: "0xf8d6e0586b0a20c7",
+    MetadataViews: "0xf8d6e0586b0a20c7",
+    FlowToken: "0x0ae53cb6e3f42a79",
+    ScopedFTProviders: "0xf8d6e0586b0a20c7",
+    FlowEVMBridge: "0xf8d6e0586b0a20c7",
+    FlowEVMBridgeUtils: "0xf8d6e0586b0a20c7",
+    FlowEVMBridgeConfig: "0xf8d6e0586b0a20c7",
+    FungibleTokenMetadataViews: "0xee82856bf20e2aa6",
+  },
 }
 
 export const CADENCE_UFIX64_PRECISION = 8

@@ -9,7 +9,7 @@ import {
 } from "@tanstack/react-query"
 import {useFlowChainId} from "./useFlowChainId"
 import {useFlowQueryClient} from "../provider/FlowQueryClient"
-import {DEFAULT_EVM_GAS_LIMIT} from "../constants"
+import {CONTRACT_ADDRESSES, DEFAULT_EVM_GAS_LIMIT} from "../constants"
 
 interface UseCrossVmBatchTransactionMutateArgs {
   calls: EvmBatchCall[]
@@ -74,16 +74,10 @@ export function encodeCalls(
   })
 }
 
-const EVM_CONTRACT_ADDRESSES = {
-  local: "0xf8d6e0586b0a20c0",
-  testnet: "0x8c5303eaa26202d6",
-  mainnet: "0xe467b9dd11fa00df",
-}
-
 // Takes a chain id and returns the cadence tx with addresses set
 export const getCadenceBatchTransaction = (chainId: string) => {
   const evmAddress =
-    EVM_CONTRACT_ADDRESSES[chainId as keyof typeof EVM_CONTRACT_ADDRESSES]
+    CONTRACT_ADDRESSES[chainId as keyof typeof CONTRACT_ADDRESSES].EVM
   if (!evmAddress) {
     throw new Error(`Unsupported chain: ${chainId}`)
   }
