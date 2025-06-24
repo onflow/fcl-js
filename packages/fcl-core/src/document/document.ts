@@ -35,6 +35,23 @@ const DOCUMENT_RESOLVERS: Map<string, typeof httpDocumentResolver> = new Map([
   ["https", httpDocumentResolver],
 ])
 
+/**
+ * @description Retrieves a document from a URL using protocol-specific resolvers. This function
+ * supports HTTP/HTTPS by default and can be extended with custom resolvers through FCL configuration.
+ * It's used internally by FCL to fetch interaction templates and other external documents.
+ *
+ * @param params The retrieval parameters
+ * @param params.url The URL of the document to retrieve
+ * @returns Promise that resolves to the retrieved document (typically a JSON object)
+ * @throws {Error} If URL is invalid, protocol is unsupported, or retrieval fails
+ *
+ * @example
+ * // Retrieve an interaction template
+ * const template = await retrieve({
+ *   url: "https://flix.flow.com/v1.0/templates/transfer-flow-tokens"
+ * })
+ * console.log("Template:", template)
+ */
 export async function retrieve({url}: RetrieveParams): Promise<any> {
   invariant(
     typeof url !== "undefined",

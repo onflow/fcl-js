@@ -28,10 +28,54 @@ async function pre(type: string, opts: PreOptions): Promise<void> {
   )
 }
 
+/**
+ * @description Validates and prepares options for Flow transaction execution (mutations). This function
+ * performs comprehensive validation of the provided options to ensure they meet the requirements for
+ * executing transactions on the Flow blockchain, including checking for required configuration values.
+ *
+ * @param opts Options object containing either Cadence code or template references for the transaction
+ * @param opts.cadence Optional Cadence transaction code string
+ * @param opts.template Optional interaction template object or reference
+ * @returns Promise that resolves when validation passes
+ * @throws Error if validation fails or required configuration is missing
+ *
+ * @example
+ * // Validate transaction options with Cadence code
+ * await preMutate({
+ *   cadence: "transaction { execute { log(\"Hello Flow!\") } }"
+ * })
+ *
+ * // Validate transaction options with template
+ * await preMutate({
+ *   template: transferFlowTemplate
+ * })
+ */
 export async function preMutate(opts: PreOptions): Promise<void> {
   return pre("mutate", opts)
 }
 
+/**
+ * @description Validates and prepares options for Flow script execution (queries). This function
+ * performs comprehensive validation of the provided options to ensure they meet the requirements for
+ * executing scripts on the Flow blockchain, including checking for required configuration values.
+ *
+ * @param opts Options object containing either Cadence code or template references for the script
+ * @param opts.cadence Optional Cadence script code string
+ * @param opts.template Optional interaction template object or reference
+ * @returns Promise that resolves when validation passes
+ * @throws Error if validation fails or required configuration is missing
+ *
+ * @example
+ * // Validate script options with Cadence code
+ * await preQuery({
+ *   cadence: "access(all) fun main(): String { return \"Hello Flow!\" }"
+ * })
+ *
+ * // Validate script options with template
+ * await preQuery({
+ *   template: getAccountTemplate
+ * })
+ */
 export async function preQuery(opts: PreOptions): Promise<void> {
   return pre("query", opts)
 }

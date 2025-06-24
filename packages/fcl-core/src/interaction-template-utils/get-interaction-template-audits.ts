@@ -15,13 +15,53 @@ export interface GetInteractionTemplateAuditsOpts {
 }
 
 /**
- * @description Returns whether a set of auditors have audited a given Interaction Template
+ * @description Checks whether a set of auditors have audited a given Interaction Template on the Flow
+ * blockchain. This function validates that the provided interaction template has been properly audited
+ * for security by trusted auditors before execution. It queries the Flow blockchain's audit contract
+ * to verify audit status.
  *
- * @param {GetInteractionTemplateAuditsParams} opts
- * @param {InteractionTemplate} opts.template Interaction Template to check audits for
- * @param {string[]} opts.auditors [auditors=undefined] Auditors to check
- * @param {GetInteractionTemplateAuditsOpts} opts
- * @returns {Promise<Record<string, boolean>>} Whether the template has been audited by the auditors
+ * @param params
+ * @param params.template The Interaction Template to check audits for. Must be
+ * a valid InteractionTemplate object with f_type "InteractionTemplate"
+ * @param params.auditors Array of auditor addresses to check. If not provided, will use
+ * auditors from configuration 'flow.auditors'
+ * @param opts Optional configuration parameters
+ * @param opts.flowInteractionAuditContract Override address for the FlowInteractionAudit
+ * contract if not using network defaults
+ *
+ * @returns Promise that resolves to an object mapping auditor
+ * addresses to boolean values indicating whether they have audited the template
+ *
+ * @throws If template is invalid, template ID cannot be recomputed, network is unsupported,
+ * or required configuration is missing
+ *
+ * @example
+ * // Check if template has been audited by specific auditors
+ * import * as fcl from "@onflow/fcl"
+ *
+ * const template = {
+ *   f_type: "InteractionTemplate",
+ *   f_version: "1.1.0",
+ *   id: "template-id-123",
+ *   data: {
+ *     type: "transaction",
+ *     interface: "...",
+ *     cadence: "transaction { ... }"
+ *   }
+ * }
+ *
+ * const auditorAddresses = [
+ *   "0x1234567890abcdef",
+ *   "0xabcdef1234567890"
+ * ]
+ *
+ * const auditResults = await fcl.InteractionTemplateUtils.getInteractionTemplateAudits({
+ *   template,
+ *   auditors: auditorAddresses
+ * })
+ *
+ * console.log(auditResults)
+ * // { "0x1234567890abcdef": true, "0xabcdef1234567890": false }
  */
 export async function getInteractionTemplateAudits(
   {template, auditors}: GetInteractionTemplateAuditsParams,

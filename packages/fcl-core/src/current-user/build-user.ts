@@ -32,6 +32,25 @@ function normalizeData(data: UserData): UserData {
   return data
 }
 
+/**
+ * @description Builds a complete CurrentUser object from user data by normalizing addresses,
+ * fetching additional services, and creating a composite ID. This function handles the
+ * construction of the user object that represents the authenticated state in FCL.
+ *
+ * @param data The user data containing address, services, and authentication information
+ * @returns Promise resolving to a CurrentUser object with normalized data and services
+ *
+ * @example
+ * // Build a user object from authentication data
+ * const userData = {
+ *   addr: "0x1234567890abcdef",
+ *   services: [...],
+ *   hks: "https://wallet.example.com/hooks",
+ *   code: "auth_code_123"
+ * }
+ * const user = await buildUser(userData)
+ * console.log(user.addr) // "0x1234567890abcdef"
+ */
 export async function buildUser(data: UserData): Promise<CurrentUser> {
   data = normalizeData(data)
 

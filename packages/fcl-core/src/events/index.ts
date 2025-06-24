@@ -7,13 +7,61 @@ import {getChainId} from "../utils"
 const FLOW_EMULATOR = "local"
 
 /**
- * @description - Subscribe to events
- * @param filterOrType - The filter or type of events to subscribe to
+ * @description Subscribes to Flow blockchain events in real-time. This function provides a way to listen
+ * for specific events emitted by smart contracts on the Flow blockchain. It automatically handles
+ * fallback to legacy polling for environments that don't support WebSocket subscriptions.
+ *
+ * @param filterOrType Event filter object or event type string.
+ * If a string is provided, it will be treated as a single event type to subscribe to.
+ * If an EventFilter object is provided, it can contain multiple event types and other filter criteria.
+ * @param filterOrType.eventTypes Array of event type strings to subscribe to
+ * @param filterOrType.startBlockId Block ID to start streaming from
+ * @param filterOrType.startBlockHeight Block height to start streaming from
+ *
+ * @returns An object containing a subscribe method
+ * @returns returns.subscribe Function to start the subscription
+ * @returns returns.subscribe.onData Callback function called when an event is received
+ * @returns returns.subscribe.onError Optional callback function called when an error occurs
+ * @returns returns.subscribe.unsubscribe Function returned by subscribe() to stop the subscription
  *
  * @example
+ * // Subscribe to a specific event type
  * import * as fcl from "@onflow/fcl"
- * const unsubscribe = fcl.events(eventName).subscribe((event) => console.log(event))
- * unsubscribe()
+ *
+ * const unsubscribe = fcl.events("A.0x1654653399040a61.FlowToken.TokensWithdrawn")
+ *   .subscribe((event) => {
+ *     console.log("Event received:", event)
+ *     console.log("Event data:", event.data)
+ *     console.log("Transaction ID:", event.transactionId)
+ *   })
+ *
+ * // Stop listening after 30 seconds
+ * setTimeout(() => {
+ *   unsubscribe()
+ * }, 30000)
+ *
+ * // Subscribe to multiple event types with error handling
+ * const unsubscribe = fcl.events({
+ *   eventTypes: [
+ *     "A.0x1654653399040a61.FlowToken.TokensWithdrawn",
+ *     "A.0x1654653399040a61.FlowToken.TokensDeposited"
+ *   ]
+ * }).subscribe(
+ *   (event) => {
+ *     console.log("Token event:", event.type, event.data)
+ *   },
+ *   (error) => {
+ *     console.error("Event subscription error:", error)
+ *   }
+ * )
+ *
+ * // Subscribe to events starting from a specific block height
+ * const unsubscribe = fcl.events({
+ *   eventTypes: ["A.CONTRACT.EVENT"],
+ *   startBlockHeight: 12345678
+ * }).subscribe((event) => {
+ *   console.log("Historical and new events:", event)
+ * })
  */
 export function events(filterOrType?: EventFilter | string) {
   let filter: EventFilter

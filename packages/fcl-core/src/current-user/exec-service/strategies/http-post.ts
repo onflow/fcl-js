@@ -24,6 +24,21 @@ export type ExecLocalFunction = (
   }
 ) => Promise<[any, () => void]>
 
+/**
+ * @description Creates an HTTP POST strategy executor that handles wallet service communication
+ * via HTTP POST requests. This function manages the full lifecycle including polling for
+ * responses, handling local views, and managing user interactions.
+ *
+ * @param execLocal Function to execute local view rendering and user interaction
+ * @returns HTTP POST strategy function that can be used to execute services
+ *
+ * @example
+ * // Create an HTTP POST executor
+ * const httpPostExec = getExecHttpPost(async (view, { serviceEndpoint, onClose }) => {
+ *   // Render local view and return cleanup function
+ *   return [viewData, () => cleanup()]
+ * })
+ */
 export const getExecHttpPost =
   (execLocal: ExecLocalFunction) =>
   async ({service, body, config, opts}: ExecHttpPostParams): Promise<any> => {

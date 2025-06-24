@@ -1,6 +1,8 @@
 import type {Service} from "@onflow/typedefs"
 
 /**
+ * @description Normalizes a user-signature service to ensure compatibility with FCL service format
+ *
  * @param service The user-signature service to normalize
  * @returns The normalized user-signature service or null
  *

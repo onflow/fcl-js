@@ -10,10 +10,10 @@ export interface DeriveCadenceByNetwork110Params {
 /**
  * @description Fills import addresses in Cadence for network
  *
- * @param {DeriveCadenceByNetwork110Params} params
- * @param {string} params.network Network to derive Cadence for
- * @param {InteractionTemplate110} params.template Interaction Template to derive Cadence from
- * @returns {Promise<string>} Promise that resolves with the derived Cadence code
+ * @param params
+ * @param params.network Network to derive Cadence for
+ * @param params.template Interaction Template to derive Cadence from
+ * @returns Promise that resolves with the derived Cadence code
  */
 export async function deriveCadenceByNetwork110({
   network,

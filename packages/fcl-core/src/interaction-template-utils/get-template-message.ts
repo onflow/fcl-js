@@ -10,11 +10,11 @@ export interface GetTemplateMessageParams {
 /**
  * @description Get Interaction Template argument message
  *
- * @param {GetTemplateMessageParams} params
- * @param {string} params.localization [localization="en-US"] Localization code
- * @param {string} params.messageKey Message key
- * @param {InteractionTemplate} params.template Interaction Template
- * @returns {string} Message
+ * @param params
+ * @param params.localization [localization="en-US"] Localization code
+ * @param params.messageKey Message key
+ * @param params.template Interaction Template
+ * @returns Message
  */
 export function getTemplateMessage({
   localization = "en-US",

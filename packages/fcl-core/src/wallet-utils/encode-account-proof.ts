@@ -18,6 +18,35 @@ const addressBuffer = (addr: string): Buffer => leftPaddedHexBuffer(addr, 8)
 
 const nonceBuffer = (nonce: string): Buffer => Buffer.from(nonce, "hex")
 
+/**
+ * @description Encodes account proof data for cryptographic signing on the Flow blockchain. This function
+ * creates a standardized message format that combines the application identifier, account address,
+ * and nonce into a format suitable for cryptographic signing. The encoded message can then be signed
+ * by the account's private key to create an account proof.
+ *
+ * @param data Object containing the account proof components
+ * @param data.address The Flow account address for which to create the proof
+ * @param data.nonce A random hexadecimal string (minimum 32 bytes/64 hex chars) to prevent replay attacks
+ * @param data.appIdentifier A unique identifier for your application to prevent cross-app replay attacks
+ * @param includeDomainTag Whether to include the FCL domain tag in the encoding
+ *
+ * @returns The encoded message as a hexadecimal string ready for signing
+ *
+ * @throws If required parameters are missing or invalid, or if nonce is too short
+ *
+ * @example
+ * // Basic account proof encoding
+ * import { encodeAccountProof } from "@onflow/fcl"
+ *
+ * const accountProofData = {
+ *   address: "0x1234567890abcdef",
+ *   nonce: "75f8587e5bd982ec9289c5be1f9426bd12b4c1de9c7a7e4d8c5f9e8b2a7c3f1e9", // 64 hex chars (32 bytes)
+ *   appIdentifier: "MyAwesomeApp"
+ * }
+ *
+ * const encodedMessage = encodeAccountProof(accountProofData)
+ * console.log("Encoded message:", encodedMessage)
+ */
 export const encodeAccountProof = (
   {address, nonce, appIdentifier}: AccountProofData,
   includeDomainTag: boolean = true

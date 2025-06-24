@@ -25,6 +25,19 @@ export interface DiscoveryRequestBody {
   network: string
 }
 
+/**
+ * @description Fetches available wallet services from the discovery endpoint based on the
+ * requested service types. This function queries the FCL discovery service to find compatible
+ * wallet providers that support the specified service types.
+ *
+ * @param params Object containing the types of services to discover
+ * @returns Promise resolving to an array of Service objects from the discovery endpoint
+ *
+ * @example
+ * // Discover authentication services
+ * const services = await getServices({ types: ["authn"] })
+ * console.log(services) // Array of available wallet authentication services
+ */
 export async function getServices({
   types,
 }: GetServicesParams): Promise<Service[]> {

@@ -29,6 +29,20 @@ const serviceBody = (service: Service): string | undefined => {
   return undefined
 }
 
+/**
+ * @description Continuously polls a service endpoint until it receives an APPROVED or DECLINED
+ * response. This function handles the asynchronous nature of wallet interactions by repeatedly
+ * checking for status updates with appropriate delays.
+ *
+ * @param service The service configuration containing the polling endpoint
+ * @param checkCanContinue Optional function to control whether polling should continue
+ * @returns Promise resolving to the final response data when approved or rejected
+ *
+ * @example
+ * // Poll a service for completion
+ * const result = await poll(pollingService, () => !userCancelled)
+ * console.log(result) // Final response data
+ */
 export async function poll(
   service: Service,
   checkCanContinue: () => boolean = () => true

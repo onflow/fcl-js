@@ -69,6 +69,21 @@ export interface MakeConfigOptions {
   discoveryFeaturesSuggested?: string[]
 }
 
+/**
+ * @description Type guard function that checks if a value is a function. This is a simple utility
+ * used internally by FCL for type checking and validation.
+ *
+ * @param d The value to check
+ * @returns True if the value is a function, false otherwise
+ *
+ * @example
+ * // Check if a value is a function
+ * const callback = () => console.log("Hello")
+ * const notCallback = "string"
+ *
+ * console.log(isFn(callback)) // true
+ * console.log(isFn(notCallback)) // false
+ */
 export const isFn = (d: any): boolean => typeof d === "function"
 
 const NAME = "CURRENT_USER"
@@ -241,16 +256,16 @@ const makeConfig = async ({
 
 /**
  * @description Factory function to get the authenticate method
- * @param {CurrentUserConfig} config Current User Configuration
+ * @param config Current User Configuration
  */
 const getAuthenticate =
   (config: CurrentUserConfig) =>
   /**
    * @description Authenticate a user
-   * @param {AuthenticationOptions} [opts] Options
-   * @param {Service} [opts.service] Optional service to use for authentication
-   * @param {boolean} [opts.redir] Optional redirect flag
-   * @param {boolean} [opts.forceReauth] Optional force re-authentication flag
+   * @param opts Options
+   * @param opts.service Optional service to use for authentication
+   * @param opts.redir Optional redirect flag
+   * @param opts.forceReauth Optional force re-authentication flag
    * @returns
    */
   async ({
@@ -337,7 +352,7 @@ const getAuthenticate =
 
 /**
  * @description Factory function to get the unauthenticate method
- * @param {CurrentUserConfig} config Current User Configuration
+ * @param config Current User Configuration
  */
 function getUnauthenticate(config: CurrentUserConfig) {
   /**
@@ -359,7 +374,7 @@ const normalizePreAuthzResponse = (authz: any) => ({
 
 /**
  * @description Factory function to get the resolvePreAuthz method
- * @param {CurrentUserConfig} config Current User Configuration
+ * @param config Current User Configuration
  */
 const getResolvePreAuthz =
   (config: CurrentUserConfig) =>
@@ -394,7 +409,7 @@ const getResolvePreAuthz =
 
 /**
  * @description Factory function to get the authorization method
- * @param {CurrentUserConfig} config Current User Configuration
+ * @param config Current User Configuration
  */
 const getAuthorization =
   (config: CurrentUserConfig) =>
@@ -402,8 +417,8 @@ const getAuthorization =
    * @description Produces the needed authorization details for the current user to submit transactions to Flow
    * It defines a signing function that connects to a user's wallet provider to produce signatures to submit transactions.
    *
-   * @param {Account} account Account object
-   * @returns {Promise<Account>} Account object with signing function
+   * @param account Account object
+   * @returns Account object with signing function
    * */
   async (account: Account) => {
     spawnCurrentUser(config)
@@ -461,7 +476,7 @@ const getAuthorization =
 
 /**
  * @description Factory function to get the subscribe method
- * @param {CurrentUserConfig} config Current User Configuration
+ * @param config Current User Configuration
  */
 function getSubscribe(config: CurrentUserConfig) {
   /**
@@ -491,7 +506,7 @@ function getSubscribe(config: CurrentUserConfig) {
 
 /**
  * @description Factory function to get the snapshot method
- * @param {CurrentUserConfig} config Current User Configuration
+ * @param config Current User Configuration
  */
 function getSnapshot(config: CurrentUserConfig): () => Promise<CurrentUser> {
   /**
@@ -505,8 +520,8 @@ function getSnapshot(config: CurrentUserConfig): () => Promise<CurrentUser> {
 }
 
 /**
- * Resolves the current user as an argument
- * @param {CurrentUserConfig} config Current User Configuration
+ * @description Resolves the current user as an argument
+ * @param config Current User Configuration
  */
 const getResolveArgument = (config: CurrentUserConfig) => async () => {
   const {addr} = (await getAuthenticate(config)()) as any
@@ -523,14 +538,14 @@ const makeSignable = (msg: string) => {
 
 /**
  * @description Factory function to get the signUserMessage method
- * @param {CurrentUserConfig} config Current User Configuration
+ * @param config Current User Configuration
  */
 const getSignUserMessage =
   (config: CurrentUserConfig) =>
   /**
    * @description A method to use allowing the user to personally sign data via FCL Compatible Wallets/Services.
-   * @param {string} msg Message to sign
-   * @returns {Promise<CompositeSignature[]>} Array of CompositeSignatures
+   * @param msg Message to sign
+   * @returns Array of CompositeSignatures
    */
   async (msg: string) => {
     spawnCurrentUser(config)
@@ -563,9 +578,88 @@ const getSignUserMessage =
   }
 
 /**
- * @description Creates the Current User object
- * @param {CurrentUserConfig} config Current User Configuration
- *  */
+ * @description Creates and configures the Current User service for managing user authentication and
+ * authorization in Flow applications. This is the core service for handling user sessions, wallet
+ * connections, transaction signing, and user data management. The service provides both callable
+ * function interface and object methods for maximum flexibility.
+ *
+ * @param config Configuration object for the current user service
+ * @param config.platform Platform identifier (e.g., "web", "mobile", "extension")
+ * @param config.discovery Optional discovery configuration for wallet services
+ * @param config.getStorageProvider Optional function to provide custom storage implementation
+ *
+ * @returns Current user service object with authentication and authorization methods
+ * @returns returns.authenticate Authenticate user with wallet services
+ * @returns returns.unauthenticate Clear user session and disconnect wallet
+ * @returns returns.authorization Get authorization function for transaction signing
+ * @returns returns.signUserMessage Sign arbitrary messages with user's private key
+ * @returns returns.subscribe Subscribe to user authentication state changes
+ * @returns returns.snapshot Get current user state snapshot
+ * @returns returns.resolveArgument Resolve user address as Flow transaction argument
+ *
+ * @example
+ * // Basic setup and authentication
+ * import * as fcl from "@onflow/fcl"
+ *
+ * // Configure FCL
+ * fcl.config({
+ *   "accessNode.api": "https://rest-testnet.onflow.org",
+ *   "discovery.wallet": "https://fcl-discovery.onflow.org/testnet/authn"
+ * })
+ *
+ * // Create current user service
+ * const currentUser = fcl.getCurrentUser({
+ *   platform: "web"
+ * })
+ *
+ * // Authenticate user
+ * const user = await currentUser.authenticate()
+ * console.log("Authenticated user:", user.addr)
+ *
+ * // Subscribe to authentication state changes
+ * const currentUser = fcl.getCurrentUser({ platform: "web" })
+ *
+ * const unsubscribe = currentUser.subscribe((user) => {
+ *   if (user.loggedIn) {
+ *     console.log("User logged in:", user.addr)
+ *     document.getElementById("login-btn").style.display = "none"
+ *     document.getElementById("logout-btn").style.display = "block"
+ *   } else {
+ *     console.log("User logged out")
+ *     document.getElementById("login-btn").style.display = "block"
+ *     document.getElementById("logout-btn").style.display = "none"
+ *   }
+ * })
+ *
+ * // Clean up subscription
+ * window.addEventListener("beforeunload", () => unsubscribe())
+ *
+ * // Sign transactions with user authorization
+ * const currentUser = fcl.getCurrentUser({ platform: "web" })
+ *
+ * const txId = await fcl.mutate({
+ *   cadence: `
+ *     transaction(amount: UFix64, to: Address) {
+ *       prepare(signer: AuthAccount) {
+ *         // Transfer tokens logic here
+ *       }
+ *     }
+ *   `,
+ *   args: (arg, t) => [
+ *     arg("10.0", t.UFix64),
+ *     arg("0x01", t.Address)
+ *   ],
+ *   authz: currentUser.authorization
+ * })
+ *
+ * // Sign custom messages
+ * const currentUser = fcl.getCurrentUser({ platform: "web" })
+ *
+ * const message = Buffer.from("Hello, Flow!").toString("hex")
+ * const signatures = await currentUser.signUserMessage(message)
+ *
+ * console.log("Message signatures:", signatures)
+ */
 const getCurrentUser = (config: CurrentUserConfig): CurrentUserService => {
   const currentUser = {
     authenticate: getAuthenticate(config),

@@ -56,6 +56,23 @@ export type StrategyFunction = (
   params: ExecStrategyParams
 ) => Promise<StrategyResponse>
 
+/**
+ * @description Executes a service strategy based on the service method. This function looks up the
+ * appropriate strategy from the service registry and executes it with the provided parameters.
+ * It's used internally by FCL to handle different communication methods with wallet services.
+ *
+ * @param params The parameters object containing service details and execution context
+ * @returns Promise resolving to the strategy response
+ *
+ * @example
+ * // Execute a service strategy (internal usage)
+ * const response = await execStrategy({
+ *   service: { method: "HTTP/POST", endpoint: "https://wallet.example.com/authz" },
+ *   body: { transaction: "..." },
+ *   config: execConfig,
+ *   abortSignal: controller.signal
+ * })
+ */
 export const execStrategy = async ({
   service,
   body,
@@ -71,6 +88,22 @@ export const execStrategy = async ({
   return strategy({service, body, config, abortSignal, customRpc, opts, user})
 }
 
+/**
+ * @description Executes a service with the provided parameters, handling configuration setup,
+ * error handling, and recursive service redirects. This is the main entry point for executing
+ * wallet service interactions in FCL.
+ *
+ * @param params The service execution parameters including service, message, and configuration
+ * @returns Promise resolving to a StrategyResponse containing the execution result
+ *
+ * @example
+ * // Execute a service (internal usage)
+ * const response = await execService({
+ *   service: { type: "authz", method: "HTTP/POST", endpoint: "..." },
+ *   msg: { transaction: "..." },
+ *   config: { client: { platform: "web" } }
+ * })
+ */
 export async function execService({
   service,
   msg = {},

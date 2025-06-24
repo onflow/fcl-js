@@ -21,12 +21,12 @@ export interface VerifyDependencyPinsSameAtLatestSealedBlockParams {
 /**
  * @description Checks if an Interaction Template's pins match those generated at a block height
  *
- * @param {VerifyDependencyPinsSameParams} params
- * @param {InteractionTemplate} params.template Interaction Template to check pins for
- * @param {number} params.blockHeight Block height to check pins at
- * @param {string} params.network Network to check pins on
- * @param {VerifyDependencyPinsSameOpts} opts
- * @returns {Promise<boolean>} Whether or not the pins match
+ * @param params
+ * @param params.template Interaction Template to check pins for
+ * @param params.blockHeight Block height to check pins at
+ * @param params.network Network to check pins on
+ * @param opts
+ * @returns Whether or not the pins match
  */
 export async function verifyDependencyPinsSame(
   {template, blockHeight, network}: VerifyDependencyPinsSameParams,
@@ -161,11 +161,11 @@ export async function verifyDependencyPinsSame(
 /**
  * @description Checks if an Interaction Template's pins match those generated at the latest block height
  *
- * @param {VerifyDependencyPinsSameAtLatestSealedBlockParams} params
- * @param {InteractionTemplate} params.template Interaction Template to check pins for
- * @param {string} params.network Network to check pins on
- * @param {VerifyDependencyPinsSameOpts} opts
- * @returns {Promise<boolean>} Whether or not the pins match
+ * @param params
+ * @param params.template Interaction Template to check pins for
+ * @param params.network Network to check pins on
+ * @param opts
+ * @returns Whether or not the pins match
  */
 export async function verifyDependencyPinsSameAtLatestSealedBlock(
   {template, network}: VerifyDependencyPinsSameAtLatestSealedBlockParams,

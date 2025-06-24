@@ -28,6 +28,58 @@ export interface ValidateArgsInput {
 const ACCOUNT_PROOF = "ACCOUNT_PROOF"
 const USER_SIGNATURE = "USER_SIGNATURE"
 
+/**
+ * @description Validates input arguments for signature verification functions (both account proof and user signature verification).
+ * This function performs comprehensive validation of parameters to ensure they meet the requirements for cryptographic
+ * signature verification on the Flow blockchain. It handles two different validation scenarios: account proof validation
+ * (when appIdentifier is provided) and user signature validation (when message is provided).
+ *
+ * @param args Object containing the arguments to validate. The validation behavior depends on which properties are present:
+ * - For account proof validation: appIdentifier, address, nonce, and signatures are required
+ * - For user signature validation: message, address, and compSigs are required
+ * @param args.appIdentifier Optional unique identifier for the application (triggers account proof validation mode)
+ * @param args.address Flow account address that should be exactly 16 characters (without 0x prefix)
+ * @param args.nonce Hexadecimal string representing a cryptographic nonce (for account proof validation)
+ * @param args.signatures Array of CompositeSignature objects for account proof validation
+ * @param args.message Hexadecimal string representing the signed message (for user signature validation)
+ * @param args.compSigs Array of CompositeSignature objects for user signature validation
+ *
+ * @returns Always returns true if validation passes, otherwise throws an error
+ *
+ * @throws Throws an invariant error if any validation check fails, with specific error messages for each validation failure
+ *
+ * @example
+ * // Validate account proof arguments
+ * const accountProofArgs = {
+ *   appIdentifier: "MyApp",
+ *   address: "1234567890abcdef",
+ *   nonce: "75f8587e5bd982ec9289c5be1f9426bd",
+ *   signatures: [{
+ *     f_type: "CompositeSignature",
+ *     f_vsn: "1.0.0",
+ *     addr: "0x1234567890abcdef",
+ *     keyId: 0,
+ *     signature: "abc123def456..."
+ *   }]
+ * }
+ *
+ * const isValid = validateArgs(accountProofArgs) // Returns true or throws
+ *
+ * // Validate user signature arguments
+ * const userSigArgs = {
+ *   message: "48656c6c6f20576f726c64", // "Hello World" in hex
+ *   address: "1234567890abcdef",
+ *   compSigs: [{
+ *     f_type: "CompositeSignature",
+ *     f_vsn: "1.0.0",
+ *     addr: "0x1234567890abcdef",
+ *     keyId: 0,
+ *     signature: "def456abc123..."
+ *   }]
+ * }
+ *
+ * const isValid = validateArgs(userSigArgs) // Returns true or throws
+ */
 export const validateArgs = (args: ValidateArgsInput): boolean => {
   if (args.appIdentifier) {
     const {appIdentifier, address, nonce, signatures} = args
@@ -113,31 +165,48 @@ const getVerifySignaturesScript = async (
 }
 
 /**
- * @description
- * Verify a valid account proof signature or signatures for an account on Flow.
+ * @description Verifies the authenticity of an account proof signature on the Flow blockchain.
+ * Account proofs are cryptographic signatures used to prove ownership of a Flow account without
+ * revealing private keys. This function validates that the provided signatures were indeed created
+ * by the private keys associated with the specified Flow account address.
  *
- * @param {string} appIdentifier - A message string in hexadecimal format
- * @param {object} accountProofData - An object consisting of address, nonce, and signatures
- * @param {string} accountProofData.address - A Flow account address
- * @param {string} accountProofData.nonce - A random string in hexadecimal format (minimum 32 bytes in total, i.e 64 hex characters)
- * @param {object[]} accountProofData.signatures - An array of composite signatures to verify
- * @param {object} [opts={}] - Options object
- * @param {string} opts.fclCryptoContract - An optional override Flow account address where the FCLCrypto contract is deployed
- * @returns {Promise<boolean>} - Returns true if the signature is valid, false otherwise
+ * @param appIdentifier A unique identifier for your application. This is typically
+ * your app's name or domain and is included in the signed message to prevent replay attacks
+ * across different applications.
+ * @param accountProofData Object containing the account proof data to verify
+ * @param accountProofData.address The Flow account address that allegedly signed the proof
+ * @param accountProofData.nonce A random hexadecimal string (minimum 32 bytes, 64 hex chars)
+ * used to prevent replay attacks. Should be unique for each proof request.
+ * @param accountProofData.signatures Array of composite signatures to verify
+ * against the account's public keys
+ * @param opts Optional configuration parameters
+ * @param opts.fclCryptoContract Override address for the FCLCrypto contract if not using
+ * the default for the current network
+ *
+ * @returns Promise that resolves to true if all signatures are valid, false otherwise.
+ *
+ * @throws If parameters are invalid or network/contract issues occur
  *
  * @example
+ * // Basic account proof verification
+ * import * as fcl from "@onflow/fcl"
  *
- *  const accountProofData = {
- *   address: "0x123",
- *   nonce: "F0123"
- *   signatures: [{f_type: "CompositeSignature", f_vsn: "1.0.0", addr: "0x123", keyId: 0, signature: "abc123"}],
- *  }
+ * const accountProofData = {
+ *   address: "0x1234567890abcdef",
+ *   nonce: "75f8587e5bd982ec9289c5be1f9426bd", // 32-byte hex string
+ *   signatures: [{
+ *     f_type: "CompositeSignature",
+ *     f_vsn: "1.0.0",
+ *     addr: "0x1234567890abcdef",
+ *     keyId: 0,
+ *     signature: "abc123def456..." // actual signature from wallet
+ *   }]
+ * }
  *
- *  const isValid = await fcl.AppUtils.verifyAccountProof(
- *    "AwesomeAppId",
- *    accountProofData,
- *    {fclCryptoContract}
- *  )
+ * const isValid = await fcl.AppUtils.verifyAccountProof(
+ *   "AwesomeAppId",
+ *   accountProofData
+ * )
  */
 export async function verifyAccountProof(
   appIdentifier: string,
@@ -167,25 +236,46 @@ export async function verifyAccountProof(
 }
 
 /**
- * @description
- * Verify a valid signature/s for an account on Flow.
+ * @description Verifies user signatures for arbitrary messages on the Flow blockchain. This function
+ * validates that the provided signatures were created by the private keys associated with the specified
+ * Flow account when signing the given message. This is useful for authenticating users or validating
+ * signed data outside of transaction contexts.
  *
- * @param {string} message - A message string in hexadecimal format
- * @param {Array} compSigs - An array of Composite Signatures
- * @param {string} compSigs[].addr - The account address
- * @param {number} compSigs[].keyId - The account keyId
- * @param {string} compSigs[].signature - The signature to verify
- * @param {object} [opts={}] - Options object
- * @param {string} opts.fclCryptoContract - An optional override of Flow account address where the FCLCrypto contract is deployed
- * @returns {Promise<boolean>} - Returns true if the signature is valid, false otherwise
+ * @param message The message that was signed, encoded as a hexadecimal string. The original
+ * message should be converted to hex before passing to this function.
+ * @param compSigs Array of composite signatures to verify. All signatures
+ * must be from the same account address.
+ * @param compSigs[].f_type Must be "CompositeSignature"
+ * @param compSigs[].f_vsn Must be "1.0.0"
+ * @param compSigs[].addr The Flow account address that created the signature
+ * @param compSigs[].keyId The key ID used to create the signature
+ * @param compSigs[].signature The actual signature data
+ * @param opts Optional configuration parameters
+ * @param opts.fclCryptoContract Override address for the FCLCrypto contract
+ *
+ * @returns Promise that resolves to true if all signatures are valid, false otherwise
+ *
+ * @throws If parameters are invalid, signatures are from different accounts, or network issues occur
  *
  * @example
+ * // Basic message signature verification
+ * import * as fcl from "@onflow/fcl"
  *
- *  const isValid = await fcl.AppUtils.verifyUserSignatures(
- *    Buffer.from('FOO').toString("hex"),
- *    [{f_type: "CompositeSignature", f_vsn: "1.0.0", addr: "0x123", keyId: 0, signature: "abc123"}],
- *    {fclCryptoContract}
- *  )
+ * const originalMessage = "Hello, Flow blockchain!"
+ * const hexMessage = Buffer.from(originalMessage).toString("hex")
+ *
+ * const signatures = [{
+ *   f_type: "CompositeSignature",
+ *   f_vsn: "1.0.0",
+ *   addr: "0x1234567890abcdef",
+ *   keyId: 0,
+ *   signature: "abc123def456..." // signature from user's wallet
+ * }]
+ *
+ * const isValid = await fcl.AppUtils.verifyUserSignatures(
+ *   hexMessage,
+ *   signatures
+ * )
  */
 export async function verifyUserSignatures(
   message: string,

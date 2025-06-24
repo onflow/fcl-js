@@ -19,9 +19,9 @@ export interface GetChainIdOptions {
  * @description
  * Gets the chain ID if its set, otherwise gets the chain ID from the access node
  *
- * @param {GetChainIdOptions} opts Optional parameters
- * @returns {Promise<string>} The chain ID of the access node
- * @throws {Error} If the chain ID is not found
+ * @param opts Optional parameters
+ * @returns The chain ID of the access node
+ * @throws If the chain ID is not found
  *
  * @example
  * // returns "testnet"
@@ -128,8 +128,19 @@ export async function getChainId(
 }
 
 /**
- * @description
- * Clears the chainId cache, useful for testing
+ * @description Clears the internal chain ID cache used by getChainId function. This is primarily useful
+ * for testing scenarios where you need to reset the cached chain ID values, or when switching between
+ * different access nodes and want to ensure fresh chain ID fetching.
+ *
+ * @example
+ * // Clear cache during testing
+ * import * as fcl from "@onflow/fcl"
+ *
+ * // Clear cache
+ * fcl.clearChainIdCache()
+ *
+ * // Now getChainId will fetch fresh data
+ * const chainId = await fcl.getChainId()
  */
 export function clearChainIdCache(): void {
   chainIdCache = {}

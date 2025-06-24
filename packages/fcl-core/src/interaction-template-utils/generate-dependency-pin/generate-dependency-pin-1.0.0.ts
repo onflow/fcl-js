@@ -10,11 +10,11 @@ export interface GenerateDependencyPin100Params {
 
 /**
  * @description Produces a dependency pin for a contract at current state of chain
- * @param {GenerateDependencyPin100Params} params
- * @param {string} params.address The address of the account containing the contract
- * @param {string} params.contractName The name of the contract
- * @param {object} opts Options to pass to the interaction
- * @returns {Promise<string>} The dependency pin
+ * @param params
+ * @param params.address The address of the account containing the contract
+ * @param params.contractName The name of the contract
+ * @param opts Options to pass to the interaction
+ * @returns The dependency pin
  */
 export async function generateDependencyPin100(
   {address, contractName}: GenerateDependencyPin100Params,

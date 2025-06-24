@@ -11,12 +11,12 @@ export interface GetTemplateArgumentMessageParams {
 /**
  * @description Gets Interaction Template argument message by message key, argument label, and localization
  *
- * @param {GetTemplateArgumentMessageParams} opts
- * @param {string} opts.localization [localization="en-US"] Localization to get message for
- * @param {string} opts.argumentLabel Argument label to get message for
- * @param {string} opts.messageKey Message key to get message for
- * @param {InteractionTemplate} opts.template Interaction Template to get message from
- * @returns {string} Message
+ * @param params
+ * @param params.localization [localization="en-US"] Localization to get message for
+ * @param params.argumentLabel Argument label to get message for
+ * @param params.messageKey Message key to get message for
+ * @param params.template Interaction Template to get message from
+ * @returns Message
  */
 export function getTemplateArgumentMessage({
   localization = "en-US",
