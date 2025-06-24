@@ -1,12 +1,12 @@
 # @onflow/kit
 
-## 1.0.0
+## 0.5.0
 
 ### Minor Changes
 
 - [#2514](https://github.com/onflow/fcl-js/pull/2514) [`fcab03fe88078a0b8a1ae5e252377903c6187c5a`](https://github.com/onflow/fcl-js/commit/fcab03fe88078a0b8a1ae5e252377903c6187c5a) Thanks [@jribbink](https://github.com/jribbink)! - Add `useCrossVmTransactionStatus` hook
 
-- [#2523](https://github.com/onflow/fcl-js/pull/2523) [`6076b0bfc95bcbe07a734c0c10c32d81ecb1dd2d`](https://github.com/onflow/fcl-js/commit/6076b0bfc95bcbe07a734c0c10c32d81ecb1dd2d) Thanks [@mfbz](https://github.com/mfbz)! - Added useFlowQueryRaw hook to execute a query and get non-decoded data as result.
+- [#2523](https://github.com/onflow/fcl-js/pull/2523) [`6076b0bfc95bcbe07a734c0c10c32d81ecb1dd2d`](https://github.com/onflow/fcl-js/commit/6076b0bfc95bcbe07a734c0c10c32d81ecb1dd2d) Thanks [@mfbz](https://github.com/mfbz)! - Added `useFlowQueryRaw` hook to execute a query and get non-decoded data as result.
 
 ### Patch Changes
 
