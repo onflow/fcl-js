@@ -26,10 +26,36 @@ import flowJson from "../flow.json"
     appDetailUrl: "https://myonchainapp.com",
   }}
   flowJson={flowJson}
+  darkMode={false}
 >
   <App />
 </FlowProvider>
 ```
+
+## 🌙 Dark Mode
+
+The kit includes built-in dark mode support controlled by the parent app. Set the `darkMode` prop to enable dark mode styling in all kit components.
+
+```tsx
+import { useDarkMode } from "@onflow/kit"
+
+function MyComponent() {
+  const { isDark } = useDarkMode()
+
+  return (
+    <div>
+      <p>Current mode: {isDark ? "Dark" : "Light"}</p>
+    </div>
+  )
+}
+```
+
+**Usage:**
+- `darkMode={false}` (default): Light mode
+- `darkMode={true}`: Dark mode
+- The parent app controls the dark mode state and can change it by updating the prop
+
+**Note**: Dark mode is controlled entirely by the parent app. Kit components will automatically apply dark mode styling when `darkMode={true}`.
 
 ## 🪝 Available Hooks
 
@@ -43,6 +69,7 @@ import flowJson from "../flow.json"
 - `useFlowMutate`
 - `useFlowTransaction`
 - `useCrossVmTokenBalance`
+- `useDarkMode`
 
 ## 📚 Full Documentation
 
