@@ -3,6 +3,14 @@ import {useQuery, UseQueryResult, UseQueryOptions} from "@tanstack/react-query"
 import {useCallback} from "react"
 import {useFlowQueryClient} from "../provider/FlowQueryClient"
 
+export function encodeQueryArgs(
+  args?: (arg: typeof fcl.arg, t: typeof fcl.t) => unknown[]
+): any[] | undefined {
+  // Encode the arguments to a JSON-CDC object so they can be deterministically
+  // serialized and used as the query key.
+  return args?.(fcl.arg, fcl.t)?.map((x: any) => x.xform.asArgument(x.value))
+}
+
 export interface UseFlowQueryArgs {
   cadence: string
   args?: (arg: typeof fcl.arg, t: typeof fcl.t) => unknown[]
@@ -32,12 +40,7 @@ export function useFlowQuery({
     return fcl.query({cadence, args})
   }, [cadence, args])
 
-  // Encode the arguments to a JSON-CDC object so they can be deterministically
-  // serialized and used as the query key.
-  const encodedArgs = args?.(fcl.arg, fcl.t)?.map((x: any) =>
-    x.xform.asArgument(x.value)
-  )
-
+  const encodedArgs = encodeQueryArgs(args)
   return useQuery<unknown, Error>(
     {
       queryKey: ["flowQuery", cadence, encodedArgs],

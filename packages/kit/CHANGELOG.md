@@ -1,5 +1,52 @@
 # @onflow/kit
 
+## 0.5.0
+
+### Minor Changes
+
+- [#2514](https://github.com/onflow/fcl-js/pull/2514) [`fcab03fe88078a0b8a1ae5e252377903c6187c5a`](https://github.com/onflow/fcl-js/commit/fcab03fe88078a0b8a1ae5e252377903c6187c5a) Thanks [@jribbink](https://github.com/jribbink)! - Add `useCrossVmTransactionStatus` hook
+
+- [#2523](https://github.com/onflow/fcl-js/pull/2523) [`6076b0bfc95bcbe07a734c0c10c32d81ecb1dd2d`](https://github.com/onflow/fcl-js/commit/6076b0bfc95bcbe07a734c0c10c32d81ecb1dd2d) Thanks [@mfbz](https://github.com/mfbz)! - Added `useFlowQueryRaw` hook to execute a query and get non-decoded data as result.
+
+### Patch Changes
+
+- [#2506](https://github.com/onflow/fcl-js/pull/2506) [`3263a098d32d8d4f73224f3d1facebd1a824c53b`](https://github.com/onflow/fcl-js/commit/3263a098d32d8d4f73224f3d1facebd1a824c53b) Thanks [@jribbink](https://github.com/jribbink)! - Make `useFlowChainId` args consistent with other hooks
+
+- [#2529](https://github.com/onflow/fcl-js/pull/2529) [`27a6b4f346eb26af63522aa25f7734c7b232bbef`](https://github.com/onflow/fcl-js/commit/27a6b4f346eb26af63522aa25f7734c7b232bbef) Thanks [@jribbink](https://github.com/jribbink)! - Export `useFlowChainId`
+
+- Updated dependencies [[`6076b0bfc95bcbe07a734c0c10c32d81ecb1dd2d`](https://github.com/onflow/fcl-js/commit/6076b0bfc95bcbe07a734c0c10c32d81ecb1dd2d)]:
+  - @onflow/fcl@1.19.0
+
+## 0.4.0
+
+### Minor Changes
+
+- [#2503](https://github.com/onflow/fcl-js/pull/2503) [`29a2c99b08d6f5a427bef5362e5d4e7ada9d51e7`](https://github.com/onflow/fcl-js/commit/29a2c99b08d6f5a427bef5362e5d4e7ada9d51e7) Thanks [@jribbink](https://github.com/jribbink)! - **BREAKING** Update `useCrossVmBatchTransaction` result data to the Cadence transaction ID instead of waiting for the EVM transaction hash.
+
+  This change ensures consistency with the existing `useFlowMutate` response format and latencies, as waiting for the transaction execution for EVM results adds unnecessary delays and harms user experience.
+
+  Developers should instead manually subscribe to the Cadence transaction status to track execution status and determine the EVM transaction results.
+
+- [#2460](https://github.com/onflow/fcl-js/pull/2460) [`d7b673e2ea97f6ab5ec2b81d2186b3e9799460cf`](https://github.com/onflow/fcl-js/commit/d7b673e2ea97f6ab5ec2b81d2186b3e9799460cf) Thanks [@jribbink](https://github.com/jribbink)! - Add `useCrossVmSpendNft` hook
+
+- [#2503](https://github.com/onflow/fcl-js/pull/2503) [`f1a7eeab04a46e78b34a7a19aa4d8d93f3add452`](https://github.com/onflow/fcl-js/commit/f1a7eeab04a46e78b34a7a19aa4d8d93f3add452) Thanks [@jribbink](https://github.com/jribbink)! - Add `useCrossVmSpendToken` hook
+
+## 0.3.1
+
+### Patch Changes
+
+- [#2491](https://github.com/onflow/fcl-js/pull/2491) [`ff07e0ea38845f188f0bbbcb9a365cad96cfb8b7`](https://github.com/onflow/fcl-js/commit/ff07e0ea38845f188f0bbbcb9a365cad96cfb8b7) Thanks [@jribbink](https://github.com/jribbink)! - Export `useCrossVmTokenBalance` hook
+
+## 0.3.0
+
+### Minor Changes
+
+- [#2398](https://github.com/onflow/fcl-js/pull/2398) [`99510059485ffb2d741407a573f3be076c77e044`](https://github.com/onflow/fcl-js/commit/99510059485ffb2d741407a573f3be076c77e044) Thanks [@jribbink](https://github.com/jribbink)! - Add `useCrossVmTokenBalance` hook to get full token balance across both Cadence and EVM accounts
+
+### Patch Changes
+
+- [#2486](https://github.com/onflow/fcl-js/pull/2486) [`3f5d5037882d2da03713ece0ff4f6b7e9d3693b2`](https://github.com/onflow/fcl-js/commit/3f5d5037882d2da03713ece0ff4f6b7e9d3693b2) Thanks [@jribbink](https://github.com/jribbink)! - Switch `contractIdentifier` to `vaultIdentifier` in `useCrossVmTokenBalance` hook
+
 ## 0.2.1
 
 ### Patch Changes

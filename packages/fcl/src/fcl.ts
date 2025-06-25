@@ -1,6 +1,7 @@
 export {
   VERSION,
   query,
+  queryRaw,
   verifyUserSignatures,
   serialize,
   tx,
