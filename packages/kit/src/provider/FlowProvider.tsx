@@ -160,9 +160,7 @@ export function FlowProvider({
       <FlowConfigContext.Provider value={flowConfig}>
         <style>{tailwindStyles}</style>
         <ThemeProvider theme={customTheme}>
-          <DarkModeProvider darkMode={darkMode}>
-            {children}
-          </DarkModeProvider>
+          <DarkModeProvider darkMode={darkMode}>{children}</DarkModeProvider>
         </ThemeProvider>
       </FlowConfigContext.Provider>
     </FlowQueryClientProvider>

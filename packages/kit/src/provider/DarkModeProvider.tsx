@@ -22,9 +22,7 @@ export function DarkModeProvider({
 export function useDarkMode() {
   const context = useContext(DarkModeContext)
   if (!context) {
-    throw new Error(
-      "useDarkMode must be used within a FlowProvider"
-    )
+    throw new Error("useDarkMode must be used within a FlowProvider")
   }
   return context
 }
