@@ -1,6 +1,6 @@
 {
   "name": "@onflow/fcl-core",
-  "version": "1.19.0",
+  "version": "1.20.0",
   "description": "Flow Client Library",
   "license": "Apache-2.0",
   "author": "Flow Foundation",
