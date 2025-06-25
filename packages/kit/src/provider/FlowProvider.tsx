@@ -13,7 +13,7 @@ interface FlowProviderProps {
   queryClient?: QueryClient
   flowJson?: Record<string, any>
   theme?: Partial<Theme>
-  enableDarkMode?: boolean
+  darkMode?: boolean
 }
 
 const mappings: Array<{fcl: string; typed: keyof FlowConfig}> = [
@@ -144,7 +144,7 @@ export function FlowProvider({
   flowJson,
   theme: customTheme,
   children,
-  enableDarkMode,
+  darkMode = false,
 }: PropsWithChildren<FlowProviderProps>) {
   const [queryClient] = useState<QueryClient>(
     () => _queryClient ?? new QueryClient({defaultOptions: defaultQueryOptions})
@@ -160,9 +160,7 @@ export function FlowProvider({
       <FlowConfigContext.Provider value={flowConfig}>
         <style>{tailwindStyles}</style>
         <ThemeProvider theme={customTheme}>
-          <DarkModeProvider enabled={enableDarkMode ?? false}>
-            {children}
-          </DarkModeProvider>
+          <DarkModeProvider darkMode={darkMode}>{children}</DarkModeProvider>
         </ThemeProvider>
       </FlowConfigContext.Provider>
     </FlowQueryClientProvider>
