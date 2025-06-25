@@ -1,5 +1,22 @@
 # @onflow/kit
 
+## 0.5.0
+
+### Minor Changes
+
+- [#2514](https://github.com/onflow/fcl-js/pull/2514) [`fcab03fe88078a0b8a1ae5e252377903c6187c5a`](https://github.com/onflow/fcl-js/commit/fcab03fe88078a0b8a1ae5e252377903c6187c5a) Thanks [@jribbink](https://github.com/jribbink)! - Add `useCrossVmTransactionStatus` hook
+
+- [#2523](https://github.com/onflow/fcl-js/pull/2523) [`6076b0bfc95bcbe07a734c0c10c32d81ecb1dd2d`](https://github.com/onflow/fcl-js/commit/6076b0bfc95bcbe07a734c0c10c32d81ecb1dd2d) Thanks [@mfbz](https://github.com/mfbz)! - Added `useFlowQueryRaw` hook to execute a query and get non-decoded data as result.
+
+### Patch Changes
+
+- [#2506](https://github.com/onflow/fcl-js/pull/2506) [`3263a098d32d8d4f73224f3d1facebd1a824c53b`](https://github.com/onflow/fcl-js/commit/3263a098d32d8d4f73224f3d1facebd1a824c53b) Thanks [@jribbink](https://github.com/jribbink)! - Make `useFlowChainId` args consistent with other hooks
+
+- [#2529](https://github.com/onflow/fcl-js/pull/2529) [`27a6b4f346eb26af63522aa25f7734c7b232bbef`](https://github.com/onflow/fcl-js/commit/27a6b4f346eb26af63522aa25f7734c7b232bbef) Thanks [@jribbink](https://github.com/jribbink)! - Export `useFlowChainId`
+
+- Updated dependencies [[`6076b0bfc95bcbe07a734c0c10c32d81ecb1dd2d`](https://github.com/onflow/fcl-js/commit/6076b0bfc95bcbe07a734c0c10c32d81ecb1dd2d)]:
+  - @onflow/fcl@1.19.0
+
 ## 0.4.0
 
 ### Minor Changes
