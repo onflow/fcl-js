@@ -255,10 +255,10 @@ const makeConfig = async ({
 }
 
 /**
- * @description Factory function to get the authenticate method
+ * @description Factory function to create the authenticate method
  * @param config Current User Configuration
  */
-const getAuthenticate =
+const createAuthenticate =
   (config: CurrentUserConfig) =>
   /**
    * @description Authenticate a user
@@ -285,7 +285,7 @@ const getAuthenticate =
     return new Promise(async (resolve, reject) => {
       spawnCurrentUser(config)
       const opts = {redir}
-      const user = await getSnapshot(config)()
+      const user = await createSnapshot(config)()
       const refreshService = serviceOfType(user.services, "authn-refresh")
       let accountProofData
 
@@ -307,7 +307,7 @@ const getAuthenticate =
               level: LEVELS.error,
             })
           } finally {
-            return resolve(await getSnapshot(config)())
+            return resolve(await createSnapshot(config)())
           }
         } else {
           return resolve(user)
@@ -345,16 +345,16 @@ const getAuthenticate =
           level: LEVELS.error,
         })
       } finally {
-        resolve(await getSnapshot(config)())
+        resolve(await createSnapshot(config)())
       }
     })
   }
 
 /**
- * @description Factory function to get the unauthenticate method
+ * @description Factory function to create the unauthenticate method
  * @param config Current User Configuration
  */
-function getUnauthenticate(config: CurrentUserConfig) {
+function createUnauthenticate(config: CurrentUserConfig) {
   /**
    * @description Unauthenticate a user
    */
@@ -373,10 +373,10 @@ const normalizePreAuthzResponse = (authz: any) => ({
 })
 
 /**
- * @description Factory function to get the resolvePreAuthz method
+ * @description Factory function to create the resolvePreAuthz method
  * @param config Current User Configuration
  */
-const getResolvePreAuthz =
+const createResolvePreAuthz =
   (config: CurrentUserConfig) =>
   (authz: any, {user}: {user: CurrentUser}) => {
     const resp = normalizePreAuthzResponse(authz)
@@ -408,10 +408,10 @@ const getResolvePreAuthz =
   }
 
 /**
- * @description Factory function to get the authorization method
+ * @description Factory function to create the authorization method
  * @param config Current User Configuration
  */
-const getAuthorization =
+const createAuthorization =
   (config: CurrentUserConfig) =>
   /**
    * @description Produces the needed authorization details for the current user to submit transactions to Flow
@@ -427,12 +427,12 @@ const getAuthorization =
       ...account,
       tempId: "CURRENT_USER",
       async resolve(account: Account, preSignable: Signable) {
-        const user = await getAuthenticate(config)({redir: true})
+        const user = await createAuthenticate(config)({redir: true})
         const authz = serviceOfType(user!.services, "authz")
         const preAuthz = serviceOfType(user!.services, "pre-authz")
 
         if (preAuthz)
-          return getResolvePreAuthz(config)(
+          return createResolvePreAuthz(config)(
             await execService({
               service: preAuthz,
               msg: preSignable,
@@ -475,10 +475,10 @@ const getAuthorization =
   }
 
 /**
- * @description Factory function to get the subscribe method
+ * @description Factory function to create the subscribe method
  * @param config Current User Configuration
  */
-function getSubscribe(config: CurrentUserConfig) {
+function createSubscribe(config: CurrentUserConfig) {
   /**
    * @description
    * The callback passed to subscribe will be called when the user authenticates and un-authenticates, making it easy to update the UI accordingly.
@@ -505,10 +505,10 @@ function getSubscribe(config: CurrentUserConfig) {
 }
 
 /**
- * @description Factory function to get the snapshot method
+ * @description Factory function to create the snapshot method
  * @param config Current User Configuration
  */
-function getSnapshot(config: CurrentUserConfig): () => Promise<CurrentUser> {
+function createSnapshot(config: CurrentUserConfig): () => Promise<CurrentUser> {
   /**
    * @description Gets the current user
    * @returns {Promise<CurrentUser>} User object
@@ -523,8 +523,8 @@ function getSnapshot(config: CurrentUserConfig): () => Promise<CurrentUser> {
  * @description Resolves the current user as an argument
  * @param config Current User Configuration
  */
-const getResolveArgument = (config: CurrentUserConfig) => async () => {
-  const {addr} = (await getAuthenticate(config)()) as any
+const createResolveArgument = (config: CurrentUserConfig) => async () => {
+  const {addr} = (await createAuthenticate(config)()) as any
   return arg(withPrefix(addr) as any, t.Address)
 }
 
@@ -537,10 +537,10 @@ const makeSignable = (msg: string) => {
 }
 
 /**
- * @description Factory function to get the signUserMessage method
+ * @description Factory function to create the signUserMessage method
  * @param config Current User Configuration
  */
-const getSignUserMessage =
+const createSignUserMessage =
   (config: CurrentUserConfig) =>
   /**
    * @description A method to use allowing the user to personally sign data via FCL Compatible Wallets/Services.
@@ -549,7 +549,7 @@ const getSignUserMessage =
    */
   async (msg: string) => {
     spawnCurrentUser(config)
-    const user: any = await getAuthenticate(config)({
+    const user: any = await createAuthenticate(config)({
       redir: true,
     })
 
@@ -660,15 +660,15 @@ const getSignUserMessage =
  *
  * console.log("Message signatures:", signatures)
  */
-const getCurrentUser = (config: CurrentUserConfig): CurrentUserService => {
+const createCurrentUser = (config: CurrentUserConfig): CurrentUserService => {
   const currentUser = {
-    authenticate: getAuthenticate(config),
-    unauthenticate: getUnauthenticate(config),
-    authorization: getAuthorization(config),
-    signUserMessage: getSignUserMessage(config),
-    subscribe: getSubscribe(config),
-    snapshot: getSnapshot(config),
-    resolveArgument: getResolveArgument(config),
+    authenticate: createAuthenticate(config),
+    unauthenticate: createUnauthenticate(config),
+    authorization: createAuthorization(config),
+    signUserMessage: createSignUserMessage(config),
+    subscribe: createSubscribe(config),
+    snapshot: createSnapshot(config),
+    resolveArgument: createResolveArgument(config),
   }
 
   return Object.assign(
@@ -679,4 +679,9 @@ const getCurrentUser = (config: CurrentUserConfig): CurrentUserService => {
   ) as any
 }
 
-export {getCurrentUser}
+/**
+ * @deprecated Use createCurrentUser instead. This is kept for backward compatibility.
+ */
+const getCurrentUser = createCurrentUser
+
+export {createCurrentUser, getCurrentUser}

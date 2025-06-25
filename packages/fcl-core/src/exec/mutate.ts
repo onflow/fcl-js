@@ -1,11 +1,12 @@
 import type {AccountAuthorization} from "@onflow/sdk"
 import * as sdk from "@onflow/sdk"
-import {CurrentUserService, getCurrentUser} from "../current-user"
+import {CurrentUserService} from "../current-user"
 import {isNumber} from "../utils/is"
 import type {ArgsFn} from "./args"
 import {normalizeArgs} from "./utils/normalize-args"
 import {preMutate} from "./utils/pre"
 import {prepTemplateOpts} from "./utils/prep-template-opts"
+import {FCLContext} from "../context"
 
 export interface MutateOptions {
   cadence?: string
@@ -23,7 +24,7 @@ export interface MutateOptions {
  *
  * @param currentUserOrConfig CurrentUser actor or configuration
  */
-export const getMutate = (currentUserOrConfig: CurrentUserService) => {
+export const createMutate = (context: FCLContext) => {
   /**
    * @description Allows you to submit transactions to the blockchain to potentially mutate the state.
    *
@@ -77,10 +78,9 @@ export const getMutate = (currentUserOrConfig: CurrentUserService) => {
       opts = await prepTemplateOpts(opts)
       // Allow for a config to overwrite the authorization function.
       // prettier-ignore
-      const currentUser = typeof currentUserOrConfig === "function" ? currentUserOrConfig : getCurrentUser(currentUserOrConfig)
-      const authz: any = await sdk
-        .config()
-        .get("fcl.authz", currentUser().authorization)
+      const authz: any = await context
+        .config
+        .get("fcl.authz", context.currentUser.authorization)
 
       txid = sdk
         .send([
@@ -108,4 +108,14 @@ export const getMutate = (currentUserOrConfig: CurrentUserService) => {
   }
 
   return mutate
+}
+
+// todo
+export const getMutate = (currentUserOrConfig: CurrentUserService) => {
+  // TODO: FIX ME
+  const mutate = createMutate(currentUserOrConfig as any)
+  // Bind the current user to the mutate function
+  return (opts: MutateOptions = {}): Promise<string> => {
+    return mutate(opts)
+  }
 }
