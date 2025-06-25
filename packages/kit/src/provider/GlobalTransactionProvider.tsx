@@ -30,7 +30,6 @@ export const GlobalTransactionProvider: React.FC<
   GlobalTransactionProviderProps
 > = ({children}) => {
   const [txId, setTxId] = useState<string | null>(null)
-  useState(false)
 
   useEffect(() => {
     if (!txId) return
