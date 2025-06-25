@@ -21,7 +21,7 @@ describe("useBatchEvmTransaction", () => {
   const mockCalls = [
     {
       address: "0x123",
-      abi: [{type: "function", name: "test"}],
+      abi: [{type: "function", name: "test"} as any],
       functionName: "test",
       args: [1, 2],
       gasLimit: BigInt(100000),
@@ -30,18 +30,6 @@ describe("useBatchEvmTransaction", () => {
   ]
 
   const mockTxId = "0x123"
-  const mockTxResult = {
-    events: [
-      {
-        type: "TransactionExecuted",
-        data: {
-          hash: ["1", "2", "3"],
-          errorCode: "0",
-          errorMessage: "",
-        },
-      },
-    ],
-  }
 
   beforeEach(() => {
     jest.clearAllMocks()
@@ -53,15 +41,15 @@ describe("useBatchEvmTransaction", () => {
 
   describe("encodeCalls", () => {
     it("should encode calls correctly", () => {
-      const result = encodeCalls(mockCalls as any)
+      const result = encodeCalls(mockCalls)
 
       expect(result).toEqual([
-        [
-          {key: "to", value: "0x123"},
-          {key: "data", value: ""},
-          {key: "gasLimit", value: "100000"},
-          {key: "value", value: "0"},
-        ],
+        {
+          to: "0x123",
+          data: "",
+          gasLimit: "100000",
+          value: "0",
+        },
       ])
     })
   })
@@ -92,9 +80,6 @@ describe("useBatchEvmTransaction", () => {
   describe("useCrossVmBatchTransaction", () => {
     test("should handle successful transaction", async () => {
       jest.mocked(fcl.mutate).mockResolvedValue(mockTxId)
-      jest.mocked(fcl.tx).mockReturnValue({
-        onceExecuted: jest.fn().mockResolvedValue(mockTxResult),
-      } as any)
 
       let result: any
       let rerender: any
@@ -112,18 +97,11 @@ describe("useBatchEvmTransaction", () => {
       await waitFor(() => result.current.isPending === false)
 
       expect(result.current.isError).toBe(false)
-      expect(result.current.data?.txId).toBe(mockTxId)
-      expect(result.current.data?.results).toHaveLength(1)
-      expect(result.current.data?.results[0].status).toBe("passed")
+      expect(result.current.data).toBe(mockTxId)
     })
 
-    test("should handle failed transaction", async () => {
-      jest.mocked(fcl.mutate).mockResolvedValue(mockTxId)
-      jest.mocked(fcl.tx).mockReturnValue({
-        onceExecuted: jest
-          .fn()
-          .mockRejectedValue(new Error("Transaction failed")),
-      } as any)
+    test("should handle error transaction", async () => {
+      jest.mocked(fcl.mutate).mockRejectedValue(new Error("Transaction failed"))
 
       let hookResult: any
 
@@ -140,35 +118,8 @@ describe("useBatchEvmTransaction", () => {
 
       await waitFor(() => expect(hookResult.current.isPending).toBe(false))
 
-      expect(hookResult.current.isError).toBe(false)
-      expect(hookResult.current.data?.results[0].status).toBe("failed")
-      expect(hookResult.current.data?.results[0].errorMessage).toBe(
-        "Transaction reverted"
-      )
-    })
-
-    test("should handle skipped calls", async () => {
-      jest.mocked(fcl.mutate).mockResolvedValue(mockTxId)
-      jest.mocked(fcl.tx).mockReturnValue({
-        onceExecuted: jest.fn().mockResolvedValue({events: []}),
-      } as any)
-
-      let hookResult: any
-
-      await act(async () => {
-        const {result} = renderHook(() => useCrossVmBatchTransaction(), {
-          wrapper: FlowProvider,
-        })
-        hookResult = result
-      })
-
-      await act(async () => {
-        await hookResult.current.sendBatchTransaction({calls: mockCalls})
-      })
-
-      await waitFor(() => expect(hookResult.current.isPending).toBe(false))
-
-      expect(hookResult.current.data?.results[0].status).toBe("skipped")
+      expect(hookResult.current.isError).toBe(true)
+      expect(hookResult.current.error?.message).toBe("Transaction failed")
     })
 
     it("should handle missing chain ID", async () => {
