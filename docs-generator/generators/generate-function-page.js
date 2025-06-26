@@ -1,7 +1,7 @@
 const path = require("path")
 const {Project} = require("ts-morph")
 const fs = require("fs")
-const {generatePage} = require("./utils")
+const {generatePage, getFirstWord} = require("./utils")
 
 // Basic types that don't need definitions
 const BASIC_TYPES = new Set([
@@ -22,6 +22,29 @@ const BASIC_TYPES = new Set([
 const typeCache = new Map()
 const coreTypesCache = new Set()
 let hasLoadedCoreTypes = false
+
+// Function to escape MDX-sensitive characters in example code
+function escapeMDXCharacters(text) {
+  if (!text) return text
+
+  // Handle already escaped curly braces by converting them to inline code
+  // This pattern matches things like A.\{AccountAddress\}.\{ContractName\}.\{EventName\}
+  text = text.replace(/A\.\\{[^}]+\\}\.\\{[^}]+\\}\.\\{[^}]+\\}/g, match => {
+    // Remove the backslashes and wrap in backticks
+    const cleanMatch = match.replace(/\\/g, "")
+    return `\`${cleanMatch}\``
+  })
+
+  // Handle other patterns of escaped curly braces by converting to inline code
+  text = text.replace(/\\{[^}]+\\}/g, match => {
+    // Remove the backslashes and wrap in backticks
+    const cleanMatch = match.replace(/\\/g, "")
+    return `\`${cleanMatch}\``
+  })
+
+  // Escape remaining unescaped curly braces that would otherwise be interpreted as MDX expressions
+  return text.replace(/(?<!\\)\{/g, "\\{").replace(/(?<!\\)\}/g, "\\}")
+}
 
 function extractCoreTypes() {
   if (hasLoadedCoreTypes) return coreTypesCache
@@ -214,6 +237,16 @@ function getTypeDefinition(typeName, packageName, sourceFilePath) {
 function generateFunctionPage(templates, outputDir, packageName, func) {
   const coreTypes = extractCoreTypes()
 
+  // Escape MDX characters in customExample
+  if (func.customExample) {
+    func.customExample = escapeMDXCharacters(func.customExample)
+  }
+
+  // Escape MDX characters in description
+  if (func.description) {
+    func.description = escapeMDXCharacters(func.description)
+  }
+
   // Process parameters
   func.parameters = func.parameters.map(param => {
     const extractedType = extractTypeName(param.type)
@@ -221,6 +254,11 @@ function generateFunctionPage(templates, outputDir, packageName, func) {
       param.name.includes("{") || param.name.includes("}")
         ? "options"
         : param.name
+
+    // Escape MDX characters in parameter description
+    const description = param.description
+      ? escapeMDXCharacters(param.description)
+      : param.description
 
     // Check if it's a core type or Promise<CoreType>
     let hasLink = false
@@ -253,6 +291,7 @@ function generateFunctionPage(templates, outputDir, packageName, func) {
       ...param,
       name: paramName,
       type: extractedType,
+      description,
       linkedType,
       hasLink,
       typeDefinition,
@@ -301,6 +340,7 @@ function generateFunctionPage(templates, outputDir, packageName, func) {
   generatePage(templates, "function", path.join(outputDir, `${filename}.md`), {
     ...func,
     packageName,
+    packageFirstWord: getFirstWord(packageName),
   })
 }
 

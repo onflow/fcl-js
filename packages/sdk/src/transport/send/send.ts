@@ -10,13 +10,15 @@ import {getTransport} from "../get-transport"
 /**
  * Sends arbitrary scripts, transactions, and requests to Flow.
  *
- * This method consumes an array of functions that are to be resolved and sent. The functions required to be included in the array depend on the interaction that is being built.
+ * This method consumes an array of builders that are to be resolved and sent. The builders required to be included in the array depend on the interaction that is being built.
  *
- * Must be used in conjunction with 'fcl.decode(response)' to get back correct keys and all values in JSON.
+ * WARNING: Must be used in conjunction with 'fcl.decode(response)' to get back correct keys and all values in JSON.
  *
- * @param args An array of functions that take an interaction object and return a new interaction object
+ * @param args An array of builders (functions that take an interaction object and return a new interaction object)
  * @param opts Additional optional options for the request
- * @returns A promise that resolves to a response
+ * @param opts.node Custom node endpoint to use for this request
+ * @param opts.resolve Custom resolve function to use for processing the interaction
+ * @returns A promise that resolves to a ResponseObject containing the data returned from the chain. Should always be decoded with fcl.decode() to get back appropriate JSON keys and values.
  *
  * @example
  * import * as fcl from "@onflow/fcl";

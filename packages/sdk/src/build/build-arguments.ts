@@ -5,9 +5,10 @@ import {TypeDescriptorInput, TypeDescriptor} from "@onflow/types"
  * A utility builder to be used with other builders to pass in arguments with a value and supported type.
  *
  * A transaction can accept zero or more arguments that are passed into the Cadence script. The arguments on the transaction must match the number and order declared in the Cadence script.
+ * This function returns a Partial Interaction that contains the arguments and types passed in. This alone is a partial and incomplete interaction.
  *
- * @param ax An array of arguments
- * @returns An interaction object
+ * @param ax An array of argument objects created with fcl.arg()
+ * @returns A Partial Interaction object containing the arguments and types passed in
  *
  * @example
  * import * as fcl from "@onflow/fcl"
@@ -34,10 +35,11 @@ export function args(ax: CadenceArgument<any>[]) {
  * A utility builder to be used with fcl.args[...] to create FCL supported arguments for interactions.
  *
  * Arguments are used to pass data to Cadence scripts and transactions. The arguments must match the number and order declared in the Cadence script.
+ * This function creates an ArgumentObject that holds the value and type passed in.
  *
- * @param value The value of the argument
- * @param xform A function to transform the value (type descriptor)
- * @returns An argument object
+ * @param value Any value that you are looking to pass to other builders
+ * @param xform A type supported by Flow (FType descriptor)
+ * @returns An ArgumentObject that holds the value and type passed in
  *
  * @example
  * import * as fcl from "@onflow/fcl"

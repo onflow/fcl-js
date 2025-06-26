@@ -8,16 +8,12 @@ description: "{{#if displayDescription}}{{displayDescription}}{{else}}{{displayN
 
 # {{displayName}}
 
-{{#if displayDescription}}
-{{{displayDescription}}}
-{{/if}}
-
 ## Overview
 
 {{#if customOverview}}
 {{{customOverview}}}
 {{else}}
-The Flow {{packageName}} provides a set of tools for developers to build applications on the Flow blockchain.
+The Flow {{packageName}} libraryprovides a set of tools for developers to build applications on the Flow blockchain.
 {{/if}}
 
 ## Installation
@@ -50,7 +46,7 @@ yarn add @onflow/{{packageName}}
 You can import the entire package:
 
 ```typescript
-import * as {{packageName}} from "@onflow/{{packageName}}"
+import * as {{packageFirstWord}} from "@onflow/{{packageName}}"
 ```
 
 Or import specific functions:

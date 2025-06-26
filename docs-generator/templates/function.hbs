@@ -17,9 +17,9 @@ description: "{{name}} function documentation."
 You can import the entire package and access the function:
 
 ```typescript
-import * as {{packageName}} from "@onflow/{{packageName}}"
+import * as {{packageFirstWord}} from "@onflow/{{packageName}}"
 
-{{packageName}}.{{name}}({{#each parameters}}{{#unless @first}}, {{/unless}}{{name}}{{/each}})
+{{packageFirstWord}}.{{name}}({{#each parameters}}{{#unless @first}}, {{/unless}}{{name}}{{/each}})
 ```
 
 Or import directly the specific function:

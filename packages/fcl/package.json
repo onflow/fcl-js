@@ -44,7 +44,8 @@
     "build": "npm run lint && fcl-bundle",
     "build:types": "tsc",
     "start": "fcl-bundle --watch",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "generate-docs": "node ../../docs-generator/generate-docs.js"
   },
   "dependencies": {
     "@babel/runtime": "^7.25.7",

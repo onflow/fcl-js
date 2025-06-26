@@ -6,24 +6,69 @@ import {
 } from "../interaction/interaction"
 import {Voucher} from "../encode/encode"
 
+/**
+ * An object that contains all the information needed for FCL to sign a message with the user's signature.
+ * Note: These values are destructed from the payload object in the first argument of a signing function.
+ */
 interface SignableMessage {
+  /**
+   * The encoded string which needs to be used to produce the signature.
+   */
   message: string
+  /**
+   * The encoded string which needs to be used to produce the signature.
+   */
   addr: string
+  /**
+   * The encoded string which needs to be used to produce the signature.
+   */
   keyId: number | string
+  /**
+   * The encoded string which needs to be used to produce the signature.
+   */
   roles: {
+    /**
+     * A Boolean representing if this signature to be produced for a proposer.
+     */
     proposer: boolean
+    /**
+     * A Boolean representing if this signature to be produced for a authorizer.
+     */
     authorizer: boolean
+    /**
+     * A Boolean representing if this signature to be produced for a payer.
+     */
     payer: boolean
   }
+  /**
+   * The raw transactions information, can be used to create the message for additional safety and lack of trust in the supplied message.
+   */
   voucher: Voucher
 }
 
+/**
+ * The object that contains all the information needed by FCL to authorize a user's transaction.
+ */
 interface SigningResult {
+  /**
+   * The address of the Flow Account this signature was produced for.
+   */
   addr?: string
+  /**
+   * The keyId for which key was used to produce the signature.
+   */
   keyId?: number | string
+  /**
+   * The hex encoded string representing the signature of the message.
+   */
   signature: string
 }
 
+/**
+ * A signing function consumes a payload and produces a signature for a transaction.
+ * This function is always async.
+ * Only write your own signing function if you are writing your own custom authorization function.
+ */
 type SigningFn = (
   signable?: SignableMessage
 ) => SigningResult | Promise<SigningResult>

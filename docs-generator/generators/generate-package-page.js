@@ -1,5 +1,5 @@
 const path = require("path")
-const {generatePage, parseConfigCustomData} = require("./utils")
+const {generatePage, parseConfigCustomData, getFirstWord} = require("./utils")
 const fs = require("fs")
 
 function truncateDescription(description, maxLength = 80) {
@@ -63,6 +63,7 @@ function generatePackagePage(templates, outputDir, packageName, functions) {
 
   generatePage(templates, "package", path.join(outputDir, "index.md"), {
     packageName,
+    packageFirstWord: getFirstWord(packageName),
     displayName: displayName || `@onflow/${packageName}`,
     displayDescription:
       packageDescription || `${packageName} package documentation.`,
