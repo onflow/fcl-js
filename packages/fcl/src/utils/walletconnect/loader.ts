@@ -11,17 +11,28 @@ const getMetadata = (config: {
   "app.detail.icon": string | undefined | null
   "app.detail.description": undefined | null
   "app.detail.url": string | undefined | null
+  "walletconnect.redirect.native": string | undefined | null
+  "walletconnect.redirect.universal": string | undefined | null
+  "walletconnect.redirect.linkMode": boolean | undefined | null
 }): CoreTypes.Metadata => {
   const appTitle = config["app.detail.title"]
   const appIcon = config["app.detail.icon"]
   const appDescription = config["app.detail.description"]
   const appUrl = config["app.detail.url"]
+  const redirectNative = config["walletconnect.redirect.native"]
+  const redirectUniversal = config["walletconnect.redirect.universal"]
+  const redirectLinkMode = config["walletconnect.redirect.linkMode"]
 
   return {
     name: appTitle ?? document.title,
     description: appDescription ?? "",
     url: appUrl ?? window.location.origin,
     icons: appIcon ? [appIcon] : [],
+    redirect: {
+      native: redirectNative ?? undefined,
+      universal: redirectUniversal ?? undefined,
+      linkMode: redirectLinkMode ??  undefined,
+    },
   }
 }
 
@@ -46,6 +57,10 @@ export function initFclWcLoader() {
       "app.detail.icon": fullConfig["app.detail.icon"],
       "app.detail.description": fullConfig["app.detail.description"],
       "app.detail.url": fullConfig["app.detail.url"],
+      
+      "walletconnect.redirect.native": fullConfig["walletconnect.redirect.native"],
+      "walletconnect.redirect.universal": fullConfig["walletconnect.redirect.universal"],
+      "walletconnect.redirect.linkMode": fullConfig["walletconnect.redirect.linkMode"],
     }
     const projectId: string | undefined = wcConfig["walletconnect.projectId"]
     const disableNotifications: boolean | undefined =
