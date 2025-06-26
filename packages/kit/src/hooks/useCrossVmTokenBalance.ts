@@ -1,8 +1,8 @@
-import {UseQueryOptions, UseQueryResult} from "@tanstack/react-query"
-import {useFlowQuery} from "./useFlowQuery"
-import {CADENCE_UFIX64_PRECISION, CONTRACT_ADDRESSES} from "../constants"
-import {useFlowChainId} from "./useFlowChainId"
-import {parseUnits, formatUnits} from "viem/utils"
+import { UseQueryOptions, UseQueryResult } from "@tanstack/react-query"
+import { useFlowQuery } from "./useFlowQuery"
+import { CADENCE_UFIX64_PRECISION, CONTRACT_ADDRESSES } from "../constants"
+import { useFlowChainId } from "./useFlowChainId"
+import { parseUnits, formatUnits } from "viem/utils"
 
 interface UseCrossVmTokenBalanceArgs {
   owner?: string
@@ -211,28 +211,28 @@ export function useCrossVmTokenBalance(params: UseCrossVmTokenBalanceArgs) {
     ...queryResult,
     data: data
       ? {
-          cadence: {
-            formatted: formatUnits(
-              parseUnits(cadenceBalance, CADENCE_UFIX64_PRECISION),
-              CADENCE_UFIX64_PRECISION
-            ),
-            value: parseUnits(cadenceBalance, CADENCE_UFIX64_PRECISION),
-            precision: CADENCE_UFIX64_PRECISION,
-          },
-          evm: {
-            formatted: formatUnits(BigInt(evmBalance), Number(evmDecimals)),
-            precision: Number(evmDecimals),
-            value: BigInt(evmBalance),
-          },
-          total: {
-            formatted: formatUnits(
-              totalPrecisionCadenceBalance + totalPrecisionEvmBalance,
-              totalPrecision
-            ),
-            value: totalPrecisionCadenceBalance + totalPrecisionEvmBalance,
-            precision: totalPrecision,
-          },
-        }
+        cadence: {
+          formatted: formatUnits(
+            parseUnits(cadenceBalance, CADENCE_UFIX64_PRECISION),
+            CADENCE_UFIX64_PRECISION
+          ),
+          value: parseUnits(cadenceBalance, CADENCE_UFIX64_PRECISION),
+          precision: CADENCE_UFIX64_PRECISION,
+        },
+        evm: {
+          formatted: formatUnits(BigInt(evmBalance), Number(evmDecimals)),
+          precision: Number(evmDecimals),
+          value: BigInt(evmBalance),
+        },
+        total: {
+          formatted: formatUnits(
+            totalPrecisionCadenceBalance + totalPrecisionEvmBalance,
+            totalPrecision
+          ),
+          value: totalPrecisionCadenceBalance + totalPrecisionEvmBalance,
+          precision: totalPrecision,
+        },
+      }
       : null,
   } as UseQueryResult<UseCrossVmTokenBalanceData | null, Error>
 }
