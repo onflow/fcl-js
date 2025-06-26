@@ -148,6 +148,174 @@ function parseJsDoc(node) {
   }
 }
 
+function resolveReExportedFunction(sourceFile, exportName, moduleSpecifier) {
+  try {
+    // Use ts-morph's built-in module resolution
+    const referencedSourceFile = sourceFile
+      .getReferencedSourceFiles()
+      .find(sf => {
+        const fileName = path.basename(sf.getFilePath())
+        const moduleFileName = path.basename(moduleSpecifier)
+        return (
+          fileName.includes(moduleFileName) ||
+          sf.getFilePath().includes(moduleSpecifier.replace(/^@onflow\//, ""))
+        )
+      })
+
+    if (referencedSourceFile) {
+      return findFunctionInSourceFile(referencedSourceFile, exportName)
+    }
+
+    // Fallback: try to get the module specifier source file directly
+    const moduleSourceFile =
+      sourceFile.getModuleSpecifierSourceFile(moduleSpecifier)
+    if (moduleSourceFile) {
+      return findFunctionInSourceFile(moduleSourceFile, exportName)
+    }
+
+    return null
+  } catch (e) {
+    console.warn(
+      `Error resolving re-exported function ${exportName} from ${moduleSpecifier}: ${e.message}`
+    )
+    return null
+  }
+}
+
+function findFunctionInSourceFile(sourceFile, functionName) {
+  try {
+    const exportedDeclarations = sourceFile.getExportedDeclarations()
+    if (exportedDeclarations.has(functionName)) {
+      const declarations = exportedDeclarations.get(functionName)
+
+      for (const declaration of declarations) {
+        let funcInfo = null
+
+        // Handle function declarations
+        if (Node.isFunctionDeclaration(declaration)) {
+          const jsDocInfo = parseJsDoc(declaration)
+          const parameters = declaration.getParameters().map(param => {
+            const paramName = param.getName()
+            const paramType = param.getType().getText()
+            const paramJsDoc = jsDocInfo.params && jsDocInfo.params[paramName]
+
+            return {
+              name: paramName,
+              type: paramType,
+              required: !param.isOptional(),
+              description: paramJsDoc || "",
+            }
+          })
+
+          const returnType = declaration.getReturnType().getText()
+          const filePath = sourceFile.getFilePath()
+          const relativeFilePath = path.relative(process.cwd(), filePath)
+
+          funcInfo = {
+            name: functionName,
+            returnType,
+            parameters,
+            description: jsDocInfo.description || "",
+            customExample: jsDocInfo.example || "",
+            sourceFilePath: relativeFilePath,
+          }
+        }
+        // Handle variable declarations with function values
+        else if (Node.isVariableDeclaration(declaration)) {
+          let jsDocInfo = parseJsDoc(declaration)
+
+          // If no JSDoc found on the declaration, try the parent VariableStatement
+          if (!jsDocInfo.description) {
+            const parentList = declaration.getParent()
+            if (parentList) {
+              const parentStatement = parentList.getParent()
+              if (parentStatement) {
+                jsDocInfo = parseJsDoc(parentStatement)
+              }
+            }
+          }
+
+          const initializer = declaration.getInitializer()
+
+          if (
+            initializer &&
+            (Node.isFunctionExpression(initializer) ||
+              Node.isArrowFunction(initializer))
+          ) {
+            const parameters = initializer.getParameters().map(param => {
+              const paramName = param.getName()
+              const paramType = param.getType().getText()
+              const paramJsDoc = jsDocInfo.params && jsDocInfo.params[paramName]
+
+              return {
+                name: paramName,
+                type: paramType,
+                required: !param.isOptional(),
+                description: paramJsDoc || "",
+              }
+            })
+
+            const returnType = initializer.getReturnType().getText()
+            const filePath = sourceFile.getFilePath()
+            const relativeFilePath = path.relative(process.cwd(), filePath)
+
+            funcInfo = {
+              name: functionName,
+              returnType,
+              parameters,
+              description: jsDocInfo.description || "",
+              customExample: jsDocInfo.example || "",
+              sourceFilePath: relativeFilePath,
+            }
+          }
+        }
+
+        if (funcInfo) {
+          return funcInfo
+        }
+      }
+    }
+
+    return null
+  } catch (e) {
+    console.warn(
+      `Error finding function ${functionName} in source file: ${e.message}`
+    )
+    return null
+  }
+}
+
+function discoverWorkspacePackages() {
+  try {
+    // Get the workspace root (2 levels up from current package directory)
+    const workspaceRoot = path.resolve(process.cwd(), "../..")
+    const packagesDir = path.join(workspaceRoot, "packages")
+
+    if (!fs.existsSync(packagesDir)) {
+      console.warn("Packages directory not found, using current package only")
+      return []
+    }
+
+    const packagePaths = []
+    const packageDirs = fs
+      .readdirSync(packagesDir, {withFileTypes: true})
+      .filter(dirent => dirent.isDirectory())
+      .map(dirent => dirent.name)
+
+    for (const packageDir of packageDirs) {
+      const srcPath = path.join(packagesDir, packageDir, "src")
+      if (fs.existsSync(srcPath)) {
+        packagePaths.push(`${srcPath}/**/*.ts`)
+      }
+    }
+
+    return packagePaths
+  } catch (e) {
+    console.warn(`Error discovering workspace packages: ${e.message}`)
+    return []
+  }
+}
+
 function extractFunctions(sourceFile) {
   const functions = []
   const filePath = sourceFile.getFilePath()
@@ -245,6 +413,38 @@ function extractFunctions(sourceFile) {
               }
             }
           }
+          // Handle re-export declarations
+          else if (Node.isExportDeclaration(declaration)) {
+            const moduleSpecifier = declaration.getModuleSpecifier()
+            if (moduleSpecifier) {
+              const moduleSpecifierValue = moduleSpecifier.getLiteralValue()
+
+              // Check if this is a named export that we need to follow
+              const namedExports = declaration.getNamedExports()
+              for (const namedExport of namedExports) {
+                const exportName = namedExport.getName()
+                if (exportName === name) {
+                  // This is a re-export, try to resolve it using ts-morph
+                  const reExportedFuncInfo = resolveReExportedFunction(
+                    sourceFile,
+                    exportName,
+                    moduleSpecifierValue
+                  )
+                  if (reExportedFuncInfo) {
+                    funcInfo = reExportedFuncInfo
+                    console.log(
+                      `Successfully resolved re-exported function: ${name}`
+                    )
+                  } else {
+                    console.warn(
+                      `Could not resolve re-exported function: ${name} from ${moduleSpecifierValue}`
+                    )
+                  }
+                  break
+                }
+              }
+            }
+          }
 
           if (funcInfo) {
             functions.push(funcInfo)
@@ -309,7 +509,22 @@ async function main() {
     const project = new Project({
       skipAddingFilesFromTsConfig: true,
     })
+
+    // Add source files from the current package
     project.addSourceFilesAtPaths(`${SOURCE_DIR}/**/*.ts`)
+
+    // Automatically discover and add all workspace packages
+    const workspacePackagePaths = discoverWorkspacePackages()
+    for (const packagePath of workspacePackagePaths) {
+      try {
+        project.addSourceFilesAtPaths(packagePath)
+      } catch (e) {
+        console.warn(
+          `Could not add source files from ${packagePath}: ${e.message}`
+        )
+      }
+    }
+
     // Collect exported functions from all files
     const functions = []
     project.getSourceFiles().forEach(sourceFile => {
@@ -320,8 +535,16 @@ async function main() {
       ) {
         return
       }
-      const fileFunctions = extractFunctions(sourceFile)
-      functions.push(...fileFunctions)
+
+      // Only process files from the current package's source directory
+      const sourceFilePath = sourceFile.getFilePath()
+      const normalizedSourceDir = path.resolve(SOURCE_DIR)
+      const normalizedSourceFilePath = path.resolve(sourceFilePath)
+
+      if (normalizedSourceFilePath.startsWith(normalizedSourceDir)) {
+        const fileFunctions = extractFunctions(sourceFile)
+        functions.push(...fileFunctions)
+      }
     })
 
     // Generate documentation
