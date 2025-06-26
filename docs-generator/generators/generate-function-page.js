@@ -237,11 +237,6 @@ function getTypeDefinition(typeName, packageName, sourceFilePath) {
 function generateFunctionPage(templates, outputDir, packageName, func) {
   const coreTypes = extractCoreTypes()
 
-  // Escape MDX characters in customExample
-  if (func.customExample) {
-    func.customExample = escapeMDXCharacters(func.customExample)
-  }
-
   // Escape MDX characters in description
   if (func.description) {
     func.description = escapeMDXCharacters(func.description)
