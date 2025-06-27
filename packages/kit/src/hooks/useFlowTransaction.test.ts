@@ -2,8 +2,7 @@ import {renderHook, act, waitFor} from "@testing-library/react"
 import * as fcl from "@onflow/fcl"
 import {FlowProvider} from "../provider"
 import {useFlowTransaction} from "./useFlowTransaction"
-import type {Transaction} from "@onflow/typedefs"
-import type {Interaction} from "@onflow/typedefs"
+import type {Interaction, Transaction} from "@onflow/typedefs"
 
 jest.mock("@onflow/fcl", () => require("../__mocks__/fcl").default)
 
@@ -42,7 +41,7 @@ describe("useFlowTransaction", () => {
 
     const mockInteraction: Partial<Interaction> = {
       tag: "GET_TRANSACTION" as any,
-      transaction: { id: "abc123" },
+      transaction: {id: "abc123"},
     }
 
     const getTransactionMock = jest.mocked(fcl.getTransaction)
@@ -78,7 +77,7 @@ describe("useFlowTransaction", () => {
 
     const mockInteraction: Partial<Interaction> = {
       tag: "GET_TRANSACTION" as any,
-      transaction: { id: "def456" },
+      transaction: {id: "def456"},
     }
 
     const getTransactionMock = jest.mocked(fcl.getTransaction)
@@ -138,7 +137,7 @@ describe("useFlowTransaction", () => {
 
     const mockInteraction: Partial<Interaction> = {
       tag: "GET_TRANSACTION" as any,
-      transaction: { id: "abc123" },
+      transaction: {id: "abc123"},
     }
 
     const getTransactionMock = jest.mocked(fcl.getTransaction)
