@@ -72,13 +72,15 @@ export async function getGlobalContext(): Promise<SdkContext> {
 }
 
 export function withGlobalContext<
-  T extends (context: SdkContext) => (...args: any[]) => any,
+  T extends (context: SdkContext) => (...args: any[]) => Promise<any>,
 >(
   fn: T
-): (...args: Parameters<ReturnType<T>>) => Promise<ReturnType<ReturnType<T>>> {
+): (
+  ...args: Parameters<ReturnType<T>>
+) => Promise<Awaited<ReturnType<ReturnType<T>>>> {
   return async (
     ...args: Parameters<ReturnType<T>>
-  ): Promise<ReturnType<ReturnType<T>>> => {
+  ): Promise<Awaited<ReturnType<ReturnType<T>>>> => {
     const context = await getGlobalContext()
     return fn(context)(...args)
   }

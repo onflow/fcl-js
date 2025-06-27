@@ -41,5 +41,4 @@ export function createSend(context: SdkContext) {
   return send
 }
 
-/* @__PURE__ */
-export const send = withGlobalContext(createSend)
+export const send = /* @__PURE__ */ withGlobalContext(createSend)

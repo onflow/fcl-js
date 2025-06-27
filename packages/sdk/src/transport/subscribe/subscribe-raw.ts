@@ -65,7 +65,6 @@ export function createSubscribeRaw(context: SdkContext) {
   return createSubscribeRawAsync(context)
 }
 
-/*@__PURE__*/
 export function subscribeRaw<T extends SubscriptionTopic>(
   {topic, args, onData, onError}: SubscribeRawParams<T>,
   opts: {
