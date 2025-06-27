@@ -15,5 +15,4 @@ export function createDecode(context: SdkContext) {
   return decode
 }
 
-/* @__PURE__ */
-export const decode = withGlobalContext(createDecode)
+export const decode = /* @__PURE__ */ withGlobalContext(createDecode)

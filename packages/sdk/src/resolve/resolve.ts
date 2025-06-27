@@ -99,7 +99,8 @@ export function createResolve(context: SdkContext) {
   return resolve
 }
 
-export const resolve = withGlobalContext(createResolve)
+// TODO: (jribbink): Fix the any type here
+export const resolve = withGlobalContext(createResolve as any)
 
 async function execFetchRef(
   ix: Interaction,

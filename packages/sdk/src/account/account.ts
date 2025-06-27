@@ -57,5 +57,4 @@ export function createAccount(context: SdkContext) {
   return account
 }
 
-/* @__PURE__ */
-export const account = withGlobalContext(createAccount)
+export const account = /* @__PURE__ */ withGlobalContext(createAccount)

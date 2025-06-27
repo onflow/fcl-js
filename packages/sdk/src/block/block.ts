@@ -58,5 +58,4 @@ export function createBlock(context: SdkContext) {
   return block
 }
 
-/* @__PURE__ */
-export const block = withGlobalContext(createBlock)
+export const block = /* @__PURE__ */ withGlobalContext(createBlock)
