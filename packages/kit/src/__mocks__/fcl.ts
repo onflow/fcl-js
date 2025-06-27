@@ -22,7 +22,7 @@ export default {
   send: jest.fn().mockImplementation(args => {
     // The real FCL returns an object that allows chaining with .then(fcl.decode)
     return {
-      then: callback => callback({}),
+      then: (callback: (value: any) => any) => callback({}),
     }
   }),
   decode: jest.fn().mockImplementation(result => {
