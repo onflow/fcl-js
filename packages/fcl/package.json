@@ -1,7 +1,7 @@
 {
   "name": "@onflow/fcl",
   "version": "1.19.0",
-  "description": "Flow Client Library",
+  "description": "High-level JavaScript/TypeScript library for building web applications on the Flow blockchain.",
   "license": "Apache-2.0",
   "author": "Flow Foundation",
   "homepage": "https://flow.com",
