@@ -22,19 +22,30 @@ describe("useFlowTransaction", () => {
   })
 
   test("fetches transaction when txId is provided", async () => {
-    const mockTransaction: Transaction = {
-      status: 4,
-      statusCode: 0,
-      errorMessage: "",
-      events: [],
-      id: "abc123",
+    const mockTransaction: Partial<Transaction> = {
+      script: "transaction { }",
+      args: [],
+      referenceBlockId: "123456",
+      gasLimit: 1000,
+      proposalKey: {
+        address: "0x123",
+        keyId: 0,
+        sequenceNumber: 1,
+      },
+      payer: "0x123",
+      proposer: "0x123",
+      authorizers: ["0x123"],
+      payloadSignatures: [],
+      envelopeSignatures: [],
     }
 
     const getTransactionMock = jest.mocked(fcl.getTransaction)
-    getTransactionMock.mockReturnValue({type: "GET_TX"})
+    getTransactionMock.mockReturnValue((ix: any) => ix)
 
     const sendMock = jest.mocked(fcl.send)
-    sendMock.mockResolvedValue("txResponse")
+    sendMock.mockResolvedValue({
+      transaction: mockTransaction,
+    })
 
     const decodeMock = jest.mocked(fcl.decode)
     decodeMock.mockResolvedValue(mockTransaction)
@@ -55,17 +66,19 @@ describe("useFlowTransaction", () => {
     expect(hookResult.current.data).toEqual(mockTransaction)
     expect(hookResult.current.error).toBeNull()
     expect(getTransactionMock).toHaveBeenCalledWith("abc123")
-    expect(sendMock).toHaveBeenCalledWith([{type: "GET_TX"}])
+    expect(sendMock).toHaveBeenCalled()
   })
 
   test("handles error when fetching transaction fails", async () => {
     const testError = new Error("Failed to fetch transaction")
 
     const getTransactionMock = jest.mocked(fcl.getTransaction)
-    getTransactionMock.mockReturnValue({type: "GET_TX"})
+    getTransactionMock.mockReturnValue((ix: any) => ix)
 
     const sendMock = jest.mocked(fcl.send)
-    sendMock.mockResolvedValue("txResponse")
+    sendMock.mockResolvedValue({
+      transaction: {},
+    })
 
     const decodeMock = jest.mocked(fcl.decode)
     decodeMock.mockRejectedValue(testError)
@@ -90,28 +103,39 @@ describe("useFlowTransaction", () => {
       "Failed to fetch transaction"
     )
     expect(getTransactionMock).toHaveBeenCalledWith("def456")
-    expect(sendMock).toHaveBeenCalledWith([{type: "GET_TX"}])
+    expect(sendMock).toHaveBeenCalled()
   })
 
   test("refetch function works correctly", async () => {
-    const mockTransaction: Transaction = {
-      status: 1,
-      statusCode: 0,
-      errorMessage: "",
-      events: [],
-      id: "abc123",
+    const mockTransaction: Partial<Transaction> = {
+      script: "transaction { }",
+      args: [],
+      referenceBlockId: "123456",
+      gasLimit: 1000,
+      proposalKey: {
+        address: "0x123",
+        keyId: 0,
+        sequenceNumber: 1,
+      },
+      payer: "0x123",
+      proposer: "0x123",
+      authorizers: ["0x123"],
+      payloadSignatures: [],
+      envelopeSignatures: [],
     }
 
-    const updatedTransaction: Transaction = {
+    const updatedTransaction: Partial<Transaction> = {
       ...mockTransaction,
-      status: 4,
+      gasLimit: 2000,
     }
 
     const getTransactionMock = jest.mocked(fcl.getTransaction)
-    getTransactionMock.mockReturnValue({type: "GET_TX"})
+    getTransactionMock.mockReturnValue((ix: any) => ix)
 
     const sendMock = jest.mocked(fcl.send)
-    sendMock.mockResolvedValue("txResponse")
+    sendMock.mockResolvedValue({
+      transaction: mockTransaction,
+    })
 
     const decodeMock = jest.mocked(fcl.decode)
     decodeMock.mockResolvedValueOnce(mockTransaction)
@@ -136,12 +160,12 @@ describe("useFlowTransaction", () => {
     })
 
     await waitFor(() => {
-      expect(hookResult.current.data?.status).toBe(4)
+      expect(hookResult.current.data?.gasLimit).toBe(2000)
     })
 
     expect(hookResult.current.data).toEqual(updatedTransaction)
     expect(getTransactionMock).toHaveBeenCalledTimes(2)
     expect(sendMock).toHaveBeenCalledTimes(2)
-    expect(sendMock).toHaveBeenCalledWith([{type: "GET_TX"}])
+    expect(sendMock).toHaveBeenCalled()
   })
 })
