@@ -2,25 +2,18 @@ import * as fcl from "@onflow/fcl"
 import {useQuery, UseQueryResult, UseQueryOptions} from "@tanstack/react-query"
 import {useCallback} from "react"
 import {useFlowQueryClient} from "../provider/FlowQueryClient"
+import {encodeQueryArgs} from "./useFlowQuery"
 
-export function encodeQueryArgs(
-  args?: (arg: typeof fcl.arg, t: typeof fcl.t) => unknown[]
-): any[] | undefined {
-  // Encode the arguments to a JSON-CDC object so they can be deterministically
-  // serialized and used as the query key.
-  return args?.(fcl.arg, fcl.t)?.map((x: any) => x.xform.asArgument(x.value))
-}
-
-export interface UseFlowQueryArgs {
+export interface UseFlowQueryRawArgs {
   cadence: string
   args?: (arg: typeof fcl.arg, t: typeof fcl.t) => unknown[]
   query?: Omit<UseQueryOptions<unknown, Error>, "queryKey" | "queryFn">
 }
 
 /**
- * useFlowQuery
+ * useFlowQueryRaw
  *
- * Executes a Cadence script and returns the query result.
+ * Executes a Cadence script and returns the raw query result.
  *
  * @param params
  *   - cadence: The Cadence script to run
@@ -28,23 +21,23 @@ export interface UseFlowQueryArgs {
  *   - query: (optional) React Query settings (staleTime, retry, enabled, select, etc.)
  * @returns {UseQueryResult<unknown, Error>}
  */
-export function useFlowQuery({
+export function useFlowQueryRaw({
   cadence,
   args,
   query: queryOptions = {},
-}: UseFlowQueryArgs): UseQueryResult<unknown, Error> {
+}: UseFlowQueryRawArgs): UseQueryResult<unknown, Error> {
   const queryClient = useFlowQueryClient()
 
-  const fetchQuery = useCallback(async () => {
+  const fetchQueryRaw = useCallback(async () => {
     if (!cadence) return null
-    return fcl.query({cadence, args})
+    return fcl.queryRaw({cadence, args})
   }, [cadence, args])
 
   const encodedArgs = encodeQueryArgs(args)
   return useQuery<unknown, Error>(
     {
-      queryKey: ["flowQuery", cadence, encodedArgs],
-      queryFn: fetchQuery,
+      queryKey: ["flowQueryRaw", cadence, encodedArgs],
+      queryFn: fetchQueryRaw,
       enabled: queryOptions.enabled ?? true,
       ...queryOptions,
     },
