@@ -40,7 +40,7 @@ function generateRootPage(templates, packagesDir, currentPackageName) {
       const regex = /\- \[(.*?)\]\(\.\/(.*?)\/index\.md\)/g
       let match
       while ((match = regex.exec(content)) !== null) {
-        if (match[1] && match[2]) {
+        if (match[1] && match[2] && match[1] !== "Type Definitions") {
           packages.push({
             displayName: match[1],
             packageName: match[2],
