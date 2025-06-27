@@ -3,6 +3,7 @@ import * as fcl from "@onflow/fcl"
 import {FlowProvider} from "../provider"
 import {useFlowTransaction} from "./useFlowTransaction"
 import type {Transaction} from "@onflow/typedefs"
+import type {Interaction} from "@onflow/typedefs"
 
 jest.mock("@onflow/fcl", () => require("../__mocks__/fcl").default)
 
@@ -39,13 +40,16 @@ describe("useFlowTransaction", () => {
       envelopeSignatures: [],
     }
 
+    const mockInteraction: Partial<Interaction> = {
+      tag: "GET_TRANSACTION" as any,
+      transaction: { id: "abc123" },
+    }
+
     const getTransactionMock = jest.mocked(fcl.getTransaction)
-    getTransactionMock.mockReturnValue((ix: any) => ix)
+    getTransactionMock.mockReturnValue(mockInteraction as any)
 
     const sendMock = jest.mocked(fcl.send)
-    sendMock.mockResolvedValue({
-      transaction: mockTransaction,
-    })
+    sendMock.mockResolvedValue(mockTransaction)
 
     const decodeMock = jest.mocked(fcl.decode)
     decodeMock.mockResolvedValue(mockTransaction)
@@ -66,19 +70,22 @@ describe("useFlowTransaction", () => {
     expect(hookResult.current.data).toEqual(mockTransaction)
     expect(hookResult.current.error).toBeNull()
     expect(getTransactionMock).toHaveBeenCalledWith("abc123")
-    expect(sendMock).toHaveBeenCalled()
+    expect(sendMock).toHaveBeenCalledWith([mockInteraction])
   })
 
   test("handles error when fetching transaction fails", async () => {
     const testError = new Error("Failed to fetch transaction")
 
+    const mockInteraction: Partial<Interaction> = {
+      tag: "GET_TRANSACTION" as any,
+      transaction: { id: "def456" },
+    }
+
     const getTransactionMock = jest.mocked(fcl.getTransaction)
-    getTransactionMock.mockReturnValue((ix: any) => ix)
+    getTransactionMock.mockReturnValue(mockInteraction as any)
 
     const sendMock = jest.mocked(fcl.send)
-    sendMock.mockResolvedValue({
-      transaction: {},
-    })
+    sendMock.mockResolvedValue({})
 
     const decodeMock = jest.mocked(fcl.decode)
     decodeMock.mockRejectedValue(testError)
@@ -103,7 +110,7 @@ describe("useFlowTransaction", () => {
       "Failed to fetch transaction"
     )
     expect(getTransactionMock).toHaveBeenCalledWith("def456")
-    expect(sendMock).toHaveBeenCalled()
+    expect(sendMock).toHaveBeenCalledWith([mockInteraction])
   })
 
   test("refetch function works correctly", async () => {
@@ -129,13 +136,16 @@ describe("useFlowTransaction", () => {
       gasLimit: 2000,
     }
 
+    const mockInteraction: Partial<Interaction> = {
+      tag: "GET_TRANSACTION" as any,
+      transaction: { id: "abc123" },
+    }
+
     const getTransactionMock = jest.mocked(fcl.getTransaction)
-    getTransactionMock.mockReturnValue((ix: any) => ix)
+    getTransactionMock.mockReturnValue(mockInteraction as any)
 
     const sendMock = jest.mocked(fcl.send)
-    sendMock.mockResolvedValue({
-      transaction: mockTransaction,
-    })
+    sendMock.mockResolvedValue(mockTransaction)
 
     const decodeMock = jest.mocked(fcl.decode)
     decodeMock.mockResolvedValueOnce(mockTransaction)
@@ -166,6 +176,6 @@ describe("useFlowTransaction", () => {
     expect(hookResult.current.data).toEqual(updatedTransaction)
     expect(getTransactionMock).toHaveBeenCalledTimes(2)
     expect(sendMock).toHaveBeenCalledTimes(2)
-    expect(sendMock).toHaveBeenCalled()
+    expect(sendMock).toHaveBeenCalledWith([mockInteraction])
   })
 })
