@@ -5,32 +5,11 @@ function parseJsDoc(node) {
       const jsDocs = node.getJsDocs()
       if (jsDocs && jsDocs.length > 0) {
         const jsDoc = jsDocs[0]
-        let description = ""
-
-        // Get full JSDoc comment text and parse it manually for better extraction
-        const jsDocText = jsDoc.getFullText()
-        if (jsDocText) {
-          // Extract description from JSDoc comment
-          const descriptionMatch = jsDocText.match(
-            /\/\*\*\s*([\s\S]*?)\s*(?:@|\*\/)/s
-          )
-          if (descriptionMatch && descriptionMatch[1]) {
-            description = descriptionMatch[1]
-              .split("\n")
-              .map(line => line.replace(/^\s*\*\s?/, "").trim())
-              .filter(line => line && !line.startsWith("@"))
-              .join("\n")
-              .trim()
-          }
-        }
-
-        // Fallback to standard description if manual parsing failed
-        if (!description) {
-          description = jsDoc.getDescription() || ""
-        }
 
         // Parse tags if available
         let parsedTags = {}
+        let description = ""
+
         if (typeof jsDoc.getTags === "function") {
           const tags = jsDoc.getTags()
 
@@ -38,39 +17,46 @@ function parseJsDoc(node) {
             const tagName = tag.getTagName()
             let comment = ""
 
-            // Try to get comment text in multiple ways
+            // Try to get comment text
             if (typeof tag.getComment === "function") {
               comment = tag.getComment() || ""
             }
 
-            // If comment is empty, try to parse from full text
-            if (!comment) {
-              const tagText = tag.getFullText()
-              if (tagText) {
-                const commentMatch = tagText.match(/@\w+\s+(.*)$/s)
-                if (commentMatch && commentMatch[1]) {
-                  comment = commentMatch[1].trim()
+            // Parse different tag types
+            if (tagName === "description") {
+              description = comment
+            }
+            // Parse param tags
+            else if (tagName === "param") {
+              if (!parsedTags.params) parsedTags.params = {}
+
+              // Try to get parameter name from the tag
+              let paramName = ""
+              if (typeof tag.getName === "function") {
+                paramName = tag.getName()
+              }
+
+              // If no name found, try to extract from comment
+              if (!paramName && comment) {
+                const paramMatch = comment.match(/^(\w+[\.\w]*)\s+(.*)$/)
+                if (paramMatch) {
+                  paramName = paramMatch[1]
+                  comment = paramMatch[2]
                 }
               }
-            }
 
-            // Parse param tags
-            if (tagName === "param") {
-              if (!parsedTags.params) parsedTags.params = {}
-              const paramName = tag.getName ? tag.getName() : ""
               if (paramName) {
                 parsedTags.params[paramName] = comment
-              } else {
-                // Try to extract param name from comment
-                const paramMatch = comment.match(/^(\w+)\s+(.*)$/)
-                if (paramMatch) {
-                  parsedTags.params[paramMatch[1]] = paramMatch[2]
-                }
               }
             }
             // Parse return tag
             else if (tagName === "returns" || tagName === "return") {
-              parsedTags.returns = comment
+              // Handle multiple @returns tags by concatenating them
+              if (parsedTags.returns) {
+                parsedTags.returns += `\n• ${comment}`
+              } else {
+                parsedTags.returns = comment
+              }
             }
             // Parse example tag
             else if (tagName === "example") {
@@ -83,6 +69,11 @@ function parseJsDoc(node) {
           })
         }
 
+        // If no description from tags, try to get from JSDoc description
+        if (!description && typeof jsDoc.getDescription === "function") {
+          description = jsDoc.getDescription() || ""
+        }
+
         return {
           description: description.trim(),
           ...parsedTags,
@@ -93,91 +84,85 @@ function parseJsDoc(node) {
     // For variable declarations, check the parent VariableStatement for JSDoc
     if (typeof node.getParent === "function") {
       const parent = node.getParent()
-      if (parent && typeof parent.getJsDocs === "function") {
-        const parentJsDocs = parent.getJsDocs()
-        if (parentJsDocs && parentJsDocs.length > 0) {
-          const jsDoc = parentJsDocs[0]
-          let description = ""
+      if (parent && typeof parent.getParent === "function") {
+        const grandparent = parent.getParent()
+        if (grandparent && typeof grandparent.getJsDocs === "function") {
+          const parentJsDocs = grandparent.getJsDocs()
+          if (parentJsDocs && parentJsDocs.length > 0) {
+            const jsDoc = parentJsDocs[0]
 
-          // Get full JSDoc comment text and parse it manually for better extraction
-          const jsDocText = jsDoc.getFullText()
-          if (jsDocText) {
-            // Extract description from JSDoc comment
-            const descriptionMatch = jsDocText.match(
-              /\/\*\*\s*([\s\S]*?)\s*(?:@|\*\/)/s
-            )
-            if (descriptionMatch && descriptionMatch[1]) {
-              description = descriptionMatch[1]
-                .split("\n")
-                .map(line => line.replace(/^\s*\*\s?/, "").trim())
-                .filter(line => line && !line.startsWith("@"))
-                .join("\n")
-                .trim()
+            // Parse tags if available
+            let parsedTags = {}
+            let description = ""
+
+            if (typeof jsDoc.getTags === "function") {
+              const tags = jsDoc.getTags()
+
+              tags.forEach(tag => {
+                const tagName = tag.getTagName()
+                let comment = ""
+
+                // Try to get comment text
+                if (typeof tag.getComment === "function") {
+                  comment = tag.getComment() || ""
+                }
+
+                // Parse different tag types
+                if (tagName === "description") {
+                  description = comment
+                }
+                // Parse param tags
+                else if (tagName === "param") {
+                  if (!parsedTags.params) parsedTags.params = {}
+
+                  // Try to get parameter name from the tag
+                  let paramName = ""
+                  if (typeof tag.getName === "function") {
+                    paramName = tag.getName()
+                  }
+
+                  // If no name found, try to extract from comment
+                  if (!paramName && comment) {
+                    const paramMatch = comment.match(/^(\w+[\.\w]*)\s+(.*)$/)
+                    if (paramMatch) {
+                      paramName = paramMatch[1]
+                      comment = paramMatch[2]
+                    }
+                  }
+
+                  if (paramName) {
+                    parsedTags.params[paramName] = comment
+                  }
+                }
+                // Parse return tag
+                else if (tagName === "returns" || tagName === "return") {
+                  // Handle multiple @returns tags by concatenating them
+                  if (parsedTags.returns) {
+                    parsedTags.returns += `\n• ${comment}`
+                  } else {
+                    parsedTags.returns = comment
+                  }
+                }
+                // Parse example tag
+                else if (tagName === "example") {
+                  parsedTags.example = comment
+                }
+                // Store any other tags
+                else {
+                  parsedTags[tagName] = comment
+                }
+              })
             }
-          }
 
-          // Fallback to standard description if manual parsing failed
-          if (!description) {
-            description = jsDoc.getDescription() || ""
-          }
+            // If no description from tags, try to get from JSDoc description
+            if (!description && typeof jsDoc.getDescription === "function") {
+              description = jsDoc.getDescription() || ""
+            }
 
-          // Parse tags if available
-          let parsedTags = {}
-          if (typeof jsDoc.getTags === "function") {
-            const tags = jsDoc.getTags()
-
-            tags.forEach(tag => {
-              const tagName = tag.getTagName()
-              let comment = ""
-
-              // Try to get comment text in multiple ways
-              if (typeof tag.getComment === "function") {
-                comment = tag.getComment() || ""
-              }
-
-              // If comment is empty, try to parse from full text
-              if (!comment) {
-                const tagText = tag.getFullText()
-                if (tagText) {
-                  const commentMatch = tagText.match(/@\w+\s+(.*)$/s)
-                  if (commentMatch && commentMatch[1]) {
-                    comment = commentMatch[1].trim()
-                  }
-                }
-              }
-
-              // Parse param tags
-              if (tagName === "param") {
-                if (!parsedTags.params) parsedTags.params = {}
-                const paramName = tag.getName ? tag.getName() : ""
-                if (paramName) {
-                  parsedTags.params[paramName] = comment
-                } else {
-                  // Try to extract param name from comment
-                  const paramMatch = comment.match(/^(\w+)\s+(.*)$/)
-                  if (paramMatch) {
-                    parsedTags.params[paramMatch[1]] = paramMatch[2]
-                  }
-                }
-              }
-              // Parse return tag
-              else if (tagName === "returns" || tagName === "return") {
-                parsedTags.returns = comment
-              }
-              // Parse example tag
-              else if (tagName === "example") {
-                parsedTags.example = comment
-              }
-              // Store any other tags
-              else {
-                parsedTags[tagName] = comment
-              }
-            })
-          }
-
-          return {
-            description: description.trim(),
-            ...parsedTags,
+            return {
+              description: description.trim(),
+              ...parsedTags,
+            }
           }
         }
       }
