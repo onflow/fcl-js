@@ -110,6 +110,20 @@ function extractFunctionInfo(
 
 function findFunctionInSourceFile(sourceFile, functionName) {
   try {
+    // First, check if this function is re-exported from another module
+    // If it is, we should NOT try to extract it directly here, but let the re-export resolution handle it
+    const exportDeclarations = sourceFile.getExportDeclarations()
+    for (const exportDecl of exportDeclarations) {
+      const namedExports = exportDecl.getNamedExports()
+      const hasExport = namedExports.some(
+        namedExport => namedExport.getName() === functionName
+      )
+
+      if (hasExport && exportDecl.getModuleSpecifier()) {
+        return null // This will force the caller to use re-export resolution
+      }
+    }
+
     const exportedDeclarations = sourceFile.getExportedDeclarations()
     if (exportedDeclarations.has(functionName)) {
       const declarations = exportedDeclarations.get(functionName)
