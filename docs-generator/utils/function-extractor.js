@@ -2,7 +2,11 @@ const path = require("path")
 const fs = require("fs")
 const {Node} = require("ts-morph")
 const {parseJsDoc} = require("./jsdoc-parser")
-const {cleanupTypeText, escapeParameterNameForMDX} = require("./type-utils")
+const {
+  cleanupTypeText,
+  escapeParameterNameForMDX,
+  escapeTextForMDX,
+} = require("./type-utils")
 
 function extractFunctionInfo(
   declaration,
@@ -25,17 +29,25 @@ function extractFunctionInfo(
           name: escapeParameterNameForMDX(paramName),
           type: paramType,
           required: !param.isOptional(),
-          description: paramJsDoc || "",
+          description: escapeTextForMDX(paramJsDoc) || "",
         }
       })
 
       const returnType = cleanupTypeText(declaration.getReturnType().getText())
+
+      // Extract return description from JSDoc
+      let returnDescription = null
+      if (jsDocInfo.returns) {
+        returnDescription = escapeTextForMDX(jsDocInfo.returns)
+      }
+
       const filePath = sourceFile.getFilePath()
       const relativeFilePath = path.relative(process.cwd(), filePath)
 
       funcInfo = {
         name: functionName,
         returnType,
+        returnDescription,
         parameters,
         description: jsDocInfo.description || "",
         customExample: jsDocInfo.example || "",
@@ -73,19 +85,71 @@ function extractFunctionInfo(
             name: escapeParameterNameForMDX(paramName),
             type: paramType,
             required: !param.isOptional(),
-            description: paramJsDoc || "",
+            description: escapeTextForMDX(paramJsDoc) || "",
           }
         })
 
         const returnType = cleanupTypeText(
           initializer.getReturnType().getText()
         )
+
+        // Extract return description from JSDoc
+        let returnDescription = null
+        if (jsDocInfo.returns) {
+          returnDescription = escapeTextForMDX(jsDocInfo.returns)
+        }
+
         const filePath = sourceFile.getFilePath()
         const relativeFilePath = path.relative(process.cwd(), filePath)
 
         funcInfo = {
           name: functionName,
           returnType,
+          returnDescription,
+          parameters,
+          description: jsDocInfo.description || "",
+          customExample: jsDocInfo.example || "",
+          sourceFilePath: relativeFilePath,
+        }
+      }
+      // Handle variable declarations with JSDoc that represent functions
+      // (like resolve = pipe([...]) or other function-returning expressions)
+      else if (jsDocInfo.description || jsDocInfo.params || jsDocInfo.returns) {
+        // Extract parameter information from JSDoc if available
+        const parameters = []
+        if (jsDocInfo.params) {
+          Object.entries(jsDocInfo.params).forEach(([paramName, paramDesc]) => {
+            parameters.push({
+              name: escapeParameterNameForMDX(paramName),
+              type: "any", // Default type since we can't infer from call expressions
+              required: true, // Default to required
+              description: escapeTextForMDX(paramDesc) || "",
+            })
+          })
+        }
+
+        // Get return type from JSDoc or try to infer from the variable type
+        let returnType = "any"
+        let returnDescription = null
+        if (jsDocInfo.returns) {
+          returnDescription = escapeTextForMDX(jsDocInfo.returns)
+        }
+
+        // Always try to get the actual TypeScript return type
+        try {
+          returnType = cleanupTypeText(declaration.getType().getText())
+        } catch (e) {
+          // Fallback to any if type inference fails
+          returnType = "any"
+        }
+
+        const filePath = sourceFile.getFilePath()
+        const relativeFilePath = path.relative(process.cwd(), filePath)
+
+        funcInfo = {
+          name: functionName,
+          returnType,
+          returnDescription,
           parameters,
           description: jsDocInfo.description || "",
           customExample: jsDocInfo.example || "",

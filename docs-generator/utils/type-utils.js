@@ -25,7 +25,16 @@ function escapeParameterNameForMDX(paramName) {
   return paramName.replace(/[{}]/g, "\\$&")
 }
 
+function escapeTextForMDX(text) {
+  if (!text) return text
+
+  // Escape angle brackets to prevent MDX from interpreting TypeScript generics as HTML/JSX tags
+  // For example: "Promise<Interaction>" becomes "Promise&lt;Interaction&gt;"
+  return text.replace(/</g, "&lt;").replace(/>/g, "&gt;")
+}
+
 module.exports = {
   cleanupTypeText,
   escapeParameterNameForMDX,
+  escapeTextForMDX,
 }

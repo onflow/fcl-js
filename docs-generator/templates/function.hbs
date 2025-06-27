@@ -62,6 +62,11 @@ import { {{name}} } from "@onflow/{{packageName}}"
 
 {{#if returnHasLink}}{{{linkedType}}}{{else}}`{{{returnType}}}`{{/if}}
 
+{{#if returnDescription}}
+
+{{{returnDescription}}}
+{{/if}}
+
 {{#if returnTypeDefinition}}
 ```typescript
 {{{returnTypeDefinition}}}
