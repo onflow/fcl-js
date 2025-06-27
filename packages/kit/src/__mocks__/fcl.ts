@@ -19,6 +19,15 @@ export default {
   query: jest.fn(),
   queryRaw: jest.fn(),
   tx: jest.fn(),
+  send: jest.fn().mockImplementation(args => {
+    return Promise.resolve("txResponse")
+  }),
+  decode: jest.fn().mockImplementation(result => {
+    return result
+  }),
+  getTransaction: jest.fn().mockImplementation(txId => {
+    return {type: "GET_TX"}
+  }),
   config: () => ({
     subscribe: sharedSubscribe,
     load: jest.fn(),
