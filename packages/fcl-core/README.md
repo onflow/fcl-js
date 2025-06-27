@@ -30,7 +30,7 @@ The things that exists probably won't be changing much externally, we will be ad
 ## Install
 
 ```bash
-npm install --save @onflow/fcl @onflow/types
+npm install --save @onflow/fcl
 ```
 
 ## Getting Started

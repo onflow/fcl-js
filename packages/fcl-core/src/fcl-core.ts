@@ -1,5 +1,6 @@
 export {VERSION} from "./VERSION"
 export {query} from "./exec/query"
+export {queryRaw} from "./exec/query-raw"
 export {verifyUserSignatures} from "./exec/verify"
 export {serialize} from "./serialize"
 export {transaction as tx, TransactionError} from "./transaction"
@@ -11,6 +12,7 @@ export {discovery}
 
 import * as types from "@onflow/types"
 export {types as t}
+export * from "@onflow/typedefs"
 
 import * as WalletUtils from "./wallet-utils"
 export {WalletUtils}
@@ -82,6 +84,8 @@ watchForChainIdChanges()
 export {getMutate} from "./exec/mutate"
 
 export {getCurrentUser} from "./current-user"
+import type {CurrentUserConfig, CurrentUserService} from "./current-user"
+export type {CurrentUserConfig, CurrentUserService}
 
 export {initServiceRegistry} from "./current-user/exec-service/plugins"
 
@@ -102,3 +106,8 @@ export {
 export {execStrategy} from "./current-user/exec-service"
 
 export type {StorageProvider} from "./utils/storage"
+
+export type {
+  AccountProofData,
+  VerifySignaturesScriptOptions,
+} from "./app-utils/verify-signatures"
