@@ -19,10 +19,17 @@ function cleanupTypeText(typeText) {
   return cleaned
 }
 
+function toCamelCase(typeName) {
+  if (!typeName) return typeName
+
+  // Convert PascalCase to camelCase (e.g., AccountProofData -> accountProofData)
+  return typeName.charAt(0).toLowerCase() + typeName.slice(1)
+}
+
 function escapeParameterNameForMDX(paramName) {
-  // Escape curly braces for MDX compatibility
-  // MDX interprets curly braces as JSX expressions, so we need to escape them
-  return paramName.replace(/[{}]/g, "\\$&")
+  // Don't escape curly braces in parameter names as they are part of destructuring syntax
+  // and don't need to be escaped in code blocks in MDX
+  return paramName
 }
 
 function escapeTextForMDX(text) {
@@ -35,6 +42,7 @@ function escapeTextForMDX(text) {
 
 module.exports = {
   cleanupTypeText,
+  toCamelCase,
   escapeParameterNameForMDX,
   escapeTextForMDX,
 }

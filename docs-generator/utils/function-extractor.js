@@ -4,6 +4,7 @@ const {Node} = require("ts-morph")
 const {parseJsDoc} = require("./jsdoc-parser")
 const {
   cleanupTypeText,
+  toCamelCase,
   escapeParameterNameForMDX,
   escapeTextForMDX,
 } = require("./type-utils")
@@ -21,9 +22,27 @@ function extractFunctionInfo(
     if (Node.isFunctionDeclaration(declaration)) {
       const jsDocInfo = parseJsDoc(declaration)
       const parameters = declaration.getParameters().map(param => {
-        const paramName = param.getName()
+        let paramName = param.getName()
         const paramType = cleanupTypeText(param.getType().getText())
         const paramJsDoc = jsDocInfo.params && jsDocInfo.params[paramName]
+
+        // Handle destructured parameters by using camelCase of the type name
+        if (paramName.includes("{") && paramName.includes("}")) {
+          // Extract the type name from the parameter type
+          // Handle both direct types (AccountProofData) and import types (import("...").AccountProofData)
+          const typeText = param.getType().getText()
+          let typeMatch = typeText.match(/^([A-Z][a-zA-Z0-9]*)/) // Direct type
+          if (!typeMatch) {
+            typeMatch = typeText.match(/import\([^)]+\)\.([A-Z][a-zA-Z0-9]*)/) // Import type
+          }
+
+          if (typeMatch && typeMatch[1]) {
+            paramName = toCamelCase(typeMatch[1])
+          } else {
+            // Fallback to "options" if we can't extract a type name
+            paramName = "options"
+          }
+        }
 
         return {
           name: escapeParameterNameForMDX(paramName),
@@ -77,9 +96,27 @@ function extractFunctionInfo(
           Node.isArrowFunction(initializer))
       ) {
         const parameters = initializer.getParameters().map(param => {
-          const paramName = param.getName()
+          let paramName = param.getName()
           const paramType = cleanupTypeText(param.getType().getText())
           const paramJsDoc = jsDocInfo.params && jsDocInfo.params[paramName]
+
+          // Handle destructured parameters by using camelCase of the type name
+          if (paramName.includes("{") && paramName.includes("}")) {
+            // Extract the type name from the parameter type
+            // Handle both direct types (AccountProofData) and import types (import("...").AccountProofData)
+            const typeText = param.getType().getText()
+            let typeMatch = typeText.match(/^([A-Z][a-zA-Z0-9]*)/) // Direct type
+            if (!typeMatch) {
+              typeMatch = typeText.match(/import\([^)]+\)\.([A-Z][a-zA-Z0-9]*)/) // Import type
+            }
+
+            if (typeMatch && typeMatch[1]) {
+              paramName = toCamelCase(typeMatch[1])
+            } else {
+              // Fallback to "options" if we can't extract a type name
+              paramName = "options"
+            }
+          }
 
           return {
             name: escapeParameterNameForMDX(paramName),

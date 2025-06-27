@@ -245,10 +245,7 @@ function generateFunctionPage(templates, outputDir, packageName, func) {
   // Process parameters
   func.parameters = func.parameters.map(param => {
     const extractedType = extractTypeName(param.type)
-    const paramName =
-      param.name.includes("{") || param.name.includes("}")
-        ? "options"
-        : param.name
+    const paramName = param.name
 
     // Escape MDX characters in parameter description
     const description = param.description
