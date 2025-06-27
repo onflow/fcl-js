@@ -667,13 +667,6 @@ const getSignUserMessage =
  * @param config.getStorageProvider Optional function to provide custom storage implementation
  *
  * @returns Current user service object with authentication and authorization methods
- * @returns returns.authenticate Authenticate user with wallet services
- * @returns returns.unauthenticate Clear user session and disconnect wallet
- * @returns returns.authorization Get authorization function for transaction signing
- * @returns returns.signUserMessage Sign arbitrary messages with user's private key
- * @returns returns.subscribe Subscribe to user authentication state changes
- * @returns returns.snapshot Get current user state snapshot
- * @returns returns.resolveArgument Resolve user address as Flow transaction argument
  *
  * @example
  * // Basic setup and authentication

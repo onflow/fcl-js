@@ -174,3 +174,4 @@ After generating documentation, copy the `output/packages-docs` directory to the
 
 - Avoid relative path linking outside of packages-docs folder to avoid docusaurus linking problems. Use only packages-docs relative links or absolute paths.
 - If adding an example to a jsdoc, avoid adding backticks, it will be directly embedded into typescript backticks on pages generation.
+- Don't use multiple @returns in jsdocs, they are not supported.

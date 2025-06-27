@@ -42,11 +42,6 @@ const registry = new Map<string, ReturnType<typeof createObservable>>()
  * not found errors during initial transaction propagation (do not modify unless you know what you are doing)
  *
  * @returns Transaction monitor object with methods for tracking transaction status
- * @returns Function returns.snapshot - Get current transaction status snapshot
- * @returns Function returns.subscribe - Subscribe to transaction status updates
- * @returns Function returns.onceFinalized - Wait for transaction to be finalized
- * @returns Function returns.onceExecuted - Wait for transaction to be executed
- * @returns Function returns.onceSealed - Wait for transaction to be sealed
  *
  * @throws If transactionId is not a valid 64-byte hash string
  *
