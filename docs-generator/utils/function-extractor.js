@@ -1,4 +1,5 @@
 const path = require("path")
+const fs = require("fs")
 const {Node} = require("ts-morph")
 const {parseJsDoc} = require("./jsdoc-parser")
 const {cleanupTypeText, escapeParameterNameForMDX} = require("./type-utils")
@@ -114,6 +115,11 @@ function findFunctionInSourceFile(sourceFile, functionName) {
       const declarations = exportedDeclarations.get(functionName)
 
       for (const declaration of declarations) {
+        // Skip export declarations - we want actual function implementations
+        if (Node.isExportDeclaration(declaration)) {
+          continue
+        }
+
         const funcInfo = extractFunctionInfo(
           declaration,
           functionName,
@@ -134,30 +140,109 @@ function findFunctionInSourceFile(sourceFile, functionName) {
   }
 }
 
+function resolveOnFlowPackage(packageName) {
+  try {
+    // Look for the package in the workspace packages directory
+    // We need to account for the fact that the current working directory is already in packages/
+    const packagesDir = path.resolve(process.cwd(), "..")
+    const packageDir = path.join(packagesDir, packageName)
+    const packageJsonPath = path.join(packageDir, "package.json")
+
+    if (fs.existsSync(packageJsonPath)) {
+      const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, "utf8"))
+      const entryFile = packageJson.source || packageJson.main || "src/index.ts"
+      const entryFilePath = path.resolve(packageDir, entryFile)
+
+      if (fs.existsSync(entryFilePath)) {
+        return entryFilePath
+      }
+    }
+
+    return null
+  } catch (e) {
+    console.warn(`Error resolving @onflow/${packageName}: ${e.message}`)
+    return null
+  }
+}
+
 function resolveReExportedFunction(sourceFile, exportName, moduleSpecifier) {
   try {
-    // First try to find the module specifier among imported files
-    const referencedSourceFiles = sourceFile.getReferencedSourceFiles()
     let referencedSourceFile = null
 
-    // Find the source file that matches the module specifier
-    for (const sf of referencedSourceFiles) {
-      const fileName = path.basename(sf.getFilePath(), ".ts")
-      const moduleFileName = path.basename(moduleSpecifier, ".ts")
+    // Handle @onflow/ package specifiers
+    if (moduleSpecifier.startsWith("@onflow/")) {
+      const packageName = moduleSpecifier.replace("@onflow/", "")
+      const packageEntryPath = resolveOnFlowPackage(packageName)
 
-      if (
-        fileName === moduleFileName ||
-        sf.getFilePath().includes(moduleSpecifier) ||
-        sf.getFilePath().includes(moduleSpecifier.replace("./", ""))
-      ) {
-        referencedSourceFile = sf
-        break
+      if (packageEntryPath) {
+        // Get the ts-morph project from the source file
+        const project = sourceFile.getProject()
+
+        // Try to get the source file, or add it if not already added
+        referencedSourceFile = project.getSourceFile(packageEntryPath)
+        if (!referencedSourceFile) {
+          try {
+            referencedSourceFile = project.addSourceFileAtPath(packageEntryPath)
+          } catch (e) {
+            console.warn(
+              `Could not add source file at ${packageEntryPath}: ${e.message}`
+            )
+          }
+        }
+      }
+    } else {
+      // Handle relative imports - existing logic
+      const referencedSourceFiles = sourceFile.getReferencedSourceFiles()
+
+      // Find the source file that matches the module specifier
+      for (const sf of referencedSourceFiles) {
+        const fileName = path.basename(sf.getFilePath(), ".ts")
+        const moduleFileName = path.basename(moduleSpecifier, ".ts")
+
+        if (
+          fileName === moduleFileName ||
+          sf.getFilePath().includes(moduleSpecifier) ||
+          sf.getFilePath().includes(moduleSpecifier.replace("./", ""))
+        ) {
+          referencedSourceFile = sf
+          break
+        }
       }
     }
 
     if (referencedSourceFile) {
-      return findFunctionInSourceFile(referencedSourceFile, exportName)
+      const funcInfo = findFunctionInSourceFile(
+        referencedSourceFile,
+        exportName
+      )
+      if (funcInfo) {
+        return funcInfo
+      }
+
+      // If not found in the entry file, check if it's re-exported from elsewhere
+      // Look through export declarations to find where this function comes from
+      const exportDeclarations = referencedSourceFile.getExportDeclarations()
+      for (const exportDecl of exportDeclarations) {
+        const namedExports = exportDecl.getNamedExports()
+        const hasExport = namedExports.some(
+          namedExport => namedExport.getName() === exportName
+        )
+
+        if (hasExport) {
+          const moduleSpec = exportDecl.getModuleSpecifier()
+          if (moduleSpec) {
+            const moduleSpecValue = moduleSpec.getLiteralValue()
+            // Recursively resolve from the module this export comes from
+            return resolveReExportedFunction(
+              referencedSourceFile,
+              exportName,
+              moduleSpecValue
+            )
+          }
+        }
+      }
     }
+
     return null
   } catch (e) {
     console.warn(

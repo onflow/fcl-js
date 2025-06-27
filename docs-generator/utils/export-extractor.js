@@ -10,6 +10,7 @@ const {extractNamespaceFunctions} = require("./namespace-utils")
 function extractExportsFromEntryFile(sourceFile) {
   const functions = []
   const namespaces = []
+  const processedReExports = new Set() // Track already processed re-exports
   const filePath = sourceFile.getFilePath()
   const relativeFilePath = path.relative(process.cwd(), filePath)
 
@@ -89,6 +90,8 @@ function extractExportsFromEntryFile(sourceFile) {
           if (reExportedFuncInfo) {
             reExportedFuncInfo.name = finalName
             functions.push(reExportedFuncInfo)
+            // Track that this function was processed as a re-export
+            processedReExports.add(finalName)
           }
         } else {
           // This is an export of something imported - check if it's an actual namespace
@@ -137,6 +140,11 @@ function extractExportsFromEntryFile(sourceFile) {
 
     // Get exported declarations from the current file
     sourceFile.getExportedDeclarations().forEach((declarations, name) => {
+      // Skip if this function was already processed as a re-export
+      if (processedReExports.has(name)) {
+        return
+      }
+
       declarations.forEach(declaration => {
         // Skip type declarations, interfaces, and type aliases
         if (
