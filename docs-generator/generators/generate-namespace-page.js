@@ -40,8 +40,26 @@ function escapeMDXCharacters(text) {
     return `\`${cleanMatch}\``
   })
 
-  // Escape remaining unescaped curly braces that would otherwise be interpreted as MDX expressions
-  return text.replace(/(?<!\\)\{/g, "\\{").replace(/(?<!\\)\}/g, "\\}")
+  // Split text by both multi-line code blocks (triple backticks) and inline code (single backticks)
+  // This regex captures both patterns while preserving them
+  const parts = text.split(/(```[\s\S]*?```|`[^`\n]*`)/g)
+
+  return parts
+    .map((part, index) => {
+      // Check if this part is a code block (either multi-line or inline)
+      const isCodeBlock =
+        part.startsWith("```") ||
+        (part.startsWith("`") && part.endsWith("`") && !part.includes("\n"))
+
+      if (isCodeBlock) {
+        // Don't escape anything inside code blocks (both multi-line and inline)
+        return part
+      } else {
+        // Escape curly braces only outside code blocks
+        return part.replace(/(?<!\\)\{/g, "\\{").replace(/(?<!\\)\}/g, "\\}")
+      }
+    })
+    .join("")
 }
 
 function extractCoreTypes() {

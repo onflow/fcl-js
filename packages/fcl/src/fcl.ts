@@ -80,6 +80,71 @@ const discoveryOpts = {
   execStrategy: execStrategyHook,
 }
 
+/**
+ * @description The main current user service for managing user authentication and authorization in Flow applications.
+ * This service provides a complete interface for wallet connections, user sessions, transaction signing, and user data management.
+ * It handles the complexity of connecting to various FCL-compatible wallets, managing authentication state, and providing
+ * authorization functions for transaction signing.
+ *
+ * The currentUser service is configured for web platforms and uses the browser's localStorage by default for session persistence.
+ * It integrates with Flow's discovery service to enable wallet selection and supports both authentication and re-authentication flows.
+ *
+ * This service is reactive and provides subscription capabilities to monitor authentication state changes in real-time.
+ * All wallet interactions are handled through FCL's standardized protocols, ensuring compatibility with the Flow ecosystem.
+ *
+ * Returns an object with the following methods:
+ * ```typescript
+ * {
+ *   authenticate,        // Authenticates the user via FCL-compatible wallets
+ *   unauthenticate,      // Logs out the current user and clears session data
+ *   authorization,       // Produces authorization details for transaction signing
+ *   signUserMessage,     // Signs arbitrary messages with the user's wallet
+ *   subscribe,           // Subscribes to authentication state changes
+ *   snapshot,            // Returns the current user object snapshot
+ *   resolveArgument      // Resolves the current user as a transaction argument
+ * }
+ * ```
+ *
+ * @returns A CurrentUserService object
+ *
+ * @example
+ * // Basic authentication flow
+ * import * as fcl from "@onflow/fcl"
+ *
+ * // Configure FCL
+ * fcl.config({
+ *   "accessNode.api": "https://rest-testnet.onflow.org",
+ *   "discovery.wallet": "https://fcl-discovery.onflow.org/testnet/authn",
+ *   "flow.network": "testnet"
+ * })
+ *
+ * // Authenticate user
+ * const user = await fcl.currentUser.authenticate()
+ * console.log("User authenticated:", user.addr)
+ *
+ * // Check authentication status
+ * const currentUser = await fcl.currentUser.snapshot()
+ * if (currentUser.loggedIn) {
+ *   console.log("User is logged in:", currentUser.addr)
+ * }
+ *
+ * // Subscribe to authentication state changes
+ * import * as fcl from "@onflow/fcl"
+ *
+ * const unsubscribe = fcl.currentUser.subscribe((user) => {
+ *   if (user.loggedIn) {
+ *     console.log("User logged in:", user.addr)
+ *     document.getElementById("login-btn").style.display = "none"
+ *     document.getElementById("logout-btn").style.display = "block"
+ *   } else {
+ *     console.log("User logged out")
+ *     document.getElementById("login-btn").style.display = "block"
+ *     document.getElementById("logout-btn").style.display = "none"
+ *   }
+ * })
+ * // Clean up subscription when component unmounts
+ * window.addEventListener("beforeunload", () => unsubscribe())
+ */
 export const currentUser = getCurrentUser({
   platform: "web",
   discovery: discoveryOpts,
@@ -89,6 +154,74 @@ export const currentUser = getCurrentUser({
     )
   },
 })
+
+/**
+ * @description A transaction execution function that allows you to submit Cadence transactions to the Flow blockchain
+ * to mutate on-chain state. This function handles the complete transaction lifecycle including building, signing, and
+ * sending transactions to Flow. It provides a high-level interface that abstracts the complexity of transaction
+ * construction while offering flexibility for advanced use cases.
+ *
+ * The mutate function automatically handles authorization using the current authenticated user by default, but allows
+ * for custom authorization functions to be specified for different transaction roles (proposer, payer, authorizer).
+ * It supports both simple single-party transactions and complex multi-party transactions with different signatories.
+ *
+ * This function integrates with FCL's address replacement system, allowing you to use placeholder addresses in your
+ * Cadence code that are replaced with actual addresses at execution time. It also supports Interaction Templates
+ * for standardized transaction execution patterns.
+ *
+ * The mutate function accepts a configuration object with the following structure:
+ * ```typescript
+ * {
+ *   cadence?: string,                    // The Cadence transaction code to execute (required if template not provided)
+ *   args?: Function,                     // Function that returns an array of arguments for the transaction
+ *   template?: any,                      // Interaction Template object or URL for standardized transactions
+ *   limit?: number,                      // Compute (gas) limit for the transaction execution
+ *   authz?: AccountAuthorization,        // Authorization function for all signatory roles (proposer, payer, authorizer)
+ *   proposer?: AccountAuthorization,     // Specific authorization function for the proposer role
+ *   payer?: AccountAuthorization,        // Specific authorization function for the payer role
+ *   authorizations?: AccountAuthorization[]  // Array of authorization functions for authorizer roles
+ * }
+ * ```
+ *
+ * @param opts Transaction configuration options
+ *
+ * @returns Promise that resolves to the transaction ID (txId) when the transaction is submitted
+ *
+ * @throws Throws an error if transaction validation fails, required configuration is missing,
+ * or transaction execution encounters an error
+ *
+ * @example
+ * // Basic transaction submission
+ * import * as fcl from "@onflow/fcl"
+ *
+ * // Configure FCL first
+ * fcl.config({
+ *   "accessNode.api": "https://rest-testnet.onflow.org",
+ *   "discovery.wallet": "https://fcl-discovery.onflow.org/testnet/authn",
+ *   "flow.network": "testnet"
+ * })
+ *
+ * // Authenticate user
+ * await fcl.authenticate()
+ *
+ * // Submit a basic transaction
+ * const txId = await fcl.mutate({
+ *   cadence: `
+ *     transaction(message: String) {
+ *       prepare(account: AuthAccount) {
+ *         log("Transaction executed by: ".concat(account.address.toString()))
+ *         log("Message: ".concat(message))
+ *       }
+ *     }
+ *   `,
+ *   args: (arg, t) => [
+ *     arg("Hello Flow!", t.String)
+ *   ],
+ *   limit: 50
+ * })
+ *
+ * console.log("Transaction submitted:", txId)
+ */
 export const mutate = getMutate(currentUser)
 
 /**
