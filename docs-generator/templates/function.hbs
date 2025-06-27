@@ -44,15 +44,18 @@ import { {{name}} } from "@onflow/{{packageName}}"
 {{#each parameters}}
 ### `{{name}}` {{#unless required}}(optional){{/unless}}
 
-- Type: {{#if hasLink}}{{{linkedType}}}{{else}}`{{{type}}}`{{/if}}
-{{#if description}}
-- Description: {{{description}}}
-{{/if}}
-
-{{#if typeDefinition}}
+{{#if typeDefinition}}{{#unless hasLink}}
+- Type: 
 ```typescript
 {{{typeDefinition}}}
 ```
+{{else}}
+- Type: {{#if hasLink}}{{{linkedType}}}{{else}}`{{{type}}}`{{/if}}
+{{/unless}}{{else}}
+- Type: {{#if hasLink}}{{{linkedType}}}{{else}}`{{{type}}}`{{/if}}
+{{/if}}
+{{#if description}}
+- Description: {{{description}}}
 {{/if}}
 
 {{/each}}
@@ -60,17 +63,17 @@ import { {{name}} } from "@onflow/{{packageName}}"
 
 ## Returns
 
-{{#if returnHasLink}}{{{linkedType}}}{{else}}`{{{returnType}}}`{{/if}}
-
-{{#if returnDescription}}
-
-{{{returnDescription}}}
-{{/if}}
-
 {{#if returnTypeDefinition}}
 ```typescript
 {{{returnTypeDefinition}}}
 ```
+{{else}}
+{{#if returnHasLink}}{{{linkedType}}}{{else}}`{{{returnType}}}`{{/if}}
+{{/if}}
+
+{{#if returnDescription}}
+
+{{{returnDescription}}}
 {{/if}}
 
 ---

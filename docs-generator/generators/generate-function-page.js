@@ -3,15 +3,14 @@ const {Project} = require("ts-morph")
 const fs = require("fs")
 const {generatePage, getFirstWord} = require("./utils")
 
-// Basic types that don't need definitions
-const BASIC_TYPES = new Set([
+// Basic primitive types that don't need definitions
+const PRIMITIVE_TYPES = new Set([
   "string",
   "number",
   "boolean",
   "object",
   "any",
   "void",
-  "function",
   "unknown",
   "never",
   "null",
@@ -80,65 +79,174 @@ function extractCoreTypes() {
 function extractTypeName(fullType) {
   if (!fullType) return fullType
 
-  // For arrays with union types, preserve the original type structure
+  // Clean up import references and comments
+  let cleanType = fullType
+    .replace(/import\([^)]+\)\./g, "")
+    .replace(/\/\*[\s\S]*?\*\//g, "")
+    .trim()
+
+  // For union types, preserve the structure
+  if (cleanType.includes("|")) {
+    return cleanType
+  }
+
+  // For simple types without complex structures
   if (
-    fullType.includes("|") &&
-    fullType.includes("[") &&
-    fullType.includes("]")
+    !cleanType.includes("Promise<") &&
+    !cleanType.includes("=>") &&
+    !cleanType.includes("{")
   ) {
-    // Clean up import references but maintain the union structure
-    return fullType
-      .replace(/import\([^)]+\)\./g, "")
-      .replace(/\/\*[\s\S]*?\*\//g, "")
-  }
-  // For union types, preserve the structure but clean up imports
-  if (fullType.includes("|")) {
-    return fullType
-      .replace(/import\([^)]+\)\./g, "")
-      .replace(/\/\*[\s\S]*?\*\//g, "")
+    return cleanType
   }
 
-  // For simple types
-  if (!fullType.includes("import(") && !fullType.includes("Promise<")) {
-    return fullType.startsWith("{") && fullType.includes(":")
-      ? "object"
-      : fullType
-  }
   // Handle Promise types
-  if (fullType.startsWith("Promise<")) {
-    const innerType = fullType.match(/Promise<(.+)>/)
-    if (innerType && innerType[1])
+  if (cleanType.startsWith("Promise<")) {
+    const innerType = cleanType.match(/Promise<(.+)>/)
+    if (innerType && innerType[1]) {
       return `Promise<${extractTypeName(innerType[1])}>`
+    }
   }
+
   // Handle function types
-  if (fullType.includes("=>")) {
-    if (fullType.length > 100) return "function"
-    return fullType
-      .replace(/import\([^)]+\)\.[^.\s]+/g, match => {
-        const typeMatch = match.match(/\.([^.\s]+)$/)
-        return typeMatch ? typeMatch[1] : "any"
-      })
-      .replace(/Promise<import\([^)]+\)\.[^.\s]+>/g, match => {
-        const typeMatch = match.match(/\.([^.\s]+)>$/)
-        return typeMatch ? `Promise<${typeMatch[1]}>` : "Promise<any>"
-      })
+  if (cleanType.includes("=>")) {
+    return cleanType
   }
-  // Handle import types
-  if (fullType.includes("import(")) {
-    const matches = fullType.match(/import\([^)]+\)\.([^.\s<>,]+)/)
-    if (matches && matches[1]) return matches[1]
 
-    const lastDotMatch = fullType.match(/\.([^.\s<>,]+)(>|\s|$|,|\|)/)
-    if (lastDotMatch && lastDotMatch[1]) return lastDotMatch[1]
-  }
   // Handle array types
-  if (fullType.endsWith("[]")) {
-    return `${extractTypeName(fullType.slice(0, -2))}[]`
+  if (cleanType.endsWith("[]")) {
+    return `${extractTypeName(cleanType.slice(0, -2))}[]`
   }
-  // Handle complex objects
-  if (fullType.includes("{") && fullType.includes("}")) return "object"
 
-  return fullType
+  // Handle complex objects - return as is for now
+  if (cleanType.includes("{") && cleanType.includes("}")) {
+    return cleanType
+  }
+
+  return cleanType
+}
+
+// Check if a type name exists in the typedefs package
+function isTypeInTypedefs(typeName, coreTypes) {
+  // Handle Promise<Type> - extract the inner type
+  if (typeName.startsWith("Promise<") && typeName.endsWith(">")) {
+    const innerType = typeName.slice(8, -1).trim() // Remove Promise< and >
+    return coreTypes.has(innerType)
+  }
+
+  // Handle Array types - extract the base type
+  if (typeName.endsWith("[]")) {
+    const baseType = typeName.slice(0, -2).trim()
+    return coreTypes.has(baseType)
+  }
+
+  // Handle union types - check if any part is in typedefs
+  if (typeName.includes("|")) {
+    const types = typeName.split("|").map(t => t.trim())
+    return types.some(t => coreTypes.has(t))
+  }
+
+  return coreTypes.has(typeName)
+}
+
+// Check if a type is non-primitive (interface, type alias, or arrow function)
+function isNonPrimitiveType(typeString) {
+  if (!typeString || PRIMITIVE_TYPES.has(typeString)) {
+    return false
+  }
+
+  // Remove whitespace for better pattern matching
+  const cleanType = typeString.trim()
+
+  // Function types (arrow functions)
+  if (cleanType.includes("=>")) {
+    return true
+  }
+
+  // Object types with properties (inline object types)
+  if (cleanType.includes("{") && cleanType.includes(":")) {
+    return true
+  }
+
+  // Complex union types (more than just primitive types)
+  if (cleanType.includes("|")) {
+    const unionTypes = cleanType.split("|").map(t => t.trim())
+    // If any part of the union is not primitive, show definition
+    const hasNonPrimitive = unionTypes.some(
+      t =>
+        !PRIMITIVE_TYPES.has(t) &&
+        !t.match(/^(null|undefined)$/) &&
+        (t.match(/^[A-Z][a-zA-Z0-9]*$/) || t.includes("=>") || t.includes("{"))
+    )
+    if (hasNonPrimitive) return true
+  }
+
+  // Generic types like Promise<SomeType>, Array<CustomType>, etc.
+  if (cleanType.includes("<") && cleanType.includes(">")) {
+    // Extract the inner type from generics
+    const genericMatch = cleanType.match(
+      /^([A-Za-z][a-zA-Z0-9]*)<(.+)>(\[\])?$/
+    )
+    if (genericMatch) {
+      const [, outerType, innerType] = genericMatch
+
+      // If outer type is Promise, Array, etc., check if inner type is non-primitive
+      if (["Promise", "Array"].includes(outerType)) {
+        return isNonPrimitiveType(innerType.trim())
+      }
+
+      // For other generic types, if the outer type starts with uppercase, it's likely custom
+      if (/^[A-Z]/.test(outerType)) {
+        return true
+      }
+    }
+    return true // Any other generic type is likely non-primitive
+  }
+
+  // Tuple types
+  if (
+    cleanType.startsWith("[") &&
+    cleanType.endsWith("]") &&
+    cleanType.includes(",")
+  ) {
+    return true
+  }
+
+  // Mapped types or conditional types
+  if (
+    cleanType.includes("keyof") ||
+    cleanType.includes("extends") ||
+    cleanType.includes("infer")
+  ) {
+    return true
+  }
+
+  // Array types with custom base types
+  if (cleanType.endsWith("[]")) {
+    const baseType = cleanType.slice(0, -2).trim()
+    return isNonPrimitiveType(baseType)
+  }
+
+  // Custom type names (PascalCase starting with uppercase)
+  if (/^[A-Z][a-zA-Z0-9]*$/.test(cleanType)) {
+    return true
+  }
+
+  // Type names with namespaces (e.g., FCL.SomeType)
+  if (/^[A-Z][a-zA-Z0-9]*\.[A-Z][a-zA-Z0-9]*$/.test(cleanType)) {
+    return true
+  }
+
+  // Function types in different formats
+  if (cleanType.match(/^\(.+\)\s*=>/)) {
+    return true
+  }
+
+  // Constructor types
+  if (cleanType.startsWith("new ") && cleanType.includes("=>")) {
+    return true
+  }
+
+  return false
 }
 
 function extractTypeDefinition(sourceFile, node) {
@@ -172,11 +280,11 @@ function findTypeInFile(sourceFile, typeName) {
 }
 
 function getTypeDefinition(typeName, packageName, sourceFilePath) {
-  if (!typeName || BASIC_TYPES.has(typeName) || typeName.includes("=>")) {
+  if (!typeName || PRIMITIVE_TYPES.has(typeName)) {
     return null
   }
 
-  // Handle Promise and array types
+  // Handle Promise and array types - extract base type
   let baseTypeName = typeName
   if (baseTypeName.startsWith("Promise<")) {
     const match = baseTypeName.match(/Promise<(.+)>/)
@@ -195,13 +303,20 @@ function getTypeDefinition(typeName, packageName, sourceFilePath) {
   let definition = null
 
   try {
+    // Create a new project for type searching to avoid conflicts
+    const project = new Project({skipAddingFilesFromTsConfig: true})
+
     // First check source file if provided
     if (sourceFilePath) {
       const fullSourcePath = path.resolve(process.cwd(), "../", sourceFilePath)
       if (fs.existsSync(fullSourcePath)) {
-        const project = new Project({skipAddingFilesFromTsConfig: true})
         const sourceFile = project.addSourceFileAtPath(fullSourcePath)
         definition = findTypeInFile(sourceFile, baseTypeName)
+
+        // If not found in the source file, check its imports and re-exports
+        if (!definition) {
+          definition = searchTypeInImports(sourceFile, baseTypeName, project)
+        }
       }
     }
 
@@ -214,15 +329,22 @@ function getTypeDefinition(typeName, packageName, sourceFilePath) {
         "src"
       )
       if (fs.existsSync(packageSrcDir)) {
-        const project = new Project({skipAddingFilesFromTsConfig: true})
+        // Add all TypeScript files in the package
         project.addSourceFilesAtPaths(`${packageSrcDir}/**/*.ts`)
 
+        // Search through all source files in the package
         for (const sourceFile of project.getSourceFiles()) {
           definition = findTypeInFile(sourceFile, baseTypeName)
           if (definition) break
         }
       }
     }
+
+    // If still not found, search in common Flow workspace packages
+    if (!definition) {
+      definition = searchTypeInWorkspacePackages(baseTypeName, project)
+    }
+
     // Cache the result
     typeCache.set(cacheKey, definition)
     return definition
@@ -231,6 +353,281 @@ function getTypeDefinition(typeName, packageName, sourceFilePath) {
       `Error getting type definition for ${typeName}: ${error.message}`
     )
     return null
+  }
+}
+
+// Helper function to search for types in imports and re-exports
+function searchTypeInImports(sourceFile, typeName, project) {
+  try {
+    // Check import declarations
+    const importDeclarations = sourceFile.getImportDeclarations()
+    for (const importDecl of importDeclarations) {
+      const namedImports = importDecl.getNamedImports()
+      const hasImport = namedImports.some(
+        namedImport => namedImport.getName() === typeName
+      )
+
+      if (hasImport) {
+        const moduleSpecifier = importDecl.getModuleSpecifier()
+        if (moduleSpecifier) {
+          const moduleSpecValue = moduleSpecifier.getLiteralValue()
+          const resolvedFile = resolveImportPath(
+            sourceFile,
+            moduleSpecValue,
+            project
+          )
+          if (resolvedFile) {
+            const definition = findTypeInFile(resolvedFile, typeName)
+            if (definition) return definition
+          }
+        }
+      }
+    }
+
+    // Check export declarations (re-exports)
+    const exportDeclarations = sourceFile.getExportDeclarations()
+    for (const exportDecl of exportDeclarations) {
+      const namedExports = exportDecl.getNamedExports()
+      const hasExport = namedExports.some(
+        namedExport => namedExport.getName() === typeName
+      )
+
+      if (hasExport) {
+        const moduleSpecifier = exportDecl.getModuleSpecifier()
+        if (moduleSpecifier) {
+          const moduleSpecValue = moduleSpecifier.getLiteralValue()
+          const resolvedFile = resolveImportPath(
+            sourceFile,
+            moduleSpecValue,
+            project
+          )
+          if (resolvedFile) {
+            const definition = findTypeInFile(resolvedFile, typeName)
+            if (definition) return definition
+            // Recursively search in the resolved file's imports
+            const recursiveDefinition = searchTypeInImports(
+              resolvedFile,
+              typeName,
+              project
+            )
+            if (recursiveDefinition) return recursiveDefinition
+          }
+        }
+      }
+    }
+
+    return null
+  } catch (error) {
+    console.warn(`Error searching type in imports: ${error.message}`)
+    return null
+  }
+}
+
+// Helper function to resolve import paths
+function resolveImportPath(sourceFile, moduleSpecifier, project) {
+  try {
+    // Handle @onflow/ package imports
+    if (moduleSpecifier.startsWith("@onflow/")) {
+      const packageName = moduleSpecifier.replace("@onflow/", "")
+      const packageDir = path.resolve(process.cwd(), "../", packageName)
+      const packageJsonPath = path.join(packageDir, "package.json")
+
+      if (fs.existsSync(packageJsonPath)) {
+        const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, "utf8"))
+        const entryFile =
+          packageJson.source || packageJson.main || "src/index.ts"
+        const entryFilePath = path.resolve(packageDir, entryFile)
+
+        if (fs.existsSync(entryFilePath)) {
+          let targetFile = project.getSourceFile(entryFilePath)
+          if (!targetFile) {
+            targetFile = project.addSourceFileAtPath(entryFilePath)
+          }
+          return targetFile
+        }
+      }
+    }
+
+    // Handle relative imports
+    else if (
+      moduleSpecifier.startsWith("./") ||
+      moduleSpecifier.startsWith("../")
+    ) {
+      const sourceDir = path.dirname(sourceFile.getFilePath())
+      const resolvedPath = path.resolve(sourceDir, moduleSpecifier)
+
+      // Try different extensions
+      const possiblePaths = [
+        resolvedPath + ".ts",
+        resolvedPath + ".d.ts",
+        resolvedPath + "/index.ts",
+        resolvedPath + "/index.d.ts",
+      ]
+
+      for (const possiblePath of possiblePaths) {
+        if (fs.existsSync(possiblePath)) {
+          let targetFile = project.getSourceFile(possiblePath)
+          if (!targetFile) {
+            targetFile = project.addSourceFileAtPath(possiblePath)
+          }
+          return targetFile
+        }
+      }
+    }
+
+    return null
+  } catch (error) {
+    console.warn(
+      `Error resolving import path ${moduleSpecifier}: ${error.message}`
+    )
+    return null
+  }
+}
+
+// Helper function to search for types in common workspace packages
+function searchTypeInWorkspacePackages(typeName, project) {
+  try {
+    const workspacePackages = ["sdk", "typedefs", "fcl-core", "types"]
+
+    for (const packageName of workspacePackages) {
+      const packageSrcDir = path.resolve(
+        process.cwd(),
+        "../",
+        packageName,
+        "src"
+      )
+      if (fs.existsSync(packageSrcDir)) {
+        try {
+          project.addSourceFilesAtPaths(`${packageSrcDir}/**/*.ts`)
+
+          for (const sourceFile of project.getSourceFiles()) {
+            if (sourceFile.getFilePath().includes(packageName)) {
+              const definition = findTypeInFile(sourceFile, typeName)
+              if (definition) return definition
+            }
+          }
+        } catch (e) {
+          // Continue to next package if this one fails
+          console.warn(
+            `Could not search in package ${packageName}: ${e.message}`
+          )
+        }
+      }
+    }
+
+    return null
+  } catch (error) {
+    console.warn(`Error searching workspace packages: ${error.message}`)
+    return null
+  }
+}
+
+function processTypeForDisplay(
+  typeString,
+  coreTypes,
+  packageName,
+  sourceFilePath
+) {
+  if (!typeString) {
+    return {
+      displayType: typeString,
+      hasLink: false,
+      linkedType: null,
+      typeDefinition: null,
+    }
+  }
+
+  const extractedType = extractTypeName(typeString)
+
+  // Check if type exists in typedefs package
+  if (isTypeInTypedefs(extractedType, coreTypes)) {
+    let linkType = extractedType
+    let linkFragment = extractedType.toLowerCase()
+
+    // Handle Promise<Type> - link to the inner type
+    if (extractedType.startsWith("Promise<") && extractedType.endsWith(">")) {
+      const innerType = extractedType.slice(8, -1).trim()
+      linkFragment = innerType.toLowerCase()
+    }
+
+    // Handle Array types
+    if (extractedType.endsWith("[]")) {
+      const baseType = extractedType.slice(0, -2).trim()
+      linkFragment = baseType.toLowerCase()
+    }
+
+    // Handle TypeScript utility types - link to the inner type
+    const utilityTypeMatch = extractedType.match(
+      /^(Partial|Required|Omit|Pick|Record|Exclude|Extract|NonNullable|ReturnType|Parameters|ConstructorParameters|InstanceType|ThisParameterType|OmitThisParameter|ThisType)<(.+)>$/
+    )
+    if (utilityTypeMatch) {
+      const [, utilityType, innerType] = utilityTypeMatch
+      const firstTypeParam = innerType.split(",")[0].trim()
+      linkFragment = firstTypeParam.toLowerCase()
+    }
+
+    return {
+      displayType: extractedType,
+      hasLink: true,
+      linkedType: `[\`${extractedType}\`](../types#${linkFragment})`,
+      typeDefinition: null,
+    }
+  }
+
+  // Check if it's a non-primitive type that should have a definition shown
+  if (isNonPrimitiveType(extractedType)) {
+    const typeDefinition = getTypeDefinition(
+      extractedType,
+      packageName,
+      sourceFilePath
+    )
+
+    // If we found a definition, use it
+    if (typeDefinition) {
+      return {
+        displayType: extractedType,
+        hasLink: false,
+        linkedType: null,
+        typeDefinition: typeDefinition,
+      }
+    }
+
+    // If no definition found but it's clearly a function type, show it anyway
+    if (extractedType.includes("=>")) {
+      return {
+        displayType: extractedType,
+        hasLink: false,
+        linkedType: null,
+        typeDefinition: extractedType,
+      }
+    }
+
+    // If no definition found but it looks like an interface/type name,
+    // don't show a fallback message - just show nothing
+    if (/^[A-Z][a-zA-Z0-9]*$/.test(extractedType)) {
+      return {
+        displayType: extractedType,
+        hasLink: false,
+        linkedType: null,
+        typeDefinition: null,
+      }
+    }
+
+    // For other complex types, show them as type definitions
+    return {
+      displayType: extractedType,
+      hasLink: false,
+      linkedType: null,
+      typeDefinition: extractedType,
+    }
+  }
+
+  // For primitive types or simple types, just show the type name
+  return {
+    displayType: extractedType,
+    hasLink: false,
+    linkedType: null,
+    typeDefinition: null,
   }
 }
 
@@ -244,88 +641,40 @@ function generateFunctionPage(templates, outputDir, packageName, func) {
 
   // Process parameters
   func.parameters = func.parameters.map(param => {
-    const extractedType = extractTypeName(param.type)
-    const paramName = param.name
+    const typeInfo = processTypeForDisplay(
+      param.type,
+      coreTypes,
+      packageName,
+      func.sourceFilePath
+    )
 
     // Escape MDX characters in parameter description
     const description = param.description
       ? escapeMDXCharacters(param.description)
       : param.description
 
-    // Check if it's a core type or Promise<CoreType>
-    let hasLink = false
-    let linkedType = null
-    let baseType = extractedType
-
-    // Handle Promise<CoreType> case
-    if (baseType.startsWith("Promise<")) {
-      const match = baseType.match(/Promise<(.+)>/)
-      if (match && match[1]) {
-        const innerType = match[1]
-        if (coreTypes.has(innerType)) {
-          hasLink = true
-          linkedType = `[\`${baseType}\`](../types#${innerType.toLowerCase()})`
-        }
-      }
-    }
-    // Handle regular core type
-    else if (coreTypes.has(baseType)) {
-      hasLink = true
-      linkedType = `[\`${baseType}\`](../types#${baseType.toLowerCase()})`
-    }
-
-    // Get type definition if not a core type or Promise<CoreType>
-    const typeDefinition = !hasLink
-      ? getTypeDefinition(extractedType, packageName, func.sourceFilePath)
-      : null
-
     return {
       ...param,
-      name: paramName,
-      type: extractedType,
+      type: typeInfo.displayType,
       description,
-      linkedType,
-      hasLink,
-      typeDefinition,
+      linkedType: typeInfo.linkedType,
+      hasLink: typeInfo.hasLink,
+      typeDefinition: typeInfo.typeDefinition,
     }
   })
 
   // Process return type
-  const extractedReturnType = extractTypeName(func.returnType)
-  let returnHasLink = false
-  let linkedType = null
+  const returnTypeInfo = processTypeForDisplay(
+    func.returnType,
+    coreTypes,
+    packageName,
+    func.sourceFilePath
+  )
 
-  // Handle Promise<CoreType> in return type
-  if (extractedReturnType.startsWith("Promise<")) {
-    const match = extractedReturnType.match(/Promise<(.+)>/)
-    if (match && match[1]) {
-      const innerType = match[1]
-      if (coreTypes.has(innerType)) {
-        returnHasLink = true
-        linkedType = `[\`${extractedReturnType}\`](../types#${innerType.toLowerCase()})`
-      }
-    }
-  }
-  // Handle regular core type in return type
-  else if (coreTypes.has(extractedReturnType)) {
-    returnHasLink = true
-    linkedType = `[\`${extractedReturnType}\`](../types#${extractedReturnType.toLowerCase()})`
-  }
-
-  func.returnType = extractedReturnType
-  func.returnHasLink = returnHasLink
-  func.linkedType = linkedType
-
-  // Only get return type definition if it's not a core type or Promise<CoreType>
-  if (!returnHasLink) {
-    func.returnTypeDefinition = getTypeDefinition(
-      extractedReturnType,
-      packageName,
-      func.sourceFilePath
-    )
-  } else {
-    func.returnTypeDefinition = null
-  }
+  func.returnType = returnTypeInfo.displayType
+  func.returnHasLink = returnTypeInfo.hasLink
+  func.linkedType = returnTypeInfo.linkedType
+  func.returnTypeDefinition = returnTypeInfo.typeDefinition
 
   // Generate the page directly in the package folder instead of in a reference subfolder
   const filename = func.name.charAt(0).toLowerCase() + func.name.slice(1)

@@ -3,15 +3,14 @@ const fs = require("fs")
 const {Project} = require("ts-morph")
 const {generatePage, getFirstWord} = require("./utils")
 
-// Import the same utilities and constants from function page generator
-const BASIC_TYPES = new Set([
+// Basic primitive types that don't need definitions
+const PRIMITIVE_TYPES = new Set([
   "string",
   "number",
   "boolean",
   "object",
   "any",
   "void",
-  "function",
   "unknown",
   "never",
   "null",
@@ -79,65 +78,109 @@ function extractCoreTypes() {
 function extractTypeName(fullType) {
   if (!fullType) return fullType
 
-  // For arrays with union types, preserve the original type structure
+  // Clean up import references and comments
+  let cleanType = fullType
+    .replace(/import\([^)]+\)\./g, "")
+    .replace(/\/\*[\s\S]*?\*\//g, "")
+    .trim()
+
+  // For union types, preserve the structure
+  if (cleanType.includes("|")) {
+    return cleanType
+  }
+
+  // For simple types without complex structures
   if (
-    fullType.includes("|") &&
-    fullType.includes("[") &&
-    fullType.includes("]")
+    !cleanType.includes("Promise<") &&
+    !cleanType.includes("=>") &&
+    !cleanType.includes("{")
   ) {
-    // Clean up import references but maintain the union structure
-    return fullType
-      .replace(/import\([^)]+\)\./g, "")
-      .replace(/\/\*[\s\S]*?\*\//g, "")
-  }
-  // For union types, preserve the structure but clean up imports
-  if (fullType.includes("|")) {
-    return fullType
-      .replace(/import\([^)]+\)\./g, "")
-      .replace(/\/\*[\s\S]*?\*\//g, "")
+    return cleanType
   }
 
-  // For simple types
-  if (!fullType.includes("import(") && !fullType.includes("Promise<")) {
-    return fullType.startsWith("{") && fullType.includes(":")
-      ? "object"
-      : fullType
-  }
   // Handle Promise types
-  if (fullType.startsWith("Promise<")) {
-    const innerType = fullType.match(/Promise<(.+)>/)
-    if (innerType && innerType[1])
+  if (cleanType.startsWith("Promise<")) {
+    const innerType = cleanType.match(/Promise<(.+)>/)
+    if (innerType && innerType[1]) {
       return `Promise<${extractTypeName(innerType[1])}>`
+    }
   }
+
   // Handle function types
-  if (fullType.includes("=>")) {
-    if (fullType.length > 100) return "function"
-    return fullType
-      .replace(/import\([^)]+\)\.[^.\s]+/g, match => {
-        const typeMatch = match.match(/\.([^.\s]+)$/)
-        return typeMatch ? typeMatch[1] : "any"
-      })
-      .replace(/Promise<import\([^)]+\)\.[^.\s]+>/g, match => {
-        const typeMatch = match.match(/\.([^.\s]+)>$/)
-        return typeMatch ? `Promise<${typeMatch[1]}>` : "Promise<any>"
-      })
+  if (cleanType.includes("=>")) {
+    return cleanType
   }
-  // Handle import types
-  if (fullType.includes("import(")) {
-    const matches = fullType.match(/import\([^)]+\)\.([^.\s<>,]+)/)
-    if (matches && matches[1]) return matches[1]
 
-    const lastDotMatch = fullType.match(/\.([^.\s<>,]+)(>|\s|$|,|\|)/)
-    if (lastDotMatch && lastDotMatch[1]) return lastDotMatch[1]
-  }
   // Handle array types
-  if (fullType.endsWith("[]")) {
-    return `${extractTypeName(fullType.slice(0, -2))}[]`
+  if (cleanType.endsWith("[]")) {
+    return `${extractTypeName(cleanType.slice(0, -2))}[]`
   }
-  // Handle complex objects
-  if (fullType.includes("{") && fullType.includes("}")) return "object"
 
-  return fullType
+  // Handle complex objects - return as is for now
+  if (cleanType.includes("{") && cleanType.includes("}")) {
+    return cleanType
+  }
+
+  return cleanType
+}
+
+// Check if a type name exists in the typedefs package
+function isTypeInTypedefs(typeName, coreTypes) {
+  // Handle Promise<Type> - extract the inner type
+  if (typeName.startsWith("Promise<") && typeName.endsWith(">")) {
+    const innerType = typeName.slice(8, -1).trim() // Remove Promise< and >
+    return coreTypes.has(innerType)
+  }
+
+  // Handle Array types - extract the base type
+  if (typeName.endsWith("[]")) {
+    const baseType = typeName.slice(0, -2).trim()
+    return coreTypes.has(baseType)
+  }
+
+  // Handle union types - check if any part is in typedefs
+  if (typeName.includes("|")) {
+    const types = typeName.split("|").map(t => t.trim())
+    return types.some(t => coreTypes.has(t))
+  }
+
+  return coreTypes.has(typeName)
+}
+
+// Check if a type is non-primitive (interface, type alias, or arrow function)
+function isNonPrimitiveType(typeString) {
+  if (!typeString || PRIMITIVE_TYPES.has(typeString)) {
+    return false
+  }
+
+  // Function types (arrow functions)
+  if (typeString.includes("=>")) {
+    return true
+  }
+
+  // Object types with properties
+  if (typeString.includes("{") && typeString.includes(":")) {
+    return true
+  }
+
+  // Complex union types
+  if (typeString.includes("|") && typeString.length > 20) {
+    return true
+  }
+
+  // If it's not a primitive type and is a single word (likely an interface/type alias name)
+  // that starts with uppercase (TypeScript convention), it's probably a custom type
+  if (/^[A-Z][a-zA-Z0-9]*(\[\])?$/.test(typeString)) {
+    return true
+  }
+
+  // Generic types like Promise<SomeType> where SomeType is not primitive
+  if (typeString.startsWith("Promise<") && typeString.endsWith(">")) {
+    const innerType = typeString.slice(8, -1).trim()
+    return isNonPrimitiveType(innerType)
+  }
+
+  return false
 }
 
 function extractTypeDefinition(sourceFile, node) {
@@ -171,11 +214,11 @@ function findTypeInFile(sourceFile, typeName) {
 }
 
 function getTypeDefinition(typeName, packageName, sourceFilePath) {
-  if (!typeName || BASIC_TYPES.has(typeName) || typeName.includes("=>")) {
+  if (!typeName || PRIMITIVE_TYPES.has(typeName)) {
     return null
   }
 
-  // Handle Promise and array types
+  // Handle Promise and array types - extract base type
   let baseTypeName = typeName
   if (baseTypeName.startsWith("Promise<")) {
     const match = baseTypeName.match(/Promise<(.+)>/)
@@ -222,6 +265,7 @@ function getTypeDefinition(typeName, packageName, sourceFilePath) {
         }
       }
     }
+
     // Cache the result
     typeCache.set(cacheKey, definition)
     return definition
@@ -233,6 +277,73 @@ function getTypeDefinition(typeName, packageName, sourceFilePath) {
   }
 }
 
+function processTypeForDisplay(
+  typeString,
+  coreTypes,
+  packageName,
+  sourceFilePath
+) {
+  if (!typeString) {
+    return {
+      displayType: typeString,
+      hasLink: false,
+      linkedType: null,
+      typeDefinition: null,
+    }
+  }
+
+  const extractedType = extractTypeName(typeString)
+
+  // Check if type exists in typedefs package
+  if (isTypeInTypedefs(extractedType, coreTypes)) {
+    let linkType = extractedType
+    let linkFragment = extractedType.toLowerCase()
+
+    // Handle Promise<Type> - link to the inner type
+    if (extractedType.startsWith("Promise<") && extractedType.endsWith(">")) {
+      const innerType = extractedType.slice(8, -1).trim()
+      linkFragment = innerType.toLowerCase()
+    }
+
+    // Handle Array types
+    if (extractedType.endsWith("[]")) {
+      const baseType = extractedType.slice(0, -2).trim()
+      linkFragment = baseType.toLowerCase()
+    }
+
+    return {
+      displayType: extractedType,
+      hasLink: true,
+      linkedType: `[\`${extractedType}\`](../types#${linkFragment})`,
+      typeDefinition: null,
+    }
+  }
+
+  // Check if it's a non-primitive type that should have a definition shown
+  if (isNonPrimitiveType(extractedType)) {
+    const typeDefinition = getTypeDefinition(
+      extractedType,
+      packageName,
+      sourceFilePath
+    )
+
+    return {
+      displayType: extractedType,
+      hasLink: false,
+      linkedType: null,
+      typeDefinition: typeDefinition || extractedType, // Show the type itself if no definition found
+    }
+  }
+
+  // For primitive types or simple types, just show the type name
+  return {
+    displayType: extractedType,
+    hasLink: false,
+    linkedType: null,
+    typeDefinition: null,
+  }
+}
+
 function processFunction(func, packageName, coreTypes) {
   // Escape MDX characters in description
   if (func.description) {
@@ -241,88 +352,40 @@ function processFunction(func, packageName, coreTypes) {
 
   // Process parameters
   func.parameters = func.parameters.map(param => {
-    const extractedType = extractTypeName(param.type)
-    const paramName = param.name
+    const typeInfo = processTypeForDisplay(
+      param.type,
+      coreTypes,
+      packageName,
+      func.sourceFilePath
+    )
 
     // Escape MDX characters in parameter description
     const description = param.description
       ? escapeMDXCharacters(param.description)
       : param.description
 
-    // Check if it's a core type or Promise<CoreType>
-    let hasLink = false
-    let linkedType = null
-    let baseType = extractedType
-
-    // Handle Promise<CoreType> case
-    if (baseType.startsWith("Promise<")) {
-      const match = baseType.match(/Promise<(.+)>/)
-      if (match && match[1]) {
-        const innerType = match[1]
-        if (coreTypes.has(innerType)) {
-          hasLink = true
-          linkedType = `[\`${baseType}\`](../types#${innerType.toLowerCase()})`
-        }
-      }
-    }
-    // Handle regular core type
-    else if (coreTypes.has(baseType)) {
-      hasLink = true
-      linkedType = `[\`${baseType}\`](../types#${baseType.toLowerCase()})`
-    }
-
-    // Get type definition if not a core type or Promise<CoreType>
-    const typeDefinition = !hasLink
-      ? getTypeDefinition(extractedType, packageName, func.sourceFilePath)
-      : null
-
     return {
       ...param,
-      name: paramName,
-      type: extractedType,
+      type: typeInfo.displayType,
       description,
-      linkedType,
-      hasLink,
-      typeDefinition,
+      linkedType: typeInfo.linkedType,
+      hasLink: typeInfo.hasLink,
+      typeDefinition: typeInfo.typeDefinition,
     }
   })
 
   // Process return type
-  const extractedReturnType = extractTypeName(func.returnType)
-  let returnHasLink = false
-  let linkedType = null
+  const returnTypeInfo = processTypeForDisplay(
+    func.returnType,
+    coreTypes,
+    packageName,
+    func.sourceFilePath
+  )
 
-  // Handle Promise<CoreType> in return type
-  if (extractedReturnType.startsWith("Promise<")) {
-    const match = extractedReturnType.match(/Promise<(.+)>/)
-    if (match && match[1]) {
-      const innerType = match[1]
-      if (coreTypes.has(innerType)) {
-        returnHasLink = true
-        linkedType = `[\`${extractedReturnType}\`](../types#${innerType.toLowerCase()})`
-      }
-    }
-  }
-  // Handle regular core type in return type
-  else if (coreTypes.has(extractedReturnType)) {
-    returnHasLink = true
-    linkedType = `[\`${extractedReturnType}\`](../types#${extractedReturnType.toLowerCase()})`
-  }
-
-  func.returnType = extractedReturnType
-  func.returnHasLink = returnHasLink
-  func.linkedType = linkedType
-
-  // Only get return type definition if it's not a core type or Promise<CoreType>
-  if (!returnHasLink) {
-    func.returnTypeDefinition = getTypeDefinition(
-      extractedReturnType,
-      packageName,
-      func.sourceFilePath
-    )
-  } else {
-    func.returnTypeDefinition = null
-  }
+  func.returnType = returnTypeInfo.displayType
+  func.returnHasLink = returnTypeInfo.hasLink
+  func.linkedType = returnTypeInfo.linkedType
+  func.returnTypeDefinition = returnTypeInfo.typeDefinition
 
   return func
 }
