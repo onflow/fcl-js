@@ -62,10 +62,14 @@ import { functionName } from "@onflow/{{packageName}}"
 
 ## API Reference
 
-This section contains documentation for all of the functions in the {{packageName}} package.
+This section contains documentation for all of the functions and namespaces in the {{packageName}} package.
 
-{{#each functions}}
-- [{{name}}](./{{lowercase_name}}.md){{#if description}} - {{description}}{{/if}}
+{{#each allApiItems}}
+{{#if isNamespace}}
+- [{{displayName}}]({{filePath}}) (namespace){{#if displayDescription}} - {{displayDescription}}{{/if}}
+{{else}}
+- [{{displayName}}]({{filePath}}){{#if displayDescription}} - {{displayDescription}}{{/if}}
+{{/if}}
 {{/each}}
 
 --- 

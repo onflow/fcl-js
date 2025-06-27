@@ -1,0 +1,81 @@
+---
+sidebar_position: 1
+title: "{{namespaceName}}"
+description: "{{namespaceDescription}}"
+---
+
+<!-- THIS DOCUMENT IS AUTO-GENERATED FROM [onflow/{{packageName}}](https://github.com/onflow/fcl-js/tree/master/packages/{{packageName}}). DO NOT EDIT MANUALLY -->
+
+# {{namespaceName}}
+
+## Overview
+
+{{namespaceDescription}}
+
+## Functions
+
+{{#each functions}}
+### {{name}}
+
+{{#if description}}
+{{{description}}}
+{{/if}}
+
+#### Import
+
+You can import the entire package and access the function:
+
+```typescript
+import * as {{../packageFirstWord}} from "@onflow/{{../packageName}}"
+
+{{../packageFirstWord}}.{{../namespaceName}}.{{name}}({{#each parameters}}{{#unless @first}}, {{/unless}}{{name}}{{/each}})
+```
+
+Or import the namespace directly:
+
+```typescript
+import { {{../namespaceName}} } from "@onflow/{{../packageName}}"
+
+{{../namespaceName}}.{{name}}({{#each parameters}}{{#unless @first}}, {{/unless}}{{name}}{{/each}})
+```
+
+{{#if customExample}}
+#### Usage
+
+```typescript
+{{{customExample}}}
+```
+{{/if}}
+
+{{#if parameters.length}}
+#### Parameters
+
+{{#each parameters}}
+##### `{{name}}`{{#unless required}} (optional){{/unless}}
+
+- Type: {{#if hasLink}}{{{linkedType}}}{{else}}`{{{type}}}`{{/if}}
+{{#if description}}
+- Description: {{{description}}}
+{{/if}}
+{{#if typeDefinition}}
+
+```typescript
+{{{typeDefinition}}}
+```
+{{/if}}
+
+{{/each}}
+{{/if}}
+#### Returns
+
+{{#if returnHasLink}}{{{linkedType}}}{{else}}`{{{returnType}}}`{{/if}}
+{{#if returnTypeDefinition}}
+
+```typescript
+{{{returnTypeDefinition}}}
+```
+{{/if}}
+
+{{/each}}
+
+---

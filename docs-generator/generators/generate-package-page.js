@@ -37,29 +37,61 @@ function getPackageDescription(packageName) {
   return ""
 }
 
-function generatePackagePage(templates, outputDir, packageName, functions) {
+function generatePackagePage(
+  templates,
+  outputDir,
+  packageName,
+  functions,
+  namespaces = [],
+  allNamespaceFunctions = []
+) {
   const configPath = path.resolve(process.cwd(), "docs-generator.config.js")
   const {displayName, sections, extra} = parseConfigCustomData(configPath)
   const packageDescription = getPackageDescription(packageName)
 
+  // Combine regular functions with namespace functions for the API reference
+  const allFunctions = [...functions, ...allNamespaceFunctions]
+
   // Deduplicate functions with the same name
   const uniqueFunctions = []
   const seenFunctionNames = new Set()
-  functions.forEach(func => {
+  allFunctions.forEach(func => {
     if (!seenFunctionNames.has(func.name)) {
       seenFunctionNames.add(func.name)
       uniqueFunctions.push(func)
     }
   })
-  // Sort functions alphabetically, case insensitively
-  uniqueFunctions.sort((a, b) =>
-    a.name.toLowerCase().localeCompare(b.name.toLowerCase())
+
+  // Process namespaces for display
+  const processedNamespaces = namespaces.map(namespace => ({
+    ...namespace,
+    displayDescription: truncateDescription(namespace.description), // Only truncate for display
+    type: "namespace", // Mark as namespace for sorting
+    isNamespace: true, // Add boolean flag for template
+    displayName: namespace.name,
+    filePath: `./${namespace.name.charAt(0).toLowerCase() + namespace.name.slice(1)}.md`,
+  }))
+
+  // Process functions for display
+  const processedFunctions = uniqueFunctions.map(func => ({
+    ...func,
+    lowercase_name: func.name.charAt(0).toLowerCase() + func.name.slice(1),
+    displayDescription: truncateDescription(func.description), // Only truncate for display
+    type: "function", // Mark as function for sorting
+    isNamespace: false, // Add boolean flag for template
+    displayName: func.namespace ? `${func.namespace}.${func.name}` : func.name,
+    filePath: func.namespace
+      ? `./${func.namespace.charAt(0).toLowerCase() + func.namespace.slice(1)}.md#${func.name}`
+      : `./${func.name.charAt(0).toLowerCase() + func.name.slice(1)}.md`,
+  }))
+
+  // Combine functions and namespaces for unified sorting
+  const allApiItems = [...processedFunctions, ...processedNamespaces]
+
+  // Sort all items alphabetically, case insensitively
+  allApiItems.sort((a, b) =>
+    a.displayName.toLowerCase().localeCompare(b.displayName.toLowerCase())
   )
-  // Add lowercase_name property and truncate descriptions for use in templates
-  uniqueFunctions.forEach(func => {
-    func.lowercase_name = func.name.charAt(0).toLowerCase() + func.name.slice(1)
-    func.description = truncateDescription(func.description)
-  })
 
   generatePage(templates, "package", path.join(outputDir, "index.md"), {
     packageName,
@@ -71,7 +103,9 @@ function generatePackagePage(templates, outputDir, packageName, functions) {
     customRequirements: sections.requirements,
     customImporting: sections.importing,
     extra,
-    functions: uniqueFunctions,
+    functions: uniqueFunctions, // Keep original functions with full descriptions for individual pages
+    namespaces: processedNamespaces,
+    allApiItems, // Use processed items with truncated descriptions for the index
   })
 }
 
