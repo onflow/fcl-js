@@ -1,4 +1,4 @@
-import {config} from "@onflow/config"
+import {ConfigService} from "./context"
 
 /**
  * @description Extracts configuration values that match a given regular expression pattern from the Flow configuration.
@@ -18,9 +18,12 @@ import {config} from "@onflow/config"
  * const walletConfig = await configLens(/^wallet\./)
  * // Filters keys like "wallet.discovery.api" and returns simplified object
  */
-export async function configLens(regex: RegExp): Promise<Record<string, any>> {
+export async function configLens(
+  config: ConfigService,
+  regex: RegExp
+): Promise<Record<string, any>> {
   return Object.fromEntries(
-    Object.entries(await config().where(regex)).map(([key, value]) => [
+    Object.entries(await config.where(regex)).map(([key, value]) => [
       key.replace(regex, ""),
       value,
     ])

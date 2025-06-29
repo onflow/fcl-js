@@ -1,13 +1,17 @@
 import {invariant} from "@onflow/util-invariant"
-import * as sdk from "@onflow/sdk"
 import {isRequired, isObject, isString} from "../../utils/is"
+import {FCLContext} from "../../context"
 
 export interface PreOptions {
   cadence?: string
   template?: any
 }
 
-async function pre(type: string, opts: PreOptions): Promise<void> {
+async function pre(
+  context: FCLContext,
+  type: string,
+  opts: PreOptions
+): Promise<void> {
   // prettier-ignore
   invariant(isRequired(opts), `${type}(opts) -- opts is required`)
   // prettier-ignore
@@ -23,7 +27,7 @@ async function pre(type: string, opts: PreOptions): Promise<void> {
   )
   // prettier-ignore
   invariant(
-    await sdk.config().get("accessNode.api"),
+    await context.config.get("accessNode.api"),
     `${type}(opts) -- Required value for "accessNode.api" not defined in config. See: ${"https://github.com/onflow/flow-js-sdk/blob/master/packages/fcl/src/exec/query.md#configuration"}`
   )
 }
@@ -50,8 +54,11 @@ async function pre(type: string, opts: PreOptions): Promise<void> {
  *   template: transferFlowTemplate
  * })
  */
-export async function preMutate(opts: PreOptions): Promise<void> {
-  return pre("mutate", opts)
+export async function preMutate(
+  context: FCLContext,
+  opts: PreOptions
+): Promise<void> {
+  return pre(context, "mutate", opts)
 }
 
 /**
@@ -76,6 +83,9 @@ export async function preMutate(opts: PreOptions): Promise<void> {
  *   template: getAccountTemplate
  * })
  */
-export async function preQuery(opts: PreOptions): Promise<void> {
-  return pre("query", opts)
+export async function preQuery(
+  context: FCLContext,
+  opts: PreOptions
+): Promise<void> {
+  return pre(context, "query", opts)
 }

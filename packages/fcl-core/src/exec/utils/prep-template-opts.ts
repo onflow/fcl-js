@@ -1,7 +1,8 @@
 import {retrieve} from "../../document/document"
 import {deriveCadenceByNetwork} from "../../interaction-template-utils/derive-cadence-by-network/derive-cadence-by-network"
 import {isString} from "../../utils/is"
-import {getChainId} from "../../utils"
+import {FCLContext} from "../../context"
+import {createGetChainId} from "../../utils"
 
 export interface TemplateOptions {
   cadence?: string
@@ -40,17 +41,18 @@ export interface TemplateOptions {
  * })
  */
 export async function prepTemplateOpts(
+  context: FCLContext,
   opts: TemplateOptions
 ): Promise<TemplateOptions> {
   if (isString(opts?.template)) {
-    opts.template = await retrieve({url: opts?.template})
+    opts.template = await retrieve(context, {url: opts?.template})
   }
 
   const cadence =
     opts.cadence ||
     (await deriveCadenceByNetwork({
       template: opts.template,
-      network: await getChainId(opts),
+      network: await createGetChainId(context)(opts),
     }))
 
   opts.cadence = cadence
