@@ -1,6 +1,6 @@
 import {fetchChainId} from "./fetch-chain-id"
 import {log} from "@onflow/util-logger"
-import {FCLContext} from "../../context"
+import {ConfigService} from "../../context"
 
 // Cache of chainId promises for each access node value
 // key: access node, value: chainId promise
@@ -15,7 +15,7 @@ export interface GetChainIdOptions {
   [key: string]: any
 }
 
-export function createGetChainId(context: FCLContext) {
+export function createGetChainId({config}: {config: ConfigService}) {
   /**
    * @description
    * Gets the chain ID if its set, otherwise gets the chain ID from the access node
@@ -29,8 +29,8 @@ export function createGetChainId(context: FCLContext) {
    * getChainId()
    */
   async function getChainId(opts: GetChainIdOptions = {}): Promise<string> {
-    let flowNetworkCfg: string | null = await context.config.get("flow.network")
-    let envCfg: string | null = await context.config.get("env")
+    let flowNetworkCfg: string | null = await config.get("flow.network")
+    let envCfg: string | null = await config.get("env")
 
     /* 
     TODO: Add deprecation warning for flow.network config key
@@ -71,7 +71,7 @@ export function createGetChainId(context: FCLContext) {
       hasWarnedEnv = true
     }
 
-    const accessNode = opts.node || (await context.config.get("accessNode.api"))
+    const accessNode = opts.node || (await config.get("accessNode.api"))
     if (!accessNode) {
       // Fall back to deprecated flow.network and env config keys
       // This probably should have been done before trying to fetch the chainId from the access node
