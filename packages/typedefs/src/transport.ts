@@ -100,7 +100,16 @@ type SubscribeFn = <T extends SubscriptionTopic>(
 
 type SendFn = (ix: Interaction, context: IContext, opts: IOpts) => void
 
+/**
+ * Transport interface for the Flow SDK that provides methods for sending interactions and subscribing to data
+ */
 export type SdkTransport = {
+  /**
+   * Function to send an interaction to the Flow blockchain
+   */
   send: SendFn
+  /**
+   * Function to subscribe to real-time data from the Flow blockchain
+   */
   subscribe: SubscribeFn
 }

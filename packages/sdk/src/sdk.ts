@@ -110,7 +110,13 @@ export {resolveVoucherIntercept} from "./resolve/resolve-voucher-intercept"
 
 export {config} from "@onflow/config"
 
-// Deprecated
+/**
+ * Legacy function for setting parameters on an interaction.
+ *
+ * @deprecated This function has been removed. Use `args` instead.
+ *
+ * @param params The parameters to set
+ */
 export const params = (params: never) =>
   logger.log.deprecate({
     pkg: "FCL/SDK",
@@ -119,6 +125,14 @@ export const params = (params: never) =>
       "https://github.com/onflow/flow-js-sdk/blob/master/packages/sdk/TRANSITIONS.md#0001-deprecate-params",
     level: logger.LEVELS.error,
   })
+
+/**
+ * Legacy function for setting a single parameter on an interaction.
+ *
+ * @deprecated This function has been removed. Use `arg` instead.
+ *
+ * @param params The parameter to set
+ */
 export const param = (params: never) =>
   logger.log.deprecate({
     pkg: "FCL/SDK",

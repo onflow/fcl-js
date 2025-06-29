@@ -13,6 +13,12 @@ import {
   findOutsideSigners,
 } from "./voucher"
 
+/**
+ * Resolves signatures for a transaction by coordinating the signing process for inside and outside signers.
+ *
+ * @param ix The interaction object containing transaction details
+ * @returns The interaction object with resolved signatures
+ */
 export async function resolveSignatures(ix: Interaction) {
   if (isTransaction(ix)) {
     try {
@@ -63,6 +69,14 @@ function fetchSignature(ix: Interaction, payload: string) {
   }
 }
 
+/**
+ * Builds a signable object that can be signed by an authorization function.
+ *
+ * @param acct The account to create the signable for
+ * @param message The encoded message to be signed
+ * @param ix The interaction object containing transaction details
+ * @returns A signable object conforming to the FCL signable standard
+ */
 export function buildSignable(
   acct: InteractionAccount,
   message: string,
