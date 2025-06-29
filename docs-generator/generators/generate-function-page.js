@@ -557,6 +557,45 @@ function processTypeForDisplay(
 
   const extractedType = extractTypeName(typeString)
 
+  // Handle union types specially
+  if (extractedType.includes("|")) {
+    const unionTypes = extractedType.split("|").map(t => t.trim())
+    let hasAnyLink = false
+
+    const processedTypes = unionTypes.map(type => {
+      if (isTypeInTypedefs(type, coreTypes)) {
+        hasAnyLink = true
+        let linkType = type
+        let linkFragment = type.toLowerCase()
+
+        // Handle Promise<Type> - link to the inner type
+        if (type.startsWith("Promise<") && type.endsWith(">")) {
+          const innerType = type.slice(8, -1).trim()
+          linkFragment = innerType.toLowerCase()
+        }
+
+        // Handle Array types
+        if (type.endsWith("[]")) {
+          const baseType = type.slice(0, -2).trim()
+          linkFragment = baseType.toLowerCase()
+        }
+
+        return `[\`${type}\`](../types#${linkFragment})`
+      } else {
+        return `\`${type}\``
+      }
+    })
+
+    if (hasAnyLink) {
+      return {
+        displayType: extractedType,
+        hasLink: true,
+        linkedType: processedTypes.join(" | "),
+        typeDefinition: null,
+      }
+    }
+  }
+
   // Check if type exists in typedefs package
   if (isTypeInTypedefs(extractedType, coreTypes)) {
     let linkType = extractedType
