@@ -1,9 +1,9 @@
-import type {CurrentUserService, CurrentUserServiceApi} from "../current-user"
-import {config} from "@onflow/config"
+import {createUser, type CurrentUserServiceApi} from "../current-user"
 import {StorageProvider} from "../fcl-core"
+import {createSdkClient, SdkClientOptions} from "@onflow/sdk/types/sdk-client"
 
-interface FCLCoreConfigOptions {
-  accessNodeUrl?: string
+interface FCLConfig extends SdkClientOptions {
+  platform: string
   discoveryWallet?: string
   discoveryWalletMethod?: string
   defaultComputeLimit?: number
@@ -11,7 +11,25 @@ interface FCLCoreConfigOptions {
   serviceOpenIdScopes?: string[]
   walletconnectProjectId?: string
   walletconnectDisableNotifications?: boolean
-  storageProvider?: StorageProvider
+  storage: StorageProvider
+  discovery?: {
+    // TODO (jribbink): Define the type for execStrategy
+    execStrategy?: (...args: any[]) => any
+  }
+}
+
+// Define a compatibility config interface for backward compatibility
+export interface ConfigService {
+  get: (key: string, defaultValue?: any) => Promise<any>
+  put: (key: string, value: any) => Promise<ConfigService>
+  update: (
+    key: string,
+    updateFn: (oldValue: any) => any
+  ) => Promise<ConfigService>
+  delete: (key: string) => Promise<ConfigService>
+  where: (pattern: RegExp) => Promise<Record<string, any>>
+  subscribe: (callback: (key: string, value: any) => void) => () => void
+  all: () => Promise<Record<string, any>>
 }
 
 /**
@@ -19,154 +37,103 @@ interface FCLCoreConfigOptions {
  */
 export interface FCLContext {
   /** Configuration service for network settings, endpoints, etc. */
-  config: ReturnType<typeof config>
   currentUser: CurrentUserServiceApi
-  //storage: StorageProvider
-}
-
-/**
- * FCL Instance binds context with user state and operations
- * This solves the bidirectional dependency issue between user and mutate()
- */
-export interface FCLInstance {
-  /** The context this instance operates within */
-  context: FCLContext
-
-  /** Current user service bound to this context */
-  currentUser: CurrentUserService
-
-  /** Mutate function bound to both context and currentUser */
-  mutate: (opts?: any) => Promise<string>
-
-  /** Query function bound to context */
-  query: (opts?: any) => Promise<any>
-
-  /** Send function bound to context */
-  send: (opts?: any) => Promise<any>
-
-  /** Decode function bound to context */
-  decode: (response: any) => any
+  sdk: ReturnType<typeof createSdkClient>
+  storage: StorageProvider
+  /** Legacy config compatibility layer */
+  config: ConfigService
 }
 
 /**
  * Factory function to create an FCL context
  */
-export function createFCLContext(
-  options: {
-    config?: Partial<ConfigService>
-    network?: Partial<FCLContext["network"]>
-    storage?: Partial<FCLContext["storage"]>
-    serviceRegistry?: Partial<FCLContext["serviceRegistry"]>
-  } = {}
-): FCLContext {
-  // Default storage implementation (can be overridden)
-  const defaultStorage: FCLContext["storage"] = {
-    get: async (key: string) => {
-      if (typeof window !== "undefined" && window.localStorage) {
-        return window.localStorage.getItem(key)
-      }
-      return null
+export function createFCLContext(config: FCLConfig): FCLContext {
+  const currentUser = createUser({
+    platform: config.platform,
+    getStorageProvider: async () => config.storage,
+    discovery: {
+      execStrategy: config.discovery?.execStrategy,
     },
-    set: async (key: string, value: string) => {
-      if (typeof window !== "undefined" && window.localStorage) {
-        window.localStorage.setItem(key, value)
-      }
-    },
-    remove: async (key: string) => {
-      if (typeof window !== "undefined" && window.localStorage) {
-        window.localStorage.removeItem(key)
-      }
-    },
+  })
+
+  // Create internal config store based on provided typed config
+  const configStore = new Map<string, any>([
+    ["platform", config.platform],
+    ["discoveryWallet", config.discoveryWallet],
+    ["discoveryWalletMethod", config.discoveryWalletMethod],
+    ["defaultComputeLimit", config.defaultComputeLimit],
+    ["flowNetwork", config.flowNetwork],
+    ["serviceOpenIdScopes", config.serviceOpenIdScopes],
+    ["walletconnectProjectId", config.walletconnectProjectId],
+    [
+      "walletconnectDisableNotifications",
+      config.walletconnectDisableNotifications,
+    ],
+    ["accessNode.api", config.accessNode],
+    ["fcl.limit", config.computeLimit],
+  ])
+
+  // Filter out undefined values
+  for (const [key, value] of configStore.entries()) {
+    if (value === undefined) {
+      configStore.delete(key)
+    }
   }
 
-  // Default service registry implementation
-  const defaultServiceRegistry: FCLContext["serviceRegistry"] = {
-    services: new Map(),
-    discover: async () => [],
-    register: (service: any) => {
-      // Implementation would register service
+  // Create subscribers registry
+  const subscribers = new Set<(key: string, value: any) => void>()
+
+  // Create compatibility config layer
+  const compatConfig: ConfigService = {
+    get: async (key: string) => configStore.get(key),
+    put: async (key: string, value: any) => {
+      configStore.set(key, value)
+      subscribers.forEach(fn => fn(key, value))
+      return compatConfig
     },
-    unregister: (serviceId: string) => {
-      // Implementation would unregister service
+    update: async (key: string, updateFn: (oldValue: any) => any) => {
+      const oldValue = configStore.get(key)
+      const newValue = updateFn(oldValue)
+      configStore.set(key, newValue)
+      subscribers.forEach(fn => fn(key, newValue))
+      return compatConfig
+    },
+    delete: async (key: string) => {
+      configStore.delete(key)
+      subscribers.forEach(fn => fn(key, undefined))
+      return compatConfig
+    },
+    where: async (pattern: RegExp) => {
+      const result: Record<string, any> = {}
+      for (const [key, value] of configStore.entries()) {
+        if (pattern.test(key)) {
+          result[key] = value
+        }
+      }
+      return result
+    },
+    subscribe: (callback: (key: string, value: any) => void) => {
+      subscribers.add(callback)
+      return () => {
+        subscribers.delete(callback)
+      }
+    },
+    all: async () => {
+      return Object.fromEntries(configStore.entries())
     },
   }
 
   return {
-    config: (options.config as ConfigService) || ({} as ConfigService),
-    network: {
-      id: "mainnet",
-      endpoint: "https://rest-mainnet.onflow.org",
-      name: "Flow Mainnet",
-      ...options.network,
-    },
-    storage: {
-      ...defaultStorage,
-      ...options.storage,
-    },
-    serviceRegistry: {
-      ...defaultServiceRegistry,
-      ...options.serviceRegistry,
-    },
+    storage: config.storage,
+    currentUser: currentUser,
+    sdk: createSdkClient({
+      accessNode: config.accessNode,
+      transport: config.transport,
+      computeLimit: config.computeLimit,
+      customResolver: config.customResolver,
+      customDecoders: config.customDecoders,
+      debug: config.debug,
+    }),
+    config: compatConfig,
   }
-}
-
-/**
- * Factory function to create an FCL instance with bound context and user
- */
-export function createFCLInstance(context: FCLContext): FCLInstance {
-  // Import these dynamically to avoid circular dependencies
-  const {createCurrentUser} = require("../current-user")
-  const {getMutate} = require("../exec/mutate")
-  const {getQuery} = require("../exec/query")
-  const {getSend} = require("../exec/send")
-  const {getDecode} = require("../exec/decode")
-
-  // Create currentUser that consumes the context
-  const currentUser = createCurrentUser(context)
-
-  // Create bound functions
-  const mutate = getMutate(currentUser)
-  const query = getQuery(context)
-  const send = getSend(context)
-  const decode = getDecode(context)
-
-  return {
-    context,
-    currentUser,
-    mutate,
-    query,
-    send,
-    decode,
-  }
-}
-
-/**
- * Default global instance for backward compatibility
- * This allows existing code to continue working while new code can use explicit contexts
- */
-let defaultInstance: FCLInstance | null = null
-
-/**
- * Get or create the default FCL instance
- */
-export function getDefaultInstance(): FCLInstance {
-  if (!defaultInstance) {
-    const defaultContext = createFCLContext()
-    defaultInstance = createFCLInstance(defaultContext)
-  }
-  return defaultInstance
-}
-
-/**
- * Set a new default instance (useful for testing or explicit configuration)
- */
-export function setDefaultInstance(instance: FCLInstance): void {
-  defaultInstance = instance
-}
-
-/**
- * Reset the default instance to null (useful for testing)
- */
-export function resetDefaultInstance(): void {
-  defaultInstance = null
 }

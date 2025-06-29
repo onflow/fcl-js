@@ -31,14 +31,11 @@ export interface CurrentUserConfig {
   platform: string
   discovery?: object | undefined
   getStorageProvider?: () => Promise<StorageProvider>
+  storageKey?: string
 }
 
 export interface CurrentUserServiceApi {
-  authenticate: ({
-    service,
-    redir,
-    forceReauth,
-  }?: AuthenticationOptions) => Promise<CurrentUser>
+  authenticate: (opts: AuthenticationOptions) => Promise<CurrentUser>
   unauthenticate: () => void
   authorization: (account: Account) => Promise<Account>
   signUserMessage: (msg: string) => Promise<CompositeSignature[]>
@@ -660,7 +657,7 @@ const createSignUserMessage =
  *
  * console.log("Message signatures:", signatures)
  */
-const createCurrentUser = (config: CurrentUserConfig): CurrentUserService => {
+const createUser = (config: CurrentUserConfig): CurrentUserService => {
   const currentUser = {
     authenticate: createAuthenticate(config),
     unauthenticate: createUnauthenticate(config),
@@ -682,6 +679,6 @@ const createCurrentUser = (config: CurrentUserConfig): CurrentUserService => {
 /**
  * @deprecated Use createCurrentUser instead. This is kept for backward compatibility.
  */
-const getCurrentUser = createCurrentUser
+const getCurrentUser = createUser
 
-export {createCurrentUser, getCurrentUser}
+export {createUser, getCurrentUser}

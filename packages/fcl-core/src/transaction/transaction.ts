@@ -21,7 +21,7 @@ import {
 } from "@onflow/sdk"
 import {TransactionError} from "./transaction-error"
 import {transaction as legacyTransaction} from "./legacy-polling"
-import {getChainId} from "../utils"
+import {createGetChainId} from "../utils"
 
 const FLOW_EMULATOR = "local"
 

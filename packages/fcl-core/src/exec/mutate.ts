@@ -74,15 +74,15 @@ export const createMutate = (context: FCLContext) => {
   const mutate = async (opts: MutateOptions = {}): Promise<string> => {
     var txid
     try {
-      await preMutate(opts)
-      opts = await prepTemplateOpts(opts)
+      await preMutate(context, opts)
+      opts = await prepTemplateOpts(context, opts)
       // Allow for a config to overwrite the authorization function.
       // prettier-ignore
       const authz: any = await context
         .config
         .get("fcl.authz", context.currentUser.authorization)
 
-      txid = sdk
+      txid = context.sdk
         .send([
           sdk.transaction(opts.cadence!),
 
@@ -99,7 +99,7 @@ export const createMutate = (context: FCLContext) => {
           // opts.authorizations > [opts.authz > authz]
           sdk.authorizations(opts.authorizations || [opts.authz || authz]),
         ])
-        .then(sdk.decode)
+        .then(context.sdk.decode)
 
       return txid
     } catch (error) {

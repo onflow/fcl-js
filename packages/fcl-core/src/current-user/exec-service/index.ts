@@ -1,7 +1,7 @@
 import {invariant} from "@onflow/util-invariant"
 import {log, LEVELS} from "@onflow/util-logger"
 import {getServiceRegistry} from "./plugins"
-import {getChainId} from "../../utils"
+import {createGetChainId} from "../../utils"
 import {VERSION} from "../../VERSION"
 import {configLens} from "../../default-config"
 import {checkWalletConnectEnabled} from "./wc-check"
@@ -127,7 +127,7 @@ export async function execService({
       fclVersion: VERSION,
       fclLibrary: "https://github.com/onflow/fcl-js",
       hostname: window?.location?.hostname ?? null,
-      network: await getChainId(opts),
+      network: await createGetChainId(context)(opts),
     },
   }
 
