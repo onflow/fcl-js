@@ -519,17 +519,44 @@ export interface StreamConnection<ChannelMap extends {[name: string]: any}> {
 }
 
 export interface EventFilter {
+  /**
+   * The event types to listen for
+   */
   eventTypes?: string[]
+  /**
+   * The addresses to listen for
+   */
   addresses?: string[]
+  /**
+   * The contracts to listen for
+   */
   contracts?: string[]
+  /**
+   * The block ID to start listening for events
+   */
   startBlockId?: string
+  /**
+   * The block height to start listening for events
+   */
   startHeight?: number
+  /**
+   * The interval in milliseconds to send a heartbeat to the Access Node
+   */
   heartbeatInterval?: number
 }
 
 export interface BlockHeartbeat {
+  /**
+   * The ID of the block
+   */
   blockId: string
+  /**
+   * The height of the block
+   */
   blockHeight: number
+  /**
+   * The timestamp of the block
+   */
   timestamp: string
 }
 

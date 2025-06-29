@@ -19,13 +19,18 @@ export interface GetChainIdOptions {
  * @description
  * Gets the chain ID if its set, otherwise gets the chain ID from the access node
  *
- * @param opts Optional parameters
- * @returns The chain ID of the access node
- * @throws If the chain ID is not found
+ * @param opts Optional configuration parameters
+ * @param opts.node Override the access node URL for this request instead of using the configured one
+ * @param opts.enableRequestLogging Enable logging for the chain ID request
+ * @returns Promise that resolves to the chain ID string (e.g., "mainnet", "testnet", "local")
+ * @throws If the chain ID cannot be determined from configuration or access node
  *
  * @example
- * // returns "testnet"
- * getChainId()
+ * // Get chain ID using configured access node
+ * import * as fcl from "@onflow/fcl"
+ *
+ * const chainId = await fcl.getChainId()
+ * console.log("Connected to:", chainId) // "testnet" or "mainnet"
  */
 export async function getChainId(
   opts: GetChainIdOptions = {}

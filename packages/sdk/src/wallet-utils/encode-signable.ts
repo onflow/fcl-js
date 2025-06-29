@@ -62,6 +62,51 @@ export class UnableToDetermineMessageEncodingTypeForSignerAddress extends Error 
   }
 }
 
+/**
+ * Encodes a message from a signable object for a specific signer address.
+ *
+ * This function determines whether the signer should sign the transaction payload or envelope
+ * based on their role in the transaction (authorizer, proposer, or payer), then encodes the
+ * appropriate message for signing.
+ *
+ * Payload signers include authorizers and proposers (but not payers)
+ * Envelope signers include only payers
+ *
+ * The encoded message is what gets signed by the account's private key to create the transaction signature.
+ *
+ * @param signable The signable object containing transaction data and voucher
+ * @param signerAddress The address of the signer to encode the message for
+ * @returns An encoded message string suitable for signing with the account's private key
+ *
+ * @throws {UnableToDetermineMessageEncodingTypeForSignerAddress} When the signer address is not found in authorizers, proposer, or payer roles
+ *
+ * @example
+ * import * as fcl from "@onflow/fcl";
+ *
+ * // This function is typically used internally by authorization functions
+ * // when implementing custom wallet connectors or signing flows
+ *
+ * const signable = {
+ *   voucher: {
+ *     cadence: "transaction { prepare(acct: AuthAccount) {} }",
+ *     authorizers: ["0x01"],
+ *     proposalKey: { address: "0x01", keyId: 0, sequenceNum: 42 },
+ *     payer: "0x02",
+ *     refBlock: "a1b2c3",
+ *     computeLimit: 100,
+ *     arguments: [],
+ *     payloadSigs: []
+ *   }
+ * };
+ *
+ * // For an authorizer (payload signer)
+ * const authorizerMessage = fcl.encodeMessageFromSignable(signable, "0x01");
+ * console.log("Authorizer signs:", authorizerMessage);
+ *
+ * // For a payer (envelope signer)
+ * const payerMessage = fcl.encodeMessageFromSignable(signable, "0x02");
+ * console.log("Payer signs:", payerMessage);
+ */
 export const encodeMessageFromSignable = (
   signable: Signable,
   signerAddress: string

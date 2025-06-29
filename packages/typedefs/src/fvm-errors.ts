@@ -78,5 +78,7 @@ export const FvmErrorCode = {
   // fvm std lib errors 1300-1400
   EVM_EXECUTION_ERROR: 1300,
 } as const
-
+/**
+ * Error codes defined by the Flow Virtual Machine (FVM) for various types of errors that can occur during transaction execution
+ */
 export type FvmErrorCode = (typeof FvmErrorCode)[keyof typeof FvmErrorCode]

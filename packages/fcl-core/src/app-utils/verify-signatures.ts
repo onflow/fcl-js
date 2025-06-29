@@ -185,27 +185,21 @@ const getVerifySignaturesScript = async (
  *
  * @returns Promise that resolves to true if all signatures are valid, false otherwise.
  *
- * @throws If parameters are invalid or network/contract issues occur
+ * @returns `true` if verified or `false`
  *
  * @example
- * // Basic account proof verification
  * import * as fcl from "@onflow/fcl"
  *
  * const accountProofData = {
- *   address: "0x1234567890abcdef",
- *   nonce: "75f8587e5bd982ec9289c5be1f9426bd", // 32-byte hex string
- *   signatures: [{
- *     f_type: "CompositeSignature",
- *     f_vsn: "1.0.0",
- *     addr: "0x1234567890abcdef",
- *     keyId: 0,
- *     signature: "abc123def456..." // actual signature from wallet
- *   }]
+ *   address: "0x123",
+ *   nonce: "F0123"
+ *   signatures: [{f_type: "CompositeSignature", f_vsn: "1.0.0", addr: "0x123", keyId: 0, signature: "abc123"}],
  * }
  *
  * const isValid = await fcl.AppUtils.verifyAccountProof(
  *   "AwesomeAppId",
- *   accountProofData
+ *   accountProofData,
+ *   {fclCryptoContract}
  * )
  */
 export async function verifyAccountProof(
