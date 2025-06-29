@@ -80,6 +80,7 @@ function extractInterfaces(sourceFiles) {
         name,
         description,
         properties,
+        importStatement: `import { type ${name} } from "@onflow/fcl"`,
       })
     })
   })
@@ -155,6 +156,7 @@ function extractTypeAliases(sourceFiles) {
         description,
         type,
         properties,
+        importStatement: `import { type ${name} } from "@onflow/fcl"`,
       })
     })
   })
@@ -196,6 +198,7 @@ function extractEnums(sourceFiles) {
         name,
         description,
         members,
+        importStatement: `import { ${name} } from "@onflow/fcl"`,
       })
     })
   })
