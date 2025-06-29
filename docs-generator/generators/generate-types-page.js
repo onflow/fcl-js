@@ -50,6 +50,115 @@ function extractJSDocDescription(node) {
   return null
 }
 
+function extractConstBasedTypes(sourceFiles) {
+  const constBasedTypes = []
+
+  sourceFiles.forEach(sourceFile => {
+    // Get exported type aliases
+    sourceFile.getTypeAliases().forEach(typeAlias => {
+      if (!typeAlias.isExported()) return
+
+      const name = typeAlias.getName()
+      const typeText = typeAlias.getTypeNode()?.getText() || ""
+
+      // Check if this is a template literal type based on a const object
+      // Pattern: (typeof SomeName)[keyof typeof SomeName]
+      const templateLiteralPattern = /\(typeof\s+(\w+)\)\[keyof\s+typeof\s+\1\]/
+      const match = typeText.match(templateLiteralPattern)
+
+      if (match) {
+        const constName = match[1]
+
+        // Find the corresponding const object in the same file
+        const constDeclaration = sourceFile.getVariableStatement(stmt => {
+          const declarations = stmt.getDeclarations()
+          return declarations.some(decl => {
+            if (decl.getName() !== constName || !decl.hasExportKeyword()) {
+              return false
+            }
+
+            const initializer = decl.getInitializer()
+            if (!initializer) return false
+
+            // Check for direct object literal
+            if (Node.isObjectLiteralExpression(initializer)) {
+              return true
+            }
+
+            // Check for object literal with 'as const' assertion
+            if (Node.isAsExpression(initializer)) {
+              return Node.isObjectLiteralExpression(initializer.getExpression())
+            }
+
+            return false
+          })
+        })
+
+        if (constDeclaration) {
+          const constVarDecl = constDeclaration
+            .getDeclarations()
+            .find(decl => decl.getName() === constName)
+          const description =
+            extractJSDocDescription(typeAlias) ||
+            extractJSDocDescription(constVarDecl)
+
+          // Extract properties from the const object
+          const members = []
+          const initializer = constVarDecl.getInitializer()
+
+          let objectLiteral = null
+          if (Node.isObjectLiteralExpression(initializer)) {
+            objectLiteral = initializer
+          } else if (Node.isAsExpression(initializer)) {
+            const expression = initializer.getExpression()
+            if (Node.isObjectLiteralExpression(expression)) {
+              objectLiteral = expression
+            }
+          }
+
+          if (objectLiteral) {
+            objectLiteral.getProperties().forEach(prop => {
+              if (Node.isPropertyAssignment(prop)) {
+                const memberName = prop.getName()
+                const memberValue = prop.getInitializer()?.getText()
+
+                // Try to extract JSDoc from leading comments
+                let memberDescription = null
+                const leadingComments = prop.getLeadingCommentRanges()
+                if (leadingComments && leadingComments.length > 0) {
+                  const commentText = leadingComments
+                    .map(range => range.getText())
+                    .join("\n")
+                  // Extract single-line comments
+                  const singleLineMatch = /\/\/\s*(.+)/.exec(commentText)
+                  if (singleLineMatch) {
+                    memberDescription = singleLineMatch[1].trim()
+                  }
+                }
+
+                members.push({
+                  name: memberName,
+                  value: memberValue,
+                  description: memberDescription,
+                })
+              }
+            })
+          }
+
+          constBasedTypes.push({
+            name,
+            description,
+            members,
+            importStatement: `import { ${name} } from "@onflow/fcl"`,
+          })
+        }
+      }
+    })
+  })
+
+  return constBasedTypes.sort((a, b) => a.name.localeCompare(b.name))
+}
+
 function extractInterfaces(sourceFiles) {
   const interfaces = []
 
@@ -97,6 +206,14 @@ function extractTypeAliases(sourceFiles) {
       if (!typeAlias.isExported()) return
 
       const name = typeAlias.getName()
+      const typeText = typeAlias.getTypeNode()?.getText() || ""
+
+      // Skip template literal types based on const objects - they'll be handled by extractConstBasedTypes
+      const templateLiteralPattern = /\(typeof\s+(\w+)\)\[keyof\s+typeof\s+\1\]/
+      if (templateLiteralPattern.test(typeText)) {
+        return
+      }
+
       const description = extractJSDocDescription(typeAlias)
       const type = decodeHtmlEntities(
         typeAlias.getType().getText(undefined, TypeFormatFlags.None)
@@ -223,11 +340,15 @@ function generateTypesPage(templates, outputDir) {
   const interfaces = extractInterfaces(sourceFiles)
   const types = extractTypeAliases(sourceFiles)
   const enums = extractEnums(sourceFiles)
+  const constBasedTypes = extractConstBasedTypes(sourceFiles)
+
+  // Combine regular types with const-based types
+  const allTypes = [...types, ...constBasedTypes]
 
   // Generate the types index page
   generatePage(templates, "types", path.join(outputDir, "index.md"), {
     interfaces,
-    types,
+    types: allTypes,
     enums,
   })
 }

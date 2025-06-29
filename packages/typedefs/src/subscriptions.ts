@@ -9,17 +9,19 @@ import {
   TransactionStatus,
 } from "."
 
+export const SubscriptionTopic = {
+  BLOCKS: "blocks",
+  BLOCK_HEADERS: "block_headers",
+  BLOCK_DIGESTS: "block_digests",
+  ACCOUNT_STATUSES: "account_statuses",
+  TRANSACTION_STATUSES: "transaction_statuses",
+  EVENTS: "events",
+} as const
 /**
  * Represents different topics that can be subscribed to for real-time data from the Flow blockchain
  */
-export enum SubscriptionTopic {
-  BLOCKS = "blocks",
-  BLOCK_HEADERS = "block_headers",
-  BLOCK_DIGESTS = "block_digests",
-  ACCOUNT_STATUSES = "account_statuses",
-  TRANSACTION_STATUSES = "transaction_statuses",
-  EVENTS = "events",
-}
+export type SubscriptionTopic =
+  (typeof SubscriptionTopic)[keyof typeof SubscriptionTopic]
 
 /**
  * The data returned by a subscription, which will vary depending on the topic

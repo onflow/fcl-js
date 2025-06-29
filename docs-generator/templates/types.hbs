@@ -60,6 +60,16 @@ Documentation for core types used throughout the Flow Client Library (FCL).
 {{/each}}
 {{/if}}
 
+{{#if members.length}}
+**Members:**
+
+| Name | Value |
+| ---- | ----- |
+{{#each members}}
+| `{{name}}` | {{{value}}} |
+{{/each}}
+{{/if}}
+
 {{/each}}
 {{/if}}
 

@@ -18,11 +18,13 @@ const isFn = (v: any): v is Function =>
 
 const genAccountId = (...ids: (string | boolean | undefined)[]) => ids.join("-")
 
-enum ROLES {
-  PAYER = "payer",
-  PROPOSER = "proposer",
-  AUTHORIZATIONS = "authorizations",
-}
+const ROLES = {
+  PAYER: "payer",
+  PROPOSER: "proposer",
+  AUTHORIZATIONS: "authorizations",
+} as const
+
+type ROLES = (typeof ROLES)[keyof typeof ROLES]
 
 function debug() {
   const SPACE = " "

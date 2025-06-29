@@ -1,56 +1,61 @@
+export const InteractionTag = {
+  UNKNOWN: "UNKNOWN",
+  SCRIPT: "SCRIPT",
+  TRANSACTION: "TRANSACTION",
+  GET_TRANSACTION_STATUS: "GET_TRANSACTION_STATUS",
+  GET_ACCOUNT: "GET_ACCOUNT",
+  GET_EVENTS: "GET_EVENTS",
+  PING: "PING",
+  GET_TRANSACTION: "GET_TRANSACTION",
+  GET_BLOCK: "GET_BLOCK",
+  GET_BLOCK_HEADER: "GET_BLOCK_HEADER",
+  GET_COLLECTION: "GET_COLLECTION",
+  GET_NETWORK_PARAMETERS: "GET_NETWORK_PARAMETERS",
+  SUBSCRIBE_EVENTS: "SUBSCRIBE_EVENTS",
+  GET_NODE_VERSION_INFO: "GET_NODE_VERSION_INFO",
+} as const
 /**
  * Represents different types of interactions with the Flow blockchain
  */
-export enum InteractionTag {
-  UNKNOWN = "UNKNOWN",
-  SCRIPT = "SCRIPT",
-  TRANSACTION = "TRANSACTION",
-  GET_TRANSACTION_STATUS = "GET_TRANSACTION_STATUS",
-  GET_ACCOUNT = "GET_ACCOUNT",
-  GET_EVENTS = "GET_EVENTS",
-  PING = "PING",
-  GET_TRANSACTION = "GET_TRANSACTION",
-  GET_BLOCK = "GET_BLOCK",
-  GET_BLOCK_HEADER = "GET_BLOCK_HEADER",
-  GET_COLLECTION = "GET_COLLECTION",
-  GET_NETWORK_PARAMETERS = "GET_NETWORK_PARAMETERS",
-  SUBSCRIBE_EVENTS = "SUBSCRIBE_EVENTS",
-  GET_NODE_VERSION_INFO = "GET_NODE_VERSION_INFO",
-}
+export type InteractionTag =
+  (typeof InteractionTag)[keyof typeof InteractionTag]
 
+export const InteractionStatus = {
+  BAD: "BAD",
+  OK: "OK",
+} as const
 /**
  * Status of an interaction with the Flow blockchain
  */
-export enum InteractionStatus {
-  BAD = "BAD",
-  OK = "OK",
-}
+export type InteractionStatus =
+  (typeof InteractionStatus)[keyof typeof InteractionStatus]
 
+export const TransactionRole = {
+  AUTHORIZER: "authorizer",
+  PAYER: "payer",
+  PROPOSER: "proposer",
+} as const
 /**
  * Represents different roles in a transaction
  */
-export enum TransactionRole {
-  AUTHORIZER = "authorizer",
-  PAYER = "payer",
-  PROPOSER = "proposer",
-}
+export type TransactionRole =
+  (typeof TransactionRole)[keyof typeof TransactionRole]
 
+export const InteractionResolverKind = {
+  ARGUMENT: "ARGUMENT",
+  ACCOUNT: "ACCOUNT",
+} as const
 /**
  * Represents different kinds of interaction resolvers
  */
-export enum InteractionResolverKind {
-  ARGUMENT = "ARGUMENT",
-  ACCOUNT = "ACCOUNT",
-}
+export type InteractionResolverKind =
+  (typeof InteractionResolverKind)[keyof typeof InteractionResolverKind]
 
+/**
+ * Represents an account involved in an interaction
+ */
 export interface InteractionAccount {
-  /**
-   * The kind of interaction resolver
-   */
-  kind: InteractionResolverKind.ACCOUNT
-  /**
-   * Temporary identifier for the account
-   */
+  kind: typeof InteractionResolverKind.ACCOUNT
   tempId: string
   /**
    * The address of the account
@@ -103,6 +108,9 @@ export interface InteractionAccount {
   authorization: any
 }
 
+/**
+ * Represents an interaction with the Flow blockchain
+ */
 export interface Interaction {
   /**
    * The type of interaction
