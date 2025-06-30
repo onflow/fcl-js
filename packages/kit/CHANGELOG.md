@@ -1,5 +1,11 @@
 # @onflow/kit
 
+## 0.6.0
+
+### Minor Changes
+
+- [#2542](https://github.com/onflow/fcl-js/pull/2542) [`aacae504fbc568d5629211c28c55849074ed696b`](https://github.com/onflow/fcl-js/commit/aacae504fbc568d5629211c28c55849074ed696b) Thanks [@chasefleming](https://github.com/chasefleming)! - Add `useFlowTransaction` hook
+
 ## 0.5.0
 
 ### Minor Changes
