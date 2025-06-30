@@ -1,5 +1,11 @@
 # @onflow/fcl
 
+## 1.20.0
+
+### Minor Changes
+
+- [#2523](https://github.com/onflow/fcl-js/pull/2523) [`6076b0bfc95bcbe07a734c0c10c32d81ecb1dd2d`](https://github.com/onflow/fcl-js/commit/6076b0bfc95bcbe07a734c0c10c32d81ecb1dd2d) Thanks [@mfbz](https://github.com/mfbz)! - Added `queryRaw` method to execute a query and get non-decoded data as result.
+
 ## 1.19.0
 
 ### Minor Changes

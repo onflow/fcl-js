@@ -2,4 +2,4 @@
 "@onflow/kit": patch
 ---
 
-Export `useFlowChainId`
+Add `useFlowTransaction` hook
