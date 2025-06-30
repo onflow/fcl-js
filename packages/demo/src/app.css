@@ -1,7 +1,7 @@
 html {
   color-scheme: light;
   font-family: system-ui;
-  background-color: #FFFFFF;
+  background-color: #ffffff;
   color: #000000;
   margin: 0;
   padding: 0;
@@ -11,7 +11,7 @@ html {
 body {
   margin: 0;
   padding: 0;
-  background-color: #FFFFFF;
+  background-color: #ffffff;
   color: #000000;
   height: 100%;
   overflow-x: hidden;
@@ -19,5 +19,5 @@ body {
 
 #root {
   height: 100vh;
-  background-color: #FFFFFF;
+  background-color: #ffffff;
 }
