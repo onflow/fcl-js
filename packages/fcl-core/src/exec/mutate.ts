@@ -6,7 +6,8 @@ import type {ArgsFn} from "./args"
 import {normalizeArgs} from "./utils/normalize-args"
 import {preMutate} from "./utils/pre"
 import {prepTemplateOpts} from "./utils/prep-template-opts"
-import {FCLContext} from "../context"
+import {ConfigService, FCLContext} from "../context"
+import {createPartialGlobalFCLContext} from "../context/global"
 
 export interface MutateOptions {
   cadence?: string
@@ -24,7 +25,11 @@ export interface MutateOptions {
  *
  * @param currentUserOrConfig CurrentUser actor or configuration
  */
-export const createMutate = (context: FCLContext) => {
+export const createMutate = (context: {
+  config: ConfigService
+  sdk: ReturnType<typeof sdk.createSdkClient>
+  currentUser: CurrentUserService
+}) => {
   /**
    * @description Allows you to submit transactions to the blockchain to potentially mutate the state.
    *
@@ -110,12 +115,15 @@ export const createMutate = (context: FCLContext) => {
   return mutate
 }
 
-// todo
+// Legacy support for the global FCL context with partial dependency injection
+// Previously, there was an implementation of a `mutate` factory function that
+// only took a subset of the FCL context and still remained coupled to the global
+// state.
 export const getMutate = (currentUserOrConfig: CurrentUserService) => {
-  // TODO: FIX ME
-  const mutate = createMutate(currentUserOrConfig as any)
-  // Bind the current user to the mutate function
-  return (opts: MutateOptions = {}): Promise<string> => {
-    return mutate(opts)
+  const partialContext = createPartialGlobalFCLContext()
+  const context: Pick<FCLContext, "config" | "sdk" | "currentUser"> = {
+    ...partialContext,
+    currentUser: currentUserOrConfig,
   }
+  return createMutate(context)
 }

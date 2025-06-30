@@ -53,7 +53,7 @@ const DOCUMENT_RESOLVERS: Map<string, typeof httpDocumentResolver> = new Map([
  * console.log("Template:", template)
  */
 export async function retrieve(
-  config: ConfigService,
+  {config}: {config: ConfigService},
   {url}: RetrieveParams
 ): Promise<any> {
   invariant(

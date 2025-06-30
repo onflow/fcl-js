@@ -1,4 +1,4 @@
-export {createGetChainId} from "./chain-id/get-chain-id"
+export {getChainId, createGetChainId} from "./chain-id/get-chain-id"
 export {watchForChainIdChanges} from "./chain-id/chain-id-watcher"
 
 /**

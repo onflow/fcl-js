@@ -1,12 +1,13 @@
 import {Event, EventFilter, SubscriptionTopic} from "@onflow/typedefs"
 import {createLegacyEvents} from "./legacy-events"
 import {SubscriptionsNotSupportedError} from "@onflow/sdk"
-import {getChainId} from "../utils"
+import {createGetChainId} from "../utils"
 import {FCLContext} from "../context"
+import {createPartialGlobalFCLContext} from "../context/global"
 
 const FLOW_EMULATOR = "local"
 
-export function createEvents(context: FCLContext) {
+export function createEvents(context: Pick<FCLContext, "config" | "sdk">) {
   /**
    * @description Subscribes to Flow blockchain events in real-time. This function provides a way to listen
    * for specific events emitted by smart contracts on the Flow blockchain. It automatically handles
@@ -127,7 +128,7 @@ export function createEvents(context: FCLContext) {
         }
 
         async function subscribeToEvents() {
-          const network = await getChainId()
+          const network = await createGetChainId(context)()
 
           // As of Flow CLI v2.2.8, WebSocket subscriptions are not supported on the Flow emulator
           // This conditional will be removed when WebSocket subscriptions are supported in this environment
@@ -159,3 +160,7 @@ export function createEvents(context: FCLContext) {
 
   return events
 }
+
+export const events = /*@__PURE__*/ createEvents(
+  createPartialGlobalFCLContext()
+)

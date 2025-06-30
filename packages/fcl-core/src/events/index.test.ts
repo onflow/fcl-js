@@ -1,7 +1,7 @@
 import {Subscription} from "@onflow/typedefs"
 import {events} from "."
 import {subscribe, SubscriptionsNotSupportedError} from "@onflow/sdk"
-import {events as legacyEvents} from "./legacy-events"
+import {createLegacyEvents, SubscribeObject} from "./legacy-events"
 import {getChainId} from "../utils"
 
 jest.mock("@onflow/sdk")
@@ -23,7 +23,9 @@ describe("events", () => {
     }
 
     jest.mocked(subscribe).mockReturnValue(mockSubscription)
-    jest.mocked(legacyEvents).mockReturnValue(mockLegacySubscribeObject)
+    jest
+      .mocked(createLegacyEvents)
+      .mockReturnValue(() => mockLegacySubscribeObject)
   })
 
   afterEach(() => {

@@ -8,7 +8,7 @@ export interface PreOptions {
 }
 
 async function pre(
-  context: FCLContext,
+  context: Pick<FCLContext, "config">,
   type: string,
   opts: PreOptions
 ): Promise<void> {
@@ -55,7 +55,9 @@ async function pre(
  * })
  */
 export async function preMutate(
-  context: FCLContext,
+  context: {
+    config: FCLContext["config"]
+  },
   opts: PreOptions
 ): Promise<void> {
   return pre(context, "mutate", opts)
@@ -84,7 +86,7 @@ export async function preMutate(
  * })
  */
 export async function preQuery(
-  context: FCLContext,
+  context: Pick<FCLContext, "config">,
   opts: PreOptions
 ): Promise<void> {
   return pre(context, "query", opts)

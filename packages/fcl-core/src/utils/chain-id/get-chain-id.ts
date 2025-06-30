@@ -1,6 +1,7 @@
 import {fetchChainId} from "./fetch-chain-id"
 import {log} from "@onflow/util-logger"
-import {ConfigService} from "../../context"
+import {FCLContext} from "../../context"
+import {createPartialGlobalFCLContext} from "../../context/global"
 
 // Cache of chainId promises for each access node value
 // key: access node, value: chainId promise
@@ -15,7 +16,13 @@ export interface GetChainIdOptions {
   [key: string]: any
 }
 
-export function createGetChainId({config}: {config: ConfigService}) {
+export function createGetChainId({
+  config,
+  sdk,
+}: {
+  config: FCLContext["config"]
+  sdk: FCLContext["sdk"]
+}) {
   /**
    * @description
    * Gets the chain ID if its set, otherwise gets the chain ID from the access node
@@ -98,7 +105,7 @@ export function createGetChainId({config}: {config: ConfigService}) {
     // Check if another getChainId() call has already started a new promise, if not, start a new one
     // There may have been concurrent calls to getChainId() while the first call was waiting for the response
     if (!chainIdCache[accessNode as string]) {
-      chainIdCache[accessNode as string] = fetchChainId(opts).catch(
+      chainIdCache[accessNode as string] = fetchChainId({sdk}, opts).catch(
         (error: Error) => {
           // If there was an error, reset the promise so that the next call will try again
           chainIdCache[accessNode as string] = null
@@ -147,3 +154,7 @@ export function createGetChainId({config}: {config: ConfigService}) {
 export function clearChainIdCache(): void {
   chainIdCache = {}
 }
+
+export const getChainId = /* @__PURE__ */ createGetChainId(
+  createPartialGlobalFCLContext()
+)

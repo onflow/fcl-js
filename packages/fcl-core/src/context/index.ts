@@ -21,14 +21,16 @@ interface FCLConfig extends SdkClientOptions {
 // Define a compatibility config interface for backward compatibility
 export interface ConfigService {
   get: (key: string, defaultValue?: any) => Promise<any>
-  put: (key: string, value: any) => Promise<ConfigService>
+  put: (key: string, value: any) => Promise<ConfigService> | ConfigService
   update: (
     key: string,
     updateFn: (oldValue: any) => any
-  ) => Promise<ConfigService>
-  delete: (key: string) => Promise<ConfigService>
+  ) => Promise<ConfigService> | ConfigService
+  delete: (key: string) => Promise<ConfigService> | ConfigService
   where: (pattern: RegExp) => Promise<Record<string, any>>
-  subscribe: (callback: (key: string, value: any) => void) => () => void
+  subscribe: (
+    callback: (config: Record<string, any> | null) => void
+  ) => () => void
   all: () => Promise<Record<string, any>>
 }
 
@@ -135,5 +137,64 @@ export function createFCLContext(config: FCLConfig): FCLContext {
       debug: config.debug,
     }),
     config: compatConfig,
+  }
+}
+
+export function createConfigService(config: FCLConfig): ConfigService {
+  const configStore = new Map<string, any>([
+    ["platform", config.platform],
+    ["discoveryWallet", config.discoveryWallet],
+    ["discoveryWalletMethod", config.discoveryWalletMethod],
+    ["defaultComputeLimit", config.defaultComputeLimit],
+    ["flowNetwork", config.flowNetwork],
+    ["serviceOpenIdScopes", config.serviceOpenIdScopes],
+    ["walletconnectProjectId", config.walletconnectProjectId],
+    [
+      "walletconnectDisableNotifications",
+      config.walletconnectDisableNotifications,
+    ],
+    ["accessNode.api", config.accessNode],
+    ["fcl.limit", config.computeLimit],
+  ])
+
+  // Filter out undefined values
+  for (const [key, value] of configStore.entries()) {
+    if (value === undefined) {
+      configStore.delete(key)
+    }
+  }
+
+  return {
+    get: async (key: string) => configStore.get(key),
+    put: async (key: string, value: any) => {
+      configStore.set(key, value)
+      return createConfigService(config)
+    },
+    update: async (key: string, updateFn: (oldValue: any) => any) => {
+      const oldValue = configStore.get(key)
+      const newValue = updateFn(oldValue)
+      configStore.set(key, newValue)
+      return createConfigService(config)
+    },
+    delete: async (key: string) => {
+      configStore.delete(key)
+      return createConfigService(config)
+    },
+    where: async (pattern: RegExp) => {
+      const result: Record<string, any> = {}
+      for (const [key, value] of configStore.entries()) {
+        if (pattern.test(key)) {
+          result[key] = value
+        }
+      }
+      return result
+    },
+    subscribe: (callback: (key: string, value: any) => void) => {
+      // No subscribers in this context
+      return () => {}
+    },
+    all: async () => {
+      return Object.fromEntries(configStore.entries())
+    },
   }
 }

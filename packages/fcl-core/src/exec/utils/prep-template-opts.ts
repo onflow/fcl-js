@@ -41,7 +41,7 @@ export interface TemplateOptions {
  * })
  */
 export async function prepTemplateOpts(
-  context: FCLContext,
+  context: Pick<FCLContext, "config" | "sdk">,
   opts: TemplateOptions
 ): Promise<TemplateOptions> {
   if (isString(opts?.template)) {

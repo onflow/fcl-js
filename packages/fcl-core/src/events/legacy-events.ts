@@ -10,6 +10,7 @@ import {
   UNSUBSCRIBE,
 } from "@onflow/util-actor"
 import {FCLContext} from "../context"
+import {createPartialGlobalFCLContext} from "../context/global"
 
 export interface SubscribeObject {
   /**
@@ -28,7 +29,7 @@ const TICK: string = "TICK"
 const HIGH_WATER_MARK: string = "hwm"
 
 const scheduleTick = async (
-  fclContext: FCLContext,
+  fclContext: Pick<FCLContext, "sdk" | "config">,
   ctx: ActorContext
 ): Promise<NodeJS.Timeout> => {
   return setTimeout(
@@ -37,7 +38,9 @@ const scheduleTick = async (
   )
 }
 
-function createHandlers(fclContext: FCLContext): ActorHandlers {
+function createHandlers(
+  fclContext: Pick<FCLContext, "sdk" | "config">
+): ActorHandlers {
   const HANDLERS: ActorHandlers = {
     [TICK]: async (ctx: ActorContext): Promise<void> => {
       if (!ctx.hasSubs()) return
@@ -82,10 +85,14 @@ function createHandlers(fclContext: FCLContext): ActorHandlers {
   return HANDLERS
 }
 
-const spawnEvents = (fclContext: FCLContext, key?: string): string =>
-  spawn(createHandlers(fclContext), key)
+const spawnEvents = (
+  fclContext: Pick<FCLContext, "sdk" | "config">,
+  key?: string
+) => spawn(createHandlers(fclContext), key)
 
-export function createLegacyEvents(context: FCLContext) {
+export function createLegacyEvents(
+  context: Pick<FCLContext, "sdk" | "config">
+) {
   /**
    * @description Subscribe to events
    * @param key A valid event name

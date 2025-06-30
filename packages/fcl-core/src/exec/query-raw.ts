@@ -4,6 +4,7 @@ import {normalizeArgs} from "./utils/normalize-args"
 import {preQuery} from "./utils/pre"
 import {prepTemplateOpts} from "./utils/prep-template-opts"
 import {FCLContext} from "../context"
+import {createPartialGlobalFCLContext} from "../context/global"
 
 export interface QueryOptions {
   cadence?: string
@@ -13,7 +14,7 @@ export interface QueryOptions {
   limit?: number
 }
 
-export function createQueryRaw(context: FCLContext) {
+export function createQueryRaw(context: Pick<FCLContext, "sdk" | "config">) {
   /**
    * @description Allows you to submit scripts to query the blockchain and get raw response data.
    *
@@ -43,8 +44,8 @@ export function createQueryRaw(context: FCLContext) {
    *    await queryRaw({ cadence, args })
    */
   async function queryRaw(opts: QueryOptions = {}): Promise<any> {
-    await preQuery(opts)
-    opts = await prepTemplateOpts(opts)
+    await preQuery(context, opts)
+    opts = await prepTemplateOpts(context, opts)
 
     return sdk.send([
       sdk.script(opts.cadence!),
@@ -59,6 +60,6 @@ export function createQueryRaw(context: FCLContext) {
   return queryRaw
 }
 
-// backward compatibility
-// TODO: global context should be passed
-export const queryRaw = createQueryRaw({} as FCLContext)
+export const queryRaw = /* @__PURE__ */ createQueryRaw(
+  createPartialGlobalFCLContext()
+)

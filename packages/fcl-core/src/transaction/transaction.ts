@@ -23,6 +23,7 @@ import {TransactionError} from "./transaction-error"
 import {transaction as legacyTransaction} from "./legacy-polling"
 import {createGetChainId} from "../utils"
 import {FCLContext} from "../context"
+import {createPartialGlobalFCLContext} from "../context/global"
 
 const FLOW_EMULATOR = "local"
 
@@ -30,7 +31,7 @@ const FLOW_EMULATOR = "local"
 // Used for shared global singleton to prevent duplicate subscriptions
 const registry = new Map<string, ReturnType<typeof createObservable>>()
 
-export function createTransaction(context: FCLContext) {
+export function createTransaction(context: Pick<FCLContext, "sdk" | "config">) {
   /**
    * @description Creates a transaction monitor that provides methods for tracking and subscribing to
    * transaction status updates on the Flow blockchain. This function returns an object with methods
@@ -197,11 +198,13 @@ export function createTransaction(context: FCLContext) {
   return transaction
 }
 
+export const transaction = createTransaction(createPartialGlobalFCLContext())
+
 /**
  * @description Creates an observable for a transaction
  */
 function createObservable(
-  context: FCLContext,
+  context: Pick<FCLContext, "sdk" | "config">,
   txId: string,
   opts: {pollRate?: number; txNotFoundTimeout?: number}
 ) {

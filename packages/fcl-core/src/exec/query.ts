@@ -1,7 +1,8 @@
 import {createQueryRaw, QueryOptions} from "./query-raw"
 import {FCLContext} from "../context"
+import {createPartialGlobalFCLContext} from "../context/global"
 
-export function createQuery(context: FCLContext) {
+export function createQuery(context: Pick<FCLContext, "sdk" | "config">) {
   /**
    * @description Allows you to submit scripts to query the blockchain.
    *
@@ -36,3 +37,7 @@ export function createQuery(context: FCLContext) {
 
   return query
 }
+
+export const query = /* @__PURE__ */ createQuery(
+  createPartialGlobalFCLContext()
+)

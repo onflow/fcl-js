@@ -1,5 +1,5 @@
-import {config} from "@onflow/config"
-import {getChainId} from "./get-chain-id"
+import {createGetChainId} from "./get-chain-id"
+import {FCLContext} from "../../context"
 
 /**
  * @description Watches the FCL configuration for changes to the access node and automatically updates
@@ -17,10 +17,12 @@ import {getChainId} from "./get-chain-id"
  * // Later, when you want to stop watching
  * unsubscribe()
  */
-export function watchForChainIdChanges(): () => void {
-  return config.subscribe(() => {
+export function watchForChainIdChanges(
+  context: Pick<FCLContext, "config" | "sdk">
+): () => void {
+  return context.config.subscribe(() => {
     // Call getChainId to update the chainId cache if access node has changed
-    getChainId({
+    createGetChainId(context)({
       enableRequestLogging: false,
     }).catch(() => {})
   })
