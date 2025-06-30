@@ -19,12 +19,12 @@
     "@onflow/fcl": "file:../fcl",
     "@onflow/kit": "file:../kit",
     "@onflow/typedefs": "file:../typedefs",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
   },
   "devDependencies": {
-    "@types/react": "^18.2.0",
-    "@types/react-dom": "^18.2.0",
+    "@types/react": "^19.0.10",
+    "@types/react-dom": "^19.0.4",
     "cross-env": "^7.0.3",
     "concurrently": "^8.0.1",
     "wait-on": "^7.0.1",
