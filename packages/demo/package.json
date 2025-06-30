@@ -19,6 +19,9 @@
     "@onflow/fcl": "file:../fcl",
     "@onflow/kit": "file:../kit",
     "@onflow/typedefs": "file:../typedefs",
+    "@react-aria/utils": "^3.25.3",
+    "@react-stately/flags": "^3.0.4",
+    "@react-stately/utils": "^3.10.4",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },

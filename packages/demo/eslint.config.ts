@@ -23,6 +23,8 @@ const config: Config = tseslint.config(
         "warn",
         {allowConstantExport: true},
       ],
+      "@typescript-eslint/no-unused-vars": "off",
+      "no-unused-vars": "off",
     },
   }
 )
