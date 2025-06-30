@@ -1,3 +1,4 @@
+import {CurrentUserConfig} from "../current-user"
 import {createUser, type CurrentUserServiceApi} from "../current-user"
 import {StorageProvider} from "../fcl-core"
 import {createSdkClient, SdkClientOptions} from "@onflow/sdk/types/sdk-client"
@@ -16,6 +17,7 @@ interface FCLConfig extends SdkClientOptions {
     // TODO (jribbink): Define the type for execStrategy
     execStrategy?: (...args: any[]) => any
   }
+  currentUserConfig: CurrentUserConfig
 }
 
 // Define a compatibility config interface for backward compatibility

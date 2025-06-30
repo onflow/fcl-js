@@ -1,4 +1,4 @@
-import {ConfigService} from "./context"
+import {FCLContext} from "./context"
 
 /**
  * @description Extracts configuration values that match a given regular expression pattern from the Flow configuration.
@@ -19,11 +19,11 @@ import {ConfigService} from "./context"
  * // Filters keys like "wallet.discovery.api" and returns simplified object
  */
 export async function configLens(
-  config: ConfigService,
+  context: Pick<FCLContext, "config">,
   regex: RegExp
 ): Promise<Record<string, any>> {
   return Object.fromEntries(
-    Object.entries(await config.where(regex)).map(([key, value]) => [
+    Object.entries(await context.config.where(regex)).map(([key, value]) => [
       key.replace(regex, ""),
       value,
     ])
