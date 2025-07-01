@@ -2,20 +2,13 @@ import {useState, useEffect} from "react"
 import * as fcl from "@onflow/fcl"
 import {CurrentUser} from "@onflow/typedefs"
 
-interface UseCurrentFlowUserResult {
+interface UseFlowCurrentUserResult {
   user: CurrentUser | null
   authenticate: () => Promise<CurrentUser>
   unauthenticate: () => void
 }
 
-/**
- * @deprecated Use useFlowCurrentUser instead. This hook will be removed in a future version.
- */
-export function useCurrentFlowUser(): UseCurrentFlowUserResult {
-  console.warn(
-    "useCurrentFlowUser is deprecated and will be removed in a future version. Use useFlowCurrentUser instead."
-  )
-
+export function useFlowCurrentUser(): UseFlowCurrentUserResult {
   const [user, setUser] = useState<CurrentUser | null>(null)
 
   useEffect(() => {
