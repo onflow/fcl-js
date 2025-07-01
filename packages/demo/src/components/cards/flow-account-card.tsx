@@ -132,16 +132,6 @@ export function FlowAccountCard() {
             marginRight: "1rem",
           }}
           disabled={isLoading}
-          onMouseOver={e => {
-            if (!isLoading) {
-              e.currentTarget.style.backgroundColor = "#02D87E"
-            }
-          }}
-          onMouseOut={e => {
-            if (!isLoading) {
-              e.currentTarget.style.backgroundColor = "#00EF8B"
-            }
-          }}
         >
           {isLoading ? "Loading..." : "Fetch Account"}
         </button>

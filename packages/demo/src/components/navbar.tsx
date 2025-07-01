@@ -78,12 +78,6 @@ export function Navbar() {
               fontSize: "0.95rem",
               transition: "all 0.2s ease",
             }}
-            onMouseOver={e => {
-              e.currentTarget.style.backgroundColor = "#02D87E"
-            }}
-            onMouseOut={e => {
-              e.currentTarget.style.backgroundColor = "#00EF8B"
-            }}
           >
             Log In With Wallet
           </button>
@@ -115,12 +109,6 @@ export function Navbar() {
                 fontWeight: "600",
                 fontSize: "0.95rem",
                 transition: "all 0.2s ease",
-              }}
-              onMouseOver={e => {
-                e.currentTarget.style.backgroundColor = "#333333"
-              }}
-              onMouseOut={e => {
-                e.currentTarget.style.backgroundColor = "#000000"
               }}
             >
               Log Out

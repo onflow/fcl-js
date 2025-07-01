@@ -166,16 +166,6 @@ access(all) fun main(): String {
             marginRight: "1rem",
           }}
           disabled={isLoading}
-          onMouseOver={e => {
-            if (!isLoading) {
-              e.currentTarget.style.backgroundColor = "#02D87E"
-            }
-          }}
-          onMouseOut={e => {
-            if (!isLoading) {
-              e.currentTarget.style.backgroundColor = "#00EF8B"
-            }
-          }}
         >
           {isLoading ? "Executing..." : "Execute Script (Raw)"}
         </button>

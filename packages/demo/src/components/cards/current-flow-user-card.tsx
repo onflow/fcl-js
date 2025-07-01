@@ -72,12 +72,6 @@ export function CurrentFlowUserCard() {
               transition: "all 0.2s ease",
               marginRight: "1rem",
             }}
-            onMouseOver={e => {
-              e.currentTarget.style.backgroundColor = "#02D87E"
-            }}
-            onMouseOut={e => {
-              e.currentTarget.style.backgroundColor = "#00EF8B"
-            }}
           >
             Authenticate
           </button>
@@ -95,12 +89,6 @@ export function CurrentFlowUserCard() {
               fontSize: "0.95rem",
               transition: "all 0.2s ease",
               marginRight: "1rem",
-            }}
-            onMouseOver={e => {
-              e.currentTarget.style.backgroundColor = "#333333"
-            }}
-            onMouseOut={e => {
-              e.currentTarget.style.backgroundColor = "#000000"
             }}
           >
             Unauthenticate

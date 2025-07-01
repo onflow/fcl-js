@@ -147,16 +147,6 @@ transaction {
             marginRight: "1rem",
           }}
           disabled={isPending}
-          onMouseOver={e => {
-            if (!isPending) {
-              e.currentTarget.style.backgroundColor = "#02D87E"
-            }
-          }}
-          onMouseOut={e => {
-            if (!isPending) {
-              e.currentTarget.style.backgroundColor = "#00EF8B"
-            }
-          }}
         >
           {isPending ? "Sending..." : "Send Transaction"}
         </button>
