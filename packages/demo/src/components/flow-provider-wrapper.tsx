@@ -1,9 +1,15 @@
-import React from "react"
+import {flowEmulator, flowMainnet, flowTestnet} from "@onflow/fcl"
 import {FlowProvider, type FlowNetwork} from "@onflow/kit"
+import React from "react"
 import flowJSON from "../../flow.json"
-import {ACCESS_NODE_URLS} from "../constants"
 
-const flowNetwork = import.meta.env.VITE_FLOW_NETWORK as FlowNetwork
+const flowNetwork =
+  (import.meta.env.VITE_FLOW_NETWORK as FlowNetwork) || "emulator"
+const flowConfig = {
+  emulator: flowEmulator,
+  testnet: flowTestnet,
+  mainnet: flowMainnet,
+}
 
 export default function FlowProviderWrapper({
   children,
@@ -13,9 +19,7 @@ export default function FlowProviderWrapper({
   return (
     <FlowProvider
       config={{
-        flowNetwork,
-        accessNodeUrl: ACCESS_NODE_URLS[flowNetwork],
-        discoveryWallet: `https://fcl-discovery.onflow.org/${flowNetwork}/authn`,
+        ...flowConfig[flowNetwork],
         appDetailTitle: "Demo App",
         appDetailIcon: "https://avatars.githubusercontent.com/u/62387156?v=4",
         appDetailUrl: "https://yourapp.com",
