@@ -1,4 +1,5 @@
 import {CurrentFlowUserCard} from "./cards/current-flow-user-card"
+import {FlowAccountCard} from "./cards/flow-account-card"
 import {FlowBlockCard} from "./cards/flow-block-card"
 import {FlowChainIdCard} from "./cards/flow-chain-id-card"
 import {FlowConfigCard} from "./cards/flow-config-card"
@@ -20,6 +21,7 @@ export function Container() {
       }}
     >
       <CurrentFlowUserCard />
+      <FlowAccountCard />
       <FlowBlockCard />
       <FlowChainIdCard />
       <FlowConfigCard />

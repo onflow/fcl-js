@@ -1,8 +1,23 @@
-import {useFlowAccount} from "@onflow/kit"
+import {useFlowAccount, useFlowConfig, type FlowNetwork} from "@onflow/kit"
 import {useState} from "react"
 
+// Network-specific contract addresses
+const CONTRACT_ADDRESSES: Record<string, Record<FlowNetwork, string>> = {
+  FlowToken: {
+    emulator: "0x0ae53cb6e3f42a79",
+    testnet: "0x7e60df042a9c0868",
+    mainnet: "0x1654653399040a61",
+  },
+}
+
 export function FlowAccountCard() {
-  const [address, setAddress] = useState("0x1654653399040a61") // Flow token contract address
+  const config = useFlowConfig()
+  const currentNetwork = config.flowNetwork || "emulator"
+
+  // Use network-specific Flow Token contract address as default
+  const [address, setAddress] = useState<string>(
+    CONTRACT_ADDRESSES.FlowToken[currentNetwork]
+  )
 
   const {
     data: account,
@@ -14,10 +29,12 @@ export function FlowAccountCard() {
     query: {enabled: false, staleTime: 30000},
   })
 
+  // Generate preset addresses based on current network
   const presetAddresses = [
-    {name: "Flow Token Contract", address: "0x1654653399040a61"},
-    {name: "FUSD Contract", address: "0x3c5959b568896393"},
-    {name: "Service Account", address: "0xf8d6e0586b0a20c7"},
+    {
+      name: "Flow Token Contract",
+      address: CONTRACT_ADDRESSES.FlowToken[currentNetwork],
+    },
   ]
 
   return (
@@ -92,7 +109,7 @@ export function FlowAccountCard() {
           type="text"
           value={address}
           onChange={e => setAddress(e.target.value)}
-          placeholder="Enter Flow account address (e.g., 0x1654653399040a61)"
+          placeholder="Enter Flow account address"
           style={{
             padding: "0.75rem",
             border: "2px solid #00EF8B",

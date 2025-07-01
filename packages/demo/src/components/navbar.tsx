@@ -1,7 +1,9 @@
-import {useCurrentFlowUser} from "@onflow/kit"
+import {useCurrentFlowUser, useFlowConfig} from "@onflow/kit"
 
 export function Navbar() {
   const {user, authenticate, unauthenticate} = useCurrentFlowUser()
+  const config = useFlowConfig()
+  const currentNetwork = config.flowNetwork || "emulator"
 
   return (
     <nav
@@ -28,7 +30,40 @@ export function Navbar() {
       >
         FCL Demo App
       </div>
-      <div>
+      <div style={{display: "flex", alignItems: "center", gap: "1rem"}}>
+        <div
+          style={{
+            fontSize: "0.85rem",
+            color: "#000000",
+            fontWeight: "500",
+            padding: "0.5rem 1rem",
+            backgroundColor: "#fff8e1",
+            borderRadius: "4px",
+            border: "1px solid #FFB800",
+            display: "flex",
+            alignItems: "center",
+            gap: "0.5rem",
+          }}
+        >
+          <div
+            style={{
+              width: "8px",
+              height: "8px",
+              borderRadius: "50%",
+              backgroundColor:
+                currentNetwork === "mainnet"
+                  ? "#00EF8B"
+                  : currentNetwork === "testnet"
+                    ? "#FFB800"
+                    : "#9945FF",
+            }}
+          />
+          <span>
+            Network:{" "}
+            <strong style={{color: "#000000"}}>{currentNetwork}</strong>
+          </span>
+        </div>
+
         {!user?.loggedIn && (
           <button
             onClick={authenticate}
@@ -54,7 +89,7 @@ export function Navbar() {
           </button>
         )}
         {user?.loggedIn && (
-          <div style={{display: "flex", alignItems: "center", gap: "1rem"}}>
+          <>
             <span
               style={{
                 fontSize: "0.9rem",
@@ -90,7 +125,7 @@ export function Navbar() {
             >
               Log Out
             </button>
-          </div>
+          </>
         )}
       </div>
     </nav>
