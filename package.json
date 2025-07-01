@@ -10,7 +10,10 @@
     "changeset": "changeset",
     "clear": "find . -name node_modules -type d -prune -exec rm -rf '{}' + && find . -name dist -type d -prune -exec rm -rf '{}' +",
     "prettier:check": "prettier --check .",
-    "prettier": "prettier --write ."
+    "prettier": "prettier --write .",
+    "demo": "npm run build && cd packages/demo && npm run dev:emulator",
+    "demo:testnet": "npm run build && cd packages/demo && npm run dev:testnet",
+    "demo:mainnet": "npm run build && cd packages/demo && npm run dev:mainnet"
   },
   "name": "fcl-js",
   "devDependencies": {
