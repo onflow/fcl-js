@@ -1,0 +1,101 @@
+---
+title: Type Definitions
+description: Type definitions for the Flow Client Library (FCL) packages.
+---
+
+<!-- THIS DOCUMENT IS AUTO-GENERATED FROM [onflow/typedefs](https://github.com/onflow/fcl-js/tree/master/packages/typedefs). DO NOT EDIT MANUALLY -->
+
+# Type Definitions
+
+Documentation for core types used throughout the Flow Client Library (FCL).
+
+{{#if interfaces.length}}
+## Interfaces
+
+{{#each interfaces}}
+### {{name}}
+
+```typescript
+{{{importStatement}}}
+```
+
+{{#if description}}
+{{{description}}}
+{{/if}}
+
+{{#if properties.length}}
+**Properties:**
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+{{#each properties}}
+| `{{name}}` | `{{{type}}}` | {{#if description}}{{{description}}}{{/if}} |
+{{/each}}
+{{/if}}
+
+{{/each}}
+{{/if}}
+
+{{#if types.length}}
+## Types
+
+{{#each types}}
+### {{name}}
+
+```typescript
+{{{importStatement}}}
+```
+
+{{#if description}}
+{{{description}}}
+{{/if}}
+
+{{#if properties.length}}
+**Properties:**
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+{{#each properties}}
+| `{{name}}` | `{{{type}}}` | {{#if description}}{{{description}}}{{/if}} |
+{{/each}}
+{{/if}}
+
+{{#if members.length}}
+**Members:**
+
+| Name | Value |
+| ---- | ----- |
+{{#each members}}
+| `{{name}}` | {{{value}}} |
+{{/each}}
+{{/if}}
+
+{{/each}}
+{{/if}}
+
+{{#if enums.length}}
+## Enums
+
+{{#each enums}}
+### {{name}}
+
+```typescript
+{{{importStatement}}}
+```
+
+{{#if description}}
+{{{description}}}
+{{/if}}
+
+**Members:**
+
+| Name | Value |
+| ---- | ----- |
+{{#each members}}
+| `{{name}}` | {{#if value}}{{{value}}}{{else}}`"{{name}}"`{{/if}} |
+{{/each}}
+
+{{/each}}
+{{/if}}
+
+---

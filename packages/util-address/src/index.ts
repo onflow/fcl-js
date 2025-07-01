@@ -1,3 +1,8 @@
+/**
+ * @description Removes 0x from address if present
+ * @param address - Flow address
+ * @returns Flow address without 0x prefix
+ */
 export function sansPrefix(address: null): null
 export function sansPrefix(address: string): string
 export function sansPrefix(address: string | null): string | null
@@ -11,6 +16,11 @@ export function sansPrefix(address: string | null): string | null {
   return address.replace(/^0x/, "").replace(/^Fx/, "")
 }
 
+/**
+ * @description Adds 0x to address if not already present
+ * @param address - Flow address
+ * @returns Flow address with 0x prefix
+ */
 export function withPrefix(address: null): null
 export function withPrefix(address: string): string
 export function withPrefix(address: string | null): string | null
