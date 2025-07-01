@@ -1,10 +1,14 @@
-import {useFlowEvents} from "@onflow/kit"
+import {useFlowEvents, useFlowConfig} from "@onflow/kit"
 import {useState, useCallback} from "react"
 import type {Event} from "@onflow/typedefs"
+import {getEventType} from "../../constants"
 
 export function FlowEventsCard() {
+  const config = useFlowConfig()
+  const currentNetwork = config.flowNetwork || "emulator"
+
   const [eventTypes, setEventTypes] = useState([
-    "A.1654653399040a61.FlowToken.TokensWithdrawn",
+    getEventType("FlowToken", "TokensWithdrawn", currentNetwork),
   ])
   const [fromBlock, setFromBlock] = useState<string>("")
   const [isListening, setIsListening] = useState(false)
@@ -36,13 +40,12 @@ export function FlowEventsCard() {
   const presetEvents = [
     {
       name: "FlowToken Withdrawn",
-      type: "A.1654653399040a61.FlowToken.TokensWithdrawn",
+      type: getEventType("FlowToken", "TokensWithdrawn", currentNetwork),
     },
     {
       name: "FlowToken Deposited",
-      type: "A.1654653399040a61.FlowToken.TokensDeposited",
+      type: getEventType("FlowToken", "TokensDeposited", currentNetwork),
     },
-    {name: "Account Created", type: "flow.AccountCreated"},
   ]
 
   const handleStartListening = () => {

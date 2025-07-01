@@ -1,7 +1,10 @@
-import {useFlowQuery} from "@onflow/kit"
+import {useFlowQuery, useFlowConfig} from "@onflow/kit"
 import {useState} from "react"
+import {getContractAddress} from "../../constants"
 
 export function FlowQueryCard() {
+  const config = useFlowConfig()
+  const currentNetwork = config.flowNetwork || "emulator"
   const [cadenceScript, setCadenceScript] = useState(
     `
 access(all) fun main(): String {
@@ -35,7 +38,7 @@ access(all) fun main(): String {
     },
     {
       name: "Get Account Balance",
-      script: `import FlowToken from 0x1654653399040a61
+      script: `import FlowToken from ${getContractAddress("FlowToken", currentNetwork)}
 
 access(all) fun main(address: Address): UFix64 {
     let account = getAccount(address)

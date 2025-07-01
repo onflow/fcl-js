@@ -1,7 +1,10 @@
-import {useFlowMutate} from "@onflow/kit"
+import {useFlowMutate, useFlowConfig} from "@onflow/kit"
 import {useState} from "react"
+import {getContractAddress} from "../../constants"
 
 export function FlowMutateCard() {
+  const config = useFlowConfig()
+  const currentNetwork = config.flowNetwork || "emulator"
   const [cadenceTransaction, setCadenceTransaction] = useState(
     `
 transaction {
@@ -28,27 +31,6 @@ transaction {
     
     execute {
         log("Transaction executed successfully")
-    }
-}`,
-    },
-    {
-      name: "Create Collection",
-      transaction: `import NonFungibleToken from 0x1d7e57aa55817448
-
-transaction {
-    prepare(signer: &Account) {
-        // Check if account already has a collection
-        if signer.storage.borrow<&{NonFungibleToken.Collection}>(from: /storage/NFTCollection) == nil {
-            // Create a new empty collection
-            let collection <- ExampleNFT.createEmptyCollection(nftType: Type<@ExampleNFT.NFT>())
-            
-            // Save it to storage
-            signer.storage.save(<-collection, to: /storage/NFTCollection)
-            
-            // Create a public capability for the collection
-            let cap = signer.capabilities.storage.issue<&{NonFungibleToken.Collection}>(/storage/NFTCollection)
-            signer.capabilities.publish(cap, at: /public/NFTCollection)
-        }
     }
 }`,
     },

@@ -1,14 +1,6 @@
-import {useFlowAccount, useFlowConfig, type FlowNetwork} from "@onflow/kit"
+import {useFlowAccount, useFlowConfig} from "@onflow/kit"
 import {useState} from "react"
-
-// Network-specific contract addresses
-const CONTRACT_ADDRESSES: Record<string, Record<FlowNetwork, string>> = {
-  FlowToken: {
-    emulator: "0x0ae53cb6e3f42a79",
-    testnet: "0x7e60df042a9c0868",
-    mainnet: "0x1654653399040a61",
-  },
-}
+import {CONTRACT_ADDRESSES} from "../../constants"
 
 export function FlowAccountCard() {
   const config = useFlowConfig()
