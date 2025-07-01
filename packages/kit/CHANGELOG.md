@@ -1,5 +1,11 @@
 # @onflow/kit
 
+## 0.7.0
+
+### Minor Changes
+
+- [#2551](https://github.com/onflow/fcl-js/pull/2551) [`32db6b4e909d92aa66d969990ae2c21f93c52b38`](https://github.com/onflow/fcl-js/commit/32db6b4e909d92aa66d969990ae2c21f93c52b38) Thanks [@chasefleming](https://github.com/chasefleming)! - Rename useCurrentFlowUser to useFlowCurrentUser
+
 ## 0.6.0
 
 ### Minor Changes
