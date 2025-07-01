@@ -30,6 +30,7 @@
     "@onflow/util-uid": "1.2.3"
   },
   "changesets": [
+    "blue-suns-accept",
     "breezy-gifts-sit",
     "chatty-ghosts-bake",
     "fast-lobsters-train",

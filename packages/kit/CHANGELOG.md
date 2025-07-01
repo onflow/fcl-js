@@ -1,5 +1,11 @@
 # @onflow/kit
 
+## 0.7.1-alpha.0
+
+### Patch Changes
+
+- [#2545](https://github.com/onflow/fcl-js/pull/2545) [`847537524b036589b14a975f450d2bc8969a01da`](https://github.com/onflow/fcl-js/commit/847537524b036589b14a975f450d2bc8969a01da) Thanks [@chasefleming](https://github.com/chasefleming)! - Make `useFlowChainId` args consistent with other hooks
+
 ## 0.7.0
 
 ### Minor Changes
