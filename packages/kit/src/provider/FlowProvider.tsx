@@ -4,11 +4,16 @@ import {FlowConfig, FlowConfigContext} from "../core/context"
 import {DefaultOptions, QueryClient} from "@tanstack/react-query"
 import {FlowQueryClientProvider} from "./FlowQueryClient"
 import {deepEqual} from "../utils/deepEqual"
+import {ThemeProvider, Theme} from "../core/theme"
+import tailwindStyles from "../styles/tailwind.css"
+import {DarkModeProvider} from "./DarkModeProvider"
 
 interface FlowProviderProps {
   config?: FlowConfig
   queryClient?: QueryClient
   flowJson?: Record<string, any>
+  theme?: Partial<Theme>
+  darkMode?: boolean
 }
 
 const mappings: Array<{fcl: string; typed: keyof FlowConfig}> = [
@@ -87,15 +92,11 @@ const defaultQueryOptions: DefaultOptions = {
   },
 }
 
-export function FlowProvider({
-  config: initialConfig = {},
-  queryClient: _queryClient,
-  flowJson,
-  children,
-}: PropsWithChildren<FlowProviderProps>) {
-  const [queryClient] = useState<QueryClient>(
-    () => _queryClient ?? new QueryClient({defaultOptions: defaultQueryOptions})
-  )
+// Custom hook for FCL configuration
+const useFCLConfig = (
+  initialConfig: FlowConfig,
+  flowJson?: Record<string, any>
+) => {
   const [flowConfig, setFlowConfig] = useState<FlowConfig | null>(null)
   const [isFlowJsonLoaded, setIsFlowJsonLoaded] = useState(false)
 
@@ -134,6 +135,22 @@ export function FlowProvider({
     return () => unsubscribe()
   }, [initialConfig, flowJson])
 
+  return {flowConfig, isFlowJsonLoaded}
+}
+
+export function FlowProvider({
+  config: initialConfig = {},
+  queryClient: _queryClient,
+  flowJson,
+  theme: customTheme,
+  children,
+  darkMode = false,
+}: PropsWithChildren<FlowProviderProps>) {
+  const [queryClient] = useState<QueryClient>(
+    () => _queryClient ?? new QueryClient({defaultOptions: defaultQueryOptions})
+  )
+  const {flowConfig, isFlowJsonLoaded} = useFCLConfig(initialConfig, flowJson)
+
   if (!flowConfig || !isFlowJsonLoaded) {
     return null
   }
@@ -141,7 +158,10 @@ export function FlowProvider({
   return (
     <FlowQueryClientProvider queryClient={queryClient}>
       <FlowConfigContext.Provider value={flowConfig}>
-        {children}
+        <style>{tailwindStyles}</style>
+        <ThemeProvider theme={customTheme}>
+          <DarkModeProvider darkMode={darkMode}>{children}</DarkModeProvider>
+        </ThemeProvider>
       </FlowConfigContext.Provider>
     </FlowQueryClientProvider>
   )
