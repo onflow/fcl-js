@@ -1,4 +1,3 @@
-import {CurrentUserConfig} from "../current-user"
 import {createUser, type CurrentUserServiceApi} from "../current-user"
 import {StorageProvider} from "../fcl-core"
 import {createSdkClient, SdkClientOptions} from "@onflow/sdk/types/sdk-client"
@@ -17,7 +16,6 @@ interface FCLConfig extends SdkClientOptions {
     // TODO (jribbink): Define the type for execStrategy
     execStrategy?: (...args: any[]) => any
   }
-  currentUserConfig: CurrentUserConfig
 }
 
 // Define a compatibility config interface for backward compatibility
@@ -46,20 +44,13 @@ export interface FCLContext {
   storage: StorageProvider
   /** Legacy config compatibility layer */
   config: ConfigService
+  platform?: string
 }
 
 /**
  * Factory function to create an FCL context
  */
 export function createFCLContext(config: FCLConfig): FCLContext {
-  const currentUser = createUser({
-    platform: config.platform,
-    getStorageProvider: async () => config.storage,
-    discovery: {
-      execStrategy: config.discovery?.execStrategy,
-    },
-  })
-
   // Create internal config store based on provided typed config
   const configStore = new Map<string, any>([
     ["platform", config.platform],
@@ -127,17 +118,29 @@ export function createFCLContext(config: FCLConfig): FCLContext {
     },
   }
 
+  const sdk = createSdkClient({
+    accessNode: config.accessNode,
+    transport: config.transport,
+    computeLimit: config.computeLimit,
+    customResolver: config.customResolver,
+    customDecoders: config.customDecoders,
+    debug: config.debug,
+  })
+
+  const currentUser = createUser({
+    platform: config.platform,
+    getStorageProvider: async () => config.storage,
+    discovery: {
+      execStrategy: config.discovery?.execStrategy,
+    },
+    config: compatConfig,
+    sdk,
+  })
+
   return {
     storage: config.storage,
     currentUser: currentUser,
-    sdk: createSdkClient({
-      accessNode: config.accessNode,
-      transport: config.transport,
-      computeLimit: config.computeLimit,
-      customResolver: config.customResolver,
-      customDecoders: config.customDecoders,
-      debug: config.debug,
-    }),
+    sdk: sdk,
     config: compatConfig,
   }
 }

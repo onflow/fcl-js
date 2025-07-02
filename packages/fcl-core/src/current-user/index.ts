@@ -26,11 +26,29 @@ import {buildUser} from "./build-user"
 import {execService} from "./exec-service"
 import {getServiceRegistry} from "./exec-service/plugins"
 import {serviceOfType} from "./service-of-type"
+import {createPartialGlobalFCLContext} from "../context/global"
+import {FCLContext} from "../context"
 
 export interface CurrentUserConfig {
   platform: string
-  discovery?: object | undefined
-  getStorageProvider?: () => Promise<StorageProvider>
+  discovery?: {
+    execStrategy?: (...args: any[]) => any
+    authnInclude?: string[]
+    authnExclude?: string[]
+    featuresSuggested?: string[]
+  }
+  getStorageProvider: () => Promise<StorageProvider>
+}
+
+export interface CurrentUserContext extends Pick<FCLContext, "config" | "sdk"> {
+  platform: string
+  getStorageProvider: () => Promise<StorageProvider>
+  discovery?: {
+    execStrategy?: (...args: any[]) => any
+    authnInclude?: string[]
+    authnExclude?: string[]
+    featuresSuggested?: string[]
+  }
 }
 
 export interface CurrentUserServiceApi {
@@ -108,10 +126,10 @@ const getStoredUser = async (storage: StorageProvider): Promise<any> => {
   return stored || fallback
 }
 
-const makeHandlers = (cfg: CurrentUserConfig) => {
+const makeHandlers = (context: CurrentUserContext) => {
   // Wrapper for backwards compatibility
   const getStorageProvider = async (): Promise<StorageProvider> => {
-    if (cfg.getStorageProvider) return await cfg.getStorageProvider()
+    if (context.getStorageProvider) return await context.getStorageProvider()
     return (await config.first(
       ["fcl.storage", "fcl.storage.default"],
       undefined
@@ -169,8 +187,9 @@ const makeHandlers = (cfg: CurrentUserConfig) => {
   }
 }
 
-const spawnCurrentUser = (cfg: CurrentUserConfig) =>
-  spawn(makeHandlers(cfg), NAME)
+const spawnCurrentUser = (context: CurrentUserContext) => {
+  spawn(makeHandlers(context), NAME)
+}
 
 function notExpired(user: any): boolean {
   return (
@@ -255,7 +274,7 @@ const makeConfig = async ({
  * @param config Current User Configuration
  */
 const createAuthenticate =
-  (config: CurrentUserConfig) =>
+  (context: CurrentUserContext) =>
   /**
    * @description Authenticate a user
    * @param opts Options
@@ -279,9 +298,9 @@ const createAuthenticate =
     }
 
     return new Promise(async (resolve, reject) => {
-      spawnCurrentUser(config)
+      spawnCurrentUser(context)
       const opts = {redir}
-      const user = await createSnapshot(config)()
+      const user = await createSnapshot(context)()
       const refreshService = serviceOfType(user.services, "authn-refresh")
       let accountProofData
 
@@ -292,7 +311,7 @@ const createAuthenticate =
               service: refreshService,
               msg: accountProofData,
               opts,
-              platform: config.platform,
+              platform: context.platform,
               user,
             })
             send(NAME, SET_CURRENT_USER, await buildUser(response))
@@ -303,7 +322,7 @@ const createAuthenticate =
               level: LEVELS.error,
             })
           } finally {
-            return resolve(await createSnapshot(config)())
+            return resolve(await createSnapshot(context)())
           }
         } else {
           return resolve(user)
@@ -323,13 +342,13 @@ const createAuthenticate =
 
       try {
         const discoveryService = await getDiscoveryService(service)
-        const response: any = await execService({
+        const response: any = await execService(context, {
           service: discoveryService,
           msg: accountProofData,
           config: await makeConfig(discoveryService),
           opts,
-          platform: config.platform,
-          execStrategy: (config.discovery as any)?.execStrategy,
+          platform: context.platform,
+          execStrategy: (context.discovery as any)?.execStrategy,
           user,
         })
 
@@ -341,7 +360,7 @@ const createAuthenticate =
           level: LEVELS.error,
         })
       } finally {
-        resolve(await createSnapshot(config)())
+        resolve(await createSnapshot(context)())
       }
     })
   }
@@ -350,12 +369,12 @@ const createAuthenticate =
  * @description Factory function to create the unauthenticate method
  * @param config Current User Configuration
  */
-function createUnauthenticate(config: CurrentUserConfig) {
+function createUnauthenticate(context: CurrentUserContext) {
   /**
    * @description Unauthenticate a user
    */
   return function unauthenticate() {
-    spawnCurrentUser(config)
+    spawnCurrentUser(context)
     send(NAME, DEL_CURRENT_USER)
   }
 }
@@ -373,7 +392,7 @@ const normalizePreAuthzResponse = (authz: any) => ({
  * @param config Current User Configuration
  */
 const createResolvePreAuthz =
-  (config: CurrentUserConfig) =>
+  (context: CurrentUserContext) =>
   (authz: any, {user}: {user: CurrentUser}) => {
     const resp = normalizePreAuthzResponse(authz)
     const axs = []
@@ -387,10 +406,10 @@ const createResolvePreAuthz =
       addr: az.identity.address,
       keyId: az.identity.keyId,
       signingFunction(signable: Signable) {
-        return execService({
+        return execService(context, {
           service: az,
           msg: signable,
-          platform: config.platform,
+          platform: context.platform,
           user,
         })
       },
@@ -408,7 +427,7 @@ const createResolvePreAuthz =
  * @param config Current User Configuration
  */
 const createAuthorization =
-  (config: CurrentUserConfig) =>
+  (context: CurrentUserContext) =>
   /**
    * @description Produces the needed authorization details for the current user to submit transactions to Flow
    * It defines a signing function that connects to a user's wallet provider to produce signatures to submit transactions.
@@ -417,22 +436,22 @@ const createAuthorization =
    * @returns Account object with signing function
    * */
   async (account: Account) => {
-    spawnCurrentUser(config)
+    spawnCurrentUser(context)
 
     return {
       ...account,
       tempId: "CURRENT_USER",
       async resolve(account: Account, preSignable: Signable) {
-        const user = await createAuthenticate(config)({redir: true})
+        const user = await createAuthenticate(context)({redir: true})
         const authz = serviceOfType(user!.services, "authz")
         const preAuthz = serviceOfType(user!.services, "pre-authz")
 
         if (preAuthz)
-          return createResolvePreAuthz(config)(
-            await execService({
+          return createResolvePreAuthz(context)(
+            await execService(context, {
               service: preAuthz,
               msg: preSignable,
-              platform: config.platform,
+              platform: context.platform,
               user,
             }),
             {
@@ -450,13 +469,13 @@ const createAuthorization =
             signature: null,
             async signingFunction(signable: Signable) {
               return normalizeCompositeSignature(
-                await execService({
+                await execService(context, {
                   service: authz,
                   msg: signable,
                   opts: {
                     includeOlderJsonRpcCall: true,
                   },
-                  platform: config.platform,
+                  platform: context.platform,
                   user,
                 })
               )
@@ -474,7 +493,7 @@ const createAuthorization =
  * @description Factory function to create the subscribe method
  * @param config Current User Configuration
  */
-function createSubscribe(config: CurrentUserConfig) {
+function createSubscribe(config: CurrentUserContext) {
   /**
    * @description
    * The callback passed to subscribe will be called when the user authenticates and un-authenticates, making it easy to update the UI accordingly.
@@ -504,7 +523,9 @@ function createSubscribe(config: CurrentUserConfig) {
  * @description Factory function to create the snapshot method
  * @param config Current User Configuration
  */
-function createSnapshot(config: CurrentUserConfig): () => Promise<CurrentUser> {
+function createSnapshot(
+  config: CurrentUserContext
+): () => Promise<CurrentUser> {
   /**
    * @description Gets the current user
    * @returns {Promise<CurrentUser>} User object
@@ -519,7 +540,7 @@ function createSnapshot(config: CurrentUserConfig): () => Promise<CurrentUser> {
  * @description Resolves the current user as an argument
  * @param config Current User Configuration
  */
-const createResolveArgument = (config: CurrentUserConfig) => async () => {
+const createResolveArgument = (config: CurrentUserContext) => async () => {
   const {addr} = (await createAuthenticate(config)()) as any
   return arg(withPrefix(addr) as any, t.Address)
 }
@@ -537,15 +558,15 @@ const makeSignable = (msg: string) => {
  * @param config Current User Configuration
  */
 const createSignUserMessage =
-  (config: CurrentUserConfig) =>
+  (context: CurrentUserContext) =>
   /**
    * @description A method to use allowing the user to personally sign data via FCL Compatible Wallets/Services.
    * @param msg Message to sign
    * @returns Array of CompositeSignatures
    */
   async (msg: string) => {
-    spawnCurrentUser(config)
-    const user: any = await createAuthenticate(config)({
+    spawnCurrentUser(context)
+    const user: any = await createAuthenticate(context)({
       redir: true,
     })
 
@@ -557,10 +578,10 @@ const createSignUserMessage =
     )
 
     try {
-      const response = await execService({
+      const response = await execService(context, {
         service: signingService as any,
         msg: makeSignable(msg),
-        platform: config.platform,
+        platform: context.platform,
         user,
       })
       if (Array.isArray(response)) {
@@ -656,15 +677,15 @@ const createSignUserMessage =
  *
  * console.log("Message signatures:", signatures)
  */
-const createUser = (config: CurrentUserConfig): CurrentUserService => {
+const _createUser = (context: CurrentUserContext): CurrentUserService => {
   const currentUser = {
-    authenticate: createAuthenticate(config),
-    unauthenticate: createUnauthenticate(config),
-    authorization: createAuthorization(config),
-    signUserMessage: createSignUserMessage(config),
-    subscribe: createSubscribe(config),
-    snapshot: createSnapshot(config),
-    resolveArgument: createResolveArgument(config),
+    authenticate: createAuthenticate(context),
+    unauthenticate: createUnauthenticate(context),
+    authorization: createAuthorization(context),
+    signUserMessage: createSignUserMessage(context),
+    subscribe: createSubscribe(context),
+    snapshot: createSnapshot(context),
+    resolveArgument: createResolveArgument(context),
   }
 
   return Object.assign(
@@ -675,11 +696,41 @@ const createUser = (config: CurrentUserConfig): CurrentUserService => {
   ) as any
 }
 
+const createUser = (
+  context: Pick<FCLContext, "config" | "sdk" | "storage"> & {
+    platform: string
+    discovery?: {
+      execStrategy?: (...args: any[]) => any
+    }
+  }
+) => {
+  return _createUser({
+    ...context,
+    getStorageProvider: async () => context.storage,
+    discovery: context.discovery,
+  })
+}
+
 /**
  * @deprecated Use createCurrentUser instead. This is kept for backward compatibility.
  */
-const getCurrentUser = (config: CurrentUserConfig): CurrentUserService => {
-  return createUser(config)
+const getCurrentUser = (cfg: CurrentUserConfig): CurrentUserService => {
+  const partialContext = createPartialGlobalFCLContext()
+
+  // Wrapper for backwards compatibility
+  const getStorageProvider = async (): Promise<StorageProvider> => {
+    if (cfg.getStorageProvider) return await cfg.getStorageProvider()
+    return (await config.first(
+      ["fcl.storage", "fcl.storage.default"],
+      undefined
+    )) as any
+  }
+
+  return _createUser({
+    ...partialContext,
+    getStorageProvider,
+    platform: cfg.platform,
+  })
 }
 
 export {createUser, getCurrentUser}
