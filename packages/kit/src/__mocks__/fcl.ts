@@ -17,7 +17,22 @@ export default {
   events: jest.fn(),
   mutate: jest.fn(),
   query: jest.fn(),
+  queryRaw: jest.fn(),
   tx: jest.fn(),
+  send: jest.fn().mockImplementation(args => {
+    // The real FCL returns an object that allows chaining with .then(fcl.decode)
+    return {
+      then: (callback: (value: any) => any) => callback({}),
+    }
+  }),
+  decode: jest.fn().mockImplementation(result => {
+    return result
+  }),
+  getTransaction: jest.fn().mockImplementation(txId => {
+    return {
+      /* Mock transaction request object */
+    }
+  }),
   config: () => ({
     subscribe: sharedSubscribe,
     load: jest.fn(),

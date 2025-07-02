@@ -1,17 +1,17 @@
 import {renderHook, act, waitFor} from "@testing-library/react"
 import * as fcl from "@onflow/fcl"
 import {FlowProvider} from "../provider"
-import {useFlowQuery, encodeQueryArgs} from "./useFlowQuery"
+import {useFlowQueryRaw} from "./useFlowQueryRaw"
 
 jest.mock("@onflow/fcl", () => require("../__mocks__/fcl").default)
 
-describe("useFlowQuery", () => {
+describe("useFlowQueryRaw", () => {
   afterEach(() => {
     jest.clearAllMocks()
   })
 
   test("returns undefined when no cadence is provided", async () => {
-    const {result} = renderHook(() => useFlowQuery({cadence: ""}), {
+    const {result} = renderHook(() => useFlowQueryRaw({cadence: ""}), {
       wrapper: FlowProvider,
     })
 
@@ -22,14 +22,14 @@ describe("useFlowQuery", () => {
   test("fetches data successfully", async () => {
     const cadenceScript = "access(all) fun main(): Int { return 42 }"
     const expectedResult = 42
-    const queryMock = jest.mocked(fcl.query)
+    const queryMock = jest.mocked(fcl.queryRaw)
     queryMock.mockResolvedValueOnce(expectedResult)
 
     let hookResult: any
 
     await act(async () => {
       const {result} = renderHook(
-        () => useFlowQuery({cadence: cadenceScript}),
+        () => useFlowQueryRaw({cadence: cadenceScript}),
         {
           wrapper: FlowProvider,
         }
@@ -49,32 +49,32 @@ describe("useFlowQuery", () => {
 
   test("does not fetch data when enabled is false", async () => {
     const cadenceScript = "access(all) fun main(): Int { return 42 }"
-    const queryMock = jest.mocked(fcl.query)
+    const queryMock = jest.mocked(fcl.queryRaw)
 
     renderHook(
-      () => useFlowQuery({cadence: cadenceScript, query: {enabled: false}}),
+      () => useFlowQueryRaw({cadence: cadenceScript, query: {enabled: false}}),
       {
         wrapper: FlowProvider,
       }
     )
 
-    // wait a little to ensure fcl.query isn't called
+    // wait a little to ensure fcl.queryRaw isn't called
     await waitFor(() => {
       expect(queryMock).not.toHaveBeenCalled()
     })
   })
 
-  test("handles error from fcl.query", async () => {
+  test("handles error from fcl.queryRaw", async () => {
     const cadenceScript = "access(all) fun main(): Int { return 42 }"
     const testError = new Error("Query failed")
-    const queryMock = jest.mocked(fcl.query)
+    const queryMock = jest.mocked(fcl.queryRaw)
     queryMock.mockRejectedValueOnce(testError)
 
     let hookResult: any
 
     await act(async () => {
       const {result} = renderHook(
-        () => useFlowQuery({cadence: cadenceScript}),
+        () => useFlowQueryRaw({cadence: cadenceScript}),
         {
           wrapper: FlowProvider,
         }
@@ -91,14 +91,14 @@ describe("useFlowQuery", () => {
     const cadenceScript = "access(all) fun main(): Int { return 42 }"
     const initialResult = 42
     const updatedResult = 100
-    const queryMock = jest.mocked(fcl.query)
+    const queryMock = jest.mocked(fcl.queryRaw)
     queryMock.mockResolvedValueOnce(initialResult)
 
     let hookResult: any
 
     await act(async () => {
       const {result} = renderHook(
-        () => useFlowQuery({cadence: cadenceScript}),
+        () => useFlowQueryRaw({cadence: cadenceScript}),
         {
           wrapper: FlowProvider,
         }
@@ -120,7 +120,7 @@ describe("useFlowQuery", () => {
   test("supports args function parameter", async () => {
     const cadenceScript = "access(all) fun main(a: Int): Int { return a }"
     const expectedResult = 7
-    const queryMock = jest.mocked(fcl.query)
+    const queryMock = jest.mocked(fcl.queryRaw)
     queryMock.mockResolvedValueOnce(expectedResult)
 
     const argsFunction = (arg: typeof fcl.arg, t: typeof fcl.t) => [
@@ -131,7 +131,7 @@ describe("useFlowQuery", () => {
 
     await act(async () => {
       const {result} = renderHook(
-        () => useFlowQuery({cadence: cadenceScript, args: argsFunction}),
+        () => useFlowQueryRaw({cadence: cadenceScript, args: argsFunction}),
         {
           wrapper: FlowProvider,
         }
@@ -151,7 +151,7 @@ describe("useFlowQuery", () => {
     const cadenceScript = "access(all) fun main(a: Int): Int { return a }"
     const initialResult = 7
     const updatedResult = 42
-    const queryMock = jest.mocked(fcl.query)
+    const queryMock = jest.mocked(fcl.queryRaw)
     queryMock.mockResolvedValueOnce(initialResult)
 
     const argsFunction = (arg: typeof fcl.arg, t: typeof fcl.t) => [
@@ -162,7 +162,7 @@ describe("useFlowQuery", () => {
     let hookRerender: any
 
     await act(async () => {
-      const {result, rerender} = renderHook(useFlowQuery, {
+      const {result, rerender} = renderHook(useFlowQueryRaw, {
         wrapper: FlowProvider,
         initialProps: {cadence: cadenceScript, args: argsFunction},
       })
@@ -182,56 +182,5 @@ describe("useFlowQuery", () => {
     })
 
     await waitFor(() => expect(hookResult.current.data).toEqual(updatedResult))
-  })
-
-  describe("encodeQueryArgs", () => {
-    beforeEach(() => {
-      // Clear mocks
-      jest.clearAllMocks()
-    })
-
-    test("returns undefined when args is undefined", () => {
-      const result = encodeQueryArgs(undefined)
-      expect(result).toBeUndefined()
-    })
-
-    test("returns undefined when args is null", () => {
-      const result = encodeQueryArgs(null as any)
-      expect(result).toBeUndefined()
-    })
-
-    test("encodes single argument correctly", () => {
-      const argsFunction = (arg: typeof fcl.arg, t: typeof fcl.t) => [
-        arg("42", t.Int),
-      ]
-
-      const result = encodeQueryArgs(argsFunction)
-
-      expect(result).toEqual([{type: "Int", value: "42"}])
-    })
-
-    test("encodes multiple arguments correctly", () => {
-      const argsFunction = (arg: typeof fcl.arg, t: typeof fcl.t) => [
-        arg("42", t.Int),
-        arg("hello", t.String),
-        arg("0x1234567890abcdef", t.Address),
-      ]
-
-      const result = encodeQueryArgs(argsFunction)
-
-      expect(result).toEqual([
-        {type: "Int", value: "42"},
-        {type: "String", value: "hello"},
-        {type: "Address", value: "0x1234567890abcdef"},
-      ])
-    })
-
-    test("handles empty args array", () => {
-      const argsFunction = (arg: typeof fcl.arg, t: typeof fcl.t) => []
-
-      const result = encodeQueryArgs(argsFunction)
-
-      expect(result).toEqual([])
-    })
   })
 })

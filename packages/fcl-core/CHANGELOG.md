@@ -1,12 +1,18 @@
 # @onflow/fcl
 
+## 1.20.0
+
+### Minor Changes
+
+- [#2523](https://github.com/onflow/fcl-js/pull/2523) [`6076b0bfc95bcbe07a734c0c10c32d81ecb1dd2d`](https://github.com/onflow/fcl-js/commit/6076b0bfc95bcbe07a734c0c10c32d81ecb1dd2d) Thanks [@mfbz](https://github.com/mfbz)! - Added `queryRaw` method to execute a query and get non-decoded data as result.
+
 ## 1.19.0
 
 ### Minor Changes
 
 - [#2201](https://github.com/onflow/fcl-js/pull/2201) [`b9c4ed3b95c2dc73698e45f353a6ef9a48f23cab`](https://github.com/onflow/fcl-js/commit/b9c4ed3b95c2dc73698e45f353a6ef9a48f23cab) Thanks [@jribbink](https://github.com/jribbink)! - Add real-time streaming methods `subscribe` and `subscribeRaw`.
 
-  These are only available when using a REST API endpoint and not supported by the deprecated GRPC transport.
+  These are only available when using a REST API endpoint and not supported by the deprecated GRPC trasnport.
 
   The following topics are now available:
 
@@ -150,7 +156,7 @@
 
   ```javascript
   import {config} from "@onflow/fcl"
-  
+
   config({
     "discovery.wallet": "https://fcl-discovery.onflow.org/testnet/authn",
     "discovery.authn.endpoint":
