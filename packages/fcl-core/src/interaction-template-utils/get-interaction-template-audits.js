@@ -1,6 +1,6 @@
 import {config, invariant} from "@onflow/sdk"
 import {log, LEVELS} from "@onflow/util-logger"
-import {query} from "../exec/query.js"
+import {query} from "../exec/query"
 import {generateTemplateId} from "./generate-template-id/generate-template-id.js"
 import {getChainId} from "../utils"
 

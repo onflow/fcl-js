@@ -1,5 +1,12 @@
 # @onflow/fcl-wc
 
+## 6.0.4
+
+### Patch Changes
+
+- Updated dependencies [[`6076b0bfc95bcbe07a734c0c10c32d81ecb1dd2d`](https://github.com/onflow/fcl-js/commit/6076b0bfc95bcbe07a734c0c10c32d81ecb1dd2d)]:
+  - @onflow/fcl-core@1.20.0
+
 ## 6.0.3
 
 ### Patch Changes
@@ -624,7 +631,7 @@
   ```javascript
   import * as fcl from "@onflow/fcl"
   import {initFclWc} from "@onflow/fcl-wc"
-  
+
   const {FclConnectServicePlugin, client} = await initFclWc({
     projectId: PROJECT_ID,
     metadata: {
@@ -634,7 +641,7 @@
       icons: ["https://avatars.githubusercontent.com/u/62387156?s=280&v=4"],
     },
   })
-  
+
   fcl.pluginRegistry.add(FclConnectServicePlugin)
   ```
 
@@ -642,12 +649,12 @@
 
   ```javascript
   import {getSdkError} from "@onflow/fcl-wc"
-  
+
   client.on("session_update", ({topic, params}) => {
     const session = client.session.get(topic)
     console.log("EVENT", "session_update", {topic, params, session})
   })
-  
+
   await client.disconnect({
     topic: session.topic,
     reason: getSdkError("USER_DISCONNECTED"),
@@ -818,7 +825,7 @@
   ```javascript
   import * as fcl from "@onflow/fcl"
   import {initFclWc} from "@onflow/fcl-wc"
-  
+
   const {FclConnectServicePlugin, client} = await initFclWc({
     projectId: PROJECT_ID,
     metadata: {
@@ -828,7 +835,7 @@
       icons: ["https://avatars.githubusercontent.com/u/62387156?s=280&v=4"],
     },
   })
-  
+
   fcl.pluginRegistry.add(FclConnectServicePlugin)
   ```
 
@@ -836,12 +843,12 @@
 
   ```javascript
   import {getSdkError} from "@onflow/fcl-wc"
-  
+
   client.on("session_update", ({topic, params}) => {
     const session = client.session.get(topic)
     console.log("EVENT", "session_update", {topic, params, session})
   })
-  
+
   await client.disconnect({
     topic: session.topic,
     reason: getSdkError("USER_DISCONNECTED"),

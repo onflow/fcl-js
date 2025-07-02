@@ -26,6 +26,7 @@ import flowJson from "../flow.json"
     appDetailUrl: "https://myonchainapp.com",
   }}
   flowJson={flowJson}
+  darkMode={false}
 >
   <App />
 </FlowProvider>
@@ -42,7 +43,9 @@ import flowJson from "../flow.json"
 - `useFlowRevertibleRandom`
 - `useFlowMutate`
 - `useFlowTransaction`
+- `useFlowTransactionStatus`
 - `useCrossVmTokenBalance`
+- `useDarkMode`
 
 ## 📚 Full Documentation
 

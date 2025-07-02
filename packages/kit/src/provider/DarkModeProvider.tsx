@@ -1,10 +1,7 @@
 import React, {createContext, useContext, PropsWithChildren} from "react"
-import {useDarkModeState} from "../hooks/internal/useDarkModeState"
 
 type DarkModeContextType = {
   isDark: boolean
-  toggleDark: () => void
-  setDark: (dark: boolean) => void
 }
 
 const DarkModeContext = createContext<DarkModeContextType | undefined>(
@@ -13,16 +10,10 @@ const DarkModeContext = createContext<DarkModeContextType | undefined>(
 
 export function DarkModeProvider({
   children,
-  enabled,
-}: PropsWithChildren<{enabled: boolean}>) {
-  const darkModeState = useDarkModeState(enabled)
-
-  if (!enabled) {
-    return <>{children}</>
-  }
-
+  darkMode = false,
+}: PropsWithChildren<{darkMode?: boolean}>) {
   return (
-    <DarkModeContext.Provider value={darkModeState}>
+    <DarkModeContext.Provider value={{isDark: darkMode}}>
       {children}
     </DarkModeContext.Provider>
   )
@@ -31,9 +22,7 @@ export function DarkModeProvider({
 export function useDarkMode() {
   const context = useContext(DarkModeContext)
   if (!context) {
-    throw new Error(
-      "useDarkMode must be used within a FlowProvider with enableDarkMode={true}"
-    )
+    throw new Error("useDarkMode must be used within a FlowProvider")
   }
   return context
 }
