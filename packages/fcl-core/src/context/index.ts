@@ -76,26 +76,26 @@ export function createFCLContext(config: FCLConfig): FCLContext {
   }
 
   // Create subscribers registry
-  const subscribers = new Set<(key: string, value: any) => void>()
+  const subscribers = new Set<(config: Record<string, any>) => void>()
 
   // Create compatibility config layer
   const compatConfig: ConfigService = {
     get: async (key: string) => configStore.get(key),
     put: async (key: string, value: any) => {
       configStore.set(key, value)
-      subscribers.forEach(fn => fn(key, value))
+      subscribers.forEach(fn => fn(configStore))
       return compatConfig
     },
     update: async (key: string, updateFn: (oldValue: any) => any) => {
       const oldValue = configStore.get(key)
       const newValue = updateFn(oldValue)
       configStore.set(key, newValue)
-      subscribers.forEach(fn => fn(key, newValue))
+      subscribers.forEach(fn => fn(configStore))
       return compatConfig
     },
     delete: async (key: string) => {
       configStore.delete(key)
-      subscribers.forEach(fn => fn(key, undefined))
+      subscribers.forEach(fn => fn(configStore))
       return compatConfig
     },
     where: async (pattern: RegExp) => {
@@ -107,7 +107,7 @@ export function createFCLContext(config: FCLConfig): FCLContext {
       }
       return result
     },
-    subscribe: (callback: (key: string, value: any) => void) => {
+    subscribe: (callback: (config: Record<string, any>) => void) => {
       subscribers.add(callback)
       return () => {
         subscribers.delete(callback)
@@ -146,6 +146,7 @@ export function createFCLContext(config: FCLConfig): FCLContext {
 }
 
 export function createConfigService(config: FCLConfig): ConfigService {
+  // Create internal config store based on provided typed config
   const configStore = new Map<string, any>([
     ["platform", config.platform],
     ["discoveryWallet", config.discoveryWallet],
@@ -169,21 +170,28 @@ export function createConfigService(config: FCLConfig): ConfigService {
     }
   }
 
-  return {
+  // Create subscribers registry
+  const subscribers = new Set<(config: Record<string, any>) => void>()
+
+  // Create compatibility config layer
+  const configService: ConfigService = {
     get: async (key: string) => configStore.get(key),
     put: async (key: string, value: any) => {
       configStore.set(key, value)
-      return createConfigService(config)
+      subscribers.forEach(fn => fn(configStore))
+      return configService
     },
     update: async (key: string, updateFn: (oldValue: any) => any) => {
       const oldValue = configStore.get(key)
       const newValue = updateFn(oldValue)
       configStore.set(key, newValue)
-      return createConfigService(config)
+      subscribers.forEach(fn => fn(configStore))
+      return configService
     },
     delete: async (key: string) => {
       configStore.delete(key)
-      return createConfigService(config)
+      subscribers.forEach(fn => fn(configStore))
+      return configService
     },
     where: async (pattern: RegExp) => {
       const result: Record<string, any> = {}
@@ -194,12 +202,16 @@ export function createConfigService(config: FCLConfig): ConfigService {
       }
       return result
     },
-    subscribe: (callback: (key: string, value: any) => void) => {
-      // No subscribers in this context
-      return () => {}
+    subscribe: (callback: (config: Record<string, any>) => void) => {
+      subscribers.add(callback)
+      return () => {
+        subscribers.delete(callback)
+      }
     },
     all: async () => {
       return Object.fromEntries(configStore.entries())
     },
   }
+
+  return configService
 }
