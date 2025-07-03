@@ -1,0 +1,43 @@
+import {FCLContext} from "./index"
+import {config as _config} from "@onflow/config"
+import {
+  send,
+  decode,
+  subscribe,
+  subscribeRaw,
+  account,
+  block,
+  resolve,
+} from "@onflow/sdk"
+
+/**
+ * Note to self:
+ * Create the partial context
+ * Then you need to make functions take only the necessary parts of the context
+ * This way you can avoid the issue where the subtype does not satisfy the args
+ */
+
+/**
+ * Create a global FCL Context based on the current global config.
+ *
+ * Some configuration values are still curried to the context as a backward compatibility measure.
+ */
+export function createPartialGlobalFCLContext(): Omit<
+  FCLContext,
+  "storage" | "currentUser"
+> {
+  return {
+    config: _config(),
+    // TODO: We need to switch SDK to use the global config service instead of direct config access
+    // It may be helpful to create a helper to get the global instance for the SDK
+    sdk: {
+      send,
+      decode,
+      subscribe,
+      subscribeRaw,
+      account,
+      block,
+      resolve,
+    },
+  }
+}
