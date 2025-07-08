@@ -1,6 +1,6 @@
 # @onflow/fcl-wc
 
-## 7.0.0-alpha.0
+## 6.0.5-alpha.0
 
 ### Patch Changes
 

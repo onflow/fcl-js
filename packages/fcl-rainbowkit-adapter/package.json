@@ -1,6 +1,6 @@
 {
   "name": "@onflow/fcl-rainbowkit-adapter",
-  "version": "1.0.0-alpha.0",
+  "version": "0.2.3-alpha.0",
   "description": "Rainbowkit adapter for FCL-compatible wallets",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
@@ -40,8 +40,8 @@
     "@babel/runtime": "^7.25.7",
     "@ethersproject/bytes": "^5.7.0",
     "@ethersproject/hash": "^5.7.0",
-    "@onflow/fcl-ethereum-provider": "1.0.0-alpha.0",
-    "@onflow/fcl-wagmi-adapter": "1.0.0-alpha.0",
+    "@onflow/fcl-ethereum-provider": "0.0.7-alpha.0",
+    "@onflow/fcl-wagmi-adapter": "0.0.7-alpha.0",
     "@onflow/rlp": "^1.2.3",
     "@wagmi/core": "^2.16.3",
     "mipd": "^0.0.7",
