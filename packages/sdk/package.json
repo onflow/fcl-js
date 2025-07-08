@@ -1,7 +1,7 @@
 {
   "name": "@onflow/sdk",
   "version": "1.9.0",
-  "description": "Flow SDK",
+  "description": "Low-level JavaScript/TypeScript SDK for interacting with the Flow blockchain.",
   "license": "Apache-2.0",
   "author": "Flow Foundation",
   "homepage": "https://flow.com",
@@ -37,7 +37,8 @@
     "build": "npm run lint && fcl-bundle",
     "test:watch": "jest --watch",
     "start": "fcl-bundle --watch",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "generate-docs": "node ../../docs-generator/generate-docs.js"
   },
   "dependencies": {
     "@babel/runtime": "^7.25.7",

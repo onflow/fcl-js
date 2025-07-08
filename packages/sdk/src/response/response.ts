@@ -19,4 +19,21 @@ const DEFAULT_RESPONSE = {
   nodeVersionInfo: null,
 }
 
+/**
+ * Creates a default response object
+ *
+ * @returns A default response object
+ *
+ * @example
+ * import { response } from "@onflow/sdk"
+ *
+ * // Create a default response object
+ * const defaultResponse = response();
+ * console.log(defaultResponse.transaction); // null
+ * console.log(defaultResponse.account); // null
+ * console.log(defaultResponse.block); // null
+ *
+ * // Typically used internally by the SDK to initialize responses
+ * // You'll rarely need to use this directly in application code
+ */
 export const response = () => ({...DEFAULT_RESPONSE})

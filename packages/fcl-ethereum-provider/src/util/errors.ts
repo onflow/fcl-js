@@ -1,29 +1,33 @@
-export enum ProviderErrorCode {
+export const ProviderErrorCode = {
   // EIP-1193 error codes
-  UserRejectedRequest = 4001,
-  Unauthorized = 4100,
-  UnsupportedMethod = 4200,
-  Disconnected = 4900,
+  UserRejectedRequest: 4001,
+  Unauthorized: 4100,
+  UnsupportedMethod: 4200,
+  Disconnected: 4900,
 
   // EIP-1474 / JSON-RPC error codes
-  ParseError = -32700,
-  InvalidRequest = -32600,
-  MethodNotFound = -32601,
-  InvalidParams = -32602,
-  InternalError = -32603,
-}
+  ParseError: -32700,
+  InvalidRequest: -32600,
+  MethodNotFound: -32601,
+  InvalidParams: -32602,
+  InternalError: -32603,
+} as const
+
+export type ProviderErrorCode =
+  (typeof ProviderErrorCode)[keyof typeof ProviderErrorCode]
+
 export const ProviderErrorMessage: Record<ProviderErrorCode, string> = {
   // EIP-1193 error messages
-  [4001]: "User rejected request",
-  [4100]: "Unauthorized",
-  [4200]: "Unsupported method",
-  [4900]: "Disconnected",
+  [ProviderErrorCode.UserRejectedRequest]: "User rejected request",
+  [ProviderErrorCode.Unauthorized]: "Unauthorized",
+  [ProviderErrorCode.UnsupportedMethod]: "Unsupported method",
+  [ProviderErrorCode.Disconnected]: "Disconnected",
   // EIP-1474 / JSON-RPC error messages
-  [-32700]: "Parse error",
-  [-32600]: "Invalid request",
-  [-32601]: "Method not found",
-  [-32602]: "Invalid params",
-  [-32603]: "Internal error",
+  [ProviderErrorCode.ParseError]: "Parse error",
+  [ProviderErrorCode.InvalidRequest]: "Invalid request",
+  [ProviderErrorCode.MethodNotFound]: "Method not found",
+  [ProviderErrorCode.InvalidParams]: "Invalid params",
+  [ProviderErrorCode.InternalError]: "Internal error",
 }
 
 export class ProviderError extends Error {

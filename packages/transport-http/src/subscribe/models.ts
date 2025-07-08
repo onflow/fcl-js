@@ -1,8 +1,11 @@
-export enum Action {
-  LIST_SUBSCRIPTIONS = "list_subscriptions",
-  SUBSCRIBE = "subscribe",
-  UNSUBSCRIBE = "unsubscribe",
-}
+export const Action = {
+  LIST_SUBSCRIPTIONS: "list_subscriptions",
+  SUBSCRIBE: "subscribe",
+  UNSUBSCRIBE: "unsubscribe",
+} as const
+
+export type Action = (typeof Action)[keyof typeof Action]
+
 export interface BaseMessageRequest {
   action: Action
   subscription_id: string
@@ -18,31 +21,31 @@ export interface BaseMessageResponse {
 }
 
 export interface ListSubscriptionsMessageRequest extends BaseMessageRequest {
-  action: Action.LIST_SUBSCRIPTIONS
+  action: typeof Action.LIST_SUBSCRIPTIONS
 }
 
 export interface ListSubscriptionsMessageResponse extends BaseMessageResponse {
-  action: Action.LIST_SUBSCRIPTIONS
+  action: typeof Action.LIST_SUBSCRIPTIONS
   subscriptions?: SubscriptionEntry[]
 }
 
 export interface SubscribeMessageRequest extends BaseMessageRequest {
-  action: Action.SUBSCRIBE
+  action: typeof Action.SUBSCRIBE
   topic: string
   arguments: Record<string, any>
 }
 
 export interface SubscribeMessageResponse extends BaseMessageResponse {
-  action: Action.SUBSCRIBE
+  action: typeof Action.SUBSCRIBE
   topic: string
 }
 
 export interface UnsubscribeMessageRequest extends BaseMessageRequest {
-  action: Action.UNSUBSCRIBE
+  action: typeof Action.UNSUBSCRIBE
 }
 
 export type UnsubscribeMessageResponse = BaseMessageResponse & {
-  action: Action.UNSUBSCRIBE
+  action: typeof Action.UNSUBSCRIBE
   id: string
 }
 
