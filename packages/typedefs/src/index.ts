@@ -303,8 +303,18 @@ export interface Service {
    * Service provider object
    */
   provider: Provider
-
+  /**
+   * Service parameters
+   */
   params: Record<string, string>
+  /**
+   * Service data
+   */
+  data?: Record<string, any>
+  /**
+   * Service headers
+   */
+  headers?: Record<string, string>
 }
 export interface Signature {
   /**
@@ -447,6 +457,14 @@ export interface Provider {
    * Indicates whether the Wallet provider is installed (if applicable).
    */
   is_installed?: boolean
+  /**
+   * Indicates whether the Wallet provider requires installation (if applicable).
+   */
+  requires_install?: boolean
+  /**
+   * The install link for the Wallet provider.
+   */
+  install_link?: string
 }
 export interface NodeVersionInfo {
   /**
@@ -492,17 +510,44 @@ export interface StreamConnection<ChannelMap extends {[name: string]: any}> {
 }
 
 export interface EventFilter {
+  /**
+   * The event types to listen for
+   */
   eventTypes?: string[]
+  /**
+   * The addresses to listen for
+   */
   addresses?: string[]
+  /**
+   * The contracts to listen for
+   */
   contracts?: string[]
+  /**
+   * The block ID to start listening for events
+   */
   startBlockId?: string
+  /**
+   * The block height to start listening for events
+   */
   startHeight?: number
+  /**
+   * The interval in milliseconds to send a heartbeat to the Access Node
+   */
   heartbeatInterval?: number
 }
 
 export interface BlockHeartbeat {
+  /**
+   * The ID of the block
+   */
   blockId: string
+  /**
+   * The height of the block
+   */
   blockHeight: number
+  /**
+   * The timestamp of the block
+   */
   timestamp: string
 }
 

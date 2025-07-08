@@ -53,6 +53,38 @@ function recApply<T, U>(d: T): (x: U) => string {
  * @param head - A string, template string array, or template function
  * @param rest - The rest of the arguments
  * @returns A template function
+ *
+ * @example
+ * import { template } from "@onflow/util-template"
+ *
+ * // String template
+ * const simpleTemplate = template("Hello, World!");
+ * console.log(simpleTemplate()); // "Hello, World!"
+ *
+ * // Template literal with interpolation
+ * const name = "Alice";
+ * const greeting = template`Hello, ${name}!`;
+ * console.log(greeting()); // "Hello, Alice!"
+ *
+ * // Cadence script template
+ * const cadenceScript = template`
+ *   access(all) fun main(greeting: String): String {
+ *     return greeting.concat(", from Flow!")
+ *   }
+ * `;
+ * console.log(cadenceScript()); // The Cadence script as a string
+ *
+ * // Used with FCL for dynamic Cadence code
+ * import * as fcl from "@onflow/fcl";
+ *
+ * const contractAddress = "0x123456789abcdef0";
+ * const scriptTemplate = fcl.cadence`
+ *   import MyContract from ${contractAddress}
+ *
+ *   access(all) fun main(): String {
+ *     return MyContract.getMessage()
+ *   }
+ * `;
  */
 export function template(
   head: string | TemplateStringsArray | ((x?: unknown) => string),

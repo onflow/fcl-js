@@ -1,7 +1,7 @@
 {
   "name": "@onflow/fcl-core",
   "version": "1.20.0",
-  "description": "Flow Client Library",
+  "description": "Core JavaScript/TypeScript library providing shared functionality for Flow blockchain interactions.",
   "license": "Apache-2.0",
   "author": "Flow Foundation",
   "homepage": "https://flow.com",
@@ -44,7 +44,8 @@
     "build": "npm run lint && fcl-bundle",
     "build:types": "tsc --project ./tsconfig-web.json && tsc --noResolve --project ./tsconfig-react-native.json",
     "start": "fcl-bundle --watch",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "generate-docs": "node ../../docs-generator/generate-docs.js"
   },
   "dependencies": {
     "@babel/runtime": "^7.25.7",
