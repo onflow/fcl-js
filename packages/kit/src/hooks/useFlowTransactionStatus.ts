@@ -4,7 +4,7 @@ import {TransactionStatus} from "@onflow/typedefs"
 
 export interface UseFlowTransactionStatusArgs {
   /** The Flow transaction ID to monitor */
-  id?: string | null
+  id?: string
 }
 
 export interface UseFlowTransactionStatusResult {
