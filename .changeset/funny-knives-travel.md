@@ -2,4 +2,4 @@
 "@onflow/kit": minor
 ---
 
-Add TransactionButton component
+Add `<TransactionButton />` component
