@@ -45,6 +45,8 @@ import flowJson from "../flow.json"
 - `useFlowTransaction`
 - `useCrossVmTokenBalance`
 - `useDarkMode`
+- `useFlowTransactionStatus`
+- `useCrossVmTokenBalance`
 
 ## 📚 Full Documentation
 
