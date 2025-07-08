@@ -29,5 +29,13 @@
     "@onflow/util-template": "1.2.3",
     "@onflow/util-uid": "1.2.3"
   },
-  "changesets": []
+  "changesets": [
+    "clean-knives-teach",
+    "fifty-seahorses-act",
+    "funny-knives-travel",
+    "lemon-toes-warn",
+    "metal-walls-dream",
+    "new-penguins-hug",
+    "old-coats-beg"
+  ]
 }

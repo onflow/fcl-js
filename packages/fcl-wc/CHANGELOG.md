@@ -1,5 +1,12 @@
 # @onflow/fcl-wc
 
+## 7.0.0-alpha.0
+
+### Patch Changes
+
+- Updated dependencies [[`8b5086024e0295649bb4266aa0cafbcb2e4171b7`](https://github.com/onflow/fcl-js/commit/8b5086024e0295649bb4266aa0cafbcb2e4171b7), [`e8293cb2c752b340793d2342450a022d79c14edc`](https://github.com/onflow/fcl-js/commit/e8293cb2c752b340793d2342450a022d79c14edc), [`14ff4a2f04362d7b8a10b444321ffd0c17b20f76`](https://github.com/onflow/fcl-js/commit/14ff4a2f04362d7b8a10b444321ffd0c17b20f76)]:
+  - @onflow/fcl-core@1.21.0-alpha.0
+
 ## 6.0.4
 
 ### Patch Changes
@@ -631,7 +638,7 @@
   ```javascript
   import * as fcl from "@onflow/fcl"
   import {initFclWc} from "@onflow/fcl-wc"
-
+  
   const {FclConnectServicePlugin, client} = await initFclWc({
     projectId: PROJECT_ID,
     metadata: {
@@ -641,7 +648,7 @@
       icons: ["https://avatars.githubusercontent.com/u/62387156?s=280&v=4"],
     },
   })
-
+  
   fcl.pluginRegistry.add(FclConnectServicePlugin)
   ```
 
@@ -649,12 +656,12 @@
 
   ```javascript
   import {getSdkError} from "@onflow/fcl-wc"
-
+  
   client.on("session_update", ({topic, params}) => {
     const session = client.session.get(topic)
     console.log("EVENT", "session_update", {topic, params, session})
   })
-
+  
   await client.disconnect({
     topic: session.topic,
     reason: getSdkError("USER_DISCONNECTED"),
@@ -825,7 +832,7 @@
   ```javascript
   import * as fcl from "@onflow/fcl"
   import {initFclWc} from "@onflow/fcl-wc"
-
+  
   const {FclConnectServicePlugin, client} = await initFclWc({
     projectId: PROJECT_ID,
     metadata: {
@@ -835,7 +842,7 @@
       icons: ["https://avatars.githubusercontent.com/u/62387156?s=280&v=4"],
     },
   })
-
+  
   fcl.pluginRegistry.add(FclConnectServicePlugin)
   ```
 
@@ -843,12 +850,12 @@
 
   ```javascript
   import {getSdkError} from "@onflow/fcl-wc"
-
+  
   client.on("session_update", ({topic, params}) => {
     const session = client.session.get(topic)
     console.log("EVENT", "session_update", {topic, params, session})
   })
-
+  
   await client.disconnect({
     topic: session.topic,
     reason: getSdkError("USER_DISCONNECTED"),
