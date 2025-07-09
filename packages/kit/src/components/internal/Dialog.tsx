@@ -1,0 +1,83 @@
+import React from "react"
+import {Dialog as HeadlessDialog} from "@headlessui/react"
+import {useTheme} from "../../core/theme"
+import {twMerge} from "tailwind-merge"
+import {XIcon} from "../../icons/XIcon"
+
+export interface DialogProps {
+  isOpen: boolean
+  onClose: () => void
+  title?: string
+  children: React.ReactNode
+  className?: string
+}
+
+export const Dialog: React.FC<DialogProps> = ({
+  isOpen,
+  onClose,
+  title,
+  children,
+  className,
+}) => {
+  const {colors} = useTheme()
+
+  return (
+    <HeadlessDialog
+      open={isOpen}
+      onClose={onClose}
+      className="flow-relative flow-z-50"
+      style={{ all: "unset" }}
+    >
+      {/* Background overlay */}
+      <div
+        className="flow-fixed flow-inset-0 flow-bg-black/30"
+        aria-hidden="true"
+      />
+
+      {/* Full-screen container to center the panel */}
+      <div className="flow-fixed flow-inset-0 flow-flex flow-items-center flow-justify-center flow-p-4">
+        <HeadlessDialog.Panel
+          className={twMerge(
+            `flow-w-full flow-max-w-md flow-rounded-lg flow-bg-white dark:flow-bg-slate-800
+            flow-p-6 flow-shadow-xl flow-relative`,
+            className
+          )}
+          style={{ all: "unset" }}
+        >
+          {/* Close button absolutely positioned */}
+          <button
+            onClick={onClose}
+            className={twMerge(
+              `flow-absolute flow-top-4 flow-right-4 flow-p-1 flow-rounded-full
+              hover:flow-bg-slate-100 dark:hover:flow-bg-slate-700 flow-transition-colors
+              flow-text-slate-500 hover:flow-text-slate-700 dark:flow-text-slate-400
+              dark:hover:flow-text-slate-200`
+            )}
+            style={{ all: "unset" }}
+            aria-label="Close"
+          >
+            <XIcon className="flow-w-5 flow-h-5" />
+          </button>
+
+          {/* Header only if title is present */}
+          {title && (
+            <div className="flow-mb-4">
+              <HeadlessDialog.Title
+                className={twMerge(
+                  "flow-text-lg flow-font-semibold flow-text-slate-900 dark:flow-text-slate-100"
+                )}
+              >
+                {title}
+              </HeadlessDialog.Title>
+            </div>
+          )}
+
+          {/* Content starts at the top */}
+          <div className="flow-mt-2 flow-text-slate-700 dark:flow-text-slate-300">
+            {children}
+          </div>
+        </HeadlessDialog.Panel>
+      </div>
+    </HeadlessDialog>
+  )
+}

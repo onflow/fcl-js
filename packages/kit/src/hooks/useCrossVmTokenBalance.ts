@@ -17,7 +17,7 @@ interface TokenBalance {
   precision: number
 }
 
-interface UseCrossVmTokenBalanceData {
+export interface UseCrossVmTokenBalanceData {
   cadence: TokenBalance
   evm: TokenBalance
   combined: TokenBalance
