@@ -69,103 +69,40 @@ export function FlowEventsCard() {
   }
 
   return (
-    <div
-      style={{
-        padding: "2rem",
-        border: "2px solid #00EF8B",
-        borderRadius: "12px",
-        backgroundColor: "#FFFFFF",
-        boxShadow: "0 4px 6px rgba(0, 239, 139, 0.1)",
-        marginBottom: "2rem",
-      }}
-    >
-      <h2
-        style={{
-          color: "#000000",
-          marginTop: "0",
-          marginBottom: "1.5rem",
-          fontSize: "1.5rem",
-          fontWeight: "700",
-        }}
-      >
-        useFlowEvents
-      </h2>
-
-      <div style={{marginBottom: "1.5rem"}}>
-        <label
-          style={{
-            display: "block",
-            marginBottom: "0.5rem",
-            color: "#000000",
-            fontWeight: "500",
-          }}
-        >
+    <div className="p-8 border-2 border-gray-200 rounded-xl bg-white shadow-sm mb-8">
+      <h2 className="text-black mt-0 mb-6 text-xl font-bold">useFlowEvents</h2>
+      <div className="mb-6">
+        <label className="block mb-2 text-black font-medium">
           Preset Event Types:
         </label>
-        <div style={{marginBottom: "1rem"}}>
+        <div className="mb-4">
           {presetEvents.map(preset => (
             <button
               key={preset.type}
               onClick={() => handleAddEventType(preset.type)}
-              style={{
-                padding: "0.75rem 1.5rem",
-                backgroundColor: "#f8f9fa",
-                color: "#000000",
-                border: "1px solid #00EF8B",
-                borderRadius: "6px",
-                cursor: "pointer",
-                fontWeight: "600",
-                fontSize: "0.95rem",
-                transition: "all 0.2s ease",
-                marginBottom: "0.5rem",
-                marginRight: "0.5rem",
-              }}
+              className="py-3 px-6 bg-[#f8f9fa] text-black border border-[#00EF8B] rounded-md
+                cursor-pointer font-semibold text-base transition-all duration-200 ease-in-out
+                mb-2 mr-2"
             >
               {preset.name}
             </button>
           ))}
         </div>
 
-        <label
-          style={{
-            display: "block",
-            marginBottom: "0.5rem",
-            color: "#000000",
-            fontWeight: "500",
-          }}
-        >
+        <label className="block mb-2 text-black font-medium">
           Current Event Types:
         </label>
-        <div style={{marginBottom: "1rem"}}>
+        <div className="mb-4">
           {eventTypes.map(type => (
             <div
               key={type}
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "0.5rem",
-                padding: "0.5rem 1rem",
-                backgroundColor: "#e9ecef",
-                borderRadius: "6px",
-                marginBottom: "0.5rem",
-                marginRight: "0.5rem",
-                fontSize: "0.8rem",
-                color: "#000000",
-                fontFamily: "monospace",
-              }}
+              className="inline-flex items-center gap-2 py-2 px-4 bg-gray-200 rounded-md mb-2 mr-2
+                text-xs text-black font-mono"
             >
               {type}
               <button
                 onClick={() => handleRemoveEventType(type)}
-                style={{
-                  background: "none",
-                  border: "none",
-                  color: "#FF6B6B",
-                  cursor: "pointer",
-                  fontSize: "1rem",
-                  padding: "0",
-                  marginLeft: "0.25rem",
-                }}
+                className="bg-none border-none text-red-500 cursor-pointer text-base p-0 ml-1"
               >
                 ×
               </button>
@@ -173,16 +110,9 @@ export function FlowEventsCard() {
           ))}
         </div>
 
-        <div style={{display: "flex", gap: "1rem", marginBottom: "1rem"}}>
-          <div style={{flex: 1}}>
-            <label
-              style={{
-                display: "block",
-                marginBottom: "0.5rem",
-                color: "#000000",
-                fontWeight: "500",
-              }}
-            >
+        <div className="flex gap-4 mb-4">
+          <div className="flex-1">
+            <label className="block mb-2 text-black font-medium">
               From Block (optional):
             </label>
             <input
@@ -191,43 +121,26 @@ export function FlowEventsCard() {
               onChange={e => setFromBlock(e.target.value)}
               placeholder="Start block height"
               disabled={isListening}
-              style={{
-                padding: "0.75rem",
-                border: "2px solid #00EF8B",
-                borderRadius: "6px",
-                fontSize: "0.9rem",
-                color: "#000000",
-                backgroundColor: isListening ? "#f8f9fa" : "#FFFFFF",
-                outline: "none",
-                transition: "border-color 0.2s ease",
-                width: "100%",
-                marginBottom: "1rem",
-                fontFamily: "monospace",
-              }}
+              className={`p-3 border-2 border-[#00EF8B] rounded-md text-sm w-full font-mono
+                transition-colors duration-200 ease-in-out ${
+                isListening
+                    ? "bg-gray-100 text-gray-500"
+                    : "bg-white text-black"
+                }`}
             />
           </div>
         </div>
 
-        <div style={{display: "flex", gap: "1rem"}}>
+        <div className="flex gap-4">
           <button
             onClick={handleStartListening}
             disabled={isListening || eventTypes.length === 0}
-            style={{
-              padding: "0.75rem 1.5rem",
-              backgroundColor:
-                isListening || eventTypes.length === 0 ? "#cccccc" : "#00EF8B",
-              color:
-                isListening || eventTypes.length === 0 ? "#666666" : "#000000",
-              border: "none",
-              borderRadius: "6px",
-              cursor:
-                isListening || eventTypes.length === 0
-                  ? "not-allowed"
-                  : "pointer",
-              fontWeight: "600",
-              fontSize: "0.95rem",
-              transition: "all 0.2s ease",
-            }}
+            className={`py-3 px-6 text-base font-semibold rounded-md transition-all duration-200
+              ease-in-out ${
+              isListening || eventTypes.length === 0
+                  ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                  : "bg-[#00EF8B] text-black cursor-pointer"
+              }`}
           >
             {isListening ? "Listening..." : "Start Listening"}
           </button>
@@ -235,117 +148,58 @@ export function FlowEventsCard() {
           <button
             onClick={handleStopListening}
             disabled={!isListening}
-            style={{
-              padding: "0.75rem 1.5rem",
-              backgroundColor: !isListening ? "#cccccc" : "#FF6B6B",
-              color: !isListening ? "#666666" : "#FFFFFF",
-              border: "none",
-              borderRadius: "6px",
-              cursor: !isListening ? "not-allowed" : "pointer",
-              fontWeight: "600",
-              fontSize: "0.95rem",
-              transition: "all 0.2s ease",
-            }}
+            className={`py-3 px-6 text-base font-semibold rounded-md transition-all duration-200
+              ease-in-out ${
+              !isListening
+                  ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                  : "bg-red-500 text-white cursor-pointer"
+              }`}
           >
             Stop Listening
           </button>
         </div>
       </div>
 
-      <div
-        style={{
-          padding: "1rem",
-          backgroundColor: "#f8f9fa",
-          borderRadius: "6px",
-          border: "1px solid #00EF8B",
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginBottom: "1rem",
-          }}
-        >
-          <h4 style={{color: "#000000", margin: "0"}}>
-            Events ({events.length})
-          </h4>
-          {events.length > 0 && (
-            <button
-              onClick={() => setEvents([])}
-              style={{
-                padding: "0.5rem 1rem",
-                backgroundColor: "#dc3545",
-                color: "#FFFFFF",
-                border: "none",
-                borderRadius: "4px",
-                cursor: "pointer",
-                fontSize: "0.8rem",
-              }}
-            >
-              Clear
-            </button>
-          )}
-        </div>
+      <div className="p-4 bg-[#f8f9fa] rounded-md border border-[#00EF8B]">
+        <h4 className="text-black m-0 mb-4">Events:</h4>
 
         {error && (
-          <div
-            style={{
-              padding: "1rem",
-              backgroundColor: "#f8d7da",
-              border: "1px solid #f5c6cb",
-              borderRadius: "4px",
-              color: "#721c24",
-              marginBottom: "1rem",
-            }}
-          >
+          <div className="p-4 bg-red-100 border border-red-200 rounded text-red-800 m-0">
             <strong>Error:</strong> {error.message}
           </div>
         )}
 
-        {events.length === 0 && !error && (
-          <p style={{color: "#666666", margin: "0"}}>
-            {isListening
-              ? "Listening for events..."
-              : "Start listening to see events here"}
+        {isListening && !error && (
+          <div className="flex items-center gap-2 text-green-600">
+            <div className="w-3 h-3 rounded-full bg-green-500 animate-pulse" />
+            <span>Listening for events...</span>
+          </div>
+        )}
+
+        {!isListening && events.length === 0 && !error && (
+          <p className="text-gray-500 m-0">
+            No events received yet. Click "Start Listening" to begin.
           </p>
         )}
 
         {events.length > 0 && (
-          <div style={{maxHeight: "400px", overflow: "auto"}}>
+          <div className="overflow-y-auto max-h-96">
             {events.map((event, index) => (
               <div
-                key={`${event.blockId}-${event.transactionIndex}-${event.eventIndex}`}
-                style={{
-                  padding: "1rem",
-                  backgroundColor: "#FFFFFF",
-                  border: "1px solid #00EF8B",
-                  borderRadius: "4px",
-                  marginBottom: "0.5rem",
-                  fontSize: "0.8rem",
-                  color: "#000000",
-                }}
+                key={`${event.transactionId}-${event.eventIndex}-${index}`}
+                className="mb-4 p-4 bg-white rounded-md border border-gray-200"
               >
-                <div style={{marginBottom: "0.5rem"}}>
-                  <strong>{event.type}</strong>
-                  <span style={{color: "#666666", marginLeft: "1rem"}}>
-                    Block: {event.blockHeight} | Tx: {event.transactionIndex}
-                  </span>
-                </div>
-                <pre
-                  style={{
-                    margin: "0",
-                    fontSize: "0.7rem",
-                    color: "#666666",
-                    whiteSpace: "pre-wrap",
-                    backgroundColor: "#f8f9fa",
-                    padding: "0.5rem",
-                    borderRadius: "4px",
-                  }}
-                >
-                  {JSON.stringify(event.data, null, 2)}
-                </pre>
+                <strong className="text-sm font-mono break-all">
+                  {event.type}
+                </strong>
+                <details className="mt-2">
+                  <summary className="cursor-pointer text-xs font-medium text-gray-600">
+                    Show Details
+                  </summary>
+                  <pre className="mt-2 bg-gray-100 p-2 rounded overflow-auto text-xs whitespace-pre-wrap">
+                    {JSON.stringify(event, null, 2)}
+                  </pre>
+                </details>
               </div>
             ))}
           </div>

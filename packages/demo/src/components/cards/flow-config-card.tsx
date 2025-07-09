@@ -4,62 +4,22 @@ export function FlowConfigCard() {
   const config = useFlowConfig()
 
   return (
-    <div
-      style={{
-        padding: "2rem",
-        border: "2px solid #00EF8B",
-        borderRadius: "12px",
-        backgroundColor: "#FFFFFF",
-        boxShadow: "0 4px 6px rgba(0, 239, 139, 0.1)",
-        marginBottom: "2rem",
-      }}
-    >
-      <h2
-        style={{
-          color: "#000000",
-          marginTop: "0",
-          marginBottom: "1.5rem",
-          fontSize: "1.5rem",
-          fontWeight: "700",
-        }}
-      >
-        useFlowConfig
-      </h2>
-
-      <div
-        style={{
-          padding: "1rem",
-          backgroundColor: "#f8f9fa",
-          borderRadius: "6px",
-          border: "1px solid #00EF8B",
-        }}
-      >
-        <h4 style={{color: "#000000", margin: "0 0 1rem 0"}}>
-          Flow Configuration:
-        </h4>
+    <div className="p-8 border-2 border-gray-200 rounded-xl bg-white shadow-sm mb-8">
+      <h2 className="text-black mt-0 mb-6 text-xl font-bold">useFlowConfig</h2>
+      <div className="p-4 bg-[#f8f9fa] rounded-md border border-[#00EF8B]">
+        <h4 className="text-black m-0 mb-4">Flow Configuration:</h4>
 
         {config && (
           <pre
-            style={{
-              backgroundColor: "#FFFFFF",
-              padding: "1rem",
-              borderRadius: "4px",
-              border: "1px solid #00EF8B",
-              overflow: "auto",
-              fontSize: "0.8rem",
-              color: "#000000",
-              margin: "0",
-              whiteSpace: "pre-wrap",
-            }}
+            className="bg-white p-4 rounded border border-[#00EF8B] overflow-auto text-xs text-black
+              m-0 whitespace-pre-wrap"
           >
             {JSON.stringify(config, null, 2)}
           </pre>
         )}
 
         {!config && (
-          <p style={{color: "#666666", margin: "0"}}>
-            No configuration available
-          </p>
+          <p className="text-gray-500 m-0">No configuration available</p>
         )}
       </div>
     </div>

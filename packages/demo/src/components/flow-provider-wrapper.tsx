@@ -1,6 +1,7 @@
 import {flowEmulator, flowMainnet, flowTestnet} from "@onflow/fcl"
 import {FlowProvider, type FlowNetwork} from "@onflow/kit"
-import React from "react"
+import React, {useEffect} from "react"
+import * as fcl from "@onflow/fcl"
 import flowJSON from "../../flow.json"
 
 const flowNetwork =
@@ -16,6 +17,16 @@ export default function FlowProviderWrapper({
 }: {
   children: React.ReactNode
 }) {
+  // TODO: Remove once fixed
+  useEffect(() => {
+    fcl.config({
+      ...flowConfig[flowNetwork],
+      appDetailTitle: "Demo App",
+      appDetailIcon: "https://avatars.githubusercontent.com/u/62387156?v=4",
+      appDetailUrl: "https://yourapp.com",
+      appDetailDescription: "Your app description",
+    })
+  }, [flowNetwork])
   return (
     <FlowProvider
       config={{

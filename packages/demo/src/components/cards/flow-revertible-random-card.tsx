@@ -12,92 +12,42 @@ export function FlowRevertibleRandomCard() {
   })
 
   return (
-    <div
-      style={{
-        padding: "2rem",
-        border: "2px solid #00EF8B",
-        borderRadius: "12px",
-        backgroundColor: "#FFFFFF",
-        boxShadow: "0 4px 6px rgba(0, 239, 139, 0.1)",
-        marginBottom: "2rem",
-      }}
-    >
-      <h2
-        style={{
-          color: "#000000",
-          marginTop: "0",
-          marginBottom: "1.5rem",
-          fontSize: "1.5rem",
-          fontWeight: "700",
-        }}
-      >
+    <div className="p-8 border-2 border-gray-200 rounded-xl bg-white shadow-sm mb-8">
+      <h2 className="text-black mt-0 mb-6 text-xl font-bold">
         useFlowRevertibleRandom
       </h2>
-
-      <div
-        style={{
-          marginBottom: "1.5rem",
-          padding: "1rem",
-          backgroundColor: "#fff8e1",
-          borderRadius: "6px",
-          border: "1px solid #FFB800",
-        }}
-      >
-        <p style={{color: "#000000", margin: "0", fontSize: "0.9rem"}}>
+      <div className="mb-6 p-4 bg-yellow-100 rounded-md border border-yellow-300">
+        <p className="text-black m-0 text-sm">
           <strong>Note:</strong> revertibleRandom() generates cryptographically
           secure random numbers on the Flow blockchain. These values are
           deterministic and can be used safely in smart contracts.
         </p>
       </div>
 
-      <div style={{marginBottom: "1.5rem"}}>
+      <div className="mb-6">
         <button
           onClick={() => refetch()}
-          style={{
-            padding: "0.75rem 1.5rem",
-            backgroundColor: isLoading ? "#cccccc" : "#00EF8B",
-            color: isLoading ? "#666666" : "#000000",
-            border: "none",
-            borderRadius: "6px",
-            cursor: isLoading ? "not-allowed" : "pointer",
-            fontWeight: "600",
-            fontSize: "0.95rem",
-            transition: "all 0.2s ease",
-            marginRight: "1rem",
-          }}
+          className={`py-3 px-6 text-base font-semibold rounded-md transition-all duration-200
+            ease-in-out mr-4 ${
+            isLoading
+                ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                : "bg-[#00EF8B] text-black cursor-pointer"
+            }`}
           disabled={isLoading}
         >
           {isLoading ? "Generating..." : "Generate Random Values"}
         </button>
       </div>
 
-      <div
-        style={{
-          padding: "1rem",
-          backgroundColor: "#f8f9fa",
-          borderRadius: "6px",
-          border: "1px solid #00EF8B",
-        }}
-      >
-        <h4 style={{color: "#000000", margin: "0 0 1rem 0"}}>Random Values:</h4>
+      <div className="p-4 bg-[#f8f9fa] rounded-md border border-[#00EF8B]">
+        <h4 className="text-black m-0 mb-4">Random Values:</h4>
 
         {isLoading && (
-          <p style={{color: "#666666", margin: "0"}}>
-            Generating random values...
-          </p>
+          <p className="text-gray-500 m-0">Generating random values...</p>
         )}
 
         {error && (
-          <div
-            style={{
-              padding: "1rem",
-              backgroundColor: "#f8d7da",
-              border: "1px solid #f5c6cb",
-              borderRadius: "4px",
-              color: "#721c24",
-              margin: "0",
-            }}
-          >
+          <div className="p-4 bg-red-100 border border-red-200 rounded text-red-800 m-0">
             <strong>Error:</strong> {error.message}
           </div>
         )}
@@ -107,123 +57,39 @@ export function FlowRevertibleRandomCard() {
             {randomResults.map((result, idx) => (
               <div
                 key={idx}
-                style={{
-                  padding: "1rem",
-                  backgroundColor: "#FFFFFF",
-                  border: "2px solid #00EF8B",
-                  borderRadius: "8px",
-                  marginBottom: "1rem",
-                }}
+                className="p-4 bg-white border-2 border-[#00EF8B] rounded-lg mb-4"
               >
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    marginBottom: "0.5rem",
-                  }}
-                >
-                  <h5
-                    style={{
-                      color: "#000000",
-                      margin: "0",
-                      fontSize: "1rem",
-                      fontWeight: "600",
-                    }}
-                  >
+                <div className="flex justify-between items-center mb-2">
+                  <h5 className="text-black m-0 text-base font-semibold">
                     Random Value #{idx + 1}
                   </h5>
-                  <span
-                    style={{
-                      fontSize: "0.8rem",
-                      color: "#666666",
-                      fontFamily: "monospace",
-                    }}
-                  >
+                  <span className="text-xs text-gray-500 font-mono">
                     Block: {result.blockHeight}
                   </span>
                 </div>
 
                 <div
-                  style={{
-                    fontSize: "1.5rem",
-                    fontWeight: "bold",
-                    color: "#000000",
-                    fontFamily: "monospace",
-                    letterSpacing: "0.05em",
-                    textAlign: "center",
-                    padding: "0.5rem",
-                    backgroundColor: "#f8f9fa",
-                    borderRadius: "4px",
-                    marginBottom: "1rem",
-                  }}
+                  className="text-2xl font-bold text-black font-mono tracking-wider text-center p-2
+                    bg-gray-100 rounded mb-4"
                 >
                   {result.value}
                 </div>
 
-                <div
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "1fr 1fr",
-                    gap: "0.5rem",
-                  }}
-                >
-                  <div
-                    style={{
-                      padding: "0.5rem",
-                      backgroundColor: "#f8f9fa",
-                      border: "1px solid #00EF8B",
-                      borderRadius: "4px",
-                    }}
-                  >
-                    <h6
-                      style={{
-                        color: "#000000",
-                        margin: "0 0 0.25rem 0",
-                        fontSize: "0.8rem",
-                      }}
-                    >
+                <div className="grid grid-cols-2 gap-2">
+                  <div className="p-2 bg-gray-100 border border-[#00EF8B] rounded">
+                    <h6 className="text-black m-0 mb-1 text-xs">
                       Hexadecimal:
                     </h6>
-                    <div
-                      style={{
-                        fontFamily: "monospace",
-                        fontSize: "0.7rem",
-                        color: "#000000",
-                        wordBreak: "break-all",
-                      }}
-                    >
+                    <div className="font-mono text-xs text-black break-all">
                       0x{BigInt(result.value).toString(16).toUpperCase()}
                     </div>
                   </div>
 
-                  <div
-                    style={{
-                      padding: "0.5rem",
-                      backgroundColor: "#f8f9fa",
-                      border: "1px solid #00EF8B",
-                      borderRadius: "4px",
-                    }}
-                  >
-                    <h6
-                      style={{
-                        color: "#000000",
-                        margin: "0 0 0.25rem 0",
-                        fontSize: "0.8rem",
-                      }}
-                    >
+                  <div className="p-2 bg-gray-100 border border-[#00EF8B] rounded">
+                    <h6 className="text-black m-0 mb-1 text-xs">
                       Binary (truncated):
                     </h6>
-                    <div
-                      style={{
-                        fontFamily: "monospace",
-                        fontSize: "0.6rem",
-                        color: "#000000",
-                        wordBreak: "break-all",
-                        maxHeight: "2rem",
-                        overflow: "hidden",
-                      }}
-                    >
+                    <div className="font-mono text-xs text-black break-all max-h-8 overflow-hidden">
                       {BigInt(result.value).toString(2).slice(0, 32)}...
                     </div>
                   </div>
@@ -231,33 +97,20 @@ export function FlowRevertibleRandomCard() {
               </div>
             ))}
 
-            <div
-              style={{
-                marginTop: "1rem",
-                padding: "0.75rem",
-                backgroundColor: "#e8f5e8",
-                border: "1px solid #00EF8B",
-                borderRadius: "4px",
-                fontSize: "0.8rem",
-                color: "#000000",
-              }}
-            >
+            <div className="mt-4 p-3 bg-green-100 border border-green-200 rounded text-xs text-black">
               <strong>Usage in Cadence:</strong>{" "}
-              <code style={{fontFamily: "monospace"}}>
+              <code className="font-mono">
                 revertibleRandom(modulo: UInt256)
               </code>
             </div>
           </div>
         )}
 
-        {(!randomResults || randomResults.length === 0) &&
-          !isLoading &&
-          !error && (
-            <p style={{color: "#666666", margin: "0"}}>
-              Click "Generate Random Values" to get cryptographically secure
-              random numbers
-            </p>
-          )}
+        {!randomResults && !isLoading && !error && (
+          <p className="text-gray-500 m-0">
+            Click "Generate Random Values" to get new random numbers
+          </p>
+        )}
       </div>
     </div>
   )

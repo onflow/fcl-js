@@ -30,71 +30,27 @@ export function FlowAccountCard() {
   ]
 
   return (
-    <div
-      style={{
-        padding: "2rem",
-        border: "2px solid #00EF8B",
-        borderRadius: "12px",
-        backgroundColor: "#FFFFFF",
-        boxShadow: "0 4px 6px rgba(0, 239, 139, 0.1)",
-        marginBottom: "2rem",
-      }}
-    >
-      <h2
-        style={{
-          color: "#000000",
-          marginTop: "0",
-          marginBottom: "1.5rem",
-          fontSize: "1.5rem",
-          fontWeight: "700",
-        }}
-      >
-        useFlowAccount
-      </h2>
-
-      <div style={{marginBottom: "1.5rem"}}>
-        <label
-          style={{
-            display: "block",
-            marginBottom: "0.5rem",
-            color: "#000000",
-            fontWeight: "500",
-          }}
-        >
+    <div className="p-8 border-2 border-gray-200 rounded-xl bg-white shadow-sm mb-8">
+      <h2 className="text-black mt-0 mb-6 text-xl font-bold">useFlowAccount</h2>
+      <div className="mb-6">
+        <label className="block mb-2 text-black font-medium">
           Preset Addresses:
         </label>
-        <div style={{marginBottom: "1rem"}}>
+        <div className="mb-4">
           {presetAddresses.map(preset => (
             <button
               key={preset.address}
               onClick={() => setAddress(preset.address)}
-              style={{
-                padding: "0.75rem 1.5rem",
-                backgroundColor: "#f8f9fa",
-                color: "#000000",
-                border: "1px solid #00EF8B",
-                borderRadius: "6px",
-                cursor: "pointer",
-                fontWeight: "600",
-                fontSize: "0.95rem",
-                transition: "all 0.2s ease",
-                marginBottom: "0.5rem",
-                marginRight: "0.5rem",
-              }}
+              className="py-3 px-6 bg-[#f8f9fa] text-black border border-[#00EF8B] rounded-md
+                cursor-pointer font-semibold text-base transition-all duration-200 ease-in-out
+                mb-2 mr-2"
             >
               {preset.name}
             </button>
           ))}
         </div>
 
-        <label
-          style={{
-            display: "block",
-            marginBottom: "0.5rem",
-            color: "#000000",
-            fontWeight: "500",
-          }}
-        >
+        <label className="block mb-2 text-black font-medium">
           Account Address:
         </label>
         <input
@@ -102,90 +58,48 @@ export function FlowAccountCard() {
           value={address}
           onChange={e => setAddress(e.target.value)}
           placeholder="Enter Flow account address"
-          style={{
-            padding: "0.75rem",
-            border: "2px solid #00EF8B",
-            borderRadius: "6px",
-            fontSize: "0.9rem",
-            color: "#000000",
-            backgroundColor: "#FFFFFF",
-            outline: "none",
-            transition: "border-color 0.2s ease",
-            width: "100%",
-            marginBottom: "1rem",
-            fontFamily: "monospace",
-          }}
+          className="p-3 border-2 border-[#00EF8B] rounded-md text-sm text-black bg-white
+            outline-none transition-colors duration-200 ease-in-out w-full mb-4 font-mono"
         />
 
         <button
           onClick={() => refetch()}
-          style={{
-            padding: "0.75rem 1.5rem",
-            backgroundColor: isLoading ? "#cccccc" : "#00EF8B",
-            color: isLoading ? "#666666" : "#000000",
-            border: "none",
-            borderRadius: "6px",
-            cursor: isLoading ? "not-allowed" : "pointer",
-            fontWeight: "600",
-            fontSize: "0.95rem",
-            transition: "all 0.2s ease",
-            marginRight: "1rem",
-          }}
+          className={`py-3 px-6 text-base font-semibold rounded-md transition-all duration-200
+            ease-in-out mr-4 ${
+            isLoading
+                ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                : "bg-[#00EF8B] text-black cursor-pointer"
+            }`}
           disabled={isLoading}
         >
           {isLoading ? "Loading..." : "Fetch Account"}
         </button>
       </div>
 
-      <div
-        style={{
-          padding: "1rem",
-          backgroundColor: "#f8f9fa",
-          borderRadius: "6px",
-          border: "1px solid #00EF8B",
-        }}
-      >
-        <h4 style={{color: "#000000", margin: "0 0 1rem 0"}}>Account Data:</h4>
+      <div className="p-4 bg-[#f8f9fa] rounded-md border border-[#00EF8B]">
+        <h4 className="text-black m-0 mb-4">Account Data:</h4>
 
         {isLoading && (
-          <p style={{color: "#666666", margin: "0"}}>Loading account data...</p>
+          <p className="text-gray-500 m-0">Loading account data...</p>
         )}
 
         {error && (
-          <div
-            style={{
-              padding: "1rem",
-              backgroundColor: "#f8d7da",
-              border: "1px solid #f5c6cb",
-              borderRadius: "4px",
-              color: "#721c24",
-              margin: "0",
-            }}
-          >
+          <div className="p-4 bg-red-100 border border-red-200 rounded text-red-800 m-0">
             <strong>Error:</strong> {error.message}
           </div>
         )}
 
         {account && !isLoading && !error && (
           <pre
-            style={{
-              backgroundColor: "#FFFFFF",
-              padding: "1rem",
-              borderRadius: "4px",
-              border: "1px solid #00EF8B",
-              overflow: "auto",
-              fontSize: "0.8rem",
-              color: "#000000",
-              margin: "0",
-              whiteSpace: "pre-wrap",
-            }}
+            className="bg-white p-4 rounded border border-[#00EF8B] overflow-auto text-xs text-black
+              m-0 whitespace-pre-wrap"
           >
             {JSON.stringify(account, null, 2)}
           </pre>
         )}
 
         {!account && !isLoading && !error && (
-          <p style={{color: "#666666", margin: "0"}}>
+          <p className="text-gray-500 m-0">
             Click "Fetch Account" to load account data
           </p>
         )}

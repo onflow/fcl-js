@@ -1,4 +1,4 @@
-import {CurrentFlowUserCard} from "./cards/current-flow-user-card"
+import {FlowCurrentUserCard} from "./cards/flow-current-user-card"
 import {FlowAccountCard} from "./cards/flow-account-card"
 import {FlowBlockCard} from "./cards/flow-block-card"
 import {FlowChainIdCard} from "./cards/flow-chain-id-card"
@@ -12,20 +12,12 @@ import {FlowTransactionStatusCard} from "./cards/flow-transaction-status-card"
 
 export function Container() {
   return (
-    <div
-      style={{
-        width: "100%",
-        display: "flex",
-        flexDirection: "column",
-        gap: "0",
-      }}
-    >
-      <CurrentFlowUserCard />
+    <div className="w-full flex flex-col gap-0">
+      <FlowCurrentUserCard />
       <FlowAccountCard />
       <FlowBlockCard />
       <FlowChainIdCard />
       <FlowConfigCard />
-      <FlowEventsCard />
       <FlowQueryCard />
       <FlowQueryRawCard />
       <FlowMutateCard />

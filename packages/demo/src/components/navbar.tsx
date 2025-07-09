@@ -1,83 +1,41 @@
-import {useCurrentFlowUser, useFlowConfig} from "@onflow/kit"
+import {useFlowCurrentUser, useFlowConfig} from "@onflow/kit"
 
 export function Navbar() {
-  const {user, authenticate, unauthenticate} = useCurrentFlowUser()
+  const {user, authenticate, unauthenticate} = useFlowCurrentUser()
   const config = useFlowConfig()
   const currentNetwork = config.flowNetwork || "emulator"
 
   return (
     <nav
-      style={{
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        padding: "1rem 2rem",
-        backgroundColor: "#FFFFFF",
-        borderLeft: "2px solid #00EF8B",
-        borderRight: "2px solid #00EF8B",
-        borderBottom: "2px solid #00EF8B",
-        borderRadius: "0 0 12px 12px",
-        marginBottom: "0",
-        boxShadow: "0 2px 4px rgba(0, 239, 139, 0.1)",
-      }}
+      className="flex justify-between items-center p-4 sm:p-8 bg-white border-l-2 border-r-2
+        border-b-2 border-l-[#00EF8B] border-r-[#00EF8B] border-b-[#00EF8B] rounded-b-xl
+        mb-0 shadow-[0_2px_4px_rgba(0,239,139,0.1)]"
     >
-      <div
-        style={{
-          fontSize: "1.5rem",
-          fontWeight: "bold",
-          color: "#000000",
-        }}
-      >
-        FCL Demo App
-      </div>
-      <div style={{display: "flex", alignItems: "center", gap: "1rem"}}>
+      <div className="text-2xl font-bold text-black">FCL Demo App</div>
+      <div className="flex items-center gap-4">
         <div
-          style={{
-            fontSize: "0.85rem",
-            color: "#000000",
-            fontWeight: "500",
-            padding: "0.5rem 1rem",
-            backgroundColor: "#fff8e1",
-            borderRadius: "4px",
-            border: "1px solid #FFB800",
-            display: "flex",
-            alignItems: "center",
-            gap: "0.5rem",
-          }}
+          className="text-sm text-black font-medium px-4 py-2 bg-[#fff8e1] rounded border
+            border-[#FFB800] flex items-center gap-2"
         >
           <div
-            style={{
-              width: "8px",
-              height: "8px",
-              borderRadius: "50%",
-              backgroundColor:
-                currentNetwork === "mainnet"
-                  ? "#00EF8B"
-                  : currentNetwork === "testnet"
-                    ? "#FFB800"
-                    : "#9945FF",
-            }}
+            className={` w-2 h-2 rounded-full ${
+              currentNetwork === "mainnet"
+                ? "bg-[#00EF8B]"
+                : currentNetwork === "testnet"
+                  ? "bg-[#FFB800]"
+                  : "bg-[#9945FF]"
+              } `}
           />
           <span>
-            Network:{" "}
-            <strong style={{color: "#000000"}}>{currentNetwork}</strong>
+            Network: <strong className="text-black">{currentNetwork}</strong>
           </span>
         </div>
 
         {!user?.loggedIn && (
           <button
             onClick={authenticate}
-            style={{
-              padding: "0.75rem 1.5rem",
-              backgroundColor: "#00EF8B",
-              color: "#000000",
-              border: "none",
-              borderRadius: "6px",
-              cursor: "pointer",
-              fontWeight: "600",
-              fontSize: "0.95rem",
-              transition: "all 0.2s ease",
-            }}
+            className="py-3 px-6 bg-[#00EF8B] text-black border-none rounded-md cursor-pointer
+              font-semibold text-base transition-all duration-200 ease-in-out"
           >
             Log In With Wallet
           </button>
@@ -85,31 +43,15 @@ export function Navbar() {
         {user?.loggedIn && (
           <>
             <span
-              style={{
-                fontSize: "0.9rem",
-                color: "#000000",
-                fontWeight: "500",
-                padding: "0.5rem 1rem",
-                backgroundColor: "#f8f9fa",
-                borderRadius: "4px",
-                border: "1px solid #00EF8B",
-              }}
+              className="text-sm text-black font-medium px-4 py-2 bg-[#f8f9fa] rounded border
+                border-[#00EF8B]"
             >
               {user?.addr}
             </span>
             <button
               onClick={unauthenticate}
-              style={{
-                padding: "0.75rem 1.5rem",
-                backgroundColor: "#000000",
-                color: "#FFFFFF",
-                border: "none",
-                borderRadius: "6px",
-                cursor: "pointer",
-                fontWeight: "600",
-                fontSize: "0.95rem",
-                transition: "all 0.2s ease",
-              }}
+              className="py-3 px-6 bg-black text-white border-none rounded-md cursor-pointer
+                font-semibold text-base transition-all duration-200 ease-in-out"
             >
               Log Out
             </button>

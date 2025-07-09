@@ -74,19 +74,19 @@ export function FlowTransactionStatusCard() {
   const getStatusColor = (statusCode: number) => {
     switch (statusCode) {
       case 0: // UNKNOWN
-        return "#666666"
+        return "bg-gray-500"
       case 1: // PENDING
-        return "#FFB800"
+        return "bg-yellow-500"
       case 2: // FINALIZED
-        return "#9945FF"
+        return "bg-purple-500"
       case 3: // EXECUTED
-        return "#00EF8B"
+        return "bg-green-500"
       case 4: // SEALED
-        return "#00EF8B"
+        return "bg-green-500"
       case 5: // EXPIRED
-        return "#FF6B6B"
+        return "bg-red-500"
       default:
-        return "#666666"
+        return "bg-gray-500"
     }
   }
 
@@ -110,37 +110,12 @@ export function FlowTransactionStatusCard() {
   }
 
   return (
-    <div
-      style={{
-        padding: "2rem",
-        border: "2px solid #00EF8B",
-        borderRadius: "12px",
-        backgroundColor: "#FFFFFF",
-        boxShadow: "0 4px 6px rgba(0, 239, 139, 0.1)",
-        marginBottom: "2rem",
-      }}
-    >
-      <h2
-        style={{
-          color: "#000000",
-          marginTop: "0",
-          marginBottom: "1.5rem",
-          fontSize: "1.5rem",
-          fontWeight: "700",
-        }}
-      >
+    <div className="p-8 border-2 border-gray-200 rounded-xl bg-white shadow-sm mb-8">
+      <h2 className="text-black mt-0 mb-6 text-xl font-bold">
         useFlowTransactionStatus
       </h2>
-
-      <div style={{marginBottom: "1.5rem"}}>
-        <label
-          style={{
-            display: "block",
-            marginBottom: "0.5rem",
-            color: "#000000",
-            fontWeight: "500",
-          }}
-        >
+      <div className="mb-6">
+        <label className="block mb-2 text-black font-medium">
           Transaction ID:
         </label>
         <input
@@ -148,210 +123,97 @@ export function FlowTransactionStatusCard() {
           value={transactionId}
           onChange={e => setTransactionId(e.target.value)}
           placeholder="Enter transaction ID (e.g., 0x1234567890abcdef...)"
-          style={{
-            padding: "0.75rem",
-            border: `2px solid ${
-              transactionId.trim() === ""
-                ? "#00EF8B"
+          className={`p-3 border-2 rounded-md text-sm text-black bg-white outline-none
+            transition-colors duration-200 ease-in-out w-full mb-2 font-mono ${
+            transactionId.trim() === ""
+                ? "border-[#00EF8B]"
                 : isValidTransactionId(transactionId)
-                  ? "#00EF8B"
-                  : "#FF6B6B"
-            }`,
-            borderRadius: "6px",
-            fontSize: "0.9rem",
-            color: "#000000",
-            backgroundColor: "#FFFFFF",
-            outline: "none",
-            transition: "border-color 0.2s ease",
-            width: "100%",
-            marginBottom: "0.5rem",
-            fontFamily: "monospace",
-          }}
+                  ? "border-green-500"
+                  : "border-red-500"
+            }`}
         />
 
         {transactionId.trim() !== "" &&
           !isValidTransactionId(transactionId) && (
-            <div
-              style={{
-                padding: "0.5rem",
-                backgroundColor: "#ffe6e6",
-                border: "1px solid #FF6B6B",
-                borderRadius: "4px",
-                color: "#d63384",
-                fontSize: "0.8rem",
-                marginBottom: "1rem",
-              }}
-            >
+            <div className="p-2 bg-red-100 border border-red-200 rounded text-red-800 text-xs mb-4">
               <strong>Invalid format:</strong> Transaction ID must be a hex
               string starting with "0x" and exactly 64 characters long
               <br />
-              <small style={{color: "#666", fontSize: "0.7rem"}}>
-                {debugInfo}
-              </small>
+              <small className="text-gray-500 text-xs">{debugInfo}</small>
             </div>
           )}
 
         {!transactionId.trim() && (
-          <p
-            style={{color: "#666666", fontSize: "0.9rem", margin: "0 0 1rem 0"}}
-          >
+          <p className="text-gray-500 text-sm m-0 mb-4">
             Enter a transaction ID above to automatically watch its status
             updates.
           </p>
         )}
 
         {transactionId.trim() !== "" && isValidTransactionId(transactionId) && (
-          <div style={{marginBottom: "1rem"}}>
-            <p
-              style={{
-                color: "#00EF8B",
-                fontSize: "0.9rem",
-                margin: "0 0 0.5rem 0",
-                fontWeight: "500",
-              }}
-            >
+          <div className="mb-4">
+            <p className="text-green-600 text-sm m-0 mb-2 font-medium">
               ✓ Valid transaction ID format - monitoring status...
             </p>
-            <small style={{color: "#666", fontSize: "0.7rem"}}>
-              {debugInfo}
-            </small>
+            <small className="text-gray-500 text-xs">{debugInfo}</small>
           </div>
         )}
       </div>
 
-      <div
-        style={{
-          padding: "1rem",
-          backgroundColor: "#f8f9fa",
-          borderRadius: "6px",
-          border: "1px solid #00EF8B",
-        }}
-      >
-        <h4 style={{color: "#000000", margin: "0 0 1rem 0"}}>
-          Transaction Status:
-        </h4>
+      <div className="p-4 bg-[#f8f9fa] rounded-md border border-[#00EF8B]">
+        <h4 className="text-black m-0 mb-4">Transaction Status:</h4>
 
         {!transactionId.trim() && (
-          <p style={{color: "#666666", margin: "0"}}>
+          <p className="text-gray-500 m-0">
             Enter a transaction ID to check its status
           </p>
         )}
 
         {transactionId.trim() !== "" &&
           !isValidTransactionId(transactionId) && (
-            <p style={{color: "#FF6B6B", margin: "0"}}>
+            <p className="text-red-500 m-0">
               Please enter a valid transaction ID format to check status
             </p>
           )}
 
         {(error || hookError) && (
-          <div
-            style={{
-              padding: "1rem",
-              backgroundColor: "#f8d7da",
-              border: "1px solid #f5c6cb",
-              borderRadius: "4px",
-              color: "#721c24",
-              margin: "0",
-            }}
-          >
+          <div className="p-4 bg-red-100 border border-red-200 rounded text-red-800 m-0">
             <strong>Error:</strong> {hookError || error?.message}
           </div>
         )}
 
-        {transactionStatus && !error && (
+        {transactionStatus && !error && !hookError && (
           <div>
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "1rem",
-                marginBottom: "1rem",
-              }}
-            >
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "0.5rem",
-                }}
+            <div className="flex items-center gap-4 mb-4">
+              <span
+                className={`py-1 px-3 rounded-full text-white text-sm font-semibold ${getStatusColor(
+                transactionStatus.status )}`}
               >
-                <div
-                  style={{
-                    width: "12px",
-                    height: "12px",
-                    borderRadius: "50%",
-                    backgroundColor: getStatusColor(transactionStatus.status),
-                  }}
-                />
-                <span
-                  style={{
-                    color: "#000000",
-                    fontWeight: "600",
-                    fontSize: "1.1rem",
-                  }}
-                >
-                  {getStatusText(transactionStatus.status)}
-                </span>
-              </div>
+                {getStatusText(transactionStatus.status)}
+              </span>
+              <span className="text-gray-500 text-xs font-mono">
+                Status Code: {transactionStatus.status}
+              </span>
             </div>
-
-            <pre
-              style={{
-                backgroundColor: "#FFFFFF",
-                padding: "1rem",
-                borderRadius: "4px",
-                border: "1px solid #00EF8B",
-                overflow: "auto",
-                fontSize: "0.8rem",
-                color: "#000000",
-                margin: "0",
-                whiteSpace: "pre-wrap",
-              }}
-            >
-              {JSON.stringify(transactionStatus, null, 2)}
-            </pre>
+            {transactionStatus.errorMessage && (
+              <div className="p-4 bg-red-100 border border-red-200 rounded text-red-800 m-0 mb-4">
+                <strong>Transaction Error:</strong>{" "}
+                {transactionStatus.errorMessage}
+              </div>
+            )}
+            <details>
+              <summary className="text-black cursor-pointer font-medium mb-2">
+                Full Transaction Status
+              </summary>
+              <pre
+                className="bg-white p-4 rounded border border-[#00EF8B] overflow-auto text-xs text-black
+                  m-0 whitespace-pre-wrap"
+              >
+                {JSON.stringify(transactionStatus, null, 2)}
+              </pre>
+            </details>
           </div>
         )}
-      </div>
-
-      <div
-        style={{
-          marginTop: "1.5rem",
-          padding: "1rem",
-          backgroundColor: "#fff8e1",
-          borderRadius: "6px",
-          border: "1px solid #FFB800",
-        }}
-      >
-        <h5 style={{color: "#000000", margin: "0 0 0.5rem 0"}}>
-          Status Codes:
-        </h5>
-        <ul
-          style={{
-            color: "#666666",
-            margin: "0",
-            paddingLeft: "1.5rem",
-            fontSize: "0.9rem",
-          }}
-        >
-          <li>
-            <strong>PENDING (1):</strong> Transaction submitted but not yet
-            finalized
-          </li>
-          <li>
-            <strong>FINALIZED (2):</strong> Transaction included in a block
-          </li>
-          <li>
-            <strong>EXECUTED (3):</strong> Transaction executed successfully
-          </li>
-          <li>
-            <strong>SEALED (4):</strong> Transaction permanently committed
-          </li>
-          <li>
-            <strong>EXPIRED (5):</strong> Transaction expired before execution
-          </li>
-        </ul>
       </div>
     </div>
   )
