@@ -26,6 +26,7 @@ export const Dialog: React.FC<DialogProps> = ({
       open={isOpen}
       onClose={onClose}
       className="flow-relative flow-z-50"
+      style={{ all: "unset" }}
     >
       {/* Background overlay */}
       <div
@@ -41,6 +42,7 @@ export const Dialog: React.FC<DialogProps> = ({
             flow-p-6 flow-shadow-xl flow-relative`,
             className
           )}
+          style={{ all: "unset" }}
         >
           {/* Close button absolutely positioned */}
           <button
@@ -51,6 +53,7 @@ export const Dialog: React.FC<DialogProps> = ({
               flow-text-slate-500 hover:flow-text-slate-700 dark:flow-text-slate-400
               dark:hover:flow-text-slate-200`
             )}
+            style={{ all: "unset" }}
             aria-label="Close"
           >
             <XIcon className="flow-w-5 flow-h-5" />

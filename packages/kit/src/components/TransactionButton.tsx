@@ -61,8 +61,8 @@ export const TransactionButton: React.FC<TransactionButtonProps> = ({
   const isDisabled = buttonProps.disabled || isLoading || !!globalTxId
 
   return (
-    <Button onClick={handleButtonClick} disabled={isDisabled} {...buttonProps}>
-      <span>
+    <Button onClick={handleButtonClick} disabled={isDisabled} {...buttonProps} style={{ all: "unset", ...buttonProps.style }}>
+      <span style={{ all: "unset" }}>
         {!isLoading ? label || "Execute Transaction" : "Processing..."}
       </span>
     </Button>

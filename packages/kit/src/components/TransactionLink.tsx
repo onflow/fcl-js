@@ -42,11 +42,13 @@ export const TransactionLink: React.FC<TransactionLinkProps> = ({
       rel="noopener noreferrer"
       className="flow-no-underline"
       onClick={handleClick}
+      style={{ all: "unset" }}
     >
       <Button
         variant={variant}
         className="flow-mt-2 flow-flex flow-items-center flow-gap-1"
         disabled={flowNetwork === "emulator"}
+        style={{ all: "unset" }}
       >
         View on Block Explorer
         <ExternalLinkIcon className="flow-w-4 flow-h-4" />

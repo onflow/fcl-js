@@ -82,12 +82,13 @@ export const Connect: React.FC<ConnectProps> = ({
         onClick={handleButtonClick}
         variant={user?.loggedIn ? "outline" : variant}
         className="flow-px-2 flow-text-sm"
+        style={{ all: "unset" }}
       >
         {user?.loggedIn ? displayAddress : "Connect Wallet"}
       </Button>
       {user?.loggedIn && (
-        <Dialog isOpen={open} onClose={() => setOpen(false)}>
-          <div className="flow-flex flow-flex-col flow-items-center flow-gap-4 flow-min-w-[320px]">
+        <Dialog isOpen={open} onClose={() => setOpen(false)} style={{ all: "unset" }}>
+          <div className="flow-flex flow-flex-col flow-items-center flow-gap-4 flow-min-w-[320px]" style={{ all: "unset" }}>
             <div className="flow-flex flow-flex-col flow-items-center">
               <div
                 className={`flow-w-16 flow-h-16 flow-rounded-full flow-bg-slate-100 flow-flex

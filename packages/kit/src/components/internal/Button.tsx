@@ -29,6 +29,7 @@ export const Button: React.FC<ButtonProps> = ({
   return (
     <HeadlessButton
       className={twMerge(baseStyles, variantClasses, className)}
+      style={{ all: "unset", ...props.style }}
       {...props}
     />
   )

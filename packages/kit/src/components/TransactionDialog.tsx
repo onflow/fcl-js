@@ -42,10 +42,11 @@ export const TransactionDialog: React.FC<TransactionDialogProps> = ({
   }, [isSuccess, onSuccess, closeOnSuccess, onOpenChange])
 
   return (
-    <Dialog isOpen={open} onClose={() => onOpenChange(false)}>
+    <Dialog isOpen={open} onClose={() => onOpenChange(false)} style={{ all: "unset" }}>
       <div
         className="flow-flex flow-flex-col flow-items-center flow-gap-4 flow-py-8
           flow-min-w-[320px] flow-animate-fade-in"
+        style={{ all: "unset" }}
       >
         <div className="flow-flex flow-flex-col flow-items-center flow-gap-2">
           {!isSuccess ? (
