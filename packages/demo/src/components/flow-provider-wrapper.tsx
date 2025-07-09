@@ -27,6 +27,7 @@ export default function FlowProviderWrapper({
       appDetailDescription: "Your app description",
     })
   }, [flowNetwork])
+
   return (
     <FlowProvider
       config={{
