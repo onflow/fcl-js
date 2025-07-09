@@ -87,28 +87,30 @@ export const Connect: React.FC<ConnectProps> = ({
         {user?.loggedIn ? displayAddress : "Connect Wallet"}
       </Button>
       {user?.loggedIn && (
-        <Dialog isOpen={open} onClose={() => setOpen(false)} style={{ all: "unset" }}>
+        <Dialog isOpen={open} onClose={() => setOpen(false)}>
           <div className="flow-flex flow-flex-col flow-items-center flow-gap-4 flow-min-w-[320px]" style={{ all: "unset" }}>
-            <div className="flow-flex flow-flex-col flow-items-center">
+            <div className="flow-flex flow-flex-col flow-items-center" style={{ all: "unset" }}>
               <div
                 className={`flow-w-16 flow-h-16 flow-rounded-full flow-bg-slate-100 flow-flex
                 flow-items-center flow-justify-center flow-mb-2`}
+                style={{ all: "unset" }}
               >
                 <UserIcon className="flow-w-8 flow-h-8 flow-text-black" />
               </div>
-              <div className="flow-text-center flow-text-lg flow-font-semibold flow-mb-0">
+              <div className="flow-text-center flow-text-lg flow-font-semibold flow-mb-0" style={{ all: "unset" }}>
                 {displayAddress}
               </div>
-              <div className="flow-text-center flow-text-sm flow-text-gray-500 flow-mt-2">
+              <div className="flow-text-center flow-text-sm flow-text-gray-500 flow-mt-2" style={{ all: "unset" }}>
                 {displayBalance}
               </div>
             </div>
-            <div className="flow-flex flow-gap-2 flow-w-full">
+            <div className="flow-flex flow-gap-2 flow-w-full" style={{ all: "unset" }}>
               <Button
                 variant="outline"
                 className="flow-flex-1 flow-flex flow-items-center flow-justify-center flow-text-sm"
                 onClick={handleCopy}
                 disabled={copied}
+                style={{ all: "unset" }}
               >
                 {copied ? (
                   <>
@@ -126,6 +128,7 @@ export const Connect: React.FC<ConnectProps> = ({
                 variant="outline"
                 className="flow-flex-1 flow-flex flow-items-center flow-justify-center flow-text-sm"
                 onClick={handleDisconnect}
+                style={{ all: "unset" }}
               >
                 <LogOutIcon className="flow-mr-2 flow-h-4 flow-w-4" />
                 Disconnect

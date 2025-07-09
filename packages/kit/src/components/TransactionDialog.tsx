@@ -42,25 +42,25 @@ export const TransactionDialog: React.FC<TransactionDialogProps> = ({
   }, [isSuccess, onSuccess, closeOnSuccess, onOpenChange])
 
   return (
-    <Dialog isOpen={open} onClose={() => onOpenChange(false)} style={{ all: "unset" }}>
+    <Dialog isOpen={open} onClose={() => onOpenChange(false)}>
       <div
         className="flow-flex flow-flex-col flow-items-center flow-gap-4 flow-py-8
           flow-min-w-[320px] flow-animate-fade-in"
         style={{ all: "unset" }}
       >
-        <div className="flow-flex flow-flex-col flow-items-center flow-gap-2">
+        <div className="flow-flex flow-flex-col flow-items-center flow-gap-2" style={{ all: "unset" }}>
           {!isSuccess ? (
             <LoaderCircleIcon className="flow-animate-spin flow-text-blue-500 flow-w-12 flow-h-12" />
           ) : (
             <CircleCheckIcon className="flow-text-green-500 flow-animate-pop flow-w-12 flow-h-12" />
           )}
-          <div className="flow-text-lg flow-font-semibold flow-text-center">
+          <div className="flow-text-lg flow-font-semibold flow-text-center" style={{ all: "unset" }}>
             {!isSuccess
               ? pendingTitle || "Transaction Pending"
               : successTitle || "Transaction Successful"}
           </div>
         </div>
-        <div className="flow-text-center flow-text-gray-500 flow-text-sm">
+        <div className="flow-text-center flow-text-gray-500 flow-text-sm" style={{ all: "unset" }}>
           {!isSuccess
             ? pendingDescription ||
               "Your transaction is being processed. Please wait..."
