@@ -6,4 +6,6 @@ module.exports = {
   },
   darkMode: "media",
   plugins: [],
+  prefix: "flow-",
+  corePlugins: {preflight: false},
 }
