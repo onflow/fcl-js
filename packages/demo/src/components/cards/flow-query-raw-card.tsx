@@ -1,7 +1,12 @@
-import {useFlowQueryRaw} from "@onflow/kit"
+import {useFlowConfig, useFlowCurrentUser, useFlowQueryRaw} from "@onflow/kit"
 import {useState} from "react"
+import * as fcl from "@onflow/fcl"
+import {getContractAddress} from "../../constants"
 
 export function FlowQueryRawCard() {
+  const config = useFlowConfig()
+  const {user: currentUser} = useFlowCurrentUser()
+  const currentNetwork = config.flowNetwork || "emulator"
   const [cadenceScript, setCadenceScript] = useState(
     `
 access(all) fun main(): String {
@@ -9,6 +14,9 @@ access(all) fun main(): String {
 }
 `.trim()
   )
+  const [args, setArgs] = useState<
+    (arg: typeof fcl.arg, t: typeof fcl.t) => any[]
+  >(() => () => [])
 
   const {
     data: result,
@@ -17,6 +25,7 @@ access(all) fun main(): String {
     refetch,
   } = useFlowQueryRaw({
     cadence: cadenceScript,
+    args,
     query: {enabled: false, staleTime: 10000},
   })
 
@@ -26,6 +35,7 @@ access(all) fun main(): String {
       script: `access(all) fun main(): String {
     return "Hello from Raw Query!"
 }`,
+      args: () => () => [],
     },
     {
       name: "Current Block Info",
@@ -33,6 +43,28 @@ access(all) fun main(): String {
     let block = getCurrentBlock()
     return [block.height, block.id, block.timestamp]
 }`,
+      args: () => () => [],
+    },
+    {
+      name: "Get Account Balance",
+      script: `import FlowToken from ${getContractAddress(
+        "FlowToken",
+        currentNetwork
+      )}
+
+access(all) fun main(address: Address): UFix64 {
+    let account = getAccount(address)
+    let vaultRef = account.capabilities.borrow<&FlowToken.Vault>(/public/flowTokenBalance)
+    
+    return vaultRef?.balance ?? 0.0
+}`,
+      args: () => {
+        if (!currentUser?.addr) {
+          alert("Please connect your wallet to run this script.")
+          return null
+        }
+        return () => [fcl.arg(currentUser.addr, fcl.t.Address)]
+      },
     },
     {
       name: "Multiple Values",
@@ -43,8 +75,17 @@ access(all) fun main(): String {
         "random": revertibleRandom()
     }
 }`,
+      args: () => () => [],
     },
   ]
+
+  const onSelectPreset = (preset: (typeof presetScripts)[number]) => {
+    const newArgs = preset.args()
+    if (newArgs) {
+      setCadenceScript(preset.script)
+      setArgs(() => newArgs)
+    }
+  }
 
   return (
     <div className="p-8 border-2 border-gray-200 rounded-xl bg-white shadow-sm mb-8">
@@ -67,7 +108,7 @@ access(all) fun main(): String {
           {presetScripts.map(preset => (
             <button
               key={preset.name}
-              onClick={() => setCadenceScript(preset.script)}
+              onClick={() => onSelectPreset(preset)}
               className="py-3 px-6 bg-[#f8f9fa] text-black border border-[#00EF8B] rounded-md
                 cursor-pointer font-semibold text-base transition-all duration-200 ease-in-out
                 mb-2 mr-2"
