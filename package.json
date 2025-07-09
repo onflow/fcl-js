@@ -11,7 +11,8 @@
     "clear": "find . -name node_modules -type d -prune -exec rm -rf '{}' + && find . -name dist -type d -prune -exec rm -rf '{}' +",
     "prettier:check": "prettier --check .",
     "prettier": "prettier --write .",
-    "demo": "cd packages/demo && npm run dev:emulator"
+    "demo": "cd packages/demo && npm run dev:emulator",
+    "demo:testnet": "cd packages/demo && npm run dev:testnet"
   },
   "name": "fcl-js",
   "devDependencies": {

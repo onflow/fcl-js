@@ -9,6 +9,10 @@ import {FlowQueryCard} from "./cards/flow-query-card"
 import {FlowQueryRawCard} from "./cards/flow-query-raw-card"
 import {FlowRevertibleRandomCard} from "./cards/flow-revertible-random-card"
 import {FlowTransactionStatusCard} from "./cards/flow-transaction-status-card"
+import {KitConnectCard} from "./kits/kit-connect-card"
+import {KitTransactionButtonCard} from "./kits/kit-transaction-button-card"
+import {KitTransactionDialogCard} from "./kits/kit-transaction-dialog-card"
+import {KitTransactionLinkCard} from "./kits/kit-transaction-link-card"
 
 export function Container() {
   return (
@@ -23,6 +27,11 @@ export function Container() {
       <FlowMutateCard />
       <FlowRevertibleRandomCard />
       <FlowTransactionStatusCard />
+
+      <KitConnectCard />
+      <KitTransactionButtonCard />
+      <KitTransactionDialogCard />
+      <KitTransactionLinkCard />
     </div>
   )
 }
