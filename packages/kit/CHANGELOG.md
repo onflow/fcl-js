@@ -1,5 +1,22 @@
 # @onflow/kit
 
+## 0.8.0-alpha.0
+
+### Minor Changes
+
+- [#2558](https://github.com/onflow/fcl-js/pull/2558) [`11c6830ae99d2daba54276854157b6fc234dd6ef`](https://github.com/onflow/fcl-js/commit/11c6830ae99d2daba54276854157b6fc234dd6ef) Thanks [@jribbink](https://github.com/jribbink)! - Add `<TransactionButton />` component
+
+- [#2559](https://github.com/onflow/fcl-js/pull/2559) [`b1bcc0a7b2bbfd952b0fa93ac79c35fcd7dccae1`](https://github.com/onflow/fcl-js/commit/b1bcc0a7b2bbfd952b0fa93ac79c35fcd7dccae1) Thanks [@jribbink](https://github.com/jribbink)! - Add component theming options
+
+- [#2559](https://github.com/onflow/fcl-js/pull/2559) [`b1bcc0a7b2bbfd952b0fa93ac79c35fcd7dccae1`](https://github.com/onflow/fcl-js/commit/b1bcc0a7b2bbfd952b0fa93ac79c35fcd7dccae1) Thanks [@jribbink](https://github.com/jribbink)! - Add `<TransactionLink />` component
+
+- [#2559](https://github.com/onflow/fcl-js/pull/2559) [`b1bcc0a7b2bbfd952b0fa93ac79c35fcd7dccae1`](https://github.com/onflow/fcl-js/commit/b1bcc0a7b2bbfd952b0fa93ac79c35fcd7dccae1) Thanks [@jribbink](https://github.com/jribbink)! - Add `<Connect />` component
+
+### Patch Changes
+
+- Updated dependencies [[`e8293cb2c752b340793d2342450a022d79c14edc`](https://github.com/onflow/fcl-js/commit/e8293cb2c752b340793d2342450a022d79c14edc)]:
+  - @onflow/fcl@1.20.0-alpha.0
+
 ## 0.7.0
 
 ### Minor Changes

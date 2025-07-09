@@ -4,6 +4,10 @@ import {FlowConfig, FlowConfigContext} from "../core/context"
 import {DefaultOptions, QueryClient} from "@tanstack/react-query"
 import {FlowQueryClientProvider} from "./FlowQueryClient"
 import {deepEqual} from "../utils/deepEqual"
+import {ThemeProvider, Theme} from "../core/theme"
+import {GlobalTransactionProvider} from "./GlobalTransactionProvider"
+import tailwindStyles from "../styles/tailwind.css"
+import {DarkModeProvider} from "./DarkModeProvider"
 
 interface FlowProviderProps {
   config?: FlowConfig
@@ -141,7 +145,12 @@ export function FlowProvider({
   return (
     <FlowQueryClientProvider queryClient={queryClient}>
       <FlowConfigContext.Provider value={flowConfig}>
-        {children}
+        <GlobalTransactionProvider>
+          <style>{tailwindStyles}</style>
+          <ThemeProvider theme={customTheme}>
+            <DarkModeProvider darkMode={darkMode}>{children}</DarkModeProvider>
+          </ThemeProvider>
+        </GlobalTransactionProvider>
       </FlowConfigContext.Provider>
     </FlowQueryClientProvider>
   )

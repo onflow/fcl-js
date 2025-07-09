@@ -42,6 +42,8 @@ import flowJson from "../flow.json"
 - `useFlowRevertibleRandom`
 - `useFlowMutate`
 - `useFlowTransaction`
+- `useCrossVmTokenBalance`
+- `useDarkMode`
 - `useFlowTransactionStatus`
 - `useCrossVmTokenBalance`
 
