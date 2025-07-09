@@ -9,7 +9,7 @@ import {FCLContext} from "../context"
 
 export interface GetServicesParams {
   types: string[]
-  context: FCLContext
+  context: Pick<FCLContext, "config">
 }
 
 export interface DiscoveryRequestBody {

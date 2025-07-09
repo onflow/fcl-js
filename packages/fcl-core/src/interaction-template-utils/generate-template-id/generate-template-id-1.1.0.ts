@@ -11,9 +11,10 @@ import type {
 import {createGenerateDependencyPin110} from "../generate-dependency-pin/generate-dependency-pin-1.1.0"
 import {genHash} from "../utils/hash"
 import {FCLContext} from "../../context"
+import {createPartialGlobalFCLContext} from "../../context/global"
 
 async function generateContractNetworks(
-  context: FCLContext,
+  context: Pick<FCLContext, "config" | "sdk">,
   contractName: string,
   networks: InteractionTemplateNetwork[]
 ): Promise<string[][]> {
@@ -35,7 +36,7 @@ async function generateContractNetworks(
 }
 
 async function generateContractDependencies(
-  context: FCLContext,
+  context: Pick<FCLContext, "config" | "sdk">,
   dependencies: InteractionTemplateDependency[]
 ): Promise<any[]> {
   const values: any[] = []
@@ -58,7 +59,9 @@ async function generateContractDependencies(
   return values
 }
 
-export function createGenerateTemplateId(context: FCLContext) {
+export function createGenerateTemplateId(
+  context: Pick<FCLContext, "config" | "sdk">
+) {
   /**
    * @description Generates Interaction Template ID for a given Interaction Template
    *
@@ -156,3 +159,7 @@ export function createGenerateTemplateId(context: FCLContext) {
 
   return generateTemplateId
 }
+
+export const generateTemplateId = /* @__PURE__ */ createGenerateTemplateId(
+  createPartialGlobalFCLContext()
+)

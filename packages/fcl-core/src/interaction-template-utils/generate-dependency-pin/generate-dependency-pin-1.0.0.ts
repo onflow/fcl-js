@@ -3,13 +3,16 @@ import {genHash} from "../utils/hash"
 import {findImports} from "../utils/find-imports"
 import {generateImport} from "../utils/generate-import"
 import {FCLContext} from "../../context"
+import {createPartialGlobalFCLContext} from "../../context/global"
 
 export interface GenerateDependencyPin100Params {
   address: string
   contractName: string
 }
 
-export function creategenerateDependencyPin100(context: FCLContext) {
+export function creategenerateDependencyPin100(
+  context: Pick<FCLContext, "config" | "sdk">
+) {
   /**
    * @description Produces a dependency pin for a contract at current state of chain
    * @param params
@@ -77,3 +80,8 @@ export function creategenerateDependencyPin100(context: FCLContext) {
 
   return generateDependencyPin100
 }
+
+export const generateDependencyPin100 =
+  /* @__PURE__ */ creategenerateDependencyPin100(
+    createPartialGlobalFCLContext()
+  )

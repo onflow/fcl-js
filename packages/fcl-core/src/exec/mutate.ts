@@ -6,7 +6,7 @@ import type {ArgsFn} from "./args"
 import {normalizeArgs} from "./utils/normalize-args"
 import {preMutate} from "./utils/pre"
 import {prepTemplateOpts} from "./utils/prep-template-opts"
-import {ConfigService, FCLContext} from "../context"
+import {FCLContext} from "../context"
 import {createPartialGlobalFCLContext} from "../context/global"
 
 export interface MutateOptions {
@@ -25,11 +25,9 @@ export interface MutateOptions {
  *
  * @param currentUserOrConfig CurrentUser actor or configuration
  */
-export const createMutate = (context: {
-  config: ConfigService
-  sdk: ReturnType<typeof sdk.createSdkClient>
-  currentUser: CurrentUserService
-}) => {
+export const createMutate = (
+  context: Pick<FCLContext, "config" | "sdk" | "currentUser">
+) => {
   /**
    * @description Allows you to submit transactions to the blockchain to potentially mutate the state.
    *

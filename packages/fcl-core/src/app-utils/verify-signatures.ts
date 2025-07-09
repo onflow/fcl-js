@@ -6,6 +6,7 @@ import {isString} from "../utils/is"
 import {CompositeSignature} from "@onflow/typedefs"
 import {createGetChainId} from "../utils"
 import {FCLContext} from "../context"
+import {createPartialGlobalFCLContext} from "../context/global"
 
 export interface AccountProofData {
   address: string
@@ -129,7 +130,7 @@ export const validateArgs = (args: ValidateArgsInput): boolean => {
 // TODO: pass in option for contract but we're connected to testnet
 // log address + network -> in sync?
 const getVerifySignaturesScript = async (
-  context: FCLContext,
+  context: Pick<FCLContext, "config" | "sdk">,
   sig: string,
   opts: VerifySignaturesScriptOptions
 ): Promise<string> => {
@@ -166,7 +167,9 @@ const getVerifySignaturesScript = async (
     `
 }
 
-export function createVerifyAccountProof(context: FCLContext) {
+export function createVerifyAccountProof(
+  context: Pick<FCLContext, "config" | "sdk">
+) {
   /**
    * @description Verifies the authenticity of an account proof signature on the Flow blockchain.
    * Account proofs are cryptographic signatures used to prove ownership of a Flow account without
@@ -241,7 +244,9 @@ export function createVerifyAccountProof(context: FCLContext) {
   return verifyAccountProof
 }
 
-export function createVerifyUserSignatures(context: FCLContext) {
+export function createVerifyUserSignatures(
+  context: Pick<FCLContext, "config" | "sdk">
+) {
   /**
    * @description Verifies user signatures for arbitrary messages on the Flow blockchain. This function
    * validates that the provided signatures were created by the private keys associated with the specified
@@ -313,3 +318,10 @@ export function createVerifyUserSignatures(context: FCLContext) {
 
   return verifyUserSignatures
 }
+
+export const verifyAccountProof = /* @__PURE__ */ createVerifyAccountProof(
+  createPartialGlobalFCLContext()
+)
+export const verifyUserSignatures = /* @__PURE__ */ createVerifyUserSignatures(
+  createPartialGlobalFCLContext()
+)

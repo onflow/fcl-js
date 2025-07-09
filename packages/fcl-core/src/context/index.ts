@@ -129,11 +129,11 @@ export function createFCLContext(config: FCLConfig): FCLContext {
 
   const currentUser = createUser({
     platform: config.platform,
-    getStorageProvider: async () => config.storage,
+    storage: config.storage,
+    config: compatConfig,
     discovery: {
       execStrategy: config.discovery?.execStrategy,
     },
-    config: compatConfig,
     sdk,
   })
 

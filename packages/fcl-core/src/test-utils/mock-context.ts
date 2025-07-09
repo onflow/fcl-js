@@ -2,7 +2,7 @@ import type {FCLContext, ConfigService} from "../context"
 import type {StorageProvider} from "../utils/storage"
 import type {CurrentUserServiceApi} from "../current-user"
 import * as sdk from "@onflow/sdk"
-import type {createSdkClient} from "@onflow/sdk/types/sdk-client"
+import type {createSdkClient} from "@onflow/sdk"
 
 /**
  * Creates a mock SDK client for testing

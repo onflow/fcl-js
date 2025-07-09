@@ -1,5 +1,6 @@
 import {createGetChainId} from "./get-chain-id"
 import {FCLContext} from "../../context"
+import {createPartialGlobalFCLContext} from "../../context/global"
 
 /**
  * @description Watches the FCL configuration for changes to the access node and automatically updates
@@ -18,8 +19,11 @@ import {FCLContext} from "../../context"
  * unsubscribe()
  */
 export function watchForChainIdChanges(
-  context: Pick<FCLContext, "config" | "sdk">
+  context?: Pick<FCLContext, "config" | "sdk">
 ): () => void {
+  if (!context) {
+    context = createPartialGlobalFCLContext()
+  }
   return context.config.subscribe(() => {
     // Call getChainId to update the chainId cache if access node has changed
     createGetChainId(context)({
