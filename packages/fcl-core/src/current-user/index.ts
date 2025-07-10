@@ -52,7 +52,7 @@ export interface CurrentUserContext extends Pick<FCLContext, "config" | "sdk"> {
 }
 
 export interface CurrentUserServiceApi {
-  authenticate: (opts: AuthenticationOptions) => Promise<CurrentUser>
+  authenticate: (opts?: AuthenticationOptions) => Promise<CurrentUser>
   unauthenticate: () => void
   authorization: (account: Account) => Promise<Account>
   signUserMessage: (msg: string) => Promise<CompositeSignature[]>
