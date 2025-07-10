@@ -89,7 +89,7 @@ export function createMockConfigService(
   initialValues: Record<string, any> = {}
 ): ConfigService {
   const configStore = new Map<string, any>(Object.entries(initialValues))
-  const subscribers = new Set<(key: string, value: any) => void>()
+  const subscribers = new Set<(config: Record<string, any>) => void>()
 
   const configService: ConfigService = {
     get: async (key: string, defaultValue?: any) => {
@@ -97,19 +97,19 @@ export function createMockConfigService(
     },
     put: async (key: string, value: any) => {
       configStore.set(key, value)
-      subscribers.forEach(fn => fn(key, value))
+      subscribers.forEach(fn => fn(configStore))
       return configService
     },
     update: async (key: string, updateFn: (oldValue: any) => any) => {
       const oldValue = configStore.get(key)
       const newValue = updateFn(oldValue)
       configStore.set(key, newValue)
-      subscribers.forEach(fn => fn(key, newValue))
+      subscribers.forEach(fn => fn(configStore))
       return configService
     },
     delete: async (key: string) => {
       configStore.delete(key)
-      subscribers.forEach(fn => fn(key, undefined))
+      subscribers.forEach(fn => fn(configStore))
       return configService
     },
     where: async (pattern: RegExp) => {
@@ -121,7 +121,7 @@ export function createMockConfigService(
       }
       return result
     },
-    subscribe: (callback: (key: string, value: any) => void) => {
+    subscribe: (callback: (config: Record<string, any>) => void) => {
       subscribers.add(callback)
       return () => {
         subscribers.delete(callback)
