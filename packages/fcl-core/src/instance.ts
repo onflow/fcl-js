@@ -1,11 +1,20 @@
+import {httpTransport} from "@onflow/transport-http"
 import {createVerifyUserSignatures} from "./app-utils/verify-signatures"
 import {createFCLContext} from "./context/index"
 import {createMutate} from "./exec/mutate"
 import {createQuery} from "./exec/query"
 import {createQueryRaw} from "./exec/query-raw"
 
-export function createFcl(params: Parameters<typeof createFCLContext>[0]) {
-  const context = createFCLContext(params)
+type WithOptionalProperties<T, K extends keyof T> = Omit<T, K> &
+  Partial<Pick<T, K>>
+
+export function createFcl(
+  params: WithOptionalProperties<
+    Parameters<typeof createFCLContext>[0],
+    "transport"
+  >
+) {
+  const context = createFCLContext({...params, transport: httpTransport})
 
   return {
     // Global services
