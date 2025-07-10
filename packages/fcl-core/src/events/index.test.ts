@@ -2,7 +2,7 @@ import {Event, Subscription} from "@onflow/typedefs"
 import {events} from "."
 import {subscribe, SubscriptionsNotSupportedError} from "@onflow/sdk"
 import {createLegacyEvents} from "./legacy-events"
-import {getChainId} from "../utils"
+import {createGetChainId} from "../utils"
 
 jest.mock("@onflow/sdk")
 jest.mock("./legacy-events")
@@ -16,6 +16,8 @@ describe("events", () => {
     ) => () => void
   }>
   let mockLegacyUnsubscribe: jest.MockedFunction<() => void>
+  let legacyEvents: jest.MockedFunction<ReturnType<typeof createLegacyEvents>>
+  let mockGetChainId: jest.MockedFunction<() => Promise<string>>
 
   beforeEach(() => {
     mockSubscription = {
@@ -25,11 +27,14 @@ describe("events", () => {
     mockLegacySubscribeObject = {
       subscribe: jest.fn().mockReturnValue(mockLegacyUnsubscribe),
     }
+    legacyEvents = jest.fn((_: string) => mockLegacySubscribeObject)
 
     jest.mocked(subscribe).mockReturnValue(mockSubscription)
-    jest
-      .mocked(createLegacyEvents)
-      .mockReturnValue(() => mockLegacySubscribeObject)
+    jest.mocked(createLegacyEvents).mockReturnValue(legacyEvents)
+
+    // Mock the getChainId function to return "mainnet" by default
+    mockGetChainId = jest.fn().mockResolvedValue("mainnet")
+    jest.mocked(createGetChainId).mockReturnValue(mockGetChainId)
   })
 
   afterEach(() => {
@@ -184,7 +189,8 @@ describe("events", () => {
     const onData = jest.fn()
     const onError = jest.fn()
 
-    jest.mocked(getChainId).mockResolvedValue("local")
+    // Mock the getChainId to return "local" to simulate the Flow emulator
+    mockGetChainId.mockResolvedValue("local")
 
     events(filter).subscribe(onData, onError)
 
