@@ -3,6 +3,7 @@ import {Dialog as HeadlessDialog} from "@headlessui/react"
 import {useTheme} from "../../core/theme"
 import {twMerge} from "tailwind-merge"
 import {XIcon} from "../../icons/XIcon"
+import {Button} from "./Button"
 
 export interface DialogProps {
   isOpen: boolean
@@ -43,18 +44,16 @@ export const Dialog: React.FC<DialogProps> = ({
           )}
         >
           {/* Close button absolutely positioned */}
-          <button
+          <Button
+            variant="outline"
             onClick={onClose}
             className={twMerge(
-              `flow-absolute flow-top-4 flow-right-4 flow-p-1 flow-rounded-full
-              hover:flow-bg-slate-100 dark:hover:flow-bg-slate-700 flow-transition-colors
-              flow-text-slate-500 hover:flow-text-slate-700 dark:flow-text-slate-400
-              dark:hover:flow-text-slate-200`
+              "flow-absolute flow-top-4 flow-right-4 flow-rounded-full flow-p-2"
             )}
             aria-label="Close"
           >
-            <XIcon className="flow-w-5 flow-h-5" />
-          </button>
+            <XIcon className="flow-w-4 flow-h-4" />
+          </Button>
 
           {/* Header only if title is present */}
           {title && (
