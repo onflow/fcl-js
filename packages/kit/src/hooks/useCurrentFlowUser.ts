@@ -1,6 +1,6 @@
 import {useState, useEffect} from "react"
-import * as fcl from "@onflow/fcl"
 import {CurrentUser} from "@onflow/typedefs"
+import {useClient} from "../provider/FlowProvider"
 
 interface UseCurrentFlowUserResult {
   user: CurrentUser | null
@@ -10,6 +10,7 @@ interface UseCurrentFlowUserResult {
 
 export function useCurrentFlowUser(): UseCurrentFlowUserResult {
   const [user, setUser] = useState<CurrentUser | null>(null)
+  const fcl = useClient()
 
   useEffect(() => {
     const unsubscribe = fcl.currentUser.subscribe(setUser)

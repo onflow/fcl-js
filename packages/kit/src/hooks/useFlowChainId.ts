@@ -1,8 +1,8 @@
-import * as fcl from "@onflow/fcl"
 import {useQuery, UseQueryOptions, UseQueryResult} from "@tanstack/react-query"
 import {useFlowQueryClient} from "../provider/FlowQueryClient"
 import {useCallback} from "react"
 import {useFlowConfig} from "./useFlowConfig"
+import {useClient} from "../provider/FlowProvider"
 
 interface UseFlowChainIdArgs {
   query?: Omit<UseQueryOptions<string | null, Error>, "queryKey" | "queryFn">
@@ -16,6 +16,7 @@ export function useFlowChainId({
 }: UseFlowChainIdArgs = {}): UseQueryResult<string | null, Error> {
   const queryClient = useFlowQueryClient()
   const config = useFlowConfig()
+  const fcl = useClient()
 
   const fetchChainId = useCallback(async () => {
     return await fcl.getChainId()

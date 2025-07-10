@@ -4,6 +4,9 @@ import {createFCLContext} from "./context/index"
 import {createMutate} from "./exec/mutate"
 import {createQuery} from "./exec/query"
 import {createQueryRaw} from "./exec/query-raw"
+import {createTransaction} from "./transaction"
+import {createEvents} from "./events"
+import {createGetChainId} from "./utils"
 
 type WithOptionalProperties<T, K extends keyof T> = Omit<T, K> &
   Partial<Pick<T, K>>
@@ -26,6 +29,11 @@ export function createFcl(
     query: createQuery(context),
     queryRaw: createQueryRaw(context),
     verifyUserSignatures: createVerifyUserSignatures(context),
+    getChainId: createGetChainId(context),
+
+    // Streaming helpers
+    tx: createTransaction(context),
+    events: createEvents(context),
 
     // Authentication methods
     authenticate: context.currentUser.authenticate,

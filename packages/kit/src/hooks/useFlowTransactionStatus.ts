@@ -1,6 +1,7 @@
 import {useState, useEffect} from "react"
-import * as fcl from "@onflow/fcl"
 import {TransactionStatus} from "@onflow/typedefs"
+import {useClient} from "../provider/FlowProvider"
+import {TransactionError} from "@onflow/fcl"
 
 export interface UseFlowTransactionStatusArgs {
   /** The Flow transaction ID to monitor */
@@ -29,6 +30,7 @@ export function useFlowTransactionStatus({
   const [transactionStatus, setTransactionStatus] =
     useState<TransactionStatus | null>(null)
   const [error, setError] = useState<Error | null>(null)
+  const fcl = useClient()
 
   useEffect(() => {
     if (!id) return
@@ -41,9 +43,7 @@ export function useFlowTransactionStatus({
       setTransactionStatus(updatedStatus)
 
       if (updatedStatus.errorMessage) {
-        setError(
-          fcl.TransactionError.fromErrorMessage(updatedStatus.errorMessage)
-        )
+        setError(TransactionError.fromErrorMessage(updatedStatus.errorMessage))
       }
     })
 

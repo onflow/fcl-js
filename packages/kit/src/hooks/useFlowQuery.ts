@@ -1,19 +1,20 @@
-import * as fcl from "@onflow/fcl"
 import {useQuery, UseQueryResult, UseQueryOptions} from "@tanstack/react-query"
 import {useCallback} from "react"
 import {useFlowQueryClient} from "../provider/FlowQueryClient"
+import {arg, t} from "@onflow/fcl"
+import {useClient} from "../provider/FlowProvider"
 
 export function encodeQueryArgs(
-  args?: (arg: typeof fcl.arg, t: typeof fcl.t) => unknown[]
+  args?: (_arg: typeof arg, _t: typeof t) => unknown[]
 ): any[] | undefined {
   // Encode the arguments to a JSON-CDC object so they can be deterministically
   // serialized and used as the query key.
-  return args?.(fcl.arg, fcl.t)?.map((x: any) => x.xform.asArgument(x.value))
+  return args?.(arg, t)?.map((x: any) => x.xform.asArgument(x.value))
 }
 
 export interface UseFlowQueryArgs {
   cadence: string
-  args?: (arg: typeof fcl.arg, t: typeof fcl.t) => unknown[]
+  args?: (_arg: typeof arg, _t: typeof t) => unknown[]
   query?: Omit<UseQueryOptions<unknown, Error>, "queryKey" | "queryFn">
 }
 
@@ -34,6 +35,7 @@ export function useFlowQuery({
   query: queryOptions = {},
 }: UseFlowQueryArgs): UseQueryResult<unknown, Error> {
   const queryClient = useFlowQueryClient()
+  const fcl = useClient()
 
   const fetchQuery = useCallback(async () => {
     if (!cadence) return null
