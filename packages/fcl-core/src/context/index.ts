@@ -1,6 +1,6 @@
 import {createUser, type CurrentUserServiceApi} from "../current-user"
 import {StorageProvider} from "../fcl-core"
-import {createSdkClient, SdkClientOptions} from "@onflow/sdk/types/sdk-client"
+import {createSdkClient, SdkClientOptions} from "@onflow/sdk"
 
 interface FCLConfig extends SdkClientOptions {
   platform: string
