@@ -1,7 +1,7 @@
 import {Subscription} from "@onflow/typedefs"
 import {events} from "."
 import {subscribe, SubscriptionsNotSupportedError} from "@onflow/sdk"
-import {createLegacyEvents, SubscribeObject} from "./legacy-events"
+import {createLegacyEvents} from "./legacy-events"
 import {getChainId} from "../utils"
 
 jest.mock("@onflow/sdk")
