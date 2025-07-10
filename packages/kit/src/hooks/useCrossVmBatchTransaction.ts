@@ -1,4 +1,3 @@
-import * as fcl from "@onflow/fcl"
 import {Abi, encodeFunctionData} from "viem"
 import {
   UseMutateAsyncFunction,
@@ -10,6 +9,8 @@ import {
 import {useFlowChainId} from "./useFlowChainId"
 import {useFlowQueryClient} from "../provider/FlowQueryClient"
 import {DEFAULT_EVM_GAS_LIMIT} from "../constants"
+import {sansPrefix} from "@onflow/fcl"
+import {useClient} from "../provider/FlowProvider"
 
 interface UseCrossVmBatchTransactionMutateArgs {
   calls: EvmBatchCall[]
@@ -67,7 +68,7 @@ export function encodeCalls(
 
     return {
       to: call.address,
-      data: fcl.sansPrefix(encodedData) ?? "",
+      data: sansPrefix(encodedData) ?? "",
       gasLimit: call.gasLimit?.toString() ?? DEFAULT_EVM_GAS_LIMIT,
       value: call.value?.toString() ?? "0",
     }
@@ -145,6 +146,7 @@ export function useCrossVmBatchTransaction({
     : null
 
   const queryClient = useFlowQueryClient()
+  const fcl = useClient()
   const mutation = useMutation(
     {
       mutationFn: async ({

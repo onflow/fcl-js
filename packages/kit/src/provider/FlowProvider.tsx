@@ -97,8 +97,7 @@ export function FlowProvider({
   const [queryClient] = useState<QueryClient>(
     () => _queryClient ?? new QueryClient({defaultOptions: defaultQueryOptions})
   )
-  const [flowConfig, setFlowConfig] = useState<FlowConfig | null>(null)
-  const [client, setClient] = useState<ReturnType<typeof createFcl>>(
+  const [client] = useState<ReturnType<typeof createFcl>>(
     createFcl({
       accessNode: initialConfig.accessNodeUrl!,
       discoveryWallet: initialConfig.discoveryWallet,
@@ -111,20 +110,6 @@ export function FlowProvider({
         initialConfig.walletconnectDisableNotifications,
     })
   )
-
-  useEffect(() => {
-    const unsubscribe = fcl.config().subscribe(latest => {
-      const newConfig = mapConfig(latest || {})
-      setFlowConfig(prev => {
-        if (prev && deepEqual(prev, newConfig)) {
-          return prev
-        }
-        return newConfig
-      })
-    })
-
-    return () => unsubscribe()
-  }, [initialConfig, flowJson])
 
   return (
     <FlowQueryClientProvider queryClient={queryClient}>
