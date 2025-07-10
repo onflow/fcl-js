@@ -76,14 +76,14 @@ export function encodeCalls(
 
 // Takes a chain id and returns the cadence tx with addresses set
 export const getCadenceBatchTransaction = (chainId: string) => {
-  const evmAddress =
-    CONTRACT_ADDRESSES[chainId as keyof typeof CONTRACT_ADDRESSES].EVM
-  if (!evmAddress) {
+  const contractAddresses =
+    CONTRACT_ADDRESSES[chainId as keyof typeof CONTRACT_ADDRESSES]
+  if (!contractAddresses) {
     throw new Error(`Unsupported chain: ${chainId}`)
   }
 
   return `
-import EVM from ${evmAddress}
+import EVM from ${contractAddresses.EVM}
 
 transaction(calls: [{String: AnyStruct}], mustPass: Bool) {
 
