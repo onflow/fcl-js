@@ -10,7 +10,6 @@ import {
   UNSUBSCRIBE,
 } from "@onflow/util-actor"
 import {FCLContext} from "../context"
-import {createPartialGlobalFCLContext} from "../context/global"
 
 export interface SubscribeObject {
   /**
