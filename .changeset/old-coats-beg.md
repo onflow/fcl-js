@@ -1,5 +1,5 @@
 ---
-"@onflow/kit": minor
+"@onflow/react-sdk": minor
 ---
 
 Add `<Connect />` component

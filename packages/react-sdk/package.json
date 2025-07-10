@@ -1,5 +1,5 @@
 {
-  "name": "@onflow/kit",
+  "name": "@onflow/react-sdk",
   "version": "0.8.0",
   "description": "React library for interacting with the Flow blockchain",
   "license": "Apache-2.0",
