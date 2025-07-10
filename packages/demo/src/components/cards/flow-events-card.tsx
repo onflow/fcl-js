@@ -69,7 +69,7 @@ export function FlowEventsCard() {
   }
 
   return (
-    <div className="p-8 border-2 border-gray-200 rounded-xl bg-white shadow-sm mb-8">
+    <div className="p-4 border border-gray-200 rounded-xl bg-white mb-8">
       <h2 className="text-black mt-0 mb-6 text-xl font-bold">useFlowEvents</h2>
       <div className="mb-6">
         <label className="block mb-2 text-black font-medium">

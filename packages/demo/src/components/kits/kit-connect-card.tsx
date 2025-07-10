@@ -7,7 +7,7 @@ export function KitConnectCard() {
   if (isLoading) {
     return (
       <div className="p-4 border border-gray-200 rounded-lg">
-        <h2 className="text-lg font-bold mb-2">Kit Connect Component</h2>
+        <h2 className="text-lg font-bold mb-2">Connect Component</h2>
         <p>Loading chain info...</p>
       </div>
     )
@@ -15,7 +15,7 @@ export function KitConnectCard() {
 
   return (
     <div className="p-4 border border-gray-200 rounded-lg mb-8">
-      <h2 className="text-lg font-bold mb-2">Kit Connect Component</h2>
+      <h2 className="text-lg font-bold mb-2">Connect Component</h2>
       {isEmulator ? (
         <p className="text-gray-500">
           The Connect component is not available on the emulator. Please switch

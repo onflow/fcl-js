@@ -17,6 +17,7 @@ import {KitTransactionLinkCard} from "./kits/kit-transaction-link-card"
 export function Container() {
   return (
     <div className="w-full flex flex-col gap-0">
+      <h4 className="text-2xl font-bold mb-2 p-4">Hooks</h4>
       <FlowCurrentUserCard />
       <FlowAccountCard />
       <FlowBlockCard />
@@ -28,6 +29,7 @@ export function Container() {
       <FlowRevertibleRandomCard />
       <FlowTransactionStatusCard />
 
+      <h4 className="text-2xl font-bold mb-2 p-4">Components</h4>
       <KitConnectCard />
       <KitTransactionButtonCard />
       <KitTransactionDialogCard />

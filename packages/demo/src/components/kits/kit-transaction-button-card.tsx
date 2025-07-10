@@ -10,9 +10,7 @@ export function KitTransactionButtonCard() {
   `
   return (
     <div className="p-4 border border-gray-200 rounded-lg mb-8">
-      <h2 className="text-lg font-bold mb-2">
-        Kit Transaction Button Component
-      </h2>
+      <h2 className="text-lg font-bold mb-2">Transaction Button Component</h2>
       <p className="mb-4">This component allows users to sign transactions.</p>
       <TransactionButton
         label="Sign Transaction"

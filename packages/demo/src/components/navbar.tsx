@@ -7,11 +7,10 @@ export function Navbar() {
 
   return (
     <nav
-      className="flex justify-between items-center p-4 sm:p-8 bg-white border-l-2 border-r-2
-        border-b-2 border-l-[#00EF8B] border-r-[#00EF8B] border-b-[#00EF8B] rounded-b-xl
-        mb-0 shadow-[0_2px_4px_rgba(0,239,139,0.1)]"
+      className="flex justify-between items-center p-4 sm:p-8 bg-white border-l border-r border-b
+        border-l-gray-200 border-r-gray-200 border-b-gray-200 rounded-b-xl mb-0"
     >
-      <div className="text-2xl font-bold text-black">FCL Demo App</div>
+      <div className="text-2xl font-bold text-black">FCL Demo</div>
       <div className="flex items-center gap-4">
         <div
           className="text-sm text-black font-medium px-4 py-2 bg-[#fff8e1] rounded border
@@ -34,7 +33,7 @@ export function Navbar() {
         {!user?.loggedIn && (
           <button
             onClick={authenticate}
-            className="py-3 px-6 bg-[#00EF8B] text-black border-none rounded-md cursor-pointer
+            className="py-2 px-6 bg-[#00EF8B] text-black border-none rounded-md cursor-pointer
               font-semibold text-base transition-all duration-200 ease-in-out"
           >
             Log In With Wallet
@@ -50,7 +49,7 @@ export function Navbar() {
             </span>
             <button
               onClick={unauthenticate}
-              className="py-3 px-6 bg-black text-white border-none rounded-md cursor-pointer
+              className="py-2 px-6 bg-black text-white border-none rounded-md cursor-pointer
                 font-semibold text-base transition-all duration-200 ease-in-out"
             >
               Log Out

@@ -15,9 +15,7 @@ export function KitTransactionDialogCard() {
 
   return (
     <div className="p-4 border border-gray-200 rounded-lg mb-8">
-      <h2 className="text-lg font-bold mb-2">
-        Kit Transaction Dialog Component
-      </h2>
+      <h2 className="text-lg font-bold mb-2">Transaction Dialog Component</h2>
       <p className="mb-4">
         This component shows the status of a transaction. Click the button to
         trigger a transaction and open the dialog.
