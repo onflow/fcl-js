@@ -1,5 +1,23 @@
 # @onflow/kit
 
+## 0.8.0
+
+### Minor Changes
+
+- [#2568](https://github.com/onflow/fcl-js/pull/2568) [`8c707acc270bfb6f6cd592a4cd061d105aea56f9`](https://github.com/onflow/fcl-js/commit/8c707acc270bfb6f6cd592a4cd061d105aea56f9) Thanks [@chasefleming](https://github.com/chasefleming)! - Add `discoveryAuthnEndpoint` to config options
+
+## 0.7.0
+
+### Minor Changes
+
+- [#2551](https://github.com/onflow/fcl-js/pull/2551) [`32db6b4e909d92aa66d969990ae2c21f93c52b38`](https://github.com/onflow/fcl-js/commit/32db6b4e909d92aa66d969990ae2c21f93c52b38) Thanks [@chasefleming](https://github.com/chasefleming)! - Rename `useCurrentFlowUser` to `useFlowCurrentUser`
+
+## 0.6.0
+
+### Minor Changes
+
+- [#2542](https://github.com/onflow/fcl-js/pull/2542) [`aacae504fbc568d5629211c28c55849074ed696b`](https://github.com/onflow/fcl-js/commit/aacae504fbc568d5629211c28c55849074ed696b) Thanks [@chasefleming](https://github.com/chasefleming)! - Add `useFlowTransaction` hook
+
 ## 0.5.0
 
 ### Minor Changes
