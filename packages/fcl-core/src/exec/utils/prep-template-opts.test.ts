@@ -1,5 +1,5 @@
-import {config} from "@onflow/config"
 import {prepTemplateOpts} from "./prep-template-opts"
+import {createMockContext} from "../../test-utils/mock-context"
 
 describe("Prepare template options for template version 1.0.0", () => {
   // NOTE: template10 and template11 copied from packages\fcl-core\src\interaction-template-utils\derive-cadence-by-network\derive-cadence-by-network.test.js
@@ -38,9 +38,13 @@ describe("Prepare template options for template version 1.0.0", () => {
 
   test("It prepares cadence and dependencies from template version 1.0.0 for mainnet", async () => {
     // prepTemplateOpts can take chain ID from multiple sources, but config has precedence
-    config.put("flow.network", "mainnet")
+    const context = createMockContext({
+      configValues: {
+        "flow.network": "mainnet",
+      },
+    })
 
-    const resultMainnet = await prepTemplateOpts({
+    const resultMainnet = await prepTemplateOpts(context, {
       template: template10,
     })
 
@@ -51,9 +55,13 @@ describe("Prepare template options for template version 1.0.0", () => {
 
   test("It prepares cadence and dependencies from template version 1.0.0 for testnet", async () => {
     // prepTemplateOpts can take chain ID from multiple sources, but config has precedence
-    config.put("flow.network", "testnet")
+    const context = createMockContext({
+      configValues: {
+        "flow.network": "testnet",
+      },
+    })
 
-    const resultTestnet = await prepTemplateOpts({
+    const resultTestnet = await prepTemplateOpts(context, {
       template: template10,
     })
 
@@ -63,10 +71,14 @@ describe("Prepare template options for template version 1.0.0", () => {
   })
 
   test("It fails to prepare cadence and dependencies from template version 1.0.0 for unknown network", async () => {
-    config.put("flow.network", "randomnet")
+    const context = createMockContext({
+      configValues: {
+        "flow.network": "randomnet",
+      },
+    })
 
     const test = async () =>
-      await prepTemplateOpts({
+      await prepTemplateOpts(context, {
         template: template10,
       })
 
@@ -146,9 +158,13 @@ describe("Prepare template options for template version 1.1.0", () => {
 
   test("It prepares cadence and dependencies from template version 1.1.0 for mainnet", async () => {
     // prepTemplateOpts can take chain ID from multiple sources, but config has precedence
-    config.put("flow.network", "mainnet")
+    const context = createMockContext({
+      configValues: {
+        "flow.network": "mainnet",
+      },
+    })
 
-    const resultMainnet = await prepTemplateOpts({
+    const resultMainnet = await prepTemplateOpts(context, {
       template: template11,
     })
 
@@ -159,9 +175,13 @@ describe("Prepare template options for template version 1.1.0", () => {
 
   test("It prepares cadence and dependencies from template version 1.1.0 for testnet", async () => {
     // prepTemplateOpts can take chain ID from multiple sources, but config has precedence
-    config.put("flow.network", "testnet")
+    const context = createMockContext({
+      configValues: {
+        "flow.network": "testnet",
+      },
+    })
 
-    const resultTestnet = await prepTemplateOpts({
+    const resultTestnet = await prepTemplateOpts(context, {
       template: template11,
     })
 
@@ -171,10 +191,14 @@ describe("Prepare template options for template version 1.1.0", () => {
   })
 
   test("It fails to prepare cadence and dependencies from template version 1.1.0 for unknown network", async () => {
-    config.put("flow.network", "randomnet")
+    const context = createMockContext({
+      configValues: {
+        "flow.network": "randomnet",
+      },
+    })
 
     const test = async () =>
-      await prepTemplateOpts({
+      await prepTemplateOpts(context, {
         template: template11,
       })
 

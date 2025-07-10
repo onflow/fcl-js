@@ -1,2 +1,2 @@
 export {TransactionError} from "./transaction-error"
-export {transaction} from "./transaction"
+export {transaction, createTransaction} from "./transaction"

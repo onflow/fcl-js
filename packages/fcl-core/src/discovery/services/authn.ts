@@ -12,6 +12,8 @@ import {
 import {getServices} from "../services"
 import {LEVELS, log} from "@onflow/util-logger"
 import {Service} from "@onflow/typedefs"
+import {FCLContext} from "../../context"
+import {createPartialGlobalFCLContext} from "../../context/global"
 
 export const SERVICE_ACTOR_KEYS = {
   AUTHN: "authn",
@@ -51,9 +53,14 @@ const warn = (fact: boolean, msg: string): void => {
   }
 }
 
-const fetchServicesFromDiscovery = async (): Promise<void> => {
+const fetchServicesFromDiscovery = async (
+  context: Pick<FCLContext, "config">
+): Promise<void> => {
   try {
-    const services = await getServices({types: [SERVICE_ACTOR_KEYS.AUTHN]})
+    const services = await getServices({
+      context,
+      types: [SERVICE_ACTOR_KEYS.AUTHN],
+    })
     send(SERVICE_ACTOR_KEYS.AUTHN, SERVICE_ACTOR_KEYS.UPDATE_RESULTS, {
       results: services,
     })
@@ -66,59 +73,70 @@ const fetchServicesFromDiscovery = async (): Promise<void> => {
   }
 }
 
-const HANDLERS = {
-  [INIT]: async (ctx: ActorContext) => {
-    warn(
-      typeof window === "undefined",
-      '"fcl.discovery" is only available in the browser.'
-    )
-    // If you call this before the window is loaded extensions will not be set yet
-    if (document.readyState === "complete") {
-      fetchServicesFromDiscovery()
-    } else {
-      window.addEventListener("load", () => {
-        fetchServicesFromDiscovery()
-      })
-    }
-  },
-  [SERVICE_ACTOR_KEYS.UPDATE_RESULTS]: (
-    ctx: ActorContext,
-    _letter: ActorLetter,
-    data: ServiceData
-  ) => {
-    ctx.merge(data)
-    ctx.broadcast(SERVICE_ACTOR_KEYS.UPDATED, {...ctx.all()})
-  },
-  [SUBSCRIBE]: (ctx: ActorContext, letter: ActorLetter) => {
-    ctx.subscribe(letter.from!)
-    ctx.send(letter.from!, SERVICE_ACTOR_KEYS.UPDATED, {...ctx.all()})
-  },
-  [UNSUBSCRIBE]: (ctx: ActorContext, letter: ActorLetter) =>
-    ctx.unsubscribe(letter.from!),
-  [SERVICE_ACTOR_KEYS.SNAPSHOT]: async (
-    ctx: ActorContext,
-    letter: ActorLetter
-  ) => letter.reply({...ctx.all()}),
+function createHandlers(context: Pick<FCLContext, "config">) {
+  return {
+    [INIT]: async (ctx: ActorContext) => {
+      warn(
+        typeof window === "undefined",
+        '"fcl.discovery" is only available in the browser.'
+      )
+      // If you call this before the window is loaded extensions will not be set yet
+      if (document.readyState === "complete") {
+        fetchServicesFromDiscovery(context)
+      } else {
+        window.addEventListener("load", () => {
+          fetchServicesFromDiscovery(context)
+        })
+      }
+    },
+    [SERVICE_ACTOR_KEYS.UPDATE_RESULTS]: (
+      ctx: ActorContext,
+      _letter: ActorLetter,
+      data: ServiceData
+    ) => {
+      ctx.merge(data)
+      ctx.broadcast(SERVICE_ACTOR_KEYS.UPDATED, {...ctx.all()})
+    },
+    [SUBSCRIBE]: (ctx: ActorContext, letter: ActorLetter) => {
+      ctx.subscribe(letter.from!)
+      ctx.send(letter.from!, SERVICE_ACTOR_KEYS.UPDATED, {...ctx.all()})
+    },
+    [UNSUBSCRIBE]: (ctx: ActorContext, letter: ActorLetter) =>
+      ctx.unsubscribe(letter.from!),
+    [SERVICE_ACTOR_KEYS.SNAPSHOT]: async (
+      ctx: ActorContext,
+      letter: ActorLetter
+    ) => letter.reply({...ctx.all()}),
+  }
 }
 
-const spawnProviders = () => spawn(HANDLERS as any, SERVICE_ACTOR_KEYS.AUTHN)
+const spawnProviders = (context: Pick<FCLContext, "config">) =>
+  spawn(createHandlers(context) as any, SERVICE_ACTOR_KEYS.AUTHN)
 
-/**
- * @description Discovery methods for interacting with Authn.
- */
-const authn: Authn = {
-  // Subscribe to Discovery authn services
-  subscribe: cb => subscriber(SERVICE_ACTOR_KEYS.AUTHN, spawnProviders, cb),
-  // Get the current Discovery authn services snapshot
-  snapshot: () => snapshoter(SERVICE_ACTOR_KEYS.AUTHN, spawnProviders),
-  // Trigger an update of authn services
-  update: () => {
-    // Only fetch services if the window is loaded
-    // Otherwise, this will be called by the INIT handler
-    if (document.readyState === "complete") {
-      fetchServicesFromDiscovery()
-    }
-  },
+function createAuthn(context: Pick<FCLContext, "config">): Authn {
+  /**
+   * @description Discovery methods for interacting with Authn.
+   */
+  const authn: Authn = {
+    // Subscribe to Discovery authn services
+    subscribe: cb =>
+      subscriber(SERVICE_ACTOR_KEYS.AUTHN, () => spawnProviders(context), cb),
+    // Get the current Discovery authn services snapshot
+    snapshot: () =>
+      snapshoter(SERVICE_ACTOR_KEYS.AUTHN, () => spawnProviders(context)),
+    // Trigger an update of authn services
+    update: () => {
+      // Only fetch services if the window is loaded
+      // Otherwise, this will be called by the INIT handler
+      if (document.readyState === "complete") {
+        fetchServicesFromDiscovery(context)
+      }
+    },
+  }
+
+  return authn
 }
+
+const authn = createAuthn(createPartialGlobalFCLContext())
 
 export default authn

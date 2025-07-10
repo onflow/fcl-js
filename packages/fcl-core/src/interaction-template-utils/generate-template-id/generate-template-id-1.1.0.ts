@@ -8,10 +8,13 @@ import type {
   InteractionTemplateNetwork,
   InteractionTemplateParameter,
 } from "../interaction-template"
-import {generateDependencyPin110} from "../generate-dependency-pin/generate-dependency-pin-1.1.0"
+import {createGenerateDependencyPin110} from "../generate-dependency-pin/generate-dependency-pin-1.1.0"
 import {genHash} from "../utils/hash"
+import {FCLContext} from "../../context"
+import {createPartialGlobalFCLContext} from "../../context/global"
 
 async function generateContractNetworks(
+  context: Pick<FCLContext, "config" | "sdk">,
   contractName: string,
   networks: InteractionTemplateNetwork[]
 ): Promise<string[][]> {
@@ -20,7 +23,7 @@ async function generateContractNetworks(
     const networkHashes = [genHash(net.network)]
     const {address, dependency_pin_block_height} = net
     if (net.dependency_pin) {
-      const hash = await generateDependencyPin110({
+      const hash = await createGenerateDependencyPin110(context)({
         address,
         contractName,
         blockHeight: dependency_pin_block_height,
@@ -33,6 +36,7 @@ async function generateContractNetworks(
 }
 
 async function generateContractDependencies(
+  context: Pick<FCLContext, "config" | "sdk">,
   dependencies: InteractionTemplateDependency[]
 ): Promise<any[]> {
   const values: any[] = []
@@ -44,6 +48,7 @@ async function generateContractDependencies(
       const contractName = c?.contract
       contracts.push(genHash(contractName))
       const contractHashes = await generateContractNetworks(
+        context,
         contractName,
         c?.networks
       )
@@ -54,97 +59,107 @@ async function generateContractDependencies(
   return values
 }
 
-/**
- * @description Generates Interaction Template ID for a given Interaction Template
- *
- * @param params
- * @param params.template Interaction Template
- * @returns Interaction Template ID
- */
-export async function generateTemplateId({
-  template,
-}: {
-  template: InteractionTemplate110
-}): Promise<string> {
-  invariant(
-    !!template,
-    "generateTemplateId({ template }) -- template must be defined"
-  )
-  invariant(
-    typeof template === "object",
-    "generateTemplateId({ template }) -- template must be an object"
-  )
-  invariant(
-    template.f_type === "InteractionTemplate",
-    "generateTemplateId({ template }) -- template object must be an InteractionTemplate"
-  )
-  invariant(
-    template.f_version === "1.1.0",
-    "generateTemplateId({ template }) -- template object must be an version 1.1.0"
-  )
-
-  const templateData = template.data
-
-  const messages = await Promise.all(
-    templateData.messages.map(
-      async (templateMessage: InteractionTemplateMessage) => [
-        genHash(templateMessage.key),
-        await Promise.all(
-          templateMessage.i18n.map(
-            async (templateMessagei18n: InteractionTemplateI18n) => [
-              genHash(templateMessagei18n.tag),
-              genHash(templateMessagei18n.translation),
-            ]
-          )
-        ),
-      ]
+export function createGenerateTemplateId(
+  context: Pick<FCLContext, "config" | "sdk">
+) {
+  /**
+   * @description Generates Interaction Template ID for a given Interaction Template
+   *
+   * @param params
+   * @param params.template Interaction Template
+   * @returns Interaction Template ID
+   */
+  async function generateTemplateId({
+    template,
+  }: {
+    template: InteractionTemplate110
+  }): Promise<string> {
+    invariant(
+      !!template,
+      "generateTemplateId({ template }) -- template must be defined"
     )
-  )
+    invariant(
+      typeof template === "object",
+      "generateTemplateId({ template }) -- template must be an object"
+    )
+    invariant(
+      template.f_type === "InteractionTemplate",
+      "generateTemplateId({ template }) -- template object must be an InteractionTemplate"
+    )
+    invariant(
+      template.f_version === "1.1.0",
+      "generateTemplateId({ template }) -- template object must be an version 1.1.0"
+    )
 
-  const params = await Promise.all(
-    templateData?.["parameters"]
-      .sort(
-        (a: InteractionTemplateParameter, b: InteractionTemplateParameter) =>
-          a.index - b.index
-      )
-      .map(async (arg: InteractionTemplateParameter) => [
-        genHash(arg.label),
-        [
-          genHash(String(arg.index)),
-          genHash(arg.type),
+    const templateData = template.data
+
+    const messages = await Promise.all(
+      templateData.messages.map(
+        async (templateMessage: InteractionTemplateMessage) => [
+          genHash(templateMessage.key),
           await Promise.all(
-            arg.messages.map(
-              async (argumentMessage: InteractionTemplateMessage) => [
-                genHash(argumentMessage.key),
-                await Promise.all(
-                  argumentMessage.i18n.map(
-                    async (argumentMessagei18n: InteractionTemplateI18n) => [
-                      genHash(argumentMessagei18n.tag),
-                      genHash(argumentMessagei18n.translation),
-                    ]
-                  )
-                ),
+            templateMessage.i18n.map(
+              async (templateMessagei18n: InteractionTemplateI18n) => [
+                genHash(templateMessagei18n.tag),
+                genHash(templateMessagei18n.translation),
               ]
             )
           ),
-        ],
-      ])
-  )
+        ]
+      )
+    )
 
-  const dependencies = [
-    await generateContractDependencies(templateData?.dependencies),
-  ]
+    const params = await Promise.all(
+      templateData?.["parameters"]
+        .sort(
+          (a: InteractionTemplateParameter, b: InteractionTemplateParameter) =>
+            a.index - b.index
+        )
+        .map(async (arg: InteractionTemplateParameter) => [
+          genHash(arg.label),
+          [
+            genHash(String(arg.index)),
+            genHash(arg.type),
+            await Promise.all(
+              arg.messages.map(
+                async (argumentMessage: InteractionTemplateMessage) => [
+                  genHash(argumentMessage.key),
+                  await Promise.all(
+                    argumentMessage.i18n.map(
+                      async (argumentMessagei18n: InteractionTemplateI18n) => [
+                        genHash(argumentMessagei18n.tag),
+                        genHash(argumentMessagei18n.translation),
+                      ]
+                    )
+                  ),
+                ]
+              )
+            ),
+          ],
+        ])
+    )
 
-  const encodedHex = rlpEncode([
-    genHash(template?.f_type),
-    genHash(template?.f_version),
-    genHash(templateData?.type),
-    genHash(templateData?.interface),
-    messages,
-    genHash(templateData?.cadence?.body),
-    [dependencies],
-    params,
-  ]).toString("hex")
+    const dependencies = [
+      await generateContractDependencies(context, templateData?.dependencies),
+    ]
 
-  return genHash(encodedHex)
+    const encodedHex = rlpEncode([
+      genHash(template?.f_type),
+      genHash(template?.f_version),
+      genHash(templateData?.type),
+      genHash(templateData?.interface),
+      messages,
+      genHash(templateData?.cadence?.body),
+      [dependencies],
+      params,
+    ]).toString("hex")
+
+    return genHash(encodedHex)
+  }
+
+  return generateTemplateId
 }
+
+export const generateTemplateId = /* @__PURE__ */ createGenerateTemplateId(
+  createPartialGlobalFCLContext()
+)

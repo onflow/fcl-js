@@ -1,9 +1,10 @@
 import {config, invariant} from "@onflow/sdk"
 import {log, LEVELS} from "@onflow/util-logger"
-import {query} from "../exec/query"
+import {createQuery} from "../exec/query"
 import {generateTemplateId} from "./generate-template-id/generate-template-id"
-import {getChainId} from "../utils"
+import {createGetChainId} from "../utils"
 import type {InteractionTemplate} from "./interaction-template"
+import {FCLContext} from "../context"
 
 export interface GetInteractionTemplateAuditsParams {
   template: InteractionTemplate
@@ -64,6 +65,7 @@ export interface GetInteractionTemplateAuditsOpts {
  * // { "0x1234567890abcdef": true, "0xabcdef1234567890": false }
  */
 export async function getInteractionTemplateAudits(
+  context: FCLContext,
   {template, auditors}: GetInteractionTemplateAuditsParams,
   opts: GetInteractionTemplateAuditsOpts = {}
 ): Promise<Record<string, boolean>> {
@@ -96,7 +98,7 @@ export async function getInteractionTemplateAudits(
   switch (template.f_version) {
     case "1.1.0":
     case "1.0.0":
-      const _auditors = auditors || (await config().get("flow.auditors"))
+      const _auditors = auditors || (await context.config.get("flow.auditors"))
 
       invariant(
         _auditors,
@@ -109,7 +111,7 @@ export async function getInteractionTemplateAudits(
 
       let FlowInteractionAuditContract = opts.flowInteractionAuditContract
       if (!FlowInteractionAuditContract) {
-        const fclNetwork = await getChainId(opts)
+        const fclNetwork = await createGetChainId(context)(opts)
         invariant(
           fclNetwork === "mainnet" || fclNetwork === "testnet",
           "getInteractionTemplateAudits Error: Unable to determine address for FlowInteractionTemplateAudit contract. Set configuration for 'fcl.network' to 'mainnet' or 'testnet'"
@@ -121,7 +123,7 @@ export async function getInteractionTemplateAudits(
         }
       }
 
-      const audits = await query({
+      const audits = await createQuery(context)({
         cadence: `
         import FlowInteractionTemplateAudit from ${FlowInteractionAuditContract}
         access(all) fun main(templateId: String, auditors: [Address]): {Address:Bool} {
