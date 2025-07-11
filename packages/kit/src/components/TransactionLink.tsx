@@ -3,6 +3,7 @@ import {Button, ButtonProps} from "./internal/Button"
 import {useFlowChainId} from "../hooks/useFlowChainId"
 import {FlowNetwork} from "../core/types"
 import {ExternalLinkIcon} from "../icons/ExternalLink"
+import {ShadowRoot} from "./internal/ShadowRoot"
 
 interface TransactionLinkProps {
   txId: string
@@ -36,21 +37,23 @@ export const TransactionLink: React.FC<TransactionLinkProps> = ({
       : "#"
 
   return (
-    <a
-      href={explorerUrl}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="no-underline"
-      onClick={handleClick}
-    >
-      <Button
-        variant={variant}
-        className="mt-2 flex items-center gap-1"
-        disabled={flowNetwork === "emulator"}
+    <ShadowRoot>
+      <a
+        href={explorerUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="no-underline"
+        onClick={handleClick}
       >
-        View on Block Explorer
-        <ExternalLinkIcon className="w-4 h-4" />
-      </Button>
-    </a>
+        <Button
+          variant={variant}
+          className="mt-2 flex items-center gap-1"
+          disabled={flowNetwork === "emulator"}
+        >
+          View on Block Explorer
+          <ExternalLinkIcon className="w-4 h-4" />
+        </Button>
+      </a>
+    </ShadowRoot>
   )
 }

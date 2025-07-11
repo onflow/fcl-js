@@ -6,7 +6,6 @@ import {FlowQueryClientProvider} from "./FlowQueryClient"
 import {deepEqual} from "../utils/deepEqual"
 import {ThemeProvider, Theme} from "../core/theme"
 import {GlobalTransactionProvider} from "./GlobalTransactionProvider"
-import tailwindStyles from "../styles/tailwind.css"
 import {DarkModeProvider} from "./DarkModeProvider"
 
 interface FlowProviderProps {
@@ -124,7 +123,7 @@ const useFCLConfig = (
 
     initializeFCL()
 
-    const unsubscribe = fcl.config().subscribe(latest => {
+    const unsubscribe = fcl.config().subscribe((latest: any) => {
       const newConfig = mapConfig(latest || {})
       setFlowConfig(prev => {
         if (prev && deepEqual(prev, newConfig)) {
@@ -161,7 +160,6 @@ export function FlowProvider({
     <FlowQueryClientProvider queryClient={queryClient}>
       <FlowConfigContext.Provider value={flowConfig}>
         <GlobalTransactionProvider>
-          <style>{tailwindStyles}</style>
           <ThemeProvider theme={customTheme}>
             <DarkModeProvider darkMode={darkMode}>{children}</DarkModeProvider>
           </ThemeProvider>

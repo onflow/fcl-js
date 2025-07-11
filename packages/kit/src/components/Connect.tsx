@@ -10,6 +10,7 @@ import {Dialog} from "./internal/Dialog"
 import {UserIcon} from "../icons/UserIcon"
 import {CopyIcon} from "../icons/CopyIcon"
 import {LogOutIcon} from "../icons/LogOutIcon"
+import {ShadowRoot} from "./internal/ShadowRoot"
 
 type BalanceType = keyof UseCrossVmTokenBalanceData
 
@@ -77,59 +78,64 @@ export const Connect: React.FC<ConnectProps> = ({
   }
 
   return (
-    <>
-      <Button
-        onClick={handleButtonClick}
-        variant={user?.loggedIn ? "outline" : variant}
-        className="px-2 text-sm"
-      >
-        {user?.loggedIn ? displayAddress : "Connect Wallet"}
-      </Button>
-      {user?.loggedIn && (
-        <Dialog isOpen={open} onClose={() => setOpen(false)}>
-          <div className="flex flex-col items-center gap-4 min-w-[320px]">
-            <div className="flex flex-col items-center">
-              <div className="w-16 h-16 rounded-full bg-slate-100 flex items-center justify-center mb-2">
-                <UserIcon className="w-8 h-8 text-black" />
+    <ShadowRoot>
+      <>
+        <Button
+          onClick={handleButtonClick}
+          variant={user?.loggedIn ? "outline" : variant}
+          className="px-2 text-sm"
+        >
+          {user?.loggedIn ? displayAddress : "Connect Wallet"}
+        </Button>
+        {user?.loggedIn && (
+          <Dialog isOpen={open} onClose={() => setOpen(false)}>
+            <div className="flex flex-col items-center gap-4 min-w-[320px]">
+              <div className="flex flex-col items-center">
+                <div
+                  className={`w-16 h-16 rounded-full bg-slate-100 flex
+                  items-center justify-center mb-2`}
+                >
+                  <UserIcon className="w-8 h-8 text-black" />
+                </div>
+                <div className="text-center text-lg font-semibold mb-0">
+                  {displayAddress}
+                </div>
+                <div className="text-center text-sm text-gray-500 mt-2">
+                  {displayBalance}
+                </div>
               </div>
-              <div className="text-center text-lg font-semibold mb-0">
-                {displayAddress}
-              </div>
-              <div className="text-center text-sm text-gray-500 mt-2">
-                {displayBalance}
+              <div className="flex gap-2 w-full">
+                <Button
+                  variant="outline"
+                  className="flex-1 flex items-center justify-center text-sm"
+                  onClick={handleCopy}
+                  disabled={copied}
+                >
+                  {copied ? (
+                    <>
+                      <span className="mr-2 h-4 w-4">✓</span>
+                      Copied!
+                    </>
+                  ) : (
+                    <>
+                      <CopyIcon className="mr-2 h-4 w-4" />
+                      Copy Address
+                    </>
+                  )}
+                </Button>
+                <Button
+                  variant="outline"
+                  className="flex-1 flex items-center justify-center text-sm"
+                  onClick={handleDisconnect}
+                >
+                  <LogOutIcon className="mr-2 h-4 w-4" />
+                  Disconnect
+                </Button>
               </div>
             </div>
-            <div className="flex gap-2 w-full">
-              <Button
-                variant="outline"
-                className="flex-1 flex items-center justify-center text-sm"
-                onClick={handleCopy}
-                disabled={copied}
-              >
-                {copied ? (
-                  <>
-                    <span className="mr-2 h-4 w-4">✓</span>
-                    Copied!
-                  </>
-                ) : (
-                  <>
-                    <CopyIcon className="mr-2 h-4 w-4" />
-                    Copy Address
-                  </>
-                )}
-              </Button>
-              <Button
-                variant="outline"
-                className="flex-1 flex items-center justify-center text-sm"
-                onClick={handleDisconnect}
-              >
-                <LogOutIcon className="mr-2 h-4 w-4" />
-                Disconnect
-              </Button>
-            </div>
-          </div>
-        </Dialog>
-      )}
-    </>
+          </Dialog>
+        )}
+      </>
+    </ShadowRoot>
   )
 }

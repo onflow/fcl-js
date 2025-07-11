@@ -5,6 +5,7 @@ import {TransactionLink} from "./TransactionLink"
 import {LoaderCircleIcon} from "../icons/LoaderCircleIcon"
 import {CircleCheckIcon} from "../icons/CircleCheckIcon"
 import {useFlowTransactionStatus} from "../hooks/useFlowTransactionStatus"
+import {ShadowRoot} from "./internal/ShadowRoot"
 
 interface TransactionDialogProps {
   open: boolean
@@ -42,35 +43,40 @@ export const TransactionDialog: React.FC<TransactionDialogProps> = ({
   }, [isSuccess, onSuccess, closeOnSuccess, onOpenChange])
 
   return (
-    <Dialog isOpen={open} onClose={() => onOpenChange(false)}>
-      <div className="flex flex-col items-center gap-4 py-8 min-w-[320px] animate-fade-in">
-        <div className="flex flex-col items-center gap-2">
-          {!isSuccess ? (
-            <LoaderCircleIcon className="animate-spin text-blue-500 w-12 h-12" />
-          ) : (
-            <CircleCheckIcon className="text-green-500 animate-pop w-12 h-12" />
-          )}
-          <div className="text-lg font-semibold text-center">
-            {!isSuccess
-              ? pendingTitle || "Transaction Pending"
-              : successTitle || "Transaction Successful"}
-          </div>
-        </div>
-        <div className="text-center text-gray-500 text-sm">
-          {!isSuccess
-            ? pendingDescription ||
-              "Your transaction is being processed. Please wait..."
-            : successDescription || "Your transaction was successful!"}
-        </div>
-        {isSuccess && txId && <TransactionLink txId={txId} variant="link" />}
-        <Button
-          variant="outline"
-          onClick={() => onOpenChange(false)}
-          className="mt-4"
+    <ShadowRoot>
+      <Dialog isOpen={open} onClose={() => onOpenChange(false)}>
+        <div
+          className="flex flex-col items-center gap-4 py-8
+            min-w-[320px] animate-fade-in"
         >
-          Close
-        </Button>
-      </div>
-    </Dialog>
+          <div className="flex flex-col items-center gap-2">
+            {!isSuccess ? (
+              <LoaderCircleIcon className="animate-spin text-blue-500 w-12 h-12" />
+            ) : (
+              <CircleCheckIcon className="text-green-500 animate-pop w-12 h-12" />
+            )}
+            <div className="text-lg font-semibold text-center">
+              {!isSuccess
+                ? pendingTitle || "Transaction Pending"
+                : successTitle || "Transaction Successful"}
+            </div>
+          </div>
+          <div className="text-center text-gray-500 text-sm">
+            {!isSuccess
+              ? pendingDescription ||
+                "Your transaction is being processed. Please wait..."
+              : successDescription || "Your transaction was successful!"}
+          </div>
+          {isSuccess && txId && <TransactionLink txId={txId} variant="link" />}
+          <Button
+            variant="outline"
+            onClick={() => onOpenChange(false)}
+            className="mt-4"
+          >
+            Close
+          </Button>
+        </div>
+      </Dialog>
+    </ShadowRoot>
   )
 }

@@ -4,6 +4,7 @@ import {Button, ButtonProps} from "./internal/Button"
 import {UseMutationOptions} from "@tanstack/react-query"
 import {mutate} from "@onflow/fcl"
 import {useGlobalTransaction} from "../provider/GlobalTransactionProvider"
+import {ShadowRoot} from "./internal/ShadowRoot"
 
 interface TransactionButtonProps
   extends Omit<ButtonProps, "onClick" | "children"> {
@@ -61,10 +62,16 @@ export const TransactionButton: React.FC<TransactionButtonProps> = ({
   const isDisabled = buttonProps.disabled || isLoading || !!globalTxId
 
   return (
-    <Button onClick={handleButtonClick} disabled={isDisabled} {...buttonProps}>
-      <span>
-        {!isLoading ? label || "Execute Transaction" : "Processing..."}
-      </span>
-    </Button>
+    <ShadowRoot>
+      <Button
+        onClick={handleButtonClick}
+        disabled={isDisabled}
+        {...buttonProps}
+      >
+        <span>
+          {!isLoading ? label || "Execute Transaction" : "Processing..."}
+        </span>
+      </Button>
+    </ShadowRoot>
   )
 }
