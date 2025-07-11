@@ -1,5 +1,15 @@
 # @onflow/kit
 
+## 0.10.0-alpha.0
+
+### Minor Changes
+
+- [#2582](https://github.com/onflow/fcl-js/pull/2582) [`90f0728bd34fb1d1ce52a08c24f1a4fbcf5db455`](https://github.com/onflow/fcl-js/commit/90f0728bd34fb1d1ce52a08c24f1a4fbcf5db455) Thanks [@jribbink](https://github.com/jribbink)! - Update with latest changes on `master` branch
+
+### Patch Changes
+
+- Update to latest changes on master branch
+
 ## 0.9.0
 
 ### Minor Changes
