@@ -27,7 +27,8 @@ async function getRefId(opts?: {[key: string]: any}): Promise<string> {
 
   var ix
   ix = await pipe(initInteraction(), [getBlock()])
-  ix = await sendFn(ix, {config, response, Buffer, ix: ixModule}, {node})
+  // TODO(jribbink): FIX any type here
+  ix = await sendFn(ix, {response, Buffer, ix: ixModule} as any, {node})
   ix = await decodeResponse(ix)
   return ix.id
 }

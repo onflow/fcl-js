@@ -2,7 +2,6 @@ import {pipe, isTransaction} from "../interaction/interaction"
 import {config} from "@onflow/config"
 import {invariant} from "@onflow/util-invariant"
 import {Buffer} from "@onflow/rlp"
-import {send as defaultSend} from "@onflow/transport-http"
 import * as ixModule from "../interaction/interaction"
 import {response} from "../response/response"
 import {build} from "../build/build"
@@ -19,6 +18,8 @@ import {resolveValidators} from "./resolve-validators"
 import {resolveFinalNormalization} from "./resolve-final-normalization"
 import {resolveVoucherIntercept} from "./resolve-voucher-intercept"
 import {resolveComputeLimit} from "./resolve-compute-limit"
+import {SdkContext} from "../context/context"
+import {withGlobalContext} from "../context/global"
 
 type DebugCallback = (ix: Interaction, log: any, accts?: any) => any
 
@@ -51,77 +52,97 @@ const debug =
     return ix
   }
 
-export const resolve = pipe([
-  resolveCadence,
-  debug("cadence", (ix: Interaction, log: any) => log(ix.message.cadence)),
-  resolveComputeLimit,
-  debug("compute limit", (ix: Interaction, log: any) =>
-    log(ix.message.computeLimit)
-  ),
-  resolveArguments,
-  debug("arguments", (ix: Interaction, log: any) =>
-    log(ix.message.arguments, ix.message)
-  ),
-  resolveAccounts,
-  debug("accounts", (ix: Interaction, log: any, accts: any) =>
-    log(...accts(ix))
-  ),
-  /* special */ execFetchRef,
-  /* special */ execFetchSequenceNumber,
-  resolveSignatures,
-  debug("signatures", (ix: Interaction, log: any, accts: any) =>
-    log(...accts(ix))
-  ),
-  resolveFinalNormalization,
-  resolveValidators,
-  resolveVoucherIntercept,
-  debug("resolved", (ix: Interaction, log: any) => log(ix)),
-])
+/**
+ * Binds a given context to a two-argument handler,
+ * returning a unary function that only needs an Interaction.
+ */
+export function applyContext(
+  handler: (ix: Interaction, context: SdkContext) => Promise<Interaction>,
+  context: SdkContext
+): (ix: Interaction) => Promise<Interaction> {
+  return ix => handler(ix, context)
+}
 
-async function execFetchRef(ix: Interaction): Promise<Interaction> {
+/**
+ * Resolves an interaction by applying a series of context-bound handlers
+ */
+export function createResolve(context: SdkContext) {
+  const resolve = pipe(
+    [
+      resolveCadence,
+      debug("cadence", (ix: Interaction, log: any) => log(ix.message.cadence)),
+      resolveComputeLimit,
+      debug("compute limit", (ix: Interaction, log: any) =>
+        log(ix.message.computeLimit)
+      ),
+      resolveArguments,
+      debug("arguments", (ix: Interaction, log: any) =>
+        log(ix.message.arguments, ix.message)
+      ),
+      resolveAccounts,
+      debug("accounts", (ix: Interaction, log: any, accts: any) =>
+        log(...accts(ix))
+      ),
+      /* special */ execFetchRef,
+      /* special */ execFetchSequenceNumber,
+      resolveSignatures,
+      debug("signatures", (ix: Interaction, log: any, accts: any) =>
+        log(...accts(ix))
+      ),
+      resolveFinalNormalization,
+      resolveValidators,
+      resolveVoucherIntercept,
+      debug("resolved", (ix: Interaction, log: any) => log(ix)),
+    ].map(handler => applyContext(handler, context))
+  )
+
+  return resolve
+}
+
+// TODO: (jribbink): Fix the any type here
+export const resolve = withGlobalContext(createResolve as any)
+
+async function execFetchRef(
+  ix: Interaction,
+  context: SdkContext
+): Promise<Interaction> {
   if (isTransaction(ix) && ix.message.refBlock == null) {
-    const node = await config().get("accessNode.api")
-    const sendFn: any = await config.first(
-      ["sdk.transport", "sdk.send"],
-      defaultSend
-    )
-
-    invariant(
-      sendFn,
-      `Required value for sdk.transport is not defined in config. See: ${"https://github.com/onflow/fcl-js/blob/master/packages/sdk/CHANGELOG.md#0057-alpha1----2022-01-21"}`
-    )
+    const sendFn = context.transport.send
 
     ix.message.refBlock = (
       await sendFn(
         build([getBlock()]),
-        {config, response, Buffer, ix: ixModule},
-        {node}
+        // TODO(jribbink): FIX any type here
+        {response, Buffer, ix: ixModule} as any,
+        {
+          get node() {
+            return context.accessNode
+          },
+        }
       ).then(decode)
     ).id
   }
   return ix
 }
 
-async function execFetchSequenceNumber(ix: Interaction): Promise<Interaction> {
+async function execFetchSequenceNumber(
+  ix: Interaction,
+  context: SdkContext
+): Promise<Interaction> {
   if (isTransaction(ix)) {
     var acct = Object.values(ix.accounts).find((a: any) => a.role.proposer)
     invariant(acct !== undefined, `Transactions require a proposer`)
     if (acct && acct.sequenceNum == null) {
-      const node = await config().get("accessNode.api")
-      const sendFn: any = await config.first(
-        ["sdk.transport", "sdk.send"],
-        defaultSend
-      )
-
-      invariant(
-        sendFn,
-        `Required value for sdk.transport is not defined in config. See: ${"https://github.com/onflow/fcl-js/blob/master/packages/sdk/CHANGELOG.md#0057-alpha1----2022-01-21"}`
-      )
+      const sendFn = context.transport.send
 
       ix.accounts[acct.tempId].sequenceNum = await sendFn(
         await build([getAccount(acct.addr!)]),
-        {config, response, Buffer, ix: ixModule},
-        {node}
+        {response, Buffer, ix: ixModule} as any,
+        {
+          get node() {
+            return context.accessNode
+          },
+        }
       )
         .then(decode)
         .then((acctResponse: any) => acctResponse.keys)

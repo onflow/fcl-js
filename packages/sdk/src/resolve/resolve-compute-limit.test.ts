@@ -5,6 +5,7 @@ import {
 } from "../interaction/interaction"
 import {config} from "@onflow/config"
 import {resolveComputeLimit} from "./resolve-compute-limit"
+import {getGlobalContext} from "../context/global"
 
 describe("resolveComputeLimit", () => {
   test("transaction compute limit has priority", async () => {
@@ -24,7 +25,7 @@ describe("resolveComputeLimit", () => {
               computeLimit: TRANSACTION_COMPUTE_LIMIT,
             },
           }),
-          resolveComputeLimit,
+          async ix => resolveComputeLimit(ix, await getGlobalContext()),
         ])(initInteraction())
 
         expect(ix.message.computeLimit).toBe(TRANSACTION_COMPUTE_LIMIT)
@@ -39,9 +40,10 @@ describe("resolveComputeLimit", () => {
         "fcl.limit": CONFIG_COMPUTE_LIMIT,
       },
       async () => {
-        const ix = await pipe([makeTransaction, resolveComputeLimit])(
-          initInteraction()
-        )
+        const ix = await pipe([
+          makeTransaction,
+          async ix => resolveComputeLimit(ix, await getGlobalContext()),
+        ])(initInteraction())
         expect(ix.message.computeLimit).toBe(CONFIG_COMPUTE_LIMIT)
       }
     )
