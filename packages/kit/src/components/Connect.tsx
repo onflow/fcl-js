@@ -10,6 +10,7 @@ import {Dialog} from "./internal/Dialog"
 import {UserIcon} from "../icons/UserIcon"
 import {CopyIcon} from "../icons/CopyIcon"
 import {LogOutIcon} from "../icons/LogOutIcon"
+import {ShadowRoot} from "./internal/ShadowRoot"
 
 type BalanceType = keyof UseCrossVmTokenBalanceData
 
@@ -77,62 +78,64 @@ export const Connect: React.FC<ConnectProps> = ({
   }
 
   return (
-    <>
-      <Button
-        onClick={handleButtonClick}
-        variant={user?.loggedIn ? "outline" : variant}
-        className="flow-px-2 flow-text-sm"
-      >
-        {user?.loggedIn ? displayAddress : "Connect Wallet"}
-      </Button>
-      {user?.loggedIn && (
-        <Dialog isOpen={open} onClose={() => setOpen(false)}>
-          <div className="flow-flex flow-flex-col flow-items-center flow-gap-4 flow-min-w-[320px]">
-            <div className="flow-flex flow-flex-col flow-items-center">
-              <div
-                className={`flow-w-16 flow-h-16 flow-rounded-full flow-bg-slate-100 flow-flex
-                flow-items-center flow-justify-center flow-mb-2`}
-              >
-                <UserIcon className="flow-w-8 flow-h-8 flow-text-black" />
+    <ShadowRoot>
+      <>
+        <Button
+          onClick={handleButtonClick}
+          variant={user?.loggedIn ? "outline" : variant}
+          className="flow-px-2 flow-text-sm"
+        >
+          {user?.loggedIn ? displayAddress : "Connect Wallet"}
+        </Button>
+        {user?.loggedIn && (
+          <Dialog isOpen={open} onClose={() => setOpen(false)}>
+            <div className="flow-flex flow-flex-col flow-items-center flow-gap-4 flow-min-w-[320px]">
+              <div className="flow-flex flow-flex-col flow-items-center">
+                <div
+                  className={`flow-w-16 flow-h-16 flow-rounded-full flow-bg-slate-100 flow-flex
+                  flow-items-center flow-justify-center flow-mb-2`}
+                >
+                  <UserIcon className="flow-w-8 flow-h-8 flow-text-black" />
+                </div>
+                <div className="flow-text-center flow-text-lg flow-font-semibold flow-mb-0">
+                  {displayAddress}
+                </div>
+                <div className="flow-text-center flow-text-sm flow-text-gray-500 flow-mt-2">
+                  {displayBalance}
+                </div>
               </div>
-              <div className="flow-text-center flow-text-lg flow-font-semibold flow-mb-0">
-                {displayAddress}
-              </div>
-              <div className="flow-text-center flow-text-sm flow-text-gray-500 flow-mt-2">
-                {displayBalance}
+              <div className="flow-flex flow-gap-2 flow-w-full">
+                <Button
+                  variant="outline"
+                  className="flow-flex-1 flow-flex flow-items-center flow-justify-center flow-text-sm"
+                  onClick={handleCopy}
+                  disabled={copied}
+                >
+                  {copied ? (
+                    <>
+                      <span className="flow-mr-2 flow-h-4 flow-w-4">✓</span>
+                      Copied!
+                    </>
+                  ) : (
+                    <>
+                      <CopyIcon className="flow-mr-2 flow-h-4 flow-w-4" />
+                      Copy Address
+                    </>
+                  )}
+                </Button>
+                <Button
+                  variant="outline"
+                  className="flow-flex-1 flow-flex flow-items-center flow-justify-center flow-text-sm"
+                  onClick={handleDisconnect}
+                >
+                  <LogOutIcon className="flow-mr-2 flow-h-4 flow-w-4" />
+                  Disconnect
+                </Button>
               </div>
             </div>
-            <div className="flow-flex flow-gap-2 flow-w-full">
-              <Button
-                variant="outline"
-                className="flow-flex-1 flow-flex flow-items-center flow-justify-center flow-text-sm"
-                onClick={handleCopy}
-                disabled={copied}
-              >
-                {copied ? (
-                  <>
-                    <span className="flow-mr-2 flow-h-4 flow-w-4">✓</span>
-                    Copied!
-                  </>
-                ) : (
-                  <>
-                    <CopyIcon className="flow-mr-2 flow-h-4 flow-w-4" />
-                    Copy Address
-                  </>
-                )}
-              </Button>
-              <Button
-                variant="outline"
-                className="flow-flex-1 flow-flex flow-items-center flow-justify-center flow-text-sm"
-                onClick={handleDisconnect}
-              >
-                <LogOutIcon className="flow-mr-2 flow-h-4 flow-w-4" />
-                Disconnect
-              </Button>
-            </div>
-          </div>
-        </Dialog>
-      )}
-    </>
+          </Dialog>
+        )}
+      </>
+    </ShadowRoot>
   )
 }

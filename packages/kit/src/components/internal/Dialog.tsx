@@ -4,6 +4,7 @@ import {useTheme} from "../../core/theme"
 import {twMerge} from "tailwind-merge"
 import {XIcon} from "../../icons/XIcon"
 import {Button} from "./Button"
+import {ShadowRoot} from "./ShadowRoot"
 
 export interface DialogProps {
   isOpen: boolean
@@ -22,60 +23,60 @@ export const Dialog: React.FC<DialogProps> = ({
 }) => {
   const {colors} = useTheme()
 
-  // flow-wrapper is needed to ensure that the dialog is styled correctly because it's rendered
-  // outside of the flow-provider as it's a dialog
   return (
     <HeadlessDialog
       open={isOpen}
       onClose={onClose}
-      className="flow-wrapper flow-relative flow-z-50"
+      className="flow-relative flow-z-50"
     >
       {/* Background overlay */}
-      <div
-        className="flow-fixed flow-inset-0 flow-bg-black/30"
-        aria-hidden="true"
-      />
+      <ShadowRoot>
+        <div
+          className="flow-fixed flow-inset-0 flow-bg-black/30"
+          aria-hidden="true"
+        />
 
-      {/* Full-screen container to center the panel */}
-      <div className="flow-fixed flow-inset-0 flow-flex flow-items-center flow-justify-center flow-p-4">
-        <HeadlessDialog.Panel
-          className={twMerge(
-            `flow-w-full flow-max-w-md flow-rounded-lg flow-bg-white dark:flow-bg-slate-800
-            flow-p-6 flow-shadow-xl flow-relative`,
-            className
-          )}
-        >
-          {/* Close button absolutely positioned */}
-          <Button
-            variant="outline"
-            onClick={onClose}
+        {/* Full-screen container to center the panel */}
+        <div className="flow-fixed flow-inset-0 flow-flex flow-items-center flow-justify-center flow-p-4">
+          <HeadlessDialog.Panel
             className={twMerge(
-              "flow-absolute flow-top-4 flow-right-4 flow-rounded-full flow-p-2"
+              `flow-w-full flow-max-w-md flow-rounded-lg flow-bg-white dark:flow-bg-slate-800
+              flow-p-6 flow-shadow-xl flow-relative`,
+              className
             )}
-            aria-label="Close"
           >
-            <XIcon className="flow-w-4 flow-h-4" />
-          </Button>
+            {/* Close button absolutely positioned */}
+            <Button
+              variant="outline"
+              onClick={onClose}
+              className={twMerge(
+                "flow-absolute flow-top-4 flow-right-4 flow-rounded-full flow-p-2"
+              )}
+              aria-label="Close"
+            >
+              <XIcon className="flow-w-4 flow-h-4" />
+            </Button>
 
-          {/* Header only if title is present */}
-          {title && (
-            <div className="flow-mb-4">
-              <HeadlessDialog.Title
-                className={twMerge(
-                  "flow-text-lg flow-font-semibold flow-text-slate-900 dark:flow-text-slate-100"
-                )}
-              >
-                {title}
-              </HeadlessDialog.Title>
+            {/* Header only if title is present */}
+            {title && (
+              <div className="flow-mb-4">
+                <HeadlessDialog.Title
+                  className={twMerge(
+                    "flow-text-lg flow-font-semibold flow-text-slate-900 dark:flow-text-slate-100"
+                  )}
+                >
+                  {title}
+                </HeadlessDialog.Title>
+              </div>
+            )}
+
+            {/* Content starts at the top */}
+            <div className="flow-mt-2 flow-text-slate-700 dark:flow-text-slate-300">
+              {children}
             </div>
-          )}
-
-          {/* Content starts at the top */}
-          <div className="flow-mt-2 flow-text-slate-700 dark:flow-text-slate-300">
-            {children}
-          </div>
-        </HeadlessDialog.Panel>
-      </div>
+          </HeadlessDialog.Panel>
+        </div>
+      </ShadowRoot>
     </HeadlessDialog>
   )
 }
