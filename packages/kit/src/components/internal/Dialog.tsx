@@ -22,11 +22,13 @@ export const Dialog: React.FC<DialogProps> = ({
 }) => {
   const {colors} = useTheme()
 
+  // flow-wrapper is needed to ensure that the dialog is styled correctly because it's rendered
+  // outside of the flow-provider as it's a dialog
   return (
     <HeadlessDialog
       open={isOpen}
       onClose={onClose}
-      className="flow-relative flow-z-50"
+      className="flow-wrapper flow-relative flow-z-50"
     >
       {/* Background overlay */}
       <div
