@@ -6,6 +6,7 @@ import {useClient} from "../provider/FlowProvider"
 
 interface UseFlowChainIdArgs {
   query?: Omit<UseQueryOptions<string | null, Error>, "queryKey" | "queryFn">
+  client?: ReturnType<typeof useClient>
 }
 
 /**
@@ -13,10 +14,12 @@ interface UseFlowChainIdArgs {
  */
 export function useFlowChainId({
   query: queryOptions = {},
+  client,
 }: UseFlowChainIdArgs = {}): UseQueryResult<string | null, Error> {
   const queryClient = useFlowQueryClient()
   const config = useFlowConfig()
-  const fcl = useClient()
+  const _fcl = useClient()
+  const fcl = client ?? _fcl
 
   const fetchChainId = useCallback(async () => {
     return await fcl.getChainId()

@@ -16,6 +16,7 @@ export interface UseCrossVmSpendNftTxArgs {
     UseMutationOptions<string, Error, UseCrossVmSpendNftTxMutateArgs>,
     "mutationFn"
   >
+  client?: ReturnType<typeof useClient>
 }
 
 export interface UseCrossVmSpendNftTxMutateArgs {
@@ -219,6 +220,7 @@ transaction(
  */
 export function useCrossVmSpendNft({
   mutation: mutationOptions = {},
+  client,
 }: UseCrossVmSpendNftTxArgs = {}): UseCrossVmSpendNftTxResult {
   const chainId = useFlowChainId()
   const cadenceTx = chainId.data
@@ -226,7 +228,8 @@ export function useCrossVmSpendNft({
     : null
 
   const queryClient = useFlowQueryClient()
-  const fcl = useClient()
+  const _fcl = useClient()
+  const fcl = client ?? _fcl
   const mutation = useMutation(
     {
       mutationFn: async ({

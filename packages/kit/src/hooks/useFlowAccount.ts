@@ -9,6 +9,7 @@ export interface UseFlowAccountArgs {
   address?: string
   /** React Query settings (staleTime, retry, enabled, select, etc.) */
   query?: Omit<UseQueryOptions<Account | null, Error>, "queryKey" | "queryFn">
+  client?: ReturnType<typeof useClient>
 }
 
 /**
@@ -20,9 +21,11 @@ export interface UseFlowAccountArgs {
 export function useFlowAccount({
   address,
   query: queryOptions = {},
+  client,
 }: UseFlowAccountArgs): UseQueryResult<Account | null, Error> {
   const queryClient = useFlowQueryClient()
-  const fcl = useClient()
+  const _fcl = useClient()
+  const fcl = client ?? _fcl
 
   const fetchAccount = useCallback(async () => {
     if (!address) return null

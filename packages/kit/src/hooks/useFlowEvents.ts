@@ -18,6 +18,7 @@ export interface UseFlowEventsArgs extends EventFilter {
   onEvent: (event: Event) => void
   /** Optional error callback */
   onError?: (error: Error) => void
+  client?: ReturnType<typeof useClient>
 }
 
 /**
@@ -34,8 +35,11 @@ export function useFlowEvents({
   opts,
   onEvent,
   onError,
+  client,
 }: UseFlowEventsArgs) {
-  const fcl = useClient()
+  const _fcl = useClient()
+  const fcl = client ?? _fcl
+
   useEffect(() => {
     let unsubscribe: (() => void) | undefined
 

@@ -6,6 +6,7 @@ import {TransactionError} from "@onflow/fcl"
 export interface UseFlowTransactionStatusArgs {
   /** The Flow transaction ID to monitor */
   id?: string
+  client?: ReturnType<typeof useClient>
 }
 
 export interface UseFlowTransactionStatusResult {
@@ -26,11 +27,13 @@ export interface UseFlowTransactionStatusResult {
  */
 export function useFlowTransactionStatus({
   id,
+  client,
 }: UseFlowTransactionStatusArgs): UseFlowTransactionStatusResult {
   const [transactionStatus, setTransactionStatus] =
     useState<TransactionStatus | null>(null)
   const [error, setError] = useState<Error | null>(null)
-  const fcl = useClient()
+  const _fcl = useClient()
+  const fcl = client ?? _fcl
 
   useEffect(() => {
     if (!id) return

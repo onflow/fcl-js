@@ -2,15 +2,22 @@ import {useState, useEffect} from "react"
 import {CurrentUser} from "@onflow/typedefs"
 import {useClient} from "../provider/FlowProvider"
 
+interface UseCurrentFlowUserArgs {
+  client?: ReturnType<typeof useClient>
+}
+
 interface UseCurrentFlowUserResult {
   user: CurrentUser | null
   authenticate: () => Promise<CurrentUser>
   unauthenticate: () => void
 }
 
-export function useCurrentFlowUser(): UseCurrentFlowUserResult {
+export function useCurrentFlowUser({
+  client,
+}: UseCurrentFlowUserArgs = {}): UseCurrentFlowUserResult {
   const [user, setUser] = useState<CurrentUser | null>(null)
-  const fcl = useClient()
+  const _fcl = useClient()
+  const fcl = client ?? _fcl
 
   useEffect(() => {
     const unsubscribe = fcl.currentUser.subscribe(setUser)

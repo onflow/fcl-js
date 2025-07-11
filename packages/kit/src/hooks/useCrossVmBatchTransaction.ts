@@ -22,6 +22,7 @@ export interface UseCrossVmBatchTransactionArgs {
     UseMutationOptions<string, Error, UseCrossVmBatchTransactionMutateArgs>,
     "mutationFn"
   >
+  client?: ReturnType<typeof useClient>
 }
 
 export interface UseCrossVmBatchTransactionResult
@@ -139,6 +140,7 @@ transaction(calls: [{String: AnyStruct}], mustPass: Bool) {
  */
 export function useCrossVmBatchTransaction({
   mutation: mutationOptions = {},
+  client,
 }: UseCrossVmBatchTransactionArgs = {}): UseCrossVmBatchTransactionResult {
   const chainId = useFlowChainId()
   const cadenceTx = chainId.data
@@ -146,7 +148,8 @@ export function useCrossVmBatchTransaction({
     : null
 
   const queryClient = useFlowQueryClient()
-  const fcl = useClient()
+  const _fcl = useClient()
+  const fcl = client ?? _fcl
   const mutation = useMutation(
     {
       mutationFn: async ({

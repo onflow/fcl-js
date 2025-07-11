@@ -3,12 +3,14 @@ import {useFlowQuery} from "./useFlowQuery"
 import {CADENCE_UFIX64_PRECISION, CONTRACT_ADDRESSES} from "../constants"
 import {useFlowChainId} from "./useFlowChainId"
 import {parseUnits, formatUnits} from "viem/utils"
+import {useClient} from "../provider/FlowProvider"
 
 interface UseCrossVmTokenBalanceArgs {
   owner?: string
   erc20Address?: string
   vaultIdentifier?: string
   query?: Omit<UseQueryOptions<unknown, Error>, "queryKey" | "queryFn">
+  client?: ReturnType<typeof useClient>
 }
 
 interface TokenBalance {
@@ -171,6 +173,7 @@ export function useCrossVmTokenBalance(params: UseCrossVmTokenBalanceArgs) {
         t.Optional(t.String)
       ),
     ],
+    client: params.client,
     query: {
       ...params.query,
       enabled:

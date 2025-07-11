@@ -19,6 +19,7 @@ export interface UseFlowMutateArgs {
     UseMutationOptions<string, Error, Parameters<typeof mutate>[0]>,
     "mutationFn"
   >
+  client?: ReturnType<typeof useClient>
 }
 
 /**
@@ -30,13 +31,15 @@ export interface UseFlowMutateArgs {
  */
 export function useFlowMutate({
   mutation: mutationOptions = {},
+  client,
 }: UseFlowMutateArgs = {}): UseMutationResult<
   string,
   Error,
   Parameters<typeof mutate>[0]
 > {
   const queryClient = useFlowQueryClient()
-  const fcl = useClient()
+  const _fcl = useClient()
+  const fcl = client ?? _fcl
 
   const mutationFn = useCallback(
     async (variables: Parameters<typeof mutate>[0]) => {

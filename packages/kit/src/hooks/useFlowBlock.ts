@@ -39,6 +39,7 @@ export interface UseFlowBlockArgs {
   id?: string
   height?: number
   query?: Omit<UseQueryOptions<Block | null, Error>, "queryKey" | "queryFn">
+  client?: ReturnType<typeof useClient>
 }
 
 /**
@@ -53,9 +54,10 @@ export interface UseFlowBlockArgs {
 export function useFlowBlock(
   params: UseFlowBlockArgs = {}
 ): UseQueryResult<Block | null, Error> {
-  const {sealed, id, height, query: queryOptions = {}} = params
+  const {sealed, id, height, query: queryOptions = {}, client} = params
   const queryClient = useFlowQueryClient()
-  const fcl = useClient()
+  const _fcl = useClient()
+  const fcl = client ?? _fcl
 
   const domainParams = useMemo<UseBlockParams>(
     () => ({sealed, id, height}) as UseBlockParams,

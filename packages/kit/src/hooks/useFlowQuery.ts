@@ -16,6 +16,7 @@ export interface UseFlowQueryArgs {
   cadence: string
   args?: (_arg: typeof arg, _t: typeof t) => unknown[]
   query?: Omit<UseQueryOptions<unknown, Error>, "queryKey" | "queryFn">
+  client?: ReturnType<typeof useClient>
 }
 
 /**
@@ -33,9 +34,11 @@ export function useFlowQuery({
   cadence,
   args,
   query: queryOptions = {},
+  client,
 }: UseFlowQueryArgs): UseQueryResult<unknown, Error> {
   const queryClient = useFlowQueryClient()
-  const fcl = useClient()
+  const _fcl = useClient()
+  const fcl = client ?? _fcl
 
   const fetchQuery = useCallback(async () => {
     if (!cadence) return null
