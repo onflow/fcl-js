@@ -6,7 +6,15 @@ export const discoveryOpts = {
   execStrategy: execStrategyHook,
 }
 
-export function createFcl(params: Parameters<typeof createFclCore>[0]) {
+type WithOptionalProperties<T, K extends keyof T> = Omit<T, K> &
+  Partial<Pick<T, K>>
+
+export function createFcl(
+  params: WithOptionalProperties<
+    Parameters<typeof createFclCore>[0],
+    "platform" | "storage"
+  >
+) {
   const fclCore = createFclCore({
     ...params,
     platform: "web",

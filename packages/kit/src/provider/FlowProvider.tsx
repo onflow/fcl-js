@@ -1,9 +1,10 @@
 import React, {useEffect, useState, PropsWithChildren} from "react"
 import * as fcl from "@onflow/fcl"
-import {FlowConfig, FlowConfigContext} from "../core/context"
+import {FclClientContext, FlowConfig, FlowConfigContext} from "../core/context"
 import {DefaultOptions, QueryClient} from "@tanstack/react-query"
 import {FlowQueryClientProvider} from "./FlowQueryClient"
 import {deepEqual} from "../utils/deepEqual"
+import {createFcl} from "@onflow/fcl"
 
 interface FlowProviderProps {
   config?: FlowConfig
@@ -96,53 +97,33 @@ export function FlowProvider({
   const [queryClient] = useState<QueryClient>(
     () => _queryClient ?? new QueryClient({defaultOptions: defaultQueryOptions})
   )
-  const [flowConfig, setFlowConfig] = useState<FlowConfig | null>(null)
-  const [isFlowJsonLoaded, setIsFlowJsonLoaded] = useState(false)
-
-  useEffect(() => {
-    const initializeFCL = async () => {
-      try {
-        if (Object.keys(initialConfig).length > 0) {
-          const fclConfig = convertTypedConfig(initialConfig)
-          if (flowJson) {
-            await fcl.config(fclConfig).load({flowJSON: flowJson})
-          } else {
-            fcl.config(fclConfig)
-          }
-        } else if (flowJson) {
-          await fcl.config().load({flowJSON: flowJson})
-        }
-
-        setIsFlowJsonLoaded(true)
-      } catch (error) {
-        setIsFlowJsonLoaded(true)
-      }
-    }
-
-    initializeFCL()
-
-    const unsubscribe = fcl.config().subscribe(latest => {
-      const newConfig = mapConfig(latest || {})
-      setFlowConfig(prev => {
-        if (prev && deepEqual(prev, newConfig)) {
-          return prev
-        }
-        return newConfig
-      })
+  const [client] = useState<ReturnType<typeof createFcl>>(
+    createFcl({
+      accessNode: initialConfig.accessNodeUrl!,
+      discoveryWallet: initialConfig.discoveryWallet,
+      discoveryWalletMethod: initialConfig.discoveryWalletMethod,
+      computeLimit: initialConfig.fclLimit!,
+      flowNetwork: initialConfig.flowNetwork,
+      serviceOpenIdScopes: initialConfig.serviceOpenIdScopes,
+      walletconnectProjectId: initialConfig.walletconnectProjectId,
+      walletconnectDisableNotifications:
+        initialConfig.walletconnectDisableNotifications,
     })
-
-    return () => unsubscribe()
-  }, [initialConfig, flowJson])
-
-  if (!flowConfig || !isFlowJsonLoaded) {
-    return null
-  }
+  )
 
   return (
     <FlowQueryClientProvider queryClient={queryClient}>
-      <FlowConfigContext.Provider value={flowConfig}>
+      <FclClientContext.Provider value={client}>
         {children}
-      </FlowConfigContext.Provider>
+      </FclClientContext.Provider>
     </FlowQueryClientProvider>
   )
+}
+
+export function useClient() {
+  const client = React.useContext(FclClientContext)
+  if (!client) {
+    throw new Error("FclClientContext is not provided")
+  }
+  return client
 }
