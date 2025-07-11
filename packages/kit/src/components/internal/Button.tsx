@@ -17,7 +17,7 @@ export const Button: React.FC<ButtonProps> = ({
   const buttonVariant = colors[variant]
 
   const baseStyles =
-    "flow-px-4 flow-py-2 flow-rounded-md flow-font-medium flow-transition-colors"
+    "px-4 py-2 rounded-md font-medium transition-colors"
 
   const variantClasses = twMerge(
     buttonVariant.background,

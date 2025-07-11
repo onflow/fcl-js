@@ -83,52 +83,52 @@ export const Connect: React.FC<ConnectProps> = ({
         <Button
           onClick={handleButtonClick}
           variant={user?.loggedIn ? "outline" : variant}
-          className="flow-px-2 flow-text-sm"
+          className="px-2 text-sm"
         >
           {user?.loggedIn ? displayAddress : "Connect Wallet"}
         </Button>
         {user?.loggedIn && (
           <Dialog isOpen={open} onClose={() => setOpen(false)}>
-            <div className="flow-flex flow-flex-col flow-items-center flow-gap-4 flow-min-w-[320px]">
-              <div className="flow-flex flow-flex-col flow-items-center">
+            <div className="flex flex-col items-center gap-4 min-w-[320px]">
+              <div className="flex flex-col items-center">
                 <div
-                  className={`flow-w-16 flow-h-16 flow-rounded-full flow-bg-slate-100 flow-flex
-                  flow-items-center flow-justify-center flow-mb-2`}
+                  className={`w-16 h-16 rounded-full bg-slate-100 flex
+                  items-center justify-center mb-2`}
                 >
-                  <UserIcon className="flow-w-8 flow-h-8 flow-text-black" />
+                  <UserIcon className="w-8 h-8 text-black" />
                 </div>
-                <div className="flow-text-center flow-text-lg flow-font-semibold flow-mb-0">
+                <div className="text-center text-lg font-semibold mb-0">
                   {displayAddress}
                 </div>
-                <div className="flow-text-center flow-text-sm flow-text-gray-500 flow-mt-2">
+                <div className="text-center text-sm text-gray-500 mt-2">
                   {displayBalance}
                 </div>
               </div>
-              <div className="flow-flex flow-gap-2 flow-w-full">
+              <div className="flex gap-2 w-full">
                 <Button
                   variant="outline"
-                  className="flow-flex-1 flow-flex flow-items-center flow-justify-center flow-text-sm"
+                  className="flex-1 flex items-center justify-center text-sm"
                   onClick={handleCopy}
                   disabled={copied}
                 >
                   {copied ? (
                     <>
-                      <span className="flow-mr-2 flow-h-4 flow-w-4">✓</span>
+                      <span className="mr-2 h-4 w-4">✓</span>
                       Copied!
                     </>
                   ) : (
                     <>
-                      <CopyIcon className="flow-mr-2 flow-h-4 flow-w-4" />
+                      <CopyIcon className="mr-2 h-4 w-4" />
                       Copy Address
                     </>
                   )}
                 </Button>
                 <Button
                   variant="outline"
-                  className="flow-flex-1 flow-flex flow-items-center flow-justify-center flow-text-sm"
+                  className="flex-1 flex items-center justify-center text-sm"
                   onClick={handleDisconnect}
                 >
-                  <LogOutIcon className="flow-mr-2 flow-h-4 flow-w-4" />
+                  <LogOutIcon className="mr-2 h-4 w-4" />
                   Disconnect
                 </Button>
               </div>

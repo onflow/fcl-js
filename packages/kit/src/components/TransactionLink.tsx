@@ -42,16 +42,16 @@ export const TransactionLink: React.FC<TransactionLinkProps> = ({
         href={explorerUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className="flow-no-underline"
+        className="no-underline"
         onClick={handleClick}
       >
         <Button
           variant={variant}
-          className="flow-mt-2 flow-flex flow-items-center flow-gap-1"
+          className="mt-2 flex items-center gap-1"
           disabled={flowNetwork === "emulator"}
         >
           View on Block Explorer
-          <ExternalLinkIcon className="flow-w-4 flow-h-4" />
+          <ExternalLinkIcon className="w-4 h-4" />
         </Button>
       </a>
     </ShadowRoot>

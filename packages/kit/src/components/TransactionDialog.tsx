@@ -46,22 +46,22 @@ export const TransactionDialog: React.FC<TransactionDialogProps> = ({
     <ShadowRoot>
       <Dialog isOpen={open} onClose={() => onOpenChange(false)}>
         <div
-          className="flow-flex flow-flex-col flow-items-center flow-gap-4 flow-py-8
-            flow-min-w-[320px] flow-animate-fade-in"
+          className="flex flex-col items-center gap-4 py-8
+            min-w-[320px] animate-fade-in"
         >
-          <div className="flow-flex flow-flex-col flow-items-center flow-gap-2">
+          <div className="flex flex-col items-center gap-2">
             {!isSuccess ? (
-              <LoaderCircleIcon className="flow-animate-spin flow-text-blue-500 flow-w-12 flow-h-12" />
+              <LoaderCircleIcon className="animate-spin text-blue-500 w-12 h-12" />
             ) : (
-              <CircleCheckIcon className="flow-text-green-500 flow-animate-pop flow-w-12 flow-h-12" />
+              <CircleCheckIcon className="text-green-500 animate-pop w-12 h-12" />
             )}
-            <div className="flow-text-lg flow-font-semibold flow-text-center">
+            <div className="text-lg font-semibold text-center">
               {!isSuccess
                 ? pendingTitle || "Transaction Pending"
                 : successTitle || "Transaction Successful"}
             </div>
           </div>
-          <div className="flow-text-center flow-text-gray-500 flow-text-sm">
+          <div className="text-center text-gray-500 text-sm">
             {!isSuccess
               ? pendingDescription ||
                 "Your transaction is being processed. Please wait..."
@@ -71,7 +71,7 @@ export const TransactionDialog: React.FC<TransactionDialogProps> = ({
           <Button
             variant="outline"
             onClick={() => onOpenChange(false)}
-            className="flow-mt-4"
+            className="mt-4"
           >
             Close
           </Button>
