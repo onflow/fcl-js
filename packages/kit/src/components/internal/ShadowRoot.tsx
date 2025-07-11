@@ -1,6 +1,7 @@
 import React, {useLayoutEffect, useRef, useState} from "react"
 import {createPortal} from "react-dom"
 import tailwindStyles from "../../styles/tailwind.css"
+import {useDarkMode} from "../../hooks"
 
 export interface ShadowRootProps {
   children: React.ReactNode
@@ -9,6 +10,7 @@ export interface ShadowRootProps {
 export const ShadowRoot: React.FC<ShadowRootProps> = ({children}) => {
   const hostRef = useRef<HTMLDivElement>(null)
   const [container, setContainer] = useState<HTMLDivElement | null>(null)
+  const {isDark} = useDarkMode()
 
   useLayoutEffect(() => {
     if (!hostRef.current) return
@@ -55,6 +57,12 @@ export const ShadowRoot: React.FC<ShadowRootProps> = ({children}) => {
       }
     }
   }, [])
+
+  useLayoutEffect(() => {
+    if (container) {
+      container.classList.toggle("dark", isDark)
+    }
+  }, [container, isDark])
 
   return (
     <div ref={hostRef}>
