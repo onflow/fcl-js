@@ -2,7 +2,11 @@ import React, {useLayoutEffect, useRef, useState} from "react"
 import {createPortal} from "react-dom"
 import tailwindStyles from "../../styles/tailwind.css"
 
-export function ShadowRoot({children}: {children: React.ReactNode}) {
+export interface ShadowRootProps {
+  children: React.ReactNode
+}
+
+export const ShadowRoot: React.FC<ShadowRootProps> = ({children}) => {
   const hostRef = useRef<HTMLDivElement>(null)
   const [container, setContainer] = useState<HTMLDivElement | null>(null)
 
