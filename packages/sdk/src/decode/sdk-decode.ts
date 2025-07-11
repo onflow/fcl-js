@@ -1,14 +1,18 @@
-import {config} from "@onflow/config"
 import {decodeResponse} from "./decode"
+import {SdkContext} from "../context/context"
+import {withGlobalContext} from "../context/global"
 
-export async function decode(response: any): Promise<any> {
-  const decodersFromConfig = await config().where(/^decoder\./)
-  const decoders = Object.entries(decodersFromConfig).map(
-    ([pattern, xform]) => {
-      pattern = `/${pattern.replace(/^decoder\./, "")}$/`
-      return [pattern, xform]
-    }
-  )
+export function createDecode(context: SdkContext) {
+  /**
+   * @description Decodes a response using the configured decoders.
+   * @param response The response to decode.
+   * @returns A promise that resolves to the decoded response.
+   */
+  async function decode(response: any): Promise<any> {
+    return decodeResponse(response, context.customDecoders)
+  }
 
-  return decodeResponse(response, Object.fromEntries(decoders))
+  return decode
 }
+
+export const decode = /* @__PURE__ */ withGlobalContext(createDecode)

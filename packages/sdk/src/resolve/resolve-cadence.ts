@@ -4,6 +4,7 @@ import {config} from "@onflow/config"
 import * as logger from "@onflow/util-logger"
 import {withPrefix} from "@onflow/util-address"
 import {Interaction} from "@onflow/typedefs"
+import {SdkContext} from "../context/context"
 
 const isFn = (v: any): v is Function => typeof v === "function"
 const isString = (v: any): v is string => typeof v === "string"
@@ -24,7 +25,11 @@ function getContractIdentifierSyntaxMatches(
   return cadence.matchAll(newIdentifierPatternFn())
 }
 
-export async function resolveCadence(ix: Interaction): Promise<Interaction> {
+// TODO: refactor
+export async function resolveCadence(
+  ix: Interaction,
+  context: SdkContext
+): Promise<Interaction> {
   if (!isTransaction(ix) && !isScript(ix)) return ix
 
   var cadence = get(ix, "ix.cadence")

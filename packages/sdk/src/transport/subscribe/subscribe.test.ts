@@ -5,10 +5,10 @@ import {
   SdkTransport,
 } from "@onflow/typedefs"
 import {subscribe} from "./subscribe"
-import {subscribeRaw} from "./subscribe-raw"
+import {createSubscribeRawAsync} from "./subscribe-raw"
 
 jest.mock("./subscribe-raw")
-const mocksubscribeRaw = jest.mocked(subscribeRaw)
+jest.mock("../../context/global")
 
 describe("subscribe", () => {
   let mockSub: jest.Mocked<Subscription> = {
@@ -17,7 +17,9 @@ describe("subscribe", () => {
 
   beforeEach(() => {
     jest.resetAllMocks()
-    mocksubscribeRaw.mockReturnValue(mockSub)
+    jest
+      .mocked(createSubscribeRawAsync)
+      .mockReturnValueOnce(jest.fn().mockReturnValue(mockSub))
   })
 
   test("subscribes to a topic and returns a subscription", async () => {
@@ -26,16 +28,19 @@ describe("subscribe", () => {
     const onData = jest.fn()
     const onError = jest.fn()
 
-    const sub = await subscribe({
+    const sub = subscribe({
       topic,
       args,
       onData,
       onError,
     })
 
+    const mockSubscribedRaw = jest.mocked(createSubscribeRawAsync).mock
+      .results[0].value
+
     expect(sub).toBe(mockSub)
-    expect(mocksubscribeRaw).toHaveBeenCalledTimes(1)
-    expect(mocksubscribeRaw).toHaveBeenCalledWith(
+    expect(mockSubscribedRaw).toHaveBeenCalledTimes(1)
+    expect(mockSubscribedRaw).toHaveBeenCalledWith(
       {topic, args, onData: expect.any(Function), onError},
       {}
     )
@@ -47,7 +52,7 @@ describe("subscribe", () => {
     const onData = jest.fn()
     const onError = jest.fn()
 
-    const sub = await subscribe({
+    const sub = subscribe({
       topic,
       args,
       onData,
@@ -67,7 +72,7 @@ describe("subscribe", () => {
 
     const node = "http://localhost:8080"
 
-    const sub = await subscribe(
+    const sub = subscribe(
       {
         topic,
         args,
@@ -77,9 +82,12 @@ describe("subscribe", () => {
       {node}
     )
 
+    const mockSubscribedRaw = jest.mocked(createSubscribeRawAsync).mock
+      .results[0].value
+
     expect(sub).toBe(mockSub)
-    expect(mocksubscribeRaw).toHaveBeenCalledTimes(1)
-    expect(mocksubscribeRaw).toHaveBeenCalledWith(
+    expect(mockSubscribedRaw).toHaveBeenCalledTimes(1)
+    expect(mockSubscribedRaw).toHaveBeenCalledWith(
       {topic, args, onData: expect.any(Function), onError},
       {node}
     )
@@ -97,7 +105,7 @@ describe("subscribe", () => {
       subscribe: jest.fn().mockResolvedValue(mockSub),
     } as jest.Mocked<SdkTransport>
 
-    const sub = await subscribe(
+    const sub = subscribe(
       {
         topic,
         args,
@@ -107,9 +115,12 @@ describe("subscribe", () => {
       {node, transport}
     )
 
+    const mockSubscribedRaw = jest.mocked(createSubscribeRawAsync).mock
+      .results[0].value
+
     expect(sub).toBe(mockSub)
-    expect(mocksubscribeRaw).toHaveBeenCalledTimes(1)
-    expect(mocksubscribeRaw).toHaveBeenCalledWith(
+    expect(mockSubscribedRaw).toHaveBeenCalledTimes(1)
+    expect(mockSubscribedRaw).toHaveBeenCalledWith(
       {topic, args, onData: expect.any(Function), onError},
       {node, transport}
     )
