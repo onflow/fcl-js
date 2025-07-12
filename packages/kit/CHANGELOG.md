@@ -1,5 +1,11 @@
 # @onflow/kit
 
+## 0.9.0
+
+### Minor Changes
+
+- [#2533](https://github.com/onflow/fcl-js/pull/2533) [`ad8989cd3d994df2835cff2c24e19aa73fdbd0d5`](https://github.com/onflow/fcl-js/commit/ad8989cd3d994df2835cff2c24e19aa73fdbd0d5) Thanks [@jribbink](https://github.com/jribbink)! - Add emulator support for Cross VM hooks
+
 ## 0.8.0
 
 ### Minor Changes
