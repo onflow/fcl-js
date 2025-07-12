@@ -51,6 +51,31 @@ const debug =
     return ix
   }
 
+/**
+ * Resolves an interaction by applying a series of resolvers in sequence.
+ *
+ * This is the main resolver function that takes a built interaction and prepares it
+ * for submission to the Flow blockchain by applying all necessary resolvers.
+ *
+ * The resolve function uses a pipeline approach, applying each resolver in sequence
+ * to transform the interaction from its initial built state to a fully resolved state
+ * ready for transmission to the Flow Access API.
+ *
+ * @param interaction The interaction object to resolve
+ * @returns A promise that resolves to the fully resolved interaction
+ * @example
+ * import { resolve, build, script } from "@onflow/sdk"
+ *
+ * const interaction = await build([
+ *   script`
+ *     access(all) fun main(): String {
+ *       return "Hello, World!"
+ *     }
+ *   `
+ * ])
+ *
+ * const resolved = await resolve(interaction)
+ */
 export const resolve = pipe([
   resolveCadence,
   debug("cadence", (ix: Interaction, log: any) => log(ix.message.cadence)),

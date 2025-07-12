@@ -285,6 +285,13 @@ export const decode = async (
   return recurseDecode(decodeInstructions, decoders, stack)
 }
 
+/**
+ * Decodes a response from Flow into JSON
+ *
+ * @param response The response object from Flow
+ * @param customDecoders An object of custom decoders
+ * @returns The decoded response
+ */
 export const decodeResponse = async (
   response: FlowResponse,
   customDecoders: DecoderMap = {}
