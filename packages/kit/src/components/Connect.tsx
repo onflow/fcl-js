@@ -92,8 +92,9 @@ export const Connect: React.FC<ConnectProps> = ({
             <div className="flex flex-col items-center gap-4 min-w-[320px]">
               <div className="flex flex-col items-center">
                 <div
-                  className={`w-16 h-16 rounded-full bg-slate-100 flex
-                  items-center justify-center mb-2`}
+                  className={
+                    "w-16 h-16 rounded-full bg-slate-100 flex items-center justify-center mb-2"
+                  }
                 >
                   <UserIcon className="w-8 h-8 text-black" />
                 </div>

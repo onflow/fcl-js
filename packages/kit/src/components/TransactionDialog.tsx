@@ -45,10 +45,7 @@ export const TransactionDialog: React.FC<TransactionDialogProps> = ({
   return (
     <ShadowRoot>
       <Dialog isOpen={open} onClose={() => onOpenChange(false)}>
-        <div
-          className="flex flex-col items-center gap-4 py-8
-            min-w-[320px] animate-fade-in"
-        >
+        <div className="flex flex-col items-center gap-4 py-8 min-w-[320px] animate-fade-in">
           <div className="flex flex-col items-center gap-2">
             {!isSuccess ? (
               <LoaderCircleIcon className="animate-spin text-blue-500 w-12 h-12" />

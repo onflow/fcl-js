@@ -24,24 +24,16 @@ export const Dialog: React.FC<DialogProps> = ({
   const {colors} = useTheme()
 
   return (
-    <HeadlessDialog
-      open={isOpen}
-      onClose={onClose}
-      className="relative z-50"
-    >
+    <HeadlessDialog open={isOpen} onClose={onClose} className="relative z-50">
       {/* Background overlay */}
       <ShadowRoot>
-        <div
-          className="fixed inset-0 bg-black/30"
-          aria-hidden="true"
-        />
+        <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
 
         {/* Full-screen container to center the panel */}
         <div className="fixed inset-0 flex items-center justify-center p-4">
           <HeadlessDialog.Panel
             className={twMerge(
-              `w-full max-w-md rounded-lg bg-white dark:bg-slate-800
-              p-6 shadow-xl relative`,
+              "w-full max-w-md rounded-lg bg-white dark:bg-slate-800 p-6 shadow-xl relative",
               className
             )}
           >
@@ -49,9 +41,7 @@ export const Dialog: React.FC<DialogProps> = ({
             <Button
               variant="outline"
               onClick={onClose}
-              className={twMerge(
-                "absolute top-4 right-4 rounded-full p-2"
-              )}
+              className={twMerge("absolute top-4 right-4 rounded-full p-2")}
               aria-label="Close"
             >
               <XIcon className="w-4 h-4" />
