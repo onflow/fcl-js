@@ -3,7 +3,7 @@ import {TransactionButton} from "@onflow/kit"
 export function KitTransactionButtonCard() {
   const GREETING_TRANSACTION = `
     transaction(greeting: String) {
-      prepare(signer: AuthAccount) {
+      prepare(signer: &Account) {
         log(greeting)
       }
     }
