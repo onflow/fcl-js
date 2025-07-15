@@ -15,13 +15,13 @@ export async function createGlobalContext(): Promise<SdkContext> {
     get transport() {
       return getGlobalTransport(globalConfig)
     },
-    get accessNode() {
-      const accessNode = globalConfig["accessNode.api"] as string | undefined
+    get accessNodeUrl() {
+      const accessNodeUrl = globalConfig["accessNode.api"] as string | undefined
       invariant(
-        !!accessNode,
+        !!accessNodeUrl,
         `Either opts.node or "accessNode.api" in config must be defined.`
       )
-      return accessNode
+      return accessNodeUrl
     },
     get computeLimit() {
       const computeLimit = globalConfig["fcl.limit"] as number | undefined

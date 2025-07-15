@@ -136,11 +136,10 @@ async function execFetchRef(
     ix.message.refBlock = (
       await sendFn(
         build([getBlock()]),
-        // TODO(jribbink): FIX any type here
         {response, Buffer, ix: ixModule} as any,
         {
           get node() {
-            return context.accessNode
+            return context.accessNodeUrl
           },
         }
       ).then(decode)
@@ -164,7 +163,7 @@ async function execFetchSequenceNumber(
         {response, Buffer, ix: ixModule} as any,
         {
           get node() {
-            return context.accessNode
+            return context.accessNodeUrl
           },
         }
       )

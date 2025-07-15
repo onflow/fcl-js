@@ -24,7 +24,7 @@ export function createSend(context: SdkContext) {
 
     const resolveFn = context.customResolver || opts.resolve || defaultResolve
 
-    opts.node = opts.node || context.accessNode
+    opts.node = opts.node || context.accessNodeUrl
 
     if (Array.isArray(args)) args = pipe(initInteraction(), args) as any
     return sendFn(await resolveFn(args), {response, ix: ixModule, Buffer}, opts)

@@ -24,7 +24,7 @@ export function createSubscribeRawAsync(
       try {
         const context = await contextPromise
         const transport = opts.transport || context.transport
-        const node = opts.node || context.accessNode
+        const node = opts.node || context.accessNodeUrl
 
         invariant(
           !!node,
