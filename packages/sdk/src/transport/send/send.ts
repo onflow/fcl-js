@@ -1,6 +1,7 @@
 import {Buffer} from "@onflow/rlp"
 import {initInteraction, pipe} from "../../interaction/interaction"
 import * as ixModule from "../../interaction/interaction"
+import {InteractionBuilderFn} from "../../interaction/interaction"
 import {response} from "../../response/response"
 import {resolve as defaultResolve} from "../../resolve/resolve"
 import {SdkContext} from "../../context/context"
@@ -42,7 +43,9 @@ export function createSend(context: SdkContext) {
    * // note: response contains several values
    */
   async function send(
-    args: (Function | false) | (Function | false)[] = [],
+    args:
+      | (InteractionBuilderFn | false)
+      | (InteractionBuilderFn | false)[] = [],
     opts: any = {}
   ): Promise<any> {
     const transport = opts.transport || context.transport
@@ -56,13 +59,8 @@ export function createSend(context: SdkContext) {
 
     opts.node = opts.node || context.accessNode
 
-    if (Array.isArray(args)) args = pipe(initInteraction(), args as any) as any
-    return sendFn(
-      await resolveFn(args),
-      // TODO(jribbink): FIX any type here
-      {response, ix: ixModule, Buffer} as any,
-      opts
-    )
+    if (Array.isArray(args)) args = pipe(initInteraction(), args) as any
+    return sendFn(await resolveFn(args), {response, ix: ixModule, Buffer}, opts)
   }
 
   return send
