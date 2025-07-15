@@ -1,7 +1,38 @@
 import {SdkTransport} from "@onflow/typedefs"
 
+/**
+ * Options for configuring the SDK client.
+ */
+export interface SdkClientOptions {
+  /**
+   * The URL of the Flow access node to connect to.
+   */
+  accessNode: string
+  /**
+   * The transport object used for sending requests to the Flow network.
+   */
+  transport: SdkTransport
+  /**
+   * The compute limit for transactions and queries.
+   */
+  computeLimit: number
+  /**
+   * Map of contract names to their addresses.
+   * @example
+   * ```ts
+   * {
+   *   "FlowToken": "0x9a07664d3c2b5f8",
+   * }
+   * ```
+   */
+  contracts?: {
+    [contractName: string]: string
+  }
+  customResolver?: (args: any) => Promise<any>
+  customDecoders?: {[key: string]: (data: any) => any}
+}
+
 export interface SdkContext {
-  // TODO: should we include more properties about the chain like viem... e.g. chainId, network, etc.?
   get accessNode(): string
   get transport(): SdkTransport
   get computeLimit(): number
@@ -19,26 +50,9 @@ export interface SdkContext {
   get legacyContractIdentifiers(): Record<string, string>
 }
 
-export interface SdkContextOptions {
-  accessNode: string
-  transport: SdkTransport
-  computeLimit: number
-  customResolver?: (args: any) => Promise<any>
-  customDecoders?: {[key: string]: (data: any) => any}
-  /**
-   * Map of contract names to their addresses.
-   * @example
-   * ```ts
-   * {
-   *   "FlowToken": "0x9a07664d3c2b5f8",
-   * }
-   * ```
-   */
-  contracts?: {
-    [contractName: string]: string
-  }
-}
-
+/**
+ * Creates a new SDK context with the provided configuration.
+ */
 export function createContext({
   accessNode,
   transport,
@@ -46,7 +60,7 @@ export function createContext({
   customResolver,
   customDecoders = {},
   contracts = {},
-}: SdkContextOptions): SdkContext {
+}: SdkClientOptions): SdkContext {
   if (!transport) {
     throw new Error("Transport must be provided to create SDK context")
   }
