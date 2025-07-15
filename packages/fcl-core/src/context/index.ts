@@ -2,12 +2,13 @@ import {createUser, type CurrentUserServiceApi} from "../current-user"
 import {StorageProvider} from "../fcl-core"
 import {createSdkClient, SdkClientOptions} from "@onflow/sdk"
 
-interface FCLConfig extends SdkClientOptions {
-  accessNode: string
+interface FCLConfig {
+  accessNodeUrl: string
   transport: SdkClientOptions["transport"]
   computeLimit: number
   customResolver?: SdkClientOptions["customResolver"]
   customDecoders?: SdkClientOptions["customDecoders"]
+  contracts?: Record<string, string>
   platform: string
   discoveryWallet?: string
   discoveryWalletMethod?: string
@@ -69,7 +70,7 @@ export function createFCLContext(config: FCLConfig): FCLContext {
       "walletconnectDisableNotifications",
       config.walletconnectDisableNotifications,
     ],
-    ["accessNode.api", config.accessNode],
+    ["accessNode.api", config.accessNodeUrl],
     ["fcl.limit", config.computeLimit],
   ])
 
@@ -124,11 +125,12 @@ export function createFCLContext(config: FCLConfig): FCLContext {
   }
 
   const sdk = createSdkClient({
-    accessNode: config.accessNode,
+    accessNodeUrl: config.accessNodeUrl,
     transport: config.transport,
     computeLimit: config.computeLimit,
     customResolver: config.customResolver,
     customDecoders: config.customDecoders,
+    contracts: config.contracts,
   })
 
   const currentUser = createUser({
@@ -163,7 +165,7 @@ export function createConfigService(config: FCLConfig): ConfigService {
       "walletconnectDisableNotifications",
       config.walletconnectDisableNotifications,
     ],
-    ["accessNode.api", config.accessNode],
+    ["accessNode.api", config.accessNodeUrl],
     ["fcl.limit", config.computeLimit],
   ])
 
