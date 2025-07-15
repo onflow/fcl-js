@@ -3,6 +3,11 @@ import {StorageProvider} from "../fcl-core"
 import {createSdkClient, SdkClientOptions} from "@onflow/sdk"
 
 interface FCLConfig extends SdkClientOptions {
+  accessNode: string
+  transport: SdkClientOptions["transport"]
+  computeLimit: number
+  customResolver?: SdkClientOptions["customResolver"]
+  customDecoders?: SdkClientOptions["customDecoders"]
   platform: string
   discoveryWallet?: string
   discoveryWalletMethod?: string
@@ -124,7 +129,6 @@ export function createFCLContext(config: FCLConfig): FCLContext {
     computeLimit: config.computeLimit,
     customResolver: config.customResolver,
     customDecoders: config.customDecoders,
-    debug: config.debug,
   })
 
   const currentUser = createUser({
