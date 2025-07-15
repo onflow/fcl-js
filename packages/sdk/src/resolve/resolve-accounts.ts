@@ -51,6 +51,13 @@ function recurseFlatMap<T>(el: T, depthLimit = 3) {
   )
 }
 
+/**
+ * Builds a pre-signable object containing interaction data before signing.
+ *
+ * @param acct The account to create the pre-signable for
+ * @param ix The interaction object containing transaction details
+ * @returns A pre-signable object conforming to the FCL pre-signable standard
+ */
 export function buildPreSignable(
   acct: Partial<InteractionAccount>,
   ix: Interaction
@@ -317,6 +324,13 @@ async function resolveAccountsByIds(
   return newTempIds
 }
 
+/**
+ * Resolves account authorization functions and validates account configurations for transactions.
+ *
+ * @param ix The interaction object containing accounts to resolve
+ * @param opts Configuration options for resolution
+ * @returns The interaction with resolved accounts
+ */
 export async function resolveAccounts(
   ix: Interaction,
   opts: Record<string, any> = {}

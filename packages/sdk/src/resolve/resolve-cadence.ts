@@ -24,6 +24,12 @@ function getContractIdentifierSyntaxMatches(
   return cadence.matchAll(newIdentifierPatternFn())
 }
 
+/**
+ * Resolves Cadence code by evaluating functions and replacing contract placeholders with addresses.
+ *
+ * @param ix The interaction object containing Cadence code to resolve
+ * @returns The interaction with resolved Cadence code
+ */
 export async function resolveCadence(
   ix: Interaction,
   context: SdkContext

@@ -4,8 +4,36 @@ import {SubscriptionsNotSupportedError} from "../transport/subscribe/errors"
 
 /**
  * Get the SDK transport object, either from the provided override or from the global config.
- * @param overrides - Override default configuration with custom transport or send function.
- * @returns The SDK transport object.
+ *
+ * The transport object handles communication with Flow Access Nodes, including sending transactions,
+ * executing scripts, and managing subscriptions. This function resolves the transport configuration
+ * from various sources with the following priority order:
+ * 1. Provided override parameters
+ * 2. Global SDK configuration
+ * 3. Default HTTP transport
+ *
+ * @param override Override default configuration with custom transport or send function
+ * @param override.send Custom send function for backwards compatibility with legacy configurations
+ * @param override.transport Complete transport object with both send and subscribe capabilities
+ * @returns The resolved SDK transport object with send and subscribe methods
+ *
+ * @throws {Error} When both transport and send options are provided simultaneously
+ * @throws {SubscriptionsNotSupportedError} When attempting to subscribe using a legacy send-only transport
+ *
+ * @example
+ * import * as fcl from "@onflow/fcl";
+ * import { httpTransport } from "@onflow/transport-http";
+ *
+ * // Get default transport (usually HTTP transport)
+ * const defaultTransport = await fcl.getTransport();
+ *
+ * // Override with custom transport
+ * const customTransport = await fcl.getTransport({
+ *   transport: httpTransport({
+ *     accessNode: "https://rest-mainnet.onflow.org",
+ *     timeout: 10000
+ *   })
+ * });
  */
 export function getGlobalTransport(cfg: Record<string, any>): SdkTransport {
   const transportOrSend = (cfg["sdk.transport"] ||

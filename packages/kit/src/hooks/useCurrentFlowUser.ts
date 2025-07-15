@@ -8,7 +8,14 @@ interface UseCurrentFlowUserResult {
   unauthenticate: () => void
 }
 
+/**
+ * @deprecated Use useFlowCurrentUser instead. This hook will be removed in a future version.
+ */
 export function useCurrentFlowUser(): UseCurrentFlowUserResult {
+  console.warn(
+    "useCurrentFlowUser is deprecated and will be removed in a future version. Use useFlowCurrentUser instead."
+  )
+
   const [user, setUser] = useState<CurrentUser | null>(null)
 
   useEffect(() => {
