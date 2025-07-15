@@ -51,8 +51,7 @@ export function CrossVmReceiveTokenCard() {
         <div className="p-4 bg-yellow-100 border border-yellow-200 rounded text-yellow-800">
           <p className="m-0">
             <strong>Network not supported:</strong> This feature is only
-            available on testnet (with ClickToken ERC20). Current network:{" "}
-            <strong>{currentNetwork}</strong>
+            available on testnet.
           </p>
         </div>
       </div>
