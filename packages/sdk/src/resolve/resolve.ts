@@ -124,7 +124,7 @@ export function createResolve(context: SdkContext) {
  *
  * const resolved = await resolve(interaction)
  */
-export const resolve = withGlobalContext(createResolve)
+export const resolve = /* @__PURE__ */ withGlobalContext(createResolve)
 
 async function execFetchRef(
   ix: Interaction,
