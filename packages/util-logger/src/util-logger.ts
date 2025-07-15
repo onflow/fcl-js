@@ -13,13 +13,15 @@ export const setConfig = (_config: any) => {
 /**
  * The levels of the logger
  */
-export enum LEVELS {
-  debug = 5,
-  info = 4,
-  log = 3,
-  warn = 2,
-  error = 1,
-}
+export const LEVELS = {
+  debug: 5,
+  info: 4,
+  log: 3,
+  warn: 2,
+  error: 1,
+} as const
+
+export type LEVELS = (typeof LEVELS)[keyof typeof LEVELS]
 
 /**
  * Builds a message formatted for the logger

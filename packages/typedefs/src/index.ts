@@ -60,19 +60,24 @@ export interface AccountKey {
   revoked: boolean
 }
 
-export enum SignatureAlgorithm {
-  ECDSA_P256 = 1,
-  ECDSA_secp256k1 = 2,
-  BLS_BLS12_381 = 3,
-}
+export const SignatureAlgorithm = {
+  ECDSA_P256: 1,
+  ECDSA_secp256k1: 2,
+  BLS_BLS12_381: 3,
+} as const
 
-export enum HashAlgorithm {
-  SHA2_256 = 1,
-  SHA2_384 = 2,
-  SHA3_256 = 3,
-  SHA3_384 = 4,
-  KMAC128_BLS_BLS12_381 = 5,
-}
+export type SignatureAlgorithm =
+  (typeof SignatureAlgorithm)[keyof typeof SignatureAlgorithm]
+
+export const HashAlgorithm = {
+  SHA2_256: 1,
+  SHA2_384: 2,
+  SHA3_256: 3,
+  SHA3_384: 4,
+  KMAC128_BLS_BLS12_381: 5,
+} as const
+
+export type HashAlgorithm = (typeof HashAlgorithm)[keyof typeof HashAlgorithm]
 
 export interface Block {
   /**
@@ -303,8 +308,18 @@ export interface Service {
    * Service provider object
    */
   provider: Provider
-
+  /**
+   * Service parameters
+   */
   params: Record<string, string>
+  /**
+   * Service data
+   */
+  data?: Record<string, any>
+  /**
+   * Service headers
+   */
+  headers?: Record<string, string>
 }
 export interface Signature {
   /**
@@ -403,14 +418,18 @@ export interface TransactionStatus {
 /**
  * The execution status of the transaction.
  */
-export enum TransactionExecutionStatus {
-  UNKNOWN = 0,
-  PENDING = 1,
-  FINALIZED = 2,
-  EXECUTED = 3,
-  SEALED = 4,
-  EXPIRED = 5,
-}
+export const TransactionExecutionStatus = {
+  UNKNOWN: 0,
+  PENDING: 1,
+  FINALIZED: 2,
+  EXECUTED: 3,
+  SEALED: 4,
+  EXPIRED: 5,
+} as const
+
+export type TransactionExecutionStatus =
+  (typeof TransactionExecutionStatus)[keyof typeof TransactionExecutionStatus]
+
 /*
  * The Provider type describes a Wallet Provider associated with a specific Service.
  */
@@ -447,6 +466,14 @@ export interface Provider {
    * Indicates whether the Wallet provider is installed (if applicable).
    */
   is_installed?: boolean
+  /**
+   * Indicates whether the Wallet provider requires installation (if applicable).
+   */
+  requires_install?: boolean
+  /**
+   * The install link for the Wallet provider.
+   */
+  install_link?: string
 }
 export interface NodeVersionInfo {
   /**
@@ -492,17 +519,44 @@ export interface StreamConnection<ChannelMap extends {[name: string]: any}> {
 }
 
 export interface EventFilter {
+  /**
+   * The event types to listen for
+   */
   eventTypes?: string[]
+  /**
+   * The addresses to listen for
+   */
   addresses?: string[]
+  /**
+   * The contracts to listen for
+   */
   contracts?: string[]
+  /**
+   * The block ID to start listening for events
+   */
   startBlockId?: string
+  /**
+   * The block height to start listening for events
+   */
   startHeight?: number
+  /**
+   * The interval in milliseconds to send a heartbeat to the Access Node
+   */
   heartbeatInterval?: number
 }
 
 export interface BlockHeartbeat {
+  /**
+   * The ID of the block
+   */
   blockId: string
+  /**
+   * The height of the block
+   */
   blockHeight: number
+  /**
+   * The timestamp of the block
+   */
   timestamp: string
 }
 

@@ -5,9 +5,11 @@ import {
 } from "@onflow/typedefs"
 import {BlockArgsDto, createSubscriptionHandler} from "./types"
 
-type BlockDigestsArgs = SubscriptionArgs<SubscriptionTopic.BLOCK_DIGESTS>
+type BlockDigestsArgs = SubscriptionArgs<typeof SubscriptionTopic.BLOCK_DIGESTS>
 
-type BlockDigestsData = RawSubscriptionData<SubscriptionTopic.BLOCK_DIGESTS>
+type BlockDigestsData = RawSubscriptionData<
+  typeof SubscriptionTopic.BLOCK_DIGESTS
+>
 
 type BlockDigestsDataDto = {
   block_id: string
@@ -18,7 +20,7 @@ type BlockDigestsDataDto = {
 type BlockDigestsArgsDto = BlockArgsDto
 
 export const blockDigestsHandler = createSubscriptionHandler<{
-  Topic: SubscriptionTopic.BLOCK_DIGESTS
+  Topic: typeof SubscriptionTopic.BLOCK_DIGESTS
   Args: BlockDigestsArgs
   Data: BlockDigestsData
   ArgsDto: BlockDigestsArgsDto

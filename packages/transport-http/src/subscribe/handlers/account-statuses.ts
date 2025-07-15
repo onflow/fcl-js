@@ -5,10 +5,13 @@ import {
 } from "@onflow/typedefs"
 import {createSubscriptionHandler} from "./types"
 
-type AccountStatusesArgs = SubscriptionArgs<SubscriptionTopic.ACCOUNT_STATUSES>
+type AccountStatusesArgs = SubscriptionArgs<
+  typeof SubscriptionTopic.ACCOUNT_STATUSES
+>
 
-type AccountStatusesData =
-  RawSubscriptionData<SubscriptionTopic.ACCOUNT_STATUSES>
+type AccountStatusesData = RawSubscriptionData<
+  typeof SubscriptionTopic.ACCOUNT_STATUSES
+>
 
 type AccountStatusesArgsDto = {
   start_block_id?: string
@@ -34,7 +37,7 @@ type AccountStatusesDataDto = {
 }
 
 export const accountStatusesHandler = createSubscriptionHandler<{
-  Topic: SubscriptionTopic.ACCOUNT_STATUSES
+  Topic: typeof SubscriptionTopic.ACCOUNT_STATUSES
   Args: AccountStatusesArgs
   Data: AccountStatusesData
   ArgsDto: AccountStatusesArgsDto

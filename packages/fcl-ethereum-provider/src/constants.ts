@@ -1,7 +1,9 @@
-export enum FlowNetwork {
-  MAINNET = "mainnet",
-  TESTNET = "testnet",
-}
+export const FlowNetwork = {
+  MAINNET: "mainnet",
+  TESTNET: "testnet",
+} as const
+
+export type FlowNetwork = (typeof FlowNetwork)[keyof typeof FlowNetwork]
 
 export const FLOW_CHAINS = {
   [FlowNetwork.MAINNET]: {
@@ -14,14 +16,18 @@ export const FLOW_CHAINS = {
   },
 }
 
-export enum ContractType {
-  EVM = "EVM",
-}
+export const ContractType = {
+  EVM: "EVM",
+} as const
 
-export enum EventType {
-  CADENCE_OWNED_ACCOUNT_CREATED = "CADENCE_OWNED_ACCOUNT_CREATED",
-  TRANSACTION_EXECUTED = "TRANSACTION_EXECUTED",
-}
+export type ContractType = (typeof ContractType)[keyof typeof ContractType]
+
+export const EventType = {
+  CADENCE_OWNED_ACCOUNT_CREATED: "CADENCE_OWNED_ACCOUNT_CREATED",
+  TRANSACTION_EXECUTED: "TRANSACTION_EXECUTED",
+} as const
+
+export type EventType = (typeof EventType)[keyof typeof EventType]
 
 export const EVENT_IDENTIFIERS = {
   [EventType.TRANSACTION_EXECUTED]: {

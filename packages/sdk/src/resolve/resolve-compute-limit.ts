@@ -5,6 +5,12 @@ import {Interaction} from "@onflow/typedefs"
 
 const DEFAULT_COMPUTE_LIMIT = 100
 
+/**
+ * Resolves the compute limit for a transaction from configuration or applies default values.
+ *
+ * @param ix The interaction object to resolve compute limit for
+ * @returns The interaction with resolved compute limit
+ */
 export async function resolveComputeLimit(
   ix: Interaction
 ): Promise<Interaction> {
