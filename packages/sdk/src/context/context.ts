@@ -7,7 +7,7 @@ export interface SdkClientOptions {
   /**
    * The URL of the Flow access node to connect to.
    */
-  accessNode: string
+  accessNodeUrl: string
   /**
    * The transport object used for sending requests to the Flow network.
    */
@@ -33,7 +33,7 @@ export interface SdkClientOptions {
 }
 
 export interface SdkContext {
-  get accessNode(): string
+  get accessNodeUrl(): string
   get transport(): SdkTransport
   get computeLimit(): number
   get customResolver(): ((args: any) => Promise<any>) | undefined
@@ -54,7 +54,7 @@ export interface SdkContext {
  * Creates a new SDK context with the provided configuration.
  */
 export function createContext({
-  accessNode,
+  accessNodeUrl,
   transport,
   computeLimit,
   customResolver,
@@ -76,11 +76,11 @@ export function createContext({
     )
   }
 
-  if (!accessNode) {
+  if (!accessNodeUrl) {
     throw new Error("Access node must be provided to create SDK context")
   }
 
-  if (typeof accessNode !== "string") {
+  if (typeof accessNodeUrl !== "string") {
     throw new Error("Access node must be a string URL")
   }
 
@@ -90,7 +90,7 @@ export function createContext({
 
   return {
     transport,
-    accessNode,
+    accessNodeUrl,
     computeLimit,
     customResolver,
     customDecoders,

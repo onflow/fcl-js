@@ -13,7 +13,7 @@ import {createDecode} from "./decode/sdk-decode"
  * @returns A client object with methods to interact with the Flow blockchain.
  * @example
  * const client = createSdkClient({
- *  accessNode: "https://rest-mainnet.onflow.org",
+ *  accessNodeUrl: "https://rest-mainnet.onflow.org",
  *  transport: myTransport,
  *  computeLimit: 1000,
  * })

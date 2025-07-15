@@ -24,7 +24,7 @@ describe("subscribe", () => {
     }
     const context = createContext({
       transport: mockTransport,
-      accessNode: "http://localhost:8080",
+      accessNodeUrl: "http://localhost:8080",
       computeLimit: 1000,
     })
     jest.mocked(getGlobalContext).mockResolvedValue(context)
@@ -63,21 +63,4 @@ describe("subscribe", () => {
     expect(onError).toHaveBeenCalledTimes(1)
     expect(onError).toHaveBeenCalledWith(new Error("Test Error"))
   })
-
-  /*test("reports error if accessNode.api is not defined", async () => {
-    const topic = "topic" as SubscriptionTopic
-    const args = {foo: "bar"} as SubscriptionArgs<any>
-    const onData = jest.fn()
-    const onError = jest.fn()
-
-    subscribeRaw({topic, args, onData, onError})
-    await new Promise(setImmediate)
-
-    expect(onError).toHaveBeenCalledTimes(1)
-    expect(onError).toHaveBeenCalledWith(
-      new Error(
-        `INVARIANT SDK Send Error: Either opts.node or "accessNode.api" in config must be defined.`
-      )
-    )
-  })*/
 })

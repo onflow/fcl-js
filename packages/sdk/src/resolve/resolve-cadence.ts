@@ -4,6 +4,7 @@ import * as logger from "@onflow/util-logger"
 import {withPrefix} from "@onflow/util-address"
 import {Interaction} from "@onflow/typedefs"
 import {SdkContext} from "../context/context"
+import {withGlobalContext} from "../context/global"
 
 const isFn = (v: any): v is Function => typeof v === "function"
 const isString = (v: any): v is string => typeof v === "string"
@@ -24,62 +25,59 @@ function getContractIdentifierSyntaxMatches(
   return cadence.matchAll(newIdentifierPatternFn())
 }
 
-/**
- * Resolves Cadence code by evaluating functions and replacing contract placeholders with addresses.
- *
- * @param ix The interaction object containing Cadence code to resolve
- * @returns The interaction with resolved Cadence code
- */
-export async function resolveCadence(
-  ix: Interaction,
-  context: SdkContext
-): Promise<Interaction> {
-  if (!isTransaction(ix) && !isScript(ix)) return ix
+export function createResolveCadence(context: SdkContext) {
+  return async function resolveCadence(ix: Interaction): Promise<Interaction> {
+    if (!isTransaction(ix) && !isScript(ix)) return ix
 
-  var cadence = get(ix, "ix.cadence")
+    var cadence = get(ix, "ix.cadence")
 
-  invariant(
-    isFn(cadence) || isString(cadence),
-    "Cadence needs to be a function or a string."
-  )
-  if (isFn(cadence)) cadence = await cadence({} as Record<string, never>)
-  invariant(isString(cadence), "Cadence needs to be a string at this point.")
-  invariant(
-    !isOldIdentifierSyntax(cadence) || !isNewIdentifierSyntax(cadence),
-    "Both account identifier and contract identifier syntax not simultaneously supported."
-  )
-  if (isOldIdentifierSyntax(cadence)) {
-    cadence = Object.entries(context.legacyContractIdentifiers || {}).reduce(
-      (cadence, [key, value]) => {
-        const regex = new RegExp("(\\b" + key + "\\b)", "g")
-        return cadence.replace(regex, value)
-      },
-      cadence
+    invariant(
+      isFn(cadence) || isString(cadence),
+      "Cadence needs to be a function or a string."
     )
-  }
+    if (isFn(cadence)) cadence = await cadence({} as Record<string, never>)
+    invariant(isString(cadence), "Cadence needs to be a string at this point.")
+    invariant(
+      !isOldIdentifierSyntax(cadence) || !isNewIdentifierSyntax(cadence),
+      "Both account identifier and contract identifier syntax not simultaneously supported."
+    )
+    if (isOldIdentifierSyntax(cadence)) {
+      cadence = Object.entries(context.legacyContractIdentifiers || {}).reduce(
+        (cadence, [key, value]) => {
+          const regex = new RegExp("(\\b" + key + "\\b)", "g")
+          return cadence.replace(regex, value)
+        },
+        cadence
+      )
+    }
 
-  if (isNewIdentifierSyntax(cadence)) {
-    for (const [fullMatch, contractName] of getContractIdentifierSyntaxMatches(
-      cadence
-    )) {
-      const address: string | null = context.contracts[contractName] || null
-      if (address) {
-        cadence = cadence.replace(
-          fullMatch,
-          `import ${contractName} from ${withPrefix(address)}`
-        )
-      } else {
-        logger.log({
-          title: "Contract Placeholder not found",
-          message: `Cannot find a value for contract placeholder ${contractName}. Please add to your flow.json or explicitly add it to the config 'contracts.*' namespace.`,
-          level: logger.LEVELS.warn,
-        })
+    if (isNewIdentifierSyntax(cadence)) {
+      for (const [
+        fullMatch,
+        contractName,
+      ] of getContractIdentifierSyntaxMatches(cadence)) {
+        const address: string | null = context.contracts[contractName] || null
+        if (address) {
+          cadence = cadence.replace(
+            fullMatch,
+            `import ${contractName} from ${withPrefix(address)}`
+          )
+        } else {
+          logger.log({
+            title: "Contract Placeholder not found",
+            message: `Cannot find a value for contract placeholder ${contractName}. Please add to your flow.json or explicitly add it to the config 'contracts.*' namespace.`,
+            level: logger.LEVELS.warn,
+          })
+        }
       }
     }
+
+    // We need to move this over in any case.
+    ix.message.cadence = cadence
+
+    return ix
   }
-
-  // We need to move this over in any case.
-  ix.message.cadence = cadence
-
-  return ix
 }
+
+export const resolveCadence =
+  /* @__PURE__ */ withGlobalContext(createResolveCadence)
