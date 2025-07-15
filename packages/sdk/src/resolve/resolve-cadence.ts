@@ -1,6 +1,5 @@
 import {isTransaction, isScript, get} from "../interaction/interaction"
 import {invariant} from "@onflow/util-invariant"
-import {config} from "@onflow/config"
 import * as logger from "@onflow/util-logger"
 import {withPrefix} from "@onflow/util-address"
 import {Interaction} from "@onflow/typedefs"
@@ -25,7 +24,6 @@ function getContractIdentifierSyntaxMatches(
   return cadence.matchAll(newIdentifierPatternFn())
 }
 
-// TODO: refactor
 export async function resolveCadence(
   ix: Interaction,
   context: SdkContext
@@ -45,23 +43,20 @@ export async function resolveCadence(
     "Both account identifier and contract identifier syntax not simultaneously supported."
   )
   if (isOldIdentifierSyntax(cadence)) {
-    cadence = await config()
-      .where(/^0x/)
-      .then(d =>
-        Object.entries(d).reduce((cadence, [key, value]) => {
-          const regex = new RegExp("(\\b" + key + "\\b)", "g")
-          return cadence.replace(regex, value)
-        }, cadence)
-      )
+    cadence = Object.entries(context.legacyContractIdentifiers || {}).reduce(
+      (cadence, [key, value]) => {
+        const regex = new RegExp("(\\b" + key + "\\b)", "g")
+        return cadence.replace(regex, value)
+      },
+      cadence
+    )
   }
 
   if (isNewIdentifierSyntax(cadence)) {
     for (const [fullMatch, contractName] of getContractIdentifierSyntaxMatches(
       cadence
     )) {
-      const address: string | null = await config().get(
-        `system.contracts.${contractName}`
-      )
+      const address: string | null = context.contracts[contractName] || null
       if (address) {
         cadence = cadence.replace(
           fullMatch,
