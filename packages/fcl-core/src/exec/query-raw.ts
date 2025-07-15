@@ -27,21 +27,21 @@ export function createQueryRaw(context: Pick<FCLContext, "sdk" | "config">) {
    * @returns A promise that resolves to the raw query result
    *
    * @example
-   *    const cadence = `
-   *      cadence: `
-   *        access(all) fun main(a: Int, b: Int, c: Address): Int {
-   *          log(c)
-   *          return a + b
-   *        }
-   *    `.trim()
+   * import * as fcl from '@onflow/fcl';
    *
-   *    const args = (arg, t) => [
-   *      arg(5, t.Int),
-   *      arg(7, t.Int),
-   *      arg("0xb2db43ad6bc345fec9", t.Address),
-   *    ]
-   *
-   *    await queryRaw({ cadence, args })
+   * const result = await fcl.queryRaw({
+   *   cadence: `
+   *     access(all) fun main(a: Int, b: Int, addr: Address): Int {
+   *       log(addr)
+   *       return a + b
+   *     }
+   *   `,
+   *   args: (arg, t) => [
+   *     arg(7, t.Int), // a: Int
+   *     arg(6, t.Int), // b: Int
+   *     arg('0xba1132bc08f82fe2', t.Address), // addr: Address
+   *   ],
+   * });
    */
   async function queryRaw(opts: QueryOptions = {}): Promise<any> {
     await preQuery(context, opts)

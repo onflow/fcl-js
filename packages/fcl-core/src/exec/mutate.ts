@@ -31,48 +31,36 @@ export const createMutate = (
   /**
    * @description Allows you to submit transactions to the blockchain to potentially mutate the state.
    *
-   * @param opts Mutation Options and configuration
-   * @param opts.cadence Cadence Transaction used to mutate Flow
-   * @param opts.args Arguments passed to cadence transaction
+   * When being used in the browser, `fcl.mutate` uses the built-in `fcl.authz` function to produce the authorization (signatures) for the current user. When calling this method from Node.js, you will need to supply your own custom authorization function.
+   *
+   * @param opts Mutation options configuration
+   * @param opts.cadence A valid cadence transaction (required)
+   * @param opts.args Any arguments to the script if needed should be supplied via a function that returns an array of arguments
+   * @param opts.limit Compute (Gas) limit for query.
+   * @param opts.proposer The authorization function that returns a valid AuthorizationObject for the proposer role
    * @param opts.template Interaction Template for a transaction
-   * @param opts.limit Compute Limit for transaction
    * @param opts.authz Authorization function for transaction
-   * @param opts.proposer Proposer Authorization function for transaction
    * @param opts.payer Payer Authorization function for transaction
    * @param opts.authorizations Authorizations function for transaction
-   * @returns Transaction Id
+   * @returns The transaction ID
    *
    * @example
-   * fcl.mutate({
+   * import * as fcl from '@onflow/fcl';
+   * // login somewhere before
+   * fcl.authenticate();
+   *
+   * const txId = await fcl.mutate({
    *   cadence: `
-   *     transaction(a: Int, b: Int, c: Address) {
-   *       prepare(acct: AuthAccount) {
-   *         log(acct)
-   *         log(a)
-   *         log(b)
-   *         log(c)
+   *     import Profile from 0xba1132bc08f82fe2
+   *
+   *     transaction(name: String) {
+   *       prepare(account: auth(BorrowValue) &Account) {
+   *         account.storage.borrow<&{Profile.Owner}>(from: Profile.privatePath)!.setName(name)
    *       }
    *     }
    *   `,
-   *   args: (arg, t) => [
-   *     arg(6, t.Int),
-   *     arg(7, t.Int),
-   *     arg("0xba1132bc08f82fe2", t.Address),
-   *   ],
-   * })
-   *
-   *
-   * Options:
-   * type Options = {
-   *   template: InteractionTemplate | String // InteractionTemplate or url to one
-   *   cadence: String!,
-   *   args: (arg, t) => Array<Arg>,
-   *   limit: Number,
-   *   authz: AuthzFn, // will overload the trinity of signatory roles
-   *   proposer: AuthzFn, // will overload the proposer signatory role
-   *   payer: AuthzFn, // will overload the payer signatory role
-   *   authorizations: [AuthzFn], // an array of authorization functions used as authorizations signatory roles
-   * }
+   *   args: (arg, t) => [arg('myName', t.String)],
+   * });
    */
   const mutate = async (opts: MutateOptions = {}): Promise<string> => {
     var txid

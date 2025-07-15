@@ -63,44 +63,68 @@ export function applyContext(
   return ix => handler(ix, context)
 }
 
-/**
- * Resolves an interaction by applying a series of context-bound handlers
- */
 export function createResolve(context: SdkContext) {
-  const resolve = pipe(
-    [
-      resolveCadence,
-      debug("cadence", (ix: Interaction, log: any) => log(ix.message.cadence)),
-      resolveComputeLimit,
-      debug("compute limit", (ix: Interaction, log: any) =>
-        log(ix.message.computeLimit)
-      ),
-      resolveArguments,
-      debug("arguments", (ix: Interaction, log: any) =>
-        log(ix.message.arguments, ix.message)
-      ),
-      resolveAccounts,
-      debug("accounts", (ix: Interaction, log: any, accts: any) =>
-        log(...accts(ix))
-      ),
-      /* special */ execFetchRef,
-      /* special */ execFetchSequenceNumber,
-      resolveSignatures,
-      debug("signatures", (ix: Interaction, log: any, accts: any) =>
-        log(...accts(ix))
-      ),
-      resolveFinalNormalization,
-      resolveValidators,
-      resolveVoucherIntercept,
-      debug("resolved", (ix: Interaction, log: any) => log(ix)),
-    ].map(handler => applyContext(handler, context))
-  )
+  const resolve = async (ix: Interaction) =>
+    pipe(
+      [
+        resolveCadence,
+        debug("cadence", (ix: Interaction, log: any) =>
+          log(ix.message.cadence)
+        ),
+        resolveComputeLimit,
+        debug("compute limit", (ix: Interaction, log: any) =>
+          log(ix.message.computeLimit)
+        ),
+        resolveArguments,
+        debug("arguments", (ix: Interaction, log: any) =>
+          log(ix.message.arguments, ix.message)
+        ),
+        resolveAccounts,
+        debug("accounts", (ix: Interaction, log: any, accts: any) =>
+          log(...accts(ix))
+        ),
+        /* special */ execFetchRef,
+        /* special */ execFetchSequenceNumber,
+        resolveSignatures,
+        debug("signatures", (ix: Interaction, log: any, accts: any) =>
+          log(...accts(ix))
+        ),
+        resolveFinalNormalization,
+        resolveValidators,
+        resolveVoucherIntercept,
+        debug("resolved", (ix: Interaction, log: any) => log(ix)),
+      ].map(handler => applyContext(handler, context))
+    )(ix)
 
   return resolve
 }
 
-// TODO: (jribbink): Fix the any type here
-export const resolve = withGlobalContext(createResolve as any)
+/**
+ * Resolves an interaction by applying a series of resolvers in sequence.
+ *
+ * This is the main resolver function that takes a built interaction and prepares it
+ * for submission to the Flow blockchain by applying all necessary resolvers.
+ *
+ * The resolve function uses a pipeline approach, applying each resolver in sequence
+ * to transform the interaction from its initial built state to a fully resolved state
+ * ready for transmission to the Flow Access API.
+ *
+ * @param interaction The interaction object to resolve
+ * @returns A promise that resolves to the fully resolved interaction
+ * @example
+ * import { resolve, build, script } from "@onflow/sdk"
+ *
+ * const interaction = await build([
+ *   script`
+ *     access(all) fun main(): String {
+ *       return "Hello, World!"
+ *     }
+ *   `
+ * ])
+ *
+ * const resolved = await resolve(interaction)
+ */
+export const resolve = withGlobalContext(createResolve)
 
 async function execFetchRef(
   ix: Interaction,

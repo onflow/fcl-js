@@ -50,10 +50,22 @@ export async function createGlobalContext(): Promise<SdkContext> {
         )
       ) as Record<string, (data: any) => any>
     },
+    get contracts() {
+      return Object.fromEntries(
+        Object.entries(globalConfig)
+          .filter(([key]) => key.startsWith("system.contracts."))
+          .map(([key, value]) => [key.replace("system.contracts.", ""), value])
+      ) as Record<string, string>
+    },
     get debug() {
       return Object.fromEntries(
         Object.entries(globalConfig).filter(([key]) => key.startsWith("debug."))
       )
+    },
+    get legacyContractIdentifiers() {
+      return Object.fromEntries(
+        Object.entries(globalConfig).filter(([key]) => key.startsWith("0x"))
+      ) as Record<string, string>
     },
   }
 }

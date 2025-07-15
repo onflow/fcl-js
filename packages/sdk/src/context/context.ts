@@ -8,8 +8,15 @@ export interface SdkContext {
   get customResolver(): ((args: any) => Promise<any>) | undefined
   get customDecoders(): {[key: string]: (data: any) => any}
 
-  // Deprecated properties
+  // Map of contract names to their addresses
+  // e.g. { "FlowToken": "0x9a07664d3c2b5f8" }
+  get contracts(): {
+    [contractName: string]: string
+  }
+
+  // Legacy properties for backwards compatibility
   get debug(): {[key: string]: any} // Debug options for internal use
+  get legacyContractIdentifiers(): Record<string, string>
 }
 
 export interface SdkContextOptions {
@@ -18,7 +25,18 @@ export interface SdkContextOptions {
   computeLimit: number
   customResolver?: (args: any) => Promise<any>
   customDecoders?: {[key: string]: (data: any) => any}
-  debug?: {[key: string]: any} // Optional debug options for internal use
+  /**
+   * Map of contract names to their addresses.
+   * @example
+   * ```ts
+   * {
+   *   "FlowToken": "0x9a07664d3c2b5f8",
+   * }
+   * ```
+   */
+  contracts?: {
+    [contractName: string]: string
+  }
 }
 
 export function createContext({
@@ -27,7 +45,7 @@ export function createContext({
   computeLimit,
   customResolver,
   customDecoders = {},
-  debug = {},
+  contracts = {},
 }: SdkContextOptions): SdkContext {
   if (!transport) {
     throw new Error("Transport must be provided to create SDK context")
@@ -62,6 +80,8 @@ export function createContext({
     computeLimit,
     customResolver,
     customDecoders,
-    debug,
+    debug: {},
+    contracts,
+    legacyContractIdentifiers: {},
   }
 }

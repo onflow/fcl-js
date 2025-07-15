@@ -113,18 +113,122 @@ function createHandlers(context: Pick<FCLContext, "config">) {
 const spawnProviders = (context: Pick<FCLContext, "config">) =>
   spawn(createHandlers(context) as any, SERVICE_ACTOR_KEYS.AUTHN)
 
+/**
+ * Discovery authn service for interacting with Flow compatible wallets.
+ *
+ * Discovery abstracts away code so that developers don't have to deal with the discovery
+ * of Flow compatible wallets, integration, or authentication. Using discovery from FCL
+ * allows dapps to list and authenticate with wallets while having full control over the UI.
+ * Common use cases for this are login or registration pages.
+ *
+ * NOTE: The following methods can only be used in web browsers.
+ *
+ * WARNING: discovery.authn.endpoint value MUST be set in the configuration before calling this method.
+ *
+ * @example
+ * // Basic usage with React
+ * import './config';
+ * import { useState, useEffect } from 'react';
+ * import * as fcl from '@onflow/fcl';
+ *
+ * function Component() {
+ *   const [wallets, setWallets] = useState([]);
+ *   useEffect(
+ *     () => fcl.discovery.authn.subscribe((res) => setWallets(res.results)),
+ *     [],
+ *   );
+ *
+ *   return (
+ *     <div>
+ *       {wallets.map((wallet) => (
+ *         <button
+ *           key={wallet.provider.address}
+ *           onClick={() => fcl.authenticate({ service: wallet })}
+ *         >
+ *           Login with {wallet.provider.name}
+ *         </button>
+ *       ))}
+ *     </div>
+ *   );
+ * }
+ *
+ * // Configuration for opt-in services
+ * import { config } from '@onflow/fcl';
+ *
+ * config({
+ *   'discovery.authn.endpoint':
+ *     'https://fcl-discovery.onflow.org/api/testnet/authn', // Endpoint set to Testnet
+ *   'discovery.authn.include': ['0x9d2e44203cb13051'], // Ledger wallet address on Testnet set to be included
+ *   'discovery.authn.exclude': ['0x123456789abcdef01'], // Example of excluding a wallet by address
+ * });
+ */
 function createAuthn(context: Pick<FCLContext, "config">): Authn {
   /**
    * @description Discovery methods for interacting with Authn.
    */
   const authn: Authn = {
-    // Subscribe to Discovery authn services
+    /**
+     * Subscribe to Discovery authn services and receive real-time updates.
+     *
+     * This method allows you to subscribe to changes in the available authentication services.
+     * When new services are discovered or existing ones are updated, the callback function will be invoked.
+     *
+     * @param cb Callback function that receives the list of available services and any error
+     * @returns A function to unsubscribe from the service updates
+     *
+     * @example
+     * import * as fcl from '@onflow/fcl';
+     *
+     * const unsubscribe = fcl.discovery.authn.subscribe((services, error) => {
+     *   if (error) {
+     *     console.error('Discovery error:', error);
+     *     return;
+     *   }
+     *   console.log('Available services:', services);
+     * });
+     *
+     * // Later, to stop receiving updates
+     * unsubscribe();
+     */
     subscribe: cb =>
       subscriber(SERVICE_ACTOR_KEYS.AUTHN, () => spawnProviders(context), cb),
-    // Get the current Discovery authn services snapshot
+
+    /**
+     * Get the current snapshot of Discovery authn services.
+     *
+     * This method returns a promise that resolves to the current state of available authentication services
+     * without setting up a subscription. Useful for one-time checks or initial state loading.
+     *
+     * @returns A promise that resolves to the current service data
+     *
+     * @example
+     * import * as fcl from '@onflow/fcl';
+     *
+     * async function getServices() {
+     *   try {
+     *     const serviceData = await fcl.discovery.authn.snapshot();
+     *     console.log('Current services:', serviceData.results);
+     *   } catch (error) {
+     *     console.error('Failed to get services:', error);
+     *   }
+     * }
+     */
     snapshot: () =>
       snapshoter(SERVICE_ACTOR_KEYS.AUTHN, () => spawnProviders(context)),
-    // Trigger an update of authn services
+
+    /**
+     * Trigger an update of authn services from the discovery endpoint.
+     *
+     * This method manually triggers a refresh of the available authentication services
+     * from the configured discovery endpoint. Useful when you want to force a refresh
+     * of the service list.
+     *
+     * @example
+     * import * as fcl from '@onflow/fcl';
+     *
+     * // Force refresh of available services
+     * fcl.discovery.authn.update();
+     */
     update: () => {
       // Only fetch services if the window is loaded
       // Otherwise, this will be called by the INIT handler

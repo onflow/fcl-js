@@ -276,12 +276,30 @@ const makeConfig = async ({
 const createAuthenticate =
   (context: CurrentUserContext) =>
   /**
-   * @description Authenticate a user
-   * @param opts Options
-   * @param opts.service Optional service to use for authentication
-   * @param opts.redir Optional redirect flag
-   * @param opts.forceReauth Optional force re-authentication flag
-   * @returns
+   * @description Calling this method will authenticate the current user via any wallet that supports FCL. Once called, FCL will initiate communication with the configured `discovery.wallet` endpoint which lets the user select a wallet to authenticate with. Once the wallet provider has authenticated the user, FCL will set the values on the current user object for future use and authorization.
+   *
+   * This method can only be used in web browsers.
+   *
+   * `discovery.wallet` value must be set in the configuration before calling this method. See FCL Configuration.
+   *
+   * The default discovery endpoint will open an iframe overlay to let the user choose a supported wallet.
+   *
+   * `authenticate` can also take a service returned from discovery with `fcl.authenticate(\{ service \})`.
+   *
+   * @param opts Authentication options
+   * @param opts.service Optional service to use for authentication. A service returned from discovery can be passed here.
+   * @param opts.redir Optional redirect flag. Defaults to false.
+   * @param opts.forceReauth Optional force re-authentication flag. Defaults to false.
+   * @returns Promise that resolves to the authenticated CurrentUser object or undefined
+   *
+   * @example
+   * import * as fcl from '@onflow/fcl';
+   * fcl
+   *   .config()
+   *   .put('accessNode.api', 'https://rest-testnet.onflow.org')
+   *   .put('discovery.wallet', 'https://fcl-discovery.onflow.org/testnet/authn');
+   * // anywhere on the page
+   * fcl.authenticate();
    */
   async ({
     service,
@@ -371,7 +389,20 @@ const createAuthenticate =
  */
 function createUnauthenticate(context: CurrentUserContext) {
   /**
-   * @description Unauthenticate a user
+   * @description Logs out the current user and sets the values on the current user object to null.
+   *
+   * This method can only be used in web browsers.
+   *
+   * The current user must be authenticated first.
+   *
+   * @example
+   * import * as fcl from '@onflow/fcl';
+   * fcl.config().put('accessNode.api', 'https://rest-testnet.onflow.org');
+   * // first authenticate to set current user
+   * fcl.authenticate();
+   * // ... somewhere else & sometime later
+   * fcl.unauthenticate();
+   * // fcl.currentUser.loggedIn === null
    */
   return function unauthenticate() {
     spawnCurrentUser(context)
@@ -495,11 +526,35 @@ const createAuthorization =
  */
 function createSubscribe(config: CurrentUserContext) {
   /**
-   * @description
-   * The callback passed to subscribe will be called when the user authenticates and un-authenticates, making it easy to update the UI accordingly.
+   * @description The callback passed to subscribe will be called when the user authenticates and un-authenticates, making it easy to update the UI accordingly.
    *
-   * @param {Function} callback Callback function
-   * @returns {Function} Unsubscribe function
+   * @param callback The callback will be called with the current user as the first argument when the current user is set or removed.
+   * @returns Function to unsubscribe from user state changes
+   *
+   * @example
+   * import React, { useState, useEffect } from 'react';
+   * import * as fcl from '@onflow/fcl';
+   *
+   * export function AuthCluster() {
+   *   const [user, setUser] = useState({ loggedIn: null });
+   *   useEffect(() => fcl.currentUser.subscribe(setUser), []); // sets the callback for FCL to use
+   *
+   *   if (user.loggedIn) {
+   *     return (
+   *       <div>
+   *         <span>{user?.addr ?? 'No Address'}</span>
+   *         <button onClick={fcl.unauthenticate}>Log Out</button>
+   *       </div>
+   *     );
+   *   } else {
+   *     return (
+   *       <div>
+   *         <button onClick={fcl.logIn}>Log In</button>{' '}
+   *         <button onClick={fcl.signUp}>Sign Up</button>
+   *       </div>
+   *     );
+   *   }
+   * }
    */
   return function subscribe(callback: (user: CurrentUser) => void) {
     spawnCurrentUser(config)
@@ -527,8 +582,16 @@ function createSnapshot(
   config: CurrentUserContext
 ): () => Promise<CurrentUser> {
   /**
-   * @description Gets the current user
-   * @returns {Promise<CurrentUser>} User object
+   * @description Returns the current user object. This is the same object that is set and available on `fcl.currentUser.subscribe(callback)`.
+   *
+   * @returns Promise that resolves to the current user object
+   *
+   * @example
+   * // returns the current user object
+   * const user = fcl.currentUser.snapshot();
+   *
+   * // subscribes to the current user object and logs to console on changes
+   * fcl.currentUser.subscribe(console.log);
    */
   return function snapshot() {
     spawnCurrentUser(config)
@@ -561,8 +624,23 @@ const createSignUserMessage =
   (context: CurrentUserContext) =>
   /**
    * @description A method to use allowing the user to personally sign data via FCL Compatible Wallets/Services.
-   * @param msg Message to sign
-   * @returns Array of CompositeSignatures
+   *
+   * This method requires the current user's wallet to support a signing service endpoint. Currently, only Blocto is compatible with this feature by default.
+   *
+   * @param msg A hexadecimal string to be signed
+   * @returns An Array of CompositeSignatures: \{`addr`, `keyId`, `signature`\}
+   *
+   * @example
+   * import * as fcl from '@onflow/fcl';
+   *
+   * export const signMessage = async () => {
+   *   const MSG = Buffer.from('FOO').toString('hex');
+   *   try {
+   *     return await currentUser.signUserMessage(MSG);
+   *   } catch (error) {
+   *     console.log(error);
+   *   }
+   * };
    */
   async (msg: string) => {
     spawnCurrentUser(context)
@@ -606,13 +684,6 @@ const createSignUserMessage =
  * @param config.getStorageProvider Optional function to provide custom storage implementation
  *
  * @returns Current user service object with authentication and authorization methods
- * @returns returns.authenticate Authenticate user with wallet services
- * @returns returns.unauthenticate Clear user session and disconnect wallet
- * @returns returns.authorization Get authorization function for transaction signing
- * @returns returns.signUserMessage Sign arbitrary messages with user's private key
- * @returns returns.subscribe Subscribe to user authentication state changes
- * @returns returns.snapshot Get current user state snapshot
- * @returns returns.resolveArgument Resolve user address as Flow transaction argument
  *
  * @example
  * // Basic setup and authentication
