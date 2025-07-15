@@ -54,16 +54,20 @@ export const TransactionButton: React.FC<TransactionButtonProps> = ({
     sendTransaction(transaction)
   }
 
-  // Determine loading state
-  const isLoading = isPending
+  // Determine loading state, pending during signature OR during transaction execution
+  const isLoading = isPending || !!globalTxId
 
   // Button is disabled if: explicitly disabled, currently loading, or any global transaction is running
-  const isDisabled = buttonProps.disabled || isLoading || !!globalTxId
+  const isDisabled = buttonProps.disabled || isLoading
 
   return (
     <Button onClick={handleButtonClick} disabled={isDisabled} {...buttonProps}>
       <span>
-        {!isLoading ? label || "Execute Transaction" : "Processing..."}
+        {!isLoading
+          ? label || "Execute Transaction"
+          : isPending
+            ? "Waiting for signature..."
+            : "Processing..."}
       </span>
     </Button>
   )
