@@ -1,4 +1,4 @@
-import {createContext, SdkContextOptions, SdkOptions} from "./context/context"
+import {createContext, SdkClientOptions} from "./context/context"
 import {createSend} from "./transport/send/send"
 import {createSubscribe} from "./transport/subscribe/subscribe"
 import {createSubscribeRaw} from "./transport/subscribe/subscribe-raw"
@@ -21,7 +21,7 @@ import {createDecode} from "./decode/sdk-decode"
  *   .then(client.decode)
  *   .catch(error => console.error("Error sending request:", error))
  */
-export function createSdkClient(options: SdkOptions) {
+export function createSdkClient(options: SdkClientOptions) {
   const context = createContext(options)
 
   return {

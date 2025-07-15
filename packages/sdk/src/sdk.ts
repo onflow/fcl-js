@@ -155,3 +155,4 @@ import * as types from "@onflow/types"
 export {types as t}
 
 export {createSdkClient} from "./sdk-client"
+export {type SdkClientOptions} from "./context/context"

@@ -3,7 +3,7 @@ import {SdkTransport} from "@onflow/typedefs"
 /**
  * Options for configuring the SDK client.
  */
-export interface SdkOptions {
+export interface SdkClientOptions {
   /**
    * The URL of the Flow access node to connect to.
    */
@@ -60,7 +60,7 @@ export function createContext({
   customResolver,
   customDecoders = {},
   contracts = {},
-}: SdkOptions): SdkContext {
+}: SdkClientOptions): SdkContext {
   if (!transport) {
     throw new Error("Transport must be provided to create SDK context")
   }
