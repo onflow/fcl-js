@@ -41,20 +41,25 @@ export default function FlowProviderWrapper({
       // theme={{
       //   colors: {
       //     primary: {
-      //       background: "bg-blue-700",
-      //       text: "text-black",
-      //       hover: "hover:bg-black-600",
+      //       background: "flow-bg-red-700",
+      //       text: "flow-text-white",
+      //       hover: "hover:flow-bg-green-800",
       //     },
       //     secondary: {
-      //       background: "bg-blue-100",
-      //       text: "text-blue-800",
-      //       hover: "hover:bg-blue-200",
+      //       background: "flow-bg-blue-100",
+      //       text: "flow-text-blue-800",
+      //       hover: "hover:flow-bg-blue-200",
       //     },
       //     outline: {
-      //       background: "bg-transparent",
-      //       text: "text-blue-700",
-      //       hover: "hover:bg-blue-50",
-      //       border: "border border-blue-700",
+      //       background: "flow-bg-transparent",
+      //       text: "flow-text-blue-700",
+      //       hover: "hover:flow-bg-blue-50",
+      //       border: "flow-border flow-border-blue-700",
+      //     },
+      //     link: {
+      //       background: "flow-bg-transparent",
+      //       text: "flow-text-blue-700",
+      //       hover: "hover:flow-bg-blue-50",
       //     },
       //   },
       // }}
