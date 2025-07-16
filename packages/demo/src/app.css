@@ -1,0 +1,27 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  color-scheme: light;
+  font-family: system-ui;
+  background-color: #ffffff;
+  color: #000000;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #ffffff;
+  color: #000000;
+  height: 100%;
+  overflow-x: hidden;
+}
+
+#root {
+  height: 100vh;
+  background-color: #ffffff;
+}

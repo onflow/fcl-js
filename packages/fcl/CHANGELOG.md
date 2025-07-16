@@ -1,5 +1,18 @@
 # @onflow/fcl
 
+## 1.20.0-alpha.0
+
+### Minor Changes
+
+- [#2535](https://github.com/onflow/fcl-js/pull/2535) [`e8293cb2c752b340793d2342450a022d79c14edc`](https://github.com/onflow/fcl-js/commit/e8293cb2c752b340793d2342450a022d79c14edc) Thanks [@mfbz](https://github.com/mfbz)! - Refactored fcl package to TypeScript
+
+### Patch Changes
+
+- Updated dependencies [[`8b5086024e0295649bb4266aa0cafbcb2e4171b7`](https://github.com/onflow/fcl-js/commit/8b5086024e0295649bb4266aa0cafbcb2e4171b7), [`e8293cb2c752b340793d2342450a022d79c14edc`](https://github.com/onflow/fcl-js/commit/e8293cb2c752b340793d2342450a022d79c14edc), [`14ff4a2f04362d7b8a10b444321ffd0c17b20f76`](https://github.com/onflow/fcl-js/commit/14ff4a2f04362d7b8a10b444321ffd0c17b20f76)]:
+  - @onflow/fcl-core@1.21.0-alpha.0
+  - @onflow/sdk@1.10.0-alpha.0
+  - @onflow/fcl-wc@6.0.5-alpha.0
+
 ## 1.19.0
 
 ### Minor Changes
