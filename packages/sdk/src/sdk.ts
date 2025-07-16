@@ -43,16 +43,24 @@ export {
 } from "./interaction/interaction"
 import type {CadenceArgument} from "./interaction/interaction"
 export {CadenceArgument} // Workaround for babel https://github.com/babel/babel/issues/8361
-import type {InteractionBuilderFn} from "./interaction/interaction"
-export {InteractionBuilderFn}
+import type {
+  InteractionBuilderFn,
+  AccountAuthorization,
+  AuthorizationFn,
+} from "./interaction/interaction"
+export {InteractionBuilderFn, AccountAuthorization, AuthorizationFn}
 
 export {createSignableVoucher, voucherToTxId} from "./resolve/voucher"
 export {encodeMessageFromSignable} from "./wallet-utils/encode-signable"
 export {template as cadence} from "@onflow/util-template"
 export {template as cdc} from "@onflow/util-template"
 
-import type {Voucher} from "./wallet-utils/encode-signable"
-export {Voucher}
+import type {
+  Voucher,
+  Signable,
+  PayloadSig,
+} from "./wallet-utils/encode-signable"
+export {Voucher, Signable, PayloadSig}
 
 // Helpers
 export {account} from "./account/account"
@@ -102,7 +110,13 @@ export {resolveVoucherIntercept} from "./resolve/resolve-voucher-intercept"
 
 export {config} from "@onflow/config"
 
-// Deprecated
+/**
+ * Legacy function for setting parameters on an interaction.
+ *
+ * @deprecated This function has been removed. Use `args` instead.
+ *
+ * @param params The parameters to set
+ */
 export const params = (params: never) =>
   logger.log.deprecate({
     pkg: "FCL/SDK",
@@ -111,6 +125,14 @@ export const params = (params: never) =>
       "https://github.com/onflow/flow-js-sdk/blob/master/packages/sdk/TRANSITIONS.md#0001-deprecate-params",
     level: logger.LEVELS.error,
   })
+
+/**
+ * Legacy function for setting a single parameter on an interaction.
+ *
+ * @deprecated This function has been removed. Use `arg` instead.
+ *
+ * @param params The parameter to set
+ */
 export const param = (params: never) =>
   logger.log.deprecate({
     pkg: "FCL/SDK",
