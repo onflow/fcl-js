@@ -241,6 +241,6 @@ function createAuthn(context: Pick<FCLContext, "config">): Authn {
   return authn
 }
 
-const authn = createAuthn(createPartialGlobalFCLContext())
+const authn = /* @__PURE__ */ createAuthn(createPartialGlobalFCLContext())
 
 export default authn

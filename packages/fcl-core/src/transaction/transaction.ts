@@ -193,7 +193,9 @@ export function createTransaction(context: Pick<FCLContext, "sdk" | "config">) {
   return transaction
 }
 
-export const transaction = createTransaction(createPartialGlobalFCLContext())
+export const transaction = /* @__PURE__ */ createTransaction(
+  createPartialGlobalFCLContext()
+)
 
 /**
  * @description Creates an observable for a transaction
