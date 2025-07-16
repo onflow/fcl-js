@@ -1,4 +1,4 @@
-import {type FlowNetwork} from "@onflow/kit"
+import {type FlowNetwork} from "@onflow/react-sdk"
 import {BLOCK_EXPLORER_URLS} from "./constants"
 
 export const createExplorerTransactionLink = ({

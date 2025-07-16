@@ -1,5 +1,5 @@
 ---
-"@onflow/kit": patch
+"@onflow/react-sdk": patch
 ---
 
 Updated transaction button pending state

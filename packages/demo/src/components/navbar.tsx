@@ -1,4 +1,4 @@
-import {useFlowCurrentUser, useFlowConfig} from "@onflow/kit"
+import {useFlowCurrentUser, useFlowConfig} from "@onflow/react-sdk"
 
 export function Navbar() {
   const {user, authenticate, unauthenticate} = useFlowCurrentUser()

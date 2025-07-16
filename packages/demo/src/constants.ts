@@ -1,4 +1,4 @@
-import {type FlowNetwork} from "@onflow/kit"
+import {type FlowNetwork} from "@onflow/react-sdk"
 
 export const ACCESS_NODE_URLS: Record<any, string> = {
   local: "http://localhost:8888",

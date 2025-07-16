@@ -1,4 +1,4 @@
-import {useFlowConfig} from "@onflow/kit"
+import {useFlowConfig} from "@onflow/react-sdk"
 
 export function FlowConfigCard() {
   const config = useFlowConfig()

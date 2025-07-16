@@ -102,7 +102,7 @@ npm run dev:testnet
 
 ## Features Provided
 
-- `@onflow/kit` setup and configuration
+- `@onflow/react-sdk` setup and configuration
 - Wallet Discovery (including Dev Wallet on Emulator)
 - CLI private key separation for security
 - Flow.json loading for contract placeholders
@@ -142,7 +142,7 @@ npm run dev:testnet
 This demo uses workspace references to:
 
 - `@onflow/fcl` - Core Flow Client Library
-- `@onflow/kit` - React hooks for Flow
+- `@onflow/react-sdk` - React hooks for Flow
 - `@onflow/typedefs` - Type definitions
 
 Changes to these packages are immediately available via workspace symlinks.

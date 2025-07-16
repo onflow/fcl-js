@@ -1,4 +1,4 @@
-import {useFlowCurrentUser} from "@onflow/kit"
+import {useFlowCurrentUser} from "@onflow/react-sdk"
 
 export function FlowCurrentUserCard() {
   const {user, authenticate, unauthenticate} = useFlowCurrentUser()

@@ -1,4 +1,4 @@
-import {useFlowBlock} from "@onflow/kit"
+import {useFlowBlock} from "@onflow/react-sdk"
 import {useState} from "react"
 
 export function FlowBlockCard() {

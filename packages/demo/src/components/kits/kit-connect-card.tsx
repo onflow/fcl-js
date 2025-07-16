@@ -1,4 +1,4 @@
-import {Connect, useFlowChainId} from "@onflow/kit"
+import {Connect, useFlowChainId} from "@onflow/react-sdk"
 
 export function KitConnectCard() {
   const {data: chainId, isLoading} = useFlowChainId()

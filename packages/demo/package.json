@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "@onflow/fcl": "file:../fcl",
-    "@onflow/kit": "file:../kit",
+    "@onflow/react-sdk": "file:../react-sdk",
     "@onflow/typedefs": "file:../typedefs",
     "@react-aria/utils": "^3.25.3",
     "@react-stately/flags": "^3.0.4",
@@ -46,6 +46,6 @@
   },
   "alias": {
     "@onflow/fcl": "../fcl/src/fcl.ts",
-    "@onflow/kit": "../kit/src/index.ts"
+    "@onflow/react-sdk": "../kit/src/index.ts"
   }
 }

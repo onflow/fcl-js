@@ -1,4 +1,4 @@
-import {useFlowAccount, useFlowConfig} from "@onflow/kit"
+import {useFlowAccount, useFlowConfig} from "@onflow/react-sdk"
 import {useState} from "react"
 import {CONTRACT_ADDRESSES} from "../../constants"
 

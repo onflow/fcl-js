@@ -1,4 +1,8 @@
-import {useFlowConfig, useFlowCurrentUser, useFlowQueryRaw} from "@onflow/kit"
+import {
+  useFlowConfig,
+  useFlowCurrentUser,
+  useFlowQueryRaw,
+} from "@onflow/react-sdk"
 import {useState} from "react"
 import * as fcl from "@onflow/fcl"
 import {getContractAddress} from "../../constants"
