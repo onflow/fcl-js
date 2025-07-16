@@ -22,9 +22,9 @@ import {
  *
  * Some configuration values are still curried to the context as a backward compatibility measure.
  */
-export function createPartialGlobalFCLContext(): Omit<
+export function createPartialGlobalFCLContext(): Pick<
   FCLContext,
-  "storage" | "currentUser"
+  "config" | "sdk"
 > {
   return {
     config: _config(),

@@ -49,80 +49,13 @@ export interface FCLContext {
   storage: StorageProvider
   /** Legacy config compatibility layer */
   config: ConfigService
-  platform?: string
+  platform: string
 }
 
 /**
  * Factory function to create an FCL context
  */
 export function createFCLContext(config: FCLConfig): FCLContext {
-  // Create internal config store based on provided typed config
-  const configStore = new Map<string, any>([
-    ["platform", config.platform],
-    ["discoveryWallet", config.discoveryWallet],
-    ["discoveryWalletMethod", config.discoveryWalletMethod],
-    ["defaultComputeLimit", config.defaultComputeLimit],
-    ["flowNetwork", config.flowNetwork],
-    ["serviceOpenIdScopes", config.serviceOpenIdScopes],
-    ["walletconnectProjectId", config.walletconnectProjectId],
-    [
-      "walletconnectDisableNotifications",
-      config.walletconnectDisableNotifications,
-    ],
-    ["accessNode.api", config.accessNodeUrl],
-    ["fcl.limit", config.computeLimit],
-  ])
-
-  // Filter out undefined values
-  for (const [key, value] of configStore.entries()) {
-    if (value === undefined) {
-      configStore.delete(key)
-    }
-  }
-
-  // Create subscribers registry
-  const subscribers = new Set<(config: Record<string, any>) => void>()
-
-  // Create compatibility config layer
-  const compatConfig: ConfigService = {
-    get: async (key: string) => configStore.get(key),
-    put: async (key: string, value: any) => {
-      configStore.set(key, value)
-      subscribers.forEach(fn => fn(configStore))
-      return compatConfig
-    },
-    update: async (key: string, updateFn: (oldValue: any) => any) => {
-      const oldValue = configStore.get(key)
-      const newValue = updateFn(oldValue)
-      configStore.set(key, newValue)
-      subscribers.forEach(fn => fn(configStore))
-      return compatConfig
-    },
-    delete: async (key: string) => {
-      configStore.delete(key)
-      subscribers.forEach(fn => fn(configStore))
-      return compatConfig
-    },
-    where: async (pattern: RegExp) => {
-      const result: Record<string, any> = {}
-      for (const [key, value] of configStore.entries()) {
-        if (pattern.test(key)) {
-          result[key] = value
-        }
-      }
-      return result
-    },
-    subscribe: (callback: (config: Record<string, any>) => void) => {
-      subscribers.add(callback)
-      return () => {
-        subscribers.delete(callback)
-      }
-    },
-    all: async () => {
-      return Object.fromEntries(configStore.entries())
-    },
-  }
-
   const sdk = createSdkClient({
     accessNodeUrl: config.accessNodeUrl,
     transport: config.transport,
@@ -132,10 +65,12 @@ export function createFCLContext(config: FCLConfig): FCLContext {
     contracts: config.contracts,
   })
 
+  const configService = createConfigService(config)
+
   const currentUser = createUser({
     platform: config.platform,
     storage: config.storage,
-    config: compatConfig,
+    config: configService,
     discovery: {
       execStrategy: config.discovery?.execStrategy,
     },
@@ -146,7 +81,8 @@ export function createFCLContext(config: FCLConfig): FCLContext {
     storage: config.storage,
     currentUser: currentUser,
     sdk: sdk,
-    config: compatConfig,
+    config: configService,
+    platform: config.platform,
   }
 }
 
