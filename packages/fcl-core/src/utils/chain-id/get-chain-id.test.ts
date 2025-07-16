@@ -67,7 +67,7 @@ describe("getChainId", () => {
       {"accessNode.api": "https://example.com"},
       async () => {
         const fetchChainIdSpy = jest.spyOn(fetchChainIdModule, "fetchChainId")
-        fetchChainIdSpy.mockImplementation((opts = {}) => {
+        fetchChainIdSpy.mockImplementation((_, opts = {}) => {
           return new Promise((resolve, reject) => {
             if (opts.node === "https://example2.com") {
               resolve("testnet")
