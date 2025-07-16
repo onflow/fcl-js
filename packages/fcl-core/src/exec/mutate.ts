@@ -1,11 +1,13 @@
 import type {AccountAuthorization} from "@onflow/sdk"
 import * as sdk from "@onflow/sdk"
-import {CurrentUserService, getCurrentUser} from "../current-user"
+import {CurrentUserService} from "../current-user"
 import {isNumber} from "../utils/is"
 import type {ArgsFn} from "./args"
 import {normalizeArgs} from "./utils/normalize-args"
 import {preMutate} from "./utils/pre"
 import {prepTemplateOpts} from "./utils/prep-template-opts"
+import {FCLContext} from "../context"
+import {createPartialGlobalFCLContext} from "../context/global"
 
 export interface MutateOptions {
   cadence?: string
@@ -23,7 +25,9 @@ export interface MutateOptions {
  *
  * @param currentUserOrConfig CurrentUser actor or configuration
  */
-export const getMutate = (currentUserOrConfig: CurrentUserService) => {
+export const createMutate = (
+  context: Pick<FCLContext, "config" | "sdk" | "currentUser">
+) => {
   /**
    * @description Allows you to submit transactions to the blockchain to potentially mutate the state.
    *
@@ -61,16 +65,15 @@ export const getMutate = (currentUserOrConfig: CurrentUserService) => {
   const mutate = async (opts: MutateOptions = {}): Promise<string> => {
     var txid
     try {
-      await preMutate(opts)
-      opts = await prepTemplateOpts(opts)
+      await preMutate(context, opts)
+      opts = await prepTemplateOpts(context, opts)
       // Allow for a config to overwrite the authorization function.
       // prettier-ignore
-      const currentUser = typeof currentUserOrConfig === "function" ? currentUserOrConfig : getCurrentUser(currentUserOrConfig)
-      const authz: any = await sdk
-        .config()
-        .get("fcl.authz", currentUser().authorization)
+      const authz: any = await context
+        .config
+        .get("fcl.authz", context.currentUser.authorization)
 
-      txid = sdk
+      txid = context.sdk
         .send([
           sdk.transaction(opts.cadence!),
 
@@ -87,7 +90,7 @@ export const getMutate = (currentUserOrConfig: CurrentUserService) => {
           // opts.authorizations > [opts.authz > authz]
           sdk.authorizations(opts.authorizations || [opts.authz || authz]),
         ])
-        .then(sdk.decode)
+        .then(context.sdk.decode)
 
       return txid
     } catch (error) {
@@ -96,4 +99,17 @@ export const getMutate = (currentUserOrConfig: CurrentUserService) => {
   }
 
   return mutate
+}
+
+// Legacy support for the global FCL context with partial dependency injection
+// Previously, there was an implementation of a `mutate` factory function that
+// only took a subset of the FCL context and still remained coupled to the global
+// state.
+export const getMutate = (currentUserOrConfig: CurrentUserService) => {
+  const partialContext = createPartialGlobalFCLContext()
+  const context: Pick<FCLContext, "config" | "sdk" | "currentUser"> = {
+    ...partialContext,
+    currentUser: currentUserOrConfig,
+  }
+  return createMutate(context)
 }

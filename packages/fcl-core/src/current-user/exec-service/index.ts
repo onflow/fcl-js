@@ -1,11 +1,12 @@
 import {invariant} from "@onflow/util-invariant"
 import {log, LEVELS} from "@onflow/util-logger"
 import {getServiceRegistry} from "./plugins"
-import {getChainId} from "../../utils"
+import {createGetChainId} from "../../utils"
 import {VERSION} from "../../VERSION"
 import {configLens} from "../../default-config"
 import {checkWalletConnectEnabled} from "./wc-check"
 import {Service, CurrentUser} from "@onflow/typedefs"
+import {FCLContext} from "../../context"
 
 const AbortController =
   globalThis.AbortController || require("abort-controller")
@@ -104,30 +105,33 @@ export const execStrategy = async ({
  *   config: { client: { platform: "web" } }
  * })
  */
-export async function execService({
-  service,
-  msg = {},
-  config = {},
-  opts = {},
-  platform,
-  abortSignal = new AbortController().signal,
-  execStrategy: _execStrategy,
-  user,
-}: ExecServiceParams): Promise<StrategyResponse> {
+export async function execService(
+  context: Pick<FCLContext, "config" | "sdk">,
+  {
+    service,
+    msg = {},
+    config = {},
+    opts = {},
+    platform,
+    abortSignal = new AbortController().signal,
+    execStrategy: _execStrategy,
+    user,
+  }: ExecServiceParams
+): Promise<StrategyResponse> {
   // Notify the developer if WalletConnect is not enabled
   checkWalletConnectEnabled()
 
   msg.data = service.data
   const execConfig: ExecConfig = {
-    services: await configLens(/^service\./),
-    app: await configLens(/^app\.detail\./),
+    services: await configLens(context, /^service\./),
+    app: await configLens(context, /^app\.detail\./),
     client: {
       ...config.client,
       platform,
       fclVersion: VERSION,
       fclLibrary: "https://github.com/onflow/fcl-js",
       hostname: window?.location?.hostname ?? null,
-      network: await getChainId(opts),
+      network: await createGetChainId(context)(opts),
     },
   }
 
@@ -146,7 +150,7 @@ export async function execService({
         service.type === res.data.type,
         "Cannot shift recursive service type in execService"
       )
-      return await execService({
+      return await execService(context, {
         service: res.data,
         msg,
         config: execConfig,

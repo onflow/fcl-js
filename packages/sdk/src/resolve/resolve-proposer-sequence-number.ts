@@ -38,7 +38,7 @@ export const resolveProposerSequenceNumber =
 
     const response = await sendFn(
       await build([getAccount(ix.accounts[ix.proposer!].addr!)]),
-      {config, response: responseModule, Buffer, ix: ixModule},
+      {response: responseModule, Buffer, ix: ixModule},
       {node}
     )
     const decoded = await decodeResponse(response)
