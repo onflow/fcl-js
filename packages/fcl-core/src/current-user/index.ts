@@ -672,6 +672,40 @@ const createSignUserMessage =
     }
   }
 
+const _createUser = (context: CurrentUserContext): CurrentUserService => {
+  const currentUser = {
+    authenticate: createAuthenticate(context),
+    unauthenticate: createUnauthenticate(context),
+    authorization: createAuthorization(context),
+    signUserMessage: createSignUserMessage(context),
+    subscribe: createSubscribe(context),
+    snapshot: createSnapshot(context),
+    resolveArgument: createResolveArgument(context),
+  }
+
+  return Object.assign(
+    () => {
+      return {...currentUser}
+    },
+    {...currentUser}
+  ) as any
+}
+
+const createUser = (
+  context: Pick<FCLContext, "config" | "sdk" | "storage"> & {
+    platform: string
+    discovery?: {
+      execStrategy?: (...args: any[]) => any
+    }
+  }
+) => {
+  return _createUser({
+    ...context,
+    getStorageProvider: async () => context.storage,
+    discovery: context.discovery,
+  })
+}
+
 /**
  * @description Creates and configures the Current User service for managing user authentication and
  * authorization in Flow applications. This is the core service for handling user sessions, wallet
@@ -747,43 +781,6 @@ const createSignUserMessage =
  * const signatures = await currentUser.signUserMessage(message)
  *
  * console.log("Message signatures:", signatures)
- */
-const _createUser = (context: CurrentUserContext): CurrentUserService => {
-  const currentUser = {
-    authenticate: createAuthenticate(context),
-    unauthenticate: createUnauthenticate(context),
-    authorization: createAuthorization(context),
-    signUserMessage: createSignUserMessage(context),
-    subscribe: createSubscribe(context),
-    snapshot: createSnapshot(context),
-    resolveArgument: createResolveArgument(context),
-  }
-
-  return Object.assign(
-    () => {
-      return {...currentUser}
-    },
-    {...currentUser}
-  ) as any
-}
-
-const createUser = (
-  context: Pick<FCLContext, "config" | "sdk" | "storage"> & {
-    platform: string
-    discovery?: {
-      execStrategy?: (...args: any[]) => any
-    }
-  }
-) => {
-  return _createUser({
-    ...context,
-    getStorageProvider: async () => context.storage,
-    discovery: context.discovery,
-  })
-}
-
-/**
- * @deprecated Use createCurrentUser instead. This is kept for backward compatibility.
  */
 const getCurrentUser = (cfg: CurrentUserConfig): CurrentUserService => {
   const partialContext = createPartialGlobalFCLContext()
