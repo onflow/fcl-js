@@ -1,9 +1,10 @@
 import React, {useEffect, useState, PropsWithChildren} from "react"
 import * as fcl from "@onflow/fcl"
-import {FlowConfig, FlowConfigContext} from "../core/context"
+import {FclClientContext, FlowConfig, FlowConfigContext} from "../core/context"
 import {DefaultOptions, QueryClient} from "@tanstack/react-query"
 import {FlowQueryClientProvider} from "./FlowQueryClient"
-import {deepEqual} from "../utils/deepEqual"
+import {createFcl} from "@onflow/fcl"
+import {httpTransport} from "@onflow/transport-http"
 import {ThemeProvider, Theme} from "../core/theme"
 import {GlobalTransactionProvider} from "./GlobalTransactionProvider"
 import tailwindStyles from "../styles/tailwind.css"
@@ -94,52 +95,6 @@ const defaultQueryOptions: DefaultOptions = {
   },
 }
 
-// Custom hook for FCL configuration
-const useFCLConfig = (
-  initialConfig: FlowConfig,
-  flowJson?: Record<string, any>
-) => {
-  const [flowConfig, setFlowConfig] = useState<FlowConfig | null>(null)
-  const [isFlowJsonLoaded, setIsFlowJsonLoaded] = useState(false)
-
-  useEffect(() => {
-    const initializeFCL = async () => {
-      try {
-        if (Object.keys(initialConfig).length > 0) {
-          const fclConfig = convertTypedConfig(initialConfig)
-          if (flowJson) {
-            await fcl.config(fclConfig).load({flowJSON: flowJson})
-          } else {
-            fcl.config(fclConfig)
-          }
-        } else if (flowJson) {
-          await fcl.config().load({flowJSON: flowJson})
-        }
-
-        setIsFlowJsonLoaded(true)
-      } catch (error) {
-        setIsFlowJsonLoaded(true)
-      }
-    }
-
-    initializeFCL()
-
-    const unsubscribe = fcl.config().subscribe(latest => {
-      const newConfig = mapConfig(latest || {})
-      setFlowConfig(prev => {
-        if (prev && deepEqual(prev, newConfig)) {
-          return prev
-        }
-        return newConfig
-      })
-    })
-
-    return () => unsubscribe()
-  }, [initialConfig, flowJson])
-
-  return {flowConfig, isFlowJsonLoaded}
-}
-
 export function FlowProvider({
   config: initialConfig = {},
   queryClient: _queryClient,
@@ -151,22 +106,39 @@ export function FlowProvider({
   const [queryClient] = useState<QueryClient>(
     () => _queryClient ?? new QueryClient({defaultOptions: defaultQueryOptions})
   )
-  const {flowConfig, isFlowJsonLoaded} = useFCLConfig(initialConfig, flowJson)
-
-  if (!flowConfig || !isFlowJsonLoaded) {
-    return null
-  }
+  const [client] = useState<ReturnType<typeof createFcl>>(
+    createFcl({
+      accessNodeUrl: initialConfig.accessNodeUrl!,
+      discoveryWallet: initialConfig.discoveryWallet,
+      discoveryWalletMethod: initialConfig.discoveryWalletMethod,
+      computeLimit: initialConfig.fclLimit!,
+      flowNetwork: initialConfig.flowNetwork,
+      serviceOpenIdScopes: initialConfig.serviceOpenIdScopes,
+      walletconnectProjectId: initialConfig.walletconnectProjectId,
+      walletconnectDisableNotifications:
+        initialConfig.walletconnectDisableNotifications,
+      transport: httpTransport,
+    })
+  )
 
   return (
     <FlowQueryClientProvider queryClient={queryClient}>
-      <FlowConfigContext.Provider value={flowConfig}>
+      <FclClientContext.Provider value={client}>
         <GlobalTransactionProvider>
           <style>{tailwindStyles}</style>
           <ThemeProvider theme={customTheme}>
             <DarkModeProvider darkMode={darkMode}>{children}</DarkModeProvider>
           </ThemeProvider>
         </GlobalTransactionProvider>
-      </FlowConfigContext.Provider>
+      </FclClientContext.Provider>
     </FlowQueryClientProvider>
   )
+}
+
+export function useClient() {
+  const client = React.useContext(FclClientContext)
+  if (!client) {
+    throw new Error("FclClientContext is not provided")
+  }
+  return client
 }

@@ -1,6 +1,10 @@
 import {useState, useEffect} from "react"
-import * as fcl from "@onflow/fcl"
 import {CurrentUser} from "@onflow/typedefs"
+import {useClient} from "../provider/FlowProvider"
+
+interface UseCurrentFlowUserArgs {
+  client?: ReturnType<typeof useClient>
+}
 
 interface UseCurrentFlowUserResult {
   user: CurrentUser | null
@@ -11,12 +15,16 @@ interface UseCurrentFlowUserResult {
 /**
  * @deprecated Use useFlowCurrentUser instead. This hook will be removed in a future version.
  */
-export function useCurrentFlowUser(): UseCurrentFlowUserResult {
+export function useCurrentFlowUser({
+  client,
+}: UseCurrentFlowUserArgs = {}): UseCurrentFlowUserResult {
   console.warn(
     "useCurrentFlowUser is deprecated and will be removed in a future version. Use useFlowCurrentUser instead."
   )
 
   const [user, setUser] = useState<CurrentUser | null>(null)
+  const _fcl = useClient()
+  const fcl = client ?? _fcl
 
   useEffect(() => {
     const unsubscribe = fcl.currentUser.subscribe(setUser)

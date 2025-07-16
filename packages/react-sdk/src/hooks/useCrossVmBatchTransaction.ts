@@ -1,4 +1,3 @@
-import * as fcl from "@onflow/fcl"
 import {Abi, encodeFunctionData} from "viem"
 import {
   UseMutateAsyncFunction,
@@ -10,6 +9,8 @@ import {
 import {useFlowChainId} from "./useFlowChainId"
 import {useFlowQueryClient} from "../provider/FlowQueryClient"
 import {CONTRACT_ADDRESSES, DEFAULT_EVM_GAS_LIMIT} from "../constants"
+import {sansPrefix} from "@onflow/fcl"
+import {useClient} from "../provider/FlowProvider"
 
 interface UseCrossVmBatchTransactionMutateArgs {
   calls: EvmBatchCall[]
@@ -21,6 +22,7 @@ export interface UseCrossVmBatchTransactionArgs {
     UseMutationOptions<string, Error, UseCrossVmBatchTransactionMutateArgs>,
     "mutationFn"
   >
+  client?: ReturnType<typeof useClient>
 }
 
 export interface UseCrossVmBatchTransactionResult
@@ -67,7 +69,7 @@ export function encodeCalls(
 
     return {
       to: call.address,
-      data: fcl.sansPrefix(encodedData) ?? "",
+      data: sansPrefix(encodedData) ?? "",
       gasLimit: call.gasLimit?.toString() ?? DEFAULT_EVM_GAS_LIMIT,
       value: call.value?.toString() ?? "0",
     }
@@ -132,6 +134,7 @@ transaction(calls: [{String: AnyStruct}], mustPass: Bool) {
  */
 export function useCrossVmBatchTransaction({
   mutation: mutationOptions = {},
+  client,
 }: UseCrossVmBatchTransactionArgs = {}): UseCrossVmBatchTransactionResult {
   const chainId = useFlowChainId()
   const cadenceTx = chainId.data
@@ -139,6 +142,8 @@ export function useCrossVmBatchTransaction({
     : null
 
   const queryClient = useFlowQueryClient()
+  const _fcl = useClient()
+  const fcl = client ?? _fcl
   const mutation = useMutation(
     {
       mutationFn: async ({

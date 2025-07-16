@@ -1,10 +1,12 @@
 import {useState, useEffect} from "react"
-import * as fcl from "@onflow/fcl"
 import {TransactionStatus} from "@onflow/typedefs"
+import {useClient} from "../provider/FlowProvider"
+import {TransactionError} from "@onflow/fcl"
 
 export interface UseFlowTransactionStatusArgs {
   /** The Flow transaction ID to monitor */
   id?: string | null
+  client?: ReturnType<typeof useClient>
 }
 
 export interface UseFlowTransactionStatusResult {
@@ -25,10 +27,13 @@ export interface UseFlowTransactionStatusResult {
  */
 export function useFlowTransactionStatus({
   id,
+  client,
 }: UseFlowTransactionStatusArgs): UseFlowTransactionStatusResult {
   const [transactionStatus, setTransactionStatus] =
     useState<TransactionStatus | null>(null)
   const [error, setError] = useState<Error | null>(null)
+  const _fcl = useClient()
+  const fcl = client ?? _fcl
 
   useEffect(() => {
     if (!id) return
@@ -41,9 +46,7 @@ export function useFlowTransactionStatus({
       setTransactionStatus(updatedStatus)
 
       if (updatedStatus.errorMessage) {
-        setError(
-          fcl.TransactionError.fromErrorMessage(updatedStatus.errorMessage)
-        )
+        setError(TransactionError.fromErrorMessage(updatedStatus.errorMessage))
       }
     })
 

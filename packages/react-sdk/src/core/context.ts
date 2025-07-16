@@ -1,5 +1,6 @@
 import {createContext} from "react"
 import {FlowNetwork} from "./types"
+import {createFcl} from "@onflow/fcl"
 
 export type FlowConfig = {
   accessNodeUrl?: string
@@ -18,3 +19,7 @@ export type FlowConfig = {
 }
 
 export const FlowConfigContext = createContext<FlowConfig>({})
+
+export const FclClientContext = createContext<ReturnType<
+  typeof createFcl
+> | null>(null)
