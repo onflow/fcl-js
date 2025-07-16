@@ -161,14 +161,10 @@ export function FlowProvider({
     <FlowQueryClientProvider queryClient={queryClient}>
       <FlowConfigContext.Provider value={flowConfig}>
         <GlobalTransactionProvider>
-          <div className="flow-wrapper">
-            <style>{tailwindStyles}</style>
-            <ThemeProvider theme={customTheme}>
-              <DarkModeProvider darkMode={darkMode}>
-                {children}
-              </DarkModeProvider>
-            </ThemeProvider>
-          </div>
+          <style>{tailwindStyles}</style>
+          <ThemeProvider theme={customTheme}>
+            <DarkModeProvider darkMode={darkMode}>{children}</DarkModeProvider>
+          </ThemeProvider>
         </GlobalTransactionProvider>
       </FlowConfigContext.Provider>
     </FlowQueryClientProvider>

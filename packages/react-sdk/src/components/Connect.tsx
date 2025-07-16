@@ -7,6 +7,7 @@ import {
 import {useFlowChainId} from "../hooks/useFlowChainId"
 import {Button, ButtonProps} from "./internal/Button"
 import {Dialog} from "./internal/Dialog"
+import {StyleWrapper} from "./internal/StyleWrapper"
 import {UserIcon} from "../icons/UserIcon"
 import {CopyIcon} from "../icons/CopyIcon"
 import {LogOutIcon} from "../icons/LogOutIcon"
@@ -77,7 +78,7 @@ export const Connect: React.FC<ConnectProps> = ({
   }
 
   return (
-    <>
+    <StyleWrapper>
       <Button
         onClick={handleButtonClick}
         variant={user?.loggedIn ? "outline" : variant}
@@ -133,6 +134,6 @@ export const Connect: React.FC<ConnectProps> = ({
           </div>
         </Dialog>
       )}
-    </>
+    </StyleWrapper>
   )
 }
