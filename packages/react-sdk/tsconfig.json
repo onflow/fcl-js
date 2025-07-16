@@ -1,0 +1,12 @@
+{
+  "extends": "../../tsconfig",
+  "include": ["src/**/*.ts", "src/**/*.tsx"],
+  "compilerOptions": {
+    "declarationDir": "types",
+    "rootDir": "src",
+    "paths": {
+      "react": ["../../node_modules/@types/react/index"]
+    },
+    "jsx": "react"
+  }
+}

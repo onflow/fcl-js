@@ -1,6 +1,6 @@
 {
   "name": "@onflow/fcl-wc",
-  "version": "6.0.4",
+  "version": "6.0.5-alpha.0",
   "description": "WalletConnect adapter for FCL",
   "license": "Apache-2.0",
   "author": "Flow Foundation",
@@ -31,7 +31,7 @@
     "@babel/plugin-transform-react-jsx": "^7.25.9",
     "@babel/preset-typescript": "^7.25.7",
     "@onflow/fcl-bundle": "1.7.0",
-    "@onflow/typedefs": "1.6.0",
+    "@onflow/typedefs": "1.7.0-alpha.0",
     "autoprefixer": "^10.4.20",
     "eslint": "^8.57.1",
     "eslint-plugin-jsdoc": "^46.10.1",
@@ -52,6 +52,6 @@
     "tailwindcss": "^3.4.14"
   },
   "peerDependencies": {
-    "@onflow/fcl-core": "1.20.0"
+    "@onflow/fcl-core": "1.21.0-alpha.0"
   }
 }
