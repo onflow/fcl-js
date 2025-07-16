@@ -19,7 +19,6 @@ interface FCLConfig {
   walletconnectDisableNotifications?: boolean
   storage: StorageProvider
   discovery?: {
-    // TODO (jribbink): Define the type for execStrategy
     execStrategy?: (...args: any[]) => any
   }
 }

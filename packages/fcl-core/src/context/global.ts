@@ -28,8 +28,6 @@ export function createPartialGlobalFCLContext(): Omit<
 > {
   return {
     config: _config(),
-    // TODO: We need to switch SDK to use the global config service instead of direct config access
-    // It may be helpful to create a helper to get the global instance for the SDK
     sdk: {
       send,
       decode,
