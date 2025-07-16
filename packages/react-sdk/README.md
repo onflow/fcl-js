@@ -1,11 +1,11 @@
-# @onflow/kit
+# @onflow/react-sdk
 
 A React library that provides hooks for interacting with the Flow blockchain. It helps you authenticate users, run Cadence scripts and transactions, listen to events, and manage network configuration directly from your components.
 
 ## 🔧 Installation
 
 ```bash
-npm install @onflow/kit
+npm install @onflow/react-sdk
 ```
 
 ## 🧩 Quick Setup
@@ -13,7 +13,7 @@ npm install @onflow/kit
 Before using any hooks, wrap your app in the `FlowProvider`:
 
 ```tsx
-import { FlowProvider } from "@onflow/kit"
+import { FlowProvider } from "@onflow/react-sdk"
 import flowJson from "../flow.json"
 
 <FlowProvider
@@ -52,4 +52,4 @@ import flowJson from "../flow.json"
 
 Looking for full API docs, examples, and usage tips?
 
-👉 [Explore the official docs →](https://developers.flow.com/tools/kit)
+👉 [Explore the official docs →](https://developers.flow.com/tools/react-sdk)

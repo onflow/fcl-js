@@ -1,4 +1,4 @@
-import {TransactionButton, TransactionLink} from "@onflow/kit"
+import {TransactionButton, TransactionLink} from "@onflow/react-sdk"
 import {useState} from "react"
 
 export function KitTransactionLinkCard() {

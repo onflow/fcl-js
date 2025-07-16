@@ -1,5 +1,5 @@
 import {flowEmulator, flowMainnet, flowTestnet} from "@onflow/fcl"
-import {FlowProvider, type FlowNetwork} from "@onflow/kit"
+import {FlowProvider, type FlowNetwork} from "@onflow/react-sdk"
 import React, {useEffect} from "react"
 import * as fcl from "@onflow/fcl"
 import flowJSON from "../../flow.json"

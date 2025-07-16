@@ -1,4 +1,4 @@
-import {useFlowChainId} from "@onflow/kit"
+import {useFlowChainId} from "@onflow/react-sdk"
 
 export function FlowChainIdCard() {
   const {
