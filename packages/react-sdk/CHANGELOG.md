@@ -1,4 +1,4 @@
-# @onflow/kit
+# @onflow/react-sdk
 
 ## 0.9.0
 
@@ -87,7 +87,7 @@
 
 - [#2414](https://github.com/onflow/fcl-js/pull/2414) [`605f66c7a78f9ff1474a18b70298956b92f90bc1`](https://github.com/onflow/fcl-js/commit/605f66c7a78f9ff1474a18b70298956b92f90bc1) Thanks [@chasefleming](https://github.com/chasefleming)! - **BREAKING**: Rename `useFlowTransaction` as `useFlowTransactionStatus`
 
-- [#2367](https://github.com/onflow/fcl-js/pull/2367) [`9595af75eeffb0c91f9bb94b70fb0adf4db40eec`](https://github.com/onflow/fcl-js/commit/9595af75eeffb0c91f9bb94b70fb0adf4db40eec) Thanks [@jribbink](https://github.com/jribbink)! - Add `useFlowChainId` hook to the `@onflow/kit` package.
+- [#2367](https://github.com/onflow/fcl-js/pull/2367) [`9595af75eeffb0c91f9bb94b70fb0adf4db40eec`](https://github.com/onflow/fcl-js/commit/9595af75eeffb0c91f9bb94b70fb0adf4db40eec) Thanks [@jribbink](https://github.com/jribbink)! - Add `useFlowChainId` hook to the `@onflow/react-sdk` package.
 
 ### Patch Changes
 
@@ -117,7 +117,7 @@
 
 - [#2414](https://github.com/onflow/fcl-js/pull/2414) [`605f66c7a78f9ff1474a18b70298956b92f90bc1`](https://github.com/onflow/fcl-js/commit/605f66c7a78f9ff1474a18b70298956b92f90bc1) Thanks [@chasefleming](https://github.com/chasefleming)! - **BREAKING**: Rename `useFlowTransaction` as `useFlowTransactionStatus`
 
-- [#2367](https://github.com/onflow/fcl-js/pull/2367) [`9595af75eeffb0c91f9bb94b70fb0adf4db40eec`](https://github.com/onflow/fcl-js/commit/9595af75eeffb0c91f9bb94b70fb0adf4db40eec) Thanks [@jribbink](https://github.com/jribbink)! - Add `useFlowChainId` hook to the `@onflow/kit` package.
+- [#2367](https://github.com/onflow/fcl-js/pull/2367) [`9595af75eeffb0c91f9bb94b70fb0adf4db40eec`](https://github.com/onflow/fcl-js/commit/9595af75eeffb0c91f9bb94b70fb0adf4db40eec) Thanks [@jribbink](https://github.com/jribbink)! - Add `useFlowChainId` hook to the `@onflow/react-sdk` package.
 
 ### Patch Changes
 
