@@ -27,7 +27,8 @@
     "@onflow/util-rpc": "0.0.2",
     "@onflow/util-semver": "1.0.3",
     "@onflow/util-template": "1.2.3",
-    "@onflow/util-uid": "1.2.3"
+    "@onflow/util-uid": "1.2.3",
+    "@onflow/demo": "1.0.0"
   },
   "changesets": [
     "clean-knives-teach",
@@ -37,6 +38,7 @@
     "lemon-toes-warn",
     "metal-walls-dream",
     "new-penguins-hug",
-    "old-coats-beg"
+    "old-coats-beg",
+    "poor-pianos-drive"
   ]
 }

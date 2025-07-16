@@ -1,5 +1,11 @@
 # @onflow/kit
 
+## 0.10.0-alpha.1
+
+### Patch Changes
+
+- [#2589](https://github.com/onflow/fcl-js/pull/2589) [`43751a02a0052f2f77915e527afb0edd21097b79`](https://github.com/onflow/fcl-js/commit/43751a02a0052f2f77915e527afb0edd21097b79) Thanks [@mfbz](https://github.com/mfbz)! - Updated transaction button pending state
+
 ## 0.10.0-alpha.0
 
 ### Minor Changes
