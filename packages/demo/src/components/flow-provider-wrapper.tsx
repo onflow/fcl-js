@@ -39,6 +39,7 @@ export default function FlowProviderWrapper({
         appDetailIcon: "https://avatars.githubusercontent.com/u/62387156?v=4",
         appDetailUrl: "https://yourapp.com",
         appDetailDescription: "Your app description",
+        fclLimit: 1000,
       }}
       flowJson={flowJSON}
       // theme={{
