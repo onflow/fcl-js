@@ -1,6 +1,5 @@
-import React, {useEffect, useState, PropsWithChildren} from "react"
-import * as fcl from "@onflow/fcl"
-import {FclClientContext, FlowConfig, FlowConfigContext} from "../core/context"
+import React, {useState, PropsWithChildren} from "react"
+import {FclClientContext, FlowConfig} from "../core/context"
 import {DefaultOptions, QueryClient} from "@tanstack/react-query"
 import {FlowQueryClientProvider} from "./FlowQueryClient"
 import {createFcl} from "@onflow/fcl"
@@ -117,7 +116,6 @@ export function FlowProvider({
       walletconnectProjectId: initialConfig.walletconnectProjectId,
       walletconnectDisableNotifications:
         initialConfig.walletconnectDisableNotifications,
-      transport: httpTransport,
     })
   )
 
