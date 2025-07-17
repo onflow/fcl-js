@@ -1,8 +1,5 @@
 ---
-"@onflow/fcl-core": minor
-"@onflow/fcl-wc": minor
-"@onflow/kit": minor
-"@onflow/sdk": minor
+"@onflow/react-sdk": minor
 ---
 
 Added tailwind prefix for style isolation
