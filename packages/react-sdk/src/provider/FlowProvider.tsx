@@ -36,54 +36,6 @@ const mappings: Array<{fcl: string; typed: keyof FlowConfig}> = [
   },
 ]
 
-// Map typed keys to FCL config keys
-const typedToFcl = mappings.reduce(
-  (acc, mapping) => {
-    acc[mapping.typed] = mapping.fcl
-    return acc
-  },
-  {} as Record<keyof FlowConfig, string>
-)
-
-// Map FCL config keys to typed keys
-const fclToTyped = mappings.reduce(
-  (acc, mapping) => {
-    acc[mapping.fcl] = mapping.typed
-    return acc
-  },
-  {} as Record<string, keyof FlowConfig>
-)
-
-/**
- * Converts typed config into FCL-style config.
- */
-function convertTypedConfig(typedConfig: FlowConfig): Record<string, any> {
-  const fclConfig: Record<string, any> = {}
-  for (const key in typedConfig) {
-    const value = typedConfig[key as keyof FlowConfig]
-    if (value !== undefined) {
-      const fclKey = typedToFcl[key as keyof FlowConfig]
-      if (fclKey) {
-        fclConfig[fclKey] = value
-      }
-    }
-  }
-  return fclConfig
-}
-
-/**
- * Converts FCL-style config into typed config.
- */
-function mapConfig(original: Record<string, any>): FlowConfig {
-  const mapped: FlowConfig = {}
-  for (const [fclKey, value] of Object.entries(original)) {
-    if (fclKey in fclToTyped) {
-      mapped[fclToTyped[fclKey]] = value
-    }
-  }
-  return mapped
-}
-
 const defaultQueryOptions: DefaultOptions = {
   queries: {
     retry: false,
