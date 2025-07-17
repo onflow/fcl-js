@@ -1,6 +1,6 @@
 import {invariant} from "@onflow/util-invariant"
 import fetchTransport from "cross-fetch"
-import {ConfigService} from "../context"
+import {ConfigService, FCLContext} from "../context"
 
 interface DocumentResolverParams {
   url: string
@@ -53,7 +53,7 @@ const DOCUMENT_RESOLVERS: Map<string, typeof httpDocumentResolver> = new Map([
  * console.log("Template:", template)
  */
 export async function retrieve(
-  {config}: {config: ConfigService},
+  context: Pick<FCLContext, "config">,
   {url}: RetrieveParams
 ): Promise<any> {
   invariant(
@@ -65,7 +65,7 @@ export async function retrieve(
     "retrieve({ url }) -- url must be a string"
   )
 
-  const documentResolversFromConfig = await config.where(
+  const documentResolversFromConfig = await context.config.where(
     /^document\.resolver\./
   )
   Object.keys(documentResolversFromConfig).map(key => {

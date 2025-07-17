@@ -7,6 +7,7 @@ import {createQueryRaw} from "./exec/query-raw"
 import {createTransaction} from "./transaction"
 import {createEvents} from "./events"
 import {createGetChainId} from "./utils"
+import {createSerialize} from "./serialize"
 
 type WithOptionalProperties<T, K extends keyof T> = Omit<T, K> &
   Partial<Pick<T, K>>
@@ -39,6 +40,9 @@ export function createFcl(
     authenticate: context.currentUser.authenticate,
     unauthenticate: context.currentUser.unauthenticate,
     signUserMessage: context.currentUser.signUserMessage,
+
+    // Utility methods
+    serialze: createSerialize(context),
 
     // Re-export the SDK methods
     ...context.sdk,

@@ -33,6 +33,7 @@ export interface ConfigService {
   ) => Promise<ConfigService> | ConfigService
   delete: (key: string) => Promise<ConfigService> | ConfigService
   where: (pattern: RegExp) => Promise<Record<string, any>>
+  first: (keys: string | string[], defaultValue?: any) => Promise<any> | any
   subscribe: (
     callback: (config: Record<string, any> | null) => void
   ) => () => void
@@ -142,6 +143,15 @@ export function createConfigService(config: FCLConfig): ConfigService {
         }
       }
       return result
+    },
+    first: async (keys: string | string[], defaultValue?: any) => {
+      if (typeof keys === "string") keys = [keys]
+      for (const key of keys) {
+        if (configStore.has(key)) {
+          return configStore.get(key)
+        }
+      }
+      return defaultValue
     },
     subscribe: (callback: (config: Record<string, any>) => void) => {
       subscribers.add(callback)

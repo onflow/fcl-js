@@ -130,7 +130,7 @@ const makeHandlers = (context: CurrentUserContext) => {
   // Wrapper for backwards compatibility
   const getStorageProvider = async (): Promise<StorageProvider> => {
     if (context.getStorageProvider) return await context.getStorageProvider()
-    return (await config.first(
+    return (await context.config.first(
       ["fcl.storage", "fcl.storage.default"],
       undefined
     )) as any
@@ -199,8 +199,10 @@ function notExpired(user: any): boolean {
   )
 }
 
-async function getAccountProofData(): Promise<AccountProofData | undefined> {
-  let accountProofDataResolver: any = await config.get(
+async function getAccountProofData(
+  context: Pick<FCLContext, "config">
+): Promise<AccountProofData | undefined> {
+  let accountProofDataResolver: any = await context.config.get(
     "fcl.accountProof.resolver"
   )
   if (accountProofDataResolver == null) return
@@ -348,7 +350,7 @@ const createAuthenticate =
       }
 
       try {
-        accountProofData = await getAccountProofData()
+        accountProofData = await getAccountProofData(context)
       } catch (error: any) {
         log({
           title: `${error.name} On Authentication: Could not resolve account proof data.`,
@@ -359,7 +361,7 @@ const createAuthenticate =
       }
 
       try {
-        const discoveryService = await getDiscoveryService(service)
+        const discoveryService = await getDiscoveryService(context, service)
         const response: any = await execService(context, {
           service: discoveryService,
           msg: accountProofData,
