@@ -1,3 +1,4 @@
+import {getTransaction} from "@onflow/fcl"
 import type {Transaction} from "@onflow/typedefs"
 import {useQuery, UseQueryResult, UseQueryOptions} from "@tanstack/react-query"
 import {useCallback} from "react"
@@ -36,7 +37,7 @@ export function useFlowTransaction({
     if (!txId) return null
 
     return fcl
-      .send([fcl.getTransaction(txId)])
+      .send([getTransaction(txId)])
       .then(fcl.decode) as Promise<Transaction>
   }, [txId])
 
