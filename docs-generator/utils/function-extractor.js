@@ -44,15 +44,74 @@ function extractFunctionInfo(
           }
         }
 
+        // Handle nested JSDoc parameters (e.g., queryOptions.height)
+        let nestedParams = []
+        if (jsDocInfo.params) {
+          Object.keys(jsDocInfo.params).forEach(jsDocParamName => {
+            if (jsDocParamName.startsWith(paramName + ".")) {
+              const nestedParamName = jsDocParamName.substring(paramName.length + 1)
+              
+              // Try to extract type information from the parameter's TypeScript type
+              let nestedParamType = "any"
+              try {
+                const paramTypeSymbol = param.getType().getSymbol()
+                if (paramTypeSymbol) {
+                  const typeDeclaration = paramTypeSymbol.getDeclarations()?.[0]
+                  if (typeDeclaration && Node.isInterfaceDeclaration(typeDeclaration)) {
+                    // Find the property in the interface
+                    const property = typeDeclaration.getProperty(nestedParamName)
+                    if (property) {
+                      const propertyType = property.getType()
+                      nestedParamType = cleanupTypeText(propertyType.getText())
+                    }
+                  }
+                }
+              } catch (e) {
+                // Fallback to any if type extraction fails
+                nestedParamType = "any"
+              }
+              
+              nestedParams.push({
+                name: escapeParameterNameForMDX(nestedParamName),
+                type: nestedParamType,
+                required: true, // Default to required
+                description: escapeTextForMDX(jsDocInfo.params[jsDocParamName]) || "",
+              })
+            }
+          })
+        }
+
         return {
           name: escapeParameterNameForMDX(paramName),
           type: paramType,
           required: !param.isOptional(),
           description: escapeTextForMDX(paramJsDoc) || "",
+          nestedParams: nestedParams.length > 0 ? nestedParams : undefined,
         }
       })
 
-      const returnType = cleanupTypeText(declaration.getReturnType().getText())
+
+      // Get the actual return type, not the function signature
+      let returnType = "any"
+      try {
+        const funcReturnType = declaration.getReturnType()
+        const returnTypeText = funcReturnType.getText()
+        
+        // If the return type text looks like a function signature, extract just the return part
+        if (returnTypeText.includes("=>")) {
+          const returnPart = returnTypeText.split("=>").pop()?.trim()
+          if (returnPart) {
+            returnType = cleanupTypeText(returnPart)
+          } else {
+            returnType = cleanupTypeText(returnTypeText)
+          }
+        } else {
+          returnType = cleanupTypeText(returnTypeText)
+        }
+      } catch (e) {
+        console.warn(`Error extracting return type: ${e.message}`)
+        returnType = "any"
+      }
 
       // Extract return description from JSDoc
       let returnDescription = null
@@ -90,6 +149,113 @@ function extractFunctionInfo(
 
       const initializer = declaration.getInitializer()
 
+      // Check for function calls that might wrap a function (like withGlobalContext(createAccount))
+      if (initializer && Node.isCallExpression(initializer)) {
+        const args = initializer.getArguments()
+        if (args.length > 0) {
+          const firstArg = args[0]
+          // If the first argument is an identifier, try to resolve it to a function
+          if (Node.isIdentifier(firstArg)) {
+            const argName = firstArg.getText()
+            // Look for the function with this name in the source file
+            const referencedFunction = sourceFile.getFunction(argName)
+            if (referencedFunction) {
+              // Look for inner function declarations within the referenced function
+              const innerFunctions = referencedFunction.getFunctions()
+              if (innerFunctions.length > 0) {
+                // Get the first inner function (usually the one being returned)
+                const innerFunction = innerFunctions[0]
+                const innerFuncInfo = extractFunctionInfo(innerFunction, functionName, sourceFile, namespace)
+                if (innerFuncInfo) {
+                  // Merge JSDoc from the exported variable, including nested parameters
+                  const mergedParameters = innerFuncInfo.parameters.map(param => {
+                    // Check if there are nested JSDoc parameters for this parameter
+                    let nestedParams = []
+                    if (jsDocInfo.params) {
+                      Object.keys(jsDocInfo.params).forEach(jsDocParamName => {
+                        if (jsDocParamName.startsWith(param.name + ".")) {
+                          const nestedParamName = jsDocParamName.substring(param.name.length + 1)
+                          // Extract nested parameter type from the parameter's TypeScript interface
+                          let nestedParamType = "any"
+                          try {
+                            // Get the parameter from the inner function for type extraction
+                            const innerParams = innerFunction.getParameters()
+                            const matchingParam = innerParams.find(p => {
+                              let pName = p.getName()
+                              if (pName.includes("{") && pName.includes("}")) {
+                                const typeText = p.getType().getText()
+                                let typeMatch = typeText.match(/^([A-Z][a-zA-Z0-9]*)/)
+                                if (!typeMatch) {
+                                  typeMatch = typeText.match(/import\([^)]+\)\.([A-Z][a-zA-Z0-9]*)/)
+                                }
+                                if (typeMatch && typeMatch[1]) {
+                                  pName = toCamelCase(typeMatch[1])
+                                }
+                              }
+                              return pName === param.name
+                            })
+                            
+                            if (matchingParam) {
+                              const paramTypeSymbol = matchingParam.getType().getSymbol()
+                              if (paramTypeSymbol) {
+                                const typeDeclaration = paramTypeSymbol.getDeclarations()?.[0]
+                                if (typeDeclaration && Node.isInterfaceDeclaration(typeDeclaration)) {
+                                  const property = typeDeclaration.getProperty(nestedParamName)
+                                  if (property) {
+                                    const propertyType = property.getType()
+                                    nestedParamType = cleanupTypeText(propertyType.getText())
+                                  }
+                                }
+                              }
+                            }
+                          } catch (e) {
+                            // Fallback to any
+                            nestedParamType = "any"
+                          }
+                          
+                          nestedParams.push({
+                            name: escapeParameterNameForMDX(nestedParamName),
+                            type: nestedParamType,
+                            required: true, // Default to required
+                            description: escapeTextForMDX(jsDocInfo.params[jsDocParamName]) || "",
+                          })
+                        }
+                      })
+                    }
+                    
+                    return {
+                      ...param,
+                      // Override description from JSDoc if available
+                      description: (jsDocInfo.params && jsDocInfo.params[param.name]) ? 
+                        escapeTextForMDX(jsDocInfo.params[param.name]) : param.description,
+                      nestedParams: nestedParams.length > 0 ? nestedParams : undefined,
+                    }
+                  })
+                  
+                  return {
+                    ...innerFuncInfo,
+                    description: jsDocInfo.description || innerFuncInfo.description,
+                    customExample: jsDocInfo.example || innerFuncInfo.customExample,
+                    parameters: mergedParameters,
+                  }
+                }
+              }
+              
+              // Fallback: try to extract info directly from the referenced function
+              const referencedFuncInfo = extractFunctionInfo(referencedFunction, functionName, sourceFile, namespace)
+              if (referencedFuncInfo) {
+                // Override with JSDoc from the exported variable
+                return {
+                  ...referencedFuncInfo,
+                  description: jsDocInfo.description || referencedFuncInfo.description,
+                  customExample: jsDocInfo.example || referencedFuncInfo.customExample,
+                }
+              }
+            }
+          }
+        }
+      }
+
       if (
         initializer &&
         (Node.isFunctionExpression(initializer) ||
@@ -118,17 +284,73 @@ function extractFunctionInfo(
             }
           }
 
+          // Handle nested JSDoc parameters (e.g., queryOptions.height)
+          let nestedParams = []
+          if (jsDocInfo.params) {
+            Object.keys(jsDocInfo.params).forEach(jsDocParamName => {
+              if (jsDocParamName.startsWith(paramName + ".")) {
+                const nestedParamName = jsDocParamName.substring(paramName.length + 1)
+                
+                // Try to extract type information from the parameter's TypeScript type
+                let nestedParamType = "any"
+                try {
+                  const paramTypeSymbol = param.getType().getSymbol()
+                  if (paramTypeSymbol) {
+                    const typeDeclaration = paramTypeSymbol.getDeclarations()?.[0]
+                    if (typeDeclaration && Node.isInterfaceDeclaration(typeDeclaration)) {
+                      // Find the property in the interface
+                      const property = typeDeclaration.getProperty(nestedParamName)
+                      if (property) {
+                        const propertyType = property.getType()
+                        nestedParamType = cleanupTypeText(propertyType.getText())
+                      }
+                    }
+                  }
+                } catch (e) {
+                  // Fallback to any if type extraction fails
+                  nestedParamType = "any"
+                }
+                
+                nestedParams.push({
+                  name: escapeParameterNameForMDX(nestedParamName),
+                  type: nestedParamType,
+                  required: true, // Default to required
+                  description: escapeTextForMDX(jsDocInfo.params[jsDocParamName]) || "",
+                })
+              }
+            })
+          }
+
           return {
             name: escapeParameterNameForMDX(paramName),
             type: paramType,
             required: !param.isOptional(),
             description: escapeTextForMDX(paramJsDoc) || "",
+            nestedParams: nestedParams.length > 0 ? nestedParams : undefined,
           }
         })
 
-        const returnType = cleanupTypeText(
-          initializer.getReturnType().getText()
-        )
+        // Get the actual return type, not the function signature
+        let returnType = "any"
+        try {
+          const funcReturnType = initializer.getReturnType()
+          const returnTypeText = funcReturnType.getText()
+          
+          // If the return type text looks like a function signature, extract just the return part
+          if (returnTypeText.includes("=>")) {
+            const returnPart = returnTypeText.split("=>").pop()?.trim()
+            if (returnPart) {
+              returnType = cleanupTypeText(returnPart)
+            } else {
+              returnType = cleanupTypeText(returnTypeText)
+            }
+          } else {
+            returnType = cleanupTypeText(returnTypeText)
+          }
+        } catch (e) {
+          console.warn(`Error extracting return type: ${e.message}`)
+          returnType = "any"
+        }
 
         // Extract return description from JSDoc
         let returnDescription = null
@@ -155,12 +377,53 @@ function extractFunctionInfo(
         // Extract parameter information from JSDoc if available
         const parameters = []
         if (jsDocInfo.params) {
-          Object.entries(jsDocInfo.params).forEach(([paramName, paramDesc]) => {
+          // First, get all top-level parameters (those without dots)
+          const topLevelParams = Object.keys(jsDocInfo.params).filter(paramName => !paramName.includes("."))
+          
+          topLevelParams.forEach(paramName => {
+            const paramDesc = jsDocInfo.params[paramName]
+            
+            // Handle nested JSDoc parameters (e.g., queryOptions.height)
+            let nestedParams = []
+            Object.keys(jsDocInfo.params).forEach(jsDocParamName => {
+              if (jsDocParamName.startsWith(paramName + ".")) {
+                const nestedParamName = jsDocParamName.substring(paramName.length + 1)
+                
+                // For JSDoc-only cases, try to infer type from variable declaration
+                let nestedParamType = "any"
+                try {
+                  const variableType = declaration.getType()
+                  const typeSymbol = variableType.getSymbol()
+                  if (typeSymbol) {
+                    const typeDeclaration = typeSymbol.getDeclarations()?.[0]
+                    if (typeDeclaration && Node.isInterfaceDeclaration(typeDeclaration)) {
+                      const property = typeDeclaration.getProperty(nestedParamName)
+                      if (property) {
+                        const propertyType = property.getType()
+                        nestedParamType = cleanupTypeText(propertyType.getText())
+                      }
+                    }
+                  }
+                } catch (e) {
+                  // Fallback to any
+                  nestedParamType = "any"
+                }
+                
+                nestedParams.push({
+                  name: escapeParameterNameForMDX(nestedParamName),
+                  type: nestedParamType,
+                  required: true, // Default to required
+                  description: escapeTextForMDX(jsDocInfo.params[jsDocParamName]) || "",
+                })
+              }
+            })
+            
             parameters.push({
               name: escapeParameterNameForMDX(paramName),
               type: "any", // Default type since we can't infer from call expressions
               required: true, // Default to required
               description: escapeTextForMDX(paramDesc) || "",
+              nestedParams: nestedParams.length > 0 ? nestedParams : undefined,
             })
           })
         }

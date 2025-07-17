@@ -57,6 +57,14 @@ import { {{name}} } from "@onflow/{{packageName}}"
 - Description: {{{description}}}
 {{/if}}
 
+{{#if nestedParams}}
+#### Properties:
+
+{{#each nestedParams}}
+- **`{{name}}`** {{#unless required}}(optional){{/unless}} - {{{description}}}
+{{/each}}
+
+{{/if}}
 {{/each}}
 {{/if}}
 
