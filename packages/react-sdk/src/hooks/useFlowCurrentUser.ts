@@ -16,8 +16,7 @@ export function useFlowCurrentUser(
   client?: ReturnType<typeof useClient>
 ): UseFlowCurrentUserResult {
   const [user, setUser] = useState<CurrentUser | null>(null)
-  const _fcl = useClient()
-  const fcl = client ?? _fcl
+  const fcl = useClient({client})
 
   useEffect(() => {
     const unsubscribe = fcl.currentUser.subscribe(setUser)
