@@ -9,17 +9,20 @@ const flowNetwork =
 const flowConfig = {
   emulator: {
     accessNodeUrl: "http://localhost:8888",
+    discoveryWallet: "http://localhost:8701/fcl/authn",
     discoveryAuthnEndpoint: "http://localhost:8701/fcl/authn",
     flowNetwork: "local" as any,
   },
   testnet: {
     accessNodeUrl: "https://rest-testnet.onflow.org",
+    discoveryWallet: "https://fcl-discovery.onflow.org/testnet/authn",
     discoveryAuthnEndpoint:
       "https://fcl-discovery.onflow.org/api/testnet/authn",
     flowNetwork: "testnet" as any,
   },
   mainnet: {
     accessNodeUrl: "https://rest-mainnet.onflow.org",
+    discoveryWallet: "https://fcl-discovery.onflow.org/mainnet/authn",
     discoveryAuthnEndpoint:
       "https://fcl-discovery.onflow.org/api/mainnet/authn",
     flowNetwork: "mainnet" as any,
