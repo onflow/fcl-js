@@ -30,8 +30,7 @@ export function useFlowTransaction({
   client,
 }: UseFlowTransactionArgs): UseQueryResult<Transaction | null, Error> {
   const queryClient = useFlowQueryClient()
-  const _fcl = useClient()
-  const fcl = client ?? _fcl
+  const fcl = useClient({client})
 
   const fetchTransaction = useCallback(async () => {
     if (!txId) return null

@@ -32,8 +32,7 @@ export function useFlowTransactionStatus({
   const [transactionStatus, setTransactionStatus] =
     useState<TransactionStatus | null>(null)
   const [error, setError] = useState<Error | null>(null)
-  const _fcl = useClient()
-  const fcl = client ?? _fcl
+  const fcl = useClient({client})
 
   useEffect(() => {
     if (!id) return

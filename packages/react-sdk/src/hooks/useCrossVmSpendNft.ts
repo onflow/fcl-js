@@ -228,8 +228,7 @@ export function useCrossVmSpendNft({
     : null
 
   const queryClient = useFlowQueryClient()
-  const _fcl = useClient()
-  const fcl = client ?? _fcl
+  const fcl = useClient({client})
   const mutation = useMutation(
     {
       mutationFn: async ({

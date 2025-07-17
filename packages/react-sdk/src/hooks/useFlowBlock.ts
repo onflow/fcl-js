@@ -56,8 +56,7 @@ export function useFlowBlock(
 ): UseQueryResult<Block | null, Error> {
   const {sealed, id, height, query: queryOptions = {}, client} = params
   const queryClient = useFlowQueryClient()
-  const _fcl = useClient()
-  const fcl = client ?? _fcl
+  const fcl = useClient({client})
 
   const domainParams = useMemo<UseBlockParams>(
     () => ({sealed, id, height}) as UseBlockParams,

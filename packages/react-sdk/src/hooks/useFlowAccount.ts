@@ -24,8 +24,7 @@ export function useFlowAccount({
   client,
 }: UseFlowAccountArgs): UseQueryResult<Account | null, Error> {
   const queryClient = useFlowQueryClient()
-  const _fcl = useClient()
-  const fcl = client ?? _fcl
+  const fcl = useClient({client})
 
   const fetchAccount = useCallback(async () => {
     if (!address) return null

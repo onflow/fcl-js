@@ -1,4 +1,4 @@
-import React, {useState, PropsWithChildren} from "react"
+import React, {useState, PropsWithChildren, useContext} from "react"
 import {FclClientContext, FlowConfig} from "../core/context"
 import {DefaultOptions, QueryClient} from "@tanstack/react-query"
 import {FlowQueryClientProvider} from "./FlowQueryClient"
@@ -85,10 +85,15 @@ export function FlowProvider({
   )
 }
 
-export function useClient() {
-  const client = React.useContext(FclClientContext)
-  if (!client) {
-    throw new Error("FclClientContext is not provided")
+export function useClient({
+  client,
+}: {client?: ReturnType<typeof createFcl>} = {}) {
+  const contextClient = useContext(FclClientContext)
+  const _client = client ?? contextClient
+  if (!_client) {
+    throw new Error(
+      "useClient must be used within FlowProvider or manually specified using the client property"
+    )
   }
-  return client
+  return _client
 }

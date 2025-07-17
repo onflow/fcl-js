@@ -38,8 +38,7 @@ export function useFlowMutate({
   Parameters<typeof mutate>[0]
 > {
   const queryClient = useFlowQueryClient()
-  const _fcl = useClient()
-  const fcl = client ?? _fcl
+  const fcl = useClient({client})
 
   const mutationFn = useCallback(
     async (variables: Parameters<typeof mutate>[0]) => {

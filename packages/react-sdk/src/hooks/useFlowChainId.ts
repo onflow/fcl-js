@@ -18,8 +18,6 @@ export function useFlowChainId({
 }: UseFlowChainIdArgs = {}): UseQueryResult<string | null, Error> {
   const queryClient = useFlowQueryClient()
   const config = useFlowConfig()
-  const _fcl = useClient()
-  const fcl = client ?? _fcl
 
   const fetchChainId = useCallback(async () => {
     return await fcl.getChainId()

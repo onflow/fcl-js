@@ -37,8 +37,7 @@ export function useFlowEvents({
   onError,
   client,
 }: UseFlowEventsArgs) {
-  const _fcl = useClient()
-  const fcl = client ?? _fcl
+  const fcl = useClient({client})
 
   useEffect(() => {
     let unsubscribe: (() => void) | undefined

@@ -30,8 +30,7 @@ export function useFlowQueryRaw({
   client,
 }: UseFlowQueryRawArgs): UseQueryResult<unknown, Error> {
   const queryClient = useFlowQueryClient()
-  const _fcl = useClient()
-  const fcl = client ?? _fcl
+  const fcl = useClient({client})
 
   const fetchQueryRaw = useCallback(async () => {
     if (!cadence) return null
