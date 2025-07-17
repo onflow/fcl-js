@@ -47,7 +47,7 @@ export function createQueryRaw(context: Pick<FCLContext, "sdk" | "config">) {
     await preQuery(context, opts)
     opts = await prepTemplateOpts(context, opts)
 
-    return sdk.send([
+    return context.sdk.send([
       sdk.script(opts.cadence!),
       sdk.args(normalizeArgs(opts.args || [])),
       sdk.atLatestBlock(opts.isSealed ?? false),
