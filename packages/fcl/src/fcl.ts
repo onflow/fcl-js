@@ -74,11 +74,7 @@ import {
   initServiceRegistry,
   StorageProvider,
 } from "@onflow/fcl-core"
-
-import {execStrategyHook} from "./discovery/exec-hook"
-const discoveryOpts = {
-  execStrategy: execStrategyHook,
-}
+import {discoveryOpts} from "./instance"
 
 /**
  * @description The main current user service for managing user authentication and authorization in Flow applications.
