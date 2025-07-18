@@ -1,5 +1,5 @@
 import React, {useState, PropsWithChildren, useContext} from "react"
-import {FclClientContext, FlowConfig} from "../core/context"
+import {FclClientContext, FlowConfig, FlowConfigContext} from "../core/context"
 import {DefaultOptions, QueryClient} from "@tanstack/react-query"
 import {FlowQueryClientProvider} from "./FlowQueryClient"
 import {createFcl} from "@onflow/fcl"
@@ -72,14 +72,18 @@ export function FlowProvider({
 
   return (
     <FlowQueryClientProvider queryClient={queryClient}>
-      <FclClientContext.Provider value={client}>
-        <GlobalTransactionProvider>
-          <style>{tailwindStyles}</style>
-          <ThemeProvider theme={customTheme}>
-            <DarkModeProvider darkMode={darkMode}>{children}</DarkModeProvider>
-          </ThemeProvider>
-        </GlobalTransactionProvider>
-      </FclClientContext.Provider>
+      <FlowConfigContext value={initialConfig}>
+        <FclClientContext.Provider value={client}>
+          <GlobalTransactionProvider>
+            <style>{tailwindStyles}</style>
+            <ThemeProvider theme={customTheme}>
+              <DarkModeProvider darkMode={darkMode}>
+                {children}
+              </DarkModeProvider>
+            </ThemeProvider>
+          </GlobalTransactionProvider>
+        </FclClientContext.Provider>
+      </FlowConfigContext>
     </FlowQueryClientProvider>
   )
 }
