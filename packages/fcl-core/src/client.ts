@@ -51,7 +51,6 @@ export function createFlowClientCore(params: FlowClientCoreConfig) {
   return {
     // Global services
     currentUser: context.currentUser,
-    config: context.config,
 
     // Execution methods
     mutate: createMutate(context),

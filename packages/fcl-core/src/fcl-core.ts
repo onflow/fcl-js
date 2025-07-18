@@ -112,4 +112,4 @@ export type {
   VerifySignaturesScriptOptions,
 } from "./app-utils/verify-signatures"
 
-export {createFlowClientCore, type FlowClientCoreConfig} from "./instance"
+export {createFlowClientCore, type FlowClientCoreConfig} from "./client"
