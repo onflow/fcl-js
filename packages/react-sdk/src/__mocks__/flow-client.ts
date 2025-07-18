@@ -79,13 +79,6 @@ export const createMockFclInstance = () => {
     subscribe: jest.fn(),
     subscribeRaw: jest.fn(),
     resolve: jest.fn(),
-    config: jest.fn().mockReturnValue({
-      subscribe: sharedSubscribe,
-      snapshot: () => ({
-        "accessNode.api": "http://localhost:8080",
-        "app.detail.title": "Test App",
-      }),
-    }) as any,
     verifyUserSignatures: jest
       .fn()
       .mockRejectedValue(new Error("Not implemented")),
