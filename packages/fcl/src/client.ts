@@ -20,7 +20,7 @@ export interface FlowClientConfig {
 
   // Wallet/Discovery configuration
   discoveryWallet?: string
-  discoveryWalletMethod?: "IFRAME/RPC" | "TAB/RPC" | "POP/RPC" | "EXT/RPC"
+  discoveryWalletMethod?: string
 
   // WalletConnect configuration
   walletconnectProjectId?: string
