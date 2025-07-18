@@ -6,6 +6,7 @@ import {
   useCrossVmSpendToken,
 } from "./useCrossVmSpendToken"
 import {useFlowChainId} from "./useFlowChainId"
+import { createMockFclInstance, MockFclInstance } from "../__mocks__/fclInstance"
 
 jest.mock("@onflow/fcl", () => require("../__mocks__/fcl").default)
 jest.mock("./useFlowChainId", () => ({
@@ -13,6 +14,8 @@ jest.mock("./useFlowChainId", () => ({
 }))
 
 describe("useCrossVmSpendToken", () => {
+  let mockFcl: MockFclInstance
+
   const mockCalls = [
     {
       address: "0x123",
@@ -44,6 +47,9 @@ describe("useCrossVmSpendToken", () => {
       data: "mainnet",
       isLoading: false,
     } as any)
+
+    mockFcl = createMockFclInstance()
+    jest.mocked(fcl.createFcl).mockReturnValue(mockFcl.mockFclInstance)
   })
 
   describe("getCrossVmSpendTokenTransaction", () => {
@@ -66,8 +72,8 @@ describe("useCrossVmSpendToken", () => {
 
   describe("useCrossVmBatchTransaction", () => {
     test("should handle successful transaction", async () => {
-      jest.mocked(fcl.mutate).mockResolvedValue(mockTxId)
-      jest.mocked(fcl.tx).mockReturnValue({
+      jest.mocked(mockFcl.mockFclInstance.mutate).mockResolvedValue(mockTxId)
+      jest.mocked(mockFcl.mockFclInstance.tx).mockReturnValue({
         onceExecuted: jest.fn().mockResolvedValue(mockTxResult),
       } as any)
 
@@ -149,7 +155,7 @@ describe("useCrossVmSpendToken", () => {
     })
 
     it("should handle mutation error", async () => {
-      ;(fcl.mutate as jest.Mock).mockRejectedValue(new Error("Mutation failed"))
+      jest.mocked(mockFcl.mockFclInstance.mutate).mockRejectedValue(new Error("Mutation failed"))
 
       let hookResult: any
 

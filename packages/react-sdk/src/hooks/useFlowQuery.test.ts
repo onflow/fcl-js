@@ -1,11 +1,19 @@
 import {renderHook, act, waitFor} from "@testing-library/react"
-import * as fcl from "@onflow/fcl"
 import {FlowProvider} from "../provider"
 import {useFlowQuery, encodeQueryArgs} from "./useFlowQuery"
+import * as fcl from "@onflow/fcl"
+import {createMockFclInstance, MockFclInstance} from "../__mocks__/fclInstance"
 
 jest.mock("@onflow/fcl", () => require("../__mocks__/fcl").default)
 
 describe("useFlowQuery", () => {
+  let mockFcl: MockFclInstance
+
+  beforeEach(() => {
+    mockFcl = createMockFclInstance()
+    jest.mocked(fcl.createFcl).mockReturnValue(mockFcl.mockFclInstance)
+  })
+
   afterEach(() => {
     jest.clearAllMocks()
   })
@@ -22,7 +30,7 @@ describe("useFlowQuery", () => {
   test("fetches data successfully", async () => {
     const cadenceScript = "access(all) fun main(): Int { return 42 }"
     const expectedResult = 42
-    const queryMock = jest.mocked(fcl.query)
+    const queryMock = jest.mocked(mockFcl.mockFclInstance.query)
     queryMock.mockResolvedValueOnce(expectedResult)
 
     let hookResult: any
@@ -49,7 +57,7 @@ describe("useFlowQuery", () => {
 
   test("does not fetch data when enabled is false", async () => {
     const cadenceScript = "access(all) fun main(): Int { return 42 }"
-    const queryMock = jest.mocked(fcl.query)
+    const queryMock = jest.mocked(mockFcl.mockFclInstance.query)
 
     renderHook(
       () => useFlowQuery({cadence: cadenceScript, query: {enabled: false}}),
@@ -67,7 +75,7 @@ describe("useFlowQuery", () => {
   test("handles error from fcl.query", async () => {
     const cadenceScript = "access(all) fun main(): Int { return 42 }"
     const testError = new Error("Query failed")
-    const queryMock = jest.mocked(fcl.query)
+    const queryMock = jest.mocked(mockFcl.mockFclInstance.query)
     queryMock.mockRejectedValueOnce(testError)
 
     let hookResult: any
@@ -91,7 +99,7 @@ describe("useFlowQuery", () => {
     const cadenceScript = "access(all) fun main(): Int { return 42 }"
     const initialResult = 42
     const updatedResult = 100
-    const queryMock = jest.mocked(fcl.query)
+    const queryMock = jest.mocked(mockFcl.mockFclInstance.query)
     queryMock.mockResolvedValueOnce(initialResult)
 
     let hookResult: any
@@ -120,7 +128,7 @@ describe("useFlowQuery", () => {
   test("supports args function parameter", async () => {
     const cadenceScript = "access(all) fun main(a: Int): Int { return a }"
     const expectedResult = 7
-    const queryMock = jest.mocked(fcl.query)
+    const queryMock = jest.mocked(mockFcl.mockFclInstance.query)
     queryMock.mockResolvedValueOnce(expectedResult)
 
     const argsFunction = (arg: typeof fcl.arg, t: typeof fcl.t) => [
@@ -151,7 +159,7 @@ describe("useFlowQuery", () => {
     const cadenceScript = "access(all) fun main(a: Int): Int { return a }"
     const initialResult = 7
     const updatedResult = 42
-    const queryMock = jest.mocked(fcl.query)
+    const queryMock = jest.mocked(mockFcl.mockFclInstance.query)
     queryMock.mockResolvedValueOnce(initialResult)
 
     const argsFunction = (arg: typeof fcl.arg, t: typeof fcl.t) => [

@@ -2,18 +2,25 @@ import {renderHook, act, waitFor} from "@testing-library/react"
 import * as fcl from "@onflow/fcl"
 import {FlowProvider} from "../provider"
 import {useFlowChainId} from "./useFlowChainId"
+import {createMockFclInstance, MockFclInstance} from "../__mocks__/fclInstance"
 
 jest.mock("@onflow/fcl", () => require("../__mocks__/fcl").default)
 
 describe("useFlowChainId", () => {
+  let mockFcl: MockFclInstance
   const mockChainId = "mainnet"
+
+  beforeEach(() => {
+    mockFcl = createMockFclInstance()
+    jest.mocked(fcl.createFcl).mockReturnValue(mockFcl.mockFclInstance)
+  })
 
   afterEach(() => {
     jest.clearAllMocks()
   })
 
   test("fetches the chain ID successfully", async () => {
-    const getChainIdMock = jest.mocked(fcl.getChainId)
+    const getChainIdMock = jest.mocked(mockFcl.mockFclInstance.getChainId)
     getChainIdMock.mockResolvedValueOnce(mockChainId)
 
     let hookResult: any
@@ -38,7 +45,7 @@ describe("useFlowChainId", () => {
 
   test("handles error when fetching chain ID fails", async () => {
     const testError = new Error("Failed to fetch chain ID")
-    const getChainIdMock = jest.mocked(fcl.getChainId)
+    const getChainIdMock = jest.mocked(mockFcl.mockFclInstance.getChainId)
     getChainIdMock.mockRejectedValueOnce(testError)
 
     let hookResult: any
@@ -58,7 +65,7 @@ describe("useFlowChainId", () => {
   })
 
   test("refetch function works correctly", async () => {
-    const getChainIdMock = jest.mocked(fcl.getChainId)
+    const getChainIdMock = jest.mocked(mockFcl.mockFclInstance.getChainId)
     getChainIdMock.mockResolvedValueOnce(mockChainId)
 
     let hookResult: any
@@ -81,11 +88,11 @@ describe("useFlowChainId", () => {
 
     await waitFor(() => expect(hookResult.current.data).toEqual(newChainId))
 
-    expect(fcl.getChainId).toHaveBeenCalledTimes(2)
+    expect(mockFcl.mockFclInstance.getChainId).toHaveBeenCalledTimes(2)
   })
 
   test("respects custom query options", async () => {
-    const getChainIdMock = jest.mocked(fcl.getChainId)
+    const getChainIdMock = jest.mocked(mockFcl.mockFclInstance.getChainId)
     getChainIdMock.mockResolvedValueOnce(mockChainId)
 
     const customOptions = {

@@ -4,16 +4,24 @@ import {useFlowTransactionStatus} from "./useFlowTransactionStatus"
 import {TransactionStatus} from "@onflow/typedefs"
 import {FlowProvider} from "../provider"
 import {defaultTxStatus, errorTxStatus} from "../__mocks__/tx"
+import {createMockFclInstance, MockFclInstance} from "../__mocks__/fclInstance"
 
 jest.mock("@onflow/fcl", () => require("../__mocks__/fcl").default)
 
 describe("useFlowTransactionStatus", () => {
+  let mockFcl: MockFclInstance
+
+  beforeEach(() => {
+    mockFcl = createMockFclInstance()
+    jest.mocked(fcl.createFcl).mockReturnValue(mockFcl.mockFclInstance)
+  })
+
   afterEach(() => {
     jest.clearAllMocks()
   })
 
   test("returns UNKNOWN when first called", async () => {
-    const txMock = jest.mocked(fcl.tx)
+    const txMock = jest.mocked(mockFcl.mockFclInstance.tx)
 
     let subscribeCallback: (txStatus: TransactionStatus) => void = () => {}
 
@@ -43,7 +51,7 @@ describe("useFlowTransactionStatus", () => {
   })
 
   test("sets error when transaction status includes an errorMessage", async () => {
-    const txMock = jest.mocked(fcl.tx)
+    const txMock = jest.mocked(mockFcl.mockFclInstance.tx)
 
     let subscribeCallback: (txStatus: TransactionStatus) => void = () => {}
     const subscribeMock = jest.fn().mockImplementation(callback => {

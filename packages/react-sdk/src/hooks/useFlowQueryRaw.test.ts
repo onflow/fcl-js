@@ -4,10 +4,7 @@ import {useFlowQueryRaw} from "./useFlowQueryRaw"
 import {createMockFclInstance, MockFclInstance} from "../__mocks__/fclInstance"
 import {arg, createFcl, t} from "@onflow/fcl"
 
-jest.mock("@onflow/fcl", () => ({
-  ...require("../__mocks__/fcl").default,
-  createFcl: jest.fn(),
-}))
+jest.mock("@onflow/fcl", () => require("../__mocks__/fcl").default)
 
 describe("useFlowQueryRaw", () => {
   let mockFcl: MockFclInstance

@@ -3,10 +3,18 @@ import * as fcl from "@onflow/fcl"
 import {FlowProvider} from "../provider"
 import {useFlowEvents} from "./useFlowEvents"
 import {Event} from "@onflow/typedefs"
+import {createMockFclInstance, MockFclInstance} from "../__mocks__/fclInstance"
 
 jest.mock("@onflow/fcl", () => require("../__mocks__/fcl").default)
 
 describe("useFlowEvents", () => {
+  let mockFcl: MockFclInstance
+
+  beforeEach(() => {
+    mockFcl = createMockFclInstance()
+    jest.mocked(fcl.createFcl).mockReturnValue(mockFcl.mockFclInstance)
+  })
+
   afterEach(() => {
     jest.clearAllMocks()
   })
@@ -30,7 +38,7 @@ describe("useFlowEvents", () => {
       return mockUnsubscribe
     })
 
-    const eventsMock = jest.mocked(fcl.events)
+    const eventsMock = jest.mocked(mockFcl.mockFclInstance.events)
     eventsMock.mockReturnValueOnce({subscribe: mockSubscribe} as any)
 
     const onEvent = jest.fn()
@@ -44,7 +52,7 @@ describe("useFlowEvents", () => {
       {wrapper: FlowProvider}
     )
 
-    expect(fcl.events).toHaveBeenCalledWith({
+    expect(mockFcl.mockFclInstance.events).toHaveBeenCalledWith({
       eventTypes: ["A.0xDeaDBeef.SomeContract.SomeEvent"],
     })
     expect(mockSubscribe).toHaveBeenCalled()
@@ -77,7 +85,7 @@ describe("useFlowEvents", () => {
       return mockUnsubscribe
     })
 
-    const eventsMock = jest.mocked(fcl.events)
+    const eventsMock = jest.mocked(mockFcl.mockFclInstance.events)
     eventsMock.mockReturnValueOnce({subscribe: mockSubscribe} as any)
 
     const filter = {
@@ -96,7 +104,7 @@ describe("useFlowEvents", () => {
       {wrapper: FlowProvider}
     )
 
-    expect(fcl.events).toHaveBeenCalledWith(filter)
+    expect(mockFcl.mockFclInstance.events).toHaveBeenCalledWith(filter)
     expect(mockSubscribe).toHaveBeenCalled()
 
     act(() => {
@@ -111,7 +119,7 @@ describe("useFlowEvents", () => {
   test("handles error during subscription", () => {
     const testError = new Error("Subscription failed")
 
-    const eventsMock = jest.mocked(fcl.events)
+    const eventsMock = jest.mocked(mockFcl.mockFclInstance.events)
     eventsMock.mockImplementation(() => {
       throw testError
     })
@@ -162,7 +170,7 @@ describe("useFlowEvents", () => {
       return mockUnsubscribe
     })
 
-    const eventsMock = jest.mocked(fcl.events)
+    const eventsMock = jest.mocked(mockFcl.mockFclInstance.events)
     eventsMock.mockReturnValueOnce({subscribe: mockSubscribe} as any)
 
     const onEvent = jest.fn()

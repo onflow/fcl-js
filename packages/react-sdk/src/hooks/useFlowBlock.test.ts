@@ -3,10 +3,13 @@ import * as fcl from "@onflow/fcl"
 import {FlowProvider} from "../provider"
 import {useFlowBlock} from "./useFlowBlock"
 import {Block} from "@onflow/typedefs"
+import {createMockFclInstance, MockFclInstance} from "../__mocks__/fclInstance"
 
 jest.mock("@onflow/fcl", () => require("../__mocks__/fcl").default)
 
 describe("useFlowBlock", () => {
+  let mockFcl: MockFclInstance
+
   const mockLatestBlock: Block = {
     id: "latest-block-id",
     parentId: "parent-id",
@@ -14,7 +17,7 @@ describe("useFlowBlock", () => {
     timestamp: "2023-01-01T00:00:00Z",
     collectionGuarantees: [],
     blockSeals: [],
-    signatures: [],
+    parentVoterSignature: "",
   }
 
   const mockSealedBlock: Block = {
@@ -24,7 +27,7 @@ describe("useFlowBlock", () => {
     timestamp: "2023-01-01T00:00:00Z",
     collectionGuarantees: [],
     blockSeals: [],
-    signatures: [],
+    parentVoterSignature: "",
   }
 
   const mockBlockById: Block = {
@@ -34,7 +37,7 @@ describe("useFlowBlock", () => {
     timestamp: "2023-01-01T00:00:00Z",
     collectionGuarantees: [],
     blockSeals: [],
-    signatures: [],
+    parentVoterSignature: "",
   }
 
   const mockBlockByHeight: Block = {
@@ -44,15 +47,20 @@ describe("useFlowBlock", () => {
     timestamp: "2023-01-01T00:00:00Z",
     collectionGuarantees: [],
     blockSeals: [],
-    signatures: [],
+    parentVoterSignature: "",
   }
+
+  beforeEach(() => {
+    mockFcl = createMockFclInstance()
+    jest.mocked(fcl.createFcl).mockReturnValue(mockFcl.mockFclInstance)
+  })
 
   afterEach(() => {
     jest.clearAllMocks()
   })
 
   test("fetches the latest block when no parameters are provided", async () => {
-    const blockMock = jest.mocked(fcl.block)
+    const blockMock = jest.mocked(mockFcl.mockFclInstance.block)
     blockMock.mockResolvedValueOnce(mockLatestBlock)
 
     let hookResult: any
@@ -76,7 +84,7 @@ describe("useFlowBlock", () => {
   })
 
   test("fetches the latest sealed block when sealed is true", async () => {
-    const blockMock = jest.mocked(fcl.block)
+    const blockMock = jest.mocked(mockFcl.mockFclInstance.block)
     blockMock.mockResolvedValueOnce(mockSealedBlock)
 
     let hookResult: any
@@ -96,7 +104,7 @@ describe("useFlowBlock", () => {
 
   test("fetches a block by ID", async () => {
     const blockId = "specific-block-id"
-    const blockMock = jest.mocked(fcl.block)
+    const blockMock = jest.mocked(mockFcl.mockFclInstance.block)
     blockMock.mockResolvedValueOnce(mockBlockById)
 
     let hookResult: any
@@ -116,7 +124,7 @@ describe("useFlowBlock", () => {
 
   test("fetches a block by height", async () => {
     const height = 75
-    const blockMock = jest.mocked(fcl.block)
+    const blockMock = jest.mocked(mockFcl.mockFclInstance.block)
     blockMock.mockResolvedValueOnce(mockBlockByHeight)
 
     let hookResult: any
@@ -137,7 +145,7 @@ describe("useFlowBlock", () => {
   test("handles error when fetching block fails", async () => {
     const testError = new Error("Failed to fetch block")
 
-    const blockMock = jest.mocked(fcl.block)
+    const blockMock = jest.mocked(mockFcl.mockFclInstance.block)
     blockMock.mockRejectedValueOnce(testError)
 
     let hookResult: any
@@ -156,7 +164,7 @@ describe("useFlowBlock", () => {
   })
 
   test("refetch function works correctly", async () => {
-    const blockMock = jest.mocked(fcl.block)
+    const blockMock = jest.mocked(mockFcl.mockFclInstance.block)
     blockMock.mockResolvedValueOnce(mockLatestBlock)
 
     let hookResult: any
@@ -181,11 +189,11 @@ describe("useFlowBlock", () => {
 
     await waitFor(() => expect(hookResult.current.data).toEqual(newLatestBlock))
 
-    expect(fcl.block).toHaveBeenCalledTimes(2)
+    expect(mockFcl.mockFclInstance.block).toHaveBeenCalledTimes(2)
   })
 
   test("updates when parameters change", async () => {
-    const blockMock = jest.mocked(fcl.block)
+    const blockMock = jest.mocked(mockFcl.mockFclInstance.block)
     blockMock.mockResolvedValueOnce(mockLatestBlock)
 
     let hookResult: any
@@ -210,6 +218,6 @@ describe("useFlowBlock", () => {
 
     await waitFor(() => expect(hookResult.current.data).toEqual(newLatestBlock))
 
-    expect(fcl.block).toHaveBeenCalledTimes(2)
+    expect(mockFcl.mockFclInstance.block).toHaveBeenCalledTimes(2)
   })
 })

@@ -5,13 +5,22 @@ import {useFlowCurrentUser} from "./useFlowCurrentUser"
 import {FlowProvider} from "../provider"
 import {CurrentUser} from "@onflow/typedefs"
 import {defaultUser, authenticatedUser} from "../__mocks__/user"
+import {createMockFclInstance, MockFclInstance} from "../__mocks__/fclInstance"
 
 jest.mock("@onflow/fcl", () => require("../__mocks__/fcl").default)
 
 describe("useFlowCurrentUser", () => {
+  let mockFcl: MockFclInstance
+
   beforeEach(() => {
+    mockFcl = createMockFclInstance()
+    jest.mocked(fcl.createFcl).mockReturnValue(mockFcl.mockFclInstance)
+  })
+
+  afterEach(() => {
     jest.clearAllMocks()
   })
+
   test("initializes with the correct default user state", () => {
     const {result} = renderHook(() => useFlowCurrentUser(), {
       wrapper: FlowProvider,
@@ -23,7 +32,9 @@ describe("useFlowCurrentUser", () => {
   test("updates user state when subscription emits a new user", () => {
     let subscribeCallback: (user: CurrentUser) => void = () => {}
 
-    const subscribeMock = jest.mocked(fcl.currentUser.subscribe)
+    const subscribeMock = jest.mocked(
+      mockFcl.mockFclInstance.currentUser.subscribe
+    )
 
     subscribeMock.mockImplementation((callback: any) => {
       subscribeCallback = callback
@@ -43,7 +54,7 @@ describe("useFlowCurrentUser", () => {
   })
 
   test("authenticate calls fcl.authenticate and returns the authenticated user", async () => {
-    const authenticateMock = jest.mocked(fcl.authenticate)
+    const authenticateMock = jest.mocked(mockFcl.mockFclInstance.authenticate)
     authenticateMock.mockResolvedValueOnce(authenticatedUser)
 
     const {result} = renderHook(() => useFlowCurrentUser(), {
@@ -55,7 +66,7 @@ describe("useFlowCurrentUser", () => {
       returnedUser = await result.current.authenticate()
     })
 
-    expect(fcl.authenticate).toHaveBeenCalledTimes(1)
+    expect(mockFcl.mockFclInstance.authenticate).toHaveBeenCalledTimes(1)
 
     expect(returnedUser).toEqual(authenticatedUser)
   })
@@ -69,7 +80,7 @@ describe("useFlowCurrentUser", () => {
       result.current.unauthenticate()
     })
 
-    expect(fcl.unauthenticate).toHaveBeenCalledTimes(1)
+    expect(mockFcl.mockFclInstance.unauthenticate).toHaveBeenCalledTimes(1)
 
     expect(result.current.user).toEqual(defaultUser)
   })
@@ -77,7 +88,9 @@ describe("useFlowCurrentUser", () => {
   test("unsubscribes from user changes on unmount", () => {
     const unsubscribeMock = jest.fn()
 
-    const subscribeMock = jest.mocked(fcl.currentUser.subscribe)
+    const subscribeMock = jest.mocked(
+      mockFcl.mockFclInstance.currentUser.subscribe
+    )
     subscribeMock.mockImplementation((callback: any) => {
       return unsubscribeMock
     })
