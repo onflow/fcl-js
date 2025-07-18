@@ -1,6 +1,5 @@
 import {
   createSignableVoucher,
-  resolve as defaultResolve,
   interaction,
   InteractionBuilderFn,
   pipe,
@@ -52,10 +51,7 @@ export function createSerialize(context: Pick<FCLContext, "config" | "sdk">) {
     args: (InteractionBuilderFn | false)[] | Interaction,
     opts: SerializeOptions = {}
   ) => {
-    const resolveFunction = await context.config.first(
-      ["sdk.resolve"],
-      opts.resolve || defaultResolve
-    )
+    const resolveFunction = opts.resolve || context.sdk.resolve
 
     if (Array.isArray(args)) args = await pipe(interaction(), args)
 
