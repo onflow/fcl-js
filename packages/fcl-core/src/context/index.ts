@@ -1,13 +1,14 @@
 import {createUser, type CurrentUserServiceApi} from "../current-user"
 import {StorageProvider} from "../fcl-core"
 import {createSdkClient, SdkClientOptions} from "@onflow/sdk"
-
+import {getContracts} from "@onflow/config"
+import {invariant} from "@onflow/util-invariant"
 interface FCLConfig {
   accessNodeUrl: string
   transport: SdkClientOptions["transport"]
   customResolver?: SdkClientOptions["customResolver"]
   customDecoders?: SdkClientOptions["customDecoders"]
-  contracts?: Record<string, string>
+  flowJson?: any
   computeLimit: number
   platform: string
   discoveryWallet?: string
@@ -55,13 +56,35 @@ export interface FCLContext {
  * Factory function to create an FCL context
  */
 export function createFCLContext(config: FCLConfig): FCLContext {
+  let contracts: Record<string, string> | undefined
+
+  if (config.flowJson) {
+    invariant(
+      !!config.flowNetwork,
+      "If flowJson is provided, flowNetwork must also be specified."
+    )
+
+    const cleanedNetwork = config.flowNetwork
+      .toLowerCase()
+      .replace(/^local$/, "emulator")
+
+    invariant(
+      cleanedNetwork === "mainnet" ||
+        cleanedNetwork === "testnet" ||
+        cleanedNetwork === "emulator",
+      `Invalid flowNetwork: ${config.flowNetwork}. Must be one of: mainnet, testnet, emulator.`
+    )
+
+    contracts = getContracts(config.flowJson, cleanedNetwork)
+  }
+
   const sdk = createSdkClient({
     accessNodeUrl: config.accessNodeUrl,
     transport: config.transport,
     computeLimit: config.computeLimit,
     customResolver: config.customResolver,
     customDecoders: config.customDecoders,
-    contracts: config.contracts,
+    contracts: contracts,
   })
 
   const configService = createConfigService(config)

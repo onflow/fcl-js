@@ -70,10 +70,10 @@ export function FlowProvider({
       return createFlowClient({
         accessNodeUrl: initialConfig.accessNodeUrl!,
         discoveryWallet: initialConfig.discoveryWallet,
+        flowJson: flowJson,
         discoveryWalletMethod: initialConfig.discoveryWalletMethod,
         computeLimit: initialConfig.fclLimit!,
         flowNetwork: initialConfig.flowNetwork,
-        //serviceOpenIdScopes: initialConfig.serviceOpenIdScopes,
         walletconnectProjectId: initialConfig.walletconnectProjectId,
         walletconnectDisableNotifications:
           initialConfig.walletconnectDisableNotifications,

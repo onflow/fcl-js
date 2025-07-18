@@ -16,7 +16,7 @@ export interface FlowClientConfig {
   // Core network configuration (most commonly used)
   accessNodeUrl: string // Required - must specify which network to connect to
   flowNetwork?: string
-  contracts?: Record<string, string>
+  flowJson?: any
 
   // Wallet/Discovery configuration
   discoveryWallet?: string
@@ -39,7 +39,7 @@ export interface FlowClientConfig {
 export function createFlowClient(params: FlowClientConfig) {
   const fclCore = createFlowClientCore({
     flowNetwork: params.flowNetwork,
-    contracts: params.contracts,
+    flowJson: params.flowJson,
     accessNodeUrl: params.accessNodeUrl,
     computeLimit: params.computeLimit || 9999,
     transport: params.transport,

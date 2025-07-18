@@ -15,7 +15,7 @@ export interface FlowClientCoreConfig {
   // Core network configuration (most commonly used)
   accessNodeUrl: string
   flowNetwork?: string
-  contracts?: Record<string, string>
+  flowJson?: Record<string, any>
 
   // Wallet/Discovery configuration
   discoveryWallet?: string
