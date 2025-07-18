@@ -2,7 +2,7 @@
 "@onflow/fcl": minor
 ---
 
-Decoupled FCL functions from the global state and created a `createFcl` function which constructs a new SDK client instance bound to a custom context.
+Decoupled FCL functions from the global state and created a `createFlowClient` function which constructs a new SDK client instance bound to a custom context.
 
 This allows for better modularity and helps support multiple FCL instances in the same application.
 
