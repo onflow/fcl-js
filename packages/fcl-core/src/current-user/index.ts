@@ -49,6 +49,7 @@ export interface CurrentUserContext extends Pick<FCLContext, "config" | "sdk"> {
     authnExclude?: string[]
     featuresSuggested?: string[]
   }
+  actorName?: string
 }
 
 export interface CurrentUserServiceApi {
@@ -188,7 +189,7 @@ const makeHandlers = (context: CurrentUserContext) => {
 }
 
 const spawnCurrentUser = (context: CurrentUserContext) => {
-  spawn(makeHandlers(context), NAME)
+  spawn(makeHandlers(context), context.actorName)
 }
 
 function notExpired(user: any): boolean {
@@ -800,6 +801,7 @@ const getCurrentUser = (cfg: CurrentUserConfig): CurrentUserService => {
     ...partialContext,
     getStorageProvider,
     platform: cfg.platform,
+    actorName: NAME,
   })
 }
 

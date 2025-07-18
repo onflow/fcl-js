@@ -113,7 +113,9 @@ export function createConfigService(config: FCLConfig): ConfigService {
 
   // Create compatibility config layer
   const configService: ConfigService = {
-    get: async (key: string) => configStore.get(key),
+    get: async (key: string, fallback?: any) => {
+      return configStore.has(key) ? configStore.get(key) : fallback
+    },
     put: async (key: string, value: any) => {
       configStore.set(key, value)
       subscribers.forEach(fn => fn(configStore))
