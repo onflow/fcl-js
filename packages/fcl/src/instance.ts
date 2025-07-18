@@ -12,13 +12,15 @@ type WithOptionalProperties<T, K extends keyof T> = Omit<T, K> &
 export function createFcl(
   params: WithOptionalProperties<
     Parameters<typeof createFclCore>[0],
-    "platform" | "storage"
+    "platform" | "storage" | "discoveryWalletMethod"
   >
 ) {
   const fclCore = createFclCore({
     ...params,
     platform: "web",
     storage: params.storage || LOCAL_STORAGE,
+    discovery: discoveryOpts,
+    discoveryWalletMethod: params.discoveryWalletMethod || "IFRAME/RPC",
   })
 
   return {

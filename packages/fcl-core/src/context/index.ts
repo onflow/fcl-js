@@ -5,16 +5,14 @@ import {createSdkClient, SdkClientOptions} from "@onflow/sdk"
 interface FCLConfig {
   accessNodeUrl: string
   transport: SdkClientOptions["transport"]
-  computeLimit: number
   customResolver?: SdkClientOptions["customResolver"]
   customDecoders?: SdkClientOptions["customDecoders"]
   contracts?: Record<string, string>
+  computeLimit: number
   platform: string
   discoveryWallet?: string
   discoveryWalletMethod?: string
-  defaultComputeLimit?: number
   flowNetwork?: string
-  serviceOpenIdScopes?: string[]
   walletconnectProjectId?: string
   walletconnectDisableNotifications?: boolean
   storage: StorageProvider
@@ -33,7 +31,7 @@ export interface ConfigService {
   ) => Promise<ConfigService> | ConfigService
   delete: (key: string) => Promise<ConfigService> | ConfigService
   where: (pattern: RegExp) => Promise<Record<string, any>>
-  first: (keys: string | string[], defaultValue?: any) => Promise<any> | any
+  first: (keys: string[], defaultValue?: any) => Promise<any> | any
   subscribe: (
     callback: (config: Record<string, any> | null) => void
   ) => () => void
@@ -91,14 +89,12 @@ export function createConfigService(config: FCLConfig): ConfigService {
   // Create internal config store based on provided typed config
   const configStore = new Map<string, any>([
     ["platform", config.platform],
-    ["discoveryWallet", config.discoveryWallet],
-    ["discoveryWalletMethod", config.discoveryWalletMethod],
-    ["defaultComputeLimit", config.defaultComputeLimit],
-    ["flowNetwork", config.flowNetwork],
-    ["serviceOpenIdScopes", config.serviceOpenIdScopes],
+    ["discovery.wallet", config.discoveryWallet],
+    ["discovery.wallet.method", config.discoveryWalletMethod],
+    ["flow.network", config.flowNetwork],
     ["walletconnectProjectId", config.walletconnectProjectId],
     [
-      "walletconnectDisableNotifications",
+      "walletconnect.disableNotifications",
       config.walletconnectDisableNotifications,
     ],
     ["accessNode.api", config.accessNodeUrl],
@@ -144,7 +140,7 @@ export function createConfigService(config: FCLConfig): ConfigService {
       }
       return result
     },
-    first: async (keys: string | string[], defaultValue?: any) => {
+    first: async (keys: string[], defaultValue?: any) => {
       if (typeof keys === "string") keys = [keys]
       for (const key of keys) {
         if (configStore.has(key)) {
