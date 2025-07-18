@@ -390,4 +390,4 @@ export {subscribe, subscribeRaw} from "@onflow/fcl-core"
 
 export * from "@onflow/typedefs"
 
-export {createFlowClient} from "./client"
+export {createFlowClient, type FlowClientConfig} from "./client"
