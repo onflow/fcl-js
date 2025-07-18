@@ -1,5 +1,4 @@
 import {
-  config,
   createSignableVoucher,
   resolve as defaultResolve,
   interaction,
@@ -53,7 +52,7 @@ export function createSerialize(context: Pick<FCLContext, "config" | "sdk">) {
     args: (InteractionBuilderFn | false)[] | Interaction,
     opts: SerializeOptions = {}
   ) => {
-    const resolveFunction = await config.first(
+    const resolveFunction = await context.config.first(
       ["sdk.resolve"],
       opts.resolve || defaultResolve
     )
