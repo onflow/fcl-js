@@ -6,7 +6,7 @@ import {
   useCrossVmSpendToken,
 } from "./useCrossVmSpendToken"
 import {useFlowChainId} from "./useFlowChainId"
-import { createMockFclInstance, MockFclInstance } from "../__mocks__/fclInstance"
+import {createMockFclInstance, MockFclInstance} from "../__mocks__/fclInstance"
 
 jest.mock("@onflow/fcl", () => require("../__mocks__/fcl").default)
 jest.mock("./useFlowChainId", () => ({
@@ -155,7 +155,9 @@ describe("useCrossVmSpendToken", () => {
     })
 
     it("should handle mutation error", async () => {
-      jest.mocked(mockFcl.mockFclInstance.mutate).mockRejectedValue(new Error("Mutation failed"))
+      jest
+        .mocked(mockFcl.mockFclInstance.mutate)
+        .mockRejectedValue(new Error("Mutation failed"))
 
       let hookResult: any
 
