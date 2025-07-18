@@ -1,6 +1,6 @@
 import {UseQueryOptions, UseQueryResult} from "@tanstack/react-query"
 import {useFlowQuery} from "./useFlowQuery"
-import {useClient} from "./useClient"
+import {useFlowClient} from "./useFlowClient"
 
 /**
  * A single random result, paired with the block height from which it was generated.
@@ -31,7 +31,7 @@ export interface UseFlowRevertibleRandomArgs {
    * TanStack Query options for an array of RevertibleRandomResult.
    */
   query?: Omit<UseQueryOptions<any, Error>, "queryKey" | "queryFn">
-  client?: ReturnType<typeof useClient>
+  flowClient?: ReturnType<typeof useFlowClient>
 }
 
 /**
@@ -50,7 +50,7 @@ export function useFlowRevertibleRandom({
   max,
   count = 1,
   query: queryOptions = {},
-  client,
+  flowClient,
 }: UseFlowRevertibleRandomArgs): UseQueryResult<
   RevertibleRandomResult[],
   Error
@@ -98,7 +98,7 @@ export function useFlowRevertibleRandom({
       arg(count, t.Int),
     ],
     query: mergedQuery,
-    client,
+    flowClient,
   })
 
   return result as UseQueryResult<RevertibleRandomResult[], Error>

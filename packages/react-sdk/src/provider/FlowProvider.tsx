@@ -56,7 +56,7 @@ export function FlowProvider({
   const [queryClient] = useState<QueryClient>(
     () => _queryClient ?? new QueryClient({defaultOptions: defaultQueryOptions})
   )
-  const [client] = useState<ReturnType<typeof createFcl>>(
+  const [flowClient] = useState<ReturnType<typeof createFcl>>(
     createFcl({
       accessNodeUrl: initialConfig.accessNodeUrl!,
       discoveryWallet: initialConfig.discoveryWallet,
@@ -73,7 +73,7 @@ export function FlowProvider({
   return (
     <FlowQueryClientProvider queryClient={queryClient}>
       <FlowConfigContext value={initialConfig}>
-        <FclClientContext.Provider value={client}>
+        <FclClientContext.Provider value={flowClient}>
           <GlobalTransactionProvider>
             <style>{tailwindStyles}</style>
             <ThemeProvider theme={customTheme}>

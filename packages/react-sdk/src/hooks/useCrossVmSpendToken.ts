@@ -9,14 +9,14 @@ import {useFlowChainId} from "./useFlowChainId"
 import {useFlowQueryClient} from "../provider/FlowQueryClient"
 import {encodeCalls, EvmBatchCall} from "./useCrossVmBatchTransaction"
 import {CONTRACT_ADDRESSES} from "../constants"
-import {useClient} from "./useClient"
+import {useFlowClient} from "./useFlowClient"
 
 export interface UseCrossVmSpendTokenArgs {
   mutation?: Omit<
     UseMutationOptions<string, Error, UseCrossVmSpendTokenMutateArgs>,
     "mutationFn"
   >
-  client?: ReturnType<typeof useClient>
+  flowClient?: ReturnType<typeof useFlowClient>
 }
 
 export interface UseCrossVmSpendTokenMutateArgs {
@@ -211,7 +211,7 @@ transaction(
  */
 export function useCrossVmSpendToken({
   mutation: mutationOptions = {},
-  client,
+  flowClient,
 }: UseCrossVmSpendTokenArgs = {}): UseCrossVmSpendTokenResult {
   const chainId = useFlowChainId()
   const cadenceTx = chainId.data
@@ -219,7 +219,7 @@ export function useCrossVmSpendToken({
     : null
 
   const queryClient = useFlowQueryClient()
-  const fcl = useClient({client})
+  const fcl = useFlowClient({flowClient})
   const mutation = useMutation(
     {
       mutationFn: async ({

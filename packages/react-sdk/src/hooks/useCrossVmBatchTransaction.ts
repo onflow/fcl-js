@@ -10,7 +10,7 @@ import {useFlowChainId} from "./useFlowChainId"
 import {useFlowQueryClient} from "../provider/FlowQueryClient"
 import {CONTRACT_ADDRESSES, DEFAULT_EVM_GAS_LIMIT} from "../constants"
 import {sansPrefix} from "@onflow/fcl"
-import {useClient} from "./useClient"
+import {useFlowClient} from "./useFlowClient"
 
 interface UseCrossVmBatchTransactionMutateArgs {
   calls: EvmBatchCall[]
@@ -22,7 +22,7 @@ export interface UseCrossVmBatchTransactionArgs {
     UseMutationOptions<string, Error, UseCrossVmBatchTransactionMutateArgs>,
     "mutationFn"
   >
-  client?: ReturnType<typeof useClient>
+  flowClient?: ReturnType<typeof useFlowClient>
 }
 
 export interface UseCrossVmBatchTransactionResult
@@ -134,7 +134,7 @@ transaction(calls: [{String: AnyStruct}], mustPass: Bool) {
  */
 export function useCrossVmBatchTransaction({
   mutation: mutationOptions = {},
-  client,
+  flowClient,
 }: UseCrossVmBatchTransactionArgs = {}): UseCrossVmBatchTransactionResult {
   const chainId = useFlowChainId()
   const cadenceTx = chainId.data
@@ -142,7 +142,7 @@ export function useCrossVmBatchTransaction({
     : null
 
   const queryClient = useFlowQueryClient()
-  const fcl = useClient({client})
+  const fcl = useFlowClient({flowClient})
   const mutation = useMutation(
     {
       mutationFn: async ({

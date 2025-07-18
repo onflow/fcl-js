@@ -3,7 +3,7 @@ import type {Transaction} from "@onflow/typedefs"
 import {useQuery, UseQueryResult, UseQueryOptions} from "@tanstack/react-query"
 import {useCallback} from "react"
 import {useFlowQueryClient} from "../provider/FlowQueryClient"
-import {useClient} from "./useClient"
+import {useFlowClient} from "./useFlowClient"
 
 export interface UseFlowTransactionArgs {
   /** Flow transaction ID to fetch */
@@ -13,8 +13,8 @@ export interface UseFlowTransactionArgs {
     UseQueryOptions<Transaction | null, Error>,
     "queryKey" | "queryFn"
   >
-  /** Optional client */
-  client?: ReturnType<typeof useClient>
+  /** Optional flowClient */
+  flowClient?: ReturnType<typeof useFlowClient>
 }
 
 /**
@@ -27,10 +27,10 @@ export interface UseFlowTransactionArgs {
 export function useFlowTransaction({
   txId,
   query: queryOptions = {},
-  client,
+  flowClient,
 }: UseFlowTransactionArgs): UseQueryResult<Transaction | null, Error> {
   const queryClient = useFlowQueryClient()
-  const fcl = useClient({client})
+  const fcl = useFlowClient({flowClient})
 
   const fetchTransaction = useCallback(async () => {
     if (!txId) return null
