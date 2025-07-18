@@ -9,7 +9,7 @@ import {useFlowChainId} from "./useFlowChainId"
 import {useFlowQueryClient} from "../provider/FlowQueryClient"
 import {encodeCalls, EvmBatchCall} from "./useCrossVmBatchTransaction"
 import {CONTRACT_ADDRESSES} from "../constants"
-import {useClient} from "../provider/FlowProvider"
+import {useClient} from "./useClient"
 
 export interface UseCrossVmSpendTokenArgs {
   mutation?: Omit<

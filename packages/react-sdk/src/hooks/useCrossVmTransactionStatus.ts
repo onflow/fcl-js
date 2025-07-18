@@ -3,7 +3,7 @@ import {TransactionStatus} from "@onflow/typedefs"
 import {CONTRACT_ADDRESSES} from "../constants"
 import {useFlowChainId} from "./useFlowChainId"
 import {useFlowTransactionStatus} from "./useFlowTransactionStatus"
-import {useClient} from "../provider/FlowProvider"
+import {useClient} from "./useClient"
 
 export interface UseCrossVmTransactionStatusArgs {
   /** The Flow transaction ID to monitor */

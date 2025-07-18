@@ -1,6 +1,6 @@
 import {Event} from "@onflow/typedefs"
 import {useEffect} from "react"
-import {useClient} from "../provider/FlowProvider"
+import {useClient} from "./useClient"
 
 export interface EventFilter {
   startBlockId?: string

@@ -3,7 +3,7 @@ import {useCallback} from "react"
 import {useFlowQueryClient} from "../provider/FlowQueryClient"
 import {encodeQueryArgs} from "./useFlowQuery"
 import {arg as fclArg, t as fclT} from "@onflow/fcl"
-import {useClient} from "../provider/FlowProvider"
+import {useClient} from "./useClient"
 
 export interface UseFlowQueryRawArgs {
   cadence: string

@@ -1,11 +1,22 @@
 import {renderHook, act, waitFor} from "@testing-library/react"
-import * as fcl from "@onflow/fcl"
 import {FlowProvider} from "../provider"
 import {useFlowQueryRaw} from "./useFlowQueryRaw"
+import {createMockFclInstance, MockFclInstance} from "../__mocks__/fclInstance"
+import {arg, createFcl, t} from "@onflow/fcl"
 
-jest.mock("@onflow/fcl", () => require("../__mocks__/fcl").default)
+jest.mock("@onflow/fcl", () => ({
+  ...require("../__mocks__/fcl").default,
+  createFcl: jest.fn(),
+}))
 
 describe("useFlowQueryRaw", () => {
+  let mockFcl: MockFclInstance
+
+  beforeEach(() => {
+    mockFcl = createMockFclInstance()
+    jest.mocked(createFcl).mockReturnValue(mockFcl.mockFclInstance)
+  })
+
   afterEach(() => {
     jest.clearAllMocks()
   })
@@ -22,7 +33,7 @@ describe("useFlowQueryRaw", () => {
   test("fetches data successfully", async () => {
     const cadenceScript = "access(all) fun main(): Int { return 42 }"
     const expectedResult = 42
-    const queryMock = jest.mocked(fcl.queryRaw)
+    const queryMock = mockFcl.mockFclInstance.queryRaw
     queryMock.mockResolvedValueOnce(expectedResult)
 
     let hookResult: any
@@ -40,16 +51,16 @@ describe("useFlowQueryRaw", () => {
     expect(hookResult.current.data).toBeUndefined()
 
     await waitFor(() => expect(hookResult.current.isLoading).toBe(false))
-    expect(hookResult.current.data).toEqual(expectedResult)
     expect(queryMock).toHaveBeenCalledWith({
       cadence: cadenceScript,
       args: undefined,
     })
+    expect(hookResult.current.data).toEqual(expectedResult)
   })
 
   test("does not fetch data when enabled is false", async () => {
     const cadenceScript = "access(all) fun main(): Int { return 42 }"
-    const queryMock = jest.mocked(fcl.queryRaw)
+    const queryMock = jest.mocked(mockFcl.mockFclInstance.queryRaw)
 
     renderHook(
       () => useFlowQueryRaw({cadence: cadenceScript, query: {enabled: false}}),
@@ -67,7 +78,7 @@ describe("useFlowQueryRaw", () => {
   test("handles error from fcl.queryRaw", async () => {
     const cadenceScript = "access(all) fun main(): Int { return 42 }"
     const testError = new Error("Query failed")
-    const queryMock = jest.mocked(fcl.queryRaw)
+    const queryMock = jest.mocked(mockFcl.mockFclInstance.queryRaw)
     queryMock.mockRejectedValueOnce(testError)
 
     let hookResult: any
@@ -91,7 +102,7 @@ describe("useFlowQueryRaw", () => {
     const cadenceScript = "access(all) fun main(): Int { return 42 }"
     const initialResult = 42
     const updatedResult = 100
-    const queryMock = jest.mocked(fcl.queryRaw)
+    const queryMock = jest.mocked(mockFcl.mockFclInstance.queryRaw)
     queryMock.mockResolvedValueOnce(initialResult)
 
     let hookResult: any
@@ -120,12 +131,10 @@ describe("useFlowQueryRaw", () => {
   test("supports args function parameter", async () => {
     const cadenceScript = "access(all) fun main(a: Int): Int { return a }"
     const expectedResult = 7
-    const queryMock = jest.mocked(fcl.queryRaw)
+    const queryMock = jest.mocked(mockFcl.mockFclInstance.queryRaw)
     queryMock.mockResolvedValueOnce(expectedResult)
 
-    const argsFunction = (arg: typeof fcl.arg, t: typeof fcl.t) => [
-      arg(7, t.Int),
-    ]
+    const argsFunction = (_arg: typeof arg, _t: typeof t) => [_arg(7, _t.Int)]
 
     let hookResult: any
 
@@ -151,12 +160,10 @@ describe("useFlowQueryRaw", () => {
     const cadenceScript = "access(all) fun main(a: Int): Int { return a }"
     const initialResult = 7
     const updatedResult = 42
-    const queryMock = jest.mocked(fcl.queryRaw)
+    const queryMock = jest.mocked(mockFcl.mockFclInstance.queryRaw)
     queryMock.mockResolvedValueOnce(initialResult)
 
-    const argsFunction = (arg: typeof fcl.arg, t: typeof fcl.t) => [
-      arg(7, t.Int),
-    ]
+    const argsFunction = (_arg: typeof arg, _t: typeof t) => [arg(7, t.Int)]
 
     let hookResult: any
     let hookRerender: any
@@ -177,7 +184,7 @@ describe("useFlowQueryRaw", () => {
     await act(() => {
       hookRerender({
         cadence: cadenceScript,
-        args: (arg: typeof fcl.arg, t: typeof fcl.t) => [arg(42, t.Int)],
+        args: (_arg: typeof arg, _t: typeof t) => [_arg(42, _t.Int)],
       })
     })
 

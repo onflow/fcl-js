@@ -1,6 +1,6 @@
 import {UseQueryOptions, UseQueryResult} from "@tanstack/react-query"
 import {useFlowQuery} from "./useFlowQuery"
-import {useClient} from "../provider/FlowProvider"
+import {useClient} from "./useClient"
 
 /**
  * A single random result, paired with the block height from which it was generated.

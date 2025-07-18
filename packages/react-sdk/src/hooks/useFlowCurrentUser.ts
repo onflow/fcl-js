@@ -1,6 +1,6 @@
 import {useState, useEffect} from "react"
 import {CurrentUser} from "@onflow/typedefs"
-import {useClient} from "../provider/FlowProvider"
+import {useClient} from "./useClient"
 
 interface UseFlowCurrentUserArgs {
   client?: ReturnType<typeof useClient>

@@ -3,7 +3,7 @@ import {useFlowQuery} from "./useFlowQuery"
 import {CADENCE_UFIX64_PRECISION, CONTRACT_ADDRESSES} from "../constants"
 import {useFlowChainId} from "./useFlowChainId"
 import {parseUnits, formatUnits} from "viem/utils"
-import {useClient} from "../provider/FlowProvider"
+import {useClient} from "./useClient"
 
 interface UseCrossVmTokenBalanceArgs {
   owner?: string

@@ -2,7 +2,7 @@ import type {Account} from "@onflow/typedefs"
 import {useQuery, UseQueryResult, UseQueryOptions} from "@tanstack/react-query"
 import {useCallback} from "react"
 import {useFlowQueryClient} from "../provider/FlowQueryClient"
-import {useClient} from "../provider/FlowProvider"
+import {useClient} from "./useClient"
 
 export interface UseFlowAccountArgs {
   /** Flow address (with or without `0x`) */

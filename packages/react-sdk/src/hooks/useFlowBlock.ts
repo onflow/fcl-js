@@ -2,7 +2,7 @@ import {Block} from "@onflow/typedefs"
 import {useQuery, UseQueryResult, UseQueryOptions} from "@tanstack/react-query"
 import {useFlowQueryClient} from "../provider/FlowQueryClient"
 import {useCallback, useMemo} from "react"
-import {useClient} from "../provider/FlowProvider"
+import {useClient} from "./useClient"
 
 interface BlockByLatest {
   sealed?: never

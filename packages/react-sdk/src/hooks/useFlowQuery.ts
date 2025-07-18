@@ -2,7 +2,7 @@ import {useQuery, UseQueryResult, UseQueryOptions} from "@tanstack/react-query"
 import {useCallback} from "react"
 import {useFlowQueryClient} from "../provider/FlowQueryClient"
 import {arg, t} from "@onflow/fcl"
-import {useClient} from "../provider/FlowProvider"
+import {useClient} from "./useClient"
 
 export function encodeQueryArgs(
   args?: (_arg: typeof arg, _t: typeof t) => unknown[]

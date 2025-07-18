@@ -42,7 +42,7 @@ export function createFcl(
     signUserMessage: context.currentUser.signUserMessage,
 
     // Utility methods
-    serialze: createSerialize(context),
+    serialize: createSerialize(context),
 
     // Re-export the SDK methods
     ...context.sdk,

@@ -6,7 +6,7 @@ import {
 import {useCallback} from "react"
 import {useFlowQueryClient} from "../provider/FlowQueryClient"
 import {mutate} from "@onflow/fcl"
-import {useClient} from "../provider/FlowProvider"
+import {useClient} from "./useClient"
 
 /**
  * Arguments for the useFlowMutate hook.

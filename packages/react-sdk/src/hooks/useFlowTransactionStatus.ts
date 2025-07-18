@@ -1,6 +1,6 @@
 import {useState, useEffect} from "react"
 import {TransactionStatus} from "@onflow/typedefs"
-import {useClient} from "../provider/FlowProvider"
+import {useClient} from "./useClient"
 import {TransactionError} from "@onflow/fcl"
 
 export interface UseFlowTransactionStatusArgs {

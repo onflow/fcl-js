@@ -10,7 +10,7 @@ import {useFlowChainId} from "./useFlowChainId"
 import {useFlowQueryClient} from "../provider/FlowQueryClient"
 import {CONTRACT_ADDRESSES, DEFAULT_EVM_GAS_LIMIT} from "../constants"
 import {sansPrefix} from "@onflow/fcl"
-import {useClient} from "../provider/FlowProvider"
+import {useClient} from "./useClient"
 
 interface UseCrossVmBatchTransactionMutateArgs {
   calls: EvmBatchCall[]

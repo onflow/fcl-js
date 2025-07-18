@@ -1,7 +1,7 @@
 import {useQuery, UseQueryOptions, UseQueryResult} from "@tanstack/react-query"
 import {useFlowQueryClient} from "../provider/FlowQueryClient"
 import {useCallback} from "react"
-import {useClient} from "../provider/FlowProvider"
+import {useClient} from "./useClient"
 
 interface UseFlowChainIdArgs {
   query?: Omit<UseQueryOptions<string | null, Error>, "queryKey" | "queryFn">
