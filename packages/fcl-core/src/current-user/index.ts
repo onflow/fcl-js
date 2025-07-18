@@ -28,6 +28,7 @@ import {getServiceRegistry} from "./exec-service/plugins"
 import {serviceOfType} from "./service-of-type"
 import {createPartialGlobalFCLContext} from "../context/global"
 import {FCLContext} from "../context"
+import {v4 as uuidv4} from "uuid"
 
 export interface CurrentUserConfig {
   platform: string
@@ -697,7 +698,6 @@ const _createUser = (context: CurrentUserContext): CurrentUserService => {
   ) as any
 }
 
-let uuid = () => Math.random().toString(36)
 const createUser = (
   context: Pick<FCLContext, "config" | "sdk" | "storage"> & {
     platform: string
@@ -710,7 +710,7 @@ const createUser = (
     ...context,
     getStorageProvider: async () => context.storage,
     discovery: context.discovery,
-    actorName: `${NAME}_${uuid()}`,
+    actorName: `${NAME}_${uuidv4()}`,
   })
 }
 
