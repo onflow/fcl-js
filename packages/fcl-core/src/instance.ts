@@ -40,7 +40,7 @@ export interface FlowClientCoreConfig {
   }
 
   // Advanced/SDK configuration (least commonly used)
-  transport: SdkTransport
+  transport?: SdkTransport
   customResolver?: any
   customDecoders?: any
 }
