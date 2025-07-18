@@ -2,7 +2,7 @@ import {renderHook, act, waitFor} from "@testing-library/react"
 import {FlowProvider} from "../provider"
 import {useFlowQueryRaw} from "./useFlowQueryRaw"
 import {createMockFclInstance, MockFclInstance} from "../__mocks__/fclInstance"
-import {arg, createFcl, t} from "@onflow/fcl"
+import {arg, createFlowClient, t} from "@onflow/fcl"
 
 jest.mock("@onflow/fcl", () => require("../__mocks__/fcl").default)
 
@@ -11,7 +11,7 @@ describe("useFlowQueryRaw", () => {
 
   beforeEach(() => {
     mockFcl = createMockFclInstance()
-    jest.mocked(createFcl).mockReturnValue(mockFcl.mockFclInstance)
+    jest.mocked(createFlowClient).mockReturnValue(mockFcl.mockFclInstance)
   })
 
   afterEach(() => {

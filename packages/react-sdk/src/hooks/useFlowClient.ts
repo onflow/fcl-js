@@ -1,11 +1,11 @@
 import {useContext} from "react"
-import {FclClientContext} from "../core/context"
-import {createFcl} from "@onflow/fcl"
+import {FlowClientContext} from "../core/context"
+import {createFlowClient} from "@onflow/fcl"
 
 export function useFlowClient({
   flowClient,
-}: {flowClient?: ReturnType<typeof createFcl>} = {}) {
-  const contextClient = useContext(FclClientContext)
+}: {flowClient?: ReturnType<typeof createFlowClient>} = {}) {
+  const contextClient = useContext(FlowClientContext)
   const _flowClient = flowClient ?? contextClient
   if (!_flowClient) {
     throw new Error(

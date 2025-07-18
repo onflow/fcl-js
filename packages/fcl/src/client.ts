@@ -1,4 +1,4 @@
-import {createFcl as createFclCore} from "@onflow/fcl-core"
+import {createFcl} from "@onflow/fcl-core"
 import {LOCAL_STORAGE} from "./fcl"
 import {execStrategyHook} from "./discovery/exec-hook"
 
@@ -9,13 +9,13 @@ export const discoveryOpts = {
 type WithOptionalProperties<T, K extends keyof T> = Omit<T, K> &
   Partial<Pick<T, K>>
 
-export function createFcl(
+export function createFlowClient(
   params: WithOptionalProperties<
-    Parameters<typeof createFclCore>[0],
+    Parameters<typeof createFcl>[0],
     "platform" | "storage" | "discoveryWalletMethod"
   >
 ) {
-  const fclCore = createFclCore({
+  const fclCore = createFcl({
     ...params,
     platform: "web",
     storage: params.storage || LOCAL_STORAGE,

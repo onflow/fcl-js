@@ -14,7 +14,7 @@ describe("useFlowCurrentUser", () => {
 
   beforeEach(() => {
     mockFcl = createMockFclInstance()
-    jest.mocked(fcl.createFcl).mockReturnValue(mockFcl.mockFclInstance)
+    jest.mocked(fcl.createFlowClient).mockReturnValue(mockFcl.mockFclInstance)
   })
 
   afterEach(() => {

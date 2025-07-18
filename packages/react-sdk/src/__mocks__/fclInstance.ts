@@ -1,4 +1,4 @@
-import {createFcl} from "@onflow/fcl"
+import {createFlowClient} from "@onflow/fcl"
 import {tx as realTx} from "@onflow/fcl"
 import {authenticatedUser, defaultUser} from "./user"
 
@@ -49,7 +49,7 @@ export const createMockFclInstance = () => {
     resolveArgument: jest.fn(),
   }
 
-  const mockFclInstance: jest.Mocked<ReturnType<typeof createFcl>> = {
+  const mockFclInstance: jest.Mocked<ReturnType<typeof createFlowClient>> = {
     account: jest.fn(),
     block: jest.fn(),
     events: jest.fn(),
