@@ -1,7 +1,6 @@
 import {useQuery, UseQueryOptions, UseQueryResult} from "@tanstack/react-query"
 import {useFlowQueryClient} from "../provider/FlowQueryClient"
 import {useCallback} from "react"
-import {useFlowConfig} from "./useFlowConfig"
 import {useClient} from "../provider/FlowProvider"
 
 interface UseFlowChainIdArgs {
