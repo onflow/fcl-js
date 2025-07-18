@@ -64,7 +64,7 @@ export function FlowProvider({
       discoveryWalletMethod: initialConfig.discoveryWalletMethod,
       computeLimit: initialConfig.fclLimit!,
       flowNetwork: initialConfig.flowNetwork,
-      serviceOpenIdScopes: initialConfig.serviceOpenIdScopes,
+      //serviceOpenIdScopes: initialConfig.serviceOpenIdScopes,
       walletconnectProjectId: initialConfig.walletconnectProjectId,
       walletconnectDisableNotifications:
         initialConfig.walletconnectDisableNotifications,
