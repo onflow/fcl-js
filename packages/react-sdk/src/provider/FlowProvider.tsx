@@ -82,7 +82,7 @@ export function FlowProvider({
 
   return (
     <FlowQueryClientProvider queryClient={queryClient}>
-      <FlowConfigContext value={initialConfig}>
+      <FlowConfigContext.Provider value={initialConfig}>
         <FlowClientContext.Provider value={flowClient}>
           <GlobalTransactionProvider>
             <style>{tailwindStyles}</style>
@@ -93,7 +93,7 @@ export function FlowProvider({
             </ThemeProvider>
           </GlobalTransactionProvider>
         </FlowClientContext.Provider>
-      </FlowConfigContext>
+      </FlowConfigContext.Provider>
     </FlowQueryClientProvider>
   )
 }
