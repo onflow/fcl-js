@@ -23,7 +23,7 @@ export function createSend(context: SdkContext) {
     )
 
     const resolveFn =
-      context.customResolver || opts.resolve || createResolve(context)
+      opts.resolve || context.customResolver || createResolve(context)
 
     opts.node = opts.node || context.accessNodeUrl
 
