@@ -1,4 +1,4 @@
-import {createFcl} from "@onflow/fcl-core"
+import {createFlowClient} from "@onflow/fcl-core"
 import {authenticatedUser, defaultUser} from "./user"
 
 const sharedSubscribe = jest.fn(callback => {
@@ -61,5 +61,5 @@ export default {
     },
   },
 
-  createFcl: jest.fn(),
+  createFlowClient: jest.fn(),
 }
