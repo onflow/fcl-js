@@ -5,7 +5,7 @@ import {
 } from "@tanstack/react-query"
 import {useCallback} from "react"
 import {useFlowQueryClient} from "../provider/FlowQueryClient"
-import {mutate} from "@onflow/fcl"
+import {type mutate} from "@onflow/fcl"
 import {useFlowClient} from "./useFlowClient"
 
 /**
@@ -45,7 +45,7 @@ export function useFlowMutate({
       const txId = await fcl.mutate(variables)
       return txId
     },
-    []
+    [fcl]
   )
 
   return useMutation<string, Error, Parameters<typeof mutate>[0]>(
