@@ -3,7 +3,7 @@ import * as fcl from "@onflow/fcl"
 import {FlowProvider} from "../provider"
 import {useFlowBlock} from "./useFlowBlock"
 import {Block} from "@onflow/typedefs"
-import {createMockFclInstance, MockFclInstance} from "../__mocks__/fclInstance"
+import {createMockFclInstance, MockFclInstance} from "../__mocks__/flow-client"
 
 jest.mock("@onflow/fcl", () => require("../__mocks__/fcl").default)
 

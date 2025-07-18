@@ -1,3 +1,4 @@
+import {createMockFclInstance} from "./flow-client"
 import {authenticatedUser, defaultUser} from "./user"
 
 const sharedSubscribe = jest.fn(callback => {

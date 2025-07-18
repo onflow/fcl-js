@@ -6,7 +6,7 @@ import {
   useCrossVmSpendToken,
 } from "./useCrossVmSpendToken"
 import {useFlowChainId} from "./useFlowChainId"
-import {createMockFclInstance, MockFclInstance} from "../__mocks__/fclInstance"
+import {createMockFclInstance, MockFclInstance} from "../__mocks__/flow-client"
 
 jest.mock("@onflow/fcl", () => require("../__mocks__/fcl").default)
 jest.mock("./useFlowChainId", () => ({

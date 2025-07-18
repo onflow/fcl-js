@@ -1,7 +1,7 @@
 import {renderHook, act, waitFor} from "@testing-library/react"
 import {FlowProvider} from "../provider"
 import {useFlowQueryRaw} from "./useFlowQueryRaw"
-import {createMockFclInstance, MockFclInstance} from "../__mocks__/fclInstance"
+import {createMockFclInstance, MockFclInstance} from "../__mocks__/flow-client"
 import {arg, createFlowClient, t} from "@onflow/fcl"
 
 jest.mock("@onflow/fcl", () => require("../__mocks__/fcl").default)

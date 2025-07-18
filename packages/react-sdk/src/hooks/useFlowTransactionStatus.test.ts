@@ -4,7 +4,7 @@ import {useFlowTransactionStatus} from "./useFlowTransactionStatus"
 import {TransactionStatus} from "@onflow/typedefs"
 import {FlowProvider} from "../provider"
 import {defaultTxStatus, errorTxStatus} from "../__mocks__/tx"
-import {createMockFclInstance, MockFclInstance} from "../__mocks__/fclInstance"
+import {createMockFclInstance, MockFclInstance} from "../__mocks__/flow-client"
 
 jest.mock("@onflow/fcl", () => require("../__mocks__/fcl").default)
 

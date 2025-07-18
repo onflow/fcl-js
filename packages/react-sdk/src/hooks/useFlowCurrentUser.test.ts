@@ -5,7 +5,7 @@ import {useFlowCurrentUser} from "./useFlowCurrentUser"
 import {FlowProvider} from "../provider"
 import {CurrentUser} from "@onflow/typedefs"
 import {defaultUser, authenticatedUser} from "../__mocks__/user"
-import {createMockFclInstance, MockFclInstance} from "../__mocks__/fclInstance"
+import {createMockFclInstance, MockFclInstance} from "../__mocks__/flow-client"
 
 jest.mock("@onflow/fcl", () => require("../__mocks__/fcl").default)
 
