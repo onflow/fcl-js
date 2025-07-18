@@ -49,7 +49,7 @@ export interface CurrentUserContext extends Pick<FCLContext, "config" | "sdk"> {
     authnExclude?: string[]
     featuresSuggested?: string[]
   }
-  actorName?: string
+  actorName: string
 }
 
 export interface CurrentUserServiceApi {
@@ -176,13 +176,13 @@ const makeHandlers = (context: CurrentUserContext) => {
     ) => {
       ctx.merge(data)
       const storage = await getStorageProvider()
-      if (storage.can) storage.put(NAME, ctx.all())
+      if (storage.can) storage.put(context.actorName, ctx.all())
       ctx.broadcast(UPDATED, {...ctx.all()})
     },
     [DEL_CURRENT_USER]: async (ctx: ActorContext, letter: Letter) => {
       ctx.merge(JSON.parse(DATA))
       const storage = await getStorageProvider()
-      if (storage.can) storage.put(NAME, ctx.all())
+      if (storage.can) storage.put(context.actorName, ctx.all())
       ctx.broadcast(UPDATED, {...ctx.all()})
     },
   }
@@ -335,7 +335,7 @@ const createAuthenticate =
               platform: context.platform,
               user,
             })
-            send(NAME, SET_CURRENT_USER, await buildUser(response))
+            send(context.actorName, SET_CURRENT_USER, await buildUser(response))
           } catch (error: any) {
             log({
               title: `${error.name} Could not refresh wallet authentication.`,
@@ -373,7 +373,7 @@ const createAuthenticate =
           user,
         })
 
-        send(NAME, SET_CURRENT_USER, await buildUser(response))
+        send(context.actorName, SET_CURRENT_USER, await buildUser(response))
       } catch (error: any) {
         log({
           title: `${error} On Authentication`,
@@ -409,7 +409,7 @@ function createUnauthenticate(context: CurrentUserContext) {
    */
   return function unauthenticate() {
     spawnCurrentUser(context)
-    send(NAME, DEL_CURRENT_USER)
+    send(context.actorName, DEL_CURRENT_USER)
   }
 }
 
@@ -525,9 +525,9 @@ const createAuthorization =
 
 /**
  * @description Factory function to create the subscribe method
- * @param config Current User Configuration
+ * @param context Current User Context
  */
-function createSubscribe(config: CurrentUserContext) {
+function createSubscribe(context: CurrentUserContext) {
   /**
    * @description The callback passed to subscribe will be called when the user authenticates and un-authenticates, making it easy to update the UI accordingly.
    *
@@ -560,14 +560,14 @@ function createSubscribe(config: CurrentUserContext) {
    * }
    */
   return function subscribe(callback: (user: CurrentUser) => void) {
-    spawnCurrentUser(config)
+    spawnCurrentUser(context)
     const EXIT = "@EXIT"
     const self = spawn(async ctx => {
-      ctx.send(NAME, SUBSCRIBE)
+      ctx.send(context.actorName, SUBSCRIBE)
       while (1) {
         const letter = await ctx.receive()
         if (letter.tag === EXIT) {
-          ctx.send(NAME, UNSUBSCRIBE)
+          ctx.send(context.actorName, UNSUBSCRIBE)
           return
         }
         callback(letter.data)
@@ -579,10 +579,10 @@ function createSubscribe(config: CurrentUserContext) {
 
 /**
  * @description Factory function to create the snapshot method
- * @param config Current User Configuration
+ * @param context Current User Context
  */
 function createSnapshot(
-  config: CurrentUserContext
+  context: CurrentUserContext
 ): () => Promise<CurrentUser> {
   /**
    * @description Returns the current user object. This is the same object that is set and available on `fcl.currentUser.subscribe(callback)`.
@@ -597,8 +597,11 @@ function createSnapshot(
    * fcl.currentUser.subscribe(console.log);
    */
   return function snapshot() {
-    spawnCurrentUser(config)
-    return send(NAME, SNAPSHOT, null, {expectReply: true, timeout: 0})
+    spawnCurrentUser(context)
+    return send(context.actorName, SNAPSHOT, null, {
+      expectReply: true,
+      timeout: 0,
+    })
   }
 }
 
@@ -694,6 +697,7 @@ const _createUser = (context: CurrentUserContext): CurrentUserService => {
   ) as any
 }
 
+let uuid = () => Math.random().toString(36)
 const createUser = (
   context: Pick<FCLContext, "config" | "sdk" | "storage"> & {
     platform: string
@@ -706,6 +710,7 @@ const createUser = (
     ...context,
     getStorageProvider: async () => context.storage,
     discovery: context.discovery,
+    actorName: `${NAME}_${uuid()}`,
   })
 }
 
