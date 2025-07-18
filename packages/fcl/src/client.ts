@@ -1,4 +1,8 @@
-import {createFcl} from "@onflow/fcl-core"
+import {
+  createFlowClientCore,
+  SdkTransport,
+  StorageProvider,
+} from "@onflow/fcl-core"
 import {LOCAL_STORAGE} from "./fcl"
 import {execStrategyHook} from "./discovery/exec-hook"
 
@@ -23,17 +27,17 @@ export interface FlowClientConfig {
   walletconnectDisableNotifications?: boolean
 
   // Storage configuration
-  storage?: any
+  storage?: StorageProvider
 
   // Advanced/SDK configuration (least commonly used)
-  transport?: any
+  transport?: SdkTransport
   computeLimit?: number
   customResolver?: any
   customDecoders?: any
 }
 
 export function createFlowClient(params: FlowClientConfig) {
-  const fclCore = createFcl({
+  const fclCore = createFlowClientCore({
     flowNetwork: params.flowNetwork,
     contracts: params.contracts,
     accessNodeUrl: params.accessNodeUrl,

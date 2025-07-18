@@ -8,16 +8,44 @@ import {createTransaction} from "./transaction"
 import {createEvents} from "./events"
 import {createGetChainId} from "./utils"
 import {createSerialize} from "./serialize"
+import {SdkTransport} from "@onflow/typedefs"
+import {StorageProvider} from "./fcl-core"
 
-type WithOptionalProperties<T, K extends keyof T> = Omit<T, K> &
-  Partial<Pick<T, K>>
+export interface FlowClientCoreConfig {
+  // Core network configuration (most commonly used)
+  accessNodeUrl: string
+  flowNetwork?: string
+  contracts?: Record<string, string>
 
-export function createFcl(
-  params: WithOptionalProperties<
-    Parameters<typeof createFCLContext>[0],
-    "transport"
-  >
-) {
+  // Wallet/Discovery configuration
+  discoveryWallet?: string
+  discoveryWalletMethod?: "IFRAME/RPC" | "TAB/RPC" | "POP/RPC" | "EXT/RPC"
+
+  // WalletConnect configuration
+  walletconnectProjectId?: string
+  walletconnectDisableNotifications?: boolean
+
+  // Compute limit for transactions
+  computeLimit: number
+
+  // Storage configuration
+  storage: StorageProvider
+
+  // Platform configuration
+  platform: string
+
+  // Discovery configuration
+  discovery?: {
+    execStrategy?: (opts: any) => Promise<any>
+  }
+
+  // Advanced/SDK configuration (least commonly used)
+  transport: SdkTransport
+  customResolver?: any
+  customDecoders?: any
+}
+
+export function createFlowClientCore(params: FlowClientCoreConfig) {
   const context = createFCLContext({...params, transport: httpTransport})
 
   return {
