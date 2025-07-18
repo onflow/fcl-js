@@ -1,14 +1,15 @@
-import * as fcl from "@onflow/fcl"
 import type {Account} from "@onflow/typedefs"
 import {useQuery, UseQueryResult, UseQueryOptions} from "@tanstack/react-query"
 import {useCallback} from "react"
 import {useFlowQueryClient} from "../provider/FlowQueryClient"
+import {useFlowClient} from "./useFlowClient"
 
 export interface UseFlowAccountArgs {
   /** Flow address (with or without `0x`) */
   address?: string
   /** React Query settings (staleTime, retry, enabled, select, etc.) */
   query?: Omit<UseQueryOptions<Account | null, Error>, "queryKey" | "queryFn">
+  flowClient?: ReturnType<typeof useFlowClient>
 }
 
 /**
@@ -20,8 +21,10 @@ export interface UseFlowAccountArgs {
 export function useFlowAccount({
   address,
   query: queryOptions = {},
+  flowClient,
 }: UseFlowAccountArgs): UseQueryResult<Account | null, Error> {
   const queryClient = useFlowQueryClient()
+  const fcl = useFlowClient({flowClient})
 
   const fetchAccount = useCallback(async () => {
     if (!address) return null

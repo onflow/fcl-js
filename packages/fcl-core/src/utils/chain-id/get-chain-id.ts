@@ -16,10 +16,7 @@ export interface GetChainIdOptions {
   [key: string]: any
 }
 
-export function createGetChainId({
-  config,
-  sdk,
-}: {
+export function createGetChainId(context: {
   config: FCLContext["config"]
   sdk: FCLContext["sdk"]
 }) {
@@ -41,8 +38,8 @@ export function createGetChainId({
    * console.log("Connected to:", chainId) // "testnet" or "mainnet"
    */
   async function getChainId(opts: GetChainIdOptions = {}): Promise<string> {
-    let flowNetworkCfg: string | null = await config.get("flow.network")
-    let envCfg: string | null = await config.get("env")
+    let flowNetworkCfg: string | null = await context.config.get("flow.network")
+    let envCfg: string | null = await context.config.get("env")
 
     /* 
     TODO: Add deprecation warning for flow.network config key
@@ -83,7 +80,7 @@ export function createGetChainId({
       hasWarnedEnv = true
     }
 
-    const accessNode = opts.node || (await config.get("accessNode.api"))
+    const accessNode = opts.node || (await context.config.get("accessNode.api"))
     if (!accessNode) {
       // Fall back to deprecated flow.network and env config keys
       // This probably should have been done before trying to fetch the chainId from the access node
@@ -110,7 +107,7 @@ export function createGetChainId({
     // Check if another getChainId() call has already started a new promise, if not, start a new one
     // There may have been concurrent calls to getChainId() while the first call was waiting for the response
     if (!chainIdCache[accessNode as string]) {
-      chainIdCache[accessNode as string] = fetchChainId({sdk}, opts).catch(
+      chainIdCache[accessNode as string] = fetchChainId(context, opts).catch(
         (error: Error) => {
           // If there was an error, reset the promise so that the next call will try again
           chainIdCache[accessNode as string] = null

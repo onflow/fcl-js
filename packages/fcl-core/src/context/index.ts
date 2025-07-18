@@ -1,26 +1,33 @@
 import {createUser, type CurrentUserServiceApi} from "../current-user"
 import {StorageProvider} from "../fcl-core"
 import {createSdkClient, SdkClientOptions} from "@onflow/sdk"
-
+import {getContracts} from "@onflow/config"
+import {invariant} from "@onflow/util-invariant"
 interface FCLConfig {
   accessNodeUrl: string
   transport: SdkClientOptions["transport"]
-  computeLimit: number
   customResolver?: SdkClientOptions["customResolver"]
   customDecoders?: SdkClientOptions["customDecoders"]
-  contracts?: Record<string, string>
+  flowJson?: any
+  computeLimit: number
   platform: string
   discoveryWallet?: string
   discoveryWalletMethod?: string
-  defaultComputeLimit?: number
+  discoveryAuthnEndpoint?: string
   flowNetwork?: string
-  serviceOpenIdScopes?: string[]
   walletconnectProjectId?: string
   walletconnectDisableNotifications?: boolean
   storage: StorageProvider
   discovery?: {
     execStrategy?: (...args: any[]) => any
   }
+  // App detail properties
+  appDetailTitle?: string
+  appDetailIcon?: string
+  appDetailDescription?: string
+  appDetailUrl?: string
+  // Service configuration
+  serviceOpenIdScopes?: string[]
 }
 
 // Define a compatibility config interface for backward compatibility
@@ -33,6 +40,7 @@ export interface ConfigService {
   ) => Promise<ConfigService> | ConfigService
   delete: (key: string) => Promise<ConfigService> | ConfigService
   where: (pattern: RegExp) => Promise<Record<string, any>>
+  first: (keys: string[], defaultValue?: any) => Promise<any> | any
   subscribe: (
     callback: (config: Record<string, any> | null) => void
   ) => () => void
@@ -56,13 +64,35 @@ export interface FCLContext {
  * Factory function to create an FCL context
  */
 export function createFCLContext(config: FCLConfig): FCLContext {
+  let contracts: Record<string, string> | undefined
+
+  if (config.flowJson) {
+    invariant(
+      !!config.flowNetwork,
+      "If flowJson is provided, flowNetwork must also be specified."
+    )
+
+    const cleanedNetwork = config.flowNetwork
+      .toLowerCase()
+      .replace(/^local$/, "emulator")
+
+    invariant(
+      cleanedNetwork === "mainnet" ||
+        cleanedNetwork === "testnet" ||
+        cleanedNetwork === "emulator",
+      `Invalid flowNetwork: ${config.flowNetwork}. Must be one of: mainnet, testnet, emulator.`
+    )
+
+    contracts = getContracts(config.flowJson, cleanedNetwork)
+  }
+
   const sdk = createSdkClient({
     accessNodeUrl: config.accessNodeUrl,
     transport: config.transport,
     computeLimit: config.computeLimit,
     customResolver: config.customResolver,
     customDecoders: config.customDecoders,
-    contracts: config.contracts,
+    contracts: contracts,
   })
 
   const configService = createConfigService(config)
@@ -90,18 +120,22 @@ export function createConfigService(config: FCLConfig): ConfigService {
   // Create internal config store based on provided typed config
   const configStore = new Map<string, any>([
     ["platform", config.platform],
-    ["discoveryWallet", config.discoveryWallet],
-    ["discoveryWalletMethod", config.discoveryWalletMethod],
-    ["defaultComputeLimit", config.defaultComputeLimit],
-    ["flowNetwork", config.flowNetwork],
-    ["serviceOpenIdScopes", config.serviceOpenIdScopes],
+    ["discovery.wallet", config.discoveryWallet],
+    ["discovery.wallet.method", config.discoveryWalletMethod],
+    ["discovery.authn.endpoint", config.discoveryAuthnEndpoint],
+    ["flow.network", config.flowNetwork],
     ["walletconnectProjectId", config.walletconnectProjectId],
     [
-      "walletconnectDisableNotifications",
+      "walletconnect.disableNotifications",
       config.walletconnectDisableNotifications,
     ],
     ["accessNode.api", config.accessNodeUrl],
     ["fcl.limit", config.computeLimit],
+    ["app.detail.title", config.appDetailTitle],
+    ["app.detail.icon", config.appDetailIcon],
+    ["app.detail.description", config.appDetailDescription],
+    ["app.detail.url", config.appDetailUrl],
+    ["service.OpenID.scopes", config.serviceOpenIdScopes],
   ])
 
   // Filter out undefined values
@@ -116,7 +150,9 @@ export function createConfigService(config: FCLConfig): ConfigService {
 
   // Create compatibility config layer
   const configService: ConfigService = {
-    get: async (key: string) => configStore.get(key),
+    get: async (key: string, fallback?: any) => {
+      return configStore.has(key) ? configStore.get(key) : fallback
+    },
     put: async (key: string, value: any) => {
       configStore.set(key, value)
       subscribers.forEach(fn => fn(configStore))
@@ -142,6 +178,15 @@ export function createConfigService(config: FCLConfig): ConfigService {
         }
       }
       return result
+    },
+    first: async (keys: string[], defaultValue?: any) => {
+      if (typeof keys === "string") keys = [keys]
+      for (const key of keys) {
+        if (configStore.has(key)) {
+          return configStore.get(key)
+        }
+      }
+      return defaultValue
     },
     subscribe: (callback: (config: Record<string, any>) => void) => {
       subscribers.add(callback)

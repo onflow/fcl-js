@@ -1,18 +1,26 @@
-import {renderHook, act} from "@testing-library/react"
+import {renderHook} from "@testing-library/react"
 import * as fcl from "@onflow/fcl"
 import {FlowProvider} from "../provider"
 import {useFlowMutate} from "./useFlowMutate"
+import {createMockFclInstance, MockFclInstance} from "../__mocks__/flow-client"
 
 jest.mock("@onflow/fcl", () => require("../__mocks__/fcl").default)
 
 describe("useFlowMutate", () => {
+  let mockFcl: MockFclInstance
+
+  beforeEach(() => {
+    mockFcl = createMockFclInstance()
+    jest.mocked(fcl.createFlowClient).mockReturnValue(mockFcl.mockFclInstance)
+  })
+
   afterEach(() => {
     jest.clearAllMocks()
   })
 
   test("calls fcl.mutate and returns transaction id", async () => {
     const txId = "transaction-id-123"
-    jest.spyOn(fcl, "mutate").mockResolvedValue(txId)
+    jest.mocked(mockFcl.mockFclInstance.mutate).mockResolvedValueOnce(txId)
 
     const variables = {
       cadence: "transaction {}",
@@ -24,12 +32,12 @@ describe("useFlowMutate", () => {
 
     const returnedTxId = await result.current.mutateAsync(variables)
     expect(returnedTxId).toBe(txId)
-    expect(fcl.mutate).toHaveBeenCalledWith(variables)
+    expect(mockFcl.mockFclInstance.mutate).toHaveBeenCalledWith(variables)
   })
 
   test("handles error when fcl.mutate rejects", async () => {
     const error = new Error("Mutation failed")
-    jest.spyOn(fcl, "mutate").mockRejectedValue(error)
+    jest.mocked(mockFcl.mockFclInstance.mutate).mockRejectedValue(error)
 
     const variables = {
       cadence: "transaction {}",
@@ -40,6 +48,6 @@ describe("useFlowMutate", () => {
     })
 
     await expect(result.current.mutateAsync(variables)).rejects.toThrow(error)
-    expect(fcl.mutate).toHaveBeenCalledWith(variables)
+    expect(mockFcl.mockFclInstance.mutate).toHaveBeenCalledWith(variables)
   })
 })

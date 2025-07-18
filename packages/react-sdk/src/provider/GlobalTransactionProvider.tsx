@@ -1,6 +1,6 @@
-import {tx} from "@onflow/fcl"
 import {TransactionExecutionStatus} from "@onflow/typedefs"
 import React, {createContext, useContext, useState, useEffect} from "react"
+import {useFlowClient} from "../hooks/useFlowClient"
 
 interface GlobalTransactionContextValue {
   /** Check if a global transaction is currently running */
@@ -30,12 +30,13 @@ export const GlobalTransactionProvider: React.FC<
   GlobalTransactionProviderProps
 > = ({children}) => {
   const [txId, setTxId] = useState<string | null>(null)
+  const fcl = useFlowClient()
 
   useEffect(() => {
     if (!txId) return
 
     // Subscribe to transaction updates
-    const unsub = tx(txId).subscribe(txStatus => {
+    const unsub = fcl.tx(txId).subscribe(txStatus => {
       if (txStatus.status >= TransactionExecutionStatus.EXECUTED) {
         // Transaction has been executed, reset the global transaction ID
         setTxId(null)

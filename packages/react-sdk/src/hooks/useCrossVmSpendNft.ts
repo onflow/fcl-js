@@ -1,4 +1,3 @@
-import * as fcl from "@onflow/fcl"
 import {
   UseMutateAsyncFunction,
   UseMutateFunction,
@@ -10,12 +9,14 @@ import {useFlowChainId} from "./useFlowChainId"
 import {useFlowQueryClient} from "../provider/FlowQueryClient"
 import {encodeCalls, EvmBatchCall} from "./useCrossVmBatchTransaction"
 import {CONTRACT_ADDRESSES} from "../constants"
+import {useFlowClient} from "./useFlowClient"
 
 export interface UseCrossVmSpendNftTxArgs {
   mutation?: Omit<
     UseMutationOptions<string, Error, UseCrossVmSpendNftTxMutateArgs>,
     "mutationFn"
   >
+  flowClient?: ReturnType<typeof useFlowClient>
 }
 
 export interface UseCrossVmSpendNftTxMutateArgs {
@@ -219,6 +220,7 @@ transaction(
  */
 export function useCrossVmSpendNft({
   mutation: mutationOptions = {},
+  flowClient,
 }: UseCrossVmSpendNftTxArgs = {}): UseCrossVmSpendNftTxResult {
   const chainId = useFlowChainId()
   const cadenceTx = chainId.data
@@ -226,6 +228,7 @@ export function useCrossVmSpendNft({
     : null
 
   const queryClient = useFlowQueryClient()
+  const fcl = useFlowClient({flowClient})
   const mutation = useMutation(
     {
       mutationFn: async ({

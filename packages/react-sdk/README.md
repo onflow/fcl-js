@@ -34,7 +34,7 @@ import flowJson from "../flow.json"
 
 ## 🪝 Available Hooks
 
-- `useCurrentFlowUser`
+- `useFlowCurrentUser`
 - `useFlowAccount`
 - `useFlowBlock`
 - `useFlowConfig`
