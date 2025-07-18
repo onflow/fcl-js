@@ -1,10 +1,4 @@
-import React, {
-  useState,
-  PropsWithChildren,
-  useContext,
-  useEffect,
-  useMemo,
-} from "react"
+import React, {useState, PropsWithChildren, useMemo} from "react"
 import {FlowClientContext, FlowConfig, FlowConfigContext} from "../core/context"
 import {DefaultOptions, QueryClient} from "@tanstack/react-query"
 import {FlowQueryClientProvider} from "./FlowQueryClient"
@@ -22,25 +16,6 @@ interface FlowProviderProps {
   theme?: Partial<Theme>
   darkMode?: boolean
 }
-
-const mappings: Array<{fcl: string; typed: keyof FlowConfig}> = [
-  {fcl: "accessNode.api", typed: "accessNodeUrl"},
-  {fcl: "app.detail.title", typed: "appDetailTitle"},
-  {fcl: "app.detail.icon", typed: "appDetailIcon"},
-  {fcl: "app.detail.description", typed: "appDetailDescription"},
-  {fcl: "app.detail.url", typed: "appDetailUrl"},
-  {fcl: "discovery.wallet", typed: "discoveryWallet"},
-  {fcl: "discovery.wallet.method", typed: "discoveryWalletMethod"},
-  {fcl: "discovery.authn.endpoint", typed: "discoveryAuthnEndpoint"},
-  {fcl: "fcl.limit", typed: "fclLimit"},
-  {fcl: "flow.network", typed: "flowNetwork"},
-  {fcl: "service.OpenID.scopes", typed: "serviceOpenIdScopes"},
-  {fcl: "walletconnect.projectId", typed: "walletconnectProjectId"},
-  {
-    fcl: "walletconnect.disableNotifications",
-    typed: "walletconnectDisableNotifications",
-  },
-]
 
 const defaultQueryOptions: DefaultOptions = {
   queries: {
@@ -70,13 +45,18 @@ export function FlowProvider({
       return createFlowClient({
         accessNodeUrl: initialConfig.accessNodeUrl!,
         discoveryWallet: initialConfig.discoveryWallet,
-        flowJson: flowJson,
         discoveryWalletMethod: initialConfig.discoveryWalletMethod,
-        computeLimit: initialConfig.fclLimit!,
+        flowJson: flowJson,
         flowNetwork: initialConfig.flowNetwork,
+        computeLimit: initialConfig.computeLimit,
         walletconnectProjectId: initialConfig.walletconnectProjectId,
         walletconnectDisableNotifications:
           initialConfig.walletconnectDisableNotifications,
+        appDetailTitle: initialConfig.appDetailTitle,
+        appDetailIcon: initialConfig.appDetailIcon,
+        appDetailDescription: initialConfig.appDetailDescription,
+        appDetailUrl: initialConfig.appDetailUrl,
+        serviceOpenIdScopes: initialConfig.serviceOpenIdScopes,
       })
   }, [_flowClient, initialConfig])
 

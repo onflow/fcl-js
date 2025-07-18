@@ -20,6 +20,7 @@ export interface FlowClientCoreConfig {
   // Wallet/Discovery configuration
   discoveryWallet?: string
   discoveryWalletMethod?: string
+  discoveryAuthnEndpoint?: string
 
   // WalletConnect configuration
   walletconnectProjectId?: string
@@ -39,6 +40,15 @@ export interface FlowClientCoreConfig {
     execStrategy?: (opts: any) => Promise<any>
   }
 
+  // App detail properties
+  appDetailTitle?: string
+  appDetailIcon?: string
+  appDetailDescription?: string
+  appDetailUrl?: string
+
+  // Service configuration
+  serviceOpenIdScopes?: string[]
+
   // Advanced/SDK configuration (least commonly used)
   transport?: SdkTransport
   customResolver?: any
@@ -46,7 +56,10 @@ export interface FlowClientCoreConfig {
 }
 
 export function createFlowClientCore(params: FlowClientCoreConfig) {
-  const context = createFCLContext({...params, transport: httpTransport})
+  const context = createFCLContext({
+    ...params,
+    transport: params.transport || httpTransport,
+  })
 
   return {
     // Global services

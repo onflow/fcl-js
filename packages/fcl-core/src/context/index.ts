@@ -13,6 +13,7 @@ interface FCLConfig {
   platform: string
   discoveryWallet?: string
   discoveryWalletMethod?: string
+  discoveryAuthnEndpoint?: string
   flowNetwork?: string
   walletconnectProjectId?: string
   walletconnectDisableNotifications?: boolean
@@ -20,6 +21,13 @@ interface FCLConfig {
   discovery?: {
     execStrategy?: (...args: any[]) => any
   }
+  // App detail properties
+  appDetailTitle?: string
+  appDetailIcon?: string
+  appDetailDescription?: string
+  appDetailUrl?: string
+  // Service configuration
+  serviceOpenIdScopes?: string[]
 }
 
 // Define a compatibility config interface for backward compatibility
@@ -114,6 +122,7 @@ export function createConfigService(config: FCLConfig): ConfigService {
     ["platform", config.platform],
     ["discovery.wallet", config.discoveryWallet],
     ["discovery.wallet.method", config.discoveryWalletMethod],
+    ["discovery.authn.endpoint", config.discoveryAuthnEndpoint],
     ["flow.network", config.flowNetwork],
     ["walletconnectProjectId", config.walletconnectProjectId],
     [
@@ -122,6 +131,11 @@ export function createConfigService(config: FCLConfig): ConfigService {
     ],
     ["accessNode.api", config.accessNodeUrl],
     ["fcl.limit", config.computeLimit],
+    ["app.detail.title", config.appDetailTitle],
+    ["app.detail.icon", config.appDetailIcon],
+    ["app.detail.description", config.appDetailDescription],
+    ["app.detail.url", config.appDetailUrl],
+    ["service.OpenID.scopes", config.serviceOpenIdScopes],
   ])
 
   // Filter out undefined values

@@ -11,7 +11,7 @@ export type FlowConfig = {
   discoveryWallet?: string
   discoveryWalletMethod?: string
   discoveryAuthnEndpoint?: string
-  fclLimit?: number
+  computeLimit?: number
   flowNetwork?: FlowNetwork
   serviceOpenIdScopes?: string[]
   walletconnectProjectId?: string

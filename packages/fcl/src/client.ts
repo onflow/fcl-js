@@ -21,6 +21,7 @@ export interface FlowClientConfig {
   // Wallet/Discovery configuration
   discoveryWallet?: string
   discoveryWalletMethod?: string
+  discoveryAuthnEndpoint?: string
 
   // WalletConnect configuration
   walletconnectProjectId?: string
@@ -28,6 +29,15 @@ export interface FlowClientConfig {
 
   // Storage configuration
   storage?: StorageProvider
+
+  // App detail properties
+  appDetailTitle?: string
+  appDetailIcon?: string
+  appDetailDescription?: string
+  appDetailUrl?: string
+
+  // Service configuration
+  serviceOpenIdScopes?: string[]
 
   // Advanced/SDK configuration (least commonly used)
   transport?: SdkTransport
@@ -47,11 +57,17 @@ export function createFlowClient(params: FlowClientConfig) {
     storage: params.storage || LOCAL_STORAGE,
     discovery: discoveryOpts,
     discoveryWalletMethod: params.discoveryWalletMethod || "IFRAME/RPC",
+    discoveryAuthnEndpoint: params.discoveryAuthnEndpoint,
     customResolver: params.customResolver,
     customDecoders: params.customDecoders,
     discoveryWallet: params.discoveryWallet,
     walletconnectProjectId: params.walletconnectProjectId,
     walletconnectDisableNotifications: params.walletconnectDisableNotifications,
+    appDetailTitle: params.appDetailTitle,
+    appDetailIcon: params.appDetailIcon,
+    appDetailDescription: params.appDetailDescription,
+    appDetailUrl: params.appDetailUrl,
+    serviceOpenIdScopes: params.serviceOpenIdScopes,
   })
 
   return {
