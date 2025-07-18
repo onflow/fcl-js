@@ -2,25 +2,52 @@ import {createFcl} from "@onflow/fcl-core"
 import {LOCAL_STORAGE} from "./fcl"
 import {execStrategyHook} from "./discovery/exec-hook"
 
+const PLATFORM = "web"
+
 export const discoveryOpts = {
   execStrategy: execStrategyHook,
 }
 
-type WithOptionalProperties<T, K extends keyof T> = Omit<T, K> &
-  Partial<Pick<T, K>>
+export interface FlowClientConfig {
+  // Core network configuration (most commonly used)
+  accessNodeUrl: string // Required - must specify which network to connect to
+  flowNetwork?: string
+  contracts?: Record<string, string>
 
-export function createFlowClient(
-  params: WithOptionalProperties<
-    Parameters<typeof createFcl>[0],
-    "platform" | "storage" | "discoveryWalletMethod"
-  >
-) {
+  // Wallet/Discovery configuration
+  discoveryWallet?: string
+  discoveryWalletMethod?: "IFRAME/RPC" | "TAB/RPC" | "POP/RPC" | "EXT/RPC"
+
+  // WalletConnect configuration
+  walletconnectProjectId?: string
+  walletconnectDisableNotifications?: boolean
+
+  // Storage configuration
+  storage?: any
+
+  // Advanced/SDK configuration (least commonly used)
+  transport?: any
+  computeLimit?: number
+  customResolver?: any
+  customDecoders?: any
+}
+
+export function createFlowClient(params: FlowClientConfig) {
   const fclCore = createFcl({
-    ...params,
-    platform: "web",
+    flowNetwork: params.flowNetwork,
+    contracts: params.contracts,
+    accessNodeUrl: params.accessNodeUrl,
+    computeLimit: params.computeLimit || 9999,
+    transport: params.transport,
+    platform: PLATFORM,
     storage: params.storage || LOCAL_STORAGE,
     discovery: discoveryOpts,
     discoveryWalletMethod: params.discoveryWalletMethod || "IFRAME/RPC",
+    customResolver: params.customResolver,
+    customDecoders: params.customDecoders,
+    discoveryWallet: params.discoveryWallet,
+    walletconnectProjectId: params.walletconnectProjectId,
+    walletconnectDisableNotifications: params.walletconnectDisableNotifications,
   })
 
   return {
