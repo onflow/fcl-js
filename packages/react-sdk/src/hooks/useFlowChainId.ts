@@ -17,11 +17,11 @@ export function useFlowChainId({
   client,
 }: UseFlowChainIdArgs = {}): UseQueryResult<string | null, Error> {
   const queryClient = useFlowQueryClient()
-  const config = useFlowConfig()
   const fcl = useClient({client})
+
   const fetchChainId = useCallback(async () => {
     return await fcl.getChainId()
-  }, [config])
+  }, [fcl])
 
   return useQuery<string | null, Error>(
     {
