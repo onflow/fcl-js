@@ -49,17 +49,23 @@ function extractFunctionInfo(
         if (jsDocInfo.params) {
           Object.keys(jsDocInfo.params).forEach(jsDocParamName => {
             if (jsDocParamName.startsWith(paramName + ".")) {
-              const nestedParamName = jsDocParamName.substring(paramName.length + 1)
-              
+              const nestedParamName = jsDocParamName.substring(
+                paramName.length + 1
+              )
+
               // Try to extract type information from the parameter's TypeScript type
               let nestedParamType = "any"
               try {
                 const paramTypeSymbol = param.getType().getSymbol()
                 if (paramTypeSymbol) {
                   const typeDeclaration = paramTypeSymbol.getDeclarations()?.[0]
-                  if (typeDeclaration && Node.isInterfaceDeclaration(typeDeclaration)) {
+                  if (
+                    typeDeclaration &&
+                    Node.isInterfaceDeclaration(typeDeclaration)
+                  ) {
                     // Find the property in the interface
-                    const property = typeDeclaration.getProperty(nestedParamName)
+                    const property =
+                      typeDeclaration.getProperty(nestedParamName)
                     if (property) {
                       const propertyType = property.getType()
                       nestedParamType = cleanupTypeText(propertyType.getText())
@@ -70,12 +76,13 @@ function extractFunctionInfo(
                 // Fallback to any if type extraction fails
                 nestedParamType = "any"
               }
-              
+
               nestedParams.push({
                 name: escapeParameterNameForMDX(nestedParamName),
                 type: nestedParamType,
                 required: true, // Default to required
-                description: escapeTextForMDX(jsDocInfo.params[jsDocParamName]) || "",
+                description:
+                  escapeTextForMDX(jsDocInfo.params[jsDocParamName]) || "",
               })
             }
           })
@@ -90,13 +97,12 @@ function extractFunctionInfo(
         }
       })
 
-
       // Get the actual return type, not the function signature
       let returnType = "any"
       try {
         const funcReturnType = declaration.getReturnType()
         const returnTypeText = funcReturnType.getText()
-        
+
         // If the return type text looks like a function signature, extract just the return part
         if (returnTypeText.includes("=>")) {
           const returnPart = returnTypeText.split("=>").pop()?.trim()
@@ -165,90 +171,138 @@ function extractFunctionInfo(
               if (innerFunctions.length > 0) {
                 // Get the first inner function (usually the one being returned)
                 const innerFunction = innerFunctions[0]
-                const innerFuncInfo = extractFunctionInfo(innerFunction, functionName, sourceFile, namespace)
+                const innerFuncInfo = extractFunctionInfo(
+                  innerFunction,
+                  functionName,
+                  sourceFile,
+                  namespace
+                )
                 if (innerFuncInfo) {
                   // Merge JSDoc from the exported variable, including nested parameters
-                  const mergedParameters = innerFuncInfo.parameters.map(param => {
-                    // Check if there are nested JSDoc parameters for this parameter
-                    let nestedParams = []
-                    if (jsDocInfo.params) {
-                      Object.keys(jsDocInfo.params).forEach(jsDocParamName => {
-                        if (jsDocParamName.startsWith(param.name + ".")) {
-                          const nestedParamName = jsDocParamName.substring(param.name.length + 1)
-                          // Extract nested parameter type from the parameter's TypeScript interface
-                          let nestedParamType = "any"
-                          try {
-                            // Get the parameter from the inner function for type extraction
-                            const innerParams = innerFunction.getParameters()
-                            const matchingParam = innerParams.find(p => {
-                              let pName = p.getName()
-                              if (pName.includes("{") && pName.includes("}")) {
-                                const typeText = p.getType().getText()
-                                let typeMatch = typeText.match(/^([A-Z][a-zA-Z0-9]*)/)
-                                if (!typeMatch) {
-                                  typeMatch = typeText.match(/import\([^)]+\)\.([A-Z][a-zA-Z0-9]*)/)
-                                }
-                                if (typeMatch && typeMatch[1]) {
-                                  pName = toCamelCase(typeMatch[1])
-                                }
-                              }
-                              return pName === param.name
-                            })
-                            
-                            if (matchingParam) {
-                              const paramTypeSymbol = matchingParam.getType().getSymbol()
-                              if (paramTypeSymbol) {
-                                const typeDeclaration = paramTypeSymbol.getDeclarations()?.[0]
-                                if (typeDeclaration && Node.isInterfaceDeclaration(typeDeclaration)) {
-                                  const property = typeDeclaration.getProperty(nestedParamName)
-                                  if (property) {
-                                    const propertyType = property.getType()
-                                    nestedParamType = cleanupTypeText(propertyType.getText())
+                  const mergedParameters = innerFuncInfo.parameters.map(
+                    param => {
+                      // Check if there are nested JSDoc parameters for this parameter
+                      let nestedParams = []
+                      if (jsDocInfo.params) {
+                        Object.keys(jsDocInfo.params).forEach(
+                          jsDocParamName => {
+                            if (jsDocParamName.startsWith(param.name + ".")) {
+                              const nestedParamName = jsDocParamName.substring(
+                                param.name.length + 1
+                              )
+                              // Extract nested parameter type from the parameter's TypeScript interface
+                              let nestedParamType = "any"
+                              try {
+                                // Get the parameter from the inner function for type extraction
+                                const innerParams =
+                                  innerFunction.getParameters()
+                                const matchingParam = innerParams.find(p => {
+                                  let pName = p.getName()
+                                  if (
+                                    pName.includes("{") &&
+                                    pName.includes("}")
+                                  ) {
+                                    const typeText = p.getType().getText()
+                                    let typeMatch =
+                                      typeText.match(/^([A-Z][a-zA-Z0-9]*)/)
+                                    if (!typeMatch) {
+                                      typeMatch = typeText.match(
+                                        /import\([^)]+\)\.([A-Z][a-zA-Z0-9]*)/
+                                      )
+                                    }
+                                    if (typeMatch && typeMatch[1]) {
+                                      pName = toCamelCase(typeMatch[1])
+                                    }
+                                  }
+                                  return pName === param.name
+                                })
+
+                                if (matchingParam) {
+                                  const paramTypeSymbol = matchingParam
+                                    .getType()
+                                    .getSymbol()
+                                  if (paramTypeSymbol) {
+                                    const typeDeclaration =
+                                      paramTypeSymbol.getDeclarations()?.[0]
+                                    if (
+                                      typeDeclaration &&
+                                      Node.isInterfaceDeclaration(
+                                        typeDeclaration
+                                      )
+                                    ) {
+                                      const property =
+                                        typeDeclaration.getProperty(
+                                          nestedParamName
+                                        )
+                                      if (property) {
+                                        const propertyType = property.getType()
+                                        nestedParamType = cleanupTypeText(
+                                          propertyType.getText()
+                                        )
+                                      }
+                                    }
                                   }
                                 }
+                              } catch (e) {
+                                // Fallback to any
+                                nestedParamType = "any"
                               }
+
+                              nestedParams.push({
+                                name: escapeParameterNameForMDX(
+                                  nestedParamName
+                                ),
+                                type: nestedParamType,
+                                required: true, // Default to required
+                                description:
+                                  escapeTextForMDX(
+                                    jsDocInfo.params[jsDocParamName]
+                                  ) || "",
+                              })
                             }
-                          } catch (e) {
-                            // Fallback to any
-                            nestedParamType = "any"
                           }
-                          
-                          nestedParams.push({
-                            name: escapeParameterNameForMDX(nestedParamName),
-                            type: nestedParamType,
-                            required: true, // Default to required
-                            description: escapeTextForMDX(jsDocInfo.params[jsDocParamName]) || "",
-                          })
-                        }
-                      })
+                        )
+                      }
+
+                      return {
+                        ...param,
+                        // Override description from JSDoc if available
+                        description:
+                          jsDocInfo.params && jsDocInfo.params[param.name]
+                            ? escapeTextForMDX(jsDocInfo.params[param.name])
+                            : param.description,
+                        nestedParams:
+                          nestedParams.length > 0 ? nestedParams : undefined,
+                      }
                     }
-                    
-                    return {
-                      ...param,
-                      // Override description from JSDoc if available
-                      description: (jsDocInfo.params && jsDocInfo.params[param.name]) ? 
-                        escapeTextForMDX(jsDocInfo.params[param.name]) : param.description,
-                      nestedParams: nestedParams.length > 0 ? nestedParams : undefined,
-                    }
-                  })
-                  
+                  )
+
                   return {
                     ...innerFuncInfo,
-                    description: jsDocInfo.description || innerFuncInfo.description,
-                    customExample: jsDocInfo.example || innerFuncInfo.customExample,
+                    description:
+                      jsDocInfo.description || innerFuncInfo.description,
+                    customExample:
+                      jsDocInfo.example || innerFuncInfo.customExample,
                     parameters: mergedParameters,
                   }
                 }
               }
-              
+
               // Fallback: try to extract info directly from the referenced function
-              const referencedFuncInfo = extractFunctionInfo(referencedFunction, functionName, sourceFile, namespace)
+              const referencedFuncInfo = extractFunctionInfo(
+                referencedFunction,
+                functionName,
+                sourceFile,
+                namespace
+              )
               if (referencedFuncInfo) {
                 // Override with JSDoc from the exported variable
                 return {
                   ...referencedFuncInfo,
-                  description: jsDocInfo.description || referencedFuncInfo.description,
-                  customExample: jsDocInfo.example || referencedFuncInfo.customExample,
+                  description:
+                    jsDocInfo.description || referencedFuncInfo.description,
+                  customExample:
+                    jsDocInfo.example || referencedFuncInfo.customExample,
                 }
               }
             }
@@ -289,20 +343,29 @@ function extractFunctionInfo(
           if (jsDocInfo.params) {
             Object.keys(jsDocInfo.params).forEach(jsDocParamName => {
               if (jsDocParamName.startsWith(paramName + ".")) {
-                const nestedParamName = jsDocParamName.substring(paramName.length + 1)
-                
+                const nestedParamName = jsDocParamName.substring(
+                  paramName.length + 1
+                )
+
                 // Try to extract type information from the parameter's TypeScript type
                 let nestedParamType = "any"
                 try {
                   const paramTypeSymbol = param.getType().getSymbol()
                   if (paramTypeSymbol) {
-                    const typeDeclaration = paramTypeSymbol.getDeclarations()?.[0]
-                    if (typeDeclaration && Node.isInterfaceDeclaration(typeDeclaration)) {
+                    const typeDeclaration =
+                      paramTypeSymbol.getDeclarations()?.[0]
+                    if (
+                      typeDeclaration &&
+                      Node.isInterfaceDeclaration(typeDeclaration)
+                    ) {
                       // Find the property in the interface
-                      const property = typeDeclaration.getProperty(nestedParamName)
+                      const property =
+                        typeDeclaration.getProperty(nestedParamName)
                       if (property) {
                         const propertyType = property.getType()
-                        nestedParamType = cleanupTypeText(propertyType.getText())
+                        nestedParamType = cleanupTypeText(
+                          propertyType.getText()
+                        )
                       }
                     }
                   }
@@ -310,12 +373,13 @@ function extractFunctionInfo(
                   // Fallback to any if type extraction fails
                   nestedParamType = "any"
                 }
-                
+
                 nestedParams.push({
                   name: escapeParameterNameForMDX(nestedParamName),
                   type: nestedParamType,
                   required: true, // Default to required
-                  description: escapeTextForMDX(jsDocInfo.params[jsDocParamName]) || "",
+                  description:
+                    escapeTextForMDX(jsDocInfo.params[jsDocParamName]) || "",
                 })
               }
             })
@@ -335,7 +399,7 @@ function extractFunctionInfo(
         try {
           const funcReturnType = initializer.getReturnType()
           const returnTypeText = funcReturnType.getText()
-          
+
           // If the return type text looks like a function signature, extract just the return part
           if (returnTypeText.includes("=>")) {
             const returnPart = returnTypeText.split("=>").pop()?.trim()
@@ -378,17 +442,21 @@ function extractFunctionInfo(
         const parameters = []
         if (jsDocInfo.params) {
           // First, get all top-level parameters (those without dots)
-          const topLevelParams = Object.keys(jsDocInfo.params).filter(paramName => !paramName.includes("."))
-          
+          const topLevelParams = Object.keys(jsDocInfo.params).filter(
+            paramName => !paramName.includes(".")
+          )
+
           topLevelParams.forEach(paramName => {
             const paramDesc = jsDocInfo.params[paramName]
-            
+
             // Handle nested JSDoc parameters (e.g., queryOptions.height)
             let nestedParams = []
             Object.keys(jsDocInfo.params).forEach(jsDocParamName => {
               if (jsDocParamName.startsWith(paramName + ".")) {
-                const nestedParamName = jsDocParamName.substring(paramName.length + 1)
-                
+                const nestedParamName = jsDocParamName.substring(
+                  paramName.length + 1
+                )
+
                 // For JSDoc-only cases, try to infer type from variable declaration
                 let nestedParamType = "any"
                 try {
@@ -396,11 +464,17 @@ function extractFunctionInfo(
                   const typeSymbol = variableType.getSymbol()
                   if (typeSymbol) {
                     const typeDeclaration = typeSymbol.getDeclarations()?.[0]
-                    if (typeDeclaration && Node.isInterfaceDeclaration(typeDeclaration)) {
-                      const property = typeDeclaration.getProperty(nestedParamName)
+                    if (
+                      typeDeclaration &&
+                      Node.isInterfaceDeclaration(typeDeclaration)
+                    ) {
+                      const property =
+                        typeDeclaration.getProperty(nestedParamName)
                       if (property) {
                         const propertyType = property.getType()
-                        nestedParamType = cleanupTypeText(propertyType.getText())
+                        nestedParamType = cleanupTypeText(
+                          propertyType.getText()
+                        )
                       }
                     }
                   }
@@ -408,16 +482,17 @@ function extractFunctionInfo(
                   // Fallback to any
                   nestedParamType = "any"
                 }
-                
+
                 nestedParams.push({
                   name: escapeParameterNameForMDX(nestedParamName),
                   type: nestedParamType,
                   required: true, // Default to required
-                  description: escapeTextForMDX(jsDocInfo.params[jsDocParamName]) || "",
+                  description:
+                    escapeTextForMDX(jsDocInfo.params[jsDocParamName]) || "",
                 })
               }
             })
-            
+
             parameters.push({
               name: escapeParameterNameForMDX(paramName),
               type: "any", // Default type since we can't infer from call expressions
