@@ -2,7 +2,7 @@ import {Block} from "@onflow/typedefs"
 import {useQuery, UseQueryResult, UseQueryOptions} from "@tanstack/react-query"
 import {useFlowQueryClient} from "../provider/FlowQueryClient"
 import {useCallback, useMemo} from "react"
-import {useClient} from "../provider/FlowProvider"
+import {useFlowClient} from "./useFlowClient"
 
 interface BlockByLatest {
   sealed?: never
@@ -39,7 +39,7 @@ export interface UseFlowBlockArgs {
   id?: string
   height?: number
   query?: Omit<UseQueryOptions<Block | null, Error>, "queryKey" | "queryFn">
-  client?: ReturnType<typeof useClient>
+  flowClient?: ReturnType<typeof useFlowClient>
 }
 
 /**
@@ -54,9 +54,9 @@ export interface UseFlowBlockArgs {
 export function useFlowBlock(
   params: UseFlowBlockArgs = {}
 ): UseQueryResult<Block | null, Error> {
-  const {sealed, id, height, query: queryOptions = {}, client} = params
+  const {sealed, id, height, query: queryOptions = {}, flowClient} = params
   const queryClient = useFlowQueryClient()
-  const fcl = useClient({client})
+  const fcl = useFlowClient({flowClient})
 
   const domainParams = useMemo<UseBlockParams>(
     () => ({sealed, id, height}) as UseBlockParams,

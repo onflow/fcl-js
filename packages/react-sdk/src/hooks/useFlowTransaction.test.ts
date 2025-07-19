@@ -3,10 +3,17 @@ import * as fcl from "@onflow/fcl"
 import {FlowProvider} from "../provider"
 import {useFlowTransaction} from "./useFlowTransaction"
 import type {Interaction, Transaction} from "@onflow/typedefs"
+import {createMockFclInstance, MockFclInstance} from "../__mocks__/flow-client"
 
 jest.mock("@onflow/fcl", () => require("../__mocks__/fcl").default)
 
 describe("useFlowTransaction", () => {
+  let mockFcl: MockFclInstance
+  beforeEach(() => {
+    mockFcl = createMockFclInstance()
+    jest.mocked(fcl.createFlowClient).mockReturnValue(mockFcl.mockFclInstance)
+  })
+
   afterEach(() => {
     jest.clearAllMocks()
   })
@@ -47,10 +54,10 @@ describe("useFlowTransaction", () => {
     const getTransactionMock = jest.mocked(fcl.getTransaction)
     getTransactionMock.mockReturnValue(mockInteraction as any)
 
-    const sendMock = jest.mocked(fcl.send)
+    const sendMock = jest.mocked(mockFcl.mockFclInstance.send)
     sendMock.mockResolvedValue(mockTransaction)
 
-    const decodeMock = jest.mocked(fcl.decode)
+    const decodeMock = jest.mocked(mockFcl.mockFclInstance.decode)
     decodeMock.mockResolvedValue(mockTransaction)
 
     let hookResult: any
@@ -83,10 +90,10 @@ describe("useFlowTransaction", () => {
     const getTransactionMock = jest.mocked(fcl.getTransaction)
     getTransactionMock.mockReturnValue(mockInteraction as any)
 
-    const sendMock = jest.mocked(fcl.send)
+    const sendMock = jest.mocked(mockFcl.mockFclInstance.send)
     sendMock.mockResolvedValue({})
 
-    const decodeMock = jest.mocked(fcl.decode)
+    const decodeMock = jest.mocked(mockFcl.mockFclInstance.decode)
     decodeMock.mockRejectedValue(testError)
 
     let hookResult: any
@@ -143,10 +150,10 @@ describe("useFlowTransaction", () => {
     const getTransactionMock = jest.mocked(fcl.getTransaction)
     getTransactionMock.mockReturnValue(mockInteraction as any)
 
-    const sendMock = jest.mocked(fcl.send)
+    const sendMock = jest.mocked(mockFcl.mockFclInstance.send)
     sendMock.mockResolvedValue(mockTransaction)
 
-    const decodeMock = jest.mocked(fcl.decode)
+    const decodeMock = jest.mocked(mockFcl.mockFclInstance.decode)
     decodeMock.mockResolvedValueOnce(mockTransaction)
     decodeMock.mockResolvedValueOnce(updatedTransaction)
 

@@ -74,7 +74,7 @@ import {
   initServiceRegistry,
   StorageProvider,
 } from "@onflow/fcl-core"
-import {discoveryOpts} from "./instance"
+import {discoveryOpts} from "./client"
 
 /**
  * @description The main current user service for managing user authentication and authorization in Flow applications.
@@ -390,4 +390,4 @@ export {subscribe, subscribeRaw} from "@onflow/fcl-core"
 
 export * from "@onflow/typedefs"
 
-export {createFcl} from "./instance"
+export {createFlowClient, type FlowClientConfig} from "./client"

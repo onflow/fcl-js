@@ -2,7 +2,7 @@ import React from "react"
 import {useFlowMutate} from "../hooks"
 import {Button, ButtonProps} from "./internal/Button"
 import {UseMutationOptions} from "@tanstack/react-query"
-import {mutate} from "@onflow/fcl"
+import {type mutate} from "@onflow/fcl"
 import {useGlobalTransaction} from "../provider/GlobalTransactionProvider"
 
 interface TransactionButtonProps

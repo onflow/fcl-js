@@ -1,12 +1,12 @@
 import {
-  config,
   createSignableVoucher,
-  resolve as defaultResolve,
   interaction,
   InteractionBuilderFn,
   pipe,
 } from "@onflow/sdk"
 import {Interaction} from "@onflow/typedefs"
+import {FCLContext} from "../context"
+import {createPartialGlobalFCLContext} from "../context/global"
 
 export interface SerializeOptions {
   resolve?: InteractionBuilderFn
@@ -46,20 +46,25 @@ export interface SerializeOptions {
  *   fcl.authorizations([authz])
  * ])
  */
-export const serialize = async (
-  args: (InteractionBuilderFn | false)[] | Interaction,
-  opts: SerializeOptions = {}
-) => {
-  const resolveFunction = await config.first(
-    ["sdk.resolve"],
-    opts.resolve || defaultResolve
-  )
+export function createSerialize(context: Pick<FCLContext, "config" | "sdk">) {
+  const serialize = async (
+    args: (InteractionBuilderFn | false)[] | Interaction,
+    opts: SerializeOptions = {}
+  ) => {
+    const resolveFunction = opts.resolve || context.sdk.resolve
 
-  if (Array.isArray(args)) args = await pipe(interaction(), args)
+    if (Array.isArray(args)) args = await pipe(interaction(), args)
 
-  return JSON.stringify(
-    createSignableVoucher(await resolveFunction(args)),
-    null,
-    2
-  )
+    return JSON.stringify(
+      createSignableVoucher(await resolveFunction(args)),
+      null,
+      2
+    )
+  }
+
+  return serialize
 }
+
+export const serialize = /* @__PURE__ */ createSerialize(
+  createPartialGlobalFCLContext()
+)

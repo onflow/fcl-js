@@ -14,11 +14,7 @@ import {
   scoped,
 } from "./utils"
 import {TXID_REGEXP} from "./constants"
-import {
-  isUnknown,
-  subscribe as sdkSubscribe,
-  SubscriptionsNotSupportedError,
-} from "@onflow/sdk"
+import {isUnknown, SubscriptionsNotSupportedError} from "@onflow/sdk"
 import {TransactionError} from "./transaction-error"
 import {transaction as legacyTransaction} from "./legacy-polling"
 import {createGetChainId} from "../utils"
@@ -239,7 +235,7 @@ function createObservable(
   // Subscribe to transaction status updates
   function subscribeTransactionStatuses() {
     // Subscribe to transaction status updates
-    const subscription = sdkSubscribe({
+    const subscription = context.sdk.subscribe({
       topic: SubscriptionTopic.TRANSACTION_STATUSES,
       args: {transactionId: txId},
       onData: txStatus => {

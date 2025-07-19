@@ -1,9 +1,9 @@
 import {useState, useEffect} from "react"
 import {CurrentUser} from "@onflow/typedefs"
-import {useClient} from "../provider/FlowProvider"
+import {useFlowClient} from "./useFlowClient"
 
 interface UseFlowCurrentUserArgs {
-  client?: ReturnType<typeof useClient>
+  flowClient?: ReturnType<typeof useFlowClient>
 }
 
 interface UseFlowCurrentUserResult {
@@ -13,10 +13,10 @@ interface UseFlowCurrentUserResult {
 }
 
 export function useFlowCurrentUser(
-  client?: ReturnType<typeof useClient>
+  flowClient?: ReturnType<typeof useFlowClient>
 ): UseFlowCurrentUserResult {
   const [user, setUser] = useState<CurrentUser | null>(null)
-  const fcl = useClient({client})
+  const fcl = useFlowClient({flowClient})
 
   useEffect(() => {
     const unsubscribe = fcl.currentUser.subscribe(setUser)

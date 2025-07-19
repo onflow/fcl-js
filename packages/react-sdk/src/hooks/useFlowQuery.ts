@@ -2,7 +2,7 @@ import {useQuery, UseQueryResult, UseQueryOptions} from "@tanstack/react-query"
 import {useCallback} from "react"
 import {useFlowQueryClient} from "../provider/FlowQueryClient"
 import {arg, t} from "@onflow/fcl"
-import {useClient} from "../provider/FlowProvider"
+import {useFlowClient} from "./useFlowClient"
 
 export function encodeQueryArgs(
   args?: (_arg: typeof arg, _t: typeof t) => unknown[]
@@ -16,7 +16,7 @@ export interface UseFlowQueryArgs {
   cadence: string
   args?: (_arg: typeof arg, _t: typeof t) => unknown[]
   query?: Omit<UseQueryOptions<unknown, Error>, "queryKey" | "queryFn">
-  client?: ReturnType<typeof useClient>
+  flowClient?: ReturnType<typeof useFlowClient>
 }
 
 /**
@@ -34,10 +34,10 @@ export function useFlowQuery({
   cadence,
   args,
   query: queryOptions = {},
-  client,
+  flowClient,
 }: UseFlowQueryArgs): UseQueryResult<unknown, Error> {
   const queryClient = useFlowQueryClient()
-  const fcl = useClient({client})
+  const fcl = useFlowClient({flowClient})
 
   const fetchQuery = useCallback(async () => {
     if (!cadence) return null

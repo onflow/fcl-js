@@ -1,12 +1,12 @@
 import {useQuery, UseQueryOptions, UseQueryResult} from "@tanstack/react-query"
 import {useFlowQueryClient} from "../provider/FlowQueryClient"
 import {useCallback} from "react"
+import {useFlowClient} from "./useFlowClient"
 import {useFlowConfig} from "./useFlowConfig"
-import {useClient} from "../provider/FlowProvider"
 
 interface UseFlowChainIdArgs {
   query?: Omit<UseQueryOptions<string | null, Error>, "queryKey" | "queryFn">
-  client?: ReturnType<typeof useClient>
+  flowClient?: ReturnType<typeof useFlowClient>
 }
 
 /**
@@ -14,14 +14,15 @@ interface UseFlowChainIdArgs {
  */
 export function useFlowChainId({
   query: queryOptions = {},
-  client,
+  flowClient,
 }: UseFlowChainIdArgs = {}): UseQueryResult<string | null, Error> {
   const queryClient = useFlowQueryClient()
+  const fcl = useFlowClient({flowClient})
   const config = useFlowConfig()
-  const fcl = useClient({client})
+
   const fetchChainId = useCallback(async () => {
     return await fcl.getChainId()
-  }, [config])
+  }, [fcl, config])
 
   return useQuery<string | null, Error>(
     {

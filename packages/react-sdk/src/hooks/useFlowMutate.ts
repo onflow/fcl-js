@@ -5,8 +5,8 @@ import {
 } from "@tanstack/react-query"
 import {useCallback} from "react"
 import {useFlowQueryClient} from "../provider/FlowQueryClient"
-import {mutate} from "@onflow/fcl"
-import {useClient} from "../provider/FlowProvider"
+import {type mutate} from "@onflow/fcl"
+import {useFlowClient} from "./useFlowClient"
 
 /**
  * Arguments for the useFlowMutate hook.
@@ -19,7 +19,7 @@ export interface UseFlowMutateArgs {
     UseMutationOptions<string, Error, Parameters<typeof mutate>[0]>,
     "mutationFn"
   >
-  client?: ReturnType<typeof useClient>
+  flowClient?: ReturnType<typeof useFlowClient>
 }
 
 /**
@@ -31,21 +31,21 @@ export interface UseFlowMutateArgs {
  */
 export function useFlowMutate({
   mutation: mutationOptions = {},
-  client,
+  flowClient,
 }: UseFlowMutateArgs = {}): UseMutationResult<
   string,
   Error,
   Parameters<typeof mutate>[0]
 > {
   const queryClient = useFlowQueryClient()
-  const fcl = useClient({client})
+  const fcl = useFlowClient({flowClient})
 
   const mutationFn = useCallback(
     async (variables: Parameters<typeof mutate>[0]) => {
       const txId = await fcl.mutate(variables)
       return txId
     },
-    []
+    [fcl]
   )
 
   return useMutation<string, Error, Parameters<typeof mutate>[0]>(

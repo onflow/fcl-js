@@ -3,10 +3,10 @@ import {initInteraction, pipe} from "../../interaction/interaction"
 import * as ixModule from "../../interaction/interaction"
 import {InteractionBuilderFn} from "../../interaction/interaction"
 import {response} from "../../response/response"
-import {resolve as defaultResolve} from "../../resolve/resolve"
 import {SdkContext} from "../../context/context"
 import {invariant} from "@onflow/util-invariant"
 import {withGlobalContext} from "../../context/global"
+import {createResolve} from "../../resolve/resolve"
 
 export function createSend(context: SdkContext) {
   async function send(
@@ -22,7 +22,8 @@ export function createSend(context: SdkContext) {
       `Required value for sdk.transport is not defined in config. See: ${"https://github.com/onflow/fcl-js/blob/master/packages/sdk/CHANGELOG.md#0057-alpha1----2022-01-21"}`
     )
 
-    const resolveFn = context.customResolver || opts.resolve || defaultResolve
+    const resolveFn =
+      opts.resolve || context.customResolver || createResolve(context)
 
     opts.node = opts.node || context.accessNodeUrl
 
