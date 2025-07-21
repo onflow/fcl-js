@@ -3,10 +3,12 @@ import {TransactionStatus} from "@onflow/typedefs"
 import {CONTRACT_ADDRESSES} from "../constants"
 import {useFlowChainId} from "./useFlowChainId"
 import {useFlowTransactionStatus} from "./useFlowTransactionStatus"
+import {useFlowClient} from "./useFlowClient"
 
 export interface UseCrossVmTransactionStatusArgs {
   /** The Flow transaction ID to monitor */
   id?: string
+  flowClient?: ReturnType<typeof useFlowClient>
 }
 
 export interface UseCrossVmTransactionStatusResult {
@@ -48,6 +50,7 @@ export interface EvmTransactionExecutedData {
  */
 export function useCrossVmTransactionStatus({
   id,
+  flowClient,
 }: UseCrossVmTransactionStatusArgs): UseCrossVmTransactionStatusResult {
   const chainId = useFlowChainId()
 
@@ -58,6 +61,7 @@ export function useCrossVmTransactionStatus({
 
   const {transactionStatus, error} = useFlowTransactionStatus({
     id: eventType ? id : undefined,
+    flowClient,
   })
 
   if (eventType === null) {

@@ -98,7 +98,11 @@ type SubscribeFn = <T extends SubscriptionTopic>(
   opts: {node: string}
 ) => Subscription
 
-type SendFn = (ix: Interaction, context: IContext, opts: IOpts) => void
+type SendFn = (
+  ix: Interaction | Promise<Interaction>,
+  context: IContext,
+  opts: IOpts
+) => Promise<any>
 
 /**
  * Transport interface for the Flow SDK that provides methods for sending interactions and subscribing to data

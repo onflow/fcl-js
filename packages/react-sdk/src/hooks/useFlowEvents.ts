@@ -1,6 +1,6 @@
-import * as fcl from "@onflow/fcl"
 import {Event} from "@onflow/typedefs"
 import {useEffect} from "react"
+import {useFlowClient} from "./useFlowClient"
 
 export interface EventFilter {
   startBlockId?: string
@@ -18,6 +18,7 @@ export interface UseFlowEventsArgs extends EventFilter {
   onEvent: (event: Event) => void
   /** Optional error callback */
   onError?: (error: Error) => void
+  flowClient?: ReturnType<typeof useFlowClient>
 }
 
 /**
@@ -34,7 +35,10 @@ export function useFlowEvents({
   opts,
   onEvent,
   onError,
+  flowClient,
 }: UseFlowEventsArgs) {
+  const fcl = useFlowClient({flowClient})
+
   useEffect(() => {
     let unsubscribe: (() => void) | undefined
 

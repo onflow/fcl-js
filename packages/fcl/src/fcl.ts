@@ -74,11 +74,7 @@ import {
   initServiceRegistry,
   StorageProvider,
 } from "@onflow/fcl-core"
-
-import {execStrategyHook} from "./discovery/exec-hook"
-const discoveryOpts = {
-  execStrategy: execStrategyHook,
-}
+import {discoveryOpts} from "./client"
 
 /**
  * @description The main current user service for managing user authentication and authorization in Flow applications.
@@ -393,3 +389,5 @@ export {LOCAL_STORAGE, SESSION_STORAGE} from "./utils/web"
 export {subscribe, subscribeRaw} from "@onflow/fcl-core"
 
 export * from "@onflow/typedefs"
+
+export {createFlowClient, type FlowClientConfig} from "./client"

@@ -3,10 +3,18 @@ import * as fcl from "@onflow/fcl"
 import {FlowProvider} from "../provider"
 import {useFlowAccount} from "./useFlowAccount"
 import {Account} from "@onflow/typedefs"
+import {createMockFclInstance, MockFclInstance} from "../__mocks__/flow-client"
 
 jest.mock("@onflow/fcl", () => require("../__mocks__/fcl").default)
 
 describe("useFlowAccount", () => {
+  let mockFcl: MockFclInstance
+
+  beforeEach(() => {
+    mockFcl = createMockFclInstance()
+    jest.mocked(fcl.createFlowClient).mockReturnValue(mockFcl.mockFclInstance)
+  })
+
   afterEach(() => {
     jest.clearAllMocks()
   })
@@ -30,7 +38,7 @@ describe("useFlowAccount", () => {
       keys: [],
     }
 
-    const accountMock = jest.mocked(fcl.account)
+    const accountMock = jest.mocked(mockFcl.mockFclInstance.account)
     accountMock.mockResolvedValueOnce(mockAccount)
 
     let hookResult: any
@@ -55,7 +63,7 @@ describe("useFlowAccount", () => {
 
   test("handles error when fetching account fails", async () => {
     const testError = new Error("Failed to fetch account")
-    const accountMock = jest.mocked(fcl.account)
+    const accountMock = jest.mocked(mockFcl.mockFclInstance.account)
     accountMock.mockRejectedValueOnce(testError)
 
     let hookResult: any
@@ -89,7 +97,7 @@ describe("useFlowAccount", () => {
       keys: [],
     }
 
-    const accountMock = jest.mocked(fcl.account)
+    const accountMock = jest.mocked(mockFcl.mockFclInstance.account)
     accountMock.mockResolvedValueOnce(mockAccount)
 
     let hookResult: any

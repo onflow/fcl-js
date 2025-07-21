@@ -12,6 +12,8 @@ import {
 import {getServices} from "../services"
 import {LEVELS, log} from "@onflow/util-logger"
 import {Service} from "@onflow/typedefs"
+import {FCLContext} from "../../context"
+import {createPartialGlobalFCLContext} from "../../context/global"
 
 export const SERVICE_ACTOR_KEYS = {
   AUTHN: "authn",
@@ -51,9 +53,14 @@ const warn = (fact: boolean, msg: string): void => {
   }
 }
 
-const fetchServicesFromDiscovery = async (): Promise<void> => {
+const fetchServicesFromDiscovery = async (
+  context: Pick<FCLContext, "config">
+): Promise<void> => {
   try {
-    const services = await getServices({types: [SERVICE_ACTOR_KEYS.AUTHN]})
+    const services = await getServices({
+      context,
+      types: [SERVICE_ACTOR_KEYS.AUTHN],
+    })
     send(SERVICE_ACTOR_KEYS.AUTHN, SERVICE_ACTOR_KEYS.UPDATE_RESULTS, {
       results: services,
     })
@@ -66,42 +73,45 @@ const fetchServicesFromDiscovery = async (): Promise<void> => {
   }
 }
 
-const HANDLERS = {
-  [INIT]: async (ctx: ActorContext) => {
-    warn(
-      typeof window === "undefined",
-      '"fcl.discovery" is only available in the browser.'
-    )
-    // If you call this before the window is loaded extensions will not be set yet
-    if (document.readyState === "complete") {
-      fetchServicesFromDiscovery()
-    } else {
-      window.addEventListener("load", () => {
-        fetchServicesFromDiscovery()
-      })
-    }
-  },
-  [SERVICE_ACTOR_KEYS.UPDATE_RESULTS]: (
-    ctx: ActorContext,
-    _letter: ActorLetter,
-    data: ServiceData
-  ) => {
-    ctx.merge(data)
-    ctx.broadcast(SERVICE_ACTOR_KEYS.UPDATED, {...ctx.all()})
-  },
-  [SUBSCRIBE]: (ctx: ActorContext, letter: ActorLetter) => {
-    ctx.subscribe(letter.from!)
-    ctx.send(letter.from!, SERVICE_ACTOR_KEYS.UPDATED, {...ctx.all()})
-  },
-  [UNSUBSCRIBE]: (ctx: ActorContext, letter: ActorLetter) =>
-    ctx.unsubscribe(letter.from!),
-  [SERVICE_ACTOR_KEYS.SNAPSHOT]: async (
-    ctx: ActorContext,
-    letter: ActorLetter
-  ) => letter.reply({...ctx.all()}),
+function createHandlers(context: Pick<FCLContext, "config">) {
+  return {
+    [INIT]: async (ctx: ActorContext) => {
+      warn(
+        typeof window === "undefined",
+        '"fcl.discovery" is only available in the browser.'
+      )
+      // If you call this before the window is loaded extensions will not be set yet
+      if (document.readyState === "complete") {
+        fetchServicesFromDiscovery(context)
+      } else {
+        window.addEventListener("load", () => {
+          fetchServicesFromDiscovery(context)
+        })
+      }
+    },
+    [SERVICE_ACTOR_KEYS.UPDATE_RESULTS]: (
+      ctx: ActorContext,
+      _letter: ActorLetter,
+      data: ServiceData
+    ) => {
+      ctx.merge(data)
+      ctx.broadcast(SERVICE_ACTOR_KEYS.UPDATED, {...ctx.all()})
+    },
+    [SUBSCRIBE]: (ctx: ActorContext, letter: ActorLetter) => {
+      ctx.subscribe(letter.from!)
+      ctx.send(letter.from!, SERVICE_ACTOR_KEYS.UPDATED, {...ctx.all()})
+    },
+    [UNSUBSCRIBE]: (ctx: ActorContext, letter: ActorLetter) =>
+      ctx.unsubscribe(letter.from!),
+    [SERVICE_ACTOR_KEYS.SNAPSHOT]: async (
+      ctx: ActorContext,
+      letter: ActorLetter
+    ) => letter.reply({...ctx.all()}),
+  }
 }
 
-const spawnProviders = () => spawn(HANDLERS as any, SERVICE_ACTOR_KEYS.AUTHN)
+const spawnProviders = (context: Pick<FCLContext, "config">) =>
+  spawn(createHandlers(context) as any, SERVICE_ACTOR_KEYS.AUTHN)
 
 /**
  * Discovery authn service for interacting with Flow compatible wallets.
@@ -152,74 +162,85 @@ const spawnProviders = () => spawn(HANDLERS as any, SERVICE_ACTOR_KEYS.AUTHN)
  *   'discovery.authn.exclude': ['0x123456789abcdef01'], // Example of excluding a wallet by address
  * });
  */
-const authn: Authn = {
+function createAuthn(context: Pick<FCLContext, "config">): Authn {
   /**
-   * Subscribe to Discovery authn services and receive real-time updates.
-   *
-   * This method allows you to subscribe to changes in the available authentication services.
-   * When new services are discovered or existing ones are updated, the callback function will be invoked.
-   *
-   * @param cb Callback function that receives the list of available services and any error
-   * @returns A function to unsubscribe from the service updates
-   *
-   * @example
-   * import * as fcl from '@onflow/fcl';
-   *
-   * const unsubscribe = fcl.discovery.authn.subscribe((services, error) => {
-   *   if (error) {
-   *     console.error('Discovery error:', error);
-   *     return;
-   *   }
-   *   console.log('Available services:', services);
-   * });
-   *
-   * // Later, to stop receiving updates
-   * unsubscribe();
+   * @description Discovery methods for interacting with Authn.
    */
-  subscribe: cb => subscriber(SERVICE_ACTOR_KEYS.AUTHN, spawnProviders, cb),
+  const authn: Authn = {
+    /**
+     * Subscribe to Discovery authn services and receive real-time updates.
+     *
+     * This method allows you to subscribe to changes in the available authentication services.
+     * When new services are discovered or existing ones are updated, the callback function will be invoked.
+     *
+     * @param cb Callback function that receives the list of available services and any error
+     * @returns A function to unsubscribe from the service updates
+     *
+     * @example
+     * import * as fcl from '@onflow/fcl';
+     *
+     * const unsubscribe = fcl.discovery.authn.subscribe((services, error) => {
+     *   if (error) {
+     *     console.error('Discovery error:', error);
+     *     return;
+     *   }
+     *   console.log('Available services:', services);
+     * });
+     *
+     * // Later, to stop receiving updates
+     * unsubscribe();
+     */
+    subscribe: cb =>
+      subscriber(SERVICE_ACTOR_KEYS.AUTHN, () => spawnProviders(context), cb),
 
-  /**
-   * Get the current snapshot of Discovery authn services.
-   *
-   * This method returns a promise that resolves to the current state of available authentication services
-   * without setting up a subscription. Useful for one-time checks or initial state loading.
-   *
-   * @returns A promise that resolves to the current service data
-   *
-   * @example
-   * import * as fcl from '@onflow/fcl';
-   *
-   * async function getServices() {
-   *   try {
-   *     const serviceData = await fcl.discovery.authn.snapshot();
-   *     console.log('Current services:', serviceData.results);
-   *   } catch (error) {
-   *     console.error('Failed to get services:', error);
-   *   }
-   * }
-   */
-  snapshot: () => snapshoter(SERVICE_ACTOR_KEYS.AUTHN, spawnProviders),
+    /**
+     * Get the current snapshot of Discovery authn services.
+     *
+     * This method returns a promise that resolves to the current state of available authentication services
+     * without setting up a subscription. Useful for one-time checks or initial state loading.
+     *
+     * @returns A promise that resolves to the current service data
+     *
+     * @example
+     * import * as fcl from '@onflow/fcl';
+     *
+     * async function getServices() {
+     *   try {
+     *     const serviceData = await fcl.discovery.authn.snapshot();
+     *     console.log('Current services:', serviceData.results);
+     *   } catch (error) {
+     *     console.error('Failed to get services:', error);
+     *   }
+     * }
+     */
+    snapshot: () =>
+      snapshoter(SERVICE_ACTOR_KEYS.AUTHN, () => spawnProviders(context)),
 
-  /**
-   * Trigger an update of authn services from the discovery endpoint.
-   *
-   * This method manually triggers a refresh of the available authentication services
-   * from the configured discovery endpoint. Useful when you want to force a refresh
-   * of the service list.
-   *
-   * @example
-   * import * as fcl from '@onflow/fcl';
-   *
-   * // Force refresh of available services
-   * fcl.discovery.authn.update();
-   */
-  update: () => {
-    // Only fetch services if the window is loaded
-    // Otherwise, this will be called by the INIT handler
-    if (document.readyState === "complete") {
-      fetchServicesFromDiscovery()
-    }
-  },
+    /**
+     * Trigger an update of authn services from the discovery endpoint.
+     *
+     * This method manually triggers a refresh of the available authentication services
+     * from the configured discovery endpoint. Useful when you want to force a refresh
+     * of the service list.
+     *
+     * @example
+     * import * as fcl from '@onflow/fcl';
+     *
+     * // Force refresh of available services
+     * fcl.discovery.authn.update();
+     */
+    update: () => {
+      // Only fetch services if the window is loaded
+      // Otherwise, this will be called by the INIT handler
+      if (document.readyState === "complete") {
+        fetchServicesFromDiscovery(context)
+      }
+    },
+  }
+
+  return authn
 }
+
+const authn = /* @__PURE__ */ createAuthn(createPartialGlobalFCLContext())
 
 export default authn

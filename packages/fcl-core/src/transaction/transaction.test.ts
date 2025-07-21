@@ -3,13 +3,14 @@ import {SubscriptionsNotSupportedError} from "@onflow/sdk"
 import {SubscriptionTopic, TransactionExecutionStatus} from "@onflow/typedefs"
 import {transaction} from "./transaction"
 import {transaction as legacyTransaction} from "./legacy-polling"
-import {getChainId} from "../utils"
+import {createGetChainId} from "../utils"
 
 jest.mock("@onflow/sdk")
 jest.mock("./legacy-polling")
 jest.mock("../utils")
 
 describe("transaction", () => {
+  let mockGetChainId: jest.MockedFunction<() => Promise<string>>
   beforeEach(() => {
     jest.clearAllMocks()
 
@@ -25,7 +26,8 @@ describe("transaction", () => {
       snapshot: jest.fn(),
     })
 
-    jest.mocked(getChainId).mockResolvedValue("mainnet")
+    mockGetChainId = jest.fn().mockResolvedValue("mainnet")
+    jest.mocked(createGetChainId).mockReturnValue(mockGetChainId)
   })
 
   test("should throw an error if transactionId is not a 64 byte hash string", () => {
@@ -210,7 +212,7 @@ describe("transaction", () => {
   })
 
   test("should fall back to legacy polling if the Flow emulator is detected", async () => {
-    jest.mocked(getChainId).mockResolvedValue("local")
+    mockGetChainId.mockResolvedValue("local")
 
     const txId =
       "3234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef"

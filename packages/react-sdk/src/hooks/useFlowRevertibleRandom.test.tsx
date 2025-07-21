@@ -1,9 +1,10 @@
 import React from "react"
 import {renderHook, waitFor} from "@testing-library/react"
 import {FlowProvider} from "../provider/FlowProvider"
-import {useFlowBlock} from "./useFlowBlock"
 import {useFlowRevertibleRandom} from "./useFlowRevertibleRandom"
 import {useFlowQuery} from "./useFlowQuery"
+import {createFlowClient} from "@onflow/fcl"
+import {createMockFclInstance} from "../__mocks__/flow-client"
 
 jest.mock("@onflow/fcl", () => require("../__mocks__/fcl").default)
 
@@ -19,6 +20,12 @@ const wrapper = ({children}: {children: React.ReactNode}) => (
 )
 
 describe("useFlowRandom", () => {
+  beforeEach(() => {
+    jest
+      .mocked(createFlowClient)
+      .mockReturnValue(createMockFclInstance().mockFclInstance)
+  })
+
   afterEach(() => {
     jest.clearAllMocks()
   })

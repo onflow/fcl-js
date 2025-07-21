@@ -46,6 +46,6 @@
   },
   "alias": {
     "@onflow/fcl": "../fcl/src/fcl.ts",
-    "@onflow/react-sdk": "../kit/src/index.ts"
+    "@onflow/react-sdk": "../react-sdk/src/index.ts"
   }
 }

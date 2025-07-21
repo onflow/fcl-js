@@ -1,4 +1,3 @@
-import {config} from "@onflow/config"
 import {invariant} from "@onflow/util-invariant"
 import {getServiceRegistry} from "../current-user/exec-service/plugins"
 import {getChainId} from "../utils"
@@ -6,9 +5,11 @@ import {VERSION} from "../VERSION"
 import {makeDiscoveryServices} from "./utils"
 import {URL} from "../utils/url"
 import {Service} from "@onflow/typedefs"
+import {FCLContext} from "../context"
 
 export interface GetServicesParams {
   types: string[]
+  context: Pick<FCLContext, "config">
 }
 
 export interface DiscoveryRequestBody {
@@ -39,16 +40,17 @@ export interface DiscoveryRequestBody {
  * console.log(services) // Array of available wallet authentication services
  */
 export async function getServices({
+  context,
   types,
 }: GetServicesParams): Promise<Service[]> {
-  const endpoint = await config.get("discovery.authn.endpoint")
+  const endpoint = await context.config.get("discovery.authn.endpoint")
   invariant(
     Boolean(endpoint),
     `"discovery.authn.endpoint" in config must be defined.`
   )
 
-  const include = await config.get("discovery.authn.include", [])
-  const exclude = await config.get("discovery.authn.exclude", [])
+  const include = await context.config.get("discovery.authn.include", [])
+  const exclude = await context.config.get("discovery.authn.exclude", [])
   const url = new URL(endpoint as string)
 
   return fetch(url, {
@@ -62,7 +64,7 @@ export async function getServices({
       include,
       exclude,
       features: {
-        suggested: await config.get("discovery.features.suggested", []),
+        suggested: await context.config.get("discovery.features.suggested", []),
       },
       clientServices: await makeDiscoveryServices(),
       supportedStrategies: getServiceRegistry().getStrategies(),

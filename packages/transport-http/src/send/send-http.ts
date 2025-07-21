@@ -98,7 +98,7 @@ interface IOpts extends IOptsCommon {
 }
 
 export const send = async (
-  ix: Interaction,
+  ix: Interaction | Promise<Interaction>,
   context: IContext,
   opts: IOpts = {}
 ) => {

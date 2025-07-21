@@ -2,6 +2,7 @@ import {config} from "@onflow/config"
 import {invariant} from "@onflow/util-invariant"
 import {getServiceRegistry} from "../current-user/exec-service/plugins"
 import {Service} from "@onflow/typedefs"
+import {FCLContext} from "../context"
 
 export interface DiscoveryService extends Service {
   discoveryAuthnInclude: string[]
@@ -37,6 +38,7 @@ export const makeDiscoveryServices = async (): Promise<Service[]> => {
  * This function combines the provided service configuration with discovery-related settings from
  * the FCL configuration to create a complete service definition for wallet authentication flows.
  *
+ * @param context FCL context containing configuration and SDK
  * @param service Optional partial service configuration to override defaults
  * @param service.method Optional communication method for the service
  * @param service.endpoint Optional endpoint URL for the service
@@ -45,17 +47,17 @@ export const makeDiscoveryServices = async (): Promise<Service[]> => {
  *
  * @example
  * // Get discovery service with default configuration
- * const discoveryService = await getDiscoveryService()
+ * const discoveryService = await getDiscoveryService(context)
  * console.log(discoveryService.endpoint) // Configured discovery endpoint
  *
  * // Override discovery service endpoint
- * const customService = await getDiscoveryService({
+ * const customService = await getDiscoveryService(context, {
  *   endpoint: "https://wallet.example.com/authn",
  *   method: "HTTP/POST"
  * })
  *
  * // Use with custom wallet service
- * const walletService = await getDiscoveryService({
+ * const walletService = await getDiscoveryService(context, {
  *   endpoint: "https://my-wallet.com/fcl",
  *   provider: {
  *     name: "My Wallet",
@@ -64,28 +66,32 @@ export const makeDiscoveryServices = async (): Promise<Service[]> => {
  * })
  */
 export async function getDiscoveryService(
+  context: Pick<FCLContext, "config">,
   service?: Partial<Service>
 ): Promise<DiscoveryService> {
-  const discoveryAuthnInclude = (await config.get(
+  const discoveryAuthnInclude = (await context.config.get(
     "discovery.authn.include",
     []
   )) as string[]
-  const discoveryAuthnExclude = (await config.get(
+  const discoveryAuthnExclude = (await context.config.get(
     "discovery.authn.exclude",
     []
   )) as string[]
-  const discoveryFeaturesSuggested = (await config.get(
+  const discoveryFeaturesSuggested = (await context.config.get(
     "discovery.features.suggested",
     []
   )) as string[]
-  const discoveryWalletMethod = await config.first(
+  const discoveryWalletMethod = await context.config.first(
     ["discovery.wallet.method", "discovery.wallet.method.default"],
     undefined
   )
   const method = service?.method ? service.method : discoveryWalletMethod
   const endpoint =
     service?.endpoint ??
-    (await config.first(["discovery.wallet", "challenge.handshake"], undefined))
+    (await context.config.first(
+      ["discovery.wallet", "challenge.handshake"],
+      undefined
+    ))
 
   invariant(
     endpoint as any,

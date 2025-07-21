@@ -5,12 +5,49 @@ import {atBlockId} from "../build/build-at-block-id"
 import {atLatestBlock} from "../build/build-at-latest-block"
 import {getAccount} from "../build/build-get-account"
 import {decodeResponse as decode} from "../decode/decode"
-import {send} from "../transport"
+import {SdkContext} from "../context/context"
+import {withGlobalContext} from "../context/global"
+import {createSend} from "../transport/send/send"
 
-interface AccountQueryOptions {
+export interface AccountQueryOptions {
   height?: number
   id?: string
   isSealed?: boolean
+}
+
+export function createAccount(context: SdkContext) {
+  async function account(
+    address: string,
+    {height, id, isSealed}: AccountQueryOptions = {},
+    opts?: object
+  ): Promise<Account> {
+    invariant(
+      !((id && height) || (id && isSealed) || (height && isSealed)),
+      `Method: account -- Only one of the following parameters can be provided: id, height, isSealed`
+    )
+
+    // Get account by ID
+    if (id)
+      return await createSend(context)(
+        [getAccount(address), atBlockId(id)],
+        opts
+      ).then(decode)
+
+    // Get account by height
+    if (height)
+      return await createSend(context)(
+        [getAccount(address), atBlockHeight(height)],
+        opts
+      ).then(decode)
+
+    // Get account by latest block
+    return await createSend(context)(
+      [getAccount(address), atLatestBlock(isSealed ?? false)],
+      opts
+    ).then(decode)
+  }
+
+  return account
 }
 
 /**
@@ -63,29 +100,4 @@ interface AccountQueryOptions {
  *   fcl.atBlockHeight(123)
  * ]).then(fcl.decode);
  */
-export async function account(
-  address: string,
-  {height, id, isSealed}: AccountQueryOptions = {},
-  opts?: object
-): Promise<Account> {
-  invariant(
-    !((id && height) || (id && isSealed) || (height && isSealed)),
-    `Method: account -- Only one of the following parameters can be provided: id, height, isSealed`
-  )
-
-  // Get account by ID
-  if (id)
-    return await send([getAccount(address), atBlockId(id)], opts).then(decode)
-
-  // Get account by height
-  if (height)
-    return await send([getAccount(address), atBlockHeight(height)], opts).then(
-      decode
-    )
-
-  // Get account by latest block
-  return await send(
-    [getAccount(address), atLatestBlock(isSealed ?? false)],
-    opts
-  ).then(decode)
-}
+export const account = /* @__PURE__ */ withGlobalContext(createAccount)
