@@ -3,6 +3,8 @@ import {useFlowChainId} from "./useFlowChainId"
 import {useFlowQuery} from "./useFlowQuery"
 import {useCrossVmTokenBalance} from "./useCrossVmTokenBalance"
 import {act, renderHook, waitFor} from "@testing-library/react"
+import {createFlowClient} from "@onflow/fcl"
+import {createMockFclInstance} from "../__mocks__/flow-client"
 
 jest.mock("@onflow/fcl", () => require("../__mocks__/fcl").default)
 jest.mock("./useFlowQuery")
@@ -10,6 +12,9 @@ jest.mock("./useFlowChainId")
 
 describe("useCrossVmTokenBalance", () => {
   beforeEach(() => {
+    jest
+      .mocked(createFlowClient)
+      .mockReturnValue(createMockFclInstance().mockFclInstance)
     jest.clearAllMocks()
   })
 

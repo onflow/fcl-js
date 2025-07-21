@@ -1,5 +1,5 @@
 import React, {useState} from "react"
-import {useCurrentFlowUser} from "../hooks"
+import {useFlowCurrentUser} from "../hooks"
 import {
   useCrossVmTokenBalance,
   UseCrossVmTokenBalanceData,
@@ -27,7 +27,7 @@ export const Connect: React.FC<ConnectProps> = ({
   onDisconnect,
   balanceType = "cadence",
 }) => {
-  const {user, authenticate, unauthenticate} = useCurrentFlowUser()
+  const {user, authenticate, unauthenticate} = useFlowCurrentUser()
   const [open, setOpen] = useState(false)
   const [copied, setCopied] = useState(false)
   const {data: chainId} = useFlowChainId()

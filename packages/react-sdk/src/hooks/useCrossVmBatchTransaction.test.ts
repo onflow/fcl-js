@@ -7,6 +7,7 @@ import {
   useCrossVmBatchTransaction,
 } from "./useCrossVmBatchTransaction"
 import {useFlowChainId} from "./useFlowChainId"
+import {createMockFclInstance, MockFclInstance} from "../__mocks__/flow-client"
 
 jest.mock("@onflow/fcl", () => require("../__mocks__/fcl").default)
 jest.mock("viem", () => ({
@@ -18,6 +19,8 @@ jest.mock("./useFlowChainId", () => ({
 }))
 
 describe("useBatchEvmTransaction", () => {
+  let mockFcl: MockFclInstance
+
   const mockCalls = [
     {
       address: "0x123",
@@ -37,6 +40,9 @@ describe("useBatchEvmTransaction", () => {
       data: "mainnet",
       isLoading: false,
     } as any)
+
+    mockFcl = createMockFclInstance()
+    jest.mocked(fcl.createFlowClient).mockReturnValue(mockFcl.mockFclInstance)
   })
 
   describe("encodeCalls", () => {
@@ -79,7 +85,7 @@ describe("useBatchEvmTransaction", () => {
 
   describe("useCrossVmBatchTransaction", () => {
     test("should handle successful transaction", async () => {
-      jest.mocked(fcl.mutate).mockResolvedValue(mockTxId)
+      jest.mocked(mockFcl.mockFclInstance.mutate).mockResolvedValue(mockTxId)
 
       let result: any
       let rerender: any
@@ -101,7 +107,9 @@ describe("useBatchEvmTransaction", () => {
     })
 
     test("should handle error transaction", async () => {
-      jest.mocked(fcl.mutate).mockRejectedValue(new Error("Transaction failed"))
+      jest
+        .mocked(mockFcl.mockFclInstance.mutate)
+        .mockRejectedValue(new Error("Transaction failed"))
 
       let hookResult: any
 
@@ -169,7 +177,9 @@ describe("useBatchEvmTransaction", () => {
     })
 
     it("should handle mutation error", async () => {
-      ;(fcl.mutate as jest.Mock).mockRejectedValue(new Error("Mutation failed"))
+      jest
+        .mocked(mockFcl.mockFclInstance.mutate)
+        .mockRejectedValue(new Error("Mutation failed"))
 
       let hookResult: any
 

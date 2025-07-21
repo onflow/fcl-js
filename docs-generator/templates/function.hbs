@@ -1,5 +1,4 @@
 ---
-sidebar_position: 1
 title: "{{name}}"
 description: "{{name}} function documentation."
 ---
@@ -58,6 +57,14 @@ import { {{name}} } from "@onflow/{{packageName}}"
 - Description: {{{description}}}
 {{/if}}
 
+{{#if nestedParams}}
+#### Properties:
+
+{{#each nestedParams}}
+- **`{{name}}`** {{#unless required}}(optional){{/unless}} - {{{description}}}
+{{/each}}
+
+{{/if}}
 {{/each}}
 {{/if}}
 

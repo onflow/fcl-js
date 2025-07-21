@@ -1,5 +1,6 @@
 import {createContext} from "react"
 import {FlowNetwork} from "./types"
+import {createFlowClient} from "@onflow/fcl"
 
 export type FlowConfig = {
   accessNodeUrl?: string
@@ -10,7 +11,8 @@ export type FlowConfig = {
   discoveryWallet?: string
   discoveryWalletMethod?: string
   discoveryAuthnEndpoint?: string
-  fclLimit?: number
+  computeLimit?: number
+  discoveryAuthnInclude?: string[]
   flowNetwork?: FlowNetwork
   serviceOpenIdScopes?: string[]
   walletconnectProjectId?: string
@@ -18,3 +20,7 @@ export type FlowConfig = {
 }
 
 export const FlowConfigContext = createContext<FlowConfig>({})
+
+export const FlowClientContext = createContext<ReturnType<
+  typeof createFlowClient
+> | null>(null)

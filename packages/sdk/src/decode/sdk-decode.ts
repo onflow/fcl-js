@@ -1,5 +1,14 @@
-import {config} from "@onflow/config"
 import {decodeResponse} from "./decode"
+import {SdkContext} from "../context/context"
+import {withGlobalContext} from "../context/global"
+
+export function createDecode(context: SdkContext) {
+  async function decode(response: any): Promise<any> {
+    return decodeResponse(response, context.customDecoders)
+  }
+
+  return decode
+}
 
 /**
  * Decodes the response from 'fcl.send()' into the appropriate JSON representation of any values returned from Cadence code.
@@ -38,14 +47,4 @@ import {decodeResponse} from "./decode"
  * const complexDecoded = await fcl.decode(complexResponse);
  * console.log(complexDecoded); // {foo: 1, bar: 2}
  */
-export async function decode(response: any): Promise<any> {
-  const decodersFromConfig = await config().where(/^decoder\./)
-  const decoders = Object.entries(decodersFromConfig).map(
-    ([pattern, xform]) => {
-      pattern = `/${pattern.replace(/^decoder\./, "")}$/`
-      return [pattern, xform]
-    }
-  )
-
-  return decodeResponse(response, Object.fromEntries(decoders))
-}
+export const decode = /* @__PURE__ */ withGlobalContext(createDecode)

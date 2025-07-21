@@ -1,11 +1,38 @@
 import {Buffer} from "@onflow/rlp"
 import {initInteraction, pipe} from "../../interaction/interaction"
 import * as ixModule from "../../interaction/interaction"
-import {invariant} from "../../build/build-invariant"
+import {InteractionBuilderFn} from "../../interaction/interaction"
 import {response} from "../../response/response"
-import {config} from "@onflow/config"
-import {resolve as defaultResolve} from "../../resolve/resolve"
-import {getTransport} from "../get-transport"
+import {SdkContext} from "../../context/context"
+import {invariant} from "@onflow/util-invariant"
+import {withGlobalContext} from "../../context/global"
+import {createResolve} from "../../resolve/resolve"
+
+export function createSend(context: SdkContext) {
+  async function send(
+    args:
+      | (InteractionBuilderFn | false)
+      | (InteractionBuilderFn | false)[] = [],
+    opts: any = {}
+  ): Promise<any> {
+    const transport = opts.transport || context.transport
+    const sendFn = transport.send?.bind?.(transport)
+    invariant(
+      !!sendFn,
+      `Required value for sdk.transport is not defined in config. See: ${"https://github.com/onflow/fcl-js/blob/master/packages/sdk/CHANGELOG.md#0057-alpha1----2022-01-21"}`
+    )
+
+    const resolveFn =
+      opts.resolve || context.customResolver || createResolve(context)
+
+    opts.node = opts.node || context.accessNodeUrl
+
+    if (Array.isArray(args)) args = pipe(initInteraction(), args) as any
+    return sendFn(await resolveFn(args), {response, ix: ixModule, Buffer}, opts)
+  }
+
+  return send
+}
 
 /**
  * Sends arbitrary scripts, transactions, and requests to Flow.
@@ -40,28 +67,4 @@ import {getTransport} from "../get-transport"
  * ]);
  * // note: response contains several values
  */
-export const send = async (
-  args: (Function | false) | (Function | false)[] = [],
-  opts: any = {}
-): Promise<any> => {
-  const transport = await getTransport(opts)
-  const sendFn = transport.send.bind(transport)
-  invariant(
-    sendFn,
-    `Required value for sdk.transport is not defined in config. See: ${"https://github.com/onflow/fcl-js/blob/master/packages/sdk/CHANGELOG.md#0057-alpha1----2022-01-21"}`
-  )
-
-  const resolveFn = await config.first(
-    ["sdk.resolve"],
-    opts.resolve || defaultResolve
-  )
-
-  opts.node = opts.node || (await config().get("accessNode.api"))
-
-  if (Array.isArray(args)) args = pipe(initInteraction(), args as any) as any
-  return sendFn(
-    await resolveFn(args),
-    {config, response, ix: ixModule, Buffer} as any,
-    opts
-  )
-}
+export const send = /* @__PURE__ */ withGlobalContext(createSend)

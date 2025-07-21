@@ -1,8 +1,8 @@
-import {Subscription} from "@onflow/typedefs"
+import {Event, Subscription} from "@onflow/typedefs"
 import {events} from "."
 import {subscribe, SubscriptionsNotSupportedError} from "@onflow/sdk"
-import {events as legacyEvents} from "./legacy-events"
-import {getChainId} from "../utils"
+import {createLegacyEvents} from "./legacy-events"
+import {createGetChainId} from "../utils"
 
 jest.mock("@onflow/sdk")
 jest.mock("./legacy-events")
@@ -10,8 +10,14 @@ jest.mock("../utils")
 
 describe("events", () => {
   let mockSubscription: jest.Mocked<Subscription>
-  let mockLegacySubscribeObject: jest.Mocked<{subscribe: () => void}>
+  let mockLegacySubscribeObject: jest.Mocked<{
+    subscribe: (
+      callback: (data: Event | null, error: Error | null) => void
+    ) => () => void
+  }>
   let mockLegacyUnsubscribe: jest.MockedFunction<() => void>
+  let legacyEvents: jest.MockedFunction<ReturnType<typeof createLegacyEvents>>
+  let mockGetChainId: jest.MockedFunction<() => Promise<string>>
 
   beforeEach(() => {
     mockSubscription = {
@@ -21,9 +27,14 @@ describe("events", () => {
     mockLegacySubscribeObject = {
       subscribe: jest.fn().mockReturnValue(mockLegacyUnsubscribe),
     }
+    legacyEvents = jest.fn((_: string) => mockLegacySubscribeObject)
 
     jest.mocked(subscribe).mockReturnValue(mockSubscription)
-    jest.mocked(legacyEvents).mockReturnValue(mockLegacySubscribeObject)
+    jest.mocked(createLegacyEvents).mockReturnValue(legacyEvents)
+
+    // Mock the getChainId function to return "mainnet" by default
+    mockGetChainId = jest.fn().mockResolvedValue("mainnet")
+    jest.mocked(createGetChainId).mockReturnValue(mockGetChainId)
   })
 
   afterEach(() => {
@@ -178,7 +189,8 @@ describe("events", () => {
     const onData = jest.fn()
     const onError = jest.fn()
 
-    jest.mocked(getChainId).mockResolvedValue("local")
+    // Mock the getChainId to return "local" to simulate the Flow emulator
+    mockGetChainId.mockResolvedValue("local")
 
     events(filter).subscribe(onData, onError)
 

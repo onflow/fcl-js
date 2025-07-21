@@ -1,4 +1,5 @@
-import * as sdk from "@onflow/sdk"
+import {getNetworkParameters} from "@onflow/sdk"
+import {FCLContext} from "../../context"
 
 /**
  * @description Fetches the chain ID from the Flow network by querying the network parameters.
@@ -14,10 +15,11 @@ import * as sdk from "@onflow/sdk"
  * console.log(chainId) // "flow-mainnet" or "flow-testnet"
  */
 export async function fetchChainId(
+  context: Pick<FCLContext, "sdk">,
   opts: Record<string, any> = {}
 ): Promise<string> {
-  const response = await sdk
-    .send([sdk.getNetworkParameters()], opts)
-    .then(sdk.decode)
+  const response = await context.sdk
+    .send([getNetworkParameters()], opts)
+    .then(context.sdk.decode)
   return response.chainId
 }
