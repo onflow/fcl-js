@@ -14,6 +14,7 @@ interface FCLConfig {
   discoveryWallet?: string
   discoveryWalletMethod?: string
   discoveryAuthnEndpoint?: string
+  discoveryAuthnInclude?: string[]
   flowNetwork?: string
   walletconnectProjectId?: string
   walletconnectDisableNotifications?: boolean

@@ -46,6 +46,8 @@ export function FlowProvider({
         accessNodeUrl: initialConfig.accessNodeUrl!,
         discoveryWallet: initialConfig.discoveryWallet,
         discoveryWalletMethod: initialConfig.discoveryWalletMethod,
+        discoveryAuthnEndpoint: initialConfig.discoveryAuthnEndpoint,
+        discoveryAuthnInclude: initialConfig.discoveryAuthnInclude,
         flowJson: flowJson,
         flowNetwork: initialConfig.flowNetwork,
         computeLimit: initialConfig.computeLimit,
@@ -58,7 +60,7 @@ export function FlowProvider({
         appDetailUrl: initialConfig.appDetailUrl,
         serviceOpenIdScopes: initialConfig.serviceOpenIdScopes,
       })
-  }, [_flowClient, initialConfig])
+  }, [_flowClient, initialConfig, flowJson])
 
   return (
     <FlowQueryClientProvider queryClient={queryClient}>

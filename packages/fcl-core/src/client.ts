@@ -21,6 +21,7 @@ export interface FlowClientCoreConfig {
   discoveryWallet?: string
   discoveryWalletMethod?: string
   discoveryAuthnEndpoint?: string
+  discoveryAuthnInclude?: string[]
 
   // WalletConnect configuration
   walletconnectProjectId?: string

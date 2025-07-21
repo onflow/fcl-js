@@ -22,6 +22,7 @@ export interface FlowClientConfig {
   discoveryWallet?: string
   discoveryWalletMethod?: string
   discoveryAuthnEndpoint?: string
+  discoveryAuthnInclude?: string[]
 
   // WalletConnect configuration
   walletconnectProjectId?: string
@@ -58,6 +59,7 @@ export function createFlowClient(params: FlowClientConfig) {
     discovery: discoveryOpts,
     discoveryWalletMethod: params.discoveryWalletMethod || "IFRAME/RPC",
     discoveryAuthnEndpoint: params.discoveryAuthnEndpoint,
+    discoveryAuthnInclude: params.discoveryAuthnInclude,
     customResolver: params.customResolver,
     customDecoders: params.customDecoders,
     discoveryWallet: params.discoveryWallet,
