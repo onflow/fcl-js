@@ -177,13 +177,13 @@ const makeHandlers = (context: CurrentUserContext) => {
     ) => {
       ctx.merge(data)
       const storage = await getStorageProvider()
-      if (storage.can) storage.put(context.actorName, ctx.all())
+      if (storage.can) storage.put(NAME, ctx.all())
       ctx.broadcast(UPDATED, {...ctx.all()})
     },
     [DEL_CURRENT_USER]: async (ctx: ActorContext, letter: Letter) => {
       ctx.merge(JSON.parse(DATA))
       const storage = await getStorageProvider()
-      if (storage.can) storage.put(context.actorName, ctx.all())
+      if (storage.can) storage.put(NAME, ctx.all())
       ctx.broadcast(UPDATED, {...ctx.all()})
     },
   }
