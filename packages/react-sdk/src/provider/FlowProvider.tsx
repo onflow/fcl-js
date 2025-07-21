@@ -26,6 +26,7 @@ const mappings: Array<{fcl: string; typed: keyof FlowConfig}> = [
   {fcl: "discovery.wallet", typed: "discoveryWallet"},
   {fcl: "discovery.wallet.method", typed: "discoveryWalletMethod"},
   {fcl: "discovery.authn.endpoint", typed: "discoveryAuthnEndpoint"},
+  {fcl: "discovery.authn.include", typed: "discoveryAuthnInclude"},
   {fcl: "fcl.limit", typed: "fclLimit"},
   {fcl: "flow.network", typed: "flowNetwork"},
   {fcl: "service.OpenID.scopes", typed: "serviceOpenIdScopes"},
