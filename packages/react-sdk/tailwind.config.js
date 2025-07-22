@@ -13,36 +13,38 @@ module.exports = {
     {
       pattern:
         /^flow-bg-(slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-(50|100|200|300|400|500|600|700|800|900|950)$/,
+      variants: ["hover", "dark", "dark:hover"],
     },
     // All text colors
     {
       pattern:
         /^flow-text-(slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-(50|100|200|300|400|500|600|700|800|900|950)$/,
+      variants: ["hover", "dark", "dark:hover"],
     },
     // All border colors
     {
       pattern:
         /^flow-border-(slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-(50|100|200|300|400|500|600|700|800|900|950)$/,
+      variants: ["hover", "dark", "dark:hover"],
     },
-    // All hover background colors
+    // Basic colors without numbers - background
     {
-      pattern:
-        /^hover:flow-bg-(slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose|black|white)-(50|100|200|300|400|500|600|700|800|900|950)$/,
+      pattern: /^flow-bg-(black|white|transparent)$/,
+      variants: ["hover", "dark", "dark:hover"],
     },
-    // Basic colors without numbers
-    "flow-bg-black",
-    "flow-bg-white",
-    "flow-bg-transparent",
-    "flow-text-black",
-    "flow-text-white",
-    "flow-border-black",
-    "flow-border-white",
+    // Basic colors without numbers - text
+    {
+      pattern: /^flow-text-(black|white)$/,
+      variants: ["hover", "dark", "dark:hover"],
+    },
+    // Basic colors without numbers - border
+    {
+      pattern: /^flow-border-(black|white)$/,
+      variants: ["hover", "dark", "dark:hover"],
+    },
+    // Additional specific classes
     "flow-border",
-    "flow-hover:bg-black",
-    "flow-hover:bg-white",
-    "hover:flow-bg-black",
-    "hover:flow-bg-white",
-    "flow-hover:underline",
     "hover:flow-underline",
+    "dark:hover:flow-underline",
   ],
 }
