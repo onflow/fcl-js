@@ -78,14 +78,16 @@ export const Connect: React.FC<ConnectProps> = ({
   }
 
   return (
-    <StyleWrapper>
-      <Button
-        onClick={handleButtonClick}
-        variant={user?.loggedIn ? "outline" : variant}
-        className="flow-px-2 flow-text-sm"
-      >
-        {user?.loggedIn ? displayAddress : "Connect Wallet"}
-      </Button>
+    <>
+      <StyleWrapper>
+        <Button
+          onClick={handleButtonClick}
+          variant={user?.loggedIn ? "outline" : variant}
+          className="flow-px-2 flow-text-sm"
+        >
+          {user?.loggedIn ? displayAddress : "Connect Wallet"}
+        </Button>
+      </StyleWrapper>
       {user?.loggedIn && (
         <Dialog isOpen={open} onClose={() => setOpen(false)}>
           <div className="flow-flex flow-flex-col flow-items-center flow-gap-4 flow-min-w-[320px]">
@@ -134,6 +136,6 @@ export const Connect: React.FC<ConnectProps> = ({
           </div>
         </Dialog>
       )}
-    </StyleWrapper>
+    </>
   )
 }
