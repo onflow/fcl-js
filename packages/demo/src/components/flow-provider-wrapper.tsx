@@ -1,8 +1,24 @@
-import {flowEmulator, flowMainnet, flowTestnet} from "@onflow/fcl"
 import {FlowProvider, type FlowNetwork} from "@onflow/react-sdk"
-import React, {useEffect} from "react"
-import * as fcl from "@onflow/fcl"
+import React, {createContext, useContext, useState} from "react"
 import flowJSON from "../../flow.json"
+
+// Dark mode context
+interface DarkModeContextType {
+  darkMode: boolean
+  toggleDarkMode: () => void
+}
+
+const DarkModeContext = createContext<DarkModeContextType | undefined>(
+  undefined
+)
+
+export const useDarkMode = () => {
+  const context = useContext(DarkModeContext)
+  if (!context) {
+    throw new Error("useDarkMode must be used within a DarkModeProvider")
+  }
+  return context
+}
 
 const flowNetwork =
   (import.meta.env.VITE_FLOW_NETWORK as FlowNetwork) || "emulator"
@@ -34,39 +50,53 @@ export default function FlowProviderWrapper({
 }: {
   children: React.ReactNode
 }) {
+  const [darkMode, setDarkMode] = useState(false)
+
+  const toggleDarkMode = () => {
+    setDarkMode(prev => !prev)
+  }
+
   return (
-    <FlowProvider
-      config={{
-        ...flowConfig[flowNetwork],
-        appDetailTitle: "Demo App",
-        appDetailIcon: "https://avatars.githubusercontent.com/u/62387156?v=4",
-        appDetailUrl: "https://yourapp.com",
-        appDetailDescription: "Your app description",
-        computeLimit: 1000,
-      }}
-      flowJson={flowJSON}
-      // theme={{
-      //   colors: {
-      //     primary: {
-      //       background: "bg-blue-700",
-      //       text: "text-black",
-      //       hover: "hover:bg-black-600",
-      //     },
-      //     secondary: {
-      //       background: "bg-blue-100",
-      //       text: "text-blue-800",
-      //       hover: "hover:bg-blue-200",
-      //     },
-      //     outline: {
-      //       background: "bg-transparent",
-      //       text: "text-blue-700",
-      //       hover: "hover:bg-blue-50",
-      //       border: "border border-blue-700",
-      //     },
-      //   },
-      // }}
-    >
-      {children}
-    </FlowProvider>
+    <DarkModeContext.Provider value={{darkMode, toggleDarkMode}}>
+      <FlowProvider
+        config={{
+          ...flowConfig[flowNetwork],
+          appDetailTitle: "Demo App",
+          appDetailIcon: "https://avatars.githubusercontent.com/u/62387156?v=4",
+          appDetailUrl: "https://yourapp.com",
+          appDetailDescription: "Your app description",
+          computeLimit: 1000,
+        }}
+        flowJson={flowJSON}
+        colorMode={darkMode ? "dark" : "light"}
+        // theme={{
+        //   colors: {
+        //     primary: {
+        //       background: "flow-bg-red-700",
+        //       text: "flow-text-white",
+        //       hover: "hover:flow-bg-green-800",
+        //     },
+        //     secondary: {
+        //       background: "flow-bg-blue-100",
+        //       text: "flow-text-blue-800",
+        //       hover: "hover:flow-bg-blue-200",
+        //     },
+        //     outline: {
+        //       background: "flow-bg-transparent",
+        //       text: "flow-text-blue-700",
+        //       hover: "hover:flow-bg-blue-50",
+        //       border: "flow-border flow-border-blue-700",
+        //     },
+        //     link: {
+        //       background: "flow-bg-transparent",
+        //       text: "flow-text-blue-700",
+        //       hover: "hover:flow-bg-blue-50",
+        //     },
+        //   },
+        // }}
+      >
+        {children}
+      </FlowProvider>
+    </DarkModeContext.Provider>
   )
 }

@@ -1,6 +1,7 @@
 import React from "react"
 import {useFlowMutate} from "../hooks"
 import {Button, ButtonProps} from "./internal/Button"
+import {StyleWrapper} from "./internal/StyleWrapper"
 import {UseMutationOptions} from "@tanstack/react-query"
 import {type mutate} from "@onflow/fcl"
 import {useGlobalTransaction} from "../provider/GlobalTransactionProvider"
@@ -61,14 +62,20 @@ export const TransactionButton: React.FC<TransactionButtonProps> = ({
   const isDisabled = buttonProps.disabled || isLoading
 
   return (
-    <Button onClick={handleButtonClick} disabled={isDisabled} {...buttonProps}>
-      <span>
-        {!isLoading
-          ? label || "Execute Transaction"
-          : isPending
-            ? "Waiting for signature..."
-            : "Processing..."}
-      </span>
-    </Button>
+    <StyleWrapper>
+      <Button
+        onClick={handleButtonClick}
+        disabled={isDisabled}
+        {...buttonProps}
+      >
+        <span>
+          {!isLoading
+            ? label || "Execute Transaction"
+            : isPending
+              ? "Waiting for signature..."
+              : "Processing..."}
+        </span>
+      </Button>
+    </StyleWrapper>
   )
 }
