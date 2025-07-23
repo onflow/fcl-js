@@ -12,9 +12,9 @@ interface UseFlowCurrentUserResult {
   unauthenticate: () => void
 }
 
-export function useFlowCurrentUser(
-  flowClient?: ReturnType<typeof useFlowClient>
-): UseFlowCurrentUserResult {
+export function useFlowCurrentUser({
+  flowClient,
+}: UseFlowCurrentUserArgs = {}): UseFlowCurrentUserResult {
   const [user, setUser] = useState<CurrentUser | null>(null)
   const fcl = useFlowClient({flowClient})
 
