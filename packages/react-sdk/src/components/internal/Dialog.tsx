@@ -1,6 +1,7 @@
 import React from "react"
 import {Dialog as HeadlessDialog} from "@headlessui/react"
 import {useTheme} from "../../core/theme"
+import {useDarkMode} from "../../provider/DarkModeProvider"
 import {twMerge} from "tailwind-merge"
 import {XIcon} from "../../icons/XIcon"
 import {Button} from "./Button"
@@ -21,13 +22,14 @@ export const Dialog: React.FC<DialogProps> = ({
   className,
 }) => {
   const {colors} = useTheme()
+  const {isDark} = useDarkMode()
 
   // NB: flow-wrapper class must be applied to headlessdialog directly to avoid positioning issues
   return (
     <HeadlessDialog
       open={isOpen}
       onClose={onClose}
-      className="flow-wrapper flow-relative flow-z-50"
+      className={`flow-wrapper ${isDark ? "flow-dark" : ""} flow-relative flow-z-50`}
     >
       {/* Background overlay */}
       <div

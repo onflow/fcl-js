@@ -1,4 +1,5 @@
 import React from "react"
+import {useDarkMode} from "../../provider/DarkModeProvider"
 
 export interface StyleWrapperProps {
   children: React.ReactNode
@@ -13,5 +14,13 @@ export const StyleWrapper: React.FC<StyleWrapperProps> = ({
   children,
   className,
 }) => {
-  return <div className={`flow-wrapper ${className || ""}`}>{children}</div>
+  const {isDark} = useDarkMode()
+
+  return (
+    <div
+      className={`flow-wrapper ${isDark ? "flow-dark" : ""} ${className || ""}`}
+    >
+      {children}
+    </div>
+  )
 }

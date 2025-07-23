@@ -4,7 +4,7 @@ module.exports = {
   theme: {
     extend: {},
   },
-  darkMode: "media",
+  darkMode: "class",
   plugins: [],
   prefix: "flow-",
   // NB: Needed so that Tailwind doesn't remove the classes and we can use them in the theme
