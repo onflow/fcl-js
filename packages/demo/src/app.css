@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 html {
-  color-scheme: light;
+  color-scheme: light dark;
   font-family: system-ui;
   background-color: #ffffff;
   color: #000000;
