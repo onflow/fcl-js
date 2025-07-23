@@ -1,5 +1,20 @@
 # @onflow/sdk
 
+## 1.10.0-alpha.1
+
+### Minor Changes
+
+- [#2538](https://github.com/onflow/fcl-js/pull/2538) [`7307e779415cd941f911bbb0c634581c959050b2`](https://github.com/onflow/fcl-js/commit/7307e779415cd941f911bbb0c634581c959050b2) Thanks [@jribbink](https://github.com/jribbink)! - Decoupled SDK functions from the global state and created a `createSdkClient` function which constructs a new SDK client instance bound to a custom context.
+
+  This allows for better modularity and helps support multiple SDK clients in the same application.
+
+  All SDK functions will continue to work as before, but now you can create a custom SDK client with its own context.
+
+### Patch Changes
+
+- Updated dependencies [[`72e23611de8025dbd36bddc2dcc1c5858f50efe8`](https://github.com/onflow/fcl-js/commit/72e23611de8025dbd36bddc2dcc1c5858f50efe8)]:
+  - @onflow/config@1.6.0-alpha.0
+
 ## 1.10.0-alpha.0
 
 ### Minor Changes
