@@ -1,7 +1,5 @@
-import {flowEmulator, flowMainnet, flowTestnet} from "@onflow/fcl"
 import {FlowProvider, type FlowNetwork} from "@onflow/react-sdk"
-import React, {useEffect, useState, createContext, useContext} from "react"
-import * as fcl from "@onflow/fcl"
+import React, {createContext, useContext, useState} from "react"
 import flowJSON from "../../flow.json"
 
 // Dark mode context
@@ -70,7 +68,7 @@ export default function FlowProviderWrapper({
           computeLimit: 1000,
         }}
         flowJson={flowJSON}
-        darkMode={darkMode}
+        colorMode={darkMode ? "dark" : "light"}
         // theme={{
         //   colors: {
         //     primary: {
