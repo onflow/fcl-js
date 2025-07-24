@@ -62,8 +62,8 @@ export default function FlowProviderWrapper({
         config={{
           ...flowConfig[flowNetwork],
           appDetailTitle: "Demo App",
+          appDetailUrl: window.location.origin,
           appDetailIcon: "https://avatars.githubusercontent.com/u/62387156?v=4",
-          appDetailUrl: "https://yourapp.com",
           appDetailDescription: "Your app description",
           computeLimit: 1000,
           walletconnectProjectId: "9b70cfa398b2355a5eb9b1cf99f4a981",
