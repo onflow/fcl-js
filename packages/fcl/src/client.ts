@@ -5,6 +5,7 @@ import {
 } from "@onflow/fcl-core"
 import {LOCAL_STORAGE} from "./fcl"
 import {execStrategyHook} from "./discovery/exec-hook"
+import {loadFclWc} from "./utils/walletconnect/loader"
 
 const PLATFORM = "web"
 
@@ -48,6 +49,18 @@ export interface FlowClientConfig {
 }
 
 export function createFlowClient(params: FlowClientConfig) {
+  // TODO: Load into the global plugin registry for now.  This should be
+  // refactored to use a plugin registry bound to the client instance
+  // in the future.
+  loadFclWc({
+    walletConnectProjectId: params.walletconnectProjectId,
+    walletConnectDisableNotifications: params.walletconnectDisableNotifications,
+    appDetailTitle: params.appDetailTitle,
+    appDetailIcon: params.appDetailIcon,
+    appDetailDescription: params.appDetailDescription,
+    appDetailUrl: params.appDetailUrl,
+  })
+
   const fclCore = createFlowClientCore({
     flowNetwork: params.flowNetwork,
     flowJson: params.flowJson,

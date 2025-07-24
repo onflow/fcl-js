@@ -66,6 +66,7 @@ export default function FlowProviderWrapper({
           appDetailUrl: "https://yourapp.com",
           appDetailDescription: "Your app description",
           computeLimit: 1000,
+          walletconnectProjectId: "9b70cfa398b2355a5eb9b1cf99f4a981",
         }}
         flowJson={flowJSON}
         colorMode={darkMode ? "dark" : "light"}
