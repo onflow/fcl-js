@@ -84,14 +84,12 @@ export function createFlowClient(params: FlowClientConfig) {
     customResolver: params.customResolver,
     customDecoders: params.customDecoders,
     discoveryWallet: params.discoveryWallet,
-    walletconnectProjectId: params.walletconnectProjectId,
-    walletconnectDisableNotifications: params.walletconnectDisableNotifications,
     appDetailTitle: params.appDetailTitle,
     appDetailIcon: params.appDetailIcon,
     appDetailDescription: params.appDetailDescription,
     appDetailUrl: params.appDetailUrl,
     serviceOpenIdScopes: params.serviceOpenIdScopes,
-    coreStrategies: coreStrategies,
+    coreStrategies: strategies,
   })
 
   return {

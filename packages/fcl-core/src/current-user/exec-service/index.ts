@@ -1,6 +1,6 @@
 import {invariant} from "@onflow/util-invariant"
 import {log, LEVELS} from "@onflow/util-logger"
-import {getServiceRegistry} from "./plugins"
+import {type getServiceRegistry} from "./plugins"
 import {createGetChainId} from "../../utils"
 import {VERSION} from "../../VERSION"
 import {configLens} from "../../default-config"

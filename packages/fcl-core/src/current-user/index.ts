@@ -272,7 +272,7 @@ const makeConfig = async (
       discoveryAuthnExclude,
       discoveryFeaturesSuggested,
       clientServices: await makeDiscoveryServices(context),
-      supportedStrategies: getServiceRegistry().getStrategies(),
+      supportedStrategies: context.serviceRegistry.getStrategies(),
     },
   }
 }
