@@ -88,10 +88,6 @@ export function createFlowClientCore(params: FlowClientCoreConfig) {
     // Utility methods
     serialize: createSerialize(context),
 
-    // Plugin system (context-aware)
-    serviceRegistry: context.serviceRegistry,
-    pluginRegistry: context.pluginRegistry,
-
     // Re-export the SDK methods
     ...context.sdk,
   }
