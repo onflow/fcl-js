@@ -381,7 +381,7 @@ initServiceRegistry({coreStrategies})
 
 // Automatically load fcl-wc plugin
 // Based on the user's config
-initFclWcLoader()
+initFclWcLoader({config})
 
 export {LOCAL_STORAGE, SESSION_STORAGE} from "./utils/web"
 
