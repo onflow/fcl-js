@@ -1,6 +1,6 @@
 {
   "name": "@onflow/fcl-wagmi-adapter",
-  "version": "1.0.0-alpha.1",
+  "version": "0.0.7-alpha.1",
   "description": "Wagmi adapter for FCL-compatible wallets",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
