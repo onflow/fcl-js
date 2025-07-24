@@ -6,6 +6,7 @@ import {
 import {LOCAL_STORAGE} from "./fcl"
 import {execStrategyHook} from "./discovery/exec-hook"
 import {coreStrategies} from "./utils/web"
+import {initLazy as initFclWcLazy} from "@onflow/fcl-wc"
 
 const PLATFORM = "web"
 
@@ -49,6 +50,25 @@ export interface FlowClientConfig {
 }
 
 export function createFlowClient(params: FlowClientConfig) {
+  const strategies: Record<string, any> = {
+    ...coreStrategies,
+  }
+
+  if (params.walletconnectProjectId) {
+    const wc = initFclWcLazy({
+      projectId: params.walletconnectProjectId,
+      metadata: {
+        name: params.appDetailTitle || document.title,
+        description: params.appDetailDescription || "",
+        url: params.appDetailUrl || window.location.origin,
+        icons: params.appDetailIcon ? [params.appDetailIcon] : [],
+      },
+      disableNotifications: params.walletconnectDisableNotifications,
+    })
+    const serviceStrategy = wc.FclWcServicePlugin.serviceStrategy
+    strategies[serviceStrategy.method] = serviceStrategy.exec
+  }
+
   const fclCore = createFlowClientCore({
     flowNetwork: params.flowNetwork,
     flowJson: params.flowJson,
