@@ -19,6 +19,7 @@ export interface ExecStrategyParams {
   customRpc?: string
   user?: CurrentUser
   opts?: Record<string, any>
+  serviceRegistry: ReturnType<typeof getServiceRegistry>
 }
 
 export interface ExecServiceParams {
@@ -94,9 +95,8 @@ export const execStrategy = async ({
   user,
   opts,
   serviceRegistry,
-}: ExecStrategyParams & {serviceRegistry?: any}): Promise<StrategyResponse> => {
-  const registry = serviceRegistry || getServiceRegistry()
-  const strategy = registry.getStrategy(service.method) as StrategyFunction
+}: ExecStrategyParams): Promise<StrategyResponse> => {
+  const strategy = serviceRegistry.getStrategy(service.method) as any
   return strategy({service, body, config, abortSignal, customRpc, opts, user})
 }
 
@@ -127,7 +127,6 @@ export async function execService(
     abortSignal = new AbortController().signal,
     execStrategy: _execStrategy,
     user,
-    serviceRegistry,
   }: ExecServiceParams
 ): Promise<StrategyResponse> {
   // Notify the developer if WalletConnect is not enabled
@@ -155,7 +154,7 @@ export async function execService(
       opts,
       user,
       abortSignal,
-      serviceRegistry,
+      serviceRegistry: context.serviceRegistry,
     })
 
     if (res.status === "REDIRECT") {
@@ -171,7 +170,6 @@ export async function execService(
         abortSignal,
         platform,
         user,
-        serviceRegistry,
       })
     } else {
       return res

@@ -5,6 +5,7 @@ import {
 } from "@onflow/fcl-core"
 import {LOCAL_STORAGE} from "./fcl"
 import {execStrategyHook} from "./discovery/exec-hook"
+import {coreStrategies} from "./utils/web"
 
 const PLATFORM = "web"
 
@@ -70,6 +71,7 @@ export function createFlowClient(params: FlowClientConfig) {
     appDetailDescription: params.appDetailDescription,
     appDetailUrl: params.appDetailUrl,
     serviceOpenIdScopes: params.serviceOpenIdScopes,
+    coreStrategies: coreStrategies,
   })
 
   return {
