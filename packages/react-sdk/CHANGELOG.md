@@ -1,5 +1,19 @@
 # @onflow/react-sdk
 
+## 0.10.0-alpha.2
+
+### Minor Changes
+
+- [#2579](https://github.com/onflow/fcl-js/pull/2579) [`77f4cbaa5c73b5fccbc6e76414293debfe167659`](https://github.com/onflow/fcl-js/commit/77f4cbaa5c73b5fccbc6e76414293debfe167659) Thanks [@jribbink](https://github.com/jribbink)! - Decoupled React SDK from the global state and include a `FlowClient` instance within the `FlowProvider` context.
+
+  This allows for better modularity and helps support multiple FCL instances in the same application. Additionally, this is part of a larger effort to move towards a cleaner lifecycle less reliant on asynchronous state management prone to race conditions and frequent bugs.
+
+  Moving forward, developers wishing to interact directly with the Flow Client (FCL Instance) should use the `useFlowClient` hook provided by the React SDK instead of relying on globally exported functions from the FCL package.
+
+- [#2609](https://github.com/onflow/fcl-js/pull/2609) [`4be1b361150c557f5c5a747b461558e35e1d3c38`](https://github.com/onflow/fcl-js/commit/4be1b361150c557f5c5a747b461558e35e1d3c38) Thanks [@mfbz](https://github.com/mfbz)! - Added tailwind prefix for style isolation
+
+- [#2604](https://github.com/onflow/fcl-js/pull/2604) [`aea5df931cbc7f664aaf6730cac8c270166a2abd`](https://github.com/onflow/fcl-js/commit/aea5df931cbc7f664aaf6730cac8c270166a2abd) Thanks [@jribbink](https://github.com/jribbink)! - Add missing config key for `discoveryAuthnInclude`.
+
 ## 0.10.0-alpha.1
 
 ### Patch Changes
