@@ -1,5 +1,16 @@
 # @onflow/fcl-wc
 
+## 7.0.0-alpha.2
+
+### Minor Changes
+
+- [#2614](https://github.com/onflow/fcl-js/pull/2614) [`c5191ab2f51204dac26f099c071ed02913b616ff`](https://github.com/onflow/fcl-js/commit/c5191ab2f51204dac26f099c071ed02913b616ff) Thanks [@jribbink](https://github.com/jribbink)! - Add support for manually passing a `network` to `createSessionProposal`
+
+### Patch Changes
+
+- Updated dependencies [[`c5191ab2f51204dac26f099c071ed02913b616ff`](https://github.com/onflow/fcl-js/commit/c5191ab2f51204dac26f099c071ed02913b616ff)]:
+  - @onflow/fcl-core@1.21.0-alpha.2
+
 ## 6.0.5-alpha.1
 
 ### Patch Changes

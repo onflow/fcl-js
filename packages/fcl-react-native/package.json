@@ -1,6 +1,6 @@
 {
   "name": "@onflow/fcl-react-native",
-  "version": "1.13.0-alpha.1",
+  "version": "1.13.0-alpha.2",
   "description": "React Native JavaScript/TypeScript library for building mobile applications on the Flow blockchain.",
   "license": "Apache-2.0",
   "author": "Flow Foundation",
@@ -49,7 +49,7 @@
   "dependencies": {
     "@babel/runtime": "^7.25.7",
     "@onflow/config": "1.6.0-alpha.0",
-    "@onflow/fcl-core": "1.21.0-alpha.1",
+    "@onflow/fcl-core": "1.21.0-alpha.2",
     "@onflow/interaction": "0.0.11",
     "@onflow/rlp": "1.2.3",
     "@onflow/sdk": "1.10.0-alpha.1",

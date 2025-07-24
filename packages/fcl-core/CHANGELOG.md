@@ -1,5 +1,11 @@
 # @onflow/fcl
 
+## 1.21.0-alpha.2
+
+### Minor Changes
+
+- [#2614](https://github.com/onflow/fcl-js/pull/2614) [`c5191ab2f51204dac26f099c071ed02913b616ff`](https://github.com/onflow/fcl-js/commit/c5191ab2f51204dac26f099c071ed02913b616ff) Thanks [@jribbink](https://github.com/jribbink)! - Remove unused WalletConnect configuration options from `createFlowClient`
+
 ## 1.21.0-alpha.1
 
 ### Minor Changes
