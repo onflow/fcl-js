@@ -23,10 +23,6 @@ export interface FlowClientCoreConfig {
   discoveryAuthnEndpoint?: string
   discoveryAuthnInclude?: string[]
 
-  // WalletConnect configuration
-  walletconnectProjectId?: string
-  walletconnectDisableNotifications?: boolean
-
   // Compute limit for transactions
   computeLimit: number
 

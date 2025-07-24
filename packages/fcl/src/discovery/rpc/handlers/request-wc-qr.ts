@@ -9,11 +9,13 @@ import {DiscoveryNotification, DiscoveryRpc} from "../requests"
 // RPC handler for handling WalletConnect QR code requests
 export const wcRequestHandlerFactory = ({
   rpc,
+  network,
   onExecResult,
   authnBody,
   abortSignal,
 }: {
   rpc: DiscoveryRpc
+  network: string
   onExecResult: (result: any) => void
   authnBody: any
   abortSignal: AbortSignal
@@ -33,6 +35,7 @@ export const wcRequestHandlerFactory = ({
     // Execute WC bypass if session is approved
     const {uri, approval} = await createSessionProposal({
       provider,
+      network,
     })
 
     // Watch for QR code connection asynchronously

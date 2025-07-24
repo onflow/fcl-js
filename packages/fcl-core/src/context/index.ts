@@ -16,8 +16,6 @@ interface FCLConfig {
   discoveryAuthnEndpoint?: string
   discoveryAuthnInclude?: string[]
   flowNetwork?: string
-  walletconnectProjectId?: string
-  walletconnectDisableNotifications?: boolean
   storage: StorageProvider
   discovery?: {
     execStrategy?: (...args: any[]) => any
@@ -125,11 +123,6 @@ export function createConfigService(config: FCLConfig): ConfigService {
     ["discovery.wallet.method", config.discoveryWalletMethod],
     ["discovery.authn.endpoint", config.discoveryAuthnEndpoint],
     ["flow.network", config.flowNetwork],
-    ["walletconnectProjectId", config.walletconnectProjectId],
-    [
-      "walletconnect.disableNotifications",
-      config.walletconnectDisableNotifications,
-    ],
     ["accessNode.api", config.accessNodeUrl],
     ["fcl.limit", config.computeLimit],
     ["app.detail.title", config.appDetailTitle],
