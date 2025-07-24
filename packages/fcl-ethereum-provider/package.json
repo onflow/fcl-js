@@ -1,6 +1,6 @@
 {
   "name": "@onflow/fcl-ethereum-provider",
-  "version": "0.0.7-alpha.1",
+  "version": "0.0.7-alpha.2",
   "description": "Ethereum provider for FCL-compatible wallets",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
@@ -40,7 +40,7 @@
     "@ethersproject/bytes": "^5.7.0",
     "@ethersproject/hash": "^5.7.0",
     "@noble/hashes": "^1.7.1",
-    "@onflow/fcl-wc": "6.0.5-alpha.1",
+    "@onflow/fcl-wc": "6.0.5-alpha.2",
     "@onflow/rlp": "^1.2.3",
     "@walletconnect/ethereum-provider": "^2.20.2",
     "@walletconnect/jsonrpc-http-connection": "^1.0.8",
@@ -50,6 +50,6 @@
     "@walletconnect/utils": "^2.20.2"
   },
   "peerDependencies": {
-    "@onflow/fcl": "1.20.0-alpha.1"
+    "@onflow/fcl": "1.20.0-alpha.2"
   }
 }

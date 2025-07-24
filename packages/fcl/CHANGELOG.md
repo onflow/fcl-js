@@ -1,5 +1,17 @@
 # @onflow/fcl
 
+## 1.20.0-alpha.2
+
+### Minor Changes
+
+- [#2614](https://github.com/onflow/fcl-js/pull/2614) [`c5191ab2f51204dac26f099c071ed02913b616ff`](https://github.com/onflow/fcl-js/commit/c5191ab2f51204dac26f099c071ed02913b616ff) Thanks [@jribbink](https://github.com/jribbink)! - Load FCL-WC in `createFlowClient`
+
+### Patch Changes
+
+- Updated dependencies [[`c5191ab2f51204dac26f099c071ed02913b616ff`](https://github.com/onflow/fcl-js/commit/c5191ab2f51204dac26f099c071ed02913b616ff), [`c5191ab2f51204dac26f099c071ed02913b616ff`](https://github.com/onflow/fcl-js/commit/c5191ab2f51204dac26f099c071ed02913b616ff)]:
+  - @onflow/fcl-wc@6.0.5-alpha.2
+  - @onflow/fcl-core@1.21.0-alpha.2
+
 ## 1.20.0-alpha.1
 
 ### Minor Changes
