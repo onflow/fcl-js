@@ -1,5 +1,5 @@
 import * as logger from "@onflow/util-logger"
-import {getServiceRegistry} from "./plugins"
+import {FCLContext} from "../../context"
 
 const FCL_WC_SERVICE_METHOD = "WC/RPC"
 
@@ -25,10 +25,12 @@ const isServerSide = typeof window === "undefined"
  * })
  */
 // Utility to notify the user if the Walletconnect service plugin has not been loaded
-export function checkWalletConnectEnabled() {
+export function checkWalletConnectEnabled(
+  context: Pick<FCLContext, "serviceRegistry">
+) {
   if (isServerSide) return
 
-  const serviceRegistry = getServiceRegistry()
+  const serviceRegistry = context.serviceRegistry
   const strategies = serviceRegistry.getStrategies()
 
   if (!strategies.includes(FCL_WC_SERVICE_METHOD)) {

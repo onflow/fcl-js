@@ -51,7 +51,11 @@ const validateDiscoveryPlugin = (servicePlugin: any) => {
   return {discoveryServices: services, serviceStrategy}
 }
 
-const ServiceRegistry = ({coreStrategies}: {coreStrategies: any}) => {
+export const createServiceRegistry = ({
+  coreStrategies,
+}: {
+  coreStrategies: any
+}) => {
   let services = new Set()
   let strategies = new Map(Object.entries(coreStrategies))
 
@@ -114,7 +118,11 @@ const validatePlugins = (plugins: any[]) => {
   return pluginsArray
 }
 
-const PluginRegistry = () => {
+export const createPluginRegistry = ({
+  getServiceRegistry,
+}: {
+  getServiceRegistry?: () => ReturnType<typeof createServiceRegistry>
+}) => {
   const pluginsMap = new Map()
 
   const getPlugins = () => pluginsMap
@@ -124,7 +132,7 @@ const PluginRegistry = () => {
     for (const p of pluginsArray) {
       pluginsMap.set(p.name, p)
       if (p.f_type === "ServicePlugin") {
-        serviceRegistry.add(p)
+        getServiceRegistry?.().add(p)
       }
     }
   }
@@ -135,7 +143,8 @@ const PluginRegistry = () => {
   })
 }
 
-let serviceRegistry: ReturnType<typeof ServiceRegistry>
+// Global state management (for backward compatibility)
+let serviceRegistry: ReturnType<typeof createServiceRegistry>
 const getIsServiceRegistryInitialized = () =>
   typeof serviceRegistry !== "undefined"
 
@@ -166,7 +175,7 @@ export const initServiceRegistry = ({
   if (getIsServiceRegistryInitialized()) {
     return serviceRegistry
   }
-  const _serviceRegistry = ServiceRegistry({coreStrategies})
+  const _serviceRegistry = createServiceRegistry({coreStrategies})
   serviceRegistry = _serviceRegistry
 
   return _serviceRegistry
@@ -212,4 +221,6 @@ export const getServiceRegistry = () => {
  *   serviceStrategy: { method: "CUSTOM/RPC", exec: customExecFunction }
  * })
  */
-export const pluginRegistry = PluginRegistry()
+export const pluginRegistry = createPluginRegistry({
+  getServiceRegistry,
+})

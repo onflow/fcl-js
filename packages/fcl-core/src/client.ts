@@ -54,6 +54,9 @@ export interface FlowClientCoreConfig {
   transport?: SdkTransport
   customResolver?: any
   customDecoders?: any
+
+  // Core strategies for plugin system
+  coreStrategies?: any
 }
 
 export function createFlowClientCore(params: FlowClientCoreConfig) {

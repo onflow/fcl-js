@@ -3,6 +3,10 @@ import type {StorageProvider} from "../utils/storage"
 import type {CurrentUserServiceApi} from "../current-user"
 import * as sdk from "@onflow/sdk"
 import type {createSdkClient} from "@onflow/sdk"
+import {
+  createPluginRegistry,
+  createServiceRegistry,
+} from "../current-user/exec-service/plugins"
 
 /**
  * Creates a mock SDK client for testing
@@ -163,6 +167,47 @@ export function createMockCurrentUser(
 }
 
 /**
+ * Creates a mock service registry for testing
+ */
+export function createMockServiceRegistry(
+  overrides: any = {}
+): ReturnType<typeof createServiceRegistry> {
+  const mockServices = new Set()
+
+  return {
+    add: jest.fn().mockImplementation(servicePlugin => {
+      // Mock implementation that just stores the service
+      mockServices.add(servicePlugin)
+    }),
+    getServices: jest.fn().mockReturnValue([]),
+    getStrategy: jest.fn().mockReturnValue(null),
+    getStrategies: jest.fn().mockReturnValue([]),
+    ...overrides,
+  }
+}
+
+/**
+ * Creates a mock plugin registry for testing
+ */
+export function createMockPluginRegistry(
+  overrides: any = {}
+): ReturnType<typeof createPluginRegistry> {
+  const mockPlugins = new Map()
+
+  return {
+    add: jest.fn().mockImplementation(plugins => {
+      if (Array.isArray(plugins)) {
+        plugins.forEach(plugin => mockPlugins.set(plugin.name, plugin))
+      } else {
+        mockPlugins.set(plugins.name, plugins)
+      }
+    }),
+    getPlugins: jest.fn().mockReturnValue(mockPlugins),
+    ...overrides,
+  }
+}
+
+/**
  * Creates a fully mocked FCL context for testing
  *
  * This creates a complete mock context with all dependencies needed for testing FCL
@@ -208,17 +253,27 @@ export function createMockContext(
     currentUser?: Partial<CurrentUserServiceApi>
     storage?: StorageProvider
     sdkOverrides?: Partial<ReturnType<typeof createSdkClient>>
+    serviceRegistryOverrides?: any
+    pluginRegistryOverrides?: any
   } = {}
 ) {
   const storage = options.storage || createMockStorage()
   const config = createMockConfigService(options.configValues || {})
   const currentUser = createMockCurrentUser(options.currentUser || {})
   const sdk = createMockSdkClient(options.sdkOverrides || {})
+  const serviceRegistry = createMockServiceRegistry(
+    options.serviceRegistryOverrides || {}
+  )
+  const pluginRegistry = createMockPluginRegistry(
+    options.pluginRegistryOverrides || {}
+  )
 
   return {
     storage,
     config,
     currentUser,
     sdk,
+    serviceRegistry,
+    pluginRegistry,
   }
 }

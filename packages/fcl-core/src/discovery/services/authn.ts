@@ -54,7 +54,7 @@ const warn = (fact: boolean, msg: string): void => {
 }
 
 const fetchServicesFromDiscovery = async (
-  context: Pick<FCLContext, "config">
+  context: Pick<FCLContext, "config" | "serviceRegistry">
 ): Promise<void> => {
   try {
     const services = await getServices({
@@ -73,7 +73,9 @@ const fetchServicesFromDiscovery = async (
   }
 }
 
-function createHandlers(context: Pick<FCLContext, "config">) {
+function createHandlers(
+  context: Pick<FCLContext, "config" | "serviceRegistry">
+) {
   return {
     [INIT]: async (ctx: ActorContext) => {
       warn(
@@ -110,8 +112,9 @@ function createHandlers(context: Pick<FCLContext, "config">) {
   }
 }
 
-const spawnProviders = (context: Pick<FCLContext, "config">) =>
-  spawn(createHandlers(context) as any, SERVICE_ACTOR_KEYS.AUTHN)
+const spawnProviders = (
+  context: Pick<FCLContext, "config" | "serviceRegistry">
+) => spawn(createHandlers(context) as any, SERVICE_ACTOR_KEYS.AUTHN)
 
 /**
  * Discovery authn service for interacting with Flow compatible wallets.
@@ -162,7 +165,9 @@ const spawnProviders = (context: Pick<FCLContext, "config">) =>
  *   'discovery.authn.exclude': ['0x123456789abcdef01'], // Example of excluding a wallet by address
  * });
  */
-function createAuthn(context: Pick<FCLContext, "config">): Authn {
+function createAuthn(
+  context: Pick<FCLContext, "config" | "serviceRegistry">
+): Authn {
   /**
    * @description Discovery methods for interacting with Authn.
    */

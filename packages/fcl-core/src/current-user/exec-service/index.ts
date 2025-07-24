@@ -1,6 +1,6 @@
 import {invariant} from "@onflow/util-invariant"
 import {log, LEVELS} from "@onflow/util-logger"
-import {getServiceRegistry} from "./plugins"
+import {type getServiceRegistry} from "./plugins"
 import {createGetChainId} from "../../utils"
 import {VERSION} from "../../VERSION"
 import {configLens} from "../../default-config"
@@ -19,6 +19,7 @@ export interface ExecStrategyParams {
   customRpc?: string
   user?: CurrentUser
   opts?: Record<string, any>
+  serviceRegistry: ReturnType<typeof getServiceRegistry>
 }
 
 export interface ExecServiceParams {
@@ -30,6 +31,7 @@ export interface ExecServiceParams {
   abortSignal?: AbortSignal
   execStrategy?: (params: ExecStrategyParams) => Promise<StrategyResponse>
   user?: CurrentUser
+  serviceRegistry?: any // Optional service registry for context-aware usage
 }
 
 export interface StrategyResponse {
@@ -63,15 +65,25 @@ export type StrategyFunction = (
  * It's used internally by FCL to handle different communication methods with wallet services.
  *
  * @param params The parameters object containing service details and execution context
+ * @param params.serviceRegistry Optional service registry to use (falls back to global if not provided)
  * @returns Promise resolving to the strategy response
  *
  * @example
- * // Execute a service strategy (internal usage)
+ * // Execute a service strategy (internal usage with global registry)
  * const response = await execStrategy({
  *   service: { method: "HTTP/POST", endpoint: "https://wallet.example.com/authz" },
  *   body: { transaction: "..." },
  *   config: execConfig,
  *   abortSignal: controller.signal
+ * })
+ *
+ * // Execute with context-aware registry
+ * const response = await execStrategy({
+ *   service: { method: "HTTP/POST", endpoint: "https://wallet.example.com/authz" },
+ *   body: { transaction: "..." },
+ *   config: execConfig,
+ *   abortSignal: controller.signal,
+ *   serviceRegistry: myContextRegistry
  * })
  */
 export const execStrategy = async ({
@@ -82,10 +94,9 @@ export const execStrategy = async ({
   customRpc,
   user,
   opts,
+  serviceRegistry,
 }: ExecStrategyParams): Promise<StrategyResponse> => {
-  const strategy = getServiceRegistry().getStrategy(
-    service.method
-  ) as StrategyFunction
+  const strategy = serviceRegistry.getStrategy(service.method) as any
   return strategy({service, body, config, abortSignal, customRpc, opts, user})
 }
 
@@ -106,7 +117,7 @@ export const execStrategy = async ({
  * })
  */
 export async function execService(
-  context: Pick<FCLContext, "config" | "sdk">,
+  context: Pick<FCLContext, "config" | "sdk" | "serviceRegistry">,
   {
     service,
     msg = {},
@@ -119,7 +130,7 @@ export async function execService(
   }: ExecServiceParams
 ): Promise<StrategyResponse> {
   // Notify the developer if WalletConnect is not enabled
-  checkWalletConnectEnabled()
+  checkWalletConnectEnabled(context)
 
   msg.data = service.data
   const execConfig: ExecConfig = {
@@ -143,6 +154,7 @@ export async function execService(
       opts,
       user,
       abortSignal,
+      serviceRegistry: context.serviceRegistry,
     })
 
     if (res.status === "REDIRECT") {

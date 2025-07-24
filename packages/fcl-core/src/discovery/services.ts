@@ -1,5 +1,4 @@
 import {invariant} from "@onflow/util-invariant"
-import {getServiceRegistry} from "../current-user/exec-service/plugins"
 import {getChainId} from "../utils"
 import {VERSION} from "../VERSION"
 import {makeDiscoveryServices} from "./utils"
@@ -9,7 +8,7 @@ import {FCLContext} from "../context"
 
 export interface GetServicesParams {
   types: string[]
-  context: Pick<FCLContext, "config">
+  context: Pick<FCLContext, "config" | "serviceRegistry">
 }
 
 export interface DiscoveryRequestBody {
@@ -66,8 +65,8 @@ export async function getServices({
       features: {
         suggested: await context.config.get("discovery.features.suggested", []),
       },
-      clientServices: await makeDiscoveryServices(),
-      supportedStrategies: getServiceRegistry().getStrategies(),
+      clientServices: await makeDiscoveryServices(context),
+      supportedStrategies: context.serviceRegistry.getStrategies(),
       userAgent: window?.navigator?.userAgent,
       network: await getChainId(),
     } as DiscoveryRequestBody),
