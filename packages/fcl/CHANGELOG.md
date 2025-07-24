@@ -16,7 +16,7 @@
   - @onflow/config@1.6.0-alpha.0
   - @onflow/fcl-core@1.21.0-alpha.1
   - @onflow/sdk@1.10.0-alpha.1
-  - @onflow/fcl-wc@7.0.0-alpha.1
+  - @onflow/fcl-wc@6.0.5-alpha.1
 
 ## 1.20.0-alpha.0
 

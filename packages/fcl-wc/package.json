@@ -1,6 +1,6 @@
 {
   "name": "@onflow/fcl-wc",
-  "version": "7.0.0-alpha.1",
+  "version": "6.0.5-alpha.1",
   "description": "WalletConnect adapter for FCL",
   "license": "Apache-2.0",
   "author": "Flow Foundation",

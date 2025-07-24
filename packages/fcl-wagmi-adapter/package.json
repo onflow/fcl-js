@@ -39,7 +39,7 @@
     "@babel/runtime": "^7.25.7",
     "@ethersproject/bytes": "^5.7.0",
     "@ethersproject/hash": "^5.7.0",
-    "@onflow/fcl-ethereum-provider": "1.0.0-alpha.1",
+    "@onflow/fcl-ethereum-provider": "0.0.7-alpha.1",
     "@onflow/rlp": "^1.2.3",
     "viem": "^2.22.21"
   },
