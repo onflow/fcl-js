@@ -9,6 +9,7 @@ import {
   block,
   resolve,
 } from "@onflow/sdk"
+import {getServiceRegistry} from "../current-user/exec-service/plugins"
 
 /**
  * Note to self:
@@ -24,7 +25,7 @@ import {
  */
 export function createPartialGlobalFCLContext(): Pick<
   FCLContext,
-  "config" | "sdk"
+  "config" | "sdk" | "serviceRegistry"
 > {
   return {
     config: _config(),
@@ -37,5 +38,6 @@ export function createPartialGlobalFCLContext(): Pick<
       block,
       resolve,
     },
+    serviceRegistry: getServiceRegistry(),
   }
 }

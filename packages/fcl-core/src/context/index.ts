@@ -3,6 +3,11 @@ import {StorageProvider} from "../fcl-core"
 import {createSdkClient, SdkClientOptions} from "@onflow/sdk"
 import {getContracts} from "@onflow/config"
 import {invariant} from "@onflow/util-invariant"
+import {
+  createPluginRegistry,
+  createServiceRegistry,
+} from "../current-user/exec-service/plugins"
+
 interface FCLConfig {
   accessNodeUrl: string
   transport: SdkClientOptions["transport"]
@@ -29,6 +34,8 @@ interface FCLConfig {
   appDetailUrl?: string
   // Service configuration
   serviceOpenIdScopes?: string[]
+  // Core strategies for plugin system
+  coreStrategies?: any
 }
 
 // Define a compatibility config interface for backward compatibility
@@ -59,6 +66,10 @@ export interface FCLContext {
   /** Legacy config compatibility layer */
   config: ConfigService
   platform: string
+  /** Service registry for managing wallet communication strategies */
+  serviceRegistry: ReturnType<typeof createServiceRegistry>
+  /** Plugin registry for managing FCL plugins */
+  pluginRegistry: ReturnType<typeof createPluginRegistry>
 }
 
 /**
@@ -98,6 +109,13 @@ export function createFCLContext(config: FCLConfig): FCLContext {
 
   const configService = createConfigService(config)
 
+  const serviceRegistry = createServiceRegistry({
+    coreStrategies: config.coreStrategies || {},
+  })
+  const pluginRegistry = createPluginRegistry({
+    getServiceRegistry: () => serviceRegistry,
+  })
+
   const currentUser = createUser({
     platform: config.platform,
     storage: config.storage,
@@ -106,6 +124,7 @@ export function createFCLContext(config: FCLConfig): FCLContext {
       execStrategy: config.discovery?.execStrategy,
     },
     sdk,
+    serviceRegistry,
   })
 
   return {
@@ -114,6 +133,8 @@ export function createFCLContext(config: FCLConfig): FCLContext {
     sdk: sdk,
     config: configService,
     platform: config.platform,
+    serviceRegistry,
+    pluginRegistry,
   }
 }
 

@@ -1,6 +1,4 @@
-import {config} from "@onflow/config"
 import {invariant} from "@onflow/util-invariant"
-import {getServiceRegistry} from "../current-user/exec-service/plugins"
 import {Service} from "@onflow/typedefs"
 import {FCLContext} from "../context"
 
@@ -25,11 +23,13 @@ export interface DiscoveryService extends Service {
  *   console.log(`Service: ${service.provider?.name}, Type: ${service.type}`)
  * })
  */
-export const makeDiscoveryServices = async (): Promise<Service[]> => {
+export const makeDiscoveryServices = async (
+  context: Pick<FCLContext, "serviceRegistry">
+): Promise<Service[]> => {
   const extensionServices = ((window as any)?.fcl_extensions || []) as Service[]
   return [
     ...extensionServices,
-    ...(getServiceRegistry().getServices() as Service[]),
+    ...(context.serviceRegistry.getServices() as Service[]),
   ]
 }
 

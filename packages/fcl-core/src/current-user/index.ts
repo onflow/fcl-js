@@ -41,7 +41,8 @@ export interface CurrentUserConfig {
   getStorageProvider: () => Promise<StorageProvider>
 }
 
-export interface CurrentUserContext extends Pick<FCLContext, "config" | "sdk"> {
+export interface CurrentUserContext
+  extends Pick<FCLContext, "config" | "sdk" | "serviceRegistry"> {
   platform: string
   getStorageProvider: () => Promise<StorageProvider>
   discovery?: {
@@ -257,17 +258,20 @@ async function getAccountProofData(
   return accountProofData
 }
 
-const makeConfig = async ({
-  discoveryAuthnInclude,
-  discoveryAuthnExclude,
-  discoveryFeaturesSuggested,
-}: MakeConfigOptions): Promise<Record<string, any>> => {
+const makeConfig = async (
+  context: Pick<FCLContext, "serviceRegistry">,
+  {
+    discoveryAuthnInclude,
+    discoveryAuthnExclude,
+    discoveryFeaturesSuggested,
+  }: MakeConfigOptions
+): Promise<Record<string, any>> => {
   return {
     client: {
       discoveryAuthnInclude,
       discoveryAuthnExclude,
       discoveryFeaturesSuggested,
-      clientServices: await makeDiscoveryServices(),
+      clientServices: await makeDiscoveryServices(context),
       supportedStrategies: getServiceRegistry().getStrategies(),
     },
   }
@@ -367,7 +371,7 @@ const createAuthenticate =
         const response: any = await execService(context, {
           service: discoveryService,
           msg: accountProofData,
-          config: await makeConfig(discoveryService),
+          config: await makeConfig(context, discoveryService),
           opts,
           platform: context.platform,
           execStrategy: (context.discovery as any)?.execStrategy,
@@ -668,6 +672,7 @@ const createSignUserMessage =
         msg: makeSignable(msg),
         platform: context.platform,
         user,
+        serviceRegistry: context.serviceRegistry,
       })
       if (Array.isArray(response)) {
         return response.map(compSigs => normalizeCompositeSignature(compSigs))
@@ -699,7 +704,10 @@ const _createUser = (context: CurrentUserContext): CurrentUserService => {
 }
 
 const createUser = (
-  context: Pick<FCLContext, "config" | "sdk" | "storage"> & {
+  context: Pick<
+    FCLContext,
+    "config" | "sdk" | "storage" | "serviceRegistry"
+  > & {
     platform: string
     discovery?: {
       execStrategy?: (...args: any[]) => any
@@ -807,6 +815,9 @@ const getCurrentUser = (cfg: CurrentUserConfig): CurrentUserService => {
     getStorageProvider,
     platform: cfg.platform,
     actorName: NAME,
+    get serviceRegistry() {
+      return getServiceRegistry()
+    },
   })
 }
 
