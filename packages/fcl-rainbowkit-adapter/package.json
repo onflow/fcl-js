@@ -1,6 +1,6 @@
 {
   "name": "@onflow/fcl-rainbowkit-adapter",
-  "version": "0.2.3.alpha.1",
+  "version": "0.2.3-alpha.1",
   "description": "Rainbowkit adapter for FCL-compatible wallets",
   "license": "Apache-2.0",
   "author": "Dapper Labs <dev@dapperlabs.com>",
