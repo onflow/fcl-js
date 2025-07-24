@@ -1,4 +1,4 @@
-import {type config as _config} from "@onflow/config"
+import {config, type config as _config} from "@onflow/config"
 import {pluginRegistry} from "@onflow/fcl-core"
 import {invariant} from "@onflow/util-invariant"
 import * as fclWc from "@onflow/fcl-wc"
@@ -31,16 +31,7 @@ let lastConfig: string | null = null
 // Only the first configuration will be used
 let hasLoaded = false
 
-export function initFclWcLoader({
-  config,
-}: {
-  config: ReturnType<typeof _config>
-}) {
-  // We cannot load WalletConnect plugin on server side
-  if (isServer) {
-    return
-  }
-
+export function initFclWcLoader() {
   config.subscribe(async (fullConfig: any) => {
     const wcConfig = {
       walletConnectProjectId: fullConfig["walletconnect.projectId"],
@@ -63,6 +54,11 @@ export function loadFclWc(wcConfig: {
   appDetailDescription?: string | null
   appDetailUrl?: string | null
 }) {
+  // We cannot load WalletConnect plugin on server side
+  if (isServer) {
+    return
+  }
+
   const projectId: string | undefined | null = wcConfig.walletConnectProjectId
   const disableNotifications: boolean | undefined | null =
     wcConfig.walletConnectDisableNotifications

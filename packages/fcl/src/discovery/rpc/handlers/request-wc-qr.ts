@@ -26,31 +26,26 @@ export const wcRequestHandlerFactory = ({
   })
 
   return async ({}) => {
-    try {
-      if (abortSignal.aborted) {
-        throw new Error("Handler has been terminated")
-      }
-
-      const provider = await getProvider()
-
-      // Execute WC bypass if session is approved
-      const {uri, approval} = await createSessionProposal({
-        provider,
-        network,
-      })
-
-      // Watch for QR code connection asynchronously
-      watchQr({
-        uri,
-        approval,
-        onExecResult,
-      })
-
-      return {uri}
-    } catch (error: any) {
-      console.error("Error in WalletConnect QR request handler:", error)
-      throw error
+    if (abortSignal.aborted) {
+      throw new Error("Handler has been terminated")
     }
+
+    const provider = await getProvider()
+
+    // Execute WC bypass if session is approved
+    const {uri, approval} = await createSessionProposal({
+      provider,
+      network,
+    })
+
+    // Watch for QR code connection asynchronously
+    watchQr({
+      uri,
+      approval,
+      onExecResult,
+    })
+
+    return {uri}
   }
 }
 
@@ -91,7 +86,6 @@ export function watchQrFactory({
         })
         onExecResult(result)
       } catch (e: any) {
-        console.error("Error during WC QR code connection:", e)
         rpc.notify(DiscoveryNotification.NOTIFY_QRCODE_ERROR, {
           uri,
           error: e?.message,
