@@ -60,12 +60,14 @@ const makeExec = (
     opts,
     abortSignal,
     user,
+    config,
   }: {
     service: any
     body: any
     opts: any
     abortSignal?: AbortSignal
     user: any
+    config: any
   }) => {
     // Preload provider image
     preloadImage(service.provider?.icon)
@@ -117,7 +119,7 @@ const makeExec = (
           wcRequestHook,
           pairingModalOverride,
           abortSignal,
-          network: opts.config.client.network,
+          network: config.client.network,
         }).then(resolve, reject)
       })
     }

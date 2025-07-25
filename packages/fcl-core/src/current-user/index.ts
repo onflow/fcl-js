@@ -34,9 +34,6 @@ export interface CurrentUserConfig {
   platform: string
   discovery?: {
     execStrategy?: (...args: any[]) => any
-    authnInclude?: string[]
-    authnExclude?: string[]
-    featuresSuggested?: string[]
   }
   getStorageProvider: () => Promise<StorageProvider>
 }
@@ -46,9 +43,6 @@ export interface CurrentUserContext extends Pick<FCLContext, "config" | "sdk"> {
   getStorageProvider: () => Promise<StorageProvider>
   discovery?: {
     execStrategy?: (...args: any[]) => any
-    authnInclude?: string[]
-    authnExclude?: string[]
-    featuresSuggested?: string[]
   }
   actorName: string
 }
@@ -370,7 +364,7 @@ const createAuthenticate =
           config: await makeConfig(discoveryService),
           opts,
           platform: context.platform,
-          execStrategy: (context.discovery as any)?.execStrategy,
+          execStrategy: context.discovery?.execStrategy,
           user,
         })
 
@@ -807,6 +801,7 @@ const getCurrentUser = (cfg: CurrentUserConfig): CurrentUserService => {
     getStorageProvider,
     platform: cfg.platform,
     actorName: NAME,
+    discovery: cfg.discovery,
   })
 }
 
