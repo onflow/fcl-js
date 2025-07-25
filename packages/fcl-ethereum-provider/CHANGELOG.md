@@ -1,6 +1,14 @@
 # @onflow/fcl-ethereum-provider
 
-## 1.0.0-alpha.2
+## 0.0.7
+
+### Patch Changes
+
+- Updated dependencies [[`305763aadbd906d3355aab2ba2ba6aa3aae1cb7b`](https://github.com/onflow/fcl-js/commit/305763aadbd906d3355aab2ba2ba6aa3aae1cb7b), [`e8293cb2c752b340793d2342450a022d79c14edc`](https://github.com/onflow/fcl-js/commit/e8293cb2c752b340793d2342450a022d79c14edc), [`c5191ab2f51204dac26f099c071ed02913b616ff`](https://github.com/onflow/fcl-js/commit/c5191ab2f51204dac26f099c071ed02913b616ff), [`c5191ab2f51204dac26f099c071ed02913b616ff`](https://github.com/onflow/fcl-js/commit/c5191ab2f51204dac26f099c071ed02913b616ff)]:
+  - @onflow/fcl@1.20.0
+  - @onflow/fcl-wc@6.0.5
+
+## 0.0.7-alpha.2
 
 ### Patch Changes
 

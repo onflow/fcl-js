@@ -1,5 +1,29 @@
 # @onflow/fcl
 
+## 1.21.0
+
+### Minor Changes
+
+- [#2534](https://github.com/onflow/fcl-js/pull/2534) [`8b5086024e0295649bb4266aa0cafbcb2e4171b7`](https://github.com/onflow/fcl-js/commit/8b5086024e0295649bb4266aa0cafbcb2e4171b7) Thanks [@mfbz](https://github.com/mfbz)! - Refactored fcl-core package to TypeScript
+
+- [#2535](https://github.com/onflow/fcl-js/pull/2535) [`e8293cb2c752b340793d2342450a022d79c14edc`](https://github.com/onflow/fcl-js/commit/e8293cb2c752b340793d2342450a022d79c14edc) Thanks [@mfbz](https://github.com/mfbz)! - Refactored fcl package to TypeScript
+
+- [#2536](https://github.com/onflow/fcl-js/pull/2536) [`14ff4a2f04362d7b8a10b444321ffd0c17b20f76`](https://github.com/onflow/fcl-js/commit/14ff4a2f04362d7b8a10b444321ffd0c17b20f76) Thanks [@mfbz](https://github.com/mfbz)! - Refactored fcl-react-native package to TypeScript
+
+- [#2614](https://github.com/onflow/fcl-js/pull/2614) [`c5191ab2f51204dac26f099c071ed02913b616ff`](https://github.com/onflow/fcl-js/commit/c5191ab2f51204dac26f099c071ed02913b616ff) Thanks [@jribbink](https://github.com/jribbink)! - Remove unused WalletConnect configuration options from `createFlowClient`
+
+- [#2539](https://github.com/onflow/fcl-js/pull/2539) [`5fb8498a5578cf21096560e316f33e92a5660350`](https://github.com/onflow/fcl-js/commit/5fb8498a5578cf21096560e316f33e92a5660350) Thanks [@jribbink](https://github.com/jribbink)! - Decoupled FCL Core functions from the global state and created a `createFlowCoreClient` function which constructs a new SDK client instance bound to a custom context.
+
+  This allows for better modularity and helps support multiple FCL instances in the same application.
+
+  All FCL functions will continue to work as before, but now you can create a custom FCL instance with its own context.
+
+### Patch Changes
+
+- Updated dependencies [[`8b5086024e0295649bb4266aa0cafbcb2e4171b7`](https://github.com/onflow/fcl-js/commit/8b5086024e0295649bb4266aa0cafbcb2e4171b7), [`e8293cb2c752b340793d2342450a022d79c14edc`](https://github.com/onflow/fcl-js/commit/e8293cb2c752b340793d2342450a022d79c14edc), [`14ff4a2f04362d7b8a10b444321ffd0c17b20f76`](https://github.com/onflow/fcl-js/commit/14ff4a2f04362d7b8a10b444321ffd0c17b20f76), [`72e23611de8025dbd36bddc2dcc1c5858f50efe8`](https://github.com/onflow/fcl-js/commit/72e23611de8025dbd36bddc2dcc1c5858f50efe8), [`7307e779415cd941f911bbb0c634581c959050b2`](https://github.com/onflow/fcl-js/commit/7307e779415cd941f911bbb0c634581c959050b2)]:
+  - @onflow/sdk@1.10.0
+  - @onflow/config@1.6.0
+
 ## 1.21.0-alpha.2
 
 ### Minor Changes
