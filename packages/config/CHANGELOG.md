@@ -1,5 +1,11 @@
 # @onflow/config
 
+## 1.6.0
+
+### Minor Changes
+
+- [#2594](https://github.com/onflow/fcl-js/pull/2594) [`72e23611de8025dbd36bddc2dcc1c5858f50efe8`](https://github.com/onflow/fcl-js/commit/72e23611de8025dbd36bddc2dcc1c5858f50efe8) Thanks [@jribbink](https://github.com/jribbink)! - Expose `getContracts` function
+
 ## 1.6.0-alpha.0
 
 ### Minor Changes

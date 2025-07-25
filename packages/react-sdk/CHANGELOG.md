@@ -1,5 +1,38 @@
 # @onflow/react-sdk
 
+## 1.0.0
+
+### Minor Changes
+
+- [#2579](https://github.com/onflow/fcl-js/pull/2579) [`77f4cbaa5c73b5fccbc6e76414293debfe167659`](https://github.com/onflow/fcl-js/commit/77f4cbaa5c73b5fccbc6e76414293debfe167659) Thanks [@jribbink](https://github.com/jribbink)! - Decoupled React SDK from the global state and include a `FlowClient` instance within the `FlowProvider` context.
+
+  This allows for better modularity and helps support multiple FCL instances in the same application. Additionally, this is part of a larger effort to move towards a cleaner lifecycle less reliant on asynchronous state management prone to race conditions and frequent bugs.
+
+  Moving forward, developers wishing to interact directly with the Flow Client (FCL Instance) should use the `useFlowClient` hook provided by the React SDK instead of relying on globally exported functions from the FCL package.
+
+- [#2582](https://github.com/onflow/fcl-js/pull/2582) [`90f0728bd34fb1d1ce52a08c24f1a4fbcf5db455`](https://github.com/onflow/fcl-js/commit/90f0728bd34fb1d1ce52a08c24f1a4fbcf5db455) Thanks [@jribbink](https://github.com/jribbink)! - Update with latest changes on `master` branch
+
+- [#2558](https://github.com/onflow/fcl-js/pull/2558) [`11c6830ae99d2daba54276854157b6fc234dd6ef`](https://github.com/onflow/fcl-js/commit/11c6830ae99d2daba54276854157b6fc234dd6ef) Thanks [@jribbink](https://github.com/jribbink)! - Add `<TransactionButton />` component
+
+- [#2559](https://github.com/onflow/fcl-js/pull/2559) [`b1bcc0a7b2bbfd952b0fa93ac79c35fcd7dccae1`](https://github.com/onflow/fcl-js/commit/b1bcc0a7b2bbfd952b0fa93ac79c35fcd7dccae1) Thanks [@jribbink](https://github.com/jribbink)! - Add component theming options
+
+- [#2609](https://github.com/onflow/fcl-js/pull/2609) [`4be1b361150c557f5c5a747b461558e35e1d3c38`](https://github.com/onflow/fcl-js/commit/4be1b361150c557f5c5a747b461558e35e1d3c38) Thanks [@mfbz](https://github.com/mfbz)! - Added tailwind prefix for style isolation
+
+- [#2559](https://github.com/onflow/fcl-js/pull/2559) [`b1bcc0a7b2bbfd952b0fa93ac79c35fcd7dccae1`](https://github.com/onflow/fcl-js/commit/b1bcc0a7b2bbfd952b0fa93ac79c35fcd7dccae1) Thanks [@jribbink](https://github.com/jribbink)! - Add `<TransactionLink />` component
+
+- [#2559](https://github.com/onflow/fcl-js/pull/2559) [`b1bcc0a7b2bbfd952b0fa93ac79c35fcd7dccae1`](https://github.com/onflow/fcl-js/commit/b1bcc0a7b2bbfd952b0fa93ac79c35fcd7dccae1) Thanks [@jribbink](https://github.com/jribbink)! - Add `<Connect />` component
+
+- [#2579](https://github.com/onflow/fcl-js/pull/2579) [`77f4cbaa5c73b5fccbc6e76414293debfe167659`](https://github.com/onflow/fcl-js/commit/77f4cbaa5c73b5fccbc6e76414293debfe167659) Thanks [@jribbink](https://github.com/jribbink)! - Removed deprecated `useCurrentFlowUser` hook in favor of `useFlowCurrentUser` hook for better clarity and consistency in naming conventions.
+
+- [#2604](https://github.com/onflow/fcl-js/pull/2604) [`aea5df931cbc7f664aaf6730cac8c270166a2abd`](https://github.com/onflow/fcl-js/commit/aea5df931cbc7f664aaf6730cac8c270166a2abd) Thanks [@jribbink](https://github.com/jribbink)! - Add missing config key for `discoveryAuthnInclude`.
+
+### Patch Changes
+
+- [#2589](https://github.com/onflow/fcl-js/pull/2589) [`43751a02a0052f2f77915e527afb0edd21097b79`](https://github.com/onflow/fcl-js/commit/43751a02a0052f2f77915e527afb0edd21097b79) Thanks [@mfbz](https://github.com/mfbz)! - Updated transaction button pending state
+
+- Updated dependencies [[`305763aadbd906d3355aab2ba2ba6aa3aae1cb7b`](https://github.com/onflow/fcl-js/commit/305763aadbd906d3355aab2ba2ba6aa3aae1cb7b), [`e8293cb2c752b340793d2342450a022d79c14edc`](https://github.com/onflow/fcl-js/commit/e8293cb2c752b340793d2342450a022d79c14edc), [`c5191ab2f51204dac26f099c071ed02913b616ff`](https://github.com/onflow/fcl-js/commit/c5191ab2f51204dac26f099c071ed02913b616ff)]:
+  - @onflow/fcl@1.20.0
+
 ## 0.1.0-alpha.3
 
 ### Patch Changes
