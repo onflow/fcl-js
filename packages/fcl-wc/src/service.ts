@@ -60,12 +60,14 @@ const makeExec = (
     opts,
     abortSignal,
     user,
+    config,
   }: {
     service: any
     body: any
     opts: any
     abortSignal?: AbortSignal
     user: any
+    config: any
   }) => {
     // Preload provider image
     preloadImage(service.provider?.icon)
@@ -117,6 +119,7 @@ const makeExec = (
           wcRequestHook,
           pairingModalOverride,
           abortSignal,
+          network: config.client.network,
         }).then(resolve, reject)
       })
     }
@@ -188,6 +191,7 @@ function connectWc(
     wcRequestHook,
     pairingModalOverride,
     abortSignal,
+    network,
   }: {
     service: any
     onClose: any
@@ -198,6 +202,7 @@ function connectWc(
     wcRequestHook: any
     pairingModalOverride: any
     abortSignal?: AbortSignal
+    network: string
   }): Promise<SessionTypes.Struct> => {
     const projectId = provider.providerOpts.projectId
     invariant(
@@ -212,6 +217,7 @@ function connectWc(
       const {uri, approval} = await createSessionProposal({
         provider,
         existingPairing: pairing,
+        network,
       })
 
       if (wcRequestHook && wcRequestHook instanceof Function) {

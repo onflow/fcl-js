@@ -161,6 +161,30 @@ For all type definitions available, see [this file](./packages/typedefs/src/inde
 - Learn Flow's smart contract language to build any script or transactions: [Cadence](https://cadence-lang.org).
 - Explore all of Flow [docs and tools](https://developers.flow.com).
 
+## Development & Testing
+
+### Internal Demo App
+
+A lightweight demo application is available for testing FCL and Kit packages during development:
+
+```bash
+# Build all packages
+npm run build
+
+# Start the demo
+npm run demo
+```
+
+The demo provides:
+
+- **Hot Reload**: Instant feedback for code changes
+- **Focused Testing**: Clean interface for testing authentication, queries, and transactions
+- **Debug Tools**: Real-time inspection of FCL state and responses
+- **Lightweight**: Vite-based setup for fast iteration
+- **Workspace Integration**: Proper Lerna workspace setup with automatic symlinks
+
+See [`packages/demo/README.md`](./packages/demo/README.md) for detailed usage instructions.
+
 ---
 ## FCL for Wallet Providers
 Wallet providers on Flow have the flexibility to build their user interactions and UI through a variety of ways:

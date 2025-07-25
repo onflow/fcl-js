@@ -14,6 +14,12 @@ interface NodeConfig {
   node: string
 }
 
+/**
+ * Resolves the sequence number for the proposer account by querying the blockchain.
+ *
+ * @param config Configuration containing the node endpoint
+ * @returns A function that resolves the proposer sequence number for an interaction
+ */
 export const resolveProposerSequenceNumber =
   ({node}: NodeConfig) =>
   async (ix: Interaction) => {
@@ -32,7 +38,7 @@ export const resolveProposerSequenceNumber =
 
     const response = await sendFn(
       await build([getAccount(ix.accounts[ix.proposer!].addr!)]),
-      {config, response: responseModule, Buffer, ix: ixModule},
+      {response: responseModule, Buffer, ix: ixModule},
       {node}
     )
     const decoded = await decodeResponse(response)

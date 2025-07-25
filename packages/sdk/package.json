@@ -1,7 +1,7 @@
 {
   "name": "@onflow/sdk",
-  "version": "1.9.0",
-  "description": "Flow SDK",
+  "version": "1.10.0-alpha.1",
+  "description": "Low-level JavaScript/TypeScript SDK for interacting with the Flow blockchain.",
   "license": "Apache-2.0",
   "author": "Flow Foundation",
   "homepage": "https://flow.com",
@@ -37,14 +37,15 @@
     "build": "npm run lint && fcl-bundle",
     "test:watch": "jest --watch",
     "start": "fcl-bundle --watch",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "generate-docs": "node ../../docs-generator/generate-docs.js"
   },
   "dependencies": {
     "@babel/runtime": "^7.25.7",
-    "@onflow/config": "1.5.2",
+    "@onflow/config": "1.6.0-alpha.0",
     "@onflow/rlp": "1.2.3",
     "@onflow/transport-http": "1.13.0",
-    "@onflow/typedefs": "1.6.0",
+    "@onflow/typedefs": "1.7.0-alpha.0",
     "@onflow/types": "1.4.1",
     "@onflow/util-actor": "1.3.4",
     "@onflow/util-address": "1.2.3",

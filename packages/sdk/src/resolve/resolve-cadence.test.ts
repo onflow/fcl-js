@@ -6,6 +6,7 @@ import {
 } from "../interaction/interaction"
 import {resolveCadence} from "./resolve-cadence"
 import {config} from "@onflow/config"
+import {getGlobalContext} from "../context/global"
 
 const idle = () => new Promise(resolve => setTimeout(resolve, 0))
 
@@ -17,7 +18,7 @@ describe("resolveCadence", () => {
       const ix = await pipe([
         makeScript,
         put("ix.cadence", CADENCE),
-        resolveCadence,
+        async ix => resolveCadence(ix, await getGlobalContext()),
       ])(initInteraction())
 
       expect(ix.message.cadence).toBe(CADENCE)
@@ -31,7 +32,7 @@ describe("resolveCadence", () => {
       const ix = await pipe([
         makeScript,
         put("ix.cadence", CADENCE),
-        resolveCadence,
+        async ix => resolveCadence(ix, await getGlobalContext()),
       ])(initInteraction())
 
       expect(ix.message.cadence).toBe(await CADENCE())
@@ -63,7 +64,7 @@ describe("resolveCadence", () => {
       const ix = await pipe([
         makeScript,
         put("ix.cadence", CADENCE),
-        resolveCadence,
+        async ix => resolveCadence(ix, await getGlobalContext()),
       ])(initInteraction())
 
       expect(ix.message.cadence).toEqual(await RESULT())
@@ -115,7 +116,7 @@ describe("resolveCadence", () => {
       const ix = await pipe([
         makeScript,
         put("ix.cadence", CADENCE),
-        resolveCadence,
+        async ix => resolveCadence(ix, await getGlobalContext()),
       ])(initInteraction())
 
       expect(ix.message.cadence).toEqual(await RESULT())
@@ -142,7 +143,7 @@ access(all) fun main(): Address {
       const ix = await pipe([
         makeScript,
         put("ix.cadence", CADENCE),
-        resolveCadence,
+        async ix => resolveCadence(ix, await getGlobalContext()),
       ])(initInteraction())
 
       expect(ix.message.cadence).toEqual(expected)
@@ -169,7 +170,7 @@ access(all) fun main(): Address {
       const ix = await pipe([
         makeScript,
         put("ix.cadence", CADENCE),
-        resolveCadence,
+        async ix => resolveCadence(ix, await getGlobalContext()),
       ])(initInteraction())
 
       expect(ix.message.cadence).toEqual(expected)
@@ -197,7 +198,7 @@ access(all) fun main(): Address {
       const ix = await pipe([
         makeScript,
         put("ix.cadence", CADENCE),
-        resolveCadence,
+        async ix => resolveCadence(ix, await getGlobalContext()),
       ])(initInteraction())
 
       expect(ix.message.cadence).toEqual(expected)
@@ -222,7 +223,7 @@ access(all) fun main(): Address {
       const ix = await pipe([
         makeScript,
         put("ix.cadence", CADENCE),
-        resolveCadence,
+        async ix => resolveCadence(ix, await getGlobalContext()),
       ])(initInteraction())
 
       expect(ix.message.cadence).toEqual(expected)

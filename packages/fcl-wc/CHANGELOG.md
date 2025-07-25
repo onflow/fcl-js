@@ -1,5 +1,31 @@
 # @onflow/fcl-wc
 
+## 6.0.5-alpha.2
+
+### Minor Changes
+
+- [#2614](https://github.com/onflow/fcl-js/pull/2614) [`c5191ab2f51204dac26f099c071ed02913b616ff`](https://github.com/onflow/fcl-js/commit/c5191ab2f51204dac26f099c071ed02913b616ff) Thanks [@jribbink](https://github.com/jribbink)! - Add support for manually passing a `network` to `createSessionProposal`
+
+### Patch Changes
+
+- Updated dependencies [[`c5191ab2f51204dac26f099c071ed02913b616ff`](https://github.com/onflow/fcl-js/commit/c5191ab2f51204dac26f099c071ed02913b616ff)]:
+  - @onflow/fcl-core@1.21.0-alpha.2
+
+## 6.0.5-alpha.1
+
+### Patch Changes
+
+- Updated dependencies [[`72e23611de8025dbd36bddc2dcc1c5858f50efe8`](https://github.com/onflow/fcl-js/commit/72e23611de8025dbd36bddc2dcc1c5858f50efe8), [`5fb8498a5578cf21096560e316f33e92a5660350`](https://github.com/onflow/fcl-js/commit/5fb8498a5578cf21096560e316f33e92a5660350)]:
+  - @onflow/config@1.6.0-alpha.0
+  - @onflow/fcl-core@1.21.0-alpha.1
+
+## 6.0.5-alpha.0
+
+### Patch Changes
+
+- Updated dependencies [[`8b5086024e0295649bb4266aa0cafbcb2e4171b7`](https://github.com/onflow/fcl-js/commit/8b5086024e0295649bb4266aa0cafbcb2e4171b7), [`e8293cb2c752b340793d2342450a022d79c14edc`](https://github.com/onflow/fcl-js/commit/e8293cb2c752b340793d2342450a022d79c14edc), [`14ff4a2f04362d7b8a10b444321ffd0c17b20f76`](https://github.com/onflow/fcl-js/commit/14ff4a2f04362d7b8a10b444321ffd0c17b20f76)]:
+  - @onflow/fcl-core@1.21.0-alpha.0
+
 ## 6.0.4
 
 ### Patch Changes
