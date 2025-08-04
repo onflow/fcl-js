@@ -42,6 +42,7 @@
     "eslint-plugin-jsdoc": "^46.10.1",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
+    "postcss-prefixwrap": "^1.56.1",
     "tailwindcss": "^3.4.14"
   },
   "dependencies": {
@@ -52,9 +53,9 @@
     "tailwind-merge": "^3.3.1"
   },
   "peerDependencies": {
-    "viem": "^2.29.2",
     "@onflow/fcl": ">=1.20.0",
     "react": "^18.0.0 || ^19.0.0",
-    "react-dom": "^18.0.0 || ^19.0.0"
+    "react-dom": "^18.0.0 || ^19.0.0",
+    "viem": "^2.29.2"
   }
 }
