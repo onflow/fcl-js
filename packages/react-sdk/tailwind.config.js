@@ -2,11 +2,15 @@
 module.exports = {
   content: ["./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
-    extend: {},
+    extend: {
+      keyframes: { 'flow-spin': { to: { transform: 'rotate(1turn)' } } },
+      animation: { 'flow-spin': 'flow-spin 1s linear infinite' },
+    },
   },
   darkMode: "class",
   plugins: [],
   prefix: "flow-",
+  safelist: ['flow-animate-flow-spin'],
   // NB: Needed so that Tailwind doesn't remove the classes and we can use them in the theme
   safelist: [
     // All background colors
