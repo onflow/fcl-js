@@ -7,7 +7,6 @@ module.exports = {
   darkMode: "class",
   plugins: [],
   prefix: "flow-",
-  safelist: [],
   // NB: Needed so that Tailwind doesn't remove the classes and we can use them in the theme
   safelist: [
     // All background colors
