@@ -1,5 +1,11 @@
 # @onflow/react-sdk
 
+## 0.10.1
+
+### Patch Changes
+
+- [#2620](https://github.com/onflow/fcl-js/pull/2620) [`f02d080abc695f339e0a27bfeba01b8b085faad2`](https://github.com/onflow/fcl-js/commit/f02d080abc695f339e0a27bfeba01b8b085faad2) Thanks [@jribbink](https://github.com/jribbink)! - Fix animation for `TransactionDialog`
+
 ## 0.10.0
 
 ### Minor Changes
