@@ -6,13 +6,19 @@ import {
   useCrossVmReceiveToken,
 } from "./useCrossVmReceiveToken"
 import {useFlowChainId} from "./useFlowChainId"
+import {createMockFclInstance, MockFclInstance} from "../__mocks__/flow-client"
 
 jest.mock("@onflow/fcl", () => require("../__mocks__/fcl").default)
 jest.mock("./useFlowChainId", () => ({
   useFlowChainId: jest.fn(),
 }))
+jest.mock("./useFlowClient", () => ({
+  useFlowClient: jest.fn(),
+}))
 
 describe("useCrossVmReceiveToken", () => {
+  let mockFcl: MockFclInstance
+
   const mockTxId = "0x123"
   const mockTxResult = {
     events: [
@@ -33,6 +39,9 @@ describe("useCrossVmReceiveToken", () => {
       data: "testnet",
       isLoading: false,
     } as any)
+
+    mockFcl = createMockFclInstance()
+    jest.mocked(fcl.createFlowClient).mockReturnValue(mockFcl.mockFclInstance)
   })
 
   describe("getCrossVmReceiveTokenTransaction", () => {
