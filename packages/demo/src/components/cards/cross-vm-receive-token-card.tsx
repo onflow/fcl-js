@@ -1,4 +1,4 @@
-import {useCrossVmReceiveToken, useFlowConfig} from "@onflow/kit"
+import {useCrossVmReceiveToken, useFlowConfig} from "@onflow/react-sdk"
 import {useState, useMemo} from "react"
 import {getContractAddress} from "../../constants"
 
