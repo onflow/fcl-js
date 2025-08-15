@@ -1,4 +1,4 @@
-import {useFlowConfig, useFlowMutate} from "@onflow/kit"
+import {useFlowConfig, useFlowMutate} from "@onflow/react-sdk"
 import {useState} from "react"
 
 export function FlowMutateCard() {

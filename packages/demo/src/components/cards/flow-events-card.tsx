@@ -1,4 +1,4 @@
-import {useFlowEvents, useFlowConfig} from "@onflow/kit"
+import {useFlowEvents, useFlowConfig} from "@onflow/react-sdk"
 import {useState, useCallback} from "react"
 import type {Event} from "@onflow/typedefs"
 import {getEventType} from "../../constants"

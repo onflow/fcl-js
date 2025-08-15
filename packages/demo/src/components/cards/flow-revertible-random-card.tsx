@@ -1,4 +1,4 @@
-import {useFlowRevertibleRandom} from "@onflow/kit"
+import {useFlowRevertibleRandom} from "@onflow/react-sdk"
 
 export function FlowRevertibleRandomCard() {
   const {

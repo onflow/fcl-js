@@ -16,3 +16,6 @@ todo.md
 
 # type declarations
 packages/*/types/
+
+# generated documentation
+/docs-generator/output/*

@@ -24,6 +24,7 @@ export function createDiscoveryRpcClient({
   rpc.on(
     FclRequest.REQUEST_WALLETCONNECT_QRCODE,
     wcRequestHandlerFactory({
+      network: opts.config.client.network,
       rpc,
       onExecResult,
       authnBody: body,

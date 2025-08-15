@@ -1,0 +1,74 @@
+---
+title: "{{displayName}}"
+description: "{{#if displayDescription}}{{displayDescription}}{{else}}{{displayName}} package documentation.{{/if}}"
+---
+
+<!-- THIS DOCUMENT IS AUTO-GENERATED FROM [onflow/{{packageName}}](https://github.com/onflow/fcl-js/tree/master/packages/{{packageName}}). DO NOT EDIT MANUALLY -->
+
+# {{displayName}}
+
+## Overview
+
+{{#if customOverview}}
+{{{customOverview}}}
+{{else}}
+The Flow {{packageName}} library provides a set of tools for developers to build applications on the Flow blockchain.
+{{/if}}
+
+## Installation
+
+You can install the @onflow/{{packageName}} package using npm or yarn:
+
+```bash
+npm install @onflow/{{packageName}}
+```
+
+Or using yarn:
+
+```bash
+yarn add @onflow/{{packageName}}
+```
+
+### Requirements
+
+{{#if customRequirements}}
+{{{customRequirements}}}
+{{else}}
+- Node.js 14.x or later
+{{/if}}
+
+### Importing
+
+{{#if customImporting}}
+{{{customImporting}}}
+{{else}}
+You can import the entire package:
+
+```typescript
+import * as {{packageFirstWord}} from "@onflow/{{packageName}}"
+```
+
+Or import specific functions:
+
+```typescript
+import { functionName } from "@onflow/{{packageName}}"
+```
+{{/if}}
+
+{{#if extra}}
+{{{extra}}}
+{{/if}}
+
+## API Reference
+
+This section contains documentation for all of the functions and namespaces in the {{packageName}} package.
+
+{{#each allApiItems}}
+{{#if isNamespace}}
+- [{{displayName}}]({{filePath}}) (namespace){{#if displayDescription}} - {{displayDescription}}{{/if}}
+{{else}}
+- [{{displayName}}]({{filePath}}){{#if displayDescription}} - {{displayDescription}}{{/if}}
+{{/if}}
+{{/each}}
+
+--- 

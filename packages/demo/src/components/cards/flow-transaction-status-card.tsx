@@ -1,4 +1,4 @@
-import {useFlowTransactionStatus} from "@onflow/kit"
+import {useFlowTransactionStatus} from "@onflow/react-sdk"
 import {useState, useEffect} from "react"
 
 // Safe wrapper hook for transaction status

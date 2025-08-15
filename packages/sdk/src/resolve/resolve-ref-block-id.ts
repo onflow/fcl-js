@@ -27,11 +27,17 @@ async function getRefId(opts?: {[key: string]: any}): Promise<string> {
 
   var ix
   ix = await pipe(initInteraction(), [getBlock()])
-  ix = await sendFn(ix, {config, response, Buffer, ix: ixModule}, {node})
+  ix = await sendFn(ix, {response, Buffer, ix: ixModule}, {node})
   ix = await decodeResponse(ix)
   return ix.id
 }
 
+/**
+ * Resolves the reference block ID for a transaction by querying the latest block from the network.
+ *
+ * @param opts Optional configuration parameters
+ * @returns A function that resolves the reference block ID for an interaction
+ */
 export function resolveRefBlockId(opts?: {[key: string]: any}) {
   return async (ix: any) => {
     if (!isTransaction(ix)) return Ok(ix)

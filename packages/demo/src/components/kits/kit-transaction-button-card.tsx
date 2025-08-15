@@ -1,9 +1,9 @@
-import {TransactionButton} from "@onflow/kit"
+import {TransactionButton} from "@onflow/react-sdk"
 
 export function KitTransactionButtonCard() {
   const GREETING_TRANSACTION = `
     transaction(greeting: String) {
-      prepare(signer: AuthAccount) {
+      prepare(signer: &Account) {
         log(greeting)
       }
     }

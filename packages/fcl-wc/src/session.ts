@@ -8,11 +8,13 @@ import {Service} from "@onflow/typedefs"
 export async function createSessionProposal({
   provider,
   existingPairing,
+  network,
 }: {
   provider: InstanceType<typeof UniversalProvider>
   existingPairing?: PairingTypes.Struct
+  network?: string
 }) {
-  const network = await fclCore.getChainId()
+  const _network = network || (await fclCore.getChainId())
 
   const requiredNamespaces = {
     flow: {
@@ -22,7 +24,7 @@ export async function createSessionProposal({
         FLOW_METHODS.FLOW_AUTHZ,
         FLOW_METHODS.FLOW_USER_SIGN,
       ],
-      chains: [`flow:${network}`],
+      chains: [`flow:${_network}`],
       events: ["chainChanged", "accountsChanged"],
     },
   }
