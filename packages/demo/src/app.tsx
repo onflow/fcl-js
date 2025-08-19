@@ -13,9 +13,9 @@ function AppContent() {
   // Apply dark class to document element for scrollbar styling
   useEffect(() => {
     if (darkMode) {
-      document.documentElement.classList.add('dark')
+      document.documentElement.classList.add("dark")
     } else {
-      document.documentElement.classList.remove('dark')
+      document.documentElement.classList.remove("dark")
     }
   }, [darkMode])
 

@@ -8,12 +8,7 @@ export function CrossVmSpendNftCard() {
   const [nftIdentifier, setNftIdentifier] = useState("")
   const [nftIds, setNftIds] = useState("1") // NFT IDs to bridge (comma-separated)
 
-  const {
-    spendNft,
-    isPending,
-    data: transactionId,
-    error,
-  } = useCrossVmSpendNft()
+  const {spendNft, isPending, data: transactionId, error} = useCrossVmSpendNft()
 
   const isNetworkSupported = currentNetwork === "testnet"
 
@@ -71,7 +66,7 @@ export function CrossVmSpendNftCard() {
         <label className="block mb-2 text-black">
           <strong>Note:</strong> Bridge NFTs from Cadence to EVM
         </label>
-        
+
         <label className="block mb-2 text-black font-medium">
           NFT Identifier:
         </label>

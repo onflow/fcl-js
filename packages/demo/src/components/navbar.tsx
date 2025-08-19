@@ -11,9 +11,9 @@ export function Navbar() {
     <nav
       className={`flex justify-between items-center p-4 sm:p-8 border-l border-r border-b
         rounded-b-xl mb-0 ${
-        darkMode 
-          ? "bg-gray-900 border-l-gray-700 border-r-gray-700 border-b-gray-700" 
-          : "bg-white border-l-gray-200 border-r-gray-200 border-b-gray-200" 
+        darkMode
+            ? "bg-gray-900 border-l-gray-700 border-r-gray-700 border-b-gray-700"
+            : "bg-white border-l-gray-200 border-r-gray-200 border-b-gray-200"
         }`}
     >
       <div
