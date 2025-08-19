@@ -5,9 +5,19 @@ import FlowProviderWrapper, {
 } from "./components/flow-provider-wrapper"
 import {Navbar} from "./components/navbar"
 import {Sidebar} from "./components/sidebar"
+import {useEffect} from "react"
 
 function AppContent() {
   const {darkMode} = useDarkMode()
+
+  // Apply dark class to document element for scrollbar styling
+  useEffect(() => {
+    if (darkMode) {
+      document.documentElement.classList.add('dark')
+    } else {
+      document.documentElement.classList.remove('dark')
+    }
+  }, [darkMode])
 
   return (
     <div

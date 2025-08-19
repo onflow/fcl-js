@@ -10,8 +10,11 @@ export function Navbar() {
   return (
     <nav
       className={`flex justify-between items-center p-4 sm:p-8 border-l border-r border-b
-        border-l-gray-200 border-r-gray-200 border-b-gray-200 rounded-b-xl mb-0 ${
-        darkMode ? "bg-gray-900" : "bg-white" }`}
+        rounded-b-xl mb-0 ${
+        darkMode 
+          ? "bg-gray-900 border-l-gray-700 border-r-gray-700 border-b-gray-700" 
+          : "bg-white border-l-gray-200 border-r-gray-200 border-b-gray-200" 
+        }`}
     >
       <div
         className={`text-2xl font-bold ${darkMode ? "text-white" : "text-black"}`}

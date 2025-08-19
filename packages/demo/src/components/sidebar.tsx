@@ -22,6 +22,12 @@ const sidebarItems: SidebarItem[] = [
     label: "Transaction Status",
     category: "hooks",
   },
+  {id: "cross-vm-spend-nft", label: "Cross VM Spend NFT", category: "hooks"},
+  {
+    id: "cross-vm-receive-nft",
+    label: "Cross VM Receive NFT",
+    category: "hooks",
+  },
 
   // Components section
   {id: "kit-connect", label: "Connect Kit", category: "components"},
