@@ -95,7 +95,6 @@ const getNftCadence = (network: "testnet" | "mainnet") => `
   access(all) fun main(address: Address, publicPathID: String, tokenID: UInt64): ViewInfo? {
     let account = getAccount(address)
 
-    // First try to get the capability as a standard ViewResolver collection
     let capability = account.capabilities.get<&{ViewResolver.ResolverCollection}>(PublicPath(identifier: publicPathID)!)
     if capability != nil {
       let collection = capability!.borrow()
@@ -200,8 +199,6 @@ const getNftCadence = (network: "testnet" | "mainnet") => `
 
 /**
  * Query a single NFT's basic metadata views from an account's ResolverCollection capability.
- *
- * Requirements: the account must expose a `MetadataViews.ResolverCollection` at the provided public path.
  */
 export function useFlowNft(params: UseFlowNftArgs) {
   const chainIdResult = useFlowChainId()
@@ -223,7 +220,9 @@ export function useFlowNft(params: UseFlowNftArgs) {
         !!chainIdResult.data &&
         !!params.accountAddress &&
         params.publicPathIdentifier.length > 0 &&
-        (params.tokenId !== undefined && params.tokenId !== null && String(params.tokenId).length > 0),
+        params.tokenId !== undefined &&
+        params.tokenId !== null &&
+        String(params.tokenId).length > 0,
       staleTime: params.query?.staleTime ?? 60_000,
     },
   })
@@ -235,7 +234,8 @@ export function useFlowNft(params: UseFlowNftArgs) {
   const getThumbnailUrl = (thumbnail: any): string => {
     if (!thumbnail) return ""
     if (thumbnail.url) return thumbnail.url
-    if (thumbnail.cid) return `https://ipfs.io/ipfs/${thumbnail.cid}${thumbnail.path || ""}`
+    if (thumbnail.cid)
+      return `https://ipfs.io/ipfs/${thumbnail.cid}${thumbnail.path || ""}`
     return ""
   }
 
@@ -248,8 +248,8 @@ export function useFlowNft(params: UseFlowNftArgs) {
           (queryResult.data as any).externalURL ||
           (queryResult.data as any).collectionDisplay?.externalURL?.url,
         collectionName: (queryResult.data as any).collectionDisplay?.name,
-        collectionExternalUrl:
-          (queryResult.data as any).collectionDisplay?.externalURL?.url,
+        collectionExternalUrl: (queryResult.data as any).collectionDisplay
+          ?.externalURL?.url,
         tokenID: String(params.tokenId ?? ""),
         traits: (queryResult.data as any).traits || {},
         rarity: (queryResult.data as any).rarity,
@@ -264,5 +264,3 @@ export function useFlowNft(params: UseFlowNftArgs) {
     data: processedData,
   } as UseQueryResult<NftViewResult | null, Error>
 }
-
-
