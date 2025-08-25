@@ -56,7 +56,7 @@ export interface NftViewResult {
 interface UseFlowNftArgs {
   accountAddress?: string
   tokenId?: string | number
-  publicPathIdentifier: string
+  publicPathIdentifier?: string
   query?: Omit<UseQueryOptions<unknown, Error>, "queryKey" | "queryFn">
   flowClient?: ReturnType<typeof useFlowClient>
 }
@@ -209,7 +209,7 @@ export function useFlowNft(params: UseFlowNftArgs) {
       : "",
     args: (arg, t) => [
       arg(params.accountAddress!, t.Address),
-      arg(params.publicPathIdentifier, t.String),
+      arg(params.publicPathIdentifier!, t.String),
       arg(String(params.tokenId!), t.UInt64),
     ],
     flowClient: params.flowClient,
@@ -219,7 +219,7 @@ export function useFlowNft(params: UseFlowNftArgs) {
         (params.query?.enabled ?? true) &&
         !!chainIdResult.data &&
         !!params.accountAddress &&
-        params.publicPathIdentifier.length > 0 &&
+        (params.publicPathIdentifier?.length ?? 0) > 0 &&
         params.tokenId !== undefined &&
         params.tokenId !== null &&
         String(params.tokenId).length > 0,
