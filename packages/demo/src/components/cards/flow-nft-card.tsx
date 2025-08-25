@@ -89,7 +89,7 @@ export function FlowNftCard() {
 
       <div className="border border-gray-200 rounded-md p-4 bg-gray-50 overflow-auto">
         <h3 className="text-black font-semibold mb-2">NFT Data:</h3>
-        {nft ? (
+        {nft && typeof nft === 'object' ? (
           <div className="space-y-3">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
@@ -171,7 +171,7 @@ export function FlowNftCard() {
                   {Object.entries(nft.traits).map(([key, value]) => (
                     <div key={key} className="bg-white p-2 rounded border">
                       <p className="text-xs text-gray-600 uppercase">{key}</p>
-                      <p className="text-black font-medium">{value}</p>
+                      <p className="text-black font-medium">{String(value)}</p>
                     </div>
                   ))}
                 </div>
