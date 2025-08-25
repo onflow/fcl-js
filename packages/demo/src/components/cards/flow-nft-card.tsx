@@ -67,9 +67,12 @@ export function FlowNftCard() {
         <button
           onClick={() => refetch()}
           disabled={!accountAddress || !tokenId || isLoading}
-          className="py-3 px-6 bg-[#f8f9fa] text-black border border-[#00EF8B] rounded-md
-            cursor-pointer font-semibold text-base transition-all duration-200 ease-in-out
-            disabled:opacity-50 disabled:cursor-not-allowed"
+          className={`py-3 px-6 text-base font-semibold rounded-md transition-all duration-200
+            ease-in-out ${
+            !accountAddress || !tokenId || isLoading
+                ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                : "bg-[#00EF8B] text-black cursor-pointer"
+            }`}
         >
           {isLoading ? "Loading..." : "Fetch NFT"}
         </button>
