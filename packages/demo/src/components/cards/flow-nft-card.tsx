@@ -34,7 +34,7 @@ export function FlowNftCard() {
             value={accountAddress}
             onChange={e => setAccountAddress(e.target.value)}
             placeholder="0x..."
-            className="w-full p-3 text-black border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#00EF8B]"
+            className="p-3 border-2 border-[#00EF8B] rounded-md text-sm text-black bg-white outline-none transition-colors duration-200 ease-in-out w-full"
           />
         </div>
 
@@ -47,7 +47,7 @@ export function FlowNftCard() {
             value={tokenId}
             onChange={e => setTokenId(e.target.value)}
             placeholder="123"
-            className="w-full p-3 text-black border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#00EF8B]"
+            className="p-3 border-2 border-[#00EF8B] rounded-md text-sm text-black bg-white outline-none transition-colors duration-200 ease-in-out w-full"
           />
         </div>
 
@@ -60,7 +60,7 @@ export function FlowNftCard() {
             value={publicPathIdentifier}
             onChange={e => setPublicPathIdentifier(e.target.value)}
             placeholder="examplenftcollection"
-            className="w-full p-3 text-black border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#00EF8B]"
+            className="p-3 border-2 border-[#00EF8B] rounded-md text-sm text-black bg-white outline-none transition-colors duration-200 ease-in-out w-full"
           />
         </div>
 
