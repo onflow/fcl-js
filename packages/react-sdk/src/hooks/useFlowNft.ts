@@ -192,11 +192,13 @@ export function useFlowNft(params: UseFlowNftArgs) {
     return ""
   }
 
-  const processedData: NftViewResult | null = queryResult.data ? (() => {
+  let processedData: NftViewResult | null = null
+  
+  if (queryResult.data) {
     const data = queryResult.data as any
     const collectionDisplay = data.collectionDisplay
     
-    return {
+    processedData = {
       name: data.name || "Unknown NFT",
       description: data.description || "",
       thumbnailUrl: getThumbnailUrl(data.thumbnail),
@@ -208,7 +210,7 @@ export function useFlowNft(params: UseFlowNftArgs) {
       rarity: data.rarity,
       serialNumber: data.serialNumber ? String(data.serialNumber) : undefined,
     }
-  })() : null
+  }
 
   return {
     ...queryResult,
