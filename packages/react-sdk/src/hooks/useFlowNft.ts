@@ -25,7 +25,7 @@ interface UseFlowNftArgs {
   flowClient?: ReturnType<typeof useFlowClient>
 }
 
-const getNftCadence = (network: "testnet" | "mainnet") => `
+const getNftCadence = (network: "testnet" | "mainnet" | "local") => `
   import NonFungibleToken from ${CONTRACT_ADDRESSES[network].NonFungibleToken}
   import MetadataViews from ${CONTRACT_ADDRESSES[network].MetadataViews}
   import ViewResolver from ${CONTRACT_ADDRESSES[network].ViewResolver}
