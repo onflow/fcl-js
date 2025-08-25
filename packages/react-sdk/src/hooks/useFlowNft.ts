@@ -4,42 +4,6 @@ import {CONTRACT_ADDRESSES} from "../constants"
 import {useFlowChainId} from "./useFlowChainId"
 import {useFlowClient} from "./useFlowClient"
 
-interface ViewInfo {
-  name: string
-  description: string
-  thumbnail: {
-    url?: string
-    cid?: string
-    path?: string
-  }
-  rarity?: string
-  transferrable: boolean
-  collectionDisplay?: {
-    name: string
-    description: string
-    externalURL?: {
-      url: string
-    }
-    squareImage?: {
-      file: {
-        url?: string
-        cid?: string
-      }
-    }
-    bannerImage?: {
-      file: {
-        url?: string
-        cid?: string
-      }
-    }
-    socials?: Record<string, {url: string}>
-  }
-  externalURL?: string
-  traits?: Record<string, string>
-  royalties?: Record<string, string>
-  serialNumber?: string
-}
-
 export interface NftViewResult {
   name: string
   description: string
