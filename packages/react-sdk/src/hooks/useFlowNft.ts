@@ -106,7 +106,7 @@ const getNftCadence = (network: "testnet" | "mainnet") => `
               traits = traitsDict
             }
 
-            // Get royalties - simplified for now
+            // Get royalties
             var royalties: {String: UFix64}? = nil
 
             // Get serial number
