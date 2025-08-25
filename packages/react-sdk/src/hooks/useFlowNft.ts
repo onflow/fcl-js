@@ -169,7 +169,7 @@ export function useFlowNft(params: UseFlowNftArgs) {
 
   const queryResult = useFlowQuery({
     cadence: chainIdResult.data
-      ? getNftCadence(chainIdResult.data as "testnet" | "mainnet")
+      ? getNftCadence(chainIdResult.data as "testnet" | "mainnet" | "local")
       : "",
     args: (arg, t) => [
       arg(params.accountAddress || "", t.Address),
