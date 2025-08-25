@@ -208,23 +208,12 @@ export function useFlowNft(params: UseFlowNftArgs) {
       ? getNftCadence(chainIdResult.data as "testnet" | "mainnet")
       : "",
     args: (arg, t) => [
-      arg(params.accountAddress!, t.Address),
-      arg(params.publicPathIdentifier!, t.String),
-      arg(String(params.tokenId!), t.UInt64),
+      arg(params.accountAddress || "", t.Address),
+      arg(params.publicPathIdentifier || "", t.String),
+      arg(String(params.tokenId || ""), t.UInt64),
     ],
     flowClient: params.flowClient,
-    query: {
-      ...params.query,
-      enabled:
-        (params.query?.enabled ?? true) &&
-        !!chainIdResult.data &&
-        !!params.accountAddress &&
-        (params.publicPathIdentifier?.length ?? 0) > 0 &&
-        params.tokenId !== undefined &&
-        params.tokenId !== null &&
-        String(params.tokenId).length > 0,
-      staleTime: params.query?.staleTime ?? 60_000,
-    },
+    ...params.query,
   })
 
   if (chainIdResult.isError) {
