@@ -16,6 +16,7 @@ const sidebarItems: SidebarItem[] = [
   {id: "flow-query", label: "Query", category: "hooks"},
   {id: "flow-query-raw", label: "Query Raw", category: "hooks"},
   {id: "flow-mutate", label: "Mutate", category: "hooks"},
+  {id: "flow-nft", label: "NFT", category: "hooks"},
   {id: "flow-revertible-random", label: "Revertible Random", category: "hooks"},
   {
     id: "flow-transaction-status",

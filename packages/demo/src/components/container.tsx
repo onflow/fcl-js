@@ -5,6 +5,7 @@ import {FlowChainIdCard} from "./cards/flow-chain-id-card"
 import {FlowConfigCard} from "./cards/flow-config-card"
 import {FlowEventsCard} from "./cards/flow-events-card"
 import {FlowMutateCard} from "./cards/flow-mutate-card"
+import {FlowNftCard} from "./cards/flow-nft-card"
 import {FlowQueryCard} from "./cards/flow-query-card"
 import {FlowQueryRawCard} from "./cards/flow-query-raw-card"
 import {FlowRevertibleRandomCard} from "./cards/flow-revertible-random-card"
@@ -50,6 +51,9 @@ export function Container() {
           </div>
           <div id="flow-mutate" className="scroll-mt-4">
             <FlowMutateCard />
+          </div>
+          <div id="flow-nft" className="scroll-mt-4">
+            <FlowNftCard />
           </div>
           <div id="flow-revertible-random" className="scroll-mt-4">
             <FlowRevertibleRandomCard />
