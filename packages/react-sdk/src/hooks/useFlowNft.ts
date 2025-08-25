@@ -192,25 +192,23 @@ export function useFlowNft(params: UseFlowNftArgs) {
     return ""
   }
 
-  const processedData: NftViewResult | null = queryResult.data
-    ? {
-        name: (queryResult.data as any).name || "Unknown NFT",
-        description: (queryResult.data as any).description || "",
-        thumbnailUrl: getThumbnailUrl((queryResult.data as any).thumbnail),
-        externalUrl:
-          (queryResult.data as any).externalURL ||
-          (queryResult.data as any).collectionDisplay?.externalURL?.url,
-        collectionName: (queryResult.data as any).collectionDisplay?.name,
-        collectionExternalUrl: (queryResult.data as any).collectionDisplay
-          ?.externalURL?.url,
-        tokenID: String(params.tokenId ?? ""),
-        traits: (queryResult.data as any).traits || {},
-        rarity: (queryResult.data as any).rarity,
-        serialNumber: (queryResult.data as any).serialNumber
-          ? String((queryResult.data as any).serialNumber)
-          : undefined,
-      }
-    : null
+  const processedData: NftViewResult | null = queryResult.data ? (() => {
+    const data = queryResult.data as any
+    const collectionDisplay = data.collectionDisplay
+    
+    return {
+      name: data.name || "Unknown NFT",
+      description: data.description || "",
+      thumbnailUrl: getThumbnailUrl(data.thumbnail),
+      externalUrl: data.externalURL || collectionDisplay?.externalURL?.url,
+      collectionName: collectionDisplay?.name,
+      collectionExternalUrl: collectionDisplay?.externalURL?.url,
+      tokenID: String(params.tokenId ?? ""),
+      traits: data.traits || {},
+      rarity: data.rarity,
+      serialNumber: data.serialNumber ? String(data.serialNumber) : undefined,
+    }
+  })() : null
 
   return {
     ...queryResult,
