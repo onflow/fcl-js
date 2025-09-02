@@ -5,7 +5,7 @@ description: Sends an interaction to an access node via the GRPC Rest API and re
 
 # Deprecated - DO NOT USE
 
-This package is deprecated and will will no receive updates for new features.  Please migrate your projects to use the [HTTP Transport] package (`@onflow/transport-http`) instead.
+This package is deprecated and will no receive updates for new features.  Please migrate your projects to use the [HTTP Transport] package (`@onflow/transport-http`) instead.
 
 Latest versions of FCL/JS-SDK will automatically use the HTTP Transport as long as the `sdk.transport` configuration key is not set.
 
