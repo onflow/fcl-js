@@ -45,11 +45,11 @@ describe("useFlowNftMetadata", () => {
       externalURL: "https://example.com/nft/123",
       collectionDisplay: {
         name: "Test Collection",
-        externalURL: {url: "https://example.com/collection"}
+        externalURL: {url: "https://example.com/collection"},
       },
       rarity: "Rare",
       traits: {color: "blue", size: "large"},
-      serialNumber: "123"
+      serialNumber: "123",
     }
 
     const queryMock = jest.mocked(mockFcl.mockFclInstance.query)
@@ -58,13 +58,17 @@ describe("useFlowNftMetadata", () => {
     let hookResult: any
 
     await act(async () => {
-      const {result} = renderHook(() => useFlowNftMetadata({
-        accountAddress: "0x1234",
-        tokenId: "123", 
-        publicPathIdentifier: "examplenftcollection"
-      }), {
-        wrapper: FlowProvider,
-      })
+      const {result} = renderHook(
+        () =>
+          useFlowNftMetadata({
+            accountAddress: "0x1234",
+            tokenId: "123",
+            publicPathIdentifier: "examplenftcollection",
+          }),
+        {
+          wrapper: FlowProvider,
+        }
+      )
       hookResult = result
     })
 
@@ -82,7 +86,7 @@ describe("useFlowNftMetadata", () => {
       tokenID: "123",
       traits: {color: "blue", size: "large"},
       rarity: "Rare",
-      serialNumber: "123"
+      serialNumber: "123",
     }
 
     expect(hookResult.current.data).toEqual(expectedResult)
@@ -90,7 +94,7 @@ describe("useFlowNftMetadata", () => {
     expect(queryMock).toHaveBeenCalledWith(
       expect.objectContaining({
         cadence: expect.stringContaining("NonFungibleToken"),
-        args: expect.any(Function)
+        args: expect.any(Function),
       })
     )
   })
@@ -102,13 +106,17 @@ describe("useFlowNftMetadata", () => {
     let hookResult: any
 
     await act(async () => {
-      const {result} = renderHook(() => useFlowNftMetadata({
-        accountAddress: "0x1234",
-        tokenId: "999",
-        publicPathIdentifier: "examplenftcollection"
-      }), {
-        wrapper: FlowProvider,
-      })
+      const {result} = renderHook(
+        () =>
+          useFlowNftMetadata({
+            accountAddress: "0x1234",
+            tokenId: "999",
+            publicPathIdentifier: "examplenftcollection",
+          }),
+        {
+          wrapper: FlowProvider,
+        }
+      )
       hookResult = result
     })
 
@@ -126,13 +134,17 @@ describe("useFlowNftMetadata", () => {
     let hookResult: any
 
     await act(async () => {
-      const {result} = renderHook(() => useFlowNftMetadata({
-        accountAddress: "0x5678",
-        tokenId: "123",
-        publicPathIdentifier: "examplenftcollection"
-      }), {
-        wrapper: FlowProvider,
-      })
+      const {result} = renderHook(
+        () =>
+          useFlowNftMetadata({
+            accountAddress: "0x5678",
+            tokenId: "123",
+            publicPathIdentifier: "examplenftcollection",
+          }),
+        {
+          wrapper: FlowProvider,
+        }
+      )
       hookResult = result
     })
 
@@ -152,13 +164,13 @@ describe("useFlowNftMetadata", () => {
       description: "An NFT with IPFS thumbnail",
       thumbnail: {
         cid: "QmTest123",
-        path: "/image.png"
+        path: "/image.png",
       },
       externalURL: null,
       collectionDisplay: null,
       rarity: null,
       traits: {},
-      serialNumber: null
+      serialNumber: null,
     }
 
     const queryMock = jest.mocked(mockFcl.mockFclInstance.query)
@@ -167,19 +179,25 @@ describe("useFlowNftMetadata", () => {
     let hookResult: any
 
     await act(async () => {
-      const {result} = renderHook(() => useFlowNftMetadata({
-        accountAddress: "0x1234",
-        tokenId: "123",
-        publicPathIdentifier: "examplenftcollection"
-      }), {
-        wrapper: FlowProvider,
-      })
+      const {result} = renderHook(
+        () =>
+          useFlowNftMetadata({
+            accountAddress: "0x1234",
+            tokenId: "123",
+            publicPathIdentifier: "examplenftcollection",
+          }),
+        {
+          wrapper: FlowProvider,
+        }
+      )
       hookResult = result
     })
 
     await waitFor(() => expect(hookResult.current.isLoading).toBe(false))
 
-    expect(hookResult.current.data?.thumbnailUrl).toBe("https://ipfs.io/ipfs/QmTest123/image.png")
+    expect(hookResult.current.data?.thumbnailUrl).toBe(
+      "https://ipfs.io/ipfs/QmTest123/image.png"
+    )
     expect(hookResult.current.data?.name).toBe("IPFS NFT")
   })
 
@@ -192,7 +210,7 @@ describe("useFlowNftMetadata", () => {
       collectionDisplay: null,
       rarity: null,
       traits: {},
-      serialNumber: "123"
+      serialNumber: "123",
     }
 
     const queryMock = jest.mocked(mockFcl.mockFclInstance.query)
@@ -200,13 +218,17 @@ describe("useFlowNftMetadata", () => {
 
     let hookResult: any
     await act(async () => {
-      const {result} = renderHook(() => useFlowNftMetadata({
-        accountAddress: "0x1234",
-        tokenId: "123",
-        publicPathIdentifier: "examplenftcollection"
-      }), {
-        wrapper: FlowProvider,
-      })
+      const {result} = renderHook(
+        () =>
+          useFlowNftMetadata({
+            accountAddress: "0x1234",
+            tokenId: "123",
+            publicPathIdentifier: "examplenftcollection",
+          }),
+        {
+          wrapper: FlowProvider,
+        }
+      )
       hookResult = result
     })
 

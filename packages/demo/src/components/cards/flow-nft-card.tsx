@@ -7,7 +7,9 @@ export function FlowNftCard() {
 
   const [accountAddress, setAccountAddress] = useState<string>("")
   const [tokenId, setTokenId] = useState<string>("")
-  const [publicPathIdentifier, setPublicPathIdentifier] = useState<string>("examplenftcollection")
+  const [publicPathIdentifier, setPublicPathIdentifier] = useState<string>(
+    "examplenftcollection"
+  )
 
   const {
     data: nft,
@@ -23,7 +25,9 @@ export function FlowNftCard() {
 
   return (
     <div className="p-4 border border-gray-200 rounded-xl bg-white mb-8">
-      <h2 className="text-black mt-0 mb-6 text-xl font-bold">useFlowNftMetadata</h2>
+      <h2 className="text-black mt-0 mb-6 text-xl font-bold">
+        useFlowNftMetadata
+      </h2>
       <div className="mb-6">
         <div className="mb-4">
           <label className="block mb-2 text-black font-medium">
@@ -34,20 +38,20 @@ export function FlowNftCard() {
             value={accountAddress}
             onChange={e => setAccountAddress(e.target.value)}
             placeholder="0x..."
-            className="p-3 border-2 border-[#00EF8B] rounded-md text-sm text-black bg-white outline-none transition-colors duration-200 ease-in-out w-full"
+            className="p-3 border-2 border-[#00EF8B] rounded-md text-sm text-black bg-white
+              outline-none transition-colors duration-200 ease-in-out w-full"
           />
         </div>
 
         <div className="mb-4">
-          <label className="block mb-2 text-black font-medium">
-            Token ID:
-          </label>
+          <label className="block mb-2 text-black font-medium">Token ID:</label>
           <input
             type="text"
             value={tokenId}
             onChange={e => setTokenId(e.target.value)}
             placeholder="123"
-            className="p-3 border-2 border-[#00EF8B] rounded-md text-sm text-black bg-white outline-none transition-colors duration-200 ease-in-out w-full"
+            className="p-3 border-2 border-[#00EF8B] rounded-md text-sm text-black bg-white
+              outline-none transition-colors duration-200 ease-in-out w-full"
           />
         </div>
 
@@ -60,7 +64,8 @@ export function FlowNftCard() {
             value={publicPathIdentifier}
             onChange={e => setPublicPathIdentifier(e.target.value)}
             placeholder="examplenftcollection"
-            className="p-3 border-2 border-[#00EF8B] rounded-md text-sm text-black bg-white outline-none transition-colors duration-200 ease-in-out w-full"
+            className="p-3 border-2 border-[#00EF8B] rounded-md text-sm text-black bg-white
+              outline-none transition-colors duration-200 ease-in-out w-full"
           />
         </div>
 
@@ -92,7 +97,7 @@ export function FlowNftCard() {
 
       <div className="border border-gray-200 rounded-md p-4 bg-gray-50 overflow-auto">
         <h3 className="text-black font-semibold mb-2">NFT Data:</h3>
-        {nft && typeof nft === 'object' ? (
+        {nft && typeof nft === "object" ? (
           <div className="space-y-3">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
@@ -116,7 +121,7 @@ export function FlowNftCard() {
                   </p>
                 )}
               </div>
-              
+
               <div>
                 {nft.collectionName && (
                   <p className="text-black">
@@ -159,9 +164,9 @@ export function FlowNftCard() {
                   src={nft.thumbnailUrl}
                   alt={nft.name}
                   className="max-w-xs max-h-48 rounded-md border border-gray-300"
-                  onError={(e) => {
+                  onError={e => {
                     const target = e.target as HTMLImageElement
-                    target.style.display = 'none'
+                    target.style.display = "none"
                   }}
                 />
               </div>

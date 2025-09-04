@@ -193,11 +193,11 @@ export function useFlowNftMetadata(params: UseFlowNftMetadataArgs) {
   }
 
   let processedData: NftViewResult | null = null
-  
+
   if (queryResult.data) {
     const data = queryResult.data as any
     const collectionDisplay = data.collectionDisplay
-    
+
     processedData = {
       name: data.name || "Unknown NFT",
       description: data.description || "",
