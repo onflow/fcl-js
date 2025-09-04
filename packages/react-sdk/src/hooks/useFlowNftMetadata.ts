@@ -17,7 +17,7 @@ export interface NftViewResult {
   serialNumber?: string
 }
 
-interface UseFlowNftArgs {
+interface UseFlowNftMetadataArgs {
   accountAddress?: string
   tokenId?: string | number
   publicPathIdentifier?: string
@@ -164,7 +164,7 @@ const getNftCadence = (network: "testnet" | "mainnet" | "local") => `
 /**
  * Query a single NFT's basic metadata views from an account's ResolverCollection capability.
  */
-export function useFlowNft(params: UseFlowNftArgs) {
+export function useFlowNftMetadata(params: UseFlowNftMetadataArgs) {
   const chainIdResult = useFlowChainId()
 
   const queryResult = useFlowQuery({

@@ -1,4 +1,4 @@
-import {useFlowNft, useFlowConfig} from "@onflow/react-sdk"
+import {useFlowNftMetadata, useFlowConfig} from "@onflow/react-sdk"
 import {useState} from "react"
 
 export function FlowNftCard() {
@@ -14,7 +14,7 @@ export function FlowNftCard() {
     isLoading,
     error,
     refetch,
-  } = useFlowNft({
+  } = useFlowNftMetadata({
     accountAddress: accountAddress || undefined,
     tokenId: tokenId || undefined,
     publicPathIdentifier: publicPathIdentifier || undefined,
@@ -23,7 +23,7 @@ export function FlowNftCard() {
 
   return (
     <div className="p-4 border border-gray-200 rounded-xl bg-white mb-8">
-      <h2 className="text-black mt-0 mb-6 text-xl font-bold">useFlowNft</h2>
+      <h2 className="text-black mt-0 mb-6 text-xl font-bold">useFlowNftMetadata</h2>
       <div className="mb-6">
         <div className="mb-4">
           <label className="block mb-2 text-black font-medium">

@@ -1,12 +1,12 @@
 import {renderHook, act, waitFor} from "@testing-library/react"
 import * as fcl from "@onflow/fcl"
 import {FlowProvider} from "../provider"
-import {useFlowNft, NftViewResult} from "./useFlowNft"
+import {useFlowNftMetadata, NftViewResult} from "./useFlowNftMetadata"
 import {createMockFclInstance, MockFclInstance} from "../__mocks__/flow-client"
 
 jest.mock("@onflow/fcl", () => require("../__mocks__/fcl").default)
 
-describe("useFlowNft", () => {
+describe("useFlowNftMetadata", () => {
   let mockFcl: MockFclInstance
 
   beforeEach(() => {
@@ -25,7 +25,7 @@ describe("useFlowNft", () => {
     let hookResult: any
 
     await act(async () => {
-      const {result} = renderHook(() => useFlowNft({}), {
+      const {result} = renderHook(() => useFlowNftMetadata({}), {
         wrapper: FlowProvider,
       })
       hookResult = result
@@ -58,7 +58,7 @@ describe("useFlowNft", () => {
     let hookResult: any
 
     await act(async () => {
-      const {result} = renderHook(() => useFlowNft({
+      const {result} = renderHook(() => useFlowNftMetadata({
         accountAddress: "0x1234",
         tokenId: "123", 
         publicPathIdentifier: "examplenftcollection"
@@ -102,7 +102,7 @@ describe("useFlowNft", () => {
     let hookResult: any
 
     await act(async () => {
-      const {result} = renderHook(() => useFlowNft({
+      const {result} = renderHook(() => useFlowNftMetadata({
         accountAddress: "0x1234",
         tokenId: "999",
         publicPathIdentifier: "examplenftcollection"
@@ -126,7 +126,7 @@ describe("useFlowNft", () => {
     let hookResult: any
 
     await act(async () => {
-      const {result} = renderHook(() => useFlowNft({
+      const {result} = renderHook(() => useFlowNftMetadata({
         accountAddress: "0x5678",
         tokenId: "123",
         publicPathIdentifier: "examplenftcollection"
@@ -167,7 +167,7 @@ describe("useFlowNft", () => {
     let hookResult: any
 
     await act(async () => {
-      const {result} = renderHook(() => useFlowNft({
+      const {result} = renderHook(() => useFlowNftMetadata({
         accountAddress: "0x1234",
         tokenId: "123",
         publicPathIdentifier: "examplenftcollection"
@@ -200,7 +200,7 @@ describe("useFlowNft", () => {
 
     let hookResult: any
     await act(async () => {
-      const {result} = renderHook(() => useFlowNft({
+      const {result} = renderHook(() => useFlowNftMetadata({
         accountAddress: "0x1234",
         tokenId: "123",
         publicPathIdentifier: "examplenftcollection"
