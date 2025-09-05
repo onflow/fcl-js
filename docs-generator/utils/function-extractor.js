@@ -154,10 +154,64 @@ function extractFunctionInfo(
       }
 
       const initializer = declaration.getInitializer()
-
+      
       // Check for function calls that might wrap a function (like withGlobalContext(createAccount))
       if (initializer && Node.isCallExpression(initializer)) {
         const args = initializer.getArguments()
+        // Check if the call expression itself is calling a function we can analyze
+        const callExpression = initializer.getExpression()
+        if (Node.isIdentifier(callExpression)) {
+          const functionName_inner = callExpression.getText()
+          
+          // Look for the function being called (like createQuery)
+          const calledFunction = sourceFile.getFunction(functionName_inner)
+          if (calledFunction) {
+            // Look for inner function declarations within the called function
+            const innerFunctions = calledFunction.getFunctions()
+            if (innerFunctions.length > 0) {
+              // Get the first inner function (usually the one being returned)
+              const innerFunction = innerFunctions[0]
+              const innerFuncInfo = extractFunctionInfo(
+                innerFunction,
+                functionName,
+                sourceFile,
+                namespace
+              )
+              if (innerFuncInfo) {
+                // Merge JSDoc from the exported variable
+                return {
+                  ...innerFuncInfo,
+                  description: jsDocInfo.description || innerFuncInfo.description,
+                  customExample: jsDocInfo.example || innerFuncInfo.customExample,
+                }
+              }
+            }
+            
+            // Also look for inner variable declarations that might contain arrow functions
+            const innerVariables = calledFunction.getVariableDeclarations()
+            if (innerVariables.length > 0) {
+              // Look for a variable with the same name as the function we're looking for
+              const matchingVariable = innerVariables.find(v => v.getName() === functionName)
+              if (matchingVariable) {
+                const innerFuncInfo = extractFunctionInfo(
+                  matchingVariable,
+                  functionName,
+                  sourceFile,
+                  namespace
+                )
+                if (innerFuncInfo) {
+                  // Merge JSDoc from the exported variable  
+                  return {
+                    ...innerFuncInfo,
+                    description: jsDocInfo.description || innerFuncInfo.description,
+                    customExample: jsDocInfo.example || innerFuncInfo.customExample,
+                  }
+                }
+              }
+            }
+          }
+        }
+
         if (args.length > 0) {
           const firstArg = args[0]
           // If the first argument is an identifier, try to resolve it to a function
@@ -568,6 +622,7 @@ function findFunctionInSourceFile(sourceFile, functionName) {
       const declarations = exportedDeclarations.get(functionName)
 
       for (const declaration of declarations) {
+        
         // Skip export declarations - we want actual function implementations
         if (Node.isExportDeclaration(declaration)) {
           continue
@@ -626,7 +681,7 @@ function resolveReExportedFunction(sourceFile, exportName, moduleSpecifier) {
     if (moduleSpecifier.startsWith("@onflow/")) {
       const packageName = moduleSpecifier.replace("@onflow/", "")
       const packageEntryPath = resolveOnFlowPackage(packageName)
-
+      
       if (packageEntryPath) {
         // Get the ts-morph project from the source file
         const project = sourceFile.getProject()
@@ -646,20 +701,30 @@ function resolveReExportedFunction(sourceFile, exportName, moduleSpecifier) {
     } else {
       // Handle relative imports - existing logic
       const referencedSourceFiles = sourceFile.getReferencedSourceFiles()
-
+      
       // Find the source file that matches the module specifier
+      // Try exact matches first, then partial matches
+      const candidates = []
+      
       for (const sf of referencedSourceFiles) {
         const fileName = path.basename(sf.getFilePath(), ".ts")
         const moduleFileName = path.basename(moduleSpecifier, ".ts")
-
-        if (
-          fileName === moduleFileName ||
-          sf.getFilePath().includes(moduleSpecifier) ||
-          sf.getFilePath().includes(moduleSpecifier.replace("./", ""))
-        ) {
-          referencedSourceFile = sf
-          break
+        
+        // Exact match (highest priority)
+        if (fileName === moduleFileName) {
+          candidates.push({sf, priority: 1})
         }
+        // Path includes the module specifier
+        else if (sf.getFilePath().includes(moduleSpecifier) || 
+                 sf.getFilePath().includes(moduleSpecifier.replace("./", ""))) {
+          candidates.push({sf, priority: 2})
+        }
+      }
+      
+      // Sort by priority and take the first (exact matches first)
+      if (candidates.length > 0) {
+        candidates.sort((a, b) => a.priority - b.priority)
+        referencedSourceFile = candidates[0].sf
       }
     }
 
@@ -677,18 +742,34 @@ function resolveReExportedFunction(sourceFile, exportName, moduleSpecifier) {
       const exportDeclarations = referencedSourceFile.getExportDeclarations()
       for (const exportDecl of exportDeclarations) {
         const namedExports = exportDecl.getNamedExports()
-        const hasExport = namedExports.some(
-          namedExport => namedExport.getName() === exportName
-        )
+        
+        // Check if this export contains our function (including checking both name and alias)
+        const hasExport = namedExports.some(namedExport => {
+          const name = namedExport.getName()
+          const alias = namedExport.getAliasNode()?.getText()
+          const finalName = alias || name
+          return finalName === exportName || name === exportName
+        })
 
         if (hasExport) {
           const moduleSpec = exportDecl.getModuleSpecifier()
           if (moduleSpec) {
             const moduleSpecValue = moduleSpec.getLiteralValue()
+            
+            // Find the original name to look up in the target module
+            const matchingExport = namedExports.find(namedExport => {
+              const name = namedExport.getName()
+              const alias = namedExport.getAliasNode()?.getText()
+              const finalName = alias || name
+              return finalName === exportName || name === exportName
+            })
+            
+            const originalNameToLookup = matchingExport?.getName() || exportName
+            
             // Recursively resolve from the module this export comes from
             return resolveReExportedFunction(
               referencedSourceFile,
-              exportName,
+              originalNameToLookup,
               moduleSpecValue
             )
           }

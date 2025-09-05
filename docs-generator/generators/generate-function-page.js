@@ -2,6 +2,133 @@ const path = require("path")
 const {Project} = require("ts-morph")
 const fs = require("fs")
 const {generatePage, getFirstWord} = require("./utils")
+const {stripGenericParams} = require("../utils/type-utils")
+
+// Cache for type structures to avoid repeated processing
+const typeStructureCache = new Map()
+
+function getGenericTypeStructure(baseTypeName, packageName, sourceFilePath) {
+  // Input validation
+  if (!baseTypeName || typeof baseTypeName !== "string") {
+    return null
+  }
+
+  // Check cache first
+  const cacheKey = `${packageName}:${baseTypeName}`
+  if (typeStructureCache.has(cacheKey)) {
+    return typeStructureCache.get(cacheKey)
+  }
+
+  let result = null
+  try {
+    const project = new Project({skipAddingFilesFromTsConfig: true})
+
+    // Only add necessary source files
+    const sourcePaths = []
+    if (sourceFilePath) {
+      const fullSourcePath = path.resolve(process.cwd(), "../", sourceFilePath)
+      if (fs.existsSync(fullSourcePath)) {
+        sourcePaths.push(fullSourcePath)
+      }
+    }
+
+    if (packageName) {
+      const packageSrcDir = path.resolve(
+        process.cwd(),
+        "../",
+        packageName,
+        "src"
+      )
+      if (fs.existsSync(packageSrcDir)) {
+        sourcePaths.push(`${packageSrcDir}/**/*.ts`)
+      }
+    }
+
+    // Add source files in batch
+    if (sourcePaths.length > 0) {
+      try {
+        project.addSourceFilesAtPaths(sourcePaths)
+      } catch (e) {
+        // If batch add fails, try individually
+        sourcePaths.forEach(sourcePath => {
+          try {
+            if (!sourcePath.includes("*")) {
+              project.addSourceFileAtPath(sourcePath)
+            } else {
+              project.addSourceFilesAtPaths(sourcePath)
+            }
+          } catch (e) {
+            // Skip problematic source paths
+          }
+        })
+      }
+    }
+
+    // Find the type definition efficiently
+    const sourceFiles = project.getSourceFiles()
+    for (const sourceFile of sourceFiles) {
+      const typeAlias = sourceFile.getTypeAlias(baseTypeName)
+      if (typeAlias) {
+        result = extractTypeStructure(typeAlias)
+        if (result) break // Stop on first successful extraction
+      }
+    }
+  } catch (e) {
+    // Fail silently to avoid breaking the docs generation
+  }
+
+  // Cache the result (including null results to avoid repeated failures)
+  typeStructureCache.set(cacheKey, result)
+  return result
+}
+
+function extractTypeStructure(typeAlias) {
+  try {
+    const typeNode = typeAlias.getTypeNode()
+    if (!typeNode || typeof typeNode.getProperties !== "function") {
+      return null
+    }
+
+    const properties = typeNode.getProperties()
+    if (properties.length === 0) {
+      return null
+    }
+
+    const structure = {}
+
+    for (const prop of properties) {
+      try {
+        const propName = prop.getName()
+        if (!propName) continue
+
+        const propType = prop.getType()
+        const cleanPropType = propType
+          ? extractTypeName(propType.getText())
+          : "unknown"
+
+        // Get JSDoc comments efficiently
+        let propDescription = ""
+        const jsDocComments = prop.getJsDocs()
+        if (jsDocComments?.length > 0) {
+          propDescription = jsDocComments[0].getDescription()?.trim() || ""
+        }
+
+        structure[propName] = {
+          type: cleanPropType,
+          description: propDescription,
+          optional: prop.hasQuestionToken?.() || false,
+        }
+      } catch (e) {
+        // Skip problematic properties but continue processing others
+        continue
+      }
+    }
+
+    return Object.keys(structure).length > 0 ? structure : null
+  } catch (e) {
+    return null
+  }
+}
 
 // Basic primitive types that don't need definitions
 const PRIMITIVE_TYPES = new Set([
@@ -705,6 +832,18 @@ function generateFunctionPage(templates, outputDir, packageName, func) {
       func.sourceFilePath
     )
 
+    // Check if this is a generic type and try to expand it
+    let expandedType = null
+    if (param.type.includes("<") && param.type.includes(">")) {
+      const baseTypeName = stripGenericParams(param.type)
+      // Try to get the structure - if the type doesn't exist, it will return null
+      expandedType = getGenericTypeStructure(
+        baseTypeName,
+        packageName,
+        func.sourceFilePath
+      )
+    }
+
     // Escape MDX characters in parameter description
     const description = param.description
       ? escapeMDXCharacters(param.description)
@@ -717,6 +856,7 @@ function generateFunctionPage(templates, outputDir, packageName, func) {
       linkedType: typeInfo.linkedType,
       hasLink: typeInfo.hasLink,
       typeDefinition: typeInfo.typeDefinition,
+      expandedType: expandedType,
     }
   })
 
