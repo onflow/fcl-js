@@ -2,6 +2,7 @@ const path = require("path")
 const fs = require("fs")
 const {Project} = require("ts-morph")
 const {generatePage, getFirstWord} = require("./utils")
+const {formatTypeScript} = require("../utils/typescript-formatter")
 
 // Basic primitive types that don't need definitions
 const PRIMITIVE_TYPES = new Set([
@@ -349,7 +350,7 @@ function processTypeForDisplay(
       displayType: extractedType,
       hasLink: false,
       linkedType: null,
-      typeDefinition: typeDefinition || extractedType, // Show the type itself if no definition found
+      typeDefinition: formatTypeScript(typeDefinition || extractedType), // Show the type itself if no definition found
     }
   }
 

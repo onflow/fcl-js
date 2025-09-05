@@ -105,7 +105,10 @@ function extractFunctionInfo(
 
         // If the return type text looks like a function signature, extract just the return part
         // But don't apply this logic to object literal types (which start with '{')
-        if (returnTypeText.includes("=>") && !returnTypeText.trim().startsWith("{")) {
+        if (
+          returnTypeText.includes("=>") &&
+          !returnTypeText.trim().startsWith("{")
+        ) {
           const returnPart = returnTypeText.split("=>").pop()?.trim()
           if (returnPart) {
             returnType = cleanupTypeText(returnPart)

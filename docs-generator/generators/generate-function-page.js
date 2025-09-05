@@ -3,6 +3,7 @@ const {Project} = require("ts-morph")
 const fs = require("fs")
 const {generatePage, getFirstWord} = require("./utils")
 const {stripGenericParams} = require("../utils/type-utils")
+const {formatTypeScript} = require("../utils/typescript-formatter")
 
 // Cache for type structures to avoid repeated processing
 const typeStructureCache = new Map()
@@ -782,7 +783,7 @@ function processTypeForDisplay(
         displayType: extractedType,
         hasLink: false,
         linkedType: null,
-        typeDefinition: extractedType,
+        typeDefinition: formatTypeScript(extractedType),
       }
     }
 
@@ -802,7 +803,7 @@ function processTypeForDisplay(
       displayType: extractedType,
       hasLink: false,
       linkedType: null,
-      typeDefinition: extractedType,
+      typeDefinition: formatTypeScript(extractedType),
     }
   }
 

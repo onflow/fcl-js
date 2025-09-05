@@ -52,21 +52,7 @@ export interface FlowClientConfig {
  * Creates a Flow client instance with authentication, transaction, and query capabilities.
  *
  * @param params Configuration object for the Flow client
- * @returns A Flow client object containing:
- *
- *   - `currentUser` - Current user authentication state and methods
- *   - `mutate` - Execute transactions that modify blockchain state
- *   - `query` - Execute read-only queries against the blockchain
- *   - `queryRaw` - Execute raw queries without decoding
- *   - `tx` - Transaction streaming and monitoring utilities
- *   - `events` - Event streaming and filtering utilities
- *   - `authenticate` - Authenticate the current user
- *   - `unauthenticate` - Sign out the current user
- *   - `signUserMessage` - Sign arbitrary messages with user's account
- *   - `verifyUserSignatures` - Verify signatures from user accounts
- *   - `getChainId` - Get the current Flow network chain ID
- *   - `serialize` - Serialize data for Flow transactions
- *   - Plus additional SDK methods for blockchain interaction
+ * @returns A Flow client object with many methods for interacting with the Flow blockchain
  */
 export function createFlowClient(params: FlowClientConfig) {
   // TODO: Load into the global plugin registry for now.  This should be
