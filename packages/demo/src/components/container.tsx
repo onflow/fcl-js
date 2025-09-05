@@ -11,6 +11,7 @@ import {FlowQueryRawCard} from "./cards/flow-query-raw-card"
 import {FlowRevertibleRandomCard} from "./cards/flow-revertible-random-card"
 import {FlowTransactionStatusCard} from "./cards/flow-transaction-status-card"
 import {KitConnectCard} from "./kits/kit-connect-card"
+import {KitNftCardCard} from "./kits/kit-nft-card"
 import {KitTransactionButtonCard} from "./kits/kit-transaction-button-card"
 import {KitTransactionDialogCard} from "./kits/kit-transaction-dialog-card"
 import {KitTransactionLinkCard} from "./kits/kit-transaction-link-card"
@@ -73,6 +74,9 @@ export function Container() {
         <div className="space-y-4">
           <div id="kit-connect" className="scroll-mt-4">
             <KitConnectCard />
+          </div>
+          <div id="kit-nft-card" className="scroll-mt-4">
+            <KitNftCardCard />
           </div>
           <div id="kit-transaction-button" className="scroll-mt-4">
             <KitTransactionButtonCard />

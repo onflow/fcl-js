@@ -26,6 +26,7 @@ const sidebarItems: SidebarItem[] = [
 
   // Components section
   {id: "kit-connect", label: "Connect Kit", category: "components"},
+  {id: "kit-nft-card", label: "NFT Card", category: "components"},
   {
     id: "kit-transaction-button",
     label: "Transaction Button",

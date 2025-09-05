@@ -1,4 +1,4 @@
-import {useFlowNftMetadata, useFlowConfig, NftCard} from "@onflow/react-sdk"
+import {useFlowNftMetadata, useFlowConfig} from "@onflow/react-sdk"
 import {useState} from "react"
 
 export function FlowNftCard() {
@@ -8,7 +8,7 @@ export function FlowNftCard() {
   const [accountAddress, setAccountAddress] = useState<string>("")
   const [tokenId, setTokenId] = useState<string>("")
   const [publicPathIdentifier, setPublicPathIdentifier] = useState<string>(
-    "examplenftcollection"
+    "exampleNFTCollection"
   )
 
   const {
@@ -63,7 +63,7 @@ export function FlowNftCard() {
             type="text"
             value={publicPathIdentifier}
             onChange={e => setPublicPathIdentifier(e.target.value)}
-            placeholder="examplenftcollection"
+            placeholder="exampleNFTCollection"
             className="p-3 border-2 border-[#00EF8B] rounded-md text-sm text-black bg-white
               outline-none transition-colors duration-200 ease-in-out w-full"
           />
@@ -190,22 +190,6 @@ export function FlowNftCard() {
           <p className="text-gray-500">No NFT data available</p>
         )}
       </div>
-
-      {/* NftCard Component Demo */}
-      {accountAddress && tokenId && publicPathIdentifier && (
-        <div className="mt-8">
-          <h3 className="text-black font-semibold mb-4">
-            NftCard Component Preview:
-          </h3>
-          <div className="max-w-sm">
-            <NftCard
-              accountAddress={accountAddress}
-              tokenId={tokenId}
-              publicPathIdentifier={publicPathIdentifier}
-            />
-          </div>
-        </div>
-      )}
     </div>
   )
 }
