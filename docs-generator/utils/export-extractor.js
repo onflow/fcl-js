@@ -72,6 +72,9 @@ function extractExportsFromEntryFile(sourceFile) {
         const exportName = namedExport.getName()
         const alias = namedExport.getAliasNode()?.getText()
         const finalName = alias || exportName
+        // For aliased exports, exportName is the original and alias is the final name
+        // When resolving, we want to look up the original name (exportName)
+        const originalName = exportName
 
         // Skip if this is a type-only import
         if (typeOnlyImports.has(exportName)) {
@@ -84,7 +87,7 @@ function extractExportsFromEntryFile(sourceFile) {
           const moduleSpecifierValue = moduleSpecifier.getLiteralValue()
           const reExportedFuncInfo = resolveReExportedFunction(
             sourceFile,
-            exportName,
+            originalName,
             moduleSpecifierValue
           )
           if (reExportedFuncInfo) {
