@@ -144,6 +144,15 @@ const argumentToString = (arg: Record<string, any>) =>
 
 const scriptBuffer = (script: string) => Buffer.from(script, "utf8")
 const signatureBuffer = (signature: string) => Buffer.from(signature, "hex")
+const extensionBuffer = (ext?: string | Uint8Array) => {
+  if (ext == null) return undefined
+  if (typeof ext === "string") {
+    const hex = ext.replace(/^0x/, "")
+    const isHex = /^[0-9a-fA-F]+$/.test(hex)
+    return isHex ? Buffer.from(hex, "hex") : Buffer.from(ext, "utf8")
+  }
+  return Buffer.from(ext)
+}
 
 const rlpEncode = (v: EncodeInput) => {
   return encode(v).toString("hex")
@@ -186,6 +195,7 @@ const preparePayloadSignatures = (tx: Transaction) => {
         signerIndex: signers.get(sansPrefix(sig.address)) || "",
         keyId: sig.keyId,
         sig: sig.sig,
+        sigExt: extensionBuffer((sig as any).signatureExtension),
       }
     })
     .sort((a, b) => {
@@ -198,7 +208,9 @@ const preparePayloadSignatures = (tx: Transaction) => {
       return 0
     })
     .map(sig => {
-      return [sig.signerIndex, sig.keyId, signatureBuffer(sig.sig)]
+      const base: any[] = [sig.signerIndex, sig.keyId, signatureBuffer(sig.sig)]
+      if (sig.sigExt != null) base.push(sig.sigExt)
+      return base
     })
 }
 
@@ -229,8 +241,14 @@ const prepareVoucher = (voucher: Voucher) => {
 
   const prepareSigs = (sigs: Sig[]) => {
     return sigs
-      .map(({address, keyId, sig}) => {
-        return {signerIndex: signers.get(sansPrefix(address)) || "", keyId, sig}
+      .map(({address, keyId, sig, ...rest}) => {
+        const signatureExtension = (rest as any).signatureExtension
+        return {
+          signerIndex: signers.get(sansPrefix(address)) || "",
+          keyId,
+          sig,
+          sigExt: extensionBuffer(signatureExtension),
+        }
       })
       .sort((a, b) => {
         if (a.signerIndex > b.signerIndex) return 1
@@ -241,7 +259,13 @@ const prepareVoucher = (voucher: Voucher) => {
         return 0
       })
       .map(sig => {
-        return [sig.signerIndex, sig.keyId, signatureBuffer(sig.sig)]
+        const base: any[] = [
+          sig.signerIndex,
+          sig.keyId,
+          signatureBuffer(sig.sig),
+        ]
+        if (sig.sigExt != null) base.push(sig.sigExt)
+        return base
       })
   }
 
@@ -319,6 +343,10 @@ interface Sig {
   address: string
   keyId: number | string
   sig: string
+  // Optional signature extension data (e.g., WebAuthn clientDataJSON + authenticatorData)
+  // Propagated via "signatureExtension" when present by wallets/connectors.
+  // Not required for existing signatures; encoding remains identical when absent.
+  signatureExtension?: string | Uint8Array
 }
 
 export interface TransactionProposalKey {

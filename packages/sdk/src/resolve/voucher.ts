@@ -124,6 +124,7 @@ export const createSignableVoucher = (ix: Interaction) => {
       address: withPrefix(ix.accounts[id].addr),
       keyId: ix.accounts[id].keyId,
       sig: ix.accounts[id].signature,
+      signatureExtension: (ix.accounts[id] as any).signatureExtension,
     }))
 
   const buildOutsideSigners = () =>
@@ -131,6 +132,7 @@ export const createSignableVoucher = (ix: Interaction) => {
       address: withPrefix(ix.accounts[id].addr),
       keyId: ix.accounts[id].keyId,
       sig: ix.accounts[id].signature,
+      signatureExtension: (ix.accounts[id] as any).signatureExtension,
     }))
 
   const proposalKey = ix.proposer

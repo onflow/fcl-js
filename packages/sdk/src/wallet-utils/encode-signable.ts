@@ -137,6 +137,7 @@ export const encodeMessageFromSignable = (
     payloadSigs: signable.voucher.payloadSigs.map(ps => ({
       ...ps,
       address: sansPrefix(ps.address),
+      signatureExtension: (ps as any).signatureExtension,
     })),
   }
 

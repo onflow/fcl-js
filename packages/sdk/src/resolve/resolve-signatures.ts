@@ -40,6 +40,7 @@ export async function resolveSignatures(ix: Interaction) {
           address: ix.accounts[id].addr || "",
           keyId: ix.accounts[id].keyId || 0,
           sig: ix.accounts[id].signature || "",
+          signatureExtension: (ix.accounts[id] as any).signatureExtension,
         })),
       })
 
@@ -62,10 +63,11 @@ function fetchSignature(ix: Interaction, payload: string) {
   return async function innerFetchSignature(id: string) {
     const acct = ix.accounts[id]
     if (acct.signature != null && acct.signature !== undefined) return
-    const {signature} = await acct.signingFunction(
+    const {signature, signatureExtension} = await acct.signingFunction(
       buildSignable(acct, payload, ix)
     )
     ix.accounts[id].signature = signature
+    ;(ix.accounts[id] as any).signatureExtension = signatureExtension
   }
 }
 

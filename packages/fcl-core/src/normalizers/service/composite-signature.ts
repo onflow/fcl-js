@@ -23,18 +23,20 @@ export function normalizeCompositeSignature(
   if (resp == null) return null
 
   if (!resp["f_vsn"]) {
+    const signatureExtension =
+      (resp as any).signatureExtension ?? (resp as any).extensionData
     return {
       ...COMPOSITE_SIGNATURE_PRAGMA,
       addr: sansPrefix(resp.addr || (resp as any).address),
       signature: resp.signature || (resp as any).sig,
       keyId: resp.keyId,
+      ...(signatureExtension != null ? {signatureExtension} : {}),
     } as unknown as CompositeSignature
   }
 
   switch (resp["f_vsn"]) {
     case "1.0.0":
       return resp as unknown as CompositeSignature
-
     default:
       return null
   }
