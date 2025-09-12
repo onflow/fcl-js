@@ -36,12 +36,21 @@ export async function resolveSignatures(ix: Interaction) {
       let outsideSigners = findOutsideSigners(ix)
       const outsidePayload = encodeOutsideMessage({
         ...prepForEncoding(ix),
-        payloadSigs: insideSigners.map(id => ({
-          address: ix.accounts[id].addr || "",
-          keyId: ix.accounts[id].keyId || 0,
-          sig: ix.accounts[id].signature || "",
-          signatureExtension: (ix.accounts[id] as any).signatureExtension,
-        })),
+        payloadSigs: insideSigners.map(id => {
+          const base: any = {
+            address: ix.accounts[id].addr || "",
+            keyId: ix.accounts[id].keyId || 0,
+            sig: ix.accounts[id].signature || "",
+          }
+          const acc = ix.accounts[id] as InteractionAccount
+          const ext = acc.signatureExtension as
+            | string
+            | Uint8Array
+            | null
+            | undefined
+          if (ext != null) base.signatureExtension = ext
+          return base
+        }),
       })
 
       // Promise.all could potentially break the flow if there are multiple outside signers trying to resolve at the same time
@@ -67,7 +76,10 @@ function fetchSignature(ix: Interaction, payload: string) {
       buildSignable(acct, payload, ix)
     )
     ix.accounts[id].signature = signature
-    ;(ix.accounts[id] as any).signatureExtension = signatureExtension
+    if (signatureExtension != null) {
+      ;(ix.accounts[id] as InteractionAccount).signatureExtension =
+        signatureExtension
+    }
   }
 }
 

@@ -23,14 +23,19 @@ export function normalizeCompositeSignature(
   if (resp == null) return null
 
   if (!resp["f_vsn"]) {
-    const signatureExtension =
-      (resp as any).signatureExtension ?? (resp as any).extensionData
+    type LegacyCompositeSignature = {
+      addr?: string
+      address?: string
+      signature?: string
+      sig?: string
+      keyId?: number
+    }
+    const r = resp as LegacyCompositeSignature
     return {
       ...COMPOSITE_SIGNATURE_PRAGMA,
-      addr: sansPrefix(resp.addr || (resp as any).address),
-      signature: resp.signature || (resp as any).sig,
-      keyId: resp.keyId,
-      ...(signatureExtension != null ? {signatureExtension} : {}),
+      addr: sansPrefix(r.addr ?? r.address ?? ""),
+      signature: r.signature ?? r.sig ?? "",
+      keyId: r.keyId as number,
     } as unknown as CompositeSignature
   }
 

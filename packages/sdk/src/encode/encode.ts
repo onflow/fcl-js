@@ -195,7 +195,7 @@ const preparePayloadSignatures = (tx: Transaction) => {
         signerIndex: signers.get(sansPrefix(sig.address)) || "",
         keyId: sig.keyId,
         sig: sig.sig,
-        sigExt: extensionBuffer((sig as any).signatureExtension),
+        sigExt: extensionBuffer(sig.signatureExtension),
       }
     })
     .sort((a, b) => {
@@ -241,8 +241,7 @@ const prepareVoucher = (voucher: Voucher) => {
 
   const prepareSigs = (sigs: Sig[]) => {
     return sigs
-      .map(({address, keyId, sig, ...rest}) => {
-        const signatureExtension = (rest as any).signatureExtension
+      .map(({address, keyId, sig, signatureExtension}) => {
         return {
           signerIndex: signers.get(sansPrefix(address)) || "",
           keyId,
