@@ -36,11 +36,21 @@ export async function resolveSignatures(ix: Interaction) {
       let outsideSigners = findOutsideSigners(ix)
       const outsidePayload = encodeOutsideMessage({
         ...prepForEncoding(ix),
-        payloadSigs: insideSigners.map(id => ({
-          address: ix.accounts[id].addr || "",
-          keyId: ix.accounts[id].keyId || 0,
-          sig: ix.accounts[id].signature || "",
-        })),
+        payloadSigs: insideSigners.map(id => {
+          const base: any = {
+            address: ix.accounts[id].addr || "",
+            keyId: ix.accounts[id].keyId || 0,
+            sig: ix.accounts[id].signature || "",
+          }
+          const acc = ix.accounts[id] as InteractionAccount
+          const ext = acc.signatureExtension as
+            | string
+            | Uint8Array
+            | null
+            | undefined
+          if (ext != null) base.signatureExtension = ext
+          return base
+        }),
       })
 
       // Promise.all could potentially break the flow if there are multiple outside signers trying to resolve at the same time
@@ -62,10 +72,14 @@ function fetchSignature(ix: Interaction, payload: string) {
   return async function innerFetchSignature(id: string) {
     const acct = ix.accounts[id]
     if (acct.signature != null && acct.signature !== undefined) return
-    const {signature} = await acct.signingFunction(
+    const {signature, signatureExtension} = await acct.signingFunction(
       buildSignable(acct, payload, ix)
     )
     ix.accounts[id].signature = signature
+    if (signatureExtension != null) {
+      ;(ix.accounts[id] as InteractionAccount).signatureExtension =
+        signatureExtension
+    }
   }
 }
 
