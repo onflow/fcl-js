@@ -1,8 +1,11 @@
+import * as logger from "@onflow/util-logger"
+
 /**
- * Asserts fact is true, otherwise throw an error with invariant message
- * @param fact
- * @param msg
- * @param rest
+ * Asserts fact is true, otherwise logs error and optionally throws
+ * @param fact - The condition to assert
+ * @param msg - The message to log if assertion fails
+ * @param loggerLevel - Optional logger level (defaults to error which will throw)
+ * @param rest - Additional arguments to log
  */
 export function invariant(
   fact: boolean,
@@ -15,7 +18,15 @@ export function invariant(
       ?.split("\n")
       ?.filter(d => !/at invariant/.test(d))
       ?.join("\n")
-    console.error("\n\n---\n\n", error, "\n\n", ...rest, "\n\n---\n\n")
-    throw error
+
+    logger.log({
+      title: "Invariant Violation",
+      message: `${error.message}\n${rest.length ? "\nDetails:" + JSON.stringify(rest, null, 2) : ""}`,
+      level: loggerLevel
+    })
+
+    if (loggerLevel === logger.LEVELS.error) {
+      throw error
+    }
   }
 }
