@@ -21,6 +21,12 @@ export const CONTRACT_ADDRESSES: Record<string, Record<any, string>> = {
     testnet: "0x7e60df042a9c0868",
     mainnet: "0x1654653399040a61",
   },
+  ExampleNFT: {
+    local: "0xf8d6e0586b0a20c7",
+    emulator: "0xf8d6e0586b0a20c7",
+    testnet: "0x012e4d204a60ac6f",
+    mainnet: "0x1d7e57aa55817448",
+  },
 }
 
 // Helper function to get contract address for current network

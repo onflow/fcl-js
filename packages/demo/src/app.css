@@ -25,3 +25,66 @@ body {
   height: 100vh;
   background-color: #ffffff;
 }
+
+/* Custom scrollbar styles - Light mode (default) */
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: #ffffff;
+  border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 8px;
+  border: 2px solid #ffffff;
+  transition: background-color 0.2s ease-in-out;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}
+
+::-webkit-scrollbar-thumb:active {
+  background: #6b7280;
+}
+
+::-webkit-scrollbar-corner {
+  background: #ffffff;
+}
+
+/* Firefox scrollbar styles - Light mode (default) */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: #d1d5db #ffffff;
+}
+
+/* Class-based dark mode support (theme toggle) */
+html.dark ::-webkit-scrollbar-track {
+  background: #374151 !important;
+}
+
+html.dark ::-webkit-scrollbar-thumb {
+  background: #6b7280 !important;
+  border: 2px solid #374151 !important;
+}
+
+html.dark ::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af !important;
+}
+
+html.dark ::-webkit-scrollbar-thumb:active {
+  background: #d1d5db !important;
+}
+
+html.dark ::-webkit-scrollbar-corner {
+  background: #374151 !important;
+}
+
+/* Firefox class-based dark mode (theme toggle) */
+html.dark {
+  scrollbar-color: #6b7280 #374151 !important;
+}

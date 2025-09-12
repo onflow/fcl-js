@@ -9,6 +9,8 @@ import {FlowQueryCard} from "./cards/flow-query-card"
 import {FlowQueryRawCard} from "./cards/flow-query-raw-card"
 import {FlowRevertibleRandomCard} from "./cards/flow-revertible-random-card"
 import {FlowTransactionStatusCard} from "./cards/flow-transaction-status-card"
+import {CrossVmReceiveNftCard} from "./cards/cross-vm-receive-nft-card"
+import {CrossVmSpendNftCard} from "./cards/cross-vm-spend-nft-card"
 import {KitConnectCard} from "./kits/kit-connect-card"
 import {KitTransactionButtonCard} from "./kits/kit-transaction-button-card"
 import {KitTransactionDialogCard} from "./kits/kit-transaction-dialog-card"
@@ -56,6 +58,12 @@ export function Container() {
           </div>
           <div id="flow-transaction-status" className="scroll-mt-4">
             <FlowTransactionStatusCard />
+          </div>
+          <div id="cross-vm-receive-nft" className="scroll-mt-4">
+            <CrossVmReceiveNftCard />
+          </div>
+          <div id="cross-vm-spend-nft" className="scroll-mt-4">
+            <CrossVmSpendNftCard />
           </div>
         </div>
       </section>
