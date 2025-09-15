@@ -87,7 +87,7 @@ export const createFclConnector = (options: FclConnectorOptions) => {
           /**
            * This is a workaround for Flow Wallet which has a race condition where the MIPD
            * provider is not immediately available.  We instead proxy the Wagmi connector
-           * such that we can dynmaically switch between the installed and WalletConnect
+           * such that we can dynamically switch between the installed and WalletConnect
            * connectors.
            *
            * It's pretty brittle and should be removed ASAP once Flow Wallet is fixed.
