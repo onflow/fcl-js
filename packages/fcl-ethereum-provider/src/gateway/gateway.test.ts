@@ -36,7 +36,7 @@ describe("gateway", () => {
       jest.mocked(JsonRpcProvider).mock.results[0].value.request
     ).toHaveBeenCalledWith({method: "eth_accounts", params: []})
 
-    // Check that the return value propogates correctly
+    // Check that the return value propagates correctly
     expect(returnValue).toEqual(["0x123"])
 
     // Verify that the mainnet provider was used
@@ -74,7 +74,7 @@ describe("gateway", () => {
       jest.mocked(JsonRpcProvider).mock.results[0].value.request
     ).toHaveBeenCalledWith({method: "eth_accounts", params: []})
 
-    // Check that the return value propogates correctly
+    // Check that the return value propagates correctly
     expect(returnValue).toEqual(["0x123"])
 
     // Verify that the testnet provider was used
