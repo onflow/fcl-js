@@ -7,13 +7,13 @@ import {useFlowClient} from "./useFlowClient"
 import {useFlowMutate} from "./useFlowMutate"
 import {useFlowQuery} from "./useFlowQuery"
 
-export enum Priority {
+export enum TransactionPriority {
   High = 0,
   Medium = 1,
   Low = 2,
 }
 
-export enum Status {
+export enum TransactionStatus {
   Unknown = 0,
   Scheduled = 1,
   Executed = 2,
@@ -22,9 +22,9 @@ export enum Status {
 
 export interface TransactionData {
   id: string
-  priority: Priority
+  priority: TransactionPriority
   executionEffort: string
-  status: Status
+  status: TransactionStatus
   fees: string
   scheduledTimestamp: string
   handlerTypeIdentifier: string
