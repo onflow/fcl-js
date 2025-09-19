@@ -561,7 +561,7 @@ FCL will
 - Receive a StatusResponse that includes an AuthzUpdates and a Status
 - (Optional Side Effect) If Status includes local instructions follow them
 - If Status is PENDING use AuthzUpdates to fetch a new Status Response and repeat this step
-- If Status is APPROVED continue with `Composite Siganture`
+- If Status is APPROVED continue with `Composite Signature`
 
 With the above service FCL will make a `application/json` POST request to
 `https://example.wallet/fcl/authz?id=0609d667-944c-3c2d-9d09-18af5c58c8fb`
@@ -587,10 +587,10 @@ const statusResponse = {
 
 FCL will first see that there is an optional local side effect of `BROWSER/IFRAME`,
 so FCL will render an iframe that renders `https://example.wallet/authz/736`.
-This iframe is probably showing a convienence interface the user can authorize the
+This iframe is probably showing a convenience interface the user can authorize the
 transaction from inside the application.
 
-Next FCL will next notice that the signature requeset is `PENDING`, so it will then
+Next FCL will next notice that the signature request is `PENDING`, so it will then
 use the data in `authorizationUpdates` to request a new status. Which could return
 something like this:
 
