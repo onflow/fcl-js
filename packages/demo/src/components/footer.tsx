@@ -81,8 +81,8 @@ export function Footer() {
                 className={`text-lg max-w-2xl ${darkMode ? "text-gray-300" : "text-gray-600"}`}
               >
                 The Flow React SDK provides everything you need to build amazing
-                Web3 applications. Start building with our components and hooks
-                and go 1000x faster.
+                Web3 applications. Start building with ready to use components
+                and hooks and go 1000x faster.
               </p>
             </div>
 
