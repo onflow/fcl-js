@@ -1,0 +1,340 @@
+import {useState, useEffect} from "react"
+import {PlusGridIcon} from "./ui/plus-grid"
+
+interface SidebarItem {
+  id: string
+  label: string
+  category: "hooks" | "components"
+  description: string
+}
+
+const sidebarItems: SidebarItem[] = [
+  // Hooks section
+  {
+    id: "flow-current-user",
+    label: "Current User",
+    category: "hooks",
+    description: "Manage user authentication",
+  },
+  {
+    id: "flow-account",
+    label: "Account",
+    category: "hooks",
+    description: "Fetch account information",
+  },
+  {
+    id: "flow-block",
+    label: "Block",
+    category: "hooks",
+    description: "Get blockchain block data",
+  },
+  {
+    id: "flow-chain-id",
+    label: "Chain ID",
+    category: "hooks",
+    description: "Get current chain ID",
+  },
+  {
+    id: "flow-config",
+    label: "Config",
+    category: "hooks",
+    description: "Access Flow configuration",
+  },
+  {
+    id: "flow-query",
+    label: "Query",
+    category: "hooks",
+    description: "Execute Flow scripts",
+  },
+  {
+    id: "flow-query-raw",
+    label: "Query Raw",
+    category: "hooks",
+    description: "Execute raw Flow scripts",
+  },
+  {
+    id: "flow-mutate",
+    label: "Mutate",
+    category: "hooks",
+    description: "Send Flow transactions",
+  },
+  {
+    id: "flow-revertible-random",
+    label: "Revertible Random",
+    category: "hooks",
+    description: "Generate random numbers",
+  },
+  {
+    id: "flow-transaction-status",
+    label: "Transaction Status",
+    category: "hooks",
+    description: "Track transaction status",
+  },
+
+  // Components section
+  {
+    id: "kit-connect",
+    label: "Connect",
+    category: "components",
+    description: "Wallet connection component",
+  },
+  {
+    id: "kit-transaction-button",
+    label: "Transaction Button",
+    category: "components",
+    description: "Transaction execution button",
+  },
+  {
+    id: "kit-transaction-dialog",
+    label: "Transaction Dialog",
+    category: "components",
+    description: "Transaction confirmation dialog",
+  },
+  {
+    id: "kit-transaction-link",
+    label: "Transaction Link",
+    category: "components",
+    description: "Transaction link component",
+  },
+]
+
+const scrollToElement = (id: string) => {
+  const element = document.getElementById(id)
+  if (element) {
+    element.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+      inline: "nearest",
+    })
+  }
+}
+
+export function ContentSidebar({darkMode}: {darkMode: boolean}) {
+  const [activeSection, setActiveSection] = useState<string>("")
+
+  const hooksItems = sidebarItems.filter(item => item.category === "hooks")
+  const componentsItems = sidebarItems.filter(
+    item => item.category === "components"
+  )
+
+  // Track which section is currently visible
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting && entry.intersectionRatio > 0.5) {
+            setActiveSection(entry.target.id)
+          }
+        })
+      },
+      {threshold: 0.5, rootMargin: "-20% 0px -20% 0px"}
+    )
+
+    sidebarItems.forEach(item => {
+      const element = document.getElementById(item.id)
+      if (element) {
+        observer.observe(element)
+      }
+    })
+
+    return () => observer.disconnect()
+  }, [])
+
+  const SidebarSection = ({
+    title,
+    items,
+    icon,
+  }: {
+    title: string
+    items: SidebarItem[]
+    icon: React.ReactNode
+  }) => (
+    <div className="relative">
+      <div className="relative mb-4">
+        <PlusGridIcon placement="top left" className="absolute" />
+        <PlusGridIcon placement="top right" className="absolute" />
+        <div
+          className={`flex items-center space-x-3 p-3 border rounded-lg ${
+            darkMode
+              ? "border-white/10 bg-gray-800/30"
+              : "border-black/5 bg-gray-50/30"
+            }`}
+        >
+          <div
+            className={`p-1.5 rounded ${darkMode ? "bg-gray-700" : "bg-white"}`}
+          >
+            {icon}
+          </div>
+          <h3
+            className={`text-sm font-semibold uppercase tracking-wider ${
+              darkMode ? "text-gray-200" : "text-gray-700" }`}
+          >
+            {title}
+          </h3>
+        </div>
+      </div>
+
+      <ul className="space-y-2">
+        {items.map(item => {
+          const isActive = activeSection === item.id
+          return (
+            <li key={item.id} className="relative">
+              <button
+                onClick={() => scrollToElement(item.id)}
+                aria-label={`Navigate to ${item.label} section`}
+                className={`w-full text-left px-4 py-3 border text-sm transition-all duration-200 group
+                focus:outline-none focus:ring-2 focus:ring-flow-primary/50 ${
+                isActive
+                    ? darkMode
+                      ? "bg-flow-primary/10 text-flow-primary border border-flow-primary/20 shadow-sm"
+                      : "bg-flow-primary/10 text-flow-600 border border-flow-primary/20 shadow-sm"
+                    : darkMode
+                      ? `text-gray-300 hover:text-white hover:bg-gray-700/30 border-transparent
+                        hover:border-white/10`
+                      : `text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent
+                        hover:border-black/5`
+                }`}
+              >
+                <div className="flex items-center justify-between mb-1">
+                  <span className="font-medium">{item.label}</span>
+                  {isActive && (
+                    <div className="w-2 h-2 bg-flow-primary animate-pulse"></div>
+                  )}
+                </div>
+                <div
+                  className={`text-xs leading-relaxed ${
+                  isActive
+                      ? darkMode
+                        ? "text-flow-primary/80"
+                        : "text-flow-600/80"
+                      : darkMode
+                        ? "text-gray-400"
+                        : "text-gray-500"
+                  }`}
+                >
+                  {item.description}
+                </div>
+              </button>
+            </li>
+          )
+        })}
+      </ul>
+    </div>
+  )
+
+  return (
+    <nav
+      className={`relative w-full h-full border rounded-xl ${
+        darkMode
+          ? "bg-gray-800/30 border-white/10"
+          : "bg-gray-50/50 border-black/5"
+        } p-6 space-y-6 overflow-y-auto scrollbar-hide`}
+      role="navigation"
+      aria-label="Table of contents"
+    >
+      <svg
+        viewBox="0 0 15 15"
+        className={`absolute -top-2 -left-2 size-[15px] z-10 ${
+          darkMode ? "fill-white/20" : "fill-black/10" }`}
+      >
+        <path d="M8 0H7V7H0V8H7V15H8V8H15V7H8V0Z" />
+      </svg>
+      <svg
+        viewBox="0 0 15 15"
+        className={`absolute -bottom-2 -left-2 size-[15px] z-10 ${
+          darkMode ? "fill-white/20" : "fill-black/10" }`}
+      >
+        <path d="M8 0H7V7H0V8H7V15H8V8H15V7H8V0Z" />
+      </svg>
+      <SidebarSection
+        title="Hooks"
+        items={hooksItems}
+        icon={
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+          >
+            <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+          </svg>
+        }
+      />
+
+      <SidebarSection
+        title="Components"
+        items={componentsItems}
+        icon={
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+          >
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+            <rect x="9" y="9" width="6" height="6" />
+          </svg>
+        }
+      />
+
+      <div className="pt-8 border-t border-gray-200/20">
+        <h4
+          className={`text-xs font-semibold uppercase tracking-wider mb-3 ${
+            darkMode ? "text-gray-400" : "text-gray-500" }`}
+        >
+          Quick Links
+        </h4>
+        <div className="space-y-2">
+          <a
+            href="https://developers.flow.com/tools/fcl-js"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={`flex items-center space-x-2 text-sm transition-colors duration-200 ${
+              darkMode
+                ? "text-gray-400 hover:text-flow-primary"
+                : "text-gray-600 hover:text-flow-600"
+              }`}
+          >
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
+              <path d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+            </svg>
+            <span>Documentation</span>
+          </a>
+          <a
+            href="https://github.com/onflow/fcl-js"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={`flex items-center space-x-2 text-sm transition-colors duration-200 ${
+              darkMode
+                ? "text-gray-400 hover:text-flow-primary"
+                : "text-gray-600 hover:text-flow-600"
+              }`}
+          >
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
+              <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" />
+            </svg>
+            <span>GitHub</span>
+          </a>
+        </div>
+      </div>
+    </nav>
+  )
+}
