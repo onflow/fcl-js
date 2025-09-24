@@ -3,6 +3,9 @@ import {
   useFlowNftMetadata,
   type NftViewResult,
 } from "../hooks/useFlowNftMetadata"
+import { ImageIcon } from "../icons/ImageIcon"
+import { AlertCircleIcon } from "../icons/AlertCircleIcon"
+import { ExternalLinkIcon } from "../icons/ExternalLink"
 
 interface NftCardProps {
   accountAddress: string
@@ -61,19 +64,7 @@ export const NftCard: React.FC<NftCardProps> = ({
             className="bg-red-100 dark:bg-red-900/20 h-48 rounded-lg mb-4 flex items-center
               justify-center"
           >
-            <svg
-              className="h-12 w-12 text-red-400"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
+            <AlertCircleIcon className="h-12 w-12 text-red-400" />
           </div>
           <p className="text-red-600 dark:text-red-400 font-medium">
             Error Loading NFT
@@ -97,19 +88,7 @@ export const NftCard: React.FC<NftCardProps> = ({
             className="bg-gray-100 dark:bg-gray-700 h-48 rounded-lg mb-4 flex items-center
               justify-center"
           >
-            <svg
-              className="h-12 w-12 text-gray-400"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-              />
-            </svg>
+            <ImageIcon className="h-12 w-12 text-gray-400" />
           </div>
           <p className="text-gray-600 dark:text-gray-400 font-medium">
             NFT Not Found
@@ -137,19 +116,7 @@ export const NftCard: React.FC<NftCardProps> = ({
           />
         ) : (
           <div className="w-full h-48 bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center">
-            <svg
-              className="h-12 w-12 text-gray-400"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-              />
-            </svg>
+            <ImageIcon className="h-12 w-12 text-gray-400" />
           </div>
         )}
       </div>
@@ -197,19 +164,7 @@ export const NftCard: React.FC<NftCardProps> = ({
                 className="inline-flex items-center gap-1 text-sm text-blue-600 dark:text-blue-400
                   hover:underline"
               >
-                <svg
-                  className="h-3 w-3"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                  />
-                </svg>
+                <ExternalLinkIcon className="h-3 w-3" />
                 Collection
               </a>
             )}
@@ -221,19 +176,7 @@ export const NftCard: React.FC<NftCardProps> = ({
                 className="inline-flex items-center gap-1 text-sm text-blue-600 dark:text-blue-400
                   hover:underline"
               >
-                <svg
-                  className="h-3 w-3"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                  />
-                </svg>
+                <ExternalLinkIcon className="h-3 w-3" />
                 View NFT
               </a>
             )}
