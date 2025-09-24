@@ -267,7 +267,13 @@ async function replaceRoles(
         )
       }
 
-      ix[role] = proposerAccts[0]?.tempId ?? ix[role]
+      // Only replace the proposer when we are resolving the same placeholder
+      // (oldAccountTempId) or when no proposer has been set yet. This prevents
+      // accounts resolved from other placeholders (e.g. wallet pre-authz) from
+      // overriding an explicitly provided proposer.
+      if (ix[role] == null || ix[role] === oldAccountTempId) {
+        ix[role] = proposerAccts[0]?.tempId ?? ix[role]
+      }
     }
   }
 }
