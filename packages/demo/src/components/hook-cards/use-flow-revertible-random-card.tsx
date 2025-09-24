@@ -21,6 +21,7 @@ export function UseFlowRevertibleRandomCard() {
       id="flow-revertible-random"
       title="useFlowRevertibleRandom"
       description="Generate cryptographically secure random numbers on the Flow blockchain that are deterministic and safe for smart contracts."
+      type="hook"
     >
       <div className="space-y-6">
         {randomResults && randomResults.length > 0 && !isLoading && !error && (

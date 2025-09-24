@@ -31,6 +31,7 @@ export function UseFlowBlockCard() {
       id="flow-block"
       title="useFlowBlock"
       description="Get blockchain block information including height, timestamp, and block ID."
+      type="hook"
     >
       <div className="space-y-6">
         {!block && !isLoading && !error && (

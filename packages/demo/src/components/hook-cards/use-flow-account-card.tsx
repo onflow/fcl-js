@@ -23,6 +23,7 @@ export function UseFlowAccountCard() {
       id="flow-account"
       title="useFlowAccount"
       description="Fetch Flow account information including balance, keys, and storage capacity."
+      type="hook"
     >
       <div className="space-y-6 overflow-hidden">
         <div className="space-y-4">

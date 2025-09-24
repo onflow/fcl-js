@@ -78,6 +78,7 @@ export function UseFlowEventsCard() {
       id="flow-events"
       title="useFlowEvents"
       description="Listen to blockchain events in real-time and filter by event types and block height ranges."
+      type="hook"
     >
       <div className="space-y-6">
         <div className="space-y-3">

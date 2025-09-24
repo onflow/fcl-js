@@ -9,6 +9,32 @@ interface SidebarItem {
 }
 
 const sidebarItems: SidebarItem[] = [
+  // Components section
+  {
+    id: "kit-connect",
+    label: "Connect",
+    category: "components",
+    description: "Wallet connection component",
+  },
+  {
+    id: "kit-transaction-button",
+    label: "Transaction Button",
+    category: "components",
+    description: "Transaction execution button",
+  },
+  {
+    id: "kit-transaction-dialog",
+    label: "Transaction Dialog",
+    category: "components",
+    description: "Transaction confirmation dialog",
+  },
+  {
+    id: "kit-transaction-link",
+    label: "Transaction Link",
+    category: "components",
+    description: "Transaction link component",
+  },
+
   // Hooks section
   {
     id: "flow-current-user",
@@ -59,6 +85,12 @@ const sidebarItems: SidebarItem[] = [
     description: "Send Flow transactions",
   },
   {
+    id: "flow-events",
+    label: "Events",
+    category: "hooks",
+    description: "Listen to blockchain events",
+  },
+  {
     id: "flow-revertible-random",
     label: "Revertible Random",
     category: "hooks",
@@ -70,41 +102,20 @@ const sidebarItems: SidebarItem[] = [
     category: "hooks",
     description: "Track transaction status",
   },
-
-  // Components section
-  {
-    id: "kit-connect",
-    label: "Connect",
-    category: "components",
-    description: "Wallet connection component",
-  },
-  {
-    id: "kit-transaction-button",
-    label: "Transaction Button",
-    category: "components",
-    description: "Transaction execution button",
-  },
-  {
-    id: "kit-transaction-dialog",
-    label: "Transaction Dialog",
-    category: "components",
-    description: "Transaction confirmation dialog",
-  },
-  {
-    id: "kit-transaction-link",
-    label: "Transaction Link",
-    category: "components",
-    description: "Transaction link component",
-  },
 ]
 
 const scrollToElement = (id: string) => {
   const element = document.getElementById(id)
   if (element) {
-    element.scrollIntoView({
+    // Get the header height to account for sticky header offset
+    const headerHeight = 80 // Approximate header height + padding
+    const elementRect = element.getBoundingClientRect()
+    const absoluteElementTop = elementRect.top + window.pageYOffset
+    const scrollPosition = absoluteElementTop - headerHeight
+
+    window.scrollTo({
+      top: scrollPosition,
       behavior: "smooth",
-      block: "start",
-      inline: "nearest",
     })
   }
 }
@@ -121,13 +132,20 @@ export function ContentSidebar({darkMode}: {darkMode: boolean}) {
   useEffect(() => {
     const observer = new IntersectionObserver(
       entries => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting && entry.intersectionRatio > 0.5) {
-            setActiveSection(entry.target.id)
-          }
-        })
+        // Find the entry with the highest intersection ratio that's actually visible
+        const visibleEntries = entries.filter(entry => entry.isIntersecting)
+        if (visibleEntries.length > 0) {
+          // Sort by intersection ratio and pick the most visible one
+          const mostVisible = visibleEntries.reduce((prev, current) =>
+            current.intersectionRatio > prev.intersectionRatio ? current : prev
+          )
+          setActiveSection(mostVisible.target.id)
+        }
       },
-      {threshold: 0.5, rootMargin: "-20% 0px -20% 0px"}
+      {
+        threshold: [0.1, 0.3, 0.5, 0.7, 0.9],
+        rootMargin: "-80px 0px -40% 0px", // Account for header height and give more weight to top sections
+      }
     )
 
     sidebarItems.forEach(item => {
@@ -247,23 +265,6 @@ export function ContentSidebar({darkMode}: {darkMode: boolean}) {
         <path d="M8 0H7V7H0V8H7V15H8V8H15V7H8V0Z" />
       </svg>
       <SidebarSection
-        title="Hooks"
-        items={hooksItems}
-        icon={
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-          >
-            <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
-          </svg>
-        }
-      />
-
-      <SidebarSection
         title="Components"
         items={componentsItems}
         icon={
@@ -275,8 +276,32 @@ export function ContentSidebar({darkMode}: {darkMode: boolean}) {
             stroke="currentColor"
             strokeWidth="2"
           >
-            <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
-            <rect x="9" y="9" width="6" height="6" />
+            <rect x="2" y="2" width="8" height="8" rx="1" />
+            <rect x="14" y="2" width="8" height="8" rx="1" />
+            <rect x="2" y="14" width="8" height="8" rx="1" />
+            <rect x="14" y="14" width="8" height="8" rx="1" />
+          </svg>
+        }
+      />
+
+      <SidebarSection
+        title="Hooks"
+        items={hooksItems}
+        icon={
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+          >
+            <path d="M12 2v6" strokeLinecap="round" />
+            <path
+              d="M12 8a6 6 0 0 1 6 6 6 6 0 0 1-6 6 6 6 0 0 1-6-6"
+              strokeLinecap="round"
+            />
+            <path d="M6 14a2 2 0 0 0 2 2 2 2 0 0 0 2-2" strokeLinecap="round" />
           </svg>
         }
       />

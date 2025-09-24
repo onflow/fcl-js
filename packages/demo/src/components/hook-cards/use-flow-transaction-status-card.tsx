@@ -160,6 +160,7 @@ export function UseFlowTransactionStatusCard() {
       id="flow-transaction-status"
       title="useFlowTransactionStatus"
       description="Monitor Flow transaction status in real-time with automatic updates from pending to sealed states."
+      type="hook"
     >
       <div className="space-y-6">
         <div className="space-y-3">

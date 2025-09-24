@@ -27,6 +27,23 @@ export function ContentSection() {
           <div className="my-24 mt-16">
             <div className="text-left mb-16">
               <h2 className="text-5xl font-bold text-gray-900 dark:text-white mb-4">
+                React Components
+              </h2>
+              <p className="text-lg text-gray-600 dark:text-gray-300 max-w-3xl leading-relaxed">
+                Pre-built UI components for common Flow blockchain interactions.
+                Drop them into your app for instant Web3 functionality.
+              </p>
+            </div>
+
+            <ConnectCard />
+            <TransactionButtonCard />
+            <TransactionDialogCard />
+            <TransactionLinkCard />
+          </div>
+
+          <div className="mb-24">
+            <div className="text-left mb-16">
+              <h2 className="text-5xl font-bold text-gray-900 dark:text-white mb-4">
                 React Hooks
               </h2>
               <p className="text-lg text-gray-600 dark:text-gray-300 max-w-3xl leading-relaxed">
@@ -45,25 +62,8 @@ export function ContentSection() {
             <UseFlowQueryRawCard />
             <UseFlowMutateCard />
             <UseFlowEventsCard />
-            <UseFlowTransactionStatusCard />
             <UseFlowRevertibleRandomCard />
-          </div>
-
-          <div className="mb-24">
-            <div className="text-left mb-16">
-              <h2 className="text-5xl font-bold text-gray-900 dark:text-white mb-4">
-                React Components
-              </h2>
-              <p className="text-lg text-gray-600 dark:text-gray-300 max-w-3xl leading-relaxed">
-                Pre-built UI components for common Flow blockchain interactions.
-                Drop them into your app for instant Web3 functionality.
-              </p>
-            </div>
-
-            <ConnectCard />
-            <TransactionButtonCard />
-            <TransactionDialogCard />
-            <TransactionLinkCard />
+            <UseFlowTransactionStatusCard />
           </div>
         </PlusGridRow>
       </PlusGrid>

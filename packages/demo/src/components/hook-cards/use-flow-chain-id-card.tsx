@@ -42,6 +42,7 @@ export function UseFlowChainIdCard() {
       id="flow-chain-id"
       title="useFlowChainId"
       description="Get the current Flow network chain identifier. Returns 'mainnet', 'testnet', 'emulator', or 'local' to determine which network your app is connected to."
+      type="hook"
     >
       <div className="space-y-6">
         <div

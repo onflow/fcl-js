@@ -87,6 +87,7 @@ access(all) fun main(address: Address): UFix64 {
       id="flow-query"
       title="useFlowQuery"
       description="Execute Cadence scripts on Flow blockchain with automatic result parsing and caching support."
+      type="hook"
     >
       <div className="space-y-6">
         <div className="space-y-3">

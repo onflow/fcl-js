@@ -88,6 +88,7 @@ access(all) fun main(address: Address): UFix64 {
       id="flow-query-raw"
       title="useFlowQueryRaw"
       description="Execute Cadence scripts and receive the complete FCL response including status, events, and raw data without automatic parsing."
+      type="hook"
     >
       <div className="space-y-6">
         <div

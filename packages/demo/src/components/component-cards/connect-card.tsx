@@ -15,6 +15,7 @@ export function ConnectCard() {
       id="kit-connect"
       title="Connect"
       description="A ready-to-use wallet connection component with built-in styling and authentication flow."
+      type="component"
     >
       <div className="space-y-6">
         <div className="grid grid-cols-2 gap-4">

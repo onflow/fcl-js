@@ -13,6 +13,7 @@ export function UseFlowCurrentUserCard() {
       id="flow-current-user"
       title="useFlowCurrentUser"
       description="Manage user authentication and access current user information including wallet address and authentication status."
+      type="hook"
     >
       <div className="space-y-6">
         <div

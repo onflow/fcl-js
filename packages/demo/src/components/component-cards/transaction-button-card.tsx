@@ -22,6 +22,7 @@ export function TransactionButtonCard() {
       id="kit-transaction-button"
       title="TransactionButton"
       description="A ready-to-use transaction button component with built-in signing flow and status management."
+      type="component"
     >
       <div className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

@@ -1,15 +1,3 @@
-/**
- * Utility functions for working with Flow Chain IDs
- *
- * FCL's getChainId() returns simple network identifiers:
- * - "mainnet" for Flow Mainnet
- * - "testnet" for Flow Testnet
- * - "emulator" or "local" for Flow Emulator/Local development
- *
- * This differs from getNetworkParameters() which returns prefixed formats
- * like "flow-mainnet", "flow-testnet", etc.
- */
-
 export type FlowChainId = "mainnet" | "testnet" | "emulator" | "local"
 export type FlowNetworkParametersChainId =
   | "flow-mainnet"
@@ -18,9 +6,6 @@ export type FlowNetworkParametersChainId =
   | "flow-canarynet"
 export type FlowEVMChainId = 747 | 545
 
-/**
- * Normalize chain ID to a consistent format
- */
 export function normalizeChainId(chainId: string): FlowChainId | "unknown" {
   switch (chainId.toLowerCase()) {
     case "mainnet":
@@ -38,9 +23,6 @@ export function normalizeChainId(chainId: string): FlowChainId | "unknown" {
   }
 }
 
-/**
- * Get human-readable network name
- */
 export function getNetworkName(chainId: string): string {
   const normalized = normalizeChainId(chainId)
   switch (normalized) {
@@ -55,9 +37,6 @@ export function getNetworkName(chainId: string): string {
   }
 }
 
-/**
- * Get corresponding EVM Chain ID for Flow networks
- */
 export function getEVMChainId(chainId: string): FlowEVMChainId | null {
   const normalized = normalizeChainId(chainId)
   switch (normalized) {
@@ -66,22 +45,16 @@ export function getEVMChainId(chainId: string): FlowEVMChainId | null {
     case "testnet":
       return 545
     case "emulator":
-      return null // Emulator doesn't have a fixed EVM chain ID
+      return null
     default:
       return null
   }
 }
 
-/**
- * Check if chain ID represents a production network
- */
 export function isProductionNetwork(chainId: string): boolean {
   return normalizeChainId(chainId) === "mainnet"
 }
 
-/**
- * Check if chain ID represents a development/test network
- */
 export function isDevelopmentNetwork(chainId: string): boolean {
   const normalized = normalizeChainId(chainId)
   return normalized === "testnet" || normalized === "emulator"
