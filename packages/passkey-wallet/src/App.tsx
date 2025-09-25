@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react"
+import {useEffect, useMemo, useState} from "react"
 import "./App.css"
 import {ready, approve, decline} from "./wallet/messaging"
 import type {AuthnResponse, Service, Signable} from "./wallet/types"
@@ -64,6 +64,9 @@ export default function App() {
   const [chainKeyMatches, setChainKeyMatches] = useState<boolean | undefined>()
   const [passkeyPubHex, setPasskeyPubHex] = useState<string | undefined>()
   const [debugMode, setDebugMode] = useState<boolean>(false)
+  const [hostOrigin, setHostOrigin] = useState<string>("")
+  const [viewMode, setViewMode] = useState<"authn" | "authz" | "home">("home")
+  const [signable, setSignable] = useState<Signable | undefined>()
 
   // no-op placeholder removed
 
@@ -73,7 +76,17 @@ export default function App() {
       if (!data || typeof data !== "object") return
       const type = (data as any).type
       if (type === "FCL:VIEW:READY:RESPONSE") {
-        setReadyPayload((data as any).body || (data as any))
+        setHostOrigin(ev.origin)
+        const body = (data as any).body || (data as any)
+        setReadyPayload(body)
+        // Determine view mode
+        if (body?.voucher) {
+          setViewMode("authz")
+          setSignable(body as Signable)
+        } else {
+          setViewMode("authn")
+          setSignable(undefined)
+        }
         try {
           setAccountApiFromReadyPayload(data as any)
         } catch {}
@@ -91,6 +104,7 @@ export default function App() {
       if (saved.publicKeySec1Hex)
         setPasskeyPubHex(saved.publicKeySec1Hex.toLowerCase())
     }
+    // removed multi-account initialization
     const url = new URL(window.location.href)
     setDebugMode(url.searchParams.get("debug") === "1")
     return () => window.removeEventListener("message", onMsg)
@@ -120,6 +134,20 @@ export default function App() {
     run()
   }, [address])
 
+  // Resize the popup window to logical dimensions per view
+  useEffect(() => {
+    try {
+      const baseWidth = 660
+      const baseHeight = viewMode === "authz" ? 720 : 560
+      if (window.resizeTo) {
+        // Avoid making it smaller than current to not annoy users
+        const targetW = Math.max(window.outerWidth || baseWidth, baseWidth)
+        const targetH = Math.max(window.outerHeight || baseHeight, baseHeight)
+        window.resizeTo(targetW, targetH)
+      }
+    } catch {}
+  }, [viewMode])
+
   const doRegister = async () => {
     try {
       const rec = await createCredential()
@@ -136,6 +164,7 @@ export default function App() {
           JSON.stringify(updated)
         )
         setAddress(newAddr)
+        // account switches to newly created address automatically
       }
     } catch (e: any) {
       decline(e?.message || "Passkey registration failed")
@@ -284,21 +313,20 @@ export default function App() {
 
   const pageStyle: React.CSSProperties = {
     minHeight: "100vh",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    background: "#f7f7f7",
-    padding: 16,
+    display: "block",
+    background: "#fff",
+    padding: 12,
     fontFamily: "ui-sans-serif,system-ui",
   }
   const cardStyle: React.CSSProperties = {
-    background: "#fff",
-    borderRadius: 12,
-    width: "min(92vw, 520px)",
-    maxHeight: "90vh",
-    overflow: "auto",
-    boxShadow: "0 20px 50px rgba(0,0,0,0.15)",
-    padding: 16,
+    background: "transparent",
+    borderRadius: 0,
+    width: "min(92vw, 660px)",
+    maxHeight: "none",
+    overflow: "visible",
+    boxShadow: "none",
+    padding: 0,
+    margin: "0 auto",
   }
   const inputStyle: React.CSSProperties = {
     width: "100%",
@@ -319,6 +347,69 @@ export default function App() {
     color: "#fff",
     border: "1px solid #000",
   }
+  const buttonDanger: React.CSSProperties = {
+    ...buttonStyle,
+    background: "#fff",
+    color: "#b00020",
+    border: "1px solid #b00020",
+  }
+  const footerStyle: React.CSSProperties = {
+    position: "sticky",
+    bottom: 0,
+    background: "#fff",
+    borderTop: "1px solid #eee",
+    padding: 12,
+    marginTop: 16,
+  }
+  const badgeStyle: React.CSSProperties = {
+    display: "inline-block",
+    padding: "2px 6px",
+    borderRadius: 6,
+    background: "#f1f3f5",
+    fontSize: 12,
+    color: "#333",
+  }
+  const divider: React.CSSProperties = {
+    height: 1,
+    background: "#eee",
+    margin: "8px 0",
+  }
+  const mono: React.CSSProperties = {
+    fontFamily:
+      "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace",
+    fontSize: 12,
+  }
+
+  // removed balance formatter (no multi-account balances)
+
+  const appMeta = useMemo(() => {
+    try {
+      const payload = readyPayload ? {body: readyPayload} : undefined
+      const body = readyPayload ?? undefined
+      const params = (payload as any)?.params ?? (body as any)?.params
+      const app =
+        (payload as any)?.app ||
+        (body as any)?.app ||
+        (payload as any)?.config?.app ||
+        (body as any)?.config?.app ||
+        params?.app
+      const url: string | undefined = app?.url || app?.href || params?.url
+      const name: string | undefined = app?.name
+      const icon: string | undefined = app?.icon
+      const originUrl = url || hostOrigin || document.referrer || ""
+      return {
+        name: name || (originUrl ? new URL(originUrl).host : ""),
+        icon,
+        url: originUrl,
+      }
+    } catch {
+      return {
+        name: hostOrigin || "",
+        icon: undefined as string | undefined,
+        url: hostOrigin,
+      }
+    }
+  }, [readyPayload, hostOrigin])
 
   const hasCredential = !!credId
   const hasAddress = !!address && address !== "0xUSER"
@@ -326,7 +417,194 @@ export default function App() {
     ? `${credId.slice(0, 6)}...${credId.slice(-6)}`
     : "none"
 
-  return (
+  const renderHeader = (
+    title: string,
+    subtitle?: string,
+    extra?: React.ReactNode
+  ) => (
+    <>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 10,
+          marginBottom: 6,
+        }}
+      >
+        {appMeta.icon && (
+          <img
+            src={appMeta.icon}
+            alt="app icon"
+            style={{width: 28, height: 28, borderRadius: 6}}
+            onError={(e: any) => (e.currentTarget.style.display = "none")}
+          />
+        )}
+        <div>
+          <h3 style={{margin: 0, fontSize: 18}}>{title}</h3>
+          {subtitle && (
+            <div style={{marginTop: 4, color: "#666", fontSize: 13}}>
+              {subtitle}
+            </div>
+          )}
+        </div>
+        {extra}
+      </div>
+      <div style={divider} />
+    </>
+  )
+
+  const renderAuthn = () => (
+    <div style={pageStyle}>
+      <div style={cardStyle}>
+        {renderHeader(
+          "Connect to Passkey Wallet",
+          appMeta.name ? `${appMeta.name} wants to connect` : undefined,
+          appMeta.url ? (
+            <span style={{marginLeft: "auto", ...badgeStyle}}>
+              {new URL(appMeta.url).host}
+            </span>
+          ) : undefined
+        )}
+        <div style={{display: "grid", gap: 10}}>
+          <div>
+            <div style={{fontWeight: 600, color: "#333", marginBottom: 6}}>
+              Selected account
+            </div>
+            <input
+              value={hasAddress ? address : "No account"}
+              readOnly
+              style={inputStyle}
+            />
+          </div>
+          {!hasCredential && (
+            <div style={{color: "#666", fontSize: 13}}>
+              No passkey found. Create one to continue.
+            </div>
+          )}
+          <div
+            style={{display: "flex", gap: 8, flexWrap: "wrap", marginTop: 4}}
+          >
+            {!hasCredential && (
+              <button onClick={doRegister} style={buttonStyle}>
+                Create New Passkey
+              </button>
+            )}
+            {hasCredential && (
+              <button onClick={doRegister} style={buttonStyle}>
+                Add Another Passkey
+              </button>
+            )}
+          </div>
+        </div>
+        <div style={{marginTop: 12, fontSize: 12, color: "#666"}}>
+          <div>Account: {hasAddress ? address : "none"}</div>
+          <div>Passkey: {maskedCred}</div>
+          {uiError && (
+            <div style={{color: "#b00020", marginTop: 8}}>{uiError}</div>
+          )}
+        </div>
+        <div style={footerStyle}>
+          <div style={{display: "flex", gap: 8, justifyContent: "flex-end"}}>
+            <button
+              onClick={() => decline("User declined")}
+              style={buttonDanger}
+            >
+              Deny
+            </button>
+            <button onClick={doAuthn} style={buttonPrimary}>
+              Approve
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+
+  const renderAuthz = () => {
+    const v = signable?.voucher as any
+    const cadence: string = v?.cadence || ""
+    const cadencePreview = cadence.split("\n").slice(0, 16).join("\n")
+    return (
+      <div style={pageStyle}>
+        <div style={cardStyle}>
+          {renderHeader(
+            "Approve Transaction",
+            appMeta.name ? `Requested by ${appMeta.name}` : undefined,
+            appMeta.url ? (
+              <span style={{marginLeft: "auto", ...badgeStyle}}>
+                {new URL(appMeta.url).host}
+              </span>
+            ) : undefined
+          )}
+          <div style={{display: "grid", gap: 10}}>
+            {cadence && (
+              <div>
+                <div style={{fontWeight: 600, color: "#333", marginBottom: 6}}>
+                  Cadence
+                </div>
+                <pre
+                  style={{
+                    ...mono,
+                    background: "#f8f9fa",
+                    padding: 8,
+                    borderRadius: 8,
+                    overflowX: "auto",
+                    textAlign: "left",
+                  }}
+                >
+                  {cadencePreview}
+                </pre>
+              </div>
+            )}
+            <div style={{display: "grid", gap: 6}}>
+              <div style={{fontWeight: 600, color: "#333"}}>Details</div>
+              <div style={{fontSize: 13, color: "#333"}}>
+                <span style={{fontWeight: 600}}>Payer:</span> {v?.payer}
+              </div>
+              <div style={{fontSize: 13, color: "#333"}}>
+                <span style={{fontWeight: 600}}>Proposer:</span>{" "}
+                {v?.proposalKey?.address}
+              </div>
+              <div style={{fontSize: 13, color: "#333"}}>
+                <span style={{fontWeight: 600}}>Authorizers:</span>{" "}
+                {(v?.authorizers || []).join(", ")}
+              </div>
+              {typeof v?.computeLimit === "number" && (
+                <div style={{fontSize: 13, color: "#333"}}>
+                  <span style={{fontWeight: 600}}>Compute limit:</span>{" "}
+                  {v.computeLimit}
+                </div>
+              )}
+              {Array.isArray(v?.arguments) && v.arguments.length > 0 && (
+                <div style={{fontSize: 13, color: "#333"}}>
+                  <span style={{fontWeight: 600}}>Arguments:</span>{" "}
+                  {v.arguments.length}
+                </div>
+              )}
+            </div>
+          </div>
+          <div style={{marginTop: 12, fontSize: 12, color: "#666"}}>
+            <div>Signing as: {hasAddress ? address : "no account"}</div>
+          </div>
+          <div style={footerStyle}>
+            <div style={{display: "flex", gap: 8, justifyContent: "flex-end"}}>
+              <button
+                onClick={() => decline("User declined")}
+                style={buttonDanger}
+              >
+                Deny
+              </button>
+              <button onClick={doAuthz} style={buttonPrimary}>
+                Approve Transaction
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  const renderHome = () => (
     <div style={pageStyle}>
       <div style={cardStyle}>
         <h2 style={{margin: 0, marginBottom: 8}}>{WALLET_NAME}</h2>
@@ -389,4 +667,10 @@ export default function App() {
       </div>
     </div>
   )
+
+  return viewMode === "authn"
+    ? renderAuthn()
+    : viewMode === "authz"
+      ? renderAuthz()
+      : renderHome()
 }
