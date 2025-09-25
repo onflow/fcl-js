@@ -19,6 +19,24 @@ export async function sendTransaction(ix, context = {}, opts = {}) {
 
   ix = await ix
 
+  const toBase64 = val => context.Buffer.from(val).toString("base64")
+  const toBase64FromStringOrBytes = ext => {
+    try {
+      if (ext == null) return null
+      if (typeof ext === "string") {
+        const hex = ext.replace(/^0x/, "")
+        const isHex = /^[0-9a-fA-F]+$/.test(hex)
+        return isHex
+          ? context.Buffer.from(hex, "hex").toString("base64")
+          : context.Buffer.from(ext, "utf8").toString("base64")
+      }
+      // Assume Uint8Array or Buffer-like
+      return context.Buffer.from(ext).toString("base64")
+    } catch {
+      return null
+    }
+  }
+
   // Apply Non Payer Signatures to Payload Signatures
   let payloadSignatures = []
   for (let acct of Object.values(ix.accounts)) {
@@ -30,6 +48,10 @@ export async function sendTransaction(ix, context = {}, opts = {}) {
           signature: context.Buffer.from(acct.signature, "hex").toString(
             "base64"
           ),
+        }
+        if (acct.signatureExtension != null) {
+          const b64 = toBase64FromStringOrBytes(acct.signatureExtension)
+          if (b64 != null) signature.extension_data = b64
         }
         if (
           !payloadSignatures.find(
@@ -63,6 +85,10 @@ export async function sendTransaction(ix, context = {}, opts = {}) {
           signature: context.Buffer.from(acct.signature, "hex").toString(
             "base64"
           ),
+        }
+        if (acct.signatureExtension != null) {
+          const b64 = toBase64FromStringOrBytes(acct.signatureExtension)
+          if (b64 != null) envelopeSignatures[id].extension_data = b64
         }
       }
     } catch (error) {

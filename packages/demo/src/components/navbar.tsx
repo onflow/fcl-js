@@ -1,4 +1,8 @@
-import {useFlowCurrentUser, useFlowConfig} from "@onflow/react-sdk"
+import {
+  useFlowCurrentUser,
+  useFlowConfig,
+  useFlowClient,
+} from "@onflow/react-sdk"
 import {useDarkMode} from "./flow-provider-wrapper"
 
 export function Navbar() {
@@ -6,6 +10,50 @@ export function Navbar() {
   const config = useFlowConfig()
   const {darkMode, toggleDarkMode} = useDarkMode()
   const currentNetwork = config.flowNetwork || "emulator"
+  const client = useFlowClient()
+
+  const loginWithPasskey = async () => {
+    const base =
+      (import.meta as any).env?.VITE_PASSKEY_WALLET_URL ||
+      "http://localhost:8710/index.html"
+    const accountApi = (import.meta as any).env?.VITE_PASSKEY_ACCOUNT_API
+    const urlStr = base as string
+
+    await client.authenticate({
+      service: {
+        f_type: "Service",
+        f_vsn: "1.0.0",
+        type: "authn",
+        method: "POP/RPC",
+        uid: "passkey-wallet#authn",
+        endpoint: urlStr,
+        provider: {
+          address: "0x0",
+          name: "Passkey Wallet",
+          icon: "https://avatars.githubusercontent.com/u/62387156?v=4",
+        },
+        data: accountApi ? {accountApi} : undefined,
+        params: {},
+      },
+    })
+  }
+
+  if (typeof window !== "undefined") {
+    // Listen for debug posts from passkey-wallet popup
+    window.addEventListener("message", e => {
+      const {data} = e
+      if (!data || typeof data !== "object") return
+      if (data.type === "PASSKEY_WALLET:DBG") {
+        console.log("[host] passkey-wallet DBG", data.payload)
+      }
+      if (data.type === "PASSKEY_WALLET:DBG2") {
+        console.log("[host] passkey-wallet DBG2", data.payload)
+      }
+      if (data.type === "PASSKEY_WALLET:COMPOSITE_SIGNATURE") {
+        console.log("[host] passkey-wallet CompositeSignature", data.payload)
+      }
+    })
+  }
 
   return (
     <nav
@@ -60,14 +108,27 @@ export function Navbar() {
         </div>
 
         {!user?.loggedIn && (
-          <button
-            onClick={authenticate}
-            className="py-2 px-6 bg-[#00EF8B] text-black border-none rounded-md cursor-pointer
-              font-semibold text-base transition-all duration-200 ease-in-out
-              hover:bg-[#00d178]"
-          >
-            Log In With Wallet
-          </button>
+          <>
+            <button
+              onClick={authenticate}
+              className="py-2 px-6 bg-[#00EF8B] text-black border-none rounded-md cursor-pointer
+                font-semibold text-base transition-all duration-200 ease-in-out
+                hover:bg-[#00d178]"
+            >
+              Log In With Wallet
+            </button>
+            <button
+              onClick={loginWithPasskey}
+              className={`py-2 px-6 border-none rounded-md cursor-pointer font-semibold text-base
+              transition-all duration-200 ease-in-out ${
+              darkMode
+                  ? "bg-gray-700 text-white hover:bg-gray-600"
+                  : "bg-black text-white hover:bg-gray-800"
+              }`}
+            >
+              Login With Passkey
+            </button>
+          </>
         )}
         {user?.loggedIn && (
           <>
