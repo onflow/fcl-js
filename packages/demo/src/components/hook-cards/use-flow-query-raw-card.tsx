@@ -18,7 +18,7 @@ const IMPLEMENTATION_CODE = `const {
   refetch 
 } = useFlowQueryRaw({
   cadence: \`
-    pub fun main(): String {
+    access(all) fun main(): String {
       return "Hello, Flow!"
     }
   \`,
