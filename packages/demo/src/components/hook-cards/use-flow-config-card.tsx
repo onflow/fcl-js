@@ -4,6 +4,11 @@ import {useDarkMode} from "../flow-provider-wrapper"
 import {PlusGridIcon} from "../ui/plus-grid"
 import {ResultsSection} from "../ui/results-section"
 
+const IMPLEMENTATION_CODE = `const { 
+  data: config, 
+  isLoading 
+} = useFlowConfig()`
+
 export function UseFlowConfigCard() {
   const {darkMode} = useDarkMode()
   const config = useFlowConfig()
@@ -13,7 +18,7 @@ export function UseFlowConfigCard() {
       id="flow-config"
       title="useFlowConfig"
       description="Access the current Flow configuration including network settings, access node, and wallet discovery."
-      type="hook"
+      code={IMPLEMENTATION_CODE}
     >
       <div className="space-y-6">
         <div

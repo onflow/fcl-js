@@ -5,6 +5,23 @@ import {PlusGridIcon} from "../ui/plus-grid"
 import {ResultsSection} from "../ui/results-section"
 import {useState} from "react"
 
+const IMPLEMENTATION_CODE = `<TransactionButton
+  label="Sign Transaction"
+  transaction={{
+    cadence: GREETING_TRANSACTION,
+    args: (arg, t) => [arg("Hello, World!", t.String)],
+    limit: 999,
+  }}
+  mutation={{
+    onSuccess: (data) => {
+      console.log("Transaction ID:", data)
+    },
+    onError: (error) => {
+      console.error("Transaction failed:", error)
+    }
+  }}
+/>`
+
 export function TransactionButtonCard() {
   const {darkMode} = useDarkMode()
   const [transactionResult, setTransactionResult] = useState<any>(null)
@@ -22,7 +39,7 @@ export function TransactionButtonCard() {
       id="kit-transaction-button"
       title="TransactionButton"
       description="A ready-to-use transaction button component with built-in signing flow and status management."
-      type="component"
+      code={IMPLEMENTATION_CODE}
     >
       <div className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

@@ -5,6 +5,15 @@ import {useDarkMode} from "../flow-provider-wrapper"
 import {PlusGridIcon} from "../ui/plus-grid"
 import {ResultsSection} from "../ui/results-section"
 
+const IMPLEMENTATION_CODE = `const { 
+  data: block, 
+  isLoading, 
+  error, 
+  refetch 
+} = useFlowBlock({
+  query: { enabled: true }
+})`
+
 export function UseFlowBlockCard() {
   const {darkMode} = useDarkMode()
   const [blockHeight, setBlockHeight] = useState<string>("")
@@ -31,7 +40,7 @@ export function UseFlowBlockCard() {
       id="flow-block"
       title="useFlowBlock"
       description="Get blockchain block information including height, timestamp, and block ID."
-      type="hook"
+      code={IMPLEMENTATION_CODE}
     >
       <div className="space-y-6">
         {!block && !isLoading && !error && (

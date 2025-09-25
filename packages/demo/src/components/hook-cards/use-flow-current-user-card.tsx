@@ -4,6 +4,19 @@ import {useDarkMode} from "../flow-provider-wrapper"
 import {PlusGridIcon} from "../ui/plus-grid"
 import {ResultsSection} from "../ui/results-section"
 
+const IMPLEMENTATION_CODE = `const { user, authenticate, unauthenticate } = useFlowCurrentUser()
+
+// Check if user is authenticated
+if (user?.addr) {
+  console.log("User address:", user.addr)
+}
+
+// Authenticate user
+const handleLogin = () => authenticate()
+
+// Sign out user  
+const handleLogout = () => unauthenticate()`
+
 export function UseFlowCurrentUserCard() {
   const {darkMode} = useDarkMode()
   const {user, authenticate, unauthenticate} = useFlowCurrentUser()
@@ -13,7 +26,7 @@ export function UseFlowCurrentUserCard() {
       id="flow-current-user"
       title="useFlowCurrentUser"
       description="Manage user authentication and access current user information including wallet address and authentication status."
-      type="hook"
+      code={IMPLEMENTATION_CODE}
     >
       <div className="space-y-6">
         <div

@@ -4,6 +4,8 @@ import {useDarkMode} from "../flow-provider-wrapper"
 import {PlusGridIcon} from "../ui/plus-grid"
 import {ResultsSection} from "../ui/results-section"
 
+const IMPLEMENTATION_CODE = `<Connect />`
+
 export function ConnectCard() {
   const {darkMode} = useDarkMode()
   const {data: chainId, isLoading} = useFlowChainId()
@@ -15,7 +17,7 @@ export function ConnectCard() {
       id="kit-connect"
       title="Connect"
       description="A ready-to-use wallet connection component with built-in styling and authentication flow."
-      type="component"
+      code={IMPLEMENTATION_CODE}
     >
       <div className="space-y-6">
         <div className="grid grid-cols-2 gap-4">

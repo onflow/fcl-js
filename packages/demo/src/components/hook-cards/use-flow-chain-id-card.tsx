@@ -10,6 +10,11 @@ import {
   isProductionNetwork,
 } from "../../utils/chain-helpers"
 
+const IMPLEMENTATION_CODE = `const { 
+  data: chainId, 
+  isLoading 
+} = useFlowChainId()`
+
 export function UseFlowChainIdCard() {
   const {darkMode} = useDarkMode()
   const {
@@ -41,8 +46,8 @@ export function UseFlowChainIdCard() {
     <DemoCard
       id="flow-chain-id"
       title="useFlowChainId"
-      description="Get the current Flow network chain identifier. Returns 'mainnet', 'testnet', 'emulator', or 'local' to determine which network your app is connected to."
-      type="hook"
+      description="Get the current Flow network chain identifier. Determine which network your app is connected to."
+      code={IMPLEMENTATION_CODE}
     >
       <div className="space-y-6">
         <div

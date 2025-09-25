@@ -11,6 +11,20 @@ import {useDarkMode} from "../flow-provider-wrapper"
 import {PlusGridIcon} from "../ui/plus-grid"
 import {ResultsSection} from "../ui/results-section"
 
+const IMPLEMENTATION_CODE = `const { 
+  data, 
+  isLoading, 
+  error, 
+  refetch 
+} = useFlowQueryRaw({
+  cadence: \`
+    pub fun main(): String {
+      return "Hello, Flow!"
+    }
+  \`,
+  args: [],
+})`
+
 export function UseFlowQueryRawCard() {
   const {darkMode} = useDarkMode()
   const config = useFlowConfig()
@@ -88,7 +102,7 @@ access(all) fun main(address: Address): UFix64 {
       id="flow-query-raw"
       title="useFlowQueryRaw"
       description="Execute Cadence scripts and receive the complete FCL response including status, events, and raw data without automatic parsing."
-      type="hook"
+      code={IMPLEMENTATION_CODE}
     >
       <div className="space-y-6">
         <div

@@ -1,6 +1,7 @@
-import {type ReactNode, memo} from "react"
+import {type ReactNode, memo, useState} from "react"
 import {PlusGridItem, PlusGridIcon} from "./plus-grid"
 import {useDarkMode} from "../flow-provider-wrapper"
+import {CodeViewer} from "./code-viewer"
 
 interface DemoCardProps {
   id: string
@@ -8,7 +9,7 @@ interface DemoCardProps {
   description: string
   children: ReactNode
   className?: string
-  type?: "hook" | "component"
+  code?: string
 }
 
 export const DemoCard = memo<DemoCardProps>(function DemoCard({
@@ -17,9 +18,10 @@ export const DemoCard = memo<DemoCardProps>(function DemoCard({
   description,
   children,
   className = "",
-  type,
+  code,
 }) {
   const {darkMode} = useDarkMode()
+  const [showCode, setShowCode] = useState(false)
 
   return (
     <div id={id} className={`scroll-mt-24 ${className}`}>
@@ -37,13 +39,15 @@ export const DemoCard = memo<DemoCardProps>(function DemoCard({
           <PlusGridIcon placement="bottom left" className="absolute z-10" />
           <PlusGridIcon placement="bottom right" className="absolute z-10" />
 
-          {type && (
+          {code && (
             <div className="absolute top-6 right-8 z-20 flex items-center h-16">
-              <div
-                className={`p-2 rounded-md ${
+              <button
+                onClick={() => setShowCode(!showCode)}
+                className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium
+                transition-colors ${
                 darkMode
-                    ? "bg-gray-700/80 text-gray-400"
-                    : "bg-gray-100 text-gray-600"
+                    ? "bg-gray-700/80 text-gray-400 hover:bg-gray-700 hover:text-gray-300"
+                    : "bg-gray-100 text-gray-600 hover:bg-gray-200 hover:text-gray-700"
                 }`}
               >
                 <svg
@@ -54,28 +58,11 @@ export const DemoCard = memo<DemoCardProps>(function DemoCard({
                   stroke="currentColor"
                   strokeWidth="2"
                 >
-                  {type === "hook" ? (
-                    <>
-                      <path d="M12 2v6" strokeLinecap="round" />
-                      <path
-                        d="M12 8a6 6 0 0 1 6 6 6 6 0 0 1-6 6 6 6 0 0 1-6-6"
-                        strokeLinecap="round"
-                      />
-                      <path
-                        d="M6 14a2 2 0 0 0 2 2 2 2 0 0 0 2-2"
-                        strokeLinecap="round"
-                      />
-                    </>
-                  ) : (
-                    <>
-                      <rect x="2" y="2" width="8" height="8" rx="1" />
-                      <rect x="14" y="2" width="8" height="8" rx="1" />
-                      <rect x="2" y="14" width="8" height="8" rx="1" />
-                      <rect x="14" y="14" width="8" height="8" rx="1" />
-                    </>
-                  )}
+                  <polyline points="16,18 22,12 16,6" />
+                  <polyline points="8,6 2,12 8,18" />
                 </svg>
-              </div>
+                <span>Code</span>
+              </button>
             </div>
           )}
 
@@ -96,6 +83,14 @@ export const DemoCard = memo<DemoCardProps>(function DemoCard({
           </div>
 
           <div className="p-6">{children}</div>
+
+          {showCode && code && (
+            <div
+              className={`border-t ${darkMode ? "border-white/10" : "border-black/5"}`}
+            >
+              <CodeViewer code={code} />
+            </div>
+          )}
         </div>
       </PlusGridItem>
     </div>

@@ -4,6 +4,15 @@ import {useDarkMode} from "../flow-provider-wrapper"
 import {PlusGridIcon} from "../ui/plus-grid"
 import {ResultsSection} from "../ui/results-section"
 
+const IMPLEMENTATION_CODE = `const { 
+  data: randomNumber, 
+  isLoading, 
+  error, 
+  refetch 
+} = useFlowRevertibleRandom({
+  query: { enabled: true }
+})`
+
 export function UseFlowRevertibleRandomCard() {
   const {darkMode} = useDarkMode()
   const {
@@ -21,7 +30,7 @@ export function UseFlowRevertibleRandomCard() {
       id="flow-revertible-random"
       title="useFlowRevertibleRandom"
       description="Generate cryptographically secure random numbers on the Flow blockchain that are deterministic and safe for smart contracts."
-      type="hook"
+      code={IMPLEMENTATION_CODE}
     >
       <div className="space-y-6">
         {randomResults && randomResults.length > 0 && !isLoading && !error && (

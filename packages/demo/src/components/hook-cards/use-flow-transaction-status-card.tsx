@@ -5,6 +5,15 @@ import {useDarkMode} from "../flow-provider-wrapper"
 import {PlusGridIcon} from "../ui/plus-grid"
 import {ResultsSection} from "../ui/results-section"
 
+const IMPLEMENTATION_CODE = `const { 
+  data: status, 
+  isLoading, 
+  error 
+} = useFlowTransactionStatus({
+  transactionId: txId,
+  query: { enabled: !!txId },
+})`
+
 // Error boundary wrapper for the hook
 function useSafeFlowTransactionStatus(id?: string) {
   const [hookError, setHookError] = useState<string | null>(null)
@@ -160,7 +169,7 @@ export function UseFlowTransactionStatusCard() {
       id="flow-transaction-status"
       title="useFlowTransactionStatus"
       description="Monitor Flow transaction status in real-time with automatic updates from pending to sealed states."
-      type="hook"
+      code={IMPLEMENTATION_CODE}
     >
       <div className="space-y-6">
         <div className="space-y-3">

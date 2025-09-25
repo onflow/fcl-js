@@ -7,6 +7,15 @@ import {useDarkMode} from "../flow-provider-wrapper"
 import {PlusGridIcon} from "../ui/plus-grid"
 import {ResultsSection} from "../ui/results-section"
 
+const IMPLEMENTATION_CODE = `const { 
+  data: events, 
+  isLoading, 
+  error 
+} = useFlowEvents({
+  eventType: "A.1654653399040a61.FlowToken.TokensWithdrawn",
+  startBlockHeight: 0,
+})`
+
 export function UseFlowEventsCard() {
   const {darkMode} = useDarkMode()
   const config = useFlowConfig()
@@ -78,7 +87,7 @@ export function UseFlowEventsCard() {
       id="flow-events"
       title="useFlowEvents"
       description="Listen to blockchain events in real-time and filter by event types and block height ranges."
-      type="hook"
+      code={IMPLEMENTATION_CODE}
     >
       <div className="space-y-6">
         <div className="space-y-3">

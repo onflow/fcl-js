@@ -5,6 +5,8 @@ import {useDarkMode} from "../flow-provider-wrapper"
 import {PlusGridIcon} from "../ui/plus-grid"
 import {ResultsSection} from "../ui/results-section"
 
+const IMPLEMENTATION_CODE = `<TransactionDialog open={open} onOpenChange={setOpen} txId={txId} />`
+
 export function TransactionDialogCard() {
   const {darkMode} = useDarkMode()
   const [open, setOpen] = useState(false)
@@ -24,7 +26,7 @@ export function TransactionDialogCard() {
       id="kit-transaction-dialog"
       title="TransactionDialog"
       description="A modal dialog component that displays transaction status and progress with real-time updates."
-      type="component"
+      code={IMPLEMENTATION_CODE}
     >
       <div className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

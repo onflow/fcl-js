@@ -11,6 +11,20 @@ import {useDarkMode} from "../flow-provider-wrapper"
 import {PlusGridIcon} from "../ui/plus-grid"
 import {ResultsSection} from "../ui/results-section"
 
+const IMPLEMENTATION_CODE = `const { 
+  data, 
+  isLoading, 
+  error, 
+  refetch 
+} = useFlowQuery({
+  cadence: \`
+    pub fun main(): String {
+      return "Hello, Flow!"
+    }
+  \`,
+  args: [],
+})`
+
 export function UseFlowQueryCard() {
   const {darkMode} = useDarkMode()
   const config = useFlowConfig()
@@ -87,7 +101,7 @@ access(all) fun main(address: Address): UFix64 {
       id="flow-query"
       title="useFlowQuery"
       description="Execute Cadence scripts on Flow blockchain with automatic result parsing and caching support."
-      type="hook"
+      code={IMPLEMENTATION_CODE}
     >
       <div className="space-y-6">
         <div className="space-y-3">

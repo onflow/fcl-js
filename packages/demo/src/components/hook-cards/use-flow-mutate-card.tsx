@@ -5,6 +5,17 @@ import {useDarkMode} from "../flow-provider-wrapper"
 import {PlusGridIcon} from "../ui/plus-grid"
 import {ResultsSection} from "../ui/results-section"
 
+const IMPLEMENTATION_CODE = `const { 
+  mutate, 
+  isPending, 
+  error, 
+  data: txId 
+} = useFlowMutate({
+  cadence: TRANSACTION_CADENCE,
+  args: (arg, t) => [arg("value", t.String)],
+  limit: 999,
+})`
+
 export function UseFlowMutateCard() {
   const {darkMode} = useDarkMode()
   const config = useFlowConfig()
@@ -50,7 +61,7 @@ export function UseFlowMutateCard() {
       id="flow-mutate"
       title="useFlowMutate"
       description="Send transactions to the Flow blockchain using Cadence scripts with built-in loading states and error handling."
-      type="hook"
+      code={IMPLEMENTATION_CODE}
     >
       <div className="space-y-6">
         <div className="space-y-3">

@@ -5,6 +5,16 @@ import {useDarkMode} from "../flow-provider-wrapper"
 import {PlusGridIcon} from "../ui/plus-grid"
 import {ResultsSection} from "../ui/results-section"
 
+const IMPLEMENTATION_CODE = `const {
+  data: account,
+  isLoading,
+  error,
+  refetch,
+} = useFlowAccount({
+  address,
+  query: { enabled: !!address },
+})`
+
 export function UseFlowAccountCard() {
   const {darkMode} = useDarkMode()
   const [address, setAddress] = useState("")
@@ -23,7 +33,7 @@ export function UseFlowAccountCard() {
       id="flow-account"
       title="useFlowAccount"
       description="Fetch Flow account information including balance, keys, and storage capacity."
-      type="hook"
+      code={IMPLEMENTATION_CODE}
     >
       <div className="space-y-6 overflow-hidden">
         <div className="space-y-4">

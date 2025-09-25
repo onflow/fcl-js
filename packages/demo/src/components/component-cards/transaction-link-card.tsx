@@ -5,6 +5,8 @@ import {useDarkMode} from "../flow-provider-wrapper"
 import {PlusGridIcon} from "../ui/plus-grid"
 import {ResultsSection} from "../ui/results-section"
 
+const IMPLEMENTATION_CODE = `<TransactionLink txId={txId} />`
+
 export function TransactionLinkCard() {
   const {darkMode} = useDarkMode()
   const [txId, setTxId] = useState<string | undefined>(undefined)
@@ -23,7 +25,7 @@ export function TransactionLinkCard() {
       id="kit-transaction-link"
       title="TransactionLink"
       description="A link component that automatically generates URLs to block explorers for viewing transaction details."
-      type="component"
+      code={IMPLEMENTATION_CODE}
     >
       <div className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
