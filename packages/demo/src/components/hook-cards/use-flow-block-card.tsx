@@ -41,6 +41,7 @@ export function UseFlowBlockCard() {
       title="useFlowBlock"
       description="Get blockchain block information including height, timestamp, and block ID."
       code={IMPLEMENTATION_CODE}
+      docsUrl="https://developers.flow.com/build/tools/react-sdk#useflowblock"
     >
       <div className="space-y-6">
         {!block && !isLoading && !error && (

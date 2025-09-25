@@ -62,6 +62,7 @@ export function UseFlowMutateCard() {
       title="useFlowMutate"
       description="Send transactions to the Flow blockchain using Cadence scripts with built-in loading states and error handling."
       code={IMPLEMENTATION_CODE}
+      docsUrl="https://developers.flow.com/build/tools/react-sdk#useflowmutate"
     >
       <div className="space-y-6">
         <div className="space-y-3">

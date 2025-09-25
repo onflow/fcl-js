@@ -47,6 +47,7 @@ export function ConnectCard() {
       description="A ready-to-use wallet connection component with built-in styling and authentication flow."
       code={IMPLEMENTATION_CODE}
       props={PROPS}
+      docsUrl="https://developers.flow.com/build/tools/react-sdk#connect"
     >
       <div className="space-y-6">
         <div className="grid grid-cols-2 gap-4">

@@ -170,6 +170,7 @@ export function UseFlowTransactionStatusCard() {
       title="useFlowTransactionStatus"
       description="Monitor Flow transaction status in real-time with automatic updates from pending to sealed states."
       code={IMPLEMENTATION_CODE}
+      docsUrl="https://developers.flow.com/build/tools/react-sdk#useflowtransactionstatus"
     >
       <div className="space-y-6">
         <div className="space-y-3">

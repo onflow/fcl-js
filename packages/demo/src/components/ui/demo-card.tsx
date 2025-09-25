@@ -20,6 +20,7 @@ interface DemoCardProps {
   className?: string
   code?: string
   props?: PropDefinition[]
+  docsUrl?: string
 }
 
 export const DemoCard = memo<DemoCardProps>(function DemoCard({
@@ -30,6 +31,7 @@ export const DemoCard = memo<DemoCardProps>(function DemoCard({
   className = "",
   code,
   props,
+  docsUrl,
 }) {
   const {darkMode} = useDarkMode()
   const [showCode, setShowCode] = useState(false)
@@ -124,12 +126,44 @@ export const DemoCard = memo<DemoCardProps>(function DemoCard({
           <div
             className={`px-8 py-6 border-b ${darkMode ? "border-white/10" : "border-black/5"}`}
           >
-            <h3
-              className={`text-2xl font-bold tracking-tight font-mono ${
-                darkMode ? "text-white" : "text-gray-900" }`}
-            >
-              {title}
-            </h3>
+            <div className="flex items-center gap-3">
+              <h3
+                className={`text-2xl font-bold tracking-tight font-mono ${
+                  darkMode ? "text-white" : "text-gray-900" }`}
+              >
+                {title}
+              </h3>
+
+              {docsUrl && (
+                <a
+                  href={docsUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium
+                  transition-colors ${
+                  darkMode
+                      ? `text-gray-300 hover:text-white bg-gray-700/50 hover:bg-gray-600/50 border
+                        border-white/10 hover:border-white/20`
+                      : `text-gray-700 hover:text-gray-900 bg-gray-100 hover:bg-gray-200 border
+                        border-black/10 hover:border-black/20`
+                  }`}
+                >
+                  <svg
+                    width="12"
+                    height="12"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15,3 21,3 21,9" />
+                    <line x1="10" y1="14" x2="21" y2="3" />
+                  </svg>
+                  DOCS
+                </a>
+              )}
+            </div>
             <p
               className={`mt-2 text-sm ${darkMode ? "text-gray-400" : "text-gray-600"}`}
             >

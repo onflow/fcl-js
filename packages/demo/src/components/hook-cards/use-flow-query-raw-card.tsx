@@ -103,6 +103,7 @@ access(all) fun main(address: Address): UFix64 {
       title="useFlowQueryRaw"
       description="Execute Cadence scripts and receive the complete FCL response including status, events, and raw data without automatic parsing."
       code={IMPLEMENTATION_CODE}
+      docsUrl="https://developers.flow.com/build/tools/react-sdk#useflowqueryraw"
     >
       <div className="space-y-6">
         <div

@@ -19,6 +19,7 @@ export function UseFlowConfigCard() {
       title="useFlowConfig"
       description="Access the current Flow configuration including network settings, access node, and wallet discovery."
       code={IMPLEMENTATION_CODE}
+      docsUrl="https://developers.flow.com/build/tools/react-sdk#useflowconfig"
     >
       <div className="space-y-6">
         <div
