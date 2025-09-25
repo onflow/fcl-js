@@ -82,7 +82,7 @@ export function Footer() {
               >
                 The Flow React SDK provides everything you need to build amazing
                 Web3 applications. Start building with ready to use components
-                and hooks and go 1000x faster.
+                and hooks and ship faster.
               </p>
             </div>
 
