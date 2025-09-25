@@ -1,11 +1,70 @@
 import {TransactionButton, TransactionDialog} from "@onflow/react-sdk"
 import {useState} from "react"
-import {DemoCard} from "../ui/demo-card"
 import {useDarkMode} from "../flow-provider-wrapper"
+import {DemoCard, type PropDefinition} from "../ui/demo-card"
 import {PlusGridIcon} from "../ui/plus-grid"
-import {ResultsSection} from "../ui/results-section"
 
 const IMPLEMENTATION_CODE = `<TransactionDialog open={open} onOpenChange={setOpen} txId={txId} />`
+
+const PROPS: PropDefinition[] = [
+  {
+    name: "open",
+    type: "boolean",
+    required: true,
+    description: "Controls whether the dialog is open or closed",
+  },
+  {
+    name: "onOpenChange",
+    type: "(open: boolean) => void",
+    required: true,
+    description: "Callback function called when the dialog open state changes",
+  },
+  {
+    name: "txId",
+    type: "string",
+    required: false,
+    description: "Transaction ID to display status for",
+  },
+  {
+    name: "onSuccess",
+    type: "() => void",
+    required: false,
+    description: "Callback function called when transaction succeeds",
+  },
+  {
+    name: "pendingTitle",
+    type: "string",
+    required: false,
+    description:
+      "Custom title for pending state (defaults to 'Transaction Pending')",
+  },
+  {
+    name: "pendingDescription",
+    type: "string",
+    required: false,
+    description: "Custom description for pending state",
+  },
+  {
+    name: "successTitle",
+    type: "string",
+    required: false,
+    description:
+      "Custom title for success state (defaults to 'Transaction Successful')",
+  },
+  {
+    name: "successDescription",
+    type: "string",
+    required: false,
+    description: "Custom description for success state",
+  },
+  {
+    name: "closeOnSuccess",
+    type: "boolean",
+    required: false,
+    description:
+      "Whether to automatically close dialog when transaction succeeds",
+  },
+]
 
 export function TransactionDialogCard() {
   const {darkMode} = useDarkMode()
@@ -27,6 +86,7 @@ export function TransactionDialogCard() {
       title="TransactionDialog"
       description="A modal dialog component that displays transaction status and progress with real-time updates."
       code={IMPLEMENTATION_CODE}
+      props={PROPS}
     >
       <div className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

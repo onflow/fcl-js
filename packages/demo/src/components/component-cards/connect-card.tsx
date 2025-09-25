@@ -1,10 +1,38 @@
 import {Connect, useFlowChainId, useFlowCurrentUser} from "@onflow/react-sdk"
-import {DemoCard} from "../ui/demo-card"
 import {useDarkMode} from "../flow-provider-wrapper"
+import {DemoCard, type PropDefinition} from "../ui/demo-card"
 import {PlusGridIcon} from "../ui/plus-grid"
-import {ResultsSection} from "../ui/results-section"
 
 const IMPLEMENTATION_CODE = `<Connect />`
+
+const PROPS: PropDefinition[] = [
+  {
+    name: "variant",
+    type: '"primary" | "secondary" | "outline" | "link"',
+    required: false,
+    description: "The visual style variant of the connect button",
+    defaultValue: '"primary"',
+  },
+  {
+    name: "onConnect",
+    type: "() => void",
+    required: false,
+    description: "Callback function called when user connects their wallet",
+  },
+  {
+    name: "onDisconnect",
+    type: "() => void",
+    required: false,
+    description: "Callback function called when user disconnects their wallet",
+  },
+  {
+    name: "balanceType",
+    type: '"cadence" | "evm" | "vault"',
+    required: false,
+    description: "Type of balance to display (from cross-VM token balance)",
+    defaultValue: '"cadence"',
+  },
+]
 
 export function ConnectCard() {
   const {darkMode} = useDarkMode()
@@ -18,6 +46,7 @@ export function ConnectCard() {
       title="Connect"
       description="A ready-to-use wallet connection component with built-in styling and authentication flow."
       code={IMPLEMENTATION_CODE}
+      props={PROPS}
     >
       <div className="space-y-6">
         <div className="grid grid-cols-2 gap-4">

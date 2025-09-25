@@ -1,9 +1,8 @@
 import {TransactionButton} from "@onflow/react-sdk"
-import {DemoCard} from "../ui/demo-card"
-import {useDarkMode} from "../flow-provider-wrapper"
-import {PlusGridIcon} from "../ui/plus-grid"
-import {ResultsSection} from "../ui/results-section"
 import {useState} from "react"
+import {useDarkMode} from "../flow-provider-wrapper"
+import {DemoCard, type PropDefinition} from "../ui/demo-card"
+import {PlusGridIcon} from "../ui/plus-grid"
 
 const IMPLEMENTATION_CODE = `<TransactionButton
   label="Sign Transaction"
@@ -21,6 +20,43 @@ const IMPLEMENTATION_CODE = `<TransactionButton
     }
   }}
 />`
+
+const PROPS: PropDefinition[] = [
+  {
+    name: "transaction",
+    type: "Parameters<typeof mutate>[0]",
+    required: true,
+    description:
+      "Transaction configuration object that can be passed to fcl.mutate",
+  },
+  {
+    name: "label",
+    type: "string",
+    required: false,
+    description:
+      "Optional label for the button (defaults to 'Execute Transaction')",
+  },
+  {
+    name: "mutation",
+    type: "UseMutationOptions<string, Error, Parameters<typeof mutate>[0]>",
+    required: false,
+    description:
+      "TanStack React Query mutation options for customizing behavior",
+  },
+  {
+    name: "variant",
+    type: '"primary" | "secondary" | "outline" | "link"',
+    required: false,
+    description: "The visual style variant of the button",
+    defaultValue: '"primary"',
+  },
+  {
+    name: "disabled",
+    type: "boolean",
+    required: false,
+    description: "Whether the button is disabled",
+  },
+]
 
 export function TransactionButtonCard() {
   const {darkMode} = useDarkMode()
@@ -40,6 +76,7 @@ export function TransactionButtonCard() {
       title="TransactionButton"
       description="A ready-to-use transaction button component with built-in signing flow and status management."
       code={IMPLEMENTATION_CODE}
+      props={PROPS}
     >
       <div className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

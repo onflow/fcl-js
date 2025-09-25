@@ -1,11 +1,26 @@
 import {TransactionButton, TransactionLink} from "@onflow/react-sdk"
 import {useState} from "react"
-import {DemoCard} from "../ui/demo-card"
 import {useDarkMode} from "../flow-provider-wrapper"
+import {DemoCard, type PropDefinition} from "../ui/demo-card"
 import {PlusGridIcon} from "../ui/plus-grid"
-import {ResultsSection} from "../ui/results-section"
 
 const IMPLEMENTATION_CODE = `<TransactionLink txId={txId} />`
+
+const PROPS: PropDefinition[] = [
+  {
+    name: "txId",
+    type: "string",
+    required: true,
+    description: "Transaction ID to create block explorer link for",
+  },
+  {
+    name: "variant",
+    type: '"primary" | "secondary" | "outline" | "link"',
+    required: false,
+    description: "The visual style variant of the link button",
+    defaultValue: '"link"',
+  },
+]
 
 export function TransactionLinkCard() {
   const {darkMode} = useDarkMode()
@@ -26,6 +41,7 @@ export function TransactionLinkCard() {
       title="TransactionLink"
       description="A link component that automatically generates URLs to block explorers for viewing transaction details."
       code={IMPLEMENTATION_CODE}
+      props={PROPS}
     >
       <div className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
