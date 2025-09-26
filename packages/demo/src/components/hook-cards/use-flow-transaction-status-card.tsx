@@ -24,7 +24,7 @@ function useSafeFlowTransactionStatus(id?: string) {
   const hookResult = (() => {
     try {
       return useFlowTransactionStatus({
-        id: id || undefined,
+        id,
       })
     } catch (error) {
       return {

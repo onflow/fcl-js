@@ -1,7 +1,6 @@
 import * as fcl from "@onflow/fcl"
 import {FlowProvider, type FlowNetwork} from "@onflow/react-sdk"
 import React, {createContext, useCallback, useContext, useState} from "react"
-import flowJSON from "../../flow.json"
 
 // Dark mode context
 interface DarkModeContextType {
@@ -108,28 +107,6 @@ function NetworkSwitchProvider({children}: {children: React.ReactNode}) {
           "fcl.walletconnect.projectId": "9b70cfa398b2355a5eb9b1cf99f4a981",
         })
 
-        // Update contract addresses for the new network using both legacy and new patterns
-        const contractAddresses: Record<string, string> = {}
-
-        // Process contracts from flow.json
-        Object.entries(flowJSON.contracts || {}).forEach(
-          ([contractName, contractConfig]) => {
-            if (typeof contractConfig === "object" && contractConfig !== null) {
-              const aliases = (contractConfig as any).aliases || {}
-              if (aliases[network] || aliases[config.flowNetwork]) {
-                const address = aliases[network] || aliases[config.flowNetwork]
-                // Legacy pattern (0x-prefixed keys)
-                contractAddresses[`0x${contractName.toUpperCase()}`] = address
-                // New pattern (system.contracts.* keys)
-                contractAddresses[`system.contracts.${contractName}`] = address
-              }
-            }
-          }
-        )
-
-        // Apply contract address configurations
-        fcl.config(contractAddresses)
-
         // Update local state
         setCurrentNetwork(network)
       } catch (error) {
@@ -173,7 +150,6 @@ function FlowProviderInner({
         walletconnectProjectId: "9b70cfa398b2355a5eb9b1cf99f4a981",
         flowNetwork: currentNetwork,
       }}
-      flowJson={flowJSON}
       colorMode={darkMode ? "dark" : "light"}
     >
       {children}

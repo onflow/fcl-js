@@ -52,7 +52,7 @@ export const getContractAddress = (
   contractName: keyof typeof CONTRACT_ADDRESSES,
   network: FlowNetwork
 ): string => {
-  return CONTRACT_ADDRESSES[contractName][network] || ""
+  return CONTRACT_ADDRESSES[contractName][network]
 }
 
 // Helper function to generate event type for current network
