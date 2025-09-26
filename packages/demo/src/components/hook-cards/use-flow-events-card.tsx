@@ -7,13 +7,17 @@ import {useDarkMode} from "../flow-provider-wrapper"
 import {PlusGridIcon} from "../ui/plus-grid"
 import {ResultsSection} from "../ui/results-section"
 
-const IMPLEMENTATION_CODE = `const { 
-  data: events, 
-  isLoading, 
-  error 
-} = useFlowEvents({
+const IMPLEMENTATION_CODE = `import { useFlowEvents } from "@onflow/react-sdk"
+
+useFlowEvents({
   eventType: "A.1654653399040a61.FlowToken.TokensWithdrawn",
   startBlockHeight: 0,
+  onEvent: (event) => {
+    console.log("New event:", event)
+  },
+  onError: (error) => {
+    console.error("Event error:", error)
+  }
 })`
 
 export function UseFlowEventsCard() {

@@ -4,18 +4,9 @@ import {useDarkMode} from "../flow-provider-wrapper"
 import {PlusGridIcon} from "../ui/plus-grid"
 import {ResultsSection} from "../ui/results-section"
 
-const IMPLEMENTATION_CODE = `const { user, authenticate, unauthenticate } = useFlowCurrentUser()
+const IMPLEMENTATION_CODE = `import { useFlowCurrentUser } from "@onflow/react-sdk"
 
-// Check if user is authenticated
-if (user?.addr) {
-  console.log("User address:", user.addr)
-}
-
-// Authenticate user
-const handleLogin = () => authenticate()
-
-// Sign out user  
-const handleLogout = () => unauthenticate()`
+const { user, authenticate, unauthenticate } = useFlowCurrentUser()`
 
 export function UseFlowCurrentUserCard() {
   const {darkMode} = useDarkMode()

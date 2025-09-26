@@ -4,7 +4,9 @@ import {useDarkMode} from "../flow-provider-wrapper"
 import {DemoCard, type PropDefinition} from "../ui/demo-card"
 import {PlusGridIcon} from "../ui/plus-grid"
 
-const IMPLEMENTATION_CODE = `<TransactionDialog open={open} onOpenChange={setOpen} txId={txId} />`
+const IMPLEMENTATION_CODE = `import { TransactionDialog } from "@onflow/react-sdk"
+
+<TransactionDialog open={open} onOpenChange={setOpen} txId={txId} />`
 
 const PROPS: PropDefinition[] = [
   {

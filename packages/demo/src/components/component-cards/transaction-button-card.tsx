@@ -4,7 +4,9 @@ import {useDarkMode} from "../flow-provider-wrapper"
 import {DemoCard, type PropDefinition} from "../ui/demo-card"
 import {PlusGridIcon} from "../ui/plus-grid"
 
-const IMPLEMENTATION_CODE = `<TransactionButton
+const IMPLEMENTATION_CODE = `import { TransactionButton } from "@onflow/react-sdk"
+
+<TransactionButton
   label="Sign Transaction"
   transaction={{
     cadence: GREETING_TRANSACTION,

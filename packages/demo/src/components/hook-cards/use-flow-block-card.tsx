@@ -5,7 +5,9 @@ import {useDarkMode} from "../flow-provider-wrapper"
 import {PlusGridIcon} from "../ui/plus-grid"
 import {ResultsSection} from "../ui/results-section"
 
-const IMPLEMENTATION_CODE = `const { 
+const IMPLEMENTATION_CODE = `import { useFlowBlock } from "@onflow/react-sdk"
+
+const { 
   data: block, 
   isLoading, 
   error, 

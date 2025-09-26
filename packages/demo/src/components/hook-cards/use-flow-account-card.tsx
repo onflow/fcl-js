@@ -5,14 +5,16 @@ import {useDarkMode} from "../flow-provider-wrapper"
 import {PlusGridIcon} from "../ui/plus-grid"
 import {ResultsSection} from "../ui/results-section"
 
-const IMPLEMENTATION_CODE = `const {
+const IMPLEMENTATION_CODE = `import { useFlowAccount } from "@onflow/react-sdk"
+
+const {
   data: account,
   isLoading,
   error,
   refetch,
 } = useFlowAccount({
   address,
-  query: { enabled: !!address },
+  query: { enabled: true },
 })`
 
 export function UseFlowAccountCard() {

@@ -5,13 +5,13 @@ import {useDarkMode} from "../flow-provider-wrapper"
 import {PlusGridIcon} from "../ui/plus-grid"
 import {ResultsSection} from "../ui/results-section"
 
-const IMPLEMENTATION_CODE = `const { 
-  data: status, 
-  isLoading, 
+const IMPLEMENTATION_CODE = `import { useFlowTransactionStatus } from "@onflow/react-sdk"
+
+const { 
+  transactionStatus, 
   error 
 } = useFlowTransactionStatus({
-  transactionId: txId,
-  query: { enabled: !!txId },
+  id: txId
 })`
 
 // Error boundary wrapper for the hook

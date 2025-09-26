@@ -4,10 +4,9 @@ import {useDarkMode} from "../flow-provider-wrapper"
 import {PlusGridIcon} from "../ui/plus-grid"
 import {ResultsSection} from "../ui/results-section"
 
-const IMPLEMENTATION_CODE = `const { 
-  data: config, 
-  isLoading 
-} = useFlowConfig()`
+const IMPLEMENTATION_CODE = `import { useFlowConfig } from "@onflow/react-sdk"
+
+const config = useFlowConfig()`
 
 export function UseFlowConfigCard() {
   const {darkMode} = useDarkMode()

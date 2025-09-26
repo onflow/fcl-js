@@ -1,17 +1,18 @@
+import * as fcl from "@onflow/fcl"
 import {
-  useFlowQuery,
   useFlowConfig,
   useFlowCurrentUser,
+  useFlowQuery,
 } from "@onflow/react-sdk"
 import {useState} from "react"
 import {getContractAddress} from "../../constants"
-import * as fcl from "@onflow/fcl"
-import {DemoCard} from "../ui/demo-card"
 import {useDarkMode} from "../flow-provider-wrapper"
-import {PlusGridIcon} from "../ui/plus-grid"
+import {DemoCard} from "../ui/demo-card"
 import {ResultsSection} from "../ui/results-section"
 
-const IMPLEMENTATION_CODE = `const { 
+const IMPLEMENTATION_CODE = `import { useFlowQuery } from "@onflow/react-sdk"
+
+const { 
   data, 
   isLoading, 
   error, 

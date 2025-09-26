@@ -10,7 +10,9 @@ import {
   isProductionNetwork,
 } from "../../utils/chain-helpers"
 
-const IMPLEMENTATION_CODE = `const { 
+const IMPLEMENTATION_CODE = `import { useFlowChainId } from "@onflow/react-sdk"
+
+const { 
   data: chainId, 
   isLoading 
 } = useFlowChainId()`

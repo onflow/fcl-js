@@ -1,11 +1,12 @@
 import {useFlowConfig, useFlowMutate} from "@onflow/react-sdk"
 import {useState} from "react"
-import {DemoCard} from "../ui/demo-card"
 import {useDarkMode} from "../flow-provider-wrapper"
-import {PlusGridIcon} from "../ui/plus-grid"
+import {DemoCard} from "../ui/demo-card"
 import {ResultsSection} from "../ui/results-section"
 
-const IMPLEMENTATION_CODE = `const { 
+const IMPLEMENTATION_CODE = `import { useFlowMutate } from "@onflow/react-sdk"
+
+const { 
   mutate, 
   isPending, 
   error, 
