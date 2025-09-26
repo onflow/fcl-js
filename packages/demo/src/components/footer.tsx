@@ -24,7 +24,10 @@ export function Footer() {
       {name: "Flow Faucet", href: "https://testnet-faucet.onflow.org"},
     ],
     Community: [
-      {name: "GitHub", href: "https://github.com/onflow/fcl-js/tree/master/packages/react-sdk"},
+      {
+        name: "GitHub",
+        href: "https://github.com/onflow/fcl-js/tree/master/packages/react-sdk",
+      },
       {name: "Discord", href: "https://discord.gg/flow"},
       {name: "Forum", href: "https://forum.onflow.org"},
       {name: "Twitter", href: "https://twitter.com/flow_blockchain"},

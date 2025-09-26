@@ -107,7 +107,7 @@ const sidebarItems: SidebarItem[] = [
   {
     id: "hook-flow-transaction-status",
     label: "Transaction Status",
-    category: "hooks", 
+    category: "hooks",
     description: "Track transaction status",
   },
 
@@ -150,7 +150,9 @@ export function ContentSidebar({darkMode}: {darkMode: boolean}) {
     item => item.category === "components"
   )
   const hooksItems = sidebarItems.filter(item => item.category === "hooks")
-  const advancedItems = sidebarItems.filter(item => item.category === "advanced")
+  const advancedItems = sidebarItems.filter(
+    item => item.category === "advanced"
+  )
 
   // Track which section is currently visible
   useEffect(() => {

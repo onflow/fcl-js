@@ -126,7 +126,7 @@ export const DemoCard = memo<DemoCardProps>(function DemoCard({
           <div
             className={`px-8 py-6 border-b ${darkMode ? "border-white/10" : "border-black/5"}`}
           >
-            <div className={`${(code || props) ? 'pr-32' : ''}`}>
+            <div className={`${code || props ? "pr-32" : ""}`}>
               <div className="flex items-center gap-3">
                 <h3
                   className={`text-2xl font-bold tracking-tight font-mono ${

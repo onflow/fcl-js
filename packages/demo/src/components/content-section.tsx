@@ -93,7 +93,8 @@ export function ContentSection() {
                 Advanced Features
               </h2>
               <p className="text-lg text-gray-600 dark:text-gray-300 max-w-3xl leading-relaxed">
-                Customize and extend the Flow React SDK with advanced theming, dark mode controls, and configuration options.
+                Customize and extend the Flow React SDK with advanced theming,
+                dark mode controls, and configuration options.
               </p>
             </div>
 
