@@ -5,6 +5,13 @@ interface PlusGridProps {
   children: ReactNode
 }
 
+interface PlusGridRowProps {
+  className?: string
+  children: ReactNode
+  showTopLines?: boolean
+  showBottomLines?: boolean
+}
+
 interface PlusGridIconProps {
   className?: string
   placement: `${"top" | "bottom"} ${"right" | "left"}`
@@ -14,7 +21,12 @@ export function PlusGrid({className = "", children}: PlusGridProps) {
   return <div className={className}>{children}</div>
 }
 
-export function PlusGridRow({className = "", children}: PlusGridProps) {
+export function PlusGridRow({
+  className = "",
+  children,
+  showTopLines = true,
+  showBottomLines = true,
+}: PlusGridRowProps) {
   return (
     <div
       className={`group/row relative isolate pt-[calc(0.5rem+1px)] last:pb-[calc(0.5rem+1px)]
@@ -24,16 +36,24 @@ export function PlusGridRow({className = "", children}: PlusGridProps) {
         aria-hidden="true"
         className="absolute inset-y-0 left-0 right-0 -z-10"
       >
-        <div className="absolute inset-x-0 top-0 border-t border-black/5 dark:border-white/10"></div>
-        <div className="absolute inset-x-0 top-2 border-t border-black/5 dark:border-white/10"></div>
-        <div
-          className="absolute inset-x-0 bottom-0 hidden border-b border-black/5 dark:border-white/10
-            group-last/row:block"
-        ></div>
-        <div
-          className="absolute inset-x-0 bottom-2 hidden border-b border-black/5 dark:border-white/10
-            group-last/row:block"
-        ></div>
+        {showTopLines && (
+          <>
+            <div className="absolute inset-x-0 top-0 border-t border-black/5 dark:border-white/10"></div>
+            <div className="absolute inset-x-0 top-2 border-t border-black/5 dark:border-white/10"></div>
+          </>
+        )}
+        {showBottomLines && (
+          <>
+            <div
+              className="absolute inset-x-0 bottom-0 hidden border-b border-black/5 dark:border-white/10
+                group-last/row:block"
+            ></div>
+            <div
+              className="absolute inset-x-0 bottom-2 hidden border-b border-black/5 dark:border-white/10
+                group-last/row:block"
+            ></div>
+          </>
+        )}
       </div>
       {children}
     </div>

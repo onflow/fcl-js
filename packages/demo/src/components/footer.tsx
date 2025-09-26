@@ -45,14 +45,14 @@ export function Footer() {
 
   return (
     <footer
-      className={`relative border-t mt-32 ${
+      className={`relative ${
         darkMode
           ? "bg-gray-900/30 border-gray-700/50"
           : "bg-gray-50/30 border-gray-200/50"
         }`}
     >
-      <div className="max-w-7xl mx-auto px-6 py-16">
-        <PlusGridRow>
+      <div className="max-w-7xl mx-auto pb-16">
+        <PlusGridRow showTopLines={false}>
           <PlusGridItem>
             <div className="mb-12">
               <div className="flex items-center space-x-4 mb-6 mt-8">
