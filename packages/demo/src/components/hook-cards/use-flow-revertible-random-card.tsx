@@ -29,7 +29,7 @@ export function UseFlowRevertibleRandomCard() {
 
   return (
     <DemoCard
-      id="flow-revertible-random"
+      id="hook-flow-revertible-random"
       title="useFlowRevertibleRandom"
       description="Generate cryptographically secure random numbers on the Flow blockchain that are deterministic and safe for smart contracts."
       code={IMPLEMENTATION_CODE}

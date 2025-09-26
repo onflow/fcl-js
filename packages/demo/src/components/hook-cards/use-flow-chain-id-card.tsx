@@ -46,7 +46,7 @@ export function UseFlowChainIdCard() {
 
   return (
     <DemoCard
-      id="flow-chain-id"
+      id="hook-flow-chain-id"
       title="useFlowChainId"
       description="Get the current Flow network chain identifier. Determine which network your app is connected to."
       code={IMPLEMENTATION_CODE}

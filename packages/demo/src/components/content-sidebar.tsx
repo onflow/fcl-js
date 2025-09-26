@@ -11,25 +11,25 @@ interface SidebarItem {
 const sidebarItems: SidebarItem[] = [
   // Components section
   {
-    id: "kit-connect",
+    id: "component-connect",
     label: "Connect",
     category: "components",
     description: "Wallet connection component",
   },
   {
-    id: "kit-transaction-button",
+    id: "component-transaction-button",
     label: "Transaction Button",
     category: "components",
     description: "Transaction execution button",
   },
   {
-    id: "kit-transaction-dialog",
+    id: "component-transaction-dialog",
     label: "Transaction Dialog",
     category: "components",
     description: "Transaction confirmation dialog",
   },
   {
-    id: "kit-transaction-link",
+    id: "component-transaction-link",
     label: "Transaction Link",
     category: "components",
     description: "Transaction link component",
@@ -37,67 +37,67 @@ const sidebarItems: SidebarItem[] = [
 
   // Hooks section
   {
-    id: "flow-current-user",
+    id: "hook-flow-current-user",
     label: "Current User",
     category: "hooks",
     description: "Manage user authentication",
   },
   {
-    id: "flow-account",
+    id: "hook-flow-account",
     label: "Account",
     category: "hooks",
     description: "Fetch account information",
   },
   {
-    id: "flow-block",
+    id: "hook-flow-block",
     label: "Block",
     category: "hooks",
     description: "Get blockchain block data",
   },
   {
-    id: "flow-chain-id",
+    id: "hook-flow-chain-id",
     label: "Chain ID",
     category: "hooks",
     description: "Get current chain ID",
   },
   {
-    id: "flow-config",
+    id: "hook-flow-config",
     label: "Config",
     category: "hooks",
     description: "Access Flow configuration",
   },
   {
-    id: "flow-query",
+    id: "hook-flow-query",
     label: "Query",
     category: "hooks",
     description: "Execute Flow scripts",
   },
   {
-    id: "flow-query-raw",
+    id: "hook-flow-query-raw",
     label: "Query Raw",
     category: "hooks",
     description: "Execute raw Flow scripts",
   },
   {
-    id: "flow-mutate",
+    id: "hook-flow-mutate",
     label: "Mutate",
     category: "hooks",
     description: "Send Flow transactions",
   },
   {
-    id: "flow-events",
+    id: "hook-flow-events",
     label: "Events",
     category: "hooks",
     description: "Listen to blockchain events",
   },
   {
-    id: "flow-revertible-random",
+    id: "hook-flow-revertible-random",
     label: "Revertible Random",
     category: "hooks",
     description: "Generate random numbers",
   },
   {
-    id: "flow-transaction-status",
+    id: "hook-flow-transaction-status",
     label: "Transaction Status",
     category: "hooks",
     description: "Track transaction status",

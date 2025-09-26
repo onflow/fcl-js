@@ -101,7 +101,7 @@ access(all) fun main(address: Address): UFix64 {
 
   return (
     <DemoCard
-      id="flow-query-raw"
+      id="hook-flow-query-raw"
       title="useFlowQueryRaw"
       description="Execute Cadence scripts and receive the complete FCL response including status, events, and raw data without automatic parsing."
       code={IMPLEMENTATION_CODE}

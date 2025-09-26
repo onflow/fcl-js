@@ -43,7 +43,7 @@ export function ConnectCard() {
 
   return (
     <DemoCard
-      id="kit-connect"
+      id="component-connect"
       title="<Connect />"
       description="A ready-to-use wallet connection component with built-in styling and authentication flow."
       code={IMPLEMENTATION_CODE}

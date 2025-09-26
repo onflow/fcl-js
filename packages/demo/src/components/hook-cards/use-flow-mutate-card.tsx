@@ -59,7 +59,7 @@ export function UseFlowMutateCard() {
 
   return (
     <DemoCard
-      id="flow-mutate"
+      id="hook-flow-mutate"
       title="useFlowMutate"
       description="Send transactions to the Flow blockchain using Cadence scripts with built-in loading states and error handling."
       code={IMPLEMENTATION_CODE}
