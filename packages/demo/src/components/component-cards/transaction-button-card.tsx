@@ -75,7 +75,7 @@ export function TransactionButtonCard() {
   return (
     <DemoCard
       id="kit-transaction-button"
-      title="TransactionButton"
+      title="<TransactionButton />"
       description="A ready-to-use transaction button component with built-in signing flow and status management."
       code={IMPLEMENTATION_CODE}
       props={PROPS}

@@ -40,7 +40,7 @@ export function TransactionLinkCard() {
   return (
     <DemoCard
       id="kit-transaction-link"
-      title="TransactionLink"
+      title="<TransactionLink />"
       description="A link component that automatically generates URLs to block explorers for viewing transaction details."
       code={IMPLEMENTATION_CODE}
       props={PROPS}

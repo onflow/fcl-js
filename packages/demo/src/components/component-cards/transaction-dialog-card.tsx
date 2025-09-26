@@ -85,7 +85,7 @@ export function TransactionDialogCard() {
   return (
     <DemoCard
       id="kit-transaction-dialog"
-      title="TransactionDialog"
+      title="<TransactionDialog />"
       description="A modal dialog component that displays transaction status and progress with real-time updates."
       code={IMPLEMENTATION_CODE}
       props={PROPS}

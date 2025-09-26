@@ -1,4 +1,4 @@
-import {Connect, useFlowChainId, useFlowCurrentUser} from "@onflow/react-sdk"
+import {Connect, useFlowChainId} from "@onflow/react-sdk"
 import {useDarkMode} from "../flow-provider-wrapper"
 import {DemoCard, type PropDefinition} from "../ui/demo-card"
 import {PlusGridIcon} from "../ui/plus-grid"
@@ -39,13 +39,12 @@ const PROPS: PropDefinition[] = [
 export function ConnectCard() {
   const {darkMode} = useDarkMode()
   const {data: chainId, isLoading} = useFlowChainId()
-  const {user: currentUser} = useFlowCurrentUser()
   const isEmulator = chainId === "emulator" || chainId === "local"
 
   return (
     <DemoCard
       id="kit-connect"
-      title="Connect"
+      title="<Connect />"
       description="A ready-to-use wallet connection component with built-in styling and authentication flow."
       code={IMPLEMENTATION_CODE}
       props={PROPS}
