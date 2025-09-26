@@ -4,7 +4,7 @@ import {PlusGridIcon} from "./ui/plus-grid"
 interface SidebarItem {
   id: string
   label: string
-  category: "setup" | "components" | "hooks"
+  category: "setup" | "components" | "hooks" | "advanced"
   description: string
 }
 
@@ -107,8 +107,22 @@ const sidebarItems: SidebarItem[] = [
   {
     id: "hook-flow-transaction-status",
     label: "Transaction Status",
-    category: "hooks",
+    category: "hooks", 
     description: "Track transaction status",
+  },
+
+  // Advanced section
+  {
+    id: "advanced-dark-mode",
+    label: "Dark Mode Control",
+    category: "advanced",
+    description: "Dynamic theme switching",
+  },
+  {
+    id: "advanced-theming",
+    label: "Custom Theming",
+    category: "advanced",
+    description: "Customize component appearance",
   },
 ]
 
@@ -136,6 +150,7 @@ export function ContentSidebar({darkMode}: {darkMode: boolean}) {
     item => item.category === "components"
   )
   const hooksItems = sidebarItems.filter(item => item.category === "hooks")
+  const advancedItems = sidebarItems.filter(item => item.category === "advanced")
 
   // Track which section is currently visible
   useEffect(() => {
@@ -329,6 +344,23 @@ export function ContentSidebar({darkMode}: {darkMode: boolean}) {
               strokeLinecap="round"
             />
             <path d="M6 14a2 2 0 0 0 2 2 2 2 0 0 0 2-2" strokeLinecap="round" />
+          </svg>
+        }
+      />
+
+      <SidebarSection
+        title="Advanced"
+        items={advancedItems}
+        icon={
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+          >
+            <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" />
           </svg>
         }
       />

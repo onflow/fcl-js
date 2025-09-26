@@ -16,6 +16,10 @@ import {UseFlowRevertibleRandomCard} from "./hook-cards/use-flow-revertible-rand
 // Import setup cards
 import {InstallationCard} from "./setup-cards/installation-card"
 
+// Import advanced cards
+import {DarkModeCard} from "./advanced-cards/dark-mode-card"
+import {ThemingCard} from "./advanced-cards/theming-card"
+
 // Import component cards
 import {ConnectCard} from "./component-cards/connect-card"
 import {TransactionButtonCard} from "./component-cards/transaction-button-card"
@@ -81,6 +85,20 @@ export function ContentSection() {
             <UseFlowEventsCard />
             <UseFlowRevertibleRandomCard />
             <UseFlowTransactionStatusCard />
+          </div>
+
+          <div className="mb-24">
+            <div className="text-left mb-16">
+              <h2 className="text-5xl font-bold text-gray-900 dark:text-white mb-4">
+                Advanced Features
+              </h2>
+              <p className="text-lg text-gray-600 dark:text-gray-300 max-w-3xl leading-relaxed">
+                Customize and extend the Flow React SDK with advanced theming, dark mode controls, and configuration options.
+              </p>
+            </div>
+
+            <DarkModeCard />
+            <ThemingCard />
           </div>
         </PlusGridRow>
       </PlusGrid>
