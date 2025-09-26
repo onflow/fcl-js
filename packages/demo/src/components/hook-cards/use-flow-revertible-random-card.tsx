@@ -33,17 +33,20 @@ export function UseFlowRevertibleRandomCard() {
       title="useFlowRevertibleRandom"
       description={
         <>
-          Generate pseudorandom numbers for simple use cases like randomized UIs. Values are deterministic within the same block.{' '}
-          <a 
-            href="https://developers.flow.com/build/smart-contracts/randomness" 
-            target="_blank" 
+          Generate pseudorandom numbers for simple use cases like randomized
+          UIs. Values are deterministic within the same block.{" "}
+          <a
+            href="https://developers.flow.com/build/cadence/advanced-concepts/randomness#commit-reveal-scheme"
+            target="_blank"
             rel="noopener noreferrer"
             className={`underline transition-colors ${
-              darkMode ? "text-flow-primary hover:text-flow-primary/80" : "text-flow-600 hover:text-flow-700"
+            darkMode
+                ? "text-flow-primary hover:text-flow-primary/80"
+                : "text-flow-600 hover:text-flow-700"
             }`}
           >
             See advanced patterns
-          </a>{' '}
+          </a>{" "}
           for secure randomness.
         </>
       }
