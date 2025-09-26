@@ -13,6 +13,9 @@ import {UseFlowEventsCard} from "./hook-cards/use-flow-events-card"
 import {UseFlowTransactionStatusCard} from "./hook-cards/use-flow-transaction-status-card"
 import {UseFlowRevertibleRandomCard} from "./hook-cards/use-flow-revertible-random-card"
 
+// Import setup cards
+import {InstallationCard} from "./setup-cards/installation-card"
+
 // Import component cards
 import {ConnectCard} from "./component-cards/connect-card"
 import {TransactionButtonCard} from "./component-cards/transaction-button-card"
@@ -27,11 +30,25 @@ export function ContentSection() {
           <div className="my-24 mt-16">
             <div className="text-left mb-16">
               <h2 className="text-5xl font-bold text-gray-900 dark:text-white mb-4">
+                Getting Started
+              </h2>
+              <p className="text-lg text-gray-600 dark:text-gray-300 max-w-3xl leading-relaxed">
+                Install and configure the Flow React SDK to start building apps
+                on Flow.
+              </p>
+            </div>
+
+            <InstallationCard />
+          </div>
+
+          <div className="mb-24">
+            <div className="text-left mb-16">
+              <h2 className="text-5xl font-bold text-gray-900 dark:text-white mb-4">
                 React Components
               </h2>
               <p className="text-lg text-gray-600 dark:text-gray-300 max-w-3xl leading-relaxed">
                 Pre-built UI components for common Flow blockchain interactions.
-                Drop them into your app for instant Web3 functionality.
+                Drop them into your app to ship faster.
               </p>
             </div>
 

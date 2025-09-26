@@ -4,11 +4,19 @@ import {PlusGridIcon} from "./ui/plus-grid"
 interface SidebarItem {
   id: string
   label: string
-  category: "hooks" | "components"
+  category: "setup" | "components" | "hooks"
   description: string
 }
 
 const sidebarItems: SidebarItem[] = [
+  // Setup section
+  {
+    id: "setup-installation",
+    label: "Installation & Setup",
+    category: "setup",
+    description: "Install and configure the React SDK",
+  },
+
   // Components section
   {
     id: "component-connect",
@@ -123,10 +131,11 @@ const scrollToElement = (id: string) => {
 export function ContentSidebar({darkMode}: {darkMode: boolean}) {
   const [activeSection, setActiveSection] = useState<string>("")
 
-  const hooksItems = sidebarItems.filter(item => item.category === "hooks")
+  const setupItems = sidebarItems.filter(item => item.category === "setup")
   const componentsItems = sidebarItems.filter(
     item => item.category === "components"
   )
+  const hooksItems = sidebarItems.filter(item => item.category === "hooks")
 
   // Track which section is currently visible
   useEffect(() => {
@@ -264,6 +273,24 @@ export function ContentSidebar({darkMode}: {darkMode: boolean}) {
       >
         <path d="M8 0H7V7H0V8H7V15H8V8H15V7H8V0Z" />
       </svg>
+      <SidebarSection
+        title="Setup"
+        items={setupItems}
+        icon={
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+          >
+            <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" />
+            <circle cx="12" cy="12" r="3" />
+          </svg>
+        }
+      />
+
       <SidebarSection
         title="Components"
         items={componentsItems}
