@@ -24,7 +24,7 @@ export function Footer() {
       {name: "Flow Faucet", href: "https://testnet-faucet.onflow.org"},
     ],
     Community: [
-      {name: "GitHub", href: "https://github.com/onflow/fcl-js"},
+      {name: "GitHub", href: "https://github.com/onflow/fcl-js/tree/master/packages/react-sdk"},
       {name: "Discord", href: "https://discord.gg/flow"},
       {name: "Forum", href: "https://forum.onflow.org"},
       {name: "Twitter", href: "https://twitter.com/flow_blockchain"},
@@ -176,7 +176,7 @@ export function Footer() {
 
               <div className="flex items-center space-x-6">
                 <a
-                  href="https://github.com/onflow/fcl-js"
+                  href="https://github.com/onflow/fcl-js/tree/master/packages/react-sdk"
                   target="_blank"
                   rel="noopener noreferrer"
                   className={`p-2 rounded-lg transition-colors duration-200 ${

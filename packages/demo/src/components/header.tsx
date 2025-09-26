@@ -250,7 +250,7 @@ export function Header() {
             )}
           </button>
           <a
-            href="https://github.com/onflow/fcl-js"
+            href="https://github.com/onflow/fcl-js/tree/master/packages/react-sdk"
             target="_blank"
             rel="noopener noreferrer"
             className={`relative p-2 border rounded-lg transition-colors duration-200 ${

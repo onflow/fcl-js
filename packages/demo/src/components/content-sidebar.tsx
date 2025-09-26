@@ -337,7 +337,7 @@ export function ContentSidebar({darkMode}: {darkMode: boolean}) {
             <span>Documentation</span>
           </a>
           <a
-            href="https://github.com/onflow/fcl-js"
+            href="https://github.com/onflow/fcl-js/tree/master/packages/react-sdk"
             target="_blank"
             rel="noopener noreferrer"
             className={`flex items-center space-x-2 text-sm transition-colors duration-200 ${
