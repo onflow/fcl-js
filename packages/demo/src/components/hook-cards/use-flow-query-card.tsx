@@ -103,7 +103,7 @@ access(all) fun main(address: Address): UFix64 {
       title="useFlowQuery"
       description="Execute Cadence scripts on Flow blockchain with automatic result parsing and caching support."
       code={IMPLEMENTATION_CODE}
-      docsUrl="https://developers.flow.com/build/tools/react-sdk#useflowquery"
+      docsUrl="https://developers.flow.com/build/tools/react-sdk/hooks#useflowquery"
     >
       <div className="space-y-6">
         <div className="space-y-3">

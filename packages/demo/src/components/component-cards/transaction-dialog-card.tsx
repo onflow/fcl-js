@@ -89,7 +89,7 @@ export function TransactionDialogCard() {
       description="A modal dialog component that displays transaction status and progress with real-time updates."
       code={IMPLEMENTATION_CODE}
       props={PROPS}
-      docsUrl="https://developers.flow.com/build/tools/react-sdk#transactiondialog"
+      docsUrl="https://developers.flow.com/build/tools/react-sdk/components#transactiondialog"
     >
       <div className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

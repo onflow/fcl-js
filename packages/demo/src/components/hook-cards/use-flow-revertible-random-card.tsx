@@ -33,7 +33,7 @@ export function UseFlowRevertibleRandomCard() {
       title="useFlowRevertibleRandom"
       description="Generate cryptographically secure random numbers on the Flow blockchain that are deterministic and safe for smart contracts."
       code={IMPLEMENTATION_CODE}
-      docsUrl="https://developers.flow.com/build/tools/react-sdk#useflowrevertiblerandom"
+      docsUrl="https://developers.flow.com/build/tools/react-sdk/hooks#useflowrevertiblerandom"
     >
       <div className="space-y-6">
         {randomResults && randomResults.length > 0 && !isLoading && !error && (

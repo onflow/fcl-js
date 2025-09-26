@@ -36,7 +36,7 @@ export function UseFlowAccountCard() {
       title="useFlowAccount"
       description="Fetch Flow account information including balance, keys, and storage capacity."
       code={IMPLEMENTATION_CODE}
-      docsUrl="https://developers.flow.com/build/tools/react-sdk#useflowaccount"
+      docsUrl="https://developers.flow.com/build/tools/react-sdk/hooks#useflowaccount"
     >
       <div className="space-y-6 overflow-hidden">
         <div className="space-y-4">

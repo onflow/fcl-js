@@ -18,7 +18,7 @@ export function UseFlowCurrentUserCard() {
       title="useFlowCurrentUser"
       description="Manage user authentication and access current user information including wallet address and authentication status."
       code={IMPLEMENTATION_CODE}
-      docsUrl="https://developers.flow.com/build/tools/react-sdk#useflowcurrentuser"
+      docsUrl="https://developers.flow.com/build/tools/react-sdk/hooks#useflowcurrentuser"
     >
       <div className="space-y-6">
         <div

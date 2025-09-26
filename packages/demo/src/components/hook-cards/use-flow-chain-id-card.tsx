@@ -50,7 +50,7 @@ export function UseFlowChainIdCard() {
       title="useFlowChainId"
       description="Get the current Flow network chain identifier. Determine which network your app is connected to."
       code={IMPLEMENTATION_CODE}
-      docsUrl="https://developers.flow.com/build/tools/react-sdk#useflowchainid"
+      docsUrl="https://developers.flow.com/build/tools/react-sdk/hooks#useflowchainid"
     >
       <div className="space-y-6">
         <div

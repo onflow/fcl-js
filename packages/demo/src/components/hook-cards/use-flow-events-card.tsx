@@ -92,7 +92,7 @@ export function UseFlowEventsCard() {
       title="useFlowEvents"
       description="Listen to blockchain events in real-time and filter by event types and block height ranges."
       code={IMPLEMENTATION_CODE}
-      docsUrl="https://developers.flow.com/build/tools/react-sdk#useflowevents"
+      docsUrl="https://developers.flow.com/build/tools/react-sdk/hooks#useflowevents"
     >
       <div className="space-y-6">
         <div className="space-y-3">
