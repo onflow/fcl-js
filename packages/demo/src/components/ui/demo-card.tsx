@@ -179,7 +179,7 @@ export const DemoCard = memo<DemoCardProps>(function DemoCard({
             <div
               className={`border-t ${darkMode ? "border-white/10" : "border-black/5"}`}
             >
-              <CodeViewer code={code} />
+              <CodeViewer code={code} noBorder />
             </div>
           )}
 

@@ -1,11 +1,19 @@
 import {useState} from "react"
+import {Prism as SyntaxHighlighter} from "react-syntax-highlighter"
+import {oneDark, oneLight} from "react-syntax-highlighter/dist/esm/styles/prism"
 import {useDarkMode} from "../flow-provider-wrapper"
 
 interface CodeViewerProps {
   code: string
+  language?: string
+  noBorder?: boolean
 }
 
-export function CodeViewer({code}: CodeViewerProps) {
+export function CodeViewer({
+  code,
+  language = "tsx",
+  noBorder = false,
+}: CodeViewerProps) {
   const {darkMode} = useDarkMode()
   const [copied, setCopied] = useState(false)
 
@@ -20,7 +28,10 @@ export function CodeViewer({code}: CodeViewerProps) {
   }
 
   return (
-    <div className="relative">
+    <div
+      className={`relative rounded-lg overflow-hidden
+        ${!noBorder ? `border ${darkMode ? "border-white/10" : "border-black/5"}` : ""}`}
+    >
       <div
         className={`flex items-center justify-between px-6 py-3 border-b
           ${darkMode ? "border-white/10" : "border-black/5"}`}
@@ -91,14 +102,28 @@ export function CodeViewer({code}: CodeViewerProps) {
         </button>
       </div>
 
-      <div
-        className={`p-6 overflow-x-auto ${darkMode ? "bg-gray-900/50" : "bg-gray-50"}`}
-      >
-        <pre
-          className={`text-sm leading-relaxed ${darkMode ? "text-gray-300" : "text-gray-800"}`}
+      <div>
+        <SyntaxHighlighter
+          language={language}
+          style={darkMode ? oneDark : oneLight}
+          customStyle={{
+            margin: 0,
+            padding: "1.5rem",
+            fontSize: "0.875rem",
+            lineHeight: "1.5",
+            background: darkMode
+              ? "rgba(17, 24, 39, 0.5)"
+              : "rgb(249, 250, 251)",
+          }}
+          codeTagProps={{
+            style: {
+              fontFamily:
+                'ui-monospace, SFMono-Regular, "SF Mono", Consolas, "Liberation Mono", Menlo, monospace',
+            },
+          }}
         >
-          <code>{code}</code>
-        </pre>
+          {code}
+        </SyntaxHighlighter>
       </div>
     </div>
   )

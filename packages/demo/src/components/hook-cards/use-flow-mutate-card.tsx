@@ -3,6 +3,7 @@ import {useState} from "react"
 import {useDarkMode} from "../flow-provider-wrapper"
 import {DemoCard} from "../ui/demo-card"
 import {ResultsSection} from "../ui/results-section"
+import {CodeEditor} from "../ui/code-editor"
 
 const IMPLEMENTATION_CODE = `import { useFlowMutate } from "@onflow/react-sdk"
 
@@ -95,18 +96,12 @@ export function UseFlowMutateCard() {
           >
             Cadence Transaction
           </label>
-          <textarea
+          <CodeEditor
             value={cadenceTransaction}
-            onChange={e => setCadenceTransaction(e.target.value)}
+            onChange={setCadenceTransaction}
+            language="javascript"
             placeholder="Enter your Cadence transaction here..."
-            className={`w-full px-4 py-3 font-mono text-sm rounded-lg border outline-none transition-all
-              duration-200 min-h-[150px] resize-y ${
-              darkMode
-                  ? `bg-gray-900 text-white border-white/10 focus:border-flow-primary
-                    placeholder-gray-600`
-                  : `bg-white text-black border-black/10 focus:border-flow-primary
-                    placeholder-gray-400`
-              }`}
+            minHeight="150px"
           />
         </div>
 

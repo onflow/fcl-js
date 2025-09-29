@@ -9,6 +9,7 @@ import {getContractAddress} from "../../constants"
 import {useDarkMode} from "../flow-provider-wrapper"
 import {DemoCard} from "../ui/demo-card"
 import {ResultsSection} from "../ui/results-section"
+import {CodeEditor} from "../ui/code-editor"
 
 const IMPLEMENTATION_CODE = `import { useFlowQuery } from "@onflow/react-sdk"
 
@@ -135,18 +136,12 @@ access(all) fun main(address: Address): UFix64 {
           >
             Cadence Script
           </label>
-          <textarea
+          <CodeEditor
             value={cadenceScript}
-            onChange={e => setCadenceScript(e.target.value)}
+            onChange={setCadenceScript}
+            language="javascript"
             placeholder="Enter your Cadence script here..."
-            className={`w-full px-4 py-3 font-mono text-sm rounded-lg border outline-none transition-all
-              duration-200 min-h-[150px] resize-y ${
-              darkMode
-                  ? `bg-gray-900 text-white border-white/10 focus:border-flow-primary
-                    placeholder-gray-600`
-                  : `bg-white text-black border-black/10 focus:border-flow-primary
-                    placeholder-gray-400`
-              }`}
+            minHeight="150px"
           />
         </div>
 

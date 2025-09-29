@@ -1,6 +1,8 @@
 import {DemoCard} from "../ui/demo-card"
 import {useDarkMode} from "../flow-provider-wrapper"
 import {PlusGridIcon} from "../ui/plus-grid"
+import {InlineCode} from "../ui/inline-code"
+import {CodeViewer} from "../ui/code-viewer"
 import {useState} from "react"
 
 export function InstallationCard() {
@@ -50,88 +52,27 @@ export function InstallationCard() {
             >
               Install the package
             </h3>
-            <div className="relative">
-              <div
-                className={`relative p-4 rounded-lg border font-mono text-sm flex items-center
-                  justify-between ${
-                  darkMode
-                      ? "bg-gray-900 text-green-400 border-white/10"
-                      : "bg-gray-50 text-gray-900 border-black/5"
-                  }`}
-              >
-                <span>npm install @onflow/react-sdk</span>
-                <button
-                  onClick={() =>
-                    copyToClipboard(
-                      "npm install @onflow/react-sdk",
-                      "npm-install"
-                    )
-                  }
-                  className={`ml-4 p-2 rounded transition-colors ${
-                    copiedStates["npm-install"]
-                      ? darkMode
-                        ? "bg-green-800 text-green-400"
-                        : "bg-green-100 text-green-600"
-                      : darkMode
-                        ? "bg-gray-700 text-gray-400 hover:bg-gray-600 hover:text-white"
-                        : "bg-white text-gray-600 hover:bg-gray-100 hover:text-gray-900"
-                    }`}
-                  title={
-                    copiedStates["npm-install"]
-                      ? "Copied!"
-                      : "Copy to clipboard"
-                  }
-                >
-                  {copiedStates["npm-install"] ? (
-                    <svg
-                      width="16"
-                      height="16"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M5 13l4 4L19 7"
-                      />
-                    </svg>
-                  ) : (
-                    <svg
-                      width="16"
-                      height="16"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                    >
-                      <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
-                      <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" />
-                    </svg>
-                  )}
-                </button>
-              </div>
-            </div>
+            <InlineCode code="npm install @onflow/react-sdk" language="bash" />
+
             <div className="mt-3 flex flex-wrap gap-2">
-              <span
-                className={`text-xs px-2 py-1 rounded ${
+              <code
+                className={`text-xs px-2 py-1 rounded font-mono ${
                   darkMode
                     ? "bg-gray-800 text-gray-400"
                     : "bg-gray-100 text-gray-600"
                   }`}
               >
                 yarn add @onflow/react-sdk
-              </span>
-              <span
-                className={`text-xs px-2 py-1 rounded ${
+              </code>
+              <code
+                className={`text-xs px-2 py-1 rounded font-mono ${
                   darkMode
                     ? "bg-gray-800 text-gray-400"
                     : "bg-gray-100 text-gray-600"
                   }`}
               >
                 pnpm add @onflow/react-sdk
-              </span>
+              </code>
             </div>
           </div>
         </div>
@@ -166,90 +107,10 @@ export function InstallationCard() {
               features
             </p>
 
-            <div
-              className={`relative p-4 rounded-lg border ${
-                darkMode
-                  ? "bg-gray-900/50 border-white/10"
-                  : "bg-gray-50 border-black/5"
-                }`}
-            >
-              <PlusGridIcon placement="top left" className="absolute" />
-              <button
-                onClick={() =>
-                  copyToClipboard(
-                    `import React from "react"
-import { FlowProvider } from "@onflow/react-sdk"
-import App from "./App"
-
-function Root() {
-  return (
-    <FlowProvider
-      config={{
-        accessNodeUrl: "https://access-mainnet.onflow.org",
-        flowNetwork: "mainnet",
-        appDetailTitle: "My Flow App",
-        appDetailIcon: "https://example.com/icon.png",
-        appDetailDescription: "A decentralized app on Flow",
-        appDetailUrl: "https://myapp.com",
-      }}
-    >
-      <App />
-    </FlowProvider>
-  )
-}
-
-export default Root`,
-                    "flow-provider"
-                  )
-                }
-                className={`absolute top-4 right-4 p-2 rounded transition-colors ${
-                  copiedStates["flow-provider"]
-                    ? darkMode
-                      ? "bg-green-800 text-green-400"
-                      : "bg-green-100 text-green-600"
-                    : darkMode
-                      ? "bg-gray-700 text-gray-400 hover:bg-gray-600 hover:text-white"
-                      : "bg-white text-gray-600 hover:bg-gray-100 hover:text-gray-900"
-                  }`}
-                title={
-                  copiedStates["flow-provider"]
-                    ? "Copied!"
-                    : "Copy to clipboard"
-                }
-              >
-                {copiedStates["flow-provider"] ? (
-                  <svg
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M5 13l4 4L19 7"
-                    />
-                  </svg>
-                ) : (
-                  <svg
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
-                    <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" />
-                  </svg>
-                )}
-              </button>
-              <pre
-                className={`text-sm overflow-x-auto ${darkMode ? "text-gray-300" : "text-gray-700"}`}
-              >
-                {`import React from "react"
+            <div className="relative">
+              <PlusGridIcon placement="top left" className="absolute z-10" />
+              <CodeViewer
+                code={`import React from "react"
 import { FlowProvider } from "@onflow/react-sdk"
 import App from "./App"
 
@@ -271,7 +132,8 @@ function Root() {
 }
 
 export default Root`}
-              </pre>
+                language="tsx"
+              />
             </div>
 
             <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -342,18 +204,10 @@ export default Root`}
               Import and use components and hooks from the React SDK
             </p>
 
-            <div
-              className={`relative p-4 rounded-lg border ${
-                darkMode
-                  ? "bg-gray-900/50 border-white/10"
-                  : "bg-gray-50 border-black/5"
-                }`}
-            >
-              <PlusGridIcon placement="top right" className="absolute" />
-              <pre
-                className={`text-sm overflow-x-auto ${darkMode ? "text-gray-300" : "text-gray-700"}`}
-              >
-                {`import { Connect, useFlowCurrentUser } from "@onflow/react-sdk"
+            <div className="relative">
+              <PlusGridIcon placement="top right" className="absolute z-10" />
+              <CodeViewer
+                code={`import { Connect, useFlowCurrentUser } from "@onflow/react-sdk"
 
 function MyApp() {
   const { data: user } = useFlowCurrentUser()
@@ -365,13 +219,14 @@ function MyApp() {
     </div>
   )
 }`}
-              </pre>
+                language="tsx"
+              />
             </div>
           </div>
         </div>
 
         <div
-          className={`relative p-4 rounded-lg border ${
+          className={`mt-6 p-4 rounded-lg border ${
             darkMode
               ? "bg-orange-900/20 border-orange-800/50"
               : "bg-orange-50 border-orange-200"
