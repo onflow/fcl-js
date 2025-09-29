@@ -69,6 +69,10 @@ export interface InteractionAccount {
    */
   signature: string | null
   /**
+   * Optional signature extension data for alternative signature schemes (e.g., WebAuthn)
+   */
+  signatureExtension?: string | Uint8Array | null
+  /**
    * Function used for signing
    */
   signingFunction: any | null
