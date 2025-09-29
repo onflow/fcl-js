@@ -40,3 +40,12 @@
 .read-the-docs {
   color: #888;
 }
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(120%);
+  }
+}

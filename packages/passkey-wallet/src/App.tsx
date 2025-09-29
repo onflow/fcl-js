@@ -67,6 +67,11 @@ export default function App() {
   const [hostOrigin, setHostOrigin] = useState<string>("")
   const [viewMode, setViewMode] = useState<"authn" | "authz" | "home">("home")
   const [signable, setSignable] = useState<Signable | undefined>()
+  const [darkMode, setDarkMode] = useState<boolean>(false)
+  const [accounts, setAccounts] = useState<
+    Array<{address: string; credentialId?: string; balance?: string}>
+  >([])
+  const [isRegistering, setIsRegistering] = useState<boolean>(false)
 
   // no-op placeholder removed
 
@@ -104,10 +109,38 @@ export default function App() {
       if (saved.publicKeySec1Hex)
         setPasskeyPubHex(saved.publicKeySec1Hex.toLowerCase())
     }
-    // removed multi-account initialization
+    // initialize accounts list from storage and saved address
+    try {
+      const raw = localStorage.getItem("passkey-wallet:accounts")
+      const list: Array<{address: string; credentialId?: string}> = raw
+        ? JSON.parse(raw)
+        : []
+      const addrs = new Set<string>(list.map(x => x.address.toLowerCase()))
+      if (saved?.address && !addrs.has(saved.address.toLowerCase())) {
+        list.push({address: saved.address, credentialId: saved.credentialId})
+      }
+      const unique = Array.from(
+        new Map(list.map(x => [x.address.toLowerCase(), x])).values()
+      )
+      localStorage.setItem("passkey-wallet:accounts", JSON.stringify(unique))
+      setAccounts(unique)
+    } catch {}
     const url = new URL(window.location.href)
     setDebugMode(url.searchParams.get("debug") === "1")
-    return () => window.removeEventListener("message", onMsg)
+    try {
+      const mq =
+        window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)")
+      const init = !!mq?.matches
+      setDarkMode(init)
+      const onChange = (e: MediaQueryListEvent) => setDarkMode(!!e.matches)
+      mq?.addEventListener?.("change", onChange)
+      return () => {
+        window.removeEventListener("message", onMsg)
+        mq?.removeEventListener?.("change", onChange)
+      }
+    } catch {
+      return () => window.removeEventListener("message", onMsg)
+    }
   }, [])
 
   useEffect(() => {
@@ -134,22 +167,118 @@ export default function App() {
     run()
   }, [address])
 
-  // Resize the popup window to logical dimensions per view
+  // Fetch balances for accounts list
   useEffect(() => {
-    try {
-      const baseWidth = 660
-      const baseHeight = viewMode === "authz" ? 720 : 560
-      if (window.resizeTo) {
-        // Avoid making it smaller than current to not annoy users
-        const targetW = Math.max(window.outerWidth || baseWidth, baseWidth)
-        const targetH = Math.max(window.outerHeight || baseHeight, baseHeight)
-        window.resizeTo(targetW, targetH)
-      }
-    } catch {}
-  }, [viewMode])
+    let aborted = false
+    const fetchBalances = async () => {
+      try {
+        const results: Array<{
+          address: string
+          credentialId?: string
+          balance?: string
+        }> = []
+        for (const acc of accounts) {
+          try {
+            const res = await fetch(
+              `https://rest-testnet.onflow.org/v1/accounts/${acc.address.replace(/^0x/, "")}`
+            )
+            if (!res.ok) {
+              results.push({
+                address: acc.address,
+                credentialId: acc.credentialId,
+                balance: "0",
+              })
+              continue
+            }
+            const json = await res.json()
+            const bal = json?.account?.balance
+            results.push({
+              address: acc.address,
+              credentialId: acc.credentialId,
+              balance:
+                bal == null ? "0" : typeof bal === "string" ? bal : String(bal),
+            })
+          } catch {
+            results.push({
+              address: acc.address,
+              credentialId: acc.credentialId,
+              balance: "0",
+            })
+          }
+        }
+        if (!aborted) setAccounts(results)
+      } catch {}
+    }
+    if (accounts.length > 0) fetchBalances()
+    return () => {
+      aborted = true
+    }
+  }, [accounts.length])
+
+  // Ensure body has no margin and hide window scrollbars (use internal scroll areas)
+  useEffect(() => {
+    const prevMargin = document.body.style.margin
+    const prevBodyOverflow = document.body.style.overflow
+    const prevHtmlOverflow = document.documentElement.style.overflow
+    document.body.style.margin = "0"
+    document.body.style.overflow = "hidden"
+    document.documentElement.style.overflow = "hidden"
+    return () => {
+      document.body.style.margin = prevMargin
+      document.body.style.overflow = prevBodyOverflow
+      document.documentElement.style.overflow = prevHtmlOverflow
+    }
+  }, [])
+
+  // Resize popup to fit content (min/max bounds)
+  useEffect(() => {
+    const measureAndResize = () => {
+      try {
+        if (!window.resizeTo) return
+        const doc = document.documentElement
+        const body = document.body
+        const contentHeight = Math.max(
+          doc.scrollHeight,
+          body.scrollHeight,
+          doc.offsetHeight,
+          body.offsetHeight,
+          doc.clientHeight
+        )
+        const rootEl = (document.getElementById("root") || body) as HTMLElement
+        const rootWidth =
+          Math.ceil(
+            rootEl.scrollWidth || rootEl.getBoundingClientRect().width
+          ) || 620
+        const innerTargetWidth = Math.min(660, Math.max(560, rootWidth + 8))
+        const chromeW = Math.max(
+          0,
+          (window.outerWidth || 0) - (window.innerWidth || 0)
+        )
+        const chromeH = Math.max(
+          0,
+          (window.outerHeight || 0) - (window.innerHeight || 0)
+        )
+        const outerW = Math.max(
+          window.outerWidth || 0,
+          Math.round(innerTargetWidth + chromeW)
+        )
+        const minH = 480
+        const maxH = 900
+        const innerTargetHeight = Math.min(maxH, Math.max(minH, contentHeight))
+        const outerH = Math.max(
+          window.outerHeight || 0,
+          Math.round(innerTargetHeight + chromeH)
+        )
+        window.resizeTo(outerW, outerH)
+      } catch {}
+    }
+    const id = window.requestAnimationFrame(measureAndResize)
+    return () => window.cancelAnimationFrame(id)
+  }, [viewMode, accounts.length, readyPayload, uiError, address, darkMode])
 
   const doRegister = async () => {
     try {
+      setIsRegistering(true)
       const rec = await createCredential()
       setCredId(rec.credentialId)
       if (rec.publicKeySec1Hex) {
@@ -165,9 +294,23 @@ export default function App() {
         )
         setAddress(newAddr)
         // account switches to newly created address automatically
+        try {
+          const raw = localStorage.getItem("passkey-wallet:accounts")
+          const list: Array<{address: string; credentialId?: string}> = raw
+            ? JSON.parse(raw)
+            : []
+          if (
+            !list.find(x => x.address.toLowerCase() === newAddr.toLowerCase())
+          )
+            list.push({address: newAddr, credentialId: rec.credentialId})
+          localStorage.setItem("passkey-wallet:accounts", JSON.stringify(list))
+          setAccounts(list)
+        } catch {}
       }
     } catch (e: any) {
       decline(e?.message || "Passkey registration failed")
+    } finally {
+      setIsRegistering(false)
     }
   }
 
@@ -233,8 +376,12 @@ export default function App() {
       // Key was provisioned with SHA2_256, so compute SHA-256(msgHex) as challenge.
       const challenge = await sha256(hexToBytes(msgHex))
       // WebAuthn assertion for passkey credential using hashed challenge
+      // Prefer the credentialId stored for the selected address, fallback to global credId
+      const acctCredId = accounts.find(
+        a => a.address.toLowerCase() === address.toLowerCase()
+      )?.credentialId
       const {signature, clientDataJSON, authenticatorData} = await getAssertion(
-        credId,
+        acctCredId || credId,
         challenge
       )
       // Debug prints (non-sensitive snippets)
@@ -311,17 +458,35 @@ export default function App() {
     }
   }
 
+  const theme = useMemo(
+    () => ({
+      bg: darkMode ? "#0b0d12" : "#fff",
+      text: darkMode ? "#e6e6e6" : "#111",
+      subtext: darkMode ? "#9aa4b2" : "#555",
+      border: darkMode ? "#263040" : "#ddd",
+      panel: darkMode ? "#141922" : "#f8f9fa",
+      divider: darkMode ? "#1f2937" : "#eee",
+      badgeBg: darkMode ? "#1f2937" : "#f1f3f5",
+      primary: darkMode ? "#7b93ff" : "#000",
+      primaryText: darkMode ? "#0b0d12" : "#fff",
+      danger: "#b00020",
+    }),
+    [darkMode]
+  )
+
   const pageStyle: React.CSSProperties = {
-    minHeight: "100vh",
+    minHeight: "auto",
     display: "block",
-    background: "#fff",
-    padding: 12,
+    background: theme.bg,
+    padding: 8,
     fontFamily: "ui-sans-serif,system-ui",
+    overflowX: "hidden",
   }
   const cardStyle: React.CSSProperties = {
     background: "transparent",
     borderRadius: 0,
-    width: "min(92vw, 660px)",
+    width: "100%",
+    maxWidth: "640px",
     maxHeight: "none",
     overflow: "visible",
     boxShadow: "none",
@@ -330,34 +495,37 @@ export default function App() {
   }
   const inputStyle: React.CSSProperties = {
     width: "100%",
-    border: "1px solid #ddd",
+    border: `1px solid ${theme.border}`,
     padding: 8,
     borderRadius: 8,
+    background: darkMode ? "#0f1420" : "#fff",
+    color: theme.text,
   }
   const buttonStyle: React.CSSProperties = {
     padding: "8px 12px",
     borderRadius: 8,
-    border: "1px solid #ddd",
-    background: "#f8f9fa",
+    border: `1px solid ${theme.border}`,
+    background: theme.panel,
     cursor: "pointer",
+    color: theme.text,
   }
   const buttonPrimary: React.CSSProperties = {
     ...buttonStyle,
-    background: "#000",
-    color: "#fff",
-    border: "1px solid #000",
+    background: theme.primary,
+    color: theme.primaryText,
+    border: `1px solid ${theme.primary}`,
   }
   const buttonDanger: React.CSSProperties = {
     ...buttonStyle,
-    background: "#fff",
-    color: "#b00020",
-    border: "1px solid #b00020",
+    background: darkMode ? "transparent" : "#fff",
+    color: theme.danger,
+    border: `1px solid ${theme.danger}`,
   }
   const footerStyle: React.CSSProperties = {
     position: "sticky",
     bottom: 0,
-    background: "#fff",
-    borderTop: "1px solid #eee",
+    background: theme.bg,
+    borderTop: `1px solid ${theme.divider}`,
     padding: 12,
     marginTop: 16,
   }
@@ -365,19 +533,62 @@ export default function App() {
     display: "inline-block",
     padding: "2px 6px",
     borderRadius: 6,
-    background: "#f1f3f5",
+    background: theme.badgeBg,
     fontSize: 12,
-    color: "#333",
+    color: theme.text,
+  }
+  const shimmer: React.CSSProperties = {
+    position: "relative",
+    overflow: "hidden",
+    background: darkMode ? "#101623" : "#e9ecef",
+  }
+  const shimmerAfter: React.CSSProperties = {
+    content: '""' as any,
+    position: "absolute",
+    top: 0,
+    left: -200,
+    height: "100%",
+    width: 200,
+    background:
+      "linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent)",
+    animation: "shimmer 1.2s infinite",
   }
   const divider: React.CSSProperties = {
     height: 1,
-    background: "#eee",
+    background: theme.divider,
     margin: "8px 0",
   }
   const mono: React.CSSProperties = {
     fontFamily:
       "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace",
     fontSize: 12,
+  }
+  const contentStyle: React.CSSProperties = {
+    maxHeight: "calc(100vh - 120px)",
+    overflowY: "auto",
+  }
+
+  const formatFlow = (bal?: string | number) => {
+    if (bal == null) return "—"
+    const raw = String(bal).trim()
+    if (raw === "") return "—"
+    if (raw.includes(".")) {
+      const [i, f = ""] = raw.split(".")
+      const intPart = i.replace(/^0+(?=\d)/, "") || "0"
+      const fracTrimmed = f.replace(/0+$/, "")
+      return fracTrimmed ? `${intPart}.${fracTrimmed}` : intPart
+    }
+    const s = raw.replace(/^0+/, "") || "0"
+    const fracLen = 8
+    if (s === "0") return "0"
+    if (s.length <= fracLen) {
+      const frac = s.padStart(fracLen, "0").replace(/0+$/, "")
+      return frac ? `0.${frac}` : "0"
+    }
+    const intPart =
+      s.slice(0, s.length - fracLen).replace(/^0+(?=\d)/, "") || "0"
+    const fracPart = s.slice(-fracLen).replace(/0+$/, "")
+    return fracPart ? `${intPart}.${fracPart}` : intPart
   }
 
   // removed balance formatter (no multi-account balances)
@@ -413,8 +624,16 @@ export default function App() {
 
   const hasCredential = !!credId
   const hasAddress = !!address && address !== "0xUSER"
-  const maskedCred = credId
-    ? `${credId.slice(0, 6)}...${credId.slice(-6)}`
+  const selectedAccount = useMemo(
+    () =>
+      accounts.find(
+        a => a.address?.toLowerCase() === (address || "").toLowerCase()
+      ),
+    [accounts, address]
+  )
+  const selectedCredId = selectedAccount?.credentialId || credId
+  const maskedSelectedCred = selectedCredId
+    ? `${selectedCredId.slice(0, 6)}...${selectedCredId.slice(-6)}`
     : "none"
 
   const renderHeader = (
@@ -465,19 +684,150 @@ export default function App() {
             </span>
           ) : undefined
         )}
-        <div style={{display: "grid", gap: 10}}>
+        <div style={{display: "grid", gap: 10, ...contentStyle}}>
           <div>
-            <div style={{fontWeight: 600, color: "#333", marginBottom: 6}}>
-              Selected account
+            <div style={{fontWeight: 600, color: theme.text, marginBottom: 6}}>
+              Choose an account
             </div>
-            <input
-              value={hasAddress ? address : "No account"}
-              readOnly
-              style={inputStyle}
-            />
+            <div style={{display: "grid", gap: 8}}>
+              {isRegistering && (
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 10,
+                    border: `1px solid ${theme.border}`,
+                    borderRadius: 10,
+                    padding: 10,
+                    background: theme.bg,
+                  }}
+                >
+                  <div
+                    style={{
+                      width: 28,
+                      height: 28,
+                      borderRadius: "50%",
+                      ...shimmer,
+                    }}
+                  >
+                    <div style={shimmerAfter} />
+                  </div>
+                  <div style={{flex: 1, minWidth: 0}}>
+                    <div style={{height: 12, borderRadius: 4, ...shimmer}}>
+                      <div style={shimmerAfter} />
+                    </div>
+                    <div
+                      style={{
+                        height: 10,
+                        marginTop: 6,
+                        width: "60%",
+                        borderRadius: 4,
+                        ...shimmer,
+                      }}
+                    >
+                      <div style={shimmerAfter} />
+                    </div>
+                  </div>
+                  <span style={{...badgeStyle, opacity: 0.7}}>Creating…</span>
+                </div>
+              )}
+              {accounts.length === 0 && (
+                <div style={{color: theme.subtext, fontSize: 13}}>
+                  No accounts found.
+                </div>
+              )}
+              {accounts.map(acc => {
+                const selected =
+                  address?.toLowerCase() === acc.address.toLowerCase()
+                return (
+                  <button
+                    key={acc.address}
+                    onClick={() => setAddress(acc.address)}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 10,
+                      width: "100%",
+                      textAlign: "left",
+                      background: selected
+                        ? darkMode
+                          ? "#16203a"
+                          : "#eef1ff"
+                        : theme.bg,
+                      border: selected
+                        ? `1px solid ${darkMode ? "#7b93ff" : "#4c6fff"}`
+                        : `1px solid ${theme.border}`,
+                      padding: 10,
+                      borderRadius: 10,
+                      cursor: "pointer",
+                      color: theme.text,
+                    }}
+                  >
+                    <span
+                      aria-hidden
+                      style={{
+                        display: "inline-flex",
+                        width: 28,
+                        height: 28,
+                        alignItems: "center",
+                        justifyContent: "center",
+                        borderRadius: "50%",
+                        border: `1px solid ${theme.border}`,
+                        background: theme.panel,
+                      }}
+                    >
+                      {/* person icon */}
+                      <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                      >
+                        <circle cx="12" cy="8" r="4" stroke={theme.text} />
+                        <path
+                          d="M4 20c0-3.3137 3.5817-6 8-6s8 2.6863 8 6"
+                          stroke={theme.text}
+                        />
+                      </svg>
+                    </span>
+                    <div style={{flex: 1, minWidth: 0}}>
+                      <div
+                        style={{
+                          fontWeight: 600,
+                          color: theme.text,
+                          fontSize: 14,
+                        }}
+                      >
+                        {acc.address}
+                      </div>
+                      <div
+                        style={{
+                          fontSize: 12,
+                          color: theme.subtext,
+                          marginTop: 2,
+                        }}
+                      >
+                        Balance: {formatFlow(acc.balance)} FLOW
+                      </div>
+                    </div>
+                    {selected && (
+                      <span
+                        style={{
+                          ...badgeStyle,
+                          background: darkMode ? "#7b93ff" : "#4c6fff",
+                          color: darkMode ? "#0b0d12" : "#fff",
+                        }}
+                      >
+                        Selected
+                      </span>
+                    )}
+                  </button>
+                )
+              })}
+            </div>
           </div>
           {!hasCredential && (
-            <div style={{color: "#666", fontSize: 13}}>
+            <div style={{color: theme.subtext, fontSize: 13}}>
               No passkey found. Create one to continue.
             </div>
           )}
@@ -496,11 +846,11 @@ export default function App() {
             )}
           </div>
         </div>
-        <div style={{marginTop: 12, fontSize: 12, color: "#666"}}>
+        <div style={{marginTop: 12, fontSize: 12, color: theme.subtext}}>
           <div>Account: {hasAddress ? address : "none"}</div>
-          <div>Passkey: {maskedCred}</div>
+          <div>Passkey: {maskedSelectedCred}</div>
           {uiError && (
-            <div style={{color: "#b00020", marginTop: 8}}>{uiError}</div>
+            <div style={{color: theme.danger, marginTop: 8}}>{uiError}</div>
           )}
         </div>
         <div style={footerStyle}>
@@ -536,7 +886,7 @@ export default function App() {
               </span>
             ) : undefined
           )}
-          <div style={{display: "grid", gap: 10}}>
+          <div style={{display: "grid", gap: 10, ...contentStyle}}>
             {cadence && (
               <div>
                 <div style={{fontWeight: 600, color: "#333", marginBottom: 6}}>
@@ -545,7 +895,8 @@ export default function App() {
                 <pre
                   style={{
                     ...mono,
-                    background: "#f8f9fa",
+                    background: darkMode ? "#0f1420" : "#f8f9fa",
+                    color: theme.text,
                     padding: 8,
                     borderRadius: 8,
                     overflowX: "auto",
@@ -557,26 +908,26 @@ export default function App() {
               </div>
             )}
             <div style={{display: "grid", gap: 6}}>
-              <div style={{fontWeight: 600, color: "#333"}}>Details</div>
-              <div style={{fontSize: 13, color: "#333"}}>
+              <div style={{fontWeight: 600, color: theme.text}}>Details</div>
+              <div style={{fontSize: 13, color: theme.text}}>
                 <span style={{fontWeight: 600}}>Payer:</span> {v?.payer}
               </div>
-              <div style={{fontSize: 13, color: "#333"}}>
+              <div style={{fontSize: 13, color: theme.text}}>
                 <span style={{fontWeight: 600}}>Proposer:</span>{" "}
                 {v?.proposalKey?.address}
               </div>
-              <div style={{fontSize: 13, color: "#333"}}>
+              <div style={{fontSize: 13, color: theme.text}}>
                 <span style={{fontWeight: 600}}>Authorizers:</span>{" "}
                 {(v?.authorizers || []).join(", ")}
               </div>
               {typeof v?.computeLimit === "number" && (
-                <div style={{fontSize: 13, color: "#333"}}>
+                <div style={{fontSize: 13, color: theme.text}}>
                   <span style={{fontWeight: 600}}>Compute limit:</span>{" "}
                   {v.computeLimit}
                 </div>
               )}
               {Array.isArray(v?.arguments) && v.arguments.length > 0 && (
-                <div style={{fontSize: 13, color: "#333"}}>
+                <div style={{fontSize: 13, color: theme.text}}>
                   <span style={{fontWeight: 600}}>Arguments:</span>{" "}
                   {v.arguments.length}
                 </div>
@@ -642,7 +993,7 @@ export default function App() {
         </div>
         <div style={{marginTop: 16, fontSize: 12, color: "#666"}}>
           <div>Account: {hasAddress ? address : "none"}</div>
-          <div>Passkey: {maskedCred}</div>
+          <div>Passkey: {maskedSelectedCred}</div>
           {chainKeyHex && (
             <div>
               On-chain key matches passkey: {chainKeyMatches ? "yes" : "no"}
