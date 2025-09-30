@@ -2,4 +2,4 @@
 "@onflow/transport-http": patch
 ---
 
-Add missing connection init args for event streaming
+Renamed misnamed `startHeight` argument to `startBlockHeight` for event subscriptions.  Type definitions will be broken to reflect this change, however the `startHeight` argument will still be accepted for backward compatibility.
