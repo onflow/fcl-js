@@ -90,7 +90,7 @@ export function UseFlowEventsCard() {
     <DemoCard
       id="hook-flow-events"
       title="useFlowEvents"
-      description="Listen to blockchain events in real-time and filter by event types and block height ranges."
+      description="Listen to blockchain events in real time and filter them by event type and block height range."
       code={IMPLEMENTATION_CODE}
       docsUrl="https://developers.flow.com/build/tools/react-sdk/hooks#useflowevents"
     >
