@@ -48,6 +48,9 @@ export const eventsHandler = createSubscriptionHandler<{
     let resumeArgs: EventsArgs = {
       ...initialArgs,
     }
+    if ("startBlockHeight" in resumeArgs && resumeArgs.startBlockHeight) {
+      resumeArgs.startHeight = resumeArgs.startBlockHeight as number
+    }
 
     return {
       onData(rawData: EventsDataDto) {
@@ -86,21 +89,19 @@ export const eventsHandler = createSubscriptionHandler<{
           event_types: resumeArgs.eventTypes,
           addresses: resumeArgs.addresses,
           contracts: resumeArgs.contracts,
-          start_block_id: resumeArgs.startBlockId,
-          start_block_height: resumeArgs.startHeight,
         }
 
-        if ("startBlockHeight" in resumeArgs && resumeArgs.startBlockHeight) {
+        if ("startHeight" in resumeArgs && resumeArgs.startHeight) {
           return {
             ...encodedArgs,
-            start_block_height: resumeArgs.startBlockHeight,
+            start_block_height: String(resumeArgs.startHeight),
           }
         }
 
         if ("startBlockId" in resumeArgs && resumeArgs.startBlockId) {
           return {
             ...encodedArgs,
-            start_block_id: resumeArgs.startBlockId,
+            start_block_id: String(resumeArgs.startBlockId),
           }
         }
 
