@@ -86,6 +86,8 @@ export const eventsHandler = createSubscriptionHandler<{
           event_types: resumeArgs.eventTypes,
           addresses: resumeArgs.addresses,
           contracts: resumeArgs.contracts,
+          start_block_id: resumeArgs.startBlockId,
+          start_block_height: resumeArgs.startHeight,
         }
 
         if ("startBlockHeight" in resumeArgs && resumeArgs.startBlockHeight) {
