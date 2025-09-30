@@ -47,7 +47,7 @@ export function UseFlowRevertibleRandomCard() {
           >
             See advanced patterns
           </a>{" "}
-          for secure randomness.
+          for onchain randomness.
         </>
       }
       code={IMPLEMENTATION_CODE}

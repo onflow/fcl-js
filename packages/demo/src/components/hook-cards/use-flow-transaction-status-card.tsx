@@ -285,6 +285,215 @@ export function UseFlowTransactionStatusCard() {
         </div>
 
         <div
+          className={`relative p-4 rounded-lg border ${
+            darkMode
+              ? "bg-gray-800/30 border-white/10"
+              : "bg-gray-50 border-black/5"
+            }`}
+        >
+          <PlusGridIcon placement="bottom right" className="absolute" />
+          <h4
+            className={`text-sm font-semibold mb-3 ${darkMode ? "text-gray-300" : "text-gray-700"}`}
+          >
+            Status Legend
+          </h4>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div
+              className={`flex items-start gap-3 p-3 rounded-lg border ${
+                darkMode
+                  ? "bg-gray-900/30 border-white/5"
+                  : "bg-white border-black/5"
+                }`}
+            >
+              <div className="flex items-center gap-2">
+                <span
+                  className={`w-5 h-5 rounded flex items-center justify-center text-[10px] font-bold ${
+                    darkMode
+                      ? "bg-gray-700 text-gray-300"
+                      : "bg-gray-200 text-gray-600"
+                    }`}
+                >
+                  0
+                </span>
+                <span className="w-2 h-2 rounded-full bg-gray-500 flex-shrink-0"></span>
+              </div>
+              <div className="flex-1 min-w-0">
+                <p
+                  className={`text-xs font-semibold mb-1 ${darkMode ? "text-gray-300" : "text-gray-700"}`}
+                >
+                  UNKNOWN
+                </p>
+                <p
+                  className={`text-xs leading-relaxed ${darkMode ? "text-gray-500" : "text-gray-500"}`}
+                >
+                  Transaction not found or not yet submitted
+                </p>
+              </div>
+            </div>
+            <div
+              className={`flex items-start gap-3 p-3 rounded-lg border ${
+                darkMode
+                  ? "bg-gray-900/30 border-white/5"
+                  : "bg-white border-black/5"
+                }`}
+            >
+              <div className="flex items-center gap-2">
+                <span
+                  className={`w-5 h-5 rounded flex items-center justify-center text-[10px] font-bold ${
+                    darkMode
+                      ? "bg-gray-700 text-gray-300"
+                      : "bg-gray-200 text-gray-600"
+                    }`}
+                >
+                  1
+                </span>
+                <span className="w-2 h-2 rounded-full bg-yellow-500 flex-shrink-0"></span>
+              </div>
+              <div className="flex-1 min-w-0">
+                <p
+                  className={`text-xs font-semibold mb-1 ${darkMode ? "text-gray-300" : "text-gray-700"}`}
+                >
+                  PENDING
+                </p>
+                <p
+                  className={`text-xs leading-relaxed ${darkMode ? "text-gray-500" : "text-gray-500"}`}
+                >
+                  Awaiting execution by network
+                </p>
+              </div>
+            </div>
+            <div
+              className={`flex items-start gap-3 p-3 rounded-lg border ${
+                darkMode
+                  ? "bg-gray-900/30 border-white/5"
+                  : "bg-white border-black/5"
+                }`}
+            >
+              <div className="flex items-center gap-2">
+                <span
+                  className={`w-5 h-5 rounded flex items-center justify-center text-[10px] font-bold ${
+                    darkMode
+                      ? "bg-gray-700 text-gray-300"
+                      : "bg-gray-200 text-gray-600"
+                    }`}
+                >
+                  2
+                </span>
+                <span className="w-2 h-2 rounded-full bg-purple-500 flex-shrink-0"></span>
+              </div>
+              <div className="flex-1 min-w-0">
+                <p
+                  className={`text-xs font-semibold mb-1 ${darkMode ? "text-gray-300" : "text-gray-700"}`}
+                >
+                  FINALIZED
+                </p>
+                <p
+                  className={`text-xs leading-relaxed ${darkMode ? "text-gray-500" : "text-gray-500"}`}
+                >
+                  Included in a block by consensus nodes
+                </p>
+              </div>
+            </div>
+            <div
+              className={`flex items-start gap-3 p-3 rounded-lg border ${
+                darkMode
+                  ? "bg-gray-900/30 border-white/5"
+                  : "bg-white border-black/5"
+                }`}
+            >
+              <div className="flex items-center gap-2">
+                <span
+                  className={`w-5 h-5 rounded flex items-center justify-center text-[10px] font-bold ${
+                    darkMode
+                      ? "bg-gray-700 text-gray-300"
+                      : "bg-gray-200 text-gray-600"
+                    }`}
+                >
+                  3
+                </span>
+                <span className="w-2 h-2 rounded-full bg-green-500 flex-shrink-0"></span>
+              </div>
+              <div className="flex-1 min-w-0">
+                <p
+                  className={`text-xs font-semibold mb-1 ${darkMode ? "text-gray-300" : "text-gray-700"}`}
+                >
+                  EXECUTED
+                </p>
+                <p
+                  className={`text-xs leading-relaxed ${darkMode ? "text-gray-500" : "text-gray-500"}`}
+                >
+                  Execution completed, results computed
+                </p>
+              </div>
+            </div>
+            <div
+              className={`flex items-start gap-3 p-3 rounded-lg border ${
+                darkMode
+                  ? "bg-gray-900/30 border-white/5"
+                  : "bg-white border-black/5"
+                }`}
+            >
+              <div className="flex items-center gap-2">
+                <span
+                  className={`w-5 h-5 rounded flex items-center justify-center text-[10px] font-bold ${
+                    darkMode
+                      ? "bg-gray-700 text-gray-300"
+                      : "bg-gray-200 text-gray-600"
+                    }`}
+                >
+                  4
+                </span>
+                <span className="w-2 h-2 rounded-full bg-green-500 flex-shrink-0"></span>
+              </div>
+              <div className="flex-1 min-w-0">
+                <p
+                  className={`text-xs font-semibold mb-1 ${darkMode ? "text-gray-300" : "text-gray-700"}`}
+                >
+                  SEALED
+                </p>
+                <p
+                  className={`text-xs leading-relaxed ${darkMode ? "text-gray-500" : "text-gray-500"}`}
+                >
+                  Permanently committed to blockchain
+                </p>
+              </div>
+            </div>
+            <div
+              className={`flex items-start gap-3 p-3 rounded-lg border ${
+                darkMode
+                  ? "bg-gray-900/30 border-white/5"
+                  : "bg-white border-black/5"
+                }`}
+            >
+              <div className="flex items-center gap-2">
+                <span
+                  className={`w-5 h-5 rounded flex items-center justify-center text-[10px] font-bold ${
+                    darkMode
+                      ? "bg-gray-700 text-gray-300"
+                      : "bg-gray-200 text-gray-600"
+                    }`}
+                >
+                  5
+                </span>
+                <span className="w-2 h-2 rounded-full bg-red-500 flex-shrink-0"></span>
+              </div>
+              <div className="flex-1 min-w-0">
+                <p
+                  className={`text-xs font-semibold mb-1 ${darkMode ? "text-gray-300" : "text-gray-700"}`}
+                >
+                  EXPIRED
+                </p>
+                <p
+                  className={`text-xs leading-relaxed ${darkMode ? "text-gray-500" : "text-gray-500"}`}
+                >
+                  Transaction reference block expired
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div
           className={`relative p-6 rounded-lg border min-h-[200px] ${
             darkMode
               ? "bg-gray-900/50 border-white/10"

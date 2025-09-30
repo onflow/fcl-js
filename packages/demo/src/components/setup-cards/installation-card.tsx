@@ -104,7 +104,7 @@ export function InstallationCard() {
               className={`text-sm mb-4 ${darkMode ? "text-gray-400" : "text-gray-600"}`}
             >
               Wrap your application with FlowProvider to enable all React SDK
-              features
+              features.
             </p>
 
             <div className="relative">
