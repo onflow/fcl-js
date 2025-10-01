@@ -1,5 +1,11 @@
 # @onflow/react-sdk
 
+## 0.10.3
+
+### Patch Changes
+
+- [#2647](https://github.com/onflow/fcl-js/pull/2647) [`6a9b141a51c563663f1030504a1537cf8a0d76df`](https://github.com/onflow/fcl-js/commit/6a9b141a51c563663f1030504a1537cf8a0d76df) Thanks [@jribbink](https://github.com/jribbink)! - Export `useFlowClient` from Flow React SDK
+
 ## 0.10.2
 
 ### Patch Changes
