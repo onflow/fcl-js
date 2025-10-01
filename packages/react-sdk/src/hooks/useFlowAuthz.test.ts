@@ -97,7 +97,7 @@ describe("useFlowAuthz", () => {
     const {result} = renderHook(
       () =>
         useFlowAuthz({
-          customAuthz: {
+          authz: {
             address: customAddress,
             keyId: 0,
             signingFunction: mockSigningFunction,
@@ -120,7 +120,7 @@ describe("useFlowAuthz", () => {
     const {result} = renderHook(
       () =>
         useFlowAuthz({
-          customAuthz: {
+          authz: {
             address: customAddress,
             keyId: customKeyId,
             signingFunction: mockSigningFunction,
@@ -151,7 +151,7 @@ describe("useFlowAuthz", () => {
     const {result} = renderHook(
       () =>
         useFlowAuthz({
-          customAuthz: {
+          authz: {
             address: "0xBACKEND",
             keyId: 0,
             signingFunction: mockSigningFunction,
@@ -191,7 +191,7 @@ describe("useFlowAuthz", () => {
     const {result} = renderHook(
       () =>
         useFlowAuthz({
-          customAuthz: {
+          authz: {
             address: "0xBACKEND",
             signingFunction: mockSigningFunction,
           },
@@ -213,7 +213,7 @@ describe("useFlowAuthz", () => {
     const {result} = renderHook(
       () =>
         useFlowAuthz({
-          customAuthz: {
+          authz: {
             address: "0xBACKEND",
             signingFunction: mockSigningFunction,
             // keyId not provided

@@ -36,7 +36,7 @@ export interface CustomAuthzConfig {
 
 interface UseFlowAuthzArgs {
   /** Custom authorization configuration, if not provided, uses current user's wallet authorization. */
-  customAuthz?: CustomAuthzConfig
+  authz?: CustomAuthzConfig
   /** Optional FlowClient instance to use instead of the default */
   flowClient?: ReturnType<typeof useFlowClient>
 }
@@ -50,7 +50,7 @@ export type AuthorizationFunction = (
  * Supports both current user wallet authorization and custom authorization.
  *
  * @param options Optional configuration object
- * @param options.customAuthz Optional custom authorization configuration
+ * @param options.authz Optional custom authorization configuration
  * @param options.flowClient Optional FlowClient instance to use instead of the default
  *
  * @returns The authorization function to be used in transactions
@@ -77,7 +77,7 @@ export type AuthorizationFunction = (
  *
  * function MyComponent() {
  *   const backendAuthz = useFlowAuthz({
- *     customAuthz: {
+ *     authz: {
  *       address: "0xBACKEND",
  *       keyId: 0,
  *       signingFunction: async ({ message }) => {
@@ -100,7 +100,7 @@ export type AuthorizationFunction = (
  * function MultisigComponent() {
  *   const userAuthz = useFlowAuthz()
  *   const backendAuthz = useFlowAuthz({
- *     customAuthz: {
+ *     authz: {
  *       address: "0xBACKEND",
  *       keyId: 0,
  *       signingFunction: async ({ message }) => {
@@ -128,28 +128,28 @@ export type AuthorizationFunction = (
  * }
  */
 export function useFlowAuthz({
-  customAuthz,
+  authz,
   flowClient,
 }: UseFlowAuthzArgs = {}): AuthorizationFunction {
   const fcl = useFlowClient({flowClient})
 
   const authorization: AuthorizationFunction = useMemo(() => {
-    if (customAuthz) {
+    if (authz) {
       return (
         account: Partial<InteractionAccount>
       ): Partial<InteractionAccount> => {
         return {
           ...account,
-          addr: customAuthz.address,
-          keyId: customAuthz.keyId ?? 0,
-          signingFunction: customAuthz.signingFunction,
+          addr: authz.address,
+          keyId: authz.keyId ?? 0,
+          signingFunction: authz.signingFunction,
         }
       }
     }
 
     // Current user authorization as default
     return fcl.currentUser.authorization as any
-  }, [fcl, customAuthz])
+  }, [fcl, authz])
 
   return authorization
 }
