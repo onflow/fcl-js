@@ -88,28 +88,21 @@ describe("useFlowAuthz", () => {
     expect(result.current).toBe(customFlowClient.currentUser.authorization)
   })
 
-  test("creates custom authorization with address and signing function", () => {
-    const customAddress = "0xBACKEND"
-    const mockSigningFunction = jest.fn().mockResolvedValue({
-      signature: "mock_signature",
+  test("creates custom authorization with authorization function", () => {
+    const customAuthz = (account: Partial<InteractionAccount>) => ({
+      ...account,
+      addr: "0xBACKEND",
+      keyId: 0,
+      signingFunction: jest.fn(),
     })
 
-    const {result} = renderHook(
-      () =>
-        useFlowAuthz({
-          authz: {
-            address: customAddress,
-            keyId: 0,
-            signingFunction: mockSigningFunction,
-          },
-        }),
-      {
-        wrapper: FlowProvider,
-      }
-    )
+    const {result} = renderHook(() => useFlowAuthz({authz: customAuthz}), {
+      wrapper: FlowProvider,
+    })
 
     expect(result.current).toBeDefined()
     expect(typeof result.current).toBe("function")
+    expect(result.current).toBe(customAuthz)
   })
 
   test("custom authorization returns correct account data", () => {
@@ -117,19 +110,16 @@ describe("useFlowAuthz", () => {
     const customKeyId = 5
     const mockSigningFunction = jest.fn()
 
-    const {result} = renderHook(
-      () =>
-        useFlowAuthz({
-          authz: {
-            address: customAddress,
-            keyId: customKeyId,
-            signingFunction: mockSigningFunction,
-          },
-        }),
-      {
-        wrapper: FlowProvider,
-      }
-    )
+    const customAuthz = (account: Partial<InteractionAccount>) => ({
+      ...account,
+      addr: customAddress,
+      keyId: customKeyId,
+      signingFunction: mockSigningFunction,
+    })
+
+    const {result} = renderHook(() => useFlowAuthz({authz: customAuthz}), {
+      wrapper: FlowProvider,
+    })
 
     const mockAccount = createMockAccount()
     const authResult = result.current(
@@ -148,19 +138,16 @@ describe("useFlowAuthz", () => {
       signature: "mock_signature_123",
     })
 
-    const {result} = renderHook(
-      () =>
-        useFlowAuthz({
-          authz: {
-            address: "0xBACKEND",
-            keyId: 0,
-            signingFunction: mockSigningFunction,
-          },
-        }),
-      {
-        wrapper: FlowProvider,
-      }
-    )
+    const customAuthz = (account: Partial<InteractionAccount>) => ({
+      ...account,
+      addr: "0xBACKEND",
+      keyId: 0,
+      signingFunction: mockSigningFunction,
+    })
+
+    const {result} = renderHook(() => useFlowAuthz({authz: customAuthz}), {
+      wrapper: FlowProvider,
+    })
 
     const mockAccount = createMockAccount()
     const authResult = result.current(
@@ -186,49 +173,21 @@ describe("useFlowAuthz", () => {
   })
 
   test("custom authorization works even when user is not logged in", () => {
-    const mockSigningFunction = jest.fn()
+    const customAuthz = (account: Partial<InteractionAccount>) => ({
+      ...account,
+      addr: "0xBACKEND",
+      keyId: 0,
+      signingFunction: jest.fn(),
+    })
 
-    const {result} = renderHook(
-      () =>
-        useFlowAuthz({
-          authz: {
-            address: "0xBACKEND",
-            signingFunction: mockSigningFunction,
-          },
-        }),
-      {
-        wrapper: FlowProvider,
-      }
-    )
+    const {result} = renderHook(() => useFlowAuthz({authz: customAuthz}), {
+      wrapper: FlowProvider,
+    })
 
     // User is not logged in (defaultUser.loggedIn === false)
     // But custom auth should still work
     expect(result.current).toBeDefined()
     expect(typeof result.current).toBe("function")
-  })
-
-  test("uses keyId 0 by default for custom authorization", () => {
-    const mockSigningFunction = jest.fn()
-
-    const {result} = renderHook(
-      () =>
-        useFlowAuthz({
-          authz: {
-            address: "0xBACKEND",
-            signingFunction: mockSigningFunction,
-            // keyId not provided
-          },
-        }),
-      {
-        wrapper: FlowProvider,
-      }
-    )
-
-    const mockAccount = createMockAccount()
-    const authResult = result.current(
-      mockAccount
-    ) as Partial<InteractionAccount>
-
-    expect(authResult.keyId).toBe(0)
+    expect(result.current).toBe(customAuthz)
   })
 })
