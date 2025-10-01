@@ -72,7 +72,7 @@ The process of a dapp receiving private data is as follows:
 
 1. The dapp requests the scopes they want up front `fcl.config().put("challenge.scope", "email+shippingAddress")`.
 2. The User authenticates `fcl.authenticate()` and inside the Wallet Providers authentication process decides its okay for the dapp to know both the `email` and the `shippingAddress`. The User should be able to decide which information to share, if any at all.
-3. When the dapp needs the information they can request it from FCLs current cache of data, if it isnt there the dapp needs to be okay with that and adjust accodingly.
+3. When the dapp needs the information they can request it from FCLs current cache of data, if it isnt there the dapp needs to be okay with that and adjust accordingly.
 
 Below are the scopes we are thinking of supporting privately:
 FCL will only publicly and privately try to fetch these when specified up front by a dapp.
@@ -86,7 +86,7 @@ FCL will only publicly and privately try to fetch these when specified up front 
 - **`location`**
 - **`publicKey`**
 
-All of the above are still subject to change as it is still early days, we would like to work closely with Wallet Providers to produce a robust, detailed and consitent spec regarding scopes. Feedback and thoughts are always welcome.
+All of the above are still subject to change as it is still early days, we would like to work closely with Wallet Providers to produce a robust, detailed and consistent spec regarding scopes. Feedback and thoughts are always welcome.
 
 # Authentication Challenge
 
@@ -97,7 +97,7 @@ Authentication can happen one of two ways:
 
 As a Wallet Provider you will be expected to register a URL endpoint (and some other information) with a handshake service (FCL will be launching with one in which registration happens on chain and is completely open source (Apache-2.0 lincense)).
 This registered URL will be what is shown inside the iFrame or where the dapp users will be redirected.
-For the remainder of this documentation we will refere to it as the _Authentication Endpoint_ and pair it with the `GET https://provider.com/flow/authentication` route.
+For the remainder of this documentation we will refer to it as the _Authentication Endpoint_ and pair it with the `GET https://provider.com/flow/authentication` route.
 
 The Authentication Endpoint will receive the following data as query params:
 
@@ -113,7 +113,7 @@ GET https://provider.com/flow/authenticate
   &scope=email+shippingAddress
   &redirect=https%3A%2F%2Fdapp.com%2Fflow%2Fcallback
 
-The values will use javascripts `encodeURIComponent` function and scopes will be `+` deliminated.
+The values will use javascripts `encodeURIComponent` function and scopes will be `+` delimited.
 ```
 
 We can tell that this challenge is using the Redirect Flow because of the inclusion of the redirect query param.
@@ -121,7 +121,7 @@ The Iframe Flow will still need to be supported as it will be the default flow f
 
 At this point its on the Wallet Provider to do their magic and be confident enough that the user is who they say they are.
 The user should then be shown in some form what the dapp is requesting via the scopes and allow them to opt in or out of anything they want.
-Once the Wallet Provider is ready to hand back control to the dapp and FCL it needs to complete the challenge by redirecting or emiting a javascript `postMessage` event.
+Once the Wallet Provider is ready to hand back control to the dapp and FCL it needs to complete the challenge by redirecting or emitting a javascript `postMessage` event.
 
 Redirecting will look like this:
 
@@ -173,7 +173,7 @@ This request needs to happen for a number of reasons.
 - It gives FCL a direct way to get Private Identity Information and Hooks.
 - The code can be passed to the backend to create a back-channel between the backend and the Wallet Provider.
 
-When users return to a dapp, if the code FCL stored hasnt expired, FCL will make this request again in order to stay up to date with the latest informtaion. FCL may also intermitently request this information before some critial actions.
+When users return to a dapp, if the code FCL stored hasnt expired, FCL will make this request again in order to stay up to date with the latest information. FCL may also intermitently request this information before some critical actions.
 
 The hooks request should respond with the following JSON
 
@@ -239,7 +239,7 @@ FCL will broadcast authorization requests to the Public and Private authorizatio
 The core concepts to this idea are:
 
 - Hooks tell FCL where to send authorization requests (Wallet Provider)
-- Wallet Provider responds imediately with:
+- Wallet Provider responds immediately with:
   - a back-channel where FCL can request the results of the authorization
   - some optional local hooks ways the currentUser can authorize
 - FCL will trigger the local hooks if they are for the currentUser
