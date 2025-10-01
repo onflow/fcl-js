@@ -441,17 +441,7 @@ export function useFlowSchedule({
       account: string,
       options?: {includeHandlerData?: boolean}
     ): Promise<TransactionInfo[] | TransactionInfoWithHandler[]> => {
-      if (!account) {
-        throw new Error("Account address is required")
-      }
-
-      if (!account.startsWith("0x")) {
-        throw new Error("Account address must start with 0x")
-      }
-
-      if (!chainId) {
-        throw new Error("Chain ID not detected")
-      }
+      if (!chainId) throw new Error("Chain ID not detected")
 
       try {
         const cadence = options?.includeHandlerData
@@ -463,10 +453,7 @@ export function useFlowSchedule({
           args: () => [arg(account, t.Address)],
         })
 
-        if (!Array.isArray(result)) {
-          return []
-        }
-
+        if (!Array.isArray(result)) return []
         return options?.includeHandlerData
           ? result.map(convertTransactionInfoWithHandler)
           : result.map(convertTransactionInfo)
@@ -484,9 +471,7 @@ export function useFlowSchedule({
       transactionId: bigint,
       options?: {includeHandlerData?: boolean}
     ): Promise<TransactionInfo | TransactionInfoWithHandler | null> => {
-      if (!chainId) {
-        throw new Error("Chain ID not detected")
-      }
+      if (!chainId) throw new Error("Chain ID not detected")
 
       try {
         const cadence = options?.includeHandlerData
@@ -498,10 +483,7 @@ export function useFlowSchedule({
           args: () => [arg(transactionId.toString(), t.UInt64)],
         })
 
-        if (!result) {
-          return null
-        }
-
+        if (!result) return null
         return options?.includeHandlerData
           ? convertTransactionInfoWithHandler(result)
           : convertTransactionInfo(result)
@@ -515,9 +497,8 @@ export function useFlowSchedule({
 
   // Setup function -> Creates manager resource if not exists
   const setup = useCallback(async (): Promise<string> => {
-    if (!chainId) {
-      throw new Error("Chain ID not detected")
-    }
+    if (!chainId) throw new Error("Chain ID not detected")
+
     try {
       const result = await setupMutation.mutateAsync({
         cadence: setupManagerMutation(chainId),
@@ -533,9 +514,7 @@ export function useFlowSchedule({
   // Cancel function -> Cancels a scheduled transaction
   const cancel = useCallback(
     async (transactionId: bigint): Promise<string> => {
-      if (!chainId) {
-        throw new Error("Chain ID not detected")
-      }
+      if (!chainId) throw new Error("Chain ID not detected")
 
       try {
         const result = await cancelMutation.mutateAsync({
