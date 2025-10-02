@@ -12,9 +12,6 @@ jest.mock("@onflow/fcl", () => require("../__mocks__/fcl").default)
 jest.mock("./useFlowChainId", () => ({
   useFlowChainId: jest.fn(),
 }))
-jest.mock("./useFlowClient", () => ({
-  useFlowClient: jest.fn(),
-}))
 
 describe("useBridgeTokenFromEvm", () => {
   let mockFcl: MockFclInstance
@@ -64,8 +61,8 @@ describe("useBridgeTokenFromEvm", () => {
 
   describe("useBridgeTokenFromEvmTx", () => {
     test("should handle successful transaction", async () => {
-      jest.mocked(fcl.mutate).mockResolvedValue(mockTxId)
-      jest.mocked(fcl.tx).mockReturnValue({
+      mockFcl.mockFclInstance.mutate.mockResolvedValue(mockTxId)
+      mockFcl.mockTx.mockReturnValue({
         onceExecuted: jest.fn().mockResolvedValue(mockTxResult),
       } as any)
 
@@ -144,7 +141,7 @@ describe("useBridgeTokenFromEvm", () => {
     })
 
     it("should handle mutation error", async () => {
-      ;(fcl.mutate as jest.Mock).mockRejectedValue(new Error("Mutation failed"))
+      mockFcl.mockFclInstance.mutate.mockRejectedValue(new Error("Mutation failed"))
 
       let hookResult: any
 

@@ -1,4 +1,3 @@
-import * as fcl from "@onflow/fcl"
 import {
   UseMutateAsyncFunction,
   UseMutateFunction,
@@ -6,15 +5,17 @@ import {
   UseMutationOptions,
   UseMutationResult,
 } from "@tanstack/react-query"
-import {useFlowChainId} from "./useFlowChainId"
-import {useFlowQueryClient} from "../provider/FlowQueryClient"
 import {CONTRACT_ADDRESSES} from "../constants"
+import {useFlowQueryClient} from "../provider/FlowQueryClient"
+import {useFlowChainId} from "./useFlowChainId"
+import {useFlowClient} from "./useFlowClient"
 
 export interface UseBridgeTokenFromEvmArgs {
   mutation?: Omit<
     UseMutationOptions<string, Error, UseBridgeTokenFromEvmMutateArgs>,
     "mutationFn"
   >
+  flowClient?: ReturnType<typeof useFlowClient>
 }
 
 export interface UseBridgeTokenFromEvmMutateArgs {
@@ -179,6 +180,7 @@ transaction(vaultIdentifier: String, amount: UInt256) {
  */
 export function useBridgeTokenFromEvm({
   mutation: mutationOptions = {},
+  flowClient,
 }: UseBridgeTokenFromEvmArgs = {}): UseBridgeTokenFromEvmResult {
   const chainId = useFlowChainId()
   const cadenceTx = chainId.data
@@ -186,6 +188,7 @@ export function useBridgeTokenFromEvm({
     : null
 
   const queryClient = useFlowQueryClient()
+  const fcl = useFlowClient({flowClient})
   const mutation = useMutation(
     {
       mutationFn: async ({
