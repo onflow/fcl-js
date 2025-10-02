@@ -48,6 +48,12 @@ export interface FlowClientConfig {
   customDecoders?: any
 }
 
+/**
+ * Creates a Flow client instance with authentication, transaction, and query capabilities.
+ *
+ * @param params Configuration object for the Flow client
+ * @returns A Flow client object with many methods for interacting with the Flow blockchain
+ */
 export function createFlowClient(params: FlowClientConfig) {
   // TODO: Load into the global plugin registry for now.  This should be
   // refactored to use a plugin registry bound to the client instance

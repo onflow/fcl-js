@@ -1,5 +1,17 @@
 # @onflow/transport-http
 
+## 1.13.1
+
+### Patch Changes
+
+- [#2634](https://github.com/onflow/fcl-js/pull/2634) [`d5f242b217426f125610f8043aea1a70e143a94a`](https://github.com/onflow/fcl-js/commit/d5f242b217426f125610f8043aea1a70e143a94a) Thanks [@jribbink](https://github.com/jribbink)! - Update dependencies
+
+- Updated dependencies [[`d5f242b217426f125610f8043aea1a70e143a94a`](https://github.com/onflow/fcl-js/commit/d5f242b217426f125610f8043aea1a70e143a94a)]:
+  - @onflow/util-address@1.2.4
+  - @onflow/util-invariant@1.2.5
+  - @onflow/util-logger@1.3.4
+  - @onflow/util-template@1.2.4
+
 ## 1.13.0
 
 ### Minor Changes

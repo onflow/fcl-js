@@ -1,6 +1,6 @@
 /*
  * This file is mostly a copy of Rainbowkit's internal WalletConnect wallet implementation.
- * The purpose is to substitute the original connector with a multi-scoped vesion that is
+ * The purpose is to substitute the original connector with a multi-scoped version that is
  * able to be used in a cross-VM context.
  *
  * See: https://github.com/rainbow-me/rainbowkit/blob/0c9679812123e17b45e1330d5e3b665b48c82864/packages/rainbowkit/src/wallets/walletConnectors/walletConnectWallet/walletConnectWallet.ts#L9
