@@ -54,7 +54,7 @@ export interface UseFlowScheduleResult {
   // Gets a transaction by ID
   // Equivalent to: flow schedule get <transaction-id> [--include-handler-data]
   get: (
-    transactionId: bigint,
+    txId: bigint,
     options?: {includeHandlerData?: boolean}
   ) => Promise<TransactionInfo | TransactionInfoWithHandler | null>
 
@@ -64,7 +64,7 @@ export interface UseFlowScheduleResult {
 
   // Cancels a scheduled transaction by ID
   // Equivalent to: flow schedule cancel <transaction-id> [--signer account]
-  cancel: (transactionId: bigint) => Promise<string>
+  cancel: (txId: bigint) => Promise<string>
 }
 
 const listTransactionsQuery = (chainId: string) => {
@@ -107,11 +107,11 @@ access(all) fun main(account: Address): [TransactionInfo] {
     let manager = FlowTransactionSchedulerUtils.borrowManager(at: account)
         ?? panic("Could not borrow Manager from account")
     
-    let transactionIds = manager.getTransactionIDs()
+    let txIds = manager.getTransactionIDs()
     var transactions: [TransactionInfo] = []
     
     // Get transaction data through the Manager
-    for id in transactionIds {
+    for id in txIds {
         if let txData = manager.getTransactionData(id) {
             transactions.append(TransactionInfo(data: txData))
         }
@@ -173,11 +173,11 @@ access(all) fun main(account: Address): [TransactionInfoWithHandler] {
     let manager = FlowTransactionSchedulerUtils.borrowManager(at: account)
         ?? panic("Could not borrow Manager from account")
     
-    let transactionIds = manager.getTransactionIDs()
+    let txIds = manager.getTransactionIDs()
     var transactions: [TransactionInfoWithHandler] = []
     
     // Get transaction data with handler views
-    for id in transactionIds {
+    for id in txIds {
         if let txData = manager.getTransactionData(id) {
             // Borrow handler to get its UUID
             let handler = txData.borrowHandler()
@@ -239,9 +239,9 @@ access(all) struct TransactionInfo {
 
 /// Gets a transaction by ID (checks globally, not manager-specific)
 /// This script is used by: flow schedule get <transaction-id>
-access(all) fun main(transactionId: UInt64): TransactionInfo? {
+access(all) fun main(txId: UInt64): TransactionInfo? {
     // Get transaction data directly from FlowTransactionScheduler
-    if let txData = FlowTransactionScheduler.getTransactionData(id: transactionId) {
+    if let txData = FlowTransactionScheduler.getTransactionData(id: txId) {
         return TransactionInfo(data: txData)
     }
     return nil
@@ -290,9 +290,9 @@ access(all) struct TransactionInfoWithHandler {
 
 /// Gets a transaction by ID with handler data (checks globally, not manager-specific)
 /// This script is used by: flow schedule get <transaction-id> --include-handler-data
-access(all) fun main(transactionId: UInt64): TransactionInfoWithHandler? {
+access(all) fun main(txId: UInt64): TransactionInfoWithHandler? {
     // Get transaction data directly from FlowTransactionScheduler
-    if let txData = FlowTransactionScheduler.getTransactionData(id: transactionId) {
+    if let txData = FlowTransactionScheduler.getTransactionData(id: txId) {
         // Borrow handler and resolve views
         let handler = txData.borrowHandler()
         let availableViews = handler.getViews()
@@ -358,7 +358,7 @@ import FungibleToken from ${contractAddresses.FungibleToken}
 
 /// Cancels a scheduled transaction by ID
 /// This transaction is used by: flow schedule cancel <transaction-id> [--signer account]
-transaction(transactionId: UInt64) {
+transaction(txId: UInt64) {
     let manager: auth(FlowTransactionSchedulerUtils.Owner) &{FlowTransactionSchedulerUtils.Manager}
     let receiverRef: &{FungibleToken.Receiver}
     
@@ -375,7 +375,7 @@ transaction(transactionId: UInt64) {
     
     execute {
         // Cancel the transaction and receive refunded fees
-        let refundedFees <- self.manager.cancel(id: transactionId)
+        let refundedFees <- self.manager.cancel(id: txId)
         
         // Deposit refunded fees back to the signer's vault
         self.receiverRef.deposit(from: <-refundedFees)
@@ -468,7 +468,7 @@ export function useFlowSchedule({
   // Get function -> Gets a specific transaction by ID
   const get = useCallback(
     async (
-      transactionId: bigint,
+      txId: bigint,
       options?: {includeHandlerData?: boolean}
     ): Promise<TransactionInfo | TransactionInfoWithHandler | null> => {
       if (!chainId) throw new Error("Chain ID not detected")
@@ -480,7 +480,7 @@ export function useFlowSchedule({
 
         const result = await fcl.query({
           cadence,
-          args: () => [arg(transactionId.toString(), t.UInt64)],
+          args: () => [arg(txId.toString(), t.UInt64)],
         })
 
         if (!result) return null
@@ -513,13 +513,13 @@ export function useFlowSchedule({
 
   // Cancel function -> Cancels a scheduled transaction
   const cancel = useCallback(
-    async (transactionId: bigint): Promise<string> => {
+    async (txId: bigint): Promise<string> => {
       if (!chainId) throw new Error("Chain ID not detected")
 
       try {
         const result = await cancelMutation.mutateAsync({
           cadence: cancelTransactionMutation(chainId),
-          args: () => [arg(transactionId.toString(), t.UInt64)],
+          args: () => [arg(txId.toString(), t.UInt64)],
         })
         return result
       } catch (error: any) {
