@@ -10,31 +10,36 @@ import {useFlowQueryClient} from "../provider/FlowQueryClient"
 import {CONTRACT_ADDRESSES} from "../constants"
 import {useFlowClient} from "./useFlowClient"
 
-export interface UseCrossVmReceiveNftTxArgs {
+export interface UseBridgeNftFromEvmTxArgs {
   mutation?: Omit<
-    UseMutationOptions<string, Error, UseCrossVmReceiveNftTxMutateArgs>,
+    UseMutationOptions<string, Error, UseBridgeNftFromEvmTxMutateArgs>,
     "mutationFn"
   >
   flowClient?: ReturnType<typeof useFlowClient>
 }
 
-export interface UseCrossVmReceiveNftTxMutateArgs {
+export interface UseBridgeNftFromEvmTxMutateArgs {
   nftIdentifier: string
+  /** The EVM NFT ID to bridge to Cadence as a string representation of a UInt256 (e.g., "123", "0x7b") */
   nftId: string
 }
 
-export interface UseCrossVmReceiveNftTxResult
+export interface UseBridgeNftFromEvmTxResult
   extends Omit<UseMutationResult<string, Error>, "mutate" | "mutateAsync"> {
-  receiveNft: UseMutateFunction<string, Error, UseCrossVmReceiveNftTxMutateArgs>
-  receiveNftAsync: UseMutateAsyncFunction<
+  bridgeNftFromEvm: UseMutateFunction<
     string,
     Error,
-    UseCrossVmReceiveNftTxMutateArgs
+    UseBridgeNftFromEvmTxMutateArgs
+  >
+  bridgeNftFromEvmAsync: UseMutateAsyncFunction<
+    string,
+    Error,
+    UseBridgeNftFromEvmTxMutateArgs
   >
 }
 
 // Takes a chain id and returns the cadence tx with addresses set
-export const getCrossVmReceiveNftTransaction = (chainId: string) => {
+export const getBridgeNftFromEvmTransaction = (chainId: string) => {
   const contractAddresses =
     CONTRACT_ADDRESSES[chainId as keyof typeof CONTRACT_ADDRESSES]
   if (!contractAddresses) {
@@ -167,13 +172,13 @@ transaction(nftIdentifier: String, id: UInt256) {
  *
  * @returns The mutation object used to send the transaction.
  */
-export function useCrossVmReceiveNft({
+export function useBridgeNftFromEvm({
   mutation: mutationOptions = {},
   flowClient,
-}: UseCrossVmReceiveNftTxArgs = {}): UseCrossVmReceiveNftTxResult {
+}: UseBridgeNftFromEvmTxArgs = {}): UseBridgeNftFromEvmTxResult {
   const chainId = useFlowChainId()
   const cadenceTx = chainId.data
-    ? getCrossVmReceiveNftTransaction(chainId.data)
+    ? getBridgeNftFromEvmTransaction(chainId.data)
     : null
 
   const queryClient = useFlowQueryClient()
@@ -183,7 +188,7 @@ export function useCrossVmReceiveNft({
       mutationFn: async ({
         nftIdentifier,
         nftId,
-      }: UseCrossVmReceiveNftTxMutateArgs) => {
+      }: UseBridgeNftFromEvmTxMutateArgs) => {
         if (!cadenceTx) {
           throw new Error("No current chain found")
         }
@@ -205,11 +210,15 @@ export function useCrossVmReceiveNft({
     queryClient
   )
 
-  const {mutate: receiveNft, mutateAsync: receiveNftAsync, ...rest} = mutation
+  const {
+    mutate: bridgeNftFromEvm,
+    mutateAsync: bridgeNftFromEvmAsync,
+    ...rest
+  } = mutation
 
   return {
-    receiveNft,
-    receiveNftAsync,
+    bridgeNftFromEvm,
+    bridgeNftFromEvmAsync,
     ...rest,
   }
 }
