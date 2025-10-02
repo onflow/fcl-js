@@ -71,7 +71,7 @@ export function UseBridgeNftFromEvmCard() {
         {exampleNftData && (
           <div
             className={`relative p-4 rounded-lg border ${
-              darkMode
+            darkMode
                 ? "bg-blue-500/10 border-blue-500/20"
                 : "bg-blue-50 border-blue-200"
             }`}
@@ -101,11 +101,14 @@ export function UseBridgeNftFromEvmCard() {
                 ? exampleNftData.nftIdentifier
                 : "e.g., A.dfc20aee650fcbdf.ExampleNFT.NFT"
             }
-            className={`w-full px-4 py-3 rounded-lg border font-mono text-sm transition-all duration-200 ${
+            className={`w-full px-4 py-3 rounded-lg border font-mono text-sm transition-all duration-200
+              ${
               darkMode
-                ? "bg-gray-900/50 border-white/10 text-white placeholder-gray-500 focus:border-flow-primary/50"
-                : "bg-white border-black/10 text-black placeholder-gray-400 focus:border-flow-primary/50"
-            } outline-none`}
+                  ? `bg-gray-900/50 border-white/10 text-white placeholder-gray-500
+                    focus:border-flow-primary/50`
+                  : `bg-white border-black/10 text-black placeholder-gray-400
+                    focus:border-flow-primary/50`
+              } outline-none`}
           />
         </div>
 
@@ -120,11 +123,14 @@ export function UseBridgeNftFromEvmCard() {
             value={nftId}
             onChange={e => setNftId(e.target.value)}
             placeholder="e.g., 1"
-            className={`w-full px-4 py-3 rounded-lg border font-mono text-sm transition-all duration-200 ${
+            className={`w-full px-4 py-3 rounded-lg border font-mono text-sm transition-all duration-200
+              ${
               darkMode
-                ? "bg-gray-900/50 border-white/10 text-white placeholder-gray-500 focus:border-flow-primary/50"
-                : "bg-white border-black/10 text-black placeholder-gray-400 focus:border-flow-primary/50"
-            } outline-none`}
+                  ? `bg-gray-900/50 border-white/10 text-white placeholder-gray-500
+                    focus:border-flow-primary/50`
+                  : `bg-white border-black/10 text-black placeholder-gray-400
+                    focus:border-flow-primary/50`
+              } outline-none`}
           />
         </div>
 
@@ -136,7 +142,7 @@ export function UseBridgeNftFromEvmCard() {
               isPending || !nftIdentifier || !nftId
                 ? "bg-gray-300 text-gray-500 cursor-not-allowed"
                 : "bg-flow-primary text-black hover:bg-flow-primary/80"
-            }`}
+              }`}
           >
             {isPending ? "Bridging..." : "Bridge NFT from EVM"}
           </button>
