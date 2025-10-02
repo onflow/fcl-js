@@ -137,4 +137,11 @@ type TransactionStatusSubscriptionArgs = {
   transactionId: string
 }
 
-type EventSubscriptionArgs = EventFilter
+type EventSubscriptionArgs = {
+  eventTypes?: string[]
+  addresses?: string[]
+  contracts?: string[]
+  startBlockId?: string
+  startBlockHeight?: number
+  heartbeatInterval?: number
+}
