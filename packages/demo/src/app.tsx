@@ -1,10 +1,12 @@
-import {useEffect, useState} from "react"
 import "./app.css"
-import {ContentSection} from "./components/content-section"
-import {ContentSidebar} from "./components/content-sidebar"
-import FlowProviderWrapper from "./components/flow-provider-wrapper"
-import {Footer} from "./components/footer"
+import FlowProviderWrapper, {
+  useDarkMode,
+} from "./components/flow-provider-wrapper"
 import {Header} from "./components/header"
+import {ContentSidebar} from "./components/content-sidebar"
+import {ContentSection} from "./components/content-section"
+import {Footer} from "./components/footer"
+import {useState} from "react"
 
 function AppContent() {
   // Move dark mode state outside FlowProvider to prevent sidebar reset on network change
@@ -25,15 +27,6 @@ function AppContent() {
       return newValue
     })
   }
-
-  // Apply dark class to document element for scrollbar styling
-  useEffect(() => {
-    if (darkMode) {
-      document.documentElement.classList.add("dark")
-    } else {
-      document.documentElement.classList.remove("dark")
-    }
-  }, [darkMode])
 
   return (
     <div
