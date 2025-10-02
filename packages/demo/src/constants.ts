@@ -22,10 +22,7 @@ export const CONTRACT_ADDRESSES: Record<string, Record<any, string>> = {
     mainnet: "0x1654653399040a61",
   },
   ExampleNFT: {
-    local: "0xf8d6e0586b0a20c7",
-    emulator: "0xf8d6e0586b0a20c7",
     testnet: "0x012e4d204a60ac6f",
-    mainnet: "0x012e4d204a60ac6f",
   },
   FungibleToken: {
     local: "0xee82856bf20e2aa6",

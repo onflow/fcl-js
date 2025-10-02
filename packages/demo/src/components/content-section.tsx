@@ -12,6 +12,8 @@ import {UseFlowMutateCard} from "./hook-cards/use-flow-mutate-card"
 import {UseFlowEventsCard} from "./hook-cards/use-flow-events-card"
 import {UseFlowTransactionStatusCard} from "./hook-cards/use-flow-transaction-status-card"
 import {UseFlowRevertibleRandomCard} from "./hook-cards/use-flow-revertible-random-card"
+import {UseBridgeNftFromEvmCard} from "./hook-cards/use-bridge-nft-from-evm-card"
+import {UseCrossVmSpendNftCard} from "./hook-cards/use-cross-vm-spend-nft-card"
 
 // Import setup cards
 import {InstallationCard} from "./setup-cards/installation-card"
@@ -85,6 +87,8 @@ export function ContentSection() {
             <UseFlowEventsCard />
             <UseFlowRevertibleRandomCard />
             <UseFlowTransactionStatusCard />
+            <UseBridgeNftFromEvmCard />
+            <UseCrossVmSpendNftCard />
           </div>
 
           <div className="mb-24">

@@ -110,6 +110,18 @@ const sidebarItems: SidebarItem[] = [
     category: "hooks",
     description: "Track transaction status",
   },
+  {
+    id: "hook-bridge-nft-from-evm",
+    label: "Bridge NFT from EVM",
+    category: "hooks",
+    description: "Bridge NFTs from EVM to Cadence",
+  },
+  {
+    id: "hook-cross-vm-spend-nft",
+    label: "Bridge NFT to EVM",
+    category: "hooks",
+    description: "Bridge NFTs from Cadence to EVM",
+  },
 
   // Advanced section
   {
