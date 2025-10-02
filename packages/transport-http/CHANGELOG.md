@@ -1,5 +1,11 @@
 # @onflow/transport-http
 
+## 1.13.2
+
+### Patch Changes
+
+- [#2649](https://github.com/onflow/fcl-js/pull/2649) [`430bb0813bab6c2de59e152184256238bda20d99`](https://github.com/onflow/fcl-js/commit/430bb0813bab6c2de59e152184256238bda20d99) Thanks [@jribbink](https://github.com/jribbink)! - Renamed misnamed `startHeight` argument to `startBlockHeight` for event subscriptions. Type definitions will be broken to reflect this change, however the `startHeight` argument will still be accepted for backward compatibility.
+
 ## 1.13.1
 
 ### Patch Changes
