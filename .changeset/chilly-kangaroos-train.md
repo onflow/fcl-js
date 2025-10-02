@@ -3,4 +3,4 @@
 "@onflow/demo": minor
 ---
 
-Added crossvm hook to transfer tokens from evm to cadence
+Added `useBridgeTokenFromEvm` hook for bridging fungible tokens from Flow EVM to Cadence. This hook withdraws tokens from the signer's Cadence-Owned Account (COA) in EVM and deposits them into their Cadence vault, automatically configuring the vault if needed.
