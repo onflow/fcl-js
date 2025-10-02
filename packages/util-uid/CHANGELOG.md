@@ -1,5 +1,11 @@
 # @onflow/util-uid
 
+## 1.2.4
+
+### Patch Changes
+
+- [#2634](https://github.com/onflow/fcl-js/pull/2634) [`d5f242b217426f125610f8043aea1a70e143a94a`](https://github.com/onflow/fcl-js/commit/d5f242b217426f125610f8043aea1a70e143a94a) Thanks [@jribbink](https://github.com/jribbink)! - Update dependencies
+
 ## 1.2.3
 
 ### Patch Changes

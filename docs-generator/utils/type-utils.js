@@ -19,6 +19,14 @@ function cleanupTypeText(typeText) {
   return cleaned
 }
 
+function stripGenericParams(typeText) {
+  if (!typeText || typeof typeText !== "string") {
+    return typeText
+  }
+  // Strip <T>, <T extends Something>, <T, U>, etc. from type names
+  return typeText.replace(/<[^>]*>/, "")
+}
+
 function toCamelCase(typeName) {
   if (!typeName) return typeName
 
@@ -45,4 +53,5 @@ module.exports = {
   toCamelCase,
   escapeParameterNameForMDX,
   escapeTextForMDX,
+  stripGenericParams,
 }
