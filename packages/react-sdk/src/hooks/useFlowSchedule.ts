@@ -54,7 +54,7 @@ export interface UseFlowScheduleResult {
   // Gets a transaction by ID
   // Equivalent to: flow schedule get <transaction-id> [--include-handler-data]
   getScheduledTx: (
-    txId: bigint,
+    scheduledTxId: bigint,
     options?: {includeHandlerData?: boolean}
   ) => Promise<ScheduledTxInfo | ScheduledTxInfoWithHandler | null>
 
@@ -64,7 +64,7 @@ export interface UseFlowScheduleResult {
 
   // Cancels a scheduled transaction by ID
   // Equivalent to: flow schedule cancel <transaction-id> [--signer account]
-  cancelScheduledTx: (txId: bigint) => Promise<string>
+  cancelScheduledTx: (scheduledTxId: bigint) => Promise<string>
 }
 
 const listScheduledTxQuery = (chainId: string) => {
@@ -468,7 +468,7 @@ export function useFlowSchedule({
   // Get function -> Gets a specific transaction by ID
   const getScheduledTx = useCallback(
     async (
-      txId: bigint,
+      scheduledTxId: bigint,
       options?: {includeHandlerData?: boolean}
     ): Promise<ScheduledTxInfo | ScheduledTxInfoWithHandler | null> => {
       if (!chainId) throw new Error("Chain ID not detected")
@@ -480,7 +480,7 @@ export function useFlowSchedule({
 
         const result = await fcl.query({
           cadence,
-          args: () => [arg(txId.toString(), t.UInt64)],
+          args: () => [arg(scheduledTxId.toString(), t.UInt64)],
         })
 
         if (!result) return null
@@ -513,13 +513,13 @@ export function useFlowSchedule({
 
   // Cancel function -> Cancels a scheduled transaction
   const cancelScheduledTx = useCallback(
-    async (txId: bigint): Promise<string> => {
+    async (scheduledTxId: bigint): Promise<string> => {
       if (!chainId) throw new Error("Chain ID not detected")
 
       try {
         const result = await cancelMutation.mutateAsync({
           cadence: cancelScheduledTxMutation(chainId),
-          args: () => [arg(txId.toString(), t.UInt64)],
+          args: () => [arg(scheduledTxId.toString(), t.UInt64)],
         })
         return result
       } catch (error: any) {
