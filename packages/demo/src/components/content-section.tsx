@@ -12,6 +12,7 @@ import {UseFlowMutateCard} from "./hook-cards/use-flow-mutate-card"
 import {UseFlowEventsCard} from "./hook-cards/use-flow-events-card"
 import {UseFlowTransactionStatusCard} from "./hook-cards/use-flow-transaction-status-card"
 import {UseFlowRevertibleRandomCard} from "./hook-cards/use-flow-revertible-random-card"
+import {UseFlowScheduleCard} from "./hook-cards/use-flow-schedule-card"
 
 // Import setup cards
 import {InstallationCard} from "./setup-cards/installation-card"
@@ -85,6 +86,7 @@ export function ContentSection() {
             <UseFlowEventsCard />
             <UseFlowRevertibleRandomCard />
             <UseFlowTransactionStatusCard />
+            <UseFlowScheduleCard />
           </div>
 
           <div className="mb-24">

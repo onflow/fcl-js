@@ -6,13 +6,13 @@ import {useFlowChainId} from "./useFlowChainId"
 import {CONTRACT_ADDRESSES, CADENCE_UFIX64_PRECISION} from "../constants"
 import {parseUnits} from "viem/utils"
 
-export enum TransactionPriority {
+export enum ScheduledTxPriority {
   Low = 0,
   Medium = 1,
   High = 2,
 }
 
-export enum TransactionStatus {
+export enum ScheduledTxStatus {
   Pending = 0,
   Processing = 1,
   Completed = 2,
@@ -20,11 +20,11 @@ export enum TransactionStatus {
   Cancelled = 4,
 }
 
-export interface TransactionInfo {
+export interface ScheduledTxInfo {
   id: bigint
-  priority: TransactionPriority
+  priority: ScheduledTxPriority
   executionEffort: bigint
-  status: TransactionStatus
+  status: ScheduledTxStatus
   fees: {
     value: bigint
     formatted: string
@@ -34,7 +34,7 @@ export interface TransactionInfo {
   handlerAddress: string
 }
 
-export interface TransactionInfoWithHandler extends TransactionInfo {
+export interface ScheduledTxInfoWithHandler extends ScheduledTxInfo {
   handlerUUID: bigint
   handlerResolvedViews: {[viewType: string]: any}
 }
@@ -46,28 +46,28 @@ export interface UseFlowScheduleArgs {
 export interface UseFlowScheduleResult {
   // Lists all transactions for an account
   // Equivalent to: flow schedule list <account> [--include-handler-data]
-  list: (
+  listScheduledTx: (
     account: string,
     options?: {includeHandlerData?: boolean}
-  ) => Promise<TransactionInfo[] | TransactionInfoWithHandler[]>
+  ) => Promise<ScheduledTxInfo[] | ScheduledTxInfoWithHandler[]>
 
   // Gets a transaction by ID
   // Equivalent to: flow schedule get <transaction-id> [--include-handler-data]
-  get: (
+  getScheduledTx: (
     txId: bigint,
     options?: {includeHandlerData?: boolean}
-  ) => Promise<TransactionInfo | TransactionInfoWithHandler | null>
+  ) => Promise<ScheduledTxInfo | ScheduledTxInfoWithHandler | null>
 
   // Sets up a Manager resource in the signer's account if not already done
   // Equivalent to: flow schedule setup [--signer account]
-  setup: () => Promise<string>
+  setupScheduler: () => Promise<string>
 
   // Cancels a scheduled transaction by ID
   // Equivalent to: flow schedule cancel <transaction-id> [--signer account]
-  cancel: (txId: bigint) => Promise<string>
+  cancelScheduledTx: (txId: bigint) => Promise<string>
 }
 
-const listTransactionsQuery = (chainId: string) => {
+const listScheduledTxQuery = (chainId: string) => {
   const contractAddresses =
     CONTRACT_ADDRESSES[chainId as keyof typeof CONTRACT_ADDRESSES]
   if (!contractAddresses) {
@@ -122,7 +122,7 @@ access(all) fun main(account: Address): [TransactionInfo] {
 `
 }
 
-const listTransactionsWithHandlerQuery = (chainId: string) => {
+const listScheduledTxWithHandlerQuery = (chainId: string) => {
   const contractAddresses =
     CONTRACT_ADDRESSES[chainId as keyof typeof CONTRACT_ADDRESSES]
   if (!contractAddresses) {
@@ -205,7 +205,7 @@ access(all) fun main(account: Address): [TransactionInfoWithHandler] {
 `
 }
 
-const getTransactionQuery = (chainId: string) => {
+const getScheduledTxQuery = (chainId: string) => {
   const contractAddresses =
     CONTRACT_ADDRESSES[chainId as keyof typeof CONTRACT_ADDRESSES]
   if (!contractAddresses) {
@@ -249,7 +249,7 @@ access(all) fun main(txId: UInt64): TransactionInfo? {
 `
 }
 
-const getTransactionWithHandlerQuery = (chainId: string) => {
+const getScheduledTxWithHandlerQuery = (chainId: string) => {
   const contractAddresses =
     CONTRACT_ADDRESSES[chainId as keyof typeof CONTRACT_ADDRESSES]
   if (!contractAddresses) {
@@ -316,7 +316,7 @@ access(all) fun main(txId: UInt64): TransactionInfoWithHandler? {
 `
 }
 
-const setupManagerMutation = (chainId: string) => {
+const setupSchedulerMutation = (chainId: string) => {
   const contractAddresses =
     CONTRACT_ADDRESSES[chainId as keyof typeof CONTRACT_ADDRESSES]
   if (!contractAddresses) {
@@ -344,7 +344,7 @@ transaction() {
 `
 }
 
-const cancelTransactionMutation = (chainId: string) => {
+const cancelScheduledTxMutation = (chainId: string) => {
   const contractAddresses =
     CONTRACT_ADDRESSES[chainId as keyof typeof CONTRACT_ADDRESSES]
   if (!contractAddresses) {
@@ -384,12 +384,12 @@ transaction(txId: UInt64) {
 `
 }
 
-const convertTransactionInfo = (data: any): TransactionInfo => {
+const convertScheduledTxInfo = (data: any): ScheduledTxInfo => {
   return {
     id: BigInt(data.id || 0),
-    priority: Number(data.priority || 0) as TransactionPriority,
+    priority: Number(data.priority || 0) as ScheduledTxPriority,
     executionEffort: BigInt(data.executionEffort || 0),
-    status: Number(data.status || 0) as TransactionStatus,
+    status: Number(data.status || 0) as ScheduledTxStatus,
     fees: {
       value: parseUnits(data.fees || "0.0", CADENCE_UFIX64_PRECISION),
       formatted: data.fees || "0.0",
@@ -400,14 +400,14 @@ const convertTransactionInfo = (data: any): TransactionInfo => {
   }
 }
 
-const convertTransactionInfoWithHandler = (
+const convertScheduledTxInfoWithHandler = (
   data: any
-): TransactionInfoWithHandler => {
+): ScheduledTxInfoWithHandler => {
   return {
     id: BigInt(data.id || 0),
-    priority: Number(data.priority || 0) as TransactionPriority,
+    priority: Number(data.priority || 0) as ScheduledTxPriority,
     executionEffort: BigInt(data.executionEffort || 0),
-    status: Number(data.status || 0) as TransactionStatus,
+    status: Number(data.status || 0) as ScheduledTxStatus,
     fees: {
       value: parseUnits(data.fees || "0.0", CADENCE_UFIX64_PRECISION),
       formatted: data.fees || "0.0",
@@ -436,17 +436,17 @@ export function useFlowSchedule({
   const cancelMutation = useFlowMutate({flowClient})
 
   // List function -> Lists all transactions for an account
-  const list = useCallback(
+  const listScheduledTx = useCallback(
     async (
       account: string,
       options?: {includeHandlerData?: boolean}
-    ): Promise<TransactionInfo[] | TransactionInfoWithHandler[]> => {
+    ): Promise<ScheduledTxInfo[] | ScheduledTxInfoWithHandler[]> => {
       if (!chainId) throw new Error("Chain ID not detected")
 
       try {
         const cadence = options?.includeHandlerData
-          ? listTransactionsWithHandlerQuery(chainId)
-          : listTransactionsQuery(chainId)
+          ? listScheduledTxWithHandlerQuery(chainId)
+          : listScheduledTxQuery(chainId)
 
         const result = await fcl.query({
           cadence,
@@ -455,8 +455,8 @@ export function useFlowSchedule({
 
         if (!Array.isArray(result)) return []
         return options?.includeHandlerData
-          ? result.map(convertTransactionInfoWithHandler)
-          : result.map(convertTransactionInfo)
+          ? result.map(convertScheduledTxInfoWithHandler)
+          : result.map(convertScheduledTxInfo)
       } catch (error: any) {
         const message = error?.message || "Unknown error"
         throw new Error(`Failed to list transactions: ${message}`)
@@ -466,17 +466,17 @@ export function useFlowSchedule({
   )
 
   // Get function -> Gets a specific transaction by ID
-  const get = useCallback(
+  const getScheduledTx = useCallback(
     async (
       txId: bigint,
       options?: {includeHandlerData?: boolean}
-    ): Promise<TransactionInfo | TransactionInfoWithHandler | null> => {
+    ): Promise<ScheduledTxInfo | ScheduledTxInfoWithHandler | null> => {
       if (!chainId) throw new Error("Chain ID not detected")
 
       try {
         const cadence = options?.includeHandlerData
-          ? getTransactionWithHandlerQuery(chainId)
-          : getTransactionQuery(chainId)
+          ? getScheduledTxWithHandlerQuery(chainId)
+          : getScheduledTxQuery(chainId)
 
         const result = await fcl.query({
           cadence,
@@ -485,8 +485,8 @@ export function useFlowSchedule({
 
         if (!result) return null
         return options?.includeHandlerData
-          ? convertTransactionInfoWithHandler(result)
-          : convertTransactionInfo(result)
+          ? convertScheduledTxInfoWithHandler(result)
+          : convertScheduledTxInfo(result)
       } catch (error: any) {
         const message = error?.message || "Unknown error"
         throw new Error(`Failed to get transaction: ${message}`)
@@ -496,12 +496,12 @@ export function useFlowSchedule({
   )
 
   // Setup function -> Creates manager resource if not exists
-  const setup = useCallback(async (): Promise<string> => {
+  const setupScheduler = useCallback(async (): Promise<string> => {
     if (!chainId) throw new Error("Chain ID not detected")
 
     try {
       const result = await setupMutation.mutateAsync({
-        cadence: setupManagerMutation(chainId),
+        cadence: setupSchedulerMutation(chainId),
         args: () => [],
       })
       return result
@@ -512,13 +512,13 @@ export function useFlowSchedule({
   }, [setupMutation, chainId])
 
   // Cancel function -> Cancels a scheduled transaction
-  const cancel = useCallback(
+  const cancelScheduledTx = useCallback(
     async (txId: bigint): Promise<string> => {
       if (!chainId) throw new Error("Chain ID not detected")
 
       try {
         const result = await cancelMutation.mutateAsync({
-          cadence: cancelTransactionMutation(chainId),
+          cadence: cancelScheduledTxMutation(chainId),
           args: () => [arg(txId.toString(), t.UInt64)],
         })
         return result
@@ -531,9 +531,9 @@ export function useFlowSchedule({
   )
 
   return {
-    list,
-    get,
-    setup,
-    cancel,
+    listScheduledTx,
+    getScheduledTx,
+    setupScheduler,
+    cancelScheduledTx,
   }
 }

@@ -4,9 +4,9 @@ import {createMockFclInstance, MockFclInstance} from "../__mocks__/flow-client"
 import {FlowProvider} from "../provider"
 import {useFlowChainId} from "./useFlowChainId"
 import {
-  TransactionInfoWithHandler,
-  TransactionPriority,
-  TransactionStatus,
+  ScheduledTxInfoWithHandler,
+  ScheduledTxPriority,
+  ScheduledTxStatus,
   useFlowSchedule,
 } from "./useFlowSchedule"
 
@@ -29,7 +29,7 @@ describe("useFlowSchedule", () => {
     jest.mocked(fcl.createFlowClient).mockReturnValue(mockFcl.mockFclInstance)
   })
 
-  describe("list", () => {
+  describe("listScheduledTx", () => {
     test("lists transactions for an account", async () => {
       const mockTransactions = [
         {
@@ -52,12 +52,12 @@ describe("useFlowSchedule", () => {
         wrapper: FlowProvider,
       })
 
-      const transactions = await result.current.list("0xACCOUNT")
+      const transactions = await result.current.listScheduledTx("0xACCOUNT")
 
       expect(transactions).toHaveLength(1)
       expect(transactions[0].id).toBe(1n)
-      expect(transactions[0].priority).toBe(TransactionPriority.Medium)
-      expect(transactions[0].status).toBe(TransactionStatus.Pending)
+      expect(transactions[0].priority).toBe(ScheduledTxPriority.Medium)
+      expect(transactions[0].status).toBe(ScheduledTxStatus.Pending)
       expect(mockFcl.mockFclInstance.query).toHaveBeenCalled()
     })
 
@@ -85,9 +85,9 @@ describe("useFlowSchedule", () => {
         wrapper: FlowProvider,
       })
 
-      const transactions = (await result.current.list("0xACCOUNT", {
+      const transactions = (await result.current.listScheduledTx("0xACCOUNT", {
         includeHandlerData: true,
-      })) as TransactionInfoWithHandler[]
+      })) as ScheduledTxInfoWithHandler[]
 
       expect(transactions).toHaveLength(1)
       expect(transactions[0].id).toBe(1n)
@@ -105,7 +105,7 @@ describe("useFlowSchedule", () => {
         wrapper: FlowProvider,
       })
 
-      const transactions = await result.current.list("0xACCOUNT")
+      const transactions = await result.current.listScheduledTx("0xACCOUNT")
 
       expect(transactions).toEqual([])
       expect(mockFcl.mockFclInstance.query).toHaveBeenCalled()
@@ -121,7 +121,7 @@ describe("useFlowSchedule", () => {
         wrapper: FlowProvider,
       })
 
-      await expect(result.current.list("0xACCOUNT")).rejects.toThrow(
+      await expect(result.current.listScheduledTx("0xACCOUNT")).rejects.toThrow(
         "Chain ID not detected"
       )
     })
@@ -134,13 +134,13 @@ describe("useFlowSchedule", () => {
         wrapper: FlowProvider,
       })
 
-      await expect(result.current.list("0xACCOUNT")).rejects.toThrow(
+      await expect(result.current.listScheduledTx("0xACCOUNT")).rejects.toThrow(
         "Failed to list transactions: Query failed"
       )
     })
   })
 
-  describe("get", () => {
+  describe("getScheduledTx", () => {
     test("gets a transaction by ID", async () => {
       const mockTransaction = {
         id: "42",
@@ -161,12 +161,12 @@ describe("useFlowSchedule", () => {
         wrapper: FlowProvider,
       })
 
-      const transaction = await result.current.get(42n)
+      const transaction = await result.current.getScheduledTx(42n)
 
       expect(transaction).toBeDefined()
       expect(transaction?.id).toBe(42n)
-      expect(transaction?.priority).toBe(TransactionPriority.Low)
-      expect(transaction?.status).toBe(TransactionStatus.Completed)
+      expect(transaction?.priority).toBe(ScheduledTxPriority.Low)
+      expect(transaction?.status).toBe(ScheduledTxStatus.Completed)
       expect(mockFcl.mockFclInstance.query).toHaveBeenCalled()
     })
 
@@ -192,9 +192,9 @@ describe("useFlowSchedule", () => {
         wrapper: FlowProvider,
       })
 
-      const transaction = (await result.current.get(42n, {
+      const transaction = (await result.current.getScheduledTx(42n, {
         includeHandlerData: true,
-      })) as TransactionInfoWithHandler
+      })) as ScheduledTxInfoWithHandler
 
       expect(transaction).toBeDefined()
       expect(transaction.id).toBe(42n)
@@ -212,7 +212,7 @@ describe("useFlowSchedule", () => {
         wrapper: FlowProvider,
       })
 
-      const transaction = await result.current.get(999n)
+      const transaction = await result.current.getScheduledTx(999n)
 
       expect(transaction).toBeNull()
       expect(mockFcl.mockFclInstance.query).toHaveBeenCalled()
@@ -226,13 +226,13 @@ describe("useFlowSchedule", () => {
         wrapper: FlowProvider,
       })
 
-      await expect(result.current.get(42n)).rejects.toThrow(
+      await expect(result.current.getScheduledTx(42n)).rejects.toThrow(
         "Failed to get transaction: Query failed"
       )
     })
   })
 
-  describe("setup", () => {
+  describe("setupScheduler", () => {
     test("sets up manager successfully", async () => {
       const txId = "setup-tx-id-123"
       jest.mocked(mockFcl.mockFclInstance.mutate).mockResolvedValueOnce(txId)
@@ -241,7 +241,7 @@ describe("useFlowSchedule", () => {
         wrapper: FlowProvider,
       })
 
-      const returnedTxId = await result.current.setup()
+      const returnedTxId = await result.current.setupScheduler()
 
       expect(returnedTxId).toBe(txId)
       expect(mockFcl.mockFclInstance.mutate).toHaveBeenCalled()
@@ -255,13 +255,13 @@ describe("useFlowSchedule", () => {
         wrapper: FlowProvider,
       })
 
-      await expect(result.current.setup()).rejects.toThrow(
+      await expect(result.current.setupScheduler()).rejects.toThrow(
         "Failed to setup manager: Setup failed"
       )
     })
   })
 
-  describe("cancel", () => {
+  describe("cancelScheduledTx", () => {
     test("cancels a transaction successfully", async () => {
       const txId = "cancel-tx-id-456"
       jest.mocked(mockFcl.mockFclInstance.mutate).mockResolvedValueOnce(txId)
@@ -270,7 +270,7 @@ describe("useFlowSchedule", () => {
         wrapper: FlowProvider,
       })
 
-      const returnedTxId = await result.current.cancel(42n)
+      const returnedTxId = await result.current.cancelScheduledTx(42n)
 
       expect(returnedTxId).toBe(txId)
       expect(mockFcl.mockFclInstance.mutate).toHaveBeenCalled()
@@ -284,7 +284,7 @@ describe("useFlowSchedule", () => {
         wrapper: FlowProvider,
       })
 
-      await expect(result.current.cancel(42n)).rejects.toThrow(
+      await expect(result.current.cancelScheduledTx(42n)).rejects.toThrow(
         "Failed to cancel transaction: Cancel failed"
       )
     })
@@ -303,7 +303,7 @@ describe("useFlowSchedule", () => {
       }
     )
 
-    await result.current.list("0xACCOUNT")
+    await result.current.listScheduledTx("0xACCOUNT")
 
     expect(customFlowClient.query).toHaveBeenCalled()
   })

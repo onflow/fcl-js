@@ -110,6 +110,12 @@ const sidebarItems: SidebarItem[] = [
     category: "hooks",
     description: "Track transaction status",
   },
+  {
+    id: "hook-flow-schedule",
+    label: "Flow Schedule",
+    category: "hooks",
+    description: "Manage scheduled transactions",
+  },
 
   // Advanced section
   {
