@@ -48,12 +48,13 @@ export const eventsHandler = createSubscriptionHandler<{
     let resumeArgs: EventsArgs = {
       ...initialArgs,
     }
+
     // Legacy support for startHeight, to be removed in the future
     // Existing users may see type errors if they use startHeight,
     // but this should be a smooth transition.
-    if ("startHeight" in resumeArgs && resumeArgs.startBlockHeight) {
-      resumeArgs.startHeight = resumeArgs.startHeight as number
-      delete resumeArgs.startBlockHeight
+    if ("startHeight" in resumeArgs && resumeArgs.startHeight) {
+      resumeArgs.startBlockHeight = resumeArgs.startHeight as number
+      delete resumeArgs.startHeight
     }
 
     return {
