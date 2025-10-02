@@ -67,7 +67,9 @@ export function UseBridgeTokenFromEvmCard() {
       const [whole = "0", fraction = ""] = cleaned.split(".")
 
       // Pad or truncate fraction to match decimals
-      const paddedFraction = fraction.padEnd(decimalPlaces, "0").slice(0, decimalPlaces)
+      const paddedFraction = fraction
+        .padEnd(decimalPlaces, "0")
+        .slice(0, decimalPlaces)
 
       // Combine whole and fraction parts
       const weiValue = (whole || "0") + paddedFraction
@@ -107,7 +109,7 @@ export function UseBridgeTokenFromEvmCard() {
         {clickTokenData && (
           <div
             className={`relative p-4 rounded-lg border ${
-              darkMode
+            darkMode
                 ? "bg-blue-500/10 border-blue-500/20"
                 : "bg-blue-50 border-blue-200"
             }`}
@@ -137,11 +139,14 @@ export function UseBridgeTokenFromEvmCard() {
                 ? clickTokenData.vaultIdentifier
                 : "e.g., A.dfc20aee650fcbdf.EVMVMBridgedToken_xxx.Vault"
             }
-            className={`w-full px-4 py-3 rounded-lg border font-mono text-sm transition-all duration-200 ${
+            className={`w-full px-4 py-3 rounded-lg border font-mono text-sm transition-all duration-200
+              ${
               darkMode
-                ? "bg-gray-900/50 border-white/10 text-white placeholder-gray-500 focus:border-flow-primary/50"
-                : "bg-white border-black/10 text-black placeholder-gray-400 focus:border-flow-primary/50"
-            } outline-none`}
+                  ? `bg-gray-900/50 border-white/10 text-white placeholder-gray-500
+                    focus:border-flow-primary/50`
+                  : `bg-white border-black/10 text-black placeholder-gray-400
+                    focus:border-flow-primary/50`
+              } outline-none`}
           />
         </div>
 
@@ -156,11 +161,14 @@ export function UseBridgeTokenFromEvmCard() {
             value={amount}
             onChange={e => setAmount(e.target.value)}
             placeholder="e.g., 1 or 1.5"
-            className={`w-full px-4 py-3 rounded-lg border font-mono text-sm transition-all duration-200 ${
+            className={`w-full px-4 py-3 rounded-lg border font-mono text-sm transition-all duration-200
+              ${
               darkMode
-                ? "bg-gray-900/50 border-white/10 text-white placeholder-gray-500 focus:border-flow-primary/50"
-                : "bg-white border-black/10 text-black placeholder-gray-400 focus:border-flow-primary/50"
-            } outline-none`}
+                  ? `bg-gray-900/50 border-white/10 text-white placeholder-gray-500
+                    focus:border-flow-primary/50`
+                  : `bg-white border-black/10 text-black placeholder-gray-400
+                    focus:border-flow-primary/50`
+              } outline-none`}
           />
         </div>
 
@@ -175,14 +183,20 @@ export function UseBridgeTokenFromEvmCard() {
             value={decimals}
             onChange={e => setDecimals(e.target.value)}
             placeholder="e.g., 18"
-            className={`w-full px-4 py-3 rounded-lg border font-mono text-sm transition-all duration-200 ${
+            className={`w-full px-4 py-3 rounded-lg border font-mono text-sm transition-all duration-200
+              ${
               darkMode
-                ? "bg-gray-900/50 border-white/10 text-white placeholder-gray-500 focus:border-flow-primary/50"
-                : "bg-white border-black/10 text-black placeholder-gray-400 focus:border-flow-primary/50"
-            } outline-none`}
+                  ? `bg-gray-900/50 border-white/10 text-white placeholder-gray-500
+                    focus:border-flow-primary/50`
+                  : `bg-white border-black/10 text-black placeholder-gray-400
+                    focus:border-flow-primary/50`
+              } outline-none`}
           />
-          <p className={`text-xs ${darkMode ? "text-gray-400" : "text-gray-500"}`}>
-            ERC20 decimals (typically 18). Amount will be converted to Wei automatically.
+          <p
+            className={`text-xs ${darkMode ? "text-gray-400" : "text-gray-500"}`}
+          >
+            ERC20 decimals (typically 18). Amount will be converted to Wei
+            automatically.
           </p>
         </div>
 
@@ -194,7 +208,7 @@ export function UseBridgeTokenFromEvmCard() {
               isPending || !vaultIdentifier || !amount
                 ? "bg-gray-300 text-gray-500 cursor-not-allowed"
                 : "bg-flow-primary text-black hover:bg-flow-primary/80"
-            }`}
+              }`}
           >
             {isPending ? "Bridging..." : "Bridge Token from EVM"}
           </button>

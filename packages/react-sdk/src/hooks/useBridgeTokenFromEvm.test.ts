@@ -141,7 +141,9 @@ describe("useBridgeTokenFromEvm", () => {
     })
 
     it("should handle mutation error", async () => {
-      mockFcl.mockFclInstance.mutate.mockRejectedValue(new Error("Mutation failed"))
+      mockFcl.mockFclInstance.mutate.mockRejectedValue(
+        new Error("Mutation failed")
+      )
 
       let hookResult: any
 
