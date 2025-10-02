@@ -49,6 +49,14 @@ export const eventsHandler = createSubscriptionHandler<{
       ...initialArgs,
     }
 
+    // Legacy support for startHeight, to be removed in the future
+    // Existing users may see type errors if they use startHeight,
+    // but this should be a smooth transition.
+    if ("startHeight" in resumeArgs && resumeArgs.startHeight) {
+      resumeArgs.startBlockHeight = resumeArgs.startHeight as number
+      delete resumeArgs.startHeight
+    }
+
     return {
       onData(rawData: EventsDataDto) {
         for (const event of rawData.events) {
@@ -74,7 +82,7 @@ export const eventsHandler = createSubscriptionHandler<{
         // Update the resume args
         resumeArgs = {
           ...resumeArgs,
-          startHeight: Number(BigInt(rawData.block_height) + BigInt(1)),
+          startBlockHeight: Number(BigInt(rawData.block_height) + BigInt(1)),
           startBlockId: undefined,
         }
       },
@@ -88,17 +96,17 @@ export const eventsHandler = createSubscriptionHandler<{
           contracts: resumeArgs.contracts,
         }
 
-        if ("startBlockHeight" in resumeArgs && resumeArgs.startBlockHeight) {
+        if ("startHeight" in resumeArgs && resumeArgs.startBlockHeight) {
           return {
             ...encodedArgs,
-            start_block_height: resumeArgs.startBlockHeight,
+            start_block_height: String(resumeArgs.startBlockHeight),
           }
         }
 
         if ("startBlockId" in resumeArgs && resumeArgs.startBlockId) {
           return {
             ...encodedArgs,
-            start_block_id: resumeArgs.startBlockId,
+            start_block_id: String(resumeArgs.startBlockId),
           }
         }
 
