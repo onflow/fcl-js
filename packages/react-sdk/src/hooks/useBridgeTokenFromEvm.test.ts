@@ -2,9 +2,9 @@ import {renderHook, act, waitFor} from "@testing-library/react"
 import * as fcl from "@onflow/fcl"
 import {FlowProvider} from "../provider"
 import {
-  getCrossVmReceiveTokenTransaction,
-  useCrossVmReceiveToken,
-} from "./useCrossVmReceiveToken"
+  getBridgeTokenFromEvmTransaction,
+  useBridgeTokenFromEvm,
+} from "./useBridgeTokenFromEvm"
 import {useFlowChainId} from "./useFlowChainId"
 import {createMockFclInstance, MockFclInstance} from "../__mocks__/flow-client"
 
@@ -16,7 +16,7 @@ jest.mock("./useFlowClient", () => ({
   useFlowClient: jest.fn(),
 }))
 
-describe("useCrossVmReceiveToken", () => {
+describe("useBridgeTokenFromEvm", () => {
   let mockFcl: MockFclInstance
 
   const mockTxId = "0x123"
@@ -44,25 +44,25 @@ describe("useCrossVmReceiveToken", () => {
     jest.mocked(fcl.createFlowClient).mockReturnValue(mockFcl.mockFclInstance)
   })
 
-  describe("getCrossVmReceiveTokenTransaction", () => {
+  describe("getBridgeTokenFromEvmTransaction", () => {
     it("should return correct cadence for mainnet", () => {
-      const result = getCrossVmReceiveTokenTransaction("mainnet")
+      const result = getBridgeTokenFromEvmTransaction("mainnet")
       expect(result).toContain("import EVM from 0xe467b9dd11fa00df")
     })
 
     it("should return correct cadence for testnet", () => {
-      const result = getCrossVmReceiveTokenTransaction("testnet")
+      const result = getBridgeTokenFromEvmTransaction("testnet")
       expect(result).toContain("import EVM from 0x8c5303eaa26202d6")
     })
 
     it("should throw error for unsupported chain", () => {
-      expect(() => getCrossVmReceiveTokenTransaction("unsupported")).toThrow(
+      expect(() => getBridgeTokenFromEvmTransaction("unsupported")).toThrow(
         "Unsupported chain: unsupported"
       )
     })
   })
 
-  describe("useCrossVmReceiveToken", () => {
+  describe("useBridgeTokenFromEvmTx", () => {
     test("should handle successful transaction", async () => {
       jest.mocked(fcl.mutate).mockResolvedValue(mockTxId)
       jest.mocked(fcl.tx).mockReturnValue({
@@ -72,13 +72,13 @@ describe("useCrossVmReceiveToken", () => {
       let result: any
       let rerender: any
       await act(async () => {
-        ;({result, rerender} = renderHook(useCrossVmReceiveToken, {
+        ;({result, rerender} = renderHook(useBridgeTokenFromEvm, {
           wrapper: FlowProvider,
         }))
       })
 
       await act(async () => {
-        await result.current.receiveToken({
+        await result.current.bridgeTokenFromEvm({
           vaultIdentifier: "A.dfc20aee650fcbdf.ClickToken.Vault",
           amount: "1000000000000000000",
         })
@@ -100,14 +100,14 @@ describe("useCrossVmReceiveToken", () => {
       let hookResult: any
 
       await act(async () => {
-        const {result} = renderHook(() => useCrossVmReceiveToken(), {
+        const {result} = renderHook(() => useBridgeTokenFromEvm(), {
           wrapper: FlowProvider,
         })
         hookResult = result
       })
 
       await act(async () => {
-        await hookResult.current.receiveToken({
+        await hookResult.current.bridgeTokenFromEvm({
           vaultIdentifier: "A.dfc20aee650fcbdf.ClickToken.Vault",
           amount: "1000000000000000000",
         })
@@ -126,14 +126,14 @@ describe("useCrossVmReceiveToken", () => {
       let hookResult: any
 
       await act(async () => {
-        const {result} = renderHook(() => useCrossVmReceiveToken(), {
+        const {result} = renderHook(() => useBridgeTokenFromEvm(), {
           wrapper: FlowProvider,
         })
         hookResult = result
       })
 
       await act(async () => {
-        await hookResult.current.receiveToken({
+        await hookResult.current.bridgeTokenFromEvm({
           vaultIdentifier: "A.dfc20aee650fcbdf.ClickToken.Vault",
           amount: "1000000000000000000",
         })
@@ -149,14 +149,14 @@ describe("useCrossVmReceiveToken", () => {
       let hookResult: any
 
       await act(async () => {
-        const {result} = renderHook(() => useCrossVmReceiveToken(), {
+        const {result} = renderHook(() => useBridgeTokenFromEvm(), {
           wrapper: FlowProvider,
         })
         hookResult = result
       })
 
       await act(async () => {
-        await hookResult.current.receiveToken({
+        await hookResult.current.bridgeTokenFromEvm({
           vaultIdentifier: "A.dfc20aee650fcbdf.ClickToken.Vault",
           amount: "1000000000000000000",
         })
