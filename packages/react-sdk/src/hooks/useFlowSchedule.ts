@@ -21,7 +21,7 @@ export enum ScheduledTxStatus {
 }
 
 export interface ScheduledTxInfo {
-  id: bigint
+  id: string
   priority: ScheduledTxPriority
   executionEffort: bigint
   status: ScheduledTxStatus
@@ -35,7 +35,7 @@ export interface ScheduledTxInfo {
 }
 
 export interface ScheduledTxInfoWithHandler extends ScheduledTxInfo {
-  handlerUUID: bigint
+  handlerUUID: string
   handlerResolvedViews: {[viewType: string]: any}
 }
 
@@ -54,7 +54,7 @@ export interface UseFlowScheduleResult {
   // Gets a transaction by ID
   // Equivalent to: flow schedule get <transaction-id> [--include-handler-data]
   getScheduledTx: (
-    scheduledTxId: bigint,
+    scheduledTxId: string,
     options?: {includeHandlerData?: boolean}
   ) => Promise<ScheduledTxInfo | ScheduledTxInfoWithHandler | null>
 
@@ -64,7 +64,7 @@ export interface UseFlowScheduleResult {
 
   // Cancels a scheduled transaction by ID
   // Equivalent to: flow schedule cancel <transaction-id> [--signer account]
-  cancelScheduledTx: (scheduledTxId: bigint) => Promise<string>
+  cancelScheduledTx: (scheduledTxId: string) => Promise<string>
 }
 
 const listScheduledTxQuery = (chainId: string) => {
@@ -386,7 +386,7 @@ transaction(txId: UInt64) {
 
 const convertScheduledTxInfo = (data: any): ScheduledTxInfo => {
   return {
-    id: BigInt(data.id || 0),
+    id: data.id,
     priority: Number(data.priority || 0) as ScheduledTxPriority,
     executionEffort: BigInt(data.executionEffort || 0),
     status: Number(data.status || 0) as ScheduledTxStatus,
@@ -404,7 +404,7 @@ const convertScheduledTxInfoWithHandler = (
   data: any
 ): ScheduledTxInfoWithHandler => {
   return {
-    id: BigInt(data.id || 0),
+    id: data.id,
     priority: Number(data.priority || 0) as ScheduledTxPriority,
     executionEffort: BigInt(data.executionEffort || 0),
     status: Number(data.status || 0) as ScheduledTxStatus,
@@ -415,7 +415,7 @@ const convertScheduledTxInfoWithHandler = (
     scheduledTimestamp: Number(data.scheduledTimestamp || 0),
     handlerTypeIdentifier: data.handlerTypeIdentifier || "",
     handlerAddress: data.handlerAddress || "",
-    handlerUUID: BigInt(data.handlerUUID || 0),
+    handlerUUID: data.handlerUUID,
     handlerResolvedViews: data.handlerResolvedViews || {},
   }
 }
@@ -468,7 +468,7 @@ export function useFlowSchedule({
   // Get function -> Gets a specific transaction by ID
   const getScheduledTx = useCallback(
     async (
-      scheduledTxId: bigint,
+      scheduledTxId: string,
       options?: {includeHandlerData?: boolean}
     ): Promise<ScheduledTxInfo | ScheduledTxInfoWithHandler | null> => {
       if (!chainId) throw new Error("Chain ID not detected")
@@ -480,7 +480,7 @@ export function useFlowSchedule({
 
         const result = await fcl.query({
           cadence,
-          args: () => [arg(scheduledTxId.toString(), t.UInt64)],
+          args: () => [arg(scheduledTxId, t.UInt64)],
         })
 
         if (!result) return null
@@ -513,13 +513,13 @@ export function useFlowSchedule({
 
   // Cancel function -> Cancels a scheduled transaction
   const cancelScheduledTx = useCallback(
-    async (scheduledTxId: bigint): Promise<string> => {
+    async (scheduledTxId: string): Promise<string> => {
       if (!chainId) throw new Error("Chain ID not detected")
 
       try {
         const result = await cancelMutation.mutateAsync({
           cadence: cancelScheduledTxMutation(chainId),
-          args: () => [arg(scheduledTxId.toString(), t.UInt64)],
+          args: () => [arg(scheduledTxId, t.UInt64)],
         })
         return result
       } catch (error: any) {

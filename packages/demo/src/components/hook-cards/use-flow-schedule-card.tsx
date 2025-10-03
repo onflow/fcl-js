@@ -25,10 +25,10 @@ await setupScheduler()
 const transactions = await listScheduledTx("0xACCOUNT")
 
 // Get specific transaction
-const tx = await getScheduledTx(123n)
+const tx = await getScheduledTx("123")
 
 // Cancel a transaction
-await cancelScheduledTx(123n)`
+await cancelScheduledTx("123")`
 
 const PRIORITY_LABELS: Record<ScheduledTxPriority, string> = {
   [ScheduledTxPriority.Low]: "Low",
@@ -109,7 +109,7 @@ export function UseFlowScheduleCard() {
     setError(null)
     setResult(null)
     try {
-      const transaction = await getScheduledTx(BigInt(txId), {
+      const transaction = await getScheduledTx(txId, {
         includeHandlerData,
       })
       setResult(transaction || {message: "Transaction not found"})
@@ -130,7 +130,7 @@ export function UseFlowScheduleCard() {
     setError(null)
     setResult(null)
     try {
-      const cancelTxId = await cancelScheduledTx(BigInt(txId))
+      const cancelTxId = await cancelScheduledTx(txId)
       setResult({
         txId: cancelTxId,
         message: "Transaction cancelled successfully",
@@ -146,7 +146,7 @@ export function UseFlowScheduleCard() {
     if (!tx.id) return tx
 
     return {
-      ID: tx.id.toString(),
+      ID: tx.id,
       Priority:
         PRIORITY_LABELS[tx.priority as ScheduledTxPriority] || tx.priority,
       Status: STATUS_LABELS[tx.status as ScheduledTxStatus] || tx.status,
@@ -155,7 +155,7 @@ export function UseFlowScheduleCard() {
       "Scheduled At": new Date(tx.scheduledTimestamp * 1000).toLocaleString(),
       "Handler Type": tx.handlerTypeIdentifier,
       "Handler Address": tx.handlerAddress,
-      ...(tx.handlerUUID && {"Handler UUID": tx.handlerUUID.toString()}),
+      ...(tx.handlerUUID && {"Handler UUID": tx.handlerUUID}),
       ...(tx.handlerResolvedViews && {
         "Handler Views": Object.keys(tx.handlerResolvedViews).length,
       }),
