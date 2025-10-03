@@ -21,6 +21,9 @@ export const CONTRACT_ADDRESSES: Record<string, Record<any, string>> = {
     testnet: "0x7e60df042a9c0868",
     mainnet: "0x1654653399040a61",
   },
+  ClickToken: {
+    testnet: "0xdfc20aee650fcbdf",
+  },
   FungibleToken: {
     local: "0xee82856bf20e2aa6",
     emulator: "0xee82856bf20e2aa6",
