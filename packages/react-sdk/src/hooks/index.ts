@@ -16,3 +16,10 @@ export {useFlowTransactionStatus} from "./useFlowTransactionStatus"
 export {useCrossVmSpendNft} from "./useCrossVmSpendNft"
 export {useCrossVmSpendToken} from "./useCrossVmSpendToken"
 export {useCrossVmTransactionStatus} from "./useCrossVmTransactionStatus"
+export {
+  useFlowSchedule,
+  ScheduledTxPriority,
+  ScheduledTxStatus,
+  type ScheduledTxInfo,
+  type ScheduledTxInfoWithHandler,
+} from "./useFlowSchedule"
