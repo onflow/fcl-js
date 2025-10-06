@@ -129,15 +129,13 @@ const sidebarItems: SidebarItem[] = [
 const scrollToElement = (id: string) => {
   const element = document.getElementById(id)
   if (element) {
-    // Get the header height to account for sticky header offset
-    const headerHeight = 140 // Approximate header height + extra padding to position card higher
-    const elementRect = element.getBoundingClientRect()
-    const absoluteElementTop = elementRect.top + window.pageYOffset
-    const scrollPosition = absoluteElementTop - headerHeight
+    // Update the URL hash without reloading the page
+    window.history.replaceState(null, '', `#${id}`)
 
-    window.scrollTo({
-      top: scrollPosition,
+    // Use scrollIntoView with block: 'start' to respect scroll-mt-24 class
+    element.scrollIntoView({
       behavior: "smooth",
+      block: "start",
     })
   }
 }
