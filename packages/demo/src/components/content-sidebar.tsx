@@ -1,4 +1,4 @@
-import {useState, useEffect} from "react"
+import {useState, useEffect, useRef} from "react"
 import {PlusGridIcon} from "./ui/plus-grid"
 
 interface SidebarItem {
@@ -126,22 +126,10 @@ const sidebarItems: SidebarItem[] = [
   },
 ]
 
-const scrollToElement = (id: string) => {
-  const element = document.getElementById(id)
-  if (element) {
-    // Update the URL hash without reloading the page
-    window.history.replaceState(null, '', `#${id}`)
-
-    // Use scrollIntoView with block: 'start' to respect scroll-mt-24 class
-    element.scrollIntoView({
-      behavior: "smooth",
-      block: "start",
-    })
-  }
-}
-
 export function ContentSidebar({darkMode}: {darkMode: boolean}) {
   const [activeSection, setActiveSection] = useState<string>("")
+  const navRef = useRef<HTMLElement>(null)
+  const scrollLockRef = useRef<number | null>(null)
 
   const setupItems = sidebarItems.filter(item => item.category === "setup")
   const componentsItems = sidebarItems.filter(
@@ -151,6 +139,43 @@ export function ContentSidebar({darkMode}: {darkMode: boolean}) {
   const advancedItems = sidebarItems.filter(
     item => item.category === "advanced"
   )
+
+  const scrollToElement = (id: string) => {
+    const element = document.getElementById(id)
+    if (element && navRef.current) {
+      // Save current sidebar scroll position
+      scrollLockRef.current = navRef.current.scrollTop
+
+      // Update the URL hash without reloading the page
+      window.history.replaceState(null, "", `#${id}`)
+
+      // Use scrollIntoView with block: 'start' to respect scroll-mt-24 class
+      element.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      })
+
+      // Unlock after scroll animation completes
+      setTimeout(() => {
+        scrollLockRef.current = null
+      }, 1000)
+    }
+  }
+
+  // Prevent sidebar from scrolling when clicking buttons
+  useEffect(() => {
+    const nav = navRef.current
+    if (!nav) return
+
+    const handleScroll = () => {
+      if (scrollLockRef.current !== null) {
+        nav.scrollTop = scrollLockRef.current
+      }
+    }
+
+    nav.addEventListener("scroll", handleScroll)
+    return () => nav.removeEventListener("scroll", handleScroll)
+  }, [])
 
   // Track which section is currently visible
   useEffect(() => {
@@ -276,6 +301,7 @@ export function ContentSidebar({darkMode}: {darkMode: boolean}) {
 
   return (
     <nav
+      ref={navRef}
       className={`relative w-full h-full border rounded-xl ${
         darkMode
           ? "bg-gray-800/30 border-white/10"
