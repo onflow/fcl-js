@@ -140,25 +140,38 @@ export function ContentSidebar({darkMode}: {darkMode: boolean}) {
     item => item.category === "advanced"
   )
 
-  const scrollToElement = (id: string) => {
+  const scrollToElement = (id: string, isInitialLoad = false) => {
     const element = document.getElementById(id)
-    if (element && navRef.current) {
-      // Save current sidebar scroll position
-      scrollLockRef.current = navRef.current.scrollTop
+    if (element) {
+      // Save current sidebar scroll position if nav ref is available (but not on initial load)
+      if (navRef.current && !isInitialLoad) {
+        scrollLockRef.current = navRef.current.scrollTop
+      }
 
       // Update the URL hash without reloading the page
       window.history.replaceState(null, "", `#${id}`)
 
-      // Use scrollIntoView with block: 'start' to respect scroll-mt-24 class
-      element.scrollIntoView({
+      // Calculate position manually to ensure consistent 60px from top
+      const absoluteElementTop = element.offsetTop
+      const scrollMarginTop = 60
+      const targetPosition = absoluteElementTop - scrollMarginTop
+      const maxScroll =
+        document.documentElement.scrollHeight - window.innerHeight
+
+      // Use the minimum of target position and max scroll to handle elements at the bottom
+      const scrollPosition = Math.min(targetPosition, maxScroll)
+
+      window.scrollTo({
+        top: scrollPosition,
         behavior: "smooth",
-        block: "start",
       })
 
-      // Unlock after scroll animation completes
-      setTimeout(() => {
-        scrollLockRef.current = null
-      }, 1000)
+      // Unlock after scroll animation completes (only if we locked it)
+      if (!isInitialLoad) {
+        setTimeout(() => {
+          scrollLockRef.current = null
+        }, 1000)
+      }
     }
   }
 
@@ -179,14 +192,58 @@ export function ContentSidebar({darkMode}: {darkMode: boolean}) {
 
   // Track which section is currently visible
   useEffect(() => {
+    // Prevent default browser scroll behavior on initial load with hash
+    if (window.location.hash) {
+      // Scroll to top immediately to prevent browser's default scroll
+      window.history.scrollRestoration = "manual"
+      window.scrollTo(0, 0)
+    }
+
     // Check if there's a hash in the URL on initial load
     const hash = window.location.hash.slice(1) // Remove the # character
     if (hash) {
       setActiveSection(hash)
-      // Scroll to the element after a brief delay to ensure DOM is ready
-      setTimeout(() => {
-        scrollToElement(hash)
-      }, 100)
+
+      // Retry mechanism: keep trying to scroll until successful or max retries
+      let retryCount = 0
+      const maxRetries = 50
+      let lastOffsetTop = 0
+
+      const tryScroll = () => {
+        const element = document.getElementById(hash)
+
+        if (!element) {
+          // Element not found, retry
+          if (retryCount < maxRetries) {
+            retryCount++
+            setTimeout(tryScroll, 100)
+          }
+          return
+        }
+
+        const currentOffsetTop = element.offsetTop
+
+        // Check if position has stabilized
+        if (currentOffsetTop === lastOffsetTop && lastOffsetTop !== 0) {
+          // Position is stable, perform final scroll
+          scrollToElement(hash, true)
+          return
+        }
+
+        // Position changed or first check, update and retry
+        lastOffsetTop = currentOffsetTop
+
+        if (retryCount < maxRetries) {
+          retryCount++
+          setTimeout(tryScroll, 100)
+        } else {
+          // Max retries reached, scroll anyway
+          scrollToElement(hash, true)
+        }
+      }
+
+      // Start trying after a brief delay
+      setTimeout(tryScroll, 100)
     }
 
     const observer = new IntersectionObserver(

@@ -38,7 +38,7 @@ export const DemoCard = memo<DemoCardProps>(function DemoCard({
   const [showProps, setShowProps] = useState(false)
 
   return (
-    <div id={id} className={`scroll-mt-24 ${className}`}>
+    <div id={id} className={`scroll-mt-[60px] ${className}`}>
       <PlusGridItem className="mb-12">
         <div
           className={`relative overflow-hidden border rounded-xl transition-all duration-300
