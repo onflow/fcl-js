@@ -100,7 +100,6 @@ export function ContentSection() {
 
             <DarkModeCard />
             <ThemingCard />
-            <div className="h-screen"></div>
           </div>
         </PlusGridRow>
       </PlusGrid>
