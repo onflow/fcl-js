@@ -192,58 +192,27 @@ export function ContentSidebar({darkMode}: {darkMode: boolean}) {
 
   // Track which section is currently visible
   useEffect(() => {
-    // Prevent default browser scroll behavior on initial load with hash
-    if (window.location.hash) {
-      // Scroll to top immediately to prevent browser's default scroll
-      window.history.scrollRestoration = "manual"
-      window.scrollTo(0, 0)
-    }
-
     // Check if there's a hash in the URL on initial load
     const hash = window.location.hash.slice(1) // Remove the # character
     if (hash) {
       setActiveSection(hash)
 
-      // Retry mechanism: keep trying to scroll until successful or max retries
-      let retryCount = 0
-      const maxRetries = 50
-      let lastOffsetTop = 0
-
-      const tryScroll = () => {
+      // Manually trigger scroll since browser isn't doing it automatically
+      const scrollToHash = () => {
         const element = document.getElementById(hash)
-
-        if (!element) {
-          // Element not found, retry
-          if (retryCount < maxRetries) {
-            retryCount++
-            setTimeout(tryScroll, 100)
-          }
-          return
-        }
-
-        const currentOffsetTop = element.offsetTop
-
-        // Check if position has stabilized
-        if (currentOffsetTop === lastOffsetTop && lastOffsetTop !== 0) {
-          // Position is stable, perform final scroll
-          scrollToElement(hash, true)
-          return
-        }
-
-        // Position changed or first check, update and retry
-        lastOffsetTop = currentOffsetTop
-
-        if (retryCount < maxRetries) {
-          retryCount++
-          setTimeout(tryScroll, 100)
-        } else {
-          // Max retries reached, scroll anyway
-          scrollToElement(hash, true)
+        if (element) {
+          // Use scrollIntoView with auto behavior (instant, not smooth) that respects scroll-margin-top
+          element.scrollIntoView({behavior: "auto", block: "start"})
         }
       }
 
-      // Start trying after a brief delay
-      setTimeout(tryScroll, 100)
+      // Try multiple times to ensure content is loaded
+      requestAnimationFrame(() => {
+        scrollToHash()
+        setTimeout(scrollToHash, 100)
+        setTimeout(scrollToHash, 300)
+        setTimeout(scrollToHash, 500)
+      })
     }
 
     const observer = new IntersectionObserver(
