@@ -126,7 +126,12 @@ const sidebarItems: SidebarItem[] = [
   },
 ]
 
-export function ContentSidebar({darkMode}: {darkMode: boolean}) {
+interface ContentSidebarProps {
+  darkMode: boolean
+  onItemClick?: () => void
+}
+
+export function ContentSidebar({darkMode, onItemClick}: ContentSidebarProps) {
   const [activeSection, setActiveSection] = useState<string>("")
   const navRef = useRef<HTMLElement>(null)
   const scrollLockRef = useRef<number | null>(null)
@@ -165,6 +170,11 @@ export function ContentSidebar({darkMode}: {darkMode: boolean}) {
         top: scrollPosition,
         behavior: "smooth",
       })
+
+      // Call onItemClick callback (for closing mobile sidebar)
+      if (!isInitialLoad && onItemClick) {
+        onItemClick()
+      }
 
       // Unlock after scroll animation completes (only if we locked it)
       if (!isInitialLoad) {

@@ -215,7 +215,7 @@ export function ThemingCard() {
                 colorMode={darkMode ? "dark" : "light"}
                 theme={currentTheme.theme}
               >
-                <div className="flex space-x-3">
+                <div className="flex flex-col sm:flex-row gap-3">
                   <Connect />
                   <TransactionButton
                     label="Demo Transaction"
