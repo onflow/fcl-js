@@ -63,7 +63,10 @@ export function Header() {
       role="banner"
     >
       <div className="flex items-center justify-between h-16 px-6">
-        <div className="flex items-center space-x-4">
+        <a
+          href="/"
+          className="flex items-center space-x-4 group transition-opacity hover:opacity-80"
+        >
           <img
             src="/assets/icon.png"
             alt="Flow"
@@ -84,7 +87,7 @@ export function Header() {
               React SDK
             </h1>
           </div>
-        </div>
+        </a>
 
         <div className="flex items-center space-x-4">
           <div className="hidden md:block relative" ref={networkMenuRef}>
