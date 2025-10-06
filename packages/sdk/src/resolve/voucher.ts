@@ -1,6 +1,6 @@
 import {withPrefix} from "@onflow/util-address"
 import {Voucher, encodeTxIdFromVoucher} from "../encode/encode"
-import {Interaction, InteractionAccount} from "@onflow/typedefs"
+import {Interaction} from "@onflow/typedefs"
 
 /**
  * Identifies signers for the transaction payload (authorizers + proposer, excluding payer).
@@ -120,28 +120,18 @@ export const createSignableVoucher = (ix: Interaction) => {
   }
 
   const buildInsideSigners = () =>
-    findInsideSigners(ix).map(id => {
-      const base: any = {
-        address: withPrefix(ix.accounts[id].addr),
-        keyId: ix.accounts[id].keyId,
-        sig: ix.accounts[id].signature,
-      }
-      const ext = (ix.accounts[id] as InteractionAccount).signatureExtension
-      if (ext != null) base.signatureExtension = ext
-      return base
-    })
+    findInsideSigners(ix).map(id => ({
+      address: withPrefix(ix.accounts[id].addr),
+      keyId: ix.accounts[id].keyId,
+      sig: ix.accounts[id].signature,
+    }))
 
   const buildOutsideSigners = () =>
-    findOutsideSigners(ix).map(id => {
-      const base: any = {
-        address: withPrefix(ix.accounts[id].addr),
-        keyId: ix.accounts[id].keyId,
-        sig: ix.accounts[id].signature,
-      }
-      const ext = (ix.accounts[id] as InteractionAccount).signatureExtension
-      if (ext != null) base.signatureExtension = ext
-      return base
-    })
+    findOutsideSigners(ix).map(id => ({
+      address: withPrefix(ix.accounts[id].addr),
+      keyId: ix.accounts[id].keyId,
+      sig: ix.accounts[id].signature,
+    }))
 
   const proposalKey = ix.proposer
     ? {

@@ -166,21 +166,6 @@ describe("encode transaction", () => {
       "464c4f572d56302e302d7472616e73616374696f6e0000000000000000000000f87bb07472616e73616374696f6e207b2065786563757465207b206c6f67282248656c6c6f2c20576f726c64212229207d207dc0a0f0e4c2f76c58916ec258f246851bea091d14d4247a2fc3e18694461b1816e13b2a880000000000000001040a880000000000000001d2880000000000000001880000000000000002",
       "464c4f572d56302e302d7472616e73616374696f6e0000000000000000000000f8a2f87bb07472616e73616374696f6e207b2065786563757465207b206c6f67282248656c6c6f2c20576f726c64212229207d207dc0a0f0e4c2f76c58916ec258f246851bea091d14d4247a2fc3e18694461b1816e13b2a880000000000000001040a880000000000000001d2880000000000000001880000000000000002e4e38004a0f7225388c1d69d57e6251c9fda50cbbf9e05131e5adb81e5aa0422402f048162",
     ],
-    [
-      "payload sig with signatureExtension appends 4th element",
-      buildTx({
-        payloadSigs: [
-          {
-            address: "01",
-            keyId: 4,
-            sig: "f7225388c1d69d57e6251c9fda50cbbf9e05131e5adb81e5aa0422402f048162",
-            signatureExtension: "abcd",
-          },
-        ],
-      }),
-      "464c4f572d56302e302d7472616e73616374696f6e0000000000000000000000f872b07472616e73616374696f6e207b2065786563757465207b206c6f67282248656c6c6f2c20576f726c64212229207d207dc0a0f0e4c2f76c58916ec258f246851bea091d14d4247a2fc3e18694461b1816e13b2a880000000000000001040a880000000000000001c9880000000000000001",
-      null,
-    ],
   ]
 
   // Test case format:
@@ -251,11 +236,7 @@ describe("encode transaction", () => {
       test.each(validPayloadCases)(
         "%s",
         (_, tx, expectedPayload, expectedEnvelope) => {
-          if (expectedEnvelope != null) {
-            expect(encodeTransactionEnvelope(tx)).toBe(expectedEnvelope)
-          } else {
-            expect(() => encodeTransactionEnvelope(tx)).not.toThrow()
-          }
+          expect(encodeTransactionEnvelope(tx)).toBe(expectedEnvelope)
         }
       )
 

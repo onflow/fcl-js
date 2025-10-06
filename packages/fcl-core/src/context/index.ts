@@ -122,6 +122,7 @@ export function createConfigService(config: FCLConfig): ConfigService {
     ["discovery.wallet", config.discoveryWallet],
     ["discovery.wallet.method", config.discoveryWalletMethod],
     ["discovery.authn.endpoint", config.discoveryAuthnEndpoint],
+    ["discovery.authn.include", config.discoveryAuthnInclude],
     ["flow.network", config.flowNetwork],
     ["accessNode.api", config.accessNodeUrl],
     ["fcl.limit", config.computeLimit],

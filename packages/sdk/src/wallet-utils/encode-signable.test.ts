@@ -74,22 +74,4 @@ describe("encode signable", () => {
       UnableToDetermineMessageEncodingTypeForSignerAddress
     )
   })
-
-  test("payload sig signatureExtension is forwarded for envelope encoding", () => {
-    const withExt = {
-      ...VOUCHER,
-      payloadSigs: [
-        {address: "0x02", keyId: 1, sig: "123", signatureExtension: "abcd"},
-      ],
-    }
-
-    const signable = {
-      ...PAYER_SIGNABLE,
-      voucher: withExt,
-    }
-
-    // Should not throw when encoding envelope including an extension on payload sig
-    const message = encodeMessageFromSignable(signable as any, "0x01")
-    expect(typeof message).toBe("string")
-  })
 })
