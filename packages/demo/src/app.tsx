@@ -61,14 +61,6 @@ function AppContent() {
             </div>
 
             <div className="relative flex-1">
-              <svg
-                viewBox="0 0 15 15"
-                className={`absolute -top-2 -left-2 size-[15px] z-10 ${
-                  darkMode ? "fill-white/20" : "fill-black/10" }`}
-              >
-                <path d="M8 0H7V7H0V8H7V15H8V8H15V7H8V0Z" />
-              </svg>
-
               <div className="p-4 lg:p-6">
                 <main id="main-content" role="main" aria-label="Main content">
                   <ContentSection />
