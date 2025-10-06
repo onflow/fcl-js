@@ -113,7 +113,7 @@ export function ThemingCard() {
 
   return (
     <DemoCard
-      id="advanced-theming"
+      id="theming"
       title="Custom Theming"
       description="Customize the appearance of Flow React SDK components with custom themes. Override colors, styles, and create consistent branding across your application."
       code={THEMING_CODE}

@@ -23,7 +23,7 @@ export function InstallationCard() {
 
   return (
     <DemoCard
-      id="setup-installation"
+      id="installation"
       title="Installation & Setup"
       description="Get started with the Flow React SDK in three simple steps. Install the package, configure the provider, and start building."
       docsUrl="https://developers.flow.com/build/tools/react-sdk"

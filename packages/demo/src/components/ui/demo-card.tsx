@@ -129,10 +129,22 @@ export const DemoCard = memo<DemoCardProps>(function DemoCard({
             <div className={`${code || props ? "pr-32" : ""}`}>
               <div className="flex items-center gap-3">
                 <h3
-                  className={`text-2xl font-bold tracking-tight font-mono ${
+                  className={`group text-2xl font-bold tracking-tight font-mono ${
                     darkMode ? "text-white" : "text-gray-900" }`}
                 >
-                  {title}
+                  <a
+                    href={`#${id}`}
+                    className="inline-flex items-center gap-2 no-underline hover:no-underline"
+                  >
+                    {title}
+                    <span
+                      className={`opacity-0 group-hover:opacity-100 transition-opacity duration-200 ${
+                        darkMode ? "text-gray-500" : "text-gray-400"
+                      }`}
+                    >
+                      #
+                    </span>
+                  </a>
                 </h3>
 
                 {docsUrl && (
