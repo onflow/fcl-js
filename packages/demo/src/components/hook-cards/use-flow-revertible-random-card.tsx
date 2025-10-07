@@ -29,7 +29,7 @@ export function UseFlowRevertibleRandomCard() {
 
   return (
     <DemoCard
-      id="hook-flow-revertible-random"
+      id="useflowrevertiblerandom"
       title="useFlowRevertibleRandom"
       description={
         <>

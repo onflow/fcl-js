@@ -43,7 +43,7 @@ export function DarkModeCard() {
 
   return (
     <DemoCard
-      id="advanced-dark-mode"
+      id="darkmode"
       title="Dark Mode Control"
       description="Implement dynamic dark mode switching with the Flow React SDK. Control theme state manually and access current mode throughout your application."
       code={DARK_MODE_CODE}
