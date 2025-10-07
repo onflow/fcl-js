@@ -29,7 +29,7 @@ export function CodeViewer({
 
   return (
     <div
-      className={`relative rounded-lg overflow-hidden
+      className={`relative rounded-lg overflow-x-auto
         ${!noBorder ? `border ${darkMode ? "border-white/10" : "border-black/5"}` : ""}`}
     >
       <div
@@ -102,14 +102,14 @@ export function CodeViewer({
         </button>
       </div>
 
-      <div>
+      <div className="min-w-0">
         <SyntaxHighlighter
           language={language}
           style={darkMode ? oneDark : oneLight}
           customStyle={{
             margin: 0,
-            padding: "1.5rem",
-            fontSize: "0.875rem",
+            padding: "1rem",
+            fontSize: "0.75rem",
             lineHeight: "1.5",
             background: darkMode
               ? "rgba(17, 24, 39, 0.5)"

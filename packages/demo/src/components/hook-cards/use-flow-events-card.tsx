@@ -88,7 +88,7 @@ export function UseFlowEventsCard() {
 
   return (
     <DemoCard
-      id="hook-flow-events"
+      id="useflowevents"
       title="useFlowEvents"
       description="Listen to blockchain events in real time and filter them by event type and block height range."
       code={IMPLEMENTATION_CODE}
