@@ -110,6 +110,12 @@ const sidebarItems: SidebarItem[] = [
     category: "hooks",
     description: "Track transaction status",
   },
+  {
+    id: "useflownftmetadata",
+    label: "NFT Metadata",
+    category: "hooks",
+    description: "Fetch NFT metadata and traits",
+  },
 
   // Advanced section
   {
