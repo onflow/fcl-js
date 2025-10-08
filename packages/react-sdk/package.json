@@ -1,6 +1,6 @@
 {
   "name": "@onflow/react-sdk",
-  "version": "0.10.1",
+  "version": "0.10.3",
   "description": "React library for interacting with the Flow blockchain",
   "license": "Apache-2.0",
   "author": "Flow Foundation",
@@ -29,8 +29,8 @@
     "@babel/preset-env": "^7.26.9",
     "@babel/preset-react": "^7.26.3",
     "@babel/preset-typescript": "^7.25.7",
-    "@onflow/fcl-bundle": "1.7.0",
-    "@onflow/typedefs": "^1.7.0",
+    "@onflow/fcl-bundle": "1.7.1",
+    "@onflow/typedefs": "^1.7.1",
     "@testing-library/dom": "^10.4.0",
     "@types/jest": "^29.5.13",
     "@types/react": "^19.0.10",
@@ -53,7 +53,7 @@
     "tailwind-merge": "^3.3.1"
   },
   "peerDependencies": {
-    "@onflow/fcl": ">=1.20.0",
+    "@onflow/fcl": ">=1.20.1",
     "react": "^18.0.0 || ^19.0.0",
     "react-dom": "^18.0.0 || ^19.0.0",
     "viem": "^2.29.2"
