@@ -144,6 +144,10 @@ const argumentToString = (arg: Record<string, any>) =>
 
 const scriptBuffer = (script: string) => Buffer.from(script, "utf8")
 const signatureBuffer = (signature: string) => Buffer.from(signature, "hex")
+const extensionBuffer = (ext?: string) => {
+  if (ext == null) return undefined
+  return Buffer.from(ext, "hex")
+}
 
 const rlpEncode = (v: EncodeInput) => {
   return encode(v).toString("hex")
@@ -186,6 +190,7 @@ const preparePayloadSignatures = (tx: Transaction) => {
         signerIndex: signers.get(sansPrefix(sig.address)) || "",
         keyId: sig.keyId,
         sig: sig.sig,
+        sigExt: extensionBuffer(sig.extensionData),
       }
     })
     .sort((a, b) => {
@@ -198,7 +203,9 @@ const preparePayloadSignatures = (tx: Transaction) => {
       return 0
     })
     .map(sig => {
-      return [sig.signerIndex, sig.keyId, signatureBuffer(sig.sig)]
+      const base: any[] = [sig.signerIndex, sig.keyId, signatureBuffer(sig.sig)]
+      if (sig.sigExt != null) base.push(sig.sigExt)
+      return base
     })
 }
 
@@ -229,8 +236,13 @@ const prepareVoucher = (voucher: Voucher) => {
 
   const prepareSigs = (sigs: Sig[]) => {
     return sigs
-      .map(({address, keyId, sig}) => {
-        return {signerIndex: signers.get(sansPrefix(address)) || "", keyId, sig}
+      .map(({address, keyId, sig, extensionData}) => {
+        return {
+          signerIndex: signers.get(sansPrefix(address)) || "",
+          keyId,
+          sig,
+          sigExt: extensionBuffer(extensionData),
+        }
       })
       .sort((a, b) => {
         if (a.signerIndex > b.signerIndex) return 1
@@ -241,7 +253,13 @@ const prepareVoucher = (voucher: Voucher) => {
         return 0
       })
       .map(sig => {
-        return [sig.signerIndex, sig.keyId, signatureBuffer(sig.sig)]
+        const base: any[] = [
+          sig.signerIndex,
+          sig.keyId,
+          signatureBuffer(sig.sig),
+        ]
+        if (sig.sigExt != null) base.push(sig.sigExt)
+        return base
       })
   }
 
@@ -319,6 +337,10 @@ interface Sig {
   address: string
   keyId: number | string
   sig: string
+  // Optional signature extension data (e.g., WebAuthn clientDataJSON + authenticatorData)
+  // Propagated via "extensionData" when present by wallets/connectors.
+  // Not required for existing signatures; encoding remains identical when absent.
+  extensionData?: string
 }
 
 export interface TransactionProposalKey {

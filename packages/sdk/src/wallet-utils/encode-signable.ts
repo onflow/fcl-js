@@ -134,10 +134,16 @@ export const encodeMessageFromSignable = (
     },
     payer: sansPrefix(signable.voucher.payer),
     authorizers: signable.voucher.authorizers.map(sansPrefix),
-    payloadSigs: signable.voucher.payloadSigs.map(ps => ({
-      ...ps,
-      address: sansPrefix(ps.address),
-    })),
+    payloadSigs: signable.voucher.payloadSigs.map(ps => {
+      const base: any = {
+        ...ps,
+        address: sansPrefix(ps.address),
+      }
+      if ((ps as any).extensionData != null) {
+        base.extensionData = (ps as any).extensionData
+      }
+      return base
+    }),
   }
 
   return isPayloadSigner
