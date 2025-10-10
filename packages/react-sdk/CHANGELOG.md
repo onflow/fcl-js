@@ -1,5 +1,18 @@
 # @onflow/react-sdk
 
+## 0.11.0
+
+### Minor Changes
+
+- [#2661](https://github.com/onflow/fcl-js/pull/2661) [`e651d625af8e516d935e74d885524eca741dd9e6`](https://github.com/onflow/fcl-js/commit/e651d625af8e516d935e74d885524eca741dd9e6) Thanks [@mfbz](https://github.com/mfbz)! - Add `useFlowNftMetadata` hook to fetch NFT metadata including name, description, thumbnail, traits, and collection information from Flow blockchain accounts.
+
+- [#2660](https://github.com/onflow/fcl-js/pull/2660) [`54672e6b16234d33fa33889d2b48451697fc8f8e`](https://github.com/onflow/fcl-js/commit/54672e6b16234d33fa33889d2b48451697fc8f8e) Thanks [@mfbz](https://github.com/mfbz)! - Fixed transaction management so that it clears up transaction state on error
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @onflow/fcl@1.20.3
+
 ## 0.10.3
 
 ### Patch Changes

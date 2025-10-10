@@ -1,5 +1,11 @@
 # @onflow/fcl
 
+## 1.21.3
+
+### Patch Changes
+
+- [#2655](https://github.com/onflow/fcl-js/pull/2655) [`81d21f98ab2838885ad32217de42b85481f5595c`](https://github.com/onflow/fcl-js/commit/81d21f98ab2838885ad32217de42b85481f5595c) Thanks [@chasefleming](https://github.com/chasefleming)! - Bugfix: add `discoveryAuthnInclude` in FCL core configStore
+
 ## 1.21.2
 
 ### Patch Changes
