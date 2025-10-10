@@ -69,7 +69,19 @@
       }
       gtag("js", new Date())
 
-      gtag("config", "G-GQJ7YJ8M03")
+      // Include hash in initial pageview
+      gtag("config", "G-GQJ7YJ8M03", {
+        page_path: window.location.pathname + window.location.hash
+      })
+
+      // Track hash changes as separate pageviews
+      window.addEventListener("hashchange", function() {
+        gtag("event", "page_view", {
+          page_path: window.location.pathname + window.location.hash,
+          page_location: window.location.href,
+          page_title: document.title
+        })
+      })
     </script>
   </head>
   <body>
