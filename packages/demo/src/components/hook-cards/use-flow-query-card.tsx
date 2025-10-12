@@ -100,7 +100,7 @@ access(all) fun main(address: Address): UFix64 {
 
   return (
     <DemoCard
-      id="hook-flow-query"
+      id="useflowquery"
       title="useFlowQuery"
       description="Execute Cadence scripts on Flow blockchain with automatic result parsing and caching support."
       code={IMPLEMENTATION_CODE}
