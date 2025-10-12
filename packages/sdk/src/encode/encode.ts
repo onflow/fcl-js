@@ -191,7 +191,7 @@ const preparePayloadSignatures = (tx: Transaction) => {
         signerIndex: signers.get(sansPrefix(sig.address)) || "",
         keyId: sig.keyId,
         sig: sig.sig,
-        sigExt: extensionBuffer((sig as any).extensionData),
+        sigExt: extensionBuffer(sig.extensionData),
       }
     })
     .sort((a, b) => {
@@ -205,7 +205,7 @@ const preparePayloadSignatures = (tx: Transaction) => {
     })
     .map(sig => {
       const base: any[] = [sig.signerIndex, sig.keyId, signatureBuffer(sig.sig)]
-      if ((sig as any).sigExt != null) base.push((sig as any).sigExt)
+      if (sig.sigExt != null) base.push(sig.sigExt)
       return base
     })
 }
@@ -259,7 +259,7 @@ const prepareVoucher = (voucher: Voucher) => {
           sig.keyId,
           signatureBuffer(sig.sig),
         ]
-        if ((sig as any).sigExt != null) base.push((sig as any).sigExt)
+        if (sig.sigExt != null) base.push(sig.sigExt)
         return base
       })
   }
@@ -338,6 +338,9 @@ interface Sig {
   address: string
   keyId: number | string
   sig: string
+  // Optional signature extension data (e.g., WebAuthn clientDataJSON + authenticatorData)
+  // Propagated via "extensionData" when present by wallets/connectors.
+  // Not required for existing signatures; encoding remains identical when absent.
   extensionData?: string
 }
 

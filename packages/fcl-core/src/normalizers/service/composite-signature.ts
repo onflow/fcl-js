@@ -28,6 +28,7 @@ export function normalizeCompositeSignature(
       addr: sansPrefix(resp.addr || (resp as any).address),
       signature: resp.signature || (resp as any).sig,
       keyId: resp.keyId,
+      ...(resp.extensionData ? {extensionData: resp.extensionData} : {}),
     } as unknown as CompositeSignature
   }
 

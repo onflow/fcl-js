@@ -69,7 +69,7 @@ export interface InteractionAccount {
    */
   signature: string | null
   /**
-   * Optional extension data for alternative signature schemes (hex string)
+   * Optional extension data for alternative signature schemes (e.g., WebAuthn)
    */
   extensionData?: string | null
   /**
