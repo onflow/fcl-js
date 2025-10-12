@@ -26,8 +26,55 @@ import {ConnectCard} from "./component-cards/connect-card"
 import {TransactionButtonCard} from "./component-cards/transaction-button-card"
 import {TransactionDialogCard} from "./component-cards/transaction-dialog-card"
 import {TransactionLinkCard} from "./component-cards/transaction-link-card"
+import {useFlowClient} from "@onflow/react-sdk"
+import {Button} from "@onflow/react-sdk/types/components/internal/Button"
 
 export function ContentSection() {
+  const client = useFlowClient()
+
+  const loginWithPasskey = async () => {
+    const base =
+      (import.meta as any).env?.VITE_PASSKEY_WALLET_URL ||
+      "http://localhost:8710/index.html"
+    const accountApi = (import.meta as any).env?.VITE_PASSKEY_ACCOUNT_API
+    const urlStr = base as string
+
+    await client.authenticate({
+      service: {
+        f_type: "Service",
+        f_vsn: "1.0.0",
+        type: "authn",
+        method: "POP/RPC",
+        uid: "passkey-wallet#authn",
+        endpoint: urlStr,
+        provider: {
+          address: "0x0",
+          name: "Passkey Wallet",
+          icon: "https://avatars.githubusercontent.com/u/62387156?v=4",
+        },
+        data: accountApi ? {accountApi} : undefined,
+        params: {},
+      },
+    })
+  }
+
+  if (typeof window !== "undefined") {
+    // Listen for debug posts from passkey-wallet popup
+    window.addEventListener("message", e => {
+      const {data} = e
+      if (!data || typeof data !== "object") return
+      if (data.type === "PASSKEY_WALLET:DBG") {
+        console.log("[host] passkey-wallet DBG", data.payload)
+      }
+      if (data.type === "PASSKEY_WALLET:DBG2") {
+        console.log("[host] passkey-wallet DBG2", data.payload)
+      }
+      if (data.type === "PASSKEY_WALLET:COMPOSITE_SIGNATURE") {
+        console.log("[host] passkey-wallet CompositeSignature", data.payload)
+      }
+    })
+  }
+
   return (
     <section id="content-section" className="">
       <PlusGrid>
@@ -58,6 +105,7 @@ export function ContentSection() {
             </div>
 
             <ConnectCard />
+            <Button onClick={loginWithPasskey}>Login with Passkey</Button>
             <TransactionButtonCard />
             <TransactionDialogCard />
             <TransactionLinkCard />
