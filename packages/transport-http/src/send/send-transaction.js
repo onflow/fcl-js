@@ -31,6 +31,14 @@ export async function sendTransaction(ix, context = {}, opts = {}) {
             "base64"
           ),
         }
+        // extensionData: optional hex string to be sent as base64
+        if (acct.extensionData != null) {
+          try {
+            const hex = String(acct.extensionData).replace(/^0x/, "")
+            const b64 = context.Buffer.from(hex, "hex").toString("base64")
+            if (b64 != null) signature.extension_data = b64
+          } catch {}
+        }
         if (
           !payloadSignatures.find(
             existingSignature =>
@@ -40,6 +48,14 @@ export async function sendTransaction(ix, context = {}, opts = {}) {
           )
         ) {
           payloadSignatures.push(signature)
+        }
+        // extensionData: optional hex string to be sent as base64
+        if (acct.extensionData != null) {
+          try {
+            const hex = String(acct.extensionData).replace(/^0x/, "")
+            const b64 = context.Buffer.from(hex, "hex").toString("base64")
+            if (b64 != null) envelopeSignatures[id].extension_data = b64
+          } catch {}
         }
       }
     } catch (error) {

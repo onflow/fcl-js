@@ -437,7 +437,7 @@ export default function App() {
         addr: address,
         keyId: 0,
         signature: sigHex,
-        signatureExtension,
+        extensionData: bytesToHex(signatureExtension),
       }
       console.log("[passkey-wallet] CompositeSignature", composite)
       try {

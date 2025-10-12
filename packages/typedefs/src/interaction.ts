@@ -69,6 +69,10 @@ export interface InteractionAccount {
    */
   signature: string | null
   /**
+   * Optional extension data for alternative signature schemes (hex string)
+   */
+  extensionData?: string | null
+  /**
    * Function used for signing
    */
   signingFunction: any | null

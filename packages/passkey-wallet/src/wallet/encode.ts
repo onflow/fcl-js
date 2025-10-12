@@ -41,13 +41,13 @@ export type Voucher = {
     address: string
     keyId: number
     sig: string
-    signatureExtension?: string | Uint8Array
+    extensionData?: string
   }[]
   envelopeSigs: {
     address: string
     keyId: number
     sig: string
-    signatureExtension?: string | Uint8Array
+    extensionData?: string
   }[]
 }
 
@@ -56,14 +56,10 @@ const blockBytes = (block: string) => hexToBytes(leftPadHex(block, 32))
 const argBytes = (arg: any) => utf8ToBytes(JSON.stringify(arg))
 const scriptBytes = (script: string) => utf8ToBytes(script)
 const sigBytes = (sig: string) => hexToBytes(arrayifyHex(sig))
-const sigExtBytes = (ext?: string | Uint8Array) => {
+const sigExtBytes = (ext?: string) => {
   if (ext == null) return undefined as unknown as Uint8Array
-  if (typeof ext === "string") {
-    const hex = arrayifyHex(ext)
-    const isHex = /^[0-9a-fA-F]+$/.test(hex)
-    return isHex ? hexToBytes(hex) : utf8ToBytes(ext)
-  }
-  return ext
+  const hex = arrayifyHex(ext)
+  return hexToBytes(hex)
 }
 
 const collectSigners = (v: Voucher) => {
@@ -100,7 +96,7 @@ const prepareSigs = (v: Voucher, sigs: Voucher["payloadSigs"]) => {
       signerIndex: signers.get(arrayifyHex(s.address)) || 0,
       keyId: s.keyId,
       sig: s.sig,
-      sigExt: sigExtBytes(s.signatureExtension),
+      sigExt: sigExtBytes(s.extensionData),
     }))
     .sort((a, b) =>
       a.signerIndex === b.signerIndex
