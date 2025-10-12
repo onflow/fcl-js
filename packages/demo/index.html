@@ -2,9 +2,87 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link rel="icon" type="image/png" href="/assets/icon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Demo App</title>
+    <meta name="theme-color" content="#00EF8B" />
+    <title>Flow React SDK - Playground for React Hooks & Components</title>
+
+    <!-- SEO Meta Tags -->
+    <meta
+      name="description"
+      content="Interactive playground for Flow React SDK. Explore and test React hooks and components for building blockchain applications with the React SDK library."
+    />
+    <meta
+      name="keywords"
+      content="Flow, React SDK, FCL, blockchain, Web3, React hooks, Flow blockchain, playground"
+    />
+    <meta name="author" content="Flow Foundation" />
+    <meta name="robots" content="index, follow" />
+    <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://react.flow.com/" />
+    <meta
+      property="og:title"
+      content="Flow React SDK - Playground for React Hooks & Components"
+    />
+    <meta
+      property="og:description"
+      content="Interactive playground for Flow React SDK. Explore and test React hooks and components for building blockchain applications with the React SDK library."
+    />
+    <meta
+      property="og:image"
+      content="https://react.flow.com/assets/banner.png"
+    />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://react.flow.com/" />
+    <meta
+      property="twitter:title"
+      content="Flow React SDK - Playground for React Hooks & Components"
+    />
+    <meta
+      property="twitter:description"
+      content="Interactive playground for Flow React SDK. Explore and test React hooks and components for building blockchain applications with the React SDK library."
+    />
+    <meta
+      property="twitter:image"
+      content="https://react.flow.com/assets/banner.png"
+    />
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://react.flow.com/" />
+
+    <!-- Google tag (gtag.js) -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-GQJ7YJ8M03"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || []
+      function gtag() {
+        dataLayer.push(arguments)
+      }
+      gtag("js", new Date())
+
+      // Include hash in initial pageview
+      gtag("config", "G-GQJ7YJ8M03", {
+        page_path: window.location.pathname + window.location.hash,
+      })
+
+      // Track hash changes as separate pageviews
+      window.addEventListener("hashchange", function () {
+        gtag("event", "page_view", {
+          page_path: window.location.pathname + window.location.hash,
+          page_location: window.location.href,
+          page_title: document.title,
+        })
+      })
+    </script>
   </head>
   <body>
     <div id="root"></div>

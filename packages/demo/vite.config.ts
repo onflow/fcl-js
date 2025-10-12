@@ -7,4 +7,18 @@ export default defineConfig({
   server: {
     allowedHosts: true,
   },
+  build: {
+    chunkSizeWarningLimit: 1000,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ["react", "react-dom"],
+          fcl: ["@onflow/fcl", "@onflow/react-sdk", "@onflow/typedefs"],
+        },
+      },
+    },
+  },
+  optimizeDeps: {
+    include: ["@onflow/fcl", "@onflow/react-sdk", "@onflow/typedefs"],
+  },
 })
