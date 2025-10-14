@@ -87,8 +87,8 @@ export function ContentSection() {
             <UseFlowEventsCard />
             <UseFlowRevertibleRandomCard />
             <UseFlowTransactionStatusCard />
-            <UseFlowScheduleCard />
             <UseFlowNftMetadataCard />
+            <UseFlowScheduleCard />
           </div>
 
           <div className="mb-12 md:mb-24">
