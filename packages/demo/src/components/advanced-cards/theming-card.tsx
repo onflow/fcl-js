@@ -113,7 +113,7 @@ export function ThemingCard() {
 
   return (
     <DemoCard
-      id="advanced-theming"
+      id="theming"
       title="Custom Theming"
       description="Customize the appearance of Flow React SDK components with custom themes. Override colors, styles, and create consistent branding across your application."
       code={THEMING_CODE}
@@ -215,7 +215,7 @@ export function ThemingCard() {
                 colorMode={darkMode ? "dark" : "light"}
                 theme={currentTheme.theme}
               >
-                <div className="flex space-x-3">
+                <div className="flex flex-col sm:flex-row gap-3">
                   <Connect />
                   <TransactionButton
                     label="Demo Transaction"

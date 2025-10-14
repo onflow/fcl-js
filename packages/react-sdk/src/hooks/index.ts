@@ -23,3 +23,4 @@ export {
   type ScheduledTxInfo,
   type ScheduledTxInfoWithHandler,
 } from "./useFlowSchedule"
+export {useFlowNftMetadata, type NftViewResult} from "./useFlowNftMetadata"
