@@ -1,0 +1,30 @@
+name: Promote playground on tag
+
+on:
+  push:
+    tags: ["**"]
+
+permissions:
+  contents: write
+
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout with full history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Move release/playground to the tag
+        run: |
+          TAG="${GITHUB_REF_NAME:-${GITHUB_REF##*/}}"  # e.g. @onflow/fcl@1.2.3
+          git fetch --tags
+          # Optional: confirm the tag exists and is signed/annotated
+          git show --no-patch --pretty=fuller "$TAG"
+
+          # Create/update branch at the tag commit and push
+          git branch -f release/playground "$TAG"
+          git push --force-with-lease origin release/playground
+
+
