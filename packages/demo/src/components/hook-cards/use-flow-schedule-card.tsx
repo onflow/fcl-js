@@ -164,7 +164,7 @@ export function UseFlowScheduleCard() {
 
   return (
     <DemoCard
-      id="hook-flow-schedule"
+      id="useflowschedule"
       title="useFlowSchedule"
       description="Manage scheduled transactions on Flow blockchain - setup manager, list, get, and cancel scheduled transactions."
       code={IMPLEMENTATION_CODE}
