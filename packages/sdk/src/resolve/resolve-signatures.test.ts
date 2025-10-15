@@ -64,13 +64,15 @@ test("voucher in signable", async () => {
       transaction``,
       limit(156),
       proposer(authz),
-      authorizations([authz]),
-      payer({
-        addr: "0x02",
-        signingFunction: () => ({signature: "123"}),
-        keyId: 0,
-        sequenceNum: 123,
-      }),
+      authorizations([authz as any]),
+      payer([
+        {
+          addr: "0x02",
+          signingFunction: () => ({signature: "123"}),
+          keyId: 0,
+          sequenceNum: 123,
+        },
+      ]),
       ref("123"),
     ])
   )
@@ -91,6 +93,37 @@ test("voucher in signable", async () => {
     ],
     envelopeSigs: [{address: "0x02", keyId: 0, sig: "123"}],
   })
+})
+
+test("extensionData is propagated into voucher", async () => {
+  const authz = {
+    addr: "0x01",
+    signingFunction: () => ({signature: "123", extensionData: "abcd"}),
+    keyId: 0,
+    sequenceNum: 123,
+  }
+  const ix = await resolve(
+    await build([
+      transaction``,
+      limit(156),
+      proposer(authz),
+      authorizations([authz as any]),
+      payer([
+        {
+          addr: "0x02",
+          signingFunction: () => ({signature: "123"}),
+          keyId: 0,
+          sequenceNum: 123,
+        },
+      ]),
+      ref("123"),
+    ])
+  )
+
+  const signable = buildSignable(ix.accounts[ix.proposer!], {} as any, ix)
+  expect(signable.voucher.payloadSigs[0]).toEqual(
+    expect.objectContaining({extensionData: "abcd"})
+  )
 })
 
 test("Golden Path", async () => {
