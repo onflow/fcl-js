@@ -120,7 +120,7 @@ const sidebarItems: SidebarItem[] = [
     id: "useflowscheduledtransaction",
     label: "Scheduled Transaction",
     category: "hooks",
-    description: "Manage scheduled transactions",
+    description: "Manage Scheduled Transactions",
   },
 
   // Advanced section
