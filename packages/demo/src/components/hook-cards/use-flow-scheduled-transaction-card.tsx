@@ -194,10 +194,10 @@ export function UseFlowScheduledTransactionCard() {
   return (
     <DemoCard
       id="useflowscheduledtransaction"
-      title="Scheduled Transaction Hooks"
-      description="Manage scheduled transactions on Flow blockchain with dedicated hooks for setup, listing, fetching, and canceling transactions. Uses TanStack Query for automatic caching and refetching."
+      title="Scheduled Transactions"
+      description="Scheduled Transactions enable autonomous execution of blockchain logic at specific future times without external triggers. Perfect for recurring payments, automated arbitrage, time-based contracts, and delayed executions. This demo shows how to setup a scheduler manager, list scheduled transactions, fetch specific transactions, and cancel them before execution."
       code={IMPLEMENTATION_CODE}
-      docsUrl="https://developers.flow.com/build/tools/react-sdk/hooks#scheduled-transactions"
+      docsUrl="https://developers.flow.com/build/cadence/advanced-concepts/scheduled-transactions"
     >
       <div className="space-y-6">
         <div className="flex space-x-2 border-b border-gray-200 dark:border-gray-700">
@@ -226,12 +226,25 @@ export function UseFlowScheduledTransactionCard() {
 
         {activeTab === "setup" && (
           <div className="space-y-4">
-            <p
-              className={`text-sm ${darkMode ? "text-gray-300" : "text-gray-600"}`}
+            <div
+              className={`p-4 rounded-lg border
+              ${darkMode ? "bg-gray-800/50 border-white/10" : "bg-gray-50 border-black/10"}`}
             >
-              Initialize the Transaction Scheduler Manager in your account
-              (one-time setup)
-            </p>
+              <p
+                className={`text-sm font-medium mb-2 ${darkMode ? "text-gray-200" : "text-gray-900"}`}
+              >
+                Setup Scheduler Manager
+              </p>
+              <p
+                className={`text-sm ${darkMode ? "text-gray-400" : "text-gray-600"}`}
+              >
+                Before scheduling transactions, you need to initialize a Manager
+                resource in your account. This is a one-time setup that creates
+                the necessary storage and capabilities for managing scheduled
+                transactions. The manager tracks your scheduled transactions and
+                handles their execution.
+              </p>
+            </div>
             <button
               onClick={handleSetup}
               disabled={isSettingUp || !user?.addr}
@@ -255,6 +268,33 @@ export function UseFlowScheduledTransactionCard() {
 
         {activeTab === "list" && (
           <div className="space-y-4">
+            <div
+              className={`p-4 rounded-lg border
+              ${darkMode ? "bg-gray-800/50 border-white/10" : "bg-gray-50 border-black/10"}`}
+            >
+              <p
+                className={`text-sm font-medium mb-2 ${darkMode ? "text-gray-200" : "text-gray-900"}`}
+              >
+                List Scheduled Transactions
+              </p>
+              <p
+                className={`text-sm mb-3 ${darkMode ? "text-gray-400" : "text-gray-600"}`}
+              >
+                View all scheduled transactions for an account. Each transaction
+                shows its ID, priority level (High/Medium/Low), execution
+                status, computational effort, fees, and scheduled execution
+                time. Optionally include handler data to see the transaction's
+                metadata and resolved views.
+              </p>
+              <p
+                className={`text-xs px-3 py-2 rounded
+                ${darkMode ? "bg-yellow-900/30 text-yellow-400 border border-yellow-700/30" : "bg-yellow-50 text-yellow-800 border border-yellow-200"}`}
+              >
+                <span className="font-medium">Note:</span> Only returns
+                transactions in pending state (not yet executed). Once executed,
+                transactions are removed from the list.
+              </p>
+            </div>
             <div className="space-y-3">
               <label
                 className={`block text-sm font-medium ${darkMode ? "text-gray-300" : "text-gray-700"}`}
@@ -335,6 +375,33 @@ export function UseFlowScheduledTransactionCard() {
 
         {activeTab === "get" && (
           <div className="space-y-4">
+            <div
+              className={`p-4 rounded-lg border
+              ${darkMode ? "bg-gray-800/50 border-white/10" : "bg-gray-50 border-black/10"}`}
+            >
+              <p
+                className={`text-sm font-medium mb-2 ${darkMode ? "text-gray-200" : "text-gray-900"}`}
+              >
+                Get Scheduled Transaction
+              </p>
+              <p
+                className={`text-sm mb-3 ${darkMode ? "text-gray-400" : "text-gray-600"}`}
+              >
+                Fetch detailed information about a specific scheduled
+                transaction by its ID. This returns the transaction's current
+                status, priority, fees, execution timestamp, and handler
+                information. Useful for monitoring individual transactions and
+                checking their execution state.
+              </p>
+              <p
+                className={`text-xs px-3 py-2 rounded
+                ${darkMode ? "bg-yellow-900/30 text-yellow-400 border border-yellow-700/30" : "bg-yellow-50 text-yellow-800 border border-yellow-200"}`}
+              >
+                <span className="font-medium">Note:</span> Only returns data for
+                transactions in pending state. Returns null if the transaction
+                has been executed or doesn't exist.
+              </p>
+            </div>
             <div className="space-y-3">
               <label
                 className={`block text-sm font-medium ${darkMode ? "text-gray-300" : "text-gray-700"}`}
@@ -404,6 +471,25 @@ export function UseFlowScheduledTransactionCard() {
 
         {activeTab === "cancel" && (
           <div className="space-y-4">
+            <div
+              className={`p-4 rounded-lg border
+              ${darkMode ? "bg-gray-800/50 border-white/10" : "bg-gray-50 border-black/10"}`}
+            >
+              <p
+                className={`text-sm font-medium mb-2 ${darkMode ? "text-gray-200" : "text-gray-900"}`}
+              >
+                Cancel Scheduled Transaction
+              </p>
+              <p
+                className={`text-sm ${darkMode ? "text-gray-400" : "text-gray-600"}`}
+              >
+                Cancel a pending scheduled transaction before it executes. This
+                prevents the transaction from running and refunds any prepaid
+                fees back to your account. Only transactions in "Pending" status
+                can be cancelled - once a transaction starts processing or
+                completes, it cannot be cancelled.
+              </p>
+            </div>
             <div className="space-y-3">
               <label
                 className={`block text-sm font-medium ${darkMode ? "text-gray-300" : "text-gray-700"}`}
