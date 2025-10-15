@@ -1,12 +1,11 @@
-import {useQuery, UseQueryOptions, UseQueryResult} from "@tanstack/react-query"
-import {useCallback} from "react"
+import {UseQueryOptions, UseQueryResult} from "@tanstack/react-query"
 import {parseUnits} from "viem/utils"
 import {CONTRACT_ADDRESSES, CADENCE_UFIX64_PRECISION} from "../constants"
-import {useFlowQueryClient} from "../provider/FlowQueryClient"
 import {useFlowClient} from "./useFlowClient"
 import {useFlowChainId} from "./useFlowChainId"
+import {useFlowQuery} from "./useFlowQuery"
 import {
-  ScheduledTransactionInfo,
+  ScheduledTransaction,
   ScheduledTransactionPriority,
   ScheduledTransactionStatus,
 } from "./useFlowScheduledTransactionList"
@@ -15,14 +14,14 @@ export interface UseFlowScheduledTransactionArgs {
   scheduledTxId?: string
   includeHandlerData?: boolean
   query?: Omit<
-    UseQueryOptions<ScheduledTransactionInfo | null, Error>,
+    UseQueryOptions<ScheduledTransaction | null, Error>,
     "queryKey" | "queryFn"
   >
   flowClient?: ReturnType<typeof useFlowClient>
 }
 
 export type UseFlowScheduledTransactionResult = UseQueryResult<
-  ScheduledTransactionInfo | null,
+  ScheduledTransaction | null,
   Error
 >
 
@@ -137,10 +136,10 @@ access(all) fun main(txId: UInt64): TransactionInfoWithHandler? {
 `
 }
 
-const convertScheduledTransactionInfo = (
+const convertScheduledTransaction = (
   data: any,
   includeHandlerData: boolean
-): ScheduledTransactionInfo => {
+): ScheduledTransaction => {
   return {
     id: data.id,
     priority: Number(data.priority || 0) as ScheduledTransactionPriority,
@@ -162,9 +161,8 @@ const convertScheduledTransactionInfo = (
 
 /**
  * Hook for getting a specific scheduled transaction by ID.
- * Uses TanStack Query for caching and automatic refetching.
  *
- * @param {UseFlowScheduledTransactionArgs} args - Configuration including transaction ID and options
+ * @param {UseFlowScheduledTransactionArgs} args Configuration including transaction ID and options
  * @returns {UseFlowScheduledTransactionResult} Query result with scheduled transaction or null if not found
  *
  * @example
@@ -186,38 +184,38 @@ export function useFlowScheduledTransaction({
   query: queryOptions = {},
   flowClient,
 }: UseFlowScheduledTransactionArgs = {}): UseFlowScheduledTransactionResult {
-  const queryClient = useFlowQueryClient()
-  const fcl = useFlowClient({flowClient})
   const chainIdResult = useFlowChainId()
   const chainId = chainIdResult.data
 
-  const fetchScheduledTransaction =
-    useCallback(async (): Promise<ScheduledTransactionInfo | null> => {
-      if (!chainId || !scheduledTxId) return null
-
-      const cadence = includeHandlerData
+  const queryResult = useFlowQuery({
+    cadence: chainId
+      ? includeHandlerData
         ? getScheduledTransactionWithHandlerQuery(chainId)
         : getScheduledTransactionQuery(chainId)
-
-      const result = await fcl.query({
-        cadence,
-        args: (arg, t) => [arg(scheduledTxId, t.UInt64)],
-      })
-
-      if (!result) return null
-
-      return convertScheduledTransactionInfo(result, includeHandlerData)
-    }, [chainId, scheduledTxId, includeHandlerData])
-
-  return useQuery<ScheduledTransactionInfo | null, Error>(
-    {
-      queryKey: ["flowScheduledTransaction", scheduledTxId, includeHandlerData],
-      queryFn: fetchScheduledTransaction,
-      enabled: Boolean(
-        chainId && scheduledTxId && (queryOptions?.enabled ?? true)
-      ),
-      ...queryOptions,
+      : "",
+    args: scheduledTxId
+      ? (arg, t) => [arg(scheduledTxId, t.UInt64)]
+      : undefined,
+    query: {
+      ...(queryOptions as Omit<
+        UseQueryOptions<unknown, Error>,
+        "queryKey" | "queryFn"
+      >),
+      enabled: (queryOptions?.enabled ?? true) && !!chainId && !!scheduledTxId,
     },
-    queryClient
-  )
+    flowClient,
+  })
+
+  // Transform raw Cadence data to ScheduledTransaction or null
+  const data =
+    queryResult.data !== undefined
+      ? queryResult.data
+        ? convertScheduledTransaction(queryResult.data, includeHandlerData)
+        : null
+      : undefined
+
+  return {
+    ...queryResult,
+    data,
+  } as UseFlowScheduledTransactionResult
 }

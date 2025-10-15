@@ -21,7 +21,7 @@ export {
   useFlowScheduledTransactionList,
   ScheduledTransactionPriority,
   ScheduledTransactionStatus,
-  type ScheduledTransactionInfo,
+  type ScheduledTransaction,
 } from "./useFlowScheduledTransactionList"
 export {useFlowScheduledTransaction} from "./useFlowScheduledTransaction"
 export {useFlowScheduledTransactionSetup} from "./useFlowScheduledTransactionSetup"

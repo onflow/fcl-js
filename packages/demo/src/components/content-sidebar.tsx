@@ -117,8 +117,8 @@ const sidebarItems: SidebarItem[] = [
     description: "Fetch NFT metadata and traits",
   },
   {
-    id: "useflowschedule",
-    label: "Flow Schedule",
+    id: "useflowscheduledtransaction",
+    label: "Scheduled Transaction",
     category: "hooks",
     description: "Manage scheduled transactions",
   },

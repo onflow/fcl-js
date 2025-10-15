@@ -51,9 +51,8 @@ transaction() {
 
 /**
  * Hook for setting up a Flow Transaction Scheduler Manager resource.
- * Uses TanStack Query mutation for transaction handling.
  *
- * @param {UseFlowScheduledTransactionSetupArgs} args - Optional configuration including mutation options
+ * @param {UseFlowScheduledTransactionSetupArgs} args Optional configuration including mutation options
  * @returns {UseFlowScheduledTransactionSetupResult} Mutation result with setup/setupAsync functions
  *
  * @example

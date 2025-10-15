@@ -1,54 +1,68 @@
 import {
   useFlowCurrentUser,
-  useFlowSchedule,
-  ScheduledTxPriority,
-  ScheduledTxStatus,
+  useFlowScheduledTransactionList,
+  useFlowScheduledTransaction,
+  useFlowScheduledTransactionSetup,
+  useFlowScheduledTransactionCancel,
+  ScheduledTransactionPriority,
+  ScheduledTransactionStatus,
+  type ScheduledTransaction,
 } from "@onflow/react-sdk"
 import {useState} from "react"
 import {useDarkMode} from "../flow-provider-wrapper"
 import {DemoCard} from "../ui/demo-card"
 import {ResultsSection} from "../ui/results-section"
 
-const IMPLEMENTATION_CODE = `import { useFlowSchedule } from "@onflow/react-sdk"
+const IMPLEMENTATION_CODE = `import {
+  useFlowScheduledTransactionList,
+  useFlowScheduledTransaction,
+  useFlowScheduledTransactionSetup,
+  useFlowScheduledTransactionCancel
+} from "@onflow/react-sdk"
 
-const {
-  setupScheduler,
-  listScheduledTx,
-  getScheduledTx,
-  cancelScheduledTx
-} = useFlowSchedule()
+// Setup the scheduler (one-time initialization)
+const { setupAsync, isPending: isSettingUp } = useFlowScheduledTransactionSetup()
+await setupAsync()
 
-// Setup manager
-await setupScheduler()
+// List all scheduled transactions for an account
+const { data: transactions, isLoading } = useFlowScheduledTransactionList({
+  account: "0xACCOUNT",
+  includeHandlerData: true  // Optional: include handler details
+})
 
-// List all scheduled transactions
-const transactions = await listScheduledTx("0xACCOUNT")
+// Get a specific scheduled transaction by ID
+const { data: transaction } = useFlowScheduledTransaction({
+  scheduledTxId: "42",
+  includeHandlerData: true
+})
 
-// Get specific transaction
-const tx = await getScheduledTx("123")
+// Cancel a scheduled transaction
+const { cancelTransactionAsync } = useFlowScheduledTransactionCancel()
+await cancelTransactionAsync("42")`
 
-// Cancel a transaction
-await cancelScheduledTx("123")`
-
-const PRIORITY_LABELS: Record<ScheduledTxPriority, string> = {
-  [ScheduledTxPriority.Low]: "Low",
-  [ScheduledTxPriority.Medium]: "Medium",
-  [ScheduledTxPriority.High]: "High",
+const PRIORITY_LABELS: Record<ScheduledTransactionPriority, string> = {
+  [ScheduledTransactionPriority.Low]: "Low",
+  [ScheduledTransactionPriority.Medium]: "Medium",
+  [ScheduledTransactionPriority.High]: "High",
 }
 
-const STATUS_LABELS: Record<ScheduledTxStatus, string> = {
-  [ScheduledTxStatus.Pending]: "Pending",
-  [ScheduledTxStatus.Processing]: "Processing",
-  [ScheduledTxStatus.Completed]: "Completed",
-  [ScheduledTxStatus.Failed]: "Failed",
-  [ScheduledTxStatus.Cancelled]: "Cancelled",
+const STATUS_LABELS: Record<ScheduledTransactionStatus, string> = {
+  [ScheduledTransactionStatus.Pending]: "Pending",
+  [ScheduledTransactionStatus.Processing]: "Processing",
+  [ScheduledTransactionStatus.Completed]: "Completed",
+  [ScheduledTransactionStatus.Failed]: "Failed",
+  [ScheduledTransactionStatus.Cancelled]: "Cancelled",
 }
 
-export function UseFlowScheduleCard() {
+export function UseFlowScheduledTransactionCard() {
   const {darkMode} = useDarkMode()
   const {user} = useFlowCurrentUser()
-  const {listScheduledTx, getScheduledTx, setupScheduler, cancelScheduledTx} =
-    useFlowSchedule()
+
+  // Individual hooks for each operation
+  const {setupAsync, isPending: isSettingUp} =
+    useFlowScheduledTransactionSetup()
+  const {cancelTransactionAsync, isPending: isCancelling} =
+    useFlowScheduledTransactionCancel()
 
   const [activeTab, setActiveTab] = useState<
     "setup" | "list" | "get" | "cancel"
@@ -58,65 +72,66 @@ export function UseFlowScheduleCard() {
   const [includeHandlerData, setIncludeHandlerData] = useState(false)
   const [result, setResult] = useState<any>(null)
   const [error, setError] = useState<string | null>(null)
-  const [loading, setLoading] = useState(false)
+
+  // Query hooks - reactive to input changes
+  const listQuery = useFlowScheduledTransactionList({
+    account: accountAddress || user?.addr,
+    includeHandlerData,
+    query: {
+      enabled: activeTab === "list" && Boolean(accountAddress || user?.addr),
+    },
+  })
+
+  const getQuery = useFlowScheduledTransaction({
+    scheduledTxId: txId,
+    includeHandlerData,
+    query: {
+      enabled: activeTab === "get" && Boolean(txId),
+    },
+  })
 
   const handleSetup = async () => {
-    setLoading(true)
     setError(null)
     setResult(null)
     try {
-      const txId = await setupScheduler()
+      const txId = await setupAsync()
       setResult({txId, message: "Manager setup successfully"})
     } catch (err: any) {
       setError(err.message || "Setup failed")
-    } finally {
-      setLoading(false)
     }
   }
 
-  const handleList = async () => {
-    const address = accountAddress || user?.addr
+  const handleList = () => {
+    setError(null)
+    setResult(null)
 
-    if (!address) {
+    if (!accountAddress && !user?.addr) {
       setError("Please connect your wallet or enter an account address")
       return
     }
 
-    setLoading(true)
-    setError(null)
-    setResult(null)
-    try {
-      const transactions = await listScheduledTx(address, {includeHandlerData})
+    // Results will automatically update via listQuery
+    if (listQuery.data) {
       setResult({
-        account: address,
-        count: transactions.length,
-        transactions,
+        account: accountAddress || user?.addr,
+        count: listQuery.data.length,
+        transactions: listQuery.data,
       })
-    } catch (err: any) {
-      setError(err.message || "Failed to list transactions")
-    } finally {
-      setLoading(false)
     }
   }
 
-  const handleGet = async () => {
+  const handleGet = () => {
+    setError(null)
+    setResult(null)
+
     if (!txId) {
       setError("Please enter a transaction ID")
       return
     }
 
-    setLoading(true)
-    setError(null)
-    setResult(null)
-    try {
-      const transaction = await getScheduledTx(txId, {
-        includeHandlerData,
-      })
-      setResult(transaction || {message: "Transaction not found"})
-    } catch (err: any) {
-      setError(err.message || "Failed to get transaction")
-    } finally {
-      setLoading(false)
+    // Results will automatically update via getQuery
+    if (getQuery.data !== undefined) {
+      setResult(getQuery.data || {message: "Transaction not found"})
     }
   }
 
@@ -126,30 +141,38 @@ export function UseFlowScheduleCard() {
       return
     }
 
-    setLoading(true)
     setError(null)
     setResult(null)
     try {
-      const cancelTxId = await cancelScheduledTx(txId)
+      const cancelTxId = await cancelTransactionAsync(txId)
       setResult({
         txId: cancelTxId,
         message: "Transaction cancelled successfully",
       })
     } catch (err: any) {
       setError(err.message || "Failed to cancel transaction")
-    } finally {
-      setLoading(false)
     }
   }
 
-  const formatTransactionInfo = (tx: any) => {
+  // Update results when queries complete
+  const handleRefresh = () => {
+    if (activeTab === "list") {
+      handleList()
+    } else if (activeTab === "get") {
+      handleGet()
+    }
+  }
+
+  const formatTransactionInfo = (tx: ScheduledTransaction) => {
     if (!tx.id) return tx
 
     return {
       ID: tx.id,
       Priority:
-        PRIORITY_LABELS[tx.priority as ScheduledTxPriority] || tx.priority,
-      Status: STATUS_LABELS[tx.status as ScheduledTxStatus] || tx.status,
+        PRIORITY_LABELS[tx.priority as ScheduledTransactionPriority] ||
+        tx.priority,
+      Status:
+        STATUS_LABELS[tx.status as ScheduledTransactionStatus] || tx.status,
       "Execution Effort": tx.executionEffort.toString(),
       "Fees (FLOW)": tx.fees.formatted,
       "Scheduled At": new Date(tx.scheduledTimestamp * 1000).toLocaleString(),
@@ -162,13 +185,19 @@ export function UseFlowScheduleCard() {
     }
   }
 
+  const isLoading =
+    (activeTab === "list" && listQuery.isLoading) ||
+    (activeTab === "get" && getQuery.isLoading) ||
+    isSettingUp ||
+    isCancelling
+
   return (
     <DemoCard
-      id="useflowschedule"
-      title="useFlowSchedule"
-      description="Manage scheduled transactions on Flow blockchain - setup manager, list, get, and cancel scheduled transactions."
+      id="useflowscheduledtransaction"
+      title="Scheduled Transaction Hooks"
+      description="Manage scheduled transactions on Flow blockchain with dedicated hooks for setup, listing, fetching, and canceling transactions. Uses TanStack Query for automatic caching and refetching."
       code={IMPLEMENTATION_CODE}
-      docsUrl="https://developers.flow.com/build/tools/react-sdk/hooks#useflowschedule"
+      docsUrl="https://developers.flow.com/build/tools/react-sdk/hooks#scheduled-transactions"
     >
       <div className="space-y-6">
         <div className="flex space-x-2 border-b border-gray-200 dark:border-gray-700">
@@ -201,18 +230,26 @@ export function UseFlowScheduleCard() {
               className={`text-sm ${darkMode ? "text-gray-300" : "text-gray-600"}`}
             >
               Initialize the Transaction Scheduler Manager in your account
+              (one-time setup)
             </p>
             <button
               onClick={handleSetup}
-              disabled={loading || !user?.addr}
+              disabled={isSettingUp || !user?.addr}
               className={`px-6 py-3 rounded-lg font-medium transition-all duration-200 ${
-              loading || !user?.addr
+              isSettingUp || !user?.addr
                   ? "bg-gray-300 text-gray-500 cursor-not-allowed"
                   : "bg-flow-primary text-black hover:bg-flow-primary/80"
               }`}
             >
-              {loading ? "Setting up..." : "Setup Manager"}
+              {isSettingUp ? "Setting up..." : "Setup Manager"}
             </button>
+            {!user?.addr && (
+              <p
+                className={`text-sm ${darkMode ? "text-yellow-400" : "text-yellow-600"}`}
+              >
+                Please connect your wallet to setup the scheduler
+              </p>
+            )}
           </div>
         )}
 
@@ -251,29 +288,48 @@ export function UseFlowScheduleCard() {
             <div className="flex items-center space-x-3">
               <input
                 type="checkbox"
-                id="includeHandler"
+                id="includeHandlerList"
                 checked={includeHandlerData}
                 onChange={e => setIncludeHandlerData(e.target.checked)}
                 className="w-4 h-4"
               />
               <label
-                htmlFor="includeHandler"
+                htmlFor="includeHandlerList"
                 className={`text-sm ${darkMode ? "text-gray-300" : "text-gray-700"}`}
               >
                 Include handler data
               </label>
             </div>
-            <button
-              onClick={handleList}
-              disabled={loading || (!accountAddress && !user?.addr)}
-              className={`px-6 py-3 rounded-lg font-medium transition-all duration-200 ${
-              loading || (!accountAddress && !user?.addr)
-                  ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                  : "bg-flow-primary text-black hover:bg-flow-primary/80"
-              }`}
-            >
-              {loading ? "Loading..." : "List Transactions"}
-            </button>
+            <div className="flex gap-3">
+              <button
+                onClick={handleList}
+                disabled={
+                  listQuery.isLoading || (!accountAddress && !user?.addr)
+                }
+                className={`px-6 py-3 rounded-lg font-medium transition-all duration-200 ${
+                listQuery.isLoading || (!accountAddress && !user?.addr)
+                    ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                    : "bg-flow-primary text-black hover:bg-flow-primary/80"
+                }`}
+              >
+                {listQuery.isLoading ? "Loading..." : "List Transactions"}
+              </button>
+              {listQuery.data && (
+                <button
+                  onClick={() => listQuery.refetch()}
+                  disabled={listQuery.isRefetching}
+                  className={`px-6 py-3 rounded-lg font-medium transition-all duration-200 ${
+                  listQuery.isRefetching
+                      ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                      : darkMode
+                        ? "bg-gray-700 text-white hover:bg-gray-600"
+                        : "bg-gray-200 text-black hover:bg-gray-300"
+                  }`}
+                >
+                  {listQuery.isRefetching ? "Refreshing..." : "Refresh"}
+                </button>
+              )}
+            </div>
           </div>
         )}
 
@@ -315,17 +371,34 @@ export function UseFlowScheduleCard() {
                 Include handler data
               </label>
             </div>
-            <button
-              onClick={handleGet}
-              disabled={loading || !txId}
-              className={`px-6 py-3 rounded-lg font-medium transition-all duration-200 ${
-              loading || !txId
-                  ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                  : "bg-flow-primary text-black hover:bg-flow-primary/80"
-              }`}
-            >
-              {loading ? "Loading..." : "Get Transaction"}
-            </button>
+            <div className="flex gap-3">
+              <button
+                onClick={handleGet}
+                disabled={getQuery.isLoading || !txId}
+                className={`px-6 py-3 rounded-lg font-medium transition-all duration-200 ${
+                getQuery.isLoading || !txId
+                    ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                    : "bg-flow-primary text-black hover:bg-flow-primary/80"
+                }`}
+              >
+                {getQuery.isLoading ? "Loading..." : "Get Transaction"}
+              </button>
+              {getQuery.data && (
+                <button
+                  onClick={() => getQuery.refetch()}
+                  disabled={getQuery.isRefetching}
+                  className={`px-6 py-3 rounded-lg font-medium transition-all duration-200 ${
+                  getQuery.isRefetching
+                      ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                      : darkMode
+                        ? "bg-gray-700 text-white hover:bg-gray-600"
+                        : "bg-gray-200 text-black hover:bg-gray-300"
+                  }`}
+                >
+                  {getQuery.isRefetching ? "Refreshing..." : "Refresh"}
+                </button>
+              )}
+            </div>
           </div>
         )}
 
@@ -354,16 +427,45 @@ export function UseFlowScheduleCard() {
             </div>
             <button
               onClick={handleCancel}
-              disabled={loading || !txId || !user?.addr}
+              disabled={isCancelling || !txId || !user?.addr}
               className={`px-6 py-3 rounded-lg font-medium transition-all duration-200 ${
-              loading || !txId || !user?.addr
+              isCancelling || !txId || !user?.addr
                   ? "bg-gray-300 text-gray-500 cursor-not-allowed"
                   : "bg-red-600 text-white hover:bg-red-700"
               }`}
             >
-              {loading ? "Cancelling..." : "Cancel Transaction"}
+              {isCancelling ? "Cancelling..." : "Cancel Transaction"}
             </button>
+            {!user?.addr && (
+              <p
+                className={`text-sm ${darkMode ? "text-yellow-400" : "text-yellow-600"}`}
+              >
+                Please connect your wallet to cancel transactions
+              </p>
+            )}
           </div>
+        )}
+
+        {activeTab === "list" && listQuery.data && !result && (
+          <ResultsSection
+            data={{
+              account: accountAddress || user?.addr,
+              count: listQuery.data.length,
+              transactions: listQuery.data.map(formatTransactionInfo),
+            }}
+            darkMode={darkMode}
+            show={true}
+            title="Result"
+          />
+        )}
+
+        {activeTab === "get" && getQuery.data && !result && (
+          <ResultsSection
+            data={formatTransactionInfo(getQuery.data)}
+            darkMode={darkMode}
+            show={true}
+            title="Result"
+          />
         )}
 
         {(result || error) && (
@@ -385,6 +487,14 @@ export function UseFlowScheduleCard() {
             show={true}
             title={error ? "Error" : "Result"}
           />
+        )}
+
+        {isLoading && !result && !error && (
+          <div
+            className={`text-center py-4 ${darkMode ? "text-gray-400" : "text-gray-600"}`}
+          >
+            Loading...
+          </div>
         )}
       </div>
     </DemoCard>

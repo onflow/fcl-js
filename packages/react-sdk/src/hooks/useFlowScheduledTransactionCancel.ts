@@ -63,9 +63,8 @@ transaction(txId: UInt64) {
 
 /**
  * Hook for canceling a scheduled transaction.
- * Uses TanStack Query mutation for transaction handling.
  *
- * @param {UseFlowScheduledTransactionCancelArgs} args - Optional configuration including mutation options
+ * @param {UseFlowScheduledTransactionCancelArgs} args Optional configuration including mutation options
  * @returns {UseFlowScheduledTransactionCancelResult} Mutation result with cancelTransaction/cancelTransactionAsync functions
  *
  * @example

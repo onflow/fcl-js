@@ -12,7 +12,7 @@ import {UseFlowMutateCard} from "./hook-cards/use-flow-mutate-card"
 import {UseFlowEventsCard} from "./hook-cards/use-flow-events-card"
 import {UseFlowTransactionStatusCard} from "./hook-cards/use-flow-transaction-status-card"
 import {UseFlowRevertibleRandomCard} from "./hook-cards/use-flow-revertible-random-card"
-import {UseFlowScheduleCard} from "./hook-cards/use-flow-schedule-card"
+import {UseFlowScheduledTransactionCard} from "./hook-cards/use-flow-scheduled-transaction-card"
 import {UseFlowNftMetadataCard} from "./hook-cards/use-flow-nft-metadata-card"
 
 // Import setup cards
@@ -88,7 +88,7 @@ export function ContentSection() {
             <UseFlowRevertibleRandomCard />
             <UseFlowTransactionStatusCard />
             <UseFlowNftMetadataCard />
-            <UseFlowScheduleCard />
+            <UseFlowScheduledTransactionCard />
           </div>
 
           <div className="mb-12 md:mb-24">

@@ -1,10 +1,9 @@
-import {useQuery, UseQueryOptions, UseQueryResult} from "@tanstack/react-query"
-import {useCallback} from "react"
+import {UseQueryOptions, UseQueryResult} from "@tanstack/react-query"
 import {parseUnits} from "viem/utils"
 import {CADENCE_UFIX64_PRECISION, CONTRACT_ADDRESSES} from "../constants"
-import {useFlowQueryClient} from "../provider/FlowQueryClient"
 import {useFlowChainId} from "./useFlowChainId"
 import {useFlowClient} from "./useFlowClient"
+import {useFlowQuery} from "./useFlowQuery"
 
 export enum ScheduledTransactionPriority {
   Low = 0,
@@ -20,7 +19,7 @@ export enum ScheduledTransactionStatus {
   Cancelled = 4,
 }
 
-export interface ScheduledTransactionInfo {
+export interface ScheduledTransaction {
   id: string
   priority: ScheduledTransactionPriority
   executionEffort: bigint
@@ -40,14 +39,14 @@ export interface UseFlowScheduledTransactionListArgs {
   account?: string
   includeHandlerData?: boolean
   query?: Omit<
-    UseQueryOptions<ScheduledTransactionInfo[], Error>,
+    UseQueryOptions<ScheduledTransaction[], Error>,
     "queryKey" | "queryFn"
   >
   flowClient?: ReturnType<typeof useFlowClient>
 }
 
 export type UseFlowScheduledTransactionListResult = UseQueryResult<
-  ScheduledTransactionInfo[],
+  ScheduledTransaction[],
   Error
 >
 
@@ -171,10 +170,10 @@ access(all) fun main(account: Address): [TransactionInfoWithHandler] {
 `
 }
 
-const convertToScheduledTransactionInfo = (
+const convertToScheduledTransaction = (
   data: any,
   includeHandlerData: boolean
-): ScheduledTransactionInfo => {
+): ScheduledTransaction => {
   return {
     id: data.id,
     priority: Number(data.priority || 0) as ScheduledTransactionPriority,
@@ -196,9 +195,8 @@ const convertToScheduledTransactionInfo = (
 
 /**
  * Hook for listing all scheduled transactions for an account.
- * Uses TanStack Query for caching and automatic refetching.
  *
- * @param {UseFlowScheduledTransactionListArgs} args - Configuration including account address and options
+ * @param {UseFlowScheduledTransactionListArgs} args Configuration including account address and options
  * @returns {UseFlowScheduledTransactionListResult} Query result with list of scheduled transactions
  *
  * @example
@@ -220,39 +218,38 @@ export function useFlowScheduledTransactionList({
   query: queryOptions = {},
   flowClient,
 }: UseFlowScheduledTransactionListArgs = {}): UseFlowScheduledTransactionListResult {
-  const queryClient = useFlowQueryClient()
-  const fcl = useFlowClient({flowClient})
   const chainIdResult = useFlowChainId()
   const chainId = chainIdResult.data
 
-  const fetchScheduledTransactions = useCallback(async (): Promise<
-    ScheduledTransactionInfo[]
-  > => {
-    if (!chainId || !account) return []
-
-    const cadence = includeHandlerData
-      ? getListScheduledTransactionWithHandlerScript(chainId)
-      : getListScheduledTransactionScript(chainId)
-
-    const result = await fcl.query({
-      cadence,
-      args: (arg, t) => [arg(account, t.Address)],
-    })
-
-    if (!Array.isArray(result)) return []
-
-    return result.map(data =>
-      convertToScheduledTransactionInfo(data, includeHandlerData)
-    )
-  }, [chainId, account, includeHandlerData])
-
-  return useQuery<ScheduledTransactionInfo[], Error>(
-    {
-      queryKey: ["flowScheduledTransactionList", account, includeHandlerData],
-      queryFn: fetchScheduledTransactions,
-      enabled: Boolean(chainId && account && (queryOptions?.enabled ?? true)),
-      ...queryOptions,
+  const queryResult = useFlowQuery({
+    cadence: chainId
+      ? includeHandlerData
+        ? getListScheduledTransactionWithHandlerScript(chainId)
+        : getListScheduledTransactionScript(chainId)
+      : "",
+    args: account ? (arg, t) => [arg(account, t.Address)] : undefined,
+    query: {
+      ...(queryOptions as Omit<
+        UseQueryOptions<unknown, Error>,
+        "queryKey" | "queryFn"
+      >),
+      enabled: (queryOptions?.enabled ?? true) && !!chainId && !!account,
     },
-    queryClient
-  )
+    flowClient,
+  })
+
+  // Transform raw Cadence data to ScheduledTransaction[]
+  const data =
+    queryResult.data !== undefined
+      ? Array.isArray(queryResult.data)
+        ? queryResult.data.map(item =>
+            convertToScheduledTransaction(item, includeHandlerData)
+          )
+        : []
+      : undefined
+
+  return {
+    ...queryResult,
+    data,
+  } as UseFlowScheduledTransactionListResult
 }
