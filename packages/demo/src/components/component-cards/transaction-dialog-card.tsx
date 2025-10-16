@@ -84,7 +84,7 @@ export function TransactionDialogCard() {
 
   return (
     <DemoCard
-      id="component-transaction-dialog"
+      id="transactiondialog"
       title="<TransactionDialog />"
       description="A modal dialog component that displays transaction status and progress with real-time updates."
       code={IMPLEMENTATION_CODE}

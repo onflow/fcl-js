@@ -189,6 +189,10 @@ export interface CompositeSignature {
    * Signature as a hex string
    */
   signature: string
+  /**
+   * Optional signature extension data for alternative schemes (e.g., WebAuthn)
+   */
+  extensionData?: string
 }
 export interface CurrentUser {
   /**

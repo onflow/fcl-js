@@ -14,7 +14,7 @@ export function UseFlowConfigCard() {
 
   return (
     <DemoCard
-      id="hook-flow-config"
+      id="useflowconfig"
       title="useFlowConfig"
       description="Access the current Flow configuration including network settings, access node, and wallet discovery."
       code={IMPLEMENTATION_CODE}

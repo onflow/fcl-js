@@ -39,7 +39,7 @@ export function TransactionLinkCard() {
 
   return (
     <DemoCard
-      id="component-transaction-link"
+      id="transactionlink"
       title="<TransactionLink />"
       description="A link component that automatically generates URLs to block explorers for viewing transaction details."
       code={IMPLEMENTATION_CODE}
