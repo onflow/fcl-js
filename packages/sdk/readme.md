@@ -484,7 +484,10 @@ const txId: string = "9dda49b2f2b1b9bc12d5cabe09f8a8cb49828c9c449574c1f46f3b3a5e
 
 // Build the interaction
 const interaction = await sdk.build([
-  sdk.getTransactionStatus(txId)
+  sdk.getTransactionStatus(txId),
+  // Optionally disambiguate system txns by providing a specific block id
+  // (uses HTTP query param ?block_id=... under the hood)
+  sdk.atBlockId("abc123blockid")
 ])
 
 // Send the interaction to the Access Node

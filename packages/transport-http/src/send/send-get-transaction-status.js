@@ -28,9 +28,16 @@ export async function sendGetTransactionStatus(ix, context = {}, opts = {}) {
 
   ix = await ix
 
+  const blockId = ix && ix.block && ix.block.id
+  const path = blockId
+    ? `/v1/transaction_results/${ix.transaction.id}?block_id=${encodeURIComponent(
+        blockId
+      )}`
+    : `/v1/transaction_results/${ix.transaction.id}`
+
   const res = await httpRequest({
     hostname: opts.node,
-    path: `/v1/transaction_results/${ix.transaction.id}`,
+    path,
     method: "GET",
     body: null,
   })
