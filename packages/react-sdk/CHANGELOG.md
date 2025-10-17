@@ -1,5 +1,20 @@
 # @onflow/react-sdk
 
+## 0.11.0
+
+### Minor Changes
+
+- [#2652](https://github.com/onflow/fcl-js/pull/2652) [`879ae914da9f4cffa3bccffddef462ffbe8ed8c7`](https://github.com/onflow/fcl-js/commit/879ae914da9f4cffa3bccffddef462ffbe8ed8c7) Thanks [@mfbz](https://github.com/mfbz)! - Added `useFlowAuthz` hook for handling Flow transaction authorization. This hook returns an authorization function that can be used when sending a transaction, defaulting to the current user's wallet authorization when no custom authorization is provided.
+
+- [#2661](https://github.com/onflow/fcl-js/pull/2661) [`e651d625af8e516d935e74d885524eca741dd9e6`](https://github.com/onflow/fcl-js/commit/e651d625af8e516d935e74d885524eca741dd9e6) Thanks [@mfbz](https://github.com/mfbz)! - Add `useFlowNftMetadata` hook to fetch NFT metadata including name, description, thumbnail, traits, and collection information from Flow blockchain accounts.
+
+- [#2660](https://github.com/onflow/fcl-js/pull/2660) [`54672e6b16234d33fa33889d2b48451697fc8f8e`](https://github.com/onflow/fcl-js/commit/54672e6b16234d33fa33889d2b48451697fc8f8e) Thanks [@mfbz](https://github.com/mfbz)! - Fixed transaction management so that it clears up transaction state on error
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @onflow/fcl@1.20.3
+
 ## 0.10.3
 
 ### Patch Changes
