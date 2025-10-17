@@ -1,4 +1,5 @@
 export {useFlowCurrentUser} from "./useFlowCurrentUser"
+export {useFlowAuthz} from "./useFlowAuthz"
 export {useFlowAccount} from "./useFlowAccount"
 export {useFlowBlock} from "./useFlowBlock"
 export {useFlowChainId} from "./useFlowChainId"
