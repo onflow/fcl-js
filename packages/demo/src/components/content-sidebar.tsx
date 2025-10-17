@@ -1,4 +1,4 @@
-import {useState, useEffect} from "react"
+import {useState, useEffect, useRef} from "react"
 import {PlusGridIcon} from "./ui/plus-grid"
 
 interface SidebarItem {
@@ -11,7 +11,7 @@ interface SidebarItem {
 const sidebarItems: SidebarItem[] = [
   // Setup section
   {
-    id: "setup-installation",
+    id: "installation",
     label: "Installation & Setup",
     category: "setup",
     description: "Install and configure the React SDK",
@@ -19,25 +19,25 @@ const sidebarItems: SidebarItem[] = [
 
   // Components section
   {
-    id: "component-connect",
+    id: "connect",
     label: "Connect",
     category: "components",
     description: "Wallet connection component",
   },
   {
-    id: "component-transaction-button",
+    id: "transactionbutton",
     label: "Transaction Button",
     category: "components",
     description: "Transaction execution button",
   },
   {
-    id: "component-transaction-dialog",
+    id: "transactiondialog",
     label: "Transaction Dialog",
     category: "components",
     description: "Transaction confirmation dialog",
   },
   {
-    id: "component-transaction-link",
+    id: "transactionlink",
     label: "Transaction Link",
     category: "components",
     description: "Transaction link component",
@@ -45,117 +45,114 @@ const sidebarItems: SidebarItem[] = [
 
   // Hooks section
   {
-    id: "hook-flow-current-user",
+    id: "useflowcurrentuser",
     label: "Current User",
     category: "hooks",
     description: "Manage user authentication",
   },
   {
-    id: "hook-flow-account",
+    id: "useflowaccount",
     label: "Account",
     category: "hooks",
     description: "Fetch account information",
   },
   {
-    id: "hook-flow-block",
+    id: "useflowblock",
     label: "Block",
     category: "hooks",
     description: "Get blockchain block data",
   },
   {
-    id: "hook-flow-chain-id",
+    id: "useflowchainid",
     label: "Chain ID",
     category: "hooks",
     description: "Get current chain ID",
   },
   {
-    id: "hook-flow-config",
+    id: "useflowconfig",
     label: "Config",
     category: "hooks",
     description: "Access Flow configuration",
   },
   {
-    id: "hook-flow-query",
+    id: "useflowquery",
     label: "Query",
     category: "hooks",
     description: "Execute Flow scripts",
   },
   {
-    id: "hook-flow-query-raw",
+    id: "useflowqueryraw",
     label: "Query Raw",
     category: "hooks",
     description: "Execute raw Flow scripts",
   },
   {
-    id: "hook-flow-mutate",
+    id: "useflowmutate",
     label: "Mutate",
     category: "hooks",
     description: "Send Flow transactions",
   },
   {
-    id: "hook-flow-events",
+    id: "useflowevents",
     label: "Events",
     category: "hooks",
     description: "Listen to blockchain events",
   },
   {
-    id: "hook-flow-revertible-random",
+    id: "useflowrevertiblerandom",
     label: "Revertible Random",
     category: "hooks",
     description: "Generate random numbers",
   },
   {
-    id: "hook-flow-transaction-status",
+    id: "useflowtransactionstatus",
     label: "Transaction Status",
     category: "hooks",
     description: "Track transaction status",
   },
   {
-    id: "hook-bridge-token-from-evm",
+    id: "usebridgetokenfromevm",
     label: "Bridge Token from EVM",
     category: "hooks",
     description: "Bridge tokens from EVM to Cadence",
   },
   {
-    id: "hook-cross-vm-spend-token",
+    id: "usecrossvmspendtoken",
     label: "Bridge Token to EVM",
     category: "hooks",
     description: "Bridge tokens from Cadence to EVM",
   },
+  {
+    id: "useflownftmetadata",
+    label: "NFT Metadata",
+    category: "hooks",
+    description: "Fetch NFT metadata and traits",
+  },
 
   // Advanced section
   {
-    id: "advanced-dark-mode",
+    id: "darkmode",
     label: "Dark Mode Control",
     category: "advanced",
     description: "Dynamic theme switching",
   },
   {
-    id: "advanced-theming",
+    id: "theming",
     label: "Custom Theming",
     category: "advanced",
     description: "Customize component appearance",
   },
 ]
 
-const scrollToElement = (id: string) => {
-  const element = document.getElementById(id)
-  if (element) {
-    // Get the header height to account for sticky header offset
-    const headerHeight = 80 // Approximate header height + padding
-    const elementRect = element.getBoundingClientRect()
-    const absoluteElementTop = elementRect.top + window.pageYOffset
-    const scrollPosition = absoluteElementTop - headerHeight
-
-    window.scrollTo({
-      top: scrollPosition,
-      behavior: "smooth",
-    })
-  }
+interface ContentSidebarProps {
+  darkMode: boolean
+  onItemClick?: () => void
 }
 
-export function ContentSidebar({darkMode}: {darkMode: boolean}) {
+export function ContentSidebar({darkMode, onItemClick}: ContentSidebarProps) {
   const [activeSection, setActiveSection] = useState<string>("")
+  const navRef = useRef<HTMLElement>(null)
+  const scrollLockRef = useRef<number | null>(null)
 
   const setupItems = sidebarItems.filter(item => item.category === "setup")
   const componentsItems = sidebarItems.filter(
@@ -166,8 +163,86 @@ export function ContentSidebar({darkMode}: {darkMode: boolean}) {
     item => item.category === "advanced"
   )
 
+  const scrollToElement = (id: string, isInitialLoad = false) => {
+    const element = document.getElementById(id)
+    if (element) {
+      // Save current sidebar scroll position if nav ref is available (but not on initial load)
+      if (navRef.current && !isInitialLoad) {
+        scrollLockRef.current = navRef.current.scrollTop
+      }
+
+      // Update the URL hash without reloading the page
+      window.history.replaceState(null, "", `#${id}`)
+
+      // Calculate position manually to ensure consistent 60px from top
+      const absoluteElementTop = element.offsetTop
+      const scrollMarginTop = 60
+      const targetPosition = absoluteElementTop - scrollMarginTop
+      const maxScroll =
+        document.documentElement.scrollHeight - window.innerHeight
+
+      // Use the minimum of target position and max scroll to handle elements at the bottom
+      const scrollPosition = Math.min(targetPosition, maxScroll)
+
+      window.scrollTo({
+        top: scrollPosition,
+        behavior: "smooth",
+      })
+
+      // Call onItemClick callback (for closing mobile sidebar)
+      if (!isInitialLoad && onItemClick) {
+        onItemClick()
+      }
+
+      // Unlock after scroll animation completes (only if we locked it)
+      if (!isInitialLoad) {
+        setTimeout(() => {
+          scrollLockRef.current = null
+        }, 1000)
+      }
+    }
+  }
+
+  // Prevent sidebar from scrolling when clicking buttons
+  useEffect(() => {
+    const nav = navRef.current
+    if (!nav) return
+
+    const handleScroll = () => {
+      if (scrollLockRef.current !== null) {
+        nav.scrollTop = scrollLockRef.current
+      }
+    }
+
+    nav.addEventListener("scroll", handleScroll)
+    return () => nav.removeEventListener("scroll", handleScroll)
+  }, [])
+
   // Track which section is currently visible
   useEffect(() => {
+    // Check if there's a hash in the URL on initial load
+    const hash = window.location.hash.slice(1) // Remove the # character
+    if (hash) {
+      setActiveSection(hash)
+
+      // Manually trigger scroll since browser isn't doing it automatically
+      const scrollToHash = () => {
+        const element = document.getElementById(hash)
+        if (element) {
+          // Use scrollIntoView with auto behavior (instant, not smooth) that respects scroll-margin-top
+          element.scrollIntoView({behavior: "auto", block: "start"})
+        }
+      }
+
+      // Try multiple times to ensure content is loaded
+      requestAnimationFrame(() => {
+        scrollToHash()
+        setTimeout(scrollToHash, 100)
+        setTimeout(scrollToHash, 300)
+        setTimeout(scrollToHash, 500)
+      })
+    }
+
     const observer = new IntersectionObserver(
       entries => {
         // Find the entry with the highest intersection ratio that's actually visible
@@ -280,6 +355,7 @@ export function ContentSidebar({darkMode}: {darkMode: boolean}) {
 
   return (
     <nav
+      ref={navRef}
       className={`relative w-full h-full border rounded-xl ${
         darkMode
           ? "bg-gray-800/30 border-white/10"

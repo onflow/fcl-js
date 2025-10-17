@@ -36,6 +36,14 @@ export async function sendGetTransaction(ix, context = {}, opts = {}) {
     address: sig.address,
     keyId: Number(sig.key_index),
     signature: sig.signature,
+    ...(sig.extension_data
+      ? {
+          extensionData: context.Buffer.from(
+            sig.extension_data,
+            "base64"
+          ).toString("hex"),
+        }
+      : {}),
   })
 
   const unwrapArg = arg =>

@@ -76,7 +76,7 @@ export function UseCrossVmSpendTokenCard() {
 
   return (
     <DemoCard
-      id="hook-cross-vm-spend-token"
+      id="usecrossvmspendtoken"
       title="useCrossVmSpendToken"
       description="Bridge fungible tokens from Cadence to Flow EVM by depositing them into the signer's Cadence-Owned Account (COA)."
       code={IMPLEMENTATION_CODE}

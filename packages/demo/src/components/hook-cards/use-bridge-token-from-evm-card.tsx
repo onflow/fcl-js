@@ -99,7 +99,7 @@ export function UseBridgeTokenFromEvmCard() {
 
   return (
     <DemoCard
-      id="hook-bridge-token-from-evm"
+      id="usebridgetokenfromevm"
       title="useBridgeTokenFromEvm"
       description="Bridge fungible tokens from Flow EVM to Cadence by withdrawing from the signer's Cadence-Owned Account (COA) in EVM."
       code={IMPLEMENTATION_CODE}

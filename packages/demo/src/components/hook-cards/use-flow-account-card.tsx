@@ -32,7 +32,7 @@ export function UseFlowAccountCard() {
 
   return (
     <DemoCard
-      id="hook-flow-account"
+      id="useflowaccount"
       title="useFlowAccount"
       description="Fetch Flow account information including balance, keys, and storage capacity."
       code={IMPLEMENTATION_CODE}
