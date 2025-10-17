@@ -229,4 +229,65 @@ access(all) fun main(): Address {
       expect(ix.message.cadence).toEqual(expected)
     })
   })
+
+  describe("mixed import syntax", () => {
+    test("supports both string imports and traditional imports", async () => {
+      const CADENCE = `import "FungibleToken"
+import MyContract from 0x12345678
+
+access(all) fun main(): Address {
+  return 0x12345678
+}`
+
+      const expected = `import FungibleToken from 0xf233dcee88fe0abe
+import MyContract from 0x12345678
+
+access(all) fun main(): Address {
+  return 0x12345678
+}`
+
+      await config().put("system.contracts.FungibleToken", "0xf233dcee88fe0abe")
+      await idle()
+
+      const ix = await pipe([
+        makeScript,
+        put("ix.cadence", CADENCE),
+        async ix => resolveCadence(ix, await getGlobalContext()),
+      ])(initInteraction())
+
+      expect(ix.message.cadence).toEqual(expected)
+    })
+
+    test("supports multiple string imports with traditional imports", async () => {
+      const CADENCE = `import "FungibleToken"
+import "NonFungibleToken"
+import MyContract from 0xABCDEF
+import FlowToken from 0x0ae53cb6e3f42a79
+
+access(all) fun main(): String {
+  return "mixed imports work"
+}`
+
+      const expected = `import FungibleToken from 0xf233dcee88fe0abe
+import NonFungibleToken from 0x1d7e57aa55817448
+import MyContract from 0xABCDEF
+import FlowToken from 0x0ae53cb6e3f42a79
+
+access(all) fun main(): String {
+  return "mixed imports work"
+}`
+
+      await config().put("system.contracts.FungibleToken", "0xf233dcee88fe0abe")
+      await config().put("system.contracts.NonFungibleToken", "0x1d7e57aa55817448")
+      await idle()
+
+      const ix = await pipe([
+        makeScript,
+        put("ix.cadence", CADENCE),
+        async ix => resolveCadence(ix, await getGlobalContext()),
+      ])(initInteraction())
+
+      expect(ix.message.cadence).toEqual(expected)
+    })
+  })
 })

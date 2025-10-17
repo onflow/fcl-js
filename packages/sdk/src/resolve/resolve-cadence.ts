@@ -37,10 +37,8 @@ export function createResolveCadence(context: SdkContext) {
     )
     if (isFn(cadence)) cadence = await cadence({} as Record<string, never>)
     invariant(isString(cadence), "Cadence needs to be a string at this point.")
-    invariant(
-      !isOldIdentifierSyntax(cadence) || !isNewIdentifierSyntax(cadence),
-      "Both account identifier and contract identifier syntax not simultaneously supported."
-    )
+
+    // Support for old identifier syntax (0xABCDEF)
     if (isOldIdentifierSyntax(cadence)) {
       cadence = Object.entries(context.legacyContractIdentifiers || {}).reduce(
         (cadence, [key, value]) => {
