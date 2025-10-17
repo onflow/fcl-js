@@ -278,7 +278,10 @@ access(all) fun main(): String {
 }`
 
       await config().put("system.contracts.FungibleToken", "0xf233dcee88fe0abe")
-      await config().put("system.contracts.NonFungibleToken", "0x1d7e57aa55817448")
+      await config().put(
+        "system.contracts.NonFungibleToken",
+        "0x1d7e57aa55817448"
+      )
       await idle()
 
       const ix = await pipe([
@@ -331,7 +334,7 @@ access(all) fun main(): Bool {
 }`
 
       // Spy on console.warn to verify warning is logged
-      const warnSpy = jest.spyOn(console, 'warn').mockImplementation()
+      const warnSpy = jest.spyOn(console, "warn").mockImplementation()
 
       const ix = await pipe([
         makeScript,
@@ -344,10 +347,10 @@ access(all) fun main(): Bool {
       // Verify warning was logged
       expect(warnSpy).toHaveBeenCalled()
       const warnCall = warnSpy.mock.calls.find(call =>
-        call.join(' ').includes('Contract Placeholder not found')
+        call.join(" ").includes("Contract Placeholder not found")
       )
       expect(warnCall).toBeDefined()
-      expect(warnCall?.join(' ')).toContain('UnconfiguredContract')
+      expect(warnCall?.join(" ")).toContain("UnconfiguredContract")
 
       warnSpy.mockRestore()
     })
@@ -370,7 +373,9 @@ access(all) fun main(): Bool {
           put("ix.cadence", CADENCE),
           async ix => resolveCadence(ix, await getGlobalContext()),
         ])(initInteraction())
-      }).rejects.toThrow("Both account identifier and contract identifier syntax not simultaneously supported.")
+      }).rejects.toThrow(
+        "Both account identifier and contract identifier syntax not simultaneously supported."
+      )
     })
 
     test("legacy placeholders alone should work without string imports", async () => {
