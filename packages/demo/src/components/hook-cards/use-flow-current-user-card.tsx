@@ -14,7 +14,7 @@ export function UseFlowCurrentUserCard() {
 
   return (
     <DemoCard
-      id="hook-flow-current-user"
+      id="useflowcurrentuser"
       title="useFlowCurrentUser"
       description="Manage user authentication and access current user information including wallet address and authentication status."
       code={IMPLEMENTATION_CODE}

@@ -39,7 +39,7 @@ export function UseFlowBlockCard() {
 
   return (
     <DemoCard
-      id="hook-flow-block"
+      id="useflowblock"
       title="useFlowBlock"
       description="Get blockchain block information including height, timestamp, and block ID."
       code={IMPLEMENTATION_CODE}

@@ -14,6 +14,7 @@ import {UseFlowTransactionStatusCard} from "./hook-cards/use-flow-transaction-st
 import {UseFlowRevertibleRandomCard} from "./hook-cards/use-flow-revertible-random-card"
 import {UseBridgeNftFromEvmCard} from "./hook-cards/use-bridge-nft-from-evm-card"
 import {UseCrossVmSpendNftCard} from "./hook-cards/use-cross-vm-spend-nft-card"
+import {UseFlowNftMetadataCard} from "./hook-cards/use-flow-nft-metadata-card"
 
 // Import setup cards
 import {InstallationCard} from "./setup-cards/installation-card"
@@ -33,12 +34,12 @@ export function ContentSection() {
     <section id="content-section" className="">
       <PlusGrid>
         <PlusGridRow>
-          <div className="my-24 mt-16">
-            <div className="text-left mb-16">
-              <h2 className="text-5xl font-bold text-gray-900 dark:text-white mb-4">
+          <div className="my-12 md:my-24 mt-8 md:mt-16">
+            <div className="text-left mb-8 md:mb-16">
+              <h2 className="text-3xl md:text-5xl font-bold text-gray-900 dark:text-white mb-3 md:mb-4">
                 Getting Started
               </h2>
-              <p className="text-lg text-gray-600 dark:text-gray-300 max-w-3xl leading-relaxed">
+              <p className="text-base md:text-lg text-gray-600 dark:text-gray-300 max-w-3xl leading-relaxed">
                 Install and configure the Flow React SDK to start building apps
                 on Flow.
               </p>
@@ -47,12 +48,12 @@ export function ContentSection() {
             <InstallationCard />
           </div>
 
-          <div className="mb-24">
-            <div className="text-left mb-16">
-              <h2 className="text-5xl font-bold text-gray-900 dark:text-white mb-4">
+          <div className="mb-12 md:mb-24">
+            <div className="text-left mb-8 md:mb-16">
+              <h2 className="text-3xl md:text-5xl font-bold text-gray-900 dark:text-white mb-3 md:mb-4">
                 React Components
               </h2>
-              <p className="text-lg text-gray-600 dark:text-gray-300 max-w-3xl leading-relaxed">
+              <p className="text-base md:text-lg text-gray-600 dark:text-gray-300 max-w-3xl leading-relaxed">
                 Pre-built UI components for common Flow blockchain interactions.
                 Drop them into your app to ship faster.
               </p>
@@ -64,12 +65,12 @@ export function ContentSection() {
             <TransactionLinkCard />
           </div>
 
-          <div className="mb-24">
-            <div className="text-left mb-16">
-              <h2 className="text-5xl font-bold text-gray-900 dark:text-white mb-4">
+          <div className="mb-12 md:mb-24">
+            <div className="text-left mb-8 md:mb-16">
+              <h2 className="text-3xl md:text-5xl font-bold text-gray-900 dark:text-white mb-3 md:mb-4">
                 React Hooks
               </h2>
-              <p className="text-lg text-gray-600 dark:text-gray-300 max-w-3xl leading-relaxed">
+              <p className="text-base md:text-lg text-gray-600 dark:text-gray-300 max-w-3xl leading-relaxed">
                 Powerful React hooks for interacting with the Flow blockchain.
                 Each hook provides a simple interface for complex blockchain
                 operations.
@@ -89,14 +90,15 @@ export function ContentSection() {
             <UseFlowTransactionStatusCard />
             <UseBridgeNftFromEvmCard />
             <UseCrossVmSpendNftCard />
+            <UseFlowNftMetadataCard />
           </div>
 
-          <div className="mb-24">
-            <div className="text-left mb-16">
-              <h2 className="text-5xl font-bold text-gray-900 dark:text-white mb-4">
+          <div className="mb-12 md:mb-24">
+            <div className="text-left mb-8 md:mb-16">
+              <h2 className="text-3xl md:text-5xl font-bold text-gray-900 dark:text-white mb-3 md:mb-4">
                 Advanced Features
               </h2>
-              <p className="text-lg text-gray-600 dark:text-gray-300 max-w-3xl leading-relaxed">
+              <p className="text-base md:text-lg text-gray-600 dark:text-gray-300 max-w-3xl leading-relaxed">
                 Customize and extend the Flow React SDK with advanced theming,
                 dark mode controls, and configuration options.
               </p>

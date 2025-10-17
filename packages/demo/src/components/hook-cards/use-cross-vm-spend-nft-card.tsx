@@ -61,7 +61,7 @@ export function UseCrossVmSpendNftCard() {
 
   return (
     <DemoCard
-      id="hook-cross-vm-spend-nft"
+      id="usecrossvmspendnft"
       title="useCrossVmSpendNft"
       description="Bridge NFTs from Cadence to Flow EVM by depositing them into the signer's Cadence-Owned Account (COA)."
       code={IMPLEMENTATION_CODE}

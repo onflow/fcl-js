@@ -1,0 +1,35 @@
+name: Promote playground on tag
+
+on:
+  push:
+    tags:
+      - "@onflow/**"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: promote-playground
+  cancel-in-progress: false
+
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout with full history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Move playground branch to tag
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          TAG="${GITHUB_REF_NAME:-${GITHUB_REF##*/}}"
+          git fetch --tags
+          git show --no-patch --pretty=fuller "$TAG"
+
+          # Create/update branch at the tag commit and push
+          git branch -f playground "$TAG"
+          git push --force-with-lease origin playground

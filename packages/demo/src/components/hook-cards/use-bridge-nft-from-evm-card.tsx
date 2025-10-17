@@ -61,7 +61,7 @@ export function UseBridgeNftFromEvmCard() {
 
   return (
     <DemoCard
-      id="hook-bridge-nft-from-evm"
+      id="usebridgenftfromevm"
       title="useBridgeNftFromEvm"
       description="Bridge NFTs from Flow EVM to Cadence by withdrawing from the signer's Cadence-Owned Account (COA) in EVM."
       code={IMPLEMENTATION_CODE}

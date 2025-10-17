@@ -166,7 +166,7 @@ export function UseFlowTransactionStatusCard() {
 
   return (
     <DemoCard
-      id="hook-flow-transaction-status"
+      id="useflowtransactionstatus"
       title="useFlowTransactionStatus"
       description="Monitor Flow transaction statuses in real time with automatic updates from pending to sealed."
       code={IMPLEMENTATION_CODE}
