@@ -18,3 +18,12 @@ export {useCrossVmSpendNft} from "./useCrossVmSpendNft"
 export {useCrossVmSpendToken} from "./useCrossVmSpendToken"
 export {useCrossVmTransactionStatus} from "./useCrossVmTransactionStatus"
 export {useFlowNftMetadata, type NftViewResult} from "./useFlowNftMetadata"
+export {
+  useFlowScheduledTransactionList,
+  ScheduledTransactionPriority,
+  ScheduledTransactionStatus,
+  type ScheduledTransaction,
+} from "./useFlowScheduledTransactionList"
+export {useFlowScheduledTransaction} from "./useFlowScheduledTransaction"
+export {useFlowScheduledTransactionSetup} from "./useFlowScheduledTransactionSetup"
+export {useFlowScheduledTransactionCancel} from "./useFlowScheduledTransactionCancel"
