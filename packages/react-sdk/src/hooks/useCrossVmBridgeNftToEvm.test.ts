@@ -2,9 +2,9 @@ import {renderHook, act, waitFor} from "@testing-library/react"
 import * as fcl from "@onflow/fcl"
 import {FlowProvider} from "../provider"
 import {
-  getBridgeNftFromEvmTransaction,
-  useBridgeNftFromEvm,
-} from "./useBridgeNftFromEvm"
+  getCrossVmBridgeNftToEvmTransaction,
+  useCrossVmBridgeNftToEvm,
+} from "./useCrossVmBridgeNftToEvm"
 import {useFlowChainId} from "./useFlowChainId"
 import {createMockFclInstance, MockFclInstance} from "../__mocks__/flow-client"
 
@@ -13,8 +13,19 @@ jest.mock("./useFlowChainId", () => ({
   useFlowChainId: jest.fn(),
 }))
 
-describe("useBridgeNftFromEvm", () => {
+describe("useCrossVmBridgeNftToEvm", () => {
   let mockFcl: MockFclInstance
+
+  const mockCalls = [
+    {
+      address: "0x123",
+      abi: [{type: "function", name: "test"}],
+      functionName: "test",
+      args: [1, 2],
+      gasLimit: BigInt(100000),
+      value: BigInt(0),
+    },
+  ]
 
   const mockTxId = "0x123"
   const mockTxResult = {
@@ -32,33 +43,34 @@ describe("useBridgeNftFromEvm", () => {
 
   beforeEach(() => {
     jest.clearAllMocks()
-    mockFcl = createMockFclInstance()
-    jest.mocked(fcl.createFlowClient).mockReturnValue(mockFcl.mockFclInstance)
     jest.mocked(useFlowChainId).mockReturnValue({
-      data: "testnet",
+      data: "mainnet",
       isLoading: false,
     } as any)
+
+    mockFcl = createMockFclInstance()
+    jest.mocked(fcl.createFlowClient).mockReturnValue(mockFcl.mockFclInstance)
   })
 
-  describe("getBridgeNftFromEvmTransaction", () => {
+  describe("getCrossVmBridgeNftToEvmTransaction", () => {
     it("should return correct cadence for mainnet", () => {
-      const result = getBridgeNftFromEvmTransaction("mainnet")
+      const result = getCrossVmBridgeNftToEvmTransaction("mainnet")
       expect(result).toContain("import EVM from 0xe467b9dd11fa00df")
     })
 
     it("should return correct cadence for testnet", () => {
-      const result = getBridgeNftFromEvmTransaction("testnet")
+      const result = getCrossVmBridgeNftToEvmTransaction("testnet")
       expect(result).toContain("import EVM from 0x8c5303eaa26202d6")
     })
 
     it("should throw error for unsupported chain", () => {
-      expect(() => getBridgeNftFromEvmTransaction("unsupported")).toThrow(
+      expect(() => getCrossVmBridgeNftToEvmTransaction("unsupported")).toThrow(
         "Unsupported chain: unsupported"
       )
     })
   })
 
-  describe("useBridgeNftFromEvmTx", () => {
+  describe("useCrossVmBridgeNftToEvmTx", () => {
     test("should handle successful transaction", async () => {
       jest.mocked(mockFcl.mockFclInstance.mutate).mockResolvedValue(mockTxId)
       jest.mocked(mockFcl.mockFclInstance.tx).mockReturnValue({
@@ -68,15 +80,16 @@ describe("useBridgeNftFromEvm", () => {
       let result: any
       let rerender: any
       await act(async () => {
-        ;({result, rerender} = renderHook(useBridgeNftFromEvm, {
+        ;({result, rerender} = renderHook(useCrossVmBridgeNftToEvm, {
           wrapper: FlowProvider,
         }))
       })
 
       await act(async () => {
-        await result.current.bridgeNftFromEvm({
-          nftIdentifier: "A.dfc20aee650fcbdf.ExampleNFT.NFT",
-          nftId: "123",
+        await result.current.crossVmBridgeNftToEvm({
+          calls: mockCalls,
+          nftIdentifier: "nft123",
+          nftIds: ["1", "2"],
         })
         rerender()
       })
@@ -88,25 +101,22 @@ describe("useBridgeNftFromEvm", () => {
     })
 
     it("should handle missing chain ID", async () => {
-      ;(useFlowChainId as jest.Mock).mockReturnValue({
+      jest.mocked(useFlowChainId).mockReturnValue({
         data: null,
         isLoading: false,
-      })
+      } as any)
 
       let hookResult: any
 
       await act(async () => {
-        const {result} = renderHook(() => useBridgeNftFromEvm(), {
+        const {result} = renderHook(() => useCrossVmBridgeNftToEvm(), {
           wrapper: FlowProvider,
         })
         hookResult = result
       })
 
       await act(async () => {
-        await hookResult.current.bridgeNftFromEvm({
-          nftIdentifier: "A.dfc20aee650fcbdf.ExampleNFT.NFT",
-          nftId: "123",
-        })
+        await hookResult.current.crossVmBridgeNftToEvm({calls: mockCalls})
       })
 
       await waitFor(() => expect(hookResult.current.isError).toBe(true))
@@ -122,17 +132,14 @@ describe("useBridgeNftFromEvm", () => {
       let hookResult: any
 
       await act(async () => {
-        const {result} = renderHook(() => useBridgeNftFromEvm(), {
+        const {result} = renderHook(() => useCrossVmBridgeNftToEvm(), {
           wrapper: FlowProvider,
         })
         hookResult = result
       })
 
       await act(async () => {
-        await hookResult.current.bridgeNftFromEvm({
-          nftIdentifier: "A.dfc20aee650fcbdf.ExampleNFT.NFT",
-          nftId: "123",
-        })
+        await hookResult.current.crossVmBridgeNftToEvm(mockCalls)
       })
 
       await waitFor(() => expect(hookResult.current.isError).toBe(true))
@@ -147,16 +154,17 @@ describe("useBridgeNftFromEvm", () => {
       let hookResult: any
 
       await act(async () => {
-        const {result} = renderHook(() => useBridgeNftFromEvm(), {
+        const {result} = renderHook(() => useCrossVmBridgeNftToEvm(), {
           wrapper: FlowProvider,
         })
         hookResult = result
       })
 
       await act(async () => {
-        await hookResult.current.bridgeNftFromEvm({
-          nftIdentifier: "A.dfc20aee650fcbdf.ExampleNFT.NFT",
-          nftId: "123",
+        await hookResult.current.crossVmBridgeNftToEvm({
+          calls: mockCalls,
+          nftIdentifier: "nft123",
+          nftIds: ["1", "2"],
         })
       })
 

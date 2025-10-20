@@ -1,4 +1,4 @@
-import {useCrossVmSpendNft, useFlowConfig} from "@onflow/react-sdk"
+import {useCrossVmBridgeNftFromEvm, useFlowConfig} from "@onflow/react-sdk"
 import {useState, useMemo} from "react"
 import {useDarkMode} from "../flow-provider-wrapper"
 import {DemoCard} from "../ui/demo-card"
@@ -6,29 +6,33 @@ import {ResultsSection} from "../ui/results-section"
 import {getContractAddress} from "../../constants"
 import {PlusGridIcon} from "../ui/plus-grid"
 
-const IMPLEMENTATION_CODE = `import { useCrossVmSpendNft } from "@onflow/react-sdk"
+const IMPLEMENTATION_CODE = `import { useCrossVmBridgeNftFromEvm } from "@onflow/react-sdk"
 
 const {
-  spendNft,
+  crossVmBridgeNftFromEvm,
   isPending,
   error,
   data: txId
-} = useCrossVmSpendNft()
+} = useCrossVmBridgeNftFromEvm()
 
-spendNft({
-  nftIdentifier: "A.012e4d204a60ac6f.ExampleNFT.NFT",
-  nftIds: ["1", "2", "3"],
-  calls: []
+crossVmBridgeNftFromEvm({
+  nftIdentifier: "A.dfc20aee650fcbdf.ExampleNFT.NFT",
+  nftId: "1"
 })`
 
-export function UseCrossVmSpendNftCard() {
+export function UseCrossVmBridgeNftFromEvmCard() {
   const {darkMode} = useDarkMode()
   const config = useFlowConfig()
   const currentNetwork = config.flowNetwork || "emulator"
   const [nftIdentifier, setNftIdentifier] = useState("")
-  const [nftIds, setNftIds] = useState("1")
+  const [nftId, setNftId] = useState("1")
 
-  const {spendNft, isPending, data: transactionId, error} = useCrossVmSpendNft()
+  const {
+    crossVmBridgeNftFromEvm,
+    isPending,
+    data: transactionId,
+    error,
+  } = useCrossVmBridgeNftFromEvm()
 
   const exampleNftData = useMemo(() => {
     if (currentNetwork !== "testnet") return null
@@ -37,7 +41,7 @@ export function UseCrossVmSpendNftCard() {
     return {
       name: "Example NFT",
       nftIdentifier: `A.${exampleNftAddress.replace("0x", "")}.ExampleNFT.NFT`,
-      nftIds: "1",
+      nftId: "1",
     }
   }, [currentNetwork])
 
@@ -45,27 +49,23 @@ export function UseCrossVmSpendNftCard() {
   useMemo(() => {
     if (exampleNftData && !nftIdentifier) {
       setNftIdentifier(exampleNftData.nftIdentifier)
-      setNftIds(exampleNftData.nftIds)
     }
   }, [exampleNftData, nftIdentifier])
 
-  const handleSpendNft = () => {
-    const nftIdArray = nftIds.split(",").map(id => id.trim())
-
-    spendNft({
+  const handleBridgeNft = () => {
+    crossVmBridgeNftFromEvm({
       nftIdentifier,
-      nftIds: nftIdArray,
-      calls: [], // No EVM calls, just bridging
+      nftId,
     })
   }
 
   return (
     <DemoCard
-      id="usecrossvmspendnft"
-      title="useCrossVmSpendNft"
-      description="Bridge NFTs from Cadence to Flow EVM by depositing them into the signer's Cadence-Owned Account (COA)."
+      id="usecrossvmbridgenftfromevm"
+      title="useCrossVmBridgeNftFromEvm"
+      description="Bridge NFTs from Flow EVM to Cadence by withdrawing from the signer's Cadence-Owned Account (COA) in EVM."
       code={IMPLEMENTATION_CODE}
-      docsUrl="https://developers.flow.com/build/tools/react-sdk/hooks#usecrossvmspendnft"
+      docsUrl="https://developers.flow.com/build/tools/react-sdk/hooks#usecrossvmbridgenftfromevm"
     >
       <div className="space-y-6">
         {exampleNftData && (
@@ -76,7 +76,7 @@ export function UseCrossVmSpendNftCard() {
                 : "bg-blue-50 border-blue-200"
             }`}
           >
-            <PlusGridIcon placement="top right" className="absolute" />
+            <PlusGridIcon placement="top left" className="absolute" />
             <p
               className={`text-sm ${darkMode ? "text-blue-300" : "text-blue-800"}`}
             >
@@ -99,7 +99,7 @@ export function UseCrossVmSpendNftCard() {
             placeholder={
               exampleNftData
                 ? exampleNftData.nftIdentifier
-                : "e.g., A.012e4d204a60ac6f.ExampleNFT.NFT"
+                : "e.g., A.dfc20aee650fcbdf.ExampleNFT.NFT"
             }
             className={`w-full px-4 py-3 rounded-lg border font-mono text-sm transition-all duration-200
               ${
@@ -116,13 +116,13 @@ export function UseCrossVmSpendNftCard() {
           <label
             className={`block text-sm font-medium ${darkMode ? "text-gray-300" : "text-gray-700"}`}
           >
-            NFT IDs (UInt64, comma-separated)
+            NFT ID (UInt256)
           </label>
           <input
             type="text"
-            value={nftIds}
-            onChange={e => setNftIds(e.target.value)}
-            placeholder="e.g., 1,2,3"
+            value={nftId}
+            onChange={e => setNftId(e.target.value)}
+            placeholder="e.g., 1"
             className={`w-full px-4 py-3 rounded-lg border font-mono text-sm transition-all duration-200
               ${
               darkMode
@@ -136,15 +136,15 @@ export function UseCrossVmSpendNftCard() {
 
         <div className="flex justify-start">
           <button
-            onClick={handleSpendNft}
-            disabled={isPending || !nftIdentifier || !nftIds}
+            onClick={handleBridgeNft}
+            disabled={isPending || !nftIdentifier || !nftId}
             className={`px-6 py-3 rounded-lg font-medium transition-all duration-200 ${
-              isPending || !nftIdentifier || !nftIds
+              isPending || !nftIdentifier || !nftId
                 ? "bg-gray-300 text-gray-500 cursor-not-allowed"
                 : "bg-flow-primary text-black hover:bg-flow-primary/80"
               }`}
           >
-            {isPending ? "Bridging..." : "Bridge NFT to EVM"}
+            {isPending ? "Bridging..." : "Bridge NFT from EVM"}
           </button>
         </div>
 
@@ -154,7 +154,7 @@ export function UseCrossVmSpendNftCard() {
           show={!!transactionId || !!error}
           title={
             transactionId
-              ? "NFTs bridged successfully!"
+              ? "NFT bridged successfully!"
               : error
                 ? "Bridge failed"
                 : undefined

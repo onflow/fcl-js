@@ -11,32 +11,32 @@ import {encodeCalls, EvmBatchCall} from "./useCrossVmBatchTransaction"
 import {CONTRACT_ADDRESSES} from "../constants"
 import {useFlowClient} from "./useFlowClient"
 
-export interface UseCrossVmSpendNftTxArgs {
+export interface UseCrossVmBridgeNftToEvmTxArgs {
   mutation?: Omit<
-    UseMutationOptions<string, Error, UseCrossVmSpendNftTxMutateArgs>,
+    UseMutationOptions<string, Error, UseCrossVmBridgeNftToEvmTxMutateArgs>,
     "mutationFn"
   >
   flowClient?: ReturnType<typeof useFlowClient>
 }
 
-export interface UseCrossVmSpendNftTxMutateArgs {
+export interface UseCrossVmBridgeNftToEvmTxMutateArgs {
   nftIdentifier: string
   nftIds: string[]
   calls: EvmBatchCall[]
 }
 
-export interface UseCrossVmSpendNftTxResult
+export interface UseCrossVmBridgeNftToEvmTxResult
   extends Omit<UseMutationResult<string, Error>, "mutate" | "mutateAsync"> {
-  spendNft: UseMutateFunction<string, Error, UseCrossVmSpendNftTxMutateArgs>
-  spendNftAsync: UseMutateAsyncFunction<
+  crossVmBridgeNftToEvm: UseMutateFunction<string, Error, UseCrossVmBridgeNftToEvmTxMutateArgs>
+  crossVmBridgeNftToEvmAsync: UseMutateAsyncFunction<
     string,
     Error,
-    UseCrossVmSpendNftTxMutateArgs
+    UseCrossVmBridgeNftToEvmTxMutateArgs
   >
 }
 
 // Takes a chain id and returns the cadence tx with addresses set
-export const getCrossVmSpendNftransaction = (chainId: string) => {
+export const getCrossVmBridgeNftToEvmTransaction = (chainId: string) => {
   const contractAddresses =
     CONTRACT_ADDRESSES[chainId as keyof typeof CONTRACT_ADDRESSES]
   if (!contractAddresses) {
@@ -211,23 +211,20 @@ transaction(
 }
 
 /**
- * Hook to send a cross-VM NFT spend transaction. This function will
+ * Hook to send a cross-VM NFT bridge transaction from Cadence to EVM. This function will
  * bundle multiple EVM calls into one atomic Cadence transaction and return the transaction ID.
  *
- * Use `useCrossVmSpendNftStatus` to watch the status of the transaction and get the transaction id + result of each EVM call.
- *
- * @deprecated This hook has been renamed to `useCrossVmBridgeNftToEvm` for better clarity.
- * Please use `useCrossVmBridgeNftToEvm` instead. This hook will be removed in a future version.
+ * Use `useCrossVmTransactionStatus` to watch the status of the transaction and get the transaction id + result of each EVM call.
  *
  * @returns The mutation object used to send the transaction.
  */
-export function useCrossVmSpendNft({
+export function useCrossVmBridgeNftToEvm({
   mutation: mutationOptions = {},
   flowClient,
-}: UseCrossVmSpendNftTxArgs = {}): UseCrossVmSpendNftTxResult {
+}: UseCrossVmBridgeNftToEvmTxArgs = {}): UseCrossVmBridgeNftToEvmTxResult {
   const chainId = useFlowChainId()
   const cadenceTx = chainId.data
-    ? getCrossVmSpendNftransaction(chainId.data)
+    ? getCrossVmBridgeNftToEvmTransaction(chainId.data)
     : null
 
   const queryClient = useFlowQueryClient()
@@ -238,7 +235,7 @@ export function useCrossVmSpendNft({
         nftIdentifier,
         nftIds,
         calls,
-      }: UseCrossVmSpendNftTxMutateArgs) => {
+      }: UseCrossVmBridgeNftToEvmTxMutateArgs) => {
         if (!cadenceTx) {
           throw new Error("No current chain found")
         }
@@ -277,11 +274,11 @@ export function useCrossVmSpendNft({
     queryClient
   )
 
-  const {mutate: spendNft, mutateAsync: spendNftAsync, ...rest} = mutation
+  const {mutate: crossVmBridgeNftToEvm, mutateAsync: crossVmBridgeNftToEvmAsync, ...rest} = mutation
 
   return {
-    spendNft,
-    spendNftAsync,
+    crossVmBridgeNftToEvm,
+    crossVmBridgeNftToEvmAsync,
     ...rest,
   }
 }
