@@ -269,7 +269,11 @@ export function useCrossVmBridgeTokenToEvm({
     queryClient
   )
 
-  const {mutate: crossVmBridgeTokenToEvm, mutateAsync: crossVmBridgeTokenToEvmAsync, ...rest} = mutation
+  const {
+    mutate: crossVmBridgeTokenToEvm,
+    mutateAsync: crossVmBridgeTokenToEvmAsync,
+    ...rest
+  } = mutation
 
   return {
     crossVmBridgeTokenToEvm,

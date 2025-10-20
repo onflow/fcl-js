@@ -53,9 +53,9 @@ describe("useCrossVmBridgeTokenFromEvm", () => {
     })
 
     it("should throw error for unsupported chain", () => {
-      expect(() => getCrossVmBridgeTokenFromEvmTransaction("unsupported")).toThrow(
-        "Unsupported chain: unsupported"
-      )
+      expect(() =>
+        getCrossVmBridgeTokenFromEvmTransaction("unsupported")
+      ).toThrow("Unsupported chain: unsupported")
     })
   })
 
