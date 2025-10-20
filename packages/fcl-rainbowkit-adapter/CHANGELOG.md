@@ -1,5 +1,26 @@
 # @onflow/fcl-rainbowkit-adapter
 
+## 0.2.5
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @onflow/fcl@1.20.2
+  - @onflow/fcl-ethereum-provider@0.0.9
+  - @onflow/fcl-wagmi-adapter@0.0.9
+
+## 0.2.4
+
+### Patch Changes
+
+- [#2634](https://github.com/onflow/fcl-js/pull/2634) [`d5f242b217426f125610f8043aea1a70e143a94a`](https://github.com/onflow/fcl-js/commit/d5f242b217426f125610f8043aea1a70e143a94a) Thanks [@jribbink](https://github.com/jribbink)! - Update dependencies
+
+- Updated dependencies [[`d5f242b217426f125610f8043aea1a70e143a94a`](https://github.com/onflow/fcl-js/commit/d5f242b217426f125610f8043aea1a70e143a94a)]:
+  - @onflow/fcl@1.20.1
+  - @onflow/fcl-ethereum-provider@0.0.8
+  - @onflow/fcl-wagmi-adapter@0.0.8
+  - @onflow/rlp@1.2.4
+
 ## 0.2.3
 
 ### Patch Changes

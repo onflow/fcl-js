@@ -229,4 +229,201 @@ access(all) fun main(): Address {
       expect(ix.message.cadence).toEqual(expected)
     })
   })
+
+  describe("mixed import syntax", () => {
+    test("supports both string imports and traditional imports", async () => {
+      const CADENCE = `import "FungibleToken"
+import MyContract from 0x12345678
+
+access(all) fun main(): Address {
+  return 0x12345678
+}`
+
+      const expected = `import FungibleToken from 0xf233dcee88fe0abe
+import MyContract from 0x12345678
+
+access(all) fun main(): Address {
+  return 0x12345678
+}`
+
+      await config().put("system.contracts.FungibleToken", "0xf233dcee88fe0abe")
+      await idle()
+
+      const ix = await pipe([
+        makeScript,
+        put("ix.cadence", CADENCE),
+        async ix => resolveCadence(ix, await getGlobalContext()),
+      ])(initInteraction())
+
+      expect(ix.message.cadence).toEqual(expected)
+    })
+
+    test("supports multiple string imports with traditional imports", async () => {
+      const CADENCE = `import "FungibleToken"
+import "NonFungibleToken"
+import MyContract from 0xABCDEF
+import FlowToken from 0x0ae53cb6e3f42a79
+
+access(all) fun main(): String {
+  return "mixed imports work"
+}`
+
+      const expected = `import FungibleToken from 0xf233dcee88fe0abe
+import NonFungibleToken from 0x1d7e57aa55817448
+import MyContract from 0xABCDEF
+import FlowToken from 0x0ae53cb6e3f42a79
+
+access(all) fun main(): String {
+  return "mixed imports work"
+}`
+
+      await config().put("system.contracts.FungibleToken", "0xf233dcee88fe0abe")
+      await config().put(
+        "system.contracts.NonFungibleToken",
+        "0x1d7e57aa55817448"
+      )
+      await idle()
+
+      const ix = await pipe([
+        makeScript,
+        put("ix.cadence", CADENCE),
+        async ix => resolveCadence(ix, await getGlobalContext()),
+      ])(initInteraction())
+
+      expect(ix.message.cadence).toEqual(expected)
+    })
+
+    test("traditional imports with explicit addresses should not be modified", async () => {
+      const CADENCE = `import FlowToken from 0x7e60df042a9c0868
+import MyContract from 0x1234567890abcdef
+
+access(all) fun main(): UFix64 {
+  return 42.0
+}`
+
+      const expected = `import FlowToken from 0x7e60df042a9c0868
+import MyContract from 0x1234567890abcdef
+
+access(all) fun main(): UFix64 {
+  return 42.0
+}`
+
+      // No config needed - explicit addresses should work as-is
+      const ix = await pipe([
+        makeScript,
+        put("ix.cadence", CADENCE),
+        async ix => resolveCadence(ix, await getGlobalContext()),
+      ])(initInteraction())
+
+      expect(ix.message.cadence).toEqual(expected)
+    })
+
+    test("string import without config should log warning and leave import unchanged", async () => {
+      const CADENCE = `import "UnconfiguredContract"
+import FlowToken from 0x7e60df042a9c0868
+
+access(all) fun main(): Bool {
+  return true
+}`
+
+      const expected = `import "UnconfiguredContract"
+import FlowToken from 0x7e60df042a9c0868
+
+access(all) fun main(): Bool {
+  return true
+}`
+
+      // Spy on console.warn to verify warning is logged
+      const warnSpy = jest.spyOn(console, "warn").mockImplementation()
+
+      const ix = await pipe([
+        makeScript,
+        put("ix.cadence", CADENCE),
+        async ix => resolveCadence(ix, await getGlobalContext()),
+      ])(initInteraction())
+
+      expect(ix.message.cadence).toEqual(expected)
+
+      // Verify warning was logged
+      expect(warnSpy).toHaveBeenCalled()
+      const warnCall = warnSpy.mock.calls.find(call =>
+        call.join(" ").includes("Contract Placeholder not found")
+      )
+      expect(warnCall).toBeDefined()
+      expect(warnCall?.join(" ")).toContain("UnconfiguredContract")
+
+      warnSpy.mockRestore()
+    })
+
+    test("legacy placeholders and string imports together should throw invariant error", async () => {
+      const CADENCE = `import "FungibleToken"
+import FlowToken from 0xFLOWTOKEN
+
+access(all) fun main(): Bool {
+  return true
+}`
+
+      config().put("system.contracts.FungibleToken", "0xf233dcee88fe0abe")
+      config().put("0xFLOWTOKEN", "0x7e60df042a9c0868")
+      await idle()
+
+      await expect(async () => {
+        await pipe([
+          makeScript,
+          put("ix.cadence", CADENCE),
+          async ix => resolveCadence(ix, await getGlobalContext()),
+        ])(initInteraction())
+      }).rejects.toThrow(
+        "Both account identifier and contract identifier syntax not simultaneously supported."
+      )
+    })
+
+    test("legacy placeholders alone should work without string imports", async () => {
+      const CADENCE = `import FlowToken from 0xFLOWTOKEN
+import MyContract from 0xMYCONTRACT
+
+access(all) fun main(): Address {
+  return 0xFLOWTOKEN
+}`
+
+      const expected = `import FlowToken from 0x7e60df042a9c0868
+import MyContract from 0x1234567890abcdef
+
+access(all) fun main(): Address {
+  return 0x7e60df042a9c0868
+}`
+
+      config().put("0xFLOWTOKEN", "0x7e60df042a9c0868")
+      config().put("0xMYCONTRACT", "0x1234567890abcdef")
+      await idle()
+
+      const ix = await pipe([
+        makeScript,
+        put("ix.cadence", CADENCE),
+        async ix => resolveCadence(ix, await getGlobalContext()),
+      ])(initInteraction())
+
+      expect(ix.message.cadence).toEqual(expected)
+    })
+  })
+
+  describe("no imports", () => {
+    test("cadence with no imports should remain unchanged", async () => {
+      const CADENCE = `access(all) fun main(): String {
+  return "Hello, Flow!"
+}`
+
+      const expected = `access(all) fun main(): String {
+  return "Hello, Flow!"
+}`
+
+      const ix = await pipe([
+        makeScript,
+        put("ix.cadence", CADENCE),
+        async ix => resolveCadence(ix, await getGlobalContext()),
+      ])(initInteraction())
+
+      expect(ix.message.cadence).toEqual(expected)
+    })
+  })
 })

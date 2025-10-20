@@ -1,0 +1,190 @@
+# Changeset Enforcement Action
+#
+# This workflow ensures that when developers make changes to package code,
+# they include a "changeset" file that describes what changed and how it
+# should affect the version number (major/minor/patch).
+#
+# Changesets are used by the @changesets/cli tool to automatically:
+# - Generate changelogs
+# - Determine version bumps
+# - Coordinate releases across multiple packages in this monorepo
+#
+# The check can be bypassed by adding the "skip-changeset" label to a PR
+# (useful for docs-only changes, CI fixes, etc. that don't need version bumps)
+
+name: Changeset Check
+
+on:
+  pull_request:
+
+jobs:
+  changeset-check:
+    name: Check for Changeset
+    runs-on: ubuntu-latest
+    # Skip draft PRs - only run on PRs ready for review
+    if: github.event.pull_request.draft == false
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          # Need full history to compare against base branch
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      # Check if PR has the skip-changeset label to bypass this check
+      - name: Check for opt-out label
+        id: check-labels
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const labels = context.payload.pull_request.labels.map(label => label.name);
+            const hasOptOut = labels.includes('skip-changeset');
+
+            core.setOutput('skip-changeset', hasOptOut);
+
+            if (hasOptOut) {
+              core.info('Changeset check skipped due to skip-changeset label');
+            }
+
+      # Use changesets CLI to check if changeset is needed for this PR
+      - name: Check changeset status
+        id: changeset-check
+        if: steps.check-labels.outputs.skip-changeset != 'true'
+        run: |
+          # First check what packages have changed
+          echo "Checking for package changes..."
+          CHANGED_FILES=$(git diff --name-only origin/${{ github.base_ref }}...HEAD)
+          PACKAGE_CHANGES=$(echo "$CHANGED_FILES" | grep -E "(packages/.*/src/|packages/.*/package\.json)" || true)
+
+          if [ -z "$PACKAGE_CHANGES" ]; then
+            echo "status=no-changes" >> $GITHUB_OUTPUT
+            echo "ℹ️  No package changes detected, changeset not required"
+            exit 0
+          fi
+
+          echo "📦 Package changes detected:"
+          echo "$PACKAGE_CHANGES"
+
+          # Now check changeset status - capture both output and exit code
+          echo "Checking changeset status..."
+          set +e  # Don't exit on error
+          npx changeset status --since=origin/${{ github.base_ref }} --verbose > changeset-output.txt 2>&1
+          EXIT_CODE=$?
+          set -e  # Re-enable exit on error
+
+          echo "Changeset status output:"
+          cat changeset-output.txt
+
+          if [ $EXIT_CODE -eq 0 ]; then
+            echo "status=valid" >> $GITHUB_OUTPUT
+            echo "✅ Changeset requirements satisfied"
+          else
+            echo "status=missing" >> $GITHUB_OUTPUT
+            echo "❌ Missing changeset for package changes"
+          fi
+
+      # Clean up old changeset comments to avoid PR pollution
+      - name: Clean up old comments
+        uses: actions/github-script@v7
+        with:
+          script: |
+            // Find and delete old changeset comments from this bot
+            const comments = await github.rest.issues.listComments({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+            });
+
+            const botComments = comments.data.filter(comment => 
+              comment.user.type === 'Bot' && 
+              comment.body.includes('📦 Changeset Required')
+            );
+
+            for (const comment of botComments) {
+              await github.rest.issues.deleteComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: comment.id,
+              });
+              console.log(`Deleted old changeset comment: ${comment.id}`);
+            }
+
+      # Add a helpful comment when changeset is missing
+      - name: Comment on PR - Missing Changeset
+        if: |
+          steps.check-labels.outputs.skip-changeset != 'true' && 
+          steps.changeset-check.outputs.status == 'missing'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const comment = `## 📦 Changeset Required
+
+            This PR appears to modify package code but doesn't include a changeset. 
+
+            A changeset helps track version changes and generate release notes.
+
+            ### To add a changeset:
+            \`\`\`bash
+            npm run changeset
+            \`\`\`
+
+            ### To skip this check (if no version bump is needed):
+            Add the \`skip-changeset\` label to this PR`;
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
+
+      # Determine final status and fail the check if needed
+      - name: Set final status
+        id: final-status
+        run: |
+          if [ "${{ steps.check-labels.outputs.skip-changeset }}" = "true" ]; then
+            echo "status=skipped" >> $GITHUB_OUTPUT
+            echo "✅ Changeset check skipped (skip-changeset label detected)"
+          elif [ "${{ steps.changeset-check.outputs.status }}" = "no-changes" ]; then
+            echo "status=not-required" >> $GITHUB_OUTPUT
+            echo "✅ Changeset not required (no package changes)"
+          elif [ "${{ steps.changeset-check.outputs.status }}" = "valid" ]; then
+            echo "status=success" >> $GITHUB_OUTPUT
+            echo "✅ Changeset requirements satisfied"
+          else
+            echo "status=missing" >> $GITHUB_OUTPUT
+            echo "❌ Missing required changeset"
+            exit 1
+          fi
+
+      # Create a summary for the GitHub Actions UI
+      - name: Summary
+        run: |
+          case "${{ steps.final-status.outputs.status }}" in
+            "skipped")
+              echo "### ✅ Changeset Check: Skipped" >> $GITHUB_STEP_SUMMARY
+              echo "The changeset requirement was bypassed using the skip-changeset label." >> $GITHUB_STEP_SUMMARY
+              ;;
+            "not-required")
+              echo "### ✅ Changeset Check: Not Required" >> $GITHUB_STEP_SUMMARY
+              echo "No package changes detected, so no changeset is needed." >> $GITHUB_STEP_SUMMARY
+              ;;
+            "success")
+              echo "### ✅ Changeset Check: Passed" >> $GITHUB_STEP_SUMMARY
+              echo "Changeset requirements satisfied for this PR." >> $GITHUB_STEP_SUMMARY
+              ;;
+            "missing")
+              echo "### ❌ Changeset Check: Failed" >> $GITHUB_STEP_SUMMARY
+              echo "Package changes detected but no valid changeset found." >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+              echo "**To fix:** Run \`npm run changeset\` or add the \`skip-changeset\` label if no version bump is needed." >> $GITHUB_STEP_SUMMARY
+              ;;
+          esac

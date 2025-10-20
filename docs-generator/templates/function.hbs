@@ -43,6 +43,16 @@ import { {{name}} } from "@onflow/{{packageName}}"
 {{#each parameters}}
 ### `{{name}}` {{#unless required}}(optional){{/unless}}
 
+{{#if expandedType}}
+- Type: `{{{type}}}`
+
+#### Properties:
+
+{{#each expandedType}}
+- **`{{@key}}`** {{#if this.optional}}(optional){{/if}} - Type: `{{{this.type}}}`{{#if this.description}} - {{{this.description}}}{{/if}}
+{{/each}}
+
+{{else}}
 {{#if typeDefinition}}{{#unless hasLink}}
 - Type: 
 ```typescript
@@ -64,6 +74,7 @@ import { {{name}} } from "@onflow/{{packageName}}"
 - **`{{name}}`** {{#unless required}}(optional){{/unless}} - {{{description}}}
 {{/each}}
 
+{{/if}}
 {{/if}}
 {{/each}}
 {{/if}}
