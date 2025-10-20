@@ -52,9 +52,9 @@ describe("useCrossVmBridgeNftFromEvm", () => {
     })
 
     it("should throw error for unsupported chain", () => {
-      expect(() => getCrossVmBridgeNftFromEvmTransaction("unsupported")).toThrow(
-        "Unsupported chain: unsupported"
-      )
+      expect(() =>
+        getCrossVmBridgeNftFromEvmTransaction("unsupported")
+      ).toThrow("Unsupported chain: unsupported")
     })
   })
 

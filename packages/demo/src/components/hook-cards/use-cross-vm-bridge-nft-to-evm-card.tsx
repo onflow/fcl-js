@@ -28,7 +28,12 @@ export function UseCrossVmBridgeNftToEvmCard() {
   const [nftIdentifier, setNftIdentifier] = useState("")
   const [nftIds, setNftIds] = useState("1")
 
-  const {crossVmBridgeNftToEvm, isPending, data: transactionId, error} = useCrossVmBridgeNftToEvm()
+  const {
+    crossVmBridgeNftToEvm,
+    isPending,
+    data: transactionId,
+    error,
+  } = useCrossVmBridgeNftToEvm()
 
   const exampleNftData = useMemo(() => {
     if (currentNetwork !== "testnet") return null

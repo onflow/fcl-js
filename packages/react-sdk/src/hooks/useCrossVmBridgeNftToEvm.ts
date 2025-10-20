@@ -27,7 +27,11 @@ export interface UseCrossVmBridgeNftToEvmTxMutateArgs {
 
 export interface UseCrossVmBridgeNftToEvmTxResult
   extends Omit<UseMutationResult<string, Error>, "mutate" | "mutateAsync"> {
-  crossVmBridgeNftToEvm: UseMutateFunction<string, Error, UseCrossVmBridgeNftToEvmTxMutateArgs>
+  crossVmBridgeNftToEvm: UseMutateFunction<
+    string,
+    Error,
+    UseCrossVmBridgeNftToEvmTxMutateArgs
+  >
   crossVmBridgeNftToEvmAsync: UseMutateAsyncFunction<
     string,
     Error,
@@ -274,7 +278,11 @@ export function useCrossVmBridgeNftToEvm({
     queryClient
   )
 
-  const {mutate: crossVmBridgeNftToEvm, mutateAsync: crossVmBridgeNftToEvmAsync, ...rest} = mutation
+  const {
+    mutate: crossVmBridgeNftToEvm,
+    mutateAsync: crossVmBridgeNftToEvmAsync,
+    ...rest
+  } = mutation
 
   return {
     crossVmBridgeNftToEvm,
