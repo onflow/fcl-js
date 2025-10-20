@@ -1,4 +1,4 @@
-import {useCrossVmSpendToken, useFlowConfig} from "@onflow/react-sdk"
+import {useCrossVmBridgeTokenToEvm, useFlowConfig} from "@onflow/react-sdk"
 import {useState, useMemo} from "react"
 import {useDarkMode} from "../flow-provider-wrapper"
 import {DemoCard} from "../ui/demo-card"
@@ -6,22 +6,22 @@ import {ResultsSection} from "../ui/results-section"
 import {getContractAddress} from "../../constants"
 import {PlusGridIcon} from "../ui/plus-grid"
 
-const IMPLEMENTATION_CODE = `import { useCrossVmSpendToken } from "@onflow/react-sdk"
+const IMPLEMENTATION_CODE = `import { useCrossVmBridgeTokenToEvm } from "@onflow/react-sdk"
 
 const {
-  spendToken,
+  crossVmBridgeTokenToEvm,
   isPending,
   error,
   data: txId
-} = useCrossVmSpendToken()
+} = useCrossVmBridgeTokenToEvm()
 
-spendToken({
+crossVmBridgeTokenToEvm({
   vaultIdentifier: "A.dfc20aee650fcbdf.EVMVMBridgedToken_xxx.Vault",
   amount: "1.0",
   calls: []
 })`
 
-export function UseCrossVmSpendTokenCard() {
+export function UseCrossVmBridgeTokenToEvmCard() {
   const {darkMode} = useDarkMode()
   const config = useFlowConfig()
   const currentNetwork = config.flowNetwork || "emulator"
@@ -29,11 +29,11 @@ export function UseCrossVmSpendTokenCard() {
   const [amount, setAmount] = useState("1") // UFix64 in Cadence (8 decimals)
 
   const {
-    spendToken,
+    crossVmBridgeTokenToEvm,
     isPending,
     data: transactionId,
     error,
-  } = useCrossVmSpendToken()
+  } = useCrossVmBridgeTokenToEvm()
 
   const clickTokenData = useMemo(() => {
     if (currentNetwork !== "testnet") return null
@@ -65,9 +65,9 @@ export function UseCrossVmSpendTokenCard() {
     return cleaned
   }
 
-  const handleSpendToken = () => {
+  const handleBridgeToken = () => {
     const normalizedAmount = normalizeAmount(amount)
-    spendToken({
+    crossVmBridgeTokenToEvm({
       vaultIdentifier,
       amount: normalizedAmount,
       calls: [], // No EVM calls, just bridging
@@ -76,11 +76,11 @@ export function UseCrossVmSpendTokenCard() {
 
   return (
     <DemoCard
-      id="usecrossvmspendtoken"
-      title="useCrossVmSpendToken"
+      id="usecrossvmbridgetokentoevm"
+      title="useCrossVmBridgeTokenToEvm"
       description="Bridge fungible tokens from Cadence to Flow EVM by depositing them into the signer's Cadence-Owned Account (COA)."
       code={IMPLEMENTATION_CODE}
-      docsUrl="https://developers.flow.com/build/tools/react-sdk/hooks#usecrossvmspendtoken"
+      docsUrl="https://developers.flow.com/build/tools/react-sdk/hooks#usecrossvmbridgetokentoevm"
     >
       <div className="space-y-6">
         {clickTokenData && (
@@ -157,7 +157,7 @@ export function UseCrossVmSpendTokenCard() {
 
         <div className="flex justify-start">
           <button
-            onClick={handleSpendToken}
+            onClick={handleBridgeToken}
             disabled={isPending || !vaultIdentifier || !amount}
             className={`px-6 py-3 rounded-lg font-medium transition-all duration-200 ${
               isPending || !vaultIdentifier || !amount

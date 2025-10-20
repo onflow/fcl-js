@@ -1,4 +1,4 @@
-import {useBridgeTokenFromEvm, useFlowConfig} from "@onflow/react-sdk"
+import {useCrossVmBridgeTokenFromEvm, useFlowConfig} from "@onflow/react-sdk"
 import {useState, useMemo} from "react"
 import {useDarkMode} from "../flow-provider-wrapper"
 import {DemoCard} from "../ui/demo-card"
@@ -6,21 +6,21 @@ import {ResultsSection} from "../ui/results-section"
 import {getContractAddress} from "../../constants"
 import {PlusGridIcon} from "../ui/plus-grid"
 
-const IMPLEMENTATION_CODE = `import { useBridgeTokenFromEvm } from "@onflow/react-sdk"
+const IMPLEMENTATION_CODE = `import { useCrossVmBridgeTokenFromEvm } from "@onflow/react-sdk"
 
 const {
-  bridgeTokenFromEvm,
+  crossVmBridgeTokenFromEvm,
   isPending,
   error,
   data: txId
-} = useBridgeTokenFromEvm()
+} = useCrossVmBridgeTokenFromEvm()
 
-bridgeTokenFromEvm({
+crossVmBridgeTokenFromEvm({
   vaultIdentifier: "A.dfc20aee650fcbdf.EVMVMBridgedToken_xxx.Vault",
   amount: "1000000000000000000"
 })`
 
-export function UseBridgeTokenFromEvmCard() {
+export function UseCrossVmBridgeTokenFromEvmCard() {
   const {darkMode} = useDarkMode()
   const config = useFlowConfig()
   const currentNetwork = config.flowNetwork || "emulator"
@@ -29,11 +29,11 @@ export function UseBridgeTokenFromEvmCard() {
   const [decimals, setDecimals] = useState("18") // ERC20 decimals
 
   const {
-    bridgeTokenFromEvm,
+    crossVmBridgeTokenFromEvm,
     isPending,
     data: transactionId,
     error,
-  } = useBridgeTokenFromEvm()
+  } = useCrossVmBridgeTokenFromEvm()
 
   const clickTokenData = useMemo(() => {
     if (currentNetwork !== "testnet") return null
@@ -91,7 +91,7 @@ export function UseBridgeTokenFromEvmCard() {
       weiAmount,
       vaultIdentifier,
     })
-    bridgeTokenFromEvm({
+    crossVmBridgeTokenFromEvm({
       vaultIdentifier,
       amount: weiAmount,
     })
@@ -99,11 +99,11 @@ export function UseBridgeTokenFromEvmCard() {
 
   return (
     <DemoCard
-      id="usebridgetokenfromevm"
-      title="useBridgeTokenFromEvm"
+      id="usecrossvmbridgetokenfromevm"
+      title="useCrossVmBridgeTokenFromEvm"
       description="Bridge fungible tokens from Flow EVM to Cadence by withdrawing from the signer's Cadence-Owned Account (COA) in EVM."
       code={IMPLEMENTATION_CODE}
-      docsUrl="https://developers.flow.com/build/tools/react-sdk/hooks#usebridgetokenfromevm"
+      docsUrl="https://developers.flow.com/build/tools/react-sdk/hooks#usecrossvmbridgetokenfromevm"
     >
       <div className="space-y-6">
         {clickTokenData && (

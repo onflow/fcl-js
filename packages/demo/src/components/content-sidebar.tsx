@@ -111,13 +111,13 @@ const sidebarItems: SidebarItem[] = [
     description: "Track transaction status",
   },
   {
-    id: "usebridgetokenfromevm",
+    id: "usecrossvmbridgetokenfromevm",
     label: "Bridge Token from EVM",
     category: "hooks",
     description: "Bridge tokens from EVM to Cadence",
   },
   {
-    id: "usecrossvmspendtoken",
+    id: "usecrossvmbridgetokentoevm",
     label: "Bridge Token to EVM",
     category: "hooks",
     description: "Bridge tokens from Cadence to EVM",

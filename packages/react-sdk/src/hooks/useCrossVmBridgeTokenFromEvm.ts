@@ -10,35 +10,35 @@ import {useFlowQueryClient} from "../provider/FlowQueryClient"
 import {useFlowChainId} from "./useFlowChainId"
 import {useFlowClient} from "./useFlowClient"
 
-export interface UseBridgeTokenFromEvmArgs {
+export interface UseCrossVmBridgeTokenFromEvmArgs {
   mutation?: Omit<
-    UseMutationOptions<string, Error, UseBridgeTokenFromEvmMutateArgs>,
+    UseMutationOptions<string, Error, UseCrossVmBridgeTokenFromEvmMutateArgs>,
     "mutationFn"
   >
   flowClient?: ReturnType<typeof useFlowClient>
 }
 
-export interface UseBridgeTokenFromEvmMutateArgs {
+export interface UseCrossVmBridgeTokenFromEvmMutateArgs {
   vaultIdentifier: string
   amount: string
 }
 
-export interface UseBridgeTokenFromEvmResult
+export interface UseCrossVmBridgeTokenFromEvmResult
   extends Omit<UseMutationResult<string, Error>, "mutate" | "mutateAsync"> {
-  bridgeTokenFromEvm: UseMutateFunction<
+  crossVmBridgeTokenFromEvm: UseMutateFunction<
     string,
     Error,
-    UseBridgeTokenFromEvmMutateArgs
+    UseCrossVmBridgeTokenFromEvmMutateArgs
   >
-  bridgeTokenFromEvmAsync: UseMutateAsyncFunction<
+  crossVmBridgeTokenFromEvmAsync: UseMutateAsyncFunction<
     string,
     Error,
-    UseBridgeTokenFromEvmMutateArgs
+    UseCrossVmBridgeTokenFromEvmMutateArgs
   >
 }
 
 // Takes a chain id and returns the cadence tx with addresses set
-export const getBridgeTokenFromEvmTransaction = (chainId: string) => {
+export const getCrossVmBridgeTokenFromEvmTransaction = (chainId: string) => {
   const contractAddresses =
     CONTRACT_ADDRESSES[chainId as keyof typeof CONTRACT_ADDRESSES]
   if (!contractAddresses) {
@@ -178,13 +178,13 @@ transaction(vaultIdentifier: String, amount: UInt256) {
  *
  * @returns The mutation object used to send the transaction.
  */
-export function useBridgeTokenFromEvm({
+export function useCrossVmBridgeTokenFromEvm({
   mutation: mutationOptions = {},
   flowClient,
-}: UseBridgeTokenFromEvmArgs = {}): UseBridgeTokenFromEvmResult {
+}: UseCrossVmBridgeTokenFromEvmArgs = {}): UseCrossVmBridgeTokenFromEvmResult {
   const chainId = useFlowChainId()
   const cadenceTx = chainId.data
-    ? getBridgeTokenFromEvmTransaction(chainId.data)
+    ? getCrossVmBridgeTokenFromEvmTransaction(chainId.data)
     : null
 
   const queryClient = useFlowQueryClient()
@@ -194,7 +194,7 @@ export function useBridgeTokenFromEvm({
       mutationFn: async ({
         vaultIdentifier,
         amount,
-      }: UseBridgeTokenFromEvmMutateArgs) => {
+      }: UseCrossVmBridgeTokenFromEvmMutateArgs) => {
         if (!cadenceTx) {
           throw new Error("No current chain found")
         }
@@ -217,14 +217,14 @@ export function useBridgeTokenFromEvm({
   )
 
   const {
-    mutate: bridgeTokenFromEvm,
-    mutateAsync: bridgeTokenFromEvmAsync,
+    mutate: crossVmBridgeTokenFromEvm,
+    mutateAsync: crossVmBridgeTokenFromEvmAsync,
     ...rest
   } = mutation
 
   return {
-    bridgeTokenFromEvm,
-    bridgeTokenFromEvmAsync,
+    crossVmBridgeTokenFromEvm,
+    crossVmBridgeTokenFromEvmAsync,
     ...rest,
   }
 }

@@ -2,9 +2,9 @@ import {renderHook, act, waitFor} from "@testing-library/react"
 import * as fcl from "@onflow/fcl"
 import {FlowProvider} from "../provider"
 import {
-  getBridgeTokenFromEvmTransaction,
-  useBridgeTokenFromEvm,
-} from "./useBridgeTokenFromEvm"
+  getCrossVmBridgeTokenToEvmTransaction,
+  useCrossVmBridgeTokenToEvm,
+} from "./useCrossVmBridgeTokenToEvm"
 import {useFlowChainId} from "./useFlowChainId"
 import {createMockFclInstance, MockFclInstance} from "../__mocks__/flow-client"
 
@@ -13,8 +13,19 @@ jest.mock("./useFlowChainId", () => ({
   useFlowChainId: jest.fn(),
 }))
 
-describe("useBridgeTokenFromEvm", () => {
+describe("useCrossVmBridgeTokenToEvm", () => {
   let mockFcl: MockFclInstance
+
+  const mockCalls = [
+    {
+      address: "0x123",
+      abi: [{type: "function", name: "test"}],
+      functionName: "test",
+      args: [1, 2],
+      gasLimit: BigInt(100000),
+      value: BigInt(0),
+    },
+  ]
 
   const mockTxId = "0x123"
   const mockTxResult = {
@@ -33,7 +44,7 @@ describe("useBridgeTokenFromEvm", () => {
   beforeEach(() => {
     jest.clearAllMocks()
     jest.mocked(useFlowChainId).mockReturnValue({
-      data: "testnet",
+      data: "mainnet",
       isLoading: false,
     } as any)
 
@@ -41,43 +52,44 @@ describe("useBridgeTokenFromEvm", () => {
     jest.mocked(fcl.createFlowClient).mockReturnValue(mockFcl.mockFclInstance)
   })
 
-  describe("getBridgeTokenFromEvmTransaction", () => {
+  describe("getCrossVmBridgeTokenToEvmTransaction", () => {
     it("should return correct cadence for mainnet", () => {
-      const result = getBridgeTokenFromEvmTransaction("mainnet")
+      const result = getCrossVmBridgeTokenToEvmTransaction("mainnet")
       expect(result).toContain("import EVM from 0xe467b9dd11fa00df")
     })
 
     it("should return correct cadence for testnet", () => {
-      const result = getBridgeTokenFromEvmTransaction("testnet")
+      const result = getCrossVmBridgeTokenToEvmTransaction("testnet")
       expect(result).toContain("import EVM from 0x8c5303eaa26202d6")
     })
 
     it("should throw error for unsupported chain", () => {
-      expect(() => getBridgeTokenFromEvmTransaction("unsupported")).toThrow(
-        "Unsupported chain: unsupported"
-      )
+      expect(() =>
+        getCrossVmBridgeTokenToEvmTransaction("unsupported")
+      ).toThrow("Unsupported chain: unsupported")
     })
   })
 
-  describe("useBridgeTokenFromEvmTx", () => {
+  describe("useCrossVmBatchTransaction", () => {
     test("should handle successful transaction", async () => {
-      mockFcl.mockFclInstance.mutate.mockResolvedValue(mockTxId)
-      mockFcl.mockTx.mockReturnValue({
+      jest.mocked(mockFcl.mockFclInstance.mutate).mockResolvedValue(mockTxId)
+      jest.mocked(mockFcl.mockFclInstance.tx).mockReturnValue({
         onceExecuted: jest.fn().mockResolvedValue(mockTxResult),
       } as any)
 
       let result: any
       let rerender: any
       await act(async () => {
-        ;({result, rerender} = renderHook(useBridgeTokenFromEvm, {
+        ;({result, rerender} = renderHook(useCrossVmBridgeTokenToEvm, {
           wrapper: FlowProvider,
         }))
       })
 
       await act(async () => {
-        await result.current.bridgeTokenFromEvm({
-          vaultIdentifier: "A.dfc20aee650fcbdf.ClickToken.Vault",
-          amount: "1000000000000000000",
+        await result.current.crossVmBridgeTokenToEvm({
+          calls: mockCalls,
+          vaultIdentifier: "A.1234.Token.Vault",
+          amount: "100.0",
         })
         rerender()
       })
@@ -97,16 +109,17 @@ describe("useBridgeTokenFromEvm", () => {
       let hookResult: any
 
       await act(async () => {
-        const {result} = renderHook(() => useBridgeTokenFromEvm(), {
+        const {result} = renderHook(() => useCrossVmBridgeTokenToEvm(), {
           wrapper: FlowProvider,
         })
         hookResult = result
       })
 
       await act(async () => {
-        await hookResult.current.bridgeTokenFromEvm({
-          vaultIdentifier: "A.dfc20aee650fcbdf.ClickToken.Vault",
-          amount: "1000000000000000000",
+        await hookResult.current.crossVmBridgeTokenToEvm({
+          calls: mockCalls,
+          vaultIdentifier: "A.1234.Token.Vault",
+          amount: "100.0",
         })
       })
 
@@ -123,16 +136,17 @@ describe("useBridgeTokenFromEvm", () => {
       let hookResult: any
 
       await act(async () => {
-        const {result} = renderHook(() => useBridgeTokenFromEvm(), {
+        const {result} = renderHook(() => useCrossVmBridgeTokenToEvm(), {
           wrapper: FlowProvider,
         })
         hookResult = result
       })
 
       await act(async () => {
-        await hookResult.current.bridgeTokenFromEvm({
-          vaultIdentifier: "A.dfc20aee650fcbdf.ClickToken.Vault",
-          amount: "1000000000000000000",
+        await hookResult.current.crossVmBridgeTokenToEvm({
+          calls: mockCalls,
+          vaultIdentifier: "A.1234.Token.Vault",
+          amount: "100.0",
         })
       })
 
@@ -141,23 +155,24 @@ describe("useBridgeTokenFromEvm", () => {
     })
 
     it("should handle mutation error", async () => {
-      mockFcl.mockFclInstance.mutate.mockRejectedValue(
-        new Error("Mutation failed")
-      )
+      jest
+        .mocked(mockFcl.mockFclInstance.mutate)
+        .mockRejectedValue(new Error("Mutation failed"))
 
       let hookResult: any
 
       await act(async () => {
-        const {result} = renderHook(() => useBridgeTokenFromEvm(), {
+        const {result} = renderHook(() => useCrossVmBridgeTokenToEvm(), {
           wrapper: FlowProvider,
         })
         hookResult = result
       })
 
       await act(async () => {
-        await hookResult.current.bridgeTokenFromEvm({
-          vaultIdentifier: "A.dfc20aee650fcbdf.ClickToken.Vault",
-          amount: "1000000000000000000",
+        await hookResult.current.crossVmBridgeTokenToEvm({
+          calls: mockCalls,
+          vaultIdentifier: "A.1234.Token.Vault",
+          amount: "100.0",
         })
       })
 
