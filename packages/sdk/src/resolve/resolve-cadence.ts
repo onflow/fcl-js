@@ -10,8 +10,19 @@ const isFn = (v: any): v is Function => typeof v === "function"
 const isString = (v: any): v is string => typeof v === "string"
 
 const oldIdentifierPatternFn = (): RegExp => /\b(0x\w+)\b/g
-function isOldIdentifierSyntax(cadence: string): boolean {
-  return oldIdentifierPatternFn().test(cadence)
+function isOldIdentifierSyntax(
+  cadence: string,
+  legacyContractIdentifiers: Record<string, string> = {}
+): boolean {
+  const matches = cadence.matchAll(oldIdentifierPatternFn())
+  for (const match of matches) {
+    const identifier = match[0]
+    // Only return true if we have a legacy identifier that needs replacement
+    if (legacyContractIdentifiers[identifier]) {
+      return true
+    }
+  }
+  return false
 }
 
 const newIdentifierPatternFn = (): RegExp => /import\s+"(\w+)"/g
@@ -38,10 +49,12 @@ export function createResolveCadence(context: SdkContext) {
     if (isFn(cadence)) cadence = await cadence({} as Record<string, never>)
     invariant(isString(cadence), "Cadence needs to be a string at this point.")
     invariant(
-      !isOldIdentifierSyntax(cadence) || !isNewIdentifierSyntax(cadence),
+      !isOldIdentifierSyntax(cadence, context.legacyContractIdentifiers) ||
+        !isNewIdentifierSyntax(cadence),
       "Both account identifier and contract identifier syntax not simultaneously supported."
     )
-    if (isOldIdentifierSyntax(cadence)) {
+
+    if (isOldIdentifierSyntax(cadence, context.legacyContractIdentifiers)) {
       cadence = Object.entries(context.legacyContractIdentifiers || {}).reduce(
         (cadence, [key, value]) => {
           const regex = new RegExp("(\\b" + key + "\\b)", "g")
