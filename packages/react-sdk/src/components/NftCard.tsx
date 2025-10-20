@@ -3,15 +3,18 @@ import {
   useFlowNftMetadata,
   type NftViewResult,
 } from "../hooks/useFlowNftMetadata"
-import { ImageIcon } from "../icons/ImageIcon"
-import { AlertCircleIcon } from "../icons/AlertCircleIcon"
-import { ExternalLinkIcon } from "../icons/ExternalLink"
+import {StyleWrapper} from "./internal/StyleWrapper"
+import {ImageIcon} from "../icons/ImageIcon"
+import {ExternalLinkIcon} from "../icons/ExternalLink"
+import {AlertCircleIcon} from "../icons/AlertCircleIcon"
 
 interface NftCardProps {
   accountAddress: string
   tokenId: string | number
   publicPathIdentifier: string
   className?: string
+  showTraits?: boolean
+  showExtra?: boolean
 }
 
 export const NftCard: React.FC<NftCardProps> = ({
@@ -19,6 +22,8 @@ export const NftCard: React.FC<NftCardProps> = ({
   tokenId,
   publicPathIdentifier,
   className = "",
+  showTraits = false,
+  showExtra = false,
 }) => {
   const {
     data: nft,
@@ -37,214 +42,205 @@ export const NftCard: React.FC<NftCardProps> = ({
 
   if (isLoading) {
     return (
-      <div
-        className={`border-2 border-gray-300 bg-white dark:bg-gray-800 shadow-md hover:shadow-lg
-          transition-all rounded-lg p-4 ${className}`}
-      >
-        <div className="animate-pulse">
-          <div className="bg-gray-200 dark:bg-gray-700 h-48 rounded-lg mb-4"></div>
-          <div className="space-y-2">
-            <div className="bg-gray-200 dark:bg-gray-700 h-4 rounded w-3/4"></div>
-            <div className="bg-gray-200 dark:bg-gray-700 h-3 rounded w-1/2"></div>
-            <div className="bg-gray-200 dark:bg-gray-700 h-3 rounded w-2/3"></div>
+      <StyleWrapper className={className}>
+        <div
+          className="flow-w-full flow-max-w-sm flow-rounded-xl flow-bg-white dark:flow-bg-slate-900
+            flow-overflow-hidden flow-shadow-lg flow-border flow-border-slate-200
+            dark:flow-border-slate-800"
+        >
+          <div className="flow-animate-pulse">
+            <div className="flow-bg-slate-200 dark:flow-bg-slate-800 flow-w-full flow-aspect-square"></div>
+            <div className="flow-p-6 flow-space-y-4">
+              <div className="flow-space-y-2">
+                <div className="flow-bg-slate-200 dark:flow-bg-slate-800 flow-h-6 flow-rounded flow-w-3/4"></div>
+                <div className="flow-bg-slate-200 dark:flow-bg-slate-800 flow-h-4 flow-rounded flow-w-1/2"></div>
+              </div>
+              <div className="flow-bg-slate-200 dark:flow-bg-slate-800 flow-h-10 flow-rounded"></div>
+            </div>
           </div>
         </div>
-      </div>
+      </StyleWrapper>
     )
   }
 
-  if (error) {
-    return (
-      <div
-        className={`border-2 border-red-300 bg-white dark:bg-gray-800 shadow-md rounded-lg p-4
-          ${className}`}
-      >
-        <div className="text-center">
-          <div
-            className="bg-red-100 dark:bg-red-900/20 h-48 rounded-lg mb-4 flex items-center
-              justify-center"
-          >
-            <AlertCircleIcon className="h-12 w-12 text-red-400" />
-          </div>
-          <p className="text-red-600 dark:text-red-400 font-medium">
-            Error Loading NFT
-          </p>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-            {error.message || "Failed to load NFT data"}
-          </p>
-        </div>
-      </div>
-    )
-  }
-
-  if (!nft) {
-    return (
-      <div
-        className={`border-2 border-gray-300 bg-white dark:bg-gray-800 shadow-md rounded-lg p-4
-          ${className}`}
-      >
-        <div className="text-center">
-          <div
-            className="bg-gray-100 dark:bg-gray-700 h-48 rounded-lg mb-4 flex items-center
-              justify-center"
-          >
-            <ImageIcon className="h-12 w-12 text-gray-400" />
-          </div>
-          <p className="text-gray-600 dark:text-gray-400 font-medium">
-            NFT Not Found
-          </p>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-            Token ID: {tokenId}
-          </p>
-        </div>
-      </div>
-    )
-  }
+  const hasError = error || !nft
+  const hasImage = !hasError && getThumbnailUrl(nft)
 
   return (
-    <div
-      className={`border-2 border-gray-300 bg-white dark:bg-gray-800 shadow-md hover:shadow-lg
-        transition-all rounded-lg p-4 ${className}`}
-    >
-      {/* NFT Image */}
-      <div className="mb-4">
-        {getThumbnailUrl(nft) ? (
-          <img
-            src={getThumbnailUrl(nft)!}
-            alt={nft.name || `NFT ${tokenId}`}
-            className="w-full h-48 object-cover rounded-lg bg-gray-100 dark:bg-gray-700"
-          />
-        ) : (
-          <div className="w-full h-48 bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center">
-            <ImageIcon className="h-12 w-12 text-gray-400" />
-          </div>
-        )}
-      </div>
-
-      {/* NFT Info */}
-      <div className="space-y-3">
-        {/* Name and Token ID */}
-        <div>
-          <h3 className="font-bold text-lg text-gray-900 dark:text-white mb-1">
-            {nft.name || `NFT #${tokenId}`}
-          </h3>
-          <div className="flex items-center gap-2">
-            <span
-              className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100
-                text-gray-800 dark:bg-gray-700 dark:text-gray-200 border"
+    <StyleWrapper className={className}>
+      <div
+        className="flow-w-full flow-max-w-sm flow-rounded-xl flow-bg-white dark:flow-bg-slate-900
+          flow-overflow-hidden flow-shadow-lg hover:flow-shadow-xl flow-transition-shadow
+          flow-duration-300 flow-border flow-border-slate-200 dark:flow-border-slate-800"
+      >
+        <div
+          className="flow-relative flow-w-full flow-aspect-square flow-bg-slate-100
+            dark:flow-bg-slate-800 flow-overflow-hidden"
+        >
+          {hasError ? (
+            <div
+              className="flow-absolute flow-inset-0 flow-flex flow-flex-col flow-items-center
+                flow-justify-center flow-gap-3"
             >
-              ID: {tokenId}
-            </span>
-            {nft.collectionName && (
-              <span
-                className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100
-                  text-blue-800 dark:bg-blue-900/50 dark:text-blue-200"
-              >
-                {nft.collectionName}
-              </span>
-            )}
-          </div>
+              <AlertCircleIcon className="flow-h-16 flow-w-16 flow-text-slate-400 dark:flow-text-slate-600" />
+              <p className="flow-text-sm flow-text-slate-500 dark:flow-text-slate-500 flow-font-medium">
+                Failed to load NFT
+              </p>
+            </div>
+          ) : hasImage ? (
+            <img
+              src={getThumbnailUrl(nft)!}
+              alt={nft.name || `NFT #${tokenId}`}
+              className="flow-absolute flow-inset-0 flow-w-full flow-h-full flow-object-cover"
+            />
+          ) : (
+            <div className="flow-absolute flow-inset-0 flow-flex flow-items-center flow-justify-center">
+              <ImageIcon className="flow-h-16 flow-w-16 flow-text-slate-400 dark:flow-text-slate-600" />
+            </div>
+          )}
         </div>
 
-        {/* Description */}
-        {nft.description && (
-          <p className="text-sm text-gray-600 dark:text-gray-300 line-clamp-2">
-            {nft.description}
-          </p>
-        )}
+        <div className="flow-p-6 flow-space-y-4">
+          <div className="flow-space-y-2">
+            <div className="flow-flex flow-items-start flow-justify-between flow-gap-4">
+              <div className="flow-flex-1 flow-min-w-0 flow-pr-2">
+                {!hasError && nft.collectionName && (
+                  <p
+                    className="flow-text-xs flow-text-slate-500 dark:flow-text-slate-400 flow-uppercase
+                      flow-tracking-wider flow-font-semibold flow-mb-1"
+                  >
+                    {nft.collectionName}
+                  </p>
+                )}
 
-        {/* External Links */}
-        {(nft.collectionExternalUrl || nft.externalUrl) && (
-          <div className="flex gap-2">
-            {nft.collectionExternalUrl && (
-              <a
-                href={nft.collectionExternalUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 text-sm text-blue-600 dark:text-blue-400
-                  hover:underline"
+                <h3
+                  className="flow-text-xl flow-font-bold flow-text-slate-900 dark:flow-text-white
+                    flow-truncate flow-leading-tight"
+                >
+                  {hasError ? `NFT #${tokenId}` : nft.name || `NFT #${tokenId}`}
+                </h3>
+              </div>
+
+              <div className="flow-flex-shrink-0 flow-self-start">
+                <span
+                  className="flow-text-sm flow-font-medium flow-text-slate-400 dark:flow-text-slate-500
+                    flow-whitespace-nowrap"
+                >
+                  #{tokenId}
+                </span>
+              </div>
+            </div>
+
+            {!hasError && nft.description && (
+              <p
+                className="flow-text-sm flow-text-slate-600 dark:flow-text-slate-400 flow-line-clamp-2
+                  flow-leading-relaxed"
               >
-                <ExternalLinkIcon className="h-3 w-3" />
-                Collection
-              </a>
+                {nft.description}
+              </p>
             )}
-            {nft.externalUrl && (
-              <a
-                href={nft.externalUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 text-sm text-blue-600 dark:text-blue-400
-                  hover:underline"
-              >
-                <ExternalLinkIcon className="h-3 w-3" />
-                View NFT
-              </a>
+
+            {hasError && (
+              <p className="flow-text-sm flow-text-slate-500 dark:flow-text-slate-500">
+                Unable to load NFT metadata
+              </p>
             )}
           </div>
-        )}
 
-        {/* Rarity and Serial Number */}
-        {(nft.rarity || nft.serialNumber) && (
-          <div className="pt-2 border-t border-gray-200 dark:border-gray-700">
-            <div className="flex gap-2 flex-wrap">
-              {nft.rarity && (
-                <div>
-                  <p className="text-xs font-medium text-gray-700 dark:text-gray-400 mb-1">
-                    Rarity
-                  </p>
+          {showExtra &&
+            !hasError &&
+            (nft.serialNumber ||
+              nft.rarity ||
+              nft.externalUrl ||
+              nft.collectionExternalUrl) && (
+              <div className="flow-flex flow-flex-wrap flow-gap-2">
+                {nft.serialNumber && (
                   <span
-                    className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium
-                      bg-purple-100 text-purple-800 dark:bg-purple-900/50 dark:text-purple-200 border"
+                    className="flow-inline-flex flow-items-center flow-px-3 flow-py-1.5 flow-rounded-full
+                      flow-text-xs flow-font-semibold flow-bg-blue-50 dark:flow-bg-blue-900/20
+                      flow-text-blue-700 dark:flow-text-blue-400 flow-border flow-border-blue-200
+                      dark:flow-border-blue-800"
+                  >
+                    Serial #{nft.serialNumber}
+                  </span>
+                )}
+
+                {nft.rarity && (
+                  <span
+                    className="flow-inline-flex flow-items-center flow-px-3 flow-py-1.5 flow-rounded-full
+                      flow-text-xs flow-font-semibold flow-bg-purple-50 dark:flow-bg-purple-900/20
+                      flow-text-purple-700 dark:flow-text-purple-400 flow-border
+                      flow-border-purple-200 dark:flow-border-purple-800"
                   >
                     {nft.rarity}
                   </span>
-                </div>
-              )}
-              {nft.serialNumber && (
-                <div>
-                  <p className="text-xs font-medium text-gray-700 dark:text-gray-400 mb-1">
-                    Serial
-                  </p>
-                  <span
-                    className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100
-                      text-green-800 dark:bg-green-900/50 dark:text-green-200 border"
-                  >
-                    #{nft.serialNumber}
-                  </span>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
+                )}
 
-        {/* Traits */}
-        {nft.traits && Object.keys(nft.traits).length > 0 && (
-          <div className="pt-2 border-t border-gray-200 dark:border-gray-700">
-            <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              Traits
-            </p>
-            <div className="grid grid-cols-2 gap-2 max-h-24 overflow-y-auto">
-              {Object.entries(nft.traits)
-                .slice(0, 6)
-                .map(([key, value]) => (
-                  <div key={key} className="text-xs">
-                    <p className="font-medium text-gray-600 dark:text-gray-400 truncate">
-                      {key}
-                    </p>
-                    <p className="text-gray-800 dark:text-gray-200 truncate">
-                      {value}
-                    </p>
-                  </div>
-                ))}
-              {Object.keys(nft.traits).length > 6 && (
-                <div className="text-xs text-gray-500 dark:text-gray-400 col-span-2">
-                  +{Object.keys(nft.traits).length - 6} more traits
+                {(nft.externalUrl || nft.collectionExternalUrl) && (
+                  <a
+                    href={nft.externalUrl || nft.collectionExternalUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flow-inline-flex flow-items-center flow-gap-1.5 flow-px-3 flow-py-1.5
+                      flow-rounded-full flow-text-xs flow-font-semibold flow-bg-slate-100
+                      dark:flow-bg-slate-800 flow-text-slate-700 dark:flow-text-slate-300
+                      hover:flow-bg-slate-200 dark:hover:flow-bg-slate-700 flow-transition-colors
+                      flow-border flow-border-slate-200 dark:flow-border-slate-700"
+                  >
+                    <ExternalLinkIcon className="flow-h-3.5 flow-w-3.5" />
+                    View
+                  </a>
+                )}
+              </div>
+            )}
+
+          {showTraits &&
+            !hasError &&
+            nft.traits &&
+            Object.keys(nft.traits).length > 0 && (
+              <div className="flow-space-y-3">
+                <p
+                  className="flow-text-xs flow-font-bold flow-text-slate-700 dark:flow-text-slate-300
+                    flow-uppercase flow-tracking-wider"
+                >
+                  Traits
+                </p>
+                <div className="flow-grid flow-grid-cols-2 flow-gap-2">
+                  {Object.entries(nft.traits)
+                    .slice(0, 4)
+                    .map(([key, value]) => (
+                      <div
+                        key={key}
+                        className="flow-px-3 flow-py-2 flow-rounded-lg flow-bg-slate-50 dark:flow-bg-slate-800/50
+                          flow-border flow-border-slate-200 dark:flow-border-slate-700"
+                      >
+                        <p
+                          className="flow-text-xs flow-text-slate-500 dark:flow-text-slate-400 flow-truncate
+                            flow-mb-0.5"
+                        >
+                          {key}
+                        </p>
+                        <p
+                          className="flow-text-sm flow-font-semibold flow-text-slate-900 dark:flow-text-white
+                            flow-truncate"
+                        >
+                          {value}
+                        </p>
+                      </div>
+                    ))}
+                  {Object.keys(nft.traits).length > 4 && (
+                    <div
+                      className="flow-col-span-2 flow-text-center flow-text-xs flow-text-slate-500
+                        dark:flow-text-slate-400 flow-font-medium flow-mt-1"
+                    >
+                      +{Object.keys(nft.traits).length - 4} more traits
+                    </div>
+                  )}
                 </div>
-              )}
-            </div>
-          </div>
-        )}
+              </div>
+            )}
+        </div>
       </div>
-    </div>
+    </StyleWrapper>
   )
 }

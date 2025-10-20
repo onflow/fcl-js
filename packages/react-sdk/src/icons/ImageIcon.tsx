@@ -1,8 +1,6 @@
 import React from "react"
 
-export const ImageIcon: React.FC<{className?: string}> = ({
-  className,
-}) => (
+export const ImageIcon: React.FC<{className?: string}> = ({className}) => (
   <svg
     className={className}
     fill="none"
