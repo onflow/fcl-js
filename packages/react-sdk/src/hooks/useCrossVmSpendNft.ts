@@ -216,6 +216,9 @@ transaction(
  *
  * Use `useCrossVmSpendNftStatus` to watch the status of the transaction and get the transaction id + result of each EVM call.
  *
+ * @deprecated This hook has been renamed to `useCrossVmBridgeNftToEvm` for better clarity.
+ * Please use `useCrossVmBridgeNftToEvm` instead. This hook will be removed in a future version.
+ *
  * @returns The mutation object used to send the transaction.
  */
 export function useCrossVmSpendNft({

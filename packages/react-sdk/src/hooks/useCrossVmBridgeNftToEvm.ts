@@ -11,32 +11,36 @@ import {encodeCalls, EvmBatchCall} from "./useCrossVmBatchTransaction"
 import {CONTRACT_ADDRESSES} from "../constants"
 import {useFlowClient} from "./useFlowClient"
 
-export interface UseCrossVmSpendTokenArgs {
+export interface UseCrossVmBridgeNftToEvmTxArgs {
   mutation?: Omit<
-    UseMutationOptions<string, Error, UseCrossVmSpendTokenMutateArgs>,
+    UseMutationOptions<string, Error, UseCrossVmBridgeNftToEvmTxMutateArgs>,
     "mutationFn"
   >
   flowClient?: ReturnType<typeof useFlowClient>
 }
 
-export interface UseCrossVmSpendTokenMutateArgs {
-  vaultIdentifier: string
-  amount: string
+export interface UseCrossVmBridgeNftToEvmTxMutateArgs {
+  nftIdentifier: string
+  nftIds: string[]
   calls: EvmBatchCall[]
 }
 
-export interface UseCrossVmSpendTokenResult
+export interface UseCrossVmBridgeNftToEvmTxResult
   extends Omit<UseMutationResult<string, Error>, "mutate" | "mutateAsync"> {
-  spendToken: UseMutateFunction<string, Error, UseCrossVmSpendTokenMutateArgs>
-  spendTokenAsync: UseMutateAsyncFunction<
+  crossVmBridgeNftToEvm: UseMutateFunction<
     string,
     Error,
-    UseCrossVmSpendTokenMutateArgs
+    UseCrossVmBridgeNftToEvmTxMutateArgs
+  >
+  crossVmBridgeNftToEvmAsync: UseMutateAsyncFunction<
+    string,
+    Error,
+    UseCrossVmBridgeNftToEvmTxMutateArgs
   >
 }
 
 // Takes a chain id and returns the cadence tx with addresses set
-export const getCrossVmSpendTokenTransaction = (chainId: string) => {
+export const getCrossVmBridgeNftToEvmTransaction = (chainId: string) => {
   const contractAddresses =
     CONTRACT_ADDRESSES[chainId as keyof typeof CONTRACT_ADDRESSES]
   if (!contractAddresses) {
@@ -45,8 +49,9 @@ export const getCrossVmSpendTokenTransaction = (chainId: string) => {
 
   return `
 import FungibleToken from ${contractAddresses.FungibleToken}
+import NonFungibleToken from ${contractAddresses.NonFungibleToken}
 import ViewResolver from ${contractAddresses.ViewResolver}
-import FungibleTokenMetadataViews from ${contractAddresses.FungibleTokenMetadataViews}
+import MetadataViews from ${contractAddresses.MetadataViews}
 import FlowToken from ${contractAddresses.FlowToken}
 
 import ScopedFTProviders from ${contractAddresses.ScopedFTProviders}
@@ -57,34 +62,33 @@ import FlowEVMBridge from ${contractAddresses.FlowEVMBridge}
 import FlowEVMBridgeConfig from ${contractAddresses.FlowEVMBridgeConfig}
 import FlowEVMBridgeUtils from ${contractAddresses.FlowEVMBridgeUtils}
 
-/// Bridges a Vault from the signer's storage to the signer's COA in EVM.Account
-/// and then executes an arbitrary number of EVM transactions.
+/// Bridges NFTs (from the same collection) from the signer's collection in Cadence to the signer's COA in FlowEVM
+/// and then performs an arbitrary number of calls afterwards to potentially do things
+/// with the bridged NFTs
 ///
-/// NOTE: This transaction also onboards the Vault to the bridge if necessary which may incur additional fees
+/// NOTE: This transaction also onboards the NFT to the bridge if necessary which may incur additional fees
 ///     than bridging an asset that has already been onboarded.
 ///
-/// @param vaultIdentifier: The Cadence type identifier of the FungibleToken Vault to bridge
-///     - e.g. vault.getType().identifier
-/// @param amount: The amount of tokens to bridge from EVM
+/// @param nftIdentifier: The Cadence type identifier of the NFT to bridge - e.g. nft.getType().identifier
+/// @param ids: The Cadence NFT.id of the NFTs to bridge to EVM
 /// @params evmContractAddressHexes, calldatas, gasLimits, values: Arrays of calldata
 ///         to be included in transaction calls to Flow EVM from the signer's COA.
 ///         The arrays are all expected to be of the same length
 ///
-///
 transaction(
-    vaultIdentifier: String,
-    amount: UFix64,
+    nftIdentifier: String,
+    ids: [UInt64],
     evmContractAddressHexes: [String],
     calldatas: [String],
     gasLimits: [UInt64],
     values: [UInt]
 ) {
-
-    let sentVault: @{FungibleToken.Vault}
+    let nftType: Type
+    let collection: auth(NonFungibleToken.Withdraw) &{NonFungibleToken.Collection}
     let coa: auth(EVM.Bridge, EVM.Call) &EVM.CadenceOwnedAccount
     let requiresOnboarding: Bool
     let scopedProvider: @ScopedFTProviders.ScopedFTProvider
-
+    
     prepare(signer: auth(CopyValue, BorrowValue, IssueStorageCapabilityController, PublishCapability, SaveValue) &Account) {
         pre {
             (evmContractAddressHexes.length == calldatas.length)
@@ -98,42 +102,43 @@ transaction(
         // Borrow a reference to the signer's COA
         self.coa = signer.storage.borrow<auth(EVM.Bridge, EVM.Call) &EVM.CadenceOwnedAccount>(from: /storage/evm)
             ?? panic("Could not borrow COA signer's account at path /storage/evm")
-
-        /* --- Construct the Vault type --- */
+        
+        /* --- Construct the NFT type --- */
         //
-        // Construct the Vault type from the provided identifier
-        let vaultType = CompositeType(vaultIdentifier)
-            ?? panic("Could not construct Vault type from identifier: ".concat(vaultIdentifier))
-        // Parse the Vault identifier into its components
-        let tokenContractAddress = FlowEVMBridgeUtils.getContractAddress(fromType: vaultType)
-            ?? panic("Could not get contract address from identifier: ".concat(vaultIdentifier))
-        let tokenContractName = FlowEVMBridgeUtils.getContractName(fromType: vaultType)
-            ?? panic("Could not get contract name from identifier: ".concat(vaultIdentifier))
+        // Construct the NFT type from the provided identifier
+        self.nftType = CompositeType(nftIdentifier)
+            ?? panic("Could not construct NFT type from identifier: ".concat(nftIdentifier))
+        // Parse the NFT identifier into its components
+        let nftContractAddress = FlowEVMBridgeUtils.getContractAddress(fromType: self.nftType)
+            ?? panic("Could not get contract address from identifier: ".concat(nftIdentifier))
+        let nftContractName = FlowEVMBridgeUtils.getContractName(fromType: self.nftType)
+            ?? panic("Could not get contract name from identifier: ".concat(nftIdentifier))
 
-        /* --- Retrieve the funds --- */
+        /* --- Retrieve the NFT --- */
         //
-        // Borrow a reference to the FungibleToken Vault
-        let viewResolver = getAccount(tokenContractAddress).contracts.borrow<&{ViewResolver}>(name: tokenContractName)
-            ?? panic("Could not borrow ViewResolver from FungibleToken contract with name"
-                .concat(tokenContractName).concat(" and address ")
-                .concat(tokenContractAddress.toString()))
-        let vaultData = viewResolver.resolveContractView(
-                resourceType: vaultType,
-                viewType: Type<FungibleTokenMetadataViews.FTVaultData>()
-            ) as! FungibleTokenMetadataViews.FTVaultData?
-            ?? panic("Could not resolve FTVaultData view for Vault type ".concat(vaultType.identifier))
-        let vault = signer.storage.borrow<auth(FungibleToken.Withdraw) &{FungibleToken.Vault}>(
-                from: vaultData.storagePath
-            ) ?? panic("Could not borrow FungibleToken Vault from storage path ".concat(vaultData.storagePath.toString()))
+        // Borrow a reference to the NFT collection, configuring if necessary
+        let viewResolver = getAccount(nftContractAddress).contracts.borrow<&{ViewResolver}>(name: nftContractName)
+            ?? panic("Could not borrow ViewResolver from NFT contract with name "
+                .concat(nftContractName).concat(" and address ")
+                .concat(nftContractAddress.toString()))
+        let collectionData = viewResolver.resolveContractView(
+                resourceType: self.nftType,
+                viewType: Type<MetadataViews.NFTCollectionData>()
+            ) as! MetadataViews.NFTCollectionData?
+            ?? panic("Could not resolve NFTCollectionData view for NFT type ".concat(self.nftType.identifier))
+        self.collection = signer.storage.borrow<auth(NonFungibleToken.Withdraw) &{NonFungibleToken.Collection}>(
+                from: collectionData.storagePath
+            ) ?? panic("Could not borrow a NonFungibleToken Collection from the signer's storage path "
+                .concat(collectionData.storagePath.toString()))
 
-        // Withdraw the requested balance & set a cap on the withdrawable bridge fee
-        self.sentVault <- vault.withdraw(amount: amount)
+        // Withdraw the requested NFT & set a cap on the withdrawable bridge fee
         var approxFee = FlowEVMBridgeUtils.calculateBridgeFee(
                 bytes: 400_000 // 400 kB as upper bound on movable storage used in a single transaction
-            )
-        // Determine if the Vault requires onboarding - this impacts the fee required
-        self.requiresOnboarding = FlowEVMBridge.typeRequiresOnboarding(self.sentVault.getType())
-            ?? panic("Bridge does not support the requested asset type ".concat(vaultIdentifier))
+            ) + (FlowEVMBridgeConfig.baseFee * UFix64(ids.length))
+        // Determine if the NFT requires onboarding - this impacts the fee required
+        self.requiresOnboarding = FlowEVMBridge.typeRequiresOnboarding(self.nftType)
+            ?? panic("Bridge does not support the requested asset type ".concat(nftIdentifier))
+        // Add the onboarding fee if onboarding is necessary
         if self.requiresOnboarding {
             approxFee = approxFee + FlowEVMBridgeConfig.onboardFee
         }
@@ -160,25 +165,31 @@ transaction(
             )
     }
 
-    pre {
-        self.sentVault.getType().identifier == vaultIdentifier:
-            "Attempting to send invalid vault type - requested: ".concat(vaultIdentifier)
-            .concat(", sending: ").concat(self.sentVault.getType().identifier)
-    }
-
     execute {
         if self.requiresOnboarding {
-            // Onboard the Vault to the bridge
+            // Onboard the NFT to the bridge
             FlowEVMBridge.onboardByType(
-                self.sentVault.getType(),
+                self.nftType,
                 feeProvider: &self.scopedProvider as auth(FungibleToken.Withdraw) &{FungibleToken.Provider}
             )
         }
-        // Execute the bridge
-        self.coa.depositTokens(
-            vault: <-self.sentVault,
-            feeProvider: &self.scopedProvider as auth(FungibleToken.Withdraw) &{FungibleToken.Provider}
-        )
+
+        // Iterate over requested IDs and bridge each NFT to the signer's COA in EVM
+        for id in ids {
+            // Withdraw the NFT & ensure it's the correct type
+            let nft <-self.collection.withdraw(withdrawID: id)
+            assert(
+                nft.getType() == self.nftType,
+                message: "Bridged nft type mismatch - requested: ".concat(self.nftType.identifier)
+                    .concat(", received: ").concat(nft.getType().identifier)
+            )
+            // Execute the bridge to EVM for the current ID
+            self.coa.depositNFT(
+                nft: <-nft,
+                feeProvider: &self.scopedProvider as auth(FungibleToken.Withdraw) &{FungibleToken.Provider}
+            )
+        }
+
         // Destroy the ScopedFTProvider
         destroy self.scopedProvider
 
@@ -204,21 +215,20 @@ transaction(
 }
 
 /**
- * Hook to send a cross-VM FT spend transaction. This function will
+ * Hook to send a cross-VM NFT bridge transaction from Cadence to EVM. This function will
  * bundle multiple EVM calls into one atomic Cadence transaction and return the transaction ID.
  *
- * @deprecated This hook has been renamed to `useCrossVmBridgeTokenToEvm` for better clarity.
- * Please use `useCrossVmBridgeTokenToEvm` instead. This hook will be removed in a future version.
+ * Use `useCrossVmTransactionStatus` to watch the status of the transaction and get the transaction id + result of each EVM call.
  *
  * @returns The mutation object used to send the transaction.
  */
-export function useCrossVmSpendToken({
+export function useCrossVmBridgeNftToEvm({
   mutation: mutationOptions = {},
   flowClient,
-}: UseCrossVmSpendTokenArgs = {}): UseCrossVmSpendTokenResult {
+}: UseCrossVmBridgeNftToEvmTxArgs = {}): UseCrossVmBridgeNftToEvmTxResult {
   const chainId = useFlowChainId()
   const cadenceTx = chainId.data
-    ? getCrossVmSpendTokenTransaction(chainId.data)
+    ? getCrossVmBridgeNftToEvmTransaction(chainId.data)
     : null
 
   const queryClient = useFlowQueryClient()
@@ -226,10 +236,10 @@ export function useCrossVmSpendToken({
   const mutation = useMutation(
     {
       mutationFn: async ({
-        vaultIdentifier,
-        amount,
+        nftIdentifier,
+        nftIds,
         calls,
-      }: UseCrossVmSpendTokenMutateArgs) => {
+      }: UseCrossVmBridgeNftToEvmTxMutateArgs) => {
         if (!cadenceTx) {
           throw new Error("No current chain found")
         }
@@ -238,8 +248,8 @@ export function useCrossVmSpendToken({
         const txId = await fcl.mutate({
           cadence: cadenceTx,
           args: (arg, t) => [
-            arg(vaultIdentifier, t.String),
-            arg(amount, t.UFix64),
+            arg(nftIdentifier, t.String),
+            arg(nftIds, t.Array(t.UInt64)),
             arg(
               encodedCalls.map(call => call.to),
               t.Array(t.String)
@@ -268,11 +278,15 @@ export function useCrossVmSpendToken({
     queryClient
   )
 
-  const {mutate: spendToken, mutateAsync: spendTokenAsync, ...rest} = mutation
+  const {
+    mutate: crossVmBridgeNftToEvm,
+    mutateAsync: crossVmBridgeNftToEvmAsync,
+    ...rest
+  } = mutation
 
   return {
-    spendToken,
-    spendTokenAsync,
+    crossVmBridgeNftToEvm,
+    crossVmBridgeNftToEvmAsync,
     ...rest,
   }
 }
