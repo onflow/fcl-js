@@ -65,7 +65,7 @@ to communicate with various services like wallets.
 
 `fcl.authenticate()` is triggered. It looks up the **Challenge Handshake Url** with
 `config().get("challenge.handshake")`. FCL will render an iframe using the **Challenge
-Handshake Url** at the src, also passing in a couple query paramaters.
+Handshake Url** at the src, also passing in a couple query parameters.
 
 > During development (and on mainnet) FCL can be configured to use the wallet directly by
 > setting the **Challenge Handshake Url** to the wallet providers **Authentication Endpoint**
@@ -226,7 +226,7 @@ type Handshake {
   hks and code work together to enable FCL to discover
   how to configure itself for the Current User. If these
   are both supplied an http get request will be made
-  to the hks url with the code as a query paramater.
+  to the hks url with the code as a query parameter.
   It should return an array of services. These services
   will be chosen over those returned directly in the
   handshake
