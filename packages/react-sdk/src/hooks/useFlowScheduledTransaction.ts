@@ -11,7 +11,7 @@ import {
 } from "./useFlowScheduledTransactionList"
 
 export interface UseFlowScheduledTransactionArgs {
-  scheduledTxId?: string
+  txId?: string
   includeHandlerData?: boolean
   query?: Omit<
     UseQueryOptions<ScheduledTransaction | null, Error>,
@@ -168,18 +168,18 @@ const convertScheduledTransaction = (
  * @example
  * // Basic usage
  * const { data: transaction, isLoading } = useFlowScheduledTransaction({
- *   scheduledTxId: "42"
+ *   txId: "42"
  * })
  *
  * @example
  * // With handler data
  * const { data: transaction } = useFlowScheduledTransaction({
- *   scheduledTxId: "42",
+ *   txId: "42",
  *   includeHandlerData: true
  * })
  */
 export function useFlowScheduledTransaction({
-  scheduledTxId,
+  txId,
   includeHandlerData = false,
   query: queryOptions = {},
   flowClient,
@@ -193,15 +193,13 @@ export function useFlowScheduledTransaction({
         ? getScheduledTransactionWithHandlerQuery(chainId)
         : getScheduledTransactionQuery(chainId)
       : "",
-    args: scheduledTxId
-      ? (arg, t) => [arg(scheduledTxId, t.UInt64)]
-      : undefined,
+    args: txId ? (arg, t) => [arg(txId, t.UInt64)] : undefined,
     query: {
       ...(queryOptions as Omit<
         UseQueryOptions<unknown, Error>,
         "queryKey" | "queryFn"
       >),
-      enabled: (queryOptions?.enabled ?? true) && !!chainId && !!scheduledTxId,
+      enabled: (queryOptions?.enabled ?? true) && !!chainId && !!txId,
     },
     flowClient,
   })

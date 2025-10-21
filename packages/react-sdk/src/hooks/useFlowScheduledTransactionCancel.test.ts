@@ -25,8 +25,10 @@ describe("useFlowScheduledTransactionCancel", () => {
   })
 
   test("cancels a transaction successfully", async () => {
-    const txId = "cancel-tx-id-456"
-    jest.mocked(mockFcl.mockFclInstance.mutate).mockResolvedValueOnce(txId)
+    const resultTxId = "cancel-tx-id-456"
+    jest
+      .mocked(mockFcl.mockFclInstance.mutate)
+      .mockResolvedValueOnce(resultTxId)
 
     const {result} = renderHook(() => useFlowScheduledTransactionCancel(), {
       wrapper: FlowProvider,
@@ -34,7 +36,7 @@ describe("useFlowScheduledTransactionCancel", () => {
 
     const returnedTxId = await result.current.cancelTransactionAsync("42")
 
-    expect(returnedTxId).toBe(txId)
+    expect(returnedTxId).toBe(resultTxId)
     expect(mockFcl.mockFclInstance.mutate).toHaveBeenCalled()
   })
 
@@ -69,9 +71,9 @@ describe("useFlowScheduledTransactionCancel", () => {
   test("uses custom flowClient when provided", async () => {
     const customMockFcl = createMockFclInstance()
     const customFlowClient = customMockFcl.mockFclInstance as any
-    const txId = "cancel-tx-id-789"
+    const resultTxId = "cancel-tx-id-789"
 
-    jest.mocked(customFlowClient.mutate).mockResolvedValueOnce(txId)
+    jest.mocked(customFlowClient.mutate).mockResolvedValueOnce(resultTxId)
 
     const {result} = renderHook(
       () => useFlowScheduledTransactionCancel({flowClient: customFlowClient}),
@@ -82,14 +84,16 @@ describe("useFlowScheduledTransactionCancel", () => {
 
     const returnedTxId = await result.current.cancelTransactionAsync("42")
 
-    expect(returnedTxId).toBe(txId)
+    expect(returnedTxId).toBe(resultTxId)
     expect(customFlowClient.mutate).toHaveBeenCalled()
   })
 
   test("calls onSuccess callback when provided", async () => {
-    const txId = "cancel-tx-id-abc"
+    const resultTxId = "cancel-tx-id-abc"
     const onSuccess = jest.fn()
-    jest.mocked(mockFcl.mockFclInstance.mutate).mockResolvedValueOnce(txId)
+    jest
+      .mocked(mockFcl.mockFclInstance.mutate)
+      .mockResolvedValueOnce(resultTxId)
 
     const {result} = renderHook(
       () =>
@@ -104,7 +108,7 @@ describe("useFlowScheduledTransactionCancel", () => {
     await result.current.cancelTransactionAsync("42")
 
     await waitFor(() =>
-      expect(onSuccess).toHaveBeenCalledWith(txId, "42", undefined)
+      expect(onSuccess).toHaveBeenCalledWith(resultTxId, "42", undefined)
     )
   })
 
@@ -129,11 +133,11 @@ describe("useFlowScheduledTransactionCancel", () => {
   })
 
   test("isPending is true while mutation is in progress", async () => {
-    const txId = "cancel-tx-id-def"
+    const resultTxId = "cancel-tx-id-def"
     jest.mocked(mockFcl.mockFclInstance.mutate).mockImplementation(
       () =>
         new Promise(resolve => {
-          setTimeout(() => resolve(txId), 100)
+          setTimeout(() => resolve(resultTxId), 100)
         })
     )
 
@@ -153,20 +157,22 @@ describe("useFlowScheduledTransactionCancel", () => {
   })
 
   test("passes correct transaction ID to mutation", async () => {
-    const txId = "cancel-tx-id-xyz"
-    const scheduledTxId = "999"
-    jest.mocked(mockFcl.mockFclInstance.mutate).mockResolvedValueOnce(txId)
+    const resultTxId = "cancel-tx-id-xyz"
+    const txId = "999"
+    jest
+      .mocked(mockFcl.mockFclInstance.mutate)
+      .mockResolvedValueOnce(resultTxId)
 
     const {result} = renderHook(() => useFlowScheduledTransactionCancel(), {
       wrapper: FlowProvider,
     })
 
-    await result.current.cancelTransactionAsync(scheduledTxId)
+    await result.current.cancelTransactionAsync(txId)
 
     expect(mockFcl.mockFclInstance.mutate).toHaveBeenCalled()
     // Verify the mutation was called with args function
     const mutateCall = jest.mocked(mockFcl.mockFclInstance.mutate).mock
-      .calls[0][0]
+      .calls[0][0] as {cadence: string; args: Function}
     expect(mutateCall.args).toBeInstanceOf(Function)
   })
 })

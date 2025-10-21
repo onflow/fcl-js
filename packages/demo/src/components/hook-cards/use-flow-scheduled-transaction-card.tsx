@@ -32,7 +32,7 @@ const { data: transactions, isLoading } = useFlowScheduledTransactionList({
 
 // Get a specific scheduled transaction by ID
 const { data: transaction } = useFlowScheduledTransaction({
-  scheduledTxId: "42",
+  txId: "42",
   includeHandlerData: true
 })
 
@@ -83,7 +83,7 @@ export function UseFlowScheduledTransactionCard() {
   })
 
   const getQuery = useFlowScheduledTransaction({
-    scheduledTxId: txId,
+    txId: txId,
     includeHandlerData,
     query: {
       enabled: activeTab === "get" && Boolean(txId),
@@ -151,15 +151,6 @@ export function UseFlowScheduledTransactionCard() {
       })
     } catch (err: any) {
       setError(err.message || "Failed to cancel transaction")
-    }
-  }
-
-  // Update results when queries complete
-  const handleRefresh = () => {
-    if (activeTab === "list") {
-      handleList()
-    } else if (activeTab === "get") {
-      handleGet()
     }
   }
 

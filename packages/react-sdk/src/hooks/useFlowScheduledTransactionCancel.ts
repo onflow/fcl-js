@@ -70,23 +70,14 @@ transaction(txId: UInt64) {
  * @example
  * const { cancelTransactionAsync, isPending } = useFlowScheduledTransactionCancel()
  *
- * const handleCancel = async (scheduledTxId: string) => {
+ * const handleCancel = async (txId: string) => {
  *   try {
- *     const txId = await cancelTransactionAsync(scheduledTxId)
- *     console.log("Cancel transaction ID:", txId)
+ *     const resultTxId = await cancelTransactionAsync(txId)
+ *     console.log("Cancel transaction ID:", resultTxId)
  *   } catch (error) {
  *     console.error("Cancel failed:", error)
  *   }
  * }
- *
- * @example
- * // With mutation options
- * const { cancelTransaction } = useFlowScheduledTransactionCancel({
- *   mutation: {
- *     onSuccess: (txId) => console.log("Cancel successful:", txId),
- *     onError: (error) => console.error("Cancel failed:", error)
- *   }
- * })
  */
 export function useFlowScheduledTransactionCancel({
   mutation: mutationOptions = {},
@@ -101,17 +92,16 @@ export function useFlowScheduledTransactionCancel({
 
   const mutation = useMutation(
     {
-      mutationFn: async (scheduledTxId: string) => {
+      mutationFn: async (txId: string) => {
         if (!cadenceTx) {
           throw new Error("Chain ID not detected")
         }
 
-        const txId = await fcl.mutate({
+        const resultTxId = await fcl.mutate({
           cadence: cadenceTx,
-          args: (arg, t) => [arg(scheduledTxId, t.UInt64)],
+          args: (arg, t) => [arg(txId, t.UInt64)],
         })
-
-        return txId
+        return resultTxId
       },
       retry: false,
       ...mutationOptions,

@@ -69,21 +69,12 @@ transaction() {
  *
  * const handleSetup = async () => {
  *   try {
- *     const txId = await setupAsync()
- *     console.log("Setup transaction ID:", txId)
+ *     const resultTxId = await setupAsync()
+ *     console.log("Setup transaction ID:", resultTxId)
  *   } catch (error) {
  *     console.error("Setup failed:", error)
  *   }
  * }
- *
- * @example
- * // With mutation options
- * const { setup } = useFlowScheduledTransactionSetup({
- *   mutation: {
- *     onSuccess: (txId) => console.log("Setup successful:", txId),
- *     onError: (error) => console.error("Setup failed:", error)
- *   }
- * })
  */
 export function useFlowScheduledTransactionSetup({
   mutation: mutationOptions = {},
@@ -103,12 +94,11 @@ export function useFlowScheduledTransactionSetup({
           throw new Error("Chain ID not detected")
         }
 
-        const txId = await fcl.mutate({
+        const resultTxId = await fcl.mutate({
           cadence: cadenceTx,
           args: () => [],
         })
-
-        return txId
+        return resultTxId
       },
       retry: false,
       ...mutationOptions,

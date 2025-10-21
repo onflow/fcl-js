@@ -25,8 +25,10 @@ describe("useFlowScheduledTransactionSetup", () => {
   })
 
   test("sets up manager successfully", async () => {
-    const txId = "setup-tx-id-123"
-    jest.mocked(mockFcl.mockFclInstance.mutate).mockResolvedValueOnce(txId)
+    const resultTxId = "setup-tx-id-123"
+    jest
+      .mocked(mockFcl.mockFclInstance.mutate)
+      .mockResolvedValueOnce(resultTxId)
 
     const {result} = renderHook(() => useFlowScheduledTransactionSetup(), {
       wrapper: FlowProvider,
@@ -34,7 +36,7 @@ describe("useFlowScheduledTransactionSetup", () => {
 
     const returnedTxId = await result.current.setupAsync()
 
-    expect(returnedTxId).toBe(txId)
+    expect(returnedTxId).toBe(resultTxId)
     expect(mockFcl.mockFclInstance.mutate).toHaveBeenCalled()
   })
 
@@ -67,9 +69,9 @@ describe("useFlowScheduledTransactionSetup", () => {
   test("uses custom flowClient when provided", async () => {
     const customMockFcl = createMockFclInstance()
     const customFlowClient = customMockFcl.mockFclInstance as any
-    const txId = "setup-tx-id-456"
+    const resultTxId = "setup-tx-id-456"
 
-    jest.mocked(customFlowClient.mutate).mockResolvedValueOnce(txId)
+    jest.mocked(customFlowClient.mutate).mockResolvedValueOnce(resultTxId)
 
     const {result} = renderHook(
       () => useFlowScheduledTransactionSetup({flowClient: customFlowClient}),
@@ -80,14 +82,16 @@ describe("useFlowScheduledTransactionSetup", () => {
 
     const returnedTxId = await result.current.setupAsync()
 
-    expect(returnedTxId).toBe(txId)
+    expect(returnedTxId).toBe(resultTxId)
     expect(customFlowClient.mutate).toHaveBeenCalled()
   })
 
   test("calls onSuccess callback when provided", async () => {
-    const txId = "setup-tx-id-789"
+    const resultTxId = "setup-tx-id-789"
     const onSuccess = jest.fn()
-    jest.mocked(mockFcl.mockFclInstance.mutate).mockResolvedValueOnce(txId)
+    jest
+      .mocked(mockFcl.mockFclInstance.mutate)
+      .mockResolvedValueOnce(resultTxId)
 
     const {result} = renderHook(
       () =>
@@ -102,7 +106,7 @@ describe("useFlowScheduledTransactionSetup", () => {
     await result.current.setupAsync()
 
     await waitFor(() =>
-      expect(onSuccess).toHaveBeenCalledWith(txId, undefined, undefined)
+      expect(onSuccess).toHaveBeenCalledWith(resultTxId, undefined, undefined)
     )
   })
 
@@ -127,11 +131,11 @@ describe("useFlowScheduledTransactionSetup", () => {
   })
 
   test("isPending is true while mutation is in progress", async () => {
-    const txId = "setup-tx-id-abc"
+    const resultTxId = "setup-tx-id-abc"
     jest.mocked(mockFcl.mockFclInstance.mutate).mockImplementation(
       () =>
         new Promise(resolve => {
-          setTimeout(() => resolve(txId), 100)
+          setTimeout(() => resolve(resultTxId), 100)
         })
     )
 

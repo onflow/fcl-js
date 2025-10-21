@@ -45,7 +45,7 @@ describe("useFlowScheduledTransaction", () => {
       .mockResolvedValueOnce(mockTransaction)
 
     const {result} = renderHook(
-      () => useFlowScheduledTransaction({scheduledTxId: "42"}),
+      () => useFlowScheduledTransaction({txId: "42"}),
       {
         wrapper: FlowProvider,
       }
@@ -83,7 +83,7 @@ describe("useFlowScheduledTransaction", () => {
     const {result} = renderHook(
       () =>
         useFlowScheduledTransaction({
-          scheduledTxId: "42",
+          txId: "42",
           includeHandlerData: true,
         }),
       {
@@ -106,7 +106,7 @@ describe("useFlowScheduledTransaction", () => {
     jest.mocked(mockFcl.mockFclInstance.query).mockResolvedValueOnce(null)
 
     const {result} = renderHook(
-      () => useFlowScheduledTransaction({scheduledTxId: "999"}),
+      () => useFlowScheduledTransaction({txId: "999"}),
       {
         wrapper: FlowProvider,
       }
@@ -136,7 +136,7 @@ describe("useFlowScheduledTransaction", () => {
     } as any)
 
     const {result} = renderHook(
-      () => useFlowScheduledTransaction({scheduledTxId: "42"}),
+      () => useFlowScheduledTransaction({txId: "42"}),
       {
         wrapper: FlowProvider,
       }
@@ -153,7 +153,7 @@ describe("useFlowScheduledTransaction", () => {
     jest.mocked(mockFcl.mockFclInstance.query).mockRejectedValueOnce(error)
 
     const {result} = renderHook(
-      () => useFlowScheduledTransaction({scheduledTxId: "42"}),
+      () => useFlowScheduledTransaction({txId: "42"}),
       {
         wrapper: FlowProvider,
       }
@@ -173,7 +173,7 @@ describe("useFlowScheduledTransaction", () => {
     const {result} = renderHook(
       () =>
         useFlowScheduledTransaction({
-          scheduledTxId: "42",
+          txId: "42",
           flowClient: customFlowClient,
         }),
       {
@@ -190,7 +190,7 @@ describe("useFlowScheduledTransaction", () => {
     const {result} = renderHook(
       () =>
         useFlowScheduledTransaction({
-          scheduledTxId: "42",
+          txId: "42",
           query: {enabled: false},
         }),
       {
