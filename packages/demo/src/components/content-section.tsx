@@ -12,6 +12,8 @@ import {UseFlowMutateCard} from "./hook-cards/use-flow-mutate-card"
 import {UseFlowEventsCard} from "./hook-cards/use-flow-events-card"
 import {UseFlowTransactionStatusCard} from "./hook-cards/use-flow-transaction-status-card"
 import {UseFlowRevertibleRandomCard} from "./hook-cards/use-flow-revertible-random-card"
+import {UseCrossVmBridgeNftFromEvmCard} from "./hook-cards/use-cross-vm-bridge-nft-from-evm-card"
+import {UseCrossVmBridgeNftToEvmCard} from "./hook-cards/use-cross-vm-bridge-nft-to-evm-card"
 import {UseCrossVmBridgeTokenFromEvmCard} from "./hook-cards/use-cross-vm-bridge-token-from-evm-card"
 import {UseCrossVmBridgeTokenToEvmCard} from "./hook-cards/use-cross-vm-bridge-token-to-evm-card"
 import {UseFlowNftMetadataCard} from "./hook-cards/use-flow-nft-metadata-card"
@@ -88,6 +90,8 @@ export function ContentSection() {
             <UseFlowEventsCard />
             <UseFlowRevertibleRandomCard />
             <UseFlowTransactionStatusCard />
+            <UseCrossVmBridgeNftFromEvmCard />
+            <UseCrossVmBridgeNftToEvmCard />
             <UseCrossVmBridgeTokenFromEvmCard />
             <UseCrossVmBridgeTokenToEvmCard />
             <UseFlowNftMetadataCard />
