@@ -73,12 +73,22 @@ export function UseFlowScheduledTransactionCard() {
   const [result, setResult] = useState<any>(null)
   const [error, setError] = useState<string | null>(null)
 
+  // Helper function to normalize address (add 0x prefix if missing)
+  const normalizeAddress = (address: string): string => {
+    if (!address) return address
+    const trimmed = address.trim()
+    return trimmed.startsWith("0x") ? trimmed : `0x${trimmed}`
+  }
+
   // Query hooks - reactive to input changes
+  const normalizedAccountAddress = accountAddress
+    ? normalizeAddress(accountAddress)
+    : user?.addr
   const listQuery = useFlowScheduledTransactionList({
-    account: accountAddress || user?.addr,
+    account: normalizedAccountAddress,
     includeHandlerData,
     query: {
-      enabled: activeTab === "list" && Boolean(accountAddress || user?.addr),
+      enabled: activeTab === "list" && Boolean(normalizedAccountAddress),
     },
   })
 
@@ -105,7 +115,7 @@ export function UseFlowScheduledTransactionCard() {
     setError(null)
     setResult(null)
 
-    if (!accountAddress && !user?.addr) {
+    if (!normalizedAccountAddress) {
       setError("Please connect your wallet or enter an account address")
       return
     }
@@ -113,7 +123,7 @@ export function UseFlowScheduledTransactionCard() {
     // Results will automatically update via listQuery
     if (listQuery.data) {
       setResult({
-        account: accountAddress || user?.addr,
+        account: normalizedAccountAddress,
         count: listQuery.data.length,
         transactions: listQuery.data,
       })
@@ -334,11 +344,9 @@ export function UseFlowScheduledTransactionCard() {
             <div className="flex gap-3">
               <button
                 onClick={handleList}
-                disabled={
-                  listQuery.isLoading || (!accountAddress && !user?.addr)
-                }
+                disabled={listQuery.isLoading || !normalizedAccountAddress}
                 className={`px-6 py-3 rounded-lg font-medium transition-all duration-200 ${
-                listQuery.isLoading || (!accountAddress && !user?.addr)
+                listQuery.isLoading || !normalizedAccountAddress
                     ? "bg-gray-300 text-gray-500 cursor-not-allowed"
                     : "bg-flow-primary text-black hover:bg-flow-primary/80"
                 }`}
@@ -526,7 +534,7 @@ export function UseFlowScheduledTransactionCard() {
         {activeTab === "list" && listQuery.data && !result && (
           <ResultsSection
             data={{
-              account: accountAddress || user?.addr,
+              account: normalizedAccountAddress,
               count: listQuery.data.length,
               transactions: listQuery.data.map(formatTransactionInfo),
             }}
