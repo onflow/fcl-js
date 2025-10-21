@@ -24,6 +24,9 @@ export const CONTRACT_ADDRESSES: Record<string, Record<any, string>> = {
   ExampleNFT: {
     testnet: "0x012e4d204a60ac6f",
   },
+  ClickToken: {
+    testnet: "0xdfc20aee650fcbdf",
+  },
   FungibleToken: {
     local: "0xee82856bf20e2aa6",
     emulator: "0xee82856bf20e2aa6",

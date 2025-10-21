@@ -11,32 +11,36 @@ import {encodeCalls, EvmBatchCall} from "./useCrossVmBatchTransaction"
 import {CONTRACT_ADDRESSES} from "../constants"
 import {useFlowClient} from "./useFlowClient"
 
-export interface UseCrossVmSpendTokenArgs {
+export interface UseCrossVmBridgeTokenToEvmArgs {
   mutation?: Omit<
-    UseMutationOptions<string, Error, UseCrossVmSpendTokenMutateArgs>,
+    UseMutationOptions<string, Error, UseCrossVmBridgeTokenToEvmMutateArgs>,
     "mutationFn"
   >
   flowClient?: ReturnType<typeof useFlowClient>
 }
 
-export interface UseCrossVmSpendTokenMutateArgs {
+export interface UseCrossVmBridgeTokenToEvmMutateArgs {
   vaultIdentifier: string
   amount: string
   calls: EvmBatchCall[]
 }
 
-export interface UseCrossVmSpendTokenResult
+export interface UseCrossVmBridgeTokenToEvmResult
   extends Omit<UseMutationResult<string, Error>, "mutate" | "mutateAsync"> {
-  spendToken: UseMutateFunction<string, Error, UseCrossVmSpendTokenMutateArgs>
-  spendTokenAsync: UseMutateAsyncFunction<
+  crossVmBridgeTokenToEvm: UseMutateFunction<
     string,
     Error,
-    UseCrossVmSpendTokenMutateArgs
+    UseCrossVmBridgeTokenToEvmMutateArgs
+  >
+  crossVmBridgeTokenToEvmAsync: UseMutateAsyncFunction<
+    string,
+    Error,
+    UseCrossVmBridgeTokenToEvmMutateArgs
   >
 }
 
 // Takes a chain id and returns the cadence tx with addresses set
-export const getCrossVmSpendTokenTransaction = (chainId: string) => {
+export const getCrossVmBridgeTokenToEvmTransaction = (chainId: string) => {
   const contractAddresses =
     CONTRACT_ADDRESSES[chainId as keyof typeof CONTRACT_ADDRESSES]
   if (!contractAddresses) {
@@ -207,18 +211,15 @@ transaction(
  * Hook to send a cross-VM FT spend transaction. This function will
  * bundle multiple EVM calls into one atomic Cadence transaction and return the transaction ID.
  *
- * @deprecated This hook has been renamed to `useCrossVmBridgeTokenToEvm` for better clarity.
- * Please use `useCrossVmBridgeTokenToEvm` instead. This hook will be removed in a future version.
- *
  * @returns The mutation object used to send the transaction.
  */
-export function useCrossVmSpendToken({
+export function useCrossVmBridgeTokenToEvm({
   mutation: mutationOptions = {},
   flowClient,
-}: UseCrossVmSpendTokenArgs = {}): UseCrossVmSpendTokenResult {
+}: UseCrossVmBridgeTokenToEvmArgs = {}): UseCrossVmBridgeTokenToEvmResult {
   const chainId = useFlowChainId()
   const cadenceTx = chainId.data
-    ? getCrossVmSpendTokenTransaction(chainId.data)
+    ? getCrossVmBridgeTokenToEvmTransaction(chainId.data)
     : null
 
   const queryClient = useFlowQueryClient()
@@ -229,7 +230,7 @@ export function useCrossVmSpendToken({
         vaultIdentifier,
         amount,
         calls,
-      }: UseCrossVmSpendTokenMutateArgs) => {
+      }: UseCrossVmBridgeTokenToEvmMutateArgs) => {
         if (!cadenceTx) {
           throw new Error("No current chain found")
         }
@@ -268,11 +269,15 @@ export function useCrossVmSpendToken({
     queryClient
   )
 
-  const {mutate: spendToken, mutateAsync: spendTokenAsync, ...rest} = mutation
+  const {
+    mutate: crossVmBridgeTokenToEvm,
+    mutateAsync: crossVmBridgeTokenToEvmAsync,
+    ...rest
+  } = mutation
 
   return {
-    spendToken,
-    spendTokenAsync,
+    crossVmBridgeTokenToEvm,
+    crossVmBridgeTokenToEvmAsync,
     ...rest,
   }
 }

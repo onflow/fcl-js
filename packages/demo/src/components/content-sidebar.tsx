@@ -123,6 +123,18 @@ const sidebarItems: SidebarItem[] = [
     description: "Bridge NFTs from Cadence to EVM",
   },
   {
+    id: "usecrossvmbridgetokenfromevm",
+    label: "Bridge Token from EVM",
+    category: "hooks",
+    description: "Bridge tokens from EVM to Cadence",
+  },
+  {
+    id: "usecrossvmbridgetokentoevm",
+    label: "Bridge Token to EVM",
+    category: "hooks",
+    description: "Bridge tokens from Cadence to EVM",
+  },
+  {
     id: "useflownftmetadata",
     label: "NFT Metadata",
     category: "hooks",
