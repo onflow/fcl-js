@@ -1,5 +1,26 @@
 # @onflow/typedefs
 
+## 1.8.0
+
+### Minor Changes
+
+- [#2638](https://github.com/onflow/fcl-js/pull/2638) [`d9d994cdaca8fe82cce0a3bcf48b5b4f7d3dc960`](https://github.com/onflow/fcl-js/commit/d9d994cdaca8fe82cce0a3bcf48b5b4f7d3dc960) Thanks [@jribbink](https://github.com/jribbink)! - Adds support for signature extension data introduced by [FLIP 264](https://github.com/onflow/flips/blob/main/protocol/20250203-webauthn-credential-support.md).
+
+  Users can now include signature extension data in their transactions by returning an additional `extensionData` property in their signing functions.
+
+  ```typescript
+  const authz = (ix: Interaction) => {
+    return {
+      addr: "0x1234567890abcdef",
+      keyId: 0,
+      signingFunction: (signable: Signable) => ({
+        signature: "1234",
+        extensionData: "1234",
+      }),
+    }
+  }
+  ```
+
 ## 1.7.1
 
 ### Patch Changes

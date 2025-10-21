@@ -1,5 +1,13 @@
 # @onflow/fcl-react-native
 
+## 1.13.3
+
+### Patch Changes
+
+- Updated dependencies [[`ef3fb70d694e83bc19c2bd6b6d6ea44b6df6ac23`](https://github.com/onflow/fcl-js/commit/ef3fb70d694e83bc19c2bd6b6d6ea44b6df6ac23), [`81d21f98ab2838885ad32217de42b85481f5595c`](https://github.com/onflow/fcl-js/commit/81d21f98ab2838885ad32217de42b85481f5595c), [`d9d994cdaca8fe82cce0a3bcf48b5b4f7d3dc960`](https://github.com/onflow/fcl-js/commit/d9d994cdaca8fe82cce0a3bcf48b5b4f7d3dc960)]:
+  - @onflow/sdk@1.11.0
+  - @onflow/fcl-core@1.22.0
+
 ## 1.13.2
 
 ### Patch Changes
