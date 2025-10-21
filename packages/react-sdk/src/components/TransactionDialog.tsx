@@ -9,6 +9,7 @@ import {useFlowTransactionStatus} from "../hooks/useFlowTransactionStatus"
 interface TransactionDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
+  /** The transaction ID (256-bit hash as hex string) or scheduled transaction ID (UInt64 as decimal string) to monitor */
   txId?: string
   onSuccess?: () => void
   pendingTitle?: string
