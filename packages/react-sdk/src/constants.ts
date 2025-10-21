@@ -26,9 +26,8 @@ export const CONTRACT_ADDRESSES = {
     FlowEVMBridgeUtils: "0x1e4aa0b87d10b141",
     FlowEVMBridgeConfig: "0x1e4aa0b87d10b141",
     FungibleTokenMetadataViews: "0xf233dcee88fe0abe",
-    // TODO: Update with mainnet addresses
-    FlowTransactionScheduler: "0x0000000000000000",
-    FlowTransactionSchedulerUtils: "0x0000000000000000",
+    FlowTransactionScheduler: "0xe467b9dd11fa00df",
+    FlowTransactionSchedulerUtils: "0xe467b9dd11fa00df",
   },
   local: {
     EVM: "0xf8d6e0586b0a20c7",
