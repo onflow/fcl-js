@@ -1,9 +1,13 @@
 name: Promote playground on tag
 
 on:
-  push:
-    tags:
-      - "@onflow/**"
+  # Automatically trigger after Release workflow completes
+  workflow_run:
+    workflows: ["Release"]
+    types:
+      - completed
+  # Optional: Allow manual triggering (will auto-detect latest tag)
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -15,6 +19,8 @@ concurrency:
 jobs:
   promote:
     runs-on: ubuntu-latest
+    # Only run if Release workflow succeeded (or if manually triggered)
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
     steps:
       - name: Checkout with full history
         uses: actions/checkout@v4
@@ -26,8 +32,9 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          TAG="${GITHUB_REF_NAME:-${GITHUB_REF##*/}}"
           git fetch --tags
+          # Get the latest @onflow/react-sdk tag (used by playground)
+          TAG=$(git tag -l "@onflow/react-sdk@*" --sort=-version:refname | head -n 1)
           git show --no-patch --pretty=fuller "$TAG"
 
           # Create/update branch at the tag commit and push
