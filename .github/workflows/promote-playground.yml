@@ -44,8 +44,11 @@ jobs:
           # Check if this is a manual trigger (skip time check for manual runs)
           if [ "${{ github.event_name }}" != "workflow_dispatch" ]; then
             echo "Checking if a new tag was created recently..."
-            # Get the timestamp of the latest stable react-sdk tag
-            LATEST_TAG_TIME=$(git log --tags="@onflow/react-sdk@*" --simplify-by-decoration --pretty=format:'%ct' | head -n 1)
+            # Get the latest stable tag first (excluding alpha/beta/rc)
+            LATEST_STABLE_TAG=$(git tag -l "@onflow/react-sdk@*" --sort=-version:refname | grep -v -E '(alpha|beta|rc)' | head -n 1)
+
+            # Get the timestamp of that specific stable tag
+            LATEST_TAG_TIME=$(git log -1 --format='%ct' "$LATEST_STABLE_TAG")
             CURRENT_TIME=$(date +%s)
             TIME_DIFF=$((CURRENT_TIME - LATEST_TAG_TIME))
 
