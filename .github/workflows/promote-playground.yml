@@ -41,8 +41,29 @@ jobs:
           echo "Fetching tags..."
           git fetch --tags
 
-          # Get the latest @onflow/react-sdk tag (used by playground)
-          TAG=$(git tag -l "@onflow/react-sdk@*" --sort=-version:refname | head -n 1)
+          # Check if this is a manual trigger (skip time check for manual runs)
+          if [ "${{ github.event_name }}" != "workflow_dispatch" ]; then
+            echo "Checking if a new tag was created recently..."
+            # Get the latest stable tag first (excluding alpha/beta/rc)
+            LATEST_STABLE_TAG=$(git tag -l "@onflow/react-sdk@*" --sort=-version:refname | grep -v -E '(alpha|beta|rc)' | head -n 1)
+
+            # Get the timestamp of that specific stable tag
+            LATEST_TAG_TIME=$(git log -1 --format='%ct' "$LATEST_STABLE_TAG")
+            CURRENT_TIME=$(date +%s)
+            TIME_DIFF=$((CURRENT_TIME - LATEST_TAG_TIME))
+
+            if [ $TIME_DIFF -gt 3600 ]; then
+              echo "No new @onflow/react-sdk tag created within the last hour"
+              exit 0
+            fi
+
+            echo "New tag detected within the last hour, proceeding with promotion"
+          else
+            echo "Manual trigger detected, skipping time check"
+          fi
+
+          # Get the latest stable @onflow/react-sdk tag (excluding alpha/beta/rc versions)
+          TAG=$(git tag -l "@onflow/react-sdk@*" --sort=-version:refname | grep -v -E '(alpha|beta|rc)' | head -n 1)
 
           if [ -z "$TAG" ]; then
             echo "Error: No @onflow/react-sdk tag found"
