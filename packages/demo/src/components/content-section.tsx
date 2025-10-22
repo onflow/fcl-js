@@ -1,4 +1,5 @@
 import {PlusGrid, PlusGridRow} from "./ui/plus-grid"
+import {StarterBanner} from "./starter-banner"
 
 // Import hook cards
 import {UseFlowCurrentUserCard} from "./hook-cards/use-flow-current-user-card"
@@ -47,6 +48,8 @@ export function ContentSection() {
                 on Flow.
               </p>
             </div>
+
+            <StarterBanner />
 
             <InstallationCard />
           </div>
