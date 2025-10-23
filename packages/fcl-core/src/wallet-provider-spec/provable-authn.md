@@ -52,7 +52,7 @@ import {WalletUtils} from "@onflow/fcl"
 const message = WalletUtils.encodeAccountProof(
   appIdentifier, // A human readable string to identify your application during signing
   address,       // Flow address of the user authenticating
-  nonce,         // minimum 32-btye nonce
+  nonce,         // minimum 32-byte nonce
 )
 
 sign(privateKey, message)

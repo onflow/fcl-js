@@ -11,7 +11,7 @@
 
 **Personally sign data via FCL Compatible Wallets**
 
-**FCL** now incldues **`signUserMessage()`** which allows for the sending of unencrypted message data to a connected wallet provider or service to be signed with a user's private key. 
+**FCL** now includes **`signUserMessage()`** which allows for the sending of unencrypted message data to a connected wallet provider or service to be signed with a user's private key. 
 
 An application or service can verify a signature against a user's public key on the **Flow Blockchain**, providing proof a user controls the account's private key.   
 

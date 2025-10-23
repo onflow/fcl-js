@@ -117,10 +117,40 @@ const sidebarItems: SidebarItem[] = [
     description: "Track transaction status",
   },
   {
+    id: "usecrossvmbridgenftfromevm",
+    label: "Bridge NFT from EVM",
+    category: "hooks",
+    description: "Bridge NFTs from EVM to Cadence",
+  },
+  {
+    id: "usecrossvmbridgenfttoevm",
+    label: "Bridge NFT to EVM",
+    category: "hooks",
+    description: "Bridge NFTs from Cadence to EVM",
+  },
+  {
+    id: "usecrossvmbridgetokenfromevm",
+    label: "Bridge Token from EVM",
+    category: "hooks",
+    description: "Bridge tokens from EVM to Cadence",
+  },
+  {
+    id: "usecrossvmbridgetokentoevm",
+    label: "Bridge Token to EVM",
+    category: "hooks",
+    description: "Bridge tokens from Cadence to EVM",
+  },
+  {
     id: "useflownftmetadata",
     label: "NFT Metadata",
     category: "hooks",
     description: "Fetch NFT metadata and traits",
+  },
+  {
+    id: "useflowscheduledtransaction",
+    label: "Scheduled Transactions",
+    category: "hooks",
+    description: "Manage Scheduled Transactions",
   },
 
   // Advanced section

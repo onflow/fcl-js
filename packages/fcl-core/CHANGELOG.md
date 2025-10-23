@@ -1,5 +1,34 @@
 # @onflow/fcl
 
+## 1.22.0
+
+### Minor Changes
+
+- [#2638](https://github.com/onflow/fcl-js/pull/2638) [`d9d994cdaca8fe82cce0a3bcf48b5b4f7d3dc960`](https://github.com/onflow/fcl-js/commit/d9d994cdaca8fe82cce0a3bcf48b5b4f7d3dc960) Thanks [@jribbink](https://github.com/jribbink)! - Adds support for signature extension data introduced by [FLIP 264](https://github.com/onflow/flips/blob/main/protocol/20250203-webauthn-credential-support.md).
+
+  Users can now include signature extension data in their transactions by returning an additional `extensionData` property in their signing functions.
+
+  ```typescript
+  const authz = (ix: Interaction) => {
+    return {
+      addr: "0x1234567890abcdef",
+      keyId: 0,
+      signingFunction: (signable: Signable) => ({
+        signature: "1234",
+        extensionData: "1234",
+      }),
+    }
+  }
+  ```
+
+### Patch Changes
+
+- [#2655](https://github.com/onflow/fcl-js/pull/2655) [`81d21f98ab2838885ad32217de42b85481f5595c`](https://github.com/onflow/fcl-js/commit/81d21f98ab2838885ad32217de42b85481f5595c) Thanks [@chasefleming](https://github.com/chasefleming)! - Bugfix: add `discoveryAuthnInclude` in FCL core configStore
+
+- Updated dependencies [[`ef3fb70d694e83bc19c2bd6b6d6ea44b6df6ac23`](https://github.com/onflow/fcl-js/commit/ef3fb70d694e83bc19c2bd6b6d6ea44b6df6ac23), [`d9d994cdaca8fe82cce0a3bcf48b5b4f7d3dc960`](https://github.com/onflow/fcl-js/commit/d9d994cdaca8fe82cce0a3bcf48b5b4f7d3dc960)]:
+  - @onflow/sdk@1.11.0
+  - @onflow/transport-http@1.14.0
+
 ## 1.21.2
 
 ### Patch Changes

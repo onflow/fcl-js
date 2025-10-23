@@ -11,6 +11,8 @@ export const CONTRACT_ADDRESSES = {
     FlowEVMBridgeUtils: "0xdfc20aee650fcbdf",
     FlowEVMBridgeConfig: "0xdfc20aee650fcbdf",
     FungibleTokenMetadataViews: "0x9a0766d93b6608b7",
+    FlowTransactionScheduler: "0x8c5303eaa26202d6",
+    FlowTransactionSchedulerUtils: "0x8c5303eaa26202d6",
   },
   mainnet: {
     EVM: "0xe467b9dd11fa00df",
@@ -24,6 +26,8 @@ export const CONTRACT_ADDRESSES = {
     FlowEVMBridgeUtils: "0x1e4aa0b87d10b141",
     FlowEVMBridgeConfig: "0x1e4aa0b87d10b141",
     FungibleTokenMetadataViews: "0xf233dcee88fe0abe",
+    FlowTransactionScheduler: "0xe467b9dd11fa00df",
+    FlowTransactionSchedulerUtils: "0xe467b9dd11fa00df",
   },
   local: {
     EVM: "0xf8d6e0586b0a20c7",
@@ -37,6 +41,8 @@ export const CONTRACT_ADDRESSES = {
     FlowEVMBridgeUtils: "0xf8d6e0586b0a20c7",
     FlowEVMBridgeConfig: "0xf8d6e0586b0a20c7",
     FungibleTokenMetadataViews: "0xee82856bf20e2aa6",
+    FlowTransactionScheduler: "0xf8d6e0586b0a20c7",
+    FlowTransactionSchedulerUtils: "0xf8d6e0586b0a20c7",
   },
 }
 

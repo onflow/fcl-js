@@ -1,9 +1,17 @@
-name: Promote playground on tag
+name: Promote playground on release
 
 on:
-  push:
-    tags:
-      - "@onflow/**"
+  # Automatically trigger after Release workflow completes on master
+  workflow_run:
+    workflows: ["Release"]
+    types:
+      - completed
+    branches:
+      - master
+  # Optional: Allow manual triggering (will auto-detect latest tag)
+  workflow_dispatch:
+    branches:
+      - master
 
 permissions:
   contents: write
@@ -15,6 +23,9 @@ concurrency:
 jobs:
   promote:
     runs-on: ubuntu-latest
+    # Only run if Release workflow succeeded (or if manually triggered)
+    # Note: workflow_run already filters for master branch, so we only need to check success
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
     steps:
       - name: Checkout with full history
         uses: actions/checkout@v4
@@ -23,13 +34,48 @@ jobs:
 
       - name: Move playground branch to tag
         run: |
+          echo "Setting up git configuration..."
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          TAG="${GITHUB_REF_NAME:-${GITHUB_REF##*/}}"
+          echo "Fetching tags..."
           git fetch --tags
+
+          # Check if this is a manual trigger (skip time check for manual runs)
+          if [ "${{ github.event_name }}" != "workflow_dispatch" ]; then
+            echo "Checking if a new tag was created recently..."
+            # Get the latest stable tag first (excluding alpha/beta/rc)
+            LATEST_STABLE_TAG=$(git tag -l "@onflow/react-sdk@*" --sort=-version:refname | grep -v -E '(alpha|beta|rc)' | head -n 1)
+
+            # Get the timestamp of that specific stable tag
+            LATEST_TAG_TIME=$(git log -1 --format='%ct' "$LATEST_STABLE_TAG")
+            CURRENT_TIME=$(date +%s)
+            TIME_DIFF=$((CURRENT_TIME - LATEST_TAG_TIME))
+
+            if [ $TIME_DIFF -gt 3600 ]; then
+              echo "No new @onflow/react-sdk tag created within the last hour"
+              exit 0
+            fi
+
+            echo "New tag detected within the last hour, proceeding with promotion"
+          else
+            echo "Manual trigger detected, skipping time check"
+          fi
+
+          # Get the latest stable @onflow/react-sdk tag (excluding alpha/beta/rc versions)
+          TAG=$(git tag -l "@onflow/react-sdk@*" --sort=-version:refname | grep -v -E '(alpha|beta|rc)' | head -n 1)
+
+          if [ -z "$TAG" ]; then
+            echo "Error: No @onflow/react-sdk tag found"
+            exit 1
+          fi
+
+          echo "Found latest tag: $TAG"
           git show --no-patch --pretty=fuller "$TAG"
 
           # Create/update branch at the tag commit and push
+          echo "Updating playground branch to point to $TAG..."
           git branch -f playground "$TAG"
           git push --force-with-lease origin playground
+
+          echo "Successfully updated playground branch to $TAG"
