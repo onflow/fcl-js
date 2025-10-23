@@ -1,0 +1,44 @@
+# This workflow is used to run CodeQL analysis on the codebase.
+# If a code scanning alert is found, it will fail the PR,
+# and prompt the user to fix the issue in a comment.
+
+name: "CodeQL Analysis"
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+  schedule:
+    - cron: '0 0 * * *'
+jobs:
+  analyze-code:
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+      pull-requests: write
+    strategy:
+      matrix:
+        languages: [javascript-typescript]
+      fail-fast: false
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: ${{ matrix.languages }}
+          queries: security-extended
+      
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@v3
+      
+      - name: Analyze
+        uses: github/codeql-action/analyze@v4
+        with:
+          category: "/language:${{ matrix.languages}}"
