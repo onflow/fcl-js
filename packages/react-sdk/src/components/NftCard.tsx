@@ -8,6 +8,7 @@ import {ImageIcon} from "../icons/ImageIcon"
 import {ExternalLinkIcon} from "../icons/ExternalLink"
 import {AlertCircleIcon} from "../icons/AlertCircleIcon"
 import {LoaderCircleIcon} from "../icons/LoaderCircleIcon"
+import {twMerge} from "tailwind-merge"
 
 interface NftCardProps {
   accountAddress: string
@@ -15,6 +16,8 @@ interface NftCardProps {
   publicPathIdentifier: string
   showTraits?: boolean
   showExtra?: boolean
+  className?: string
+  style?: React.CSSProperties
 }
 
 export const NftCard: React.FC<NftCardProps> = ({
@@ -23,6 +26,8 @@ export const NftCard: React.FC<NftCardProps> = ({
   publicPathIdentifier,
   showTraits = false,
   showExtra = false,
+  className,
+  style,
 }) => {
   const {
     data: nft,
@@ -45,9 +50,13 @@ export const NftCard: React.FC<NftCardProps> = ({
   return (
     <StyleWrapper>
       <div
-        className="flow-w-full flow-max-w-sm flow-rounded-xl flow-bg-white dark:flow-bg-slate-900
-          flow-overflow-hidden flow-shadow-lg hover:flow-shadow-xl flow-transition-shadow
-          flow-duration-300 flow-border flow-border-slate-200 dark:flow-border-slate-800"
+        className={twMerge(
+          "flow-w-full flow-rounded-xl flow-bg-white dark:flow-bg-slate-900",
+          "flow-overflow-hidden flow-shadow-lg hover:flow-shadow-xl flow-transition-shadow",
+          "flow-duration-300 flow-border flow-border-slate-200 dark:flow-border-slate-800",
+          className
+        )}
+        style={style}
       >
         <div
           className="flow-relative flow-w-full flow-aspect-square flow-bg-slate-100

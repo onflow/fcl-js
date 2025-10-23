@@ -46,7 +46,7 @@ const sidebarItems: SidebarItem[] = [
     id: "nftcard",
     label: "NFT Card",
     category: "components",
-    description: "NFT display card component",
+    description: "NFT card component",
   },
 
   // Hooks section

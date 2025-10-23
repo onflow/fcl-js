@@ -10,6 +10,8 @@ const IMPLEMENTATION_CODE = `import { NftCard } from "@onflow/react-sdk"
   accountAddress="0x123456789abcdef"
   tokenId="42"
   publicPathIdentifier="exampleNFTCollection"
+  showTraits={true}
+  showExtra={true}
 />`
 
 const PROPS: PropDefinition[] = [
@@ -29,8 +31,35 @@ const PROPS: PropDefinition[] = [
     name: "publicPathIdentifier",
     type: "string",
     required: true,
+    description: "The public path identifier for the NFT collection",
+  },
+  {
+    name: "showTraits",
+    type: "boolean",
+    required: false,
     description:
-      "The public path identifier for the NFT collection (e.g., 'exampleNFTCollection')",
+      "Display NFT traits and attributes when available (default: false)",
+  },
+  {
+    name: "showExtra",
+    type: "boolean",
+    required: false,
+    description:
+      "Show additional metadata like serial number, rarity, and external links (default: false)",
+  },
+  {
+    name: "className",
+    type: "string",
+    required: false,
+    description:
+      "Additional CSS classes to apply to the card container for custom styling",
+  },
+  {
+    name: "style",
+    type: "React.CSSProperties",
+    required: false,
+    description:
+      "Inline styles to apply to the card container for custom styling",
   },
 ]
 
@@ -60,7 +89,7 @@ export function DemoNftCard() {
     <DemoCard
       id="nftcard"
       title="<NftCard />"
-      description="A ready-to-use NFT display component that fetches and renders NFT metadata including image, name, description, traits, and external links."
+      description="A card component that fetches and renders NFT metadata including image, name, description, traits, and external links."
       code={IMPLEMENTATION_CODE}
       props={PROPS}
       docsUrl="https://developers.flow.com/build/tools/react-sdk/components#nftcard"
@@ -246,12 +275,14 @@ export function DemoNftCard() {
               </p>
             </div>
           ) : showNft && loadedAddress && loadedTokenId && loadedPublicPath ? (
-            <div className="flex justify-center">
-              <NftCard
-                accountAddress={loadedAddress}
-                tokenId={loadedTokenId}
-                publicPathIdentifier={loadedPublicPath}
-              />
+            <div className="flex justify-center items-start">
+              <div className="w-full max-w-sm">
+                <NftCard
+                  accountAddress={loadedAddress}
+                  tokenId={loadedTokenId}
+                  publicPathIdentifier={loadedPublicPath}
+                />
+              </div>
             </div>
           ) : (
             <div className="text-center py-8">
