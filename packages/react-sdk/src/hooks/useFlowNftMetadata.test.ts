@@ -63,7 +63,7 @@ describe("useFlowNftMetadata", () => {
           useFlowNftMetadata({
             accountAddress: "0x1234",
             tokenId: "123",
-            publicPathIdentifier: "exampleNFTCollection",
+            publicPathIdentifier: "examplenftcollection",
           }),
         {
           wrapper: FlowProvider,
@@ -111,7 +111,7 @@ describe("useFlowNftMetadata", () => {
           useFlowNftMetadata({
             accountAddress: "0x1234",
             tokenId: "999",
-            publicPathIdentifier: "exampleNFTCollection",
+            publicPathIdentifier: "examplenftcollection",
           }),
         {
           wrapper: FlowProvider,
@@ -139,7 +139,7 @@ describe("useFlowNftMetadata", () => {
           useFlowNftMetadata({
             accountAddress: "0x5678",
             tokenId: "123",
-            publicPathIdentifier: "exampleNFTCollection",
+            publicPathIdentifier: "examplenftcollection",
           }),
         {
           wrapper: FlowProvider,
@@ -184,7 +184,7 @@ describe("useFlowNftMetadata", () => {
           useFlowNftMetadata({
             accountAddress: "0x1234",
             tokenId: "123",
-            publicPathIdentifier: "exampleNFTCollection",
+            publicPathIdentifier: "examplenftcollection",
           }),
         {
           wrapper: FlowProvider,
@@ -223,7 +223,7 @@ describe("useFlowNftMetadata", () => {
           useFlowNftMetadata({
             accountAddress: "0x1234",
             tokenId: "123",
-            publicPathIdentifier: "exampleNFTCollection",
+            publicPathIdentifier: "examplenftcollection",
           }),
         {
           wrapper: FlowProvider,
