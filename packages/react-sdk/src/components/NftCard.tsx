@@ -8,6 +8,7 @@ import {ImageIcon} from "../icons/ImageIcon"
 import {ExternalLinkIcon} from "../icons/ExternalLink"
 import {AlertCircleIcon} from "../icons/AlertCircleIcon"
 import {LoaderCircleIcon} from "../icons/LoaderCircleIcon"
+import {DownIcon} from "../icons/DownIcon"
 import {twMerge} from "tailwind-merge"
 
 interface NftCardProps {
@@ -29,6 +30,8 @@ export const NftCard: React.FC<NftCardProps> = ({
   className,
   style,
 }) => {
+  const [showAllTraits, setShowAllTraits] = React.useState(false)
+
   const {
     data: nft,
     isLoading,
@@ -232,7 +235,7 @@ export const NftCard: React.FC<NftCardProps> = ({
                 </p>
                 <div className="flow-grid flow-grid-cols-2 flow-gap-2">
                   {Object.entries(nft.traits)
-                    .slice(0, 4)
+                    .slice(0, showAllTraits ? undefined : 4)
                     .map(([key, value]) => (
                       <div
                         key={key}
@@ -254,12 +257,21 @@ export const NftCard: React.FC<NftCardProps> = ({
                       </div>
                     ))}
                   {Object.keys(nft.traits).length > 4 && (
-                    <div
-                      className="flow-col-span-2 flow-text-center flow-text-xs flow-text-slate-500
-                        dark:flow-text-slate-400 flow-font-medium flow-mt-1"
+                    <button
+                      onClick={() => setShowAllTraits(!showAllTraits)}
+                      className="flow-col-span-2 flow-flex flow-items-center flow-justify-center flow-mt-1
+                        flow-text-slate-500 dark:flow-text-slate-400 hover:flow-text-slate-700
+                        dark:hover:flow-text-slate-300 flow-transition-all flow-cursor-pointer
+                        flow-bg-transparent flow-border-none flow-px-2 flow-py-0.5"
+                      aria-label={
+                        showAllTraits ? "Show less traits" : "Show more traits"
+                      }
                     >
-                      +{Object.keys(nft.traits).length - 4} more traits
-                    </div>
+                      <DownIcon
+                        className={`flow-w-5 flow-h-5 flow-transition-transform flow-duration-200 ${
+                        showAllTraits ? "flow-rotate-180" : "" }`}
+                      />
+                    </button>
                   )}
                 </div>
               </div>
