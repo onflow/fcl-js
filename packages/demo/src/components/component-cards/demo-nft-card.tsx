@@ -32,12 +32,6 @@ const PROPS: PropDefinition[] = [
     description:
       "The public path identifier for the NFT collection (e.g., 'exampleNFTCollection')",
   },
-  {
-    name: "className",
-    type: "string",
-    required: false,
-    description: "Additional CSS classes to apply to the card wrapper",
-  },
 ]
 
 export function DemoNftCard() {

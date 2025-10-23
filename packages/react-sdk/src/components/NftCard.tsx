@@ -12,7 +12,6 @@ interface NftCardProps {
   accountAddress: string
   tokenId: string | number
   publicPathIdentifier: string
-  className?: string
   showTraits?: boolean
   showExtra?: boolean
 }
@@ -21,7 +20,6 @@ export const NftCard: React.FC<NftCardProps> = ({
   accountAddress,
   tokenId,
   publicPathIdentifier,
-  className = "",
   showTraits = false,
   showExtra = false,
 }) => {
@@ -42,7 +40,7 @@ export const NftCard: React.FC<NftCardProps> = ({
 
   if (isLoading) {
     return (
-      <StyleWrapper className={className}>
+      <StyleWrapper>
         <div
           className="flow-w-full flow-max-w-sm flow-rounded-xl flow-bg-white dark:flow-bg-slate-900
             flow-overflow-hidden flow-shadow-lg flow-border flow-border-slate-200
@@ -67,7 +65,7 @@ export const NftCard: React.FC<NftCardProps> = ({
   const hasImage = !hasError && getThumbnailUrl(nft)
 
   return (
-    <StyleWrapper className={className}>
+    <StyleWrapper>
       <div
         className="flow-w-full flow-max-w-sm flow-rounded-xl flow-bg-white dark:flow-bg-slate-900
           flow-overflow-hidden flow-shadow-lg hover:flow-shadow-xl flow-transition-shadow
