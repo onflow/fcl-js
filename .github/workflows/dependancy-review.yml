@@ -5,15 +5,14 @@
 # and will also provide a comment on what to do next.
 
 # Public documentation: https://docs.github.com/en/code-security/supply-chain-security/understanding-your-software-supply-chain/about-dependency-review#dependency-review-enforcement
-name: 'Dependency review'
+name: "Dependency review"
 on:
   pull_request:
-    branches: [ "master" ]
-
+    branches: ["master"]
 
 permissions:
   contents: read
-  pull-requests: write  # Required for PR comments
+  pull-requests: write # Required for PR comments
 
 jobs:
   dependency-review:
@@ -21,9 +20,9 @@ jobs:
     outputs:
       vulnerable-changes: ${{ steps.review.outputs.vulnerable-changes }}
     steps:
-      - name: 'Checkout repository'
+      - name: "Checkout repository"
         uses: actions/checkout@v4
-      - name: 'Dependency Review'
+      - name: "Dependency Review"
         id: review
         uses: actions/dependency-review-action@v4
         with:
