@@ -7,6 +7,7 @@ import {StyleWrapper} from "./internal/StyleWrapper"
 import {ImageIcon} from "../icons/ImageIcon"
 import {ExternalLinkIcon} from "../icons/ExternalLink"
 import {AlertCircleIcon} from "../icons/AlertCircleIcon"
+import {LoaderCircleIcon} from "../icons/LoaderCircleIcon"
 
 interface NftCardProps {
   accountAddress: string
@@ -38,29 +39,6 @@ export const NftCard: React.FC<NftCardProps> = ({
     return nft.thumbnailUrl
   }
 
-  if (isLoading) {
-    return (
-      <StyleWrapper>
-        <div
-          className="flow-w-full flow-max-w-sm flow-rounded-xl flow-bg-white dark:flow-bg-slate-900
-            flow-overflow-hidden flow-shadow-lg flow-border flow-border-slate-200
-            dark:flow-border-slate-800"
-        >
-          <div className="flow-animate-pulse">
-            <div className="flow-bg-slate-200 dark:flow-bg-slate-800 flow-w-full flow-aspect-square"></div>
-            <div className="flow-p-6 flow-space-y-4">
-              <div className="flow-space-y-2">
-                <div className="flow-bg-slate-200 dark:flow-bg-slate-800 flow-h-6 flow-rounded flow-w-3/4"></div>
-                <div className="flow-bg-slate-200 dark:flow-bg-slate-800 flow-h-4 flow-rounded flow-w-1/2"></div>
-              </div>
-              <div className="flow-bg-slate-200 dark:flow-bg-slate-800 flow-h-10 flow-rounded"></div>
-            </div>
-          </div>
-        </div>
-      </StyleWrapper>
-    )
-  }
-
   const hasError = error || !nft
   const hasImage = !hasError && getThumbnailUrl(nft)
 
@@ -75,7 +53,14 @@ export const NftCard: React.FC<NftCardProps> = ({
           className="flow-relative flow-w-full flow-aspect-square flow-bg-slate-100
             dark:flow-bg-slate-800 flow-overflow-hidden"
         >
-          {hasError ? (
+          {isLoading ? (
+            <div className="flow-absolute flow-inset-0 flow-flex flow-items-center flow-justify-center">
+              <LoaderCircleIcon
+                className="flow-h-16 flow-w-16 flow-text-slate-400 dark:flow-text-slate-600
+                  flow-animate-spin"
+              />
+            </div>
+          ) : hasError ? (
             <div
               className="flow-absolute flow-inset-0 flow-flex flow-flex-col flow-items-center
                 flow-justify-center flow-gap-3"
@@ -100,36 +85,69 @@ export const NftCard: React.FC<NftCardProps> = ({
 
         <div className="flow-p-6 flow-space-y-4">
           <div className="flow-space-y-2">
-            <div className="flow-flex flow-items-start flow-justify-between flow-gap-4">
-              <div className="flow-flex-1 flow-min-w-0 flow-pr-2">
-                {!hasError && nft.collectionName && (
-                  <p
-                    className="flow-text-xs flow-text-slate-500 dark:flow-text-slate-400 flow-uppercase
-                      flow-tracking-wider flow-font-semibold flow-mb-1"
+            {isLoading ? (
+              <>
+                <div className="flow-flex flow-items-start flow-justify-between flow-gap-4">
+                  <div className="flow-flex-1 flow-min-w-0 flow-pr-2">
+                    <div
+                      className="flow-bg-slate-200 dark:flow-bg-slate-700 flow-h-3 flow-rounded flow-w-1/3
+                        flow-mb-2 flow-animate-pulse"
+                    ></div>
+                    <div
+                      className="flow-bg-slate-200 dark:flow-bg-slate-700 flow-h-6 flow-rounded flow-w-3/4
+                        flow-animate-pulse"
+                    ></div>
+                  </div>
+                  <div className="flow-flex-shrink-0 flow-self-start">
+                    <div
+                      className="flow-bg-slate-200 dark:flow-bg-slate-700 flow-h-5 flow-rounded flow-w-12
+                        flow-animate-pulse"
+                    ></div>
+                  </div>
+                </div>
+                <div
+                  className="flow-bg-slate-200 dark:flow-bg-slate-700 flow-h-4 flow-rounded flow-w-full
+                    flow-animate-pulse"
+                ></div>
+                <div
+                  className="flow-bg-slate-200 dark:flow-bg-slate-700 flow-h-4 flow-rounded flow-w-5/6
+                    flow-animate-pulse"
+                ></div>
+              </>
+            ) : (
+              <div className="flow-flex flow-items-start flow-justify-between flow-gap-4">
+                <div className="flow-flex-1 flow-min-w-0 flow-pr-2">
+                  {!hasError && nft.collectionName && (
+                    <p
+                      className="flow-text-xs flow-text-slate-500 dark:flow-text-slate-400 flow-uppercase
+                        flow-tracking-wider flow-font-semibold flow-mb-1"
+                    >
+                      {nft.collectionName}
+                    </p>
+                  )}
+
+                  <h3
+                    className="flow-text-xl flow-font-bold flow-text-slate-900 dark:flow-text-white
+                      flow-truncate flow-leading-tight"
                   >
-                    {nft.collectionName}
-                  </p>
-                )}
+                    {hasError
+                      ? `NFT #${tokenId}`
+                      : nft.name || `NFT #${tokenId}`}
+                  </h3>
+                </div>
 
-                <h3
-                  className="flow-text-xl flow-font-bold flow-text-slate-900 dark:flow-text-white
-                    flow-truncate flow-leading-tight"
-                >
-                  {hasError ? `NFT #${tokenId}` : nft.name || `NFT #${tokenId}`}
-                </h3>
+                <div className="flow-flex-shrink-0 flow-self-start">
+                  <span
+                    className="flow-text-sm flow-font-medium flow-text-slate-400 dark:flow-text-slate-500
+                      flow-whitespace-nowrap"
+                  >
+                    #{tokenId}
+                  </span>
+                </div>
               </div>
+            )}
 
-              <div className="flow-flex-shrink-0 flow-self-start">
-                <span
-                  className="flow-text-sm flow-font-medium flow-text-slate-400 dark:flow-text-slate-500
-                    flow-whitespace-nowrap"
-                >
-                  #{tokenId}
-                </span>
-              </div>
-            </div>
-
-            {!hasError && nft.description && (
+            {!isLoading && !hasError && nft.description && (
               <p
                 className="flow-text-sm flow-text-slate-600 dark:flow-text-slate-400 flow-line-clamp-2
                   flow-leading-relaxed"
@@ -138,7 +156,7 @@ export const NftCard: React.FC<NftCardProps> = ({
               </p>
             )}
 
-            {hasError && (
+            {!isLoading && hasError && (
               <p className="flow-text-sm flow-text-slate-500 dark:flow-text-slate-500">
                 Unable to load NFT metadata
               </p>
