@@ -42,6 +42,12 @@ const sidebarItems: SidebarItem[] = [
     category: "components",
     description: "Transaction link component",
   },
+  {
+    id: "scheduledtransactionlist",
+    label: "Scheduled Transaction List",
+    category: "components",
+    description: "List of scheduled transactions",
+  },
 
   // Hooks section
   {

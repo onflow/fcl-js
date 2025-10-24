@@ -1,0 +1,384 @@
+import {
+  ScheduledTransactionList,
+  useFlowCurrentUser,
+  useFlowChainId,
+} from "@onflow/react-sdk"
+import {useState} from "react"
+import {useDarkMode} from "../flow-provider-wrapper"
+import {DemoCard, type PropDefinition} from "../ui/demo-card"
+import {PlusGridIcon} from "../ui/plus-grid"
+
+const IMPLEMENTATION_CODE = `import { ScheduledTransactionList, useFlowCurrentUser } from "@onflow/react-sdk"
+
+function MyComponent() {
+  const { user } = useFlowCurrentUser()
+
+  return (
+    <div style={{ height: "600px" }}>
+      <ScheduledTransactionList
+        accountAddress={user?.addr || ""}
+      />
+    </div>
+  )
+}`
+
+const PROPS: PropDefinition[] = [
+  {
+    name: "accountAddress",
+    type: "string",
+    required: true,
+    description: "The Flow account address to fetch scheduled transactions for",
+  },
+  {
+    name: "className",
+    type: "string",
+    required: false,
+    description: "Additional CSS classes to apply to the list container",
+  },
+  {
+    name: "style",
+    type: "React.CSSProperties",
+    required: false,
+    description: "Inline styles to apply to the list container",
+  },
+]
+
+export function ScheduledTransactionListDemo() {
+  const {darkMode} = useDarkMode()
+  const {user} = useFlowCurrentUser()
+  const {data: chainId, isLoading} = useFlowChainId()
+  const isEmulator = chainId === "emulator" || chainId === "local"
+  const [customAddress, setCustomAddress] = useState("")
+
+  const normalizeAddress = (address: string): string => {
+    if (!address) return ""
+    const trimmed = address.trim()
+    return trimmed.startsWith("0x") ? trimmed : `0x${trimmed}`
+  }
+
+  const displayAddress = customAddress
+    ? normalizeAddress(customAddress)
+    : user?.addr || ""
+
+  return (
+    <DemoCard
+      id="scheduledtransactionlist"
+      title="<ScheduledTransactionList />"
+      description="A scrollable list component that displays all scheduled transactions for an account with automatic refresh after cancellation."
+      code={IMPLEMENTATION_CODE}
+      props={PROPS}
+      docsUrl="https://developers.flow.com/build/tools/react-sdk/components#scheduledtransactionlist"
+    >
+      <div className="space-y-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div
+            className={`relative p-4 rounded-lg border ${
+              darkMode
+                ? "bg-gray-900/50 border-white/10"
+                : "bg-gray-50 border-black/5"
+              }`}
+          >
+            <PlusGridIcon placement="top left" className="absolute" />
+            <h4
+              className={`text-xs font-medium mb-1 ${darkMode ? "text-gray-500" : "text-gray-500"}`}
+            >
+              Auto-fetch
+            </h4>
+            <p className={`text-sm ${darkMode ? "text-white" : "text-black"}`}>
+              Automatic data fetching
+            </p>
+          </div>
+
+          <div
+            className={`relative p-4 rounded-lg border ${
+              darkMode
+                ? "bg-gray-900/50 border-white/10"
+                : "bg-gray-50 border-black/5"
+              }`}
+          >
+            <PlusGridIcon placement="top right" className="absolute" />
+            <h4
+              className={`text-xs font-medium mb-1 ${darkMode ? "text-gray-500" : "text-gray-500"}`}
+            >
+              Scrollable
+            </h4>
+            <p className={`text-sm ${darkMode ? "text-white" : "text-black"}`}>
+              Configurable max height
+            </p>
+          </div>
+
+          <div
+            className={`relative p-4 rounded-lg border ${
+              darkMode
+                ? "bg-gray-900/50 border-white/10"
+                : "bg-gray-50 border-black/5"
+              }`}
+          >
+            <PlusGridIcon placement="bottom left" className="absolute" />
+            <h4
+              className={`text-xs font-medium mb-1 ${darkMode ? "text-gray-500" : "text-gray-500"}`}
+            >
+              Auto-refresh
+            </h4>
+            <p className={`text-sm ${darkMode ? "text-white" : "text-black"}`}>
+              Refreshes after cancellation
+            </p>
+          </div>
+        </div>
+
+        <div className="space-y-4">
+          <div
+            className={`p-4 rounded-lg border ${
+              darkMode
+                ? "bg-gray-900/50 border-white/10"
+                : "bg-gray-50 border-black/5"
+              }`}
+          >
+            <label
+              className={`block text-sm font-medium mb-2 ${darkMode ? "text-gray-300" : "text-gray-700"}`}
+            >
+              Account Address
+            </label>
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={customAddress}
+                onChange={e => setCustomAddress(e.target.value)}
+                placeholder={user?.addr || "Enter Flow address (e.g., 0x...)"}
+                className={`flex-1 px-3 py-2 rounded-md border text-sm font-mono ${
+                  darkMode
+                    ? `bg-gray-800 border-gray-700 text-white placeholder-gray-500
+                      focus:border-blue-500`
+                    : `bg-white border-gray-300 text-gray-900 placeholder-gray-400
+                      focus:border-blue-500`
+                  } focus:outline-none focus:ring-1 focus:ring-blue-500`}
+              />
+              {customAddress && (
+                <button
+                  onClick={() => setCustomAddress("")}
+                  className={`px-3 py-2 rounded-md border text-sm ${
+                  darkMode
+                      ? "bg-gray-800 border-gray-700 text-gray-300 hover:bg-gray-700"
+                      : "bg-white border-gray-300 text-gray-700 hover:bg-gray-50"
+                  }`}
+                >
+                  Clear
+                </button>
+              )}
+            </div>
+            {user?.addr && !customAddress && (
+              <p
+                className={`text-xs mt-2 ${darkMode ? "text-gray-500" : "text-gray-500"}`}
+              >
+                Using connected wallet address: {user.addr}
+              </p>
+            )}
+          </div>
+        </div>
+
+        <div
+          className={`relative rounded-lg border overflow-hidden ${
+            darkMode
+              ? "bg-gray-900/50 border-white/10"
+              : "bg-gray-50 border-black/5"
+            }`}
+        >
+          {isLoading ? (
+            <div className="text-center py-8 px-6">
+              <div
+                className={`inline-block animate-spin rounded-full h-8 w-8 border-b-2 ${
+                  darkMode ? "border-white" : "border-black" }`}
+              ></div>
+              <p
+                className={`mt-4 text-sm ${darkMode ? "text-gray-400" : "text-gray-600"}`}
+              >
+                Loading chain information...
+              </p>
+            </div>
+          ) : isEmulator ? (
+            <div className="p-6">
+              <div
+                className={`text-center py-8 px-6 rounded-lg border ${
+                  darkMode
+                    ? "bg-orange-900/20 border-orange-800/50"
+                    : "bg-orange-50 border-orange-200"
+                  }`}
+              >
+                <svg
+                  className="w-8 h-8 mx-auto mb-2 text-orange-500"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                  />
+                </svg>
+                <p
+                  className={`text-sm font-medium ${darkMode ? "text-orange-400" : "text-orange-600"}`}
+                >
+                  Emulator Network Detected
+                </p>
+                <p
+                  className={`text-xs mt-1 ${darkMode ? "text-orange-400/70" : "text-orange-600/70"}`}
+                >
+                  Scheduled transactions require testnet or mainnet
+                </p>
+              </div>
+            </div>
+          ) : !displayAddress ? (
+            <div className="p-6">
+              <div
+                className={`text-center py-8 px-6 rounded-lg border ${
+                  darkMode
+                    ? "bg-blue-900/20 border-blue-800/50"
+                    : "bg-blue-50 border-blue-200"
+                  }`}
+              >
+                <svg
+                  className="w-8 h-8 mx-auto mb-2 text-blue-500"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                  />
+                </svg>
+                <p
+                  className={`text-sm font-medium ${darkMode ? "text-blue-400" : "text-blue-600"}`}
+                >
+                  Connect Wallet or Enter Address
+                </p>
+                <p
+                  className={`text-xs mt-1 ${darkMode ? "text-blue-400/70" : "text-blue-600/70"}`}
+                >
+                  Connect your wallet or enter a Flow address above to view
+                  scheduled transactions
+                </p>
+              </div>
+            </div>
+          ) : (
+            <div style={{height: "500px"}}>
+              <ScheduledTransactionList accountAddress={displayAddress} />
+            </div>
+          )}
+        </div>
+
+        <div
+          className={`-mx-6 h-px ${darkMode ? "bg-white/10" : "bg-black/10"}`}
+        />
+
+        <div className="space-y-4">
+          <div className="flex items-center space-x-3">
+            <div
+              className={`p-1.5 rounded ${darkMode ? "bg-gray-700" : "bg-gray-100"}`}
+            >
+              <svg
+                width="12"
+                height="12"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                className={darkMode ? "text-gray-400" : "text-gray-600"}
+              >
+                <path d="M12 2v20M2 12h20" />
+              </svg>
+            </div>
+            <h4
+              className={`text-sm font-semibold uppercase tracking-wider ${
+                darkMode ? "text-gray-200" : "text-gray-700" }`}
+            >
+              Key Features
+            </h4>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div
+              className={`p-3 rounded-lg border ${
+                darkMode
+                  ? "bg-gray-800/50 border-white/5"
+                  : "bg-white border-black/5"
+                }`}
+            >
+              <p
+                className={`text-xs font-medium mb-1 ${darkMode ? "text-gray-400" : "text-gray-500"}`}
+              >
+                Loading States
+              </p>
+              <p
+                className={`text-sm ${darkMode ? "text-white" : "text-black"}`}
+              >
+                Skeleton loaders while fetching data
+              </p>
+            </div>
+
+            <div
+              className={`p-3 rounded-lg border ${
+                darkMode
+                  ? "bg-gray-800/50 border-white/5"
+                  : "bg-white border-black/5"
+                }`}
+            >
+              <p
+                className={`text-xs font-medium mb-1 ${darkMode ? "text-gray-400" : "text-gray-500"}`}
+              >
+                Error Handling
+              </p>
+              <p
+                className={`text-sm ${darkMode ? "text-white" : "text-black"}`}
+              >
+                User-friendly error messages
+              </p>
+            </div>
+
+            <div
+              className={`p-3 rounded-lg border ${
+                darkMode
+                  ? "bg-gray-800/50 border-white/5"
+                  : "bg-white border-black/5"
+                }`}
+            >
+              <p
+                className={`text-xs font-medium mb-1 ${darkMode ? "text-gray-400" : "text-gray-500"}`}
+              >
+                Empty States
+              </p>
+              <p
+                className={`text-sm ${darkMode ? "text-white" : "text-black"}`}
+              >
+                Customizable empty state messages
+              </p>
+            </div>
+
+            <div
+              className={`p-3 rounded-lg border ${
+                darkMode
+                  ? "bg-gray-800/50 border-white/5"
+                  : "bg-white border-black/5"
+                }`}
+            >
+              <p
+                className={`text-xs font-medium mb-1 ${darkMode ? "text-gray-400" : "text-gray-500"}`}
+              >
+                Query Invalidation
+              </p>
+              <p
+                className={`text-sm ${darkMode ? "text-white" : "text-black"}`}
+              >
+                Auto-refresh after transaction cancellation
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </DemoCard>
+  )
+}
