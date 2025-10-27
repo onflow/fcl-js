@@ -11,14 +11,20 @@ import {StyleWrapper} from "./internal/StyleWrapper"
 import {UserIcon} from "../icons/UserIcon"
 import {CopyIcon} from "../icons/CopyIcon"
 import {LogOutIcon} from "../icons/LogOutIcon"
+import {ScheduledTransactionList} from "./ScheduledTransactionList"
 
 type BalanceType = keyof UseCrossVmTokenBalanceData
+
+export interface ConnectModalConfig {
+  showScheduledTransactions?: boolean
+}
 
 interface ConnectProps {
   variant?: ButtonProps["variant"]
   onConnect?: () => void
   onDisconnect?: () => void
   balanceType?: BalanceType
+  modalConfig?: ConnectModalConfig
 }
 
 export const Connect: React.FC<ConnectProps> = ({
@@ -26,11 +32,18 @@ export const Connect: React.FC<ConnectProps> = ({
   onConnect,
   onDisconnect,
   balanceType = "cadence",
+  modalConfig = {showScheduledTransactions: false},
 }) => {
   const {user, authenticate, unauthenticate} = useFlowCurrentUser()
   const [open, setOpen] = useState(false)
   const [copied, setCopied] = useState(false)
   const {data: chainId} = useFlowChainId()
+
+  const showScheduledTransactions =
+    modalConfig.showScheduledTransactions ?? true
+  const modalWidth = showScheduledTransactions
+    ? "flow-max-w-xl"
+    : "flow-max-w-md"
 
   const {data: balanceData} = useCrossVmTokenBalance({
     owner: user?.addr,
@@ -89,8 +102,12 @@ export const Connect: React.FC<ConnectProps> = ({
         </Button>
       </StyleWrapper>
       {user?.loggedIn && (
-        <Dialog isOpen={open} onClose={() => setOpen(false)}>
-          <div className="flow-flex flow-flex-col flow-items-center flow-gap-4 flow-min-w-[320px]">
+        <Dialog
+          isOpen={open}
+          onClose={() => setOpen(false)}
+          className={modalWidth}
+        >
+          <div className="flow-flex flow-flex-col flow-gap-4">
             <div className="flow-flex flow-flex-col flow-items-center">
               <div
                 className={`flow-w-16 flow-h-16 flow-rounded-full flow-bg-slate-100 flow-flex
@@ -133,6 +150,20 @@ export const Connect: React.FC<ConnectProps> = ({
                 Disconnect
               </Button>
             </div>
+
+            {showScheduledTransactions && (
+              <div className="flow-rounded-lg flow-bg-slate-50 dark:flow-bg-slate-900 flow-p-4 flow-mt-2">
+                <h3 className="flow-text-base flow-font-bold flow-text-slate-900 dark:flow-text-white flow-mb-3">
+                  Scheduled Transactions
+                </h3>
+                <div
+                  className="flow-overflow-y-auto"
+                  style={{maxHeight: "350px", minHeight: "150px"}}
+                >
+                  <ScheduledTransactionList accountAddress={user.addr || ""} />
+                </div>
+              </div>
+            )}
           </div>
         </Dialog>
       )}
