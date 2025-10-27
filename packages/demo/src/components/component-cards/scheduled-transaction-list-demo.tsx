@@ -177,7 +177,7 @@ export function ScheduledTransactionListDemo() {
         </div>
 
         <div
-          className={`relative rounded-lg border overflow-hidden ${
+          className={`relative rounded-lg border ${
             darkMode
               ? "bg-gray-900/50 border-white/10"
               : "bg-gray-50 border-black/5"
@@ -265,7 +265,7 @@ export function ScheduledTransactionListDemo() {
               </div>
             </div>
           ) : (
-            <div style={{height: "500px"}}>
+            <div style={{height: "500px", overflowY: "auto"}}>
               <ScheduledTransactionList accountAddress={displayAddress} />
             </div>
           )}
