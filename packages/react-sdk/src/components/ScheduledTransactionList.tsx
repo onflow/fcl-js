@@ -130,7 +130,10 @@ const ScheduledTransactionCard: React.FC<ScheduledTransactionCardProps> = ({
     >
       <div className="flow-flex flow-gap-4 flow-p-5">
         {metadata.thumbnail && (
-          <div className="flow-flex-shrink-0 flow-w-24 flow-h-24 flow-rounded-lg flow-bg-slate-100 dark:flow-bg-slate-800 flow-overflow-hidden">
+          <div
+            className="flow-flex-shrink-0 flow-w-24 flow-h-24 flow-rounded-lg flow-bg-slate-100
+              dark:flow-bg-slate-800 flow-overflow-hidden"
+          >
             <img
               src={metadata.thumbnail}
               alt={metadata.name || "Transaction"}
@@ -307,7 +310,10 @@ export const ScheduledTransactionList: React.FC<
                     flow-overflow-hidden flow-animate-pulse"
                 >
                   <div className="flow-flex flow-gap-4 flow-p-5">
-                    <div className="flow-flex-shrink-0 flow-w-24 flow-h-24 flow-rounded-lg flow-bg-slate-200 dark:flow-bg-slate-700"></div>
+                    <div
+                      className="flow-flex-shrink-0 flow-w-24 flow-h-24 flow-rounded-lg flow-bg-slate-200
+                        dark:flow-bg-slate-700"
+                    ></div>
                     <div className="flow-flex-1 flow-min-w-0 flow-space-y-3">
                       <div className="flow-flex flow-items-start flow-justify-between flow-gap-3">
                         <div className="flow-flex-1 flow-min-w-0 flow-space-y-2">

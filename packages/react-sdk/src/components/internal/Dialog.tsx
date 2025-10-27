@@ -41,8 +41,8 @@ export const Dialog: React.FC<DialogProps> = ({
       <div className="flow-fixed flow-inset-0 flow-flex flow-items-center flow-justify-center flow-p-4">
         <HeadlessDialog.Panel
           className={twMerge(
-            `flow-w-full flow-rounded-lg flow-bg-white dark:flow-bg-slate-800
-            flow-p-6 flow-shadow-xl flow-relative`,
+            `flow-w-full flow-rounded-lg flow-bg-white dark:flow-bg-slate-800 flow-p-6
+            flow-shadow-xl flow-relative`,
             className || "flow-max-w-md"
           )}
         >
