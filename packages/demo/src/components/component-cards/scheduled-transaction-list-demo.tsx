@@ -19,6 +19,7 @@ function MyComponent() {
       <ScheduledTransactionList
         address={user?.addr || ""}
         filterHandlerTypes={["A.123.Contract.Handler1"]}
+        cancelEnabled={true}
       />
     </div>
   )
@@ -37,6 +38,13 @@ const PROPS: PropDefinition[] = [
     required: false,
     description:
       "Array of handler type identifiers to filter. Only transactions matching these types will be displayed",
+  },
+  {
+    name: "cancelEnabled",
+    type: "boolean",
+    required: false,
+    description:
+      "Whether to show cancel buttons on transaction cards. Defaults to true",
   },
   {
     name: "className",

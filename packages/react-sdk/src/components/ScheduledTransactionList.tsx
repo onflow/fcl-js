@@ -12,7 +12,6 @@ import {AlertCircleIcon} from "../icons/AlertCircleIcon"
 import {LoaderCircleIcon} from "../icons/LoaderCircleIcon"
 import {TrashIcon} from "../icons/TrashIcon"
 import {FlowIcon} from "../icons/FlowIcon"
-import {Button} from "./internal/Button"
 import {twMerge} from "tailwind-merge"
 import {useFlowQueryClient} from "../provider/FlowQueryClient"
 
@@ -91,12 +90,14 @@ const extractMetadataDisplay = (handlerResolvedViews?: {
 
 interface ScheduledTransactionCardProps {
   transaction: ScheduledTransaction
+  cancelEnabled?: boolean
   onCancelSuccess?: () => void
   className?: string
 }
 
 const ScheduledTransactionCard: React.FC<ScheduledTransactionCardProps> = ({
   transaction,
+  cancelEnabled = true,
   onCancelSuccess,
   className,
 }) => {
@@ -104,7 +105,6 @@ const ScheduledTransactionCard: React.FC<ScheduledTransactionCardProps> = ({
     useFlowScheduledTransactionCancel()
 
   const metadata = extractMetadataDisplay(transaction.handlerResolvedViews)
-  const hasMetadata = !!(metadata.name || metadata.description)
 
   const handleCancel = async () => {
     try {
@@ -116,23 +116,24 @@ const ScheduledTransactionCard: React.FC<ScheduledTransactionCardProps> = ({
   }
 
   const canCancel =
-    transaction.status === ScheduledTransactionStatus.Pending ||
-    transaction.status === ScheduledTransactionStatus.Processing
+    cancelEnabled &&
+    (transaction.status === ScheduledTransactionStatus.Pending ||
+      transaction.status === ScheduledTransactionStatus.Processing)
 
   return (
     <div
       className={twMerge(
-        "flow-w-full flow-rounded-xl flow-bg-white dark:flow-bg-slate-900",
-        "flow-border flow-border-slate-200 dark:flow-border-slate-800",
-        "flow-shadow-lg hover:flow-shadow-xl flow-transition-shadow flow-duration-300",
-        "flow-overflow-hidden",
+        "flow-w-full flow-rounded-lg flow-relative flow-group",
+        "flow-bg-white dark:flow-bg-gray-900/50",
+        "flow-border flow-border-black/5 dark:flow-border-white/10",
+        "flow-transition-colors flow-duration-200",
         className
       )}
     >
-      <div className="flow-flex flow-gap-4 flow-p-5">
+      <div className="flow-flex flow-items-start flow-gap-3 flow-p-3">
         {metadata.thumbnail && (
           <div
-            className="flow-flex-shrink-0 flow-w-24 flow-h-24 flow-rounded-lg flow-bg-slate-100
+            className="flow-flex-shrink-0 flow-w-12 flow-h-12 flow-rounded flow-bg-slate-100
               dark:flow-bg-slate-800 flow-overflow-hidden"
           >
             <img
@@ -143,98 +144,48 @@ const ScheduledTransactionCard: React.FC<ScheduledTransactionCardProps> = ({
           </div>
         )}
 
-        <div className="flow-flex-1 flow-min-w-0 flow-space-y-3">
-          <div className="flow-flex flow-items-start flow-justify-between flow-gap-3">
-            <div className="flow-flex-1 flow-min-w-0">
-              {hasMetadata ? (
-                <div className="flow-space-y-1">
-                  <h3
-                    className="flow-text-lg flow-font-bold flow-text-slate-900 dark:flow-text-white
-                      flow-truncate"
-                  >
-                    {metadata.name}
-                  </h3>
-                  {metadata.description && (
-                    <p className="flow-text-sm flow-text-slate-600 dark:flow-text-slate-400 flow-line-clamp-2">
-                      {metadata.description}
-                    </p>
-                  )}
-                </div>
-              ) : (
-                <div className="flow-space-y-1">
-                  <div className="flow-flex flow-items-baseline flow-gap-2 flow-flex-wrap">
-                    <h3 className="flow-text-lg flow-font-bold flow-text-slate-900 dark:flow-text-white">
-                      Scheduled Transaction
-                    </h3>
-                    <span className="flow-text-sm flow-font-mono flow-text-slate-500 dark:flow-text-slate-400">
-                      #{transaction.id}
-                    </span>
-                  </div>
-                  <p className="flow-text-sm flow-text-slate-600 dark:flow-text-slate-400 flow-truncate">
-                    {transaction.handlerTypeIdentifier}
-                  </p>
-                </div>
-              )}
-            </div>
-
-            {canCancel && (
-              <Button
-                variant="outline"
-                onClick={handleCancel}
-                disabled={isPending}
-                className="flow-flex flow-items-center flow-gap-1.5 flow-px-3 flow-py-1.5 flow-text-sm
-                  hover:flow-bg-red-50 dark:hover:flow-bg-red-900/20 hover:flow-text-red-700
-                  dark:hover:flow-text-red-400 hover:flow-border-red-300
-                  dark:hover:flow-border-red-800 flow-transition-colors flow-flex-shrink-0"
-              >
-                {isPending ? (
-                  <>
-                    <LoaderCircleIcon className="flow-h-4 flow-w-4 flow-animate-spin" />
-                    <span className="flow-hidden sm:flow-inline">
-                      Cancelling...
-                    </span>
-                  </>
-                ) : (
-                  <>
-                    <TrashIcon className="flow-h-4 flow-w-4" />
-                    <span className="flow-hidden sm:flow-inline">Cancel</span>
-                  </>
-                )}
-              </Button>
-            )}
+        <div className="flow-flex-1 flow-min-w-0 flow-pr-8">
+          <div className="flow-flex flow-items-center flow-gap-2 flow-mb-0.5">
+            <h3
+              className="flow-text-sm flow-font-semibold flow-text-slate-900 dark:flow-text-white
+                flow-truncate"
+              title={metadata.name || "Scheduled Transaction"}
+            >
+              {metadata.name || "Scheduled Transaction"}
+            </h3>
+            <span
+              className="flow-text-xs flow-font-mono flow-text-slate-500 dark:flow-text-slate-400"
+              title={`Transaction ID: ${transaction.id}`}
+            >
+              #{transaction.id.slice(0, 8)}
+            </span>
           </div>
 
-          <div className="flow-flex flow-items-center flow-gap-3 flow-flex-wrap">
-            <div className="flow-flex flow-items-center flow-gap-2">
-              <span className="flow-text-xs flow-text-slate-500 dark:flow-text-slate-400 flow-font-medium">
-                Scheduled at:
-              </span>
-              <p className="flow-text-base flow-font-bold flow-text-slate-900 dark:flow-text-white">
-                {formatTimestamp(transaction.scheduledTimestamp)}
-              </p>
-            </div>
-            <div className="flow-flex flow-items-center flow-gap-1">
-              <span className="flow-text-xs flow-text-slate-500 dark:flow-text-slate-400 flow-font-medium">
-                Fee:
-              </span>
-              <FlowIcon className="flow-h-4 flow-w-4 flow-flex-shrink-0" />
-              <p className="flow-text-sm flow-font-semibold flow-text-slate-900 dark:flow-text-white">
-                {transaction.fees.formatted}
-              </p>
-            </div>
-          </div>
+          {metadata.description && (
+            <p
+              className="flow-text-xs flow-text-slate-500 dark:flow-text-slate-400 flow-truncate
+                flow-mb-2"
+              title={metadata.description}
+            >
+              {metadata.description}
+            </p>
+          )}
 
-          <div className="flow-flex flow-flex-wrap flow-gap-2 flow-items-center">
+          <div
+            className="flow-flex flow-items-center flow-gap-2.5 flow-text-[10px] flow-text-slate-600
+              dark:flow-text-slate-400 flow-mt-2"
+          >
             <div
               className={twMerge(
-                "flow-inline-flex flow-items-center flow-gap-1.5 flow-px-2.5 flow-py-1",
-                "flow-rounded-full flow-text-xs flow-font-semibold",
+                "flow-inline-flex flow-items-center flow-gap-1 flow-px-2 flow-py-0.5",
+                "flow-rounded-full flow-font-semibold",
                 getPriorityColor(transaction.priority)
               )}
+              title="Priority"
             >
               <span
                 className={twMerge(
-                  "flow-w-2 flow-h-2 flow-rounded-full",
+                  "flow-w-1.5 flow-h-1.5 flow-rounded-full",
                   transaction.priority === ScheduledTransactionPriority.High
                     ? "flow-bg-red-500 dark:flow-bg-red-400"
                     : transaction.priority ===
@@ -243,18 +194,85 @@ const ScheduledTransactionCard: React.FC<ScheduledTransactionCardProps> = ({
                       : "flow-bg-slate-400 dark:flow-bg-slate-500"
                 )}
               />
-              {getPriorityLabel(transaction.priority)} Priority
+              {getPriorityLabel(transaction.priority)}
             </div>
 
             <div
-              className="flow-inline-flex flow-items-center flow-gap-1 flow-px-2.5 flow-py-1
-                flow-rounded-full flow-bg-slate-100 dark:flow-bg-slate-800 flow-text-xs
-                flow-font-medium flow-text-slate-700 dark:flow-text-slate-300"
+              className="flow-flex flow-items-center flow-gap-1"
+              title="Scheduled time"
             >
-              Effort: {transaction.executionEffort.toString()}
+              <svg
+                className="flow-h-3.5 flow-w-3.5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+              <span className="flow-font-medium">
+                {formatTimestamp(transaction.scheduledTimestamp)}
+              </span>
+            </div>
+
+            <div
+              className="flow-flex flow-items-center flow-gap-1"
+              title="Execution effort"
+            >
+              <svg
+                className="flow-h-3.5 flow-w-3.5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M13 10V3L4 14h7v7l9-11h-7z"
+                />
+              </svg>
+              <span className="flow-font-medium">
+                {transaction.executionEffort.toString()}
+              </span>
+            </div>
+
+            <div className="flow-flex flow-items-center flow-gap-1" title="Fee">
+              <FlowIcon className="flow-h-3.5 flow-w-3.5" />
+              <span className="flow-font-medium">
+                {transaction.fees.formatted}
+              </span>
             </div>
           </div>
         </div>
+
+        {canCancel && (
+          <div
+            className="flow-absolute flow-top-1/2 flow-right-2 flow--translate-y-1/2 flow-opacity-0
+              group-hover:flow-opacity-100 flow-transition-opacity"
+            title={isPending ? "Cancelling..." : "Cancel transaction"}
+          >
+            <button
+              onClick={handleCancel}
+              disabled={isPending}
+              className="flow-h-6 flow-w-6 flow-p-0 flow-rounded-full flow-flex flow-items-center
+                flow-justify-center flow-bg-transparent flow-border flow-border-slate-200
+                dark:flow-border-slate-700 hover:flow-border-red-500
+                dark:hover:flow-border-red-500 flow-transition-colors disabled:flow-opacity-50
+                disabled:flow-cursor-not-allowed"
+            >
+              {isPending ? (
+                <LoaderCircleIcon className="flow-h-3 flow-w-3 flow-text-red-500 flow-animate-spin" />
+              ) : (
+                <TrashIcon className="flow-h-3 flow-w-3 flow-text-red-500" />
+              )}
+            </button>
+          </div>
+        )}
       </div>
     </div>
   )
@@ -263,6 +281,7 @@ const ScheduledTransactionCard: React.FC<ScheduledTransactionCardProps> = ({
 interface ScheduledTransactionListProps {
   address: string
   filterHandlerTypes?: string[]
+  cancelEnabled?: boolean
   className?: string
   style?: React.CSSProperties
   flowClient?: UseFlowScheduledTransactionListArgs["flowClient"]
@@ -270,7 +289,14 @@ interface ScheduledTransactionListProps {
 
 export const ScheduledTransactionList: React.FC<
   ScheduledTransactionListProps
-> = ({address, filterHandlerTypes, className, style, flowClient}) => {
+> = ({
+  address,
+  filterHandlerTypes,
+  cancelEnabled = true,
+  className,
+  style,
+  flowClient,
+}) => {
   const queryClient = useFlowQueryClient()
 
   const {
@@ -319,38 +345,24 @@ export const ScheduledTransactionList: React.FC<
       >
         <div className="flow-flex-1 flow-overflow-y-auto flow-px-2">
           {isLoading ? (
-            <div className="flow-space-y-4 flow-py-2">
+            <div className="flow-space-y-2 flow-py-2">
               {[1, 2, 3].map(i => (
                 <div
                   key={i}
-                  className="flow-w-full flow-rounded-xl flow-bg-white dark:flow-bg-slate-900 flow-border
-                    flow-border-slate-200 dark:flow-border-slate-800 flow-shadow-lg
-                    flow-overflow-hidden flow-animate-pulse"
+                  className="flow-w-full flow-rounded-lg flow-relative flow-bg-gray-50
+                    dark:flow-bg-gray-900/50 flow-border flow-border-black/5
+                    dark:flow-border-white/10 flow-animate-pulse"
                 >
-                  <div className="flow-flex flow-gap-4 flow-p-5">
+                  <div className="flow-flex flow-items-center flow-gap-3 flow-p-3">
                     <div
-                      className="flow-flex-shrink-0 flow-w-24 flow-h-24 flow-rounded-lg flow-bg-slate-200
+                      className="flow-flex-shrink-0 flow-w-12 flow-h-12 flow-rounded flow-bg-slate-200
                         dark:flow-bg-slate-700"
                     ></div>
-                    <div className="flow-flex-1 flow-min-w-0 flow-space-y-3">
-                      <div className="flow-flex flow-items-start flow-justify-between flow-gap-3">
-                        <div className="flow-flex-1 flow-min-w-0 flow-space-y-2">
-                          <div className="flow-bg-slate-200 dark:flow-bg-slate-700 flow-h-5 flow-rounded flow-w-3/4"></div>
-                          <div className="flow-bg-slate-200 dark:flow-bg-slate-700 flow-h-4 flow-rounded flow-w-full"></div>
-                        </div>
-                        <div className="flow-bg-slate-200 dark:flow-bg-slate-700 flow-h-8 flow-rounded flow-w-20"></div>
-                      </div>
-
-                      <div className="flow-flex flow-items-center flow-gap-3 flow-flex-wrap">
-                        <div className="flow-bg-slate-200 dark:flow-bg-slate-700 flow-h-5 flow-rounded flow-w-56"></div>
-                        <div className="flow-bg-slate-200 dark:flow-bg-slate-700 flow-h-5 flow-rounded flow-w-24"></div>
-                      </div>
-
-                      <div className="flow-flex flow-gap-2">
-                        <div className="flow-bg-slate-200 dark:flow-bg-slate-700 flow-h-6 flow-rounded-full flow-w-24"></div>
-                        <div className="flow-bg-slate-200 dark:flow-bg-slate-700 flow-h-6 flow-rounded-full flow-w-16"></div>
-                      </div>
+                    <div className="flow-flex-1 flow-min-w-0 flow-space-y-2">
+                      <div className="flow-bg-slate-200 dark:flow-bg-slate-700 flow-h-4 flow-rounded flow-w-1/3"></div>
+                      <div className="flow-bg-slate-200 dark:flow-bg-slate-700 flow-h-3 flow-rounded flow-w-2/3"></div>
                     </div>
+                    <div className="flow-bg-slate-200 dark:flow-bg-slate-700 flow-h-8 flow-w-8 flow-rounded"></div>
                   </div>
                 </div>
               ))}
@@ -399,12 +411,13 @@ export const ScheduledTransactionList: React.FC<
               </p>
             </div>
           ) : (
-            <div className="flow-space-y-4 flow-py-2">
+            <div className="flow-space-y-2 flow-py-2">
               {sortedTransactions.map(transaction => (
                 <ScheduledTransactionCard
                   key={transaction.id}
                   transaction={transaction}
                   onCancelSuccess={handleCancelSuccess}
+                  cancelEnabled={cancelEnabled}
                 />
               ))}
             </div>
