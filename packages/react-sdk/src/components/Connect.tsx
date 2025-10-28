@@ -16,7 +16,10 @@ import {ScheduledTransactionList} from "./ScheduledTransactionList"
 type BalanceType = keyof UseCrossVmTokenBalanceData
 
 export interface ConnectModalConfig {
-  showScheduledTransactions?: boolean
+  scheduledTransactions?: {
+    show?: boolean
+    filterHandlerTypes?: string[]
+  }
 }
 
 interface ConnectProps {
@@ -32,7 +35,7 @@ export const Connect: React.FC<ConnectProps> = ({
   onConnect,
   onDisconnect,
   balanceType = "cadence",
-  modalConfig = {showScheduledTransactions: false},
+  modalConfig = {},
 }) => {
   const {user, authenticate, unauthenticate} = useFlowCurrentUser()
   const [open, setOpen] = useState(false)
@@ -40,7 +43,7 @@ export const Connect: React.FC<ConnectProps> = ({
   const {data: chainId} = useFlowChainId()
 
   const showScheduledTransactions =
-    modalConfig.showScheduledTransactions ?? false
+    modalConfig.scheduledTransactions?.show ?? false
   const modalWidth = showScheduledTransactions
     ? "flow-max-w-xl"
     : "flow-max-w-md"
@@ -160,7 +163,12 @@ export const Connect: React.FC<ConnectProps> = ({
                   className="flow-overflow-y-auto"
                   style={{maxHeight: "350px", minHeight: "150px"}}
                 >
-                  <ScheduledTransactionList accountAddress={user.addr || ""} />
+                  <ScheduledTransactionList
+                    accountAddress={user.addr || ""}
+                    filterHandlerTypes={
+                      modalConfig.scheduledTransactions?.filterHandlerTypes
+                    }
+                  />
                 </div>
               </div>
             )}

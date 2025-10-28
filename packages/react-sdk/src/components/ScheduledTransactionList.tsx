@@ -261,6 +261,7 @@ const ScheduledTransactionCard: React.FC<ScheduledTransactionCardProps> = ({
 
 interface ScheduledTransactionListProps {
   accountAddress: string
+  filterHandlerTypes?: string[]
   className?: string
   style?: React.CSSProperties
   flowClient?: UseFlowScheduledTransactionListArgs["flowClient"]
@@ -268,7 +269,7 @@ interface ScheduledTransactionListProps {
 
 export const ScheduledTransactionList: React.FC<
   ScheduledTransactionListProps
-> = ({accountAddress, className, style, flowClient}) => {
+> = ({accountAddress, filterHandlerTypes, className, style, flowClient}) => {
   const queryClient = useFlowQueryClient()
 
   const {
@@ -289,6 +290,22 @@ export const ScheduledTransactionList: React.FC<
     })
     refetch()
   }
+
+  const filteredTransactions =
+    filterHandlerTypes && transactions
+      ? transactions.filter(tx =>
+          filterHandlerTypes.includes(tx.handlerTypeIdentifier)
+        )
+      : transactions
+
+  const sortedTransactions = filteredTransactions
+    ? [...filteredTransactions].sort((a, b) => {
+        if (a.scheduledTimestamp !== b.scheduledTimestamp) {
+          return a.scheduledTimestamp - b.scheduledTimestamp
+        }
+        return b.priority - a.priority
+      })
+    : filteredTransactions
 
   return (
     <StyleWrapper>
@@ -353,7 +370,7 @@ export const ScheduledTransactionList: React.FC<
                 An error occurred.
               </p>
             </div>
-          ) : !transactions || transactions.length === 0 ? (
+          ) : !sortedTransactions || sortedTransactions.length === 0 ? (
             <div
               className="flow-flex flow-flex-col flow-items-center flow-justify-center flow-h-full
                 flow-gap-3 flow-py-12"
@@ -382,7 +399,7 @@ export const ScheduledTransactionList: React.FC<
             </div>
           ) : (
             <div className="flow-space-y-4 flow-py-2">
-              {transactions.map(transaction => (
+              {sortedTransactions.map(transaction => (
                 <ScheduledTransactionCard
                   key={transaction.id}
                   transaction={transaction}

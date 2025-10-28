@@ -18,6 +18,7 @@ function MyComponent() {
     <div style={{ height: "600px" }}>
       <ScheduledTransactionList
         accountAddress={user?.addr || ""}
+        filterHandlerTypes={["A.123.Contract.Handler1"]}
       />
     </div>
   )
@@ -29,6 +30,13 @@ const PROPS: PropDefinition[] = [
     type: "string",
     required: true,
     description: "The Flow account address to fetch scheduled transactions for",
+  },
+  {
+    name: "filterHandlerTypes",
+    type: "string[]",
+    required: false,
+    description:
+      "Array of handler type identifiers to filter. Only transactions matching these types will be displayed",
   },
   {
     name: "className",
@@ -50,6 +58,7 @@ export function ScheduledTransactionListDemo() {
   const {data: chainId, isLoading} = useFlowChainId()
   const isEmulator = chainId === "emulator" || chainId === "local"
   const [customAddress, setCustomAddress] = useState("")
+  const [filterInput, setFilterInput] = useState("")
 
   const normalizeAddress = (address: string): string => {
     if (!address) return ""
@@ -62,6 +71,13 @@ export function ScheduledTransactionListDemo() {
     : chainId === "testnet"
       ? DEMO_ADDRESS_TESTNET
       : user?.addr || ""
+
+  const filterHandlerTypes = filterInput
+    ? filterInput
+        .split(",")
+        .map(s => s.trim())
+        .filter(s => s.length > 0)
+    : undefined
 
   return (
     <DemoCard
@@ -181,6 +197,54 @@ export function ScheduledTransactionListDemo() {
               </p>
             )}
           </div>
+
+          <div
+            className={`p-4 rounded-lg border ${
+              darkMode
+                ? "bg-gray-900/50 border-white/10"
+                : "bg-gray-50 border-black/5"
+              }`}
+          >
+            <label
+              className={`block text-sm font-medium mb-2 ${darkMode ? "text-gray-300" : "text-gray-700"}`}
+            >
+              Filter by Handler Types (Optional)
+            </label>
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={filterInput}
+                onChange={e => setFilterInput(e.target.value)}
+                placeholder="e.g., A.123.Contract.Handler1, A.456.Contract.Handler2"
+                className={`flex-1 px-3 py-2 rounded-md border text-sm font-mono ${
+                  darkMode
+                    ? `bg-gray-800 border-gray-700 text-white placeholder-gray-500
+                      focus:border-blue-500`
+                    : `bg-white border-gray-300 text-gray-900 placeholder-gray-400
+                      focus:border-blue-500`
+                  } focus:outline-none focus:ring-1 focus:ring-blue-500`}
+              />
+              {filterInput && (
+                <button
+                  onClick={() => setFilterInput("")}
+                  className={`px-3 py-2 rounded-md border text-sm ${
+                  darkMode
+                      ? "bg-gray-800 border-gray-700 text-gray-300 hover:bg-gray-700"
+                      : "bg-white border-gray-300 text-gray-700 hover:bg-gray-50"
+                  }`}
+                >
+                  Clear
+                </button>
+              )}
+            </div>
+            <p
+              className={`text-xs mt-2 ${darkMode ? "text-gray-500" : "text-gray-500"}`}
+            >
+              {filterInput
+                ? `Filtering by ${filterHandlerTypes?.length || 0} handler type(s)`
+                : "Enter comma-separated handler type identifiers to filter transactions"}
+            </p>
+          </div>
         </div>
 
         <div
@@ -273,117 +337,12 @@ export function ScheduledTransactionListDemo() {
             </div>
           ) : (
             <div style={{height: "500px", overflowY: "auto"}}>
-              <ScheduledTransactionList accountAddress={displayAddress} />
+              <ScheduledTransactionList
+                accountAddress={displayAddress}
+                filterHandlerTypes={filterHandlerTypes}
+              />
             </div>
           )}
-        </div>
-
-        <div
-          className={`-mx-6 h-px ${darkMode ? "bg-white/10" : "bg-black/10"}`}
-        />
-
-        <div className="space-y-4">
-          <div className="flex items-center space-x-3">
-            <div
-              className={`p-1.5 rounded ${darkMode ? "bg-gray-700" : "bg-gray-100"}`}
-            >
-              <svg
-                width="12"
-                height="12"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                className={darkMode ? "text-gray-400" : "text-gray-600"}
-              >
-                <path d="M12 2v20M2 12h20" />
-              </svg>
-            </div>
-            <h4
-              className={`text-sm font-semibold uppercase tracking-wider ${
-                darkMode ? "text-gray-200" : "text-gray-700" }`}
-            >
-              Key Features
-            </h4>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            <div
-              className={`p-3 rounded-lg border ${
-                darkMode
-                  ? "bg-gray-800/50 border-white/5"
-                  : "bg-white border-black/5"
-                }`}
-            >
-              <p
-                className={`text-xs font-medium mb-1 ${darkMode ? "text-gray-400" : "text-gray-500"}`}
-              >
-                Loading States
-              </p>
-              <p
-                className={`text-sm ${darkMode ? "text-white" : "text-black"}`}
-              >
-                Skeleton loaders while fetching data
-              </p>
-            </div>
-
-            <div
-              className={`p-3 rounded-lg border ${
-                darkMode
-                  ? "bg-gray-800/50 border-white/5"
-                  : "bg-white border-black/5"
-                }`}
-            >
-              <p
-                className={`text-xs font-medium mb-1 ${darkMode ? "text-gray-400" : "text-gray-500"}`}
-              >
-                Error Handling
-              </p>
-              <p
-                className={`text-sm ${darkMode ? "text-white" : "text-black"}`}
-              >
-                User-friendly error messages
-              </p>
-            </div>
-
-            <div
-              className={`p-3 rounded-lg border ${
-                darkMode
-                  ? "bg-gray-800/50 border-white/5"
-                  : "bg-white border-black/5"
-                }`}
-            >
-              <p
-                className={`text-xs font-medium mb-1 ${darkMode ? "text-gray-400" : "text-gray-500"}`}
-              >
-                Empty States
-              </p>
-              <p
-                className={`text-sm ${darkMode ? "text-white" : "text-black"}`}
-              >
-                Customizable empty state messages
-              </p>
-            </div>
-
-            <div
-              className={`p-3 rounded-lg border ${
-                darkMode
-                  ? "bg-gray-800/50 border-white/5"
-                  : "bg-white border-black/5"
-                }`}
-            >
-              <p
-                className={`text-xs font-medium mb-1 ${darkMode ? "text-gray-400" : "text-gray-500"}`}
-              >
-                Query Invalidation
-              </p>
-              <p
-                className={`text-sm ${darkMode ? "text-white" : "text-black"}`}
-              >
-                Auto-refresh after transaction cancellation
-              </p>
-            </div>
-          </div>
         </div>
       </div>
     </DemoCard>
