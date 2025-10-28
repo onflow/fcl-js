@@ -350,7 +350,7 @@ export const ScheduledTransactionList: React.FC<
                 className="flow-text-xs flow-text-slate-400 dark:flow-text-slate-600 flow-max-w-md
                   flow-text-center"
               >
-                {error.message}
+                An error occurred.
               </p>
             </div>
           ) : !transactions || transactions.length === 0 ? (
