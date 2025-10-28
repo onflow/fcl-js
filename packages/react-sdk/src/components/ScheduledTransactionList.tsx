@@ -70,8 +70,9 @@ const extractMetadataDisplay = (handlerResolvedViews?: {
 } => {
   if (!handlerResolvedViews) return {}
 
+  // Find MetadataViews.Display - match the full type name
   const displayView = Object.entries(handlerResolvedViews).find(([key]) =>
-    key.includes("Display")
+    key.includes("MetadataViews.Display")
   )
 
   if (displayView && displayView[1]) {
