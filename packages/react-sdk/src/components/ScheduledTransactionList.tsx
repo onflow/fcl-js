@@ -144,7 +144,7 @@ const ScheduledTransactionCard: React.FC<ScheduledTransactionCardProps> = ({
       <div className="flow-flex flow-items-start flow-gap-2 sm:flow-gap-3 flow-p-2 sm:flow-p-3">
         {metadata.thumbnail && (
           <div
-            className="flow-flex-shrink-0 flow-w-10 flow-h-10 sm:flow-w-12 sm:flow-h-12 flow-rounded
+            className="max-sm:flow-hidden flow-flex-shrink-0 flow-w-16 flow-h-16 flow-rounded
               flow-bg-slate-100 dark:flow-bg-slate-800 flow-overflow-hidden"
           >
             <img
