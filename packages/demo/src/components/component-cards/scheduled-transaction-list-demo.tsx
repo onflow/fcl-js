@@ -7,6 +7,7 @@ import {useState} from "react"
 import {useDarkMode} from "../flow-provider-wrapper"
 import {DemoCard, type PropDefinition} from "../ui/demo-card"
 import {PlusGridIcon} from "../ui/plus-grid"
+import {DEMO_ADDRESS_TESTNET} from "../../constants"
 
 const IMPLEMENTATION_CODE = `import { ScheduledTransactionList, useFlowCurrentUser } from "@onflow/react-sdk"
 
@@ -58,7 +59,9 @@ export function ScheduledTransactionListDemo() {
 
   const displayAddress = customAddress
     ? normalizeAddress(customAddress)
-    : user?.addr || ""
+    : chainId === "testnet"
+      ? DEMO_ADDRESS_TESTNET
+      : user?.addr || ""
 
   return (
     <DemoCard
@@ -166,11 +169,15 @@ export function ScheduledTransactionListDemo() {
                 </button>
               )}
             </div>
-            {user?.addr && !customAddress && (
+            {!customAddress && (
               <p
                 className={`text-xs mt-2 ${darkMode ? "text-gray-500" : "text-gray-500"}`}
               >
-                Using connected wallet address: {user.addr}
+                {chainId === "testnet"
+                  ? `Using demo account: ${DEMO_ADDRESS_TESTNET}`
+                  : user?.addr
+                    ? `Using connected wallet address: ${user.addr}`
+                    : "Connect wallet or enter address to view scheduled transactions"}
               </p>
             )}
           </div>

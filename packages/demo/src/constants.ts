@@ -70,3 +70,6 @@ export const getEventType = (
   const address = getContractAddress(contractName, network)
   return `A.${address.replace("0x", "")}.${contractName}.${eventName}`
 }
+
+// Demo account used to showcase features (testnet only)
+export const DEMO_ADDRESS_TESTNET = "0x012e4d204a60ac6f"
