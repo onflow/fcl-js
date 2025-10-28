@@ -12,8 +12,10 @@ import {AlertCircleIcon} from "../icons/AlertCircleIcon"
 import {LoaderCircleIcon} from "../icons/LoaderCircleIcon"
 import {TrashIcon} from "../icons/TrashIcon"
 import {FlowIcon} from "../icons/FlowIcon"
+import {ExternalLinkIcon} from "../icons/ExternalLink"
 import {twMerge} from "tailwind-merge"
 import {useFlowQueryClient} from "../provider/FlowQueryClient"
+import {useFlowChainId} from "../hooks/useFlowChainId"
 
 const getPriorityLabel = (priority: ScheduledTransactionPriority): string => {
   switch (priority) {
@@ -103,6 +105,7 @@ const ScheduledTransactionCard: React.FC<ScheduledTransactionCardProps> = ({
 }) => {
   const {cancelTransactionAsync, isPending} =
     useFlowScheduledTransactionCancel()
+  const {data: chainId} = useFlowChainId()
 
   const metadata = extractMetadataDisplay(transaction.handlerResolvedViews)
 
@@ -120,6 +123,14 @@ const ScheduledTransactionCard: React.FC<ScheduledTransactionCardProps> = ({
     (transaction.status === ScheduledTransactionStatus.Pending ||
       transaction.status === ScheduledTransactionStatus.Processing)
 
+  const getFlowscanUrl = (txId: string) => {
+    const baseUrl =
+      chainId === "mainnet"
+        ? "https://flowscan.io"
+        : "https://testnet.flowscan.io"
+    return `${baseUrl}/scheduled/${txId}`
+  }
+
   return (
     <div
       className={twMerge(
@@ -130,11 +141,11 @@ const ScheduledTransactionCard: React.FC<ScheduledTransactionCardProps> = ({
         className
       )}
     >
-      <div className="flow-flex flow-items-start flow-gap-3 flow-p-3">
+      <div className="flow-flex flow-items-start flow-gap-2 sm:flow-gap-3 flow-p-2 sm:flow-p-3">
         {metadata.thumbnail && (
           <div
-            className="flow-flex-shrink-0 flow-w-12 flow-h-12 flow-rounded flow-bg-slate-100
-              dark:flow-bg-slate-800 flow-overflow-hidden"
+            className="flow-flex-shrink-0 flow-w-10 flow-h-10 sm:flow-w-12 sm:flow-h-12 flow-rounded
+              flow-bg-slate-100 dark:flow-bg-slate-800 flow-overflow-hidden"
           >
             <img
               src={metadata.thumbnail}
@@ -144,17 +155,18 @@ const ScheduledTransactionCard: React.FC<ScheduledTransactionCardProps> = ({
           </div>
         )}
 
-        <div className="flow-flex-1 flow-min-w-0 flow-pr-8">
-          <div className="flow-flex flow-items-center flow-gap-2 flow-mb-0.5">
+        <div className="flow-flex-1 flow-min-w-0 flow-pr-10 sm:flow-pr-12">
+          <div className="flow-flex flow-items-center flow-gap-2 flow-mb-0.5 flow-flex-wrap">
             <h3
               className="flow-text-sm flow-font-semibold flow-text-slate-900 dark:flow-text-white
-                flow-truncate"
+                flow-truncate flow-flex-shrink flow-min-w-0"
               title={metadata.name || "Scheduled Transaction"}
             >
               {metadata.name || "Scheduled Transaction"}
             </h3>
             <span
-              className="flow-text-xs flow-font-mono flow-text-slate-500 dark:flow-text-slate-400"
+              className="flow-text-xs flow-font-mono flow-text-slate-500 dark:flow-text-slate-400
+                flow-flex-shrink-0"
               title={`Transaction ID: ${transaction.id}`}
             >
               #{transaction.id.slice(0, 8)}
@@ -172,8 +184,8 @@ const ScheduledTransactionCard: React.FC<ScheduledTransactionCardProps> = ({
           )}
 
           <div
-            className="flow-flex flow-items-center flow-gap-2.5 flow-text-[10px] flow-text-slate-600
-              dark:flow-text-slate-400 flow-mt-2"
+            className="flow-flex flow-items-center flow-flex-wrap flow-gap-2 sm:flow-gap-2.5
+              flow-text-[10px] flow-text-slate-600 dark:flow-text-slate-400 flow-mt-2"
           >
             <div
               className={twMerge(
@@ -250,29 +262,45 @@ const ScheduledTransactionCard: React.FC<ScheduledTransactionCardProps> = ({
           </div>
         </div>
 
-        {canCancel && (
-          <div
-            className="flow-absolute flow-top-1/2 flow-right-2 flow--translate-y-1/2 flow-opacity-0
-              group-hover:flow-opacity-100 flow-transition-opacity"
-            title={isPending ? "Cancelling..." : "Cancel transaction"}
-          >
-            <button
-              onClick={handleCancel}
-              disabled={isPending}
-              className="flow-h-6 flow-w-6 flow-p-0 flow-rounded-full flow-flex flow-items-center
-                flow-justify-center flow-bg-transparent flow-border flow-border-slate-200
-                dark:flow-border-slate-700 hover:flow-border-red-500
-                dark:hover:flow-border-red-500 flow-transition-colors disabled:flow-opacity-50
-                disabled:flow-cursor-not-allowed"
+        <div
+          className="flow-absolute flow-right-2 sm:flow-right-2 flow-top-2 sm:flow-top-3 flow-flex
+            flow-flex-col flow-items-end flow-gap-1"
+        >
+          {canCancel && (
+            <div
+              className="flow-opacity-0 group-hover:flow-opacity-100 flow-transition-opacity"
+              title={isPending ? "Cancelling..." : "Cancel transaction"}
             >
-              {isPending ? (
-                <LoaderCircleIcon className="flow-h-3 flow-w-3 flow-text-red-500 flow-animate-spin" />
-              ) : (
-                <TrashIcon className="flow-h-3 flow-w-3 flow-text-red-500" />
-              )}
-            </button>
-          </div>
-        )}
+              <button
+                onClick={handleCancel}
+                disabled={isPending}
+                className="flow-h-6 flow-w-6 flow-p-0 flow-rounded-full flow-flex flow-items-center
+                  flow-justify-center flow-bg-transparent flow-border flow-border-slate-200
+                  dark:flow-border-slate-700 hover:flow-border-red-500
+                  dark:hover:flow-border-red-500 flow-transition-colors disabled:flow-opacity-50
+                  disabled:flow-cursor-not-allowed"
+              >
+                {isPending ? (
+                  <LoaderCircleIcon className="flow-h-3 flow-w-3 flow-text-red-500 flow-animate-spin" />
+                ) : (
+                  <TrashIcon className="flow-h-3 flow-w-3 flow-text-red-500" />
+                )}
+              </button>
+            </div>
+          )}
+
+          <a
+            href={getFlowscanUrl(transaction.id)}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flow-h-6 flow-w-6 flow-p-0 flow-rounded-full flow-flex flow-items-center
+              flow-justify-center flow-text-slate-400 dark:flow-text-slate-500
+              hover:flow-text-slate-600 dark:hover:flow-text-slate-400 flow-transition-colors"
+            title="View on Flowscan"
+          >
+            <ExternalLinkIcon className="flow-h-3.5 flow-w-3.5" />
+          </a>
+        </div>
       </div>
     </div>
   )
