@@ -164,7 +164,7 @@ export const Connect: React.FC<ConnectProps> = ({
                   style={{maxHeight: "350px", minHeight: "150px"}}
                 >
                   <ScheduledTransactionList
-                    accountAddress={user.addr || ""}
+                    address={user.addr || ""}
                     filterHandlerTypes={
                       modalConfig.scheduledTransactions?.filterHandlerTypes
                     }

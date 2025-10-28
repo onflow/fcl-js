@@ -260,7 +260,7 @@ const ScheduledTransactionCard: React.FC<ScheduledTransactionCardProps> = ({
 }
 
 interface ScheduledTransactionListProps {
-  accountAddress: string
+  address: string
   filterHandlerTypes?: string[]
   className?: string
   style?: React.CSSProperties
@@ -269,7 +269,7 @@ interface ScheduledTransactionListProps {
 
 export const ScheduledTransactionList: React.FC<
   ScheduledTransactionListProps
-> = ({accountAddress, filterHandlerTypes, className, style, flowClient}) => {
+> = ({address, filterHandlerTypes, className, style, flowClient}) => {
   const queryClient = useFlowQueryClient()
 
   const {
@@ -278,7 +278,7 @@ export const ScheduledTransactionList: React.FC<
     error,
     refetch,
   } = useFlowScheduledTransactionList({
-    account: accountAddress,
+    account: address,
     includeHandlerData: true,
     flowClient,
   })

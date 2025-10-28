@@ -17,7 +17,7 @@ function MyComponent() {
   return (
     <div style={{ height: "600px" }}>
       <ScheduledTransactionList
-        accountAddress={user?.addr || ""}
+        address={user?.addr || ""}
         filterHandlerTypes={["A.123.Contract.Handler1"]}
       />
     </div>
@@ -26,7 +26,7 @@ function MyComponent() {
 
 const PROPS: PropDefinition[] = [
   {
-    name: "accountAddress",
+    name: "address",
     type: "string",
     required: true,
     description: "The Flow account address to fetch scheduled transactions for",
@@ -338,7 +338,7 @@ export function ScheduledTransactionListDemo() {
           ) : (
             <div style={{height: "500px", overflowY: "auto"}}>
               <ScheduledTransactionList
-                accountAddress={displayAddress}
+                address={displayAddress}
                 filterHandlerTypes={filterHandlerTypes}
               />
             </div>
