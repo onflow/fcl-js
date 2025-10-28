@@ -344,7 +344,10 @@ export function ScheduledTransactionListDemo() {
               </div>
             </div>
           ) : (
-            <div style={{height: "500px", overflowY: "auto"}}>
+            <div
+              className={"p-3 m-2"}
+              style={{height: "500px", overflowY: "auto"}}
+            >
               <ScheduledTransactionList
                 address={displayAddress}
                 filterHandlerTypes={filterHandlerTypes}

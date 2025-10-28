@@ -156,12 +156,12 @@ export const Connect: React.FC<ConnectProps> = ({
 
             {showScheduledTransactions && (
               <div className="flow-rounded-lg flow-bg-slate-50 dark:flow-bg-slate-900 flow-p-4 flow-mt-2">
-                <h3 className="flow-text-base flow-font-bold flow-text-slate-900 dark:flow-text-white flow-mb-3">
+                <h3 className="flow-text-base flow-font-bold flow-text-slate-900 dark:flow-text-white flow-pb-2">
                   Scheduled Transactions
                 </h3>
                 <div
-                  className="flow-overflow-y-auto"
-                  style={{maxHeight: "350px", minHeight: "150px"}}
+                  className="flow-overflow-y-auto flow-pr-2"
+                  style={{maxHeight: "250px", minHeight: "100px"}}
                 >
                   <ScheduledTransactionList
                     address={user.addr || ""}

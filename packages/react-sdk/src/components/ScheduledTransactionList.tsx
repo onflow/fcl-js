@@ -343,7 +343,7 @@ export const ScheduledTransactionList: React.FC<
         )}
         style={style}
       >
-        <div className="flow-flex-1 flow-overflow-y-auto flow-px-2">
+        <div className="flow-flex-1">
           {isLoading ? (
             <div className="flow-space-y-2 flow-py-2">
               {[1, 2, 3].map(i => (
@@ -411,7 +411,7 @@ export const ScheduledTransactionList: React.FC<
               </p>
             </div>
           ) : (
-            <div className="flow-space-y-2 flow-py-2">
+            <div className="flow-space-y-2">
               {sortedTransactions.map(transaction => (
                 <ScheduledTransactionCard
                   key={transaction.id}
