@@ -40,7 +40,7 @@ export const Connect: React.FC<ConnectProps> = ({
   const {data: chainId} = useFlowChainId()
 
   const showScheduledTransactions =
-    modalConfig.showScheduledTransactions ?? true
+    modalConfig.showScheduledTransactions ?? false
   const modalWidth = showScheduledTransactions
     ? "flow-max-w-xl"
     : "flow-max-w-md"
