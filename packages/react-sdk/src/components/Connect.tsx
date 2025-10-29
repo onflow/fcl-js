@@ -14,11 +14,26 @@ import {LogOutIcon} from "../icons/LogOutIcon"
 
 type BalanceType = keyof UseCrossVmTokenBalanceData
 
+export interface TokenConfig {
+  symbol: string
+  name: string
+  vaultIdentifier?: string
+  erc20Address?: string
+}
+
+export interface ConnectModalConfig {
+  balance?: {
+    tokens?: TokenConfig[]
+    defaultSymbol?: string
+  }
+}
+
 interface ConnectProps {
   variant?: ButtonProps["variant"]
   onConnect?: () => void
   onDisconnect?: () => void
   balanceType?: BalanceType
+  modalConfig?: ConnectModalConfig
 }
 
 export const Connect: React.FC<ConnectProps> = ({
@@ -26,17 +41,44 @@ export const Connect: React.FC<ConnectProps> = ({
   onConnect,
   onDisconnect,
   balanceType = "cadence",
+  modalConfig = {},
 }) => {
   const {user, authenticate, unauthenticate} = useFlowCurrentUser()
   const [open, setOpen] = useState(false)
   const [copied, setCopied] = useState(false)
   const {data: chainId} = useFlowChainId()
 
+  // Default token configuration for FlowToken
+  const defaultTokens: TokenConfig[] = [
+    {
+      symbol: "FLOW",
+      name: "Flow Token",
+      vaultIdentifier: `A.${chainId === "testnet" ? "7e60df042a9c0868" : "1654653399040a61"}.FlowToken.Vault`,
+    },
+  ]
+
+  // Read configuration from modalConfig.balance
+  const balanceConfig = modalConfig.balance || {}
+  const availableTokens = balanceConfig.tokens || defaultTokens
+  const initialSymbol =
+    balanceConfig.defaultSymbol || availableTokens[0]?.symbol || "FLOW"
+
+  const [selectedSymbol, setSelectedSymbol] = useState(initialSymbol)
+
+  const selectedToken = availableTokens.find(
+    (t: TokenConfig) => t.symbol === selectedSymbol
+  )
+
   const {data: balanceData} = useCrossVmTokenBalance({
     owner: user?.addr,
-    vaultIdentifier: `A.${chainId === "testnet" ? "7e60df042a9c0868" : "1654653399040a61"}.FlowToken.Vault`,
+    vaultIdentifier: selectedToken?.vaultIdentifier,
+    erc20Address: selectedToken?.erc20Address,
     query: {
-      enabled: !!user?.addr && !!chainId,
+      enabled:
+        !!user?.addr &&
+        !!chainId &&
+        !!selectedToken &&
+        (!!selectedToken.vaultIdentifier || !!selectedToken.erc20Address),
     },
   })
 
@@ -47,8 +89,8 @@ export const Connect: React.FC<ConnectProps> = ({
 
   const displayBalance =
     balanceData && typeof balanceData !== "string"
-      ? `${Number(balanceData[balanceType].formatted).toLocaleString()} FLOW`
-      : "0.00 FLOW"
+      ? `${Number(balanceData[balanceType].formatted).toLocaleString()} ${selectedToken?.symbol || "-"}`
+      : `0.00 ${selectedToken?.symbol || "-"}`
 
   const handleButtonClick = async () => {
     if (user?.loggedIn) {
@@ -101,7 +143,30 @@ export const Connect: React.FC<ConnectProps> = ({
               <div className="flow-text-center flow-text-lg flow-font-semibold flow-mb-0">
                 {displayAddress}
               </div>
-              <div className="flow-text-center flow-text-sm flow-text-gray-500 flow-mt-2">
+
+              {availableTokens.length > 1 && (
+                <div className="flow-w-full flow-mt-3">
+                  <label className="flow-block flow-text-xs flow-text-gray-500 flow-mb-1 flow-text-center">
+                    Token
+                  </label>
+                  <select
+                    value={selectedSymbol}
+                    onChange={e => setSelectedSymbol(e.target.value)}
+                    className="flow-w-full flow-px-3 flow-py-2 flow-text-sm flow-rounded-lg flow-border
+                      flow-border-gray-300 dark:flow-border-gray-700 flow-bg-white
+                      dark:flow-bg-gray-800 flow-text-gray-900 dark:flow-text-white
+                      focus:flow-outline-none focus:flow-ring-2 focus:flow-ring-blue-500"
+                  >
+                    {availableTokens.map((token: TokenConfig) => (
+                      <option key={token.symbol} value={token.symbol}>
+                        {token.name} ({token.symbol})
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
+
+              <div className="flow-text-center flow-text-sm flow-text-gray-500 flow-mt-3">
                 {displayBalance}
               </div>
             </div>
