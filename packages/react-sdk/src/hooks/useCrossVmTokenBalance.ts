@@ -227,7 +227,7 @@ export function useCrossVmTokenBalance(params: UseCrossVmTokenBalanceArgs) {
             precision: Number(evmDecimals),
             value: BigInt(evmBalance),
           },
-          total: {
+          combined: {
             formatted: formatUnits(
               totalPrecisionCadenceBalance + totalPrecisionEvmBalance,
               totalPrecision
