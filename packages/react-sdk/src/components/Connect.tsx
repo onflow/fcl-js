@@ -198,7 +198,7 @@ export const Connect: React.FC<ConnectProps> = ({
       </StyleWrapper>
       {user?.loggedIn && (
         <Dialog isOpen={open} onClose={() => setOpen(false)}>
-          <div className="flow-flex flow-flex-col flow-items-center flow-w-full flow-min-w-[380px]">
+          <div className="flow-flex flow-flex-col flow-items-center flow-w-full flow-min-w-[320px]">
             <div className="flow-flex flow-flex-col flow-items-center flow-w-full flow-mb-6">
               <div
                 className="flow-w-16 flow-h-16 flow-rounded-full flow-bg-slate-100 dark:flow-bg-slate-800
