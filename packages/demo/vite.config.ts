@@ -18,7 +18,4 @@ export default defineConfig({
       },
     },
   },
-  optimizeDeps: {
-    include: ["@onflow/fcl", "@onflow/react-sdk", "@onflow/typedefs"],
-  },
 })
