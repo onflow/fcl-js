@@ -8,7 +8,7 @@ import {ImageIcon} from "../icons/ImageIcon"
 import {ExternalLinkIcon} from "../icons/ExternalLink"
 import {AlertCircleIcon} from "../icons/AlertCircleIcon"
 import {LoaderCircleIcon} from "../icons/LoaderCircleIcon"
-import {DownIcon} from "../icons/DownIcon"
+import {Dialog} from "./internal/Dialog"
 import {twMerge} from "tailwind-merge"
 
 interface NftCardProps {
@@ -30,7 +30,7 @@ export const NftCard: React.FC<NftCardProps> = ({
   className,
   style,
 }) => {
-  const [showAllTraits, setShowAllTraits] = React.useState(false)
+  const [showTraitsModal, setShowTraitsModal] = React.useState(false)
 
   const {
     data: nft,
@@ -49,6 +49,8 @@ export const NftCard: React.FC<NftCardProps> = ({
 
   const hasError = error || !nft
   const hasImage = !hasError && getThumbnailUrl(nft)
+  const totalTraits =
+    !hasError && nft?.traits ? Object.keys(nft.traits).length : 0
 
   return (
     <StyleWrapper>
@@ -222,62 +224,93 @@ export const NftCard: React.FC<NftCardProps> = ({
               </div>
             )}
 
-          {showTraits &&
-            !hasError &&
-            nft.traits &&
-            Object.keys(nft.traits).length > 0 && (
-              <div className="flow-space-y-3">
-                <p
-                  className="flow-text-xs flow-font-bold flow-text-slate-700 dark:flow-text-slate-300
-                    flow-uppercase flow-tracking-wider"
-                >
-                  Traits
-                </p>
-                <div className="flow-grid flow-grid-cols-2 flow-gap-2">
-                  {Object.entries(nft.traits)
-                    .slice(0, showAllTraits ? undefined : 4)
-                    .map(([key, value]) => (
-                      <div
-                        key={key}
-                        className="flow-px-3 flow-py-2 flow-rounded-lg flow-bg-slate-50 dark:flow-bg-slate-800/50
-                          flow-border flow-border-slate-200 dark:flow-border-slate-700"
-                      >
-                        <p
-                          className="flow-text-xs flow-text-slate-500 dark:flow-text-slate-400 flow-truncate
-                            flow-mb-0.5"
-                        >
-                          {key}
-                        </p>
-                        <p
-                          className="flow-text-sm flow-font-semibold flow-text-slate-900 dark:flow-text-white
-                            flow-truncate"
-                        >
-                          {value}
-                        </p>
-                      </div>
-                    ))}
-                  {Object.keys(nft.traits).length > 4 && (
-                    <button
-                      onClick={() => setShowAllTraits(!showAllTraits)}
-                      className="flow-col-span-2 flow-flex flow-items-center flow-justify-center flow-mt-1
-                        flow-text-slate-500 dark:flow-text-slate-400 hover:flow-text-slate-700
-                        dark:hover:flow-text-slate-300 flow-transition-all flow-cursor-pointer
-                        flow-bg-transparent flow-border-none flow-px-2 flow-py-0.5"
-                      aria-label={
-                        showAllTraits ? "Show less traits" : "Show more traits"
-                      }
+          {showTraits && !hasError && nft.traits && totalTraits > 0 && (
+            <div className="flow-space-y-3">
+              <p
+                className="flow-text-xs flow-font-bold flow-text-slate-700 dark:flow-text-slate-300
+                  flow-uppercase flow-tracking-wider"
+              >
+                Traits
+              </p>
+              <div className="flow-grid flow-grid-cols-2 flow-gap-2">
+                {Object.entries(nft.traits)
+                  .slice(0, 4)
+                  .map(([key, value]) => (
+                    <div
+                      key={key}
+                      className="flow-px-3 flow-py-2 flow-rounded-lg flow-bg-slate-50 dark:flow-bg-slate-800/50
+                        flow-border flow-border-slate-200 dark:flow-border-slate-700"
                     >
-                      <DownIcon
-                        className={`flow-w-5 flow-h-5 flow-transition-transform flow-duration-200 ${
-                        showAllTraits ? "flow-rotate-180" : "" }`}
-                      />
-                    </button>
-                  )}
-                </div>
+                      <p
+                        className="flow-text-xs flow-text-slate-500 dark:flow-text-slate-400 flow-truncate
+                          flow-mb-0.5"
+                      >
+                        {key}
+                      </p>
+                      <p
+                        className="flow-text-sm flow-font-semibold flow-text-slate-900 dark:flow-text-white
+                          flow-truncate"
+                      >
+                        {value}
+                      </p>
+                    </div>
+                  ))}
+                {totalTraits > 4 && (
+                  <button
+                    onClick={() => setShowTraitsModal(true)}
+                    className="flow-col-span-2 flow-flex flow-items-center flow-justify-center flow-gap-1.5
+                      flow-px-3 flow-py-2 flow-rounded-lg flow-text-xs flow-font-semibold
+                      flow-bg-slate-100 dark:flow-bg-slate-800 flow-text-slate-700
+                      dark:flow-text-slate-300 hover:flow-bg-slate-200 dark:hover:flow-bg-slate-700
+                      flow-transition-colors flow-border flow-border-slate-200
+                      dark:flow-border-slate-700"
+                  >
+                    Show all ({totalTraits}) traits
+                  </button>
+                )}
               </div>
-            )}
+            </div>
+          )}
         </div>
       </div>
+
+      <Dialog
+        isOpen={showTraitsModal}
+        onClose={() => setShowTraitsModal(false)}
+        title={`NFT #${tokenId} Traits`}
+      >
+        <div
+          className="flow-overflow-y-auto flow-pr-2"
+          style={{
+            maxHeight: totalTraits > 6 ? "70vh" : "auto",
+          }}
+        >
+          <div className="flow-grid flow-grid-cols-2 flow-gap-3">
+            {!hasError &&
+              nft.traits &&
+              Object.entries(nft.traits).map(([key, value]) => (
+                <div
+                  key={key}
+                  className="flow-px-3 flow-py-2 flow-rounded-lg flow-bg-slate-50 dark:flow-bg-slate-800/50
+                    flow-border flow-border-slate-200 dark:flow-border-slate-700"
+                >
+                  <p
+                    className="flow-text-xs flow-text-slate-500 dark:flow-text-slate-400 flow-truncate
+                      flow-mb-0.5"
+                  >
+                    {key}
+                  </p>
+                  <p
+                    className="flow-text-sm flow-font-semibold flow-text-slate-900 dark:flow-text-white
+                      flow-truncate"
+                  >
+                    {value}
+                  </p>
+                </div>
+              ))}
+          </div>
+        </div>
+      </Dialog>
     </StyleWrapper>
   )
 }

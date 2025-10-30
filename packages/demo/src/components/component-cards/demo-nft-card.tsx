@@ -75,6 +75,8 @@ export function DemoNftCard() {
 
   const isEmulator = chainId === "emulator" || chainId === "local"
   const isTestnet = chainId === "testnet"
+  const isMainnet = chainId === "mainnet"
+  const canShowDemo = isTestnet || isMainnet
 
   // Use user input if provided, otherwise use demo values
   const displayAddress = accountAddress || DEMO_ADDRESS_TESTNET
@@ -168,7 +170,7 @@ export function DemoNftCard() {
               NFT Card component requires testnet or mainnet
             </p>
           </div>
-        ) : !isTestnet ? (
+        ) : !canShowDemo ? (
           <div
             className={`text-center py-4 px-6 rounded-lg border ${
               darkMode
@@ -192,12 +194,12 @@ export function DemoNftCard() {
             <p
               className={`text-sm font-medium ${darkMode ? "text-blue-400" : "text-blue-600"}`}
             >
-              Demo Available on Testnet Only
+              Demo Available on Testnet and Mainnet
             </p>
             <p
               className={`text-xs mt-1 ${darkMode ? "text-blue-400/70" : "text-blue-600/70"}`}
             >
-              Switch to testnet to see the NFT card demo
+              Switch to testnet or mainnet to see the NFT card demo
             </p>
           </div>
         ) : (
