@@ -20,6 +20,7 @@ import {LogOutIcon} from "../icons/LogOutIcon"
 import {ExternalLinkIcon} from "../icons/ExternalLink"
 import {ScheduledTransactionList} from "./ScheduledTransactionList"
 import {CONTRACT_ADDRESSES} from "../constants"
+import {getFlowscanAccountUrl} from "../utils/flowscan"
 
 type BalanceType = keyof UseCrossVmTokenBalanceData
 
@@ -141,20 +142,7 @@ export const Connect: React.FC<ConnectProps> = ({
       ? `${user.addr.slice(0, 6)}...${user.addr.slice(-4)}`
       : ""
 
-  // Get Flowscan URL based on network
-  const getFlowscanUrl = () => {
-    if (!user?.addr || !chainId) return null
-    if (chainId === "emulator" || chainId === "local") return null
-
-    const baseUrl =
-      chainId === "testnet"
-        ? "https://testnet.flowscan.io"
-        : "https://flowscan.io"
-
-    return `${baseUrl}/account/${user.addr}`
-  }
-
-  const flowscanUrl = getFlowscanUrl()
+  const flowscanUrl = getFlowscanAccountUrl(user?.addr || "", chainId)
 
   const hasData = balanceData && typeof balanceData !== "string"
 
